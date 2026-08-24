@@ -1,546 +1,1168 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runbooks/flora/promotion-runbook
-title: Flora — Promotion Runbook (RAW → PUBLISHED)
-type: standard
-version: v0.1
-status: draft
-owners: [TODO — flora-domain-steward, release-authority, docs-steward]  # PLACEHOLDER — verify against CODEOWNERS
+title: Flora Promotion Runbook
+type: runbook; operational-procedure; domain-lane; non-authoritative
+version: v1.0.0
+prior_version: v0.1
+status: draft; repository-grounded; bounded-public-safe-fixture-validator-present; flora-candidate-absent; flora-proof-held; policy-inactive; release-dry-run-held; sensitive-location-deny-by-default; non-publisher
+owners:
+  - "@bartytime4life — verified GitHub review route only"
+  - "NEEDS VERIFICATION — accountable Flora, taxonomy, source, rights, sensitivity, geoprivacy, stewardship, evidence, policy, validation, public-surface, release, correction, rollback, operations, and independent-review assignments"
 created: 2026-05-13
-updated: 2026-05-13
-policy_label: public
+updated: 2026-08-24
+policy_label: restricted-review; flora; promotion-readiness; rare-plants; cultural-knowledge; fail-closed; no-release-authority; no-publication-authority
+current_path: docs/runbooks/flora/PROMOTION_RUNBOOK.md
+owning_root: docs/
+responsibility: >-
+  Provide the repository-grounded human procedure for evaluating Flora
+  promotion readiness and preparing an accountable, public-safe review handoff
+  without granting source admission, botanical or taxonomic authority, rights or
+  sensitivity clearance, policy authority, review authority, lifecycle-transition
+  authority, release authority, deployment authority, or publication authority.
+truth_posture: cite-or-abstain
+truth_labels: [CONFIRMED, PROPOSED, UNKNOWN, NEEDS VERIFICATION, CONFLICTED, HOLD]
+authority_class: explanatory operational documentation
+canonical_relationship: same-path update; no new or parallel authority
+path_posture: PLACE
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  content_inspection_commit: 35bb62209569f63af78c6fefe4c85015d3bdceb1
+  prior_blob: 89a77d18edc56b9eb9901f5e82ea6eeca4c0c52c
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  promotion_sequence_adr_blob: 51cedfdf98b92f1a9af492ce3a1cde231eed9308
+  source_authority_register_blob: 32729857bc8eb5001acb37b8ee8e60bcb6e0dc50
+  flora_workflow_blob: 3fe6b1ba8150960692b6b2fc764c6aa31d09565c
+  flora_fixture_validator_blob: 17933f997f7cb1219e3057ea74bf2c077dc45386
+  flora_fixture_test_blob: 18d15781b78487de4c786c5ee38254f3a48e49e3
+  flora_candidate_readme_blob: 15a08f9fb2cdd33041d3a3f3e3c844f26a7a0998
+  flora_domain_policy_blob: 247fc146131f4e6598af9fd939cf087d92523ed6
+  flora_sensitivity_policy_blob: 4c65abec24135f7e4467fd108e163cdce594d5f9
+  flora_proof_readme_blob: 130effccfd6e14f2660de04c3cc30d839503ef8a
+  published_flora_readme_blob: 1368127a0ddc2ca2766eec23923c48de26a678e1
+  promotion_gate_readme_blob: e729df0cc007e8cf0d9811afc25ec1f5ffbdffdd
+  promotion_policy_readme_blob: 79287df1d828010d716ed43d2e24d6dbd610305b
+  promotion_decision_contract_blob: 42295bfc83a621cf125d33aa821912b426f70bd2
+  promotion_receipt_contract_blob: ed432f8e3e02d170589c9e04d78087a69346909d
+  release_manifest_contract_blob: ce7dc89ff447d76d974afdd802b85a38538d8f48
+  rollback_card_contract_blob: c6d3c35c56b064e04c3a2532f4709d938d7b0c1a
+  release_review_readme_blob: bf3058a5af8fc85aa04a25a36ed03541cd9eb657
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+inspection_boundary: >-
+  Current-session GitHub reads of the target, accepted Directory Rules decision,
+  proposed promotion-sequence ADR, Flora domain, source, proof, policy,
+  sensitivity, candidate, published-carrier, validation, workflow, review,
+  decision, receipt, manifest, correction, and rollback boundaries. Google Drive
+  Flora architecture material was inspected as planning lineage only. No live
+  Flora source, protected location payload, restricted botanical knowledge,
+  credential, production policy evaluator, evidence resolver, release service,
+  deployed public surface, or lifecycle transition was exercised.
 related:
-  - kfm://doctrine/directory-rules
-  - kfm://doctrine/lifecycle-law
-  - kfm://doctrine/trust-membrane
-  - kfm://doc/domains/flora            # PROPOSED home: docs/domains/flora/
-  - kfm://doc/architecture/governed-api
-  - kfm://doc/runbooks/flora/ROLLBACK  # PROPOSED sibling; NEEDS VERIFICATION
-  - kfm://doc/runbooks/flora/VALIDATION # PROPOSED sibling; NEEDS VERIFICATION
-  - kfm://adr/ADR-0001-schema-home
-tags: [kfm, flora, promotion, lifecycle, policy-as-code, fail-closed, runbook]
+  - ../README.md
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../adr/ADR-0018-promotion-gate-sequence.md
+  - ../../doctrine/directory-rules.md
+  - ../../domains/flora/README.md
+  - ../../domains/flora/DATA_LIFECYCLE.md
+  - ../../domains/flora/RELEASE_INDEX.md
+  - ../../domains/flora/SENSITIVITY.md
+  - ../../domains/flora/PUBLICATION_AND_ROLLBACK.md
+  - ../../../control_plane/source_authority_register.yaml
+  - ../../../data/registry/sources/flora/README.md
+  - ../../../data/proofs/flora/README.md
+  - ../../../data/published/flora/README.md
+  - ../../../contracts/release/promotion_decision.md
+  - ../../../contracts/release/promotion_receipt.md
+  - ../../../contracts/release/release_manifest.md
+  - ../../../contracts/release/rollback_card.md
+  - ../../../policy/promotion/README.md
+  - ../../../policy/domains/flora/README.md
+  - ../../../policy/sensitivity/flora/README.md
+  - ../../../tools/validators/promotion_gate/README.md
+  - ../../../tools/validators/domains/flora/validate_public_safe_fixture.py
+  - ../../../tests/domains/flora/test_flora_smoke.py
+  - ../../../release/candidates/flora/README.md
+  - ../../../release/reviews/README.md
+  - ../../../.github/CODEOWNERS
+  - ../../../.github/workflows/domain-flora.yml
+  - ./NO_NETWORK_TEST_RUNBOOK.md
+  - ./SOURCE_REFRESH_RUNBOOK.md
+  - ./ROLLBACK_RUNBOOK.md
+tags: [kfm, flora, runbook, promotion, readiness, taxonomy, occurrences, specimens, rare-plants, geoprivacy, cultural-knowledge, evidence, policy, review, release, correction, rollback, fail-closed]
 notes:
-  - "Path PROPOSED per Directory Rules §4: docs/ is canonical for human-facing control plane (incl. runbooks); domain appears as a segment inside the responsibility root."
-  - "Implementation maturity UNKNOWN — no mounted repo inspected in this session. All paths, route names, schemas, validators, and CI workflows below are PROPOSED."
+  - "v1.0.0 replaces proposal-era no-mounted-repository assumptions, guessed paths, speculative policy execution, and implied release automation with current repository evidence and bounded procedures."
+  - "The Google Drive Flora blueprint remains useful design lineage for source-role, object-family, sensitivity, and lifecycle distinctions; it is not current repository implementation evidence."
+  - "The shared A-G promotion-gate validator is executable, deterministic, no-network, read-only, and non-publishing. PASS means APPROVE_READY for accountable review only."
+  - "The executable Flora slice validates only synthetic, fixture-only public-safe candidates that are explicitly not released and not promotion eligible."
+  - "No child Flora candidate dossier, accepted Flora proof producer, active Flora policy evaluator, accepted Flora release dry-run command, accountable Flora ReviewRecord, Flora PromotionDecision, Flora ReleaseManifest, applied transition, or released Flora carrier was established by the bounded inspection."
+  - "This document changes no candidate, source, data, contract, schema, policy, fixture, validator, workflow, evidence object, receipt, proof, review, release record, deployment, lifecycle state, or public surface."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Flora — Promotion Runbook
+# Flora Promotion Runbook
 
-> Governed, evidence-first procedure for moving Flora claims, layers, and bundles from `RAW` through `WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`. **Promotion is a governed state transition, not a file move.**
+> **Evaluate whether one specifically identified Flora candidate has enough governed, public-safe support for accountable release review. Never translate documentation, a synthetic fixture pass, a green workflow, a schema-valid packet, or an `APPROVE_READY` result into promotion, release, deployment, or publication.**
 
-<p align="center">
-  <img alt="status: draft" src="https://img.shields.io/badge/status-draft-lightgrey">
-  <img alt="domain: flora" src="https://img.shields.io/badge/domain-flora-2e7d32">
-  <img alt="lifecycle: governed" src="https://img.shields.io/badge/lifecycle-governed-blue">
-  <img alt="policy: fail--closed" src="https://img.shields.io/badge/policy-fail--closed-red">
-  <img alt="promotion gates: A→G" src="https://img.shields.io/badge/promotion%20gates-A%E2%86%92G-purple">
-  <img alt="evidence: cite-or-abstain" src="https://img.shields.io/badge/evidence-cite--or--abstain-green">
-  <img alt="rare-plant geometry: DENY by default" src="https://img.shields.io/badge/rare--plant%20geometry-DENY%20by%20default-critical">
-</p>
-
-| Field | Value |
-|---|---|
-| **Status** | `draft` |
-| **Owners** | `TODO` — flora domain steward · release authority · docs steward _(verify against `CODEOWNERS`)_ |
-| **Updated** | 2026-05-13 |
-| **Authority of this doc** | CONFIRMED **doctrine** · PROPOSED **implementation** _(no repo mounted)_ |
-| **Authority of any path quoted here** | PROPOSED until verified against repo evidence and ADRs |
-
----
-
-## Quick links
-
-- [1. Purpose & scope](#1-purpose--scope)
-- [2. Doctrinal anchors](#2-doctrinal-anchors)
-- [3. Lifecycle at a glance](#3-lifecycle-at-a-glance)
-- [4. Promotion gate matrix (A → G) for Flora](#4-promotion-gate-matrix-a--g-for-flora)
-- [5. Flora sensitivity decision matrix](#5-flora-sensitivity-decision-matrix)
-- [6. Required artifacts per transition](#6-required-artifacts-per-transition)
-- [7. Step-by-step procedure](#7-step-by-step-procedure)
-- [8. Reason codes & recovery paths](#8-reason-codes--recovery-paths)
-- [9. Rollback procedure](#9-rollback-procedure)
-- [10. CI / pre-flight expectations](#10-ci--pre-flight-expectations)
-- [11. Pre-promotion checklist](#11-pre-promotion-checklist)
-- [12. Verification backlog](#12-verification-backlog)
-- [Appendix A. Object families touched by Flora promotion](#appendix-a-object-families-touched-by-flora-promotion)
-- [Appendix B. Glossary (Flora-relevant subset)](#appendix-b-glossary-flora-relevant-subset)
-- [Related docs](#related-docs)
-
----
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#current-repository-posture)
+[![Flora fixture validator: present](https://img.shields.io/badge/Flora%20fixture%20validator-present-1f883d?style=flat-square)](#current-executable-validation)
+[![Flora candidate: absent](https://img.shields.io/badge/Flora%20candidate-NOT__ESTABLISHED-critical?style=flat-square)](#current-repository-posture)
+[![Promotion policy: inactive](https://img.shields.io/badge/promotion%20policy-inactive-d4a72c?style=flat-square)](#current-repository-posture)
+[![Sensitive locations: deny by default](https://img.shields.io/badge/sensitive%20locations-deny__by__default-b42318?style=flat-square)](#flora-specific-gates)
+[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-boundary-and-handoff)
 
 > [!IMPORTANT]
-> **Promotion in KFM is a governed state transition, not a file move.** A transition is *closed* only when:
->
-> 1. every required artifact for that gate exists,
-> 2. every `EvidenceRef` **resolves** to an `EvidenceBundle` (and `source_id` → `SourceDescriptor`, `model_id` → `ModelRunReceipt` where applicable), and
-> 3. the policy gate has **evaluated and recorded** its decision.
->
-> Missing any of these → the transition **fails closed** and the prior state is preserved. The trust membrane forbids any public client, normal UI surface, or released AI surface from reaching `RAW`, `WORK`, `QUARANTINE`, canonical/internal stores, graph internals, vector indexes, source APIs, or direct model runtimes. **PUBLISHED is the only state from which the governed API may emit `ANSWER`.**
-
----
-
-## 1. Purpose & scope
-
-This runbook is the operational procedure for the **Flora** domain lane. It tells a steward, a release authority, and CI exactly what must be true — and what must be **proved** — before a Flora claim, layer, evidence bundle, or release candidate is allowed to cross a lifecycle gate.
-
-**In scope** (Flora-owned object families):
-
-`PlantTaxon` · `SpecimenRecord` · `FloraOccurrence` · `RarePlantRecord` · `VegetationCommunity` · `InvasivePlantRecord` · `PhenologyObservation` · `RangePolygon` · `HabitatAssociation` · `BotanicalSurvey` · `RestorationPlanting` · `RedactionReceipt`.
-
-**Out of scope** (joined to, but not owned by, Flora):
-
-- `HabitatPatch`, suitability surfaces → owned by **Habitat**.
-- Animal taxa and occurrences → owned by **Fauna**.
-- Soil / hydrology / agriculture / hazards / roads / settlements / archaeology / people-DNA-land → keep their own truth.
-
-> [!NOTE]
-> This runbook **does not** make policy or contract decisions — those live in `policy/domains/flora/` _(PROPOSED)_, `contracts/domains/flora/` _(PROPOSED)_, and the ADR set. This runbook tells you **how to execute** the procedure those decisions imply.
-
----
-
-## 2. Doctrinal anchors
-
-| Doctrine | What it forces here |
-|---|---|
-| **Lifecycle invariant** | Every Flora artifact moves through `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`. No skipping. |
-| **Cite-or-abstain** | A Flora claim without a resolvable `EvidenceBundle` cannot become an `ANSWER`. Default is `ABSTAIN` or `DENY`. |
-| **Trust membrane** | The public Flora map layers, popups, Evidence Drawer payloads, and Focus Mode answers consume **released** artifacts only — never `RAW`, `WORK`, `QUARANTINE`, canonical stores, or model runtimes. |
-| **Fail-closed on sensitivity** | Rare, protected, or culturally sensitive flora **default to** generalized geometry, withheld geometry, staged access, or denial. Exact geometry of sensitive taxa is a hard fail unless an explicit `RedactionReceipt` + review path documents the transform. |
-| **Promotion = state transition** | A `PromotionReceipt` (Gates A → G) and a `ReleaseManifest` are what change the state. Copying a file into `data/published/` is not promotion. |
-| **Release authority ≠ author** | Where materiality applies, the release authority for a Flora artifact must be distinct from the original author. |
-| **Reversibility** | Every promotion must point at a `RollbackCard` and a `CorrectionNotice` path before it is allowed to publish. |
-
----
-
-## 3. Lifecycle at a glance
-
-The Flora lane is an instance of the universal KFM pipeline. The gates below are the only routes by which content reaches `PUBLISHED`.
-
-```mermaid
-flowchart LR
-    A([Source intake]) --> B[RAW]
-    B -->|Admission| C{Schema · Geometry · Time · Identity · Rights · Policy}
-    C -->|fail| Q[QUARANTINE]
-    C -->|pass| W[WORK]
-    W -->|Validation| P[PROCESSED]
-    P -->|Catalog closure| K[CATALOG / TRIPLET]
-    K -->|Release| PUB([PUBLISHED])
-    PUB -.->|Correction| PUB2([PUBLISHED'])
-    PUB -.->|Rollback| PRIOR([Prior PUBLISHED])
-
-    classDef stateNode fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20;
-    classDef gateNode fill:#fff3e0,stroke:#e65100,color:#bf360c;
-    classDef holdNode fill:#ffebee,stroke:#c62828,color:#b71c1c;
-    class B,W,P,K,PUB,PUB2,PRIOR stateNode;
-    class C gateNode;
-    class Q holdNode;
-```
-
-> [!NOTE]
-> **Diagram status:** the *shape* of this pipeline is CONFIRMED doctrine. The specific Flora-lane wiring of validators, policy bundles, and CI workflows is PROPOSED — verify each named tool against repo evidence before relying on the runbook to operate that tool.
-
----
-
-## 4. Promotion gate matrix (A → G) for Flora
-
-KFM enforces **seven gates** between authoring and publication. The shared envelope (Gates A–G) is CONFIRMED doctrine; the Flora-lane *evidence* each gate inspects is listed below.
-
-| Gate | Name | What it checks (generic) | Flora-specific evidence |
-|---|---|---|---|
-| **A** | Structure & Metadata | `MetaBlock v2` presence; zone correctness; required catalog fields. | Flora artifact carries `MetaBlock v2` incl. `steward_org`, `authority_to_control` where culturally sensitive flora applies (CARE-aligned). |
-| **B** | Schemas & Contracts | JSON Schema + OpenAPI validation against the canonical schema home (`schemas/contracts/v1/...` per ADR-0001). | `PlantTaxon`, `FloraOccurrence`, `RarePlantRecord`, `VegetationCommunity`, `InvasivePlantRecord`, `PhenologyObservation`, `RangePolygon`, `HabitatAssociation` validate against their pinned schemas. **PROPOSED schema paths.** |
-| **C** | Policy Parity | Same OPA/Rego bundle (pinned by digest) runs in CI (Conftest) and at runtime (PDP / Gatekeeper). | `policy/domains/flora/*.rego` _(PROPOSED)_ evaluated with the same digest in PR and runtime. Negative fixtures pinned. |
-| **D** | Security & Sensitivity | License/SPDX allowlist; sensitivity rubric; geoprivacy and rights posture. | Default-**DENY** on exact rare-plant geometry; **DENY** on unresolved rights; **DENY** on culturally sensitive plant knowledge without `authority_to_control` consent. See §5. |
-| **E** | Data Quality | DQ profilers and assertions meeting thresholds. | Taxonomic reconciliation passes (e.g. GBIF / ITIS / NatureServe crosswalk closure); geometry sanity; phenology temporal sanity; uncertainty bounds present. **PROPOSED thresholds.** |
-| **F** | Provenance & Lineage | Receipt + lineage validation; `spec_hash` recomputation match; signed attestation. | `RunReceipt`, `EvidenceBundle`, `source_head`, signed (DSSE / cosign) attestation; lineage edges resolve to `SourceDescriptor`. |
-| **G** | Reviewability | Two-key approval: CODEOWNERS-enforced human review **plus** policy approval. | Release authority distinct from author where materiality applies; `ReviewRecord` present for rare-plant, culturally sensitive, and steward-controlled cases. |
+> **Promotion is a governed state transition, not a file move, commit, pull request, merge, workflow result, badge, fixture, candidate dossier, receipt-shaped file, manifest-shaped file, deployment, alias update, map-layer toggle, or generated summary.** Lifecycle and public state may change only after the owning source, evidence, rights, sensitivity, policy, review, decision, release, correction, and rollback controls close.
 
 > [!CAUTION]
-> **Auto-merge fires only when all seven gates pass.** Any single failure blocks promotion until remediation. There is no “temporary bypass.” Bypassing a gate creates uncited public claims — exactly the failure mode the trust membrane exists to prevent.
-
-```mermaid
-flowchart TD
-    START([Candidate at CATALOG / TRIPLET]) --> A[A · Structure & Metadata]
-    A -->|fail| HOLD[HOLD · fail-closed]
-    A -->|pass| B[B · Schemas & Contracts]
-    B -->|fail| HOLD
-    B -->|pass| C[C · Policy Parity]
-    C -->|fail| HOLD
-    C -->|pass| D[D · Security & Sensitivity]
-    D -->|fail| HOLD
-    D -->|pass| E[E · Data Quality]
-    E -->|fail| HOLD
-    E -->|pass| F[F · Provenance & Lineage]
-    F -->|fail| HOLD
-    F -->|pass| G[G · Reviewability · two-key]
-    G -->|fail| HOLD
-    G -->|pass| REL([Emit ReleaseManifest → PUBLISHED])
-
-    classDef gate fill:#fff3e0,stroke:#e65100,color:#bf360c;
-    classDef pub  fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20;
-    classDef hold fill:#ffebee,stroke:#c62828,color:#b71c1c;
-    class A,B,C,D,E,F,G gate;
-    class REL pub;
-    class HOLD hold;
-```
-
----
-
-## 5. Flora sensitivity decision matrix
-
-Flora carries some of the most consequential sensitivity logic in KFM. The matrix below is the **decision surface** Gate D evaluates on every release candidate.
-
-| Class of Flora material | Public surface default | Allowed only when | Outcome on failure |
-|---|---|---|---|
-| Generally observed plant taxon (non-sensitive) | Public, evidence-backed | Standard Gates A–G pass | `DENY` until gates pass |
-| `FloraOccurrence` — sensitive taxon, exact coordinates | **`DENY`** (fail closed) | `RedactionReceipt` + review + generalized geometry (county / ecoregion / buffered centroid) + `authority_to_control` (where applicable) | `DENY` published; restricted exact coords stay internal, access-controlled |
-| `RarePlantRecord` — exact location | **`DENY`** (fail closed) | Steward review + Redaction Receipt + public-safe derivative + `ReviewRecord` | `DENY`; promote a *redacted* derivative or hold |
-| Culturally sensitive plant knowledge | **`DENY`** (fail closed) | `authority_to_control` consent present, valid, unrevoked (CARE) | `DENY`; record reason; queue stewardship review |
-| Invasive plant record on a public-facing parcel | Public, but linkage to landowner identity removed | Person-parcel join not exposed; rights cleared | `DENY` join; publish generalized invasive surface only |
-| Phenology observation tied to a sensitive specimen | Public **only** as anonymized/aggregated derivative | `AggregationReceipt` + sensitivity transform | `DENY` raw observation; allow aggregated derivative |
-| Source rights `UNKNOWN` | **`DENY`** | Rights resolution + new `SourceDescriptor` | `DENY`; quarantine source |
-| Style filter as the only "protection" | **Not a valid mechanism** | — | `DENY`; sensitive geometry must be transformed at promotion time, not hidden client-side |
+> **Current Flora promotion is `HOLD`.** The repository has one bounded synthetic public-safe Flora fixture suite and a separate generic A-G readiness validator. The Flora candidate lane has no verified child dossier; the Flora proof producer and Flora release dry run remain explicit workflow holds; Flora domain policy is inactive; Flora sensitivity policy remains a scaffold; and no accountable Flora review, promotion decision, release manifest, applied transition, or released public carrier was established.
 
 > [!WARNING]
-> **Style-side hiding is not redaction.** Filtering layers in MapLibre is a rendering choice; it is **not** a sensitivity protection. Sensitive geometry that exists in the released tile/bundle has *already* leaked, regardless of whether a default style hides it. Sensitivity transforms must happen **upstream of** publication and must produce a `RedactionReceipt`.
+> **Exact or reverse-engineerable plant locations and protected botanical knowledge fail closed.** Do not expose rare or protected occurrences, specimen localities, culturally sensitive plant knowledge, private-land joins, collection or access clues, steward-controlled records, withheld precision, or geoprivacy transform parameters in a candidate packet, pull request, log, screenshot, map, export, graph, cache, or AI answer.
+
+**Quick navigation:** [Purpose](#purpose) · [Current posture](#current-repository-posture) · [Placement](#directory-rules-basis) · [Scope](#scope-and-non-goals) · [Roles](#roles-and-separation-of-duties) · [Lifecycle](#lifecycle-and-object-family-boundaries) · [Preflight](#preflight-and-stop-conditions) · [Procedure](#promotion-readiness-procedure) · [Flora gates](#flora-specific-gates) · [Validation](#current-executable-validation) · [Packet](#candidate-review-packet) · [Outcomes](#finite-outcomes-and-current-holds) · [Authority](#authority-boundary-and-handoff) · [Recovery](#correction-withdrawal-and-rollback) · [Audit](#audit-and-join-keys) · [Checklist](#operator-checklist) · [Open work](#open-verification-register) · [Evidence](#evidence-basis) · [Document rollback](#document-change-rollback)
 
 ---
 
-## 6. Required artifacts per transition
+<a id="purpose"></a>
 
-Every transition is closed only when the artifacts below **exist and resolve**.
+## Purpose
 
-| Transition | Pre-condition | Required artifacts (PROPOSED minimum) | Failure-closed outcome |
-|---|---|---|---|
-| `— → RAW` (Admission) | Source identity & rights minimally established; source-role intent set. | `SourceDescriptor` (role, authority, rights, sensitivity, cadence); hash of payload or reference. | Source not admitted; logged as candidate awaiting steward. |
-| `RAW → WORK / QUARANTINE` (Normalization) | Schema / geometry / time / identity / evidence / rights / policy rules are runnable. | `TransformReceipt`; `ValidationReport` (working set); `PolicyDecision`; `QUARANTINE` for failures. | Quarantine with reason — never silently promotes. |
-| `WORK → PROCESSED` (Validation) | Validators are deterministic and tied to fixtures; required receipts present. | `ValidationReport` pass; `RedactionReceipt` if sensitivity applies; `AggregationReceipt` if applies. | Stay in `WORK`; structured `FAIL` outcome. |
-| `PROCESSED → CATALOG / TRIPLET` (Catalog closure) | `EvidenceRef`s resolve; catalog matrix and digests close. | `CatalogMatrix` entry; `EvidenceBundle`; graph/triplet projections if applicable. | `HOLD` at `PROCESSED`; structured `FAIL`; no public edge. |
-| `CATALOG / TRIPLET → PUBLISHED` (Release) | Review state where required; release authority distinct from author when materiality applies. | `ReleaseManifest`; `RollbackCard` (rollback target); correction path; `ReviewRecord` (if required); `PromotionReceipt` (Gates A–G). | `HOLD` at `CATALOG`; no public surface change. |
-| `PUBLISHED → PUBLISHED'` (Correction) | Detected error or new evidence; downstream derivatives identified. | `CorrectionNotice`; `ReviewRecord`; invalidation list; `ReleaseManifest` update or supersession. | Stale-state announcement; **no silent edit**. |
-| `PUBLISHED → prior PUBLISHED` (Rollback) | Failed release or post-publication failure; targeted prior release identified. | `RollbackCard`; `CorrectionNotice`; `ReleaseManifest` reverts to prior release; downstream derivative invalidation. | Held at current state until rollback validated. |
+Use this runbook to assess one bounded Flora candidate against the support required for a possible transition from governed `CATALOG` or `TRIPLET` state toward a public-safe released carrier.
 
-> [!NOTE]
-> **Resolution, not reference.** A `ReleaseManifest` that *references* an `EvidenceBundle` which cannot be fetched and verified is **not** closed. A dangling `EvidenceRef` is the textbook fail-closed condition.
+The KFM lifecycle remains:
 
----
-
-## 7. Step-by-step procedure
-
-This is the operator-facing sequence for a single Flora release candidate. Each step has an explicit owner and an explicit fail-closed outcome.
-
-### Step 1 — Confirm intake & source role
-
-- Confirm the relevant `SourceDescriptor` exists in the source registry _(PROPOSED `data/registry/sources/flora/`)_.
-- Confirm `source_role` is set (e.g. `herbarium`, `citizen_science`, `agency_dataset`, `restoration_project`, `survey`, `modeled_derivative`).
-- Confirm `rights`, `sensitivity`, and `cadence` are non-empty.
-
-**Owner:** Flora domain steward.
-**Fail-closed if:** `rights` is `UNKNOWN`, `sensitivity` is unresolved, or `source_role` is missing → quarantine source.
-
-### Step 2 — Normalize & quarantine on defect
-
-- Run the Flora normalization pipeline _(PROPOSED `pipelines/domains/flora/`)_ against `RAW` payloads.
-- Emit a `TransformReceipt` for every successful transform; route geometry / identity / rights / policy failures to `QUARANTINE` with a reason code.
-- **Exact rare-plant coordinates must not survive to `WORK` without an associated redaction plan.**
-
-**Owner:** Flora pipeline + automated policy gate.
-**Fail-closed if:** geometry invalid, schema mismatch, rights unknown, sensitivity unresolved → `QUARANTINE`.
-
-### Step 3 — Validate against schemas & DQ
-
-- Run schema validators against `schemas/contracts/v1/domains/flora/...` _(PROPOSED)_.
-- Run DQ assertions:
-  - Taxonomic reconciliation closure (e.g. GBIF Backbone / ITIS / NatureServe — pick per source policy).
-  - Geometry sanity (no zero-area polygons; valid CRS; coordinate uncertainty present where required).
-  - Temporal sanity for `PhenologyObservation` (event time within plausible season).
-  - Uncertainty bounds present for points and modeled surfaces.
-- Emit a `ValidationReport`.
-
-**Owner:** Validators + Flora steward.
-**Fail-closed if:** any required validator reports `FAIL` or `ABSTAIN` → stay in `WORK`.
-
-### Step 4 — Resolve sensitivity → emit Redaction / Aggregation receipts
-
-- For every sensitive `FloraOccurrence`, `RarePlantRecord`, or culturally sensitive record:
-  - Compute the public-safe derivative (generalized polygon, buffered centroid, county/ecoregion aggregation).
-  - Record the transform parameters (radius, generalization method, seed if jittered).
-  - Emit a `RedactionReceipt` (and `AggregationReceipt` where applicable) bound to the source identity and the transform.
-- Confirm `authority_to_control` consent for culturally sensitive plant knowledge.
-
-**Owner:** Flora domain steward (with cultural authority where applicable).
-**Fail-closed if:** transform missing, consent missing/revoked, or exact geometry still present in candidate → `DENY` publication path.
-
-### Step 5 — Catalog closure
-
-- Bind the candidate to a `CatalogMatrix` entry.
-- Resolve every `EvidenceRef` to its `EvidenceBundle` (do not just *reference*).
-- Compute and pin `spec_hash` over the canonical bundle (sorted-key JSON canonicalization).
-- Generate graph/triplet projections if Flora joins (e.g. Flora ↔ Habitat, Flora ↔ Fauna) are in scope.
-
-**Owner:** Catalog tooling + Flora steward.
-**Fail-closed if:** any `EvidenceRef` is dangling or `spec_hash` does not recompute → `HOLD` at `PROCESSED`.
-
-### Step 6 — Build the release candidate
-
-- Assemble the `ReleaseManifest` binding:
-  - artifact digests (e.g. `EvidenceBundle`, `LayerManifest`, `MapReleaseManifest` for tile assets),
-  - validation status,
-  - policy posture (sensitivity label, rights status),
-  - review state,
-  - rollback target (`RollbackCard`),
-  - correction path.
-- Sign the manifest (DSSE / cosign per release policy) and record the attestation reference _(e.g. Rekor index)_ inside the `RunReceipt`.
-
-**Owner:** Release tooling.
-**Fail-closed if:** missing rollback target, unsigned manifest, or attestation verification fails → `HOLD` at `CATALOG / TRIPLET`.
-
-### Step 7 — Two-key release approval (Gate G)
-
-- Solicit a `ReviewRecord` from a release authority **distinct from** the original author when materiality applies (rare/protected/culturally sensitive flora; anything affecting a public layer).
-- Confirm CODEOWNERS-enforced human approval **and** policy approval (Conftest / OPA decision recorded).
-
-**Owner:** Release authority + Flora domain steward + automated policy.
-**Fail-closed if:** single-key approval, or release authority equals author for material change → `HOLD`.
-
-### Step 8 — Publish via the governed surface
-
-- Promotion emits a `PromotionReceipt` enumerating Gates A–G outcomes.
-- The governed API begins serving the released artifact set; the Evidence Drawer resolves clicked features to the `EvidenceBundle`.
-- Record the transition timestamp, release authority identity, and `ReleaseManifest` digest.
-
-**Owner:** Release authority.
-**Fail-closed if:** any of the above cannot be recorded → revert to `CATALOG / TRIPLET`; the release is *not* considered live.
-
-### Step 9 — Post-publication watch
-
-- Monitor for correction triggers: new evidence, source-rights change, sensitivity reclassification, consent revocation, stale-source detection.
-- Watch for derivative drift (e.g. downstream tile rebuilds, graph projections, search/vector indexes).
-- Trigger §9 *Rollback procedure* on any post-publication failure.
-
-**Owner:** Flora domain steward + correction / rollback authority.
-
----
-
-## 8. Reason codes & recovery paths
-
-When promotion fails, the gate must record a reason. The set below is the canonical PROPOSED catalog from KFM doctrine, narrowed to the failure families Flora encounters most often.
-
-| Failure family | Reason code | Gate(s) where it fires | Recovery path |
-|---|---|---|---|
-| Missing required artifact | `MISSING_RECEIPT`, `MISSING_EVIDENCE`, `MISSING_REVIEW` | Normalization / Validation / Catalog / Release | Re-emit missing receipt; re-run review; re-validate. |
-| Schema / contract mismatch | `SCHEMA_MISMATCH`, `CONTRACT_DRIFT` | Normalization / Validation | Schema fix and/or ADR; re-run validator. |
-| Rights / sensitivity unresolved | `RIGHTS_UNKNOWN`, `SENSITIVITY_UNRESOLVED` | Admission / Validation / Catalog / Release | Steward review; rights resolution; tier reassignment. |
-| Source-role collapse risk | `ROLE_COLLAPSE`, `ROLE_DOWNCAST_FORBIDDEN` | Validation / Catalog / Release | Restore source role; refuse upcast. |
-| Review state inadequate | `REVIEW_NEEDED`, `REVIEW_INSUFFICIENT`, `REVIEW_REJECTED` | Catalog / Release | Run required review; supply `ReviewRecord`. |
-| Release infrastructure error | `RELEASE_MANIFEST_INVALID`, `ROLLBACK_TARGET_MISSING` | Release | Manifest fix; supply rollback target. |
-| Sensitivity protection failure (Flora-specific) | `EXACT_RARE_GEOMETRY_PRESENT`, `STYLE_FILTER_ONLY`, `AUTHORITY_TO_CONTROL_MISSING` | Validation / Release | Re-derive public-safe geometry; emit `RedactionReceipt`; secure consent. |
-| Provenance / signing failure | `INVALID_SPEC_HASH`, `UNSIGNED_RELEASE_MANIFEST`, `MISSING_RUN_RECEIPT` | Release | Re-canonicalize and re-hash; re-sign; emit receipt. |
-
-> [!TIP]
-> The reason code surface above is the same set the Evidence Drawer can surface to a steward, and the same set the Focus Mode runtime should be able to translate into a finite envelope (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`). Keep the codes stable.
-
----
-
-## 9. Rollback procedure
-
-Rollback for Flora follows the universal KFM model. **A rollback is itself a governed release**; it is not a file copy and not a silent revert.
-
-```mermaid
-flowchart LR
-    Inc([Incident detected]) --> Triage{Classify defect}
-    Triage -->|evidence gap| Withdraw[Withdraw / ABSTAIN unsupported claim]
-    Triage -->|sensitivity / rights| Redact[Re-derive public-safe geometry · emit RedactionReceipt]
-    Triage -->|schema / contract| SchemaFix[Schema fix · ADR if needed]
-    Triage -->|release infra| ManifestFix[Manifest / signing fix]
-    Withdraw --> RC[Locate prior safe ReleaseManifest]
-    Redact --> RC
-    SchemaFix --> RC
-    ManifestFix --> RC
-    RC --> Verify[Verify digests · manifest · rollback target]
-    Verify --> Disable[Disable / withdraw affected public surface]
-    Disable --> Receipts[Preserve audit receipts · mark stale UI state]
-    Receipts --> Restore[Restore / republish target via governed release path]
-    Restore --> Done([Rollback complete · CorrectionNotice issued])
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
 
-### Operator steps
+This runbook concentrates on the final readiness boundary. Earlier lifecycle stages remain prerequisites owned by their source, data, evidence, validation, and policy lanes. The operator's output is a public-safe readiness, hold, abstention, denial, or error packet. Completing the procedure cannot create missing authority.
 
-1. **Trigger.** Confirm the post-publication failure class (evidence gap, sensitivity breach, schema/contract, release infra, AI-output, etc.).
-2. **Identify rollback target.** Locate the prior safe `ReleaseManifest` referenced by the `RollbackCard` on the currently published release.
-3. **Verify the target.** Recompute digests; verify manifest signatures; confirm the prior `EvidenceBundle`s are still resolvable.
-4. **Withdraw the failed surface.** Disable / withdraw affected public layers, tile sets, popups, and Evidence Drawer projections. Mark stale UI state explicitly — do **not** silently swap.
-5. **Preserve audit chain.** Keep the failed `ReleaseManifest`, all gate receipts, and the `CorrectionNotice` linked to the rollback record.
-6. **Republish the target.** Run the rollback target through the same governed release path (it is a fresh `ReleaseManifest` even though the content is prior).
-7. **Invalidate derivatives.** Re-fan-out: tile rebuilds, graph projections, search indexes, vector indexes — all must be rebuilt or invalidated.
-8. **Drill, then close.** Treat the rollback as a tested transition — an untested rollback target is not a rollback target.
+When this runbook conflicts with accepted ADRs, adopted Directory Rules, current contracts, schemas, policy, source-admission records, EvidenceBundles, review records, release decisions, correction records, rollback records, or runtime evidence, stop and record the conflict rather than selecting the convenient interpretation.
 
-> [!WARNING]
-> **Rollback never bypasses Gates A → G.** The rollback target was previously released through the gates; it must clear them again for the rebuilt environment. A rollback that bypasses gates is just another uncited public claim.
+### What this runbook can establish
+
+- which candidate and requested lifecycle boundary are being evaluated;
+- which current repository checks apply;
+- which required support objects are present, absent, stale, conflicted, or unresolved;
+- which Flora-specific taxonomic, specimen, occurrence, source-role, rights, sensitivity, geoprivacy, temporal, spatial, uncertainty, and representation distinctions must remain visible;
+- which finite readiness outcome applies at the current evidence level; and
+- which separately accountable authority must receive the handoff.
+
+### What this runbook cannot establish
+
+- that a Flora source is admitted, active, authoritative, current, or rights-cleared;
+- that a taxonomic identification, specimen, occurrence, range, vegetation class, phenology state, invasive status, restoration claim, or modeled surface is botanically true;
+- that a public-safe transform is scientifically, ethically, legally, culturally, or operationally sufficient;
+- that evidence is complete or authentic merely because a reference is present;
+- that policy is accepted, active, or executing;
+- that a reviewer is qualified, assigned, independent, or current;
+- that a candidate exists because a directory or README exists;
+- that a transition occurred because a receipt, decision, manifest, or workflow validates;
+- that a map or export is safe because a style hides detail; or
+- that release, deployment, promotion, or publication occurred.
+
+[Back to top](#top)
 
 ---
 
-## 10. CI / pre-flight expectations
+<a id="current-repository-posture"></a>
 
-> **Status:** all paths, workflow names, and tool versions below are **PROPOSED**. No mounted repo was inspected; treat the names as the *shape* the runbook expects, not as observed code.
+## Current repository posture
 
-| Stage | What CI does | Fail-closed on |
+The following conclusions are bounded to `main@35bb62209569f63af78c6fefe4c85015d3bdceb1`.
+
+| Surface | Status | Safe conclusion |
 |---|---|---|
-| `fmt` / `lint` | Format and lint Rego, JSON schemas, fixtures. | Syntax errors, drift from canonical form. |
-| `schema-validate` | Validate Flora artifacts against `schemas/contracts/v1/domains/flora/` _(PROPOSED)_. | Any schema mismatch. |
-| `policy-conftest` | Run Conftest against the **pinned-by-digest** OPA bundle (`policy/domains/flora/` _(PROPOSED)_) over good- and negative-path fixtures. | Any negative fixture **fails to be denied**. |
-| `dq-assert` | Run DQ profilers (taxonomic reconciliation, geometry sanity, phenology temporal sanity, uncertainty bounds). | DQ thresholds unmet. |
-| `provenance-verify` | Recompute `spec_hash` over canonical bundle; verify DSSE/cosign signature; check `RunReceipt` linkage. | Hash mismatch, unsigned manifest, missing receipt. |
-| `sensitivity-deny` | Exercise negative fixtures: exact rare-plant geometry, style-filter-only "protection", missing `authority_to_control`. | Any of these reaches a published state in the fixture. |
-| `release-checklist` | Validate `ReleaseManifest`, `RollbackCard`, `ReviewRecord` presence and shape; confirm release authority ≠ author where required. | Missing manifest fields; single-key approval. |
-| `parity-check` | Confirm the OPA bundle digest pinned in CI **equals** the digest pinned in runtime deployment manifests. | Digest drift between CI and runtime. |
+| This runbook path | **CONFIRMED** | `docs/runbooks/flora/PROMOTION_RUNBOOK.md` is tracked. The prior v0.1 text was proposal-era and still claimed that no repository had been inspected. This revision is a same-path documentation modernization. |
+| Directory governance | **CONFIRMED / accepted** | ADR-0029 adopts Directory Rules v2; `docs/runbooks/` owns human operational procedures. |
+| Flora candidate lane | **CONFIRMED guidance / no child candidate** | `release/candidates/flora/` contains the parent README and no verified child candidate dossier. “A candidate is not a release.” |
+| Flora fixture validation | **CONFIRMED / bounded** | `domain-flora` runs one deterministic, no-network synthetic public-safe fixture suite. Its valid fixture is explicitly not released and not promotion eligible. |
+| Flora fixture matrix | **CONFIRMED / synthetic** | One valid fixture and six invalid fixtures exercise malformed candidates, missing public controls or references, role/taxonomy collapse, undeclared transform material, and unsafe location or sensitivity state. |
+| Flora proof producer | **CONFIRMED / HOLD** | The domain workflow records no accepted Flora proof producer or deterministic proof command. |
+| Flora release dry run | **CONFIRMED / HOLD** | The domain workflow records no accepted Flora release dry-run command or candidate-manifest contract. |
+| Generic promotion readiness | **CONFIRMED / bounded** | `tools/validators/promotion_gate/validate_promotion_gate.py` evaluates a declared `CATALOG` or `TRIPLET` to `PUBLISHED` packet through A-G gates with no network or writes. |
+| Generic readiness result | **CONFIRMED / non-authoritative** | `PASS` maps to `APPROVE_READY` for accountable review only. It is not `APPROVE`, `PROMOTED`, `RELEASED`, or `PUBLISHED`. |
+| Promotion sequence ADR | **CONFIRMED / proposed** | ADR-0018 remains proposed. The current executable gate names are implementation evidence, not an accepted universal sequence. |
+| `PromotionDecision` family | **CONFIRMED / PROPOSED contract and shape** | The semantic contract and paired schema define `APPROVE`, `DENY`, or `ABSTAIN`. No Flora instance was established. |
+| `PromotionReceipt` family | **CONFIRMED / PROPOSED fixture-first** | Contract, schema, validator, fixtures, tests, and read-only workflow exist. Internal consistency is not proof that a transition occurred. |
+| `ReleaseManifest` family | **CONFIRMED / dual-profile candidate validation** | The contract and validator preserve legacy compatibility and a closed fixture-only strict branch. A strict `PASS` is not production release authority. |
+| `RollbackCard` family | **CONFIRMED / fixture-first and non-executing** | Contract, schema, validator, fixtures, and tests can check candidate shape and local consistency. They do not execute rollback. |
+| Promotion policy | **CONFIRMED / inactive** | `policy/promotion/` contains two no-op Rego stubs. No accepted bundle, evaluator binding, active gate-register entry, or governed consumer is established. |
+| Flora domain policy | **CONFIRMED / scaffold corpus and inactive** | The lane contains policy-shaped source, but no accepted Flora entrypoint, bundle, evaluator, native policy test suite, decision normalization, or governed consumer was established. |
+| Flora sensitivity policy | **CONFIRMED / scaffold** | `policy/sensitivity/flora/README.md` explicitly says `PROPOSED scaffold`; it is not active geoprivacy or sensitive-knowledge enforcement. |
+| Source authority | **CONFIRMED / empty projection** | The central source-authority register is `PROPOSED`, projection-only, `implementation_status: ABSENT`, and has `entries: []`. |
+| Flora source registry | **CONFIRMED draft / topology unresolved** | Source guidance exists, but subtype-first and domain-first source-registry lanes remain unresolved. Do not duplicate or infer admitted source records. |
+| Flora proof support | **CONFIRMED draft / production hold** | Shared EvidenceBundle surfaces exist, but no accepted Flora proof packet, producer, resolver binding, release linkage, or public-safe proof inventory was established. |
+| Published Flora lane | **CONFIRMED guidance / emitted release unverified** | `data/published/flora/README.md` defines a downstream carrier boundary. It does not establish an emitted release or authorize public use. |
+| Release review lane | **CONFIRMED guidance** | `release/reviews/` describes review records and a fixture-only Gate G validator. No parent-level accountable Flora review was established. |
+| CODEOWNERS | **CONFIRMED routing only** | `@bartytime4life` is the verified GitHub review route. CODEOWNERS is not a stewardship assignment, independent approval, or release authority. |
+| Google Drive Flora blueprint | **CONFIRMED source lineage / not repo proof** | The blueprint contributes object-family, source-role, lifecycle, and sensitivity design pressure, but explicitly records that it was produced without a mounted repository. |
 
-<details>
-<summary><b>Illustrative skeleton — <code>.github/workflows/flora-promotion.yml</code> (PROPOSED · do not assume present)</b></summary>
+### Current bounded outcome
 
-```yaml
-# PROPOSED skeleton — illustrative, not observed in any mounted repo.
-# Paths, action versions, and policy/* fixtures below are placeholders
-# and must be reconciled against repo evidence before use.
-name: flora-promotion-gate
-on:
-  pull_request:
-  workflow_dispatch:
-
-jobs:
-  promotion:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install tooling
-        run: |
-          pip install --quiet jsonschema       # schema validation
-          curl -sSfL -o /usr/local/bin/conftest \
-            https://github.com/open-policy-agent/conftest/releases/latest/download/conftest_Linux_x86_64
-          chmod +x /usr/local/bin/conftest
-
-      - name: Schema validate (Gate B)
-        run: tools/validators/flora/validate_artifacts.py  # PROPOSED
-
-      - name: Policy check (Gate C · D · partial G)
-        run: |
-          conftest test fixtures/flora/good/   -p policy/domains/flora -n gates/promotion
-          conftest test fixtures/flora/bad/    -p policy/domains/flora -n gates/promotion && exit 1 || echo "deny ok"
-
-      - name: DQ assertions (Gate E)
-        run: tools/validators/flora/dq_assert.py            # PROPOSED
-
-      - name: Provenance verify (Gate F)
-        run: tools/attest/verify_release.sh                  # PROPOSED
-
-      - name: Build PromotionReceipt
-        run: tools/release/build_promotion_receipt.py        # PROPOSED
+```text
+HOLD_FOR_CANDIDATE
++ HOLD_FOR_SOURCE_ADMISSION
++ HOLD_FOR_EVIDENCE
++ HOLD_FOR_POLICY
++ HOLD_FOR_SENSITIVITY
++ HOLD_FOR_REVIEW
++ HOLD_FOR_RELEASE_PATH
++ HOLD_FOR_ROLLBACK
 ```
 
-</details>
+This is a readiness statement, not a change to any candidate or lifecycle state.
+
+[Back to top](#top)
 
 ---
 
-## 11. Pre-promotion checklist
+<a id="directory-rules-basis"></a>
 
-Use this before any release authority signs Gate G. Every box should be ticked **with a link to evidence**, not from memory.
+## Directory Rules basis
 
-- [ ] `SourceDescriptor` resolves; `rights`, `sensitivity`, and `cadence` non-empty.
-- [ ] All `EvidenceRef`s resolve to `EvidenceBundle`s (no dangling refs).
-- [ ] Schemas validate against `schemas/contracts/v1/domains/flora/...` _(PROPOSED)_.
-- [ ] `ValidationReport` is `PASS` for every required validator.
-- [ ] Taxonomic reconciliation closed (GBIF / ITIS / NatureServe per source policy).
-- [ ] No exact rare/protected/culturally sensitive geometry in candidate; `RedactionReceipt` issued where applicable.
-- [ ] `authority_to_control` consent present and unrevoked where CARE applies.
-- [ ] Style filter is **not** the sole sensitivity protection.
-- [ ] `spec_hash` recomputes; manifest is signed; attestation reference recorded.
-- [ ] `RollbackCard` present and **drilled** (untested rollback ≠ rollback).
-- [ ] `ReviewRecord` present; release authority distinct from author for material changes.
-- [ ] Reason-code surface available for any structured `FAIL` outcome.
-- [ ] Downstream derivatives (tiles, graph projections, search indexes) identified for invalidation if rollback fires.
-- [ ] Docs updated (this runbook + any affected domain doc) **or** a deliberate decision recorded not to.
+**Placement outcome: `PLACE` at the existing path.**
+
+Accepted ADR-0029 adopts the exact Directory Rules v2 bytes at `docs/doctrine/directory-rules.md`. Those rules treat a path as an authority claim and place artifacts by their owning responsibility.
+
+| Question | Result |
+|---|---|
+| What is this artifact? | Human-readable operational procedure. |
+| Owning responsibility root | `docs/`. |
+| Operational specialization | `docs/runbooks/`. |
+| Domain lane | `flora/`. |
+| Existing canonical-looking path | `docs/runbooks/flora/PROMOTION_RUNBOOK.md`. |
+| Structural effect | None; same-path update only. |
+| Parallel authority created | None. |
+| Contract, schema, policy, evidence, release, or published-data home created | None. |
+
+The runbook may point to candidate, source, evidence, policy, validation, review, release, correction, and rollback surfaces. It must not absorb their authority or store their instances.
+
+[Back to top](#top)
 
 ---
 
-## 12. Verification backlog
+<a id="scope-and-non-goals"></a>
 
-These are the open items that block this runbook from rising above PROPOSED to CONFIRMED implementation. Each requires concrete repo evidence.
+## Scope and non-goals
 
-| Item | Evidence that would settle it | Status |
+### In scope
+
+This procedure applies to a specifically identified Flora candidate involving one or more of these families:
+
+- plant taxon and taxon-concept records;
+- taxonomic crosswalks and source-name mappings;
+- specimen or herbarium records;
+- plant occurrences and botanical surveys;
+- rare, protected, culturally sensitive, or steward-controlled Flora records;
+- vegetation communities and classes;
+- invasive-plant records;
+- phenology observations or derived condition products;
+- range, distribution, suitability, or generalized public surfaces;
+- habitat associations and governed cross-lane joins;
+- restoration planting records; and
+- released map, API, report, export, index, or summary carriers.
+
+### Required distinctions
+
+Never collapse:
+
+- taxon identity into occurrence evidence;
+- a specimen record into a current occurrence;
+- an observation into a modeled range or suitability surface;
+- a regulatory or conservation status into occurrence proof;
+- an aggregator into the originating source role;
+- an internal exact record into a generalized public derivative;
+- a map style or hidden field into redaction;
+- a validation receipt into an EvidenceBundle;
+- a proof packet into a policy decision;
+- a policy result into release approval;
+- a review recommendation into a `PromotionDecision`;
+- a `PromotionDecision` into a `ReleaseManifest`; or
+- generated language into botanical evidence.
+
+### Non-goals
+
+This runbook does not:
+
+- activate or retrieve a live source;
+- access or reproduce restricted botanical material;
+- resolve taxonomy on behalf of a qualified botanical authority;
+- perform a geoprivacy, redaction, aggregation, or generalization transform;
+- define sensitivity thresholds or reveal transform parameters;
+- activate Rego or another policy engine;
+- create or authenticate evidence, proof, review, decision, receipt, or release objects;
+- mutate `RAW`, `WORK`, `QUARANTINE`, `PROCESSED`, `CATALOG`, `TRIPLET`, or `PUBLISHED`;
+- write a public alias, tile set, API payload, cache, index, or deployment;
+- approve, merge, release, deploy, promote, or publish.
+
+[Back to top](#top)
+
+---
+
+<a id="roles-and-separation-of-duties"></a>
+
+## Roles and separation of duties
+
+All accountable assignments below are **NEEDS VERIFICATION**. `@bartytime4life` is the verified GitHub routing identity only.
+
+| Role | Required responsibility | Must not substitute for |
 |---|---|---|
-| Confirm Flora source endpoints and rights posture (GBIF, iNaturalist, NatureServe, USFWS, KS state programs). | `data/registry/sources/flora/` entries; rights review records. | `NEEDS VERIFICATION` |
-| Confirm Flora schema home and exact paths. | Files under `schemas/contracts/v1/domains/flora/` + ADR-0001. | `NEEDS VERIFICATION` |
-| Confirm Flora policy bundle home, pinned digest, and parity between CI and runtime. | `policy/domains/flora/`, deployment manifest digest match. | `NEEDS VERIFICATION` |
-| Confirm Flora-specific rare-plant policy (generalization radius, ecoregion vs county, jitter seed). | Rego rule + steward-approved parameter file. | `NEEDS VERIFICATION` |
-| Confirm reviewability burden (CODEOWNERS for `policy/domains/flora/` and `schemas/contracts/v1/domains/flora/`). | `CODEOWNERS` entries. | `NEEDS VERIFICATION` |
-| Confirm Evidence Drawer + Focus Mode wiring for Flora claims. | Runtime fixtures, citation validation reports, AI receipt fixtures. | `NEEDS VERIFICATION` |
-| Confirm rollback drill cadence for Flora releases. | Recorded `RollbackCard` drill receipts. | `NEEDS VERIFICATION` |
-| Confirm runbook sibling files (`ROLLBACK`, `VALIDATION`, `LOCAL_DEV`) and naming convention (`docs/runbooks/flora/...` vs flat `docs/runbooks/flora_*.md`). | Repo `docs/runbooks/` tree + ADR if naming changes. | `NEEDS VERIFICATION` |
+| Candidate author or producer | Identify the candidate, immutable artifact set, intended lifecycle boundary, scope, and limitations. | Independent reviewer or release authority. |
+| Flora domain steward | Confirm domain scope and object-family boundaries. | Taxonomic, rights, sensitivity, or release authority unless separately assigned. |
+| Taxonomy reviewer | Evaluate taxon-concept identity, source-name crosswalks, uncertainty, and conflicts. | Occurrence truth or release approval. |
+| Source steward | Confirm source descriptor, source role, admission state, cadence, and authority boundary. | Rights clearance, evidence closure, or botanical truth. |
+| Rights reviewer | Confirm license, terms, attribution, redistribution, embargo, and permitted use. | Sensitivity or cultural authority. |
+| Sensitivity and geoprivacy reviewer | Assess exact-location risk, join-induced disclosure, public derivative, and withheld-detail posture. | Source, rights, or release authority. |
+| Stewardship or community authority | Review steward-controlled or culturally sensitive botanical knowledge where applicable. | Generic repository review routing. |
+| Evidence reviewer | Confirm claim-scoped `EvidenceRef` to `EvidenceBundle` closure and limitations. | Policy or release decision. |
+| Policy steward | Own accepted policy source, bundle identity, evaluation, result normalization, and obligations. | Candidate production or release authority. |
+| Validation steward | Run bounded validators and preserve exact outputs and limitations. | Botanical truth, policy evaluation, or approval. |
+| Public-surface reviewer | Inspect the actual proposed map, API, export, report, search, graph, cache, and AI surfaces for leakage. | Upstream transformation or policy. |
+| Independent release reviewer | Confirm separation, support closure, scope, and recommendation. | Candidate author. |
+| Release authority | Create the separately governed final decision and authorize the accepted release operation. | This runbook, CODEOWNERS, or CI. |
+| Correction and rollback steward | Confirm correction, withdrawal, invalidation, restoration, and audit lineage. | Silent deletion or history rewrite. |
+| Operations owner | Execute only a separately authorized transition and emit operational records. | Review or policy authority. |
 
-> [!NOTE]
-> Until these items are settled, treat every named path, workflow, and tool in this runbook as **PROPOSED**. The doctrine — gates, fail-closed posture, lifecycle invariant, sensitivity matrix — is CONFIRMED; the wiring is not.
+### Separation rules
 
----
+- The candidate author must not self-approve a material release.
+- A GitHub review request is not a `StewardshipAssignment` or `ReviewRecord`.
+- A source provider is not automatically the KFM release authority.
+- A botanical expert is not automatically a rights, sensitivity, policy, or release authority.
+- The operator running validators must not convert their output into approval.
+- AI may summarize a public-safe packet, but it may not act as reviewer, steward, rights holder, policy authority, or release authority.
+- When an accountable role is absent or its authority cannot be verified, use `HOLD` or `ABSTAIN`.
 
-## Appendix A. Object families touched by Flora promotion
-
-<details>
-<summary><b>Expand — Flora-owned and Flora-adjacent object families</b></summary>
-
-**Flora-owned (CONFIRMED scope, PROPOSED field realization):**
-
-`PlantTaxon` · `SpecimenRecord` · `FloraOccurrence` · `RarePlantRecord` · `VegetationCommunity` · `InvasivePlantRecord` · `PhenologyObservation` · `RangePolygon` · `HabitatAssociation` · `BotanicalSurvey` · `RestorationPlanting` · `RedactionReceipt`.
-
-**Universal envelope objects this runbook expects:**
-
-`SourceDescriptor` · `EvidenceRef` · `EvidenceBundle` · `DatasetVersion` · `ValidationReport` · `TransformReceipt` · `AggregationReceipt` · `RunReceipt` · `PolicyDecision` · `PromotionReceipt` · `ReleaseManifest` · `LayerManifest` · `MapReleaseManifest` · `CorrectionNotice` · `RollbackCard` · `ReviewRecord` · `CatalogRecord` / `CatalogMatrix` · `EvidenceDrawerPayload` · `RuntimeResponseEnvelope` · `AIReceipt` · `CitationValidationReport`.
-
-**Cross-lane relations preserved at promotion:**
-
-- Flora ↔ Habitat — habitat association, vegetation community context.
-- Flora ↔ Fauna — pollinator, food-web, invasive, biodiversity context.
-- Flora ↔ Soil / Hydrology — substrate, wetland, riparian, drought context.
-- Flora ↔ Hazards — fire, drought, flood, smoke, vegetation stress.
-
-Each relation **must preserve** source role, sensitivity, ownership, and `EvidenceBundle` support across the gate.
-
-</details>
-
-## Appendix B. Glossary (Flora-relevant subset)
-
-<details>
-<summary><b>Expand — terms used above (project-defined)</b></summary>
-
-- **Promotion** — CONFIRMED: a governed release transition, not a file movement.
-- **Trust membrane** — CONFIRMED: the boundary that prevents raw, unreviewed, restricted, or generated state from becoming public truth.
-- **EvidenceRef → EvidenceBundle** — CONFIRMED: an `EvidenceRef` is a *pointer*; it must **resolve** to a fetchable, verifiable `EvidenceBundle` before a claim can carry public authority.
-- **PromotionReceipt** — CONFIRMED doctrine / PROPOSED implementation: governed state-transition record enumerating Promotion Gates A–G as auditable promotion memory.
-- **ReleaseManifest** — CONFIRMED doctrine / PROPOSED implementation: record of the published artifact set, digests, policy posture, release state, correction path, and rollback target.
-- **RollbackCard** — CONFIRMED: rollback target and drill object that preserves history while repointing current release state.
-- **RedactionReceipt** — CONFIRMED object family / PROPOSED implementation: record of a public-safe field or geometry transformation, including the parameters of the transform.
-- **CARE / `authority_to_control`** — CONFIRMED metadata extension: the body whose authority governs an asset; required for Indigenous, marginalized-community, sensitive-cultural, or sovereignty-implicating Flora knowledge.
-- **`spec_hash`** — CONFIRMED doctrine: canonical (JCS+SHA-256-style) hash recomputed at promotion; mismatch is a hard fail.
-
-</details>
+[Back to top](#top)
 
 ---
 
-## Related docs
+<a id="lifecycle-and-object-family-boundaries"></a>
 
-- _(PROPOSED · NEEDS VERIFICATION)_ `docs/doctrine/directory-rules.md` — placement law for any path quoted here.
-- _(PROPOSED · NEEDS VERIFICATION)_ `docs/doctrine/lifecycle-law.md` — `RAW → PUBLISHED` invariant.
-- _(PROPOSED · NEEDS VERIFICATION)_ `docs/doctrine/trust-membrane.md` — what may and may not reach a public client.
-- _(PROPOSED · NEEDS VERIFICATION)_ `docs/domains/flora/README.md` — Flora domain dossier and ubiquitous language.
-- _(PROPOSED · NEEDS VERIFICATION)_ `docs/runbooks/flora/ROLLBACK.md` — Flora rollback drill.
-- _(PROPOSED · NEEDS VERIFICATION)_ `docs/runbooks/flora/VALIDATION.md` — Flora validation runs.
-- _(PROPOSED · NEEDS VERIFICATION)_ `docs/adr/ADR-0001-schema-home.md` — schema home convention referenced for Gate B.
-- _(PROPOSED · NEEDS VERIFICATION)_ `policy/domains/flora/` — Flora policy bundle (OPA / Rego).
-- _(PROPOSED · NEEDS VERIFICATION)_ `schemas/contracts/v1/domains/flora/` — Flora schema home.
+## Lifecycle and object-family boundaries
+
+### Lifecycle relationship
+
+```text
+SOURCE DISCOVERY
+  -> SOURCE ADMISSION
+  -> RAW
+  -> WORK or QUARANTINE
+  -> PROCESSED
+  -> CATALOG / TRIPLET
+  -> PROMOTION-READINESS EVALUATION
+  -> ACCOUNTABLE REVIEW
+  -> PROMOTION DECISION
+  -> RELEASE MANIFEST AND AUTHORIZED OPERATION
+  -> PUBLISHED PUBLIC-SAFE CARRIER
+  -> CORRECTION / WITHDRAWAL / ROLLBACK / RECOMPILE
+```
+
+This runbook begins only when a candidate claims `CATALOG` or `TRIPLET` readiness for a possible public release. If earlier lifecycle support is absent, return the candidate to the owning lane.
+
+### Object-family separation
+
+| Object or surface | Owning responsibility | What it proves | What it does not prove |
+|---|---|---|---|
+| `SourceDescriptor` or source-admission record | Source registry and source governance | Reviewed source identity, role, rights/sensitivity posture, and admitted use when actually resolved. | Botanical claim truth or release. |
+| Flora candidate dossier | `release/candidates/flora/` | Candidate identity, scope, pointers, blockers, and review state. | Release or public safety. |
+| `EvidenceRef` / `EvidenceBundle` | Evidence and proof lanes | Claim-scoped support and limitations when resolved. | Policy approval or release. |
+| Validation result | Validator, test, and receipt lanes | What a named executable checked over named bytes. | Botanical truth, reviewer authority, or release. |
+| Policy result | Accepted policy source, evaluator, and decision record | Admissibility for a named operation under supplied context. | Evidence truth or release execution. |
+| `ReviewRecord` | Release review lane | Accountable review when identity, authority, scope, and validity resolve. | Final decision or publication. |
+| `PromotionDecision` | Release-governance lane | `APPROVE`, `DENY`, or `ABSTAIN` for a named transition when authentic and authorized. | Manifest emission or public serving by itself. |
+| `PromotionReceipt` | Release/data receipt lane | Declared attempt, gate outcomes, integrity binding, and whether a transition was reported as applied. | Authentic transition or release by shape alone. |
+| `ReleaseManifest` | Release-governance lane | Release inventory and governed support binding when approved and persisted. | Artifact storage or public availability by itself. |
+| `RollbackCard` | Release-governance lane | Candidate recovery plan, target, invalidation scope, and support. | Rollback execution. |
+| Published Flora carrier | `data/published/flora/` or accepted artifact store | Released public-safe bytes only when linked to a valid release state. | Canonical source truth or unrestricted reuse. |
+| Map, API, graph, search, export, dashboard, or AI answer | Governed public delivery | Interpretation of released public-safe carriers. | Sovereign truth or hidden authority. |
+
+[Back to top](#top)
 
 ---
 
-<sub>**Last updated:** 2026-05-13 · **Doc id:** `kfm://doc/runbooks/flora/promotion-runbook` · **Status:** draft · **Authority:** doctrine CONFIRMED · implementation PROPOSED</sub>
+<a id="preflight-and-stop-conditions"></a>
 
-<sub>[⬆ Back to top](#top)</sub>
+## Preflight and stop conditions
+
+Perform preflight before assembling or evaluating a candidate packet.
+
+### 1. Freeze repository and task identity
+
+Record:
+
+- repository and exact base commit;
+- target candidate ID and candidate version;
+- candidate path and immutable artifact digest set;
+- requested lifecycle boundary;
+- current target runbook blob;
+- relevant contract, schema, policy, validator, workflow, and release-object versions;
+- open branches or pull requests touching the same candidate or authority surface.
+
+Stop on unresolved overlap, stale target bytes, or conflicting authority.
+
+### 2. Confirm a candidate actually exists
+
+A parent README, proposed thin slice, processed path, catalog entry, test fixture, workflow, or planning document is not a candidate.
+
+Required minimum:
+
+- child candidate dossier under the accepted candidate lane;
+- stable candidate ID and version;
+- immutable artifact pointer or digest set;
+- explicit `CATALOG` or `TRIPLET` source state;
+- explicit proposed audience and public carrier;
+- no restricted payload in the public-review packet.
+
+**Current result:** no verified child Flora candidate exists. Stop with `HOLD_FOR_CANDIDATE`.
+
+### 3. Confirm source admission and role
+
+For every contributing source, resolve:
+
+- source descriptor identity;
+- admission or activation state;
+- source role and authority boundary;
+- rights, terms, attribution, embargo, and redistribution posture;
+- sensitivity and precision floor;
+- cadence, source-head, retrieval, and stale-state posture;
+- correction, supersession, and withdrawal references.
+
+**Current central projection:** empty and non-implementing. Do not infer admission from a connector, URL, bibliography, source README, or available download.
+
+### 4. Confirm botanical and taxonomic scope
+
+Resolve:
+
+- accepted or bounded taxon-concept reference;
+- source-native name and identifier;
+- synonym or crosswalk reference;
+- identification method and reviewer;
+- unresolved or conflicting taxonomy;
+- observation, specimen, model, classification, regulatory, aggregate, contextual, or synthetic source role.
+
+Unresolved taxonomy does not automatically require deletion, but it blocks any claim that depends on a resolved taxon concept.
+
+### 5. Confirm evidence closure
+
+Every consequential candidate claim must have resolvable support. Confirm:
+
+- claim IDs and exact scope;
+- `EvidenceRef` values;
+- `EvidenceBundle` identity, version, digest, source roles, citations, limitations, and validity;
+- citation-validation state;
+- invalidation, correction, or supersession state;
+- no evidence reference points to a fixture or planning artifact as real support.
+
+Missing or unresolved support yields `HOLD_FOR_EVIDENCE` or `ABSTAIN`.
+
+### 6. Confirm rights, sensitivity, and safe representation
+
+Stop if the packet contains or permits inference of:
+
+- exact or reverse-engineerable sensitive plant location;
+- restricted specimen locality;
+- private-land identity or access route;
+- culturally sensitive plant knowledge without verified authority to control;
+- collection directions, habitat clues, or joins that defeat generalization;
+- withheld precision or redaction parameters;
+- unknown rights or prohibited redistribution;
+- client-side hiding as the only protection.
+
+The public candidate packet may contain public-safe reason codes and immutable references. It must not contain the restricted value.
+
+### 7. Confirm active policy
+
+Require an accepted policy profile, immutable bundle identity, evaluator, normalized result, obligations, evaluation time, and governed consumer.
+
+**Current result:** promotion policy, Flora domain policy, and Flora sensitivity policy are not active. Stop with `HOLD_FOR_POLICY`; do not treat default Rego declarations or absence of a denial as permission.
+
+### 8. Confirm accountable review and rollback
+
+Require:
+
+- candidate-specific reviewer assignments;
+- identity and authority records;
+- separation of duties;
+- review validity interval and scope;
+- correction and withdrawal paths;
+- rollback target and invalidation scope;
+- re-review triggers for source, taxonomy, rights, sensitivity, evidence, policy, or artifact changes.
+
+Missing accountable authority yields `HOLD_FOR_REVIEW` or `ABSTAIN`.
+
+[Back to top](#top)
+
+---
+
+<a id="promotion-readiness-procedure"></a>
+
+## Promotion-readiness procedure
+
+The procedure is read-only until a separately authorized release operation begins.
+
+### Step 0 — Open an auditable evaluation record
+
+Record the exact candidate, repository checkpoint, operator, evaluation time, requested transition, applicable profiles, and expected output location. Use public-safe identifiers only.
+
+Do not copy candidate payloads, protected coordinates, restricted knowledge, tokens, credentials, or transform parameters into the evaluation record.
+
+### Step 1 — Verify candidate identity and closure
+
+Confirm:
+
+- candidate ID, version, object family, and author;
+- source lifecycle state is `CATALOG` or `TRIPLET`;
+- proposed target is `PUBLISHED`;
+- candidate and proposed manifest identities agree;
+- artifact digests are complete, unique, and immutable;
+- candidate packet declares the public carrier and audience;
+- no mutable alias is used as the sole rollback or evidence anchor.
+
+Failure: `HOLD_FOR_CANDIDATE`, `DENY`, or `ERROR`.
+
+### Step 2 — Verify taxonomy, source role, and source admission
+
+For every claim and artifact:
+
+1. resolve the taxon concept and any source-name crosswalk;
+2. retain source-native identifiers and uncertainty;
+3. preserve whether support is observed, specimen-backed, aggregate, modeled, regulatory, administrative, contextual, or synthetic;
+4. resolve source descriptor and admission state;
+5. confirm rights, terms, cadence, source head, and authority boundary;
+6. reject role upgrades caused by normalization, aggregation, mapping, or generated explanation.
+
+Failure: `HOLD_FOR_TAXONOMY`, `HOLD_FOR_SOURCE_ADMISSION`, `HOLD_FOR_SOURCE_ROLE`, or `DENY`.
+
+### Step 3 — Verify evidence and catalog support
+
+Confirm that each release-visible claim resolves to:
+
+- claim-scoped EvidenceBundle support;
+- source references and source roles;
+- citations and limitations;
+- integrity and spec hashes;
+- validation and transform receipts where applicable;
+- STAC, DCAT, PROV, domain-catalog, or triplet references appropriate to the carrier;
+- correction and invalidation lineage.
+
+Do not count a catalog record, graph edge, tile, model output, or generated summary as evidence by itself.
+
+Failure: `HOLD_FOR_EVIDENCE`, `HOLD_FOR_CATALOG`, or `ABSTAIN`.
+
+### Step 4 — Verify rights, sensitivity, geoprivacy, and public surfaces
+
+Evaluate both the upstream material and the actual proposed public representation.
+
+Required checks include:
+
+- rights and redistribution permission;
+- sensitive taxon, specimen, habitat, or cultural-knowledge flags;
+- exact and reverse-engineerable location risk;
+- private-land and person/parcel joins;
+- temporal, taxonomic, and spatial uncertainty;
+- public-safe transform identity and review, without exposing transform secrets;
+- map source data, tile payload, feature properties, API response, search index, export, graph, cache, screenshot, and AI context;
+- ability to recover restricted detail by differencing, repeated queries, zooming, filters, metadata, or auxiliary joins.
+
+A style filter, collapsed UI panel, or hidden field is not redaction.
+
+Failure: `HOLD_FOR_RIGHTS`, `HOLD_FOR_SENSITIVITY`, `HOLD_FOR_STEWARDSHIP`, `HOLD_FOR_GEOPRIVACY`, `RESTRICT`, or `DENY`.
+
+### Step 5 — Run the bounded Flora fixture proof
+
+Run the repository-native deterministic synthetic suite:
+
+```bash
+python -m unittest discover \
+  --start-directory tests/domains/flora \
+  --pattern 'test_flora_smoke.py' \
+  --verbose
+```
+
+This suite checks the frozen synthetic public-safe profile. It does not evaluate the real candidate and does not create a proof packet.
+
+If the suite fails, classify the failure before changing the candidate or repository:
+
+- introduced by the current change;
+- inherited repository failure;
+- fixture/profile drift;
+- environment or runner error; or
+- unresolved without logs.
+
+Failure: `HOLD_FOR_VALIDATION` or `ERROR`.
+
+### Step 6 — Evaluate the explicit promotion-readiness packet
+
+Run the complete bounded shared fixture proof when appropriate:
+
+```bash
+make publish-check
+```
+
+Run the current synthetic matrices directly when diagnosis is needed:
+
+```bash
+python tools/validators/validate_promotion_gate.py --fixtures
+python tools/validators/validate_review_record.py --fixtures
+```
+
+Evaluate one explicit candidate packet only after its public-safe packet exists:
+
+```bash
+python tools/validators/validate_promotion_gate.py \
+  release/candidates/flora/<candidate-id>/promotion-readiness.json
+```
+
+The command is read-only. Preserve the exact validator version, input digest, output, exit code, and limitations.
+
+A `PASS` means `APPROVE_READY` for accountable review only.
+
+### Step 7 — Obtain active policy results
+
+Resolve and record:
+
+- accepted Flora domain-policy profile;
+- accepted Flora sensitivity/geoprivacy profile;
+- applicable rights and promotion policy;
+- immutable policy bundle identity and digest;
+- accepted evaluator and entrypoint;
+- normalized finite result, reasons, and obligations;
+- evaluation time and validity;
+- governed consumer enforcement.
+
+**Current repository state cannot complete this step.** Retain `HOLD_FOR_POLICY`.
+
+### Step 8 — Assemble the public-safe candidate review packet
+
+Assemble only identifiers, immutable pointers, digests, public-safe summaries, finite outcomes, limitations, and blocker state. Use the packet contract below.
+
+Do not emit a `PromotionDecision`, `PromotionReceipt` with `transition.applied: true`, `ReleaseManifest`, public alias, or published carrier from this step.
+
+### Step 9 — Obtain accountable review
+
+Route the packet to the separately assigned:
+
+- Flora domain reviewer;
+- taxonomy reviewer;
+- source and rights reviewers;
+- sensitivity/geoprivacy reviewer;
+- stewardship or community authority where applicable;
+- evidence and policy reviewers;
+- public-surface reviewer;
+- independent release reviewer;
+- correction and rollback reviewer; and
+- release authority.
+
+Record each review as its owning governed object. GitHub approval text may accompany review but cannot replace it.
+
+### Step 10 — Handoff, do not self-transition
+
+If every required reviewer and policy authority closes the packet, hand it to the release authority for a separately governed decision and operation.
+
+Permitted handoff result:
+
+```text
+READY_FOR_ACCOUNTABLE_REVIEW
+```
+
+or the bounded validator's:
+
+```text
+APPROVE_READY
+```
+
+Neither result changes lifecycle state.
+
+[Back to top](#top)
+
+---
+
+<a id="flora-specific-gates"></a>
+
+## Flora-specific gates
+
+The current executable validator uses this bounded A-G profile. ADR-0018 remains proposed, so treat these names as **current implementation evidence**, not accepted universal doctrine.
+
+| Gate | Current executable name | Flora-specific closure | Fail-closed outcome |
+|:---:|---|---|---|
+| A | Identity and closure | Stable candidate, object family, taxon-concept references, source state, requested lifecycle boundary, proposed carrier, audience, manifest identity, and no restricted payload in the packet. | `DENY` or `HOLD_FOR_CANDIDATE`. |
+| B | Asset integrity | Candidate, manifest, receipt, and digest-set agreement; deterministic artifacts; no mutable alias as sole anchor; public-safe artifact set is distinct from restricted originals. | `DENY` or `ERROR`. |
+| C | Geometry and CRS | Declared valid geometry, deterministic processing, expected CRS, bounded public-safe extent, and no exact or reverse-engineerable sensitive location. The generic validator does not prove scientific geoprivacy. | `DENY` or `HOLD_FOR_GEOPRIVACY`. |
+| D | Temporal semantics | Valid observation, collection, source, retrieval, publication, effective, review, correction, and release times as applicable; taxonomic and source versions; stale-state rules. | `DENY`, `HOLD_FOR_TIME`, or `ABSTAIN`. |
+| E | Rights and sensitivity | Resolved rights, source role, sensitivity class, public audience, policy profile, finite policy result, stewardship or community authority where required, and no unsafe join. Current policy is inactive. | `DENY`, `RESTRICT`, `HOLD_FOR_RIGHTS`, `HOLD_FOR_SENSITIVITY`, or `HOLD_FOR_POLICY`. |
+| F | Proof and catalog support | EvidenceRefs, EvidenceBundles, source descriptors, citations, receipts, attestations, STAC/DCAT/PROV or domain-catalog references, transform-review reference, and conditional AI receipt. | `ABSTAIN`, `HOLD_FOR_EVIDENCE`, or `DENY`. |
+| G | Review and rollback | Accountable review, authority, separation, scope and hash binding, obligations closure, correction and withdrawal paths, rollback target, and public-surface invalidation plan. | `ABSTAIN`, `DENY`, or `HOLD_FOR_REVIEW`. |
+
+### Flora sensitivity and representation matrix
+
+| Material | Ordinary public-review posture | Minimum condition for a public-safe derivative | Failure posture |
+|---|---|---|---|
+| Common, non-sensitive Flora record | Eligible for review, not automatically public | Source, taxonomy, evidence, rights, policy, review, release, correction, and rollback closure | Hold or abstain |
+| Rare or protected occurrence with exact location | **Do not include** | Reviewed public-safe derivative with restricted original retained outside the public packet; transform and review references only | Deny or restrict |
+| Specimen locality that reveals a sensitive occurrence | **Do not include** | Generalized or withheld derivative with institution, rights, sensitivity, and review closure | Deny or restrict |
+| Culturally sensitive plant knowledge | **Deny by default** | Verified authority to control, permitted purpose and audience, review, and revocation/correction path | Deny |
+| Private-land or person/parcel join | **Do not include** | Join removed or safely aggregated; no access clue or identity exposure | Deny |
+| Collection route, access direction, locality note, habitat clue, or repeated-query reconstruction path | **Do not include** | No ordinary public exception | Deny |
+| Vegetation community, range, suitability, or distribution model | Derived and visibly labeled | Model/source/evidence lineage, uncertainty, time, validation, policy, and non-occurrence caveat | Abstain or deny role collapse |
+| Invasive-plant record | Public-safe derivative only | Rights cleared; person, parcel, and access details removed; source role retained | Deny unsafe join |
+| Phenology tied to a sensitive specimen or site | Aggregate or withhold | Reviewed aggregation/generalization and evidence support | Deny raw detail |
+| Geoprivacy transform parameters, offsets, seeds, thresholds, or withheld precision | **Never ordinary public packet content** | Store only in an authorized restricted control plane where required | Deny and remediate |
+| Unknown rights, taxonomy, sensitivity, or stewardship state | Not public | Resolve owning decision and re-run review | Hold, abstain, or deny |
+
+[Back to top](#top)
+
+---
+
+<a id="current-executable-validation"></a>
+
+## Current executable validation
+
+### Flora public-safe fixture validator
+
+Current executable:
+
+```text
+tools/validators/domains/flora/validate_public_safe_fixture.py
+```
+
+Current focused test:
+
+```text
+tests/domains/flora/test_flora_smoke.py
+```
+
+Current workflow:
+
+```text
+.github/workflows/domain-flora.yml
+```
+
+The validator and tests use the Python standard library and a shared bounded-JSON helper. The suite:
+
+- accepts one explicit synthetic public-safe fixture;
+- rejects six explicit invalid fixtures;
+- blocks network access;
+- requires fixture-only source, taxon, rights, evidence, spatial, sensitivity, public-representation, and governance markers;
+- requires `release_state: not_released` and `promotion_eligible: false`;
+- rejects location aliases, coordinate-like values, WKT, URLs, numeric candidate values, undeclared fields, and transform-secret aliases;
+- rejects malformed, duplicate-key, non-finite, oversized, over-deep, over-large, or non-regular JSON input;
+- emits stable sorted reason codes and JSON paths without echoing candidate values; and
+- uses deterministic exit codes.
+
+A Flora fixture `PASS` proves only conformance to that frozen synthetic profile.
+
+It does **not** establish:
+
+- botanical or taxonomic truth;
+- source admission;
+- rights or consent;
+- sensitivity or geoprivacy approval;
+- stewardship or community authority;
+- EvidenceBundle closure;
+- policy evaluation;
+- proof production;
+- candidate readiness;
+- release, deployment, promotion, publication, or safe public use.
+
+### Shared promotion-readiness validator
+
+Current executable:
+
+```text
+tools/validators/promotion_gate/validate_promotion_gate.py
+```
+
+Current finite results:
+
+| Result | Readiness | Exit | Meaning |
+|---|---|---:|---|
+| `PASS` | `APPROVE_READY` | `0` | Every bounded declaration passed; accountable review is still required. |
+| `ABSTAIN` | `BLOCKED` | `1` | Support is insufficient without an explicit unsafe contradiction. |
+| `DENY` | `BLOCKED` | `1` | A mandatory, unsafe, or contradictory condition blocks readiness. |
+| `ERROR` | `BLOCKED` | `2` | Input or policy evaluation could not be completed safely. |
+
+Precedence is:
+
+```text
+ERROR > DENY > ABSTAIN > PASS
+```
+
+The validator checks declared packet consistency. It does not dereference references, authenticate reviewers, verify real signatures, execute Rego, prove rights or sensitivity clearance, resolve EvidenceBundles, inspect the actual public surface, or mutate lifecycle state.
+
+### Workflow holds
+
+The current Flora workflow deliberately keeps these jobs as holds:
+
+```text
+build-proof-flora
+  WORKFLOW_HOLD: no accepted Flora proof producer or deterministic proof command
+
+publish-dry-run-flora
+  WORKFLOW_HOLD: no accepted Flora release dry-run command or candidate manifest contract
+```
+
+A green held job means the hold is still intact. It is not proof production or release readiness.
+
+### Validation recording rule
+
+For every check, record:
+
+- exact repository commit;
+- exact executable path and blob or commit;
+- exact command;
+- exact input path and digest;
+- environment and no-network posture;
+- start and finish time;
+- exit code;
+- stdout/stderr or hosted log pointer;
+- finite result;
+- introduced versus inherited failure classification;
+- limitations and unresolved follow-up.
+
+Do not call a check “passing” unless the exact command or hosted exact-head job was observed.
+
+[Back to top](#top)
+
+---
+
+<a id="candidate-review-packet"></a>
+
+## Candidate review packet
+
+Create a child candidate packet only after the candidate exists and its public-safe metadata can be disclosed.
+
+### Required public-safe fields
+
+| Family | Required content |
+|---|---|
+| Candidate identity | Candidate ID, version, object family, author/producer ID, requested lifecycle boundary, evaluation timestamp. |
+| Artifact identity | Immutable artifact pointer, spec hash, content digests, proposed public carrier and audience. |
+| Botanical scope | Taxon-concept refs, source-native names/IDs, crosswalk refs, identification state, unresolved taxonomy, object-family and method. |
+| Source support | SourceDescriptor refs, admission refs, source roles, source-head/version, authority limits, rights and cadence states. |
+| Evidence support | Claim IDs, EvidenceRefs, EvidenceBundle refs, citation-validation refs, limitations, stale/correction state. |
+| Spatial and temporal scope | Public-safe spatial support, declared CRS, uncertainty/precision class, relevant time kinds, stale state. |
+| Rights and sensitivity | Rights decision refs, sensitivity class, stewardship/community authority refs where applicable, public-safe transform or withholding review refs. |
+| Policy | Accepted profile, bundle identity/digest, evaluator, finite result, reasons, obligations, evaluation time and validity. |
+| Validation | Exact commands, executable versions, input digests, outputs, exit codes, receipts, limitations. |
+| Public-surface review | Map/API/export/search/graph/cache/AI inspection refs and leakage findings. |
+| Accountable review | Review IDs, reviewer identities, authority/assignment refs, scope, validity, separation, recommendation. |
+| Release and recovery | Proposed PromotionDecision ref, PromotionReceipt ref, ReleaseManifest ref, correction/withdrawal refs, rollback target, invalidation scope. |
+| Outcome | Current finite readiness outcome and explicit blockers. |
+
+### Prohibited packet content
+
+Do not include:
+
+- raw or restricted source payloads;
+- exact or reverse-engineerable coordinates;
+- private-land or person identifiers;
+- collection, access, locality, habitat, or route clues;
+- culturally sensitive knowledge;
+- redaction or generalization parameters;
+- credentials, tokens, private URLs, or secret-manager references;
+- unredacted logs or screenshots;
+- model prompts containing restricted context;
+- generated claims without evidence;
+- statements that a check, review, merge, or manifest shape caused release.
+
+Use stable public-safe pointers and reason codes. If even a pointer reveals sensitive context, keep it in the authorized restricted system and reference a public-safe review record instead.
+
+[Back to top](#top)
+
+---
+
+<a id="finite-outcomes-and-current-holds"></a>
+
+## Finite outcomes and current holds
+
+These are operational handoff labels for this runbook. They do not replace accepted policy or release vocabularies.
+
+| Outcome | Meaning | Next action |
+|---|---|---|
+| `READY_FOR_ACCOUNTABLE_REVIEW` | Public-safe packet is complete enough for assigned reviewers. | Open governed review; do not transition. |
+| `APPROVE_READY` | Bounded shared validator returned `PASS`. | Treat as one validation input to accountable review. |
+| `HOLD_FOR_CANDIDATE` | No stable child candidate or artifact set exists. | Create a candidate only through the accepted release lane. |
+| `HOLD_FOR_TAXONOMY` | Taxon concept, identification, or crosswalk is unresolved. | Obtain qualified review or narrow the claim. |
+| `HOLD_FOR_SOURCE_ADMISSION` | Source descriptor or admission state is missing or unresolved. | Return to source governance. |
+| `HOLD_FOR_SOURCE_ROLE` | Observation, specimen, aggregate, model, regulatory, context, or synthetic role is collapsed or unclear. | Correct role and downstream claims. |
+| `HOLD_FOR_RIGHTS` | License, terms, attribution, redistribution, consent, or embargo is unresolved. | Obtain an accountable rights decision. |
+| `HOLD_FOR_SENSITIVITY` | Rare-plant, exact-location, private-land, cultural, stewardship, or join-induced risk is unresolved. | Restrict, generalize, withhold, or deny. |
+| `HOLD_FOR_STEWARDSHIP` | Required steward or community authority is absent or unresolved. | Obtain an accountable assignment and decision. |
+| `HOLD_FOR_GEOPRIVACY` | Public-safe transform, review, or surface inspection is incomplete. | Remediate upstream; never expose transform secrets. |
+| `HOLD_FOR_EVIDENCE` | EvidenceRefs or EvidenceBundles do not resolve or are stale/conflicted. | Repair support or abstain. |
+| `HOLD_FOR_CATALOG` | Catalog, lineage, or artifact closure is incomplete. | Return to catalog/proof lanes. |
+| `HOLD_FOR_TIME` | Required time semantics, validity, or stale state is missing. | Correct time model or narrow scope. |
+| `HOLD_FOR_POLICY` | Accepted policy, evaluator, result, or obligations are absent. | Keep candidate held; do not infer permission. |
+| `HOLD_FOR_VALIDATION` | Required check is absent, stale, failing, or not exact-head. | Run or repair the bounded proof. |
+| `HOLD_FOR_REVIEW` | Accountable reviewer identity, authority, separation, scope, or validity is missing. | Obtain governed review. |
+| `HOLD_FOR_RELEASE_PATH` | Decision, receipt, manifest, operation, or public carrier path is unresolved. | Resolve release topology before approval. |
+| `HOLD_FOR_CORRECTION_PATH` | Correction, withdrawal, supersession, or invalidation path is incomplete. | Define and review recovery. |
+| `HOLD_FOR_ROLLBACK` | No safe prior target or rollback plan exists. | Prepare and validate a RollbackCard candidate. |
+| `RESTRICT` | Review may continue only in an authorized restricted environment. | Keep protected material out of ordinary Git and public surfaces. |
+| `ABSTAIN` | Support is insufficient for the requested claim or decision. | Narrow scope or obtain evidence. |
+| `DENY` | The proposed operation is unsafe, prohibited, or contradictory. | Stop; record public-safe reason and remediation path. |
+| `ERROR` | Evaluation could not complete safely. | Preserve prior state and diagnose without leaking values. |
+
+### Current outcome
+
+At the pinned repository checkpoint, the truthful outcome is:
+
+```text
+HOLD
+```
+
+The strongest immediate blockers are the absent child candidate, empty central source-authority projection, absent accepted Flora proof producer, inactive Flora and promotion policy, scaffolded Flora sensitivity policy, absent accountable Flora review, held Flora release dry run, and unverified released carrier.
+
+[Back to top](#top)
+
+---
+
+<a id="authority-boundary-and-handoff"></a>
+
+## Authority boundary and handoff
+
+This runbook's terminal authority is a review handoff.
+
+A complete handoff contains:
+
+1. exact candidate identity and immutable artifact digests;
+2. public-safe scope and audience;
+3. source, taxonomy, evidence, rights, sensitivity, policy, validation, and public-surface support refs;
+4. current finite outcome and blockers;
+5. accountable reviewer and release-authority routing;
+6. correction, withdrawal, invalidation, and rollback refs;
+7. explicit non-effects.
+
+The handoff must say:
+
+```text
+No source was admitted or activated.
+No protected Flora payload or exact sensitive location was exposed.
+No policy was accepted or activated.
+No review or release authority was inferred from CODEOWNERS or CI.
+No lifecycle transition was applied.
+No release, deployment, promotion, or publication occurred.
+```
+
+Only a separately authorized release authority may create or approve the final governed transition records. Operations may execute only the accepted decision and must emit their own receipts. Public clients may consume only released public-safe carriers through governed interfaces.
+
+[Back to top](#top)
+
+---
+
+<a id="correction-withdrawal-and-rollback"></a>
+
+## Correction, withdrawal, and rollback
+
+Promotion readiness is incomplete without a reversible public-state plan.
+
+Before review, identify:
+
+- the prior valid release or explicit no-prior-release state;
+- correction and withdrawal triggers;
+- candidate, manifest, catalog, evidence, proof, map, API, export, search, graph, cache, and AI-cache invalidation scope;
+- downstream consumers and notification route;
+- restoration or withdrawal target;
+- public correction message requirements;
+- review and authority required to apply recovery;
+- revalidation and re-release requirements.
+
+Use the sibling [`ROLLBACK_RUNBOOK.md`](./ROLLBACK_RUNBOOK.md) for Flora rollback procedure. That runbook and a schema-valid `RollbackCard` remain non-executing until a separately accountable decision and operation occur.
+
+### Flora-specific recovery triggers
+
+- taxon concept corrected, split, merged, or superseded;
+- specimen identification or locality corrected;
+- occurrence shown to be false, duplicated, mislocated, or out of scope;
+- source rights, terms, consent, or attribution change;
+- rare/protected/cultural sensitivity is newly identified;
+- public derivative leaks or permits reconstruction of restricted detail;
+- transform or generalization is invalidated;
+- EvidenceBundle, citation, proof, or source role is withdrawn or corrected;
+- model, range, vegetation, or phenology product is stale or misrepresented;
+- policy bundle, reviewer authority, or release decision expires or is revoked;
+- artifact digest, manifest, catalog, cache, or public alias diverges.
+
+Rollback must preserve audit history. Do not delete or rewrite the original decision trail to make the correction invisible.
+
+[Back to top](#top)
+
+---
+
+<a id="audit-and-join-keys"></a>
+
+## Audit and join keys
+
+Preserve deterministic, public-safe join keys where practical.
+
+| Join key | Purpose |
+|---|---|
+| `candidate_id` and candidate version | Bind every readiness artifact to one candidate. |
+| artifact digest set | Bind checks, review, decision, manifest, and rollback to exact bytes. |
+| `spec_hash` | Bind candidate and validation to exact contract/profile identity. |
+| taxon-concept and crosswalk refs | Preserve botanical identity and source-name lineage. |
+| source descriptor and admission refs | Preserve source role, rights, sensitivity, cadence, and authority boundary. |
+| claim ID, EvidenceRef, and EvidenceBundle refs | Bind release-visible claims to evidence. |
+| policy profile, bundle digest, evaluator, and decision ref | Bind admissibility to exact policy. |
+| validation receipt or hosted exact-head run | Bind reported checks to exact execution. |
+| review ID, identity, authority, scope, and validity | Bind accountable review without inferring it from GitHub routing. |
+| PromotionDecision and PromotionReceipt refs | Bind decision and attempt while keeping them distinct. |
+| ReleaseManifest and release ID | Bind public carrier inventory to release state. |
+| CorrectionNotice, WithdrawalNotice, and RollbackCard refs | Bind recovery and audit lineage. |
+| public carrier digest and alias generation | Detect cache, index, tile, API, export, or map drift. |
+
+Audit records must not reproduce protected values. Store sensitive detail only in the authorized restricted system and expose public-safe references or reason codes.
+
+[Back to top](#top)
+
+---
+
+<a id="operator-checklist"></a>
+
+## Operator checklist
+
+### Candidate and authority
+
+- [ ] Exact repository checkpoint and target blob are recorded.
+- [ ] No open branch or pull request owns the same candidate or runbook surface.
+- [ ] A verified child Flora candidate dossier exists.
+- [ ] Candidate ID, version, artifact digest set, lifecycle state, target, audience, and carrier are explicit.
+- [ ] Accountable role assignments and separation are verified.
+- [ ] CODEOWNERS is treated as routing only.
+
+### Taxonomy, source, and evidence
+
+- [ ] Taxon concept, source-native identity, crosswalk, method, and uncertainty are resolved or visibly bounded.
+- [ ] Observation, specimen, model, aggregate, regulatory, context, and synthetic roles remain distinct.
+- [ ] Every source descriptor and admission state resolves.
+- [ ] Rights, terms, attribution, cadence, source head, and authority boundaries resolve.
+- [ ] Every consequential claim resolves EvidenceRef to EvidenceBundle.
+- [ ] Catalog, proof, citation, receipt, correction, and invalidation refs close.
+
+### Sensitivity and public representation
+
+- [ ] No exact or reverse-engineerable sensitive location appears in the packet.
+- [ ] No private-land, person, collection, access, locality, habitat, or route clue appears.
+- [ ] No culturally sensitive knowledge appears without verified authority and permitted audience.
+- [ ] No redaction or generalization parameters appear.
+- [ ] Public-safe transform and review refs are present where needed.
+- [ ] Map, API, export, search, graph, cache, screenshot, and AI surfaces were inspected.
+- [ ] Client-side styling is not relied on as redaction.
+
+### Policy, validation, review, and recovery
+
+- [ ] Accepted Flora, sensitivity, rights, and promotion policy profiles are active.
+- [ ] Policy bundle, evaluator, result, reasons, obligations, time, and validity are recorded.
+- [ ] Flora fixture suite ran at the exact candidate branch/head where applicable.
+- [ ] Shared promotion-gate and review-record checks ran against exact inputs.
+- [ ] Every reported failure is classified as introduced, inherited, or unresolved.
+- [ ] `PASS` is recorded only as `APPROVE_READY`.
+- [ ] Accountable reviews, authority, scope, validity, separation, and recommendation resolve.
+- [ ] Correction, withdrawal, invalidation, and rollback paths are complete.
+- [ ] No release, deployment, promotion, or publication is implied by this checklist.
+
+[Back to top](#top)
+
+---
+
+<a id="open-verification-register"></a>
+
+## Open verification register
+
+| Item | Current status | Evidence needed before reliance |
+|---|---|---|
+| Child Flora candidate dossier | **ABSENT in bounded inventory** | Verified child path, stable ID/version, immutable artifact pointer, public-safe scope, and blocker state. |
+| Central source-authority projection | **PROPOSED / empty / implementation absent** | Accepted registry or resolver, populated entries, owners, source-admission records, and consumer enforcement. |
+| Flora source-registry topology | **CONFLICTED / NEEDS VERIFICATION** | Accepted canonical lane, migration/compatibility rule, no divergent descriptor sets, and rollback. |
+| Flora proof producer | **HOLD** | Accepted Flora proof profile, producer, public-safe fixtures, validators, receipts, access controls, and release linkage. |
+| Flora EvidenceBundle resolution | **NEEDS VERIFICATION** | Resolver binding, real Flora bundle inventory, citation validation, invalidation, and consumer tests. |
+| Promotion policy | **INACTIVE** | Accepted rules, tests, bundle, evaluator, active gate entry, normalized result, governed consumer, and rollback. |
+| Flora domain policy | **M0 scaffold corpus / inactive** | Accepted entrypoint, rule semantics, native tests, evaluator, obligations, receipts, and consumer enforcement. |
+| Flora sensitivity policy | **PROPOSED scaffold** | Domain-reviewed geoprivacy and cultural-knowledge rules, tests, evaluator, reviewer assignments, and public-surface enforcement. |
+| Taxonomy authority and reviewer | **NEEDS VERIFICATION** | Accepted taxon-concept source/profile, crosswalk rules, qualified assignment, and conflict procedure. |
+| Rights and stewardship authority | **NEEDS VERIFICATION** | Accountable assignments, current decisions, consent/authority validity, revocation, and audit path. |
+| Flora release dry run | **HOLD** | Accepted candidate-manifest contract, deterministic no-write command, negative fixtures, review, and rollback binding. |
+| Accountable Flora ReviewRecord | **NOT ESTABLISHED** | Authenticated identity, authority, scope, separation, validity, obligations, subject, and hash binding. |
+| Flora PromotionDecision | **NOT ESTABLISHED** | Authorized candidate-specific decision with evidence, policy, review, and rollback refs. |
+| Flora PromotionReceipt | **NOT ESTABLISHED** | Candidate-specific attempt record, exact gate outputs, digest binding, and truthful applied-state declaration. |
+| Flora ReleaseManifest | **NOT ESTABLISHED** | Authorized strict release instance, artifact inventory, support refs, signatures, correction, rollback, and persisted release state. |
+| Published Flora carrier | **UNVERIFIED** | Release-linked public-safe bytes, digests, governed delivery, cache/index parity, and public-surface tests. |
+| Required-check enforcement | **NEEDS VERIFICATION** | Exact-head hosted results and repository ruleset evidence for required checks; green workflow presence is insufficient. |
+| Rollback drill | **NEEDS VERIFICATION** | Candidate-specific no-write rehearsal, invalidation inventory, restoration target, receipts, review, and observed recovery behavior. |
+
+[Back to top](#top)
+
+---
+
+<a id="evidence-basis"></a>
+
+## Evidence basis
+
+### Current repository evidence
+
+This revision is grounded in current-session inspection of:
+
+- accepted ADR-0029 and the adopted Directory Rules bytes;
+- proposed ADR-0018 and its explicit non-acceptance;
+- the exact prior target file;
+- the Flora domain workflow;
+- the bounded Flora validator, fixtures, and focused tests;
+- the central source-authority projection;
+- Flora source-registry, proof, policy, sensitivity, candidate, and published-lane boundaries;
+- shared promotion-gate, review, PromotionDecision, PromotionReceipt, ReleaseManifest, and RollbackCard surfaces;
+- CODEOWNERS review routing; and
+- the current main checkpoint.
+
+Repository evidence supports the current bounded implementation claims in this runbook. It does not prove deployment, production policy, active sources, restricted-system state, external consumers, operational release, or public use.
+
+### Google Drive source lineage
+
+The Google Drive document **KFM Flora Architecture PDF-Only Implementation Blueprint** was inspected as planning lineage. It supports the design need to keep taxon/naming, specimens, occurrences, source roles, rare and culturally sensitive flora, modeled/generalized products, evidence, policy, review, correction, and rollback distinct.
+
+The blueprint explicitly records that it was produced without a mounted KFM repository and labels implementation paths as proposed. This runbook therefore uses it for scope and design pressure only. Current GitHub evidence controls claims about repository paths, validators, workflows, policy maturity, candidate inventory, and release state.
+
+### Evidence not established
+
+This revision did not inspect or exercise:
+
+- a live or restricted Flora source;
+- real protected coordinates or culturally sensitive knowledge;
+- a production evidence resolver;
+- a production policy evaluator or bundle;
+- an authenticated reviewer or stewardship registry;
+- a signer trust root or transparency log;
+- a release service or deployment;
+- a public map/API/export/search/AI surface;
+- a real Flora candidate, proof packet, review, decision, manifest, release, or rollback execution.
+
+[Back to top](#top)
+
+---
+
+<a id="document-change-rollback"></a>
+
+## Document change rollback
+
+This update changes only:
+
+```text
+docs/runbooks/flora/PROMOTION_RUNBOOK.md
+```
+
+Before merge, close the draft pull request and remove its scoped branch if the revision is rejected or superseded.
+
+After merge, revert the documentation commit through a reviewed pull request or apply a smaller forward correction. Do not rewrite shared history.
+
+Reverting this Markdown:
+
+- does not admit or deactivate a source;
+- does not alter a Flora candidate or data artifact;
+- does not change contracts, schemas, policy, validators, tests, fixtures, workflows, evidence, proofs, receipts, reviews, decisions, manifests, or published carriers;
+- does not execute rollback; and
+- does not release, deploy, promote, or publish anything.
+
+[Back to top](#top)
