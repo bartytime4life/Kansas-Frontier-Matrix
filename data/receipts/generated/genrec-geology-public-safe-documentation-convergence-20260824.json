@@ -1,0 +1,130 @@
+{
+  "receipt_id": "genrec-geology-public-safe-documentation-convergence-20260824",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/domains/geology/README.md",
+    "tools/validators/domains/geology/README.md",
+    "tools/validators/geology/public_safe_geometry/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/domains/geology/README.md": "sha256:08c5cb749d4676a466329ee235a4c420ebba0493bce5d24fdc26d5004a5bab81",
+    "tools/validators/domains/geology/README.md": "sha256:b5a7756424eded117d01d0caa5969d0d3b3ee5ec2ccc9f96e8f75d2cd625225d",
+    "tools/validators/geology/public_safe_geometry/README.md": "sha256:1054559223bf2a5443576c8811e6a2aeb5bb7bdfae84790ef9ba022b18513be8"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-24"
+  },
+  "prompt_or_contract": "sha256:1290a9c5b08547ed2979ab67f25e0653c3dcd78748eae429f5e4943781f55013",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector repository and pull-request inspection",
+      "Google Drive read-only source inspection",
+      "local Git and deterministic no-network validation",
+      "Poppler PDF metadata and bounded page-text inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:d334f43df8fd74f17115cc0f51861cf8238c9cb99d37adaf95f5e4e1655fdf51"
+    ],
+    "attached_docs": [
+      "KFM Geology & Natural Resources Architecture — PDF-only plan (2026-04-21)"
+    ],
+    "evidence_refs": [
+      "attachment:sha256:d334f43df8fd74f17115cc0f51861cf8238c9cb99d37adaf95f5e4e1655fdf51#section-16-pdf-page-19-and-sections-20-21-pdf-pages-22-23",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34",
+      "repo:docs/doctrine/directory-rules.md@a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34",
+      "repo:contracts/domains/geology/public_safe_geometry_assessment.md@a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34",
+      "repo:tools/validators/geology/public_safe_geometry/validate_public_safe_geometry.py@a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34",
+      "repo:tests/domains/geology/test_public_safe_geometry.py@a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2444"
+    ]
+  },
+  "truth_labels": {
+    "docs/domains/geology/README.md": "PROPOSED",
+    "tools/validators/domains/geology/README.md": "PROPOSED",
+    "tools/validators/geology/public_safe_geometry/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-public-safe-geometry-suite-12-tests",
+      "outcome": "PASS",
+      "reason": "All 12 focused tests passed with network entry points blocked and no coordinate payloads."
+    },
+    {
+      "gate": "fixture-polarity-18-cases",
+      "outcome": "PASS",
+      "reason": "All 18 synthetic cases matched exactly: two HOLD and 16 DENY; authority remained NONE."
+    },
+    {
+      "gate": "documentation-metadata",
+      "outcome": "PASS",
+      "reason": "All three metadata blocks passed; the branch resolves 18 exact baseline findings without weakening the validator."
+    },
+    {
+      "gate": "markdown-local-links",
+      "outcome": "PASS",
+      "reason": "All 71 repository-local targets resolved; external badge targets were classified without network requests."
+    },
+    {
+      "gate": "documentation-staleness-advisory",
+      "outcome": "PASS",
+      "reason": "The deterministic 2026-08-24 advisory scan reported zero findings."
+    },
+    {
+      "gate": "generated-receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "The receipt binds the final SHA-256 bytes of all three modified Markdown artifacts."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation starts only after the draft pull request exists."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not represented as approval."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "KFM-GEOLOGY-PDF-2026-04-21-SECTION-16-P19-AND-SECTIONS-20-21-PP22-23",
+      "validated": true,
+      "evidence_ref": "attachment:sha256:d334f43df8fd74f17115cc0f51861cf8238c9cb99d37adaf95f5e4e1655fdf51#section-16-pdf-page-19-and-sections-20-21-pdf-pages-22-23"
+    },
+    {
+      "id": "ADR-0029@a565914e",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34"
+    },
+    {
+      "id": "GEOLOGY-PUBLIC-SAFE-ASSESSMENT@a565914e",
+      "validated": true,
+      "evidence_ref": "repo:contracts/domains/geology/public_safe_geometry_assessment.md@a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-24T21:31:51Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only convergence of three existing Geology status surfaces to the already-merged, synthetic, metadata-only public-safe-geometry assessment. The external PDF is proposal material; current repository contracts, schema, fixtures, validator, tests, workflow, and merged PR #2444 establish implemented behavior. This receipt is authoring provenance only. It creates no geometry transform, source admission, rights decision, evidence, policy result, review, lifecycle write, operational receipt, release, deployment, publication, or public-use authority."
+}

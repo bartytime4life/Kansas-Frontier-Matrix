@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-validators-domains-geology-readme
 title: tools/validators/domains/geology README
 type: README
-version: v0.2
+version: v0.3
 status: draft
 owner: TODO-tooling-qa-owner-plus-geology-steward-plus-natural-resources-steward-plus-policy-steward-plus-evidence-steward-plus-release-steward
 created: 2026-07-07
-updated: 2026-08-03
+updated: 2026-08-24
 policy_label: repository-facing; per-domain-validator-index; geology; natural-resources; subsurface; resource-sensitivity; fail-closed; non-authoritative
 owning_root: tools/
 responsibility: proposed per-domain Geology validator index for geologic maps, stratigraphy, lithology, structures, subsurface observations, boreholes, well logs, cores, geophysics, geochemistry, mineral occurrence/deposit/estimate/permit/production/reserve anti-collapse, hydrostratigraphy joins, sensitivity, evidence, policy, release, correction, rollback, and public-surface denial checks while deferring Geology meaning, policy decisions, proof records, and release authority to their owning roots
@@ -17,24 +17,24 @@ related:
   - ../README.md
   - ../../cross-domain-joins/README.md
   - ../../cross-lane/README.md
-  - ../../../../../docs/domains/geology/README.md
-  - ../../../../../docs/domains/geology/POLICY.md
-  - ../../../../../docs/domains/geology/PRESERVATION_MATRIX.md
-  - ../../../../../docs/domains/geology/SOURCE_REGISTRY.md
-  - ../../../../../docs/domains/geology/IDENTITY_MODEL.md
-  - ../../../../../docs/domains/geology/sublanes/natural_resources.md
-  - ../../../../../docs/runbooks/geology/SOURCE_REFRESH_RUNBOOK.md
-  - ../../../../../contracts/domains/geology/
-  - ../../../../../schemas/contracts/v1/domains/geology/
-  - ../../../../../policy/domains/geology/
-  - ../../../../../policy/sensitivity/geology/
-  - ../../../../../data/registry/sources/geology/
-  - ../../../../../data/proofs/
-  - ../../../../../data/receipts/
-  - ../../../../../release/
+  - ../../../../docs/domains/geology/README.md
+  - ../../../../docs/domains/geology/POLICY.md
+  - ../../../../docs/domains/geology/PRESERVATION_MATRIX.md
+  - ../../../../docs/domains/geology/SOURCE_REGISTRY.md
+  - ../../../../docs/domains/geology/IDENTITY_MODEL.md
+  - ../../../../docs/domains/geology/sublanes/natural_resources.md
+  - ../../../../docs/runbooks/geology/SOURCE_REFRESH_RUNBOOK.md
+  - ../../../../contracts/domains/geology/
+  - ../../../../schemas/contracts/v1/domains/geology/
+  - ../../../../policy/domains/geology/
+  - ../../../../policy/sensitivity/geology/
+  - ../../../../data/registry/sources/geology/
+  - ../../../../data/proofs/
+  - ../../../../data/receipts/
+  - ../../../../release/
 notes:
-  - "Two bounded fixture validators are confirmed: resource-class anti-collapse and the sparse announcement-bound GMD 3 AEM campaign-candidate profile."
-  - "No broad tools/validators/geology/README.md was found during this task, so this path currently serves as the inspected per-domain Geology validator index."
+  - "Three bounded fixture validators are confirmed in this routing scope: resource-class anti-collapse, the sparse announcement-bound GMD 3 AEM campaign-candidate profile, and the metadata-only public-safe-geometry assessment."
+  - "The broad tools/validators/geology/README.md and the specialized tools/validators/geology/public_safe_geometry/README.md are current adjacent routing surfaces; this path remains the per-domain index."
   - "Geology validators must preserve the distinction between occurrence, deposit, estimate, permit, production, and reserve claims, and must not treat generalized map polygons or AI summaries as sourced observations."
   - "Exact borehole, core, well-log, private-well, sample, and extraction-targetable resource locations are sensitive by default and require public-safe transforms, review, evidence, policy, release, correction, and rollback support before public exposure."
   - "Validators enforce declared contracts, schemas, and policy. They do not define Geology meaning, create EvidenceBundles, approve release, or publish public outputs."
@@ -75,12 +75,13 @@ The answer should be a navigable validator index and deterministic validation ou
 |---|---|---|
 | `tools/validators/domains/geology/README.md` | **CONFIRMED** | This README replaces the previous greenfield stub. |
 | Parent per-domain validators README | **CONFIRMED stub** | `tools/validators/domains/README.md` currently says only `# Per-domain validators`; this file keeps its own boundary explicit. |
-| Broad `tools/validators/geology/README.md` | **NOT FOUND in this task** | This path currently serves as the inspected Geology validator index. |
+| Broad `tools/validators/geology/README.md` | **CONFIRMED routing README** | The broad Geology validator README exists; this path remains the per-domain index rather than a replacement authority. |
 | Geology domain doctrine | **CONFIRMED in repo evidence / draft** | `docs/domains/geology/README.md` defines scope, anti-collapse posture, lifecycle, public trust path, deny-by-default exact subsurface/private-well posture, and responsibility-root split. |
 | Geology policy posture | **CONFIRMED in repo evidence / draft** | `docs/domains/geology/POLICY.md` states mixed-tier posture, exact borehole/well/resource sensitivity, claim-distinction rules, and fail-closed public promotion conditions. |
 | Resource-class lane | **CONFIRMED bounded fixture implementation** | `validate_resource_class_distinction.py` checks a frozen synthetic occurrence/deposit/estimate profile; `tools/validators/geology/resource_class/README.md` records its limits. |
+| Public-safe geometry lane | **CONFIRMED bounded fixture implementation** | `tools/validators/geology/public_safe_geometry/validate_public_safe_geometry.py` checks 18 synthetic metadata-only cases, consumes no geometry bytes, and returns only `HOLD`, `DENY`, or `ERROR`; it grants no transform, policy, review, release, or publication authority. |
 | GMD 3 AEM campaign lane | **CONFIRMED bounded fixture implementation** | `validate_aem_campaign.py` binds one document-specific 2026-05-11 announcement, keeps current campaign state unknown, binds no acquisition evidence, denies unscoped planning/downstream stages and malformed correction lineage, and pins the exact citation-only/candidate-only descriptor bytes against prose, endpoint, credential, connector, source-head, claim-role, and release drift. It is not source-registry authority or evidence closure and performs no activation or publication. |
-| Broader executables, schemas, policy bundles, proof, and release wiring | **NEEDS VERIFICATION** | Other validator scripts remain placeholders; these profiles do not establish schema, policy, evidence, proof, source, or release authority. |
+| Broader executables, schemas, policy bundles, proof, and release wiring | **NEEDS VERIFICATION** | Other validator scripts remain placeholders; the three bounded profiles do not establish operational geometry transforms, schema, policy, evidence, proof, source, or release authority. |
 
 [Back to top](#top)
 
@@ -93,7 +94,10 @@ The resource-class specialization is documented at
 in this per-domain lane to follow the repository's current validator inventory.
 The fixture-bound AEM campaign specialization is documented at
 `fixtures/domains/geology/aem_survey_campaign/README.md`; its executable is
-`validate_aem_campaign.py`. Other child lanes remain proposed.
+`validate_aem_campaign.py`. The metadata-only public-safe-geometry specialization
+is documented and implemented under
+`tools/validators/geology/public_safe_geometry/`. Other child lanes remain
+proposed.
 
 Future child lanes should be added only when they represent a distinct Geology validator specialty, fixture family, edge, or public-surface invariant with accepted contracts, schemas, policy posture, fixtures, receipts, and report semantics.
 
@@ -297,6 +301,6 @@ PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-07 |
-| Review state | Draft README replacement for greenfield stub and current parent index for Geology validators. |
-| Next smallest safe change | Verify child validator scripts, accepted profiles, schemas, source descriptors, policy bundles, fixtures, report destinations, receipts, public-safe geometry behavior, release linkage, cross-domain join behavior, and CI/runtime wiring before promoting this lane beyond draft. |
+| Last reviewed | 2026-08-24 |
+| Review state | Draft per-domain index reconciled to three bounded synthetic fixture profiles; broader operational Geology validation remains unverified. |
+| Next smallest safe change | Verify an independently owned, contract-backed child gap before adding another profile; keep live sources, geometry transforms, policy execution, release linkage, and publication unwired until their governing dependencies close. |
