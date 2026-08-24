@@ -1,63 +1,28 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runbooks/fauna/publication-gate-dry-run
 title: Fauna — Publication Gate Dry-Run Runbook
-type: runbook; operational-procedure; domain-lane; sensitive-domain; publication-denial; non-authoritative
-version: v1.0.0
-prior_version: PROPOSED scaffold
-status: draft; repository-grounded; shared-synthetic-publication-denial-executable; fauna-candidate-absent; fauna-domain-dry-run-held; no-write; non-publisher
-owners:
-  - "@bartytime4life — verified GitHub review route only"
-owner_status: >-
-  Fauna, taxonomy, source, rights/stewardship, sensitivity/geoprivacy,
-  evidence, policy, validation, independent-review, release, correction,
-  rollback, public-surface, and operations assignments remain NEEDS
-  VERIFICATION; CODEOWNERS routing does not create those authorities.
-created: NEEDS VERIFICATION — the prior scaffold carried no creation date
+type: runbook
+version: v1.0.1
+status: draft; repository-grounded; no-write; non-publisher
+created: 2026-08-24
 updated: 2026-08-24
-policy_label: public-review; fauna; publication-gate; dry-run; synthetic-denial; sensitive-location; fail-closed; no-release-authority; no-publication-authority
+last_reviewed: 2026-08-24
+owner: "@bartytime4life — GitHub review routing only"
+owner_status: functional Fauna, taxonomy, source, rights, sensitivity, evidence, policy, validation, release, correction, rollback, and independent-review assignments remain NEEDS VERIFICATION
+truth_posture: cite-or-abstain
+policy_label: public-review; fauna; publication-gate; dry-run; synthetic-denial; sensitive-location; fail-closed
 current_path: docs/runbooks/fauna/PUBLICATION_GATE_DRY_RUN.md
 owning_root: docs/
-responsibility: >-
-  Document the exact bounded, no-write publication-gate rehearsal currently
-  available to the Fauna lane; distinguish the shared synthetic denial profile
-  from a candidate-specific Fauna dry run; and produce a public-safe review
-  handoff without creating source admission, taxonomic authority, evidence,
-  policy, review, promotion, release, deployment, or publication authority.
-truth_posture: cite-or-abstain
-truth_labels: [CONFIRMED, PROPOSED, UNKNOWN, NEEDS VERIFICATION, CONFLICTED, HOLD]
 authority_class: explanatory operational documentation
-canonical_relationship: same-path modernization; no new or parallel authority
 path_posture: PLACE
+repository: bartytime4life/Kansas-Frontier-Matrix
+content_inspection_commit: c3b39fb27fd7ca46c41f5b5133149f1d8cd73996
+prior_target_blob: dff3b4a32ccbda552931775c67bf5aadcfad8c99
 prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  base_ref: main
-  content_inspection_commit: c3b39fb27fd7ca46c41f5b5133149f1d8cd73996
-  branch_base_commit: c3b39fb27fd7ca46c41f5b5133149f1d8cd73996
-  target_prior_blob: dff3b4a32ccbda552931775c67bf5aadcfad8c99
-  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
-  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  fauna_candidate_readme_blob: 653277efe3a44a96c29af481a73d7d90c41443ce
-  fauna_proof_readme_blob: 70c2501e6d7c8ff4beeae7577fde9acd6b720b2e
-  fauna_manifest_readme_blob: 9487abafcc0c4647618e3295efb3224b17eacd83
-  fauna_published_readme_blob: 24a276f0e9b31ab5e7abc7dfe0b554c9dcba4029
-  source_authority_register_blob: 32729857bc8eb5001acb37b8ee8e60bcb6e0dc50
-  fauna_workflow_blob: 0edc73a77ee0ddb3193db2c0386ed6ac685b139a
-  shared_dry_run_tool_blob: 5fed3a16aa0915b9233861048fc6a1e676e0ed8f
-  shared_dry_run_test_blob: a5a427c20f52aa0303b334ce876781c6364a2d79
-  promotion_gate_readme_blob: e729df0cc007e8cf0d9811afc25ec1f5ffbdffdd
-  promotion_runbook_blob: e3c4ce643d77d887a8b74cc34f688c2d08613f5b
-inspection_boundary: >-
-  Current-session GitHub reads covered the target scaffold; accepted Directory
-  Rules decision; CODEOWNERS; the Fauna candidate, proof, manifest, published,
-  source-authority, promotion-policy, promotion-readiness, workflow, fixture,
-  test, correction, withdrawal, and rollback boundaries; and the shared
-  publication-denial executable and workflow. Repository-native commands were
-  not run in a mounted checkout while this document was authored. No live or
-  restricted Fauna source, animal occurrence, exact location, source credential,
-  production policy evaluator, public carrier, release service, or lifecycle
-  transition was exercised.
+release_effect: none
+deployment_effect: none
+publication_effect: none
+source_activation_effect: none
 related:
   - ../README.md
   - ../RELEASE_DRY_RUN.md
@@ -67,7 +32,6 @@ related:
   - ../../domains/fauna/RELEASE_INDEX.md
   - ./NO_NETWORK_TEST_RUNBOOK.md
   - ./PROMOTION_RUNBOOK.md
-  - ./SOURCE_REFRESH_RUNBOOK.md
   - ./EBD_DERIVATIVE_RELEASE.md
   - ./ROLLBACK_RUNBOOK.md
   - ../../../Makefile
@@ -84,93 +48,75 @@ related:
   - ../../../tools/release/release_dry_run.py
   - ../../../tools/validators/promotion_gate/README.md
   - ../../../tests/release/test_publication_deny_dry_run.py
-tags: [kfm, fauna, runbook, publication-gate, dry-run, denial, promotion, evidence, geoprivacy, review, release, rollback, fail-closed]
-notes:
-  - "v1.0.0 replaces the inventory-generated scaffold with a repository-grounded publication-gate rehearsal and review-handoff procedure."
-  - "The implemented shared helper proves five synthetic publication-denial paths only; it does not accept or assemble a Fauna candidate."
-  - "The domain-fauna workflow still records an explicit hold because no accepted Fauna release dry-run command or candidate-manifest contract exists."
-  - "No child Fauna candidate dossier, Fauna proof artifact, Fauna manifest instance, or Fauna published carrier was present in the bounded direct-child inventories."
-  - "This document changes no source, candidate, data, contract, schema, policy, fixture, validator, workflow, receipt, proof, review, decision, manifest, correction, withdrawal, rollback record, lifecycle state, deployment, or public surface."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Fauna — Publication Gate Dry-Run Runbook
 
-> **Run the repository's bounded publication-denial rehearsal, evaluate the Fauna lane's candidate-specific publication prerequisites, and produce a public-safe review handoff—without assembling a release, weakening sensitive-location controls, or implying that a green check is promotion, release, deployment, or publication.**
-
-[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#current-repository-posture)
-[![Shared denial profile: executable](https://img.shields.io/badge/shared%20denial%20profile-executable-1f883d?style=flat-square)](#shared-publication-denial-profile)
-[![Fauna candidate: absent](https://img.shields.io/badge/Fauna%20candidate-NOT__ESTABLISHED-critical?style=flat-square)](#current-repository-posture)
-[![Fauna dry run: hold](https://img.shields.io/badge/Fauna%20dry%20run-HOLD-d4a72c?style=flat-square)](#current-fauna-publication-closure-matrix)
-[![Network: denied](https://img.shields.io/badge/network-denied-1f883d?style=flat-square)](#no-network-and-no-write-contract)
-[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-boundary-and-review-handoff)
+> Run the repository's bounded publication-denial rehearsal, assess whether a specifically identified Fauna candidate is ready for a candidate-specific no-write rehearsal, and produce a public-safe review handoff without creating promotion, release, deployment, or publication state.
 
 > [!IMPORTANT]
-> **The currently implemented command is a shared synthetic publication-denial profile, not a Fauna candidate dry run.** It starts from a repository-controlled synthetic promotion packet, applies five negative mutations, verifies that publication remains blocked, writes no file, and accepts no caller-controlled candidate content.
+> The implemented `release-dry-run` command is a **shared synthetic publication-denial profile**. It does not accept a caller-selected Fauna candidate, assemble a release, resolve live evidence, evaluate production policy, authenticate reviewers, or publish anything.
 
 > [!CAUTION]
-> **Current Fauna publication-gate result: `HOLD`.** The Fauna candidate lane has no verified child dossier; the Fauna proof lane has no proof artifact; the Fauna manifest lane has no manifest instance; the central source-authority projection is empty; promotion policy is inactive; and the domain workflow explicitly records that no accepted Fauna release dry-run command or candidate-manifest contract exists.
+> **Current Fauna result: `HOLD`.** At the inspected repository checkpoint, the Fauna candidate, proof, manifest, and published lanes contain no verified child trust object or public carrier; the source-authority projection is empty; promotion policy is inactive; and the domain workflow explicitly holds the Fauna proof and publication-dry-run capabilities.
 
 > [!WARNING]
-> **Never place exact or reverse-engineerable animal locations in dry-run inputs, logs, reports, pull requests, screenshots, workflow summaries, or handoff packets.** Sensitive taxa, nests, dens, roosts, hibernacula, spawning or breeding sites, aggregation sites, telemetry paths, private-land joins, access clues, observer-linked detail, steward-controlled records, and geoprivacy transform parameters fail closed.
+> Never place exact or reverse-engineerable animal locations in inputs, logs, workflow summaries, pull requests, screenshots, reports, exports, or handoff packets. Sensitive taxa, nests, dens, roosts, hibernacula, breeding or spawning sites, aggregations, telemetry paths, observer-linked records, private-land clues, and geoprivacy parameters fail closed.
 
-**Quick navigation:** [Purpose](#purpose-scope-and-terminal-boundary) · [Placement](#authority-placement-and-document-precedence) · [Posture](#current-repository-posture) · [Terms](#terms-and-anti-collapse-rules) · [Roles](#roles-and-separation-of-duties) · [Contract](#no-network-and-no-write-contract) · [Preflight](#preflight-and-mandatory-stop-conditions) · [Commands](#current-executable-command-map) · [Shared profile](#shared-publication-denial-profile) · [Procedure](#operator-procedure) · [Fauna gates](#fauna-specific-publication-gates) · [Matrix](#current-fauna-publication-closure-matrix) · [Outcomes](#finite-outcomes-and-reason-code-boundary) · [Handoff](#authority-boundary-and-review-handoff) · [CI](#hosted-ci-and-exact-head-interpretation) · [Recovery](#correction-withdrawal-and-rollback-boundary) · [Graduation](#graduation-criteria-for-a-candidate-specific-fauna-dry-run) · [Open work](#open-verification-register) · [Evidence](#evidence-basis) · [Document rollback](#document-change-rollback) · [Checklist](#appendix-a-operator-checklist)
+**Navigation:** [Purpose](#purpose-and-terminal-boundary) · [Authority](#authority-and-placement) · [Posture](#current-repository-posture) · [Safety](#no-network-no-write-and-sensitive-data-contract) · [Preflight](#preflight-and-stop-conditions) · [Commands](#current-command-map) · [Shared profile](#shared-publication-denial-profile) · [Procedure](#operator-procedure) · [Fauna gates](#fauna-candidate-publication-gates) · [Matrix](#current-closure-matrix) · [CI](#hosted-ci-and-held-job-interpretation) · [Handoff](#public-safe-review-handoff) · [Graduation](#graduation-criteria) · [Recovery](#correction-withdrawal-and-rollback) · [Evidence](#evidence-basis) · [Checklist](#operator-checklist)
 
 ---
 
-<a id="purpose-scope-and-terminal-boundary"></a>
+<a id="purpose-and-terminal-boundary"></a>
 
-## Purpose, scope, and terminal boundary
+## Purpose and terminal boundary
 
-Use this runbook for two separate operations that must remain visibly distinct:
+This runbook separates two operations:
 
-1. **Execute the shared synthetic publication-denial profile** to prove that five known unsafe or unsupported packet mutations remain blocked at an exact repository revision.
-2. **Assess whether one specifically identified Fauna candidate has the support required for a candidate-specific no-write publication-gate rehearsal.**
+1. **Shared synthetic denial rehearsal** — execute the repository-controlled five-case profile and verify that unsafe or unsupported packet mutations remain blocked.
+2. **Candidate-specific Fauna assessment** — determine whether one named Fauna candidate has enough accepted support to enter a future no-write publication-gate rehearsal.
 
-At the current repository checkpoint, operation 1 is executable and operation 2 stops at `HOLD` because no Fauna candidate dossier or accepted domain dry-run contract exists.
+At the inspected checkpoint, operation 1 is executable. Operation 2 stops at `HOLD` because no verified child Fauna candidate dossier or accepted candidate-specific dry-run contract exists.
 
-The KFM lifecycle remains:
+The governing lifecycle remains:
 
 ```text
 RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
 
-This runbook does not execute that lifecycle. It documents a rehearsal and a fail-closed assessment of readiness to rehearse.
+This runbook does not execute that lifecycle. It rehearses denial behavior and assesses readiness to rehearse a transition.
 
 ### In scope
 
-- freezing the exact repository revision and target scope;
-- verifying that the shared helper, tests, and workflow remain synthetic, deterministic, no-network, and no-write;
-- running `make release-dry-run` and interpreting only its declared five-case result;
-- running the generic bounded A–G readiness fixtures through `make publish-check`;
-- running the accepted synthetic Fauna fixture-safety suite;
-- inventorying candidate, proof, manifest, and published Fauna lanes without reading protected payloads;
-- assessing source, taxonomy, evidence, rights, sensitivity, geoprivacy, validation, policy, review, correction, withdrawal, rollback, and public-carrier closure;
-- reporting exact-head hosted results without treating held jobs as implemented release machinery; and
-- preparing a public-safe review handoff.
+- freeze the exact repository revision and target scope;
+- verify that the shared helper remains synthetic, deterministic, no-network, no-write, and non-authoritative;
+- run and interpret the shared denial, generic A–G readiness, and Fauna fixture-safety profiles;
+- inventory Fauna candidate, proof, manifest, and published lanes without opening protected payloads;
+- assess candidate identity, source, taxonomy, evidence, rights, sensitivity, geoprivacy, validation, policy, review, correction, withdrawal, rollback, and public-carrier closure;
+- report hosted checks at the exact head and distinguish held jobs from implemented capabilities; and
+- prepare a public-safe review handoff.
 
 ### Out of scope
 
-- live source access, connector execution, source admission, source activation, or credential use;
-- validation of real animal occurrence, range, migration, mortality, disease, conservation, telemetry, or sensitive-site records;
+- live source access, source admission, source activation, connector execution, credential use, or data retrieval;
+- validation of real occurrence, range, migration, mortality, disease, conservation, telemetry, or sensitive-site records;
 - choosing or executing a production geoprivacy transform;
 - resolving a real `EvidenceRef` to an authoritative `EvidenceBundle`;
-- evaluating the inactive promotion Rego stubs as production policy;
-- authenticating a reviewer, stewardship assignment, rights-holder decision, or release authority;
-- assembling a Fauna candidate, `PromotionDecision`, `PromotionReceipt`, `ReleaseManifest`, proof, signature, rollback card, correction notice, or withdrawal notice;
-- writing to any lifecycle, receipt, proof, release, cache, deployment, or public-serving surface; and
+- treating the inactive promotion Rego stubs as production policy;
+- authenticating a reviewer, steward, rights holder, or release authority;
+- creating a candidate, receipt, proof, review, decision, manifest, signature, correction, withdrawal, rollback card, or published carrier;
+- writing to lifecycle, release, cache, deployment, or public-serving surfaces; and
 - promotion, release, deployment, publication, correction execution, withdrawal execution, or rollback execution.
 
-### Terminal boundary
-
-The maximum current result is:
+### Maximum current result
 
 ```text
 shared synthetic denial profile: PASS | ABSTAIN | DENY | ERROR
-Fauna candidate-specific gate:   HOLD | DENY | ABSTAIN | ERROR
-review handoff:                  READY only when explicitly supported
-public or lifecycle state:       UNCHANGED
+candidate-specific Fauna gate:    HOLD | DENY | ABSTAIN | ERROR
+review handoff:                   READY only when explicitly supported
+lifecycle and public state:       UNCHANGED
 ```
 
 `READY` means ready for accountable review only. It is not `APPROVE`, `PROMOTED`, `RELEASED`, or `PUBLISHED`.
@@ -179,34 +125,34 @@ public or lifecycle state:       UNCHANGED
 
 ---
 
-<a id="authority-placement-and-document-precedence"></a>
+<a id="authority-and-placement"></a>
 
-## Authority, placement, and document precedence
+## Authority and placement
 
 ### Directory Rules result
 
-**`PLACE` — CONFIRMED for this same-path update.**
+**`PLACE` — confirmed for this same-path update.**
 
-Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [Directory Rules v2](../../doctrine/directory-rules.md). This tracked file is a human operational procedure under `docs/runbooks/`, with `fauna` as a domain segment. The update creates no new root, lane, alias, mirror, schema home, policy home, release home, proof home, or publication path.
+Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [Directory Rules v2](../../doctrine/directory-rules.md). This tracked file is a human operational procedure under `docs/runbooks/fauna/`. The update creates no new root, schema home, policy home, release home, proof home, alias, mirror, or publication path.
 
 | Responsibility | Owning surface | This runbook's role |
 |---|---|---|
-| Human operating procedure | `docs/runbooks/fauna/` | Explain exact bounded execution and handoff |
-| Fauna meaning and sensitivity intent | `docs/domains/fauna/`, `contracts/domains/fauna/` | Cite; do not redefine |
+| Human procedure | `docs/runbooks/fauna/` | Explain bounded execution and handoff |
+| Fauna meaning and sensitivity | `docs/domains/fauna/`, domain contracts | Cite; do not redefine |
 | Machine shape | `schemas/` | Do not invent or amend |
-| Source admission and rights | source registry and policy authorities | Require accepted pointers |
-| Evidence and proof | `data/proofs/` and evidence authorities | Require resolution; do not manufacture |
-| Policy source | `policy/` | Record current state; do not evaluate by prose |
-| Validators and tests | `tools/validators/`, `tests/`, `fixtures/` | Document exact bounded entry points |
-| Release decisions and manifests | `release/` | Require governed records; do not create |
-| Published public-safe carriers | `data/published/` | Inspect public-safe inventory only; no writes |
-| Public clients | governed APIs and released artifacts | Outside this procedure |
+| Source admission and rights | source registry and policy authorities | Require accepted references |
+| Evidence and proof | evidence and `data/proofs/` authorities | Require resolution; do not manufacture |
+| Policy | `policy/` | Record current posture; do not replace evaluation with prose |
+| Validators and tests | `tools/validators/`, `tests/`, `fixtures/` | Document exact entry points and limits |
+| Decisions and manifests | `release/` | Require governed records; do not create |
+| Public-safe carriers | `data/published/` | Inventory only; no writes |
+| Public consumption | governed APIs and released artifacts | Outside this procedure |
 
-The local [`docs/runbooks/fauna/README.md`](./README.md) remains a one-byte placeholder at the evidence checkpoint. This runbook does not substitute for that missing local lane boundary. The parent [runbook index](../README.md) and accepted responsibility-root rules remain the broader navigation and authority surfaces.
+The local `docs/runbooks/fauna/README.md` remains a placeholder at the inspection checkpoint. This runbook does not substitute for that missing lane-boundary and navigation contract.
 
-### Current behavior outranks proposal-era prose
+### Current implementation outranks proposal-era mechanics
 
-The broad [Release Dry-Run Runbook](../RELEASE_DRY_RUN.md) remains useful as planning lineage, but its proposal-era statements about assembling candidate outputs, producing decisions, or drafting manifests do not describe the current implemented helper. For current behavior, prefer:
+The cross-domain [Release Dry-Run Runbook](../RELEASE_DRY_RUN.md) remains planning lineage. For current executable behavior, prefer:
 
 1. [`tools/release/release_dry_run.py`](../../../tools/release/release_dry_run.py);
 2. [`tests/release/test_publication_deny_dry_run.py`](../../../tests/release/test_publication_deny_dry_run.py);
@@ -214,7 +160,7 @@ The broad [Release Dry-Run Runbook](../RELEASE_DRY_RUN.md) remains useful as pla
 4. [`.github/workflows/release-dry-run.yml`](../../../.github/workflows/release-dry-run.yml); and
 5. [`.github/workflows/domain-fauna.yml`](../../../.github/workflows/domain-fauna.yml).
 
-If those surfaces disagree with this runbook, stop and update the documentation rather than selecting whichever wording permits publication.
+When those surfaces and this document disagree, stop and correct the documentation or implementation in a separate reviewable change. Do not choose the wording that permits publication.
 
 [Back to top](#top)
 
@@ -228,175 +174,96 @@ The following conclusions are bounded to `main@c3b39fb27fd7ca46c41f5b5133149f1d8
 
 | Surface | Status | Safe conclusion |
 |---|---|---|
-| This target | **CONFIRMED prior scaffold** | The prior 660-byte file says to fill in authoritative content. It contains no executable procedure. |
-| Directory governance | **CONFIRMED / accepted** | `docs/runbooks/fauna/` is the correct same-path human procedure lane. |
-| Fauna candidate lane | **CONFIRMED / empty of child dossiers** | Direct-child inventory contains only the parent README. No active candidate is established. |
-| Fauna proof lane | **CONFIRMED / guidance only** | Direct-child inventory contains README plus `.gitkeep`; no Fauna proof artifact is established. |
-| Fauna manifest lane | **CONFIRMED / guidance only** | Direct-child inventory contains README plus `.gitkeep`; no Fauna manifest instance is established. The singular/plural manifest-home question remains unresolved. |
-| Fauna published lane | **CONFIRMED / guidance only** | Direct-child inventory contains README plus `.gitkeep`; no Fauna published carrier is established. |
-| Source-authority projection | **CONFIRMED / empty and non-authoritative** | Status is `PROPOSED`, implementation is `ABSENT`, completeness is `empty`, and `entries: []`. |
-| Shared publication-denial helper | **CONFIRMED executable / synthetic** | Five negative mutations are replayed over one repository-controlled synthetic packet. No caller candidate is accepted. |
-| Shared denial tests | **CONFIRMED executable** | Exact case polarity, no-authority claims, no-network behavior, deterministic output, and no file emission are tested. |
-| Generic A–G readiness validator | **CONFIRMED executable / bounded** | `PASS` means only `APPROVE_READY` over declared synthetic closure. References and authority are not authenticated. |
-| Promotion policy | **CONFIRMED proposed and inactive** | Two local Rego files are no-op stubs, have no operative denial body, and are not executed by the promotion workflow. |
-| Fauna fixture suite | **CONFIRMED executable / synthetic** | Two positive and five negative public-safe fixtures test bounded hygiene. They are ineligible for promotion and publication. |
-| Fauna proof producer | **CONFIRMED workflow hold** | No accepted Fauna proof producer or deterministic proof command is wired. |
-| Fauna publication dry run | **CONFIRMED workflow hold** | No accepted Fauna release dry-run command or candidate-manifest contract is wired. |
-| Review route | **CONFIRMED routing only** | CODEOWNERS routes to `@bartytime4life`; functional authority and independence remain unverified. |
-| Release, deployment, publication | **NOT ESTABLISHED** | No current inspected surface creates those effects for Fauna. |
+| Prior target | **Confirmed scaffold** | The prior file asked for authoritative content but provided no executable procedure. |
+| Fauna candidate lane | **Empty of verified child dossiers** | Direct-child inventory contains only guidance. No active candidate is established. |
+| Fauna proof lane | **Guidance only** | No Fauna proof artifact is established. |
+| Fauna manifest lane | **Guidance only / conflicted topology** | No Fauna manifest instance is established; singular/plural manifest responsibility remains unresolved. |
+| Fauna published lane | **Guidance only** | No Fauna public carrier is established. |
+| Source-authority projection | **Proposed, absent, empty** | `entries: []`; it neither admits nor activates sources. |
+| Shared denial helper | **Executable, synthetic** | Replays five fixed mutations over a repository-controlled synthetic packet. It accepts no caller candidate. |
+| Shared denial tests | **Executable** | Check exact polarity, reason codes, no authority claims, deterministic output, no-network behavior, and no file emission. |
+| Generic A–G validator | **Executable, bounded** | `PASS` means `APPROVE_READY` for review only; references and authority are not authenticated. |
+| Promotion policy | **Proposed and inactive** | Local Rego files are no-op stubs and are not the operative gate. |
+| Fauna fixture suite | **Executable, synthetic** | Tests public-safe fixture hygiene; fixtures are ineligible for promotion and publication. |
+| Fauna proof producer | **Workflow hold** | No accepted producer or deterministic proof command is wired. |
+| Fauna publication dry run | **Workflow hold** | No accepted Fauna candidate-manifest contract or domain command is wired. |
+| Review route | **Routing only** | CODEOWNERS routes GitHub review to `@bartytime4life`; functional authority and independence are unverified. |
+| Release, deployment, publication | **Not established** | No inspected surface creates those effects for Fauna. |
 
-### Current bounded determination
+### Bounded determination
 
 ```text
-shared synthetic publication-denial profile = IMPLEMENTED / BOUNDED
-generic declared readiness profile          = IMPLEMENTED / BOUNDED
-Fauna fixture-safety profile                 = IMPLEMENTED / BOUNDED
-Fauna candidate dossier                      = ABSENT
-Fauna candidate proof                        = ABSENT
-Fauna candidate manifest                     = ABSENT
-Fauna domain publication dry run             = HOLD
-Fauna release or publication                 = NOT ESTABLISHED
+shared synthetic denial profile     = IMPLEMENTED / BOUNDED
+generic declared-readiness profile  = IMPLEMENTED / BOUNDED
+Fauna fixture-safety profile        = IMPLEMENTED / BOUNDED
+Fauna candidate dossier             = ABSENT
+Fauna candidate proof               = ABSENT
+Fauna candidate manifest            = ABSENT
+Fauna candidate-specific dry run    = HOLD
+Fauna release or publication        = NOT ESTABLISHED
 ```
 
-Repository-native commands were not run in a mounted checkout while this documentation revision was authored. Commands below are therefore documented entry points, not reported execution results for this revision.
+Repository-native commands were not run in a mounted checkout while this revision was authored. Commands below are documented entry points, not claimed local passes.
 
 [Back to top](#top)
 
 ---
 
-<a id="terms-and-anti-collapse-rules"></a>
+<a id="no-network-no-write-and-sensitive-data-contract"></a>
 
-## Terms and anti-collapse rules
+## No-network, no-write, and sensitive-data contract
 
-| Term | Meaning in this runbook | Must not be collapsed into |
-|---|---|---|
-| **Shared publication-denial profile** | Synthetic helper that proves five unsafe mutations remain blocked | Candidate-specific Fauna validation |
-| **Generic promotion readiness** | A–G declared-packet validator; `PASS` means `APPROVE_READY` | Promotion decision, release approval, or publication |
-| **Fauna fixture-safety profile** | Synthetic public-safe fixture hygiene | Real taxonomy, source admission, evidence, or geoprivacy approval |
-| **Fauna publication-gate dry run** | A future candidate-specific no-write rehearsal over accepted Fauna support | The shared synthetic helper |
-| **Promotion** | Governed lifecycle transition | File move, PR, merge, workflow result, badge, or deployment |
-| **Release** | Accountable release-family decision and bound records | Schema-valid manifest-shaped file |
-| **Publication** | Authorized exposure of a released public-safe carrier | Presence under `data/published/`, map visibility, or public URL |
-| **Receipt** | Process memory about what ran | Proof, decision, or authority |
-| **Proof** | Support for a bounded claim or gate | Receipt, catalog, or release record |
-| **Manifest** | Release-governance record binding included artifacts and support | Payload, proof, or decision by itself |
-| **Rollback card** | Governed rollback decision/support record | Executed rollback or restored public state |
-| **Workflow success** | Exact workflow completed according to its current definition | All functional holds graduated |
-
-### Core anti-collapse rules
-
-- A `PASS` from `make release-dry-run` means the **denial controls worked**, not that a release is ready.
-- The `evidence_missing` case returns `ABSTAIN`, yet its publication outcome remains denied. Insufficient support is not a soft pass.
-- A `PASS` from `make publish-check` means declared synthetic closure is `APPROVE_READY` for review only.
-- A green `domain-fauna` workflow includes explicit proof and publication-dry-run hold jobs. Green does not mean those capabilities exist.
-- A source descriptor-shaped file is not source admission.
-- A taxon identifier is not a verified identification.
-- A range polygon is not an occurrence observation.
-- A model surface is not an observation.
-- An aggregate is not an individual location.
-- A regulatory status is not evidence of current presence.
-- A hidden map field is not a safe transform.
-- A generalized public carrier is not canonical restricted truth.
-- Generated language, map pixels, tiles, screenshots, dashboards, indexes, graph projections, and AI answers are not release authority.
-
-[Back to top](#top)
-
----
-
-<a id="roles-and-separation-of-duties"></a>
-
-## Roles and separation of duties
-
-Only the GitHub review route is verified. Every functional role below remains **NEEDS VERIFICATION** until an accepted assignment and current authority interval are available.
-
-| Role | Publication-gate responsibility | Current status |
-|---|---|---|
-| Operator | Freeze revision, run bounded commands, preserve logs, stop on holds | Assignment unknown |
-| Fauna domain steward | Confirm domain scope and object-family ownership | Assignment unknown |
-| Taxonomy reviewer | Resolve accepted-name, concept, crosswalk, and conflict posture | Assignment unknown |
-| Source and rights reviewer | Verify source identity, role, access terms, redistribution, and approved use | Assignment unknown |
-| Sensitivity/geoprivacy reviewer | Review harmful precision, transform, reconstruction, and audience posture | Assignment unknown |
-| Evidence steward | Verify EvidenceRef resolution and support limitations | Assignment unknown |
-| Policy steward | Verify accepted policy source, bundle, evaluator, and result | Assignment unknown |
-| Validation owner | Confirm validator scope, fixtures, exact revision, and finding interpretation | Assignment unknown |
-| Independent reviewer | Review the candidate without collapsing author and approver | Assignment unknown |
-| Release authority | Decide release-family state after all support closes | Assignment unknown |
-| Correction/withdrawal owner | Ensure correction, supersession, withdrawal, and notice paths exist | Assignment unknown |
-| Rollback owner | Verify rollback target and bounded restoration plan | Assignment unknown |
-| Public-surface/operations owner | Verify governed API, map, export, cache, and monitoring effects | Assignment unknown |
-| GitHub reviewer | Review repository changes routed through CODEOWNERS | `@bartytime4life` routing confirmed |
-
-> [!IMPORTANT]
-> CODEOWNERS routing does not prove taxonomic qualification, rights-holder authority, sensitivity stewardship, reviewer independence, release approval, or publication authority.
-
-No person may infer a missing role from a filename, account ownership, prior comment, workflow actor, or generated receipt.
-
-[Back to top](#top)
-
----
-
-<a id="no-network-and-no-write-contract"></a>
-
-## No-network and no-write contract
-
-### Shared profile contract
+### Shared profile
 
 | Requirement | Required posture | Failure posture |
 |---|---|---|
-| Inputs | Repository-controlled synthetic baseline and five fixed mutations only | `ERROR` or stop on caller-controlled candidate input |
-| Network | No source, DNS, socket, API, tile, registry, model, or external policy request | `DENY` and stop |
-| Credentials | No source token, cloud credential, private endpoint, signing key, or unrelated secret | `DENY` and stop |
-| Writes | No candidate, decision, receipt, proof, manifest, rollback card, release, or published artifact | `ERROR` and investigate |
-| Output | Deterministic JSON to stdout plus test output | `ERROR` on nondeterminism or file emission |
-| Authority | Every authority/publication field remains false | `DENY` on authority claim |
-| Case closure | All five cases match exact status and reason-code expectations and remain `BLOCKED` | `FAIL` |
-| Sensitive data | No real or reconstructable Fauna detail | `DENY`, quarantine the test material, and notify authorized reviewers |
+| Inputs | Fixed repository-controlled synthetic packet and mutations | Stop on caller-controlled candidate content |
+| Network | No DNS, socket, API, source, tile, model, registry, or external policy request | `DENY` and stop |
+| Credentials | No source token, cloud credential, signing key, private endpoint, or unrelated secret | `DENY` and stop |
+| Writes | No candidate, receipt, proof, decision, manifest, rollback, release, or published artifact | `ERROR` and investigate |
+| Output | Deterministic JSON to stdout plus bounded test output | `ERROR` on nondeterminism or file emission |
+| Authority | Every authority, decision, assembly, and publication field remains false | `DENY` on an authority claim |
+| Sensitive data | No real or reconstructable Fauna detail | Quarantine and notify authorized reviewers |
 
-### Candidate-specific Fauna contract
+### Future candidate-specific profile
 
-A future Fauna dry run must additionally:
+A candidate-specific Fauna dry run must additionally:
 
-- use one explicit accepted candidate and immutable artifact identity;
-- read only public-safe packet metadata or governed references;
+- name one accepted candidate and immutable artifact set;
+- consume only public-safe packet metadata or governed references;
 - never print protected values, exact coordinates, transform parameters, observer identities, private-land clues, or restricted source rows;
 - resolve support through governed interfaces rather than direct canonical-store access;
-- bind every finding to an exact candidate, revision, policy version, validator profile, review context, and evaluation time;
+- bind every finding to candidate, revision, policy version, validator profile, review context, and evaluation time;
 - produce review support without writing release or public state; and
-- fail closed when rights, sensitivity, stewardship, evidence, policy, review, correction, withdrawal, or rollback support is missing.
+- fail closed when rights, sensitivity, stewardship, evidence, policy, review, correction, withdrawal, or rollback support is incomplete.
 
-### Environment
-
-Use an isolated checkout at an exact revision. Remove unrelated source credentials from the environment. The accepted commands set deterministic and no-network intent variables, but environment variables alone are not a network sandbox. The shared test suite provides the bounded socket guard described by its implementation; production-grade isolation remains separate work.
-
-Do not run this procedure in a checkout that contains unreviewed restricted Fauna payloads or uncommitted sensitive files.
+Environment variables express intent but are not a network sandbox. Use an isolated checkout and remove unrelated credentials. Do not run in a worktree containing unreviewed restricted Fauna payloads.
 
 [Back to top](#top)
 
 ---
 
-<a id="preflight-and-mandatory-stop-conditions"></a>
+<a id="preflight-and-stop-conditions"></a>
 
-## Preflight and mandatory stop conditions
+## Preflight and stop conditions
 
 ### Freeze before execution
 
 Record:
 
-- repository and exact commit SHA;
-- branch and worktree status;
-- candidate identity, or `NOT_ESTABLISHED`;
-- shared helper and test blobs;
-- promotion-gate validator profile;
-- Fauna fixture profile;
-- candidate/proof/manifest/published lane counts;
-- policy and source-authority status;
+- repository, branch, and exact 40-hex commit;
+- clean or dirty worktree status;
+- candidate ID, or `NOT_ESTABLISHED`;
+- helper, test, workflow, and validator revision;
+- candidate, proof, manifest, and published lane counts;
+- source-authority and policy posture;
 - requested terminal boundary;
-- current reviewers and verified assignments;
-- any overlapping branch, pull request, migration, or correction work.
+- verified reviewers and assignments; and
+- overlapping pull request, migration, correction, withdrawal, or rollback work.
 
-### Safe count-only inventory
+### Count-only inventory
 
-Do not print candidate or artifact contents. Use a count-only inventory that excludes README and `.gitkeep` guidance files:
+Do not print payload contents. Exclude guidance files:
 
 ```bash
 python - <<'PY'
@@ -419,41 +286,41 @@ for label, root in lanes.items():
 PY
 ```
 
-A nonzero count is not permission to inspect or expose a file. Stop and determine its access, sensitivity, ownership, and review posture first.
+A nonzero count is not permission to open or expose a file. Determine access, sensitivity, ownership, and review posture first.
 
 ### Mandatory stop conditions
 
-Stop before candidate-specific evaluation when any condition applies:
+Stop candidate-specific evaluation when any condition applies:
 
-1. **No candidate exists.** Record `HOLD: candidate not established`. Running the shared synthetic profile remains allowed, but it cannot stand in for the absent candidate.
-2. **The target or governing bytes changed after the freeze.** Re-read and reconcile before continuing.
-3. **An overlapping pull request, migration, correction, withdrawal, or rollback owns the same surface.**
-4. **Any input contains or may reveal protected location, observer, private-land, telemetry, collection, or steward-controlled detail.**
-5. **Source identity, approved use, rights, redistribution, or source role is unresolved.**
-6. **Taxonomic identity or crosswalk conflict is unresolved and material to the output.**
-7. **EvidenceRefs do not resolve to accepted EvidenceBundles, or support scope is insufficient.**
-8. **The public-safe transform, caveats, reconstruction risk, or transform proof is unresolved.**
-9. **Promotion policy remains inactive or no accepted evaluator/result is bound to the candidate.**
-10. **Required review or separation of duties is absent, expired, superseded, or unauthenticated.**
-11. **Manifest placement or release-state vocabulary conflict prevents an unambiguous record.**
-12. **Correction, withdrawal, supersession, cache invalidation, or rollback support is missing.**
-13. **A command requires network, credentials, public writes, release secrets, signing authority, deployment access, or mutable external state.**
-14. **A workflow is green only because a readiness hold is implemented as a successful inspection job.**
-15. **The operator cannot report the result without exposing sensitive detail.**
+1. no candidate exists;
+2. frozen governing bytes changed;
+3. overlapping work owns the same surface;
+4. an input contains or may reveal protected animal, observer, telemetry, private-land, access, or site detail;
+5. source identity, role, approved use, rights, or redistribution is unresolved;
+6. taxonomic identity or a material crosswalk conflict is unresolved;
+7. EvidenceRefs do not resolve to accepted EvidenceBundles;
+8. public-safe transform, caveats, reconstruction risk, or transform proof is unresolved;
+9. promotion policy is inactive or no accepted evaluator/result is bound;
+10. required review, authority interval, or separation of duties is absent;
+11. manifest placement or release vocabulary is ambiguous;
+12. correction, withdrawal, cache invalidation, or rollback support is missing;
+13. a command requires network, credentials, signing authority, deployment access, or mutable external state;
+14. a workflow is green only because it successfully confirmed a hold; or
+15. the result cannot be reported without exposing protected detail.
 
-A correct `HOLD`, `DENY`, or `ABSTAIN` is preferable to a persuasive but unsupported pass.
+A correct `HOLD`, `DENY`, or `ABSTAIN` is preferable to an unsupported pass.
 
 [Back to top](#top)
 
 ---
 
-<a id="current-executable-command-map"></a>
+<a id="current-command-map"></a>
 
-## Current executable command map
+## Current command map
 
 Run from repository root at the frozen revision.
 
-### 1. Shared synthetic publication-denial profile
+### Shared synthetic publication-denial profile
 
 ```bash
 KFM_NO_NETWORK=1 \
@@ -464,25 +331,9 @@ TZ=UTC \
 make release-dry-run
 ```
 
-Equivalent implementation entry points:
+This invokes the helper and its bounded unittest profile.
 
-```bash
-KFM_NO_NETWORK=1 \
-PYTHONHASHSEED=0 \
-PYTHONDONTWRITEBYTECODE=1 \
-PYTHONUNBUFFERED=1 \
-TZ=UTC \
-python tools/release/release_dry_run.py --pretty
-
-KFM_NO_NETWORK=1 \
-PYTHONHASHSEED=0 \
-PYTHONDONTWRITEBYTECODE=1 \
-PYTHONUNBUFFERED=1 \
-TZ=UTC \
-python -m unittest -q tests.release.test_publication_deny_dry_run
-```
-
-### 2. Generic A–G declared-readiness fixtures
+### Generic A–G declared-readiness fixtures
 
 ```bash
 KFM_NO_NETWORK=1 \
@@ -493,9 +344,9 @@ TZ=UTC \
 make publish-check
 ```
 
-This runs fixture-only `ReviewRecord` and promotion-gate validation. It does not evaluate the inactive promotion Rego stubs, resolve live evidence, authenticate actors, or create a decision.
+This validates fixture-only `ReviewRecord` and A–G readiness matrices. It does not evaluate the inactive promotion Rego stubs, resolve live evidence, authenticate actors, or create a decision.
 
-### 3. Accepted synthetic Fauna fixture-safety suite
+### Synthetic Fauna fixture-safety suite
 
 ```bash
 KFM_NO_NETWORK=1 \
@@ -509,9 +360,9 @@ python -m unittest discover \
   --verbose
 ```
 
-This suite validates synthetic fixture hygiene only.
+This validates synthetic fixture hygiene only.
 
-### 4. Registry-driven release-adjacent profile
+### Registry-driven release-adjacent profile
 
 ```bash
 KFM_NO_NETWORK=1 \
@@ -522,18 +373,16 @@ TZ=UTC \
 make validator-release-profile
 ```
 
-Treat the selected validator set as release-adjacent fixture validation only. It is not a substitute for the explicit commands above and has no release effect.
+Treat this as release-adjacent fixture validation, not a candidate release gate.
 
-### Commands that do not exist
-
-At the evidence checkpoint, neither of these accepted Make targets exists:
+### Commands not currently established
 
 ```text
 fauna-release-dry-run
 release-dry-run-fauna
 ```
 
-Do not invent an alias, shell script, candidate path, or workflow invocation in order to make the documentation appear complete. Wiring a candidate-specific tool requires its own reviewed implementation slice.
+Do not invent an alias, candidate path, shell script, or workflow invocation to make the documentation appear complete. A candidate-specific tool requires its own reviewed implementation slice.
 
 [Back to top](#top)
 
@@ -543,51 +392,45 @@ Do not invent an alias, shell script, candidate path, or workflow invocation in 
 
 ## Shared publication-denial profile
 
-The shared helper loads `fixtures/release/promotion_gate/valid/pass__complete_candidate.json`, copies it in memory, applies exactly one negative mutation per case, invokes the bounded promotion-gate validator, and compares the observed result with the exact expected status and reason codes.
+The helper loads a repository-controlled synthetic promotion packet, copies it in memory, applies one negative mutation per case, invokes the bounded validator, and compares the observed result with the exact expected status and reason code.
 
-| Case | Mutation | Expected status | Exact reason code | Publication effect |
+| Case | Mutation | Expected status | Exact reason code | Publication posture |
 |---|---|---|---|---|
-| `evidence_missing` | Clear `evidence_refs` | `ABSTAIN` | `PG_F_EVIDENCE_REF_MISSING` | Denied |
-| `policy_denied` | Set declared policy evaluation to `DENY` | `DENY` | `PG_E_POLICY_DENY` | Denied |
-| `integrity_mismatch` | Replace receipt output digest set | `DENY` | `PG_B_ARTIFACT_SET_MISMATCH` | Denied |
-| `rights_or_sensitivity_not_public_safe` | Replace public-safe labels with `restricted` | `DENY` | `PG_E_PUBLIC_SAFE_LABEL_INVALID` | Denied |
-| `review_absent` | Remove declared review | `DENY` | `PG_G_REVIEW_INVALID` | Denied |
+| `evidence_missing` | clear `evidence_refs` | `ABSTAIN` | `PG_F_EVIDENCE_REF_MISSING` | denied |
+| `policy_denied` | set declared policy evaluation to `DENY` | `DENY` | `PG_E_POLICY_DENY` | denied |
+| `integrity_mismatch` | replace receipt output digest set | `DENY` | `PG_B_ARTIFACT_SET_MISMATCH` | denied |
+| `rights_or_sensitivity_not_public_safe` | replace public-safe labels with `restricted` | `DENY` | `PG_E_PUBLIC_SAFE_LABEL_INVALID` | denied |
+| `review_absent` | remove declared review | `DENY` | `PG_G_REVIEW_INVALID` | denied |
 
 The suite passes only when:
 
-- every case has the exact expected status;
-- the exact sorted reason-code tuple matches;
-- readiness is `BLOCKED` for every case;
-- the report contains five cases;
-- no authority, decision, publication, network use, or release-candidate assembly is claimed;
-- two CLI executions produce byte-identical stdout; and
-- the repository file inventory is unchanged.
+- all five cases have exact expected statuses and sorted reason codes;
+- readiness remains `BLOCKED` for every case;
+- authority, decision, network, publication, and candidate-assembly claims remain false;
+- repeated CLI executions emit byte-identical stdout; and
+- repository file inventory is unchanged.
 
-### Interpretation
+### What a pass proves
 
-A successful run proves:
-
-- the fixed synthetic negative mutations still trigger their expected bounded findings;
+- the fixed synthetic mutations still trigger the expected bounded findings;
 - the helper and tests executed at the tested revision;
-- the helper is deterministic under the tested environment;
-- its tested code path does not use the patched network entry point; and
-- its execution emits no repository file.
+- the tested path is deterministic under the supplied environment;
+- the patched network entry point was not used; and
+- no repository file was emitted.
 
-A successful run does **not** prove:
+### What a pass does not prove
 
 - that a Fauna candidate exists;
-- source admission, rights, sensitivity, or taxonomic truth;
-- that an EvidenceRef resolves;
-- that current policy was actually evaluated;
-- that a reviewer or assignment is authentic;
-- that a real manifest, correction path, or rollback target is valid;
+- source admission, taxonomic truth, rights, or geoprivacy approval;
+- EvidenceRef resolution;
+- production policy evaluation;
+- reviewer authenticity or independence;
+- manifest, correction, withdrawal, or rollback validity;
 - public-surface safety;
-- promotion, release, deployment, publication, withdrawal, correction, or rollback; or
+- promotion, release, deployment, publication, correction, withdrawal, or rollback; or
 - required-check enforcement in repository settings.
 
-### Why `ABSTAIN` still denies publication
-
-The evidence-missing case is not a policy denial. It is an evidence insufficiency outcome. The helper nevertheless records `publication_outcome: DENIED` because cite-or-abstain forbids publication of an unsupported consequential claim. Do not rewrite `ABSTAIN` as `PASS`, `WARN`, or “nearly ready.”
+The evidence-missing case returns `ABSTAIN`, not a policy denial. Publication remains blocked because cite-or-abstain forbids unsupported consequential claims. Do not translate `ABSTAIN` into warning-only or nearly ready.
 
 [Back to top](#top)
 
@@ -597,9 +440,7 @@ The evidence-missing case is not a policy denial. It is an evidence insufficienc
 
 ## Operator procedure
 
-### Step 1 — freeze identity and scope
-
-Record the exact SHA and clean/dirty state:
+### 1. Freeze revision and scope
 
 ```bash
 git rev-parse HEAD
@@ -607,46 +448,40 @@ git branch --show-current
 git status --short
 ```
 
-Do not continue from a dirty checkout containing unknown or sensitive files.
-
 Record:
 
 ```text
 candidate_id: NOT_ESTABLISHED
 requested_boundary: CATALOG/TRIPLET -> PUBLISHED rehearsal
-public_state_mutation_allowed: false
-release_state_mutation_allowed: false
 network_allowed: false
+release_state_mutation_allowed: false
+public_state_mutation_allowed: false
 ```
 
-Replace `NOT_ESTABLISHED` only after a verified child candidate dossier exists and its identifier can be disclosed safely.
+Replace `NOT_ESTABLISHED` only after a verified child candidate exists and its identifier is safe for the audience.
 
-### Step 2 — inventory without opening payloads
+### 2. Inventory without opening payloads
 
-Run the count-only inventory in [Preflight](#preflight-and-mandatory-stop-conditions).
+Run the count-only inventory. At the inspected checkpoint, the expected non-guidance counts are zero. A changed count triggers review, not automatic progression.
 
-At the current checkpoint, the expected non-guidance counts are all zero. Any change triggers review; it does not automatically advance the procedure.
+### 3. Verify implementation boundaries
 
-### Step 3 — verify current implementation boundaries
+Confirm that:
 
-Confirm:
+- the helper still loads the fixed synthetic baseline;
+- its case set remains the five documented mutations;
+- all authority and publication fields remain false;
+- tests still enforce no-network behavior, deterministic output, and no file emission;
+- the Make target invokes only the bounded helper and tests;
+- the shared workflow has read-only contents permission and no release or deployment secret;
+- the Fauna workflow still marks proof and candidate-specific dry run as holds; and
+- no new candidate-specific target appeared without a reviewed contract and tests.
 
-- `tools/release/release_dry_run.py` still loads the fixed synthetic baseline;
-- its `CASES` set remains the five documented cases;
-- the report still declares all authority/publication/assembly fields false;
-- `tests/release/test_publication_deny_dry_run.py` still checks no-network, deterministic output, and no file emission;
-- the `Makefile` target still invokes only the bounded helper and test;
-- the shared workflow has read-only contents permission and no release/deployment secret;
-- the Fauna workflow still marks proof and publication-dry-run jobs as holds; and
-- no candidate-specific target appeared without a reviewed contract and tests.
+Stop when an assumption changed.
 
-If any assumption changed, stop and update this runbook or the implementation as a separate coherent change.
+### 4. Run the shared denial profile
 
-### Step 4 — run the shared synthetic denial profile
-
-Execute `make release-dry-run`.
-
-Required interpretation:
+Execute `make release-dry-run` and require:
 
 ```text
 dry_run_status=PASS
@@ -660,280 +495,225 @@ publication_created=false
 release_candidate_assembled=false
 ```
 
-Do not copy the synthetic packet or its `PASS` status into a Fauna candidate record.
+Do not copy the synthetic packet or its pass status into a Fauna candidate record.
 
-### Step 5 — run generic declared-readiness fixtures
+### 5. Run generic readiness fixtures
 
-Execute `make publish-check`.
+Execute `make publish-check`. Interpret success as fixture-only declared readiness, not authenticated support or transition authority.
 
-A pass proves only that the current fixture-only review and A–G matrices pass their bounded tests. It does not authenticate a source, EvidenceBundle, policy result, reviewer, assignment, rollback target, or public surface.
+### 6. Run Fauna fixture safety
 
-### Step 6 — run the accepted Fauna fixture-safety suite
+Execute the exact Fauna unittest command. Confirm positive and negative fixture polarity without treating fixture success as candidate readiness.
 
-Execute the exact Fauna unittest command.
+### 7. Apply the candidate closure matrix
 
-Required interpretation:
-
-- accepted positive synthetic fixtures have no findings;
-- negative fixtures fail closed with the suite's exact expected findings;
-- the sensitive-withheld fixture preserves its fixture-only transform reference, matching geoprivacy state, and withholding caveat;
-- no live Fauna data were tested; and
-- no candidate, proof, release, or publication was produced.
-
-### Step 7 — evaluate the candidate-specific matrix
-
-Use [Current Fauna publication closure matrix](#current-fauna-publication-closure-matrix).
-
-Because no candidate exists at the current checkpoint, stop at:
+Because no candidate exists at the inspected checkpoint, stop at:
 
 ```text
-HOLD
+outcome: HOLD
 reason: no verified child Fauna candidate dossier
-next authority: accountable Fauna candidate commissioning and review
+next authority: accountable candidate commissioning and review
 public effect: none
 ```
 
-Do not continue by substituting a synthetic fixture, a planning example from the release index, or an eBird/GBIF source template.
+Do not substitute a synthetic fixture, planning example, source template, or range product.
 
-### Step 8 — inspect hosted exact-head evidence
+### 8. Inspect hosted exact-head evidence
 
-For a pull request, bind every workflow result to the exact head SHA.
+Bind every workflow result to the exact pull-request head. Separate:
 
-Distinguish:
-
-- direct changed-area documentation checks;
-- shared synthetic publication-denial checks;
-- generic promotion-readiness fixture checks;
-- Fauna fixture-safety checks;
+- documentation checks;
+- shared denial checks;
+- generic readiness fixtures;
+- Fauna fixture checks;
 - explicit hold jobs;
-- inherited or concurrent repository failures; and
-- repository-settings enforcement, which remains separate evidence.
+- introduced failures;
+- inherited or concurrent failures; and
+- repository-settings enforcement, which requires separate evidence.
 
-### Step 9 — prepare a public-safe review handoff
+### 9. Prepare the public-safe handoff
 
 Use the template below. Include no protected values.
 
-The current correct handoff is `HOLD`, not `REVIEW_HANDOFF_READY`.
+### 10. Stop
 
-### Step 10 — stop
-
-Do not:
-
-- create a candidate, decision, receipt, proof, manifest, signature, correction, withdrawal, rollback, or publication record;
-- copy files to `data/published/fauna/`;
-- update a governed API catalog, map layer, tile source, cache, search index, graph, export, or AI context;
-- request release or deployment authority; or
-- treat a merge as lifecycle progression.
+Do not create or mutate candidate, evidence, proof, decision, receipt, manifest, correction, withdrawal, rollback, public carrier, API, map, tile, cache, search, graph, export, deployment, release, promotion, or publication state.
 
 [Back to top](#top)
 
 ---
 
-<a id="fauna-specific-publication-gates"></a>
+<a id="fauna-candidate-publication-gates"></a>
 
-## Fauna-specific publication gates
+## Fauna candidate publication gates
 
-A future candidate-specific dry run must preserve the following distinctions and fail closed when support is missing.
+A future candidate-specific dry run must preserve these distinctions.
 
-### Candidate identity and object family
+### Candidate and object family
 
 - Name one candidate, immutable artifact set, specification hash, domain scope, audience, and requested boundary.
-- Identify whether each included object is a taxon, crosswalk, conservation status, occurrence, restricted occurrence, public occurrence, range, seasonal range, migration context, sensitive site, mortality observation, disease observation, invasive-species record, or redaction/generalization support.
-- Do not add an object family by implication or allow a view/product name to become canonical domain ownership.
+- Identify taxon, crosswalk, conservation status, occurrence, restricted occurrence, public occurrence, range, seasonal range, migration context, sensitive site, mortality, disease, invasive-species, and transform-support objects explicitly.
+- Do not let a product name or folder imply canonical ownership.
 
 ### Taxonomy
 
-- Bind names to a taxon concept and source authority, not a string alone.
+- Bind names to taxon concepts and source authority, not strings alone.
 - Preserve accepted, synonym, provisional, unresolved, split, lump, and conflict posture.
-- Record the taxonomic time/version and crosswalk limitations.
-- Abstain from species-level claims when the evidence supports only a broader concept.
+- Record taxonomic version and crosswalk limits.
+- Abstain from species-level claims when support is broader.
 
-### Source identity, role, rights, and stewardship
+### Source, rights, and stewardship
 
-- Require an accepted source descriptor and approved use for every input.
-- Keep observed, specimen, citizen-science, modeled, aggregate, administrative, regulatory, contextual, and synthetic roles distinct.
-- Verify access terms, redistribution, citation, retention, derivative, audience, and revocation obligations.
-- Do not inherit public-use permission from discoverability or API access.
+- Require accepted source descriptors and approved uses.
+- Keep observation, specimen, citizen-science, model, aggregate, administrative, regulatory, contextual, and synthetic roles distinct.
+- Verify access, redistribution, citation, retention, derivative, audience, and revocation obligations.
+- API access or discoverability does not establish public-use permission.
 
 ### Occurrence, range, season, and migration
 
-- An occurrence record supports a bounded observation, not general range.
-- A range polygon does not prove presence at a point or time.
-- Seasonal range does not prove year-round presence.
-- Migration context does not reveal or predict an individual path.
-- Non-detection is not absence unless the sampling design supports that inference.
+- occurrence supports a bounded observation, not general range;
+- range does not prove presence at a point or time;
+- seasonal range does not prove year-round presence;
+- migration context must not reveal or predict an individual path; and
+- non-detection is not absence unless sampling design supports the inference.
 
-### Rights, sensitivity, and geoprivacy
+### Sensitivity and geoprivacy
 
-- Deny exact or reconstructable sensitive location exposure.
-- Review direct coordinates, centroids, bounding boxes, tiles, feature IDs, source-layer names, counts, timestamps, labels, URLs, caches, screenshots, logs, exports, and cross-domain joins.
 - Transform before rendering or delivery; client-side hiding is not a safe transform.
-- Bind the public derivative to the transform identity, input/output digests, audience, caveats, evidence, policy, and review without disclosing protected parameters.
-- Test reverse inference, differencing, repeated-query, temporal-correlation, private-land, road/access, imagery, and habitat joins.
+- Review coordinates, centroids, boxes, tiles, feature IDs, source-layer names, counts, timestamps, URLs, logs, caches, screenshots, exports, and cross-domain joins.
+- Bind the public derivative to transform identity, digests, audience, caveats, evidence, policy, and review without exposing protected parameters.
+- Test reverse inference, differencing, repeated queries, temporal correlation, private-land, access-road, imagery, and habitat joins.
 
 ### Evidence and scientific support
 
 - Resolve every consequential EvidenceRef to an accepted EvidenceBundle.
-- Preserve support type, spatial scope, temporal scope, source role, uncertainty, caveats, and contradiction state.
-- Do not treat a receipt, summary, model, index, tile, or graph projection as evidence truth.
-- Keep modeled suitability, predicted occupancy, interpolated density, observed count, checklist effort, mortality, disease, and population trend separate.
+- Preserve support type, spatial and temporal scope, source role, uncertainty, caveats, and contradiction state.
+- Do not treat a receipt, summary, model, index, tile, graph, or generated answer as root evidence.
+- Keep suitability, predicted occupancy, interpolated density, observed count, effort, mortality, disease, and population trend distinct.
 
 ### Validation and integrity
 
-- Bind candidate, artifacts, manifest, receipts, proofs, and public carriers by deterministic identity and digest.
-- Validate geometry/CRS, time, schema, taxonomy, source role, evidence closure, rights, sensitivity, field allowlists, transform support, and public-carrier reconstruction risk.
-- Include negative fixtures for exact-location leakage, encoded clues, missing source identity, unresolved taxonomy, evidence gaps, rights gaps, policy gaps, review gaps, correction gaps, and rollback gaps.
-- A validator must not echo protected values in diagnostics.
+- Bind candidate, artifacts, receipts, proofs, manifest, and public carrier by deterministic identity and digest.
+- Validate schema, geometry/CRS, time, taxonomy, source role, evidence closure, rights, sensitivity, field allowlists, transform support, and reconstruction risk.
+- Include negative fixtures for exact-location leakage, encoded clues, missing source identity, taxonomy conflict, evidence gap, rights gap, policy gap, review gap, correction gap, and rollback gap.
+- Diagnostics must not echo protected values.
 
-### Policy
+### Policy, review, and release support
 
-- Use an accepted policy source, bundle, evaluator, entry point, input contract, result normalization, and version/digest.
-- Treat missing context, unknown labels, evaluator failure, inactive stubs, and unbound policy as `HOLD`, `ABSTAIN`, `DENY`, or `ERROR` according to the accepted contract—not allow.
-- Policy output is one input to review and release; it does not decide truth or apply a transition.
-
-### Review and separation
-
-- Authenticate subject, reviewer, assignment, scope, authority interval, review time, validity interval, obligations, and supersession state.
-- Prevent self-review where materiality requires separation.
-- Require source/rights, taxonomy, sensitivity/geoprivacy, evidence, policy, validation, and release review appropriate to consequence.
-- Do not substitute CODEOWNERS routing or a PR approval for a substantive review record.
-
-### Release, correction, withdrawal, and rollback
-
+- Use an accepted policy source, bundle, evaluator, entry point, input contract, result normalization, version, and digest.
+- Missing context, unknown labels, evaluator failure, inactive stubs, and unbound policy never default to allow.
+- Authenticate subject, reviewer, assignment, scope, authority interval, obligations, and supersession state.
+- Prevent self-review when materiality requires separation.
 - Resolve the canonical manifest lane before creating an instance.
-- Bind included artifacts, decisions, evidence/proof, receipts, policy, reviews, signatures, correction path, withdrawal path, rollback target, changelog, and public-carrier identity.
-- Prove that public caches, tiles, indexes, graphs, exports, screenshots, and AI-facing summaries can be invalidated or superseded safely.
-- Preserve immutable history; do not silently overwrite or delete prior public state.
+- Bind included artifacts, evidence, proof, receipts, policy, reviews, decisions, signatures, correction, withdrawal, rollback, changelog, and public-carrier identity.
 
 ### Public clients and governed AI
 
 - Standard clients consume governed APIs or released public-safe artifacts only.
-- Evidence Drawer and Focus Mode must show bounded evidence, time, policy, release, stale, correction, and withheld/denied context appropriate to the audience.
+- Evidence Drawer and Focus Mode expose evidence, time, policy, release, stale, correction, and withheld/denied context appropriate to the audience.
 - AI may interpret released evidence; it cannot infer protected coordinates, expand beyond EvidenceBundle scope, or approve release.
-- An attractive map, popup, dashboard, report, story, or answer cannot compensate for an unresolved gate.
+- A polished map, popup, dashboard, report, story, export, or answer cannot compensate for an unresolved gate.
 
 [Back to top](#top)
 
 ---
 
-<a id="current-fauna-publication-closure-matrix"></a>
+<a id="current-closure-matrix"></a>
 
-## Current Fauna publication closure matrix
+## Current closure matrix
 
-This matrix describes the bounded checkpoint, not a permanent judgment.
-
-| Closure area | Current status | Evidence-based reason | Required before candidate-specific dry run |
+| Closure area | Current status | Reason | Required before candidate-specific dry run |
 |---|---|---|---|
-| Candidate identity and artifact set | **HOLD** | No verified child dossier under `release/candidates/fauna/` | Accepted child candidate with immutable public-safe pointers |
-| Source admission and approved use | **HOLD** | Central authority projection is empty; candidate source set absent | Accepted source descriptors, rights, purpose, role, and cadence |
-| Taxonomy packet | **HOLD** | No candidate taxon scope or crosswalk packet | Reviewed taxon concepts, versions, conflicts, and limitations |
-| Evidence and proof | **HOLD** | No Fauna proof artifact; no candidate EvidenceBundle closure | Resolvable candidate EvidenceRefs and accepted proof support |
+| Candidate and artifact set | **HOLD** | No verified child dossier | Accepted child candidate with immutable public-safe pointers |
+| Source admission | **HOLD** | Empty authority projection; no candidate source set | Accepted descriptors, roles, rights, purpose, and cadence |
+| Taxonomy | **HOLD** | No candidate taxon packet | Reviewed concepts, versions, conflicts, and limitations |
+| Evidence and proof | **HOLD** | No Fauna proof or candidate EvidenceBundle closure | Resolvable EvidenceRefs and accepted proof support |
 | Rights and stewardship | **HOLD** | No candidate-specific decision | Current approved-use, redistribution, stewardship, and audience decisions |
-| Sensitivity and geoprivacy | **HOLD** | No candidate transform/review packet | Public-safe transform proof, reconstruction review, caveats, and reviewer decision |
-| Candidate-specific validation | **HOLD** | Current executable Fauna suite is synthetic fixture hygiene only | Candidate-bound validator profile, fixtures, tests, and exact findings |
-| Generic readiness validation | **PARTIAL / BOUNDED** | A–G fixture validator exists; authenticity and authority are unresolved | Candidate-specific accepted input and support resolution |
-| Promotion policy | **HOLD** | Promotion Rego stubs are inactive and no evaluator binding exists | Accepted fail-closed policy bundle, evaluator, input, output, and consumer |
-| Accountable review | **HOLD** | Only GitHub review routing is verified | Current assignments, independence, scope, obligations, and review records |
-| Promotion decision/receipt | **HOLD** | No Fauna instance; reusable families remain proposed/fixture-first | Governed, authenticated, candidate-bound records after review |
-| Release manifest | **HOLD / CONFLICTED** | No Fauna instance; singular/plural manifest topology unresolved | Accepted canonical lane and candidate-bound manifest |
+| Sensitivity and geoprivacy | **HOLD** | No transform or review packet | Transform proof, reconstruction review, caveats, and decision |
+| Candidate validation | **HOLD** | Existing Fauna suite is synthetic fixture hygiene only | Candidate-bound profile, fixtures, tests, and findings |
+| Generic A–G validation | **PARTIAL / BOUNDED** | Declared-packet validator exists | Candidate-specific accepted input and support resolution |
+| Promotion policy | **HOLD** | Rego stubs inactive; no evaluator binding | Accepted fail-closed bundle, evaluator, input, output, and consumer |
+| Accountable review | **HOLD** | Only GitHub routing verified | Assignments, independence, scope, obligations, and review records |
+| Decision and receipt | **HOLD** | No Fauna instance | Governed candidate-bound records after review |
+| Release manifest | **HOLD / CONFLICTED** | No instance; topology unresolved | Accepted canonical lane and candidate-bound manifest |
 | Correction and withdrawal | **HOLD** | No candidate-specific closure | Accepted correction, supersession, withdrawal, notice, and propagation plan |
-| Rollback | **HOLD** | No candidate rollback target or executed drill | Candidate-bound rollback card/target and bounded rehearsal |
-| Public carrier | **HOLD** | No Fauna published artifact in direct-child inventory | Release-authorized public-safe carrier with digest and support bindings |
-| Governed API/map/export/AI | **HOLD / UNKNOWN** | No candidate release binding or public-surface proof | End-to-end public-safe consumption and invalidation evidence |
-| Release, deployment, publication | **NOT ESTABLISHED** | No accountable decision or transition evidence | Separate authorized transitions after all gates close |
+| Rollback | **HOLD** | No candidate target or drill | Candidate-bound target, card, and bounded rehearsal |
+| Public carrier | **HOLD** | No direct-child carrier | Release-authorized public-safe carrier with digest and support bindings |
+| Governed API, map, export, AI | **HOLD / UNKNOWN** | No candidate release binding | End-to-end consumption and invalidation evidence |
+| Release, deployment, publication | **NOT ESTABLISHED** | No accountable decision or transition evidence | Separate authorized transitions after every gate closes |
 
-### Current outcome
+Current human-facing outcome:
 
 ```text
 outcome: HOLD
 primary_reason: FAUNA_CANDIDATE_NOT_ESTABLISHED
-secondary_reasons:
-  - source admission not closed
-  - proof/evidence closure absent
-  - rights and geoprivacy review absent
-  - promotion policy inactive
-  - accountable review absent
-  - manifest topology unresolved
-  - correction/withdrawal/rollback closure absent
 public_state_changed: false
 release_state_changed: false
+source_activation_changed: false
 ```
 
-The identifiers in this example are **runbook-local explanatory labels**, not accepted wire-level enums. Do not serialize them into a governed record unless an accepted contract defines them.
+These explanatory labels are not accepted wire-level enums. Do not serialize them into a governed record unless an accepted contract defines them.
 
 [Back to top](#top)
 
 ---
 
-<a id="finite-outcomes-and-reason-code-boundary"></a>
+<a id="hosted-ci-and-held-job-interpretation"></a>
 
-## Finite outcomes and reason-code boundary
+## Hosted CI and held-job interpretation
 
-### Shared helper outcomes
-
-These are implemented in the shared helper or promotion-gate validator:
-
-| Outcome | Meaning | Publication posture |
+| Workflow | A success can show | A success cannot show |
 |---|---|---|
-| `PASS` | All five expected denial cases matched exactly | No publication; proves synthetic blocking profile only |
-| `ABSTAIN` | Support is insufficient without a contradictory unsafe claim | Publication remains blocked |
-| `DENY` | Mandatory or unsafe condition blocks readiness | Publication remains blocked |
-| `ERROR` | Input or evaluation could not complete safely | Publication remains blocked |
+| `release-dry-run` | Shared denial, bounded A–G fixtures, and synthetic rollback support completed at exact head | Candidate assembly, live policy, evidence authentication, release, or publication |
+| `promotion-gate` | Fixture-only review and readiness profile completed | Authenticated reviewer, accepted policy, decision, or transition |
+| `domain-fauna` | Synthetic fixture suite completed and hold assertions remained true | Fauna proof, domain dry run, source admission, or real-data safety |
+| Documentation checks | Current docs checks passed by their definitions | Scientific truth, rights, sensitivity, release authority, or operations |
 
-Exact shared reason codes used by this runbook:
+### Exact-head rule
 
-- `PG_F_EVIDENCE_REF_MISSING`
-- `PG_E_POLICY_DENY`
-- `PG_B_ARTIFACT_SET_MISMATCH`
-- `PG_E_PUBLIC_SAFE_LABEL_INVALID`
-- `PG_G_REVIEW_INVALID`
+Report:
 
-### Fauna handoff outcomes
+- PR number and exact head SHA;
+- workflow/run/job identity;
+- status and conclusion;
+- changed-area relevance;
+- introduced, inherited, concurrent, or unresolved failure classification;
+- whether a successful job confirmed a hold; and
+- whether all runs settled.
 
-Use these human-facing classifications without presenting them as schema enums:
+A check from an older head becomes stale when the branch moves.
 
-| Classification | Use |
-|---|---|
-| **HOLD** | A named prerequisite is missing, unresolved, stale, conflicted, or unassigned |
-| **DENY** | Exposure or use is prohibited by accepted rights, sensitivity, policy, or authority |
-| **ABSTAIN** | Evidence is insufficient to make the requested consequential claim |
-| **ERROR** | The rehearsal could not be completed safely or deterministically |
-| **REVIEW HANDOFF READY** | The public-safe packet is complete enough for accountable review; no release effect |
-| **NO ACTION** | No candidate-specific action is authorized or required |
+### Held-success rule
 
-At the current checkpoint, the correct classification is **HOLD**.
+A successful Fauna publication-dry-run hold job means the workflow confirmed that no accepted candidate-specific command and contract appeared. It does **not** mean a Fauna publication dry run ran.
 
-Do not use `ALLOW`, `APPROVE`, `PUBLISHED`, `RELEASED`, or `PROMOTED` as a dry-run conclusion.
+A successful Fauna proof hold job means the workflow confirmed that no accepted proof producer and artifact appeared. It does **not** mean a proof was built.
+
+A workflow appearing on a PR does not prove it is required by a ruleset. Required-check coupling and branch protection need separate current evidence.
 
 [Back to top](#top)
 
 ---
 
-<a id="authority-boundary-and-review-handoff"></a>
+<a id="public-safe-review-handoff"></a>
 
-## Authority boundary and review handoff
+## Public-safe review handoff
 
-### Handoff requirements
+Include only:
 
-A public-safe handoff should include only:
-
-- repository and exact commit;
-- command/profile identities and relevant blobs;
+- repository and exact revision;
+- command/profile and relevant blob identities;
 - candidate ID or `NOT_ESTABLISHED`;
 - requested lifecycle boundary and audience;
-- count-only candidate/proof/manifest/published inventory;
-- source descriptor IDs and status, without protected credentials or rows;
-- taxon concept IDs and conflict posture;
-- EvidenceRef/EvidenceBundle IDs and resolution status;
+- count-only lane inventory;
+- public-safe source, taxon, EvidenceRef, and EvidenceBundle IDs and statuses;
 - rights, sensitivity, geoprivacy, policy, validation, review, correction, withdrawal, and rollback status;
-- exact shared helper statuses and public-safe reason codes;
-- hosted exact-head workflow statuses;
+- exact shared statuses and public-safe reason codes;
+- exact-head hosted checks;
 - introduced versus inherited failures;
-- current finite handoff outcome;
-- required next authority; and
+- finite handoff outcome;
+- next verified authority; and
 - explicit non-effects.
-
-### Handoff template
 
 ```markdown
 ## Fauna publication-gate dry-run handoff
@@ -942,222 +722,116 @@ A public-safe handoff should include only:
 - Exact revision: `<40-hex SHA>`
 - Candidate: `NOT_ESTABLISHED` or `<public-safe candidate ID>`
 - Requested boundary: `CATALOG/TRIPLET -> PUBLISHED rehearsal`
-- Audience: `<public-safe audience class or UNKNOWN>`
 - Shared denial profile: `PASS | ABSTAIN | DENY | ERROR`
 - Generic A–G fixtures: `PASS | ABSTAIN | DENY | ERROR`
 - Fauna fixture-safety profile: `PASS | FAIL | ERROR`
-- Candidate-specific Fauna dry run: `HOLD | DENY | ABSTAIN | ERROR | REVIEW HANDOFF READY`
-- Candidate/proof/manifest/published payload counts: `<count-only>`
+- Candidate-specific result: `HOLD | DENY | ABSTAIN | ERROR | REVIEW HANDOFF READY`
+- Candidate/proof/manifest/published counts: `<count-only>`
 - Source admission: `<status and public-safe IDs>`
 - Taxonomy: `<status and public-safe IDs>`
 - Evidence/proof: `<status and public-safe IDs>`
 - Rights/stewardship: `<status>`
 - Sensitivity/geoprivacy: `<status>`
-- Policy: `<status and accepted evaluator identity, if any>`
+- Policy: `<status and accepted evaluator ID, if any>`
 - Review/separation: `<status>`
 - Correction/withdrawal/rollback: `<status>`
-- Exact-head hosted checks: `<status summary>`
+- Exact-head checks: `<status summary>`
 - Introduced failures: `<none or bounded list>`
 - Inherited/concurrent failures: `<none or bounded list>`
-- Outcome: `<finite handoff classification>`
+- Outcome: `<finite classification>`
 - Next accountable authority: `<verified assignment or NEEDS VERIFICATION>`
 - Public state changed: `false`
 - Release state changed: `false`
 - Source activation changed: `false`
 ```
 
-### Current handoff
+Do not include coordinates, protected site clues, transform thresholds or secrets, source rows, observer identities, private-land/access detail, restricted URLs, credentials, unredacted logs, or language enabling reverse inference.
+
+Current handoff:
 
 ```text
 candidate: NOT_ESTABLISHED
-shared denial profile: available
-candidate-specific Fauna dry run: HOLD
+candidate-specific dry run: HOLD
 review handoff ready: no
-next action: commission and review a bounded candidate-specific implementation slice
 release/deployment/publication effect: none
 ```
 
-### Sensitive reporting rule
+[Back to top](#top)
 
-Report categories, counts, IDs safe for the review audience, and public-safe reason codes. Do not report:
+---
 
-- coordinates or precision;
-- source-row contents;
-- protected site or taxon clues;
-- transform thresholds, salts, seeds, secret grids, or reversible mappings;
-- observer names or contact details;
-- private-land/access details;
-- restricted URLs, credentials, tokens, or storage paths;
-- unredacted diffs, logs, screenshots, or exports; or
-- language that enables reverse inference.
+<a id="graduation-criteria"></a>
 
-When a reviewer needs protected detail, route it through the accepted restricted review environment. Do not move it into GitHub to simplify review.
+## Graduation criteria
+
+Do not remove the workflow hold because this document is complete. Graduate the candidate-specific Fauna dry-run lane only through a separate implementation that establishes:
+
+1. an accepted candidate and no-write input/output contract;
+2. verified homes for candidate, proof, decision, receipt, manifest, correction, withdrawal, and rollback families;
+3. one explicitly non-releasable public-safe synthetic candidate fixture;
+4. negative fixtures for source, taxonomy, evidence, rights, sensitivity, reconstruction, transform, policy, review, integrity, correction, and rollback failures;
+5. accepted source descriptors and approved uses;
+6. taxon concept, authority/version, crosswalk, conflict, and uncertainty closure;
+7. resolvable fixture EvidenceRefs and bounded EvidenceBundles;
+8. geoprivacy contract, proof/receipt binding, safe diagnostics, and reverse-inference tests;
+9. accepted fail-closed policy bundle, evaluator, entry point, input/output contract, and consumer;
+10. review and assignment shapes that keep synthetic proof separate from production authority;
+11. accepted manifest, decision, receipt, correction, withdrawal, and rollback contracts;
+12. tests proving no lifecycle, release, cache, API, map, tile, index, graph, export, or published mutation;
+13. deterministic no-network execution with explicit guards;
+14. stable safe reason codes without protected values;
+15. least-privilege workflow permissions, pinned actions, timeouts, and explicit non-effects;
+16. synchronized runbook, workflow, tool, test, index, and register documentation;
+17. exact-head changed-area validation and transparent implementation rollback; and
+18. accountable domain, source/rights, taxonomy, sensitivity, evidence, policy, validation, independent-review, release, correction, and rollback assignments.
+
+The first graduated command must still stop before release and publication.
 
 [Back to top](#top)
 
 ---
 
-<a id="hosted-ci-and-exact-head-interpretation"></a>
+<a id="correction-withdrawal-and-rollback"></a>
 
-## Hosted CI and exact-head interpretation
-
-### Relevant workflows
-
-| Workflow | What a success can show | What it cannot show |
-|---|---|---|
-| `release-dry-run` | Shared synthetic denial, bounded A–G fixtures, and rollback-card fixture/rehearsal checks completed at exact head | Candidate assembly, live policy, evidence authentication, release, or publication |
-| `promotion-gate` | Fixture-only review and A–G readiness profile completed | Authenticated reviewer, accepted policy, real decision, or transition |
-| `domain-fauna` | Synthetic fixture suite completed and current proof/dry-run hold assertions remained true | Fauna proof, domain dry run, source admission, or public safety of real data |
-| `domain-fauna` held jobs | Repository still lacks the capabilities the hold checks are designed to detect | Functional proof or release machinery |
-| Documentation checks | Markdown, metadata, links, or docs build passed according to each workflow | Scientific truth, rights, sensitivity, release authority, or operations |
-
-### Exact-head rule
-
-Always report:
-
-- pull-request number;
-- exact head SHA;
-- check name and run/job identity;
-- status and conclusion;
-- whether the workflow tested the changed path;
-- whether the failure is introduced, inherited, concurrent, or unresolved;
-- whether a hold job passed by confirming absence; and
-- whether all runs settled.
-
-A workflow pass at an older head is stale after the branch moves.
-
-### Held-success rule
-
-A successful `publish-dry-run-fauna` job currently means:
-
-> The workflow confirmed that no child candidate record and no accepted Fauna dry-run target had appeared, then emitted the documented hold.
-
-It does **not** mean the Fauna publication dry run ran.
-
-A successful `build-proof-fauna` job currently means:
-
-> The workflow confirmed that no accepted Fauna proof producer/artifact had appeared, then emitted the documented hold.
-
-It does **not** mean a Fauna proof was built.
-
-### Required-check rule
-
-A workflow appearing on a pull request does not prove it is required by repository rulesets. Required-check coupling, branch protection, merge policy, and administrative enforcement require separate current evidence.
-
-[Back to top](#top)
-
----
-
-<a id="correction-withdrawal-and-rollback-boundary"></a>
-
-## Correction, withdrawal, and rollback boundary
+## Correction, withdrawal, and rollback
 
 ### Dry-run correction
 
-When the shared helper, fixtures, reason codes, or workflow change:
+When helper behavior, fixtures, reason codes, or workflows change:
 
-1. freeze the old and new exact revisions;
-2. identify the contract or behavior change;
+1. freeze old and new exact revisions;
+2. identify the contract change;
 3. rerun all five negative cases;
-4. compare deterministic output and reason codes;
-5. update tests and this runbook in the same coherent review boundary when the behavior intentionally changed;
-6. preserve prior generated authoring receipts and exact-tree references;
-7. do not rewrite old evidence to make it match new code; and
+4. compare deterministic output and exact codes;
+5. update tests and this runbook in the same coherent boundary when intentional;
+6. preserve prior receipts and exact-tree references;
+7. do not rewrite old evidence to match new code; and
 8. record unresolved compatibility as `HOLD` or `CONFLICTED`.
 
-### Candidate correction
-
-A future candidate dry run must route incorrect source, taxonomic, evidence, transform, rights, policy, or validation support back to its owning lane. Do not repair canonical or restricted data inside a release-support tool.
+A future candidate dry run routes incorrect source, taxonomy, evidence, transform, rights, policy, or validation support back to its owning lane. It must not repair canonical or restricted data inside release tooling.
 
 ### Public correction and withdrawal
 
-No current Fauna public carrier was established by the bounded inventory. Therefore this procedure cannot execute a public correction or withdrawal.
+No current Fauna public carrier was established by the bounded inventory, so this procedure cannot execute public correction or withdrawal.
 
-If a future release exists:
+For a future release:
 
-- issue a correction or withdrawal through the accepted release-family lane;
-- retain the original release and immutable lineage;
+- retain immutable original history;
+- issue correction or withdrawal through accepted release-family authority;
 - publish an audience-appropriate notice;
 - invalidate or supersede governed API, tile, cache, search, graph, export, screenshot, and AI-facing derivatives;
-- bind the successor or withdrawal to evidence, review, decision, and rollback records; and
-- verify public surfaces rather than assuming a repository change propagated.
+- bind successor or withdrawal state to evidence, review, decision, and rollback records; and
+- verify public surfaces rather than assuming repository changes propagated.
 
-### Rollback
+### Rollback boundary
 
-The shared workflow's rollback-card checks are synthetic fixture/rehearsal evidence only. They do not execute rollback.
+Synthetic rollback-card checks do not execute rollback. Candidate-specific rollback readiness requires a stable prior target, enumerated consumers, explicit correction/withdrawal relationships, bounded cache/index/tile/API invalidation, protected-data preservation, successful rehearsal, and accountable review.
 
-A candidate-specific Fauna dry run must not claim rollback readiness until:
+### This document's rollback
 
-- the prior public-safe target is stable and available;
-- affected carriers and consumers are enumerated;
-- correction and withdrawal relationships are explicit;
-- cache/index/tile/API invalidation is bounded;
-- protected source material remains protected;
-- a deterministic or otherwise auditable rehearsal succeeds; and
-- accountable reviewers accept the result.
+Before merge, close or abandon the draft PR and leave `main` unchanged. After merge, use a transparent revert of the actual merge commit or a reviewed forward correction. Do not rewrite shared history.
 
-[Back to top](#top)
-
----
-
-<a id="graduation-criteria-for-a-candidate-specific-fauna-dry-run"></a>
-
-## Graduation criteria for a candidate-specific Fauna dry run
-
-Do not remove the workflow hold merely because this runbook is complete.
-
-Graduate the Fauna domain dry-run lane only through a separate reviewable implementation that establishes:
-
-1. **Candidate contract** — accepted candidate identity, artifact, manifest, lifecycle boundary, audience, and no-write semantics.
-2. **Directory placement** — verified homes for candidate, manifest, decision, receipt, proof, correction, withdrawal, and rollback families; resolve singular/plural manifest conflict or record an accepted migration.
-3. **Accepted candidate fixture** — one public-safe synthetic Fauna candidate that cannot expose protected locations and is explicitly non-releasable.
-4. **Negative matrix** — missing source, taxonomy conflict, evidence gap, rights gap, sensitive precision, reconstruction clue, transform gap, policy gap, review gap, integrity mismatch, correction gap, and rollback gap.
-5. **Source closure** — accepted descriptors, roles, terms, rights, cadence, and purpose binding.
-6. **Taxonomy closure** — concept identity, authority/version, crosswalk, conflict, and uncertainty.
-7. **Evidence closure** — resolvable fixture EvidenceRefs and bounded EvidenceBundles without promoting fixture data.
-8. **Geoprivacy closure** — public-safe transform contract, proof/receipt binding, diagnostics redaction, and reverse-inference tests.
-9. **Policy closure** — accepted fail-closed rule source, bundle, evaluator, entry point, input/output contract, tests, and governed consumer.
-10. **Review closure** — fixture-only authenticated-shape profile plus a production authority/assignment route kept separate from synthetic proof.
-11. **Release support** — accepted manifest, decision, receipt, correction, withdrawal, and rollback contracts and candidate-bound validation.
-12. **No-write enforcement** — tests prove no lifecycle, release, cache, API, map, tile, index, graph, export, or published mutation.
-13. **No-network enforcement** — deterministic fixture execution with explicit guards; any dependency installation remains outside the validated domain logic.
-14. **Sensitive diagnostics** — findings contain stable codes and safe paths only, never protected values.
-15. **Workflow hardening** — least permissions, pinned actions, no release/deployment secrets, exact job summaries, concurrency, timeouts, and explicit non-effects.
-16. **Documentation** — update this runbook, the Fauna workflow, tool/test READMEs, candidate index, and relevant registers together.
-17. **Validation and rollback** — changed-area tests, exact-head CI, and a transparent rollback plan for the implementation itself.
-18. **Human authority** — accountable domain, source/rights, sensitivity, evidence, policy, validation, independent-review, release, correction, and rollback assignments.
-
-The first graduated command should still stop before release and publication.
-
-[Back to top](#top)
-
----
-
-<a id="open-verification-register"></a>
-
-## Open verification register
-
-| Item | Status | Verification required |
-|---|---|---|
-| Fauna runbook-lane README | **HOLD** | Replace one-byte placeholder with a reviewed local boundary/navigation contract |
-| Fauna child candidate dossier | **ABSENT** | Commission and verify one bounded public-safe candidate |
-| Fauna proof producer and artifact | **HOLD** | Accepted proof contract, producer, fixtures, validator, and release binding |
-| Fauna candidate-specific dry-run tool | **HOLD** | Accepted input/output contract, implementation, tests, and workflow |
-| Canonical Fauna manifest home | **CONFLICTED** | Decide singular/plural lane responsibilities before instance creation |
-| Source-authority register | **PROPOSED / empty** | Accepted owner, schema, entries, and admission integration |
-| Candidate source set and rights | **UNKNOWN / HOLD** | Accepted source descriptors and current approved-use records |
-| Taxonomy authority and review | **NEEDS VERIFICATION** | Verified concepts, crosswalks, assignments, and review |
-| Promotion policy | **INACTIVE** | Operative fail-closed rules, tests, bundle, evaluator, and consumer |
-| Fauna sensitivity/geoprivacy policy | **NEEDS VERIFICATION / HOLD** | Accepted transform and reconstruction-risk enforcement |
-| EvidenceRef resolution | **HOLD** | Candidate-bound EvidenceBundle resolution and proof linkage |
-| Accountable reviewers | **NEEDS VERIFICATION** | Current assignments, scopes, authority intervals, and independence |
-| PromotionDecision/Receipt | **PROPOSED / no Fauna instance** | Candidate-bound authenticated records after review |
-| Correction/withdrawal topology | **NEEDS VERIFICATION** | Accepted homes, contracts, propagation, and notices |
-| Rollback target and drill | **HOLD** | Candidate-bound target, card, rehearsal, and public-surface validation |
-| Published Fauna carrier | **NOT ESTABLISHED** | Separate release-authorized public-safe artifact and manifest binding |
-| Governed API/map/export/AI behavior | **UNKNOWN / HOLD** | End-to-end released-carrier proof and correction/rollback propagation |
-| Required-check/ruleset coupling | **NEEDS VERIFICATION** | Current GitHub ruleset and exact required-check evidence |
-| Independent operational ownership | **NEEDS VERIFICATION** | Named and accepted owners beyond CODEOWNERS routing |
+Reverting this Markdown file would not withdraw a source, undo a lifecycle transition, roll back a release, invalidate a public carrier, or change deployment state because this documentation change creates none of those effects.
 
 [Back to top](#top)
 
@@ -1167,115 +841,80 @@ The first graduated command should still stop before release and publication.
 
 ## Evidence basis
 
-| Repository surface | Use in this runbook | Limitation |
+| Surface | Use | Limitation |
 |---|---|---|
-| [Directory Rules v2](../../doctrine/directory-rules.md) and [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Same-path placement and responsibility separation | Does not prove runtime behavior |
-| [CODEOWNERS](../../../.github/CODEOWNERS) | Verified GitHub review route | Not substantive authority or review completion |
-| [Fauna candidate README](../../../release/candidates/fauna/README.md) and direct-child inventory | Candidate-lane boundary and no verified child dossier | Differently named, external, restricted, generated, or historical material remains outside the bounded inventory |
-| [Fauna proof README](../../../data/proofs/fauna/README.md) and direct-child inventory | Proof-lane boundary and absence of proof artifact | README is not proof |
-| [Fauna manifest README](../../../release/manifests/fauna/README.md) and direct-child inventory | Manifest guidance and topology conflict | No manifest instance or accepted canonical lane |
-| [Fauna published README](../../../data/published/fauna/README.md) and direct-child inventory | Public-carrier boundary and absence of carrier | Folder/README presence is not publication |
-| [Source-authority register](../../../control_plane/source_authority_register.yaml) | Current empty projection posture | Does not admit or activate sources |
-| [Shared dry-run tool](../../../tools/release/release_dry_run.py) | Exact five-case implementation | Synthetic baseline only; accepts no caller candidate |
-| [Shared dry-run tests](../../../tests/release/test_publication_deny_dry_run.py) | Exact case, no-network, determinism, and no-emission assertions | Bounded Python test surface only |
-| [Release tooling README](../../../tools/release/README.md) | Tooling versus release-authority boundary | Draft explanatory surface |
-| [Promotion-gate README](../../../tools/validators/promotion_gate/README.md) | A–G checks, finite results, and limitations | Declared context only; no live resolution or authority |
-| [Promotion policy README](../../../policy/promotion/README.md) | Inactive no-op policy posture | Does not provide production policy |
-| [Fauna workflow](../../../.github/workflows/domain-fauna.yml) | Exact synthetic validation and explicit proof/dry-run holds | Workflow success is not release |
-| [Shared release-dry-run workflow](../../../.github/workflows/release-dry-run.yml) | Read-only orchestration and bounded synthetic checks | No real candidate or publication |
-| [Fauna Promotion Runbook](./PROMOTION_RUNBOOK.md) | Current promotion-readiness boundary and holds | Documentation cannot create transition authority |
-| [Fauna No-Network Test Runbook](./NO_NETWORK_TEST_RUNBOOK.md) | Accepted synthetic fixture procedure | Fixture hygiene only |
-| [Fauna Release Index](../../domains/fauna/RELEASE_INDEX.md) | Human release-navigation lineage and open vocabulary conflicts | Illustrative IDs are not releases |
-| [Proposal-era Release Dry-Run Runbook](../RELEASE_DRY_RUN.md) | Planning lineage | Current implementation files outrank its unverified broad mechanics |
+| [Directory Rules](../../doctrine/directory-rules.md) and [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Placement and responsibility separation | No runtime proof |
+| [CODEOWNERS](../../../.github/CODEOWNERS) | GitHub review routing | Not substantive authority or completed review |
+| [Fauna candidate README](../../../release/candidates/fauna/README.md) and bounded inventory | Candidate-lane boundary and absent child dossier | Does not cover external or restricted systems |
+| [Fauna proof README](../../../data/proofs/fauna/README.md) and bounded inventory | Proof-lane boundary and absent artifact | README is not proof |
+| [Fauna manifest README](../../../release/manifests/fauna/README.md) and bounded inventory | Manifest guidance and topology conflict | No instance or accepted canonical lane |
+| [Fauna published README](../../../data/published/fauna/README.md) and bounded inventory | Public-carrier boundary and absent carrier | Folder presence is not publication |
+| [Source-authority projection](../../../control_plane/source_authority_register.yaml) | Empty current projection posture | Does not admit or activate sources |
+| [Shared helper](../../../tools/release/release_dry_run.py) | Exact five-case implementation | Synthetic baseline only |
+| [Shared tests](../../../tests/release/test_publication_deny_dry_run.py) | Polarity, code, no-network, determinism, and no-emission assertions | Bounded Python test surface |
+| [Promotion-gate README](../../../tools/validators/promotion_gate/README.md) | A–G checks, finite results, and limits | Declared context only; no live authority |
+| [Promotion policy README](../../../policy/promotion/README.md) | Inactive policy posture | No production policy evaluation |
+| [Fauna workflow](../../../.github/workflows/domain-fauna.yml) | Synthetic validation and explicit holds | Workflow success is not release |
+| [Release-dry-run workflow](../../../.github/workflows/release-dry-run.yml) | Read-only orchestration | No real candidate or publication |
+| [Fauna Promotion Runbook](./PROMOTION_RUNBOOK.md) | Current promotion-readiness boundary | Documentation cannot create authority |
+| [Fauna No-Network Runbook](./NO_NETWORK_TEST_RUNBOOK.md) | Synthetic fixture procedure | Fixture hygiene only |
+| [Fauna Release Index](../../domains/fauna/RELEASE_INDEX.md) | Navigation lineage and vocabulary conflicts | Illustrative IDs are not releases |
 
 ### Evidence limits
 
-- Git tree presence proves bytes at a revision, not scientific correctness, legal permission, release, deployment, or publication.
-- Direct-child inventories are bounded to the inspected paths and revision.
+- Git-tree presence proves bytes at a revision, not scientific correctness, legal permission, release, deployment, or publication.
+- Direct-child inventories are bounded to inspected paths and revision.
 - Connector-only authoring did not execute repository-native commands locally.
-- No live source, protected payload, policy engine, reviewer authority service, release service, public API, map, tile server, cache, or deployment was exercised.
-- Current operational state outside visible repository evidence remains `UNKNOWN` or `NEEDS VERIFICATION`.
+- No live source, protected payload, production policy engine, reviewer-authority service, release service, public API, map, tile server, cache, or deployment was exercised.
+- Operational state beyond visible repository evidence remains `UNKNOWN` or `NEEDS VERIFICATION`.
+
+The `created` date in this file records creation of the substantive v1.0 runbook. The creation date of the prior inventory-generated scaffold remains unknown.
 
 [Back to top](#top)
 
 ---
 
-<a id="document-change-rollback"></a>
+<a id="operator-checklist"></a>
 
-## Document change rollback
+## Operator checklist
 
-This change replaces one same-path Markdown scaffold. It creates no executable or public effect.
+### Freeze and safety
 
-Before merge:
-
-- close or abandon the draft pull request;
-- delete or retain the feature branch according to repository practice; and
-- leave `main` unchanged.
-
-After merge:
-
-- revert the actual merge commit through a reviewed pull request, or
-- apply a reviewed forward correction.
-
-Do not rewrite shared history.
-
-Reverting this document would restore the prior scaffold. It would not withdraw a Fauna source, undo a lifecycle transition, roll back a release, invalidate a public carrier, or change deployment state because this documentation change creates none of those effects.
-
-[Back to top](#top)
-
----
-
-<a id="appendix-a-operator-checklist"></a>
-
-## Appendix A — operator checklist
-
-### Freeze
-
-- [ ] Exact repository and 40-hex commit recorded.
+- [ ] Exact repository and head recorded.
 - [ ] Branch and worktree status recorded.
-- [ ] Target and governing blobs frozen.
-- [ ] Candidate ID recorded, or explicitly `NOT_ESTABLISHED`.
-- [ ] Requested boundary and audience recorded.
-- [ ] Active overlapping work checked.
-- [ ] No restricted or uncommitted sensitive payload is present.
-
-### Safety
-
-- [ ] No source credentials exposed.
-- [ ] No network access required by validated logic.
-- [ ] No protected location or observer detail in inputs or logs.
-- [ ] No geoprivacy transform parameters exposed.
-- [ ] No lifecycle, release, cache, deployment, or public write authorized.
-- [ ] Count-only lane inventory used.
+- [ ] Candidate ID recorded or `NOT_ESTABLISHED`.
+- [ ] Active overlap checked.
+- [ ] No restricted or uncommitted sensitive payload present.
+- [ ] No source credential, network, signing, deployment, or public-write dependency.
+- [ ] Count-only inventory used.
 
 ### Shared validation
 
-- [ ] `make release-dry-run` ran at exact revision.
+- [ ] `make release-dry-run` ran at the exact revision.
 - [ ] Five cases observed.
+- [ ] Exact statuses and reason codes matched.
 - [ ] Every publication outcome remained denied.
-- [ ] Exact expected reason codes matched.
-- [ ] Every case readiness remained `BLOCKED`.
-- [ ] Authority, decision, publication, network, and assembly fields remained false.
-- [ ] Deterministic/no-emission tests passed.
+- [ ] Every readiness remained `BLOCKED`.
+- [ ] Authority, decision, network, publication, and assembly fields remained false.
+- [ ] Determinism and no-emission tests passed.
 
-### Generic and Fauna validation
+### Generic and Fauna fixtures
 
 - [ ] `make publish-check` interpreted as fixture-only declared readiness.
-- [ ] Accepted Fauna fixture suite ran.
-- [ ] Positive/negative fixture polarity remained exact.
-- [ ] Synthetic pass was not translated into candidate readiness.
-- [ ] Domain proof and dry-run hold jobs were reported as holds.
+- [ ] Fauna fixture-safety suite ran.
+- [ ] Positive and negative fixture polarity remained exact.
+- [ ] Synthetic success was not translated into candidate readiness.
+- [ ] Proof and dry-run jobs were reported as holds when applicable.
 
-### Candidate-specific closure
+### Candidate closure
 
-- [ ] Candidate exists and identity is stable.
-- [ ] Artifact set and digests are immutable.
+- [ ] Candidate and immutable artifact set exist.
 - [ ] Source admission and approved use are accepted.
 - [ ] Taxonomy packet is reviewed.
 - [ ] EvidenceRefs resolve to accepted EvidenceBundles.
-- [ ] Rights/stewardship decisions are current.
-- [ ] Sensitivity/geoprivacy transform and reconstruction review are accepted.
-- [ ] Candidate-specific validation is deterministic and negative-tested.
+- [ ] Rights and stewardship decisions are current.
+- [ ] Geoprivacy transform and reconstruction review are accepted.
+- [ ] Candidate validation is deterministic and negative-tested.
 - [ ] Promotion policy is active, accepted, and bound.
 - [ ] Required reviewers and separation are authenticated.
 - [ ] Manifest lane and vocabulary are unambiguous.
@@ -1287,13 +926,10 @@ Reverting this document would restore the prior scaffold. It would not withdraw 
 - [ ] Exact-head hosted status recorded.
 - [ ] Introduced and inherited failures separated.
 - [ ] Public-safe reason codes only.
-- [ ] No protected values in the handoff.
-- [ ] Finite outcome recorded.
-- [ ] Next accountable authority verified or marked `NEEDS VERIFICATION`.
-- [ ] Public state unchanged.
-- [ ] Release state unchanged.
-- [ ] Source activation unchanged.
+- [ ] No protected values exposed.
+- [ ] Finite outcome and next accountable authority recorded.
+- [ ] Public, release, deployment, and source-activation state unchanged.
 
-At the current checkpoint, the checklist must stop at **candidate-specific closure: candidate does not exist**, and the final outcome is **HOLD**.
+At the inspected checkpoint, the checklist stops at **candidate closure: candidate not established**, and the final outcome is **HOLD**.
 
 [Back to top](#top)
