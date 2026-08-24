@@ -181,9 +181,10 @@ function parseCompare(value: unknown): PublicWorkspaceCompareContext | null {
 }
 
 /**
- * Strictly parse the public-safe context that may be serialized into a URL.
- * Unknown and extra fields fail closed so private prompts, reviewer notes,
- * restricted coordinates, or other privileged payloads cannot hitchhike here.
+ * Strictly parse the UI-owned context projection. Unknown and extra fields
+ * fail closed so private prompts, reviewer notes, restricted coordinates, or
+ * other privileged payloads cannot hitchhike here. URL-specific functions
+ * apply the additional evidence-reference exclusion below.
  */
 export function parsePublicWorkspaceContext(
   value: unknown,
@@ -231,12 +232,23 @@ export function parsePublicWorkspaceContext(
   });
 }
 
+/**
+ * Evidence references require governed release and access proof that this
+ * browser-owned projection cannot establish. Keep them available for bounded
+ * in-memory context transfer, but fail closed at every shareable URL boundary.
+ */
+function isPublicUrlSafeContext(context: PublicWorkspaceContext): boolean {
+  return (
+    context.selection === null || context.selection.evidenceRefs.length === 0
+  );
+}
+
 /** Serialize one canonical context into the versioned query parameter. */
 export function serializePublicWorkspaceContext(
   value: unknown,
 ): string | null {
   const context = parsePublicWorkspaceContext(value);
-  if (!context) return null;
+  if (!context || !isPublicUrlSafeContext(context)) return null;
   const json = JSON.stringify(context);
   if (json.length > MAX_CONTEXT_JSON_LENGTH) return null;
   const params = new URLSearchParams();
@@ -257,7 +269,8 @@ export function parsePublicWorkspaceContextQuery(
     return null;
   }
   try {
-    return parsePublicWorkspaceContext(JSON.parse(candidates[0]));
+    const context = parsePublicWorkspaceContext(JSON.parse(candidates[0]));
+    return context && isPublicUrlSafeContext(context) ? context : null;
   } catch {
     return null;
   }
@@ -272,7 +285,7 @@ export function withPublicWorkspaceContext(
   value: unknown,
 ): URL | null {
   const context = parsePublicWorkspaceContext(value);
-  if (!context) return null;
+  if (!context || !isPublicUrlSafeContext(context)) return null;
   const workspace = findPublicWorkspace(context.workspaceId);
   if (!workspace) return null;
   const json = JSON.stringify(context);
