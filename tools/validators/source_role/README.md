@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-validators-source-role-readme
 title: tools/validators/source_role README
 type: README
-version: v0.1
+version: v0.2
 status: draft
 owner: TODO-tooling-qa-owner-plus-source-steward-plus-validator-steward-plus-schema-steward-plus-policy-steward-plus-evidence-steward-plus-release-steward
 created: 2026-07-08
-updated: 2026-07-08
+updated: 2026-08-24
 policy_label: repository-facing; source-role-validator-index; source-admission; source-role-anti-collapse; authority-rank-aware; admissibility-limits-aware; evidence-role-aware; fail-closed; release-gated; non-authoritative
 owning_root: tools/
 responsibility: source-role validator routing README under tools/validators; documents validation expectations for source_role presence, authority_rank presence, role vocabulary conformance, role immutability after admission, role-to-claim compatibility, admissibility limits, source-role anti-collapse, modeled/aggregate/candidate/context/primary role boundaries, evidence support posture, downstream role propagation, policy/review/release posture, correction and supersession handling, fixture/test routing, and finite outcomes while deferring SourceDescriptor meaning, source-role vocabulary authority, canonical schemas, policy decisions, source registry records, evidence records, receipts, lifecycle data, release records, public runtime code, and release authority to their owning roots
@@ -28,8 +28,11 @@ related:
   - ../../../docs/sources/source-roles.md
   - ../../../docs/sources/ADMISSION_PROCESS.md
   - ../../../contracts/source/source_descriptor.md
+  - ../../../contracts/source/source_role_use_request.md
   - ../../../schemas/contracts/v1/source/README.md
   - ../../../schemas/contracts/v1/source/source_descriptor.schema.json
+  - ../../../schemas/contracts/v1/source/source_role_use_request.schema.json
+  - ../../../schemas/contracts/v1/source/source_role_transition_assessment.schema.json
   - ../../../data/registry/sources/
   - ../../../policy/source/
   - ../../../policy/rights/
@@ -39,13 +42,20 @@ related:
   - ../../../data/receipts/
   - ../../../release/
   - ../../../fixtures/contracts/v1/source/source_descriptor/
+  - ../../../fixtures/contracts/v1/source/source_role_use_request/
+  - ../../../fixtures/contracts/v1/source/source_role_transition_assessment/
+  - ../../../tests/validators/test_validate_source_role.py
+  - ../../../tests/source/test_source_role_transition_assessment.py
+  - ../../../.github/workflows/source-role-anti-collapse.yml
+  - ../../../.github/workflows/source-role-transition-assessment.yml
   - ../../../fixtures/
   - ../../../tests/
 notes:
-  - "This README replaces an empty placeholder at tools/validators/source_role/README.md. It does not confirm executable source-role validators, registry wiring, schema bindings, fixtures, policy bundles, receipt emission, runtime behavior, or CI behavior."
+  - "v0.2 reconciles this lane with the bounded fixture-only executable validators, active schema bindings, synthetic fixtures, focused tests, compatibility shim, and dedicated CI workflows present on current main."
+  - "The bounded implementation remains PROPOSED_INACTIVE. It performs no live source access, registry mutation, source activation, evidence creation, policy decision, review approval, release, publication, or public permission."
   - "Source role is fixed at source admission. Promotion, publication, map rendering, AI generation, downstream derivation, or catalog appearance must not upgrade a role."
   - "This lane validates source-role posture and anti-collapse behavior. It does not define the source-role vocabulary, mutate source descriptors, decide policy, approve release, or make source claims true."
-  - "Exact enum values and source-role vocabulary authority remain NEEDS VERIFICATION unless verified from the active schema, accepted ADR, or source-role standard."
+  - "The executable anti-collapse profile reads active source-role, authority-rank, and claim-role vocabularies from schemas/contracts/v1/source/source_descriptor.schema.json rather than defining a second vocabulary."
   - "Unknown, missing, contradictory, unsupported, AI-inferred, or downstream-upgraded source roles should fail closed or route to steward review."
 [/KFM_META_BLOCK_V2] -->
 
@@ -82,12 +92,17 @@ The answer should be a deterministic validation result or routing decision. This
 
 | Surface | Status | Notes |
 |---|---|---|
-| `tools/validators/source_role/README.md` | **CONFIRMED README** | This README replaces the previous empty placeholder. |
+| `tools/validators/source_role/README.md` | **CONFIRMED README** | v0.2 reconciles this routing surface with the bounded implementation present on current main. |
 | `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` | **CONFIRMED standard / implementation NEEDS VERIFICATION** | Includes source-role vocabulary and anti-collapse sections. |
-| `contracts/source/source_descriptor.md` | **CONFIRMED contract / schema-paired draft** | SourceDescriptor requires `source_role`, `authority_rank`, and `admissibility_limits`; exact accepted enum values still need active schema verification here. |
+| `contracts/source/source_descriptor.md` | **CONFIRMED contract / schema-paired draft** | SourceDescriptor requires `source_role`, `authority_rank`, and `admissibility_limits`; the executable profile validates descriptor snapshots against the active schema. |
 | `tools/validators/source/README.md` | **CONFIRMED parent README / executable behavior NEEDS VERIFICATION** | Broad source validator parent route already treats source role and anti-collapse as parent source concerns. |
 | `tools/validators/source-descriptor/README.md` and `tools/validators/source_descriptor/README.md` | **CONFIRMED sibling READMEs / executable behavior NEEDS VERIFICATION** | SourceDescriptor-specific lanes cover broader descriptor validation and naming drift. |
-| Executable source-role validator scripts, registry wiring, source-role vocabulary authority, schema bindings, fixtures, policy bundles, report destinations, receipt emission, runtime behavior, and CI wiring | **NEEDS VERIFICATION** | This README is documentation only. |
+| `source_role_core.py`, `source_role_rules.py`, and `validate_source_role.py` | **CONFIRMED bounded executable / `PROPOSED_INACTIVE`** | Deterministically evaluates one descriptor-bound downstream-use request or the synthetic fixture suite with finite `PASS`, `ERROR`, `HOLD`, `RESTRICT`, `ABSTAIN`, and `DENY` outcomes. |
+| `validate_source_role_transition_assessment.py` | **CONFIRMED bounded fixture-only executable** | Validates synthetic source-role transition assessments; it does not mutate descriptors or create governed transition records. |
+| `tools/validators/sources/validate_source_role.py` | **CONFIRMED compatibility shim** | Imports the canonical `source_role/` entrypoint and does not define a second schema, vocabulary, or outcome grammar. |
+| Source-role use-request and transition contracts, schemas, and fixtures | **CONFIRMED repository surfaces / proposal status retained** | Machine shape remains in `schemas/`, meaning in `contracts/`, and minimized synthetic cases in `fixtures/`; their presence does not activate a source or grant public use. |
+| Focused tests and dedicated workflows | **CONFIRMED executable proof and CI wiring** | Focused suites cover finite positive and fail-closed outcomes; dedicated workflows are no-network, read-only, and non-publishing. |
+| Central validator-registry entry, live registry or policy resolution, authenticated evidence/review/release references, persisted report emission, runtime integration, and public-surface enforcement | **NOT IMPLEMENTED or NEEDS VERIFICATION by surface** | The current bounded profiles are not entries in `tools/validators/validator_registry.json`; broader live and public integration is outside their declared scope. |
 
 [Back to top](#top)
 
@@ -192,9 +207,10 @@ A source-role candidate should fail closed, deny, restrict, hold, abstain, or ro
 
 Safe interpretation:
 
-- **CONFIRMED:** this README exists at `tools/validators/source_role/README.md`.
-- **PROPOSED:** validator code may live here when it checks declared source-role and anti-collapse invariants and delegates vocabulary authority, meaning, schemas, registry records, policy decisions, evidence, receipts, lifecycle data, release records, and public runtime authority to owning roots.
-- **NEEDS VERIFICATION:** exact executable files, registry entries, source-role vocabulary authority, accepted enum values, schema bindings, fixture files, test paths, policy bundle homes, report destinations, receipt emission, release integration, runtime behavior, and CI wiring.
+- **CONFIRMED:** bounded executable validators, active schema bindings, synthetic fixtures, focused tests, one plural compatibility shim, generated authoring receipts, and dedicated no-network CI workflows exist for this lane.
+- **CONFIRMED boundary:** the main anti-collapse contract remains `PROPOSED_INACTIVE`; passing synthetic validation creates no source role, evidence, policy decision, review approval, source activation, release, publication, or public permission.
+- **NEEDS VERIFICATION:** live source-registry lookup, policy-bundle evaluation, authenticated evidence/review/release resolution, persisted report destinations, runtime integration, and public-surface enforcement.
+- **NOT IMPLEMENTED in the searched central registry:** `tools/validators/validator_registry.json` contains no entry for these source-role profiles; their dedicated workflows do not establish aggregate-registry wiring.
 - **DENY:** using this folder as source-role vocabulary authority, source registry, source data store, source admission authority, legal authority, policy rule authority, canonical schema home, semantic contract home, evidence store, proof store, receipt store, lifecycle data store, release record store, public runtime surface, AI answer source, or publication authority.
 
 [Back to top](#top)
@@ -266,20 +282,23 @@ Good fits for `tools/validators/source_role/` include:
 
 ---
 
-## Minimal future layout
+## Current bounded layout
 
-Future implementation should remain small and reversible:
+The executable lane is intentionally small and reversible:
 
 ```text
 tools/validators/source_role/
 ├── README.md
-├── validate_source_role.py              # PROPOSED; not confirmed
-├── validate_role_anti_collapse.py       # PROPOSED; not confirmed
-├── validate_claim_role_compatibility.py # PROPOSED; not confirmed
-└── registry_notes.md                    # PROPOSED; documentation only
+├── IMPLEMENTATION.md
+├── source_role_core.py
+├── source_role_rules.py
+├── validate_source_role.py
+└── validate_source_role_transition_assessment.py
 ```
 
-Do not add executable validators, local vocabulary files, local schema files, registry records, policy bundles, source data, release records, or fixtures unless the placement decision is documented, the canonical authority relationship is explicit, and tests prove fail-closed behavior without granting source-role, public-surface, or release authority.
+The plural `tools/validators/sources/validate_source_role.py` path is a compatibility shim only. Contracts, schemas, fixtures, tests, workflows, and generated authoring receipts remain in their responsibility roots.
+
+Do not add local vocabulary files, local schema files, registry records, policy bundles, source data, release records, or validator-owned proof/receipt stores. Any broader implementation must preserve the canonical authority relationship and prove fail-closed behavior without granting source-role, public-surface, or release authority.
 
 [Back to top](#top)
 
@@ -287,23 +306,24 @@ Do not add executable validators, local vocabulary files, local schema files, re
 
 ## Acceptance checklist
 
-This README is complete for documentation purposes when:
+This README is current for the bounded repository surfaces when:
 
 - [x] It replaces the empty placeholder at `tools/validators/source_role/README.md`.
 - [x] It marks this path as source-role validator routing, not source-role vocabulary authority, source registry, source admission authority, schema authority, policy authority, evidence authority, proof/receipt storage, release record storage, public runtime, or AI authority.
 - [x] It preserves role-fixed-at-admission posture, anti-collapse checks, role-to-claim compatibility, correction/supersession lineage, and fail-closed handling.
 - [x] It routes source-role doctrine/vocabulary to `docs/` and accepted ADR/schema homes, source meaning to `contracts/`, machine shape to `schemas/`, registry records to `data/registry/sources/`, policy to `policy/`, receipts/proofs to `data/`, release records to `release/`, fixtures to `fixtures/`, and tests to `tests/`.
-- [x] It marks exact enum values, executable scripts, registry wiring, schema bindings, fixtures, tests, policy bundles, receipt emission, release integration, runtime behavior, and CI wiring as **NEEDS VERIFICATION**.
+- [x] It distinguishes confirmed executable, schema, fixture, test, shim, receipt, and CI surfaces from unimplemented or unverified central-registry, live-resolution, report-emission, runtime, and public-enforcement surfaces.
 
-Future implementation is not complete until:
+Current verification status:
 
-- [ ] Validator registry or CLI references to source-role validators are searched and classified.
-- [ ] Accepted source-role vocabulary and enum values are verified from schema, ADR, or source-role standard.
-- [ ] Source role, authority rank, admissibility limits, claim-role compatibility, and anti-collapse schema bindings are verified.
-- [ ] Fixture files are added or verified only as synthetic/minimized public-safe payloads with documented expected outcomes.
-- [ ] Tests prove positive, negative, deny, restrict, hold, abstain, role-missing, unsupported-role, AI-inferred-role, role-collapse, claim-role-incompatible, lineage-missing, release-missing, and public-surface-blocked cases.
-- [ ] CI invokes source-role validators in deterministic order.
-- [ ] Any generated validation outputs write only to accepted report, proof, receipt, or artifact roots.
+- [x] Central validator-registry and CLI references were searched; these profiles use direct entrypoints and dedicated workflows rather than `tools/validators/validator_registry.json`.
+- [x] The active SourceDescriptor schema supplies the source-role, authority-rank, and claim-role vocabularies consumed by the anti-collapse implementation.
+- [x] Source role, authority rank, admissibility limits, claim-role compatibility, and anti-collapse bindings are exercised against active schemas.
+- [x] Fixture payloads are synthetic, minimized, and carry exact expected outcomes.
+- [x] Focused tests cover bounded positive, malformed, hold, restrict, abstain, AI-inferred, collapse, incompatibility, lineage, release-support, public-exposure, identity, duplicate-key, compatibility-shim, and no-network behavior.
+- [x] Dedicated CI invokes both source-role profiles deterministically with read-only permissions and no publication effects.
+- [x] Validator output is bounded stdout only; no persisted ValidationReport, proof, receipt, registry record, release record, or artifact is emitted.
+- [ ] Live registry, policy, evidence, review, release, runtime, and public-surface integration remains outside the current fixture-only profiles and requires separate authority and acceptance criteria.
 
 [Back to top](#top)
 
@@ -313,4 +333,5 @@ Future implementation is not complete until:
 
 | Date | Change | Status |
 |---|---|---|
+| 2026-08-24 | Reconciled the README with current bounded executables, active schema bindings, synthetic fixtures, focused tests, compatibility routing, and dedicated CI while retaining `PROPOSED_INACTIVE` and non-publishing boundaries. | **CONFIRMED repository status / broader integration NEEDS VERIFICATION** |
 | 2026-07-08 | Replaced empty placeholder with source-role validator README. | **CONFIRMED README / implementation NEEDS VERIFICATION** |
