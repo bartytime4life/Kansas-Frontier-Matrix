@@ -2,11 +2,11 @@
 doc_id: kfm://doc/docs-architecture-briefing-integration
 title: Briefing-to-System Integration Architecture
 type: architecture; implementation-guide
-version: v0.7.0
+version: v0.8.0
 status: proposed; bounded foundations reconciled through authenticated read-only GitHub issue observation
 owners: OWNER_TBD — Architecture steward · Governance steward · Domain stewards · Source/evidence/policy/release stewards
 created: 2026-07-29
-updated: 2026-08-14
+updated: 2026-08-24
 policy_label: public; architecture; briefing-integration; no-public-authority
 related:
   - ../../contracts/governance/briefing_signal.md
@@ -32,6 +32,7 @@ related:
   - ../../.github/workflows/github-issue-inventory-read.yml
 tags: [kfm, architecture, briefing, identity, deduplication, materiality, routing, issue-inventory, github-read, temporal-authority, source-snapshot, evidence-binding, water-planning, evidence-first]
 notes:
+  - "v0.8 adds five non-authoritative reporting lenses without creating domain, schema, routing, lifecycle, evidence, policy, review, release, or publication authority."
   - "v0.7 corrects the prior future-stage claim: the repository already contains a separately bounded authenticated read-only GitHub issue-observation profile, probe, validator, fixtures/tests, and workflow."
   - "GitHubIssueInventoryRead remains PROPOSED_INACTIVE and creates no repository mutation, evidence, policy, review, release, publication, or public-use authority."
   - "Live source access, authoritative source/evidence/policy resolution, and public products remain separately reviewed future stages."
@@ -111,6 +112,29 @@ authenticates an `EvidenceBundle`, decides rights or policy, approves review,
 mutates lifecycle state, releases, deploys, publishes, or authorizes public use.
 A `PASS` on a candidate/assessment or a `FRESH` GitHub read means only that the
 named bounded contract closed under its declared conditions.
+
+## Non-authoritative reporting lenses
+
+Recurring briefing stories may be summarized through one primary lens and
+secondary tags. The lens identifies the reporting pattern and its anti-collapse
+risk; it does not classify truth, replace the native object family, or select a
+route.
+
+| Lens | Typical material | Required separation |
+|---|---|---|
+| Repository governance and control | Branch and pull-request state, CI ambiguity, review coverage, ruleset drift, campaign cursors, and compatibility migration | Repository observations are not geospatial lifecycle or public-truth events. |
+| Volatile advisories and public-safety events | Alerts, advisories, closures, rescissions, and status checks | Retrieval failure is not a clear state; the native issuer and event status remain visible. |
+| Conditions, observations, classifications, and forecasts | Station observations, modeled grids, surveys, statewide classes, and forecasts | Source role, scale, resolution, time, and uncertainty remain distinct. |
+| Governance events and public participation | Meetings, hearings, workshops, rulemaking, comment windows, recommendations, and decisions | Announcement, participation, recommendation, decision, and implementation remain separate states. |
+| Funding, projects, and measured outcomes | Programs, eligibility, applications, reviews, awards, agreements, projects, payments, milestones, completion, observations, and evaluation | Funding, completed work, and observed outcomes cannot be inferred from one another. |
+
+These labels are a contributor and reporting view only. They add no domain
+type, schema field, priority, state, evidence, policy, review, routing, release,
+or publication authority. The native object family, source role, real-world
+state, KFM lifecycle state, and governed evidence and policy surfaces continue
+to control. See the
+[source reconciliation](../intake/exploratory/circled-whole-system-sources-distinctive-delta-source-map.md#33-five-briefing-lenses)
+for the proposal lineage.
 
 ## Independent state machines
 
