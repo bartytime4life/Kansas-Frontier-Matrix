@@ -3,14 +3,14 @@ doc_id: kfm://doc/docs-runbooks-readme
 title: docs/runbooks/ — Operational Procedure and Recovery Index
 type: readme
 subtype: nested-directory-landing-page
-version: v1.1
-prior_version: v1
+version: v1.2
+prior_version: v1.1
 status: draft; repository-grounded; documentation-only; non-authoritative
 owners:
   - "@bartytime4life — verified GitHub review route"
   - "NEEDS VERIFICATION — accountable runbook, domain, security, release, and independent-review assignments"
 created: 2026-05-12
-updated: 2026-08-14
+updated: 2026-08-24
 policy_label: repository-facing; mixed child sensitivity
 current_path: docs/runbooks/README.md
 owning_root: docs/
@@ -23,23 +23,25 @@ canonical_relationship: same-path update; no sibling authority created
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 9cc9c7c05e85d27358e4d6d2987a4da422dea1f9
-  target_prior_blob: 82e2978edad36fa69cb9f082911a3b79e8249557
-  runbooks_tree: bc8283efec2b05a33dfe2e767bdd272fbd60551b
+  base_commit: 991f9f99634ceeb31228b22e593b1111f9b0510b
+  target_prior_blob: 7b6f266a41f7723cba50ea3c093d341063c08f4d
+  runbooks_tree: 105052f66cb10a12e4a26d2d8e347ce8f10b48f9
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
-  adr_index_blob: 419ebd60db28404edb0d363125c85f6f15deaec0
+  adr_index_blob: 8f90c75e662918f8062c4a9d139b19f268295c55
   docs_root_readme_blob: 1f8bac189dac1d01c1185e8b4fb8e25efd11d09f
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
   inventory:
-    direct_entries: 40
-    direct_markdown_files_including_this_readme: 27
+    direct_entries: 42
+    direct_markdown_files_including_this_readme: 29
     direct_domain_directories: 13
-    recursive_markdown_files: 104
-    files_with_exact_proposed_scaffold_marker: 32
+    recursive_markdown_files: 108
+    files_with_exact_proposed_scaffold_marker: 34
     recurring_domain_packet_directories: 13
     recurring_domain_packet_files: 52
-    direct_domain_directory_readmes: 0
+    direct_domain_directory_readme_paths: 4
+    substantive_domain_boundary_readmes: 2
+    one_byte_domain_readme_placeholders: 2
 related:
   - docs/README.md
   - docs/doctrine/directory-rules.md
@@ -60,9 +62,9 @@ related:
   - data/README.md
   - release/README.md
 notes:
-  - "v1.1 replaces a proposal-only May 2026 inventory with a repository-grounded index of the current 104-file Markdown subtree."
-  - "Thirty-two files explicitly identify themselves with the exact phrase PROPOSED scaffold; the absence of that marker does not prove a procedure is validated, rehearsed, approved, or operationally admitted."
-  - "All 13 domain directories contain a recurring four-file packet, but none has a local README boundary contract; this update records that gap without creating 13 new documents."
+  - "v1.2 reconciles the parent index with the exact 108-file Markdown subtree at the pinned current-main checkpoint."
+  - "Thirty-four files contain the exact phrase PROPOSED scaffold, but the phrase is a lexical drift signal rather than a present-maturity classifier because some current documents retain it only in prior-state or inventory text."
+  - "All 13 domain directories retain the recurring four-file packet; Agriculture and Archaeology now have substantive local README boundary contracts, while Atmosphere and Fauna have one-byte README placeholders."
   - "Naming aliases, flat-versus-domain placement, scaffold disposition, and stale no-mounted-repo language remain separate dependency-aware cleanup work."
   - "This one-file update changes no executable procedure, contract, schema, policy, fixture, validator, workflow, evidence object, lifecycle object, release decision, deployment, promotion, publication, or repository setting."
 [/KFM_META_BLOCK_V2] -->
@@ -74,11 +76,11 @@ notes:
 > **Human-facing index for KFM procedures used to inspect, rehearse, contain, correct, recover, and safely hand off governed work.** Runbooks explain how an authorized actor should proceed; they do not grant authority, make evidence true, approve policy, change lifecycle state, or release anything by themselves.
 
 [![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status-and-evidence-boundary)
-[![Tracked Markdown: 104](https://img.shields.io/badge/tracked%20Markdown-104-0969da?style=flat-square)](#status-and-evidence-boundary)
+[![Tracked Markdown: 108](https://img.shields.io/badge/tracked%20Markdown-108-0969da?style=flat-square)](#status-and-evidence-boundary)
 [![Direct domain lanes: 13](https://img.shields.io/badge/direct%20domain%20lanes-13-1f6feb?style=flat-square)](#domain-lane-inventory)
-[![Explicit scaffolds: 32](https://img.shields.io/badge/explicit%20scaffolds-32-d4a72c?style=flat-square)](#scaffolds-aliases-and-drift)
+[![Scaffold phrase files: 34](https://img.shields.io/badge/scaffold%20phrase%20files-34-d4a72c?style=flat-square)](#scaffolds-aliases-and-drift)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-and-negative-authority)
-[![Reviewed: 2026-08-14](https://img.shields.io/badge/reviewed-2026--08--14-0969da?style=flat-square)](#last-reviewed-and-rollback)
+[![Reviewed: 2026-08-24](https://img.shields.io/badge/reviewed-2026--08--24-0969da?style=flat-square)](#last-reviewed-and-rollback)
 
 > [!IMPORTANT]
 > **A runbook is an instruction surface, not an authority surface.** It may cite an accepted decision, policy result, EvidenceBundle, ReviewRecord, ReleaseManifest, CorrectionNotice, RollbackCard, validator result, or workflow conclusion. It cannot create or replace any of them.
@@ -135,17 +137,17 @@ A procedure must stop when its named authority, input, permission, review, evide
 
 ## Status and evidence boundary
 
-The observations below are pinned to `main@9cc9c7c05e85d27358e4d6d2987a4da422dea1f9`. They describe tracked repository bytes, not deployed behavior or operational approval.
+The observations below are pinned to `main@991f9f99634ceeb31228b22e593b1111f9b0510b`. They describe tracked repository bytes, not deployed behavior or operational approval.
 
 | Surface | CONFIRMED observation | Bounded conclusion |
 |---|---|---|
-| This README | Prior v1 blob `82e2978e...`, dated 2026-05-12 | Same-path v1.1 reconciliation; no sibling authority |
-| Direct subtree | 40 direct entries: this README, 26 other Markdown files, and 13 domain directories | Current direct-child map is known at the pinned revision |
-| Recursive Markdown inventory | 104 Markdown files | The lane is materially implemented as documentation, but document count is not procedure maturity |
-| Explicit scaffold marker | 32 files contain the exact phrase `PROPOSED scaffold` | Those files are not executable procedures and must remain visibly held |
-| Remaining Markdown | 72 files do not contain that exact marker | Absence of the phrase is not validation, rehearsal, review, admission, or release proof |
+| This README | Prior v1.1 blob `7b6f266a...`, dated 2026-08-14 | Same-path v1.2 reconciliation; no sibling authority |
+| Direct subtree | 42 direct entries: this README, 28 other Markdown files, and 13 domain directories | Current direct-child map is known at the pinned revision |
+| Recursive Markdown inventory | 108 Markdown files | The lane is materially implemented as documentation, but document count is not procedure maturity |
+| Exact scaffold phrase | 34 files contain the exact phrase `PROPOSED scaffold` | This is a lexical drift signal, not proof that every matching file is presently a scaffold |
+| Remaining Markdown | 74 files do not contain that exact phrase | Absence of the phrase is not validation, rehearsal, review, admission, or release proof |
 | Domain packet pattern | Every one of the 13 domain directories contains `NO_NETWORK_TEST_RUNBOOK.md`, `PROMOTION_RUNBOOK.md`, `ROLLBACK_RUNBOOK.md`, and `SOURCE_REFRESH_RUNBOOK.md` | A repeated documentation pattern exists; parity and current correctness remain separate checks |
-| Domain-lane boundary READMEs | 0 of 13 direct domain directories contains `README.md` | Local ownership, inheritance, sensitivity, and maintenance contracts are not closed |
+| Domain-lane boundary READMEs | 4 of 13 direct domain directories contain a tracked `README.md`; Agriculture and Archaeology are substantive, while Atmosphere and Fauna are one-byte placeholders | Two local boundary contracts are documented; the other 11 lanes remain locally unclosed |
 | Sampled long-form runbooks | Promotion, rollback, correction, release dry-run, and incident response are substantive drafts | Useful content exists, but several retain May 2026 proposal or no-mounted-repo language |
 | Naming and alias consistency | Flat, domain-nested, upper-snake, lower-snake, kebab, and mixed legacy forms coexist | Identity and migration work is required before renaming or deleting anything |
 | CODEOWNERS | Default repository route is `@bartytime4life`; no separate `docs/runbooks/` rule is present | GitHub review routing exists; accountable stewardship and independent approval remain unverified |
@@ -208,12 +210,14 @@ docs/runbooks/
 ├── hazards/
 ├── hydrology/
 ├── hydrology_VALIDATION.md
+├── mrts-06-ci-conformance-handoff.md
 ├── people-dna-land/
 ├── pipeline-resilience.md
 ├── retention-agriculture.md
 ├── revocation.md
 ├── roads-rail-trade/
 ├── roads_rail_trade_source_refresh.md
+├── rollback-rehearsal.md
 ├── settlements-infrastructure/
 ├── soil/
 ├── ui_LOCAL_DEV.md
@@ -258,6 +262,7 @@ docs/runbooks/
 | [`STABLE_DIFF_REVIEW_HANDOFF.md`](./STABLE_DIFF_REVIEW_HANDOFF.md) | Stable-diff review handoff | Tracked procedure; review state remains external |
 | [`VALIDATOR_ORCHESTRATOR.md`](./VALIDATOR_ORCHESTRATOR.md) | Validator orchestration guidance | Tracked guidance; executable path and exit semantics require current verification |
 | [`automation-draft-pr-opener-validation-checklist.md`](./automation-draft-pr-opener-validation-checklist.md) | Narrow validation checklist | Tracked checklist; not equivalent to end-to-end automation proof |
+| [`mrts-06-ci-conformance-handoff.md`](./mrts-06-ci-conformance-handoff.md) | MRTS-06 CI conformance and closure handoff | Proposed blocked handoff; it grants no review, issue-closure, release, or publication authority |
 
 ### Intake, source, lifecycle, and resilience
 
@@ -276,6 +281,7 @@ docs/runbooks/
 | [`PROMOTION_RUNBOOK.md`](./PROMOTION_RUNBOOK.md) | Lifecycle promotion procedure | Substantive draft; current gate bindings require verification |
 | [`RELEASE_DRY_RUN.md`](./RELEASE_DRY_RUN.md) | No-public-write release rehearsal | Substantive draft; dry-run output is not release approval |
 | [`ROLLBACK_RUNBOOK.md`](./ROLLBACK_RUNBOOK.md) | Cross-cutting rollback procedure | Substantive draft; prior-safe target and actual drill evidence remain per release |
+| [`rollback-rehearsal.md`](./rollback-rehearsal.md) | Synthetic rollback, withdrawal, and correction rehearsal | Marker-protected synthetic procedure; not an operational rollback or release mutation |
 | [`EVIDENCE_CORRECTION.md`](./EVIDENCE_CORRECTION.md) | Published-evidence correction procedure | Substantive draft; several linked paths retain verification notes |
 
 ### Security, sensitivity, and doctrine handling
@@ -322,10 +328,10 @@ That pattern is **CONFIRMED current repository structure**, not proof that the f
 
 | Domain lane | Recurring packet | Additional tracked material | Current boundary finding |
 |---|---:|---|---|
-| `agriculture/` | 4 files | — | No local README; procedure currency needs domain audit |
-| `archaeology/` | 4 files | — | No local README; cultural/sovereignty review boundary needs explicit inheritance |
-| `atmosphere/` | 4 files | Correction, release, rollback, stale-state, and validation scaffolds | No local README; not-for-life-safety and source-role boundaries need current audit |
-| `fauna/` | 4 files | EBD derivative, publication dry-run, rollback drill, sensitive-occurrence, and taxonomy scaffolds | No local README; exact sensitive occurrences fail closed |
+| [`agriculture/`](./agriculture/README.md) | 4 files | Substantive local `README.md` | Boundary contract is documented; no-network, rollback, and source-refresh are repository-grounded v0.2 drafts, while promotion remains the older v0.1 draft |
+| [`archaeology/`](./archaeology/README.md) | 4 files | Substantive local `README.md` | Sensitive-domain boundary is documented and all four packet files are repository-grounded drafts; their declared proof, live-source, operational-rollback, and release holds remain |
+| `atmosphere/` | 4 files | One-byte `README.md`; correction, release, release-rollback, stale-state, and validation documents | No local boundary contract; correction, stale-state, and validation are repository-grounded drafts, while the two release documents remain small scaffolds |
+| `fauna/` | 4 files | One-byte `README.md`; EBD derivative, publication dry-run, rollback drill, sensitive-occurrence, and taxonomy scaffolds | No local boundary contract; exact sensitive occurrences fail closed |
 | `flora/` | 4 files | — | No local README; rare/culturally sensitive geometry fails closed |
 | `geology/` | 4 files | Bedrock-review scaffold | No local README; private-well and sensitive subsurface detail requires policy review |
 | `habitat/` | 4 files | Nested `ecoregions/SOURCE_REFRESH.md` scaffold | No local or nested README; modeled habitat is not occurrence or regulatory designation |
@@ -338,9 +344,9 @@ That pattern is **CONFIRMED current repository structure**, not proof that the f
 
 ### Inheritance gap
 
-Directory Rules assigns `BOUNDARY_COMPACT` treatment to domain and sensitive boundaries. The 13 directories above currently have no local README, so their inherited authority, scope, exposure, permitted writers, validation, related policy, and open verification are not locally closed.
+Directory Rules assigns `BOUNDARY_COMPACT` treatment to domain and sensitive boundaries. Agriculture and Archaeology now have substantive local boundary READMEs. Atmosphere and Fauna have tracked one-byte placeholders, and the other nine lanes have no local README path, so 11 lanes still lack a substantive local contract closing inherited authority, scope, exposure, permitted writers, validation, related policy, and open verification.
 
-This README records that gap. It does not create thirteen boilerplate files, assign stewards, normalize sensitive rules, or imply that one generic packet is sufficient for every domain.
+This README records the remaining gap. It does not fill placeholder files, create nine boilerplate files, assign stewards, normalize sensitive rules, or imply that one generic packet is sufficient for every domain.
 
 [Back to top](#top)
 
@@ -587,9 +593,9 @@ Do not encode role names as GitHub identities unless the account or team and its
 
 ## Scaffolds, aliases, and drift
 
-### Explicit scaffolds
+### Exact scaffold-phrase inventory
 
-Thirty-two files in the current subtree contain the exact phrase `PROPOSED scaffold`. Their expected treatment is `HOLD` until content, authority, owners, validation, sensitivity, and target identity are reviewed. A scaffold should not be cited as an executable procedure or used to justify another scaffold.
+Thirty-four files in the current subtree contain the exact phrase `PROPOSED scaffold`. That count is a lexical drift inventory, not a maturity classification: this parent index and some modernized runbooks use the phrase while describing prior bytes or historical state. Each matching file must be inspected at its pinned revision. A file that actually declares scaffold or proposed status remains `HOLD` until content, authority, owners, validation, sensitivity, and target identity are reviewed; a historical mention does not erase a newer declared draft posture or prove operational admission.
 
 ### Current identity conflicts and duplication pressure
 
@@ -713,8 +719,8 @@ A documentation revert restores text only. It does not reverse an operational ac
 
 ### P1 — structure and conformance
 
-6. **NEEDS VERIFICATION — domain boundary READMEs.** Decide whether to add evidence-grounded `BOUNDARY_COMPACT` READMEs, inherit through another verified mechanism, consolidate lanes, or retire unsupported directories.
-7. **NEEDS VERIFICATION — scaffold disposition.** Classify all 32 explicit scaffolds as fill, supersede, migrate, mirror, retain as lineage, or retire; do not mass-delete by size or wording alone.
+6. **NEEDS VERIFICATION — remaining domain boundary READMEs.** Close or deliberately inherit the 11 still-substantive gaps: Atmosphere and Fauna are one-byte placeholders, and nine other lanes have no local README path. Preserve the completed Agriculture and Archaeology boundaries.
+7. **NEEDS VERIFICATION — scaffold disposition.** Inspect the 34 exact-phrase matches, distinguish current scaffolds from historical mentions, and classify actual scaffolds as fill, supersede, migrate, mirror, retain as lineage, or retire; do not mass-delete by size or wording alone.
 8. **CONFLICTED — naming and aliases.** Resolve flat versus nested, snake versus kebab, and duplicate-scope paths through consumer inventories and reviewed migration.
 9. **NEEDS VERIFICATION — shared packet ownership.** Determine which parts of the 13 repeated four-file packets are shared kernel, generated projection, domain delta, or independent procedure.
 10. **NEEDS VERIFICATION — current metadata.** Reconcile stale May 2026 owner, status, link, and no-mounted-repo statements in individual runbooks through file-specific inspection.
@@ -736,13 +742,14 @@ A documentation revert restores text only. It does not reverse an operational ac
 
 | Evidence | Use in this edition | Limitation |
 |---|---|---|
-| `main@9cc9c7c05e85d27358e4d6d2987a4da422dea1f9` | Pins the target, runbook tree, direct children, sampled documents, ADRs, and review routing | Commit bytes do not prove runtime behavior, operational admission, release, or publication |
+| `main@991f9f99634ceeb31228b22e593b1111f9b0510b` | Pins the target, runbook tree, direct children, sampled documents, ADRs, and review routing | Commit bytes do not prove runtime behavior, operational admission, release, or publication |
 | Exact `docs/runbooks/` Git tree | Direct-child map and all recursive tracked paths | Tree presence does not prove content quality or use |
-| GitHub code-search counts | 104 Markdown files and 32 exact `PROPOSED scaffold` markers | Text search is not a semantic maturity audit |
+| Exact Git-tree and repository-text counts | 42 direct entries, 108 Markdown files, four domain README paths, two substantive boundary READMEs, two one-byte placeholders, and 34 exact `PROPOSED scaffold` phrase matches | Tree and text counts are not a semantic maturity audit |
 | Accepted ADR-0029 and Directory Rules v2 | Placement authority, README inheritance, compatibility, migration, correction, and rollback rules | Does not validate individual procedures |
 | Current ADR index | One accepted and 35 proposed numbered decisions | Index cannot accept a decision itself |
 | Current CODEOWNERS | Verifies GitHub review routing | Does not establish stewardship, expertise, independent approval, policy, or release authority |
-| Sampled long-form and scaffold runbooks | Supports bounded maturity and drift findings | Not a full line-by-line audit of all 104 files |
+| Agriculture and Archaeology local READMEs and their recurring packet files | Supports the two closed local-boundary findings and mixed child-maturity statements | Documentation state does not prove rehearsal, operational admission, release, or publication |
+| Sampled long-form and scaffold-shaped runbooks | Supports other bounded maturity and drift findings | Not a full line-by-line audit of all 108 files |
 | Bounded repository search | Dedicated validator and workflow-reference findings | Does not prove absence outside searched terms or runtime systems |
 
 ### Assumptions deliberately not made
@@ -767,7 +774,7 @@ This edition does not assume:
 
 ## Last reviewed and rollback
 
-**2026-08-14** — v1.1 same-path repository-grounded reconciliation against `main@9cc9c7c05e85d27358e4d6d2987a4da422dea1f9`.
+**2026-08-24** — v1.2 same-path repository-grounded reconciliation against `main@991f9f99634ceeb31228b22e593b1111f9b0510b`.
 
 Re-review this README when:
 
@@ -781,6 +788,7 @@ Re-review this README when:
 
 | Edition | Date | Change | Effect |
 |---|---|---|---|
+| **v1.2** | 2026-08-24 | Refreshed exact inventory and navigation; recognized the substantive Agriculture and Archaeology boundary READMEs and their mixed child maturity; distinguished one-byte placeholders and lexical scaffold-phrase matches from completed boundary contracts or semantic maturity. | Documentation only; no procedure execution or authority change |
 | **v1.1** | 2026-08-14 | Replaced proposal-only inventory with current subtree counts, direct-child map, root and domain indexes, scaffold and alias disclosure, risk-based authoring contract, finite outcomes, validation boundaries, prioritized backlog, and exact rollback. | Documentation only; no procedure execution or authority change |
 | **v1** | 2026-05-12 | Initial operational-runbook proposal and authoring template. | Historical documentation state |
 
@@ -790,9 +798,9 @@ Restore the prior file blob:
 
 ```text
 path: docs/runbooks/README.md
-prior_blob: 82e2978edad36fa69cb9f082911a3b79e8249557
+prior_blob: 7b6f266a41f7723cba50ea3c093d341063c08f4d
 ```
 
-or revert the focused content commit created by this change. That rollback restores the v1 documentation snapshot. It does not remove current runbooks, undo a procedure, reverse an incident response, change source/evidence/policy/release state, restore a public carrier, deploy, promote, publish, or change repository settings.
+or revert the focused content commit created by this change. That rollback restores the v1.1 documentation snapshot. It does not remove current runbooks, undo a procedure, reverse an incident response, change source/evidence/policy/release state, restore a public carrier, deploy, promote, publish, or change repository settings.
 
 [Back to top](#top)
