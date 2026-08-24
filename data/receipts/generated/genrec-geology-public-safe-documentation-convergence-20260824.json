@@ -2,12 +2,14 @@
   "receipt_id": "genrec-geology-public-safe-documentation-convergence-20260824",
   "contract_version": "3.0.0",
   "artifact_paths": [
+    ".github/workflows/domain-geology.yml",
     "docs/domains/geology/README.md",
     "tools/validators/domains/geology/README.md",
     "tools/validators/geology/public_safe_geometry/README.md"
   ],
   "artifact_hashes": {
-    "docs/domains/geology/README.md": "sha256:08c5cb749d4676a466329ee235a4c420ebba0493bce5d24fdc26d5004a5bab81",
+    ".github/workflows/domain-geology.yml": "sha256:cc0134432ace9ff483f1a11fec9affbf3f790477bdb6df9ea8e2fa2b69e6659e",
+    "docs/domains/geology/README.md": "sha256:7a47e4180d267341fe52e2447fa319b4c71c204d79776f5fb16b5421307637bd",
     "tools/validators/domains/geology/README.md": "sha256:b5a7756424eded117d01d0caa5969d0d3b3ee5ec2ccc9f96e8f75d2cd625225d",
     "tools/validators/geology/public_safe_geometry/README.md": "sha256:1054559223bf2a5443576c8811e6a2aeb5bb7bdfae84790ef9ba022b18513be8"
   },
@@ -43,10 +45,12 @@
       "repo:contracts/domains/geology/public_safe_geometry_assessment.md@a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34",
       "repo:tools/validators/geology/public_safe_geometry/validate_public_safe_geometry.py@a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34",
       "repo:tests/domains/geology/test_public_safe_geometry.py@a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34",
+      "repo:.github/workflows/domain-geology.yml@a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34",
       "github://bartytime4life/Kansas-Frontier-Matrix/pull/2444"
     ]
   },
   "truth_labels": {
+    ".github/workflows/domain-geology.yml": "PROPOSED",
     "docs/domains/geology/README.md": "PROPOSED",
     "tools/validators/domains/geology/README.md": "PROPOSED",
     "tools/validators/geology/public_safe_geometry/README.md": "PROPOSED"
@@ -68,6 +72,11 @@
       "reason": "All three metadata blocks passed; the branch resolves 18 exact baseline findings without weakening the validator."
     },
     {
+      "gate": "documentation-graph-changed-file-ratchet",
+      "outcome": "PASS",
+      "reason": "The changed Geology landing page has only resolvable related paths and document identities; no new document-graph failure remains."
+    },
+    {
       "gate": "markdown-local-links",
       "outcome": "PASS",
       "reason": "All 71 repository-local targets resolved; external badge targets were classified without network requests."
@@ -80,7 +89,7 @@
     {
       "gate": "generated-receipt-byte-binding",
       "outcome": "PASS",
-      "reason": "The receipt binds the final SHA-256 bytes of all three modified Markdown artifacts."
+      "reason": "The receipt binds the final SHA-256 bytes of the three modified Markdown artifacts and the Geology workflow that validates this current receipt."
     },
     {
       "gate": "hosted-exact-head-ci",
@@ -122,9 +131,9 @@
   "created_at": "2026-08-24T21:31:51Z",
   "emitter": "OpenAI Codex via ChatGPT Work",
   "links": {
-    "pr_number": null,
+    "pr_number": 3539,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Documentation-only convergence of three existing Geology status surfaces to the already-merged, synthetic, metadata-only public-safe-geometry assessment. The external PDF is proposal material; current repository contracts, schema, fixtures, validator, tests, workflow, and merged PR #2444 establish implemented behavior. This receipt is authoring provenance only. It creates no geometry transform, source admission, rights decision, evidence, policy result, review, lifecycle write, operational receipt, release, deployment, publication, or public-use authority."
+  "notes": "Documentation-only convergence of three existing Geology status surfaces to the already-merged, synthetic, metadata-only public-safe-geometry assessment. The Geology workflow retains the prior receipt as a required historical artifact and validates this current receipt against the changed bytes. The external PDF is proposal material; current repository contracts, schema, fixtures, validator, tests, workflow, and merged PR #2444 establish implemented behavior. This receipt is authoring provenance only. It creates no geometry transform, source admission, rights decision, evidence, policy result, review, lifecycle write, operational receipt, release, deployment, publication, or public-use authority."
 }

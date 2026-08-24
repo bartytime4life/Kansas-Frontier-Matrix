@@ -13,14 +13,13 @@ responsibility: Human-facing Geology and Natural Resources lane orientation, rep
 truth_posture: cite-or-abstain; implementation claims require current repository evidence
 related:
   - docs/doctrine/directory-rules.md
-  - ai-build-operating-contract.md   # CONTRACT_VERSION = "3.0.0"
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/encyclopedia.md
   - docs/architecture/contract-schema-policy-split.md
   - docs/domains/README.md
   - docs/domains/geology/POLICY.md
   - docs/domains/geology/PRESERVATION_MATRIX.md
   - docs/domains/geology/OPEN_QUESTIONS.md
-  - kfm://doc/dom-geol
-  - kfm://doc/ency-geology-and-natural-resources
 tags: [kfm, domain, geology, natural-resources]
 notes:
   - Lane landing README, not a doctrine root. Doctrine lives in DOM-GEOL and the Encyclopedia.
