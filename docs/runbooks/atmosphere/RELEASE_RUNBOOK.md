@@ -35,7 +35,7 @@ prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Impleme
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 0c63d45e2a6f132052c8b6d67cae47a373860eae
+  base_commit: b2c6022cb0fa12269403aebe49698a141eeb8586
   target_prior_blob: 1a3ac56d5108197f57716f84a6db45370320a0f4
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   release_manifest_contract_blob: ce7dc89ff447d76d974afdd802b85a38538d8f48
@@ -49,6 +49,7 @@ evidence_snapshot:
   atmosphere_policy_readme_blob: a300dfd5abda1b58a07fd978935dd40ef232ec71
   atmosphere_validation_runbook_blob: 4ae9d1e8b33ad2ed5df915813f859140602628d1
   atmosphere_stale_state_runbook_blob: 2b2050da0ef0e149101dc90478a0fb9c42417b63
+  atmosphere_source_refresh_runbook_blob: 2d75b58e8d9a267f4f97f3e03100e0d243434d01
   atmosphere_correction_runbook_blob: f04b6a5904be2b060f70637af8caddaf4511a227
   atmosphere_rollback_placeholder_blob: ba00c2191e8b190059e729d6c70bf8c69d4fc2da
 inspection_boundary: >-
@@ -257,7 +258,7 @@ This document may explain how to prepare a release handoff. It cannot:
 
 ## 3. Current repository release posture
 
-The observations below are pinned to `main@0c63d45e2a6f132052c8b6d67cae47a373860eae`.
+The observations below are pinned to `main@b2c6022cb0fa12269403aebe49698a141eeb8586`.
 
 | Surface | CONFIRMED current evidence | Safe conclusion |
 |---|---|---|
