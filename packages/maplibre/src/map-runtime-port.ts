@@ -27,6 +27,40 @@ export const MAP_RUNTIME_STATES = [
 
 export type MapRuntimeState = (typeof MAP_RUNTIME_STATES)[number];
 
+export const MAP_RUNTIME_TRUST_STATES = [
+  "STALE",
+  "ABSTAINED",
+  "DENIED",
+  "CONFLICT",
+  "DEGRADED",
+  "WITHDRAWN",
+  "ROLLED_BACK",
+  "ERROR",
+] as const;
+
+export type MapRuntimeTrustState =
+  (typeof MAP_RUNTIME_TRUST_STATES)[number];
+
+/**
+ * Renderer-neutral reason codes for observed upstream trust/runtime states.
+ *
+ * These codes report a state already supplied to the runtime. They do not
+ * make evidence, policy, review, correction, release, or rollback decisions.
+ */
+export const MAP_RUNTIME_TRUST_STATE_REASONS = Object.freeze({
+  STALE: "MAP_RUNTIME_STALE",
+  ABSTAINED: "MAP_RUNTIME_ABSTAINED",
+  DENIED: "MAP_RUNTIME_DENIED",
+  CONFLICT: "MAP_RUNTIME_CONFLICT",
+  DEGRADED: "MAP_RUNTIME_DEGRADED",
+  WITHDRAWN: "MAP_RUNTIME_WITHDRAWN",
+  ROLLED_BACK: "MAP_RUNTIME_ROLLED_BACK",
+  ERROR: "MAP_RUNTIME_ERROR",
+} as const satisfies Record<MapRuntimeTrustState, string>);
+
+export type MapRuntimeTrustStateReasonCode =
+  (typeof MAP_RUNTIME_TRUST_STATE_REASONS)[MapRuntimeTrustState];
+
 export type MapRuntimeCamera = Readonly<{
   longitude: number;
   latitude: number;
@@ -44,10 +78,12 @@ export type MapFeatureSelection = Readonly<{
 }>;
 
 export type MapRuntimeReasonCode =
+  | MapRuntimeTrustStateReasonCode
   | "MAP_RUNTIME_DISPOSED"
   | "MAP_RUNTIME_NOT_READY"
   | "MAP_RUNTIME_CAMERA_INVALID"
   | "MAP_RUNTIME_SELECTION_INVALID"
+  | "MAP_RUNTIME_STATE_INVALID"
   | "MAP_RUNTIME_LISTENER_INVALID";
 
 export type MapRuntimeSnapshot = Readonly<{
@@ -62,6 +98,10 @@ export type MapRuntimeSelectionListener = (
   selection: MapFeatureSelection,
 ) => void;
 
+export type MapRuntimeSnapshotListener = (
+  snapshot: MapRuntimeSnapshot,
+) => void;
+
 /**
  * Minimal renderer-neutral consumer contract.
  *
@@ -74,6 +114,7 @@ export interface MapRuntimePort {
   initialize(initialCamera?: MapRuntimeCamera): Promise<MapRuntimeSnapshot>;
   getSnapshot(): MapRuntimeSnapshot;
   setCamera(camera: MapRuntimeCamera): MapRuntimeSnapshot;
+  subscribeSnapshot(listener: MapRuntimeSnapshotListener): () => void;
   subscribeSelection(listener: MapRuntimeSelectionListener): () => void;
   dispose(): void;
 }
@@ -148,6 +189,27 @@ export function isMapFeatureSelection(
   }
   if (!value.evidenceRefs.every(isSafeId)) return false;
   return new Set(value.evidenceRefs).size === value.evidenceRefs.length;
+}
+
+export function isMapRuntimeTrustState(
+  value: unknown,
+): value is MapRuntimeTrustState {
+  return (
+    typeof value === "string" &&
+    (MAP_RUNTIME_TRUST_STATES as readonly string[]).includes(value)
+  );
+}
+
+export function reasonForMapRuntimeTrustState(
+  state: MapRuntimeTrustState,
+): MapRuntimeTrustStateReasonCode {
+  if (!isMapRuntimeTrustState(state)) {
+    throw new MapRuntimePortError(
+      "MAP_RUNTIME_STATE_INVALID",
+      "Map runtime trust state is invalid.",
+    );
+  }
+  return MAP_RUNTIME_TRUST_STATE_REASONS[state];
 }
 
 export function freezeMapRuntimeCamera(

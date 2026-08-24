@@ -9,6 +9,7 @@ This slice connects a synthetic rendered-feature selection to the existing Evide
 ```text
 synthetic feature selection
   -> strict kfm.explorer.map-feature-selection.v1 parser
+  -> closed LayerManifest admission projection for the same layer_id
   -> injected governed resolver
   -> Evidence Drawer strict projection parser
   -> ANSWER / ABSTAIN / DENY / ERROR
@@ -48,11 +49,22 @@ MapRuntimePort selection event
 The binding:
 
 - accepts only a validated KFM-owned runtime selection;
+- requires the supplied closed LayerManifest projection to return `PASS` for the selected `layer_id` before invoking the governed resolver;
+- exposes the exact finite layer-admission result beside the Evidence Drawer result and maps non-`PASS` admission to a visible, no-leak `ABSTAIN`, `DENY`, or `ERROR` drawer state;
 - still routes the selection through the existing strict parser rather than bypassing it;
 - uses an injected governed resolver and performs no transport itself;
 - suppresses a slower stale result when a newer selection arrives;
+- observes KFM-owned runtime snapshots and invalidates unresolved evidence when
+  the runtime leaves `READY`;
+- prevents a late `ANSWER` from crossing a stale, denied, abstained, conflicted,
+  degraded, withdrawn, rolled-back, or error transition;
 - provides idempotent teardown that unsubscribes the runtime and invalidates pending results; and
 - is proven with `NullMapRuntime`, not with a concrete renderer.
+
+`NullMapRuntime.emitTrustState(...)` is a deterministic test/control-plane hook.
+It clears the selected feature and publishes a frozen snapshot with a finite
+KFM-owned reason code. It consumes an upstream state for continuity testing; it
+does not decide evidence, policy, review, correction, release, or rollback.
 
 This is a bounded consumer-integration proof. The current browser lab may continue to use deterministic controls until a separately reviewed concrete adapter translates real renderer events into the same port contract.
 
@@ -71,9 +83,14 @@ Rendered properties are therefore request scope, never evidence, and the resolve
 | Condition | Outcome |
 |---|---|
 | Invalid or over-broad selection | `ERROR / SELECTION_INVALID` |
+| Layer admission is held | `ABSTAIN / MISSING_EVIDENCE`; governed resolver not called |
+| Layer admission is policy/security denied | `DENY / POLICY_DENIED`; governed resolver not called |
+| Admitted projection names another layer or has an integrity mismatch | `ERROR / UPSTREAM_ERROR`; governed resolver not called |
+| Layer admission input is invalid | `ERROR / UPSTREAM_ERROR`; governed resolver not called |
 | No governed evidence reference | `ABSTAIN / MISSING_EVIDENCE` |
 | Resolver throws | `ERROR / GOVERNED_RESOLVER_ERROR` |
 | Resolver widens evidence scope | `ERROR / DRAWER_EVIDENCE_OUTSIDE_SELECTION` |
+| Runtime leaves `READY` while resolution is pending | Pending result invalidated; no late drawer delivery |
 | Strict drawer returns a governed negative state | Existing `ABSTAIN`, `DENY`, or `ERROR` projection |
 | Strict drawer returns supported evidence | `ANSWER / SUPPORTED` |
 
@@ -107,7 +124,7 @@ This is browser behavior evidence for the governed handoff, not proof of a real 
 - `tools/validators/maplibre/assess_acquisition_inventory.py`
 - `tests/maplibre/test_assess_acquisition_inventory.py`
 
-The test matrix covers supported evidence, missing evidence, policy denial, upstream error, evidence-scope widening, stale request suppression, keyboard use, accessibility status, and teardown. Shared-port coverage additionally proves deterministic initialization, KFM-owned selection events, strict runtime-to-evidence translation, invalid camera/selection rejection, stale-result suppression, and idempotent disposal.
+The test matrix covers matching layer admission, held/denied/invalid admission, cross-layer manifest reuse denial, supported evidence, missing evidence, policy denial, upstream error, evidence-scope widening, stale request suppression, runtime trust-state invalidation, keyboard use, accessibility status, and teardown. Shared-port coverage additionally proves deterministic initialization, KFM-owned selection and snapshot events, strict runtime-to-evidence translation, invalid camera/selection/state rejection, selection clearing on negative state, stale-result suppression, and idempotent disposal.
 
 ## Explicit non-effects
 
@@ -117,6 +134,7 @@ This implementation does **not**:
 - select or authenticate a MapLibre version;
 - satisfy issue #2906 browser or long-session readiness;
 - activate live sources or retrieve live payloads;
+- assert that the fixture-only admission projection is a live registry lookup, release decision, or source registration;
 - read RAW, WORK, QUARANTINE, or PROCESSED stores;
 - resolve evidence directly in browser code;
 - turn feature properties into evidence;
