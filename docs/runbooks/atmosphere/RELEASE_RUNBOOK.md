@@ -1382,6 +1382,8 @@ Do not restore the scaffold merely to hide evidence that the operational release
 
 ---
 
+<a id="appendix-a-operator-checklist"></a>
+
 ## Appendix A — Operator checklist
 
 ### Identity and overlap
@@ -1444,6 +1446,8 @@ Do not restore the scaffold merely to hide evidence that the operational release
 [Back to top](#top)
 
 ---
+
+<a id="appendix-b-current-command-and-surface-matrix"></a>
 
 ## Appendix B — Current command and surface matrix
 
