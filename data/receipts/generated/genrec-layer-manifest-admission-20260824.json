@@ -58,7 +58,7 @@
   "links": {
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null,
-    "pr_number": null
+    "pr_number": 3532
   },
   "model_identity": {
     "provider": "OpenAI",
