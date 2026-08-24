@@ -122,12 +122,13 @@ jobs:
               stream.write("- Mutation: none; authority remains unresolved until review.\n")
           PY
 
-      - name: Verify generated authoring receipt integrity
+      - name: Replay retained authoring receipt from its exact Git tree
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-docs-meta-block-20260806.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref 0f1bf80bb96d81fb8ebaf4623b224a3de2d3f86d
 
       - name: Record metadata trust boundary
         if: always()
@@ -138,6 +139,7 @@ jobs:
             echo "### Documentation metadata trust boundary"
             echo "- Scope: bounded top-level KFM_META_BLOCK_V2 structure, duplicate identity, responsibility-root agreement, dates, related-path hygiene, and machine-register comparison."
             echo "- Ratchet: current changed-path failures remain blocking; unchanged failures are historical warnings."
+            echo "- Receipt replay: retained authoring bytes are read from exact tree 0f1bf80bb96d81fb8ebaf4623b224a3de2d3f86d; later documentation changes do not rewrite historical process memory."
             echo "- Registry: emitted delta is review-only and never applied by this workflow."
             echo "- Network: validator and focused tests make no external request."
             echo "- Non-effects: no documentation edit, registry mutation, doctrine decision, evidence decision, policy approval, release, deployment, or publication."
