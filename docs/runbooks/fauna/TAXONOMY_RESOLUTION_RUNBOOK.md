@@ -33,7 +33,7 @@ prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Impleme
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 4a6c06fb3ab1f7e6e29c99ae07000aa94ad4cc38
+  base_commit: "evidence snapshot at authoring time — 4a6c06fb3ab1f7e6e29c99ae07000aa94ad4cc38"
   target_prior_blob: 7c30a3320f60ad5b19ad129c6b30dfbc92ff8d1c
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   taxon_schema_blob: 3ee60e2f4e4cf85b0fabdc5edb3ec5bde98d598e
