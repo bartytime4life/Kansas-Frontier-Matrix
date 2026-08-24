@@ -22,6 +22,7 @@ export type AdmissionCode =
   | "LAYER_MANIFEST_EVIDENCE_UNRESOLVED"
   | "LAYER_MANIFEST_POLICY_DENIED"
   | "LAYER_MANIFEST_RELEASE_BINDING_MISMATCH"
+  | "LAYER_MANIFEST_SELECTION_LAYER_MISMATCH"
   | "LAYER_MANIFEST_SOURCE_CLASS_DENIED"
   | "LAYER_MANIFEST_AUTHORITY_OVERCLAIM"
   | "LAYER_MANIFEST_ADMISSION_INPUT_INVALID";
@@ -201,4 +202,24 @@ export function evaluateLayerManifestAdmission(input: unknown): AdmissionResult 
     return result("HOLD", "LAYER_MANIFEST_NOT_PUBLISHED");
   }
   return result("PASS", "LAYER_MANIFEST_REGISTER_ELIGIBLE", true);
+}
+
+/**
+ * Require a validated runtime selection to name the same layer as an otherwise
+ * admissible manifest projection. Non-PASS manifest outcomes retain their
+ * original finite reason; a PASS projection cannot be reused for another
+ * selected layer.
+ */
+export function evaluateLayerManifestSelectionAdmission(
+  input: unknown,
+  selectionLayerId: string,
+): AdmissionResult {
+  const admission = evaluateLayerManifestAdmission(input);
+  if (admission.outcome !== "PASS") return admission;
+
+  const parsed = parse(input);
+  if (parsed === null || parsed.root.layer_id !== selectionLayerId) {
+    return result("DENY", "LAYER_MANIFEST_SELECTION_LAYER_MISMATCH");
+  }
+  return admission;
 }

@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 import fixtureSuite from "../../../fixtures/runtime/layer_manifest_admission/cases.json";
 import moduleSource from "../src/features/map_runtime/layer_manifest_admission.ts?raw";
-import { evaluateLayerManifestAdmission } from "../src/features/map_runtime/layer_manifest_admission";
+import {
+  evaluateLayerManifestAdmission,
+  evaluateLayerManifestSelectionAdmission,
+} from "../src/features/map_runtime/layer_manifest_admission";
 
 type Candidate = typeof fixtureSuite.base;
 function clone<T>(value: T): T {
@@ -43,6 +46,28 @@ describe("LayerManifest runtime admission fixture", () => {
       maplibreSourceCreated: false,
       registrationEligible: true,
       holds: ["RUNTIME_REGISTRATION_NOT_EXECUTED"],
+    });
+  });
+  it("prevents an admitted manifest projection from authorizing another selected layer", () => {
+    expect(
+      evaluateLayerManifestSelectionAdmission(
+        clone(fixtureSuite.base),
+        "layer:released:another-layer",
+      ),
+    ).toMatchObject({
+      outcome: "DENY",
+      code: "LAYER_MANIFEST_SELECTION_LAYER_MISMATCH",
+      registrationEligible: false,
+    });
+    expect(
+      evaluateLayerManifestSelectionAdmission(
+        clone(fixtureSuite.base),
+        fixtureSuite.base.layer_id,
+      ),
+    ).toMatchObject({
+      outcome: "PASS",
+      code: "LAYER_MANIFEST_REGISTER_ELIGIBLE",
+      registrationEligible: true,
     });
   });
   it("contains no transport, MapLibre import, or registry mutation shortcut", () => {
