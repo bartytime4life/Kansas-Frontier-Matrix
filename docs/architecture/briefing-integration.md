@@ -1,13 +1,16 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/docs-architecture-briefing-integration
 title: Briefing-to-System Integration Architecture
-type: architecture; implementation-guide
+type: architecture/implementation-guide
 version: v0.8.0
 status: proposed; bounded foundations reconciled through authenticated read-only GitHub issue observation
 owners: OWNER_TBD — Architecture steward · Governance steward · Domain stewards · Source/evidence/policy/release stewards
 created: 2026-07-29
 updated: 2026-08-24
 policy_label: public; architecture; briefing-integration; no-public-authority
+owning_root: docs/
+responsibility: Human-readable briefing integration architecture subordinate to accepted decisions and executable contracts.
+truth_posture: PROPOSED reporting view; CONFIRMED repository boundaries at the pinned evidence snapshot; cite-or-abstain.
 related:
   - ../../contracts/governance/briefing_signal.md
   - ../../schemas/contracts/v1/governance/briefing_signal.schema.json
