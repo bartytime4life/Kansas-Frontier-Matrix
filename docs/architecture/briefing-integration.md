@@ -1,13 +1,16 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/docs-architecture-briefing-integration
 title: Briefing-to-System Integration Architecture
-type: architecture; implementation-guide
-version: v0.7.0
+type: architecture
+version: v0.8.0
 status: proposed; bounded foundations reconciled through authenticated read-only GitHub issue observation
 owners: OWNER_TBD — Architecture steward · Governance steward · Domain stewards · Source/evidence/policy/release stewards
 created: 2026-07-29
-updated: 2026-08-14
+updated: 2026-08-24
 policy_label: public; architecture; briefing-integration; no-public-authority
+owning_root: docs/
+responsibility: Explain the non-authoritative briefing-to-governed-work architecture, its bounded executable foundations, reporting lenses, trust separations, and held public stages without creating repository, source, evidence, policy, review, release, deployment, publication, or public-use authority.
+truth_posture: CONFIRMED repository-present bounded contracts, schemas, fixtures, validators, tests, workflows, and read-only issue-observation profile / PROPOSED reporting lenses and remaining architecture stages / NEEDS VERIFICATION live source, runtime, review, release, deployment, publication, and public-use behavior
 related:
   - ../../contracts/governance/briefing_signal.md
   - ../../schemas/contracts/v1/governance/briefing_signal.schema.json
@@ -28,10 +31,12 @@ related:
   - ../../contracts/source/source_obligation_propagation_assessment.md
   - ../../contracts/evidence/evidence_binding_chain_assessment.md
   - ../../examples/briefing_integration/README.md
+  - ../intake/exploratory/circled-whole-system-sources-distinctive-delta-source-map.md
   - ../../.github/workflows/briefing-integration.yml
   - ../../.github/workflows/github-issue-inventory-read.yml
-tags: [kfm, architecture, briefing, identity, deduplication, materiality, routing, issue-inventory, github-read, temporal-authority, source-snapshot, evidence-binding, water-planning, evidence-first]
+tags: [kfm, architecture, briefing, reporting-lenses, identity, deduplication, materiality, routing, issue-inventory, github-read, temporal-authority, source-snapshot, evidence-binding, water-planning, evidence-first]
 notes:
+  - "v0.8 adds five non-authoritative reporting lenses without changing BriefingSignal shape, native object families, routing, or lifecycle semantics."
   - "v0.7 corrects the prior future-stage claim: the repository already contains a separately bounded authenticated read-only GitHub issue-observation profile, probe, validator, fixtures/tests, and workflow."
   - "GitHubIssueInventoryRead remains PROPOSED_INACTIVE and creates no repository mutation, evidence, policy, review, release, publication, or public-use authority."
   - "Live source access, authoritative source/evidence/policy resolution, and public products remain separately reviewed future stages."
@@ -139,6 +144,31 @@ state, or repository mutation authorization.
 A transition in one state machine never implies a transition in another. `P0`
 is a review priority, not a lifecycle or authority state. An open issue is not
 evidence, policy approval, release authority, or permission to mutate it.
+
+## Non-authoritative reporting lenses
+
+Recurring stories may be grouped through five stable lenses so a briefing can
+name the dominant responsibility and its main anti-collapse risk without
+inventing a domain taxonomy or changing the native object model.
+
+| Primary lens | Typical stories | Separation that must remain visible |
+|---|---|---|
+| Repository governance and control | Branch and pull-request state, CI ambiguity, review coverage, ruleset drift, campaign cursors, compatibility migration | Repository observations are not geospatial lifecycle events or public-truth events. |
+| Volatile advisories and public-safety events | Alerts, advisories, closures, rescissions, status checks | Retrieval failure cannot become a false clear state; native issuer and event status remain visible. |
+| Conditions, observations, classifications, and forecasts | Station observations, modeled grids, surveys, statewide classes, forecasts | Source role, scale, resolution, time, and uncertainty cannot collapse. |
+| Governance events and public participation | Meetings, hearings, workshops, rulemaking, comment windows, recommendations, decisions | Announcement, participation, recommendation, decision, and implementation remain separate states and objects. |
+| Funding, projects, and measured outcomes | Programs, eligibility, applications, reviews, awards, agreements, projects, payments, milestones, completion, observations, evaluation | Funding, work completion, and observed outcomes cannot be inferred from one another. |
+
+One item may have one primary lens and bounded secondary tags. Those labels are
+view-layer organization only: the native object family, source role, real-world
+state, signal state, KFM lifecycle state, evidence, policy, review, release, and
+correction lineage continue to control. The lenses are not BriefingSignal enum
+values, materiality inputs, routing outcomes, source authority, or permission to
+create or update an issue.
+
+Proposal provenance: *KFM Briefing to System Integration Architecture*,
+Executive Summary and §§12-16, reconciled through the
+[circled-source distinctive-delta map](../intake/exploratory/circled-whole-system-sources-distinctive-delta-source-map.md#33-five-briefing-lenses).
 
 ## Deterministic identity and deduplication
 
