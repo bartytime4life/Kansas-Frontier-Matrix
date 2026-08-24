@@ -49,6 +49,9 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install declared Hazards validation dependencies
+        run: python tools/ci/install_python_ci.py project-runtime
+
       - name: Validate bounded Hazards materiality lane
         shell: bash
         run: |
@@ -61,9 +64,13 @@ jobs:
             "contracts/domains/hazards/README.md"
             "schemas/contracts/v1/domains/hazards/README.md"
             "fixtures/domains/hazards/README.md"
+            "fixtures/domains/hazards/drought_declaration/valid/valid_1.json"
+            "fixtures/domains/hazards/drought_observation/valid/valid_1.json"
+            "fixtures/domains/hazards/drought_obs_decl_relationship/valid/valid_1.json"
             "fixtures/domains/hazards/usdm_materiality/cases.json"
             "policy/domains/hazards/README.md"
             "tests/domains/hazards/README.md"
+            "tests/domains/hazards/test_hazards_smoke.py"
             "tests/domains/hazards/test_validate_usdm_materiality.py"
             "tools/validators/domains/hazards/README.md"
             "tools/validators/domains/hazards/validate_usdm_materiality.py"
@@ -85,7 +92,7 @@ jobs:
           fi
 
           make hazards-validate
-          echo "HAZARDS_VALIDATION_PASS: usdm-materiality"
+          echo "HAZARDS_VALIDATION_PASS: drought-fixture-polarity usdm-materiality"
 
       - name: Record Hazards validation scope
         if: always()
@@ -96,7 +103,7 @@ jobs:
             echo
             echo "- Result: ${{ job.status }}."
             echo "- Executed command: \`make hazards-validate\`."
-            echo "- Covered surface: deterministic, no-network USDM material-change unit tests and exact synthetic fixture polarity."
+            echo "- Covered surface: deterministic, no-network drought-family schema/fixture polarity plus USDM material-change unit tests and exact synthetic fixture polarity."
             echo "- Remaining scope: other Hazards validator families, live-source retrieval, source admission, evidence resolution, policy evaluation, proof construction, release assembly, deployment, and publication remain outside this job."
             echo "- Life-safety boundary: a green result does not establish current hazard conditions, warning validity, regulatory status, source freshness, EvidenceBundle closure, emergency authority, release readiness, or public-use safety."
           } >> "$GITHUB_STEP_SUMMARY"
