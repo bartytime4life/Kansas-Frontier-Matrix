@@ -33,7 +33,7 @@ prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Impleme
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: f83c290dd7b6ed2e86262a1b483b76c60de350e6
+  base_commit: 1012d9f6b605656d3e994801581ff3ccbe212556
   target_prior_blob: 902dcbcaaa5d2ef4fed1793e59067b4066760cbe
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   domain_atmosphere_workflow_blob: fccba4b6e2cdae561ec8a4904446ed5dbe6ec8ce
@@ -50,7 +50,10 @@ inspection_boundary: >-
   validator indexes, generic and domain validation-report contracts/schemas,
   Atmosphere policy boundary, related runbooks, and selected contracts, tests,
   fixtures, validators, receipts, proof placeholders, and release boundaries.
-  Repository-native commands were not executed in a mounted checkout during
+  Initial source reads preceded concurrent main advances; the merged target was
+  re-read at main@1012d9f6b605656d3e994801581ff3ccbe212556, intervening changes
+  were inspected as non-overlapping, and the direct-dependency blobs remain pinned
+  above. Repository-native commands were not executed in a mounted checkout during
   authoring. No live source was contacted; no validation report, EvidenceBundle,
   PolicyDecision, ReviewRecord, release decision, correction, rollback, deployment,
   promotion, publication, alert, health determination, or regulatory action was
@@ -88,6 +91,7 @@ notes:
   - "The current repository supports multiple bounded synthetic Atmosphere profiles, but it does not yet expose one accepted aggregate validation command or a release-grade DomainValidationReport producer."
   - "The schema-declared tools/validators/domains/atmosphere/validate_domain_validation_report.py path is absent at the evidence snapshot; this runbook must not imply otherwise."
   - "KFM is not an AQI, medical, regulatory, emergency-alerting, or life-safety issuing authority."
+  - "Post-merge correction replaces the stale pre-merge checkpoint that failed docs-stale-scan; the operating procedure is otherwise unchanged."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -1264,7 +1268,7 @@ Reverting this file:
 
 | Field | Value |
 |---|---|
-| Evidence checkpoint | `main@f83c290dd7b6ed2e86262a1b483b76c60de350e6` |
+| Evidence checkpoint | `main@1012d9f6b605656d3e994801581ff3ccbe212556` |
 | Prior target blob | `902dcbcaaa5d2ef4fed1793e59067b4066760cbe` |
 | Reviewed | 2026-08-24 |
 | Operational validation posture | Bounded synthetic profiles; broader validation `HOLD` |
