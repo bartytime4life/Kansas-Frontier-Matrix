@@ -11,6 +11,7 @@ The composition:
 - exposes the thirteen domain families already represented under `src/features/domains/`;
 - presents KFM's evidence, finite-outcome, time, correction, accessibility, and trust-membrane principles;
 - mounts the existing renderer-neutral `map_runtime` selection-to-Evidence-Drawer bridge with deterministic synthetic cases;
+- mounts the existing finite `MapRuntimePort` trust-status presenter in the normal map workspace through the dependency-free `NullMapRuntime`;
 - records the current MapLibre package, candidate, and HOLD posture without importing or admitting `maplibre-gl`;
 - projects its existing public anchors through a code-owned workspace registry; and
 - composes existing finite-state features into one text-first public trust surface.
@@ -80,6 +81,14 @@ This composition does not:
 
 The concrete renderer remains a separate governed implementation and dependency-admission change after its own gates close.
 
+## Renderer-neutral runtime status
+
+The map workspace now exposes the existing finite runtime-state presenter at its normal point of use. The synthetic controls exercise `IDLE`, `READY`, `STALE`, `WITHDRAWN`, and `ERROR` through `NullMapRuntime`; every non-`READY` state blocks candidate-selection eligibility, and critical states remain text-first assertive alerts.
+
+This is consumer-migration and accessibility proof for the KFM-owned port only. It performs no network, DOM renderer, WebGL, worker, tile, source, evidence, policy, release, deployment, or publication work. `maplibre-gl`, the concrete `MapLibreAdapter`, dependency admission, and issue #2906 browser readiness remain on HOLD.
+
+Implementation baseline: `main@8c943018a0cd59b06b5a623e15b9a9068a3513f4`.
+
 ## Validation
 
 Run from `apps/explorer-web/` with the repository's locked toolchain:
@@ -90,8 +99,10 @@ pnpm run test:unit
 pnpm run test:browser
 ```
 
-The catalog tests check identifier/path uniqueness, the thirteen-domain inventory, sensitive-domain safeguards, filtering, and preservation of the MapLibre HOLD. Workspace tests cover registry/context/URL behavior. Trust-surface and Evidence Drawer tests cover the consistent public grammar, finite negative states, malformed metadata, no-network boundaries, unique DOM identity, accessible trigger relationships, error-state suppression, and browser presentation.
+The catalog tests check identifier/path uniqueness, the thirteen-domain inventory, sensitive-domain safeguards, filtering, and preservation of the MapLibre HOLD. Workspace tests cover registry/context/URL behavior. The Explorer runtime-status browser test covers normal-shell mounting, text-first state and reason fields, selection blocking, assertive critical states, recovery, and preservation of the renderer HOLD. Trust-surface and Evidence Drawer tests cover the consistent public grammar, finite negative states, malformed metadata, no-network boundaries, unique DOM identity, accessible trigger relationships, error-state suppression, and browser presentation.
 
 ## Rollback
 
 For UI-02, restore `src/main.ts`, remove `trust-state-primitives.ts`, `trust-surface.ts`, `site-trust.css`, and their tests, restore this README, and revert the bounded Evidence Drawer identity/error-presentation repair. UI-01 navigation/context behavior and the independently merged Focus Mode request surface remain intact. No data migration, renderer transition, API transition, source transition, policy action, release action, deployment action, or publication action is required.
+
+For the renderer-neutral runtime-status slice, restore `mount-explorer-site.ts` and `site-map.css`, remove its bounded browser test, and restore this README. The reusable port and presenter remain intact, and rollback requires no data, dependency, renderer, API, source, release, deployment, or publication transition.
