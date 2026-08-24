@@ -47,7 +47,6 @@
     "outcome": {
       "enum": [
         "OBSERVED",
-        "FORECAST",
         "DERIVED",
         "CONFLICT",
         "STALE",
@@ -92,8 +91,7 @@
             "PRECIP_EDDI",
             "SOIL_MOISTURE",
             "AGRICULTURE_CONTEXT",
-            "WATER_MANAGEMENT_BOUNDARY",
-            "CPC_DROUGHT_OUTLOOK"
+            "WATER_MANAGEMENT_BOUNDARY"
           ]
         },
         "source_id": {
@@ -103,15 +101,6 @@
         "source_version_ref": {
           "type": "string",
           "minLength": 1
-        },
-        "source_role": {
-          "enum": [
-            "OBSERVATION",
-            "CLASSIFICATION",
-            "FORECAST",
-            "CONTEXT",
-            "REFERENCE"
-          ]
         },
         "observation_status": {
           "enum": [
@@ -140,41 +129,6 @@
             "null"
           ],
           "format": "date-time"
-        },
-        "forecast_issue_time": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "format": "date-time"
-        },
-        "forecast_valid_start": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "format": "date-time"
-        },
-        "forecast_valid_end": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "format": "date-time"
-        },
-        "predecessor_ref": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "predecessor_relation": {
-          "enum": [
-            "SUCCESSOR",
-            "CORRECTION",
-            "SUPERSESSION",
-            null
-          ]
         },
         "publication_time": {
           "type": "string",
@@ -269,7 +223,6 @@
         "kind": {
           "enum": [
             "DROUGHT_CLASSIFICATION",
-            "DROUGHT_OUTLOOK",
             "STREAMFLOW_CONDITION",
             "GROUNDWATER_CONDITION",
             "EVAPORATIVE_DEMAND",
