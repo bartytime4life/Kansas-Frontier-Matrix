@@ -99,12 +99,13 @@ jobs:
 
           cat "$RUNNER_TEMP/docs-stale-scan.md" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Verify current stale-scan repair receipt integrity
+      - name: Replay retained stale-scan receipt from its exact Git tree
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-docs-stale-scan-current-binding-20260808.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref f07a14b0f516fdcbc26592df7e205d7a566d8fd7
 
       - name: Record freshness trust boundary
         if: always()
@@ -116,6 +117,7 @@ jobs:
             echo "- Scope: explicit-as-of review age, placeholder-owner age, temporary markers, verification debt, and implementation-claim review signals."
             echo "- Profile: advisory; warnings are not promoted to failures by default."
             echo "- Ratchet: changed-path findings remain current; inherited warnings are omitted and inherited failures are historical warnings."
+            echo "- Receipt replay: retained authoring bytes are read from exact tree f07a14b0f516fdcbc26592df7e205d7a566d8fd7; later documentation changes do not rewrite historical process memory."
             echo "- Network: validator and focused tests make no external request."
             echo "- Non-effects: no documentation edit, owner assignment, registry mutation, doctrine decision, policy approval, review record, release, deployment, or publication."
           } >> "$GITHUB_STEP_SUMMARY"
