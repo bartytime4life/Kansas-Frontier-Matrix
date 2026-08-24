@@ -1,9 +1,15 @@
+import {
+  createNullMapRuntime,
+  type MapRuntimeTrustState,
+} from "@kfm/maplibre";
 import { resolveBaselineShell } from "../features/shell";
 import {
   MAP_FEATURE_SELECTION_PROFILE,
   mountMapFeatureEvidenceFixture,
+  mountMapRuntimeTrustStatus,
   type MapEvidenceFixtureCase,
   type MapEvidenceFixtureController,
+  type MapRuntimeTrustStatusController,
 } from "../features/map_runtime";
 import {
   FEATURE_CATALOG,
@@ -182,7 +188,9 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
   const document = root.ownerDocument;
   const baseline = resolveBaselineShell();
   const cleanup: Array<() => void> = [];
+  const mapRuntime = createNullMapRuntime();
   let mapFixture: MapEvidenceFixtureController | null = null;
+  let mapRuntimeStatus: MapRuntimeTrustStatusController | null = null;
   root.className = "kfm-explorer-root";
   document.documentElement.dataset.kfmExplorer = "true";
 
@@ -229,7 +237,45 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
   mapToolbar.append(chip(document, "Interaction", "Synthetic"), chip(document, "Evidence bridge", "Active", "positive"), chip(document, "MapLibre", "HOLD", "critical"));
   mapCard.append(mapToolbar, mapArtwork(document));
   const runtime = el(document, "aside", "runtime-card card");
-  runtime.append(text(document, "p", "Renderer gate", "eyebrow"), text(document, "h3", "MapLibre integration remains governed"), text(document, "p", "The selected browser renderer family is visible, but the concrete package, one-adapter seam, dependency integrity, and authenticated browser probes remain separate gates."), chip(document, "Candidate", REPOSITORY_SNAPSHOT.mapLibre.readinessCandidate), chip(document, "Admission", "Not admitted", "critical"), link(document, "Open governance issue #2957", `https://github.com/${REPOSITORY_SNAPSHOT.repository}/issues/${REPOSITORY_SNAPSHOT.mapLibre.governanceIssue}`, "text-link"));
+  const runtimeStatusHost = el(document, "div", "runtime-status-host");
+  runtimeStatusHost.dataset.component = "explorer-map-runtime-status-host";
+  const runtimeControls = el(document, "div", "runtime-controls");
+  runtimeControls.setAttribute("aria-label", "Synthetic map runtime controls");
+  const runtimeActions: readonly Readonly<{
+    label: string;
+    state: MapRuntimeTrustState | null;
+  }>[] = Object.freeze([
+    Object.freeze({ label: "Initialize or recover synthetic runtime", state: null }),
+    Object.freeze({ label: "Mark synthetic runtime stale", state: "STALE" }),
+    Object.freeze({ label: "Withdraw synthetic runtime", state: "WITHDRAWN" }),
+    Object.freeze({ label: "Mark synthetic runtime error", state: "ERROR" }),
+  ]);
+  runtimeActions.forEach((action) => {
+    const button = el(document, "button");
+    button.type = "button";
+    button.textContent = action.label;
+    const handleRuntimeAction = (): void => {
+      if (action.state === null) {
+        void mapRuntime.initialize();
+        return;
+      }
+      mapRuntime.emitTrustState(action.state);
+    };
+    button.addEventListener("click", handleRuntimeAction);
+    cleanup.push(() => button.removeEventListener("click", handleRuntimeAction));
+    runtimeControls.append(button);
+  });
+  runtime.append(
+    text(document, "p", "Renderer gate", "eyebrow"),
+    text(document, "h3", "MapLibre integration remains governed"),
+    text(document, "p", "The selected browser renderer family is visible, but the concrete package, one-adapter seam, dependency integrity, and authenticated browser probes remain separate gates."),
+    chip(document, "Candidate", REPOSITORY_SNAPSHOT.mapLibre.readinessCandidate),
+    chip(document, "Admission", "Not admitted", "critical"),
+    text(document, "p", "This dependency-free synthetic port exercises only the finite, renderer-neutral status contract. READY does not establish MapLibre readiness, release, deployment, or publication authority.", "guardrail"),
+    runtimeStatusHost,
+    runtimeControls,
+    link(document, "Open governance issue #2957", `https://github.com/${REPOSITORY_SNAPSHOT.repository}/issues/${REPOSITORY_SNAPSHOT.mapLibre.governanceIssue}`, "text-link"),
+  );
   mapGrid.append(mapCard, runtime);
   mapSection.append(mapGrid);
   const lab = el(document, "div", "selection-lab card");
@@ -244,6 +290,7 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
     if (selection.selectionId === "selection:error") throw new Error("Synthetic governed resolver failure");
     return supportedProjection;
   });
+  mapRuntimeStatus = mountMapRuntimeTrustStatus(runtimeStatusHost, mapRuntime);
 
   const knowledge = el(document, "section", "section-shell");
   knowledge.id = "knowledge";
@@ -334,6 +381,9 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
   return Object.freeze({
     destroy: () => {
       cleanup.forEach((fn) => fn());
+      mapRuntimeStatus?.destroy();
+      mapRuntimeStatus = null;
+      mapRuntime.dispose();
       mapFixture?.destroy();
       mapFixture = null;
       root.replaceChildren();
