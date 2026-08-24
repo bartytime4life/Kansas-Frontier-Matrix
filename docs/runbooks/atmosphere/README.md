@@ -19,7 +19,7 @@ evidence_snapshot:
   base_ref: main
   base_commit: df6c3f5dadd2800fdc2356ceb540ca4e448f6c7a
   prior_blob: bb25864bf893ae1700ac4dc4ce40bbaa85154696
-  release_rollback_runbook_blob: 24a61405e65bd2f24e4793c4566b2b6cd052dc1b
+  release_rollback_runbook_blob: 9054c5a584f06f065b94960491de28a0c6941217
   child_count: 9
   substantive_repository_grounded_children: 8
   proposal_era_substantive_children: 1
