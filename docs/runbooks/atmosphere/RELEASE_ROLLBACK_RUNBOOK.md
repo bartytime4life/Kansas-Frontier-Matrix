@@ -210,8 +210,8 @@ The placement outcome is `PLACE`: replace the scaffold in place under the `docs/
 | Release and rollback meaning | [`contracts/release/`](../../../contracts/release/) | Referenced; not redefined |
 | Machine shape | [`schemas/contracts/v1/release/`](../../../schemas/contracts/v1/release/) | Referenced; schema PASS is not authority |
 | Candidate, review, manifest, correction, withdrawal, and rollback records | [`release/`](../../../release/README.md) | Separate release-governance object families |
-| Evidence and proof | [`data/proofs/`](../../../data/proofs/) | Separate from receipts and release decisions |
-| Published public-safe carriers | [`data/published/atmosphere/`](../../../data/published/atmosphere/README.md) | Downstream carriers only |
+| Evidence and proof | [`data/proofs/`](../../../../data/proofs/) | Separate from receipts and release decisions |
+| Published public-safe carriers | [`data/published/atmosphere/`](../../../../data/published/atmosphere/README.md) | Downstream carriers only |
 | Atmosphere policy | [`policy/domains/atmosphere/`](../../../policy/domains/atmosphere/README.md) | Current scaffolds remain unbound |
 | Artifact assembly and transition execution | `pipelines/` and authorized operations surfaces | Not established by this runbook |
 
