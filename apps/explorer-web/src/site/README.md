@@ -23,7 +23,8 @@ The first Unified Workspace implementation slice is intentionally public, no-net
 - `workspace-navigation.ts` mounts those descriptors into the existing shell without creating routes or privileged actions.
 - `workspace-context.ts` defines a strict UI-owned public context projection for workspace, domain, place, released-layer IDs, renderer-neutral camera and selection, material time, compare references, and story position.
 - The context parser reuses `@kfm/maplibre` camera and selection validators, rejects extra fields, requires `publicSafe: true`, and keeps URL context synchronized with the compatible workspace hash.
-- Unit and browser tests cover registry integrity, feature references, deterministic URL round-trip, malformed/oversized/duplicated context, public-safety exclusions, hash mismatch, and rendered anchor navigation.
+- Evidence references remain available for bounded in-memory context transfer, but URL serialization and parsing reject any selection that carries them because this browser-owned projection cannot prove release or access eligibility. Shareable links retain the public selection identifier; a governed interface must resolve admissible evidence after navigation.
+- Unit and browser tests cover registry integrity, feature references, deterministic URL round-trip, evidence-reference exclusion, malformed/oversized/duplicated context, public-safety exclusions, hash mismatch, and rendered anchor navigation.
 
 UI-01 is a bounded browser-composition contract. It is not a canonical semantic contract, source registry, policy rule, evidence object, review decision, release record, deployment record, or publication artifact.
 

@@ -45,6 +45,14 @@ const validContext = Object.freeze({
   publicSafe: true,
 });
 
+const urlSafeContext = Object.freeze({
+  ...validContext,
+  selection: Object.freeze({
+    ...validContext.selection,
+    evidenceRefs: Object.freeze([]),
+  }),
+});
+
 describe("Explorer public workspace context", () => {
   it("strictly parses and deeply freezes a public-safe context", () => {
     const parsed = parsePublicWorkspaceContext(validContext);
@@ -56,17 +64,17 @@ describe("Explorer public workspace context", () => {
   });
 
   it("round-trips deterministically through a shareable URL and preserves unrelated parameters", () => {
-    const first = serializePublicWorkspaceContext(validContext);
-    const second = serializePublicWorkspaceContext(validContext);
+    const first = serializePublicWorkspaceContext(urlSafeContext);
+    const second = serializePublicWorkspaceContext(urlSafeContext);
     expect(first).not.toBeNull();
     expect(first).toBe(second);
     expect(parsePublicWorkspaceContextQuery(first ?? "")).toEqual(
-      parsePublicWorkspaceContext(validContext),
+      parsePublicWorkspaceContext(urlSafeContext),
     );
 
     const url = withPublicWorkspaceContext(
       new URL("https://example.test/explorer?lang=en#top"),
-      validContext,
+      urlSafeContext,
     );
     expect(url).not.toBeNull();
     expect(url?.searchParams.get("lang")).toBe("en");
@@ -75,8 +83,26 @@ describe("Explorer public workspace context", () => {
     );
     expect(url?.hash).toBe("#map");
     expect(url ? parsePublicWorkspaceContextUrl(url) : null).toEqual(
-      parsePublicWorkspaceContext(validContext),
+      parsePublicWorkspaceContext(urlSafeContext),
     );
+  });
+
+  it("rejects evidence identifiers at every public URL boundary", () => {
+    expect(parsePublicWorkspaceContext(validContext)).not.toBeNull();
+    expect(serializePublicWorkspaceContext(validContext)).toBeNull();
+    expect(
+      withPublicWorkspaceContext(
+        new URL("https://example.test/explorer"),
+        validContext,
+      ),
+    ).toBeNull();
+
+    const params = new URLSearchParams();
+    params.set(
+      PUBLIC_WORKSPACE_CONTEXT_QUERY_PARAM,
+      JSON.stringify(validContext),
+    );
+    expect(parsePublicWorkspaceContextQuery(params)).toBeNull();
   });
 
   it("rejects extra, private, or internally inconsistent fields", () => {
@@ -119,12 +145,12 @@ describe("Explorer public workspace context", () => {
       ),
     ).toBeNull();
 
-    const encoded = serializePublicWorkspaceContext(validContext);
+    const encoded = serializePublicWorkspaceContext(urlSafeContext);
     expect(encoded).not.toBeNull();
     const duplicated = new URLSearchParams(encoded ?? "");
     duplicated.append(
       PUBLIC_WORKSPACE_CONTEXT_QUERY_PARAM,
-      JSON.stringify(validContext),
+      JSON.stringify(urlSafeContext),
     );
     expect(parsePublicWorkspaceContextQuery(duplicated)).toBeNull();
 
@@ -134,7 +160,7 @@ describe("Explorer public workspace context", () => {
 
     const mismatched = withPublicWorkspaceContext(
       new URL("https://example.test/explorer"),
-      validContext,
+      urlSafeContext,
     );
     expect(mismatched).not.toBeNull();
     if (mismatched) mismatched.hash = "#trust";
