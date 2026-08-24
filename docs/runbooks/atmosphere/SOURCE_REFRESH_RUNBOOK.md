@@ -1,779 +1,632 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/runbooks/atmosphere/source-refresh
-title: Atmosphere & Air — Source Refresh Runbook
+doc_id: kfm://doc/runbook-atmosphere-source-refresh
+title: Atmosphere Source Refresh Runbook
 type: standard
-version: v0.1
-status: draft
-owners: [NEEDS_VERIFICATION — Atmosphere/Air domain steward + Docs steward]
+subtype: operational-runbook
+version: v1.0.0
+prior_version: v0.1
+status: draft; repository-grounded; documentation-only; live-source-execution-hold; not-for-life-safety; non-publisher
+owners:
+  - "@bartytime4life — verified GitHub review route only"
+  - "NEEDS VERIFICATION — accountable Atmosphere, source, connector, rights, sensitivity, Hazards-seam, evidence, release, correction, operations, and independent-review assignments"
 created: 2026-05-13
-updated: 2026-05-13
-policy_label: restricted
+updated: 2026-08-24
+policy_label: repository-facing; restricted-by-default; no-network-first; not-for-life-safety; non-release
+current_path: docs/runbooks/atmosphere/SOURCE_REFRESH_RUNBOOK.md
+owning_root: docs/
+responsibility: "Describe the governed operator procedure for refreshing an already-admitted Atmosphere source without granting source authority, activating a connector, issuing an alert, exposing restricted material, promoting a release, or publishing data."
+truth_posture: cite-or-abstain
+truth_labels: [CONFIRMED, PROPOSED, UNKNOWN, NEEDS_VERIFICATION, CONFLICTED, HOLD]
+authority_class: explanatory operational procedure
+authority_rank: subordinate to accepted doctrine and ADRs, source authority, contracts, schemas, policy, evidence, review, lifecycle, release, correction, and rollback records
+canonical_relationship: same-path update; no sibling authority created
+path_posture: PLACE
+prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  content_commit: 1012d9f6b605656d3e994801581ff3ccbe212556
+  branch_base_commit: 991f9f99634ceeb31228b22e593b1111f9b0510b
+  target_prior_blob: e96d7118a91bf68704ed14f679ba7e6bebb68991
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  source_admission_adr_blob: b5c0ac83be6f00897ee626c46df2bf64f15d82f5
+  source_authority_register_blob: 32729857bc8eb5001acb37b8ee8e60bcb6e0dc50
+  atmosphere_source_registry_readme_blob: 6a50dd496225cd9e4c3165dead10cde3d0f23959
+  atmosphere_source_placeholder_blob: 2899950fd4b9f4fa53df37b39cf8780e1503a5da
+  atmosphere_connector_readme_blob: 4acc061f85248d8c98d85195ac5548bd384aed9d
+  atmosphere_ingest_spec_blob: 4b0c610557a4c0b2d11a5376608565d138c78023
+  atmosphere_ingest_placeholder_blob: ff71241bb9c783bbf22fc067b5b00602110b88f5
+  source_descriptor_validator_blob: a0420731a1b80ce6d156f8e4cfd928a6b13699f4
+  source_activation_validator_blob: 6e2bfceae3b58872d3f905f4d24003b80b7de422
+  ingest_receipt_validator_blob: 6596685b04b7889355bf66ae6b25f1f83bacccaf
+  atmosphere_workflow_blob: fccba4b6e2cdae561ec8a4904446ed5dbe6ec8ce
+  atmosphere_validation_runbook_blob: ba3257f79cb4245d1c6de7e1271768910b42d9c8
+inspection_boundary: >-
+  Current-session GitHub reads of this target, accepted Directory Rules evidence,
+  proposed source-admission ADR, source contracts, schemas, fixtures, validators,
+  source authority register, Atmosphere source registry, connector lanes, pipeline
+  specifications and placeholders, lifecycle roots, release-candidate boundary,
+  Atmosphere workflows, tests, policy, and sibling runbooks. Repository-native
+  commands were not executed in a mounted checkout during authoring. No live source
+  was contacted and no credential, lifecycle, release, deployment, or publication
+  state was changed.
 related:
-  - docs/domains/atmosphere/README.md
-  - docs/runbooks/README.md
-  - data/registry/sources/atmosphere/
-  - connectors/README.md
-  - pipelines/ingest/
-  - policy/domains/atmosphere/
-  - release/candidates/atmosphere/
-tags: [kfm, runbook, atmosphere, air, ingest, refresh, governance]
-notes:
-  - Path is PROPOSED until verified against mounted repo evidence.
-  - All source-specific paths, route names, and tool names are PROPOSED / NEEDS VERIFICATION
-    unless visible in the repo.
+  - ../README.md
+  - ../../doctrine/directory-rules.md
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../adr/ADR-0017-source-descriptor-admission-process.md
+  - ../../domains/atmosphere/README.md
+  - ../../domains/atmosphere/DATA_LIFECYCLE.md
+  - ../../domains/atmosphere/OBSERVED_MODELED_SEPARATION.md
+  - ../../domains/atmosphere/POLICY.md
+  - ../../domains/atmosphere/PUBLICATION_POSTURE.md
+  - ../../sources/SOURCE_DESCRIPTOR_STANDARD.md
+  - ../../../control_plane/source_authority_register.yaml
+  - ../../../data/registry/sources/atmosphere/README.md
+  - ../../../connectors/atmosphere/README.md
+  - ../../../connectors/airnow/README.md
+  - ../../../pipeline_specs/atmosphere/README.md
+  - ../../../pipelines/domains/atmosphere/README.md
+  - ../../../policy/domains/atmosphere/README.md
+  - ../../../fixtures/domains/atmosphere/README.md
+  - ../../../tests/domains/atmosphere/README.md
+  - ../../../tools/validators/domains/atmosphere/README.md
+  - ../../../release/candidates/atmosphere/README.md
+  - ./NO_NETWORK_TEST_RUNBOOK.md
+  - ./VALIDATION_RUNBOOK.md
+  - ./PROMOTION_RUNBOOK.md
+  - ./CORRECTION_RUNBOOK.md
+  - ./ROLLBACK_RUNBOOK.md
+tags: [kfm, runbook, atmosphere, air, source-refresh, source-admission, source-role, no-network, evidence, policy, correction, rollback, life-safety-denial]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Atmosphere & Air — Source Refresh Runbook
+# Atmosphere Source Refresh Runbook
 
-> Governed, evidence-first refresh procedure for the KFM Atmosphere & Air source families
-> — RAW capture through release candidate, with policy, sensitivity, and rollback gates.
-
-![Status](https://img.shields.io/badge/status-draft-orange)
-![Authority](https://img.shields.io/badge/authority-PROPOSED-yellow)
-![Lifecycle](https://img.shields.io/badge/lifecycle-RAW%20%E2%86%92%20PUBLISHED-informational)
-![Policy](https://img.shields.io/badge/policy-fail--closed-critical)
-![Domain](https://img.shields.io/badge/domain-atmosphere--air-blueviolet)
-![Updated](https://img.shields.io/badge/updated-2026--05--13-lightgrey)
-
-| Field | Value |
-|---|---|
-| **Document type** | Domain runbook (Atmosphere & Air) |
-| **Status** | `draft` |
-| **Owners** | NEEDS VERIFICATION — Atmosphere/Air steward + Docs steward |
-| **Last updated** | 2026-05-13 |
-| **Authority of this doc** | PROPOSED — pending mounted-repo verification |
-| **Lifecycle invariant** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED |
-| **Cite-or-abstain** | Default truth posture; AI may never substitute for `EvidenceBundle` |
+> **Repository-grounded procedure for refreshing an already-admitted Atmosphere source through bounded acquisition, immutable capture, normalization, validation, evidence closure, and review handoff—without treating source access, green CI, a receipt, a map, or generated language as truth or publication authority.**
 
 > [!IMPORTANT]
-> This runbook is **doctrine-grounded but implementation-PROPOSED**. Every connector
-> name, command, validator, route, and path quoted below is PROPOSED or NEEDS
-> VERIFICATION until reconciled against mounted repository evidence. Doctrine
-> (the lifecycle, the gates, the source roles, the sensitivity posture) is CONFIRMED
-> and must not be bent without an ADR.
+> **A source refresh is not source admission, truth certification, lifecycle promotion, release, deployment, or publication.** This procedure can produce a reviewable candidate only after the owning source, evidence, policy, and lifecycle controls resolve. It stops before promotion authority acts.
+
+> [!WARNING]
+> **KFM is not an official AQI, medical, regulatory, emergency-alerting, or life-safety authority.** Do not use this runbook to issue health guidance, declare safe or unsafe conditions, replace an agency alert, infer exposure, or certify a measurement. Official observations, forecasts, and advisories retain their source roles and issuer authority.
+
+> [!CAUTION]
+> **Live Atmosphere source execution is `HOLD` at the pinned repository state.** The source-authority projection is empty; the tracked Atmosphere source records are placeholders; connector lanes are README-only; the ingest specification has no stages; and the ingest implementation is a placeholder. The executable posture currently supported by evidence is bounded and no-network.
+
+**Navigation:** [Purpose](#1-purpose-scope-and-non-goals) · [Evidence](#2-placement-authority-and-current-state) · [Outcomes](#3-truth-labels-and-finite-outcomes) · [Preflight](#4-roles-inputs-and-authority-freeze) · [Sources](#5-source-family-routing-inventory) · [Meaning](#6-atmosphere-meaning-time-and-cross-domain-guardrails) · [Lifecycle](#7-refresh-lifecycle-and-trust-boundary) · [Procedure](#8-governed-refresh-procedure) · [Validation](#9-current-no-network-validation) · [Graduation](#10-live-profile-graduation-sequence) · [Operations](#11-staleness-retries-security-and-safe-diagnostics) · [Correction](#12-correction-withdrawal-and-rollback) · [Handoff](#13-review-handoff-and-open-verification) · [References](#14-related-current-surfaces) · [Anti-patterns](#appendix-a-anti-patterns)
 
 ---
 
-## Quick Jump
+## 1. Purpose, scope, and non-goals
 
-- [1. Purpose & Scope](#1-purpose--scope)
-- [2. Repo Fit](#2-repo-fit)
-- [3. Source Inventory](#3-source-inventory)
-- [4. Refresh Cadence Matrix](#4-refresh-cadence-matrix)
-- [5. Lifecycle Diagram](#5-lifecycle-diagram)
-- [6. Pre-flight Checks](#6-pre-flight-checks)
-- [7. Refresh Procedure](#7-refresh-procedure)
-- [8. Source-Family Specifics](#8-source-family-specifics)
-- [9. Sensitivity, Rights & Public-Safe Rules](#9-sensitivity-rights--public-safe-rules)
-- [10. Validators & Tests](#10-validators--tests)
-- [11. Failure Modes & Quarantine Reasons](#11-failure-modes--quarantine-reasons)
-- [12. Rollback & Correction](#12-rollback--correction)
-- [13. Operator Task List](#13-operator-task-list)
-- [14. FAQ](#14-faq)
-- [15. Related Docs](#15-related-docs)
-- [Appendix A — Receipt & Manifest Skeletons](#appendix-a--receipt--manifest-skeletons)
+Use this runbook only to check or retrieve a new version of an **already-admitted** Atmosphere source. The operator must:
 
----
+1. freeze the exact source, descriptor, decision, connector, prior state, and intended effects;
+2. prove the affected boundary with no-network fixtures before any permitted live contact;
+3. preserve source role, rights, sensitivity, access, time, units, spatial support, uncertainty, and caveats;
+4. retrieve conditionally and with bounded effects;
+5. capture immutable bytes or immutable source references into governed RAW or QUARANTINE;
+6. normalize only in WORK and route unresolved records to QUARANTINE;
+7. validate machine shape, Atmosphere meaning, integrity, policy, and evidence references;
+8. prepare catalog/evidence candidates and a review handoff; then stop.
 
-## 1. Purpose & Scope
+### In scope
 
-This runbook describes **how an operator refreshes Atmosphere & Air source material**
-into KFM in a way that preserves the lifecycle invariant, evidence closure, source-role
-discipline, sensitivity posture, and release-state governance.
+- admitted observations, regulatory records, operational context, remote-sensing observations, model context, historical context, citation sources, and other explicitly classified Atmosphere products;
+- source-head comparison, conditional retrieval, no-change, skip, rate-limit, error, quarantine, and denial outcomes;
+- immutable capture, WORK normalization, source-specific validation, evidence/catalog candidate closure, and correction/rollback handoff.
 
-It covers:
+### Out of scope
 
-- Capture of source-native payloads or references into `data/raw/atmosphere/<source_id>/<run_id>/`.
-- Normalization and validation in `data/work/atmosphere/` and `data/quarantine/atmosphere/`.
-- Emission of `RunReceipt`, `ValidationReport`, `EvidenceRef`, and `DatasetVersion`
-  objects through `PROCESSED` into `CATALOG / TRIPLET`.
-- Promotion of release candidates to `PUBLISHED` under explicit policy review.
+This runbook does not:
 
-It does **not** cover:
+- admit, activate, credential, schedule, approve, release, deploy, or publish a source;
+- define machine contracts or schemas in Markdown;
+- certify calibration, regulatory equivalence, model skill, forecast accuracy, health impact, exposure, causality, or emergency significance;
+- issue or repeat life-safety instructions as KFM authority;
+- permit public clients, maps, dashboards, or AI to read RAW, WORK, QUARANTINE, candidate, or restricted stores;
+- turn AQI into concentration, AOD into ground-level PM2.5, a model into an observation, a preliminary report into a certified record, or a low-cost sensor into regulatory evidence;
+- treat a file move, pull request, merge, workflow, badge, receipt, or map layer as promotion.
 
-- Public emergency alerting or official advisory issuance (Hazards owns advisory truth;
-  Atmosphere/Air owns `AdvisoryContext` only, with official-source redirection).
-- Renderer-side concerns (map style, MapLibre layer wiring) — see the MapLibre runbook.
-- AI / Focus Mode generation flows — see the governed-AI runbook family.
-
-### What this is / is not
-
-| This **is** | This is **not** |
-|---|---|
-| A governed refresh procedure with finite outcomes | A bypass around policy or review |
-| Evidence-aware ingest of observations, model fields, and remote-sensing context | A direct path from upstream API to public map |
-| A source-role-preserving pipeline (observation / model / authority / context) | A fusion that flattens AQI, AOD, and PM2.5 into one number |
-| A fail-closed sensor and rights workflow | A guarantee that any specific connector or route exists in the repo today |
+Use the [Correction Runbook](./CORRECTION_RUNBOOK.md) and [Rollback Runbook](./ROLLBACK_RUNBOOK.md) when already released material is affected. Route emergency or life-safety communication to the official issuer and the Hazards boundary.
 
 [Back to top](#top)
 
 ---
 
-## 2. Repo Fit
-
-**PROPOSED path:** `docs/runbooks/atmosphere/SOURCE_REFRESH_RUNBOOK.md`
+## 2. Placement, authority, and current state
 
 ### Directory Rules basis
 
-- **Responsibility root:** `docs/` — this file *explains something to humans* (per
-  Directory Rules §4 Step 1, the "explains something to humans → `docs/`" mapping).
-- **Sub-segment:** `runbooks/` — operational, human-facing procedure for stewards
-  and operators. Sibling subsystem runbooks (e.g. UI, governed-AI families) are
-  PROPOSED in project documentation.
-- **Domain segment:** `atmosphere/` — applied as a segment inside the responsibility
-  root, per Domain Placement Law (Directory Rules §12). Atmosphere MUST NOT become
-  a root folder; here it appears only as a `docs/runbooks/<domain>/` segment.
-- **Authority needed:** none beyond an existing `docs/runbooks/` parent and its
-  README. No new canonical or compatibility root is introduced.
-
-> [!NOTE]
-> A flat naming pattern (e.g. `docs/runbooks/atmosphere_SOURCE_REFRESH.md`) is also
-> compatible with Directory Rules. If the repo already uses the flat pattern for
-> sibling subsystem runbooks, rename this file to match — **the responsibility, lifecycle
-> phase, and domain segment, not the filename casing, are the governance load-bearing
-> elements.**
-
-### Upstream / downstream
+Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [Directory Rules v2](../../doctrine/directory-rules.md). This is a same-path `PLACE` under the human-readable operational-procedure responsibility root:
 
 ```text
-upstream (read)         this runbook                  downstream (drives)
-─────────────────       ───────────────────           ───────────────────────────
-docs/doctrine/...   →   docs/runbooks/             →  connectors/<source>/...
-docs/domains/           atmosphere/                    pipelines/ingest/...
-  atmosphere/...        SOURCE_REFRESH_RUNBOOK.md      pipeline_specs/atmosphere/...
-data/registry/                                         data/raw/atmosphere/...
-  sources/atmosphere/                                  data/quarantine/atmosphere/...
-policy/domains/                                        data/processed/atmosphere/...
-  atmosphere/                                          data/catalog/domain/atmosphere/
-schemas/contracts/                                     release/candidates/atmosphere/
-  v1/domains/atmosphere/
+docs/runbooks/atmosphere/SOURCE_REFRESH_RUNBOOK.md
 ```
 
-### Accepted inputs
+The update creates no parallel contract, schema, source registry, connector, policy, receipt, proof, release, or publication authority, and creates, moves, renames, or deletes no file.
 
-- Operator-triggered refresh requests for a registered Atmosphere/Air source.
-- Scheduled watcher events (`event_envelope` / `prefilter_output`) that propose a
-  refresh; *the watcher does not publish* — it emits a candidate decision only.
-- Steward-initiated targeted refreshes (e.g. a single station, a single tile window,
-  a single product version pin).
+### Responsibility boundary
 
-### Exclusions
-
-- Direct writes from connectors to `data/processed/`, `data/catalog/`, or
-  `data/published/` (Directory Rules §13 — connector-publishes anti-pattern).
-- Auto-publication from a refresh run (promotion is a governed state transition).
-- Use of unvalidated PurpleAir readings (Barkjohn correction is required before
-  publication; uncorrected readings stay in WORK or QUARANTINE).
-- Treating AQI as a concentration, AOD as PM2.5, or model fields as observations.
-
-[Back to top](#top)
-
----
-
-## 3. Source Inventory
-
-> [!IMPORTANT]
-> Rights, redistribution terms, API keys, and bulk-fetch limits **MUST be verified**
-> for each source before any refresh that touches the public path. Rights/source-role
-> ambiguity is a fail-closed quarantine reason.
-
-| Source family | Source role | Object families produced | Rights / sensitivity | Status |
-|---|---|---|---|---|
-| **EPA AQS / AirData** | regulatory authority / validated observation | `AirObservation`, `PM25Observation`, `OzoneObservation`, `AirStation` | API key required; validated data may lag months; redistribution NEEDS VERIFICATION | PROPOSED |
-| **EPA AirNow** | preliminary observation / public AQI report | `AirObservation`, `AdvisoryContext` | API key required; rate limits NEEDS VERIFICATION; preliminary, not regulatory | PROPOSED |
-| **NOAA / NWS** | authority / observation / forecast context | `WeatherObservation`, `ForecastContext`, `AdvisoryContext` | Generally public-domain; redistribution terms NEEDS VERIFICATION per product | PROPOSED |
-| **Kansas Mesonet** | observation (in-situ) | `WeatherStation`, `WeatherObservation`, `PrecipitationObservation`, `TemperatureObservation`, `WindField` | Written consent or attribution may be required; contact `kansas-wdl@k-state.edu` | PROPOSED |
-| **PurpleAir** | low-cost sensor / community observation | `PM25Observation` (variant- and channel-tagged) | API keys MUST stay out of `STAC` / `DCAT` / catalog metadata; ToS NEEDS VERIFICATION; Barkjohn correction REQUIRED before publication | PROPOSED |
-| **OpenAQ-like aggregators** | aggregator (source role depends on upstream) | `AirObservation` | Rights and source-role NEEDS VERIFICATION; sensitive joins fail closed | PROPOSED |
-| **HRRR-Smoke / BlueSky** | model field / smoke forecast | `SmokeContext`, `ForecastContext` | Model output — NEVER published as observation | PROPOSED |
-| **NOAA HMS smoke** | analyst-derived context / context | `SmokeContext` | Analyst product, not observation; redistribution NEEDS VERIFICATION | PROPOSED |
-| **GOES / ABI AOD** | remote-sensing observation | `AODRaster` | AOD is NOT PM2.5; publication MUST preserve that distinction | PROPOSED |
-| **VIIRS / MODIS fire (FIRMS)** | NRT remote-sensing observation | `SmokeContext` (fire-context join only) | NRT typically within ~3 hours; FRP units must be preserved | PROPOSED |
-| **MAIAC (MCD19A2 / VNP19A2)** | remote-sensing observation | `AODRaster` | L2 gridded; AOD-as-PM2.5 denial required | PROPOSED |
-| **CAMS / ECMWF-family** | model field | `ForecastContext`, `AODRaster` (model variant) | Rights and redistribution NEEDS VERIFICATION | PROPOSED |
-| **Climate normals (NCEI / NOAA)** | authority / climate context | `ClimateNormal`, `ClimateAnomaly` | Public; cite product version | PROPOSED |
-| **KDHE bulletins** | state authority / advisory | `AdvisoryContext` | Official source redirection required on the public surface | PROPOSED |
-
-[Back to top](#top)
-
----
-
-## 4. Refresh Cadence Matrix
-
-Cadence is **policy, not science**. The numbers below are recommended defaults; the
-binding cadence is whichever value is recorded in the relevant `SourceDescriptor`.
-
-| Source family | Recommended cadence | Stale threshold (default) | Probe type |
-|---|---|---|---|
-| AirNow | hourly | > 3 h since last observation → degraded badge | API call + conditional GET |
-| EPA AQS | weekly batch (validated data lags months) | > 60 d for daily summary refresh | scheduled batch |
-| NOAA / NWS observations | hourly (METAR-class) | > 3 h → degraded | API + conditional GET |
-| NOAA / NWS forecast | every 6 h (model-run aligned) | > 12 h since last run → degraded | scheduled aligned |
-| Kansas Mesonet | 5-min / hourly (per endpoint) | > 2 h hourly, > 30 min 5-min | REST CSV pull |
-| PurpleAir | 10-min (subject to ToS / rate limits) | > 1 h → degraded | API with key header |
-| HRRR-Smoke | hourly model cycle | > 12 h since last run → degraded | NOMADS / model archive |
-| NOAA HMS | daily | > 48 h → degraded | scheduled fetch |
-| GOES / ABI AOD | sub-hourly (during daylight) | > 6 h or night-gap aware | tile fetch |
-| VIIRS / MODIS FIRMS | NRT (~3 h) | > 12 h → degraded | NRT API |
-| MAIAC AOD | daily L2 product | > 7 d → degraded | Earthdata / LAADS |
-| CAMS / ECMWF | per model cycle | per product | scheduled cycle |
-| Climate normals | per release (multi-year) | per product | scheduled |
-| KDHE bulletins | as issued | per issuance | redirect to official |
-
-> [!TIP]
-> Use **conditional GETs** (`If-None-Match` / `If-Modified-Since`) and **debounce /
-> coalesce** for high-frequency sources (Mesonet, PurpleAir, AirNow). A no-op refresh
-> still emits a `RunReceipt`; it does not emit a new `DatasetVersion`.
-
-[Back to top](#top)
-
----
-
-## 5. Lifecycle Diagram
-
-```mermaid
-flowchart LR
-    classDef raw       fill:#fff2cc,stroke:#bf9000,color:#000
-    classDef gate      fill:#f4cccc,stroke:#990000,color:#000
-    classDef work      fill:#cfe2f3,stroke:#0b5394,color:#000
-    classDef quar      fill:#e6b8af,stroke:#990000,color:#000
-    classDef proc      fill:#d9ead3,stroke:#38761d,color:#000
-    classDef cat       fill:#c9daf8,stroke:#3c78d8,color:#000
-    classDef pub       fill:#b6d7a8,stroke:#274e13,color:#000
-
-    SD[SourceDescriptor<br/>+ rights + role + cadence]:::gate
-    WATCH[Watcher / Operator<br/>refresh request]:::gate
-    RAW[(data/raw/atmosphere/<br/>source_id/run_id/)]:::raw
-
-    SD --> WATCH --> RAW
-
-    RAW --> NORM[Normalize: schema · units ·<br/>geometry · time · identity]:::work
-    NORM --> VAL[Validators:<br/>rights · sensitivity · evidence ·<br/>temporal · geometry · policy]:::gate
-
-    VAL -- pass --> PROC[(data/processed/atmosphere/<br/>DatasetVersion +<br/>RunReceipt + ValidationReport)]:::proc
-    VAL -- defect --> QUAR[(data/quarantine/atmosphere/<br/>QuarantineRecord + reason)]:::quar
-
-    PROC --> CAT[(data/catalog/domain/atmosphere/<br/>CatalogRecord · EvidenceBundle ·<br/>Triplet · LayerManifest)]:::cat
-
-    CAT --> POL[Policy gate:<br/>ALLOW · RESTRICT · DENY · ABSTAIN]:::gate
-    POL -- ALLOW --> REL[(release/candidates/atmosphere/<br/>ReleaseManifest +<br/>review · correction · rollback)]:::cat
-    POL -- DENY / RESTRICT --> QUAR
-
-    REL --> PUB[(data/published/layers/atmosphere/<br/>governed APIs · public-safe artifacts)]:::pub
-
-    PUB -. CorrectionNotice / RollbackCard .-> CAT
-```
-
-> [!NOTE]
-> Promotion across any arrow in this diagram is a **governed state transition, not a
-> file move.** A pipeline that writes directly to `PUBLISHED` is an anti-pattern.
-
-[Back to top](#top)
-
----
-
-## 6. Pre-flight Checks
-
-Before initiating any refresh, the operator MUST satisfy every check in this list.
-Any unchecked item is grounds to abort or quarantine.
-
-- [ ] **SourceDescriptor exists** for the source under `data/registry/sources/atmosphere/`
-      and carries `source_id`, `role`, `rights`, `sensitivity`, `cadence`, `retrieval plan`.
-- [ ] **Source role is unambiguous** — observation, model, authority, context, or
-      aggregator. AI may not invent a role.
-- [ ] **Rights and redistribution terms** are current (re-check at least quarterly for
-      version-sensitive sources; immediately for PurpleAir / AirNow / Mesonet).
-- [ ] **API key / credential** is loaded from secrets, never inline. Keys MUST NOT
-      appear in `STAC`, `DCAT`, catalog metadata, receipts, or fixtures.
-- [ ] **No-network fixture path** is available for dry-run validation.
-- [ ] **Quarantine has free capacity** and a steward is reachable for any expected
-      fail-closed events.
-- [ ] **Rollback target** is identified — prior `ReleaseManifest` digest is recorded
-      if the refresh feeds a release candidate.
-- [ ] **Sensitivity review** has occurred if the source crosses domains that own
-      sensitive geometry (e.g. atmosphere × biodiversity rare-species joins, atmosphere ×
-      hazards life-safety overlays).
-
-> [!WARNING]
-> Unknown rights, unresolved source role, missing `SourceDescriptor`, or absent
-> rollback target are each independently a **block on public promotion**. They do
-> not block a quarantined refresh, but they MUST NOT silently advance.
-
-[Back to top](#top)
-
----
-
-## 7. Refresh Procedure
-
-The numbered steps below are the **governed sequence**. Skipping a step is a
-lifecycle violation; combining steps is acceptable only when each gate is still
-recorded.
-
-### Step 1 — Resolve the SourceDescriptor
-
-```bash
-# PROPOSED command shape; verify actual tool name against tools/ before use.
-kfm-sources resolve \
-    --domain atmosphere \
-    --source-id <source_id> \
-    --emit work/<run_id>/source_descriptor.json
-```
-
-Captured fields (CONFIRMED doctrine, PROPOSED schema home):
-`source_id`, `role`, `rights`, `sensitivity`, `cadence`, `retrieval plan`,
-`spec_hash`, `last_seen`, `retrieved_at`, `license_text_or_contact`, `policy_id`.
-
-### Step 2 — Capture into RAW
-
-Connector output MUST land in `data/raw/atmosphere/<source_id>/<run_id>/` together
-with checksums and a `RawCaptureReceipt`. RAW is immutable and never publicly
-accessible.
-
-```bash
-# PROPOSED
-connectors/<source>/refresh.py \
-    --descriptor work/<run_id>/source_descriptor.json \
-    --out data/raw/atmosphere/<source_id>/<run_id>/
-```
-
-Required emissions:
-
-| Artifact | Purpose |
-|---|---|
-| `<payload>` | Source-native bytes or reference |
-| `source_head.json` | `ETag`, `Last-Modified`, `Content-Length` |
-| `checksum.txt` | BLAKE3 / SHA-256 of the payload |
-| `raw_capture_receipt.json` | Source identity + run identity + operator |
-
-### Step 3 — Normalize in WORK
-
-Transform to canonical or domain-normalized candidates with **unit conversion
-receipts**, geometry validity, and time-field separation (`observed_time`,
-`valid_time`, `source_time`, `retrieval_time`, `release_time`, `correction_time`).
-A `TransformReceipt` records the transform applied and any loss.
-
-### Step 4 — Validate
-
-Run the validator family. Any failure routes to QUARANTINE with a recorded reason.
-
-| Validator | Outcome on failure |
-|---|---|
-| Schema validation | QUARANTINE: schema defect |
-| Rights / source-role | QUARANTINE: rights/role ambiguity |
-| Sensitivity (location, joins) | QUARANTINE or redaction transform |
-| Evidence closure | QUARANTINE: evidence missing |
-| Temporal logic | QUARANTINE: temporal scope ambiguous |
-| Geometry validity | QUARANTINE: geometry defect |
-| AQI-as-concentration denial | QUARANTINE: source-role collapse |
-| AOD-as-PM2.5 denial | QUARANTINE: source-role collapse |
-| Model-as-observation denial | QUARANTINE: source-role collapse |
-| PurpleAir-pre-Barkjohn denial | QUARANTINE: uncorrected sensor data |
-| Low-cost sensor caveat presence | QUARANTINE if caveat fields absent |
-
-### Step 5 — Emit PROCESSED
-
-On full validator pass, emit:
-
-- `DatasetVersion` under `data/processed/atmosphere/<source_id>/<run_id>/`.
-- `ValidationReport` recording all checks and pass states.
-- `RunReceipt` with `spec_hash`, `source_head`, `policy_id`, `decision_id`,
-  operator, runner, timestamps, evidence references.
-- `EvidenceRef` entries that resolve to an `EvidenceBundle` projection.
-
-### Step 6 — Catalog closure
-
-Emit `CatalogRecord` and the associated `EvidenceBundle` projection into
-`data/catalog/domain/atmosphere/`. Build or refresh the `LayerManifest` and (when
-relevant) the `Triplet` / graph delta. **No orphan artifacts** — every published
-dataset/layer MUST have source, schema, validation, policy, and release metadata.
-
-### Step 7 — Policy gate and release candidate
-
-Run the policy gate on the candidate. Outcomes are finite: `ALLOW`, `RESTRICT`,
-`DENY`, `ABSTAIN`. `ALLOW` advances the candidate to
-`release/candidates/atmosphere/<candidate_id>/` with a draft `ReleaseManifest`,
-review state, correction path, and rollback target.
-
-### Step 8 — Promotion to PUBLISHED
-
-Promotion is a **governed state transition**. It requires: validation pass, policy
-ALLOW, review state where required, signed receipt, rollback target identified, and
-correction path declared. The published artifact is served only through the
-governed API and the public-safe layer manifest.
-
-> [!CAUTION]
-> Do not move files between `data/raw/`, `data/processed/`, `data/catalog/`, and
-> `data/published/` with `mv`. Each state transition emits a receipt and a decision
-> envelope. A filesystem move bypasses the trust membrane.
-
-[Back to top](#top)
-
----
-
-## 8. Source-Family Specifics
-
-### 8.1 EPA AQS
-
-- **Source role:** regulatory authority / validated observation.
-- **Latency:** validated data lags months; do **not** treat AQS rows as real-time.
-- **Identifiers:** AQS Site ID and Monitor POC must be preserved in
-  `AirStation` / `AirObservation` identity.
-- **Publication:** historical trend layers and station detail panels.
-
-### 8.2 EPA AirNow
-
-- **Source role:** preliminary observation / public AQI report.
-- **Latency:** near-real-time, with preliminary QA. Badge as **preliminary**.
-- **Key rule:** AQI is **not** a concentration. Publish AQI and concentration as
-  separate fields; the AQI-as-concentration validator must pass before promotion.
-- **API key:** required; never embedded in fixtures or catalog metadata.
-
-### 8.3 NOAA / NWS
-
-- **Source role:** authority / observation / forecast context.
-- **Object families:** `WeatherObservation`, `WindField`, `PrecipitationObservation`,
-  `TemperatureObservation`, `ForecastContext`, `AdvisoryContext`.
-- **Public-surface rule:** advisory layers redirect to the official NWS source;
-  KFM never replaces emergency alerting.
-
-### 8.4 Kansas Mesonet
-
-- **Source role:** observation.
-- **Endpoints:** station metadata, intervals at 5-min / hourly / daily, soil moisture
-  at standardized depths (5, 10, 20, 50 cm), surface meteorology.
-- **Rights:** verify written-consent posture; fail-closed if consent is missing.
-  Failure messages MUST include `kansas-wdl@k-state.edu` for steward follow-up.
-
-### 8.5 PurpleAir + Barkjohn correction
-
-<details>
-<summary><b>Click to expand — PurpleAir governed handling</b></summary>
-
-PurpleAir is a low-cost sensor network whose raw readings systematically overstate
-particulate concentration. KFM requires the **EPA Barkjohn correction** to be
-applied before any PurpleAir reading is published, and requires both corrected and
-uncorrected pairs to be preserved so the correction is reversible and auditable.
-
-| Requirement | Detail |
-|---|---|
-| Barkjohn version | Pinned in the policy bundle; **recorded in every receipt** |
-| Channel handling | PurpleAir exposes multiple PM2.5 variants and channels; store which field and algorithm variant was used |
-| Sanity checks | Channel-consistency and impossible-PM range checks before corrected values are emitted |
-| Caveat fields | Low-cost sensor caveat must be present on the public layer |
-| API keys | Header-only; never in `STAC`, `DCAT`, catalog metadata, fixtures, or logs |
-| Chunking | Historical pulls use deterministic chunking with checkpoint state keyed by sensor, average, fields hash, and chunk end time |
-
-</details>
-
-### 8.6 HRRR-Smoke / BlueSky / HMS
-
-- **Source role:** model field (HRRR-Smoke, BlueSky) or analyst-derived context (HMS).
-- **Object family:** `SmokeContext` (never published as an observation).
-- **Public-surface rule:** the model-as-observation validator must pass before any
-  smoke layer is shown alongside station observations.
-
-### 8.7 GOES / ABI AOD, MAIAC, VIIRS / MODIS FIRMS
-
-- **Source role:** remote-sensing observation.
-- **Object families:** `AODRaster`, `SmokeContext` (fire-context join only).
-- **Critical rule:** AOD is **not** PM2.5. Fusion products that bridge AOD and PM2.5
-  require an explicit fusion receipt, an uncertainty channel, and steward review.
-- **Operational thresholds (PROPOSED):**
-  - AOD > 0.5 → `TILE_DEGRADED`
-  - AOD > 0.8 → `TILE_QUARANTINE`
-  - FIRMS FRP > 0 within 5 km of tile centroid → `ESCALATE`
-  - FRP ≥ 10 MW within 5 km → immediate `QUARANTINE`
-  - Persistence rule: only trigger state change if the breach persists for ≥ 2
-    independent observations within a 4-day window.
-
-### 8.8 Climate normals & anomalies
-
-- **Source role:** authority / climate context.
-- **Object families:** `ClimateNormal`, `ClimateAnomaly`.
-- **Versioning:** every refresh records the climate-normal product version.
-
-### 8.9 KDHE bulletins & AdvisoryContext
-
-- **Source role:** state authority / advisory.
-- **Public-surface rule:** official-source redirection; KFM presents context, not
-  emergency instructions.
-
-[Back to top](#top)
-
----
-
-## 9. Sensitivity, Rights & Public-Safe Rules
-
-> [!WARNING]
-> Unknown rights, unresolved source role, missing evidence, unresolved sensitivity,
-> or absent release state **block public promotion**. These are not soft warnings —
-> they are gating conditions.
-
-| Rule | Why | Enforcement |
+| Responsibility | Owning surface | Runbook posture |
 |---|---|---|
-| AQI ≠ concentration | AQI is an index, not a measurement | `aqi-as-concentration` validator must pass |
-| AOD ≠ PM2.5 | AOD is column-integrated optical depth | `aod-as-pm25` validator must pass |
-| Model ≠ observation | Model fields are not measurements | `model-as-observed` validator must pass |
-| PurpleAir pre-Barkjohn → no publish | Sensor overstates concentration | `purpleair-pre-barkjohn` validator must pass; Barkjohn version pinned in receipt |
-| Low-cost sensor caveats required | Public read of caveat-less sensor layers is misleading | `low-cost-caveat` validator must pass |
-| Advisory layers redirect | KFM does not replace emergency alerting | `advisory-redirect` rule in layer manifest |
-| API keys never in metadata | Catalog leakage risk | Dependency / SBOM / metadata scrubber |
-| Sensitive cross-domain joins fail closed | Atmosphere × biodiversity / hazards / archaeology can expose sensitive geometry | Sensitivity policy DENY |
-| Stale source → degraded badge | Stale state must be visible | Stale-state policy + freshness badge |
+| Source admission and meaning | source doctrine, contracts, accepted decisions | Require resolution; never grant it |
+| Machine shape | canonical schemas and validators | Invoke verified checks; never redefine fields |
+| Source authority projection | `control_plane/` | Inspect status; an index is not authority by itself |
+| Source records | `data/registry/sources/` | Resolve admitted records; never mint or upgrade them |
+| Acquisition and transforms | `connectors/`, `pipeline_specs/`, `pipelines/` | Run only substantive, reviewed implementation |
+| Lifecycle material | governed `data/` roots | Write only through the owning implementation and authorized transition |
+| Policy, evidence, review | policy, evidence, proof, and review authorities | Require closure; keep object families distinct |
+| Promotion and release | `release/` and authorized reviewers | Prepare a packet and stop |
+| Public delivery | governed APIs and released public-safe carriers | Verify only after separate release authority |
 
-[Back to top](#top)
+### Confirmed repository evidence
 
----
+The target remained at blob `e96d7118a91bf68704ed14f679ba7e6bebb68991` when re-read at branch base `main@991f9f99…`; intervening sibling-runbook merges did not modify it.
 
-## 10. Validators & Tests
-
-The following validators and tests are **PROPOSED** and follow the doctrine in the
-Atmosphere/Air domain dossier; verify exact names and paths against the mounted
-repo before relying on them.
-
-| Validator / test | Purpose | Expected pass state |
+| Surface | Confirmed evidence | Safe conclusion |
 |---|---|---|
-| `schema-validation` | SourceDescriptor, LayerManifest, ReleaseManifest, RunReceipt | shape valid |
-| `source-descriptor-rights` | rights / source-role / sensitivity present | fields present and non-ambiguous |
-| `knowledge-character-registry` | domain terms used with constrained meaning | term in registry |
-| `unit-normalization` | unit conversions recorded as receipts | conversion receipt present |
-| `aqi-as-concentration` | AQI cannot be treated as concentration | DENY on collapse |
-| `aod-as-pm25` | AOD cannot be treated as PM2.5 | DENY on collapse |
-| `model-as-observed` | Model fields cannot be observations | DENY on collapse |
-| `purpleair-pre-barkjohn` | Uncorrected PurpleAir cannot be published | DENY on uncorrected |
-| `low-cost-caveat` | Low-cost sensor layers carry caveats | caveat fields present |
-| `temporal-logic` | observed / valid / retrieval / release / correction distinct where material | times distinct |
-| `dryrun-no-live-fetch` | No-network fixtures cannot reach the network | network calls = 0 |
-| `evidence-closure` | EvidenceRef resolves to EvidenceBundle | closure passes |
-| `policy-deny-sensitive-geometry` | Sensitive joins fail closed | DENY |
-| `citation-validation` | Public claims cite resolved evidence | every claim cited |
-| `release-manifest-validation` | ReleaseManifest fields present | fields present |
-| `rollback-drill` | Rollback target restorable | replay succeeds |
-| `no-public-raw` | Public surface cannot reach RAW / WORK / QUARANTINE | grep / import-boundary pass |
+| Existing target | v0.1 contains proposed commands, fixed cadences/thresholds, source claims, wire skeletons, and a direct promotion step | Replace it with bounded repository evidence |
+| Source-admission ADR | ADR-0017 remains proposed | Operational source-admission authority is not established |
+| Source authority register | `implementation_status: ABSENT`, `completeness: empty`, `entries: []`, projection-only | No Atmosphere authority resolves from it |
+| Atmosphere source registry | README plus placeholder `aqs.source.json` and `knowledge_character.json` | Routing exists; complete admitted source records are not established |
+| Shared validators | No-network validators exist for SourceDescriptor, SourceActivationDecision, and IngestReceipt | Candidate shape and local consistency only; no live refresh |
+| Atmosphere/AirNow connectors | README plus `.gitkeep` | No executable connector verified |
+| Ingest specification | `stages: []` | No executable sequence declared |
+| Ingest implementation | one-line placeholder | No live implementation established |
+| Atmosphere workflow | read-only, no-network, synthetic positive/negative profiles | Useful bounded proof; no source contact or release proof |
+| Release candidates | README only | No Atmosphere release candidate established |
+
+**Current result:** shared candidate validators and bounded Atmosphere fixture profiles are `CONFIRMED`; live refresh, source activation, credentials, external requests, lifecycle persistence, production policy, evidence/catalog closure, promotion, release, deployment, and publication remain `HOLD`. Accountable steward and independent-review assignments remain `NEEDS VERIFICATION`.
 
 [Back to top](#top)
 
 ---
 
-## 11. Failure Modes & Quarantine Reasons
+## 3. Truth labels and finite outcomes
 
-| Failure mode | Quarantine reason | Recovery |
+| Label | Meaning |
+|---|---|
+| `CONFIRMED` | Verified from pinned repository evidence, executable code, fixtures, workflows, or generated artifacts inspected in this session |
+| `PROPOSED` | Future design or procedure not verified as accepted implementation |
+| `UNKNOWN` | Evidence is insufficient |
+| `NEEDS VERIFICATION` | A concrete check remains |
+| `CONFLICTED` | Authority, naming, shape, or lifecycle evidence disagrees |
+| `HOLD` | Do not advance; preserve the prior safe state |
+
+Use these operator classifications without inventing machine enum values:
+
+| Outcome | Meaning | Maximum effect |
 |---|---|---|
-| Source 4xx / auth failure | `auth_or_rights_failure` | Re-verify key, scope, and rights; re-run pre-flight |
-| Source 5xx / outage | `upstream_unavailable` | Wait, retry with backoff, log a `RunReceipt` with `ERROR` |
-| Stale source | `stale_threshold_exceeded` | Surface freshness badge; consider manual steward push |
-| Schema drift | `schema_defect` | Open ADR / drift entry; pin upstream version; update schema |
-| AQI / AOD / model collapse | `source_role_collapse` | Reject candidate; fix source-role mapping |
-| Sensitive geometry exposure | `sensitive_geometry` | Apply redaction / generalization transform; emit transform receipt |
-| PurpleAir pre-Barkjohn | `uncorrected_low_cost_sensor` | Apply pinned Barkjohn correction; preserve uncorrected pair |
-| Missing evidence | `evidence_closure_missing` | ABSTAIN on the affected claim; re-run after evidence resolves |
-| Unknown rights | `unknown_rights` | Block publication; route to rights-review steward |
-| Time-field collision | `temporal_ambiguity` | Re-emit with distinct observed / valid / source / retrieval times |
+| `READY_TO_FETCH` | All preconditions for the exact authorized request resolve | Permit that bounded request only |
+| `ADMIT_TO_RAW` | Material may enter governed RAW under the resolved decision | RAW capture plus receipt |
+| `QUARANTINE` | Material or operation requires controlled review | Governed QUARANTINE only |
+| `DENY_INTAKE` | Source or operation is not permitted | No admitted lifecycle write |
+| `HOLD` | Authority, rights, sensitivity, policy, evidence, review, or rollback is unresolved | No live operation or transition |
+| `NO_CHANGE` | Accepted comparison proves unchanged content/version | Heartbeat or no-change record only |
+| `SKIP` | Run intentionally not attempted under a documented rule | Safe reason and next eligibility only |
+| `RATE_LIMITED` | Upstream/local policy requires backoff | Safe retry metadata only |
+| `ERROR` | Attempt failed or integrity cannot close | No permissive fallback |
 
-> [!CAUTION]
-> Quarantine is **not** a publishable staging area. Material in QUARANTINE is never
-> readable by public clients. Promote only via a deliberate steward action that
-> records the disposition.
+The current SourceActivationDecision contract owns `ADMIT_TO_RAW`, `QUARANTINE`, `DENY_INTAKE`, `HOLD`, and `ERROR`. Do not serialize other prose labels unless an accepted contract allows them.
 
 [Back to top](#top)
 
 ---
 
-## 12. Rollback & Correction
+## 4. Roles, inputs, and authority freeze
 
-Every release candidate carries a **rollback target** — the digest and reference of
-the prior `ReleaseManifest`. Every published release carries a **correction path**.
+[CODEOWNERS](../../../.github/CODEOWNERS) routes GitHub review to `@bartytime4life`; that is not source, rights, policy, independent-review, release, or operational authority.
 
-### Rollback drill (per release)
+### Required role classes
+
+- **Source steward:** identity, role, authority rank, terms, cadence, access, citation, source-head, and retirement posture.
+- **Connector operator:** exact implementation, bounded request, secret hygiene, capture target, and safe diagnostics.
+- **Atmosphere steward:** units, knowledge character, observation/model distinction, uncertainty, caveats, and domain ownership.
+- **Rights/sensitivity reviewers:** permitted use, attribution, redistribution, credentials, precision, joins, restricted stations, infrastructure, and re-identification risk.
+- **Hazards liaison:** official-issuer, advisory, warning, incident, and life-safety boundary.
+- **Validation/evidence steward:** validator scope, integrity, evidence resolution, limitations, and replay.
+- **Release/correction authority and independent reviewer:** separately governed review, release, correction, rollback, and duty separation where required.
+
+### Minimum input packet
+
+Before live work, resolve:
+
+- exact repository commit and implementation identity;
+- complete source descriptor reference, digest, registry state, and source role;
+- operation-specific activation/re-admission decision, scope, obligations, and expiry;
+- source authority and accountable steward;
+- current terms, permitted use, attribution, redistribution, credentials, and rate limits;
+- sensitivity floor, public precision, cross-domain join rules, and required transforms;
+- exact connector/importer, configuration digest, timeouts, retries, size/content-type/redirect bounds;
+- prior ETag, Last-Modified, immutable version, digest, or other accepted source-head basis;
+- current no-network positive and negative proof;
+- approved RAW/QUARANTINE and WORK targets;
+- exact validation/policy/evidence profile;
+- prior release, correction, withdrawal, and rollback references when public state could be affected;
+- named next owner for every outcome.
+
+### Authority freeze
+
+Record all of the above before the first request or write. A change in descriptor, decision, endpoint, product, connector, scope, time window, terms, role, or policy requires a new or explicitly linked preflight.
+
+Stop with `HOLD`, `DENY_INTAKE`, `QUARANTINE`, or `ERROR` when any applicable authority is absent, stale, placeholder-only, expired, conflicted, rights-unclear, role-ambiguous, sensitivity-unclear, implementation-incomplete, network-reaching during no-network proof, digest-mismatched, meaning-losing, or lacking a correction/rollback route.
+
+[Back to top](#top)
+
+---
+
+## 5. Source-family routing inventory
+
+The previous runbook named the following families. They are retained as **candidate lineage**, not proof of admission, rights, reachability, or connector support.
+
+| Candidate family | Required source-role boundary | Current posture |
+|---|---|---|
+| EPA AQS / AirData | Product-specific regulatory record or observation; certification state explicit | AQS record is placeholder-only |
+| EPA AirNow | Preliminary/operational context distinct from certified records and raw concentration | README-only connector |
+| NOAA / NWS products | Observation, model/forecast, or official advisory classified per product | Source-specific descriptor and issuer routing required |
+| Kansas Mesonet | In-situ observation with network, parameter, unit, time, attribution, and terms | Rights/access/cadence and connector unverified |
+| PurpleAir or other low-cost networks | Low-cost/community observation with correction, drift, transferability, caveats, and reference relation | Synthetic caveat proof only; no live admission or accepted correction method |
+| OpenAQ-like aggregators | Aggregator/discovery context; upstream authority and rights remain resolvable | Aggregation cannot upgrade authority |
+| HRRR-Smoke, BlueSky, CAMS, or other models | Model/forecast context with run, valid time, method, uncertainty, and limits | Model cannot become observation |
+| HMS or other analyst-derived products | Analyst/operational context appropriate to the product | Not direct measurement by default |
+| GOES/ABI AOD, MAIAC, related aerosol products | Remote-sensing observation of represented quantity | No direct substitution for ground PM2.5 |
+| VIIRS/MODIS FIRMS or related fire detections | Fire context only | Not smoke exposure, causality, or instruction |
+| Climate normals/anomalies | Historical/statistical context with baseline, method, version, and release time | Descriptor-driven refresh only |
+| KDHE or other official state communications | Official context with issuer identity, issue/expiry, and link-back | KFM does not originate instructions |
+| Local, research, historical, or steward-controlled material | Explicit observation, archive, model, contextual, or restricted role | `HOLD` until identity, rights, sensitivity, provenance, review, and access resolve |
+
+Fixed polling intervals and stale thresholds from v0.1 are removed as operating instructions. Binding cadence, retries, staleness, and source-health behavior must come from the admitted descriptor, source-native release semantics, terms, and accepted source profile.
+
+[Back to top](#top)
+
+---
+
+## 6. Atmosphere meaning, time, and cross-domain guardrails
+
+| Distinction | Required behavior | Fail-closed posture |
+|---|---|---|
+| AQI vs concentration | Preserve index, pollutant, averaging, method, category, and concentration as distinct meanings | Hold/quarantine collapsed candidates |
+| AOD vs ground PM2.5 | Preserve AOD as its represented quantity; any bridge is a separately governed derived method | No direct relabeling |
+| Model/forecast/reanalysis vs observation | Preserve model identity, initialization, valid time, method, uncertainty, and generated status | Model cannot fill observation authority |
+| Preliminary vs certified/final | Preserve provisional, QC, certification, correction, and supersession state | No silent replacement |
+| Low-cost vs reference/regulatory | Preserve sensor class, correction, reference relation, drift, transferability, and limits | Agreement does not mint regulatory authority |
+| Smoke/fire/plume context vs exposure/cause | Preserve context and uncertainty | Abstain/deny or route to official health/Hazards authority |
+| Advisory context vs instruction | Preserve official issuer, ID, issue/expiry, and link-back | Deny KFM-originated life-safety language |
+| Grid/aggregate vs station/place | Preserve spatial support, scale, resolution, interpolation, aggregation, and uncertainty | No point-truth substitution |
+| Atmosphere vs Hazards | Atmosphere owns bounded observations/context; official issuers and Hazards own warning/life-safety posture | Route and hold |
+| Cross-domain joins | Each lane retains canonical observations and sensitivity | Derived joins remain downstream and reviewed |
+
+Preserve observation time, source issue/publication time, model initialization, forecast valid time, retrieval time, effective/expiry time, certification/correction time, transaction time, and KFM release time as distinct fields where material.
+
+Before a record leaves WORK, preserve source-native and normalized units with transform lineage; parameter identity; station/pixel/grid/polygon/vertical support; CRS/datum/resolution; detection limits and missing/censored values; quality/provisional flags; method and uncertainty; and any generalization or redaction receipt.
+
+[Back to top](#top)
+
+---
+
+## 7. Refresh lifecycle and trust boundary
 
 ```text
-1. Identify the prior ReleaseManifest digest from the RollbackCard.
-2. Verify the prior artifact digests resolve and pass integrity check.
-3. Repoint the public layer manifest alias to the prior release.
-4. Emit a RollbackReceipt recording: operator, reason, timestamps,
-   superseded release id, and the affected catalog records.
-5. Invalidate derivative caches (tiles, layer styles, focus payloads).
-6. Issue a CorrectionNotice if the rolled-back release was already public.
+ADMITTED SOURCE + VALID OPERATION DECISION
+  -> bounded source-head check / conditional retrieval
+  -> RAW capture or QUARANTINE
+  -> WORK normalization
+  -> validation + policy + evidence resolution
+  -> PROCESSED candidate
+  -> CATALOG / optional TRIPLET candidate
+  -> promotion handoff
+  -> STOP
+
+Separate authority only:
+  -> promotion decision
+  -> release decision and manifest
+  -> PUBLISHED public-safe carrier
+  -> governed API / map / Evidence Drawer / bounded AI
+  -> correction / withdrawal / rollback / recompile
 ```
 
-### Correction (without rollback)
+Lifecycle rules:
 
-When the data is right but the framing was wrong (e.g. an advisory layer mis-routed
-to context), emit a `CorrectionNotice` against the affected `CatalogRecord` and
-update the `ReviewRecord`. Public clients see a correction badge until the notice
-clears review.
-
-> [!IMPORTANT]
-> Rollback does **not** silently delete history. The superseded release is retained
-> with status `superseded`, and its `CorrectionNotice` chain is preserved.
+- RAW preserves retrieved bytes or immutable source references and integrity evidence; it is not public truth.
+- WORK is mutable transformation space and never a normal public path.
+- QUARANTINE preserves unsafe, unclear, conflicted, malformed, or unauthorized material with safe reasons.
+- PROCESSED requires validated shape and meaning; it is still not released.
+- Catalogs, triplets, indexes, tiles, summaries, scenes, and AI text remain derived carriers.
+- Promotion is a governed state transition, not a file move or merge.
+- Public clients use governed APIs and released public-safe carriers only.
+- EvidenceRef must resolve to EvidenceBundle before a consequential claim is authoritative; otherwise abstain or deny.
 
 [Back to top](#top)
 
 ---
 
-## 13. Operator Task List
+## 8. Governed refresh procedure
 
-A copy-paste checklist for the on-shift operator running a refresh.
+### Step 0 — Freeze authority and scope
 
-- [ ] Confirm `SourceDescriptor` is current (rights / role / cadence verified).
-- [ ] Load credentials from secrets; verify no plaintext leakage.
-- [ ] Allocate a fresh `run_id`; record operator and runner identity.
-- [ ] Run pre-flight checks (§6).
-- [ ] Execute connector refresh; verify `RawCaptureReceipt` and checksum.
-- [ ] Run normalization; verify unit and time-field receipts.
-- [ ] Run the validator family (§10); route failures to QUARANTINE with a reason.
-- [ ] Emit `DatasetVersion`, `RunReceipt`, `ValidationReport`, `EvidenceRef`.
-- [ ] Update `CatalogRecord` / `EvidenceBundle` / `LayerManifest`.
-- [ ] Run policy gate; record finite outcome.
-- [ ] If ALLOW: prepare release candidate with review, correction, rollback fields.
-- [ ] Notify steward for promotion decision.
-- [ ] On steward ALLOW: promote; invalidate caches; verify public surface.
-- [ ] Update the freshness badge and the catalog "last refreshed" timestamp.
-- [ ] Close the run; archive run logs alongside the receipt.
+Create a preflight record containing the repository revision, source and descriptor digests, decision identity, connector/config identity, prior source head, lifecycle targets, validators, policy/evidence references, prior release context, correction/rollback targets, and overlap check.
 
-[Back to top](#top)
+### Step 1 — Resolve source and operation decision
 
----
+Validate the complete descriptor and exact operation decision. Confirm role, rights, sensitivity, access, timing, obligations, source-head convention, and digest lineage. A placeholder, README, or projection-only index cannot satisfy this step.
 
-## 14. FAQ
+### Step 2 — Prove the boundary without network access
 
-> [!NOTE]
-> **Q: Can I publish a PurpleAir map without the Barkjohn correction "just for
-> previewing"?**
-> **A:** No. The `purpleair-pre-barkjohn` validator is a fail-closed gate. Preview
-> belongs in `PROCESSED` or a non-public review surface, not on the public map.
+Run the shared source fixture validators and affected Atmosphere positive/negative profiles. Confirm denied network access, deterministic fixtures, exact expected polarity, bounded diagnostics, and no secret dependence. Any unexpected network call is a failure.
 
-> [!NOTE]
-> **Q: The AirNow API was down. The release candidate is otherwise clean. Can I
-> promote anyway?**
-> **A:** Yes, with explicit stale labeling on AirNow-derived layers, an active
-> `CorrectionNotice` describing the gap, and an `ERROR` outcome recorded against
-> the affected `RunReceipt`. Other sources are unaffected.
+### Step 3 — Recheck source-native controls
 
-> [!NOTE]
-> **Q: A connector wrote to `data/processed/` directly because the pipeline failed
-> mid-run. What do I do?**
-> **A:** Treat the artifact as untrusted. Quarantine it, run a drift register entry
-> (Directory Rules §13 — connector-publishes anti-pattern), and re-run from RAW.
+Verify current official endpoint/product identity, terms, attribution, access limits, content types, redirect behavior, size limits, source schema/version, publication/correction behavior, sensitivity, and official-issuer boundary. Record the check without copying secrets or restricted payloads.
 
-> [!NOTE]
-> **Q: Can AI summarize the refresh outcome on the public site?**
-> **A:** AI may summarize the released `EvidenceBundle`, compare evidence, explain
-> limitations, and draft steward-review notes. AI must `ABSTAIN` when evidence is
-> insufficient and `DENY` when policy, rights, sensitivity, or release state blocks
-> the request. AI is never the root truth source.
+### Step 4 — Retrieve or import conditionally
 
-[Back to top](#top)
+Only after explicit authorization:
 
----
+- use an accepted source-head mechanism where available;
+- send the minimum request needed;
+- enforce timeout, retry, redirect, media-type, decompression, and size bounds;
+- do not follow unapproved hosts or accept silent schema/product substitution;
+- do not log authorization headers, tokens, signed URLs, cookies, private endpoints, or raw restricted responses;
+- stop on changed terms, identity, shape, or risk.
 
-## 15. Related Docs
+### Step 5 — Capture immutable RAW or QUARANTINE material
 
-> [!NOTE]
-> The links below are PROPOSED targets. Verify the actual paths exist in the
-> mounted repo before linking from neighboring docs.
+Write through the owning implementation only. Record source/descriptor/decision IDs, retrieval and represented times, request profile, status, headers allowed by policy, byte count, media type, digest, prior source head, storage reference, sensitivity floor, and failure classification. Verify persisted bytes or immutable reference before success. Never overwrite prior RAW.
 
-- `docs/doctrine/directory-rules.md` — placement protocol and lifecycle invariant.
-- `docs/doctrine/lifecycle-law.md` — `RAW → … → PUBLISHED` law.
-- `docs/doctrine/truth-posture.md` — cite-or-abstain default.
-- `docs/domains/atmosphere/README.md` — Atmosphere & Air domain index.
-- `docs/architecture/governed-ai/FOCUS_FLOW.md` — Focus Mode boundary.
-- `docs/architecture/publication/GEO_MANIFEST.md` — release manifests for spatial
-  artifacts.
-- `docs/runbooks/governed_ai_VALIDATION.md` — evidence / citation / policy
-  validation for AI output that touches atmosphere claims.
-- `docs/runbooks/ui_ROLLBACK.md` — UI / layer rollback procedure.
-- `data/registry/sources/atmosphere/` — `SourceDescriptor` set.
-- `policy/domains/atmosphere/` — policy bundle (incl. Barkjohn-version pin).
-- `connectors/<source>/README.md` — per-source connector docs.
+### Step 6 — Normalize only in WORK
+
+Preserve source role, identifiers, units, time kinds, spatial support, quality/provisional flags, uncertainty, method/version, rights, sensitivity, and provenance. Record every transform. Route ambiguity, mismatch, unsafe precision, malformed data, or unsupported semantics to QUARANTINE.
+
+### Step 7 — Validate shape, meaning, integrity, and policy
+
+Run, as applicable:
+
+1. source descriptor, activation decision, and ingest receipt checks;
+2. source-specific schema and semantic checks;
+3. Atmosphere anti-collapse and observed/modeled separation checks;
+4. cross-domain boundary and sensitivity checks;
+5. digest, count, time, units, CRS, duplicate, and idempotency checks;
+6. policy evaluation and EvidenceRef resolution.
+
+A green machine check proves only its bounded assertion. Rights, scientific validity, independent review, release, deployment, and publication remain separate.
+
+### Step 8 — Close evidence and catalog candidates
+
+Create only contract-valid candidate objects. Evidence must identify supporting source material, scope, limits, transformations, and review state. Catalog/triplet projections must point back to governed evidence and must not become canonical truth.
+
+### Step 9 — Prepare promotion handoff and stop
+
+Provide exact input/output digests, source and decision references, validation and policy results, evidence/catalog closure, unresolved items, reviewer roles, correction/rollback targets, and public-safe read-back plan. Continue only under the [Promotion Runbook](./PROMOTION_RUNBOOK.md) and separate authority.
+
+### Step 10 — Record every terminal outcome
+
+Record success, no-change, skip, rate-limit, quarantine, denial, hold, and error with safe reason, exact scope, prior/new source head where applicable, artifact references, validator results, limitations, next owner, and retry/review timing. Do not silently drop failed or no-change runs.
 
 [Back to top](#top)
 
 ---
 
-## Appendix A — Receipt & Manifest Skeletons
+## 9. Current no-network validation
 
-<details>
-<summary><b>RunReceipt skeleton (PROPOSED)</b></summary>
+### Shared source-candidate validators
 
-```json
-{
-  "kfm:spec_hash": "<blake3-of-canonicalized-source-descriptor>",
-  "run_id": "<uuid>",
-  "domain": "atmosphere",
-  "source_id": "<source_id>",
-  "source_role": "observation|model|authority|context|aggregator",
-  "operator": "<steward-id>",
-  "runner": "<ci-or-host-id>",
-  "source_head": {
-    "etag": "<etag>",
-    "last_modified": "<rfc1123-or-iso-8601>",
-    "content_length": "<bytes>"
-  },
-  "license": { "spdx_id": "<spdx-or-NEEDS_VERIFICATION>" },
-  "policy_id": "<policy-id>",
-  "decision_id": "<decision-uuid>",
-  "evidence_refs": [{ "uri": "<evidence-uri>" }],
-  "timestamps": {
-    "observed": "<iso-8601>",
-    "valid":    "<iso-8601>",
-    "source":   "<iso-8601>",
-    "retrieval":"<iso-8601>",
-    "release":  null,
-    "correction": null
-  },
-  "outcome": "ANSWER|ABSTAIN|DENY|ERROR"
-}
+```bash
+python tools/validators/validate_source_descriptor.py --fixtures
+python tools/validators/validate_source_activation_decision.py --fixtures
+python tools/validators/validate_ingest_receipt.py --fixtures
 ```
-</details>
 
-<details>
-<summary><b>QuarantineRecord skeleton (PROPOSED)</b></summary>
+These validate bounded fixture shape, routing, lineage, and local consistency only. They do not establish live source identity, terms, authority, activation, network behavior, credential safety, scientific validity, persistence, promotion, or publication.
 
-```json
-{
-  "run_id": "<uuid>",
-  "domain": "atmosphere",
-  "source_id": "<source_id>",
-  "reason": "auth_or_rights_failure | upstream_unavailable | stale_threshold_exceeded | schema_defect | source_role_collapse | sensitive_geometry | uncorrected_low_cost_sensor | evidence_closure_missing | unknown_rights | temporal_ambiguity",
-  "validator": "<validator-id>",
-  "detail": "<short human-readable description>",
-  "disposition": "hold|redact|generalize|return_to_source",
-  "steward": "<steward-id>",
-  "opened_at": "<iso-8601>",
-  "expected_resolution": "<iso-8601-or-null>"
-}
+### Atmosphere bounded profiles
+
+The read-only domain workflow and repository-grounded [Validation Runbook](./VALIDATION_RUNBOOK.md) identify the current no-network checks:
+
+```bash
+python tests/domains/atmosphere/test_atmosphere_smoke.py --verbose
+python tests/domains/atmosphere/test_knowledge_character_registry.py --verbose
+python tests/domains/atmosphere/test_low_cost_sensor_caveat_required.py --verbose
+python tests/domains/atmosphere/test_observed_modeled_separation.py --verbose
+python tests/cross_domain/test_environmental_observation_boundaries.py --verbose
+
+python -m pytest \
+  tests/validators/domains/atmosphere/airnow_aqs_reconciliation/test_validate_reconciliation.py \
+  tests/domains/atmosphere/test_prescribed_burn_quality_flag.py \
+  tests/domains/atmosphere/test_pm25_trigger_candidate_assessment.py \
+  -q --strict-config --strict-markers
 ```
-</details>
 
-<details>
-<summary><b>ReleaseManifest skeleton (PROPOSED — atmosphere candidate)</b></summary>
+Use the current Validation Runbook for exact polarity and proof limits. No accepted aggregate `make atmosphere-validate` target was verified at the pinned snapshot.
 
-```json
-{
-  "candidate_id": "<uuid>",
-  "domain": "atmosphere",
-  "layers": ["<layer-id>"],
-  "evidence_bundle": "<bundle-uri>",
-  "validation_report": "<report-uri>",
-  "policy_decision": "ALLOW|RESTRICT|DENY|ABSTAIN",
-  "review_state": "<reviewer + state>",
-  "correction_path": "<correction-uri>",
-  "rollback_target": "<prior-release-manifest-digest>",
-  "freshness": { "last_refreshed": "<iso-8601>", "stale_threshold": "<iso-8601-duration>" },
-  "badges": ["preliminary?", "model?", "low-cost-sensor?", "advisory-redirect?"],
-  "signatures": { "dsse": "<NEEDS_VERIFICATION>", "cosign": "<NEEDS_VERIFICATION>" }
-}
+### Documentation-change checks
+
+```bash
+python tools/validators/docs/link-check/check_links.py \
+  --repo-root . \
+  --format text \
+  docs/runbooks/atmosphere/SOURCE_REFRESH_RUNBOOK.md
+
+python -m unittest discover \
+  --start-directory tests/validators/docs/link-check \
+  --pattern 'test_*.py' \
+  --verbose
+
+make repository-topology
 ```
-</details>
+
+These commands are recorded for a real checkout. They were not run locally in this connector-only authoring session. Hosted CI is separate evidence and must be reported at the exact pull-request head.
+
+[Back to top](#top)
 
 ---
 
-### Footer
+## 10. Live-profile graduation sequence
 
-**Related docs:** see [§15](#15-related-docs) ·
-**Owners:** NEEDS VERIFICATION — Atmosphere/Air steward + Docs steward ·
-**Last updated:** 2026-05-13 ·
+A future live source must graduate through separate, reviewable stages:
+
+1. complete source-specific descriptor under the accepted registry convention;
+2. accepted operation decision bound to its exact digest and scope;
+3. deterministic positive and negative source fixtures;
+4. substantive no-network connector/importer with request, media, size, redirect, retry, secret, and failure controls;
+5. immutable RAW/QUARANTINE writer with digest verification and idempotency;
+6. source-specific parser/normalizer preserving role, time, units, support, uncertainty, rights, sensitivity, and caveats;
+7. semantic, policy, evidence, correction, and rollback tests;
+8. bounded count-only or metadata-only live checkpoint where terms permit;
+9. externally deterministic payload/carrier proof where material;
+10. repeatable replay and no-change/error/rate-limit proof;
+11. human review and separation-of-duty checks;
+12. separate promotion and release authorization;
+13. public-safe governed read-back, correction, withdrawal, and rollback drill.
+
+No stage may infer the next. A successful metadata probe does not admit geometry or payloads; an admitted source does not authorize a release; a merge does not publish.
+
+[Back to top](#top)
+
+---
+
+## 11. Staleness, retries, security, and safe diagnostics
+
+### No change and staleness
+
+A `NO_CHANGE` record must state the comparison basis, prior/new source head, retrieval time, and limitations. A missed refresh does not automatically make prior data false; a recent retrieval does not prove represented conditions are current. Apply the admitted product's time semantics and the owning stale-state procedure.
+
+### Retry and rate limits
+
+- retry only transient failures classified by the accepted profile;
+- use bounded attempts, exponential backoff, jitter, and upstream `Retry-After` where applicable;
+- never retry rights denial, authentication misconfiguration, schema drift, digest mismatch, unsafe redirect, policy denial, or semantic mismatch as if transient;
+- do not rotate credentials, hosts, or IPs to evade terms or rate limits;
+- record next eligibility without exposing restricted headers or account details.
+
+### Fail-closed rights and sensitivity
+
+| Unresolved condition | Posture |
+|---|---|
+| Terms, attribution, redistribution, retention, or credentials | `HOLD` or `DENY_INTAKE` |
+| Station precision, infrastructure implication, private-person relation, or harmful join | QUARANTINE, transform, staged access, or denial |
+| Official advisory or emergency meaning | Preserve issuer and route to official/Hazards surface |
+| Source-role ambiguity or unsupported scientific bridge | QUARANTINE or abstain |
+| Restricted endpoint, token, signed URL, cookie, or account identity | Never log or publish |
+
+Safe diagnostics may include stable source ID, public product family, descriptor/decision digest, run ID, status class, count/byte total, duration bucket, safe reason code, and content digest where policy permits. Do not log secrets, authorization data, private endpoints, full restricted payloads, exact sensitive coordinates, unsafe joins, or free-form upstream bodies.
+
+Dependency installs, new network permissions, secrets, schedules, workflow permissions, or repository settings are outside this documentation slice and require separate review. Network access must remain deny-by-default until a source-specific profile proves otherwise.
+
+[Back to top](#top)
+
+---
+
+## 12. Correction, withdrawal, and rollback
+
+### Before promotion
+
+Defective candidates remain in WORK or QUARANTINE. Preserve prior RAW, record the failed transform or validation, and create a new candidate or transparent forward fix. Do not silently rewrite evidence or history.
+
+### Released material
+
+Use the [Correction Runbook](./CORRECTION_RUNBOOK.md) and, when needed, the [Rollback Runbook](./ROLLBACK_RUNBOOK.md). Identify affected evidence, catalog/triplet projections, governed API responses, tiles, caches, exports, summaries, Focus Mode outputs, and downstream consumers. Preserve correction notice, supersession, withdrawal, cache invalidation, rollback target, review, and public read-back evidence.
+
+A source refresh cannot itself revoke or republish a released artifact. Source retirement or suspension also requires explicit authority, effective time, reasons, successor posture, affected releases, and correction/rollback handling. Endpoint reachability neither proves authority nor reverses retirement.
+
+[Back to top](#top)
+
+---
+
+## 13. Review handoff and open verification
+
+### Handoff checklist
+
+- [ ] Same-path placement and exact repository/head are recorded.
+- [ ] Descriptor, operation decision, source role, rights, sensitivity, access, cadence, citation, and source head resolve.
+- [ ] Connector and pipeline are substantive rather than placeholder-only.
+- [ ] No-network positive/negative proof and exact command results are attached.
+- [ ] Network, secret, redirect, timeout, retry, media, size, decompression, and log controls are explicit.
+- [ ] RAW/QUARANTINE integrity, idempotency, and failure cleanup are demonstrated.
+- [ ] Units, time kinds, spatial support, uncertainty, quality, and source-role distinctions survive normalization.
+- [ ] AQI/concentration, AOD/PM2.5, model/observation, preliminary/certified, low-cost/regulatory, context/exposure, and advisory/instruction distinctions remain intact.
+- [ ] Policy, EvidenceRef/EvidenceBundle, catalog, correction, and rollback state are visible.
+- [ ] CI, human review, promotion, release, deployment, and publication are reported as separate states.
+- [ ] A named owner and next action exist for every unresolved item.
+
+### Current `HOLD` / verification backlog
+
+1. accepted operational source-admission authority and complete source-authority projection;
+2. complete Atmosphere SourceDescriptors and operation decisions;
+3. executable, dependency-closed Atmosphere/AirNow connectors and non-empty ingest stages;
+4. immutable lifecycle persistence and replay proof;
+5. source-specific rights, access, cadence, schema, source-head, and attribution verification;
+6. semantic profiles for each admitted source/product;
+7. production policy evaluation and EvidenceBundle/catalog closure;
+8. accountable Atmosphere, Hazards, source, rights, sensitivity, evidence, operations, release, correction, and independent reviewers;
+9. source-health, stale-state, correction, withdrawal, rollback, and public read-back drill;
+10. release, deployment, and publication authorization.
+
+Until these resolve, live refresh remains `HOLD`; the bounded no-network profiles are the supported proof surface.
+
+[Back to top](#top)
+
+---
+
+## 14. Related current surfaces
+
+### Governance and domain doctrine
+
+- [Directory Rules](../../doctrine/directory-rules.md)
+- [ADR-0029 — Adopt Directory Governance Standard v2](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+- [ADR-0017 — Source Descriptor Admission Process](../../adr/ADR-0017-source-descriptor-admission-process.md)
+- [Source Descriptor Standard](../../sources/SOURCE_DESCRIPTOR_STANDARD.md)
+- [Atmosphere domain README](../../domains/atmosphere/README.md)
+- [Atmosphere data lifecycle](../../domains/atmosphere/DATA_LIFECYCLE.md)
+- [Observed-modeled separation](../../domains/atmosphere/OBSERVED_MODELED_SEPARATION.md)
+- [Atmosphere policy doctrine](../../domains/atmosphere/POLICY.md)
+- [Atmosphere publication posture](../../domains/atmosphere/PUBLICATION_POSTURE.md)
+
+### Source, implementation, validation, and release
+
+- [Source authority register](../../../control_plane/source_authority_register.yaml)
+- [Atmosphere source registry README](../../../data/registry/sources/atmosphere/README.md)
+- [Atmosphere connector README](../../../connectors/atmosphere/README.md)
+- [AirNow connector README](../../../connectors/airnow/README.md)
+- [Atmosphere pipeline specification README](../../../pipeline_specs/atmosphere/README.md)
+- [Atmosphere pipeline implementation README](../../../pipelines/domains/atmosphere/README.md)
+- [Atmosphere policy implementation README](../../../policy/domains/atmosphere/README.md)
+- [Atmosphere fixtures README](../../../fixtures/domains/atmosphere/README.md)
+- [Atmosphere tests README](../../../tests/domains/atmosphere/README.md)
+- [Atmosphere validator README](../../../tools/validators/domains/atmosphere/README.md)
+- [Atmosphere release-candidate README](../../../release/candidates/atmosphere/README.md)
+- [Atmosphere domain workflow](../../../.github/workflows/domain-atmosphere.yml)
+- [Runbooks index](../README.md)
+- [No-Network Test Runbook](./NO_NETWORK_TEST_RUNBOOK.md)
+- [Validation Runbook](./VALIDATION_RUNBOOK.md)
+- [Promotion Runbook](./PROMOTION_RUNBOOK.md)
+- [Correction Runbook](./CORRECTION_RUNBOOK.md)
+- [Rollback Runbook](./ROLLBACK_RUNBOOK.md)
+
+[Back to top](#top)
+
+---
+
+<a id="appendix-a-anti-patterns"></a>
+
+## Appendix A — Anti-patterns
+
+Do not:
+
+- treat repository presence, a README, placeholder JSON, empty stage list, or comment-only module as source admission or executable capability;
+- use illustrative commands, fixed cadences, thresholds, endpoint assumptions, or wire shapes from v0.1 as current implementation;
+- let a watcher, connector, receipt, successful request, green workflow, map, dashboard, search index, graph projection, or generated explanation publish;
+- fetch first and decide rights, role, sensitivity, or storage later;
+- place secrets or restricted responses in commands, fixtures, issues, PRs, logs, receipts, catalogs, or evidence bundles;
+- overwrite RAW, silently rewrite history, or discard failed/no-change runs;
+- collapse AQI and concentration, AOD and PM2.5, model and observation, preliminary and certified, low-cost and regulatory, context and exposure, or advisory context and official instruction;
+- infer exposure, causality, health impact, emergency status, or safe/unsafe conditions from proximity, correlation, model output, or map appearance;
+- hide sensitive records with client-side styling rather than applying governed transforms before delivery;
+- treat promotion as a file move, merge, release badge, or deployment;
+- let AI decide source authority, rights, sensitivity, policy, review, release, correction, or life-safety meaning;
+- continue when authority, evidence, or rollback is unresolved—use `HOLD`.
+
 [Back to top](#top)
