@@ -91,6 +91,7 @@ jobs:
             exit 1
           fi
 
+          python -m unittest -v tests.domains.hazards.test_hazards_smoke
           make hazards-validate
           echo "HAZARDS_VALIDATION_PASS: drought-fixture-polarity usdm-materiality"
 
@@ -102,7 +103,7 @@ jobs:
             echo "### Hazards validation status"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Executed command: \`make hazards-validate\`."
+            echo "- Executed commands: \`python -m unittest -v tests.domains.hazards.test_hazards_smoke\` and \`make hazards-validate\`."
             echo "- Covered surface: deterministic, no-network drought-family schema/fixture polarity plus USDM material-change unit tests and exact synthetic fixture polarity."
             echo "- Remaining scope: other Hazards validator families, live-source retrieval, source admission, evidence resolution, policy evaluation, proof construction, release assembly, deployment, and publication remain outside this job."
             echo "- Life-safety boundary: a green result does not establish current hazard conditions, warning validity, regulatory status, source freshness, EvidenceBundle closure, emergency authority, release readiness, or public-use safety."
