@@ -8,6 +8,9 @@ owners: OWNER_TBD — Architecture steward · Governance steward · Domain stewa
 created: 2026-07-29
 updated: 2026-08-24
 policy_label: public; architecture; briefing-integration; no-public-authority
+owning_root: docs/
+responsibility: Human-readable briefing integration architecture subordinate to accepted decisions and executable contracts.
+truth_posture: PROPOSED reporting view; CONFIRMED repository boundaries at the pinned evidence snapshot; cite-or-abstain.
 related:
   - ../../contracts/governance/briefing_signal.md
   - ../../schemas/contracts/v1/governance/briefing_signal.schema.json
