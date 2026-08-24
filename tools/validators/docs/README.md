@@ -2,15 +2,15 @@
 doc_id: kfm://doc/tools-validators-docs-readme
 title: tools/validators/docs README
 type: README
-version: v0.6
-status: draft; four-bounded-child-executables; remaining-children-proposed
+version: v0.7
+status: draft; five-bounded-child-executables; terminology-parity-proposed
 owner: TODO-tooling-qa-owner-plus-docs-steward-plus-ci-steward
 created: 2026-07-07
-updated: 2026-08-07
+updated: 2026-08-23
 policy_label: repository-facing; docs-validator-parent; markdown-qa; non-authoritative
 owning_root: tools/
-responsibility: parent and navigation lane for bounded documentation validators covering local links, graph connectivity, metadata blocks, freshness, terminology, truth-label posture, and documentation QA without deciding doctrine, evidence sufficiency, source admissibility, policy exceptions, release approval, or publication
-truth_posture: CONFIRMED bounded local-only link-check, document-graph, meta-block, and stale-scan executables with synthetic tests / PROPOSED remaining child executables and parent orchestration / NEEDS VERIFICATION hosted exact-head results, historical baselines, and required-check coupling
+responsibility: parent and navigation lane for bounded documentation validators covering local links, graph connectivity, metadata blocks, freshness, terminology, opt-in assessment-axis separation, and documentation QA without deciding doctrine, evidence sufficiency, source admissibility, policy exceptions, release approval, or publication
+truth_posture: CONFIRMED bounded local-only link-check, document-graph, meta-block, stale-scan, and opt-in truth-label assessment-axis executables with synthetic tests / PROPOSED terminology-parity executable and broader assessment-document adoption / NEEDS VERIFICATION hosted exact-head results, historical baselines, steward acceptance, and required-check coupling
 related:
   - ../README.md
   - ../_common/README.md
@@ -26,9 +26,9 @@ related:
   - ../../../control_plane/document_registry.yaml
   - ../../../tests/validators/docs/
 notes:
-  - "This parent lane contains four bounded local-only executables: link-check, document-graph, meta-block, and stale-scan."
+  - "This parent lane contains five bounded local-only executables: link-check, document-graph, meta-block, stale-scan, and the opt-in truth-label assessment-axis linter."
   - "Documentation validators emit QA projections and cannot create truth, source admission, policy, review, release, or publication authority."
-  - "Link resolution, graph connectivity, metadata conformance, and freshness review signals remain distinct validator responsibilities."
+  - "Assessment-axis linting verifies only that an opted-in document keeps authority or epistemic posture separate from capability maturity; it does not interpret either value."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -49,7 +49,7 @@ notes:
 | `meta-block/` | **CONFIRMED bounded executable** | `KFM_META_BLOCK_V2` structure plus review-only registry-delta candidates. |
 | `stale-scan/` | **CONFIRMED bounded executable** | Explicit-as-of freshness, review-age, placeholder-owner, temporal-marker, and review-due signals. |
 | `terminology-parity/` | **README-only proposal** | Vocabulary, casing, and source-role consistency. |
-| `truth-label-lint/` | **README-only proposal** | Evidence-posture and implementation-overclaim signals. |
+| `truth-label-lint/` | **PROPOSED bounded executable on this branch** | Opt-in structural separation of authority/epistemic posture from capability maturity; values remain uninterpreted. |
 | Hosted enforcement | **NEEDS VERIFICATION** | Workflow definitions exist; exact-head runs and required-check coupling remain separate evidence. |
 
 ## Responsibility split
@@ -61,7 +61,7 @@ notes:
 | Is the bounded metadata envelope structurally valid, and what registry review delta follows? | `meta-block/` |
 | Is review/freshness posture stale under an explicit as-of date and threshold? | `stale-scan/` |
 | Does terminology align with accepted KFM vocabulary? | `terminology-parity/` — proposed |
-| Does prose expose truth labels without overclaiming? | `truth-label-lint/` — proposed |
+| Does an explicitly opted-in assessment keep authority/epistemic posture separate from capability maturity? | `truth-label-lint/` — bounded structural executable |
 
 Child validators must delegate rather than silently reimplement another lane's
 authority. In particular:
@@ -69,7 +69,8 @@ authority. In particular:
 - metadata validation does not become a second link checker;
 - document graph construction does not become metadata doctrine;
 - stale scanning does not infer truth or current runtime behavior from a date;
-- freshness parsing delegates malformed metadata to `meta-block/`; and
+- freshness parsing delegates malformed metadata to `meta-block/`;
+- assessment-axis linting preserves values as written and does not create a hidden enum, maturity decision, or evidence decision; and
 - exact local target resolution remains with `link-check/`.
 
 ## Authority boundary
@@ -82,7 +83,7 @@ route gaps to review. They must not:
 - decide whether a claim is true or an EvidenceBundle is sufficient;
 - approve source admission, rights, sensitivity, or policy exceptions;
 - create review, release, promotion, publication, correction, or rollback state;
-- turn a passing workflow, badge, graph, metadata block, or recent date into authority; or
+- turn a passing workflow, badge, graph, metadata block, recent date, or assessment table into authority; or
 - write generated QA reports into canonical trust-object homes.
 
 Responsibility-root placement remains:
@@ -100,12 +101,13 @@ Responsibility-root placement remains:
 
 ## Child outcomes
 
-| Lane | Pass | Warn | Fail | Operational error |
+| Lane | Pass | Warn / not applicable | Fail | Operational error |
 |---|---|---|---|---|
 | Link check | `DOC_LINK_CHECK_PASS` | informational external/unverified state | target/anchor/path failures | `ERROR` |
 | Document graph | `DOC_GRAPH_PASS` | `DOC_GRAPH_WARN` | `DOC_GRAPH_FAIL` | `ERROR` |
 | Metadata block | `DOC_META_BLOCK_PASS` | `DOC_META_BLOCK_WARN` | `DOC_META_BLOCK_FAIL` | `ERROR` |
 | Freshness scan | `DOC_STALE_SCAN_PASS` | `DOC_STALE_SCAN_WARN` | `DOC_STALE_SCAN_FAIL` | `ERROR` |
+| Truth-label assessment axes | `DOC_TRUTH_LABEL_LINT_PASS` | `DOC_TRUTH_LABEL_LINT_NOT_APPLICABLE` | `DOC_TRUTH_LABEL_LINT_FAIL` | `ERROR` |
 
 A parent outcome grammar remains **PROPOSED** until precedence, waiver rules,
 report destinations, and composition semantics are reviewed. No parent runner is
@@ -143,6 +145,13 @@ python -m unittest discover \
   --verbose
 ```
 
+```bash
+python -m unittest discover \
+  --start-directory tests/validators/docs/truth-label-lint \
+  --pattern 'test_*.py' \
+  --verbose
+```
+
 ## Review checklist
 
 - [ ] The child validator has one distinct QA responsibility.
@@ -157,10 +166,10 @@ python -m unittest discover \
 
 ## Next smallest safe change
 
-Classify the first combined graph, metadata, and freshness reports. Then choose
-one of two bounded follow-ups: a steward-reviewed freshness profile for a
-specific documentation lane, or the separate terminology-parity validator.
-Do not promote advisory freshness defaults into repository-wide required policy
-without a reviewed baseline and owner disposition.
+After the opt-in assessment-axis profile receives human review, adopt it in one
+bounded dated assessment or reconciliation document and compare its findings
+with manual review. Keep repository-wide enforcement and any value vocabulary
+on hold until an accepted owner, baseline, and semantics exist. The independent
+terminology-parity validator remains a separate candidate.
 
 [Back to top](#top)
