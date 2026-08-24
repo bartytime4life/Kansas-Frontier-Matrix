@@ -1,0 +1,121 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/layer-manifest-admission.yml": "sha256:e4fd594d6aff3fcafe9f92764518133f3dd9e226c0bd3c492592f61f1e4d9f20",
+    "apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts": "sha256:e4c6f046a2d579bce22d1ff1a6a5f94787d9f6697f07874364f3ecc9c6e3e205",
+    "apps/explorer-web/tests/layer-manifest-admission.test.ts": "sha256:8482dd4b0b6b86e1c777e6ae58d2236714cd3bd76663266e2f03f678000fa729",
+    "contracts/runtime/layer_manifest_admission.md": "sha256:30cea5eb169f08724605ac30cbc1446b841cbd55369ea143fd75bc286403cc0b",
+    "fixtures/runtime/layer_manifest_admission/cases.json": "sha256:12af87d9e2f5207da85a40fd21514c1a4908c6090dd0e69cc08d48a9a7f2f69b"
+  },
+  "artifact_paths": [
+    ".github/workflows/layer-manifest-admission.yml",
+    "apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts",
+    "apps/explorer-web/tests/layer-manifest-admission.test.ts",
+    "contracts/runtime/layer_manifest_admission.md",
+    "fixtures/runtime/layer_manifest_admission/cases.json"
+  ],
+  "citations": [
+    {
+      "id": "repository:layer-manifest-receipt-failure",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/32774237586"
+    },
+    {
+      "id": "drive:ai-build-receipt-contract",
+      "validated": true,
+      "evidence_ref": "gdrive:Kansas Frontier Matrix — AI Build Operating Contract.md#34-generated_receipt-contract"
+    },
+    {
+      "id": "attachment:maplibre-runtime-boundary",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf#pages-12-19-22"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@91c90744753fdb81c1e6a11ae1a6f826dce267fa"
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-24T20:59:07Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "Kansas Frontier Matrix — AI Build Operating Contract.md",
+      "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf"
+    ],
+    "evidence_hashes": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/32774237586",
+      "gdrive:Kansas Frontier Matrix — AI Build Operating Contract.md#34-generated_receipt-contract",
+      "attachment:KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf#pages-12-19-22"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-24"
+  },
+  "notes": "Forward authoring receipt for the current LayerManifest admission packet after PR #3526 changed the evaluator and focused test. The 2026-08-08 receipt remains immutable lineage. This receipt restores current-byte validation only; it grants no registry, source, evidence, policy, review, release, deployment, publication, or public-use authority.",
+  "override_record": null,
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector repository inspection and draft-PR delivery",
+      "Google Drive read-only source inspection",
+      "local deterministic hashing and syntax validation"
+    ]
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "receipt_id": "genrec-layer-manifest-admission-20260824",
+  "truth_labels": {
+    ".github/workflows/layer-manifest-admission.yml": "CONFIRMED",
+    "apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts": "CONFIRMED",
+    "apps/explorer-web/tests/layer-manifest-admission.test.ts": "CONFIRMED",
+    "contracts/runtime/layer_manifest_admission.md": "PROPOSED",
+    "fixtures/runtime/layer_manifest_admission/cases.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The read-only path-scoped workflow parsed as YAML after selecting the new current-byte receipt."
+    },
+    {
+      "gate": "generated-receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "Every listed artifact path is unique and its SHA-256 digest matches the intended branch bytes."
+    },
+    {
+      "gate": "baseline-focused-unit-and-build",
+      "outcome": "PASS",
+      "reason": "The focused Vitest lane and Explorer build succeeded at PR #3526 exact head; its generated-receipt step alone failed on the two changed artifact digests."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation starts after the draft pull request is created."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ]
+}
