@@ -27,10 +27,12 @@ path_posture: PLACE
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: df6c3f5dadd2800fdc2356ceb540ca4e448f6c7a
+  initial_base_commit: df6c3f5dadd2800fdc2356ceb540ca4e448f6c7a
+  reconciled_base_commit: 6e1bc94ea13fc0c7429fb824b62099ed1871598b
   target_prior_blob: c19719a1014db3b1217c8d2fad1d4315a3bb0d99
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  atmosphere_runbook_index_blob: bb25864bf893ae1700ac4dc4ce40bbaa85154696
+  atmosphere_runbook_index_blob: 3fc864c34682de630faa2c529a41004e7ff08e38
+  atmosphere_release_rollback_runbook_blob: 7db7cc87e673b6a9f29b76cc6cb865099ad2ea8a
   atmosphere_candidate_readme_blob: 2cff863a65c035cc167583ecae481c03580fc24a
   atmosphere_workflow_blob: fccba4b6e2cdae561ec8a4904446ed5dbe6ec8ce
   promotion_gate_readme_blob: e729df0cc007e8cf0d9811afc25ec1f5ffbdffdd
@@ -54,7 +56,11 @@ inspection_boundary: >-
   consumer, or public surface was exercised. No candidate, decision, receipt,
   manifest, lifecycle transition, release, deployment, promotion, correction,
   rollback, alert, medical determination, regulatory determination, or
-  publication was created or performed.
+  publication was created or performed. Main advanced during authoring through
+  merged PR #3508, which changed the Atmosphere runbook index and combined
+  release/rollback coordination procedure but did not change this target. The
+  branch was reconciled against that exact main checkpoint and preserves those
+  merged changes.
 related:
   - ../README.md
   - ./README.md
@@ -101,6 +107,7 @@ notes:
   - "The current Atmosphere candidate lane has no verified child candidate dossier; the source-authority projection is empty; Atmosphere and promotion policy sources are inactive; and no accepted Atmosphere proof packet, review, PromotionDecision, ReleaseManifest, applied transition, or released carrier was established."
   - "The proposed ADR-0018 sequence is not accepted, and repository documentation still contains materially different A-G vocabularies. This runbook uses the implemented bounded validator names only when describing that validator."
   - "KFM Atmosphere is not an official AQI, medical, regulatory, emergency-alerting, or life-safety authority."
+  - "The combined Atmosphere release/rollback procedure is now substantive coordination-only guidance; it does not change the operational promotion hold or supersede the separate release and rollback procedures."
   - "This document changes no source, candidate, data, contract, schema, policy, fixture, validator, workflow, evidence object, receipt, proof, review, release record, deployment, lifecycle state, or public surface."
 [/KFM_META_BLOCK_V2] -->
 
@@ -176,7 +183,7 @@ It may not end with `PROMOTED`, `RELEASED`, `DEPLOYED`, or `PUBLISHED`.
 
 ## Current repository posture
 
-The following conclusions are bounded to `main@df6c3f5dadd2800fdc2356ceb540ca4e448f6c7a`.
+The following conclusions are bounded to reconciled `main@6e1bc94ea13fc0c7429fb824b62099ed1871598b`.
 
 | Surface | Status | Safe conclusion |
 |---|---|---|
@@ -199,6 +206,7 @@ The following conclusions are bounded to `main@df6c3f5dadd2800fdc2356ceb540ca4e4
 | Atmosphere release readiness | **CONFIRMED fixture-first / operational hold** | The release runbook documents no active candidate, no Atmosphere ReleaseManifest, no accepted release evaluator, no authenticated release authority, and no public write. |
 | Published Atmosphere carriers | **CONFIRMED directory guidance / payload unverified** | `data/published/atmosphere/README.md` exists, but no released payload or public carrier was established by the bounded inspection. |
 | Rollback support | **CONFIRMED bounded candidate/rehearsal surfaces** | Shared `RollbackCard` checks and synthetic rehearsal exist; operational Atmosphere rollback remains held. |
+| Release/rollback coordination | **CONFIRMED substantive coordination / operational hold** | The combined procedure binds release-readiness and rollback-assurance handoffs without superseding the separate procedures or authorizing action. |
 | Functional stewards | **NEEDS VERIFICATION** | `@bartytime4life` is a verified GitHub review route. CODEOWNERS routing does not establish scientific, source, evidence, policy, release, or independent-review authority. |
 | Deployment and public state | **UNKNOWN** | No deployed endpoint, cache topology, alias state, public read-back, monitoring, or operational SLO evidence was inspected. |
 
@@ -1123,7 +1131,7 @@ This revision is grounded in current repository files, not in the proposal-era r
 | Review | Atmosphere review README | Guidance exists; accountable review and authority unestablished |
 | Decision/receipt | PromotionDecision and PromotionReceipt contracts | Proposed separate object families; no Atmosphere operational instance |
 | Release/public state | Atmosphere release runbook and published README | No active candidate, manifest, public write, or released carrier established |
-| Recovery | correction and rollback runbooks | Bounded preparation/rehearsal exists; operational mutation remains held |
+| Recovery | correction, rollback, and combined release/rollback runbooks | Bounded preparation, rehearsal, and coordination exist; operational mutation remains held |
 
 ### Evidence limit
 

@@ -2,7 +2,7 @@
 doc_id: kfm://doc/runbooks/atmosphere/readme
 title: Atmosphere / Air Runbooks · Lane Boundary and Navigation
 type: readme
-version: v1.1
+version: v1.2
 status: draft; repository-grounded; documentation-only; mixed-child-maturity; non-authoritative; non-publisher; not-for-life-safety
 owners:
   - "@bartytime4life — verified GitHub review route only"
@@ -17,12 +17,14 @@ truth_posture: cite-or-abstain
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: df6c3f5dadd2800fdc2356ceb540ca4e448f6c7a
-  target_prior_blob: bb25864bf893ae1700ac4dc4ce40bbaa85154696
+  initial_base_commit: df6c3f5dadd2800fdc2356ceb540ca4e448f6c7a
+  reconciled_base_commit: 6e1bc94ea13fc0c7429fb824b62099ed1871598b
+  prior_blob: 3fc864c34682de630faa2c529a41004e7ff08e38
+  release_rollback_runbook_blob: 7db7cc87e673b6a9f29b76cc6cb865099ad2ea8a
   child_count: 9
-  substantive_repository_grounded_children: 8
+  substantive_repository_grounded_children: 9
   proposal_era_substantive_children: 0
-  proposed_scaffold_children: 1
+  proposed_scaffold_children: 0
 related:
   - ../README.md
   - ../../domains/atmosphere/README.md
@@ -30,9 +32,10 @@ related:
   - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
 tags: [kfm, runbooks, atmosphere, air, navigation, boundary, mixed-maturity, promotion, hold]
 notes:
-  - "Eight child procedures are substantive repository-grounded drafts; the combined release/rollback surface remains a 785-byte proposed scaffold."
-  - "The promotion procedure now reflects the bounded shared A-G readiness validator, empty Atmosphere candidate lane, empty source-authority projection, inactive policy sources, and operational promotion hold."
-  - "Document length, a passing fixture, or a green workflow is not operational readiness, promotion, release, deployment, or publication evidence."
+  - "All nine child procedures are substantive repository-grounded drafts after reconciling the merged combined release/rollback coordination update and the promotion modernization."
+  - "The combined release/rollback child is composition-only and does not supersede the separate release and rollback procedures or authorize execution."
+  - "The promotion procedure reflects the bounded shared A-G readiness validator, empty Atmosphere candidate lane, empty source-authority projection, inactive policy sources, and operational promotion hold."
+  - "Document maturity, a passing fixture, or a green workflow is not operational readiness, promotion, release, deployment, rollback execution, or publication evidence."
   - "This README changes no contract, schema, policy, fixture, validator, workflow, evidence object, lifecycle object, promotion decision, release object, runtime, deployment, rollback execution, or publication state."
 [/KFM_META_BLOCK_V2] -->
 
@@ -49,7 +52,7 @@ notes:
 > KFM is not an official AQI, medical, regulatory, emergency-alerting, or life-safety authority. Atmosphere may preserve observations, forecasts, smoke context, and official advisory context, but it must not originate health or emergency instructions. Route life-safety interpretation to the Hazards lane and the official issuing authority.
 
 > [!CAUTION]
-> Child maturity remains mixed. Eight procedures are substantive repository-grounded drafts, while [`RELEASE_ROLLBACK_RUNBOOK.md`](RELEASE_ROLLBACK_RUNBOOK.md) remains only a proposed scaffold. Repository-grounded does not mean operational: source admission, evidence closure, policy activation, accountable authority, promotion, release, deployment, public read-back, and operational rollback remain separate and may still be held.
+> All nine child procedures are now substantive repository-grounded drafts, but **operational maturity remains mixed and held**. [`PROMOTION_RUNBOOK.md`](PROMOTION_RUNBOOK.md) stops at bounded readiness or hold. [`RELEASE_ROLLBACK_RUNBOOK.md`](RELEASE_ROLLBACK_RUNBOOK.md) is composition-only: it binds release-readiness and rollback-assurance handoffs without superseding the separate procedures or authorizing operational action. Source admission, evidence closure, policy activation, accountable authority, transition application, release, deployment, public read-back, and operational rollback remain separate.
 
 ## Lane boundary
 
@@ -78,20 +81,20 @@ Missing authority or support fails closed with the outcome owned by the selected
 | Assess final promotion readiness | [`PROMOTION_RUNBOOK.md`](PROMOTION_RUNBOOK.md) | Bounded A–G readiness or hold packet; no transition, release, or public write |
 | Assess release readiness | [`RELEASE_RUNBOOK.md`](RELEASE_RUNBOOK.md) | Fixture-first, no-public-write review handoff |
 | Prepare or rehearse rollback | [`ROLLBACK_RUNBOOK.md`](ROLLBACK_RUNBOOK.md) | Candidate and synthetic rehearsal; operational rollback remains held |
-| Follow the planned combined release/rollback surface | [`RELEASE_ROLLBACK_RUNBOOK.md`](RELEASE_ROLLBACK_RUNBOOK.md) | Partial scaffold only; use the separate release and rollback procedures instead |
+| Coordinate release readiness with rollback assurance | [`RELEASE_ROLLBACK_RUNBOOK.md`](RELEASE_ROLLBACK_RUNBOOK.md) | Joint review handoff only; operational release, correction, withdrawal, and rollback remain held |
 
-If more than one procedure applies, preserve the state boundaries between them. Validation does not promote; promotion readiness does not create a `PromotionDecision` or apply a transition; release readiness does not deploy or publish; correction planning does not mutate a prior release; and synthetic rollback rehearsal does not alter public state.
+If more than one procedure applies, preserve the state boundaries between them. Validation does not promote; promotion readiness does not create a `PromotionDecision` or apply a transition; release readiness does not deploy or publish; correction planning does not mutate a prior release; and synthetic rollback rehearsal does not alter public state. The combined procedure coordinates those boundaries; it does not collapse them.
 
 ## Current child maturity
 
-The labels below describe the repository documents at `main@df6c3f5dadd2800fdc2356ceb540ca4e448f6c7a` plus the same-branch promotion modernization. They do not prove that a live source, accountable actor, accepted policy, deployed consumer, released artifact, or public carrier exists.
+The labels below describe the repository documents at reconciled `main@6e1bc94ea13fc0c7429fb824b62099ed1871598b` plus the same-branch promotion modernization. They do not prove that a live source, accountable actor, accepted policy, deployed consumer, released artifact, or public carrier exists.
 
 | Procedure | Current document maturity | Verified limit |
 |---|---|---|
 | [`CORRECTION_RUNBOOK.md`](CORRECTION_RUNBOOK.md) | Substantive repository-grounded draft | Generic bounded checks exist; Atmosphere-specific schema, policy, worker, review, and release-lane closure remain incomplete or conflicted |
 | [`NO_NETWORK_TEST_RUNBOOK.md`](NO_NETWORK_TEST_RUNBOOK.md) | Substantive repository-grounded draft | Bounded synthetic profiles are executable; live sources and broader proof remain held |
 | [`PROMOTION_RUNBOOK.md`](PROMOTION_RUNBOOK.md) | Substantive repository-grounded draft | Shared deterministic A–G readiness validator is present; no active Atmosphere candidate, admitted source authority, accepted proof packet, active policy, accountable review, applied transition, manifest, or released carrier was established |
-| [`RELEASE_ROLLBACK_RUNBOOK.md`](RELEASE_ROLLBACK_RUNBOOK.md) | **Partial — 785-byte proposed scaffold** | Navigation lineage only; not a usable release or rollback procedure |
+| [`RELEASE_ROLLBACK_RUNBOOK.md`](RELEASE_ROLLBACK_RUNBOOK.md) | Substantive repository-grounded coordination draft | Composes release readiness, first-release withdrawal/hold assurance, successor rollback assurance, synthetic checks, incident routing, and joint handoff; no operational release or rollback effect |
 | [`RELEASE_RUNBOOK.md`](RELEASE_RUNBOOK.md) | Substantive repository-grounded draft | Fixture-first readiness checks and handoff only; operational release remains held |
 | [`ROLLBACK_RUNBOOK.md`](ROLLBACK_RUNBOOK.md) | Substantive repository-grounded draft | Bounded `RollbackCard` validation and marker-protected synthetic rehearsal; operational rollback remains held |
 | [`SOURCE_REFRESH_RUNBOOK.md`](SOURCE_REFRESH_RUNBOOK.md) | Substantive repository-grounded draft | No-network procedure and graduation sequence; live source refresh remains held |
@@ -128,6 +131,8 @@ Use [`PROMOTION_RUNBOOK.md`](PROMOTION_RUNBOOK.md) to produce a finite readiness
 4. Use only verified actors and environments. `@bartytime4life` is the verified GitHub route; the accountable domain, scientific, source-rights, sensitivity, Hazards-seam, evidence, policy, review, promotion, release, rollback, operations, and independent-review assignments remain to be verified where required.
 5. Record finite outcomes and unresolved holds without upgrading them through prose. A `PASS` means only what the producing profile declares.
 6. Keep validation, review, decision, transition application, release, merge, deployment, promotion, rollback execution, publication, and public read-back as separate events with separate evidence.
+7. For a first Atmosphere release, use withdrawal or hold assurance when no distinct prior release exists; never invent a rollback target.
+8. For a successor release, independently revalidate a prior target before treating it as safer than the affected release.
 
 Stop and create a public-safe handoff when required authority, source identity, rights, sensitivity, evidence, policy, time semantics, correction support, rollback target, or consumer binding is missing; when an observation/model/forecast/advisory role would collapse; when life-safety language would be originated; or when a named path or command does not match the pinned repository.
 
@@ -136,7 +141,8 @@ Stop and create a public-safe handoff when required authority, source identity, 
 | Item | Current posture | Smallest truthful next step |
 |---|---|---|
 | Operational promotion | `HOLD` | Establish one real candidate plus admitted source authority, evidence/proof closure, accepted policy, accountable review, correction, rollback, transition execution, release topology, and public read-back before any promotion claim |
-| Combined release/rollback procedure | `PARTIAL / PROPOSED SCAFFOLD` | Either replace it through domain review or explicitly retire it in favor of the separate release and rollback procedures; do not infer the decision here |
+| Combined release/rollback procedure | `SUBSTANTIVE COORDINATION / OPERATIONAL HOLD` | Graduate only after a real immutable Atmosphere candidate, accepted release and rollback profiles, EvidenceBundle and policy closure, authenticated authorities, safe executors, invalidation, and public read-back are verified |
+| First Atmosphere release recovery | `HOLD / NO PRIOR RELEASE VERIFIED` | Define an accepted withdrawal and fail-closed public posture; do not invent a predecessor |
 | Accountable roles | `NEEDS VERIFICATION` | Record verified scope, authority, separation, effective interval, obligations, and revocation for each required role |
 | Live Atmosphere operations | `HOLD / UNKNOWN` | Require admitted sources, executable connectors, evidence and policy closure, review, release topology, correction, rollback, monitoring, and current runtime evidence |
 | A–G vocabulary convergence | `CONFLICTED / proposed` | Reconcile lifecycle-wide and final-readiness profiles through the governing ADR process without treating the current validator names as silently accepted doctrine |
@@ -158,6 +164,6 @@ Stop and create a public-safe handoff when required authority, source identity, 
 
 Update this README when a child is added, removed, renamed, materially re-scoped, or changes maturity; when the Atmosphere/Hazards seam changes; or when accountable authority, executable validation, source admission, evidence, policy, promotion, release, rollback, deployment, publication, or public read-back evidence changes.
 
-This is a documentation-only change. Before merge, close or abandon its draft pull request. After merge, revert the documentation commit or submit a smaller reviewed forward fix. Blob `bb25864bf893ae1700ac4dc4ce40bbaa85154696` restores the prior README, but reverting this index would not change any operational or public state.
+This is a documentation-only change. Before merge, close or abandon its draft pull request. After merge, revert the documentation commit or submit a smaller reviewed forward fix. Blob `3fc864c34682de630faa2c529a41004e7ff08e38` restores the reconciled pre-promotion README, but reverting this index would not change any operational or public state.
 
 [Back to top](#top)
