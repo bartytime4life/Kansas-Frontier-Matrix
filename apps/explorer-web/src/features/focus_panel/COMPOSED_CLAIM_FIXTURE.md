@@ -19,6 +19,7 @@ public-safe projection and maps closure state to the existing Focus vocabulary:
 | Dependency closure | Focus outcome | Render posture |
 |---|---|---|
 | `SUPPORTED` | `ANSWER` | cited, released support |
+| `SUPPORTED` with correction history | `ANSWER` | active corrected support only; superseded evidence remains visible history |
 | `QUALIFIED` | `ANSWER` | cited support plus visible optional-role limitations |
 | `ABSTAIN` | `ABSTAIN` | fixed no-leak copy; unresolved role remains visible |
 | `DENY` | `DENY` | fixed no-leak copy; protected detail is not reflected |
@@ -50,6 +51,8 @@ The feature:
 - rejects Focus or Evidence Drawer EvidenceRefs outside request scope;
 - requires every answer EvidenceRef to have exactly one citation and matching
   Evidence Drawer support;
+- keeps superseded EvidenceRefs out of active Focus support while preserving
+  their public-safe correction lineage in the Evidence Drawer;
 - requires `ANSWER` to be reviewed, released, current, policy-allowed, and bound
   to a safe AIReceipt reference;
 - sanitizes all negative Evidence Drawer inputs before retaining browser state;

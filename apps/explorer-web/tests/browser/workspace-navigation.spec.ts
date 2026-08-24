@@ -37,8 +37,11 @@ test("runs one bounded governed Focus request inside the Explore workspace", asy
   await expect(
     workspace.getByRole("button", { name: "Run bounded governed Focus request" }),
   ).toHaveCount(1);
+  await expect(
+    workspace.getByRole("button", { name: "Run corrected-evidence Focus request" }),
+  ).toHaveCount(1);
   await expect(workspace).toContainText(
-    "Only the endorsed synthetic summary crosses the client boundary",
+    "Only active endorsed synthetic support crosses the answer boundary",
   );
 
   await workspace
@@ -72,6 +75,56 @@ test("runs one bounded governed Focus request inside the Explore workspace", asy
   await expect(panel).not.toContainText("RAW_GOVERNED_CONTEXT_CANARY_3373");
   await expect(panel).not.toContainText("raw_governed_context");
   await expect(workspace).toContainText(
-    "This fixture does not activate a source, execute a model, authenticate release, or publish an answer.",
+    "These fixtures do not activate a source, execute a model, authenticate release, or publish an answer.",
+  );
+});
+
+test("keeps superseded Focus evidence in visible correction history only", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  const workspace = page.locator('[data-component="focus-mode-workspace"]');
+  await workspace
+    .getByRole("button", { name: "Run corrected-evidence Focus request" })
+    .click();
+
+  await expect(workspace.getByRole("status")).toHaveText(
+    "ANSWER / COMPOSED_CLAIM_SUPPORTED",
+  );
+  const panel = workspace.getByRole("region", {
+    name: "Focus Panel: supported composed claim",
+  });
+  const activeEvidence = panel.locator(
+    'ul[aria-label="Focus evidence references"]',
+  );
+  await expect(activeEvidence).toContainText(
+    "kfm:evidence:synthetic:corrected-soil-summary-001",
+  );
+  await expect(activeEvidence).not.toContainText(
+    "kfm:evidence:synthetic:superseded-soil-summary-001",
+  );
+  await expect(
+    panel.getByRole("link", { name: "Corrected synthetic soil summary" }),
+  ).toBeVisible();
+
+  await panel.getByRole("button", { name: "Open Evidence Drawer" }).click();
+  const drawer = panel.getByRole("complementary", {
+    name: "Evidence Drawer: supported evidence",
+  });
+  await expect(drawer).toBeVisible();
+  await expect(
+    drawer.locator('ul[aria-label="Evidence trust state"]'),
+  ).toContainText("Correction: CORRECTED");
+  await expect(
+    drawer.locator('ul[aria-label="Evidence references"]'),
+  ).toContainText("kfm:evidence:synthetic:corrected-soil-summary-001");
+  await expect(
+    drawer.locator('ul[aria-label="Evidence references"]'),
+  ).not.toContainText("kfm:evidence:synthetic:superseded-soil-summary-001");
+  await expect(
+    drawer.locator('ul[aria-label="Evidence history"]'),
+  ).toContainText(
+    "Correction lineage: kfm:evidence:synthetic:superseded-soil-summary-001 → kfm:evidence:synthetic:corrected-soil-summary-001",
   );
 });

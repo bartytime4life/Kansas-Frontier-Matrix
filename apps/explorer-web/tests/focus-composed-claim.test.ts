@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import abstainFixture from "../../../fixtures/ui/focus_composed_claim_projection/valid/abstain-unresolved.json";
+import correctedFixture from "../../../fixtures/ui/focus_composed_claim_projection/valid/answer-corrected.json";
 import qualifiedFixture from "../../../fixtures/ui/focus_composed_claim_projection/valid/answer-qualified.json";
 import supportedFixture from "../../../fixtures/ui/focus_composed_claim_projection/valid/answer-supported.json";
 import denyFixture from "../../../fixtures/ui/focus_composed_claim_projection/valid/deny-policy.json";
@@ -154,6 +155,52 @@ describe("Explorer Focus composed-claim projection", () => {
         ],
       },
     });
+  });
+
+  it("keeps superseded evidence in correction history and out of active support", async () => {
+    const request = {
+      profile: FOCUS_COMPOSED_CLAIM_REQUEST_PROFILE,
+      request_id: "request:focus:corrected-evidence-001",
+      claim_id: "claim:synthetic:corrected-evidence-001",
+      question: "What does the corrected synthetic summary support?",
+      allowed_evidence_refs: [
+        "kfm:evidence:synthetic:corrected-soil-summary-001",
+      ],
+    };
+    const result = await resolveFocusComposedClaim(
+      request,
+      async () => correctedFixture,
+    );
+
+    expect(result).toMatchObject({
+      code: "COMPOSED_CLAIM_SUPPORTED",
+      projection: {
+        evidenceRefs: [
+          "kfm:evidence:synthetic:corrected-soil-summary-001",
+        ],
+        evidenceDrawer: {
+          evidenceRefs: [
+            "kfm:evidence:synthetic:corrected-soil-summary-001",
+          ],
+          trustLabels: expect.arrayContaining(["Correction: CORRECTED"]),
+          historyLabels: expect.arrayContaining([
+            "Correction lineage: kfm:evidence:synthetic:superseded-soil-summary-001 → kfm:evidence:synthetic:corrected-soil-summary-001 (2026-08-20T00:00:00Z)",
+          ]),
+        },
+      },
+      view: {
+        outcome: "ANSWER",
+        evidenceRefs: [
+          "kfm:evidence:synthetic:corrected-soil-summary-001",
+        ],
+      },
+    });
+    expect(result.view.citations.map((citation) => citation.evidenceRef)).toEqual([
+      "kfm:evidence:synthetic:corrected-soil-summary-001",
+    ]);
+    expect(result.view.evidenceRefs).not.toContain(
+      "kfm:evidence:synthetic:superseded-soil-summary-001",
+    );
   });
 
   it("abstains without transport when the request has no governed evidence scope", async () => {

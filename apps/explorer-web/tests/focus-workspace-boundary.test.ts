@@ -6,6 +6,7 @@ import {
   FOCUS_COMPOSED_CLAIM_REQUEST_PROFILE,
   resolveFocusComposedClaim,
 } from "../src/features/focus_panel";
+import { resolveSyntheticFocusWorkspaceProjection } from "../src/site/mount-synthetic-focus-workspace";
 
 const request = Object.freeze({
   profile: FOCUS_COMPOSED_CLAIM_REQUEST_PROFILE,
@@ -76,5 +77,40 @@ describe("Focus workspace governed boundary", () => {
     );
     expect(workspaceSource).not.toContain("RAW_GOVERNED_CONTEXT_CANARY_3373");
     expect(workspaceSource).not.toContain("raw_governed_context");
+  });
+
+  it("binds the corrected workspace answer to active evidence while retaining history", async () => {
+    const result = await resolveFocusComposedClaim(
+      {
+        profile: FOCUS_COMPOSED_CLAIM_REQUEST_PROFILE,
+        request_id: "request:focus:corrected-evidence-001",
+        claim_id: "claim:synthetic:corrected-evidence-001",
+        question: "What does the corrected synthetic summary support?",
+        allowed_evidence_refs: [
+          "kfm:evidence:synthetic:corrected-soil-summary-001",
+        ],
+      },
+      resolveSyntheticFocusWorkspaceProjection,
+    );
+
+    expect(result).toMatchObject({
+      code: "COMPOSED_CLAIM_SUPPORTED",
+      projection: {
+        evidenceDrawer: {
+          trustLabels: expect.arrayContaining(["Correction: CORRECTED"]),
+          historyLabels: expect.arrayContaining([
+            "Correction lineage: kfm:evidence:synthetic:superseded-soil-summary-001 → kfm:evidence:synthetic:corrected-soil-summary-001 (2026-08-20T00:00:00Z)",
+          ]),
+        },
+      },
+      view: {
+        evidenceRefs: [
+          "kfm:evidence:synthetic:corrected-soil-summary-001",
+        ],
+      },
+    });
+    expect(result.view.evidenceRefs).not.toContain(
+      "kfm:evidence:synthetic:superseded-soil-summary-001",
+    );
   });
 });
