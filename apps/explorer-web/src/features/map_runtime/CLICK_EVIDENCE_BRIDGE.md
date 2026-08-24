@@ -58,6 +58,13 @@ The binding:
   the runtime leaves `READY`;
 - prevents a late `ANSWER` from crossing a stale, denied, abstained, conflicted,
   degraded, withdrawn, rolled-back, or error transition;
+- emits a separate `RUNTIME_INVALIDATED` consumer event for an active selection
+  when a finite trust state or disposal supersedes it;
+- limits that invalidation to the prior `selection_id` plus the exact KFM-owned
+  runtime state and reason, with no evidence references or upstream payload;
+- does not translate runtime invalidation into an Evidence Drawer, policy,
+  sensitivity, review, release, correction, or rollback decision; a later
+  governed response must supply any replacement claim-bearing projection;
 - provides idempotent teardown that unsubscribes the runtime and invalidates pending results; and
 - is proven with `NullMapRuntime`, not with a concrete renderer.
 
@@ -90,7 +97,9 @@ Rendered properties are therefore request scope, never evidence, and the resolve
 | No governed evidence reference | `ABSTAIN / MISSING_EVIDENCE` |
 | Resolver throws | `ERROR / GOVERNED_RESOLVER_ERROR` |
 | Resolver widens evidence scope | `ERROR / DRAWER_EVIDENCE_OUTSIDE_SELECTION` |
-| Runtime leaves `READY` while resolution is pending | Pending result invalidated; no late drawer delivery |
+| Runtime enters a finite trust state while resolution is pending | `RUNTIME_INVALIDATED` for the active `selection_id`; pending result suppressed; no synthesized Drawer projection |
+| Runtime enters a finite trust state after a result was delivered | `RUNTIME_INVALIDATED` for the active `selection_id`; consumer must clear the prior result and await a separately governed replacement |
+| Runtime is disposed while a result is active | `RUNTIME_INVALIDATED / MAP_RUNTIME_DISPOSED`; no evidence detail |
 | Runtime snapshot changes | A separate text-first status presenter exposes the exact KFM-owned state and reason without inferring evidence, policy, sensitivity, review, release, correction, rollback authority, or publication state |
 | Strict drawer returns a governed negative state | Existing `ABSTAIN`, `DENY`, or `ERROR` projection |
 | Strict drawer returns supported evidence | `ANSWER / SUPPORTED` |
@@ -131,7 +140,7 @@ This is browser behavior evidence for the governed handoff, not proof of a real 
 - `tools/validators/maplibre/assess_acquisition_inventory.py`
 - `tests/maplibre/test_assess_acquisition_inventory.py`
 
-The test matrix covers matching layer admission, held/denied/invalid admission, cross-layer manifest reuse denial, supported evidence, missing evidence, policy denial, upstream error, evidence-scope widening, stale request suppression, runtime trust-state invalidation, visible text-first runtime status, critical alert semantics, keyboard use, accessibility status, and teardown. Shared-port coverage additionally proves deterministic initialization, KFM-owned selection and snapshot events, strict runtime-to-evidence translation, invalid camera/selection/state rejection, selection clearing on negative state, stale-result suppression, and idempotent disposal.
+The test matrix covers matching layer admission, held/denied/invalid admission, cross-layer manifest reuse denial, supported evidence, missing evidence, policy denial, upstream error, evidence-scope widening, stale request suppression, non-claim-bearing invalidation for every runtime trust state and disposal, absence of evidence references in invalidation events, visible text-first runtime status, critical alert semantics, keyboard use, accessibility status, and teardown. Shared-port coverage additionally proves deterministic initialization, KFM-owned selection and snapshot events, strict runtime-to-evidence translation, invalid camera/selection/state rejection, selection clearing on negative state, stale-result suppression, and idempotent disposal.
 
 ## Explicit non-effects
 

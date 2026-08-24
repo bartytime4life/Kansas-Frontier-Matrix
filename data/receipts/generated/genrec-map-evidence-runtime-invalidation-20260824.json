@@ -1,0 +1,176 @@
+{
+  "receipt_id": "genrec-map-evidence-runtime-invalidation-20260824",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/features/map_runtime/CLICK_EVIDENCE_BRIDGE.md",
+    "apps/explorer-web/src/features/map_runtime/runtime-evidence-binding.ts",
+    "apps/explorer-web/tests/map-runtime-evidence-binding.test.ts"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/features/map_runtime/CLICK_EVIDENCE_BRIDGE.md": "sha256:f615c770a6cecf8a1d8dbb12047d1116db21849ddd870e2a52b12136e4ce9718",
+    "apps/explorer-web/src/features/map_runtime/runtime-evidence-binding.ts": "sha256:c0f92f1be4f61ca02e3d39fd484e757cd5c3cb1e82a5c1991fd9b9d74ccd750c",
+    "apps/explorer-web/tests/map-runtime-evidence-binding.test.ts": "sha256:3bcc616580bcf773002b1f94a1b6903c3949774158b2f741cb09bc7285d33064"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5-session-2026-08-24"
+  },
+  "prompt_or_contract": "sha256:defbdeba6010238205b3f9d2f585f9460d36c4db732df3bf6a315998d4ecf3eb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "read-only local source inspection",
+      "local Git evidence inspection",
+      "no-network repository validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:77f56ec1ab632b76c7728cfb250330271b7dc8948db95c8c0594c92ad9ca6b36",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:9adaf38047a6eb86e57a93939efec30bc1a21bb354a406889c5e6da4be7cd9c9",
+      "sha256:060b20d6e28197faa8a9034ccb5a29b63621f73ebdeea1d2d77d31b23c2149e0"
+    ],
+    "attached_docs": [
+      "KFM MapLibre Operating Architecture, Governed UI, and AI Interaction Manual - Revised Working Edition",
+      "KFM Greenfield Commissioning Plan v2"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf#page=20",
+      "gdrive:KFM Greenfield Commissioning Plan v2#16.2",
+      "gdrive:KFM Greenfield Commissioning Plan v2#20.1",
+      "gdrive:KFM Greenfield Commissioning Plan v2#22.4",
+      "repo:docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md@8c943018a0cd59b06b5a623e15b9a9068a3513f4",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@8c943018a0cd59b06b5a623e15b9a9068a3513f4",
+      "repo:docs/doctrine/directory-rules.md@8c943018a0cd59b06b5a623e15b9a9068a3513f4#7.2",
+      "repo:apps/explorer-web/src/features/map_runtime/runtime-evidence-binding.ts@8c943018a0cd59b06b5a623e15b9a9068a3513f4",
+      "github:bartytime4life/Kansas-Frontier-Matrix#3397",
+      "github:bartytime4life/Kansas-Frontier-Matrix#3524",
+      "github:bartytime4life/Kansas-Frontier-Matrix#3527",
+      "github:bartytime4life/Kansas-Frontier-Matrix#3529"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/features/map_runtime/CLICK_EVIDENCE_BRIDGE.md": "PROPOSED",
+    "apps/explorer-web/src/features/map_runtime/runtime-evidence-binding.ts": "PROPOSED",
+    "apps/explorer-web/tests/map-runtime-evidence-binding.test.ts": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source_reconciliation_and_non_authority_boundary",
+      "outcome": "PASS",
+      "reason": "The gap is traced to MapLibre manual page 20 and commissioning-plan sections 16.2, 20.1, and 22.4. The slice emits a non-claim-bearing invalidation and creates no Evidence Drawer payload, policy decision, correction notice, rollback execution, release, or publication authority."
+    },
+    {
+      "gate": "authority_ownership_and_overlap_reconciliation",
+      "outcome": "PASS",
+      "reason": "Current main 8c943018a0cd59b06b5a623e15b9a9068a3513f4, accepted ADR-0006 and ADR-0029, Directory Rules, issue 3397, recent merged pull requests 3522 through 3531, and the open pull-request queue were inspected. Merged 3527 presents runtime status without retracting evidence; merged 3529 preserves already governed Focus withdrawal history; neither supplies this binding-level invalidation event."
+    },
+    {
+      "gate": "diff_and_typescript_syntax",
+      "outcome": "PASS",
+      "reason": "git diff --check passes and Node built-in TypeScript syntax checks accept both changed TypeScript files."
+    },
+    {
+      "gate": "explorer_focused_unit_tests",
+      "outcome": "SKIPPED",
+      "reason": "Vitest is absent locally. Offline pnpm installation reached the locked dependency graph but the pinned Vitest tarball was not cached; exact-head hosted ui-build remains required."
+    },
+    {
+      "gate": "explorer_build",
+      "outcome": "SKIPPED",
+      "reason": "The local Node version is 24.19.0 while the repository declares Node >=22.13 <23, and the locked TypeScript/Vite dependencies are absent. The hosted pinned Node 22 build is required."
+    },
+    {
+      "gate": "explorer_static_boundary",
+      "outcome": "PASS",
+      "reason": "Both Explorer boundary checks pass: no raw renderer import and no canonical or internal data-store path literal."
+    },
+    {
+      "gate": "maplibre_acquisition_inventory",
+      "outcome": "PASS",
+      "reason": "All eight dependency-free acquisition-inventory unit tests pass; this slice admits no renderer dependency or parallel acquisition path."
+    },
+    {
+      "gate": "repository_guardrails",
+      "outcome": "PASS",
+      "reason": "Validator registry and workflow security pass on baseline and branch. Repository topology passes with 14,034 tracked paths on the final refreshed baseline and 14,035 on the branch; each retains 131 baselined warnings with zero invariant, new-drift, or stale findings."
+    },
+    {
+      "gate": "schema_orchestrator",
+      "outcome": "FAIL",
+      "reason": "The command rejects the same nine validator IDs on untouched baseline and branch because local Python lacks jsonschema. Traceback hashes differ only because the detached baseline and branch use different absolute checkout paths; direct inspection confirms the same ModuleNotFoundError failure class, so this is inherited environment failure rather than a branch regression."
+    },
+    {
+      "gate": "generated_receipt_schema_validator",
+      "outcome": "SKIPPED",
+      "reason": "The local generated-receipt validator also requires the unavailable locked jsonschema dependency; JSON parsing and artifact hash recomputation pass, and hosted validator-suite remains required."
+    },
+    {
+      "gate": "hosted_exact_pr_head_checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks run only after the draft pull-request head is published."
+    },
+    {
+      "gate": "accountable_human_review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and cannot be inferred from CODEOWNERS, a receipt, a workflow, or a pull request."
+    },
+    {
+      "gate": "artifact_sha256_integrity",
+      "outcome": "PASS",
+      "reason": "All three AI-authored artifacts are bound to their final local SHA-256 values; this receipt does not bind itself."
+    }
+  ],
+  "policy_decisions": [
+    "kfm://adr/ADR-0006",
+    "kfm://adr/ADR-0029"
+  ],
+  "citations": [
+    {
+      "id": "KFM-MAPLIBRE-ROLLBACK-CORRECTION",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf#page=20"
+    },
+    {
+      "id": "KFM-GREENFIELD-CORRECTION-PROPAGATION",
+      "validated": true,
+      "evidence_ref": "gdrive:KFM Greenfield Commissioning Plan v2#20.1"
+    },
+    {
+      "id": "KFM-ADR-0006",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md@8c943018a0cd59b06b5a623e15b9a9068a3513f4"
+    },
+    {
+      "id": "KFM-ADR-0029",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@8c943018a0cd59b06b5a623e15b9a9068a3513f4"
+    },
+    {
+      "id": "KFM-M33",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix#3397"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-24T21:06:21Z",
+  "emitter": "OpenAI Codex Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md",
+    "drift_register_entry": null
+  },
+  "notes": "This Explorer slice changes the private binding consumer surface from resolution-only delivery to discriminated resolution or invalidation updates. Invalidation contains only the active selection ID and exact renderer-neutral runtime state/reason; it contains no EvidenceRef, governed payload, raw renderer value, geometry, policy decision, correction action, model output, or source data. Before merge, rollback is closing the draft PR and abandoning its branch. After an authorized merge, revert this dependency-closed commit and generated receipt; no source, data, cache, release, deployment, or publication state requires restoration."
+}

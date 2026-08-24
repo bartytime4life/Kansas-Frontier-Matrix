@@ -160,11 +160,14 @@ describe("MapRuntimePort to governed Evidence Drawer binding", () => {
 
     await vi.waitFor(() => expect(consume).toHaveBeenCalledTimes(1));
     expect(consume.mock.calls[0]?.[0]).toMatchObject({
-      layerAdmission: { outcome: "PASS" },
-      evidence: {
-        selection,
-        code: "SUPPORTED",
-        drawer: { outcome: "ANSWER" },
+      kind: "EVIDENCE_RESOLVED",
+      resolution: {
+        layerAdmission: { outcome: "PASS" },
+        evidence: {
+          selection,
+          code: "SUPPORTED",
+          drawer: { outcome: "ANSWER" },
+        },
       },
     });
 
@@ -195,9 +198,12 @@ describe("MapRuntimePort to governed Evidence Drawer binding", () => {
     runtime.emitSelection({ ...selection, selectionId: "selection:newest" });
 
     await vi.waitFor(() => expect(consume).toHaveBeenCalledTimes(1));
-    expect(consume.mock.calls[0]?.[0].evidence.selection?.selectionId).toBe(
-      "selection:newest",
-    );
+    expect(consume.mock.calls[0]?.[0]).toMatchObject({
+      kind: "EVIDENCE_RESOLVED",
+      resolution: {
+        evidence: { selection: { selectionId: "selection:newest" } },
+      },
+    });
 
     releaseSlow?.(answerFixture);
     await settle();
@@ -232,11 +238,84 @@ describe("MapRuntimePort to governed Evidence Drawer binding", () => {
     await settle();
 
     expect(resolver).toHaveBeenCalledTimes(1);
-    expect(consume).not.toHaveBeenCalled();
+    expect(consume).toHaveBeenCalledTimes(1);
+    expect(consume.mock.calls[0]?.[0]).toEqual({
+      kind: "RUNTIME_INVALIDATED",
+      selectionId: selection.selectionId,
+      runtimeState: "WITHDRAWN",
+      runtimeReason: "MAP_RUNTIME_WITHDRAWN",
+    });
     expect(runtime.getSnapshot()).toMatchObject({
       state: "WITHDRAWN",
       reason: "MAP_RUNTIME_WITHDRAWN",
       selection: null,
+    });
+
+    binding.destroy();
+  });
+
+  it.each([
+    ["STALE", "MAP_RUNTIME_STALE"],
+    ["ABSTAINED", "MAP_RUNTIME_ABSTAINED"],
+    ["DENIED", "MAP_RUNTIME_DENIED"],
+    ["CONFLICT", "MAP_RUNTIME_CONFLICT"],
+    ["DEGRADED", "MAP_RUNTIME_DEGRADED"],
+    ["WITHDRAWN", "MAP_RUNTIME_WITHDRAWN"],
+    ["ROLLED_BACK", "MAP_RUNTIME_ROLLED_BACK"],
+    ["ERROR", "MAP_RUNTIME_ERROR"],
+  ] as const)(
+    "retracts delivered evidence without synthesizing a Drawer result for %s",
+    async (runtimeState, runtimeReason) => {
+      const runtime = createNullMapRuntime();
+      await runtime.initialize();
+      const consume = vi.fn();
+      const binding = bindMapRuntimeEvidence(
+        runtime,
+        admittedLayerManifest,
+        async () => answerFixture,
+        consume,
+      );
+
+      runtime.emitSelection(selection);
+      await vi.waitFor(() => expect(consume).toHaveBeenCalledTimes(1));
+      runtime.emitTrustState(runtimeState);
+
+      expect(consume).toHaveBeenCalledTimes(2);
+      expect(consume.mock.calls[1]?.[0]).toEqual({
+        kind: "RUNTIME_INVALIDATED",
+        selectionId: selection.selectionId,
+        runtimeState,
+        runtimeReason,
+      });
+      expect(JSON.stringify(consume.mock.calls[1]?.[0])).not.toContain(
+        selection.evidenceRefs[0],
+      );
+      expect(consume.mock.calls[1]?.[0]).not.toHaveProperty("resolution");
+
+      binding.destroy();
+    },
+  );
+
+  it("invalidates delivered evidence when the runtime is disposed", async () => {
+    const runtime = createNullMapRuntime();
+    await runtime.initialize();
+    const consume = vi.fn();
+    const binding = bindMapRuntimeEvidence(
+      runtime,
+      admittedLayerManifest,
+      async () => answerFixture,
+      consume,
+    );
+
+    runtime.emitSelection(selection);
+    await vi.waitFor(() => expect(consume).toHaveBeenCalledTimes(1));
+    runtime.dispose();
+
+    expect(consume.mock.calls[1]?.[0]).toEqual({
+      kind: "RUNTIME_INVALIDATED",
+      selectionId: selection.selectionId,
+      runtimeState: "DISPOSED",
+      runtimeReason: "MAP_RUNTIME_DISPOSED",
     });
 
     binding.destroy();
