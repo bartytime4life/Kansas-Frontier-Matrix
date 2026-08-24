@@ -1,4 +1,5 @@
 import abstainFixture from "../../../../fixtures/ui/focus_composed_claim_projection/valid/abstain-unresolved.json";
+import withdrawnFixture from "../../../../fixtures/ui/focus_composed_claim_projection/valid/abstain-withdrawn.json";
 import qualifiedFixture from "../../../../fixtures/ui/focus_composed_claim_projection/valid/answer-qualified.json";
 import supportedFixture from "../../../../fixtures/ui/focus_composed_claim_projection/valid/answer-supported.json";
 import denyFixture from "../../../../fixtures/ui/focus_composed_claim_projection/valid/deny-policy.json";
@@ -57,6 +58,19 @@ const cases: readonly FocusComposedClaimFixtureCase[] = Object.freeze([
     },
   },
   {
+    caseId: "withdrawn",
+    label: "Ask withdrawn composed claim",
+    request: {
+      profile: FOCUS_COMPOSED_CLAIM_REQUEST_PROFILE,
+      request_id: "request:focus:withdrawn-evidence-001",
+      claim_id: "claim:synthetic:withdrawn-evidence-001",
+      question: "Can the withdrawn synthetic summary still support this claim?",
+      allowed_evidence_refs: [
+        "kfm:evidence:synthetic:withdrawn-soil-summary-001",
+      ],
+    },
+  },
+  {
     caseId: "scope-mismatch",
     label: "Ask composed claim outside evidence scope",
     request: {
@@ -92,6 +106,8 @@ mountFocusComposedClaimFixture(root, cases, async (request) => {
       return abstainFixture;
     case "request:focus:soil-context-deny-001":
       return denyFixture;
+    case "request:focus:withdrawn-evidence-001":
+      return withdrawnFixture;
     case "request:focus:resolver-error-001":
       throw new Error("PRIVATE_BROWSER_FOCUS_RESOLVER_CANARY_c74bd9");
     default:

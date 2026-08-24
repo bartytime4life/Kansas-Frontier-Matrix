@@ -1,0 +1,186 @@
+{
+  "receipt_id": "genrec-focus-withdrawn-history-20260824",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/features/focus_panel/COMPOSED_CLAIM_FIXTURE.md",
+    "apps/explorer-web/src/features/focus_panel/parsers.ts",
+    "apps/explorer-web/tests/browser/focus-composed-claim.fixture.ts",
+    "apps/explorer-web/tests/browser/focus-composed-claim.spec.ts",
+    "apps/explorer-web/tests/focus-composed-claim.test.ts",
+    "fixtures/ui/focus_composed_claim_projection/README.md",
+    "fixtures/ui/focus_composed_claim_projection/valid/abstain-withdrawn.json"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/features/focus_panel/COMPOSED_CLAIM_FIXTURE.md": "sha256:3bcd4edf3ef25c74d4c7639f4ebb8c92d413913db7fc68a4dbd82946a2c7193e",
+    "apps/explorer-web/src/features/focus_panel/parsers.ts": "sha256:75fa71b1df03356d9e900a43bb978604ae76795c261732988d1128891a75d668",
+    "apps/explorer-web/tests/browser/focus-composed-claim.fixture.ts": "sha256:23625e4f05c9d31126b8b46bfdacb1e4fe0232e6a50549c86b58f85c0e9aeb46",
+    "apps/explorer-web/tests/browser/focus-composed-claim.spec.ts": "sha256:61f65d5ecf220a4fce82169467c8f232bc3c581b76fb0c8c70a88b2cdbfa4eda",
+    "apps/explorer-web/tests/focus-composed-claim.test.ts": "sha256:6013dd953f9e09dcf709d966e8e0ab35e64d1a37cb0835741af0b9b402791932",
+    "fixtures/ui/focus_composed_claim_projection/README.md": "sha256:f5f1091617936ca81dec57be7bb3d08e877f34a80d07e0ff8866bf6eb4cd721b",
+    "fixtures/ui/focus_composed_claim_projection/valid/abstain-withdrawn.json": "sha256:d13da3875931d0f0d0e75154a8a72bda909a47a38150fe0abc8cbee22298c2f3"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5-session-2026-08-24"
+  },
+  "prompt_or_contract": "sha256:db8b9ceee470b543d01181aed136c599d4506f98aa8e6643b987a61401f8241e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "read-only local source inspection",
+      "local Git evidence inspection",
+      "no-network repository validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:77f56ec1ab632b76c7728cfb250330271b7dc8948db95c8c0594c92ad9ca6b36",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:060b20d6e28197faa8a9034ccb5a29b63621f73ebdeea1d2d77d31b23c2149e0",
+      "sha256:f23e57e1eaea16eebbdcfd4a84c7daa170dbd8ac9123becffc88fea9ea9af9d6"
+    ],
+    "attached_docs": [
+      "KFM MapLibre Operating Architecture, Governed UI, and AI Interaction Manual - Revised Working Edition",
+      "KFM Greenfield Commissioning Plan v2"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf#page=13",
+      "attachment:KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf#page=20",
+      "gdrive:KFM Greenfield Commissioning Plan v2#22.2",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@91c90744753fdb81c1e6a11ae1a6f826dce267fa",
+      "repo:docs/doctrine/directory-rules.md@91c90744753fdb81c1e6a11ae1a6f826dce267fa#7.2",
+      "repo:docs/doctrine/corrections-first-class.md@91c90744753fdb81c1e6a11ae1a6f826dce267fa#correction-and-rollback-flow",
+      "repo:apps/explorer-web/src/features/focus_panel/parsers.ts@91c90744753fdb81c1e6a11ae1a6f826dce267fa",
+      "repo:fixtures/ui/focus_composed_claim_projection/README.md@91c90744753fdb81c1e6a11ae1a6f826dce267fa",
+      "github:bartytime4life/Kansas-Frontier-Matrix#3397",
+      "github:bartytime4life/Kansas-Frontier-Matrix#3527",
+      "github:bartytime4life/Kansas-Frontier-Matrix#3528"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/features/focus_panel/COMPOSED_CLAIM_FIXTURE.md": "PROPOSED",
+    "apps/explorer-web/src/features/focus_panel/parsers.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/focus-composed-claim.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/focus-composed-claim.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/focus-composed-claim.test.ts": "PROPOSED",
+    "fixtures/ui/focus_composed_claim_projection/README.md": "PROPOSED",
+    "fixtures/ui/focus_composed_claim_projection/valid/abstain-withdrawn.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source_reconciliation_and_non_authority_boundary",
+      "outcome": "PASS",
+      "reason": "The bounded gap is traced to pages 13 and 20 of the inspected MapLibre manual, Drive commissioning-plan section 22.2, current correction doctrine, and issue 3397. The slice preserves an existing public-safe projection and creates no contract enum, source, policy decision, correction notice, rollback card, release, or publication authority."
+    },
+    {
+      "gate": "authority_ownership_and_overlap_reconciliation",
+      "outcome": "PASS",
+      "reason": "Current main, accepted ADR-0029, Directory Rules, adjacent Explorer and fixture READMEs, issue 3397, recent merged pull requests 3522, 3523, 3527, and 3528, and the open pull-request queue were inspected. Merged pull request 3527 adds a renderer-neutral runtime status presenter under map_runtime and expressly does not synthesize an Evidence Drawer projection; merged pull request 3528 changes only CONTRIBUTING.md. Neither shares a path or Focus withdrawn-history behavior with this slice. Open pull request 3511 concerns Atmosphere documentation."
+    },
+    {
+      "gate": "fixture_json_and_diff",
+      "outcome": "PASS",
+      "reason": "The new fixture parses as JSON, authored artifact hashes bind to final bytes, and git diff --check passes."
+    },
+    {
+      "gate": "explorer_unit_and_browser_tests",
+      "outcome": "SKIPPED",
+      "reason": "Baseline and branch local execution are blocked because node_modules is absent and this runtime cannot perform package-registry installation. Existing ui-build hosted checks are expected to run against the exact draft head after publication."
+    },
+    {
+      "gate": "explorer_build",
+      "outcome": "SKIPPED",
+      "reason": "Local TypeScript and Vite dependencies are absent on both baseline and branch; exact-head hosted ui-build remains required evidence."
+    },
+    {
+      "gate": "explorer_static_syntax_and_boundary",
+      "outcome": "PASS",
+      "reason": "Node syntax checks accept all changed TypeScript files, and both Explorer boundary checks pass: no raw renderer import and no canonical or internal data-store path literal."
+    },
+    {
+      "gate": "workflow_security",
+      "outcome": "PASS",
+      "reason": "The untouched baseline passes 19 workflow-security tests and scans 478 workflows with zero findings; this slice changes no workflow."
+    },
+    {
+      "gate": "validator_registry",
+      "outcome": "PASS",
+      "reason": "The untouched baseline validator registry is valid with 23 registered validators; this slice changes no registry."
+    },
+    {
+      "gate": "repository_topology",
+      "outcome": "PASS",
+      "reason": "The untouched baseline and tracked branch both report 131 inherited warnings, zero invariant or new-drift findings, and zero stale fingerprints; the branch adds only the declared fixture and generated receipt paths."
+    },
+    {
+      "gate": "generated_receipt_schema_validator",
+      "outcome": "PASS",
+      "reason": "The no-network generated-receipt validator accepts this candidate with seven locally bound artifacts, pending human review, and no review claim; all 28 focused validator tests pass."
+    },
+    {
+      "gate": "hosted_exact_pr_head_checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks run only after the draft pull-request head is published."
+    },
+    {
+      "gate": "accountable_human_review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and cannot be inferred from CODEOWNERS, a receipt, a workflow, or a pull request."
+    },
+    {
+      "gate": "artifact_sha256_integrity",
+      "outcome": "PASS",
+      "reason": "All seven AI-authored artifacts are bound to their final local SHA-256 values; this receipt does not bind itself."
+    }
+  ],
+  "policy_decisions": [
+    "kfm://adr/ADR-0029"
+  ],
+  "citations": [
+    {
+      "id": "KFM-MAPLIBRE-THIN-SLICE",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf#page=13"
+    },
+    {
+      "id": "KFM-MAPLIBRE-ROLLBACK-CORRECTION",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf#page=20"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES-V2",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@91c90744753fdb81c1e6a11ae1a6f826dce267fa#7.2"
+    },
+    {
+      "id": "KFM-ADR-0029",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@91c90744753fdb81c1e6a11ae1a6f826dce267fa"
+    },
+    {
+      "id": "KFM-CORRECTIONS-FIRST-CLASS",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/corrections-first-class.md@91c90744753fdb81c1e6a11ae1a6f826dce267fa#correction-and-rollback-flow"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-24T20:50:38Z",
+  "emitter": "OpenAI Codex Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "This fixture-only Explorer slice retains normalized public-safe withdrawal history when Focus sanitizes a negative Evidence Drawer handoff. It keeps fixed no-leak negative copy, no active evidence or citations, and no source, transport, model, policy execution, correction, rollback execution, review, release, deployment, promotion, publication, access, or repository-setting effect. Before merge, rollback is closing the draft PR and abandoning its branch; after an authorized merge, revert this dependency-closed packet and its generated receipt, then rerun Explorer and repository guardrails."
+}
