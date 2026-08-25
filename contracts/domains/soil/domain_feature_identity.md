@@ -2,8 +2,8 @@
 doc_id: kfm://doc/contracts-domains-soil-domain-feature-identity
 title: Domain Feature Identity Contract — Soil
 type: semantic-contract
-version: v0.2
-status: draft; PROPOSED; schema-stub-confirmed; canonical-working-lane; support-type-separation-required; schema-home-variance-noted; NEEDS VERIFICATION before promotion
+version: v0.3.0
+status: draft; PROPOSED_INACTIVE candidate profile implemented; support-type-separation-required; non-canonical; non-publisher
 owners:
   - OWNER_TBD — Soil domain steward
   - OWNER_TBD — Contracts steward
@@ -13,9 +13,12 @@ owners:
   - OWNER_TBD — Policy steward
   - OWNER_TBD — Release steward
   - OWNER_TBD — Docs steward
-created: NEEDS VERIFICATION — scaffold existed before v0.2 expansion
-updated: 2026-06-23
-policy_label: public; contracts; soil; domain-feature-identity; identity-envelope; deterministic-identity; source-role-aware; support-type-separation; temporal-scope-aware; evidence-bound; schema-stub; release-gated; rollback-aware; not-source-truth; not-schema-authority; not-etl-code; not-publication-authority
+created: 2026-06-23
+updated: 2026-08-24
+policy_label: public; contracts; soil; domain-feature-identity; deterministic-candidate; source-role-aware; support-type-separation; temporal-scope-aware; evidence-bound; fixture-first; release-gated; rollback-aware; not-source-truth; not-canonical-authority; not-etl-code; not-publication-authority
+owning_root: contracts/
+responsibility: Semantic meaning and authority limits for the Soil DomainFeatureIdentity candidate profile
+truth_posture: CONFIRMED closed PROPOSED_INACTIVE schema, deterministic validator, synthetic fixture matrix, and focused tests; NEEDS VERIFICATION canonical adoption, broader coverage, runtime integration, release, and publication
 tags: [kfm, contracts, soil, domain-feature-identity, SoilMapUnit, SoilComponent, Horizon, ComponentHorizonJoin, SoilProperty, HydrologicSoilGroup, SoilMoistureObservation, Pedon, SoilProfileView, ErosionRisk, SuitabilityRating, SoilTimeCaveat, SSURGO, SDA, gSSURGO, gNATSGO, Mesonet, SCAN, USCRN, SMAP, SourceDescriptor, EvidenceRef, EvidenceBundle, PolicyDecision, ReviewRecord, ReleaseManifest, RollbackCard]
 related:
   - ./README.md
@@ -39,16 +42,19 @@ related:
   - ../../../pipelines/domains/soil/README.md
   - ../../../schemas/contracts/v1/domains/soil/domain_feature_identity.schema.json
   - ../../../schemas/contracts/v1/domains/soil/README.md
+  - ../../../tools/validators/domains/soil/validate_domain_feature_identity.py
   - ../../../policy/domains/soil/README.md
   - ../../../fixtures/domains/soil/domain_feature_identity/
-  - ../../../tests/domains/soil/
+  - ../../../tests/validators/domains/soil/test_domain_feature_identity.py
   - ../../../release/candidates/soil/
 notes:
   - "Expanded from a greenfield scaffold at contracts/domains/soil/domain_feature_identity.md."
-  - "A paired schema exists at schemas/contracts/v1/domains/soil/domain_feature_identity.schema.json, but it is a permissive stub with id/version/spec_hash only and additionalProperties true. Field realization remains PROPOSED."
+  - "The `created` date records the v0.2 semantic-contract expansion; the earlier scaffold's creation date remains unestablished."
+  - "Repository status reconciled at main@362d6590b9516596ad1c34a64781c13bf85d52c8."
+  - "The paired schema is now a closed PROPOSED_INACTIVE fixture-first candidate with a deterministic validator, five synthetic cases, and five focused tests."
   - "Soil architecture proposes the identity rule `source id + object role + temporal scope + normalized digest` across Soil object families. This contract gives that rule semantic meaning for the Soil lane."
   - "Support-type separation remains mandatory: static survey, gridded derivative, station observation, satellite grid, pedon/profile evidence, and interpretation cannot be collapsed by identity logic."
-  - "This contract defines identity-envelope meaning only; it does not implement schema validation, ETL joins, source activation, public API behavior, release approval, or map rendering."
+  - "The implemented profile validates only bounded synthetic candidates; it does not create canonical identity, execute ETL joins, activate a source, resolve evidence, approve public API behavior, release, publish, or render a map."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -62,7 +68,7 @@ notes:
   <img alt="Root: contracts" src="https://img.shields.io/badge/root-contracts%2F-0a7ea4">
   <img alt="Domain: soil" src="https://img.shields.io/badge/domain-soil-8B4513">
   <img alt="Object: domain feature identity" src="https://img.shields.io/badge/object-domain__feature__identity-purple">
-  <img alt="Schema: stub confirmed" src="https://img.shields.io/badge/schema-stub__confirmed-orange">
+  <img alt="Schema: bounded inactive candidate" src="https://img.shields.io/badge/schema-bounded__inactive__candidate-orange">
   <img alt="Support type: separate" src="https://img.shields.io/badge/support--type-separate-critical">
   <img alt="Publication: release gated" src="https://img.shields.io/badge/publication-release--gated-orange">
 </p>
@@ -81,8 +87,9 @@ notes:
 > **Status:** `draft` / semantic contract  
 > **Owner:** `OWNER_TBD`  
 > **Contract path:** `contracts/domains/soil/domain_feature_identity.md`  
-> **Schema path checked:** `schemas/contracts/v1/domains/soil/domain_feature_identity.schema.json` — **confirmed stub only**  
-> **Truth posture:** target path, prior scaffold, paired schema stub, Soil contract-lane README, Soil architecture, Soil API posture, Soil lifecycle inventory, and Soil pipeline README are confirmed from current repo evidence. Field-level shape beyond `id`, `version`, and `spec_hash`, schema enforcement, validators, fixtures, policy tests, ETL behavior, source registry records, release manifests, governed API routes, public API behavior, map rendering, graph behavior, and runtime behavior remain **NEEDS VERIFICATION**.
+> **Schema path checked:** `schemas/contracts/v1/domains/soil/domain_feature_identity.schema.json` — **closed `PROPOSED_INACTIVE` fixture-first candidate**
+> **Executable path checked:** `tools/validators/domains/soil/validate_domain_feature_identity.py` with five synthetic cases and five focused tests
+> **Truth posture:** the bounded candidate shape, deterministic hash/ID rule, support-role matrix, finite outcomes, and denial of public/effect overclaims are confirmed from current repository evidence. Canonical adoption, complete object/support-family coverage, source admission, policy integration, runtime API/UI behavior, release, publication, correction propagation, and rollback invalidation remain **NEEDS VERIFICATION**.
 
 > [!CAUTION]
 > This contract defines identity meaning only. It does **not** validate JSON, execute source ingestion, decide source activation, publish a layer, prove a soil property, or authorize an AI answer.
@@ -124,13 +131,14 @@ This contract makes that rule inspectable. It states what must be preserved when
 |---|---|---|
 | Contract lane | `contracts/domains/soil/domain_feature_identity.md` | This semantic identity contract. |
 | Soil contract README | `contracts/domains/soil/README.md` | Defines `contracts/domains/soil/` as meaning-only and lists Soil object-family contract candidates. |
-| Paired schema stub | `schemas/contracts/v1/domains/soil/domain_feature_identity.schema.json` | Confirms a stub exists, but only `id`, `version`, `spec_hash`, and `additionalProperties: true` are enforced. |
+| Paired candidate schema | `schemas/contracts/v1/domains/soil/domain_feature_identity.schema.json` | Closed `PROPOSED_INACTIVE` candidate shape; fixes public use and all authority effects to `false`. |
+| Candidate validator | `tools/validators/domains/soil/validate_domain_feature_identity.py` | Deterministic hash/ID, source identity, temporal scope, canonical arrays, and support-role checks with `PASS`, `DENY`, and `ERROR`. |
 | Soil architecture | `docs/domains/soil/ARCHITECTURE.md` | Defines object families, identity rule, source families, support-type separation, lifecycle, and cross-lane boundaries. |
 | Soil API posture | `docs/domains/soil/API_CONTRACTS.md` | Defines governed API posture, finite outcomes, public trust membrane, and support-type separation. |
 | Soil lifecycle inventory | `docs/domains/soil/DATA_LIFECYCLE.md` | Lists owned Soil object families, source families, lifecycle posture, and sensitivity defaults. |
 | Soil pipeline lane | `pipelines/domains/soil/README.md` | Describes executable pipeline scope and clarifies pipelines own the how, not object meaning or release approval. |
 | Policy | `policy/domains/soil/` | Allow/deny/restrict/abstain, rights, sensitivity, and release gating. |
-| Tests / fixtures | `tests/domains/soil/`, `fixtures/domains/soil/domain_feature_identity/` | Expected proof surfaces; maturity not verified here. |
+| Tests / fixtures | `tests/validators/domains/soil/test_domain_feature_identity.py`, `fixtures/domains/soil/domain_feature_identity/cases.json` | Five focused tests and five synthetic cases prove the bounded candidate matrix. |
 | Release / rollback | `release/candidates/soil/` and release roots | Publication, correction, and rollback authority. |
 
 ---
@@ -143,15 +151,22 @@ A paired schema exists at:
 schemas/contracts/v1/domains/soil/domain_feature_identity.schema.json
 ```
 
-The confirmed schema is a **greenfield stub**. It defines:
+The confirmed schema is a closed, fixture-first candidate profile. It defines:
 
-- `id` as required;
-- optional `version`;
-- optional `spec_hash`;
-- `additionalProperties: true`.
+- profile `kfm.domains.soil.domain-feature-identity.v1`;
+- status `PROPOSED_INACTIVE` and version `1.0.0`;
+- deterministic `id` and full SHA-256 `spec_hash` shapes;
+- object family, object role, support type, source identity, temporal scope,
+  evidence references, match status, and limitations;
+- `additionalProperties: false` and `public_use_allowed: false`; and
+- canonical-identity, evidence, policy, review, release, and publication effects
+  fixed to `false`.
 
 > [!WARNING]
-> Because the paired schema is only a permissive stub, every field below beyond `id`, `version`, and `spec_hash` is **PROPOSED** semantic guidance. Do not treat it as machine-enforced until schema, fixtures, validators, policy tests, release checks, governed API behavior, and runtime behavior are verified.
+> The schema and validator prove only the bounded `PROPOSED_INACTIVE` candidate
+> profile. Enumerated fields are machine-checked for that profile, but this does
+> not make the profile canonical, complete across every Soil object/support
+> family, active, released, public, or suitable as a runtime API contract.
 
 ---
 
@@ -189,13 +204,15 @@ The confirmed schema is a **greenfield stub**. It defines:
 
 ## Recommended fields
 
-The following fields are **PROPOSED** until the paired schema is expanded and validated.
+The following fields carry semantic meaning in this contract. The current
+candidate schema enforces the bounded subset described below; broader lifecycle
+and runtime bindings remain proposed.
 
 | Field | Meaning |
 |---|---|
-| `id` | Canonical identity record identifier. Confirmed required by schema stub. |
-| `version` | Contract/object version. Confirmed optional by schema stub. |
-| `spec_hash` | Deterministic hash over normalized identity content. Confirmed optional by schema stub. |
+| `id` | Deterministic candidate identifier derived from the first 24 hex characters of the candidate digest; not canonical authority. |
+| `version` | Candidate-profile version, fixed to `1.0.0` in the current schema. |
+| `spec_hash` | Full SHA-256 over sorted compact candidate JSON after removing `id` and `spec_hash`. |
 | `domain` | Expected value: `soil`. |
 | `object_family` | SoilMapUnit, SoilComponent, Horizon, ComponentHorizonJoin, SoilProperty, HydrologicSoilGroup, SoilMoistureObservation, Pedon, SoilProfileView, ErosionRisk, SuitabilityRating, or SoilTimeCaveat. |
 | `object_role` | Role in the soil lane: survey carrier, component, vertical layer, lineage join, property, classification, observation, profile, interpretation, temporal caveat, etc. |
@@ -246,7 +263,9 @@ domain_feature_identity = {
 }
 ```
 
-The exact serialized shape is **NEEDS VERIFICATION** until the schema and validators are field-complete.
+The exact `PROPOSED_INACTIVE` candidate shape is implemented by the paired schema
+and validator. A canonical or public serialized identity shape remains **NEEDS
+VERIFICATION**.
 
 ---
 
@@ -325,7 +344,7 @@ flowchart LR
   REL --> PUB["governed API / map / Evidence Drawer / Focus Mode"]
 
   CONTRACT["contracts/domains/soil/domain_feature_identity.md\nmeaning only"] -. guides .-> ID
-  SCHEMA["schemas/contracts/v1/domains/soil/domain_feature_identity.schema.json\nstub now; shape later"] -. validates .-> PROC
+  SCHEMA["schemas/contracts/v1/domains/soil/domain_feature_identity.schema.json\nbounded inactive candidate"] -. validates .-> PROC
   POLICY["policy/domains/soil/\nallow/deny/restrict/abstain"] -. gates .-> REVIEW
 ```
 
@@ -335,12 +354,17 @@ flowchart LR
 
 Before this contract is treated as mature, maintainers should verify:
 
-- [ ] paired schema expands beyond the current permissive stub or an ADR declares a different identity-shape home;
-- [ ] schema includes object family, object role, support type, source ref, source role, native key family, temporal scope, normalized digest, match status, evidence refs, policy/review/release/rollback refs, and limitations;
-- [ ] fixtures cover all Soil object families, support types, native key families, candidate/confirmed/conflicted/superseded identity, stale source vintage, and correction lineage;
-- [ ] tests prevent support-type collapse;
-- [ ] tests prevent identity from becoming object payload truth, source truth, release approval, or AI authority;
-- [ ] tests enforce ABSTAIN/DENY/ERROR when evidence, source role, support type, time scope, policy, or release state is unresolved;
+- [x] paired schema is closed and fixes the candidate profile to `PROPOSED_INACTIVE`;
+- [x] schema includes object family, object role, support type, source identity,
+  temporal scope, evidence refs, match status, limitations, public-use denial, and
+  explicit false authority effects;
+- [x] focused fixtures/tests prove one valid candidate plus support-role, public,
+  effect, and hash fail-closed cases;
+- [ ] fixtures cover all Soil object families, support types, native key families,
+  candidate/confirmed/conflicted/superseded identity, stale source vintage, and
+  correction lineage;
+- [ ] policy, review, release, API/UI, correction, revocation, and rollback
+  integration is implemented and independently proved;
 - [ ] public map, Evidence Drawer, Focus Mode, exports, and AI summaries use only released/governed identity projections;
 - [ ] rollback invalidates linked processed records, catalog/triplet refs, layers, drawer payloads, exports, caches, graph projections, and AI summaries that cited a withdrawn identity.
 
@@ -366,7 +390,9 @@ Rollback target: revert `contracts/domains/soil/domain_feature_identity.md` to p
 | Evidence | Status | Supports | Limits |
 |---|---|---|---|
 | Prior `contracts/domains/soil/domain_feature_identity.md` | `CONFIRMED` | Target file existed as a greenfield scaffold. | Scaffold did not define authoritative semantic contract content. |
-| `schemas/contracts/v1/domains/soil/domain_feature_identity.schema.json` | `CONFIRMED schema stub` | Confirms schema path, required `id`, optional `version` and `spec_hash`, and permissive `additionalProperties`. | Does not enforce proposed identity fields. |
+| `schemas/contracts/v1/domains/soil/domain_feature_identity.schema.json` | `CONFIRMED bounded candidate schema` | Closed `PROPOSED_INACTIVE` shape, required identity/source/evidence fields, public-use denial, and false authority effects. | Does not establish canonical adoption, active use, release, or publication. |
+| `tools/validators/domains/soil/validate_domain_feature_identity.py` | `CONFIRMED executable` | Deterministic candidate digest/ID, support-role separation, source/temporal/canonical-array checks, and finite outcomes. | Local candidate evaluation only; no source, evidence, policy, review, release, or publication effect. |
+| `fixtures/domains/soil/domain_feature_identity/cases.json` and focused test | `CONFIRMED synthetic proof` | One valid case plus denial/error polarity for role collapse, authority overclaim, and hash mismatch. | Does not cover all enumerated object/support families or runtime consumers. |
 | `contracts/domains/soil/README.md` | `CONFIRMED contract-lane rule` | Defines this folder as semantic meaning only and lists Soil object-family contract candidates. | Does not prove object schema, validator, or release maturity. |
 | `docs/domains/soil/ARCHITECTURE.md` | `CONFIRMED doctrine / PROPOSED field realization` | Defines Soil object families, identity rule, source families, support-type separation, cross-lane limits, and lifecycle posture. | Does not prove implementation. |
 | `docs/domains/soil/API_CONTRACTS.md` | `CONFIRMED doctrine / PROPOSED implementation` | Defines governed Soil API posture, finite outcomes, trust membrane, and support-type separation. | Route names and runtime behavior remain UNKNOWN / NEEDS VERIFICATION. |
