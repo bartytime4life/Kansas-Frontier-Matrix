@@ -18,6 +18,8 @@ This no-network slice implements the first enforceable portion of MapLibre atlas
 
 The cache key binds release identity, PMTiles artifact digest, and policy digest. An old archive cannot be reused merely because its URL or layer ID matches.
 
+The fixture vocabulary is closed: `release_id` must be nonempty; `request_mode` accepts only `ONLINE` or `OFFLINE`; `release_state` accepts only `CURRENT` or `WITHDRAWN`; and `required_assets` must contain exactly `GLYPHS`, `PMTILES`, and `SPRITES`. Unknown or incomplete vocabulary returns `ERROR / PMTILES_CACHE_INPUT_INVALID` and cannot render.
+
 ## Boundary
 
 The evaluator plans a future Service Worker decision. It does not call `fetch`, `CacheStorage`, MapLibre, source systems, canonical stores, or publication services. A `PASS` with `PMTILES_CACHE_FETCH_REQUIRED` authorizes no network request; it only identifies what a later governed worker would need to do.
