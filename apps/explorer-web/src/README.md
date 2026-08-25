@@ -239,7 +239,7 @@ find apps/explorer-web/src -maxdepth 6 -type f | sort
 find apps/explorer-web/tests tests/policy fixtures -maxdepth 6 -type f 2>/dev/null | grep -Ei 'explorer|map|layer|evidence|focus|story|compare|export|diagnostic|governed|maplibre' | sort
 pnpm --filter explorer-web build
 pnpm --filter explorer-web test
-python -m unittest tests.policy.test_explorer_web_adapter_boundary --verbose
+python -m pytest -q tests/policy/test_explorer_web_adapter_boundary.py
 ```
 
 ## 12. Validation expectations
