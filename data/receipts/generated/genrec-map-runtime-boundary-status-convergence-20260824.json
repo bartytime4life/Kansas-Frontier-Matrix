@@ -1,0 +1,154 @@
+{
+  "artifact_hashes": {
+    "docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md": "sha256:3eab8b7afffd205fc2a79c2c41cef5ba643e360171ba79e10cb086face68004a",
+    "docs/architecture/ui/README.md": "sha256:5986bee88e9dab303b0f7d2ff3ee821860619f9700cb8ae216b98fbd74d793eb"
+  },
+  "artifact_paths": [
+    "docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md",
+    "docs/architecture/ui/README.md"
+  ],
+  "citations": [
+    {
+      "id": "attached:maplibre-revised-manual",
+      "validated": true,
+      "evidence_ref": "attached:KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf#section-5-printed-and-pdf-page-6"
+    },
+    {
+      "id": "repository:accepted-maplibre-boundary",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md@362d6590b9516596ad1c34a64781c13bf85d52c8"
+    },
+    {
+      "id": "repository:accepted-maplibre-renderer-family",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md@362d6590b9516596ad1c34a64781c13bf85d52c8"
+    },
+    {
+      "id": "repository:map-runtime-port-implementation",
+      "validated": true,
+      "evidence_ref": "repo:packages/maplibre/src/map-runtime-port.ts@362d6590b9516596ad1c34a64781c13bf85d52c8"
+    },
+    {
+      "id": "repository:null-map-runtime-implementation",
+      "validated": true,
+      "evidence_ref": "repo:packages/maplibre/src/null-map-runtime.ts@362d6590b9516596ad1c34a64781c13bf85d52c8"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@362d6590b9516596ad1c34a64781c13bf85d52c8"
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-25T00:48:01Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM MapLibre Operating Architecture, Governed UI, and AI Interaction Manual — Revised Working Edition"
+    ],
+    "evidence_hashes": [
+      "sha256:77f56ec1ab632b76c7728cfb250330271b7dc8948db95c8c0594c92ad9ca6b36"
+    ],
+    "evidence_refs": [
+      "repo:packages/maplibre/package.json@362d6590b9516596ad1c34a64781c13bf85d52c8",
+      "repo:packages/maplibre/src/index.ts@362d6590b9516596ad1c34a64781c13bf85d52c8",
+      "repo:packages/maplibre/src/map-runtime-port.ts@362d6590b9516596ad1c34a64781c13bf85d52c8",
+      "repo:packages/maplibre/src/null-map-runtime.ts@362d6590b9516596ad1c34a64781c13bf85d52c8",
+      "repo:apps/explorer-web/src/site/mount-explorer-site.ts@362d6590b9516596ad1c34a64781c13bf85d52c8",
+      "repo:apps/explorer-web/tests/map-runtime-port.test.ts@362d6590b9516596ad1c34a64781c13bf85d52c8",
+      "repo:apps/explorer-web/tests/map-runtime-evidence-binding.test.ts@362d6590b9516596ad1c34a64781c13bf85d52c8",
+      "repo:apps/explorer-web/tests/map-runtime-trust-status.test.ts@362d6590b9516596ad1c34a64781c13bf85d52c8"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-24"
+  },
+  "notes": "Documentation-only status convergence. The UI landing page and Map Runtime Boundary still described ADR-0006/0007 and MapRuntimePort as proposed after the ADRs were accepted and the dependency-free port, null runtime, Explorer consumers, and focused tests merged. The correction preserves the concrete MapLibreAdapter, renderer dependency, browser readiness, deployment, release, and publication HOLDs. It changes no runtime, dependency, contract, schema, policy, registry, manifest, source, data, lifecycle, release, deployment, or publication behavior and includes no source excerpt or sensitive material.",
+  "override_record": null,
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector repository inspection and draft-PR delivery",
+      "Google Drive read-only source discovery",
+      "local PDF extraction, deterministic hashing, and repository validation"
+    ]
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md",
+    "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "receipt_id": "genrec-map-runtime-boundary-status-convergence-20260824",
+  "truth_labels": {
+    "docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md": "PROPOSED",
+    "docs/architecture/ui/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-current-status-assertions",
+      "outcome": "PASS",
+      "reason": "Deterministic Markdown and link assertions pass, and stale proposal-era runtime claims are absent from the exact branch worktree."
+    },
+    {
+      "gate": "metadata-ratchet",
+      "outcome": "PASS",
+      "reason": "The focused metadata validator retains the exact-base total of 75 warnings with zero failures."
+    },
+    {
+      "gate": "generated-receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 digests bind the final two documentation artifacts."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Both corrected files retain exactly one H1 and balanced fenced-code delimiters; repository-relative links resolve in the checkout."
+    },
+    {
+      "gate": "generated-receipt-schema-validator",
+      "outcome": "PASS",
+      "reason": "The repository generated-receipt validator passes on this receipt."
+    },
+    {
+      "gate": "repository-wide-validation",
+      "outcome": "PASS",
+      "reason": "Exact-base and branch make validate pass in the compatible Python 3.12/jsonschema 4.26.0 environment with 493 tests and 53 subtests; exact-base and branch make repository-guardrails pass."
+    },
+    {
+      "gate": "default-python-environment",
+      "outcome": "SKIPPED",
+      "reason": "The first branch make validate invocation used a Python environment without jsonschema and was non-comparable; the compatible pinned validator environment produced the cited pass."
+    },
+    {
+      "gate": "explorer-unit-tests",
+      "outcome": "SKIPPED",
+      "reason": "An offline dependency installation could not complete in this environment, so no comparable local Explorer test execution is claimed."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation starts after the draft pull request is created."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ]
+}

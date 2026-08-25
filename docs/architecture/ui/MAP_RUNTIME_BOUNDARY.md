@@ -2,43 +2,43 @@
 doc_id: kfm://doc/architecture/ui/map-runtime-boundary
 title: Map Runtime Boundary
 type: architecture-reference
-version: v2.0-draft
+version: v2.1-draft
 status: draft; repository-grounded; mixed-maturity; renderer-neutral-bounded-slices; concrete-runtime-hold; non-publication
 owners:
   - "@bartytime4life — current CODEOWNERS review route"
   - "NEEDS VERIFICATION — independent UI, map-runtime, accessibility, security, policy, evidence, release, correction, and rollback stewardship"
 created: 2026-05-14
-updated: 2026-08-20
+updated: 2026-08-24
 policy_label: public; architecture; ui; map-runtime; trust-membrane; fail-closed; non-publication
 owning_root: docs/
 current_path: docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md
 responsibility: >-
-  Explain the current renderer-neutral map-interaction boundary, reconcile it
-  with repository evidence, define the proposed port and adapter seams without
-  presenting them as implemented, and state the gates that must close before a
-  concrete browser renderer may enter the governed public path.
+  Explain the current renderer-neutral map-interaction boundary, distinguish
+  the implemented dependency-free port and null runtime from the held concrete
+  adapter, and state the gates that must close before a browser renderer may
+  enter the governed public path.
 truth_posture: >-
-  CONFIRMED current tracked path, accepted Directory Rules placement,
-  renderer-neutral feature-selection bridge, fixture-only LayerManifest
-  admission, fixture-only PMTiles cache decisions, governed API abstain
-  scaffolds, dependency-free MapLibre package scaffold, comment-only Explorer
-  adapter, and current tests inspected for this revision / PROPOSED
-  MapRuntimePort, concrete MapLibreAdapter, sole-importer rule, renderer-family
-  selection, dependency admission, runtime transport, camera/time contract, and
-  live layer loading / UNKNOWN deployed renderer, public layer serving,
+  CONFIRMED current tracked path, accepted Directory Rules placement, accepted ADR-0006 package-owned seam and ADR-0007 renderer family, implemented
+  renderer-neutral MapRuntimePort, deterministic NullMapRuntime,
+  finite trust states, Explorer consumers, renderer-neutral feature-selection
+  bridge, fixture-only LayerManifest admission, fixture-only PMTiles cache
+  decisions, governed API abstain scaffolds, dependency-free MapLibre package,
+  comment-only Explorer adapter, and current tests inspected for this revision /
+  PARTIAL dependency-free consumer seam / HOLD concrete MapLibreAdapter,
+  renderer dependency, transport, temporal contract, live layer loading, and authenticated browser proof / UNKNOWN deployed renderer and public layer serving,
   production policy and evidence resolution, operational cache invalidation,
   correction propagation, rollback execution, and public parity / NEEDS
   VERIFICATION independent review and hosted exact-head validation.
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 1162f7fccc902bfd56e2679e0b14f2633b7a9fd9
-  target_prior_blob: baf929fdca617ea95ea4ce5bde4c7b8abd9ac6d5
+  base_commit: 362d6590b9516596ad1c34a64781c13bf85d52c8
+  target_prior_blob: ff4cb66c0571bca7494f698bc585a4569bc95c5c
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
-  adr_0006_blob: 3b789a623a07d27eb538ffaed10b0487ffc43d95
-  adr_0007_blob: 6bfd66b1169728d7fad08f0bb2d7e2a56e3577b2
+  adr_0006_blob: 4bf4292dc05a85fd4cd829c491808b13894bc223
+  adr_0007_blob: 2482eea382fd97e68544bb04bc2e2ea1e1cedebe
   map_master_renderer_boundary_blob: 628872aa58f9f86e31337924025a8590405385b5
   map_selection_bridge_blob: 18d61ea0ef2fbe2fc2f3cc9d42291c101003037f
   click_bridge_readme_blob: de7219fcb58d257d81a6e50c3d060c932c9c35f2
@@ -49,23 +49,23 @@ evidence_snapshot:
   pmtiles_cache_test_blob: 8fc54a7244e112aa352864888e283457afb5d4a6
   explorer_manifest_blob: ddd201b74a06001d84a14bf54ac62a6cc3607a29
   explorer_adapter_blob: 663ba0f7a05498948f67d644387c73ab19d5c16c
-  maplibre_package_manifest_blob: b0582955feeb51016327113692fa5c98ecad8816
-  maplibre_package_entry_blob: 91664eb00583f9e3d0405eb7954fefa9a48f4ee9
+  maplibre_package_manifest_blob: c7e8e57445fcca8f8a7316b54043da0ea43968a6
+  maplibre_package_entry_blob: 08a48ac008665317833a9476b21cd35b1679c595
   governed_api_registry_blob: b0802568879e262a2cd411d8fe3bc4861de15505
   governed_api_bootstrap_blob: 5d42426846069162eb3e68b93687d0bd587d87d0
   governed_api_layers_blob: eaddcc9bfe066aea29178f3973275bd7e0932284
   governed_api_evidence_blob: 866322965d5e6f3d123a3d06cc9ea0e8e82262e7
   governed_api_stub_blob: 371e60d9f96c78e31c8a1e6109d19dee5da4213b
 inspection_boundary: >-
-  Current-session GitHub reads covered the complete prior target, accepted
-  Directory Rules adoption, CODEOWNERS, proposed ADR-0006 and ADR-0007, the
+  Current-session repository and GitHub reads covered the complete prior target,
+  accepted Directory Rules adoption, CODEOWNERS, accepted ADR-0006 and ADR-0007, the
   current map-master renderer boundary, Explorer package metadata, the
   renderer-neutral click bridge and unit test, fixture-only layer admission and
-  PMTiles cache decisions and tests, the dependency-free MapLibre package
-  scaffold, the comment-only Explorer adapter, and governed API route stubs.
-  No mounted checkout, dependency installation, local repository-native test
-  run, authenticated browser probe, deployed runtime, live source, release
-  application, correction propagation, or production rollback was exercised.
+  PMTiles cache decisions and tests, the dependency-free MapLibre package,
+  MapRuntimePort, NullMapRuntime, Explorer consumers and tests, the comment-only adapter,
+  and governed API stubs. Local Python validation and guardrails ran against the pinned checkout.
+  Explorer unit tests were not locally comparable because an offline
+  dependency install could not be completed. No browser probe, deployed runtime, live source, release application, correction propagation, or production rollback was exercised.
 related:
   - docs/architecture/ui/README.md
   - docs/architecture/ui/BOUNDARIES.md
@@ -93,9 +93,9 @@ related:
   - packages/maplibre/src/index.ts
 tags: [kfm, architecture, ui, map-runtime, maplibre, renderer-neutral, adapter, evidence-drawer, finite-outcomes, trust-membrane, renderer-hold, rollback]
 notes:
-  - "v2.0-draft replaces proposal-era and no-repository language with current-session repository evidence."
-  - "The current executable map-runtime slices are renderer-neutral or fixture-only; no concrete MapLibre runtime is admitted."
-  - "ADR-0006 and ADR-0007 remain proposed. This document does not accept them or make their target architecture current fact."
+  - "v2.1-draft reconciles accepted ADR-0006/0007 and merged MapRuntimePort/NullMapRuntime evidence without admitting a renderer."
+  - "The current executable map-runtime slices are dependency-free, renderer-neutral, or fixture-only; no concrete MapLibre runtime is admitted."
+  - "ADR-0006 and ADR-0007 are accepted architecture. Their acceptance does not admit a dependency, prove browser readiness, or authorize release or publication."
   - "The existing target receives PLACE as a same-path architecture update under accepted ADR-0029 and Directory Rules v2."
   - "This document changes no application code, package, dependency, contract, schema, policy, registry, lifecycle state, release, deployment, or publication."
 [/KFM_META_BLOCK_V2] -->
@@ -113,13 +113,13 @@ notes:
 [![Publication: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#rollback-and-non-effects)
 
 > [!IMPORTANT]
-> **Repository-grounded does not mean renderer-ready.** Current code proves bounded request scoping, Evidence Drawer projection, fixture-only layer admission, and fixture-only cache decisions. It does not prove an implemented `MapRuntimePort`, a concrete MapLibre adapter, an admitted renderer dependency, a live click-resolution route, released-layer rendering, deployment, or public operation.
+> **Repository-grounded does not mean renderer-ready.** Current code proves a dependency-free `MapRuntimePort`, deterministic `NullMapRuntime`, bounded request scoping, Evidence Drawer projection, fixture-only layer admission, and fixture-only cache decisions. It does not prove a concrete MapLibre adapter, an admitted renderer dependency, a live click-resolution route, released-layer rendering, deployment, or public operation.
 
 > [!WARNING]
 > **Rendering is not publication.** A visible feature, hit-test result, screenshot, browser test, or performance probe is downstream technical evidence only. It does not establish claim truth, rights clearance, sensitivity approval, review approval, release, or publication safety.
 
 > [!CAUTION]
-> **The proposed renderer ADRs are not accepted by documentation.** ADR-0006 and ADR-0007 remain `proposed`; this page records their intended boundary and the current HOLD without treating either decision as adopted.
+> **Accepted architecture is not runtime admission.** ADR-0006 and ADR-0007 are `accepted`; the concrete adapter, renderer dependency, browser evidence, release, deployment, and publication remain on HOLD or unestablished.
 
 **Quick navigation:** [Status](#status-and-authority) · [Evidence](#current-repository-evidence) · [Purpose](#purpose-and-placement) · [Rule and scope](#core-rule-and-scope) · [Flow](#current-and-future-flow) · [Click bridge](#renderer-neutral-click-bridge) · [Admission and cache](#current-admission-and-cache-models) · [Port](#proposed-mapruntimeport) · [Adapter](#proposed-maplibre-adapter) · [Inputs](#renderer-input-contract) · [Camera and time](#camera-time-and-state) · [Forbidden operations](#forbidden-browser-operations) · [Finite states](#finite-and-negative-states) · [Validation](#validation-and-admission-evidence) · [Rollback](#rollback-and-non-effects) · [Related](#related-docs) · [Open work](#open-verification-and-adr-triggers)
 
@@ -135,17 +135,17 @@ notes:
 | **Document identity** | `kfm://doc/architecture/ui/map-runtime-boundary` |
 | **Owning root** | `docs/` — human-readable architecture and boundary explanation |
 | **Placement** | **CONFIRMED / PLACE** under accepted ADR-0029 and Directory Rules v2 |
-| **Evidence snapshot** | `main@1162f7fccc902bfd56e2679e0b14f2633b7a9fd9` |
-| **Prior target blob** | `baf929fdca617ea95ea4ce5bde4c7b8abd9ac6d5` |
+| **Evidence snapshot** | `main@362d6590b9516596ad1c34a64781c13bf85d52c8` |
+| **Prior target blob** | `ff4cb66c0571bca7494f698bc585a4569bc95c5c` |
 | **Review route** | `@bartytime4life` through current CODEOWNERS |
 | **Independent specialist review** | **NEEDS VERIFICATION** |
 | **Current click bridge** | **CONFIRMED / renderer-neutral / fixture transport injected** |
 | **Current layer admission** | **CONFIRMED / pure fixture evaluator / no registration or source creation** |
 | **Current PMTiles cache logic** | **CONFIRMED / pure fixture decision / no fetch or cache mutation** |
-| **`MapRuntimePort`** | **PROPOSED / not verified as implemented** |
+| **`MapRuntimePort` / `NullMapRuntime`** | **CONFIRMED / IMPLEMENTED / dependency-free and renderer-neutral** |
 | **Concrete `MapLibreAdapter`** | **HOLD / comment-only app placeholder; no functioning adapter** |
 | **MapLibre dependency** | **HOLD / not declared in Explorer Web or `@kfm/maplibre`** |
-| **ADR-0006 / ADR-0007** | **PROPOSED** |
+| **ADR-0006 / ADR-0007** | **ACCEPTED architecture / dependency and runtime remain held** |
 | **Live governed click transport** | **UNKNOWN / not established; current routes abstain** |
 | **Deployed public behavior** | **UNKNOWN / not established here** |
 | **Release, deployment, or publication effect** | None |
@@ -182,10 +182,13 @@ This file is explanatory architecture. Semantic meaning belongs to contracts; ma
 | [`pmtiles-release-cache.test.ts`](../../../apps/explorer-web/tests/pmtiles-release-cache.test.ts) | Positive and exact-negative synthetic coverage for cache hit, miss, mismatch, incomplete, withdrawal, authority, and invalid-input cases | No operational CacheStorage or Service Worker behavior is proved |
 | [`apps/explorer-web/package.json`](../../../apps/explorer-web/package.json) | Build, unit-test, and browser-test scripts; no `maplibre-gl` dependency | Explorer Web does not currently admit a concrete MapLibre runtime |
 | [`packages/maplibre/package.json`](../../../packages/maplibre/package.json) | Private package `@kfm/maplibre`, version `0.0.0`, no dependencies | Package identity exists; dependency admission and runtime behavior do not |
-| [`packages/maplibre/src/index.ts`](../../../packages/maplibre/src/index.ts) | Placeholder export only | No port, adapter, protocol registrar, renderer lifecycle, or public API is implemented |
+| [`packages/maplibre/src/index.ts`](../../../packages/maplibre/src/index.ts) | Exports the renderer-neutral port and deterministic null runtime | A dependency-free package facade exists; no concrete renderer follows |
+| [`map-runtime-port.ts`](../../../packages/maplibre/src/map-runtime-port.ts) | KFM-owned serializable camera, selection, snapshot, finite-state, validation, listener, error, and disposal contract | The port consumes bounded state; it owns no evidence, policy, review, release, lifecycle, or publication decision |
+| [`null-map-runtime.ts`](../../../packages/maplibre/src/null-map-runtime.ts) | Deterministic no-network implementation used for consumer migration and tests | It is not a renderer and does not satisfy browser readiness |
+| Explorer port consumers and focused tests | Explorer imports the package facade; focused tests cover lifecycle, validation, trust states, selection, evidence binding, and disposal | Consumer proof remains dependency-free and does not boot MapLibre |
 | [`apps/explorer-web/src/adapters/MapLibreAdapter.ts`](../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) | Comment-only placeholder | It is not a functioning adapter or accepted importer seam |
 | Governed API route scaffolds | `/bootstrap`, `/layers`, and `/evidence` call the shared abstain stub with `outcome: ABSTAIN` and `reason_code: NOT_IMPLEMENTED` | No current click-specific claim-resolution transport may be inferred |
-| [ADR-0006](../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) and [ADR-0007](../../adr/ADR-0007%20%E2%80%94%20MapLibre%20GL%20JS%20Is%20the%20Sole%20Browser-Side%20Renderer.md) | Both remain `proposed` | The single-importer and sole-renderer rules are design direction, not accepted current architecture |
+| [ADR-0006](../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) and [ADR-0007](<../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) | Both are `accepted` | Package ownership, the adapter seam, and renderer-family selection are binding architecture; dependency and runtime admission remain separate |
 | [Map Master renderer boundary](../map-master/RENDERER_BOUNDARY.md) | Reconciles the seven negative authorities with current executable evidence and keeps concrete MapLibre on HOLD | This UI page should remain consistent with that broader boundary |
 
 ### Maturity matrix
@@ -196,8 +199,8 @@ This file is explanatory architecture. Semantic meaning belongs to contracts; ma
 | Selection-to-Evidence-Drawer bridge | **CONFIRMED / bounded** | Injected resolver, evidence-subset guard, finite outcomes | Live governed transport and deployed behavior |
 | LayerManifest admission | **CONFIRMED / fixture-only** | Pure eligibility evaluator and tests | Registry lookup, authenticated validation, source creation, operational revocation |
 | PMTiles cache posture | **CONFIRMED / fixture-only** | Pure release-scoped decision and tests | Service Worker, CacheStorage, fetch, invalidation receipts, correction propagation |
-| `MapRuntimePort` | **PROPOSED** | Illustrative method family only | Accepted contract, source implementation, consumers, tests |
-| Concrete MapLibre adapter | **HOLD** | Comment-only app placeholder and package scaffold | Accepted seam, dependency, implementation, sole-import scan, browser proof |
+| `MapRuntimePort` / `NullMapRuntime` | **IMPLEMENTED / bounded** | Exported KFM-owned contract, deterministic null runtime, Explorer consumers, and focused tests | Concrete renderer, layer loading, temporal methods, DOM/WebGL, browser proof |
+| Concrete MapLibre adapter | **HOLD** | Accepted package-owned seam; comment-only app placeholder | Dependency admission, implementation, sole-import scan, browser proof |
 | Governed click-resolution API | **UNKNOWN / not established** | Generic abstain route scaffolds | Accepted route/envelope and evidence-bound implementation |
 | Public map runtime | **UNKNOWN** | No current evidence in this revision | Deployment, release coupling, monitoring, correction, rollback, public review |
 
@@ -212,7 +215,7 @@ This file is explanatory architecture. Semantic meaning belongs to contracts; ma
 This document defines the trust boundary between the governed Explorer Web shell and any present or future browser map renderer. It answers four questions:
 
 1. What map-interaction behavior is implemented today?
-2. Which future port and adapter seams are proposed?
+2. Which renderer-neutral port behavior exists, and which concrete adapter work remains held?
 3. Which evidence, policy, release, dependency, accessibility, and runtime gates must close before real rendering?
 4. Which responsibilities may never move into the browser renderer?
 
@@ -256,8 +259,8 @@ That rule is stable even while the concrete renderer remains on HOLD.
 - the boundary between Explorer Web and a browser map runtime;
 - the current renderer-neutral feature-selection bridge;
 - the current fixture-only layer-admission and PMTiles-cache decisions;
-- the proposed `MapRuntimePort` used by non-renderer UI components;
-- the proposed single concrete `MapLibreAdapter`;
+- the implemented `MapRuntimePort` and deterministic `NullMapRuntime` used by non-renderer UI components;
+- the accepted but unimplemented single concrete `MapLibreAdapter` seam;
 - camera, time, layer, click-candidate, lifecycle, and teardown obligations;
 - finite negative states, accessibility, telemetry, validation, and rollback expectations;
 - the gates required before a concrete renderer enters the normal public path.
@@ -290,6 +293,9 @@ That rule is stable even while the concrete renderer remains on HOLD.
 ```mermaid
 flowchart LR
     subgraph Current["CONFIRMED bounded slices"]
+        Shell["Explorer shell consumer"]
+        Port["MapRuntimePort"]
+        Null["NullMapRuntime"]
         Selection["Renderer-neutral selection fixture"]
         Parser["Strict selection parser"]
         Resolver["Injected governed resolver"]
@@ -297,6 +303,9 @@ flowchart LR
         Admission["LayerManifest admission fixture"]
         Cache["PMTiles cache decision fixture"]
 
+        Shell --> Port
+        Port --> Null
+        Null --> Selection
         Selection --> Parser
         Parser --> Resolver
         Resolver --> Drawer
@@ -305,8 +314,6 @@ flowchart LR
     end
 
     subgraph Future["PROPOSED / HOLD"]
-        Shell["Governed Explorer shell"]
-        Port["MapRuntimePort"]
         Adapter["One concrete MapLibreAdapter"]
         Renderer["MapLibre GL JS"]
         LiveAPI["Governed click-resolution transport"]
@@ -314,8 +321,7 @@ flowchart LR
 
     Internal["RAW / WORK / QUARANTINE / canonical stores / models"]
 
-    Shell -. "accepted contract" .-> Port
-    Port -. "accepted sole importer" .-> Adapter
+    Port -. "accepted adapter seam" .-> Adapter
     Adapter -. "renderer API" .-> Renderer
     Renderer -. "bounded candidate" .-> Parser
     Resolver -. "future transport" .-> LiveAPI
@@ -324,7 +330,7 @@ flowchart LR
     Shell -. "FORBIDDEN normal path" .-x Internal
 ```
 
-Solid arrows describe current bounded behavior. Dashed arrows describe future integration that remains **PROPOSED** or on **HOLD**.
+Solid arrows describe current bounded behavior. Dashed arrows describe concrete renderer and transport integration that remains **PROPOSED** or on **HOLD**.
 
 ### Interpretation
 
@@ -457,34 +463,33 @@ The fixture evaluators do not establish:
 
 <a id="proposed-mapruntimeport"></a>
 
-## 6. `MapRuntimePort` — proposed UI contract
+## 6. `MapRuntimePort` — implemented bounded UI contract
 
-**Status: PROPOSED / not verified as implemented.**
+**Status: CONFIRMED / IMPLEMENTED / dependency-free.**
 
-The rest of the UI should eventually depend on a KFM-owned renderer-neutral port rather than on MapLibre types. The port is a stability and trust seam, not a second authority layer.
+Explorer consumers can depend on a KFM-owned renderer-neutral port rather than on MapLibre types. The port is a stability and trust seam, not a second authority layer.
 
-### 6.1 Proposed minimum method family
+### 6.1 Current method family
 
-| Method | Proposed input | Proposed effect | Must not do |
+| Method | Current input | Current effect | Must not do |
 |---|---|---|---|
-| `setCamera` | bounded center, bounds, zoom, pitch, bearing | Apply shell-owned camera state | Persist canonical state or fetch data |
-| `setTimeContext` | shell-owned time context | Apply already-governed temporal filters | Decide freshness or collapse distinct times |
-| `loadValidatedLayer` | accepted public-safe layer descriptor | Request adapter loading | Admit, promote, or publish the layer |
-| `removeLayer` | stable layer identity | Remove renderer representation | Withdraw a release or delete evidence |
-| `setLayerVisibility` | stable layer identity and boolean | Change presentation only | Change access, sensitivity, or policy |
-| `queryRenderedFeatureAtPoint` | bounded screen point | Return a candidate selection | Return a claim or EvidenceBundle |
-| `destroy` | none | Remove listeners and renderer resources | Mutate lifecycle or release state |
+| `initialize` | optional bounded camera | Enter `INITIALIZING`, then `READY` | Fetch, render, admit, release, or publish data |
+| `getSnapshot` | none | Return a frozen runtime snapshot | Expose renderer-native or canonical state |
+| `setCamera` | bounded center, zoom, pitch, bearing | Update shell-owned presentation state | Persist canonical state or fetch data |
+| `subscribeSnapshot` | snapshot listener | Observe finite runtime state | Grant lifecycle or policy authority |
+| `subscribeSelection` | selection listener | Observe bounded feature candidates | Return a claim or EvidenceBundle |
+| `dispose` | none | Remove listeners and enter `DISPOSED` | Mutate release or evidence state |
 
-Proposed events may include `camera_changed`, `time_applied`, `layer_loaded`, `feature_candidate`, `negative_state`, and `boundary_violation`. Exact names and payloads require accepted contracts, schemas where appropriate, source implementation, and tests.
+`NullMapRuntime` supplies deterministic `emitSelection` and `emitTrustState` control hooks for migration and tests. They are not methods on the public port and confer no renderer, policy, evidence, or publication authority.
 
 ### 6.2 Port invariants
 
-The future port must:
+The current port must continue to:
 
 - expose KFM-owned types only;
 - return bounded events, never renderer-native objects;
 - keep feature candidates distinct from claims;
-- accept only upstream-admitted public-safe layer inputs;
+- remain free of layer loading until an accepted, governed input contract is admitted;
 - preserve finite `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` paths;
 - support deterministic teardown and a fake/null implementation;
 - avoid network, policy, evidence resolution, release, and lifecycle authority;
@@ -498,11 +503,11 @@ Adding a method is an architectural change when it widens authority, data exposu
 
 <a id="proposed-maplibre-adapter"></a>
 
-## 7. `MapLibreAdapter` — proposed concrete importer
+## 7. `MapLibreAdapter` — held concrete importer
 
-**Status: HOLD.** No functioning concrete adapter or MapLibre dependency was verified. ADR-0006 and ADR-0007 remain proposed.
+**Status: HOLD.** No functioning concrete adapter or MapLibre dependency was verified. ADR-0006 and ADR-0007 are accepted, but acceptance does not admit a dependency or establish browser readiness.
 
-If the decisions are accepted, exactly one reviewed module should import the MapLibre runtime and implement the KFM-owned port. The present comment-only Explorer file is not that implementation and must not become an accidental second importer.
+Exactly one reviewed package-owned module may import the MapLibre runtime and implement the KFM-owned port. The present comment-only Explorer file is not that implementation and must not become an accidental second importer.
 
 ### 7.1 Proposed responsibilities
 
@@ -534,10 +539,10 @@ The adapter must not:
 
 ### 7.3 Admission gates before implementation may be called current
 
-1. ADR-0006 and ADR-0007 are accepted, replaced, or explicitly narrowed by an accepted decision.
+1. The implementation remains within accepted ADR-0006 and ADR-0007, or an accepted replacement explicitly changes the boundary.
 2. The exact package and sole importer module are fixed without creating a parallel runtime authority.
 3. The renderer dependency and any protocol/plugin dependencies are pinned, reviewed, and lockfile-synchronized.
-4. `MapRuntimePort` meaning, compatibility, ownership, and tests are accepted.
+4. Any `MapRuntimePort` widening preserves compatibility, ownership, finite-state, and direct-test requirements.
 5. Repository-wide import enforcement proves that no other normal-path module imports renderer APIs.
 6. Layer admission is bound to governed release identity, artifact integrity, policy, evidence, review, correction, withdrawal, and rollback state.
 7. A real click event is translated into the existing strict selection profile without leaking raw feature data.
@@ -592,7 +597,7 @@ A style filter can hide a feature from normal drawing while the underlying bytes
 
 ## 9. Camera, time, and state
 
-**Current status: PROPOSED for a real renderer.** No implemented camera or temporal port was verified.
+**Current status: PARTIAL.** The dependency-free port and null runtime implement bounded camera state. No temporal port, concrete renderer translation, or browser proof was verified.
 
 ### 9.1 State ownership
 
@@ -673,9 +678,11 @@ The renderer-neutral bridge currently proves:
 
 The layer-admission and cache fixtures prove bounded `PASS`, `HOLD`, `DENY`, and `ERROR` classifications without performing the proposed action.
 
-### 11.2 Proposed runtime states
+### 11.2 Current port states and held renderer states
 
-A real renderer will also need finite states for:
+The current port exports `IDLE`, `INITIALIZING`, `READY`, `STALE`, `ABSTAINED`, `DENIED`, `CONFLICT`, `DEGRADED`, `WITHDRAWN`, `ROLLED_BACK`, `ERROR`, and `DISPOSED`. Focused tests exercise lifecycle, trust-state transitions, selection, evidence binding, validation, and teardown. These states describe a renderer-neutral snapshot; they do not prove a concrete renderer or public UX.
+
+A real renderer will still need explicit public behavior for:
 
 | State | Required public behavior |
 |---|---|
@@ -691,7 +698,7 @@ A real renderer will also need finite states for:
 | Renderer error | Show safe error and preserve non-map access where possible |
 | Destroyed | Remove listeners, workers, protocols, and renderer resources deterministically |
 
-These runtime states remain **PROPOSED** until implementation and tests exist.
+The browser rendering, asset, offline, accessibility, and public-behavior mappings in this table remain **PROPOSED** until concrete implementation and tests exist.
 
 [Back to top](#top)
 
@@ -714,6 +721,9 @@ pnpm run test:browser
 
 The current focused unit files include:
 
+- `tests/map-runtime-port.test.ts`;
+- `tests/map-runtime-evidence-binding.test.ts`;
+- `tests/map-runtime-trust-status.test.ts`;
 - `tests/map-evidence-drawer.test.ts`;
 - `tests/layer-manifest-admission.test.ts`;
 - `tests/pmtiles-release-cache.test.ts`.
@@ -724,6 +734,8 @@ The click-bridge documentation also identifies browser coverage for the Evidence
 
 | Check | Current status | What passing proves | What it does not prove |
 |---|---|---|---|
+| Port lifecycle, validation, trust-state, selection, and disposal tests | **CONFIRMED source/test presence** | Dependency-free contract and null-runtime behavior | Concrete renderer, browser readiness, or publication |
+| Evidence-binding consumer tests | **CONFIRMED source/test presence** | Bounded consumer projection from runtime selection | Live evidence resolution or evidence truth |
 | Strict selection parser tests | **CONFIRMED source/test presence** | Closed request shape and immutable parse behavior | Real renderer event integrity |
 | Evidence-subset and no-leak tests | **CONFIRMED source/test presence** | Bounded projection behavior | Evidence truth or production policy |
 | No-network/no-renderer-import unit guard | **CONFIRMED source/test presence** | The current bridge stays renderer-neutral | Repository-wide sole-import enforcement |
@@ -819,7 +831,7 @@ This update does not:
 ### Decisions and doctrine
 
 - [ADR-0006 — MapLibre boundary](../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md)
-- [ADR-0007 — MapLibre GL JS as sole browser renderer](../../adr/ADR-0007%20%E2%80%94%20MapLibre%20GL%20JS%20Is%20the%20Sole%20Browser-Side%20Renderer.md)
+- [ADR-0007 — MapLibre GL JS as sole browser renderer](<../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>)
 - [ADR-0029 — Directory governance adoption](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
 - [Directory Rules v2](../../doctrine/directory-rules.md)
 
@@ -831,7 +843,7 @@ This update does not:
 - [PMTiles cache fixture](../../../apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts)
 - [Explorer MapLibre adapter placeholder](../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts)
 - [`@kfm/maplibre` package manifest](../../../packages/maplibre/package.json)
-- [`@kfm/maplibre` placeholder entry](../../../packages/maplibre/src/index.ts)
+- [`@kfm/maplibre` port and null-runtime entry](../../../packages/maplibre/src/index.ts)
 
 [Back to top](#top)
 
@@ -843,11 +855,11 @@ This update does not:
 
 | Item | Status | Closure evidence |
 |---|---|---|
-| Accept, replace, or narrow ADR-0006 | **OPEN / PROPOSED** | Accepted decision with exact importer seam, ownership, compatibility, and rollback |
-| Accept, replace, or narrow ADR-0007 | **OPEN / PROPOSED** | Accepted renderer-family decision and exception process |
+| Preserve or explicitly replace ADR-0006 | **ACCEPTED / ongoing** | Import enforcement, ownership, compatibility, and rollback for any concrete adapter |
+| Preserve or explicitly replace ADR-0007 | **ACCEPTED / ongoing** | Renderer-family compliance and governed exception handling |
 | Fix the exact package and concrete adapter module | **NEEDS VERIFICATION** | Directory Rules review, source implementation, CODEOWNERS, import scan |
 | Admit the renderer dependency | **HOLD** | Reviewed version, integrity, license, lockfile, vulnerability and provenance evidence |
-| Define `MapRuntimePort` meaning and shape | **PROPOSED** | Accepted contract/schema placement, source, validators, fixtures, migration, tests |
+| Widen `MapRuntimePort` beyond current bounded methods | **HOLD** | Accepted need, compatibility analysis, source, validators where needed, migration, and tests |
 | Implement live governed click transport | **UNKNOWN / not established** | Accepted route and envelope, fail-closed resolver, integration tests, operational evidence |
 | Bind real layer loading to release and correction state | **PROPOSED** | Governed registry lookup, artifact verification, denial/withdrawal/correction tests |
 | Implement operational PMTiles caching | **PROPOSED** | Service Worker design, CacheStorage implementation, release-scoped invalidation, offline tests, receipts |
@@ -865,42 +877,24 @@ A proposal that introduces a peer renderer, a second direct importer, a new writ
 
 <a id="appendix-a"></a>
 
-## Appendix A — illustrative TypeScript shape
+## Appendix A — current TypeScript shape
 
 > [!NOTE]
-> **Illustrative only.** This sketch is not an accepted contract, source file, or schema. Exact names and types require repository-native authority and tests.
+> This excerpt mirrors the exported interface at the evidence snapshot. The repository source remains executable authority.
 
 ```ts
 export interface MapRuntimePort {
-  setCamera(camera: CameraState): void;
-  setTimeContext(time: TimeContext): void;
-
-  // Input is already admitted and public-safe. This method does not publish.
-  loadValidatedLayer(layer: RuntimeLayerInput): Promise<void>;
-  removeLayer(layerId: string): void;
-  setLayerVisibility(layerId: string, visible: boolean): void;
-
-  // Returned value is request context, never a claim.
-  queryRenderedFeatureAtPoint(point: ScreenPoint): FeatureSelection | null;
-
-  destroy(): void;
-
-  on(event: "camera_changed", cb: (camera: CameraState) => void): Unsubscribe;
-  on(event: "time_applied", cb: (time: TimeContext) => void): Unsubscribe;
-  on(event: "layer_loaded", cb: (layerId: string) => void): Unsubscribe;
-  on(event: "feature_candidate", cb: (selection: FeatureSelection) => void): Unsubscribe;
-  on(event: "negative_state", cb: (state: RuntimeNegativeState) => void): Unsubscribe;
-  on(event: "boundary_violation", cb: (violation: BoundaryViolation) => void): Unsubscribe;
-}
-
-export interface FeatureSelection {
-  profile: "kfm.explorer.map-feature-selection.v1";
-  selection_id: string;
-  layer_id: string;
-  feature_id: string;
-  evidence_refs: readonly string[];
+  readonly profile: typeof MAP_RUNTIME_PORT_PROFILE;
+  initialize(initialCamera?: MapRuntimeCamera): Promise<MapRuntimeSnapshot>;
+  getSnapshot(): MapRuntimeSnapshot;
+  setCamera(camera: MapRuntimeCamera): MapRuntimeSnapshot;
+  subscribeSnapshot(listener: MapRuntimeSnapshotListener): () => void;
+  subscribeSelection(listener: MapRuntimeSelectionListener): () => void;
+  dispose(): void;
 }
 ```
+
+Future layer, time, query, and renderer-specific expansion is outside this interface and requires accepted ownership, compatibility treatment, and implementation evidence.
 
 [Back to top](#top)
 
@@ -930,6 +924,6 @@ export interface FeatureSelection {
 
 **Related:** [UI README](./README.md) · [UI boundaries](./BOUNDARIES.md) · [Layering](./LAYERING.md) · [Evidence Drawer](./EVIDENCE_DRAWER.md) · [Map Master renderer boundary](../map-master/RENDERER_BOUNDARY.md) · [Directory Rules](../../doctrine/directory-rules.md)
 
-**Last updated:** `2026-08-20` · **Version:** `v2.0-draft` · **Status:** `repository-grounded draft / concrete renderer HOLD / non-publication`
+**Last updated:** `2026-08-24` · **Version:** `v2.1-draft` · **Status:** `repository-grounded draft / bounded port implemented / concrete renderer HOLD / non-publication`
 
 [Back to top](#top)
