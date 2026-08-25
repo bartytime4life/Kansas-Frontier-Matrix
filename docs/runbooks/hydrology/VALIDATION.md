@@ -5,7 +5,7 @@ type: runbook
 version: 0.2.0
 status: DRAFT_REPOSITORY_GROUNDED; BOUNDED_SYNTHETIC_VALIDATION_ONLY; BROADER_SEMANTICS_HELD; NON_RELEASE; NON_PUBLICATION
 owners: "@bartytime4life — verified CODEOWNERS route; accountable hydrology, evidence, policy, source, safety, and release stewardship NEEDS VERIFICATION"
-created: NEEDS_VERIFICATION
+created: 2026-08-25
 updated: 2026-08-25
 owning_root: docs/
 responsibility: human validation procedure for the existing hydrology lane
