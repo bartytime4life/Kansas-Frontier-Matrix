@@ -2,11 +2,11 @@
 doc_id: kfm://app/explorer-web/src/readme
 title: Explorer Web Source Tree README
 type: app-readme
-version: v0.2
+version: v0.3
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Docs steward
 created: 2026-06-16
-updated: 2026-07-29
+updated: 2026-08-25
 policy_label: public
 related:
   - ../README.md
@@ -25,8 +25,9 @@ related:
   - ../../../data/README.md
 tags: [kfm, apps, explorer-web, src, map-first, public-ui, governed-api, evidence-drawer, focus-mode, renderer-boundary]
 notes:
-  - "Initial README for the Explorer Web src tree."
-  - "Repository evidence confirms a bounded static shell entrypoint, fixed fail-closed states, app-local tests, and locked build tooling; route inventory, fixtures, API client, renderer adapters, accessibility, and deployment posture remain NEEDS VERIFICATION."
+  - "v0.3 reconciles this source-tree README with the current repository-grounded site composition, adapters, feature modules, viewer templates, tests, and parent app README."
+  - "Repository evidence confirms bounded local and fixture-first implementation slices; it does not establish a production route tree, live Governed API transport, an admitted renderer, deployment, release, or publication."
+  - "MapLibreAdapter.ts remains a boundary note rather than a functional renderer adapter; renderer admission remains HOLD."
   - "src/ is the app implementation source-layout boundary only; it must not become a public API, lifecycle data store, policy root, release authority, schema/contract home, model-runtime surface, or shared package root."
 [/KFM_META_BLOCK_V2] -->
 
@@ -44,20 +45,20 @@ notes:
 ![owner](https://img.shields.io/badge/owner-OWNER__TBD-lightgrey)
 ![layout](https://img.shields.io/badge/layout-src%2F-0a7ea4)
 ![app](https://img.shields.io/badge/app-explorer--web-2ea44f)
-![truth](https://img.shields.io/badge/truth-NEEDS__VERIFICATION-yellow)
+![truth](https://img.shields.io/badge/truth-bounded__implementation-0969da)
 
-[Purpose](#1-purpose) · [Repo fit](#2-repo-fit) · [Boundary](#3-authority-boundary) · [Inputs](#5-inputs) · [Exclusions](#6-exclusions) · [Module map](#7-candidate-source-map) · [Definition of done](#14-definition-of-done)
+[Purpose](#1-purpose) · [Repo fit](#2-repo-fit) · [Boundary](#3-authority-boundary) · [Inputs](#5-inputs) · [Exclusions](#6-exclusions) · [Module map](#7-current-source-map) · [Definition of done](#14-definition-of-done)
 
 </div>
 
 ---
 
 > [!IMPORTANT]
-> **Status:** draft / `NEEDS VERIFICATION`  
+> **Status:** draft / bounded implementation
 > **Owners:** `OWNER_TBD` — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Docs steward  
 > **Path:** `apps/explorer-web/src/README.md`  
 > **Responsibility root:** `apps/` — deployable application surfaces  
-> **Truth posture:** CONFIRMED bounded static shell entrypoint and fixed baseline-state resolver / CONFIRMED app-local positive and negative tests / UNKNOWN routes, client validators, renderer adapters, accessibility, and deployment state
+> **Truth posture:** CONFIRMED repository-grounded local composition, app-local adapters and feature slices, deterministic fixtures, and positive/negative tests / HOLD functional renderer and live trust-bearing transport / UNKNOWN deployment and public operation
 
 > [!CAUTION]
 > Code under `apps/explorer-web/src/` must not directly read lifecycle data roots, canonical/internal stores, direct model runtime outputs, or local source files as user-facing truth. Claim-bearing UI should render only governed API envelopes, released or bounded-safe layer artifacts, EvidenceBundle-derived payloads, and finite states.
@@ -72,7 +73,7 @@ notes:
 - [4. Default posture](#4-default-posture)
 - [5. Inputs](#5-inputs)
 - [6. Exclusions](#6-exclusions)
-- [7. Candidate source map](#7-candidate-source-map)
+- [7. Current source map](#7-current-source-map)
 - [8. Diagram](#8-diagram)
 - [9. Source-tree obligations](#9-source-tree-obligations)
 - [10. Route and component expectations](#10-route-and-component-expectations)
@@ -86,11 +87,11 @@ notes:
 
 ## 1. Purpose
 
-`apps/explorer-web/src/` is the proposed implementation source tree for the Explorer Web app.
+`apps/explorer-web/src/` is the implementation source tree for the Explorer Web app.
 
-It may eventually hold browser-shell code, route modules, governed API client adapters, response validators, map adapters, layer-catalog views, Evidence Drawer components, Focus Mode surfaces, Story Player surfaces, compare/export flows, settings, diagnostics, and accessibility support.
+It currently holds the default local entrypoint, repository-grounded site composition, boundary adapters, fixture-first feature modules, and bounded viewer templates for the map-first shell.
 
-This README defines the source-tree boundary. The current implementation proves only a static entrypoint and a fixed fail-closed state resolver. It does not prove routes, fixtures, API clients, renderer adapters, accessibility, or deployment wiring.
+This README defines the source-tree boundary. The current implementation proves bounded local and synthetic interaction slices; it does not prove a production route tree, live Governed API transport, an admitted renderer, deployment wiring, release, publication, or public operation.
 
 [Back to top](#top)
 
@@ -174,25 +175,17 @@ A route, component, adapter, export flow, or map interaction should not render c
 | Direct model runtime behavior | `runtime/` behind governed API only |
 | Secrets, credentials, tokens, private keys | Secret manager / deployment environment, not app source |
 
-## 7. Candidate source map
+## 7. Current source map
 
-Exact modules remain `NEEDS VERIFICATION`. Candidate areas should be introduced only with route inventory and tests.
-
-| Candidate area | Responsibility | Status |
+| Current area | Verified repository responsibility | Maturity limit |
 |---|---|---|
-| `app/` | App bootstrap, providers, route outlet, error boundaries | PROPOSED |
-| `routes/` | Explore, Focus, Story, Compare, Export, Settings, Diagnostics | PROPOSED |
-| `client/` | Governed API client and response validators | PROPOSED |
-| `map/` | Map runtime port and renderer adapters | PROPOSED |
-| `layers/` | Layer catalog, legends, badges, time filters | PROPOSED |
-| `evidence/` | Evidence Drawer and citation affordances | PROPOSED |
-| `focus/` | Focus Mode UI and finite-outcome rendering | PROPOSED |
-| `story/` | Story Player UI with evidence continuity | PROPOSED |
-| `export/` | Safe export flows with citation/redaction obligations | PROPOSED |
-| `diagnostics/` | Safe trust, version, route, envelope, and layer diagnostics | PROPOSED |
+| `main.ts` | Mounts the repository-grounded Explorer site, public workspace navigation, shared trust surface, and bounded synthetic Focus workspace. | Local deterministic composition; not a production router, transport, deployment, release, or publication path. |
+| `site/` | Implements Map, Knowledge, Features, and Trust regions, anchor navigation, conservative catalogs, URL context, trust-state primitives, and synthetic workspace composition. | Synthetic/local inputs do not establish live data, authentication, evidence authority, or public operation. |
+| `adapters/` | Contains defensive projections and a bounded `GovernedClient` interface for app-local consumers. | Projection code is not a live Governed API transport. `MapLibreAdapter.ts` remains non-functional boundary documentation. |
+| `features/` | Contains bounded modules for shell, evidence, Focus, map runtime, story, compare, export, settings, diagnostics, read-only review, trust, time, and additional fixture-first projections. | A module and its tests prove only that slice; most modules are not composed as production routes or backed by live services. |
+| `viewer_templates/` | Contains deterministic JSON style templates for default, compare, review, and story views. | Templates are not released layer manifests, admitted renderer configuration, or publication authority. |
 
-> [!WARNING]
-> Candidate area names are not implementation proof. Do not document a route, adapter, client, or export as runnable until files, tests, fixtures, and package scripts confirm it.
+No `routes/`, live transport, or functional renderer-adapter tree is present. Those remain future work subject to accepted contracts, dependency admission, tests, and the app boundary.
 
 ## 8. Diagram
 
@@ -239,12 +232,14 @@ Every long-lived route, panel, adapter, or component group should document or en
 
 ## 11. Inspection path
 
-Implementation files, route inventory, renderer imports, tests, fixtures, package scripts, API client wiring, and deployment state remain `NEEDS VERIFICATION`.
+The repository inventory is directly inspectable; live integration and deployment remain `NEEDS VERIFICATION`.
 
 ```bash
 find apps/explorer-web/src -maxdepth 6 -type f | sort
-find apps/explorer-web packages/ui packages/maplibre packages/cesium apps/governed-api tests fixtures -maxdepth 6 -type f 2>/dev/null | grep -Ei 'explorer|route|map|layer|evidence|focus|story|compare|export|diagnostic|governed|maplibre|cesium' | sort
-find ui web styles viewer_templates -maxdepth 5 -type f 2>/dev/null | sort
+find apps/explorer-web/tests tests/policy fixtures -maxdepth 6 -type f 2>/dev/null | grep -Ei 'explorer|map|layer|evidence|focus|story|compare|export|diagnostic|governed|maplibre' | sort
+pnpm --filter explorer-web build
+pnpm --filter explorer-web test
+python -m unittest tests.policy.test_explorer_web_adapter_boundary --verbose
 ```
 
 ## 12. Validation expectations
@@ -276,39 +271,38 @@ For source changes under `apps/explorer-web/src/`:
 - [ ] Owners are confirmed and `OWNER_TBD` is replaced.
 - [x] The bounded `src/` entrypoint and package build/test scripts are confirmed.
 - [x] The no-input `ABSTAIN` and supplied-input `ERROR` paths are tested without reflecting supplied input.
-- [ ] Route inventory is documented.
-- [ ] Governed API client and response validators are implemented and tested.
-- [ ] Renderer import boundaries are verified.
-- [ ] Evidence Drawer, Focus Mode, layer catalog, export, and diagnostics behavior are tested.
-- [ ] Direct lifecycle-data import/read checks are covered.
-- [ ] Public/semi-public finite-outcome states are tested.
-- [ ] Accessibility checks are documented or automated.
+- [x] The current `site/`, `adapters/`, `features/`, and `viewer_templates/` inventory and maturity limits are documented.
+- [x] Bounded Evidence Drawer, Focus, layer catalog, export, diagnostics, trust, time, story, and map-runtime slices have app-local tests.
+- [x] A policy test constrains renderer imports and direct internal-store path literals.
+- [x] Keyboard and browser checks cover bounded implemented surfaces.
+- [ ] A production route inventory and router are implemented and tested.
+- [ ] Live Governed API transport and runtime response validation are implemented and tested.
+- [ ] A functional renderer adapter and dependency are admitted and tested.
+- [ ] Deployment, authentication, CSP, operations, release, and public availability are verified from current evidence.
 
 ## 15. Open verification items
 
 | Item | Why it matters |
 |---|---|
-| Confirm implementation beyond `main.ts` and the bounded shell resolver | Prevents overclaiming source-tree maturity |
-| Confirm route inventory and app framework | Required for public/semi-public UI review |
-| Confirm governed API client and validators | Required for trust membrane enforcement |
-| Confirm renderer adapter modules | Required to keep renderers behind boundaries |
-| Confirm tests and fixtures | Required before implementation claims |
-| Confirm export implementation | Required before public download claims |
-| Confirm broader build/test needs beyond the locked baseline | Required before adding framework, browser, or integration tooling |
+| Commission a production route inventory and router | Required before describing the local composition as a production application |
+| Implement and validate live Governed API transport | Required for trust-bearing integration beyond deterministic fixtures |
+| Admit and implement a renderer adapter | `MapLibreAdapter.ts` is not functional; dependency and protocol decisions remain held |
+| Graduate bounded export behavior | App-local behavior is not proof of a public download or released artifact path |
+| Verify deployment, authentication, CSP, and operations | Required before any public-availability claim |
 | Confirm legacy shell roots | Required to prevent parallel shell drift |
 
 <details>
 <summary>Appendix A — no-loss preservation note</summary>
 
-The target file was an empty placeholder. This README adds a bounded `src/` source-tree contract for Explorer Web. The current baseline implements only `main.ts`, the fixed shell-state resolver, and app-local unit tests; it does not claim routes, API clients, validators, renderer adapters, fixtures, deployment, or export behavior.
+The target file began as an empty placeholder. Earlier README versions correctly established the `src/` boundary but later became stale as `site/`, `adapters/`, `features/`, `viewer_templates/`, and their tests were added.
 
-The observed `apps/explorer-web/package.json` now has real locked build and test scripts. Broader Explorer behavior remains `NEEDS VERIFICATION`.
+This version records those bounded repository facts without promoting them into claims about a production router, live transport, admitted renderer, deployment, release, publication, or public operation.
 
 </details>
 
 ## Status summary
 
-`apps/explorer-web/src/` now holds a buildable fail-closed static baseline. It should be treated as a functional map-first public/semi-public shell only after route inventory, governed API client behavior, renderer boundaries, accessibility, fixtures, and deployment posture are verified.
+`apps/explorer-web/src/` holds a buildable, repository-grounded local composition and multiple fail-closed, fixture-first feature slices. It must not be described as a production map application until the route, live transport, renderer, deployment, release, and public-operation gates are verified.
 
 It must stay downstream of governed APIs, policy decisions, EvidenceBundle closure, release state, correction/rollback controls, and renderer adapter boundaries without becoming source truth, release authority, policy authority, lifecycle store, schema/contract home, model-output surface, or parallel shell authority.
 
