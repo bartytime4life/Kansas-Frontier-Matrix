@@ -108,6 +108,55 @@ class IngestReceiptValidatorTests(unittest.TestCase):
         self.assertTrue(result.source_head_bound)
         self.assertEqual(result.artifact_count, 2)
 
+    def test_duplicate_receipt_key_fails_closed(self) -> None:
+        receipt = self._receipt()
+        raw = json.dumps(receipt)
+        field = f'"bytes_in": {receipt["bytes_in"]}'
+        self.receipt_path.write_text(
+            raw.replace(field, f"{field}, {field}", 1) + "\n",
+            encoding="utf-8",
+        )
+
+        self.assertFinding(self._validate(), "JSON_DUPLICATE_KEY")
+
+    def test_nonfinite_receipt_number_fails_closed(self) -> None:
+        self._write_receipt(lambda value: value.update(bytes_in=float("nan")))
+
+        self.assertFinding(self._validate(), "JSON_NONFINITE_NUMBER")
+
+    def test_overflowing_receipt_number_fails_closed(self) -> None:
+        receipt = self._receipt()
+        raw = json.dumps(receipt)
+        field = f'"bytes_in": {receipt["bytes_in"]}'
+        self.receipt_path.write_text(
+            raw.replace(field, '"bytes_in": 1e400', 1) + "\n",
+            encoding="utf-8",
+        )
+
+        self.assertFinding(self._validate(), "JSON_NONFINITE_NUMBER")
+
+    def test_duplicate_source_descriptor_key_fails_closed(self) -> None:
+        raw = self.descriptor_path.read_text(encoding="utf-8")
+        self.descriptor_path.write_text(
+            raw.replace(
+                '"source_id": "src:kwo-synthetic"',
+                '"source_id": "src:kwo-synthetic",\n  '
+                '"source_id": "src:kwo-synthetic"',
+                1,
+            ),
+            encoding="utf-8",
+        )
+
+        result = self._validate()
+
+        self.assertFinding(result, "JSON_DUPLICATE_KEY")
+        duplicate = next(
+            finding
+            for finding in result.findings
+            if finding.code == "JSON_DUPLICATE_KEY"
+        )
+        self.assertEqual(duplicate.field, "/source_descriptor")
+
     def test_source_id_mismatch_fails_closed(self) -> None:
         self._write_descriptor(lambda value: value.update(source_id="src:other-source"))
 
