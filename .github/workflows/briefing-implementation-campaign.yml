@@ -68,6 +68,7 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
       - name: Set up repository Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -101,12 +102,13 @@ jobs:
           printf '%s\n' "$output"
           test "$code" -eq 3
           python -c 'import json,sys; value=json.loads(sys.argv[1]); assert value["outcome"] == "HOLD"; assert value["target_version"] == "6.4.0"; assert value["upstream_tag_commit"] == "4529c6e451f0e5607ef42ad0ed81aa76a14a0f43"; assert "MAPLIBRE_DEPENDENCY_UNPINNED" in value["reasons"]; assert "RUNTIME_PROBES_PENDING" in value["reasons"]' "$output"
-      - name: Verify current MapLibre 6.4 readiness receipt integrity
+      - name: Replay MapLibre 6.4 readiness receipt from its exact Git tree
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-maplibre-v6-4-readiness-current-binding-20260818.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref 24f53ac126659ca154467b657cbec0e88481c546
       - name: Record trust boundary
         if: always()
         run: |
@@ -116,5 +118,6 @@ jobs:
             echo "- Result: ${{ job.status }}."
             echo "- Scope: synthetic TemporalSlice SQL lookup, trace/receipt/evidence/TemporalSlice closure, exact MapLibre 6.4.0 readiness classification, and USDM material-change semantics."
             echo "- MapLibre probes: WebGL/CSP/style/GeoJSON/query/visual coverage plus image-source texture reclamation, tile-churn querying, PMTiles/vector loading, terrain/DEM behavior, Evidence Drawer selection stability, and headless parity."
+            echo "- Receipt replay: retained MapLibre authoring bytes are read from exact tree 24f53ac126659ca154467b657cbec0e88481c546; later classifier and test changes do not rewrite historical process memory."
             echo "- Boundary: no live source, dependency upgrade, production database, authenticated evidence, policy authority, release, deployment, publication, or public-use path is created."
           } >> "$GITHUB_STEP_SUMMARY"
