@@ -5,9 +5,18 @@ import argparse
 import hashlib
 import json
 import sys
+from functools import lru_cache
 from pathlib import Path
 
+from jsonschema import Draft202012Validator
+from jsonschema.exceptions import SchemaError
+
 PROFILE = "kfm.governance.health-projection.v1"
+REPO_ROOT = Path(__file__).resolve().parents[3]
+OUTPUT_SCHEMA_PATH = (
+    REPO_ROOT
+    / "schemas/contracts/v1/governance/governance_health_projection.schema.json"
+)
 INDICATORS = (
     "evidence_ref_resolution_rate",
     "cite_or_abstain_compliance",
@@ -26,6 +35,23 @@ EXPECTED_FAMILY = {
     "ai_receipt_presence_rate": "AI_RECEIPT",
     "adr_completeness": "ADR_CHANGE",
 }
+
+
+@lru_cache(maxsize=1)
+def _output_validator():
+    try:
+        schema = json.loads(OUTPUT_SCHEMA_PATH.read_text(encoding="utf-8"))
+        Draft202012Validator.check_schema(schema)
+    except (OSError, json.JSONDecodeError, SchemaError) as exc:
+        raise ValueError("governance health output schema is unavailable or invalid") from exc
+    return Draft202012Validator(schema)
+
+
+def validate_projection_output(projection):
+    if next(_output_validator().iter_errors(projection), None) is not None:
+        raise ValueError(
+            "generated projection does not conform to GovernanceHealthProjection schema"
+        )
 
 
 def canonical(obj):
@@ -111,7 +137,13 @@ def compile_projection(source):
         },
     }
     projection_id = "kfm:governance-health:" + hashlib.sha256(canonical(body)).hexdigest()
-    return {"profile": PROFILE, "projection_id": projection_id, **{k: v for k, v in body.items() if k != "profile"}}
+    projection = {
+        "profile": PROFILE,
+        "projection_id": projection_id,
+        **{k: v for k, v in body.items() if k != "profile"},
+    }
+    validate_projection_output(projection)
+    return projection
 
 
 def main():
