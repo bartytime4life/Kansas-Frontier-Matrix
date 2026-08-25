@@ -6,7 +6,7 @@ version: v0.5
 status: draft; repository-grounded; executable; widely-consumed; fixture-driven; bounded-public-safe-fixture-mechanics; ci-invoked; extraction-decision-open; non-authoritative
 owners: OWNER_TBD — Validator steward · Schema steward · Contract steward · Test/fixture steward · Python tooling steward · Security steward · CI steward · Release steward · Docs steward
 created: 2026-05-09
-updated: 2026-08-02
+updated: 2026-08-25
 supersedes: v0.3 shared-validator runtime guide
 policy_label: "public-review; tools; validators; shared-runtime; json-schema; draft-2020-12; local-resolution; no-network; deterministic-intent; fail-closed; schema-authority-external; contract-authority-external; policy-authority-external; evidence-authority-external; release-authority-external; extraction-aware; correction-aware; rollback-aware"
 current_path: tools/validators/_common/README.md
@@ -16,7 +16,8 @@ truth_posture: >
   indexing; $id skip and duplicate-$id failure behavior; Draft 2020-12 validator construction;
   seven hard-coded top-level fixture validators; Makefile schemas target; schema-validation and
   validator-suite workflows; focused standard-library runner tests; sorted, nonempty positive and
-  negative fixture lanes; explicit EXPECTED_FAIL diagnostics for schema-invalid negative fixtures;
+  negative fixture lanes; duplicate-member and non-finite-number rejection for candidate instances;
+  explicit EXPECTED_FAIL diagnostics for schema-invalid negative fixtures;
   bounded exact-import search surfacing twenty validator scripts and six test modules; the
   package/schema-registry placeholder with working implementation still under this lane; and no
   direct network calls in the inspected helper modules / PROPOSED stable helper contract,
@@ -108,7 +109,7 @@ notes:
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Version: v0.4" src="https://img.shields.io/badge/version-v0.4-informational">
+  <img alt="Version: v0.5" src="https://img.shields.io/badge/version-v0.5-informational">
   <img alt="Maturity: executable" src="https://img.shields.io/badge/maturity-executable-success">
   <img alt="Schema dialect: Draft 2020-12" src="https://img.shields.io/badge/schema-Draft__2020--12-blue">
   <img alt="Network: none in helpers" src="https://img.shields.io/badge/network-none__in__helpers-success">
@@ -757,7 +758,7 @@ validator-suite workflow
 
 ### Confirmed focused runner coverage
 
-`tests/validators/test_jsonschema_runner.py` contains ten deterministic,
+`tests/validators/test_jsonschema_runner.py` contains sixteen deterministic,
 synthetic, standard-library cases for:
 
 - explicit valid and invalid exit/output polarity;
@@ -767,6 +768,7 @@ synthetic, standard-library cases for:
 - nonempty valid and invalid lanes;
 - reversed fixture polarity;
 - malformed negative JSON as a harness `FAIL`;
+- duplicate-member and non-finite-number rejection in explicit and fixture modes;
 - contained validator exceptions;
 - missing fixture configuration.
 
@@ -781,7 +783,6 @@ Additional `_common` coverage should include:
 - reference resolution;
 - registry ordering;
 - primary schema outside the scan root;
-- malformed instance JSON;
 - aggregate order and fail-fast behavior;
 - child exit-code propagation;
 - path containment and symlinks;
@@ -818,11 +819,12 @@ Passing these commands is implementation evidence for their declared scope only.
 | COMMON-06 | Only the first validation error per explicit file is printed. | CONFIRMED |
 | COMMON-07 | Format-keyword enforcement is not explicitly configured in `load_validator()`. | NEEDS VERIFICATION |
 | COMMON-08 | Fixture iteration was not explicitly sorted in the CLI runner. | Corrected and directly tested in v0.4 |
-| COMMON-09 | Direct unit coverage for registry, aggregate, and remaining CLI error branches is incomplete. | PARTIAL; ten runner cases added in v0.4 |
+| COMMON-09 | Direct unit coverage for registry, aggregate, and remaining CLI error branches is incomplete. | PARTIAL; sixteen runner cases through v0.5 |
 | COMMON-10 | Relative schema/fixture paths assume repository-root execution. | CONFIRMED wrappers |
 | COMMON-11 | Working registry logic overlaps a proposed `packages/schema-registry` extraction. | CONFLICTED |
 | COMMON-12 | Stable API, output, exit-code, and deprecation policy are absent. | NEEDS VERIFICATION |
 | COMMON-13 | Resource, path, symlink, timeout, and log-redaction limits are not established. | NEEDS VERIFICATION |
+| COMMON-15 | Candidate instances accepted duplicate members and non-finite numeric values through Python's permissive JSON defaults. | Corrected and directly tested in v0.5 |
 | COMMON-14 | ADR-0001 declares the intended schema home but remains `proposed`. | CONFIRMED status |
 
 This README records the remaining conditions and the bounded v0.4 corrections;
@@ -1079,7 +1081,7 @@ matching tests, documentation, and workflow expectations.
 | `run_all.py` | Seven hard-coded aggregate entries and fail-fast behavior | Complete validator coverage |
 | Top-level validator wrappers | Relative schema/fixture paths and shared-runner imports | All consumers or supported CWDs |
 | Exact-import search | Twenty validator and six test consumers surfaced | Exhaustive dependency graph |
-| `test_jsonschema_runner.py` | Ten synthetic cases for explicit and fixture polarity, order, non-vacuity, errors, configuration, and exit behavior | Resolver internals, aggregate subprocess behavior, complete path/resource controls, or semantic validity |
+| `test_jsonschema_runner.py` | Sixteen synthetic cases for explicit and fixture polarity, strict candidate parsing, order, non-vacuity, errors, configuration, and exit behavior | Resolver internals, aggregate subprocess behavior, complete path/resource controls, or semantic validity |
 | `test_common_contracts.py` | Generic fixture polarity tests using `load_validator` | Direct coverage of every helper branch |
 | Makefile | `make schemas` invokes aggregate runner | Overall repository correctness |
 | Schema workflows | CI invokes the focused runner suite, `make schemas`, and a fail-closed invalid check | Production use or complete policy enforcement |

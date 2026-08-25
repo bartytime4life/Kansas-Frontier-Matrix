@@ -1,11 +1,45 @@
 import argparse
 import json
+import math
 import sys
 from pathlib import Path
 
 from jsonschema import Draft202012Validator, FormatChecker
 
 from tools.validators._common.local_resolver import build_registry
+
+
+class DuplicateKeyError(ValueError):
+    """Raised when an input object repeats a member name."""
+
+
+def _unique_object(pairs):
+    candidate = {}
+    for key, value in pairs:
+        if key in candidate:
+            raise DuplicateKeyError("duplicate JSON object key")
+        candidate[key] = value
+    return candidate
+
+
+def _reject_nonfinite_constant(raw_value):
+    raise ValueError(f"non-finite JSON number: {raw_value}")
+
+
+def _finite_float(raw_value):
+    value = float(raw_value)
+    if not math.isfinite(value):
+        raise ValueError("non-finite JSON number")
+    return value
+
+
+def _load_instance(path):
+    return json.loads(
+        Path(path).read_text(encoding="utf-8"),
+        object_pairs_hook=_unique_object,
+        parse_constant=_reject_nonfinite_constant,
+        parse_float=_finite_float,
+    )
 
 
 def load_validator(schema_path: Path, *, check_formats: bool = False):
@@ -22,7 +56,7 @@ def validate_files(validator, files):
     ok = True
     for fp in files:
         try:
-            data = json.loads(Path(fp).read_text(encoding="utf-8"))
+            data = _load_instance(fp)
             errs = sorted(validator.iter_errors(data), key=lambda e: e.path)
             if errs:
                 print(f"FAIL {fp}: {errs[0].message}")
@@ -39,7 +73,7 @@ def _validate_fixture_files(validator, files, *, expect_valid: bool):
     ok = True
     for fp in files:
         try:
-            data = json.loads(Path(fp).read_text(encoding="utf-8"))
+            data = _load_instance(fp)
             errs = sorted(validator.iter_errors(data), key=lambda e: e.path)
         except Exception as e:
             print(f"FAIL {fp}: {e}")
