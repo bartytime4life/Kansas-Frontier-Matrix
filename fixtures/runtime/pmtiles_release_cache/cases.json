@@ -117,6 +117,12 @@
       "expected_code": "PMTILES_CACHE_INPUT_INVALID"
     },
     {
+      "case_id": "empty-release-id",
+      "mutation": "EMPTY_RELEASE_ID",
+      "expected_outcome": "ERROR",
+      "expected_code": "PMTILES_CACHE_INPUT_INVALID"
+    },
+    {
       "case_id": "internal-source",
       "mutation": "INTERNAL_SOURCE",
       "expected_outcome": "DENY",
