@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 
-from .core import ResolutionCandidate
+from .core import PROFILE, ResolutionCandidate
 
 
 STATUS_TO_DISPOSITION = {
@@ -71,17 +71,24 @@ def project_runtime_posture(result: ResolutionCandidate) -> RuntimePosture:
     shape inconsistencies raise ``ValueError`` rather than being normalized.
     """
 
+    if result.profile != PROFILE:
+        raise ValueError("candidate/profile-unsupported")
+
     if result.status not in STATUS_TO_DISPOSITION:
         raise ValueError("candidate/status-unsupported")
 
     if result.status == "RESOLVED":
         if result.bundle_id is None:
             raise ValueError("candidate/resolved-bundle-missing")
+        if result.issues:
+            raise ValueError("candidate/resolved-issues-present")
         next_checks = REQUIRED_NEXT_CHECKS
         bundle_id = result.bundle_id
     else:
         if result.bundle_id is not None:
             raise ValueError("candidate/nonresolved-bundle-present")
+        if not result.issues:
+            raise ValueError("candidate/nonresolved-issues-missing")
         next_checks = ()
         bundle_id = None
 
