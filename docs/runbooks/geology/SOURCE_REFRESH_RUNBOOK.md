@@ -8,7 +8,7 @@ status: draft; repository-grounded; documentation-only; inspection-and-handoff-o
 owners:
   - "@bartytime4life — verified GitHub review route"
   - "NEEDS VERIFICATION — accountable source, connector, Geology, Natural Resources, rights, sensitivity, evidence, policy, validation, review, release, correction, rollback, security, and operations stewards"
-created: NEEDS VERIFICATION — proposal-era v1 predates mounted-repository reconciliation
+created: 2026-05-12
 updated: 2026-08-25
 policy_label: public-review; geology; natural-resources; source-refresh-inspection; operational-documentation; rights-aware; sensitive-location-aware; fail-closed; no-publication-authority
 current_path: docs/runbooks/geology/SOURCE_REFRESH_RUNBOOK.md
