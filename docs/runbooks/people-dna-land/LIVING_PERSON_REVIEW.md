@@ -5,7 +5,7 @@ type: runbook
 version: 0.2.0
 status: DRAFT_REPOSITORY_GROUNDED; SYNTHETIC_VALIDATION_ONLY; POLICY_RUNTIME_UNBOUND; NON_RELEASE; NON_PUBLICATION
 owners: "@bartytime4life — verified CODEOWNERS route; accountable privacy, consent, Indigenous/Tribal, legal, and domain stewardship NEEDS VERIFICATION"
-created: NEEDS_VERIFICATION
+created: 2026-08-25
 updated: 2026-08-25
 owning_root: docs/
 responsibility: human review procedure for the existing people-dna-land lane
