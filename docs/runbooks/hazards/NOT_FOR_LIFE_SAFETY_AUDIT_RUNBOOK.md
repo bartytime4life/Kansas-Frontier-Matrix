@@ -5,7 +5,7 @@ type: runbook
 version: 0.2.0
 status: DRAFT_REPOSITORY_GROUNDED; BOUNDED_SYNTHETIC_VALIDATION_ONLY; RUNTIME_ENFORCEMENT_UNVERIFIED; NON_RELEASE; NON_PUBLICATION
 owners: "@bartytime4life — verified CODEOWNERS route; accountable hazards, safety, emergency-management, policy, legal, and accessibility stewardship NEEDS VERIFICATION"
-created: NEEDS_VERIFICATION
+created: 2026-08-25
 updated: 2026-08-25
 owning_root: docs/
 responsibility: human audit procedure for the existing hazards lane
