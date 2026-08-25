@@ -17,6 +17,9 @@ function mutate(base:Candidate,name:string):unknown{
  else if(name==="MISSING_GLYPHS")v.cache_snapshot.assets.glyphs=false;
  else if(name==="MISSING_SPRITES")v.cache_snapshot.assets.sprites=false;
  else if(name==="WITHDRAWN")v.requested_release.release_state="WITHDRAWN";
+ else if(name==="UNKNOWN_RELEASE_STATE")v.requested_release.release_state="PENDING";
+ else if(name==="UNKNOWN_REQUEST_MODE")v.request_mode="SNEAKERNET";
+ else if(name==="UNKNOWN_REQUIRED_ASSET")v.requested_release.required_assets=["GLYPHS","PMTILES","SECRET"];
  else if(name==="INTERNAL_SOURCE")v.requested_release.source_url_class="CANONICAL_INTERNAL";
  else if(name==="AUTHORITY_OVERCLAIM")v.authority.public_use_authorized=true;
  else if(name==="BAD_KEY")v.cache_snapshot.cache_key="kfm-pmtiles:wrong";

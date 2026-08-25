@@ -99,6 +99,24 @@
       "expected_code": "PMTILES_CACHE_RELEASE_WITHDRAWN"
     },
     {
+      "case_id": "unknown-release-state",
+      "mutation": "UNKNOWN_RELEASE_STATE",
+      "expected_outcome": "ERROR",
+      "expected_code": "PMTILES_CACHE_INPUT_INVALID"
+    },
+    {
+      "case_id": "unknown-request-mode",
+      "mutation": "UNKNOWN_REQUEST_MODE",
+      "expected_outcome": "ERROR",
+      "expected_code": "PMTILES_CACHE_INPUT_INVALID"
+    },
+    {
+      "case_id": "unknown-required-asset",
+      "mutation": "UNKNOWN_REQUIRED_ASSET",
+      "expected_outcome": "ERROR",
+      "expected_code": "PMTILES_CACHE_INPUT_INVALID"
+    },
+    {
       "case_id": "internal-source",
       "mutation": "INTERNAL_SOURCE",
       "expected_outcome": "DENY",

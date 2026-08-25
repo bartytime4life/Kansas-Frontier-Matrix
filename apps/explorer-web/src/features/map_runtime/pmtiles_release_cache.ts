@@ -35,6 +35,9 @@ export type CacheDecision = Readonly<{
 
 type JsonRecord = Record<string, unknown>;
 const DIGEST = /^sha256:[0-9a-f]{64}$/;
+const REQUEST_MODES = new Set(["ONLINE", "OFFLINE"]);
+const RELEASE_STATES = new Set(["CURRENT", "WITHDRAWN"]);
+const REQUIRED_ASSETS = new Set(["GLYPHS", "PMTILES", "SPRITES"]);
 const ROOT_FIELDS = new Set(["profile","request_mode","requested_release","cache_snapshot","authority"]);
 const RELEASE_FIELDS = new Set(["release_id","artifact_digest","policy_digest","source_url_class","release_state","required_assets"]);
 const SNAPSHOT_FIELDS = new Set(["present","cache_key","release_id","artifact_digest","policy_digest","completion","assets"]);
@@ -48,6 +51,12 @@ function exact(value: JsonRecord, fields: ReadonlySet<string>): boolean {
   const keys=Object.keys(value);
   return keys.length===fields.size && keys.every((key)=>fields.has(key));
 }
+function exactStringSet(value: unknown, expected: ReadonlySet<string>): boolean {
+  return Array.isArray(value)
+    && value.length===expected.size
+    && new Set(value).size===expected.size
+    && value.every((item)=>typeof item==="string"&&expected.has(item));
+}
 function decision(outcome: CacheOutcome, code: CacheCode, cacheKey: string | null, mayRender=false): CacheDecision {
   return Object.freeze({outcome,code,authority:"NONE",cacheMutated:false,networkRequested:false,mayRender,cacheKey});
 }
@@ -58,7 +67,8 @@ function parse(input: unknown): {root:JsonRecord; release:JsonRecord; snapshot:J
   if(!record(input)||!exact(input,ROOT_FIELDS)||input.profile!==PMTILES_CACHE_PROFILE||!record(input.requested_release)||!record(input.cache_snapshot)||!record(input.authority)) return null;
   const release=input.requested_release, snapshot=input.cache_snapshot, authority=input.authority;
   if(!exact(release,RELEASE_FIELDS)||!exact(snapshot,SNAPSHOT_FIELDS)||!exact(authority,AUTHORITY_FIELDS)||!record(snapshot.assets)||!exact(snapshot.assets,ASSET_FIELDS)) return null;
-  if(typeof release.release_id!=="string"||!DIGEST.test(String(release.artifact_digest))||!DIGEST.test(String(release.policy_digest))||!Array.isArray(release.required_assets)) return null;
+  if(typeof release.release_id!=="string"||release.release_id.length===0||!DIGEST.test(String(release.artifact_digest))||!DIGEST.test(String(release.policy_digest))) return null;
+  if(typeof input.request_mode!=="string"||!REQUEST_MODES.has(input.request_mode)||typeof release.release_state!=="string"||!RELEASE_STATES.has(release.release_state)||!exactStringSet(release.required_assets,REQUIRED_ASSETS)) return null;
   return {root:input,release,snapshot,assets:snapshot.assets,authority};
 }
 export function evaluatePmtilesCache(input: unknown): CacheDecision {
