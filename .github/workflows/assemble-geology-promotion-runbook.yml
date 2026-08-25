@@ -25,7 +25,8 @@ jobs:
         run: |
           set -euo pipefail
           cat .tmp/geology-promotion/PROMOTION_RUNBOOK.md.gz.b64.part01 \
-              .tmp/geology-promotion/PROMOTION_RUNBOOK.md.gz.b64.part02 \
+              .tmp/geology-promotion/PROMOTION_RUNBOOK.md.gz.b64.part02a \
+              .tmp/geology-promotion/PROMOTION_RUNBOOK.md.gz.b64.part02b \
             | base64 --decode > /tmp/PROMOTION_RUNBOOK.md.gz
           gzip -dc /tmp/PROMOTION_RUNBOOK.md.gz \
             > docs/runbooks/geology/PROMOTION_RUNBOOK.md
