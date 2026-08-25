@@ -60,11 +60,41 @@ class RuntimeProjectionTests(unittest.TestCase):
                 self.assertFalse(payload["renderable"])
 
     def test_inconsistent_candidate_shapes_fail_closed(self) -> None:
+        unsupported_profile = ResolutionCandidate(
+            profile="kfm/evidence-ref-bundle-candidate/v0",
+            status="RESOLVED",
+            bundle_id="bundle:test",
+            checks_performed=("fixture",),
+            issues=(),
+        )
+        with self.assertRaisesRegex(ValueError, "profile-unsupported"):
+            project_runtime_posture(unsupported_profile)
+
         with self.assertRaisesRegex(ValueError, "resolved-bundle-missing"):
             project_runtime_posture(_candidate("RESOLVED", None))
 
+        resolved_with_issue = ResolutionCandidate(
+            profile="kfm/evidence-ref-bundle-candidate/v1alpha1",
+            status="RESOLVED",
+            bundle_id="bundle:test",
+            checks_performed=("fixture",),
+            issues=(ResolutionIssue("fixture/inconsistent"),),
+        )
+        with self.assertRaisesRegex(ValueError, "resolved-issues-present"):
+            project_runtime_posture(resolved_with_issue)
+
         with self.assertRaisesRegex(ValueError, "nonresolved-bundle-present"):
             project_runtime_posture(_candidate("UNRESOLVED", "bundle:leak"))
+
+        nonresolved_without_issue = ResolutionCandidate(
+            profile="kfm/evidence-ref-bundle-candidate/v1alpha1",
+            status="UNRESOLVED",
+            bundle_id=None,
+            checks_performed=("fixture",),
+            issues=(),
+        )
+        with self.assertRaisesRegex(ValueError, "nonresolved-issues-missing"):
+            project_runtime_posture(nonresolved_without_issue)
 
         with self.assertRaisesRegex(ValueError, "status-unsupported"):
             project_runtime_posture(_candidate("ANSWER", None))
