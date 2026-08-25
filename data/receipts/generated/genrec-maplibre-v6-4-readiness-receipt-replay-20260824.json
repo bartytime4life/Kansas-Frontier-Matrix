@@ -1,6 +1,6 @@
 {
   "artifact_hashes": {
-    ".github/workflows/briefing-implementation-campaign.yml": "sha256:ec60a7fcabe2cf93ed9de21f62139fb16b7761ac113f6c43533af13aba062608"
+    ".github/workflows/briefing-implementation-campaign.yml": "sha256:acd39b3c0fe265316cceb327b65189af4aaa7ae6b41cb1704f67095a99000b3d"
   },
   "artifact_paths": [
     ".github/workflows/briefing-implementation-campaign.yml"
@@ -27,13 +27,18 @@
       "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/3472"
     },
     {
+      "id": "repository:hosted-shallow-checkout-failure",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/32795327478"
+    },
+    {
       "id": "repository:directory-governance",
       "validated": true,
       "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@362d6590b9516596ad1c34a64781c13bf85d52c8"
     }
   ],
   "contract_version": "3.0.0",
-  "created_at": "2026-08-25T00:44:27Z",
+  "created_at": "2026-08-25T00:54:15Z",
   "emitter": "OpenAI Codex via ChatGPT Work",
   "human_review": {
     "reviewer_ids": [],
@@ -55,7 +60,8 @@
       "repo:tools/validators/validate_generated_receipt.py@362d6590b9516596ad1c34a64781c13bf85d52c8",
       "repo:main@362d6590b9516596ad1c34a64781c13bf85d52c8",
       "github://bartytime4life/Kansas-Frontier-Matrix/pull/3017",
-      "github://bartytime4life/Kansas-Frontier-Matrix/pull/3472"
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/3472",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/32795327478"
     ]
   },
   "links": {
@@ -68,7 +74,7 @@
     "model": "GPT-5",
     "version": "2026-08-24"
   },
-  "notes": "Workflow-only repair for a retained MapLibre readiness receipt whose exact authoring bytes remain valid at ancestor commit 24f53ac126659ca154467b657cbec0e88481c546 but whose test and validator artifacts later changed. The workflow now uses the repository-native historical replay option rather than validating immutable process memory against mutable current-tree bytes. The historical receipt is unchanged. No dependency is installed or admitted, no browser or long-session probe is recorded, and no source, runtime, release, deployment, promotion, publication, access, policy, or repository-setting authority is created.",
+  "notes": "Workflow-only repair for a retained MapLibre readiness receipt whose exact authoring bytes remain valid at ancestor commit 24f53ac126659ca154467b657cbec0e88481c546 but whose test and validator artifacts later changed. The workflow now uses the repository-native historical replay option rather than validating immutable process memory against mutable current-tree bytes, and fetch-depth zero makes the exact ancestor available to hosted validation. The historical receipt is unchanged. No dependency is installed or admitted, no browser or long-session probe is recorded, and no source, runtime, release, deployment, promotion, publication, access, policy, or repository-setting authority is created.",
   "override_record": null,
   "parameters": {
     "seed": null,
@@ -125,7 +131,7 @@
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Hosted validation starts after the draft pull request is created."
+      "reason": "The prior draft head failed historical replay because the default depth-one checkout omitted the exact authoring ancestor. This finalized successor head has not yet been pushed, so its hosted validation has not started."
     },
     {
       "gate": "human-review",
