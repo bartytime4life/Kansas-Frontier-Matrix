@@ -2,11 +2,13 @@
   "receipt_id": "genrec-verified-jsonschema-input-integrity-20260825",
   "contract_version": "3.0.0",
   "artifact_paths": [
+    "data/receipts/generated/genrec-identity-token-validator-format-checking-20260809.json",
     "tests/validators/test_jsonschema_runner.py",
     "tools/validators/_common/README.md",
     "tools/validators/_common/jsonschema_runner.py"
   ],
   "artifact_hashes": {
+    "data/receipts/generated/genrec-identity-token-validator-format-checking-20260809.json": "sha256:f2a96b1ef926da8ef1c65df269845072f06e62da04252220ac62a59537dfe841",
     "tests/validators/test_jsonschema_runner.py": "sha256:545bd428f518648fe513d47ed40b8f36dd2442595c5e3901ca63edbdfd53334c",
     "tools/validators/_common/README.md": "sha256:61b0bfc890d162e15ee8272b10c901d96f29592a60a078a096efb8f2d9489d3b",
     "tools/validators/_common/jsonschema_runner.py": "sha256:b4e83ef7fbbfc054b9b39543672b7b33ef1ddcc8aa6c87f62430a203af455ace"
@@ -48,6 +50,7 @@
     ]
   },
   "truth_labels": {
+    "data/receipts/generated/genrec-identity-token-validator-format-checking-20260809.json": "CONFIRMED",
     "tests/validators/test_jsonschema_runner.py": "CONFIRMED",
     "tools/validators/_common/README.md": "PROPOSED",
     "tools/validators/_common/jsonschema_runner.py": "CONFIRMED"
@@ -61,7 +64,7 @@
     {
       "gate": "directory-placement-and-dependency-closure",
       "outcome": "PASS",
-      "reason": "The runner and README remain at existing tools paths, the regression proof remains in the existing tests suite, and this receipt uses the governed generated-receipt lane."
+      "reason": "The runner and README remain at existing tools paths, the regression proof remains in the existing tests suite, and both receipts use the governed generated-receipt lane. The existing IdentityToken receipt refresh is limited to the two later artifact digests and an explicit non-attribution note required by its current-byte hosted check."
     },
     {
       "gate": "baseline-versus-branch-negative-proof",
@@ -125,5 +128,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2874"
   },
-  "notes": "Generated-work provenance for verified campaign candidate C1 at exact base 2d0c9a8e4072ce14cb71404585e85fbc86339e12. Scope is limited to strict candidate-instance parsing in the shared JSON Schema runner, focused tests, and its owning README. Schema-resource parsing, resource limits, lifecycle behavior, publication, and source activation are unchanged. The receipt excludes itself from artifact hashes to avoid recursive identity."
+  "notes": "Generated-work provenance for verified campaign candidate C1 at exact base 2d0c9a8e4072ce14cb71404585e85fbc86339e12. Scope is limited to strict candidate-instance parsing in the shared JSON Schema runner, focused tests, its owning README, and the dependency-closure refresh of the existing IdentityToken current-byte receipt check. The historical receipt explicitly attributes the later runner/test bytes to this receipt and retains its independently inherited pyproject digest drift. Schema-resource parsing, resource limits, lifecycle behavior, publication, and source activation are unchanged. The receipt excludes itself from artifact hashes to avoid recursive identity."
 }
