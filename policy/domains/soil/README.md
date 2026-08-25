@@ -3,11 +3,11 @@ doc_id: kfm://policy/domains/soil
 title: Soil Domain Policy README
 type: readme
 classification: directory-readme; domain-policy-boundary; soil; policy-index
-version: v0.1
+version: v0.2
 status: draft; repository-grounded; mixed-maturity; one-fixture-only-guard; direct-policy-scaffolds; evaluator-unbound; proof-held; non-release; non-publication
 owners: "@bartytime4life — verified CODEOWNERS review route; Soil, source, scientific, identity, measurement, rights, sensitivity, evidence, policy, contract/schema, validator/test, runtime, release, security, correction/rollback, and docs stewardship assignments NEEDS VERIFICATION"
 created: 2026-05-08
-updated: 2026-08-13
+updated: 2026-08-24
 supersedes_version: unversioned greenfield scaffold
 policy_label: public; policy; soil; support-type; source-role; identity; depth; time; units; public-safe; finite-outcomes; no-advice-authority; no-public-authority
 current_path: policy/domains/soil/README.md
@@ -17,7 +17,7 @@ base_commit: 96467cda05c74399b87b4ba9e8a5913c0d182c20
 base_tree: e11649f4a72dd5534c715fb706cea249f72b5a82
 prior_blob: 551e67681f90b1c3c717c3421f1782e155121865
 lane_tree: d1a9b74477c29e1deb49180e21a93911fb71d442
-truth_posture: "CONFIRMED canonical policy-root placement, CODEOWNERS routing, six direct Rego sources, one substantive fixture-only watcher guard, three allow-default-false scaffolds, two deny-default-false stubs, no native Soil Rego tests, 27 direct semantic contracts plus their README, 38 mixed-maturity schemas plus their README, 89 JSON fixtures among 128 fixture-lane files, 22 validator workflows plus one broad Soil workflow, mixed substantive and placeholder validators/tests/pipelines, one inactive manual-only watcher, one held Agriculture–Soil seam, duplicate source-registry topology, and empty direct proof/receipt/candidate/published payload lanes / PROPOSED bounded Soil policy architecture, inputs, normalization, obligations, public-surface contract, native test matrix, and reversible implementation sequence / CONFLICTED allow-versus-deny result polarity, generated-versus-short package namespaces, profile-local support-type vocabularies, local PASS/HOLD/ALLOW results versus outward decisions, duplicate registry topology, and stale adjacent indexes versus inspected repository bytes / UNKNOWN accepted Soil bundle, evaluator, decision emitter, obligation handlers, production consumers, required-check coupling, deployment enforcement, proof graduation, release behavior, and public behavior / NEEDS VERIFICATION functional owners, source authority, rights, canonical support types, units and depth profiles, freshness windows, sensitivity transforms, evaluator compatibility, negative policy tests, correction propagation, withdrawal, and rollback drills."
+truth_posture: "CONFIRMED canonical policy-root placement, CODEOWNERS routing, six direct Rego sources, one substantive fixture-only watcher guard, three allow-default-false scaffolds, two deny-default-false stubs, no native Soil Rego tests, 27 direct semantic contracts plus their README, 38 mixed-maturity schemas plus their README, 89 JSON fixtures among 128 fixture-lane files, 22 validator workflows plus one broad Soil workflow, mixed substantive and placeholder validators/tests/pipelines, one inactive manual-only watcher, one held Agriculture–Soil seam, accepted subtype-first source-registry writer, four unmigrated domain-first compatibility templates, and empty direct proof/receipt/candidate/published payload lanes / PROPOSED bounded Soil policy architecture, inputs, normalization, obligations, public-surface contract, native test matrix, and reversible implementation sequence / CONFLICTED allow-versus-deny result polarity, generated-versus-short package namespaces, profile-local support-type vocabularies, local PASS/HOLD/ALLOW results versus outward decisions, unresolved SourceDescriptor schema/migration binding, and stale adjacent indexes versus inspected repository bytes / UNKNOWN accepted Soil bundle, evaluator, decision emitter, obligation handlers, production consumers, required-check coupling, deployment enforcement, proof graduation, release behavior, and public behavior / NEEDS VERIFICATION functional owners, source authority, rights, canonical support types, units and depth profiles, freshness windows, sensitivity transforms, evaluator compatibility, negative policy tests, correction propagation, withdrawal, and rollback drills."
 related:
   - ../README.md
   - ../../README.md
@@ -97,7 +97,7 @@ notes:
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Version: v0.1" src="https://img.shields.io/badge/version-v0.1-informational">
+  <img alt="Version: v0.2" src="https://img.shields.io/badge/version-v0.2-informational">
   <img alt="Root: policy" src="https://img.shields.io/badge/root-policy%2F-blue">
   <img alt="Domain: soil" src="https://img.shields.io/badge/domain-soil-795548">
   <img alt="Direct policy: one guard and five scaffolds" src="https://img.shields.io/badge/direct__policy-1__guard%20%2B%205__scaffolds-orange">
@@ -234,7 +234,7 @@ The most restrictive applicable source, support type, role, rights, sensitivity,
 | Pipeline specifications | **5 EMPTY-STAGE YAML / 5 INACTIVE JSON + WATCHER** | Five YAML specs have `stages: []`; five domain JSON profiles and one shared watcher spec are substantive but proposed/inactive. |
 | Domain pipeline implementation | **2 FIXTURE-ONLY MODULES / 7 TOP-LEVEL STUBS** | Mesonet normalizer and station-health modules are substantive; ingest through rollback top-level modules are one-line placeholders. |
 | Domain package | **PLACEHOLDER** | Identity, layers, and observations modules are one-line placeholders; the initializer is empty. |
-| Source registry topology | **DUPLICATED / PROPOSED** | Nine source-first path stubs and four domain-first templates coexist; no canonical topology or activated source is established. |
+| Source registry topology | **CANONICAL PATH CONFIRMED / MIGRATION HELD** | ADR-0029 and Directory Rules make the source-first lane the writer. Nine placeholders and four unmigrated domain-first compatibility templates coexist; no activated source is established. |
 | Watcher register | **ONE INACTIVE ENTRY** | The Soil SSURGO/gNATSGO candidate watcher is manual-only, network-denied, output-limited to WORK/QUARANTINE, and not authorized for raw admission, promotion, release, or publication. |
 | Cross-domain seam | **ONE HELD ENTRY** | The Agriculture–Soil suitability seam is `HOLD_UNRESOLVED`, forbids public join, and has no seam contract. |
 | Proof, direct receipts, candidate, published payloads | **ZERO IN BOUNDED LANES** | READMEs and markers exist, but no non-marker payload is established in the direct Soil proof, receipt, candidate, or published-layer directories. |
@@ -275,7 +275,7 @@ The most restrictive applicable source, support type, role, rights, sensitivity,
 - inventoried the direct Rego semantics and incompatible result shapes;
 - reconciled adjacent documentation with inspected, newer repository surfaces without modifying those indexes;
 - separated workflow-executed fixture/profile validation from policy activation, proof, release, and publication;
-- made duplicate registries, profile-local vocabulary, and the held Agriculture–Soil seam explicit;
+- made canonical source-registry placement, unmigrated compatibility templates, profile-local vocabulary, and the held Agriculture–Soil seam explicit;
 - added finite outcomes, public-surface rules, implementation order, review burden, correction, and rollback expectations; and
 - retained unresolved authority as `UNKNOWN`, `NEEDS VERIFICATION`, `CONFLICTED`, or `HOLD` instead of filling gaps with prose.
 
@@ -790,8 +790,8 @@ pipeline_specs/soil/                       domain pipeline/profile specs
 pipeline_specs/watchers/                   shared watcher specs
 tools/ingest/ssurgo_watch/                 bounded SSURGO watch tooling
 tests/ingest/ssurgo_watch/                 watcher and SDA fixture tests
-data/registry/soil/                         domain-first registry projection/templates
-data/registry/sources/soil/                 source-first path stubs
+data/registry/soil/                         domain-first compatibility parent/templates; no independent writes
+data/registry/sources/soil/                 canonical source-registry writer; current records are placeholders
 data/proofs/soil/                           proof payload lane; currently empty except docs/marker
 data/receipts/soil/                         runtime receipt lane; currently empty except docs/marker
 data/published/layers/soil/                 published-layer lane; currently empty except docs/marker
@@ -805,7 +805,7 @@ control_plane/cross_domain_seam_register.yaml held Agriculture–Soil seam
 ### Compatibility and topology guards
 
 - `contracts/domains/soil/` is the semantic authority path after acceptance; `contracts/soil/` is a compatibility guard, not a second evolving contract authority.
-- `data/registry/soil/sources/` and `data/registry/sources/soil/` currently coexist. This README does not choose a winner; accepted Directory Rules, an ADR, or a migration decision must do so.
+- `data/registry/soil/sources/` and `data/registry/sources/soil/` currently coexist. Accepted ADR-0029 and Directory Rules select the subtype-first writer; the domain-first path remains a non-writing compatibility view pending reviewed mapping, generation, redirect, or retirement.
 - Shared watcher specification placement follows the shared watcher boundary; the direct Soil Rego guard remains domain policy source.
 - Generated receipts under `data/receipts/generated/` prove authoring/provenance operations only. They do not populate the direct Soil runtime-receipt lane.
 
@@ -831,7 +831,7 @@ control_plane/cross_domain_seam_register.yaml held Agriculture–Soil seam
 | `kfm.generated...` versus short Soil package namespaces | Treat as separate unbound packages | namespace/version decision and migration compatibility tests |
 | Profile-local support-type vocabularies | No global enum inferred | semantic contract, canonical schema, alias map, fixtures, consumer migration |
 | `PASS/HOLD/ALLOW` versus outward `ANSWER/ABSTAIN/DENY/ERROR` | Local states only | accepted exhaustive normalization and parity tests |
-| Duplicate source-registry topology | Neither path gains authority by presence | accepted path decision, migration, compatibility guard, link repair |
+| Unmigrated domain-first source templates | Deny independent writes; canonical changes remain subtype-first | reviewed mapping, generator or retirement decision, consumer/link closure, lineage, rollback |
 | Stale adjacent README claims versus newer files | Inspected bytes control this inventory | update child indexes in separate exact-scope changes |
 | Component–horizon stored hashes versus deterministic validator output | Treat the fixture family as failing, not proof-bearing | identify intended hash inputs, regenerate reviewed synthetic fixtures, and pass exact matrix/hosted checks |
 | Substantive validators versus placeholder package/pipeline core | Bounded validation only | implemented lifecycle and consumer bindings with proofs |
@@ -848,7 +848,7 @@ No conflict may be resolved by whichever file is newer, more detailed, or more c
 ## Smallest sound implementation sequence
 
 1. **Close authority and ownership.** Name Soil, source, scientific, rights, sensitivity, policy, evaluator, proof, release, correction, and rollback roles.
-2. **Resolve topology.** Decide the source-registry authority path and preserve explicit compatibility during migration.
+2. **Complete registry compatibility migration.** Preserve the accepted subtype-first writer; map, generate, redirect, or retire each domain-first template with consumer closure, lineage, and rollback.
 3. **Freeze semantics.** Accept object, support-type, source-role, identity, depth, time, unit, quality, no-data, and interpretation contracts.
 4. **Close schemas.** Replace permissive scaffolds, align aliases, register versions, and repair stale indexes.
 5. **Complete fixtures.** Add synthetic positive, negative, boundary, malformed, stale, conflict, rights, sensitivity, join, correction, and rollback cases.
@@ -875,7 +875,7 @@ Each step should be reviewable and reversible. Later steps must not be represent
 This lane is ready to claim **implemented Soil policy** only when all of the following are evidenced for the exact accepted version:
 
 - [ ] functional owners and independent review roles are accepted;
-- [ ] source-registry and compatibility topology is resolved;
+- [ ] source-registry compatibility migration is complete while the accepted subtype-first writer remains authoritative;
 - [ ] support-type, source-role, identity, depth, time, unit, quality, no-data, and interpretation semantics are accepted;
 - [ ] contracts and schemas are closed, versioned, registered, and mutually consistent;
 - [ ] source authority, rights, terms, sensitivity, and allowed claims are explicit;
@@ -902,7 +902,7 @@ Until then, this README is a repository-grounded boundary and implementation gui
 | ID | Question | Blocking effect | Required evidence |
 |---|---|---|---|
 | SOIL-POL-001 | Who holds Soil semantic, scientific, source, policy, and independent review authority? | Blocks acceptance | governed owner and reviewer records |
-| SOIL-POL-002 | Which source-registry topology is canonical? | Blocks activation and correction routing | accepted path decision and migration plan |
+| SOIL-POL-002 | How will each domain-first compatibility template map, generate, redirect, or retire against the canonical source-first lane? | Blocks activation and correction routing | reviewed mapping, consumer closure, lineage, and rollback plan |
 | SOIL-POL-003 | What is the accepted support-type vocabulary and alias policy? | Blocks reliable composition | accepted contract, schema, alias map, fixtures |
 | SOIL-POL-004 | Which direct Rego packages and entrypoints are intended? | Blocks bundle creation | accepted package/entrypoint inventory |
 | SOIL-POL-005 | How do boolean allow, boolean deny, deny sets, and local profile outcomes normalize? | Blocks all consumers | exhaustive normalization contract and tests |
@@ -981,7 +981,7 @@ Deleting a file, reverting a commit, or disabling a workflow alone is not a comp
 | Domain docs/contracts/schemas | Substantial, mixed-maturity architecture exists; presence is not acceptance. |
 | Fixtures/tests/validators | Bounded semantic and anti-collapse coverage is real; placeholder families and missing native Rego proof remain visible. |
 | Workflows/pipelines | Twenty-two focused workflows and two fixture-only implementations coexist with broad stubs and explicit proof/release holds. |
-| Registries/control plane | Source topology is duplicated; watcher is inactive; Agriculture–Soil seam is held. |
+| Registries/control plane | Subtype-first source placement is accepted; domain-first compatibility templates remain unmigrated; watcher is inactive; Agriculture–Soil seam is held. |
 | Trust-output lanes | No direct Soil proof, runtime receipt, release candidate, or published-layer payload is established. |
 | Explorer feature lane | Shared drawer reuse exists, but FocusFlow/layers and end-to-end public policy enforcement are unproved. |
 | Planning PDF | Preserved as planning lineage after hashing and visual/text inspection; its no-repository limitation prevents treating proposals as current implementation fact. |
@@ -993,7 +993,7 @@ This documentation change does not:
 - modify or activate a Rego rule;
 - accept a source, support type, unit, depth, freshness, quality, sensitivity, or policy value;
 - create a contract, schema, fixture, validator, test, workflow, pipeline, watcher, registry entry, or UI behavior;
-- resolve the duplicate registry topology or Agriculture–Soil seam;
+- migrate, generate, redirect, or retire the domain-first registry templates or resolve the Agriculture–Soil seam;
 - create evidence, review, receipt, proof, candidate, release, correction, withdrawal, rollback, deployment, or publication state;
 - establish a required check or production consumer; or
 - authorize scientific, advisory, regulatory, engineering, agricultural, hydrologic, hazard, legal, economic, or public claims.
@@ -1007,6 +1007,7 @@ This documentation change does not:
 | Version | Date | Change |
 |---|---|---|
 | v0.1 | 2026-08-13 | Replaced the 17-line greenfield scaffold with a repository-grounded Soil policy boundary, exact maturity inventory, anti-collapse invariants, finite decision and obligation model, public-surface contract, review burden, reversible implementation sequence, open verification register, and correction/rollback guidance. |
+| v0.2 | 2026-08-24 | Reconciled source-registry routing to accepted ADR-0029 and Directory Rules while keeping schema binding, compatibility migration, activation, release, and publication held. |
 
 ## Maintainer summary
 

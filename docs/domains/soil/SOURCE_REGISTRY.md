@@ -2,7 +2,7 @@
 doc_id: kfm://doc/domains/soil/source-registry
 title: Soil Source Registry Guide
 type: domain-source-registry-guide
-version: v1.0.0
+version: v1.1.0
 status: draft; repository-grounded; implementation-partial
 owners:
   - OWNER_TBD - Soil domain steward
@@ -14,7 +14,7 @@ updated: 2026-08-24
 policy_label: public
 owning_root: docs/
 responsibility: Human-readable routing and current-state guidance for Soil source admission records
-truth_posture: CONFIRMED repository paths and inspected bytes; PROPOSED planning lineage; NEEDS VERIFICATION registry topology, source rights, admission, activation, and publication state
+truth_posture: CONFIRMED accepted subtype-first registry placement and inspected Soil lane bytes; PROPOSED planning lineage; NEEDS VERIFICATION descriptor migration, schema binding, source rights, admission, activation, and publication state
 related:
   - docs/domains/soil/README.md
   - docs/domains/soil/SOURCES.md
@@ -28,10 +28,11 @@ related:
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
 tags: [kfm, soil, source-registry, source-role, rights, sensitivity, admission, fail-closed]
 notes:
-  - "Repository evidence snapshot: main@362d6590b9516596ad1c34a64781c13bf85d52c8."
+  - "Repository evidence snapshot: main@366cfa9185b0d10ca27f128a8a041ca8c5312896."
   - "Planning lineage: KFM Soil Architecture Extended Pro PDF-Only Planning Report, sections 13 and Appendix C, printed/PDF pages 15 and 24, SHA-256 7c2d498212b9ad56f3ba37bf91f841e9f328794e8aa4940f8f665a4116c5aaea."
   - "The planning report explicitly had no mounted repository; its source list and paths remain proposal evidence, not repository authority or activation proof."
-  - "This guide records, but does not resolve, the two existing Soil source-registry lane shapes."
+  - "Accepted ADR-0029 and Directory Rules DIR-SOURCE-001 through DIR-SOURCE-004 make data/registry/sources/ the canonical writer and limit data/registry/<domain>/sources/ to a generated or compatibility view."
+  - "This guide reconciles routing posture only; it does not migrate the four domain-first templates or select a SourceDescriptor schema."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -39,23 +40,25 @@ notes:
 # Soil source registry guide
 
 Human-readable routing and current-state guidance for Soil source admission
-records. This document does not admit a source, select a canonical registry
-topology, confer authority, approve rights, or create a public data path.
+records. This document does not admit or migrate a source, select a descriptor
+schema, confer authority, approve rights, or create a public data path.
 
 > [!IMPORTANT]
 > **Current determination at
-> `main@362d6590b9516596ad1c34a64781c13bf85d52c8`:** the repository contains two
-> Soil source-registry lane shapes. Both describe themselves as draft and both
-> say the final topology needs verification. The subtype-first lane contains
-> nine small `PROPOSED` placeholder records; the domain-first lane contains four
-> richer greenfield templates with unresolved fields. No inspected record proves
-> admission, activation, rights clearance, operational retrieval, release, or
-> publication.
+> `main@366cfa9185b0d10ca27f128a8a041ca8c5312896`:** accepted ADR-0029 adopts
+> Directory Rules `DIR-SOURCE-001` through `DIR-SOURCE-004`. Those rules make
+> `data/registry/sources/` the canonical machine source-identity and descriptor
+> writer and permit `data/registry/<domain>/sources/` only as a generated view,
+> not an independent writer. The canonical Soil lane contains nine small
+> `PROPOSED` placeholders. The domain-first compatibility lane retains four
+> richer greenfield templates with unresolved fields pending a reviewed
+> migration. No inspected record proves admission, activation, rights clearance,
+> operational retrieval, release, or publication.
 
 | Field | Current repository result |
 |---|---|
 | Human guide | This file under the `docs/` responsibility root |
-| Registry instances | Two existing `data/` lane shapes; topology unresolved |
+| Registry instances | Canonical subtype-first writer plus an unmigrated domain-first compatibility lane |
 | Source authority | Not established by a filename, descriptor, watcher, or planning report |
 | Activation posture | Fail closed; no inspected Soil record establishes an active source |
 | Public posture | No registry record is a public interface or published Soil artifact |
@@ -72,6 +75,13 @@ Repository authority is applied in this order for this guide:
    behavior at the pinned repository snapshot;
 3. current authoritative repository documentation; and
 4. external planning material only as proposal lineage.
+
+Directory Rules `DIR-SOURCE-001` through `DIR-SOURCE-003` establish source-first
+capture identity, one registration for each canonical `source_id`, and
+`data/registry/sources/` as the machine descriptor home. `DIR-SOURCE-004`
+allows `data/registry/<domain>/sources/` only as a generated view and prohibits
+it from becoming an independent writer. That accepted placement decision
+outranks the older unresolved-topology text still present in the Soil lane.
 
 The relevant planning source is **KFM Soil Architecture Extended Pro PDF-Only
 Planning Report**, sections 13 and Appendix C, printed/PDF pages 15 and 24,
@@ -115,10 +125,10 @@ substantive README plus these nine records:
 - `nrcs-ssurgo.yaml`
 
 Each inspected record is a small `PROPOSED` placeholder tied to the current
-documentation inventory. The lane README says the repository also contains the
-domain-first path and that final topology needs an ADR, migration note, Directory
-Rules update, or registry-inventory decision. It also denies activation and
-publication authority.
+documentation inventory. Accepted Directory Rules make this subtype-first lane
+the canonical writer. Canonical placement does not make the placeholders
+complete, admitted, active, rights-cleared, or public. The lane README also
+denies activation and publication authority.
 
 ### 3.2 Domain-first lane
 
@@ -132,24 +142,27 @@ substantive README plus four greenfield templates:
 
 These records carry more descriptive fields than the subtype-first placeholders,
 but unresolved values and a richer shape do not make them canonical or active.
-The lane README likewise records the subtype-first pattern and labels the exact
-topology as needing verification.
+They are retained as unmigrated compatibility material. Independent writes are
+denied; a future generated view or retirement requires reviewed source mapping,
+consumer and link closure, retained lineage, and a mechanical rollback target.
 
 ### 3.3 Reconciled result
 
 | Question | Result |
 |---|---|
 | Does a Soil registry path exist? | `CONFIRMED` - two path shapes exist. |
-| Is one lane accepted as canonical? | `NEEDS VERIFICATION` - both lane READMEs explicitly defer the topology decision. |
-| May the two descriptor sets diverge? | No - both lane READMEs warn against divergent authority records. |
+| Is one lane accepted as canonical? | `CONFIRMED` - ADR-0029 adopts Directory Rules that make `data/registry/sources/` the canonical writer. |
+| May the two descriptor sets diverge? | No - `DIR-SOURCE-004` prohibits the domain-first view from becoming an independent writer. |
 | Are the records complete SourceDescriptors? | `NEEDS VERIFICATION` - the subtype-first records are placeholders and the domain-first records retain unresolved values. |
+| Is compatibility migration complete? | No - the four domain-first templates remain and no reviewed mapping, generator, redirect, or retirement record was found. |
 | Is any source active? | `NEEDS VERIFICATION`, with fail-closed effect - no inspected record proves activation. |
 | Is any source public-ready? | No inspected registry evidence establishes rights, sensitivity, evidence, review, release, and public read-back closure. |
 
-The duplicate lane shapes are governance and implementation drift to be resolved
-by an accepted topology decision and migration plan. This guide does not silently
-select the more detailed lane, merge descriptors, add redirects, or delete either
-set.
+The accepted topology is clear, while physical compatibility migration remains
+implementation drift. This guide does not merge descriptors, create a generator,
+add redirects, or delete either set. It prevents additional drift by routing new
+canonical work to the subtype-first lane and denying independent writes in the
+domain-first lane.
 
 ## 4. Source-family orientation
 
@@ -203,22 +216,22 @@ generators do not become publishers. Derived layers, tiles, indexes, embeddings,
 or language are not canonical Soil truth. Evidence-dependent claims must resolve
 through governed evidence references and cite or abstain.
 
-## 6. Required reconciliation before descriptor work
+## 6. Required reconciliation before descriptor or migration work
 
-Do not add or enrich competing Soil source records until all of the following are
-resolved in repository authority:
+Canonical placement is resolved by ADR-0029 and Directory Rules
+`DIR-SOURCE-001` through `DIR-SOURCE-004`. Do not add or enrich competing Soil
+source records until all remaining conditions are resolved in repository
+authority:
 
-1. select the canonical Soil source-registry lane and document the accepted
-   Directory Rules or ADR basis;
-2. define migration and compatibility behavior for the non-canonical lane,
+1. define migration and compatibility behavior for the non-canonical lane,
    including redirects or tombstones if adopted;
-3. identify the authoritative SourceDescriptor schema and registry binding rather
+2. identify the authoritative SourceDescriptor schema and registry binding rather
    than choosing among similarly named schema files by filename;
-4. reconcile source-role and support-type vocabularies with current policies,
+3. reconcile source-role and support-type vocabularies with current policies,
    schemas, validators, and tests;
-5. identify accountable source, rights, sensitivity, policy, evidence, release,
+4. identify accountable source, rights, sensitivity, policy, evidence, release,
    correction, and rollback stewards; and
-6. prove fail-closed outcomes with licensed or synthetic fixtures before any live
+5. prove fail-closed outcomes with licensed or synthetic fixtures before any live
    retrieval or source activation is considered.
 
 Until those conditions close, the safe outcomes are `DEFER`, `QUARANTINE`, or
@@ -231,7 +244,7 @@ This guide does not:
 - contact, scrape, download, ingest, mirror, or activate a source;
 - verify endpoint availability, credentials, current terms, or redistribution
   rights;
-- choose a registry topology or make either descriptor set authoritative;
+- move, rename, rewrite, generate, redirect, or retire either descriptor set;
 - promote material or emit an operational admission, promotion, release, or
   publication decision;
 - publish data, layers, maps, tiles, indexes, embeddings, summaries, or generated
@@ -255,7 +268,8 @@ This guide does not:
 ## 9. Maintenance rule
 
 Update this guide only from cited repository evidence. If a future accepted
-decision selects a topology or an operational decision changes a source state,
-pin the exact decision, affected schema and policy bindings, migration behavior,
-tested SHA, and rollback boundary. Do not infer currentness from modification
-date, record detail, or planning-language confidence.
+decision binds the SourceDescriptor schema, completes compatibility migration,
+or changes an operational source state, pin the exact decision, affected schema
+and policy bindings, migration behavior, tested SHA, and rollback boundary. Do
+not infer currentness from modification date, record detail, or
+planning-language confidence.
