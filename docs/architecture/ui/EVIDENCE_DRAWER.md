@@ -2,13 +2,13 @@
 doc_id: kfm://doc/architecture/ui/evidence-drawer
 title: Evidence Drawer — UI Projection and Trust-Panel Boundary
 type: architecture-reference
-version: v2.0-draft
+version: v2.1-draft
 status: draft; repository-grounded; bounded-executable; fixture-first; live-transport-hold; non-authoritative
 owners:
   - "@bartytime4life — verified CODEOWNERS review route"
   - "NEEDS VERIFICATION — independent UI, accessibility, evidence, policy, security, review, release, correction, and rollback stewardship"
 created: 2026-05-14
-updated: 2026-08-19
+updated: 2026-08-24
 policy_label: public; architecture; ui; evidence-drawer; finite-outcomes; fail-closed; no-release; no-publication
 owning_root: docs/
 responsibility: "Explain the current Explorer Evidence Drawer projection, parser, finite view model, keyboard-operable panel, renderer-neutral selection bridge, and production HOLDs without becoming contract, schema, evidence, policy, review, release, correction, rollback, runtime, deployment, or publication authority."
@@ -30,9 +30,16 @@ related:
   - apps/explorer-web/src/adapters/GovernedClient.ts
   - apps/explorer-web/src/features/evidence_drawer/index.tsx
   - apps/explorer-web/src/features/map_runtime/index.tsx
+  - apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts
+  - apps/explorer-web/src/features/map_runtime/runtime-evidence-binding.ts
+  - apps/explorer-web/src/features/map_runtime/runtime-trust-status.ts
   - apps/explorer-web/tests/evidence-drawer.test.ts
+  - apps/explorer-web/tests/evidence-drawer-drift-integrity.test.ts
   - apps/explorer-web/tests/map-evidence-drawer.test.ts
+  - apps/explorer-web/tests/map-runtime-evidence-binding.test.ts
+  - apps/explorer-web/tests/map-runtime-trust-status.test.ts
   - apps/explorer-web/tests/browser/evidence-drawer.spec.ts
+  - apps/explorer-web/tests/browser/trust-surface.spec.ts
   - .github/workflows/evidence-drawer-payload.yml
 tags:
   - kfm
@@ -49,7 +56,8 @@ tags:
   - renderer-neutral
 notes:
   - "Same-path repository-grounded modernization; placement outcome PLACE."
-  - "The executable slice is fixture-first and no-network; production transport and evidence closure remain on HOLD."
+  - "v2.1 reconciles the page with the package-owned renderer-neutral selection type, closed synthetic layer-admission projection, runtime evidence binding and invalidation, finite runtime trust presenter, unique composed Drawer identities, and current drift/integrity tests."
+  - "The executable slice is deterministic, fixture-first, and no-network; production transport, authoritative evidence closure, and concrete MapLibre composition remain on HOLD."
   - "This documentation change does not modify contracts, schemas, policy, fixtures, validators, tests, workflows, runtime, release, deployment, publication, or repository settings."
 [/KFM_META_BLOCK_V2] -->
 
@@ -64,7 +72,7 @@ notes:
 > **Projection is not closure.** A finite outcome, citation, trust label, or release declaration in a UI payload is not the underlying `EvidenceBundle`, `PolicyDecision`, `ReviewRecord`, `ReleaseManifest`, `CorrectionNotice`, or rollback authority.
 
 > [!CAUTION]
-> **Current behavior is narrower than the former architecture target.** Repository evidence supports a deterministic fixture parser, finite view model, keyboard-operable complementary panel, and renderer-neutral selection laboratory. Live governed transport, authoritative evidence resolution, policy execution, release lookup, and a functioning MapLibre click path remain **HOLD**.
+> **Current behavior is narrower than the former architecture target.** Repository evidence supports a deterministic fixture parser, finite view model, keyboard-operable complementary panel, package-owned renderer-neutral selection port, closed synthetic layer-admission projection, and no-network runtime-to-evidence binding. Live governed transport, authoritative evidence resolution, policy execution, authenticated release lookup, and a functioning MapLibre click path remain **HOLD**.
 
 > [!WARNING]
 > **Negative states are no-leak states.** `DENY`, `ERROR`, malformed input, resolver failure, and evidence-scope mismatch must not reflect restricted values, private diagnostics, unsupported summaries, citations, limitations, history, or exception text into the browser.
@@ -95,7 +103,7 @@ notes:
 
 ## 0. Current repository evidence
 
-**Evidence snapshot:** `main@7293f40cc4f2bc7cc48f1956218fd6c15536f787`.
+**Evidence snapshot:** `main@366cfa9185b0d10ca27f128a8a041ca8c5312896`.
 
 Accepted ADR-0029 makes `docs/doctrine/directory-rules.md` the writable Directory Rules authority. This existing path remains a human architecture document under the `docs/` responsibility root. It does not compete with contracts, schemas, policy, runtime, evidence, review, release, correction, or rollback authorities.
 
@@ -106,9 +114,11 @@ Accepted ADR-0029 makes `docs/doctrine/directory-rules.md` the writable Director
 | `contracts/ui/evidence_drawer_payload.md` | Draft UI projection semantics and non-effects | Strongest current UI-facing meaning; still proposed |
 | `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` | Closed Draft 2020-12 profile with four outcomes, bounded trust state, HTTPS citations, and optional history | Machine shape exists; authenticity is not proved |
 | `apps/explorer-web/src/adapters/GovernedClient.ts` | Strict parser for `kfm.explorer.evidence-drawer.public-safe.v1`; no transport or lifecycle-store access | App adapter fails closed over supplied objects |
-| `apps/explorer-web/src/features/evidence_drawer/index.tsx` | Finite view resolver and keyboard-operable complementary panel with fixed negative copy | Bounded app-local projection exists |
-| `apps/explorer-web/src/features/map_runtime/index.tsx` | Strict renderer-neutral selection, injected resolver, evidence-subset check, finite local failures, synthetic controls | Selection laboratory exists without renderer or live service |
-| Unit and browser test sources | Finite states, correction history, no-leak behavior, selection scope, keyboard open/close, and focus return are represented | Intended bounded behavior is inspectable; execution remains separate evidence |
+| `apps/explorer-web/src/features/evidence_drawer/index.tsx` | Finite view resolver and keyboard-operable complementary panel with fixed negative copy, unique composed DOM identities, and suppressed release/correction labels for `ERROR` | Bounded app-local projection exists |
+| `apps/explorer-web/src/features/map_runtime/index.tsx` | Strict renderer-neutral selection adaptation, injected resolver, evidence-subset check, and finite local failures | Selection bridge exists without renderer or live service |
+| Runtime admission and binding helpers | Closed synthetic layer-manifest admission, package-owned `MapRuntimePort` selection subscription, newest-request wins, and evidence invalidation when runtime state leaves `READY` | Fail-closed no-network composition exists; declarations are not authenticated lifecycle or release authority |
+| Runtime trust presenter | Exact KFM runtime snapshots become fixed text-first finite status; only `READY` is selection-eligible | UI status does not infer evidence, policy, review, release, correction, rollback, or publication authority |
+| Unit and browser test sources | Finite states, correction history, drift/integrity failures, no-leak behavior, selection scope, runtime invalidation, unique composed IDs, keyboard open/close, and focus return are represented | Intended bounded behavior is inspectable; execution remains separate evidence |
 | `tools/validators/ui/validate_evidence_drawer_payload.py` | No-network closed-schema and cross-field validator | Declaration consistency can be checked without resolving evidence |
 | `.github/workflows/evidence-drawer-payload.yml` | Read-only, path-scoped orchestration | Workflow presence or success is not review, release, or publication |
 
@@ -124,7 +134,17 @@ Accepted ADR-0029 makes `docs/doctrine/directory-rules.md` the writable Director
 | The drawer is a modal with focus trapping and established WCAG conformance | **UNSUPPORTED.** The current surface is a non-modal complementary panel with bounded keyboard proof. |
 | `release=RELEASED` proves publication | **DENY.** It is a projection declaration, not an authenticated release lookup. |
 
-### 0.3 Documentation responsibility split
+### 0.3 Changes after the v2.0 evidence snapshot
+
+| Current addition | Bounded effect | Preserved HOLD |
+|---|---|---|
+| Package-owned `MapFeatureSelection` | Explorer consumes the renderer-neutral type exported by `@kfm/maplibre` and adapts it into the strict public-safe bridge profile | No concrete renderer or MapLibre event source |
+| Layer-manifest selection admission | A closed supplied projection must pass finite admission and name the selected layer before the injected resolver runs | No registry read/write, loader, lifecycle mutation, or authenticated release decision |
+| Runtime evidence binding | Newer selections supersede unresolved work; a non-`READY` transition or disposal invalidates pending or delivered selection evidence without synthesizing a Drawer claim | No transport, evidence store, policy engine, cache invalidation service, correction service, or publication effect |
+| Runtime trust status | Fixed text and ARIA state expose every finite runtime transition and block selection outside `READY` | Renderer state is not evidence or lifecycle authority |
+| Composed Drawer hardening | Multiple drawers receive unique linked IDs; `ERROR` views suppress conflicting release and correction labels | Bounded DOM proof is not app-wide accessibility conformance |
+
+### 0.4 Documentation responsibility split
 
 | Page | Responsibility |
 |---|---|
@@ -148,7 +168,7 @@ The current executable responsibility is deliberately narrow:
 2. convert it into one finite view model;
 3. render outcome, reason, safe title/summary, evidence identifiers, citations, limitations, trust labels, and bounded history permitted by the outcome;
 4. suppress untrusted detail for denied, errored, malformed, contradictory, or locally failed inputs; and
-5. preserve keyboard open/close, Escape dismissal, focus entry, and focus return for the bounded fixture surface.
+5. preserve keyboard open/close, Escape dismissal, focus entry, focus return, and unique linked DOM identities for composed bounded surfaces.
 
 | Property | Current result | Authority limit |
 |---|---|---|
@@ -158,7 +178,7 @@ The current executable responsibility is deliberately narrow:
 | Trust visibility | Source role, policy, review, release, freshness, correction | Declarations only |
 | History | Bounded negative outcomes and correction edges | Audit projection only |
 | Accessibility | Native controls, complementary landmark, live announcement, Escape, focus entry/return | Not complete conformance |
-| Integration | Deterministic fixtures and renderer-neutral selection laboratory | No authenticated service, renderer, or public operation |
+| Integration | Deterministic fixtures, package-owned renderer-neutral port, closed synthetic layer admission, and runtime evidence binding | No authenticated service, concrete renderer, or public operation |
 
 Two invariants control every extension:
 
@@ -186,22 +206,29 @@ flowchart LR
     N["Network, canonical stores,<br/>EvidenceBundle lookup, policy,<br/>release lookup, model runtime"] -. "absent" .-> P
 ```
 
-### 2.2 Renderer-neutral selection laboratory
+### 2.2 Renderer-neutral runtime-to-evidence slice
 
 ```mermaid
 flowchart LR
-    S["Synthetic MapFeatureSelection"] --> Q["Strict selection parser"]
+    P["MapRuntimePort<br/>renderer-neutral selection"] --> B["Runtime evidence binding"]
+    B --> L{"Closed supplied layer projection<br/>passes admission for selected layer?"}
+    L -->|no| N["Finite local ABSTAIN / DENY / ERROR<br/>resolver not called"]
+    L -->|yes| Q["Strict selection adapter"]
     Q -->|invalid| I["ERROR / SELECTION_INVALID"]
     Q -->|no refs| A["ABSTAIN / MISSING_EVIDENCE"]
     Q -->|valid| R["Injected resolver"]
     R --> D["Finite drawer view"]
     D --> C{"Returned evidence is a subset<br/>of selected evidence?"}
-    C -->|yes| U["Mount drawer"]
+    C -->|yes| U["Deliver bounded resolution"]
     C -->|no| O["ERROR / DRAWER_EVIDENCE_OUTSIDE_SELECTION"]
+    T["Runtime leaves READY<br/>or is disposed"] --> X["Invalidate selection evidence<br/>without synthesizing a claim"]
+    T --> B
 
-    ML["MapLibre click"] -. "HOLD" .-> S
+    ML["MapLibre click"] -. "HOLD" .-> P
     API["Live governed transport"] -. "HOLD" .-> R
 ```
+
+The current binding consumes `MapRuntimePort`, but the repository implementation used by Explorer is still the deterministic `NullMapRuntime`. The layer projection and resolver are injected collaborators. Neither is a loader, registry, authenticated release service, evidence authority, or publication path.
 
 ### 2.3 Target production composition
 
@@ -228,17 +255,19 @@ The target sequence is a graduation plan, not current runtime evidence.
 
 ### 3.1 Current selection object
 
-`MapFeatureSelection` contains exactly:
+The package-owned `MapFeatureSelection` contains exactly:
 
 | Field | Current rule |
 |---|---|
 | `profile` | Must equal `kfm.explorer.map-feature-selection.v1` |
-| `selection_id` | Bounded safe identifier |
-| `layer_id` | Selection context only; not release proof |
-| `feature_id` | Selection context only; not evidence |
-| `evidence_refs` | Unique bounded identifiers, maximum 16 |
+| `selectionId` | Bounded safe identifier |
+| `layerId` | Selection context only; not release proof |
+| `featureId` | Selection context only; not evidence |
+| `evidenceRefs` | Unique bounded identifiers, maximum 16 |
 
 Raw renderer properties, geometry, source payloads, popup text, policy records, release records, prompts, and model output do not cross this browser boundary.
+
+Explorer freezes the KFM-owned value and adapts those camel-case members to the strict bridge object's `selection_id`, `layer_id`, `feature_id`, and `evidence_refs`. The Evidence Drawer payload remains independent of MapLibre-native `queryRenderedFeatures` output and style JSON.
 
 ### 3.2 Current finite bridge behavior
 
@@ -246,19 +275,23 @@ Raw renderer properties, geometry, source payloads, popup text, policy records, 
 |---|---|
 | Selection malformed | `SELECTION_INVALID` and fixed local error view |
 | No evidence refs | `MISSING_EVIDENCE`; resolver is not called |
+| Supplied layer projection is invalid, held, denied, stale, withdrawn, superseded, mismatched, or otherwise non-admissible | Resolver is not called; the finite admission result is mapped to a bounded local `ABSTAIN`, `DENY`, or `ERROR` view |
 | Resolver returns in-scope support | `SUPPORTED` and bounded answer view |
 | Resolver returns denial | Preserve `DENY` with fixed no-leak copy |
 | Resolver throws | `GOVERNED_RESOLVER_ERROR`; exception text is suppressed |
 | Returned evidence exceeds selection scope | `DRAWER_EVIDENCE_OUTSIDE_SELECTION`; fixed local error view |
+| A newer selection arrives before an older resolver completes | Older result is suppressed |
+| Runtime leaves `READY` or is disposed | Active selection evidence is invalidated using only selection ID and finite runtime state/reason; no Drawer claim is synthesized |
 
 Bridge codes are app-local. They are not members of the wire `EvidenceDrawerPayload.reason_code` enum.
 
 ### 3.3 Not established
 
-- live claim-resolution route or equivalent active API;
+- live claim-resolution route or equivalent active API behind the injected resolver;
 - authenticated Explorer transport;
 - functioning MapLibre click translation;
 - authoritative `EvidenceRef -> EvidenceBundle` resolution;
+- authenticated layer-manifest, active-release, correction, withdrawal, or rollback lookup;
 - source-rights, sensitivity, policy, reviewer, or release authentication;
 - production cancellation, retry, caching, telemetry, retention, or incident behavior;
 - Focus Mode or correction-submission handoff;
@@ -397,6 +430,8 @@ A later version must coordinate contract, schema, fixtures, validator, parser, t
 | History | Show bounded safe history when permitted | Treat negative or superseded evidence as current |
 | Sensitive detail | Render only the filtered projection | Reconstruct geometry or reflect denial detail |
 | Map selection | Validate bounded renderer-neutral context | Treat properties, pixels, styles, or popup text as evidence |
+| Layer admission | Consume a closed supplied no-network projection and fail closed before the resolver | Load a registry, authenticate release state, register a source, or create a renderer source |
+| Runtime transitions | Block selection outside `READY` and invalidate selection evidence on finite trust-state change | Infer policy, correction, rollback, release, or publication from renderer state |
 | Model runtime | Nothing | Call a model directly |
 | Lifecycle stores | Nothing | Read RAW, WORK, QUARANTINE, PROCESSED, catalog/triplet, proof, release, or canonical stores |
 
@@ -417,7 +452,7 @@ Current code and tests provide bounded anti-bypass checks, but source structure 
 | `DENY` | Policy, rights, or sensitive-detail restriction | Fixed no-leak copy; no evidence, citations, or history |
 | `ERROR` | `UPSTREAM_ERROR` | Fixed no-leak copy; never fall back to an answer |
 
-The view model uses fixed public-safe negative messages rather than supplied negative-state title or summary. Policy display is not policy execution. `HOLD`, `STALE`, `WITHDRAWN`, and similar conditions are represented through the four finite outcomes, reason code, trust state, and history; they are not extra top-level outcomes in this profile.
+The view model uses fixed public-safe negative messages rather than supplied negative-state title or summary. An `ERROR` view also suppresses supplied release and correction labels because an upstream or adapter failure cannot establish a reliable interpretation of either field. Policy display is not policy execution. `HOLD`, `STALE`, `WITHDRAWN`, and similar conditions are represented through the four finite outcomes, reason code, trust state, and history; they are not extra top-level outcomes in this profile.
 
 [Back to top](#top)
 
@@ -445,6 +480,8 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET
 
 The drawer may project bounded correction history. It cannot issue a correction, choose an active release, invalidate caches, or mutate history.
 
+The current runtime binding invalidates one selection's pending or delivered UI evidence when the renderer-neutral runtime leaves `READY` or is disposed. That local suppression is not an authenticated correction, withdrawal, rollback, cache purge, or lifecycle transition. The layer-admission helper likewise checks only a closed supplied declaration and reports `authority: NONE`, `registryMutated: false`, and `maplibreSourceCreated: false`.
+
 [Back to top](#top)
 
 ---
@@ -459,6 +496,7 @@ Accessibility is part of the trust membrane because outcome, evidence, citation,
 
 - native open and close buttons;
 - labelled `<aside role="complementary">`;
+- unique panel, label, and title IDs when multiple drawers are composed, with each trigger linked to exactly one panel;
 - focus moves to the close button on open;
 - Escape closes;
 - close returns focus to the prior connected element or trigger;
@@ -497,8 +535,11 @@ A bounded browser fixture must not be inflated into a conformance claim.
 | Validator tests | `tests/validators/test_validate_evidence_drawer_payload.py` | Fixture and semantic expectations |
 | Parser | `apps/explorer-web/src/adapters/GovernedClient.ts` | Exact profile parsing |
 | Drawer | `apps/explorer-web/src/features/evidence_drawer/index.tsx` | Finite view and panel |
-| Selection bridge | `apps/explorer-web/src/features/map_runtime/index.tsx` | Renderer-neutral selection scope |
-| App tests | `apps/explorer-web/tests/` | Finite states, no-leak, keyboard/focus, selection |
+| Selection bridge | `apps/explorer-web/src/features/map_runtime/index.tsx` | Renderer-neutral selection adaptation and evidence scope |
+| Layer admission | `apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts` | Closed no-network supplied-projection gate; no registration side effect |
+| Runtime evidence binding | `apps/explorer-web/src/features/map_runtime/runtime-evidence-binding.ts` | `MapRuntimePort` subscription, latest-result ordering, and non-`READY` invalidation |
+| Runtime trust presenter | `apps/explorer-web/src/features/map_runtime/runtime-trust-status.ts` | Fixed text-first finite state and selection eligibility |
+| App tests | `apps/explorer-web/tests/` | Finite states, drift/integrity, no-leak, keyboard/focus, unique DOM identity, selection, admission, runtime ordering, and invalidation |
 | Workflow | `.github/workflows/evidence-drawer-payload.yml` | Read-only focused orchestration |
 
 Repository-native commands:
@@ -523,7 +564,7 @@ A pass does not resolve evidence, execute policy, authenticate review/release/co
 | Anti-pattern | Why forbidden |
 |---|---|
 | Calling the fixture parser a live governed client | It performs no transport or authoritative resolution |
-| Calling the selection laboratory a functioning MapLibre click path | It imports no renderer and uses synthetic controls |
+| Calling the current port/binding a functioning MapLibre click path | Explorer consumes `NullMapRuntime`; no concrete renderer or live event source is established |
 | Treating pixels, properties, popups, badges, or selection as evidence | They scope a request only |
 | Adding prose-only fields rejected by the closed schema | Creates a shadow contract |
 | Treating `ALLOW`, `REVIEWED`, or `RELEASED` labels as authenticated authority | They are declarations |
@@ -557,6 +598,8 @@ The heading is retained for fragment compatibility. Current paths are distinguis
 | Fixtures/validator | `fixtures/ui/evidence_drawer_payload/`; `tools/validators/ui/` | Present; no-network declaration checks |
 | Browser parser/view | Explorer adapter and feature paths | Present; bounded executable |
 | Selection laboratory | Explorer map-runtime feature | Present; renderer-neutral synthetic slice |
+| Runtime selection binding | Explorer map-runtime feature | Present; no-network `MapRuntimePort` composition with synthetic layer admission and injected resolver |
+| Runtime trust projection | Explorer map-runtime feature | Present; text-first finite state, no evidence or lifecycle authority |
 | Policy/evidence/review/release/correction/rollback | Owning roots and records | **HOLD** for production composition |
 
 A material profile change must reconcile contract, schema, fixtures, validator, parser, DOM, selection bridge, tests, workflow, receipts, companion docs, compatibility, correction, and rollback.
@@ -588,7 +631,7 @@ The three architecture pages overlap but have distinguishable responsibilities. 
 
 ### Rollback
 
-Before merge, close the draft pull request and delete only its feature branch. After an authorized merge, revert the documentation commit through a reviewed pull request. No contract, schema, fixture, validator, test, workflow, runtime, lifecycle data, release, deployment, or public artifact requires migration.
+The same-path documentation rollback target is prior blob `d32539bf56705abe0c76683254bfaaa6ad31a099`. Before merge, close the draft pull request and delete only its feature branch. After an authorized merge, revert the documentation commit through a reviewed pull request. No contract, schema, fixture, validator, test, workflow, runtime, lifecycle data, release, deployment, or public artifact requires migration.
 
 [Back to top](#top)
 
@@ -722,7 +765,10 @@ The denial view uses fixed public-safe copy and suppresses the supplied title an
 - [`../../../tools/validators/ui/validate_evidence_drawer_payload.py`](../../../tools/validators/ui/validate_evidence_drawer_payload.py) — no-network validator
 - [`../../../apps/explorer-web/src/adapters/GovernedClient.ts`](../../../apps/explorer-web/src/adapters/GovernedClient.ts) — strict parser
 - [`../../../apps/explorer-web/src/features/evidence_drawer/index.tsx`](../../../apps/explorer-web/src/features/evidence_drawer/index.tsx) — finite view and panel
-- [`../../../apps/explorer-web/src/features/map_runtime/index.tsx`](../../../apps/explorer-web/src/features/map_runtime/index.tsx) — selection laboratory
+- [`../../../apps/explorer-web/src/features/map_runtime/index.tsx`](../../../apps/explorer-web/src/features/map_runtime/index.tsx) — strict selection adapter and bridge
+- [`../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts`](../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts) — closed supplied-projection admission
+- [`../../../apps/explorer-web/src/features/map_runtime/runtime-evidence-binding.ts`](../../../apps/explorer-web/src/features/map_runtime/runtime-evidence-binding.ts) — renderer-neutral subscription and invalidation
+- [`../../../apps/explorer-web/src/features/map_runtime/runtime-trust-status.ts`](../../../apps/explorer-web/src/features/map_runtime/runtime-trust-status.ts) — text-first finite runtime status
 - [`../../../apps/explorer-web/tests/evidence-drawer.test.ts`](../../../apps/explorer-web/tests/evidence-drawer.test.ts) — unit expectations
 - [`../../../apps/explorer-web/tests/map-evidence-drawer.test.ts`](../../../apps/explorer-web/tests/map-evidence-drawer.test.ts) — selection expectations
 - [`../../../apps/explorer-web/tests/browser/evidence-drawer.spec.ts`](../../../apps/explorer-web/tests/browser/evidence-drawer.spec.ts) — browser expectations

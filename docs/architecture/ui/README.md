@@ -2,7 +2,7 @@
 doc_id: kfm://doc/architecture/ui/readme
 title: UI Subsystem — Architecture README
 type: architecture-landing-page
-version: v4.1-draft
+version: v4.1.1-draft
 status: draft; repository-grounded; mixed-maturity; documentation-only; non-publisher
 owners:
   - "@bartytime4life — verified CODEOWNERS review route"
@@ -85,10 +85,11 @@ related:
   - .github/workflows/ui-build.yml
 tags: [kfm, ui, architecture, explorer-web, governed-api, maplibre, evidence-drawer, focus-mode, story-player, review-console, accessibility, finite-outcomes, trust-membrane, correction, rollback]
 notes:
-  - "v4.1-draft reconciles the landing page with accepted ADR-0006/0007 and the implemented dependency-free MapRuntimePort/NullMapRuntime while preserving the document ID, path, H1, twenty-three numbered sections, and Appendix A anchor."
+  - "v4.1.1-draft preserves the v4.1 landing-page evidence snapshot and corrects only the Evidence Drawer sibling status after same-path v2.1 reconciliation at main@366cfa9185b0d10ca27f128a8a041ca8c5312896."
+  - "v4.1-draft reconciled the landing page with accepted ADR-0006/0007 and the implemented dependency-free MapRuntimePort/NullMapRuntime while preserving the document ID, path, H1, twenty-three numbered sections, and Appendix A anchor."
   - "The current Explorer entrypoint mounts a bounded map-first landing composition with a synthetic renderer-neutral map stage, deterministic selection-to-Evidence-Drawer laboratory, thirteen knowledge domains, thirty-eight feature catalog entries, and eight trust principles."
   - "The baseline shell still resolves to fixed fail-closed states, all claim-bearing demonstrations use local deterministic fixtures, and no live Governed API transport, released-layer loader, model call, MapLibre runtime, deployment, release, or publication is established."
-  - "Sibling-document maturity is mixed: MAP_RUNTIME_BOUNDARY.md is reconciled at this evidence snapshot, while EVIDENCE_DRAWER.md and FOCUS_FLOW.md still require separate same-path reconciliation."
+  - "Sibling-document maturity is mixed: MAP_RUNTIME_BOUNDARY.md is reconciled at the landing-page snapshot, EVIDENCE_DRAWER.md is separately reconciled at main@366cfa9185b0d10ca27f128a8a041ca8c5312896, and FOCUS_FLOW.md still requires same-path reconciliation."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -219,7 +220,7 @@ The architecture lane is not uniformly current:
 
 - [`GOVERNED_SHELL.md`](./GOVERNED_SHELL.md), [`LAYERING.md`](./LAYERING.md), [`REVIEW_CONSOLE.md`](./REVIEW_CONSOLE.md), [`STORY_PLAYER.md`](./STORY_PLAYER.md), [`TELEMETRY.md`](./TELEMETRY.md), [`TRUST_BADGES.md`](./TRUST_BADGES.md), and [`map-context-evidence-drawer-admission.md`](./map-context-evidence-drawer-admission.md) contain recent repository-grounded boundaries.
 - [`BOUNDARIES.md`](./BOUNDARIES.md), [`ACCESSIBILITY.md`](./ACCESSIBILITY.md), [`COMPARE_AND_EXPORT.md`](./COMPARE_AND_EXPORT.md), and [`CONTINUITY_NOTES.md`](./CONTINUITY_NOTES.md) are repository-grounded but predate the current site composition and must not be used for current entrypoint claims without checking code.
-- [`EVIDENCE_DRAWER.md`](./EVIDENCE_DRAWER.md) and [`FOCUS_FLOW.md`](./FOCUS_FLOW.md) retain proposal-era metadata or stale assumptions and require separate reconciliation. [`MAP_RUNTIME_BOUNDARY.md`](./MAP_RUNTIME_BOUNDARY.md) is reconciled at this evidence snapshot; executable behavior still comes from pinned source and tests.
+- [`EVIDENCE_DRAWER.md`](./EVIDENCE_DRAWER.md) is a repository-grounded v2.1 current-state reference at its own pinned snapshot. [`FOCUS_FLOW.md`](./FOCUS_FLOW.md) retains proposal-era path or sibling assumptions and requires separate reconciliation. [`MAP_RUNTIME_BOUNDARY.md`](./MAP_RUNTIME_BOUNDARY.md) is reconciled at the landing-page evidence snapshot; executable behavior still comes from pinned source and tests.
 
 ### Proposed architecture
 
@@ -403,7 +404,7 @@ This is fifteen tracked Markdown files: this landing page plus fourteen siblings
 | [`BOUNDARIES.md`](./BOUNDARIES.md) | Browser authority, governed API, and forbidden operations | Repository-grounded trust map with useful negative scaffold evidence; current entrypoint description predates the site composition |
 | [`COMPARE_AND_EXPORT.md`](./COMPARE_AND_EXPORT.md) | Comparison and outbound artifact boundaries | Repository-grounded placeholder-only result; no launch wiring, route, policy, schema, receipt, or export runtime is established |
 | [`CONTINUITY_NOTES.md`](./CONTINUITY_NOTES.md) | Context preservation across map, evidence, Focus, story, export, and correction | Repository-grounded bounded proof inventory; no live continuity runtime; current entrypoint detail predates site composition |
-| [`EVIDENCE_DRAWER.md`](./EVIDENCE_DRAWER.md) | Evidence inspection doctrine and proposed UI panel | **NEEDS RECONCILIATION:** proposal-era metadata says implementation is unknown, while current code/tests establish a bounded fixture-first drawer; use current code, contract/schema, tests, and newer references for current behavior |
+| [`EVIDENCE_DRAWER.md`](./EVIDENCE_DRAWER.md) | Evidence projection, finite view, renderer-neutral runtime binding, and trust-panel boundary | Repository-grounded v2.1 current-state reference; bounded parser/panel/admission/runtime-binding proofs exist, while live transport, authoritative evidence closure, authenticated release lookup, and concrete MapLibre composition remain HOLD |
 | [`FOCUS_FLOW.md`](./FOCUS_FLOW.md) | Client-side Focus Mode sequence | **NEEDS RECONCILIATION:** proposal-era path and sibling assumptions; isolated Focus fixtures may exist, but no live composed Focus transport or route is established |
 | [`GOVERNED_SHELL.md`](./GOVERNED_SHELL.md) | Current Explorer composition and graduation boundary | Current repository-grounded architecture reference matching the composed synthetic site; no live transport or MapLibre runtime |
 | [`LAYERING.md`](./LAYERING.md) | Layer contracts, schemas, fixtures, admission, policy, release, and map-shell use | Current repository-grounded mixed-maturity map; validator and admission evidence are fixture-only; layer-home drift and MapLibre HOLD remain explicit |
@@ -839,7 +840,7 @@ No. Tests, workflows, commits, pull requests, merges, builds, deployments, badge
 
 ### P0 · Documentation convergence and authority clarity
 
-- **NEEDS VERIFICATION:** reconcile [`EVIDENCE_DRAWER.md`](./EVIDENCE_DRAWER.md) with the current bounded implementation, contract/schema, tests, and map-evidence composition.
+- **ONGOING:** keep [`EVIDENCE_DRAWER.md`](./EVIDENCE_DRAWER.md) synchronized with the current bounded parser, panel, runtime binding, contract/schema, tests, and production HOLDs.
 - **NEEDS VERIFICATION:** reconcile [`FOCUS_FLOW.md`](./FOCUS_FLOW.md) with current Focus fixtures, current contract homes, governed-AI boundaries, and the actual absence of a live composed route.
 - **ONGOING:** keep [`MAP_RUNTIME_BOUNDARY.md`](./MAP_RUNTIME_BOUNDARY.md) synchronized with the package-owned port, accepted renderer ADRs, and concrete MapLibre HOLD.
 - **NEEDS VERIFICATION:** refresh entrypoint-specific claims in [`BOUNDARIES.md`](./BOUNDARIES.md), [`ACCESSIBILITY.md`](./ACCESSIBILITY.md), [`COMPARE_AND_EXPORT.md`](./COMPARE_AND_EXPORT.md), and [`CONTINUITY_NOTES.md`](./CONTINUITY_NOTES.md) against the composed site.
@@ -879,7 +880,7 @@ Open items should be resolved in the owning ADR, contract, schema, policy, code,
 
 ## Appendix A · No-loss modernization ledger
 
-| Prior material or identity | v4.1-draft treatment |
+| Prior material or identity | v4.1.1-draft treatment |
 |---|---|
 | Document path, `doc_id`, title, H1, `top` anchor, twenty-three numbered sections, and Appendix A | **Retained** |
 | Map-first, time-aware, evidence-bounded UI purpose | **Retained and tied to current composition evidence** |
@@ -889,7 +890,7 @@ Open items should be resolved in the owning ADR, contract, schema, policy, code,
 | Current Explorer composition | **Added** — synthetic map stage, evidence lab, thirteen domains, thirty-eight feature entries, and eight principles |
 | Current Governed API route state | **Added** — three GET ABSTAIN scaffolds plus safe unsupported-operation errors |
 | UI sibling inventory | **Corrected** — `REVIEW_CONSOLE.md` added; current lane is fifteen files total |
-| Sibling document currentness | **Updated** — Map Runtime Boundary reconciled; Evidence Drawer and Focus Flow remain separate candidates |
+| Sibling document currentness | **Updated** — Map Runtime Boundary and Evidence Drawer are reconciled at their declared snapshots; Focus Flow remains a separate candidate |
 | Story Player bounded executable slice | **Added** without implying live playback or publication |
 | Review Console and operational telemetry maturity | **Narrowed** to explicit implementation HOLDs |
 | Renderer-neutral port/null runtime | **Added** from current package exports, Explorer consumption, and focused tests |
@@ -900,7 +901,7 @@ Open items should be resolved in the owning ADR, contract, schema, policy, code,
 
 ### Rollback
 
-The documentation rollback target is prior blob `623b5eb4ccc107db366ed000769569f56c5ac43e`. Reverting this documentation change restores the previous README. Remove only the companion generated authoring receipt introduced by the same change. No app code, contract, schema, policy, fixture, validator, workflow, source, evidence, lifecycle state, release, deployment, cache, or public state requires rollback.
+The documentation rollback target for this incremental status correction is prior blob `00495949a8aa67c247332a5f38f6ae8967231b32`. Reverting this documentation change restores the previous README. Remove only the companion generated authoring receipt introduced by the same change. No app code, contract, schema, policy, fixture, validator, workflow, source, evidence, lifecycle state, release, deployment, cache, or public state requires rollback.
 
 ---
 
