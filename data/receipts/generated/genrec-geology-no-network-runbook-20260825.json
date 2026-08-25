@@ -1,0 +1,164 @@
+{
+  "receipt_id": "genrec-geology-no-network-runbook-20260825",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/geology/NO_NETWORK_TEST_RUNBOOK.md"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/geology/NO_NETWORK_TEST_RUNBOOK.md": "sha256:48909a67354e82e9cbef7e0409e63feca4559900e7dc5d74a11648d8cc26ca4d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-25"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector repository inspection and feature-branch authoring",
+      "Google Drive read-only source search and inspection",
+      "local SHA-256 hashing and Markdown/JSON structural validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:d334f43df8fd74f17115cc0f51861cf8238c9cb99d37adaf95f5e4e1655fdf51",
+      "sha256:d0b27fc3a2e4c18637e978c67fb8e8bb7af5de4726d33ddc4ae2a6e1fbff51b5",
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    ],
+    "attached_docs": [
+      "Pasted text(20260825-033214).txt — KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM Geology & Natural Resources Architecture — PDF-only plan (2026-04-21)",
+      "Kansas Frontier Matrix Definitive Greenfield and Commissioning Plan v2.0"
+    ],
+    "evidence_refs": [
+      "attachment:sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+      "drive:1kxONABD4knMG1HYaJR740tzZ_EBrt7Ca#sha256:d334f43df8fd74f17115cc0f51861cf8238c9cb99d37adaf95f5e4e1655fdf51",
+      "drive:161zjrR23nrv2b9ejne7iRDasVNnvCFwc#sha256:d0b27fc3a2e4c18637e978c67fb8e8bb7af5de4726d33ddc4ae2a6e1fbff51b5",
+      "repo:docs/runbooks/geology/NO_NETWORK_TEST_RUNBOOK.md@a125b5b949627898f5a0b0f52a0a09f53b0c0483",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a125b5b949627898f5a0b0f52a0a09f53b0c0483",
+      "repo:docs/doctrine/directory-rules.md@a125b5b949627898f5a0b0f52a0a09f53b0c0483",
+      "repo:.github/workflows/domain-geology.yml@a125b5b949627898f5a0b0f52a0a09f53b0c0483",
+      "repo:tests/domains/geology/test_source_role_anti_collapse.py@a125b5b949627898f5a0b0f52a0a09f53b0c0483",
+      "repo:tests/domains/geology/test_aem_campaign.py@a125b5b949627898f5a0b0f52a0a09f53b0c0483",
+      "repo:tests/domains/geology/test_public_safe_geometry.py@a125b5b949627898f5a0b0f52a0a09f53b0c0483",
+      "repo:tests/domains/geology/test_production_material_change.py@a125b5b949627898f5a0b0f52a0a09f53b0c0483",
+      "repo:control_plane/source_authority_register.yaml@a125b5b949627898f5a0b0f52a0a09f53b0c0483",
+      "repo:data/proofs/geology/README.md@a125b5b949627898f5a0b0f52a0a09f53b0c0483",
+      "repo:release/candidates/geology/README.md@a125b5b949627898f5a0b0f52a0a09f53b0c0483"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/geology/NO_NETWORK_TEST_RUNBOOK.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-target-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main and target blob were re-read; focused open-PR search returned no pull request owning the target path."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and the tracked same-path runbook placement preserve docs/runbooks as the human operational responsibility root."
+    },
+    {
+      "gate": "markdown-meta-block-yaml",
+      "outcome": "PASS",
+      "reason": "The KFM Meta Block v2 parsed as one YAML mapping with current evidence, source, inspection, relation, and non-effect fields."
+    },
+    {
+      "gate": "markdown-structure-and-anchor-scan",
+      "outcome": "PASS",
+      "reason": "One H1, balanced code fences, no trailing whitespace, final newline, and all explicit quick-navigation anchors resolved."
+    },
+    {
+      "gate": "relative-link-target-inventory",
+      "outcome": "PASS",
+      "reason": "Twenty-three unique repository-relative targets resolve to current inspected files or paths required by the current Geology workflow."
+    },
+    {
+      "gate": "sensitive-content-pattern-review",
+      "outcome": "PASS",
+      "reason": "The document contains no source payload, coordinate pair, credential, private endpoint, well-log content, operator/parcel identity, or restricted location."
+    },
+    {
+      "gate": "artifact-sha256-binding",
+      "outcome": "PASS",
+      "reason": "The receipt binds the final runbook bytes as sha256:48909a67354e82e9cbef7e0409e63feca4559900e7dc5d74a11648d8cc26ca4d."
+    },
+    {
+      "gate": "repository-native-test-execution",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout was available; the runbook records exact current commands but does not claim they were executed during authoring."
+    },
+    {
+      "gate": "repository-generated-receipt-validator",
+      "outcome": "SKIPPED",
+      "reason": "The repository validator cannot be run without a mounted checkout; JSON shape and key/hash invariants were checked locally."
+    },
+    {
+      "gate": "hosted-exact-pr-validation",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks begin only after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not represented as approval."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "KFM-REPO-BUILD-V6-2026-08-01",
+      "validated": true,
+      "evidence_ref": "attachment:sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    },
+    {
+      "id": "KFM-GEOLOGY-PDF-2026-04-21",
+      "validated": true,
+      "evidence_ref": "drive:1kxONABD4knMG1HYaJR740tzZ_EBrt7Ca#sha256:d334f43df8fd74f17115cc0f51861cf8238c9cb99d37adaf95f5e4e1655fdf51"
+    },
+    {
+      "id": "KFM-COMMISSIONING-PLAN-V2",
+      "validated": true,
+      "evidence_ref": "drive:161zjrR23nrv2b9ejne7iRDasVNnvCFwc#sha256:d0b27fc3a2e4c18637e978c67fb8e8bb7af5de4726d33ddc4ae2a6e1fbff51b5"
+    },
+    {
+      "id": "ADR-0029@a125b5b9",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a125b5b949627898f5a0b0f52a0a09f53b0c0483"
+    },
+    {
+      "id": "DOMAIN-GEOLOGY-WORKFLOW@a125b5b9",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/domain-geology.yml@a125b5b949627898f5a0b0f52a0a09f53b0c0483"
+    },
+    {
+      "id": "GEOLOGY-FOCUSED-TESTS@a125b5b9",
+      "validated": true,
+      "evidence_ref": "repo:tests/domains/geology/@a125b5b949627898f5a0b0f52a0a09f53b0c0483"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-25T03:55:44Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "AI-authoring provenance for the same-path modernization of the Geology no-network test runbook. The runbook reconciles the 2026-04-21 proposal source and commissioning plan against current repository validators, tests, fixtures, workflow, source-authority projection, proof hold, and release-candidate hold. It creates no source admission, connector activation, live retrieval, restricted data, evidence object, policy result, review approval, lifecycle write, operational receipt, proof, candidate, release, deployment, promotion, correction execution, rollback execution, publication, or public behavior."
+}
