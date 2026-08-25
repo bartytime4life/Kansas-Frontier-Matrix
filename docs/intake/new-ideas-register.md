@@ -2,18 +2,18 @@
 doc_id: kfm://doc/NEEDS-VERIFICATION/new-ideas-register
 title: New Ideas Register
 type: standard
-version: v0.10
+version: v0.11
 status: draft; repository-grounded; intake-only
 owner: OWNER_TBD
 created: 2026-05-16
-updated: 2026-08-09
+updated: 2026-08-25
 policy_label: public
 owning_root: docs/
 responsibility: governed exploratory packet ledger without implementation or promotion authority
 truth_posture: CONFIRMED repository paths and recorded source identities / EXPLORATORY packet content / NEEDS VERIFICATION downstream implementation and promotion
-related: [docs/intake/README.md, docs/intake/NEW_IDEAS_INDEX.md, docs/intake/canonicalization-policy.md, docs/intake/exploratory/new-ideas-4-13-source-map.md, docs/intake/exploratory/new-ideas-4-14-source-map.md, docs/intake/exploratory/new-ideas-4-15-source-map.md, docs/intake/exploratory/new-ideas-4-16-source-map.md, docs/intake/exploratory/new-ideas-4-23-source-map.md, docs/intake/exploratory/new-ideas-4-25-source-map.md, docs/intake/exploratory/new-ideas-4-30-source-map.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/intake/exploratory/new-ideas-5-19-26-source-map.md, docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md, docs/intake/exploratory/tile-artifact-manifest-pmtiles-profile-source-map.md, docs/archive/exploratory/new-ideas/README.md, docs/doctrine/authority-ladder.md, docs/doctrine/truth-posture.md]
+related: [docs/intake/README.md, docs/intake/NEW_IDEAS_INDEX.md, docs/intake/canonicalization-policy.md, docs/intake/exploratory/new-ideas-4-13-source-map.md, docs/intake/exploratory/new-ideas-4-14-source-map.md, docs/intake/exploratory/new-ideas-4-15-source-map.md, docs/intake/exploratory/new-ideas-4-16-source-map.md, docs/intake/exploratory/new-ideas-4-23-source-map.md, docs/intake/exploratory/new-ideas-4-25-source-map.md, docs/intake/exploratory/new-ideas-4-30-source-map.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/intake/exploratory/new-ideas-5-19-26-source-map.md, docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md, docs/intake/exploratory/tile-artifact-manifest-pmtiles-profile-source-map.md, docs/doctrine/authority-ladder.md, docs/doctrine/truth-posture.md]
 tags: [kfm, intake, new-ideas, canonization, governance, documentation-control]
-notes: [Repository path and sibling intake surfaces verified through remote main 1bab49fa7342a8bb71f335a2efb4924f438486cc; New Ideas 4-13-26, 4-14-26, 4-15-26, 4-16-26, 4-23-26, 4-25-26, 4-30-26, New Ideas 5, New Ideas 5-19-26, and the spatiotemporal modernization blueprint are triaged exploratory packets; a bounded partial triage of the New Ideas 5-15-26 PMTiles subset is registered; the 4-14 and 4-15 packets are also prior Pass 23 lineage; register rows remain intake records and not implementation or promotion authority.]
+notes: [Repository path and sibling intake surfaces verified through remote main 2d0c9a8e4072ce14cb71404585e85fbc86339e12; New Ideas 4-13-26, 4-14-26, 4-15-26, 4-16-26, 4-23-26, 4-25-26, 4-30-26, New Ideas 5, New Ideas 5-19-26, and the spatiotemporal modernization blueprint are triaged exploratory packets; bounded candidate status for the 4-16 stable diff, 4-23 composed-claim closure, 4-25 taxonomy lineage, and 4-30 distribution coverage slices is reconciled against that snapshot; a bounded partial triage of the New Ideas 5-15-26 PMTiles subset is registered; the 4-14 and 4-15 packets are also prior Pass 23 lineage; register rows remain intake records and not implementation or promotion authority.]
 [/KFM_META_BLOCK_V2] -->
 
 # New Ideas Register
@@ -24,7 +24,7 @@ A governed intake ledger for exploratory KFM idea packets so useful proposals st
 > **Status:** draft / repository-grounded / intake-only
 > **Owner:** OWNER_TBD  
 > **Path:** `docs/intake/new-ideas-register.md`  
-> **Truth posture:** CONFIRMED repository path and sibling intake surfaces through remote `main@83cca9c66a1eb218f010a75b862d417d429c3c85` / EXPLORATORY packet content / no promotion authority
+> **Truth posture:** CONFIRMED repository path, sibling intake surfaces, and the bounded candidate statuses recorded below through remote `main@2d0c9a8e4072ce14cb71404585e85fbc86339e12` / EXPLORATORY packet content / no promotion authority
 > **Rule:** packet pressure is not implementation proof.
 
 ## Quick jumps
@@ -306,10 +306,10 @@ Each row should carry enough information for a maintainer to decide whether to p
 | Secondary tags | `fauna`, `soil`, `hydrology`, `vegetation`, `air-quality`, `baseline`, `materiality`, `corroboration`, `correction`, `consent`, `revocation`, `MapLibre`, `PMTiles`, `STAC`, `historical-networks` |
 | Detailed source map | [`exploratory/new-ideas-4-16-source-map.md`](exploratory/new-ideas-4-16-source-map.md) |
 | Evidence threshold | Current repository evidence for path and gap claims; accepted contract and policy authority; official-source verification; synthetic fixtures; explicit source roles; finite outcomes; correction and rollback. |
-| Promotion blockers | Duplicated domain scaffolding; underdefined canonical hash and materiality profiles; unresolved baseline/event contracts; incomplete executable consent/revocation behavior; renderer conflict; draft STAC profile; source descriptors with unresolved authority/rights/access. |
+| Promotion blockers | The bounded stable-diff helper exists, but purpose-specific canonical hash and materiality profiles remain underdefined; baseline/event contracts, executable consent/revocation behavior, renderer conflict, draft STAC profile, and source authority/rights/access also remain unresolved. |
 | Atlas carry-forward | Ten noncanonical gap-fill triads, `KFM-TRIAD-033` through `KFM-TRIAD-042`, in [`../kfm_full_atlas_seed_cards.md`](../kfm_full_atlas_seed_cards.md). |
-| Smallest next action | Implement the already-recorded `tools/diff/stable_diff.py` contract with public-safe synthetic fixtures, deterministic output, finite status, and no policy or publication authority. |
-| Decision note | Triaged as high-value connective design pressure. Paste-ready code, generic paths, real data examples, hard-coded thresholds, Cesium integration, source activation, and release automation are not promoted. |
+| Smallest next action | Review the existing [`tools/diff/stable_diff.py`](../../tools/diff/stable_diff.py) slice and proof pack; keep materiality, policy, promotion, and publication decisions outside the comparator. |
+| Decision note | The bounded deterministic comparator is `IMPLEMENTED / REVIEW REQUIRED` on the pinned repository snapshot. Paste-ready packet code, generic paths, real data examples, hard-coded thresholds, Cesium integration, source activation, and release automation are not promoted. |
 
 #### `NI-2026-04-23-evidence-custody-composition`
 
@@ -321,10 +321,10 @@ Each row should carry enough information for a maintainer to decide whether to p
 | Secondary tags | `custody`, `reconciliation`, `EvidenceBundle`, `composed-claim`, `dependency-closure`, `signing`, `trust-root`, `key-rotation`, `historical-verification`, `event`, `replay`, `side-effect`, `review`, `obligation`, `correction` |
 | Detailed source map | [`exploratory/new-ideas-4-23-source-map.md`](exploratory/new-ideas-4-23-source-map.md) |
 | Evidence threshold | Current repository evidence for path and gap claims; accepted dependency, trust-root, event, effect, review, and obligation semantics; deterministic synthetic fixtures; finite outcomes; correction and rollback. |
-| Promotion blockers | Duplicated evidence/catalog/release scaffolding; unresolved trust-root machine authority; no confirmed common composed-claim profile, custody reconciliation, event-effect ledger, or obligation-closure enforcement; external cryptographic and infrastructure assumptions. |
+| Promotion blockers | A proposed fixture-only composed-claim profile exists, but adoption, live evidence resolution, custody reconciliation, trust-root machine authority, event-effect ledger, obligation-closure enforcement, and external cryptographic/infrastructure assumptions remain unresolved. |
 | Atlas carry-forward | Five noncanonical gap-fill triads, `KFM-TRIAD-054` through `KFM-TRIAD-058`, in [`../kfm_full_atlas_seed_cards.md`](../kfm_full_atlas_seed_cards.md). |
-| Smallest next action | Define a contract-only composed-claim dependency profile with synthetic `required`, `optional`, `one_of`, `excluded`, `missing`, `denied`, and `contradictory` evidence fixtures. |
-| Decision note | Triaged as high-value trust and orchestration pressure. Parallel evidence stacks, key-service recipes, shallow canonicalization, ETag-as-identity, direct side effects, obligation shortcuts, and publication workflows are not promoted. |
+| Smallest next action | Review the existing proposed, fixture-only [`composed-claim dependency-closure`](../../contracts/evidence/composed_claim_dependency_closure.md) slice; do not extend it into live resolution, policy, review, release, or publication. |
+| Decision note | The bounded contract/schema/fixture/validator/test slice exists on the pinned repository snapshot and remains proposed. Parallel evidence stacks, key-service recipes, shallow canonicalization, ETag-as-identity, direct side effects, obligation shortcuts, and publication workflows are not promoted. |
 
 #### `NI-2026-04-25-identity-authority-assurance`
 
@@ -336,10 +336,10 @@ Each row should carry enough information for a maintainer to decide whether to p
 | Secondary tags | `biodiversity`, `dedupe`, `reconciliation`, `taxonomy`, `name-usage`, `taxon-concept`, `GNIS`, `place-name`, `temporal-alias`, `PLSS`, `CadNSDI`, `GLO`, `survey-control`, `georeference`, `mutation-testing`, `validator-assurance` |
 | Detailed source map | [`exploratory/new-ideas-4-25-source-map.md`](exploratory/new-ideas-4-25-source-map.md) |
 | Evidence threshold | Current repository evidence for path and gap claims; accepted identity, taxonomy, naming, survey-control, derivation, and validator-assurance semantics; official source-role verification; synthetic fixtures; finite outcomes; correction and rollback. |
-| Promotion blockers | Duplicated loaders and trust machinery; incomplete cross-domain taxonomy surface; unresolved common reversible reconciliation, temporal alias, survey-derivation, and mutation-assurance contracts; authority-role, legal-use, source, rights, sensitivity, and threshold decisions. |
+| Promotion blockers | A draft fixture-first taxonomic-concept lineage slice exists, but adopted taxonomy authority, live source use, broader reversible reconciliation, temporal alias, survey derivation, mutation assurance, rights, sensitivity, and threshold decisions remain unresolved. |
 | Atlas carry-forward | Five noncanonical gap-fill triads, `KFM-TRIAD-059` through `KFM-TRIAD-063`, in [`../kfm_full_atlas_seed_cards.md`](../kfm_full_atlas_seed_cards.md). |
-| Smallest next action | Define a cross-domain taxonomy concept decision packet with synthetic synonym, homonym, split, lump, misapplied-name, unresolved, supersession, and reversal fixtures. |
-| Decision note | Triaged as useful identity and assurance pressure. Destructive dedupe, hard-coded authority ranks, scientific-name string identity, GNIS role collapse, PLSS ground-truth claims, fixed mutation thresholds, unpinned installs, sensitive examples, and AI-driven promotion are not promoted. |
+| Smallest next action | Review the existing draft, fixture-first [`taxonomic concept lineage`](../../contracts/crosswalks/taxonomy/taxonomic_concept_lineage.md) slice; do not infer a live authority, occurrence, source permission, or public-use decision. |
+| Decision note | The bounded contract/schema/fixture/validator/test slice exists on the pinned repository snapshot and remains proposed. Destructive dedupe, hard-coded authority ranks, scientific-name string identity, GNIS role collapse, PLSS ground-truth claims, fixed mutation thresholds, unpinned installs, sensitive examples, and AI-driven promotion are not promoted. |
 
 #### `NI-2026-04-30-retrieval-offline-trust`
 
@@ -351,10 +351,10 @@ Each row should carry enough information for a maintainer to decide whether to p
 | Secondary tags | `USDA PLANTS`, `eBird`, `GBIF`, `query`, `rights`, `sampling-effort`, `distribution`, `soil-moisture`, `air-quality`, `measurement-support`, `cadence`, `latency`, `async-transfer`, `PMTiles`, `offline`, `verified-rendering`, `STAC`, `vegetation-confounders` |
 | Detailed source map | [`exploratory/new-ideas-4-30-source-map.md`](exploratory/new-ideas-4-30-source-map.md) |
 | Evidence threshold | Current repository evidence for path and gap claims; accepted contract and policy authority; primary-source verification for external facts and terms; synthetic fixtures; explicit source roles and support; finite outcomes; correction, withdrawal, and rollback. |
-| Promotion blockers | Duplicated source and validator scaffolding; missing common query/terms/distribution/support/latency/transfer contracts; unresolved offline trust and verify-before-render composition; dated source facts and thresholds; peer-renderer conflict; dependency, credential, hosting, rights, and public-release burden. |
+| Promotion blockers | A proposed local-only distribution/coverage slice exists, but query, terms, measurement support, latency, transfer, offline trust, verify-before-render composition, dated source facts, peer-renderer, dependency, credential, hosting, rights, and public-release decisions remain unresolved. |
 | Atlas carry-forward | Eleven noncanonical gap-fill triads, `KFM-TRIAD-043` through `KFM-TRIAD-053`, in [`../kfm_full_atlas_seed_cards.md`](../kfm_full_atlas_seed_cards.md). |
-| Smallest next action | Define `DistributionAssertion` and `CoverageAssessment` semantics with synthetic `present`, `explicitly_absent`, `not_assessed`, `unknown`, `suppressed`, `stale`, and `missing_row` fixtures. |
-| Decision note | Triaged as useful connective design pressure. Packet loaders, generic paths, credentials, cloud examples, hard-coded thresholds, Cesium overlays, source activation, fail-open workflow fragments, and publication automation are not promoted. |
+| Smallest next action | Review the existing proposed, local-only [`DistributionAssertion` and `CoverageAssessment`](../../contracts/evidence/distribution_coverage_assessment.md) slice; keep `HOLD` structural and preserve its no-network, no-source, and no-publication boundary. |
+| Decision note | The bounded contract/schema/fixture/validator/test slice exists on the pinned repository snapshot and remains proposed. Packet loaders, generic paths, credentials, cloud examples, hard-coded thresholds, Cesium overlays, source activation, fail-open workflow fragments, and publication automation are not promoted. |
 
 #### `NI-2026-07-29-new-ideas-5`
 
