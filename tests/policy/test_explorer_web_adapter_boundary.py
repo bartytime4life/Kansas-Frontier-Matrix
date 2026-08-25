@@ -18,12 +18,20 @@ RAW_RENDERER_PACKAGES = (
 
 
 def _source_files() -> list[Path]:
-    return [
-        *ROOT.rglob("*.ts"),
-        *ROOT.rglob("*.tsx"),
-        *ROOT.rglob("*.js"),
-        *ROOT.rglob("*.jsx"),
-    ]
+    assert ROOT.is_dir(), f"Explorer Web source root is missing: {ROOT}"
+    source_files = sorted(
+        [
+            *ROOT.rglob("*.ts"),
+            *ROOT.rglob("*.tsx"),
+            *ROOT.rglob("*.js"),
+            *ROOT.rglob("*.jsx"),
+        ]
+    )
+    assert source_files, (
+        "Explorer Web boundary scan found no TypeScript or JavaScript source files: "
+        f"{ROOT}"
+    )
+    return source_files
 
 
 def test_explorer_web_uses_kfm_port_instead_of_raw_renderer_imports() -> None:
