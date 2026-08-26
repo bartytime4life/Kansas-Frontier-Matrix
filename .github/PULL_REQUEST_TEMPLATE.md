@@ -1,18 +1,34 @@
 <!--
 KFM Pull Request Template
-Template version: v1.4
+Template version: v1.5
 Pinned contract: CONTRACT_VERSION = "3.0.0"
-Evidence snapshot used for this revision: main@f7b9a29ccbf38453cf43efba8eb1cbc5af3eb275
+Evidence snapshot used for this revision: main@97e64536aa7096213731397461ccb0f2a152f41c
+Alignment input: Google Drive "KFM Repository Build-Out & Markdown
+Modernization Implementation Agent" v7.0.0, observed 2026-08-26. Drive is
+proposal and lineage input; repository authority remains GitHub at an exact ref.
 
 This is a governed work-intake and review surface. It asks for evidence,
 scope, validation, risk, review, and rollback. It is not evidence authority,
 policy approval, release approval, publication authority, or proof that the
 implementation is correct.
 
-Fill every section. Mark a field `N/A` only when it truly does not apply and
-explain why. Do not delete sections. Do not paste secrets, exploit details,
-exact sensitive locations, restricted source payloads, living-person data,
-DNA/genomic material, private review notes, prompts, or hidden reasoning.
+Keep every heading. At draft opening, complete the core review boundary: goal,
+delivery state, minimum task contract, changed paths, evidence, Directory Rules
+basis, actual change and non-goals, validation performed and not performed,
+open unknowns, rollback, and terminal exclusions. Complete a conditional
+section when its trigger applies; otherwise use `N/A — <reason>` once for that
+section instead of fabricating detail.
+
+Non-critical `UNKNOWN` and `NEEDS VERIFICATION` items may travel with a draft
+when their affected scope and later gate are explicit. They block only the
+transition that depends on them. Before READY, merge recommendation, or any
+later governed transition, every applicable conditional section must be finite
+enough for that transition. Concrete trust, safety, irreversibility, secret,
+sensitive-data, or unavoidable external-effect risks remain stop conditions.
+
+Do not paste secrets, exploit details, exact sensitive locations, restricted
+source payloads, living-person data, DNA/genomic material, private review
+notes, prompts, or hidden reasoning.
 
 The visible headings `Goal:`, `Status labels:`, `Directory Rules basis:`,
 `Validation:`, and `Rollback:` intentionally preserve the current
@@ -21,10 +37,12 @@ The visible headings `Goal:`, `Status labels:`, `Directory Rules basis:`,
 When a PR touches three or more top-level roots, retain and complete the exact
 visible `Cross-cutting:` field because the current Rego stub checks that token.
 
-Before substantive authoring and again before the final remote mutation, inspect
-current open PRs, active branches, linked issues or campaign cursors, and recent
-merges for overlapping paths or behavior. Record exact refs and head SHAs rather
-than inferring independence from titles or branch names.
+Use a bounded overlap search before the first commit and again before the final
+remote mutation. Inspect current open PRs, relevant active branches, linked
+issues or campaign cursors, and recent merges for plausible path or behavior
+overlap. Record exact refs and head SHAs rather than inferring independence from
+titles or branch names. Historical branches and unrelated blocked work are not
+blanket authoring blockers.
 -->
 
 ## Goal:
@@ -32,6 +50,26 @@ than inferring independence from titles or branch names.
 <!-- One or two sentences: what observable outcome does this PR produce, and why now? -->
 
 -
+
+## Current delivery state and gate boundary:
+
+<!--
+Select one current delivery state. Authors report delivery state; reviewers
+record disposition later. Do not infer a later state from implementation,
+validation, mergeability, or a green check.
+-->
+
+- [ ] `DRAFT_WIP` — the review boundary is still forming; core fields are current and every gap is explicit.
+- [ ] `DRAFT_REVIEWABLE` — the bounded diff and review-grade validation are present; hosted or acceptance-grade work may remain pending and labeled.
+- [ ] `READY_PR` — explicitly authorized for ready-for-review and every applicable readiness gate is satisfied.
+- [ ] `HOLD` — a concrete blocker is recorded with its affected scope or transition.
+
+| Transition field | Current value |
+|---|---|
+| Highest completed repository delivery state | <!-- WORKSPACE_PATCH / PUSHED_BRANCH / DRAFT_PR / READY_PR --> |
+| Transition requested by this PR | |
+| Later gates intentionally not requested | <!-- merge, activation, source admission, release, deployment, promotion, publication, settings/admin action --> |
+| Concrete blocker, if any | <!-- name the affected scope/transition; do not globalize a local blocker --> |
 
 ## Change classification and review risk:
 
@@ -57,7 +95,7 @@ than inferring independence from titles or branch names.
 - [ ] `MODERATE` — shared behavior, compatibility, automation, or public-surface implications
 - [ ] `HIGH` — authority root, policy, sensitive domain, lifecycle, release, security, or migration impact
 - [ ] `CRITICAL` — active exposure, integrity, rollback, or publication risk; private coordination required
-- [ ] `UNKNOWN` — stop or narrow until risk can be classified
+- [ ] `UNKNOWN` — permitted only on a draft with the affected transition named; blocks readiness or later action when material
 
 **Why this risk level is appropriate:**
 
@@ -66,6 +104,11 @@ than inferring independence from titles or branch names.
 <!--
 Record the bounded contract that governed the work. For non-AI or routine human
 changes, keep the fields and use a truthful value rather than deleting them.
+At draft opening, resolve repository, base, goal, target paths or discovery
+selector, authority, delivery route, in-scope work, non-goals, acceptance,
+validation, stop conditions, and change budget. Other fields become mandatory
+when material to the change or requested transition. Use a labeled unknown
+rather than delaying reversible draft work or inventing a value.
 -->
 
 | Field | Value |
@@ -93,12 +136,14 @@ changes, keep the fields and use a truthful value rather than deleting them.
 ## Work coordination and overlap:
 
 <!--
-Before substantive authoring and again immediately before the final remote
-mutation, inspect current open PRs, active branches, linked issues or campaign
-cursors, and recently merged work for overlap in target paths, object families,
-validator behavior, fixtures, workflows, generated outputs, and release
-effects. Record exact refs and head SHAs. An issue title or branch name alone is
-not proof that work is independent.
+Before the first commit and again immediately before the final remote mutation,
+perform a bounded search of current open PRs, relevant active branches, linked
+issues or campaign cursors, and recently merged work for plausible overlap in
+target paths, object families, validator behavior, fixtures, workflows,
+generated outputs, and release effects. Record exact refs and head SHAs. An
+issue title or branch name alone is not proof that work is independent. An
+unrelated or historical branch is not a reason to freeze a dependency-closed
+draft slice.
 -->
 
 | Coordination item | Evidence or decision | Status |
@@ -124,7 +169,7 @@ not proof that work is independent.
 - [ ] `CONFIRMED` — verified in this work session from repository evidence, tests, logs, generated artifacts, or accepted decisions.
 - [ ] `PROPOSED` — design, placement, behavior, or recommendation not yet verified as implemented.
 - [ ] `NEEDS VERIFICATION` — checkable, but not checked strongly enough to act as fact.
-- [ ] `UNKNOWN` — unresolved; do not silently act on it.
+- [ ] `UNKNOWN` — unresolved; may travel with a draft when bounded, but do not silently act on it or cross a dependent gate.
 
 ## Claim posture and capability maturity:
 
@@ -179,7 +224,10 @@ For every new, moved, renamed, deleted, or authority-bearing file, identify its
 owning responsibility root and cite the applicable Directory Rules/ADR basis.
 Do not create parallel schema, contract, policy, registry, release, proof,
 receipt, catalog, or canonical-truth homes without an accepted decision and
-migration plan.
+migration plan. An existing tracked file under an established responsibility
+root may use same-path and adjacent-precedent evidence for a bounded in-place
+revision; structural, authority-changing, moved, renamed, or deleted paths need
+the fuller adjudication above.
 -->
 
 | Path or path family | Owning root | Placement/ADR basis | Status |
@@ -392,7 +440,10 @@ workflows, so "not applicable" requires a concrete explanation.
 <!--
 Distinguish performed from planned. A commit, upload, generated file, or green
 workflow is not completion. Use only: PASS, FAIL, PARTIAL, NOT RUN,
-NOT APPLICABLE, UNKNOWN.
+NOT APPLICABLE, UNKNOWN. Review-grade changed-area validation is required before
+draft delivery. Acceptance-grade validation and every applicable required check
+are required before READY. Hosted checks may still be pending on a truthful
+draft and must remain separate from local results and delivery state.
 -->
 
 ### Performed
@@ -414,6 +465,9 @@ NOT APPLICABLE, UNKNOWN.
 - [ ] No-network or synthetic fixtures used by default where external sources are involved.
 - [ ] Tests prove only their declared scope; broader claims remain labeled.
 - [ ] Current remote check conclusions were inspected or remain `UNKNOWN`.
+- [ ] Review-grade changed-area validation is sufficient for the current draft state, with limitations explicit.
+- [ ] Acceptance-grade validation is complete for `READY_PR`, or this PR remains draft.
+- [ ] Pending, inherited, skipped, and not-run hosted checks are reported separately from introduced failures.
 - [ ] Documentation-only change: structure, links, anchors, diff, and claim boundaries checked.
 - [ ] Not applicable — explanation:
 
@@ -466,9 +520,15 @@ their controls are effective.
 
 ## Open `UNKNOWN` / `NEEDS VERIFICATION`:
 
-<!-- List what this PR explicitly does not resolve. -->
+<!--
+List what this PR explicitly does not resolve. A bounded unknown may travel
+with draft work. Name the first transition that actually depends on resolving
+it so a later gate is not pulled forward into authoring.
+-->
 
--
+| Item | Affected scope or first blocked transition | Draft treatment | Resolution evidence / owner |
+|---|---|---|---|
+| | | carry / narrow / hold | |
 
 ## Security, rights, and sensitive domains involved:
 
@@ -563,7 +623,7 @@ Select the current review result. This is a PR review state, not a release or
 publication decision.
 -->
 
-- [ ] `DRAFT` — evidence or implementation still being assembled
+- [ ] `DRAFT` — review is not final; explicit non-critical gaps may remain bounded to later gates
 - [ ] `HOLD` — unresolved authority, safety, drift, validation, or dependency blocker
 - [ ] `NEEDS PATCH` — bounded changes are required before another review
 - [ ] `READY FOR HUMAN REVIEW` — authoring complete; approval not yet granted
@@ -607,6 +667,12 @@ at `policy/ai_builder/operating_contract.rego`.
 
 That Rego file remains a PROPOSED policy stub. CI invocation, input assembly,
 branch-protection enforcement, required template completion, and merge gating
-remain NEEDS VERIFICATION unless this PR supplies current evidence. A completed template, green workflow, approved receipt, repository-control
-setting, merge, release, and publication are separate states.
+remain NEEDS VERIFICATION unless this PR supplies current evidence. A completed
+template, green workflow, approved receipt, repository-control setting, merge,
+release, and publication are separate states.
+
+Template v1.5 uses progressive completion: core review evidence is required for
+draft delivery, while conditional evidence becomes mandatory when its trigger
+or requested transition applies. This changes authoring flow, not evidence,
+policy, review, merge, release, deployment, promotion, or publication authority.
 </sub>

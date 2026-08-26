@@ -1,6 +1,6 @@
 # First Governed PR — Runbook
 
-[![Edition](https://img.shields.io/badge/edition-v1.0-1f6feb)](#changelog)
+[![Edition](https://img.shields.io/badge/edition-v1.1-1f6feb)](#changelog)
 [![Status](https://img.shields.io/badge/status-PROPOSED-orange)](#status--authority)
 [![Doctrine basis](https://img.shields.io/badge/doctrine%20basis-CONFIRMED-2da44e)](#source-basis)
 [![Companion](https://img.shields.io/badge/companion-ai--build--operating--contract%20v3.0-6e7681)](../doctrine/ai-build-operating-contract.md)
@@ -21,7 +21,7 @@
 | **Required reviewers for material change** | AI surface steward + docs steward |
 | **Companion contract** | `ai-build-operating-contract.md` v3.0 |
 | **Generated** | 2026-05-19 |
-| **Last reviewed** | 2026-05-19 |
+| **Last reviewed** | 2026-08-26 |
 
 ---
 
@@ -223,7 +223,7 @@ Validate the receipt itself against `generated_receipt.schema.json` before commi
 ### 3.6 Stage F — Open the PR (§27)
 
 1. Push a branch named `scaffold/example-object`.
-2. Open a PR. The `.github/PULL_REQUEST_TEMPLATE.md` renders the §27.1 body — fill every section. Do not delete sections; mark `N/A` and explain.
+2. Open a PR. The `.github/PULL_REQUEST_TEMPLATE.md` renders the §27.1 body. For draft delivery, keep every heading, complete the core review boundary, and mark each non-triggered conditional section `N/A` with one reason. Before readiness or merge recommendation, complete every applicable conditional section and resolve or hold each material unknown that blocks that transition.
 3. Required tokens (the OPA stub checks for these): `Goal:`, `Status labels:`, `Directory Rules basis:`, `Validation:`, `Rollback:`.
 4. Link the `GENERATED_RECEIPT` you emitted in Stage E.
 5. Confirm `CONTRACT_VERSION followed: 3.0.0` at the bottom.
@@ -282,7 +282,7 @@ The first governed PR is done when:
 
 - All three artifacts are merged at their proposed paths.
 - The `GENERATED_RECEIPT` is reachable and validates against its schema.
-- The §27.1 PR body is complete and the OPA stub reports `admissible: true`.
+- The §27.1 core PR body is complete, every conditional section triggered by merge is finite, and any executed OPA-stub check reports `admissible: true`.
 - The §33 reviewer set has signed off.
 - No `CorrectionNotice` is open against the artifacts.
 - The §35 coverage signal (or its placeholder register) reflects the merge.
@@ -310,4 +310,5 @@ After this PR lands, you can run the same shape against larger changes — addin
 
 | Edition | Date | Change |
 |---|---|---|
+| v1.1 | 2026-08-26 | Align draft-stage progressive completion with PR template v1.5; later transition gates remain fail-closed. |
 | v1.0 | 2026-05-19 | Initial runbook accompanying contract v3.0. |
