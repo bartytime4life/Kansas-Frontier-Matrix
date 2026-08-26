@@ -6,7 +6,7 @@
     "docs/security/THREAT_MODEL.md"
   ],
   "artifact_hashes": {
-    "docs/security/README.md": "sha256:1f953ff5c0be19e2a7592bfdff906ebdece76382e9acf908a66e467ba31967ea",
+    "docs/security/README.md": "sha256:f6710292c708e89e91c99c134989a13391ee97a2cc17d09294ae3e4e4bf076c9",
     "docs/security/THREAT_MODEL.md": "sha256:6cbb171916f3d46857842d1a6bad9c1b43612a0c95a15fdf2393aab0bf3f0512"
   },
   "model_identity": {

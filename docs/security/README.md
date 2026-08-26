@@ -33,7 +33,6 @@ evidence_snapshot:
   inventory:
     direct_markdown_files_including_this_readme: 10
     direct_child_guidance_files: 8
-    direct_child_decision_packets: 1
     direct_child_directories: 0
     current_repo_grounded_guidance_docs: 1
     older_draft_child_docs_requiring_file_specific_reconciliation: 7
