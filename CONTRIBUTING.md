@@ -318,9 +318,9 @@ Minimum expectations:
 
 ### Pull requests
 
-Use [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md) and keep every section. Mark a section `Not applicable` with a reason instead of deleting it.
+Use [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md) and keep every heading. At draft opening, complete the core review boundary and mark each non-triggered conditional section `Not applicable` with one reason. Do not fabricate evidence or delete the visible tokens required by the current proposed Rego companion.
 
-A complete pull request identifies:
+At draft opening, the core review boundary identifies:
 
 - goal and status labels;
 - pinned evidence inspected;
@@ -334,6 +334,8 @@ A complete pull request identifies:
 - anti-prompt-injection result;
 - generated-receipt path for AI-authored work;
 - ADR triggers and links.
+
+Before `READY_PR` or a merge recommendation, complete every applicable conditional section and resolve, narrow, or explicitly hold each material unknown that blocks that transition. Non-critical unknowns may remain on a draft when their affected scope and later gate are explicit.
 
 Draft pull requests are the default for substantial, governance-significant, AI-authored, or not-yet-fully-validated changes. Do not self-approve, merge, enable auto-merge, dismiss reviews, or mark ready for review unless explicitly authorized.
 
