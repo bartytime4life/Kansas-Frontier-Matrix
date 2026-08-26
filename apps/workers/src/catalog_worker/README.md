@@ -3,12 +3,12 @@ doc_id: kfm://app/workers/src/catalog-worker/readme
 title: Catalog Worker README
 type: app-readme
 subtype: worker-lane-boundary-readme
-version: v0.2
-prior_version: v0.1
-status: draft; repository-grounded; placeholder-only
+version: v0.3
+prior_version: v0.2
+status: draft; repository-grounded; source-reconciled; placeholder-only
 owner: "NEEDS VERIFICATION — CODEOWNERS routes default repository review to @bartytime4life; no accepted Catalog Worker steward, operations owner, independent reviewer, or release authority was verified"
 created: 2026-06-16
-updated: 2026-08-12
+updated: 2026-08-26
 policy_label: public
 current_path: apps/workers/src/catalog_worker/README.md
 owning_root: apps/
@@ -17,13 +17,19 @@ truth_posture: "CONFIRMED pinned repository bytes and adopted placement authorit
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: e1d43539b6f6a237649334b7e6a91957034a38fb
-  target_prior_blob: d70d552353aef5558e4ede896264d92c00df2a6b
+  base_commit: fd29f643db7efe54da7e21937e2491a679bee97d
+  repository_tree: bcd85b3c20578c18efabb8e6b62863cdc599bdf9
+  target_prior_blob: 82284b2f41610c82286cc7a84489b7968329b902
   entrypoint_blob: be727f309790b3510560fa09ebf7c661141f0189
   workers_readme_blob: 5b5c1e6b067e652a380bf445488a6227028dfc0e
   workers_src_readme_blob: 08ad9f8116f64817ffa4f8b2058613749360c102
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  catalog_matrix_closure_profile_blob: fa78e2f0050c16941daf98f3d9355c5817499485
+  catalog_matrix_closure_validator_blob: 2dc376e928a4fffdf4061828d830cc4072dfbdc5
+  catalog_matrix_claim_closure_profile_blob: f8907301fcfd8e8c874a43f2575a8016732d4f08
+  catalog_matrix_claim_closure_validator_blob: 30f71b796cae41fed503dd2f82b2b0c676e0a206
+  catalog_closure_validator_readme_blob: a6001d58d20c4f1c078281661f6cba17a488f293
   inspection_mode: GitHub connector reads, exact-path probes, bounded code search, current open-PR reconciliation, and deterministic Markdown checks
 related:
   - ../README.md
@@ -36,12 +42,22 @@ related:
   - ../../../../pipelines/catalog/README.md
   - ../../../../packages/catalog/README.md
   - ../../../../contracts/data/catalog_matrix.md
+  - ../../../../contracts/data/catalog_matrix_closure_profile.md
+  - ../../../../contracts/data/catalog_matrix_claim_closure_profile.md
   - ../../../../contracts/data/catalog_closure_packet.md
   - ../../../../schemas/contracts/v1/data/catalog_matrix.schema.json
+  - ../../../../schemas/contracts/v1/data/catalog_matrix_closure_profile.schema.json
+  - ../../../../schemas/contracts/v1/data/catalog_matrix_claim_closure_profile.schema.json
   - ../../../../schemas/contracts/v1/data/catalog_closure_packet.schema.json
+  - ../../../../fixtures/data/catalog_matrix/closure/README.md
+  - ../../../../fixtures/data/catalog_matrix/claim_closure/README.md
   - ../../../../fixtures/data/catalog_closure_packet/README.md
+  - ../../../../tools/validators/validate_catalog_matrix_closure.py
+  - ../../../../tools/validators/validate_catalog_matrix_claim_closure.py
   - ../../../../tools/validators/catalog_closure/README.md
   - ../../../../tools/validators/catalog_closure/validate_catalog_closure.py
+  - ../../../../tests/validators/test_validate_catalog_matrix_closure.py
+  - ../../../../tests/validators/test_validate_catalog_matrix_claim_closure.py
   - ../../../../tests/validators/test_validate_catalog_closure.py
   - ../../../../data/catalog/README.md
   - ../../../../data/triplets/README.md
@@ -65,10 +81,11 @@ tags:
   - fail-closed
   - rollback
 notes:
-  - "v0.2 replaces proposal-heavy worker claims with a current repository-grounded maturity contract."
+  - "v0.3 refreshes the repository snapshot and reconciles current additive catalog-closure profiles with read-only source and coordination pressure."
   - "The lane contains only this README and one comment-only main.py placeholder at the pinned base."
-  - "CatalogClosurePacket contract, schema, fixtures, validator, tests, and read-only workflow exist elsewhere; no Catalog Worker consumer or execution wiring was verified."
-  - "CatalogMatrix meaning exists, but its paired schema remains permissive and the schema-declared validate_catalog_matrix.py path is absent."
+  - "CatalogClosurePacket and two additive proposed CatalogMatrix closure profiles have schemas, fixtures, validators, and tests elsewhere; no Catalog Worker consumer or execution wiring was verified."
+  - "The broader CatalogMatrix schema remains permissive and its schema-declared tools/validators/data/validate_catalog_matrix.py path is absent; additive profile validators do not close that gap."
+  - "Drive, Notion, and supplied PDF/Markdown sources are lineage or design inputs only; GitHub repository bytes remain authoritative for current implementation claims."
   - "This documentation change does not add worker code, queue wiring, catalog data, policy, release state, deployment, or publication."
 [/KFM_META_BLOCK_V2] -->
 
@@ -89,14 +106,14 @@ notes:
 [![Truth posture: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#13-validation-and-test-strategy)
 [![Directory Rules: ADR-0029](https://img.shields.io/badge/directory%20rules-ADR--0029-8250df?style=flat-square)](#3-authority-and-placement)
 
-[Purpose](#1-purpose) · [Current state](#2-repository-grounded-status) · [Boundary](#4-operating-boundary) · [Inputs](#5-inputs) · [Outputs](#6-outputs) · [Execution](#8-execution-model) · [Validation](#13-validation-and-test-strategy) · [Done](#18-definition-of-done) · [Rollback](#20-maintenance-correction-and-rollback)
+[Purpose](#1-purpose) · [Current state](#2-repository-grounded-status) · [Source pressure](#source-pressure) · [Boundary](#4-operating-boundary) · [Inputs](#5-inputs) · [Outputs](#6-outputs) · [Execution](#8-execution-model) · [Validation](#13-validation-and-test-strategy) · [Done](#18-definition-of-done) · [Rollback](#20-maintenance-correction-and-rollback)
 
 </div>
 
 ---
 
 > [!IMPORTANT]
-> **Current state:** repository-grounded draft / placeholder-only. The directory contains this README and [`main.py`](./main.py); `main.py` is a single comment and establishes no executable worker behavior. No queue consumer, scheduler, catalog builder, service loop, runtime dependency, deployment manifest, worker-specific test, or release integration was verified at `main@e1d43539b6f6a237649334b7e6a91957034a38fb`.
+> **Current state:** repository-grounded draft / placeholder-only. The directory contains this README and [`main.py`](./main.py); `main.py` is a single comment and establishes no executable worker behavior. No queue consumer, scheduler, catalog builder, service loop, runtime dependency, deployment manifest, worker-specific test, or release integration was verified at `main@fd29f643db7efe54da7e21937e2491a679bee97d`.
 
 > [!CAUTION]
 > A Catalog Worker may eventually coordinate bounded catalog-candidate jobs. It must never treat a successful job, schema pass, catalog record, STAC item, DCAT distribution, PROV activity, `CatalogMatrix`, receipt, pull request, merge, or generated summary as evidence truth, policy approval, release authority, lifecycle promotion, or KFM publication.
@@ -166,9 +183,9 @@ This lane does not exist to:
 
 | Field | Bounded result |
 |---|---|
-| Repository snapshot | `main@e1d43539b6f6a237649334b7e6a91957034a38fb` |
+| Repository snapshot | `main@fd29f643db7efe54da7e21937e2491a679bee97d` |
 | Directory contents | Exactly `README.md` and `main.py` |
-| Prior README blob | `d70d552353aef5558e4ede896264d92c00df2a6b` |
+| Prior README blob | `82284b2f41610c82286cc7a84489b7968329b902` |
 | Entrypoint blob | `be727f309790b3510560fa09ebf7c661141f0189` |
 | Entrypoint bytes | `# catalog_worker entrypoint — greenfield placeholder` plus final newline |
 | Executable Python in this lane | None verified |
@@ -202,10 +219,13 @@ This lane does not exist to:
 | [`packages/catalog/pyproject.toml`](../../../../packages/catalog/pyproject.toml) | Project `kfm-catalog`, version `0.0.0`, no verified implementation dependency surface | Package identity exists; production capability is not established |
 | [`CatalogMatrix` contract](../../../../contracts/data/catalog_matrix.md) | Draft semantic contract | Meaning is documented; not evidence or release authority |
 | [`CatalogMatrix` schema](../../../../schemas/contracts/v1/data/catalog_matrix.schema.json) | Greenfield placeholder; only `id` required; additional properties allowed | Shape is too permissive to prove full CatalogMatrix semantics |
-| `tools/validators/data/validate_catalog_matrix.py` | Exact path not found at the pinned base | Schema-declared dedicated validator remains absent |
+| `tools/validators/data/validate_catalog_matrix.py` | Exact path not found at the pinned base | Schema-declared broad validator remains absent |
+| [STAC/DCAT/PROV closure profile](../../../../contracts/data/catalog_matrix_closure_profile.md) | Proposed additive `STAC_DCAT_PROV_CLOSURE_V1` profile with closed schema, fixtures, executable validator, and tests | Proves bounded identity/digest/release-reference alignment only; does not replace the broad CatalogMatrix contract or accept proposed ADR-0022 |
+| [ClaimEnvelope closure profile](../../../../contracts/data/catalog_matrix_claim_closure_profile.md) | Proposed additive `CLAIM_ENVELOPE_CATALOG_MATRIX_CLOSURE_V1` profile with closed schema, fixtures, executable validator, and tests | Rejects catalog projections that overstate claim authority; does not implement a worker or create release/publication authority |
 | [`CatalogClosurePacket` contract](../../../../contracts/data/catalog_closure_packet.md) | Fixture-first readiness contract | Bounded readiness object exists; does not create catalog/release authority |
 | [`CatalogClosurePacket` schema](../../../../schemas/contracts/v1/data/catalog_closure_packet.schema.json) | Closed Draft 2020-12 shape | Machine shape exists for the fixture-first packet |
 | [`catalog_closure` validator](../../../../tools/validators/catalog_closure/validate_catalog_closure.py) | Executable validator present | Can evaluate declared packet invariants; no worker wiring inferred |
+| [`catalog_closure` validator README](../../../../tools/validators/catalog_closure/README.md) | Still says validator path, dedicated tests, and dedicated CI are unestablished | **CONFIRMED DRIFT:** that README contradicts repository files; correction belongs in a separate, same-path follow-up |
 | [`catalog closure` tests](../../../../tests/validators/test_validate_catalog_closure.py) | Test source expects four valid and eleven invalid fixtures plus fail-closed parser cases | Executable test surface exists; this README does not claim a current run result |
 | [`catalog-closure-packet` workflow](../../../../.github/workflows/catalog-closure-packet.yml) | Read-only, path-scoped, fixture/test workflow | Workflow bytes exist; passing status is not worker or release proof |
 | [`data/catalog/`](../../../../data/catalog/README.md) | Canonical catalog projection lane | Owns governed catalog instances, not worker code |
@@ -235,12 +255,30 @@ The correct documentation posture is therefore neither “not started” nor “
 
 ### 2.6 Last reviewed
 
-- **Date:** 2026-08-12
+- **Date:** 2026-08-26
 - **Repository:** `bartytime4life/Kansas-Frontier-Matrix`
-- **Base:** `main@e1d43539b6f6a237649334b7e6a91957034a38fb`
-- **Target prior blob:** `d70d552353aef5558e4ede896264d92c00df2a6b`
-- **Inspection:** exact target and entrypoint bytes; parent worker contracts; adopted Directory Rules and ADR; CODEOWNERS; bounded worker reference search; catalog package/pipeline placeholders; catalog data/triplet boundaries; CatalogMatrix and CatalogClosurePacket surfaces; closure validator, fixtures, tests, and workflow
+- **Base:** `main@fd29f643db7efe54da7e21937e2491a679bee97d`
+- **Target prior blob:** `82284b2f41610c82286cc7a84489b7968329b902`
+- **Inspection:** exact target and entrypoint bytes; parent worker contracts; adopted Directory Rules and ADR; CODEOWNERS; bounded worker reference and open-PR search; package/pipeline placeholders; CatalogMatrix, its two additive closure profiles, and CatalogClosurePacket contracts/schemas/fixtures/validators/tests; catalog data, triplet, release, and workflow boundaries
+- **Source reconciliation:** supplied PDF/Markdown manuals, Drive source material, and Notion coordination pages were read as non-authoritative design pressure; current GitHub bytes control implementation claims
 - **Not inspected as operational proof:** deployed worker, queue, runtime logs, dashboard, secrets, storage transactions, required-check settings for this lane, or release/publication activity
+
+<a id="source-pressure"></a>
+
+### 2.7 Source and coordination pressure — not implementation
+
+The supplied sources consistently strengthen the intended boundary, but they do not establish repository implementation, adoption, or operational state.
+
+| Read-only source family | Useful pressure carried forward | What this README does not infer |
+|---|---|---|
+| Pipeline implementation manual | Catalog improvement follows evidence, policy, validation, and review; dry-run candidates, receipts, correction, and rollback precede any public effect | No live worker, queue, automatic catalog write, or auto-publication |
+| MapLibre operating manual | Browser/UI surfaces consume governed APIs and released catalog records; catalog processing stays behind the trust membrane | No direct browser-to-worker path and no UI catalog/release authority |
+| KFM implementation/architecture references | Stable identifiers, source ledgers, STAC/DCAT/PROV alignment, reproducible mappings, release manifests, and rollback are desired design properties | No current catalog closure, bitemporal implementation, or accepted release transition beyond verified repository bytes |
+| Full Atlas seed cards and Drive material | Evidence/claim envelopes, process receipts, reconstructability proofs, governed release, correction, and rollback form a proposed dependency chain | No card is treated as an admitted contract, schema, policy, review, release, or publication record |
+| Notion coordination pages | GitHub is implementation/governance authority; Drive is source/lineage; canonical catalog instances belong under `data/catalog/`; generated summaries are non-authoritative | No coordination checkpoint is copied into current-state claims |
+| Generalized worker-outcome proposal | A four-way `ANSWER / ABSTAIN / DENY / ERROR` model is useful comparison pressure | It is **not adopted here** because current catalog profiles use distinct `PASS / HOLD / DENY / FAIL / ERROR` and `READY / HOLD / DENY` namespaces |
+
+Source pressure can shape a future proposal. It cannot silently activate source material, normalize incompatible vocabularies, or bypass contract/schema/fixture/validator/test review.
 
 [Back to top](#top)
 
@@ -501,7 +539,7 @@ This is meaningful repository implementation evidence for a **validator profile*
 
 ### 7.2 Outcome vocabulary
 
-The existing closure profile uses:
+The existing `CatalogClosurePacket` profile uses:
 
 | Outcome | Existing profile meaning | Worker handling rule |
 |---|---|---|
@@ -512,6 +550,17 @@ The existing closure profile uses:
 | `ERROR` | Input could not be safely read or evaluated | Fail closed; operator remediation required |
 
 A future worker should preserve this vocabulary when invoking that profile. It must not rename `FAIL` to `DENY`, coerce `HOLD` to success, or flatten all negative outcomes into one generic exception.
+
+The repository now contains multiple bounded namespaces. They are not interchangeable:
+
+| Surface | Declared state/outcome vocabulary | Integration rule |
+|---|---|---|
+| `CatalogClosurePacket` | `PASS / HOLD / DENY / FAIL / ERROR` | Preserve exactly |
+| CatalogMatrix STAC/DCAT/PROV closure record | local decision `READY / HOLD / DENY`; validator `PASS / FAIL / ERROR` | Keep record state separate from validator execution outcome |
+| CatalogMatrix ClaimEnvelope closure validator | `PASS / FAIL / ERROR` | Treat PASS as local non-overstatement only |
+| Source-only generalized worker proposal | `ANSWER / ABSTAIN / DENY / ERROR` | Comparison input only; not an adopted Catalog Worker language |
+
+Any future translation requires an accepted contract, closed schema, paired fixtures, deterministic tests, and explicit loss/authority analysis. Name similarity is not sufficient.
 
 ### 7.3 Catalog-carrier agreement
 
@@ -534,14 +583,16 @@ The check does not establish that:
 
 ### 7.4 CatalogMatrix distinction
 
-`CatalogMatrix` and `CatalogClosurePacket` are not synonyms.
+`CatalogMatrix`, its additive closure profiles, and `CatalogClosurePacket` are related but not synonyms.
 
 | Object | Current role | Maturity |
 |---|---|---|
-| `CatalogMatrix` | Semantic descriptor for catalog/evidence/source/lifecycle relationships | Draft meaning; permissive placeholder schema; dedicated declared validator absent |
+| `CatalogMatrix` | Semantic descriptor for catalog/evidence/source/lifecycle relationships | Draft meaning; permissive placeholder schema; schema-declared broad validator absent |
+| `CatalogMatrix STAC/DCAT/PROV Closure Profile` | Additive identity, digest, and release-reference agreement for discriminated records | Proposed contract; closed schema, fixtures, executable validator, and tests present |
+| `CatalogMatrix ClaimEnvelope Closure Profile` | Additive non-overstatement check between a claim and its catalog projection | Proposed contract; closed schema, fixtures, executable validator, and tests present |
 | `CatalogClosurePacket` | Immutable, bounded readiness packet for carrier and dependency agreement | Contract, closed schema, fixtures, validator, tests, workflow present |
 
-The worker must not synthesize a persisted `CatalogMatrix` merely because closure validation exists, and it must not use a `CatalogClosurePacket` as a public catalog record.
+The additive profiles do not close or replace the broader permissive CatalogMatrix schema. The worker must not synthesize a persisted `CatalogMatrix` merely because a profile validator passes, and it must not use any closure object as a public catalog record, evidence decision, policy decision, release approval, or publication receipt.
 
 ### 7.5 Source-role anti-collapse
 
@@ -1126,13 +1177,23 @@ Where consequence warrants:
 - Shared catalog pipeline: [`pipelines/catalog/`](../../../../pipelines/catalog/README.md)
 - Reusable catalog package: [`packages/catalog/`](../../../../packages/catalog/README.md)
 - `CatalogMatrix` meaning: [`contracts/data/catalog_matrix.md`](../../../../contracts/data/catalog_matrix.md)
+- STAC/DCAT/PROV closure profile: [`catalog_matrix_closure_profile.md`](../../../../contracts/data/catalog_matrix_closure_profile.md)
+- ClaimEnvelope closure profile: [`catalog_matrix_claim_closure_profile.md`](../../../../contracts/data/catalog_matrix_claim_closure_profile.md)
 - `CatalogClosurePacket` meaning: [`contracts/data/catalog_closure_packet.md`](../../../../contracts/data/catalog_closure_packet.md)
 - `CatalogMatrix` placeholder schema: [`schemas/contracts/v1/data/catalog_matrix.schema.json`](../../../../schemas/contracts/v1/data/catalog_matrix.schema.json)
+- STAC/DCAT/PROV closure schema: [`catalog_matrix_closure_profile.schema.json`](../../../../schemas/contracts/v1/data/catalog_matrix_closure_profile.schema.json)
+- ClaimEnvelope closure schema: [`catalog_matrix_claim_closure_profile.schema.json`](../../../../schemas/contracts/v1/data/catalog_matrix_claim_closure_profile.schema.json)
 - Closure packet schema: [`schemas/contracts/v1/data/catalog_closure_packet.schema.json`](../../../../schemas/contracts/v1/data/catalog_closure_packet.schema.json)
-- Closure fixtures: [`fixtures/data/catalog_closure_packet/`](../../../../fixtures/data/catalog_closure_packet/README.md)
+- STAC/DCAT/PROV closure fixtures: [`fixtures/data/catalog_matrix/closure/`](../../../../fixtures/data/catalog_matrix/closure/README.md)
+- ClaimEnvelope closure fixtures: [`fixtures/data/catalog_matrix/claim_closure/`](../../../../fixtures/data/catalog_matrix/claim_closure/README.md)
+- Closure packet fixtures: [`fixtures/data/catalog_closure_packet/`](../../../../fixtures/data/catalog_closure_packet/README.md)
+- STAC/DCAT/PROV closure validator: [`validate_catalog_matrix_closure.py`](../../../../tools/validators/validate_catalog_matrix_closure.py)
+- ClaimEnvelope closure validator: [`validate_catalog_matrix_claim_closure.py`](../../../../tools/validators/validate_catalog_matrix_claim_closure.py)
 - Closure validator docs: [`tools/validators/catalog_closure/`](../../../../tools/validators/catalog_closure/README.md)
 - Closure validator: [`validate_catalog_closure.py`](../../../../tools/validators/catalog_closure/validate_catalog_closure.py)
-- Closure tests: [`test_validate_catalog_closure.py`](../../../../tests/validators/test_validate_catalog_closure.py)
+- STAC/DCAT/PROV closure tests: [`test_validate_catalog_matrix_closure.py`](../../../../tests/validators/test_validate_catalog_matrix_closure.py)
+- ClaimEnvelope closure tests: [`test_validate_catalog_matrix_claim_closure.py`](../../../../tests/validators/test_validate_catalog_matrix_claim_closure.py)
+- Closure packet tests: [`test_validate_catalog_closure.py`](../../../../tests/validators/test_validate_catalog_closure.py)
 - Closure workflow: [`catalog-closure-packet.yml`](../../../../.github/workflows/catalog-closure-packet.yml)
 
 ### 16.3 Data, policy, and release surfaces
@@ -1261,7 +1322,7 @@ Worker completion is never release completion. Public release still requires ide
 | `CATW-004` | What is the canonical job/result schema? | `UNKNOWN` | Contract/schema/fixtures/validator |
 | `CATW-005` | What exact first operation is admitted? | `NEEDS VERIFICATION` | Bounded use case and acceptance criteria |
 | `CATW-006` | Does the worker call `pipelines/catalog/`, `packages/catalog/`, validator tooling, or a service interface? | `UNKNOWN` | Dependency decision and executable code |
-| `CATW-007` | How are CatalogMatrix and closure-packet responsibilities divided? | `NEEDS VERIFICATION` | Accepted semantics and consumer map |
+| `CATW-007` | How are broad CatalogMatrix, its additive closure profiles, and CatalogClosurePacket responsibilities divided? | `NEEDS VERIFICATION` | Accepted semantics, discriminator rules, and consumer map |
 | `CATW-008` | Will CatalogMatrix’s schema be closed and its declared validator implemented? | `UNKNOWN` | Schema/validator PR and tests |
 | `CATW-009` | What storage transaction and compensation model applies? | `UNKNOWN` | Writer interface, integration tests |
 | `CATW-010` | What receipt family and schema record worker runs? | `UNKNOWN` | Receipt contract/schema/registry |
@@ -1275,6 +1336,8 @@ Worker completion is never release completion. Public release still requires ide
 | `CATW-018` | Which workflows/checks cover worker code and are required? | `UNKNOWN` | Workflow/ruleset evidence |
 | `CATW-019` | Are public or internal consumers already expecting this worker? | `UNKNOWN` | Import, queue, deployment, and runtime inventory |
 | `CATW-020` | What independent review is required before operational use? | `NEEDS VERIFICATION` | Governance decision tied to risk |
+| `CATW-021` | When will the catalog-closure validator README be reconciled with its existing validator, tests, and workflow? | `CONFIRMED DRIFT` | Separate same-path documentation correction |
+| `CATW-022` | If a worker envelope is added, how will it preserve or explicitly translate each contract's outcome namespace? | `NEEDS VERIFICATION` | Accepted contract/schema, fixtures, translation table, and tests |
 
 Unknowns narrow scope and block unsafe transitions; they do not authorize plausible defaults.
 
@@ -1315,7 +1378,7 @@ When a claim becomes stale:
 
 **Before merge:** close the draft pull request and abandon the scoped branch through normal repository controls.
 
-**After an authorized merge:** revert the documentation commit or restore prior blob `d70d552353aef5558e4ede896264d92c00df2a6b` through a reviewed commit. Re-run the same Markdown, link, metadata, exact-diff, and hosted documentation checks.
+**After an authorized merge:** revert the documentation commit or restore prior blob `82284b2f41610c82286cc7a84489b7968329b902` through a reviewed commit. Re-run the same Markdown, link, metadata, exact-diff, and hosted documentation checks.
 
 No worker process, queue, catalog instance, receipt, proof, policy decision, release record, deployment, cache, or public artifact requires rollback because this change modifies documentation only.
 
@@ -1340,7 +1403,7 @@ A future implementation must define:
 
 ## Appendix A. No-loss preservation ledger
 
-| v0.1 element | v0.2 disposition |
+| Earlier element | v0.3 disposition |
 |---|---|
 | Stable document ID and path | Preserved |
 | Catalog Worker purpose | Preserved, narrowed to app-local coordination |
@@ -1399,6 +1462,16 @@ Before editing worker behavior:
 
 ## Change history
 
+### v0.3 — 2026-08-26
+
+- repinned the document to `main@fd29f643db7efe54da7e21937e2491a679bee97d` and prior blob `82284b2f41610c82286cc7a84489b7968329b902`;
+- confirmed the worker lane and shared package/pipeline entrypoints remain placeholder-only;
+- recorded the two proposed additive CatalogMatrix closure profiles and their schemas, fixtures, executable validators, and tests without treating them as broad CatalogMatrix or worker implementation;
+- preserved distinct closure-record, validator, and source-only outcome namespaces instead of silently normalizing them;
+- reconciled supplied PDF/Markdown, Drive, and Notion material as read-only design pressure under GitHub implementation authority;
+- recorded adjacent catalog-closure validator README drift as a separate follow-up;
+- changed documentation only.
+
 ### v0.2 — 2026-08-12
 
 - repinned the document to current repository evidence;
@@ -1418,13 +1491,13 @@ Before editing worker behavior:
 
 ## Status summary
 
-> **CONFIRMED:** `apps/workers/src/catalog_worker/` contains this README and a comment-only `main.py`; parent worker surfaces classify the lane as a placeholder; adjacent fixture-first catalog-closure contracts, schema, fixtures, validator, tests, and workflow exist elsewhere.
+> **CONFIRMED:** `apps/workers/src/catalog_worker/` contains this README and a comment-only `main.py`; parent worker surfaces classify the lane as a placeholder; adjacent CatalogClosurePacket machinery and two additive CatalogMatrix closure profiles have schemas, fixtures, validators, and tests elsewhere, but no Catalog Worker wiring was found.
 >
 > **PROPOSED:** a future Catalog Worker should be a thin, idempotent, fail-closed deployment wrapper that delegates catalog logic and preserves finite outcomes.
 >
 > **UNKNOWN:** queue, scheduler, producer, runtime, storage writer, deployment, operations, worker-specific tests, and consumers.
 >
-> **NEEDS VERIFICATION:** ownership, contract/schema decisions, permissions, policy/evidence/review integration, receipt family, ruleset/check coupling, correction drill, and operational readiness.
+> **NEEDS VERIFICATION:** ownership, worker contract/schema decisions, outcome translation, permissions, policy/evidence/review integration, receipt family, ruleset/check coupling, correction drill, and operational readiness; the adjacent catalog-closure validator README is confirmed documentation drift.
 >
 > **DENIED BY BOUNDARY:** direct public access, raw/internal-store access, policy self-approval, lifecycle promotion by job success, release approval, deployment by documentation, and publication.
 
