@@ -3,12 +3,12 @@ doc_id: kfm://app/workers/src/correction-worker/readme
 title: Correction Worker README
 type: app-readme
 subtype: worker-lane-readme
-version: v0.2
-prior_version: v0.1
+version: v0.3
+prior_version: v0.2
 status: draft; repository-grounded; placeholder-only
 owner: "NEEDS VERIFICATION — CODEOWNERS routes default repository review to @bartytime4life; no accepted Correction Worker steward, independent correction reviewer, runtime operator, or release authority was verified"
 created: 2026-06-16
-updated: 2026-08-12
+updated: 2026-08-26
 policy_label: public
 current_path: apps/workers/src/correction_worker/README.md
 scope_id: apps/workers/src/correction_worker/
@@ -22,10 +22,10 @@ authority_rank: implementation orientation subordinate to adopted doctrine, acce
 canonical_relationship: same-path update; no new authority, generated projection, compatibility path, queue, runtime binding, correction object, release decision, or publication capability created
 evidence_repository: bartytime4life/Kansas-Frontier-Matrix
 evidence_base_ref: main
-evidence_base_commit: d00422105d38fbd3babafb940f78bcfe4dc1d114
-evidence_repository_tree: eb5212dcd9029beb641c84d72b886e20e8fc6391
-evidence_lane_tree: 0f748d8c71590912ab8f95c929e0d68e43127c23
-evidence_target_prior_blob: 331bc76b14a0a5c61b0fd93211f9624bae3860a1
+evidence_base_commit: 93a66dbcd7a7a924f3e52e071459c775bb2b1422
+evidence_repository_tree: 005fe3659d57445041c8efeda754c00d3a48d215
+evidence_lane_tree: 91b222b839c40699fe9a0d09c68fefd77fab605f
+evidence_target_prior_blob: a26a354e679fa37184ba4bed5e31a07119336a55
 evidence_entrypoint_blob: 229bf39b7adc0b6be18e24273c84057b1c601b29
 evidence_parent_source_blob: 08ad9f8116f64817ffa4f8b2058613749360c102
 evidence_workers_readme_blob: 5b5c1e6b067e652a380bf445488a6227028dfc0e
@@ -34,6 +34,15 @@ evidence_directory_rules_adoption: ADR-0029; accepted
 evidence_codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
 evidence_correction_doctrine_blob: f396cd18bc55dd7a6e9699e4216159b30c8c351c
 evidence_release_root_blob: 60b6a656f8f2b765616bba7223f51c25863c7172
+evidence_correction_notice_validator_blob: 00b7335a39efdc6b12d180acb40a27fe682b8ade
+evidence_correction_notice_compatibility_blob: e74e34bb225020c24eecb029700b6fe678727f8f
+evidence_correction_notice_fixtures_readme_blob: f1d43d19977e31b5677a4fa12d3aac802eecc5fd
+evidence_correction_notice_test_blob: 49934e6a7674d8b94ae4c1f1ac61dd4275dca84b
+evidence_focus_correction_lineage_blob: 57dda820681913fbaaddfb4b71816910bf9d07b3
+evidence_review_console_correction_blob: d4a5b72fe0ac3cc562995fc364e61fd5ada74ac8
+evidence_atmosphere_correction_runbook_blob: f04b6a5904be2b060f70637af8caddaf4511a227
+evidence_correction_dashboard_blob: d2bbd2e96e4cb3316ad96931bd0b7ebd7d6019a3
+evidence_rights_correction_policy_blob: 4841af6174847fa1288836ae474e27d6269f21f7
 evidence_direct_files: 2
 evidence_executable_python_lines: 0
 evidence_repository_runtime_bindings: 0
@@ -48,12 +57,19 @@ related:
   - ../../../../docs/architecture/publication/CORRECTION.md
   - ../../../../docs/atlases/stale-state-reference.md
   - ../../../../docs/dashboards/governance/RELEASE_CORRECTION_ROLLBACK.md
+  - ../../../../docs/runbooks/atmosphere/CORRECTION_RUNBOOK.md
+  - ../../../../docs/architecture/publication/rollback-and-correction.md
+  - ../../../../apps/explorer-web/src/features/focus_panel/COMPOSED_CLAIM_FIXTURE.md
+  - ../../../../apps/review-console/src/features/correction/README.md
+  - ../../../../policy/rights/correction/README.md
   - ../../../../contracts/correction/README.md
   - ../../../../contracts/correction/correction_impact_assessment.md
   - ../../../../contracts/correction/correction_propagation_plan.md
   - ../../../../contracts/common/stale_state_supersession_assessment.md
   - ../../../../schemas/contracts/v1/correction/
   - ../../../../fixtures/contracts/v1/correction/
+  - ../../../../fixtures/correction/correction_notice/README.md
+  - ../../../../tests/validators/test_validate_correction_notice.py
   - ../../../../tools/validators/correction/
   - ../../../../release/README.md
   - ../../../../release/correction_notices/README.md
@@ -61,9 +77,10 @@ related:
   - ../../../../release/rollback_cards/README.md
 tags: [kfm, apps, workers, correction-worker, placeholder, corrections-first-class, append-only, supersession, withdrawal, rollback, stale-state, derivative-invalidation, non-publisher]
 notes:
-  - "v0.2 replaces generalized source uncertainty with exact repository evidence: this lane contains one README and one 58-byte, comment-only Python placeholder with zero executable lines."
-  - "Correction doctrine, release-decision lanes, semantic contracts, schemas, fixture-only assessment and propagation validators, fixtures, and tests exist elsewhere; no import, trigger, queue, schedule, package, policy binding, write capability, deployment, or runtime edge connects them to this lane."
-  - "CorrectionNotice and SupersessionNotice shapes remain permissive stubs, correction object families occur across several schema and release paths, and the accepted worker job/envelope, receipt, and execution profiles remain unresolved."
+  - "v0.3 refreshes exact repository evidence at current main: this lane still contains one README and one 58-byte, comment-only Python placeholder with zero executable lines."
+  - "CorrectionNotice now has deterministic, no-network schema-and-JSON-safety validation, synthetic fixtures, and focused tests, but the schema remains a permissive PROPOSED stub and no worker binding or issuance authority exists."
+  - "Explorer carries a bounded synthetic correction-lineage proof, while the Review Console correction feature, Atmosphere correction runbook, governance dashboard, and rights-correction policy boundary remain review, documentation, fixture, or placeholder surfaces outside this lane."
+  - "Drive, Notion, Atlas, and attached-manual ideas are non-authoritative design pressure; repository bytes and accepted decisions remain the current-state authority."
   - "This documentation-only update does not detect, approve, apply, propagate, publish, withdraw, supersede, invalidate, roll back, or otherwise execute a correction."
 [/KFM_META_BLOCK_V2] -->
 
@@ -82,14 +99,14 @@ notes:
 [![History: append only](https://img.shields.io/badge/history-append--only-8250df?style=flat-square)](#9-worker-obligations)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#6-exclusions)
 [![Directory Rules: ADR-0029 accepted](https://img.shields.io/badge/directory%20rules-ADR--0029%20accepted-2da44e?style=flat-square)](../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
-[![Evidence base: d004221](https://img.shields.io/badge/evidence%20base-d004221-6e7781?style=flat-square)](#11-inspection-path)
+[![Evidence base: 93a66db](https://img.shields.io/badge/evidence%20base-93a66db-6e7781?style=flat-square)](#11-inspection-path)
 
 **Quick navigation:** [Purpose](#1-purpose) · [Repo fit](#2-repo-fit) · [Authority](#3-authority-boundary) · [Posture](#4-default-posture) · [Inputs and outputs](#5-inputs-and-outputs) · [Exclusions](#6-exclusions) · [Lane map](#7-current-lane-map) · [Required flow](#8-required-correction-flow) · [Obligations](#9-worker-obligations) · [Admission contract](#10-job-admission-contract) · [Evidence](#11-inspection-path) · [Validation](#12-validation-expectations) · [Change pattern](#13-safe-change-pattern) · [Done](#14-definition-of-done) · [Gaps](#15-open-verification-items) · [Rollback](#17-correction-and-rollback)
 
 </div>
 
 > [!IMPORTANT]
-> **Current state:** `CONFIRMED / PLACEHOLDER-ONLY`. At `main@d00422105d38fbd3babafb940f78bcfe4dc1d114`, this lane contains exactly two tracked files: this README and a 58-byte [`main.py`](./main.py). The Python file contains only `# correction_worker entrypoint — greenfield placeholder`, for zero imports, definitions, executable statements, or side effects.
+> **Current state:** `CONFIRMED / PLACEHOLDER-ONLY`. At `main@93a66dbcd7a7a924f3e52e071459c775bb2b1422`, this lane contains exactly two tracked files: this README and a 58-byte [`main.py`](./main.py). The Python file contains only `# correction_worker entrypoint — greenfield placeholder`, for zero imports, definitions, executable statements, or side effects.
 
 Repository-wide name and path inspection found no import, trigger, queue, schedule, package, configuration, test, deployment, or output binding for `correction_worker`. This is bounded repository evidence, not proof about untracked experiments or external systems.
 
@@ -142,12 +159,13 @@ This document does not:
 | Claim | Truth | Repository evidence | Limit |
 |---|---|---|---|
 | The lane exists under the deployable `apps/` responsibility root. | CONFIRMED | Accepted Directory Rules, root registry projection, parent Workers READMEs, and current tree | Placement does not grant runtime capability. |
-| The lane contains exactly a README and `main.py`. | CONFIRMED at pinned base | Lane tree `0f748d8c71590912ab8f95c929e0d68e43127c23` | Does not describe untracked or external files. |
+| The lane contains exactly a README and `main.py`. | CONFIRMED at pinned base | Lane tree `91b222b839c40699fe9a0d09c68fefd77fab605f` | Does not describe untracked or external files. |
 | `main.py` is one 58-byte comment and has zero executable Python lines. | CONFIRMED | Blob `229bf39b7adc0b6be18e24273c84057b1c601b29` | A filename and comment do not form an entry point. |
 | A correction worker is importable, registered, queued, scheduled, configured, tested, packaged, deployed, or active. | CONFIRMED absent from bounded repository inspection | Complete lane inventory plus repository name/path search | External deployment state remains UNKNOWN. |
 | First-class correction doctrine and an append-only release decision plane exist as documentation and governance surfaces. | CONFIRMED | Correction doctrine and `release/` root README | Documentation does not prove an authenticated operational authority. |
 | Closed fixture-only impact-assessment and propagation-plan validation slices exist elsewhere. | CONFIRMED | Contracts, schemas, validators, fixtures, and tests under their owning roots | They are explicitly non-authoritative and unwired here. |
-| `CorrectionNotice` and `SupersessionNotice` are worker-ready payloads. | NOT ESTABLISHED | Their singular-family schemas are permissive greenfield stubs; declared validator paths are absent or placeholder-only | Exact binding, compatibility, policy, review, and execution remain unresolved. |
+| `CorrectionNotice` is a worker-ready payload. | NOT ESTABLISHED | Its semantic contract is draft and its schema remains a permissive PROPOSED stub. A deterministic, no-network validator, synthetic fixtures, and focused tests now prove only that stub schema plus bounded JSON-input safety. | Exact binding, richer semantics, compatibility, policy, review, issuance, and execution remain unresolved. |
+| `SupersessionNotice` is a worker-ready payload. | NOT ESTABLISHED | Its semantic contract is draft, its schema remains a permissive PROPOSED stub, and no dedicated validator or fixture profile was verified. | Exact binding, compatibility, policy, review, issuance, and execution remain unresolved. |
 | This README implements correction behavior. | CONFIRMED false | Markdown-only same-path update | No runtime behavior changes. |
 
 ### Responsibility split
@@ -370,7 +388,7 @@ apps/workers/src/correction_worker/
 
 | File | Blob | Current behavior |
 |---|---|---|
-| [`README.md`](./README.md) | Prior blob `331bc76b14a0a5c61b0fd93211f9624bae3860a1` | Documentation only |
+| [`README.md`](./README.md) | Prior blob `a26a354e679fa37184ba4bed5e31a07119336a55` | Documentation only |
 | [`main.py`](./main.py) | `229bf39b7adc0b6be18e24273c84057b1c601b29` | Comment only; zero imports, definitions, statements, side effects, or output |
 
 No `__init__.py`, package manifest, lock file, configuration, module family, queue adapter, schedule, test directory, fixture, Dockerfile, deployment manifest, receipt, or generated artifact exists beneath this lane at the pinned base.
@@ -479,7 +497,7 @@ Replacing the placeholder requires a dependency-closed implementation slice. Bef
 
 | Family | Repository support | Current status | Worker admission consequence |
 |---|---|---|---|
-| `CorrectionNotice` | Semantic contract plus singular correction schema | Contract is draft; schema is permissive greenfield stub; root validator is a `NotImplementedError` stub; declared nested validator path is absent | Not a worker-ready binding |
+| `CorrectionNotice` | Semantic contract, singular correction schema, deterministic validator, compatibility entry point, synthetic fixtures, and focused tests | Contract is draft; schema remains a permissive PROPOSED stub with an `id`-only minimum; validator enforces only that schema and bounded JSON-input safety | Fixture-safe shape checking is available, but this is not a worker-ready issuance or execution binding |
 | `SupersessionNotice` | Semantic contract plus singular correction schema | Contract is draft; schema is permissive greenfield stub; declared validator is absent | Not a worker-ready binding |
 | `CorrectionImpactAssessment` | Semantic contract, closed schema, validator, valid/invalid fixtures, and tests | `proposed-inactive`; fixture-only; no network; no authority or mutation | May be evaluated only as an explicitly adopted candidate profile; `COMPLETE` is not execution authority |
 | `CorrectionPropagationPlan` | Semantic contract, closed schema, validator, case fixture, and tests | Proposed fixture-only, non-executing, and mutation flags fixed false | May inform planning only until a separate execution contract is accepted |
@@ -492,9 +510,9 @@ Replacing the placeholder requires a dependency-closed implementation slice. Bef
 
 1. Accepted Directory Rules name `release/correction_notices/` as the canonical public correction-object family, while `release/correction/` and `release/corrections/` remain classification or migration surfaces.
 2. Correction-related schema shapes occur under singular `schemas/contracts/v1/correction/`, plural `schemas/contracts/v1/corrections/`, `schemas/contracts/v1/release/`, `schemas/contracts/v1/review/`, and domain-specific lanes.
-3. The singular correction schema index calls the singular family canonical, but its `CorrectionNotice` and `SupersessionNotice` schemas remain permissive stubs.
+3. The singular correction schema index calls the singular family canonical. Its `CorrectionNotice` and `SupersessionNotice` schemas remain permissive stubs; only `CorrectionNotice` now has a bounded schema-and-JSON-safety validator profile.
 4. `CorrectionImpactAssessment`, `CorrectionPropagationPlan`, and stale-state assessment are substantive but explicitly fixture-only and non-authoritative.
-5. A substantive `policy/correction/` bundle was not found in the bounded inspection; `policy/rights/correction/` contains only a placeholder, while release and domain policy surfaces exist elsewhere.
+5. A substantive `policy/correction/` bundle was not found in the bounded inspection. `policy/rights/correction/` now documents an inactive fail-closed boundary, but it still has no executable correction rule, fixture, evaluator, consumer, or emitted decision; release and domain policy surfaces remain separate.
 6. A generated documentation receipt is not a runtime correction, invalidation, cache, alias, withdrawal, or rollback execution receipt.
 
 An implementation PR must provide an accepted binding matrix or an applicable ADR/migration decision. It must not select a payload merely because its filename is closest to the worker name.
@@ -508,13 +526,13 @@ An implementation PR must provide an accepted binding matrix or an applicable AD
 The repository state in this README can be reproduced without network access:
 
 ```bash
-git rev-parse d00422105d38fbd3babafb940f78bcfe4dc1d114^{tree}
-git rev-parse d00422105d38fbd3babafb940f78bcfe4dc1d114:apps/workers/src/correction_worker
-git ls-tree -rl d00422105d38fbd3babafb940f78bcfe4dc1d114 \
+git rev-parse 93a66dbcd7a7a924f3e52e071459c775bb2b1422^{tree}
+git rev-parse 93a66dbcd7a7a924f3e52e071459c775bb2b1422:apps/workers/src/correction_worker
+git ls-tree -rl 93a66dbcd7a7a924f3e52e071459c775bb2b1422 \
   apps/workers/src/correction_worker
-git show d00422105d38fbd3babafb940f78bcfe4dc1d114:apps/workers/src/correction_worker/main.py
+git show 93a66dbcd7a7a924f3e52e071459c775bb2b1422:apps/workers/src/correction_worker/main.py
 git grep -n -i -E 'correction_worker|correction worker' \
-  d00422105d38fbd3babafb940f78bcfe4dc1d114 -- \
+  93a66dbcd7a7a924f3e52e071459c775bb2b1422 -- \
   ':!apps/workers/src/correction_worker/README.md'
 rg --files contracts schemas fixtures tests tools policy release data docs \
   | rg -i 'correction|supersession|withdrawal|rollback|stale|invalidation'
@@ -524,9 +542,9 @@ rg --files contracts schemas fixtures tests tools policy release data docs \
 
 | Evidence | Pinned object | Supports | Does not prove |
 |---|---|---|---|
-| Repository base | commit `d00422105d38fbd3babafb940f78bcfe4dc1d114`; tree `eb5212dcd9029beb641c84d72b886e20e8fc6391` | Exact review baseline | Runtime, security, release, or deployment state |
-| Correction Worker lane | tree `0f748d8c71590912ab8f95c929e0d68e43127c23` | Complete two-file lane inventory | Off-repository state |
-| Prior README | blob `331bc76b14a0a5c61b0fd93211f9624bae3860a1` | Same-path baseline and no-loss review | Worker behavior |
+| Repository base | commit `93a66dbcd7a7a924f3e52e071459c775bb2b1422`; tree `005fe3659d57445041c8efeda754c00d3a48d215` | Exact review baseline | Runtime, security, release, or deployment state |
+| Correction Worker lane | tree `91b222b839c40699fe9a0d09c68fefd77fab605f` | Complete two-file lane inventory | Off-repository state |
+| Prior README | blob `a26a354e679fa37184ba4bed5e31a07119336a55` | Same-path baseline and no-loss review | Worker behavior |
 | Placeholder entrypoint | blob `229bf39b7adc0b6be18e24273c84057b1c601b29` | Exact comment-only source bytes | Importability or execution |
 | Parent source README | blob `08ad9f8116f64817ffa4f8b2058613749360c102` | Inherited placeholder, thin-wrapper, and non-publisher contract | Child maturity |
 | Parent Workers README | blob `5b5c1e6b067e652a380bf445488a6227028dfc0e` | Scaffold-only background app boundary | Active deployment |
@@ -537,8 +555,25 @@ rg --files contracts schemas fixtures tests tools policy release data docs \
 | Impact-assessment contract/schema | blobs `c397c83f558299388f9d5ca0a9c58deffb3f8c86` / `f721aa7cd9c1b30cf63ab108f12c9b08927fd0bf` | Existing closed fixture-only assessment profile | Live carrier discovery or mutation |
 | Propagation-plan contract/schema | blobs `b61e7fb0ecd0e68588a29642f3c47e0cb810eff9` / `3b178bd83c5753a90b30a1549ef5ed587986bd70` | Existing fixture-only dependency-plan profile | Cache invalidation, alias movement, release, or publication |
 | CorrectionNotice contract/schema | blobs `4716f2bc6e714ad2ab873d95144417d7855f5beb` / `8f260eb5a5adba0b4966adfeffebfbcf6960277d` | Draft meaning plus proposed stub shape | Closed machine contract or executable correction |
+| CorrectionNotice validator profile | canonical/compatibility blobs `00b7335a39efdc6b12d180acb40a27fe682b8ade` / `e74e34bb225020c24eecb029700b6fe678727f8f`; fixture README `f1d43d19977e31b5677a4fa12d3aac802eecc5fd`; test blob `49934e6a7674d8b94ae4c1f1ac61dd4275dca84b` | Deterministic, no-network validation of the current stub schema, duplicate-key rejection, object-root enforcement, finite-number safety, CLI compatibility, and fixture polarity | Rich correction semantics, correction eligibility, policy/review approval, worker binding, issuance, propagation, release, or publication |
+| Explorer correction-lineage fixture | blob `57dda820681913fbaaddfb4b71816910bf9d07b3` | Synthetic Focus proof keeps superseded evidence out of active support while retaining public-safe visible history | Live evidence resolution, a Correction Worker path, correction authority, deployment, or publication |
+| Review Console correction feature | blob `d4a5b72fe0ac3cc562995fc364e61fd5ada74ac8` | Documented role-gated review-support boundary | An implemented queue, reviewer decision, correction issuance, or runtime worker handoff |
+| Atmosphere correction runbook | blob `f04b6a5904be2b060f70637af8caddaf4511a227` | Substantive repository-grounded human procedure and explicit holds | Operational admission, completed correction, worker activation, or release authority |
+| Correction governance dashboard | blob `d2bbd2e96e4cb3316ad96931bd0b7ebd7d6019a3` | Documentation-only status/metric design with correction and production rollback held | Runtime telemetry, deployed panel, correction completion, or public parity |
+| Rights-correction policy boundary | blob `4841af6174847fa1288836ae474e27d6269f21f7` | Inactive fail-closed boundary documentation | Executable policy, legal determination, evaluator binding, correction decision, or publication action |
 
-Evidence pins make repository claims reviewable. They do not turn supporting documents, schemas, fixtures, validators, workflows, or receipts into implementation or authority.
+### Source-pressure register — non-authoritative
+
+| Source | Design pressure retained | Repository disposition |
+|---|---|---|
+| Google Drive: [KFM Repository Build-Out & Markdown Modernization Implementation Agent](https://docs.google.com/document/d/1xIoImud9WHBVW715WRPRjgoay_oPZm9wjLgUUvPPt5c/edit) | Prefer the smallest reversible branch slice, carry non-safety unknowns in draft state, and keep delivery distinct from review, release, deployment, promotion, and publication. | Process input for this one-file draft; it does not prove Correction Worker behavior. |
+| Google Drive and attached `KFM_Full_Atlas_seed_cards` | Bind public claims to evidence, policy, review/release state, correction lineage, and rollback; keep `CorrectionNotice`, withdrawal, rollback, receipt, and proof families separate. | PROPOSED design pressure. Current contracts and bounded proofs partially reflect it, but no worker composition or authority follows. |
+| Attached `Kansas Frontier Matrix Pipeline Living Implementation Manual v0.3` | Preserve correction/withdrawal/supersession lineage, deterministic recompile records, and rollback targets; never substitute silent recompilation for a correction notice. | PROPOSED future admission criteria; current lane remains inert. |
+| Attached MapLibre/UI and implementation-reference manuals | Make current versus superseded support visible at the outward trust surface without exposing internal authority paths. | PARTIALLY REALIZED only by synthetic Explorer correction-lineage fixtures; no live worker, governed API, or publication path is inferred. |
+| Notion: [KFM Cross-System Authority & Intake Model](https://app.notion.com/p/3c5a92021bf6811ba9c2d923215f11b7) | GitHub current-state evidence outranks Drive design sources and Notion coordination; preserve truth labels and exact checkpoints. | Coordination rule applied here; Notion does not approve or activate this change. |
+| Notion: [KFM Evidence, Documentation & Ideas Atlas](https://app.notion.com/p/3c6a92021bf681e097f2e9e976d74bc9) | Keep finite outcomes, correction/withdrawal lineage, and synthetic proof separate from live operational maturity. | Coordination evidence only; its repository checkpoint is historical and is not reused as current proof. |
+
+Evidence pins make repository claims reviewable. Source pressure can sharpen future requirements, but neither source presence nor documentation depth turns supporting documents, schemas, fixtures, validators, workflows, or receipts into implementation or authority.
 
 [Back to top](#top)
 
@@ -655,13 +690,15 @@ This lane is not implementation-complete merely because its placeholder and surr
 | Worker implementation | CONFIRMED absent | Dependency-closed code, package identity, tests, and review evidence |
 | Producer, transport, queue, event, or schedule | CONFIRMED absent in repository bindings | Accepted contract, producer identity, delivery/replay semantics, activation, and dead-letter/hold posture |
 | Canonical correction/release child paths | CONFLICTED / migration-bound | Object-family classification and accepted migration/compatibility decision for singular/plural lanes |
-| `CorrectionNotice` and `SupersessionNotice` schemas | CONFIRMED permissive stubs | Closed accepted schemas, validators, fixtures, tests, registry bindings, and migration posture |
+| `CorrectionNotice` schema and validator | CONFIRMED permissive PROPOSED stub with deterministic fixture-only schema/JSON-safety validation; worker binding absent | Closed accepted semantics and schema, richer negative fixtures, registry binding, compatibility/migration posture, policy/review integration, and issuance boundary |
+| `SupersessionNotice` schema | CONFIRMED permissive PROPOSED stub; dedicated validator and worker binding absent | Closed accepted schema, validator, fixtures, tests, registry binding, compatibility/migration posture, policy/review integration, and issuance boundary |
 | Correction-specific policy | NOT ESTABLISHED | Accepted bundle, policy decision contract, representative allow/hold/deny/abstain tests, and worker client binding |
 | Impact and propagation profiles | CONFIRMED fixture-only and unwired | Explicit adoption decision or successor execution contracts; never infer live authority from fixture success |
-| Stale-state and supersession handling | CONFIRMED candidate assessment exists; worker binding absent | Accepted cross-lane propagation policy, exact refs, and review/execution boundaries |
+| Stale-state and supersession handling | CONFIRMED candidate assessment and synthetic outward correction-lineage proof exist; worker binding absent | Accepted cross-lane propagation policy, exact refs, live resolver behavior, and review/execution boundaries |
 | Runtime write capabilities | CONFIRMED absent | Least-privilege operator APIs, target allowlists, expected-state checks, credentials, expiry, and denied-write tests |
 | Correction-worker receipt family | NEEDS VERIFICATION | Exact semantic contract/schema, writer, target, integrity, retention, replay, and correction behavior |
 | Release/correction/rollback handoff | NEEDS VERIFICATION | Authenticated decision intake, separation of duties, completion evidence, public propagation, and failure recovery |
+| Runbook, dashboard, and review-support surfaces | CONFIRMED substantive documentation outside this lane; runtime binding and operational evidence absent | Accepted owners, exact machine interfaces, deployment/telemetry evidence, completed drills, and independently reviewed handoff proof |
 | Deployment, activation, health, logs, metrics, and alerts | UNKNOWN | Exact deployed revision, public-safe observed telemetry, operator evidence, and separate activation authority |
 | Public correction completion | NOT ESTABLISHED by this lane | Independent release decision plus carrier verification and governed notice/public-state evidence |
 
@@ -676,20 +713,21 @@ Re-review this README when the placeholder changes, a producer or transport is p
 | Version | Date | Change | Runtime effect |
 |---|---|---|---|
 | `v0.1` | 2026-06-16 | Replaced a greenfield stub with a broad proposed correction-support worker contract. | None; documentation only. |
-| `v0.2` | 2026-08-12 | Pinned current repository evidence; recorded the two-file comment-only lane; reconciled with the merged Workers parent boundaries, accepted Directory Rules, first-class correction doctrine, release-decision plane, and current fixture-only correction capabilities; replaced speculative modules with the verified direct-child tree; surfaced binding and authority conflicts; and strengthened admission, validation, maintenance, correction, and rollback. | None; documentation only. |
+| `v0.2` | 2026-08-12 | Pinned repository evidence; recorded the two-file comment-only lane; reconciled parent boundaries, accepted Directory Rules, correction doctrine, release decisions, and fixture-only correction capabilities; and surfaced binding and authority conflicts. | None; documentation only. |
+| `v0.3` | 2026-08-26 | Refreshed the exact repository checkpoint; recognized bounded CorrectionNotice validation, synthetic Explorer correction lineage, substantive correction runbook/dashboard/review-support documentation, and the inactive rights-correction boundary; added a non-authoritative source-pressure register; and preserved the worker as placeholder-only. | None; documentation only. |
 
 <details>
 <summary>Appendix A — no-loss and correction note</summary>
 
 The v0.1 edition correctly preserved core constraints: correction candidates are not decisions; prior records must not be silently rewritten; evidence, policy, lineage, receipts, review, release, and rollback remain distinct; and a worker must not publish.
 
-This edition retains those constraints while correcting its evidence posture. Source-file presence is no longer unknown: `main.py` exists as a comment-only placeholder. Correction doctrine, release lanes, contracts, schemas, fixture-only assessment/propagation profiles, validators, fixtures, and tests also exist. None is wired to this lane, several payload families remain stubs or occur at multiple paths, and no accepted correction-worker job, policy, capability, receipt, deployment, or runtime binding was verified.
+This edition retains those constraints while refreshing its evidence posture. `main.py` remains a comment-only placeholder. Correction doctrine, release lanes, contracts, schemas, fixture-only assessment/propagation profiles, the bounded CorrectionNotice validator, synthetic Explorer correction lineage, review-support documentation, the Atmosphere runbook, the governance dashboard, and the inactive rights-correction boundary all exist outside this lane. None is wired to it, several payload families remain permissive or occur at multiple paths, and no accepted correction-worker job, policy, capability, receipt, deployment, or runtime binding was verified.
 
 </details>
 
 ## 17. Correction and rollback
 
-Before merge, abandon or close the feature branch and draft pull request. After an independently authorized merge, use a transparent revert or forward-fix pull request restoring prior blob `331bc76b14a0a5c61b0fd93211f9624bae3860a1`, then rerun the same documentation checks.
+Before merge, abandon or close the feature branch and draft pull request. After an independently authorized merge, use a transparent revert or forward-fix pull request restoring prior blob `a26a354e679fa37184ba4bed5e31a07119336a55`, then rerun the same documentation checks.
 
 A README rollback changes no Python source, contract, schema, policy, package, pipeline, fixture, test, queue, schedule, configuration, capability, receipt, correction, release, cache, alias, data, deployment, activation, promotion, publication, or repository setting. If a later implementation affects those surfaces, its accepted execution record, partial-effect handling, correction lineage, carrier invalidation, deployment, and rollback obligations control; restoring prose alone is not an operational rollback.
 
@@ -697,7 +735,7 @@ A README rollback changes no Python source, contract, schema, policy, package, p
 
 ## Status summary
 
-`apps/workers/src/correction_worker/` is correctly located as an inherited app-local lane but is not an implemented or active worker. Its repository state is exactly one boundary README and one 58-byte comment-only placeholder, with zero executable lines and no import, trigger, queue, schedule, package, policy binding, test, configuration, write capability, deployment, or output binding.
+`apps/workers/src/correction_worker/` is correctly located as an inherited app-local lane but is not an implemented or active worker. Its repository state is exactly one boundary README and one 58-byte comment-only placeholder, with zero executable lines and no import, trigger, queue, schedule, package, policy binding, test, configuration, write capability, deployment, or output binding. Surrounding KFM surfaces now include bounded CorrectionNotice validation, synthetic correction-lineage rendering, and substantive correction documentation, but none is a worker composition or authority grant.
 
 Future work must first resolve orchestration ownership, exact object/schema/policy/receipt bindings, and capability-scoped execution. Any admitted implementation must remain thin, authenticated, append-only, evidence- and policy-bounded, lineage-preserving, idempotent, replay-safe, least-privileged, independently reviewed, receipt-complete, non-publishing, and subordinate to correction and release authority.
 
