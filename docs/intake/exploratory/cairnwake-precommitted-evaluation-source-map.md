@@ -8,6 +8,12 @@ owners: OWNER_TBD — Intake steward · Validation steward
 created: 2026-08-25
 updated: 2026-08-25
 policy_label: internal; exploratory; no-authority
+owning_root: docs/
+responsibility: source-grounded mapping from external sealed-evaluation reports to a bounded KFM validation candidate without treating product claims or public scoring as repository evidence or authority
+truth_posture: CONFIRMED source transcription and repository comparison / PROPOSED bounded adaptation pending steward review / NEEDS VERIFICATION hosted exact-head execution
+related:
+  - ../../../contracts/validation/precommitted_evaluation_record.md
+  - ../../../contracts/validation/pipeline_replay_assessment.md
 tags: [kfm, cairnwake, preregistration, commitment, scoring, source-map]
 [/KFM_META_BLOCK_V2] -->
 
