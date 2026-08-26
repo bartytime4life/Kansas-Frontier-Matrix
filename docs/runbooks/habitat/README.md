@@ -13,57 +13,37 @@ updated: 2026-08-26
 policy_label: public-review; habitat; operational-documentation; sensitive-ecology; fail-closed; no-publication-authority
 current_path: docs/runbooks/habitat/README.md
 owning_root: docs/
-responsibility: >-
-  Define the human-facing boundary, navigation, inheritance, current maturity,
-  safe entry conditions, stop states, and maintenance contract for Habitat
-  operational procedures without granting source admission, ecological or
-  regulatory authority, evidence, policy, lifecycle, review, release,
-  deployment, promotion, rollback-execution, or publication authority.
+responsibility: Define the human-facing boundary, navigation, inheritance, current maturity, safe entry conditions, stop states, and maintenance contract for Habitat operational procedures without granting source admission, ecological or regulatory authority, evidence, policy, lifecycle, review, release, deployment, promotion, rollback-execution, or publication authority.
 truth_posture: cite-or-abstain
 truth_labels: [CONFIRMED, PROPOSED, UNKNOWN, NEEDS VERIFICATION, CONFLICTED, HOLD]
 authority_class: explanatory operational-documentation index
-canonical_relationship: >-
-  Same-path completion of an existing tracked one-byte blank file under the
-  accepted docs/ responsibility root; no sibling procedure, source, policy,
-  evidence, lifecycle, release, rollback, or publication authority is created.
+canonical_relationship: Same-path completion of an existing tracked one-byte blank file under the accepted docs/ responsibility root; no sibling procedure, source, policy, evidence, lifecycle, release, rollback, or publication authority is created.
 prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
 repository: bartytime4life/Kansas-Frontier-Matrix
 evidence_snapshot:
-  base_ref: main
-  base_commit: ce4e3f6dc902ecfaa44f1d95b9007e3b52ec970b
-  target_prior_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
-  direct_entries_including_this_readme: 6
-  direct_procedure_files: 4
-  direct_sublane_directories: 1
-  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
-  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  no_network_test_runbook_blob: b170a5f77db808c5a19a8c1460b32165069fb4ad
-  promotion_runbook_blob: 32d4b0b7e2ba681eaa3d12ecc1db988db8c80be6
-  rollback_runbook_blob: 79990fad8abf71f96c32f808d0d420f11d3425b0
-  source_refresh_runbook_blob: 80a91eedd27b369963ebe7a12d9ef5a0e75aa769
-  ecoregions_readme_blob: c94242ccba3a81d5c0da60e3c393381ab8d12fcd
-  ecoregions_source_refresh_blob: 2d03c7f0bf9b4998013db7e589d77a3bb1f9c407
-  habitat_workflow_blob: 59771c027f688d7028a46c4635c0ec710b34e3ab
-  source_authority_register_blob: 32729857bc8eb5001acb37b8ee8e60bcb6e0dc50
-  policy_gate_register_blob: bc8185b4762a947c742cf54a7ea4f2bf80670e21
-  habitat_candidate_index_blob: e55b9344cda673e069bce5525937f5a50666bf63
+  - "base_ref: main"
+  - "base_commit: ce4e3f6dc902ecfaa44f1d95b9007e3b52ec970b"
+  - "target_prior_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc"
+  - "direct_entries_including_this_readme: 6"
+  - "direct_procedure_files: 4"
+  - "direct_sublane_directories: 1"
+  - "directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d"
+  - "directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9"
+  - "codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61"
+  - "no_network_test_runbook_blob: b170a5f77db808c5a19a8c1460b32165069fb4ad"
+  - "promotion_runbook_blob: 32d4b0b7e2ba681eaa3d12ecc1db988db8c80be6"
+  - "rollback_runbook_blob: 79990fad8abf71f96c32f808d0d420f11d3425b0"
+  - "source_refresh_runbook_blob: 80a91eedd27b369963ebe7a12d9ef5a0e75aa769"
+  - "ecoregions_readme_blob: c94242ccba3a81d5c0da60e3c393381ab8d12fcd"
+  - "ecoregions_source_refresh_blob: 2d03c7f0bf9b4998013db7e589d77a3bb1f9c407"
+  - "habitat_workflow_blob: 59771c027f688d7028a46c4635c0ec710b34e3ab"
+  - "source_authority_register_blob: 32729857bc8eb5001acb37b8ee8e60bcb6e0dc50"
+  - "policy_gate_register_blob: bc8185b4762a947c742cf54a7ea4f2bf80670e21"
+  - "habitat_candidate_index_blob: e55b9344cda673e069bce5525937f5a50666bf63"
 drive_sources:
-  - title: kfm_habitat_architecture_pdf_only_blueprint_2026-04-21.pdf
-    file_id: 1Ys9Z_AYfEz6oStxY0YqZjih9DFHc5GA6
-    role: planning lineage only; not current repository implementation proof
-  - title: KFM_Habitat_Fauna_Thin_Slice_Extended_Pro_Blueprint.pdf
-    file_id: 1KU3Z_KkqbKAkv3E7oyulTAQlN4f1Gz5w
-    role: cross-domain planning lineage only; not source admission, release, or current implementation proof
-inspection_boundary: >-
-  Current-session GitHub reads of this target, its direct children, accepted
-  Directory Rules adoption, CODEOWNERS, Habitat domain and policy boundaries,
-  source- and policy-projection registers, the Habitat workflow, release
-  candidate index, and connected Google Drive planning sources. No mounted
-  checkout, live source, credential, real Habitat payload, exact sensitive
-  geometry, production policy evaluator, governed EvidenceBundle resolver,
-  proof producer, release service, deployed consumer, or public carrier was
-  exercised.
+  - "kfm_habitat_architecture_pdf_only_blueprint_2026-04-21.pdf; file_id=1Ys9Z_AYfEz6oStxY0YqZjih9DFHc5GA6; role=planning lineage only, not current repository implementation proof"
+  - "KFM_Habitat_Fauna_Thin_Slice_Extended_Pro_Blueprint.pdf; file_id=1KU3Z_KkqbKAkv3E7oyulTAQlN4f1Gz5w; role=cross-domain planning lineage only, not source admission, release, or current implementation proof"
+inspection_boundary: Current-session GitHub reads of this target, its direct children, accepted Directory Rules adoption, CODEOWNERS, Habitat domain and policy boundaries, source- and policy-projection registers, the Habitat workflow, release candidate index, and connected Google Drive planning sources. No mounted checkout, live source, credential, real Habitat payload, exact sensitive geometry, production policy evaluator, governed EvidenceBundle resolver, proof producer, release service, deployed consumer, or public carrier was exercised.
 related:
   - docs/runbooks/README.md
   - docs/runbooks/habitat/NO_NETWORK_TEST_RUNBOOK.md
