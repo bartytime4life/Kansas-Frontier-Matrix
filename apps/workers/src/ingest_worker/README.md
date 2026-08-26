@@ -3,12 +3,12 @@ doc_id: kfm://app/workers/src/ingest-worker/readme
 title: Ingest Worker README
 type: app-readme
 subtype: worker-lane-boundary-readme
-version: v0.2
-prior_version: v0.1
+version: v0.3
+prior_version: v0.2
 status: draft; repository-grounded; placeholder-only
 owner: "NEEDS VERIFICATION — CODEOWNERS routes default repository review to @bartytime4life; no accepted Ingest Worker steward, source-admission owner, operations owner, independent reviewer, or release authority was verified"
 created: 2026-06-16
-updated: 2026-08-12
+updated: 2026-08-26
 policy_label: public
 current_path: apps/workers/src/ingest_worker/README.md
 owning_root: apps/
@@ -17,9 +17,22 @@ truth_posture: "CONFIRMED pinned repository bytes and adopted placement authorit
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 40995f1585466972e8f7602613633a64129af60d
-  target_prior_blob: a0469d836745cca8bb88a970ca7e274e4f8fdb31
+  base_commit: 0eb7a527cb2157504a5a03a9d024a4127fc5e45c
+  repository_tree: 456129ff70e0d172ae3f7a9344ebc0ebad0412f5
+  lane_tree: 57e03a7d1e2a64f9420239e3ea83a3c5b2afa808
+  target_prior_blob: 972466b5af140411fc6cd987dc6a71342f82c543
   entrypoint_blob: c13ad0e8911241da3ea18f8da0f869eea27db58b
+  ingest_receipt_contract_blob: 449420af794a5287e793fb6e1e1b900793ef15fa
+  ingest_receipt_schema_blob: 4e9707bec7da63049c5043562c9470564b77184f
+  ingest_receipt_validator_blob: 7bdf9f993a9f25759c8428a6da03df186d9c0651
+  ingest_receipt_test_blob: b77e945c05da13c5637b44dd2b255c3611f66cec
+  ingest_receipt_fixture_readme_blob: a182f24b7f33ed08e714dd24a9c868c10bbee8c2
+  connector_gate_blob: dd3fd47b44ed5151aaa4ce72032a069f4b848190
+  connectors_core_project_blob: ea94c0b24f50a68f3d59becbb34625c42298d7d9
+  connectors_core_core_blob: a817a1beea6d1e8344e5942db335b17284eebd4a
+  direct_files: 2
+  executable_python_lines: 0
+  repository_runtime_bindings: 0
   workers_readme_blob: 5b5c1e6b067e652a380bf445488a6227028dfc0e
   workers_src_readme_blob: 08ad9f8116f64817ffa4f8b2058613749360c102
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
@@ -35,6 +48,9 @@ related:
   - ../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../../../connectors/README.md
   - ../../../../packages/connectors-core/README.md
+  - ../../../../packages/connectors-core/pyproject.toml
+  - ../../../../packages/connectors-core/src/connectors_core/core.py
+  - ../../../../packages/connectors-core/src/connectors_core/transport.py
   - ../../../../pipelines/ingest/README.md
   - ../../../../pipeline_specs/README.md
   - ../../../../contracts/source/source_descriptor.md
@@ -82,10 +98,11 @@ tags:
   - fail-closed
   - rollback
 notes:
-  - "v0.2 replaces proposal-heavy worker claims with a current repository-grounded maturity contract."
-  - "The lane contains only this README and one comment-only main.py placeholder at the pinned base."
-  - "SourceDescriptor, SourceAdapter, SourceIngestionPlanCandidate, SourceRetrievalEpisode, and IngestReceipt surfaces exist elsewhere with mixed proposed, fixture-first, and executable-validator maturity; no Ingest Worker consumer or execution wiring was verified."
-  - "The shared pipelines/ingest and CLI ingest entrypoints are also comment-only placeholders; tools/ingest contains repository tools and must not become a production app dependency."
+  - "v0.3 refreshes exact repository evidence at current main; the lane still contains one README and one 54-byte, comment-only Python placeholder with zero executable lines."
+  - "IngestReceipt is now v0.5 with strict duplicate-member and non-finite-number rejection, schema and format checks, deterministic fixtures, focused tests, optional source-head/artifact/byte bindings, and connector-gate prerequisite wiring."
+  - "Connector-run receipt presence, governed persistence, source activation, candidate/receipt writers, worker composition, queue/runtime binding, deployment, and operational evidence remain held, absent, or unverified."
+  - "The actual connectors-core project is an internal 0.0.1 bounded implementation, while its package README still describes the superseded 0.0.0 placeholder; current bytes control maturity and the adjacent documentation drift remains explicit."
+  - "Drive, Notion, Atlas, and attached-manual ideas are non-authoritative design pressure; repository bytes and accepted decisions remain the current-state authority."
   - "This documentation change does not activate a source, add worker code, fetch data, write RAW or QUARANTINE material, create a receipt, deploy a process, promote lifecycle state, release, or publish."
 [/KFM_META_BLOCK_V2] -->
 
@@ -102,7 +119,7 @@ notes:
 [![Status: placeholder only](https://img.shields.io/badge/status-placeholder%20only-lightgrey?style=flat-square)](#2-repository-grounded-status)
 [![Authority: app-local wrapper](https://img.shields.io/badge/authority-app--local%20wrapper-0969da?style=flat-square)](#3-authority-and-placement)
 [![Source activation: no](https://img.shields.io/badge/source%20activation-no-critical?style=flat-square)](#4-operating-boundary)
-[![Receipt profile: fixture first](https://img.shields.io/badge/receipt%20profile-fixture%20first-f59e0b?style=flat-square)](#7-adjacent-ingest-contracts-and-finite-outcomes)
+[![Receipt profile: strict JSON](https://img.shields.io/badge/receipt%20profile-strict%20JSON-f59e0b?style=flat-square)](#7-adjacent-ingest-contracts-and-finite-outcomes)
 [![Truth posture: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#13-validation-and-test-strategy)
 [![Directory Rules: ADR-0029](https://img.shields.io/badge/directory%20rules-ADR--0029-8250df?style=flat-square)](#3-authority-and-placement)
 
@@ -113,7 +130,7 @@ notes:
 ---
 
 > [!IMPORTANT]
-> **Current state:** repository-grounded draft / placeholder-only. The directory contains this README and [`main.py`](./main.py); `main.py` is a single comment and establishes no executable worker behavior. No queue consumer, scheduler, connector invocation, source fetch, RAW writer, receipt writer, service loop, worker package, worker-specific test, deployment manifest, or runtime integration was verified at `main@40995f1585466972e8f7602613633a64129af60d`.
+> **Current state:** repository-grounded draft / placeholder-only. The directory contains this README and [`main.py`](./main.py); `main.py` is a single comment and establishes no executable worker behavior. No queue consumer, scheduler, connector invocation, source fetch, RAW writer, receipt writer, service loop, worker package, worker-specific test, deployment manifest, or runtime integration was verified at `main@0eb7a527cb2157504a5a03a9d024a4127fc5e45c`.
 
 > [!CAUTION]
 > An Ingest Worker may eventually coordinate bounded source-intake jobs. It must never treat a reachable endpoint, successful fetch, valid `SourceDescriptor`, `SourceRetrievalEpisode`, `IngestReceipt`, checksum, schema pass, queue acknowledgement, pull request, merge, or generated summary as evidence truth, policy approval, lifecycle promotion, release authority, or KFM publication.
@@ -186,9 +203,9 @@ This lane does not exist to:
 
 | Field | Bounded result |
 |---|---|
-| Repository snapshot | `main@40995f1585466972e8f7602613633a64129af60d` |
+| Repository snapshot | `main@0eb7a527cb2157504a5a03a9d024a4127fc5e45c` |
 | Directory contents | Exactly `README.md` and `main.py` |
-| Prior README blob | `a0469d836745cca8bb88a970ca7e274e4f8fdb31` |
+| Prior README blob | `972466b5af140411fc6cd987dc6a71342f82c543` |
 | Entrypoint blob | `c13ad0e8911241da3ea18f8da0f869eea27db58b` |
 | Entrypoint bytes | `# ingest_worker entrypoint — greenfield placeholder` plus final newline |
 | Executable Python in this lane | None verified |
@@ -235,10 +252,10 @@ This is the complete current directory map at the pinned base. It is not a propo
 | [`SourceDescriptor` contract](../../../../contracts/source/source_descriptor.md) | Draft, schema-paired, source-role anti-collapse contract | Semantic and governance surface exists; source truth or admission is not implied |
 | [`SourceDescriptor` schema](../../../../schemas/contracts/v1/source/source_descriptor.schema.json) | Rich Draft 2020-12 implementation schema | Machine shape exists; source use still requires contract, policy, review, and runtime authorization |
 | [`SourceAdapter` contract](../../../../contracts/source/source_adapter.md) | Proposed source-agnostic protocol; no live adapter or source activation | Reusable protocol and connector primitives exist; worker binding is absent |
-| [`connectors-core`](../../../../packages/connectors-core/README.md) | Executable source-agnostic transport, retry, integrity, redaction, and adapter primitives | Package capability exists; no source-specific activation or worker composition is inferred |
+| [`connectors-core` project](../../../../packages/connectors-core/pyproject.toml) and [core module](../../../../packages/connectors-core/src/connectors_core/core.py) | Internal `0.0.1` source-agnostic core and injected-transport implementation; its package README still describes the superseded `0.0.0` placeholder | Bounded package capability exists; no live transport, source-specific activation, governed persistence, or worker composition is inferred |
 | [`SourceIngestionPlanCandidate`](../../../../contracts/source/source_ingestion_plan.md) | Proposed, fixture-first, no-network, no-source-activation profile | Contract, closed schema, fixtures, validator, tests, and workflow exist; it is not a live schedule |
 | [`SourceRetrievalEpisode`](../../../../contracts/source/source_retrieval_episode.md) | Proposed, inactive, fixture-only, no-network observation profile | Schema, cases, validator, tests, and workflow exist; it grants no RAW write or source activation |
-| [`IngestReceipt`](../../../../contracts/source/ingest_receipt.md) | Draft, schema-paired, validator-implemented profile | Schema, fixtures, validator, tests, and connector-gate prerequisite exist; connector-run receipt presence remains held |
+| [`IngestReceipt`](../../../../contracts/source/ingest_receipt.md) | Draft v0.5, schema-paired, validator-implemented, strict-JSON profile | Duplicate members and non-finite numbers fail closed; schema, fixtures, focused tests, optional integrity bindings, and connector-gate prerequisite exist; connector-run receipt presence remains held |
 | [`data/receipts/ingest/`](../../../../data/receipts/ingest/README.md) | Draft parent receipt lane with atmosphere and flora child lanes | Logical receipt family exists; receipt presence is process memory, not worker wiring or proof |
 | [`tools/ingest/`](../../../../tools/ingest/README.md) | Repository watcher, preflight, and review-signal tool boundary | Useful implementation exists under `tools/`; production apps must not depend on it as hidden runtime logic |
 | Source-oriented workflows | Read-only or bounded validation workflows are present | Workflow bytes exist; no current-run result or worker execution is claimed |
@@ -252,7 +269,7 @@ The repository contains real ingest-adjacent implementation, but the following s
 |---|---|
 | A schema and validator can evaluate a synthetic `SourceIngestionPlanCandidate` | `CONFIRMED PRESENT` |
 | A schema and validator can evaluate fixture-only retrieval episodes | `CONFIRMED PRESENT` |
-| An IngestReceipt validator and focused tests exist | `CONFIRMED PRESENT` |
+| An IngestReceipt validator rejects duplicate members, non-finite numbers, schema/format defects, temporal inversion, placeholder digests, and requested binding failures | `CONFIRMED PRESENT` |
 | Source-agnostic connector primitives exist in a reusable package | `CONFIRMED PRESENT` |
 | Source-specific watchers and preflight tools exist | `CONFIRMED PRESENT` |
 | `apps/workers/src/ingest_worker/main.py` composes those capabilities | `NOT FOUND / UNKNOWN` |
@@ -283,12 +300,25 @@ The correct posture is neither “empty project” nor “working ingest service
 
 ### 2.8 Last reviewed
 
-- **Date:** 2026-08-12
+- **Date:** 2026-08-26
 - **Repository:** `bartytime4life/Kansas-Frontier-Matrix`
-- **Base:** `main@40995f1585466972e8f7602613633a64129af60d`
-- **Target prior blob:** `a0469d836745cca8bb88a970ca7e274e4f8fdb31`
-- **Inspection:** complete target and entrypoint bytes; parent worker contracts; adopted Directory Rules and ADR; CODEOWNERS; recursive tree inventory; bounded worker and open-PR search; CLI and pipeline placeholders; source descriptor, adapter, ingestion-plan, retrieval-episode, receipt, connector-core, receipt-lane, tool, validator, test, and workflow surfaces
-- **Not inspected as operational proof:** deployed worker, broker, scheduler, live connector, source credentials, runtime logs, dashboard, storage transaction, required-check settings for this lane, or release/publication activity
+- **Base:** `main@0eb7a527cb2157504a5a03a9d024a4127fc5e45c`
+- **Target prior blob:** `972466b5af140411fc6cd987dc6a71342f82c543`
+- **Inspection:** complete target and entrypoint bytes; parent worker contracts; accepted Directory Rules and ADR; CODEOWNERS; exact lane and repository trees; bounded worker and open-PR search; CLI and pipeline placeholders; source descriptor, adapter, ingestion-plan, retrieval-episode, IngestReceipt v0.5 contract/schema/fixtures/validator/test/workflow; actual connectors-core project/core/transport bytes; receipt-lane and release boundaries; Drive, Notion, Atlas, and attached-manual source pressure
+- **Not inspected as operational proof:** deployed worker, broker, scheduler, live connector, source credentials, connector-emitted receipt instance, governed receipt persistence, runtime logs, dashboard, storage transaction, required-check settings for this lane, or release/publication activity
+
+### 2.9 Source-pressure register — non-authoritative
+
+| Source | Design pressure retained | Repository disposition |
+|---|---|---|
+| Google Drive: [KFM Repository Build-Out & Markdown Modernization Implementation Agent](https://docs.google.com/document/d/1xIoImud9WHBVW715WRPRjgoay_oPZm9wjLgUUvPPt5c/edit) | Prefer the smallest reversible branch slice, carry non-safety unknowns in draft state, and keep delivery distinct from source admission, review, release, deployment, promotion, and publication. | Process input for this one-file draft; it does not prove Ingest Worker behavior. |
+| Google Drive and attached `KFM_Full_Atlas_seed_cards` | Govern source admission by source role, rights, sensitivity, cadence, authority class, and permitted use; keep intake, receipts, evidence, decisions, releases, and corrections distinct. | PROPOSED design pressure. Current source and receipt contracts partially reflect it, but no worker wiring or source admission follows. |
+| Attached `Kansas Frontier Matrix Pipeline Living Implementation Manual v0.3` | Preserve immutable RAW capture and source hashes, route unresolved material to WORK/QUARANTINE, treat receipts as process memory, and forbid direct publication. | PROPOSED future admission criteria; current lane remains inert. |
+| Attached `Kansas Frontier Matrix Implementation Reference` | Block live intake while rights or redistribution posture is unresolved; preserve original CRS/geometry hashes and distinct observation, publication, ingest, and release times. | Research and design input only; no source, transformation, storage, or temporal profile is adopted here. |
+| Notion: [KFM Cross-System Authority & Intake Model](https://app.notion.com/p/3c5a92021bf6811ba9c2d923215f11b7) | GitHub current-state evidence outranks Drive design sources and Notion coordination; preserve exact checkpoints, truth labels, retained holds, and rollback. | Coordination rule applied here; Notion does not approve, admit, activate, merge, release, or publish this change. |
+| Notion: [KFM Evidence, Documentation & Ideas Atlas](https://app.notion.com/p/3c6a92021bf681e097f2e9e976d74bc9) | Classify ingest-receipt JSON hardening as a bounded implemented slice while keeping live source, runtime, rights, persistence, and publication claims held. | Coordination evidence only; its repository checkpoint is historical and is not reused as current proof. |
+
+Repository bytes and accepted decisions control current-state claims. Source pressure can sharpen future requirements, but neither documentation depth nor a passing fixture, validator, workflow prerequisite, or receipt-shaped object creates worker execution or authority.
 
 [Back to top](#top)
 
@@ -638,7 +668,9 @@ The draft [`IngestReceipt`](../../../../contracts/source/ingest_receipt.md) prof
 | `PARTIAL` | Material is missing, skipped, truncated, restricted, quarantined, or failed in part | Review and fail-closed public/promotion posture unless policy explicitly allows a safe partial |
 | `FAIL` | Ingest failed or could not safely capture material | No promotion/publication; inspect, retry, repair, or quarantine as governed |
 
-The schema, fixture family, no-network validator, focused tests, and connector-gate prerequisite are present. The connector-gate workflow still declares connector-run receipt presence as held. Therefore:
+The v0.5 contract, closed schema, deterministic fixture family, no-network validator, focused tests, and connector-gate prerequisite are present. The validator now rejects duplicate JSON members and non-standard or overflowing non-finite numbers for both receipt and optional SourceDescriptor inputs; it also checks date-time/schema shape, temporal order, all-zero digest placeholders, optional `SUCCESS` gating, exact source-head binding, local artifact SHA-256 bindings, symbolic-link and duplicate-binding hazards, and bound byte totals. Diagnostics remain bounded and do not echo source values or artifact content.
+
+The connector-gate workflow still declares connector-run receipt presence as held. Therefore:
 
 - receipt-validation capability is not worker receipt emission;
 - a valid fixture is not a production receipt;
@@ -1103,7 +1135,7 @@ python tools/validators/docs/document-graph/check_document_graph.py \
   --format text
 
 python tools/validators/docs/stale-scan/check_stale_docs.py \
-  --repo-root . --as-of 2026-08-12 \
+  --repo-root . --as-of 2026-08-26 \
   --profile advisory --review-window-days 365 \
   --placeholder-grace-days 90 --format text \
   apps/workers/src/ingest_worker/README.md
@@ -1133,7 +1165,7 @@ python -m unittest discover \
 python tools/validators/validate_ingest_receipt.py --fixtures
 ```
 
-No execution result is claimed here unless produced and pinned for the exact revision under review.
+The current focused test source covers duplicate receipt keys, non-finite and overflowing numbers, duplicate SourceDescriptor keys, source mismatch, temporal inversion, placeholder digests, unsuccessful outcomes, artifact digest and byte mismatch, symlink denial, duplicate bindings, and valid exact bindings. No execution result is claimed here unless produced and pinned for the exact revision under review.
 
 ### 13.3 Future worker test layers
 
@@ -1439,7 +1471,9 @@ This README does not decide:
 | Shared ingest pipeline entrypoint | Comment-only placeholder | Do not claim executable shared-stage behavior |
 | Ingest CLI entrypoint | Comment-only placeholder | Do not document a runnable command |
 | SourceDescriptor schema paths | Rich implementation under `source/`; compatibility alias under `sources/`; placeholder `.json` also exists | Follow declared canonical/compatibility lineage; do not create another copy |
-| IngestReceipt connector-run presence | Workflow explicitly holds presence requirement | Add real writer/binding and evidence; do not weaken the hold |
+| IngestReceipt validator input integrity | Strict duplicate-member and non-finite-number rejection is implemented for receipt and optional SourceDescriptor JSON | Treat this as bounded validator capability only; it is not worker execution, connector correctness, source admission, or persistence |
+| IngestReceipt connector-run presence | Workflow explicitly holds presence requirement | Add a real writer/binding, governed persistence, replay/correction semantics, and evidence; do not weaken the hold |
+| connectors-core package README | Still describes a `0.0.0` placeholder while `pyproject.toml` and implementation bytes establish an internal `0.0.1` bounded package | Correct that README in a separate same-path slice; current package bytes control capability claims here |
 | Worker job/result contract | Not found | Contract, schema, fixtures, validator, and tests required |
 | Runtime capability map | Not found | Explicit authenticated read/write/network permissions and negative tests required |
 | Source activation | Not authorized by this README | Separate governed decision and operational evidence required |
@@ -1583,7 +1617,7 @@ When a claim becomes stale:
 
 **Before merge:** close the draft pull request and abandon the scoped branch through normal repository controls.
 
-**After an independently authorized merge:** revert the documentation commit or restore prior blob `a0469d836745cca8bb88a970ca7e274e4f8fdb31` through a reviewed commit. Re-run the same Markdown, link, metadata, exact-diff, and hosted documentation checks.
+**After an independently authorized merge:** revert the documentation commit or restore prior blob `972466b5af140411fc6cd987dc6a71342f82c543` through a reviewed commit. Re-run the same Markdown, link, metadata, exact-diff, and hosted documentation checks.
 
 No worker process, queue, connector, source, candidate, receipt, proof, policy decision, deployment, release record, cache, or public artifact requires rollback because this change modifies documentation only.
 
@@ -1609,7 +1643,7 @@ A future implementation must define:
 <details>
 <summary><strong>Appendix A — no-loss preservation ledger</strong></summary>
 
-| v0.1 element | v0.2 disposition |
+| v0.1 element | v0.2/v0.3 disposition |
 |---|---|
 | Stable document ID, path, and created date | Preserved |
 | Ingest Worker purpose | Preserved and narrowed to app-local coordination |
@@ -1697,6 +1731,16 @@ This is a category checklist, not verified variable names or deployment configur
 
 ## Change history
 
+### v0.3 — 2026-08-26
+
+- refreshed the exact repository, lane, target, placeholder, parent, authority, receipt, workflow, and connectors-core evidence pins;
+- retained the confirmed two-file, zero-executable-line worker state and the comment-only CLI and shared ingest-stage entrypoints;
+- recorded IngestReceipt v0.5 strict duplicate-member and non-finite-number rejection, focused tests, optional integrity bindings, and connector-gate prerequisite without inferring worker or connector execution;
+- kept connector-run receipt presence, governed persistence, source activation, queue/runtime binding, deployment, release, and publication explicitly held or unverified;
+- recorded the adjacent connectors-core README drift against the actual internal 0.0.1 package bytes;
+- added a source-pressure register that keeps Drive, Notion, Atlas, and attached-manual ideas non-authoritative;
+- changed documentation only.
+
 ### v0.2 — 2026-08-12
 
 - repinned the document to current repository evidence;
@@ -1716,7 +1760,7 @@ This is a category checklist, not verified variable names or deployment configur
 
 ## Status summary
 
-> **CONFIRMED:** `apps/workers/src/ingest_worker/` contains this README and a comment-only `main.py`; parent worker surfaces classify the lane as a placeholder; adjacent source-admission contracts, schemas, fixtures, validators, tests, connector primitives, tools, receipts documentation, and workflows exist elsewhere with mixed maturity.
+> **CONFIRMED:** `apps/workers/src/ingest_worker/` contains this README and a comment-only `main.py`; parent worker surfaces classify the lane as a placeholder; IngestReceipt v0.5 now has strict JSON input handling, deterministic fixtures, focused tests, optional integrity bindings, and connector-gate prerequisite wiring; other adjacent source-admission contracts, validators, connector primitives, tools, receipt documentation, and workflows remain outside this lane with mixed maturity.
 >
 > **PROPOSED:** a future Ingest Worker should be a thin, idempotent, fail-closed deployment wrapper that delegates acquisition and lifecycle work, preserves source roles and finite outcomes, and emits only governed candidates, receipts, and obligations.
 >
