@@ -91,6 +91,49 @@ def test_connector_and_source_material_access_remain_disabled() -> None:
     assert "etag" not in source_head["content_identity"]
 
 
+def test_m05_source_assessment_matrix_remains_fail_closed() -> None:
+    descriptor = _load()
+    rights = descriptor["rights"]
+    cadence = descriptor["cadence"]
+    admissibility = descriptor["admissibility_limits"]
+    public_release = descriptor["public_release"]
+    release_conditions = " ".join(public_release["release_conditions"]).lower()
+
+    # Identity, authority role, terms, and cadence stay explicit and bounded to
+    # the reviewed M-118 map artifact rather than a live source or point truth.
+    assert descriptor["publisher"]["name"] == "Kansas Geological Survey"
+    assert descriptor["owner_or_steward"]["name"] == "Kansas Geological Survey"
+    assert descriptor["source_role"] == "authoritative_for_claim"
+    assert rights["rights_status"] == "unknown"
+    assert rights["license_url"].startswith("https://")
+    assert rights["terms_url"].startswith("https://")
+    assert cadence["update_cadence"] == "static"
+    assert cadence["staleness_policy"] == "review_required"
+
+    # Public-safety posture preserves the published map scale and prevents a
+    # broadly public map from becoming authority for precise protected detail.
+    assert descriptor["sensitivity_default"] == "public"
+    assert "protected subsurface" in descriptor["sensitivity_notes"].lower()
+    assert "scale-bound" in admissibility["limitations"]
+    assert (
+        "1:500,000"
+        in descriptor["source_head"]["content_identity"]["upstream_version"]
+    )
+    assert public_release["redaction_required"] is False
+    assert "scale" in release_conditions
+
+    # Unknown rights, review, correction, and rollback remain prerequisites;
+    # the source cannot become active or releasable through this descriptor.
+    assert "rights" in release_conditions
+    assert "review" in release_conditions
+    assert "correction" in release_conditions
+    assert "rollback" in release_conditions
+    assert public_release["allowed"] is False
+    assert descriptor["connectors"]["activation_state"] == "disabled"
+    assert descriptor["review_state"] == "needs_review"
+    assert descriptor["release_state"] == "not_released"
+
+
 def test_only_official_kgs_https_endpoints_are_declared() -> None:
     descriptor = _load()
     endpoints = descriptor["access"]["endpoints"]
