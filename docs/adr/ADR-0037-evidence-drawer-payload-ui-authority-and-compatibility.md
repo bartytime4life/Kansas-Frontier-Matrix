@@ -24,7 +24,7 @@ owning_root: docs/
 responsibility: Record the proposed EvidenceDrawerPayload object-family authority and compatibility decision without independently implementing, accepting, releasing, deploying, or publishing it.
 current_path: docs/adr/ADR-0037-evidence-drawer-payload-ui-authority-and-compatibility.md
 supersedes: []
-superseded_by: null
+superseded_by: []
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main

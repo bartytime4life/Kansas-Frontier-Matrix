@@ -1,5 +1,5 @@
 {
-  "receipt_id": "genrec-adr-0037-evidence-drawer-payload-authority-3f68d4db",
+  "receipt_id": "genrec-adr-0037-evidence-drawer-payload-authority-d5b215a0",
   "contract_version": "3.0.0",
   "artifact_paths": [
     "docs/adr/ADR-0037-evidence-drawer-payload-ui-authority-and-compatibility.md",
@@ -8,7 +8,7 @@
     "docs/registers/ADR_INDEX.md"
   ],
   "artifact_hashes": {
-    "docs/adr/ADR-0037-evidence-drawer-payload-ui-authority-and-compatibility.md": "sha256:3f68d4dbb3ad00865f4be7f71e19e0f586d2e3243a4625b2b70d69484308e909",
+    "docs/adr/ADR-0037-evidence-drawer-payload-ui-authority-and-compatibility.md": "sha256:d5b215a0856c684c06b0d0755bca9e34390019ab0531e18c1e31d4ba825578c2",
     "docs/adr/INDEX.md": "sha256:4703ca6301f2a9339332394a16afb43b6c89be46d5fc83e6c58dfc359aa5cd04",
     "docs/adr/README.md": "sha256:ad1e77aa5431002019759f8aad7c5fa468d5320faa04651d7621d5fc3d79214e",
     "docs/registers/ADR_INDEX.md": "sha256:4dee3baf666d672f814bac202e9f504fb1ad367818f74dc29e960c5a22eec5cc"
@@ -18,7 +18,7 @@
     "model": "GPT-5",
     "version": "2026-08-26"
   },
-  "prompt_or_contract": "sha256:3f68d4dbb3ad00865f4be7f71e19e0f586d2e3243a4625b2b70d69484308e909",
+  "prompt_or_contract": "sha256:d5b215a0856c684c06b0d0755bca9e34390019ab0531e18c1e31d4ba825578c2",
   "parameters": {
     "seed": null,
     "temperature": null,
