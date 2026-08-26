@@ -1,0 +1,155 @@
+{
+  "receipt_id": "genrec-adr-0037-evidence-drawer-payload-authority-3f68d4db",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/adr/ADR-0037-evidence-drawer-payload-ui-authority-and-compatibility.md",
+    "docs/adr/INDEX.md",
+    "docs/adr/README.md",
+    "docs/registers/ADR_INDEX.md"
+  ],
+  "artifact_hashes": {
+    "docs/adr/ADR-0037-evidence-drawer-payload-ui-authority-and-compatibility.md": "sha256:3f68d4dbb3ad00865f4be7f71e19e0f586d2e3243a4625b2b70d69484308e909",
+    "docs/adr/INDEX.md": "sha256:4703ca6301f2a9339332394a16afb43b6c89be46d5fc83e6c58dfc359aa5cd04",
+    "docs/adr/README.md": "sha256:ad1e77aa5431002019759f8aad7c5fa468d5320faa04651d7621d5fc3d79214e",
+    "docs/registers/ADR_INDEX.md": "sha256:4dee3baf666d672f814bac202e9f504fb1ad367818f74dc29e960c5a22eec5cc"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-26"
+  },
+  "prompt_or_contract": "sha256:3f68d4dbb3ad00865f4be7f71e19e0f586d2e3243a4625b2b70d69484308e909",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive read-only milestone reconciliation",
+      "Notion milestone and Atlas reconciliation",
+      "current-main repository checkout and deterministic validators",
+      "SHA-256 artifact binding"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/0eb7a527cb2157504a5a03a9d024a4127fc5e45c",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/456129ff70e0d172ae3f7a9344ebc0ebad0412f5",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0eb7a527cb2157504a5a03a9d024a4127fc5e45c/docs/adr/INDEX.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0eb7a527cb2157504a5a03a9d024a4127fc5e45c/docs/adr/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0eb7a527cb2157504a5a03a9d024a4127fc5e45c/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0eb7a527cb2157504a5a03a9d024a4127fc5e45c/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0eb7a527cb2157504a5a03a9d024a4127fc5e45c/contracts/ui/evidence_drawer_payload.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0eb7a527cb2157504a5a03a9d024a4127fc5e45c/contracts/evidence/evidence_drawer_payload.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0eb7a527cb2157504a5a03a9d024a4127fc5e45c/schemas/contracts/v1/ui/evidence_drawer_payload.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0eb7a527cb2157504a5a03a9d024a4127fc5e45c/schemas/contracts/v1/evidence/evidence_drawer_payload.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0eb7a527cb2157504a5a03a9d024a4127fc5e45c/schemas/contracts/v1/runtime/evidence_drawer_payload.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/3368"
+    ]
+  },
+  "truth_labels": {
+    "docs/adr/ADR-0037-evidence-drawer-payload-ui-authority-and-compatibility.md": "PROPOSED",
+    "docs/adr/INDEX.md": "CONFIRMED",
+    "docs/adr/README.md": "CONFIRMED",
+    "docs/registers/ADR_INDEX.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "pinned-authority-and-overlap-check",
+      "outcome": "PASS",
+      "reason": "Repinned main 0eb7a527cb2157504a5a03a9d024a4127fc5e45c and tree 456129ff70e0d172ae3f7a9344ebc0ebad0412f5 after one unrelated Correction Worker documentation merge; no Evidence Drawer or ADR control-plane evidence changed, and no open pull request or branch claiming ADR-0037 was returned."
+    },
+    {
+      "gate": "directory-rules-placement-and-two-change-discipline",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and adopted Directory Rules v2 require an accepted decision before changing an object-family authority owner and prohibit using this proposed record to authorize dependent contract or schema migration in the same authority batch."
+    },
+    {
+      "gate": "evidence-drawer-conflict-and-coverage-inventory",
+      "outcome": "PASS",
+      "reason": "The pinned repository contains sixteen EvidenceDrawerPayload schemas: one closed UI profile, two empty permissive family anchors, six domain references to UI, and seven domain-local permissive scaffolds. Excluding the ignored generated-receipt archive, exact-path repository reference counts are 61 files for UI, seven for evidence, and three for runtime; these are reference counts, not verified consumer counts."
+    },
+    {
+      "gate": "adr-status-and-index-coherence",
+      "outcome": "PASS",
+      "reason": "The source ADR and canonical index remain proposed; the validator reports one contiguous ADR-0001 through ADR-0037 sequence with 37 numbered records and twelve unassigned scaffolds."
+    },
+    {
+      "gate": "adr-validator-negative-path-tests",
+      "outcome": "PASS",
+      "reason": "Eight focused ADR validator tests passed with strict configuration and markers."
+    },
+    {
+      "gate": "documentation-metadata-and-links",
+      "outcome": "PASS",
+      "reason": "All four Markdown artifacts have valid metadata blocks; the metadata check returned no failures and fourteen non-blocking unsupported-nesting warnings from the template-shaped evidence snapshot. The local-link check passed after removing two inherited missing support-document links."
+    },
+    {
+      "gate": "documentation-validator-tests",
+      "outcome": "PASS",
+      "reason": "The focused metadata and link validator suites passed 42 tests."
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "The recorded SHA-256 values bind the exact four authored Markdown artifacts."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks begin only after the immutable branch and draft pull request are published."
+    },
+    {
+      "gate": "human-review-and-adr-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Required human review functions and any proposed-to-accepted transition remain pending and separate."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/doctrine/directory-rules.md",
+    "docs/adr/ADR-0037-evidence-drawer-payload-ui-authority-and-compatibility.md"
+  ],
+  "citations": [
+    {
+      "id": "canonical-adr-inventory",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0eb7a527cb2157504a5a03a9d024a4127fc5e45c/docs/adr/INDEX.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0eb7a527cb2157504a5a03a9d024a4127fc5e45c/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "adopted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0eb7a527cb2157504a5a03a9d024a4127fc5e45c/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "ui-evidence-drawer-profile",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0eb7a527cb2157504a5a03a9d024a4127fc5e45c/contracts/ui/evidence_drawer_payload.md"
+    },
+    {
+      "id": "m02-coordination",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issues/3368"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-26T19:28:04Z",
+  "emitter": "OpenAI Codex (GPT-5)",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0037-evidence-drawer-payload-ui-authority-and-compatibility.md",
+    "drift_register_entry": null
+  },
+  "notes": "Initial proposed ADR-0037 packet. This receipt records authorship, evidence inventory, and deterministic artifact binding only. It grants no ADR acceptance, EvidenceDrawerPayload authority, contract or schema migration, alias retirement, policy approval, review approval, source activation, lifecycle promotion, release, deployment, publication, merge, or repository-settings authority."
+}
