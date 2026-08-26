@@ -3,12 +3,12 @@ doc_id: kfm://doc/apps-readme
 title: apps/ - Deployable Applications
 type: root-readme
 subtype: canonical-root-landing-page
-version: v0.6
-prior_version: v0.5
+version: v0.7
+prior_version: v0.6
 status: draft; repository-grounded; mixed-maturity
 owner: "NEEDS VERIFICATION — CODEOWNERS routes repository review to @bartytime4life and explicitly covers apps/governed-api/ and apps/explorer-web/; no accepted application-steward assignment, required independent-review rule, or release authority was verified"
 created: 2026-05-10
-updated: 2026-08-08
+updated: 2026-08-26
 policy_label: public
 current_path: apps/README.md
 owning_root: apps/
@@ -21,26 +21,24 @@ canonical_relationship: same-path update; no sibling authority created
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 0f4cccc367e1beb18a31bb3459a579d6ab6e3fba
-  root_tree: 03885136400d1b33975459c1f00a0139920d39e2
-  apps_tree: 37af16928f3dcdef8ccf22509d149642045ebc26
-  target_prior_blob: 4b7d11b3f5e62ea4458c2895bf907eade8975918
+  base_commit: d5bd9a0f1fb8aef50d62ddc92b5b62d1d33859e6
+  root_tree: fa2c758186259d2ae0fd9d838aa575504294b658
+  apps_tree: 9f49d109280d7c7fa269c352bd724b8996ed2830
+  target_prior_blob: 6cd825905976b2b662e43497203206305cb78827
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_adoption: ADR-0029; accepted
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  governed_api_main_blob: bcc8d3a0ddba4b225e962b594d548819df0cbb71
+  governed_api_main_blob: 4eb335c7c0b27f62c7419c478542e8fe40e1ff38
   governed_api_routes_blob: 3418168d0b267160d6ad6dd87f289e880ef4a024
-  governed_api_stub_blob: 5d7c137d2e78ddfca35a1356a96333ac2e84952b
-  explorer_manifest_blob: e68ea6566580489a2c0a272e7ee387e9de249eb0
-  explorer_entrypoint_blob: 9c95ae67333b7cbf6bc88051fa5c76e4cd97efa4
-  explorer_shell_blob: 64c78c78820af33fb7a622094e4c0944ad9412f8
+  governed_api_stub_blob: 371e60d9f96c78e31c8a1e6109d19dee5da4213b
+  explorer_manifest_blob: d9ada6539e07a4a5cd9b65ec9792105bd4856807
+  explorer_entrypoint_blob: f056c897fbe063762c5594b819c44536d8ddf9e1
+  explorer_site_blob: 6f2a883c1a4a18355ecd97acbe236b9b333ee507
+  explorer_focus_workspace_blob: 094f546512a9b999ad33031faa81e4b7a149dde4
+  explorer_trust_surface_blob: b92b486d3ea29ffe365f82b627e5fd9d47d4daba
+  explorer_maplibre_adapter_blob: 663ba0f7a05498948f67d644387c73ab19d5c16c
   explorer_governed_client_blob: 21f6e4d1225ab0427ecb689d6782f4b56fc25ea2
-  explorer_drawer_blob: 7746843c259594568fe75e975155a67eb8372e8f
-  explorer_trust_header_blob: 91197ecec1c1dce3ca5969c7bb5d1708967efc13
-  explorer_time_scrubber_blob: e54aafb36c54f97863ce95bebda15c8a163640c3
-  explorer_citation_pill_blob: 87d3036c175f626beca7e478690f61e05346c1da
-  explorer_evidence_tooltip_blob: d732b39a7ae88f2f3f15b680f10d3c60bd743ad6
-  api_workflow_blob: e1a6242d02cf7220f680c489d53162bec3433258
+  api_workflow_blob: 84ba16a3c36a1d58b2f6f1059a31ed6354063357
   ui_workflow_blob: 52382d796a8dd5ecafc39a801515aff0a8b013f8
 related:
   - ../README.md
@@ -71,9 +69,10 @@ related:
   - ../tests/README.md
 tags: [kfm, apps, deployables, trust-membrane, governed-api, explorer-web, finite-outcomes, mixed-maturity]
 notes:
-  - "v0.6 replaces the superseded Directory Rules conflict warning with accepted ADR-0029 and the pinned v2 authority."
-  - "v0.6 records the current Explorer fixture-first trust projections: Evidence Drawer, Trust Header, accessible time scrubber, citation pill, evidence tooltip, correction/history visibility, and deterministic unit/browser coverage."
-  - "Explorer remains a static fail-closed shell: only the no-input Evidence Drawer is mounted by the browser entrypoint; the newer trust components are independently tested modules, not a live governed API or map flow."
+  - "v0.7 repins the root to current main and corrects the app-ADR status map."
+  - "v0.7 records the mounted local Explorer composition: public workspace navigation, a renderer-neutral synthetic map/status surface, a bounded synthetic Focus workspace, and a shared public trust surface."
+  - "The attached KFM manuals, Drive Atlas, and Notion reconciliation are read-only design and coordination inputs; they do not establish repository behavior, source admission, review, release, deployment, promotion, or publication."
+  - "MapLibre remains unadmitted at runtime: the dependency is absent and MapLibreAdapter is comment-only even though ADR-0006 is accepted."
   - "No application code, route, workflow, dependency, deployment, policy, release, promotion, or publication behavior is changed by this README update."
 [/KFM_META_BLOCK_V2] -->
 
@@ -92,11 +91,11 @@ notes:
 [![Maturity: mixed](https://img.shields.io/badge/maturity-mixed-d4a72c?style=flat-square)](#current-app-map)
 [![Public trust path: governed-api](https://img.shields.io/badge/public%20trust%20path-governed--api-bf8700?style=flat-square)](./governed-api/README.md)
 [![Directory Rules: ADR-0029 accepted](https://img.shields.io/badge/directory%20rules-ADR--0029%20accepted-2da44e?style=flat-square)](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
-[![Evidence base: 0f4cccc](https://img.shields.io/badge/evidence%20base-0f4cccc-6e7781?style=flat-square)](#evidence-ledger)
+[![Evidence base: d5bd9a0](https://img.shields.io/badge/evidence%20base-d5bd9a0-6e7781?style=flat-square)](#evidence-ledger)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-level)
-[![Reviewed: 2026-08-08](https://img.shields.io/badge/reviewed-2026--08--08-0969da?style=flat-square)](#last-reviewed)
+[![Reviewed: 2026-08-26](https://img.shields.io/badge/reviewed-2026--08--26-0969da?style=flat-square)](#last-reviewed)
 
-**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Evidence](#evidence-ledger) · [App map](#current-app-map) · [Gaps](#verified-gaps-and-next-work)
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Evidence](#evidence-ledger) · [Sources](#source-informed-architecture-pressure) · [App map](#current-app-map) · [Gaps](#verified-gaps-and-next-work)
 
 </div>
 
@@ -152,7 +151,7 @@ The root owns deployable composition. It does not own:
 
 **Draft / repository-grounded / mixed maturity.**
 
-This edition is pinned to `main@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba` and apps tree `37af16928f3dcdef8ccf22509d149642045ebc26`. It describes repository bytes and bounded tests; it does not describe a deployed system or current production health.
+This edition is pinned to `main@d5bd9a0f1fb8aef50d62ddc92b5b62d1d33859e6` and apps tree `9f49d109280d7c7fa269c352bd724b8996ed2830`. It describes repository bytes and bounded local or CI-facing test definitions; it does not describe a deployed system or current production health.
 
 ### Evidence boundary
 
@@ -161,12 +160,13 @@ This edition is pinned to `main@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba` and ap
 | `apps/` has seven direct child lanes plus this README. | CONFIRMED | Pinned apps tree | Direct-lane presence does not establish implementation maturity. |
 | Governed API registers `/bootstrap`, `/layers`, and `/evidence` through a small WSGI application. | CONFIRMED | `governed-api/src/governed_api/main.py` and route registry | The routes are fail-closed scaffolds, not domain APIs. |
 | Governed API route stubs return bounded `ABSTAIN / NOT_IMPLEMENTED` envelopes. | CONFIRMED | Current stub and bounded API tests | Does not prove authorization, EvidenceBundle resolution, deployment, or load behavior. |
-| Explorer Web builds a static browser entrypoint and mounts a no-input Evidence Drawer over a fixed fail-closed shell state. | CONFIRMED | `explorer-web/src/main.ts`, shell resolver, manifest, and tests | No map, route tree, governed API transport, live evidence resolution, or deployment is present. |
-| Explorer contains independently testable fixture-first Trust Header, accessible time scrubber, citation pill, evidence tooltip, Evidence Drawer, trust-overlay, and correction/history behavior. | CONFIRMED | Current feature modules plus unit and browser tests | Most components are not composed into the default shell and do not establish a live user flow. |
+| Explorer Web mounts a repository-grounded local site with Map, Knowledge, Features, and Trust regions, public anchor navigation, a synthetic Focus workspace, and a shared public trust surface. | CONFIRMED | `explorer-web/src/main.ts`, `src/site/`, unit tests, and browser tests | The composition is deterministic and fixture-first; it is not a production route tree, live service, or release. |
+| The mounted Explorer map surface uses `NullMapRuntime`, synthetic feature-to-Evidence-Drawer cases, and finite runtime states while preserving the renderer hold. | CONFIRMED | `mount-explorer-site.ts`, runtime-status tests, and map/evidence fixture tests | `maplibre-gl` is absent and `MapLibreAdapter.ts` is comment-only; no live map renderer or released layer is established. |
+| Explorer's current tree contains 37 named feature lanes, 23 TypeScript adapter modules, 44 top-level unit tests, and 34 browser specs. | CONFIRMED | Pinned apps tree | File and test inventory demonstrates bounded implementation breadth, not integrated product or operational maturity. |
 | Explorer package scripts run TypeScript/Vite build, Vitest unit tests, and Playwright browser tests. | CONFIRMED | Current `package.json`, lockfile, Playwright config, and `ui-build` workflow | Workflow wiring is not a hosted-run conclusion or deployment proof. |
-| Review Console, CLI, Workers, and Admin remain scaffolded or documentation-led. | CONFIRMED | Pinned child trees and no current non-Explorer implementation delta | No product readiness is claimed. |
+| Review Console and Admin remain documentation-led; CLI and Worker Python entrypoints remain explicit greenfield placeholders. | CONFIRMED | Pinned child trees, CLI `__main__.py`, and worker `main.py` files | No review mutation, operator workflow, queue, schedule, or product readiness is established. |
 | `@bartytime4life` is the executable GitHub review route. | CONFIRMED | Current CODEOWNERS | Routing is not stewardship, independent approval, or release authority. |
-| ADR-0029 is accepted; the app-related ADRs listed below remain proposed. | CONFIRMED | Current ADR source and index | Proposed ADRs remain design lineage rather than current behavior proof. |
+| ADR-0029 and ADR-0006 are accepted; ADR-0004, ADR-0005, ADR-0019, and ADR-0025 remain draft or proposed. | CONFIRMED | Current ADR sources and index | Acceptance of a boundary does not admit a dependency, establish runtime behavior, or approve release. |
 | Deployment, dashboards, audit sinks, live authorization, service health, and public operation are established. | UNKNOWN | No admissible operational evidence inspected | Verify through infrastructure, runtime, logs, and deployed observations. |
 
 ### Trust flow
@@ -180,7 +180,7 @@ flowchart TD
     explorer -. "denied" .-> internal["RAW / WORK / QUARANTINE<br/>canonical or model stores"]
 ```
 
-The Governed API and Explorer each provide bounded fail-closed executable slices. Explorer does not yet call the API, render a map, resolve live evidence, or expose a production claim surface. Internal-app mutation, worker execution, release assembly, deployment, and operational observability remain placeholder, held, or unverified.
+The Governed API and Explorer each provide bounded fail-closed executable slices. Explorer now composes a meaningful local shell, synthetic map/runtime status, Focus request, and trust/evidence interaction surface, but it still does not call the API, load MapLibre, resolve live evidence, or expose a production claim surface. Internal-app mutation, worker execution, release assembly, deployment, and operational observability remain placeholder, held, or unverified.
 
 ## What belongs here
 
@@ -317,22 +317,22 @@ Governance role names are not executable GitHub identities. CODEOWNERS routing i
 
 ## ADRs
 
-ADR-0029 is the accepted placement authority relevant to this root. The app-related records remain proposed design lineage unless a later accepted ADR or current implementation evidence establishes more.
+ADR-0029 is the accepted placement authority for this root. ADR-0006 now accepts the renderer seam, but acceptance does not add `maplibre-gl`, implement the concrete adapter, or admit a released renderer. The remaining app-related records are draft or proposed design lineage unless a later accepted decision or current implementation evidence establishes more.
 
 | ADR | Effective status | Relationship |
 |---|---|---|
 | [`ADR-0029`](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | `accepted` | Adopts Directory Rules v2 and makes `docs/doctrine/directory-rules.md` the sole writable authority |
-| [`ADR-0004`](../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md) | `proposed` | Describes Governed API as the trust membrane |
+| [`ADR-0004`](../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md) | document `draft`; index decision `proposed` | Describes Governed API as the trust membrane |
 | [`ADR-0005`](../docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md) | `proposed` | Describes Explorer Web as the map-first shell |
-| [`ADR-0006`](../docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) | `proposed` | Describes the renderer adapter boundary |
-| [`ADR-0019`](../docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md) | `proposed` | Describes provider-neutral adapters and finite envelopes |
-| [`ADR-0025`](../docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md) | `proposed` | Describes the no-direct-store public-client invariant |
+| [`ADR-0006`](../docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) | `accepted` | Accepts the renderer adapter boundary; dependency and concrete runtime remain separate gates |
+| [`ADR-0019`](../docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md) | document `draft`; index decision `proposed` | Describes provider-neutral adapters and finite envelopes |
+| [`ADR-0025`](../docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md) | document `draft`; index decision `proposed` | Describes the no-direct-store public-client invariant |
 
 Accepted Directory Rules and current repository evidence control placement and current-state claims. Proposed ADR language does not upgrade scaffolds to implementation.
 
 ## Last reviewed
 
-**2026-08-08**, against `main@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba`, root tree `03885136400d1b33975459c1f00a0139920d39e2`, and apps tree `37af16928f3dcdef8ccf22509d149642045ebc26`.
+**2026-08-26**, against `main@d5bd9a0f1fb8aef50d62ddc92b5b62d1d33859e6`, root tree `fa2c758186259d2ae0fd9d838aa575504294b658`, and apps tree `9f49d109280d7c7fa269c352bd724b8996ed2830`.
 
 Re-review after any app-lane creation or removal, public-route change, package-manager or lockfile change, renderer/runtime integration, worker write-target change, deployment exposure change, accepted app-architecture ADR, or child README update that materially changes the maturity map.
 
@@ -340,66 +340,75 @@ Re-review after any app-lane creation or removal, public-route change, package-m
 
 | Evidence | Identifier | Supports | Does not support |
 |---|---|---|---|
-| Prior README | blob `4b7d11b3…` | Same-path baseline and no-loss review | Runtime behavior |
-| Current base | `main@0f4cccc…` | Repository state used for this edition | Untracked files or deployed state |
-| Apps tree | `37af1692…` | Direct lanes and tracked current app surfaces | Runtime reachability |
+| Prior README | blob `6cd82590…` | Same-path baseline and no-loss review | Runtime behavior |
+| Current base | `main@d5bd9a0…` | Repository state used for this edition | Untracked files or deployed state |
+| Apps tree | `9f49d109…` | Direct lanes, file inventory, and tracked current app surfaces | Runtime reachability |
 | Accepted Directory Rules | blob `fd49a0b8…`; ADR-0029 | Root placement, responsibility split, and compatibility posture | App implementation maturity |
 | CODEOWNERS | blob `dd2a84aa…` | GitHub review routing | Stewardship, approval, or separation of duties |
-| Governed API WSGI | blob `bcc8d3a0…` | Route and method dispatch | Production isolation |
+| Governed API WSGI | blob `4eb335c7…` | Route and method dispatch | Production isolation |
 | Governed API route registry | blob `3418168d…` | `/bootstrap`, `/layers`, `/evidence` registration | Domain implementation |
-| Governed API stub | blob `5d7c137d…` | Bounded `ABSTAIN / NOT_IMPLEMENTED` source | Complete policy/evidence coverage |
-| Explorer manifest | blob `e68ea656…` | Exact Node range, scripts, Vite/Vitest/Playwright/TypeScript dependencies | Hosted result or product architecture |
-| Explorer entrypoint | blob `9c95ae67…` | Static shell and mounted no-input Evidence Drawer | Map, live API, or production route tree |
-| Explorer shell resolver | blob `64c78c78…` | Fixed `ABSTAIN`/`ERROR` baseline states | Governed answer flow |
-| Explorer governed projection adapter | current pinned blob | Strict fixture-only payload parsing, trust state, correction/history validation | Canonical payload schema adoption or transport |
-| Evidence Drawer | blob `7746843c…` | Finite no-leak render, history/correction display, keyboard focus behavior | Live evidence service |
-| Trust Header | blob `91197ece…` | Text-first finite trust projection and drawer delegation | Policy evaluation or shell integration |
-| Time scrubber | blob `e54aafb3…` | Strict UTC-second governed temporal projection and accessible interaction | Historical truth or live timeline integration |
-| Citation pill | blob `87d3036c…` | Reviewed/released/current evidence gating and copy-only link projection | Canonical navigation route |
-| Evidence tooltip | blob `d732b39a…` | Supported-only tooltip and Drawer delegation | Map interaction integration |
-| API workflow | current pinned file | Bounded API hosted orchestration | Human review or deployment |
+| Governed API stub | blob `371e60d9…` | Bounded `ABSTAIN / NOT_IMPLEMENTED` and safe `ERROR` source | Complete policy/evidence coverage |
+| Explorer manifest | blob `d9ada653…` | Exact Node range and Vite/Vitest/Playwright/TypeScript scripts | Hosted result or product architecture |
+| Explorer entrypoint | blob `f056c897…` | Mounted site, public navigation, synthetic Focus workspace, and public trust surface | Live API, renderer, or production route tree |
+| Explorer site composition | blob `6f2a883c…` | Map/Knowledge/Features/Trust regions, `NullMapRuntime`, synthetic selection bridge, and finite runtime status | Admitted MapLibre runtime or released layer |
+| Explorer synthetic Focus workspace | blob `094f5465…` | Bounded request identity, active evidence scope, correction visibility, and no-leak fixture flow | Live provider, production EvidenceRef resolution, or released answer |
+| Explorer public trust surface | blob `b92b486d…` | Shared finite trust states and mounted header, drawer, time, citation, and denial components | Backend policy evaluation or operational authorization |
+| MapLibre adapter | blob `663ba0f7…` | Current comment-only boundary marker | Concrete renderer implementation or dependency admission |
+| Explorer governed projection adapter | blob `21f6e4d1…` | Strict fixture-only payload parsing, trust state, and correction/history validation | Canonical payload schema adoption or transport |
+| API workflow | blob `84ba16a3…` | Bounded API hosted orchestration definition | Human review, hosted pass at this README head, or deployment |
 | UI workflow | blob `52382d79…` | Locked build plus unit/browser test orchestration | A functional map, release, or publication |
+
+## Source-informed architecture pressure
+
+The supplied corpus was used as read-only design input and then reconciled against the pinned repository. It can explain why an app boundary matters or identify a candidate slice; it cannot prove that the repository implements a proposal, admit a source or dependency, accept an ADR, or establish review, release, deployment, promotion, or publication.
+
+| Source input | Retained application pressure | Current repository reconciliation | Status carried here |
+|---|---|---|---|
+| *KFM MapLibre Operating Architecture, Governed UI, and AI Interaction Manual* | Keep renderer state downstream of evidence and policy; make Evidence Drawer, Focus Mode, correction, and finite negative outcomes visible at the point of use. | The local Explorer now composes synthetic map/evidence, Focus, and trust surfaces; Governed API remains a separate fail-closed stub and no live transaction joins them. | `PROPOSED` architecture / `PARTIAL` bounded implementation |
+| *Kansas Frontier Matrix Pipeline Living Implementation Manual v0.3* | Preserve lifecycle, no-autopublish, receipts, review, correction, withdrawal, and rollback across outward app flows. | Root boundaries and failure-safe wording preserve these obligations; no app is evidence of promotion or publication. | `CONFIRMED` source doctrine / runtime closure `UNKNOWN` |
+| *Kansas Frontier Matrix Implementation Reference* and the Drive-backed *KFM Full Atlas Seed Cards* | Treat the inspectable claim, evidence closure, temporal scope, source role, policy, release state, and correction lineage as the durable outward unit. | Current app fixtures project several of these fields, but the Atlas remains proposal lineage and its cards are not automatically implementation requirements. | `PROPOSED`; source admission not inferred |
+| *Master MapLibre Components-Functions-Features* and `maplibre3d.md` | Retain renderer, tile, terrain, 3D, performance, accessibility, and fallback ideas as testable capability pressure. | ADR-0006 accepts the seam, while `maplibre-gl`, the concrete adapter, live tiles, WebGL evidence, and 3D delivery remain absent or held. | Research pressure only |
+| Notion Atlas and modernization reconciliation pages | Preserve source/repository deltas, current limitations, and dependency-closed next slices. | Notion is coordination evidence and included older GitHub checkpoints; this README uses current `main` for repository claims. | Coordination only; repository evidence wins |
+| General GIS, PostGIS, geostatistics, urban-planning, archaeology, API, database-lifecycle, GUI, and DDD references | Supply background vocabulary and possible future validation concerns. | No dependency, route, schema, storage profile, benchmark, source role, or app feature is adopted from those references in this change. | Out of scope for current-state claims |
+
+Source-derived ideas advance only through the normal sequence: classify the claim, identify the owning root, bind contracts/schemas/policy/evidence, implement a bounded app slice, run negative-path tests, and preserve release and rollback as separate governed transitions.
 
 ## Current app map
 
 | Lane | Current implementation truth | Verified entrypoint or check | Failure-safe posture |
 |---|---|---|---|
 | [`governed-api/`](governed-api/README.md) | Bounded executable WSGI, three fail-closed routes, route/envelope tests | `make governed-api-smoke`; `make governed-api-verify`; `api-test` | `ABSTAIN`, 404, or 405; no renderer/model/internal-store shortcut |
-| [`explorer-web/`](explorer-web/README.md) | Static fail-closed shell plus fixture-first trust/evidence/time/citation components and deterministic unit/browser tests | `make ui-build`; `pnpm --filter explorer-web test`; `ui-build` | Missing or unsafe support hides detail or returns fixed `ABSTAIN`, `DENY`, or `ERROR`; no live API/map/publication path |
-| [`review-console/`](review-console/README.md) | README-led feature scaffolds and minimal package surface | No accepted executable review flow | No review, promotion, correction, or rollback mutation is proven |
-| [`cli/`](cli/README.md) | Python package skeleton with placeholder command modules | Placeholder module behavior only | No operator shortcut is release authority |
-| [`workers/`](workers/README.md) | Named worker entrypoints remain placeholder-oriented | No accepted queue, schedule, or worker test suite | Watcher and worker outputs remain candidates/receipts, never publication |
+| [`explorer-web/`](explorer-web/README.md) | Mounted local site, public workspace navigation, renderer-neutral synthetic map/status and map/evidence fixtures, bounded synthetic Focus workspace, shared trust surface, and many independently tested projections | `make ui-build`; `pnpm --filter explorer-web test`; `ui-build` | Missing or unsafe support resolves to bounded `ABSTAIN`, `DENY`, or `ERROR`; no live API, admitted renderer, released layer, deployment, or publication path |
+| [`review-console/`](review-console/README.md) | README-led feature boundaries and a minimal package manifest | No accepted executable review flow | No review, promotion, correction, or rollback mutation is proven |
+| [`cli/`](cli/README.md) | Python package skeleton with an explicit greenfield placeholder entrypoint and placeholder command modules | `apps/cli/src/kfm_cli/__main__.py` | No operator shortcut is review, release, or publication authority |
+| [`workers/`](workers/README.md) | Named worker directories with explicit greenfield placeholder entrypoints | No accepted queue, schedule, worker behavior, or worker test suite | Watcher and worker outputs remain candidates or receipts, never publication |
 | [`admin/`](admin/README.md) | README-only restricted boundary | No executable admin surface | Restricted and absent by default |
-| [`packages/`](packages/README.md) | README plus drift guard | No workspace/package activation | Must not shadow top-level `packages/` |
+| [`packages/`](packages/README.md) | README and `.gitkeep` drift guard | No local manifest or package activation | Must not shadow top-level `packages/` |
 
 ### Explorer maturity split
 
 **CONFIRMED integrated default shell:**
 
-- static Vite entrypoint;
-- fixed no-input `ABSTAIN / NO_GOVERNED_RESPONSE`;
-- fixed error for unsupported shell input without reflection;
-- a mounted no-input Evidence Drawer with keyboard close and focus return.
+- Vite entrypoint mounting the local Explorer site and the Map, Knowledge, Features, and Trust regions;
+- public workspace navigation with bounded URL/hash context and no privileged review or admin route;
+- renderer-neutral `NullMapRuntime` status controls and synthetic feature-selection-to-Evidence-Drawer cases;
+- bounded synthetic Focus requests with active evidence scope, policy outcome, withheld context, and correction visibility;
+- a shared public trust surface composing Trust Header, Evidence Drawer, time, citation, denial, and finite negative states.
 
-**CONFIRMED independently implemented and tested modules:**
+**CONFIRMED broader independently implemented and tested surface:**
 
-- strict fixture-only governed evidence projection parser;
-- finite Evidence Drawer with correction and negative-history visibility;
-- text-first Trust Header;
-- accessible governed time scrubber;
-- supported-only evidence tooltip;
-- reviewed/released/current citation pill;
-- bounded roads/rail/trade trust overlay;
-- soil Evidence Drawer delegation;
-- drift and artifact-integrity fixture coverage.
+- 37 named feature lanes and 23 adapter modules in the pinned Explorer tree;
+- 44 top-level unit tests and 34 Playwright browser specs discovered in that tree;
+- strict fixture-only projection parsers, finite Evidence Drawer behavior, text-first trust state, governed time, citation, denial, correction, and no-leak checks;
+- domain, source-health, provenance, PMTiles, STAC, attestation, redaction, reveal, promotion-status, lineage, and diagnostic projections that remain fixture-first unless explicitly mounted above.
 
 **UNKNOWN or not implemented as a current integrated product flow:**
 
-- MapLibre map and released layer catalog;
+- `maplibre-gl` dependency, concrete `MapLibreAdapter`, live map, and released layer catalog;
 - live Governed API transport;
 - canonical Evidence Drawer schema binding;
-- map-click-to-evidence resolution;
-- Focus Mode runtime;
+- live map-click-to-EvidenceBundle resolution;
+- provider-backed or deployed Focus Mode runtime;
 - Story Player route composition;
 - production compare/export;
 - complete accessibility audit;
@@ -410,15 +419,16 @@ Re-review after any app-lane creation or removal, public-route change, package-m
 
 | Gap | Truth | Disposition | Dependency-safe next step |
 |---|---|---|---|
-| Explorer's default shell does not compose the newer trust, citation, tooltip, time, or domain-overlay modules. | CONFIRMED | DEFERRED | Choose one governed integration slice with a closed input contract, no-leak fixtures, browser tests, and rollback. |
-| Explorer has no live Governed API transport or map renderer flow. | CONFIRMED | DEFERRED | Add transport only after canonical payload/schema and policy boundaries are accepted and tested. |
-| Explorer child READMEs predate several August feature additions. | CONFIRMED | FOLLOW-UP | Refresh lane-local docs in a separate bounded documentation PR or dependency-closed Explorer integration slice. |
+| Explorer has no admitted `maplibre-gl` dependency or concrete `MapLibreAdapter`; its normal map surface remains renderer-neutral and synthetic. | CONFIRMED | HOLD | Preserve ADR-0006's seam and add the dependency/adapter only through its own supply-chain, browser-readiness, performance, accessibility, and rollback gate. |
+| Explorer has no live Governed API transport or production EvidenceBundle resolution flow. | CONFIRMED | DEFERRED | Add one contract/schema/policy-closed transport slice with public-safe fixtures, negative cases, and no direct internal-store path. |
+| The mounted Focus and map/evidence flows are synthetic even though their visible trust continuity is real local implementation. | CONFIRMED | PARTIAL | Prove one bounded end-to-end governed transaction before describing live integration; keep release and publication separate. |
+| Root and child README checkpoints do not all share the same repository base or maturity vocabulary. | CONFIRMED | FOLLOW-UP | Refresh lane-local documentation only when its current bytes can be repinned without broad cross-root rewrite. |
 | Review Console has no executable review flow. | CONFIRMED | DEFERRED | Establish accepted review-record, authorization, audit, and separation-of-duty contracts before mutation UI. |
 | CLI commands and Workers remain placeholders. | CONFIRMED | DEFERRED | Select one no-network dry-run command or non-publishing worker with fixtures, receipts, and fail-safe outputs. |
 | Admin has no executable surface. | CONFIRMED | INTENTIONAL ABSENCE | Keep absent until a verified need, authorization model, audit path, and break-glass policy exist. |
 | Governed API supports only fail-closed stubs. | CONFIRMED | DEFERRED | Add one evidence-resolving route only after contract, schema, policy, fixtures, and released public-safe input are ready. |
 | App deployment and observability are unproved. | UNKNOWN | DEFERRED | Verify from deployed infrastructure, logs, health checks, and audit sinks; repository prose is insufficient. |
-| App-specific ADRs remain proposed. | CONFIRMED | HOLD AS DESIGN LINEAGE | Do not treat their language as implementation or placement authority beyond accepted Directory Rules. |
+| App-specific ADR status is mixed: ADR-0006 is accepted while ADR-0004, ADR-0005, ADR-0019, and ADR-0025 remain draft or proposed. | CONFIRMED | MIXED | Apply ADR-0006's accepted seam without treating the remaining proposals as adopted behavior or release authority. |
 
 ## Safe change pattern
 
@@ -451,15 +461,16 @@ The root is not complete while child lanes are placeholders. For a declared app 
 | v0.4 | 2026-07-23 | Repinned the evidence snapshot, clarified review routing versus stewardship, recorded the then-unresolved Directory Rules duplicate, and added an evidence ledger. | None; documentation and receipt only. |
 | v0.5 | 2026-07-29 | Recorded the locked, buildable, tested, fail-closed Explorer Web shell baseline. | Static shell only; no API, renderer, claim, release, or deployment behavior. |
 | v0.6 | 2026-08-08 | Reconciled accepted ADR-0029 and the current Explorer trust/evidence/time/citation modules while preserving the static-shell integration boundary. | None; documentation only. |
+| v0.7 | 2026-08-26 | Repinned current `main`, reconciled the mounted Explorer site/Focus/trust composition and ADR-0006 acceptance, and separated source-derived design pressure from repository evidence. | None; documentation only. |
 
 ## Correction and rollback
 
-Before merge, close the review branch or revert its README commit. After an authorized merge, use a transparent revert or forward correction restoring prior blob `4b7d11b3f5e62ea4458c2895bf907eade8975918`, then rerun the same documentation checks.
+Before merge, close the review branch or revert its README commit. After an authorized merge, use a transparent revert or forward correction restoring prior blob `6cd825905976b2b662e43497203206305cb78827`, then rerun the same documentation checks.
 
 A README rollback changes no application code, dependency, route, test, workflow, deployment, policy, release, promotion, or publication state. Never rewrite shared history to correct documentation.
 
 ---
 
-> **Current conclusion:** `apps/` is correctly placed but not uniformly implemented. Governed API provides a small fail-closed route slice. Explorer Web provides a buildable static shell plus a growing set of fixture-first trust, evidence, time, and citation components, but it is still not a functional map or live governed answer client. Review Console, CLI, Workers, and Admin remain separate future implementation slices, and `apps/packages/` remains a drift guard.
+> **Current conclusion:** `apps/` is correctly placed but not uniformly implemented. Governed API provides a small fail-closed route slice. Explorer Web now provides a substantial mounted local composition with synthetic map/runtime, Focus, evidence, correction, and public trust interactions plus a broad fixture-first test surface; it still has no admitted MapLibre runtime, live Governed API transport, production EvidenceBundle resolution, release, deployment, or publication path. Review Console and Admin remain documentation-led, CLI and Workers remain explicit placeholders, and `apps/packages/` remains a drift guard.
 
 <p align="right"><a href="#top">Back to top</a></p>
