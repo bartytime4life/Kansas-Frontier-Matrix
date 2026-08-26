@@ -3,12 +3,12 @@ doc_id: kfm://app/workers/src/tile-worker/readme
 title: Tile Worker README
 type: app-readme
 subtype: worker-lane-boundary-readme
-version: v0.2
-prior_version: v0.1
+version: v0.3
+prior_version: v0.2
 status: draft; repository-grounded; placeholder-only
 owner: "NEEDS VERIFICATION — CODEOWNERS routes default repository review to @bartytime4life; no accepted Tile Worker steward, operations owner, independent reviewer, security owner, or release authority was verified"
 created: 2026-06-16
-updated: 2026-08-12
+updated: 2026-08-26
 policy_label: public
 current_path: apps/workers/src/tile_worker/README.md
 owning_root: apps/
@@ -17,21 +17,36 @@ truth_posture: "CONFIRMED pinned repository bytes and adopted placement authorit
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 079bedbf566ad321b11e278749a188998f430165
-  base_tree: ec9204c4eaf6e2b40efa00aa359cb54db87d08ca
-  tile_worker_tree: 2dcca2d7ba67407cfad87810df72f85d51713ffa
-  target_prior_blob: 2f7e556480d003615e789d42113642d2e619ac45
+  base_commit: 137f51159a35b566cd949c795c36d96bba8e590d
+  base_tree: b52705a14514cec210a4a117d95c080d73c16842
+  tile_worker_tree: 76c5d2de8b4cf9a565dc77efb88fd8f3acccac15
+  target_prior_blob: e5b4784334db26a26826c8cdf79986180818bd78
   entrypoint_blob: 28f3fd3b3327b6398cd514e371f485ed33817001
   workers_readme_blob: 5b5c1e6b067e652a380bf445488a6227028dfc0e
   workers_src_readme_blob: 08ad9f8116f64817ffa4f8b2058613749360c102
+  tile_artifact_contract_blob: 138e2d97b0d0bd7311c7c36a45ed983bae63b154
   tile_artifact_schema_blob: ed8fb0834c06a6254d6175f9a08b8d17ccc68d71
+  pmtiles_standard_blob: c6bc8455124c98cc184197700c16257dbea023cc
   pmtiles_validator_readme_blob: 00948c34bc7361e1a86fe5a97ed7e870d854b514
-  pmtiles_attestation_workflow_blob: 6b5e73f7361d542de8f43c80e897d16c6b5bca96
-  pmtiles_attestation_standard_blob: acf86aa94fb34dcdc8c0687bd823b7ff3b6f6134
-  maplibre_package_blob: b0582955feeb51016327113692fa5c98ecad8816
-  maplibre_entrypoint_blob: 91664eb00583f9e3d0405eb7954fefa9a48f4ee9
+  pmtiles_attestation_workflow_blob: 7857db8fafc77b40c84f09d208ca6a60d2b7d4df
+  pmtiles_attestation_standard_blob: 372845bd9ee9877a96de2d01d824e003d22010b5
+  maplibre_package_blob: 5389602f07dfc371d632beceece759bd4fbba439
+  maplibre_entrypoint_blob: 08a48ac008665317833a9476b21cd35b1679c595
+  map_runtime_port_blob: 01c3d17bfbb34aae310fe17cbf892a0516a1c852
+  null_map_runtime_blob: f67d5f90fe58ce49b5e6496cd4398688e35b6399
   published_pmtiles_readme_blob: 1b40b18badf10d57ec2cce363770784bae21649e
-  explorer_cache_projection_blob: 9e52c7c186ce72d56e2728c8c1a35737fe5f1540
+  explorer_cache_projection_blob: 414e3cc1bcb621fe025d74aa845aca13759c9a5a
+  explorer_cache_test_blob: d2c3a7c836f6d2879ee218e3620c69fe576e68b3
+  pmtiles_delta_contract_blob: 73486b65a29603dad7d42502b8031887a92f93ee
+  pmtiles_delta_schema_blob: ff6f5d4922dc48c9e42c18d45c61a268c789f923
+  pmtiles_delta_validator_blob: d57c6a5e2c3f45315624f651c7ecffaad516048e
+  pmtiles_delta_test_blob: ab4ed12416af1221f75b9cc5d62857b4c9238040
+  tile_delivery_assessment_contract_blob: 2711141f46744c803ed9cb396134fd26eb35f842
+  tile_delivery_assessment_validator_blob: 86d9d1a8f4d5af91723c1451c3f3244f25054c8c
+  tiles3d_tree_hash_contract_blob: b3bd2aafc6131b3ffaeb7163034003077cff222e
+  tiles3d_tree_hash_builder_blob: 14ea987b3f27752a8b7491a4c544845d8b4a6d45
+  mobile_pmtiles_verification_blob: c554298345117a19835da92de8a6e187cae63f4d
+  pmtiles_range_diagnostics_blob: b82408075f9be09b7f9d4d10682463e7fb575d32
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
@@ -47,25 +62,43 @@ related:
   - ../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../../../docs/doctrine/derived-stays-derived.md
   - ../../../../docs/doctrine/map-first.md
+  - ../../../../docs/standards/PMTILES.md
   - ../../../../docs/standards/pmtiles/PMTILES_ATTESTATION_STANDARD.md
+  - ../../../../docs/adr/ADR-0023-geo-manifest-signs-every-pmtiles-cog-release.md
   - ../../../../docs/standards/pmtiles/PMIDX_SPEC_V1.md
   - ../../../../contracts/release/tile_artifact_manifest.md
+  - ../../../../contracts/release/pmtiles_delta_manifest.md
+  - ../../../../contracts/release/tile_delivery_strategy_assessment.md
+  - ../../../../contracts/map/tiles3d_tree_hash_manifest.md
   - ../../../../contracts/runtime/pmtiles_release_cache.md
   - ../../../../schemas/contracts/v1/map/tile_artifact_manifest.schema.json
+  - ../../../../schemas/contracts/v1/map/pmtiles_delta_manifest.schema.json
+  - ../../../../schemas/contracts/v1/release/tile_delivery_strategy_assessment.schema.json
   - ../../../../tools/validators/pmtiles/README.md
   - ../../../../tools/validators/pmtiles/validate_attestation_bundle.py
   - ../../../../tools/validators/pmtiles/validate_header.py
   - ../../../../tools/validators/pmtiles/verify_merkle.py
   - ../../../../tools/validators/pmtiles/verify_partial_read.py
+  - ../../../../tools/validators/pmtiles/validate_mobile_verification_fixture.py
+  - ../../../../tools/validators/pmtiles/validate_headless_render_review_packet.py
+  - ../../../../tools/validators/validate_pmtiles_delta_manifest.py
+  - ../../../../tools/validators/release/validate_tile_delivery_strategy_assessment.py
+  - ../../../../tools/validators/map/tiles3d_tree_hash_manifest/build_tiles3d_tree_hash_manifest.py
   - ../../../../tools/attest/sign_pmtiles.py
   - ../../../../fixtures/pmtiles/attestation/README.md
   - ../../../../tests/validators/test_pmtiles_attestation_bundle.py
   - ../../../../.github/workflows/pmtiles-attestation.yml
+  - ../../../../.github/workflows/pmtiles-delta-manifest.yml
+  - ../../../../.github/workflows/pmtiles-release-cache.yml
   - ../../../../packages/maplibre/README.md
   - ../../../../packages/maplibre/src/index.ts
+  - ../../../../packages/maplibre/src/map-runtime-port.ts
+  - ../../../../packages/maplibre/src/null-map-runtime.ts
   - ../../../../pipelines/domains/roads-rail-trade/emit_pmtiles_layers.py
   - ../../../../data/published/pmtiles/README.md
   - ../../../explorer-web/src/features/map_runtime/pmtiles_release_cache.ts
+  - ../../../explorer-web/src/features/map_runtime/mobile_pmtiles_verification.ts
+  - ../../../explorer-web/src/features/pmtiles_range_diagnostics/index.ts
   - ../../../explorer-web/tests/pmtiles-release-cache.test.ts
   - ../../../../release/README.md
   - ../../../../policy/README.md
@@ -88,11 +121,12 @@ tags:
   - fail-closed
   - rollback
 notes:
-  - "v0.2 replaces proposal-heavy worker claims with a current repository-grounded maturity and graduation contract."
-  - "The lane contains only this README and one comment-only main.py placeholder at the pinned base."
-  - "The repository has meaningful PMTiles structural validators, generated-fixture tests, and a read-only path-scoped workflow elsewhere, but those surfaces retain authority NONE and explicit cryptographic, policy, schema, release, correction, and rollback holds."
-  - "The TileArtifactManifest semantic contract is draft and schema-family-unresolved; the existing map-family schema is an empty permissive scaffold."
-  - "The reusable MapLibre package and one inspected domain PMTiles emitter remain placeholder-level; the Explorer PMTiles cache evaluator is fixture-only and performs no fetch or cache mutation."
+  - "v0.3 refreshes repository evidence while preserving the exact two-file, placeholder-only Tile Worker boundary and the v0.2 admission contract."
+  - "The MapLibre package now exports a renderer-neutral MapRuntimePort and dependency-free NullMapRuntime; neither surface builds tiles, imports MapLibre GL, admits a renderer, or wires this worker."
+  - "PMTiles attestation, release-cache, mobile-verification, range-diagnostics, delta-manifest, and delivery-strategy surfaces provide bounded local or fixture-first proof while cryptographic, policy, schema-family, release, correction, hosting, and publication holds remain visible."
+  - "The TileArtifactManifest semantic contract remains draft and schema-family-unresolved; the existing map-family schema remains an empty permissive scaffold."
+  - "A proposed 3D Tiles tree-hash profile proves deterministic local byte inventory only; it does not establish 3D conformance, sensitive-geometry safety, renderer readiness, release, or publication."
+  - "Attached, Drive, and Notion material is retained only as non-authoritative design pressure; current repository bytes control implementation claims."
   - "This documentation change adds no worker code, queue wiring, tile bytes, source activation, policy decision, signing, release state, cache mutation, deployment, or publication."
 [/KFM_META_BLOCK_V2] -->
 
@@ -121,7 +155,7 @@ notes:
 ---
 
 > [!IMPORTANT]
-> **Current state:** repository-grounded draft / placeholder-only. The directory contains this README and [`main.py`](./main.py); `main.py` is a one-line comment and establishes no executable Tile Worker behavior. No queue consumer, scheduler, tile builder, service loop, package binding, worker-specific test, deployment manifest, service identity, storage capability, or release integration was verified at `main@079bedbf566ad321b11e278749a188998f430165`.
+> **Current state:** repository-grounded draft / placeholder-only. The directory contains this README and [`main.py`](./main.py); `main.py` is a one-line comment and establishes no executable Tile Worker behavior. No queue consumer, scheduler, tile builder, service loop, package binding, worker-specific test, deployment manifest, service identity, storage capability, or release integration was verified at `main@137f51159a35b566cd949c795c36d96bba8e590d`.
 
 > [!CAUTION]
 > A Tile Worker may eventually coordinate bounded **tile-candidate** jobs. It must never treat generated tiles, a valid archive header, a digest, a Merkle root, a manifest, a signature-shaped object, a receipt, a test, a workflow result, a cache entry, a pull request, or a merge as evidence truth, policy approval, release authority, lifecycle promotion, or KFM publication.
@@ -204,11 +238,11 @@ This lane does not exist to:
 
 | Field | Bounded result |
 |---|---|
-| Repository snapshot | `main@079bedbf566ad321b11e278749a188998f430165` |
-| Repository tree | `ec9204c4eaf6e2b40efa00aa359cb54db87d08ca` |
-| Tile Worker tree | `2dcca2d7ba67407cfad87810df72f85d51713ffa` |
+| Repository snapshot | `main@137f51159a35b566cd949c795c36d96bba8e590d` |
+| Repository tree | `b52705a14514cec210a4a117d95c080d73c16842` |
+| Tile Worker tree | `76c5d2de8b4cf9a565dc77efb88fd8f3acccac15` |
 | Directory contents | Exactly `README.md` and `main.py` |
-| Prior README blob | `2f7e556480d003615e789d42113642d2e619ac45` |
+| Prior README blob | `e5b4784334db26a26826c8cdf79986180818bd78` |
 | Entrypoint blob | `28f3fd3b3327b6398cd514e371f485ed33817001` |
 | Entrypoint bytes | `# tile_worker entrypoint — greenfield placeholder` plus final newline |
 | Executable Python in this lane | None verified |
@@ -242,20 +276,26 @@ This lane does not exist to:
 | Surface | Pinned evidence | Current bounded interpretation |
 |---|---|---|
 | [`main.py`](./main.py) | One comment; no imports, functions, classes, statements, or side effects | Tile Worker remains placeholder-only |
-| [`packages/maplibre/package.json`](../../../../packages/maplibre/package.json) | Private package `@kfm/maplibre`, version `0.0.0`, no declared dependencies | Package identity exists; production renderer/build capability is not established |
-| [`packages/maplibre/src/index.ts`](../../../../packages/maplibre/src/index.ts) | Placeholder comment plus `export const placeholder = true` | Reusable MapLibre package remains scaffold-level |
+| [`packages/maplibre/package.json`](../../../../packages/maplibre/package.json) | Private package `@kfm/maplibre`, version `0.0.0`, no declared dependencies | Package identity plus renderer-neutral code exists; MapLibre GL dependency/admission and tile-build capability remain absent |
+| [`packages/maplibre/src/index.ts`](../../../../packages/maplibre/src/index.ts) | Exports [`MapRuntimePort`](../../../../packages/maplibre/src/map-runtime-port.ts) and dependency-free [`NullMapRuntime`](../../../../packages/maplibre/src/null-map-runtime.ts) | Bounded runtime seam and deterministic test port exist; neither imports a renderer, fetches tiles, builds artifacts, or wires this worker |
+| [`MapRuntimePort` tests](../../../explorer-web/tests/map-runtime-port.test.ts) | Executable camera, selection, trust-state, listener, replay, and disposal coverage | Consumer-migration proof only; no MapLibre GL, browser-map, tile, source, release, or publication readiness |
 | [`roads-rail-trade` PMTiles emitter](../../../../pipelines/domains/roads-rail-trade/emit_pmtiles_layers.py) | Docstring-only proposed placeholder | This inspected domain emitter provides no tile-build implementation |
 | [`TileArtifactManifest` contract](../../../../contracts/release/tile_artifact_manifest.md) | Draft v0.3 semantic contract; schema family unresolved | Meaning is substantially documented; canonical machine profile remains unselected |
 | [`TileArtifactManifest` map schema](../../../../schemas/contracts/v1/map/tile_artifact_manifest.schema.json) | Empty `properties`, `additionalProperties: true`, status `PROPOSED` | The current schema is too permissive to prove contract conformance |
-| [`PMTiles Attestation Standard`](../../../../docs/standards/pmtiles/PMTILES_ATTESTATION_STANDARD.md) | Draft v1.2; partial structural implementation confirmed | Defines a proposed chain and explicit unresolved authority holds |
+| [`PMTiles archive standard`](../../../../docs/standards/PMTILES.md) | Repository-grounded v2.0 draft; upstream currentness refreshed; partial structural implementation | Records archive/readiness boundaries without adoption, release, hosting, or publication authority |
+| [`PMTiles Attestation Standard`](../../../../docs/standards/pmtiles/PMTILES_ATTESTATION_STANDARD.md) | Draft v1.2; partial structural implementation confirmed; refreshed 2026-08-14 | Defines a proposed chain and explicit unresolved authority holds |
 | [`PMTiles validators`](../../../../tools/validators/pmtiles/README.md) | Executable header, Merkle, bundle, partial-read, mobile-fixture, and review-packet validators exist | Bounded structural compatibility checks exist; authority remains `NONE` |
 | [`PMTiles tests`](../../../../tests/validators/test_pmtiles_attestation_bundle.py) | Generates temporary valid/invalid archives and many mutation cases | Strong fixture-first conformance surface; not worker, policy, release, or publication proof |
-| [`PMTiles workflow`](../../../../.github/workflows/pmtiles-attestation.yml) | Read-only, pinned, no-secret/no-OIDC, path-scoped workflow | Runs structural checks and deliberately denies incomplete candidate authority |
+| [`PMTiles workflow`](../../../../.github/workflows/pmtiles-attestation.yml) | Read-only, pinned, no-secret/no-OIDC, path-scoped workflow with explicit skip/fail/deny outcomes | Runs structural checks and deliberately denies incomplete candidate authority; emits no receipt, proof, release, deployment, or publication record |
 | [`sign_pmtiles.py`](../../../../tools/attest/sign_pmtiles.py) | Writes a development PMSIG shell with an invalid placeholder signature | Production signing is not implemented by this helper |
 | [`data/published/pmtiles/`](../../../../data/published/pmtiles/README.md) | Format-specific published-lane index | README and child lanes do not prove payload bytes, release approval, or hosting readiness |
 | [`PMTiles cache contract`](../../../../contracts/runtime/pmtiles_release_cache.md) | Proposed-inactive, fixture-only, no Service Worker side effects | Defines bounded cache decision meaning only |
 | [`PMTiles cache evaluator`](../../../explorer-web/src/features/map_runtime/pmtiles_release_cache.ts) | Actual deterministic TypeScript evaluator; `authority: NONE`, no fetch, no CacheStorage mutation | Fixture-only planning exists; no browser cache worker or network path is established |
 | [`PMTiles cache tests`](../../../explorer-web/tests/pmtiles-release-cache.test.ts) | Replays declared states and asserts no network/cache calls | Executable negative and replay evidence for the fixture-only evaluator |
+| [`PMTiles delta manifest`](../../../../contracts/release/pmtiles_delta_manifest.md) | Proposed closed schema, deterministic no-network validator, fixtures, tests, and path-scoped workflow | Proves bounded delta lineage and QC consistency only; no signature, policy, release, deployment, or publication effect |
+| [`Tile delivery strategy assessment`](../../../../contracts/release/tile_delivery_strategy_assessment.md) | Proposed-inactive fixture-only contract/schema/validator/tests for PMTiles, XYZ, Martin/PostGIS, or local MBTiles | Produces review-facing `PASS/HOLD/DENY/ERROR`; does not host, activate, deploy, release, or publish a strategy |
+| Mobile PMTiles verification and range diagnostics | Browser-facing deterministic modules plus synthetic validators/fixtures | Bounded verify/decode/render and diagnostics vocabulary only; no live fetch, MapLibre admission, released carrier, or public delivery |
+| [`3D Tiles tree-hash profile`](../../../../contracts/map/tiles3d_tree_hash_manifest.md) | Proposed contract plus deterministic local builder/verifier | Local byte-inventory integrity only; not 3D Tiles conformance, rendering, evidence, policy, release, or publication |
 | [`release/`](../../../../release/README.md) | Separate release decision plane | Tile Worker cannot approve publication or rollback by implication |
 
 ### 2.4 PMTiles compatibility boundary
@@ -286,13 +326,20 @@ The current PMTiles implementation is meaningful but deliberately incomplete.
 - release, correction, withdrawal, rollback, and publication are not authorized;
 - Brotli and Zstandard metadata are outside the current local compatibility subset.
 
-A future worker must preserve these distinctions. It may call a structural validator, but it must not convert `STRUCTURAL_PASS` or `STRUCTURAL_HOLD` into publication eligibility.
+Adjacent bounded profiles add useful proof without closing the chain:
+
+- the PMTiles delta-manifest profile validates deterministic archive lineage, per-tile changes, bounded QC, and finite `PASS`, `REVIEW`, or `REJECT` consistency;
+- the tile-delivery strategy assessment recomputes a review-facing PMTiles, XYZ, Martin/PostGIS, or local MBTiles recommendation with finite `PASS`, `HOLD`, `DENY`, or `ERROR` outcomes;
+- mobile PMTiles verification and range diagnostics exercise synthetic verify/decode/render and diagnostic vocabulary without live fetch, renderer admission, or released bytes;
+- the 3D Tiles tree-hash profile proves deterministic local byte inventory only.
+
+A future worker must preserve these distinctions. It may call a structural validator, but it must not convert `STRUCTURAL_PASS`, a delta-manifest `PASS`, a delivery-assessment `PASS`, or any fixture result into publication eligibility.
 
 ### 2.5 Maturity conclusion
 
-> **Current Tile Worker maturity: `PLACEHOLDER_ONLY`.** The repository has meaningful tile-adjacent structural validation and fixture-only cache logic elsewhere, but no evidence shows that `tile_worker` imports, executes, schedules, consumes, emits, deploys, signs, publishes, serves, or owns any of it.
+> **Current Tile Worker maturity: `PLACEHOLDER_ONLY`.** The repository has meaningful tile-adjacent structural validation, deterministic assessment/integrity profiles, a renderer-neutral map port, and fixture-only browser/cache logic elsewhere, but no evidence shows that `tile_worker` imports, executes, schedules, consumes, emits, deploys, signs, publishes, serves, or owns any of it.
 
-The correct documentation posture is therefore neither “nothing exists” nor “tile generation is implemented.” The lane has a governed placement and a detailed future admission contract. Some supporting validators and tests are executable, while the worker and key trust/release integrations remain unimplemented or unverified.
+The correct documentation posture is therefore neither “nothing exists” nor “tile generation is implemented.” The lane has a governed placement and a detailed future admission contract. Supporting validators, tests, and deterministic no-network projections have advanced, while tile building, worker composition, real renderer admission, signing, hosting, policy execution, release integration, and publication remain unimplemented, held, or unverified.
 
 ### 2.6 README impact
 
@@ -311,11 +358,11 @@ The correct documentation posture is therefore neither “nothing exists” nor 
 
 ### 2.7 Last reviewed
 
-- **Date:** 2026-08-12
+- **Date:** 2026-08-26
 - **Repository:** `bartytime4life/Kansas-Frontier-Matrix`
-- **Base:** `main@079bedbf566ad321b11e278749a188998f430165`
-- **Target prior blob:** `2f7e556480d003615e789d42113642d2e619ac45`
-- **Inspection:** exact target and entrypoint bytes; parent worker contracts; adopted Directory Rules, ADR, Root Registry, and CODEOWNERS; open-PR overlap; bounded worker reference search; TileArtifactManifest contract and schema; PMTiles standard, validators, fixtures, tests, workflow, and development signing helper; MapLibre package scaffold; one domain PMTiles emitter; published PMTiles lane; Explorer cache contract, evaluator, and tests
+- **Base:** `main@137f51159a35b566cd949c795c36d96bba8e590d`
+- **Target prior blob:** `e5b4784334db26a26826c8cdf79986180818bd78`
+- **Inspection:** exact target and entrypoint bytes; parent worker contracts; adopted Directory Rules, ADR, Root Registry, and CODEOWNERS; absent ancestor `AGENTS.md` files; zero open-PR overlap; bounded worker reference search; TileArtifactManifest contract/schema; PMTiles archive and attestation standards, validators, fixtures, tests, workflows, and development signing helper; PMTiles delta and delivery-strategy profiles; MapRuntimePort/NullMapRuntime; one placeholder domain emitter; published PMTiles lane; Explorer cache, mobile-verification, range-diagnostics, and headless-review surfaces; proposed 3D tree-hash profile; supplied PDFs; Drive seed cards; and Notion reconciliation/authority pages
 - **Not inspected as operational proof:** deployed worker, queue, scheduler, service identity, runtime logs, dashboard, production signing service, storage transaction, CDN/cache provider, public tile serving, policy execution, or release/publication activity
 
 [Back to top](#top)
@@ -714,6 +761,8 @@ Current checks cover a bounded subset of:
 - explicit candidate completeness;
 - generated mutation fixtures.
 
+Adjacent profiles also cover deterministic PMTiles delta lineage/QC, fixture-only delivery-strategy assessment, synthetic mobile verification, range-diagnostics projection, and headless-render review-packet integrity. Those are separate bounded profiles; none is worker wiring or release closure.
+
 Current checks do **not** establish:
 
 - generic PMTiles v3 compatibility;
@@ -790,6 +839,8 @@ A future worker must not infer 3D support from MapLibre documentation. It needs:
 - negative tests for precise sensitive geometry;
 - release and rollback support.
 
+The repository now has a proposed [`3D Tiles Tree Hash Manifest`](../../../../contracts/map/tiles3d_tree_hash_manifest.md) and deterministic local builder/verifier. A passing result proves bounded byte inventory, normalized paths, and deterministic hashing only. It does not prove 3D Tiles conformance, renderer compatibility, semantic correctness, sensitive-geometry safety, evidence, policy, release, or publication.
+
 No current Tile Worker implementation or inspected reusable package proves 3D build capability.
 
 ### 7.5 Style, sprites, and glyphs
@@ -824,13 +875,16 @@ This logic is fixture-only. A future Tile Worker may emit a cache-invalidation *
 | Carrier/profile | Current worker support | Adjacent evidence | Worker posture |
 |---|---|---|---|
 | PMTiles v3/MVT compatibility subset | Not wired | Structural validators/tests/workflow exist | PROPOSED future adapter; preserve holds |
+| PMTiles delta-manifest profile | Not wired | Closed fixture-first schema, validator, tests, and workflow exist | Bounded lineage/QC candidate only; no release effect |
+| Tile-delivery strategy assessment | Not wired | Fixture-only PMTiles/XYZ/Martin/MBTiles decision profile exists | Review-facing assessment only; no hosting or activation |
+| Mobile PMTiles verification/range diagnostics | Not wired | Synthetic browser modules, fixtures, validators, and tests exist | Diagnostics/verification proof only; no live fetch or released carrier |
 | Generic PMTiles v3 | Not established | Local compression/profile limits documented | HOLD |
 | MVT directory/archive | Not established | Standards/contract references exist | NEEDS VERIFICATION |
 | TileJSON | Not established | Semantic references exist | NEEDS VERIFICATION |
 | Raster tile archive | Not established | Documentation exists elsewhere | NEEDS VERIFICATION |
 | COG-derived tiles | Not established | COG validators exist elsewhere, not inspected as worker wiring | NEEDS VERIFICATION |
 | Terrain/DEM | Not established | Map doctrine only for this lane | HOLD pending profile |
-| OGC 3D Tiles/glTF | Not established | Separate map/3D contracts may exist | HOLD pending governance |
+| OGC 3D Tiles/glTF | Not established | Proposed deterministic 3D tree-hash profile exists | HOLD; byte inventory is not conformance, renderer, or release proof |
 | Point clouds | Not established | No worker implementation verified | HOLD |
 | Style/sprite/glyph package | Not established | Cache fixture expects companion completeness | NEEDS VERIFICATION |
 | Public tile serving | None | Separate delivery surfaces exist | DENY for this worker |
@@ -1454,7 +1508,11 @@ A worker adapter should test:
 - signature placeholder rejection;
 - authority remains `NONE`;
 - cryptographic/policy/release holds remain visible;
-- worker does not claim canonical schema conformance.
+- worker does not claim canonical schema conformance;
+- delta-manifest duplicate/order/digest/QC mutations remain profile-specific and non-authorizing;
+- mobile verification and range diagnostics keep synthetic bytes, finite outcomes, and no-network behavior;
+- headless-render review packets prove bounded screenshot/metrics/sidecar integrity only;
+- 3D tree-hash success is not relabeled as 3D conformance or renderer readiness.
 
 ### 13.7 End-to-end acceptance
 
@@ -2006,12 +2064,12 @@ Do not silently rewrite implementation history or convert a proposed field into 
 Before merge:
 
 - close the draft pull request;
-- abandon `docs/modernize-tile-worker-readme-20260812` through normal repository controls.
+- abandon `docs/tile-worker-readme-v0-3-20260826` through normal repository controls.
 
 After an authorized merge:
 
 - revert the documentation commit or merge commit; or
-- restore prior blob `2f7e556480d003615e789d42113642d2e619ac45` through a reviewed forward correction;
+- restore prior blob `e5b4784334db26a26826c8cdf79986180818bd78` through a reviewed forward correction;
 - rerun the same Markdown and documentation checks.
 
 No tile bytes, worker process, queue, schema, policy, key, receipt, proof, release, deployment, cache, or public artifact requires operational rollback because this change is documentation-only.
@@ -2048,28 +2106,67 @@ This README does not authorize those actions.
 - `control_plane/root_registry.yaml`
 - `.github/CODEOWNERS`
 - `contracts/release/tile_artifact_manifest.md`
+- `contracts/release/pmtiles_delta_manifest.md`
+- `contracts/release/tile_delivery_strategy_assessment.md`
+- `contracts/map/tiles3d_tree_hash_manifest.md`
 - `schemas/contracts/v1/map/tile_artifact_manifest.schema.json`
+- `schemas/contracts/v1/map/pmtiles_delta_manifest.schema.json`
+- `schemas/contracts/v1/release/tile_delivery_strategy_assessment.schema.json`
+- `docs/standards/PMTILES.md`
 - `docs/standards/pmtiles/PMTILES_ATTESTATION_STANDARD.md`
+- `docs/adr/ADR-0023-geo-manifest-signs-every-pmtiles-cog-release.md`
 - `tools/validators/pmtiles/README.md`
 - `tools/validators/pmtiles/validate_attestation_bundle.py`
 - `tools/validators/pmtiles/validate_header.py`
 - `tools/validators/pmtiles/verify_merkle.py`
 - `tools/validators/pmtiles/verify_partial_read.py`
+- `tools/validators/pmtiles/validate_mobile_verification_fixture.py`
+- `tools/validators/pmtiles/validate_headless_render_review_packet.py`
+- `tools/validators/validate_pmtiles_delta_manifest.py`
+- `tools/validators/release/validate_tile_delivery_strategy_assessment.py`
+- `tools/validators/map/tiles3d_tree_hash_manifest/build_tiles3d_tree_hash_manifest.py`
 - `tools/attest/sign_pmtiles.py`
 - `fixtures/pmtiles/attestation/README.md`
 - `tests/validators/test_pmtiles_attestation_bundle.py`
 - `.github/workflows/pmtiles-attestation.yml`
+- `.github/workflows/pmtiles-delta-manifest.yml`
+- `.github/workflows/pmtiles-release-cache.yml`
 - `packages/maplibre/package.json`
 - `packages/maplibre/src/index.ts`
+- `packages/maplibre/src/map-runtime-port.ts`
+- `packages/maplibre/src/null-map-runtime.ts`
+- `apps/explorer-web/tests/map-runtime-port.test.ts`
 - `pipelines/domains/roads-rail-trade/emit_pmtiles_layers.py`
 - `data/published/pmtiles/README.md`
 - `contracts/runtime/pmtiles_release_cache.md`
 - `apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts`
+- `apps/explorer-web/src/features/map_runtime/mobile_pmtiles_verification.ts`
+- `apps/explorer-web/src/features/pmtiles_range_diagnostics/index.ts`
 - `apps/explorer-web/tests/pmtiles-release-cache.test.ts`
 - open pull requests and bounded `tile_worker` repository search
 - exact `AGENTS.md` probes at repository root, `apps/`, `apps/workers/`, and `apps/workers/src/`
 
 Operational systems, deployed services, private storage, signing infrastructure, runtime logs, dashboards, CDN state, and external consumers were not inspected.
+
+</details>
+
+<details>
+<summary><strong>Source-pressure register</strong></summary>
+
+The following supplied and connected sources were inspected as design pressure only. They do not override the pinned GitHub checkpoint, admit a renderer or dependency, select a tile-delivery strategy, authorize a builder, validate production bytes, approve review, or change release, deployment, promotion, cache, or publication state.
+
+| Source | Useful pressure retained | Authority limit |
+|---|---|---|
+| Attached *KFM MapLibre Operating Architecture — Governed UI & AI Interaction Manual* | Prefer immutable, rebuildable, public-safe PMTiles only with Range-capable hosting, manifest identity, cache invalidation, and rollback; keep dynamic or access-controlled delivery server-mediated | Supplied architecture proposal; not hosting, renderer, dependency, worker, policy, or release evidence |
+| Attached *Kansas Frontier Matrix Pipeline Living Implementation Manual v0.3* | Keep PMTiles, COG, indexes, scenes, and other map carriers derived; public clients consume governed APIs and released artifacts, not canonical lifecycle stores | Design doctrine only; current repository and accepted decisions control implementation |
+| Attached *Kansas Frontier Matrix Implementation Reference* and *Master MapLibre Components–Functions–Features* | Preserve deterministic TileArtifactManifest identity, digest-pinned carrier references, PMTiles/COG provenance, finite validation, and rollback; treat version, hosting, rights, and performance claims as verification work | Proposal lineage; no package version, byte conformance, signer, CDN, Service Worker, or public-route authority |
+| Attached *Archaeological 3D GIS* | Treat 3D representations as partial interpretive models whose recording and visualization choices shape understanding | General reference; not a KFM 3D carrier contract, sensitivity decision, renderer admission, or release rule |
+| [Drive KFM Full Atlas Seed Cards](https://docs.google.com/document/d/1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho/edit) | Keep map/tile proposals truth-labeled, dependency-closed, no-network testable, and explicitly reconciled against current contracts, schemas, policy, evidence, release, and rollback objects | Read-only proposal/lineage carrier; not repository implementation or canonical map authority |
+| [Notion modernization reconciliation](https://app.notion.com/p/3c5a92021bf681258c70d703a46d8156) | Preserve the distinction between extensive PMTiles fixtures/diagnostics and absent browser-range interception, hosting, production cache safety, MapLibre dependency admission, and public delivery | Coordination synthesis pinned to an older checkpoint; current GitHub bytes control |
+| [Notion Evidence, Documentation & Ideas Atlas](https://app.notion.com/p/3c6a92021bf681e097f2e9e976d74bc9) | Retain PMTiles as PARTIAL: local contracts, integrity fixtures, range diagnostics, cache profiles, and receipt rebinding exist while public delivery remains unproved | Research overlay; does not establish runtime, review, release, deployment, or publication |
+| [Notion Cross-System Authority & Intake Model](https://app.notion.com/p/3c5a92021bf6811ba9c2d923215f11b7) | Pin exact GitHub evidence, record contradictions, and select only reversible dependency-closed slices | Coordination guidance; never repository, review, release, or publication authority |
+
+Repository consequences are intentionally narrow: retain PMTiles as a bounded structural compatibility subset; keep delta, delivery-strategy, mobile, diagnostics, cache, and 3D tree-hash profiles separate; preserve all cryptographic, policy, rights, sensitivity, schema-family, renderer, hosting, release, correction, and publication holds; and do not treat adjacent test maturity as Tile Worker maturity.
 
 </details>
 
@@ -2100,10 +2197,16 @@ python tools/validators/pmtiles/validate_attestation_bundle.py \
 
 ## Appendix B — No-loss preservation ledger
 
-<details>
-<summary><strong>Useful v0.1 semantics retained or strengthened</strong></summary>
+| Version | Date | Documentation delta | Runtime effect |
+|---|---|---|---|
+| `v0.1` | 2026-06-16 | Established the proposed non-publishing Tile Worker contract. | None; documentation only. |
+| `v0.2` | 2026-08-12 | Replaced proposal-heavy claims with pinned repository evidence, a two-file placeholder inventory, carrier boundaries, admission gates, validation, graduation, correction, and rollback guidance. | None; documentation only. |
+| `v0.3` | 2026-08-26 | Refreshed current `main`; corrected MapLibre package maturity; added bounded PMTiles delta, delivery-strategy, mobile-verification, range-diagnostics, cache, and 3D tree-hash evidence; added a labeled source-pressure register; preserved the placeholder-only worker boundary. | None; documentation only. |
 
-| Prior semantic | v0.2 disposition |
+<details>
+<summary><strong>Useful prior semantics retained or strengthened through v0.3</strong></summary>
+
+| Prior semantic | v0.3 disposition |
 |---|---|
 | Tile Worker is a non-publisher | Retained and expanded into an authority matrix and invariants |
 | Inputs must be validated and policy-eligible | Retained with startup/per-job preflight gates |
@@ -2119,8 +2222,12 @@ python tools/validators/pmtiles/validate_attestation_bundle.py \
 | Worker logic should delegate to proper roots | Retained through Directory Rules responsibility split |
 | Unknown implementation remains visible | Replaced generic uncertainty with pinned evidence and a prioritized backlog |
 | Mermaid flow and inspection guidance | Rebuilt with a repository-grounded flow and plain-text equivalent |
+| MapLibre package described as scaffold-only | Corrected: a renderer-neutral port and deterministic null runtime now exist, while MapLibre GL dependency/admission and tile building remain absent |
+| PMTiles evidence limited to the core attestation bundle | Expanded with separate delta-manifest, delivery-strategy, mobile-verification, range-diagnostics, cache, and headless-review profiles; none grants worker or release authority |
+| 3D capability remained entirely unverified | Narrowed: deterministic local tree hashing exists, but 3D conformance, rendering, semantic validity, sensitivity safety, release, and publication remain held |
+| External source ideas were implicit | Added a truth-labeled source-pressure register that keeps repository bytes authoritative |
 
-No accurate, unique, governance-significant v0.1 concept was intentionally discarded. Generic proposal language was replaced where current repository evidence allowed a more precise statement.
+No accurate, unique, governance-significant prior concept was intentionally discarded. Generic or stale maturity language was replaced where current repository evidence allowed a more precise statement.
 
 </details>
 
@@ -2206,4 +2313,4 @@ Before adoption, reconcile naming with repository-wide reason-code contracts. Do
 
 ---
 
-**Current terminal statement:** `apps/workers/src/tile_worker/` remains a placeholder-only, non-publishing worker lane. This README defines a future admission and operating boundary; it does not implement a worker, build or sign tiles, activate a source, approve policy, promote lifecycle state, release an artifact, mutate a cache, deploy a service, or publish KFM content.
+**Current terminal statement:** `apps/workers/src/tile_worker/` remains a placeholder-only, non-publishing worker lane. Adjacent renderer-neutral, PMTiles, cache, diagnostics, assessment, and 3D integrity profiles provide bounded local or fixture-first proof only. This README does not implement a worker, build or sign tiles, admit a renderer, activate a source, approve policy or review, promote lifecycle state, release or host an artifact, mutate a cache, deploy a service, or publish KFM content.
