@@ -6,7 +6,15 @@ from pathlib import Path
 from typing import Any, Mapping
 
 FIXTURE_EXECUTION_ARGUMENTS = frozenset({"--fixtures", "--cases"})
-NON_FIXTURE_VALIDATORS = frozenset({"repository-topology", "workflow-security"})
+NON_FIXTURE_ARGUMENTS: dict[str, tuple[str, ...]] = {
+    "pnpm-dependency-readiness": (
+        "validate-repository",
+        "--repository-root",
+        ".",
+    ),
+    "repository-topology": (),
+    "workflow-security": (),
+}
 EXPECTED_TARGET = '\t@echo "TODO: regenerate deterministic fixtures"'
 EXPECTED_ROOT: dict[str, object] = {
     "root_id": "root.fixtures",
@@ -100,13 +108,14 @@ def aggregate(
             findings.append(("AGGREGATE_VALIDATOR_MISSING", field))
             continue
         args, script = item.get("args"), item.get("script")
-        if validator_id not in NON_FIXTURE_VALIDATORS:
+        expected_non_fixture_args = NON_FIXTURE_ARGUMENTS.get(validator_id)
+        if expected_non_fixture_args is None:
             if not isinstance(args, list) or not any(
                 argument in FIXTURE_EXECUTION_ARGUMENTS for argument in args
             ):
                 findings.append(("FIXTURE_MODE_ARGUMENT_MISSING", field))
-        elif args:
-            findings.append(("NON_FIXTURE_ARGUMENTS_PRESENT", field))
+        elif not isinstance(args, list) or tuple(args) != expected_non_fixture_args:
+            findings.append(("NON_FIXTURE_ARGUMENTS_INVALID", field))
         if not isinstance(script, str) or not (root / script).is_file():
             findings.append(("AGGREGATE_VALIDATOR_SCRIPT_MISSING", field))
     return len(full), findings
