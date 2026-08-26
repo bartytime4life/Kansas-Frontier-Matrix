@@ -3,12 +3,12 @@ doc_id: kfm://app/workers/src/receipt-worker/readme
 title: Receipt Worker README
 type: app-readme
 subtype: worker-lane-readme
-version: v0.2
-prior_version: v0.1
+version: v0.3
+prior_version: v0.2
 status: draft; repository-grounded; placeholder-only
 owner: "NEEDS VERIFICATION — CODEOWNERS routes default repository review to @bartytime4life; no accepted Receipt Worker steward, runtime operator, receipt-profile authority, evidence steward, or release authority was verified"
 created: 2026-06-16
-updated: 2026-08-12
+updated: 2026-08-26
 policy_label: public
 current_path: apps/workers/src/receipt_worker/README.md
 scope_id: apps/workers/src/receipt_worker/
@@ -22,18 +22,32 @@ authority_rank: implementation orientation subordinate to adopted doctrine, acce
 canonical_relationship: same-path update; no new authority, generated projection, compatibility path, job, queue, runtime binding, writer, receipt instance, release decision, or publication capability created
 evidence_repository: bartytime4life/Kansas-Frontier-Matrix
 evidence_base_ref: main
-evidence_base_commit: 73038246390f2f2a28952f10eb36f28eace1b409
-evidence_repository_tree: 69777d12df676af92ae1104b54774111f3004520
-evidence_lane_tree: 00e67290ff158b74761133b7e3a5deaea5c57838
-evidence_target_prior_blob: ad25d9d9fd82990b4a2303be3deee774202adeff
+evidence_base_commit: 3eb98f63c311370d8e2f0823f628dd2c1d6059c8
+evidence_repository_tree: cda32eb045c7337caa7997a9111578bcca5c01e8
+evidence_lane_tree: 8f0bd619fbe81428ee01c2222370c891e3c0efe6
+evidence_target_prior_blob: a65f3ecb129c2db48afbff5f46489b2e29ee913c
 evidence_entrypoint_blob: 0a80db14c4eecb130ad5a5f427742a7d793323d1
 evidence_parent_source_blob: 08ad9f8116f64817ffa4f8b2058613749360c102
 evidence_workers_readme_blob: 5b5c1e6b067e652a380bf445488a6227028dfc0e
 evidence_directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
 evidence_directory_rules_adoption: ADR-0029; accepted
 evidence_codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-evidence_receipt_separation_adr_blob: 40b0f47b87d584040803ed76aa6b31f5204b7fca
-evidence_receipts_tree: 7a99ac33f792bfd4cf7c6399a92ffc8a7637b102
+evidence_receipt_separation_adr_blob: d67c5c5d4cc70f51ca172651d28aad9a60fa4d41
+evidence_receipts_tree: c2e7513cdfeb6e7412870b814a981e5f58e8841c
+evidence_receipts_root_blob: 041f205dd5e618185fc7c75e95c85872fc9bbf69
+evidence_receipt_files: 1176
+evidence_receipt_json_files: 1092
+evidence_generated_receipt_files: 1092
+evidence_generated_receipt_json_files: 1091
+evidence_run_receipt_standard_blob: 80123299d4f7d23987ebb7f070c2ff6c5e0a3cb5
+evidence_run_receipt_schema_blob: c930ff0fd4da34d8b4ff202d9fd576110258974c
+evidence_run_receipt_validator_blob: d57bc57234a16dc11908e1509b293124e185d388
+evidence_ingest_receipt_contract_blob: 449420af794a5287e793fb6e1e1b900793ef15fa
+evidence_ingest_receipt_schema_blob: 4e9707bec7da63049c5043562c9470564b77184f
+evidence_ingest_receipt_validator_blob: 7bdf9f993a9f25759c8428a6da03df186d9c0651
+evidence_ingest_receipt_test_blob: b77e945c05da13c5637b44dd2b255c3611f66cec
+evidence_connector_gate_workflow_blob: dd3fd47b44ed5151aaa4ce72032a069f4b848190
+evidence_generated_receipt_validator_blob: 070b29e6dc57a36e0aed01af9a4e4443ae1780af
 evidence_direct_files: 2
 evidence_executable_python_lines: 0
 evidence_repository_runtime_bindings: 0
@@ -55,12 +69,19 @@ related:
   - ../../../../schemas/contracts/v1/runtime/run_receipt.schema.json
   - ../../../../schemas/contracts/v1/runtime/ai_receipt.schema.json
   - ../../../../schemas/contracts/v1/receipts/generated_receipt.schema.json
+  - ../../../../tools/validators/validate_run_receipt.py
+  - ../../../../tools/validators/validate_ingest_receipt.py
+  - ../../../../tests/validators/test_validate_ingest_receipt.py
+  - ../../../../tools/validators/validate_generated_receipt.py
+  - ../../../../.github/workflows/connector-gate.yml
   - ../../../../release/README.md
 tags: [kfm, apps, workers, receipt-worker, placeholder, receipts, provenance, append-only, idempotency, evidence, non-publisher]
 notes:
-  - "v0.2 replaces generalized source uncertainty with exact repository evidence: this lane contains one README and one 55-byte, comment-only Python placeholder with zero executable lines."
-  - "The repository has a broad, heterogeneous receipt ecosystem: 831 tracked entries under data/receipts at the pinned base, multiple substantive fixture-first validators, several proposed or conflicted profiles, and no accepted catalog or runtime binding for this lane."
-  - "RunReceipt, IngestReceipt, AIReceipt, GENERATED_RECEIPT, PromotionReceipt, receipt-catalog assessment, and receipt-proof pairing are distinct profiles; no one family is a generic substitute for the others."
+  - "v0.3 refreshes exact repository evidence while preserving the confirmed two-file, placeholder-only worker boundary."
+  - "The heterogeneous data/receipts hierarchy now contains 1,176 tracked files, including 1,092 JSON files; volume does not establish validity, completeness, canonical family status, or worker wiring."
+  - "RunReceipt v2.0 now distinguishes the canonical runtime profile from a separate PMTiles attestation profile, and IngestReceipt v0.5 adds bounded duplicate-key and non-finite JSON rejection; neither slice activates this worker."
+  - "RunReceipt, IngestReceipt, AIReceipt, GENERATED_RECEIPT, PromotionReceipt, receipt-catalog assessment, and receipt-proof pairing remain distinct profiles; no one family is a generic substitute for the others."
+  - "Attached, Drive, and Notion material is recorded only as non-authoritative design pressure for append-only lineage, finite outcomes, correction, replay, and authority separation."
   - "This documentation-only update does not create, backfill, validate, index, sign, attest, emit, supersede, publish, or delete a receipt."
 [/KFM_META_BLOCK_V2] -->
 
@@ -79,7 +100,7 @@ notes:
 [![Receipts: append only](https://img.shields.io/badge/receipts-append--only-8250df?style=flat-square)](#9-worker-obligations)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#6-exclusions)
 [![Directory Rules: ADR-0029 accepted](https://img.shields.io/badge/directory%20rules-ADR--0029%20accepted-2da44e?style=flat-square)](../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
-[![Evidence base: 7303824](https://img.shields.io/badge/evidence%20base-7303824-6e7781?style=flat-square)](#11-inspection-path)
+[![Evidence base: 3eb98f6](https://img.shields.io/badge/evidence%20base-3eb98f6-6e7781?style=flat-square)](#11-inspection-path)
 
 **Quick navigation:** [Purpose](#1-purpose) · [Repo fit](#2-repo-fit) · [Authority](#3-authority-boundary) · [Posture](#4-default-posture) · [Inputs and outputs](#5-inputs-and-outputs) · [Exclusions](#6-exclusions) · [Lane map](#7-current-lane-map) · [Required flow](#8-required-receipt-flow) · [Obligations](#9-worker-obligations) · [Admission contract](#10-job-admission-contract) · [Evidence](#11-inspection-path) · [Validation](#12-validation-expectations) · [Change pattern](#13-safe-change-pattern) · [Done](#14-definition-of-done) · [Gaps](#15-open-verification-items) · [Rollback](#17-correction-and-rollback)
 
@@ -89,7 +110,7 @@ notes:
 > Badges summarize the pinned repository inspection. They are navigation aids, not live health, deployment, validation, approval, or release signals.
 
 > [!IMPORTANT]
-> **Current state:** `CONFIRMED / PLACEHOLDER-ONLY`. At `main@73038246390f2f2a28952f10eb36f28eace1b409`, this lane contains exactly two tracked files: this README and a 55-byte [`main.py`](./main.py). The Python file contains only `# receipt_worker entrypoint — greenfield placeholder`, for zero imports, definitions, executable statements, or side effects.
+> **Current state:** `CONFIRMED / PLACEHOLDER-ONLY`. At `main@3eb98f63c311370d8e2f0823f628dd2c1d6059c8`, this lane contains exactly two tracked files: this README and a 55-byte [`main.py`](./main.py). The Python file contains only `# receipt_worker entrypoint — greenfield placeholder`, for zero imports, definitions, executable statements, or side effects.
 
 Repository-wide name and path inspection found no import, trigger, queue, schedule, package, configuration, test, policy binding, deployment, writer, or output binding for `receipt_worker`. This is bounded repository evidence, not proof about untracked experiments or external systems.
 
@@ -142,10 +163,10 @@ This document does not:
 | Claim | Truth | Repository evidence | Limit |
 |---|---|---|---|
 | The lane exists under the deployable `apps/` responsibility root. | CONFIRMED | Accepted Directory Rules, parent Workers READMEs, and current tree | Placement does not grant runtime capability. |
-| The lane contains exactly a README and `main.py`. | CONFIRMED at pinned base | Lane tree `00e67290ff158b74761133b7e3a5deaea5c57838` | Does not describe untracked or external files. |
+| The lane contains exactly a README and `main.py`. | CONFIRMED at pinned base | Lane tree `8f0bd619fbe81428ee01c2222370c891e3c0efe6` | Does not describe untracked or external files. |
 | `main.py` is one 55-byte comment and has zero executable Python lines. | CONFIRMED | Blob `0a80db14c4eecb130ad5a5f427742a7d793323d1` | A filename and comment do not form an entry point. |
 | A receipt worker is imported, registered, queued, scheduled, configured, tested, packaged, deployed, or active. | CONFIRMED absent from bounded repository inspection | Complete lane inventory plus repository name/path search | External deployment state remains UNKNOWN. |
-| `data/receipts/` is populated and heterogeneous. | CONFIRMED at pinned base | Tree `7a99ac33f792bfd4cf7c6399a92ffc8a7637b102`: 831 tracked entries, including 747 JSON files, 47 Markdown files, and 37 `.gitkeep` files | File counts do not establish validity, completeness, canonical status, or one common schema. |
+| `data/receipts/` is populated and heterogeneous. | CONFIRMED at pinned base | Tree `c2e7513cdfeb6e7412870b814a981e5f58e8841c`: 1,176 tracked files, including 1,092 JSON files, 47 Markdown files, and 37 `.gitkeep` files | File counts do not establish validity, completeness, canonical status, or one common schema. |
 | Substantive receipt contracts, schemas, validators, fixtures, and tests exist elsewhere. | CONFIRMED for representative profiles | Run, ingest, AI, generated-authoring, promotion, catalog-assessment, and proof-pairing surfaces | Adjacent capability is not worker wiring or operational authority. |
 | One accepted repository-wide receipt catalog and worker binding exists. | NOT ESTABLISHED | Receipt catalog and separation ADR are draft/proposed; adjacent inventories report drift | The worker must not invent a canonical family map. |
 | This README implements receipt behavior. | CONFIRMED false | Markdown-only same-path update | No runtime behavior changes. |
@@ -364,7 +385,7 @@ The complete direct-child map at the pinned base is:
 
 | Direct child | Kind | Verified state | Runtime role |
 |---|---|---|---|
-| [`README.md`](./README.md) | Boundary documentation | This same-path v0.2 update replaces prior blob `ad25d9d9fd82990b4a2303be3deee774202adeff` | None |
+| [`README.md`](./README.md) | Boundary documentation | This same-path v0.3 update replaces prior blob `a65f3ecb129c2db48afbff5f46489b2e29ee913c` | None |
 | [`main.py`](./main.py) | Python source placeholder | 55 bytes; one comment; zero executable Python lines | None |
 
 There is no `__init__.py`, package manifest, dependency declaration, configuration, schema, fixture, test, queue adapter, scheduler, command, writer, signer, indexer, health endpoint, deployment descriptor, or runbook in this lane.
@@ -376,7 +397,7 @@ The neighboring durable receipt tree is broad but is not owned by this app-local
 | Cross-cutting/process | `aggregation/`, `ai/`, `generated/`, `ingest/`, `pipeline/`, `redaction/`, `release/`, `telemetry/`, `validation/` |
 | Domain-oriented | `agriculture/`, `archaeology/`, `atmosphere/`, `fauna/`, `flora/`, `geology/`, `habitat/`, `hazards/`, `hydrology/`, `people-dna-land/`, `roads-rail-trade/`, `settlement/`, `settlements-infrastructure/`, `soil/` |
 
-The 831 tracked entries under that tree include 747 JSON files, 47 Markdown files, and 37 `.gitkeep` files. Of those, `data/receipts/generated/` accounts for 747 tracked entries—746 JSON files and one README. These are pinned lexical/file counts only; they do not claim that every JSON file validates, every family is canonical, every event is complete, or every receipt belongs to one schema.
+The 1,176 tracked files under that tree include 1,092 JSON files, 47 Markdown files, and 37 `.gitkeep` files. Of those, `data/receipts/generated/` accounts for 1,092 tracked files—1,091 JSON files and one README. These are pinned lexical/file counts only; they do not claim that every JSON file validates, every family is canonical, every event is complete, or every receipt belongs to one schema.
 
 [Back to top](#top)
 
@@ -483,10 +504,10 @@ No receipt job is admitted now. A future implementation PR must answer every row
 
 | Profile or surface | Confirmed repository support | Current limit for this lane |
 |---|---|---|
-| `RunReceipt` | Draft standard; substantive runtime schema, validator, fixtures, and tests; narrow PMTiles helper | Standard is proposed and names a schema path that does not exist; no accepted generic worker binding |
-| `IngestReceipt` | Proposed semantic contract, source schema, validator, fixtures, and tests | Connector-gate and live producer/persistence prerequisites remain unresolved; no worker binding |
+| `RunReceipt` | Repository-grounded v2.0 draft; substantive runtime schema, deterministic no-network validator, fixtures, and tests; separate bounded PMTiles attestation producer | Current runtime profile is explicit, but broader signing, cross-family composition, release use, and any worker binding remain unaccepted or absent |
+| `IngestReceipt` | Proposed v0.5 semantic contract, closed source schema, deterministic validator, fixtures/tests, and connector-gate prerequisite wiring; parser rejects duplicate keys and non-finite values | Connector-run presence, live producer/persistence, source admission, and this worker's binding remain unresolved |
 | `AIReceipt` | Proposed AI/runtime schemas plus validator, fixtures, and tests | Runtime event family is distinct from repository-authoring provenance; exact schema authority and worker binding unresolved |
-| `GENERATED_RECEIPT` | Closed proposed schema, populated `data/receipts/generated/`, bounded validator, fixtures, tests, and CI surfaces | Records AI-assisted repository-artifact provenance; it is not a generic runtime receipt or proof |
+| `GENERATED_RECEIPT` | Closed proposed schema, 1,091 generated JSON receipts at the pinned tree, bounded JSON-integrity validator, fixtures, tests, and CI surfaces | Records AI-assisted repository-artifact provenance; historical and successor receipts remain distinct, and the family is not a generic runtime receipt, proof, review, or release record |
 | `PromotionReceipt` | Proposed semantic contract, schema, deterministic validator, fixtures, and tests | Fixture-first and non-authorizing; does not grant promotion or release capability |
 | Receipt catalog assessment | Proposed-inactive semantic contract, schema, fixture matrix, validator, and tests | Review-required candidate; not a canonical catalog or writer registry |
 | Receipt-proof pairing assessment | Proposed-inactive semantic contract, schema, fixture matrix, validator, and tests | Fixture-only and non-authoritative; does not establish proof closure |
@@ -496,7 +517,7 @@ No receipt job is admitted now. A future implementation PR must answer every row
 
 ### Binding conflicts that must be resolved, not guessed
 
-1. Run-receipt shapes occur under runtime, source, and multiple domain schema paths; the draft standard also points to absent `schemas/contracts/v1/receipts/run_receipt.v1.schema.json`.
+1. RunReceipt v2.0 now identifies `schemas/contracts/v1/runtime/run_receipt.schema.json` as the current runtime machine shape and explicitly separates the SLSA-shaped PMTiles attestation profile; this closes the stale-path claim but does not create a generic worker binding or authorize cross-family substitution.
 2. `AIReceipt` shapes occur in more than one schema family, while `GENERATED_RECEIPT` is a separate repository-authoring provenance family.
 3. Receipt semantic meaning is split among contracts, standards, schema descriptions, lane READMEs, and exploratory material with different statuses.
 4. The draft receipt catalog explicitly reports adjacent inventory and classification conflict; proposed ADR-0011 is useful separation rationale but is not accepted migration authority.
@@ -516,15 +537,15 @@ An implementation PR must provide an accepted binding matrix or applicable ADR/m
 The repository state in this README can be reproduced without network access:
 
 ```bash
-git rev-parse 73038246390f2f2a28952f10eb36f28eace1b409^{tree}
-git rev-parse 73038246390f2f2a28952f10eb36f28eace1b409:apps/workers/src/receipt_worker
-git ls-tree -rl 73038246390f2f2a28952f10eb36f28eace1b409 \
+git rev-parse 3eb98f63c311370d8e2f0823f628dd2c1d6059c8^{tree}
+git rev-parse 3eb98f63c311370d8e2f0823f628dd2c1d6059c8:apps/workers/src/receipt_worker
+git ls-tree -rl 3eb98f63c311370d8e2f0823f628dd2c1d6059c8 \
   apps/workers/src/receipt_worker
-git show 73038246390f2f2a28952f10eb36f28eace1b409:apps/workers/src/receipt_worker/main.py
+git show 3eb98f63c311370d8e2f0823f628dd2c1d6059c8:apps/workers/src/receipt_worker/main.py
 git grep -n -i -E 'receipt_worker|receipt worker' \
-  73038246390f2f2a28952f10eb36f28eace1b409 -- \
+  3eb98f63c311370d8e2f0823f628dd2c1d6059c8 -- \
   ':!apps/workers/src/receipt_worker/README.md'
-git ls-tree -r --name-only 73038246390f2f2a28952f10eb36f28eace1b409 -- \
+git ls-tree -r --name-only 3eb98f63c311370d8e2f0823f628dd2c1d6059c8 -- \
   data/receipts
 rg --files contracts schemas fixtures tests tools policy release data docs \
   | rg -i 'receipt|proof|provenance|attest|signature|catalog'
@@ -536,22 +557,39 @@ The file totals above were calculated from the pinned tree, not the mutable work
 
 | Evidence | Pinned object | Supports | Does not prove |
 |---|---|---|---|
-| Repository base | commit `73038246390f2f2a28952f10eb36f28eace1b409`; tree `69777d12df676af92ae1104b54774111f3004520` | Exact review baseline | Runtime, security, release, or deployment state |
-| Receipt Worker lane | tree `00e67290ff158b74761133b7e3a5deaea5c57838` | Complete two-file lane inventory | Off-repository state |
-| Prior README | blob `ad25d9d9fd82990b4a2303be3deee774202adeff` | Same-path baseline and no-loss review | Worker behavior |
+| Repository base | commit `3eb98f63c311370d8e2f0823f628dd2c1d6059c8`; tree `cda32eb045c7337caa7997a9111578bcca5c01e8` | Exact review baseline | Runtime, security, release, or deployment state |
+| Receipt Worker lane | tree `8f0bd619fbe81428ee01c2222370c891e3c0efe6` | Complete two-file lane inventory | Off-repository state |
+| Prior README | blob `a65f3ecb129c2db48afbff5f46489b2e29ee913c` | Same-path baseline and no-loss review | Worker behavior |
 | Placeholder entrypoint | blob `0a80db14c4eecb130ad5a5f427742a7d793323d1` | Exact comment-only source bytes | Importability or execution |
 | Parent source README | blob `08ad9f8116f64817ffa4f8b2058613749360c102` | Inherited placeholder, thin-wrapper, and non-publisher contract | Child maturity |
 | Parent Workers README | blob `5b5c1e6b067e652a380bf445488a6227028dfc0e` | Scaffold-only background app boundary | Active deployment |
-| Accepted Directory Rules | blob `fd49a0b83e55cef52c1124281f093e263526898d`; accepted ADR-0029 blob `b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62` | Placement, dependency, Boundary Compact, lifecycle, and receipt/proof/release separation rules | Runtime authorization |
+| Accepted Directory Rules | blob `fd49a0b83e55cef52c1124281f093e263526898d`; accepted ADR-0029 blob `a4de0d7a96b78da59cfc499d1025e1508afd8dd9` | Placement, dependency, Boundary Compact, lifecycle, and receipt/proof/release separation rules | Runtime authorization |
 | CODEOWNERS | blob `dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61` | Default repository review route to `@bartytime4life` | Receipt stewardship, runtime authentication, or release approval |
-| Receipt separation ADR | blob `40b0f47b87d584040803ed76aa6b31f5204b7fca`; status PROPOSED | Explicit distinction among receipts, proofs, manifests, catalog, and release | Accepted migration, complete catalog, or operational binding |
-| Receipt data tree | tree `7a99ac33f792bfd4cf7c6399a92ffc8a7637b102` | Pinned 831-entry receipt hierarchy and file counts | Per-file validity, completeness, authority, or shared schema |
-| Run-receipt standard | blob `144f6a153ba9223a617e2718bca3e161bf24e605`; status draft | Proposed field and validation posture plus acknowledged drift | Accepted generic runtime contract or worker binding |
-| Runtime RunReceipt schema/validator | blobs `c930ff0fd4da34d8b4ff202d9fd576110258974c` / `d57bc57234a16dc11908e1509b293124e185d388` | Substantive bounded validation profile | Production writer, signing, storage, or activation |
-| Generated-receipt schema/validator | blobs `fba21ed27ebccf1362fe397fe0c3ebd85e072685` / `70c54b877ef3f9f13a839f9a06cb8c14e67cb753` | Separate repository-authoring provenance profile | Runtime AI event, factual proof, merge, release, or publication |
+| Receipt separation ADR | blob `d67c5c5d4cc70f51ca172651d28aad9a60fa4d41`; status PROPOSED | Explicit distinction among receipts, proofs, manifests, catalog, and release | Accepted migration, complete catalog, or operational binding |
+| Receipt data tree | tree `c2e7513cdfeb6e7412870b814a981e5f58e8841c` | Pinned 1,176-file hierarchy: 1,092 JSON, 47 Markdown, and 37 `.gitkeep` files | Per-file validity, completeness, authority, or shared schema |
+| RunReceipt v2.0 standard | blob `80123299d4f7d23987ebb7f070c2ff6c5e0a3cb5`; repository-grounded draft | Current runtime shape, finite run outcomes, profile separation, and no-network validation posture | Generic worker binding, signing requirement, release, or publication authority |
+| Runtime RunReceipt schema/validator | blobs `c930ff0fd4da34d8b4ff202d9fd576110258974c` / `d57bc57234a16dc11908e1509b293124e185d388` | Substantive bounded profile with duplicate-key, non-finite, placeholder-hash, Smart Sync, and decision checks | Production writer, signing, storage, worker composition, or activation |
+| IngestReceipt contract/schema | blobs `449420af794a5287e793fb6e1e1b900793ef15fa` / `4e9707bec7da63049c5043562c9470564b77184f` | Proposed v0.5 source-ingest semantics and closed machine shape | Source admission, live connector run, persistence, or worker binding |
+| IngestReceipt validator/test/workflow | blobs `7bdf9f993a9f25759c8428a6da03df186d9c0651` / `b77e945c05da13c5637b44dd2b255c3611f66cec` / `dd3fd47b44ed5151aaa4ce72032a069f4b848190` | No-network validation including malformed, duplicate-key, non-finite, schema, and semantic cases | Operational ingest, receipt emission, source activation, or this worker |
+| Generated-receipt schema/validator | blobs `fba21ed27ebccf1362fe397fe0c3ebd85e072685` / `070b29e6dc57a36e0aed01af9a4e4443ae1780af` | Separate repository-authoring provenance profile with bounded JSON-integrity and artifact-binding checks | Runtime AI event, factual proof, merge, review, release, or publication |
 | PromotionReceipt contract/validator | blobs `ed432f8e3e02d170589c9e04d78087a69346909d` / `876c1b82d712623e52c7029a87f33c8ed9eb9668` | Existing fixture-first promotion-attempt profile | Promotion authority, release, or live state transition |
 
 Evidence pins make repository claims reviewable. They do not turn supporting documents, schemas, fixtures, validators, workflows, files, or receipts into implementation or authority.
+
+### Source-pressure register
+
+The following supplied and connected sources were inspected as design pressure only. They do not override the exact GitHub checkpoint, select a receipt profile, authorize a writer, validate an instance, admit a source, approve review, or change release or publication state.
+
+| Source | Useful pressure retained | Authority limit |
+|---|---|---|
+| Attached *Kansas Frontier Matrix Pipeline Living Implementation Manual v0.3* | Preserve per-stage RunReceipt/TransformReceipt/ValidationReport/PolicyDecision separation; finite failure outcomes stop partial publication; evidence, policy, catalog, review, and release gates remain distinct | Supplied architecture proposal; not repository implementation or adopted receipt policy |
+| Attached *Kansas Frontier Matrix Implementation Reference* and governed-UI manual | Treat RunReceipt as one trust object among EvidenceBundle, PolicyDecision, ReleaseManifest, PromotionDecision, and CorrectionNotice; keep public claims reconstructible to correction lineage | Design synthesis only; no worker, writer, signer, review, release, or public-route binding |
+| [Drive KFM Full Atlas Seed Cards](https://docs.google.com/document/d/1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho/edit) | Keep receipt/provenance proposals truth-labeled, dependency-bounded, no-network testable, and explicitly unverified against current implementation until reconciled | Read-only proposal/lineage carrier; not a canonical contract or implementation fact |
+| [Notion Cross-System Authority & Intake Model](https://app.notion.com/p/3c5a92021bf6811ba9c2d923215f11b7) | Canonical receipt instances remain under `data/receipts/`; receipt-shaped staging output is not governed process memory; current GitHub evidence outranks coordination state | Coordination guidance; never receipt, review, release, or repository authority |
+| [Notion Evidence, Documentation & Ideas Atlas](https://app.notion.com/p/3c6a92021bf681e097f2e9e976d74bc9) | Preserve the bounded status of IngestReceipt hardening and PMTiles receipt rebinding, including retained hosted-check contradictions and non-effects | Research overlay with an older checkpoint; must be reverified against current GitHub bytes |
+
+Repository consequences retained from that pressure are conservative: historical receipts remain immutable; changed artifacts require explicit successor lineage; receipt volume never substitutes for family authority; validation remains profile-specific; and receipts never collapse into truth, proof, review, release, or publication.
+
 
 [Back to top](#top)
 
@@ -578,7 +616,7 @@ python tools/validators/docs/document-graph/check_document_graph.py \
   --registry control_plane/document_registry.yaml \
   --format text apps/workers/src/receipt_worker/README.md
 python tools/validators/docs/stale-scan/check_stale_docs.py \
-  --repo-root . --as-of 2026-08-12 --profile advisory \
+  --repo-root . --as-of 2026-08-26 --profile advisory \
   --review-window-days 365 --placeholder-grace-days 90 \
   --format text apps/workers/src/receipt_worker/README.md
 python -m unittest discover \
@@ -616,7 +654,7 @@ Replacing the placeholder requires, at minimum:
 
 - deterministic no-network unit tests with synthetic, public-safe fixtures for one explicitly admitted receipt family;
 - exact job, semantic contract, schema, validator, canonicalization, finite-outcome, policy, evidence, writer, and retention bindings;
-- unauthorized producer, malformed envelope, unknown profile/version, extra field, missing ref, invalid enum, unsupported algorithm, and digest mismatch cases;
+- unauthorized producer, malformed envelope, duplicate JSON keys, non-finite numeric tokens, unknown profile/version, extra field, missing ref, invalid enum, unsupported algorithm, and digest mismatch cases;
 - event-time/write-time confusion, untrusted clock, signer mismatch, revoked or unknown key, missing signature, and invalid signature cases where applicable;
 - duplicate delivery, identical replay, conflicting idempotency key, retry after confirmed write, retry after uncertain write, timeout, cancellation, and dependency-unavailable cases;
 - missing, stale, conflicted, denied, sensitive, rights-restricted, weak-source, or unsupported evidence/policy/review dependencies where applicable;
@@ -720,20 +758,21 @@ Re-review this README when the placeholder changes, a producer or transport is p
 |---|---|---|---|
 | `v0.1` | 2026-06-16 | Replaced a greenfield stub with a broad proposed receipt-support worker contract. | None; documentation only. |
 | `v0.2` | 2026-08-12 | Pinned current repository evidence; recorded the two-file comment-only lane and populated receipt ecosystem; reconciled accepted Directory Rules with proposed/conflicted receipt governance; separated representative receipt families and authorities; replaced speculative modules with the verified direct-child map; and strengthened admission, flow, validation, maintenance, correction, and rollback guidance. | None; documentation only. |
+| `v0.3` | 2026-08-26 | Refreshed current `main` and receipt-tree evidence; corrected the RunReceipt v2.0 runtime/PMTiles profile boundary; recorded IngestReceipt duplicate-key and non-finite JSON rejection; added a labeled source-pressure register; and preserved the worker's placeholder-only status. | None; documentation only. |
 
 <details>
 <summary>Appendix A — no-loss and correction note</summary>
 
 The v0.1 edition correctly preserved core constraints: a receipt worker must not fabricate receipts, rewrite history, publish, mutate release records, or replace evidence and provenance truth. It also identified useful future concerns including validation, integrity, provenance references, indexing, drift signals, idempotency, retries, safe errors, and governed handoffs.
 
-This edition retains those constraints while correcting the evidence posture. Source-file presence is no longer unknown: `main.py` exists as a comment-only placeholder. Receipt contracts, schemas, validators, fixtures, tests, policies, data lanes, and helpers also exist elsewhere. None is wired to this lane; maturity and authority vary; several families or paths conflict; and no accepted receipt-worker job, profile catalog, writer, signer, index, deployment, or runtime binding was verified.
+The v0.3 edition retains those constraints while refreshing the evidence posture. `main.py` remains a comment-only placeholder. RunReceipt, IngestReceipt, and generated-receipt profiles have gained bounded contract, schema, validator, test, or workflow evidence elsewhere, but none is wired to this lane; maturity and authority still vary; and no accepted generic receipt-worker job, family registry, writer, signer, index, deployment, or runtime binding was verified.
 
 </details>
 
 <details>
-<summary>Appendix B — material disposition from v0.1</summary>
+<summary>Appendix B — v0.3 material disposition</summary>
 
-| Prior material | v0.2 disposition |
+| v0.2 material | v0.3 disposition |
 |---|---|
 | Proposed purpose and non-publisher warning | Preserved and narrowed to a future thin wrapper |
 | Root responsibility map | Reconciled with accepted Directory Rules and current parent READMEs |
@@ -745,12 +784,16 @@ This edition retains those constraints while correcting the evidence posture. So
 | Safe change sequence and definition of done | Retained, evidence-pinned, and split between this docs change and future runtime maturity |
 | Open questions | Converted into truth-labeled verification items with required evidence |
 | No-loss note | Expanded to record corrected claims and retained constraints |
+| Receipt hierarchy counts | Refreshed to 1,176 tracked files, including 1,092 JSON receipts; volume is not generic authority or worker maturity. |
+| RunReceipt profile | Corrected to the v2.0 runtime schema and validator, with PMTiles attestation treated as a separate bounded profile. |
+| IngestReceipt parsing | Added current duplicate-key and non-finite JSON rejection, without claiming live connector, persistence, admission, or worker binding. |
+| Attached, Drive, and Notion material | Added only as labeled design pressure or coordination evidence; repository bytes remain authoritative for current implementation claims. |
 
 </details>
 
 ## 17. Correction and rollback
 
-Before merge, abandon or close the feature branch and draft pull request. After an independently authorized merge, use a transparent revert or forward-fix pull request restoring prior blob `ad25d9d9fd82990b4a2303be3deee774202adeff`, then rerun the same documentation checks.
+Before merge, abandon or close the feature branch and draft pull request. After an independently authorized merge, use a transparent revert or forward-fix pull request restoring prior blob `a65f3ecb129c2db48afbff5f46489b2e29ee913c`, then rerun the same documentation checks.
 
 A README rollback changes no Python source, contract, schema, policy, package, pipeline, fixture, test, queue, schedule, configuration, capability, receipt, proof, index, signature, key, release, data, deployment, activation, promotion, publication, or repository setting. If a later implementation affects those surfaces, its accepted execution record, partial-effect handling, append-only correction lineage, index rebuild, deployment, and rollback obligations control; restoring prose alone is not an operational rollback.
 
@@ -760,7 +803,7 @@ A README rollback changes no Python source, contract, schema, policy, package, p
 
 `apps/workers/src/receipt_worker/` is correctly located as an inherited app-local lane but is not an implemented or active worker. Its repository state is exactly one boundary README and one 55-byte comment-only placeholder, with zero executable lines and no import, trigger, queue, schedule, package, policy binding, test, configuration, writer, signer, index, deployment, or output binding.
 
-The wider repository contains substantial but heterogeneous receipt material. That ecosystem does not supply a canonical generic receipt or activate this lane. Future work must first select one accepted profile and resolve orchestration ownership, exact contract/schema/validator/policy/storage bindings, event and attempt identity, append-only correction, idempotency, time, integrity, signing, retention, and least-privilege execution.
+The wider repository now contains a 1,176-file receipt hierarchy, while bounded profiles have advanced: RunReceipt v2.0 separates its runtime profile from PMTiles attestation, and IngestReceipt v0.5 rejects duplicate-key and non-finite JSON. Those improvements do not supply a canonical generic receipt, wire a common writer, or activate this lane. Future work must first select one accepted profile and resolve orchestration ownership, exact contract/schema/validator/policy/storage bindings, event and attempt identity, append-only correction, idempotency, time, integrity, signing, retention, and least-privilege execution.
 
 Any admitted implementation must remain thin, authenticated, profile-closed, append-only, provenance-preserving, evidence- and policy-bounded, idempotent, replay-safe, least-privileged, independently reviewable, readback-verified, public-safe, non-publishing, and subordinate to proof, review, correction, release, and publication authority.
 
