@@ -2,7 +2,7 @@
   "artifact_hashes": {
     ".github/workflows/action-point-reference-check.yml": "sha256:d1d8e0366ee67a563b9e1eb5fca3cac274f89a5b6be34ff32dbc2edb34e74ff3",
     "contracts/validation/action_point_reference_check.md": "sha256:9af6288661154fa4059dafbb1ae15b29d05a5a0217b340e8759179318b5cfd3d",
-    "docs/intake/exploratory/cairnwake-action-point-reference-check-source-map.md": "sha256:ca33a6b3667a41a35d9ac32bb5a204976e7c2b3a4f6ca23981ff94e5829e167d",
+    "docs/intake/exploratory/cairnwake-action-point-reference-check-source-map.md": "sha256:9d6750874c8b6b59da74004a043e1b09cdafc6d4bc362a3001061ace57d84b8e",
     "fixtures/contracts/v1/validation/action_point_reference_check/cases.json": "sha256:d78638bcae29d53a94ed100d1391ec7fe40f54b0bc922bb75a505e3412509642",
     "schemas/contracts/v1/validation/action_point_reference_check.schema.json": "sha256:5614f5830b7c01c8f13deb4394ee081224fae461b65c774dcae10c904aaa388b",
     "tests/validators/test_validate_action_point_reference_check.py": "sha256:6627460970f8d682269b668b33cdf88084d23c15820659cfc783150fc73454bb",
