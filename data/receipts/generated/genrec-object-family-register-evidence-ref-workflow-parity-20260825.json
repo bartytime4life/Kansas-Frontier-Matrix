@@ -2,10 +2,12 @@
   "receipt_id": "genrec-object-family-register-evidence-ref-workflow-parity-20260825",
   "contract_version": "3.0.0",
   "artifact_paths": [
+    ".github/workflows/object-family-register.yml",
     "control_plane/object_family_register.yaml",
     "docs/registers/OBJECT_FAMILY.md"
   ],
   "artifact_hashes": {
+    ".github/workflows/object-family-register.yml": "sha256:95fbd18dc93ddfa271a67b69be56e989213e3b915bd4e11c121a9ebe0afabad8",
     "control_plane/object_family_register.yaml": "sha256:c44b729a3d1ad3c8aa751e3fea776a432d1df4a73fc5823a1bf4eb1cfe7c9592",
     "docs/registers/OBJECT_FAMILY.md": "sha256:2c94e309c0d6883014622129b53fb9c9a326dbd43ccba4bce2dca389c30a245e"
   },
@@ -39,6 +41,7 @@
     ]
   },
   "truth_labels": {
+    ".github/workflows/object-family-register.yml": "PROPOSED",
     "control_plane/object_family_register.yaml": "PROPOSED",
     "docs/registers/OBJECT_FAMILY.md": "PROPOSED"
   },
@@ -69,14 +72,14 @@
       "reason": "Exact base main reports 130 baselined warnings, one new-drift finding, and one stale fingerprint. The slice does not alter the topology baseline; branch comparison must preserve the same signature."
     },
     {
-      "gate": "repository-native-object-family-and-focused-tests",
-      "outcome": "SKIPPED",
-      "reason": "The local execution image lacks declared jsonschema and pytest dependencies. Exact-head hosted schema-validation and object-family-register results remain required verification."
+      "gate": "predecessor-hosted-validation",
+      "outcome": "FAIL",
+      "reason": "At draft PR head bda2b15a10252eb1315839fa4bb0f7933bb409e6, hosted schema-validation passed and the object-family focused tests, fixture polarity, and current-register validation passed. The object-family job then failed because it still verified the immutable 2026-08-23 historical receipt after the bound register changed. This successor patch retargets only that integrity step and updates its summary; the new exact head remains unverified until rerun."
     },
     {
       "gate": "hosted-exact-head-validation",
       "outcome": "SKIPPED",
-      "reason": "No draft pull-request head existed when this pending-review provenance receipt was emitted. Hosted results must be reported from the exact remote head after PR creation."
+      "reason": "The successor branch head containing the receipt-target correction did not yet exist when this pending-review provenance receipt was updated. Hosted results must be reported from that exact remote head after push."
     }
   ],
   "policy_decisions": [],
@@ -106,9 +109,9 @@
   "created_at": "2026-08-26T00:10:32Z",
   "emitter": "openai/codex-gpt-5",
   "links": {
-    "pr_number": null,
+    "pr_number": 3582,
     "adr_link": null,
     "drift_register_entry": null
   },
-  "notes": "Bounded M02 navigational parity correction. It records already-existing EvidenceRef shape-validation orchestration and updates the human mirror. It creates no object-family authority, policy decision, evidence resolution, source activation, lifecycle transition, release, deployment, promotion, publication, or public behavior. Before merge, discard the draft branch; after merge, revert the scoped commit or apply a same-path forward correction."
+  "notes": "Bounded M02 navigational parity correction. It records already-existing EvidenceRef shape-validation orchestration, updates the human mirror, and makes the existing object-family workflow validate this successor receipt instead of replaying an immutable historical receipt against changed bytes. It creates no object-family authority, policy decision, evidence resolution, source activation, lifecycle transition, release, deployment, promotion, publication, or public behavior. Before merge, discard the draft branch; after merge, revert the scoped commits or apply a same-path forward correction."
 }
