@@ -3,13 +3,13 @@ doc_id: kfm://app/workers/src/validate-worker/readme
 title: Validate Worker README
 type: app-readme
 subtype: worker-lane-boundary-readme
-version: v0.2
-prior_version: v0.1
+version: v0.3
+prior_version: v0.2
 status: draft; repository-grounded; placeholder-only; no-executable-worker-binding
 owners: OWNER_TBD — Worker steward · Validation steward · Runtime steward · Contract steward · Schema steward · Evidence steward · Policy steward · Receipt steward · Security reviewer · Operations steward · Docs steward
 review_route: .github/CODEOWNERS defaults GitHub review routing to @bartytime4life; this is not stewardship, independent approval, validation authority, policy authority, review authority, release authority, or proof that review occurred
 created: 2026-06-16
-updated: 2026-08-12
+updated: 2026-08-26
 policy_label: public-documentation; app-boundary; fail-closed; candidate-only; non-authoritative; no-direct-publication
 current_path: apps/workers/src/validate_worker/README.md
 owning_root: apps/
@@ -22,28 +22,38 @@ authority_sources:
   - ../../../../docs/doctrine/directory-rules.md
   - ../README.md
   - ../../README.md
-evidence_commit: 60a54f63404929a4ccb3043a5059a2351747df50
-evidence_tree: 47b58b71fc4746e92cb8a0b9e0119aa5d8e8c33e
-evidence_reviewed: 2026-08-12
+evidence_commit: 728694fbc6c1280a5f780f816562204bdafe1194
+evidence_tree: bc3aad6aac71b969b7b7cfc47c65a0472aab537b
+evidence_reviewed: 2026-08-26
 evidence:
-  target_tree: 4bae7b3d49bf7282351dcd0fb0616cf44dda943c
-  target_readme_blob: 5ea1800d06a57aeb7faa90799004fc2136bd8bf8
+  target_tree: a85a88bf80b1e26e7cf607d0a509d48f73113a3e
+  target_readme_blob: e6c9673be358dd066ddd4233b111b19e4ebebbf2
   target_entrypoint_blob: d42e8a837b61ba42038d7a4fbc260072e53feea8
-  workers_source_tree: 0a59ece917327aefc57cca453e89594f34308d0b
+  workers_source_tree: 3f4a181f9856b9eb5c8848f8937f172e5d2ad241
   workers_source_readme_blob: 08ad9f8116f64817ffa4f8b2058613749360c102
   workers_app_readme_blob: 5b5c1e6b067e652a380bf445488a6227028dfc0e
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  directory_rules_adr_blob: b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62
+  directory_rules_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
   validator_entrypoint_blob: c308015da780d7b72f56277b521fb0e42317651e
   validator_orchestrator_blob: 728cf1404839a5b95e03d70d44567863a6f9b6df
-  validator_registry_blob: c65c1c2b27b85be4bdc3c42d0555c6e8e44698e2
-  validator_orchestrator_test_blob: 649b0d3eaaa3ea8faabf6c8231a9f7c3aa207131
+  validator_registry_blob: bc86fd0641c445730e4288c4835bfd34694666d6
+  validator_orchestrator_test_blob: e6f4b1978a9f0e34556d9314d74721e9cb58ec48
   validation_report_contract_blob: 1ee7872dc4144c159816fabdc2433548e5f47a78
   validation_report_schema_blob: 14d1eeffbb15fa07f233c778a7a30106a4a14fd6
   shared_validate_readme_blob: ee38f7876e75848854294642a696f8dcf6be155a
   shared_validate_entrypoint_blob: ab3aaa5d6ec49fe4f1a03aca633b89f79fce3246
   cli_validate_entrypoint_blob: 43eb0a7eb1f7d06a3d189a9382552f36a7c02f9f
+  validator_runbook_blob: df9e59cfdae95e2f4369121791cdb1fd42548d5d
+  validator_suite_workflow_blob: b223cea3f83606c4b93aa12a0deaba8665468632
+  validation_report_validator_blob: c43b6e9594e8fd91760ea3811ac888c848681e70
+  validation_report_validator_test_blob: 498022e1071f0f897ddc7cde7f66bc173186523f
+  validation_report_fixture_readme_blob: 6066d8a8bc49ed9a39ac58e28056bc84c24431d1
+  worker_integrity_contract_blob: c99e31db801a1c56d393f065e537bebab96acd94
+  worker_integrity_schema_blob: 97ce7f0e7085101b15f4af25e3424bb1440551dc
+  worker_integrity_validator_blob: 575b9ffef226d37ff5b80b70b5e652f214f38619
+  worker_integrity_test_blob: 172af22baa4bfc8054823a0e5b9caa827100c6d9
+  worker_integrity_workflow_blob: 80e625b68dd657988fed5dd29cd4aa2cba5fe7df
 implementation_facts:
   lane_inventory: README.md plus main.py; no direct child directory
   entrypoint: one comment; zero executable Python lines
@@ -57,8 +67,11 @@ implementation_facts:
   cli_validate_entrypoint: one comment; zero executable Python lines
   general_validation_report_contract: draft semantic contract
   general_validation_report_schema: proposed greenfield placeholder requiring only id and allowing additional properties
-  declared_general_validation_report_validator: absent at the schema-declared path
-  declared_general_validation_report_fixture_root: absent
+  general_validation_report_validator: confirmed bounded no-network schema-shape checker with duplicate-key and non-finite JSON rejection
+  general_validation_report_fixture_root: confirmed minimal valid and invalid lanes
+  general_validation_report_registry_binding: absent from the canonical 24-entry registry
+  worker_integrity_launch_readiness_family: confirmed executable fixture-only validation family outside this worker and outside the canonical registry
+  worker_integrity_launch_authority: explicitly false; review remains required
 related:
   - ../README.md
   - ../../README.md
@@ -77,6 +90,13 @@ related:
   - ../../../../pipeline_specs/README.md
   - ../../../../contracts/data/validation_report.md
   - ../../../../schemas/contracts/v1/data/validation_report.schema.json
+  - ../../../../fixtures/data/validation_report/README.md
+  - ../../../../tools/validators/data/validate_validation_report.py
+  - ../../../../tests/validators/test_validate_validation_report.py
+  - ../../../../contracts/runtime/worker_integrity_launch_readiness.md
+  - ../../../../schemas/contracts/v1/runtime/worker_integrity_launch_readiness.schema.json
+  - ../../../../tools/validators/runtime/validate_worker_integrity_launch_readiness.py
+  - ../../../../tests/validators/test_worker_integrity_launch_readiness.py
   - ../../../../contracts/validation/README.md
   - ../../../../schemas/contracts/v1/validation/README.md
   - ../../../../artifacts/qa/validation/README.md
@@ -87,6 +107,7 @@ related:
   - ../../../../.github/workflows/validator-suite.yml
   - ../../../../.github/workflows/schema-validation.yml
   - ../../../../.github/workflows/contracts-validate.yml
+  - ../../../../.github/workflows/worker-integrity-launch-readiness.yml
 non_effects:
   - No executable worker code, package, import, validator, queue, schedule, service identity, configuration, test, fixture, deployment, network access, report, receipt, proof, review record, release record, lifecycle mutation, or public route is created
   - No schema, contract, policy, evidence, review, lifecycle, release, correction, rollback, or publication authority is changed
@@ -95,7 +116,7 @@ non_effects:
   - No validation outcome is translated into policy approval, review approval, release readiness, or publication
 tags: [kfm, apps, workers, validate-worker, validation, validator-orchestrator, validation-report, receipts, proofs, contracts, schemas, evidence, policy, lifecycle, fail-closed, non-publisher]
 notes:
-  - "This edition replaces future-state ambiguity with exact placeholder evidence and a bounded implementation path."
+  - "This edition refreshes the placeholder boundary against the 24-entry canonical registry, the now-present bounded generic ValidationReport validator and fixtures, and the separate inactive WorkerIntegrityLaunchReadinessCandidate family."
   - "Repository-wide validator orchestration exists under tools/, but Directory Rules prohibit production apps from depending on tools as runtime libraries."
   - "The general ValidationReport prose contract, placeholder schema, orchestrator report, domain reports, receipts, and proof-support lanes are distinct surfaces and must not be collapsed."
 [/KFM_META_BLOCK_V2] -->
@@ -197,11 +218,11 @@ This README does not:
 | Field | Confirmed value |
 |---|---|
 | Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Evidence base | `main@60a54f63404929a4ccb3043a5059a2351747df50` |
-| Repository tree | `47b58b71fc4746e92cb8a0b9e0119aa5d8e8c33e` |
-| Workers source tree | `0a59ece917327aefc57cca453e89594f34308d0b` |
-| Validate Worker tree | `4bae7b3d49bf7282351dcd0fb0616cf44dda943c` |
-| Prior README blob | `5ea1800d06a57aeb7faa90799004fc2136bd8bf8` |
+| Evidence base | `main@728694fbc6c1280a5f780f816562204bdafe1194` |
+| Repository tree | `bc3aad6aac71b969b7b7cfc47c65a0472aab537b` |
+| Workers source tree | `3f4a181f9856b9eb5c8848f8937f172e5d2ad241` |
+| Validate Worker tree | `a85a88bf80b1e26e7cf607d0a509d48f73113a3e` |
+| Prior README blob | `e6c9673be358dd066ddd4233b111b19e4ebebbf2` |
 | Entrypoint blob | `d42e8a837b61ba42038d7a4fbc260072e53feea8` |
 | README profile | `BOUNDARY_COMPACT`, expanded because this is a deployable trust boundary |
 | Placement | `PLACE` — same-path update under the existing `apps/` responsibility root |
@@ -222,11 +243,13 @@ This README does not:
 | The parent source README classifies this lane as a placeholder. | [`../README.md`](../README.md). | **CONFIRMED** |
 | The Workers app documents a future validation-job role. | [`../../README.md`](../../README.md). | **CONFIRMED PROPOSED ROLE** |
 | A repository-wide validator orchestrator exists. | [`tools/validate_all.py`](../../../../tools/validate_all.py), its implementation, registry, tests, and runbook. | **CONFIRMED OUTSIDE THIS WORKER** |
-| A bounded registry currently lists ten validators. | [`validator_registry.json`](../../../../tools/validators/validator_registry.json). | **CONFIRMED** |
+| The canonical registry currently lists 24 validators. | [`validator_registry.json`](../../../../tools/validators/validator_registry.json) binds 4 focused, 13 release-dry-run, and 24 full-profile entries; changed-area remains path-selected. | **CONFIRMED OUTSIDE THIS WORKER** |
 | The general `ValidationReport` semantic contract exists. | [`contracts/data/validation_report.md`](../../../../contracts/data/validation_report.md). | **CONFIRMED DRAFT** |
 | The paired general schema is complete. | It requires only `id`, permits extra properties, and labels itself a greenfield placeholder. | **DENIED** |
-| The schema-declared general report validator and fixture root exist. | Neither declared path is present in the pinned tree. | **NOT PRESENT** |
+| The schema-declared generic report validator and fixture root exist. | Both paths are present. Seven focused tests cover the proposed schema minimum, fixture polarity, duplicate keys, non-object roots, non-finite numbers, and no-network CLI replay. | **CONFIRMED BOUNDED** |
 | The shared Validate pipeline or CLI implements worker behavior. | Both entrypoints are one-comment placeholders. | **DENIED** |
+| The generic report validator is registered in the canonical orchestrator. | Its ID is absent from the 24-entry registry, even though its validator, fixtures, and tests exist. | **DENIED** |
+| A worker-integrity launch-readiness family exists. | Contract, schema, fixtures, validator, eight tests, and focused workflow exist; the family is proposed, inactive, review-required, and explicitly denies launch authority. | **CONFIRMED OUTSIDE THIS WORKER** |
 | Existing tools, workflows, pipelines, or domain validators are bound to this worker. | No binding is established by this lane, its parents, or the bounded adjacent evidence reviewed here. | **NOT VERIFIED** |
 | A queue, schedule, deployment, service identity, secret, runtime config, worker-local test, or operational dashboard is bound here. | No such binding is present in this lane. | **NOT VERIFIED** |
 
@@ -250,17 +273,34 @@ KFM contains substantial validation capability. Presence elsewhere must not be m
 |---|---|---|
 | [`tools/validate_all.py`](../../../../tools/validate_all.py) | Canonical thin repository entrypoint. | Repository tool, not a worker runtime API. |
 | [`tools/validators/validate_all.py`](../../../../tools/validators/validate_all.py) | Bounded deterministic orchestrator with registry validation, selection, timeouts, finite results, and JSON output. | Executable repository tooling; production apps must not import `tools/`. |
-| [`tools/validators/validator_registry.json`](../../../../tools/validators/validator_registry.json) | Ten registered validators across `focused`, `changed-area`, `release-dry-run`, and `full` profiles. | Registry scope is bounded; `full` means every registered entry, not every repository checker. |
-| [`tests/validators/test_validator_orchestrator.py`](../../../../tests/validators/test_validator_orchestrator.py) | Ten focused tests for deterministic bytes, result mapping, selection, registry safety, and compatibility inventory. | Test evidence for the tool, not for this worker. |
+| [`tools/validators/validator_registry.json`](../../../../tools/validators/validator_registry.json) | Twenty-four registered validators: 4 in `focused`, 13 in `release-dry-run`, all 24 in `full`, plus path-selected `changed-area`. | Registry scope is bounded; `full` means every registered entry, not every repository checker. |
+| [`tests/validators/test_validator_orchestrator.py`](../../../../tests/validators/test_validator_orchestrator.py) | Twelve focused tests for deterministic bytes, result mapping, selection, registry safety, live DatasetVersion and ReleaseManifest registration, and compatibility inventory. | Test evidence for the tool, not for this worker. |
 | [`docs/runbooks/VALIDATOR_ORCHESTRATOR.md`](../../../../docs/runbooks/VALIDATOR_ORCHESTRATOR.md) | Operator commands, profiles, exit semantics, report contract, maintenance, failure handling, and rollback. | Runbook for repository tooling, not deployment proof. |
 | [`pipelines/validate/`](../../../../pipelines/validate/README.md) | Rich shared-stage boundary documentation. | Its `main.py` remains a placeholder; no active shared stage is established. |
 | Domain pipeline and spec lanes | Domain `validate.py` files and validation specifications exist in the tree. | Independent domain capability; no worker binding is inferred. |
 | Validation workflows | Validator suite, schema validation, contract validation, and many focused workflows exist. | CI execution is not a background worker deployment. |
-| [`ValidationReport`](../../../../contracts/data/validation_report.md) | Draft semantic meaning and proposed finite outcomes. | General schema/fixture/validator closure remains incomplete. |
+| [`ValidationReport`](../../../../contracts/data/validation_report.md) | Draft semantic meaning and proposed finite outcomes. | The schema remains permissive placeholder scaffolding; machine checks do not close the prose semantics. |
+| [Generic `ValidationReport` validator](../../../../tools/validators/data/validate_validation_report.py) | Bounded no-network JSON/schema checker with minimal valid/invalid fixtures and seven focused tests. | Shape conformance only; not in the canonical registry and not a worker binding. |
+| [Worker-integrity launch-readiness family](../../../../contracts/runtime/worker_integrity_launch_readiness.md) | Fixture-only candidate contract, schema, validator, eight tests, and focused workflow over synthetic identity, declared proof outcome, and browser capability inputs. | Proposed and inactive; `READY_CANDIDATE` remains review-required and never starts or authorizes a worker. |
 | Domain validation-report families | Several domain contracts, schemas, fixtures, validators, and tests exist. | Domain-specific artifacts do not complete the general report or this worker. |
 | [`data/receipts/validation/`](../../../../data/receipts/validation/README.md) | Parent and selected child README boundaries. | Process-memory lane; no worker writer is bound. |
 | [`data/proofs/validation_report/`](../../../../data/proofs/validation_report/README.md) | Parent plus Atmosphere and Flora README/placeholder sublanes. | Proof-support lane; no worker writer is bound. |
 | [`artifacts/qa/validation/`](../../../../artifacts/qa/validation/README.md) | Transitional inspection-output lane. | Its tracked JSON is an explicit empty proposed placeholder, not a receipt or proof. |
+
+### Source-pressure register
+
+These read-only sources explain design pressure; they do not override the pinned repository evidence above.
+
+| Source | Useful pressure carried into this README | Authority limit |
+|---|---|---|
+| *Kansas Frontier Matrix Pipeline Living Implementation Manual v0.3* (supplied PDF) | Prefer deterministic, fixture-backed, no-network validation; preserve finite outcomes; never publish partial output. | Proposal lineage only; its historical repository-unknown statements are superseded by the exact checkpoint above. |
+| [KFM Full Atlas Seed Cards](https://docs.google.com/document/d/1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho/edit?usp=drivesdk) | Keep inspectable claims, schema checks, negative fixtures, evidence closure, and release separation visible. | Card language explicitly leaves implementation maturity unresolved without repository evidence. |
+| [KFM Greenfield Commissioning Plan v2](https://drive.google.com/file/d/161zjrR23nrv2b9ejne7iRDasVNnvCFwc/view?usp=drivesdk) | Separate truth, reconciliation, commissioning, and runtime outcomes; commission only bounded reversible work. | Planning reference, not implementation, acceptance, release, deployment, or publication evidence. |
+| [KFM Evidence, Documentation & Ideas Atlas](https://app.notion.com/p/3c6a92021bf681e097f2e9e976d74bc9) | Retain exact-head CI contradictions and distinguish focused behavior evidence from repository-topology or receipt-integrity failures. | Coordination and research only; its repository checkpoint is historical relative to this README. |
+| [KFM Cross-System Authority & Intake Model](https://app.notion.com/p/3c5a92021bf6811ba9c2d923215f11b7) | Pin exact GitHub evidence, record drift, and state non-effects for source, policy, review, release, deployment, promotion, and publication. | Notion is a coordination layer and Drive is read-only lineage; neither creates repository authority. |
+
+> [!NOTE]
+> Repetition across attached, Drive, or Notion sources does not admit a source, register a validator, activate a worker, approve review, or change lifecycle state.
 
 ### 2.5 Important maturity distinctions
 
@@ -272,7 +312,7 @@ KFM contains substantial validation capability. Presence elsewhere must not be m
 | “The Validate Worker runs the orchestrator.” | No. | `main.py` is a comment and no binding is established. |
 | “The shared validation pipeline is operational.” | No. | Its executable entrypoint is also a comment-only placeholder. |
 | “The `kfm validate` CLI is operational.” | No. | Its command file is a comment-only placeholder. |
-| “The general ValidationReport shape is ready for production.” | No. | The schema is permissive placeholder scaffolding and its declared validator/fixtures are absent. |
+| “The general ValidationReport shape is ready for production.” | No. | The validator and minimal fixtures exist, but they enforce only the permissive placeholder schema and do not close the draft semantics. |
 | “A successful CI workflow is a ValidationReport.” | No. | Workflow state, orchestrator output, semantic report, and process receipt are separate objects. |
 | “A validation pass authorizes release.” | No. | Policy, review, proof, and release decisions remain separate. |
 
@@ -300,7 +340,7 @@ This document changes maintainers' understanding of the lane. It does not change
 
 ### 2.8 Last reviewed
 
-Evidence was reviewed against the immutable base in §2.1 on `2026-08-12`.
+Evidence was reviewed against the immutable base in §2.1 on `2026-08-26`.
 
 Re-review is required when the target lane, parent Workers boundaries, Directory Rules, validator orchestrator, general ValidationReport contract/schema, shared Validate pipeline, queue/deployment configuration, or output-family ownership changes.
 
@@ -737,15 +777,15 @@ Those facts support the tool. They do not establish a production worker API, rem
 
 | Profile | Current selection |
 |---|---|
-| `focused` | SourceDescriptor, EvidenceRef, EvidenceBundle, and RuntimeResponseEnvelope |
-| `changed-area` | Registry entries whose path globs match supplied changed paths; empty selection abstains |
-| `release-dry-run` | EvidenceBundle, LayerManifest, DecisionEnvelope, RunReceipt, and IngestReceipt |
-| `full` | All ten registry entries exactly once, in registry order |
+| `focused` | 4 entries: SourceDescriptor, EvidenceRef, EvidenceBundle, and RuntimeResponseEnvelope |
+| `changed-area` | Registry entries whose path globs match supplied changed paths; empty selection returns `ABSTAIN` with `NO_MATCHING_VALIDATORS` |
+| `release-dry-run` | 13 entries: EvidenceBundle, LayerManifest, DecisionEnvelope, RunReceipt, IngestReceipt, four catalog-closure profiles, ReleaseManifest, ReleaseProofPackClosure, TrustSpineFixtureSlice, and CIConformanceReport |
+| `full` | All 24 registry entries exactly once, in registry order, including citation, dataset, release, bounded assessment, governance, dependency-readiness, workflow-security, and repository-topology checks |
 
-The registry also includes workflow-security and repository-topology validators in `full`.
+The canonical registry does not include every executable validator in the repository. In particular, the generic ValidationReport validator and the WorkerIntegrityLaunchReadinessCandidate validator remain separately wired surfaces.
 
 > [!WARNING]
-> `full` means complete coverage of the ten-entry registry. It is not a claim that every validator or invariant in the repository is registered.
+> `full` means complete coverage of the 24-entry registry. It is not a claim that every validator or invariant in the repository is registered.
 
 ### 7.2 Why the worker cannot import the tool
 
@@ -782,13 +822,20 @@ The paired [`validation_report.schema.json`](../../../../schemas/contracts/v1/da
 - declares `fixtures/data/validation_report/`; and
 - declares `tools/validators/data/validate_validation_report.py`.
 
-The declared fixture root and validator path are absent at the pinned tree.
+The declared fixture root and validator path are present at the pinned tree. The validator:
+
+- reads bounded duplicate-free finite JSON without network access or mutation;
+- validates the current Draft 2020-12 schema;
+- has one minimal valid fixture and one missing-`id` invalid fixture;
+- has seven focused tests covering schema validity, polarity, duplicate keys, non-object roots, non-finite numbers, and CLI replay; and
+- is not an ID in the canonical 24-entry orchestrator registry.
 
 Therefore:
 
-- the prose contract is not machine-enforced in full;
-- the schema cannot safely validate the recommended semantics;
-- the worker cannot claim it emits conforming general ValidationReports; and
+- the prose contract is still not machine-enforced in full;
+- a passing check proves only the permissive proposed schema's current shape boundary;
+- registry absence must not be presented as failed validation or silent registration;
+- the worker cannot claim it emits semantically complete general ValidationReports; and
 - domain-specific report implementations must not be silently treated as closure of the general family.
 
 ### 7.4 Orchestrator report versus ValidationReport
@@ -860,7 +907,15 @@ They run in GitHub Actions with their own event, permission, dependency, fixture
 
 <a id="8-diagram"></a>
 
-### 7.9 Current topology
+### 7.9 Worker-integrity launch-readiness family
+
+The repository also contains a separate [`WorkerIntegrityLaunchReadinessCandidate`](../../../../contracts/runtime/worker_integrity_launch_readiness.md) family with a closed schema, synthetic fixture matrix, executable validator, eight focused tests, and a dedicated read-only workflow.
+
+It deterministically composes a synthetic worker identity, a declared RuntimeVerificationProof outcome, and browser capability declarations. Its validator can return `PASS`, `ABSTAIN`, `DENY`, or `ERROR`, but even `PASS` serializes review-required state while `worker_launch_authorized` remains false. It does not read worker bytes, resolve proofs, alter headers, start a worker, evaluate policy, deploy, release, or publish.
+
+This family is not a binding for `validate_worker`, is not registered in the canonical 24-entry orchestrator, and cannot be used to upgrade this lane's placeholder maturity.
+
+### 7.10 Current topology
 
 ```mermaid
 flowchart TD
@@ -1609,6 +1664,8 @@ Passing worker tests do not by themselves prove:
 
 Documentation changes should be classified against hosted results for the exact branch head. Relevant checks may include documentation control-plane, link, metadata, stale-scan, build, security, CodeQL, schema, contract, topology, and validator-suite workflows.
 
+The current validator-suite workflow runs registry, workflow-security, and repository-topology guardrails as separately attributable fail-closed steps before its focused aggregate and canary work. A focused validator pass and a hosted topology or generated-receipt failure are separate evidence states; neither may erase the other.
+
 A failure must be compared with the exact base before unrelated code, schemas, policy, data, receipts, workflows, or release files are changed.
 
 [Back to top](#top)
@@ -1851,6 +1908,13 @@ High-consequence release requires independent evidence and human or governed dec
 
 - [General ValidationReport semantic contract](../../../../contracts/data/validation_report.md)
 - [General ValidationReport placeholder schema](../../../../schemas/contracts/v1/data/validation_report.schema.json)
+- [Generic ValidationReport fixtures](../../../../fixtures/data/validation_report/README.md)
+- [Generic ValidationReport validator](../../../../tools/validators/data/validate_validation_report.py)
+- [Generic ValidationReport validator tests](../../../../tests/validators/test_validate_validation_report.py)
+- [Worker-integrity launch-readiness contract](../../../../contracts/runtime/worker_integrity_launch_readiness.md)
+- [Worker-integrity launch-readiness schema](../../../../schemas/contracts/v1/runtime/worker_integrity_launch_readiness.schema.json)
+- [Worker-integrity launch-readiness validator](../../../../tools/validators/runtime/validate_worker_integrity_launch_readiness.py)
+- [Worker-integrity launch-readiness tests](../../../../tests/validators/test_worker_integrity_launch_readiness.py)
 - [Validation assurance contract family](../../../../contracts/validation/README.md)
 - [Validation assurance schema family](../../../../schemas/contracts/v1/validation/README.md)
 - [Policy boundary](../../../../policy/README.md)
@@ -1868,6 +1932,7 @@ High-consequence release requires independent evidence and human or governed dec
 - [Validator suite workflow](../../../../.github/workflows/validator-suite.yml)
 - [Schema validation workflow](../../../../.github/workflows/schema-validation.yml)
 - [Contract validation workflow](../../../../.github/workflows/contracts-validate.yml)
+- [Worker-integrity launch-readiness workflow](../../../../.github/workflows/worker-integrity-launch-readiness.yml)
 - [Accepted Directory Rules ADR](../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
 - [Canonical Directory Rules](../../../../docs/doctrine/directory-rules.md)
 - [CODEOWNERS routing](../../../../.github/CODEOWNERS)
@@ -1918,7 +1983,8 @@ This README does not decide:
 | CLI Validate | Comment-only command | Do not document as runnable |
 | General ValidationReport | Rich draft prose | Preserve draft status |
 | General report schema | Permissive placeholder | Close fields and invariants before production use |
-| General report validator/fixtures | Schema-declared paths absent | Add dependency-closed family before reliance |
+| General report validator/fixtures | Present, bounded to placeholder-shape checks, not canonically registered | Graduate schema semantics and decide registry scope before reliance |
+| Worker-integrity readiness | Separate fixture-only, inactive, review-required family | Keep unbound until an admitted runtime seam and launch-authority design exist |
 | Orchestrator versus semantic report | Different shape and purpose | Explicit mapping or continued separation |
 | Outcome vocabularies | Several overlapping proposed/confirmed sets | Adopt bounded mapping without semantic loss |
 | Durable writers | Receipt/proof lanes exist; no worker binding | Define accepted writer contracts and capabilities |
@@ -2026,9 +2092,11 @@ Release/publication requires the separate evidence, policy, review, proof, relea
 | P0 | Producer authentication | Unresolved | Identity, auth, expiry, revocation, replay contract |
 | P0 | Capability model | Unresolved | Target/validator/writer/network scopes |
 | P0 | General ValidationReport schema | Placeholder | Dependency-closed schema graduation |
-| P0 | General report validator | Declared path absent | Executable validator and tests |
-| P0 | General report fixtures | Declared root absent | Valid/invalid synthetic fixtures |
+| P0 | General report validator | Present, bounded, seven focused tests, not canonically registered | Decide registry/profile scope only after schema graduation and authority review |
+| P0 | General report fixtures | Present but minimal: `id`-only valid and missing-`id` invalid | Expand only with an accepted closed semantic schema and reviewed negative matrix |
 | P0 | Report/receipt separation | Documented only | Accepted writer contracts and integration tests |
+| P1 | Generic report semantic closure | Validator checks placeholder shape only | Accepted closed schema, mapping, fixtures, and outcome/authority review |
+| P1 | Worker-integrity readiness binding | Separate inactive fixture family; no Validate Worker binding | Accepted runtime/package seam, real integrity proof contract, review, and launch authorization design |
 | P1 | Validator packaging/discovery | Unresolved | Immutable identities and distribution model |
 | P1 | Domain-plan composition | Unresolved | Domain and cross-domain selection contract |
 | P1 | Evidence/policy integration | Unresolved | Resolver/client contracts and fail-closed cases |
@@ -2067,6 +2135,8 @@ Re-review this README when:
 - `main.py` becomes executable;
 - a worker package, job contract, queue, schedule, deployment, or service identity appears;
 - the validator orchestrator, registry, profiles, report shape, or exit semantics change;
+- the generic ValidationReport schema, validator, fixtures, tests, or registry disposition changes;
+- the WorkerIntegrityLaunchReadinessCandidate family gains a runtime/package binding or launch authority;
 - reusable validation runtime moves into `packages/`;
 - the general ValidationReport contract/schema/validator/fixtures change;
 - a report, receipt, proof, policy, review, lifecycle, or release writer is bound;
@@ -2098,7 +2168,7 @@ Before merge:
 After an authorized merge:
 
 - revert the merge or authored commit through a reviewed pull request; or
-- restore prior README blob `5ea1800d06a57aeb7faa90799004fc2136bd8bf8` through a forward correction.
+- restore prior README blob `e6c9673be358dd066ddd4233b111b19e4ebebbf2` through a forward correction.
 
 No data, schema, policy, validator, queue, deployment, report, receipt, proof, release, cache, or published-artifact migration is required.
 
@@ -2247,17 +2317,19 @@ Configuration must use non-secret values or secret references. It must not embed
 
 | Evidence | Blob or tree | What it supports | What it does not prove |
 |---|---|---|---|
-| Target lane | `4bae7b3d49bf7282351dcd0fb0616cf44dda943c` | Two-file direct-child inventory | Runtime behavior |
+| Target lane | `a85a88bf80b1e26e7cf607d0a509d48f73113a3e` | Two-file direct-child inventory | Runtime behavior |
 | `main.py` | `d42e8a837b61ba42038d7a4fbc260072e53feea8` | Comment-only placeholder | Future architecture |
 | Workers source README | `08ad9f8116f64817ffa4f8b2058613749360c102` | Parent intent and placeholder classification | Deployment |
 | Workers app README | `5b5c1e6b067e652a380bf445488a6227028dfc0e` | Deployable boundary and validation role intent | Worker execution |
 | Directory Rules | `fd49a0b83e55cef52c1124281f093e263526898d` | Root ownership, dependency, README, data/release separation | Acceptance by itself |
-| ADR-0029 | `b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62` | Accepted Directory Rules authority | Worker implementation |
+| ADR-0029 | `a4de0d7a96b78da59cfc499d1025e1508afd8dd9` | Accepted Directory Rules authority | Worker implementation |
 | CODEOWNERS | `dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61` | GitHub review routing | Stewardship or completed review |
 | Validator wrapper | `c308015da780d7b72f56277b521fb0e42317651e` | Canonical thin tool entrypoint | Worker API |
 | Validator orchestrator | `728cf1404839a5b95e03d70d44567863a6f9b6df` | Executable bounded tool behavior | Production isolation |
-| Validator registry | `c65c1c2b27b85be4bdc3c42d0555c6e8e44698e2` | Ten current registered validators/profiles | Complete repository coverage |
-| Orchestrator tests | `649b0d3eaaa3ea8faabf6c8231a9f7c3aa207131` | Focused tool behavior | Worker behavior |
+| Validator registry | `bc86fd0641c445730e4288c4835bfd34694666d6` | Twenty-four current registered validators and four selection profiles | Complete repository coverage or worker binding |
+| Orchestrator tests | `e6f4b1978a9f0e34556d9314d74721e9cb58ec48` | Twelve focused tests for deterministic orchestration and registry behavior | Worker behavior |
+| Generic ValidationReport validator | `c43b6e9594e8fd91760ea3811ac888c848681e70` | Bounded JSON/schema shape checking | Full prose semantics, registry binding, or worker output |
+| Worker-integrity readiness validator | `575b9ffef226d37ff5b80b70b5e652f214f38619` | Fixture-only synthetic readiness derivation | Worker launch, proof resolution, deployment, or Validate Worker binding |
 | ValidationReport contract | `1ee7872dc4144c159816fabdc2433548e5f47a78` | Draft semantic meaning | Accepted machine enforcement |
 | ValidationReport schema | `14d1eeffbb15fa07f233c778a7a30106a4a14fd6` | Current permissive placeholder shape | Rich contract closure |
 | Shared Validate README | `ee38f7876e75848854294642a696f8dcf6be155a` | Shared-stage boundary | Executable stage |
@@ -2269,6 +2341,15 @@ Configuration must use non-secret values or secret references. It must not embed
 ---
 
 ## Change history
+
+### v0.3 — 2026-08-26
+
+- Refreshed the evidence base, lane tree, governance pins, validator registry, orchestrator tests, runbook, and workflow to current `main`.
+- Corrected the canonical registry from 10 to 24 entries and the orchestrator regression suite from 10 to 12 tests.
+- Reclassified the formerly absent generic ValidationReport validator and fixtures as present but bounded to the still-permissive proposed schema and absent from the canonical registry.
+- Added the separate fixture-only WorkerIntegrityLaunchReadinessCandidate family without inferring worker binding or launch authority.
+- Recorded attached, Drive, and Notion material as read-only source pressure and retained exact-head CI contradictions as distinct evidence states.
+- Preserved the two-file placeholder lane and all policy, review, lifecycle, release, deployment, promotion, and publication holds.
 
 ### v0.2 — 2026-08-12
 
@@ -2292,8 +2373,8 @@ Configuration must use non-secret values or secret references. It must not embed
 
 `apps/workers/src/validate_worker/` is a **confirmed placeholder lane**, not an operational validation service.
 
-KFM's repository-wide validator orchestrator is real and tested, but it lives under `tools/` and is not a production app dependency. The general ValidationReport contract is rich but draft; its paired schema remains permissive placeholder scaffolding, and its declared general fixture and validator paths are absent. The shared Validate pipeline and CLI entrypoints also remain comment-only placeholders.
+KFM's canonical repository validator orchestrator is real, tested, and currently registers 24 bounded validators, but it lives under `tools/` and is not a production app dependency. The generic ValidationReport validator and minimal fixtures now exist and fail closed on ambiguous JSON, yet they enforce only the permissive proposed schema and are not registered in that orchestrator. The separate WorkerIntegrityLaunchReadinessCandidate family is executable and fixture-backed, but remains proposed, inactive, review-required, and explicitly non-authorizing. The shared Validate pipeline and CLI entrypoints remain comment-only placeholders.
 
-A future Validate Worker may become a thin, authenticated, least-privilege coordinator over admitted package and pipeline interfaces. It must preserve native finite outcomes, keep reports and receipts distinct, fail closed on unresolved evidence/policy/rights/sensitivity, and stop before review, lifecycle, release, or publication authority.
+A future Validate Worker may become a thin, authenticated, least-privilege coordinator over admitted package and pipeline interfaces. It must preserve native finite outcomes, keep reports and receipts distinct, fail closed on unresolved evidence/policy/rights/sensitivity, and stop before review, lifecycle, worker launch, release, deployment, promotion, or publication authority.
 
 <p align="right"><a href="#top">Back to top</a></p>
