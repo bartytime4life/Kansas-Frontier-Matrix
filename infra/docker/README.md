@@ -61,6 +61,8 @@ Both digest-pinned Debian 13 base images previously carried `CVE-2026-53615` in 
 
 The exact-head security run for PR #3419 later found `CVE-2026-73566` in npm's bundled `tar@7.5.19` inside the Explorer review image. The bounded successor overlay keeps checksum-bound npm `11.19.0`, adds `tar@7.5.22` and its dependency graph to the committed integrity lock, replaces only npm's bundled `tar` directory, and asserts the exact resolved runtime dependency versions plus the loadable extraction API during image construction. It does not weaken scanner policy, suppress the finding, change the base-image digest, add an application payload, or change runtime exposure.
 
+The exact-main [security run `33002709039`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33002709039) at `main@4f4230934ff6603c2b568a8194c0de4f7e49cd23` later found HIGH `CVE-2026-14456` in the OpenSSL package family in both review images. The bounded successor refresh extends the existing Debian package step to upgrade only `libssl3t64`, `openssl`, and `openssl-provider-legacy` when installed, then asserts `libssl3t64 >= 3.5.7-1~deb13u2`. It preserves both digest-pinned base images, dependency locks, scanner policy, runtime users, build context, and exposure posture; a fresh exact-head image build and scan remains required.
+
 This confirms a repository-owned final-image assembly correction for the affected OS package layer. It does not establish that future base images or vulnerability databases will remain finding-free, that these placeholders are production images, or that any image is released, deployed, published, or approved for public use.
 
 ## Expected Docker file families
