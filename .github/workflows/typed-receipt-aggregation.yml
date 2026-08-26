@@ -14,7 +14,7 @@ name: typed-receipt-aggregation
       - "docs/intake/exploratory/pass-31-typed-receipt-aggregation-source-map.md"
       - "packages/hashing/**"
       - "pyproject.toml"
-      - "data/receipts/generated/genrec-pass31-typed-receipt-aggregation-20260809.json"
+      - "data/receipts/generated/genrec-pass31-typed-receipt-aggregation-source-map-reconciliation-20260825.json"
   push:
     branches: [main]
     paths:
@@ -27,7 +27,7 @@ name: typed-receipt-aggregation
       - "docs/intake/exploratory/pass-31-typed-receipt-aggregation-source-map.md"
       - "packages/hashing/**"
       - "pyproject.toml"
-      - "data/receipts/generated/genrec-pass31-typed-receipt-aggregation-20260809.json"
+      - "data/receipts/generated/genrec-pass31-typed-receipt-aggregation-source-map-reconciliation-20260825.json"
   workflow_dispatch:
 
 permissions:
@@ -78,7 +78,7 @@ jobs:
         run: python tools/validators/receipts/validate_typed_receipt_aggregation.py --fixtures
 
       - name: Validate generated authoring receipt integrity
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass31-typed-receipt-aggregation-20260809.json
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass31-typed-receipt-aggregation-source-map-reconciliation-20260825.json
 
       - name: Record authority boundary
         if: always()

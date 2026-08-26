@@ -2,11 +2,11 @@
 doc_id: kfm://intake/exploratory/pass-31-graph-invariant-artifact-source-map
 title: Pass 31 graph invariant artifact source map
 type: source-adaptation-map
-version: v1.0.0
-status: proposed; implementation-support; non-authoritative
+version: v1.1.0
+status: proposed; implementation-reconciled; fixture-only; non-authoritative
 owners: OWNER_TBD — Intake steward · Evidence steward · Graph steward · Directory Rules reviewer
 created: 2026-08-09
-updated: 2026-08-09
+updated: 2026-08-25
 policy_label: internal; intake; graph; evidence; provenance
 source_card: KFM-P31-PROG-0003
 source_spec_hash: sha256:48b01f0bed00068e64026d0e1ed3d35071da734e223310244c04b23542cc31d7
@@ -31,12 +31,25 @@ The existing `GraphMigrationDeclaration` remains the pre-execution governance au
 
 ## Collision check
 
-Exact card-ID, exact-title, repository-file, and PR searches found no implementation of `KFM-P31-PROG-0003`. Merged PR #2371 implements the distinct declaration card `KFM-P30-PROG-0008`; its intent, scope, and invariants are reused by reference rather than duplicated.
+The original assay at `main@7335ed9ea0f81342ae0b1c7828a21ac74711c78b` found no pre-existing implementation of `KFM-P31-PROG-0003`. That historical result does not describe current repository state: the bounded packet authored from the assay is now present on `main@75e47a5785d02fdc82e4a0f3f6f7d7dab2ac4f05`. Merged PR #2371 implements the distinct declaration card `KFM-P30-PROG-0008`; its intent, scope, and invariants are reused by reference rather than duplicated.
+
+## Current executable packet
+
+The card is **IMPLEMENTED only as a `PROPOSED_INACTIVE` / `FIXTURE_ONLY` profile** through:
+
+- semantic contract: [`contracts/evidence/graph_invariant_artifact.md`](../../../contracts/evidence/graph_invariant_artifact.md);
+- machine shape: [`schemas/contracts/v1/evidence/graph_invariant_artifact.schema.json`](../../../schemas/contracts/v1/evidence/graph_invariant_artifact.schema.json);
+- synthetic cases: [`fixtures/contracts/v1/evidence/graph_invariant_artifact/cases.json`](../../../fixtures/contracts/v1/evidence/graph_invariant_artifact/cases.json);
+- deterministic validator: [`tools/validators/evidence/validate_graph_invariant_artifact.py`](../../../tools/validators/evidence/validate_graph_invariant_artifact.py);
+- focused proof: [`tests/validators/evidence/test_graph_invariant_artifact.py`](../../../tests/validators/evidence/test_graph_invariant_artifact.py); and
+- read-only workflow: [`.github/workflows/graph-invariant-artifact.yml`](../../../.github/workflows/graph-invariant-artifact.yml).
+
+This closure proves only deterministic validation of prepared synthetic before/after declarations and finite fixture outcomes. It does not connect to a graph, execute a query or migration, load GDS, validate live compatibility, decide policy, approve review, release, deploy, or publish.
 
 ## Truth and authority boundary
 
-`CONFIRMED`: source card, specification hash, Directory Rules authority, repository base, and existing graph declaration were inspected. `PROPOSED`: this profile and every authored path. `UNKNOWN`: live graph compatibility, representative query correctness, GDS availability, migration admissibility, policy, human review, release, and publication.
+`CONFIRMED`: source card, specification hash, Directory Rules authority, current packet paths, executable fixture proof, and the existing graph declaration were inspected. `IMPLEMENTED`: the bounded fixture-only profile and its no-network validation path. `PROPOSED_INACTIVE`: the profile's authority and operational posture. `UNKNOWN`: live graph compatibility, representative query correctness, GDS availability, migration admissibility, policy, human review, release, and publication.
 
 ## Rollback
 
-Delete the eight additive packet files. No migration, graph, policy, evidence, release, or public state requires restoration.
+Revert this source-map reconciliation independently. The executable packet is unchanged, and no migration, graph, policy, evidence, release, or public state requires restoration.

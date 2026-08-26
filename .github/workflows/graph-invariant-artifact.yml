@@ -14,7 +14,7 @@ name: graph-invariant-artifact
       - "docs/intake/exploratory/pass-31-graph-invariant-artifact-source-map.md"
       - "packages/hashing/**"
       - "pyproject.toml"
-      - "data/receipts/generated/genrec-pass31-graph-invariant-artifact-20260809.json"
+      - "data/receipts/generated/genrec-pass31-graph-invariant-artifact-source-map-reconciliation-20260825.json"
   push:
     branches: [main]
     paths:
@@ -27,7 +27,7 @@ name: graph-invariant-artifact
       - "docs/intake/exploratory/pass-31-graph-invariant-artifact-source-map.md"
       - "packages/hashing/**"
       - "pyproject.toml"
-      - "data/receipts/generated/genrec-pass31-graph-invariant-artifact-20260809.json"
+      - "data/receipts/generated/genrec-pass31-graph-invariant-artifact-source-map-reconciliation-20260825.json"
   workflow_dispatch:
 
 permissions:
@@ -78,7 +78,7 @@ jobs:
         run: python tools/validators/evidence/validate_graph_invariant_artifact.py --fixtures
 
       - name: Validate generated authoring receipt integrity
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass31-graph-invariant-artifact-20260809.json
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass31-graph-invariant-artifact-source-map-reconciliation-20260825.json
 
       - name: Record authority boundary
         if: always()
