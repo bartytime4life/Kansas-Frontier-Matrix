@@ -101,6 +101,13 @@
       "subject": "test-reference:apps/explorer-web/tests/streamflow-qc-dashboard.test.ts"
     },
     {
+      "evidence_sha256": "sha256:2fcc564a29158f518332b12760f9fd88670ac729e2de4ce622db70686d77ce26",
+      "evidence_zlib_base64": "eNqVU9tuwjAM3Q+ZqoUfQMAkhJimae+RSUyJSJPICbDu6+fChhjdGHtJlZyLTx3HYMaCqbYpc1uksGNNqdjgymbMxctsPF3OBo15MDd5pEOHBZ/ukLwjmzt4reHgQt3+yYwUoiMwHsGhN//mdwuEgydOGxvvlF/Sgk4FZodJ0MXjUk1Dg9YnNdm5xnrM0hc17nC1L1V5U9IRVHS7pJ4xpWp4/AwrNZHWBmclEZmTV8/GnCzguId9OSh/pXQg6E05usnogdt1A98s4jEjDCvQF/lOCXrqBqOzKyZoMGXiH/Du+CJ+UY2kxqntILNAgD5bKeUcxkT3GVTApMnGDM6uSbfadQFitL7uGUQbyVlPUMtviG5NTF73C305apkPmdAzLktm0RdoYbWzTqYqEsv9+7prUGbU+Uy2PuOWivl0Nlbzp9fxYnYNaWRuYR34IA/met4+OfQWXZASgS/eyQfGyWCM",
+      "fingerprint": "sha256:1831dfdc821f0553c6a55336d9e1e6122298db4ad1518232deb5f2b68cec6593",
+      "rule_id": "KFM-TOPO-016",
+      "subject": "doc-id:kfm://doc/NEEDS-VERIFICATION"
+    },
+    {
       "evidence_sha256": "sha256:752c925a6112c9cfdcf625484919daa2220b92f945c8137612ede0a8b881316d",
       "evidence_zlib_base64": "eNpLyU8u1i8uScxLSSxKKdb3d/TUDfD10MtNYUhBlclPzNQtyM0AygAA2JYSKw==",
       "fingerprint": "sha256:238d3aa621befa1b680e0e9243c7d783d514504b8445ccc6969449166158dd39",
@@ -456,13 +463,6 @@
       "fingerprint": "sha256:7c6d6a88931fb35a3a38351adb75c0f83b90346e60fc096447f8f2c9dae88010",
       "rule_id": "KFM-TOPO-011",
       "subject": "release/promotion_decisions/hazards-r0001.yaml"
-    },
-    {
-      "evidence_sha256": "sha256:460547c60ada5869b0f0f048931500c2948163c6263a129b53fe3f31b91a962d",
-      "evidence_zlib_base64": "eNqVU9tOwzAM5YdM1W4/MLEiIQRCgARvkZd4XUSaRE4GlK/H2QCNFcZ4SZWci08dx2DGiqmzKfNQpbBmTala4cJmzNVtO5tftae9OTEHeaRDwYJPR0jekM0RvMFwcKEb/mRGCtERGI/g0Jt/88sC4cUTp5WNR8p3aUGnCrPDJOjl+ZWahx6tT+ps7XrrMUtf1Kzg6rlW9UFJIajo1kndYErNZPOZNOpMWhuclURktl4jG7O1gM0enuvT+ldKAUGv6ulBxgh8WvbwzSJuMsKkAb2Tb5tgpO4xOrtggh5TJv4BL8c78atmKjW2bQeZBQL02Uop5zAmOs6gASZNNmZwdkl60K4EiNH6bmQQbSRnPUEnvyG6JTF5PS706ahlPmRCv3BZMou+QguLtXUyVZFY7t93pUGZUecvsvUZn6i6mLczdXF9P7ts96Hr9kEV+E7wefu4D2tkHmAZ+EXe0/44fnDoNbogCQLvPKN32U9qlA==",
-      "fingerprint": "sha256:7fece9bca8102d75c14cdb6c62b9c38d036baf1f6d74b8eb35a6e18192d88a03",
-      "rule_id": "KFM-TOPO-016",
-      "subject": "doc-id:kfm://doc/NEEDS-VERIFICATION"
     },
     {
       "evidence_sha256": "sha256:bd597557db543ce1d71fd84b5277df572d2d03c0218c5031e4e1d9a887fd0f72",
