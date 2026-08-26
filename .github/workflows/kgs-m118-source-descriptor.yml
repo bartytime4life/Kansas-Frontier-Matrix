@@ -67,7 +67,7 @@ jobs:
       - name: Validate generated authoring receipt
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py             data/receipts/generated/genrec-kgs-m118-source-descriptor-20260814.json             --repo-root .
+          python tools/validators/validate_generated_receipt.py             data/receipts/generated/genrec-kgs-m118-source-descriptor-m05-hold-matrix-20260825.json             --repo-root .
       - name: Record authority boundary
         if: always()
         run: |
