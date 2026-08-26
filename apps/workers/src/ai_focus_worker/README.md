@@ -3,12 +3,12 @@ doc_id: kfm://app/workers/src/ai-focus-worker/readme
 title: AI Focus Worker README
 type: app-readme
 subtype: worker-lane-readme
-version: v0.2
-prior_version: v0.1
-status: draft; repository-grounded; placeholder-only
+version: v0.3
+prior_version: v0.2
+status: draft; repository-grounded; placeholder-only; source-reconciled
 owner: "NEEDS VERIFICATION — CODEOWNERS routes default repository review to @bartytime4life; no accepted AI Focus worker steward, independent reviewer, runtime operator, or release authority was verified"
 created: 2026-06-16
-updated: 2026-08-12
+updated: 2026-08-26
 policy_label: public
 current_path: apps/workers/src/ai_focus_worker/README.md
 scope_id: apps/workers/src/ai_focus_worker/
@@ -22,10 +22,10 @@ authority_rank: implementation orientation subordinate to adopted doctrine, acce
 canonical_relationship: same-path update; no new authority, generated projection, compatibility path, or runtime capability created
 evidence_repository: bartytime4life/Kansas-Frontier-Matrix
 evidence_base_ref: main
-evidence_base_commit: e1d43539b6f6a237649334b7e6a91957034a38fb
-evidence_repository_tree: 3cd50e2b4863ea5bdbbec9f963162c2b2ac65222
+evidence_base_commit: a7ad838d4c11444695a4b3af9542fdf42e0e7363
+evidence_repository_tree: 3eaea38b02f6d1dc720ceb73b129673079c11526
 evidence_lane_tree: c2102ccdf7fc622aa8a59c1e74d42052e6b6b597
-evidence_target_prior_blob: 5bb3b812574a67c35321db9ae435cd89af293995
+evidence_target_prior_blob: 32a22be6fcbd70376e6c5735796b65251d30fa8b
 evidence_entrypoint_blob: 7715d01fc585b03dedae7bb535591064bd6d055c
 evidence_parent_source_blob: 08ad9f8116f64817ffa4f8b2058613749360c102
 evidence_workers_readme_blob: 5b5c1e6b067e652a380bf445488a6227028dfc0e
@@ -45,6 +45,8 @@ related:
   - ../../../../docs/architecture/governed-ai/README.md
   - ../../../../docs/architecture/governed-ai/FOCUS_FLOW.md
   - ../../../../docs/architecture/governed-ai/BOUNDARIES.md
+  - ../../../../docs/architecture/governed-ai/ROUTE_MAP.md
+  - ../../../explorer-web/src/features/focus_panel/README.md
   - ../../../../contracts/ai/focus_mode_request/README.md
   - ../../../../contracts/ai/focus_mode_response/README.md
   - ../../../../contracts/runtime/ai_receipt.md
@@ -67,6 +69,7 @@ related:
 tags: [kfm, apps, workers, ai-focus-worker, placeholder, governed-ai, focus-mode, cite-or-abstain, finite-outcomes, non-publisher]
 notes:
   - "v0.2 replaces the broad unknown-source posture with exact repository evidence: this lane contains one README and one 56-byte, comment-only Python placeholder with zero executable lines."
+  - "v0.3 refreshes current-main evidence, reconciles changed adjacent Focus surfaces, and records attached, Drive, and Notion ideas as proposal lineage without activating the worker."
   - "Focus contracts, schemas, policy rules, evidence and policy packages, receipt families, fixtures, validators, and runtime adapters exist elsewhere in the repository; no import, trigger, queue, schedule, package, deployment, or runtime binding connects them to this lane."
   - "Parallel Focus and AI schema families exist for several object families. Their exact binding and consolidation posture remains NEEDS VERIFICATION and must not be guessed by a future worker implementation."
   - "This documentation-only update does not implement, activate, deploy, authorize, or execute a Focus job and does not emit an answer, receipt, policy decision, evidence object, release record, or public carrier."
@@ -87,14 +90,14 @@ notes:
 [![Outcomes: finite](https://img.shields.io/badge/outcomes-ANSWER%20%7C%20ABSTAIN%20%7C%20DENY%20%7C%20ERROR-8250df?style=flat-square)](#4-default-posture)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#9-worker-obligations)
 [![Directory Rules: ADR-0029 accepted](https://img.shields.io/badge/directory%20rules-ADR--0029%20accepted-2da44e?style=flat-square)](../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
-[![Evidence base: e1d4353](https://img.shields.io/badge/evidence%20base-e1d4353-6e7781?style=flat-square)](#11-inspection-path)
+[![Evidence base: a7ad838](https://img.shields.io/badge/evidence%20base-a7ad838-6e7781?style=flat-square)](#11-inspection-path)
 
 **Quick navigation:** [Purpose](#1-purpose) · [Repo fit](#2-repo-fit) · [Authority](#3-authority-boundary) · [Posture](#4-default-posture) · [Inputs and outputs](#5-inputs-and-outputs) · [Exclusions](#6-exclusions) · [Lane map](#7-current-lane-map) · [Required flow](#8-required-focus-job-flow) · [Obligations](#9-worker-obligations) · [Admission contract](#10-job-admission-contract) · [Evidence](#11-inspection-path) · [Validation](#12-validation-expectations) · [Change pattern](#13-safe-change-pattern) · [Done](#14-definition-of-done) · [Gaps](#15-open-verification-items) · [Rollback](#17-correction-and-rollback)
 
 </div>
 
 > [!IMPORTANT]
-> **Current state:** `CONFIRMED / PLACEHOLDER-ONLY`. At `main@e1d43539b6f6a237649334b7e6a91957034a38fb`, this lane contains exactly two tracked files: this README and a 56-byte [`main.py`](./main.py). The Python file contains only `# ai_focus_worker entrypoint — greenfield placeholder`, for zero imports, definitions, executable statements, or side effects.
+> **Current state:** `CONFIRMED / PLACEHOLDER-ONLY`. At `main@a7ad838d4c11444695a4b3af9542fdf42e0e7363`, this lane contains exactly two tracked files: this README and a 56-byte [`main.py`](./main.py). The Python file contains only `# ai_focus_worker entrypoint — greenfield placeholder`, for zero imports, definitions, executable statements, or side effects.
 
 > [!CAUTION]
 > An AI Focus worker must never become a browser-to-model shortcut, a second public trust membrane, an evidence or policy authority, a raw-store reader, an uncited-answer path, or a publisher. Generated language remains subordinate to admissible `EvidenceBundle` support, policy, citation validation, review state, release state, correction lineage, and finite governed outcomes.
@@ -145,10 +148,26 @@ Accepted Directory Rules places independently deployable processes under `apps/`
 | Governed AI architecture | [`README.md`](../../../../docs/architecture/governed-ai/README.md), [`FOCUS_FLOW.md`](../../../../docs/architecture/governed-ai/FOCUS_FLOW.md), and [`BOUNDARIES.md`](../../../../docs/architecture/governed-ai/BOUNDARIES.md) exist | Doctrine and proposed flow context; not worker wiring |
 | Request and response semantics | [`contracts/ai/focus_mode_request/`](../../../../contracts/ai/focus_mode_request/README.md) and [`contracts/ai/focus_mode_response/`](../../../../contracts/ai/focus_mode_response/README.md) exist | Semantic inputs and outputs; no consumer binding here |
 | Focus policy | Four Rego rules plus [`policy/focus/README.md`](../../../../policy/focus/README.md) exist | Normative decision source; worker may apply but never redefine it |
-| Evidence and policy packages | [`packages/evidence-resolver/`](../../../../packages/evidence-resolver/README.md) and [`packages/policy-runtime/`](../../../../packages/policy-runtime/README.md) contain packaged Python code | Candidate governed dependencies; not imported by this placeholder |
-| Runtime adapters | [`runtime/model_adapters/`](../../../../runtime/model_adapters/README.md) contains adapter documentation and implementations | Provider detail remains behind bounded runtime interfaces; ownership of async invocation is unresolved |
-| Receipt and envelope families | Contracts, schemas, fixtures, and validators exist for AIReceipt, citation reports, and runtime envelopes | Object-family existence does not prove emission by this lane |
-| Governed API AI source lane | [`apps/governed-api/src/ai/README.md`](../../../governed-api/src/ai/README.md) exists with a placeholder marker | The Governed API remains the public trust membrane; no cross-app internal import is authorized |
+| Evidence Resolver package | [`packages/evidence-resolver/`](../../../../packages/evidence-resolver/README.md) implements a bounded candidate evaluator plus one fixed, read-only Hydrology fixture adapter | Reusable partial proof only; it is not imported here and is not a general or public resolver |
+| Policy Runtime package | [`packages/policy-runtime/`](../../../../packages/policy-runtime/README.md) remains a `0.0.0` greenfield scaffold with an empty initializer and comment-only core | No evaluator, active bundle, consumer, or worker binding exists |
+| Explorer Focus projection | [`apps/explorer-web/src/features/focus_panel/`](../../../explorer-web/src/features/focus_panel/README.md) has strict app-local types, parsers, injected resolution, and fixture-first finite-outcome proofs | Browser-local proof does not establish Governed API transport, EvidenceBundle authentication, policy execution, provider use, receipt emission, or this worker |
+| Runtime adapters | [`runtime/model_adapters/`](../../../../runtime/model_adapters/README.md) contains bounded adapter documentation and repository-present mock/placeholder surfaces | Provider detail remains behind bounded runtime interfaces; ownership and authorization of async invocation are unresolved |
+| Receipt and envelope families | Contracts, schemas, fixtures, helpers, and validators exist for AIReceipt, citation reports, and runtime envelopes | Object-family existence does not prove semantic selection, emission, persistence, release, or worker use |
+| Governed API boundary | The current registry exposes only `GET /bootstrap`, `GET /layers`, and `GET /evidence`, each as deterministic `ABSTAIN / NOT_IMPLEMENTED` scaffolding; no Focus route is registered | The Governed API remains the public trust membrane; no cross-app internal import, live resolver, model route, or worker orchestration is established |
+
+### Source and coordination pressure — not implementation
+
+The supplied architecture manuals, the Full Atlas seed cards, Google Drive research, and the Notion Evidence, Documentation & Ideas Atlas converge on useful pressure for a future Focus flow. They are **read-only proposal and coordination lineage**. Repository bytes, accepted decisions, executable tests, receipts, and explicit lifecycle records remain authoritative for current state.
+
+| Source pressure | Bounded implication for a future worker | Current disposition |
+|---|---|---|
+| Map interaction should remain explainable as released layer → selected candidate → Governed API → EvidenceBundle → Evidence Drawer → bounded Focus outcome. | Accept only an authenticated internal job derived from a governed request; preserve scope and evidence identity through the terminal envelope. | **PROPOSED / HOLD** — the client has bounded local proofs, but no live route or worker composition closes this chain. |
+| Evidence closure, missing evidence, abstention reasons, withheld-context posture, and correction lineage should remain visible while outward data stays bounded. | Carry public-safe reason, limitation, citation, correction, and rollback references without leaking evidence bodies, protected detail, prompts, or internal locators. | **PROPOSED** — exact fields and canonical schema bindings require review. |
+| Iterative AI-assisted work must remain no-autopublish, receipted, reviewable, correctable, and reversible. | Emit candidate/process memory only through declared writers; never promote, release, publish, or silently replace a corrected result. | **REQUIRED POSTURE / UNIMPLEMENTED HERE**. |
+| EvidenceBundle and policy decisions outrank generated language; policy and citation checks surround adapter work. | Preserve the order: validate scope → precheck → resolve admissible evidence → minimize context → invoke bounded adapter → validate citations → postcheck → select finite outcome → write required process memory. | **PROPOSED orchestration / HOLD** until owned contracts, evaluator bindings, tests, and route evidence close. |
+| Source material may suggest richer UI, live providers, caching, telemetry, or scaling. | Treat these as separate dependency, rights, security, privacy, deployment, and operations decisions—not implied worker requirements. | **DEFERRED / NEEDS VERIFICATION**. |
+
+This register does not admit a source, accept an architecture decision, choose between parallel schemas, authorize a provider, activate a policy bundle, create a queue, or establish review, release, deployment, promotion, or publication state.
 
 ### Binding ambiguity that must remain explicit
 
@@ -321,7 +340,7 @@ apps/workers/src/ai_focus_worker/
 
 | Direct file | Blob | Current role | Executable state |
 |---|---|---|---|
-| [`README.md`](./README.md) | prior edition `5bb3b812574a67c35321db9ae435cd89af293995` | Human orientation and proposed boundary | Documentation only |
+| [`README.md`](./README.md) | prior edition `32a22be6fcbd70376e6c5735796b65251d30fa8b` | Human orientation and proposed boundary | Documentation only |
 | [`main.py`](./main.py) | `7715d01fc585b03dedae7bb535591064bd6d055c` | Intent-named placeholder | Zero executable lines |
 
 No `__init__.py`, package manifest, lock file, configuration file, module family, test directory, fixture, queue adapter, schedule, Dockerfile, deployment manifest, or generated artifact exists beneath this lane at the pinned base.
@@ -446,22 +465,22 @@ At the pinned base, the first two commands show only `README.md` and `main.py`; 
 
 | Evidence | Identifier | Supports | Does not support |
 |---|---|---|---|
-| Current base | `main@e1d43539b6f6a237649334b7e6a91957034a38fb` | Snapshot used for this edition | Future main, deployments, or external systems |
-| Repository tree | `3cd50e2b4863ea5bdbbec9f963162c2b2ac65222` | Exact complete tree at the base | Operational state |
+| Current base | `main@a7ad838d4c11444695a4b3af9542fdf42e0e7363` | Snapshot used for this edition | Future main, deployments, or external systems |
+| Repository tree | `3eaea38b02f6d1dc720ceb73b129673079c11526` | Exact complete tree at the base | Operational state |
 | AI Focus lane tree | `c2102ccdf7fc622aa8a59c1e74d42052e6b6b597` | Complete two-file lane inventory | Queue, process, or deployment existence |
-| Prior README | blob `5bb3b812574a67c35321db9ae435cd89af293995` | Same-path baseline and no-loss review | Current worker behavior |
+| Prior README | blob `32a22be6fcbd70376e6c5735796b65251d30fa8b` | Same-path baseline and no-loss review | Current worker behavior |
 | Placeholder entrypoint | blob `7715d01fc585b03dedae7bb535591064bd6d055c` | Exact comment-only source bytes | Importability, execution, or model access |
 | Parent source README | blob `08ad9f8116f64817ffa4f8b2058613749360c102` | Inherited placeholder, thin-wrapper, and non-publisher contract | Child implementation maturity |
 | Parent Workers README | blob `5b5c1e6b067e652a380bf445488a6227028dfc0e` | Current scaffold-only background app boundary | Active worker deployment |
 | Accepted Directory Rules | blob `fd49a0b83e55cef52c1124281f093e263526898d`; accepted ADR-0029 | Placement, dependency direction, Boundary Compact profile, direct-child map law | Runtime correctness or activation |
 | CODEOWNERS | blob `dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61` | Default review route to `@bartytime4life` | Stewardship, independent approval, or release authority |
-| Governed AI overview | blob `718282655d5752351d46122af1620e37c2bf05c6` | Repository architecture context and evidence-subordinate AI posture | Worker wiring |
-| Focus Flow | blob `2dc6213d667e7d2f130427355c5af6b7d59813e2` | Proposed request-to-envelope gate sequence | Accepted async execution owner or deployed flow |
-| Governed AI boundaries | blob `5364452ed999cd79154afcfa7bf8bd50379a944b` | No-direct-public-model and trust-boundary constraints | Worker implementation |
+| Governed AI overview | blob `e043c58f7cf65fa8a6d729e7f7cf33607235b70a` | Current repository-grounded architecture context and evidence-subordinate AI posture | Worker wiring, deployment, or release |
+| Focus Flow | blob `6f6d98f4101acfe686d20d31665317240d705f42` | Current client-proof/server-hold split and proposed request-to-envelope gate sequence | Accepted async execution owner, live route, or deployed flow |
+| Governed AI boundaries | blob `6bd100cfe7a7727df9d729bf211e24c2303c7974` | Current bounded guards, absent Focus route, and no-direct-public-model constraints | End-to-end runtime or worker implementation |
 | Focus request/response contracts | blobs `c22fb8778d0f4bca4a0214c36ca6ce7ca06460ae` and `580116adffcffd1a264e10f27120a34bb03ab676` | Existing semantic-contract documents | Canonical schema binding |
-| Focus policy README | blob `29c507e76a9c15c44f2c195b7342e93630cdc701` plus four Rego files | Existing policy lane | Policy invocation by this worker |
-| Evidence and policy package READMEs | blobs `b67abf1b788790eedf77724b46e3022ea732c5f6` and `d64f112e9fe6538178c74dd31cc751235781c7f3` | Existing reusable dependency lanes | Import or configuration here |
-| Runtime adapter README | blob `5a20cfac50a93f497765421b7566559ae49a39b8` | Existing provider-neutral adapter lane | Authorization for this worker to call a model |
+| Focus policy README | blob `35001e958a6b51d2f22004d5e637d72baeab49af` plus four Rego scaffolds | Current inactive Focus policy boundary and finite-outcome posture | Active evaluation, bundle admission, or worker invocation |
+| Evidence Resolver and Policy Runtime READMEs | blobs `74b12d1732b297458967a8c76bacca240b74eba3` and `5a20cfac50a93f497765421b7566559ae49a39b8` | Bounded Evidence Resolver implementation versus placeholder Policy Runtime | Import, configuration, broad resolution, or policy execution here |
+| Runtime adapter README | blob `cfc7a0979ee64041cb93e8140ea514f6ed6e262f` | Current provider-neutral adapter boundary and bounded mock/placeholder surfaces | Authorization for this worker to call a model |
 
 [Back to top](#top)
 
@@ -488,7 +507,7 @@ python tools/validators/docs/document-graph/check_document_graph.py \
   --registry control_plane/document_registry.yaml \
   --format text apps/workers/src/ai_focus_worker/README.md
 python tools/validators/docs/stale-scan/check_stale_docs.py \
-  --repo-root . --as-of 2026-08-12 --profile advisory \
+  --repo-root . --as-of 2026-08-26 --profile advisory \
   --review-window-days 365 --placeholder-grace-days 90 \
   --format text apps/workers/src/ai_focus_worker/README.md
 python -m unittest discover \
@@ -600,19 +619,22 @@ Re-review this README when the placeholder changes, an internal producer or tran
 |---|---|---|---|
 | `v0.1` | 2026-06-16 | Replaced a greenfield stub with a broad proposed asynchronous Focus worker contract. | None; documentation only. |
 | `v0.2` | 2026-08-12 | Pinned current repository evidence, recorded the two-file comment-only lane, reconciled with the merged parent Workers app and source contracts, applied accepted Directory Rules and the Boundary Compact profile, distinguished adjacent capabilities from worker wiring, exposed parallel schema-family ambiguity, and strengthened admission, validation, correction, and rollback. | None; documentation only. |
+| `v0.3` | 2026-08-26 | Refreshed current-main evidence, corrected adjacent Focus and package maturity, and added a source/coordination pressure register that keeps attached, Drive, and Notion ideas non-authoritative. | None; documentation only. |
 
 <details>
 <summary>Appendix A — no-loss and correction note</summary>
 
 The v0.1 edition correctly preserved the intended Governed AI constraints: evidence-subordinate language, cite-or-abstain, policy precheck/postcheck, citation validation before `ANSWER`, finite outcomes, receipts, no browser-to-model shortcut, no raw-store access, and no publication authority.
 
-This edition retains those constraints while correcting its evidence posture. Source-file presence is no longer unknown: `main.py` exists as a comment-only placeholder. Several adjacent contracts, schemas, policy rules, packages, fixtures, validators, receipt lanes, and runtime adapters also exist. None is wired to this lane, and parallel schema-family bindings remain unresolved.
+The v0.2 edition retained those constraints while correcting its evidence posture. Source-file presence is no longer unknown: `main.py` exists as a comment-only placeholder. Several adjacent contracts, schemas, policy rules, packages, fixtures, validators, receipt lanes, and runtime adapters also exist. None is wired to this lane, and parallel schema-family bindings remain unresolved.
+
+The v0.3 edition preserves that no-loss result while reconciling current adjacent evidence: the Explorer has a bounded client-side Focus proof, the Evidence Resolver has a narrow fixture-backed implementation slice, the Policy Runtime remains a greenfield scaffold, and the Governed API still has no Focus route. Source-derived ideas are recorded only as pressure and promotion gates.
 
 </details>
 
 ## 17. Correction and rollback
 
-Before merge, abandon or close the feature branch and draft pull request. After an independently authorized merge, use a transparent revert or forward-fix pull request restoring prior blob `5bb3b812574a67c35321db9ae435cd89af293995`, then rerun the same documentation checks.
+Before merge, abandon or close the feature branch and draft pull request. After an independently authorized merge, use a transparent revert or forward-fix pull request restoring prior blob `32a22be6fcbd70376e6c5735796b65251d30fa8b`, then rerun the same documentation checks.
 
 A README rollback changes no Python source, contract, schema, policy, package, adapter, fixture, test, queue, schedule, configuration, receipt, data, deployment, activation, release, promotion, publication, or repository setting. If a later implementation affects those surfaces, its own migration, correction, cache/data disposition, credential, deployment, and rollback obligations control; restoring prose alone is not an operational rollback.
 
