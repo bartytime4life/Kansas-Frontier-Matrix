@@ -126,7 +126,7 @@ jobs:
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-object-family-register-catalog-correction-20260823.json \
+            data/receipts/generated/genrec-object-family-register-evidence-ref-workflow-parity-20260825.json \
             --repo-root .
 
       - name: Record validation boundary
@@ -138,6 +138,6 @@ jobs:
             echo
             echo "- Result: ${{ job.status }}."
             echo "- Scope: the exact sixteen-family milestone set, three retained families, schema shape, canonical ordering, relationship closure, responsibility-root placement, path existence, per-surface status, and structural classification."
-            echo "- Known gaps: eleven required families retain unresolved candidate conflicts; EvidenceRef and WithdrawalNotice remain partial."
+            echo "- Known gaps: eleven required families retain unresolved candidate conflicts; EvidenceRef identity remains partial, and WithdrawalNotice remains structurally partial."
             echo "- Boundary: the register is a navigational index. It cannot select conflicting candidates, add, rename, remove, approve, release, deploy, promote, or publish an object family."
           } >> "$GITHUB_STEP_SUMMARY"
