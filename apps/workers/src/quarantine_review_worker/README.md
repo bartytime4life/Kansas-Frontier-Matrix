@@ -3,12 +3,12 @@ doc_id: kfm://app/workers/src/quarantine-review-worker/readme
 title: Quarantine Review Worker README
 type: app-readme
 subtype: worker-lane-readme
-version: v0.2
-prior_version: v0.1
+version: v0.3
+prior_version: v0.2
 status: draft; repository-grounded; placeholder-only
 owner: "NEEDS VERIFICATION — CODEOWNERS routes default repository review to @bartytime4life; no accepted Quarantine Review Worker steward, independent quarantine reviewer, runtime operator, policy authority, or release authority was verified"
 created: 2026-06-16
-updated: 2026-08-12
+updated: 2026-08-26
 policy_label: public
 current_path: apps/workers/src/quarantine_review_worker/README.md
 scope_id: apps/workers/src/quarantine_review_worker/
@@ -22,13 +22,13 @@ authority_rank: "Implementation orientation subordinate to adopted doctrine, acc
 canonical_relationship: "Same-path update; no new authority, generated projection, compatibility path, queue, review decision, lifecycle transition, runtime binding, or publication capability created."
 evidence_repository: bartytime4life/Kansas-Frontier-Matrix
 evidence_base_ref: main
-evidence_base_commit: 079bedbf566ad321b11e278749a188998f430165
-evidence_repository_tree: ec9204c4eaf6e2b40efa00aa359cb54db87d08ca
-evidence_apps_tree: b42508d948e33456c21f720ff9d60a2ca07228a3
-evidence_workers_tree: c31de1160f1e21332fbc4916b6c0013915a22a01
-evidence_source_tree: ab3dfd47f06fb015d8adcb404505099ec0ab645d
-evidence_lane_tree: 1c8978e7e88a275eec29ff923e14b861e0b5b435
-evidence_target_prior_blob: 5c5a90cc0c471bd17a18678b5c73b35e10049a4a
+evidence_base_commit: 87f31eff33f03715e7c4ed48ff249240b8d61b8d
+evidence_repository_tree: f23a369298cca052d958baa2395c1c73fe6ca8ca
+evidence_apps_tree: b1d8fca136d9c8cd6781e97c64803ce7a597554a
+evidence_workers_tree: ffcd6faff768d95f0a5aad3ab58d09ae72f5e715
+evidence_source_tree: 179bac553cec7087d04d6884018c356be1c58bb0
+evidence_lane_tree: 787e299ad9ee1c69743d43e015d746d9af5fa217
+evidence_target_prior_blob: 7a48f9ea38304bd9fbf77b5db6fc52f0e8ea999d
 evidence_entrypoint_blob: eaef2862a7c1038590e5afba8224b52de54c5c96
 evidence_parent_source_blob: 08ad9f8116f64817ffa4f8b2058613749360c102
 evidence_workers_readme_blob: 5b5c1e6b067e652a380bf445488a6227028dfc0e
@@ -37,12 +37,19 @@ evidence_review_console_package_blob: 9c83b3dee793e2428a33c4aae072e668f1c2a4f8
 evidence_review_queue_readme_blob: 6923b702cf97816cee15a5ded38e6e3a8c20fce8
 evidence_quarantine_root_blob: 9b375d795d96b15c06e51ef54770a023cd14454c
 evidence_lifecycle_law_blob: 4eb1f0a38a31130bb9928867450709724bd4cacb
-evidence_adr_0021_blob: bcd98911a420a5cf00fd3571a8fe18e15e2efe70
+evidence_adr_0021_blob: f4851015790e33561b50d9259e4b7abe07060f3a
 evidence_adr_0021_status: proposed
 evidence_review_record_contract_blob: 9641345d1e5d939dc59687a900e60a563d92c4f0
 evidence_governance_review_schema_blob: fe2f2223af46481e7fb19b0baa94f62ce9c6c855
 evidence_review_family_schema_blob: a053448d68e8379b92b12a16e6528275b975433c
 evidence_review_validator_blob: a26f10fa18edaf7b2d2e3bf499e233c05f3007cd
+evidence_governed_run_chain_contract_blob: b3c38c0bb2da63a8fad566cb6dff07daaeb104dd
+evidence_quarantine_record_schema_blob: 4c08a07c1a4259f77e63fa2990418fd06f132262
+evidence_governed_run_chain_schema_blob: 18de23fb564e4f1a5d792354c924d39fa10f1864
+evidence_governed_run_chain_validator_blob: 687a1123bbe533b5d98374463dff7915424ccfcf
+evidence_governed_run_chain_test_blob: 48ad9d37a3144490487e9f99c3ab98d4e5ff240f
+evidence_governed_run_chain_valid_fixtures_tree: 5594ff7e3a0b43be7dc9530ee6283de66899eca7
+evidence_governed_run_chain_invalid_fixtures_tree: 5bdd845c3aa020bad87d30f3e05753206fcd2e79
 evidence_directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
 evidence_directory_rules_adoption: ADR-0029; accepted
 evidence_codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
@@ -68,6 +75,12 @@ related:
   - ../../../../data/quarantine/README.md
   - ../../../../data/receipts/README.md
   - ../../../../contracts/governance/ReviewRecord.md
+  - ../../../../contracts/governance/governed_run_chain.md
+  - ../../../../schemas/contracts/v1/governance/quarantine_record.schema.json
+  - ../../../../schemas/contracts/v1/governance/governed_run_chain.schema.json
+  - ../../../../tools/validators/governance/validate_governed_run_chain.py
+  - ../../../../fixtures/contracts/v1/governance/governed_run_chain/
+  - ../../../../tests/validators/governance/governed_run_chain/test_validate_governed_run_chain.py
   - ../../../../schemas/contracts/v1/governance/review_record.schema.json
   - ../../../../schemas/contracts/v1/review/review_record.schema.json
   - ../../../../tools/validators/validate_review_record.py
@@ -75,9 +88,10 @@ related:
   - ../../../../policy/README.md
 tags: [kfm, apps, workers, quarantine-review-worker, placeholder, quarantine, review-routing, candidate-only, fail-closed, non-publisher, separation-of-duties]
 notes:
-  - "v0.2 replaces generalized implementation uncertainty with exact repository evidence: this lane contains one README and one 65-byte, comment-only Python placeholder with zero executable lines."
-  - "Quarantine doctrine, a canonical data/quarantine lane, a proposed structured-exit ADR, Review Console feature READMEs, ReviewRecord contract/schema/fixture surfaces, and a fixture-only promotion review validator exist elsewhere; no import, trigger, queue, schedule, package, deployment, or runtime binding connects them to this lane."
-  - "Quarantine exit grammar and ReviewRecord authority are not closed: ADR-0021 remains proposed, ReviewRecord has competing schema-family paths, and the existing validator is scoped to synthetic promotion Gate G fixtures rather than this worker."
+  - "v0.3 refreshes exact repository evidence while preserving the confirmed two-file, placeholder-only worker boundary."
+  - "A draft GovernedRunChain contract, closed schemas, a deterministic no-network validator, fixtures, and focused tests now prove one bounded linkage profile for PROMOTABLE, QUARANTINED, HELD, and ERROR outcomes; they do not bind or activate this worker."
+  - "The bounded QuarantineRecord profile is process-control evidence inside that exact chain. It does not resolve ADR-0021's proposed five-exit grammar, ReviewRecord authority, human review, lifecycle transition, release, or publication."
+  - "Attached, Drive, and Notion material is recorded only as non-authoritative design pressure: unknown rights or sensitivity stays held, sensitive detail stays protected, and coordination or AI output is not a review decision."
   - "This documentation-only update does not inspect a live quarantine payload, route an actual candidate, record a review, transition lifecycle state, admit a source, approve policy, release an artifact, or publish anything."
 [/KFM_META_BLOCK_V2] -->
 
@@ -97,14 +111,14 @@ notes:
 [![Reviewer: human or governed authority](https://img.shields.io/badge/reviewer-human%20or%20governed%20authority-8250df?style=flat-square)](#9-worker-obligations)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#6-exclusions)
 [![Directory Rules: ADR-0029 accepted](https://img.shields.io/badge/directory%20rules-ADR--0029%20accepted-2da44e?style=flat-square)](../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
-[![Evidence base: 079bedb](https://img.shields.io/badge/evidence%20base-079bedb-6e7781?style=flat-square)](#11-inspection-and-evidence)
+[![Evidence base: 87f31ef](https://img.shields.io/badge/evidence%20base-079bedb-6e7781?style=flat-square)](#11-inspection-and-evidence)
 
 **Quick navigation:** [Purpose](#1-purpose) · [Repo fit](#2-repo-fit) · [Authority](#3-authority-boundary) · [Posture](#4-default-posture) · [Inputs and outputs](#5-inputs-and-outputs) · [Exclusions](#6-exclusions) · [Lane map](#7-current-lane-map) · [Required flow](#8-required-quarantine-review-flow) · [Obligations](#9-worker-obligations) · [Admission contract](#10-job-admission-contract) · [Evidence](#11-inspection-and-evidence) · [Validation](#12-validation-expectations) · [Change pattern](#13-safe-change-pattern) · [Done](#14-definition-of-done) · [Gaps](#15-open-verification-items) · [Maintenance](#16-maintenance-and-review-triggers) · [Rollback](#17-correction-and-rollback)
 
 </div>
 
 > [!IMPORTANT]
-> **Current state: `CONFIRMED / PLACEHOLDER-ONLY`.** At `main@079bedbf566ad321b11e278749a188998f430165`, this lane contains exactly two tracked files: this README and a 65-byte [`main.py`](./main.py). The Python file contains only `# quarantine_review_worker entrypoint — greenfield placeholder`, for zero imports, definitions, executable statements, or side effects.
+> **Current state: `CONFIRMED / PLACEHOLDER-ONLY`.** At `main@87f31eff33f03715e7c4ed48ff249240b8d61b8d`, this lane contains exactly two tracked files: this README and a 65-byte [`main.py`](./main.py). The Python file contains only `# quarantine_review_worker entrypoint — greenfield placeholder`, for zero imports, definitions, executable statements, or side effects.
 
 Repository-wide name and path inspection found no import, trigger, queue, schedule, package, configuration, worker-local test, deployment, or output binding for `quarantine_review_worker`. This is bounded repository evidence, not proof about untracked experiments or external systems.
 
@@ -112,7 +126,7 @@ Repository-wide name and path inspection found no import, trigger, queue, schedu
 > A Quarantine Review Worker must never become a reviewer, lifecycle authority, policy authority, evidence authority, release authority, or publisher. It may eventually prepare a bounded review candidate through accepted interfaces, but it must not read protected stores by path, expose quarantined content to a public surface, approve or reject an item, select a quarantine exit, mutate lifecycle state, or treat a successful job, validator result, queue row, receipt, pull request, or dashboard as review completion.
 
 > [!NOTE]
-> The repository contains meaningful quarantine and review documentation plus selected contract, schema, fixture, and validator surfaces. Their existence is `CONFIRMED`; their composition into this worker is `CONFIRMED ABSENT` at the pinned base. Nearby capability is not worker wiring, and documentation is not runtime evidence.
+> The repository contains meaningful quarantine and review documentation plus selected contract, schema, fixture, and validator surfaces. Their existence is `CONFIRMED`; their composition into this worker is `CONFIRMED ABSENT` at the pinned base. A bounded GovernedRunChain/QuarantineRecord validation profile is also implemented and tested outside this lane, but it proves only deterministic fixture linkage—not five-exit authority, human review, lifecycle mutation, release, publication, or worker wiring.
 
 ---
 
@@ -165,7 +179,7 @@ Accepted Directory Rules places deployable processes and process-local compositi
 | Claim | Truth | Repository evidence | Limitation |
 |---|---|---|---|
 | The lane exists under the deployable `apps/` responsibility root. | CONFIRMED | Accepted ADR-0029, parent Workers READMEs, and current tree | Placement does not grant runtime capability. |
-| The lane contains exactly two direct files and no child directory. | CONFIRMED | Lane tree `1c8978e7e88a275eec29ff923e14b861e0b5b435` | Directory shape does not prove runtime behavior. |
+| The lane contains exactly two direct files and no child directory. | CONFIRMED | Lane tree `787e299ad9ee1c69743d43e015d746d9af5fa217` | Directory shape does not prove runtime behavior. |
 | `main.py` is a 65-byte, one-line placeholder comment. | CONFIRMED | Blob `eaef2862a7c1038590e5afba8224b52de54c5c96` | A filename and intent comment are not an entry point. |
 | The lane contains zero non-comment executable Python lines. | CONFIRMED | Exact content inspection | Future branches and external deployments are outside this snapshot. |
 | Repository code imports, invokes, registers, queues, schedules, configures, tests, packages, or deploys `quarantine_review_worker`. | CONFIRMED absent from bounded inspection | Complete lane inventory plus repository name/path search | External systems not represented in Git remain `UNKNOWN`. |
@@ -179,7 +193,7 @@ Accepted Directory Rules places deployable processes and process-local compositi
 | Canonical quarantine lane | [`data/quarantine/README.md`](../../../../data/quarantine/README.md) defines a fail-closed hold and prohibits silent promotion or direct public use | Lifecycle authority context; not a worker data API |
 | Lifecycle doctrine | [`lifecycle-law.md`](../../../../docs/doctrine/lifecycle-law.md) preserves `(Pre-RAW) → RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` | Governing stage semantics; no queue or worker wiring |
 | Quarantine runbook | [`QUARANTINE_HANDLING.md`](../../../../docs/runbooks/QUARANTINE_HANDLING.md) describes draft operational handling and proposed reason-code/case-record concepts | Human/runbook guidance; implementation references remain proposed |
-| Structured exits | [ADR-0021](../../../../docs/adr/ADR-0021-quarantine-has-structured-exit-paths.md) proposes five governed exits | Proposed decision only; no accepted exit grammar or executable binding |
+| Structured exits | [ADR-0021](../../../../docs/adr/ADR-0021-quarantine-has-structured-exit-paths.md) v1.3 still proposes five governed exits and records the worker as placeholder-only | Proposed decision only; no accepted five-exit case schema, validator, policy binding, or worker implementation |
 | Review Console root | [`apps/review-console/`](../../../review-console/README.md) has a README, a minimal `package.json`, and a documentation-only source tree | Adjacent app scaffold; not an operational review service |
 | Review queue feature | [`features/queue/README.md`](../../../review-console/src/features/queue/README.md) is the only tracked file in the queue feature directory | Proposed role-gated projection boundary; no queue implementation |
 | Record and sensitivity features | [`record_view`](../../../review-console/src/features/record_view/README.md) and [`sensitivity_review`](../../../review-console/src/features/sensitivity_review/README.md) each have boundary documentation | Proposed feature contracts; no worker binding |
@@ -188,6 +202,7 @@ Accepted Directory Rules places deployable processes and process-local compositi
 | Governance review schema | [`schemas/contracts/v1/governance/review_record.schema.json`](../../../../schemas/contracts/v1/governance/review_record.schema.json) is a closed proposed shape | One candidate machine shape; exact authority and compatibility remain unresolved |
 | Review-family schema | [`schemas/contracts/v1/review/review_record.schema.json`](../../../../schemas/contracts/v1/review/review_record.schema.json) is an empty permissive scaffold | Competing path; must not be silently selected |
 | Review validator and fixtures | [`validate_review_record.py`](../../../../tools/validators/validate_review_record.py) plus governance review fixtures exist | Explicitly fixture-only promotion Gate G profile; not a general quarantine review validator |
+| Governed run-chain profile | [`governed_run_chain.md`](../../../../contracts/governance/governed_run_chain.md), closed [`GovernedRunChain`](../../../../schemas/contracts/v1/governance/governed_run_chain.schema.json) and [`QuarantineRecord`](../../../../schemas/contracts/v1/governance/quarantine_record.schema.json) schemas, a [no-network validator](../../../../tools/validators/governance/validate_governed_run_chain.py), [fixtures](../../../../fixtures/contracts/v1/governance/governed_run_chain/), and [focused tests](../../../../tests/validators/governance/governed_run_chain/test_validate_governed_run_chain.py) exist | Implemented fixture-first linkage for `PROMOTABLE`, `QUARANTINED`, `HELD`, and `ERROR`; not review authority, five-exit closure, lifecycle mutation, release, publication, or worker wiring |
 | Receipt lane | [`data/receipts/README.md`](../../../../data/receipts/README.md) owns governed process memory | Receipt instances belong there through an accepted writer, not as worker-local files |
 
 ### Authority and compatibility gaps
@@ -197,11 +212,11 @@ A future worker must not infer a complete quarantine-review platform from nearby
 | Gap | Current evidence | Required posture |
 |---|---|---|
 | Worker job contract | No accepted queue/event/job schema or authorized producer is bound to this lane | `NEEDS VERIFICATION`; define and review before code |
-| Quarantine case shape | Runbook proposes `QuarantineRecord`; ADR-0021 proposes `quarantine_case_record`; no closed accepted binding was verified | `CONFLICTED / NEEDS VERIFICATION`; do not invent an adapter |
+| Quarantine case shape | A closed `QuarantineRecord` schema exists for the exact GovernedRunChain profile, while the runbook and ADR-0021 still propose broader and differently named case/exit surfaces | `PARTIAL / CONFLICTED`; use the bounded profile only in its declared scope and do not invent a worker adapter |
 | Exit grammar | Current quarantine README, runbook, and proposed ADR-0021 describe related but not identical dispositions | Preserve the hold; worker must not choose an exit |
 | ReviewRecord home | ReviewRecord appears under both `schemas/contracts/v1/governance/` and `schemas/contracts/v1/review/` | `CONFLICTED`; resolve through accepted authority, compatibility note, or migration |
 | Contract path casing | Governance schema metadata names lowercase `contracts/governance/review_record.md`, while the tracked contract is `ReviewRecord.md` | `NEEDS VERIFICATION`; case-sensitive environments can fail |
-| Review validator scope | Existing validator is fixture-only and promotion-Gate-G-specific | Do not represent it as a general worker or quarantine validator |
+| Review validator scope | The ReviewRecord validator is promotion-Gate-G-specific; the GovernedRunChain validator is fixture-only, deterministic, and no-network | Do not represent either as human review, a general quarantine-review service, lifecycle authority, or worker wiring |
 | Queue projection contract | Review Console queue directory contains only a README | No runtime route, DTO, authorization, count-redaction, or handoff behavior is proven |
 | Policy composition | General policy roots exist, but no accepted quarantine-review policy bundle is bound here | Fail closed; no local fallback policy |
 | Worker receipt family | No accepted quarantine-review job, routing, hold, or failure receipt interface is bound here | Do not create ad hoc receipt files |
@@ -522,7 +537,7 @@ apps/workers/src/quarantine_review_worker/
 
 | Path | Blob at evidence base | Bytes | What it proves | What it does not prove |
 |---|---|---:|---|---|
-| `README.md` before this update | `5c5a90cc0c471bd17a18678b5c73b35e10049a4a` | 20,963 | A v0.1 boundary README existed | Runtime, queue, review, or deployment |
+| `README.md` before this update | `7a48f9ea38304bd9fbf77b5db6fc52f0e8ea999d` | 90,181 | The v0.2 evidence-grounded boundary README existed | Runtime, queue, review, or deployment |
 | `main.py` | `eaef2862a7c1038590e5afba8224b52de54c5c96` | 65 | Placeholder intent comment exists | Importability, entrypoint behavior, packaging, or execution |
 
 ### Surrounding capability map
@@ -542,6 +557,7 @@ apps/workers/src/quarantine_review_worker/
 | Review-family ReviewRecord schema | Yes | Empty permissive scaffold |
 | ReviewRecord fixture profile | Yes | Synthetic valid/invalid fixtures |
 | ReviewRecord validator | Yes | Fixture-only promotion Gate G scope |
+| GovernedRunChain and QuarantineRecord validation profile | Yes | Draft contract plus closed schemas, fixtures, no-network validator, and tests; no worker, review, lifecycle, release, or publication authority |
 | Quarantine exit validator/policy | No verified implementation | Named only in proposed ADR |
 | Worker-local tests or fixtures | None | No executable maturity |
 | Queue, schedule, deployment, service identity, logs, receipts | None bound | Operational state unknown |
@@ -862,27 +878,45 @@ git grep -n -E \
 
 | Evidence | Pinned identity | Supports | Does not support |
 |---|---|---|---|
-| Repository base | `079bedbf566ad321b11e278749a188998f430165` | Exact inspection checkpoint | Runtime or external deployment |
-| Repository tree | `ec9204c4eaf6e2b40efa00aa359cb54db87d08ca` | Root topology at checkpoint | Operational behavior |
-| Worker source tree | `ab3dfd47f06fb015d8adcb404505099ec0ab645d` | Eight-lane source inventory | Executable workers |
-| Target lane tree | `1c8978e7e88a275eec29ff923e14b861e0b5b435` | Two direct target files | Queue, schedule, or runtime |
-| Prior target README | `5c5a90cc0c471bd17a18678b5c73b35e10049a4a` | v0.1 content and rollback source | Current worker behavior |
+| Repository base | `87f31eff33f03715e7c4ed48ff249240b8d61b8d` | Exact inspection checkpoint | Runtime or external deployment |
+| Repository tree | `f23a369298cca052d958baa2395c1c73fe6ca8ca` | Root topology at checkpoint | Operational behavior |
+| Worker source tree | `179bac553cec7087d04d6884018c356be1c58bb0` | Eight-lane source inventory | Executable workers |
+| Target lane tree | `787e299ad9ee1c69743d43e015d746d9af5fa217` | Two direct target files | Queue, schedule, or runtime |
+| Prior target README | `7a48f9ea38304bd9fbf77b5db6fc52f0e8ea999d` | v0.2 content and rollback source | Current worker behavior |
 | Target `main.py` | `eaef2862a7c1038590e5afba8224b52de54c5c96` | One-line comment-only placeholder | Importability or execution |
 | Parent source README | `08ad9f8116f64817ffa4f8b2058613749360c102` | Source-boundary and eight placeholder lanes | Child implementation |
 | Parent Workers README | `5b5c1e6b067e652a380bf445488a6227028dfc0e` | App scaffold and non-publisher boundary | Worker operation |
 | Quarantine root README | `9b375d795d96b15c06e51ef54770a023cd14454c` | Canonical fail-closed lane contract | Recursive payloads or enforcement |
 | Lifecycle Law | `4eb1f0a38a31130bb9928867450709724bd4cacb` | Stage and trust-membrane doctrine | Queue or worker wiring |
-| ADR-0021 | `bcd98911a420a5cf00fd3571a8fe18e15e2efe70` | Proposed five-exit design and explicit gaps | Accepted or executable exit grammar |
+| ADR-0021 | `f4851015790e33561b50d9259e4b7abe07060f3a` | Proposed five-exit design and explicit gaps | Accepted or executable exit grammar |
 | Review Console README | `02512b6b8d16a8f1dfcd4c564f8b6d68b61b49e3` | Adjacent app boundary | Running review service |
 | Review Console package | `9c83b3dee793e2428a33c4aae072e668f1c2a4f8` | Minimal private package identity | Scripts, dependencies, build, or deployment |
 | Queue feature README | `6923b702cf97816cee15a5ded38e6e3a8c20fce8` | Proposed queue display boundary | Queue implementation |
 | ReviewRecord contract | `9641345d1e5d939dc59687a900e60a563d92c4f0` | Draft semantic meaning and anti-collapse rules | Accepted machine shape or review instance |
 | Governance ReviewRecord schema | `fe2f2223af46481e7fb19b0baa94f62ce9c6c855` | Proposed closed shape | Canonical selection or worker binding |
 | Review-family ReviewRecord schema | `a053448d68e8379b92b12a16e6528275b975433c` | Competing permissive scaffold | Useful closed validation |
-| ReviewRecord validator | Current tracked file; exact blob must be rechecked before implementation | Synthetic promotion Gate G validation behavior | General quarantine review validation |
+| ReviewRecord validator | `a26f10fa18edaf7b2d2e3bf499e233c05f3007cd` | Synthetic promotion Gate G validation behavior | General quarantine review validation |
+| GovernedRunChain contract | `b3c38c0bb2da63a8fad566cb6dff07daaeb104dd` | Draft finite linkage semantics and explicit non-effects | Accepted review or lifecycle authority |
+| QuarantineRecord schema | `4c08a07c1a4259f77e63fa2990418fd06f132262` | Closed shape for a bounded control-plane hold inside the governed chain | Generic quarantine case, five-exit grammar, or review decision |
+| GovernedRunChain schema and validator | `18de23fb564e4f1a5d792354c924d39fa10f1864` / `687a1123bbe533b5d98374463dff7915424ccfcf` | Deterministic schema and cross-object linkage checks | Network resolution, live policy, lifecycle writes, release, or publication |
+| GovernedRunChain fixtures and tests | Trees `5594ff7e3a0b43be7dc9530ee6283de66899eca7` / `5bdd845c3aa020bad87d30f3e05753206fcd2e79`; test `48ad9d37a3144490487e9f99c3ab98d4e5ff240f` | Valid/invalid fixture evidence for the bounded profile | Operational traffic, worker binding, or human review |
 | ReviewRecord fixtures | Current tracked valid/invalid fixture directories | Synthetic conformance examples | Live review data or operational flow |
 | Directory Rules | `fd49a0b83e55cef52c1124281f093e263526898d` adopted by ADR-0029 | Same-path placement and responsibility separation | Runtime authority |
 | CODEOWNERS | `dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61` | Default GitHub review routing | Stewardship, independence, approval, or release authority |
+
+### Source-pressure register
+
+The following supplied and connected sources were inspected as design pressure only. They do not override the exact GitHub checkpoint, accept an ADR, select a contract, admit a source, approve review, or change runtime or publication state.
+
+| Source | Useful pressure retained | Authority limit |
+|---|---|---|
+| Attached *Kansas Frontier Matrix Pipeline Living Implementation Manual v0.3* | Unknown rights block public release; unknown sensitivity fails closed; pipeline failure outcomes remain bounded; direct AI access to RAW, WORK, QUARANTINE, or unpublished candidates requires a governed backend flow | Supplied architecture proposal; not repository implementation or adopted policy |
+| Attached MapLibre/governed-UI and implementation reference manuals | Keep protected detail behind governed backend projections; preserve evidence, policy, review, receipt, lifecycle, release, and UI roles as separate concerns | Design input only; no route, worker, reviewer, or release binding |
+| Supplied/Drive Atlas material | Quarantined candidate ideas remain retained for review rather than silently adopted; source role, rights, and sensitivity remain explicit | Downstream proposal/lineage carrier; not source admission or current-state proof |
+| [Notion Cross-System Authority & Intake Model](https://app.notion.com/p/3c5a92021bf6811ba9c2d923215f11b7) | Pin exact GitHub evidence, record drift, preserve source-role/admissibility limits, and treat Notion as coordination | Coordination guidance; never review approval or repository authority |
+| [Notion Evidence, Documentation & Ideas Atlas](https://app.notion.com/p/3c6a92021bf681e097f2e9e976d74bc9) | Keep semantic relation and implementation maturity separate; `HUMAN_REVIEW/HOLD` does not become adoption, release, deployment, promotion, or publication | Research overlay; checkpoint claims can age and must be reverified against current GitHub bytes |
+
+Repository consequences retained from that pressure are conservative: rights-unknown or sensitivity-unknown candidates stay held; exact protected locations and private locators do not cross this worker boundary; receipts and AI summaries remain non-decisional; and no automatic quarantine exit is admitted.
 
 ### Reproducibility note
 
@@ -1133,7 +1167,7 @@ The last four items are intentionally not satisfied by this documentation change
 | Item | Current status | Required evidence |
 |---|---|---|
 | Quarantine job and candidate contract | UNKNOWN | Accepted semantics, closed schemas, producer/consumer, versioning, fixtures |
-| Quarantine case/record authority | CONFLICTED | Accepted contract/schema home, compatibility and migration decision |
+| Quarantine case/record authority | PARTIAL / CONFLICTED | Reconcile the bounded GovernedRunChain `QuarantineRecord` profile with runbook/ADR case semantics; accept any broader home, compatibility, and migration decision |
 | Exit grammar | CONFLICTED / ADR-0021 PROPOSED | Accepted decision or explicit bounded non-use |
 | ReviewRecord authority | CONFLICTED | Canonical contract/schema, aliases, compatibility, validator, fixtures |
 | Contract path casing | NEEDS VERIFICATION | Case-sensitive link/registry validation and correction |
@@ -1152,7 +1186,7 @@ The last four items are intentionally not satisfied by this documentation change
 | Package and entrypoint | ABSENT | Package manifest, locked dependencies, importable/explicit command |
 | App-local test root | ABSENT | Unit/property tests and fixtures |
 | Deterministic identity | UNKNOWN | Canonicalization and replay contract |
-| Finite outcome mapping | UNKNOWN | Accepted job outcome vocabulary and adapter table |
+| Finite outcome mapping | PARTIAL | The governed-chain profile proves four fixture outcomes; this worker still needs an accepted job vocabulary and explicit adapter table without inheriting lifecycle authority |
 | Candidate currentness checks | UNKNOWN | Stale/superseded/corrected/already-reviewed tests |
 | Idempotent writer behavior | UNKNOWN | Duplicate and partial-failure tests |
 | Safe logging and metrics | UNKNOWN | Redaction tests and bounded telemetry schema |
@@ -1211,7 +1245,7 @@ The last four items are intentionally not satisfied by this documentation change
 - the lane gains a package, module, child directory, test, fixture, config, or deployment file;
 - a queue, schedule, producer, consumer, or service identity is added;
 - Review Console queue, record, sensitivity, audit, or decision features gain implementation;
-- a quarantine-case, ReviewRecord, candidate, or receipt contract/schema is accepted or migrated;
+- a quarantine-case, `QuarantineRecord`, `GovernedRunChain`, ReviewRecord, candidate, or receipt contract/schema is accepted or migrated;
 - ADR-0021 changes status or quarantine exit semantics;
 - policy, evidence, source-role, rights, sensitivity, sovereignty, or review-authority behavior changes;
 - a direct lifecycle read/write capability is proposed;
@@ -1280,7 +1314,7 @@ A documentation rollback may:
 
 - revert the merge commit;
 - revert the authored README commit; or
-- restore prior blob `5c5a90cc0c471bd17a18678b5c73b35e10049a4a` through a reviewed forward correction.
+- restore prior blob `7a48f9ea38304bd9fbf77b5db6fc52f0e8ea999d` through a reviewed forward correction.
 
 A rollback must not imply that the older README is more accurate if repository reality has changed. Prefer a forward correction when new evidence exists.
 
@@ -1322,7 +1356,7 @@ A rollback is complete only when:
 <details>
 <summary><strong>Appendix A — semantic no-loss ledger</strong></summary>
 
-| v0.1 element | v0.2 disposition | Result |
+| v0.2 element | v0.3 disposition | Result |
 |---|---|---|
 | Quarantine/work review-support purpose | KEEP + GROUND | Preserved as a possible thin wrapper, not current behavior |
 | Candidate readiness checks | KEEP + BOUND | Requires accepted contracts and read-only projections |
@@ -1340,9 +1374,11 @@ A rollback is complete only when:
 | Validation expectations | KEEP + EXPAND | Adds negative tests, schema conflict, hidden counts, and partial failure |
 | Definition of done | KEEP + SPLIT | Documentation completion separated from executable graduation |
 | Open verification list | KEEP + PRIORITIZE | P0–P3 decision and evidence backlog |
-| Greenfield-stub note | CORRECT | Lane has a rich README but executable source remains a one-line placeholder |
+| Governed run-chain profile | ADD + BOUND | Records the implemented fixture-first slice without upgrading it into worker, review, lifecycle, release, or publication authority |
+| Attached/Drive/Notion design pressure | ADD + LABEL | Retains fail-closed rights, sensitivity, protected-detail, and authority-separation pressure as non-authoritative input |
+| Greenfield-stub note | KEEP | Lane has a rich README but executable source remains a one-line placeholder |
 
-No accurate boundary was intentionally deleted. Generic future-module assertions were converted into evidence-bounded admission guidance. Current implementation claims were narrowed to what the pinned tree proves.
+No accurate boundary was intentionally deleted. Generic future-module assertions remain evidence-bounded admission guidance. v0.3 adds the bounded GovernedRunChain/QuarantineRecord fixture profile and source pressure without changing the worker's placeholder maturity.
 
 </details>
 
@@ -1351,7 +1387,7 @@ No accurate boundary was intentionally deleted. Generic future-module assertions
 
 | Area | Surface A | Surface B | Conflict or ambiguity | Worker posture |
 |---|---|---|---|---|
-| Quarantine instance | Runbook `QuarantineRecord` proposal | ADR-0021 `quarantine_case_record` proposal | Name, shape, path, and status unresolved | Do not bind |
+| Quarantine instance | Runbook and ADR-0021 broader case/exit proposals | Closed `QuarantineRecord` shape inside the draft GovernedRunChain profile | The bounded implemented profile does not settle generic case naming, five-exit semantics, review authority, or worker binding | Use only within the exact profile; do not bind this worker |
 | Quarantine exits | Canonical quarantine README operating contract | ADR-0021 five exits | Related but not identical; ADR remains proposed | Do not choose or execute |
 | ReviewRecord contract | `contracts/governance/ReviewRecord.md` | Schema metadata lowercases path | Case-sensitive path mismatch | Fail admission until resolved |
 | ReviewRecord schema | `schemas/contracts/v1/governance/review_record.schema.json` | `schemas/contracts/v1/review/review_record.schema.json` | Closed proposed shape versus empty permissive scaffold | No implicit precedence |
@@ -1375,7 +1411,7 @@ This documentation change:
 - does not create a package, import, job, queue, schedule, service identity, configuration, test, fixture, workflow, deployment, or network path;
 - does not read or write a quarantine payload;
 - does not accept ADR-0021 or alter lifecycle doctrine;
-- does not select a QuarantineRecord, quarantine-case, ReviewRecord, candidate, or receipt schema;
+- does not select a broader quarantine-case, ReviewRecord, candidate, or receipt schema and does not activate the bounded GovernedRunChain/QuarantineRecord fixture profile;
 - does not implement Review Console queue, record, sensitivity, audit, or decision behavior;
 - does not create or modify a policy decision, EvidenceBundle, ReviewRecord, candidate, receipt, lifecycle transition, release record, correction, withdrawal, or rollback card;
 - does not activate a source, expose a protected detail, grant access, or change a public route;
@@ -1395,7 +1431,8 @@ This documentation change:
 - [ ] Current lane inventory remains two files.
 - [ ] `main.py` remains comment-only.
 - [ ] No runtime, queue, review, lifecycle, or deployment claim exceeds evidence.
-- [ ] ADR-0021 remains labeled proposed.
+- [ ] ADR-0021 v1.3 remains labeled proposed.
+- [ ] The bounded GovernedRunChain/QuarantineRecord profile is represented as fixture-first, no-network, non-operational, and non-authoritative.
 - [ ] ReviewRecord path/schema conflicts are accurately represented.
 - [ ] Candidate-only, no-review-decision, no-lifecycle-mutation, no-public-path, and non-publisher boundaries are clear.
 - [ ] Security, sensitivity, hidden-count, correction, and rollback posture is sufficient.
@@ -1423,7 +1460,7 @@ This documentation change:
 
 `apps/workers/src/quarantine_review_worker/` is a repository-confirmed placeholder lane, not a working quarantine review service.
 
-The repository has meaningful lifecycle doctrine, a canonical quarantine README, a draft quarantine runbook, a proposed structured-exit ADR, Review Console boundary documents, ReviewRecord semantic/schema/fixture surfaces, and a fixture-only promotion review validator outside this lane. Those surfaces are not composed here, and several authority bindings conflict or remain unresolved.
+The repository has meaningful lifecycle doctrine, a canonical quarantine README, a draft quarantine runbook, proposed structured exits, Review Console boundary documents, ReviewRecord semantic/schema/fixture surfaces, and a fixture-only promotion review validator outside this lane. It also has a bounded GovernedRunChain/QuarantineRecord contract-schema-validator-fixture-test profile for deterministic no-network linkage. None of those surfaces is composed into this worker, and the bounded profile does not close human review, the five proposed exits, lifecycle mutation, release, or publication authority.
 
 A future implementation must remain a thin, authenticated, least-privilege, candidate-only wrapper. It must bind exact accepted contracts and schemas; consume policy, evidence, validation, lifecycle, and review-authority projections through governed interfaces; preserve source role, rights, sensitivity, currentness, separation of duties, correction lineage, and receipt auditability; and prove that it cannot decide review, mutate lifecycle state, expose quarantine material publicly, or publish.
 
