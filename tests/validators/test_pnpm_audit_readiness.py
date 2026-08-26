@@ -14,8 +14,11 @@ from tools.validators.dependencies.pnpm_audit_readiness import (
     render_report,
     validate_repository,
 )
+from tools.validators.validate_all import load_registry, select_validators
 
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+REGISTRY_PATH = REPO_ROOT / "tools/validators/validator_registry.json"
 WORKSPACES = ["apps/*", "packages/*"]
 IMPORTERS = [
     ".",
@@ -109,6 +112,49 @@ def test_current_contract_is_ready_and_report_is_deterministic(tmp_path: Path) -
     assert first["expected_importers"] == IMPORTERS
     assert first["lockfile_importers"] == IMPORTERS
     assert render_report(first) == render_report(second)
+
+
+@pytest.mark.parametrize(
+    "changed_path",
+    [
+        "package.json",
+        "pnpm-workspace.yaml",
+        "pnpm-lock.yaml",
+        "package-lock.json",
+        "apps/explorer-web/package.json",
+        "packages/maplibre/package.json",
+        ".github/workflows/dependency-scan.yml",
+        "tools/validators/dependencies/pnpm_audit_readiness.py",
+    ],
+)
+def test_registry_runs_readiness_for_dependency_contract_changes(
+    changed_path: str,
+) -> None:
+    registry = load_registry(REGISTRY_PATH, REPO_ROOT)
+    registered = registry.by_id["pnpm-dependency-readiness"]
+
+    assert registered.script == (
+        "tools/validators/dependencies/pnpm_audit_readiness.py"
+    )
+    assert registered.args == (
+        "validate-repository",
+        "--repository-root",
+        ".",
+    )
+    assert "pnpm-dependency-readiness" in registry.profiles["full"]
+    assert "pnpm-dependency-readiness" not in registry.profiles["focused"]
+    assert "pnpm-dependency-readiness" not in registry.profiles["release-dry-run"]
+
+    selected, mode = select_validators(
+        registry,
+        profile="changed-area",
+        changed_paths=(changed_path,),
+    )
+
+    assert mode == "changed-area"
+    assert "pnpm-dependency-readiness" in {
+        item.validator_id for item in selected
+    }
 
 
 @pytest.mark.parametrize(

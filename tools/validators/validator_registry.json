@@ -46,6 +46,7 @@
       "repository-governance-parity",
       "trust-spine-fixture-slice",
       "ci-conformance-report",
+      "pnpm-dependency-readiness",
       "workflow-security",
       "repository-topology"
     ]
@@ -486,6 +487,33 @@
         "tests/validators/test_validate_generated_receipt.py",
         "tools/validators/governance/validate_ci_conformance_report.py",
         "tools/validators/validate_generated_receipt.py"
+      ],
+      "timeout_seconds": 120,
+      "artifact_refs": []
+    },
+    {
+      "id": "pnpm-dependency-readiness",
+      "description": "Validate the accepted pnpm manager, workspace, and lockfile contract deterministically without querying an advisory service.",
+      "script": "tools/validators/dependencies/pnpm_audit_readiness.py",
+      "args": [
+        "validate-repository",
+        "--repository-root",
+        "."
+      ],
+      "path_globs": [
+        ".github/workflows/dependency-scan.yml",
+        "package.json",
+        "pnpm-workspace.yaml",
+        "pnpm-lock.yaml",
+        "package-lock.json",
+        "npm-shrinkwrap.json",
+        "yarn.lock",
+        "bun.lock",
+        "bun.lockb",
+        "apps/*/package.json",
+        "packages/*/package.json",
+        "tests/validators/test_pnpm_audit_readiness.py",
+        "tools/validators/dependencies/**"
       ],
       "timeout_seconds": 120,
       "artifact_refs": []

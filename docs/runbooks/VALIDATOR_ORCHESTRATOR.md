@@ -2,11 +2,11 @@
 doc_id: kfm://doc/runbooks-validator-orchestrator
 title: Validator Orchestrator Runbook
 type: runbook
-version: v1.3
+version: v1.4
 status: draft
 owners: ["@bartytime4life"]
 created: 2026-08-08
-updated: 2026-08-15
+updated: 2026-08-25
 policy_label: internal
 owning_root: docs/
 responsibility: Operate the bounded registry-driven validator orchestrator without treating a validation result as evidence, policy, review, release, or publication authority.
@@ -20,12 +20,14 @@ related:
   - ../../tools/validators/validate_catalog_matrix_closure.py
   - ../../tools/validators/validate_catalog_matrix_claim_closure.py
   - ../../tools/validators/catalog_closure/validate_catalog_distribution_mapping_profile.py
+  - ../../tools/validators/dependencies/pnpm_audit_readiness.py
   - ../../tools/validators/release/validate_release_manifest.py
   - ../../tools/validators/release/validate_release_proof_pack_closure.py
   - ../../tests/validators/test_validate_release_manifest.py
   - ../../tests/validators/test_validate_release_proof_pack_closure.py
   - ../../tests/validators/test_validator_orchestrator.py
   - ../../tests/validators/test_catalog_validator_registry_convergence.py
+  - ../../tests/validators/test_pnpm_audit_readiness.py
   - ../../tests/validators/test_legacy_schema_runner_scope.py
   - ../doctrine/directory-rules.md
   - ../dashboards/observability/validator-orchestrator-health.md
@@ -36,6 +38,7 @@ notes:
   - "Catalog closure registration coordinates four existing fixture-only validators; it does not accept ADR-0022 or create catalog, evidence, review, release, promotion, publication, or public-use authority."
   - "ReleaseManifest and ReleaseProofPackClosure registration coordinates existing fixture-only release-support validators in release-dry-run and full; PASS remains non-authoritative."
   - "The historical make schemas compatibility runner explicitly selects the nine reviewed schema fixture families; canonical full remains broader and retains catalog, release-support, and repository guardrail validators."
+  - "The deterministic pnpm readiness checker is registered in full and changed-area selection; the separate advisory query remains owned by dependency-scan."
   - "A green orchestrator report proves only the selected checks completed successfully for the declared profile."
 [/KFM_META_BLOCK_V2] -->
 
@@ -122,6 +125,21 @@ python tools/validate_all.py --profile full --include-timing
 
 The `full` profile means every validator in `validator_registry.json`; it does not claim every executable checker in the repository has been registered.
 
+### Registered dependency-readiness validator
+
+`pnpm-dependency-readiness` registers the existing no-network repository
+preflight in `full` and changed-area selection. It checks the exact pnpm and
+Node declarations, workspace agreement, lockfile format and importer closure,
+and absence of competing root lockfiles. Its path globs cover the dependency
+workflow, root and workspace manifests, accepted lockfiles, competing
+lockfiles, validator implementation, and focused tests.
+
+This registration does not execute `pnpm audit`, query an advisory service,
+admit a dependency, or establish vulnerability absence, provenance,
+compatibility, release readiness, deployment approval, or publication
+authority. The network-dependent, point-in-time audit remains in
+`.github/workflows/dependency-scan.yml`.
+
 ### Registered catalog-closure validators
 
 The following existing, fixture-only validators are registered in `release-dry-run` and `full`. They are intentionally not added to `focused`, which remains the smaller trust-spine subset.
@@ -207,6 +225,7 @@ python -m unittest discover \
   --pattern 'test_legacy_schema_runner_scope.py' \
   --verbose
 
+python -m pytest tests/validators/test_pnpm_audit_readiness.py -q
 python -m unittest tests.validators.test_validate_release_manifest --verbose
 python -m unittest tests.validators.test_validate_release_proof_pack_closure --verbose
 python tools/validate_all.py --validate-registry
