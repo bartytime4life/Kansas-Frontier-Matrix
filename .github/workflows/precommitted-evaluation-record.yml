@@ -1,0 +1,94 @@
+# Validate fixture-only sealed precommitment and scoring semantics.
+name: precommitted-evaluation-record
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/precommitted-evaluation-record.yml"
+      - "contracts/validation/precommitted_evaluation_record.md"
+      - "schemas/contracts/v1/validation/precommitted_evaluation_record.schema.json"
+      - "fixtures/contracts/v1/validation/precommitted_evaluation_record/**"
+      - "tools/generators/precommitted_evaluation_record/**"
+      - "tools/validators/validate_precommitted_evaluation_record.py"
+      - "tests/validators/test_validate_precommitted_evaluation_record.py"
+      - "docs/intake/exploratory/cairnwake-precommitted-evaluation-source-map.md"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-cairnwake-precommitted-evaluation-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/precommitted-evaluation-record.yml"
+      - "contracts/validation/precommitted_evaluation_record.md"
+      - "schemas/contracts/v1/validation/precommitted_evaluation_record.schema.json"
+      - "fixtures/contracts/v1/validation/precommitted_evaluation_record/**"
+      - "tools/generators/precommitted_evaluation_record/**"
+      - "tools/validators/validate_precommitted_evaluation_record.py"
+      - "tests/validators/test_validate_precommitted_evaluation_record.py"
+      - "docs/intake/exploratory/cairnwake-precommitted-evaluation-source-map.md"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-cairnwake-precommitted-evaluation-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: precommitted-evaluation-record-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-precommitted-evaluation-record
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: |
+            pyproject.toml
+            packages/hashing/pyproject.toml
+
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python tools/ci/install_python_ci.py project-test-hashing-test
+
+      - name: Run deterministic no-network checks
+        run: |
+          set -euo pipefail
+          python -m unittest tests.validators.test_validate_precommitted_evaluation_record --verbose
+          python tools/generators/precommitted_evaluation_record/build_precommitted_evaluation_record.py --case valid-scored-with-interventions
+          python tools/validators/validate_precommitted_evaluation_record.py --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-cairnwake-precommitted-evaluation-20260825.json --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### PrecommittedEvaluationRecord validation"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only commit-reveal binding, temporal precommitment, intervention ordering, outcome coverage, exact Brier scoring, and identity."
+            echo "- Boundary: a green result does not publish a commitment, collect or authenticate observations, run an experiment, update a scoreboard, or authorize release or public use."
+          } >> "$GITHUB_STEP_SUMMARY"

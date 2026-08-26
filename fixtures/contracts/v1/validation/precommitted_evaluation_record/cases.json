@@ -1,0 +1,13 @@
+{
+  "profile": "kfm.validation.precommitted-evaluation-record.v1",
+  "cases": [
+    {"case_id": "valid-scored-with-interventions", "mutation": null, "expected": {"validation_outcome": "PASS", "finding_codes": []}},
+    {"case_id": "invalid-seal", "mutation": "SEAL_DRIFT", "expected": {"validation_outcome": "DENY", "finding_codes": ["SEAL_MISMATCH"]}},
+    {"case_id": "invalid-late-registration", "mutation": "LATE_REGISTRATION", "expected": {"validation_outcome": "DENY", "finding_codes": ["REGISTRATION_NOT_PRECOMMITTED"]}},
+    {"case_id": "invalid-early-reveal", "mutation": "EARLY_REVEAL", "expected": {"validation_outcome": "DENY", "finding_codes": ["REVEAL_BEFORE_WINDOW_CLOSE"]}},
+    {"case_id": "invalid-outcome-coverage", "mutation": "OUTCOME_MISSING", "expected": {"validation_outcome": "DENY", "finding_codes": ["OUTCOME_COVERAGE_MISMATCH", "SCORE_COVERAGE_MISMATCH"]}},
+    {"case_id": "invalid-score", "mutation": "SCORE_DRIFT", "expected": {"validation_outcome": "DENY", "finding_codes": ["SCORE_MISMATCH"]}},
+    {"case_id": "invalid-unsorted-interventions", "mutation": "UNSORTED_INTERVENTIONS", "expected": {"validation_outcome": "DENY", "finding_codes": ["INTERVENTIONS_NOT_SORTED"]}},
+    {"case_id": "invalid-identity", "mutation": "IDENTITY_DRIFT", "expected": {"validation_outcome": "DENY", "finding_codes": ["EVALUATION_ID_MISMATCH", "SPEC_HASH_MISMATCH"]}}
+  ]
+}
