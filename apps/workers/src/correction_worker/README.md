@@ -600,7 +600,7 @@ python tools/validators/docs/document-graph/check_document_graph.py \
   --registry control_plane/document_registry.yaml \
   --format text apps/workers/src/correction_worker/README.md
 python tools/validators/docs/stale-scan/check_stale_docs.py \
-  --repo-root . --as-of 2026-08-12 --profile advisory \
+  --repo-root . --as-of 2026-08-26 --profile advisory \
   --review-window-days 365 --placeholder-grace-days 90 \
   --format text apps/workers/src/correction_worker/README.md
 python -m unittest discover \
