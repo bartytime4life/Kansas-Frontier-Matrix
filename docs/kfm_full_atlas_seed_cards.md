@@ -2,16 +2,18 @@
 doc_id: kfm://doc/kfm-atlas-seed-cards-optimized
 title: KFM Atlas Seed Cards — Optimized Carry-Forward Register
 type: atlas_card_register
-version: v0.6
+version: v0.6.1
 status: draft
 owners: <PLACEHOLDER — Atlas steward · Docs steward · Evidence steward · Domain stewards>
 created: 2026-06-12
-updated: 2026-07-29
+updated: 2026-08-25
 policy_label: public
 authority_class: synthesis / candidate-card register; NOT canonical doctrine
 requested_path: docs/kfm_full_atlas_seed_cards.md
 current_repository_home: docs/kfm_full_atlas_seed_cards.md
 current_repository_home_status: CONFIRMED at main 5266ba5f2d8f39cad2d54b066d514be8ca8eb3b7; retained in place to preserve identity and avoid a parallel atlas carrier.
+owning_root: docs/
+responsibility: Maintain the non-authoritative KFM Atlas seed-card candidate register and preserve explicit source/carrier lineage without assigning adoption or implementation status.
 truth_posture: cite-or-abstain with explicit truth labels
 implementation_boundary: remote main was inspected at snapshot 5266ba5f2d8f39cad2d54b066d514be8ca8eb3b7; hosted CI for this proposed change, release state, dashboards, deployments, and runtime behavior remain NEEDS VERIFICATION unless separately verified.
 related:
@@ -46,9 +48,10 @@ notes:
   - "v0.4 — adds 33 packet-local cards in 11 triads from New Ideas 4-30-26, focused on retrieval intent, rights drift, sampling support, distribution meaning, coverage bias, measurement reconciliation, delivery latency, asynchronous transfers, offline trust, verified rendering, and confounder-aware fitness."
   - "v0.5 — adds 30 packet-local cards in 10 triads from New Ideas 4-23-26 and New Ideas 4-25-26, focused on custody, composed-claim closure, trust-root history, replay-safe effects, obligations, reversible reconciliation, taxonomic concepts, place-name authority, survey-control provenance, and adversarial validator assurance."
   - "v0.6 — reconciles the Pass 23 source packets New Ideas 4-14-26 and New Ideas 4-15-26 against current repository evidence and adds 21 cards in 7 triads focused on bitemporal verification replay, source-conflict influence, cross-layer outcome parity, verifier portability, quality translation, runtime-proof artifact lifecycle, and interface evolution."
+  - "v0.6.1 — records an exact-title inventory crosswalk against the later supplied same-name 213-card source without importing, adopting, or semantically normalizing unmatched cards."
   - "The original draft repeated shared dependencies, tensions, open questions, and self-check text in every card. This edition deduplicates those into shared sections while preserving every card topic, class, category, source-ID set, and normalized statement."
   - "Stable IDs intentionally remain templates until PASS and ordinal allocation are supplied."
-] -->
+[/KFM_META_BLOCK_V2] -->
 
 # KFM Atlas Seed Cards — Optimized Carry-Forward Register
 
@@ -67,6 +70,13 @@ The source draft already used KFM truth labels and included required card fields
 
 This is a **candidate register**, not an implementation claim. The gap passes were reconciled against remote `main@5266ba5f2d8f39cad2d54b066d514be8ca8eb3b7`, but no card here proves later repository state, hosted enforcement, release state, deployment, or runtime behavior.
 
+A later supplied file with the same `KFM_Full_Atlas_seed_cards.md` title contains
+213 cards in 71 apparent triads, including a marked `v2 Expansion Header`.
+Its relationship to the 96-card source described by v0.2 is **UNKNOWN**: no
+explicit replacement statement, stable version metadata, or repository adoption
+record was verified. Section 9.1 therefore records an exact-title inventory
+crosswalk while leaving both unmatched inventories intact.
+
 ---
 
 ## 1. Optimization summary
@@ -84,6 +94,11 @@ This is a **candidate register**, not an implementation claim. The gap passes we
 | Idea cards | 70 |
 | Feature cards | 70 |
 | Programming cards | 70 |
+| Later supplied same-name source | 213 cards in 71 apparent triads |
+| Exact-title crosswalk | 31 triads |
+| Title delta requiring review | 1 triad |
+| Source-only exact titles | 39 triads |
+| Repository-only exact titles | 38 triads |
 | Stable ID posture | Template retained: `KFM-P{PASS}-{CLASS}-{NNNN}` |
 | Spec hash posture | `PROPOSED` until canonical JCS + SHA-256 computation |
 | Repository implementation maturity | `PARTIAL` at remote `main@5266ba5…`; hosted CI significance for this proposed change, releases, deployments, and runtime remain `NEEDS VERIFICATION` |
@@ -298,6 +313,139 @@ Unless a card explicitly narrows the requirement, every candidate card inherits 
 | `KFM-TRIAD-068` | Source-Native Quality Translation and Health Separation | `SRC-NEW415`, `SRC-SOIL`, `SRC-ATM`, `SRC-ENCYC` | `KFM-CAND-0202` | `KFM-CAND-0203` | `KFM-CAND-0204` |
 | `KFM-TRIAD-069` | Generated Runtime-Proof Artifact Lifecycle | `SRC-NEW415`, `SRC-GREEN`, `SRC-PIPE`, `SRC-ENCYC` | `KFM-CAND-0205` | `KFM-CAND-0206` | `KFM-CAND-0207` |
 | `KFM-TRIAD-070` | Observed Interface Evolution and Compatibility Window | `SRC-NEW414`, `SRC-NEW415`, `SRC-PIPE`, `SRC-DIR` | `KFM-CAND-0208` | `KFM-CAND-0209` | `KFM-CAND-0210` |
+
+---
+
+## 9.1 Supplied-source versus repository-carrier crosswalk
+
+This crosswalk compares the current repository carrier with a later supplied
+same-name source. It is an inventory comparison, not a supersession,
+implementation, adoption, or authority decision.
+
+### 9.1.1 Source identity and limits
+
+| Item | Evidence |
+|---|---|
+| Supplied source | `KFM_Full_Atlas_seed_cards.md`; read-only attachment |
+| Source digest | SHA-256 `9a95ab510bd984c257a8c578f8646993c7fe55d76f7d3c5f60d8bb9ad04ec3a2` |
+| Source coverage | 8,248 lines; 213 card headings grouped positionally into 71 idea/feature/programming triplets |
+| Source version posture | **UNKNOWN** — the file contains a `v2 Expansion Header` but no top-level stable version, date, or explicit replacement statement |
+| Repository carrier | This v0.6.1 document; 210 cards in 70 triads |
+| Repository comparison base | `main@077ee7d5b7925c8880e6457baf113662f6992313` |
+| Inspection time | `2026-08-26T02:55:29Z` |
+| Authority effect | None. The source remains proposal material and unmatched titles remain unadopted. |
+
+The comparison uses exact topic-title equality only. Source ordinals below are
+analysis positions derived from contiguous idea/feature/programming triplets;
+they are not new KFM IDs. No fuzzy or semantic match was used.
+
+| Classification | Source inventory | Repository inventory | Count |
+|---|---|---|---:|
+| `EXACT_TITLE_MATCH` | Ordinals 001–027 and 029–032 | `KFM-TRIAD-001`–`027` and `029`–`032` | 31 |
+| `TITLE_DELTA_NEEDS_REVIEW` | Ordinal 028, “Field and MapLibre 3D integration Capture Governance” | `KFM-TRIAD-028`, “Field and 3D Capture Governance” | 1 |
+| `SOURCE_ONLY_EXACT_TITLE` | Ordinals 033–071 | No exact carrier title | 39 |
+| `REPOSITORY_ONLY_EXACT_TITLE` | No exact supplied-source title | `KFM-TRIAD-033`–`070` | 38 |
+
+The ordinal-028 wording and its three normalized statements differ. It may
+represent editorial normalization, but equivalence is **NEEDS VERIFICATION** and
+is not asserted here.
+
+### 9.1.2 Supplied-source-only exact titles
+
+These titles are absent from the carrier by exact-title comparison. This does
+not establish that their ideas are absent from the wider repository.
+
+| Source ordinal | Exact source topic title |
+|---|---|
+| `033` | Source-Role Anti-Collapse Register |
+| `034` | Master Receipt Catalog and Lifecycle Mapping |
+| `035` | Finite Decision Outcome Envelope |
+| `036` | Sensitivity Tier Scheme T0-T4 and Transitions |
+| `037` | Universal Pipeline Gate Reference (RAW to PUBLISHED) |
+| `038` | Reviewer Role and Separation-of-Duties Matrix |
+| `039` | Stale-State and Supersession Lineage |
+| `040` | Failure-Mode and Anti-Pattern Register (Trust-Membrane Discipline) |
+| `041` | Risk Register and Threat Posture |
+| `042` | Governance Health Indicators |
+| `043` | Open-ADR Backlog Discipline |
+| `044` | Object Family x Domain Reference Matrix |
+| `045` | Frontier Demography Economy Settlement Land Time Matrix Lane |
+| `046` | Planetary MapLibre 3D integration Digital-Twin and Synthetic Spatial Governance Lane |
+| `047` | Sigstore Keyless Attestation as Promotion Floor |
+| `048` | Bao Outboard Range-Proof for PMTiles Verification |
+| `049` | STAC DCAT PROV Distribution Cross-Mapping |
+| `050` | OCI ORAS Artifact Publication Lane |
+| `051` | Environmental Indicator Gate (NDVI and Air Quality) |
+| `052` | SSURGO and gNATSGO Yearly Diff Pipeline |
+| `053` | Connector and Watcher as Anti-Corruption Layer |
+| `054` | Consent and Egress Policy Pack |
+| `055` | GA4GH-Style Token Gatehouse for DNA and Genomic Material |
+| `056` | Headless Render Gate CI |
+| `057` | JCS Plus SHA-256 Spec-Hash Identity |
+| `058` | OPA Promotion Gate for Derived Indicators |
+| `059` | apps/explorer-web Canonical Map-First Shell |
+| `060` | Focus Mode as Cross-Cutting Compositional Unit |
+| `061` | Renderer as Pluggable Component Framework |
+| `062` | KFM Domains as DDD Bounded Contexts with Context Map |
+| `063` | Manifests as DDD Entities with spec_hash Identity |
+| `064` | Two-Person Rule for T3/T4 Release |
+| `065` | Pre-RAW Watcher Signal Stage |
+| `066` | Replay Verification of Pipelines and Receipts |
+| `067` | Drift Register Triage Discipline |
+| `068` | Crosswalk Validator Lane (SQL-First Non-Publisher) |
+| `069` | Authority Ladder Doctrine |
+| `070` | County Proof-Slice (Focus-Mode-First Releases) |
+| `071` | LiDAR Lineage Manifest |
+
+### 9.1.3 Repository-only exact titles
+
+These carrier titles are absent from the supplied source by exact-title
+comparison. They remain repository-local candidate cards and are not evidence
+that the source was superseded.
+
+| Repository triad | Exact carrier topic title |
+|---|---|
+| `KFM-TRIAD-033` | Material Change Classification and Non-Event Receipts |
+| `KFM-TRIAD-034` | Identifier and Precision Lineage |
+| `KFM-TRIAD-035` | Correctable Environmental Event Lifecycle |
+| `KFM-TRIAD-036` | Baseline Cohort and Drift Governance |
+| `KFM-TRIAD-037` | Corroboration Role Graph |
+| `KFM-TRIAD-038` | Purpose-Bound Consent and Revocation Propagation |
+| `KFM-TRIAD-039` | Governed Time-Bucket Map Playback |
+| `KFM-TRIAD-040` | STAC Profile and Link-Closure Conformance |
+| `KFM-TRIAD-041` | Historical Network Uncertainty and Temporal Joins |
+| `KFM-TRIAD-042` | Purpose-Specific Hash Profiles |
+| `KFM-TRIAD-043` | Retrieval Intent and Query Snapshot |
+| `KFM-TRIAD-044` | Source Terms Snapshot and Rights Drift |
+| `KFM-TRIAD-045` | Sampling Effort and Non-Detection Support |
+| `KFM-TRIAD-046` | Distribution Assertion and Coverage Semantics |
+| `KFM-TRIAD-047` | Coverage-Aware Prioritization and Exploration-Bias Control |
+| `KFM-TRIAD-048` | Measurement Support and Scale Reconciliation |
+| `KFM-TRIAD-049` | Product Cadence, Delivery Latency, and Availability |
+| `KFM-TRIAD-050` | Asynchronous Transfer and Partial-State Provenance |
+| `KFM-TRIAD-051` | Offline Release Capsule and Trust Freshness |
+| `KFM-TRIAD-052` | Verified Rendering Resource Envelope |
+| `KFM-TRIAD-053` | Confounder Exclusion and Observation Fitness |
+| `KFM-TRIAD-054` | Cross-Boundary Evidence Custody and Reconciliation |
+| `KFM-TRIAD-055` | Composed Claim Dependency Closure |
+| `KFM-TRIAD-056` | Trust-Root Lifecycle and Historical Signature Verification |
+| `KFM-TRIAD-057` | Replay-Safe Event Identity and Side-Effect Ledger |
+| `KFM-TRIAD-058` | Conditional Decision Obligations and Closure |
+| `KFM-TRIAD-059` | Reversible Entity Reconciliation and Conflict-Preserving Dedupe |
+| `KFM-TRIAD-060` | Taxonomic Concept and Name-Usage Lineage |
+| `KFM-TRIAD-061` | Place-Name Authority and Temporal Alias Graph |
+| `KFM-TRIAD-062` | Survey-Control and Boundary Derivation Provenance |
+| `KFM-TRIAD-063` | Adversarial Validator Assurance and Mutation Adequacy |
+| `KFM-TRIAD-064` | Bitemporal Verification-State Replay |
+| `KFM-TRIAD-065` | Source-Conflict Topology and Influence Accounting |
+| `KFM-TRIAD-066` | Cross-Layer Outcome Projection and Parity |
+| `KFM-TRIAD-067` | Verifier Profile and Capability Portability |
+| `KFM-TRIAD-068` | Source-Native Quality Translation and Health Separation |
+| `KFM-TRIAD-069` | Generated Runtime-Proof Artifact Lifecycle |
+| `KFM-TRIAD-070` | Observed Interface Evolution and Compatibility Window |
+
+No title in either unmatched set is assigned a stable card ID, merged, deleted,
+adopted, rejected, or treated as implemented by this crosswalk.
 
 ---
 
@@ -2009,6 +2157,7 @@ This manifest is generated from the optimized card register. It is **not canonic
 
 | Version | Date | Change |
 |---|---:|---|
+| v0.6.1 | 2026-08-25 | Added an exact-title crosswalk for the later supplied 213-card same-name source; preserved 39 source-only and 38 repository-only titles, held one editorial title delta for review, and repaired the metadata-block closing delimiter. No cards or implementation claims changed. |
 | v0.6 | 2026-07-29 | Reconciled the prior Pass 23 sources `New Ideas 4-14-26` and `New Ideas 4-15-26` against the pinned remote-main snapshot and added 21 gap-fill cards in 7 triads covering bitemporal verification replay, source-conflict influence, cross-layer outcome parity, verifier portability, source-native quality translation and health separation, generated runtime-proof artifact lifecycle, and observed interface evolution. |
 | v0.5 | 2026-07-29 | Reconciled `New Ideas 4-23-26` and `New Ideas 4-25-26` against the pinned remote-main snapshot and added 30 gap-fill cards in 10 triads covering cross-boundary custody, composed-claim closure, trust-root history, replay-safe effects, conditional obligations, reversible reconciliation, taxonomic concepts, temporal place-name authority, survey-control provenance, and adversarial validator assurance. |
 | v0.4 | 2026-07-29 | Reconciled `New Ideas 4-30-26` against the pinned remote-main snapshot and added 33 gap-fill cards in 11 triads covering retrieval intent, source terms drift, sampling support, distribution meaning, coverage bias, measurement reconciliation, delivery latency, asynchronous transfer state, offline trust, verified rendering, and confounder-aware observation fitness. |
@@ -2023,7 +2172,7 @@ This manifest is generated from the optimized card register. It is **not canonic
 ```yaml
 kfm_footer:
   document: "KFM Atlas Seed Cards — Optimized Carry-Forward Register"
-  version: "v0.6"
+  version: "v0.6.1"
   status: "draft"
   authority_class: "candidate-card register / synthesis; not canonical doctrine"
   requested_path: "docs/kfm_full_atlas_seed_cards.md"
