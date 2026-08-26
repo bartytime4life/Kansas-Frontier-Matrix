@@ -1,0 +1,114 @@
+{
+  "receipt_id": "genrec-object-family-register-evidence-ref-workflow-parity-20260825",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "control_plane/object_family_register.yaml",
+    "docs/registers/OBJECT_FAMILY.md"
+  ],
+  "artifact_hashes": {
+    "control_plane/object_family_register.yaml": "sha256:c44b729a3d1ad3c8aa751e3fea776a432d1df4a73fc5823a1bf4eb1cfe7c9592",
+    "docs/registers/OBJECT_FAMILY.md": "sha256:2c94e309c0d6883014622129b53fb9c9a326dbd43ccba4bce2dca389c30a245e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:0b433e2de12c24bb2eb638d24b6af533d673c4b318aff63a86abf2f6c8964b19",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "deterministic Python projection checks",
+      "SHA-256 artifact binding"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/c7bd822adce38d68e5033b8997d819b81e548569",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3368",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c7bd822adce38d68e5033b8997d819b81e548569/.github/workflows/schema-validation.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c7bd822adce38d68e5033b8997d819b81e548569/control_plane/object_family_register.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c7bd822adce38d68e5033b8997d819b81e548569/docs/registers/OBJECT_FAMILY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c7bd822adce38d68e5033b8997d819b81e548569/tests/schemas/test_evidence_ref_validator.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c7bd822adce38d68e5033b8997d819b81e548569/tools/validators/validate_evidence_ref.py"
+    ]
+  },
+  "truth_labels": {
+    "control_plane/object_family_register.yaml": "PROPOSED",
+    "docs/registers/OBJECT_FAMILY.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned main to c7bd822adce38d68e5033b8997d819b81e548569, found no open pull request for this slice, and verified matching historical branches are fully behind main with zero unique commits."
+    },
+    {
+      "gate": "existing-workflow-execution-evidence",
+      "outcome": "PASS",
+      "reason": "The existing schema-validation workflow binds the EvidenceRef schema, fixture family, validator inventory, make schemas aggregate, and repository-owned tests/schemas lane containing the focused EvidenceRef test."
+    },
+    {
+      "gate": "catalog-and-human-mirror-reconciliation",
+      "outcome": "PASS",
+      "reason": "The proposed machine catalog and human mirror now record the existing workflow without creating a workflow, changing EvidenceRef meaning or shape, or claiming referential resolution, admissibility, EvidenceBundle closure, runtime use, release, or publication."
+    },
+    {
+      "gate": "deterministic-structural-projection",
+      "outcome": "PASS",
+      "reason": "Parsed the register and workflow, verified derived hardened and IMPLEMENTED structural status, exact 16 required plus three retained family counts, eleven required conflicts, canonical path ordering, relationship closure, and recursive object-family workflow-watch coverage."
+    },
+    {
+      "gate": "repository-topology-baseline",
+      "outcome": "FAIL",
+      "reason": "Exact base main reports 130 baselined warnings, one new-drift finding, and one stale fingerprint. The slice does not alter the topology baseline; branch comparison must preserve the same signature."
+    },
+    {
+      "gate": "repository-native-object-family-and-focused-tests",
+      "outcome": "SKIPPED",
+      "reason": "The local execution image lacks declared jsonschema and pytest dependencies. Exact-head hosted schema-validation and object-family-register results remain required verification."
+    },
+    {
+      "gate": "hosted-exact-head-validation",
+      "outcome": "SKIPPED",
+      "reason": "No draft pull-request head existed when this pending-review provenance receipt was emitted. Hosted results must be reported from the exact remote head after PR creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "m02-coordination-issue",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3368"
+    },
+    {
+      "id": "current-main-schema-validation",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c7bd822adce38d68e5033b8997d819b81e548569/.github/workflows/schema-validation.yml"
+    },
+    {
+      "id": "current-main-object-family-register",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c7bd822adce38d68e5033b8997d819b81e548569/control_plane/object_family_register.yaml"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-26T00:10:32Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Bounded M02 navigational parity correction. It records already-existing EvidenceRef shape-validation orchestration and updates the human mirror. It creates no object-family authority, policy decision, evidence resolution, source activation, lifecycle transition, release, deployment, promotion, publication, or public behavior. Before merge, discard the draft branch; after merge, revert the scoped commit or apply a same-path forward correction."
+}
