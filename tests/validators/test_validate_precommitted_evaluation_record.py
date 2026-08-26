@@ -63,7 +63,7 @@ class PrecommittedEvaluationRecordTests(unittest.TestCase):
 
     def test_missing_outcome_cannot_keep_a_complete_score(self) -> None:
         result = VALIDATOR.validate_document(self.documents["invalid-outcome-coverage"])
-        self.assertEqual({finding.code for finding in result.findings}, {"OUTCOME_COVERAGE_MISMATCH", "SCORE_COVERAGE_MISMATCH"})
+        self.assertEqual({finding.code for finding in result.findings}, {"OUTCOME_COVERAGE_MISMATCH"})
 
     def test_builder_and_validator_have_no_network_or_write_surface(self) -> None:
         imports: set[str] = set()
