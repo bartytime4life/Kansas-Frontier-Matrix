@@ -2,25 +2,26 @@
 doc_id: kfm://app/explorer-web/readme
 title: Explorer Web App README
 type: app-readme
-version: v0.5
+version: v0.6
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Accessibility steward · Docs steward
 created: 2026-06-16
-updated: 2026-08-15
+updated: 2026-08-24
 policy_label: public
 owning_root: apps/
 responsibility: "Orient maintainers to the bounded Explorer Web deployable, its trust boundary, verified executable slices, validation path, and graduation gates without claiming release or deployment."
-truth_posture: "CONFIRMED repository evidence / PROPOSED shell decision / UNKNOWN deployment and live integration"
+truth_posture: "CONFIRMED repository-grounded local composition and bounded synthetic interaction / PROPOSED shell decision / UNKNOWN deployment and live integration"
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 35a6237f2f29e680bafe9af16f71e28fc585a735
-  target_prior_blob: 3d7944fcd31b7edeabca5b793eb7b88e12563f56
+  base_commit: 366cfa9185b0d10ca27f128a8a041ca8c5312896
+  target_prior_blob: a668a318b56cd3d8987162b366d0ffbae779c50c
 related:
   - ../README.md
   - ../governed-api/README.md
   - ../review-console/README.md
   - ./src/README.md
+  - ./src/site/README.md
   - ./src/adapters/README.md
   - ./src/features/README.md
   - ./src/features/story_player/current-implementation.md
@@ -34,8 +35,9 @@ related:
   - ../../tests/policy/test_explorer_web_adapter_boundary.py
 tags: [kfm, apps, explorer-web, map-first, governed-ui, evidence-drawer, focus-mode, story-player, finite-outcomes, fail-closed]
 notes:
-  - "v0.5 reconciles the README with the current fixture-first Explorer implementation while preserving the fixed fail-closed default entrypoint as the public maturity boundary."
-  - "Independent projection modules and tests are implementation evidence for their bounded slices, not proof of a live route tree, Governed API transport, admitted renderer, deployment, release, or publication."
+  - "v0.6 reconciles the app boundary with the current repository-grounded site composition, public anchor navigation, shared trust surface, and bounded synthetic Focus workspace."
+  - "The mounted composition and independently tested projections are implementation evidence for their bounded local slices, not proof of a production route tree, live Governed API transport, admitted renderer, deployment, release, or publication."
+  - "The synthetic Focus workspace accepts bounded user questions but resolves them only against deterministic repository fixtures; it does not contact a source, policy service, model runtime, or release service."
   - "ADR-0005 remains proposed; repository presence and passing checks do not accept the shell decision."
 [/KFM_META_BLOCK_V2] -->
 
@@ -47,7 +49,7 @@ notes:
 
 `apps/explorer-web/`
 
-**KFM's bounded browser-shell workspace: a fixed fail-closed default entrypoint plus independently tested, fixture-first projections for evidence, trust, time, story, map-selection, artifact-verification, and review surfaces.**
+**KFM's bounded browser-shell workspace: a repository-grounded local composition plus fixture-first projections for evidence, trust, time, Focus, story, map-selection, artifact-verification, and review surfaces.**
 
 ![status](https://img.shields.io/badge/status-draft-blue)
 ![default](https://img.shields.io/badge/default-ABSTAIN%20fail--closed-d4a72c)
@@ -62,7 +64,7 @@ notes:
 ---
 
 > [!IMPORTANT]
-> **This app is not a released KFM product.** The tracked workspace, locked build/test scripts, bounded projections, and synthetic browser proofs are real repository implementation. The default entrypoint still returns `ABSTAIN / NO_GOVERNED_RESPONSE`, accepts no input, mounts a no-input Evidence Drawer, and exposes no live map, route tree, Governed API transport, model runtime, deployment, or publication path.
+> **This app is not a released KFM product.** The tracked workspace, locked build/test scripts, repository-grounded site composition, bounded projections, and synthetic browser proofs are real repository implementation. The default entrypoint mounts local Map, Knowledge, Features, and Trust regions, public anchor navigation, a shared trust surface, and a bounded synthetic Focus workspace while retaining `ABSTAIN / NO_GOVERNED_RESPONSE` as its baseline trust posture. It exposes no live map, production route tree, Governed API transport, model runtime, deployment, or publication path.
 
 > [!CAUTION]
 > Explorer Web is downstream of trust. A rendered feature, tile, popup, story, diagnostic, score, screenshot, or generated explanation is never evidence authority. Claim-bearing UI must consume a governed finite-outcome envelope or an already released public-safe artifact and preserve evidence, policy, time, sensitivity, correction, and release context.
@@ -90,15 +92,17 @@ notes:
 
 ## 0. Current evidence snapshot
 
-This README distinguishes the **default composed app** from the larger set of **independently executable feature slices**. That distinction is the safest current maturity description.
+This README distinguishes the **mounted local composition** from the larger set of **independently executable feature slices** and from **unverified live operation**. That three-way distinction is the safest current maturity description.
 
 | Surface | Verified repository state | Authority limit |
 |---|---|---|
 | Workspace and toolchain | `package.json` provides real Vite, TypeScript, Vitest, and Playwright scripts under the locked pnpm workspace. | Buildability is not deployment, release, or publication. |
-| Default entrypoint | `src/main.ts` calls the fixed shell resolver, renders its finite state, and mounts the Evidence Drawer. | No route tree, transport, map, authentication, released layer, or dynamic claim flow. |
-| Baseline shell | No-input resolution returns `ABSTAIN / NO_GOVERNED_RESPONSE`; supplied input returns `ERROR / UNSUPPORTED_BASELINE_INPUT`. | The baseline intentionally cannot turn arbitrary browser input into a claim. |
+| Default entrypoint | `src/main.ts` mounts the repository-grounded Explorer site, public workspace navigation, bounded synthetic Focus workspace, and public trust surface. | Composition is local and deterministic; it is not a production route tree, transport, deployment, release, or publication path. |
+| Baseline shell posture | The composed hero preserves `ABSTAIN / NO_GOVERNED_RESPONSE`; the underlying fixed shell resolver still rejects unsupported baseline input. | The baseline remains a trust posture inside the larger composition, not the complete entrypoint. |
+| Site and workspace navigation | `src/site/` implements Map, Knowledge, Features, and Trust regions, code-owned anchor destinations, bounded public URL context, a synthetic map stage, and conservative repository catalogs. | Anchors and public context are not authenticated routes, released-layer identity, evidence authority, or live data. |
 | Adapters and feature modules | `src/adapters/` and `src/features/` contain app-local, defensive projections for multiple trust-visible surfaces. | Most are fixture-first consumers or view-model builders, not composed live routes. |
-| Evidence Drawer | A bounded parser/resolver, keyboard-operable drawer, negative copy, correction/history display, and browser tests exist. | No live `EvidenceBundle` resolver or accepted cross-root network contract is wired. |
+| Evidence Drawer and trust surface | A bounded parser/resolver, keyboard-operable drawer, shared six-label trust grammar, negative copy, correction/history display, and browser tests exist. | No live `EvidenceBundle` resolver or accepted cross-root network contract is wired. |
+| Focus workspace | The normal entrypoint mounts a bounded question form that submits through an injected synthetic governed boundary and preserves finite outcomes, evidence support, withheld-context limitations, and correction history. | Deterministic fixtures only; no source retrieval, model call, policy execution, live evidence authentication, or publication. |
 | Story Player | A bounded 2D-only consumer of an already-governed public-safe StoryManifest projection and focused unit tests exist. | No live route, fetch, StoryNode resolution, map continuity, authoring, or publication. |
 | Map and PMTiles proof | Synthetic map-selection handoff and mobile-emulated PMTiles archive/index/range/render verification exist with fail-closed cases. | No admitted MapLibre dependency, live renderer boot, cryptographic trust decision, source activation, or released layer. |
 | UI validation | The `ui-build` workflow performs locked install, build, unit tests, and browser tests; a policy test constrains renderer imports and internal-store path literals. | CI is a bounded signal, not evidence, policy, review, release, deployment, or publication authority. |
@@ -111,7 +115,9 @@ This README distinguishes the **default composed app** from the larger set of **
 CONFIRMED
   configured workspace
   locked build and test lane
-  static fail-closed entrypoint
+  repository-grounded local site composition
+  code-owned public anchor navigation and bounded URL context
+  shared trust-state surface and synthetic Focus workspace
   independently tested fixture-first projections
   synthetic browser and boundary proofs
 
@@ -146,7 +152,7 @@ Its intended role is to compose:
 - Story Player, Compare, Export, Settings, Diagnostics, and read-only review views;
 - accessible non-map alternatives and negative states.
 
-The current implementation proves a defensive foundation and multiple isolated projection slices. It does **not** yet prove an integrated map application. See the [source-tree README](./src/README.md), [feature catalog](./src/features/README.md), and [ADR-0005](../../docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md) for the deeper boundary and decision record.
+The current implementation proves a defensive, repository-grounded local composition and multiple bounded projection slices. It does **not** yet prove an integrated live map application. See the [site-composition README](./src/site/README.md), [feature catalog](./src/features/README.md), and [ADR-0005](../../docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md) for the deeper implementation boundary and proposed shell decision.
 
 [Back to top](#top)
 
@@ -300,9 +306,9 @@ The directory contains a growing catalog of bounded feature families. Presence m
 
 | Family | Current evidence | Current boundary |
 |---|---|---|
-| Shell and trust chrome | Fixed baseline resolver; trust-header and time-banner projections/tests | Default shell remains static and unintegrated |
-| Evidence surfaces | Evidence Drawer, citation pill, tooltip, provenance, attestation, lineage, and denial projections | Fixture-first; no live evidence resolver |
-| Focus and story | Focus composed-claim tests and bounded Story Player consumer | No live route, model call, or story publication |
+| Shell and trust chrome | Repository-grounded site composition, public anchor navigation/context, baseline shell posture, shared trust surface, and focused tests | Local/static and fixture-first; no production route tree, authentication, transport, or deployment |
+| Evidence surfaces | Mounted Evidence Drawer/trust projections plus citation pill, tooltip, provenance, attestation, lineage, and denial slices | Fixture-first; no live evidence resolver |
+| Focus and story | Mounted synthetic Focus workspace, Focus composed-claim tests, and bounded Story Player consumer | No live governed transport, model call, story route, or story publication |
 | Map and layers | Synthetic map-selection bridge, layer catalog/lineage projections, HUC crosswalk, mobile PMTiles verification | No admitted MapLibre runtime or released layer |
 | Domain panels | Fauna and environmental/soil/hydrology-oriented projections | Domain UI projections, not domain truth |
 | Review and governance visibility | Read-only review, promotion-gate, watcher/source-health, STAC, OCI, and diagnostics projections | No review mutation or authority transition |
@@ -440,7 +446,7 @@ pnpm --filter explorer-web test:browser
 pnpm --filter explorer-web dev
 ```
 
-The development server displays the fixed fail-closed entrypoint unless code composition changes. Tests exercise a broader set of fixture-first slices than the default page.
+The development server displays the repository-grounded local site composition, including its synthetic map, public workspace navigation, bounded Focus request surface, and shared trust-state cases. Tests exercise a broader set of fixture-first slices than the composed page.
 
 ### Inspect current implementation
 
@@ -566,7 +572,7 @@ The app must continue to prove that:
 | Confirmed owner and independent review route | `OWNER_TBD` must not be replaced without evidence. |
 | Functional MapLibre adapter and dependency | Current wrapper/adapter surfaces do not establish a live renderer. |
 | Live Governed API response contract and transport | Fixture projections are not network integration. |
-| Route inventory and default composition | Feature paths are not proof of navigable routes. |
+| Production route inventory | Code-owned anchor destinations and public URL context exist, but feature paths and anchors are not proof of authenticated or production routes. |
 | Released layer and artifact discovery | Synthetic PMTiles proof does not load a governed public release. |
 | EvidenceBundle resolution and citation validation | Defensive payload projection is not end-to-end evidence closure. |
 | Integrated Focus, Story, Compare, and Export flows | Bounded consumers exist, but cross-feature composition remains incomplete. |
@@ -580,8 +586,8 @@ The app must continue to prove that:
 
 ## Status summary
 
-Explorer Web is best described as a **bounded, executable, fixture-first UI laboratory behind a deliberately inert default shell**.
+Explorer Web is best described as a **bounded, executable, repository-grounded local composition and fixture-first UI laboratory**.
 
-That is more mature than a placeholder and less mature than a live map product. The repository proves real build/test tooling, defensive adapters, many finite-state projections, Evidence Drawer behavior, a bounded Story Player consumer, synthetic map-selection and mobile PMTiles verification, and static anti-bypass checks. It does not yet prove a live route tree, admitted renderer, Governed API transport, released map layer, deployment, or public operation.
+That is more mature than a placeholder or inert shell and less mature than a live map product. The repository proves real build/test tooling, a mounted local site and navigation composition, bounded public context, shared trust states, a synthetic Focus request surface, defensive adapters, many finite-state projections, Evidence Drawer behavior, a bounded Story Player consumer, synthetic map-selection and mobile PMTiles verification, and static anti-bypass checks. It does not yet prove a production route tree, admitted renderer, live Governed API transport, released map layer, model-backed Focus execution, deployment, or public operation.
 
 <p align="right"><a href="#top">Back to top</a></p>

@@ -9,7 +9,7 @@ owners:
   - "@bartytime4life — verified GitHub review route only"
   - "NEEDS VERIFICATION — accountable Atmosphere, source, scientific, rights, sensitivity, evidence, policy, validation, review, promotion, release, correction, rollback, operations, public-surface, and independent-review assignments"
 created: 2026-05-13
-updated: 2026-08-24
+updated: 2026-08-25
 policy_label: restricted-review; atmosphere; promotion-readiness; fail-closed; no-release-authority; no-publication-authority; not-for-life-safety
 current_path: docs/runbooks/atmosphere/PROMOTION_RUNBOOK.md
 owning_root: docs/
@@ -28,11 +28,11 @@ evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
   initial_base_commit: df6c3f5dadd2800fdc2356ceb540ca4e448f6c7a
-  reconciled_base_commit: 6e1bc94ea13fc0c7429fb824b62099ed1871598b
+  reconciled_base_commit: 218363515d5f477cb4005491e22945130b84eebc
   target_prior_blob: c19719a1014db3b1217c8d2fad1d4315a3bb0d99
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  atmosphere_runbook_index_blob: 3fc864c34682de630faa2c529a41004e7ff08e38
-  atmosphere_release_rollback_runbook_blob: 7db7cc87e673b6a9f29b76cc6cb865099ad2ea8a
+  atmosphere_runbook_index_blob: ed9d6588dbd7400ac78eb65a897b008399d4307e
+  atmosphere_release_rollback_runbook_blob: 9054c5a584f06f065b94960491de28a0c6941217
   atmosphere_candidate_readme_blob: 2cff863a65c035cc167583ecae481c03580fc24a
   atmosphere_workflow_blob: fccba4b6e2cdae561ec8a4904446ed5dbe6ec8ce
   promotion_gate_readme_blob: e729df0cc007e8cf0d9811afc25ec1f5ffbdffdd
@@ -56,11 +56,11 @@ inspection_boundary: >-
   consumer, or public surface was exercised. No candidate, decision, receipt,
   manifest, lifecycle transition, release, deployment, promotion, correction,
   rollback, alert, medical determination, regulatory determination, or
-  publication was created or performed. Main advanced during authoring through
-  merged PR #3508, which changed the Atmosphere runbook index and combined
-  release/rollback coordination procedure but did not change this target. The
-  branch was reconciled against that exact main checkpoint and preserves those
-  merged changes.
+  publication was created or performed. Main advanced after initial authoring
+  through the current-session checkpoint. This reconciliation reverified the
+  pinned authority and object-family surfaces, preserved intervening main
+  ancestry, and refreshed the Atmosphere index and combined release/rollback
+  evidence bindings without expanding the two-file pull-request scope.
 related:
   - ../README.md
   - ./README.md
@@ -183,7 +183,7 @@ It may not end with `PROMOTED`, `RELEASED`, `DEPLOYED`, or `PUBLISHED`.
 
 ## Current repository posture
 
-The following conclusions are bounded to reconciled `main@6e1bc94ea13fc0c7429fb824b62099ed1871598b`.
+The following conclusions are bounded to reconciled `main@218363515d5f477cb4005491e22945130b84eebc`.
 
 | Surface | Status | Safe conclusion |
 |---|---|---|
@@ -380,10 +380,11 @@ A safe sequence is:
 ```text
 candidate packet
   -> bounded readiness validation
+  -> candidate ReleaseManifest preparation and immutable binding
   -> accountable review
   -> PromotionDecision
-  -> transition execution and PromotionReceipt
-  -> ReleaseManifest / release application
+  -> authorized transition execution and PromotionReceipt
+  -> release authorization / application
   -> deployed public-safe carrier
   -> public read-back and monitoring
 ```
@@ -446,7 +447,7 @@ A real candidate packet must at minimum declare:
 - validation profile and exact results;
 - subject-bound review and authority references;
 - correction lineage; and
-- rollback target and scope.
+- a successor rollback target, or explicit first-release withdrawal/hold assurance, with scope.
 
 The shared validator can inspect declared fields, but it does not authenticate them.
 
@@ -464,7 +465,7 @@ Stop and emit a named hold, abstention, denial, or error when any of these appli
 - evidence references do not resolve or proof scope is insufficient;
 - the policy source, bundle, selector, evaluator, or outcome cannot be verified;
 - reviewer identity, authority, scope, separation, expiry, or obligations cannot be verified;
-- correction lineage or rollback target is missing;
+- correction lineage is missing; a successor lacks a rollback target; or a first-release candidate lacks withdrawal/hold assurance;
 - the packet requests live source access, credentials, protected data, current-condition advice, or public writes;
 - an exact-location, infrastructure, private-network, or re-identifying join exceeds the public need;
 - a required path or command does not match the pinned repository;
@@ -496,7 +497,7 @@ TRIPLET -> PUBLISHED
 
 Any other lifecycle transition is outside the current shared A–G profile. Route it to the owning upstream procedure rather than renaming it “promotion.”
 
-**Output:** frozen subject record or `ERROR_UNSUPPORTED_BOUNDARY`.
+**Output:** frozen subject record or `ERROR` with reason code `UNSUPPORTED_BOUNDARY`.
 
 ### Step 2 — Verify candidate inventory and identity
 
@@ -594,6 +595,13 @@ Use the current repository command only on:
 
 Do not fabricate a candidate packet to obtain `PASS`.
 
+For a first release with no legitimate predecessor, the current Gate G profile
+cannot represent withdrawal-only recovery: it requires a rollback card and a
+`target_spec_hash` distinct from the candidate hash. Do not invent a target.
+Record the bounded A–G readiness check as `NOT_RUN` and return
+`HOLD_FOR_FIRST_RELEASE_RECOVERY_PROFILE` until an accepted withdrawal-only
+profile exists.
+
 The validator:
 
 - performs no network access;
@@ -640,21 +648,24 @@ Do not include:
 
 ### Step 10 — Stop at the authority boundary
 
-A readiness `PASS` yields:
+Only when every preceding source, evidence, policy, authority, sensitivity,
+correction, rollback, and profile check has closed without a retained hold,
+abstention, denial, error, or `NOT_RUN` result does readiness `PASS` yield:
 
 ```text
 READY_FOR_ACCOUNTABLE_REVIEW
 ```
 
-or the validator vocabulary:
+This is the runbook handoff label for the validator's equal readiness value:
 
 ```text
 APPROVE_READY
 ```
 
-It does not yield `APPROVE`.
+A declaration-only validator `PASS` must not overwrite an earlier substantive
+hold. Neither readiness label yields `APPROVE`.
 
-The next steps—accountable review, `PromotionDecision`, transition application, `PromotionReceipt`, release manifesting, release authorization, deployment, publication, and public read-back—belong to separate authorities and procedures.
+The next steps—candidate `ReleaseManifest` preparation and binding, accountable review, `PromotionDecision`, authorized transition application and `PromotionReceipt`, release authorization/application, deployment, publication, and public read-back—belong to separate authorities and procedures.
 
 [Back to top](#top)
 
@@ -677,7 +688,7 @@ The implemented A–G profile is generic. Atmosphere readiness must overlay the 
 | Observed, modeled, aggregate, regulatory, contextual, candidate, synthetic, and restricted roles remain distinct | Carry source role through evidence, catalog, map, export, graph, and AI surfaces. | `DENY` on role downcasting or substitution. |
 | Pollutant, variable, units, method, and averaging window are load-bearing | Bind them to the candidate, evidence, validation, and carrier. | `DENY` or `ABSTAIN` when they are missing, incompatible, or ambiguous. |
 | Time and freshness are claim-specific | Preserve observation, model-run, issue, valid, retrieval, correction, expiry, release, and stale state. | `HOLD`, `ABSTAIN`, or `DENY` when stale or temporally ambiguous. |
-| Station and network precision is audience-aware | Expose only the precision needed for the released claim; review sensitive joins. | `DENY` or `RESTRICT` when precision or joins create harm. |
+| Station and network precision is audience-aware | Expose only the precision needed for the released claim; review sensitive joins. | `HOLD_FOR_SENSITIVITY` or `DENY` when precision or joins create harm. |
 | Cross-domain impacts retain owner authority | Atmosphere may provide forcing or context; Hazards, Hydrology, Agriculture, Habitat, Fauna, Flora, Roads, and Settlements retain their canonical claims. | `ABSTAIN` or route to the owning lane. |
 | AI is interpretive | AI may summarize released EvidenceBundles under policy and citation checks. | `ABSTAIN`, `DENY`, or `ERROR` when support, policy, or citation closure fails. |
 
@@ -914,7 +925,8 @@ At the evidence snapshot, the following remain load-bearing:
 - `HOLD_FOR_TRANSITION_EXECUTION` — no accepted Atmosphere promotion executor or applied transition proof was established;
 - `HOLD_FOR_RELEASE_MANIFEST` — no Atmosphere ReleaseManifest was established;
 - `HOLD_FOR_PUBLIC_READ_BACK` — deployed carriers, aliases, caches, endpoints, monitoring, and public state remain unknown; and
-- `HOLD_FOR_OPERATIONAL_ROLLBACK` — bounded card validation/rehearsal does not establish operational rollback.
+- `HOLD_FOR_OPERATIONAL_ROLLBACK` — bounded card validation/rehearsal does not establish operational rollback; and
+- `HOLD_FOR_FIRST_RELEASE_RECOVERY_PROFILE` — a future first release with no predecessor cannot use the current Gate G rollback shape without inventing a target.
 
 ### Current default result
 
@@ -956,25 +968,25 @@ A separately governed process must establish, as applicable:
 
 1. admitted and current source authority;
 2. authentic, sufficient EvidenceBundle support;
-3. accepted and executed policy;
-4. accountable independent review;
-5. `PromotionDecision`;
-6. transition execution and authoritative receipt;
-7. ReleaseManifest and signer/attestation custody;
-8. correction and rollback readiness;
-9. deployment and public-safe carrier activation;
-10. cache/index/alias propagation;
-11. public read-back and monitoring; and
-12. correction, withdrawal, or rollback triggers.
+3. correction and rollback readiness;
+4. candidate `ReleaseManifest` and signer/attestation custody;
+5. accepted and executed policy;
+6. accountable independent review;
+7. `PromotionDecision`;
+8. authorized transition execution and authoritative receipt;
+9. release authorization/application;
+10. deployment and public-safe carrier activation;
+11. cache/index/alias propagation;
+12. public read-back and monitoring; and
+13. correction, withdrawal, or rollback triggers.
 
 ### No implied transitions
 
 The following are not interchangeable:
 
 ```text
-validation PASS
-!= readiness PASS
-!= APPROVE_READY
+profile validation PASS
+!= readiness PASS = APPROVE_READY
 != review approval
 != PromotionDecision APPROVE
 != transition applied
@@ -994,6 +1006,10 @@ No reviewer, tool, workflow, assistant, or document may collapse these states th
 ## Correction, withdrawal, and rollback
 
 Promotion readiness must be reversible before any public transition is considered.
+A successor candidate requires a verified prior target. A first-release candidate
+has no legitimate predecessor; while Gate G requires one, record readiness as
+`NOT_RUN` and retain `HOLD_FOR_FIRST_RELEASE_RECOVERY_PROFILE` unless an
+accepted withdrawal-only recovery profile closes that gap.
 
 ### Before handoff
 
@@ -1313,4 +1329,4 @@ They do not release, deploy, promote, or publish.
 
 ---
 
-**Last updated:** 2026-08-24 · **Version:** v2.0.0 · **Terminal boundary:** accountable review handoff only · [Back to top](#top)
+**Last updated:** 2026-08-25 · **Version:** v2.0.0 · **Terminal boundary:** accountable review handoff only · [Back to top](#top)

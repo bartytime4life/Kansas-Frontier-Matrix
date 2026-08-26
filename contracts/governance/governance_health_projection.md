@@ -29,6 +29,12 @@ The first fixture-only profile computes eight indicators already named by the KF
 - `EMPTY`: no applicable observations were supplied.
 - `ERROR`: malformed, non-canonical, internally inconsistent, or authority-overreaching input/output.
 
+## Schema closure
+
+Before returning a projection, the compiler validates the complete emitted object against the Draft 2020-12 schema at `schemas/contracts/v1/governance/governance_health_projection.schema.json`. An unavailable or invalid schema, or a nonconforming generated object, fails closed without returning a partial projection. The command-line surface reports the existing finite `ERROR` / `INVALID_INPUT` outcome; library callers receive `ValueError`.
+
+Schema conformance proves only the bounded machine shape. It does not make a projection authoritative, healthy, compliant, release-ready, or publishable.
+
 ## Non-authority boundary
 
 The projection does not declare `GREEN`, `HEALTHY`, `SAFE`, `RELEASE_READY`, or similar conclusions. Dashboard thresholds remain documentation/policy concerns and require separate review. A ratio of `1.0` is only a measurement over the bounded supplied observations.

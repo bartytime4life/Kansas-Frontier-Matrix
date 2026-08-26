@@ -1,11 +1,18 @@
 # Representation fitness assessment source adaptation
 
-Status: PROPOSED implementation candidate.
+Status: IMPLEMENTED as a bounded `PROPOSED_INACTIVE` / `FIXTURE_ONLY` profile.
 
-KFM Components Pass 18 identifies representation and fitness-for-use acceptance criteria as an implementation gap. Current repository reconciliation found a mature fixture-first `RepresentationReceipt` family that records transformation fidelity, information loss, evidence binding, represented time, reality-boundary linkage, and correction lineage, but no cross-domain fitness assessment for one declared use.
+Reconciled against `main@2d0c9a8e4072ce14cb71404585e85fbc86339e12` on 2026-08-25. The proposal lineage is *KFM Pass 18 — Idea Index, Category Atlas, and Expansion Dossier*, Pass 18, §8.6.49, printed p. 302 (`KFM-P9-IDEA-0003`). That downstream carrier proposes purpose-bound fitness assessment; it does not establish repository authority or implementation status.
 
-This slice therefore adds only a read-only compatibility assessment over declared representation metadata. It does not modify `RepresentationReceipt`, decide evidence truth, execute policy, determine professional fitness, authorize a source, write lifecycle state, promote, release, deploy, publish, or authorize public use.
+The earlier absence statement is superseded by current executable repository evidence. The bounded profile now exists as:
 
-The fixture profile checks bounded combinations of intended use, source role, fidelity, geometry character, scale range, temporal coverage, EvidenceRef presence, and synthetic reality-boundary linkage. `FIT` means only internal compatibility with this proposed profile; `HOLD` preserves an unsupported use without silently upgrading it.
+- semantic contract: [`contracts/map/representation_fitness_assessment.md`](../../../contracts/map/representation_fitness_assessment.md);
+- machine shape: [`schemas/contracts/v1/map/representation_fitness_assessment.schema.json`](../../../schemas/contracts/v1/map/representation_fitness_assessment.schema.json);
+- synthetic cases: [`fixtures/contracts/v1/map/representation_fitness_assessment/cases.json`](../../../fixtures/contracts/v1/map/representation_fitness_assessment/cases.json);
+- deterministic validator: [`tools/validators/map/validate_representation_fitness_assessment.py`](../../../tools/validators/map/validate_representation_fitness_assessment.py);
+- focused proof: [`tests/validators/map/test_representation_fitness_assessment.py`](../../../tests/validators/map/test_representation_fitness_assessment.py); and
+- read-only workflow: [`.github/workflows/representation-fitness-assessment.yml`](../../../.github/workflows/representation-fitness-assessment.yml).
 
-Directory Rules basis: meaning under `contracts/map/`; shape under `schemas/contracts/v1/map/`; synthetic replay under `fixtures/contracts/v1/map/`; validation under `tools/validators/map/`; tests under `tests/validators/map/`; CI under `.github/workflows/`.
+The validator returns finite `FIT`, `HOLD`, or `ERROR` outcomes over declared representation metadata. `FIT` means only internal compatibility with this fixture profile. The packet does not modify `RepresentationReceipt`, decide evidence truth, execute policy, determine professional fitness, authorize a source, write lifecycle state, promote, release, deploy, publish, or authorize public use.
+
+Accepted ADR-0029 and the adopted Directory Rules support the existing placement: meaning under `contracts/map/`, shape under `schemas/contracts/v1/map/`, synthetic replay under `fixtures/`, validation under `tools/validators/map/`, proof under `tests/validators/map/`, and orchestration under `.github/workflows/`. This reconciliation changes only the source map; no packet file, registry, manifest, compatibility surface, or authority home changes.

@@ -9,10 +9,10 @@ This guide explains how to contribute code, documentation, schemas, policies, fi
 | Field | Current status |
 |---|---|
 | Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Evidence snapshot for this revision | `main@99337e68ba4299b667f27d5dd35c3dc92295933e` |
+| Evidence snapshot for this revision | `main@66489ef991cf015d1dd697fe965981a1da171897` |
 | Directory-governance authority reverified | `main@2262d5b374eebeb216494c05a8edb4cc189dfd84`; accepted [`ADR-0029`](docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) |
 | Document role | Root contribution guide |
-| Truth posture | Cite-or-abstain; use the core four truth labels |
+| Truth posture | Cite-or-abstain; report truth posture and capability maturity separately for material capability claims |
 | Review route | Focused branch and draft pull request by default |
 | Verified review-routing file | [`.github/CODEOWNERS`](.github/CODEOWNERS) |
 | Review-routing limitation | The listed GitHub teams and branch-protection enforcement remain **NEEDS VERIFICATION** |
@@ -133,6 +133,29 @@ A revision should:
 - preserve IDs, anchors, public links, and compatibility surfaces unless the change intentionally migrates them;
 - state conflicts rather than flattening them;
 - avoid turning a polished document into implementation proof.
+
+### 4. Use the optional proof rhythm when it helps
+
+For a bounded contribution that crosses several trust responsibilities, the
+following sequence can organize the work and its handoffs:
+
+| Session | Question | Handoff to existing owners |
+|---|---|---|
+| `FRAME` | What current claim, place/time scope, user value, owner, non-goals, and stop conditions bound the work? | Task contract, issue, or pull-request scope |
+| `TRACE` | Which source roles, rights, sensitivity, identity, temporal model, and evidence target control the claim? | Existing source, evidence, rights, sensitivity, identity, and temporal surfaces |
+| `PROVE` | Which contract, schema, fixture, validator, policy dependency, and positive and negative cases establish the bounded behavior? | Responsibility-owning contracts, schemas, policy, fixtures, tests, and receipts |
+| `SHOW` | How will a governed API, map, drawer, or Focus interaction keep `ABSTAIN`, `DENY`, `HOLD`, stale, conflict, and correction states visible? | Existing carrier and public-safe interaction surfaces |
+| `REHEARSE` | Which human review, dry run, correction, rollback, unresolved items, and next decision complete the handoff? | Existing review, release, correction, rollback, and continuation records |
+
+This rhythm is optional contributor organization, not a KFM state machine. It
+does not rename the lifecycle, create a policy or gate outcome, prove a claim,
+or authorize review, merge, promotion, release, deployment, publication, or
+public use. A session may be omitted when it does not apply, but the owning
+responsibility and any unresolved risk must remain explicit.
+
+Proposal provenance: *KFM Living Compass Working Edition 1.0*, `TRAIL 12 - A
+five-session mission rhythm`, reconciled through the
+[circled-source distinctive-delta map](docs/intake/exploratory/circled-whole-system-sources-distinctive-delta-source-map.md#32-five-session-contributor-rhythm).
 
 ## Choose the owning responsibility root
 
@@ -328,6 +351,19 @@ Use these labels for material claims:
 | **NEEDS VERIFICATION** | Checkable, but not yet checked strongly enough to act as fact |
 
 `INFERRED`, `CONFLICTED`, `SUPERSEDED`, `RETAINED`, or similar terms may qualify a claim's relationship or lifecycle, but they do not replace the core four evidence labels.
+
+### Capability maturity is a separate axis
+
+Whenever a pull request makes a material claim about a repository capability, report two independent answers at a pinned evidence snapshot:
+
+| Axis | Pull-request vocabulary | Question answered | Must not imply |
+|---|---|---|---|
+| Authority / epistemic posture | `CONFIRMED`, `PROPOSED`, `UNKNOWN`, `NEEDS VERIFICATION` | How strongly may the exact claim be relied on? | Implementation, deployment, activation, release, or publication |
+| Capability maturity | `IMPLEMENTED`, `PARTIAL`, `DRAFT`, `DEPRECATED`, `ABSENT`, `NOT INSPECTED` | What implementation evidence exists for the exact capability and scope? | Acceptance, evidence sufficiency, rights clearance, policy approval, review, release, publication, or public fitness |
+
+Do not infer either axis from the other. An implemented validator may enforce only a proposed inactive profile; an accepted placement decision may be only partially implemented; a confirmed source fact may remain held by rights or sensitivity controls. When a capability was not inspected, use `NOT INSPECTED` instead of inferring maturity from prose, filenames, schemas, workflow names, or check status.
+
+This is a reporting discipline, not a new machine enum, lifecycle state, gate result, policy outcome, ADR status, release state, or publication authority. Its proposal lineage and bounded non-effects are recorded in [`circled-whole-system-sources-distinctive-delta-source-map.md`](docs/intake/exploratory/circled-whole-system-sources-distinctive-delta-source-map.md#31-two-axis-assessment-authority-is-not-maturity).
 
 ### Evidence requirements
 

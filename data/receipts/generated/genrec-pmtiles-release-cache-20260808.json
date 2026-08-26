@@ -1,10 +1,10 @@
 {
   "artifact_hashes": {
     ".github/workflows/pmtiles-release-cache.yml": "sha256:e8a1531e36cdb6c1d15851f74d6cd1cf10e4d3a7fb4aed441575c44119400a9f",
-    "apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts": "sha256:29d042156d75b8a86996dafba630ed3cae9cc41da3dd4792e1687332a4338875",
-    "apps/explorer-web/tests/pmtiles-release-cache.test.ts": "sha256:9561e38a138a12750a8cfd2459434f456a8a440b2ceb5053be64f9885ea6efd0",
-    "contracts/runtime/pmtiles_release_cache.md": "sha256:4d254a19ebc60a62ffa1109d83fc2d300c7ddbbbd97e54bad5f1e9d1e699e096",
-    "fixtures/runtime/pmtiles_release_cache/cases.json": "sha256:8ae5fc9bb8c8ae7688004bf5dcc01b85ba65454ef6d602af927eca45581fd9fb"
+    "apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts": "sha256:622d9a74412527f874f9b6aea46370d2243fde2449cadb1cbf187b9986b4da15",
+    "apps/explorer-web/tests/pmtiles-release-cache.test.ts": "sha256:eafaa3f964d860e24ed677939b953448d9eecca99730fc70e97b975b316fb4fc",
+    "contracts/runtime/pmtiles_release_cache.md": "sha256:65b6501c96cd5199f2cafc7d944a257cd28bdfb552007eab53255a315dda75a9",
+    "fixtures/runtime/pmtiles_release_cache/cases.json": "sha256:411ee695577dbcd7e45125808b74adf53d76bf5a48a2c542a5c8ef40a3732550"
   },
   "artifact_paths": [
     ".github/workflows/pmtiles-release-cache.yml",
@@ -52,14 +52,14 @@
   "links": {
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null,
-    "pr_number": null
+    "pr_number": 3574
   },
   "model_identity": {
     "model": "GPT-5.6 Pro",
     "provider": "OpenAI",
     "version": "2026-08-08"
   },
-  "notes": "Fixture-only release-scoped PMTiles cache policy selected from ML-Y-114. It binds cache keys to release, artifact, and policy identity and proves exact decisions for online first run, offline miss, partial download, stale release, policy/artifact mismatch, missing glyphs/sprites, withdrawal, internal-source denial, authority overclaim, and malformed input. No Service Worker, network, CacheStorage, MapLibre, release, or publication side effect occurs.",
+  "notes": "Fixture-only release-scoped PMTiles cache policy selected from ML-Y-114. It binds cache keys to release, artifact, and policy identity and proves exact decisions for online first run, offline miss, partial download, stale release, policy/artifact mismatch, missing glyphs/sprites, withdrawal, internal-source denial, authority overclaim, malformed input, and closed-vocabulary input rejection. No Service Worker, network, CacheStorage, MapLibre, release, or publication side effect occurs. Corrective current-byte edition after PR #3574 merged at b0a4c657162a27c84cf176b8db865bb230a8ca72: the later module, test, contract, and fixture bytes are attributable to PR #3574 head ad174a31e3f9fd7eb5fa66858d5f055c0427c789 and are not claimed as outputs of this receipt's original 2026-08-08 model or prompt provenance.",
   "override_record": null,
   "parameters": {
     "max_tokens": null,
@@ -96,7 +96,7 @@
     {
       "gate": "fixture-replay",
       "outcome": "PASS",
-      "reason": "Fourteen synthetic cache cases matched exact finite outcome and code pairs."
+      "reason": "Eighteen synthetic cache cases match exact finite outcome and code pairs, including fail-closed rejection of unknown request modes, release states, required assets, and empty release IDs."
     },
     {
       "gate": "release-scoped-key",
@@ -116,12 +116,12 @@
     {
       "gate": "generated-receipt-byte-binding",
       "outcome": "PASS",
-      "reason": "Every listed artifact path is unique and its SHA-256 digest matches this receipt."
+      "reason": "Every listed current artifact except this receipt is byte-bound without receipt self-reference. The four later module, test, contract, and fixture byte versions are attributable to PR #3574, not to the original 2026-08-08 model/prompt provenance."
     },
     {
       "gate": "hosted-exact-head-ci",
-      "outcome": "SKIPPED",
-      "reason": "Hosted validation starts after the branch and draft pull request are created."
+      "outcome": "FAIL",
+      "reason": "PR #3574 synthetic merge 53164e4b99004ff2a0ba6cc403dce5cb74f25c69 passed the focused unit test and Explorer build but failed generated-receipt validation because the four later artifact digests had not been rebound; this corrective receipt edit is validated separately."
     },
     {
       "gate": "human-review",

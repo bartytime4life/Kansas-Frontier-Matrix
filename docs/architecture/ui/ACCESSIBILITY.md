@@ -2,13 +2,13 @@
 doc_id: kfm://doc/architecture/ui/accessibility
 title: KFM UI — Accessibility Architecture
 type: architecture
-version: v1.0-draft
-status: draft; repository-grounded; cross-cutting; explanatory; no-conformance-authority
+version: v1.1-draft
+status: draft; repository-grounded; cross-cutting; partial-keyboard-ci; explanatory; no-conformance-authority
 owners:
   - "@bartytime4life — verified CODEOWNERS review route"
 owner_status: "CODEOWNERS routing is CONFIRMED. Accountable accessibility, UI, policy/privacy, evidence, release, and independent assistive-technology review assignments remain NEEDS VERIFICATION."
 created: 2026-05-14
-updated: 2026-08-18
+updated: 2026-08-24
 policy_label: public
 owning_root: docs/
 responsibility: "Explain the KFM UI accessibility boundary, current bounded implementation evidence, target behavior, validation burden, failure posture, and graduation gates without becoming contract, schema, policy, release, publication, or conformance authority."
@@ -16,8 +16,8 @@ truth_posture: "CONFIRMED repository evidence / PROPOSED accessibility architect
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 241b1f6cd76110c188449b8942a9ea93b6aedf9f
-  target_prior_blob: 902f10807813152cfe8f59ec5e183c654a427cd7
+  base_commit: 8c943018a0cd59b06b5a623e15b9a9068a3513f4
+  target_prior_blob: 580fcb19e1c7cbea7980f69790b26b53a225e261
   ui_architecture_readme_blob: 36d975710d906a6c4146c550d40929b1822b667e
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
   explorer_manifest_blob: ddd201b74a06001d84a14bf54ac62a6cc3607a29
@@ -59,11 +59,12 @@ related:
   - .github/workflows/evidence-drawer-payload.yml
 tags: [kfm, ui, accessibility, architecture, explorer-web, evidence-drawer, finite-outcomes, keyboard, focus, non-map-parity, trust-membrane]
 notes:
-  - "v1.0-draft is a same-path documentation-only reconciliation against current repository evidence."
+  - "v1.1-draft records the bounded keyboard/focus CI graduation without expanding the document into conformance authority."
   - "The inherited WCAG 2.2 AA statement is retained as a PROPOSED target, not a conformance claim or accepted release gate."
-  - "The current accessibility workflow is an explicit non-enforcing readiness HOLD; a green run is not an accessibility pass."
+  - "The accessibility workflow now runs one bounded keyboard/focus smoke over eight deterministic Explorer browser specifications; the axe job remains an explicit non-enforcing readiness HOLD."
+  - "A passing keyboard-navigation job is scoped CI evidence only, not an app-wide audit, assistive-technology result, WCAG conformance statement, release decision, or publication approval."
   - "The default Explorer entrypoint is a bounded fail-closed shell plus fixture-driven Evidence Drawer, not a functional map, live governed client, deployment, or published product."
-  - "The prior maplibre-3d dependency and implemented 3D-admission assertions are removed. docs/architecture/maplibre-3d.md is absent, ADR-0007 remains proposed, and the renderer runtime remains on HOLD."
+  - "The prior maplibre-3d dependency and implemented 3D-admission assertions are removed. ADR-0006 and ADR-0007 now govern the accepted renderer architecture, while dependency admission and a concrete MapLibreAdapter remain on HOLD."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -74,15 +75,15 @@ notes:
 > **One-line rule.** KFM accessibility keeps evidence, finite outcomes, trust state, correction state, and user control perceivable and operable without turning documentation, tests, badges, maps, or assistive-technology output into truth or release authority.
 
 > [!IMPORTANT]
-> **Current maturity is bounded.** At `main@241b1f6cd76110c188449b8942a9ea93b6aedf9f`, the default Explorer entrypoint composes a static fail-closed shell and a fixture-driven Evidence Drawer. The drawer has tested native controls, a named complementary landmark, Escape-to-close behavior, focus entry and restoration, finite text outcomes, citations, trust labels, and fixed no-leak negative copy. This evidence does **not** establish a functional map, complete route system, live governed transport, app-wide keyboard completion, automated accessibility-rule coverage, manual assistive-technology parity, WCAG conformance, deployment, release, or publication.
+> **Current maturity is bounded.** At `main@8c943018a0cd59b06b5a623e15b9a9068a3513f4`, Explorer Web has deterministic Playwright fixtures for native workspace navigation, citation and evidence controls, Evidence Drawer focus entry/restoration, a keyboard-operable time slider, renderer-neutral map-selection handoff, text-first finite runtime trust states, and bounded Focus composition. The dedicated accessibility workflow now executes a curated eight-spec keyboard/focus smoke. This evidence does **not** establish a functional MapLibre renderer, complete route system, live governed transport, app-wide keyboard completion, automated accessibility-rule coverage, manual assistive-technology parity, WCAG conformance, deployment, release, or publication.
 
 | Field | Current value |
 |---|---|
 | **Document status** | `draft` / repository-grounded architecture guidance |
 | **Placement authority** | Accepted [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) and adopted [`directory-rules.md`](../../doctrine/directory-rules.md) |
 | **Repository review route** | `@bartytime4life` through CODEOWNERS; not proof of independent accessibility review |
-| **Confirmed implementation** | Bounded shell semantics plus fixture-driven Evidence Drawer keyboard/focus behavior |
-| **Accessibility workflow** | `WORKFLOW_HOLD`; no axe or full keyboard-navigation audit runs |
+| **Confirmed implementation** | Bounded shell, workspace navigation, evidence/citation controls, time control, renderer-neutral selection, Focus composition, and Evidence Drawer keyboard/focus behavior over synthetic fixtures |
+| **Accessibility workflow** | `keyboard-navigation` executes an eight-spec Playwright smoke; `axe` remains `WORKFLOW_HOLD` |
 | **Renderer/map state** | `HOLD`; no functioning renderer or map is composed by the default entrypoint |
 | **Conformance posture** | `UNKNOWN`; WCAG 2.2 AA remains a proposed target only |
 | **Release/publication effect** | None |
@@ -151,7 +152,7 @@ It does **not** define semantic object meaning, machine payload shape, policy ad
 
 | Status | Bounded conclusion |
 |---|---|
-| **CONFIRMED** | Existing path and placement; static shell; native `main` landmark and heading; fixture-driven Evidence Drawer; finite text outcomes; named complementary landmark; open/close buttons; Escape close; focus entry/return; citation links; trust/history/limitation lists; focused unit and Playwright tests; build/test workflow; explicit accessibility workflow HOLD. |
+| **CONFIRMED** | Existing path and placement; native landmarks and navigation; finite text outcomes; Evidence Drawer, citation, tooltip, time, renderer-neutral selection, and Focus fixture behavior; keyboard activation; Escape dismissal; focus entry/return; fixed no-leak negative copy; focused unit and Playwright tests; build/test workflow; bounded keyboard-navigation CI smoke. |
 | **PROPOSED** | Whole-shell accessibility contract, WCAG 2.2 AA target, non-map parity, reduced-motion behavior, comprehensive keyboard model, trust-badge semantics, export continuity, automated rule-engine adoption, and release gates. |
 | **UNKNOWN** | Production behavior, deployed CSS, complete routes, all feature directories, map behavior, browser/device matrix, zoom/reflow results, high-contrast behavior, screen-reader parity, voice-control parity, cognitive accessibility, public operation, and formal conformance. |
 | **NEEDS VERIFICATION** | Accountable accessibility owner, independent reviewer, exact supported browser/assistive-technology matrix, target-size policy, announcement priority, audit cadence, exception process, and evidence required for release significance. |
@@ -219,8 +220,8 @@ The existing target is placement-safe:
 | Browser test | Covers Enter-to-open, focus on close, Escape-to-close, focus restoration, citations, history, and fixed no-leak negative states | One fixture surface, not all features or assistive technologies |
 | `ui-build` workflow | Runs locked Explorer build and full package test script | CI signal only |
 | `evidence-drawer-payload` workflow | Validates the closed schema, fixture polarity, focused tests, and generated receipt | Projection validation only; no upstream evidence/policy/release authenticity |
-| `accessibility` workflow | Emits explicit `WORKFLOW_SKIPPED_EXPLICIT` and `WORKFLOW_HOLD` for axe and keyboard-navigation jobs | It checks nothing and must not be reported as an accessibility pass |
-| Renderer decision | ADR-0007 remains proposed; the package and adapter are placeholders | No functional map or 3D accessibility claim is established |
+| `accessibility` workflow | Keeps axe on explicit HOLD and runs eight named Playwright specifications in `keyboard-navigation` with locked workspace dependencies | It is not an axe/ruleset scan, full keyboard audit, assistive-technology matrix, WCAG conformance result, release gate, or publication approval |
+| Renderer decision | ADR-0006 and ADR-0007 are accepted; the dependency-free `MapRuntimePort` exists, but no concrete `MapLibreAdapter` or `maplibre-gl` dependency is admitted | No functional map or 3D accessibility claim is established |
 
 ### Corrected lineage
 
@@ -531,18 +532,21 @@ No representative narrow-viewport, touch, coarse-pointer, virtual-keyboard, or o
 
 | Criterion | Current state | Evidence boundary |
 |---|---|---|
-| Native drawer opener and closer | **CONFIRMED** | One fixture-driven Evidence Drawer |
-| Named `main` and complementary landmarks | **CONFIRMED** | Default entrypoint and drawer fixture only |
-| Keyboard open with Enter | **CONFIRMED** | Playwright fixture test |
-| Focus moves to close control | **CONFIRMED** | Playwright fixture test |
-| Escape closes and restores focus | **CONFIRMED** | Playwright fixture test |
+| Native navigation, openers, and closers | **CONFIRMED** | Eight selected synthetic browser specifications |
+| Named `main`, navigation, region, status, and complementary landmarks | **CONFIRMED** | Selected Explorer fixture surfaces only |
+| Keyboard activation with Enter | **CONFIRMED** | Citation, drawer, tooltip, map-selection, and Focus browser paths |
+| Focus moves to requested close controls | **CONFIRMED** | Drawer and Focus fixture paths |
+| Escape closes and restores focus | **CONFIRMED** | Drawer, tooltip, and nested Focus/Drawer fixture paths |
+| Keyboard-operable time slider | **CONFIRMED** | Arrow, shifted-arrow, Home, and End fixture cases |
 | Finite text outcome and reason code | **CONFIRMED** | Drawer projection profile only |
 | Citation/history/limitation lists | **CONFIRMED** | Supported fixture and bounded history profile |
 | Fixed no-leak `DENY` and `ERROR` copy | **CONFIRMED** | Synthetic canary tests only |
 | Closed schema and fixture polarity | **CONFIRMED bounded lane** | Proposed UI projection profile; no upstream authenticity |
 | App build and package tests | **CONFIRMED workflow surface** | CI signal only |
+| Text-first runtime trust states | **CONFIRMED** | Polite status and assertive alert fixture cases without color-only meaning |
+| Dedicated keyboard/focus smoke | **CONFIRMED workflow command** | Eight named Playwright specs; exact-head result remains per-run evidence |
 | Automated axe scan | **HOLD / not implemented** | Accessibility workflow explicitly skips |
-| Full keyboard-navigation audit | **HOLD / not implemented** | Accessibility workflow explicitly skips |
+| Full keyboard-navigation audit | **HOLD / not implemented** | The bounded smoke is not a whole-app audit |
 | Whole-app focus order and visible focus | **UNKNOWN** | No representative completion evidence |
 | Map/list parity | **HOLD / not applicable to current entrypoint** | No functioning map |
 | Reduced-motion behavior | **UNKNOWN** | No representative animation/story runtime |
@@ -572,7 +576,7 @@ A slice should not be described as accessibility-complete until the applicable e
 - missing required evidence produces `HOLD`, not a guessed pass;
 - an unavailable automated tool does not waive manual review;
 - a manual review does not waive deterministic regression tests;
-- a green non-enforcing workflow is not an accessibility result;
+- a green bounded smoke is evidence only for its named fixtures and configured browser;
 - critical keyboard, focus, disclosure, or protected-detail failures block the affected public surface;
 - rollback or feature disablement must remain available when a regression reaches a released surface.
 
@@ -594,6 +598,16 @@ python tools/validators/docs/meta-block/check_meta_blocks.py \
 
 pnpm --filter explorer-web build
 pnpm --filter explorer-web test
+pnpm --filter explorer-web exec playwright test \
+  --config=playwright.config.ts \
+  tests/browser/citation-pill.spec.ts \
+  tests/browser/evidence-drawer.spec.ts \
+  tests/browser/evidence-tooltip.spec.ts \
+  tests/browser/focus-composed-claim.spec.ts \
+  tests/browser/map-evidence-drawer.spec.ts \
+  tests/browser/map-runtime-trust-status.spec.ts \
+  tests/browser/time-banner.spec.ts \
+  tests/browser/workspace-navigation.spec.ts
 
 python tools/validators/ui/validate_evidence_drawer_payload.py --fixtures
 python -m unittest -q tests.validators.test_validate_evidence_drawer_payload
@@ -608,11 +622,11 @@ A documentation-only change should also receive the repository's configured meta
 |---|---|---|
 | `ui-build` | Installs locked dependencies, builds Explorer, runs package unit/browser tests | Whole-app accessibility, policy, evidence authenticity, release, deployment, publication |
 | `evidence-drawer-payload` | Validates proposed closed schema, fixtures, focused validator tests, and generated receipt | Live transport, upstream evidence resolution, policy execution, accountable review, public release |
-| `accessibility` | Emits explicit HOLD summaries and warnings; executes no repository code | Axe results, keyboard/focus behavior, WCAG conformance, release readiness |
+| `accessibility` | Keeps axe on explicit HOLD; installs the locked workspace and runs eight named local-fixture Playwright specs in `keyboard-navigation` | Axe results, whole-app keyboard order, manual assistive-technology parity, WCAG conformance, release readiness |
 
-### Proposed accessibility workflow graduation
+### Remaining accessibility workflow graduation
 
-Replacing the HOLD scaffold requires a separate, reviewable implementation slice that establishes:
+The keyboard/focus smoke closes one bounded workflow gap. Replacing the remaining axe HOLD requires a separate, reviewable implementation slice that establishes:
 
 - a repository-owned command;
 - deterministic public-safe fixtures;
@@ -728,7 +742,7 @@ No production export, screenshot manifest, accessible generated-document pipelin
 Do not:
 
 - declare the application accessible because one component has keyboard tests;
-- report the green accessibility HOLD scaffold as a pass;
+- report the green axe HOLD or bounded keyboard smoke as whole-app accessibility proof;
 - claim WCAG conformance from a build, unit test, automated scan, badge, or document;
 - make map clicks, drag gestures, hover, color, or animation the only path to meaning;
 - hide `ABSTAIN`, `DENY`, stale, corrected, or withdrawn state behind visual-only badges;
@@ -744,7 +758,7 @@ Do not:
 - treat an inaccessible denial as permission to reveal more detail;
 - create a second accessibility schema, policy, checklist authority, or component package from this document;
 - list nonexistent paths as implemented dependencies;
-- turn a proposed renderer decision into an accessibility implementation claim;
+- turn an accepted renderer architecture decision into a dependency-admission or accessibility implementation claim;
 - let exports strip evidence, release, temporal, limitation, or correction context;
 - close an accessibility defect without exact-head regression evidence or a documented disposition.
 
@@ -769,7 +783,7 @@ Do not:
 | A11Y-09 | How are accessibility defects prioritized against rights, sensitivity, evidence, and release failures? | NEEDS VERIFICATION | Shared severity and release-blocking policy |
 | A11Y-10 | What is the accessible export/document format matrix? | UNKNOWN | Implemented export paths, format standards, and release tests |
 | A11Y-11 | How should dynamic correction/withdrawal updates be announced without stealing focus? | PROPOSED | Live transport design and representative AT tests |
-| A11Y-12 | Which proposed renderer/map surfaces will be admitted, and what accessibility evidence must accompany each? | HOLD | Accepted renderer/package decision and functioning runtime evidence |
+| A11Y-12 | Which concrete renderer/map surfaces will be admitted, and what accessibility evidence must accompany each? | HOLD | Dependency admission, functioning adapter/runtime evidence, and scoped accessibility review |
 
 ### Graduation gates
 
@@ -782,24 +796,13 @@ The accessibility architecture may advance from **bounded component proof** to *
 5. unresolved high-severity findings have an explicit HOLD, exception, or remediation decision;
 6. policy/privacy review confirms accessibility surfaces do not leak protected detail;
 7. release and rollback ownership is known;
-8. the accessibility workflow executes real checks and no longer reports `WORKFLOW_HOLD`;
+8. each accessibility workflow job either executes its named check or reports an explicit scoped `WORKFLOW_HOLD`;
 9. documentation names remaining limitations without implying conformance;
 10. a correction path exists for a false or outdated accessibility claim.
 
 ### Smallest coherent next implementation slice
 
-A bounded next slice is **not** to claim whole-app conformance. It is to replace one accessibility workflow HOLD with one deterministic, repository-owned check over the current public-safe Evidence Drawer browser fixture, while preserving:
-
-- no secrets and read-only permissions;
-- pinned dependencies;
-- positive and negative states;
-- keyboard/focus tests;
-- fixed no-leak denial/error behavior;
-- a reviewed exclusion mechanism;
-- exact scope in the workflow summary;
-- rollback to the prior HOLD scaffold if the new lane is unreliable.
-
-That proposal remains separate from this documentation-only update.
+The next accessibility slice remains **PROPOSED**: select and pin an automated rule engine only after dependency, ruleset, exclusion, ownership, fixture-state, and rollback review. It must complement rather than replace the bounded keyboard/focus smoke, and it must not be described as whole-app or WCAG conformance.
 
 [Back to top](#top)
 
@@ -815,7 +818,7 @@ That proposal remains separate from this documentation-only update.
 - [`EVIDENCE_DRAWER.md`](./EVIDENCE_DRAWER.md) — evidence inspection architecture.
 - [`FOCUS_FLOW.md`](./FOCUS_FLOW.md) — governed Focus Mode flow.
 - [`LAYERING.md`](./LAYERING.md) — layer catalog and trust-state architecture.
-- [`MAP_RUNTIME_BOUNDARY.md`](./MAP_RUNTIME_BOUNDARY.md) — proposed renderer-neutral seam.
+- [`MAP_RUNTIME_BOUNDARY.md`](./MAP_RUNTIME_BOUNDARY.md) — renderer-neutral seam guidance; current page predates the accepted ADR status and implemented port.
 - [`STORY_PLAYER.md`](./STORY_PLAYER.md) — story playback architecture.
 - [`COMPARE_AND_EXPORT.md`](./COMPARE_AND_EXPORT.md) — comparison and export continuity.
 - [`TELEMETRY.md`](./TELEMETRY.md) — safe UI observability.
@@ -827,7 +830,8 @@ That proposal remains separate from this documentation-only update.
 
 - [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — accepted Directory Rules v2 adoption.
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — adopted placement authority.
-- [`ADR-0007`](<../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) — proposed renderer decision; not implementation authority.
+- [`ADR-0006`](../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) — accepted package-owned renderer seam.
+- [`ADR-0007`](<../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) — accepted browser renderer-family decision; not dependency admission or runtime proof.
 
 ### Current bounded implementation and proof
 
@@ -846,7 +850,7 @@ That proposal remains separate from this documentation-only update.
 
 ### Workflows
 
-- [`accessibility.yml`](../../../.github/workflows/accessibility.yml) — explicit non-enforcing readiness HOLD.
+- [`accessibility.yml`](../../../.github/workflows/accessibility.yml) — bounded keyboard/focus smoke plus explicit axe readiness HOLD.
 - [`ui-build.yml`](../../../.github/workflows/ui-build.yml) — Explorer build and package tests.
 - [`evidence-drawer-payload.yml`](../../../.github/workflows/evidence-drawer-payload.yml) — closed projection validation.
 
@@ -895,12 +899,8 @@ Their removal from this page does not delete a repository object or decide their
 
 ## Appendix B. Rollback
 
-This update changes documentation only.
+This revision documents the paired workflow change. Before merge, rollback is closing the draft pull request and deleting its feature branch. After an authorized merge, rollback is a reviewed revert that restores the prior workflow HOLD and prior document blob `580fcb19e1c7cbea7980f69790b26b53a225e261`.
 
-Before merge, rollback is closing the draft pull request and deleting its feature branch. After an authorized merge, rollback is a normal reviewed revert of the documentation commit or restoration of prior blob `902f10807813152cfe8f59ec5e183c654a427cd7`.
-
-Rollback requires no data migration, schema migration, policy change, package reinstall, runtime restart, cache invalidation, release withdrawal, or publication correction because this file does not change executable behavior or public release state.
-
-A later implementation must define its own rollback. In particular, graduating the accessibility workflow from HOLD requires an explicit disable/revert path and must not erase prior findings or conformance limitations.
+Rollback requires no data or schema migration, policy change, runtime restart, cache invalidation, release withdrawal, or publication correction. Dependency installation occurs only inside CI jobs and produces no committed package or lockfile change. Reverting the workflow must preserve the explicit HOLD wording so a green placeholder cannot be mistaken for keyboard/focus proof.
 
 [Back to top](#top)

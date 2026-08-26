@@ -1,540 +1,1581 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/runbook/flora/rollback
+doc_id: kfm://doc/runbook-flora-rollback
 title: Flora Rollback Runbook
 type: standard
-subtype: runbook
-domain: flora
-version: v1
-status: draft
-owners: <TODO — flora steward + release authority + docs steward>
+profile: candidate-preparation-and-synthetic-rehearsal
+version: v2.0
+prior_version: v1
+status: draft; repository-grounded; fixture-first; operational-rollback-hold; sensitivity-aware; non-authoritative; non-publisher
+owners:
+  - "@bartytime4life — verified GitHub review route only"
+owner_status: "Flora, evidence, source-rights, taxonomic, sensitivity, cultural-knowledge, correction, rollback, review, release, operations, and independent-review assignments remain NEEDS VERIFICATION; CODEOWNERS routing does not establish those authorities."
 created: 2026-05-13
-updated: 2026-05-13
-policy_label: public
+updated: 2026-08-24
+policy_label: public; flora; rollback; fixture-first; no-network; sensitive-location-aware; operational-hold; non-release
+current_path: docs/runbooks/flora/ROLLBACK_RUNBOOK.md
+owning_root: docs/
+responsibility: "Explain how to classify a Flora release defect, prepare a non-executing RollbackCard candidate, exercise the bounded synthetic rollback or withdrawal rehearsal, protect sensitive botanical material, and hand unresolved operational action to governed authorities without mutating public state."
+truth_posture: >-
+  CONFIRMED same-path repository placement, accepted Directory Rules basis,
+  current generic RollbackCard contract/schema/validator/fixtures, marker-protected
+  synthetic rehearsal helper and tests, read-only rollback-drill workflow, one
+  verified CODEOWNERS route, Flora domain/candidate/published/pipeline inventories,
+  empty central source-authority projection, and current operational holds /
+  PROPOSED future actor assignments, accepted Flora policy, operational rollback,
+  alias mutation, external invalidation, public correction, and release authority /
+  CONFLICTED generic release profile versus permissive Flora-domain schema stub,
+  overlapping Flora sensitivity documents, source-registry topology, and proposed
+  alias/data-plane guidance / UNKNOWN production aliases, deployed public surfaces,
+  external caches, signer custody, operational source-rights state, restricted-system
+  consumers, and operator capacity; cite-or-abstain
+prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
+source_basis:
+  google_drive_file_id: 1awNB4HbNr3X4ll0XjJnsO-AqmuO2GSfj
+  google_drive_title: KFM_Flora_Architecture_PDF_Only_Implementation_Blueprint.pdf
+  use: "Flora rollback lineage, rare-plant protection, correction/supersession separation, and preserve-history posture; repository evidence controls current behavior."
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 35bb62209569f63af78c6fefe4c85015d3bdceb1
+  target_prior_blob: 335a96a3481130b203abfb718215b19624acb862
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_decision: ADR-0029 accepted
+  flora_runbook_index_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
+  release_root_readme_blob: 60b6a656f8f2b765616bba7223f51c25863c7172
+  rollback_contract_blob: c6d3c35c56b064e04c3a2532f4709d938d7b0c1a
+  release_rollback_schema_blob: e0a9edf02dd5d6997eda60a054a5bf19636c3dd4
+  flora_rollback_schema_blob: ae393e9b3d3e158a5f791a99a5b3d7ba238c97c9
+  release_rollback_validator_blob: 9e9ed5a92851935b41a36698e4bead13ef4edf57
+  rollback_validator_test_blob: c8aeac6348127fb768981e2b5b5588c6a7bdeb78
+  synthetic_rehearsal_helper_blob: a8f6bff350e79b453f425ebce9a9ded6801f8944
+  synthetic_rehearsal_test_blob: b644ca6c4185b3f81bc339c077eae85299833261
+  rollback_card_workflow_blob: 1980b6e914532c1478d6f14310b916b69a0fb1c4
+  rollback_drill_workflow_blob: 6ce891a99b3c192da17eb8ef25757b023b686f47
+  flora_policy_readme_blob: 247fc146131f4e6598af9fd939cf087d92523ed6
+  flora_sensitivity_policy_readme_blob: 4c65abec24135f7e4467fd108e163cdce594d5f9
+  source_authority_register_blob: 32729857bc8eb5001acb37b8ee8e60bcb6e0dc50
+  flora_source_placeholder_blob: 4cf877d234542990be382913d0ab0917f8fb3398
+  flora_candidate_readme_blob: 15a08f9fb2cdd33041d3a3f3e3c844f26a7a0998
+  flora_manifest_readme_blob: 2280c451e00c58eaefa2b23d3d141deb393a666c
+  flora_published_readme_blob: 1368127a0ddc2ca2766eec23923c48de26a678e1
+  flora_published_layers_readme_blob: f4440020bd279a8b7caf01e2b8387b4d79f1dcfc
+  flora_rollback_pipeline_readme_blob: 06c6d89a43278cb85f9ba7bdaaec3bb590ae05bb
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+inspection_boundary: >-
+  Current-session Google Drive read of the Flora architecture blueprint and GitHub
+  reads of the target, accepted Directory Rules evidence, release root, RollbackCard
+  contract and both schema lanes, validator and fixtures, synthetic rehearsal helper
+  and tests, rollback workflows, CODEOWNERS, Flora domain/sensitivity/policy/source
+  registry/candidate/manifest/published/rollback-support surfaces, and current
+  repository inventories. Repository-native commands were not run in a mounted
+  checkout while authoring. No live botanical source was contacted, no protected
+  location was retrieved, no actor was authenticated, no RollbackCard instance was
+  issued, and no policy, review, correction, withdrawal, rollback, release,
+  deployment, promotion, publication, cache invalidation, or public mutation occurred.
 related:
   - docs/runbooks/README.md
+  - docs/runbooks/ROLLBACK_RUNBOOK.md
+  - docs/runbooks/flora/README.md
+  - docs/runbooks/flora/NO_NETWORK_TEST_RUNBOOK.md
+  - docs/runbooks/flora/PROMOTION_RUNBOOK.md
+  - docs/runbooks/flora/SOURCE_REFRESH_RUNBOOK.md
+  - docs/doctrine/directory-rules.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/adr/ADR-0015-data-published-_domain_-current-alias-is-governed-by-rollback_card.md
+  - docs/governance/SEPARATION_OF_DUTIES.md
   - docs/domains/flora/README.md
-  - docs/architecture/governed-ai/README.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/trust-membrane.md
+  - docs/domains/flora/PUBLICATION_AND_ROLLBACK.md
+  - docs/domains/flora/SENSITIVITY.md
+  - docs/domains/flora/RIGHTS_AND_SENSITIVITY.md
   - release/README.md
+  - release/candidates/flora/README.md
+  - release/manifests/flora/README.md
+  - contracts/release/rollback_card.md
+  - schemas/contracts/v1/release/rollback_card.schema.json
+  - schemas/contracts/v1/domains/flora/rollback_card.schema.json
+  - fixtures/release/rollback_card/
+  - tools/validators/release/validate_rollback_card.py
+  - tools/validators/validate_rollback_card.py
+  - tools/release/rollback_apply.py
+  - pipelines/rollback/main.py
+  - pipelines/domains/flora/rollback/README.md
+  - tests/validators/test_validate_rollback_card.py
+  - tests/release/test_synthetic_rollback_rehearsal.py
+  - .github/workflows/rollback-card.yml
+  - .github/workflows/rollback-drill.yml
+  - .github/CODEOWNERS
+  - policy/domains/flora/README.md
+  - policy/sensitivity/flora/README.md
+  - control_plane/source_authority_register.yaml
+  - data/registry/sources/flora/README.md
+  - data/registry/sources/flora/usda_plants.yaml
+  - data/rollback/flora/README.md
+  - data/published/flora/README.md
   - data/published/layers/flora/README.md
-  - data/rollback/README.md
-tags: [kfm, runbook, rollback, flora, release, governance]
+tags: [kfm, runbook, flora, plants, rollback, withdrawal, correction, rollback-card, synthetic-rehearsal, rare-plants, geoprivacy, source-role, taxonomy, evidence, rights, sensitivity, cultural-knowledge, governance, operational-hold]
 notes:
-  - Path 'docs/runbooks/flora/ROLLBACK_RUNBOOK.md' is PROPOSED. Existing planned subsystem runbooks use flat naming (e.g. 'docs/runbooks/ui_ROLLBACK.md'); domain-as-subdirectory may require an ADR or DRIFT_REGISTER entry. See §2 (Repo fit) below.
+  - "Same-path modernization under accepted ADR-0029; no root, lane, contract, schema, policy, fixture, validator, test, workflow, receipt, proof, release object, alias, or public state is created or moved."
+  - "The generic release RollbackCard 1.0.0 profile is the current bounded validator target. The Flora-domain rollback-card schema remains a permissive greenfield stub and is not an equivalent authority surface."
+  - "Operational rollback remains HOLD: the production rollback pipeline and generic validator entrypoint are placeholders, the published-alias decision remains proposed, Flora policy is inactive, and the available apply helper is synthetic-workspace-only."
+  - "This runbook is an instruction and review-handoff surface. It is not a RollbackCard, ReviewRecord, PolicyDecision, CorrectionNotice, release approval, rollback receipt, or execution record."
 [/KFM_META_BLOCK_V2] -->
 
-# 🌱 Flora Rollback Runbook
+<a id="top"></a>
 
-> Step-by-step procedure for **rolling back a published Flora release** without bypassing the trust membrane, the lifecycle invariant, or sensitivity controls on rare and culturally sensitive plant data.
+# Flora Rollback Runbook
 
-<!-- Badges: placeholders until Shields.io endpoints and CI hooks are wired. -->
-![status](https://img.shields.io/badge/status-draft-orange)
-![scope](https://img.shields.io/badge/scope-flora-2e7d32)
-![doc--type](https://img.shields.io/badge/doc--type-runbook-blue)
-![lifecycle](https://img.shields.io/badge/lifecycle-PUBLISHED%E2%86%92prior%20release-555)
-![sensitivity](https://img.shields.io/badge/sensitivity-deny--by--default-critical)
-![policy](https://img.shields.io/badge/policy-cite--or--abstain-informational)
-![ci](https://img.shields.io/badge/ci-TODO-lightgrey)
-![last--updated](https://img.shields.io/badge/last--updated-2026--05--13-blue)
+> **Repository-grounded procedure for classifying a Flora release defect, preparing a non-executing `RollbackCard` candidate, exercising the deterministic synthetic rollback or withdrawal rehearsal, protecting sensitive botanical material, and handing unresolved operational action to the appropriate governed authorities.**
 
-| **Status** | **Domain** | **Owners** | **Updated** |
-|---|---|---|---|
-| Draft (PROPOSED) | Flora | `<TODO — flora steward · release authority · docs steward>` | 2026-05-13 |
+<p>
+  <img alt="Document status: repository-grounded draft" src="https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b">
+  <img alt="Domain: flora" src="https://img.shields.io/badge/domain-flora-2e7d32">
+  <img alt="Profile: fixture first" src="https://img.shields.io/badge/profile-fixture%20first-8250df">
+  <img alt="Sensitive geometry: fail closed" src="https://img.shields.io/badge/sensitive%20geometry-fail%20closed-b42318">
+  <img alt="Operational rollback: hold" src="https://img.shields.io/badge/operational%20rollback-HOLD-b42318">
+  <img alt="Publication effect: none" src="https://img.shields.io/badge/publication-none-6e7781">
+</p>
 
 > [!IMPORTANT]
-> **Rollback is a governed state transition, not a file move.**
-> A path-level copy that bypasses validators, policy gates, EvidenceBundle resolution, catalog closure, and release-decision recording is a violation of the lifecycle invariant regardless of which directory the bytes end up in.
-
----
-
-## Quick jump
-
-- [1. Scope](#1-scope)
-- [2. Repo fit](#2-repo-fit)
-- [3. When to use this runbook](#3-when-to-use-this-runbook)
-- [4. Out of scope](#4-out-of-scope)
-- [5. Flora rollback model at a glance](#5-flora-rollback-model-at-a-glance)
-- [6. Defect → correction × rollback matrix](#6-defect--correction--rollback-matrix)
-- [7. Required artifacts and homes](#7-required-artifacts-and-homes)
-- [8. Procedure — standard Flora rollback](#8-procedure--standard-flora-rollback)
-- [9. Procedure — sensitive-lane fail-closed disablement](#9-procedure--sensitive-lane-fail-closed-disablement)
-- [10. Validation, drill, and acceptance](#10-validation-drill-and-acceptance)
-- [11. Post-rollback obligations](#11-post-rollback-obligations)
-- [12. Anti-patterns and refusal triggers](#12-anti-patterns-and-refusal-triggers)
-- [13. Worked example (illustrative)](#13-worked-example-illustrative)
-- [14. Related docs and runbooks](#14-related-docs-and-runbooks)
-- [15. Open verification items](#15-open-verification-items)
-
----
-
-## 1. Scope
-
-This runbook covers **rollback of a PUBLISHED Flora release** — generalized occurrence layers, range/distribution layers, vegetation-community layers, invasive-plant layers, phenology/condition layers, habitat-association summaries, review-candidate views, Evidence Drawer payloads tied to Flora features, and Focus-Mode answers tied to released Flora EvidenceBundles.
-
-It applies when any of the following has occurred or is suspected:
-
-- A defect is detected in a released Flora artifact (evidence, rights, sensitivity, geometry, temporal, policy, validation, rendering, API, or AI-output class).
-- A released artifact, layer, catalog record, or AI answer is no longer supported by its EvidenceBundle.
-- A change in rights, source role, or sensitivity tier invalidates a public Flora surface.
-- A sensitivity leak (precise rare-plant location, culturally sensitive material, restricted geometry) has reached a public surface and must be removed immediately.
-
-**Status of the rollback model itself:** CONFIRMED doctrine — KFM treats correction and rollback as publication requirements, not afterthoughts, and a released claim is treated as safely publishable only when a visible correction path and rollback target exist.
-
-**Status of any specific repo wiring quoted below** (paths, route names, schema homes, validator commands, dashboard names): PROPOSED / NEEDS VERIFICATION until checked against the mounted repository.
-
-[Back to top](#-flora-rollback-runbook)
-
----
-
-## 2. Repo fit
-
-**Proposed path:** `docs/runbooks/flora/ROLLBACK_RUNBOOK.md` — PROPOSED.
-
-| Field | Value | Status |
-|---|---|---|
-| Owning responsibility root | `docs/` (Canonical — human-facing control plane) | CONFIRMED rule |
-| Subdirectory | `docs/runbooks/` ("ops procedures, rollback drills, validation runs") | CONFIRMED rule |
-| Domain segment | `flora/` (per Domain Placement Law: domain as a lane inside a responsibility root) | CONFIRMED rule / PROPOSED file convention |
-| Companion subsystem runbooks (reference style) | `docs/runbooks/ui_ROLLBACK.md`, `docs/runbooks/governed_ai_ROLLBACK.md` | PROPOSED |
-
-> [!NOTE]
-> **Directory Rules basis.** Per Directory Rules, `docs/` is the canonical authority surface for runbooks and a domain MUST NOT become a root folder; it must appear as a segment inside a responsibility root. Existing planned subsystem runbooks use flat `<subsystem>_<TYPE>.md` naming. This runbook uses a `<domain>/<TYPE>.md` subdirectory pattern; if the repo convention turns out to prefer flat `flora_ROLLBACK.md` instead, this file should be moved and an entry opened in `docs/registers/DRIFT_REGISTER.md`.
-
-**Upstream (consumed by this runbook):**
-
-- `docs/doctrine/lifecycle-law.md` — RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED
-- `docs/doctrine/trust-membrane.md` — no public client reaches RAW / WORK / QUARANTINE / canonical / graph internals / vector indexes / source APIs / direct model runtimes
-- `docs/domains/flora/README.md` — Flora doctrine, ubiquitous language, source families
-- `release/README.md` — release-decision plane (manifests, rollback cards, correction notices)
-
-**Downstream (referenced by this runbook):**
-
-- `release/rollback_cards/` — the RollbackCard artifact home
-- `release/correction_notices/` — public CorrectionNotice home
-- `data/published/layers/flora/` — released Flora artifacts the rollback acts on
-- `data/rollback/` — alias-revert receipts (data-plane mirror of the release-plane decision)
-- `data/proofs/` — EvidenceBundle / ProofPack home
-- `apps/governed-api/` — the only public route through which clients may read published Flora data
-
-[Back to top](#-flora-rollback-runbook)
-
----
-
-## 3. When to use this runbook
-
-Use this runbook when **all** of the following are true:
-
-1. The affected artifact is in **PUBLISHED** state. Defects detected in PROCESSED, CATALOG / TRIPLET, or release-candidate state are handled by the corresponding promotion-gate failure, not by rollback.
-2. The defect is Flora-scoped. Cross-domain defects (e.g., a habitat × flora × hydrology surface) follow the **lowest common responsibility root** that owns the surface, with Flora-specific controls applied where Flora records contribute.
-3. A **rollback target** (a prior PUBLISHED release manifest, digest-pinned artifact set, or "no safe prior" determination requiring withdrawal) can be named.
-
-If a prior safe release **does not exist**, the action is **withdrawal**, not rollback — see §11.
-
-[Back to top](#-flora-rollback-runbook)
-
----
-
-## 4. Out of scope
-
-This runbook does **not** cover:
-
-- Source-admission rollback (rights revocation, source-role downgrade). See `docs/runbooks/<TODO>` and the Flora source registry.
-- Schema / contract rollback. See `docs/adr/` and the schema-home ADR.
-- Generic UI feature-flag rollback. See `docs/runbooks/ui_ROLLBACK.md`.
-- AI adapter / kill-switch rollback (provider, MockAdapter, citation validator). See `docs/runbooks/governed_ai_ROLLBACK.md`.
-- Infrastructure rollback (reverse-proxy, VPN, firewall). See `infra/` and `docs/security/`.
-- Validation runs and drills not triggered by a release defect. See `docs/runbooks/<TODO — flora validation runbook>`.
-
-[Back to top](#-flora-rollback-runbook)
-
----
-
-## 5. Flora rollback model at a glance
-
-```mermaid
-flowchart TD
-    A[Defect detected<br/>in PUBLISHED Flora artifact] --> B{Classify defect}
-    B -->|Evidence / Rights / Sensitivity /<br/>Geometry / Temporal / Policy /<br/>Validation / Rendering / API / AI| C[Open RollbackCard candidate]
-    C --> D[Locate prior PUBLISHED<br/>rollback target<br/>ReleaseManifest + digests]
-    D -->|target found| E[Verify digests, manifests,<br/>EvidenceBundle closure of target]
-    D -->|no safe prior| W[Withdrawal track:<br/>WithdrawalNotice +<br/>derivative invalidation]
-    E --> F{Sensitive lane?<br/>rare / protected /<br/>culturally sensitive flora}
-    F -->|Yes| G[IMMEDIATE public disablement<br/>fail-closed at governed API]
-    F -->|No| H[Plan staged disablement<br/>of affected surfaces]
-    G --> I[Disable / withdraw<br/>affected public surfaces]
-    H --> I
-    I --> J[Preserve audit receipts<br/>RunReceipt, AIReceipt,<br/>PolicyDecision, ReviewRecord]
-    J --> K[Mark stale / withdrawn UI state<br/>Evidence Drawer, Focus Mode,<br/>layer registry]
-    K --> L[Restore or republish<br/>rollback target<br/>through governed release path]
-    L --> M[Emit CorrectionNotice<br/>+ invalidate downstream derivatives]
-    M --> N[Run rollback drill and<br/>non-regression tests]
-    N --> O[PUBLISHED' state established]
-
-    classDef sensitive fill:#fee,stroke:#c33,color:#900;
-    classDef terminal fill:#efe,stroke:#383,color:#040;
-    classDef hold fill:#ffe,stroke:#aa3,color:#530;
-    class G,F sensitive
-    class O terminal
-    class W hold
-```
-
-**Reading the diagram.** Rollback flows through the **same governed release path** as the original promotion. It does not write directly to `data/published/`; it routes through `release/` (the decision plane) and emits new receipts, a CorrectionNotice, and — if appropriate — a superseding ReleaseManifest pointing at the rollback target. A sensitive-lane breach short-circuits to immediate public disablement first, then completes the standard flow.
-
-[Back to top](#-flora-rollback-runbook)
-
----
-
-## 6. Defect → correction × rollback matrix
-
-> [!NOTE]
-> **Source.** The defect-class matrix below is taken from KFM's master correction-and-rollback model. Postures are CONFIRMED doctrine; the precise reason codes are PROPOSED.
-
-| Defect class | Typical Flora trigger | Correction posture | Rollback posture | Reason code (PROPOSED) |
-|---|---|---|---|---|
-| **Evidence gap** | Released occurrence claim no longer resolves to an EvidenceBundle; citation broken | ABSTAIN or withdraw the unsupported claim | Restore prior evidence-supported release | `MISSING_EVIDENCE` |
-| **Rights defect** | Source rights revoked, redistribution class changed, license now incompatible with public release | DENY public use; quarantine source / artifact | Withdraw affected artifacts | `RIGHTS_UNKNOWN` |
-| **Sensitivity leak** | Precise rare-plant / culturally sensitive location reached a public layer, popup, drawer, or AI answer | Redact / generalize and notify stewards | **Immediate public disablement** (see §9) | `SENSITIVITY_UNRESOLVED` |
-| **Geometry defect** | Invalid geometry, wrong projection, over-precise generalization, footprint mismatch in a derivative | Rebuild derivative layer and EvidenceBundle payload | Restore previous digest-pinned artifact | `SCHEMA_MISMATCH` / `GEOM_INVALID` |
-| **Temporal defect** | `observed`, `valid`, `retrieval`, `release`, or `correction` time recorded incorrectly; phenology window mislabeled | Correct the time field set | Mark stale until rebuilt | `TEMPORAL_DRIFT` |
-| **Policy defect** | Policy gate evaluated stale rules; PolicyDecision absent or wrong outcome | Re-run policy and DecisionEnvelope | Disable route / layer if gate failed | `POLICY_REGRESSION` |
-| **Validation defect** | Schema-validator regression released bad records | Re-run validators against prior fixture set | Restore previous catalog state | `CONTRACT_DRIFT` |
-| **Rendering defect** | MapLibre style, sprites, glyphs, or tile artifact mis-serves released geometry | Rebuild StyleManifest / TileArtifactManifest | Restore prior `MapReleaseManifest.rollback_target` | `STYLE_DRIFT` |
-| **API defect** | Governed API emits wrong envelope outcome; `FloraDecisionEnvelope` schema mismatch | Re-run contract tests; pin prior route | Disable route until corrected | `ENVELOPE_DRIFT` |
-| **AI-output defect** | Focus-Mode answer cites a withdrawn EvidenceBundle, fails CitationValidationReport, or leaks restricted content | Invalidate AIReceipt and RuntimeResponseEnvelope | Remove answer; **preserve the EvidenceBundle** | `AI_CITATION_FAIL` |
-| **Catalog defect** | Catalog closure regressed; orphan EvidenceRef; STAC/DCAT/PROV inconsistency | Re-emit catalog closure after proof repair | Restore previous catalog state | `CATALOG_CLOSURE_FAIL` |
-
-> [!CAUTION]
-> **AI rollback does not delete evidence.** Removing an AI answer (or invalidating an AIReceipt) MUST NOT delete or alter the underlying `EvidenceBundle`. The evidence remains; only the interpretive derivative is withdrawn.
-
-[Back to top](#-flora-rollback-runbook)
-
----
-
-## 7. Required artifacts and homes
-
-> [!IMPORTANT]
-> A Flora rollback is **closed** only when (i) every required artifact below exists, (ii) every required artifact **resolves** the artifacts it depends on (`EvidenceRef → EvidenceBundle`, `source_id → SourceDescriptor`, `model_id → ModelRunReceipt`), and (iii) the policy gate has evaluated and recorded its decision. Missing any of these means the rollback fails closed and the prior PUBLISHED state is preserved.
-
-| Artifact | Owns | Proposed home | Status |
-|---|---|---|---|
-| `RollbackCard` | The rollback decision — affected release, defect class, rollback target, reviewer, signatures | `release/rollback_cards/` | CONFIRMED doctrine / PROPOSED implementation |
-| `ReleaseManifest` (rollback target) | The prior PUBLISHED release the system is reverting to | `release/manifests/<release_id>/` | CONFIRMED doctrine / PROPOSED implementation |
-| `ReleaseManifest` (superseding) | The new PUBLISHED' release that points at the rollback target and supersedes the defective release | `release/manifests/<new_release_id>/` | PROPOSED |
-| `CorrectionNotice` | Public notice naming the defect, the supersession, and the invalidation list | `release/correction_notices/` | CONFIRMED doctrine / PROPOSED implementation |
-| `WithdrawalNotice` *(when no safe prior exists)* | Public notice that the artifact has been withdrawn rather than rolled back | `release/withdrawal_notices/` | PROPOSED |
-| Alias-revert receipts | Data-plane evidence that public aliases (URLs, layer IDs, manifest pointers) have moved | `data/rollback/` | PROPOSED; treatment of `data/rollback/` vs `release/rollback_cards/` is OPEN per Directory Rules §18 |
-| `EvidenceBundle` | The resolved evidence package for every restored claim | `data/proofs/` | CONFIRMED doctrine / PROPOSED implementation |
-| `RedactionReceipt` *(sensitivity-leak class)* | Record of public-safe geometry / field transformation | `data/proofs/` or `data/receipts/` per ADR | CONFIRMED doctrine / PROPOSED implementation |
-| `ReviewRecord` | Steward / release-authority approval for the rollback (separation of duties where materiality applies) | `data/receipts/` | CONFIRMED doctrine / PROPOSED implementation |
-| `PolicyDecision` | Re-evaluated policy outcome for every restored surface | `data/receipts/` | CONFIRMED doctrine / PROPOSED implementation |
-| `AIReceipt` invalidations *(AI-defect class)* | Marks affected Focus-Mode answers as withdrawn | `data/receipts/ai/` | PROPOSED |
-
-> [!NOTE]
-> **Release plane vs. data plane.** `release/` owns release **decisions** (manifests, rollback cards, correction notices, signatures). `data/published/` owns the public-safe **artifacts** clients read. `data/rollback/` owns alias-revert **receipts**. A released PMTiles file does not live in `release/`; a release manifest does not live in `data/published/`. Mixing these is one of the four named drift patterns in Directory Rules §10.
-
-[Back to top](#-flora-rollback-runbook)
-
----
-
-## 8. Procedure — standard Flora rollback
+> **This runbook does not authorize or execute rollback.** The current repository proves a closed, fixture-first `RollbackCard` candidate profile and a marker-protected synthetic-workspace rehearsal. It does not prove authenticated rollback authority, accepted Flora policy, independent review, production alias mutation, external cache invalidation, release, deployment, promotion, or publication.
 
 > [!WARNING]
-> If the defect class is **Sensitivity leak**, jump to **§9** first. Complete the immediate disablement, then return here for the full rollback. Do **not** wait for steward review to disable a confirmed sensitivity leak.
-
-### Step 1 — Detect, triage, and open a RollbackCard candidate
-
-1. Confirm the artifact is in PUBLISHED state. (If not, treat as a promotion-gate failure, not rollback.)
-2. Classify the defect against the matrix in [§6](#6-defect--correction--rollback-matrix). If multiple classes apply, take the **most restrictive posture**.
-3. Open a `RollbackCard` candidate under `release/rollback_cards/` with: `affected_release_id`, `defect_class`, `defect_reason_code`, `detected_at`, `detector_role`, `suspected_rollback_target`, `sensitive_lane` (boolean), `derivative_invalidation_set` (initial), and `reviewer` (TBD).
-
-### Step 2 — Locate and verify the rollback target
-
-1. Read `affected_release.ReleaseManifest.rollback_target` (or `MapReleaseManifest.rollback_target` for map releases). If absent, the affected release was promoted out of policy and the action becomes **withdrawal** — see §11.
-2. Resolve the target `ReleaseManifest` from `release/manifests/<release_id>/`.
-3. Verify target integrity:
-   - All artifact digests in the target manifest resolve and match.
-   - Every `EvidenceRef` in the target resolves to an `EvidenceBundle`.
-   - The target's `PolicyDecision` set is intact and still valid under current policy (re-evaluate if policy has changed since target was published).
-   - The target's review state is still valid (no revoked ReviewRecords).
-4. If verification fails, the target is **not safe** — escalate to a steward and consider withdrawal.
-
-### Step 3 — Steward and release-authority review
-
-1. Route the `RollbackCard` candidate to the **flora steward** for defect classification and sensitivity confirmation.
-2. Route it to the **release authority** (separation of duties: must be distinct from the original author of the defective release where materiality applies).
-3. Record both decisions as `ReviewRecord` artifacts. The `RollbackCard` is not actionable without both records resolving.
-
-### Step 4 — Re-evaluate policy
-
-1. Run the Flora policy gate against the rollback target with current rules.
-2. Record a `PolicyDecision` for each restored public surface.
-3. If any decision is `DENY` or `RESTRICT`, the rollback cannot include that surface; remove it from the supersession set and add it to the withdrawal set.
-
-### Step 5 — Disable / withdraw the defective public surfaces
-
-> [!TIP]
-> Run the disablement **before** publishing the superseding manifest. The trust-membrane invariant is preserved when no public client can read a defective Flora surface during the transition.
-
-1. Through the governed API only (`apps/governed-api/`), do the following:
-   - Mark the affected `LayerManifest` entries in the Flora layer registry as `withdrawn` or `superseded`.
-   - Cause the affected routes to return the appropriate `FloraDecisionEnvelope` outcome:
-     - `DENY` for sensitivity / rights defects
-     - `ABSTAIN` for evidence / temporal / AI defects
-     - `ERROR` only for true infrastructure failure
-   - Remove the affected `EvidenceDrawerPayload` cache entries.
-   - Mark affected `AIReceipt` records as **invalidated** (do not delete; preserve audit lineage).
-2. Update the Flora map style only via a new `StyleManifest` + `MapReleaseManifest`; do not edit a published style in place.
-
-### Step 6 — Preserve audit receipts
-
-Preserve **all** of the following from the defective release. Do not delete or overwrite:
-
-- `RunReceipt` records (intake, transform, validation, catalog, release)
-- `AIReceipt` records (invalidated, not deleted)
-- `PolicyDecision` records
-- `ReviewRecord` records
-- `ValidationReport` records
-- `PromotionDecision` for the defective promotion
-
-These remain the audit trail explaining how the defective release came to be PUBLISHED and why it was rolled back.
-
-### Step 7 — Mark stale / withdrawn UI state
-
-Through the governed API, surface the rollback to public-facing clients:
-
-| Surface | Marking |
-|---|---|
-| Evidence Drawer | `release_state = withdrawn` or `superseded`; show CorrectionNotice link |
-| Focus Mode answer | Affected answers return `ABSTAIN` with `abstain_reason = "answer withdrawn pending rollback"` |
-| Map layer registry | Layer marked `withdrawn` / `superseded`; trust badge updated |
-| Time slider | Affected snapshots marked stale; non-regression for prior lineage preserved |
-| Correction / stale-state view | Affected feature listed with CorrectionNotice link |
-
-### Step 8 — Publish the superseding release
-
-1. Promote the rollback target through the **same governed release path** as any other release: validation, policy, catalog closure, release-candidate review, promotion decision, release manifest. Rollback **is** a release; it just happens to point at a prior digest-pinned artifact set.
-2. Emit the new `ReleaseManifest` with:
-   - `supersedes = <defective_release_id>`
-   - `rollback_target = <previous_target_id>` (every release names a rollback target, including this one)
-   - `rollback_cause = <defect_reason_code>`
-   - Updated `signatures` (DSSE / Sigstore per `release/signatures/`)
-3. Emit a `CorrectionNotice` to `release/correction_notices/` naming: the defective release, the defect class, the affected claims/features/layers, the supersession, and the **derivative-invalidation set** (downstream catalogs, triplets, AI answers, story nodes, exports).
-4. Move public aliases (URLs, layer IDs, manifest pointers) to the new release via `data/rollback/` alias-revert receipts.
-
-### Step 9 — Close the RollbackCard
-
-Mark the `RollbackCard` `status = closed` only when steps 2–8 are complete **and** rollback validation (§10) passes. A `RollbackCard` that closes without a passing drill is itself a defect.
-
-[Back to top](#-flora-rollback-runbook)
-
----
-
-## 9. Procedure — sensitive-lane fail-closed disablement
+> **Do not place exact or reverse-engineerable rare, protected, culturally sensitive, or steward-controlled plant locations in an issue, pull request, candidate card, command transcript, screenshot, workflow log, public incident summary, or this runbook.** Use public-safe identifiers and reason codes. Restricted evidence belongs only in an authorized restricted system with verified stewardship and access controls.
 
 > [!CAUTION]
-> **Default outcome: DENY.** Per the Sensitive / Deny-by-Default Register, exact rare-plant, protected, or culturally sensitive flora locations DENY public exact output by default. A confirmed leak is an emergency-class disablement, not a normal rollback step.
+> [`tools/release/rollback_apply.py`](../../../tools/release/rollback_apply.py) is guarded for synthetic roots only. Do not weaken, bypass, rename around, or copy around its `.kfm-synthetic-rollback-rehearsal` marker and `synthetic: true` checks. Do not point it at the repository's real `data/`, `release/`, cache, storage, deployment, or public-delivery paths.
 
-Trigger conditions:
-
-- Precise location of a rare, protected, or culturally sensitive plant has reached a public layer, popup, EvidenceDrawerPayload, Focus-Mode answer, story node, export, or downstream derivative.
-- Source role downgraded (steward record published as public observation, or similar `ROLE_COLLAPSE`).
-- Rights revocation on a sensitive-lane source.
-
-**Immediate steps** (run before Step 3 of §8; do **not** wait for full review):
-
-1. **Disable at the governed API.** Cause `FloraDecisionEnvelope` to return `DENY` for the affected `feature_id` / `layer_id` set. The trust membrane forbids any public client, normal UI surface, or released AI surface from reaching the underlying canonical store directly, so disabling at `apps/governed-api/` removes the public surface.
-2. **Pull the layer.** Remove the affected layer from the Flora layer registry. Do not edit the layer in place.
-3. **Suppress Evidence Drawer payloads.** Invalidate any `EvidenceDrawerPayload` cache entries that resolve to the affected feature.
-4. **Invalidate AI answers.** Mark any `AIReceipt` whose `evidence_ids` intersect the affected set as `withdrawn`. Cause Focus Mode to return `DENY` for the affected feature set, with `deny_reason` referencing the sensitivity classification (do **not** disclose the precise reason in public text).
-5. **Pull derivatives.** Story nodes, exports, dashboards, scenes, and catalog records that include the affected feature are removed from public surfaces and added to the derivative-invalidation set.
-6. **Notify stewards.** Notify the flora steward, the sensitivity-review steward, and (if culturally sensitive) the cultural-review steward. Record notification in a `ReviewRecord` with `purpose = "sensitivity-leak notification"`.
-7. **Open the RollbackCard.** The rollback proceeds per §8, with `defect_class = sensitivity_leak` and `defect_reason_code = SENSITIVITY_UNRESOLVED`.
-8. **Issue a public CorrectionNotice** as soon as steward review confirms the supersession set. The CorrectionNotice MUST NOT republish the precise location it is correcting.
-
-> [!WARNING]
-> **No silent edits.** Do not "fix" a sensitivity leak by editing the published artifact in place, re-tiling, or pushing a quiet style update. That collapses the trust membrane and bypasses the correction path. The only correct action is disablement → superseding release.
-
-[Back to top](#-flora-rollback-runbook)
+**Quick navigation:** [Purpose](#1-purpose-scope-and-non-goals) · [Authority](#2-authority-and-current-repository-evidence) · [Invariants](#3-flora-fail-closed-invariants) · [Triggers](#4-trigger-classification-and-finite-candidate-dispositions) · [Preconditions](#5-preconditions-and-stop-conditions) · [Procedure](#6-candidate-preparation-and-synthetic-rehearsal-procedure) · [Contract](#7-current-rollbackcard-profile-and-schema-conflict) · [Rehearsal](#8-synthetic-rehearsal-and-safe-entry-points) · [Domain risks](#9-flora-specific-defects-rights-sensitivity-and-cross-lane-seams) · [Disposition](#10-correction-stale-state-withdrawal-rollback-and-erasure) · [Invalidation](#11-carrier-and-derivative-invalidation-plan) · [Validation](#12-validation-and-claim-boundaries) · [Handoff](#13-review-handoff-packet) · [Anti-patterns](#14-anti-patterns) · [Open work](#15-current-holds-and-open-verification) · [Related](#16-related-authorities-and-operational-surfaces) · [Maintenance](#17-maintenance-correction-and-document-rollback) · [Template](#appendix-a-non-executing-flora-candidate-template) · [Commands](#appendix-b-command-and-path-matrix) · [Worksheet](#appendix-c-public-safe-incident-worksheet)
 
 ---
 
-## 10. Validation, drill, and acceptance
+## 1. Purpose, scope, and non-goals
 
-A Flora rollback is accepted only after the **rollback drill** passes. The drill rehearses the rollback against the released artifact set and must return:
+### Purpose
 
-| Check | Expected | Status |
+Use this runbook after a Flora artifact, claim, release candidate, or public-facing carrier is suspected of being wrong, unsupported, impermissible, unsafe, stale in a way that changes public meaning, or inconsistent with its release record. The operator's bounded responsibilities are to:
+
+1. freeze the exact subject and repository revision;
+2. classify the defect without inventing operational state;
+3. prevent further disclosure of sensitive botanical detail in review material;
+4. preserve Flora object-family, source-role, taxonomic, spatial, temporal, rights, and sensitivity distinctions;
+5. prepare a schema-paired, non-executing `RollbackCard` candidate;
+6. validate candidate shape and local consistency with the current no-network profile;
+7. run the synthetic rehearsal only in a marked disposable workspace;
+8. enumerate correction, withdrawal, invalidation, review, target, and public-readback dependencies;
+9. produce a truthful review handoff that leaves operational action on `HOLD` when authority or implementation is absent.
+
+### In scope
+
+- Public-safe Flora carriers and claims, including generalized occurrence or specimen-derived views, taxon summaries, vegetation-community products, range or distribution products, phenology and invasive-plant context, catalog or API projections, map layers, Evidence Drawer content, Focus Mode answers, exports, search indexes, vector indexes, graph/triplet projections, and generated summaries.
+- Candidate rollback, withdrawal, hold, and error planning using the generic release `RollbackCard` 1.0.0 profile.
+- Deterministic, no-network candidate validation and synthetic rehearsal in isolated temporary roots.
+- Flora-specific taxonomic identity, source-role, evidence, rights, sensitivity, geoprivacy, cultural-knowledge, precision, uncertainty, freshness, and cross-lane checks.
+- Public-safe incident and review handoff material.
+- Correction, withdrawal, invalidation, lineage, target, and rollback-support planning.
+
+The presence of a path above does not prove that a corresponding production artifact or public service exists. Current repository inventories establish documentation and scaffolds, not a deployed Flora release.
+
+### Out of scope
+
+- **Production rollback execution.** [`pipelines/rollback/main.py`](../../../pipelines/rollback/main.py) remains a one-line greenfield placeholder.
+- **A Flora-specific rollback executor.** [`pipelines/domains/flora/rollback/`](../../../pipelines/domains/flora/rollback/README.md) currently contains guidance and `.gitkeep`, not executable Flora rollback code.
+- **Live alias mutation.** The logical published-alias decision in [ADR-0015](../../adr/ADR-0015-data-published-_domain_-current-alias-is-governed-by-rollback_card.md) remains proposed, and no production alias/operator is established by this runbook.
+- **Release approval or public mutation.** A runbook, candidate card, passing validator, green workflow, commit, pull request, merge, or file under `data/published/` cannot approve or perform a release transition.
+- **Live source access.** Do not contact USDA PLANTS, KDWP, Kansas Biological Survey, herbarium, GBIF, iNaturalist, NatureServe, USFWS, vegetation, remote-sensing, or other upstream services through this procedure.
+- **Restricted-record retrieval.** Do not fetch or copy rare-plant coordinates, specimen localities, cultural plant knowledge, steward-only notes, collection-pressure clues, or private-land detail for a public review packet.
+- **Database, schema, graph, policy-bundle, or application-code rollback.** Those changes require their owning migration and rollback procedures.
+- **Taxonomic adjudication.** This runbook may identify a taxonomic defect; it does not choose the accepted taxon concept.
+- **Legal, rights-holder, or sovereign-community determination.** This runbook cannot clear rights, consent, access, or cultural authority.
+- **Field intervention or conservation action.** It does not direct collection, treatment, eradication, restoration, land management, or emergency response.
+- **Erasure.** Rollback, withdrawal, correction, and tombstoning do not satisfy lawful deletion, consent withdrawal, cultural restriction, or rights-based removal by themselves.
+
+### State separation
+
+| State or artifact | What it proves | What it does **not** prove |
 |---|---|---|
-| Rollback target manifest resolves and verifies | `pass` | PROPOSED test home: `tests/domains/flora/release/` |
-| All target `EvidenceRef`s resolve to `EvidenceBundle`s | `pass` | PROPOSED |
-| Schema validation of restored `LayerManifest`, `MapReleaseManifest`, `EvidenceDrawerPayload`, `FloraDecisionEnvelope` | `pass` | PROPOSED |
-| Citation validation across restored Focus-Mode answers | `pass` (`cite-or-abstain` compliance = 100%) | PROPOSED |
-| Sensitivity policy: exact sensitive Flora geometry denial on public surfaces | `pass` (DENY at first gate) | CONFIRMED requirement / PROPOSED implementation |
-| Source-role mismatch denial (e.g., observation as legal/regulatory truth) | `pass` | PROPOSED |
-| Stale-state handling visible on Evidence Drawer, Focus Mode, layer registry | `pass` | PROPOSED |
-| Non-regression for prior lineage (older releases still resolve where supported) | `pass` | PROPOSED |
-| No-network fixture lane runs without live source calls | `pass` | PROPOSED |
-| `RollbackCard` signed by steward **and** release authority | `pass` | CONFIRMED requirement / PROPOSED implementation |
+| Tracked runbook | Human procedure exists at a reviewed commit | Operator authority or runtime readiness |
+| Schema-valid `RollbackCard` candidate | Closed shape and bounded local consistency | Reference resolution, reviewer eligibility, policy approval, safe target, or execution |
+| Candidate disposition | Proposed recovery posture | A public state transition |
+| Synthetic rehearsal `PASS` | Deterministic behavior inside a marked temporary root | Production alias mutation, external invalidation, release, or publication |
+| Hosted workflow success | Exact workflow assertions passed at one revision | Human approval, operational rollback, deployment, or public parity |
+| Pull-request merge | Repository bytes entered `main` | `PUBLISHED`, corrected, withdrawn, or rollback lifecycle state |
+| File under `data/published/` | Bytes or documentation exist at a repository path | A governed Flora release |
+| Operational rollback | **UNKNOWN / HOLD** in current evidence | Must not be inferred from any state above |
+
+[Back to top](#top)
+
+---
+
+## 2. Authority and current repository evidence
+
+### 2.1 Directory Rules basis
+
+Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [Directory Rules v2](../../doctrine/directory-rules.md). This file is a human operational procedure at the existing path:
 
 ```text
-# Illustrative — exact command paths PROPOSED until verified in mounted repo
-# Do not treat as a confirmed CLI surface.
-
-$ kfm release rollback drill \
-    --domain flora \
-    --release-id <affected_release_id> \
-    --target-id  <rollback_target_id> \
-    --fixture-lane no-network \
-    --report-out  tests/domains/flora/release/rollback_drill_report.json
+docs/runbooks/flora/ROLLBACK_RUNBOOK.md
 ```
 
-> [!NOTE]
-> **Drill cadence.** Per the master Governance Health Indicators, **rollback rehearsal rate** should be non-zero and periodic. A release that has never been rehearsed for rollback is itself a release-quality defect.
+The update is a same-path `PLACE` under the `docs/` responsibility root. It creates no new root, lane, contract, schema, policy, fixture, validator, test, workflow, receipt, proof, release record, alias, runtime, or public authority.
 
-[Back to top](#-flora-rollback-runbook)
-
----
-
-## 11. Post-rollback obligations
-
-A rollback is not finished when the public surfaces revert. The following obligations remain.
-
-1. **Publish the CorrectionNotice.** Public-facing; names the defect class, the supersession, and links to the new ReleaseManifest. Sensitivity-class notices MUST NOT republish the precise content they correct.
-2. **Invalidate downstream derivatives.** The `derivative_invalidation_set` in the RollbackCard must be exhausted: catalog records re-emitted, triplet projections rebuilt or marked stale, AI answers withdrawn, exports re-issued, story nodes updated, dashboards refreshed.
-3. **Preserve supersession lineage.** The defective release is **not deleted**. It is preserved with `status = superseded` and a forward link to the new release. Supersession lineage gaps are a CONFIRMED governance defect.
-4. **Update freshness and trust badges.** Surfaces consuming Flora data must reflect the new release time, the supersession state, and the corrected trust posture.
-5. **Update validators.** If the defect was preventable, add the missing validator or fixture to the Flora validator and fixture set. Add a non-regression test that fails against the defective release and passes against the rollback target.
-6. **Update this runbook.** If the procedure changed in any material way, edit this runbook before closing the RollbackCard. If not, record "no doctrinal change" in the RollbackCard.
-7. **Withdrawal track.** Where no safe prior release exists, the action is **withdrawal**, not rollback. Emit a `WithdrawalNotice` to `release/withdrawal_notices/` and disable the affected surfaces. Subsequent re-release follows the full promotion path from PROCESSED → PUBLISHED, not the rollback path.
-
-[Back to top](#-flora-rollback-runbook)
-
----
-
-## 12. Anti-patterns and refusal triggers
-
-> [!WARNING]
-> **Stop and refuse.** Any one of these is sufficient to halt the rollback and escalate.
-
-| Anti-pattern | Why it's wrong | Correct posture |
+| Responsibility | Owning surface | Relationship to this runbook |
 |---|---|---|
-| Editing a published artifact in place | Collapses the supersession trail; the lifecycle invariant treats promotion as a state transition, not a file move | Emit a superseding ReleaseManifest |
-| Deleting the defective release | Erases the audit trail explaining the defect | Mark `status = superseded`; preserve and forward-link |
-| Rolling back without a target | A release is treated as safely publishable only when a rollback target exists; "no target" means the defective release was promoted out of policy | Withdrawal track (§11) |
-| Skipping derivative invalidation | Derivatives become orphan truth; catalogs, triplets, AI answers, and stories will continue to cite the withdrawn claim | Exhaust the derivative-invalidation set |
-| Letting AI summarize during rollback | AI runs over released `EvidenceBundle`s only; mid-rollback some bundles are invalidated, others restored | Force Focus Mode to `ABSTAIN` for the affected feature set during the transition |
-| Republishing the precise content in a sensitivity-class CorrectionNotice | Re-leaks the sensitive content | Reference the supersession; describe the class of correction, not the precise content |
-| Single-actor rollback on a material release | Violates separation of duties | Steward + release authority, distinct from original author where materiality applies |
-| "Hidden file copy" rollback | Bypasses validators, policy gates, EvidenceBundle creation, catalog closure, and release-decision recording | Route through `release/`; emit the full receipt set |
+| Human Flora rollback guidance | `docs/runbooks/flora/` | **Owned here** |
+| Flora meaning and domain boundaries | [`docs/domains/flora/`](../../domains/flora/README.md) and semantic contracts | Referenced; not redefined |
+| Generic rollback meaning | [`contracts/release/rollback_card.md`](../../../contracts/release/rollback_card.md) | Current bounded semantic target |
+| Generic candidate machine shape | [`schemas/contracts/v1/release/rollback_card.schema.json`](../../../schemas/contracts/v1/release/rollback_card.schema.json) | Current bounded machine target |
+| Flora-specific rollback schema stub | [`schemas/contracts/v1/domains/flora/rollback_card.schema.json`](../../../schemas/contracts/v1/domains/flora/rollback_card.schema.json) | Recorded conflict; not used as equivalent authority |
+| Candidate validation | [`tools/validators/release/validate_rollback_card.py`](../../../tools/validators/release/validate_rollback_card.py) | No-network shape and local-consistency proof only |
+| Synthetic rehearsal | [`tools/release/rollback_apply.py`](../../../tools/release/rollback_apply.py) | Marked temporary roots only |
+| Release decisions | [`release/`](../../../release/README.md) | Separate append-only decision plane |
+| Flora candidate review | [`release/candidates/flora/`](../../../release/candidates/flora/README.md) | No verified child candidate at the inspected inventory |
+| Flora manifests | [`release/manifests/flora/`](../../../release/manifests/flora/README.md) | README and `.gitkeep`; no manifest instance established |
+| Flora policy source | [`policy/domains/flora/`](../../../policy/domains/flora/README.md) | M0 scaffold, evaluator unbound, inactive |
+| Flora sensitivity policy | [`policy/sensitivity/flora/`](../../../policy/sensitivity/flora/README.md) | Proposed scaffold; not accepted enforcement |
+| Source authority projection | [`control_plane/source_authority_register.yaml`](../../../control_plane/source_authority_register.yaml) | Empty proposal-only projection |
+| Published Flora carriers | [`data/published/flora/`](../../../data/published/flora/README.md) and [`data/published/layers/flora/`](../../../data/published/layers/flora/README.md) | README and `.gitkeep`; no public carrier instance established |
+| Data-plane rollback support | [`data/rollback/flora/`](../../../data/rollback/flora/README.md) | Guidance; not release authority |
+| Review routing | [`.github/CODEOWNERS`](../../../.github/CODEOWNERS) | Routes review to `@bartytime4life`; not stewardship or approval |
 
-[Back to top](#-flora-rollback-runbook)
+### 2.2 Current maturity snapshot
 
----
-
-## 13. Worked example (illustrative)
-
-> [!NOTE]
-> **Status: ILLUSTRATIVE.** The names, identifiers, and step outputs below are placeholder — they show shape, not real values. Adapt to the real release identifiers in the mounted repo.
-
-<details>
-<summary><strong>Example A — Rare-plant sensitivity leak on a public range layer (sensitivity_leak class)</strong></summary>
-
-**Detection.** A reviewer notices that the public `flora.range.<species_id>` layer renders a point cluster overlapping a steward-controlled population.
-
-**Step 1 — Triage.** Defect class: `sensitivity_leak`; reason code `SENSITIVITY_UNRESOLVED`. Sensitive lane: yes.
-
-**Step 9.1–9.6 — Immediate disablement.**
-- `apps/governed-api/` is configured to return `DENY` for `feature_id = flora.feature.<id>` and the affected `layer_id`.
-- The layer is pulled from the Flora layer registry.
-- `EvidenceDrawerPayload` cache invalidated.
-- Focus Mode answers tied to `evidence_ids` intersecting the feature are forced to `DENY`.
-- Story node `<story_id>` referencing the feature is removed from public surfaces.
-- Flora steward + cultural-review steward notified via ReviewRecord.
-
-**Step 2 — Locate target.** `affected_release.ReleaseManifest.rollback_target` points to the prior generalized-only release; verified intact.
-
-**Step 4 — Policy re-evaluation.** Generalized range polygon under steward-reviewed `RedactionReceipt` re-evaluates to `ALLOW (generalized)`. Exact geometry stays `DENY`.
-
-**Step 8 — Superseding release.** New ReleaseManifest emitted; `supersedes = <defective_release_id>`, `rollback_cause = SENSITIVITY_UNRESOLVED`. Generalized-only layer republished.
-
-**Step 11 — Obligations.** CorrectionNotice published referencing the supersession class (not the precise location). Validator added: "exact sensitive Flora geometry denial" non-regression test against the defective release.
-
-</details>
-
-<details>
-<summary><strong>Example B — Evidence gap on a vegetation-community polygon (evidence_gap class)</strong></summary>
-
-**Detection.** Citation validator reports that polygon `flora.veg.<id>` in release `<r-id>` cites an `EvidenceRef` that no longer resolves.
-
-**Step 1 — Triage.** Defect class: `evidence_gap`; reason code `MISSING_EVIDENCE`. Sensitive lane: no.
-
-**Step 2 — Target.** Prior release with intact EvidenceBundle resolved.
-
-**Step 5 — Disablement.** Affected feature returns `ABSTAIN` with `abstain_reason = "evidence under review"`. Layer remains public; only the affected polygon is suppressed in the Evidence Drawer.
-
-**Step 8 — Supersession.** New ReleaseManifest republishes the previous polygon set; the new polygon is held in WORK / QUARANTINE pending evidence repair.
-
-**Step 11 — Obligations.** Validator added to fail closed when an `EvidenceRef` resolution rate drops below threshold for any Flora layer.
-
-</details>
-
-<details>
-<summary><strong>Example C — Temporal defect on a phenology layer (temporal_defect class)</strong></summary>
-
-**Detection.** Phenology layer mislabels `observed_time` as `valid_time` for a subset of observations.
-
-**Step 1 — Triage.** Defect class: `temporal_defect`; reason code `TEMPORAL_DRIFT`. Sensitive lane: no.
-
-**Step 5 — Disablement.** Affected snapshots in the time slider are marked stale via a stale-state flag on the layer.
-
-**Step 8 — Supersession.** Layer rebuilt with corrected time fields and republished through the standard promotion path. Old release marked superseded; not deleted.
-
-**Step 11 — Obligations.** Non-regression test added covering source/observed/valid/retrieval/release/correction time distinctness for Flora records.
-
-</details>
-
-[Back to top](#-flora-rollback-runbook)
-
----
-
-## 14. Related docs and runbooks
-
-| Type | Doc | Status |
+| Surface | Current bounded evidence | Safe conclusion |
 |---|---|---|
-| Doctrine | `docs/doctrine/lifecycle-law.md` — RAW → … → PUBLISHED invariant | PROPOSED presence |
-| Doctrine | `docs/doctrine/trust-membrane.md` — public surfaces never reach internal stores | PROPOSED presence |
-| Doctrine | `docs/doctrine/truth-posture.md` — cite-or-abstain | PROPOSED presence |
-| Domain | `docs/domains/flora/README.md` — Flora doctrine, ubiquitous language, sources | PROPOSED presence |
-| Architecture | `docs/architecture/governed-api/README.md` | PROPOSED presence |
-| Architecture | `docs/architecture/governed-ai/README.md` | PROPOSED presence |
-| Release plane | `release/README.md` — manifests, rollback cards, correction notices, withdrawal notices, signatures | PROPOSED presence |
-| Data plane | `data/published/layers/flora/README.md` | PROPOSED presence |
-| Data plane | `data/rollback/README.md` — alias-revert receipts | PROPOSED presence |
-| Runbook | `docs/runbooks/ui_ROLLBACK.md` — UI rollback, feature flags, schema deprecation | PROPOSED |
-| Runbook | `docs/runbooks/governed_ai_ROLLBACK.md` — AI adapter rollback and kill switch | PROPOSED |
-| Register | `docs/registers/DRIFT_REGISTER.md` | PROPOSED presence |
-| Register | `docs/registers/VERIFICATION_BACKLOG.md` | PROPOSED presence |
+| Flora rollback runbook target | Existing, proposal-era document | Same-path modernization is appropriate |
+| Flora runbook local README | One-byte file | Local lane boundary/index remains a separate `HOLD` |
+| Generic `RollbackCard` contract/schema | Closed 1.0.0 fixture-first candidate profile | Use for non-executing candidate validation |
+| Generic release validator | Implemented, deterministic, no-network | Proves shape and local consistency only |
+| Generic fixtures/tests | Three named valid candidates, six named invalid cases, and negative parser tests | Bounded polarity proof; not operational proof |
+| Generic top-level validator | Greenfield `NotImplementedError` placeholder | Do not invoke as the current validator |
+| Flora-domain rollback schema | `id`-only, `additionalProperties: true`, declared companions not established | Permissive greenfield stub; not equivalent to generic profile |
+| Synthetic rehearsal helper | Marker-protected, `synthetic: true`, no-network | May run only in disposable synthetic roots |
+| Synthetic rehearsal tests | Non-vacuous rollback, withdrawal, marker, digest, target, and invalidation cases | Rehearsal proof only |
+| Production rollback pipeline | One-line placeholder | Operational rollback remains `HOLD` |
+| Flora rollback pipeline lane | README plus `.gitkeep` | No executable Flora rollback implementation |
+| Rollback drill workflow | Read-only readiness inspection | Confirms holds; does not run production rollback |
+| Flora domain policy | Sixteen default-only/comment-only Rego modules, placeholder YAML, no local native Rego test, evaluator unbound | Inactive M0 scaffold |
+| Flora sensitivity policy | Proposed scaffold and policy-shaped files without accepted activation proof | Fail closed; do not infer enforcement |
+| Human sensitivity docs | Multiple overlapping drafts | `CONFLICTED`; do not choose one as accepted authority |
+| Central source-authority register | `entries: []`, `implementation_status: ABSENT` | No source admission or activation established |
+| Flora source entry | `usda_plants.yaml` is a proposal-only documentation placeholder | Not a SourceDescriptor admission |
+| Flora candidate lane | Parent README only | No verified child candidate |
+| Flora manifest lane | README plus `.gitkeep` | No verified Flora ReleaseManifest |
+| Flora published lanes | README plus `.gitkeep` | No verified published Flora payload or map layer |
+| Production aliases, external caches, public endpoints, signer custody | Not established in inspected evidence | `UNKNOWN / HOLD` |
 
-[Back to top](#-flora-rollback-runbook)
+### 2.3 Source-document role
+
+The Google Drive Flora architecture blueprint is retained as design lineage. It supports these planning principles:
+
+- distinguish observations, specimens, reviewed data, rare-plant controls, models, public visualizations, and AI summaries;
+- preserve correction, supersession, withdrawal, and rollback as separate governance objects;
+- keep exact/internal geometry separate from public-safe geometry;
+- preserve prior evidence and process receipts rather than deleting history;
+- disable or revert a wrong source descriptor, validator, or policy path before broadening implementation.
+
+The Drive blueprint does not prove current repository behavior. Where it and current GitHub evidence differ, current contracts, schemas, policy, code, tests, workflows, and inventories control the current-behavior claim.
+
+[Back to top](#top)
 
 ---
 
-## 15. Open verification items
+## 3. Flora fail-closed invariants
 
-| Item | Evidence that would settle it | Status |
+These invariants apply before any candidate disposition is proposed.
+
+1. **Occurrence is not range.** A specimen or observation can support an occurrence claim; it does not automatically support a statewide range polygon or distribution surface.
+2. **Observed is not modeled.** Interpolation, habitat suitability, classification, remote-sensing inference, and generated summaries remain modeled or derived.
+3. **Taxonomic synonymy is not adjudication.** A name match, crosswalk, or generated reconciliation does not establish the accepted taxon concept without reviewed support.
+4. **Specimen locality is not public-safe geometry.** Exact collection coordinates, label text, collection notes, and uncertainty envelopes may contain protected or reverse-engineerable location detail.
+5. **Generalized geometry is a separate representation.** A county, grid, watershed, buffered, delayed, or suppressed public carrier must preserve its transform and uncertainty lineage; it cannot masquerade as exact source geometry.
+6. **Sensitivity outranks convenience.** Source quality, scientific interest, public demand, map styling, or a lack of an observed denial never authorizes exact rare/protected/culturally sensitive exposure.
+7. **Rights and sensitivity are independent.** Rights-clean material can still be sensitive; non-sensitive material can still have unresolved rights.
+8. **Source role does not upgrade downstream.** Aggregation, normalization, cataloging, visualization, or AI explanation cannot convert context, regulatory status, model output, or community observation into a stronger role.
+9. **Habitat association is not occurrence proof.** Habitat, soil, hydrology, agriculture, fire, land cover, or climate context may support a governed join but cannot establish plant presence by itself.
+10. **Cross-lane joins inherit the strictest restriction.** A join that makes a protected location inferable must be denied, generalized, or restricted even when each input appears safe in isolation.
+11. **Maps, tiles, indexes, graphs, and AI are downstream carriers.** They do not become sovereign truth and must be invalidated when their supporting release changes.
+12. **Evidence references must resolve before consequential claims.** A string that resembles an `EvidenceRef` is not an `EvidenceBundle`.
+13. **Rollback is not deletion.** Prior releases, decisions, receipts, proofs, and correction lineage remain inspectable unless a separate lawful removal process applies.
+14. **Rollback is not a file move.** Copying a prior artifact, changing a path, or hiding a map layer is not a governed transition.
+15. **The current repository is non-operational for Flora rollback.** When a required authority, target, policy result, reviewer, alias, invalidator, or receipt is missing, the correct result is `HOLD`, not optimistic execution.
+
+### Sensitive-location containment rule
+
+When a suspected defect exposes or can reconstruct protected plant location detail:
+
+- stop copying the detail into public or semi-public systems;
+- preserve only public-safe identifiers in the issue and candidate card;
+- route restricted evidence through a verified restricted channel;
+- classify the public-safe trigger as `SENSITIVITY_DISCOVERY`, `RIGHTS_CHANGE`, `SECURITY_ISSUE`, or another fitting schema reason code;
+- request governed containment, withdrawal, or denial from the appropriate authority;
+- do not claim the public state changed until operational evidence proves it;
+- include every derivative capable of reconstructing the location in the invalidation plan.
+
+[Back to top](#top)
+
+---
+
+## 4. Trigger classification and finite candidate dispositions
+
+### 4.1 Trigger reason codes
+
+Use the finite reason-code vocabulary from the generic schema. Do not place coordinates, specimen labels, private contacts, cultural knowledge, exploit detail, or unrestricted source excerpts in `trigger`.
+
+| Schema reason code | Flora example | Minimum review question |
 |---|---|---|
-| Flora rollback wired to a real governed-API route emitting `FloraDecisionEnvelope` | Mounted-repo route, contract test, fixture coverage | NEEDS VERIFICATION |
-| `release/rollback_cards/` exists as the rollback-decision home | Mounted-repo directory; ADR resolving `release/rollback_cards/` vs `data/rollback/` split | NEEDS VERIFICATION |
-| `RollbackCard` schema home (`schemas/contracts/v1/release/rollback_card.schema.json` PROPOSED) | Mounted-repo schema, validator, fixture | NEEDS VERIFICATION |
-| Rollback-drill CLI / CI hook exists | Mounted-repo CI workflow, tool entry, drill report fixture | NEEDS VERIFICATION |
-| Sensitivity-leak fail-closed test covers all Flora public surfaces (layer, drawer, Focus Mode, story, export) | Mounted-repo tests under `tests/domains/flora/` | NEEDS VERIFICATION |
-| Separation-of-duties enforcement: release authority ≠ original author at material thresholds | Policy gate, governance doctrine, repo enforcement | NEEDS VERIFICATION |
-| `docs/runbooks/flora/` (subdirectory) vs `docs/runbooks/flora_ROLLBACK.md` (flat) naming | ADR or DRIFT_REGISTER entry; mounted-repo convention | NEEDS VERIFICATION |
-| Naming of `WithdrawalNotice` vs `withdrawal_notices/` folder | Directory Rules confirms folder; artifact name PROPOSED | NEEDS VERIFICATION |
-| Derivative-invalidation coverage measurement | Mounted-repo health indicator dashboard | NEEDS VERIFICATION |
+| `RELEASE_DEFECT` | Wrong taxon label, wrong legend, missing transform note, mismatched manifest content | Is a distinct prior release demonstrably safer and complete? |
+| `EVIDENCE_CONTRADICTION` | Specimen record or reviewed source contradicts a released occurrence or range claim | Which EvidenceBundle and taxon concept control the correction? |
+| `RIGHTS_CHANGE` | Upstream terms, attribution, embargo, consent, or redistribution posture changed | Must the carrier be withdrawn while rights are re-evaluated? |
+| `SENSITIVITY_DISCOVERY` | Exact or inferable rare-plant, specimen-locality, or culturally sensitive detail reached a public carrier | Which carriers and joins can reconstruct the detail? |
+| `VALIDATION_FAILURE` | Schema, digest, topology, geoprivacy, taxonomic, or fixture check failed after release preparation | Was the failure present in the affected release and absent in the target? |
+| `SOURCE_WITHDRAWAL` | Source steward withdraws data or revokes access | Does any safe prior release avoid the withdrawn support? |
+| `POLICY_FAILURE` | Required policy was absent, inactive, bypassed, or produced an incompatible result | Which accepted policy identity and evaluator should govern? |
+| `SECURITY_ISSUE` | Restricted material, secret-bearing metadata, path traversal, or access-control failure | Is containment required before normal review? |
+| `OPERATIONAL_FAILURE` | Carrier, manifest, alias, digest, cache, or delivery state is inconsistent | Can state be verified without guessing at a production alias? |
+| `EMERGENCY_HOLD` | Immediate fail-closed stop is requested while evidence is incomplete | Who can authorize containment and what public-safe notice is needed? |
+| `INSUFFICIENT_EVIDENCE` | No admissible support proves either current or prior claim | Should the candidate remain `HOLD` or become withdrawal? |
+| `INPUT_INVALID` | Candidate JSON, identifier, digest, time, or target is malformed | Correct input before any review or action |
 
-[Back to top](#-flora-rollback-runbook)
+### 4.2 Candidate dispositions
+
+| Disposition | Meaning | Flora selection rule | Public effect |
+|---|---|---|---|
+| `ROLLBACK_CANDIDATE` | Propose restoration of a distinct prior release | Use only when a prior manifest, artifacts, evidence, policy/review posture, sensitivity transforms, and invalidation scope can be verified | None until separately approved and executed |
+| `WITHDRAWAL_CANDIDATE` | Propose no current Flora release for the affected scope | Use when no safe prior release exists, source/rights support is withdrawn, or continued exposure is unacceptable | None until separately approved and executed |
+| `HOLD` | Stop evaluation or transition pending named evidence or authority | Default for unresolved taxonomy, rights, sensitivity, target, policy, review, alias, invalidation, or receipt | None |
+| `ERROR` | Record malformed or failed recovery evaluation | Use for invalid input or an evaluation that cannot produce a coherent candidate | None |
+
+### 4.3 Selection order
+
+```text
+unsafe or malformed input
+  -> ERROR
+
+missing authority, evidence, target, rights, sensitivity, review, or operational implementation
+  -> HOLD
+
+no safe prior release, but a governed withdrawal path may exist
+  -> WITHDRAWAL_CANDIDATE
+
+distinct prior release is verified as safe for the exact affected scope
+  -> ROLLBACK_CANDIDATE
+```
+
+A prior Git commit, previous file, old tile archive, or remembered deployment is not by itself a rollback target. The target must be bound to the relevant release identity and content.
+
+[Back to top](#top)
 
 ---
 
-<sub>**Last updated:** 2026-05-13 · **Status:** Draft (PROPOSED) · **Owners:** `<TODO — flora steward · release authority · docs steward>` · **Related:** [`docs/runbooks/README.md`](../README.md) · [`docs/domains/flora/README.md`](../../domains/flora/README.md) · [`release/README.md`](../../../release/README.md) · [Back to top](#-flora-rollback-runbook)</sub>
+## 5. Preconditions and stop conditions
+
+### 5.1 Preconditions for candidate preparation
+
+A non-executing candidate may be prepared only after the operator can name, with public-safe identifiers:
+
+- the repository revision used for the investigation;
+- the affected Flora scope and object family;
+- the affected release reference or an explicit statement that it is unresolved;
+- the defect reason code;
+- the source role and taxonomic context relevant to the defect;
+- whether restricted botanical material is involved;
+- the known affected carriers and derivatives;
+- the evidence, policy, review, correction, and target references currently available;
+- the unknowns that prevent operational action.
+
+### 5.2 Additional preconditions for `ROLLBACK_CANDIDATE`
+
+Before selecting a prior-release target, verify:
+
+- target release identity is distinct from the affected release;
+- target manifest is available and content-addressed;
+- target artifacts match declared digests;
+- target does not contain the same defect;
+- target evidence remains admissible for the proposed scope and time;
+- target source rights and source-role posture remain valid;
+- target taxonomic concept is compatible or explicitly migrated;
+- target public-safe geometry and transform lineage remain acceptable;
+- target correction and rollback support are present;
+- invalidation can cover every dependent carrier.
+
+The current repository does not provide a verified Flora release instance or production alias. These preconditions therefore describe review requirements, not an executable current flow.
+
+### 5.3 Stop conditions
+
+Stop and record `HOLD` or `ERROR` when any of the following applies:
+
+- exact or inferable protected location detail would enter a public packet;
+- the affected release cannot be identified;
+- a target is guessed from a branch, path, timestamp, or filename;
+- target and affected release are the same;
+- target artifact digests cannot be verified;
+- target evidence, rights, sensitivity, or taxonomic posture is unresolved;
+- required correction notice is absent;
+- policy source exists but no accepted evaluator or policy identity is bound;
+- a reviewer is named only by role placeholder or CODEOWNERS route;
+- the request depends on a live source call;
+- the request would use the permissive Flora schema as proof of a complete candidate;
+- the request would invoke the generic placeholder validator rather than the release-scoped validator;
+- the synthetic workspace marker is absent or invalid;
+- any path escapes the disposable synthetic root or crosses a symlink;
+- the invalidation inventory is incomplete;
+- production alias, cache, storage, deployment, signing, or public-readback behavior is unknown;
+- a database, schema, policy, graph, or application migration is being smuggled into a release rollback;
+- the action would erase audit history or substitute rollback for a lawful removal process.
+
+### 5.4 Escalation without overclaiming
+
+When immediate containment appears necessary, the operator may prepare a public-safe escalation packet and request action from an authenticated authority. The operator must still report:
+
+```text
+candidate status: HOLD or WITHDRAWAL_CANDIDATE
+operational action: UNKNOWN / NOT VERIFIED
+public state: UNKNOWN until read-back evidence exists
+```
+
+[Back to top](#top)
+
+---
+
+## 6. Candidate preparation and synthetic rehearsal procedure
+
+### Step 1 — Freeze the investigation boundary
+
+Record:
+
+- `repository_ref`;
+- exact commit SHA;
+- target file or artifact identity;
+- public-safe incident ID;
+- affected object family;
+- suspected release reference;
+- inspection timestamp in UTC;
+- known open pull requests or migrations touching the same surface.
+
+Do not freeze restricted botanical content into a public issue. Record only the restricted-system reference.
+
+### Step 2 — Classify the Flora meaning
+
+Identify the primary affected family:
+
+- plant taxon or taxon crosswalk;
+- occurrence;
+- specimen;
+- rare-plant record;
+- vegetation community;
+- invasive-plant record;
+- phenology observation;
+- range polygon;
+- distribution surface;
+- habitat association;
+- botanical survey;
+- restoration context;
+- map, API, evidence, search, graph, export, or AI derivative.
+
+Then record the knowledge character:
+
+```text
+observed | specimen-backed | aggregate | regulatory | administrative |
+modeled | classified | derived | contextual | synthetic
+```
+
+Use the repository's current accepted vocabulary when one is verified. Do not silently normalize competing vocabularies in the incident record.
+
+### Step 3 — Establish a public-safe containment description
+
+For sensitivity, rights, or security defects:
+
+- name the affected public carrier, not the protected coordinate;
+- use the schema reason code;
+- state whether exact detail may be inferred;
+- identify the restricted evidence reference;
+- prohibit copies of the restricted material in public review surfaces;
+- list potential reconstruction paths such as tiles, query endpoints, exports, feature properties, caches, logs, indexes, screenshots, and cross-lane joins.
+
+### Step 4 — Inventory the affected release and derivatives
+
+Build a dependency table with one row per known carrier:
+
+| Carrier | Exact version/digest | Release ref | Evidence ref | Sensitivity transform | Cache/index dependency | Current status |
+|---|---|---|---|---|---|---|
+| Example public-safe Flora layer | `UNKNOWN` until verified | `UNKNOWN` | `UNKNOWN` | `UNKNOWN` | tiles, catalog, API | `HOLD` |
+
+Do not infer a clean dependency graph from documentation. Unknown rows remain unknown.
+
+### Step 5 — Choose a finite candidate disposition
+
+Apply [§4.3](#43-selection-order). Record the rejected alternatives and reasons. A rollback candidate must explain why withdrawal or hold is not safer.
+
+### Step 6 — Resolve the target and support references
+
+For `ROLLBACK_CANDIDATE`, collect:
+
+- `affected_release_ref`;
+- distinct `target.release_ref`;
+- target and affected manifest digests;
+- artifact digests;
+- `EvidenceBundle` references;
+- policy-decision references;
+- review references, if any;
+- correction notice reference when public notice is required;
+- target transform and redaction receipts;
+- target taxonomic identity and source-role support;
+- complete invalidation classes.
+
+Reference presence is not resolution. Record unresolved references as blockers.
+
+### Step 7 — Prepare the candidate JSON
+
+Use the generic release profile described in [§7](#7-current-rollbackcard-profile-and-schema-conflict), not the Flora-domain schema stub. Keep:
+
+- `governance.authority_created: false`;
+- `governance.policy_evaluated: false`;
+- `governance.review_completed: false`;
+- `governance.rollback_executed: false`;
+- `governance.public_state_mutated: false`;
+- `governance.release_ref: null`.
+
+The candidate is not an approval record. A future accepted profile may use separate decision and execution objects rather than changing these flags in place.
+
+### Step 8 — Validate candidate shape and local consistency
+
+Set `CANDIDATE` to an approved local candidate path and run:
+
+```bash
+CANDIDATE="${CANDIDATE:?set CANDIDATE to a reviewed RollbackCard JSON path}"
+python tools/validators/release/validate_rollback_card.py "$CANDIDATE"
+```
+
+Expected exit semantics:
+
+| Exit | Meaning |
+|---:|---|
+| `0` | Candidate passed schema and bounded local-consistency checks |
+| `1` | Candidate failed one or more checks |
+| `2` | Not used by the candidate validator; do not confuse with synthetic rehearsal exit `2` |
+
+A passing candidate remains non-executing.
+
+### Step 9 — Run the repository's focused proof profiles
+
+```bash
+python tools/validators/release/validate_rollback_card.py --fixtures
+
+python -m unittest discover \
+  --start-directory tests/validators \
+  --pattern 'test_validate_rollback_card.py' \
+  --verbose
+
+python -m unittest -q tests.release.test_synthetic_rollback_rehearsal
+```
+
+These commands do not contact Flora sources or mutate production state.
+
+### Step 10 — Rehearse only in a disposable marked root
+
+The safest current entry point is the isolated test profile above. A direct helper run requires all of the following:
+
+- a newly created disposable root;
+- exact marker file `.kfm-synthetic-rollback-rehearsal`;
+- marker bytes `synthetic-only\n`;
+- a scenario with `synthetic: true`;
+- synthetic release manifests and artifacts;
+- complete invalidation set;
+- expected digest bindings;
+- no symlinks or path traversal;
+- no repository, deployment, object-store, cache, or public path.
+
+Run without `--apply` first. The default mode is `PLAN` and must not write correction, invalidation, or alias files. `--apply` is allowed only inside the disposable synthetic root and still creates no KFM authority.
+
+### Step 11 — Prepare the review handoff
+
+Use [§13](#13-review-handoff-packet). Include validator output, rehearsal output, blockers, and a public-safe invalidation matrix. Exclude restricted content.
+
+### Step 12 — Stop before operational action
+
+At the current repository maturity, finish with:
+
+```text
+candidate prepared: yes/no
+candidate validator: PASS/FAIL/NOT RUN
+synthetic rehearsal: PASS/HOLD/NOT RUN
+operational rollback: HOLD
+public mutation: none
+release/deployment/publication: none
+```
+
+### Step 13 — Future operational closure, not currently executable
+
+An operationally mature rollback would additionally require:
+
+1. authenticated decision authority;
+2. accepted policy identity and evaluated result;
+3. eligible independent review where required;
+4. verified affected and target release manifests;
+5. signer or integrity verification;
+6. production alias/operator identity;
+7. transactional or fail-safe target switch;
+8. execution receipts;
+9. complete invalidation receipts;
+10. public and restricted read-back verification;
+11. correction/withdrawal visibility;
+12. monitoring and rollback-of-rollback path.
+
+No current command in this runbook performs those steps.
+
+[Back to top](#top)
+
+---
+
+## 7. Current `RollbackCard` profile and schema conflict
+
+### 7.1 Current bounded target
+
+The current candidate profile is:
+
+| Surface | Current role |
+|---|---|
+| [`contracts/release/rollback_card.md`](../../../contracts/release/rollback_card.md) | Semantic meaning |
+| [`schemas/contracts/v1/release/rollback_card.schema.json`](../../../schemas/contracts/v1/release/rollback_card.schema.json) | Closed machine shape |
+| [`fixtures/release/rollback_card/`](../../../fixtures/release/rollback_card/) | Valid and invalid fixture polarity |
+| [`tools/validators/release/validate_rollback_card.py`](../../../tools/validators/release/validate_rollback_card.py) | No-network schema and local-semantic validation |
+| [`tests/validators/test_validate_rollback_card.py`](../../../tests/validators/test_validate_rollback_card.py) | Focused validator tests |
+| [`.github/workflows/rollback-card.yml`](../../../.github/workflows/rollback-card.yml) | Read-only hosted proof for the profile's own changed paths |
+
+The candidate profile requires:
+
+- `object_type: RollbackCard`;
+- `schema_version: 1.0.0`;
+- stable ID and semantic version;
+- non-placeholder SHA-256 binding;
+- finite disposition and trigger;
+- affected release and target;
+- evidence, policy, review, and correction references;
+- one or more invalidation classes;
+- restoration, timing, lineage, and governance objects;
+- closed additional-property handling.
+
+### 7.2 What the validator checks
+
+The validator checks:
+
+- UTF-8 JSON object input;
+- file size limit;
+- duplicate keys;
+- non-finite numbers;
+- JSON Schema Draft 2020-12 shape;
+- non-zero digest placeholder;
+- sorted, unique references and invalidations;
+- disposition/target agreement;
+- distinct affected and target releases;
+- restoration/target agreement;
+- required evidence and policy refs for rollback candidates;
+- correction reference when public notice is required;
+- time ordering;
+- no self-supersession;
+- all governance flags remain non-authoritative.
+
+### 7.3 What it does not check
+
+It does not:
+
+- resolve any reference;
+- authenticate an actor or reviewer;
+- evaluate Flora policy;
+- determine source rights;
+- adjudicate taxonomy;
+- inspect protected coordinates;
+- verify a geoprivacy transform;
+- decide whether a prior release is scientifically or culturally safe;
+- check production manifests or artifacts;
+- mutate an alias;
+- invalidate a cache;
+- issue a correction;
+- execute rollback;
+- release, deploy, promote, or publish.
+
+### 7.4 Flora-domain schema conflict
+
+[`schemas/contracts/v1/domains/flora/rollback_card.schema.json`](../../../schemas/contracts/v1/domains/flora/rollback_card.schema.json) is a permissive greenfield stub:
+
+- only `id` is required;
+- `additionalProperties` is `true`;
+- it describes fields as still to be defined;
+- it points to a Flora contract, fixtures, validator, and policy profile that are not established as the current executable candidate surface.
+
+Therefore:
+
+> [!IMPORTANT]
+> **Do not validate a Flora rollback candidate against the Flora-domain stub and do not treat a pass against that stub as rollback readiness.** Use the generic release profile until an accepted migration explicitly supersedes it.
+
+### 7.5 Generic entrypoint conflict
+
+[`tools/validators/validate_rollback_card.py`](../../../tools/validators/validate_rollback_card.py) is a known `NotImplementedError` placeholder. The current implementation is release-scoped:
+
+```text
+tools/validators/release/validate_rollback_card.py
+```
+
+Do not alter import paths, wrapper scripts, workflow checks, or documentation to hide that distinction.
+
+### 7.6 Migration rule
+
+Any future Flora specialization must:
+
+1. preserve or explicitly version generic meaning;
+2. avoid creating a parallel rollback authority;
+3. define contract, schema, fixtures, validator, tests, policy inputs, and migration notes together;
+4. prove backward compatibility or provide a controlled break;
+5. update current consumers and documentation;
+6. preserve candidate versus decision versus execution separation;
+7. include rollback for the migration itself.
+
+[Back to top](#top)
+
+---
+
+## 8. Synthetic rehearsal and safe entry points
+
+### 8.1 Guard model
+
+The helper refuses unsafe use through:
+
+- required root marker `.kfm-synthetic-rollback-rehearsal`;
+- exact marker body `synthetic-only\n`;
+- required `synthetic: true`;
+- root containment checks;
+- absolute-path and `..` denial;
+- symlink denial;
+- manifest and artifact digest checks;
+- current-alias digest checks;
+- distinct target checks;
+- complete invalidation-set requirement;
+- history-preservation verification.
+
+### 8.2 Supported synthetic operations
+
+| Operation | Default `PLAN` result | Synthetic `--apply` result |
+|---|---|---|
+| `ROLLBACK` | Computes before/after alias, target, correction, invalidation, and preservation report without write | Switches only the synthetic alias, writes synthetic correction and invalidation records, preserves synthetic release history |
+| `WITHDRAWAL` | Computes withdrawn state without write | Writes only the synthetic withdrawn alias, correction, and invalidation records |
+
+The report deliberately records:
+
+```json
+{
+  "authority_created": false,
+  "policy_evaluated": false,
+  "review_completed": false,
+  "release_authorized": false,
+  "publication_authorized": false,
+  "public_state_mutated": false,
+  "synthetic_workspace_only": true
+}
+```
+
+### 8.3 Exit semantics
+
+| Exit | Meaning |
+|---:|---|
+| `0` | Synthetic rehearsal returned `PASS` |
+| `2` | Helper returned `HOLD` with a deterministic reason code |
+| Other | Tool/runtime failure; record as `ERROR` and inspect without guessing |
+
+### 8.4 Canonical current rehearsal command
+
+```bash
+python -m unittest -q tests.release.test_synthetic_rollback_rehearsal
+```
+
+This is preferred because it creates and destroys isolated temporary roots itself.
+
+### 8.5 Direct helper form
+
+Use only after independently verifying a disposable root and synthetic scenario:
+
+```bash
+SYNTHETIC_WORKSPACE="${SYNTHETIC_WORKSPACE:?set a disposable synthetic root}"
+SYNTHETIC_SCENARIO="${SYNTHETIC_SCENARIO:?set a reviewed synthetic scenario}"
+SYNTHETIC_REPORT="${SYNTHETIC_REPORT:?set a disposable report path}"
+
+python tools/release/rollback_apply.py \
+  --workspace "$SYNTHETIC_WORKSPACE" \
+  --scenario "$SYNTHETIC_SCENARIO" \
+  --report "$SYNTHETIC_REPORT"
+```
+
+Do not add `--apply` until the default plan passes and a reviewer verifies that the root contains only synthetic fixture material. Even then, the action remains a rehearsal.
+
+### 8.6 Current workflow boundary
+
+[`.github/workflows/rollback-drill.yml`](../../../.github/workflows/rollback-drill.yml):
+
+- has read-only repository permission;
+- runs on pull requests, `main`, and manual dispatch;
+- confirms the production rollback pipeline remains a placeholder;
+- confirms the generic validator entrypoint remains a placeholder;
+- runs the release-scoped fixture profile;
+- runs non-vacuous synthetic rehearsal tests;
+- checks known rollback-card placeholder inventories;
+- emits `WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD`;
+- does not select or mutate a production target.
+
+Do not edit this runbook to imply that the workflow is an operational rollback drill.
+
+[Back to top](#top)
+
+---
+
+## 9. Flora-specific defects, rights, sensitivity, and cross-lane seams
+
+### 9.1 Defect matrix
+
+| Defect class | Examples | Candidate bias | Required additional checks |
+|---|---|---|---|
+| Taxonomic identity | Synonym treated as accepted name; concept drift; authority/version mismatch | `HOLD` until adjudicated; rollback only to a compatible concept | Taxon concept, authority, crosswalk, downstream labels and indexes |
+| Occurrence/specimen support | Record lacks specimen/observation support; duplicate or georeferencing error | Correction or rollback candidate | EvidenceBundle, locality uncertainty, duplicate lineage |
+| Rare/protected location exposure | Exact point, small polygon, label text, tile property, export, or join reveals location | Immediate fail-closed escalation; withdrawal or hold often safer | Every direct and inferential carrier; restricted evidence only |
+| Cultural plant knowledge exposure | Community-restricted knowledge appears in summary, map, metadata, or AI answer | `HOLD` or withdrawal candidate | Authority to control, consent, audience, derivative leakage |
+| Rights or source withdrawal | License, attribution, terms, consent, or access posture changes | Withdrawal unless a safe independently supported target exists | Rights evidence, affected assets, derivative redistribution |
+| Source-role collapse | Regulatory rank, model, aggregator, or context represented as occurrence truth | Correction or rollback candidate | Origin publisher, role, claim family, UI/AI wording |
+| Observed/modeled collapse | Suitability or distribution surface shown as observation | Correction or rollback candidate | Model identity, uncertainty, legend, Evidence Drawer |
+| Generalization failure | Public-safe derivative retains exactness or reverse-engineerable clues | Withdrawal/hold until corrected transform is reviewed | Transform receipt, grid/region size, auxiliary joins, tile attributes |
+| Time or phenology defect | Observation date, valid time, season, source release, or freshness is wrong | Stale state, correction, or rollback depending on consequence | Valid/source/retrieval/release times, seasonal scope |
+| Invasive/native status defect | Regulatory or administrative status presented as universal botanical fact | Correction or rollback candidate | Jurisdiction, effective time, status authority, occurrence support |
+| Vegetation/range overreach | Polygon extends beyond support or masks uncertainty | Correction or rollback candidate | Method, scale, source role, uncertainty, target compatibility |
+| Cross-lane ownership defect | Habitat, soil, hydrology, agriculture, fire, or land-cover context becomes Flora truth | `HOLD` or correction | Owning lane, join contract, EvidenceBundle, strictest sensitivity |
+| Catalog/index/graph drift | Search, vector, triplet, catalog, or AI cache still reflects superseded release | Rollback cannot close until invalidated | All nine invalidation classes and read-back |
+| Public explanation defect | Popup, Evidence Drawer, export, or AI text omits correction, uncertainty, or source role | Correction or rollback candidate | Governed API envelope, citation closure, cache invalidation |
+| Security or private-detail leak | Token, private land detail, restricted note, or unsafe path appears in carrier/log | Security hold and containment | Security owner, restricted incident process, no public detail |
+
+### 9.2 Sensitive geometry and cultural knowledge
+
+The repository carries strong deny-by-default documentation pressure, but current Flora sensitivity policy is not proven active. Therefore the runbook uses the stricter operational posture:
+
+```text
+unknown sensitivity or unknown authority
+  -> HOLD or DENY public exact exposure
+```
+
+Do not:
+
+- rely on UI hiding;
+- rely on client-side filters;
+- assume county generalization is always sufficient;
+- publish transform parameters that permit reconstruction;
+- expose source-native uncertainty envelopes when they reveal a site;
+- include exact points in rollback diffs;
+- copy protected details into a prior release merely because it predates the incident;
+- infer consent from prior publication.
+
+### 9.3 Taxonomy and identity
+
+A rollback to an earlier release can reintroduce:
+
+- obsolete accepted names;
+- a different taxon concept;
+- rank changes;
+- split/lump history;
+- broken source identifiers;
+- stale common names;
+- incompatible sensitivity classifications.
+
+The candidate must treat target taxonomy as a reviewed dependency, not as cosmetic metadata.
+
+### 9.4 Cross-lane joins
+
+When Flora is joined to Habitat, Fauna, Soil, Hydrology, Agriculture, Hazards, Archaeology, Settlements/Infrastructure, Roads/Rail/Trade, or People/DNA/Land:
+
+- preserve each lane's ownership;
+- preserve source role;
+- preserve time and uncertainty;
+- apply the strictest rights and sensitivity result;
+- include all downstream derivatives in invalidation;
+- do not reconstruct protected Flora location from another public layer;
+- do not let a rollback in Flora silently change another lane's canonical truth.
+
+A cross-domain carrier may need coordinated correction or withdrawal, but each owning lane retains its own decision and evidence responsibilities.
+
+### 9.5 AI and map surfaces
+
+A map selection, popup, Evidence Drawer, search result, graph edge, summary, or Focus Mode answer must not:
+
+- remain cached after its release support is withdrawn;
+- cite the rolled-back release as current;
+- display exact restricted geometry from client state;
+- convert a modeled surface into observed language;
+- hide a correction or supersession state;
+- answer from raw or restricted stores.
+
+AI output is interpretive. It cannot approve rollback or provide missing evidence.
+
+[Back to top](#top)
+
+---
+
+## 10. Correction, stale state, withdrawal, rollback, and erasure
+
+Keep these transitions separate.
+
+| Concept | Use when | Required posture | Not equivalent to |
+|---|---|---|---|
+| **Stale state** | Evidence, taxonomy, source head, review, or time support aged out without proof the claim is wrong | Mark stale; narrow or abstain; refresh or review | Correction or rollback |
+| **Correction** | Released meaning, metadata, geometry, evidence binding, or public explanation is wrong or incomplete | Issue explicit correction lineage; invalidate affected derivatives | Silent edit |
+| **Supersession** | A newer reviewed object or release replaces an older one | Link predecessor and successor; preserve history | Deletion |
+| **Withdrawal** | No current public carrier should remain for the affected scope | Use withdrawal candidate/notice and complete invalidation | Rollback to a prior release |
+| **Rollback** | A distinct prior release is verified as the safe target | Use candidate, decision, execution, receipts, invalidation, and read-back as separate stages | Copying old bytes |
+| **Emergency hold** | Immediate fail-closed pause is requested while evidence or authority is incomplete | Record public-safe reason and escalate | Proof that public state changed |
+| **Erasure/removal** | Law, consent, rights, sovereignty, or cultural authority requires removal beyond ordinary correction | Use separate authorized process, minimum disclosure, and audit/legal controls | Rollback or withdrawal alone |
+
+### Disposition guidance
+
+```text
+old but still supported
+  -> STALE or current, depending on the accepted freshness rule
+
+wrong but a safe corrected release can be prepared
+  -> CORRECTION / SUPERSESSION
+
+unsafe and no safe target exists
+  -> WITHDRAWAL_CANDIDATE
+
+unsafe but a distinct prior release is verified safe
+  -> ROLLBACK_CANDIDATE
+
+uncertain target, policy, rights, sensitivity, taxonomy, authority, or implementation
+  -> HOLD
+
+invalid candidate input
+  -> ERROR
+```
+
+### History preservation
+
+A rollback or withdrawal must not erase:
+
+- affected release identity;
+- target selection evidence;
+- previous manifests and digests;
+- correction and withdrawal notices;
+- review and policy references;
+- invalidation scope and receipts;
+- public-safe incident reasoning;
+- restricted incident reference;
+- supersession and rollback-of-rollback lineage.
+
+Restricted details may require separate controlled retention or removal. The public audit record should retain only safe metadata.
+
+[Back to top](#top)
+
+---
+
+## 11. Carrier and derivative invalidation plan
+
+The generic candidate schema exposes nine invalidation classes. A rollback cannot be considered operationally closed until the applicable classes have execution receipts and read-back evidence.
+
+| Invalidation class | Flora examples | Current implementation status |
+|---|---|---|
+| `API_CACHE` | Governed Flora endpoints, Evidence Drawer payloads, query responses | `UNKNOWN` |
+| `CDN` | Static JSON, PMTiles, images, reports, downloadable carriers | `UNKNOWN` |
+| `TILES` | Vector/raster tiles, PMTiles, tile metadata, feature properties | No verified Flora published layer; operational invalidator `UNKNOWN` |
+| `CATALOG` | Domain catalog, STAC/DCAT/PROV projections, release indexes | Operational invalidator `UNKNOWN` |
+| `TRIPLETS` | Flora graph/triplet projections and cross-lane relations | Operational invalidator `UNKNOWN` |
+| `SEARCH_INDEX` | Taxon, occurrence, specimen, range, report, or layer search | Operational invalidator `UNKNOWN` |
+| `VECTOR_INDEX` | AI retrieval embeddings or semantic indexes | Operational invalidator `UNKNOWN` |
+| `AI_CACHE` | Focus Mode answers, generated summaries, explanation caches | Operational invalidator `UNKNOWN` |
+| `DOWNSTREAM_DERIVATIVES` | Exports, screenshots, reports, cards, dashboards, stories, mirrors, analytics | Consumer inventory `UNKNOWN` |
+
+### 11.1 Minimum invalidation inventory
+
+For every carrier, record:
+
+- carrier ID and exact digest/version;
+- owning responsibility root or external system;
+- public/restricted audience;
+- affected release ref;
+- invalidation class;
+- dependency or cache key;
+- requested action;
+- executor identity;
+- request timestamp;
+- completion receipt;
+- read-back result;
+- failure and retry posture;
+- correction or withdrawal display state.
+
+### 11.2 Sensitive reconstruction paths
+
+For a sensitive-location incident, include indirect paths:
+
+- zoom-dependent tiles;
+- feature property endpoints;
+- hover/popup caches;
+- bounding boxes;
+- small-area counts;
+- search snippets;
+- nearest-feature queries;
+- download/export services;
+- browser storage and service workers;
+- screenshots and social previews;
+- vector-search chunks;
+- graph neighbors;
+- AI conversation caches;
+- monitoring logs;
+- analytics payloads;
+- cross-lane joins.
+
+Do not mark invalidation complete merely because a visible map layer was removed.
+
+### 11.3 Read-back
+
+Future operational read-back should test:
+
+- old release is no longer current for the affected scope;
+- target or withdrawal state matches the decision;
+- public endpoints and static carriers no longer expose affected content;
+- restricted systems retain only authorized material;
+- correction/withdrawal state is visible;
+- caches and indexes return the expected release identity;
+- no exact or inferable protected location remains;
+- unaffected lanes and releases remain intact.
+
+Current repository evidence does not establish these production checks.
+
+[Back to top](#top)
+
+---
+
+## 12. Validation and claim boundaries
+
+### 12.1 Repository-native focused commands
+
+```bash
+python tools/validators/release/validate_rollback_card.py --fixtures
+
+python -m unittest discover \
+  --start-directory tests/validators \
+  --pattern 'test_validate_rollback_card.py' \
+  --verbose
+
+python -m unittest -q tests.release.test_synthetic_rollback_rehearsal
+
+python tools/validators/validate_generated_receipt.py \
+  data/receipts/generated/genrec-rollback-card-contract-current-binding-20260815.json \
+  --repo-root .
+
+make workflow-security
+```
+
+Validate an explicit candidate separately:
+
+```bash
+CANDIDATE="${CANDIDATE:?set CANDIDATE to a reviewed RollbackCard JSON path}"
+python tools/validators/release/validate_rollback_card.py "$CANDIDATE"
+```
+
+### 12.2 Expected proof boundaries
+
+| Check | A green result supports | It does **not** support |
+|---|---|---|
+| RollbackCard fixture validator | Closed shape, exact fixture polarity, local semantic checks | Reference resolution or safe target |
+| Validator unit tests | Parser, schema, reason, target, timing, and governance-boundary behavior covered by those tests | Full production behavior |
+| Synthetic rehearsal tests | Deterministic temporary-root plan/apply behavior and negative guards | Production rollback |
+| Generated receipt validator | Recorded file/hash binding for that generated receipt | Botanical truth, review, release, or public parity |
+| Workflow security | Declared workflow-security assertions | Policy activation, actor eligibility, or operational safety |
+| Hosted `rollback-card` workflow | Exact-head profile tests and binding receipt | Flora-specific policy, target, or public state |
+| Hosted `rollback-drill` workflow | Current readiness holds and synthetic checks | A real rollback drill or alias change |
+| Markdown/link checks | Documentation structure and link targets | Runtime readiness or release authority |
+
+### 12.3 Authoring validation status
+
+This runbook update was prepared through connector-based repository inspection. Repository-native commands were not executed in a mounted checkout during authoring. Therefore:
+
+- content and link targets were inspected against current GitHub paths;
+- exact-head hosted checks remain `NEEDS VERIFICATION` until the pull-request revision runs;
+- no claim is made that the commands passed locally in this session;
+- any hosted failure must be classified as introduced, inherited, or unrelated using exact-head and base evidence.
+
+### 12.4 Documentation checks
+
+The pull request should verify:
+
+- exactly one `KFM_META_BLOCK_V2`;
+- exactly one H1;
+- balanced Markdown fences;
+- final newline;
+- no trailing whitespace;
+- all repository-relative links resolve;
+- one-file change unless a direct dependency is proven;
+- no sensitive Flora detail appears in the diff;
+- no wording upgrades candidate validation into operational authority.
+
+[Back to top](#top)
+
+---
+
+## 13. Review handoff packet
+
+Prepare one public-safe packet with these sections.
+
+### 13.1 Identity and scope
+
+- incident ID;
+- repository and exact commit;
+- candidate version and digest;
+- affected Flora object family;
+- public-safe geographic and temporal scope;
+- affected release ref;
+- proposed disposition;
+- proposed target ref, if any;
+- restricted incident/evidence reference, if needed.
+
+### 13.2 Defect classification
+
+- schema reason code;
+- knowledge character;
+- source role;
+- taxonomic context;
+- rights status;
+- sensitivity status;
+- public-safety consequence;
+- why rollback, withdrawal, hold, or error was selected;
+- rejected alternatives.
+
+### 13.3 Evidence and authority
+
+- EvidenceBundle refs and resolution status;
+- source descriptor/admission refs and status;
+- policy refs and whether evaluation occurred;
+- review refs and reviewer eligibility status;
+- correction notice ref;
+- affected and target manifest refs;
+- digest verification results;
+- actor/authority assignments;
+- unresolved ownership or separation-of-duties gaps.
+
+### 13.4 Sensitive-material statement
+
+Use a statement such as:
+
+> Restricted botanical detail is not reproduced in this packet. The packet carries only public-safe identifiers and a pointer to the authorized restricted review system. Public exact exposure remains denied until an accepted policy result, eligible review, safe transform, release decision, and read-back evidence support a different outcome.
+
+Do not describe the exact locality, offset, grid, buffer, label text, or source fields in a way that enables reconstruction.
+
+### 13.5 Invalidation matrix
+
+Include all nine schema classes. Mark each:
+
+```text
+NOT_APPLICABLE | IDENTIFIED | REQUESTED | COMPLETED | FAILED | UNKNOWN
+```
+
+`COMPLETED` requires an execution receipt and read-back result, not a request ticket.
+
+### 13.6 Validation evidence
+
+Attach:
+
+- candidate validator JSON output;
+- fixture validator output;
+- focused unit-test output;
+- synthetic rehearsal report;
+- exact-head hosted check links;
+- base comparison when a failure occurs;
+- any known limitations.
+
+### 13.7 Decision boundary
+
+End the packet with:
+
+```text
+candidate shape: PASS / FAIL / NOT RUN
+references resolved: YES / NO / PARTIAL / UNKNOWN
+policy evaluated: YES / NO / UNKNOWN
+eligible review complete: YES / NO / UNKNOWN
+operational rollback executed: NO / UNKNOWN
+public state mutated: NO / UNKNOWN
+release/deployment/publication: NONE
+```
+
+Do not mark `YES` from a placeholder, proposed document, CODEOWNERS route, or green synthetic test.
+
+[Back to top](#top)
+
+---
+
+## 14. Anti-patterns
+
+Do not:
+
+- treat this runbook as rollback approval;
+- store exact rare-plant or culturally sensitive detail in public repository history;
+- select a target by filename, branch name, date, or memory;
+- call a Git revert a data-release rollback;
+- use the permissive Flora schema as operational proof;
+- use the generic placeholder validator entrypoint;
+- bypass the synthetic marker or `synthetic: true` guard;
+- point the synthetic helper at repository or production paths;
+- hide sensitive geometry only with client styling;
+- assume a prior release is safer because it is older;
+- publish a generalized carrier without transform lineage;
+- convert a model, range, or habitat association into occurrence truth;
+- collapse rights, sensitivity, taxonomy, source role, policy, review, and release into one boolean;
+- treat an aggregator as the originating source;
+- treat CODEOWNERS as steward appointment or independent review;
+- treat a policy file's presence as policy activation;
+- treat `entries: []` in the source authority register as an admitted-source inventory;
+- treat `data/published/` path presence as publication;
+- treat cache purge as rollback completion;
+- silently overwrite catalog, triplet, search, vector, or AI state;
+- delete prior manifests, evidence, receipts, or correction history;
+- use rollback as a substitute for lawful erasure or cultural authority;
+- allow an AI system to choose the rollback target or approve the transition;
+- state that public exposure is fixed before read-back evidence exists.
+
+[Back to top](#top)
+
+---
+
+## 15. Current holds and open verification
+
+| Item | Current status | Required evidence to close |
+|---|---|---|
+| Flora rollback runbook local index | `HOLD` — one-byte `docs/runbooks/flora/README.md` | Separate reviewed lane-boundary/index update |
+| Flora steward and rollback authority | `NEEDS VERIFICATION` | Named, accepted assignments and authenticated execution role |
+| Independent sensitivity/cultural review | `NEEDS VERIFICATION` | Eligible reviewer classes, assignments, restricted review process |
+| Accepted Flora policy | `HOLD` — M0 scaffold, evaluator unbound | Accepted package/entrypoint, tests, bundle identity, evaluator, consumers, receipts |
+| Flora sensitivity policy | `HOLD` — proposed scaffold | Accepted policy, reviewer authority, transform thresholds, tests, runtime enforcement |
+| Human sensitivity authority | `CONFLICTED` | Reconcile overlapping Flora sensitivity documents without parallel canon |
+| Flora source authority | `HOLD` — central projection empty | Admitted SourceDescriptor/decision records and operational resolver |
+| USDA PLANTS entry | `PROPOSED placeholder` | Full descriptor, terms, role, cadence, rights, validation, admission |
+| Flora release candidate | `NOT ESTABLISHED` | Child dossier with safe support pointers and reviewed state |
+| Flora ReleaseManifest | `NOT ESTABLISHED` | Manifest instance, digests, evidence, review, correction, rollback target |
+| Flora published carrier | `NOT ESTABLISHED` in inspected lanes | Released public-safe artifact and manifest binding |
+| Flora production alias | `UNKNOWN` | Accepted alias profile, current binding, operator, access and audit controls |
+| Rollback engine | `HOLD` — production pipeline placeholder | Accepted implementation, tests, authorization, transaction/fail-safe behavior |
+| Flora rollback pipeline | `HOLD` — README plus `.gitkeep` | Executable support code, fixtures, tests, interfaces, receipts |
+| External invalidation | `UNKNOWN` | Consumer inventory, authenticated invalidators, receipts, read-back |
+| Signer custody and integrity verification | `UNKNOWN` | Key/identity policy, custody, verification workflow, revocation |
+| Restricted-system evidence handling | `UNKNOWN` | Approved storage, access, retention, audit, and safe public pointer |
+| Operational correction/withdrawal | `UNKNOWN` | Accepted notice records, executor, public display, receipts |
+| Hosted exact-head checks | `NEEDS VERIFICATION` | Completed check set for the pull-request head |
+| External consumers | `UNKNOWN` | Inventory outside repository-visible paths |
+| Rollback-of-rollback | `UNKNOWN` | Accepted incident and recovery procedure |
+
+The correct posture remains:
+
+```text
+candidate preparation: available
+fixture validation: available
+synthetic rehearsal: available
+operational Flora rollback: HOLD
+```
+
+[Back to top](#top)
+
+---
+
+## 16. Related authorities and operational surfaces
+
+### Governing placement and review
+
+- [Directory Rules v2](../../doctrine/directory-rules.md)
+- [ADR-0029 — Adopt Directory Governance Standard v2](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+- [Separation of Duties](../../governance/SEPARATION_OF_DUTIES.md)
+- [CODEOWNERS](../../../.github/CODEOWNERS)
+
+### Flora meaning and sensitivity
+
+- [Flora domain README](../../domains/flora/README.md)
+- [Flora Publication & Rollback](../../domains/flora/PUBLICATION_AND_ROLLBACK.md)
+- [Flora Sensitivity](../../domains/flora/SENSITIVITY.md)
+- [Flora Rights and Sensitivity](../../domains/flora/RIGHTS_AND_SENSITIVITY.md)
+- [Flora domain policy boundary](../../../policy/domains/flora/README.md)
+- [Flora sensitivity policy scaffold](../../../policy/sensitivity/flora/README.md)
+
+### Release and rollback controls
+
+- [Release root](../../../release/README.md)
+- [Generic RollbackCard contract](../../../contracts/release/rollback_card.md)
+- [Generic RollbackCard schema](../../../schemas/contracts/v1/release/rollback_card.schema.json)
+- [Flora rollback schema stub](../../../schemas/contracts/v1/domains/flora/rollback_card.schema.json)
+- [RollbackCard fixtures](../../../fixtures/release/rollback_card/)
+- [Release-scoped RollbackCard validator](../../../tools/validators/release/validate_rollback_card.py)
+- [Synthetic rehearsal helper](../../../tools/release/rollback_apply.py)
+- [Validator tests](../../../tests/validators/test_validate_rollback_card.py)
+- [Synthetic rehearsal tests](../../../tests/release/test_synthetic_rollback_rehearsal.py)
+- [RollbackCard workflow](../../../.github/workflows/rollback-card.yml)
+- [Rollback drill readiness workflow](../../../.github/workflows/rollback-drill.yml)
+- [Proposed published-alias ADR](../../adr/ADR-0015-data-published-_domain_-current-alias-is-governed-by-rollback_card.md)
+
+### Flora source, candidate, manifest, published, and rollback-support lanes
+
+- [Central source authority projection](../../../control_plane/source_authority_register.yaml)
+- [Flora source registry](../../../data/registry/sources/flora/README.md)
+- [USDA PLANTS placeholder](../../../data/registry/sources/flora/usda_plants.yaml)
+- [Flora candidate lane](../../../release/candidates/flora/README.md)
+- [Flora manifest lane](../../../release/manifests/flora/README.md)
+- [Flora published lane](../../../data/published/flora/README.md)
+- [Flora published-layer lane](../../../data/published/layers/flora/README.md)
+- [Flora data-plane rollback support](../../../data/rollback/flora/README.md)
+- [Flora rollback pipeline guidance](../../../pipelines/domains/flora/rollback/README.md)
+
+### Sibling Flora runbooks
+
+- [Flora no-network test runbook](./NO_NETWORK_TEST_RUNBOOK.md)
+- [Flora promotion runbook](./PROMOTION_RUNBOOK.md)
+- [Flora source refresh runbook](./SOURCE_REFRESH_RUNBOOK.md)
+- [Flora local runbook index](./README.md) — current one-byte placeholder; `HOLD`
+
+[Back to top](#top)
+
+---
+
+## 17. Maintenance, correction, and document rollback
+
+### 17.1 Update triggers
+
+Review this runbook when any of these changes:
+
+- generic RollbackCard contract, schema, validator, fixtures, or workflow;
+- Flora-domain rollback schema or declared companions;
+- synthetic helper guards or report schema;
+- production rollback pipeline status;
+- Flora policy or sensitivity-policy activation;
+- accepted taxonomy/source-role/sensitivity vocabulary;
+- source authority register entries;
+- Flora candidate, manifest, or published inventory;
+- alias/profile decision;
+- correction, withdrawal, invalidation, or receipt implementation;
+- CODEOWNERS or stewardship assignments;
+- Directory Rules or accepted ADRs;
+- public or restricted Flora delivery architecture.
+
+### 17.2 Correction rule
+
+When a runbook statement is wrong:
+
+1. preserve the prior Git history;
+2. open the smallest same-path correction;
+3. name the exact claim and evidence that changed;
+4. update truth labels and evidence snapshot;
+5. repair direct links and commands;
+6. rerun proportionate documentation and repository-native checks;
+7. do not convert the documentation correction into an operational state claim.
+
+### 17.3 Document rollback
+
+Before merge:
+
+- close the draft pull request;
+- leave `main` unchanged;
+- delete the feature branch only after preserving needed review evidence.
+
+After an authorized merge, revert the documentation commit or restore the prior target blob:
+
+```text
+path: docs/runbooks/flora/ROLLBACK_RUNBOOK.md
+prior_blob: 335a96a3481130b203abfb718215b19624acb862
+```
+
+Reverting this runbook:
+
+- does not roll back data;
+- does not restore a Flora release;
+- does not mutate an alias;
+- does not invalidate caches;
+- does not alter policy;
+- does not erase correction history;
+- does not release, deploy, promote, or publish.
+
+### 17.4 Acceptance checklist for this document
+
+- [ ] Same-path `PLACE` remains valid under accepted Directory Rules.
+- [ ] Exactly one file changes unless a direct dependency is proven.
+- [ ] All current-behavior claims are pinned to repository evidence.
+- [ ] Google Drive material is used as lineage, not implementation proof.
+- [ ] The generic release profile is distinguished from the Flora schema stub.
+- [ ] Sensitive botanical detail is absent.
+- [ ] Candidate, decision, execution, receipt, correction, release, and publication remain separate.
+- [ ] Synthetic-only guards are explicit.
+- [ ] Operational rollback remains `HOLD`.
+- [ ] Relative links and commands are verified.
+- [ ] Hosted exact-head checks are reported separately from human review and merge.
+
+[Back to top](#top)
+
+---
+
+## Appendix A: Non-executing Flora candidate template
+
+> [!IMPORTANT]
+> This is an illustrative shape, not a valid instance until every placeholder is replaced, references are reviewed, the digest is recomputed, and the release-scoped validator passes. It creates no authority.
+
+```json
+{
+  "object_type": "RollbackCard",
+  "schema_version": "1.0.0",
+  "id": "rollback:flora:<public-safe-candidate-id>",
+  "version": "0.1.0",
+  "spec_hash": "sha256:<REPLACE_WITH_64_LOWERCASE_HEX>",
+  "disposition": "ROLLBACK_CANDIDATE",
+  "trigger": {
+    "reason_code": "SENSITIVITY_DISCOVERY",
+    "detected_at": "2026-08-24T00:00:00Z"
+  },
+  "affected_release_ref": "kfm://release/<affected-release>",
+  "target": {
+    "mode": "PRIOR_RELEASE",
+    "release_ref": "kfm://release/<distinct-prior-release>"
+  },
+  "evidence_bundle_refs": [
+    "kfm://evidence-bundle/<public-safe-support-id>"
+  ],
+  "policy_decision_refs": [
+    "kfm://policy-decision/<candidate-policy-id>"
+  ],
+  "review_record_refs": [],
+  "correction_notice_ref": "kfm://correction-notice/<public-safe-notice-id>",
+  "invalidations": [
+    "AI_CACHE",
+    "API_CACHE",
+    "CATALOG",
+    "CDN",
+    "DOWNSTREAM_DERIVATIVES",
+    "SEARCH_INDEX",
+    "TILES",
+    "TRIPLETS",
+    "VECTOR_INDEX"
+  ],
+  "restoration": {
+    "restore_release_ref": "kfm://release/<distinct-prior-release>",
+    "public_notice_required": true,
+    "validation_required": true
+  },
+  "timing": {
+    "decided_at": "2026-08-24T00:10:00Z",
+    "effective_at": null
+  },
+  "lineage": {
+    "supersedes": null,
+    "superseded_by": null
+  },
+  "governance": {
+    "authority_created": false,
+    "policy_evaluated": false,
+    "review_completed": false,
+    "rollback_executed": false,
+    "public_state_mutated": false,
+    "release_ref": null
+  }
+}
+```
+
+### Template rules
+
+- Use a public-safe candidate ID.
+- Never embed coordinates or protected locality text.
+- Recompute `spec_hash` from the accepted canonicalization profile; do not use the template text as a binding.
+- Keep arrays sorted and unique.
+- Keep affected and target releases distinct.
+- Use a correction reference when `public_notice_required` is `true`.
+- Keep all governance flags false.
+- Do not mutate this candidate into an approval or execution receipt.
+- Store the instance only in a reviewed location consistent with Directory Rules and current release topology.
+
+[Back to top](#top)
+
+---
+
+## Appendix B: Command and path matrix
+
+| Purpose | Current command/path | Status | Boundary |
+|---|---|---|---|
+| Validate generic fixtures | `python tools/validators/release/validate_rollback_card.py --fixtures` | **CONFIRMED implemented** | Candidate shape/local consistency only |
+| Validate one candidate | `python tools/validators/release/validate_rollback_card.py "$CANDIDATE"` | **CONFIRMED implemented** | Does not resolve references or execute |
+| Run validator tests | `python -m unittest discover --start-directory tests/validators --pattern 'test_validate_rollback_card.py' --verbose` | **CONFIRMED implemented** | Focused test scope |
+| Run synthetic rehearsal tests | `python -m unittest -q tests.release.test_synthetic_rollback_rehearsal` | **CONFIRMED implemented** | Temporary synthetic roots only |
+| Inspect helper options | `python tools/release/rollback_apply.py --help` | **CONFIRMED implemented** | No production authority |
+| Direct synthetic plan | `python tools/release/rollback_apply.py --workspace "$SYNTHETIC_WORKSPACE" --scenario "$SYNTHETIC_SCENARIO" --report "$SYNTHETIC_REPORT"` | **CONFIRMED helper form** | Disposable marked root only |
+| Synthetic apply | Same command plus `--apply` | **RESTRICTED TO SYNTHETIC ROOT** | Writes synthetic alias/correction/invalidation only |
+| Validate binding receipt | `python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-rollback-card-contract-current-binding-20260815.json --repo-root .` | **CONFIRMED repository path** | Hash/current-binding evidence only |
+| Workflow security | `make workflow-security` | **Repository-native target** | Does not prove release authority |
+| Generic validator wrapper | `tools/validators/validate_rollback_card.py` | **PLACEHOLDER** | Do not use as implemented validator |
+| Production rollback pipeline | `pipelines/rollback/main.py` | **PLACEHOLDER / HOLD** | No execution |
+| Flora rollback pipeline | `pipelines/domains/flora/rollback/` | **README + `.gitkeep`** | No executable Flora rollback |
+| Generic RollbackCard schema | `schemas/contracts/v1/release/rollback_card.schema.json` | **Current bounded target** | Proposed fixture-first candidate profile |
+| Flora RollbackCard schema | `schemas/contracts/v1/domains/flora/rollback_card.schema.json` | **Permissive stub** | Not equivalent authority |
+| Flora policy | `policy/domains/flora/` | **M0 scaffold / inactive** | No accepted evaluator |
+| Flora sensitivity policy | `policy/sensitivity/flora/` | **Proposed scaffold** | No operational clearance |
+| Flora candidate lane | `release/candidates/flora/` | **README only** | No candidate instance |
+| Flora manifest lane | `release/manifests/flora/` | **README + `.gitkeep`** | No manifest instance |
+| Flora published lane | `data/published/flora/` | **README + `.gitkeep`** | No published payload established |
+| Flora published layers | `data/published/layers/flora/` | **README + `.gitkeep`** | No published layer established |
+| Central source authority | `control_plane/source_authority_register.yaml` | **Empty proposal-only projection** | No source activation |
+| USDA PLANTS source record | `data/registry/sources/flora/usda_plants.yaml` | **Placeholder** | Not admitted |
+
+[Back to top](#top)
+
+---
+
+## Appendix C: Public-safe incident worksheet
+
+Copy this worksheet into an authorized review surface. Keep protected botanical detail in the restricted system only.
+
+```text
+INCIDENT ID:
+REPOSITORY:
+REPOSITORY COMMIT:
+INSPECTION TIME UTC:
+RESTRICTED EVIDENCE POINTER:
+PUBLIC-SAFE SCOPE:
+FLORA OBJECT FAMILY:
+KNOWLEDGE CHARACTER:
+SOURCE ROLE:
+TAXON CONCEPT / AUTHORITY:
+AFFECTED RELEASE REF:
+TRIGGER REASON CODE:
+PROPOSED DISPOSITION:
+PROPOSED TARGET REF:
+EVIDENCE BUNDLE REFS:
+POLICY DECISION REFS:
+REVIEW RECORD REFS:
+CORRECTION NOTICE REF:
+RIGHTS STATUS:
+SENSITIVITY STATUS:
+EXACT OR INFERABLE LOCATION RISK: YES / NO / UNKNOWN
+AFFECTED CARRIERS:
+INVALIDATIONS:
+  API_CACHE:
+  CDN:
+  TILES:
+  CATALOG:
+  TRIPLETS:
+  SEARCH_INDEX:
+  VECTOR_INDEX:
+  AI_CACHE:
+  DOWNSTREAM_DERIVATIVES:
+CANDIDATE VALIDATOR:
+SYNTHETIC REHEARSAL:
+REFERENCES RESOLVED:
+POLICY EVALUATED:
+ELIGIBLE REVIEW COMPLETE:
+OPERATIONAL ROLLBACK:
+PUBLIC STATE MUTATED:
+OPEN HOLDS:
+ROLLBACK-OF-ROLLBACK TARGET:
+DOCUMENTATION / REVIEW LINKS:
+```
+
+### Worksheet completion rule
+
+The worksheet is complete when every field is either:
+
+- supported by a public-safe reference;
+- marked `NOT_APPLICABLE`;
+- marked `UNKNOWN`;
+- or recorded as a named `HOLD`.
+
+Blank fields are not approval.
+
+<p align="right"><a href="#top">Back to top</a></p>

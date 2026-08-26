@@ -11,10 +11,13 @@ release state, or authorize publication.
 | Fixture | Closure | Focus outcome |
 |---|---|---|
 | `valid/answer-supported.json` | `SUPPORTED` | `ANSWER` |
+| `valid/answer-corrected.json` | `SUPPORTED` | `ANSWER` with active correction lineage and superseded history |
 | `valid/answer-qualified.json` | `QUALIFIED` | `ANSWER` with explicit optional-role limitation |
 | `valid/abstain-unresolved.json` | `ABSTAIN` | fixed no-leak `ABSTAIN` |
+| `valid/abstain-withdrawn.json` | `ABSTAIN` | fixed no-leak `ABSTAIN` with public-safe withdrawal history |
 | `valid/deny-policy.json` | `DENY` | fixed no-leak `DENY` |
 
 The browser feature must enforce request/claim identity, EvidenceRef subset
 binding, citation-to-evidence closure, Evidence Drawer parity, finite outcome
-consistency, and no-browser-model/no-lifecycle-store boundaries.
+consistency, safe negative-state sanitization without erasing validated
+withdrawal history, and no-browser-model/no-lifecycle-store boundaries.

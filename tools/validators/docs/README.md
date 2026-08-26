@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-validators-docs-readme
 title: tools/validators/docs README
 type: README
-version: v0.7
+version: v0.8
 status: draft; five-bounded-child-executables; terminology-parity-proposed
 owner: TODO-tooling-qa-owner-plus-docs-steward-plus-ci-steward
 created: 2026-07-07
-updated: 2026-08-23
+updated: 2026-08-24
 policy_label: repository-facing; docs-validator-parent; markdown-qa; non-authoritative
 owning_root: tools/
 responsibility: parent and navigation lane for bounded documentation validators covering local links, graph connectivity, metadata blocks, freshness, terminology, opt-in assessment-axis separation, and documentation QA without deciding doctrine, evidence sufficiency, source admissibility, policy exceptions, release approval, or publication
@@ -49,8 +49,9 @@ notes:
 | `meta-block/` | **CONFIRMED bounded executable** | `KFM_META_BLOCK_V2` structure plus review-only registry-delta candidates. |
 | `stale-scan/` | **CONFIRMED bounded executable** | Explicit-as-of freshness, review-age, placeholder-owner, temporal-marker, and review-due signals. |
 | `terminology-parity/` | **README-only proposal** | Vocabulary, casing, and source-role consistency. |
-| `truth-label-lint/` | **PROPOSED bounded executable on this branch** | Opt-in structural separation of authority/epistemic posture from capability maturity; values remain uninterpreted. |
-| Hosted enforcement | **NEEDS VERIFICATION** | Workflow definitions exist; exact-head runs and required-check coupling remain separate evidence. |
+| `truth-label-lint/` | **CONFIRMED bounded executable** | Tracked standard-library implementation and synthetic tests structurally separate authority/epistemic posture from capability maturity; values remain uninterpreted. |
+| Workflow definition | **CONFIRMED tracked definition** | The focused read-only truth-label workflow is present; its presence is not a hosted-run result. |
+| Hosted enforcement | **NEEDS VERIFICATION** | Exact-head runs and required-check coupling remain separate evidence. |
 
 ## Responsibility split
 

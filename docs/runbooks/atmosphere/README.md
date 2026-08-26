@@ -8,7 +8,7 @@ owners:
   - "@bartytime4life — verified GitHub review route only"
 owner_status: "Atmosphere, source, validation, evidence, policy, rights, sensitivity, Hazards-seam, review, promotion, release, correction, rollback, operations, and independent-review assignments remain NEEDS VERIFICATION; CODEOWNERS routing does not create those authorities."
 created: 2026-08-24
-updated: 2026-08-24
+updated: 2026-08-25
 policy_label: public; atmosphere; runbook-index; mixed-maturity; non-release; not-for-life-safety
 current_path: docs/runbooks/atmosphere/README.md
 owning_root: docs/
@@ -19,9 +19,9 @@ evidence_snapshot:
   base_ref: main
   initial_base_commit: df6c3f5dadd2800fdc2356ceb540ca4e448f6c7a
   first_reconciled_base_commit: 6e1bc94ea13fc0c7429fb824b62099ed1871598b
-  current_base_commit: fdf513f9b450aef016ea47b599cf0b6d6e8db04d
-  prior_blob: 89f76bcb650950c04be47109739d11908f545991
-  release_rollback_runbook_blob: 24a61405e65bd2f24e4793c4566b2b6cd052dc1b
+  current_base_commit: 218363515d5f477cb4005491e22945130b84eebc
+  prior_blob: ed9d6588dbd7400ac78eb65a897b008399d4307e
+  release_rollback_runbook_blob: 9054c5a584f06f065b94960491de28a0c6941217
   child_count: 9
   substantive_repository_grounded_children: 9
   proposal_era_substantive_children: 0
@@ -88,7 +88,7 @@ If more than one procedure applies, preserve the state boundaries between them. 
 
 ## Current child maturity
 
-The labels below describe the repository documents at current `main@fdf513f9b450aef016ea47b599cf0b6d6e8db04d` plus the same-branch promotion modernization. They do not prove that a live source, accountable actor, accepted policy, deployed consumer, released artifact, or public carrier exists.
+The labels below describe the repository documents at current `main@218363515d5f477cb4005491e22945130b84eebc` plus the same-branch promotion modernization. They do not prove that a live source, accountable actor, accepted policy, deployed consumer, released artifact, or public carrier exists.
 
 | Procedure | Current document maturity | Verified limit |
 |---|---|---|
@@ -165,6 +165,6 @@ Stop and create a public-safe handoff when required authority, source identity, 
 
 Update this README when a child is added, removed, renamed, materially re-scoped, or changes maturity; when the Atmosphere/Hazards seam changes; or when accountable authority, executable validation, source admission, evidence, policy, promotion, release, rollback, deployment, publication, or public read-back evidence changes.
 
-This is a documentation-only change. Before merge, close or abandon its draft pull request. After merge, revert the documentation commit or submit a smaller reviewed forward fix. Blob `89f76bcb650950c04be47109739d11908f545991` restores the current-main pre-promotion lane index, but reverting this index would not change any operational or public state.
+This is a documentation-only change. Before merge, close or abandon its draft pull request. After merge, revert the documentation commit or submit a smaller reviewed forward fix. Blob `ed9d6588dbd7400ac78eb65a897b008399d4307e` restores the current-main pre-promotion lane index, but reverting this index would not change any operational or public state.
 
 [Back to top](#top)

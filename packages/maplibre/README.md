@@ -2,55 +2,60 @@
 doc_id: kfm://doc/packages-maplibre-readme
 title: packages/maplibre/ — MapLibre Package, Adapter, Distribution, and Compatibility Boundary
 type: readme
-version: v1.1
+version: v1.2
 status: draft
 owners: OWNER_TBD — Package steward · MapLibre adapter steward · Map-runtime steward · UI steward · Governed API steward · Contract steward · Schema steward · Policy steward · Security steward · Privacy/sensitivity reviewer · Dependency steward · Supply-chain steward · Validation steward · Release steward · Migration steward · CI steward · Docs steward
-created: NEEDS VERIFICATION — target existed before the current evidence-grounded revision
-updated: 2026-07-15
-policy_label: "public-doctrine; package-boundary; maplibre; renderer-adapter; implementation-placeholder; private-npm-package; workspace-enrolled; distribution-not-authorized; api-unratified; single-importer-proposed; sole-renderer-proposed; runtime-split-conflicted; renderer-downstream; released-artifacts-only; effect-boundary-explicit; network-posture-conflicted; sensitive-geometry-upstream; supply-chain-aware; fail-closed; no-truth-authority; no-publication-authority; migration-required; rollback-aware"
+created: 2026-08-23
+updated: 2026-08-24
+policy_label: "public-doctrine; package-boundary; maplibre; renderer-adapter; dependency-free-port-implemented; null-runtime-implemented; concrete-adapter-hold; private-npm-package; workspace-enrolled; distribution-not-authorized; accepted-single-importer; accepted-renderer-family; runtime-split-conflicted; renderer-downstream; released-artifacts-only; effect-boundary-explicit; network-posture-conflicted; sensitive-geometry-upstream; supply-chain-aware; fail-closed; no-truth-authority; no-publication-authority; migration-required; rollback-aware"
 current_path: packages/maplibre/README.md
-truth_posture: CONFIRMED target README v1, merged source-envelope README v1.1, private npm package metadata @kfm/maplibre version 0.0.0, source index.ts greenfield placeholder export, root npm workspace enrollment and placeholder generic lint/test/build scripts, MapLibre-specific root performance scripts, package/root placement, proposed ADR-0006 single-importer boundary, proposed ADR-0007 sole-browser-renderer decision, MapLibre architecture lane, app-local map-runtime README, MapLibre config/performance workflow and scripts, permissive legacy performance schema, executable performance-envelope validator wrapper, MapLibre validator/test/fixture README lanes, and bounded absence of package dependencies, exports, scripts, engines, build configuration, common root lockfiles, functional adapter modules, package-local tests, tests/packages/maplibre README, packages/maplibre-runtime README, package consumers, and package-watching CI / PROPOSED package metadata contract, accepted adapter ownership, dependency and supply-chain controls, export map, browser/runtime support matrix, KFM-shaped public API, manifest-gated renderer activation, plugin/protocol admission, package test matrix, import-boundary enforcement, consumer inventory, semantic versioning, internal distribution, correction, migration, deprecation, and rollback / CONFLICTED helper-only no-network wording versus an effectful renderer adapter, ADR-0006 package seam versus external CDN-based smoke harness outside the package, packages/maplibre versus referenced packages/maplibre-runtime ownership, ADR-0007 sole-renderer proposal versus unaccepted exception and plugin governance, canonical schema family versus permissive schemas/maplibre scaffold, tests/maplibre versus tests/packages/maplibre placement, apps/explorer-web versus workflow apps/web filter, repository-root performance tooling versus package-specific proof, and artifacts/perf trust-like outputs versus artifacts compatibility-root limits / UNKNOWN accepted adapter API, package manager and lockfile strategy, MapLibre dependency/version, plugin dependency set, build tooling, module format, TypeScript configuration, source maps, browser targets, package exports, actual consumers, runtime import inventory beyond bounded search, plugin/protocol allowlist, manifest resolver bindings, endpoint policy, CSP posture, contract/schema bindings, test pass rates, CI enforcement, internal release use, deployment use, and operational health / NEEDS VERIFICATION owners, ADR acceptance or supersession, renderer-runtime ownership decision, package metadata completion, dependency approval, lockfile policy, import allowlist, public API, contract/schema pairing, policy and release bindings, local hermetic fixtures, consumer migration, CI path filters, software distribution policy, correction path, deprecation window, and rollback automation
+owning_root: packages/
+responsibility: Document current package metadata, accepted renderer-boundary ownership, dependency and distribution posture, consumer compatibility, and held concrete-renderer work without becoming runtime, policy, release, or publication authority.
+truth_posture: CONFIRMED accepted ADR-0006 package-owned MapRuntimePort/MapLibreAdapter seam, accepted ADR-0007 sole browser-renderer family, private @kfm/maplibre 0.0.0 workspace package, module/type exports, renderer-neutral MapRuntimePort, deterministic NullMapRuntime, strict local validators, Explorer Web consumers and tests, no declared dependencies, and no concrete MapLibreAdapter / PARTIAL dependency-free package facade and consumer seam / HOLD concrete renderer dependency, MapLibreAdapter, browser readiness, plugin/protocol admission, software distribution, release, deployment, and publication / CONFLICTED packages/maplibre-runtime references, schema/test placement, workflow filters, external CDN performance harness, and artifacts/perf trust-like outputs / UNKNOWN accepted dependency bytes, complete package build, browser/CSP/worker support, operational health, release use, and accountable review / NEEDS VERIFICATION owners, full consumer/import inventory, CI enforcement, manifest/policy/release bindings, hermetic browser fixtures, correction, deprecation, and runtime rollback
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: 96ae9619f3d38daeb7a2881c0ae691e31314177c
-  prior_blob: 7aff988e18d5b113d8fb049f2ffd8c9e49bcf422
-  source_readme_blob: eccacaa37463e222febaa9f0659d98d3a80486bf
-  package_metadata_blob: b0582955feeb51016327113692fa5c98ecad8816
-  source_entry_blob: 91664eb00583f9e3d0405eb7954fefa9a48f4ee9
-  root_package_metadata_blob: 62f45306aef7376a2d68042b0c9e7f556edf0e78
-  packages_root_blob: fc18fb3334fefe992a551fe12aa98c812232cd17
-  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
-  maplibre_architecture_blob: ff4b4754e5dc7beae22620ee669d3fdc240c44d7
-  adapter_adr_blob: fba9562322a263876bb5b1096b8093746dd43990
-  sole_renderer_adr_blob: c753f09db18e12081f99405b42cd79ebb89d0ac3
-  config_readme_blob: a216d1b1f2203f781846512ea2cca7ac163adc4b
+  base_commit: 6361e92b72deccef9fef4e7dea0d2cdcd635c2bd
+  prior_blob: 334ed62b180273943ff23c010b90e2f351dfa9e6
+  source_readme_blob: abf0041230ee591ae77888d613c92258c53f7730
+  package_metadata_blob: c7e8e57445fcca8f8a7316b54043da0ea43968a6
+  source_entry_blob: 08a48ac008665317833a9476b21cd35b1679c595
+  map_runtime_port_blob: 01c3d17bfbb34aae310fe17cbf892a0516a1c852
+  null_map_runtime_blob: f67d5f90fe58ce49b5e6496cd4398688e35b6399
+  root_package_metadata_blob: 5cba790c88c40b885cc65fe2d585f3205aa1ef9d
+  root_pnpm_lock_blob: 69a45e6aaca1ea6521e01ff274e4f1b3e1bf3975
+  packages_root_blob: 7b672f4d834b648f4b30ce7e2e9a5e214efa2c71
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  maplibre_architecture_blob: a897b1b0a464bedeabdd8556d19be6e207038f6e
+  adapter_adr_blob: 4bf4292dc05a85fd4cd829c491808b13894bc223
+  sole_renderer_adr_blob: 2482eea382fd97e68544bb04bc2e2ea1e1cedebe
+  config_readme_blob: 40bb91dd6b810b70f50bdba07b58d78fcb125ad2
   map_runtime_readme_blob: 4d3897eda64d11f84f4805cb9cc2bc30a2ee333c
   validator_readme_blob: 7d29f8e5b5c215a5848803d87fd9f4c7549be105
-  perf_workflow_blob: ad9dffbddc455411fef1eb35c83b513fa96eb3e0
+  perf_workflow_blob: aad6793dc416017f27d3da1d39af5f9a48c531e8
   perf_smoke_blob: 699dd4cf42d355dd2ed7620852b7fd1f3000bbe2
   perf_schema_blob: 511e7f34ca84390fd5d000326ab33c46c3050fc4
   perf_validator_blob: 1f9e0f785a701da2a2b8f52bf73f4e97866d951d
-  maplibre_tests_readme_blob: 4c5d24be322fcbff1a98aa255adc1be26b168ba6
+  maplibre_tests_readme_blob: b20a14eae605017b7d7f210f1c27768cacbd411a
   maplibre_fixtures_readme_blob: 3b6796d242157b22c8b6d2c1621c0b02178841f9
   bounded_path_checks:
-    - packages/maplibre/README.md existed at version v1 before this revision
-    - packages/maplibre/src/README.md exists at version v1.1
-    - packages/maplibre/package.json exists with name @kfm/maplibre, private true, and version 0.0.0
-    - packages/maplibre/src/index.ts exists and exports only placeholder = true
+    - packages/maplibre/README.md existed at version v1.1 before this correction
+    - packages/maplibre/src/README.md exists at version v1.1 on the pinned base
+    - packages/maplibre/package.json exists with name @kfm/maplibre, private true, version 0.0.0, module type, types, and root exports
+    - packages/maplibre/src/index.ts exports map-runtime-port and null-map-runtime; their source modules define the accepted renderer-neutral consumer seam, closed local validators, and deterministic dependency-free behavior
     - repository root package.json includes workspaces apps/* and packages/*
     - repository root lint, test, and build scripts are TODO echo placeholders
     - repository root contains MapLibre performance/proof script entry points and Playwright/pixelmatch/pngjs development dependencies
-    - package-lock.json, pnpm-lock.yaml, and yarn.lock were not found as repository-root lockfiles at checked paths
-    - packages/maplibre package metadata has no scripts, exports, dependencies, devDependencies, peerDependencies, engines, files, sideEffects, type, main, module, types, browser, or publishConfig fields
-    - packages/maplibre/src/MapLibreAdapter.ts and functional source/layer/style/manifest/context/validation modules were not found
+    - root package.json pins pnpm 11.17.0 and Node >=22.13 <23; pnpm-lock.yaml exists
+    - packages/maplibre package metadata has no scripts, dependencies, devDependencies, peerDependencies, engines, files, sideEffects, main, module, browser, or publishConfig fields
+    - packages/maplibre/src/MapLibreAdapter.ts and renderer-bound source/layer/style/protocol modules were not found
     - packages/maplibre/tests/README.md and tests/packages/maplibre/README.md were not found
     - tests/maplibre/README.md and tests/fixtures/maplibre/README.md exist as draft documentation lanes
     - packages/maplibre-runtime/README.md was not found
-    - bounded code search found no @kfm/maplibre consumer import
-    - ADR-0006 and ADR-0007 remain PROPOSED
+    - Explorer Web source and tests import @kfm/maplibre through explicit TypeScript and Vite aliases
+    - ADR-0006 and ADR-0007 are accepted architecture decisions with dependency and runtime readiness still held
     - scripts/maplibre-smoke-perf.mjs loads MapLibre GL JS and glyph assets from public external URLs
     - .github/workflows/maplibre-perf-governance.yml does not watch packages/maplibre/** and watches apps/web/** rather than apps/explorer-web/**
     - schemas/maplibre/perf-envelope.schema.json is an open object scaffold with additionalProperties true and no required fields
@@ -91,9 +96,9 @@ related:
   - ../../release/
 tags: [kfm, packages, maplibre, typescript, npm-workspace, renderer-adapter, map-runtime-port, source-descriptor, layer-descriptor, style-manifest, release-manifest, evidence-ref, negative-state, protocol-admission, plugin-admission, pmtiles, cog, performance, import-boundary, supply-chain, privacy, distribution, compatibility, migration, rollback]
 notes:
-  - "This revision changes only packages/maplibre/README.md."
-  - "The package currently contains documentation, a private 0.0.0 npm manifest, and a placeholder TypeScript export; no functioning adapter or package consumer is established."
-  - "This README does not accept ADR-0006 or ADR-0007, create a MapLibreAdapter, approve dependencies, admit plugins/protocols/endpoints, authorize package publication, or prove runtime consumers."
+  - "This correction updates repository-facing status after merged PR #3433 and later Explorer consumer work; it changes no package behavior."
+  - "The package exports a renderer-neutral MapRuntimePort and deterministic NullMapRuntime and has bounded Explorer consumers; no concrete MapLibreAdapter or renderer dependency is established."
+  - "This README records accepted ADR-0006 and ADR-0007 without approving dependencies, admitting plugins/protocols/endpoints, authorizing package publication, or claiming browser readiness."
   - "The renderer may consume only governed, released, public-safe artifacts. Descriptor validity, package installation, and successful visual rendering are not truth, evidence closure, policy approval, or release approval."
   - "Package release is a software-distribution event, not KFM map/data/claim publication."
 [/KFM_META_BLOCK_V2] -->
@@ -104,21 +109,21 @@ notes:
 
 `packages/maplibre/`
 
-> Repository-present private npm workspace package intended to become KFM's governed MapLibre renderer-adapter seam. Current evidence establishes documentation, a `0.0.0` package manifest, and a one-line placeholder export—not a functioning adapter, declared dependency set, buildable package, tested API, published distribution, or enforced single-importer boundary.
+> Repository-present private npm workspace package at KFM's accepted renderer-adapter seam. Current evidence establishes a `0.0.0` module facade, renderer-neutral `MapRuntimePort`, deterministic `NullMapRuntime`, strict local validators, and Explorer Web consumers—not a concrete `MapLibreAdapter`, admitted renderer dependency, browser-ready runtime, published distribution, or publication path.
 
 ![status](https://img.shields.io/badge/status-draft-yellow)
-![version](https://img.shields.io/badge/version-v1.1-informational)
-![maturity](https://img.shields.io/badge/maturity-package__scaffold-lightgrey)
+![version](https://img.shields.io/badge/version-v1.2-informational)
+![maturity](https://img.shields.io/badge/maturity-port__partial-blue)
 ![package](https://img.shields.io/badge/package-%40kfm%2Fmaplibre-blue)
 ![distribution](https://img.shields.io/badge/distribution-private__not__authorized-critical)
-![adapter](https://img.shields.io/badge/adapter-unratified-orange)
+![adapter](https://img.shields.io/badge/adapter-concrete__hold-orange)
 ![renderer](https://img.shields.io/badge/renderer-downstream-blue)
 ![authority](https://img.shields.io/badge/truth__authority-none-red)
 
 **Quick links:** [Purpose](#purpose) · [Evidence](#status-and-evidence) · [Placement](#directory-rules-and-authority) · [Responsibilities](#package-responsibilities) · [Conflicts](#compatibility-and-implementation-conflicts) · [Tree](#confirmed-package-tree) · [Invariants](#keystone-invariants) · [Metadata](#package-metadata-and-workspace-boundary) · [Dependencies](#dependency-and-supply-chain-boundary) · [Distribution](#distribution-and-publishing-posture) · [API](#public-api-and-export-boundary) · [Consumers](#consumer-and-import-boundary) · [Runtime](#renderer-runtime-and-source-boundary) · [Descriptors](#descriptor-manifest-and-release-boundary) · [Plugins](#plugin-protocol-and-network-boundary) · [Security](#security-rights-sensitivity-and-privacy) · [Performance](#performance-tooling-boundary) · [Testing](#testing-build-and-ci) · [Compatibility](#versioning-compatibility-and-consumer-migration) · [Implementation](#smallest-sound-implementation-sequence) · [Done](#definition-of-done) · [Open](#verification-register) · [Rollback](#rollback-correction-deprecation-and-package-release)
 
 > [!IMPORTANT]
-> **This README is not an implemented adapter, accepted ADR, dependency approval, export contract, plugin allowlist, endpoint allowlist, distribution authorization, schema, policy, release, or publication decision.** It does not establish the accepted MapLibre version, package manager, lockfile, build output, browser matrix, public API, consumer bindings, network policy, protocol registration, CI enforcement, or operational health.
+> **This README is not a concrete renderer adapter, dependency approval, export contract, plugin allowlist, endpoint allowlist, distribution authorization, schema, policy, release, or publication decision.** ADR-0006 and ADR-0007 are accepted architecture, while exact dependency admission, concrete adapter implementation, browser support, CI enforcement, and operational readiness remain separate held work.
 
 > [!CAUTION]
 > **MapLibre draws released artifacts; it does not decide what is true.** Package presence, installation, a valid descriptor, a successful render, a screenshot, a popup, a camera state, or a map feature property is never evidence closure, policy approval, review approval, release approval, or public truth by itself.
@@ -167,22 +172,23 @@ The merged [`src/README.md`](src/README.md) governs source placement, module dec
 
 | Surface | Status | Safe conclusion |
 |---|---:|---|
-| This README | **CONFIRMED v1 before revision** | A package-boundary document exists, but its Python-shaped layout was inconsistent with repository evidence. |
-| `src/README.md` | **CONFIRMED v1.1** | The source envelope now documents the TypeScript placeholder state and proposed adapter boundary. |
-| `package.json` | **CONFIRMED private `0.0.0` scaffold** | Distribution name is `@kfm/maplibre`; no scripts, exports, dependencies, engines, entry points, or build configuration are declared. |
+| This README | **CONFIRMED v1.1 before correction** | The package boundary exists, but its implementation snapshot was stale after PR #3433. |
+| `src/README.md` | **CONFIRMED v1.1 before paired correction** | The source envelope owns module-level status and placement. |
+| `package.json` | **CONFIRMED private `0.0.0` partial package** | Module/type exports exist; scripts, dependencies, engines, and build output remain absent. |
 | Root workspace enrollment | **CONFIRMED** | Root `package.json` includes `packages/*`, so this folder is inside the npm workspace pattern. |
 | Root generic commands | **CONFIRMED placeholders** | `lint`, `test`, and `build` only echo TODO messages; they do not prove package checks. |
 | Root MapLibre commands | **CONFIRMED performance-tooling entry points** | Repository scripts invoke smoke/performance/proof tooling, not this package's adapter implementation. |
-| Root JavaScript lockfiles | **NOT FOUND at checked paths** | `package-lock.json`, `pnpm-lock.yaml`, and `yarn.lock` were absent at checked paths; dependency reproducibility is not established. |
-| `src/index.ts` | **CONFIRMED placeholder** | It exports only `placeholder = true`; no public adapter behavior exists. |
-| Functional adapter modules | **NOT ESTABLISHED** | No lifecycle adapter, descriptor compiler, protocol registrar, event bridge, or package validation implementation was found. |
+| Root package manager and lockfile | **CONFIRMED** | Root metadata pins `pnpm@11.17.0` and Node `>=22.13 <23`; `pnpm-lock.yaml` exists. This does not admit a renderer dependency. |
+| `src/index.ts` | **CONFIRMED package facade** | It exports `map-runtime-port` and `null-map-runtime`; it exports no raw renderer type. |
+| Renderer-neutral source modules | **IMPLEMENTED / BOUNDED** | `MapRuntimePort`, `NullMapRuntime`, serializable values, strict validators, finite states, reason codes, listeners, and disposal behavior exist. |
+| Concrete renderer modules | **HOLD / NOT ESTABLISHED** | No `MapLibreAdapter`, renderer dependency, descriptor compiler, protocol registrar, or renderer event bridge was found. |
 | Package dependencies | **NONE DECLARED** | `maplibre-gl`, style-spec, PMTiles, COG, plugin, and runtime dependencies are not declared in the package manifest. |
-| Package consumers | **NOT ESTABLISHED by bounded search** | No `@kfm/maplibre` consumer import was found. |
+| Package consumers | **CONFIRMED** | Explorer Web source and tests import the KFM facade through explicit TypeScript/Vite aliases. |
 | Package-local tests | **NOT FOUND at checked paths** | No package test README or accepted package-local test suite is established. |
 | MapLibre test lane | **CONFIRMED draft documentation** | `tests/maplibre/README.md` documents proposed proof obligations; executable tests and placement acceptance remain unproved. |
 | MapLibre fixture lane | **CONFIRMED draft documentation** | `tests/fixtures/maplibre/README.md` documents synthetic fixtures; payload coverage and consumers remain unproved. |
-| ADR-0006 | **CONFIRMED `proposed`** | The single-importer `MapLibreAdapter` seam is architectural intent, not accepted or enforced behavior. |
-| ADR-0007 | **CONFIRMED `PROPOSED`** | Sole-browser-renderer and plugin-admission commitments are not accepted runtime authority. |
+| ADR-0006 | **CONFIRMED accepted architecture** | The package-owned seam is accepted; dependency, concrete adapter, and full acquisition enforcement remain held. |
+| ADR-0007 | **CONFIRMED accepted architecture** | The renderer family is accepted; exact version, plugins, dependency admission, and runtime readiness remain held. |
 | Referenced runtime package | **NOT FOUND at named README path** | `packages/maplibre-runtime/README.md` remains unresolved architecture drift. |
 | Performance harness | **CONFIRMED separate root tooling** | It loads MapLibre and glyph assets from public external URLs; it is not package implementation proof. |
 | Performance workflow | **CONFIRMED present / path drift** | It omits `packages/maplibre/**` and watches legacy `apps/web/**`; it does not enforce package changes. |
@@ -196,19 +202,20 @@ The merged [`src/README.md`](src/README.md) governs source placement, module dec
 - `packages/maplibre/` is under the shared `packages/` responsibility root.
 - The package is enrolled by the root `packages/*` workspace pattern.
 - The package name is `@kfm/maplibre`, version `0.0.0`, and `private: true`.
-- The package manifest does not declare an adapter runtime, build, exports, dependencies, engines, files list, side-effect metadata, or publishing configuration.
-- The source entry is a greenfield placeholder.
-- The merged source README records the TypeScript source-envelope boundary.
+- The package manifest declares module/type exports but no concrete renderer dependency, scripts, engines, files list, side-effect metadata, or publishing configuration.
+- The source facade exports a renderer-neutral `MapRuntimePort` and deterministic `NullMapRuntime`.
+- The paired source README records the TypeScript source-envelope boundary.
 - Root generic `lint`, `test`, and `build` scripts are placeholders.
+- Root package metadata pins pnpm and Node, and the repository carries `pnpm-lock.yaml`.
 - Root MapLibre scripts exercise performance/proof tooling outside the package.
-- ADR-0006 and ADR-0007 remain proposed.
+- ADR-0006 and ADR-0007 are accepted architecture decisions.
 - MapLibre remains downstream of governed evidence, policy, review, release, correction, and rollback.
-- No package consumer, package-local tests, package-specific build, or accepted runtime API was established by bounded inspection.
+- Explorer Web is a bounded package consumer; package-local tests, a package-specific build, a concrete renderer, and browser runtime proof remain unestablished.
 
 **PROPOSED**
 
 - Package metadata completion and internal distribution rules.
-- Accepted adapter/runtime ownership.
+- Concrete adapter implementation after the accepted ownership decision.
 - Declared and pinned dependencies.
 - An explicit export map and KFM-shaped API.
 - Pure/effectful entry-point separation.
@@ -221,22 +228,22 @@ The merged [`src/README.md`](src/README.md) governs source placement, module dec
 **CONFLICTED**
 
 - The prior helper-only blanket no-network wording versus the required effects of a browser renderer.
-- `packages/maplibre/` as the proposed adapter seam versus repeated references to absent `packages/maplibre-runtime/`.
-- ADR-0006's single-importer proposal versus repository-root smoke tooling loading MapLibre from a public CDN outside the package.
-- ADR-0007's sole-renderer proposal versus unaccepted plugin-admission, exception-ADR, and supply-chain mechanisms.
+- Accepted `packages/maplibre/` ownership versus repeated references to absent `packages/maplibre-runtime/`.
+- ADR-0006's accepted acquisition boundary versus repository-root smoke tooling loading MapLibre from a public CDN outside the package.
+- ADR-0007's accepted renderer family versus still-unaccepted plugin admission, exact dependency, exception, and supply-chain mechanisms.
 - Canonical `schemas/contracts/v1/maplibre/` doctrine versus permissive `schemas/maplibre/` performance scaffolding.
 - `tests/maplibre/` versus `tests/packages/maplibre/` as the executable test home.
 - `apps/explorer-web/` doctrine versus `apps/web/**` in the performance workflow filter.
 - Performance proof artifacts under `artifacts/perf/` versus the Directory Rules limitation on trust-bearing content in `artifacts/`.
-- Rich package/source documentation versus a placeholder implementation.
+- Rich future-adapter documentation versus the current partial dependency-free implementation.
 
 **UNKNOWN**
 
-- Accepted package manager and lockfile.
+- Applicability of the root pnpm/lock profile to future renderer dependency admission and package-specific builds.
 - Accepted MapLibre GL JS version and dependency range.
 - Module format, TypeScript config, bundler, output directories, source maps, tree-shaking, and browser targets.
 - Public export names and compatibility guarantees.
-- Accepted consumers and deployment path.
+- Complete consumer inventory and deployment path beyond the bounded Explorer Web imports.
 - Runtime ownership between package and app-local feature code.
 - Protocol, plugin, worker, sprite, glyph, tile, and endpoint allowlists.
 - Contract/schema/policy/release bindings.
@@ -246,7 +253,7 @@ The merged [`src/README.md`](src/README.md) governs source placement, module dec
 **NEEDS VERIFICATION**
 
 - Named owners and reviewers.
-- ADR acceptance or supersession.
+- Accountable review and enforcement evidence for the accepted ADR-0006/0007 architecture.
 - One canonical renderer/runtime package home.
 - Package metadata, dependency, lockfile, export, build, and browser-support decisions.
 - Import inventory and enforcement.
@@ -354,12 +361,12 @@ These conflicts must remain visible until accepted decisions resolve them.
 
 ### 1. Package seam versus runtime-package references
 
-ADR-0006 proposes `packages/maplibre/` as the single runtime importer. Other docs reference `packages/maplibre-runtime/`, whose README was not found.
+ADR-0006 accepts `packages/maplibre/` as the single runtime importer. Other docs still reference `packages/maplibre-runtime/`, whose README was not found.
 
 **Required resolution:**
 
-- select one canonical package home;
-- record the decision in an accepted ADR or migration note;
+- apply the accepted `packages/maplibre/` ownership decision;
+- record migration/retirement of conflicting references without creating another package;
 - inventory all references;
 - migrate consumers and docs;
 - freeze the losing path;
@@ -379,11 +386,11 @@ The old package README described no-network helpers. A browser renderer necessar
 - test cleanup, cancellation, timeouts, and denial;
 - avoid pretending the entire package is pure or no-network.
 
-### 3. Single-importer proposal versus root smoke harness
+### 3. Accepted single-importer boundary versus root smoke harness
 
 The performance harness loads MapLibre through public CDN script tags outside `packages/maplibre/`.
 
-**Required resolution before ADR-0006 acceptance:**
+**Required conformance resolution after ADR-0006 acceptance:**
 
 - classify the harness as a temporary test exception or migrate it behind the package;
 - record any exception scope;
@@ -392,13 +399,13 @@ The performance harness loads MapLibre through public CDN script tags outside `p
 - add import/network enforcement;
 - ensure examples and tests cannot become production bypass patterns.
 
-### 4. Sole-renderer proposal versus plugin governance
+### 4. Accepted renderer family versus plugin governance
 
-ADR-0007 proposes MapLibre GL JS plus an admitted plugin set as the sole browser renderer, but plugin contracts, policy decisions, pins, and supply-chain attestations remain proposed.
+ADR-0007 accepts MapLibre GL JS as the sole normal browser-renderer family, but plugin contracts, exact dependencies, policy decisions, pins, and supply-chain attestations remain unaccepted.
 
 **Required resolution:**
 
-- accept or supersede ADR-0007;
+- preserve ADR-0007 while separately admitting exact dependencies and plugins;
 - define `PluginAdmission`;
 - assign contract/schema/policy homes;
 - pin versions and integrity;
@@ -465,16 +472,20 @@ packages/maplibre/
 ├── package.json
 └── src/
     ├── README.md
-    └── index.ts
+    ├── index.ts
+    ├── map-runtime-port.ts
+    └── null-map-runtime.ts
 ```
 
 Confirmed details:
 
-- `package.json` contains only `name`, `private`, and `version`.
-- `src/index.ts` contains only a placeholder export.
+- `package.json` declares a private ESM package with root type/import exports and no dependencies.
+- `src/index.ts` exports the renderer-neutral port and null runtime.
+- `src/map-runtime-port.ts` owns KFM-shaped values, strict validators, finite states, and the consumer interface.
+- `src/null-map-runtime.ts` supplies deterministic no-network behavior for migration and tests.
 - No package-specific test directory was established.
 - No accepted build output directory was established.
-- No package-local TypeScript configuration, bundler configuration, changelog, license file, export map, or dependency declarations were established.
+- No package-local TypeScript configuration, bundler configuration, changelog, license file, renderer dependency, or build output was established.
 - No `packages/maplibre-runtime/README.md` was found.
 
 ### Proposed mature tree
@@ -640,7 +651,7 @@ No package dependencies are currently declared. Before adding `maplibre-gl` or a
 
 | Class | Examples | Required posture |
 |---|---|---|
-| Core renderer | `maplibre-gl` | Single approved version/range; adapter-only import if ADR-0006 is accepted. |
+| Core renderer | `maplibre-gl` | Single approved version/range; adapter-only import under accepted ADR-0006 after separate dependency admission. |
 | Style/type support | style-spec packages | Keep renderer-specific types inside package boundary. |
 | Protocols | PMTiles, COG, vector-text protocols | Explicit registration, endpoint controls, integrity, cleanup, and admission. |
 | 3D/custom layers | three.js, 3D Tiles, glTF, lidar, deck.gl integrations | Per-version PluginAdmission, supply-chain review, capability tests, fallback state. |
@@ -650,7 +661,7 @@ No package dependencies are currently declared. Before adding `maplibre-gl` or a
 
 ### Lockfile posture
 
-Common root lockfiles were not found at checked paths. Until a package-manager and lockfile strategy is accepted:
+The root workspace pins `pnpm@11.17.0`, Node `>=22.13 <23`, and carries `pnpm-lock.yaml`. Before admitting a renderer dependency:
 
 - do not claim reproducible installation;
 - do not claim deterministic dependency resolution;
@@ -690,14 +701,14 @@ Evidence:
 
 - `private: true`;
 - version `0.0.0`;
-- no exports;
+- only the renderer-neutral root facade is exported;
 - no build;
 - no files list;
 - no dependencies;
 - no package tests;
 - no consumer inventory;
 - no package publication workflow;
-- no accepted API.
+- a bounded accepted renderer-neutral API and no concrete renderer API.
 
 ### Internal distribution, if later approved
 
@@ -827,9 +838,9 @@ Outcome names must align with accepted contracts and consumers before implementa
 
 ## Consumer and import boundary
 
-No executable consumer import was established.
+Explorer Web source and tests import the renderer-neutral `@kfm/maplibre` facade. That bounded consumer evidence does not prove a concrete renderer, deployment, or complete consumer inventory.
 
-Before consumers depend on `@kfm/maplibre`, create a consumer inventory containing:
+Before expanding consumer use, complete the consumer inventory with:
 
 - repository path;
 - owner;
@@ -843,9 +854,7 @@ Before consumers depend on `@kfm/maplibre`, create a consumer inventory containi
 - migration contact;
 - rollback behavior.
 
-### Proposed import law
-
-If ADR-0006 is accepted:
+### Accepted import law; enforcement remains partial
 
 - only `@kfm/maplibre` implementation code may import approved MapLibre runtime packages;
 - apps and shared UI import the KFM-shaped package surface;
@@ -1288,7 +1297,7 @@ The existing MapLibre performance workflow is not a package CI workflow. It does
 
 ### Versioning posture
 
-`0.0.0` is a scaffold marker. Before the first consumer:
+`0.0.0` remains a pre-release marker. Before a concrete renderer or broader consumer commitment:
 
 - choose versioning policy;
 - define which surfaces are public;
@@ -1358,14 +1367,13 @@ When package behavior misrepresents release, policy, evidence, or map state:
 
 ## Smallest sound implementation sequence
 
-### Stage 0 — Resolve governance
+### Stage 0 — Apply accepted architecture and resolve remaining governance
 
-Before functional code:
+Before concrete renderer code:
 
 - assign owners;
-- accept or supersede ADR-0006;
-- accept, supersede, or narrow ADR-0007;
-- choose `packages/maplibre/` versus `packages/maplibre-runtime/`;
+- preserve accepted ADR-0006 and ADR-0007 boundaries;
+- retire or migrate stale `packages/maplibre-runtime/` references without creating a parallel package;
 - decide package manager and lockfile;
 - approve dependency and plugin governance;
 - choose contract/schema/policy bindings;
@@ -1385,7 +1393,7 @@ Add only the minimum metadata and tooling needed to:
 - test;
 - inspect package contents;
 - keep publication denied;
-- preserve placeholder behavior until the API is accepted.
+- preserve the dependency-free port/null-runtime behavior until concrete renderer dependencies and APIs are admitted.
 
 **Stop condition:** build metadata implies an API or runtime dependency not yet approved.
 
@@ -1481,25 +1489,25 @@ Only after all prior gates:
 The package may be described as implemented only when:
 
 - [ ] Owners and required reviewers are assigned.
-- [ ] Renderer/runtime package ownership is accepted.
-- [ ] ADR-0006 is accepted, superseded, or explicitly deferred with bounded behavior.
-- [ ] ADR-0007 and plugin admission posture are accepted, superseded, or narrowed.
-- [ ] Package manager and lockfile policy are accepted.
+- [x] Renderer/runtime package ownership is accepted through ADR-0006.
+- [x] ADR-0006 is accepted with dependency and concrete implementation still held.
+- [x] ADR-0007 accepts the renderer family; plugin and dependency admission remain separate.
+- [x] Current workspace package manager/version and root lockfile are declared; renderer dependency admission remains separate.
 - [ ] Package metadata is complete and tested.
 - [ ] Approved dependencies and exact/range policy are declared.
 - [ ] License, provenance, vulnerability, and transitive dependency reviews exist.
 - [ ] Build, typecheck, lint, test, and package commands are real.
-- [ ] Export map and public types are ratified.
+- [x] The current renderer-neutral facade has an explicit export map and public types; concrete renderer exports remain held.
 - [ ] Pure and effectful entry points are explicit.
-- [ ] Raw renderer types do not leak across the accepted boundary.
+- [x] The current renderer-neutral facade exposes no raw renderer types; full acquisition enforcement remains open.
 - [ ] Manifest, evidence, policy, release, correction, withdrawal, and rollback bindings are implemented as required.
 - [ ] Endpoint, protocol, plugin, worker, and asset policies are explicit.
 - [ ] Sensitive geometry is transformed upstream.
-- [ ] Negative states are deterministic and visible.
-- [ ] Package-local or accepted repository tests cover success and failure paths.
+- [x] The bounded renderer-neutral port exposes deterministic finite states and reason codes.
+- [x] Accepted repository tests cover bounded port success and failure paths; concrete adapter/browser coverage remains open.
 - [ ] Import-boundary enforcement is required in CI.
 - [ ] CI watches `packages/maplibre/**`.
-- [ ] Consumer inventory and contract tests exist.
+- [x] Bounded Explorer Web consumers and contract-style tests exist; the complete inventory remains open.
 - [ ] Browser and capability support are documented and tested.
 - [ ] Build outputs are reproducible and inspected.
 - [ ] No secrets or private endpoints enter artifacts.
@@ -1507,7 +1515,7 @@ The package may be described as implemented only when:
 - [ ] Package release remains distinct from map/data publication.
 - [ ] Documentation reflects actual behavior.
 
-Until then, describe the package as a **private workspace scaffold with proposed adapter responsibilities**.
+Until the concrete adapter and dependency gates close, describe the package as a **private, dependency-free renderer-neutral facade with an accepted adapter boundary and concrete runtime on HOLD**.
 
 [Back to top](#top)
 
@@ -1522,20 +1530,20 @@ Until then, describe the package as a **private workspace scaffold with proposed
 | MAPLIBRE-PKG-001 | Assign package owner. | NEEDS VERIFICATION |
 | MAPLIBRE-PKG-002 | Assign MapLibre adapter/runtime owner. | NEEDS VERIFICATION |
 | MAPLIBRE-PKG-003 | Assign dependency and supply-chain reviewer. | NEEDS VERIFICATION |
-| MAPLIBRE-PKG-004 | Confirm package root as canonical runtime home. | NEEDS VERIFICATION |
-| MAPLIBRE-PKG-005 | Resolve `packages/maplibre-runtime/` references. | NEEDS VERIFICATION |
-| MAPLIBRE-PKG-006 | Accept, supersede, or narrow ADR-0006. | NEEDS VERIFICATION |
-| MAPLIBRE-PKG-007 | Accept, supersede, or narrow ADR-0007. | NEEDS VERIFICATION |
+| MAPLIBRE-PKG-004 | Confirm package root as canonical runtime home. | RESOLVED — ADR-0006 ACCEPTED |
+| MAPLIBRE-PKG-005 | Resolve `packages/maplibre-runtime/` references. | CONFLICTED — migrate stale references without parallel implementation |
+| MAPLIBRE-PKG-006 | Accept, supersede, or narrow ADR-0006. | RESOLVED — ACCEPTED |
+| MAPLIBRE-PKG-007 | Accept, supersede, or narrow ADR-0007. | RESOLVED — ACCEPTED renderer family; dependency/plugin admission separate |
 | MAPLIBRE-PKG-008 | Resolve plugin-admission contract/schema/policy. | NEEDS VERIFICATION |
-| MAPLIBRE-PKG-009 | Select package manager. | UNKNOWN |
-| MAPLIBRE-PKG-010 | Establish lockfile policy. | UNKNOWN |
-| MAPLIBRE-PKG-011 | Confirm supported Node tooling version. | UNKNOWN |
+| MAPLIBRE-PKG-009 | Select package manager. | RESOLVED for current workspace — pnpm 11.17.0 |
+| MAPLIBRE-PKG-010 | Establish lockfile policy. | PARTIAL — root pnpm lock exists; renderer admission not established |
+| MAPLIBRE-PKG-011 | Confirm supported Node tooling version. | RESOLVED for current workspace — >=22.13 <23 |
 | MAPLIBRE-PKG-012 | Confirm TypeScript configuration. | UNKNOWN |
-| MAPLIBRE-PKG-013 | Confirm module format. | UNKNOWN |
+| MAPLIBRE-PKG-013 | Confirm module format. | PARTIAL — package declares ESM |
 | MAPLIBRE-PKG-014 | Confirm bundler/build tooling. | UNKNOWN |
 | MAPLIBRE-PKG-015 | Confirm browser target matrix. | UNKNOWN |
 | MAPLIBRE-PKG-016 | Confirm source-map posture. | UNKNOWN |
-| MAPLIBRE-PKG-017 | Complete package export map. | PROPOSED |
+| MAPLIBRE-PKG-017 | Complete package export map. | PARTIAL — root renderer-neutral facade exported |
 | MAPLIBRE-PKG-018 | Complete files/sideEffects metadata. | PROPOSED |
 | MAPLIBRE-PKG-019 | Approve MapLibre GL JS dependency/version. | NEEDS VERIFICATION |
 | MAPLIBRE-PKG-020 | Approve style-spec dependency posture. | NEEDS VERIFICATION |
@@ -1545,9 +1553,9 @@ Until then, describe the package as a **private workspace scaffold with proposed
 | MAPLIBRE-PKG-024 | Establish license review. | NEEDS VERIFICATION |
 | MAPLIBRE-PKG-025 | Establish vulnerability threshold and update process. | NEEDS VERIFICATION |
 | MAPLIBRE-PKG-026 | Establish SBOM/provenance requirements. | NEEDS VERIFICATION |
-| MAPLIBRE-PKG-027 | Ratify KFM-shaped public API. | NEEDS VERIFICATION |
-| MAPLIBRE-PKG-028 | Ratify finite outcomes/reason codes. | NEEDS VERIFICATION |
-| MAPLIBRE-PKG-029 | Enforce raw renderer type containment. | PROPOSED |
+| MAPLIBRE-PKG-027 | Ratify KFM-shaped public API. | PARTIAL — renderer-neutral port accepted and implemented |
+| MAPLIBRE-PKG-028 | Ratify finite outcomes/reason codes. | PARTIAL — renderer-neutral states/reasons implemented |
+| MAPLIBRE-PKG-029 | Enforce raw renderer type containment. | PARTIAL — current facade contains no raw types |
 | MAPLIBRE-PKG-030 | Enforce single-importer boundary. | PROPOSED |
 | MAPLIBRE-PKG-031 | Inventory direct MapLibre imports. | NEEDS VERIFICATION |
 | MAPLIBRE-PKG-032 | Classify or migrate external-CDN smoke harness. | NEEDS VERIFICATION |
@@ -1572,8 +1580,8 @@ Until then, describe the package as a **private workspace scaffold with proposed
 | MAPLIBRE-PKG-051 | Resolve `apps/web/**` versus `apps/explorer-web/**`. | CONFLICTED |
 | MAPLIBRE-PKG-052 | Resolve permissive performance schema posture. | CONFLICTED |
 | MAPLIBRE-PKG-053 | Resolve `artifacts/perf/` trust-artifact placement. | CONFLICTED |
-| MAPLIBRE-PKG-054 | Inventory consumers and owners. | NEEDS VERIFICATION |
-| MAPLIBRE-PKG-055 | Add consumer contract tests. | PROPOSED |
+| MAPLIBRE-PKG-054 | Inventory consumers and owners. | PARTIAL — Explorer Web imports confirmed |
+| MAPLIBRE-PKG-055 | Add consumer contract tests. | PARTIAL — bounded Explorer port/evidence/status tests exist |
 | MAPLIBRE-PKG-056 | Define versioning and changelog policy. | NEEDS VERIFICATION |
 | MAPLIBRE-PKG-057 | Define internal distribution channel. | NEEDS VERIFICATION |
 | MAPLIBRE-PKG-058 | Define software correction process. | NEEDS VERIFICATION |
@@ -1662,15 +1670,16 @@ Deprecation requires:
 | Package path | CONFIRMED |
 | npm workspace enrollment | CONFIRMED |
 | Package name/privacy/version | CONFIRMED private `@kfm/maplibre` `0.0.0` |
-| Source entry | CONFIRMED placeholder |
-| Source boundary README | CONFIRMED v1.1 |
-| Functional adapter | NOT ESTABLISHED |
+| Source entry | CONFIRMED facade exports |
+| Source boundary README | CONFIRMED v1.2 correction |
+| Renderer-neutral port/null runtime | IMPLEMENTED / BOUNDED |
+| Concrete `MapLibreAdapter` | HOLD / NOT ESTABLISHED |
 | Package dependencies | NONE DECLARED |
-| Package build/export | NOT ESTABLISHED |
+| Package build/export | PARTIAL — source export map; no build output |
 | Package tests | NOT ESTABLISHED |
-| Consumers | NOT ESTABLISHED |
-| ADR-0006 | PROPOSED |
-| ADR-0007 | PROPOSED |
+| Consumers | PARTIAL — Explorer Web bounded imports/tests |
+| ADR-0006 | ACCEPTED architecture; dependency/implementation HOLD |
+| ADR-0007 | ACCEPTED renderer family; dependency/runtime HOLD |
 | Runtime package ownership | CONFLICTED |
 | Performance tooling | CONFIRMED adjacent tooling |
 | Package-specific CI | NOT ESTABLISHED |
@@ -1678,6 +1687,6 @@ Deprecation requires:
 | Truth/policy/release authority | NONE |
 | Operational health | UNKNOWN |
 
-> **Current safe description:** `packages/maplibre/` is a private npm workspace scaffold and documentation boundary for a proposed governed MapLibre adapter. It is not yet a functioning, installable, consumer-proven, CI-enforced, or distribution-authorized renderer package.
+> **Current safe description:** `packages/maplibre/` is a private, dependency-free renderer-neutral facade at the accepted MapLibre adapter boundary. Its `MapRuntimePort`, `NullMapRuntime`, exports, and bounded Explorer consumers are implemented; the concrete renderer dependency, `MapLibreAdapter`, browser readiness, distribution, release, deployment, and publication remain on HOLD or unestablished.
 
 [Back to top](#top)

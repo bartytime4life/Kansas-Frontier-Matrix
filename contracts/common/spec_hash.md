@@ -2,17 +2,22 @@
 doc_id: kfm://contract/common/spec-hash
 title: contracts/common/spec_hash.md — SpecHash Contract
 type: contract
-version: v0.2
+version: v0.3
 status: draft
 owners: OWNER_TBD — Contract steward · Schema steward · Release steward · Validation steward · Provenance steward · Docs steward
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-08-25
 policy_label: public; contracts; common; spec-hash; semantic-contract; shared-kernel; integrity-reference
 related:
   - ./README.md
   - ../../schemas/contracts/v1/common/spec_hash.schema.json
   - ../../fixtures/contracts/v1/common/spec_hash/
+  - ../../packages/hashing/
+  - ../../tools/spec_hash/
   - ../../tools/validators/validate_spec_hash.py
+  - ../../tests/validators/test_validate_spec_hash.py
+  - ../../tests/validators/test_validate_spec_hash_geojson.py
+  - ../../.github/workflows/spec-hash.yml
   - ../../policy/common/
   - ../../docs/architecture/contract-schema-policy-split.md
   - ../../data/proofs/
@@ -21,7 +26,8 @@ tags: [kfm, contracts, common, spec-hash, sha256, integrity, provenance, determi
 notes:
   - "Expanded from scaffold into a semantic contract for the common spec_hash object."
   - "Machine-checkable shape is in schemas/contracts/v1/common/spec_hash.schema.json. This edit does not change schema fields, pattern, or validation rules."
-  - "Declared validator exists but is a greenfield placeholder that raises NotImplementedError; validation behavior remains NEEDS VERIFICATION."
+  - "The declared validator, reusable RFC 8785 JCS plus SHA-256 helpers, thin repository wrapper, common fixtures, focused tests, and dedicated workflow are implemented at the reviewed repository baseline."
+  - "Executable validation remains an integrity check only; it creates no source, evidence, policy, review, promotion, release, publication, or public-use authority."
   - "spec_hash is an integrity/reference carrier for a specification byte/string representation, not proof of correctness, admissibility, release, policy approval, or evidence closure."
 [/KFM_META_BLOCK_V2] -->
 
@@ -37,7 +43,7 @@ notes:
   <img alt="Family: common" src="https://img.shields.io/badge/family-common-blue">
   <img alt="Schema: proposed" src="https://img.shields.io/badge/schema-PROPOSED-orange">
   <img alt="Hash: sha256" src="https://img.shields.io/badge/hash-sha256-purple">
-  <img alt="Validator: placeholder" src="https://img.shields.io/badge/validator-placeholder-red">
+  <img alt="Validator: implemented" src="https://img.shields.io/badge/validator-implemented-green">
   <img alt="Authority: semantic" src="https://img.shields.io/badge/authority-semantic__contract-green">
 </p>
 
@@ -56,7 +62,7 @@ notes:
 > **Owner:** `OWNER_TBD`  
 > **Contract path:** `contracts/common/spec_hash.md`  
 > **Schema path:** `schemas/contracts/v1/common/spec_hash.schema.json`  
-> **Truth posture:** `CONFIRMED` contract path, schema path, schema shape, schema pattern, and current update; validator file exists but is a placeholder; fixtures, policy behavior, canonicalization algorithm, producer behavior, and downstream usage remain `NEEDS VERIFICATION`.
+> **Truth posture:** `CONFIRMED` contract/schema pairing, fixture polarity, implemented RFC 8785 JCS plus SHA-256 helpers, thin wrapper, validator, focused tests, and dedicated workflow / `PARTIAL` producer and downstream-consumer inventory / `NEEDS VERIFICATION` policy behavior, cross-language parity, deployment, release, and public use.
 
 ---
 
@@ -97,8 +103,12 @@ Adjacent responsibility roots:
 |---|---|
 | `./README.md` | Common contract directory boundary and shared-kernel discipline. |
 | `../../schemas/contracts/v1/common/spec_hash.schema.json` | Machine-checkable shape for this contract. |
-| `../../fixtures/contracts/v1/common/spec_hash/` | Schema-declared fixture root; existence and coverage remain `NEEDS VERIFICATION`. |
-| `../../tools/validators/validate_spec_hash.py` | Schema-declared validator; exists as a placeholder, behavior not implemented. |
+| `../../fixtures/contracts/v1/common/spec_hash/` | Schema-declared valid/invalid fixtures exercised by focused tests and the validator fixture mode. |
+| `../../packages/hashing/` | Reusable bounded RFC 8785 JCS, SHA-256, verification, file-input, CLI, and structural GeoJSON digest helpers. |
+| `../../tools/spec_hash/` | Thin repository-facing wrapper over the reusable package implementation. |
+| `../../tools/validators/validate_spec_hash.py` | Implemented schema/fixture validator that can recompute a supplied JSON subject and emits finite `PASS` / `DENY` / `ERROR` results. |
+| `../../tests/validators/test_validate_spec_hash*.py` | Focused positive and negative executable coverage for common and structural GeoJSON profiles. |
+| `../../.github/workflows/spec-hash.yml` | Dedicated bounded workflow; CI signal only, never semantic or publication authority. |
 | `../../policy/common/` | Schema-declared policy home; existence and behavior remain `NEEDS VERIFICATION`. |
 | `../../data/proofs/` | Evidence/proof surfaces may cite or carry spec hashes but remain separate proof authority. |
 | `../../release/` | Release surfaces may record spec hashes but release authority remains in release records, not in the hash. |
@@ -121,8 +131,8 @@ The current schema metadata identifies:
 |---|---|---|
 | `$id` | `https://schemas.kfm.local/contracts/v1/common/spec_hash.schema.json` | `CONFIRMED` from schema. |
 | `contract_doc` | `contracts/common/spec_hash.md` | `CONFIRMED` from schema. |
-| `fixtures_root` | `fixtures/contracts/v1/common/spec_hash/` | `NEEDS VERIFICATION` existence/coverage. |
-| `validator` | `tools/validators/validate_spec_hash.py` | `CONFIRMED` file exists; behavior is placeholder / `NEEDS IMPLEMENTATION`. |
+| `fixtures_root` | `fixtures/contracts/v1/common/spec_hash/` | `CONFIRMED` valid/invalid fixtures with focused polarity coverage. |
+| `validator` | `tools/validators/validate_spec_hash.py` | `CONFIRMED` implemented schema, fixture, and optional subject-recomputation validation. |
 | `policy` | `policy/common/` | `NEEDS VERIFICATION` existence/behavior. |
 | `status` | `PROPOSED` | `CONFIRMED` from schema metadata. |
 
@@ -277,7 +287,7 @@ Lifecycle notes:
 Before relying on this contract, verify:
 
 - schema validation passes against `schemas/contracts/v1/common/spec_hash.schema.json`;
-- validator implementation exists beyond the current placeholder and covers valid/invalid cases;
+- the implemented validator and focused tests continue to cover valid/invalid fixture polarity and subject recomputation;
 - fixtures exist under the schema-declared fixture root;
 - producers define what artifact or canonicalized representation is hashed;
 - canonicalization rules are documented where hashes are compared across producers;
@@ -306,7 +316,8 @@ Before relying on this contract, verify:
 |---|---|---|---|
 | Prior `contracts/common/spec_hash.md` scaffold | `CONFIRMED` | Contract existed and referenced the schema URL, lifecycle, and open verification note. | Scaffold delegated field meaning to schema and lacked semantic boundaries. |
 | `schemas/contracts/v1/common/spec_hash.schema.json` | `CONFIRMED` | Current field set, required field, lowercase `sha256:<64 hex>` pattern, top-level additionalProperties false, and x-kfm metadata. | Schema does not prove canonicalization method, producer behavior, policy allowance, or validator behavior. |
-| `tools/validators/validate_spec_hash.py` | `CONFIRMED placeholder` | Declared validator path exists. | It raises `NotImplementedError`; validation behavior is not implemented. |
+| `packages/hashing/src/hashing/`, `tools/spec_hash/spec_hash.py`, and `tools/validators/validate_spec_hash.py` | `CONFIRMED implemented` | RFC 8785 JCS plus SHA-256 computation, verification, bounded file parsing, a thin repository wrapper, and finite validator outcomes. | Integrity equality is not semantic correctness, evidence, policy, review, release, or publication authority. |
+| `fixtures/contracts/v1/common/spec_hash/`, `tests/validators/test_validate_spec_hash*.py`, and `.github/workflows/spec-hash.yml` | `CONFIRMED bounded proof surfaces` | Valid/invalid fixture polarity, deterministic computation, failure cases, structural GeoJSON profile behavior, and dedicated CI orchestration. | Single-repository/runtime proof does not establish cross-language parity, deployment, or public use. |
 | `contracts/common/README.md` | `CONFIRMED` | Common contracts may define small cross-cutting value objects only when no single domain owns them; common must stay narrow. | Does not prove individual common contract inventory. |
 | `docs/architecture/contract-schema-policy-split.md` | `CONFIRMED` | Contracts define meaning; schemas define shape; policy decides admissibility; tests/fixtures prove enforceability. | Path presence and runtime behavior remain verification-bound. |
 | Uploaded `KFM Repository Markdown Authoring Agent — Full Operating Prompt v2` | `CONFIRMED user-supplied guidance` | Requires no-loss preservation, evidence grounding, truth labels, GitHub polish, contract/schema doc sections, Markdown QA, and pre-publish discipline. | It is authoring guidance, not repo implementation proof. |
@@ -324,8 +335,8 @@ Rollback target: prior scaffold content SHA `0e597b209c53da691889875fae46cbf7a6b
 ## Definition of done
 
 - [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Validator is implemented beyond placeholder behavior.
-- [ ] Fixtures exist and cover valid/invalid cases.
+- [x] Validator implementation and focused negative cases are present.
+- [x] Fixtures exist and cover valid/invalid cases.
 - [ ] Canonicalization rules are documented wherever hashes are compared across producers.
 - [ ] Producers identify the artifact or representation being hashed in surrounding receipt/review/release records.
 - [ ] Consumers do not treat `spec_hash` as proof of correctness, evidence closure, policy allowance, or release state.

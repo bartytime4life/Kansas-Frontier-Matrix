@@ -3,13 +3,16 @@ import {
   MapRuntimePortError,
   freezeMapFeatureSelection,
   freezeMapRuntimeCamera,
+  reasonForMapRuntimeTrustState,
   type MapFeatureSelection,
   type MapRuntimeCamera,
   type MapRuntimePort,
   type MapRuntimeReasonCode,
   type MapRuntimeSelectionListener,
+  type MapRuntimeSnapshotListener,
   type MapRuntimeSnapshot,
   type MapRuntimeState,
+  type MapRuntimeTrustState,
 } from "./map-runtime-port";
 
 /** Kansas-centered deterministic camera used by the dependency-free test port. */
@@ -35,7 +38,8 @@ export class NullMapRuntime implements MapRuntimePort {
   private camera: MapRuntimeCamera;
   private selection: MapFeatureSelection | null = null;
   private reason: MapRuntimeReasonCode | null = null;
-  private readonly listeners = new Set<MapRuntimeSelectionListener>();
+  private readonly selectionListeners = new Set<MapRuntimeSelectionListener>();
+  private readonly snapshotListeners = new Set<MapRuntimeSnapshotListener>();
 
   constructor(initialCamera: MapRuntimeCamera = DEFAULT_MAP_RUNTIME_CAMERA) {
     this.camera = freezeMapRuntimeCamera(initialCamera);
@@ -49,9 +53,10 @@ export class NullMapRuntime implements MapRuntimePort {
 
     this.state = "INITIALIZING";
     this.reason = null;
+    this.notifySnapshot();
     this.camera = freezeMapRuntimeCamera(initialCamera);
     this.state = "READY";
-    return this.getSnapshot();
+    return this.notifySnapshot();
   }
 
   getSnapshot(): MapRuntimeSnapshot {
@@ -67,7 +72,24 @@ export class NullMapRuntime implements MapRuntimePort {
   setCamera(camera: MapRuntimeCamera): MapRuntimeSnapshot {
     this.assertReady();
     this.camera = freezeMapRuntimeCamera(camera);
-    return this.getSnapshot();
+    return this.notifySnapshot();
+  }
+
+  subscribeSnapshot(listener: MapRuntimeSnapshotListener): () => void {
+    this.assertNotDisposed();
+    if (typeof listener !== "function") {
+      throw new MapRuntimePortError(
+        "MAP_RUNTIME_LISTENER_INVALID",
+        "Map runtime snapshot listener is invalid.",
+      );
+    }
+    this.snapshotListeners.add(listener);
+    let active = true;
+    return (): void => {
+      if (!active) return;
+      active = false;
+      this.snapshotListeners.delete(listener);
+    };
   }
 
   subscribeSelection(listener: MapRuntimeSelectionListener): () => void {
@@ -78,12 +100,12 @@ export class NullMapRuntime implements MapRuntimePort {
         "Map runtime selection listener is invalid.",
       );
     }
-    this.listeners.add(listener);
+    this.selectionListeners.add(listener);
     let active = true;
     return (): void => {
       if (!active) return;
       active = false;
-      this.listeners.delete(listener);
+      this.selectionListeners.delete(listener);
     };
   }
 
@@ -92,16 +114,34 @@ export class NullMapRuntime implements MapRuntimePort {
     this.assertReady();
     const frozen = freezeMapFeatureSelection(selection);
     this.selection = frozen;
-    for (const listener of [...this.listeners]) listener(frozen);
-    return this.getSnapshot();
+    const snapshot = this.notifySnapshot();
+    for (const listener of [...this.selectionListeners]) listener(frozen);
+    return snapshot;
+  }
+
+  /** Test/control-plane hook; consumes a state but grants no upstream authority. */
+  emitTrustState(state: MapRuntimeTrustState): MapRuntimeSnapshot {
+    this.assertNotDisposed();
+    this.state = state;
+    this.reason = reasonForMapRuntimeTrustState(state);
+    this.selection = null;
+    return this.notifySnapshot();
   }
 
   dispose(): void {
     if (this.state === "DISPOSED") return;
-    this.listeners.clear();
     this.selection = null;
     this.state = "DISPOSED";
     this.reason = "MAP_RUNTIME_DISPOSED";
+    this.notifySnapshot();
+    this.selectionListeners.clear();
+    this.snapshotListeners.clear();
+  }
+
+  private notifySnapshot(): MapRuntimeSnapshot {
+    const snapshot = this.getSnapshot();
+    for (const listener of [...this.snapshotListeners]) listener(snapshot);
+    return snapshot;
   }
 
   private assertNotDisposed(): void {

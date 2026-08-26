@@ -2,11 +2,11 @@
 doc_id: kfm://intake/exploratory/pass-31-typed-receipt-aggregation-source-map
 title: Pass 31 typed receipt aggregation source map
 type: source-adaptation-map
-version: v1.0.0
-status: proposed; implementation-support; non-authoritative
+version: v1.1.0
+status: proposed; implementation-reconciled; fixture-only; non-authoritative
 owners: OWNER_TBD — Intake steward · Data steward · Receipt steward · Directory Rules reviewer
 created: 2026-08-09
-updated: 2026-08-09
+updated: 2026-08-25
 policy_label: internal; intake; data; receipt; provenance
 source_card: KFM-P31-PROG-0013
 source_spec_hash: sha256:fa365992bb1c2f8569fd070249dea29aa05442be2a032b33922aed4318317a4a
@@ -31,12 +31,25 @@ The source asks for dataset, run, specification, input digest, Rekor identifier,
 
 ## Collision check
 
-Exact card-ID, exact-title, repository-field, and PR searches found no implementation of `KFM-P31-PROG-0013`. Existing receipt families remain distinct authorities and are referenced, not merged or superseded.
+The original assay at `main@7335ed9ea0f81342ae0b1c7828a21ac74711c78b` found no pre-existing implementation of `KFM-P31-PROG-0013`. That historical result does not describe current repository state: the bounded packet authored from the assay is now present on `main@75e47a5785d02fdc82e4a0f3f6f7d7dab2ac4f05`. Existing receipt families remain distinct authorities and are referenced, not merged or superseded.
+
+## Current executable packet
+
+The card is **IMPLEMENTED only as a `PROPOSED_INACTIVE` / `FIXTURE_ONLY` profile** through:
+
+- semantic contract: [`contracts/data/typed_receipt_aggregation.md`](../../../contracts/data/typed_receipt_aggregation.md);
+- machine shape: [`schemas/contracts/v1/data/typed_receipt_aggregation.schema.json`](../../../schemas/contracts/v1/data/typed_receipt_aggregation.schema.json);
+- synthetic cases: [`fixtures/contracts/v1/data/typed_receipt_aggregation/cases.json`](../../../fixtures/contracts/v1/data/typed_receipt_aggregation/cases.json);
+- deterministic validator: [`tools/validators/receipts/validate_typed_receipt_aggregation.py`](../../../tools/validators/receipts/validate_typed_receipt_aggregation.py);
+- focused proof: [`tests/validators/receipts/test_typed_receipt_aggregation.py`](../../../tests/validators/receipts/test_typed_receipt_aggregation.py); and
+- read-only workflow: [`.github/workflows/typed-receipt-aggregation.yml`](../../../.github/workflows/typed-receipt-aggregation.yml).
+
+This closure proves only deterministic validation of synthetic aggregation declarations and finite fixture outcomes. It does not resolve receipts or artifacts, contact Rekor, verify signatures, evaluate policy, approve review, promote, release, deploy, or publish.
 
 ## Truth and authority boundary
 
-`CONFIRMED`: source card, specification hash, Directory Rules authority, repository base, and existing receipt-family boundaries were inspected. `PROPOSED`: this profile and every authored path. `UNKNOWN`: referenced receipt validity, artifact validity, Rekor inclusion, signature state, policy, human review, promotion, release, and publication.
+`CONFIRMED`: source card, specification hash, Directory Rules authority, current packet paths, executable fixture proof, and existing receipt-family boundaries were inspected. `IMPLEMENTED`: the bounded fixture-only profile and its no-network validation path. `PROPOSED_INACTIVE`: the profile's authority and operational posture. `UNKNOWN`: referenced receipt validity, artifact validity, Rekor inclusion, signature state, policy, human review, promotion, release, and publication.
 
 ## Rollback
 
-Delete the eight additive packet files. Existing receipt schemas, instances, verification state, lifecycle state, release state, and public state are unchanged.
+Revert this source-map reconciliation independently. The executable packet is unchanged, and existing receipt schemas, instances, verification state, lifecycle state, release state, and public state are unaffected.

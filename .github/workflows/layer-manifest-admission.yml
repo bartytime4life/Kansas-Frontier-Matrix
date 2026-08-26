@@ -65,10 +65,16 @@ jobs:
           set -euo pipefail
           pnpm --filter explorer-web exec vitest run tests/layer-manifest-admission.test.ts
           pnpm --filter explorer-web build
-      - name: Validate generated authoring receipt
+      - name: Validate generated authoring receipts
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py             data/receipts/generated/genrec-layer-manifest-admission-20260808.json             --repo-root .
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-layer-manifest-admission-20260808.json \
+            --repo-root . \
+            --artifact-git-ref 61943e3c99485d846e97a3d924348bb18e2827c3
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-layer-manifest-admission-runtime-evidence-binding-20260824.json \
+            --repo-root .
       - name: Record trust boundary
         if: always()
         run: |

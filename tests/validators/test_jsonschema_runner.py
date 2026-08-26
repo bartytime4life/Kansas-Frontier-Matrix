@@ -251,6 +251,62 @@ class JsonSchemaRunnerTests(unittest.TestCase):
             f"FAIL {invalid}: synthetic schema rejection\n",
         )
 
+    def test_explicit_mode_rejects_duplicate_object_members(self) -> None:
+        duplicate = self.root / "duplicate.json"
+        duplicate.write_text('{"valid": true, "valid": true}\n', encoding="utf-8")
+
+        exit_code, stdout, stderr = self._run([str(duplicate)])
+
+        self.assertEqual(exit_code, 1)
+        self.assertEqual(stderr, "")
+        self.assertIn(f"FAIL {duplicate}: duplicate JSON object key", stdout)
+
+    def test_explicit_mode_rejects_nonfinite_numeric_constants(self) -> None:
+        for literal in ("NaN", "Infinity", "-Infinity"):
+            with self.subTest(literal=literal):
+                path = self.root / f"nonfinite-{literal.lstrip('-')}.json"
+                path.write_text(
+                    f'{{"valid": true, "value": {literal}}}\n',
+                    encoding="utf-8",
+                )
+
+                exit_code, stdout, stderr = self._run([str(path)])
+
+                self.assertEqual(exit_code, 1)
+                self.assertEqual(stderr, "")
+                self.assertIn(f"FAIL {path}: non-finite JSON number", stdout)
+
+    def test_explicit_mode_rejects_float_overflow(self) -> None:
+        overflow = self.root / "overflow.json"
+        overflow.write_text(
+            '{"valid": true, "value": 1e400}\n',
+            encoding="utf-8",
+        )
+
+        exit_code, stdout, stderr = self._run([str(overflow)])
+
+        self.assertEqual(exit_code, 1)
+        self.assertEqual(stderr, "")
+        self.assertIn(f"FAIL {overflow}: non-finite JSON number", stdout)
+
+    def test_invalid_lane_parse_failures_are_not_expected_rejections(self) -> None:
+        self._write_json("valid", "valid.json", {"valid": True})
+        duplicate = self.fixtures / "invalid" / "duplicate.json"
+        duplicate.write_text('{"valid": false, "valid": false}\n', encoding="utf-8")
+        nonfinite = self.fixtures / "invalid" / "nonfinite.json"
+        nonfinite.write_text(
+            '{"valid": false, "value": NaN}\n',
+            encoding="utf-8",
+        )
+
+        exit_code, stdout, _ = self._run(["--fixtures"])
+
+        self.assertEqual(exit_code, 1)
+        self.assertIn(f"FAIL {duplicate}: duplicate JSON object key", stdout)
+        self.assertIn(f"FAIL {nonfinite}: non-finite JSON number", stdout)
+        self.assertNotIn(f"EXPECTED_FAIL {duplicate}:", stdout)
+        self.assertNotIn(f"EXPECTED_FAIL {nonfinite}:", stdout)
+
     def test_no_input_returns_two_without_loading_schema(self) -> None:
         stdout = io.StringIO()
         stderr = io.StringIO()

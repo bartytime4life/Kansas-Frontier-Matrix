@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import sys
 from dataclasses import dataclass
 from datetime import datetime
@@ -33,6 +34,14 @@ SOURCE_DESCRIPTOR_SCHEMA = (
 FIXTURES_ROOT = REPO_ROOT / "fixtures/contracts/v1/source/ingest_receipt"
 MAX_JSON_BYTES = 5 * 1024 * 1024
 ZERO_SHA256 = "sha256:" + ("0" * 64)
+
+
+class DuplicateKeyError(ValueError):
+    """Raised when a JSON object repeats a member name."""
+
+
+class NonFiniteNumberError(ValueError):
+    """Raised when JSON contains a non-standard or overflowing number."""
 
 
 @dataclass(frozen=True, order=True)
@@ -66,6 +75,26 @@ class ValidationResult:
         return not self.findings
 
 
+def _object_no_duplicates(pairs: list[tuple[str, object]]) -> dict[str, object]:
+    candidate: dict[str, object] = {}
+    for key, value in pairs:
+        if key in candidate:
+            raise DuplicateKeyError
+        candidate[key] = value
+    return candidate
+
+
+def _reject_nonfinite_number(_value: str) -> object:
+    raise NonFiniteNumberError
+
+
+def _parse_finite_float(value: str) -> float:
+    parsed = float(value)
+    if not math.isfinite(parsed):
+        raise NonFiniteNumberError
+    return parsed
+
+
 def _load_schema_validator(path: Path) -> Draft202012Validator:
     schema = json.loads(path.read_text(encoding="utf-8"))
     registry = build_registry(REPO_ROOT)
@@ -85,11 +114,32 @@ def _load_json_object(path: Path, field: str) -> tuple[dict[str, object] | None,
             return None, [Finding("INPUT_NOT_FILE", field, "input is not a regular file")]
         if path.stat().st_size > MAX_JSON_BYTES:
             return None, [Finding("INPUT_TOO_LARGE", field, "JSON input exceeds 5 MiB")]
-        value = json.loads(path.read_text(encoding="utf-8"))
+        value = json.loads(
+            path.read_text(encoding="utf-8"),
+            object_pairs_hook=_object_no_duplicates,
+            parse_constant=_reject_nonfinite_number,
+            parse_float=_parse_finite_float,
+        )
     except (OSError, UnicodeError):
         return None, [Finding("INPUT_UNREADABLE", field, "input could not be read safely")]
     except json.JSONDecodeError:
         return None, [Finding("JSON_INVALID", field, "input is not valid JSON")]
+    except DuplicateKeyError:
+        return None, [
+            Finding(
+                "JSON_DUPLICATE_KEY",
+                field,
+                "JSON objects must not contain duplicate member names",
+            )
+        ]
+    except NonFiniteNumberError:
+        return None, [
+            Finding(
+                "JSON_NONFINITE_NUMBER",
+                field,
+                "JSON numbers must be finite and standards-conforming",
+            )
+        ]
     if not isinstance(value, dict):
         findings.append(Finding("JSON_ROOT_INVALID", field, "JSON root must be an object"))
         return None, findings

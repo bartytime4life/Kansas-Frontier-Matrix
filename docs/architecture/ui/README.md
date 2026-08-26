@@ -2,13 +2,13 @@
 doc_id: kfm://doc/architecture/ui/readme
 title: UI Subsystem — Architecture README
 type: architecture-landing-page
-version: v4.0-draft
+version: v4.1.1-draft
 status: draft; repository-grounded; mixed-maturity; documentation-only; non-publisher
 owners:
   - "@bartytime4life — verified CODEOWNERS review route"
   - "NEEDS VERIFICATION — independent UI, map-runtime, governed-API, evidence, policy, accessibility, security, review, release, correction, rollback, and operations stewardship"
 created: 2026-05-08
-updated: 2026-08-19
+updated: 2026-08-24
 policy_label: public; architecture; ui; trust-membrane; no-release; no-publication
 owning_root: docs/
 responsibility: "Provide the repository-grounded landing page for KFM UI architecture, current bounded implementation, trust boundaries, sibling-document maturity, validation expectations, graduation gates, and rollback without becoming decision, contract, schema, policy, evidence, runtime, review, release, deployment, or publication authority."
@@ -17,9 +17,9 @@ current_path: docs/architecture/ui/README.md
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: d639f9ff40288d12244cd7bc84af538652f6dfb1
-  target_prior_blob: 36d975710d906a6c4146c550d40929b1822b667e
-  ui_directory_tree_ref: d639f9ff40288d12244cd7bc84af538652f6dfb1
+  base_commit: 362d6590b9516596ad1c34a64781c13bf85d52c8
+  target_prior_blob: 623b5eb4ccc107db366ed000769569f56c5ac43e
+  ui_directory_tree_ref: 362d6590b9516596ad1c34a64781c13bf85d52c8
   explorer_readme_blob: f8f37ed6e396a19ca080ea29b41920afdf03a94b
   explorer_package_blob: ddd201b74a06001d84a14bf54ac62a6cc3607a29
   explorer_main_blob: 86c16e43e03601e65eb01b0b4949f7850089e877
@@ -37,7 +37,7 @@ evidence_snapshot:
   governed_api_registry_blob: 3418168d0b267160d6ad6dd87f289e880ef4a024
   governed_api_stub_blob: 371e60d9f96c78e31c8a1e6109d19dee5da4213b
   ui_build_workflow_blob: 52382d796a8dd5ecafc39a801515aff0a8b013f8
-  adr_index_ref: d639f9ff40288d12244cd7bc84af538652f6dfb1
+  adr_index_ref: 362d6590b9516596ad1c34a64781c13bf85d52c8
   directory_rules_decision: ADR-0029 accepted
 related:
   - docs/architecture/README.md
@@ -85,10 +85,11 @@ related:
   - .github/workflows/ui-build.yml
 tags: [kfm, ui, architecture, explorer-web, governed-api, maplibre, evidence-drawer, focus-mode, story-player, review-console, accessibility, finite-outcomes, trust-membrane, correction, rollback]
 notes:
-  - "v4.0-draft reconciles the landing page with the repository-grounded Explorer composition introduced after the v3 evidence snapshot while preserving the document ID, path, H1, twenty-three numbered sections, and Appendix A anchor."
+  - "v4.1.1-draft preserves the v4.1 landing-page evidence snapshot and corrects only the Evidence Drawer sibling status after same-path v2.1 reconciliation at main@366cfa9185b0d10ca27f128a8a041ca8c5312896."
+  - "v4.1-draft reconciled the landing page with accepted ADR-0006/0007 and the implemented dependency-free MapRuntimePort/NullMapRuntime while preserving the document ID, path, H1, twenty-three numbered sections, and Appendix A anchor."
   - "The current Explorer entrypoint mounts a bounded map-first landing composition with a synthetic renderer-neutral map stage, deterministic selection-to-Evidence-Drawer laboratory, thirteen knowledge domains, thirty-eight feature catalog entries, and eight trust principles."
   - "The baseline shell still resolves to fixed fail-closed states, all claim-bearing demonstrations use local deterministic fixtures, and no live Governed API transport, released-layer loader, model call, MapLibre runtime, deployment, release, or publication is established."
-  - "Sibling-document maturity is mixed: several pages are current repository-grounded references, while EVIDENCE_DRAWER.md, FOCUS_FLOW.md, and MAP_RUNTIME_BOUNDARY.md retain proposal-era metadata and require separate same-path reconciliation."
+  - "Sibling-document maturity is mixed: MAP_RUNTIME_BOUNDARY.md is reconciled at the landing-page snapshot, EVIDENCE_DRAWER.md is separately reconciled at main@366cfa9185b0d10ca27f128a8a041ca8c5312896, and FOCUS_FLOW.md still requires same-path reconciliation."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -98,18 +99,18 @@ notes:
 > **Repository-grounded landing page.** KFM's UI is a downstream, map-first, time-aware, evidence-bounded client surface. It may orient users, render finite governed projections, exercise deterministic synthetic interactions, and display already released public-safe carriers. It does not create truth, resolve evidence authority, decide policy, approve review or release, activate sources, call model runtimes directly, or publish by displaying something.
 
 > [!IMPORTANT]
-> **Current Explorer composition is real but bounded.** At `main@d639f9ff40288d12244cd7bc84af538652f6dfb1`, [`src/main.ts`](../../../apps/explorer-web/src/main.ts) mounts the repository-grounded [`mountExplorerSite`](../../../apps/explorer-web/src/site/mount-explorer-site.ts) composition. That composition includes a skip link, section navigation, trust posture, synthetic renderer-neutral map stage, deterministic map-selection-to-Evidence-Drawer laboratory, thirteen knowledge-domain entries, thirty-eight descriptive feature entries, and eight trust principles. It still uses local deterministic fixtures, preserves the baseline `ABSTAIN / NO_GOVERNED_RESPONSE` posture, imports no MapLibre runtime, and establishes no live Governed API claim path, released-layer loader, model call, deployment, release, or public operation.
+> **Current Explorer composition is real but bounded.** At `main@362d6590b9516596ad1c34a64781c13bf85d52c8`, [`src/main.ts`](../../../apps/explorer-web/src/main.ts) mounts the repository-grounded [`mountExplorerSite`](../../../apps/explorer-web/src/site/mount-explorer-site.ts) composition. That composition includes a skip link, section navigation, trust posture, synthetic renderer-neutral map stage, deterministic map-selection-to-Evidence-Drawer laboratory, thirteen knowledge-domain entries, thirty-eight descriptive feature entries, and eight trust principles. It consumes the dependency-free `MapRuntimePort` through `NullMapRuntime`, still uses local deterministic fixtures, preserves the baseline `ABSTAIN / NO_GOVERNED_RESPONSE` posture, imports no MapLibre runtime, and establishes no live Governed API claim path, released-layer loader, model call, deployment, release, or public operation.
 
 | Field | Current evidence-backed value |
 |---|---|
 | **Document status** | `draft` / repository-grounded architecture landing page |
 | **Placement authority** | [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) is accepted and adopts [`Directory Rules v2`](../../doctrine/directory-rules.md) |
-| **UI decision authority** | The shell, governed-API, MapLibre-boundary, sole-renderer, finite-envelope, abstention, telemetry, and public-client ADRs remain `proposed` in the current [`ADR index`](../../adr/INDEX.md) |
+| **UI decision authority** | ADR-0006 and ADR-0007 are `accepted` architecture; shell, governed-API, finite-envelope, abstention, telemetry, and public-client ADRs remain `proposed` in the current [`ADR index`](../../adr/INDEX.md) |
 | **Repository review route** | `@bartytime4life` through CODEOWNERS; routing is not independent approval or separation of duties |
 | **Current composed UI** | Bounded Explorer landing composition plus deterministic synthetic map/evidence interaction and repository catalog |
 | **Current isolated executable slices** | Fail-closed baseline shell, Evidence Drawer, map-evidence bridge, Story Player projection consumer, trust/header projections, and other fixture-first feature modules |
 | **Governed API** | Three GET scaffold routes—`/bootstrap`, `/layers`, and `/evidence`—return `ABSTAIN / NOT_IMPLEMENTED`; unsupported operations fail safely |
-| **Map runtime** | `HOLD`: Explorer has no `maplibre-gl` dependency; `packages/maplibre/` and `MapLibreAdapter.ts` remain placeholders |
+| **Map runtime** | `PARTIAL`: `packages/maplibre/` exports a dependency-free `MapRuntimePort` and deterministic `NullMapRuntime` consumed by Explorer; concrete `MapLibreAdapter`, dependency admission, and browser renderer remain `HOLD` |
 | **Operational telemetry** | `HOLD`: bounded telemetry profiles exist, but no general UI event, emitter, governed route, sink, retention regime, or emitted telemetry receipt is established |
 | **Release/publication effect** | None |
 
@@ -184,7 +185,7 @@ This file is an **architecture landing page**, not an accepted decision record. 
 | May a claim or detail be shown? | Resolved evidence, policy, review, release, sensitivity, rights, purpose, audience, and correction state appropriate to consequence |
 | Is something published? | A governed release decision and released artifact state, not this README, a fixture, test, workflow, commit, pull request, merge, build, or deployment |
 
-The current [`ADR index`](../../adr/INDEX.md) records thirty-six numbered ADRs. [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) is the only accepted numbered ADR; the other thirty-five remain effectively proposed. This README may describe or prepare proposed decisions but cannot accept them by repetition.
+The current [`ADR index`](../../adr/INDEX.md) records thirty-six numbered ADRs. ADR-0006, ADR-0007, and ADR-0029 are accepted; the other thirty-three remain effectively proposed. This README reports those decisions but cannot accept or alter them by repetition.
 
 [Back to top](#top)
 
@@ -209,7 +210,7 @@ The current [`ADR index`](../../adr/INDEX.md) records thirty-six numbered ADRs. 
 | Review Console | Architecture/feature documentation, private placeholder package, and separate synthetic ReviewRecord validation proof are present | No operational queue, actor registry, decision recorder, audit ledger, API, deployment, release approval, or public path |
 | Telemetry | Four bounded fixture-first profiles and focused validators/tests exist | No general UI event envelope, operational emitter, governed route, sink, retention, or receipt instances |
 | [`packages/ui/`](../../../packages/ui/) | Private placeholder entrypoint | No stable shared component API is established |
-| [`packages/maplibre/`](../../../packages/maplibre/) | Private placeholder package; Explorer has no `maplibre-gl` dependency | No functioning renderer seam or admitted runtime |
+| [`packages/maplibre/`](../../../packages/maplibre/) | Private dependency-free package exporting `MapRuntimePort` and `NullMapRuntime`; Explorer has no `maplibre-gl` dependency | Bounded consumer seam exists; no functioning concrete adapter or admitted renderer runtime |
 | UI build workflow | Read-only workflow checks locked readiness, build, unit tests, and browser tests | CI signal only; required-check coupling and current exact-head results must be evaluated separately |
 | UI review routing | `@bartytime4life` is the verified CODEOWNERS route | Review routing is not independent approval, release authority, or separation of duties |
 
@@ -219,14 +220,14 @@ The architecture lane is not uniformly current:
 
 - [`GOVERNED_SHELL.md`](./GOVERNED_SHELL.md), [`LAYERING.md`](./LAYERING.md), [`REVIEW_CONSOLE.md`](./REVIEW_CONSOLE.md), [`STORY_PLAYER.md`](./STORY_PLAYER.md), [`TELEMETRY.md`](./TELEMETRY.md), [`TRUST_BADGES.md`](./TRUST_BADGES.md), and [`map-context-evidence-drawer-admission.md`](./map-context-evidence-drawer-admission.md) contain recent repository-grounded boundaries.
 - [`BOUNDARIES.md`](./BOUNDARIES.md), [`ACCESSIBILITY.md`](./ACCESSIBILITY.md), [`COMPARE_AND_EXPORT.md`](./COMPARE_AND_EXPORT.md), and [`CONTINUITY_NOTES.md`](./CONTINUITY_NOTES.md) are repository-grounded but predate the current site composition and must not be used for current entrypoint claims without checking code.
-- [`EVIDENCE_DRAWER.md`](./EVIDENCE_DRAWER.md), [`FOCUS_FLOW.md`](./FOCUS_FLOW.md), and [`MAP_RUNTIME_BOUNDARY.md`](./MAP_RUNTIME_BOUNDARY.md) retain proposal-era metadata, placeholder ownership, stale path assumptions, or unmounted-repository disclaimers. Their doctrine may remain useful, but current behavior must come from code, current contracts/tests, and newer repository-grounded references until those pages are reconciled.
+- [`EVIDENCE_DRAWER.md`](./EVIDENCE_DRAWER.md) is a repository-grounded v2.1 current-state reference at its own pinned snapshot. [`FOCUS_FLOW.md`](./FOCUS_FLOW.md) retains proposal-era path or sibling assumptions and requires separate reconciliation. [`MAP_RUNTIME_BOUNDARY.md`](./MAP_RUNTIME_BOUNDARY.md) is reconciled at the landing-page evidence snapshot; executable behavior still comes from pinned source and tests.
 
 ### Proposed architecture
 
 The following remain architectural targets or held integrations unless a current file, test, run, or accepted decision proves otherwise:
 
 - an accepted canonical Explorer-shell decision;
-- a functioning renderer-neutral `MapRuntimePort` and admitted MapLibre adapter seam;
+- a concrete MapLibre adapter, admitted dependency, and authenticated browser-runtime proof;
 - live Explorer-to-Governed-API transport over an accepted runtime response contract;
 - authoritative EvidenceRef-to-EvidenceBundle resolution in the claim path;
 - operative UI/render/access/rights/sensitivity policy evaluation;
@@ -260,7 +261,7 @@ The existing path is placement-safe under the accepted Directory Rules:
 | Governed dynamic interface | [`apps/governed-api/`](../../../apps/governed-api/) | Current negative scaffold and future trust-bearing transport boundary |
 | Restricted steward application | [`apps/review-console/`](../../../apps/review-console/) | Documentation scaffold; runtime on HOLD |
 | Reusable UI code | [`packages/ui/`](../../../packages/ui/) | Current placeholder package |
-| Renderer wrapper | [`packages/maplibre/`](../../../packages/maplibre/) | Current placeholder package and held adapter/runtime boundary |
+| Renderer wrapper | [`packages/maplibre/`](../../../packages/maplibre/) | Current dependency-free port/null runtime and held concrete adapter/runtime boundary |
 | Semantic meaning | [`contracts/`](../../../contracts/) | Defines object meaning; this README does not |
 | Machine shape | [`schemas/`](../../../schemas/) | Defines validated payload shape; this README does not |
 | Admissibility | [`policy/`](../../../policy/) | Owns allow, deny, restrict, abstain, obligations, and redaction decisions |
@@ -403,11 +404,11 @@ This is fifteen tracked Markdown files: this landing page plus fourteen siblings
 | [`BOUNDARIES.md`](./BOUNDARIES.md) | Browser authority, governed API, and forbidden operations | Repository-grounded trust map with useful negative scaffold evidence; current entrypoint description predates the site composition |
 | [`COMPARE_AND_EXPORT.md`](./COMPARE_AND_EXPORT.md) | Comparison and outbound artifact boundaries | Repository-grounded placeholder-only result; no launch wiring, route, policy, schema, receipt, or export runtime is established |
 | [`CONTINUITY_NOTES.md`](./CONTINUITY_NOTES.md) | Context preservation across map, evidence, Focus, story, export, and correction | Repository-grounded bounded proof inventory; no live continuity runtime; current entrypoint detail predates site composition |
-| [`EVIDENCE_DRAWER.md`](./EVIDENCE_DRAWER.md) | Evidence inspection doctrine and proposed UI panel | **NEEDS RECONCILIATION:** proposal-era metadata says implementation is unknown, while current code/tests establish a bounded fixture-first drawer; use current code, contract/schema, tests, and newer references for current behavior |
+| [`EVIDENCE_DRAWER.md`](./EVIDENCE_DRAWER.md) | Evidence projection, finite view, renderer-neutral runtime binding, and trust-panel boundary | Repository-grounded v2.1 current-state reference; bounded parser/panel/admission/runtime-binding proofs exist, while live transport, authoritative evidence closure, authenticated release lookup, and concrete MapLibre composition remain HOLD |
 | [`FOCUS_FLOW.md`](./FOCUS_FLOW.md) | Client-side Focus Mode sequence | **NEEDS RECONCILIATION:** proposal-era path and sibling assumptions; isolated Focus fixtures may exist, but no live composed Focus transport or route is established |
 | [`GOVERNED_SHELL.md`](./GOVERNED_SHELL.md) | Current Explorer composition and graduation boundary | Current repository-grounded architecture reference matching the composed synthetic site; no live transport or MapLibre runtime |
 | [`LAYERING.md`](./LAYERING.md) | Layer contracts, schemas, fixtures, admission, policy, release, and map-shell use | Current repository-grounded mixed-maturity map; validator and admission evidence are fixture-only; layer-home drift and MapLibre HOLD remain explicit |
-| [`MAP_RUNTIME_BOUNDARY.md`](./MAP_RUNTIME_BOUNDARY.md) | Proposed renderer-neutral port and MapLibre adapter seam | **NEEDS RECONCILIATION:** proposal-era metadata, placeholder owners, stale/nonexistent links, and unverified authority claims; renderer runtime remains HOLD |
+| [`MAP_RUNTIME_BOUNDARY.md`](./MAP_RUNTIME_BOUNDARY.md) | Implemented renderer-neutral port and held MapLibre adapter seam | Repository-grounded current-state reference; dependency-free port/null runtime are bounded, while the concrete renderer remains HOLD |
 | [`REVIEW_CONSOLE.md`](./REVIEW_CONSOLE.md) | Restricted human review support | Current repository-grounded architecture; application remains a documentation scaffold with separate synthetic ReviewRecord proof and no operational runtime |
 | [`STORY_PLAYER.md`](./STORY_PLAYER.md) | StoryManifest projection and future playback | Current repository-grounded bounded 2D projection consumer; no fetch, route, node resolution, map playback, policy execution, or publication |
 | [`TELEMETRY.md`](./TELEMETRY.md) | Safe UI observability and graduation requirements | Current repository-grounded fixture-first profile register; general operational telemetry remains HOLD |
@@ -743,7 +744,7 @@ Material changes to an ADR, contract, schema, policy, release rule, object-famil
 | [`apps/governed-api/`](../../../apps/governed-api/) | Current negative scaffold and future trust-bearing dynamic interface |
 | [`apps/review-console/`](../../../apps/review-console/) | Restricted steward/review application scaffold |
 | [`packages/ui/`](../../../packages/ui/) | Current shared-UI placeholder package |
-| [`packages/maplibre/`](../../../packages/maplibre/) | Current renderer placeholder package and held acquisition seam |
+| [`packages/maplibre/`](../../../packages/maplibre/) | Current dependency-free port/null runtime and held concrete renderer acquisition seam |
 | [`contracts/ui/`](../../../contracts/ui/) | UI-facing semantic contracts |
 | [`contracts/runtime/`](../../../contracts/runtime/) | Runtime envelope and admission semantics |
 | [`schemas/contracts/v1/ui/`](../../../schemas/contracts/v1/ui/) | UI machine validation shapes |
@@ -765,21 +766,21 @@ Compatibility roots such as `ui/`, `web/`, `styles/`, `viewer_templates/`, and `
 
 ## 21 · ADRs that govern this folder
 
-The table separates accepted placement authority from proposed UI decisions. Effective status comes from the current [`ADR index`](../../adr/INDEX.md), not from repetition in architecture prose.
+The table separates accepted placement and renderer architecture from proposed UI decisions. Effective status comes from the current [`ADR index`](../../adr/INDEX.md), not from repetition in architecture prose.
 
 | ADR | Effective status | Relevance |
 |---|---|---|
 | [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | **accepted** | Adopts Directory Rules v2 and establishes responsibility-root placement law |
 | [`ADR-0004`](../../adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md) | proposed | Governed API as the trust membrane |
 | [`ADR-0005`](../../adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md) | proposed | Explorer Web as the canonical map-first shell |
-| [`ADR-0006`](../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) | proposed | One MapLibre acquisition/import seam |
-| [`ADR-0007`](<../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) | proposed | Sole browser-renderer family and exception governance |
+| [`ADR-0006`](../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) | **accepted** | One package-owned MapLibre acquisition/import seam; dependency admission remains separate |
+| [`ADR-0007`](<../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) | **accepted** | Sole browser-renderer family and exception governance; browser readiness remains unproved |
 | [`ADR-0016`](../../adr/ADR-0016-telemetry-redaction-posture.md) | proposed | Telemetry minimization and redaction posture |
 | [`ADR-0019`](../../adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md) | proposed | Governed AI adapter and finite envelopes |
 | [`ADR-0020`](../../adr/ADR-0020-abstain-is-a-first-class-decision.md) | proposed | First-class abstention |
 | [`ADR-0025`](../../adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md) | proposed | Public-client store boundary |
 
-Until a decision is accepted, implementation and documentation may prepare, test, or describe the proposal but must not label it binding. Repository presence and successful tests do not independently accept an ADR.
+Until a decision is accepted, implementation and documentation may prepare, test, or describe the proposal but must not label it binding. Accepted architecture still does not admit a dependency, prove runtime readiness, or authorize release or publication.
 
 [Back to top](#top)
 
@@ -801,7 +802,7 @@ No. The current map artwork is explicitly illustrative, and the interaction labo
 
 ### Is MapLibre currently running in Explorer?
 
-No current repository evidence establishes that. Explorer declares no `maplibre-gl` dependency, `packages/maplibre/` remains a private placeholder, and `MapLibreAdapter.ts` is comment-only. The concrete renderer remains on HOLD.
+No current repository evidence establishes a concrete MapLibre renderer. Explorer declares no `maplibre-gl` dependency, `packages/maplibre/` provides only a dependency-free port and null runtime, and `MapLibreAdapter.ts` is comment-only. The concrete renderer remains on HOLD.
 
 ### Are the thirty-eight feature catalog entries implemented routes?
 
@@ -839,9 +840,9 @@ No. Tests, workflows, commits, pull requests, merges, builds, deployments, badge
 
 ### P0 · Documentation convergence and authority clarity
 
-- **NEEDS VERIFICATION:** reconcile [`EVIDENCE_DRAWER.md`](./EVIDENCE_DRAWER.md) with the current bounded implementation, contract/schema, tests, and map-evidence composition.
+- **ONGOING:** keep [`EVIDENCE_DRAWER.md`](./EVIDENCE_DRAWER.md) synchronized with the current bounded parser, panel, runtime binding, contract/schema, tests, and production HOLDs.
 - **NEEDS VERIFICATION:** reconcile [`FOCUS_FLOW.md`](./FOCUS_FLOW.md) with current Focus fixtures, current contract homes, governed-AI boundaries, and the actual absence of a live composed route.
-- **NEEDS VERIFICATION:** reconcile [`MAP_RUNTIME_BOUNDARY.md`](./MAP_RUNTIME_BOUNDARY.md) with accepted Directory Rules, current package homes, current ADR identities, acquisition enforcement, and MapLibre HOLD.
+- **ONGOING:** keep [`MAP_RUNTIME_BOUNDARY.md`](./MAP_RUNTIME_BOUNDARY.md) synchronized with the package-owned port, accepted renderer ADRs, and concrete MapLibre HOLD.
 - **NEEDS VERIFICATION:** refresh entrypoint-specific claims in [`BOUNDARIES.md`](./BOUNDARIES.md), [`ACCESSIBILITY.md`](./ACCESSIBILITY.md), [`COMPARE_AND_EXPORT.md`](./COMPARE_AND_EXPORT.md), and [`CONTINUITY_NOTES.md`](./CONTINUITY_NOTES.md) against the composed site.
 - **NEEDS VERIFICATION:** assign accountable UI, API, map-runtime, accessibility, evidence, policy, review, release, security, telemetry, and operations stewardship without confusing CODEOWNERS routing with substantive authority.
 
@@ -856,7 +857,7 @@ No. Tests, workflows, commits, pull requests, merges, builds, deployments, badge
 
 ### P1 · Map, navigation, and user workflow closure
 
-- **OPEN:** resolve the physical and semantic `MapRuntimePort` / `MapLibreAdapter` home without creating a second active package.
+- **OPEN:** implement the accepted package-owned `MapLibreAdapter` seam only after dependency, compatibility, import-enforcement, security, accessibility, browser, and rollback gates close.
 - **OPEN:** admit the concrete renderer dependency only after version, integrity, import/acquisition, browser, accessibility, performance, security, and rollback evidence closes.
 - **OPEN:** define and test route/deep-link continuity for map, time, selection, evidence, Focus, story, compare, export, settings, diagnostics, and read-only review.
 - **OPEN:** connect released-layer map selection to governed evidence resolution without exposing renderer-native or internal-store state.
@@ -879,7 +880,7 @@ Open items should be resolved in the owning ADR, contract, schema, policy, code,
 
 ## Appendix A · No-loss modernization ledger
 
-| Prior material or identity | v4.0-draft treatment |
+| Prior material or identity | v4.1.1-draft treatment |
 |---|---|
 | Document path, `doc_id`, title, H1, `top` anchor, twenty-three numbered sections, and Appendix A | **Retained** |
 | Map-first, time-aware, evidence-bounded UI purpose | **Retained and tied to current composition evidence** |
@@ -889,21 +890,22 @@ Open items should be resolved in the owning ADR, contract, schema, policy, code,
 | Current Explorer composition | **Added** — synthetic map stage, evidence lab, thirteen domains, thirty-eight feature entries, and eight principles |
 | Current Governed API route state | **Added** — three GET ABSTAIN scaffolds plus safe unsupported-operation errors |
 | UI sibling inventory | **Corrected** — `REVIEW_CONSOLE.md` added; current lane is fifteen files total |
-| Sibling document currentness | **Classified** — current repository-grounded references separated from proposal-era pages needing reconciliation |
+| Sibling document currentness | **Updated** — Map Runtime Boundary and Evidence Drawer are reconciled at their declared snapshots; Focus Flow remains a separate candidate |
 | Story Player bounded executable slice | **Added** without implying live playback or publication |
 | Review Console and operational telemetry maturity | **Narrowed** to explicit implementation HOLDs |
-| MapLibre GL JS implementation or package admission | **Not claimed**; renderer remains HOLD |
+| Renderer-neutral port/null runtime | **Added** from current package exports, Explorer consumption, and focused tests |
+| MapLibre GL JS implementation or dependency admission | **Not claimed**; concrete renderer remains HOLD |
 | Exact production route tree, authentication, deployment, and public operation | **Not claimed** |
 | Accessibility, telemetry, export, correction, rollback, and review expectations | **Retained with explicit maturity limits** |
 | Contract, schema, policy, fixture, validator, code, workflow, source, release, deployment, publication, or settings changes | **None in this documentation slice** |
 
 ### Rollback
 
-The documentation rollback target is prior blob `36d975710d906a6c4146c550d40929b1822b667e`. Reverting this documentation change restores the previous README. Remove only the companion generated authoring receipt introduced by the same change. No app code, contract, schema, policy, fixture, validator, workflow, source, evidence, lifecycle state, release, deployment, cache, or public state requires rollback.
+The documentation rollback target for this incremental status correction is prior blob `00495949a8aa67c247332a5f38f6ae8967231b32`. Reverting this documentation change restores the previous README. Remove only the companion generated authoring receipt introduced by the same change. No app code, contract, schema, policy, fixture, validator, workflow, source, evidence, lifecycle state, release, deployment, cache, or public state requires rollback.
 
 ---
 
-**Last reviewed:** `2026-08-19` against `main@d639f9ff40288d12244cd7bc84af538652f6dfb1`  
+**Last reviewed:** `2026-08-24` against `main@362d6590b9516596ad1c34a64781c13bf85d52c8`
 **Truth posture:** CONFIRMED repository evidence / PROPOSED architecture and integration / UNKNOWN deployment and public operation
 
 [Back to top](#top)

@@ -15,7 +15,7 @@ name: pm25-sensor-colocation-manifest
       - "docs/intake/exploratory/pass-30-pm25-sensor-colocation-manifest-source-map.md"
       - "packages/hashing/**"
       - "pyproject.toml"
-      - "data/receipts/generated/genrec-pass30-pm25-sensor-colocation-manifest-20260809.json"
+      - "data/receipts/generated/genrec-pass30-pm25-sensor-colocation-manifest-source-map-reconciliation-20260825.json"
   push:
     branches: [main]
     paths:
@@ -29,7 +29,7 @@ name: pm25-sensor-colocation-manifest
       - "docs/intake/exploratory/pass-30-pm25-sensor-colocation-manifest-source-map.md"
       - "packages/hashing/**"
       - "pyproject.toml"
-      - "data/receipts/generated/genrec-pass30-pm25-sensor-colocation-manifest-20260809.json"
+      - "data/receipts/generated/genrec-pass30-pm25-sensor-colocation-manifest-source-map-reconciliation-20260825.json"
   workflow_dispatch:
 
 permissions:
@@ -80,7 +80,7 @@ jobs:
         run: python tools/validators/domains/atmosphere/validate_pm25_sensor_colocation_manifest.py --fixtures
 
       - name: Validate generated authoring receipt integrity
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass30-pm25-sensor-colocation-manifest-20260809.json
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass30-pm25-sensor-colocation-manifest-source-map-reconciliation-20260825.json
 
       - name: Record authority boundary
         if: always()

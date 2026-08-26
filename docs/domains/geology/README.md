@@ -2,22 +2,24 @@
 doc_id: kfm://doc/docs-domains-geology-readme
 title: Geology and Natural Resources Domain — Documentation Landing
 type: domain-readme
-version: v1
+version: v1.1
 status: draft
 owners: <docs-steward> + <geology-domain-steward>   # placeholder — confirm in CODEOWNERS
 created: 2026-05-17
-updated: 2026-06-04
+updated: 2026-08-24
 policy_label: public
+owning_root: docs/
+responsibility: Human-facing Geology and Natural Resources lane orientation, repository status, authority boundaries, and verification backlog without defining machine contracts, policy, evidence, release, or publication authority.
+truth_posture: cite-or-abstain; implementation claims require current repository evidence
 related:
   - docs/doctrine/directory-rules.md
-  - ai-build-operating-contract.md   # CONTRACT_VERSION = "3.0.0"
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/encyclopedia.md
   - docs/architecture/contract-schema-policy-split.md
   - docs/domains/README.md
   - docs/domains/geology/POLICY.md
   - docs/domains/geology/PRESERVATION_MATRIX.md
   - docs/domains/geology/OPEN_QUESTIONS.md
-  - kfm://doc/dom-geol
-  - kfm://doc/ency-geology-and-natural-resources
 tags: [kfm, domain, geology, natural-resources]
 notes:
   - Lane landing README, not a doctrine root. Doctrine lives in DOM-GEOL and the Encyclopedia.
@@ -43,9 +45,9 @@ notes:
 ![sensitivity: deny-by-default](https://img.shields.io/badge/exact--locations-deny--by--default-critical?style=flat-square)
 ![CONTRACT_VERSION: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-lightgrey?style=flat-square)
 ![CI](https://img.shields.io/badge/CI-TODO-lightgrey?style=flat-square)
-![last updated](https://img.shields.io/badge/updated-2026--06--04-informational?style=flat-square)
+![last updated](https://img.shields.io/badge/updated-2026--08--24-informational?style=flat-square)
 
-> **Status:** `draft` &nbsp;·&nbsp; **Owners:** `<docs-steward>` + `<geology-domain-steward>` _(placeholders — confirm in CODEOWNERS)_ &nbsp;·&nbsp; **Last updated:** 2026-06-04
+> **Status:** `draft` &nbsp;·&nbsp; **Owners:** `<docs-steward>` + `<geology-domain-steward>` _(placeholders — confirm in CODEOWNERS)_ &nbsp;·&nbsp; **Last updated:** 2026-08-24
 
 > [!IMPORTANT]
 > This README is a **lane landing page**, not a doctrine source. Domain doctrine for Geology lives in `DOM-GEOL` (canonical dossier) and the Domain & Capability Encyclopedia §7.8. Operating law lives in `ai-build-operating-contract.md` (`CONTRACT_VERSION = "3.0.0"`). Where this page summarizes doctrine, the upstream sources prevail.
@@ -68,7 +70,7 @@ notes:
 - [12. Map and viewing products](#12-map-and-viewing-products)
 - [13. API, contract, and schema surfaces](#13-api-contract-and-schema-surfaces)
 - [14. Governed AI behavior](#14-governed-ai-behavior)
-- [15. Validators, tests, and fixtures (proposed)](#15-validators-tests-and-fixtures-proposed)
+- [15. Validators, tests, and fixtures](#15-validators-tests-and-fixtures-proposed)
 - [16. Verification backlog and open questions](#16-verification-backlog-and-open-questions)
 - [17. Related docs](#17-related-docs)
 - [18. FAQ](#18-faq)
@@ -516,7 +518,8 @@ The lane's first-PR scope is **docs / registry / schema / fixture / validator / 
 
 - [ ] **Source-role validators** — authority / observation / context / model split is enforced per record.
 - [x] **Bounded resource-class fixture proof** — the synthetic `MineralOccurrence` / `ResourceDeposit` / `ResourceEstimate` profile rejects permit, production, modeled-potential, observation, reserve, missing-classification, and sensitive-location collapse. Canonical vocabulary, policy, and live-data validation remain PROPOSED.
-- [ ] **Public-safe geometry tests** — exact borehole, well, sample geometries are denied on public outputs.
+- [x] **Bounded public-safe geometry metadata assessment** — 18 synthetic, coordinate-free cases prove two `HOLD` paths and 16 fail-closed `DENY` paths, including exact-public geometry denial. The profile performs no transform and grants no policy, review, release, or publication authority.
+- [ ] **Operational public-safe geometry transform and release checks** — real transforms, transform-receipt emission, rights resolution, authenticated review, policy execution, and governed release remain unwired.
 - [ ] **Borehole / well-log rights tests** — KGS LAS and similar rights-controlled sources fail closed without confirmed terms.
 - [ ] **Catalog closure tests** — every released geology object has a resolvable `EvidenceBundle`.
 - [ ] **Temporal logic tests** — source / observed / valid / retrieval / release / correction times remain distinct where material.
@@ -525,7 +528,7 @@ The lane's first-PR scope is **docs / registry / schema / fixture / validator / 
 - [ ] **Rollback drill** — `ReleaseManifest` + `RollbackCard` for every release candidate.
 - [ ] **Non-regression tests** — prior lineage preserved on schema or boundary updates.
 
-Unchecked items above remain **PROPOSED** (DOM-GEOL §K names the first five explicitly). The checked item proves only the repository's frozen synthetic fixture profile; it is not resource/reserve certification, source admission, evidence resolution, policy approval, or release authority.
+Unchecked items above remain **PROPOSED** (DOM-GEOL §K names the first five explicitly). The checked items prove only their frozen synthetic fixture profiles; they are not resource/reserve certification, source admission, geometry transformation, evidence resolution, policy approval, or release authority.
 
 [Back to top ↑](#top)
 

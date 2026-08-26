@@ -1,19 +1,19 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION
+doc_id: kfm://doc/intake/new-ideas-index
 title: New Ideas Index
 type: standard
-version: v1.10
+version: v1.11
 status: draft; repository-grounded; intake-only
 owner: OWNER_TBD
 created: 2026-05-16
-updated: 2026-08-09
+updated: 2026-08-25
 policy_label: public
 owning_root: docs/
 responsibility: governed packet index and intake navigation without implementation or promotion authority
 truth_posture: CONFIRMED repository paths and recorded source identities / EXPLORATORY packet content / NEEDS VERIFICATION downstream implementation and promotion
 related: [docs/doctrine/directory-rules.md, docs/intake/README.md, docs/intake/new-ideas-register.md, docs/intake/exploratory/new-ideas-4-13-source-map.md, docs/intake/exploratory/new-ideas-4-14-source-map.md, docs/intake/exploratory/new-ideas-4-15-source-map.md, docs/intake/exploratory/new-ideas-4-16-source-map.md, docs/intake/exploratory/new-ideas-4-23-source-map.md, docs/intake/exploratory/new-ideas-4-25-source-map.md, docs/intake/exploratory/new-ideas-4-30-source-map.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/intake/exploratory/new-ideas-5-19-26-source-map.md, docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md, docs/intake/exploratory/tile-artifact-manifest-pmtiles-profile-source-map.md, docs/registers/DRIFT_REGISTER.md, docs/registers/VERIFICATION_BACKLOG.md]
 tags: [kfm, intake, new-ideas, documentation-control, governance]
-notes: [Repository presence and sibling register verified through remote main 1bab49fa7342a8bb71f335a2efb4924f438486cc; New Ideas 4-13-26, 4-14-26, 4-15-26, 4-16-26, 4-23-26, 4-25-26, 4-30-26, New Ideas 5, New Ideas 5-19-26, and the spatiotemporal modernization blueprint source identities and bounded triage maps added; a bounded partial triage of the New Ideas 5-15-26 PMTiles subset is registered; the 4-14 and 4-15 packets are also prior Pass 23 lineage; source packets remain EXPLORATORY until triaged and promoted; no packet is promoted by this file.]
+notes: [Repository presence and sibling register verified through remote main 2d0c9a8e4072ce14cb71404585e85fbc86339e12; New Ideas 4-13-26, 4-14-26, 4-15-26, 4-16-26, 4-23-26, 4-25-26, 4-30-26, New Ideas 5, New Ideas 5-19-26, and the spatiotemporal modernization blueprint source identities and bounded triage maps added; bounded candidate status for the 4-16 stable diff, 4-23 composed-claim closure, 4-25 taxonomy lineage, and 4-30 distribution coverage slices reconciled against that snapshot; a bounded partial triage of the New Ideas 5-15-26 PMTiles subset is registered; the 4-14 and 4-15 packets are also prior Pass 23 lineage; source packets remain EXPLORATORY until triaged and promoted; no packet is promoted by this file.]
 [/KFM_META_BLOCK_V2] -->
 
 # New Ideas Index
@@ -24,7 +24,7 @@ A governed intake index for dated KFM “New Ideas” packets, preserving useful
 > **Status:** draft / repository-grounded / intake-only
 > **Path:** `docs/intake/NEW_IDEAS_INDEX.md`  
 > **Owner:** `OWNER_TBD`  
-> **Truth posture:** CONFIRMED repository path and sibling intake surfaces through remote `main@83cca9c66a1eb218f010a75b862d417d429c3c85` / EXPLORATORY packet content / no promotion authority
+> **Truth posture:** CONFIRMED repository path, sibling intake surfaces, and the bounded candidate statuses recorded below through remote `main@2d0c9a8e4072ce14cb71404585e85fbc86339e12` / EXPLORATORY packet content / no promotion authority
 
 > [!NOTE]
 > This file is an intake control surface. It records packet presence, themes, routing pressure, blockers, and next verification moves. It does **not** prove that proposed paths, tools, schemas, policies, workflows, or services exist in the repository.
@@ -442,7 +442,7 @@ The packet's Cesium implementation is not carried forward. Only renderer-neutral
 
 ### Candidate next extraction
 
-Implement the repository's already-recorded deterministic `stable_diff.py` slice with synthetic same/changed/malformed fixtures. Keep it non-authoritative; use a later contract to decide materiality.
+Review the existing deterministic [`stable_diff.py`](../../tools/diff/stable_diff.py) slice and synthetic proof pack. The comparator is `IMPLEMENTED / REVIEW REQUIRED` and non-authoritative; materiality profiles, promotion decisions, and publication remain separate work.
 
 </details>
 
@@ -477,7 +477,7 @@ Packet key-service recipes, shallow canonicalization, ETag-as-identity, direct s
 
 ### Candidate next extraction
 
-Define a contract-only composed-claim dependency profile with synthetic `required`, `optional`, `one_of`, `excluded`, `missing`, `denied`, and `contradictory` evidence. No keys, live sources, event infrastructure, or publication.
+Review the existing proposed, fixture-only [`composed-claim dependency-closure`](../../contracts/evidence/composed_claim_dependency_closure.md) slice. It proves finite synthetic outcomes without live `EvidenceRef` resolution, policy evaluation, review, release, or publication authority.
 
 </details>
 
@@ -512,7 +512,7 @@ Hard-coded authority ranks, destructive dedupe, scientific-name string identity,
 
 ### Candidate next extraction
 
-Define a cross-domain taxonomy concept decision packet with synthetic synonym, homonym, split, lump, misapplied-name, unresolved, and reversal fixtures. No live fetch, permanent authority ranking, sensitive record, or public distribution.
+Review the existing draft, fixture-first [`taxonomic concept lineage`](../../contracts/crosswalks/taxonomy/taxonomic_concept_lineage.md) slice. It does not select a live taxonomy authority, establish an occurrence, authorize source access, or permit public distribution.
 
 </details>
 
@@ -546,7 +546,7 @@ Cesium/MapLibre overlays, live source activation, hard-coded thresholds, wildcar
 
 ### Candidate next extraction
 
-Define a contract-only `DistributionAssertion` and `CoverageAssessment` slice with synthetic states for `present`, `explicitly_absent`, `not_assessed`, `unknown`, `suppressed`, `stale`, and `missing_row`. No network access, source activation, or publication.
+Review the existing proposed, local-only [`DistributionAssertion` and `CoverageAssessment`](../../contracts/evidence/distribution_coverage_assessment.md) slice. Its synthetic validator can return structural `HOLD` only; it performs no network access, source activation, biological assertion, promotion, or publication.
 
 </details>
 

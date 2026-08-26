@@ -2,14 +2,14 @@
 doc_id: kfm://doc/tools-validators-geology-public-safe-geometry-readme
 title: tools/validators/geology/public_safe_geometry README
 type: README
-version: v0.1
+version: v0.2
 status: draft
 owner: TODO-tooling-qa-owner-plus-geology-steward-plus-geometry-steward-plus-sensitivity-reviewer-plus-redaction-steward-plus-evidence-steward-plus-policy-steward-plus-release-steward
 created: 2026-07-08
-updated: 2026-08-10
+updated: 2026-08-24
 policy_label: repository-facing; geology-validator; public-safe-geometry; exact-location-sensitive; redaction; generalization; aggregation; geometry-role-aware; fail-closed; release-gated; non-authoritative
 owning_root: tools/
-responsibility: proposed Geology public-safe-geometry validator lane for checking geometry role separation, exact/internal geometry denial, public-safe generalized geometry, CRS and topology posture, spatial uncertainty, redaction/generalization/aggregation receipt posture, sensitive subsurface/resource-location exposure, borehole/sample/private-well/resource-targeting denial, EvidenceRef/EvidenceBundle linkage, policy/review/release linkage, correction and rollback linkage, and public-surface denial checks while deferring Geology meaning, geometry helper implementation, source registry authority, policy decisions, evidence records, proof records, receipts, and release authority to their owning roots
+responsibility: bounded Geology public-safe-geometry metadata assessment lane for checking declared geometry-role separation, exact/internal geometry denial, generalized or withheld public posture, sensitivity, rights, review, policy, scale, uncertainty, receipt references, and release denials while consuming no geometry bytes and deferring Geology meaning, transforms, source registry authority, policy decisions, evidence records, proof records, receipts, review authentication, release, and publication authority to their owning roots
 truth_posture: cite-or-abstain; implementation claims require current repo evidence
 related:
   - ../../README.md
@@ -58,7 +58,7 @@ notes:
 ![posture](https://img.shields.io/badge/posture-redaction--receipt--aware-blueviolet)
 ![truth](https://img.shields.io/badge/truth-cite--or--abstain-success)
 
-> **One-line purpose.** `tools/validators/geology/public_safe_geometry/` is the proposed validator lane for checking whether Geology geometry has been transformed, receipted, reviewed, policy-gated, and release-linked enough to be safe for the requested public or governed surface.
+> **One-line purpose.** `tools/validators/geology/public_safe_geometry/` hosts a bounded metadata-only assessment that checks declared Geology geometry separation and fails closed without transforming, reading, or publishing geometry.
 
 ---
 
@@ -108,13 +108,13 @@ The answer should be a deterministic validation result. This folder should not c
 | Source descriptors | `data/registry/sources/geology/` |
 | Proofs, receipts, release | `data/proofs/geology/`, `data/proofs/`, `data/receipts/`, `release/` |
 
-This README does not move, replace, or override those roots. It only defines where public-safe geometry validation may be documented or implemented after verification.
+This README does not move, replace, or override those roots. It documents the bounded assessment implemented here; every operational transform, policy, evidence, review, receipt, release, and publication responsibility remains with its owning root.
 
 [Back to top](#top)
 
 ---
 
-## Proposed validation focus
+## Bounded validation focus
 
 The executable freezes only the metadata checks in the paired assessment
 contract. Broader concepts remain proposed until their owning artifacts and
@@ -156,7 +156,7 @@ authority paths are verified:
 Safe interpretation:
 
 - **CONFIRMED:** this README exists.
-- **PROPOSED:** validator code may live here when it checks declared public-safe geometry, sensitivity, transform-receipt, evidence, policy, release, correction, and public-surface rules and writes reports/receipts only to accepted roots.
+- **CONFIRMED:** the implemented validator checks only the closed synthetic metadata profile and emits deterministic assessment output; broader operational checks remain proposed.
 - **CONFIRMED:** the bounded executable, closed assessment schema, synthetic fixture matrix, focused tests, and CI invocation exist.
 - **NEEDS VERIFICATION:** canonical geometry-role vocabulary, transform receipt shapes, report destinations, receipt emission, package integration, live policy enforcement, release integration, and runtime behavior.
 - **DENY:** using this folder as Geology doctrine, geometry semantics, geometry helper implementation, exact geometry storage, source registry, schema home, proof storage, receipt storage, policy home, release record store, public runtime surface, AI answer authority, or publication authority.
@@ -276,18 +276,20 @@ tests/validators/geology/public_safe_geometry/
     └── policy_or_release_gap/
 ```
 
-Suggested future command pattern:
+Current focused commands:
 
 ```bash
-pytest -q tests/validators/geology/public_safe_geometry
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/geology/test_public_safe_geometry.py --verbose
 ```
 
 ```bash
-python tools/validators/geology/public_safe_geometry/validate_public_safe_geometry.py --repo-root . --format json
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tools/validators/geology/public_safe_geometry/validate_public_safe_geometry.py --fixtures
 ```
 
 > [!NOTE]
-> This is a proposed interface, not proof that `validate_public_safe_geometry.py` or the test path exists here.
+> These commands exercise the implemented metadata profile only. A passing run does not execute a geometry transform, resolve rights or evidence, authenticate review, evaluate live policy, write lifecycle or receipt state, or authorize release or publication.
 
 [Back to top](#top)
 
@@ -315,6 +317,6 @@ python tools/validators/geology/public_safe_geometry/validate_public_safe_geomet
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-08 |
-| Review state | Draft README replacement for empty Geology public-safe-geometry validator file. |
-| Next smallest safe change | Verify actual public-safe geometry validator script path, accepted Geology/source/receipt schemas, geometry-role vocabulary, transform receipt shapes, sensitivity-tier binding, fixtures, report destination, receipt emission, package integration, policy enforcement, release linkage, and CI/runtime wiring before promoting this lane beyond draft. |
+| Last reviewed | 2026-08-24 |
+| Review state | Draft boundary README reconciled to the implemented, synthetic, metadata-only assessment and its exact current commands. |
+| Next smallest safe change | Keep operational transforms and release unwired; require a separately governed slice to close canonical geometry vocabulary, transform receipts, rights, evidence, authenticated review, policy execution, report/receipt destinations, and release integration. |

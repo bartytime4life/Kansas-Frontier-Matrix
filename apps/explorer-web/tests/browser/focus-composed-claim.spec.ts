@@ -94,6 +94,37 @@ test("policy denial uses fixed copy and exposes no protected payload detail", as
   await expect(panel.locator('ul[aria-label="Focus evidence references"]')).toBeEmpty();
 });
 
+test("withdrawn support abstains while its public-safe history remains inspectable", async ({
+  page,
+}) => {
+  await page.goto(fixture);
+  await page.getByRole("button", { name: "Ask withdrawn composed claim" }).click();
+
+  await expect(page.getByRole("status")).toHaveText(
+    "ABSTAIN / REQUIRED_DEPENDENCY_UNRESOLVED",
+  );
+  const panel = page.getByRole("region", { name: "Focus Panel: abstain" });
+  await expect(panel).toContainText(
+    "The composed claim does not have sufficient released evidence support.",
+  );
+  await expect(panel).toContainText("Unresolved role: ENDORSED_SUMMARY");
+  await expect(panel.getByRole("link")).toHaveCount(0);
+
+  await page.getByRole("button", { name: "Open Evidence Drawer" }).click();
+  const drawer = page.getByRole("complementary", {
+    name: "Evidence Drawer: abstain",
+  });
+  await expect(drawer).toContainText("Release: WITHDRAWN");
+  await expect(drawer).toContainText("Correction: NONE");
+  await expect(drawer).toContainText(
+    "Withdrawn evidence: kfm:evidence:synthetic:withdrawn-soil-summary-001",
+  );
+  await expect(drawer).not.toContainText(
+    "WITHDRAWN_PRIVATE_DIAGNOSTIC_CANARY_483e12",
+  );
+  await expect(drawer.getByRole("link")).toHaveCount(0);
+});
+
 test("evidence outside request scope fails closed", async ({ page }) => {
   await page.goto(fixture);
   await page
