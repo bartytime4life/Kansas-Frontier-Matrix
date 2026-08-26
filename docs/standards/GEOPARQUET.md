@@ -1,56 +1,49 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/standards-geoparquet
 title: GeoParquet — KFM Repository and Conformance Boundary
-type: standard; repository-boundary; conformance-readiness
-version: v2.0-draft
-status: "draft; repository-grounded; upstream-currentness-refreshed; mixed-maturity; no-adoption; no-byte-conformance; no-release; no-publication"
+type: standard
+version: v2.1-draft
+status: "draft; repository-grounded; upstream-currentness-refreshed; mixed-maturity; bounded-fixture-byte-proof; pyarrow-patch-successor-held; no-adoption; no-release; no-publication"
 owners:
   - "@bartytime4life — verified GitHub review route through CODEOWNERS"
   - "NEEDS VERIFICATION — accountable GeoParquet, data-platform, catalog, evidence, policy, release, runtime, performance, and independent-review stewards"
 created: 2026-05-14
-updated: 2026-08-18
+updated: 2026-08-26
 policy_label: "repository-facing; standards-guidance; geoparquet; vector-carrier; version-gated; release-gated"
 owning_root: docs/
 current_path: docs/standards/GEOPARQUET.md
-responsibility: >
-  Explain the upstream GeoParquet 1.1 and 2.0-release-candidate boundaries,
-  disclose KFM's current declaration-only readiness, mirror-parity, and
-  exact-toolchain assessment surfaces, and identify the evidence required
-  before KFM may claim version adoption, byte conformance, production
-  interoperability, release, or publication.
-truth_posture: >
-  CONFIRMED current path, standards-lane placement, default CODEOWNERS route,
-  GeoParquet 1.1.0 stable line and corrected v1.1.0+p1 package, upstream
-  v2.0.0-rc.1 status, current inactive metadata-readiness profile, fixture-only
-  STAC mirror assessment, inactive 2.0-RC exact-toolchain packet, proposed
-  ADR-0033, and published-lane scaffolding / PROPOSED accepted production
-  profile, byte validators, migration, release integration, correction, and
-  rollback / UNKNOWN real GeoParquet payloads, production readers and writers,
-  deployed consumers, released carriers, and public publication.
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  base_ref: main
-  base_commit: 66fa5657e505b989d9c3465a364923af16c17ccf
-  target_prior_blob: 7320145300e2ab6f414078e8479735ec374711c4
-  standards_readme_blob: a8cbe5d183448d5f0de37f8a4eacd6fcaca0d71b
-  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
-  geospatial_carrier_contract_blob: 17055a680b83a4f83834735e88aeb0569322845b
-  geospatial_carrier_schema_blob: b6ebec77a6e09c50b89594c4032bd40ec238f6be
-  geospatial_carrier_workflow_blob: f5791e0988166dbcdd5d781c690073e8d3b10389
-  stac_mirror_contract_blob: e5b3aabbee5a697d8e72e84f7df769882fdf76d5
-  stac_mirror_workflow_blob: 28bbbf731a1ffb6ba489e9dc0e0b44acb9d6e660
-  geoparquet_2_rc_contract_blob: 98345edd9f5262a63064b01cac57145eed2fe0e9
-  geoparquet_2_rc_schema_blob: 5855e1a0d9eea37520329612b595cb64befa7ea2
-  geoparquet_2_rc_validator_blob: 0bff4e868f0a49a4de40d020cf7e21c10bb8042f
-  geoparquet_2_rc_tests_blob: b2923fafb91bdf35dc1f80b60fecc73c0395f540
-  geoparquet_2_rc_workflow_blob: 45e25050a199cd12e777a120f6208ba50318e5fd
-  published_lane_readme_blob: d5aced3d0e8200fba1be2a236a561e3fd2918224
-external_currentness:
-  access_date: 2026-08-18
-  stable_line: "GeoParquet 1.1.0; corrected release package v1.1.0+p1 retains the 1.1.0 version identifier"
-  candidate_line: "GeoParquet v2.0.0-rc.1; release candidate, not final 2.0.0"
+responsibility: "Explain the upstream GeoParquet 1.1 and 2.0-release-candidate boundaries; disclose KFM's current declaration, mirror-parity, exact-toolchain, and bounded PyArrow-to-GDAL fixture-proof surfaces; preserve exact PyArrow 25.0.0 lineage; record the held 25.0.1 successor proposal; and identify the evidence required before KFM may claim version adoption, broader byte conformance, production interoperability, release, or publication."
+truth_posture: "CONFIRMED current path, standards-lane placement, default CODEOWNERS route, GeoParquet 1.1.0 stable line, corrected v1.1.0+p1 package, upstream v2.0.0-rc.1 status, inactive metadata-readiness and exact-toolchain profiles, fixture-only STAC mirror assessment, exact PyArrow 25.0.0 synthetic carrier profile, bounded PyArrow-to-GDAL consumer profile, proposed ADR-0033, and published-lane scaffolding / PROPOSED PyArrow 25.0.1 only as a separately versioned successor replay, plus any accepted production profile, migration, release integration, correction, or rollback / UNKNOWN production GeoParquet payloads, readers, writers, deployed consumers, released carriers, and public publication."
+evidence_repository: bartytime4life/Kansas-Frontier-Matrix
+evidence_base_ref: main
+evidence_base_commit: 7115f5c046d0660c65befef65f20964de79c5f2b
+evidence_target_prior_blob: 467c4b5810e052de872f6368a89ee0f225591078
+evidence_standards_readme_blob: a8cbe5d183448d5f0de37f8a4eacd6fcaca0d71b
+evidence_directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+evidence_codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+evidence_adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+evidence_geospatial_carrier_contract_blob: 17055a680b83a4f83834735e88aeb0569322845b
+evidence_geospatial_carrier_schema_blob: b6ebec77a6e09c50b89594c4032bd40ec238f6be
+evidence_geospatial_carrier_workflow_blob: f5791e0988166dbcdd5d781c690073e8d3b10389
+evidence_stac_mirror_contract_blob: e5b3aabbee5a697d8e72e84f7df769882fdf76d5
+evidence_stac_mirror_workflow_blob: 28bbbf731a1ffb6ba489e9dc0e0b44acb9d6e660
+evidence_geoparquet_2_rc_contract_blob: 98345edd9f5262a63064b01cac57145eed2fe0e9
+evidence_geoparquet_2_rc_schema_blob: 5855e1a0d9eea37520329612b595cb64befa7ea2
+evidence_geoparquet_2_rc_validator_blob: 0bff4e868f0a49a4de40d020cf7e21c10bb8042f
+evidence_geoparquet_2_rc_tests_blob: b2923fafb91bdf35dc1f80b60fecc73c0395f540
+evidence_geoparquet_2_rc_workflow_blob: 45e25050a199cd12e777a120f6208ba50318e5fd
+evidence_pyarrow_carrier_contract_blob: 5a7a009faeba903284736637edf5be5c2bbf1072
+evidence_pyarrow_carrier_schema_blob: 2f9a0f57b0a2fbd9389da291fa08867edb62afe7
+evidence_pyarrow_carrier_generator_blob: f79e4205f47f1b6ca68825d5a8d51ae9827e2cf3
+evidence_pyarrow_carrier_validator_blob: e54762123b5b52d0e8813617bf34b8d0e620f479
+evidence_pyarrow_carrier_workflow_blob: b9ffd1d1326f91b2ed7a224545b3ba1d973ec531
+evidence_gdal_consumer_contract_blob: 759546ddbc1fd6e72a2adb1c1801b3b3550cec8c
+evidence_gdal_consumer_workflow_blob: d0c132d7bbc45c46688c7d844ba2ad1f29aa4a0e
+evidence_published_lane_readme_blob: d5aced3d0e8200fba1be2a236a561e3fd2918224
+external_access_date: 2026-08-26
+external_stable_line: "GeoParquet 1.1.0; corrected release package v1.1.0+p1 retains the 1.1.0 version identifier"
+external_candidate_line: "GeoParquet v2.0.0-rc.1; release candidate, not final 2.0.0"
+external_pyarrow_patch_line: "Apache Arrow 25.0.1; bug-fix patch proposed only as a held, separately versioned replay of the retained PyArrow 25.0.0 lane"
 related:
   - ./README.md
   - ./STAC.md
@@ -68,10 +61,14 @@ related:
   - ../../schemas/contracts/v1/data/stac_geoparquet_mirror_assessment.schema.json
   - ../../contracts/release/geoparquet_2_rc_compatibility_assessment.md
   - ../../schemas/contracts/v1/release/geoparquet_2_rc_compatibility_assessment.schema.json
+  - ../../contracts/release/geoparquet_2_rc_pyarrow_carrier_probe.md
+  - ../../schemas/contracts/v1/release/geoparquet_2_rc_pyarrow_carrier_probe.schema.json
+  - ../../contracts/release/geoparquet_2_rc_gdal_consumer_probe.md
   - ../../data/published/geoparquet/README.md
 tags: [kfm, standards, geoparquet, parquet, vector, interoperability, catalog, evidence, release]
 notes:
-  - "Same-path documentation modernization only; no contract, schema, policy, validator, fixture, workflow, receipt, data, dependency, runtime, release, deployment, or publication changes."
+  - "Same-path documentation reconciliation only; no contract, schema, policy, validator, fixture, workflow, data, dependency, runtime, release, deployment, or publication changes."
+  - "The exact PyArrow 25.0.0 profiles, lock, workflow, receipts, carrier identities, and GDAL edge remain unchanged historical proof; 25.0.1 is not substituted into those identities."
   - "The prior page overstated KFM-wide canonical adoption while understating the current inactive synthetic implementation."
   - "The legacy document identity, created date, H1 anchor, numbered-section anchors, lifecycle boundary, and cite-or-abstain posture are retained."
   - "The unsupported GeoParquetAssetManifest name is not represented as a current repository object."
@@ -84,32 +81,32 @@ notes:
 
 > **Operating rule.** GeoParquet is a geospatial table carrier. Its file structure does not create source authority, semantic meaning, evidence closure, policy approval, release authority, or public truth.
 
-![status](https://img.shields.io/badge/status-v2.0--draft-d4a72c?style=flat-square)
+![status](https://img.shields.io/badge/status-v2.1--draft-d4a72c?style=flat-square)
 ![evidence](https://img.shields.io/badge/evidence-repository--grounded-1a7f37?style=flat-square)
 ![stable baseline](https://img.shields.io/badge/stable%20baseline-1.1.0-0969da?style=flat-square)
 ![candidate](https://img.shields.io/badge/candidate-2.0.0--rc.1-f59e0b?style=flat-square)
-![byte conformance](https://img.shields.io/badge/byte%20conformance-not%20verified-b42318?style=flat-square)
+![byte conformance](https://img.shields.io/badge/byte%20proof-bounded%2025.0.0%20fixtures-1a7f37?style=flat-square)
 ![publication](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)
 
 > [!IMPORTANT]
 > **Human-readable standards guidance only.** Contracts define KFM object meaning, schemas define machine shape, policy decides admissibility, validators establish only their declared checks, and governed release records decide release. This page does not replace any of those authorities.
 
 > [!CAUTION]
-> **Current KFM GeoParquet checks are declaration-only.** The repository contains deterministic, no-network profiles for 1.1 metadata readiness, declared STAC-mirror parity, and a 2.0-RC exact-toolchain packet. None opens or writes Parquet bytes, proves cross-engine behavior, migrates data, or authorizes release.
+> **Current byte evidence is narrow and version-bound.** The repository has exact PyArrow `25.0.0` synthetic carrier generation/inspection and one PyArrow-to-GDAL `3.13.2` consumer-read edge. That fixture proof is not a full cross-engine matrix, a production dependency, source admission, migration, or release authority. Declaration-only profiles remain separate from those byte-reading profiles.
 
 > [!WARNING]
 > **Do not collapse 1.1 and 2.0.** GeoParquet 1.1 centers on the `geo` metadata layer and optional 1.1 accelerators. The 2.0 release candidate moves the storage foundation to native Parquet geospatial logical types and native spatial statistics. A version string or metadata-only `READY` result is not interoperability evidence.
 
 | Field | Current bounded result |
 |---|---|
-| **Evidence snapshot** | `main@66fa5657e505b989d9c3465a364923af16c17ccf` |
+| **Evidence snapshot** | `main@7115f5c046d0660c65befef65f20964de79c5f2b` |
 | **Directory result** | **PLACE** at existing `docs/standards/GEOPARQUET.md`; accepted Directory Rules assign human-readable standards guidance to `docs/standards/` |
 | **Review route** | `@bartytime4life` through current CODEOWNERS; accountable specialist stewardship and independent review remain **NEEDS VERIFICATION** |
 | **Stable upstream line** | GeoParquet `1.1.0`; the corrected `v1.1.0+p1` release still uses the `1.1.0` version identifier |
 | **Latest upstream candidate checked** | `v2.0.0-rc.1`; a release candidate, not final `2.0.0` |
 | **KFM adoption state** | **NOT ESTABLISHED** as an accepted production format, migration, or release policy |
-| **Current executable proof** | Synthetic declaration validation only; no Parquet carrier bytes are opened |
-| **Current version decision** | ADR-0033 remains **proposed**; its `KEEP_1_1` route is not an accepted decision |
+| **Current executable proof** | `PARTIAL / FIXTURE_ONLY`: exact PyArrow `25.0.0` generates and inspects a retained synthetic 1.1/2.0-RC pair; exact GDAL `3.13.2` reads that bounded pair. Wider engines, producer routes, CRS breadth, and pruning remain open |
+| **Current version decision** | GeoParquet `1.1.0` remains the declared default; ADR-0033 remains **proposed**. PyArrow `25.0.1` is `PROPOSED SUCCESSOR / HOLD` for a separate replay, not an in-place replacement |
 | **Published-data surface** | Directory scaffolding and child READMEs exist; no released GeoParquet carrier was verified |
 | **Release/public effect** | None |
 
@@ -125,7 +122,7 @@ notes:
 
 ### 0.1 Evidence boundary
 
-This revision reconciles the target against repository bytes at the evidence snapshot in the metadata block and official upstream release material checked on 2026-08-18. Repository presence proves tracked bytes and bounded executable behavior at that revision. It does not prove production data, current consumers, deployed services, accepted stewardship, required-check status, release, or publication.
+This revision reconciles the target against repository bytes at the evidence snapshot in the metadata block and official upstream release material checked on 2026-08-26. Repository presence proves tracked bytes and bounded executable behavior at that revision. Exact hosted results cited in issue #2907 remain result-specific evidence; neither tracked bytes nor those runs prove production data, current consumers, deployed services, accepted stewardship, required-check status, release, or publication.
 
 | Surface | CONFIRMED current state | What it does **not** establish |
 |---|---|---|
@@ -134,6 +131,8 @@ This revision reconciles the target against repository bytes at the evidence sna
 | [`GeospatialCarrierReadinessCheck`](../../contracts/release/geospatial_carrier_readiness.md) and companions | `PROPOSED_INACTIVE` metadata preflight with `READY`, `HOLD`, and `ERROR` outcomes | Reading Parquet bytes, source resolution, policy, promotion, or release |
 | [`StacGeoParquetMirrorAssessment`](../../contracts/data/stac_geoparquet_mirror_assessment.md) and companions | Proposed, fixture-only parity over declared STAC and mirror projections | Existence or validity of STAC objects or GeoParquet bytes |
 | [`GeoParquet 2.0 RC Compatibility Assessment`](../../contracts/release/geoparquet_2_rc_compatibility_assessment.md) and companions | `PROPOSED_INACTIVE` exact-toolchain declaration packet for later 2.0-RC byte probes | Installed tools, carrier generation, cross-engine compatibility, or migration |
+| [`GeoParquet 2.0 RC PyArrow Carrier Probe`](../../contracts/release/geoparquet_2_rc_pyarrow_carrier_probe.md) and companions | `PROPOSED_INACTIVE / PARTIAL / FIXTURE_ONLY` exact PyArrow `25.0.0` producer/inspector over two synthetic carriers | Another PyArrow version, broad engine support, production dependency, source admission, or migration |
+| [`GeoParquet 2.0 RC GDAL Consumer Probe`](../../contracts/release/geoparquet_2_rc_gdal_consumer_probe.md) and companions | `PROPOSED_INACTIVE / PARTIAL_OR_HOLD / FIXTURE_ONLY` PyArrow `25.0.0` producer to GDAL `3.13.2` consumer-read edge | GDAL production, the remaining engine matrix, pruning, adoption, or release |
 | [`ADR-0033`](../adr/ADR-0033-geoparquet-version-readiness.md) | Proposed version-readiness decision | Accepted default, approved dual evaluation, or release authority |
 | [`data/published/geoparquet/`](../../data/published/geoparquet/README.md) | Draft published-carrier lane with domain child READMEs | Released files, valid manifests, governed downloads, or publication |
 | `GeoParquetAssetManifest` | No separate repository object with this exact name was found in the bounded search | Permission to invent a contract, schema, or parallel authority |
@@ -169,9 +168,10 @@ This page:
 1. records the checked GeoParquet `1.1.0` stable line and `2.0.0-rc.1` candidate boundary;
 2. explains KFM's intended use of GeoParquet as a processed or released vector carrier without claiming accepted adoption;
 3. reconciles the current metadata-readiness, STAC-mirror, and 2.0-RC assessment packets;
-4. separates declaration validation from byte conformance, interoperability, evidence, policy, release, and publication;
-5. defines a finite evidence ladder for future implementation; and
-6. preserves KFM lifecycle, correction, rollback, and public-path boundaries.
+4. separates declaration validation from bounded fixture-byte proof, broader interoperability, evidence, policy, release, and publication;
+5. preserves exact PyArrow `25.0.0` proof lineage while recording `25.0.1` only as a held, separately versioned successor replay;
+6. defines a finite evidence ladder for future implementation; and
+7. preserves KFM lifecycle, correction, rollback, and public-path boundaries.
 
 ### 1.2 In scope
 
@@ -179,6 +179,8 @@ This page:
 - The current inactive KFM 1.1 metadata-readiness profile.
 - The current fixture-only STAC GeoParquet mirror assessment.
 - The current inactive 2.0-RC exact-toolchain readiness packet.
+- The current exact PyArrow `25.0.0` synthetic carrier and bounded GDAL consumer probes.
+- The non-adopting PyArrow `25.0.1` patch-delta decision.
 - Required evidence for real carrier validation, cross-engine testing, catalog closure, policy, review, release, and rollback.
 - Fail-closed version and public-exposure behavior.
 
@@ -189,6 +191,7 @@ This page:
 - Creating `GeoParquetAssetManifest` or any other contract/schema family.
 - Generating, migrating, publishing, or deleting GeoParquet files.
 - Installing or admitting GDAL, DuckDB, Sedona, PyArrow, GeoArrow, or another dependency.
+- Rewriting the exact PyArrow `25.0.0` profile, schema, lock, workflow, receipts, or prior carrier identities in place.
 - Activating a source, catalog mirror, download endpoint, map layer, API route, release, or publication.
 - Treating generic Parquet tuning guidance as a universal KFM requirement.
 
@@ -257,9 +260,9 @@ The checked stable line is GeoParquet `1.1.0`. Upstream also publishes a correct
 | 1.1 property | Upstream boundary | KFM current posture |
 |---|---|---|
 | Foundation | Parquet plus file-level `geo` metadata | Declared baseline in an inactive metadata profile |
-| Geometry encoding | WKB and optional 1.1 native encodings based on GeoArrow | Current inactive KFM schema permits `WKB` or `GEOARROW`; executable byte support is unverified |
+| Geometry encoding | WKB and optional 1.1 native encodings based on GeoArrow | The retained exact PyArrow `25.0.0` fixture proves one WKB carrier; optional GeoArrow encodings and production bytes remain unverified |
 | Bbox covering | Optional covering-column mechanism for spatial pruning | Advisory in the current KFM metadata preflight, not a universal hard gate |
-| CRS | GeoParquet metadata carries the declared CRS semantics | Current inactive KFM profile requires explicit `PROJJSON`; no carrier bytes are inspected |
+| CRS | GeoParquet metadata carries the declared CRS semantics | The retained synthetic WKB carrier and bounded GDAL read preserve one OGC:CRS84 case; projected, conflicting, missing, and production CRS cases remain unproved |
 | File naming | `.parquet` is the upstream recommendation | Current inactive KFM profile requires a declared `.parquet` filename |
 | Media type | Upstream publishes a Parquet media-type recommendation | Current inactive KFM profile declares `application/vnd.apache.parquet` |
 | Compatibility correction | `v1.1.0+p1` removes a conflicting group-field requirement without changing the `1.1.0` identifier | KFM must pin the corrected specification package when byte tests are added |
@@ -270,11 +273,11 @@ The latest checked upstream release is `v2.0.0-rc.1`. It is explicitly a release
 
 | 2.0-RC property | Candidate boundary | KFM current posture |
 |---|---|---|
-| Foundation | Native Parquet `GEOMETRY` or `GEOGRAPHY` logical types | Declaration packet only; no byte probes |
-| Physical representation | Native logical type over Parquet binary storage with WKB encoding | Recorded in the inactive packet; not verified from bytes |
+| Foundation | Native Parquet `GEOMETRY` or `GEOGRAPHY` logical types | Exact PyArrow `25.0.0` fixture proof covers one `GEOMETRY` case; `GEOGRAPHY` and broader producers/consumers remain unproved |
+| Physical representation | Native logical type over Parquet binary storage with WKB encoding | Verified for the retained synthetic `GEOMETRY` / `BYTE_ARRAY` / WKB carrier only |
 | Spatial statistics | Native row-group geospatial statistics | Required by the declaration packet; no pruning benchmark executed |
-| `geo` metadata | Optional explicit layer that must agree with Parquet-level metadata | Equivalence is declared, not measured |
-| CRS authority | Native Parquet CRS property is the source of truth; inline GeoParquet CRS remains explicit when present | Current packet records the split; no round trip executed |
+| `geo` metadata | Optional explicit layer that must agree with Parquet-level metadata | Equivalence is recorded for the retained OGC:CRS84 fixture only |
+| CRS authority | Native Parquet CRS property is the source of truth; inline GeoParquet CRS remains explicit when present | The PyArrow-to-GDAL edge exercises one same-CRS consumer read; conflict and projected round trips remain open |
 | 1.1 covering column | Removed from the 2.0 model in favor of native statistics | The packet rejects carrying a universal 1.1 covering requirement into 2.0 |
 | Release maturity | Candidate, not final | Production use and default change remain **HOLD** |
 
@@ -286,10 +289,25 @@ The latest checked upstream release is `v2.0.0-rc.1`. It is explicitly a release
 | Upstream candidate known | **CONFIRMED** — `v2.0.0-rc.1` |
 | KFM declared metadata baseline | **CONFIRMED** — `1.1.0` inside a `PROPOSED_INACTIVE` profile |
 | Accepted KFM production default | **NOT ESTABLISHED** |
-| 1.1 carrier-byte conformance | **NOT ESTABLISHED** |
-| 2.0-RC carrier-byte compatibility | **NOT ESTABLISHED** |
+| 1.1 carrier-byte conformance | **PARTIAL / FIXTURE_ONLY** — one exact PyArrow `25.0.0` synthetic WKB carrier plus bounded GDAL consumer read |
+| 2.0-RC carrier-byte compatibility | **PARTIAL / FIXTURE_ONLY** — one exact PyArrow `25.0.0` `GEOMETRY` carrier plus bounded GDAL consumer read |
 | Production migration or dual-read window | **NOT ESTABLISHED** |
 | Release/publication authority | **NONE** |
+
+### 3.4 PyArrow patch lineage and successor decision
+
+The current carrier evidence is bound to an exact producer version and artifact. A patch release does not retroactively change that evidence.
+
+| Line | Immutable identity inspected | Current KFM disposition |
+|---|---|---|
+| Retained proof | PyArrow `25.0.0`; `pyarrow-25.0.0-cp312-cp312-manylinux_2_28_x86_64.whl`; SHA-256 `5d1dbf24e151042f2fa3c129563f65d66674128868496fb008c4272b16bdf778` | **CONFIRMED historical exact proof.** Keep the existing profile `v1`, schema constants, lock, generator, validator, workflows, receipts, and carrier bindings unchanged. |
+| Patch candidate | Apache Arrow `25.0.1`; source commit `beccec0d0c451b7aa3e4530416ac431b3c035c69`; `pyarrow-25.0.1-cp312-cp312-manylinux_2_28_x86_64.whl`; SHA-256 `5389cdf79447ed1515c9e31620e6e1e2302249564d603f2ad727d4f6d313e4c3` | **PROPOSED SUCCESSOR / HOLD.** The patch is a candidate for a separate versioned replay, not selected, admitted, supported, or substituted into the retained proof. |
+
+Apache Arrow describes `25.0.1` as a bug-fix patch. Its release notes include aarch64 SVE Parquet decoding and memory-allocation crash fixes plus unrelated Python changes; they make no GeoParquet-conformance claim. KFM's retained wheel and hosted evidence are for manylinux x86-64, so that evidence cannot prove the aarch64 fixes.
+
+A later successor replay must use a new profile/version and separate lock, regenerate fresh manifests and carrier digests from the same public-safe synthetic input, compare bounded semantics with the retained `25.0.0` result, rerun the exact GDAL edge, and emit its own receipt and review handoff. Any aarch64 claim requires a separately authenticated aarch64 artifact and execution lane. Until then, `25.0.1` remains `HOLD`.
+
+This patch decision does not admit PyArrow or a data source, change the GeoParquet `1.1.0` default, accept ADR-0033, migrate data, or authorize release, deployment, publication, or public use.
 
 <p align="right"><a href="#top">Back to top</a></p>
 
@@ -299,26 +317,27 @@ The latest checked upstream release is `v2.0.0-rc.1`. It is explicitly a release
 
 ## 4. Current repository implementation
 
-KFM currently implements three independent synthetic assessment surfaces. Each is useful, but each stops before Parquet-byte validation.
+KFM currently implements three declaration or metadata-assessment surfaces and two bounded fixture-byte probe surfaces. Each remains narrower than production interoperability.
 
 | Surface | Profile/status | Inputs actually inspected | Finite outcomes | Boundary |
 |---|---|---|---|---|
 | [`GeospatialCarrierReadinessCheck`](../../contracts/release/geospatial_carrier_readiness.md) | `kfm.geospatial-carrier-readiness.v1.1` / `PROPOSED_INACTIVE` | Declared carrier metadata and bindings | `READY`, `HOLD`, `ERROR` | No TIFF, Parquet, or Protobuf bytes; no source, policy, release, or publication |
 | [`StacGeoParquetMirrorAssessment`](../../contracts/data/stac_geoparquet_mirror_assessment.md) | `v0.1.0` / proposed, experimental, fixture-only | Declared STAC Item projections and declared mirror rows | `PASS`, `ABSTAIN`, `DENY`, `ERROR` | No STAC fetch, Parquet access, catalog mutation, or evidence resolution |
 | [`GeoParquet 2.0 RC Compatibility Assessment`](../../contracts/release/geoparquet_2_rc_compatibility_assessment.md) | `kfm.geoparquet-2-rc-compatibility-assessment.v2` / `PROPOSED_INACTIVE` | Exact declared tools, artifacts, evidence refs, and probe statuses | `READY`, `HOLD`, `ERROR` | `READY` means ready to run byte probes; it is not a compatibility result |
+| [`GeoParquet 2.0 RC PyArrow Carrier Probe`](../../contracts/release/geoparquet_2_rc_pyarrow_carrier_probe.md) | `kfm.geoparquet-2-rc-pyarrow-carrier-probe.v1` / `PROPOSED_INACTIVE / PARTIAL / FIXTURE_ONLY` | Two generated synthetic carriers plus exact PyArrow `25.0.0` footer, metadata, row-group, identity, WKB, and digest observations | `PARTIAL`, `ERROR` | One producer/inspector version and platform only; no production dependency or broad engine support |
+| [`GeoParquet 2.0 RC GDAL Consumer Probe`](../../contracts/release/geoparquet_2_rc_gdal_consumer_probe.md) | `kfm.geoparquet-2-rc-gdal-consumer-probe.v1` / `PROPOSED_INACTIVE / PARTIAL_OR_HOLD / FIXTURE_ONLY` | The retained carrier pair consumed by exact GDAL `3.13.2` | `PARTIAL`, `HOLD`, `FAIL`, `ERROR` | One consumer-read edge only; no GDAL producer route, wider engine matrix, adoption, or release |
 
 ### 4.1 Companion implementation
 
-The three profiles have repository-local schemas, fixtures, validators, tests, workflows, and generated-receipt bindings. Their existence establishes deterministic synthetic implementation at the pinned revision. It does not convert a proposed profile into adopted policy.
+The five surfaces have the repository-local companions required by their bounded scopes. Their existence establishes deterministic synthetic implementation at the pinned revision. It does not convert a proposed profile into adopted policy, admit a dependency, or authenticate every prior hosted result as exact-current-`main` proof.
 
 ### 4.2 What is not currently proved
 
 The inspected repository evidence does not establish:
 
-- a checked-in real or synthetic `.parquet` fixture opened by a KFM GeoParquet validator;
-- a producer that writes a KFM-reviewed GeoParquet file;
-- a reader/query-engine matrix that consumes the same bytes;
-- CRS, geometry, null, unknown-metadata, or row-group behavior observed from file bytes;
+- a reviewed, durable canonical carrier corpus beyond the reproducible synthetic workflow artifacts;
+- a producer or reader/query-engine matrix beyond the exact PyArrow `25.0.0` producer/inspector and GDAL `3.13.2` consumer edge;
+- projected or conflicting CRS behavior, `GEOGRAPHY`, unknown-metadata rewrite preservation, or native geospatial row-group pruning;
 - source-to-carrier semantic parity;
 - a complete production-consumer inventory;
 - an accepted version-readiness decision;
@@ -427,17 +446,17 @@ The assessment does not open Parquet or Arrow, decode WKB or GeoArrow, fetch STA
 
 ## 7. GeoParquet 2.0-RC readiness packet
 
-The inactive `GeoParquet 2.0 RC Compatibility Assessment` records whether an exact synthetic toolchain packet is structurally ready for later carrier-byte probes against `2.0.0-rc.1`.
+The inactive `GeoParquet 2.0 RC Compatibility Assessment` records whether an exact synthetic toolchain packet is structurally ready for carrier-byte probes against `2.0.0-rc.1`. The later PyArrow and GDAL profiles execute only two bounded lanes from that wider matrix; they do not rewrite the original declaration packet.
 
 ### 7.1 Current declared matrix
 
 | Lane | Declared version | Intended later probe role | Current proof |
 |---|---|---|---|
-| GDAL | `3.13.2` | Producer, consumer, native type, CRS, statistics, metadata, and legacy 1.1 checks | Declaration only |
+| GDAL | `3.13.2` | Producer, consumer, native type, CRS, statistics, metadata, and legacy 1.1 checks | **PARTIAL / FIXTURE_ONLY** for one PyArrow-produced consumer-read edge; producer and wider checks remain open |
 | DuckDB | `1.5.5` with `spatial@1.5.5` | Read, query, pruning, CRS, metadata, and legacy 1.1 checks | Declaration only |
 | SedonaSpark | `1.9.0` with pinned Spark/Java/Scala/parquet-java context | Distributed read/write and compatibility probes | Declaration only |
 | SedonaDB | `0.4.0` | Separate single-node read/write probes | Declaration only |
-| PyArrow inspector | `25.0.0` | Footer logical-type and row-group-statistics inspection | Declaration only |
+| PyArrow producer/inspector | `25.0.0` | Synthetic carrier generation plus footer logical-type, metadata, identity, WKB, null, digest, and row-group-shape inspection | **PARTIAL / FIXTURE_ONLY** for the retained two-carrier pair |
 
 Version recognition is not support evidence. A source tag is not package-integrity proof. The declared packet keeps tool artifacts, transitive dependencies, probe results, and evidence identities distinct.
 
@@ -447,7 +466,7 @@ Version recognition is not support evidence. A source tag is not package-integri
 - `HOLD` — required probes are pending or failed, a tool remains intentionally unpinned, or an unsupported assumption does not close.
 - `ERROR` — shape, version, source pin, transitive dependency, digest, evidence identity, format expectation, governance boundary, or declared result is invalid.
 
-No outcome changes KFM's declared 1.1 baseline, accepts ADR-0033, installs a tool, creates a carrier, migrates data, or authorizes release.
+No outcome changes KFM's declared 1.1 baseline, accepts ADR-0033, admits a production tool or source, migrates data, or authorizes release. The byte-probe workflows create only bounded synthetic carrier artifacts for their declared evidence lanes.
 
 <p align="right"><a href="#top">Back to top</a></p>
 
@@ -501,8 +520,8 @@ Ordinary public clients should consume governed API responses or explicitly rele
 | 1 | Synthetic 1.1 metadata readiness | **CONFIRMED checked in / PROPOSED_INACTIVE** |
 | 2 | Synthetic declared STAC-mirror parity | **CONFIRMED checked in / proposed fixture-only** |
 | 3 | Synthetic 2.0-RC exact-toolchain readiness | **CONFIRMED checked in / PROPOSED_INACTIVE** |
-| 4 | Real 1.1 carrier-byte conformance and negative corpus | **NOT ESTABLISHED** |
-| 5 | Cross-engine 1.1 and 2.0-RC round trip, query, CRS, metadata, and pruning evidence | **NOT ESTABLISHED** |
+| 4 | Synthetic 1.1 and 2.0-RC carrier-byte generation, footer inspection, and focused negatives | **PARTIAL / FIXTURE_ONLY** at exact PyArrow `25.0.0` |
+| 5 | Cross-engine 1.1 and 2.0-RC round trip, query, CRS, metadata, and pruning evidence | **PARTIAL / FIXTURE_ONLY** for one PyArrow `25.0.0` producer to GDAL `3.13.2` consumer-read edge; the matrix remains incomplete |
 | 6 | Source-to-carrier semantic parity, catalog, evidence, rights, sensitivity, policy, and review closure | **NOT ESTABLISHED end to end** |
 | 7 | Governed release, serving, correction, withdrawal, rollback, and observed consumers | **NOT ESTABLISHED** |
 
@@ -514,8 +533,8 @@ Ordinary public clients should consume governed API responses or explicitly rele
 | Metadata readiness | Declared 1.1 profile and layout fields | Implemented synthetically | Actual bytes |
 | STAC mirror parity | Declared source/mirror projections | Implemented synthetically | STAC or mirror existence |
 | 2.0-RC toolchain packet | Exact declared tools, artifacts, statuses, and non-effects | Implemented synthetically | Installed or functioning tools |
-| 1.1 byte conformance | Footer, `geo` metadata, geometry encodings, CRS, covering, values | Missing | Semantic correctness or release |
-| Cross-engine interoperability | Write/read/round trip/query/statistics/pruning/unknown metadata | Missing | Source authority or policy |
+| 1.1 and 2.0-RC byte conformance | Footer, `geo` metadata, native logical type, WKB, bounded CRS, row-group shape, values, and digests | Partial for the exact two-carrier PyArrow `25.0.0` fixture pair | Production semantics, broader versions/platforms, source authority, or release |
+| Cross-engine interoperability | Write/read/round trip/query/statistics/pruning/unknown metadata | Partial for one exact GDAL `3.13.2` consumer-read edge | Wider engine support, source authority, or policy |
 | Semantic and source parity | Contracts, field meaning, time, units, source roles, evidence | Missing end to end | Public safety without policy/review |
 | Release and serving | Immutable bytes, review, policy, Range/download behavior, correction, rollback | Missing | Future correctness without monitoring |
 
@@ -534,7 +553,7 @@ python -m pytest -q tests/release/test_geoparquet_2_rc_compatibility_assessment.
 python tools/validators/release/validate_geoparquet_2_rc_compatibility_assessment.py --cases
 ```
 
-These commands are no-network synthetic checks. They do not replace the missing carrier-byte and cross-engine layers.
+The exact PyArrow and GDAL probe workflows add locked package installation, carrier generation, byte validation, focused negative tests, and the bounded GDAL consumer run. Those hosted lanes are version-, artifact-, platform-, and exact-head-specific; they do not replace the missing wider engine, producer, CRS, pruning, source, policy, or release layers.
 
 ### 9.4 Minimum future byte corpus
 
@@ -660,16 +679,16 @@ The omitted digests, artifact bindings, source/run/STAC references, and governan
 
 ### 13.1 Current repository tooling
 
-KFM currently has Python validators for the three synthetic assessment surfaces. Their checked-in workflows:
+KFM currently has Python validators for the three declaration/metadata assessment surfaces and the two bounded byte-probe surfaces. Their checked-in workflows, according to each profile:
 
 - run with `KFM_NO_NETWORK=1`;
 - use read-only `contents` permission;
-- install the repository's declared test dependencies;
-- execute focused fixtures and tests;
+- install the repository's declared test dependencies or the profile's exact locked artifacts;
+- execute focused fixtures, carrier generation/inspection, consumer reads, and tests;
 - verify a generated authoring receipt; and
 - record explicit non-effects.
 
-Those workflows do not install the proposed GeoParquet interoperability matrix or read carrier bytes.
+Only the exact PyArrow `25.0.0` and GDAL `3.13.2` lanes read the generated carrier bytes. They do not install or execute the remaining proposed interoperability matrix.
 
 ### 13.2 External tools
 
@@ -750,6 +769,7 @@ A later accepted decision would need at least:
 | Does KFM permit 1.1 GeoArrow encodings or require WKB in production? | **OPEN** | Consumer support matrix and accepted profile |
 | What is the canonical carrier-manifest object family? | **OPEN** | Contract/schema placement decision; do not infer `GeoParquetAssetManifest` |
 | Which producers, readers, query engines, notebooks, pipelines, and services consume GeoParquet? | **UNKNOWN** | Repository and operational consumer inventory |
+| Does a separately versioned PyArrow `25.0.1` replay preserve the exact bounded semantics observed under `25.0.0`? | **PROPOSED / HOLD** | New profile/version, separate lock and artifact identity, fresh carrier/manifests/digests, bounded comparison, GDAL rerun, receipt, and accountable review |
 | Which layout strategies are justified by real KFM workloads? | **UNKNOWN** | Dataset-specific benchmarks and reproducibility receipts |
 | Are real released GeoParquet carriers present outside the inspected repository paths? | **UNKNOWN** | Release inventory and immutable artifact evidence |
 | How will 1.1 corrections and 2.x migrations preserve downstream identity? | **OPEN** | Migration, correction, supersession, and rollback design |
@@ -791,6 +811,16 @@ Do not convert these questions into implementation facts merely to complete the 
 - [`GeoParquet 2.0 RC Compatibility Assessment` validator](../../tools/validators/release/validate_geoparquet_2_rc_compatibility_assessment.py)
 - [`GeoParquet 2.0 RC Compatibility Assessment` tests](../../tests/release/test_geoparquet_2_rc_compatibility_assessment.py)
 - [`GeoParquet 2.0 RC Compatibility Assessment` workflow](../../.github/workflows/geoparquet-2-rc-compatibility-assessment.yml)
+- [`GeoParquet 2.0 RC PyArrow Carrier Probe` contract](../../contracts/release/geoparquet_2_rc_pyarrow_carrier_probe.md)
+- [`GeoParquet 2.0 RC PyArrow Carrier Probe` schema](../../schemas/contracts/v1/release/geoparquet_2_rc_pyarrow_carrier_probe.schema.json)
+- [`GeoParquet 2.0 RC PyArrow Carrier Probe` generator](../../tools/experiments/geoparquet/generate_pyarrow_25_carriers.py)
+- [`GeoParquet 2.0 RC PyArrow Carrier Probe` validator](../../tools/validators/release/validate_geoparquet_2_rc_pyarrow_carriers.py)
+- [`GeoParquet 2.0 RC PyArrow Carrier Probe` tests](../../tests/release/test_geoparquet_2_rc_pyarrow_carriers.py)
+- [`GeoParquet 2.0 RC PyArrow Carrier Probe` workflow](../../.github/workflows/geoparquet-2-rc-pyarrow-carrier-probe.yml)
+- [`GeoParquet 2.0 RC GDAL Consumer Probe` contract](../../contracts/release/geoparquet_2_rc_gdal_consumer_probe.md)
+- [`GeoParquet 2.0 RC GDAL Consumer Probe` schema](../../schemas/contracts/v1/release/geoparquet_2_rc_gdal_consumer_probe.schema.json)
+- [`GeoParquet 2.0 RC GDAL Consumer Probe` tests](../../tests/release/test_geoparquet_2_rc_gdal_consumer_probe.py)
+- [`GeoParquet 2.0 RC GDAL Consumer Probe` workflow](../../.github/workflows/geoparquet-2-rc-gdal-consumer-probe.yml)
 - [`data/published/geoparquet/` boundary](../../data/published/geoparquet/README.md)
 
 ### 16.3 Official upstream sources
@@ -801,8 +831,11 @@ Do not convert these questions into implementation facts merely to complete the 
 - GeoParquet `v2.0.0-rc.1` release — <https://github.com/opengeospatial/geoparquet/releases/tag/v2.0.0-rc.1>
 - GeoParquet project — <https://geoparquet.org/>
 - Apache Parquet geospatial logical types — <https://github.com/apache/parquet-format/blob/master/Geospatial.md>
+- Apache Arrow `25.0.1` release notes — <https://arrow.apache.org/release/25.0.1.html>
+- Apache Arrow `25.0.1` source commit — <https://github.com/apache/arrow/commit/beccec0d0c451b7aa3e4530416ac431b3c035c69>
+- PyArrow `25.0.1` package files and hashes — <https://pypi.org/project/pyarrow/25.0.1/>
 
-External URLs were checked for currentness on 2026-08-18. They are upstream authority for format facts, not KFM adoption or release authority.
+External URLs were checked for currentness on 2026-08-26. They are upstream authority for format and package-release facts, not KFM dependency admission, source admission, support, adoption, or release authority.
 
 <p align="right"><a href="#top">Back to top</a></p>
 
@@ -828,10 +861,22 @@ External URLs were checked for currentness on 2026-08-18. They are upstream auth
 
 No implementation, adoption, release, or publication state changes with this ledger.
 
+### Appendix B — v2.1 bounded-proof and patch-decision ledger
+
+| Prior v2.0 statement | v2.1 disposition |
+|---|---|
+| All GeoParquet checks are declaration-only | **REPAIR** — retain the declaration-only surfaces and add the exact PyArrow `25.0.0` carrier plus GDAL `3.13.2` consumer proof already present on current `main` |
+| No carrier bytes are generated or opened | **REPAIR** — narrow to the reproducible synthetic two-carrier pair and one consumer edge; do not imply a canonical corpus or production interoperability |
+| PyArrow `25.0.0` is only a proposed inspector | **REPAIR** — preserve it as exact historical producer/inspector proof with immutable wheel, profile, workflow, receipt, and carrier identities |
+| New PyArrow patch version | **ADD AS PROPOSAL** — `25.0.1` is a separately versioned successor replay on `HOLD`, not an in-place replacement or admitted dependency |
+| GeoParquet `1.1.0` default and all adoption/release holds | **KEEP** |
+
+This appendix is a documentation reconciliation and proposal record. It changes no profile identity, executable byte, source, dependency, lifecycle state, policy decision, release, deployment, or publication.
+
 ---
 
 <sub>
-<b>Last evidence review:</b> 2026-08-18 &nbsp;·&nbsp;
+<b>Last evidence review:</b> 2026-08-26 &nbsp;·&nbsp;
 <b>Review route:</b> @bartytime4life; specialist stewardship needs verification &nbsp;·&nbsp;
 <b>Stable upstream line:</b> GeoParquet 1.1.0 / corrected package v1.1.0+p1 &nbsp;·&nbsp;
 <b>Latest candidate checked:</b> v2.0.0-rc.1 &nbsp;·&nbsp;
