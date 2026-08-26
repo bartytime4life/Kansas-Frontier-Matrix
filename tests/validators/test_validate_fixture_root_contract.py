@@ -78,9 +78,19 @@ def _root_registry() -> dict[str, object]:
     }
 
 
+NON_FIXTURE_ARGUMENTS = {
+    "pnpm-dependency-readiness": [
+        "validate-repository",
+        "--repository-root",
+        ".",
+    ],
+    "repository-topology": [],
+    "workflow-security": [],
+}
+
+
 def _validator_registry() -> dict[str, object]:
     ids = [f"validator-{index}" for index in range(9)]
-    non_fixture_ids = ["repository-topology", "workflow-security"]
     validators = [
         {
             "id": validator_id,
@@ -93,12 +103,12 @@ def _validator_registry() -> dict[str, object]:
         {
             "id": validator_id,
             "script": f"tools/validators/validate_{validator_id}.py",
-            "args": [],
+            "args": NON_FIXTURE_ARGUMENTS[validator_id],
         }
-        for validator_id in non_fixture_ids
+        for validator_id in NON_FIXTURE_ARGUMENTS
     )
     return {
-        "profiles": {"full": [*ids, *non_fixture_ids]},
+        "profiles": {"full": [*ids, *NON_FIXTURE_ARGUMENTS]},
         "validators": validators,
     }
 
@@ -121,7 +131,7 @@ class FixtureRootContractTests(unittest.TestCase):
             (self.root / f"tools/validators/validate_{index}.py").write_text(
                 "# synthetic validator\n", encoding="utf-8"
             )
-        for validator_id in ("repository-topology", "workflow-security"):
+        for validator_id in NON_FIXTURE_ARGUMENTS:
             (self.root / f"tools/validators/validate_{validator_id}.py").write_text(
                 "# synthetic non-fixture validator\n", encoding="utf-8"
             )
@@ -141,7 +151,7 @@ class FixtureRootContractTests(unittest.TestCase):
         self.assertTrue(result.ok, result.findings)
         self.assertEqual(result.outcome, "PASS")
         self.assertEqual(result.direct_child_directories, 2)
-        self.assertEqual(result.aggregate_validators, 11)
+        self.assertEqual(result.aggregate_validators, 12)
 
     def test_root_full_heading_order_fails_closed(self) -> None:
         path = self.root / "fixtures/README.md"
@@ -185,6 +195,18 @@ class FixtureRootContractTests(unittest.TestCase):
         payload["validators"][0]["args"] = ["--unknown-mode"]
         path.write_text(json.dumps(payload), encoding="utf-8")
         self.assertIn("FIXTURE_MODE_ARGUMENT_MISSING", self.codes())
+
+    def test_non_fixture_arguments_must_match_the_registered_profile(self) -> None:
+        path = self.root / "tools/validators/validator_registry.json"
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        validator = next(
+            item
+            for item in payload["validators"]
+            if item["id"] == "pnpm-dependency-readiness"
+        )
+        validator["args"] = []
+        path.write_text(json.dumps(payload), encoding="utf-8")
+        self.assertIn("NON_FIXTURE_ARGUMENTS_INVALID", self.codes())
 
 
 if __name__ == "__main__":
