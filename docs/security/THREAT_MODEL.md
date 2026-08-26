@@ -2,12 +2,17 @@
 doc_id: kfm://doc/security/threat-model
 title: KFM Threat Model
 type: standard
-version: v0.1
+version: v0.2
+prior_version: v0.1
 status: draft
 owners: docs-steward, security-steward (PROPOSED role assignments)
 created: 2026-05-13
-updated: 2026-05-13
+updated: 2026-08-25
 policy_label: public (governance doctrine; describes posture, not exploits)
+current_path: docs/security/THREAT_MODEL.md
+owning_root: docs/
+responsibility: "Provide a planning-level threat posture, risk register, anti-pattern inventory, and residual-risk backlog for the human-readable security-guidance lane."
+truth_posture: "CONFIRMED repository path and cited repository evidence / PROPOSED risk severity, controls, roles, and decision backlog / UNKNOWN operational enforcement and admission; cite-or-abstain"
 related:
   - docs/security/EXPOSURE_PLAN.md
   - docs/security/INCIDENT_RESPONSE.md
@@ -16,12 +21,12 @@ related:
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/authority-ladder.md
   - docs/doctrine/truth-posture.md
-  - docs/governance/separation-of-duties.md
+  - docs/governance/SEPARATION_OF_DUTIES.md
   - docs/runbooks/
   - docs/adr/
 tags: [kfm, security, threat-model, governance]
 notes:
-  - Path is PROPOSED until verified against mounted-repo evidence.
+  - Path and related tracked-file presence were verified at main@077ee7d5b7925c8880e6457baf113662f6992313; presence does not establish adoption, implementation, review, or operational readiness.
   - Owners are placeholder role labels; assign before status moves to review.
   - This document is a reference view; EvidenceBundle remains authoritative.
 [/KFM_META_BLOCK_V2] -->
@@ -34,9 +39,9 @@ notes:
 ![scope](https://img.shields.io/badge/scope-governance_doctrine-blue)
 ![policy_label](https://img.shields.io/badge/policy_label-public-green)
 ![doctrine](https://img.shields.io/badge/doctrine-KFM_v1.1-purple)
-![last_updated](https://img.shields.io/badge/last_updated-2026--05--13-lightgrey)
+![last_updated](https://img.shields.io/badge/last_updated-2026--08--25-lightgrey)
 
-**Status:** draft &nbsp;·&nbsp; **Owners:** docs-steward, security-steward *(PROPOSED — see [§14](#14-known-gaps-and-verification-backlog))* &nbsp;·&nbsp; **Last updated:** 2026-05-13
+**Status:** draft &nbsp;·&nbsp; **Owners:** docs-steward, security-steward *(PROPOSED — see [§14](#14-known-gaps-and-verification-backlog))* &nbsp;·&nbsp; **Last updated:** 2026-08-25
 
 ---
 
@@ -86,30 +91,30 @@ This document is the **threat-posture surface** of KFM doctrine. It names the ri
 
 ## 2. Where this doc fits
 
-`docs/security/` is the **threat model, exposure posture, and incident response** lane of the human-facing control plane. The lane has three sibling concerns; this document carries the first. *[CONFIRMED lane purpose from Directory Rules; PROPOSED filenames.]* `[DIRRULES]`
+`docs/security/` is the **threat, incident, and exposure guidance** lane inside the human-readable `docs/` responsibility root. Accepted ADR-0029 adopts the Directory Rules bytes that place this lane; the three filenames below are tracked at `main@077ee7d5b7925c8880e6457baf113662f6992313`. This document carries the threat-posture concern. *[CONFIRMED placement and path presence; document maturity remains separate.]* `[DIRRULES]`
 
 | Sibling | Concern | Status |
 |---|---|---|
-| `docs/security/THREAT_MODEL.md` *(this doc)* | What KFM is built to refuse, and the guardrails that refuse it. | **PROPOSED** — drafted here; exact filename not verified against mounted repo. |
+| `docs/security/THREAT_MODEL.md` *(this doc)* | What KFM is built to refuse, and the guardrails that refuse it. | **CONFIRMED tracked path; document remains draft.** |
 | `docs/security/EXPOSURE_PLAN.md` | Public/semi-public surface inventory; deny-by-default, secrets, and audit posture. | **CONFIRMED tracked path; document remains draft.** |
-| `docs/security/INCIDENT_RESPONSE.md` | Detection → triage → containment → rollback → correction loop for trust-relevant incidents. | **PROPOSED — NEEDS VERIFICATION** that the path exists. |
+| `docs/security/INCIDENT_RESPONSE.md` | Detection → triage → containment → rollback → correction loop for trust-relevant incidents. | **CONFIRMED tracked path; document remains draft.** |
 
 > [!NOTE]
-> Per `directory-rules.md`, **the authority of any specific path quoted in this document is PROPOSED until verified against mounted-repo evidence.** This applies to every path on this page, including the sibling paths above. `[DIRRULES]`
+> Repository path presence, document authority, control implementation, review, and operational admission are independent states. The paths marked tracked below were verified at the pinned revision; their contents remain draft, proposed, partial, or unverified as stated. `[DIRRULES]`
 
 ### Upstream doctrine this doc inherits
 
-- `docs/doctrine/trust-membrane.md` — the boundary that prevents raw / unreviewed / model-generated / internal state from becoming public truth. *[CONFIRMED concept; PROPOSED path.]* `[ENCY]` `[DIRRULES]`
-- `docs/doctrine/lifecycle-law.md` — `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`. Promotion is a **governed state transition, not a file move.** *[CONFIRMED invariant; PROPOSED path.]* `[ENCY]` `[DIRRULES]`
-- `docs/doctrine/authority-ladder.md` — the source-of-truth order for placement and release decisions. *[CONFIRMED concept; PROPOSED path.]* `[DIRRULES]`
-- `docs/doctrine/truth-posture.md` — cite-or-abstain as the default truth posture; `ABSTAIN` is a finite outcome. *[CONFIRMED concept; PROPOSED path.]* `[ENCY]` `[GAI]`
+- `docs/doctrine/trust-membrane.md` — the boundary that prevents raw / unreviewed / model-generated / internal state from becoming public truth. *[CONFIRMED tracked draft path; adoption and implementation remain separate.]* `[ENCY]` `[DIRRULES]`
+- `docs/doctrine/lifecycle-law.md` — `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`. Promotion is a **governed state transition, not a file move.** *[CONFIRMED tracked draft path and campaign invariant.]* `[ENCY]` `[DIRRULES]`
+- `docs/doctrine/authority-ladder.md` — the source-of-truth order proposed for placement and release decisions. *[CONFIRMED tracked draft path; doctrine adoption remains proposed.]* `[DIRRULES]`
+- `docs/doctrine/truth-posture.md` — cite-or-abstain as the default truth posture; `ABSTAIN` is a finite outcome. *[CONFIRMED tracked draft path; operational enforcement remains unverified.]* `[ENCY]` `[GAI]`
 
 ### Downstream surfaces this doc constrains
 
-- `apps/governed-api/` — the trust membrane in executable form; returns the `RuntimeResponseEnvelope` with finite outcomes (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`). *[CONFIRMED doctrinal role; PROPOSED app path.]* `[ENCY]` `[DIRRULES]`
-- `apps/explorer-web/`, `apps/review-console/`, `apps/admin/` — the public, steward, and restricted client surfaces. *[PROPOSED app paths.]* `[DIRRULES]`
-- `infra/` — deny-by-default, least privilege, no direct model endpoint exposure, no raw data exposure, audit logs. *[CONFIRMED doctrinal posture; PROPOSED implementation.]* `[DIRRULES]` `[UNIFIED]`
-- `runtime/` — local AI runtimes (Ollama, etc.) MUST stay behind the governed API and remain subordinate to evidence, policy, review, and release state. *[CONFIRMED doctrinal posture.]* `[DIRRULES]` `[UIAI]` `[GAI]`
+- `apps/governed-api/` — tracked application path for the governed public boundary. The finite-envelope and trust-membrane requirements are doctrinal; this page does not establish current route behavior or deployment. *[CONFIRMED path presence; implementation maturity requires owning evidence.]* `[ENCY]` `[DIRRULES]`
+- `apps/explorer-web/`, `apps/review-console/`, `apps/admin/` — tracked client paths for public, steward, and restricted roles. *[CONFIRMED path presence; access, authorization, deployment, and operational admission remain unverified here.]* `[DIRRULES]`
+- `infra/` — tracked infrastructure root; deny-by-default, least privilege, no direct model endpoint exposure, no raw data exposure, and auditability are required posture, not implementation proof. *[CONFIRMED path presence; implementation remains unverified here.]* `[DIRRULES]` `[UNIFIED]`
+- `runtime/` — tracked runtime root. Local AI runtimes MUST stay behind the governed API and remain subordinate to evidence, policy, review, and release state. *[CONFIRMED path presence and doctrinal posture; operational state remains unverified.]* `[DIRRULES]` `[UIAI]` `[GAI]`
 
 [Back to top ↑](#table-of-contents)
 
@@ -174,7 +179,7 @@ flowchart LR
   Runtime --> API
 ```
 
-*Diagram intent: every solid arrow that enters the membrane is a governed boundary; every dashed arrow is a restricted path that **must not** become the normal public path. The diagram is **CONFIRMED in shape** against KFM doctrine; the **exact app paths are PROPOSED** until repo verification.* `[ENCY]` `[DIRRULES]` `[MAP-MASTER]` `[GAI]`
+*Diagram intent: every solid arrow that enters the membrane is a governed boundary; every dashed arrow is a restricted path that **must not** become the normal public path. The named app paths are tracked at the pinned revision; the arrows and behaviors remain a doctrinal model rather than proof of composed or deployed enforcement.* `[ENCY]` `[DIRRULES]` `[MAP-MASTER]` `[GAI]`
 
 ### 3.3 Actors and capabilities (summary)
 
@@ -505,7 +510,7 @@ The **PROPOSED** governance-health indicators that surface threat-relevant drift
 
 ## 13. Incident-response posture (summary)
 
-A full incident-response runbook is **out of scope** for this document and belongs in `docs/security/INCIDENT_RESPONSE.md` (PROPOSED — NEEDS VERIFICATION that the path exists) with operational specifics in `docs/runbooks/`. The summary posture is:
+A full incident-response runbook is **out of scope** for this document. Public security guidance is tracked at `docs/security/INCIDENT_RESPONSE.md`; operational specifics are tracked separately in `docs/runbooks/INCIDENT_RESPONSE.md`. Their proposed handoff remains unaccepted in [`incident-response-handoff-decision.md`](./incident-response-handoff-decision.md). The summary posture is:
 
 ```mermaid
 flowchart LR
@@ -563,20 +568,21 @@ The following items are explicitly **PROPOSED** / **NEEDS VERIFICATION** in curr
 
 ## 15. Related docs
 
-- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — placement law and conformance language. *(CONFIRMED authority of rules; PROPOSED authority of any specific quoted path.)*
-- [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — boundary doctrine. *(PROPOSED path; CONFIRMED concept.)*
-- [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — lifecycle invariant. *(PROPOSED path; CONFIRMED invariant.)*
-- [`docs/doctrine/authority-ladder.md`](../doctrine/authority-ladder.md) — source-of-truth order. *(PROPOSED path; CONFIRMED concept.)*
-- [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md) — cite-or-abstain. *(PROPOSED path; CONFIRMED concept.)*
-- [`docs/architecture/governed-api/README.md`](../architecture/governed-api/README.md) — operational form of the trust membrane. *(PROPOSED path.)*
-- [`docs/architecture/contract-schema-policy-split.md`](../architecture/contract-schema-policy-split.md) — meaning / shape / policy split. *(PROPOSED path.)*
-- [`docs/governance/separation-of-duties.md`](../governance/separation-of-duties.md) — full role and duty matrix. *(PROPOSED path.)*
-- [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) — drift entries that may concern this document. *(PROPOSED path.)*
-- [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) — repo-state verification queue. *(PROPOSED path.)*
-- [`docs/adr/`](../adr/) — ADR index including the open ADRs cited above (ADR-S-05 … ADR-S-15). *(PROPOSED path.)*
-- [`docs/runbooks/`](../runbooks/) — operational runbooks (rotation, rollback drills, validation runs). *(PROPOSED path.)*
+- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — accepted placement law and conformance language under ADR-0029. *(CONFIRMED tracked authority.)*
+- [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — boundary doctrine. *(CONFIRMED tracked draft path; adoption remains separate.)*
+- [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — lifecycle invariant. *(CONFIRMED tracked draft path and campaign invariant.)*
+- [`docs/doctrine/authority-ladder.md`](../doctrine/authority-ladder.md) — proposed source-of-truth order. *(CONFIRMED tracked draft path; not adopted doctrine.)*
+- [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md) — cite-or-abstain. *(CONFIRMED tracked draft path.)*
+- [`docs/architecture/governed-api/README.md`](../architecture/governed-api/README.md) — repository-grounded Governed API boundary. *(CONFIRMED tracked path; consult the page for bounded implementation maturity.)*
+- [`docs/architecture/contract-schema-policy-split.md`](../architecture/contract-schema-policy-split.md) — meaning / shape / policy split. *(CONFIRMED tracked path.)*
+- [`docs/governance/SEPARATION_OF_DUTIES.md`](../governance/SEPARATION_OF_DUTIES.md) — repository-grounded proposed role and duty matrix. *(CONFIRMED tracked path; decision status remains proposed.)*
+- [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) — human-readable drift entries. *(CONFIRMED tracked path.)*
+- [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) — repository verification queue. *(CONFIRMED tracked path.)*
+- [`docs/adr/`](../adr/) — tracked ADR corpus. The `ADR-S-*` labels below are source-lineage proposal identifiers, not confirmed repository ADR identities. *(CONFIRMED directory presence; individual decision status must be checked separately.)*
+- [`docs/runbooks/`](../runbooks/) — tracked operational runbook lane. *(CONFIRMED directory presence; operational readiness remains unverified.)*
 - [`docs/security/EXPOSURE_PLAN.md`](./EXPOSURE_PLAN.md) — public/semi-public surface posture. *(Current tracked path; document remains draft.)*
-- [`docs/security/INCIDENT_RESPONSE.md`](./INCIDENT_RESPONSE.md) — detection → containment → rollback → correction loop. *(PROPOSED — NEEDS VERIFICATION.)*
+- [`docs/security/INCIDENT_RESPONSE.md`](./INCIDENT_RESPONSE.md) — detection → containment → rollback → correction loop. *(Current tracked path; document remains draft.)*
+- [`docs/security/incident-response-handoff-decision.md`](./incident-response-handoff-decision.md) — proposed public-guidance versus restricted-runbook split. *(Current tracked path; decision remains proposed.)*
 
 [Back to top ↑](#table-of-contents)
 
@@ -606,7 +612,9 @@ The following items are explicitly **PROPOSED** / **NEEDS VERIFICATION** in curr
 </details>
 
 <details>
-<summary><b>Open ADR backlog touching this document</b></summary>
+<summary><b>Proposed decision backlog touching this document</b></summary>
+
+The `ADR-S-*` labels are proposal-source lineage retained for traceability. They do not identify accepted repository ADRs or create a canonical backlog. Current numbered ADR status must be resolved through the tracked ADR corpus and its indexes.
 
 | ADR | Question / decision needed | Why it’s ADR-class |
 |---|---|---|
@@ -618,7 +626,7 @@ The following items are explicitly **PROPOSED** / **NEEDS VERIFICATION** in curr
 | ADR-S-13 | Drift-register triage: cadence, owner, outcome. | Drift register bridges repo state and doctrine. |
 | ADR-S-14 | Cross-lane join policy: which joins require steward review, which are denied, which are open. | Cross-lane joins are inference-risk multipliers. |
 
-*The full open-ADR backlog lives in `docs/adr/` (PROPOSED path) and is consolidated in Atlas v1.1 §24.12.* `[ENCY]` `[DIRRULES]`
+*This table is a draft-local planning view. The tracked `docs/adr/` corpus and repository backlog guidance remain separate current-state surfaces; no one-to-one mapping or acceptance is implied here.* `[ENCY]` `[DIRRULES]`
 
 </details>
 
@@ -642,8 +650,8 @@ The following items are explicitly **PROPOSED** / **NEEDS VERIFICATION** in curr
 
 ---
 
-> **Related** · [`directory-rules.md`](../doctrine/directory-rules.md) · [`trust-membrane.md`](../doctrine/trust-membrane.md) · [`lifecycle-law.md`](../doctrine/lifecycle-law.md) · [`EXPOSURE_PLAN.md`](./EXPOSURE_PLAN.md) *(current tracked path; document remains draft)* · [`INCIDENT_RESPONSE.md`](./INCIDENT_RESPONSE.md) *(PROPOSED)*
+> **Related** · [`directory-rules.md`](../doctrine/directory-rules.md) · [`trust-membrane.md`](../doctrine/trust-membrane.md) · [`lifecycle-law.md`](../doctrine/lifecycle-law.md) · [`EXPOSURE_PLAN.md`](./EXPOSURE_PLAN.md) *(current tracked path; document remains draft)* · [`INCIDENT_RESPONSE.md`](./INCIDENT_RESPONSE.md) *(current tracked path; document remains draft)*
 >
-> **Last updated** · 2026-05-13 · **Status** · draft · **Version** · v0.1
+> **Last updated** · 2026-08-25 · **Status** · draft · **Version** · v0.2
 >
 > [↑ Back to top](#table-of-contents)
