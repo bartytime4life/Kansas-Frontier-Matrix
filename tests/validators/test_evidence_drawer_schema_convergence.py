@@ -9,6 +9,7 @@ import pytest
 from tools.validators.validate_evidence_drawer_schema_convergence import (
     ConvergenceError,
     audit,
+    public_audit_projection,
     validate_baseline_transition,
 )
 
@@ -323,6 +324,31 @@ def test_family_baseline_denies_authority_metadata_change(tmp_path: Path) -> Non
     assert result["baseline_state"] == "ERROR"
     assert result["baseline_errors"] == ["baseline authority is invalid"]
     assert "SCHEMA_FAMILY_BASELINE_ERROR" in result["reason_codes"]
+
+
+def test_public_audit_projection_omits_detailed_schema_data(tmp_path: Path) -> None:
+    _write_required_anchors(tmp_path)
+    result = audit(tmp_path)
+    result["schemas"][0]["private_marker"] = "must-not-reach-stdout"
+
+    projection = public_audit_projection(result)
+    serialized = json.dumps(projection, sort_keys=True)
+
+    assert set(projection) == {
+        "outcome",
+        "placement_state",
+        "reason_codes",
+        "schema_count",
+        "shape_state",
+        "baseline_state",
+        "baseline_entry_count",
+        "trusted_baseline_state",
+        "boundary",
+    }
+    assert projection["outcome"] == "PASS"
+    assert "schemas" not in projection
+    assert "trusted_baseline_errors" not in projection
+    assert "must-not-reach-stdout" not in serialized
 
 
 def test_trusted_family_baseline_accepts_exact_inventory(tmp_path: Path) -> None:

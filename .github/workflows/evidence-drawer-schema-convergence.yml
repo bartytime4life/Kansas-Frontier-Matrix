@@ -95,7 +95,7 @@ jobs:
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-evidence-drawer-schema-family-ratchet-20260826.json \
+            data/receipts/generated/genrec-evidence-drawer-public-safe-output-20260827.json \
             --repo-root .
 
       - name: Record governance boundary
