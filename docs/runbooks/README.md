@@ -290,6 +290,7 @@ docs/runbooks/
 |---|---|---|
 | [`ui_LOCAL_DEV.md`](./ui_LOCAL_DEV.md) | Locked local setup and focused app validation | Repository-grounded; no live API, deployment, release, or publication path is established |
 | [`ui_ROLLBACK.md`](./ui_ROLLBACK.md) | Source-control recovery and rollback handoff | Repository-grounded; operational deployment and governed release rollback remain outside its authority |
+| [`ui_VALIDATION.md`](./ui_VALIDATION.md) | Scope-based Explorer checks and workflow-result interpretation | Repository-grounded; axe, WCAG, live integration, deployment, release, and publication remain unproven or held |
 
 ### Security, sensitivity, and doctrine handling
 
@@ -309,7 +310,6 @@ The following direct files are small scaffold or compatibility-shaped documents.
 - [`retention-agriculture.md`](./retention-agriculture.md)
 - [`revocation.md`](./revocation.md)
 - [`roads_rail_trade_source_refresh.md`](./roads_rail_trade_source_refresh.md)
-- [`ui_VALIDATION.md`](./ui_VALIDATION.md)
 
 Their canonical target, consumers, replacement procedure, and retirement path remain `NEEDS VERIFICATION`. Do not hand-edit one alias and its apparent target as competing authorities.
 
