@@ -1,0 +1,107 @@
+{
+  "receipt_id": "genrec-feature-validation-vocabulary-ca09ef840804",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/ISSUE_TEMPLATE/feature.md"
+  ],
+  "artifact_hashes": {
+    ".github/ISSUE_TEMPLATE/feature.md": "sha256:ca09ef840804c897f728e9e2ca4d376a550b8003cbc7dabab10dfbc201c9465c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6",
+    "version": "2026-08-27 session"
+  },
+  "prompt_or_contract": "sha256:bfc14c1accb253a3e0b4137f8383959d8e61ca65e7e2e655296b2e83ec4b287d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "deterministic artifact validation",
+      "remote repository read-back"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:bfc14c1accb253a3e0b4137f8383959d8e61ca65e7e2e655296b2e83ec4b287d"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/9b72907fb058f4bbeb1b395cb5111cac66cef805",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9b72907fb058f4bbeb1b395cb5111cac66cef805/.github/ISSUE_TEMPLATE/feature.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9b72907fb058f4bbeb1b395cb5111cac66cef805/.github/ISSUE_TEMPLATE/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9b72907fb058f4bbeb1b395cb5111cac66cef805/data/receipts/generated/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/3635"
+    ]
+  },
+  "truth_labels": {
+    ".github/ISSUE_TEMPLATE/feature.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "bounded-vocabulary-reconciliation",
+      "outcome": "PASS",
+      "reason": "Changed the planned validation matrix's sole N/A outcome token to the section-defined NOT_APPLICABLE token; governance-transition N/A values remain unchanged."
+    },
+    {
+      "gate": "frontmatter-and-routing",
+      "outcome": "PASS",
+      "reason": "Chooser front matter and six-template routing are byte-for-byte unchanged."
+    },
+    {
+      "gate": "governance-boundaries",
+      "outcome": "PASS",
+      "reason": "No authority, lifecycle, review, release, deployment, promotion, publication, source-admission, or repository-settings semantics changed."
+    },
+    {
+      "gate": "artifact-integrity",
+      "outcome": "PASS",
+      "reason": "Final feature.md bytes are bound to sha256:ca09ef840804c897f728e9e2ca4d376a550b8003cbc7dabab10dfbc201c9465c."
+    },
+    {
+      "gate": "repository-native-validation",
+      "outcome": "SKIPPED",
+      "reason": "No mounted checkout was available; the one-token transformation, exact occurrence count, and remote read-back are validated, while hosted checks remain separate."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-main-feature-template",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9b72907fb058f4bbeb1b395cb5111cac66cef805/.github/ISSUE_TEMPLATE/feature.md"
+    },
+    {
+      "id": "issue-template-authoring-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9b72907fb058f4bbeb1b395cb5111cac66cef805/.github/ISSUE_TEMPLATE/README.md"
+    },
+    {
+      "id": "generated-receipt-lane-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9b72907fb058f4bbeb1b395cb5111cac66cef805/data/receipts/generated/README.md"
+    },
+    {
+      "id": "merged-pr-3635-lineage",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/3635"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-27T21:49:19.295Z",
+  "emitter": "openai/gpt-5.6",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored one-token correction to make the feature template's planned validation matrix use its declared finite NOT_APPLICABLE outcome. Historical receipt genrec-feature-issue-template-v1-579516296eb9 remains immutable. This receipt is process memory only and does not imply review, approval, merge, release, deployment, promotion, publication, source activation, or policy authority."
+}
