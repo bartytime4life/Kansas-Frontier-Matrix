@@ -118,6 +118,34 @@ class DocumentGraphTests(unittest.TestCase):
 
         self.assertEqual(targets, ["docs/README.md", "docs/README.md"])
 
+    def test_shorter_fence_run_cannot_expose_links_from_longer_example(self) -> None:
+        for marker in ("`", "~"):
+            with self.subTest(marker=marker):
+                text = (
+                    f"{marker * 4}markdown\n"
+                    "[ignored one](missing-one.md)\n"
+                    f"{marker * 3}\n"
+                    "[ignored two](missing-two.md)\n"
+                    f"{marker * 4}\n"
+                )
+
+                self.assertEqual(document_graph.extract_links(text), ())
+
+    def test_longer_fence_run_closes_the_example(self) -> None:
+        for marker in ("`", "~"):
+            with self.subTest(marker=marker):
+                text = (
+                    f"{marker * 3}markdown\n"
+                    "[ignored](missing.md)\n"
+                    f"{marker * 4}\n"
+                    "[visible](docs/README.md)\n"
+                )
+
+                self.assertEqual(
+                    document_graph.extract_links(text),
+                    ((4, "docs/README.md"),),
+                )
+
     def test_duplicate_document_identity_fails_closed(self) -> None:
         temporary, root = self._copy_fixture()
         self.addCleanup(temporary.cleanup)
