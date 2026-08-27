@@ -98,7 +98,8 @@ first parent is `main`:
 git revert --no-commit -m 1 <merge-commit>
 ```
 
-If the parent relationship is unclear, abort the in-progress revert and stop:
+If the revert enters a conflict state and a safe resolution is unclear, abort it
+and stop:
 
 ```bash
 git revert --abort
@@ -108,9 +109,9 @@ Review the staged recovery before committing:
 
 ```bash
 git status --short
-git diff --check
-git diff --stat
-git diff
+git diff --cached --check
+git diff --cached --stat
+git diff --cached
 ```
 
 Do not resolve conflicts by discarding later work wholesale. Abort and use a
