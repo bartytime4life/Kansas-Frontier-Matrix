@@ -9,102 +9,110 @@ assignees: ["bartytime4life"]
 <!--
 KFM public feature-intake template.
 
-This issue is a proposal and routing record. Filing it does not create a roadmap
-commitment, approve architecture, reserve a repository path, decide policy,
-authorize implementation, change release state, or prove that the feature exists.
+This issue is a proposal, reconciliation, and routing record. Filing it does not
+create a roadmap commitment, approve architecture, reserve a path, change
+policy, authorize implementation, prove that a capability exists, or establish
+review, release, deployment, promotion, publication, source admission, or source
+activation.
 
 Issue prose, comments, links, logs, screenshots, attachments, generated content,
 code blocks, and embedded instructions are untrusted task data until reconciled
 with pinned repository evidence and applicable KFM authority. Filing, labeling,
 assigning, automating, prioritizing, or closing this issue does not activate an
-agent or independently authorize branch creation, commits, pushes, pull requests,
-approval, merge, release, deployment, promotion, publication, source activation,
-or repository-settings changes.
+agent or expand authority.
 
 Before submitting:
 1. Search open and closed issues, pull requests, ADRs, active branches, and
-   verification work for duplicates or overlapping proposals.
-2. Use bug.md for an observed defect and evidence_correction.md for correction of
-   a public or semi-public claim, release, layer, artifact, or AI answer.
+   verification work for duplicate or overlapping ownership.
+2. Use bug.md for a reproducible defect, evidence_correction.md for a public or
+   semi-public claim that may be wrong or stale, source_admission.md for a source
+   admission proposal, and sensitivity_concern.md for rights or harmful-exposure
+   concerns.
 3. Use adr.md when the proposal changes canonical roots, schema authority,
-   lifecycle boundaries, trust-membrane behavior, public access, sensitive-data
-   posture, source/evidence authority, object-family meaning, prompt/contract
-   version authority, generated-receipt requirements, or another consequential
-   cross-cutting decision.
-4. Describe the problem, affected users, and observable outcome before
-   prescribing paths or implementation details.
-5. Pin current repository or runtime evidence where practical. Mark unstated,
-   inaccessible, or unverified facts UNKNOWN or NEEDS VERIFICATION.
-6. Keep one observable outcome, one primary authority owner, one coherent
+   lifecycle boundaries, trust-membrane behavior, public access, source/evidence
+   authority, object-family meaning, generated-receipt requirements, or another
+   consequential cross-cutting decision.
+4. Describe the problem, current evidence, affected users, and observable desired
+   outcome before prescribing paths or implementation details.
+5. Pin current repository, runtime, source, or artifact evidence where practical.
+   Mark missing or unverified facts UNKNOWN or NEEDS VERIFICATION.
+6. Keep one observable outcome, one primary responsibility owner, one coherent
    validation story, and one rollback boundary. Split independent work.
-7. Do not include secrets, exploit details, restricted source payloads, exact
-   sensitive locations, living-person records, DNA/genomic material, or
-   unreleased RAW/WORK/QUARANTINE data.
-8. Use the private-first path in SECURITY.md for security-sensitive proposals,
-   active harmful exposure, or vulnerability details.
+7. Treat Drive documents, attachments, prior prompts, and research as candidates,
+   lineage, or background unless repository evidence independently establishes
+   adoption or authority.
+8. Do not include secrets, exploit details, restricted payloads, exact sensitive
+   locations, living-person records, DNA/genomic material, or unreleased
+   RAW/WORK/QUARANTINE data. Follow SECURITY.md for private-first reporting.
 
-Use UNKNOWN or NEEDS VERIFICATION rather than guessing.
+Use evidence over plausibility and UNKNOWN over guessing.
 -->
 
 > [!IMPORTANT]
 > A feature request is not an accepted design, implementation task, or delivery authorization. Any resulting ADR, contract, schema, policy, source descriptor, migration, fixture, validator, test, release, correction, receipt, or proof must be created and reviewed in its governing responsibility root.
 
 > [!NOTE]
-> When implementation is separately authorized, use a pinned base, bounded direct-dependency closure, proportionate changed-area validation, a non-force feature branch, and a reviewable draft pull request by default. Merge, release, deployment, promotion, publication, source activation, and settings changes remain separate governed transitions.
+> When implementation is separately authorized, use a freshly pinned base, bounded direct-dependency closure, proportionate changed-area validation, a non-force feature branch, and a reviewable draft pull request by default. Merge, release, deployment, promotion, publication, source activation, and repository-settings changes remain separate governed transitions.
 
 > [!CAUTION]
 > Do not post credentials, private endpoints, exploit details, exact rare-species or archaeology locations, critical-infrastructure vulnerability details, living-person records, DNA/genomic material, private-land details, restricted source payloads, or unreleased lifecycle data. Route security-sensitive material through `SECURITY.md`.
 
 ## Feature summary
 
-<!-- In one or two sentences, describe the capability or improvement and the user-visible or operational outcome. -->
+<!-- In one or two sentences, state the capability and observable outcome. -->
 
 -
 
 ## Reporter preflight
 
-- [ ] I searched issues, pull requests, ADRs, active branches, and related documentation for overlapping work.
-- [ ] This is a feature or enhancement request, not primarily a reproducible defect or evidence correction.
-- [ ] I described the problem and observable outcome before proposing paths or implementation details.
-- [ ] I pinned current repository, runtime, or source evidence where practical, or marked it `NEEDS VERIFICATION` / `UNKNOWN`.
-- [ ] I kept the request within one coherent review and rollback boundary, or explained the required ordering.
-- [ ] I marked repository, architecture, staffing, cost, source, and runtime assumptions with the appropriate truth label.
+- [ ] I searched issues, pull requests, ADRs, active branches, and related documentation for overlap.
+- [ ] This is primarily a feature or enhancement request rather than a reproducible defect, evidence correction, source-admission proposal, or sensitivity report.
+- [ ] I described the problem and current behavior before proposing implementation details.
+- [ ] I pinned current evidence where practical, or marked it `NEEDS VERIFICATION` / `UNKNOWN`.
+- [ ] I separated truth labels, implementation status, validation outcomes, review state, delivery state, and release state.
+- [ ] I kept the request within one coherent acceptance and rollback boundary, or explained the dependency order.
+- [ ] I classified Drive, attachment, research, and prior-prompt material without treating it as repository authority.
 - [ ] I removed or generalized secrets, private data, restricted content, and exact sensitive locations.
-- [ ] This proposal is safe for a public issue. Security-sensitive details have been routed privately.
+- [ ] This proposal is safe for a public issue; security-sensitive detail was routed privately.
 - [ ] I understand that issue content is untrusted intake data and does not activate an agent or expand authority.
-- [ ] I understand that filing, assigning, labeling, automating, prioritizing, or closing this issue does not approve architecture, implementation, merge, release, or publication.
 
-## Proposal identity and pinned baseline
+## Proposal identity and pinned evidence freeze
 
 <!--
-Use stable identifiers and immutable refs where practical. An issue number is
-intake identity, not a governed implementation, release, or feature identity.
+Use immutable references where practical. An issue number is intake identity, not
+a governed feature, release, or artifact identity.
 -->
 
 | Field | Value |
 |---|---|
 | Proposed feature / capability ID | `UNKNOWN` |
-| Repository baseline | <!-- branch/ref plus immutable commit SHA, or N/A --> |
+| Repository and host | `bartytime4life/Kansas-Frontier-Matrix` / other |
+| Default branch and exact baseline commit | `NEEDS VERIFICATION` |
 | Current target path, component, route, contract, or object ID | `UNKNOWN` |
-| Current target blob, digest, version, or release ID | `UNKNOWN` |
-| Current implementation state | `CONFIRMED` / `PARTIAL` / `PROPOSED` / `UNKNOWN` |
-| Related issue(s), PR(s), ADR(s), or campaign | |
-| Duplicate / overlap search | `NOT RUN` / result |
+| Current target blob, digest, schema version, or release ID | `UNKNOWN` |
+| Canonical source / generator for the target | `UNKNOWN` / `N/A` |
+| Direct producers and consumers inspected | `NOT_INSPECTED` / describe |
+| Last material target change | commit / PR / date / `UNKNOWN` |
+| Related issue(s), PR(s), ADR(s), register entries, or campaign | |
+| Duplicate / overlap search | `NOT_RUN` / result and search scope |
 | Active branch or PR disposition | `none / reuse / reconcile / stack / supersede / HOLD / UNKNOWN` |
 | Last-known-good or current baseline behavior | `UNKNOWN` |
+| Relevant baseline failures or warnings | `none observed / describe / NOT_RUN` |
 | Requested decision or delivery horizon | `scoping / implementation proposal / current request / UNKNOWN` |
 
 > [!NOTE]
-> Recheck current bytes, accepted ADRs, active branches, and open pull requests before implementation. Stale or compatible overlap is not an automatic blocker; unresolved same-byte conflict, contradictory authority, or active edits that cannot be preserved produce `HOLD`.
+> Recheck current bytes, accepted ADRs, active branches, and open pull requests before implementation. Compatible overlap may be reconciled. Unresolved same-byte conflict, contradictory authority, or active edits that cannot be preserved produce `HOLD`.
 
-## Current truth posture
+## Truth posture
 
-<!-- Apply labels per material claim. Most new feature proposals begin as PROPOSED. -->
+Use a truth label for each material claim. Do not use implementation or validation states as truth labels.
 
-- [ ] `CONFIRMED` — verified from pinned repository evidence, tests, logs, accepted decisions, source records, or generated artifacts.
-- [ ] `PROPOSED` — desired capability, design, placement, implementation, or delivery approach under review.
-- [ ] `NEEDS VERIFICATION` — checkable, but not checked strongly enough to act as fact.
-- [ ] `UNKNOWN` — unresolved and unsafe to assume.
+- [ ] `CONFIRMED` — verified from pinned repository evidence, attached material, tests, logs, source records, generated artifacts, or authoritative sources.
+- [ ] `PROPOSED` — a desired capability, design, placement, implementation, or future state under review.
+- [ ] `NEEDS VERIFICATION` — a concrete check remains before the claim is safe to rely on.
+- [ ] `UNKNOWN` — evidence is insufficient, inaccessible, ambiguous, or outside the inspected scope.
+
+Optional qualifiers such as `CONFLICTED`, `STALE`, `SUPERSEDED`, `NARROWED`, or `INFERRED` may refine a truth label but do not replace it.
 
 **Overall proposal posture:** `PROPOSED`
 
@@ -114,18 +122,35 @@ intake identity, not a governed implementation, release, or feature identity.
 |---|---|---|---|
 | | `CONFIRMED` / `PROPOSED` / `NEEDS VERIFICATION` / `UNKNOWN` | | |
 
+## Candidate implementation status
+
+Select the current status supported by the recorded search. Failure to find something without a defensible search is `UNKNOWN`, not `ABSENT`.
+
+- [ ] `IMPLEMENTED` — current behavior is demonstrated by executable or contract-level evidence at the pinned baseline.
+- [ ] `PARTIAL` — a verified portion exists and a precise bounded gap remains.
+- [ ] `ABSENT` — a recorded, defensible search found no implementation in the relevant surfaces.
+- [ ] `IN_FLIGHT` — verified active work already owns the gap.
+- [ ] `SUPERSEDED` — a later equal- or higher-authority decision replaces the candidate.
+- [ ] `CONTRADICTED` — the candidate conflicts with current governing authority.
+- [ ] `NOT_INSPECTED` — the relevant surface was not examined.
+- [ ] `UNKNOWN`
+
+**Search scope and evidence:**
+
+-
+
+> [!NOTE]
+> A branch or pull request is `DRAFTED`; it is not `IMPLEMENTED` on the default branch. A merge proves repository bytes, not release, deployment, promotion, publication, source activation, or runtime operation.
+
 ## Problem or opportunity
 
-<!--
-Describe the current limitation, unmet need, governance gap, user pain, or
-opportunity. Separate current evidence from desired future behavior.
--->
+<!-- Describe the verified limitation, unmet need, governance gap, or user pain. -->
 
 -
 
 ### Current behavior or capability
 
-<!-- Describe only what current evidence supports. -->
+<!-- State only what pinned evidence supports. -->
 
 -
 
@@ -144,11 +169,25 @@ opportunity. Separate current evidence from desired future behavior.
 
 ### Desired outcome
 
-<!-- What should become possible, safer, clearer, faster, more inspectable, or more correct? -->
+<!-- What should become possible, safer, clearer, faster, or more inspectable? -->
 
 -
 
-## Request and change classification
+## Request classification
+
+### Improvement class
+
+Select the narrowest class that fits the observable outcome.
+
+- [ ] `UPDATE` — align an existing artifact, configuration, dependency, workflow, or document with current authoritative evidence.
+- [ ] `UPGRADE` — move to a newer interface, schema, format, dependency, toolchain, or architecture with compatibility and rollback.
+- [ ] `IMPROVE` — produce a measurable gain in correctness, evidence closure, governance, security, accessibility, reliability, maintainability, usability, observability, correction, or rollback.
+- [ ] `INTEGRATE_IDEA` — reconcile an attached, Drive, issue, or research idea against current repository authority before adaptation.
+- [ ] `MODERNIZE_DOCUMENTATION` — improve accuracy, structure, navigation, rendering, or usability without letting prose outrun implementation evidence.
+- [ ] `CAMPAIGN` — evaluate multiple candidates and, only when explicitly requested, order no more than three independently reviewable slices.
+- [ ] `FIX` — route a primarily reproducible defect to `bug.md` unless the feature boundary is still primary.
+- [ ] Other:
+- [ ] `NEEDS VERIFICATION`
 
 ### Request type
 
@@ -173,24 +212,20 @@ Check all that apply.
 
 ### Change class
 
-Select the strongest class currently supported.
-
 - [ ] `EDITORIAL` — wording or presentation only.
 - [ ] `ADDITIVE` — backward-compatible capability, guardrail, or documentation.
-- [ ] `BEHAVIORAL` — current runtime, validation, workflow, policy application, or public behavior changes.
+- [ ] `BEHAVIORAL` — runtime, validation, workflow, policy application, or public behavior changes.
 - [ ] `STRUCTURAL` — path ownership, generation, lifecycle, migration, or dependency topology changes.
-- [ ] `AUTHORITY_CHANGING` — normative governance, policy meaning, object authority, responsibility, or public-path boundary changes.
+- [ ] `AUTHORITY_CHANGING` — governance, policy meaning, object authority, responsibility, or public-path boundary changes.
 - [ ] `NEEDS VERIFICATION`
 
-### Implementation risk
+### Implementation risk and materiality
 
 - [ ] `LOW` — bounded editorial or deterministic additive work with no trust-boundary effect.
 - [ ] `MODERATE` — multi-file or behavioral work with contained compatibility and rollback.
 - [ ] `HIGH` — security, policy, source rights, persisted data, migration, public interface, workflow, or release implications.
 - [ ] `CRITICAL` — harmful exposure, authority bypass, irreversible loss, or publication-integrity risk.
 - [ ] `UNKNOWN`
-
-### Materiality and urgency
 
 - User or governance value:
 - Urgency or deadline:
@@ -199,12 +234,34 @@ Select the strongest class currently supported.
 - Reuse across domains or components:
 - Materiality remains `UNKNOWN`:
 
+## Source and idea reconciliation
+
+Complete this section when the request depends on Drive, an attachment, external research, a prior prompt, an issue, or another proposal source.
+
+### Source ledger
+
+| Source title / stable reference | Version, date, section, page, or lines | Classification | What it supports | What it cannot prove | Adoption / supersession evidence | Rights or sensitivity note |
+|---|---|---|---|---|---|---|
+| | | `ACCEPTED_DOCTRINE` / `ADOPTED_REFERENCE` / `PLANNING_REFERENCE` / `LINEAGE` / `EXPLORATORY` / `BACKGROUND` / `DUPLICATE` / `UNKNOWN` | | | | |
+
+> [!IMPORTANT]
+> Detail, recency, polish, repetition, or a “definitive” label does not create authority. Establish adoption or supersession through an accepted decision, explicit replacement language, version lineage, or strong current repository evidence.
+
+### Candidate reconciliation
+
+| Candidate ID / name | Intended repository outcome | Repository search scope | Implementation status | Governing authority | Owning root / current consumers | Dependencies and overlap | Rights / sensitivity / security | Acceptance and negative cases | Disposition |
+|---|---|---|---|---|---|---|---|---|---|
+| | | | `IMPLEMENTED` / `PARTIAL` / `ABSENT` / `IN_FLIGHT` / `SUPERSEDED` / `CONTRADICTED` / `UNKNOWN` / `NOT_INSPECTED` | | | | | | `SELECTED` / `DRAFTED` / `DEFERRED` / `REJECTED` |
+
+- [ ] Only the smallest source ideas needed for this verified gap are carried forward.
+- [ ] Source prose is paraphrased rights-safely rather than transcribed into repository authority.
+- [ ] Unavailable, duplicate, irrelevant, or uninspected sources are recorded honestly.
+- [ ] Current repository behavior is described from repository evidence, not from the source proposal.
+- [ ] Not applicable.
+
 ## Proposed user or operator workflow
 
-<!--
-Describe the intended workflow from the user's perspective. Include safe negative
-outcomes such as HOLD, ABSTAIN, DENY, unavailable, stale, or permission required.
--->
+<!-- Include safe negative states such as HOLD, ABSTAIN, DENY, stale, or unavailable. -->
 
 1.
 2.
@@ -219,8 +276,6 @@ outcomes such as HOLD, ABSTAIN, DENY, unavailable, stale, or permission required
 -
 
 ### Finite behavior outcomes
-
-Check all outcomes the feature must represent explicitly.
 
 - [ ] `ANSWER` / `ALLOW` / successful operation
 - [ ] `ABSTAIN` / insufficient or stale evidence
@@ -243,47 +298,72 @@ Check all outcomes the feature must represent explicitly.
 
 ### Explicitly unchanged
 
-<!-- Name trust boundaries, APIs, formats, roots, lifecycle stages, or compatibility promises that should remain unchanged. -->
+<!-- Name trust boundaries, APIs, formats, roots, lifecycle stages, or compatibility promises that remain unchanged. -->
 
 -
 
-## Review boundary and direct-dependency closure
+## Change contract and direct-dependency closure
 
-<!--
-Define one observable outcome, one primary authority owner, a bounded direct
-companion set, one validation story, and one rollback boundary.
--->
+<!-- Define the smallest complete, reviewable, reversible acceptance boundary. -->
 
-| Boundary item | Decision |
+| Contract item | Decision |
 |---|---|
-| Observable feature outcome | |
-| Primary authority owner | |
+| Goal / observable outcome | |
+| Verified problem or gap | |
+| Current behavior at pinned baseline | |
+| Desired behavior / invariant | |
+| Exact targets and object families | |
+| Primary owning responsibility root | |
+| Canonical source / generator | |
+| Direct producers and consumers | |
 | Hand-edited canonical artifacts | |
-| Generated or synchronized outputs | |
+| Generated, mirrored, or synchronized outputs | |
 | Direct contracts / schemas / policy | |
 | Direct fixtures / validators / tests | |
 | Documentation / navigation / migration closure | |
+| Objective positive acceptance criteria | |
+| Negative, denied, abstain, fail-closed, and invalid-input criteria | |
+| Compatibility, aliases, versions, or rollout | |
+| Rights, privacy, sovereignty, licensing, and precision impact | |
+| Validation plan and exact evidence required | |
 | Work intentionally deferred or split | |
 | Ordered or stacked dependency sequence | |
-| Rollback / abandonment boundary | |
 | Active overlap disposition | |
+| Rollback / forward-fix / correction boundary | |
+| Delivery ceiling | `report / patch / pushed branch / DRAFT_PR / READY_PR / UNKNOWN` |
 
 - [ ] The proposal has one coherent outcome, validation story, and rollback boundary.
 - [ ] Direct dependencies are limited to buildability, semantic agreement, fixtures/tests, generation, navigation, compatibility, migration, correction, rollback, or repository-required receipts.
 - [ ] Confirmed required consumers are included, ordered, or named as concrete blockers.
 - [ ] Optional consumers and unrelated cleanup are excluded or listed as follow-up work.
 - [ ] Generated or mirrored artifacts will be changed through their writable canonical source and deterministic regeneration.
-- [ ] A governance change and implementation that depends on it are ordered separately.
-- [ ] Any active overlap has a survivor, reconciliation, supersession, stack, or intentionally disjoint boundary.
+- [ ] Governance adoption and dependent implementation are ordered separately when required.
+- [ ] Active overlap has a survivor, reconciliation, supersession, stack, or intentionally disjoint boundary.
 - [ ] `NEEDS VERIFICATION`
 
-## Evidence and need basis
+## Non-compensable eligibility gates
 
-<!--
-Use current repository paths plus immutable refs, issue/PR numbers, user research,
-test results, logs, metrics, or authoritative sources. Memory and plausibility are
-not evidence.
--->
+A candidate must pass every applicable gate before implementation. Value, urgency, polish, milestone pressure, or a numerical score cannot compensate for a failed gate.
+
+- [ ] Source and repository evidence are traceable enough to evaluate.
+- [ ] Current repository evidence confirms a meaningful, bounded gap or defect.
+- [ ] The owning responsibility root and canonical home are unambiguous.
+- [ ] No active PR, branch, migration, or human work owns the same bytes or semantic authority surface, or overlap is safely reconciled.
+- [ ] The change does not depend on an unaccepted ADR or unresolved governance, lifecycle, authority, compatibility, source-admission, promotion, release, or publication decision.
+- [ ] Objective acceptance criteria and meaningful negative cases exist.
+- [ ] Required fail-closed behavior can be tested.
+- [ ] The work fits one small dependency-closed review and rollback boundary, or a justified ordered stack.
+- [ ] Rights, licensing, consent, sovereignty, sensitivity, privacy, security, and harmful precision are understood and controllable.
+- [ ] The change stays within the currently authorized mutation boundary.
+- [ ] Success does not require weakening a validator, ratchet, policy, evidence resolver, governed API, trust membrane, promotion control, publication control, or security default.
+- [ ] Core acceptance criteria can be proved despite unrelated baseline failures.
+- [ ] Gate result is `PASS` / `DEFERRED` / `BLOCKED` / `NEEDS VERIFICATION`.
+
+**Failed gate, exact blocker, and unblock condition:**
+
+-
+
+## Evidence and need basis
 
 | Truth label | Evidence location | Observation supported | Limitation / verification needed |
 |---|---|---|---|
@@ -302,12 +382,10 @@ not evidence.
 
 ## Alternatives and status quo
 
-<!-- Include genuine alternatives. "Do nothing" or a narrower manual workflow is valid. -->
-
 1. **Preferred capability —**
 2. **Narrower alternative —**
 3. **Different implementation approach —**
-4. **Status quo —**
+4. **Status quo / no change —**
 
 **Why the preferred capability is proportionate:**
 
@@ -338,15 +416,11 @@ A feature request must route to the ADR process when it would make a consequenti
 **ADR issue or proposed ADR path:** `N/A / ADR-XXXX / related issue`
 
 > [!IMPORTANT]
-> Do not use this feature issue to approve an ADR-triggering decision. Route the decision through `.github/ISSUE_TEMPLATE/adr.md` and the governed `docs/adr/` process. Dependent implementation must wait for acceptance and a repinned base unless it can remain non-authoritative behind an existing accepted boundary.
+> Do not use this feature issue to approve an ADR-triggering decision. Route the decision through `.github/ISSUE_TEMPLATE/adr.md` and the governed `docs/adr/` process. Dependent behavior must wait for acceptance and a repinned base unless it remains conspicuously non-authoritative and inactive behind an accepted boundary.
 
 ## Directory Rules and placement
 
-<!--
-Paths are PROPOSED until checked against adopted Directory Rules, current
-repository evidence, path-scoped instructions, and visible accepted ADRs.
-Choose paths by responsibility, not topic.
--->
+<!-- Paths are PROPOSED until checked against adopted Directory Rules and current repository evidence. Choose paths by responsibility, not topic. -->
 
 | Proposed or affected path | Owning responsibility root | Responsibility / authority role | Change class | Placement outcome | Directory Rules or ADR basis |
 |---|---|---|---|---|---|
@@ -357,10 +431,10 @@ Choose paths by responsibility, not topic.
 - [ ] No new parallel authority home is proposed.
 - [ ] Canonical, compatibility, generated, mirror, and external-storage surfaces remain distinct.
 - [ ] Meaning, machine shape, policy, proof, lifecycle data, and release authority remain separated.
-- [ ] Domain files stay inside the proper responsibility root rather than creating a new root-level domain folder.
-- [ ] Any move, rename, delete, or authority change has a migration, deprecation, link-repair, and rollback plan.
+- [ ] Domain files remain inside the proper responsibility root rather than creating a root-level topic folder.
+- [ ] Any move, rename, delete, or authority change has migration, deprecation, link-repair, and rollback handling.
 - [ ] A docs/implementation conflict is surfaced as drift rather than silently normalized.
-- [ ] Placement is not yet known and is explicitly `NEEDS VERIFICATION`.
+- [ ] Placement is `NEEDS VERIFICATION` and no speculative path is being claimed as current fact.
 
 ## Affected KFM surfaces
 
@@ -386,7 +460,9 @@ Choose paths by responsibility, not topic.
 - [ ] Other:
 - [ ] `UNKNOWN`
 
-**Cross-cutting explanation:** <!-- Required when several roots are affected. -->
+**Cross-cutting explanation:**
+
+-
 
 ### Object families and authority surfaces
 
@@ -446,9 +522,7 @@ Choose paths by responsibility, not topic.
 - Fixture posture: `synthetic / minimized / public-safe / no-network / UNKNOWN`
 - Not applicable:
 
-## Trust, policy, rights, and sensitivity impact
-
-Check all that apply.
+## Trust, policy, rights, sensitivity, and security impact
 
 - [ ] Requires new or changed policy behavior.
 - [ ] Could expose sensitive or restricted material.
@@ -460,31 +534,23 @@ Check all that apply.
 - [ ] Could affect rights, licensing, attribution, redistribution, consent, sovereignty, or source terms.
 - [ ] Requires redaction, generalization, staged access, delayed release, quarantine, abstention, or denial.
 - [ ] Requires a correction path and rollback target before public release.
-- [ ] No known trust, policy, rights, sensitivity, or release impact.
+- [ ] Authentication or authorization changes.
+- [ ] New network, secret, token, signing, OIDC, or third-party integration.
+- [ ] New upload, parsing, rendering, execution, generated-content, dependency, action, container, or binary surface.
+- [ ] Critical infrastructure, exact-sensitive location, living-person, DNA/genomic, private-land, or restricted-source implications.
+- [ ] No known trust, policy, rights, sensitivity, security, or release impact.
 - [ ] `UNKNOWN`
+
+**Private handling required:** `no / yes / NEEDS VERIFICATION`
 
 **Impact explanation:**
 
 -
 
-## Security and public-safety review
-
-- [ ] No security-sensitive behavior is proposed.
-- [ ] Authentication or authorization changes.
-- [ ] New network, secret, token, signing, OIDC, or third-party integration.
-- [ ] New upload, parsing, rendering, execution, or generated-content surface.
-- [ ] New public route, data exposure, map layer, export, search, graph, or AI surface.
-- [ ] New dependency, package lifecycle script, action, container, or binary.
-- [ ] Critical infrastructure, exact-sensitive location, living-person, DNA/genomic, private-land, or restricted-source implications.
-- [ ] Security review is required before public discussion continues.
-- [ ] `UNKNOWN`
-
-**Private handling required:** `no / yes / NEEDS VERIFICATION`
-
 ## Proposed implementation task contract
 
 > [!IMPORTANT]
-> The fields below support later implementation scoping. Completing them does not authorize repository mutation. A current direct implementation request and applicable safeguards still control any branch, commit, push, or pull request.
+> Completing these fields supports later scoping; it does not authorize mutation. A current direct implementation request and applicable controls still govern branch, commit, push, and pull-request work.
 
 | Field | Proposed value |
 |---|---|
@@ -492,8 +558,8 @@ Check all that apply.
 | `goal` | |
 | `repository` | `bartytime4life/Kansas-Frontier-Matrix` / other |
 | `base` | ref plus immutable commit / `NEEDS VERIFICATION` |
+| `improvement_class` | `UPDATE` / `UPGRADE` / `IMPROVE` / `INTEGRATE_IDEA` / `MODERNIZE_DOCUMENTATION` / `CAMPAIGN` |
 | `profile` | `DOCS_ONLY` / `DOCS_PLUS_DEPENDENCIES` / `REPOSITORY_SLICE` / `CAMPAIGN` / `GOVERNANCE_CHANGE` |
-| `operation` | `MODERNIZE_MARKDOWN` / `CREATE_DOCUMENTATION` / `IMPLEMENT_REPOSITORY_SLICE` / `FIX_ISSUE` / `MIGRATE_STRUCTURE` / `IMPLEMENT_NEXT_GAP` / `RUN_CAMPAIGN` / other |
 | `user_intent` | `DRAFT` / `IMPLEMENT` / `IMPLEMENT_AND_READY` / `UNKNOWN` |
 | `authority_reference` | `CURRENT_USER_REQUEST` / accepted control / `UNKNOWN` |
 | `delivery_target` | `ARTIFACT_ONLY` / `WORKSPACE_PATCH` / `PUSHED_BRANCH` / `DRAFT_PR` / `READY_PR` / `UNKNOWN` |
@@ -501,18 +567,13 @@ Check all that apply.
 | `writable_manifest` | exact intended paths; identify generated outputs |
 | `in_scope` | implementation plus direct dependency closure |
 | `non_goals` | merge, release, deployment, promotion, publication, settings, or other exclusions |
-| `acceptance_criteria` | observable functional, structural, safety, and documentation outcomes |
-| `validation_plan` | changed-area, safety, hosted, and delivery checks |
+| `acceptance_criteria` | observable positive, negative, safety, structural, and documentation outcomes |
+| `validation_plan` | changed-area, fail-closed, hosted, and delivery checks |
 | `stop_conditions` | concrete conflict, safety, authority, sensitivity, or irreversibility conditions |
 | `rollback` | abandon, revert, forward-fix, compatibility, and correction boundary |
 | `budgets` | changed paths, roots, diff size, commits, PRs, time, and repair cycles |
 
 ## Proposed implementation approach
-
-<!--
-Keep design and paths PROPOSED. Prefer the smallest complete, useful, reversible
-change. Do not turn this section into an unreviewed architecture decision.
--->
 
 | Order | Proposed artifact or path | Owning root | Direct dependency | Hand-edited / generated | Reversible? | Status |
 |---:|---|---|---|---|---:|---|
@@ -539,7 +600,7 @@ change. Do not turn this section into an unreviewed architecture decision.
 
 ## Workflow-trigger and execution-safety preflight
 
-Complete this section when `.github/workflows/`, automation, CI, external execution, or repository control may change.
+Complete when `.github/workflows/`, automation, CI, external execution, or repository control may change.
 
 - [ ] No workflow or externally executing behavior changes.
 - [ ] Trigger events and trusted/untrusted input boundaries are identified.
@@ -548,7 +609,7 @@ Complete this section when `.github/workflows/`, automation, CI, external execut
 - [ ] Required check names and failure semantics remain stable, or their contract change is separately approved.
 - [ ] Network access, downloads, dependency installation, and artifact retention are bounded and justified.
 - [ ] The workflow cannot automatically merge, release, deploy, promote, publish, activate a source, or change settings from untrusted input.
-- [ ] A failing baseline is classified as introduced, inherited, drift, or unrelated before repair.
+- [ ] Baseline failures are attributed only from comparable exact-base and exact-head evidence.
 - [ ] Not applicable.
 - [ ] `NEEDS VERIFICATION`
 
@@ -570,7 +631,7 @@ Complete this section when `.github/workflows/`, automation, CI, external execut
 
 - [ ] Generated outputs will not be hand-edited to bypass their source.
 - [ ] Derived artifacts remain downstream carriers rather than canonical truth.
-- [ ] Old generated-work receipts remain immutable; a new receipt will bind new AI-authored bytes when required.
+- [ ] Existing generated-work receipts remain immutable; a new receipt will bind new AI-authored bytes when required.
 - [ ] `NEEDS VERIFICATION`
 
 ## Dependencies, compatibility, and operational cost
@@ -588,16 +649,15 @@ Complete this section when `.github/workflows/`, automation, CI, external execut
 
 ## Acceptance criteria
 
-<!--
-Make each criterion observable and independently evaluable. Include safe negative
-behavior, trust visibility, documentation, and rollback—not only the happy path.
--->
+Make each criterion observable and independently evaluable. Include negative and fail-closed behavior, not only the happy path.
 
 | Criterion | Expected outcome | Evidence required |
 |---|---|---|
 | User or operator outcome | | Demonstration, test, or reviewed artifact |
 | Positive path | | Deterministic test or fixture |
 | Negative / denied / abstain path | | Negative fixture, policy test, or finite outcome |
+| Invalid, malformed, restricted, or unavailable input | | Fail-closed test or explicit N/A rationale |
+| Offline / no-network behavior | | No-network test or explicit N/A rationale |
 | Evidence and provenance | | Resolved evidence, receipt, or proof as applicable |
 | Public-surface safety | | Boundary or exposure test |
 | Security / rights / sensitivity | | Review, test, or explicit N/A rationale |
@@ -605,18 +665,18 @@ behavior, trust visibility, documentation, and rollback—not only the happy pat
 | Documentation | | Updated path or explicit N/A rationale |
 | Compatibility / migration | | Compatibility test or migration evidence |
 | Generated-output closure | | Regeneration and drift evidence or N/A |
-| Rollback / correction | | Named reversal target and validation |
-| No unintended publication | | Proof that issue, PR, CI, watcher, connector, or model cannot publish directly |
+| Rollback / correction / supersession | | Named reversal target and validation |
+| No unintended publication | | Evidence that issue, PR, CI, watcher, connector, or model cannot publish directly |
 
 ## Validation and evaluation plan
 
 ### Before implementation
 
-- [ ] Confirm repository identity, base commit, target blobs, owning roots, related ADRs, and overlapping work.
-- [ ] Freeze the goal, initial writable manifest, direct dependencies, validation plan, stop conditions, and rollback boundary.
+- [ ] Confirm repository identity, base commit, target blobs, owning roots, canonical sources, consumers, related ADRs, and overlapping work.
+- [ ] Freeze the goal, writable manifest, direct dependencies, validation plan, stop conditions, and rollback boundary.
 - [ ] Resolve `UNKNOWN` and `NEEDS VERIFICATION` items required to make the next action safe and materially correct.
-- [ ] Define representative positive, negative, denied, abstain, stale, no-action, and error cases where applicable.
-- [ ] Establish baseline behavior, tests, metrics, or current known failures.
+- [ ] Define representative positive, negative, denied, abstain, stale, invalid, unavailable, no-action, and error cases where applicable.
+- [ ] Establish baseline behavior, tests, metrics, and current known failures.
 - [ ] Complete rights, sensitivity, security, source, and policy review where applicable.
 
 ### During implementation
@@ -629,26 +689,50 @@ behavior, trust visibility, documentation, and rollback—not only the happy pat
 - [ ] Update documentation, indexes, links, and generated outputs alongside behavior.
 - [ ] Inspect the complete diff for unrelated churn, missing companions, false claims, and recoverability.
 
-### Post-implementation and delivery
+### Validation outcome vocabulary
 
-- [ ] Evaluate every acceptance criterion as `PASS`, `FAIL`, `PARTIAL`, `PENDING`, `NOT RUN`, `NOT APPLICABLE`, or `UNKNOWN`.
-- [ ] Verify exact branch head, parentage, base-to-head diff, changed paths, and consequential remote bytes.
-- [ ] Verify pull-request base, head, open state, draft/ready state, and task identity.
-- [ ] Separate local validation, hosted checks, delivery state, human review, merge, release, and publication state.
-- [ ] Confirm correction and rollback paths.
-- [ ] Capture follow-up verification work without disguising it as completion.
+Use only the outcome supported by evidence:
+
+- `PASS`
+- `FAIL`
+- `ERROR`
+- `SKIPPED`
+- `NOT_RUN`
+- `PENDING`
+- `CANCELLED`
+- `TIMED_OUT`
+- `NO_RUN_FOUND`
+- `NOT_APPLICABLE`
+
+`SKIPPED`, `NOT_RUN`, `PENDING`, `NO_RUN_FOUND`, and `CHECK_NOT_RUN` are never equivalent to `PASS`.
+
+### Baseline comparison and failure attribution
+
+When attribution matters, run the same command in materially comparable environments on exact base and exact head.
+
+- [ ] `INTRODUCED` — base passes and head fails with the same command and comparable environment.
+- [ ] `INHERITED` — the same failure signature occurs on exact base and exact head.
+- [ ] `RESOLVED` — base fails and head passes.
+- [ ] `BASE_DRIFT_OR_INTEGRATION` — prior head passed its base but a later merge or integration result fails after material drift.
+- [ ] `ENVIRONMENTAL_OR_FLAKY` — repeated evidence supports infrastructure failure or nondeterminism.
+- [ ] `UNRESOLVED_OR_NONCOMPARABLE` — evidence cannot support attribution.
+- [ ] `NOT_RUN` — state the exact reason.
+
+Never call a failure inherited from an older run, different SHA, command, toolchain, or environment.
 
 ### Planned validation matrix
 
-| Check or command | Scope | Required? | Expected outcome | Evidence location |
-|---|---|---:|---|---|
-| | | `yes` / `no` | `PASS` / `FAIL` / `PENDING` / `NOT RUN` / `N/A` / `UNKNOWN` | |
+| Check or command | Scope | Required? | Exact base/head | Expected outcome | Evidence location |
+|---|---|---:|---|---|---|
+| | | `yes` / `no` | | `PASS` / `FAIL` / `PENDING` / `NOT_RUN` / `N/A` | |
 
 ### Hosted checks and exact-head evidence
 
-| Check | Required? | State | Exact run / head evidence |
-|---|---:|---|---|
-| | `yes` / `no` | `PASS` / `FAIL` / `PENDING` / `NOT RUN` / `UNKNOWN` | |
+| Check | Required? | State | Exact run / tested head | Failure attribution |
+|---|---:|---|---|---|
+| | `yes` / `no` | `PASS` / `FAIL` / `PENDING` / `SKIPPED` / `NO_RUN_FOUND` | | |
+
+Any new commit invalidates earlier head-specific validation. Distinguish branch-head checks from synthetic merge-result or merge-queue checks.
 
 ## Rollout, delivery, release, correction, and rollback
 
@@ -710,90 +794,123 @@ behavior, trust visibility, documentation, and rollback—not only the happy pat
 
 - [ ] I understand this issue is a proposal, not an approved roadmap item, design, task contract, or delivery authorization.
 - [ ] I used current evidence for present-state claims and labeled uncertainty.
-- [ ] I did not invent a file path, owner, workflow, API, label, source state, review, or runtime behavior as current fact.
+- [ ] I kept truth, implementation, validation, review, delivery, and release states separate.
+- [ ] I did not invent a path, owner, workflow, API, source state, review, or runtime behavior as current fact.
+- [ ] I classified Drive, attachment, prior-prompt, and research sources without promoting them into authority.
 - [ ] I identified ADR triggers, affected responsibility roots, lifecycle/public-path implications, and placement uncertainty.
 - [ ] I bounded direct dependencies and excluded unrelated cleanup.
-- [ ] I included measurable acceptance criteria, safe negative behavior, validation, delivery, and rollback.
+- [ ] I included objective positive, negative, fail-closed, no-network, validation, delivery, correction, and rollback criteria as applicable.
 - [ ] I identified generated/mirrored outputs and workflow-trigger risk where applicable.
 - [ ] I did not include sensitive, restricted, private, or unreleased material.
 - [ ] I understand implementation, merge, release, publication, and issue closure require separate governed evidence and authority.
 
-## Maintainer triage
+## Maintainer triage and governed handoff
 
-<!-- Maintainers may update this section after review. -->
+<!-- Maintainers may update this section after review. Keep each state axis separate. -->
 
-### Intake classification
+### Intake disposition
 
-- [ ] Duplicate or covered by existing work
-- [ ] Needs more evidence or problem definition
-- [ ] `NEEDS VERIFICATION`
-- [ ] Suitable for bounded backlog / planning
-- [ ] Suitable for implementation scoping
-- [ ] Requires ADR before implementation
-- [ ] Requires security, policy, rights, sensitivity, sovereignty, or legal review
-- [ ] Requires source-admission or release/correction review
-- [ ] Not planned, with reason recorded
-- [ ] Out of scope for KFM
-- [ ] Route to bug, correction, documentation, or other intake process
+- [ ] `ACCEPTED_FOR_SCOPING`
+- [ ] `NEEDS_INFORMATION`
+- [ ] `NEEDS_VERIFICATION`
+- [ ] `ROUTE_TO_ADR`
+- [ ] `ROUTE_TO_BUG`
+- [ ] `ROUTE_TO_EVIDENCE_CORRECTION`
+- [ ] `ROUTE_TO_SECURITY_OR_SENSITIVE_REVIEW`
+- [ ] `ROUTE_TO_SOURCE_ADMISSION`
+- [ ] `DUPLICATE_OR_CONSOLIDATE`
+- [ ] `DEFERRED`
+- [ ] `REJECTED` / `NOT_PLANNED`, with reason
+- [ ] `OUT_OF_SCOPE`
 
-### Definition of ready for implementation planning
+### Candidate implementation status
 
-- [ ] Problem, affected users, current evidence, and desired outcome are clear.
-- [ ] Scope, non-goals, one review boundary, and affected roots are bounded.
-- [ ] Current target identity, baseline, overlap, and required authority are resolved or explicitly planned.
-- [ ] ADR, placement, migration, generated-output, and compatibility requirements are resolved or ordered.
-- [ ] Rights, sensitivity, security, source role, and public-path posture are resolved or fail closed.
-- [ ] Acceptance criteria cover positive, negative, denied, abstain, stale, and error behavior as applicable.
-- [ ] Direct dependencies, documentation, delivery, correction, release, and rollback are understood.
-- [ ] Required reviewers and owners are identified.
-- [ ] Remaining uncertainty is recorded as `UNKNOWN` or `NEEDS VERIFICATION`.
+- [ ] `IMPLEMENTED`
+- [ ] `PARTIAL`
+- [ ] `ABSENT`
+- [ ] `IN_FLIGHT`
+- [ ] `SUPERSEDED`
+- [ ] `CONTRADICTED`
+- [ ] `NOT_INSPECTED`
+- [ ] `UNKNOWN`
+
+**Status evidence and search scope:**
+
+-
+
+### Eligibility result
+
+- [ ] `SELECTED` — every applicable non-compensable gate passes.
+- [ ] `DRAFTED` — a reviewable proposal or implementation exists, but no default-branch implementation is implied.
+- [ ] `DEFERRED` — a valuable candidate requires a named dependency, decision, or review.
+- [ ] `BLOCKED` — a concrete safety, authority, ownership, evidence, rights, or testability gate prevents trustworthy progress.
+- [ ] `REJECTED` — candidate conflicts with scope, authority, evidence, or value.
+- [ ] `NO_OP` — current evidence shows the requested outcome is already satisfied.
+
+**Gate evidence, blocker, and unblock condition:**
+
+-
 
 ### Proposed implementation routing
 
 | Field | Maintainer disposition |
 |---|---|
 | Task ID | |
-| Resolved profile / operation | |
+| Improvement class / profile | |
 | Authority reference | |
 | Delivery target | `ARTIFACT_ONLY` / `WORKSPACE_PATCH` / `PUSHED_BRANCH` / `DRAFT_PR` / `READY_PR` / none |
 | Base / branch strategy | |
 | Writable manifest | |
 | Direct dependency set | |
-| Required validation | |
+| Required validation and negative cases | |
 | Stop conditions | |
 | Rollback boundary | |
 | Campaign / stacked PR order | `N/A` / describe |
 
-### Triage outcome
+### GitHub delivery state
 
-- [ ] `ACCEPTED_FOR_SCOPING`
-- [ ] `NEEDS_INFORMATION`
-- [ ] `NEEDS_VERIFICATION`
-- [ ] `ROUTE_TO_ADR`
-- [ ] `ROUTE_TO_SECURITY_OR_SENSITIVE_REVIEW`
-- [ ] `ROUTE_TO_SOURCE_ADMISSION`
-- [ ] `DUPLICATE_OR_CONSOLIDATE`
-- [ ] `DEFERRED`
-- [ ] `NOT_PLANNED`
-- [ ] `OUT_OF_SCOPE`
+- [ ] `NOT_STARTED`
+- [ ] `ARTIFACT_ONLY`
+- [ ] `WORKSPACE_PATCH`
+- [ ] `PUSHED_BRANCH`
+- [ ] `DRAFT_PR`
+- [ ] `READY_PR` — only after explicit request and required checks settle
+- [ ] `CLOSED_UNMERGED`
+- [ ] `MERGED` — repository state only; not release or publication
 
-### Implementation / delivery outcome
+**Branch / PR / base / head / tested SHA:**
 
-<!-- Complete only after separately authorized implementation work. -->
+-
 
-- [ ] `NO_ACTION` / already satisfied
-- [ ] `DRAFT_COMPLETE` / artifact only
+### External and governed transitions
+
+| Transition | State | Evidence / authority |
+|---|---|---|
+| Human review | `PENDING` / `APPROVED` / `CHANGES_REQUESTED` / `REJECTED` / `UNKNOWN` | |
+| ADR acceptance | `N/A` / `PROPOSED` / `ACCEPTED` / `SUPERSEDED` / `UNKNOWN` | |
+| Source admission / activation | `N/A` / `NOT_STARTED` / `HOLD` / `ADMITTED` / `ACTIVE` / `UNKNOWN` | |
+| Lifecycle promotion | `N/A` / `NOT_STARTED` / `HOLD` / `PROMOTED` / `UNKNOWN` | |
+| Release | `N/A` / `NOT_STARTED` / `HOLD` / `RELEASED` / `UNKNOWN` | |
+| Deployment | `N/A` / `NOT_STARTED` / `HOLD` / `DEPLOYED` / `UNKNOWN` | |
+| Publication | `N/A` / `NOT_STARTED` / `HOLD` / `PUBLISHED` / `UNKNOWN` | |
+| Correction / rollback | `N/A` / `PLANNED` / `EXECUTED` / `VERIFIED` / `UNKNOWN` | |
+
+### Useful terminal outcome
+
+- [ ] `READ_ONLY_COMPLETE`
+- [ ] `DRAFT_COMPLETE`
 - [ ] `IMPLEMENTED`
 - [ ] `IMPLEMENTED_WITH_LIMITATIONS`
-- [ ] `PARTIAL`
+- [ ] `NO_OP`
+- [ ] `DEFERRED`
 - [ ] `BLOCKED`
 - [ ] `ERROR`
 - [ ] Not started / not authorized
 
-**Branch / PR / head / validation evidence:**
+**Outcome evidence, remaining limitations, and next governed transition:**
 
 -
 
 ---
 
-<sub>Issue state, labels, assignment, automation, milestones, projects, comments, or closure do not by themselves prove approval, implementation, validation, merge, release, deployment, publication, correction, or rollback completion.</sub>
+<sub>Issue state, labels, assignment, automation, milestones, projects, comments, or closure do not by themselves prove approval, implementation, validation, merge, release, deployment, promotion, publication, correction, or rollback completion.</sub>
