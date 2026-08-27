@@ -21,8 +21,9 @@ issue does not activate an agent or authorize repository mutation by itself.
 
 Before submitting:
 1. Read docs/adr/README.md, docs/adr/INDEX.md, and docs/adr/ADR-template.md.
-2. Pin the current repository baseline and check numbered ADRs, open pull
-   requests, and active branches for ID, path, and decision collisions.
+2. Pin the current repository baseline and check the canonical ADR index, open
+   pull requests, active branches, recent relevant merges, and direct consumers
+   for ID, path, authority, and decision collisions.
 3. Apply the current adopted Directory Rules and accepted, unsuperseded ADRs.
 4. Keep a governance change separate from implementation that depends on its
    adoption. Dependent work may be ordered after acceptance and a repinned base.
@@ -63,7 +64,10 @@ the decision.
 | Governing authority reference(s) | <!-- accepted ADRs, adopted doctrine, current controls --> |
 | Related issue(s) / PR(s) / campaign | |
 | Number-collision check | <!-- highest indexed ID plus open ADR work inspected --> |
-| Path / behavior overlap check | <!-- open PRs, branches, and recent merges inspected --> |
+| Path / behavior overlap check | <!-- open PRs, branches, recent merges, and active migrations inspected --> |
+| Canonical source(s) / generator(s) | <!-- authoritative bytes and producer, or N/A --> |
+| Direct consumers / automation | <!-- paths, workflows, interfaces, or NEEDS VERIFICATION --> |
+| Last material change inspected | <!-- commit / PR plus relevance --> |
 | Decision record or drift entry superseded | `N/A` / link |
 
 > [!NOTE]
@@ -159,20 +163,29 @@ authorize dependent implementation in the same step merely by existing.
 | Boundary item | Decision |
 |---|---|
 | Observable decision outcome | |
+| Current state and problem evidence | |
+| Desired state and explicit invariant | |
 | Primary authority owner | |
+| Canonical source / generator | |
+| Direct consumers and downstream effects | |
 | Decision-record paths | <!-- ADR source, canonical index, direct references --> |
 | Direct companion changes required to record the decision | |
+| Objective acceptance and denial cases | |
 | Dependent implementation after acceptance | |
 | Work intentionally deferred or split | |
 | Required ordered / stacked sequence | |
 | Conflict or overlap disposition | |
+| Delivery ceiling | <!-- issue only / ADR draft PR / later implementation draft PR --> |
 
 - [ ] This issue requests one coherent decision.
+- [ ] Current state, desired state, non-goals, and unchanged invariants are explicit.
+- [ ] Canonical sources, generators, direct consumers, and active overlap were inspected or marked `NEEDS VERIFICATION`.
 - [ ] Direct dependencies are bounded to what is required to record, review, validate, migrate, or supersede the decision.
 - [ ] Unrelated cleanup and optional consumers are excluded or listed as follow-up work.
 - [ ] Implementation that depends on this decision is not treated as authorized before acceptance.
 - [ ] If a governance PR and implementation PR are both needed, their dependency order and repinning rule are explicit.
 - [ ] Any active overlap has a survivor, supersession, consolidation, or intentionally disjoint boundary.
+- [ ] The delivery ceiling is explicit; issue triage does not imply branch, PR, merge, release, deployment, promotion, publication, or settings authority.
 
 ## Evidence basis
 
@@ -372,9 +385,26 @@ the ADR, authorize implementation, or publish anything.
 | Decision is singular and unambiguous | | | |
 | Evidence and authority basis are sufficient | | | |
 | Directory and migration consequences are bounded | | | |
+| Objective positive criteria are testable | | | |
+| Negative, denied, and fail-closed cases preserve the stated invariant | | | |
+| No-network, degraded-mode, or unavailable-dependency behavior is explicit where relevant | | | |
 | Required reviewers acted | | | |
 | Source and canonical index agree | | | |
 | Dependent implementation remains correctly ordered | | | |
+
+### Negative and fail-closed cases
+
+| Case | Expected denial / hold / abstention / error | Evidence required |
+|---|---|---|
+| Missing or stale authority | | |
+| Missing required dependency or reviewer | | |
+| Invalid, restricted, or sensitive input | | |
+| Offline / no-network / unavailable service, when relevant | | |
+| Rollback or supersession boundary crossed | | |
+
+- [ ] Synthetic or minimized fixtures cover sensitive and restricted paths.
+- [ ] Relevant validators reject invalid or incomplete states without weakening policy, baselines, trust boundaries, or promotion controls.
+- [ ] A skipped negative or no-network case is marked `N/A` or `NEEDS VERIFICATION` with a reason and blocked transition.
 
 ### Hosted checks
 
@@ -440,6 +470,36 @@ the ADR, authorize implementation, or publish anything.
 - [ ] Missing reviewer identity or authority produces `HOLD` / `NEEDS VERIFICATION`, not implicit approval.
 - [ ] CODEOWNERS, assignment, labels, issue closure, and green CI are not treated as acceptance evidence by themselves.
 
+## Triage and governed handoff
+
+<!--
+Record the current intake disposition without granting authority. A routing
+recommendation is not permission to mutate the repository or cross a later
+review, merge, release, deployment, promotion, publication, source-admission,
+activation, or settings boundary.
+-->
+
+| State family | Current disposition | Evidence or blocker |
+|---|---|---|
+| Issue triage | `HOLD` / `ROUTE ELSEWHERE` / `ADR RECORD READY FOR DRAFT PR` | |
+| ADR lifecycle | `proposed` / `accepted` / `superseded` / `rejected` | |
+| Implementation readiness | `not authorized` / `blocked pending acceptance` / `separately authorized after repin` | |
+| GitHub delivery | issue only / ADR draft PR / later implementation draft PR | |
+| External transitions | not requested / separately authorized transition | |
+
+- [ ] The disposition is supported by the pinned baseline, accepted authority, direct-consumer evidence, overlap check, and bounded dependencies.
+- [ ] Blocking `UNKNOWN` or `NEEDS VERIFICATION` items name the first transition they prevent.
+- [ ] The smallest next reviewable artifact and its rollback boundary are explicit.
+- [ ] ADR acceptance, implementation readiness, GitHub delivery, and external-transition state are not inferred from one another.
+
+**Triage disposition:**
+
+**Smallest next reviewable artifact:**
+
+**Blocking `UNKNOWN` / `NEEDS VERIFICATION`:**
+
+**Delivery ceiling:**
+
 ## Open questions and verification backlog
 
 -
@@ -468,4 +528,7 @@ the ADR, authorize implementation, or publish anything.
 - [ ] I listed required companion artifacts, validation, compatibility, rollback, correction, and supersession work.
 - [ ] I did not include secrets, restricted payloads, or sensitive exact-location details.
 - [ ] I identified required independent reviewers and unresolved authority gaps.
+- [ ] I identified canonical sources or generators, direct consumers, active overlap, and the last relevant change—or marked the exact gap `NEEDS VERIFICATION`.
+- [ ] I supplied objective acceptance criteria plus relevant negative, denied, fail-closed, and no-network cases.
+- [ ] I recorded issue triage, ADR lifecycle, implementation readiness, GitHub delivery, and external-transition state separately.
 - [ ] I understand that issue text, comments, labels, assignment, closure, bot actions, or green CI do not authorize mutation, accept the decision, merge code, release, deploy, promote, publish, or change repository settings.
