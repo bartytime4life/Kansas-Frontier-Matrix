@@ -2,13 +2,13 @@
 doc_id: kfm://doc/architecture/ui/map-runtime-boundary
 title: Map Runtime Boundary
 type: architecture-reference
-version: v2.1-draft
+version: v2.1.1-draft
 status: draft; repository-grounded; mixed-maturity; renderer-neutral-bounded-slices; concrete-runtime-hold; non-publication
 owners:
   - "@bartytime4life — current CODEOWNERS review route"
   - "NEEDS VERIFICATION — independent UI, map-runtime, accessibility, security, policy, evidence, release, correction, and rollback stewardship"
 created: 2026-05-14
-updated: 2026-08-24
+updated: 2026-08-27
 policy_label: public; architecture; ui; map-runtime; trust-membrane; fail-closed; non-publication
 owning_root: docs/
 current_path: docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md
@@ -223,7 +223,7 @@ This document defines the trust boundary between the governed Explorer Web shell
 
 Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [Directory Rules v2](../../doctrine/directory-rules.md). The target already exists under `docs/architecture/ui/` and explains a human-readable UI authority boundary. This same-path modernization therefore receives **PLACE**.
 
-The change creates no new root, child lane, contract, schema, policy, source registry, receipt, proof, release record, runtime package, or published artifact.
+The change creates no new root, child lane, contract, schema, policy, source registry, proof, release record, runtime package, or published artifact. Its generated authoring receipt is process memory only; it creates no map-runtime, policy, release, or publication authority.
 
 ### Responsibility split
 
@@ -792,7 +792,7 @@ A credible runtime rollback must include:
 This update does not:
 
 - modify application or package code;
-- create or accept a contract, schema, policy, ADR, source, registry, receipt, proof, or release record;
+- create or accept a contract, schema, policy, ADR, source, registry, proof, or release record; its generated authoring receipt remains process memory only;
 - admit `maplibre-gl` or any plugin/protocol dependency;
 - create a MapLibre source, style, layer, worker, or cache entry;
 - alter governed API routes;
@@ -924,6 +924,6 @@ Future layer, time, query, and renderer-specific expansion is outside this inter
 
 **Related:** [UI README](./README.md) · [UI boundaries](./BOUNDARIES.md) · [Layering](./LAYERING.md) · [Evidence Drawer](./EVIDENCE_DRAWER.md) · [Map Master renderer boundary](../map-master/RENDERER_BOUNDARY.md) · [Directory Rules](../../doctrine/directory-rules.md)
 
-**Last updated:** `2026-08-24` · **Version:** `v2.1-draft` · **Status:** `repository-grounded draft / bounded port implemented / concrete renderer HOLD / non-publication`
+**Last updated:** `2026-08-27` · **Version:** `v2.1.1-draft` · **Status:** `repository-grounded draft / bounded port implemented / concrete renderer HOLD / non-publication`
 
 [Back to top](#top)
