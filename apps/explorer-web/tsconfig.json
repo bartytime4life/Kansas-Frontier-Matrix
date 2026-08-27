@@ -14,7 +14,10 @@
     "strict": true,
     "types": ["vite/client"],
     "paths": {
-      "@kfm/maplibre": ["../../packages/maplibre/src/index.ts"]
+      "@kfm/maplibre": ["../../packages/maplibre/src/index.ts"],
+      "@kfm/maplibre/vite-adapter": [
+        "../../packages/maplibre/src/maplibre-vite-adapter.ts"
+      ]
     }
   },
   "include": ["src"]
