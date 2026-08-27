@@ -10,7 +10,7 @@ These files are examples only. They are not source records, lifecycle data, Evid
 
 ## Fixture posture
 
-Use this parent lane to navigate Hazards fixture families and keep their boundaries consistent. The populated child READMEs define synthetic examples for resolver, drawer, Focus, identity, layer-manifest, valid, negative, invalid, and golden-output scenarios.
+Use this parent lane to navigate Hazards fixture families and keep their boundaries consistent. The populated child READMEs define synthetic examples for resolver, drawer, Focus, identity, layer-manifest, rollback-rehearsal, valid, negative, invalid, and golden-output scenarios.
 
 A fixture is not implementation proof. It does not prove validator behavior, governed API route behavior, UI behavior, policy enforcement, release integration, schema enforcement, source activation, EvidenceBundle closure, or CI coverage. It only provides reviewable synthetic material for future checks.
 
@@ -35,6 +35,7 @@ The following child lanes have populated README coverage. This table is a naviga
 | `focus/` | Synthetic Hazards Focus Mode examples. | `RuntimeResponseEnvelope` plus `AIReceipt` where AI is involved. |
 | `identity/` | Synthetic stable-ID and feature-reference examples. | Source role and temporal scope remain identity-bearing. |
 | `layer_manifest/` | Synthetic Hazards-scoped `LayerManifest` examples. | Released/public-safe layer metadata examples, not layer bytes or release authority. |
+| `synthetic_rollback_rehearsal/` | Marker-protected stale-context rollback workspace. | Bounded helper/test evidence only; no operational rollback or release authority. |
 
 ## Relationship between fixture lanes
 
@@ -49,6 +50,7 @@ The following child lanes have populated README coverage. This table is a naviga
 | `focus/` | Focus Mode request, response, receipt, citation, and limitation examples. |
 | `identity/` | Stable identity, duplicate, correction, supersession, and temporal-scope examples. |
 | `layer_manifest/` | Layer identity, artifact, release, policy, evidence, stale-state, and rollback examples. |
+| `synthetic_rollback_rehearsal/` | One no-sensitive-data rollback from deliberately stale-mislabeled planning context to a withheld stale carrier. |
 
 ## Related references
 
@@ -61,6 +63,7 @@ The following child lanes have populated README coverage. This table is a naviga
 - `focus/README.md`
 - `identity/README.md`
 - `layer_manifest/README.md`
+- `synthetic_rollback_rehearsal/README.md`
 - `../../README.md`
 - `../../../docs/architecture/governed-api/README.md`
 - `../../../docs/architecture/hazards-trust-membrane.md`
@@ -129,6 +132,7 @@ Do not use this lane for real records, source exports, lifecycle data, EvidenceB
 - Focus fixture alignment: PARTIALLY VERIFIED against `focus/README.md`.
 - Identity fixture alignment: PARTIALLY VERIFIED against `identity/README.md`.
 - Layer-manifest fixture alignment: PARTIALLY VERIFIED against `layer_manifest/README.md`.
+- Synthetic rollback fixture alignment: VERIFIED against `synthetic_rollback_rehearsal/README.md` and its four focused domain tests.
 - Root fixture alignment: PARTIALLY VERIFIED against `fixtures/README.md`.
 - Consumer alignment: NEEDS VERIFICATION against validators, valid-fixture checks, negative-fixture checks, invalid-fixture checks, golden-file checks, governed-API tests, feature-resolver checks, drawer checks, Focus Mode checks, identity checks, layer-manifest checks, evidence-resolution checks, citation-validation checks, source-role checks, freshness checks, UI tests, release-readiness checks, schema checks, and policy checks.
-- Tests and validators: NOT RUN.
+- Focused synthetic rollback tests: PASS locally for all four domain cases; remaining parent-lane tests and validators were not run by this slice.

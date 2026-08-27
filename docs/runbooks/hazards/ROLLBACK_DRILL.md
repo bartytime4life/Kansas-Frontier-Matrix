@@ -2,8 +2,8 @@
 doc_id: kfm://doc/runbook-hazards-rollback-drill
 title: Hazards Rollback Drill
 type: operational-runbook
-version: v1.0.0
-status: DRAFT_REPOSITORY_GROUNDED; BOUNDED_SYNTHETIC_REHEARSAL; HAZARDS_SCENARIO_HELD; OPERATIONAL_ROLLBACK_UNVERIFIED; NON_RELEASE; NON_PUBLICATION
+version: v1.1.0
+status: DRAFT_REPOSITORY_GROUNDED; BOUNDED_SYNTHETIC_REHEARSAL; HAZARDS_FIXTURE_IMPLEMENTED; OPERATIONAL_ROLLBACK_UNVERIFIED; NON_RELEASE; NON_PUBLICATION
 owner: NEEDS VERIFICATION — Hazards domain steward plus rollback/correction reviewer and accountable release authority
 created: 2026-08-27
 updated: 2026-08-27
@@ -18,13 +18,17 @@ publication_effect: none
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: c926093346329739d963ed06af83927028e46e62
+  base_commit: d6b72570bc71aa4c7adec7cba518c214c38c5cb2
+  execution_start_commit: a84670b00e240f0e5bb647e001c342e5387a8625
   target_path: docs/runbooks/hazards/ROLLBACK_DRILL.md
-  target_prior_blob: e0297d1562c19411efe0b2134b62092aa28501ae
+  target_prior_blob: decc1aafd7b5a4ed6f1cac2b3c2501b8f3f047d2
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   rollback_tool_blob: a8f6bff350e79b453f425ebce9a9ded6801f8944
   rollback_test_blob: b644ca6c4185b3f81bc339c077eae85299833261
+  hazards_fixture_readme_blob: 4b2d23a437a999c6beb249adb0dd7b02037bd34a
+  hazards_scenario_blob: 23942cf833d3b5a2484d1fd357e12a6e6c5afaae
+  hazards_test_blob: 76d8c6c36df5bcb53d913c9451cecaf230bdf717
   rollback_rehearsal_doc_blob: c65b2790a2796572498ff07d4d12c4f028eb50c6
   hazards_rollback_runbook_blob: 89183e9a619028006921832b5513e811274f2920
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
@@ -48,10 +52,12 @@ related:
   - ../../domains/hazards/README.md
   - ../../../tools/release/rollback_apply.py
   - ../../../tests/release/test_synthetic_rollback_rehearsal.py
+  - ../../../tests/domains/hazards/test_synthetic_rollback_rehearsal.py
+  - ../../../fixtures/domains/hazards/synthetic_rollback_rehearsal/README.md
   - ../../../release/README.md
 notes:
   - The implemented helper is generic and synthetic-only; it is not a Hazards-specific or operational rollback executor.
-  - The focused tests construct their own temporary release pair, alias, scenario, and marker; no tracked Hazards rollback scenario was found in the bounded fixture inspection.
+  - The tracked Hazards fixture models one non-locating planning-context rollback from deliberately stale-mislabeled synthetic context to a withheld stale carrier; domain tests copy it to a temporary directory before plan or apply.
   - A successful rehearsal report is process evidence for the named synthetic case. It is not a RollbackCard, CorrectionNotice, ReviewRecord, PolicyDecision, ReleaseManifest, release decision, deployment, promotion, publication, or proof of production recovery.
 [/KFM_META_BLOCK_V2] -->
 
@@ -62,7 +68,7 @@ notes:
 > **One-line purpose.** Rehearse KFM's implemented rollback and withdrawal mechanics against a marker-protected synthetic workspace, verify fail-closed behavior and preservation guarantees, and hand off an evidence-bounded result without touching a real Hazards release or public surface.
 
 [![Status: bounded rehearsal](https://img.shields.io/badge/status-bounded%20synthetic%20rehearsal-8250df?style=flat-square)](#current-disposition)
-[![Domain scenario: held](https://img.shields.io/badge/Hazards%20scenario-held-b42318?style=flat-square)](#current-disposition)
+[![Domain fixture: bounded](https://img.shields.io/badge/Hazards%20fixture-bounded-8250df?style=flat-square)](#current-disposition)
 [![Mode: no network](https://img.shields.io/badge/mode-no%20network-0969da?style=flat-square)](#6-run-the-focused-drill)
 [![Life safety: no](https://img.shields.io/badge/life%20safety-not%20an%20alerting%20system-b42318?style=flat-square)](#not-for-life-safety-boundary)
 [![Public effect: none](https://img.shields.io/badge/public%20effect-none-6e7781?style=flat-square)](#2-authority-and-terminal-boundary)
@@ -73,7 +79,7 @@ notes:
 > **KFM Hazards is not an emergency-alerting system, emergency-operations system, or regulatory authority.** Do not use this drill to issue, replace, delay, retract, or interpret current life-safety instructions. The fixture must contain synthetic, public-safe material only. A real public Hazards defect requires immediate fail-closed containment and referral to the appropriate official authority through an independently authorized incident and rollback path.
 
 > [!IMPORTANT]
-> **Current disposition: `BOUNDED_PROOF / HOLD`.** The repository implements a deterministic synthetic rollback/withdrawal helper and eight focused tests. The helper is not Hazards-specific, does not evaluate policy or review, does not authorize release, and cannot touch an unmarked workspace. A tracked Hazards scenario, operational release target, authenticated reviewers, live invalidation consumers, and public recovery verification were not demonstrated in the inspected surfaces.
+> **Current disposition: `BOUNDED_HAZARDS_FIXTURE_PROOF / OPERATIONAL_HOLD`.** The repository implements a deterministic synthetic rollback/withdrawal helper, eight generic focused tests, one tracked no-sensitive-data Hazards planning-context fixture, and four domain-focused tests. The helper remains generic, does not evaluate policy or review, does not authorize release, and cannot touch an unmarked workspace. No operational release target, authenticated reviewers, live invalidation consumers, or public recovery verification is demonstrated.
 
 ## Quick navigation
 
@@ -141,7 +147,9 @@ This is a same-path replacement of an existing tracked scaffold. It creates no n
 |---|---|---|
 | Human Hazards drill procedure | `docs/runbooks/hazards/ROLLBACK_DRILL.md` | Explains the bounded rehearsal and its stop conditions |
 | Generic synthetic rollback mechanics | `tools/release/rollback_apply.py` | Verifies and optionally mutates only a marker-protected synthetic workspace |
-| Executable behavior evidence | `tests/release/test_synthetic_rollback_rehearsal.py` | Exercises positive and negative helper behavior |
+| Generic executable behavior evidence | `tests/release/test_synthetic_rollback_rehearsal.py` | Exercises positive and negative helper behavior |
+| Hazards reusable fixture | `fixtures/domains/hazards/synthetic_rollback_rehearsal/` | Supplies one public-safe, non-locating stale-context rollback workspace |
+| Hazards executable behavior evidence | `tests/domains/hazards/test_synthetic_rollback_rehearsal.py` | Copies the fixture to a temporary root and checks deterministic, apply, preservation, and fail-closed behavior |
 | General synthetic operator note | `docs/runbooks/rollback-rehearsal.md` | Supplies the cross-domain concise entry point |
 | Hazards rollback design | `docs/runbooks/hazards/ROLLBACK_RUNBOOK.md` | Describes the broader domain procedure; verify its assumptions before use |
 | Release decisions and records | `release/` | Remain outside the drill and require separate authority |
@@ -162,26 +170,28 @@ That result means only that the exact focused checks passed for the synthetic wo
 
 ## 3. Current disposition
 
-The following assessment is pinned to `main@c926093346329739d963ed06af83927028e46e62`.
+The following assessment is pinned to delivery-base `main@d6b72570bc71aa4c7adec7cba518c214c38c5cb2`. Execution began at `main@a84670b00e240f0e5bb647e001c342e5387a8625`; the intervening merge of unrelated PR #3625 changed only ADR issue-intake and receipt paths.
 
 | Surface | Current evidence | Truth / maturity | Safe conclusion |
 |---|---|---|---|
-| Target path | Existing three-paragraph scaffold | **CONFIRMED / STALE** | Same-path modernization is justified. |
+| Target path | Grounded bounded drill merged by PR #3620 | **CONFIRMED / CURRENT BASELINE** | Update only the statements changed by this executable slice. |
 | Generic helper | `tools/release/rollback_apply.py` verifies marker, exact scenario fields, manifests, artifacts, digests, alias identity, target identity, and invalidation completeness | **CONFIRMED / IMPLEMENTED BOUNDED** | A synthetic plan/apply rehearsal is available. |
-| Focused tests | Eight tests cover deterministic no-write plan, rollback apply, withdrawal apply, and five fail-closed cases | **CONFIRMED BY SOURCE / NEEDS EXECUTION AT EACH HEAD** | The module is the canonical first drill command. |
-| Hazards-specific tracked fixture | No static Hazards scenario was found in the bounded inspection of `fixtures/release/` and the focused test constructs generic temporary toy releases | **ABSENT IN INSPECTED SURFACES** | Hazards semantic coverage remains `HOLD`; do not imply domain recovery proof. |
+| Generic focused tests | Eight tests cover deterministic no-write plan, rollback apply, withdrawal apply, and five fail-closed cases | **CONFIRMED BY SOURCE / NEEDS EXECUTION AT EACH HEAD** | Retain as helper regression coverage. |
+| Hazards-specific tracked fixture | `fixtures/domains/hazards/synthetic_rollback_rehearsal/` contains one marker-protected, non-locating stale-context rollback workspace | **IMPLEMENTED BOUNDED** | The fixture proves only the exact planning-context scenario; it is not release or operational data. |
+| Hazards-focused tests | Four tests verify deterministic no-write plan, bounded carrier fields, stale-withholding apply, release-byte preservation, tamper denial, and non-synthetic denial | **IMPLEMENTED BOUNDED / NEEDS EXECUTION AT EACH HEAD** | Run with the generic module as the first milestone-specific drill. |
 | Invalidations | Helper requires `API_CACHE`, `CDN`, `TILES`, `CATALOG`, `TRIPLETS`, `SEARCH_INDEX`, `VECTOR_INDEX`, `AI_CACHE`, and `DOWNSTREAM_DERIVATIVES` | **CONFIRMED DECLARED SET** | Completeness of the synthetic record is testable; real consumers are not invoked. |
 | Governance fields | Reports state that no authority, policy evaluation, review, release authorization, publication authorization, or public-state mutation occurred | **CONFIRMED REPORT CONTRACT** | A report cannot be promoted into governance evidence it does not own. |
 | Operational Hazards rollback | No real candidate, production alias, cache/CDN consumer, authenticated release authority, or public recovery exercise was demonstrated for this drill | **UNKNOWN / HOLD** | Do not run this helper against a real release or claim operational readiness. |
-| Open overlap | No open pull request touching the target was returned at the evidence freeze | **CONFIRMED AT FREEZE** | Recheck immediately before branch creation and delivery. |
+| Open overlap | PR #3625 was the only open PR at execution start and merged without overlap; delivery preflight found open PRs #3626–#3629 on unrelated receipt, governance-parity, MapLibre, and issue-intake paths | **CONFIRMED AT DELIVERY-BASE RECHECK** | No open changed-path or rehearsal-semantics overlap was found; recheck immediately before remote delivery. |
 
 ### Current finite result
 
 ```text
-implementation_state: BOUNDED_PROOF
-domain_state: HOLD
+implementation_state: BOUNDED_HAZARDS_FIXTURE_PROOF
+domain_state: SYNTHETIC_ONLY
+operational_state: HOLD
 reason_codes:
-  - HAZ_ROLLBACK_SCENARIO_NOT_TRACKED
+  - HAZ_SYNTHETIC_STALE_CONTEXT_ROLLBACK_TRACKED
   - HAZ_ROLLBACK_POLICY_NOT_EVALUATED
   - HAZ_ROLLBACK_REVIEW_AUTHORITY_UNVERIFIED
   - HAZ_OPERATIONAL_RECOVERY_UNVERIFIED
@@ -271,10 +281,12 @@ export PYTHONDONTWRITEBYTECODE=1
 export PYTHONUNBUFFERED=1
 export TZ=UTC
 
-python -m unittest -q tests.release.test_synthetic_rollback_rehearsal
+python -m unittest -q \
+  tests.release.test_synthetic_rollback_rehearsal \
+  tests.domains.hazards.test_synthetic_rollback_rehearsal
 ```
 
-The current module contains eight focused cases:
+The generic module contains eight focused cases:
 
 | Case | Required observation |
 |---|---|
@@ -287,6 +299,15 @@ The current module contains eight focused cases:
 | Tampered artifact | Denied with `ARTIFACT_DIGEST_MISMATCH` |
 | Missing marker | Denied with `SYNTHETIC_MARKER_MISSING` |
 
+The Hazards module adds four fixture-bound cases:
+
+| Case | Required observation |
+|---|---|
+| Bounded deterministic plan | Both carriers remain synthetic, non-locating, unreleased, unpublished, planning-only, and not for life safety; two plans match; no file changes |
+| Stale-context rollback apply | Temporary alias targets the `WITHHELD_STALE` prior carrier; correction and invalidation records exist; both releases remain byte-identical |
+| Tampered carrier | Digest mismatch denies apply before alias, correction, or invalidation changes |
+| Non-synthetic scenario | `NON_SYNTHETIC_INPUT_DENIED` denies apply before any state change |
+
 Record the exact command, commit, start/end time, exit code, and complete test summary. Do not call the drill `PASS` if the command is skipped, pending, interrupted, or run against a different head.
 
 [Back to top](#top)
@@ -295,7 +316,7 @@ Record the exact command, commit, start/end time, exit code, and complete test s
 
 ## 7. Optional direct CLI rehearsal
 
-The focused test is the preferred first execution because it constructs and cleans a correct temporary workspace. Use the CLI directly only after copying the implemented workspace/scenario contract from the focused test into a new, narrowly scoped temporary directory.
+The focused tests are the preferred first execution because the Hazards module copies the tracked workspace into a temporary directory and cleans it afterward. Use the CLI directly only after copying `fixtures/domains/hazards/synthetic_rollback_rehearsal/workspace/` into a new, narrowly scoped temporary directory. Never apply directly to the tracked fixture.
 
 ### Plan
 
@@ -367,20 +388,11 @@ On a handled failure the CLI prints a JSON `HOLD` report and exits `2`. Preserve
 
 ## 9. Hazards scenario profile
 
-The current focused test proves generic release mechanics with toy text artifacts. A future tracked Hazards scenario is a separate implementation slice and must not be invented inside this documentation update.
+The tracked profile supplies one affected and one prior carrier with deterministic identities and exact digests. Both use a non-locating synthetic area, planning-only context, synthetic source role, fixed UTC times, `not_for_life_safety: true`, and false public-use, release, and publication effects.
 
-Before admission, that scenario should provide:
+The affected carrier is deliberately expired but labeled `CURRENT`; its fixture defect is `STALE_CONTEXT_MISLABELED_CURRENT`. The rollback target preserves the expired time window and changes only the safe display posture to `WITHHELD_STALE`, with wording that asserts no current condition or alert. The scenario uses a fixed correction identity and the complete implemented invalidation vocabulary.
 
-- one synthetic, public-safe historical or planning-context Hazards carrier;
-- an affected and prior release with deterministic identities and exact artifact digests;
-- an alias that points only inside the marker-protected temporary root;
-- one bounded defect such as stale contextual metadata, a generalized geometry mismatch, or a withdrawn derived carrier;
-- no real warning, watch, advisory, incident, person, property, infrastructure, archaeology, rare-species, or exact sensitive location data;
-- the complete implemented invalidation set;
-- a fixed synthetic correction ID, reason code, and UTC decision time;
-- positive rollback and withdrawal cases;
-- negative non-synthetic, marker, digest, target, traversal/symlink, and invalidation cases; and
-- acceptance criteria that keep source roles, time roles, evidence, policy, review, release, and public recovery separate.
+This first slice intentionally does not add a Hazards withdrawal fixture, generalized-geometry case, policy evaluation, evidence resolution, reviewer authentication, signature, real cache consumer, operational release target, or public recovery check. Those remain separate future slices and cannot be inferred from this rollback pass.
 
 The [Not-for-Life-Safety Audit Runbook](NOT_FOR_LIFE_SAFETY_AUDIT_RUNBOOK.md) must govern any later public-surface scenario. A synthetic drill must not fetch or reproduce current official alerts.
 
@@ -458,13 +470,15 @@ This runbook is acceptable when it:
 - preserves correction, withdrawal, rollback, review, policy, release, and publication as distinct object and authority families;
 - treats skipped or absent execution as not proven;
 - provides objective positive and negative cases; and
-- includes a reversible documentation-only rollback.
+- includes a reversible fixture, test, and documentation rollback.
 
 ### Executable acceptance criteria
 
 | Condition | Required result |
 |---|---|
-| Focused module at exact head | All eight tests pass |
+| Focused modules at exact head | All twelve tests pass |
+| Hazards fixture plan | Carrier bounds hold, two reports match, and workspace bytes do not change |
+| Hazards fixture apply | Alias targets the withheld stale carrier and both release trees remain byte-identical |
 | Same scenario planned twice | Reports are byte-for-byte equivalent after canonical serialization |
 | Plan without `--report` | No correction or invalidation state is written |
 | Valid rollback apply | Synthetic alias points to the prior release; affected bytes remain unchanged |
@@ -517,7 +531,9 @@ Until then, report operational Hazards rollback as `UNKNOWN / HOLD`, even when t
 | [Hazards Promotion Runbook](PROMOTION_RUNBOOK.md) | Repository-grounded promotion preflight | Current Hazards promotion remains held |
 | [Not-for-Life-Safety Audit](NOT_FOR_LIFE_SAFETY_AUDIT_RUNBOOK.md) | Public-boundary audit procedure | Required for any later public-facing Hazards scenario |
 | [Rollback helper](../../../tools/release/rollback_apply.py) | Implemented marker-protected synthetic plan/apply engine | Generic, synthetic-only, no policy/review/release authority |
-| [Focused tests](../../../tests/release/test_synthetic_rollback_rehearsal.py) | Eight executable positive and negative cases | First validation command for this drill |
+| [Generic focused tests](../../../tests/release/test_synthetic_rollback_rehearsal.py) | Eight executable positive and negative helper cases | Shared regression coverage |
+| [Hazards fixture](../../../fixtures/domains/hazards/synthetic_rollback_rehearsal/README.md) | One tracked non-locating stale-context rollback workspace | Synthetic input only; never operational or public state |
+| [Hazards focused tests](../../../tests/domains/hazards/test_synthetic_rollback_rehearsal.py) | Four deterministic, apply, preservation, and fail-closed cases | First milestone-specific rehearsal command |
 | [Release root](../../../release/README.md) | Release-governance boundary | Canonical records and decisions stay separate from the helper report |
 
 The read-only Greenfield Commissioning Plan v2 informed the measurable drill, correction-cascade, and smallest-complete-circle framing. It remains a planning reference and does not prove repository implementation. The Notion Alignment Register remains coordination-only and does not authorize rollback or change repository, review, release, deployment, promotion, or publication state.
@@ -528,7 +544,7 @@ The read-only Greenfield Commissioning Plan v2 informed the measurable drill, co
 
 ## 15. Runbook maintenance and rollback
 
-This revision changes documentation only. It creates no fixture, helper behavior, test behavior, source admission, data mutation, schema migration, policy activation, candidate, review, correction, withdrawal, rollback decision, release, deployment, promotion, publication, or repository-setting change.
+This revision adds one reusable synthetic Hazards fixture and four executable domain tests, then reconciles this runbook and the adjacent fixture/test indexes. It changes no generic helper behavior, source admission, lifecycle data, schema, contract, policy, candidate, governed review, canonical correction or rollback object, release, deployment, promotion, publication, or repository setting.
 
 ### Validation for a future edit
 
@@ -542,8 +558,8 @@ This revision changes documentation only. It creates no fixture, helper behavior
 
 ### Rollback of this documentation change
 
-Before merge, close the draft pull request and remove only its task branch if separately authorized. After merge, revert the documentation commit through a reviewed pull request or restore prior blob `e0297d1562c19411efe0b2134b62092aa28501ae` at this same path.
+Before merge, close the draft pull request and remove only its task branch if separately authorized. After merge, use a reviewed revert or forward-fix pull request covering the tracked fixture, its domain test, and the three documentation/index updates together. Do not delete a fixture while leaving its test or runbook claim behind.
 
-No real release, alias, cache, catalog, artifact, source, policy decision, deployment, promotion, publication, or public state is touched by reverting this document.
+No real release, alias, cache, catalog, artifact, source, policy decision, deployment, promotion, publication, or public state is touched by reverting this synthetic slice.
 
 [Back to top](#top)

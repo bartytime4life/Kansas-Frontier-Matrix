@@ -2,7 +2,7 @@
 doc_id: kfm://doc/tests-domains-hazards-readme
 title: Hazards Domain Tests README
 type: test-index-readme
-version: v0.1
+version: v0.2
 status: draft; stub-expanded; parent-index; PROPOSED / NEEDS VERIFICATION before promotion
 owners:
   - OWNER_TBD — Hazards domain steward
@@ -13,7 +13,7 @@ owners:
   - OWNER_TBD — Release steward
   - OWNER_TBD — QA steward
 created: NEEDS VERIFICATION — greenfield stub existed before v0.1 expansion
-updated: 2026-07-05
+updated: 2026-08-27
 policy_label: public-doc; tests; hazards; parent-index; no-network; evidence-bound; source-role-aware; policy-filtered; finite-outcomes; release-gated; rollback-aware
 tags: [kfm, tests, hazards, parent-index, enforceability, no-network, fixtures, LayerManifest, EvidenceDrawerPayload, FocusModeResponse, EvidenceBundle, PolicyDecision, ReleaseManifest, CorrectionNotice, RollbackCard, ABSTAIN, DENY, ERROR]
 related:
@@ -25,6 +25,7 @@ related:
   - focus/emergency_alert_denial/README.md
   - layer_manifest/README.md
   - source_role_anti_collapse_test/README.md
+  - test_synthetic_rollback_rehearsal.py
   - ../../../docs/domains/hazards/README.md
   - ../../../docs/domains/hazards/MAP_UI_CONTRACTS.md
   - ../../../docs/domains/hazards/LIFE_SAFETY_BOUNDARY.md
@@ -45,6 +46,7 @@ notes:
   - "The tested parent invariant is that Hazards tests prove enforceable trust boundaries across layer manifests, feature resolution, Evidence Drawer payloads, Focus Mode outcomes, source-role anti-collapse, freshness/context state, policy posture, release relationship, correction, and rollback."
   - "Default posture is deterministic and no-network. Live source checks, real source exports, live feeds, lifecycle data, public tiles, and restricted records do not belong in default Hazards tests."
   - "Rollback target for this replacement is previous stub blob SHA 1e4180a3df4bffeeb38324b7806b583e6104a725."
+  - "v0.2 indexes the first tracked, marker-protected Hazards synthetic rollback rehearsal; the helper remains generic and operational recovery remains unverified."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -66,7 +68,7 @@ notes:
 **Owning root:** `tests/`  
 **Domain segment:** `hazards`  
 **Default execution posture:** deterministic, synthetic, no-network, public-safe fixtures only  
-**Truth posture:** CONFIRMED target was a greenfield stub before this expansion · CONFIRMED `tests/` is the canonical root for enforceability proof · CONFIRMED documented child lanes now exist for drawer payloads, feature resolution, Focus Mode, boundary denial, layer manifests, and source-role anti-collapse · CONFIRMED Hazards map/UI doctrine requires governed public flow, context labeling, source-role visibility, finite outcomes, release relationship, freshness state, correction, and rollback · NEEDS VERIFICATION for executable test modules, fixture payload inventory, validators, policy runtime, release integration, public route/UI behavior, CI coverage, and pass rates.
+**Truth posture:** CONFIRMED target was a greenfield stub before this expansion · CONFIRMED `tests/` is the canonical root for enforceability proof · CONFIRMED documented child lanes now exist for drawer payloads, feature resolution, Focus Mode, boundary denial, layer manifests, and source-role anti-collapse · CONFIRMED one tracked Hazards synthetic rollback fixture has deterministic plan/apply and fail-closed executable coverage · CONFIRMED Hazards map/UI doctrine requires governed public flow, context labeling, source-role visibility, finite outcomes, release relationship, freshness state, correction, and rollback · NEEDS VERIFICATION for the remaining executable test families, validators, policy runtime, operational release integration, public route/UI behavior, hosted CI coverage, and operational pass rates.
 
 ---
 
@@ -109,6 +111,7 @@ Core checks:
 | [`focus/emergency_alert_denial/`](focus/emergency_alert_denial/README.md) | Boundary-crossing prompt denial/referral tests. | KFM remains planning/context posture and returns finite denial/referral where required. |
 | [`layer_manifest/`](layer_manifest/README.md) | Hazards `LayerManifest` metadata tests. | Manifest is release-gated metadata, not source truth, policy decision, release approval, or public-layer truth. |
 | [`source_role_anti_collapse_test/`](source_role_anti_collapse_test/README.md) | Canonical source-role preservation tests. | Roles remain first-class identity attributes and cannot collapse across map, drawer, resolver, Focus, release, or AI paths. |
+| [`test_synthetic_rollback_rehearsal.py`](test_synthetic_rollback_rehearsal.py) | Stale-context rollback rehearsal against a copied marker-protected fixture. | Proves bounded synthetic mechanics only; no real rollback, release, recovery, or publication effect. |
 
 ---
 
@@ -173,9 +176,10 @@ pytest tests/domains/hazards/feature_resolver
 pytest tests/domains/hazards/drawer
 pytest tests/domains/hazards/focus
 pytest tests/domains/hazards/source_role_anti_collapse_test
+python -m unittest -q tests.domains.hazards.test_synthetic_rollback_rehearsal
 ```
 
-Status of these commands: **PROPOSED / NEEDS VERIFICATION**. They assume `pytest` is the accepted runner and that executable test modules exist. This README does not claim any command currently passes.
+The focused `unittest` command is implemented and no-network. Other listed subtree commands remain **PROPOSED / NEEDS VERIFICATION** until their executable coverage and runner behavior are checked at the exact head.
 
 ---
 
