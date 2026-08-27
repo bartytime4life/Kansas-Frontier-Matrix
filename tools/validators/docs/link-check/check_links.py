@@ -102,15 +102,15 @@ class ReferenceDefinition:
 def _visible_markdown_lines(text: str) -> Iterator[tuple[int, str]]:
     """Yield lines outside fenced code and HTML comments with markup intact."""
 
-    fence: str | None = None
+    fence: tuple[str, int] | None = None
     in_comment = False
     for line_number, raw_line in enumerate(text.splitlines(), start=1):
         fence_match = FENCE_RE.match(raw_line)
         if fence_match:
             marker = fence_match.group(1)
             if fence is None:
-                fence = marker[0]
-            elif marker[0] == fence:
+                fence = (marker[0], len(marker))
+            elif marker[0] == fence[0] and len(marker) >= fence[1]:
                 fence = None
             continue
         if fence is not None:

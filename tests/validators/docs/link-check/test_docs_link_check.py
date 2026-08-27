@@ -135,6 +135,40 @@ class DocsLinkCheckTests(unittest.TestCase):
         self.assertEqual(result.outcome, "DOC_LINK_CHECK_PASS")
         self.assertEqual(result.checked_local_targets, 0)
 
+    def test_shorter_fence_run_cannot_expose_links_from_longer_example(self) -> None:
+        for marker in ("`", "~"):
+            with self.subTest(marker=marker):
+                self.write(
+                    "docs/source.md",
+                    f"{marker * 4}markdown\n"
+                    "[ignored one](missing-one.md)\n"
+                    f"{marker * 3}\n"
+                    "[ignored two](missing-two.md)\n"
+                    f"{marker * 4}\n",
+                )
+
+                result = self.run_check("docs/source.md")
+
+                self.assertEqual(result.outcome, "DOC_LINK_CHECK_PASS")
+                self.assertEqual(result.checked_local_targets, 0)
+
+    def test_longer_fence_run_closes_the_example(self) -> None:
+        self.write("docs/target.md", "# Target\n")
+        for marker in ("`", "~"):
+            with self.subTest(marker=marker):
+                self.write(
+                    "docs/source.md",
+                    f"{marker * 3}markdown\n"
+                    "[ignored](missing.md)\n"
+                    f"{marker * 4}\n"
+                    "[visible](target.md)\n",
+                )
+
+                result = self.run_check("docs/source.md")
+
+                self.assertEqual(result.outcome, "DOC_LINK_CHECK_PASS")
+                self.assertEqual(result.checked_local_targets, 1)
+
     def test_duplicate_heading_slugs_match_github_suffixes(self) -> None:
         self.write("docs/source.md", "[second](target.md#repeat-1)\n")
         self.write("docs/target.md", "# Repeat\n\n# Repeat\n")
