@@ -11,7 +11,7 @@ policy_label: "public-doctrine; package-boundary; maplibre; renderer-adapter; ex
 current_path: packages/maplibre/README.md
 owning_root: packages/
 responsibility: Document current package metadata, accepted renderer-boundary ownership, dependency and distribution posture, consumer compatibility, and held concrete-renderer work without becoming runtime, policy, release, or publication authority.
-truth_posture: CONFIRMED accepted ADR-0006 package-owned seam, accepted ADR-0007 renderer family, renderer-neutral MapRuntimePort, deterministic NullMapRuntime, exact maplibre-gl 6.4.0 candidate and lock closure, minimal package-owned MapLibreAdapter lifecycle/camera slice, package-local positive and fail-closed tests, and raw-renderer acquisition confined to packages/maplibre / PROPOSED dependency admission pending review and merge / HOLD authenticated browser, CSP/worker, PMTiles, terrain, accessibility, performance, long-session, release, deployment, and publication evidence / CONFLICTED legacy CDN/global harness and stale packages/maplibre-runtime references / NEEDS VERIFICATION owners, license/provenance review, Node 22 exact-head validation, hosted checks, browser probes, correction, and rollback
+truth_posture: CONFIRMED accepted ADR-0006 package-owned seam, accepted ADR-0007 renderer family, renderer-neutral MapRuntimePort, deterministic NullMapRuntime, exact maplibre-gl 6.6.0 candidate and lock closure, minimal package-owned MapLibreAdapter lifecycle/camera slice, package-local positive and fail-closed tests, and raw-renderer acquisition confined to packages/maplibre / PROPOSED dependency admission pending review and merge / HOLD authenticated browser, CSP/worker, PMTiles, terrain, accessibility, performance, long-session, release, deployment, and publication evidence / CONFLICTED legacy CDN/global harness and stale packages/maplibre-runtime references / NEEDS VERIFICATION owners, license/provenance review, Node 22 exact-head validation, hosted checks, browser probes, correction, and rollback
 evidence_snapshot:
   snapshot_role: prior_to_issue_3387_slice
   repository: bartytime4life/Kansas-Frontier-Matrix
@@ -98,7 +98,7 @@ related:
 tags: [kfm, packages, maplibre, typescript, npm-workspace, renderer-adapter, map-runtime-port, source-descriptor, layer-descriptor, style-manifest, release-manifest, evidence-ref, negative-state, protocol-admission, plugin-admission, pmtiles, cog, performance, import-boundary, supply-chain, privacy, distribution, compatibility, migration, rollback]
 notes:
   - "This v1.3 checkpoint accompanies issue #3387's proposed exact dependency-admission and minimal package-owned adapter slice."
-  - "The branch selects maplibre-gl 6.4.0 only in packages/maplibre/package.json, records its pnpm lock closure, and adds a minimal lifecycle/camera MapLibreAdapter with deterministic mocked tests."
+  - "The branch selects maplibre-gl 6.6.0 only in packages/maplibre/package.json, records its pnpm lock closure, and adds a minimal lifecycle/camera MapLibreAdapter with deterministic mocked tests."
   - "Review or merge of this slice remains separate from #2906 browser readiness and does not admit plugins, protocols, sources, release, deployment, or publication."
   - "The renderer may consume only governed, released, public-safe artifacts. Descriptor validity, package installation, and successful visual rendering are not truth, evidence closure, policy approval, or release approval."
   - "Package release is a software-distribution event, not KFM map/data/claim publication."
@@ -110,7 +110,7 @@ notes:
 
 `packages/maplibre/`
 
-> Private npm workspace package at KFM's accepted renderer-adapter seam. This issue #3387 slice proposes exact `maplibre-gl@6.4.0` admission and implements the first package-owned lifecycle/camera adapter while browser readiness, source/layer admission, distribution, release, deployment, and publication remain on hold.
+> Private npm workspace package at KFM's accepted renderer-adapter seam. This issue #3387 slice proposes exact `maplibre-gl@6.6.0` admission and implements the first package-owned lifecycle/camera adapter while browser readiness, source/layer admission, distribution, release, deployment, and publication remain on hold.
 
 ![status](https://img.shields.io/badge/status-draft-yellow)
 ![version](https://img.shields.io/badge/version-v1.3-informational)
@@ -175,7 +175,7 @@ The merged [`src/README.md`](src/README.md) governs source placement, module dec
 |---|---:|---|
 | This README | **CONFIRMED v1.1 before correction** | The package boundary exists, but its implementation snapshot was stale after PR #3433. |
 | `src/README.md` | **CONFIRMED v1.1 before paired correction** | The source envelope owns module-level status and placement. |
-| `package.json` | **PROPOSED admission slice** | Private `0.0.0` package with exact `maplibre-gl@6.4.0`, a focused test script, and no publication authority. |
+| `package.json` | **PROPOSED admission slice** | Private `0.0.0` package with exact `maplibre-gl@6.6.0`, a focused test script, and no publication authority. |
 | Root workspace enrollment | **CONFIRMED** | Root `package.json` includes `packages/*`, so this folder is inside the npm workspace pattern. |
 | Root generic commands | **CONFIRMED placeholders** | `lint`, `test`, and `build` only echo TODO messages; they do not prove package checks. |
 | Root MapLibre commands | **CONFIRMED performance-tooling entry points** | Repository scripts invoke smoke/performance/proof tooling, not this package's adapter implementation. |
@@ -183,7 +183,7 @@ The merged [`src/README.md`](src/README.md) governs source placement, module dec
 | Package exports | **IMPLEMENTED / SPLIT** | The root facade exports the renderer-neutral port/null runtime; `@kfm/maplibre/adapter` exports the package-owned adapter without raw renderer types. |
 | Renderer-neutral source modules | **IMPLEMENTED / BOUNDED** | `MapRuntimePort`, `NullMapRuntime`, serializable values, strict validators, finite states, reason codes, listeners, and disposal behavior exist. |
 | Concrete renderer modules | **IMPLEMENTED / INITIAL SLICE** | `MapLibreAdapter` owns inline empty-style construction, camera synchronization, finite errors, and teardown; source/layer/selection/plugin/protocol behavior remains absent. |
-| Package dependencies | **EXACT CANDIDATE / REVIEW PENDING** | Only `packages/maplibre/package.json` declares `maplibre-gl@6.4.0`; `pnpm-lock.yaml` records the integrity-bound closure. |
+| Package dependencies | **EXACT CANDIDATE / REVIEW PENDING** | Only `packages/maplibre/package.json` declares `maplibre-gl@6.6.0`; `pnpm-lock.yaml` records the integrity-bound closure. |
 | Package consumers | **CONFIRMED** | Explorer Web source and tests import the KFM facade through explicit TypeScript/Vite aliases. |
 | Package-local tests | **IMPLEMENTED / FOCUSED** | Five deterministic mocked tests cover valid lifecycle/camera behavior plus invalid container, construction/error, and in-flight-disposal failures. |
 | MapLibre test lane | **CONFIRMED draft documentation** | `tests/maplibre/README.md` documents proposed proof obligations; executable tests and placement acceptance remain unproved. |
@@ -203,7 +203,7 @@ The merged [`src/README.md`](src/README.md) governs source placement, module dec
 - `packages/maplibre/` is under the shared `packages/` responsibility root.
 - The package is enrolled by the root `packages/*` workspace pattern.
 - The package name is `@kfm/maplibre`, version `0.0.0`, and `private: true`.
-- The package manifest declares exact `maplibre-gl@6.4.0`, a package-local test script, module/type exports, and no publishing configuration.
+- The package manifest declares exact `maplibre-gl@6.6.0`, a package-local test script, module/type exports, and no publishing configuration.
 - The source facade exports a renderer-neutral `MapRuntimePort` and deterministic `NullMapRuntime`.
 - The paired source README records the TypeScript source-envelope boundary.
 - Root generic `lint`, `test`, and `build` scripts are placeholders.
@@ -482,7 +482,7 @@ packages/maplibre/
 
 Confirmed details:
 
-- `package.json` declares a private ESM package, exact `maplibre-gl@6.4.0`, and a focused Vitest script.
+- `package.json` declares a private ESM package, exact `maplibre-gl@6.6.0`, and a focused Vitest script.
 - `src/index.ts` retains the renderer-neutral port/null-runtime facade; the explicit `./adapter` subpath contains the effectful adapter export.
 - `src/maplibre-adapter.ts` owns the raw renderer import, empty-style initialization, camera state, finite failures, and teardown.
 - `src/map-runtime-port.ts` owns KFM-shaped values, strict validators, finite states, and the consumer interface.
@@ -633,7 +633,7 @@ The current root `lint`, `test`, and `build` scripts are placeholders. Package m
 
 ## Dependency and supply-chain boundary
 
-This draft slice declares exact `maplibre-gl@6.4.0` only in the accepted package manifest and records its lockfile integrity closure. Human dependency-admission review still requires:
+This draft slice declares exact `maplibre-gl@6.6.0` only in the accepted package manifest and records its lockfile integrity closure. Human dependency-admission review still requires:
 
 1. accepted adapter/runtime ownership;
 2. dependency purpose and import location;
@@ -1498,7 +1498,7 @@ The package may be described as implemented only when:
 - [x] ADR-0007 accepts the renderer family; plugin and dependency admission remain separate.
 - [x] Current workspace package manager/version and root lockfile are declared; renderer dependency admission remains separate.
 - [ ] Package metadata is complete and tested beyond the exact dependency and focused test-script slice.
-- [x] Exact `maplibre-gl@6.4.0` is declared only in the accepted package as a review-pending admission candidate.
+- [x] Exact `maplibre-gl@6.6.0` is declared only in the accepted package as a review-pending admission candidate.
 - [ ] License, provenance, vulnerability, and transitive dependency reviews exist.
 - [ ] Build, typecheck, lint, and package commands are real; the focused package test command is implemented.
 - [x] The explicit export map keeps the root facade renderer-neutral and exposes the initial package-owned adapter only through `@kfm/maplibre/adapter`, without raw renderer types.
@@ -1678,7 +1678,7 @@ Deprecation requires:
 | Source boundary README | CONFIRMED v1.2 correction |
 | Renderer-neutral port/null runtime | IMPLEMENTED / BOUNDED |
 | Concrete `MapLibreAdapter` | IMPLEMENTED / INITIAL LIFECYCLE-CAMERA SLICE |
-| Package dependencies | EXACT `maplibre-gl@6.4.0` CANDIDATE / REVIEW PENDING |
+| Package dependencies | EXACT `maplibre-gl@6.6.0` CANDIDATE / REVIEW PENDING |
 | Package build/export | PARTIAL — source export map; no build output |
 | Package tests | IMPLEMENTED / FIVE FOCUSED MOCKED TESTS |
 | Consumers | PARTIAL — Explorer Web bounded imports/tests |
@@ -1691,6 +1691,6 @@ Deprecation requires:
 | Truth/policy/release authority | NONE |
 | Operational health | UNKNOWN |
 
-> **Current safe description:** `packages/maplibre/` is the private accepted MapLibre seam. This draft proposes exact `maplibre-gl@6.4.0` admission and implements only lifecycle, camera, finite error, and teardown behavior. #2906 browser readiness, source/layer/plugin/protocol admission, distribution, release, deployment, and publication remain held or unauthorized.
+> **Current safe description:** `packages/maplibre/` is the private accepted MapLibre seam. This draft proposes exact `maplibre-gl@6.6.0` admission and implements only lifecycle, camera, finite error, and teardown behavior. #2906 browser readiness, source/layer/plugin/protocol admission, distribution, release, deployment, and publication remain held or unauthorized.
 
 [Back to top](#top)
