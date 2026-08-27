@@ -12,8 +12,9 @@
 #   access occurs.
 #
 # Inputs:
-#   Rollback pipeline/audit placeholders, the synthetic apply rehearsal,
-#   RollbackCard contracts and schemas, declared fixture and validator paths,
+#   Rollback pipeline/audit placeholders, the generic synthetic apply rehearsal,
+#   the bounded Hazards rehearsal fixture, RollbackCard contracts and schemas,
+#   declared fixture and validator paths,
 #   placeholder rollback-card records, drill-test inventory, rollback data
 #   lanes, published alias inventory, policy routing, and the proposed alias ADR.
 #
@@ -110,12 +111,23 @@ jobs:
           rehearsal_test_path = Path(
               "tests/release/test_synthetic_rollback_rehearsal.py"
           )
+          hazards_rehearsal_test_path = Path(
+              "tests/domains/hazards/test_synthetic_rollback_rehearsal.py"
+          )
+          hazards_rehearsal_fixture_root = Path(
+              "fixtures/domains/hazards/synthetic_rollback_rehearsal"
+          )
           agriculture_drill_root = Path("tests/domains/agriculture/rollback_drill")
 
           required = [
               rollback_pipeline_path,
               rollback_apply_path,
               rehearsal_test_path,
+              hazards_rehearsal_test_path,
+              hazards_rehearsal_fixture_root / "README.md",
+              hazards_rehearsal_fixture_root
+              / "workspace/.kfm-synthetic-rollback-rehearsal",
+              hazards_rehearsal_fixture_root / "workspace/scenario.json",
               generic_validator_path,
               release_validator_path,
               release_contract_path,
@@ -233,6 +245,7 @@ jobs:
                   "unittest",
                   "-q",
                   "tests.release.test_synthetic_rollback_rehearsal",
+                  "tests.domains.hazards.test_synthetic_rollback_rehearsal",
               ],
               check=False,
               capture_output=True,
@@ -243,7 +256,7 @@ jobs:
           assert "Ran 0 tests" not in rehearsal_output, (
               "synthetic rollback rehearsal test profile is vacuous"
           )
-          assert "Ran " in rehearsal_output and "OK" in rehearsal_output, (
+          assert "Ran 12 tests" in rehearsal_output and "OK" in rehearsal_output, (
               "synthetic rollback rehearsal test result was not recognized"
           )
 
@@ -289,7 +302,7 @@ jobs:
 
           print("CONFIRMED: the production rollback pipeline and generic RollbackCard entrypoint remain placeholders.")
           print("CONFIRMED: rollback_apply.py remains marker-protected, synthetic-only, and non-authoritative.")
-          print("CONFIRMED: the non-vacuous synthetic rollback rehearsal test profile passed in isolated temporary roots.")
+          print("CONFIRMED: the generic and Hazards synthetic rollback rehearsal profiles ran 12 non-vacuous tests in isolated temporary roots.")
           print("CONFIRMED: the release RollbackCard schema is closed and its bounded local fixture profile passes.")
           print("CONFIRMED: the Agriculture RollbackCard schema remains a permissive id-only scaffold without its declared contract, fixtures, or validator.")
           print("CONFIRMED: direct Agriculture drill inventory contains guidance only.")
@@ -306,7 +319,7 @@ jobs:
           {
             echo "### Rollback simulation"
             echo
-            echo "- The release RollbackCard profile remains closed and fixture-validated; the generic entrypoint and production pipeline remain placeholders, while rollback_apply.py is a marker-protected synthetic-only rehearsal covered by non-vacuous isolated-root tests."
+            echo "- The release RollbackCard profile remains closed and fixture-validated; the generic entrypoint and production pipeline remain placeholders, while rollback_apply.py is a marker-protected synthetic-only rehearsal covered by 12 non-vacuous generic and Hazards isolated-root tests."
             echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** no production rollback engine, live target selection, signature/review verification, policy decision, receipt flow, external invalidation execution, or published-alias mutation is accepted."
             echo "- The Agriculture RollbackCard profile and direct drill lane remain scaffolds, and the two root JSON cards remain documentation-inventory placeholders rather than schema-admissible rollback authority."
             echo "- Result: ${{ job.status }}. No production rollback target was selected or mutated, and no card, receipt, proof, signature, release transition, or publication authority was created."
