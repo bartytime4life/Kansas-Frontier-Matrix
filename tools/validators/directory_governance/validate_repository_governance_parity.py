@@ -298,16 +298,18 @@ def _run_lane(command: tuple[str, ...], repo_root: Path) -> str:
         }
     )
     try:
-        result = subprocess.run(
-            command,
-            cwd=repo_root,
-            env=env,
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            check=False,
-            timeout=LANE_TIMEOUT_SECONDS,
-        )
+        with tempfile.TemporaryDirectory(prefix="kfm-mrts04-hypothesis-") as storage:
+            env["HYPOTHESIS_STORAGE_DIRECTORY"] = storage
+            result = subprocess.run(
+                command,
+                cwd=repo_root,
+                env=env,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=False,
+                timeout=LANE_TIMEOUT_SECONDS,
+            )
     except (OSError, subprocess.TimeoutExpired):
         return "ERROR"
     return "PASS" if result.returncode == 0 else "FAIL"
