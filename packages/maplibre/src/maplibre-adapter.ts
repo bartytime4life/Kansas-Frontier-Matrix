@@ -1,0 +1,314 @@
+import "maplibre-gl/dist/maplibre-gl.css";
+
+import { Map as MapLibreMap } from "maplibre-gl";
+
+import {
+  MAP_RUNTIME_PORT_PROFILE,
+  MAP_RUNTIME_TRUST_STATE_REASONS,
+  MapRuntimePortError,
+  freezeMapRuntimeCamera,
+  type MapFeatureSelection,
+  type MapRuntimeCamera,
+  type MapRuntimePort,
+  type MapRuntimeReasonCode,
+  type MapRuntimeSelectionListener,
+  type MapRuntimeSnapshot,
+  type MapRuntimeSnapshotListener,
+  type MapRuntimeState,
+} from "./map-runtime-port";
+import { DEFAULT_MAP_RUNTIME_CAMERA } from "./null-map-runtime";
+
+const CONTAINER_ID = /^[A-Za-z][A-Za-z0-9._:-]{0,127}$/;
+
+function createEmptyStyle() {
+  return { version: 8 as const, sources: {}, layers: [] };
+}
+
+export type MapLibreAdapterOptions = Readonly<{
+  /** ID of an existing, empty browser element owned by the calling app. */
+  containerId: string;
+  /** Whether MapLibre should attach its normal pointer and keyboard handlers. */
+  interactive?: boolean;
+}>;
+
+function camerasEqual(left: MapRuntimeCamera, right: MapRuntimeCamera): boolean {
+  return (
+    left.longitude === right.longitude &&
+    left.latitude === right.latitude &&
+    left.zoom === right.zoom &&
+    left.bearing === right.bearing &&
+    left.pitch === right.pitch
+  );
+}
+
+/**
+ * Minimal package-owned MapLibre implementation of the accepted MapRuntimePort.
+ *
+ * This first slice owns only renderer construction, camera synchronization,
+ * finite lifecycle state, and teardown. It starts with an inline empty style,
+ * performs no source discovery, and exposes no raw MapLibre values. Source,
+ * layer, selection, protocol, plugin, worker, and external-style admission stay
+ * out of scope until separately governed inputs and browser probes exist.
+ */
+export class MapLibreAdapter implements MapRuntimePort {
+  readonly profile = MAP_RUNTIME_PORT_PROFILE;
+
+  private readonly containerId: string;
+  private readonly interactive: boolean;
+  private state: MapRuntimeState = "IDLE";
+  private camera: MapRuntimeCamera = DEFAULT_MAP_RUNTIME_CAMERA;
+  private selection: MapFeatureSelection | null = null;
+  private reason: MapRuntimeReasonCode | null = null;
+  private map: MapLibreMap | null = null;
+  private initialization: Promise<MapRuntimeSnapshot> | null = null;
+  private rejectInitialization: ((error: MapRuntimePortError) => void) | null =
+    null;
+  private readonly rendererUnsubscribers = new Set<() => void>();
+  private readonly selectionListeners = new Set<MapRuntimeSelectionListener>();
+  private readonly snapshotListeners = new Set<MapRuntimeSnapshotListener>();
+
+  constructor(options: MapLibreAdapterOptions) {
+    if (!CONTAINER_ID.test(options.containerId)) {
+      throw new MapRuntimePortError(
+        "MAP_RUNTIME_CONTAINER_INVALID",
+        "Map runtime container ID is invalid.",
+      );
+    }
+    this.containerId = options.containerId;
+    this.interactive = options.interactive ?? true;
+  }
+
+  initialize(
+    initialCamera: MapRuntimeCamera = this.camera,
+  ): Promise<MapRuntimeSnapshot> {
+    this.assertNotDisposed();
+    if (this.state === "READY") return Promise.resolve(this.getSnapshot());
+    if (this.initialization !== null) return this.initialization;
+
+    this.camera = freezeMapRuntimeCamera(initialCamera);
+    this.state = "INITIALIZING";
+    this.reason = null;
+    this.notifySnapshot();
+
+    let resolveInitialization!: (snapshot: MapRuntimeSnapshot) => void;
+    let rejectInitialization!: (error: MapRuntimePortError) => void;
+    const initialization = new Promise<MapRuntimeSnapshot>((resolve, reject) => {
+      resolveInitialization = resolve;
+      rejectInitialization = reject;
+    });
+    this.initialization = initialization;
+    this.rejectInitialization = rejectInitialization;
+
+    try {
+      const map = new MapLibreMap({
+        container: this.containerId,
+        style: createEmptyStyle(),
+        center: [this.camera.longitude, this.camera.latitude],
+        zoom: this.camera.zoom,
+        bearing: this.camera.bearing,
+        pitch: this.camera.pitch,
+        interactive: this.interactive,
+        hash: false,
+        attributionControl: false,
+        maplibreLogo: false,
+      });
+      this.map = map;
+
+      const loadSubscription = map.on("load", () => {
+        loadSubscription.unsubscribe();
+        this.rendererUnsubscribers.delete(loadSubscription.unsubscribe);
+        if (this.state === "DISPOSED") return;
+        this.camera = this.readRendererCamera(map);
+        this.state = "READY";
+        this.reason = null;
+        const snapshot = this.notifySnapshot();
+        this.initialization = null;
+        this.rejectInitialization = null;
+        resolveInitialization(snapshot);
+      });
+      this.rendererUnsubscribers.add(loadSubscription.unsubscribe);
+
+      const moveSubscription = map.on("moveend", () => {
+        if (this.state !== "READY") return;
+        try {
+          const nextCamera = this.readRendererCamera(map);
+          if (camerasEqual(this.camera, nextCamera)) return;
+          this.camera = nextCamera;
+          this.notifySnapshot();
+        } catch {
+          this.failRuntime();
+        }
+      });
+      this.rendererUnsubscribers.add(moveSubscription.unsubscribe);
+
+      const errorSubscription = map.on("error", () => {
+        if (this.state === "INITIALIZING") {
+          this.failInitialization();
+          return;
+        }
+        if (this.state !== "DISPOSED") this.failRuntime();
+      });
+      this.rendererUnsubscribers.add(errorSubscription.unsubscribe);
+    } catch {
+      this.failInitialization();
+    }
+
+    return initialization;
+  }
+
+  getSnapshot(): MapRuntimeSnapshot {
+    return Object.freeze({
+      profile: MAP_RUNTIME_PORT_PROFILE,
+      state: this.state,
+      camera: this.camera,
+      selection: this.selection,
+      reason: this.reason,
+    });
+  }
+
+  setCamera(camera: MapRuntimeCamera): MapRuntimeSnapshot {
+    this.assertReady();
+    const frozen = freezeMapRuntimeCamera(camera);
+    this.map!.jumpTo({
+      center: [frozen.longitude, frozen.latitude],
+      zoom: frozen.zoom,
+      bearing: frozen.bearing,
+      pitch: frozen.pitch,
+    });
+    this.camera = frozen;
+    return this.notifySnapshot();
+  }
+
+  subscribeSnapshot(listener: MapRuntimeSnapshotListener): () => void {
+    this.assertNotDisposed();
+    if (typeof listener !== "function") {
+      throw new MapRuntimePortError(
+        "MAP_RUNTIME_LISTENER_INVALID",
+        "Map runtime snapshot listener is invalid.",
+      );
+    }
+    this.snapshotListeners.add(listener);
+    return this.unsubscribeOnce(this.snapshotListeners, listener);
+  }
+
+  subscribeSelection(listener: MapRuntimeSelectionListener): () => void {
+    this.assertNotDisposed();
+    if (typeof listener !== "function") {
+      throw new MapRuntimePortError(
+        "MAP_RUNTIME_LISTENER_INVALID",
+        "Map runtime selection listener is invalid.",
+      );
+    }
+    this.selectionListeners.add(listener);
+    return this.unsubscribeOnce(this.selectionListeners, listener);
+  }
+
+  dispose(): void {
+    if (this.state === "DISPOSED") return;
+    const rejection = this.rejectInitialization;
+    this.rejectInitialization = null;
+    this.initialization = null;
+    this.clearRendererSubscriptions();
+    const map = this.map;
+    this.map = null;
+    map?.remove();
+    this.selection = null;
+    this.state = "DISPOSED";
+    this.reason = "MAP_RUNTIME_DISPOSED";
+    this.notifySnapshot();
+    this.selectionListeners.clear();
+    this.snapshotListeners.clear();
+    rejection?.(
+      new MapRuntimePortError(
+        "MAP_RUNTIME_DISPOSED",
+        "Map runtime was disposed during initialization.",
+      ),
+    );
+  }
+
+  private readRendererCamera(map: MapLibreMap): MapRuntimeCamera {
+    const center = map.getCenter();
+    return freezeMapRuntimeCamera({
+      longitude: center.lng,
+      latitude: center.lat,
+      zoom: map.getZoom(),
+      bearing: map.getBearing(),
+      pitch: map.getPitch(),
+    });
+  }
+
+  private failInitialization(): void {
+    const rejection = this.rejectInitialization;
+    this.rejectInitialization = null;
+    this.initialization = null;
+    this.clearRenderer();
+    this.state = "ERROR";
+    this.reason = MAP_RUNTIME_TRUST_STATE_REASONS.ERROR;
+    this.notifySnapshot();
+    rejection?.(
+      new MapRuntimePortError(
+        "MAP_RUNTIME_INITIALIZATION_FAILED",
+        "Map runtime initialization failed.",
+      ),
+    );
+  }
+
+  private failRuntime(): void {
+    this.selection = null;
+    this.state = "ERROR";
+    this.reason = MAP_RUNTIME_TRUST_STATE_REASONS.ERROR;
+    this.notifySnapshot();
+  }
+
+  private clearRenderer(): void {
+    this.clearRendererSubscriptions();
+    const map = this.map;
+    this.map = null;
+    map?.remove();
+  }
+
+  private clearRendererSubscriptions(): void {
+    for (const unsubscribe of this.rendererUnsubscribers) unsubscribe();
+    this.rendererUnsubscribers.clear();
+  }
+
+  private notifySnapshot(): MapRuntimeSnapshot {
+    const snapshot = this.getSnapshot();
+    for (const listener of [...this.snapshotListeners]) listener(snapshot);
+    return snapshot;
+  }
+
+  private unsubscribeOnce<T>(listeners: Set<T>, listener: T): () => void {
+    let active = true;
+    return (): void => {
+      if (!active) return;
+      active = false;
+      listeners.delete(listener);
+    };
+  }
+
+  private assertNotDisposed(): void {
+    if (this.state === "DISPOSED") {
+      throw new MapRuntimePortError(
+        "MAP_RUNTIME_DISPOSED",
+        "Map runtime has been disposed.",
+      );
+    }
+  }
+
+  private assertReady(): void {
+    this.assertNotDisposed();
+    if (this.state !== "READY" || this.map === null) {
+      throw new MapRuntimePortError(
+        "MAP_RUNTIME_NOT_READY",
+        "Map runtime is not ready.",
+      );
+    }
+  }
+}
+
+export function createMapLibreAdapter(
+  options: MapLibreAdapterOptions,
+): MapLibreAdapter {
+  return new MapLibreAdapter(options);
+}
