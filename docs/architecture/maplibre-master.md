@@ -22,7 +22,7 @@ responsibility: >
 truth_posture: >
   CONFIRMED same-path architecture placement, accepted Directory Rules v2,
   current ADR status, current package/app/validator surfaces, exact MapLibre
-  6.4.0 readiness candidate identity, and current dependency-free/runtime-HOLD
+  6.6.0 readiness candidate identity, and current dependency-free/runtime-HOLD
   state / PROPOSED adapter, sole-renderer, dependency, plugin, protocol,
   verification, receipt, release, correction, and rollback architecture until
   the owning decisions and implementations close / UNKNOWN deployed browser
@@ -46,14 +46,14 @@ evidence_snapshot:
   renderer_capability_contract_blob: 5b172bd279ed2f18c5d6339b6c635512a6c3ff25
   performance_harness_blob: 699dd4cf42d355dd2ed7620852b7fd1f3000bbe2
   upstream_candidate:
-    version: 6.4.0
-    tag_commit: 4529c6e451f0e5607ef42ad0ed81aa76a14a0f43
-    checked: 2026-08-19
+    version: 6.6.0
+    tag_commit: 407a8ce9e379c16066b13c3a6729e404b69743c6
+    checked: 2026-08-27
 related:
   - ./maplibre.md
   - ./map-master/README.md
   - ./map-shell.md
-  - ./ui/MAP_RUNTIME_BOUNDARY.md
+  - docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md
   - ../adr/INDEX.md
   - ../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
   - "../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
@@ -81,7 +81,7 @@ notes:
   - "Same-path documentation modernization only. No ADR, contract, schema, policy, dependency, lockfile, source, validator, runtime, release, deployment, or publication state changes."
   - "The prior edition repeatedly promoted planning lineage and absent paths into present-tense architecture facts. This revision separates upstream capability, maintainer direction, proposed ADR state, repository implementation, validation evidence, and release/publication state."
   - "Issue #2957 records maintainer direction for seven of eight MapLibre architecture choices; acquisition enforcement remains HOLD and ADR-0006/0007 remain effectively proposed."
-  - "MapLibre GL JS 6.4.0 is an exact readiness candidate, not an admitted KFM dependency."
+  - "MapLibre GL JS 6.6.0 is an exact readiness candidate, not an admitted KFM dependency."
   - "Legacy section headings and anchors are retained for inbound-link compatibility."
 [/KFM_META_BLOCK_V2] -->
 
@@ -95,7 +95,7 @@ notes:
 ![status](https://img.shields.io/badge/status-v2.0--draft-d4a72c?style=flat-square)
 ![evidence](https://img.shields.io/badge/evidence-repository--grounded-1a7f37?style=flat-square)
 ![decisions](https://img.shields.io/badge/ADR--0006%2F0007-proposed-b54708?style=flat-square)
-![candidate](https://img.shields.io/badge/readiness_candidate-6.4.0-0969da?style=flat-square)
+![candidate](https://img.shields.io/badge/readiness_candidate-6.6.0-0969da?style=flat-square)
 ![dependency](https://img.shields.io/badge/dependency-not__admitted-6e7781?style=flat-square)
 ![runtime](https://img.shields.io/badge/runtime-HOLD-b42318?style=flat-square)
 ![publication](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)
@@ -104,7 +104,7 @@ notes:
 > **This register is not a renderer decision or conformance certificate.** It describes upstream MapLibre capabilities, KFM architecture intent, and the exact bounded implementation evidence present at the pinned revision. ADR-0006 and ADR-0007 remain effectively `proposed`; a component row marked `SUPPORTED UPSTREAM` or `DIRECTION RECORDED` does not admit a package, plugin, protocol, source, layer, artifact, release, or public route.
 
 > [!CAUTION]
-> **Current runtime posture is `HOLD`.** `packages/maplibre/` is a private dependency-free `0.0.0` scaffold, its entry point exports only a placeholder, and the Explorer `MapLibreAdapter.ts` is comment-only. The current readiness classifier targets exact MapLibre GL JS `6.4.0`, but the dependency is unpinned and the twelve browser/runtime probes are not established by this document.
+> **Current runtime posture is `HOLD`.** `packages/maplibre/` is a private dependency-free `0.0.0` scaffold, its entry point exports only a placeholder, and the Explorer `MapLibreAdapter.ts` is comment-only. The current readiness classifier targets exact MapLibre GL JS `6.6.0`, but the dependency is unpinned and the twelve browser/runtime probes are not established by this document.
 
 > [!WARNING]
 > **Rendering success is not truth.** A map, hit-test result, popup, screenshot, performance sample, visual-diff image, tile, style, or feature property is a downstream representation. Consequential claims still require governed evidence resolution, policy and sensitivity checks, review and release state, correction lineage, and an appropriate rollback path.
@@ -121,7 +121,7 @@ notes:
 | **Explorer application** | A real Vite/TypeScript, map-first, trust-visible shell exists; its map selection and Evidence Drawer laboratory remain renderer-neutral |
 | **Concrete adapter** | Not implemented; `apps/explorer-web/src/adapters/MapLibreAdapter.ts` is one boundary comment |
 | **Acquisition evidence** | Deterministic no-network inventory exists; its `HOLD` is structural evidence, not renderer admission or enforcement closure |
-| **Readiness evidence** | Exact `6.4.0` classifier and fixtures exist; a `READY` result would be review eligibility only, not admission or release |
+| **Readiness evidence** | Exact `6.6.0` classifier and fixtures exist; a `READY` result would be review eligibility only, not admission or release |
 | **Renderer capability profile** | Fixture-only, inactive, review-pending candidate with no runtime or public effect |
 | **Map data carrier checks** | Inactive metadata and compatibility checks exist for selected declarations; production byte conformance and release are not established |
 | **Deployed/public MapLibre runtime** | `UNKNOWN` / not established by inspected repository evidence |
@@ -248,7 +248,7 @@ Each capability row SHOULD identify:
 | Dependency owner | `DIRECTION_RECORDED` | Intended owner is `packages/maplibre/package.json`; it currently declares no dependencies |
 | Renderer family | `DIRECTION_RECORDED` / ADR proposed | Maintainer direction chooses MapLibre GL JS as the sole normal production browser renderer family; ADR-0007 remains proposed |
 | Peer-renderer exception | `DIRECTION_RECORDED` | A separately accepted scoped exception or successor ADR is intended for any independent engine owning map/scene lifecycle |
-| Exact version | `READINESS_CANDIDATE` | Current classifier targets `6.4.0` at upstream tag commit `4529c6e…`; no version is admitted |
+| Exact version | `READINESS_CANDIDATE` | Current classifier targets `6.6.0` at upstream tag commit `407a8ce…`; no version is admitted |
 | Browser/runtime proof | `RUNTIME_HOLD` | Twelve named probes are required by the current classifier; this page does not establish accepted results |
 | Release/publication | none | No renderer release or public MapLibre runtime is established by this register |
 
@@ -514,8 +514,8 @@ The prior edition treated a `RenderReceipt` as an established emitted object. Cu
 
 `tools/validators/maplibre/validate_v6_readiness.py` currently targets:
 
-- MapLibre GL JS `6.4.0`;
-- upstream tag commit `4529c6e451f0e5607ef42ad0ed81aa76a14a0f43`;
+- MapLibre GL JS `6.6.0`;
+- upstream tag commit `407a8ce9e379c16066b13c3a6729e404b69743c6`;
 - ESM module mode;
 - TypeScript target `ES2022`;
 - no known internal `map.transform` access;
@@ -816,7 +816,7 @@ No data/source release needs semantic rollback merely because a browser renderer
 ### 15.2 Dependency and runtime
 
 - **NEEDS VERIFICATION — exact dependency admission:** integrity, license, notices, supply-chain, lockfile, browser support, CSP/worker/network, security, and removal review for the exact version selected after architecture closure.
-- **NEEDS VERIFICATION — candidate currentness:** `6.4.0` is the repository's current exact readiness candidate; later upstream releases must not silently retarget admission.
+- **NEEDS VERIFICATION — candidate currentness:** `6.6.0` is the repository's current exact readiness candidate; later upstream releases must not silently retarget admission.
 - **NEEDS VERIFICATION — twelve probes:** exact runner identity, authenticated artifacts, browser/OS/device/GPU coverage, headless parity, and accepted thresholds.
 - **UNKNOWN — public/deployed runtime:** no current public MapLibre deployment or operational trace is established here.
 - **NEEDS VERIFICATION — performance harness:** source fixtures, external glyph dependency, network policy, result authority, artifact retention, and retirement plan.
@@ -878,7 +878,7 @@ Adjacent May-era MapLibre architecture and atlas pages still contain proposal-er
 - [`MVT.md`](../standards/MVT.md) — encoding and readiness boundary.
 - [`PMTILES.md`](../standards/PMTILES.md) — PMTiles profile guidance; verify file-specific maturity.
 - [`assess_acquisition_inventory.py`](../../tools/validators/maplibre/assess_acquisition_inventory.py) — non-authoritative acquisition inventory.
-- [`validate_v6_readiness.py`](../../tools/validators/maplibre/validate_v6_readiness.py) — exact `6.4.0` readiness classifier.
+- [`validate_v6_readiness.py`](../../tools/validators/maplibre/validate_v6_readiness.py) — exact `6.6.0` readiness classifier.
 
 ### 16.4 Upstream primary references
 
@@ -894,7 +894,7 @@ Adjacent May-era MapLibre architecture and atlas pages still contain proposal-er
 
 | Component / capability | Upstream | Direction / decision | Repository implementation | Validation | Runtime | Release / publication |
 |---|---|---|---|---|---|---|
-| MapLibre GL JS browser renderer | `SUPPORTED_UPSTREAM` | Sole-family direction recorded; ADR proposed | Dependency-free scaffold only | Exact `6.4.0` classifier | `HOLD` | none |
+| MapLibre GL JS browser renderer | `SUPPORTED_UPSTREAM` | Sole-family direction recorded; ADR proposed | Dependency-free scaffold only | Exact `6.6.0` classifier | `HOLD` | none |
 | `MapRuntimePort` | KFM abstraction | Direction recorded | Not verified as concrete TS port | No complete port contract test | not run | none |
 | Package-owned `MapLibreAdapter` | KFM target | Revised direction recorded | Not implemented | Acquisition inventory incomplete for exact seam | not run | none |
 | Explorer bootstrap | KFM target | Renderer-neutral role intended | Comment-only adapter path; real renderer-neutral site/selection lab exists | Site and selection tests exist | no real renderer | none |
@@ -933,7 +933,7 @@ Adjacent May-era MapLibre architecture and atlas pages still contain proposal-er
 | Rollback | Expanded across documentation, ADR, port, dependency, adapter, runtime, release and correction transitions |
 | Anti-patterns | Expanded with current acquisition, authority, fixture, absent-path and evidence-collapse risks |
 | Open questions | Replaced with current issue/ADR/acquisition/readiness/object/release backlog |
-| Upstream version claims | Refreshed to exact repository candidate `6.4.0` at tag commit `4529c6e…`; admission remains separate |
+| Upstream version claims | Refreshed to exact repository candidate `6.6.0` at tag commit `407a8ce…`; admission remains separate |
 | Legacy heading/anchor compatibility | Preserved for sections 1–16 and appendices |
 
 ### Evidence limits

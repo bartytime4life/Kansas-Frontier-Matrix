@@ -27,9 +27,9 @@ evidence_snapshot:
   current_campaign_workflow_blob: 47f667022cf3c5030bf5e7597ad793470ad67a60
   current_temporal_store_blob: 3a965ba5a0a5bf9ca57c3fb48ef4283758712324
   current_trace_closure_blob: 355c6d538131cb7b665f2feb7f84128183d21255
-  current_maplibre_readiness_profile: kfm-maplibre-v6-4-readiness-v3
-  current_maplibre_target: 6.4.0
-  current_maplibre_upstream_tag_commit: 4529c6e451f0e5607ef42ad0ed81aa76a14a0f43
+  current_maplibre_readiness_profile: kfm-maplibre-v6-6-readiness-v4
+  current_maplibre_target: 6.6.0
+  current_maplibre_upstream_tag_commit: 407a8ce9e379c16066b13c3a6729e404b69743c6
   current_usdm_materiality_blob: dac5f56560f40e725c4d8924d8d20138ae5708fd
   open_pull_requests_for_exact_target_at_preflight: 0
 related:
@@ -76,7 +76,7 @@ notes:
 | **Durable briefing architecture** | [`briefing-integration.md`](briefing-integration.md). That page owns the reusable BriefingSignal-to-governed-work narrative. |
 | **Placement decision** | `PLACE` for this same-path correction; `HOLD` on any move or archival migration under the current [convergence plan](document-convergence-plan.md). |
 | **Campaign scope** | Four fixture-first, deterministic, no-network slices: TemporalSlice SQL indexing, trace-to-temporal reference closure, MapLibre readiness classification, and USDM material-change classification. |
-| **Current MapLibre target** | Exact `6.4.0` under profile `kfm-maplibre-v6-4-readiness-v3`; current repository posture remains `HOLD`. |
+| **Current MapLibre target** | Exact `6.6.0` under profile `kfm-maplibre-v6-6-readiness-v4`; current repository posture remains `HOLD`. |
 | **Current external operation** | No live USDM retrieval, live telemetry, production database, admitted MapLibre dependency, authenticated browser probe packet, source activation, or public product is established. |
 | **Publication effect** | None. A fixture, test, validator, workflow, receipt, pull request, merge, or `PROMOTION_CANDIDATE` is not KFM release or publication. |
 
@@ -200,7 +200,7 @@ The campaign's original non-goals remain controlling for interpretation:
 
 ### 3.2 Later evolution
 
-The MapLibre readiness lane evolved after the original campaign. The current classifier targets exact MapLibre GL JS `6.4.0`, profile `kfm-maplibre-v6-4-readiness-v3`, and upstream tag commit `4529c6e451f0e5607ef42ad0ed81aa76a14a0f43`. A successor receipt preserves the historical earlier receipts rather than rewriting them.
+The MapLibre readiness lane evolved after the original campaign. The current classifier targets exact MapLibre GL JS `6.6.0`, profile `kfm-maplibre-v6-6-readiness-v4`, and upstream tag commit `407a8ce9e379c16066b13c3a6729e404b69743c6`. A successor receipt preserves the historical earlier receipts rather than rewriting them.
 
 The other three campaign components remain fixture-first, local, and no-network at the inspected snapshot.
 
@@ -210,7 +210,7 @@ The other three campaign components remain fixture-first, local, and no-network 
 |---|---|---|
 | TemporalSlice SQL index | Standard-library SQLite experiment plus focused tests | Production repository/database is `UNKNOWN`; graduation `HOLD` |
 | Trace-to-temporal closure | Deterministic local validator, synthetic artifact, exact negative fixtures, focused tests | Live trace, receipt, evidence resolver, attestation, and policy closure are `UNKNOWN`; graduation `HOLD` |
-| MapLibre readiness | Exact 6.4.0 classifier, 12-probe profile, fixtures/tests, successor receipt, workflow assertion | Current repository is `HOLD`; dependency and browser evidence are absent |
+| MapLibre readiness | Exact 6.6.0 classifier, 12-probe profile, fixtures/tests, successor receipt, workflow assertion | Current repository is `HOLD`; dependency and browser evidence are absent |
 | USDM materiality | Synthetic weekly snapshot comparator, finite outcomes, exact negative fixtures, focused tests | Source activation, native snapshots, reviewed thresholds, and release path are `UNKNOWN`; graduation `HOLD` |
 
 ### 3.4 State separation
@@ -357,9 +357,9 @@ A live closure profile needs a separately governed packet for real trace identit
 
 | Field | Current value |
 |---|---|
-| Profile | `kfm-maplibre-v6-4-readiness-v3` |
-| Exact target | `6.4.0` |
-| Upstream tag commit binding | `4529c6e451f0e5607ef42ad0ed81aa76a14a0f43` |
+| Profile | `kfm-maplibre-v6-6-readiness-v4` |
+| Exact target | `6.6.0` |
+| Upstream tag commit binding | `407a8ce9e379c16066b13c3a6729e404b69743c6` |
 | Finite outcomes | `READY`, `HOLD`, `ERROR` |
 | Current repository result | `HOLD` by the declared workflow expectation |
 | Decision state | ADR-0006 and ADR-0007 remain proposed |
@@ -382,7 +382,7 @@ Those facts support `HOLD`; they do not support a functioning adapter or rendere
 
 The classifier requires:
 
-- one exact `6.4.0` dependency selection;
+- one exact `6.6.0` dependency selection;
 - ESM and ES2022;
 - no direct MapLibre acquisition outside the inspected `packages/maplibre/` boundary;
 - no known internal `map.transform` access;
@@ -411,7 +411,7 @@ A missing result is `NOT_RUN`, not `PASS`. A fully populated synthetic `READY` f
 
 The current focused test file contains fourteen test methods covering:
 
-- exact 6.4.0 success;
+- exact 6.6.0 success;
 - prior-minor and missing-dependency holds;
 - package/Explorer version conflict;
 - Explorer-manifest compatibility;

@@ -32,7 +32,7 @@ related:
   - ./maplibre-master.md
   - ./map-shell.md
   - ./planetary-3d.md
-  - ./ui/MAP_RUNTIME_BOUNDARY.md
+  - docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md
   - ./contract-schema-policy-split.md
   - ./identity-and-spec-hash.md
   - ../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
@@ -234,7 +234,7 @@ This table reports **current repository maturity**, not the broader capabilities
 | Map selection and evidence-resolution bridge | Fixture-driven profile with injected resolver and finite outcomes | `IMPLEMENTED BOUNDED SLICE` |
 | Layer-manifest admission evaluation | Deterministic fixture-only evaluator; no registry mutation or source creation | `IMPLEMENTED BOUNDED SLICE` |
 | PMTiles release-cache planning | Deterministic fixture-only planner; no fetch or cache side effects | `IMPLEMENTED BOUNDED SLICE` |
-| Readiness validator | Exact candidate `6.4.0`, import-boundary checks, TypeScript/module checks, and twelve named runtime probes | `IMPLEMENTED VALIDATOR` |
+| Readiness validator | Exact candidate `6.6.0`, import-boundary checks, TypeScript/module checks, and twelve named runtime probes | `IMPLEMENTED VALIDATOR` |
 | Readiness tests | Synthetic positive and exact-negative unit coverage | `IMPLEMENTED TESTS` |
 | Committed v6 probe result | `configs/maplibre/v6-probe-results.json` not present at the evidence snapshot | `HOLD` |
 | Admitted MapLibre GL JS dependency | No current inspected manifest declares it | `HOLD` |
@@ -372,7 +372,7 @@ Before creating or changing a concrete object family, verify its semantic contra
 |---|---|---|---|
 | `ML-OPEN-01` | Will ADR-0006's one-import seam be accepted, amended, or superseded? | `NEEDS VERIFICATION` | Architecture decision plus enforceable import-boundary tests |
 | `ML-OPEN-02` | Will ADR-0007's sole-renderer proposal be accepted, amended, or superseded? | `NEEDS VERIFICATION` | Accepted ADR with explicit consequences and migration/rollback |
-| `ML-OPEN-03` | Is `6.4.0` still the candidate when dependency admission is actually attempted? | `NEEDS VERIFICATION` | Current authoritative upstream review plus exact repository compatibility evidence |
+| `ML-OPEN-03` | Is `6.6.0` still the candidate when dependency admission is actually attempted? | `NEEDS VERIFICATION` | Current authoritative upstream review plus exact repository compatibility evidence |
 | `ML-OPEN-04` | Who owns the package seam, Explorer adapter, performance profile, and release decision independently? | `UNKNOWN` | Accepted stewardship and review routing beyond the current CODEOWNERS fallback |
 | `ML-OPEN-05` | How will the standalone `5.5.0` CDN performance harness be reconciled with the package seam and no-network test posture? | `CONFLICTED` | Small dependency-closed design decision, hermetic fixture strategy, and focused validation |
 | `ML-OPEN-06` | Which current contracts and schemas canonically carry layer, tile, selection, representation, and release metadata? | `NEEDS VERIFICATION` | Current object-family inventory and accepted contract/schema authority |

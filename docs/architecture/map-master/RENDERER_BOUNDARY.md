@@ -22,7 +22,7 @@ truth_posture: >-
   CONFIRMED current tracked path, accepted Directory Rules placement, the
   renderer-neutral selection-to-Evidence-Drawer bridge, fixture-only
   LayerManifest admission and release-scoped PMTiles cache decisions, bounded
-  acquisition inventory, exact 6.4.0 readiness classifier, dependency-free
+  acquisition inventory, exact 6.6.0 readiness classifier, dependency-free
   MapLibre package scaffold, comment-only Explorer adapter, and current runtime
   HOLD / PROPOSED MapRuntimePort, one concrete MapLibreAdapter seam,
   sole-renderer choice, dependency ownership, plugin and protocol admission,
@@ -67,7 +67,7 @@ inspection_boundary: >-
   Directory Rules and CODEOWNERS, ADR-0006 and ADR-0007, open issues 2957 and
   2906, package and app manifests, placeholder package and adapter code, the
   renderer-neutral map-selection bridge and tests, fixture-only admission and
-  cache decisions, the acquisition inventory and workflow, and the 6.4.0
+  cache decisions, the acquisition inventory and workflow, and the 6.6.0
   readiness validator. No mounted checkout, local repository-native test run,
   dependency installation, authenticated browser probe packet, deployed
   runtime, live source, public endpoint, release application, correction
@@ -102,7 +102,7 @@ notes:
   - "v2.0-draft is a same-path repository-grounded modernization; placement outcome PLACE."
   - "The seven negative authorities remain the stable architecture spine, but the authority homes and implementation claims are corrected and bounded."
   - "data/published/ is a released public-safe carrier lane, not the canonical truth store."
-  - "The concrete MapLibre runtime remains unadmitted: no maplibre-gl dependency, no functional package export, no functional Explorer adapter, and no authenticated 6.4.0 probe packet are established."
+  - "The concrete MapLibre runtime remains unadmitted: no maplibre-gl dependency, no functional package export, no functional Explorer adapter, and no authenticated 6.6.0 probe packet are established."
   - "ADR-0006 and ADR-0007 remain proposed; this document does not accept them or turn their proposed seam into current authority."
   - "Current executable evidence is renderer-neutral or fixture-only and creates no evidence, policy, review, release, publication, cache, registry, or MapLibre-source authority."
   - "The branch was reconciled with the same-day 2D/3D parity and layer-lifecycle modernizations; no target overlap occurred, and their repository-grounded HOLD posture is reflected here."
@@ -128,7 +128,7 @@ notes:
 > **Current executable evidence is meaningful but bounded.** Explorer Web has a strict renderer-neutral map-selection-to-Evidence-Drawer bridge, fixture-only release/admission decisions, and release-scoped cache decisions. None boots MapLibre, mutates a registry or cache, calls a live governed service, applies policy, or publishes a layer.
 
 > [!WARNING]
-> **ADR-0006 and ADR-0007 remain proposed.** The dependency-free `@kfm/maplibre` package, placeholder export, comment-only `MapLibreAdapter.ts`, structural acquisition inventory, and `6.4.0` readiness classifier do not accept either decision, admit a dependency, establish one binding adapter seam, or prove browser behavior.
+> **ADR-0006 and ADR-0007 remain proposed.** The dependency-free `@kfm/maplibre` package, placeholder export, comment-only `MapLibreAdapter.ts`, structural acquisition inventory, and `6.6.0` readiness classifier do not accept either decision, admit a dependency, establish one binding adapter seam, or prove browser behavior.
 
 **Quick navigation:** [Status](#status-and-authority) · [Directory Rules](#directory-rules-basis) · [Current evidence](#current-repository-evidence) · [Scope](#1-scope) · [Seven authorities](#2-the-seven-negative-authorities) · [Truth store](#3-authority-1--not-the-canonical-truth-store) · [Source registry](#4-authority-2--not-the-source-registry) · [Policy](#5-authority-3--not-the-policy-engine) · [Citation](#6-authority-4--not-the-citation-authority) · [Review](#7-authority-5--not-the-review-authority) · [Publication](#8-authority-6--not-the-publication-authority) · [AI](#9-authority-7--not-the-ai-authority) · [Contract](#10-renderer-as-downstream-contract) · [Enforcement](#11-boundary-enforcement) · [Anti-patterns](#12-anti-patterns) · [Open work](#13-open-questions-and-adr-triggers) · [Related](#14-related-docs) · [Appendix](#15-appendix)
 
@@ -223,7 +223,7 @@ The current repository has progressed beyond proposal-only prose, but it has not
 | Explorer toolchain | Vite, TypeScript, Vitest, and Playwright commands; no `maplibre-gl` dependency | Real app toolchain, renderer dependency absent |
 | Acquisition inventory | Bounded deterministic scan of manifests/imports/require/CDN/globals/workers/protocol registration | Structural evidence; `PASS` or `HOLD` creates no authority |
 | Acquisition workflow | Read-only, no-network, pinned-action workflow; accepts structural `PASS` or `HOLD` | Orchestration only; not dependency or architecture approval |
-| Readiness classifier | Exact `6.4.0` candidate, upstream tag binding, ESM/ES2022/import checks, twelve probe slots | Review-readiness classifier; not runtime proof |
+| Readiness classifier | Exact `6.6.0` candidate, upstream tag binding, ESM/ES2022/import checks, twelve probe slots | Review-readiness classifier; not runtime proof |
 | Current readiness inputs | No exact dependency and no committed authenticated probe record | `MAPLIBRE_DEPENDENCY_UNPINNED` and `RUNTIME_PROBES_PENDING`; outcome remains `HOLD` |
 | Legacy adapter test | Allows MapLibre/Cesium imports anywhere under Explorer `adapters/` | Partial historical guard, not the proposed one-literal-module rule |
 | Governance packet | Issues #2957 and #2906 remain open | Architecture ownership and authenticated runtime evidence remain unresolved |
@@ -246,7 +246,7 @@ flowchart LR
     MR["MapRuntimePort"]
     MLA["Concrete MapLibreAdapter"]
     DEP["Exact admitted dependency + lock"]
-    BP["Authenticated 6.4.0 browser probes"]
+    BP["Authenticated 6.6.0 browser probes"]
     LOAD["Released-layer loader"]
   end
 
@@ -652,7 +652,7 @@ No step may be inferred from a later-looking file, a successful fixture, or a gr
 |---|---|---|---|
 | `assess_acquisition_inventory.py` | Bounded manifests and executable/package/test/example/runtime/public-web roots | `PASS / HOLD / FAIL / ERROR` | Reports candidate seam; does not accept it |
 | `maplibre-acquisition-inventory.yml` | Read-only no-network orchestration | Allows structural `PASS` or `HOLD`; fails `FAIL`/`ERROR` | Path-scoped; docs target does not itself trigger it |
-| `validate_v6_readiness.py` | Exact `6.4.0`, ESM/ES2022, import/internal-access checks, twelve probe slots | `READY / HOLD / ERROR` | Candidate readiness only |
+| `validate_v6_readiness.py` | Exact `6.6.0`, ESM/ES2022, import/internal-access checks, twelve probe slots | `READY / HOLD / ERROR` | Candidate readiness only |
 | `test_explorer_web_adapter_boundary.py` | Explorer source imports and internal-store literals | Fails direct imports outside `adapters/` | Allows any adapter module and Cesium; incomplete for ADR-0006 |
 | `map-evidence-drawer.test.ts` | Renderer-neutral selection and drawer bridge | Positive and fail-closed finite cases | Fixtures and injected resolver |
 | LayerManifest admission evaluator | Closed synthetic packet | `PASS / HOLD / DENY / ERROR` | No registry or renderer mutation |
@@ -754,7 +754,7 @@ Repository-native and hosted checks remain separate execution evidence.
 | Decide sole/default browser renderer and peer-renderer exception grammar | **PROPOSED** | ADR-0007 |
 | Reconcile old Explorer adapter test with one-literal-module/acquisition policy | **NEEDS VERIFICATION** | Structural enforcement slice |
 | Decide exact dependency owner, version, lock, worker, CSP, and supply-chain profile | **HOLD** | Separate dependency-admission review |
-| Execute all twelve exact `6.4.0` browser/long-session probes | **HOLD** | Issue [#2906](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2906) |
+| Execute all twelve exact `6.6.0` browser/long-session probes | **HOLD** | Issue [#2906](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2906) |
 | Implement a released public-safe layer loader | **PROPOSED** | After architecture and dependency admission |
 | Authenticate live evidence, policy, review, release, and correction transport | **UNKNOWN** | Governed API/runtime integration |
 | Prove alias, cache, tile, drawer, search, export, AI, and graph invalidation | **NEEDS VERIFICATION** | Correction/rollback rehearsal |
@@ -802,7 +802,7 @@ An accepted ADR or amendment is required before:
 | [`../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts`](../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts) | Fixture-only registration eligibility | Bounded executable / no mutation |
 | [`../../../apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts`](../../../apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts) | Fixture-only release-scoped cache decision | Bounded executable / no mutation |
 | [`../../../tools/validators/maplibre/assess_acquisition_inventory.py`](../../../tools/validators/maplibre/assess_acquisition_inventory.py) | Structural acquisition inventory | Bounded executable / non-authoritative |
-| [`../../../tools/validators/maplibre/validate_v6_readiness.py`](../../../tools/validators/maplibre/validate_v6_readiness.py) | Exact `6.4.0` readiness classifier | Bounded executable / current HOLD |
+| [`../../../tools/validators/maplibre/validate_v6_readiness.py`](../../../tools/validators/maplibre/validate_v6_readiness.py) | Exact `6.6.0` readiness classifier | Bounded executable / current HOLD |
 | [`../../../packages/maplibre/`](../../../packages/maplibre/) | Current reusable-package candidate home | Dependency-free scaffold |
 | [`../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts`](../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) | Current app-side adapter placeholder | Comment-only; not implemented |
 
@@ -850,7 +850,7 @@ CONFIRMED:
 - strict renderer-neutral selection -> Evidence Drawer bridge
 - fixture-only, non-mutating layer admission and PMTiles cache decisions
 - bounded acquisition inventory and read-only workflow
-- exact MapLibre 6.4.0 readiness classifier with twelve probe slots
+- exact MapLibre 6.6.0 readiness classifier with twelve probe slots
 - dependency-free @kfm/maplibre 0.0.0 scaffold
 - comment-only MapLibreAdapter.ts
 

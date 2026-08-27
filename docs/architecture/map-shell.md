@@ -454,7 +454,7 @@ interface MapRuntimePort {
 | [`apps/explorer-web/src/adapters/MapLibreAdapter.ts`](../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) | One boundary comment; no import, export, type, or implementation |
 | Explorer package manifest | Real build/test scripts, but no `maplibre-gl` dependency |
 | Renderer ADRs | ADR-0006 and ADR-0007 remain proposed |
-| Current catalog | MapLibre readiness candidate `6.4.0`, dependency not admitted, runtime not implemented, state `HOLD` |
+| Current catalog | MapLibre readiness candidate `6.6.0`, dependency not admitted, runtime not implemented, state `HOLD` |
 
 ### 6.4 Port rules
 
