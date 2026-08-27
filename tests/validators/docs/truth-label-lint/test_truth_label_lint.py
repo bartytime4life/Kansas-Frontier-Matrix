@@ -68,6 +68,34 @@ class TruthLabelLintTests(unittest.TestCase):
         self.assertEqual(linter.FAIL, result.outcome)
         self.assertEqual([linter.MARKER_MISSING], [item.code for item in result.findings])
 
+    def test_shorter_fence_run_cannot_expose_an_example_table(self) -> None:
+        result = linter.lint_text(
+            "<!-- kfm-assessment-axes: required -->\n\n"
+            "````markdown\n"
+            "```\n"
+            "| Axis | Current result |\n"
+            "|---|---|\n"
+            "| Authority / epistemic posture | CONFIRMED |\n"
+            "| Capability maturity | PARTIAL |\n"
+            "````\n"
+        )
+        self.assertEqual(linter.FAIL, result.outcome)
+        self.assertEqual([linter.TABLE_MISSING], [item.code for item in result.findings])
+
+    def test_longer_matching_fence_run_closes_the_example(self) -> None:
+        result = linter.lint_text(
+            "<!-- kfm-assessment-axes: required -->\n\n"
+            "```markdown\n"
+            "| example | only |\n"
+            "````\n\n"
+            "| Axis | Current result |\n"
+            "|---|---|\n"
+            "| Authority / epistemic posture | CONFIRMED |\n"
+            "| Capability maturity | PARTIAL |\n"
+        )
+        self.assertEqual(linter.PASS, result.outcome)
+        self.assertEqual((), result.findings)
+
     def test_directory_discovery_is_sorted_and_does_not_follow_symlinks(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

@@ -19,7 +19,12 @@ from typing import Iterable, Sequence
 MARKER_RE = re.compile(
     r"<!--\s*kfm-assessment-axes\s*:\s*required\s*-->", re.IGNORECASE
 )
-FENCE_RE = re.compile(r"^\s*(`{3,}|~{3,})")
+FENCE_OPEN_RE = re.compile(
+    r"^[ ]{0,3}(?P<fence>`{3,}|~{3,})(?P<info>.*)$"
+)
+FENCE_CLOSE_RE = re.compile(
+    r"^[ ]{0,3}(?P<fence>`{3,}|~{3,})[ \t]*$"
+)
 SEPARATOR_RE = re.compile(r"^:?-{3,}:?$")
 DECORATION_RE = re.compile(r"[*_`]+")
 SPACE_RE = re.compile(r"\s+")
@@ -71,18 +76,28 @@ class MarkdownTable:
 def _visible_lines(text: str) -> list[tuple[int, str]]:
     """Return lines outside fenced code blocks while preserving line numbers."""
     visible: list[tuple[int, str]] = []
-    fence: str | None = None
+    fence: tuple[str, int] | None = None
     for number, line in enumerate(text.splitlines(), start=1):
-        match = FENCE_RE.match(line)
-        if match:
-            marker = match.group(1)[0]
-            if fence is None:
-                fence = marker
-            elif fence == marker:
-                fence = None
+        if fence is not None:
+            match = FENCE_CLOSE_RE.fullmatch(line)
+            if match:
+                run = match.group("fence")
+                marker, minimum_length = fence
+                if run[0] == marker and len(run) >= minimum_length:
+                    fence = None
             continue
-        if fence is None:
-            visible.append((number, line))
+
+        match = FENCE_OPEN_RE.fullmatch(line)
+        if match:
+            run = match.group("fence")
+            info = match.group("info")
+            if run[0] == "`" and "`" in info:
+                visible.append((number, line))
+                continue
+            fence = (run[0], len(run))
+            continue
+
+        visible.append((number, line))
     return visible
 
 

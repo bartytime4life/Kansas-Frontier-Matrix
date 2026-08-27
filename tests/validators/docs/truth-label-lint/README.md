@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tests-validators-docs-truth-label-lint-readme
 title: tests/validators/docs/truth-label-lint README
 type: README
-version: v0.1.0
+version: v0.1.1
 status: bounded-executable-tests; synthetic; no-network; review-pending
 owner: TODO-tooling-qa-owner-plus-docs-steward-plus-ci-steward
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-08-27
 policy_label: repository-facing; tests; docs-validator; synthetic; non-authoritative
 owning_root: tests/
 responsibility: Prove the finite structural behavior, deterministic reporting, failure polarity, and no-network boundary of the opt-in documentation assessment-axis linter.
@@ -28,7 +28,7 @@ implemented by `lint_truth_labels.py`.
 ## Test surfaces
 
 - `cases.json` records reviewed Markdown inputs, exact aggregate outcomes, and required finding codes.
-- `test_truth_label_lint.py` checks fixture polarity, value preservation, explicit marker enforcement, deterministic discovery and JSON, UTF-8 errors, finite exits, fenced-example exclusion, symlink refusal, and no network/process/model dependency.
+- `test_truth_label_lint.py` checks fixture polarity, value preservation, explicit marker enforcement, deterministic discovery and JSON, UTF-8 errors, finite exits, mixed-length fenced-example exclusion, symlink refusal, and no network/process/model dependency.
 
 Run:
 
