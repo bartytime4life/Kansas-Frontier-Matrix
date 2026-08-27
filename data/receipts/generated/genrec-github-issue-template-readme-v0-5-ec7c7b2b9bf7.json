@@ -64,7 +64,7 @@
     {
       "gate": "overlap-and-concurrency",
       "outcome": "PASS",
-      "reason": "No open pull request matching the target path or issue-template README was found at the evidence freeze. A final overlap and base-head drift check remains required immediately before delivery."
+      "reason": "No open pull request matching the target path or issue-template README was found at the evidence freeze or final pre-branch check. After main advanced, the target blob and issue-template tree remained unchanged and the candidate was repinned to the new exact base."
     },
     {
       "gate": "current-template-and-live-metadata-inventory",
@@ -107,32 +107,32 @@
     {
       "id": "pinned-main-and-target",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/858842359642d8edf5ba0c4112b7999298a17fde/.github/ISSUE_TEMPLATE/README.md"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef7f2fbd523af5d803fadf92504d7f734c82c2ca/.github/ISSUE_TEMPLATE/README.md"
     },
     {
       "id": "github-platform-root-boundary",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/858842359642d8edf5ba0c4112b7999298a17fde/.github/README.md"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef7f2fbd523af5d803fadf92504d7f734c82c2ca/.github/README.md"
     },
     {
       "id": "accepted-directory-governance",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/858842359642d8edf5ba0c4112b7999298a17fde/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef7f2fbd523af5d803fadf92504d7f734c82c2ca/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
     },
     {
       "id": "repository-directory-rules",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/858842359642d8edf5ba0c4112b7999298a17fde/docs/doctrine/directory-rules.md"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef7f2fbd523af5d803fadf92504d7f734c82c2ca/docs/doctrine/directory-rules.md"
     },
     {
       "id": "private-first-security-route",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/858842359642d8edf5ba0c4112b7999298a17fde/SECURITY.md"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef7f2fbd523af5d803fadf92504d7f734c82c2ca/SECURITY.md"
     },
     {
       "id": "generated-receipt-contract",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/858842359642d8edf5ba0c4112b7999298a17fde/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef7f2fbd523af5d803fadf92504d7f734c82c2ca/schemas/contracts/v1/receipts/generated_receipt.schema.json"
     }
   ],
   "human_review": {
@@ -141,7 +141,7 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-27T17:51:10Z",
+  "created_at": "2026-08-27T17:52:54Z",
   "emitter": "openai/gpt-5.6",
   "links": {
     "pr_number": null,
