@@ -12,6 +12,7 @@ import {
   type MapRuntimeTrustStatusController,
 } from "../features/map_runtime";
 import {
+  CURRENT_MAPLIBRE_READINESS,
   FEATURE_CATALOG,
   KNOWLEDGE_DOMAINS,
   KNOWLEDGE_PRINCIPLES,
@@ -268,13 +269,14 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
   runtime.append(
     text(document, "p", "Renderer gate", "eyebrow"),
     text(document, "h3", "MapLibre integration remains governed"),
-    text(document, "p", "The selected browser renderer family is visible, but the concrete package, one-adapter seam, dependency integrity, and authenticated browser probes remain separate gates."),
-    chip(document, "Candidate", REPOSITORY_SNAPSHOT.mapLibre.readinessCandidate),
-    chip(document, "Admission", "Not admitted", "critical"),
-    text(document, "p", "This dependency-free synthetic port exercises only the finite, renderer-neutral status contract. READY does not establish MapLibre readiness, release, deployment, or publication authority.", "guardrail"),
+    text(document, "p", "The package-owned adapter is present, but Explorer activation, dependency review, and authenticated browser probes remain separate gates."),
+    chip(document, "Candidate", CURRENT_MAPLIBRE_READINESS.readinessCandidate),
+    chip(document, "Package", "Present"),
+    chip(document, "Browser evidence", "Pending", "critical"),
+    text(document, "p", "This workspace still exercises the dependency-free NullMapRuntime and finite renderer-neutral status contract. READY does not establish MapLibre readiness, release, deployment, or publication authority.", "guardrail"),
     runtimeStatusHost,
     runtimeControls,
-    link(document, "Open governance issue #2957", `https://github.com/${REPOSITORY_SNAPSHOT.repository}/issues/${REPOSITORY_SNAPSHOT.mapLibre.governanceIssue}`, "text-link"),
+    link(document, "Open governance issue #2957", `https://github.com/${REPOSITORY_SNAPSHOT.repository}/issues/${CURRENT_MAPLIBRE_READINESS.governanceIssue}`, "text-link"),
   );
   mapGrid.append(mapCard, runtime);
   mapSection.append(mapGrid);

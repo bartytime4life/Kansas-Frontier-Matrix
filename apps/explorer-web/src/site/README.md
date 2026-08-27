@@ -12,7 +12,7 @@ The composition:
 - presents KFM's evidence, finite-outcome, time, correction, accessibility, and trust-membrane principles;
 - mounts the existing renderer-neutral `map_runtime` selection-to-Evidence-Drawer bridge with deterministic synthetic cases;
 - mounts the existing finite `MapRuntimePort` trust-status presenter in the normal map workspace through the dependency-free `NullMapRuntime`;
-- records the current MapLibre package, candidate, and HOLD posture without importing or admitting `maplibre-gl`;
+- records the current MapLibre package, candidate, and HOLD posture without activating `maplibre-gl` in Explorer;
 - projects its existing public anchors through a code-owned workspace registry; and
 - composes existing finite-state features into one text-first public trust surface.
 
@@ -60,10 +60,12 @@ The feature catalog is pinned to:
 - commit: `67cf9bcd8d4044beb2f7ec4ec17e1bf162ca30aa`
 - Explorer path: `apps/explorer-web/`
 - MapLibre package home: `packages/maplibre/`
-- MapLibre readiness candidate: `6.6.0`
-- concrete runtime/dependency posture: `HOLD / not admitted / not implemented`
+- MapLibre readiness candidate at that snapshot: `6.4.0`
+- concrete runtime/dependency posture at that snapshot: `HOLD / not admitted / not implemented`
 
 Refresh `catalog.ts` when repository authority, feature inventory, or maturity changes. Do not silently convert a repository snapshot into runtime authority.
+
+Current readiness is carried separately from that snapshot at exact evidence commit `main@1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f`: exact candidate `6.6.0`, package and initial package-owned adapter present, Explorer browser runtime not activated, authenticated browser evidence incomplete, and overall state `HOLD`.
 
 ## Trust boundary
 
@@ -79,13 +81,13 @@ This composition does not:
 - import `maplibre-gl` or create a second renderer acquisition seam; or
 - claim that fixture-first feature slices are live production routes.
 
-The concrete renderer remains a separate governed implementation and dependency-admission change after its own gates close.
+The concrete package-owned adapter is present, but Explorer activation and browser-readiness evidence remain separate governed changes after their own gates close.
 
 ## Renderer-neutral runtime status
 
 The map workspace now exposes the existing finite runtime-state presenter at its normal point of use. The synthetic controls exercise `IDLE`, `READY`, `STALE`, `WITHDRAWN`, and `ERROR` through `NullMapRuntime`; every non-`READY` state blocks candidate-selection eligibility, and critical states remain text-first assertive alerts.
 
-This is consumer-migration and accessibility proof for the KFM-owned port only. It performs no network, DOM renderer, WebGL, worker, tile, source, evidence, policy, release, deployment, or publication work. `maplibre-gl`, the concrete `MapLibreAdapter`, dependency admission, and issue #2906 browser readiness remain on HOLD.
+This is consumer-migration and accessibility proof for the KFM-owned port only. It performs no network, DOM renderer, WebGL, worker, tile, source, evidence, policy, release, deployment, or publication work. The package and initial `MapLibreAdapter` are present, but this Explorer composition still uses `NullMapRuntime`; activation and issue #2906 browser readiness remain on HOLD.
 
 Implementation baseline: `main@8c943018a0cd59b06b5a623e15b9a9068a3513f4`.
 

@@ -60,7 +60,8 @@ test("mounts finite renderer-neutral runtime status in the normal map workspace"
   ).toContainText("Candidate selectionELIGIBLE");
 
   const rendererGate = page.getByText("Renderer gate").locator("..");
-  await expect(rendererGate).toContainText("Not admitted");
+  await expect(rendererGate).toContainText("Package: Present");
+  await expect(rendererGate).toContainText("Browser evidence: Pending");
   await expect(rendererGate).toContainText(
     "READY does not establish MapLibre readiness",
   );

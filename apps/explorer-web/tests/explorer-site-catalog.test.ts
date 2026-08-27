@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  CURRENT_MAPLIBRE_READINESS,
   FEATURE_CATALOG,
   KNOWLEDGE_DOMAINS,
   REPOSITORY_SNAPSHOT,
@@ -29,13 +30,23 @@ describe("Explorer repository catalog", () => {
     ).toBe(true);
   });
 
-  it("keeps the concrete MapLibre runtime explicitly held", () => {
+  it("keeps the current MapLibre runtime explicitly held without rewriting the snapshot", () => {
     const runtime = FEATURE_CATALOG.find(
       (entry) => entry.id === "maplibre-runtime",
     );
     expect(runtime?.maturity).toBe("HOLD");
+    expect(REPOSITORY_SNAPSHOT.mapLibre.readinessCandidate).toBe("6.4.0");
     expect(REPOSITORY_SNAPSHOT.mapLibre.dependencyAdmitted).toBe(false);
     expect(REPOSITORY_SNAPSHOT.mapLibre.runtimeImplemented).toBe(false);
+    expect(CURRENT_MAPLIBRE_READINESS).toMatchObject({
+      evidenceCommit: "1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f",
+      readinessCandidate: "6.6.0",
+      readinessState: "HOLD",
+      packagePresent: true,
+      adapterImplemented: true,
+      browserRuntimeActivated: false,
+      browserEvidenceComplete: false,
+    });
   });
 
   it("finds cross-domain and maturity-filtered feature slices", () => {
