@@ -1,511 +1,766 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runbook-hazards-source-refresh
 title: Hazards Source Refresh Runbook
-type: standard
-version: v0.1
-status: draft
-owners: TODO — Hazards lane steward + Docs steward (NEEDS VERIFICATION)
+type: operational-runbook
+version: v2.0.0
+status: DRAFT_REPOSITORY_GROUNDED; LIVE_SOURCE_REFRESH_HELD; BOUNDED_SYNTHETIC_VALIDATION_ONLY; NON_RELEASE; NON_PUBLICATION
+owners: "@bartytime4life — verified CODEOWNERS route; accountable Hazards, source, rights, sensitivity, operations, review, and release stewardship NEEDS VERIFICATION"
 created: 2026-05-12
-updated: 2026-05-12
-policy_label: public
+updated: 2026-08-27
+policy_label: repository-facing; hazards; source-refresh; fail-closed; not-for-life-safety; non-publisher
+owning_root: docs/
+path_authority: same-path modernization under accepted ADR-0029 and Directory Rules v2
+authority_effect: none
+source_activation_effect: none
+lifecycle_effect: none
+release_effect: none
+deployment_effect: none
+promotion_effect: none
+publication_effect: none
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: ca8a81a9f7728347ce19843b7a681d5c9fe19ba0
+  target_path: docs/runbooks/hazards/SOURCE_REFRESH_RUNBOOK.md
+  target_prior_blob: f2a5a8ddb57be9ff336ac9cb00de4b30a35a3d82
+  directory_rules_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  source_authority_register_blob: 32729857bc8eb5001acb37b8ee8e60bcb6e0dc50
+  hazards_source_registry_readme_blob: bed3a870b83afce8a461a152e782c7a1e1897be6
+  dotted_storm_events_descriptor_blob: db7d6c2c1e261e9687d74497498761f228bedd4b
+  alternate_storm_events_descriptor_blob: 902da1bd0e7164d26f70bf4f2835fb1b48b8d69a
+  storm_events_underscore_connector_readme_blob: 8e7dac6e913e9276c719e674c56719770bd65c43
+  storm_events_hyphen_connector_readme_blob: a47e3eaf0e67c67b2126fd0c6a35249c11b4f1e9
+  storm_events_watcher_readme_blob: e36c8e8213a51fc00290623dff5ca518881910af
+  storm_events_pipeline_spec_blob: 74aad5c7ebbbc7e8c6dc0c848e3449c9dde0fcab
+  domain_workflow_blob: 9d48f97ff33fedd4f2acf3a6aed2b6753d0caaea
+  hazards_smoke_test_blob: af8550b8e22c7022e30cc11e5c77a951898cf1f0
+  usdm_materiality_test_blob: dc71faa0667b8817abe070a7fef08361c9ddc743
+  usdm_materiality_validator_blob: dac5f56560f40e725c4d8924d8d20138ae5708fd
+  open_pull_requests_touching_target: 0
+source_lineage:
+  - title: kfm_hazards_extended_pro_pdf_only_blueprint.pdf
+    source_class: PLANNING_LINEAGE
+    use: not-for-life-safety, source-role, temporal, evidence, and offline-first design context only
+  - title: KFM Markdown Update & Modernization Agent v1.0
+    source_class: CURRENT_TASK_GUIDANCE
+    use: same-path repository-grounded Markdown modernization and draft-pull-request delivery
 related:
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/trust-membrane.md
-  - docs/domains/hazards/README.md
-  - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
-  - docs/runbooks/governed_ai_VALIDATION.md
-  - docs/adr/ADR-0001-schema-home.md
-tags: [kfm, hazards, runbook, source-refresh, lifecycle, governance]
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../doctrine/directory-rules.md
+  - ../README.md
+  - ../../domains/hazards/README.md
+  - ../../domains/hazards/LIFE_SAFETY_BOUNDARY.md
+  - ../../domains/hazards/PUBLICATION_AND_BOUNDARY.md
+  - ../../domains/hazards/SOURCE_REGISTRY.md
+  - ../../domains/hazards/SOURCE_ROLE_MATRIX.md
+  - NO_NETWORK_TEST_RUNBOOK.md
+  - PROMOTION_RUNBOOK.md
+  - ROLLBACK_RUNBOOK.md
+  - ROLLBACK_DRILL.md
+  - ../../../control_plane/source_authority_register.yaml
+  - ../../../data/registry/sources/hazards/README.md
+  - ../../../data/registry/sources/hazards/noaa.storm_events.yaml
+  - ../../../data/registry/hazards/sources/noaa_storm_events.yaml
+  - ../../../connectors/noaa_storm_events/README.md
+  - ../../../connectors/noaa-storm-events/README.md
+  - ../../../pipeline_specs/hazards/noaa_storm_events.yaml
+  - ../../../tools/ingest/storm_events_watch/README.md
+  - ../../../policy/domains/hazards/README.md
+  - ../../../release/candidates/hazards/README.md
+  - ../../../.github/workflows/domain-hazards.yml
+  - ../../../tests/domains/hazards/test_hazards_smoke.py
+  - ../../../tests/domains/hazards/test_validate_usdm_materiality.py
+  - ../../../tools/validators/domains/hazards/validate_usdm_materiality.py
 notes:
-  - Path under docs/runbooks/hazards/ is PROPOSED until verified against mounted-repo convention or an ADR amending Directory Rules.
-  - All path, schema, validator, route, and workflow names are PROPOSED unless tagged otherwise.
-  - Doctrine (lifecycle, trust membrane, not-for-life-safety boundary, stale-state markers, supersession) is CONFIRMED from project corpus.
+  - The current repository has bounded, no-network drought fixture and USDM materiality validation; it does not have a verified operational Hazards source-refresh executor.
+  - The only Hazards NOAA Storm Events registry records are proposal/TBD placeholders, the source-authority register is empty and projection-only, connector topology is conflicted and README-only, and the pipeline spec is a placeholder.
+  - A passing synthetic materiality result can create a review candidate only inside its fixture profile; it cannot activate a source, authorize live retrieval, admit data, build proof, release, promote, deploy, or publish.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Hazards Source Refresh Runbook
 
-> Operational procedure for refreshing **Hazards** sources (NOAA, NWS, FEMA, USGS, NASA FIRMS, drought monitors, state emergency management) through the governed `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` lifecycle — without letting operational warning context become a life-safety alerting surface.
+> **One-line purpose.** Determine whether a Hazards source refresh is ready for accountable implementation, run the repository's current no-network validation, and produce a truthful handoff without activating a source, fetching live data, changing lifecycle state, or implying release or publication.
 
-![Status: draft](https://img.shields.io/badge/status-draft-lightgrey)
-![Authority: doctrine grounded](https://img.shields.io/badge/authority-doctrine--grounded-blue)
-![Path: PROPOSED](https://img.shields.io/badge/path-PROPOSED-orange)
-![Lifecycle: RAW→PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-success)
-![Domain: Hazards](https://img.shields.io/badge/domain-Hazards-red)
-![Life-safety: NOT-A-LIFE-SAFETY-SYSTEM](https://img.shields.io/badge/life--safety-NOT--A--LIFE--SAFETY--SYSTEM-critical)
+[![Status: live refresh held](https://img.shields.io/badge/status-live%20refresh%20held-b42318?style=flat-square)](#current-disposition)
+[![Validation: bounded synthetic](https://img.shields.io/badge/validation-bounded%20synthetic-8250df?style=flat-square)](#repository-native-validation)
+[![Life safety: no](https://img.shields.io/badge/life%20safety-not%20an%20alerting%20system-b42318?style=flat-square)](#not-for-life-safety-boundary)
+[![Source activation: none](https://img.shields.io/badge/source%20activation-none-6e7781?style=flat-square)](#authority-and-terminal-boundary)
+[![Public effect: none](https://img.shields.io/badge/public%20effect-none-6e7781?style=flat-square)](#authority-and-terminal-boundary)
 
-| Field | Value |
-|---|---|
-| **Status** | Draft |
-| **Owners** | `TODO` — Hazards lane steward + Docs steward (NEEDS VERIFICATION against `CODEOWNERS`) |
-| **Last updated** | 2026-05-12 |
-| **Lifecycle invariant** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED — promotion is a **governed state transition, not a file move** |
-| **Trust posture** | Cite-or-abstain; deny-by-default for sensitive / life-safety surfaces |
-| **Domain boundary** | Hazards governs historical, regulatory, modeled, and operational-**context** data; it **MUST NOT** act as a life-safety alerting system |
-
----
-
-## Contents
-
-1. [Purpose & scope](#1-purpose--scope)
-2. [Doctrinal preflight](#2-doctrinal-preflight)
-3. [Hazards source families & source roles](#3-hazards-source-families--source-roles)
-4. [Refresh flow (RAW → PUBLISHED)](#4-refresh-flow-raw--published)
-5. [Per-stage procedure](#5-per-stage-procedure)
-6. [Stale-state handling](#6-stale-state-handling)
-7. [Quarantine handling](#7-quarantine-handling)
-8. [Receipts, evidence, and audit trail](#8-receipts-evidence-and-audit-trail)
-9. [Validation gates](#9-validation-gates)
-10. [Promotion to PUBLISHED](#10-promotion-to-published)
-11. [Correction & rollback](#11-correction--rollback)
-12. [Failure modes & anti-patterns](#12-failure-modes--anti-patterns)
-13. [Verification backlog](#13-verification-backlog)
-14. [Related docs](#14-related-docs)
-15. [Appendix A — Worked example: NWS alerts refresh](#appendix-a--worked-example-nws-alerts-refresh)
-
----
-
-## 1. Purpose & scope
-
-This runbook tells a **Hazards lane operator** (steward, on-call engineer, or release reviewer) how to drive a routine or ad-hoc refresh of a Hazards source through the KFM governed lifecycle, what proof to emit at each step, and how to decide between **publish**, **quarantine**, **stale-mark**, **abstain**, or **deny**.
-
-**In scope.**
-
-- Cadence-driven refresh of Hazards `SourceDescriptor`-registered sources.
-- Ad-hoc re-admission after an upstream change (URL, schema, rights, terms, cadence).
-- Stale-state declaration on a Hazards layer or claim when freshness expires.
-- Quarantine intake, disposition, and recovery for Hazards inputs.
-- Triggering correction or rollback when a refresh exposes a published-claim defect.
-
-**Out of scope.**
-
-- Live, operator-facing emergency alerting. KFM is **not** a life-safety system; this runbook **MUST NOT** be used to drive operational warning dispatch.
-- One-time source onboarding (initial admission). That lives in `SOURCE_DESCRIPTOR_STANDARD.md` (PROPOSED) and source-intake doctrine.
-- Schema, contract, or policy authoring. Those live under `contracts/`, `schemas/`, and `policy/` per Directory Rules.
-
-> [!IMPORTANT]
-> **Hazards is not a life-safety alerting system.** Operational warnings, advisories, and watches from NWS or state emergency management enter KFM as **WarningContext** / **AdvisoryContext** with strict issue/expiry handling — never as actionable instructions. The doctrinal boundary is `DOM-HAZ`: *historical, regulatory, modeled, and operational-context hazard information for analysis and resilience, while refusing to act as a life-safety alerting system.* (CONFIRMED doctrine; PROPOSED implementation.)
-
-[⬆ Back to top](#top)
-
----
-
-## 2. Doctrinal preflight
-
-Run this checklist **before** initiating any Hazards source refresh. Stop and escalate if any item fails.
-
-| # | Check | Where it lives | Status |
-|---|---|---|---|
-| 1 | A current `SourceDescriptor` exists for the source, with role, rights, sensitivity, cadence, and citation. | `data/registry/sources/hazards/` (PROPOSED) | CONFIRMED doctrine |
-| 2 | Source role is recorded as one of: `authority`, `observation`, `context`, `modeled`, `synthetic`, `candidate`. Source role is **fixed at admission** and **never upgraded** by a refresh. | `SourceDescriptor` field `source_role` | CONFIRMED doctrine; PROPOSED field shape |
-| 3 | Rights and terms are current; redistribution class is recorded. Unknown rights **fail closed**. | `SourceDescriptor.rights` + `policy/domains/hazards/` | CONFIRMED doctrine |
-| 4 | Sensitivity tier and any locality / cultural / sovereignty constraints are recorded. | `SourceDescriptor.sensitivity` | CONFIRMED doctrine |
-| 5 | Cadence (`expected_refresh_interval`) is recorded and the current request falls within or beyond it. | `SourceDescriptor.cadence` | CONFIRMED doctrine; field name PROPOSED |
-| 6 | The watcher / connector is **signed** and registered; admin shortcuts are not the normal path. | `connectors/` + control-plane register | CONFIRMED doctrine |
-| 7 | Public clients reach this data only through the **governed API** (`apps/governed-api/`). Browsers, MapLibre, and Focus Mode do **not** read RAW/WORK/QUARANTINE. | Trust membrane (Directory Rules §7.1) | CONFIRMED doctrine |
+<a id="not-for-life-safety-boundary"></a>
 
 > [!CAUTION]
-> If any preflight item is **UNKNOWN** or **NEEDS VERIFICATION**, the refresh **MUST NOT** proceed to PROCESSED. Hold in RAW / QUARANTINE, open a `docs/registers/VERIFICATION_BACKLOG.md` entry, and notify the Hazards lane steward.
+> **KFM Hazards is not an emergency-alerting system, incident-command system, regulatory authority, or substitute for official instructions.** This procedure must not issue, replace, delay, retract, summarize as actionable, or interpret a warning, evacuation order, shelter instruction, medical direction, all-clear, or other life-safety message. Current urgent needs belong with the appropriate official authority.
 
-[⬆ Back to top](#top)
-
----
-
-## 3. Hazards source families & source roles
-
-CONFIRMED doctrine from the Encyclopedia (§7.10) and Domains Atlas (Hazards Lane, §D): a source's *family* is its provenance origin; its *role* is its evidentiary stance inside KFM. Role determines which assertions a refresh may carry.
-
-| Source family | Typical role(s) | Rights / sensitivity | Freshness profile |
-|---|---|---|---|
-| NOAA Storm Events / NCEI-style records | `observation` (historical) | Public; sensitive joins fail closed | Source-vintage; episodic refresh |
-| NWS API (alerts, warnings, advisories, watches) | `context` only — **not** life-safety authority for KFM | Public; **issue/expiry mandatory** | Operational cadence; expired context **MUST NOT** appear as current |
-| FEMA Disaster Declarations / OpenFEMA | `authority` (legal declaration record) | Public; NEEDS VERIFICATION of redistribution terms | Event-driven |
-| FEMA NFHL / MSC flood hazard | `authority` (regulatory baseline) — **not** observed inundation or forecast | Public; NEEDS VERIFICATION | Localized, event-driven version updates (`VERSION_ID`, `EFFECTIVE_DATE`) |
-| USGS Earthquake Catalog | `observation` / `authority` | Public | Near-real-time to historical |
-| NOAA HMS Fire and Smoke | `observation` / `context` | Public | Daily cadence (PROPOSED) |
-| NASA FIRMS active fire | `observation` | Public; geoprivacy considerations | Sub-daily cadence (PROPOSED) |
-| Drought monitors | `context` / `modeled` | Public | Weekly cadence (PROPOSED) |
-| State / local emergency management & resilience plans | `context` / `authority` (jurisdictional) | NEEDS VERIFICATION per source | Variable |
-
-> [!NOTE]
-> **Source-role anti-collapse rule** (CONFIRMED doctrine, `DOM-HAZ`). A refresh **MUST NOT** silently change a source's role — e.g., a `modeled` source MUST NOT be re-admitted as `observation`, even if the upstream rebrands. Role drift requires a new `SourceDescriptor` with a `superseded_by` link, not an in-place update.
-
-[⬆ Back to top](#top)
-
----
-
-## 4. Refresh flow (RAW → PUBLISHED)
-
-PROPOSED diagram of the governed refresh path. Concrete tool names, queue topology, and worker boundaries are **NEEDS VERIFICATION** against the mounted repo; doctrine is CONFIRMED.
-
-```mermaid
-flowchart TD
-    A[Cadence trigger or<br/>upstream event] --> B[Watcher / connector<br/>conditional GET ETag/If-None-Match]
-    B -->|304 / no change| C[No-op RunReceipt<br/>spec_hash unchanged]
-    B -->|new payload| D[RAW capture<br/>RawCaptureReceipt + hash]
-    D --> E{Schema / rights /<br/>sensitivity / temporal /<br/>geometry validators}
-    E -->|fail| Q[QUARANTINE<br/>QuarantineRecord +<br/>reason code]
-    E -->|pass| F[WORK<br/>normalize → TransformReceipt]
-    F --> G[PROCESSED<br/>ValidationReport +<br/>EvidenceRef]
-    G --> H[CATALOG / TRIPLET<br/>CatalogRecord +<br/>EvidenceBundle +<br/>release candidate]
-    H --> I{Promotion gate<br/>rights · sensitivity ·<br/>policy · review · proof}
-    I -->|deny / abstain| Q
-    I -->|allow| J[PUBLISHED<br/>ReleaseManifest +<br/>rollback target +<br/>governed API surface]
-    Q -.->|steward review| F
-    J -.->|stale / wrong| K[CorrectionNotice<br/>or RollbackCard]
-    K -.-> H
-
-    classDef gov fill:#0b4d6b,color:#fff,stroke:#062a3a;
-    classDef deny fill:#7a1f1f,color:#fff,stroke:#3a0d0d;
-    classDef pass fill:#1b5e20,color:#fff,stroke:#0d2e10;
-    class B,E,I gov
-    class Q,K deny
-    class C,J pass
-```
-
-> [!NOTE]
-> **PROPOSED diagram.** The branches, gate names, and receipt names reflect CONFIRMED doctrine from `DOM-HAZ`, the Encyclopedia Appendix E feature index, and the Domains Atlas v1.1. Specific queue, worker, validator, and route names remain **NEEDS VERIFICATION** until inspected in a mounted repo.
-
-[⬆ Back to top](#top)
-
----
-
-## 5. Per-stage procedure
-
-Each subsection states **what the stage does**, **what it emits**, and **what blocks the next stage**. Receipt names are CONFIRMED doctrine; their schema homes are PROPOSED under `schemas/contracts/v1/receipts/` (NEEDS VERIFICATION; see ADR-0001).
-
-### 5.1 Trigger
-
-A refresh starts in one of three ways:
-
-1. **Cadence trigger.** Scheduler fires per the `SourceDescriptor.cadence`.
-2. **Upstream event.** Object-store event, webhook, or feed change advertised by the upstream.
-3. **Operator-initiated.** Hazards lane steward re-runs a refresh manually (e.g., after a rights-status change). All operator-initiated refreshes **MUST** record actor and reason.
-
-### 5.2 Watcher / connector fetch
-
-The watcher performs a **conditional GET** (HTTP `ETag` / `If-None-Match`, or upstream equivalent) and records the response in a `RunReceipt`. On `304 Not Modified`, emit a **no-op `RunReceipt`** and stop — do not create new STAC / catalog entities for unchanged sources.
-
-> [!TIP]
-> The no-op receipt is doctrinally important: it proves the system *looked* and *elected not to act*. Auditors and stale-state detectors rely on it.
-
-### 5.3 RAW capture
-
-Store the source-native payload (or a stable byte-addressed reference) immutably, with:
-
-- `source_id`
-- `source_role` (copied from `SourceDescriptor`; never re-derived here)
-- `content_hash` (e.g., SHA-256 over the byte payload)
-- `retrieval_time`
-- citation pointer
-- `rights` and `sensitivity` snapshots
-
-Emit a **`RawCaptureReceipt`**. **No public client may read RAW.** Egress from `data/raw/hazards/` is denied by trust-membrane policy.
-
-### 5.4 WORK / QUARANTINE — normalize and validate
-
-Run normalization (schema, geometry, time, identity, evidence, rights, policy). Each transform emits a **`TransformReceipt`** with `input_geom_hash`, `output_geom_hash`, parameters, and actor. Failures route to `data/quarantine/hazards/` with a **`QuarantineRecord`** that names the reason code (see §7).
-
-### 5.5 PROCESSED
-
-Emit validated, normalized objects (one of: `HazardEvent`, `HazardObservation`, `WarningContext`, `AdvisoryContext`, `DisasterDeclaration`, `FloodContext`, `WildfireDetection`, `SmokeContext`, `DroughtIndicator`, `EarthquakeEvent`, `HeatColdEvent`, `ExposureSummary`, `ResilienceSummary`, `HazardTimeline`, `ImpactArea`). Each object carries:
-
-- a resolvable **`EvidenceRef`** that points at an **`EvidenceBundle`** (resolution is required before publication);
-- a **`ValidationReport`** with finite outcomes;
-- distinct **temporal fields** for `observed_time`, `valid_time`, `issue_time`, `expiry_time`, `source_time`, `retrieval_time`, `release_time`, and `correction_time` where material.
-
-### 5.6 CATALOG / TRIPLET
-
-Emit a **`CatalogRecord`** with source, schema, validation, policy, and release metadata, plus a graph / triplet projection if applicable. The catalog closure test rejects orphan artifacts (no `EvidenceBundle`, no `ValidationReport`, no `SourceDescriptor`).
-
-### 5.7 PUBLISHED
-
-Promotion is **governed**, not a file move. See §10.
-
-[⬆ Back to top](#top)
-
----
-
-## 6. Stale-state handling
-
-CONFIRMED doctrine (Domains Atlas v1.1 §24.8.1): KFM separates **stale** from **wrong**. A stale claim is one whose evidence, source freshness, dependent data, or context has aged past its declared tolerance; a wrong claim is incorrect in substance. Both states have visible markers and traceable lifecycles. The stale-state markers below apply to Hazards refreshes.
-
-| Marker | Trigger | UI signal | Required action |
-|---|---|---|---|
-| **Source freshness expired** | Cadence in `SourceDescriptor` passed without a new admission | Stale source badge in Evidence Drawer | Re-admit or supersede; otherwise mark dependent claims stale |
-| **Schema version drift** | Object schema upgraded past the published claim's schema version | Schema-drift badge; show migration ADR | Migrate, re-validate, re-release; or mark stale |
-| **Geography version drift** | `GeographyVersion` replaced; published claim still bound to the prior version | Geography-version banner with prior-version cite | Rebind to current `GeographyVersion`; re-release; or mark stale |
-| **Time-scope outside support** | Claim's temporal scope falls outside current data support window | Time-out-of-support indicator | Mark stale; **do not refresh silently** |
-| **Model version superseded** | `ModelRunReceipt` references an older model than current | Model-version badge with new model identity | Re-run; supersede; or mark stale |
-| **Review aged out** | `ReviewRecord` older than the review-cycle tolerance for the sensitive lane | Review-aged badge | Trigger steward review; potentially downgrade tier |
-| **Rights status changed** | Rights change in `SourceDescriptor` or rights-holder communication | Rights-changed badge | Re-evaluate tier; potentially downgrade; emit `CorrectionNotice` if necessary |
-| **Policy version changed** | Policy referenced by `PolicyDecision` was superseded | Policy-version badge | Re-run gate; potentially supersede release |
-
-> [!WARNING]
-> **Operational-warning expiry is doctrinally absolute.** For Hazards, `WarningContext` and `AdvisoryContext` carry mandatory `issue_time` / `expiry_time` fields. An expired warning **MUST NOT** appear as a current warning state in any released layer, popup, or Evidence Drawer payload. (`DOM-HAZ`, CONFIRMED.)
-
-[⬆ Back to top](#top)
-
----
-
-## 7. Quarantine handling
-
-CONFIRMED doctrine: **quarantine is not a publishable staging area.** A `QuarantineRecord` holds failed, sensitive, rights-unknown, or malformed inputs until disposition.
-
-Typical Hazards quarantine reasons (PROPOSED reason-code list; align with `policy/domains/hazards/` once mounted):
-
-- `schema_invalid` — payload fails the shape contract.
-- `rights_unknown` — license, redistribution class, or attribution missing.
-- `source_role_ambiguous` — upstream rebranding or unclear evidentiary stance.
-- `sensitive_geometry` — locality, cultural, or sovereignty constraint triggered.
-- `expired_operational_context` — warning/advisory past `expiry_time` at retrieval.
-- `temporal_role_collapse` — observed/issued/valid/retrieved times collapsed in upstream.
-- `geometry_invalid` — topology, CRS, or coordinate-range failure.
-- `evidence_unresolved` — `EvidenceRef` cannot resolve to an `EvidenceBundle`.
-- `policy_deny` — admissibility gate denied the input.
-
-**Recovery path.** A quarantined input may re-enter WORK only after:
-
-1. The blocking condition is documented and resolved (rights letter, schema migration, redaction receipt, etc.).
-2. A steward records a `ReviewRecord` authorizing re-entry.
-3. The original `QuarantineRecord` is retained for audit; a forward link records the disposition.
-
-[⬆ Back to top](#top)
-
----
-
-## 8. Receipts, evidence, and audit trail
-
-CONFIRMED doctrine: a refresh's audit trail is the union of its receipts. If no receipt exists, the operation did not happen in the governed sense.
-
-<details>
-<summary><strong>Hazards-refresh receipt families (CONFIRMED doctrine; PROPOSED schema home under <code>schemas/contracts/v1/receipts/</code>)</strong></summary>
-
-| Receipt | Purpose | Triggered by |
-|---|---|---|
-| `SourceDescriptor` | Anchors source identity, rights, role, sensitivity, cadence at admission | Source admission (one per source; superseded on change) |
-| `RawCaptureReceipt` | Records the immutable RAW capture (payload reference + hash + time) | Watcher fetch with new payload |
-| `TransformReceipt` | Records a spatial / attribute transform (reprojection, generalization, snap, simplification) | Normalization steps |
-| `ValidationReport` | Records the finite outcome of schema / geometry / temporal / rights / sensitivity / evidence checks | WORK and PROCESSED gates |
-| `RunReceipt` | Records pipeline run, inputs, outputs, `spec_hash`, timestamp, operator, result | Every governed run, including no-op |
-| `RedactionReceipt` | Records a public-safe transformation (mask, fuzz, withhold) for sensitivity or rights | Sensitive-lane publication |
-| `QuarantineRecord` | Records reason and disposition for held inputs | Validator / policy denial |
-| `EvidenceRef` → `EvidenceBundle` | Stable reference from a claim to its evidence; bundle returns sources, excerpts, provenance, policy / review / release state | Every published claim |
-| `PolicyDecision` | ALLOW / DENY / RESTRICT / ABSTAIN / ERROR with rule IDs and reasons | Every gate |
-| `PromotionDecision` | Gate results, materiality, review state, attestations, release / rollback targets | Promotion gate |
-| `ReleaseManifest` | Binds the published artifact set with rollback target and cache-invalidation record | Promotion → PUBLISHED |
-| `CorrectionNotice` | Records a substantive correction to a published claim and lists invalidated derivatives | Wrong-state path |
-| `RollbackCard` | Records a reversal anchor: prior manifest, artifact digests, cache invalidation, replay steps | Pre-publication or post-publication rollback |
-| `ReviewRecord` | Steward / reviewer disposition; required for sensitive lanes | Review queue |
-| `AIReceipt` | Provider, model, context, config, prompt class, evidence refs, output digest, citation report — **never** chain-of-thought | Any AI-assisted summarization over Hazards EvidenceBundles |
-
-</details>
-
-> [!NOTE]
-> **Conditional-GET receipts matter.** Every conditional fetch — including `304 Not Modified` outcomes — **MUST** emit a `RunReceipt`. Silent no-ops break audit chains and confuse stale-state detection.
-
-[⬆ Back to top](#top)
-
----
-
-## 9. Validation gates
-
-PROPOSED test families derived from `DOM-HAZ` validator list and the Encyclopedia §K. Specific validator names, file paths, and CI job IDs are **NEEDS VERIFICATION** in a mounted repo.
-
-| Gate | What it proves | Default on failure |
-|---|---|---|
-| Schema validation | `SourceDescriptor`, normalized object, `LayerManifest`, `EvidenceBundle`, and receipt families all match `schemas/contracts/v1/...` shapes | DENY before promotion |
-| Source-role anti-collapse | Role at PROCESSED matches role at admission; no upgrade through promotion | DENY |
-| Rights & terms | Current redistribution class and attribution are recorded; unknown rights fail closed | DENY public; allow restricted with `ReviewRecord` |
-| Sensitivity / geoprivacy | Locality, cultural, sovereignty constraints honored; sensitive geometry generalized or denied before public tile production | DENY public; emit `RedactionReceipt` for restricted release |
-| Temporal-role | `observed`, `issued`, `valid`, `source`, `retrieval`, `release`, and `correction` times stay distinct where material | DENY |
-| Operational expiry / freshness | `WarningContext` / `AdvisoryContext` `expiry_time` not passed at release time | DENY public; mark stale |
-| Geometry validity | Topology, CRS, coordinate range pass | Quarantine; emit `GeometryRepairReport` if a repair is attempted |
-| Evidence closure | Every claim's `EvidenceRef` resolves to an `EvidenceBundle` | ABSTAIN on the claim; do not publish |
-| Citation validation | Evidence Drawer payloads carry resolvable citations; Focus Mode answers are cited or abstain | ABSTAIN |
-| Emergency-alert denial | KFM is not invoked as an emergency-alerting authority | DENY |
-| Catalog closure | Published dataset / layer has source, schema, validation, policy, release metadata | DENY promotion |
-| UI no-direct-source | Public clients route through `apps/governed-api/`, never to `data/raw|work|quarantine` or upstream APIs | DENY route at trust-membrane test |
-
-[⬆ Back to top](#top)
-
----
-
-## 10. Promotion to PUBLISHED
-
-Promotion is a **governed state transition**, not a file move. A Hazards release candidate becomes PUBLISHED only when:
-
-1. **Catalog closure passes.** Every published dataset / layer has its source, schema, validation, policy, and release metadata.
-2. **EvidenceRef → EvidenceBundle resolves** for every claim a public surface might expose.
-3. **Policy gate ALLOWs.** No outstanding DENY or unresolved ABSTAIN on rights, sensitivity, operational expiry, or review state.
-4. **Review state is current.** For sensitive lanes, separation of duties applies: the release authority **MUST** be distinct from the author / promoter.
-5. **`ReleaseManifest` is signed**, carries a **rollback target**, and is bound to a **cache-invalidation record**.
-6. **Trust-membrane tests pass.** No public client can reach RAW, WORK, QUARANTINE, canonical stores, vector indexes, or upstream APIs.
+<a id="current-disposition"></a>
 
 > [!IMPORTANT]
-> **Watcher-as-non-publisher invariant** (CONFIRMED doctrine, Directory Rules §13.5). Workers and connectors emit **receipts and candidate decisions only.** They do **not** write to `data/catalog/` or `data/published/`. The publication boundary is a separate governed step.
+> **Current disposition: `LIVE_SOURCE_REFRESH_HOLD / BOUNDED_SYNTHETIC_VALIDATION_AVAILABLE`.** At the pinned repository snapshot, the source-authority register is empty and projection-only; the NOAA Storm Events source records are proposal or TBD placeholders; the competing connector paths are README-only; the Storm Events pipeline spec and watcher are proposed documentation boundaries; and no accepted live retrieval command, active source decision, or operational Hazards refresh pipeline is established. The repository can validate committed synthetic drought fixtures and deterministic USDM materiality semantics. It cannot truthfully claim a live source refresh.
 
-[⬆ Back to top](#top)
-
----
-
-## 11. Correction & rollback
-
-When a refresh exposes a defect in a previously-published Hazards claim:
-
-1. **Decide stale vs wrong.** A *stale* claim is aged-out evidence; a *wrong* claim is substantively incorrect. (Atlas v1.1 §24.8.) Stale-marking is not a correction.
-2. **Emit a `CorrectionNotice`** for wrong claims. The notice **MUST** list invalidated derivatives (tiles, exports, Story Nodes, AI summaries) so downstream caches and `EvidenceBundles` can be re-resolved.
-3. **Emit a `RollbackCard`** if the wrong claim must be withdrawn rather than replaced. The card pins the prior `ReleaseManifest`, artifact digests, cache state, and replay steps.
-4. **Run the rollback drill.** A rollback receipt confirms the prior manifest is restored and caches are invalidated.
-5. **AIReceipts are never superseded retroactively.** An updated answer is a **new** `AIReceipt` with a cross-reference to the old one.
-
-[⬆ Back to top](#top)
-
----
-
-## 12. Failure modes & anti-patterns
-
-CONFIRMED anti-patterns from Domains Atlas v1.1 §24.9.2 and Directory Rules §13.5, narrowed to Hazards-refresh contexts.
-
-| Anti-pattern | Why it fails | DENY surface |
-|---|---|---|
-| KFM cited as an emergency-alert authority | Out-of-scope use of governed evidence as life-safety guidance | Hazards governed API; Evidence Drawer disclaimer |
-| Expired warning surfaced as current warning state | `expiry_time` ignored; operational-context boundary violated | `WarningContext` validator |
-| Public route reads `data/raw` or `data/quarantine` directly | Trust membrane bypassed; promotion gates skipped | Governed API; layer-manifest resolver |
-| Watcher writes to `data/published/` | Watcher-as-non-publisher invariant violated | Promotion gate |
-| Source role upgraded by refresh (e.g., `modeled` → `observation`) | Source-role anti-collapse rule broken | Source-role validator |
-| Quarantine treated as staging area | Quarantine is not publishable; review must clear it first | Promotion gate |
-| Sensitive geometry hidden only by style filter on the renderer | Renderer is not a governance surface | Tile build; sensitivity validator |
-| Refresh skips a lifecycle phase (e.g., RAW → PUBLISHED directly) | Lifecycle invariant violated | Catalog closure |
-| AI answer published without resolvable citations | Cite-or-abstain rule broken; AI becomes its own truth source | Citation validator; Focus Mode |
-| Promotion auto-approved by the author | Separation of duties violated on a sensitive lane | Promotion gate |
-
-[⬆ Back to top](#top)
-
----
-
-## 13. Verification backlog
-
-Items to verify against a mounted repo before this runbook can move from `draft` to `published`. Each is **NEEDS VERIFICATION** in this session.
-
-- Path of this runbook (`docs/runbooks/hazards/` subfolder vs flat `docs/runbooks/hazards_SOURCE_REFRESH.md`). Existing PROPOSED examples in the Whole-UI Expansion Report use flat subsystem-prefixed naming (`docs/runbooks/ui_LOCAL_DEV.md`), while Domain Placement Law (Directory Rules §12) supports domain-segmented subfolders inside responsibility roots. **An ADR or a mounted-repo convention should settle this.**
-- Owner names in the meta block and the Status table.
-- Whether `connectors/hazards/` exists and the exact watcher schema fields used.
-- Whether `data/registry/sources/hazards/` is the canonical source-descriptor home (alt: `data/registry/sources/` flat).
-- Whether `schemas/contracts/v1/receipts/` is the canonical receipt-schema home, or whether ADR-S-03 (Atlas v1.1 §24.12) has been accepted to split receipts under `schemas/contracts/v1/<domain>/receipts/`.
-- Concrete validator file names, CI job names, and OPA / policy-engine identifiers for each gate in §9.
-- The release / promotion app or workflow that executes §10 (e.g., `apps/cli/`, `apps/workers/`, GitHub Actions name).
-- Cadence values per source (NOAA Storm Events, NWS API, FEMA, USGS, NASA FIRMS, drought monitors).
-- The rollback-drill schedule for Hazards releases.
-- The mounted-repo `docs/runbooks/` README, if any, governing runbook structure.
-
-> [!TIP]
-> Open backlog items in `docs/registers/VERIFICATION_BACKLOG.md` rather than smoothing them over in this runbook.
-
-[⬆ Back to top](#top)
-
----
-
-## 14. Related docs
-
-| Doc | Role | Status |
-|---|---|---|
-| `docs/doctrine/directory-rules.md` | Placement law for every file referenced here | CONFIRMED (this session) |
-| `docs/doctrine/lifecycle-law.md` | RAW → PUBLISHED invariant | PROPOSED home; doctrine CONFIRMED |
-| `docs/doctrine/trust-membrane.md` | Public-client boundaries; deny-by-default | PROPOSED home; doctrine CONFIRMED |
-| `docs/domains/hazards/README.md` | Hazards domain README (mission, boundaries, source families) | PROPOSED |
-| `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` | One-time source onboarding and descriptor shape | PROPOSED |
-| `docs/runbooks/governed_ai_VALIDATION.md` | Focus Mode evidence / citation / policy validation runbook | PROPOSED |
-| `docs/runbooks/ui_ROLLBACK.md` | UI rollback, feature flag, schema deprecation | PROPOSED |
-| `docs/adr/ADR-0001-schema-home.md` | Schema-home convention (`schemas/contracts/v1/...`) | PROPOSED home; convention CONFIRMED |
-| `docs/registers/DRIFT_REGISTER.md` | Where to record repo-vs-doctrine conflicts | PROPOSED home |
-| `docs/registers/VERIFICATION_BACKLOG.md` | Where to log items from §13 | PROPOSED home |
-| `control_plane/source_authority_register.yaml` | Machine-readable source authority register | PROPOSED |
-
-[⬆ Back to top](#top)
-
----
-
-## Appendix A — Worked example: NWS alerts refresh
-
-PROPOSED illustrative example. Treat values as placeholders; real values are NEEDS VERIFICATION against a mounted source registry and connector implementation.
-
-<details>
-<summary><strong>Step-by-step: refreshing an <code>NWS alerts</code> feed into <code>WarningContext</code></strong></summary>
-
-**Source.** `EXT-NWS` — NWS API, official forecast / alert / observation context. Role: `context` (KFM is **not** a forecasting or emergency-alerting authority).
-
-**Cadence.** Sub-hourly (PROPOSED). Operator-initiated refresh is allowed on a documented reason.
-
-**1. Preflight.**
-
-- `SourceDescriptor` for `EXT-NWS` is current, signed, and registered in the source authority register.
-- Source role is `context`. Rights are public (NEEDS VERIFICATION of current terms).
-- Sensitivity tier is the Hazards lane default; locality constraints do not apply.
-
-**2. Watcher fetch.**
-
-```text
-GET /alerts/active?area=KS
-If-None-Match: "<prior_etag>"
+```yaml
+work_state: HOLD
+available_evidence:
+  - BOUNDED_SYNTHETIC_DROUGHT_SCHEMA_AND_FIXTURE_VALIDATION
+  - BOUNDED_SYNTHETIC_USDM_MATERIALITY_VALIDATION
+reason_codes:
+  - HAZ_REFRESH_SOURCE_AUTHORITY_REGISTER_EMPTY
+  - HAZ_REFRESH_SOURCE_DESCRIPTOR_PLACEHOLDER
+  - HAZ_REFRESH_CONNECTOR_TOPOLOGY_CONFLICTED
+  - HAZ_REFRESH_CONNECTOR_IMPLEMENTATION_UNVERIFIED
+  - HAZ_REFRESH_PIPELINE_SPEC_PLACEHOLDER
+  - HAZ_REFRESH_PROOF_AND_RELEASE_HELD
+source_activation_effect: none
+lifecycle_effect: none
+release_effect: none
+publication_effect: none
 ```
 
-- `304 Not Modified` → emit `RunReceipt{spec_hash=unchanged, outcome=no-op}` and stop.
-- `200 OK` → proceed to RAW capture with new payload.
-
-**3. RAW capture.**
-
-```text
-data/raw/hazards/nws/alerts/active/<retrieval_ts>.json   (PROPOSED path)
-RawCaptureReceipt{
-  source_id: "EXT-NWS",
-  source_role: "context",
-  content_hash: "sha256:<...>",
-  retrieval_time: "<iso8601>",
-  rights_snapshot: "<...>",
-  citation: "<...>"
-}
-```
-
-**4. Normalize + validate.**
-
-- Schema-shape the alert envelope to `WarningContext` and `AdvisoryContext` objects.
-- Enforce **issue/expiry**: any alert past `expiry_time` at retrieval routes to QUARANTINE with reason `expired_operational_context`. (CONFIRMED doctrine, `DOM-HAZ`.)
-- Run temporal-role checks: `issued`, `valid_from`, `valid_to`, `source_time`, `retrieval_time` must stay distinct.
-- Run geometry validators.
-- Emit `TransformReceipt` and `ValidationReport`.
-
-**5. PROCESSED.**
-
-Emit one `WarningContext` or `AdvisoryContext` object per active alert with a resolvable `EvidenceRef`, a `ValidationReport`, and a `not-for-life-safety` disclaimer flag set.
-
-**6. CATALOG / TRIPLET.**
-
-Add a `CatalogRecord`; project relevant triples into the graph (e.g., `WarningContext --affects--> County`).
-
-**7. Promotion.**
-
-- Policy gate: ALLOW only if all alerts have non-expired `expiry_time` at release time *or* are explicitly marked historical-context.
-- `ReleaseManifest` is signed and carries the prior manifest as `rollback_target`.
-- Cache invalidation record names the affected layers.
-
-**8. Stale handling at runtime.**
-
-- The Evidence Drawer shows the stale-source badge when the `SourceDescriptor` cadence elapses without a new admission.
-- The not-for-life-safety disclaimer is **never suppressed**, even on a fresh refresh.
-
-</details>
-
-[⬆ Back to top](#top)
+**Quick navigation:** [Goal](#goal-and-scope) · [Authority](#authority-and-terminal-boundary) · [Evidence](#current-repository-evidence) · [States](#state-and-vocabulary-separation) · [Preconditions](#preconditions) · [Procedure](#procedure) · [Validation](#repository-native-validation) · [Interpretation](#interpret-the-bounded-results) · [Quarantine](#quarantine-stale-and-correction-handling) · [Handoff](#source-refresh-handoff-packet) · [Failures](#mandatory-stop-conditions) · [Acceptance](#acceptance-and-negative-cases) · [Maintenance](#maintenance-drift-and-verification-backlog)
 
 ---
 
-## Footer
+<a id="goal-and-scope"></a>
 
-> This runbook is governed by the KFM lifecycle law (`RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`) and the trust-membrane rule (public clients use `apps/governed-api/` only). It is **doctrine-grounded** but **implementation-PROPOSED**. Mounted-repo evidence is required to convert the PROPOSED elements (paths, validator names, schema homes, owners, cadences) into CONFIRMED ones.
+## Goal and scope
 
-**Related docs:** [Directory Rules](../../doctrine/directory-rules.md) · [Lifecycle Law](../../doctrine/lifecycle-law.md) · [Trust Membrane](../../doctrine/trust-membrane.md) · [Hazards domain README](../../domains/hazards/README.md) · [Governed-AI Validation](../governed_ai_VALIDATION.md)
+Use this runbook when a maintainer needs to evaluate, prepare, or review a refresh of an **already proposed or admitted Hazards source** and must first determine what the repository can actually support.
 
-**Last updated:** 2026-05-12 · **Status:** draft · **Owners:** TODO (NEEDS VERIFICATION) · [⬆ Back to top](#top)
+The current safe operating circle is:
+
+```text
+exact repository and source identity
+  -> source authority, role, rights, cadence, and connector preflight
+  -> committed no-network fixture validation
+  -> deterministic materiality assessment where implemented
+  -> HOLD, ABSTAIN, DENY, ERROR, or review handoff
+  -> no live fetch and no lifecycle mutation unless a separate governed path exists
+```
+
+### In scope
+
+- freeze the exact repository SHA, source identity, descriptor path, connector path, pipeline-spec path, and reviewer route;
+- determine whether the source descriptor and source-activation authority are real, current, and non-placeholder;
+- distinguish connector, watcher, pipeline, validator, policy, evidence, proof, candidate, release, and publication responsibilities;
+- run the current repository-owned no-network Hazards validation;
+- interpret the USDM materiality profile without promoting its finite outcomes into source or release authority;
+- record missing rights, sensitivity, cadence, source-role, connector, pipeline, fixture, proof, review, correction, or rollback support;
+- prepare a reviewable source-refresh handoff; and
+- mark dependent material stale or route unsupported input to quarantine through the owning lifecycle procedure.
+
+### Out of scope
+
+- live NOAA, NWS, FEMA, USGS, NASA, Kansas, local, or other external-source access;
+- creating or accepting credentials, API keys, secrets, endpoints, rate-limit policy, or source terms;
+- activating or admitting a `SourceDescriptor`;
+- selecting a canonical connector path or resolving source-registry topology by documentation alone;
+- writing to RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, receipt, proof, release, or PUBLISHED stores;
+- assembling a Hazards release candidate;
+- approving policy, review, release, deployment, promotion, or publication;
+- validating current hazard conditions or operational warning freshness; and
+- issuing or interpreting emergency guidance.
+
+[Back to top](#top)
+
+---
+
+<a id="authority-and-terminal-boundary"></a>
+
+## Authority and terminal boundary
+
+Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) and the adopted [Directory Rules v2](../../doctrine/directory-rules.md) place human operational procedures under `docs/runbooks/`. This is a same-path modernization of an established file, so it creates no new responsibility root or parallel contract, schema, policy, source, evidence, proof, release, or publication home.
+
+| Responsibility | Owning surface | This runbook may do | This runbook must not do |
+|---|---|---|---|
+| Human procedure | `docs/runbooks/hazards/SOURCE_REFRESH_RUNBOOK.md` | Explain preflight, bounded validation, holds, and handoff | Grant source or release authority |
+| Source identity and admission | `data/registry/sources/`, owning descriptor, and accepted activation decision | Require and inspect exact references | Activate, admit, or invent missing fields |
+| Source-authority projection | `control_plane/source_authority_register.yaml` | Read current projection state | Treat an empty or proposed projection as authority |
+| External acquisition | Ratified path under `connectors/` | Verify implementation, tests, and declared limits | Choose among conflicted paths or perform an unverified fetch |
+| Watcher materiality signal | `tools/ingest/` or accepted watcher home | Consume a bounded report | Treat a watcher signal as source truth or publication |
+| Pipeline behavior | Accepted `pipelines/` implementation plus `pipeline_specs/` | Verify exact command and stage limits | Infer implementation from a placeholder spec |
+| Object meaning and shape | `contracts/` and `schemas/` | Require current references and run validation | Redefine semantics or treat shape validity as truth |
+| Policy and review | `policy/` plus authenticated review records | Require finite results and obligations | Invent approval or reviewer authority |
+| Lifecycle instances | Governed `data/` phases and accountability families | Describe expected transition evidence | Mutate lifecycle state from Markdown |
+| Release and correction | `release/` plus linked evidence, review, correction, and rollback objects | Prepare a bounded handoff | Assemble, sign, approve, release, or publish |
+| Public use | Governed API and released public-safe carriers | Preserve the no-direct-source rule | Serve registry, connector, watcher, RAW, or model output directly |
+
+The highest result this runbook can establish today is one of:
+
+```text
+SOURCE_REFRESH_PREFLIGHT_COMPLETE
+BOUNDED_SYNTHETIC_VALIDATION_PASS
+READY_FOR_ACCOUNTABLE_SOURCE_REFRESH_IMPLEMENTATION_REVIEW
+```
+
+None means `SOURCE_ACTIVATED`, `SOURCE_REFRESHED`, `RAW_CAPTURED`, `EVIDENCE_RESOLVED`, `POLICY_APPROVED`, `REVIEWED`, `PROOF_COMPLETE`, `RELEASED`, `DEPLOYED`, `PROMOTED`, or `PUBLISHED`.
+
+[Back to top](#top)
+
+---
+
+<a id="current-repository-evidence"></a>
+
+## Current repository evidence
+
+The observations below are pinned to `main@ca8a81a9f7728347ce19843b7a681d5c9fe19ba0`. Re-read the exact files when the base, source registry, connector, pipeline, workflow, tests, or policy lane changes.
+
+| Surface | CONFIRMED repository evidence | Bounded conclusion |
+|---|---|---|
+| Runbook path | The target exists under `docs/runbooks/hazards/` | Same-path update is valid; no new path is needed |
+| Pull-request overlap | No open pull request matching this target was found before branch creation | A focused branch can proceed; recheck before mutation |
+| Source-authority register | `status: PROPOSED`, `authority_mode: projection_only`, `implementation_status: ABSENT`, `entries: []` | No Hazards source is activated by this register |
+| Hazards source registry | The subtype-first lane contains a substantive README and `noaa.storm_events.yaml` | The lane exists; one file does not prove admission |
+| Dotted Storm Events record | `status: PROPOSED`; the file is explicitly a documentation-inventory placeholder | Not an active or complete descriptor |
+| Alternate Storm Events record | Authority, role, rights, cadence, access, and citation remain `TBD` | Not eligible for live retrieval |
+| Registry topology | Subtype-first and domain-first source lanes coexist | Canonical descriptor placement remains conflicted |
+| Storm Events connector | Underscore and hyphenated paths are README-only; no verified client, parser, product test, or accepted canonical path | No operational connector is established |
+| Storm Events pipeline spec | `status: PROPOSED`; placeholder created from documentation inventory | Not an executable pipeline |
+| Storm Events watcher | README defines a proposed review-signal boundary and names no executable | No watcher result can be produced from the documented lane |
+| Hazards workflow | Runs no-network drought fixture and USDM materiality validation; proof and release jobs are explicit holds | Bounded synthetic validation only |
+| Hazards policy | Policy source is draft/default-only and evaluator binding remains unverified | No operational policy decision can be inferred |
+| Hazards release candidate lane | The promotion runbook records no current Hazards candidate | No candidate exists to advance |
+| Planning lineage | The Drive Hazards blueprint preserves source-role, time, evidence, and not-for-life-safety doctrine but was authored without a mounted repository | Use as planning lineage, never as current implementation proof |
+
+### Current executable evidence
+
+The repository currently proves only this bounded path:
+
+```text
+committed drought-family JSON Schemas and fixtures
+  -> exact valid/invalid fixture polarity
+  -> in-process socket, DNS, and urllib denial checks
+  -> deterministic synthetic USDM snapshot comparison
+  -> UNCHANGED | SEMANTIC_NON_MATERIAL | MATERIAL | UNDETERMINED
+  -> NON_EVENT | PROMOTION_CANDIDATE | HOLD
+```
+
+It does not retrieve a live source, resolve current rights, verify current conditions, create a raw capture, resolve EvidenceRef to EvidenceBundle, evaluate an active Hazards policy bundle, assemble proof, create a release candidate, or publish.
+
+[Back to top](#top)
+
+---
+
+<a id="state-and-vocabulary-separation"></a>
+
+## State and vocabulary separation
+
+Keep these states independent.
+
+| State or term | Meaning | Effect |
+|---|---|---|
+| `WATCHER_SIGNAL` | A watcher reports possible source, schema, correction, cadence, or materiality drift | Review work only; no source or lifecycle effect |
+| `SOURCE_REFRESH_PREFLIGHT_COMPLETE` | Required repository and source-edge checks were performed and recorded | No live fetch or admission |
+| `BOUNDED_SYNTHETIC_VALIDATION_PASS` | Current committed fixture profile passed | No statement about live source truth |
+| `SOURCE_ACTIVATED` | A separate accepted source decision authorizes bounded intake | Outside this runbook |
+| `RAW_CAPTURED` | An approved connector preserved an immutable source payload or reference with receipts | Not established by current Hazards implementation |
+| `PROMOTION_CANDIDATE` | In the current USDM fixture profile, a deterministic materiality criterion fired | A review signal only; not source admission or release readiness |
+| `READY_FOR_ACCOUNTABLE_SOURCE_REFRESH_IMPLEMENTATION_REVIEW` | The missing implementation/authority packet is complete enough for accountable review | Still not activation or execution |
+| `PUBLISHED` | A separate governed release transition exposed a public-safe carrier | Outside this runbook |
+
+Do not convert `PROPOSED`, `TBD`, `README-only`, `SKIPPED`, `NOT_RUN`, `PENDING`, `NO_RUN_FOUND`, or an explicit workflow hold into `PASS`.
+
+[Back to top](#top)
+
+---
+
+<a id="preconditions"></a>
+
+## Preconditions
+
+A live source refresh remains **HOLD** unless every applicable condition is supported by immutable or versioned evidence.
+
+| # | Required condition | Minimum evidence | Failure posture |
+|---:|---|---|---|
+| 1 | Exact repository and source identity | Forty-character repository SHA, source ID, native product/version, descriptor path and digest | `HOLD` or `ERROR` |
+| 2 | Canonical descriptor authority | One non-placeholder descriptor in the accepted registry home | `HOLD` |
+| 3 | Source activation | Accepted, current source-activation decision bound to the descriptor | `HOLD` or `DENY` |
+| 4 | Source role | Canonical role plus role authority and anti-collapse obligations | `ABSTAIN` or `DENY` |
+| 5 | Rights and terms | Current access, redistribution, attribution, retention, and citation basis | `HOLD` or `DENY` |
+| 6 | Sensitivity and precision | Reviewed sensitivity class, public-use floor, minimization/generalization obligations | `HOLD` or `DENY` |
+| 7 | Time and cadence | Source, publication, valid, retrieval, expiry, correction, and expected cadence where material | `ABSTAIN` or `DENY` |
+| 8 | Canonical connector | One accepted connector path with implementation, bounded transport rules, tests, and rollback | `HOLD` |
+| 9 | Executable pipeline | Accepted pipeline command/spec pair with stage boundaries and deterministic identity | `HOLD` |
+| 10 | No-network fixture | Public-safe synthetic fixture that exercises the parser/transform path without live access | `HOLD` |
+| 11 | Credentials and egress control | Approved secret ownership, least privilege, redaction, timeout, retry, redirect, size, and audit policy | `HOLD` or `DENY` |
+| 12 | Quarantine path | Reason codes, immutable source reference, review route, and no-public-path enforcement | `HOLD` |
+| 13 | Correction and rollback | Upstream correction handling, prior safe target, invalidation scope, and replay plan | `ABSTAIN` or `DENY` |
+| 14 | Accountable review | Verified assignments and separation where materiality or sensitivity requires it | `HOLD` |
+| 15 | Overlap check | No active branch, pull request, migration, or steward work owns the same source or path | `HOLD` |
+| 16 | Separate execution authority | Current instruction or governed operation authorizes live external access | `HOLD` |
+
+A green fixture run cannot compensate for a missing descriptor, rights record, canonical connector, active source decision, or separate execution authority.
+
+[Back to top](#top)
+
+---
+
+<a id="procedure"></a>
+
+## Procedure
+
+### 1. Freeze the evaluation baseline
+
+Record the exact repository and source-edge references before inspecting or running anything.
+
+```bash
+git rev-parse HEAD
+git status --short
+python --version
+```
+
+Record at least:
+
+```yaml
+repository_sha: "<40-character SHA>"
+source_id: "<canonical source ID or UNKNOWN>"
+descriptor_path: "<path or UNKNOWN>"
+descriptor_digest: "<blob/content digest or UNKNOWN>"
+activation_decision_ref: "<immutable ref or ABSENT>"
+rights_ref: "<immutable ref or UNKNOWN>"
+connector_path: "<accepted path or CONFLICTED>"
+connector_revision: "<commit/blob or ABSENT>"
+pipeline_spec_ref: "<commit/blob or PLACEHOLDER>"
+requested_scope: "<source, vintage, geography, and time window>"
+operator_or_requestor: "<authenticated identity>"
+review_route: "<verified assignment or NEEDS VERIFICATION>"
+```
+
+Re-run the overlap check immediately before mutation. Preserve unrelated branches and pull requests.
+
+### 2. Verify source authority before any fetch
+
+Inspect the canonical descriptor and its activation decision. A filename, provider name, endpoint, README, or registry path is not enough.
+
+For the currently tracked NOAA Storm Events surfaces:
+
+- `data/registry/sources/hazards/noaa.storm_events.yaml` is a `PROPOSED` placeholder;
+- `data/registry/hazards/sources/noaa_storm_events.yaml` retains `TBD` authority, rights, cadence, and access;
+- `control_plane/source_authority_register.yaml` is empty and projection-only.
+
+Therefore the current result is:
+
+```text
+HOLD: HAZ_REFRESH_SOURCE_AUTHORITY_UNRESOLVED
+```
+
+Do not live-fetch. Do not “complete” the missing fields from general knowledge, the upstream website, a planning PDF, or a second registry copy.
+
+### 3. Verify connector, watcher, and pipeline implementation
+
+Confirm one canonical connector path and inspect its code, tests, fixture profile, transport controls, and emitted object boundary.
+
+Current NOAA Storm Events evidence produces these results:
+
+| Check | Current result |
+|---|---|
+| Canonical connector path | `CONFLICTED` between underscore and hyphenated README-only lanes |
+| Source client/parser | Not verified |
+| Product-specific tests | Not verified |
+| Source-specific fixture parser path | Not verified |
+| Accepted live endpoint/configuration | Not verified |
+| Pipeline spec | Proposal placeholder |
+| Watcher executable | Not verified |
+| Connector workflow enforcement | Not established as source-refresh proof |
+
+Current result:
+
+```text
+HOLD: HAZ_REFRESH_CONNECTOR_AND_PIPELINE_UNVERIFIED
+```
+
+A watcher README may define future review signals. It cannot substitute for a connector, raw capture, activation decision, or pipeline.
+
+### 4. Run the repository-native no-network checks
+
+Run the bounded validation even when live refresh remains held. It detects regression in the implemented drought fixture lane and provides an exact handoff fact.
+
+See [Repository-native validation](#repository-native-validation).
+
+### 5. Classify the result without broadening it
+
+Use [Interpret the bounded results](#interpret-the-bounded-results). A synthetic `MATERIAL / PROMOTION_CANDIDATE` result means the fixture's deterministic thresholds fired. It does not mean a source may be fetched, admitted, promoted, or published.
+
+### 6. Decide the next state
+
+| Condition | Result | Next action |
+|---|---|---|
+| Descriptor, activation, rights, canonical connector, or executable pipeline missing | `HOLD` | Produce the handoff packet; do not fetch |
+| Evidence cannot establish role, time, or source identity | `ABSTAIN` | Narrow the request or obtain authoritative records |
+| Rights, sensitivity, life-safety, public-path, or role boundary is violated | `DENY` | Stop; preserve evidence and escalate |
+| Validator or required input cannot be evaluated safely | `ERROR` | Repair evaluator/input before retry |
+| Bounded fixtures pass but live path remains incomplete | `SOURCE_REFRESH_PREFLIGHT_COMPLETE` | Route implementation/authority gaps for review |
+| Every precondition is met under a separately authorized live-source operation | Outside current repository evidence | Follow the accepted connector's own reviewed command and receipt contract; this runbook intentionally supplies no unverified live command |
+
+### 7. Preserve the lifecycle boundary when a future live path exists
+
+A future accepted connector may emit only to controlled RAW or QUARANTINE intake. It must record:
+
+- exact `SourceDescriptor` and activation-decision references;
+- connector and pipeline revisions;
+- source-native object identity and product/vintage;
+- source, publication, valid, retrieval, expiry, and correction times where material;
+- content digest or immutable source-object reference;
+- rights, attribution, access, and sensitivity snapshots;
+- fetch status, transport limits, retries, redirects, and size/decompression results;
+- quarantine reason or raw-capture receipt;
+- no claim of evidence closure, review, release, or publication.
+
+The connector must not write directly to WORK, PROCESSED, CATALOG, TRIPLET, proof, release, or PUBLISHED lanes.
+
+### 8. Hand off downstream work without collapsing states
+
+After controlled intake exists, normalization, evidence resolution, policy, catalog, proof, candidate assembly, promotion, correction, and rollback remain separate operations. Use the [Hazards Promotion Runbook](./PROMOTION_RUNBOOK.md) only after a real candidate and its closure objects exist. Current proof and release jobs remain explicit holds.
+
+[Back to top](#top)
+
+---
+
+<a id="repository-native-validation"></a>
+
+## Repository-native validation
+
+### Preconditions
+
+1. Work from a clean checkout or isolated worktree at a recorded commit SHA.
+2. Run from the repository root.
+3. Use Python 3.11 for hosted-workflow parity unless the workflow pin changes.
+4. Keep live-source credentials, endpoints, tokens, and production data out of the focused validation environment.
+5. Install only the repository-declared, hash-locked validation profile.
+
+Dependency bootstrap:
+
+```bash
+python tools/ci/install_python_ci.py project-runtime
+```
+
+The bootstrap may require an approved package cache or network before the focused test. Record dependency acquisition separately; it is not part of the no-live-source validation claim.
+
+### Focused commands
+
+```bash
+python -m unittest -v tests.domains.hazards.test_hazards_smoke
+make hazards-validate
+```
+
+Equivalent explicit USDM commands currently owned by the Make target are:
+
+```bash
+KFM_NO_NETWORK=1 \
+PYTHONHASHSEED=0 \
+PYTHONDONTWRITEBYTECODE=1 \
+PYTHONUNBUFFERED=1 \
+TZ=UTC \
+python -m unittest discover \
+  --start-directory tests/domains/hazards \
+  --pattern 'test_validate_usdm_materiality.py' \
+  --verbose
+
+KFM_NO_NETWORK=1 \
+PYTHONHASHSEED=0 \
+PYTHONDONTWRITEBYTECODE=1 \
+PYTHONUNBUFFERED=1 \
+TZ=UTC \
+python tools/validators/domains/hazards/validate_usdm_materiality.py --fixtures
+```
+
+### What the checks cover
+
+| Check | Covered behavior |
+|---|---|
+| Drought schema/fixture smoke | Three JSON Schema 2020-12 object families; exact valid/invalid inventories; duplicate-key, regular-file, symlink, UTF-8, and fixture-size protections |
+| Process-level network guard | Selected socket connect, DNS resolution, and `urllib.request.urlopen` paths fail closed during the smoke test |
+| USDM materiality tests | Four valid finite states, deterministic trigger criteria, exact invalid finding sets, and rejection of legal-declaration fields in an observation snapshot |
+| USDM fixture validator | Fixture-only declaration, network forbidden, time ordering, geometry digest, severity hierarchy, thresholds, and explicit governance non-effects |
+
+### What the checks do not cover
+
+- operating-system firewall, namespace, proxy, DNS, or air-gap enforcement;
+- live source availability, endpoint behavior, rate limits, credentials, terms, or current rights;
+- live parser correctness or raw-capture integrity;
+- current drought or hazard conditions;
+- SourceDescriptor admission or source activation;
+- EvidenceRef-to-EvidenceBundle resolution;
+- Hazards policy evaluation or authenticated review;
+- proof, candidate, release, deployment, promotion, or publication.
+
+[Back to top](#top)
+
+---
+
+<a id="interpret-the-bounded-results"></a>
+
+## Interpret the bounded results
+
+The USDM validator has four deterministic assessment states.
+
+| Assessment state | Validator outcome | Meaning inside the fixture profile | Forbidden inference |
+|---|---|---|---|
+| `UNCHANGED` | `NON_EVENT` | No tested metric or geometry change | The live source was checked |
+| `SEMANTIC_NON_MATERIAL` | `NON_EVENT` | Change exists but no configured materiality criterion fired | The change is safe to publish |
+| `MATERIAL` | `PROMOTION_CANDIDATE` | One or more deterministic fixture criteria fired | A source, candidate, release, or publication was authorized |
+| `UNDETERMINED` | `HOLD` | Geometry changed without supporting metric change | The operator may resolve the ambiguity by assumption |
+
+The validator also requires these governance flags to remain false:
+
+```text
+authority_created
+source_activated
+promotion_authorized
+release_authorized
+publication_authorized
+```
+
+Any attempt to set one true is a `GOVERNANCE_BOUNDARY_VIOLATION`.
+
+Record:
+
+- exact repository SHA;
+- exact commands;
+- exit codes;
+- finite assessment and triggered criteria;
+- validation findings;
+- whether dependency bootstrap used external access;
+- unresolved source/connector/pipeline conditions; and
+- `live_fetch: NOT_RUN`.
+
+[Back to top](#top)
+
+---
+
+<a id="quarantine-stale-and-correction-handling"></a>
+
+## Quarantine, stale, and correction handling
+
+### Quarantine
+
+Quarantine is a governed hold, not a publishable staging area. Route a future intake to the owning quarantine path when any of these conditions applies:
+
+- source identity or role is ambiguous;
+- descriptor or activation reference is missing;
+- rights, terms, attribution, access, or retention is unresolved;
+- sensitivity or public precision is unsafe;
+- content digest, archive, encoding, schema, geometry, or time checks fail;
+- operational context is expired or cannot be bounded;
+- the upstream correction/supersession relationship is unclear;
+- evidence support cannot be resolved; or
+- policy or review returns `DENY`, `ABSTAIN`, `ERROR`, or `HOLD`.
+
+Do not invent a quarantine reason-code schema in this document. Use the accepted lifecycle contract when one is verified and preserve the original input reference, findings, actor, time, and review path.
+
+### Stale is not wrong
+
+- **Stale** means the declared freshness or review window elapsed, a source vintage was superseded, or required support is no longer current.
+- **Wrong** means the claim or carrier is substantively incorrect.
+
+A missed refresh does not justify silent replacement. Mark dependent claims or layers stale through their owning surfaces, preserve the prior release identity, and record what evidence is missing.
+
+### Operational context expiry
+
+An expired warning, watch, or advisory must not be presented as a current KFM warning state. It may remain historical/contextual evidence only when the source, issue time, expiry time, retrieval time, correction state, official-source referral, and not-for-life-safety boundary remain visible.
+
+### Correction and rollback
+
+When a future refresh reveals a defect in a released Hazards carrier:
+
+1. contain or disable the affected KFM surface when rights, sensitivity, or life-safety risk requires immediate action;
+2. preserve the failed release and evidence identity;
+3. emit or reference the governed correction/withdrawal objects;
+4. invalidate dependent catalog, map, export, Evidence Drawer, search, and AI derivatives;
+5. use the [Rollback Runbook](./ROLLBACK_RUNBOOK.md) and [Rollback Drill](./ROLLBACK_DRILL.md) through accountable release authority; and
+6. verify recovery without implying that KFM changed the official upstream source.
+
+[Back to top](#top)
+
+---
+
+<a id="source-refresh-handoff-packet"></a>
+
+## Source-refresh handoff packet
+
+Use this documentation-only worksheet when the current result is `HOLD`, `ABSTAIN`, `DENY`, `ERROR`, or bounded preflight completion. It does not create a source, receipt, policy decision, review record, or release object.
+
+```yaml
+source_refresh_handoff:
+  repository:
+    base_sha: "<40-character SHA>"
+    branch_or_pr: "<ref or NONE>"
+    changed_paths: []
+  request:
+    source_id: "<canonical ID or UNKNOWN>"
+    source_family: "<family>"
+    native_product_and_version: "<value or UNKNOWN>"
+    spatial_scope: "<value or UNKNOWN>"
+    temporal_scope: "<value or UNKNOWN>"
+  authority:
+    descriptor_ref: "<immutable ref or PLACEHOLDER>"
+    activation_decision_ref: "<immutable ref or ABSENT>"
+    source_authority_register_entry: "<ref or ABSENT>"
+    rights_ref: "<ref or UNKNOWN>"
+    sensitivity_ref: "<ref or UNKNOWN>"
+    review_assignments: "<refs or NEEDS VERIFICATION>"
+  implementation:
+    connector_path: "<accepted path or CONFLICTED>"
+    connector_revision: "<ref or ABSENT>"
+    pipeline_spec_ref: "<ref or PLACEHOLDER>"
+    executable_command: "<reviewed command or ABSENT>"
+    no_network_fixture_ref: "<ref>"
+  validation:
+    dependency_bootstrap: "<record>"
+    smoke_test: "<PASS | FAIL | NOT_RUN>"
+    materiality_test: "<PASS | FAIL | NOT_RUN>"
+    assessment_state: "<UNCHANGED | SEMANTIC_NON_MATERIAL | MATERIAL | UNDETERMINED | NOT_APPLICABLE>"
+    triggered_criteria: []
+    limitations: []
+  result:
+    work_state: "<HOLD | ABSTAIN | DENY | ERROR | SOURCE_REFRESH_PREFLIGHT_COMPLETE>"
+    reason_codes: []
+    live_fetch: "NOT_RUN"
+    lifecycle_effect: "NONE"
+    release_effect: "NONE"
+    publication_effect: "NONE"
+  next_review:
+    owner_route: "@bartytime4life"
+    accountable_roles: "<NEEDS VERIFICATION>"
+    requested_decision: "<bounded decision>"
+```
+
+Do not populate missing authority fields with plausible defaults. Preserve `UNKNOWN`, `ABSENT`, `PLACEHOLDER`, or `NEEDS VERIFICATION`.
+
+[Back to top](#top)
+
+---
+
+<a id="mandatory-stop-conditions"></a>
+
+## Mandatory stop conditions
+
+Stop without live retrieval or lifecycle mutation when any of the following is true.
+
+| Condition | Required result |
+|---|---|
+| Source-authority register has no accepted entry for the source | `HOLD` |
+| Descriptor is a placeholder, incomplete, duplicated, or in a conflicted home | `HOLD` |
+| Source role cannot be fixed without collapsing observed, regulatory, modeled, aggregate, administrative, candidate, or synthetic meaning | `ABSTAIN` or `DENY` |
+| Rights, attribution, redistribution, retention, or access terms are unresolved | `HOLD` or `DENY` |
+| Sensitivity or public precision is unresolved | `HOLD` or `DENY` |
+| Connector path is conflicted or implementation/tests are absent | `HOLD` |
+| Pipeline spec is a placeholder or has no executable implementation | `HOLD` |
+| Live command, credential owner, egress rules, or audit path is unverified | `HOLD` |
+| No public-safe no-network fixture exists for the proposed parser/transform path | `HOLD` |
+| Focused synthetic validation fails | `ERROR` or `DENY`, according to the finding |
+| A watcher, connector, or test attempts to publish or authorize release | `DENY` |
+| An operational product is framed as KFM life-safety guidance | `DENY` |
+| A synthetic `PROMOTION_CANDIDATE` result is used as source or release approval | `DENY` |
+| Evidence, policy, review, correction, or rollback closure is missing for a downstream candidate | `HOLD`, `ABSTAIN`, or `DENY` |
+| Overlapping branch, pull request, migration, or steward work owns the same surface | `HOLD` |
+| The requested action would release, deploy, promote, or publish under this runbook | `DENY` |
+
+[Back to top](#top)
+
+---
+
+<a id="acceptance-and-negative-cases"></a>
+
+## Acceptance and negative cases
+
+### Runbook acceptance
+
+This procedure is accurate for the pinned snapshot when:
+
+1. it identifies the live source-refresh capability as held;
+2. it names the current source-authority, descriptor, connector, pipeline, workflow, test, validator, policy, and release evidence without upgrading maturity;
+3. the focused commands match the Makefile and workflow;
+4. relative links resolve;
+5. the not-for-life-safety boundary is visible;
+6. synthetic validation, source activation, lifecycle mutation, proof, review, release, deployment, promotion, and publication remain separate; and
+7. the diff changes only this runbook unless a direct documentation dependency is proven.
+
+### Negative cases
+
+| Case | Expected posture |
+|---|---|
+| Dotted placeholder descriptor is presented as admitted | Reject the documentation change |
+| Alternate TBD descriptor is silently treated as canonical | Reject |
+| One of the competing connector README paths is declared canonical without an accepted decision | Reject |
+| A live endpoint or command is copied from planning material rather than verified implementation | Reject |
+| `make hazards-validate` is described as current-conditions validation | Reject |
+| `MATERIAL / PROMOTION_CANDIDATE` is described as release readiness | Reject |
+| Expired warning context is presented as current instruction | Reject |
+| Watcher output writes or implies PUBLISHED state | Reject |
+| The procedure creates a source-activation, policy, review, release, or publication effect | Reject |
+| Missing support is converted to a plausible default | Reject |
+
+[Back to top](#top)
+
+---
+
+<a id="maintenance-drift-and-verification-backlog"></a>
+
+## Maintenance, drift, and verification backlog
+
+Reconcile this runbook whenever any of these surfaces changes:
+
+- `control_plane/source_authority_register.yaml`;
+- Hazards source descriptor schemas or accepted registry topology;
+- `data/registry/sources/hazards/` or `data/registry/hazards/sources/`;
+- NOAA Storm Events connector placement or implementation;
+- the Storm Events watcher or pipeline spec;
+- Hazards fixture schemas, tests, validator, Make target, or domain workflow;
+- policy bundle/evaluator binding;
+- proof or release-candidate implementation;
+- source-rights, sensitivity, or reviewer assignments;
+- correction and rollback contracts; or
+- the not-for-life-safety boundary.
+
+### Open verification backlog
+
+- Settle the canonical Hazards source registry and descriptor identity without creating parallel writable authority.
+- Resolve the NOAA Storm Events underscore/hyphen connector topology through an accepted ADR or migration note.
+- Replace proposal/TBD descriptor records with one reviewed descriptor only after rights, cadence, source role, access, citation, and activation are supported.
+- Populate the source-authority register through its owning governed process; do not edit it merely to satisfy this runbook.
+- Implement and test a connector, fixture-first parser, raw/quarantine receipt boundary, and transport controls before any live fetch.
+- Bind an executable pipeline spec to accepted code and deterministic identity.
+- Add source-refresh-specific negative tests that prove the connector cannot write beyond RAW/QUARANTINE or act as a publisher.
+- Establish policy evaluator binding, EvidenceRef-to-EvidenceBundle closure, proof production, candidate assembly, and release review separately.
+- Assign accountable source, Hazards, rights, sensitivity, security, operations, review, correction, and release stewards.
+- Reconcile the inherited duplicate at [`docs/domains/hazards/SOURCE_REFRESH_RUNBOOK.md`](../../domains/hazards/SOURCE_REFRESH_RUNBOOK.md), which points readers back to this canonical runbook path, without deleting or moving it until consumer and migration evidence exists.
+- Reconcile the generic [`docs/runbooks/SOURCE_REFRESH_RUNBOOK.md`](../SOURCE_REFRESH_RUNBOOK.md) relationship and the one-byte local [`docs/runbooks/hazards/README.md`](./README.md) in separate, dependency-aware documentation work.
+
+### Source posture
+
+The Drive Hazards blueprint remains planning lineage. It contributes the not-for-life-safety, source-role, time, evidence, quarantine, and offline-first design posture. Its no-mounted-repository assumptions, proposed paths, and illustrative commands do not override the live repository.
+
+The Notion runbook-inventory checkpoint confirms that the runbook lane is broad but does not prove child procedure validation, rehearsal, review, source admission, release, deployment, promotion, or publication. This runbook therefore remains tied to repository bytes and owning authority surfaces.
+
+[Back to top](#top)
+
+---
+
+## Related repository surfaces
+
+| Surface | Role |
+|---|---|
+| [Hazards No-Network Test Runbook](./NO_NETWORK_TEST_RUNBOOK.md) | Exact bounded synthetic validation procedure and limitations |
+| [Hazards Promotion Runbook](./PROMOTION_RUNBOOK.md) | Candidate preflight and accountable release-review handoff; current promotion remains held |
+| [Hazards Rollback Runbook](./ROLLBACK_RUNBOOK.md) | Release-side correction and rollback procedure |
+| [Hazards Rollback Drill](./ROLLBACK_DRILL.md) | Recovery rehearsal boundary |
+| [Hazards domain README](../../domains/hazards/README.md) | Domain mission, object families, source-role and public boundary |
+| [Life-Safety Boundary](../../domains/hazards/LIFE_SAFETY_BOUNDARY.md) | Non-negotiable not-for-life-safety doctrine |
+| [Publication and Boundary](../../domains/hazards/PUBLICATION_AND_BOUNDARY.md) | Public-use and alert-authority constraints |
+| [Hazards Source Registry](../../../data/registry/sources/hazards/README.md) | Source admission and authority-control orientation |
+| [Source Authority Register](../../../control_plane/source_authority_register.yaml) | Current projection-only source-authority index |
+| [Storm Events connector boundary](../../../connectors/noaa_storm_events/README.md) | Current README-only, placement-conflicted source edge |
+| [Storm Events watcher boundary](../../../tools/ingest/storm_events_watch/README.md) | Proposed review-signal tooling boundary |
+| [Hazards domain workflow](../../../.github/workflows/domain-hazards.yml) | Bounded synthetic validation plus explicit proof/release holds |
+| [Hazards policy boundary](../../../policy/domains/hazards/README.md) | Draft/default-only policy source and evaluator gap |
+| [Hazards release candidates](../../../release/candidates/hazards/README.md) | Candidate boundary; no current candidate established |
+
+---
+
+## Runbook rollback
+
+This is a Markdown-only, same-path modernization. Revert the documentation commit or restore prior blob `f2a5a8ddb57be9ff336ac9cb00de4b30a35a3d82` if the evidence snapshot, command mapping, or stated maturity is shown to be wrong. Reverting this file changes no source, connector, lifecycle object, policy, review, release, deployment, promotion, or publication state.
+
+[Back to top](#top)
