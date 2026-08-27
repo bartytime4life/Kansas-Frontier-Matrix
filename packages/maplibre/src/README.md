@@ -2,16 +2,16 @@
 doc_id: kfm://doc/packages-maplibre-src-readme
 title: packages/maplibre/src/ — MapLibre Source Envelope and Renderer-Adapter Placement Boundary
 type: readme
-version: v1.4
+version: v1.5
 status: draft
 owners: OWNER_TBD — Package steward · MapLibre adapter steward · Map-runtime steward · UI steward · Governed API steward · Contract steward · Schema steward · Policy steward · Security steward · Privacy/sensitivity reviewer · Dependency steward · Validation steward · Release steward · CI steward · Docs steward
 created: 2026-08-23
 updated: 2026-08-27
-policy_label: "public-doctrine; package-source-boundary; maplibre; renderer-adapter; exact-dependency-admitted; vite-worker-configured; initial-adapter-implemented; null-runtime-implemented; browser-readiness-hold; private-npm-package; accepted-single-importer; renderer-downstream; effect-boundary-explicit; fail-closed; no-truth-authority; no-publication-authority; rollback-aware"
+policy_label: "public-doctrine; package-source-boundary; maplibre; renderer-adapter; exact-dependency-admitted; vite-worker-configured; legacy-cdn-harness-retired; initial-adapter-implemented; null-runtime-implemented; browser-readiness-hold; private-npm-package; accepted-single-importer; renderer-downstream; effect-boundary-explicit; fail-closed; no-truth-authority; no-publication-authority; rollback-aware"
 current_path: packages/maplibre/src/README.md
 owning_root: packages/
 responsibility: Document current source-module placement, renderer-neutral port/null-runtime behavior, accepted adapter boundary, and held concrete-renderer work without becoming contract, policy, evidence, release, or publication authority.
-truth_posture: CONFIRMED accepted package-owned seam, exact maplibre-gl 6.6.0 dependency and lock closure, exported renderer-neutral port, deterministic null runtime, minimal MapLibreAdapter lifecycle/camera implementation, Vite-specific self-contained worker setup, finite KFM errors, package-local positive and fail-closed tests, and no raw renderer types in the public seam / PROPOSED bounded local browser smoke pending hosted execution / HOLD authenticated browser, CSP enforcement, PMTiles, terrain, accessibility, performance, long-session, release, deployment, and publication evidence / CONFLICTED legacy CDN/global harness and stale packages/maplibre-runtime references / NEEDS VERIFICATION owners, license/provenance, exact Node 22 hosted checks, broader browser probes, correction, and rollback
+truth_posture: CONFIRMED accepted package-owned seam, exact maplibre-gl 6.6.0 dependency and lock closure, exported renderer-neutral port, deterministic null runtime, minimal MapLibreAdapter lifecycle/camera implementation, Vite-specific self-contained worker setup, hosted bounded browser smoke, finite KFM errors, package-local positive and fail-closed tests, no raw renderer types in the public seam, and retired CDN/global performance acquisition / HOLD governed performance fixtures, CSP enforcement, PMTiles, terrain, accessibility, long-session, release, deployment, and publication evidence / CONFLICTED stale packages/maplibre-runtime references and trust-shaped candidate builders under artifacts/perf / NEEDS VERIFICATION owners, license/provenance, broader browser probes, performance authority, correction, and rollback
 evidence_snapshot:
   snapshot_role: prior_to_issue_3387_slice
   repository: bartytime4life/Kansas-Frontier-Matrix
@@ -89,7 +89,7 @@ related:
   - ../../../release/
 tags: [kfm, packages, maplibre, src, typescript, renderer-adapter, map-runtime-port, source-descriptor, layer-descriptor, style-manifest, release-manifest, evidence-ref, negative-state, protocol-admission, pmtiles, cog, performance, import-boundary, privacy, migration, rollback]
 notes:
-  - "This v1.4 checkpoint records the admitted exact dependency, Vite-specific worker configuration, and bounded local browser fixture without activating Explorer's production runtime."
+  - "This v1.5 checkpoint records retirement of the nonconforming live-CDN performance harness while preserving the finite performance HOLD."
   - "MapLibreAdapter owns only empty-style construction, camera synchronization, finite failures, and teardown; sources, layers, selections, plugins, protocols, and external styles remain out of scope."
   - "The change does not claim browser readiness, authorize package publication, or affect release, deployment, promotion, source activation, or map/data publication."
   - "The renderer may consume only governed, released, public-safe artifacts. Descriptor validity and visual rendering are not truth, evidence closure, policy approval, or release approval."
@@ -105,7 +105,7 @@ notes:
 > TypeScript source envelope for KFM's accepted MapLibre adapter seam. Exact `maplibre-gl@6.6.0`, the initial lifecycle/camera adapter, and Vite-specific worker setup are implemented; production activation, broader browser readiness, governed source/layer behavior, plugins, protocols, release, deployment, and publication remain held.
 
 ![status](https://img.shields.io/badge/status-draft-yellow)
-![version](https://img.shields.io/badge/version-v1.4-informational)
+![version](https://img.shields.io/badge/version-v1.5-informational)
 ![maturity](https://img.shields.io/badge/maturity-initial__adapter-blue)
 ![runtime](https://img.shields.io/badge/runtime-browser__hold-orange)
 ![renderer](https://img.shields.io/badge/renderer-downstream-blue)
@@ -172,16 +172,16 @@ The package root governs package metadata and distribution. This `src/` README g
 | Concrete renderer source modules | **IMPLEMENTED / INITIAL SLICE** | `maplibre-adapter.ts` owns renderer construction, an inline empty style, camera synchronization, finite failures, and teardown only. |
 | Vite worker module | **IMPLEMENTED / BOUNDED** | `maplibre-vite-adapter.ts` uses Vite's `?worker&url` pipeline and calls `setWorkerUrl` before construction; it does not activate Explorer production. |
 | Package consumers | **CONFIRMED** | Explorer Web source and tests import the KFM facade through explicit TypeScript/Vite aliases. |
-| Package-local tests | **IMPLEMENTED / FOCUSED** | Five mocked tests cover successful lifecycle/camera behavior and invalid container, renderer error/construction, and disposal failures. |
-| MapLibre test lane | **CONFIRMED README / execution unknown** | `tests/maplibre/README.md` documents a proposed executable lane; test inventory and runner remain unproved. |
+| Package-local tests | **IMPLEMENTED / FOCUSED** | Seven tests cover lifecycle/camera behavior, Vite worker setup, and invalid container, WebGL2, renderer, and disposal failures. |
+| MapLibre test lane | **IMPLEMENTED / MIXED MATURITY** | Executable acquisition, readiness, source-metadata, negative-path, and harness-retirement tests exist; full performance proof remains held. |
 | MapLibre fixtures | **CONFIRMED README lanes / payload use unknown** | Tiny, baseline, invalid, and bad-baseline documentation lanes exist. |
 | Adapter ADRs | **CONFIRMED accepted architecture** | ADR-0006 accepts the package-owned seam and ADR-0007 the renderer family; dependency, concrete adapter, and browser readiness remain held. |
 | Architecture lane | **CONFIRMED documentation** | Renderer-downstream and released-artifact rules are documented. |
 | Explorer Web consumer | **IMPLEMENTED / BOUNDED** | Source and tests consume the renderer-neutral port; no renderer, WebGL, worker, tile, network, or publication behavior is thereby proved. |
-| Vite browser fixture | **IMPLEMENTED / HOSTED EXECUTION PENDING** | A deterministic empty-style fixture checks real construction, CSS, local-only requests, disposal, and WebGL2 fail-closed behavior; local execution is blocked when Chromium is absent. |
+| Vite browser fixture | **IMPLEMENTED / HOSTED PASS** | A deterministic empty-style fixture checks real construction, CSS, local-only requests, disposal, and WebGL2 fail-closed behavior; PR #3641's exact head passed both cases in hosted Chrome. |
 | Referenced `packages/maplibre-runtime/` | **NOT FOUND at checked README path** | Ownership between helper and runtime package remains unresolved. |
-| Performance workflow | **CONFIRMED executable workflow** | It runs validators and a browser smoke harness, but does not watch this package path. |
-| Performance smoke harness | **CONFIRMED executable script** | It launches Playwright and loads MapLibre/glyph assets from external URLs. |
+| Performance workflow | **CONFIRMED executable hold workflow** | It runs syntax, negative-path, retirement, dependency, and readiness guards; browser/performance/trust stages remain held. |
+| Performance smoke harness | **RETIRED / FINITE HOLD** | The root command exits `3` without renderer, browser, network, source, screenshot, receipt, or artifact acquisition. |
 | Performance schema | **CONFIRMED permissive scaffold** | It accepts any JSON object and does not prove field-level governance. |
 | General MapLibre validator lane | **CONFIRMED README-led routing** | Broad validation is documented; executable general adapter validation is not established. |
 
@@ -197,14 +197,13 @@ The package root governs package metadata and distribution. This `src/` README g
 - The Vite-specific adapter configures a self-contained worker URL before map construction and keeps raw renderer acquisition in this package.
 - MapLibre is doctrinally downstream of governed evidence, policy, review, release, correction, and rollback.
 - The current performance lane is real but separate from the dependency-free consumer seam.
-- The current performance harness is not hermetic because it loads public CDN assets.
-- The dedicated performance workflow does not include `packages/maplibre/**` in its path filters.
+- The former public-CDN performance harness is retired and guarded against renderer or network reacquisition outside the package seam.
+- The dedicated performance workflow includes `packages/maplibre/**` and the canonical Explorer path in its filters.
 - The legacy performance schema is intentionally or effectively non-restrictive.
 - Dependency-free port behavior, mocked adapter behavior, and production bundling of the Vite worker are executable; broader authenticated browser behavior is not yet proved.
 
 **PROPOSED**
 
-- Hosted execution of the bounded Vite adapter browser fixture.
 - A pure/effectful module split.
 - Additional KFM-shaped descriptor and renderer-operation types beyond the implemented camera, selection, snapshot, and state values.
 - Manifest-gated source, layer, style, protocol, and plugin activation.
@@ -212,19 +211,17 @@ The package root governs package metadata and distribution. This `src/` README g
 - Explicit capability and negative-state models.
 - Import-boundary linting and dependency checks.
 - Broader deterministic browser probes beyond the bounded empty-style Vite fixture.
-- A migration from external CDN smoke loading to pinned, reviewed dependencies or hermetic fixtures.
+- A governed performance harness using the package-owned runtime and deterministic fixtures.
 
 **CONFLICTED**
 
 - The prior README's Python-shaped module proposal versus the actual npm/TypeScript scaffold.
 - “Helper-only, no-network” wording versus ADR-0006's effectful runtime-adapter responsibilities.
 - Accepted `packages/maplibre/` ownership versus architecture references to absent `packages/maplibre-runtime/`.
-- ADR-0006's accepted acquisition boundary versus a standalone smoke harness that loads the MapLibre runtime outside the package.
 - `schemas/contracts/v1/maplibre/` as the proposed governed schema family versus the current permissive `schemas/maplibre/` performance schema.
 - `tests/maplibre/` versus `tests/packages/maplibre/` as package test placement.
 - `apps/explorer-web/` as the documented app shell versus the workflow's `apps/web/**` filter.
 - Trust-like performance proof/release/rollback outputs under `artifacts/perf/` versus Directory Rules limits on `artifacts/`.
-- Synthetic/no-network test doctrine versus current external CDN use.
 
 **UNKNOWN**
 
@@ -790,15 +787,11 @@ An admitted endpoint should be:
 - observable without logging secrets or sensitive query values;
 - revocable and rollback-aware.
 
-### Current performance exception
+### Retired performance exception
 
-The existing smoke harness loads:
+The former standalone smoke harness acquired `maplibre-gl@5.5.0`, CSS, and glyphs from public endpoints outside the accepted package seam while referencing absent local style fixtures. The command now exits with a finite `WORKFLOW_HOLD` before acquiring a renderer, browser, network endpoint, source, screenshot, receipt, or artifact.
 
-- `maplibre-gl@5.5.0` from `unpkg.com`;
-- CSS from `unpkg.com`;
-- glyphs from `demotiles.maplibre.org`.
-
-That is confirmed performance-tool behavior, not the approved package runtime contract. It must not be copied into package source or public production configuration without dependency, rights, endpoint, CSP, integrity, availability, privacy, and rollback review.
+Restoring performance execution requires a separate dependency-closed slice using the package-owned runtime, deterministic governed fixtures, meaningful thresholds, accepted QA artifact homes, and executable browser validation. Retirement does not establish performance readiness.
 
 [Back to top](#top)
 
@@ -1120,13 +1113,13 @@ Do not silently:
 
 - Inventory renderer imports and injections.
 - Move Explorer Web to the adapter port.
-- Decide treatment of smoke/performance harnesses.
+- Keep the retired standalone harness fail-closed until a governed replacement closes.
 - Enforce no-restricted-imports or equivalent.
 - Remove temporary exceptions after migration.
 
 ### Gate 7 — make tests hermetic
 
-- Replace public CDN dependence in default tests.
+- Keep public CDN acquisition absent from default tests and performance commands.
 - Use pinned local runtime assets and synthetic fixtures.
 - Keep optional external performance checks separately labeled.
 - Prove negative and rollback cases.
@@ -1165,10 +1158,10 @@ This source envelope is implementation-ready only when all applicable items are 
 - [ ] Correction, withdrawal, supersession, and rollback are visible.
 - [x] `NullMapRuntime` listeners and disposal behavior are deterministic in the bounded implementation.
 - [x] Package unit and adapter-contract tests cover the initial lifecycle/camera slice and fail-closed initialization paths.
-- [ ] Local browser tests are hermetic by default.
+- [x] The bounded Vite browser smoke is local-only and the legacy CDN harness is retired fail-closed.
 - [ ] Test-home and fixture-home decisions are documented.
 - [x] Explorer Web consumes the accepted port facade.
-- [ ] Dedicated CI watches package and canonical app paths.
+- [x] Dedicated CI watches package and canonical app paths.
 - [ ] Performance checks remain separate from semantic/admission proof.
 - [ ] Schema authority is reconciled.
 - [ ] Diagnostics and telemetry are privacy-safe.

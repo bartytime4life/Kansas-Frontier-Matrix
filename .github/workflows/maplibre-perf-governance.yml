@@ -1,6 +1,7 @@
 # KFM MapLibre performance-governance readiness workflow.
 # Status: command-bearing static syntax/negative-path checks plus an explicit
-# governed hold on browser performance, render comparison, attestation, proof,
+# retired legacy harness and governed hold on browser performance, render
+# comparison, attestation, proof,
 # release-manifest, correction, rollback, and failure-bundle claims.
 #
 # Responsibility:
@@ -19,7 +20,8 @@
 #   browsers are installed; checks are no-network after action bootstrap.
 # Commands:
 # - `node --check` for the seven repository-owned MapLibre scripts.
-# - Three repository-owned pure-Python negative-path test functions are invoked
+# - Five repository-owned pure-Python negative-path/retirement test functions
+#   are invoked
 #   directly; this lane does not install workspace dependencies or browsers.
 # - Readiness inspection is standard-library-only and does not replace validators.
 # - The repository pnpm lock records the exact package-owned MapLibre dependency
@@ -40,7 +42,8 @@
 #   `maplibre-perf-governance`, and job name `MapLibre perf governance` are preserved.
 # Rollback / disable:
 # - Revert this workflow revision. Do not restore unused OIDC, unlocked installs,
-#   live-CDN rendering, unsigned attestation, or trust-shaped artifact generation
+#   the retired live-CDN renderer, unsigned attestation, or trust-shaped
+#   artifact generation
 #   without MapLibre, security, evidence, policy, release, and CI review.
 # Authority boundary:
 # - Renderer metrics and screenshots are derived QA signals, not canonical truth.
@@ -194,11 +197,17 @@ jobs:
               test_rejects_out_of_range_tile_error_rate,
               test_rejects_zero_frame_budget,
           )
+          from tests.maplibre.test_legacy_perf_harness_retirement import (
+              test_retired_harness_fails_with_a_finite_hold,
+              test_retired_harness_has_no_renderer_or_network_acquisition,
+          )
 
           tests = (
               test_rejects_zero_frame_budget,
               test_rejects_negative_memory_budget,
               test_rejects_out_of_range_tile_error_rate,
+              test_retired_harness_fails_with_a_finite_hold,
+              test_retired_harness_has_no_renderer_or_network_acquisition,
           )
           for test in tests:
               test()
@@ -240,6 +249,7 @@ jobs:
             "tests/maplibre/README.md"
             "tests/maplibre/perf_fixture_builder.py"
             "tests/maplibre/test_assess_acquisition_inventory.py"
+            "tests/maplibre/test_legacy_perf_harness_retirement.py"
             "tests/maplibre/test_perf_governance_negative_paths.py"
             "tests/maplibre/test_validate_v6_readiness.py"
             "tools/validators/maplibre/README.md"
@@ -608,15 +618,24 @@ jobs:
               encoding="utf-8"
           )
           for marker in (
-              "https://unpkg.com/maplibre-gl@5.5.0/",
-              "https://demotiles.maplibre.org/font/",
-              "http://localhost:8080/fixtures/slim/style.json",
-              "http://localhost:8080/fixtures/heavy/style.json",
+              "WORKFLOW_HOLD: the legacy MapLibre performance harness is retired.",
+              "performance execution remains NOT_RUN",
           ):
               if marker not in smoke_text:
                   raise SystemExit(
-                      "MapLibre smoke network/fixture posture changed. Reassess browser "
-                      f"determinism and source activation deliberately; missing: {marker}"
+                      "The retired MapLibre harness posture changed. Reassess browser, "
+                      f"performance, artifact, and authority closure; missing: {marker}"
+                  )
+          for forbidden in (
+              "unpkg.com",
+              "demotiles.maplibre.org",
+              "maplibregl",
+              'from "playwright"',
+          ):
+              if forbidden in smoke_text:
+                  raise SystemExit(
+                      "The retired MapLibre harness reacquired a renderer, browser, or "
+                      f"network endpoint outside the package seam: {forbidden}"
                   )
 
           trust_markers = {
@@ -679,7 +698,7 @@ jobs:
           print("No unclassified MapLibre performance fixture payloads exist.")
           print("All eight MapLibre perf schemas remain accept-any-object placeholders.")
           print("Governance verifiers remain placeholders and the aggregate command remains no-argument.")
-          print("Browser smoke remains live-CDN-dependent and lacks its referenced local style fixtures.")
+          print("The legacy live-CDN browser harness is retired and fails with a finite HOLD.")
           print("Attestation remains unsigned; proof/release outcomes remain candidate builders in artifacts/.")
           PY
 
@@ -689,12 +708,12 @@ jobs:
           set -euo pipefail
           {
             echo "### MapLibre performance governance"
-            echo "- Executed: Node syntax checks and three deterministic negative-path unit tests."
+            echo "- Executed: Node syntax checks and five deterministic negative-path/retirement tests."
             echo "- Outcome: WORKFLOW_SKIPPED_EXPLICIT for browser/perf/render/trust stages."
             echo "- Gate: WORKFLOW_HOLD"
             echo "- Toolchain: the reviewed pnpm workspace lock is accepted as dependency state only; no dependency install or browser run occurred."
             echo "- Fixture boundary: source-metadata JSON fixtures and the v6-readiness fixture pack remain governed by their dedicated no-network workflow/campaign and are not runtime/performance baselines."
-            echo "- Blockers: dependency admission remains review-pending; no runtime/baseline fixtures; live CDN dependencies; permissive schemas; placeholder governance verifiers; unsigned attestation; unaccepted trust-output roots."
+            echo "- Blockers: no governed performance/baseline fixtures; permissive schemas; placeholder governance verifiers; unsigned attestation; unaccepted trust-output roots. The legacy live-CDN harness is retired."
             echo "- Safety: no browser, server, external source, screenshot, receipt, attestation, proof, release object, correction, rollback, failure bundle, or artifact upload was produced."
           } >> "$GITHUB_STEP_SUMMARY"
           echo "::notice::WORKFLOW_HOLD — MapLibre runtime performance governance is not release-grade."
