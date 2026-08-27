@@ -1,561 +1,511 @@
-# 🌪️ Hazards — No-Network Test Runbook
-
-> **Run the Hazards domain thin-slice tests against synthetic fixtures with no live source fetches, no network egress, and no public publication path active.** This runbook operationalizes PR-00 (`no-network fixture`) for the Hazards lane: schema validation, source-role anti-collapse, temporal-role validation, emergency-alert denial, operational expiry/freshness, catalog closure, Evidence Drawer disclaimer, and UI no-direct-source — all offline, all evidence-bounded, all reversible.
-
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runbook-hazards-no-network-test
-title: Hazards — No-Network Test Runbook
-type: standard
-version: v1
-status: draft
-owners: TODO (Hazards lane steward + Docs steward + Validation steward)
+title: Hazards No-Network Test Runbook
+type: operational-runbook
+version: v2.0.0
+status: DRAFT_REPOSITORY_GROUNDED; BOUNDED_SYNTHETIC_VALIDATION_ONLY; PROOF_AND_RELEASE_HELD; NON_RELEASE; NON_PUBLICATION
+owners: "@bartytime4life — verified CODEOWNERS route; accountable Hazards, validation, safety, policy, and release stewardship NEEDS VERIFICATION"
 created: 2026-05-12
-updated: 2026-05-12
-policy_label: public
+updated: 2026-08-27
+policy_label: repository-facing; hazards; no-network; synthetic-only; fail-closed; not-for-life-safety; non-publisher
+owning_root: docs/
+path_authority: same-path modernization under accepted ADR-0029 and Directory Rules v2
+authority_effect: none
+source_activation_effect: none
+release_effect: none
+deployment_effect: none
+promotion_effect: none
+publication_effect: none
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 7da7e26240859ba0d3c7bd9f992a4590e8146cf2
+  target_path: docs/runbooks/hazards/NO_NETWORK_TEST_RUNBOOK.md
+  target_prior_blob: 3a8e6afaa888b7611e91c7319d76c4d31d77f2a3
+  workflow_blob: 9d48f97ff33fedd4f2acf3a6aed2b6753d0caaea
+  smoke_test_blob: af8550b8e22c7022e30cc11e5c77a951898cf1f0
+  materiality_test_blob: dc71faa0667b8817abe070a7fef08361c9ddc743
+  materiality_validator_blob: dac5f56560f40e725c4d8924d8d20138ae5708fd
+  dependency_installer_blob: a403f366b5a51767456730d05060b105dca3d3f8
+  open_pull_requests_touching_target: 0
+source_lineage:
+  - title: kfm_hazards_extended_pro_pdf_only_blueprint.pdf
+    source_class: PLANNING_LINEAGE
+    use: not-for-life-safety, source-role, time, cite-or-abstain, and offline-first design context only
+  - title: KFM Markdown Update & Modernization Agent v1.0
+    source_class: CURRENT_TASK_GUIDANCE
+    use: same-path repository-grounded documentation modernization and draft-PR delivery method
 related:
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/truth-posture.md
-  - docs/doctrine/trust-membrane.md
-  - docs/domains/hazards/README.md
-  - docs/runbooks/README.md
-  - docs/runbooks/governed_ai_VALIDATION.md
-  - docs/adr/ADR-0001-schema-home.md
-tags: [kfm, hazards, runbook, no-network, validation, fixtures, governance]
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../doctrine/directory-rules.md
+  - ../README.md
+  - ../../domains/hazards/README.md
+  - ../../domains/hazards/LIFE_SAFETY_BOUNDARY.md
+  - ../../domains/hazards/PUBLICATION_AND_BOUNDARY.md
+  - NOT_FOR_LIFE_SAFETY_AUDIT_RUNBOOK.md
+  - PROMOTION_RUNBOOK.md
+  - ROLLBACK_DRILL.md
+  - ../../../.github/workflows/domain-hazards.yml
+  - ../../../Makefile
+  - ../../../tests/domains/hazards/test_hazards_smoke.py
+  - ../../../tests/domains/hazards/test_validate_usdm_materiality.py
+  - ../../../tools/validators/domains/hazards/validate_usdm_materiality.py
+  - ../../../tools/ci/install_python_ci.py
+  - ../../../fixtures/domains/hazards/usdm_materiality/cases.json
 notes:
-  - Repository not mounted in this session; all repo-shaped claims are PROPOSED until verified.
-  - This runbook governs the Hazards lane only; cross-domain runs use the runbook root.
+  - The current executable lane proves bounded drought-family schema and fixture polarity plus deterministic USDM materiality semantics; it does not prove the complete Hazards trust spine.
+  - KFM_NO_NETWORK and in-process socket/URL guards constrain the validation profile, but the hash-locked dependency bootstrap is not an operating-system air-gap proof.
+  - The workflow's proof and release jobs are explicit readiness holds. A green held job is not proof, review, release, promotion, deployment, or publication evidence.
 [/KFM_META_BLOCK_V2] -->
 
-[![Status: draft](https://img.shields.io/badge/status-draft-orange)](#)
-[![Authority: PROPOSED](https://img.shields.io/badge/authority-PROPOSED-yellow)](#)
-[![Lane: hazards](https://img.shields.io/badge/lane-hazards-red)](#)
-[![Mode: no--network](https://img.shields.io/badge/mode-no--network-blueviolet)](#)
-[![Lifecycle: RAW%20%E2%86%92%20PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%20%E2%86%92%20PUBLISHED-informational)](#)
-[![Truth posture: cite--or--abstain](https://img.shields.io/badge/truth-cite--or--abstain-success)](#)
-[![Policy: deny--by--default](https://img.shields.io/badge/policy-deny--by--default-critical)](#)
+<a id="top"></a>
+
+# Hazards No-Network Test Runbook
+
+> **One-line purpose.** Run KFM's current bounded Hazards validation against committed synthetic drought fixtures without contacting live hazard sources, then record exactly what passed, what remained held, and why the result creates no life-safety, source-admission, proof, release, or publication authority.
+
+[![Status: bounded synthetic validation](https://img.shields.io/badge/status-bounded%20synthetic%20validation-8250df?style=flat-square)](#current-disposition)
+[![Network: live sources forbidden](https://img.shields.io/badge/live%20sources-forbidden-b42318?style=flat-square)](#what-no-network-means)
+[![Life safety: no](https://img.shields.io/badge/life%20safety-not%20an%20alerting%20system-b42318?style=flat-square)](#not-for-life-safety-boundary)
+[![Proof and release: held](https://img.shields.io/badge/proof%20%2F%20release-held-6e7781?style=flat-square)](#explicit-holds-and-unproved-behavior)
+[![Public effect: none](https://img.shields.io/badge/public%20effect-none-6e7781?style=flat-square)](#authority-and-terminal-boundary)
+
+<a id="not-for-life-safety-boundary"></a>
+
+> [!CAUTION]
+> **KFM Hazards is not an emergency-alerting system, incident-command system, regulatory authority, or substitute for official instructions.** This procedure does not retrieve or validate current conditions and must not be used to issue, replace, delay, retract, summarize as actionable, or interpret a warning, evacuation order, shelter instruction, medical direction, all-clear, or other life-safety message. Direct urgent needs to the appropriate official authority.
+
+<a id="current-disposition"></a>
+
+> [!IMPORTANT]
+> **Current disposition: `BOUNDED_SYNTHETIC_VALIDATION / PROOF_AND_RELEASE_HOLD`.** At the pinned repository snapshot, the implemented lane validates three drought-family JSON Schemas and their exact fixture polarity, exercises an in-process network-denial guard, and validates deterministic U.S. Drought Monitor materiality cases. EvidenceBundle resolution, active policy evaluation, Hazards proof production, candidate assembly, release dry-run execution, deployment, and publication are not established by this lane.
+
+**Quick navigation:** [Goal](#goal-and-scope) · [Authority](#authority-and-terminal-boundary) · [Current evidence](#current-repository-evidence) · [No-network meaning](#what-no-network-means) · [Preconditions](#preconditions) · [Run](#run-the-focused-validation) · [Interpretation](#interpret-the-results) · [Coverage](#covered-behavior) · [Holds](#explicit-holds-and-unproved-behavior) · [Failures](#failure-handling) · [Hermetic mode](#stronger-hermetic-execution) · [Handoff](#pull-request-and-review-handoff) · [Rollback](#rollback-path) · [Maintenance](#maintenance-and-verification-backlog)
+
+---
+
+<a id="goal-and-scope"></a>
+
+## Goal and scope
+
+Use this runbook when a change touches the current Hazards drought-family schemas, fixtures, materiality validator, focused tests, workflow boundary, or documentation that describes them. The procedure gives a developer or reviewer a reproducible, repository-owned changed-area check while live source admission and public release remain out of scope.
+
+The current executable circle is:
+
+```text
+committed synthetic drought fixtures
+  -> JSON Schema 2020-12 validation and exact fixture polarity
+  -> in-process network-denial checks
+  -> deterministic USDM snapshot comparison
+  -> finite materiality classification
+  -> bounded validation result and review handoff
+```
+
+### In scope
+
+- the three committed drought object families:
+  - `drought_observation`;
+  - `drought_declaration`; and
+  - `drought_obs_decl_relationship`;
+- their valid and invalid synthetic fixture sets;
+- duplicate-key, regular-file, symlink, UTF-8, and fixture-size protections implemented by the smoke test;
+- the `kfm-usdm-materiality-v1` fixture profile;
+- deterministic materiality, non-event, and hold semantics;
+- the repository's current Hazards workflow and exact focused commands; and
+- documentation/link validation for this runbook when it changes.
+
+### Out of scope
+
+- NOAA, NWS, FEMA, USGS, NASA, state, local, or other live source access;
+- current conditions, warning validity, emergency guidance, or operational source freshness;
+- source admission, credentials, rights acceptance, or connector activation;
+- hazard families other than the exact drought fixtures and USDM comparison profile named here;
+- EvidenceRef-to-EvidenceBundle resolution, active policy evaluation, ProofPack construction, candidate assembly, release, deployment, promotion, or publication;
+- production network isolation, firewall enforcement, or air-gap certification; and
+- writes to RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, proof, receipt, release, or PUBLISHED stores.
+
+[Back to top](#top)
+
+---
+
+<a id="authority-and-terminal-boundary"></a>
+
+## Authority and terminal boundary
+
+Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) and the adopted [Directory Rules v2](../../doctrine/directory-rules.md) place human operational procedures under `docs/runbooks/`, executable validation under `tools/` and `tests/`, machine shape under `schemas/`, policy under `policy/`, lifecycle objects under governed `data/` lanes, and release decisions under `release/`.
+
+This is a same-path modernization of an established file. It creates no new responsibility root or parallel contract, schema, policy, evidence, receipt, proof, release, or publication home.
+
+| Responsibility | Owning surface | This runbook's role |
+|---|---|---|
+| Human procedure | `docs/runbooks/hazards/NO_NETWORK_TEST_RUNBOOK.md` | Explain the bounded commands, outcomes, limits, and handoff |
+| Drought object meaning | `contracts/domains/hazards/` | Link and consume; do not redefine |
+| Machine validation shape | `schemas/contracts/v1/domains/hazards/` | Validate current schemas; do not treat shape as truth |
+| Synthetic examples | `fixtures/domains/hazards/` | Exercise reviewed fixtures; do not substitute them for source evidence |
+| Executable behavior | `tests/domains/hazards/` and `tools/validators/domains/hazards/` | Provide the actual bounded proof of behavior |
+| CI orchestration | `.github/workflows/domain-hazards.yml` | Run the same bounded profile and preserve explicit holds |
+| Policy, evidence, proof, and release | Their existing responsibility roots | Remain outside this procedure unless separately implemented and governed |
+
+The highest result this runbook can establish is:
+
+```text
+BOUNDED_SYNTHETIC_VALIDATION_PASS
+```
+
+That result is not `SOURCE_ADMITTED`, `EVIDENCE_RESOLVED`, `POLICY_APPROVED`, `REVIEWED`, `PROOF_COMPLETE`, `RELEASED`, `DEPLOYED`, `PROMOTED`, or `PUBLISHED`.
+
+[Back to top](#top)
+
+---
+
+<a id="current-repository-evidence"></a>
+
+## Current repository evidence
+
+The observations below are pinned to `main@7da7e26240859ba0d3c7bd9f992a4590e8146cf2`. Re-read the exact files when the base, workflow, Makefile, schemas, fixtures, validator, or tests move.
+
+| Surface | CONFIRMED repository evidence | Bounded conclusion |
+|---|---|---|
+| Focused smoke test | `tests/domains/hazards/test_hazards_smoke.py` validates three JSON Schema 2020-12 families, exact valid/invalid fixture inventories, and selected file-safety properties | Proves only the committed drought-family profile at the tested SHA |
+| Network guard | The smoke test patches socket connection, DNS resolution, and `urllib.request.urlopen` entry points to fail closed and verifies representative calls are denied | Proves the named Python process guard; not operating-system egress isolation |
+| Materiality tests | `tests/domains/hazards/test_validate_usdm_materiality.py` covers four valid semantic states, deterministic criteria, exact invalid findings, and rejection of legal-declaration fields in an observation snapshot | Proves the named USDM comparison semantics, not current drought truth |
+| Materiality validator | `tools/validators/domains/hazards/validate_usdm_materiality.py` requires fixture-only/no-network declarations, validates deterministic inputs, and rejects any candidate that claims authority, source activation, promotion, release, or publication | Produces a comparison result, not a governance decision |
+| Make target | `make hazards-validate` runs the USDM materiality unit module and the exact fixture validator with deterministic environment variables | This is the current repository-owned entry point for the materiality profile |
+| Domain workflow | `.github/workflows/domain-hazards.yml` runs the smoke test and `make hazards-validate` using read-only repository permission, pinned actions, and `persist-credentials: false` | Hosted orchestration is bounded and non-publishing |
+| Dependency bootstrap | The workflow invokes `python tools/ci/install_python_ci.py project-runtime`, which installs exact hash-locked dependencies and the local package | Dependency integrity is bounded; package acquisition may still require an approved cache or network |
+| Hazards proof job | `build-proof-hazards` explicitly emits a hold when no accepted producer or deterministic proof command exists | A green held job is readiness-boundary evidence, not a proof |
+| Hazards release dry-run job | `publish-dry-run-hazards` explicitly emits a hold when no accepted candidate contract or command exists | A green held job is not release readiness or a release decision |
+
+The April Hazards blueprint remains useful planning lineage for the not-for-life-safety, source-role, time, evidence, and offline-first posture. Its old no-repository assumptions and proposed command paths do not override current repository evidence.
+
+[Back to top](#top)
+
+---
+
+<a id="what-no-network-means"></a>
+
+## What no-network means
+
+The phrase **no-network** has three different possible meanings. Keep them separate.
+
+| Layer | Current status | What may be claimed |
+|---|---|---|
+| Live hazard sources | **CONFIRMED forbidden by the focused profile** | The implemented tests and validator consume committed fixtures and do not need a live hazard endpoint |
+| Python validation process | **CONFIRMED bounded guard** | The smoke test fails selected socket, DNS, and `urllib` access paths closed |
+| Runner or operating system | **NEEDS VERIFICATION** | `KFM_NO_NETWORK=1` is an application contract, not proof of firewall, namespace, proxy, DNS, or host-level egress denial |
+| Dependency bootstrap | **SEPARATE PRECONDITION** | The hash-locked installer may obtain packages before the focused run; that acquisition is not part of the fixture validation claim |
+
+> [!WARNING]
+> Do not call a run hermetic, air-gapped, or infrastructure-level no-egress unless the execution environment independently enforces that property and the handoff records the mechanism. Do not disable or bypass the in-process guard to make a test pass.
+
+[Back to top](#top)
+
+---
+
+<a id="preconditions"></a>
+
+## Preconditions
+
+1. Work from a clean checkout or isolated worktree at a recorded 40-character commit SHA.
+2. Run from the repository root.
+3. Use Python 3.11 for hosted-workflow parity unless the repository changes that pin.
+4. Ensure the committed Hazards schemas, fixtures, tests, validator, workflow, and Makefile are present at the same revision.
+5. Keep live-source credentials out of the environment and do not supply source URLs, API keys, tokens, or production data to the focused commands.
+6. Install dependencies through the repository-owned hash-locked profile when the environment does not already provide them.
+
+Dependency bootstrap:
+
+```bash
+python tools/ci/install_python_ci.py project-runtime
+```
+
+> [!NOTE]
+> Run dependency installation before applying external network containment, or use an approved pre-populated cache or wheelhouse. Record bootstrap separately from the no-live-source validation. A successful install is supply-chain/bootstrap evidence, not Hazards validation evidence.
+
+Record before running:
+
+```bash
+git rev-parse HEAD
+git status --short
+python --version
+```
+
+A dirty working tree is not automatically invalid, but the handoff must identify the exact changed paths and must not attribute unrelated changes to this run.
+
+[Back to top](#top)
+
+---
+
+<a id="run-the-focused-validation"></a>
+
+## Run the focused validation
+
+Set the deterministic environment used by the repository and execute the two current entry points:
+
+```bash
+export KFM_NO_NETWORK=1
+export PYTHONHASHSEED=0
+export PYTHONDONTWRITEBYTECODE=1
+export PYTHONUNBUFFERED=1
+export TZ=UTC
+
+python -m unittest -v tests.domains.hazards.test_hazards_smoke
+make hazards-validate
+```
+
+For a documentation change to this file, also run the bounded local link checker:
+
+```bash
+python tools/validators/docs/link-check/check_links.py \
+  --repo-root . \
+  --format text \
+  docs/runbooks/hazards/NO_NETWORK_TEST_RUNBOOK.md
+```
+
+Review the complete diff:
+
+```bash
+git diff --check
+git diff -- docs/runbooks/hazards/NO_NETWORK_TEST_RUNBOOK.md
+```
+
+### Hosted workflow parity
+
+On pull requests, the `domain-hazards` workflow currently performs these relevant steps:
+
+1. checks out with persisted credentials disabled;
+2. installs the `project-runtime` dependency profile;
+3. verifies required Hazards boundary paths;
+4. runs the smoke test;
+5. runs `make hazards-validate`; and
+6. records the bounded scope and remaining holds in the job summary.
+
+The local commands above are the focused changed-area check. Hosted results remain bound to the exact workflow run and tested commit identity.
+
+[Back to top](#top)
+
+---
+
+<a id="interpret-the-results"></a>
+
+## Interpret the results
+
+### Procedure result
+
+| Result | Meaning | Required action |
+|---|---|---|
+| `BOUNDED_SYNTHETIC_VALIDATION_PASS` | Both focused commands exit `0` at the recorded SHA and no unexpected network access occurs | Record the exact scope and limitations; continue to review only |
+| `FAIL` | A valid fixture, invalid fixture, schema, expected finding, materiality state, or guard does not match the committed profile | Stop; repair the cause without weakening a required negative case |
+| `ERROR` | Dependencies, input files, encoding, repository state, or runner setup prevent a trustworthy run | Stop; repair the environment or classify the result as not established |
+| `HOLD` | Required authority or a later lane is absent, or the run attempts to exceed fixture-only scope | Keep proof, release, promotion, deployment, and publication unchanged |
+
+### USDM materiality semantics
+
+The validator's semantic result is separate from command success and governance state.
+
+| Computed state | Computed outcome | Meaning in this profile |
+|---|---|---|
+| `UNCHANGED` | `NON_EVENT` | No modeled metric or geometry change was detected in the synthetic comparison |
+| `SEMANTIC_NON_MATERIAL` | `NON_EVENT` | A change exists but does not meet the committed materiality criteria |
+| `MATERIAL` | `PROMOTION_CANDIDATE` | The synthetic comparison meets a materiality criterion and may be considered by a later governed process |
+| `UNDETERMINED` | `HOLD` | Geometry changed without supporting metric change; do not infer materiality |
+
+> [!IMPORTANT]
+> `PROMOTION_CANDIDATE` is a materiality-classification output. It does not authorize promotion, create a candidate record, satisfy evidence or policy, approve release, or change lifecycle state.
+
+The validator also prints `PASS` or `FAIL` for each fixture validation result. That process-level result must not be confused with an outward `PolicyDecision`, a review decision, a proof, or a release decision.
+
+[Back to top](#top)
+
+---
+
+<a id="covered-behavior"></a>
+
+## Covered behavior
+
+A passing focused run supports only these claims at the tested revision:
+
+- the three named drought schemas are valid JSON Schema 2020-12 documents;
+- the expected valid fixture inventory passes and the expected invalid inventory fails with exact findings;
+- committed fixture inputs are bounded, UTF-8 JSON regular files and duplicate object keys are rejected by the smoke-test loader;
+- valid fixture metadata declares `no_network_required` and `sensitive_data: false`;
+- representative Python socket, DNS, and `urllib` network entry points fail closed inside the smoke test;
+- USDM synthetic comparisons preserve snapshot time order, digest form, area hierarchy, threshold shape, and deterministic assessment;
+- observation snapshots cannot carry undeclared legal or administrative stage fields;
+- fixture candidates cannot claim authority creation, source activation, promotion authorization, release authorization, or publication authorization; and
+- the exact negative cases retain their expected reason codes.
+
+Maps, dashboards, tiles, indexes, summaries, model outputs, and generated text are not exercised by this profile and do not become evidence because the tests pass.
+
+[Back to top](#top)
+
+---
+
+<a id="explicit-holds-and-unproved-behavior"></a>
+
+## Explicit holds and unproved behavior
+
+The following remain outside the current executable lane:
+
+| Surface | Current disposition | Graduation evidence needed before changing the claim |
+|---|---|---|
+| Other Hazards families | `UNKNOWN / NOT COVERED` | Accepted contracts, schemas, fixtures, validators, and positive/fail-closed tests for each named profile |
+| Live source retrieval | `HOLD` | Admitted SourceDescriptor, rights/terms, credentials handling, retrieval contract, freshness/expiry behavior, and governed connector evidence |
+| Evidence closure | `HOLD` | Deterministic EvidenceRef-to-EvidenceBundle resolver, fixtures, citation validation, and negative tests |
+| Hazards policy runtime | `HOLD` | Accepted policy profile, evaluator binding, finite outcome record, obligations, tests, and governed consumer path |
+| Proof production | `HOLD` | Accepted proof contract, producer, fixtures, freshness/source-role evidence, receipts, access controls, and validator |
+| Candidate and release dry run | `HOLD` | Candidate identity, immutable artifact set, manifest contract, policy/review closure, correction path, and rollback target |
+| Public API/UI/AI behavior | `UNKNOWN / HOLD` | Exact governed consumer path, not-for-life-safety disclosure, evidence/time/correction state, accessibility, and negative tests |
+| Deployment and publication | `ABSENT / HOLD` | Separately authorized operational transition with release, deployment, correction, and rollback evidence |
+
+The workflow's `build-proof-hazards` and `publish-dry-run-hazards` jobs intentionally preserve these holds. They may complete successfully after proving that no premature implementation or candidate has appeared. Read the job summary; do not translate a green held job into `PASS` for the held capability.
+
+[Back to top](#top)
+
+---
+
+<a id="failure-handling"></a>
+
+## Failure handling
+
+| Symptom | Likely class | Safe response |
+|---|---|---|
+| `ModuleNotFoundError` or missing dependency | Environment/bootstrap error | Run the repository-owned hash-locked installer or use an approved prebuilt environment; do not add an unpinned install command |
+| Network-denial assertion | Boundary regression or unsupported dependency behavior | Remove the live dependency from the focused path or provide a local fixture; do not unpatch the guard |
+| Valid fixture fails | Schema/fixture/validator drift | Identify which authority changed and update the smallest coherent set with explicit compatibility reasoning |
+| Invalid fixture passes | Fail-closed regression | Stop; restore the required negative constraint and retain an exact regression test |
+| Exact finding differs | Semantic or diagnostic drift | Reconcile the schema and expected reason code; do not replace exact checks with a generic “must fail” assertion without justification |
+| Materiality result differs | Determinism or threshold regression | Compare computed criteria, snapshot fields, time order, geometry digest, and thresholds; preserve domain-role separation |
+| Missing required workflow path | Repository topology drift | Re-pin current main and reconcile the path against Directory Rules and the current workflow before editing |
+| Proof/release hold job reports a newly surfaced implementation | Dependency-admission event | Open a separate bounded review to establish contract, fixtures, validators, policy/review, and rollback; do not delete the hold reflexively |
+| Link checker fails | Documentation defect or path/anchor drift | Repair the exact local path, case, or anchor; external URLs remain unrequested and unverified |
+| Hosted result lacks exact commit identity | Evidence gap | Mark hosted validation `NEEDS VERIFICATION`; do not transfer evidence from another SHA |
+
+Never “fix” a failure by contacting a live source, replacing synthetic inputs with current operational data, deleting a negative fixture, weakening source-role separation, suppressing a reason code, or treating a later governance gate as already satisfied.
+
+[Back to top](#top)
+
+---
+
+<a id="stronger-hermetic-execution"></a>
+
+## Stronger hermetic execution
+
+The repository's current process-level guards are useful but do not prove host-level no egress. A stronger rehearsal may be appropriate for security-sensitive review.
+
+1. Prepare the exact repository revision and hash-locked dependencies from an approved local cache or wheelhouse.
+2. Apply external network isolation through the approved runner, container, virtual machine, or CI control.
+3. Confirm the isolation mechanism without contacting a real hazard source.
+4. Run the same focused commands unchanged.
+5. Record the isolation mechanism, executor identity, exact SHA, dependency provenance, commands, exit codes, and limitations.
+
+**NEEDS VERIFICATION:** no canonical repository-owned hermetic Hazards runner was confirmed at the pinned snapshot. Do not invent a `sudo`, firewall, container, or namespace command in this runbook and present it as KFM authority. An externally isolated pass remains bounded to these fixtures and still does not establish evidence, policy, proof, release, or public safety.
+
+[Back to top](#top)
+
+---
+
+<a id="pull-request-and-review-handoff"></a>
+
+## Pull-request and review handoff
+
+Record this minimum packet in the pull request or its verified check output:
+
+```yaml
+validation_scope: hazards-bounded-synthetic-drought
+base_commit: <40-character SHA>
+head_commit: <40-character SHA>
+commands:
+  - python -m unittest -v tests.domains.hazards.test_hazards_smoke
+  - make hazards-validate
+  - python tools/validators/docs/link-check/check_links.py --repo-root . --format text docs/runbooks/hazards/NO_NETWORK_TEST_RUNBOOK.md
+results:
+  smoke_test: PASS | FAIL | ERROR | NOT_RUN
+  materiality_profile: PASS | FAIL | ERROR | NOT_RUN
+  local_link_check: PASS | FAIL | ERROR | NOT_RUN
+network_claim:
+  live_sources_used: false
+  in_process_guard: exercised | not_exercised
+  host_egress_isolation: CONFIRMED | NEEDS_VERIFICATION | NOT_APPLICABLE
+held_capabilities:
+  - live_source_admission
+  - evidence_resolution
+  - policy_runtime
+  - proof_production
+  - release_candidate_assembly
+  - release
+  - deployment
+  - promotion
+  - publication
+```
+
+Use actual values; do not copy the example as evidence. Link hosted runs to the exact PR head. Report skipped, pending, held, inherited, unrelated, or unavailable checks separately from passing checks.
+
+A runbook update and green focused validation may support review. They do not mark the pull request ready, authenticate a reviewer, approve a source, merge the change, release a candidate, deploy, promote, or publish.
+
+[Back to top](#top)
+
+---
+
+<a id="rollback-path"></a>
+
+## Rollback path
+
+Before merge, close the draft pull request and abandon its feature branch. After an authorized merge, revert the focused documentation commit through a new reviewed change. Do not write directly to the default branch or silently restore stale May 2026 implementation claims.
+
+Reverting this Markdown changes only the human procedure. It does not roll back schemas, fixtures, validators, tests, workflows, data, evidence, policy, proof, release, deployment, or publication. Use the [Hazards Rollback Drill](./ROLLBACK_DRILL.md) only for its documented synthetic rehearsal scope; it is not an operational release rollback executor.
+
+[Back to top](#top)
+
+---
+
+<a id="maintenance-and-verification-backlog"></a>
+
+## Maintenance and verification backlog
+
+Update this runbook when any of these surfaces materially changes:
+
+- `.github/workflows/domain-hazards.yml` job names, permissions, dependency profile, commands, required paths, or hold logic;
+- the `hazards-validate` Make target;
+- the three drought schema families or their exact fixture inventories;
+- the network-denial guard or its covered entry points;
+- `kfm-usdm-materiality-v1` states, outcomes, thresholds, fields, or reason codes;
+- an accepted Hazards policy evaluator, EvidenceBundle resolver, proof producer, candidate contract, or release dry-run command lands;
+- a canonical hermetic runner is adopted; or
+- accountable Hazards, validation, safety, policy, release, and independent-review ownership is assigned.
+
+Open items at this snapshot:
+
+- **NEEDS VERIFICATION:** accountable domain and safety stewardship beyond the repository CODEOWNERS route;
+- **NEEDS VERIFICATION:** exact-host egress enforcement for hosted and local runners;
+- **HOLD:** policy runtime, evidence closure, proof production, candidate assembly, release, deployment, promotion, and publication;
+- **PARTIAL:** `docs/runbooks/hazards/README.md` remains a one-byte placeholder, so the parent runbook index supplies the current directory boundary; and
+- **UNKNOWN:** operational behavior outside the exact committed fixture profile.
+
+### Related procedures and authority surfaces
+
+- [Runbook root index](../README.md)
+- [Hazards domain boundary](../../domains/hazards/README.md)
+- [Hazards life-safety boundary](../../domains/hazards/LIFE_SAFETY_BOUNDARY.md)
+- [Hazards publication boundary](../../domains/hazards/PUBLICATION_AND_BOUNDARY.md)
+- [Not-for-Life-Safety Audit Runbook](./NOT_FOR_LIFE_SAFETY_AUDIT_RUNBOOK.md)
+- [Hazards Promotion Runbook](./PROMOTION_RUNBOOK.md)
+- [Hazards Rollback Drill](./ROLLBACK_DRILL.md)
+- [Hazards workflow](../../../.github/workflows/domain-hazards.yml)
+- [Hazards smoke test](../../../tests/domains/hazards/test_hazards_smoke.py)
+- [USDM materiality tests](../../../tests/domains/hazards/test_validate_usdm_materiality.py)
+- [USDM materiality validator](../../../tools/validators/domains/hazards/validate_usdm_materiality.py)
+- [Hash-locked dependency installer](../../../tools/ci/install_python_ci.py)
+- [USDM fixture manifest](../../../fixtures/domains/hazards/usdm_materiality/cases.json)
+
+### Last reviewed
 
 | Field | Value |
 |---|---|
-| **Status** | `draft` |
-| **Authority of the runbook structure** | PROPOSED — derived from KFM doctrine; not yet executed against a mounted repo |
-| **Authority of doctrine cited** | CONFIRMED (Directory Rules, lifecycle law, Hazards lane non-emergency posture) |
-| **Owners** | TODO — Hazards lane steward · Validation steward · Docs steward |
-| **Last updated** | 2026-05-12 |
-| **Applies to** | Hazards domain only; cross-domain runs use `docs/runbooks/NO_NETWORK_TEST_RUNBOOK.md` (PROPOSED) |
-| **Not for** | Live source fetches · public publication · life-safety alerting · production rollouts |
-
----
-
-## 🔭 Quick jump
-
-- [1. Purpose](#1-purpose)
-- [2. Repo fit and placement basis](#2-repo-fit-and-placement-basis)
-- [3. When to use this runbook](#3-when-to-use-this-runbook)
-- [4. Scope and non-goals](#4-scope-and-non-goals)
-- [5. Preconditions](#5-preconditions)
-- [6. Flow at a glance](#6-flow-at-a-glance)
-- [7. The runbook](#7-the-runbook)
-- [8. Expected finite outcomes](#8-expected-finite-outcomes)
-- [9. Hazards source-role posture under no-network](#9-hazards-source-role-posture-under-no-network)
-- [10. Failure handling](#10-failure-handling)
-- [11. Rollback path](#11-rollback-path)
-- [12. Receipts and proof artifacts emitted](#12-receipts-and-proof-artifacts-emitted)
-- [13. Anti-patterns this runbook protects against](#13-anti-patterns-this-runbook-protects-against)
-- [14. Related docs](#14-related-docs)
-- [15. Verification backlog](#15-verification-backlog)
-- [16. Appendix — fixture skeletons](#16-appendix--fixture-skeletons)
-
----
-
-## 1. Purpose
-
-> **CONFIRMED doctrine / PROPOSED procedure.** The Hazards lane must be able to demonstrate its trust spine — source admission, evidence resolution, policy decision, validation, release state, UI trust payload, correction path, and rollback target — for at least one public-safe proof slice **without contacting any live source and without writing to any public surface.**
-
-This runbook is the operational form of that requirement. It executes the Hazards thin slice — *historical flood / severe-weather event fixture plus NFHL flood context plus exposure summary, with warning feeds disabled or contextual-only* — against synthetic fixtures. It treats the **absence of network** as a first-class invariant of the run, not a deployment accident.
-
-The runbook serves three readers: a developer working a Hazards PR locally; a steward rehearsing release/correction/rollback before broad activation; and a CI workflow whose job is to fail closed on any regression in the Hazards trust posture.
-
-> [!IMPORTANT]
-> **KFM Hazards is not an emergency alert system and must not provide life-safety instructions.** This runbook explicitly tests the denial path that enforces that boundary. If you are operating Hazards material as if it were an alerting product, stop and read [`docs/domains/hazards/README.md`](../../domains/hazards/README.md) (PROPOSED) first.
-
----
-
-## 2. Repo fit and placement basis
-
-| Aspect | Decision |
-|---|---|
-| **Responsibility root** | `docs/` (human-facing control plane) |
-| **Sub-area** | `docs/runbooks/` (operational procedures) |
-| **Domain segment** | `hazards/` — per Domain Placement Law |
-| **Full path** | `docs/runbooks/hazards/NO_NETWORK_TEST_RUNBOOK.md` |
-| **Directory Rules basis** | §4 Step 1 (responsibility = explains humans → `docs/`); §4 Step 3 (domain appears as a segment, never as a root); §6.1 (`docs/runbooks/` named as a canonical sub-area); §12 (Domain Placement Law) |
-| **Authority of this path** | PROPOSED until verified against mounted-repo evidence |
-
-> [!NOTE]
-> Prior PROPOSED runbook examples in the corpus use a flat naming pattern (e.g. `docs/runbooks/ui_LOCAL_DEV.md`). This runbook adopts the **domain-segment** form (`docs/runbooks/hazards/...`) on the basis that Hazards is one of many domains that will need parallel runbooks; segmenting prevents the `runbooks/` directory from becoming a flat dumping ground as lanes multiply. If a mounted-repo ADR settles a different convention, migrate via §14 of Directory Rules and preserve this file as lineage.
-
-**Inputs accepted here:** lane-specific Hazards operational procedures that run against fixtures only.
-**Inputs that do NOT belong here:**
-- Cross-domain runbooks → `docs/runbooks/` root (no domain segment).
-- ADRs about Hazards schema or policy → `docs/adr/`.
-- Hazards doctrine, source-family analysis, ubiquitous language → `docs/domains/hazards/`.
-- Fixture files themselves → `fixtures/domains/hazards/` (PROPOSED).
-- Validator implementations → `tools/validators/` (PROPOSED).
-- Test specs → `tests/domains/hazards/` (PROPOSED).
-
----
-
-## 3. When to use this runbook
-
-Use this runbook when:
-
-- You are opening or reviewing a Hazards PR that touches schemas, policy, fixtures, or the governed API surface, and need a deterministic pre-merge gate.
-- You are rehearsing the Hazards thin slice before any live source activation (PR-00 acceptance: *fixture validation passes; no network access*).
-- You are practicing a **rollback drill** against a dry-run Hazards release and need a deterministic baseline to roll back to.
-- A live source endpoint, credential, or rights determination is unresolved and you need to keep building.
-- CI is running on a runner that **must not** have egress (air-gapped or restricted-network environments).
-
-Do **not** use this runbook when:
-
-- You are trying to validate a live source endpoint's current behavior — that is the job of a separate connector acceptance runbook (PROPOSED; not yet authored).
-- You are trying to publish a Hazards layer to a public surface. This runbook intentionally lacks any publish path.
-- You need to test emergency-alert content. KFM does not author or test such content; redirect to official sources.
-
----
-
-## 4. Scope and non-goals
-
-**In scope.**
-The Hazards lane object families: `HazardEvent`, `HazardObservation`, `WarningContext`, `AdvisoryContext`, `DisasterDeclaration`, `FloodContext`, `WildfireDetection`, `SmokeContext`, `DroughtIndicator`, `EarthquakeEvent`, `HeatColdEvent`, `ExposureSummary`, `ResilienceSummary`, `HazardTimeline`, `ImpactArea`. Their `SourceDescriptor`, `EvidenceRef` → `EvidenceBundle` resolution, `LayerManifest`, `ReleaseManifest`, `CorrectionNotice`, `RollbackCard`, and `RunReceipt` artifacts as exercised by synthetic fixtures.
-
-**Out of scope.**
-- Live NOAA Storm Events, NWS API, FEMA OpenFEMA / NFHL, USGS Earthquake Catalog, NASA FIRMS, NOAA HMS, USGS Water, drought monitor, or state emergency-management endpoints.
-- Real exact sensitive geometry of any kind.
-- Public publication, public tile activation, or any write outside `tests/`, `fixtures/`, `data/work/hazards/`, or local receipt locations.
-- Any AI/Focus Mode interaction with a non-mock adapter.
-
----
-
-## 5. Preconditions
-
-> [!WARNING]
-> All commands and paths below are **PROPOSED**. The KFM repository was not mounted in this session, so script names, runner choice, and exact CLI flags have not been verified. Treat the commands as a template; align them with mounted-repo conventions during the first execution, and update this runbook with an ADR-tracked change.
-
-| Precondition | What it means | Verification (PROPOSED) |
-|---|---|---|
-| Repo cloned at a known SHA | Reproducibility anchor for receipts | `git rev-parse HEAD` recorded into the run receipt |
-| Network egress disabled or absent | No live source can leak in | Loopback-only environment or runner with no egress |
-| Hazards fixture set present | Synthetic SourceDescriptor / EvidenceBundle / LayerManifest / ReleaseManifest + one HazardEvent | `fixtures/domains/hazards/` populated |
-| Validators present | Schema, source-role, temporal, evidence-closure, policy, citation, release-manifest validators | `tools/validators/` (PROPOSED home) |
-| Policy engine available offline | Conftest/OPA bundle and obligations resolvable from disk | `policy/domains/hazards/` (PROPOSED) |
-| MockAdapter only | No live model provider | `runtime/ai/` adapter pinned to MockAdapter |
-| RunReceipt sink writable | Local receipt directory writable; signing in offline / pinned-key mode if used | `data/receipts/hazards/` (PROPOSED) |
-
-> [!TIP]
-> If keyless cosign would normally sign receipts and Sigstore is unreachable, use the documented pinned-key fallback for the offline run. Record the signing mode in the run receipt so a verifier can tell offline-signed receipts apart from keyless ones.
-
----
-
-## 6. Flow at a glance
-
-```mermaid
-flowchart TD
-    subgraph No-Network Environment
-        A([Start: clean checkout, no egress]) --> B[Load Hazards synthetic fixtures]
-        B --> C[Schema validation]
-        C --> D[Source-role + temporal-role validators]
-        D --> E[Evidence closure / EvidenceRef → EvidenceBundle]
-        E --> F[Policy gates: rights, sensitivity, emergency-alert denial]
-        F --> G[Catalog / proof closure dry-run]
-        G --> H[LayerManifest + Evidence Drawer payload check]
-        H --> I[Focus Mode via MockAdapter only]
-        I --> J[ReleaseManifest dry-run + RollbackCard drill]
-        J --> K[Emit + verify RunReceipt]
-        K --> L{All finite outcomes match expectations?}
-        L -- yes --> M([PASS — record receipt, link in PR])
-        L -- no --> N([FAIL closed — open DRIFT entry, do not promote])
-    end
-```
-
-> [!NOTE]
-> The diagram reflects the doctrinal flow. **NEEDS VERIFICATION** against actual validator wiring once the repo is mounted; the order of steps C–J may be reordered by validator dependencies surfaced in `tools/validators/` and `tests/domains/hazards/`.
-
-[⬆ Back to top](#-hazards--no-network-test-runbook)
-
----
-
-## 7. The runbook
-
-Steps are written in execution order. Each step lists a goal, a representative command template, and a fail-closed expectation. Commands are templates — adapt to the mounted repo's actual runner and script names.
-
-### 7.1 Disable egress and confirm the environment
-
-**Goal.** Make network failure the default. A test that passes by accidentally reaching the internet is not a no-network test.
-
-```bash
-# PROPOSED — verify against repo's actual offline-runner setup
-unset HTTP_PROXY HTTPS_PROXY ALL_PROXY
-export NO_PROXY="*"
-# Optional: deny egress at the OS / container level (mounted-repo specific)
-```
-
-> [!CAUTION]
-> If a step in this runbook ever appears to need network — to fetch a schema, validate a citation, resolve a source endpoint, sign a receipt against a transparency log — **stop**. That step has drifted out of no-network scope and must be either re-pointed at a local mirror, switched to pinned-key/offline mode, or moved to a different runbook.
-
-### 7.2 Load Hazards synthetic fixtures
-
-**Goal.** Bring up the minimum object set the Hazards lane needs to demonstrate a closed trust spine.
-
-Required synthetic objects (one valid + one invalid + one denied + one abstention + one rollback/correction for each — see §16 for skeletons):
-
-- `SourceDescriptor` for each Hazards source family (authority / observation / context / model role variants).
-- `HazardEvent` (historical), `FloodContext` (regulatory), `WildfireDetection` (remote-sensing), `WarningContext` (operational, expired), `DisasterDeclaration` (administrative).
-- `EvidenceBundle` for at least one HazardEvent feature.
-- `LayerManifest` for the public-safe historical event layer.
-- `ReleaseManifest` with a release candidate and `rollback_target` pointing to a prior fixture release.
-- `CorrectionNotice` and `RollbackCard` skeletons.
-- One `sensitive-geometry deny fixture` (public-safe transformed; **never** real exact location).
-- One `stale-source fixture` (expired `WarningContext`).
-
-### 7.3 Schema validation
-
-**Goal.** Every object validates against its schema; every invalid fixture fails as expected.
-
-```bash
-# PROPOSED — substitute with mounted-repo validator entry point
-kfm-validate schemas \
-  --root schemas/contracts/v1/domains/hazards \
-  --fixtures fixtures/domains/hazards \
-  --strict --no-network
-```
-
-Expected: all valid fixtures pass; every invalid fixture fails with a deterministic reason code. **NEEDS VERIFICATION** of exact tool name, flags, and exit semantics.
-
-### 7.4 Source-role and temporal-role validators
-
-**Goal.** Prove that a source authorized as `observation` cannot be silently used as `authority`, and that `event time`, `valid time`, `issue/expiry time`, `source time`, `retrieval time`, `release time`, and `correction time` stay distinct where material.
-
-Key denial cases:
-
-- Operational warning used as historical event of record → **DENY**.
-- Model output presented as observation → **DENY**.
-- Regulatory NFHL flood context represented as observed inundation → **DENY**.
-
-### 7.5 Evidence closure
-
-**Goal.** Every claim in a Hazards `EvidenceDrawerPayload` resolves to an `EvidenceBundle` via its `EvidenceRef`. Claims that cannot resolve cause **ABSTAIN**, not silent omission.
-
-### 7.6 Policy gates
-
-**Goal.** Run the Hazards policy bundle (rights, sensitivity, emergency-alert denial, redaction, freshness, release-state) against fixtures.
-
-Required denials (all **DENY**):
-
-- Unreviewed exact sensitive Hazards locations → public path.
-- Unknown rights or unresolved source role → public promotion.
-- Operational warning whose `expiry` is past → presented as current.
-- Any attempt to phrase Hazards output as life-safety instruction.
-
-### 7.7 Catalog / proof closure dry-run
-
-**Goal.** A release candidate's `CatalogMatrix`, `DatasetVersion`, `ValidationReport`, and `EvidenceBundle` set must form a closed proof — no orphan artifacts, no broken refs.
-
-### 7.8 LayerManifest and Evidence Drawer payload check
-
-**Goal.** The proposed public-safe Hazards layer's `LayerManifest` is well-formed and reads only released manifests. The `EvidenceDrawerPayload` for a clicked feature surfaces source role, rights, sensitivity, freshness, release state, and limitations — including the Hazards **not-for-life-safety** disclaimer.
-
-### 7.9 Focus Mode via MockAdapter only
-
-**Goal.** A Focus Mode question routed to the governed API returns a finite `RuntimeResponseEnvelope` (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`) with an `AIReceipt` and a `CitationValidationReport`. No live model provider is reachable; the adapter is pinned to MockAdapter.
-
-Required behaviors:
-
-- Question backed by a resolvable `EvidenceBundle` → **ANSWER** with valid citations.
-- Question whose evidence is missing → **ABSTAIN**.
-- Question that asks for life-safety guidance or sensitive exact geometry → **DENY**.
-- Adapter failure → **ERROR** (never a fabricated answer).
-
-### 7.10 ReleaseManifest dry-run and rollback drill
-
-**Goal.** Produce a `ReleaseManifest` *candidate* — never a published release — with a `rollback_target`, `correction_notice` path, and `RollbackCard`. Execute the rollback drill against the dry-run release and verify the receipt.
-
-```bash
-# PROPOSED
-kfm-release dry-run \
-  --domain hazards \
-  --candidate <id> \
-  --no-public-write
-kfm-rollback drill \
-  --release <id> \
-  --target <prior-release-id>
-```
-
-### 7.11 Emit and verify the RunReceipt
-
-**Goal.** A signed `RunReceipt` records inputs (fixture set, git SHA), outputs (validator outcomes, decision envelopes), `spec_hash`, tool versions, actor, timestamps, signing mode, and `source_head` markers (which, in no-network mode, are the fixture digests rather than upstream `ETag`/`Last-Modified`). The receipt is the proof that this run happened, on this code, with these fixtures, and produced these decisions.
-
-[⬆ Back to top](#-hazards--no-network-test-runbook)
-
----
-
-## 8. Expected finite outcomes
-
-Every Hazards governed surface returns one of four outcomes. The no-network run pins fixtures to make these outcomes deterministic.
-
-| Surface | Outcome under valid fixture | Outcome under invalid / restricted fixture |
-|---|---|---|
-| Hazards feature/detail resolver | `ANSWER` | `ABSTAIN` (evidence) · `DENY` (rights / sensitivity / emergency) · `ERROR` (malformed) |
-| Hazards layer manifest resolver | `ANSWER` | `DENY` (unreleased / sensitive) · `ERROR` |
-| Hazards Evidence Drawer payload | `ANSWER` | `ABSTAIN` · `DENY` · `ERROR` |
-| Hazards Focus Mode answer (MockAdapter) | `ANSWER` | `ABSTAIN` · `DENY` · `ERROR` |
-| ReleaseManifest dry-run | promotion candidate produced | candidate rejected with reasons |
-| Rollback drill | `RollbackCard` receipt | drill failure recorded; no public effect |
-
-> [!IMPORTANT]
-> A passing run produces **zero** uncited public claims, **zero** life-safety phrasings, and **zero** writes to `data/published/`. If any of those three counters is nonzero, the run has not passed regardless of validator green-checks.
-
----
-
-## 9. Hazards source-role posture under no-network
-
-| Source family (PROPOSED) | Permitted roles | Forbidden uses in this run |
-|---|---|---|
-| NOAA Storm Events / NCEI-style records | authority / observation / context (historical) | Used as live warning surface |
-| NWS alerts / warnings / advisories / watches | context (operational, dated) | Used as life-safety alert · used past expiry · used as observed event |
-| FEMA Disaster Declarations / OpenFEMA | authority (administrative) | Used to imply current emergency |
-| FEMA NFHL / MSC flood hazard | context (regulatory) | Used as observed inundation |
-| USGS Earthquake Catalog | authority / observation | Used as forecast or warning |
-| NOAA HMS Fire and Smoke | observation / context | Used as life-safety instruction |
-| NASA FIRMS active fire | observation (detection) | Used as confirmed ground truth without corroboration |
-| Kansas / local emergency context | context | Used as primary truth source |
-
-> [!CAUTION]
-> Rights and current terms for every source listed above are **NEEDS VERIFICATION**. No-network mode does not absolve the rights determination — it defers the *fetch*, not the *posture*. Sensitive joins remain fail-closed.
-
----
-
-## 10. Failure handling
-
-When a step fails, prefer **honest incompleteness** over a green build. The procedure below is reversible and audit-friendly.
-
-1. **Capture.** Save the failing output, the run receipt (if emitted), and the affected fixture IDs.
-2. **Classify.** Is the failure (a) a validator finding a real defect, (b) a fixture authoring error, (c) a validator bug, (d) drift between schemas and contracts, or (e) drift between Directory Rules and repo structure?
-3. **Open a drift or backlog entry.**
-   - Real defect → fix in the PR; re-run.
-   - Fixture error → fix the fixture; do **not** weaken the validator.
-   - Validator bug → open an issue; pin the validator if needed; do not silence it.
-   - Schema/contract drift → resolve via ADR; mark affected paths `PROPOSED / CONFLICTED`.
-   - Directory-Rules drift → add entry in `docs/registers/DRIFT_REGISTER.md` per Directory Rules §2.5.
-4. **Do not promote.** The release candidate stays in `release/candidates/hazards/` until the next clean run.
-
-> [!WARNING]
-> Never adjust a Hazards fixture to make a denial test pass. The denial tests *are the product*: they prove the lane cannot be turned into an emergency alert system, cannot publish sensitive geometry, and cannot present stale warnings as current.
-
----
-
-## 11. Rollback path
-
-For this runbook itself:
-
-- This file is doctrine; reverting the PR that added it restores the prior state. No data is moved by adopting or reverting the runbook.
-
-For a Hazards run executed against this runbook:
-
-| Symptom | Rollback action |
-|---|---|
-| Dry-run ReleaseManifest accidentally referenced a real (non-fixture) source | Revert the candidate; open a drift entry; verify `no-public-write` invariant restored |
-| Rollback drill failed to restore the prior `ReleaseManifest` | Restore the prior `release_id` manually and record the discrepancy in the run receipt |
-| RunReceipt signing failed | Re-run with pinned-key fallback; do not promote unsigned receipts |
-| MockAdapter silently fell through to a live provider | Disable adapter; treat as a `WARNING`-class governance incident; review `runtime/ai/` config |
-
----
-
-## 12. Receipts and proof artifacts emitted
-
-| Artifact | Schema (PROPOSED home) | What it proves |
-|---|---|---|
-| `RunReceipt` | `schemas/contracts/v1/proofs/run_receipt.schema.json` | What ran, on what code, against which fixtures, with which tool versions |
-| `ValidationReport` | `schemas/contracts/v1/proofs/validation_report.schema.json` | Schema, source-role, temporal, evidence, and policy outcomes |
-| `CitationValidationReport` | `schemas/contracts/v1/evidence/citation_validation_report.schema.json` | Every cited `EvidenceRef` resolved within scope |
-| `PolicyDecision` | `schemas/contracts/v1/policy/policy_decision.schema.json` | Allow/deny with finite outcome and obligations |
-| `PromotionDecision` | `schemas/contracts/v1/release/promotion_decision.schema.json` | Gate outcomes, reviewer, rollback target |
-| `AIReceipt` | `schemas/contracts/v1/ai/ai_receipt.schema.json` | MockAdapter execution audit trail |
-| `ReleaseManifest` (candidate) | `schemas/contracts/v1/release/release_manifest.schema.json` | Dry-run release with rollback target |
-| `RollbackCard` | `schemas/contracts/v1/release/rollback_card.schema.json` | Rollback drill receipt |
-| `CorrectionNotice` (skeleton) | `schemas/contracts/v1/release/correction_notice.schema.json` | Correction path is live, not theoretical |
-
-All schema paths above are **PROPOSED** per Directory Rules §7.4 / ADR-0001; mounted-repo conventions may differ.
-
----
-
-## 13. Anti-patterns this runbook protects against
-
-| Anti-pattern | What it would look like | What this runbook does about it |
-|---|---|---|
-| Generation-as-truth | A MockAdapter "answer" presented without an `EvidenceBundle` | `CitationValidationReport` forces **ABSTAIN** |
-| Operational warning as historical event | An expired `WarningContext` written into `HazardEvent` | Source-role + temporal-role validators **DENY** |
-| Sensitive-geometry leak | Exact location reaching a fixture or a candidate `LayerManifest` | Sensitive-geometry deny fixture **DENY** |
-| Direct browser-to-canonical fetch | UI reading `data/processed/` or RAW sources | UI no-direct-source test fails the run |
-| Life-safety phrasing | Output drifts toward "evacuate" / "shelter" instructions | Emergency-alert denial test **DENY** |
-| Silent promotion | Release written without proof closure | Catalog closure + ReleaseManifest dry-run **REJECT** |
-| Irreversible release | No `rollback_target` recorded | Rollback drill **FAIL** before promotion |
-| Network "convenience" call | A validator quietly fetches a schema or asset | No-network environment makes the call **ERROR** |
-
----
-
-## 14. Related docs
-
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement authority; §4 Step 3 and §12 cited above.
-- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED.
-- [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — cite-or-abstain.
-- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — governed-API boundary.
-- [`docs/domains/hazards/README.md`](../../domains/hazards/README.md) — Hazards lane identity, scope, non-ownership, ubiquitous language. **PROPOSED**.
-- [`docs/runbooks/README.md`](../README.md) — runbooks root README. **PROPOSED**.
-- [`docs/runbooks/governed_ai_VALIDATION.md`](../governed_ai_VALIDATION.md) — Focus Mode validation runbook. **PROPOSED**.
-- [`docs/runbooks/ui_VALIDATION.md`](../ui_VALIDATION.md) — UI validation runbook (cross-lane). **PROPOSED**.
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — schema home decision underpinning the schema paths quoted here.
-
-> [!NOTE]
-> Every related path is **PROPOSED** until verified against mounted-repo evidence. If a target file is named differently in the actual repo, fix the link rather than the convention, and record the rename via a Directory Rules §14 migration note.
-
----
-
-## 15. Verification backlog
-
-| Item | What would settle it | Status |
-|---|---|---|
-| Exact validator entry-point names and flags | Mounted-repo `tools/validators/` and CI workflow files | NEEDS VERIFICATION |
-| Hazards fixture directory and file names | Mounted-repo `fixtures/domains/hazards/` | NEEDS VERIFICATION |
-| Policy bundle for Hazards (rights, sensitivity, emergency-alert) | Mounted-repo `policy/domains/hazards/` | NEEDS VERIFICATION |
-| Schema homes for Hazards object families | Mounted-repo `schemas/contracts/v1/domains/hazards/` | NEEDS VERIFICATION |
-| Receipt signing mode (keyless vs. pinned-key fallback) | Mounted-repo signing config + offline policy | NEEDS VERIFICATION |
-| Runbook flat-naming vs. domain-segment convention | Accepted ADR or §14 migration note | PROPOSED |
-| Cross-domain `NO_NETWORK_TEST_RUNBOOK.md` parent | `docs/runbooks/NO_NETWORK_TEST_RUNBOOK.md` | PROPOSED |
-| Live source rights / endpoints for every Hazards source | Source descriptor entries with rights + cadence + steward | NEEDS VERIFICATION |
-| Emergency-alert boundary enforcement coverage | Negative tests + policy denials passing on red lane | NEEDS VERIFICATION |
-| Release / correction / rollback drill record for Hazards | Drilled `ReleaseManifest` + `RollbackCard` receipts | NEEDS VERIFICATION |
-
----
-
-## 16. Appendix — fixture skeletons
-
-> [!NOTE]
-> These skeletons are **illustrative**. Field names track the corpus's object-family conventions; exact JSON Schema shape is **NEEDS VERIFICATION** against `schemas/contracts/v1/...`.
-
-<details>
-<summary><b>Synthetic <code>SourceDescriptor</code> (Hazards observation role)</b></summary>
-
-```json
-{
-  "source_id": "fixture:hazards:noaa-storm-events:historical",
-  "source_family": "NOAA Storm Events",
-  "role": "observation",
-  "rights_status": "fixture/synthetic",
-  "sensitivity": "public",
-  "cadence": "historical",
-  "freshness_state": "static",
-  "limitations": [
-    "synthetic fixture; not a real source admission",
-    "not for life-safety use under any circumstance"
-  ],
-  "spec_hash": "sha256:<computed>",
-  "fixture_marker": true
-}
-```
-
-</details>
-
-<details>
-<summary><b>Synthetic <code>HazardEvent</code> (historical flood)</b></summary>
-
-```json
-{
-  "id": "fixture:hazards:hazard-event:hist-flood-1903",
-  "object_role": "historical_event_record",
-  "kind": "flood",
-  "geometry": { "type": "Polygon", "coordinates": [[/* public-safe generalized */]] },
-  "time": {
-    "event_time": "1903-05-29",
-    "valid_time": { "start": "1903-05-29", "end": "1903-06-06" },
-    "source_time": "fixture-authoring",
-    "retrieval_time": null,
-    "release_time": null,
-    "correction_time": null
-  },
-  "source_refs": ["fixture:hazards:noaa-storm-events:historical"],
-  "evidence_refs": ["fixture:hazards:evidence-bundle:hist-flood-1903"],
-  "fixture_marker": true
-}
-```
-
-</details>
-
-<details>
-<summary><b>Synthetic <code>WarningContext</code> (expired — should ABSTAIN/DENY as current)</b></summary>
-
-```json
-{
-  "id": "fixture:hazards:warning-context:expired-2024-04-15",
-  "object_role": "operational_warning",
-  "issued_at": "2024-04-15T18:00:00Z",
-  "expires_at": "2024-04-15T22:00:00Z",
-  "freshness_state": "expired",
-  "source_refs": ["fixture:hazards:nws:context"],
-  "expected_outcome_for_current_state_query": "DENY",
-  "fixture_marker": true
-}
-```
-
-</details>
-
-<details>
-<summary><b>Sensitive-geometry deny fixture (must never publish)</b></summary>
-
-```json
-{
-  "id": "fixture:hazards:sensitive-geometry-deny",
-  "geometry": { "type": "Point", "coordinates": [/* public-safe transformed */] },
-  "sensitivity_label": "restricted_exact_location",
-  "attempted_public_artifact": "data/published/layers/hazards/<would-be-layer>",
-  "expected_policy_outcome": "DENY",
-  "fixture_marker": true
-}
-```
-
-</details>
-
-<details>
-<summary><b>Skeleton <code>RunReceipt</code> for a no-network run</b></summary>
-
-```json
-{
-  "run_id": "run:hazards:no-network:<utc-timestamp>",
-  "inputs": {
-    "git_sha": "<commit>",
-    "fixture_set": "fixtures/domains/hazards@<sha>",
-    "validator_versions": { "<validator>": "<version>" }
-  },
-  "outputs": {
-    "validation_report_ref": "data/proofs/hazards/<id>.json",
-    "policy_decisions": ["..."],
-    "release_candidate_ref": "release/candidates/hazards/<id>.json"
-  },
-  "spec_hash": "sha256:<computed>",
-  "actor": "<runner-or-user>",
-  "signing_mode": "pinned-key-offline | keyless",
-  "network_egress": false,
-  "source_head": { "note": "no-network — fixture digests substitute for ETag/Last-Modified" },
-  "fixture_marker": true
-}
-```
-
-</details>
-
-[⬆ Back to top](#-hazards--no-network-test-runbook)
-
----
-
-> _Related: [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`docs/domains/hazards/README.md`](../../domains/hazards/README.md) · [`docs/runbooks/README.md`](../README.md)_
-> _Last updated: 2026-05-12 · Status: `draft` · Authority: PROPOSED until verified against mounted-repo evidence._
-> _[⬆ Back to top](#-hazards--no-network-test-runbook)_
+| Review date | 2026-08-27 |
+| Evidence base | `main@7da7e26240859ba0d3c7bd9f992a4590e8146cf2` |
+| Human review | Pending |
+| Release effect | None |
+| Publication effect | None |
+
+[Back to top](#top)
