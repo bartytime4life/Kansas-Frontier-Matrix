@@ -30,7 +30,7 @@ name: evidence-temporal-posture-assessment
       - "schemas/contracts/v1/governance/program_outcome_chain.schema.json"
       - "tools/validators/governance/*program_outcome_chain*.py"
       - "tests/validators/governance/test_program_outcome_chain.py"
-      - "data/receipts/generated/genrec-evidence-temporal-posture-split-phase1-20260817.json"
+      - "data/receipts/generated/genrec-evidence-temporal-posture-split-reconciliation-20260827.json"
   workflow_dispatch:
 
 permissions:
@@ -120,7 +120,7 @@ jobs:
       - name: Verify successor migration receipt
         run: |
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-evidence-temporal-posture-split-phase1-20260817.json \
+            data/receipts/generated/genrec-evidence-temporal-posture-split-reconciliation-20260827.json \
             --repo-root .
       - name: Record bounded result
         if: always()
