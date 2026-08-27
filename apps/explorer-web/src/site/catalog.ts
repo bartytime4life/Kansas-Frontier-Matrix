@@ -8,7 +8,7 @@ export const REPOSITORY_SNAPSHOT = Object.freeze({
   mapLibre: Object.freeze({
     family: "MapLibre GL JS",
     packageHome: "packages/maplibre",
-    readinessCandidate: "6.4.0",
+    readinessCandidate: "6.6.0",
     readinessState: "HOLD" as const,
     dependencyAdmitted: false,
     runtimeImplemented: false,

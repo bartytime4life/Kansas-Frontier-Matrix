@@ -24,7 +24,7 @@ truth_posture: >-
   direct-child inventory, repository-grounded sibling set, renderer-neutral
   map-selection-to-Evidence-Drawer bridge, fixture-only layer-admission and
   release-scoped PMTiles-cache decisions, bounded 3D and performance profiles,
-  structural MapLibre acquisition inventory, exact 6.4.0 readiness classifier,
+  structural MapLibre acquisition inventory, exact 6.6.0 readiness classifier,
   dependency-free MapLibre package scaffold, comment-only Explorer adapter, and
   absent committed browser-probe packet / PROPOSED ADR-0006 adapter boundary,
   ADR-0007 renderer-family decision, concrete MapLibre runtime, plugin and
@@ -65,7 +65,7 @@ inspection_boundary: >-
   Directory Rules bytes; proposed ADR-0006 and ADR-0007; the current root,
   Explorer, and MapLibre package manifests; the placeholder package and adapter;
   renderer-neutral map selection; fixture-only layer admission and PMTiles cache
-  decisions; the acquisition and 6.4.0 readiness validators; the absent committed
+  decisions; the acquisition and 6.6.0 readiness validators; the absent committed
   probe-results path; recent sibling modernization pull requests; and open pull
   request overlap. No mounted checkout, dependency installation, repository-native
   test run, live source, authenticated browser probe, deployed runtime, public
@@ -94,7 +94,7 @@ tags: [kfm, architecture, map-master, maplibre, renderer, evidence-drawer, layer
 notes:
   - "v2.0-draft is a same-path repository-grounded refresh; placement outcome PLACE."
   - "All seven direct-child architecture pages are now repository-grounded mixed-maturity references; none establishes an admitted MapLibre runtime or public map release."
-  - "ADR-0006 and ADR-0007 remain proposed; their embedded August 13 readiness snapshots predate the current 6.4.0, twelve-probe classifier and are lineage for exact current readiness facts."
+  - "ADR-0006 and ADR-0007 remain proposed; their embedded August 13 readiness snapshots predate the current 6.6.0, twelve-probe classifier and are lineage for exact current readiness facts."
   - "The parent records child boundaries and current evidence but does not duplicate their normative contracts, schemas, policy, validators, receipts, or release objects."
   - "This document changes no dependency, lockfile, adapter, runtime, source, registry, lifecycle state, release, deployment, publication, or repository setting."
 [/KFM_META_BLOCK_V2] -->
@@ -118,7 +118,7 @@ notes:
 > **The lane has meaningful bounded implementation but no concrete MapLibre runtime.** Explorer Web contains renderer-neutral map-selection, Evidence Drawer, layer-admission, and release-scoped PMTiles-cache profiles. The repository also contains fixture-first 3D and performance profiles plus structural acquisition/readiness validators. None of those surfaces installs MapLibre, creates a source, mutates a registry or cache, contacts a live governed service, applies a release transition, or publishes a map.
 
 > [!WARNING]
-> **ADR-0006 and ADR-0007 remain proposed.** The current `@kfm/maplibre` `0.0.0` package is dependency-free, its export is a placeholder, `MapLibreAdapter.ts` is comment-only, `maplibre-gl` is absent from the inspected manifests, and `configs/maplibre/v6-probe-results.json` is absent. The exact `6.4.0` readiness lane therefore cannot be represented as `READY` from current evidence.
+> **ADR-0006 and ADR-0007 remain proposed.** The current `@kfm/maplibre` `0.0.0` package is dependency-free, its export is a placeholder, `MapLibreAdapter.ts` is comment-only, `maplibre-gl` is absent from the inspected manifests, and `configs/maplibre/v6-probe-results.json` is absent. The exact `6.6.0` readiness lane therefore cannot be represented as `READY` from current evidence.
 
 **Quick navigation:** [Status](#status-and-authority) · [Directory Rules](#directory-rules-basis) · [Purpose](#1-purpose-and-authority) · [Current evidence](#2-current-repository-evidence) · [Trust boundary](#3-renderer-boundary-and-seven-negative-authorities) · [Boundary contract](#4-boundary-contract) · [Children](#5-direct-child-map) · [Current implementation](#6-current-implementation-surfaces) · [Click-to-truth](#7-click-to-truth-and-governed-interaction) · [Artifacts and parity](#8-artifacts-lifecycle-performance-and-parity) · [Validation](#9-validation-and-finite-outcomes) · [Gates](#10-decision-and-graduation-gates) · [Change rules](#11-change-review-and-maintenance-rules) · [Open work](#12-open-verification-register) · [Rollback](#13-rollback-and-correction) · [Related](#14-related-repository-evidence) · [Ledger](#15-no-loss-change-ledger)
 
@@ -243,7 +243,7 @@ This README is the compact landing page for KFM's Map Master architecture lane. 
 
 ## 2. Current repository evidence
 
-The prior v1.0 landing page correctly recorded a scaffold and readiness HOLD, but it predated the repository-grounded rewrite of every sibling page and the current `6.4.0`, twelve-probe readiness profile. This edition reconciles those changes without upgrading bounded fixtures into runtime or publication proof.
+The prior v1.0 landing page correctly recorded a scaffold and readiness HOLD, but it predated the repository-grounded rewrite of every sibling page and the current `6.6.0`, twelve-probe readiness profile. This edition reconciles those changes without upgrading bounded fixtures into runtime or publication proof.
 
 ### 2.1 Direct evidence snapshot
 
@@ -263,7 +263,7 @@ The prior v1.0 landing page correctly recorded a scaffold and readiness HOLD, bu
 | 3D/parity | Inactive candidate decisions, Reality Boundary guidance, representation receipts, and zero-effect fixtures | Trust-parity logic exists; no renderer, scene, or public 3D runtime exists |
 | Performance | Synthetic mobile, resource-envelope, service-SLO, and telemetry profiles | Fixture measurements and arithmetic exist; production budgets and telemetry do not |
 | Acquisition inventory | Bounded no-network scan for manifests, imports, globals, CDN URLs, workers, and protocols | Structural inventory exists; it creates no dependency or renderer authority |
-| Readiness classifier | Exact `6.4.0` profile with twelve required probes and finite `READY / HOLD / ERROR` outcomes | `READY` is human-review eligibility only; current inspected inputs cannot satisfy it |
+| Readiness classifier | Exact `6.6.0` profile with twelve required probes and finite `READY / HOLD / ERROR` outcomes | `READY` is human-review eligibility only; current inspected inputs cannot satisfy it |
 | Probe record | `configs/maplibre/v6-probe-results.json` is absent | All required browser/runtime probes are unrecorded in the committed profile |
 | Direct-child docs | All seven siblings have repository-grounded mixed-maturity rewrites | The parent can treat them as current lane references, not stale proposal-only pages |
 
@@ -288,7 +288,7 @@ The prior v1.0 landing page correctly recorded a scaffold and readiness HOLD, bu
 
 ### 2.3 Current contradictions and stale embedded snapshots
 
-ADR-0006 and ADR-0007 remain the correct decision records for the proposed adapter and renderer-family choices. Their embedded August 13 repository snapshots, however, describe an earlier six-probe readiness profile and earlier version context. The current executable validator at the evidence snapshot targets exact `6.4.0` and requires twelve probes. This README therefore uses the ADRs for **decision status** and the current validator for **current readiness behavior**.
+ADR-0006 and ADR-0007 remain the correct decision records for the proposed adapter and renderer-family choices. Their embedded August 13 repository snapshots, however, describe an earlier six-probe readiness profile and earlier version context. The current executable validator at the evidence snapshot targets exact `6.6.0` and requires twelve probes. This README therefore uses the ADRs for **decision status** and the current validator for **current readiness behavior**.
 
 That difference is documentation drift, not authority to accept either ADR or silently rewrite its decision.
 
@@ -501,7 +501,7 @@ networkRequested: false
 | Validator | Scope | Finite outcomes | Non-effect |
 |---|---|---|---|
 | [`assess_acquisition_inventory.py`](../../../tools/validators/maplibre/assess_acquisition_inventory.py) | Bounded manifests and source roots for renderer packages, imports, CDN URLs, globals, protocols, and workers | `PASS / HOLD / FAIL / ERROR` | Does not admit a dependency or select a renderer |
-| [`validate_v6_readiness.py`](../../../tools/validators/maplibre/validate_v6_readiness.py) | Exact `6.4.0` dependency, ESM/ES2022, boundary hygiene, internal API scan, and twelve named probes | `READY / HOLD / ERROR` | `READY` is eligibility evidence for human review only |
+| [`validate_v6_readiness.py`](../../../tools/validators/maplibre/validate_v6_readiness.py) | Exact `6.6.0` dependency, ESM/ES2022, boundary hygiene, internal API scan, and twelve named probes | `READY / HOLD / ERROR` | `READY` is eligibility evidence for human review only |
 
 The current inspected manifests have no exact MapLibre dependency and the committed probe-results file is absent. Those facts are sufficient to preserve a readiness HOLD without claiming that the complete repository scan was freshly executed in this documentation task.
 
@@ -834,7 +834,7 @@ This revision changes documentation and its required authoring provenance only.
 | [`layer_manifest_admission.ts`](../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts) | Fixture-only zero-effect admission decision |
 | [`pmtiles_release_cache.ts`](../../../apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts) | Fixture-only zero-effect cache decision |
 | [`assess_acquisition_inventory.py`](../../../tools/validators/maplibre/assess_acquisition_inventory.py) | Bounded structural acquisition inventory |
-| [`validate_v6_readiness.py`](../../../tools/validators/maplibre/validate_v6_readiness.py) | Exact `6.4.0`, twelve-probe readiness classifier |
+| [`validate_v6_readiness.py`](../../../tools/validators/maplibre/validate_v6_readiness.py) | Exact `6.6.0`, twelve-probe readiness classifier |
 | [MapLibre acquisition workflow](../../../.github/workflows/maplibre-acquisition-inventory.yml) | Read-only hosted orchestration for the inventory profile |
 | [MapLibre performance workflow](../../../.github/workflows/maplibre-perf-governance.yml) | Bounded performance-governance orchestration; green may still mean explicit HOLD |
 

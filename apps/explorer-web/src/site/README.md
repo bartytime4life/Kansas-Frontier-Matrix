@@ -60,7 +60,7 @@ The feature catalog is pinned to:
 - commit: `67cf9bcd8d4044beb2f7ec4ec17e1bf162ca30aa`
 - Explorer path: `apps/explorer-web/`
 - MapLibre package home: `packages/maplibre/`
-- MapLibre readiness candidate: `6.4.0`
+- MapLibre readiness candidate: `6.6.0`
 - concrete runtime/dependency posture: `HOLD / not admitted / not implemented`
 
 Refresh `catalog.ts` when repository authority, feature inventory, or maturity changes. Do not silently convert a repository snapshot into runtime authority.

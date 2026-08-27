@@ -56,8 +56,8 @@ def write_repo(
     )
 
 
-class MapLibreV64ReadinessTests(unittest.TestCase):
-    def test_ready_repository_accepts_exact_package_owned_6_4_candidate(self) -> None:
+class MapLibreV66ReadinessTests(unittest.TestCase):
+    def test_ready_repository_accepts_exact_package_owned_6_6_candidate(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             write_repo(root)
@@ -67,10 +67,10 @@ class MapLibreV64ReadinessTests(unittest.TestCase):
             self.assertEqual(result.selected_version, TARGET_VERSION)
             self.assertEqual(result.to_dict()["upstream_tag_commit"], UPSTREAM_TAG_COMMIT)
 
-    def test_previous_v6_minor_is_hold(self) -> None:
+    def test_superseded_v6_candidate_is_hold(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
-            write_repo(root, version="6.3.0")
+            write_repo(root, version="6.4.0")
             result = scan_repository(root)
             self.assertEqual(result.outcome, Outcome.HOLD)
             self.assertIn("MAPLIBRE_TARGET_CANDIDATE_NOT_SELECTED", result.reasons)
@@ -134,7 +134,7 @@ class MapLibreV64ReadinessTests(unittest.TestCase):
     def test_floating_version_is_hold(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
-            write_repo(root, version="^6.4.0")
+            write_repo(root, version="^6.6.0")
             result = scan_repository(root)
             self.assertIn("MAPLIBRE_VERSION_NOT_EXACT", result.reasons)
 
@@ -175,7 +175,7 @@ class MapLibreV64ReadinessTests(unittest.TestCase):
     def test_legacy_probe_profile_is_error(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
-            write_repo(root, probe_profile="kfm-maplibre-v6-3-readiness-v2")
+            write_repo(root, probe_profile="kfm-maplibre-v6-4-readiness-v3")
             result = scan_repository(root)
             self.assertEqual(result.outcome, Outcome.ERROR)
             self.assertIn("PROBE_PROFILE_INVALID", result.reasons)
