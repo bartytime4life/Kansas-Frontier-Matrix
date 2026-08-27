@@ -200,7 +200,12 @@
         {
           "op": "replace",
           "path": "/spec_hash",
-          "value": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffb ¢ÒÀ¢°¢&÷#¢'&WÆ6R"À¢'F‚#¢"ö76W76ÖVçEö–B"À¢'fÇVR#¢&¶fÓ¦²Öæöç–Ö—G’Ö76W76ÖVçC§6†#Sc¦ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+          "value": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+        },
+        {
+          "op": "replace",
+          "path": "/assessment_id",
+          "value": "kfm:k-anonymity-assessment:sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
         }
       ]
     },
