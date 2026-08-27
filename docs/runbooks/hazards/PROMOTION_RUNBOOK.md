@@ -52,6 +52,8 @@ notes:
 [![Life safety: no](https://img.shields.io/badge/life%20safety-not%20an%20alerting%20system-b42318?style=flat-square)](#not-for-life-safety-boundary)
 [![Release effect: none](https://img.shields.io/badge/release%20effect-none-6e7781?style=flat-square)](#authority-and-terminal-boundary)
 
+<a id="not-for-life-safety-boundary"></a>
+
 > [!CAUTION]
 > **KFM Hazards is not an emergency-alerting system, emergency-operations system, or regulatory authority.** Do not use KFM to issue, replace, delay, retract, or interpret current life-safety instructions. Public-facing Hazards material must remain planning, research, historical, modeled, regulatory-context, or explanatory content and must direct urgent needs to the appropriate official source.
 
