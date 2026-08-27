@@ -8,13 +8,29 @@ export const REPOSITORY_SNAPSHOT = Object.freeze({
   mapLibre: Object.freeze({
     family: "MapLibre GL JS",
     packageHome: "packages/maplibre",
-    readinessCandidate: "6.6.0",
+    readinessCandidate: "6.4.0",
     readinessState: "HOLD" as const,
     dependencyAdmitted: false,
     runtimeImplemented: false,
     governanceIssue: 2957,
     runtimeEvidenceIssue: 2906,
   }),
+});
+
+/** Current MapLibre readiness facts, intentionally separate from the pinned snapshot. */
+export const CURRENT_MAPLIBRE_READINESS = Object.freeze({
+  evidenceCommit: "1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f",
+  evidenceRecordedAt: "2026-08-27T18:33:32Z",
+  family: "MapLibre GL JS",
+  packageHome: "packages/maplibre",
+  readinessCandidate: "6.6.0",
+  readinessState: "HOLD" as const,
+  packagePresent: true,
+  adapterImplemented: true,
+  browserRuntimeActivated: false,
+  browserEvidenceComplete: false,
+  governanceIssue: 2957,
+  runtimeEvidenceIssue: 2906,
 });
 
 export type FeatureArea =
@@ -48,7 +64,7 @@ const rows: readonly FeatureRow[] = [
   ["pmtiles-diagnostics", "PMTiles range diagnostics", "Map and layers", "FIXTURE_FIRST", "Archive, range, index, and render verification for governed artifacts.", "pmtiles_range_diagnostics", "pmtiles tiles range"],
   ["stac-inspector", "STAC conformance inspector", "Map and layers", "FIXTURE_FIRST", "Read-only release-facing STAC metadata inspection.", "stac_conformance_inspector", "stac catalog metadata"],
   ["view-registry", "View registry inspector", "Map and layers", "FIXTURE_FIRST", "Read-only inspection of governed view projections.", "view_registry_inspector", "view registry projection"],
-  ["maplibre-runtime", "MapLibre browser runtime", "Map and layers", "HOLD", "Renderer direction is recorded; dependency admission and authenticated browser proof remain open.", "packages/maplibre", "maplibre renderer adapter hold"],
+  ["maplibre-runtime", "MapLibre browser runtime", "Map and layers", "HOLD", "The package-owned adapter is present; Explorer activation and authenticated browser proof remain open.", "packages/maplibre", "maplibre renderer adapter hold"],
   ["evidence-drawer", "Evidence Drawer", "Evidence and trust", "VERIFIED_SLICE", "Keyboard-operable evidence, citation, limitation, and correction inspection.", "evidence_drawer", "evidence citations correction"],
   ["evidence-tooltip", "Evidence tooltip", "Evidence and trust", "FIXTURE_FIRST", "Compact finite evidence support summary.", "evidence_tooltip", "evidence tooltip support"],
   ["citation-pill", "Citation pill", "Evidence and trust", "FIXTURE_FIRST", "Compact citation status and resolution affordance.", "citation_pill", "citation source support"],
