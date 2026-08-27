@@ -17,6 +17,11 @@
       "types": "./src/maplibre-adapter.ts",
       "import": "./src/maplibre-adapter.ts",
       "default": "./src/maplibre-adapter.ts"
+    },
+    "./vite-adapter": {
+      "types": "./src/maplibre-vite-adapter.ts",
+      "import": "./src/maplibre-vite-adapter.ts",
+      "default": "./src/maplibre-vite-adapter.ts"
     }
   },
   "dependencies": {

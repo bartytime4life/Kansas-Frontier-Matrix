@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 type RendererHandler = (event?: unknown) => void;
 
@@ -20,6 +20,8 @@ const renderer = vi.hoisted(() => ({
   instances: [] as RendererInstance[],
   throwOnConstruct: false,
 }));
+
+const capabilities = vi.hoisted(() => ({ webgl2: true }));
 
 vi.mock("maplibre-gl", () => ({
   Map: class FakeMap {
@@ -114,13 +116,38 @@ describe("package-owned MapLibreAdapter", () => {
   beforeEach(() => {
     renderer.instances.length = 0;
     renderer.throwOnConstruct = false;
+    capabilities.webgl2 = true;
+    vi.stubGlobal("document", {
+      createElement: () => ({
+        getContext: (type: string) =>
+          type === "webgl2" && capabilities.webgl2
+            ? { getExtension: () => null }
+            : null,
+      }),
+    });
   });
+
+  afterEach(() => vi.unstubAllGlobals());
 
   it("fails closed before renderer acquisition for an invalid container ID", () => {
     expect(() => createMapLibreAdapter({ containerId: " unsafe container " })).toThrow(
       expect.objectContaining({ code: "MAP_RUNTIME_CONTAINER_INVALID" }),
     );
     expect(renderer.instances).toHaveLength(0);
+  });
+
+  it("fails closed before renderer construction when WebGL2 is unavailable", async () => {
+    capabilities.webgl2 = false;
+    const runtime = createMapLibreAdapter({ containerId: "kfm-map-root" });
+
+    await expect(runtime.initialize()).rejects.toMatchObject({
+      code: "MAP_RUNTIME_INITIALIZATION_FAILED",
+    });
+    expect(renderer.instances).toHaveLength(0);
+    expect(runtime.getSnapshot()).toMatchObject({
+      state: "ERROR",
+      reason: "MAP_RUNTIME_ERROR",
+    });
   });
 
   it("initializes with an inline empty style and synchronizes camera state", async () => {

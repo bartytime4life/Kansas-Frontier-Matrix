@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MapLibre Vite adapter browser fixture</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 1rem;
+      }
+
+      #maplibre-vite-map {
+        height: 360px;
+        width: 640px;
+      }
+    </style>
+  </head>
+  <body>
+    <main aria-labelledby="fixture-title">
+      <h1 id="fixture-title">MapLibre Vite adapter browser fixture</h1>
+      <p id="runtime-status" role="status" aria-live="polite">State IDLE</p>
+      <button id="dispose-runtime" type="button">Dispose runtime</button>
+      <div id="maplibre-vite-map" aria-label="Synthetic empty map"></div>
+    </main>
+    <script type="module" src="./maplibre-vite-adapter.fixture.ts"></script>
+  </body>
+</html>
