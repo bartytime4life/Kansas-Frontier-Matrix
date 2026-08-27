@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-validators-docs-truth-label-lint-readme
 title: tools/validators/docs/truth-label-lint README
 type: README
-version: v0.2.1
+version: v0.2.2
 status: bounded-executable; opt-in; no-network; non-authoritative; review-pending
 owner: TODO-tooling-qa-owner-plus-docs-steward-plus-evidence-steward-plus-ci-steward
 created: 2026-07-07
-updated: 2026-08-24
+updated: 2026-08-27
 policy_label: repository-facing; docs-validator; truth-label-lint; evidence-posture-qa; non-authoritative
 owning_root: tools/
 responsibility: Deterministically verify that explicitly opted-in Markdown assessments record authority or epistemic posture separately from capability maturity, without deciding either axis, interpreting its values, editing documents, or creating evidence, policy, review, release, or publication authority.
@@ -172,8 +172,8 @@ policy, receipt, proof, registry, release, or publication home.
 ## Validation and rollback
 
 Synthetic cases cover pass, not-applicable, missing-axis, collapsed-axis,
-split-table, duplicate-axis, empty-value, fenced-example, deterministic-output,
-UTF-8 failure, symlink, no-network, and finite-exit behavior.
+split-table, duplicate-axis, empty-value, fenced-example, mixed-length fence,
+deterministic-output, UTF-8 failure, symlink, no-network, and finite-exit behavior.
 
 Rollback is ordinary Git reversion of the validator, tests, documentation, and
 focused workflow. No source, governed data, release, deployment, or public state
