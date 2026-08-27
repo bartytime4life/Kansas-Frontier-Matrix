@@ -1,664 +1,802 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runbook-hazards-rollback
-title: Hazards — Rollback Runbook
-type: standard
-version: v1
-status: draft
-owners: Docs steward; Hazards domain steward; Release authority
+title: Hazards Rollback Runbook
+type: operational-runbook
+version: v2.0.0
+status: DRAFT_REPOSITORY_GROUNDED; OPERATIONAL_ROLLBACK_HOLD; BOUNDED_SYNTHETIC_MECHANICS_IMPLEMENTED; NOT_FOR_LIFE_SAFETY; NON_RELEASE; NON_PUBLICATION
+owners: "@bartytime4life — verified CODEOWNERS route; accountable Hazards, correction, rollback, safety, policy, and release stewardship NEEDS VERIFICATION"
 created: 2026-05-12
-updated: 2026-05-12
-policy_label: public
-related: [
-  docs/doctrine/directory-rules.md,
-  docs/doctrine/lifecycle-law.md,
-  docs/doctrine/trust-membrane.md,
-  docs/domains/hazards/README.md,
-  docs/runbooks/README.md,
-  docs/governance/separation-of-duties.md,
-  release/rollback_cards/,
-  release/manifests/,
-  release/correction_notices/,
-  schemas/contracts/v1/release/
-]
-tags: [kfm, runbook, hazards, rollback, release, governance]
-notes: [
-  "Path placement PROPOSED — see Section 2 on docs/runbooks/<domain>/ vs flat <domain>_ROLLBACK.md convention.",
-  "All concrete paths, validator names, CI job names PROPOSED until mounted-repo evidence verifies them."
-]
+updated: 2026-08-27
+policy_label: repository-facing; hazards; rollback; correction-aware; synthetic-proof-bounded; fail-closed; not-for-life-safety; non-publisher
+owning_root: docs/
+path_authority: same-path modernization under accepted ADR-0029 and Directory Rules v2
+authority_effect: none
+source_activation_effect: none
+release_effect: none
+deployment_effect: none
+promotion_effect: none
+publication_effect: none
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: ca8a81a9f7728347ce19843b7a681d5c9fe19ba0
+  target_path: docs/runbooks/hazards/ROLLBACK_RUNBOOK.md
+  target_prior_blob: 89183e9a619028006921832b5513e811274f2920
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  rollback_workflow_blob: 2d0c39fc6ff8e44bd9cf753ce546475079e8ffd5
+  rollback_tool_blob: a8f6bff350e79b453f425ebce9a9ded6801f8944
+  generic_rehearsal_test_blob: b644ca6c4185b3f81bc339c077eae85299833261
+  hazards_rehearsal_test_blob: 76d8c6c36df5bcb53d913c9451cecaf230bdf717
+  hazards_fixture_readme_blob: 4b2d23a437a999c6beb249adb0dd7b02037bd34a
+  rollback_card_contract_blob: c6d3c35c56b064e04c3a2532f4709d938d7b0c1a
+  rollback_card_schema_blob: e0a9edf02dd5d6997eda60a054a5bf19636c3dd4
+  rollback_card_validator_blob: 9e9ed5a92851935b41a36698e4bead13ef4edf57
+  production_rollback_pipeline_blob: 2afd3a3d859318e05dcb3e1b2763e4e375b790b6
+  published_alias_auditor_blob: f3749474a32761b6671952e815180b4764d0df83
+  open_pull_requests_touching_target: 0
+source_lineage:
+  - title: KFM_Greenfield_Commissioning_Plan_v2_FULL.pdf
+    source_class: PLANNING_REFERENCE
+    use: correction cascade, commissioning gates, and smallest-complete-circle framing only
+  - title: KFM Alignment Register — 2026-08-23
+    source_class: COORDINATION_ONLY
+    use: keep implementation, review, rollback, release, deployment, promotion, and publication states separate
+  - title: KFM Markdown Update & Modernization Agent v1.0
+    source_class: CURRENT_TASK_GUIDANCE
+    use: same-path repository-grounded documentation modernization and draft-PR delivery method
+related:
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../doctrine/directory-rules.md
+  - ../README.md
+  - ../rollback-rehearsal.md
+  - ROLLBACK_DRILL.md
+  - PROMOTION_RUNBOOK.md
+  - NO_NETWORK_TEST_RUNBOOK.md
+  - NOT_FOR_LIFE_SAFETY_AUDIT_RUNBOOK.md
+  - SOURCE_REFRESH_RUNBOOK.md
+  - ../../domains/hazards/README.md
+  - ../../../.github/workflows/rollback-drill.yml
+  - ../../../contracts/release/rollback_card.md
+  - ../../../schemas/contracts/v1/release/rollback_card.schema.json
+  - ../../../fixtures/release/rollback_card/
+  - ../../../fixtures/domains/hazards/synthetic_rollback_rehearsal/
+  - ../../../tools/validators/release/validate_rollback_card.py
+  - ../../../tools/release/rollback_apply.py
+  - ../../../tests/release/test_synthetic_rollback_rehearsal.py
+  - ../../../tests/domains/hazards/test_synthetic_rollback_rehearsal.py
+  - ../../../pipelines/rollback/main.py
+  - ../../../scripts/maintenance/audit_published_aliases.py
+notes:
+  - The repository has a deterministic, marker-protected synthetic rollback and withdrawal rehearsal. It is not a production rollback executor.
+  - The release RollbackCard contract, closed schema, fixtures, validator, and tests establish candidate shape and local consistency only.
+  - The production rollback pipeline and published-alias auditor remain one-line greenfield placeholders at the pinned base.
+  - No operational target selection, authenticated review, policy execution, signing, external invalidation, alias mutation, release, deployment, promotion, publication, or public recovery is established by this runbook.
 [/KFM_META_BLOCK_V2] -->
 
-# Hazards — Rollback Runbook
+<a id="top"></a>
 
-> Procedure for reverting a PUBLISHED Hazards release to a prior safe release, with correction lineage, downstream invalidation, and the life-safety boundary preserved.
+# Hazards Rollback Runbook
 
-![status: draft](https://img.shields.io/badge/status-draft-yellow)
-![doc: runbook](https://img.shields.io/badge/doc-runbook-informational)
-![domain: hazards](https://img.shields.io/badge/domain-hazards-orange)
-![scope: PUBLISHED rollback](https://img.shields.io/badge/scope-PUBLISHED%20rollback-blue)
-![policy: not-life-safety](https://img.shields.io/badge/policy-not%20life%20safety-critical)
-![last-updated: 2026-05-12](https://img.shields.io/badge/last--updated-2026--05--12-lightgrey)
+> **One-line purpose.** Contain a defective Hazards public surface, decide whether rollback, withdrawal, or forward correction is justified, and preserve evidence, review, correction, invalidation, and recovery boundaries without treating KFM as a life-safety authority or the current synthetic rehearsal as production machinery.
 
-| Field | Value |
-|---|---|
-| **Status** | `draft` |
-| **Owners** | Docs steward · Hazards domain steward · Release authority |
-| **Last updated** | 2026-05-12 |
-| **Authority of this procedure** | CONFIRMED doctrine; PROPOSED implementation |
-| **Authority of specific paths quoted here** | PROPOSED until verified against mounted-repo evidence |
-| **Supersedes** | none |
+[![Status: operational hold](https://img.shields.io/badge/operational%20rollback-HOLD-b42318?style=flat-square)](#current-disposition)
+[![Synthetic mechanics: bounded](https://img.shields.io/badge/synthetic%20mechanics-bounded-8250df?style=flat-square)](#bounded-synthetic-rehearsal)
+[![RollbackCard: candidate only](https://img.shields.io/badge/RollbackCard-candidate%20only-8250df?style=flat-square)](#rollbackcard-and-required-records)
+[![Life safety: no](https://img.shields.io/badge/life%20safety-not%20an%20alerting%20system-b42318?style=flat-square)](#not-for-life-safety-boundary)
+[![Public effect: none](https://img.shields.io/badge/public%20effect-none-6e7781?style=flat-square)](#authority-and-terminal-boundary)
+
+<a id="not-for-life-safety-boundary"></a>
 
 > [!CAUTION]
-> **KFM Hazards is not an emergency alert system.** A rollback in this domain MUST NOT delay, replace, or compete with life-safety guidance from official sources (NWS, NWS API, FEMA, state emergency management, local EM). If a release error has placed life-safety content, expired warnings, or unredirected advisory context in front of users, the first action is **public disablement of the affected surface and a visible redirect to official sources** — the rollback decision and lineage artifacts follow that disablement, they do not gate it.
+> **KFM Hazards is not an emergency-alerting system, incident-command system, regulatory authority, or substitute for official instructions.** Do not use this runbook to issue, replace, delay, retract, summarize as actionable, or interpret a current warning, evacuation order, shelter instruction, medical direction, all-clear, or other life-safety message. Direct urgent needs to the appropriate official authority. A KFM defect that could mislead users must be contained through a separately authorized incident/public-surface control; this document does not create that authority.
 
----
-
-## Quick jump
-
-- [1. Scope and life-safety boundary](#1-scope-and-life-safety-boundary)
-- [2. Repo fit](#2-repo-fit)
-- [3. Inputs — what triggers a rollback](#3-inputs--what-triggers-a-rollback)
-- [4. Exclusions — what this runbook does not cover](#4-exclusions--what-this-runbook-does-not-cover)
-- [5. Roles and separation of duties](#5-roles-and-separation-of-duties)
-- [6. Preconditions and required artifacts](#6-preconditions-and-required-artifacts)
-- [7. The rollback flow](#7-the-rollback-flow)
-- [8. Defect-class rollback postures](#8-defect-class-rollback-postures)
-- [9. Hazards-specific variants](#9-hazards-specific-variants)
-- [10. Cross-lane fanout](#10-cross-lane-fanout)
-- [11. Stale vs. wrong](#11-stale-vs-wrong)
-- [12. UI and public-surface state during rollback](#12-ui-and-public-surface-state-during-rollback)
-- [13. Records emitted by a rollback](#13-records-emitted-by-a-rollback)
-- [14. Rollback drill and replay verification](#14-rollback-drill-and-replay-verification)
-- [15. Failure modes and reason codes](#15-failure-modes-and-reason-codes)
-- [16. Anti-patterns](#16-anti-patterns)
-- [17. Open questions and verification backlog](#17-open-questions-and-verification-backlog)
-- [18. Related docs](#18-related-docs)
-- [Appendix A — RollbackCard fields](#appendix-a--rollbackcard-fields)
-- [Appendix B — Worked example: stale NWS warning context release](#appendix-b--worked-example-stale-nws-warning-context-release)
-
----
-
-## 1. Scope and life-safety boundary
-
-This runbook applies to PUBLISHED Hazards releases — historical hazard events, regulatory hazard areas, scientific observations, remote-sensing detections, modeled derivatives, exposure summaries, resilience summaries, and **contextual** (not live-safety) operational warning/advisory/declaration projections — and to any Hazards-bound layer, catalog record, EvidenceBundle, Evidence Drawer payload, or governed AI answer derived from them.
-
-CONFIRMED doctrine: **correction and rollback are publication requirements, not afterthoughts.** A Hazards claim, layer, catalog record, artifact, or governed AI answer is treated as safely publishable only if it has a visible correction path and a rollback target before release. Rollback is a **governed state transition through the same release path** that produced the original release — never a hidden file copy and never a silent edit.
-
-### What "rollback" means inside Hazards
-
-| Term | Meaning in this runbook |
-|---|---|
-| **Rollback** | Revert a PUBLISHED Hazards release to a previously released, safe artifact set. Public state held at the prior release until rollback is validated. |
-| **Correction** | Emit a `CorrectionNotice` plus a superseding release; the original release record is preserved, not mutated. |
-| **Disablement** | Immediately remove a public surface (route, layer, tile bundle, Evidence Drawer payload, AI answer) without a complete rollback — used when sensitivity, rights, or life-safety risk requires speed. Always followed by a rollback or correction within the same governed flow. |
-| **Tombstone** | A signed record that an item is retracted; lineage and audit remain explorable, but public views hide the tombstoned item. (PROPOSED reference — see [Related docs](#18-related-docs).) |
-
-[Back to top](#quick-jump)
-
----
-
-## 2. Repo fit
-
-PROPOSED placement (see Section 2 of Notes for the convention question):
-
-```text
-docs/
-└── runbooks/
-    └── hazards/
-        ├── ROLLBACK_RUNBOOK.md        ← this file
-        ├── VALIDATION_RUNBOOK.md      (PROPOSED sibling)
-        └── LOCAL_DEV_RUNBOOK.md       (PROPOSED sibling)
-```
-
-Per the Directory Rules canonical tree, `docs/runbooks/` is the canonical home for "ops procedures, rollback drills, validation runs," and Hazards is a domain **segment** inside that root — not a root-level folder of its own.
-
-**Upstream doctrine** (consult before editing this runbook):
-
-- `docs/doctrine/lifecycle-law.md` — RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED.
-- `docs/doctrine/trust-membrane.md` — no public client touches RAW / WORK / QUARANTINE / canonical / model runtime.
-- `docs/doctrine/truth-posture.md` — cite-or-abstain default.
-- `docs/doctrine/directory-rules.md` — placement law for release artifacts and runbooks.
-- `docs/domains/hazards/README.md` — Hazards domain identity, source families, object families, sensitivity posture.
-- `docs/architecture/governed-api/README.md` — the only public route through which a rolled-back state becomes visible.
-
-**Downstream artifacts** (produced or referenced when this procedure runs):
-
-- `release/manifests/<release_id>.json` — the new `ReleaseManifest` that revert-points to the prior release.
-- `release/rollback_cards/<rollback_id>.json` — the `RollbackCard` decision record.
-- `release/correction_notices/<correction_id>.json` — paired `CorrectionNotice`.
-- `data/rollback/hazards/<alias>/<receipt_id>.json` — data-plane alias-revert receipts.
-- `data/published/layers/hazards/...` — restored layer artifacts (digest-pinned).
-- `data/proofs/hazards/...` — `EvidenceBundle` references that the rolled-back release continues to satisfy.
-
-[Back to top](#quick-jump)
-
----
-
-## 3. Inputs — what triggers a rollback
-
-A rollback is initiated when a PUBLISHED Hazards release fails one or more of the conditions below. The trigger list is not exhaustive; any condition that breaks a closure rule of the Release gate (see [§6](#6-preconditions-and-required-artifacts)) is a candidate.
-
-| Trigger | Source of detection (PROPOSED) | Default first action |
-|---|---|---|
-| Expired operational warning context appearing as current state | Freshness/expiry validator; UI stale-state probe; user correction | **Disable** affected layer/payload; open rollback |
-| Source-role collapse (observation rendered as regulatory, model rendered as observed, etc.) | Source-role anti-collapse test; reviewer | Disable; rollback to last release whose source roles validated cleanly |
-| Sensitive-location exposure (e.g., archaeological, rare-species, infrastructure precision crossing into a Hazards layer) | Sensitivity reviewer; redaction-receipt audit | **Immediate disablement**; sensitive-lane rollback |
-| Rights change / takedown (NOAA, FEMA, NWS, USGS, NASA FIRMS, state EM, rights-holder communication) | Rights register; rights-holder rep | Withdraw affected artifacts; rollback |
-| Geometry defect (CRS error, polygon flip, projection drift, NFHL clip wrong) | Geometry validator; visual regression | Rollback to last digest-pinned artifact |
-| Temporal defect (event time / valid / issue / expiry / retrieval / release time confused) | Temporal-role validator | Mark stale; rollback if cannot be corrected in place |
-| Policy version drift / OPA rebuild | `PolicyDecision` re-run | Re-run gate; supersede if needed; rollback if not recoverable |
-| Validation regression after a schema migration | `ValidationReport` failure on a re-run | Rollback to last release validated by the prior schema; coordinate ADR |
-| Catalog defect (`EvidenceRef` no longer resolves to `EvidenceBundle`) | Catalog closure check | Rollback to last release whose catalog closure passed |
-| API or layer manifest defect (route returns wrong envelope, `LayerManifest` invalid) | Contract tests; runtime monitoring | Disable route; rollback |
-| Governed AI answer defect (uncited claim, abstention bypassed, restricted answer leaked) | `AIReceipt` audit; citation validator | Invalidate `AIReceipt`; remove answer; preserve `EvidenceBundle` |
-| Release-infrastructure error (`ReleaseManifest` invalid, signature failure, missing rollback target) | Release CI; release authority | Block; fix manifest; re-run release; rollback if already public |
-| External life-safety conflict (KFM contextual content visibly conflicts with current official guidance) | UI stale probe; correction queue; partner report | **Immediate disablement** and visible redirect to the official source |
+<a id="current-disposition"></a>
 
 > [!IMPORTANT]
-> If two or more triggers fire together, treat the most restrictive (sensitivity, rights, life-safety conflict) as authoritative. The principle is fail-closed: when posture is uncertain, hide the surface and roll back.
+> **Current disposition: `BOUNDED_SYNTHETIC_ROLLBACK_PROOF / OPERATIONAL_ROLLBACK_HOLD`.** The repository implements a deterministic no-network helper for marker-protected synthetic workspaces, eight generic tests, one non-locating Hazards fixture, four Hazards-focused tests, and a read-only workflow that asserts all twelve tests are non-vacuous. The production rollback pipeline and published-alias auditor remain placeholders. The current RollbackCard profile validates proposed candidate shape and local consistency while requiring all authority and execution flags to remain false.
 
-[Back to top](#quick-jump)
+<a id="quick-jump"></a>
 
----
-
-## 4. Exclusions — what this runbook does not cover
-
-This runbook does **not** cover:
-
-- **Live-safety alerting or emergency instructions.** KFM Hazards is not an emergency alert system. Issuing, retracting, amending, or "rolling back" an official NWS warning, FEMA declaration, or any other authoritative emergency notice is owned by the official source, not by KFM.
-- **Source admission rollback in RAW.** Withdrawing a raw payload or quarantine entry uses the admission/quarantine procedure, not this runbook. RAW and QUARANTINE never reach a public surface, so there is no PUBLISHED release to revert.
-- **Schema migrations as such.** A schema change that requires re-validation lives under the schema ADR + migration procedure. This runbook only describes the **release-side** rollback that may accompany it.
-- **Hydrology, Atmosphere/Air, Settlements/Infrastructure, Roads/Rail rollbacks.** Cross-lane derivatives may need to be invalidated by a Hazards rollback (see [§10](#10-cross-lane-fanout)), but each owning lane runs its own rollback procedure.
-- **Story / export / atlas snapshot rollback.** `StorySnapshot` and `ExportReceipt` rollbacks are covered by the Story / export runbook(s); this runbook only handles the Hazards layer/catalog/EvidenceBundle/AI surfaces those snapshots depend on.
-- **Tile-only rebuilds without an evidence change.** A pure tile rebuild that preserves identical evidence, source roles, and policy still goes through the release path, but is generally a forward fix rather than a rollback.
-
-[Back to top](#quick-jump)
+**Quick navigation:** [Goal](#goal-and-scope) · [Authority](#authority-and-terminal-boundary) · [Current evidence](#current-repository-evidence) · [Decision model](#rollback-decision-model) · [Containment](#immediate-containment-and-referral) · [Roles](#roles-and-separation-of-duties) · [Preconditions](#operational-preconditions) · [Procedure](#governed-rollback-procedure) · [Synthetic drill](#bounded-synthetic-rehearsal) · [Records](#rollbackcard-and-required-records) · [Failures](#failure-handling-and-finite-outcomes) · [Public state](#public-surface-and-cross-lane-recovery) · [Graduation](#operational-graduation-gate) · [Validation](#documentation-and-review-handoff) · [Maintenance](#maintenance-correction-and-rollback) · [Related](#related-repository-surfaces)
 
 ---
 
-## 5. Roles and separation of duties
+<a id="1-scope-and-life-safety-boundary"></a>
+<a id="goal-and-scope"></a>
 
-CONFIRMED doctrine: **author ≠ release authority when materiality applies**, and the correction reviewer is distinct from the original detector for steward-significant corrections. For sensitive lanes (rare-species locations, archaeological coordinates, infrastructure precision, living-person data joins), the rights-holder representative is required.
+## Goal and scope
 
-| Role | Responsibility in a Hazards rollback | Required when |
+Use this runbook when a released or release-facing Hazards carrier may be defective and the team must decide, without erasing history, whether to:
+
+- contain the affected surface;
+- propose restoration of a distinct prior release;
+- withdraw the current release when no safe target exists;
+- issue a forward correction through the normal governed release path; or
+- hold because evidence, rights, sensitivity, policy, review, target identity, or execution capability is insufficient.
+
+The intended operational circle is:
+
+```text
+detected defect
+  -> fail-closed containment and official referral where needed
+  -> exact affected-release and scope freeze
+  -> rollback / withdrawal / forward-correction decision
+  -> evidence, policy, review, rights, sensitivity, and target verification
+  -> authorized non-production plan
+  -> authorized execution through accepted rollback machinery
+  -> invalidation and public recovery verification
+  -> append-only correction, lineage, receipts, and closure
+```
+
+Only the first four responsibilities are fully useful as a decision and handoff procedure today. Operational planning, authorization, execution, external invalidation, alias mutation, and public recovery remain `HOLD` until the [graduation gate](#operational-graduation-gate) is satisfied.
+
+<a id="4-exclusions--what-this-runbook-does-not-cover"></a>
+
+### Out of scope
+
+This runbook does not:
+
+- retract, amend, or interpret an official warning, watch, advisory, declaration, or emergency instruction;
+- authorize direct edits to `data/published/`, a public alias, a cache, a CDN, a map layer, an API route, or a deployed system;
+- turn a schema-valid `RollbackCard`, green workflow, pull request, merge, receipt, signature, or synthetic report into rollback authority;
+- withdraw RAW, WORK, or QUARANTINE inputs; those are not public releases;
+- execute database recovery, infrastructure failover, repository revert, source deactivation, or secret rotation;
+- resolve another domain's release automatically; dependent domains own their own governed recovery decisions; or
+- claim release, deployment, promotion, publication, or operational readiness.
+
+[Back to top](#top)
+
+---
+
+<a id="2-repo-fit"></a>
+<a id="authority-and-terminal-boundary"></a>
+
+## Authority and terminal boundary
+
+Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) and the adopted [Directory Rules v2](../../doctrine/directory-rules.md) place human runbooks under `docs/runbooks/`, executable helpers under `tools/`, behavioral evidence under `tests/`, candidate shape under `contracts/` and `schemas/`, policy under `policy/`, release decisions under `release/`, and public-safe carriers under governed published-data lanes.
+
+This is a same-path modernization of an established file. It creates no new responsibility root, contract home, schema home, policy home, release home, receipt home, proof home, or publication path.
+
+The canonical data lifecycle remains:
+
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+```
+
+Rollback changes governed release state and downstream carriers; it does not rewrite RAW evidence or move lifecycle files backward to simulate recovery.
+
+| Responsibility | Owning surface | This runbook's role |
 |---|---|---|
-| **Hazards domain steward** | Owns Hazards object families, validators, and the rollback initiation decision. Approves rollback target selection. | Always |
-| **Release authority** | Issues the new `ReleaseManifest` that pins the rollback target. Distinct from the original author when materiality applies. | Always for PUBLISHED |
-| **Correction reviewer** | Reviews the paired `CorrectionNotice`. May be a different steward than the detector. | Steward-significant correction |
-| **Sensitivity reviewer** | Reviews redaction / withholding / tier downgrade decisions tied to the rollback. | Sensitive-content rollback |
-| **Rights-holder representative** | Confirms sovereignty / cultural / consent-based decisions. | Rights or cultural-sensitivity rollback |
-| **Source steward** | Confirms source rights and source-role posture after the rollback. | Source-rights or source-role rollback |
-| **AI surface steward** | Reviews and signs off on Focus Mode answer invalidation; audits `AIReceipt` consequences. | AI-answer rollback |
-| **Docs steward** | Updates this runbook, registers, drift entries, ADR linkage. | Any rollback that surfaces a doctrine or path question |
+| Human Hazards rollback procedure | `docs/runbooks/hazards/ROLLBACK_RUNBOOK.md` | Explain decisions, prerequisites, stop conditions, current capability, and review handoff |
+| Synthetic rehearsal procedure | [`ROLLBACK_DRILL.md`](ROLLBACK_DRILL.md) | Supply the exact bounded operator/test procedure |
+| Synthetic mechanics | [`tools/release/rollback_apply.py`](../../../tools/release/rollback_apply.py) | Plan or mutate only a marker-protected synthetic workspace |
+| Candidate semantics | [`contracts/release/rollback_card.md`](../../../contracts/release/rollback_card.md) | Define `RollbackCard` meaning and non-authority boundary |
+| Candidate machine shape | [`schemas/contracts/v1/release/rollback_card.schema.json`](../../../schemas/contracts/v1/release/rollback_card.schema.json) | Validate closed fixture-first candidate structure |
+| Candidate local consistency | [`tools/validators/release/validate_rollback_card.py`](../../../tools/validators/release/validate_rollback_card.py) | Validate shape and bounded cross-field rules without executing rollback |
+| CI readiness inspection | [`.github/workflows/rollback-drill.yml`](../../../.github/workflows/rollback-drill.yml) | Run bounded checks and retain explicit production holds |
+| Production rollback pipeline | [`pipelines/rollback/main.py`](../../../pipelines/rollback/main.py) | **Placeholder; no accepted operational implementation** |
+| Published-alias audit | [`scripts/maintenance/audit_published_aliases.py`](../../../scripts/maintenance/audit_published_aliases.py) | **Placeholder; no accepted live alias audit or mutation** |
+| Release decisions and records | [`release/`](../../../release/) | Remain separate, append-only governed records |
+| Public carriers and runtime state | Governed published-data and runtime surfaces | Must never be mutated by this Markdown file or the synthetic helper |
 
-> [!NOTE]
-> Separation of duties is **maturity-dependent**. Early-stage releases with low materiality may be authored and approved by the same actor; as the public trust surface expands, separation must be enforced through tooling rather than custom. This runbook assumes the higher-maturity posture by default and notes where lighter-touch separation is acceptable.
+The highest result this runbook can establish from current executable evidence is:
 
-[Back to top](#quick-jump)
+```text
+SYNTHETIC_REHEARSAL_PASS
+```
+
+It cannot establish `REVIEWED`, `APPROVED`, `ROLLBACK_AUTHORIZED`, `RECOVERED`, `RELEASED`, `DEPLOYED`, `PROMOTED`, or `PUBLISHED`.
+
+[Back to top](#top)
 
 ---
 
-## 6. Preconditions and required artifacts
+<a id="current-repository-evidence"></a>
 
-A Hazards rollback is **closed** only when all of the following exist and resolve. Missing any one means the transition fails closed and the prior public state is preserved.
+## Current repository evidence
 
-| Required artifact | Purpose | Default home (PROPOSED) |
+The observations below are pinned to `main@ca8a81a9f7728347ce19843b7a681d5c9fe19ba0`. Re-read the exact surfaces when the base, helper, workflow, contract, schema, validator, fixture, tests, pipeline, or alias tooling changes.
+
+| Surface | CONFIRMED repository evidence | Bounded conclusion |
 |---|---|---|
-| `ReleaseManifest` (current, failed) | Identifies the release being rolled back | `release/manifests/<failed_release_id>.json` |
-| `ReleaseManifest` (rollback target) | Identifies the prior safe release; its digests and signatures must still verify | `release/manifests/<rollback_target_id>.json` |
-| `RollbackCard` | The rollback decision record; names `release_id`, `rollback_to`, reason, invalidates, reviewer, time | `release/rollback_cards/<rollback_id>.json` |
-| `CorrectionNotice` | Public-facing notice of what changed and why; paired with the `RollbackCard` | `release/correction_notices/<correction_id>.json` |
-| `ReviewRecord` | Records the steward / release authority / sensitivity / rights-holder reviews that approved the rollback | Linked from `RollbackCard.review_ref` |
-| `PolicyDecision` (re-run) | Records the policy gate evaluating the rollback target against the current policy bundle | Linked from `RollbackCard` |
-| `EvidenceBundle` (still resolving) | Confirms the rollback target's `EvidenceRef`s still resolve | `data/proofs/hazards/...` |
-| Alias-revert receipts (data plane) | Records the layer/tile/URL alias pointer change | `data/rollback/hazards/<alias>/<receipt_id>.json` |
-| Invalidation list | Names downstream derivatives (catalog records, graph projections, vector index entries, Evidence Drawer payloads, `AIReceipt`s) to invalidate | Embedded in `RollbackCard.invalidates[]` |
-| Stale-state UI markers | Visible to users on any surface that depended on the failed release until cache propagation completes | UI state; tracked by cache-invalidation record |
+| Generic helper | `tools/release/rollback_apply.py` verifies a synthetic marker, exact scenario fields, safe paths, current alias identity, manifest/artifact digests, rollback target identity, and the complete declared invalidation vocabulary | Deterministic `PLAN` and marker-protected synthetic `APPLY` exist; no real public state is touched |
+| Generic tests | Eight unit tests cover deterministic no-write plan, rollback apply, withdrawal apply, and five fail-closed cases | The generic synthetic contract is executable |
+| Hazards fixture | `fixtures/domains/hazards/synthetic_rollback_rehearsal/` contains non-locating, unreleased, unpublished, planning-only stale-context carriers | The fixture contains no current alert or real sensitive location |
+| Hazards tests | Four tests cover bounded carrier semantics, deterministic no-write plan, stale-context apply with history preservation, tamper denial, and non-synthetic denial | The exact Hazards fixture is executable; it is not operational recovery evidence |
+| Workflow | `rollback-drill` runs the release candidate validator plus the generic and Hazards rehearsal modules and requires `Ran 12 tests` with `OK` | CI proves the declared bounded profile when it passes at an exact revision |
+| RollbackCard profile | The contract, closed `1.0.0` schema, validator, three valid fixtures, six invalid fixtures, and expected-findings manifest exist | A passing candidate proves shape and local consistency only |
+| RollbackCard governance flags | Candidate validation requires authority, policy evaluation, completed review, rollback execution, and public mutation to remain false, with no release reference | The profile deliberately cannot represent an executed or authorized rollback |
+| Production pipeline | `pipelines/rollback/main.py` is a one-line greenfield placeholder | No accepted production rollback engine exists |
+| Published alias auditor | `scripts/maintenance/audit_published_aliases.py` is a one-line greenfield placeholder | No accepted live alias inventory, audit, or mutation is established |
+| External invalidation | The synthetic report records nine invalidation classes but calls no cache, CDN, tile, catalog, triplet, search, vector, AI, or downstream consumer | Declared invalidation completeness is testable; operational invalidation is not |
+| Accountable review and release authority | CODEOWNERS routes review to `@bartytime4life`; no authenticated Hazards rollback authority or enforced separation of duties is established by the inspected surfaces | Review routing is not approval or transition authority |
+| Deployment and public recovery | No deployment target, runtime log, public endpoint, recovery timing result, or residual-access check is established here | Operational recovery remains `UNKNOWN / HOLD` |
 
-**Universal closure rule** (CONFIRMED doctrine): a transition is closed only when the required artifacts above exist, every required artifact **resolves** the artifacts it depends on (`EvidenceRef → EvidenceBundle`, `source_id → SourceDescriptor`, `model_id → ModelRunReceipt`), and the policy gate has evaluated and recorded its decision.
+The Drive commissioning plan remains planning lineage and the Notion alignment register remains coordination memory. Neither outranks the current repository or creates operational authority.
 
-[Back to top](#quick-jump)
+[Back to top](#top)
 
 ---
 
-## 7. The rollback flow
+<a id="3-inputs--what-triggers-a-rollback"></a>
+<a id="8-defect-class-rollback-postures"></a>
+<a id="rollback-decision-model"></a>
+
+## Rollback decision model
+
+Start with the consequence and available safe state, not with the word “rollback.”
+
+| Condition | Candidate disposition | Required posture |
+|---|---|---|
+| A distinct prior release is identified, digest-verifiable, evidence-supported, rights/sensitivity-clean, policy-eligible, and reviewable | `ROLLBACK_CANDIDATE` | Build and validate a candidate card; do not execute until every operational gate closes |
+| No safe prior release exists, the source is withdrawn, or rights/sensitivity/security requires removal | `WITHDRAWAL_CANDIDATE` | Keep the surface fail-closed and prepare governed withdrawal/correction records |
+| Evidence, target identity, rights, sensitivity, policy, review, signing, invalidation, or execution capability is incomplete | `HOLD` | Preserve containment; do not improvise an operational command |
+| Candidate input or evaluation is invalid | `ERROR` | Preserve prior state, record the bounded error, and correct the candidate |
+| The defect should be repaired by a new release rather than restoration of an old one | Forward correction outside the RollbackCard disposition set | Use normal validation, review, release, correction, and rollback gates; do not relabel a rebuild as rollback |
+| Investigation shows no release-facing defect | No transition | Record the determination in the appropriate review/incident surface; do not mutate public state |
+
+### Defect posture
+
+| Defect class | First concern | Default recovery candidate |
+|---|---|---|
+| Life-safety-adjacent or misleading operational context | Prevent KFM from competing with official guidance | Authorized containment and official referral; then withdrawal or rollback review |
+| Rights change, source withdrawal, sovereignty, or consent issue | Stop unpermitted exposure | Withdrawal unless a prior rights-clean release is verified |
+| Sensitivity or harmful-precision exposure | Stop disclosure and preserve audit | Authorized containment; withdrawal or generalized forward correction |
+| Evidence contradiction or unsupported claim | Restore cite-or-abstain | Prior evidence-supported release or withdrawal |
+| Source-role or time-role collapse | Prevent observation/model/advisory/regulatory substitution | Prior release that passes role checks or a forward correction |
+| Geometry, transform, catalog, tile, API, or presentation defect | Determine whether the prior carrier is safer than a rebuild | Rollback only to an already released verified target; otherwise forward correction |
+| Policy or security failure | Re-evaluate under current controls | `HOLD` or withdrawal until a current decision exists |
+| Operational failure | Preserve service safety and audit | Use separately authorized incident/recovery controls; do not use the synthetic helper |
+
+### Stale is not automatically wrong
+
+<a id="11-stale-vs-wrong"></a>
+
+A stale carrier may still be historically accurate but outside its supported freshness window. A wrong carrier is materially incorrect. Both require visible, traceable handling, but rollback is not automatic for every stale record. For current-warning-like presentation, rights, sensitivity, or unsupported authoritative appearance, fail closed and treat the consequence as high until an accountable review narrows it.
+
+[Back to top](#top)
+
+---
+
+<a id="immediate-containment-and-referral"></a>
+
+## Immediate containment and referral
+
+Containment protects users while the rollback decision is assembled. It is not the rollback itself.
+
+1. **Recognize the boundary.** KFM does not issue or amend official emergency instructions.
+2. **Record the exact affected surface.** Capture the release reference, route/layer/view identifier, observed behavior, detection time, and safe public description without copying protected content into logs.
+3. **Refer urgent users to the appropriate official authority.** Do not paraphrase current life-safety instructions as KFM guidance.
+4. **Invoke only a separately authorized containment mechanism.** The repository does not currently expose an accepted production disablement, alias, or cache command through this runbook.
+5. **Return `HOLD` when containment authority or mechanism is not verified.** Escalate through the verified repository review route and the accountable incident/release route once identified.
+6. **Preserve evidence and history.** Do not delete the affected release, rewrite its manifest, or destroy audit material to make the surface disappear.
+
+> [!WARNING]
+> Never point `tools/release/rollback_apply.py` at the repository root, `release/`, `data/`, a deployment checkout, mounted public storage, or any real system. Its marker and `synthetic: true` checks are safety boundaries, not an invitation to manufacture a marker around production data.
+
+[Back to top](#top)
+
+---
+
+<a id="5-roles-and-separation-of-duties"></a>
+<a id="roles-and-separation-of-duties"></a>
+
+## Roles and separation of duties
+
+The exact accountable identities remain `NEEDS VERIFICATION`. CODEOWNERS currently routes repository review to `@bartytime4life`, but that routing is not a `ReviewRecord`, policy decision, release approval, or proof of independent review.
+
+| Role | Required responsibility | Current status |
+|---|---|---|
+| Detector / incident reporter | Record the bounded defect and affected surface without deciding the release outcome by implication | Function is understandable; identity varies by incident |
+| Hazards domain steward | Confirm domain semantics, source role, time role, and affected Hazards scope | Accountable assignment `NEEDS VERIFICATION` |
+| Evidence/source steward | Confirm `EvidenceRef` resolution, source authority, rights, freshness, and limitations | Accountable assignment `NEEDS VERIFICATION` |
+| Safety/sensitivity/rights reviewer | Decide harmful precision, rights, sovereignty, consent, security, and not-for-life-safety posture | Required when material; assignment `NEEDS VERIFICATION` |
+| Policy evaluator/reviewer | Evaluate the candidate under the current accepted policy bundle and record reasons/obligations | Operational evaluator and authority `NEEDS VERIFICATION` |
+| Correction/rollback reviewer | Review the target, correction linkage, invalidation plan, and recovery evidence | Accountable assignment `NEEDS VERIFICATION` |
+| Release authority | Authorize a release-state mutation through the accepted mechanism | Not established by current repository evidence |
+| Operator and independent observer | Execute the accepted plan and independently verify resulting state | Operational mechanism and assignment absent |
+
+For material public consequences, the detector, candidate author, executor, and release approver should not collapse into one unreviewed action. A bootstrap single-owner repository route may prepare a draft, but it must not be represented as independent operational approval.
+
+[Back to top](#top)
+
+---
+
+<a id="6-preconditions-and-required-artifacts"></a>
+<a id="operational-preconditions"></a>
+
+## Operational preconditions
+
+An operational rollback remains `HOLD` unless every applicable condition below is verified for one named scope.
+
+- [ ] The affected release and every affected public carrier have stable identifiers.
+- [ ] A distinct prior release target exists, or the candidate explicitly chooses withdrawal.
+- [ ] Manifests and artifact bytes for the affected and target releases are immutable and digest-verifiable.
+- [ ] Required `EvidenceRef` values resolve to admissible `EvidenceBundle` support.
+- [ ] Source roles and material time roles remain explicit and do not collapse.
+- [ ] Rights, sensitivity, sovereignty, consent, security, and harmful-precision posture are resolved.
+- [ ] The candidate is evaluated under the current accepted policy bundle with reasons and obligations.
+- [ ] Accountable reviews and the required separation of duties are recorded.
+- [ ] Required signatures or integrity envelopes are verified by an accepted profile.
+- [ ] The production mechanism supports deterministic no-write planning before mutation.
+- [ ] Alias mutation and every real invalidation consumer are implemented, test-covered, and receipt-emitting.
+- [ ] Correction/withdrawal notice, rollback decision, release lineage, and execution records have accepted homes and contracts.
+- [ ] The public UI/API can expose stale, withdrawn, superseded, unavailable, and correction states without bypassing the trust membrane.
+- [ ] Recovery verification checks caches, public routes, map layers, Evidence Drawer payloads, AI caches, and residual access.
+- [ ] A reversal path exists for a failed rollback attempt.
+- [ ] Incident containment, release, deployment, promotion, and publication authority are independently established where applicable.
+
+A schema-valid candidate, synthetic pass, green readiness workflow, or merged pull request cannot compensate for a failed prerequisite.
+
+[Back to top](#top)
+
+---
+
+<a id="7-the-rollback-flow"></a>
+<a id="governed-rollback-procedure"></a>
+
+## Governed rollback procedure
 
 ```mermaid
 flowchart TD
-  A["Trigger detected<br/>(see §3)"] --> B{"Life-safety<br/>or sensitivity<br/>conflict?"}
-  B -- "Yes" --> C["IMMEDIATE<br/>disablement<br/>+ redirect"]
-  B -- "No" --> D["Identify affected<br/>release_id"]
+  A["Defect detected"] --> B{"Could users be harmed or misled?"}
+  B -- "Yes" --> C["Authorized containment<br/>and official referral"]
+  B -- "No" --> D["Freeze affected release<br/>and scope"]
   C --> D
-  D --> E["Locate rollback target<br/>(prior safe release)"]
-  E --> F["Verify target digests,<br/>signatures, EvidenceBundle"]
-  F --> G{"Target<br/>verifies?"}
-  G -- "No" --> H["Escalate:<br/>no safe target.<br/>Hold at current<br/>state; correction path."]
-  G -- "Yes" --> I["Re-run policy gate<br/>against current bundle"]
-  I --> J{"Policy<br/>passes?"}
-  J -- "No" --> H
-  J -- "Yes" --> K["Steward / release authority<br/>review + ReviewRecord"]
-  K --> L["Emit RollbackCard<br/>+ CorrectionNotice"]
-  L --> M["Issue superseding<br/>ReleaseManifest pinning<br/>rollback target"]
-  M --> N["Repoint aliases;<br/>emit data-plane<br/>revert receipts"]
-  N --> O["Invalidate downstream<br/>derivatives<br/>(see §10)"]
-  O --> P["Cache invalidation<br/>+ stale-state UI markers"]
-  P --> Q["Replay verification<br/>(see §14)"]
-  Q --> R{"Verification<br/>passes?"}
-  R -- "No" --> H
-  R -- "Yes" --> S["Rollback closed.<br/>Public state =<br/>rollback target."]
+  D --> E{"Safe prior release<br/>verified?"}
+  E -- "No" --> F["Withdrawal or forward-correction<br/>candidate / HOLD"]
+  E -- "Yes" --> G["RollbackCard candidate"]
+  F --> H["Evidence, rights, sensitivity,<br/>policy, review, integrity"]
+  G --> H
+  H --> I{"All operational gates closed?"}
+  I -- "No" --> J["HOLD<br/>preserve containment"]
+  I -- "Yes" --> K["Authorized no-write plan"]
+  K --> L["Authorized execution"]
+  L --> M["Invalidate dependent carriers"]
+  M --> N["Verify public recovery"]
+  N --> O["Append-only correction,<br/>lineage, receipts, closure"]
 ```
 
-### Numbered procedure
+### 1. Detect, classify, and freeze
 
-The steps below correspond to the diagram and are the canonical sequence. Skipping a step is a failure and must be recorded as a `RollbackCard` exception with reason.
+Record:
 
-1. **Detect and classify.** Record the trigger ([§3](#3-inputs--what-triggers-a-rollback)) and the defect class ([§8](#8-defect-class-rollback-postures)). The defect class determines the **rollback posture**.
-2. **Life-safety / sensitivity short-circuit.** If life-safety conflict, sensitive-location exposure, rights takedown, or any other condition demands speed: **disable the affected public surface immediately and post a visible redirect to the official source.** Disablement is fail-closed; the rollback proceeds underneath.
-3. **Identify the failed `release_id`.** Pull the current `ReleaseManifest` for the affected Hazards surface(s).
-4. **Locate the rollback target.** Walk the `rollback_target` chain on each affected `ReleaseManifest` until a candidate prior release is found whose `EvidenceBundle`s, `PolicyDecision`s, source roles, and digests can still be expected to verify.
-5. **Verify the target.** Re-check digests and signatures of the prior release's artifacts. Re-resolve `EvidenceRef → EvidenceBundle`. If any reference fails to resolve, the target is **not** a safe rollback; escalate per Step 12.
-6. **Re-run the policy gate** against the **current** policy bundle. A target that passed under an old policy may now fail; if it does, escalate per Step 12. A passing decision yields a new `PolicyDecision` that is referenced from the `RollbackCard`.
-7. **Convene the required reviewers** ([§5](#5-roles-and-separation-of-duties)). Record decisions in `ReviewRecord`s. For sensitive lanes, the rights-holder representative is required.
-8. **Emit the `RollbackCard`** ([Appendix A](#appendix-a--rollbackcard-fields)) and the paired `CorrectionNotice`. The `RollbackCard.invalidates[]` array enumerates downstream derivatives.
-9. **Issue a superseding `ReleaseManifest`** that pins the rollback target as the new public state. The original failed `ReleaseManifest` is **not deleted or mutated** — it is preserved and superseded.
-10. **Repoint aliases** (layer URLs, tile bundle pointers, route → manifest bindings) and emit data-plane alias-revert receipts under `data/rollback/hazards/<alias>/`.
-11. **Invalidate downstream derivatives.** Walk the invalidation list (see [§10](#10-cross-lane-fanout)): catalog records, graph/triplet projections, vector index entries, Evidence Drawer payloads, `AIReceipt`s that referenced the failed release.
-12. **Cache invalidation.** Emit a cache-invalidation record. Mark UI state stale or withdrawn for any view that may still hold the failed release pending cache propagation.
-13. **Replay verification** ([§14](#14-rollback-drill-and-replay-verification)). Run the rollback drill fixture: same evidence + same inputs + same pinned tooling MUST produce the same receipt hashes as the rollback target's original release. Failure here means the rollback is **not closed.**
-14. **Close the rollback.** Update the release register; update the drift register if the rollback exposed a doctrine question; update this runbook if the procedure itself surfaced a gap.
+- the exact repository/runtime observation time;
+- affected release and carrier identifiers;
+- defect class and public consequence;
+- source, evidence, policy, review, and release references already known;
+- current containment state; and
+- any uncertainty that changes the safe outcome.
 
-> [!TIP]
-> A rollback is closed only after replay verification passes. Before that point, public state remains held at the rollback target and the `RollbackCard` is in an interim "verifying" state. Releases and corrections downstream of the affected surface should be paused until verification completes.
+Do not copy secrets, precise protected locations, private review text, or current emergency content into a public issue or log.
 
-[Back to top](#quick-jump)
+### 2. Contain and refer
 
----
+Apply [immediate containment](#immediate-containment-and-referral) through an independently authorized mechanism. Keep official-source referral visible where KFM content could be mistaken for current guidance.
 
-## 8. Defect-class rollback postures
+### 3. Identify the recovery mode
 
-CONFIRMED doctrine: every published claim has both a **correction posture** and a **rollback posture** keyed to defect class. The table below restates the general rules for Hazards.
+Choose one bounded candidate:
 
-| Defect class | Correction posture | Rollback posture (Hazards default) |
-|---|---|---|
-| **Evidence gap** | ABSTAIN or withdraw unsupported claim | Restore prior evidence-supported release |
-| **Rights defect** | DENY public use; quarantine source/artifact | Withdraw affected artifacts; rollback to last rights-clean release |
-| **Sensitivity leak** | Redact / generalize and notify stewards | **Immediate public disablement**, then rollback |
-| **Geometry defect** | Rebuild derivative layer and Evidence payload | Restore previous digest-pinned artifact |
-| **Temporal defect** (issue/expiry/valid/retrieval/release/correction time confused) | Correct the time fields | Mark stale until rebuilt; rollback if cannot correct in place |
-| **Policy defect** | Re-run policy and `DecisionEnvelope` | Disable route/layer if the gate failed; rollback if the policy itself is rolled back |
-| **AI answer defect** | Invalidate `AIReceipt` and response envelope | Remove answer; preserve `EvidenceBundle`; new `AIReceipt` is a new record, not a retroactive supersession |
-| **Catalog defect** | Re-emit catalog closure after proof repair | Restore previous catalog state |
-| **Source-role collapse** (observation → regulatory, model → observed, advisory → warning, etc.) | Restore source role; refuse upcast | Rollback to last release whose source-role anti-collapse tests passed |
+- a distinct prior release;
+- withdrawal without a prior target;
+- `HOLD`;
+- `ERROR`; or
+- forward correction through the normal release path.
 
-### Hazards-specific overlay
+Do not rebuild bytes from RAW and call them a prior release. A rebuilt carrier is a new candidate and must follow forward validation and release.
 
-- **Operational warning / advisory / watch context** — never act as life-safety. If expired context appears as current, the rollback posture is **immediate disablement of the operational-context layer** followed by a rollback that keeps historical event layers public and demotes the operational layer to a contextual-only state with a visible redirect to the official source.
-- **Disaster declaration layers** — these are administrative records, not life-safety instructions. Rollback follows the standard rights / geometry / temporal postures.
-- **Regulatory layers (e.g., NFHL flood hazard context)** — vintage-bearing; rollback should preserve the rollback target's vintage and explicitly badge it on the UI rather than silently revert to an older regulatory state without context.
-- **Detection layers (NASA FIRMS, NOAA HMS smoke)** — `WildfireDetection` and `SmokeContext` are observations, not warnings; a rollback must not convert a model-as-observed leak into an "observed" rollback target.
+### 4. Build and validate the candidate card
 
-[Back to top](#quick-jump)
+Use the repository-owned [`RollbackCard` contract](../../../contracts/release/rollback_card.md), [schema](../../../schemas/contracts/v1/release/rollback_card.schema.json), and validator.
 
----
-
-## 9. Hazards-specific variants
-
-The general flow ([§7](#7-the-rollback-flow)) applies uniformly. The variants below highlight where Hazards differs from a generic domain rollback.
-
-### 9.1 Operational warning / advisory / watch context
-
-> [!WARNING]
-> Operational context is **contextual only**. A stale, expired, or mis-rendered operational warning is the most life-safety-adjacent failure mode in Hazards. Treat any stale or expired `WarningContext`, `AdvisoryContext`, or implied "current warning" UI state as a sensitivity-leak-equivalent: immediate disablement of the surface, visible redirect to official sources, rollback underneath.
-
-Required additions to the standard flow:
-
-- Confirm the freshness validator and operational-expiry tests pass on the rollback target.
-- Confirm the rollback target's Evidence Drawer payloads include the non-life-safety disclaimer.
-- The `CorrectionNotice` for an operational-context rollback should explicitly name the official source(s) users were redirected to during disablement.
-
-### 9.2 Regulatory hazard areas (NFHL, KGS, state regulatory polygons)
-
-- Vintage and rights matter more than geometry detail. Preserve the rollback target's source vintage on the UI rather than silently revert.
-- If the trigger was a rights change, the rollback may need to **withdraw the entire layer** rather than revert to a prior rights-bearing release. In that case, the new `ReleaseManifest` pins the layer to a withdrawn state with a tombstone-equivalent record.
-
-### 9.3 Scientific observations and remote-sensing detections
-
-- `HazardObservation`, `WildfireDetection`, `SmokeContext`, `EarthquakeEvent` — these are observation source-role artifacts. The rollback must not promote any of them to a regulatory or warning role.
-- If a model-as-observed leak triggered the rollback, the rollback target itself must be re-checked for the same defect before it is treated as safe.
-
-### 9.4 Exposure and resilience summaries (modeled derivatives)
-
-- These are `modeled_derivative` source-role artifacts and depend on cross-lane inputs (Settlements/Infrastructure, Hydrology, Atmosphere/Air, Roads/Rail).
-- A Hazards rollback that invalidates a cross-lane input MUST trigger a cross-lane review ([§10](#10-cross-lane-fanout)) before the modeled derivative is re-published from the rollback target.
-
-### 9.5 Governed AI answers about Hazards
-
-- An AI answer is a new record; rolling back the underlying release does not retroactively change a previously emitted `AIReceipt`. Instead:
-  1. Invalidate the affected `AIReceipt`s on the published surface (hide from public views).
-  2. Preserve them in audit (no silent deletion).
-  3. Emit new `AIReceipt`s only when a user re-asks against the rolled-back evidence.
-- Focus Mode must ABSTAIN where the rolled-back evidence no longer supports a prior answer and DENY where rights / sensitivity / release state now blocks it.
-
-[Back to top](#quick-jump)
-
----
-
-## 10. Cross-lane fanout
-
-Hazards has CONFIRMED / PROPOSED cross-lane relations to **Hydrology**, **Atmosphere/Air**, **Settlements/Infrastructure**, and **Roads/Rail**. A Hazards rollback must walk these relations and invalidate or notify the dependent surfaces.
-
-```mermaid
-flowchart LR
-  H["Hazards<br/>(rolled back)"] -->|flood / drought / water context| HY["Hydrology"]
-  H -->|smoke / heat-cold / fire-weather| AT["Atmosphere/Air"]
-  H -->|exposure / lifelines / dependencies| SI["Settlements/<br/>Infrastructure"]
-  H -->|closures / detours / bridge & crossing exposure| RR["Roads/Rail"]
-  HY -. invalidate derivatives .-> H
-  AT -. invalidate derivatives .-> H
-  SI -. invalidate derivatives .-> H
-  RR -. invalidate derivatives .-> H
+```bash
+python tools/validators/release/validate_rollback_card.py <candidate.json>
 ```
 
-**Required cross-lane actions on a Hazards rollback:**
+A pass establishes candidate shape and local consistency only. It does not resolve references, authenticate actors, evaluate policy, verify signatures, approve the target, execute invalidation, mutate public state, or release anything.
 
-| Cross-lane dependency | Action on rollback | Owner |
-|---|---|---|
-| Hydrology — flood / drought event context | Invalidate joined records; notify Hydrology steward; flag for re-publication after Hazards rollback is closed | Hazards + Hydrology stewards |
-| Atmosphere/Air — `SmokeContext`, heat-cold context, AQI joins | Invalidate cross-cited records; notify Atmosphere/Air steward | Hazards + Atmosphere/Air stewards |
-| Settlements/Infrastructure — `ExposureSummary`, lifeline dependencies | Invalidate exposure summaries that referenced the failed release; downstream review required | Hazards + Settlements/Infrastructure stewards |
-| Roads/Rail — closures, detours, bridge/crossing exposure | Invalidate transient `RestrictionEvent` / `StatusEvent` joins; coordinate with Roads/Rail steward | Hazards + Roads/Rail stewards |
-| Story / export / atlas snapshots that included the failed release | Tombstone-equivalent: hide affected snapshots from public; preserve in audit; re-publish from rollback target if appropriate | Story / export steward |
+### 5. Resolve support and authorize
 
-> [!IMPORTANT]
-> Cross-lane invalidation is a **notification + invalidation** action, not a transitive rollback. Each owning lane runs its own rollback procedure for its own published artifacts. The Hazards `RollbackCard.invalidates[]` array enumerates the cross-lane derivatives that must be touched.
+Before an operational plan:
 
-[Back to top](#quick-jump)
+- resolve evidence, policy, review, correction, and release references;
+- verify target bytes and integrity;
+- confirm current policy eligibility;
+- record rights/sensitivity decisions;
+- obtain accountable release authorization; and
+- verify the operator and independent observer.
 
----
+At the pinned base, this operational authority path is not implemented. The truthful result is `HOLD`.
 
-## 11. Stale vs. wrong
+### 6. Produce an authorized no-write plan
 
-CONFIRMED doctrine: **stale ≠ wrong**. A stale claim's evidence, source freshness, dependent data, or context has aged past its declared tolerance; a wrong claim's substance is incorrect. Both states have visible markers and traceable lifecycles, but they trigger different responses.
+The production mechanism must show the exact proposed alias/state change, target identities, invalidations, correction lineage, preconditions, receipts to be emitted, and reversal path without mutating public state.
 
-| Marker | Triggered by | Required action — Hazards |
-|---|---|---|
-| Source freshness expired | `SourceDescriptor` cadence passed without re-admission | Re-admit or supersede; otherwise mark dependent Hazards claims stale and surface the stale-source badge in the Evidence Drawer |
-| Schema version drift | Object schema upgraded past the published claim's version | Migrate, re-validate, re-release — or mark stale until migration completes |
-| Geography version drift | `GeographyVersion` replaced; published claim still bound to prior version | Rebind to current `GeographyVersion`; re-release; or mark stale |
-| Time-scope outside support | Claim's temporal scope outside current data support window | Mark stale; **do not refresh silently** |
-| Model version superseded | `ModelRunReceipt` references an older model | Re-run; supersede; or mark stale |
-| Review aged out | `ReviewRecord` older than the review-cycle tolerance for the sensitive lane | Trigger steward review; potentially downgrade tier |
-| Rights status changed | Rights change in `SourceDescriptor` or rights-holder communication | Re-evaluate tier; potentially downgrade; emit `CorrectionNotice` if necessary |
-| Policy version changed | Policy referenced by `PolicyDecision` was superseded | Re-run gate; potentially supersede release |
+The current synthetic helper demonstrates this property only inside a marker-protected toy workspace. It must not be substituted for a production planner.
 
-**Rule of thumb for this runbook**: *stale* is handled by visible markers and a re-release; *wrong* is handled by rollback. When in doubt — particularly for operational warning context — treat as wrong, not stale.
+### 7. Execute through accepted machinery
 
-[Back to top](#quick-jump)
+Execution is permitted only after the accepted plan, target, policy, reviews, integrity, and authority match the exact execution input. The current `pipelines/rollback/main.py` does not implement this step.
 
----
+### 8. Invalidate dependents
 
-## 12. UI and public-surface state during rollback
+Invalidate only the consumers named by current release/catalog/runtime evidence. The current candidate vocabulary includes:
 
-The trust membrane forbids any public client, normal UI surface, or released AI surface from reaching RAW, WORK, QUARANTINE, canonical/internal stores, graph internals, vector indexes, source APIs, or direct model runtimes. **A rollback in progress does not relax this rule.** The public path remains the governed API; the rollback target becomes the new state that the governed API serves.
+- `API_CACHE`;
+- `CDN`;
+- `TILES`;
+- `CATALOG`;
+- `TRIPLETS`;
+- `SEARCH_INDEX`;
+- `VECTOR_INDEX`;
+- `AI_CACHE`; and
+- `DOWNSTREAM_DERIVATIVES`.
 
-| Phase | Recommended UI state |
-|---|---|
-| Trigger detected, awaiting disablement | No UI change yet; reviewers notified |
-| Immediate disablement (sensitive / life-safety conflict) | Affected layer/payload hidden; visible non-life-safety disclaimer and redirect to official sources; trust badge set to *withdrawn* |
-| Rollback target located, target verifying | Hazards layer set to *stale / verifying* on the affected surfaces; Evidence Drawer shows the prior release ID and "rollback in progress" state |
-| `RollbackCard` + `CorrectionNotice` emitted, new `ReleaseManifest` issued | UI begins switching to the rollback target as cache propagation completes; trust badge transitions to *superseded* on the failed release and *current* on the rollback target |
-| Replay verification in progress | UI shows the rollback target as current; an audit-facing badge surfaces "verifying" until verification passes |
-| Verification complete, rollback closed | Stale badges cleared on the rolled-back surfaces; `CorrectionNotice` accessible from the Evidence Drawer |
-| Verification failed | Hold at the rollback target's predecessor or escalate to a manual hold; affected surfaces remain disabled |
+The synthetic rehearsal records this list but invokes none of those consumers. Operational closure requires per-consumer results or receipts and a fail-closed response to partial invalidation.
 
-**Required UI guarantees** during any rollback phase:
+### 9. Verify public recovery
 
-- No public surface reads from RAW / WORK / QUARANTINE / canonical / internal.
-- No direct model traffic to a public client.
-- No uncited authoritative claim is rendered as current state.
-- The non-life-safety disclaimer remains visible on any Hazards operational-context surface that is publicly reachable.
-- The Evidence Drawer can show, for the affected surfaces, the failed release ID, the rollback target ID, and the linked `RollbackCard` and `CorrectionNotice` (audit visibility per policy label).
+An independent observer must confirm:
 
-[Back to top](#quick-jump)
+- the affected carrier is no longer served where prohibited;
+- the intended prior release or withdrawn state is visible;
+- caches and alternate routes do not expose the affected carrier;
+- map, API, Evidence Drawer, export, and AI surfaces agree on release/correction state;
+- the not-for-life-safety boundary remains visible;
+- no public client reaches RAW, WORK, QUARANTINE, canonical/internal stores, or direct model output; and
+- monitoring remains stable for the declared observation window.
+
+### 10. Close without erasing history
+
+Preserve the affected release and append the correction, withdrawal/rollback decision, execution evidence, invalidation results, release lineage, public notice, and recovery verification. A failed or partially completed rollback remains visible and does not silently become `closed`.
+
+[Back to top](#top)
 
 ---
 
-## 13. Records emitted by a rollback
+<a id="14-rollback-drill-and-replay-verification"></a>
+<a id="bounded-synthetic-rehearsal"></a>
 
-Every rollback produces a small, well-known set of records. **None of them is optional.** Missing one means the transition fails closed and the prior public state is preserved.
+## Bounded synthetic rehearsal
 
-| Record | Phase | Default home (PROPOSED) | Lifetime |
-|---|---|---|---|
-| `RollbackCard` | Decision | `release/rollback_cards/<rollback_id>.json` | Permanent; never silently deleted |
-| `CorrectionNotice` | Decision | `release/correction_notices/<correction_id>.json` | Permanent |
-| `ReleaseManifest` (superseding) | Decision | `release/manifests/<new_release_id>.json` | Permanent; preserves rollback chain |
-| `ReleaseManifest` (failed; preserved) | Lineage | `release/manifests/<failed_release_id>.json` | Permanent; marked superseded |
-| `PolicyDecision` (re-run against rollback target) | Validation | Linked from `RollbackCard` | Permanent |
-| `ReviewRecord`(s) | Validation | Linked from `RollbackCard.review_ref` | Permanent |
-| `ValidationReport` (replay verification) | Validation | Linked from `RollbackCard` | Permanent |
-| Alias-revert receipts (data plane) | Data plane | `data/rollback/hazards/<alias>/<receipt_id>.json` | Permanent |
-| Cache-invalidation record | Data plane | Cache invalidation log | Permanent |
-| Tombstone records for downstream derivatives | Lineage | Per lane | Permanent |
+Use [`ROLLBACK_DRILL.md`](ROLLBACK_DRILL.md) for the complete operator procedure. The focused current command is:
+
+```bash
+export KFM_NO_NETWORK=1
+export PYTHONHASHSEED=0
+export PYTHONDONTWRITEBYTECODE=1
+export PYTHONUNBUFFERED=1
+export TZ=UTC
+
+python -m unittest -q \
+  tests.release.test_synthetic_rollback_rehearsal \
+  tests.domains.hazards.test_synthetic_rollback_rehearsal
+```
+
+The expected bounded result is twelve tests with `OK`.
+
+The rehearsal proves only that:
+
+- identical synthetic plans are deterministic and do not mutate the workspace;
+- marker-protected synthetic apply can restore a prior toy release or withdraw a toy alias;
+- affected toy release bytes remain unchanged;
+- a synthetic correction and complete declared invalidation record are written;
+- the Hazards fixture moves stale-mislabeled planning context to a withheld stale carrier; and
+- tampered, incomplete, unmarked, unsafe, missing-target, or non-synthetic inputs fail closed.
+
+It does not prove source admission, real release identity, evidence resolution, active policy evaluation, authenticated review, signing, production alias mutation, actual invalidation, cache propagation, public recovery, release, deployment, promotion, or publication.
 
 > [!NOTE]
-> *Permanent* means *append-only* — superseded, withdrawn, and tombstoned records remain queryable for audit and lineage. They are hidden from public views but never deleted. Right-to-be-forgotten obligations for personal data are handled by a distinct erasure procedure with its own log; that procedure is outside the scope of this runbook.
+> The helper's generated `corrections/` and `invalidations/` files exist only inside the temporary synthetic workspace. They are rehearsal output, not canonical KFM `CorrectionNotice`, `RollbackCard`, receipt, proof, or release records.
 
-[Back to top](#quick-jump)
+[Back to top](#top)
 
 ---
 
-## 14. Rollback drill and replay verification
+<a id="13-records-emitted-by-a-rollback"></a>
+<a id="appendix-a--rollbackcard-fields"></a>
+<a id="rollbackcard-and-required-records"></a>
 
-A rollback is closed only when **replay verification** passes. Replay verification is a deterministic re-derivation: same evidence + same inputs + same pinned tooling MUST produce the same receipt hashes as the rollback target's original release. The Hazards rollback drill is the routine exercise of this verification.
+## RollbackCard and required records
 
-### Replay verification invariant
+### Current candidate profile
+
+The current `RollbackCard` profile is deliberately non-executing:
+
+| Surface | Current maturity | What it proves |
+|---|---|---|
+| Semantic contract | Draft, repository-grounded, schema-paired | Meaning, field responsibilities, finite vocabularies, and non-authority boundary |
+| JSON Schema `1.0.0` | Closed fixture-first profile | Machine shape |
+| Validator | Implemented, no-network | Schema conformance and bounded local cross-field consistency |
+| Fixtures | Three valid, six invalid, expected-findings manifest | Positive/negative polarity for the candidate profile |
+| Candidate governance fields | Required false; `release_ref` null | The profile cannot claim authority, policy completion, review completion, execution, or public mutation |
+| Root rollback-card JSON inventory | Readiness workflow classifies the two root JSON files as nonconforming documentation placeholders | They are not operational cards |
+
+A candidate contains identity, disposition, trigger, affected release, target, evidence/policy/review references, correction linkage, invalidations, restoration, timing, lineage, and explicit governance non-effects. The contract is the source for exact field semantics; this runbook does not duplicate the schema.
+
+### Operational closure packet
+
+An operational implementation will need accepted, resolvable, and append-only records for the responsibilities below. Their exact accepted profiles and executor bindings remain `NEEDS VERIFICATION`.
+
+| Responsibility | Required evidence before closure |
+|---|---|
+| Affected and target release identity | Immutable release references, manifests, artifacts, and verified digests/signatures |
+| Evidence support | Resolved `EvidenceRef -> EvidenceBundle` closure and limitations |
+| Policy | Current policy evaluation with reasons and obligations |
+| Review and authority | Authenticated review records and accountable release authorization |
+| Correction/withdrawal | Public-safe explanation and lineage without erasing the affected release |
+| Rollback decision | Accepted decision record distinct from a proposed candidate |
+| Execution | Receipt proving the exact authorized plan was applied |
+| Invalidation | Per-consumer completion or explicit failure for every required dependent surface |
+| Release lineage | Supersession/withdrawal relationship and current-state binding |
+| Public recovery | Independent verification that affected state is unavailable and intended state is consistent |
+| Failure/reversal | Record of any partial failure plus the safe state and reversal target |
+
+Do not infer the existence or acceptance of those operational profiles from similarly named directories.
+
+[Back to top](#top)
+
+---
+
+<a id="15-failure-modes-and-reason-codes"></a>
+<a id="failure-handling-and-finite-outcomes"></a>
+
+## Failure handling and finite outcomes
+
+### Synthetic helper outcomes
+
+| Outcome / reason | Meaning | Safe response |
+|---|---|---|
+| `PASS / SYNTHETIC_REHEARSAL_PLANNED` | Synthetic plan verified without workspace mutation | Record bounded evidence only |
+| `PASS / SYNTHETIC_REHEARSAL_APPLIED` | Synthetic alias/correction/invalidation mutation completed inside the marked workspace | Record bounded evidence only |
+| `HOLD / NON_SYNTHETIC_INPUT_DENIED` | Scenario did not declare literal synthetic input | Do not weaken the guard |
+| `HOLD / SYNTHETIC_MARKER_MISSING` or `SYNTHETIC_MARKER_INVALID` | Workspace protection is absent or malformed | Use a dedicated temporary fixture copy |
+| `HOLD / INVALIDATION_SET_INCOMPLETE` | Declared synthetic invalidations are incomplete | Repair the synthetic scenario; do not delete required classes |
+| `HOLD / ARTIFACT_DIGEST_MISMATCH` | Artifact bytes differ from the manifest | Preserve state and investigate |
+| `HOLD / REQUIRED_FILE_MISSING` | Required synthetic release/manifest/artifact is absent | Repair the fixture or target identity |
+| `HOLD / UNSAFE_PATH` or `UNSAFE_SYMLINK` | A selected path escapes or crosses a symlink | Stop; do not bypass path safety |
+| Unexpected exception/non-contract output | Helper contract failed | Classify `ERROR`; preserve logs; do not apply |
+
+### RollbackCard validator findings
+
+The validator may report findings such as:
+
+- `TARGET_RELEASE_REQUIRED`;
+- `EVIDENCE_REQUIRED`;
+- `POLICY_DECISION_REQUIRED`;
+- `ROLLBACK_TARGET_NOT_PRIOR`;
+- `RESTORATION_TARGET_MISMATCH`;
+- `CORRECTION_NOTICE_REQUIRED`;
+- `DECISION_BEFORE_DETECTION`;
+- `EFFECTIVE_BEFORE_DECISION`;
+- `REFS_NOT_CANONICAL`; or
+- `GOVERNANCE_BOUNDARY_VIOLATION`.
+
+Fixing a candidate finding does not close the operational prerequisites. It only makes the candidate locally consistent.
+
+### Operational procedure outcome
+
+Until production target selection, policy, review, signing, execution, invalidation, alias, and recovery surfaces are accepted and verified, the only truthful operational result is:
 
 ```text
-same EvidenceBundle + same pipeline_spec + same pinned tooling
-  -> same TransformReceipt, ValidationReport, and ReleaseManifest digests
-  -> same RollbackCard outcome
+HOLD
 ```
 
-### Rollback drill cadence (PROPOSED)
+Do not translate `SKIPPED`, `PENDING`, `NO_RUN_FOUND`, a green readiness hold, or lack of evidence into `PASS`.
 
-| Cadence | Scope |
-|---|---|
-| Per-release | Every Hazards release MUST have a verifiable rollback target. Replay verification runs as part of the release gate, before PUBLISHED, **not only** when a rollback fires. |
-| Quarterly | Hazards domain steward initiates a full rollback drill against a representative published surface: pick a release, simulate a defect of each class in [§8](#8-defect-class-rollback-postures), execute the rollback flow against a non-production target, and record the outcomes. |
-| Post-incident | After any real rollback, the drill is replayed against a fixture to capture the lessons learned and to update this runbook. |
-
-### Drill fixture requirements (PROPOSED)
-
-- A small, public-safe Hazards fixture: one historical flood / severe weather event, NFHL flood context, and one exposure summary — with warning feeds disabled or contextual-only (this matches the Hazards thin-slice plan).
-- A pinned tool-version manifest.
-- A `pipeline_spec` snapshot that produced the original release.
-- A `replay_check` CI job (PROPOSED name) that emits a pass/fail receipt.
-
-> [!TIP]
-> If replay verification fails, the rollback target is **not** a safe rollback. The most common causes are non-deterministic tooling, drifted external dependencies, and policy bundle changes that change the gate outcome. Investigate, pin, and re-run; do not paper over a verification failure.
-
-[Back to top](#quick-jump)
+[Back to top](#top)
 
 ---
 
-## 15. Failure modes and reason codes
+<a id="9-hazards-specific-variants"></a>
+<a id="10-cross-lane-fanout"></a>
+<a id="12-ui-and-public-surface-state-during-rollback"></a>
+<a id="public-surface-and-cross-lane-recovery"></a>
 
-PROPOSED reason codes (consistent with the universal gate-failure catalog). Every rollback that does not close emits one or more of these codes on its `RollbackCard`.
+## Public-surface and cross-lane recovery
 
-| Reason code (PROPOSED) | Meaning | Recovery path |
-|---|---|---|
-| `ROLLBACK_TARGET_MISSING` | No rollback target named on the failed `ReleaseManifest`, or named target cannot be located | Manually supply a rollback target; escalate to release authority |
-| `ROLLBACK_TARGET_UNVERIFIED` | Rollback target's digests, signatures, or `EvidenceBundle` references do not resolve | Investigate; do not roll back to an unverified target |
-| `RELEASE_MANIFEST_INVALID` | Superseding `ReleaseManifest` fails schema or contract validation | Manifest fix; re-run release |
-| `MISSING_RECEIPT` | Required `TransformReceipt` / `RedactionReceipt` / `AggregationReceipt` for the rollback target cannot be located | Re-emit missing receipt or pick a different target |
-| `MISSING_EVIDENCE` | `EvidenceRef` no longer resolves to an `EvidenceBundle` | Repair evidence resolution; pick a different target if irrecoverable |
-| `MISSING_REVIEW` | Required `ReviewRecord` absent | Convene the required reviewer; record the decision |
-| `REVIEW_REJECTED` | Reviewer denied the rollback | Re-scope; escalate; consider an alternative target or a correction-only path |
-| `ROLE_COLLAPSE` | Source-role collapse risk on the rollback target | Restore source role; refuse upcast; pick a different target |
-| `RIGHTS_UNKNOWN` / `SENSITIVITY_UNRESOLVED` | Rights or sensitivity status unresolved on the rollback target | Steward review; rights resolution; tier reassignment |
-| `SCHEMA_MISMATCH` / `CONTRACT_DRIFT` | Rollback target validates against an older schema/contract that no longer matches the active one | Schema fix and/or ADR; re-run validator |
-| `POLICY_REJECT` | Rollback target fails the **current** policy bundle | Re-run; consider correction-only path; do not bypass the gate |
-| `REPLAY_FAIL` | Replay verification did not reproduce the rollback target's receipts | Investigate non-determinism; pin tooling; re-run |
-| `CORRECTION_DERIVATIVES_UNRESOLVED` | Downstream derivatives could not be invalidated | Walk the invalidation list; engage cross-lane stewards |
-| `CACHE_INVALIDATION_FAILED` | Cache invalidation record could not be emitted or honored | Force-invalidate; if cache cannot be invalidated, hold disablement until cache TTL expires |
+### Public trust membrane
 
-[Back to top](#quick-jump)
+During containment and recovery:
 
----
+- public clients continue to use governed interfaces and released public-safe carriers;
+- no fallback may expose RAW, WORK, QUARANTINE, canonical/internal stores, unreleased candidates, source credentials, or direct model output;
+- maps, tiles, indexes, summaries, graph projections, and AI answers remain downstream carriers rather than truth or rollback authority;
+- current release, stale/withdrawn state, correction lineage, and evidence limitations should remain visible at the consequence-appropriate level; and
+- Focus Mode or other AI surfaces must abstain or deny when the surviving released evidence no longer supports an answer.
 
-## 16. Anti-patterns
+### Cross-lane dependents
 
-These are explicit non-actions. Reviewers should flag any rollback PR that exhibits them.
+Do not hard-code a broad domain list from this runbook. Enumerate actual dependents from the affected release manifest, catalog, graph/triplet projections, layer registry, runtime configuration, and observed consumers at the exact incident revision.
 
-> [!WARNING]
-> **Do not** silently mutate a previously released `ReleaseManifest`. The failed release is preserved and superseded; it is never edited in place.
+The operational invalidation plan must identify:
 
-> [!WARNING]
-> **Do not** rebuild a tile / layer / catalog record from raw inputs and call it "the rollback target." A rollback target is a *prior released artifact*, not a re-derivation. (A re-derivation is a forward fix and goes through the release path; it may be a correction, not a rollback.)
+- each dependent object or surface;
+- its owning lane and reviewer;
+- why it depends on the affected release;
+- whether it is invalidated, held, rebuilt, or unaffected;
+- the completion evidence; and
+- the safe response if one dependent cannot be updated.
 
-> [!WARNING]
-> **Do not** copy files around in the file system to "restore" a prior state. Rollback is a governed state transition through the same release path that produced the original release.
+A Hazards rollback may notify another lane, but it does not authorize a transitive rollback of that lane's release.
 
-> [!WARNING]
-> **Do not** treat a rollback as a way to bypass the policy gate. The rollback target is re-evaluated against the **current** policy bundle; a target that passed under an old policy may not pass now.
+### Public-state expectations
 
-> [!WARNING]
-> **Do not** use a rollback to retroactively change a `AIReceipt`. An AI answer is a new record; retroactive supersession of an `AIReceipt` is forbidden.
+The UI/API should eventually support unambiguous states such as stale, withdrawn, superseded, unavailable, and corrected, but those state contracts and parity checks must be verified from current implementation before operational use. Where the implementation cannot expose a safe truthful state, keep the affected surface fail-closed.
 
-> [!WARNING]
-> **Do not** allow a rollback to publish operational warning / advisory / watch context as life-safety. The non-life-safety disclaimer and the official-source redirect remain mandatory on every surface that touches operational context, including the rollback target.
-
-[Back to top](#quick-jump)
+[Back to top](#top)
 
 ---
 
-## 17. Open questions and verification backlog
+<a id="operational-graduation-gate"></a>
 
-These are tracked here in addition to `docs/registers/VERIFICATION_BACKLOG.md`. NEEDS VERIFICATION items become PROPOSED until they are settled by mounted-repo or ADR evidence.
+## Operational graduation gate
 
-| Item | Default posture | Verification step |
-|---|---|---|
-| Path placement: `docs/runbooks/<domain>/<RUNBOOK>.md` (this file) vs. flat `docs/runbooks/<domain>_<TYPE>.md` (per UI / Governed AI plan) | PROPOSED — convention question | Resolve with a docs steward decision or short ADR |
-| Schema home for `RollbackCard`, `CorrectionNotice`, `ReleaseManifest` | NEEDS VERIFICATION — defaults to `schemas/contracts/v1/release/` per ADR-0001 | Inspect mounted repo; confirm or ADR |
-| Policy engine binding for the release-gate policy re-run | NEEDS VERIFICATION — likely OPA / Conftest | Inspect `policy/` and CI workflow |
-| Replay-verification CI job name and fixture path | UNKNOWN | Inspect CI workflows and `fixtures/domains/hazards/` |
-| Cross-lane invalidation tooling (graph, vector index, catalog) | UNKNOWN | Inspect `packages/catalog/`, `packages/evidence-resolver/`, graph projection package |
-| Cache invalidation surface (CDN / edge / proxy) | UNKNOWN | Inspect `infra/` and `apps/governed-api/` |
-| Tombstone schema and visibility rules for Hazards | NEEDS VERIFICATION | Confirm tombstone register and UI visibility tests |
-| Rollback-card signing (cosign / DSSE) for Hazards releases | NEEDS VERIFICATION | Inspect signing pipeline and signing-key handling |
-| Hazards source rights and current terms (NOAA / NWS / FEMA / USGS / NASA / state EM) | NEEDS VERIFICATION | Source-steward review; per-source admissibility records |
-| Whether `data/rollback/hazards/` and `release/rollback_cards/` co-exist with the documented split | NEEDS VERIFICATION | Confirm or merge via ADR per Directory Rules open question |
+Do not replace `OPERATIONAL_ROLLBACK_HOLD` until one named Hazards scope demonstrates all of the following:
 
-[Back to top](#quick-jump)
+- [ ] accepted affected-release and prior-release identity contracts;
+- [ ] a production-safe no-write planner that cannot act on synthetic authorization alone;
+- [ ] an accepted executor whose input is cryptographically or deterministically bound to the approved plan;
+- [ ] reference resolution for evidence, policy, review, correction, and release objects;
+- [ ] current rights, sensitivity, sovereignty, consent, security, and precision review;
+- [ ] authenticated accountable reviewers and required separation of duties;
+- [ ] accepted signature/integrity verification;
+- [ ] real alias/current-state inspection and mutation with a reversal path;
+- [ ] real invalidation adapters and receipts for every required consumer;
+- [ ] public map/API/Evidence Drawer/AI parity checks;
+- [ ] residual-access and cache-propagation verification;
+- [ ] repeated non-production recovery exercises with timing and failure evidence;
+- [ ] incident containment and official-referral procedures;
+- [ ] correction, withdrawal, supersession, and public notice closure;
+- [ ] independent authorization for any production exercise; and
+- [ ] a reviewed update to this runbook grounded in the exact implemented commands.
 
----
+A partial implementation may narrow specific unknowns, but it must not silently upgrade the whole procedure.
 
-## 18. Related docs
-
-> [!NOTE]
-> Links below are repo-relative under the canonical tree defined by `docs/doctrine/directory-rules.md`. Specific file presence is PROPOSED until verified.
-
-- [`docs/runbooks/README.md`](../README.md) — runbook index *(PROPOSED)*
-- [`docs/runbooks/hazards/VALIDATION_RUNBOOK.md`](./VALIDATION_RUNBOOK.md) — Hazards validation runbook *(PROPOSED sibling)*
-- [`docs/runbooks/hazards/LOCAL_DEV_RUNBOOK.md`](./LOCAL_DEV_RUNBOOK.md) — Hazards local dev runbook *(PROPOSED sibling)*
-- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — lifecycle invariant
-- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — trust-membrane rules
-- [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — cite-or-abstain
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law
-- [`docs/domains/hazards/README.md`](../../domains/hazards/README.md) — Hazards domain identity, source families, sensitivity posture
-- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — governed API surface
-- [`docs/governance/separation-of-duties.md`](../../governance/separation-of-duties.md) — release authority, correction reviewer *(PROPOSED)*
-- [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — open verification items
-- [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — recorded conflicts between docs and repo state
-
-[Back to top](#quick-jump)
+[Back to top](#top)
 
 ---
 
-## Appendix A — RollbackCard fields
+<a id="16-anti-patterns"></a>
 
-Reference for authors of `RollbackCard` records produced by this runbook. CONFIRMED doctrine on purpose; PROPOSED on exact field shape; canonical schema lives in `schemas/contracts/v1/release/RollbackCard.schema.json` *(home PROPOSED per ADR-0001)*.
+## Anti-patterns
 
-<details>
-<summary><strong>Expand: PROPOSED field shape</strong></summary>
+- Do not mutate or delete the failed release to make history look clean.
+- Do not copy files into a prior path and call the result rollback.
+- Do not rebuild from RAW and label the new bytes a prior release.
+- Do not use style filters, client-side hiding, or an AI disclaimer as the sole containment control for sensitive or misleading data.
+- Do not treat a digest or signature as proof of source authority, evidence truth, policy approval, review, or release.
+- Do not let the rollback candidate approve or execute itself.
+- Do not run the synthetic helper against real data or create a marker around a production directory.
+- Do not weaken negative tests, required invalidation classes, target identity, safe-path checks, or governance flags to obtain a green result.
+- Do not claim operational recovery from a fixture, workflow summary, pull request, merge, or documentation update.
+- Do not let a Hazards rollback become an instruction about current emergency conditions.
 
-| Field | Type | Purpose |
-|---|---|---|
-| `release_id` | string (release identifier) | The PUBLISHED release being rolled back |
-| `rollback_to` | string (release identifier) | The prior release the public state is reverting to |
-| `reason` | string + structured `defect_class` enum | Plain-text reason and machine-readable defect class (§8) |
-| `defect_class` | enum | One of: `evidence_gap`, `rights_defect`, `sensitivity_leak`, `geometry_defect`, `temporal_defect`, `policy_defect`, `ai_answer_defect`, `catalog_defect`, `source_role_collapse`, `release_infrastructure`, `other` |
-| `triggered_by` | string + ref | Detection source (validator, reviewer, user correction, monitoring) |
-| `invalidates[]` | array of refs | Catalog records, graph projections, vector index entries, Evidence Drawer payloads, `AIReceipt`s to invalidate |
-| `cross_lane_notifications[]` | array of refs | Cross-lane lanes notified (Hydrology, Atmosphere/Air, Settlements/Infrastructure, Roads/Rail, Story/export) |
-| `review_ref[]` | array of `ReviewRecord` refs | All required reviewers' decisions |
-| `policy_decision_ref` | `PolicyDecision` ref | Re-run against the current policy bundle |
-| `validation_report_ref` | `ValidationReport` ref | Replay verification report |
-| `correction_notice_ref` | `CorrectionNotice` ref | The paired notice |
-| `superseding_release_id` | string | The new `ReleaseManifest` that pins the rollback target |
-| `time` | ISO-8601 timestamp | Decision time |
-| `actor` | identity | Domain steward / release authority who issued the card |
-| `signature` | DSSE / cosign envelope | Signed envelope; verification required before public-state change |
-| `status` | enum | `proposed`, `verifying`, `closed`, `failed`, `held` |
-
-</details>
-
-[Back to top](#quick-jump)
+[Back to top](#top)
 
 ---
 
-## Appendix B — Worked example: stale NWS warning context release
+<a id="documentation-and-review-handoff"></a>
 
-Illustrative only. Identifiers, file paths, and tool names are placeholders. The walk-through is meant to make the flow concrete, not to claim implementation.
+## Documentation and review handoff
 
-<details>
-<summary><strong>Expand: worked example</strong></summary>
+### Focused repository checks
 
-**Scenario.** A Hazards release `hazards-rel-2026-05-10-04` published a layer that renders the NWS `WarningContext` from the morning's retrieval. The freshness validator on the afternoon CI run reports that the `WarningContext` polygon for one Kansas county is past its declared expiry but still rendering as current on the affected layer's tile bundle. No life-safety instructions are emitted by KFM, but a stale warning context is visibly current on the public UI.
+Run from the repository root:
 
-**Defect class.** `temporal_defect` with a secondary `source_role_collapse_risk` posture (operational context being rendered without the non-life-safety disclaimer adequately surfaced).
-
-**Step-by-step.**
-
-1. **Detect.** Freshness validator emits `STALE_OPERATIONAL_CONTEXT` for the affected polygon.
-2. **Short-circuit disablement.** Operational-context layer is disabled on the affected tile bundle; the UI replaces the layer with the non-life-safety disclaimer plus a redirect to the NWS official URL for the affected county. Trust badge: *withdrawn*.
-3. **Identify failed `release_id`.** `hazards-rel-2026-05-10-04`.
-4. **Locate rollback target.** Walk the `rollback_target` chain on the failed `ReleaseManifest`. Candidate: `hazards-rel-2026-05-10-02`, which preceded the morning operational refresh.
-5. **Verify target.** Digests and signatures on `hazards-rel-2026-05-10-02` artifacts verify. `EvidenceRef → EvidenceBundle` resolves. Source-role anti-collapse tests pass.
-6. **Re-run policy gate.** `PolicyDecision` against the current policy bundle returns ALLOW for the rollback target's content (which contains no operational context for the affected county at that time).
-7. **Reviewers.** Hazards domain steward + release authority + AI surface steward sign `ReviewRecord`s. Sensitivity reviewer not required (no sensitive-content posture).
-8. **Emit `RollbackCard` + `CorrectionNotice`.** `RollbackCard` lists `invalidates[]`: the catalog record for the failed release, the Evidence Drawer payload that referenced the stale `WarningContext`, and one `AIReceipt` that had answered a user question using the stale context.
-9. **Issue superseding `ReleaseManifest`.** `hazards-rel-2026-05-10-05` pins `rollback_to: hazards-rel-2026-05-10-02`.
-10. **Repoint aliases.** Layer URL aliases repointed; alias-revert receipt emitted under `data/rollback/hazards/<alias>/`.
-11. **Invalidate downstream.** Catalog record marked superseded; Evidence Drawer payload hidden from public; `AIReceipt` marked invalidated for public visibility (preserved in audit).
-12. **Cache invalidation.** CDN tile cache invalidated; UI shows *superseded* on the failed release and *current* on the rollback target.
-13. **Replay verification.** Drill fixture re-derives `hazards-rel-2026-05-10-02` receipts; hashes match.
-14. **Close.** Verification report attached to the `RollbackCard`. Status moves from `verifying` to `closed`.
-
-**Records produced.**
-
-```text
-release/manifests/hazards-rel-2026-05-10-05.json     # superseding release pinning rollback target
-release/manifests/hazards-rel-2026-05-10-04.json     # preserved; marked superseded
-release/rollback_cards/hazards-rb-2026-05-10-01.json # RollbackCard
-release/correction_notices/hazards-cn-2026-05-10-01.json
-data/rollback/hazards/operational-context-layer/<receipt_id>.json
+```bash
+python tools/validators/docs/link-check/check_links.py \
+  --repo-root . \
+  --format text \
+  docs/runbooks/hazards/ROLLBACK_RUNBOOK.md
 ```
 
-</details>
+Validate the current RollbackCard fixture profile:
 
-[Back to top](#quick-jump)
+```bash
+python tools/validators/release/validate_rollback_card.py --fixtures
+```
+
+Run the bounded rollback rehearsal:
+
+```bash
+KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 TZ=UTC \
+  python -m unittest -q \
+  tests.release.test_synthetic_rollback_rehearsal \
+  tests.domains.hazards.test_synthetic_rollback_rehearsal
+```
+
+### Review handoff
+
+Record:
+
+- exact base and head SHAs;
+- changed paths;
+- local command outputs or explicit `NOT_RUN`;
+- hosted workflow run identities and conclusions;
+- whether a human reviewer was requested and whether a review was submitted;
+- every remaining operational hold;
+- confirmation that no source was admitted and no release, deployment, promotion, publication, alias, cache, or public state was changed; and
+- the documentation rollback path.
+
+A draft pull request with pending hosted checks is a valid delivery state. It is not ready-for-review, approved, merged, released, deployed, promoted, or published by implication.
+
+[Back to top](#top)
 
 ---
 
-## Footer
+<a id="17-open-questions-and-verification-backlog"></a>
+<a id="maintenance-correction-and-rollback"></a>
 
-| Field | Value |
-|---|---|
-| **Doc type** | Standard runbook |
-| **Owners** | Docs steward · Hazards domain steward · Release authority |
-| **Last updated** | 2026-05-12 |
-| **Authority** | CONFIRMED doctrine; PROPOSED implementation; PROPOSED specific paths |
+## Maintenance, correction, and rollback
 
-**Related docs:** [`docs/runbooks/README.md`](../README.md) · [`docs/domains/hazards/README.md`](../../domains/hazards/README.md) · [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) · [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) · [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md)
+### Verification backlog
 
-[Back to top](#quick-jump)
+- Accountable Hazards, evidence, safety, policy, rollback, correction, and release stewardship.
+- Accepted production rollback plan and execution contracts.
+- Current policy evaluator and bundle identity.
+- Signature/integrity profile and custody.
+- Real published-alias inventory and mutation interface.
+- Real invalidation adapters, receipts, retry semantics, and partial-failure behavior.
+- Public UI/API recovery states and parity tests.
+- Correction, withdrawal, release-lineage, and public-notice profiles used by an operational rollback.
+- Exact recovery timing, residual-access checks, monitoring, and reversal behavior.
+- Hosted exact-head checks and required-check coupling for the eventual operational profile.
+
+### When to update this runbook
+
+Update the file when:
+
+- the helper, workflow, contract, schema, validator, fixtures, or focused tests change;
+- production rollback or alias tooling stops being a placeholder;
+- an accountable reviewer/authority model is accepted;
+- policy, signing, invalidation, correction, release, or public recovery surfaces become executable;
+- a real incident or non-production recovery exercise exposes a gap; or
+- a related path is migrated under Directory Rules.
+
+### Rollback path for this documentation change
+
+Before merge, close the draft pull request and delete the task branch through normal repository controls. After an authorized merge, revert the focused documentation commit. Reverting this Markdown file does not alter the helper, tests, fixtures, candidate schema, policy, release records, aliases, public data, deployment, or publication state.
+
+[Back to top](#top)
+
+---
+
+<a id="18-related-docs"></a>
+<a id="related-repository-surfaces"></a>
+
+## Related repository surfaces
+
+### Governing and domain documentation
+
+- [ADR-0029 — Adopt Directory Governance Standard v2](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+- [Directory Rules v2](../../doctrine/directory-rules.md)
+- [Runbook inventory](../README.md)
+- [Hazards domain README](../../domains/hazards/README.md)
+- [Hazards not-for-life-safety audit](NOT_FOR_LIFE_SAFETY_AUDIT_RUNBOOK.md)
+- [Hazards no-network validation](NO_NETWORK_TEST_RUNBOOK.md)
+- [Hazards promotion runbook](PROMOTION_RUNBOOK.md)
+- [Hazards rollback drill](ROLLBACK_DRILL.md)
+- [Hazards source refresh runbook](SOURCE_REFRESH_RUNBOOK.md)
+- [General synthetic rollback rehearsal](../rollback-rehearsal.md)
+
+### Contracts, validation, fixtures, and CI
+
+- [RollbackCard contract](../../../contracts/release/rollback_card.md)
+- [RollbackCard schema](../../../schemas/contracts/v1/release/rollback_card.schema.json)
+- [RollbackCard fixtures](../../../fixtures/release/rollback_card/)
+- [RollbackCard validator](../../../tools/validators/release/validate_rollback_card.py)
+- [Synthetic rollback helper](../../../tools/release/rollback_apply.py)
+- [Generic rehearsal tests](../../../tests/release/test_synthetic_rollback_rehearsal.py)
+- [Hazards rehearsal fixture](../../../fixtures/domains/hazards/synthetic_rollback_rehearsal/)
+- [Hazards rehearsal tests](../../../tests/domains/hazards/test_synthetic_rollback_rehearsal.py)
+- [Rollback readiness workflow](../../../.github/workflows/rollback-drill.yml)
+- [Production rollback placeholder](../../../pipelines/rollback/main.py)
+- [Published-alias auditor placeholder](../../../scripts/maintenance/audit_published_aliases.py)
+- [Release governance root](../../../release/)
+- [Rollback-card lane](../../../release/rollback_cards/)
+
+[Back to top](#top)
