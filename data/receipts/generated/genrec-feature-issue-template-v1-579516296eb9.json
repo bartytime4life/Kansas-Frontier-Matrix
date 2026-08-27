@@ -1,1 +1,139 @@
-{"receipt_id":"genrec-feature-issue-template-v1-579516296eb9","contract_version":"3.0.0","artifact_paths":[".github/ISSUE_TEMPLATE/feature.md"],"artifact_hashes":{".github/ISSUE_TEMPLATE/feature.md":"sha256:579516296eb9e2d0781834c086d1e64a83e966b9c7d5bb5c02e2958bf1e43cbc"},"model_identity":{"provider":"OpenAI","model":"GPT-5.6","version":"2026-08-27 session"},"prompt_or_contract":"sha256:1eb456ca4497015dbd54101bc4ea23da379219896213e1cc87b49d7527edffa7","parameters":{"seed":null,"temperature":null,"top_p":null,"max_tokens":null,"tools_enabled":["GitHub connector","Google Drive connector","Notion connector","deterministic artifact validation","remote repository read-back"]},"inputs":{"evidence_hashes":["sha256:1eb456ca4497015dbd54101bc4ea23da379219896213e1cc87b49d7527edffa7"],"attached_docs":["Pasted markdown(20260827-181644).md - KFM Governed Improvement, Upgrade & Repair Agent v1.0"],"evidence_refs":["github://bartytime4life/Kansas-Frontier-Matrix/commit/1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f","github://bartytime4life/Kansas-Frontier-Matrix/commit/d6b72570bc71aa4c7adec7cba518c214c38c5cb2","github://bartytime4life/Kansas-Frontier-Matrix/blob/1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f/.github/ISSUE_TEMPLATE/feature.md","github://bartytime4life/Kansas-Frontier-Matrix/blob/1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f/.github/ISSUE_TEMPLATE/README.md","github://bartytime4life/Kansas-Frontier-Matrix/blob/1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md","github://bartytime4life/Kansas-Frontier-Matrix/blob/1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f/schemas/contracts/v1/receipts/generated_receipt.schema.json","source://google-drive/KFM-Governed-Improvement-Upgrade-Repair-Agent-v1.0","coordination://notion/KFM-Cross-System-Authority-Intake-Model"]},"truth_labels":{".github/ISSUE_TEMPLATE/feature.md":"PROPOSED"},"validation_gates":[{"gate":"repository-base-and-placement","outcome":"PASS","reason":"Refreshed to current main 1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f; the target feature template blob remained ea7eee9203fa8cf9b9cc3421e9559b73ec5af561, and same-path placement remains correct under accepted Directory Rules."},{"gate":"overlap-and-concurrency","outcome":"PASS","reason":"No open pull request was found owning the target bytes. Main advanced after the initial freeze, so the branch was reconciled to exact current main before delivery without overwriting the unchanged target."},{"gate":"frontmatter-and-routing","outcome":"PASS","reason":"Preserved chooser name, about, title, empty labels, and bartytime4life assignee."},{"gate":"truth-status-and-transition-separation","outcome":"PASS","reason":"Separated truth, implementation, validation, GitHub delivery, review, source, lifecycle, release, deployment, and publication states."},{"gate":"change-contract-and-eligibility","outcome":"PASS","reason":"Added source reconciliation, dependency closure, non-compensable gates, objective positive and fail-closed acceptance, validation, and rollback fields."},{"gate":"security-rights-and-sensitive-intake","outcome":"PASS","reason":"Preserved private-first routing and prohibitions on secrets, restricted material, harmful precision, living-person data, and DNA/genomic material."},{"gate":"markdown-and-receipt-integrity","outcome":"PASS","reason":"Verified front matter, balanced comments, final newline, no conflict markers, exact SHA-256 binding, and schema-shaped receipt fields."},{"gate":"repository-native-validator-suite","outcome":"SKIPPED","reason":"No mounted checkout was available; deterministic local checks and remote exact-head read-back are used, with hosted checks reported separately."},{"gate":"github-chooser-render-and-submission","outcome":"SKIPPED","reason":"The live chooser was not submitted; rendering and automatic assignee behavior remain hosted or human-review observations."}],"policy_decisions":[],"citations":[{"id":"attached-improvement-agent-prompt","validated":true,"evidence_ref":"sha256:1eb456ca4497015dbd54101bc4ea23da379219896213e1cc87b49d7527edffa7"},{"id":"pinned-current-feature-template","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f/.github/ISSUE_TEMPLATE/feature.md"},{"id":"issue-template-readme-v0.5","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f/.github/ISSUE_TEMPLATE/README.md"},{"id":"accepted-directory-governance","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"},{"id":"generated-receipt-contract","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f/schemas/contracts/v1/receipts/generated_receipt.schema.json"}],"human_review":{"reviewer_ids":[],"state":"pending","timestamp":null},"override_record":null,"created_at":"2026-08-27T18:29:25Z","emitter":"openai/gpt-5.6","links":{"pr_number":null,"adr_link":null,"drift_register_entry":null},"notes":"AI-authored alignment of the existing feature issue-intake template with the attached evidence-first improvement prompt. The change strengthens source and candidate reconciliation, truth-versus-implementation status, change-contract and eligibility gates, negative/no-network acceptance, failure attribution, and triage-to-governed-handoff state separation. It does not authorize implementation from issue content, accept an ADR, alter policy, admit or activate a source, change GitHub settings, merge, release, deploy, promote, or publish. The delivery branch was refreshed against main@1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f after unrelated repository advancement; the target baseline blob was unchanged."}
+{
+  "receipt_id": "genrec-feature-issue-template-v1-579516296eb9",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/ISSUE_TEMPLATE/feature.md"
+  ],
+  "artifact_hashes": {
+    ".github/ISSUE_TEMPLATE/feature.md": "sha256:579516296eb9e2d0781834c086d1e64a83e966b9c7d5bb5c02e2958bf1e43cbc"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6",
+    "version": "2026-08-27 session"
+  },
+  "prompt_or_contract": "sha256:1eb456ca4497015dbd54101bc4ea23da379219896213e1cc87b49d7527edffa7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "Notion connector",
+      "deterministic artifact validation",
+      "remote repository read-back"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:1eb456ca4497015dbd54101bc4ea23da379219896213e1cc87b49d7527edffa7"
+    ],
+    "attached_docs": [
+      "Pasted markdown(20260827-181644).md - KFM Governed Improvement, Upgrade & Repair Agent v1.0"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/d6b72570bc71aa4c7adec7cba518c214c38c5cb2",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f/.github/ISSUE_TEMPLATE/feature.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f/.github/ISSUE_TEMPLATE/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "source://google-drive/KFM-Governed-Improvement-Upgrade-Repair-Agent-v1.0",
+      "coordination://notion/KFM-Cross-System-Authority-Intake-Model"
+    ]
+  },
+  "truth_labels": {
+    ".github/ISSUE_TEMPLATE/feature.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-base-and-placement",
+      "outcome": "PASS",
+      "reason": "Refreshed to current main 1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f; the target feature template blob remained ea7eee9203fa8cf9b9cc3421e9559b73ec5af561, and same-path placement remains correct under accepted Directory Rules."
+    },
+    {
+      "gate": "overlap-and-concurrency",
+      "outcome": "PASS",
+      "reason": "No open pull request was found owning the target bytes. Main advanced after the initial freeze, so the branch was reconciled to exact current main before delivery without overwriting the unchanged target."
+    },
+    {
+      "gate": "frontmatter-and-routing",
+      "outcome": "PASS",
+      "reason": "Preserved chooser name, about, title, empty labels, and bartytime4life assignee."
+    },
+    {
+      "gate": "truth-status-and-transition-separation",
+      "outcome": "PASS",
+      "reason": "Separated truth, implementation, validation, GitHub delivery, review, source, lifecycle, release, deployment, and publication states."
+    },
+    {
+      "gate": "change-contract-and-eligibility",
+      "outcome": "PASS",
+      "reason": "Added source reconciliation, dependency closure, non-compensable gates, objective positive and fail-closed acceptance, validation, and rollback fields."
+    },
+    {
+      "gate": "security-rights-and-sensitive-intake",
+      "outcome": "PASS",
+      "reason": "Preserved private-first routing and prohibitions on secrets, restricted material, harmful precision, living-person data, and DNA/genomic material."
+    },
+    {
+      "gate": "markdown-and-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "Verified front matter, balanced comments, final newline, no conflict markers, exact SHA-256 binding, and schema-shaped receipt fields."
+    },
+    {
+      "gate": "repository-native-validator-suite",
+      "outcome": "SKIPPED",
+      "reason": "No mounted checkout was available; deterministic local checks and remote exact-head read-back are used, with hosted checks reported separately."
+    },
+    {
+      "gate": "github-chooser-render-and-submission",
+      "outcome": "SKIPPED",
+      "reason": "The live chooser was not submitted; rendering and automatic assignee behavior remain hosted or human-review observations."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "attached-improvement-agent-prompt",
+      "validated": true,
+      "evidence_ref": "sha256:1eb456ca4497015dbd54101bc4ea23da379219896213e1cc87b49d7527edffa7"
+    },
+    {
+      "id": "pinned-current-feature-template",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f/.github/ISSUE_TEMPLATE/feature.md"
+    },
+    {
+      "id": "issue-template-readme-v0.5",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f/.github/ISSUE_TEMPLATE/README.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "generated-receipt-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-27T18:29:25Z",
+  "emitter": "openai/gpt-5.6",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored alignment of the existing feature issue-intake template with the attached evidence-first improvement prompt. The change strengthens source and candidate reconciliation, truth-versus-implementation status, change-contract and eligibility gates, negative/no-network acceptance, failure attribution, and triage-to-governed-handoff state separation. It does not authorize implementation from issue content, accept an ADR, alter policy, admit or activate a source, change GitHub settings, merge, release, deploy, promote, or publish. The delivery branch was refreshed against main@1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f after unrelated repository advancement; the target baseline blob was unchanged."
+}
