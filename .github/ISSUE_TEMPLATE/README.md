@@ -2,27 +2,27 @@
 doc_id: kfm://doc/github-issue-template-readme
 title: .github/ISSUE_TEMPLATE README
 type: README
-version: v0.4
+version: v0.5
 status: draft; repository-grounded issue-intake governance; live settings selectively verified
 owners: ["@bartytime4life"]
 created: 2026-07-17
-updated: 2026-08-10
+updated: 2026-08-27
 policy_label: public; issue-intake; governance; security-aware; non-authoritative
 owning_root: .github/
 responsibility: GitHub public issue chooser templates and routing into governed KFM work
 truth_posture: CONFIRMED repository evidence / NEEDS VERIFICATION live rendering and enforcement / issue intake is non-authoritative
-evidence_snapshot: bartytime4life/Kansas-Frontier-Matrix main@e663400eddaef042486dfe73ae558e6d0d9e4694
-evidence_root_tree: d7687ae53fe52540a95e11a93781cd9bd1fbc721
-evidence_github_tree: a4d5691464d3ad89f5c0d3a72fe52a1ed2c1bc02
-evidence_issue_template_tree: f23b899a18ccfafe3de44683c35ed59dc428d2f6
-evidence_target_prior_blob: 364def954b051af032e40925ba11cd6d9d8a14b4
-evidence_adr_prior_blob: 9c4c44ab57c05903f76d1439504053de9e96e014
+evidence_snapshot: bartytime4life/Kansas-Frontier-Matrix main@ef7f2fbd523af5d803fadf92504d7f734c82c2ca
+evidence_root_tree: 989b76bea75e30d275a7cd515ea3f6cab4f6adec
+evidence_github_tree: 245bd98cf05ac3f5afd9765db34ef0c9393639b6
+evidence_issue_template_tree: 7a0dfe35ba99fb1eb6eafac16e0b8410c3510107
+evidence_target_prior_blob: f689cad3a3c66e4e201208c66bbe4e218c5edea5
+evidence_adr_blob: 8fc79fe67bfb84fa9feb287670478a5a374fb068
 evidence_chooser_templates: 6 Markdown files
 evidence_issue_forms: 0
 evidence_chooser_config: absent
 evidence_issues: enabled
 evidence_discussions: disabled
-evidence_private_vulnerability_reporting: enabled
+evidence_private_vulnerability_reporting: NEEDS VERIFICATION; last confirmed enabled 2026-08-10
 verified_template_labels: ["needs-review"]
 related:
   - ../README.md
@@ -40,8 +40,9 @@ related:
   - ../../docs/registers/VERIFICATION_BACKLOG.md
 notes:
   - "The tracked inventory is complete for .github/ISSUE_TEMPLATE at the pinned baseline."
-  - "Private vulnerability reporting, repository Issues, Discussions, the absent legacy ADR labels, and the existing needs-review label were checked through current GitHub state on 2026-08-10."
-  - "This edition changes adr.md, this README, and a generated provenance receipt; it does not create a label, change an assignee or setting, accept an ADR, authorize dependent implementation, release, deploy, promote, or publish."
+  - "Repository Issues, Discussions, the six-template inventory, chooser configuration, current assignee routing, and the needs-review label were checked at the pinned baseline on 2026-08-27."
+  - "Private vulnerability reporting was last confirmed enabled on 2026-08-10; the current setting could not be read through the connected capability and remains NEEDS VERIFICATION."
+  - "This edition changes this README and a generated provenance receipt; it does not change a chooser template, label, assignee, setting, workflow, policy, ADR state, source state, release, deployment, promotion, or publication."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -51,7 +52,7 @@ notes:
 [![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b)](#status)
 [![Templates: 6](https://img.shields.io/badge/templates-6-7c3aed)](#confirmed-template-inventory)
 [![Authority: intake only](https://img.shields.io/badge/authority-intake%20only-b91c1c)](#authority-boundary)
-[![Private vulnerability reporting: enabled](https://img.shields.io/badge/private%20reporting-enabled-15803d)](#public-safety-boundary)
+[![Private reporting: verify current](https://img.shields.io/badge/private%20reporting-verify%20current-f59e0b)](#public-safety-boundary)
 
 > Public-safe issue intake for bugs, features, ADR proposals, evidence corrections, sensitivity concerns, and source-admission proposals. Issues route work; they do not become KFM authority objects or independently authorize repository mutation.
 
@@ -67,6 +68,7 @@ notes:
 - [Routing guide](#routing-guide)
 - [Public-safety boundary](#public-safety-boundary)
 - [Template authoring contract](#template-authoring-contract)
+- [Triage and implementation handoff](#triage-and-implementation-handoff)
 - [Issue-to-governed-artifact flow](#issue-to-governed-artifact-flow)
 - [Validation](#validation)
 - [Review and maintenance](#review-and-maintenance)
@@ -103,22 +105,22 @@ Reporter-provided prose, links, logs, screenshots, attachments, generated conten
 
 ## Status
 
-Baseline: `main@e663400eddaef042486dfe73ae558e6d0d9e4694`, inspected and reconciled 2026-08-10.
+Baseline: `main@ef7f2fbd523af5d803fadf92504d7f734c82c2ca`, inspected and reconciled 2026-08-27.
 
 | Surface | Confirmed state | Evidence boundary |
 |---|---|---|
-| Markdown chooser templates | **6 present** | Exact for baseline issue-template tree `f23b899a18ccfafe3de44683c35ed59dc428d2f6`. GitHub chooser rendering was not exercised in this pass. |
+| Markdown chooser templates | **6 present** | Exact for baseline issue-template tree `7a0dfe35ba99fb1eb6eafac16e0b8410c3510107`. GitHub chooser rendering was not exercised in this pass. |
 | Issue-form YAML | **0 present** | No structured issue form is tracked in this subtree. |
 | `config.yml` | **Absent** | No repository-tracked chooser configuration changes blank issues or contact links. Live chooser behavior was not exercised. |
 | Repository Issues | **Enabled** | Confirmed from current repository metadata. |
 | GitHub Discussions | **Disabled** | No Discussions-based general-question route is available. |
-| Private vulnerability reporting | **Enabled** | Confirmed from GitHub's current private-vulnerability-reporting state. Follow [`SECURITY.md`](../../SECURITY.md) and use the repository's private reporting UI. |
+| Private vulnerability reporting | **NEEDS VERIFICATION** | Last confirmed enabled on 2026-08-10. The current setting endpoint was unavailable to this pass; follow [`SECURITY.md`](../../SECURITY.md) and do not disclose sensitive detail publicly while availability is unresolved. |
 | Assignee routing | All six templates name `bartytime4life` | Assignment is intake routing, not review or approval. |
-| Template labels | `adr.md` requests the existing `needs-review` label; the other templates request none | The pre-change `adr` and `adr-proposed` labels were absent. This change replaces those unresolved references without creating or changing repository labels. |
+| Template labels | `adr.md` requests `needs-review`; the other templates request none | `needs-review` was observed on current issue #3400 at the pinned baseline. The older `adr` and `adr-proposed` mismatch remains historical; no label is created or changed here. |
 | CODEOWNERS | [`.github/CODEOWNERS`](../CODEOWNERS) routes this subtree to `@bartytime4life` | Required-review enforcement and independent review remain **NEEDS VERIFICATION**. |
 
 > [!NOTE]
-> This edition resolves the recorded ADR chooser label mismatch by using the already-existing `needs-review` label. Labeling remains triage metadata; it does not accept an ADR, authenticate review, or authorize implementation, release, or publication.
+> The ADR chooser's `needs-review` label currently resolves to an observed repository label. Labeling remains triage metadata; it does not accept an ADR, authenticate review, or authorize implementation, release, or publication.
 
 ## Confirmed template inventory
 
@@ -157,7 +159,7 @@ All six chooser templates currently:
 
 | Report | Public issue? | Route |
 |---|---:|---|
-| Vulnerability, credential exposure, exploit path, unsafe exact location, or active sensitive-data exposure | **No** | Follow [`SECURITY.md`](../../SECURITY.md) and use GitHub private vulnerability reporting. |
+| Vulnerability, credential exposure, exploit path, unsafe exact location, or active sensitive-data exposure | **No** | Follow [`SECURITY.md`](../../SECURITY.md). Use private vulnerability reporting when available; do not fall back to a public issue while private-route availability is unresolved. |
 | Architecture or governance decision | Yes, when public-safe | [`adr.md`](adr.md), followed by the reviewed ADR process. |
 | Reproducible defect | Yes, when public-safe | [`bug.md`](bug.md). |
 | Released or generated claim may be wrong or stale | Usually, with minimized public detail | [`evidence_correction.md`](evidence_correction.md); escalate privately when evidence is restricted. |
@@ -177,7 +179,7 @@ Use synthetic or minimized examples. When rights, sensitivity, or public fitness
 
 Issue templates must not ask reporters by default to paste unrestricted logs, complete datasets, raw source payloads, precise coordinates, private evidence, or live credentials. A link or attachment is not safer merely because it is indirect.
 
-Private vulnerability reporting is enabled for this repository. That setting supports confidential intake; it does not itself approve testing, remediation, disclosure timing, release, or publication.
+Private vulnerability reporting was last confirmed enabled on 2026-08-10; its current state is **NEEDS VERIFICATION**. When available, it supports confidential intake, but does not itself approve testing, remediation, disclosure timing, release, or publication.
 
 ## Template authoring contract
 
@@ -220,7 +222,7 @@ Keep `name`, `about`, `title`, `labels`, and `assignees` present with GitHub-com
 - Treat assignment as a request for triage, not evidence that review occurred.
 - Preserve current human routing unless the task explicitly changes it.
 
-The ADR chooser now uses the existing `needs-review` label. The prior references to absent `adr` and `adr-proposed` labels remain historical evidence in earlier commits and generated receipts; this change does not create, rename, or delete repository labels.
+The ADR chooser uses `needs-review`, which was observed on current issue #3400 during this evidence freeze. The prior references to absent `adr` and `adr-proposed` labels remain historical evidence in earlier commits and generated receipts; this change does not create, rename, or delete repository labels.
 
 ### Issue forms and chooser configuration
 
@@ -249,6 +251,33 @@ When a chooser template changes, review at least:
 - the AI-generated provenance receipt when the change is AI-authored.
 
 Historical generated receipts remain immutable process records. Emit a new receipt for new authored bytes rather than rewriting prior provenance.
+
+## Triage and implementation handoff
+
+An issue is ready for bounded implementation planning only when current evidence supports a coherent change contract. The issue records that contract; it does not supply implementation, review, merge, release, or publication authority by itself.
+
+| Handoff question | Minimum reviewable evidence |
+|---|---|
+| Goal and problem | One observable outcome and a verified defect, gap, stale claim, or improvement opportunity. |
+| Current and desired state | Exact baseline evidence, the smallest intended end state, and explicit non-goals. |
+| Ownership and placement | Existing target paths, one authority owner, the applicable responsibility root, adjacent README contract, accepted ADRs, and canonical sources or generators. |
+| Dependency closure | Direct contracts, schemas, policy, registries, fixtures, tests, workflows, generated outputs, documentation, and consumers that must agree for the claim to become true. |
+| Overlap | Open pull requests, branches, issues, migrations, or other active work that touches the same bytes or semantic authority surface. |
+| Acceptance and denial cases | Objective positive criteria plus relevant fail-closed, negative, compatibility, no-network, or rollback cases. |
+| Rights and sensitivity | Source role, license, consent, sovereignty, privacy, security, harmful precision, and public-path effects, with unresolved risk held or routed privately. |
+| Validation | Focused repository-native checks, exact tested SHA, hosted-check expectations, and honest failure attribution. |
+| Correction and rollback | The smallest safe abandon, revert, forward-fix, withdrawal, or supersession boundary. |
+| Delivery boundary | The separately authorized terminal state, normally one feature branch and one draft pull request for one coherent slice. |
+
+A current, directly authored implementation request may authorize scoped repository work within its stated boundary. Without that separate request, the issue remains intake and coordination only. Even with authorization, default delivery is reviewable and unmerged: do not infer ready-for-review, approval, merge, release, deployment, promotion, publication, source activation, or repository-settings authority.
+
+Keep three state dimensions distinct:
+
+- truth state: `CONFIRMED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION`;
+- implementation state: implemented on the pinned default branch, drafted on a branch, partial, absent, in flight, superseded, contradicted, or not inspected; and
+- GitHub state: open or closed issue, assigned or unassigned, labeled or unlabeled, draft or non-draft pull request, and hosted checks with their actual outcomes.
+
+If ownership, accepted authority, overlap, rights, sensitivity, testability, or rollback cannot be bounded, narrow the slice or record the exact blocker. Do not weaken a validator, baseline, policy, evidence resolver, trust boundary, security default, promotion gate, or publication control to make an issue appear ready.
 
 ## Issue-to-governed-artifact flow
 
@@ -319,9 +348,9 @@ Review evidence snapshots as observations, not perpetual facts. Repin current st
 
 ## Rollback
 
-Before merge, close or abandon the draft pull request and leave the feature branch unmerged. After an authorized merge, revert the ADR template, this README, and the accompanying generated-receipt commit through a new pull request.
+Before merge, close or abandon the draft pull request and leave the feature branch unmerged. After an authorized merge, revert this README and the accompanying generated-receipt commit through a new pull request.
 
-This change does not create, rename, or delete a label; change an assignee, workflow, repository setting, issue, release, deployment, data lifecycle state, or publication state. Rollback therefore requires no data migration, user notification, cache invalidation, or publication withdrawal.
+This change does not modify a chooser template; create, rename, or delete a label; change an assignee, workflow, repository setting, issue, release, deployment, data lifecycle state, or publication state. Rollback therefore requires no chooser migration, data migration, user notification, cache invalidation, or publication withdrawal.
 
 Do not rewrite historical generated receipts during rollback. Preserve them as provenance and add a new receipt for any corrective authored bytes.
 
@@ -331,13 +360,14 @@ Do not rewrite historical generated receipts during rollback. Preserve them as p
 - **NEEDS VERIFICATION** — blank-issue behavior in the rendered chooser while `config.yml` is absent.
 - **NEEDS VERIFICATION** — issue-to-project and other issue automation consuming titles, labels, or body text.
 - **NEEDS VERIFICATION** — required CODEOWNERS review, ruleset coupling, and independent review routing.
-- **NEEDS VERIFICATION** — verified fallback private contact if GitHub private vulnerability reporting is unavailable.
+- **NEEDS VERIFICATION** — current private vulnerability reporting status and a verified fallback private contact if it is unavailable.
 - **UNKNOWN** — intended general-question route while Discussions are disabled.
 
 ## Changelog
 
 | Date | Version | Change |
 |---|---|---|
+| 2026-08-27 | v0.5 | Repinned the README to current `main`; preserved the six-template inventory and current Issues/Discussions/label evidence; narrowed private vulnerability reporting to its last verified state; added a dependency-closed triage-to-implementation handoff contract; and updated rollback and provenance boundaries without changing chooser behavior. |
 | 2026-08-10 | v0.4 | Reconciled the merged v0.3 README with the ADR chooser implementation: replaced absent ADR label references with the verified `needs-review` label, preserved live Issues/Discussions/private-reporting evidence, clarified non-activation and governance-to-implementation ordering, and updated rollback and provenance boundaries. |
 | 2026-08-10 | v0.3 | Repinned the subtree to current `main`; confirmed six Markdown templates, no issue forms or chooser config, Issues enabled, Discussions disabled, and private vulnerability reporting enabled; confirmed the ADR template's two requested labels are absent; added a chooser contract matrix, dependency discipline, validation commands, and rollback guidance without changing live chooser behavior. |
 | 2026-07-22 | v0.2 | Reconciled the README to all six chooser templates, verified the absence of issue forms and `config.yml`, corrected owner and CODEOWNERS claims, and bounded label and settings behavior. |
