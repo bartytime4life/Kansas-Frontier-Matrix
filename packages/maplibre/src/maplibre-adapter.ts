@@ -24,6 +24,18 @@ function createEmptyStyle() {
   return { version: 8 as const, sources: {}, layers: [] };
 }
 
+function supportsWebGL2(): boolean {
+  if (typeof document === "undefined") return false;
+  try {
+    const context = document.createElement("canvas").getContext("webgl2");
+    if (context === null) return false;
+    context.getExtension("WEBGL_lose_context")?.loseContext();
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export type MapLibreAdapterOptions = Readonly<{
   /** ID of an existing, empty browser element owned by the calling app. */
   containerId: string;
@@ -98,6 +110,11 @@ export class MapLibreAdapter implements MapRuntimePort {
     });
     this.initialization = initialization;
     this.rejectInitialization = rejectInitialization;
+
+    if (!supportsWebGL2()) {
+      this.failInitialization();
+      return initialization;
+    }
 
     try {
       const map = new MapLibreMap({
