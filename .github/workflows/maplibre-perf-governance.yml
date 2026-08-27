@@ -22,8 +22,8 @@
 # - Three repository-owned pure-Python negative-path test functions are invoked
 #   directly; this lane does not install workspace dependencies or browsers.
 # - Readiness inspection is standard-library-only and does not replace validators.
-# - The repository pnpm lock records workspace dependency state. It is not evidence
-#   that the dependency-free MapLibre package or held browser runtime is ready.
+# - The repository pnpm lock records the exact package-owned MapLibre dependency
+#   state. It is not evidence that the held browser runtime is ready.
 # Inputs:
 # - MapLibre scripts, placeholder schemas/validators, config, fixture/test lanes,
 #   package/Make commands, renderer/docs boundaries, and candidate trust builders.
@@ -260,6 +260,12 @@ jobs:
           import re
           from pathlib import Path
 
+          from tools.validators.maplibre.validate_v6_readiness import (
+              Outcome as ReadinessOutcome,
+              TARGET_VERSION,
+              scan_repository,
+          )
+
           alternative_lockfiles = (
               Path("package-lock.json"),
               Path("npm-shrinkwrap.json"),
@@ -294,7 +300,7 @@ jobs:
           for lock_marker in (
               "lockfileVersion: '9.0'",
               "  apps/explorer-web:",
-              "  packages/maplibre: {}",
+              "  packages/maplibre:",
           ):
               if lock_marker not in lock_text:
                   raise SystemExit(
@@ -306,22 +312,77 @@ jobs:
           maplibre_package = json.loads(
               Path("packages/maplibre/package.json").read_text(encoding="utf-8")
           )
-          dependency_fields = (
-              "dependencies",
-              "devDependencies",
-              "optionalDependencies",
-              "peerDependencies",
-          )
-          surfaced_maplibre_dependencies = {
-              field: maplibre_package[field]
-              for field in dependency_fields
-              if maplibre_package.get(field)
-          }
-          if surfaced_maplibre_dependencies:
+          runtime_dependencies = maplibre_package.get("dependencies")
+          dev_dependencies = maplibre_package.get("devDependencies")
+          if (
+              not isinstance(runtime_dependencies, dict)
+              or set(runtime_dependencies) != {"maplibre-gl"}
+          ):
               raise SystemExit(
-                  "The @kfm/maplibre package gained dependencies. Review runtime ownership, "
+                  "The @kfm/maplibre runtime dependency boundary changed. Review ownership, "
                   "browser installation, license, cache, and no-network behavior before "
-                  "changing CI."
+                  "changing CI; expected only maplibre-gl in dependencies."
+              )
+          selected_version = runtime_dependencies["maplibre-gl"]
+          if (
+              not isinstance(selected_version, str)
+              or re.fullmatch(r"6\.[0-9]+\.[0-9]+", selected_version) is None
+          ):
+              raise SystemExit(
+                  "The @kfm/maplibre package must select one exact MapLibre GL JS 6.x "
+                  "version; ranges and unreviewed majors are not accepted by this gate."
+              )
+          if dev_dependencies != {"vitest": "4.1.11"}:
+              raise SystemExit(
+                  "The reviewed @kfm/maplibre development dependency boundary changed. "
+                  "Reconcile package tests and install behavior before changing CI."
+              )
+          for field in ("optionalDependencies", "peerDependencies"):
+              if maplibre_package.get(field):
+                  raise SystemExit(
+                      f"The @kfm/maplibre {field} boundary changed. Review runtime and "
+                      "consumer compatibility before changing CI."
+                  )
+
+          importer_marker = (
+              "  packages/maplibre:\n"
+              "    dependencies:\n"
+              "      maplibre-gl:\n"
+              f"        specifier: {selected_version}\n"
+              f"        version: {selected_version}\n"
+              "    devDependencies:\n"
+              "      vitest:\n"
+              "        specifier: 4.1.11\n"
+          )
+          if importer_marker not in lock_text:
+              raise SystemExit(
+                  "The @kfm/maplibre manifest and pnpm importer disagree. Regenerate and "
+                  "review the exact lock closure before changing CI."
+              )
+          if re.search(
+              rf"(?m)^  maplibre-gl@{re.escape(selected_version)}:\n"
+              r"    resolution: \{integrity: sha512-[A-Za-z0-9+/=]+\}$",
+              lock_text,
+          ) is None:
+              raise SystemExit(
+                  "The selected MapLibre package lacks an integrity-bound pnpm resolution."
+              )
+
+          readiness = scan_repository(Path("."))
+          if readiness.outcome is not ReadinessOutcome.HOLD:
+              raise SystemExit(
+                  "MapLibre readiness no longer has the reviewed HOLD outcome. Reconcile "
+                  "browser probes and governance authority before changing CI."
+              )
+          if readiness.selected_version != selected_version:
+              raise SystemExit(
+                  "The performance gate and readiness classifier disagree on the selected "
+                  "MapLibre version."
+              )
+          if "RUNTIME_PROBES_PENDING" not in readiness.reasons:
+              raise SystemExit(
+                  "MapLibre runtime probes no longer have the reviewed pending posture. "
+                  "Reconcile browser evidence before changing CI."
               )
 
           acquisition_inventory_companions = (
@@ -595,7 +656,13 @@ jobs:
               )
 
           print("The reviewed pnpm workspace lockfile is present and no alternative lockfile exists.")
-          print("The @kfm/maplibre importer and package remain dependency-free.")
+          print(
+              "The @kfm/maplibre manifest and lock agree on exact "
+              f"maplibre-gl@{selected_version}; no optional or peer dependency surfaced."
+          )
+          print(
+              f"MapLibre {TARGET_VERSION} readiness remains HOLD with runtime probes pending."
+          )
           if source_metadata_payloads:
               print(
                   f"Classified {len(source_metadata_payloads)} source-metadata JSON payloads "
@@ -627,7 +694,7 @@ jobs:
             echo "- Gate: WORKFLOW_HOLD"
             echo "- Toolchain: the reviewed pnpm workspace lock is accepted as dependency state only; no dependency install or browser run occurred."
             echo "- Fixture boundary: source-metadata JSON fixtures and the v6-readiness fixture pack remain governed by their dedicated no-network workflow/campaign and are not runtime/performance baselines."
-            echo "- Blockers: dependency-free MapLibre package; no runtime/baseline fixtures; live CDN dependencies; permissive schemas; placeholder governance verifiers; unsigned attestation; unaccepted trust-output roots."
+            echo "- Blockers: dependency admission remains review-pending; no runtime/baseline fixtures; live CDN dependencies; permissive schemas; placeholder governance verifiers; unsigned attestation; unaccepted trust-output roots."
             echo "- Safety: no browser, server, external source, screenshot, receipt, attestation, proof, release object, correction, rollback, failure bundle, or artifact upload was produced."
           } >> "$GITHUB_STEP_SUMMARY"
           echo "::notice::WORKFLOW_HOLD — MapLibre runtime performance governance is not release-grade."
