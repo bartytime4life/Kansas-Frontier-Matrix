@@ -70,6 +70,21 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(result.findings[0].kind, "MANIFEST_DEPENDENCY")
         self.assertTrue(result.findings[0].candidate_seam)
 
+    def test_package_owned_adapter_import_is_confined_to_candidate_seam(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "packages/maplibre/src/maplibre-adapter.ts",
+                'import { Map } from "maplibre-gl";\nexport const create = Map;\n',
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.HOLD)
+        self.assertEqual(result.reasons, ("RENDERER_ACQUISITION_PRESENT",))
+        self.assertEqual(len(result.findings), 1)
+        self.assertEqual(result.findings[0].kind, "STATIC_IMPORT")
+        self.assertTrue(result.findings[0].candidate_seam)
+
     def test_explorer_adapter_raw_import_is_outside_accepted_seam(self) -> None:
         with self._root() as tmp:
             root = Path(tmp)

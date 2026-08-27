@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Evaluate the MapLibre GL JS 6.4 readiness candidate without installing MapLibre.
+"""Evaluate the MapLibre GL JS 6.6 readiness candidate without installing MapLibre.
 
 The validator combines bounded repository inspection with an optional committed
 probe-results record. It can prove accepted package-owned exact dependency
@@ -10,7 +10,7 @@ behavior, tile-query safety, resource reclamation, terrain behavior, Evidence
 Drawer stability, or headless parity unless those probes have actually been
 executed and supplied.
 
-A ``READY`` result is eligibility evidence for human review of the exact 6.4.0
+A ``READY`` result is eligibility evidence for human review of the exact 6.6.0
 candidate. It does not authorize dependency admission, upgrade, release,
 deployment, publication, or public use.
 """
@@ -24,9 +24,9 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
-PROFILE = "kfm-maplibre-v6-4-readiness-v3"
-TARGET_VERSION = "6.4.0"
-UPSTREAM_TAG_COMMIT = "4529c6e451f0e5607ef42ad0ed81aa76a14a0f43"
+PROFILE = "kfm-maplibre-v6-6-readiness-v4"
+TARGET_VERSION = "6.6.0"
+UPSTREAM_TAG_COMMIT = "407a8ce9e379c16066b13c3a6729e404b69743c6"
 PROBE_NAMES = (
     "webgl2_failure_handling",
     "worker_csp_loading",
