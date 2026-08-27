@@ -12,6 +12,7 @@ from jsonschema import Draft202012Validator
 
 from tools.validators.directory_governance import (
     validate_repository_governance_parity as parity,
+    validate_root_registry as root_registry,
 )
 
 
@@ -61,6 +62,33 @@ class RepositoryGovernanceParityTests(unittest.TestCase):
     def test_not_run_is_never_classified_as_pass(self) -> None:
         case = parity._load_yaml(parity.FIXTURE_ROOT / "invalid/check_not_run.yaml")
         self.assertIn("LANE_NOT_RUN", {item.code for item in parity.classify_fixture(case)})
+
+    def test_nested_lane_cache_does_not_contaminate_root_registry(self) -> None:
+        register = root_registry.resolve_registry(
+            json.loads(root_registry.REGISTER_PATH.read_text(encoding="utf-8"))
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            projected = Path(directory)
+            for entry in register["roots"]:
+                if entry["status"] != "RETIRED":
+                    (projected / entry["path"]).mkdir(parents=True, exist_ok=True)
+
+            command = (
+                sys.executable,
+                "-c",
+                "from hypothesis import settings; "
+                "settings.default.database.save(b'kfm-cache-probe', b'value')",
+            )
+            self.assertEqual("PASS", parity._run_lane(command, projected))
+            self.assertFalse((projected / ".hypothesis").exists())
+
+            result = root_registry.validate_register(
+                root_registry.REGISTER_PATH,
+                repo_root=projected,
+            )
+
+        self.assertTrue(result.ok, result.findings)
+        self.assertEqual("PASS", result.outcome)
 
     def test_inherited_failure_cannot_be_mislabeled_pass(self) -> None:
         case = parity._load_yaml(parity.FIXTURE_ROOT / "invalid/hold_as_pass.yaml")
