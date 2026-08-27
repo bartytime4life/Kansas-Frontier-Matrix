@@ -724,7 +724,7 @@ Never call a failure inherited from an older run, different SHA, command, toolch
 
 | Check or command | Scope | Required? | Exact base/head | Expected outcome | Evidence location |
 |---|---|---:|---|---|---|
-| | | `yes` / `no` | | `PASS` / `FAIL` / `PENDING` / `NOT_RUN` / `N/A` | |
+| | | `yes` / `no` | | `PASS` / `FAIL` / `PENDING` / `NOT_RUN` / `NOT_APPLICABLE` | |
 
 ### Hosted checks and exact-head evidence
 
