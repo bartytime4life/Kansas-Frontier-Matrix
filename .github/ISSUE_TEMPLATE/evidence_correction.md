@@ -92,11 +92,15 @@ number is intake identity, not the governed correction identity.
 | Current `spec_hash`, digest, version, or commit | `UNKNOWN` |
 | First observed date/time | `UNKNOWN` |
 | Last known supportable state | `UNKNOWN` |
+| Canonical source / generator | `UNKNOWN` |
+| Direct consumers / automation | `UNKNOWN` |
+| Last material change inspected | `UNKNOWN` |
+| Active migration / correction lane | `UNKNOWN` |
 | Related issue(s), correction(s), or PR(s) | |
 | Duplicate / overlap check | `NOT RUN` / result |
 
 > [!NOTE]
-> Recheck identity, current bytes, active branches, and open pull requests before implementation. A stale issue or historical branch is evidence, not a perpetual veto; an unresolved same-byte or semantic-authority conflict is a `HOLD`.
+> Recheck identity, current bytes, canonical sources or generators, direct consumers, active correction or migration lanes, branches, open pull requests, and recent relevant merges before implementation. A stale issue or historical branch is evidence, not a perpetual veto; an unresolved same-byte or semantic-authority conflict is a `HOLD`.
 
 ## Current truth posture
 
@@ -261,21 +265,31 @@ bounded direct dependency set, and one rollback boundary.
 | Boundary item | Decision |
 |---|---|
 | Observable correction outcome | |
+| Current state and problem evidence | |
+| Smallest intended end state and unchanged invariant | |
 | Primary authority owner | |
 | Affected canonical object(s) | |
+| Canonical source / generator | |
+| Direct consumers and propagation targets | |
 | Direct companion changes required | |
 | Derivatives that must be revalidated or rebuilt | |
+| Objective positive and fail-closed cases | |
 | Work intentionally deferred or split | |
 | Ordered or stacked dependency sequence | |
 | Rollback / abandonment boundary | |
 | Active overlap disposition | |
+| Delivery ceiling | <!-- issue only / correction record / draft PR / separately authorized transition --> |
 
 - [ ] The proposed work has one coherent correction outcome and rollback boundary.
+- [ ] Current state, intended end state, non-goals, and unchanged invariants are explicit.
+- [ ] Canonical sources, generators, direct consumers, active correction lanes, and overlap were inspected or marked `NEEDS VERIFICATION`.
 - [ ] Direct dependencies are limited to what is required for evidence, policy, review, validation, propagation, release, correction, and rollback closure.
 - [ ] Optional consumers and unrelated cleanup are excluded or listed as follow-up work.
 - [ ] Generated or mirrored artifacts will be changed through their writable canonical source and deterministic regeneration.
+- [ ] Objective positive and relevant denied, abstained, invalid, no-network, and rollback cases are explicit.
 - [ ] A governance decision and implementation that depends on it are ordered separately.
 - [ ] Any active overlap has a survivor, consolidation, supersession, or intentionally disjoint boundary.
+- [ ] The delivery ceiling is explicit; triage does not imply correction approval, implementation, merge, release, deployment, promotion, publication, or settings authority.
 - [ ] `NEEDS VERIFICATION`
 
 ## Evidence basis
@@ -377,6 +391,22 @@ Record authoritative conflicts instead of selecting the most convenient source.
 **Conditions and limitations:**
 
 -
+
+### Negative and fail-closed verification
+
+| Condition | Expected finite outcome | Evidence required |
+|---|---|---|
+| Missing, stale, denied, or unresolved `EvidenceRef` / `EvidenceBundle` | `HOLD` / `ABSTAIN` / `DENY`; do not invent support | Resolution trace or explicit blocker |
+| Unknown source role, rights, sensitivity, consent, or sovereignty | `HOLD` / `DENY`; keep restricted detail private | Current policy and reviewer evidence |
+| Invalid identity, digest, signature, manifest, or correction lineage | `ERROR` / `HOLD`; do not silently rewrite history | Validator output and preserved prior record |
+| Offline, no-network, unavailable source, or unavailable service | Preserve the last supportable state or fail closed; no unsafe fallback | Synthetic/minimized reproduction and state evidence |
+| Incomplete derivative, cache, alias, index, graph, or AI propagation | Correction remains partial or held | Dependent inventory and read-back plan |
+| Rollback target or release-state mismatch | Deny rollback/promotion or hold for reconciliation | Exact target digest, manifest, and authority |
+
+- [ ] Public-safe synthetic or minimized inputs exercise restricted and unavailable-dependency paths.
+- [ ] Validators, policy, baselines, trust boundaries, and promotion controls are not weakened to make a case pass.
+- [ ] Skipped negative or no-network cases are marked `N/A` or `NEEDS VERIFICATION` with the first blocked transition.
+- [ ] Relevant cases are reproducible against exact pinned bytes or carry an explicit limitation.
 
 ## Spatial and temporal scope
 
@@ -634,7 +664,10 @@ its stated scope.
 | Criterion | Expected outcome | Evidence required |
 |---|---|---|
 | Affected object identity | Exact claim, release, layer, artifact, or answer is named | Stable ID, path, URL, digest, or manifest pointer |
+| Observable correction outcome | Current state, smallest intended end state, and unchanged invariant are explicit | Before/after evidence and bounded rationale |
 | Evidence support | Corrected posture is supported, or the system abstains/denies | Resolved evidence and source-role review |
+| Denial and abstention | Missing authority, evidence, rights, sensitivity, or dependencies fail closed | Negative fixtures, policy result, or explicit `HOLD` |
+| Offline / degraded behavior | No-network or unavailable-source paths preserve a safe supportable state | Synthetic/minimized reproduction and state evidence |
 | Prior record preservation | Original release and correction history remain inspectable | Supersession/correction lineage |
 | Policy and sensitivity | Rights, sensitivity, sovereignty, and public-safe posture pass | `PolicyDecision` / review evidence |
 | Dependency closure | Contracts, schemas, validators, fixtures, docs, manifests, and derivatives agree where applicable | Bounded changed-path and validation ledger |
@@ -680,6 +713,9 @@ its stated scope.
 
 | Field | Maintainer value |
 |---|---|
+| Truth posture | `CONFIRMED` / `PROPOSED` / `NEEDS VERIFICATION` / `UNKNOWN` |
+| Correction decision state | candidate / under review / governed outcome recorded / `UNKNOWN` |
+| Implementation readiness | not authorized / blocked pending decision / separately authorized after repin / `UNKNOWN` |
 | Resolved implementation intent | `READ_ONLY` / `DRAFT` / `IMPLEMENT` / `IMPLEMENT_AND_READY` / `UNKNOWN` |
 | Operation | `AUDIT` / `PLAN` / `MODERNIZE_MARKDOWN` / `FIX_ISSUE` / `IMPLEMENT_REPOSITORY_SLICE` / `MIGRATE_STRUCTURE` / `UNKNOWN` |
 | Profile | `DOCS_ONLY` / `DOCS_PLUS_DEPENDENCIES` / `REPOSITORY_SLICE` / `GOVERNANCE_CHANGE` / `UNKNOWN` |
@@ -689,8 +725,11 @@ its stated scope.
 | Branch / pull request | |
 | Hosted checks | `PASS` / `FAIL` / `PENDING` / `NOT RUN` / `UNKNOWN` |
 | Run outcome | `IMPLEMENTED` / `IMPLEMENTED_WITH_LIMITATIONS` / `PARTIAL` / `NO_OP` / `READ_ONLY_COMPLETE` / `BLOCKED` / `ERROR` / `UNKNOWN` |
+| First blocked transition | |
+| External transition ceiling | no release/deploy/promote/publish / separately authorized transition / `UNKNOWN` |
 | Rollback reference | |
 
+- [ ] Truth posture, correction decision, implementation readiness, GitHub delivery, and external-transition state are recorded separately and are not inferred from one another.
 - [ ] No direct default-branch write, force-push, self-approval, merge, release, deploy, promotion, publication, or settings change is implied.
 - [ ] A draft pull request may be delivered with hosted checks pending when changed-area and safety requirements permit; `READY_PR` requires required checks and no review-blocking defect.
 - [ ] Remote bytes, branch head, base-to-head diff, changed paths, and PR state will be read back before delivery is claimed.
@@ -713,15 +752,21 @@ its stated scope.
 | Observable goal | |
 | Authority reference | `CURRENT_USER_REQUEST` / accepted control / `UNKNOWN` |
 | Primary owner | |
+| Canonical source / generator | |
+| Direct consumers / automation | |
+| Active overlap / migration lane | |
 | Immutable base | |
 | Change class | `EDITORIAL` / `ADDITIVE` / `BEHAVIORAL` / `STRUCTURAL` / `AUTHORITY_CHANGING` |
 | In scope | |
 | Non-goals | |
 | Acceptance criteria | |
+| Negative / fail-closed cases | |
 | Validation plan | |
 | Stop conditions | |
+| First blocked transition | |
 | Rollback / correction boundary | |
 | Change budget | |
+| Delivery ceiling | |
 
 ### Classification
 
@@ -744,8 +789,10 @@ its stated scope.
 ### Required follow-up
 
 - [ ] Affected object, release, owner, and responsibility root are identified.
-- [ ] Current baseline, target bytes, open branches, pull requests, and direct dependencies were inspected.
+- [ ] Current baseline, target bytes, canonical source or generator, direct consumers, active correction/migration lanes, open branches, pull requests, recent merges, and direct dependencies were inspected.
 - [ ] Evidence, source role, and truth labels are recorded per material claim.
+- [ ] Objective positive plus relevant denied, abstained, invalid, no-network, unavailable-dependency, and rollback cases are recorded.
+- [ ] Truth posture, correction decision, implementation readiness, GitHub delivery, and external-transition state remain separate.
 - [ ] Stale-versus-wrong classification and finite correction outcome are recorded.
 - [ ] Derivative impact, public exposure, and correction propagation are reviewed.
 - [ ] Required correction, release, policy, review, proof, and rollback artifacts are linked.
@@ -778,7 +825,10 @@ its stated scope.
 - [ ] I have not asked maintainers to silently overwrite or delete published history.
 - [ ] I have used public-safe evidence pointers and generalized restricted details.
 - [ ] I have marked inferences and unknowns instead of presenting them as confirmed facts.
+- [ ] I identified canonical sources or generators, direct consumers, active overlap, and the last material change—or marked the exact gap `NEEDS VERIFICATION`.
+- [ ] I recorded objective acceptance plus relevant denied, abstained, fail-closed, no-network, and rollback cases.
 - [ ] I understand issue closure is administrative state and does not prove correction completion.
+- [ ] I understand truth posture, correction decision, implementation readiness, GitHub delivery, and external-transition state are separate.
 - [ ] I understand a passing test, generated receipt, pull request, merge, GitHub release, or public wording change does not by itself prove governed correction or publication closure.
 
 ---
