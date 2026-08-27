@@ -284,6 +284,13 @@ docs/runbooks/
 | [`rollback-rehearsal.md`](./rollback-rehearsal.md) | Synthetic rollback, withdrawal, and correction rehearsal | Marker-protected synthetic procedure; not an operational rollback or release mutation |
 | [`EVIDENCE_CORRECTION.md`](./EVIDENCE_CORRECTION.md) | Published-evidence correction procedure | Substantive draft; several linked paths retain verification notes |
 
+### Explorer Web development and recovery
+
+| File | Current role | Evidence posture |
+|---|---|---|
+| [`ui_LOCAL_DEV.md`](./ui_LOCAL_DEV.md) | Locked local setup and focused app validation | Repository-grounded; no live API, deployment, release, or publication path is established |
+| [`ui_ROLLBACK.md`](./ui_ROLLBACK.md) | Source-control recovery and rollback handoff | Repository-grounded; operational deployment and governed release rollback remain outside its authority |
+
 ### Security, sensitivity, and doctrine handling
 
 | File | Current role | Evidence posture |
@@ -302,8 +309,6 @@ The following direct files are small scaffold or compatibility-shaped documents.
 - [`retention-agriculture.md`](./retention-agriculture.md)
 - [`revocation.md`](./revocation.md)
 - [`roads_rail_trade_source_refresh.md`](./roads_rail_trade_source_refresh.md)
-- [`ui_LOCAL_DEV.md`](./ui_LOCAL_DEV.md)
-- [`ui_ROLLBACK.md`](./ui_ROLLBACK.md)
 - [`ui_VALIDATION.md`](./ui_VALIDATION.md)
 
 Their canonical target, consumers, replacement procedure, and retirement path remain `NEEDS VERIFICATION`. Do not hand-edit one alias and its apparent target as competing authorities.
