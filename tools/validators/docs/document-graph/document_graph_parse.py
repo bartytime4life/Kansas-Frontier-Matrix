@@ -88,13 +88,16 @@ def _collect(root: Path, inputs: Sequence[str]) -> tuple[Path, ...]:
 
 def _visible_lines(text: str) -> list[tuple[int, str]]:
     result: list[tuple[int, str]] = []
-    fence: str | None = None
+    fence: tuple[str, int] | None = None
     in_comment = False
     for number, raw in enumerate(text.splitlines(), 1):
         match = FENCE_RE.match(raw)
         if match:
-            marker = match.group(1)[0]
-            fence = None if fence == marker else marker if fence is None else fence
+            marker = match.group(1)
+            if fence is None:
+                fence = (marker[0], len(marker))
+            elif marker[0] == fence[0] and len(marker) >= fence[1]:
+                fence = None
             continue
         if fence:
             continue
