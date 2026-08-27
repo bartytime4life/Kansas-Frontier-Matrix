@@ -1,0 +1,94 @@
+{
+  "schema_version": "kfm.evidence-drawer-schema-family-baseline.v1",
+  "authority": "implementation_inventory_only",
+  "generated_from_ref": "main@97e64536aa7096213731397461ccb0f2a152f41c",
+  "closure_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3368",
+  "entries": [
+    {
+      "path": "schemas/contracts/v1/domains/agriculture/evidence_drawer_payload.schema.json",
+      "shape_class": "domain-local-shape-scaffold",
+      "document_fingerprint": "sha256:6598efad786ece3027b8b73372576b97214ed8d36bb10f5e228daf958c0c0c0a"
+    },
+    {
+      "path": "schemas/contracts/v1/domains/archaeology/evidence_drawer_payload.schema.json",
+      "shape_class": "domain-local-shape-scaffold",
+      "document_fingerprint": "sha256:8da8bb2d59314ee840f130c61c9b2dfafccb287c5e58b00485274ded240e2b3a"
+    },
+    {
+      "path": "schemas/contracts/v1/domains/atmosphere/evidence_drawer_payload.schema.json",
+      "shape_class": "reference-only-profile",
+      "document_fingerprint": "sha256:96b539566783d050f4160dbd4969a0f90a2fe16c26412e7b1fce9934569118b6"
+    },
+    {
+      "path": "schemas/contracts/v1/domains/fauna/evidence_drawer_payload.schema.json",
+      "shape_class": "reference-only-profile",
+      "document_fingerprint": "sha256:c48f74335321b746a3adb097a5e22c9bae3f19b935333c3509cc5666f4fd98d2"
+    },
+    {
+      "path": "schemas/contracts/v1/domains/flora/evidence_drawer_payload.schema.json",
+      "shape_class": "domain-local-shape-scaffold",
+      "document_fingerprint": "sha256:9e2a7ba19bd06d5c9af4636180cd81a4dc56e0ac3b63945bb2c8bd3241147d6b"
+    },
+    {
+      "path": "schemas/contracts/v1/domains/geology/evidence_drawer_payload.schema.json",
+      "shape_class": "reference-only-profile",
+      "document_fingerprint": "sha256:eb6a8c76637aa1555db4225e58519c1e60c603e8124c23c902abccc1a9656047"
+    },
+    {
+      "path": "schemas/contracts/v1/domains/habitat/evidence_drawer_payload.schema.json",
+      "shape_class": "domain-local-shape-scaffold",
+      "document_fingerprint": "sha256:0ce3699f42693178214626232f966df377ac80688e7743675ee8d1162beb2211"
+    },
+    {
+      "path": "schemas/contracts/v1/domains/hazards/evidence_drawer_payload.schema.json",
+      "shape_class": "domain-local-shape-scaffold",
+      "document_fingerprint": "sha256:13244522ebc326e065686fba4fb426f9274263f7c425a7e6fdb200eae4d08523"
+    },
+    {
+      "path": "schemas/contracts/v1/domains/hydrology/evidence_drawer_payload.schema.json",
+      "shape_class": "reference-only-profile",
+      "document_fingerprint": "sha256:1e29ed80fad82c8c2906b302021c36f4cfdc2734df644d7394083cfb41682aaa"
+    },
+    {
+      "path": "schemas/contracts/v1/domains/people-dna-land/evidence_drawer_payload.schema.json",
+      "shape_class": "domain-local-shape-scaffold",
+      "document_fingerprint": "sha256:81f42a37825634d9defc0586e3d6a561c4b26abc187fb1c15a1994efb3a28cc3"
+    },
+    {
+      "path": "schemas/contracts/v1/domains/roads-rail-trade/evidence_drawer_payload.schema.json",
+      "shape_class": "reference-only-profile",
+      "document_fingerprint": "sha256:40f81ce824fca4967f21f64c6e2d7afe2a54d66be22940b5c52dd04bb72fbe93"
+    },
+    {
+      "path": "schemas/contracts/v1/domains/settlements-infrastructure/evidence_drawer_payload.schema.json",
+      "shape_class": "domain-local-shape-scaffold",
+      "document_fingerprint": "sha256:882f8a36165c20e42c9d944ba72745fcaf9c3290d9dff3fb706fad3fc2311f07"
+    },
+    {
+      "path": "schemas/contracts/v1/domains/soil/evidence_drawer_payload.schema.json",
+      "shape_class": "reference-only-profile",
+      "document_fingerprint": "sha256:7210bcfadbe21681592114c458c0f2930843096a533808a704946d04485bbfb6"
+    },
+    {
+      "path": "schemas/contracts/v1/evidence/evidence_drawer_payload.schema.json",
+      "shape_class": "permissive-empty-scaffold",
+      "document_fingerprint": "sha256:19cea8780718b410ad81d11af2662c263338a00b3f527ca7de54a132ea7b3adf"
+    },
+    {
+      "path": "schemas/contracts/v1/runtime/evidence_drawer_payload.schema.json",
+      "shape_class": "permissive-empty-scaffold",
+      "document_fingerprint": "sha256:bdaf37372cc7f18893b6d145e42ee0dac5a4c0b4c3175ef20ebb042733f9fdf0"
+    },
+    {
+      "path": "schemas/contracts/v1/ui/evidence_drawer_payload.schema.json",
+      "shape_class": "closed-ui-profile-candidate",
+      "document_fingerprint": "sha256:f3ef6e31e221f3076a1f965ec8e397ce73f58d08b65e1971b25206236081822a"
+    }
+  ],
+  "non_effects": [
+    "does_not_select_canonical_authority",
+    "does_not_accept_adr_0037",
+    "does_not_waive_new_removed_or_changed_family_members",
+    "does_not_authorize_migration_review_release_deployment_promotion_or_publication"
+  ]
+}
