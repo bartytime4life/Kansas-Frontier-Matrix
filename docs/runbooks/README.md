@@ -807,6 +807,6 @@ path: docs/runbooks/README.md
 prior_blob: 90943d2b6b5cfa0fa4d225e858525bdaa94a9515
 ```
 
-or revert the focused content commit created by this change. That rollback restores the v1.1 documentation snapshot. It does not remove current runbooks, undo a procedure, reverse an incident response, change source/evidence/policy/release state, restore a public carrier, deploy, promote, publish, or change repository settings.
+or revert the focused content commit created by this change. That rollback restores the v1.2 documentation snapshot. It does not remove current runbooks, undo a procedure, reverse an incident response, change source/evidence/policy/release state, restore a public carrier, deploy, promote, publish, or change repository settings.
 
 [Back to top](#top)
