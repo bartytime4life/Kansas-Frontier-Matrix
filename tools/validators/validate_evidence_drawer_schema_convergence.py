@@ -67,6 +67,17 @@ SHAPE_CLASSES = frozenset(
 FULL_SHA256 = re.compile(r"sha256:[0-9a-f]{64}")
 MAIN_REF = re.compile(r"main@[0-9a-f]{40}")
 TRUSTED_REF = re.compile(r"[A-Za-z0-9_./^~:-]{1,200}")
+PUBLIC_AUDIT_FIELDS = (
+    "outcome",
+    "placement_state",
+    "reason_codes",
+    "schema_count",
+    "shape_state",
+    "baseline_state",
+    "baseline_entry_count",
+    "trusted_baseline_state",
+    "boundary",
+)
 
 
 class ConvergenceError(ValueError):
@@ -542,6 +553,14 @@ def audit(
     }
 
 
+def public_audit_projection(
+    result: Mapping[str, object],
+) -> dict[str, object]:
+    """Return the bounded, public-safe CLI and workflow projection."""
+
+    return {field: result.get(field) for field in PUBLIC_AUDIT_FIELDS}
+
+
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(
         description="Audit EvidenceDrawerPayload schema-family convergence."
@@ -555,7 +574,7 @@ def main(argv: list[str]) -> int:
         baseline_path=repo_root / BASELINE_RELATIVE_PATH,
         trusted_baseline_ref=args.trusted_baseline_ref,
     )
-    print(json.dumps(result, indent=2, sort_keys=True))
+    print(json.dumps(public_audit_projection(result), indent=2, sort_keys=True))
     return 0 if result["outcome"] == "PASS" else 1
 
 
