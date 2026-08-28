@@ -56,6 +56,7 @@ class AgricultureObservationIoFailClosedTests(unittest.TestCase):
         document = validator.materialize_case(manifest, case)
 
         for failure in (
+            validator.CanonicalizationFailure("canonical identity canonicalization failure"),
             TypeError("canonical identity type failure"),
             ValueError("canonical identity value failure"),
             RecursionError("canonical identity recursion failure"),

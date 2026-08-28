@@ -1,0 +1,120 @@
+{
+  "receipt_id": "genrec-agriculture-observation-canonicalization-failclosed-negative-20260828",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/agriculture-observation.yml",
+    "tests/validators/evidence/test_validate_agriculture_observation_io_failclosed.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/agriculture-observation.yml": "sha256:e247bea2a0317f787b199f263e9bcee7190a678da549e8e0407c02c83c4180d8",
+    "tests/validators/evidence/test_validate_agriculture_observation_io_failclosed.py": "sha256:a188a8873211669b7cdda13ff02e12ea698f6e26ec576dc0ac503a1cdb050ea6"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Sol",
+    "version": "2026-08-28"
+  },
+  "prompt_or_contract": "sha256:75aae19b741008db96ef385438672bd3f73dface2574febd444466f40dbc9eef",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector repository inspection and mutation",
+      "Notion connector coordination",
+      "Google Drive connector read-only lineage inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/332a371f0be1aae68690853fba368a6289d2dab4/tools/validators/evidence/validate_agriculture_observation.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/332a371f0be1aae68690853fba368a6289d2dab4/tests/validators/evidence/test_validate_agriculture_observation_io_failclosed.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/332a371f0be1aae68690853fba368a6289d2dab4/.github/workflows/agriculture-observation.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/332a371f0be1aae68690853fba368a6289d2dab4/packages/hashing/src/hashing/core.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/332a371f0be1aae68690853fba368a6289d2dab4/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/3668",
+      "drive://1TkFtqaDDtR9CiiEDdqGsyLgc2dDLX4qr"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/agriculture-observation.yml": "PROPOSED",
+    "tests/validators/evidence/test_validate_agriculture_observation_io_failclosed.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "active-work-and-overlap-reconciliation",
+      "outcome": "PASS",
+      "reason": "No open pull request contains KFM_HOURLY_AGRICULTURE_BUILDER_V1. Open generic-marker PR #3817 is People/DNA/Land documentation; open PR #3818 is Hazards workflow/documentation and #3819 is MapLibre documentation. None owns AgricultureObservation validator-test/workflow/receipt paths."
+    },
+    {
+      "gate": "canonicalization-failure-negative-coverage",
+      "outcome": "PASS",
+      "reason": "The AgricultureObservation semantic validator explicitly catches hashing.CanonicalizationFailure as AGRICULTURE_IDENTITY_ERROR, while current focused Agriculture tests cover TypeError, ValueError, and RecursionError but do not directly prove CanonicalizationFailure."
+    },
+    {
+      "gate": "artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "SHA-256 digests bind the exact proposed workflow and focused negative-test bytes; the workflow triggers on both paths and validates this immutable receipt."
+    },
+    {
+      "gate": "local-static-validation",
+      "outcome": "PASS",
+      "reason": "The proposed Python module parses; the workflow parses as YAML; the receipt JSON is syntactically valid and its hashes bind the exact proposed bytes."
+    },
+    {
+      "gate": "local-repository-native-tests",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout is available in this connector run; repository-native runtime execution is delegated to hosted exact-head CI after push."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending until the task-owned draft pull request head is created and hosted workflows run."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "The task stops at a draft pull request and does not approve or mark work ready."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "agriculture-observation-validator",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/332a371f0be1aae68690853fba368a6289d2dab4/tools/validators/evidence/validate_agriculture_observation.py"
+    },
+    {
+      "id": "agriculture-observation-io-test",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/332a371f0be1aae68690853fba368a6289d2dab4/tests/validators/evidence/test_validate_agriculture_observation_io_failclosed.py"
+    },
+    {
+      "id": "hashing-canonicalization-failure",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/332a371f0be1aae68690853fba368a6289d2dab4/packages/hashing/src/hashing/core.py"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/332a371f0be1aae68690853fba368a6289d2dab4/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-28T23:19:22Z",
+  "emitter": "OpenAI ChatGPT automation runtime",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Dependency-closure receipt for explicit AgricultureObservation CanonicalizationFailure fail-closed negative proof. It binds the focused test and workflow bytes, preserves historical receipts unchanged, changes no validator or hashing semantics, and creates no source, evidence/proof, review, lifecycle, release, deployment, promotion, or publication authority."
+}
