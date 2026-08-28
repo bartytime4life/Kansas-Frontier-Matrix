@@ -2,7 +2,7 @@
 doc_id: kfm://doc/domains/fauna/readme
 title: KFM Fauna Domain Lane
 type: standard
-version: v1.2.0
+version: v1.2.1
 status: draft
 owners: ["@bartytime4life — CODEOWNERS review route", "NEEDS VERIFICATION — fauna domain steward; docs steward; independent reviewer"]
 created: 2026-05-16
@@ -256,7 +256,7 @@ flowchart LR
   W --> P["PROCESSED<br/>data/processed/fauna/"]
   P --> K["CATALOG / TRIPLET<br/>data/catalog/domain/fauna/<br/>EvidenceBundle closure"]
   K -- "release gate" --> RC["release/candidates/fauna/"]
-  RC -- "PromotionDecision +<br/>ReleaseManifest +<br/>RollbackCard" --> PUB["PUBLISHED<br/>data/published/fauna/"]
+  RC -- "PromotionDecision +<br/>ReleaseManifest +<br/>RollbackCard" --> PUB["PUBLISHED CARRIERS<br/>topology CONFLICTED / NEEDS VERIFICATION<br/>data/published/fauna/<br/>data/published/layers/fauna/"]
   PUB --> API["governed API<br/>apps/governed-api/"]
   API --> UI["MapLibre +<br/>Evidence Drawer +<br/>Focus Mode"]
 
@@ -269,7 +269,7 @@ flowchart LR
   class PUB,API,UI pub;
 ```
 
-**Reading the diagram.** Sensitive taxa, nests, dens, roosts, hibernacula, and spawning sites land in **QUARANTINE** by default; they only re-enter the WORK lane after **steward review + geoprivacy transform + RedactionReceipt**. Publication is a **governed state transition**, not a file move — every transition emits receipts, and rollback is always a valid target. [DIRRULES]
+**Reading the diagram.** Sensitive taxa, nests, dens, roosts, hibernacula, and spawning sites land in **QUARANTINE** by default; they only re-enter the WORK lane after **steward review + geoprivacy transform + RedactionReceipt**. Publication is a **governed state transition**, not a file move — every transition emits receipts, and rollback is always a valid target. Current repository guidance contains both `data/published/fauna/` and the map-layer delivery surface `data/published/layers/fauna/`; their canonical relationship is **CONFLICTED / NEEDS VERIFICATION**. The diagram records both without selecting a canonical carrier, and neither path grants release authority. [DIRRULES]
 
 [Back to top ↑](#top)
 
@@ -405,6 +405,7 @@ Repository inspection resolves former blanket path questions but leaves authorit
 | Added DIRRULES section citations to §2 / §4 / §5 placement claims | clarification | Make placement basis auditable per §4 Step 5 |
 | Bumped doc `version` v1 → v1.1; `updated` 2026-05-16 → 2026-06-02 | housekeeping | MINOR — no operating-law change, no receipts re-issued |
 | Reconciled repository presence, bounded fixture workflow, explicit proof/release holds, CODEOWNERS routing, runbook maturity, path drift, and ADR status against current main | repository-state correction | Remove blanket `PROPOSED` and `CI TODO` claims without implying source admission, policy acceptance, review, runtime readiness, release, or publication |
+| Preserved both published Fauna guidance surfaces and their unresolved carrier-topology relationship in the lifecycle diagram and FAQ | review correction | Address the post-merge P2 finding without selecting a canonical carrier or changing release authority |
 
 > **Backward compatibility.** All prior heading anchors are preserved (`#1-scope` … `#13-appendix-and-15-readme-contract-crosswalk` retained where text was unchanged); the appendix anchor is renumbered to `#16-...` because §10–§13 were inserted for companion sections. Inbound links targeting the old `#10`–`#13` (Verification backlog, FAQ, Related docs, Appendix) should be re-pointed — see §16 anchor note.
 
@@ -436,8 +437,8 @@ This document remains reviewable when:
 **Q: Why does Fauna default to deny for sensitive occurrence locations?**
 A: Exact location exposure of sensitive taxa, nests, dens, roosts, hibernacula, and spawning sites creates real-world harm risk (poaching, disturbance, habitat loss). Per Atlas §24.5.2 (extending the v1.0 §20.5 Deny-by-Default Register) and [DOM-FAUNA], such records are **T4 default**, released only via `geoprivacy generalization + RedactionReceipt + ReviewRecord + PolicyDecision`. KFM publishes only the safest representation that still answers the steward's and the public's reasonable needs.
 
-**Q: Can I write a Fauna pipeline that publishes directly to `data/published/fauna/`?**
-A: No. Lifecycle skip is an anti-pattern. Promotion is a **governed state transition**, not a file move; every transition goes RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED, gated by validators, policy, and (where required) review. [DIRRULES]
+**Q: Can I write a Fauna pipeline that publishes directly to either published Fauna path?**
+A: No. Lifecycle skip is an anti-pattern. Current guidance contains both `data/published/fauna/` and `data/published/layers/fauna/`, and their canonical relationship remains **CONFLICTED / NEEDS VERIFICATION**. A pipeline must not select or bind one as canonical by assumption. Promotion is a **governed state transition**, not a file move; every transition goes RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED, gated by validators, policy, and (where required) review. [DIRRULES]
 
 **Q: Where does a Fauna × Habitat habitat-assignment file live?**
 A: Cross-domain files live under their **lowest common responsibility root without a domain segment** (Directory Rules §12). The thin-slice doctrine is `[DOM-HF]` (Habitat + Fauna). Truth remains in the owning lane; habitat outputs are **adjacent derivatives**, not fauna truth.
