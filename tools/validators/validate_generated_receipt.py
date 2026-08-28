@@ -57,7 +57,7 @@ POLICY_DECISION_ROOTS = (
 )
 DOCUMENT_SUFFIXES = frozenset({".md", ".markdown", ".mdx", ".rst"})
 WORKFLOW_MIGRATION_MANIFEST_SHA256 = (
-    "sha256:037eec7126e4c5cd9b14c0dcee5cf3f0ac4209fd59b8e0e23b79fc411d48b9dc"
+    "sha256:02a50fb78ecf6744751922c24c68d9b3e5d8101a4bfdbf62c79dcc8f41f15131"
 )
 
 
