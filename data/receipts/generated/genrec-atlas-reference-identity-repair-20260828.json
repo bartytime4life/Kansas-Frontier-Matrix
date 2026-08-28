@@ -2,16 +2,20 @@
   "receipt_id": "genrec-atlas-reference-identity-repair-20260828",
   "contract_version": "3.0.0",
   "artifact_paths": [
+    "control_plane/repository_governance_parity.yaml",
     "docs/atlases/sensitivity-tier-reference.md",
     "docs/atlases/source-role-anti-collapse.md",
     "docs/atlases/stale-state-reference.md",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py",
     "tests/validators/directory_governance/test_validate_repository_topology.py",
     "tools/validators/directory_governance/repository_topology_baseline.json"
   ],
   "artifact_hashes": {
+    "control_plane/repository_governance_parity.yaml": "sha256:f8b6c0756fc6bb2e27840b48a953d056c4d506883b5aa3f08d6d745d3cb7a4f8",
     "docs/atlases/sensitivity-tier-reference.md": "sha256:2adcec64e543784966ba32337b56771e2f8b2aebf2ad31e154fa49f1184c659b",
     "docs/atlases/source-role-anti-collapse.md": "sha256:d07c8aac4bafe7da18e7dcb553c8ba007f6bdc1334b097725c52015d2a7b375a",
     "docs/atlases/stale-state-reference.md": "sha256:a358edce935502a033bdea879283f71bad859cffe0409b62e14a53dd4d488d6c",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "sha256:791b47e333c897d27a9a6c174ad1b8dffca646366c3e39eabec44303e6374ac3",
     "tests/validators/directory_governance/test_validate_repository_topology.py": "sha256:d588232188006a48252a92a7ef25d00380dcd93213890a4c1acfbf29b3ba49b6",
     "tools/validators/directory_governance/repository_topology_baseline.json": "sha256:5bee801306194f3c9e59fb96e3aaf022cb26b71176ff85e41667d8fa6d7839dd"
   },
@@ -50,9 +54,11 @@
     ]
   },
   "truth_labels": {
+    "control_plane/repository_governance_parity.yaml": "PROPOSED",
     "docs/atlases/sensitivity-tier-reference.md": "PROPOSED",
     "docs/atlases/source-role-anti-collapse.md": "PROPOSED",
     "docs/atlases/stale-state-reference.md": "PROPOSED",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "PROPOSED",
     "tests/validators/directory_governance/test_validate_repository_topology.py": "PROPOSED",
     "tools/validators/directory_governance/repository_topology_baseline.json": "PROPOSED"
   },
@@ -70,7 +76,7 @@
     {
       "gate": "focused-validator-tests",
       "outcome": "PASS",
-      "reason": "24 metadata tests, 29 document-graph tests, 20 link-check tests, and 25 repository-topology tests pass."
+      "reason": "24 metadata tests, 29 document-graph tests, 20 link-check tests, 25 repository-topology tests, and 12 repository-governance-parity tests pass."
     },
     {
       "gate": "baseline-versus-branch-link-attribution",
@@ -131,5 +137,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Repairs three same-path human-reference identities and required metadata, removes one resolved topology waiver, and updates the deterministic warning-count expectation. It does not adopt Atlas proposals, assign owners, mutate the document registry, alter policy or runtime behavior, activate a source, release, deploy, promote, or publish."
+  "notes": "Repairs three same-path human-reference identities and required metadata, removes one resolved topology waiver, and updates both deterministic warning-count expectations that consume that baseline. It does not adopt Atlas proposals, assign owners, mutate the document registry, alter policy or runtime behavior, activate a source, release, deploy, promote, or publish."
 }
