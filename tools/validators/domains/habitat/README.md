@@ -2,14 +2,14 @@
 doc_id: kfm://doc/tools-validators-domains-habitat-readme
 title: tools/validators/domains/habitat README
 type: README
-version: v0.1
+version: v0.2
 status: draft
 owner: TODO-tooling-qa-owner-plus-habitat-steward-plus-ecology-steward-plus-geoprivacy-reviewer-plus-policy-steward-plus-evidence-steward
 created: 2026-07-07
-updated: 2026-07-07
+updated: 2026-08-28
 policy_label: repository-facing; per-domain-validator-index; habitat; ecology; suitability; connectivity; geoprivacy; fail-closed; non-authoritative
 owning_root: tools/
-responsibility: proposed per-domain Habitat validator index for habitat patches, classes, suitability, connectivity, corridors, restoration opportunity, stewardship zones, land-cover/ecoregion inputs, source-role separation, sensitive joins, geoprivacy, evidence, policy, release, correction, rollback, and public-surface denial checks while deferring Habitat meaning, policy decisions, proof records, and release authority to their owning roots
+responsibility: per-domain Habitat validator index for habitat patches, classes, suitability, connectivity, corridors, restoration opportunity, stewardship zones, land-cover/ecoregion inputs, source-role separation, sensitive joins, geoprivacy, evidence, policy, release, correction, rollback, and public-surface denial checks while deferring Habitat meaning, policy decisions, proof records, and release authority to their owning roots
 truth_posture: cite-or-abstain; implementation claims require current repo evidence
 related:
   - ../../README.md
@@ -34,7 +34,7 @@ related:
   - ../../../../data/receipts/
   - ../../../../release/
 notes:
-  - "This README replaces a greenfield stub. It does not confirm executable files."
+  - "v0.2 reconciles this index with current repository executables, focused tests and fixtures, and CI wiring without changing validator behavior or maturity."
   - "No broad tools/validators/habitat/README.md was found during this task, so this path currently serves as the inspected per-domain Habitat validator index."
   - "Habitat owns landscape, patches, suitability, connectivity, restoration opportunity, and stewardship-zone products. It does not own Fauna occurrence truth, Flora taxon/specimen truth, Hydrology water truth, Soil substrate truth, or regulatory hazard truth."
   - "Habitat sensitivity is often join-induced. Outputs that reveal sensitive Fauna, Flora, archaeology, stewardship, private-land, infrastructure, or other restricted context must fail closed unless public-safe geoprivacy, review, policy, evidence, release, correction, and rollback support exists."
@@ -52,7 +52,7 @@ notes:
 ![authority](https://img.shields.io/badge/authority-index--only-lightgrey)
 ![truth](https://img.shields.io/badge/truth-cite--or--abstain-success)
 
-> **One-line purpose.** `tools/validators/domains/habitat/` is the proposed per-domain Habitat validator index for habitat patches, classes, suitability, connectivity, corridors, restoration opportunity, stewardship zones, land-cover/ecoregion inputs, source-role separation, sensitive joins, geoprivacy, evidence, policy, release, correction, rollback, and public-surface denial checks.
+> **One-line purpose.** `tools/validators/domains/habitat/` is the per-domain Habitat validator index for habitat patches, classes, suitability, connectivity, corridors, restoration opportunity, stewardship zones, land-cover/ecoregion inputs, source-role separation, sensitive joins, geoprivacy, evidence, policy, release, correction, rollback, and public-surface denial checks.
 
 ---
 
@@ -74,33 +74,36 @@ The answer should be a navigable validator index and deterministic validation ou
 
 | Surface | Status | Notes |
 |---|---|---|
-| `tools/validators/domains/habitat/README.md` | **CONFIRMED** | This README replaces the previous greenfield stub. |
+| `tools/validators/domains/habitat/README.md` | **CONFIRMED index / draft** | This file records current executable and placeholder posture without granting authority. |
 | Parent per-domain validators README | **CONFIRMED stub** | `tools/validators/domains/README.md` currently says only `# Per-domain validators`; this file keeps its own boundary explicit. |
-| Broad `tools/validators/habitat/README.md` | **NOT FOUND in this task** | This path currently serves as the inspected Habitat validator index. |
+| Broad `tools/validators/habitat/README.md` | **ABSENT** | This path is the current per-domain Habitat validator index; no parallel broad Habitat validator home is established. |
 | Habitat domain doctrine | **CONFIRMED in repo evidence / draft** | `docs/domains/habitat/README.md` defines Habitat as landscape/suitability/connectivity lane, not species-record ownership, with source-role anti-collapse and lifecycle boundaries. |
 | Over-precise geometry quarantine | **CONFIRMED in repo evidence / draft** | `data/quarantine/habitat/over_precise_geometry/README.md` defines fail-closed hold posture for Habitat geometry that is too precise for sensitivity, source-role, evidence, review, release, or public-surface posture. |
-| Child README lanes | **NONE CONFIRMED IN THIS TASK** | No child Habitat validator README was verified while writing this index. |
-| Executables, schemas, fixtures, policy bundles, and CI wiring | **NEEDS VERIFICATION** | No script names, test paths, schema maturity, policy bundles, receipts, runtime behavior, or CI behavior are claimed as implemented here. |
+| Subdirectories | **NONE** | Current validator implementations are direct children of this directory. |
+| Substantive executables | **FOUR CONFIRMED** | Cover-class crosswalk, land-cover materiality, model-run receipt, and critical-habitat source-role validators are implemented with focused tests. |
+| Placeholder executables | **SIX CONFIRMED** | Catalog matrix, EvidenceBundle, HabitatPatch, schema, source descriptor, and suitability-model files remain inert placeholders and must not be cited as enforcement. |
+| Focused CI | **CONFIRMED / bounded** | Three focused workflows cover crosswalk, materiality, and model-run receipt; `domain-habitat` runs the materiality slice and explicit proof/release holds. Critical-habitat source-role tests have no dedicated focused workflow. |
 
 [Back to top](#top)
 
 ---
 
-## Child lanes
+## Executable inventory
 
-No child README lanes were confirmed during this edit.
+Current main establishes four substantive direct-child validators:
 
-Future child lanes should be added only when they represent a distinct Habitat validator specialty, fixture family, edge, or public-surface invariant with accepted contracts, schemas, policy posture, fixtures, receipts, and report semantics.
+| Validator | Bounded responsibility | Test / fixture evidence | Focused workflow |
+|---|---|---|---|
+| `validate_cover_class_crosswalk_profile.py` | Fixture-only ontology version, directionality, coverage, and lossiness checks. | `tests/domains/habitat/land_cover/crosswalk/test_cover_class_crosswalk_profile.py`; `fixtures/domains/habitat/land_cover/crosswalk/profile_cases.json` | `cover-class-crosswalk-profile.yml` |
+| `validate_land_cover_materiality.py` | Deterministic material-change classification for the inactive land-cover profile. | `tests/validators/domains/habitat/test_land_cover_materiality.py`; `fixtures/domains/habitat/land_cover/materiality/` | `habitat-land-cover-materiality.yml`; also exercised by `domain-habitat.yml` |
+| `validate_model_run_receipt.py` | Fixture-only model-run receipt shape, identity, temporal, digest, uncertainty, and authority-boundary checks. | `tests/validators/domains/habitat/test_validate_model_run_receipt.py`; `fixtures/contracts/v1/domains/habitat/model_run_receipt/` | `habitat-model-run-receipt.yml` |
+| `validate_critical_habitat_source_role.py` | Synthetic source-role anti-collapse for regulatory critical habitat and modeled habitat, including species-presence denial. | `tests/domains/habitat/test_critical_habitat_source_role.py` | **No dedicated focused workflow**; local execution is confirmed. |
 
-Possible future children remain **PROPOSED** until verified:
+The following direct-child files remain placeholders: `validate_catalog_matrix.py`, `validate_evidence_bundle.py`, `validate_habitat_patch.py`, `validate_schema.py`, `validate_source_descriptor.py`, and `validate_suitability_model.py`. Their existence proves no validation behavior.
 
-- `land-cover/` for NLCD, remote-sensing land-cover, ecological-system, and classification-role checks;
-- `ecoregions/` for ecoregion/habitat-class lineage, source vintage, and boundary provenance;
-- `suitability/` for habitat suitability model outputs, model cards, uncertainty, and non-occurrence posture;
-- `connectivity/` for corridors, graph/connectivity products, and public-safe generalization;
-- `critical-habitat/` for regulatory critical-habitat context without legal-advice or species-occurrence collapse;
-- `sensitive-join/` for Fauna, Flora, archaeology, stewardship, private-land, infrastructure, or other restricted joins;
-- `over-precise-geometry/` for precision, redaction, aggregation, and quarantine-exit checks.
+Habitat EvidenceBundle projection validation is implemented at the schema-declared top-level entry point `tools/validators/validate_habitat_evidence_bundle_projection.py`, with focused workflow `habitat-evidence-bundle-convergence.yml`. The inert same-named domain placeholder does not replace or mirror that authority.
+
+No child directory is established below this index. Add one only when a distinct validator specialty has accepted contracts, schemas, policy posture, fixtures, receipts, and report semantics; do not create a parallel authority home for an already-established direct-child or schema-declared entry point.
 
 [Back to top](#top)
 
@@ -126,8 +129,9 @@ Possible future children remain **PROPOSED** until verified:
 Safe interpretation:
 
 - **CONFIRMED:** this README exists.
-- **PROPOSED:** validator code may live below this folder when it checks declared Habitat invariants and delegates meaning, sensitivity, policy, evidence, and release authority to owning roots.
-- **NEEDS VERIFICATION:** exact executable names, schema homes, policy bundle digests, source descriptors, fixtures, report destinations, receipts, runtime behavior, and CI wiring.
+- **CONFIRMED:** the four substantive direct-child validators, their cited focused tests/fixtures, and the cited workflow files exist on the reviewed repository state.
+- **BOUNDED:** passing fixtures prove only the declared validator behavior; they do not establish source truth, rights, sensitivity clearance, evidence closure, policy approval, human review, lifecycle promotion, release, deployment, or publication.
+- **NEEDS VERIFICATION:** placeholder behavior, policy bundle execution, live source descriptors, production report destinations, operational receipts, runtime behavior, and any uncited CI coupling.
 - **DENY:** using this folder as habitat doctrine, species-record authority, regulatory-designation authority, contract home, schema home, policy home, source registry, evidence store, lifecycle data store, receipt store, release record store, public map product surface, or domain-meaning authority.
 
 [Back to top](#top)
@@ -228,37 +232,28 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 
 ## Validation
 
-Suggested future test surface:
-
-```text
-tests/validators/domains/habitat/
-├── README.md
-├── test_habitat_domain_validator_parent.py
-└── fixtures/
-    ├── valid_public_safe_habitat_derivative/
-    ├── missing_evidence_ref/
-    ├── source_role_collapse/
-    ├── model_as_observation_denied/
-    ├── habitat_species_authority_collapse/
-    ├── over_precise_geometry_denied/
-    ├── sensitive_join_denied/
-    ├── public_safe_geometry_missing/
-    ├── review_or_policy_gap/
-    └── ignored_with_reason/
-```
-
-Suggested future command pattern:
+Repository-confirmed focused commands:
 
 ```bash
-pytest -q tests/validators/domains/habitat
+python -m pytest -q tests/validators/domains/habitat/test_land_cover_materiality.py
+python tools/validators/domains/habitat/validate_land_cover_materiality.py --fixtures
 ```
 
 ```bash
-python tools/validators/domains/habitat/run_habitat_domain_validators.py --repo-root . --format json
+python -m pytest -q tests/validators/domains/habitat/test_validate_model_run_receipt.py
+python tools/validators/domains/habitat/validate_model_run_receipt.py --fixtures
 ```
 
-> [!NOTE]
-> This is a proposed interface, not proof that `run_habitat_domain_validators.py` or the test path exists.
+```bash
+python -m unittest -v tests.domains.habitat.land_cover.crosswalk.test_cover_class_crosswalk_profile
+python tools/validators/domains/habitat/validate_cover_class_crosswalk_profile.py --fixtures
+```
+
+```bash
+python -m unittest -v tests.domains.habitat.test_critical_habitat_source_role
+```
+
+There is no confirmed `run_habitat_domain_validators.py` aggregate entry point. Do not substitute broad test discovery for the focused commands above without first classifying unrelated or placeholder lanes.
 
 [Back to top](#top)
 
@@ -288,6 +283,6 @@ python tools/validators/domains/habitat/run_habitat_domain_validators.py --repo-
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-07 |
-| Review state | Draft README replacement for greenfield stub and current parent index for Habitat validators. |
-| Next smallest safe change | Verify child validator scripts, accepted profiles, schemas, source descriptors, policy bundles, fixtures, report destinations, receipts, geoprivacy behavior, release linkage, cross-domain join behavior, and CI/runtime wiring before promoting this lane beyond draft. |
+| Last reviewed | 2026-08-28 against `main@bacb77cfbc04014a2c05da541f9cba8025629068` |
+| Review state | Draft index reconciled to current executable, placeholder, test/fixture, and workflow evidence. |
+| Next smallest safe change | Add dedicated hosted coverage for the critical-habitat source-role guard or implement one currently inert placeholder only with an accepted contract/schema boundary, synthetic negative fixtures, and a complete focused test/workflow seam. |
