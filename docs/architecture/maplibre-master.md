@@ -3,13 +3,13 @@ doc_id: kfm://doc/architecture/maplibre-master
 title: MapLibre Master — Components, Functions, Features Architecture Register
 type: architecture
 subtype: component-capability-register
-version: v2.0-draft
-status: "draft; repository-grounded; decision-pending; runtime-hold; no-release; no-publication"
+version: v2.1-draft
+status: "draft; repository-grounded; architecture-accepted; production-runtime-hold; no-release; no-publication"
 owners:
   - "@bartytime4life — verified default repository review route"
   - "NEEDS VERIFICATION — architecture, map-runtime, Explorer, security, accessibility, release, and independent-review stewardship"
 created: 2026-05-25
-updated: 2026-08-19
+updated: 2026-08-27
 policy_label: "repository-facing; architecture; maplibre; renderer-boundary; public"
 owning_root: docs/
 current_path: docs/architecture/maplibre-master.md
@@ -21,11 +21,11 @@ responsibility: >
   responsibility roots that own them.
 truth_posture: >
   CONFIRMED same-path architecture placement, accepted Directory Rules v2,
-  current ADR status, current package/app/validator surfaces, exact MapLibre
-  6.6.0 readiness candidate identity, and current dependency-free/runtime-HOLD
-  state / PROPOSED adapter, sole-renderer, dependency, plugin, protocol,
-  verification, receipt, release, correction, and rollback architecture until
-  the owning decisions and implementations close / UNKNOWN deployed browser
+  accepted ADR-0006/0007 status, current package/app/validator surfaces, exact
+  MapLibre 6.6.0 package identity, package-owned adapter and Vite worker seam,
+  deterministic browser fixture, retired legacy harness, and Explorer
+  NullMapRuntime production HOLD / PROPOSED plugin, protocol, broader runtime
+  verification, receipt, release, correction, and rollback closure / UNKNOWN deployed browser
   behavior, public MapLibre runtime, production tile loading, plugin use,
   renderer parity, operational performance, and public release.
 evidence_snapshot:
@@ -443,20 +443,15 @@ A future 3D architecture document may be useful, but creating it is a separate s
 The repository contains a deterministic no-network acquisition inventory that scans package manifests and bounded code roots for static/dynamic imports, `require`, CDN/global use, protocol registration, workers, and renderer-family packages. Its current semantics are intentionally non-authoritative:
 
 - `PASS`: scan completed and found no renderer acquisition;
-- `HOLD`: acquisition exists while architecture/admission remains unresolved;
-- `FAIL`: parallel active MapLibre package homes surfaced;
+- `HOLD`: raw renderer acquisition is confined to `packages/maplibre/` while production runtime activation remains unresolved;
+- `FAIL`: raw renderer acquisition escaped the accepted package seam or parallel active MapLibre package homes surfaced;
 - `ERROR`: the scan could not complete safely.
 
-The validator currently treats both `packages/maplibre/` and the Explorer `MapLibreAdapter.ts` path as candidate seams. Maintainer direction narrows this: the one concrete renderer-importing implementation belongs inside `packages/maplibre/`; the Explorer path may only perform renderer-neutral bootstrap/composition. The validator and negative fixtures have not yet closed that revised rule.
+The validator treats only `packages/maplibre/` as the accepted raw-renderer seam. Explorer and other consumers may use the KFM-owned facade but fail the inventory if they directly acquire a renderer. The classifier excludes documentation links, renderer-created CSS class assertions, and package-local imports whose filenames merely contain `maplibre`; its negative fixtures retain direct imports, executable CDN assets, browser globals, and parallel package homes as fail-closed cases.
 
-### 8.2 Known acquisition HOLD
+### 8.2 Current acquisition HOLD
 
-`scripts/maplibre-smoke-perf.mjs` currently acquires MapLibre `5.5.0` from `unpkg` through a browser global and loads external glyphs. Issue #2957 requires a reviewed choice:
-
-- migrate/retire the path and prohibit CDN/global renderer acquisition outside the package; or
-- grant one named, non-production, time-bounded exception with exact path, owner, expiry/removal trigger, version/network limits, tests, and rollback.
-
-A permanent parallel harness authority is not acceptable. This unresolved choice is the remaining architecture-packet HOLD.
+`scripts/maplibre-smoke-perf.mjs` is retired and exits with a finite `WORKFLOW_HOLD` before renderer or network acquisition. The remaining structural `HOLD` is the exact package-owned MapLibre dependency and imports under `packages/maplibre/`; it does not authorize Explorer production activation, live sources, performance execution, release, deployment, or publication. Any future CDN/global or direct consumer acquisition outside that package fails the inventory.
 
 ### 8.3 Admission record
 
