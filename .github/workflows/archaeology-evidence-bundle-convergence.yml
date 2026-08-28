@@ -6,7 +6,10 @@ on:
       - 'schemas/contracts/v1/evidence/evidence_bundle.schema.json'
       - 'schemas/contracts/v1/domains/archaeology/evidence_bundle.schema.json'
       - 'fixtures/contracts/v1/evidence/evidence_bundle/**'
+      - 'tools/ci/kfm_no_network/README.md'
+      - 'tools/ci/kfm_no_network/sitecustomize.py'
       - 'tools/validators/validate_archaeology_evidence_bundle_projection.py'
+      - 'tests/domains/archaeology/test_no_network_fixtures.py'
       - 'tests/validators/domains/archaeology/test_evidence_bundle_schema_convergence.py'
       - '.github/workflows/archaeology-evidence-bundle-convergence.yml'
   workflow_dispatch:
@@ -36,10 +39,20 @@ jobs:
         run: >-
           python -m py_compile
           tools/validators/validate_archaeology_evidence_bundle_projection.py
+          tests/domains/archaeology/test_no_network_fixtures.py
           tests/validators/domains/archaeology/test_evidence_bundle_schema_convergence.py
+      - name: Verify Python no-network startup guard
+        env:
+          PYTHONPATH: ${{ github.workspace }}/tools/ci/kfm_no_network:${{ github.workspace }}
+        run: python -c 'import sitecustomize; assert sitecustomize.GUARD_ACTIVE'
       - name: Run deterministic convergence tests
+        env:
+          PYTHONPATH: ${{ github.workspace }}/tools/ci/kfm_no_network:${{ github.workspace }}
         run: >-
           python -m unittest -q
+          tests.domains.archaeology.test_no_network_fixtures
           tests.validators.domains.archaeology.test_evidence_bundle_schema_convergence
       - name: Validate shared fixtures through the Archaeology projection
+        env:
+          PYTHONPATH: ${{ github.workspace }}/tools/ci/kfm_no_network:${{ github.workspace }}
         run: python tools/validators/validate_archaeology_evidence_bundle_projection.py --fixtures
