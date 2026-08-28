@@ -40,7 +40,7 @@ class RepositoryGovernanceParityTests(unittest.TestCase):
         self.assertEqual("HOLD_INHERITED", report["conformance_outcome"])
         self.assertEqual(0, report["topology"]["introduced_finding_count"])
         self.assertEqual(0, report["topology"]["fail_new_drift"])
-        self.assertEqual(131, report["topology"]["baselined_warning"])
+        self.assertEqual(130, report["topology"]["baselined_warning"])
         self.assertEqual(0, report["topology"]["stale_fingerprints"])
 
     def test_valid_and_invalid_fixtures_match_reviewed_codes(self) -> None:
