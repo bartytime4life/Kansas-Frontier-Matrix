@@ -139,6 +139,10 @@ def activate() -> bool:
         socket.socket.sendmsg = _guarded_sendmsg
     if _original_sendfile is not None:
         socket.socket.sendfile = _guarded_sendfile
+    # ``socket.SocketType`` is the native ``_socket.socket`` class rather than
+    # the patchable ``socket.socket`` subclass. Rebind the public constructor
+    # alias after patching so it cannot bypass the guarded methods.
+    socket.SocketType = socket.socket
     socket.create_connection = _guarded_create_connection
     socket.getaddrinfo = _guarded_getaddrinfo
     socket.gethostbyname = _guarded_gethostbyname
