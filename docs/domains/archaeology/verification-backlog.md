@@ -8,7 +8,7 @@ owners: "@bartytime4life via CODEOWNERS review routing; archaeology-domain stewa
 created: 2026-05-28
 updated: 2026-08-28
 policy_label: public
-related: [docs/domains/archaeology/README.md, docs/domains/archaeology/sensitivity-and-publication-posture.md, docs/domains/archaeology/pipeline-shape.md, docs/domains/archaeology/source-families.md, docs/domains/archaeology/governed-ai-behavior.md, docs/domains/archaeology/cross-lane-relations.md, docs/registers/VERIFICATION_BACKLOG.md, docs/registers/DRIFT_REGISTER.md, ai-build-operating-contract.md]
+related: [docs/domains/archaeology/README.md, docs/domains/archaeology/sensitivity-and-publication-posture.md, docs/domains/archaeology/pipeline-shape.md, docs/domains/archaeology/source-families.md, docs/domains/archaeology/governed-ai-behavior.md, docs/domains/archaeology/cross-lane-relations.md, docs/registers/VERIFICATION_BACKLOG.md, docs/registers/DRIFT_REGISTER.md, docs/doctrine/ai-build-operating-contract.md]
 tags: [kfm, archaeology, verification, backlog, open-questions, ADR, sensitive-domain]
 notes: [CONTRACT_VERSION = "3.0.0" pinned; repository inspected at main@6207ce4ca01aa6684bef2585464da369398d3010; placement and selected bounded evidence are confirmed while authority, evaluator binding, rights, review, release, and publication remain separate]
 [/KFM_META_BLOCK_V2] -->
