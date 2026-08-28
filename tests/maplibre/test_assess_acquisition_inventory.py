@@ -537,6 +537,51 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(result.findings[0].kind, "INPUT_CHANGED_DURING_READ")
         self.assertNotIn("RENDERER_ACQUISITION_PRESENT", result.reasons)
 
+    def test_stable_metadata_content_change_fails_digest_consistency(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            candidate = root / "scripts" / "candidate.mjs"
+            candidate.parent.mkdir(parents=True)
+            active = 'require("maplibre-gl");\n'
+            benign = "export {};\n".ljust(len(active))
+            candidate.write_text(benign, encoding="utf-8")
+            real_read = MODULE.os.read
+            real_fstat = MODULE.os.fstat
+            raced_descriptor: int | None = None
+            stable_snapshot = None
+            changed = False
+
+            def racing_read(descriptor: int, count: int) -> bytes:
+                nonlocal changed, raced_descriptor, stable_snapshot
+                chunk = real_read(descriptor, count)
+                if chunk and not changed:
+                    raced_descriptor = descriptor
+                    stable_snapshot = real_fstat(descriptor)
+                    candidate.write_text(active, encoding="utf-8")
+                    changed = True
+                return chunk
+
+            def stable_fstat(descriptor: int):
+                if descriptor == raced_descriptor and stable_snapshot is not None:
+                    return stable_snapshot
+                return real_fstat(descriptor)
+
+            with (
+                patch.object(MODULE.os, "read", racing_read),
+                patch.object(MODULE.os, "fstat", stable_fstat),
+            ):
+                result = MODULE.scan(root)
+
+        self.assertTrue(changed)
+        self.assertEqual(result.outcome, MODULE.Outcome.ERROR)
+        self.assertEqual(
+            result.reasons, ("SCAN_INPUT_CONTENT_CHANGED_DURING_VERIFICATION",)
+        )
+        self.assertEqual(
+            result.findings[0].kind, "INPUT_CONTENT_CHANGED_DURING_VERIFICATION"
+        )
+        self.assertNotIn("RENDERER_ACQUISITION_PRESENT", result.reasons)
+
     def test_parent_swap_cannot_escape_pinned_directory_descriptor(self) -> None:
         with self._root() as tmp, self._root() as external_tmp:
             root = Path(tmp)
@@ -664,7 +709,7 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 3)
         payload = json.loads(completed.stdout)
         self.assertEqual(payload["outcome"], "HOLD")
-        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v11")
+        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v12")
         self.assertEqual(payload["max_input_bytes"], MODULE.MAX_INPUT_BYTES)
         self.assertEqual(payload["max_total_input_bytes"], MODULE.MAX_TOTAL_INPUT_BYTES)
         self.assertEqual(payload["findings"], [])
