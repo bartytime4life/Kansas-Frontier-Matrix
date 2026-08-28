@@ -1,13 +1,16 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/PATH_TBD_AFTER_REPO_INSPECTION
+doc_id: kfm://doc/docs-atlases-source-role-anti-collapse
 title: Source-Role Anti-Collapse Register (Atlas v1.1 §24.1 register extract)
 type: standard
-version: v1
+version: v1.0.1
 status: draft
 owners: OWNER_TBD (docs steward; source steward; sensitivity reviewer)
 created: 2026-05-25
-updated: 2026-05-25
+updated: 2026-08-28
 policy_label: public
+owning_root: docs/
+responsibility: "Provide a human navigational extract of Atlas v1.1 source-role anti-collapse doctrine without becoming SourceDescriptor, evidence, policy, validator, release, or publication authority."
+truth_posture: "CONFIRMED source extraction and current same-path repository identity / PROPOSED field names and implementation surfaces / NEEDS VERIFICATION adoption, ownership, implementation depth, review, release, and publication"
 related:
   - docs/atlases/KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md
   - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf
@@ -31,8 +34,8 @@ notes:
   - "Authority basis: faithful extraction of Atlas v1.1 §24.1. Atlas v1.1 explicitly states Chapter 24 tables are NAVIGATIONAL, not authoritative."
   - "EvidenceBundle, source dossiers, and schemas under schemas/contracts/v1/... remain the canonical sources for any specific claim (Atlas v1.1 Ch. 24 preamble)."
   - "Source-role vocabulary v1 (7 canonical classes) is doctrine-CONFIRMED; ADR-S-04 governs evolution."
-  - "Implementation depth (validator wiring, policy packages, contract/schema authoring) is PROPOSED throughout and requires mounted-repo verification."
-  - "Owner, doc_id, exact ADR filenames are placeholders pending mounted-repo inspection and ADR acceptance."
+  - "Implementation depth (validator wiring, policy packages, contract/schema authoring) remains PROPOSED; the 2026-08-28 same-path identity repair verifies only this document's repository placement, metadata, and topology relationship."
+  - "Owner and exact ADR filenames remain placeholders pending accountable assignment and ADR acceptance; doc_id is resolved by the current same-path identity repair."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -513,7 +516,7 @@ Until ADR-S-04 is accepted, the vocabulary is `CONFIRMED doctrinally` (seven cla
 | *KFM Repository Structure Guiding Document* | `CONFIRMED doctrine` | Grounds §7 enforcement-surface paths and §9 implementation-surface paths. | Doctrine, not implementation. |
 | `docs/atlas/source-role-anti-collapse.md` (prior turn, this session) | `CONFIRMED pointer-page status` | The deprecated-lane pointer page that redirects to this canonical-lane file. | Pointer; not authority. |
 
-**Memory is not evidence.** No mounted repo, CI run, workflow, dashboard, or branch state was inspected. Every implementation claim is `PROPOSED` and bounded to doctrine.
+**Current repository evidence boundary.** The 2026-08-28 same-path identity repair inspected this file, its parent lane, accepted Directory Rules, and the repository topology and documentation validators at `main@2a205c8df31ff95a61f72a52489336b924a791ac`. That confirms only this document's repository identity and human-reference responsibility. Every policy, contract, schema, validator, runtime, review, release, and publication claim remains `PROPOSED` or `NEEDS VERIFICATION` as labeled.
 
 </details>
 

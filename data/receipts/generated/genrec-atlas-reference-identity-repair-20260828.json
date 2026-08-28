@@ -1,0 +1,142 @@
+{
+  "receipt_id": "genrec-atlas-reference-identity-repair-20260828",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "control_plane/repository_governance_parity.yaml",
+    "docs/atlases/sensitivity-tier-reference.md",
+    "docs/atlases/source-role-anti-collapse.md",
+    "docs/atlases/stale-state-reference.md",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py",
+    "tests/validators/directory_governance/test_validate_repository_topology.py",
+    "tools/validators/directory_governance/repository_topology_baseline.json"
+  ],
+  "artifact_hashes": {
+    "control_plane/repository_governance_parity.yaml": "sha256:97b114c61c846a00952c7f4f07bef09ba1283d194e31caf31456b938b8c187df",
+    "docs/atlases/sensitivity-tier-reference.md": "sha256:2adcec64e543784966ba32337b56771e2f8b2aebf2ad31e154fa49f1184c659b",
+    "docs/atlases/source-role-anti-collapse.md": "sha256:d07c8aac4bafe7da18e7dcb553c8ba007f6bdc1334b097725c52015d2a7b375a",
+    "docs/atlases/stale-state-reference.md": "sha256:a358edce935502a033bdea879283f71bad859cffe0409b62e14a53dd4d488d6c",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "sha256:cbb08e2300855149b7196ab84c0cc705fec014ea23a2f1f04b43fa3ebc9b924b",
+    "tests/validators/directory_governance/test_validate_repository_topology.py": "sha256:f4a352dde1901ccedf3f3701ec51bd75930b369f87750fe4c18bdac2ce3aee9a",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "sha256:2ca7584646f763d056343f4cedb9691746f5cca85ce1d918796901687ea03c7b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-5)",
+    "version": "2026-08-28"
+  },
+  "prompt_or_contract": "sha256:ec485fc55a486e37f2545309ac4b87c2e1fa3392b9780ce225e123ea0258fe95",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "git",
+      "repository validators"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:f043bff22a1d99295b115def55336cbd920ff2f83a7c2e8f17844524ee2ea31a",
+      "sha256:160f963df73f0876063f554c15acdeb7d2925feb87db4a01f466f3c95e8e4156",
+      "sha256:caff960ccb205e7dfb785567ed8955db2397f74acf9490c22f3d1a14f8676d65",
+      "sha256:5c9c82e92dee831bbfa6041fc03ab7b8c6cca676919ad6c34fc2ecf761a56421",
+      "sha256:9e60f8c2028ba0296c17d6ed515b6cb3598d3933faf4e4b9a573748fa4d22a52"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:main@2a205c8df31ff95a61f72a52489336b924a791ac",
+      "repo:main@8449e853e556058033d9880141dc73bbc4444acd",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@2a205c8df31ff95a61f72a52489336b924a791ac",
+      "repo:docs/atlases/README.md@2a205c8df31ff95a61f72a52489336b924a791ac",
+      "repo:issue/3361",
+      "topology:KFM-TOPO-016:sha256:d208e37621a4b7d61435d6f01de9dfa1cff94801cbca7d6ddbdde2e9bdbaea6b"
+    ]
+  },
+  "truth_labels": {
+    "control_plane/repository_governance_parity.yaml": "PROPOSED",
+    "docs/atlases/sensitivity-tier-reference.md": "PROPOSED",
+    "docs/atlases/source-role-anti-collapse.md": "PROPOSED",
+    "docs/atlases/stale-state-reference.md": "PROPOSED",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "PROPOSED",
+    "tests/validators/directory_governance/test_validate_repository_topology.py": "PROPOSED",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "target-metadata-conformance",
+      "outcome": "PASS",
+      "reason": "All three changed metadata blocks parse as valid, carry unique document IDs, match the docs/ owning root, and include the required responsibility and truth-posture fields."
+    },
+    {
+      "gate": "topology-trusted-baseline-transition",
+      "outcome": "PASS",
+      "reason": "After non-force reconciliation with main 8449e853e556058033d9880141dc73bbc4444acd, the indexed branch state has 0 invariant findings, 0 new drift, 127 baselined warnings, and 0 stale entries. Main contributes the independently merged Agriculture and Archaeology reductions from 130 to 128; this slice removes exactly its own placeholder-ID group from 128 to 127."
+    },
+    {
+      "gate": "focused-validator-tests",
+      "outcome": "PASS",
+      "reason": "24 metadata tests, 29 document-graph tests, 20 link-check tests, 25 repository-topology tests, and 12 repository-governance-parity tests pass."
+    },
+    {
+      "gate": "baseline-versus-branch-link-attribution",
+      "outcome": "PASS",
+      "reason": "Separate clean-base and branch runs report the same 20 local-target failure identities and 20 unrequested external-target notices; only line offsets changed after adding required metadata. No link target changed in this slice."
+    },
+    {
+      "gate": "repository-registry-health",
+      "outcome": "FAIL",
+      "reason": "The explicit metadata run retains the same seven control_plane/document_registry.yaml structural failures seen on the untouched base. The three repaired documents are valid and emit review-only missing-entry candidates; this slice does not mutate the separately governed registry."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation begins only after the campaign branch is pushed and the draft pull request exists."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt is not approval."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "exact-main-baseline",
+      "validated": true,
+      "evidence_ref": "repo:main@2a205c8df31ff95a61f72a52489336b924a791ac"
+    },
+    {
+      "id": "accepted-directory-rules-decision",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@2a205c8df31ff95a61f72a52489336b924a791ac"
+    },
+    {
+      "id": "atlas-lane-contract",
+      "validated": true,
+      "evidence_ref": "repo:docs/atlases/README.md@2a205c8df31ff95a61f72a52489336b924a791ac"
+    },
+    {
+      "id": "placeholder-document-identity-finding",
+      "validated": true,
+      "evidence_ref": "topology:KFM-TOPO-016:sha256:d208e37621a4b7d61435d6f01de9dfa1cff94801cbca7d6ddbdde2e9bdbaea6b"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-28T21:19:31Z",
+  "emitter": "OpenAI Codex via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Repairs three same-path human-reference identities and required metadata, removes one resolved topology waiver, and updates both deterministic warning-count expectations that consume that baseline. It does not adopt Atlas proposals, assign owners, mutate the document registry, alter policy or runtime behavior, activate a source, release, deploy, promote, or publish."
+}

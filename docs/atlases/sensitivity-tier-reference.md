@@ -1,13 +1,16 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/PATH_TBD_AFTER_REPO_INSPECTION
+doc_id: kfm://doc/docs-atlases-sensitivity-tier-reference
 title: Sensitivity / Rights Tier Reference (Atlas v1.1 §24.5 register extract)
 type: standard
-version: v1
+version: v1.0.1
 status: draft
 owners: OWNER_TBD (sensitivity reviewer; release authority; sovereignty reviewer; docs steward)
 created: 2026-05-25
-updated: 2026-05-25
+updated: 2026-08-28
 policy_label: public
+owning_root: docs/
+responsibility: "Provide a human navigational extract of Atlas v1.1 sensitivity and rights tiers without becoming policy, permission, source, evidence, release, or publication authority."
+truth_posture: "CONFIRMED source extraction and current same-path repository identity / PROPOSED tier scheme and implementation surfaces / NEEDS VERIFICATION adoption, ownership, implementation depth, review, release, and publication"
 related:
   - docs/atlases/KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md
   - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf
@@ -39,7 +42,7 @@ notes:
   - "EvidenceBundle, source dossiers, and schemas under schemas/contracts/v1/... remain the canonical sources for any specific claim (Atlas v1.1 Ch. 24 preamble)."
   - "Tier scheme T0-T4 is PROPOSED per §24.5.1; ADR-S-05 governs canonical adoption."
   - "Corpus-internal divergence: Pass 10 C6-01 uses a 0-5 rubric (6 levels); Atlas v1.1 §24.5 uses T0-T4 (5 tiers). Reconciliation is ADR-S-05 territory. See §12.1."
-  - "Implementation depth (redaction profile libraries, validators, policy packages, schema headers) is PROPOSED throughout and requires mounted-repo verification."
+  - "Implementation depth (redaction profile libraries, validators, policy packages, schema headers) remains PROPOSED; the 2026-08-28 same-path identity repair verifies only this document's repository placement, metadata, and topology relationship."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -558,7 +561,7 @@ Each contract above has a corresponding schema home per ADR-0001 (`schemas/contr
 | `directory-rules.md` v1.2 §6.6 fixture substructure + §7.4 + ADR-0001 | `CONFIRMED doctrine` | Grounds §9.2 schema paths and §9.6 fixture layout. | Doctrine, not implementation. |
 | `docs/atlas/README.md` and `docs/atlas/source-role-anti-collapse.md` (prior turns, this session) | `CONFIRMED pointer-page status` | Establishes the deprecated-lane pattern; this canonical-lane register supersedes the prior pointers in scope. | Pointer; not authority. |
 
-**Memory is not evidence.** No mounted repo, CI run, workflow, dashboard, or branch state was inspected. Every implementation claim is `PROPOSED` and bounded to doctrine.
+**Current repository evidence boundary.** The 2026-08-28 same-path identity repair inspected this file, its parent lane, accepted Directory Rules, and the repository topology and documentation validators at `main@2a205c8df31ff95a61f72a52489336b924a791ac`. That confirms only this document's repository identity and human-reference responsibility. Every policy, contract, schema, validator, runtime, review, release, and publication claim remains `PROPOSED` or `NEEDS VERIFICATION` as labeled.
 
 </details>
 
