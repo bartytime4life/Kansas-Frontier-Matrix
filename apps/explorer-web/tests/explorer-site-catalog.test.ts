@@ -6,6 +6,7 @@ import {
   REPOSITORY_SNAPSHOT,
   filterFeatures,
   findDomain,
+  repositoryUrl,
 } from "../src/site/catalog";
 
 describe("Explorer repository catalog", () => {
@@ -30,16 +31,26 @@ describe("Explorer repository catalog", () => {
     ).toBe(true);
   });
 
-  it("keeps the current MapLibre runtime explicitly held without rewriting the snapshot", () => {
+  it("binds the website catalog and MapLibre HOLD to the refreshed repository snapshot", () => {
     const runtime = FEATURE_CATALOG.find(
       (entry) => entry.id === "maplibre-runtime",
     );
     expect(runtime?.maturity).toBe("HOLD");
-    expect(REPOSITORY_SNAPSHOT.mapLibre.readinessCandidate).toBe("6.4.0");
-    expect(REPOSITORY_SNAPSHOT.mapLibre.dependencyAdmitted).toBe(false);
-    expect(REPOSITORY_SNAPSHOT.mapLibre.runtimeImplemented).toBe(false);
+    expect(REPOSITORY_SNAPSHOT).toMatchObject({
+      commit: "90e8a1b231b2c07ae6346ce75ecd42a172ef67e7",
+      commitRecordedAt: "2026-08-28T14:33:53Z",
+      mapLibre: {
+        readinessCandidate: "6.6.0",
+        readinessState: "HOLD",
+        packagePresent: true,
+        adapterImplemented: true,
+        browserRuntimeActivated: false,
+        browserEvidenceComplete: false,
+      },
+    });
     expect(CURRENT_MAPLIBRE_READINESS).toMatchObject({
-      evidenceCommit: "1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f",
+      evidenceCommit: "90e8a1b231b2c07ae6346ce75ecd42a172ef67e7",
+      evidenceRecordedAt: "2026-08-28T14:33:53Z",
       readinessCandidate: "6.6.0",
       readinessState: "HOLD",
       packagePresent: true,
@@ -47,6 +58,9 @@ describe("Explorer repository catalog", () => {
       browserRuntimeActivated: false,
       browserEvidenceComplete: false,
     });
+    expect(repositoryUrl("apps/explorer-web")).toContain(
+      `/tree/${REPOSITORY_SNAPSHOT.commit}/apps/explorer-web`,
+    );
   });
 
   it("finds cross-domain and maturity-filtered feature slices", () => {
