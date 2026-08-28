@@ -81,6 +81,22 @@ import { runtimeSeamStepForSelection, type RuntimeSeamState } from "./runtime-se
 type ViewState = { center: [number, number]; zoom: number; bearing: number; pitch: number };
 type MapBoundsState = { west: number; south: number; east: number; north: number };
 type RuntimeState = { kind: "loading" | "ready" | "degraded" | "error"; message: string };
+type MapLibreRuntimeProbe = {
+  version: string | null;
+  workerConfigured: boolean;
+  runtimeAssetsReady: boolean;
+  webgl2: boolean | null;
+  mapConstructed: boolean;
+  canvasReady: boolean;
+  styleLoaded: boolean;
+  idle: boolean;
+  tilesLoaded: boolean;
+  controlsReady: boolean;
+  interactionsReady: boolean;
+  sourcesReady: number;
+  projection: "mercator" | "globe";
+  error: string | null;
+};
 type DrawerView = "evidence" | "metadata" | "lineage" | "focus";
 type MeasureMode = "distance" | "area" | null;
 type RepositoryView = "updates" | "functions" | "runtime" | "transitions" | "readiness" | "sources";
@@ -106,6 +122,9 @@ type SelectedContext = {
 };
 
 const KANSAS_VIEW: ViewState = { center: [-98.38, 38.48], zoom: 5.45, bearing: 0, pitch: 0 };
+const EXPECTED_MAPLIBRE_VERSION = "6.6.0";
+const MAPLIBRE_WORKER_URL = "/maplibre/maplibre-gl-worker.mjs";
+const MAPLIBRE_RUNTIME_ASSET_URLS = [MAPLIBRE_WORKER_URL, "/maplibre/maplibre-gl-shared.mjs"] as const;
 const SUPPORTED_CONTEXT_BOUNDS = Object.freeze({ west: -104.8, south: 34.8, east: -92, north: 42.2 });
 const defaultVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, layer.defaultVisibility]));
 const defaultOpacity = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, layer.defaultOpacity]));
@@ -123,6 +142,20 @@ const mapUtilityLabels: Record<MapUtilityView, string> = {
   diagnostics: "Diagnostics",
 };
 const governedRoutes = new Set<GovernedRoute>(["/bootstrap", "/layers", "/evidence"]);
+
+const loadConfiguredMapLibre = async () => {
+  await Promise.all(MAPLIBRE_RUNTIME_ASSET_URLS.map(async (url) => {
+    const response = await fetch(url, { cache: "no-store" });
+    if (!response.ok) throw new Error(`MapLibre runtime asset unavailable (${response.status})`);
+    await response.body?.cancel();
+  }));
+  const maplibregl = await import("maplibre-gl");
+  maplibregl.setWorkerUrl(MAPLIBRE_WORKER_URL);
+  const version = maplibregl.getVersion();
+  if (version !== EXPECTED_MAPLIBRE_VERSION) throw new Error(`Expected MapLibre ${EXPECTED_MAPLIBRE_VERSION}, received ${version}`);
+  if (maplibregl.getWorkerUrl() !== MAPLIBRE_WORKER_URL) throw new Error("MapLibre worker configuration did not persist");
+  return { maplibregl, version };
+};
 const publicWorkspaces: readonly Readonly<{
   id: PublicWorkspaceId;
   label: string;
@@ -331,6 +364,22 @@ export default function Home() {
   const [pointer, setPointer] = useState<[number, number]>(KANSAS_VIEW.center);
   const [mapViewportBounds, setMapViewportBounds] = useState<MapBoundsState>(SUPPORTED_CONTEXT_BOUNDS);
   const [runtime, setRuntime] = useState<RuntimeState>({ kind: "loading", message: "Starting the MapLibre renderer…" });
+  const [maplibreProbe, setMaplibreProbe] = useState<MapLibreRuntimeProbe>({
+    version: null,
+    workerConfigured: false,
+    runtimeAssetsReady: false,
+    webgl2: null,
+    mapConstructed: false,
+    canvasReady: false,
+    styleLoaded: false,
+    idle: false,
+    tilesLoaded: false,
+    controlsReady: false,
+    interactionsReady: false,
+    sourcesReady: 0,
+    projection: "mercator",
+    error: null,
+  });
   const [styleReady, setStyleReady] = useState(false);
   const [locationCameraRedacted, setLocationCameraRedacted] = useState(false);
   const [selected, setSelected] = useState<SelectedContext | null>(null);
@@ -416,7 +465,8 @@ export default function Home() {
     const hasSharedFeature = new URLSearchParams(window.location.search).has("f");
     let dismissed = false;
     try { dismissed = window.localStorage.getItem(GUIDED_START_STORAGE_KEY) === "1"; } catch { /* Device storage is optional. */ }
-    setGuidedStartOpen(!hasSharedFeature && !dismissed);
+    const openGuide = window.setTimeout(() => setGuidedStartOpen(!hasSharedFeature && !dismissed), 0);
+    return () => window.clearTimeout(openGuide);
   }, []);
   useEffect(() => { selectedRef.current = selected; }, [selected]);
   useEffect(() => { measureModeRef.current = measureMode; }, [measureMode]);
@@ -432,6 +482,54 @@ export default function Home() {
     loading: Object.values(sourceStates).filter((state) => state === "loading").length,
     error: Object.values(sourceStates).filter((state) => state === "error").length,
   }), [sourceStates]);
+  const maplibreCapabilityChecks = useMemo(() => {
+    const state = (ready: boolean, failed = false): "READY" | "CHECKING" | "ERROR" => failed ? "ERROR" : ready ? "READY" : "CHECKING";
+    const startupFailed = Boolean(maplibreProbe.error);
+    return [
+      {
+        id: "module-worker",
+        label: "ESM runtime + worker",
+        detail: `${maplibreProbe.version ?? "Loading version"} · same-origin worker + shared module ${maplibreProbe.runtimeAssetsReady ? "verified" : "pending"}`,
+        state: state(maplibreProbe.version === EXPECTED_MAPLIBRE_VERSION && maplibreProbe.workerConfigured && maplibreProbe.runtimeAssetsReady, startupFailed && !maplibreProbe.workerConfigured),
+      },
+      {
+        id: "webgl2",
+        label: "WebGL2 context",
+        detail: "Required by MapLibre GL JS 6; catalog metadata remains readable if unavailable",
+        state: state(maplibreProbe.webgl2 === true, maplibreProbe.webgl2 === false),
+      },
+      {
+        id: "canvas",
+        label: "Map + canvas",
+        detail: maplibreProbe.canvasReady ? "Map constructed with a non-zero render surface" : "Waiting for the render surface",
+        state: state(maplibreProbe.mapConstructed && maplibreProbe.canvasReady, startupFailed && !maplibreProbe.mapConstructed),
+      },
+      {
+        id: "style",
+        label: "Style Specification v8",
+        detail: `${BASEMAPS[basemap].title} · ${maplibreProbe.styleLoaded ? "style loaded" : "style pending"}`,
+        state: state(maplibreProbe.styleLoaded, startupFailed),
+      },
+      {
+        id: "sources",
+        label: "Admitted local sources",
+        detail: `${maplibreProbe.sourcesReady}/${LAYER_REGISTRY.length} GeoJSON sources · ${maplibreProbe.idle ? "idle" : "working"} · ${maplibreProbe.tilesLoaded ? "tiles settled" : "tiles pending"}`,
+        state: state(maplibreProbe.sourcesReady === LAYER_REGISTRY.length && maplibreProbe.idle && maplibreProbe.tilesLoaded, startupFailed || sourceStateCounts.error > 0),
+      },
+      {
+        id: "interaction",
+        label: "Controls + interactions",
+        detail: "Scale, pan, zoom, keyboard, hover, selection, cluster expansion, and measurement handlers",
+        state: state(maplibreProbe.controlsReady && maplibreProbe.interactionsReady, startupFailed),
+      },
+      {
+        id: "projection",
+        label: "Projection + fallback",
+        detail: maplibreProbe.mapConstructed ? `${maplibreProbe.projection} active · Mercator remains the explicit 2D fallback` : "Renderer unavailable · catalog and evidence interfaces remain active",
+        state: state(maplibreProbe.mapConstructed, startupFailed),
+      },
+    ] as const;
+  }, [basemap, maplibreProbe, sourceStateCounts.error]);
   const mapFeatureIndex = useMemo(() => {
     const query = mapFeatureQuery.trim().toLowerCase();
     return LAYER_REGISTRY
@@ -1009,12 +1107,15 @@ export default function Home() {
     const mapContainer = mapContainerRef.current;
     if (!mapContainer) return;
 
-    import("maplibre-gl").then((maplibregl) => {
+    loadConfiguredMapLibre().then(({ maplibregl, version }) => {
       if (disposed || !mapContainerRef.current) return;
+      setMaplibreProbe((current) => ({ ...current, version, workerConfigured: true, runtimeAssetsReady: true, error: null }));
       try {
         const webgl2 = document.createElement("canvas").getContext("webgl2");
+        setMaplibreProbe((current) => ({ ...current, webgl2: Boolean(webgl2) }));
         if (!webgl2) {
           setSourceStates(Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, "error"])));
+          setMaplibreProbe((current) => ({ ...current, error: "WebGL2 is unavailable" }));
           setRuntime({ kind: "error", message: "WebGL2 is unavailable in this browser. The Layer Catalog and trust metadata remain readable, but the interactive map cannot start." });
           return;
         }
@@ -1033,9 +1134,45 @@ export default function Home() {
           cooperativeGestures: true,
         });
         mapRef.current = map;
+        setMaplibreProbe((current) => ({ ...current, mapConstructed: true }));
         const scaleControl = new maplibregl.ScaleControl({ unit: measureUnitRef.current, maxWidth: 110 });
         scaleControlRef.current = scaleControl;
         map.addControl(scaleControl, "bottom-left");
+        let interactionHandlersBound = false;
+        let runtimeError: string | null = null;
+        const failedSourceIds = new Set<string>();
+
+        const refreshMaplibreProbe = () => {
+          const nextSourceStates = Object.fromEntries(LAYER_REGISTRY.map((layer) => {
+            const sourceReady = Boolean(map.getSource(layer.sourceId)) && map.isSourceLoaded(layer.sourceId);
+            return [layer.id, sourceReady ? "ready" : failedSourceIds.has(layer.sourceId) ? "error" : "loading"];
+          })) as Record<string, "loading" | "ready" | "error">;
+          const sourcesReady = Object.values(nextSourceStates).filter((state) => state === "ready").length;
+          const styleLoaded = Boolean(map.isStyleLoaded());
+          const canvasBounds = map.getCanvas().getBoundingClientRect();
+          const canvasReady = canvasBounds.width > 0 && canvasBounds.height > 0 && map.getCanvas().width > 0 && map.getCanvas().height > 0;
+          const projectionType = map.getProjection().type === "globe" ? "globe" : "mercator";
+          const interactionsReady = interactionHandlersBound
+            && map.dragPan.isEnabled()
+            && map.scrollZoom.isEnabled()
+            && map.keyboard.isEnabled()
+            && map.touchZoomRotate.isEnabled();
+          const nextProbe = {
+            styleLoaded,
+            canvasReady,
+            idle: map.loaded(),
+            tilesLoaded: map.areTilesLoaded(),
+            controlsReady: Boolean(scaleControlRef.current),
+            interactionsReady,
+            sourcesReady,
+            projection: projectionType,
+            error: runtimeError,
+          } satisfies Partial<MapLibreRuntimeProbe>;
+          setSourceStates(nextSourceStates);
+          setStyleReady(styleLoaded);
+          setMaplibreProbe((current) => ({ ...current, ...nextProbe }));
+          return nextProbe;
+        };
 
         const syncStyle = () => {
           hoveredRef.current = null;
@@ -1049,15 +1186,14 @@ export default function Home() {
             updateSelectionSource(map, mismatch || !layerVisible ? null : currentSelection.geometry);
           }
           updateMeasurementSource(map, buildMeasurementData(measureCoordinatesRef.current, measurementGeometryModeRef.current));
-          setSourceStates(Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, "ready"])));
-          setStyleReady(true);
+          refreshMaplibreProbe();
         };
 
         map.on("style.load", syncStyle);
         map.once("load", () => {
           syncStyle();
           map.setProjection({ type: projectionRef.current });
-          setRuntime({ kind: "ready", message: "MapLibre renderer ready · site-local public-safe fixtures" });
+          setRuntime({ kind: "loading", message: `MapLibre ${version} loaded · verifying local sources and interactions…` });
           map.resize();
         });
 
@@ -1181,6 +1317,7 @@ export default function Home() {
             .setDOMContent(popupNode)
             .addTo(map);
         });
+        interactionHandlersBound = true;
 
         map.on("movestart", () => {
           const center = map.getCenter();
@@ -1197,6 +1334,9 @@ export default function Home() {
           const message = event.error?.message || "The map reported an unknown rendering error.";
           const sourceId = (event as typeof event & { sourceId?: string }).sourceId;
           const affectedLayer = sourceId ? LAYER_REGISTRY.find((layer) => layer.sourceId === sourceId) : undefined;
+          runtimeError = message;
+          if (sourceId) failedSourceIds.add(sourceId);
+          setMaplibreProbe((current) => ({ ...current, error: message }));
           if (affectedLayer) {
             setSourceStates((current) => ({ ...current, [affectedLayer.id]: "error" }));
             setRuntime({ kind: "degraded", message: `${affectedLayer.title} could not load; other map layers remain available. ${message}` });
@@ -1204,11 +1344,29 @@ export default function Home() {
             setRuntime({ kind: "error", message: `Map runtime error: ${message}` });
           }
         });
+        map.on("idle", () => {
+          const probe = refreshMaplibreProbe();
+          const ready = probe.styleLoaded
+            && probe.canvasReady
+            && probe.tilesLoaded
+            && probe.sourcesReady === LAYER_REGISTRY.length
+            && probe.interactionsReady
+            && !runtimeError;
+          if (!ready) {
+            setRuntime({ kind: runtimeError ? "degraded" : "loading", message: runtimeError ? `MapLibre runtime proof is incomplete: ${runtimeError}` : "MapLibre is waiting for all admitted local capabilities to settle…" });
+            return;
+          }
+          setRuntime({ kind: "ready", message: `MapLibre ${version} ready · ${LAYER_REGISTRY.length} local sources · interactions proven` });
+        });
       } catch (error) {
-        setRuntime({ kind: "error", message: `MapLibre could not start: ${error instanceof Error ? error.message : "unknown failure"}` });
+        const message = error instanceof Error ? error.message : "unknown failure";
+        setMaplibreProbe((current) => ({ ...current, error: message }));
+        setRuntime({ kind: "error", message: `MapLibre could not start: ${message}` });
       }
     }).catch((error: unknown) => {
-      setRuntime({ kind: "error", message: `MapLibre could not load: ${error instanceof Error ? error.message : "unknown failure"}` });
+      const message = error instanceof Error ? error.message : "unknown failure";
+      setMaplibreProbe((current) => ({ ...current, error: message }));
+      setRuntime({ kind: "error", message: `MapLibre could not load: ${message}` });
     });
 
     return () => {
@@ -1231,8 +1389,8 @@ export default function Home() {
     if (!map || !map.isStyleLoaded()) return;
     map.setStyle(BASEMAPS[basemap].style);
     setStyleReady(false);
+    setMaplibreProbe((current) => ({ ...current, styleLoaded: false, idle: false, tilesLoaded: false, sourcesReady: 0 }));
     setRuntime({ kind: "loading", message: `Applying ${BASEMAPS[basemap].title} style…` });
-    map.once("idle", () => setRuntime({ kind: "ready", message: "MapLibre renderer ready · custom layers restored" }));
   }, [basemap]);
 
   useEffect(() => {
@@ -1245,6 +1403,7 @@ export default function Home() {
     const map = mapRef.current;
     if (!map?.isStyleLoaded()) return;
     map.setProjection({ type: projection });
+    setMaplibreProbe((current) => ({ ...current, projection }));
   }, [projection]);
 
   useEffect(() => {
@@ -1736,7 +1895,23 @@ export default function Home() {
       format: "kfm-map-diagnostics-v1",
       authority: "SITE_LOCAL_REDACTED_DIAGNOSTIC",
       generated_at: new Date().toISOString(),
-      site_renderer: { family: "MapLibre GL JS", package: "6.6.0", runtime_state: runtime.kind, message_class: runtime.kind.toUpperCase() },
+      site_renderer: { family: "MapLibre GL JS", package: maplibreProbe.version ?? EXPECTED_MAPLIBRE_VERSION, runtime_state: runtime.kind, message_class: runtime.kind.toUpperCase() },
+      runtime_proof: {
+        expected_version: EXPECTED_MAPLIBRE_VERSION,
+        worker: maplibreProbe.workerConfigured ? "SAME_ORIGIN_CONFIGURED" : "NOT_CONFIRMED",
+        runtime_assets: maplibreProbe.runtimeAssetsReady ? "WORKER_AND_SHARED_VERIFIED" : "NOT_CONFIRMED",
+        webgl2: maplibreProbe.webgl2,
+        map_constructed: maplibreProbe.mapConstructed,
+        canvas_ready: maplibreProbe.canvasReady,
+        style_loaded: maplibreProbe.styleLoaded,
+        idle: maplibreProbe.idle,
+        tiles_loaded: maplibreProbe.tilesLoaded,
+        sources_ready: `${maplibreProbe.sourcesReady}/${LAYER_REGISTRY.length}`,
+        controls_ready: maplibreProbe.controlsReady,
+        interactions_ready: maplibreProbe.interactionsReady,
+        projection: maplibreProbe.projection,
+        error_class: maplibreProbe.error ? "FINITE_MAP_RUNTIME_ERROR" : null,
+      },
       repository_boundary: {
         snapshot: REPOSITORY_SNAPSHOT.commit,
         architecture: "ACCEPTED",
@@ -2261,7 +2436,7 @@ export default function Home() {
         </aside>
 
         <section className="map-stage" aria-label="Kansas MapLibre Explorer">
-          <div className="mission-band"><span><i /> DEMO MAP READY</span><p>Synthetic and generalized data only · Select a feature to inspect what is supported, missing, corrected, or withheld.</p></div>
+          <div className="mission-band"><span data-runtime={runtime.kind}><i /> {runtime.kind === "ready" ? `MAPLIBRE ${maplibreProbe.version ?? EXPECTED_MAPLIBRE_VERSION} READY` : runtime.kind === "loading" ? "MAPLIBRE STARTING" : "EXPLORER FALLBACK"}</span><p>Synthetic and generalized data only · Select a feature to inspect what is supported, missing, corrected, or withheld.</p></div>
           <div id="map-canvas" ref={mapContainerRef} className="map-canvas" tabIndex={0} role="application" aria-label="Interactive MapLibre map of Kansas demonstration layers. Use arrow keys to pan and plus or minus to zoom; use Map Workbench Inspect or the Layer Catalog for a keyboard feature alternative." />
 
           {(runtime.kind === "loading" || runtime.kind === "error") && <div className={`runtime-overlay ${runtime.kind}`} role="status" aria-live="assertive"><span className="runtime-spinner" aria-hidden="true" /><strong>{runtime.kind === "loading" ? "Preparing spatial explorer" : "Map runtime unavailable"}</strong><p>{runtime.message}</p>{runtime.kind === "error" && <button type="button" onClick={() => window.location.reload()}>Reload map</button>}</div>}
@@ -2449,6 +2624,10 @@ export default function Home() {
                   <article><span>STYLE</span><strong>{styleReady ? "LOADED" : "WAITING"}</strong><small>{BASEMAPS[basemap].title} · {projection}</small></article>
                   <article><span>SOURCES</span><strong>{sourceStateCounts.ready} READY</strong><small>{sourceStateCounts.loading} loading · {sourceStateCounts.error} error</small></article>
                 </div>
+                <section className="map-control-group maplibre-runtime-proof" aria-labelledby="maplibre-runtime-proof-title">
+                  <header><strong id="maplibre-runtime-proof-title">MapLibre {EXPECTED_MAPLIBRE_VERSION} runtime proof</strong><span>Live browser checks</span></header>
+                  <div className="map-status-list" aria-label="MapLibre browser capability status">{maplibreCapabilityChecks.map((check) => <article className="map-status-row" key={check.id} data-state={check.state}><div><span>{check.label}</span><p>{check.detail}</p></div><strong>{check.state}</strong></article>)}</div>
+                </section>
                 <section className="runtime-seam-lab" aria-labelledby="runtime-seam-title">
                   <header><div><span>REPOSITORY-PROVEN PORT · SITE-LOCAL REPLAY</span><h4 id="runtime-seam-title">Renderer-neutral runtime seam</h4><p>Replay initialize → validated selection binding → dispose without importing the repository package, MapLibre, or a network source.</p></div><strong data-state={runtimeSeamState}>{runtimeSeamState}</strong></header>
                   <div className="runtime-seam-state"><span>Reason / effect</span><p>{runtimeSeamReason}</p><small>Current selection: {selected ? `${selected.featureId} · ${selected.properties.evidenceState}` : "NONE"}</small></div>
@@ -2458,7 +2637,7 @@ export default function Home() {
                 <div className="map-status-list" aria-label="MapLibre repository status">{MAPLIBRE_REPOSITORY_STATUS.map((status) => <article className="map-status-row" key={status.id} data-state={status.state}><div><span>{status.label}</span><p>{status.detail}</p></div><strong>{status.state}</strong></article>)}</div>
                 <div className="map-utility-actions"><button type="button" onClick={reapplyRendererState}>Reapply local state</button><button type="button" onClick={restoreLastKnownGoodView}>Restore prior camera</button><button type="button" onClick={() => void copyMapDiagnostics()}>Copy redacted diagnostics</button></div>
                 <div className="map-control-group"><header><strong>Capability gates</strong><span>Honest interfaces for unavailable work</span></header><div className="map-capability-grid">{MAP_CAPABILITY_GATES.map((gate) => <article className="map-capability-card" key={gate.id}><header><strong>{gate.title}</strong><span>{gate.state}</span></header><p>{gate.reason}</p><small>{gate.safeInterface}</small></article>)}</div></div>
-                <aside className="map-utility-boundary"><strong>Renderer evidence boundary</strong><p>This Site runs MapLibre 6.6.0 against site-local GeoJSON fixtures. GitHub proves an exact dependency, a bounded concrete adapter, the renderer-neutral port, and deterministic Null runtime; broader authenticated, performance, terrain, accessibility, and long-session readiness remain held.</p></aside>
+                <aside className="map-utility-boundary"><strong>Renderer evidence boundary</strong><p>This Site runs MapLibre {EXPECTED_MAPLIBRE_VERSION} against site-local GeoJSON fixtures. GitHub proves an exact dependency, a bounded concrete adapter, the renderer-neutral port, and deterministic Null runtime; broader authenticated, performance, terrain, accessibility, and long-session readiness remain held.</p></aside>
               </section>}
             </div>
           </aside>
@@ -2583,7 +2762,7 @@ export default function Home() {
         </section>
 
         <footer className="status-bar" aria-label="Map status">
-          <span data-runtime={runtime.kind}><i />{runtime.kind.toUpperCase()}</span><span>{formatCoordinate(pointer[1], "N", "S")} · {formatCoordinate(pointer[0], "E", "W")}</span><span>{scaleAtView(view)}</span><span>Zoom {view.zoom.toFixed(2)}</span><span>Bearing {Math.round(view.bearing)}° · Pitch {Math.round(view.pitch)}°</span><span>{formatTimelineStep(year)} active time</span><span>{visibleCount} layers visible</span><span>GeoJSON fixtures · MapLibre 6.6.0</span><span>Repo main@{REPOSITORY_SNAPSHOT.shortCommit}</span>
+          <span data-runtime={runtime.kind}><i />{runtime.kind.toUpperCase()}</span><span>{formatCoordinate(pointer[1], "N", "S")} · {formatCoordinate(pointer[0], "E", "W")}</span><span>{scaleAtView(view)}</span><span>Zoom {view.zoom.toFixed(2)}</span><span>Bearing {Math.round(view.bearing)}° · Pitch {Math.round(view.pitch)}°</span><span>{formatTimelineStep(year)} active time</span><span>{visibleCount} layers visible</span><span>GeoJSON fixtures · MapLibre {maplibreProbe.version ?? EXPECTED_MAPLIBRE_VERSION}</span><span>Repo main@{REPOSITORY_SNAPSHOT.shortCommit}</span>
         </footer>
       </main>
 

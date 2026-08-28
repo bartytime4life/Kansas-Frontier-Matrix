@@ -193,6 +193,10 @@ test("keeps the MapLibre Workbench complete, bounded, and responsive", async () 
   const exportCenter = await readFile(new URL("../app/export-center.ts", import.meta.url), "utf8");
   const explorerData = await readFile(new URL("../app/explorer-data.ts", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  const prepareMapLibreAssets = await readFile(new URL("../scripts/prepare-maplibre-assets.mjs", import.meta.url), "utf8");
+  const buildScript = await readFile(new URL("../scripts/build-verified.sh", import.meta.url), "utf8");
+  const installScript = await readFile(new URL("../scripts/install-ci.sh", import.meta.url), "utf8");
+  const tsconfig = await readFile(new URL("../tsconfig.json", import.meta.url), "utf8");
 
   assert.match(source, /id="map-utility-panel"/);
   for (const view of ["Navigate", "Inspect", "Display", "Measure", "Export", "Diagnostics"]) assert.match(source, new RegExp(`${view}`));
@@ -211,6 +215,21 @@ test("keeps the MapLibre Workbench complete, bounded, and responsive", async () 
   assert.match(source, /fitIndexedFeatures/);
   assert.match(source, /SUPPORTED_CONTEXT_BOUNDS/);
   assert.match(source, /site_package: "6\.6\.0"/);
+  assert.match(source, /setWorkerUrl\(MAPLIBRE_WORKER_URL\)/);
+  assert.match(source, /getWorkerUrl\(\) !== MAPLIBRE_WORKER_URL/);
+  assert.match(source, /getVersion\(\)/);
+  assert.match(source, /MAPLIBRE_RUNTIME_ASSET_URLS/);
+  assert.match(source, /if \(!response\.ok\) throw new Error/);
+  assert.match(source, /map\.on\("idle"/);
+  assert.match(source, /map\.areTilesLoaded\(\)/);
+  assert.match(source, /map\.isSourceLoaded\(layer\.sourceId\)/);
+  assert.match(source, /MapLibre \{EXPECTED_MAPLIBRE_VERSION\} runtime proof/);
+  assert.match(source, /SAME_ORIGIN_CONFIGURED/);
+  assert.match(prepareMapLibreAssets, /maplibre-gl-worker\.mjs/);
+  assert.match(prepareMapLibreAssets, /maplibre-gl-shared\.mjs/);
+  assert.match(buildScript, /exec bash "\$\{script_dir\}\/sites-env\.sh"/);
+  assert.match(installScript, /exec bash "\$\{script_dir\}\/sites-env\.sh"/);
+  assert.match(tsconfig, /"target": "ES2022"/);
   assert.match(source, /FULL TEMPORAL CAPACITY · 4\.54 GA BP TO 2026/);
   assert.match(source, /Deep-time and intermediate ticks are capacity markers, not claims/);
   assert.match(source, /TIMELINE_JUMPS/);

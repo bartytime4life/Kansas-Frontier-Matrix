@@ -591,6 +591,13 @@ input[type="range"] { accent-color: var(--gold); }
 .map-status-row[data-state="ACCEPTED"] > strong { color: var(--green); }
 .map-status-row[data-state="VERIFIED SLICE"] { border-left-color: var(--water); }
 .map-status-row[data-state="VERIFIED SLICE"] > strong { color: var(--water); }
+.map-status-row[data-state="READY"] { border-left-color: var(--green); }
+.map-status-row[data-state="READY"] > strong { color: var(--green); }
+.map-status-row[data-state="CHECKING"] { border-left-color: var(--gold); }
+.map-status-row[data-state="CHECKING"] > strong { color: var(--gold); }
+.map-status-row[data-state="ERROR"] { border-left-color: var(--red); }
+.map-status-row[data-state="ERROR"] > strong { color: var(--red); }
+.maplibre-runtime-proof .map-status-list { padding: 8px; }
 .export-review-summary { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 6px; }
 .export-review-summary article { display: grid; gap: 5px; min-height: 82px; border: 1px solid var(--line); border-radius: 9px; background: rgba(255,255,255,.016); padding: 9px; }
 .export-review-summary span { color: var(--dim); font-size: 7px; font-weight: 950; letter-spacing: .1em; }
