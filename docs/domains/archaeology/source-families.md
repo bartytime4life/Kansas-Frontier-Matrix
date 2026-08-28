@@ -73,7 +73,7 @@ This document inventories the **key source families** for the Archaeology / Cult
 | Owning responsibility root | `docs/` (explains something to humans) | `CONFIRMED` rule |
 | Domain segment | `archaeology` as a lane inside `docs/`, never a root | `CONFIRMED` rule |
 | Source registry counterpart | `data/registry/sources/archaeology/` | `CONFIRMED` repository path; records and admission authority remain `PROPOSED` / `NEEDS VERIFICATION` |
-| SourceDescriptor schema surfaces | `schemas/contracts/v1/source/source_descriptor.json`; `schemas/contracts/v1/source/source_descriptor.schema.json`; `schemas/contracts/v1/sources/source_descriptor.schema.json` | `CONFIRMED` repository paths; canonical authority and convergence remain unresolved |
+| SourceDescriptor schema surfaces | `schemas/contracts/v1/source/source-descriptor.json`; `schemas/contracts/v1/source/source-descriptor.schema.json`; `schemas/contracts/v1/source/source_descriptor.json`; `schemas/contracts/v1/source/source_descriptor.schema.json`; `schemas/contracts/v1/sources/source_descriptor.schema.json` | `CONFIRMED` repository paths; canonical authority and convergence remain unresolved |
 | Policy counterpart | `policy/sensitivity/archaeology/` | `CONFIRMED` rule lane; evaluator binding and activation remain unresolved |
 | Upstream (governs this doc) | `docs/doctrine/directory-rules.md`; `docs/doctrine/ai-build-operating-contract.md`; `[ENCY]` source doctrine | `CONFIRMED` repository paths / mixed doctrine maturity |
 
@@ -253,7 +253,7 @@ This document is done enough for accountable review at its current repository lo
 - `docs/domains/archaeology/pipeline-shape.md` — sibling lifecycle doc (current repository path; draft)
 - `docs/domains/archaeology/cross-lane-relations.md` — sibling cross-lane doc (current repository path; draft)
 - `docs/doctrine/ai-build-operating-contract.md` — source-role anti-collapse and §23.2 matrix (current repository path)
-- `schemas/contracts/v1/source/source_descriptor.json` — current SourceDescriptor schema surface; accepted canonical authority unresolved
+- `schemas/contracts/v1/source/source-descriptor.json`; `schemas/contracts/v1/source/source-descriptor.schema.json`; `schemas/contracts/v1/source/source_descriptor.json`; `schemas/contracts/v1/source/source_descriptor.schema.json`; `schemas/contracts/v1/sources/source_descriptor.schema.json` — current SourceDescriptor schema surfaces; accepted canonical authority unresolved
 
 **Last updated:** 2026-08-28 · `CONTRACT_VERSION = "3.0.0"`
 
