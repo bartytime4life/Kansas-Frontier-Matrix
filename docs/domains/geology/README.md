@@ -2,15 +2,15 @@
 doc_id: kfm://doc/docs-domains-geology-readme
 title: Geology and Natural Resources Domain — Documentation Landing
 type: domain-readme
-version: v1.1
-status: draft
-owners: <docs-steward> + <geology-domain-steward>   # placeholder — confirm in CODEOWNERS
+version: v1.2
+status: draft; repository-grounded; documentation-only; mixed-implementation; non-release; non-publication
+owners: ["@bartytime4life — default CODEOWNERS review route", "NEEDS VERIFICATION — Geology stewardship, scientific/rights/sensitivity review, and independent review"]
 created: 2026-05-17
-updated: 2026-08-24
+updated: 2026-08-28
 policy_label: public
 owning_root: docs/
 responsibility: Human-facing Geology and Natural Resources lane orientation, repository status, authority boundaries, and verification backlog without defining machine contracts, policy, evidence, release, or publication authority.
-truth_posture: cite-or-abstain; implementation claims require current repository evidence
+truth_posture: "CONFIRMED current repository paths, accepted Directory Rules placement, default CODEOWNERS routing, and four bounded no-network validation profiles / PARTIAL mixed contract, schema, policy, pipeline, proof, release-candidate, API, and Explorer maturity / UNKNOWN source admission, production retrieval, accountable stewardship, independent review, release, deployment, promotion, and publication"
 related:
   - docs/doctrine/directory-rules.md
   - docs/doctrine/ai-build-operating-contract.md
@@ -26,8 +26,8 @@ notes:
   - Doctrine-adjacent; pins CONTRACT_VERSION = "3.0.0".
   - Path home confirmed by Directory Rules §6.1 and Domain Placement Law (§12).
   - Object-family naming drift in the source corpus (§10.B owns-list short forms vs §10.E table Reference forms) is surfaced as CONFLICTED in §8, not silently resolved.
-  - Lane-path form uses the Directory Rules §12 segment pattern; the Atlas §24.13 flat form differs — surfaced as CONFLICTED.
-  - All implementation-layer claims default to PROPOSED until verified against mounted repo evidence.
+  - Accepted ADR-0029 makes the Directory Rules responsibility-root lane pattern controlling for current placement; historical flat Atlas paths remain lineage, not competing implementation authority.
+  - Repository presence and bounded validation are recorded explicitly; they do not establish source admission, evidence closure, policy approval, proof acceptance, release, deployment, promotion, or publication.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -36,21 +36,23 @@ notes:
 
 *Documentation landing for KFM's geology lane — bedrock and surficial geology, stratigraphy, structures, subsurface observations, and resource context, governed by evidence and bounded by public-safe geometry.*
 
-<!-- Top-of-file badge row — placeholders. Replace with real Shields.io endpoints once owners and CI are wired. -->
+<!-- Badges summarize this documentation checkpoint; exact workflow results remain head-specific. -->
 
 ![status: draft](https://img.shields.io/badge/status-draft-orange?style=flat-square)
 ![doctrine: CONFIRMED](https://img.shields.io/badge/doctrine-CONFIRMED-blue?style=flat-square)
-![implementation: PROPOSED](https://img.shields.io/badge/implementation-PROPOSED-lightgrey?style=flat-square)
+![implementation: repository grounded](https://img.shields.io/badge/implementation-repository__grounded-blue?style=flat-square)
 ![policy: public-safe](https://img.shields.io/badge/policy-public--safe-success?style=flat-square)
 ![sensitivity: deny-by-default](https://img.shields.io/badge/exact--locations-deny--by--default-critical?style=flat-square)
 ![CONTRACT_VERSION: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-lightgrey?style=flat-square)
-![CI](https://img.shields.io/badge/CI-TODO-lightgrey?style=flat-square)
-![last updated](https://img.shields.io/badge/updated-2026--08--24-informational?style=flat-square)
+![CI](https://img.shields.io/badge/CI-bounded__no--network__profiles-brightgreen?style=flat-square)
+![last updated](https://img.shields.io/badge/updated-2026--08--28-informational?style=flat-square)
 
-> **Status:** `draft` &nbsp;·&nbsp; **Owners:** `<docs-steward>` + `<geology-domain-steward>` _(placeholders — confirm in CODEOWNERS)_ &nbsp;·&nbsp; **Last updated:** 2026-08-24
+> **Status:** `draft; repository-grounded; mixed implementation maturity` &nbsp;·&nbsp; **Review route:** `@bartytime4life` via default CODEOWNERS &nbsp;·&nbsp; **Geology stewardship and independent review:** `NEEDS VERIFICATION` &nbsp;·&nbsp; **Last updated:** 2026-08-28
 
 > [!IMPORTANT]
 > This README is a **lane landing page**, not a doctrine source. Domain doctrine for Geology lives in `DOM-GEOL` (canonical dossier) and the Domain & Capability Encyclopedia §7.8. Operating law lives in `ai-build-operating-contract.md` (`CONTRACT_VERSION = "3.0.0"`). Where this page summarizes doctrine, the upstream sources prevail.
+>
+> **Current repository checkpoint.** The lane now has established documentation, contract, schema, policy, fixture, test, validator, package, pipeline, pipeline-spec, source-registry, proof-support, release-candidate, Explorer, and workflow surfaces. Four frozen no-network profiles are wired in `domain-geology`: resource-class anti-collapse, announcement-bounded AEM campaign, public-safe geometry assessment, and production material-change assessment. The broader semantics/evidence/proof/release path remains held; no live source, accepted Geology proof packet, child release-candidate dossier, dedicated governed-API Geology route, deployment, or publication is established.
 
 ---
 
@@ -82,7 +84,7 @@ notes:
 
 ## 1. Scope and mission
 
-**CONFIRMED doctrine / PROPOSED implementation.** The Geology and Natural Resources domain governs geologic maps, stratigraphy, lithology, structures, subsurface observations, and resource context **without turning interpretations or extraction records into unreviewed truth**. It owns bedrock and surficial geology, geologic age, structures, geomorphology, boreholes, well logs, cores, geophysics, geochemistry, mineral occurrences, oil/gas/resource deposits, and extraction and reclamation context. It links to Hydrology via hydrostratigraphy.
+**REPOSITORY-GROUNDED documentation / MIXED implementation maturity.** The Geology and Natural Resources domain governs geologic maps, stratigraphy, lithology, structures, subsurface observations, and resource context **without turning interpretations or extraction records into unreviewed truth**. It owns bedrock and surficial geology, geologic age, structures, geomorphology, boreholes, well logs, cores, geophysics, geochemistry, mineral occurrences, oil/gas/resource deposits, and extraction and reclamation context. It links to Hydrology via hydrostratigraphy.
 
 The domain's first job is **anti-collapse**: keep `Occurrence`, `Deposit`, `Estimate`, `Permit`, `Production`, and `Reserve` claims distinct, and never let a generalized map polygon or an AI summary stand in for a sourced, dated, role-typed observation.
 
@@ -103,18 +105,18 @@ The domain's first job is **anti-collapse**: keep `Occurrence`, `Deposit`, `Esti
 | Authority level of this folder | Lane documentation under `docs/` (canonical root) | **CONFIRMED** |
 | Doctrinal source of truth for the domain | `DOM-GEOL` dossier + Encyclopedia §7.8 + Culmination Atlas Ch. 10 | **CONFIRMED** |
 | Operating law | `ai-build-operating-contract.md` (`CONTRACT_VERSION = "3.0.0"`) | **CONFIRMED** |
-| Schema responsibility root for geology objects | `schemas/contracts/v1/domains/geology/...` | **PROPOSED** per ADR-0001 (schema-home); segment-vs-flat form unresolved — see §8 / OQ note |
-| Policy responsibility root | `policy/domains/geology/...` | **PROPOSED** |
-| Pipeline spec home | `pipeline_specs/geology/...` | **PROPOSED** |
+| Schema responsibility root for geology objects | `schemas/contracts/v1/domains/geology/` | **CONFIRMED PRESENT / DRAFT MATURITY** under accepted Directory Rules placement |
+| Policy responsibility root | `policy/domains/geology/` | **CONFIRMED PRESENT / POLICY BINDING AND REVIEW REMAIN BOUNDED** |
+| Pipeline spec home | `pipeline_specs/geology/` | **CONFIRMED PRESENT / INDIVIDUAL EXECUTION MATURITY MIXED** |
 | Public trust path | `apps/governed-api/` (the trust membrane) — **never** direct reads of `data/{raw,work,quarantine,processed}` | **CONFIRMED doctrine** |
 | Lifecycle invariant | `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` | **CONFIRMED** |
-| Last reviewed | 2026-06-04 | placeholder |
+| Last reviewed | 2026-08-28 | current repository checkpoint |
 
 > [!WARNING]
-> A geology-specific root (`geology/` at repo root) **MUST NOT** exist. Per Directory Rules §12 (Domain Placement Law), the domain appears as a **segment inside each responsibility root**, never as a root itself. If a `geology/` root is encountered in the mounted repo, raise it as a drift entry in `docs/registers/DRIFT_REGISTER.md`.
+> A geology-specific root (`geology/` at repo root) **MUST NOT** exist. Accepted ADR-0029 makes the Directory Rules responsibility-root model controlling: Geology appears as a scope segment inside established roots, never as a competing root-level authority bucket.
 
 > [!NOTE]
-> **Lane-path form (CONFLICTED).** The segment paths above (`policy/domains/geology/`, `schemas/contracts/v1/domains/geology/`) follow Directory Rules §12. The Atlas §24.13 crosswalk uses a *flat* form (`policy/sensitivity/`, `schemas/contracts/v1/geology/`). Both are defensible; this README uses the §12 segment form pending ADR resolution. New files must target one form, not both.
+> **Current placement decision.** ADR-0029 is accepted and makes the Directory Rules responsibility-root lane pattern controlling for current implementation. Historical Atlas flat forms remain design lineage and must not be used to create parallel policy or schema authority.
 
 [Back to top ↑](#top)
 
@@ -126,20 +128,18 @@ The domain's first job is **anti-collapse**: keep `Occurrence`, `Deposit`, `Esti
 
 `docs/domains/geology/` is the **human-facing** landing for the geology lane. It explains; it does not store machine artifacts.
 
-Accepted content (all **PROPOSED** filenames; verify against mounted repo before creating):
+Current explanatory files include the following. File presence is confirmed; each file's own status and evidence boundary still controls its maturity.
 
-| File pattern | Purpose | Status |
+| Current file | Purpose | Repository-grounded posture |
 |---|---|---|
-| `README.md` (this file) | Lane orientation, governance summary, links into the rest of the lane | CONFIRMED placement |
-| `POLICY.md` | Geology policy & sensitivity posture (states intent; enforcement lives in `policy/`) | PROPOSED |
-| `PRESERVATION_MATRIX.md` | Per-object-family preservation, tier, transform, and release rules | PROPOSED |
-| `OPEN_QUESTIONS.md` | Geology open-questions register (`OQ-GEOL-NN`) | PROPOSED |
-| `source-roles.md` | Source-role discipline for KGS, USGS, KCC, etc. (authority / observation / context / model) | PROPOSED |
-| `anti-collapse.md` | Distinctness rules for Occurrence vs Deposit vs Estimate vs Permit vs Production vs Reserve | PROPOSED |
-| `public-safe-geometry.md` | Generalization rules for borehole, well-log, sample, sensitive resource locations | PROPOSED |
-| `cross-section-protocol.md` | Cross-section authorship, uncertainty annotation, evidence binding | PROPOSED |
-| `hydrostratigraphy.md` | The geology ↔ hydrology bridge for hydrostratigraphic units | PROPOSED |
-| `ai-behavior.md` _(or link out)_ | Domain-specific governed-AI rules (ABSTAIN / DENY conditions for geology) | PROPOSED |
+| `README.md` (this file) | Lane orientation, governance summary, and navigation | Present; explanatory only |
+| `POLICY.md`, `SENSITIVITY.md`, `SENSITIVITY_POSTURE.md` | Policy and sensitivity documentation | Present; enforcement remains in policy and executable controls |
+| `PRESERVATION_MATRIX.md` | Per-family preservation, transform, and release posture | Present; not a release decision |
+| `OPEN_QUESTIONS.md`, `VERIFICATION_BACKLOG.md` | Open questions and current verification debt | Present; not implementation authority |
+| `SOURCE_ROLE_MATRIX.md`, `SOURCE_REGISTRY.md`, `SOURCE_LEDGER.md` | Source-role and registry navigation | Present; not source admission or activation |
+| `OBJECT_FAMILIES.md`, `UBIQUITOUS_LANGUAGE.md`, `IDENTITY_MODEL.md` | Human-readable semantic orientation | Present; contracts and schemas remain the machine/semantic carriers |
+| `API_CONTRACTS.md`, `EVIDENCE_DRAWER_PAYLOAD.md`, `MAP_UI_CONTRACTS.md` | Downstream interface documentation | Present; dedicated route/runtime/release state must be verified separately |
+| `DATA_LIFECYCLE.md`, `RELEASE_INDEX.md` | Lifecycle and release-boundary documentation | Present; no proof packet, child candidate dossier, release, or publication is implied |
 
 > [!TIP]
 > Doctrine files (`DOM-GEOL.md`, etc.) should each carry a KFM Meta Block v2 header and link back to this README under "Related docs."
@@ -177,7 +177,7 @@ Per Directory Rules §6.1 and the contract-schema-policy split, **none** of the 
 
 ## 5. The geology lane across the repo
 
-**CONFIRMED doctrine / PROPOSED file homes.** Per Directory Rules §12, the geology lane appears as a segment inside every relevant responsibility root. This README sits at the ★ node:
+**CONFIRMED current responsibility-root lanes / MIXED maturity.** Accepted Directory Rules place Geology as a scope segment inside established responsibility roots. Current main contains the documentation, contract, schema, policy, test, fixture, package, pipeline, pipeline-spec, source-registry, proof-support, release-candidate, Explorer, and workflow surfaces summarized here; presence is not source admission, runtime proof, release, or publication. This README sits at the ★ node:
 
 ```mermaid
 flowchart LR
@@ -200,7 +200,7 @@ flowchart LR
     R_rel["release/"]:::root
   end
 
-  subgraph LANE["geology lane segments (PROPOSED until mounted-repo verified)"]
+  subgraph LANE["geology lane segments (presence confirmed; maturity and authority remain per-file)"]
     direction TB
     L_docs["docs/domains/geology/ ★ (this README)"]:::here
     L_contracts["contracts/domains/geology/"]:::lane
@@ -228,7 +228,7 @@ flowchart LR
   R_rel --> L_rel
 ```
 
-Reference tree (PROPOSED — verify against mounted repo):
+Reference tree (current responsibility-root homes; verify each path's maturity and authority before changing it):
 
 ```text
 docs/domains/geology/                            # ← this folder
@@ -297,7 +297,7 @@ flowchart LR
 Project-specific terms. **Preserve casing and compound forms exactly** when referenced elsewhere.
 
 > [!CAUTION]
-> **The geology corpus carries an object-family naming drift.** DOM-GEOL §B (the "owns" list) uses short forms (`Borehole`, `Well Log`, `Core Sample`, `Mineral Occurrence`, `Resource Deposit`, `Extraction Site`). DOM-GEOL §E (the "Main object families" table) uses `…Reference` and variant forms (`BoreholeReference`, `Well LogReference`, `GeochemistrySampleReference`, `SurficialUnit`, `StructureFeature`, `GeologyBoundaryVersion`). This section keeps the **short conceptual forms** for readability; §8 lists the **schema-candidate forms** as they appear in §E. The canonical names are **NEEDS VERIFICATION** and resolvable only by ADR or schema PR — see [§16](#16-verification-backlog-and-open-questions).
+> **Current carrier rule.** Historical doctrine uses both short conceptual names and `…Reference` variants. Current implementation claims must follow the actual contract and schema carriers under `contracts/domains/geology/` and `schemas/contracts/v1/domains/geology/`; label or spelling similarity does not establish semantic equivalence, and carrier presence does not establish acceptance, runtime use, or release.
 
 | Term | One-line meaning | Status |
 |---|---|---|
@@ -467,15 +467,15 @@ The geology lane integrates with several neighbors. All cross-lane relations pre
 
 ## 13. API, contract, and schema surfaces
 
-All surfaces are PROPOSED governed-API artifacts; exact routes are UNKNOWN until verified (DOM-GEOL §J).
+Current main contains Geology contract/schema documentation and a bounded shared Evidence Drawer projection. The dedicated governed-API Geology feature, dashboard, and Focus Mode routes remain unverified; no surface below is a public release merely because its carrier exists.
 
 | Surface | DTO / schema | Finite outcomes | Status |
 |---|---|---|---|
-| Geology feature / detail resolver | `GeologyDecisionEnvelope` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | PROPOSED; route UNKNOWN |
-| Geology layer manifest resolver | `LayerManifest` / domain layer descriptor | `ANSWER` / `DENY` / `ERROR` | PROPOSED; public-safe only |
-| Geology Evidence Drawer payload | `EvidenceDrawerPayload` + `EvidenceBundle` projection | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | PROPOSED; evidence- and policy-filtered |
-| Geology Focus Mode answer | `RuntimeResponseEnvelope` + `AIReceipt` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | PROPOSED; AI never root truth |
-| Schema responsibility root | `schemas/contracts/v1/domains/geology/...` | finite validator outcomes | PROPOSED per ADR-0001 |
+| Geology feature / detail resolver | `GeologyDecisionEnvelope` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | Contract/schema carriers present; dedicated governed route unverified |
+| Geology layer manifest resolver | `LayerManifest` / domain layer descriptor | `ANSWER` / `DENY` / `ERROR` | Carriers present; layer adapter remains placeholder and public route unverified |
+| Geology Evidence Drawer payload | `EvidenceDrawerPayload` + `EvidenceBundle` projection | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | Shared bounded projection/delegation present; policy binding, released payload, and runtime route remain held |
+| Geology Focus Mode answer | `RuntimeResponseEnvelope` + `AIReceipt` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | Dedicated Geology route and released evidence path unverified |
+| Schema responsibility root | `schemas/contracts/v1/domains/geology/` | finite validator outcomes | Present under accepted Directory Rules; schema maturity remains per-file |
 
 > [!NOTE]
 > The public trust path is `apps/governed-api/`. Explorer-web, review-console, and any 3D renderer consume the same `EvidenceBundle` and `DecisionEnvelope` — they are not alternate truth paths.
@@ -514,21 +514,17 @@ Governed AI **MUST**:
 
 ## 15. Validators, tests, and fixtures
 
-The lane's first-PR scope is **docs / registry / schema / fixture / validator / policy / dry-run only** — no live fetch, no public promotion, no UI / API binding beyond typed contract notes.
+The `domain-geology` workflow currently distinguishes substantive bounded profiles from explicit placeholders and executes four frozen, synthetic, no-network validation seams:
 
-- [ ] **Source-role validators** — authority / observation / context / model split is enforced per record.
-- [x] **Bounded resource-class fixture proof** — the synthetic `MineralOccurrence` / `ResourceDeposit` / `ResourceEstimate` profile rejects permit, production, modeled-potential, observation, reserve, missing-classification, and sensitive-location collapse. Canonical vocabulary, policy, and live-data validation remain PROPOSED.
-- [x] **Bounded public-safe geometry metadata assessment** — 18 synthetic, coordinate-free cases prove two `HOLD` paths and 16 fail-closed `DENY` paths, including exact-public geometry denial. The profile performs no transform and grants no policy, review, release, or publication authority.
-- [ ] **Operational public-safe geometry transform and release checks** — real transforms, transform-receipt emission, rights resolution, authenticated review, policy execution, and governed release remain unwired.
-- [ ] **Borehole / well-log rights tests** — KGS LAS and similar rights-controlled sources fail closed without confirmed terms.
-- [ ] **Catalog closure tests** — every released geology object has a resolvable `EvidenceBundle`.
-- [ ] **Temporal logic tests** — source / observed / valid / retrieval / release / correction times remain distinct where material.
-- [ ] **AI evidence-before-model tests** — no AI ANSWER without resolved `EvidenceBundle`; ABSTAIN / DENY paths exercised.
-- [ ] **No-network fixtures** — full lane runnable offline.
-- [ ] **Rollback drill** — `ReleaseManifest` + `RollbackCard` for every release candidate.
-- [ ] **Non-regression tests** — prior lineage preserved on schema or boundary updates.
+- [x] **Resource-class anti-collapse** — rejects occurrence/deposit/estimate collapse, permit/production/model/reserve substitution, missing classification support, and sensitive-location exposure within its fixture boundary.
+- [x] **Announcement-bounded AEM campaign** — preserves one document-reported planned campaign as sparse historical candidate context and denies invented acquisition, processing, inversion, product, geometry, correction, or release state.
+- [x] **Public-safe geometry assessment** — evaluates opaque coordinate-free metadata, denies exact public geometry, and holds generalized candidates lacking transform, rights, policy, review, or release closure.
+- [x] **Production material-change assessment** — compares version-pinned snapshot metadata while preserving production as production evidence rather than physical-geology, deposit, estimate, or reserve truth.
+- [ ] **Operational source, geometry-transform, evidence, policy, proof, release, deployment, and publication seams** — remain held.
+- [ ] **Accepted Geology proof producer and child release-candidate dossier** — remain absent.
+- [ ] **Dedicated governed-API Geology route and production Explorer layer adapter** — remain unverified or placeholder-bound.
 
-Unchecked items above remain **PROPOSED** (DOM-GEOL §K names the first five explicitly). The checked items prove only their frozen synthetic fixture profiles; they are not resource/reserve certification, source admission, geometry transformation, evidence resolution, policy approval, or release authority.
+A green bounded profile proves only its declared fixture and structural assertions at the tested head. It does not admit or activate a source, retrieve production data, establish Geology truth, resolve rights, emit a public-safe transform, close an `EvidenceBundle`, apply release policy, accept a proof, release, deploy, promote, or publish.
 
 [Back to top ↑](#top)
 
@@ -538,22 +534,19 @@ Unchecked items above remain **PROPOSED** (DOM-GEOL §K names the first five exp
 
 ## 16. Verification backlog and open questions
 
-| Item | What would settle it | Status |
+| Item | Current evidence-backed posture | Status |
 |---|---|---|
-| **Object-family naming drift** — §B short forms vs §E `…Reference` forms; `Resource Deposit` (§B) vs `ResourceEstimate` (§C/§24.14) | ADR or schema PR fixing one canonical family-name set in `contracts/domains/geology/` | **CONFLICTED** |
-| **Lane-path form** — segment (`policy/domains/geology/`, §12) vs Atlas §24.13 flat (`policy/sensitivity/`) | ADR-class decision; file to `DRIFT_REGISTER.md` | **CONFLICTED** |
-| Confirmed `SourceDescriptor` set for KGS, KCC, USGS NGMDB / GeMS, USGS MRDS, KGS LAS, WWC5, KDHE | Files in `data/registry/sources/geology/` with rights and source-role fields populated | NEEDS VERIFICATION |
-| Schema home for geology objects (ADR-0001 alignment) | Presence of `schemas/contracts/v1/domains/geology/...` and absence of divergent `contracts/<domain>/<x>.schema.json` | NEEDS VERIFICATION |
-| Geology policy bundles | Files in `policy/domains/geology/` covering rights, sensitivity, public-safe geometry, anti-collapse | NEEDS VERIFICATION |
-| Pipeline first-slice (offline fixture) | `pipeline_specs/geology/` + matching `pipelines/domains/geology/` | NEEDS VERIFICATION |
-| Public-safe geometry transform implementation | `tools/validators/geometry/...` or similar; geology-specific tests | NEEDS VERIFICATION |
-| Governed-API geology routes | Routes in `apps/governed-api/` returning `GeologyDecisionEnvelope` | UNKNOWN |
-| Domain thin-slice fixture | One county geologic unit fixture with borehole / cross-section evidence, public-safe generalized resource context, and `EvidenceBundle`-backed unit inspector | PROPOSED |
-| 3D / cross-section representation policy | `RepresentationReceipt` required for 3D subsurface scenes | PROPOSED |
-| CODEOWNERS entries for geology lane | Confirmed in `.github/CODEOWNERS` | NEEDS VERIFICATION |
+| Object-family short-form versus `…Reference` lineage | Current contract/schema filenames are implementation carriers, but their presence does not resolve the canonical-name conflict across short and `…Reference` forms. | CONFLICTED / ADR or schema decision still required |
+| Responsibility-root placement | ADR-0029 is accepted; current segment paths under established roots control and historical flat Atlas forms must not create parallel authority. | CONFIRMED for current placement |
+| Live-source descriptor coverage and rights | `data/registry/sources/geology/` contains a lane README and a KGS M-118 descriptor; broader KGS/KCC/USGS/KDHE coverage, terms, automation permission, and steward authority remain unresolved. | HOLD / NEEDS VERIFICATION |
+| Schema, policy, pipeline, fixtures, tests, and validators | Current lanes and files are present; four bounded no-network profiles execute, while broader semantics, rights, evidence, proof, and release coverage remains held. | PRESENT / MATURITY MIXED |
+| Public-safe geometry transform | The metadata assessment exists; it does not perform a transform or emit release authority. | HOLD |
+| Geology proof and release candidate | Proof-support and candidate-index READMEs exist; no accepted proof packet or child candidate dossier is established. | HOLD |
+| Governed-API Geology route and Explorer adapter | Shared Evidence Drawer projection exists; no dedicated Geology route is verified and the layer adapter remains placeholder-bound. | UNKNOWN / HOLD |
+| CODEOWNERS and stewardship | Default CODEOWNERS routes review to `@bartytime4life`; Geology stewardship, specialist review, and independent review remain unverified. | REVIEW ROUTE CONFIRMED / STEWARDSHIP UNKNOWN |
 
 > [!NOTE]
-> Items marked **UNKNOWN** require both repo evidence and a decision (e.g., route names). **NEEDS VERIFICATION** items are checkable once the repo is mounted. **CONFLICTED** items require an ADR or drift-register entry to resolve, not just inspection.
+> `PRESENT`, `PASS`, or a green workflow is never shorthand for source admission, evidence closure, policy approval, proof acceptance, release, deployment, promotion, or publication. Unknown rights or sensitivity remain fail-closed.
 
 [Back to top ↑](#top)
 
@@ -563,17 +556,17 @@ Unchecked items above remain **PROPOSED** (DOM-GEOL §K names the first five exp
 
 ## 17. Related docs
 
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement rules, lane pattern, §15 README contract _(path PROPOSED)_
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — accepted placement rules and responsibility-root lane pattern (adopted by ADR-0029)
 - [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law, §23.2 sensitive-domain matrix _(path CONFIRMED; `CONTRACT_VERSION = "3.0.0"`)_
-- [`docs/domains/README.md`](../README.md) — domain index across the lane atlas _(path PROPOSED)_
-- [`docs/domains/geology/POLICY.md`](./POLICY.md) — geology policy & sensitivity posture _(path PROPOSED)_
-- [`docs/domains/geology/PRESERVATION_MATRIX.md`](./PRESERVATION_MATRIX.md) — per-family preservation/tier/transform rules _(path PROPOSED)_
-- [`docs/domains/geology/OPEN_QUESTIONS.md`](./OPEN_QUESTIONS.md) — geology open-questions register _(path PROPOSED)_
+- [`docs/domains/README.md`](../README.md) — domain index across the lane atlas
+- [`docs/domains/geology/POLICY.md`](./POLICY.md) — geology policy and sensitivity documentation
+- [`docs/domains/geology/PRESERVATION_MATRIX.md`](./PRESERVATION_MATRIX.md) — per-family preservation, tier, transform, and release posture
+- [`docs/domains/geology/OPEN_QUESTIONS.md`](./OPEN_QUESTIONS.md) — geology open-questions register
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — the four-layer authority _(path PROPOSED)_
 - [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — trust membrane and finite outcomes _(path PROPOSED)_
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O profile _(path PROPOSED; naming variance vs `PROVENANCE.md` → OPEN-DR-01)_
 - Doctrinal upstream: `DOM-GEOL` dossier (canonical); Encyclopedia §7.8; Culmination Atlas Ch. 10; Build Manual §10.8
-- Cross-lane neighbors: `docs/domains/hydrology/`, `docs/domains/soil/`, `docs/domains/hazards/`, `docs/domains/people-dna-land/`, `docs/domains/archaeology/` _(paths PROPOSED)_
+- Cross-lane neighbors: `docs/domains/hydrology/`, `docs/domains/soil/`, `docs/domains/hazards/`, `docs/domains/people-dna-land/`, `docs/domains/archaeology/`
 
 [Back to top ↑](#top)
 
@@ -699,4 +692,4 @@ Before a new geology source reaches `data/raw/geology/`:
 
 ---
 
-<sub>**Related docs:** see [§17](#17-related-docs). &nbsp;·&nbsp; **Last updated:** 2026-06-04 &nbsp;·&nbsp; `CONTRACT_VERSION = "3.0.0"` &nbsp;·&nbsp; [Back to top ↑](#top)</sub>
+<sub>**Related docs:** see [§17](#17-related-docs). &nbsp;·&nbsp; **Last updated:** 2026-08-28 &nbsp;·&nbsp; `CONTRACT_VERSION = "3.0.0"` &nbsp;·&nbsp; [Back to top ↑](#top)</sub>
