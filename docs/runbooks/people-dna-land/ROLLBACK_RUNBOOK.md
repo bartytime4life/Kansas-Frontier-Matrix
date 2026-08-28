@@ -2,9 +2,9 @@
 doc_id: kfm://doc/runbook-people-dna-land-rollback
 title: People · DNA · Land — Rollback Runbook
 type: standard
-version: v1.1.3
-prior_version: v1.1.2
-prior_state: proposal-era operational procedure with placeholder owners, unverified routes, invented timing targets, and illustrative release objects
+version: v1.1.4
+prior_version: v1.1.3
+prior_state: repository-grounded rollback HOLD boundary with source refresh still described as proposal-era
 status: draft; repository-grounded hold boundary; proposal lineage retained in Git history; operational rollback unavailable; non-release; non-publication
 owners:
   - "@bartytime4life — verified GitHub review route"
@@ -52,7 +52,7 @@ notes:
   - "The prior 2026-05-12 body is retired from operational use because current repository evidence does not establish its kill switch, release target, derivative invalidator, signer route, timing targets, or end-to-end rollback runtime."
   - "This file does not execute rollback, revoke consent, delete data, invalidate derivatives or caches, restore a release, or authorize any public-path change."
   - "The lane remains held for operational rollback maturity; this repository-grounded hold boundary narrows unsafe claims without upgrading operational status."
-  - "Promotion is a separate repository-grounded HOLD boundary; source-refresh remains proposal-era; five other children remain explicit scaffolds."
+  - "Promotion and source refresh are separate repository-grounded HOLD boundaries; three other children remain explicit scaffolds."
 [/KFM_META_BLOCK_V2] -->
 
 # People · DNA · Land — Rollback Runbook
@@ -132,7 +132,7 @@ Missing any item keeps the procedure at `HOLD`.
 
 The prior body is superseded at this path and retained in Git history as design lineage. It is not copied into a second authority home. In particular, prior references to immediate disablement, fixed response times, a governed-API kill switch, `SurfaceDisableReceipt`, domain-specific `RollbackCard` fields, republication, cache invalidation, and required signers were not verified as executable current behavior and must not be reconstructed from this document.
 
-The sibling [promotion](./PROMOTION_RUNBOOK.md) document is now a repository-grounded `HOLD` boundary. [Source refresh](./SOURCE_REFRESH_RUNBOOK.md) remains proposal-era. Neither supplies missing rollback authority.
+The sibling [promotion](./PROMOTION_RUNBOOK.md) and [source-refresh](./SOURCE_REFRESH_RUNBOOK.md) documents are separate repository-grounded `HOLD` boundaries. Their prior operational detail remains proposal lineage in Git history. Neither supplies missing rollback authority.
 
 ## Validation and interpretation
 

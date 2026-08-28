@@ -2,19 +2,34 @@
 doc_id: kfm://doc/people-dna-land/landing
 title: People / Genealogy / DNA / Land Ownership — Domain Landing
 type: standard
-version: v1
+version: v1.1.0
+prior_version: v1
+prior_state: proposal-era domain landing that described unverified live consent introspection and source-refresh procedure
 status: draft
 owners: People-DNA-Land domain steward; Rights & Sovereignty reviewer; Docs steward (placeholders — NEEDS VERIFICATION)
 created: 2026-06-07
-updated: 2026-06-07
+updated: 2026-08-28
 policy_label: public
-related: [ai-build-operating-contract.md, directory-rules.md, docs/domains/people-dna-land/README.md, docs/domains/people-dna-land/SENSITIVITY_PROFILE.md, docs/domains/people-dna-land/SOURCE_FAMILIES.md, docs/domains/people-dna-land/SOURCE_LEDGER.md, docs/domains/people-dna-land/SOURCE_REGISTRY.md, docs/domains/people-dna-land/VERIFICATION_BACKLOG.md, docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md]
+owning_root: docs/
+responsibility: Route readers through the People/DNA/Land domain meaning and sensitivity boundary without deciding identity, kinship, consent validity, title, source admission, release, or publication.
+truth_posture: CONFIRMED current repository paths and fail-closed sensitivity boundary / PROPOSED domain design lineage / NEEDS VERIFICATION accountable ownership, policy runtime, live consent and revocation implementation, evidence, and review
+related:
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
+  - docs/domains/people-dna-land/README.md
+  - docs/domains/people-dna-land/SENSITIVITY_PROFILE.md
+  - docs/domains/people-dna-land/SOURCE_FAMILIES.md
+  - docs/domains/people-dna-land/SOURCE_LEDGER.md
+  - docs/domains/people-dna-land/SOURCE_REGISTRY.md
+  - docs/domains/people-dna-land/VERIFICATION_BACKLOG.md
+  - docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md
 tags: [kfm, people, dna, land, genealogy, ownership, domain-landing, deny-by-default]
 notes:
   - CONTRACT_VERSION = "3.0.0".
   - Filename people.md is a landing/index variant; the README-like convention is docs/domains/<domain>/README.md. If both exist, README.md should be canonical and this file an alias/index. See OQ-PDL-LAND-02.
   - Lane-slug placement docs/domains/people-dna-land/ is CONFIRMED (Directory Rules §12 names people-dna-land). Externally-presented canonical NAME is unsettled (Atlas "People / Genealogy / DNA / Land"; schema/policy use people/). See OQ-PDL-LAND-01.
   - Highest-sensitivity lane: living-person fields, raw DNA segments, private person-parcel joins default T4 (Denied).
+  - Live consent introspection, revocation execution, teardown, cache invalidation, and source refresh are not established by this landing page or the current source-refresh HOLD boundary.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -28,9 +43,9 @@ notes:
 [![default tier: T4](https://img.shields.io/badge/default%20tier-T4%20Denied-b71c1c)](#7-sensitivity-and-publication-posture)
 [![consent: required](https://img.shields.io/badge/consent-required-c2185b)](#9-consent-and-revocation)
 [![contract: v3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-blue)](#footer)
-[![last updated](https://img.shields.io/badge/updated-2026--06--07-informational)](#footer)
+[![last updated](https://img.shields.io/badge/updated-2026--08--28-informational)](#footer)
 
-**Status:** `draft` · **Owners:** People-DNA-Land domain steward · Rights & Sovereignty reviewer · Docs steward *(placeholders — NEEDS VERIFICATION)* · **Updated:** 2026-06-07
+**Status:** `draft` · **Owners:** People-DNA-Land domain steward · Rights & Sovereignty reviewer · Docs steward *(placeholders — NEEDS VERIFICATION)* · **Updated:** 2026-08-28
 **Pinned:** `CONTRACT_VERSION = "3.0.0"`
 
 > [!CAUTION]
@@ -224,10 +239,10 @@ flowchart LR
 
 ## 9. Consent and revocation
 
-**CONFIRMED doctrine / PROPOSED implementation.** Consent is machine-readable and checked on every render; the policy decision point introspects the revocation endpoint and fails closed when it cannot complete. Full procedure in [`SENSITIVITY_PROFILE.md`](./SENSITIVITY_PROFILE.md) §7 and the [`SOURCE_REFRESH_RUNBOOK`](../../runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md). `[Pass-10 C6-07/C6-08; Pass-23 KFM-P5-PROG-0007]`
+**CONFIRMED doctrine / HELD implementation.** Consent grant, render authorization, source refresh, revocation status, action execution, derivative invalidation, cache invalidation, deletion, withdrawal, release, and publication are distinct states. Current repository evidence establishes bounded synthetic consent and revocation-propagation profiles, not live endpoint introspection or an operational revocation executor. The [`SENSITIVITY_PROFILE.md`](./SENSITIVITY_PROFILE.md) supplies domain constraints; the [`SOURCE_REFRESH_RUNBOOK`](../../runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md) is a repository-grounded `HOLD` boundary, not a full consent-introspection procedure. `[Pass-10 C6-07/C6-08; Pass-23 KFM-P5-PROG-0007]`
 
 > [!IMPORTANT]
-> **Consent does NOT publish data.** A consent grant constrains what a render gate may materialize; publication still requires a `ReleaseManifest` and the release gate. On revocation: signed tombstone + new `spec_hash` + `RunReceipt` + cache invalidation. `[Pass-23 KFM-P5-PROG-0005]`
+> **Consent does NOT publish data or prove execution.** A declared consent state constrains the bounded assessment; publication still requires separate policy, evidence, accountable review, and release authority. A proposed tombstone, receipt, teardown, cache invalidation, or deletion remains unproved until its owning implementation and verification surfaces exist. Unknown status, scope, purpose, audience, role, data class, expiration, revocation, rights, sensitivity, or review fails closed. `[Pass-23 KFM-P5-PROG-0005]`
 
 [↑ Back to top](#top)
 
