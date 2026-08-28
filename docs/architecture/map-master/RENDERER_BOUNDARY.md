@@ -2,7 +2,7 @@
 doc_id: kfm://doc/architecture-map-master-renderer-boundary
 title: Map Master — Renderer Boundary
 type: architecture-reference
-version: v2.3-draft
+version: v2.4-draft
 status: draft; repository-grounded; mixed-maturity; renderer-neutral-bounded-slices; production-runtime-hold; non-authoritative; non-publication
 owners:
   - "@bartytime4life — current CODEOWNERS review route"
@@ -671,6 +671,11 @@ The bounded acquisition validator is designed to report:
 - worker construction;
 - protocol registration; and
 - parallel active package homes.
+
+Before applying those patterns, the validator masks bounded JavaScript line/block
+comments and HTML comments while preserving quoted runtime strings and line positions.
+This prevents retired or explanatory comment examples from becoming active acquisition
+findings without treating a quoted CDN URL in executable code as inert.
 
 It treats only `packages/maplibre/**` as the accepted raw-renderer seam. Acquisition confined to that package yields structural `HOLD` while production runtime activation remains unresolved. Acquisition elsewhere produces `ACQUISITION_OUTSIDE_CANDIDATE_SEAM` and fails closed; parallel active package homes also fail closed. Documentation links, CSS class assertions, and package-local imports whose filenames contain `maplibre` are not renderer acquisition.
 

@@ -247,6 +247,49 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(result.outcome, MODULE.Outcome.PASS)
         self.assertEqual(result.findings, ())
 
+    def test_renderer_examples_in_comments_are_not_active_acquisition(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "scripts/retired-example.mjs",
+                "/* retired example:\n"
+                'import { Map } from "maplibre-gl";\n'
+                "const map = new maplibregl.Map({});\n"
+                'const url = "https://unpkg.com/maplibre-gl@6.6.0/dist/maplibre-gl.mjs";\n'
+                "*/\n"
+                '// require.resolve("maplibre-gl");\n'
+                '<!-- <script src="https://unpkg.com/maplibre-gl@6.6.0/dist/maplibre-gl.mjs"></script> -->\n',
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.PASS)
+        self.assertEqual(result.findings, ())
+
+    def test_comment_markers_inside_runtime_strings_are_preserved(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "scripts/runtime-url.mjs",
+                'const rendererUrl = "https://unpkg.com/maplibre-gl@6.6.0/dist/maplibre-gl.mjs";\n',
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.FAIL)
+        self.assertEqual(result.findings[0].kind, "CDN_URL")
+
+    def test_active_acquisition_after_comments_still_fails(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "scripts/active-renderer.mjs",
+                '// retired: require.resolve("maplibre-gl");\n'
+                'import { Map } from "maplibre-gl";\n',
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.FAIL)
+        self.assertEqual(result.findings[0].kind, "STATIC_IMPORT")
+
     def test_governance_link_and_maplibre_css_class_are_not_acquisition(self) -> None:
         with self._root() as tmp:
             root = Path(tmp)
@@ -334,7 +377,7 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 3)
         payload = json.loads(completed.stdout)
         self.assertEqual(payload["outcome"], "HOLD")
-        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v4")
+        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v5")
         self.assertEqual(payload["findings"], [])
         self.assertEqual(payload["finding_counts"]["STATIC_IMPORT"], 1)
         self.assertFalse(payload["authority_created"])
