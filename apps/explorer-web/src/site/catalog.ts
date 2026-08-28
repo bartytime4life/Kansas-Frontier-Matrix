@@ -2,25 +2,27 @@
 export const REPOSITORY_SNAPSHOT = Object.freeze({
   repository: "bartytime4life/Kansas-Frontier-Matrix",
   ref: "main",
-  commit: "67cf9bcd8d4044beb2f7ec4ec17e1bf162ca30aa",
-  commitRecordedAt: "2026-08-19T05:22:18Z",
+  commit: "90e8a1b231b2c07ae6346ce75ecd42a172ef67e7",
+  commitRecordedAt: "2026-08-28T14:33:53Z",
   explorerPath: "apps/explorer-web",
   mapLibre: Object.freeze({
     family: "MapLibre GL JS",
     packageHome: "packages/maplibre",
-    readinessCandidate: "6.4.0",
+    readinessCandidate: "6.6.0",
     readinessState: "HOLD" as const,
-    dependencyAdmitted: false,
-    runtimeImplemented: false,
+    packagePresent: true,
+    adapterImplemented: true,
+    browserRuntimeActivated: false,
+    browserEvidenceComplete: false,
     governanceIssue: 2957,
     runtimeEvidenceIssue: 2906,
   }),
 });
 
-/** Current MapLibre readiness facts, intentionally separate from the pinned snapshot. */
+/** Current MapLibre readiness facts at the pinned repository snapshot. */
 export const CURRENT_MAPLIBRE_READINESS = Object.freeze({
-  evidenceCommit: "1a3a4075537ea47b7b87b3e2dccbb044b6a62e0f",
-  evidenceRecordedAt: "2026-08-27T18:33:32Z",
+  evidenceCommit: "90e8a1b231b2c07ae6346ce75ecd42a172ef67e7",
+  evidenceRecordedAt: "2026-08-28T14:33:53Z",
   family: "MapLibre GL JS",
   packageHome: "packages/maplibre",
   readinessCandidate: "6.6.0",
