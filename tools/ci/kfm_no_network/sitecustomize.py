@@ -164,10 +164,12 @@ def activate() -> bool:
         socket.socket.sendfile = _guarded_sendfile
     # The standard subclass initializer consults ``_socket.socket`` at runtime.
     # Preserve its behavior through the saved extension type before routing
-    # both constructor aliases through the guarded subclass.
+    # the public and extension-module constructor aliases through the guarded
+    # subclass.
     socket.socket.__init__ = _guarded_socket_init
     socket.SocketType = socket.socket
     _socket.socket = socket.socket
+    _socket.SocketType = socket.socket
     socket.create_connection = _guarded_create_connection
     socket.getaddrinfo = _guarded_getaddrinfo
     socket.gethostbyname = _guarded_gethostbyname

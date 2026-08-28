@@ -24,6 +24,7 @@ evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   reconciliation_base_commit: 813ef14b1dbe5bd236fc902ce8fc3bb2e8ae7e80
   prior_blob: e942483dddef1c036354348c8b0a9ca823da2400
+  composition_merge_base_commit: 249974ba480fd68dc749ad0258c84e09477d523a
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   domain_workflow_path: .github/workflows/domain-people-dna-land.yml

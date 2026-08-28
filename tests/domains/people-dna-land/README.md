@@ -53,6 +53,7 @@ The workflow deliberately reports holds for broader People/DNA/Land semantics, p
 ## Related boundaries
 
 - [People/DNA/Land runbook boundary](../../../docs/runbooks/people-dna-land/README.md)
+- [Consent review and revocation runbook](../../../docs/runbooks/people-dna-land/CONSENT_RUNBOOK.md)
 - [Living-person review runbook](../../../docs/runbooks/people-dna-land/LIVING_PERSON_REVIEW.md)
 - [Domain policy boundary](../../../policy/domains/people-dna-land/README.md)
 - [Validator boundary](../../../tools/validators/domains/people-dna-land/README.md)
