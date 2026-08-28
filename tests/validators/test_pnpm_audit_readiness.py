@@ -121,6 +121,7 @@ def test_current_contract_is_ready_and_report_is_deterministic(tmp_path: Path) -
         "pnpm-workspace.yaml",
         "pnpm-lock.yaml",
         "package-lock.json",
+        "apps/kansas-frontier-matrix-explorer/package-lock.json",
         "apps/explorer-web/package.json",
         "packages/maplibre/package.json",
         ".github/workflows/dependency-scan.yml",
@@ -261,6 +262,52 @@ def test_clean_audit_is_pass(tmp_path: Path) -> None:
     assert report["outcome"] == "PASS"
     assert report["threshold_count"] == 0
     assert report["reason_codes"] == []
+
+
+def test_npm_audit_is_classified_as_the_installed_graph(tmp_path: Path) -> None:
+    report_path = tmp_path / "audit.json"
+    _write_audit_report(report_path, moderate=1)
+
+    report = classify_audit(
+        report_path,
+        command_exit_code=0,
+        audit_level="high",
+        manager="npm",
+    )
+
+    assert report["outcome"] == "PASS"
+    assert report["report_type"] == "npm_audit_result"
+    assert report["manager"] == "npm"
+
+
+def test_unsupported_audit_manager_is_error(tmp_path: Path) -> None:
+    report_path = tmp_path / "audit.json"
+    _write_audit_report(report_path)
+
+    report = classify_audit(
+        report_path,
+        command_exit_code=0,
+        audit_level="high",
+        manager="other",
+    )
+
+    assert report["outcome"] == "ERROR"
+    assert report["report_type"] == "node_audit_result"
+    assert report["reason_codes"] == ["AUDIT_MANAGER_INVALID"]
+
+
+def test_dependency_workflow_audits_both_locked_node_graphs() -> None:
+    workflow = (REPO_ROOT / ".github/workflows/dependency-scan.yml").read_text(
+        encoding="utf-8"
+    )
+
+    assert 'pnpm audit \\' in workflow
+    assert 'npm --prefix apps/kansas-frontier-matrix-explorer audit \\' in workflow
+    assert '--package-lock-only' in workflow
+    assert '--workspaces=false' in workflow
+    assert 'apps/kansas-frontier-matrix-explorer' in workflow
+    assert '--manager "pnpm"' in workflow
+    assert '--manager "npm"' in workflow
 
 
 @pytest.mark.parametrize(
