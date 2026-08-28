@@ -63,7 +63,7 @@ notes:
 - [2. Repo fit](#2-repo-fit)
 - [3. What belongs here](#3-what-belongs-here)
 - [4. What does NOT belong here](#4-what-does-not-belong-here)
-- [5. Directory tree (lane pattern)](#5-directory-tree-lane-pattern)
+- [5. Current repository snapshot](#5-current-repository-snapshot)
 - [6. Quickstart](#6-quickstart)
 - [7. Usage and contribution paths](#7-usage-and-contribution-paths)
 - [8. Lifecycle and sensitivity diagram](#8-lifecycle-and-sensitivity-diagram)
