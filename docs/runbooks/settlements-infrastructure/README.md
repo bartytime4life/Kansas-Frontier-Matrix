@@ -5,7 +5,7 @@ type: readme
 subtype: boundary-compact
 version: v1.0
 prior_state: no local README path
-status: draft; repository-grounded; static readiness checks executable; semantic validation, proof, promotion, rollback, release, deployment, and publication held
+status: draft; repository-grounded; static readiness and bounded EvidenceBundle projection convergence executable; domain semantic validation, proof, promotion, rollback, release, deployment, and publication held
 owners:
   - "@bartytime4life — verified GitHub review route"
   - "NEEDS VERIFICATION — accountable Settlements/Infrastructure, municipal-source, infrastructure-security, cultural, sovereignty, evidence, policy, and release assignments"
@@ -25,6 +25,13 @@ evidence_snapshot:
   parent_runbooks_readme_blob: f3b1147529e0b08650b671d543d04222abb1b3f5
   domain_readme_blob: bccb04cd4f181ac5cc1c7935177bbd4977715e19
   workflow_blob: a47d89c40efd58ac31bc44dbc56bdfb1ccc3a325
+  evidence_bundle_convergence_workflow_blob: 584ac26dcaf5791b1a560cb71bd059e889f55791
+  evidence_bundle_projection_schema_blob: 44c022ffc7f24cc582b061c5f3145b716e3f150f
+  evidence_bundle_shared_schema_blob: cf5256831b63dca46a5f68b168441adcf68b8751
+  evidence_bundle_projection_validator_blob: 407c99ad07442e0b4802d057b695e391bdf4f8eb
+  evidence_bundle_convergence_tests_blob: d1cfa0e9064e250dc3d157372d0091ae835d05c1
+  evidence_bundle_valid_fixture_blob: c0e41762e4318907acbc8425f2be77da4af43b8c
+  evidence_bundle_invalid_fixture_blob: 63986c0b9e3f09415a3f41290f64df229fd1d603
   no_network_runbook_blob: 6608cef57d32ffcfef5b2f394892e11dbdd495ae
   promotion_runbook_blob: f848e5336d7d013b7221334b5a416cf317a76c4f
   rollback_runbook_blob: 9ac8e114bc18ac5b7a63033e60fdf3559e87ee2b
@@ -40,6 +47,7 @@ evidence_snapshot:
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
   direct_markdown_files_before_this_readme: 4
   bounded_static_readiness_profiles: 1
+  bounded_schema_convergence_profiles: 1
   executable_semantic_validator_profiles: 0
   proposal_or_stale_child_procedures: 4
 related:
@@ -48,6 +56,12 @@ related:
   - ../../doctrine/directory-rules.md
   - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../../.github/workflows/domain-settlements-infrastructure.yml
+  - ../../../.github/workflows/settlements-infrastructure-evidence-bundle-convergence.yml
+  - ../../../schemas/contracts/v1/domains/settlements-infrastructure/evidence_bundle.schema.json
+  - ../../../schemas/contracts/v1/evidence/evidence_bundle.schema.json
+  - ../../../tools/validators/validate_settlements_infrastructure_evidence_bundle_projection.py
+  - ../../../tests/validators/domains/settlements-infrastructure/test_evidence_bundle_schema_convergence.py
+  - ../../../fixtures/contracts/v1/evidence/evidence_bundle/
   - ../../../tests/domains/settlements-infrastructure/README.md
   - ../../../tools/validators/domains/settlements-infrastructure/README.md
   - ../../../fixtures/domains/settlements-infrastructure/README.md
@@ -57,7 +71,8 @@ related:
 notes:
   - "v1.0 closes the final missing local runbook boundary without changing a child procedure or authority surface."
   - "The domain workflow executes bounded static readiness checks and records explicit semantic-validation, proof-production, and release-dry-run holds."
-  - "Seven domain test modules remain docstring-only placeholders, one smoke test only asserts true, four domain validator scripts raise NotImplementedError, and the fixture README remains a greenfield stub."
+  - "A separate no-network workflow executes three focused EvidenceBundle projection-convergence tests plus a shared-fixture validator; it creates no independent evidence semantics or exposure, release, or publication authority."
+  - "Seven direct domain test modules remain docstring-only placeholders, one direct smoke test only asserts true, four direct domain validator scripts raise NotImplementedError, and the domain fixture README remains a greenfield stub."
   - "All four child runbooks retain proposal-era paths, commands, roles, or no-mounted-repository claims and are not current operational authority."
 [/KFM_META_BLOCK_V2] -->
 
@@ -79,13 +94,14 @@ dependency, source, policy, evidence, proof, release, or publication authority.
 > operational decisions.
 
 > [!IMPORTANT]
-> Current executable evidence is limited to static readiness checks. The
-> workflow deliberately does not execute domain tests or semantic validator
-> implementations. Its green result preserves explicit holds; it does not prove
-> any settlement, infrastructure, evidence, policy, proof, release, or public
-> behavior.
+> Current executable evidence contains two bounded profiles: static readiness
+> checks and a no-network EvidenceBundle projection-convergence check. Neither
+> profile validates real Settlements/Infrastructure records, activates domain
+> policy, produces proof, or establishes exposure, release, or publication
+> authority.
 
-**Start here:** [current readiness](#current-readiness) ·
+**Start here:** [static readiness](#static-readiness) ·
+[EvidenceBundle convergence](#bounded-evidencebundle-projection-convergence) ·
 [child-procedure maturity](#child-procedure-maturity) ·
 [parent runbook index](../README.md) ·
 [domain boundary](../../domains/settlements-infrastructure/README.md)
@@ -99,7 +115,8 @@ inherit authority rather than manufacture it.
 
 This README therefore:
 
-- distinguishes implemented static readiness checks from held semantic work;
+- distinguishes implemented readiness and schema-convergence checks from held
+  domain semantic work;
 - routes readers to current child documents and responsibility roots;
 - preserves settlement/infrastructure, legal/census, source-role, time,
   sensitivity, cultural, sovereignty, and cross-domain boundaries;
@@ -117,17 +134,18 @@ migration-dependent question.
 |---|---|---|
 | Domain workflow | Three read-only jobs evaluate validation, proof, and release readiness | Orchestration exists and records explicit holds; it does not perform semantic validation, proof production, or a release dry run |
 | Static readiness job | Verifies required paths, parses tracked JSON schemas and JSON fixtures, invokes the shared CI-readiness classifier, and checks expected placeholder posture | Can detect structural or unexpected-maturity drift at one revision; cannot establish domain truth |
-| Domain tests | Seven docstring-only placeholder modules and one `assert True` smoke test | No substantive domain test suite is established |
+| EvidenceBundle projection convergence | Separate no-network workflow runs three focused tests and the projection validator against one shared valid and one shared expected-invalid fixture | Proves the domain projection delegates shape to the shared schema and adds no independent fields or release/exposure authority; does not prove evidence closure or domain truth |
+| Direct domain tests | Seven docstring-only placeholder modules and one `assert True` smoke test below `tests/domains/settlements-infrastructure/` | No substantive direct domain test suite is established |
 | Domain validators | Four scripts whose `main()` raises `NotImplementedError` | No callable domain semantic validator is established |
-| Fixtures | The parent fixture README is a two-line greenfield stub and the workflow recognizes placeholder files | Fixture presence is not evidence for a settlement, facility, condition, dependency, policy outcome, or release |
+| Fixtures | The domain fixture README is a two-line greenfield stub; the separate convergence profile reuses two shared EvidenceBundle schema fixtures | Shared schema fixtures test shape only and are not evidence for a settlement, facility, condition, dependency, policy outcome, or release |
 | Schemas | The workflow parses current JSON schemas for structural integrity | Parseability is not schema acceptance, semantic sufficiency, contract closure, or source admission |
 | Policy | The domain policy README retains an experimental, evaluator-unbound posture | No accepted lane bundle, selector, evaluator, or public-safe policy decision is established |
 | Proof | The proof job rejects unexpected proof artifacts and records that no accepted deterministic producer or command exists | No EvidenceBundle or proof closure is established |
 | Release | The release job rejects unexpected candidate records or command surfaces and records that no accepted dry-run command or candidate-manifest contract exists | No candidate approval, release, deployment, promotion, or publication is established |
 
-## Current readiness
+## Static readiness
 
-The domain workflow is the current executable boundary. It performs three
+The domain workflow is one current executable boundary. It performs three
 read-only jobs:
 
 1. `validate-settlements-infrastructure` checks the expected structural and
@@ -190,6 +208,47 @@ Do not run the four domain validator scripts as procedures: each currently
 raises `NotImplementedError`. Do not report the smoke test's `assert True` as
 substantive coverage.
 
+## Bounded EvidenceBundle projection convergence
+
+A separate no-network workflow verifies that the domain's
+`evidence_bundle.schema.json` remains a projection of the shared
+`EvidenceBundle` shape rather than a second semantic authority.
+
+Run its two focused commands from the repository root:
+
+```bash
+python -m unittest discover \
+  --start-directory tests/validators/domains/settlements-infrastructure \
+  --pattern 'test_evidence_bundle_schema_convergence.py' \
+  --verbose
+python tools/validators/validate_settlements_infrastructure_evidence_bundle_projection.py --fixtures
+```
+
+The workflow also compiles the validator and test module before execution and
+sets `KFM_NO_NETWORK=1`, `PYTHONHASHSEED=0`, and `TZ=UTC`.
+
+### What the convergence profile checks
+
+- the domain projection references the shared EvidenceBundle schema;
+- projection metadata declares `authority: projection`,
+  `independent_fields: DENY`, and no public-release or
+  critical-infrastructure-exposure authority;
+- the projection defines no independent `properties`, `required`, or
+  `additionalProperties`;
+- the shared schema remains closed and requires its ten declared top-level
+  fields; and
+- the projection accepts the tracked shared valid fixture and rejects the
+  tracked fixture that omits `bundle_id`.
+
+### What the convergence profile does not check
+
+It does not establish that either fixture is a materialized EvidenceBundle, that
+any `EvidenceRef` resolves, that source records or citations are authoritative,
+that rights or sensitivity labels are correct, or that transforms and digests
+close over real records. It does not execute domain policy, review
+infrastructure exposure, produce proof, approve a candidate, release, deploy,
+promote, or publish anything.
+
 ## Child-procedure maturity
 
 | Procedure | Current classification | Safe use |
@@ -211,12 +270,15 @@ against current repository evidence first.
 - the tracked repository tree at an exact revision;
 - required boundary files named by the domain workflow;
 - tracked JSON schemas and any tracked JSON fixtures inspected by that workflow;
+- the domain EvidenceBundle projection, shared EvidenceBundle schema, and two
+  shared schema fixtures used by the convergence workflow;
 - current placeholder test and validator inventories; and
 - the documented policy, proof, candidate, and published-lane hold markers.
 
 ### Bounded outputs
 
 - workflow status and step summaries tied to an exact commit;
+- focused unittest and projection-validator outcomes tied to an exact commit;
 - structural-error messages for missing paths, malformed JSON, duplicate schema
   identifiers, or unexpected command/artifact surfaces; and
 - the three explicit workflow-hold statements.
@@ -230,6 +292,8 @@ RollbackCards, correction completion, or published artifacts.
 | Observation | Interpretation | Required response |
 |---|---|---|
 | Readiness workflow is green | Expected structural and held-state checks completed at one SHA | Record the SHA and holds; do not report semantic validation or operational readiness |
+| EvidenceBundle convergence is green | The projection and two shared schema fixtures satisfied the bounded checks at one SHA | Report schema convergence only; do not claim evidence closure, policy approval, proof, or release readiness |
+| EvidenceBundle convergence fails | Projection metadata, shared required fields, delegation, or fixture behavior drifted | Stop and reconcile schema authority and compatibility; do not add independent domain fields by convenience |
 | Required path or JSON check fails | The documented readiness inventory is incomplete or malformed | Repair or deliberately reclassify the owning surface; do not weaken the check |
 | Placeholder classifier fails | Substantive-looking code or tests appeared without a reconciled graduation | Inspect the exact change and add the required fixtures, semantics, review, and evidence before changing maturity claims |
 | Proof or candidate guard fails | An unexpected artifact or command surfaced in a held lane | Quarantine and review it; do not infer proof, release, or publication authority |
@@ -307,6 +371,12 @@ publication.
 
 - [Settlements/Infrastructure domain boundary](../../domains/settlements-infrastructure/README.md)
 - [Domain workflow](../../../.github/workflows/domain-settlements-infrastructure.yml)
+- [EvidenceBundle convergence workflow](../../../.github/workflows/settlements-infrastructure-evidence-bundle-convergence.yml)
+- [Domain EvidenceBundle projection](../../../schemas/contracts/v1/domains/settlements-infrastructure/evidence_bundle.schema.json)
+- [Shared EvidenceBundle schema](../../../schemas/contracts/v1/evidence/evidence_bundle.schema.json)
+- [Projection validator](../../../tools/validators/validate_settlements_infrastructure_evidence_bundle_projection.py)
+- [Focused convergence tests](../../../tests/validators/domains/settlements-infrastructure/test_evidence_bundle_schema_convergence.py)
+- [Shared EvidenceBundle fixtures](../../../fixtures/contracts/v1/evidence/evidence_bundle/README.md)
 - [Domain test boundary](../../../tests/domains/settlements-infrastructure/README.md)
 - [Domain validator boundary](../../../tools/validators/domains/settlements-infrastructure/README.md)
 - [Fixture boundary](../../../fixtures/domains/settlements-infrastructure/README.md)
