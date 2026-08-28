@@ -11,6 +11,7 @@ namespace, container policy, or runner-wide isolation proof.
 
 from __future__ import annotations
 
+import _socket
 import os
 import socket
 import urllib.request
@@ -45,6 +46,27 @@ _original_urlopen = urllib.request.urlopen
 
 def _deny(operation: str) -> None:
     raise NetworkAccessDenied(f"{DENIAL_MESSAGE}: {operation}")
+
+
+def _guarded_socket_init(
+    self: socket.socket,
+    family: int = -1,
+    type: int = -1,
+    proto: int = -1,
+    fileno: int | None = None,
+) -> None:
+    """Initialize the guarded subclass without consulting rebound ``_socket``."""
+
+    if fileno is None:
+        if family == -1:
+            family = socket.AF_INET
+        if type == -1:
+            type = socket.SOCK_STREAM
+        if proto == -1:
+            proto = 0
+    _original_socket_type.__init__(self, family, type, proto, fileno)
+    self._io_refs = 0
+    self._closed = False
 
 
 def _guarded_connect(self: socket.socket, address: Any) -> Any:
@@ -140,10 +162,12 @@ def activate() -> bool:
         socket.socket.sendmsg = _guarded_sendmsg
     if _original_sendfile is not None:
         socket.socket.sendfile = _guarded_sendfile
-    # ``socket.SocketType`` normally aliases the unpatched ``_socket.socket``
-    # base type. Route the public constructor alias through the guarded
-    # subclass so it cannot bypass the method replacements above.
+    # The standard subclass initializer consults ``_socket.socket`` at runtime.
+    # Preserve its behavior through the saved extension type before routing
+    # both constructor aliases through the guarded subclass.
+    socket.socket.__init__ = _guarded_socket_init
     socket.SocketType = socket.socket
+    _socket.socket = socket.socket
     socket.create_connection = _guarded_create_connection
     socket.getaddrinfo = _guarded_getaddrinfo
     socket.gethostbyname = _guarded_gethostbyname

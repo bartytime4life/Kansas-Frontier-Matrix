@@ -41,9 +41,10 @@ def _guarded_python(source: str, *, enabled: bool = True) -> subprocess.Complete
 
 def test_guard_requires_explicit_no_network_posture() -> None:
     result = _guarded_python(
-        "import socket, sitecustomize; "
+        "import _socket, socket, sitecustomize; "
         "assert not sitecustomize.GUARD_ACTIVE; "
-        "assert socket.SocketType is sitecustomize._original_socket_type",
+        "assert socket.SocketType is sitecustomize._original_socket_type; "
+        "assert _socket.socket is sitecustomize._original_socket_type",
         enabled=False,
     )
     assert result.returncode == 0, result.stderr
@@ -145,9 +146,25 @@ def test_guard_routes_public_socket_type_alias_through_guarded_socket_class() ->
     assert "socket.sendmsg" in result.stderr
 
 
+def test_guard_routes_extension_socket_constructor_through_guarded_class() -> None:
+    result = _guarded_python(
+        "import _socket, socket; "
+        "assert _socket.socket is socket.socket; "
+        "_socket.socket(socket.AF_INET, socket.SOCK_DGRAM).sendmsg("
+        "[b'x'], [], 0, ('192.0.2.1', 53))"
+    )
+    assert result.returncode != 0
+    assert DENIAL_MESSAGE in result.stderr
+    assert "socket.sendmsg" in result.stderr
+
+
 def test_guard_preserves_unix_domain_socket_routing() -> None:
     result = _guarded_python(
         "import socket; import sitecustomize; "
+        "left, right = socket.socketpair(); "
+        "left.sendall(b'x'); "
+        "assert right.recv(1) == b'x'; "
+        "left.close(); right.close(); "
         "local_socket = type('LocalSocket', (), {'family': socket.AF_UNIX})(); "
         "sitecustomize._original_connect = lambda _socket, address: address; "
         "sitecustomize._original_send = lambda _socket, data: data; "
