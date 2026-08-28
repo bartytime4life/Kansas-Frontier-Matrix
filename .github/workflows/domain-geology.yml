@@ -256,7 +256,7 @@ jobs:
             --fixtures
 
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-geology-post-merge-convergence-20260828.json \
+            data/receipts/generated/genrec-geology-no-network-guard-adoption-20260828.json \
             --repo-root .
 
           echo "WORKFLOW_CHECK_EXECUTED: geology-public-safe-geometry-fixture"
