@@ -11,6 +11,7 @@ name: agriculture-observation
       - "tools/validators/evidence/validate_agriculture_observation.py"
       - "tools/ci/kfm_no_network/sitecustomize.py"
       - "tests/validators/evidence/test_validate_agriculture_observation.py"
+      - "tests/validators/evidence/test_validate_agriculture_observation_io_failclosed.py"
       - "docs/intake/exploratory/implementation-reference-agriculture-observation-source-map.md"
       - "contracts/common/geography_version.md"
       - "schemas/contracts/v1/common/geography_version.schema.json"
@@ -18,7 +19,7 @@ name: agriculture-observation
       - "schemas/contracts/v1/data/county_year_panel.schema.json"
       - "packages/hashing/**"
       - "pyproject.toml"
-      - "data/receipts/generated/genrec-agriculture-observation-invalid-utf8-negative-20260828.json"
+      - "data/receipts/generated/genrec-agriculture-observation-io-failclosed-negative-20260828.json"
   push:
     branches: [main]
     paths:
@@ -29,6 +30,7 @@ name: agriculture-observation
       - "tools/validators/evidence/validate_agriculture_observation.py"
       - "tools/ci/kfm_no_network/sitecustomize.py"
       - "tests/validators/evidence/test_validate_agriculture_observation.py"
+      - "tests/validators/evidence/test_validate_agriculture_observation_io_failclosed.py"
       - "docs/intake/exploratory/implementation-reference-agriculture-observation-source-map.md"
       - "contracts/common/geography_version.md"
       - "schemas/contracts/v1/common/geography_version.schema.json"
@@ -36,7 +38,7 @@ name: agriculture-observation
       - "schemas/contracts/v1/data/county_year_panel.schema.json"
       - "packages/hashing/**"
       - "pyproject.toml"
-      - "data/receipts/generated/genrec-agriculture-observation-invalid-utf8-negative-20260828.json"
+      - "data/receipts/generated/genrec-agriculture-observation-io-failclosed-negative-20260828.json"
   workflow_dispatch:
 
 permissions:
@@ -78,6 +80,7 @@ jobs:
           PYTHONPATH: ${{ github.workspace }}/tools/ci/kfm_no_network:${{ github.workspace }}
         run: |
           python -m unittest -v tests.validators.evidence.test_validate_agriculture_observation
+          python -m unittest -v tests.validators.evidence.test_validate_agriculture_observation_io_failclosed
           python -m unittest -v tests.validators.evidence.test_validate_population_observation
           python -m unittest -v tests.validators.evidence.test_validate_economic_observation
           python -m unittest -v tests.data.test_county_year_panel
@@ -85,7 +88,7 @@ jobs:
       - name: Validate generated authoring receipt integrity
         run: |
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-agriculture-observation-invalid-utf8-negative-20260828.json \
+            data/receipts/generated/genrec-agriculture-observation-io-failclosed-negative-20260828.json \
             --repo-root .
       - name: Record trust boundary
         if: always()
