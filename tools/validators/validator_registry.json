@@ -511,6 +511,7 @@
         "bun.lock",
         "bun.lockb",
         "apps/*/package.json",
+        "apps/*/package-lock.json",
         "packages/*/package.json",
         "tests/validators/test_pnpm_audit_readiness.py",
         "tools/validators/dependencies/**"
