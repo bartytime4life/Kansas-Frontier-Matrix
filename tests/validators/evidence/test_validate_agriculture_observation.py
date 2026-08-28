@@ -89,6 +89,20 @@ class AgricultureObservationTests(unittest.TestCase):
         self.assertEqual("FIXTURE_ONLY", governance.pop("execution_mode"))
         self.assertTrue(all(value is False for value in governance.values()))
 
+    def test_source_role_rejects_role_collapse(self) -> None:
+        manifest = validator.load_fixtures()
+        case = next(case for case in manifest["cases"] if case["case_id"] == "valid-farm-count")
+        for source_role in ("SATELLITE_GRID", "STATION_OBSERVATION", "OPERATOR_RECORD"):
+            with self.subTest(source_role=source_role):
+                document = validator.materialize_case(manifest, case)
+                document["source"]["source_role"] = source_role
+                result = validator.validate_payload(document)
+                self.assertEqual("DENY", result.outcome)
+                self.assertEqual(
+                    (validator.Finding("AGRICULTURE_SCHEMA_INVALID", "/source/source_role"),),
+                    result.findings,
+                )
+
     def test_identity_is_content_addressed_and_replay_stable(self) -> None:
         manifest = validator.load_fixtures()
         document = validator.materialize_case(manifest, manifest["cases"][0])
