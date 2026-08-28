@@ -2,12 +2,15 @@
 doc_id: kfm://doc/archaeology-api-contracts
 title: Archaeology — API Contracts
 type: standard
-version: v0.3
+version: v0.3.1
 status: draft
 owners: <TODO: archaeology-domain-steward; cultural-review-board; governed-API-owner; security-steward; docs-steward>
 created: 2026-05-15
-updated: 2026-05-29
+updated: 2026-08-28
 policy_label: public
+owning_root: docs/
+responsibility: "Explain the Archaeology governed-API contract, finite outcomes, evidence and source-role constraints, and fail-closed sensitivity boundary for human readers."
+truth_posture: "Mixed: confirmed current repository placement and mixed-maturity authority paths; proposed route and DTO surfaces; unverified Archaeology handler, policy-runtime, evidence-resolver, citation, receipt, and release binding; no public or policy authority."
 related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
@@ -30,12 +33,12 @@ related:
   - schemas/contracts/v1/domains/archaeology/
   - policy/domains/archaeology/
   - policy/sensitivity/archaeology/
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 tags: [kfm, archaeology, api, contracts, governed-api, sensitivity, trust-membrane, source-role-anti-collapse]
 notes:
   - CONTRACT_VERSION = "3.0.0" (pinned per ai-build-operating-contract.md §37 versioning + CONTRACT_VERSION pinning convention).
   - Doctrine-adjacent reference; canonical authority lives in contracts/, schemas/, policy/, tests/.
-  - Repository NOT mounted in this session; every path, route, schema file, and contract file is PROPOSED until verified ([CONTRACT v3.0] §7 current-session evidence limit).
+  - Repository paths were inspected on 2026-08-28; current documentation, contract, schema, policy, test, fixture, and app-local route-family paths are mixed-maturity evidence, not proof of runtime binding or acceptance.
   - Source-role anti-collapse (Atlas v1.1 §24.1) is load-bearing for this lane; threaded throughout §§3, 5, 6, 8. Chapter 24 master tables are navigational, not authoritative — EvidenceBundle, source dossiers, and schemas/contracts remain canonical (Atlas v1.1 Ch. 24 authority rule).
   - Inherits Archaeology sensitivity envelope: T4 site coords default (T1 generalized only after steward review, Atlas §24.14); T4 forever for human remains / sacred sites (Atlas §24.5.2). The §23.2 sensitive-domain matrix is itself PROPOSED in v3.0 pending steward ratification; most-restrictive-row applies until then.
   - source_role enum values are lowercase (observed | regulatory | modeled | aggregate | administrative | candidate | synthetic) per Atlas §24.1.3.
@@ -46,7 +49,7 @@ notes:
 > Governed API surface, DTOs, finite outcomes, source-role discipline, and sensitivity gates for the Archaeology and Cultural Heritage domain. This document **explains**; canonical authority lives in `contracts/`, `schemas/`, `policy/`, and `tests/`.
 
 <p align="left">
-  <img alt="Edition" src="https://img.shields.io/badge/edition-v0.3%20draft-1f6feb">
+  <img alt="Edition" src="https://img.shields.io/badge/edition-v0.3.1%20draft-1f6feb">
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-lightgrey">
   <img alt="Authority: explanation only" src="https://img.shields.io/badge/authority-explanation%20only-blue">
   <img alt="Policy label: public" src="https://img.shields.io/badge/policy_label-public-2e7d32">
@@ -55,12 +58,12 @@ notes:
   <img alt="Source-role: anti-collapse acute" src="https://img.shields.io/badge/source--role-acute-orange">
   <img alt="Lifecycle: RAW→PUBLISHED" src="https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-6e7681">
   <img alt="Conformance: RFC 2119" src="https://img.shields.io/badge/conformance-RFC%202119-555">
-  <img alt="Implementation: PROPOSED" src="https://img.shields.io/badge/implementation-PROPOSED-yellow">
+  <img alt="Implementation: mixed" src="https://img.shields.io/badge/repository_evidence-MIXED-yellow">
   <img alt="CONTRACT_VERSION 3.0.0" src="https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-555">
-  <!-- TODO: replace with live Shields.io endpoints (CI status, last-updated, ADR coverage, route verification status) once paths are verified against the mounted repo. -->
+  <!-- Static badges describe this document only; they are not runtime, policy, review, or release evidence. -->
 </p>
 
-**Status:** draft · **Owners:** _TODO: archaeology-domain-steward · cultural-review-board · governed-API-owner · security-steward · docs-steward_ · **Last updated:** 2026‑05‑29
+**Status:** draft · **Owners:** _TODO: archaeology-domain-steward · cultural-review-board · governed-API-owner · security-steward · docs-steward_ · **Last updated:** 2026‑08‑28
 
 > [!IMPORTANT]
 > Archaeology is a **deny-by-default** domain. Exact site locations, burial, human remains, sacred sites, unresolved cultural sensitivity, collection security, private-landowner details, and looting-risk exposure **MUST fail closed** at the API boundary. No request, regardless of authentication tier, releases unredacted exact geometry at T0 (Open) without explicit sovereignty / cultural review and an attached `RedactionReceipt`. See [§8](#8-sensitivity-gates-baked-into-the-contract-surface).
@@ -72,16 +75,16 @@ notes:
 | Field | Value |
 |---|---|
 | **Document type** | API-contracts reference (standard doc, doctrine-adjacent, domain-scoped). |
-| **Edition** | v0.3 draft (v0.2 → v0.3, PATCH — citation corrections; see [§15 Changelog](#15-changelog)). |
-| **Proposed repo path** | `docs/domains/archaeology/api-contracts.md` (lowercase-with-hyphens, matching the `rollback-drill.md` convention). |
+| **Edition** | v0.3.1 draft (repository-evidence correction; see [§15 Changelog](#15-changelog)). |
+| **Current repo path** | `docs/domains/archaeology/API_CONTRACTS.md` (`CONFIRMED` path; casing convergence remains an open documentation question, not an absence claim). |
 | **Placement basis** | **CONFIRMED** — Directory Rules §12 (Domain Placement Law; domain segment under responsibility root `docs/domains/<domain>/`); KFM Encyclopedia §7.13 (per-domain dossier). |
-| **Operating contract** | `ai-build-operating-contract.md` — `CONTRACT_VERSION = "3.0.0"`. |
+| **Operating contract** | `docs/doctrine/ai-build-operating-contract.md` — `CONTRACT_VERSION = "3.0.0"`. |
 | **Conformance language** | **RFC 2119 / RFC 8174** — `MUST` / `MUST NOT` / `SHOULD` / `SHOULD NOT` / `MAY`. |
 | **Authority posture** | **Explanation only.** Canonical authority: `contracts/domains/archaeology/`, `contracts/runtime/`, `schemas/contracts/v1/runtime/`, `schemas/contracts/v1/domains/archaeology/`, `policy/domains/archaeology/`, `policy/sensitivity/archaeology/`, `tests/domains/archaeology/`. |
 | **Sensitivity envelope** | **T4 inherited** — site coords default (T1 generalized only after steward review, Atlas §24.14); **T4 forever** for human remains and sacred sites (Atlas §24.5.2). |
 | **Source-role posture** | **Anti-collapse strictly enforced** — seven canonical roles (Atlas v1.1 §24.1.1) preserved through every promotion; collapses are DENY conditions (Atlas v1.1 §24.1.2). |
 | **Atlas anchor** | **Atlas v1.0 Ch. 15 §J** (API / contract / schema surfaces) + **§L** (governed AI) + **§N** (verification backlog). Atlas v1.1 §24.1 / §24.5 / §24.13 / §24.14 navigational (Chapter 24 tables are navigational, not authoritative — Atlas Ch. 24 authority rule). |
-| **Status of this file in any repo** | `draft` until reviewed and merged. AI-revised — `GENERATED_RECEIPT.json` required at merge per contract §34. |
+| **Repository state** | This file and the named authority roots exist on current `main`; maturity is mixed and file presence does not establish route handlers, runtime binding, policy activation, review, release, or publication. |
 | **Required reviewers** | Docs steward + archaeology-domain steward + cultural-review-board representative + sovereignty-review liaison + policy steward + governed-API owner + security steward + AI surface steward. |
 
 ---
@@ -125,7 +128,7 @@ This document is the **archaeology lane's reading guide** to the KFM governed AP
   - **Machine shape** → `schemas/contracts/v1/domains/archaeology/` and `schemas/contracts/v1/runtime/` (JSON Schema, per ADR-0001).
   - **Admissibility** → `policy/domains/archaeology/` and `policy/sensitivity/archaeology/`.
   - **Enforceability proof** → `tests/domains/archaeology/` + `fixtures/domains/archaeology/`.
-- It is **not** an inventory of implemented routes. The repository is **not mounted** in this session; every route, schema path, and contract path here is `PROPOSED` until verified. The operating contract §38 anti-patterns and Directory Rules name documentation-as-truth as a failure mode; this doc explains, it does not decide.
+- It is **not** an inventory of implemented routes. Current repository inspection confirms authority and app-local route-family documentation paths, but does not establish Archaeology route handlers, DTO wiring, policy evaluation, evidence resolution, receipt emission, or release enforcement. The operating contract §38 anti-patterns and Directory Rules name documentation-as-truth as a failure mode; this doc explains, it does not decide.
 
 [Back to top](#contents)
 
@@ -177,7 +180,7 @@ Optional extended outcomes (per contract §8 extended labels) **MAY** appear on 
 
 The archaeology lane **reuses** the general KFM governed API surface. There are no archaeology-specific routes; the lane is identified by the domain segment in the request (or by the layer / claim / evidence id resolving to archaeology). Atlas v1.0 Ch. 15 §J records the Archaeology API surface as PROPOSED with **routes TBD**.
 
-The following surfaces are PROPOSED and have been documented in upstream architecture material; specific path strings are illustrative until verified against `apps/governed-api/`.
+The following surfaces remain `PROPOSED`. Current repository inspection confirms `apps/governed-api/routes/domains/archaeology/README.md`, whose own truth posture says route handlers, DTOs, middleware, schemas, tests, authorization, policy enforcement, evidence resolution, and runtime behavior remain `NEEDS VERIFICATION`; the path strings below are therefore illustrative, not implementation claims.
 
 | Surface | Proposed route (illustrative) | DTO out | Finite outcomes | Status |
 |---|---|---|---|---|
@@ -192,7 +195,7 @@ The following surfaces are PROPOSED and have been documented in upstream archite
 | Steward read-only queue | `GET /api/v1/review/queue` (filter: `domain=archaeology`) | `ReviewRecord[]` | `ANSWER` / `DENY` / `ERROR` | PROPOSED |
 
 > [!NOTE]
-> Routes are PROPOSED. The Whole-UI Governed AI Expansion records `apps/governed-api/src/routes/*.ts` paths as **VERIFY THEN CREATE/ADAPT**, with the explicit note that if the actual repo uses `apps/governed_api/` or `packages/api/`, paths must be adapted and an ADR recorded. The same caveat applies to every row above (see `OQ-AR-API-04`).
+> Routes are `PROPOSED`. The repository confirms the governed API root and an app-local Archaeology route-family README, but not `apps/governed-api/src/routes/*.ts` handlers or Archaeology runtime binding. Do not infer an implementation from the documentation tree (see `OQ-AR-API-04`).
 
 [Back to top](#contents)
 
@@ -474,7 +477,7 @@ This section is a **single-source-of-pointer table** so readers do not look here
 | Admissibility / allow / deny / restrict | `policy/domains/archaeology/`, `policy/sensitivity/archaeology/`, `policy/rights/`, `policy/release/` |
 | Test proof | `tests/domains/archaeology/` |
 | Valid / invalid / golden samples | `fixtures/domains/archaeology/` |
-| Actual route implementations | `apps/governed-api/src/routes/` (verify name and convention against mounted repo — `OQ-AR-API-04`) |
+| Archaeology route-family documentation | `apps/governed-api/routes/domains/archaeology/README.md` (`CONFIRMED` path; handlers and runtime binding remain unverified) |
 | Source-role discipline | Atlas v1.1 §24.1 (roles + collapse patterns); ADR-S-04 (enum evolution) |
 | Sensitivity tier scheme (T0–T4) | Atlas v1.1 §24.5; `docs/domains/archaeology/SENSITIVITY.md` (PROPOSED) |
 | Domain doctrine (orientation, ubiquitous language, sources) | `docs/domains/archaeology/` (this folder; `ARCHITECTURE.md`, `CANONICAL_PATHS.md`, `CROSS_DOMAIN.md`) |
@@ -485,7 +488,7 @@ This section is a **single-source-of-pointer table** so readers do not look here
 | Per-domain verification backlog | `docs/domains/archaeology/VERIFICATION_BACKLOG.md` |
 
 > [!NOTE]
-> Every path above is PROPOSED. The operating contract §7 current-session evidence limit requires path-bearing artifacts produced without a mounted repo to keep path claims bounded; this section serves that purpose for this doc.
+> Paths above were checked against current repository evidence. Their maturity remains mixed: a path may exist while its contract or schema is proposed, permissive, lineage-only, or unbound. File presence never grants runtime, policy, review, release, or publication authority.
 
 [Back to top](#contents)
 
@@ -500,7 +503,7 @@ PROPOSED. Questions specific to this API-contracts reference, distinct from the 
 | **OQ-AR-API-01** | Is `ArchaeologyDecisionEnvelope` a named subtype of `DecisionEnvelope` / `RuntimeResponseEnvelope`, or a generic envelope with a domain-tagged payload? | Governed-API owner + docs steward | ADR + inspection of `contracts/runtime/` and `schemas/contracts/v1/runtime/`. Connects to the schema-home question (Atlas ADR-S-01 / ADR-S-03). |
 | **OQ-AR-API-02** | Canonical list of authority crosswalks the archaeology `EvidenceBundle` MUST carry (SHPO IDs, NRHP IDs, trinomial site numbers, Wikidata, LCNAF, VIAF, ISNI, GNIS, optionally KSHS / KHRI). | Archaeology-domain steward + evidence-bundle owner | `contracts/evidence/evidence_bundle.md` + steward review. |
 | **OQ-AR-API-03** | Numeric generalization thresholds: H3 r7 vs. alternative (geohash, quad-key); per-class deltas. | Policy steward + cultural-review-board representative | `policy/sensitivity/archaeology/` + `SensitivityTransform` schema + steward + cultural review sign-off. |
-| **OQ-AR-API-04** | Is `apps/governed-api/` the canonical executable trust-membrane path, or does the live repo use `apps/governed_api/` / `packages/api/`? | Governed-API owner | Mounted repo inspection + ADR. |
+| **OQ-AR-API-04** | Which accepted handler convention and runtime binding implement the confirmed app-local Archaeology route-family documentation under `apps/governed-api/`? | Governed-API owner | implementation review + deterministic route tests |
 | **OQ-AR-API-05** | Source-role enum (Atlas v1.1 §24.1.3) — evolution rule and additions; confirm lowercase enum values and the `role_*` companion fields land in the `SourceDescriptor` schema. Tied to ADR-S-04. | Docs steward + governed-API owner | ADR-S-04. |
 | **OQ-AR-API-06** | Steward review queue routing for archaeology (named queues, role bindings; integration with `docs/domains/archaeology/runbooks/`). | Archaeology-domain steward + review-console owner | `policy/domains/archaeology/` + `apps/review-console/`. |
 | **OQ-AR-API-07** | Should this file be renamed to `docs/domains/archaeology/api-contracts.md` (lowercase-with-hyphens) to match sibling dossier docs? Note this conflicts with the UPPER_SNAKE sibling convention (`ARCHITECTURE.md`, `CANONICAL_PATHS.md`, `CROSS_DOMAIN.md`); reconcile naming repo-wide. | Docs steward | Rename in same PR; preserve `doc_id`; resolve casing convention against sibling docs. |
@@ -515,11 +518,11 @@ PROPOSED. Questions specific to this API-contracts reference, distinct from the 
 
 PROPOSED. Items that remain `NEEDS VERIFICATION` for this doc before promotion from `draft` to `published`. Cross-referenced to `docs/registers/VERIFICATION_BACKLOG.md` (canonical) and `docs/domains/archaeology/VERIFICATION_BACKLOG.md` (domain-scoped) where applicable.
 
-1. Confirm placement at `docs/domains/archaeology/api-contracts.md` (per `OQ-AR-API-07`) and reconcile file-casing convention against the UPPER_SNAKE sibling docs.
+1. Reconcile the confirmed current path `docs/domains/archaeology/API_CONTRACTS.md` with the casing question in `OQ-AR-API-07`; preserve `doc_id` through any reviewed rename.
 2. Confirm `ArchaeologyDecisionEnvelope` shape against `contracts/runtime/` and `schemas/contracts/v1/runtime/` — resolve `OQ-AR-API-01`.
 3. Confirm reason-code lists in [§10](#10-negative-outcome-register) against `policy/domains/archaeology/` and `tests/domains/archaeology/` negative fixtures (negative-state paths MUST be exercised, contract §38).
 4. Confirm generalization threshold against `policy/sensitivity/archaeology/` and `schemas/contracts/v1/domains/archaeology/sensitivity_transform.schema.json` — resolve `OQ-AR-API-03`.
-5. Confirm `apps/governed-api/` path convention against mounted repo — resolve `OQ-AR-API-04`.
+5. Establish accepted Archaeology handler, DTO, policy-runtime, evidence-resolver, and receipt bindings behind the confirmed app-local route-family README — resolve `OQ-AR-API-04`.
 6. Confirm `EvidenceBundle` authority-crosswalk list against `contracts/evidence/evidence_bundle.md` — resolve `OQ-AR-API-02`.
 7. Confirm steward review queue routing against `policy/domains/archaeology/` and `apps/review-console/` — resolve `OQ-AR-API-06`.
 8. Confirm steward authority and confidentiality terms for archaeology source agreements (Atlas v1.0 Ch. 15 §N item 1; DOM-ARCH §N).
@@ -543,6 +546,7 @@ Per `ai-build-operating-contract.md` §37 lifecycle (MAJOR / MINOR / PATCH).
 | v0.1 (draft) | 2026-05-15 | Initial draft. 14 sections covering scope, trust-membrane recap, finite outcomes, governed-API surfaces, DTO table, `ArchaeologyDecisionEnvelope`, EvidenceBundle linkage, sensitivity gates, click-to-drawer diagram, negative-outcome register, governed-AI behavior, cross-references, verification backlog, related docs. | new | First placement of archaeology API-contracts explanation doc. |
 | v0.2 (draft) | 2026-05-27 | Threaded **source-role anti-collapse** (Atlas v1.1 §24.1) through §§2, 3, 5, 6, 8, 9, 10. Added §0 Status & Authority table. Added `CONTRACT_VERSION = "3.0.0"` pin. RFC 2119 conformance pass. Added §13 Open questions, §14 Open verification backlog, §15 Changelog, §16 Definition of done. Added `GENERATED_RECEIPT.json` row to §5 and §11. Added `source-role-collapse` and `synthetic-as-observed` DENY codes. Added `jcs:sha256:<hex>` notation. Added `NARROWED` / `BOUNDED` extensions. | MINOR — clarification + new sections + threading existing doctrine | Aligns with operating contract v3.0; closes gap on source-role doctrine; adds companion sections. |
 | v0.3 (draft) | 2026-05-29 | **Citation-correction pass.** Corrected contract section references to the verified v3.0 map: cite-or-abstain → §10.3 (was §1.5); governed AI → §21 (was §22); finite-outcome extensions → §8 (was §21.2); `SOURCE_STALE`/freshness → §22.2 (was §9.2); trust-membrane → §10.2; lifecycle → §10.1; current-session evidence limit → §7; chain-of-thought-not-authority → §26.2. Renumbered §38 anti-pattern references to the verified list (§38.2, §38.15, §38.18, §38.21, §38.25). Normalized `source_role` enum to **lowercase** values per Atlas §24.1.3 (was Title-Case). Labeled the §23.2 matrix PROPOSED with most-restrictive-row fallback in §8. Added the **navigational-not-authoritative** note for Chapter 24 tables. Added `synthetic-as-observed` grounding from Atlas §24.1.2. Corrected placement basis to Directory Rules §12 (was §4 Step 3) and Encyclopedia §7.13 (was §6.2). Added `OQ-AR-API-08` (receipt reconciliation) and `OQ-AR-API-09` (runbooks placement); aligned `OQ-AR-API-07` with the sibling UPPER_SNAKE casing conflict. Added sibling docs (`ARCHITECTURE.md`, `CANONICAL_PATHS.md`, `CROSS_DOMAIN.md`) to `related` and §12. Added health-signal backlog item (§35). | PATCH — citation accuracy; no semantic doctrine change | Prior draft cited several non-existent contract sections (§1.5, §5.1.1, §9.2, §21.2, §22) and Title-Cased the enum; corrected to the verified section map and Atlas enum casing. No outcomes, gates, or invariants changed. |
+| v0.3.1 (draft) | 2026-08-28 | Reconciled repository placement and mixed-maturity path evidence; retained route and runtime claims as proposed/unverified. | PATCH — status accuracy; no semantic doctrine change | Removes stale repository-unavailable and blanket-`PROPOSED` path claims without activating policy, runtime, review, release, or publication. |
 
 > **Backward compatibility.** §§1–17 anchors are unchanged from v0.2. The `source_role` values changed case (Title-Case → lowercase); any code keyed to the Title-Case strings MUST migrate to the canonical lowercase enum, and the migration is logged in `docs/registers/DRIFT_REGISTER.md`. No section was renumbered in this PATCH.
 
@@ -552,9 +556,9 @@ Per `ai-build-operating-contract.md` §37 lifecycle (MAJOR / MINOR / PATCH).
 
 ## 16. Definition of done
 
-This document is done enough to enter the repository when:
+Future promotion beyond `draft` requires:
 
-- it is placed at `docs/domains/archaeology/api-contracts.md` per Directory Rules §12 (or retains a location consistent with the sibling casing convention per `OQ-AR-API-07`);
+- the confirmed current path and any reviewed casing convergence preserve `doc_id` and repository links;
 - docs steward, archaeology-domain steward, cultural-review-board representative, sovereignty-review liaison, policy steward, governed-API owner, security steward, and AI surface steward have reviewed and approved it;
 - it is linked from `docs/domains/archaeology/README.md`, `docs/domains/archaeology/ARCHITECTURE.md`, and `docs/architecture/governed-api/README.md`;
 - it does not conflict with accepted ADRs, including ADR-0001 (schema home) and any of ADR-S-01 / ADR-S-03 / ADR-S-04 once filed;
@@ -569,29 +573,29 @@ This document is done enough to enter the repository when:
 
 ## 17. Related docs
 
-PROPOSED. Targets below are PROPOSED; verify before linking from other docs.
+Repository paths below are confirmed unless explicitly qualified; maturity and authority remain separate.
 
-- [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — _TODO_ — operating contract v3.0; `CONTRACT_VERSION = "3.0.0"`.
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — _TODO_ — placement law (§12 Domain Placement Law).
-- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — _TODO_ — membrane in human terms.
-- [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — _TODO_ — cite-or-abstain.
-- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — _TODO_ — `RAW → PUBLISHED`.
-- [`./README.md`](./README.md) — _TODO_ — Archaeology domain landing and lane pattern.
+- [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract v3.0; `CONTRACT_VERSION = "3.0.0"`.
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law (§12 Domain Placement Law).
+- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — membrane in human terms.
+- [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — cite-or-abstain.
+- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — `RAW → PUBLISHED`.
+- [`./README.md`](./README.md) — Archaeology domain landing and lane pattern.
 - [`./ARCHITECTURE.md`](./ARCHITECTURE.md) — Archaeology domain architecture (sibling; path namespace authority).
 - [`./CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) — Archaeology canonical paths (sibling).
 - [`./CROSS_DOMAIN.md`](./CROSS_DOMAIN.md) — edges to Spatial Foundation, Roads / Rail, Settlements, Hazards, People / Land (sibling).
-- [`./SENSITIVITY.md`](./SENSITIVITY.md) — _TODO_ — T0–T4 tier matrix, allowed transforms, gates.
-- [`./SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md) — _TODO_ — source families, rights, sensitivity, cadence.
-- [`./PIPELINE.md`](./PIPELINE.md) — _TODO_ — RAW → PUBLISHED gates for this lane.
-- [`./VERIFICATION_BACKLOG.md`](./VERIFICATION_BACKLOG.md) — _TODO_ — Archaeology verification backlog.
+- [`./SENSITIVITY.md`](./SENSITIVITY.md) — T0–T4 tier matrix, allowed transforms, gates.
+- [`./SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md) — source families, rights, sensitivity, cadence.
+- [`./PIPELINE.md`](./PIPELINE.md) — RAW → PUBLISHED gates for this lane.
+- [`./VERIFICATION_BACKLOG.md`](./VERIFICATION_BACKLOG.md) — Archaeology verification backlog.
 - [`./runbooks/README.md`](./runbooks/README.md) — Archaeology runbooks folder README (placement under ADR review, `OQ-AR-API-09`).
 - [`./runbooks/rollback-drill.md`](./runbooks/rollback-drill.md) — Rollback drill runbook (Atlas v1.0 Ch. 15 §N item 4 anchor).
-- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — _TODO_ — universal trust-membrane and route doctrine.
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — _TODO_ — schemas live under `schemas/contracts/v1/...`.
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — universal trust-membrane and route doctrine.
+- [`docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schemas live under `schemas/contracts/v1/...`.
 
 ---
 
 > [!NOTE]
-> **Last updated:** 2026-05-29 · **Edition:** v0.3 draft · **`CONTRACT_VERSION = "3.0.0"`** · **Authority:** explanation only — canonical homes named above govern. **Repository inspection:** not mounted in this session. **Conformance:** RFC 2119 / RFC 8174.
+> **Last updated:** 2026-08-28 · **Edition:** v0.3.1 draft · **`CONTRACT_VERSION = "3.0.0"`** · **Authority:** explanation only — canonical homes named above govern. **Repository evidence:** mixed maturity; handlers and runtime binding unverified. **Conformance:** RFC 2119 / RFC 8174.
 
 [↑ Back to top](#contents)
