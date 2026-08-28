@@ -400,6 +400,30 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(result.outcome, MODULE.Outcome.ERROR)
         self.assertIn("SCAN_INPUT_UNREADABLE", result.reasons)
 
+    def test_oversized_input_errors_without_becoming_acquisition(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            path = root / "scripts" / "oversized.mjs"
+            path.parent.mkdir(parents=True)
+            path.write_bytes(b" " * (MODULE.MAX_INPUT_BYTES + 1))
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.ERROR)
+        self.assertEqual(result.reasons, ("SCAN_INPUT_TOO_LARGE",))
+        self.assertEqual(result.findings[0].kind, "INPUT_TOO_LARGE")
+        self.assertNotIn("RENDERER_ACQUISITION_PRESENT", result.reasons)
+        self.assertNotIn("ACQUISITION_OUTSIDE_CANDIDATE_SEAM", result.reasons)
+        self.assertEqual(result.to_dict()["max_input_bytes"], MODULE.MAX_INPUT_BYTES)
+
+    def test_input_at_byte_limit_is_scanned(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            path = root / "scripts" / "at-limit.mjs"
+            path.parent.mkdir(parents=True)
+            path.write_bytes(b" " * MODULE.MAX_INPUT_BYTES)
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.PASS)
+        self.assertEqual(result.findings, ())
+
     def test_summary_cli_hides_findings_but_keeps_counts(self) -> None:
         with self._root() as tmp:
             root = Path(tmp)
@@ -413,7 +437,8 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 3)
         payload = json.loads(completed.stdout)
         self.assertEqual(payload["outcome"], "HOLD")
-        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v6")
+        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v7")
+        self.assertEqual(payload["max_input_bytes"], MODULE.MAX_INPUT_BYTES)
         self.assertEqual(payload["findings"], [])
         self.assertEqual(payload["finding_counts"]["STATIC_IMPORT"], 1)
         self.assertFalse(payload["authority_created"])

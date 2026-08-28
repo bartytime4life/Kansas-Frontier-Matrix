@@ -23,12 +23,16 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Sequence
 
-PROFILE = "kfm-maplibre-acquisition-inventory-v6"
+PROFILE = "kfm-maplibre-acquisition-inventory-v7"
 TEXT_SUFFIXES = frozenset({".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx", ".html"})
 MAX_FILES = 5000
+MAX_INPUT_BYTES = 1024 * 1024
 SCAN_ROOTS = ("apps", "packages", "runtime", "scripts", "tests", "examples", "public")
 RENDERER_PACKAGES = ("maplibre-gl", "mapbox-gl", "cesium", "leaflet", "ol", "openlayers")
 KFM_RENDERER_FACADES = ("@kfm/maplibre",)
+INPUT_ERROR_KINDS = frozenset(
+    {"INPUT_TOO_LARGE", "MANIFEST_UNREADABLE", "TEXT_UNREADABLE"}
+)
 
 PATTERNS = {
     "STATIC_IMPORT": re.compile(r"(?:^|\n)\s*import(?:\s+type)?(?:[\s\S]{0,160}?from\s*)?['\"]([^'\"]+)['\"]"),
@@ -139,6 +143,7 @@ class Result:
             "profile": PROFILE,
             "reasons": list(self.reasons),
             "renderer_selected": False,
+            "max_input_bytes": MAX_INPUT_BYTES,
             "scanned_files": self.scanned_files,
             "truncated": self.truncated,
         }
@@ -367,11 +372,34 @@ def _iter_files(root: Path) -> tuple[list[Path], bool]:
     return files, False
 
 
-def _scan_manifest(root: Path, path: Path) -> list[Finding]:
+def _read_bounded_text(
+    root: Path, path: Path, *, unreadable_kind: str
+) -> tuple[str | None, Finding | None]:
     rel = path.relative_to(root).as_posix()
     try:
-        value = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeError, json.JSONDecodeError):
+        with path.open("rb") as stream:
+            raw = stream.read(MAX_INPUT_BYTES + 1)
+    except OSError:
+        return None, Finding(unreadable_kind, rel, path.name, False)
+    if len(raw) > MAX_INPUT_BYTES:
+        return None, Finding(
+            "INPUT_TOO_LARGE", rel, f"max-bytes-{MAX_INPUT_BYTES}", False
+        )
+    try:
+        return raw.decode("utf-8"), None
+    except UnicodeError:
+        return None, Finding(unreadable_kind, rel, path.name, False)
+
+
+def _scan_manifest(root: Path, path: Path) -> list[Finding]:
+    rel = path.relative_to(root).as_posix()
+    text, error = _read_bounded_text(root, path, unreadable_kind="MANIFEST_UNREADABLE")
+    if error:
+        return [error]
+    assert text is not None
+    try:
+        value = json.loads(text)
+    except json.JSONDecodeError:
         return [Finding("MANIFEST_UNREADABLE", rel, "package.json", False)]
     if not isinstance(value, dict):
         return [Finding("MANIFEST_UNREADABLE", rel, "package.json", False)]
@@ -388,11 +416,11 @@ def _scan_manifest(root: Path, path: Path) -> list[Finding]:
 
 
 def _scan_text(root: Path, path: Path) -> list[Finding]:
+    text, error = _read_bounded_text(root, path, unreadable_kind="TEXT_UNREADABLE")
+    if error:
+        return [error]
+    assert text is not None
     rel = path.relative_to(root).as_posix()
-    try:
-        text = path.read_text(encoding="utf-8")
-    except (OSError, UnicodeError):
-        return [Finding("TEXT_UNREADABLE", rel, path.name, False)]
     scan_text = _mask_comments(text)
     findings: list[Finding] = []
     for kind in (
@@ -432,6 +460,9 @@ def scan(root: Path) -> Result:
         findings.extend(_scan_manifest(root, path) if path.name == "package.json" else _scan_text(root, path))
 
     unique = tuple(sorted(set(findings), key=lambda item: (item.path, item.kind, item.subject, item.candidate_seam)))
+    acquisition_findings = tuple(
+        finding for finding in unique if finding.kind not in INPUT_ERROR_KINDS
+    )
     reasons: set[str] = set()
     package_homes = {
         finding.path.rsplit("/", 1)[0]
@@ -443,14 +474,18 @@ def scan(root: Path) -> Result:
         reasons.add("PARALLEL_MAPLIBRE_PACKAGE_HOMES")
     if any(finding.kind in {"MANIFEST_UNREADABLE", "TEXT_UNREADABLE"} for finding in unique):
         reasons.add("SCAN_INPUT_UNREADABLE")
+    if any(finding.kind == "INPUT_TOO_LARGE" for finding in unique):
+        reasons.add("SCAN_INPUT_TOO_LARGE")
     if truncated:
         reasons.add("SCAN_TRUNCATED")
-    if any(not finding.candidate_seam for finding in unique):
+    if any(not finding.candidate_seam for finding in acquisition_findings):
         reasons.add("ACQUISITION_OUTSIDE_CANDIDATE_SEAM")
-    if unique:
+    if acquisition_findings:
         reasons.add("RENDERER_ACQUISITION_PRESENT")
 
-    if "SCAN_INPUT_UNREADABLE" in reasons or "SCAN_TRUNCATED" in reasons:
+    if reasons.intersection(
+        {"SCAN_INPUT_TOO_LARGE", "SCAN_INPUT_UNREADABLE", "SCAN_TRUNCATED"}
+    ):
         outcome = Outcome.ERROR
     elif "PARALLEL_MAPLIBRE_PACKAGE_HOMES" in reasons or "ACQUISITION_OUTSIDE_CANDIDATE_SEAM" in reasons:
         outcome = Outcome.FAIL
