@@ -662,7 +662,7 @@ The full preservation and rollback contract lives in [`PRESERVATION_MATRIX.md`](
 
 ## 19. Verification backlog and open questions
 
-**Status:** all rows below are **NEEDS VERIFICATION** until inspected against a mounted repo. <small>[Atlas v1.1 §12.N]</small>
+**Status:** repository path presence is now inspected at the pinned base. Each row remains open only to the extent named: current files and bounded tests do not by themselves establish source admission, complete enforcement, runtime use, accountable review, operational recovery, release, deployment, promotion, or publication. <small>[Atlas v1.1 §12.N]</small>
 
 | Item to verify | Evidence that would settle it |
 |---|---|
