@@ -2,7 +2,7 @@
 doc_id: kfm://doc/registry/schema/readme
 title: docs/registry/schema/ — Schema Documentation Routing Boundary
 type: readme
-version: v1.2
+version: v1.3
 status: provisional
 owners:
   - "@bartytime4life"
@@ -11,12 +11,12 @@ updated: 2026-08-28
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "Route readers from the registry documentation tree to current schema, fixture, validator, test, and policy owners without becoming any of those authorities."
-truth_posture: "CONFIRMED current repository paths, fixture and validator child routing boundaries, and accepted placement doctrine / PARTIAL separate local schema-registry helper and hosted-workflow evidence / NOT IMPLEMENTED policy dry-run binding"
+truth_posture: "CONFIRMED current repository paths, fixture, validator, policy-routing, and dry-run child documentation boundaries, and accepted placement doctrine / PARTIAL separate local schema-registry helper and hosted-workflow evidence / NOT IMPLEMENTED policy dry-run binding"
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: debd3ceb1c9ce267cb26eaf8295e2371baf4ba0e
-  prior_blob: 66af3122c97bc58d0f09363f6a480f73bcc48821
+  base_commit: 630f468f9c7672309fdffade6e1537ebbafc4f03
+  prior_blob: d68d02c36b0ac6878fc84c20876f8ea845a89b97
 related:
   - ../README.md
   - ../../doctrine/directory-rules.md
@@ -79,17 +79,22 @@ docs/registry/schema/
     └── validator/
         ├── README.md
         └── policy/
+            ├── README.md
             └── dry-run/
-                └── .gitkeep
+                ├── .gitkeep
+                └── README.md
 ```
 
-The [fixture README](fixture/README.md) and
-[validator README](fixture/validator/README.md) are substantive routing-and-hold
-boundaries grounded in the canonical package fixtures, partial package helper,
-nine-test regression profile, and dedicated hosted workflow. The `dry-run/` leaf
-is the only remaining inert placeholder and contains only a keep marker. This
-documentation subtree implements no schema, fixture payload, validator, policy
-rule, dry-run evaluator, approval, release effect, or publication authority.
+The [fixture README](fixture/README.md),
+[validator README](fixture/validator/README.md),
+[policy-routing README](fixture/validator/policy/README.md), and
+[dry-run README](fixture/validator/policy/dry-run/README.md) are substantive
+routing-and-hold boundaries grounded in the canonical package fixtures, partial
+package helper, nine-test regression profile, and dedicated hosted workflow. The
+`dry-run/` leaf now contains only its keep marker and documentation boundary. This
+documentation subtree still implements no schema, fixture payload, validator,
+policy rule, dry-run evaluator, approval, release effect, or publication
+authority.
 
 ## Inputs and outputs
 
@@ -128,14 +133,15 @@ dry-run capability, release, or publication.
 - If the policy dry-run placeholder gains implementation, document its accepted
   contract, executable evaluator, consumer, validation, failure behavior, and
   authority boundary before changing its maturity claim.
-- If that remaining placeholder has no intended consumer, retain it as an
-  explicit open placement decision or remove it through a separately reviewed
-  topology change.
+- If the held dry-run path has no intended consumer, preserve its documented
+  uncertainty until a separately reviewed placement decision authorizes migration
+  or retirement.
 
-Reverting this documentation commit restores this parent to v1.1 at blob
-`66af3122c97bc58d0f09363f6a480f73bcc48821` and restores the validator child to
-its prior blank blob. It does not roll back package behavior, schemas, fixtures,
-validators, policy, tests, releases, deployments, or publication.
+This v1.3 documentation slice changes no implementation. Before merge, close the
+draft pull request and abandon its branch. After merge, prefer a focused forward
+correction. Do not restore the marker-only child state merely to revise wording,
+and do not move or delete the held path without an accepted placement decision
+and verified reference closure.
 
 ## Open verification register
 
@@ -143,6 +149,7 @@ validators, policy, tests, releases, deployments, or publication.
 |---|---|
 | What scoped responsibility does `schema/fixture/README.md` own? | **CONFIRMED — documentation routing and evidence limits only** |
 | What scoped responsibility does `schema/fixture/validator/README.md` own? | **CONFIRMED — documentation routing and evidence limits only** |
+| What do the nested policy and dry-run READMEs establish? | **CONFIRMED — local routing, absence evidence, and admission prerequisites only** |
 | Does `schema/fixture/validator/policy/dry-run/` have an accepted contract, executable evaluator, or consumer? | **NOT IMPLEMENTED** |
 | Should the remaining policy dry-run placeholder remain, migrate to an owning root, or be retired? | **NEEDS DIRECTORY REVIEW** |
 | Which reviewer owns future child-lane semantics beyond the current repository route? | **NEEDS VERIFICATION** |
