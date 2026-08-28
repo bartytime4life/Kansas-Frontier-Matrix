@@ -2,7 +2,7 @@
 doc_id: kfm://doc/registry/schema/fixture/readme
 title: docs/registry/schema/fixture/ — Schema Fixture Documentation Boundary
 type: readme
-version: v1.1
+version: v1.2
 status: provisional
 owners:
   - "@bartytime4life"
@@ -11,12 +11,12 @@ updated: 2026-08-28
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "Explain the current schema-registry fixture profiles and route readers to their canonical fixture, package, and test owners without storing fixture payloads or executable behavior here."
-truth_posture: "CONFIRMED current fixture profiles, consumers, and validator documentation route / PARTIAL package and hosted-workflow evidence / NOT IMPLEMENTED policy dry-run binding"
+truth_posture: "CONFIRMED current fixture profiles, consumers, validator documentation route, and nested policy/dry-run documentation holds / PARTIAL package and hosted-workflow evidence / NOT IMPLEMENTED policy dry-run binding"
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: debd3ceb1c9ce267cb26eaf8295e2371baf4ba0e
-  prior_blob: e37d9e04bd31aabd53a1c088dca17f8d4b78dcb6
+  base_commit: 630f468f9c7672309fdffade6e1537ebbafc4f03
+  prior_blob: a11525c21fbaa2c592ae45ca27466c04e956642d
 related:
   - ../README.md
   - ../../README.md
@@ -115,14 +115,18 @@ docs/registry/schema/fixture/
 └── validator/
     ├── README.md
     └── policy/
+        ├── README.md
         └── dry-run/
-            └── .gitkeep
+            ├── .gitkeep
+            └── README.md
 ```
 
-The [validator boundary](validator/README.md) now routes readers to the partial
+The [validator boundary](validator/README.md) routes readers to the partial
 package implementation, nine-test regression profile, dedicated hosted workflow,
-and generated authoring receipt that currently own this bounded evidence. The
-`dry-run/` leaf still contains only a keep marker. No policy dry-run contract,
+and generated authoring receipt that currently own this bounded evidence. Its
+[policy-routing child](validator/policy/README.md) and
+[dry-run child](validator/policy/dry-run/README.md) now document the nested hold;
+the leaf contains only `.gitkeep` plus its README. No policy dry-run contract,
 registered orchestrator entry, executable policy evaluator, approval, release
 effect, or publication authority is established by this documentation tree.
 
@@ -155,10 +159,11 @@ and fragments at that revision.
   evaluator, and identified consumer are present in an owning implementation
   root.
 
-Reverting this documentation commit restores this parent to v1.0 at blob
-`e37d9e04bd31aabd53a1c088dca17f8d4b78dcb6` and restores the validator child to
-its prior blank blob. It does not remove or change fixture payloads, package code,
-tests, schemas, validators, policy, releases, deployments, or publication.
+This v1.2 documentation slice changes no fixture or implementation behavior.
+Before merge, close the draft pull request and abandon its branch. After merge,
+prefer a focused forward correction. Do not restore marker-only or blank child
+documentation merely to revise wording, and do not move or delete the held path
+without an accepted placement decision and verified reference closure.
 
 ## Open verification register
 
@@ -166,6 +171,7 @@ tests, schemas, validators, policy, releases, deployments, or publication.
 |---|---|
 | Does the package achieve identifier and document-resolution parity with the current canonical schema tree? | **NOT ESTABLISHED — separate parity proof required** |
 | What scoped responsibility does `validator/README.md` own today? | **CONFIRMED — documentation routing and evidence limits only** |
+| What do the nested policy and dry-run READMEs establish? | **CONFIRMED — local routing, absence evidence, and admission prerequisites only** |
 | Does `validator/policy/dry-run/` have an accepted contract, executable entry point, or consumer? | **NOT IMPLEMENTED** |
 | Should the remaining policy dry-run placeholder stay here, migrate to an owning root, or be retired? | **NEEDS DIRECTORY REVIEW** |
 | Which reviewer owns future child-lane semantics beyond the current repository route? | **NEEDS VERIFICATION** |

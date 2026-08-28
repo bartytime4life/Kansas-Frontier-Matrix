@@ -2,7 +2,7 @@
 doc_id: kfm://doc/registry/schema/fixture/validator/readme
 title: docs/registry/schema/fixture/validator/ — Schema Fixture Validator Documentation Boundary
 type: readme
-version: v1.0
+version: v1.1
 status: provisional
 owners:
   - "@bartytime4life"
@@ -11,12 +11,12 @@ updated: 2026-08-28
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "Route readers to the implemented schema-registry package checks, fixtures, tests, workflow, and receipt integrity boundary without becoming validator, policy, proof, or release authority."
-truth_posture: "CONFIRMED package tests, fixture snapshot checks, dedicated workflow, and absent orchestrator registration at the pinned base / PARTIAL no-network and package validation evidence / NOT IMPLEMENTED nested policy dry-run binding"
+truth_posture: "CONFIRMED package tests, fixture snapshot checks, dedicated workflow, absent orchestrator registration, and documented nested policy/dry-run holds at the pinned base / PARTIAL no-network and package validation evidence / NOT IMPLEMENTED nested policy dry-run binding"
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: debd3ceb1c9ce267cb26eaf8295e2371baf4ba0e
-  prior_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
+  base_commit: 630f468f9c7672309fdffade6e1537ebbafc4f03
+  prior_blob: cd05cb184e6b91ea249dde69279b9ebde0f65fa0
 related:
   - ../README.md
   - ../../README.md
@@ -154,13 +154,18 @@ This documentation subtree currently ends at:
 docs/registry/schema/fixture/validator/
 ├── README.md
 └── policy/
+    ├── README.md
     └── dry-run/
-        └── .gitkeep
+        ├── .gitkeep
+        └── README.md
 ```
 
-The `policy/dry-run/` leaf contains only a keep marker. No policy input
-contract, bundle, evaluator, outcome mapping, fixture, test, command, workflow,
-consumer, receipt, or rollback procedure is implemented there.
+The [`policy/`](policy/README.md) and
+[`policy/dry-run/`](policy/dry-run/README.md) READMEs now make the local routing
+and admission hold explicit. The leaf contains only `.gitkeep` plus its README.
+No policy input contract, bundle, evaluator, outcome mapping, fixture, test,
+command, workflow, consumer, receipt, or operational rollback procedure is
+implemented there.
 
 External planning material proposes dry-run compilers and no-autopublish policy
 gates, but current repository evidence does not adopt or implement those ideas in
@@ -194,9 +199,11 @@ and fragments at that revision.
 - Keep validation output free of sensitive payloads and harmful precision; a
   verbose local diagnostic is not automatically public-safe evidence.
 
-Reverting this documentation commit restores the prior blank file. It does not
-change package behavior, fixtures, tests, workflows, validator registration,
-policy, schemas, receipts, releases, deployments, or publication.
+This v1.1 documentation slice changes no package, validator, or policy behavior.
+Before merge, close the draft pull request and abandon its branch. After merge,
+prefer a focused forward correction. Do not restore marker-only child
+status merely to revise wording, and do not move or delete the held path without
+an accepted placement decision and verified reference closure.
 
 ## Open verification register
 
