@@ -3,14 +3,14 @@ doc_id: kfm://doc/runbooks-people-dna-land-readme
 title: docs/runbooks/people-dna-land/ — People, DNA, and Land Operational Procedure Boundary
 type: readme
 subtype: boundary-compact
-version: v1.0.0
+version: v1.0.1
 prior_state: one-byte placeholder
 status: draft; repository-grounded; sensitive-domain; bounded synthetic validation executable; broader policy runtime, source operation, proof, release, deployment, and publication held
 owners:
   - "@bartytime4life — verified GitHub review route"
   - "NEEDS VERIFICATION — accountable People/DNA/Land, privacy, consent, Indigenous/Tribal, legal, policy, source, evidence, release, and independent-review assignments"
 created: 2026-08-27
-updated: 2026-08-27
+updated: 2026-08-28
 policy_label: repository-facing; sensitive-domain; operational-procedure index; fail-closed; non-release; non-publication
 current_path: docs/runbooks/people-dna-land/README.md
 owning_root: docs/
@@ -58,6 +58,7 @@ notes:
   - "The living-person review is repository-grounded and names the two current synthetic fixture profiles; the other four long-form packet procedures retain proposal-era or no-mounted-repository assumptions."
   - "Six additional direct children remain explicit scaffolds and are not operational instructions."
   - "The current workflow executes two bounded synthetic consent profiles and explicitly holds broader semantics, policy runtime, proof, release, deployment, and publication."
+  - "The consent-revocation test-lane README now reflects those two executable fixture profiles; this documentation reconciliation does not establish operational revocation or cleanup."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -91,7 +92,7 @@ This README inherits the parent [`docs/runbooks/` contract](../README.md). It ow
 
 ## Current repository status
 
-The following observations are pinned to `main@6e02ced04834c8f9f2210da8c655cdef626a3b08`.
+The following observations were rechecked at `main@96ddafceac843753c019b8a79abfd74b162dd49c`.
 
 | Surface | Status | Bounded conclusion |
 |---|---:|---|
@@ -100,7 +101,7 @@ The following observations are pinned to `main@6e02ced04834c8f9f2210da8c655cdef6
 | Recurring four-file packet | **Proposal-era / stale** | The no-network, promotion, rollback, and source-refresh documents retain May 2026 proposal, placeholder-owner, illustrative-command, or no-mounted-repository assumptions |
 | Six additional children | **Explicit scaffolds** | Consent, vendor-loss, rollback-drill, validation, vendor-watch, and revocation paths are not operational procedures |
 | Domain workflow | **Executable bounded hold gate** | Runs two synthetic consent profiles and explicitly holds broader semantics, policy runtime, evidence closure, proof, and release |
-| Test-lane overview | **Corrected with this boundary** | Records both executable profiles; it does not claim complete domain validation |
+| Test-lane overview | **Repository-grounded** | The consent-revocation README records both executable profiles; it does not claim complete domain validation or operational revocation |
 | Real source or person material | **Not admitted by this documentation** | Remains outside these repository-visible procedures and fixtures |
 | Operational source refresh, promotion, rollback, release, deployment, publication | **HOLD / UNKNOWN** | No current authority or complete executable path is established by this lane |
 
@@ -222,10 +223,9 @@ Open items remain:
 1. assign accountable privacy, consent, Indigenous/Tribal, legal, domain, source, evidence, policy, release, and independent-review roles;
 2. reconcile the four proposal-era packet documents against current repository paths and tools;
 3. fill, supersede, or retire each of the six explicit scaffolds through file-specific review;
-4. reconcile `tests/domains/people-dna-land/consent/revocation/README.md`, which still describes executable tests as proposed, with the two current profiles;
-5. verify active policy-runtime binding, real revocation and derivative invalidation, approved sensitive-data handling, proof production, release dry-run, operational rollback, and publication controls before any maturity claim;
-6. preserve separate states for documentation, validation, review, admission, lifecycle promotion, release, deployment, and publication.
+4. verify active policy-runtime binding, real revocation and derivative invalidation, approved sensitive-data handling, proof production, release dry-run, operational rollback, and publication controls before any maturity claim;
+5. preserve separate states for documentation, validation, review, admission, lifecycle promotion, release, deployment, and publication.
 
-To roll back this documentation-only change, restore blob `8b137891791fe96927ad78e64b0aad7bded08bdc` at this path or revert the focused commit. That restores the one-byte placeholder only; it does not alter tests, policy, sources, evidence, lifecycle state, releases, deployments, revocations, or published material.
+To roll back this v1.0.1 status reconciliation, revert its focused commit and restore the prior boundary text. Blob `8b137891791fe96927ad78e64b0aad7bded08bdc` is retained only as the pre-boundary historical rollback target; restoring it would remove the entire local boundary, not just this status update. Neither action alters tests, policy, sources, evidence, lifecycle state, releases, deployments, revocations, or published material.
 
 [Back to top](#top)
