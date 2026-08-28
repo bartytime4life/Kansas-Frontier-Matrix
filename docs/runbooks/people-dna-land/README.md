@@ -3,9 +3,9 @@ doc_id: kfm://doc/runbooks-people-dna-land-readme
 title: docs/runbooks/people-dna-land/ — People, DNA, and Land Operational Procedure Boundary
 type: readme
 subtype: boundary-compact
-version: v1.2.0
-prior_version: v1.1.1
-prior_state: repository-grounded boundary with consent runbook still classified as a scaffold
+version: v1.3.0
+prior_version: v1.2.0
+prior_state: repository-grounded boundary with promotion still classified as proposal-era
 status: draft; repository-grounded; sensitive-domain; bounded synthetic validation executable; broader policy runtime, source operation, proof, release, deployment, and publication held
 owners:
   - "@bartytime4life — verified GitHub review route"
@@ -24,9 +24,12 @@ evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
   base_commit: 813ef14b1dbe5bd236fc902ce8fc3bb2e8ae7e80
-  target_prior_blob: d77ea6759157223308524dee0b41216c45a816fe
+  target_prior_blob: 99c6e944ed4545482332adce7d91256e3a7ac21c
   pre_boundary_historical_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
   consent_runbook_prior_blob: d615875309c9298a9f621447fa9dcacc08e60cb1
+  consent_reconciliation_merge_commit: e99b1c5f798f1f708b201dcaab0db4e6212f7655
+  promotion_reconciliation_base_commit: 249974ba480fd68dc749ad0258c84e09477d523a
+  promotion_runbook_prior_blob: e942483dddef1c036354348c8b0a9ca823da2400
   no_network_reconciliation_base_commit: bacb77cfbc04014a2c05da541f9cba8025629068
   domain_workflow_blob: bcf64c3e3b6653b9543489fc5a6031805ae3ef48
   living_person_review_blob: 9619d58cd3f7e1326248b2fe76002bda188420fc
@@ -38,8 +41,8 @@ evidence_snapshot:
   directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
   direct_markdown_files_including_this_readme: 12
-  repository_grounded_child_procedures: 4
-  proposal_or_stale_child_procedures: 2
+  repository_grounded_child_procedures: 5
+  proposal_or_stale_child_procedures: 1
   explicit_scaffold_children: 5
   bounded_executable_synthetic_profiles: 2
 related:
@@ -58,10 +61,11 @@ related:
   - ../../../release/candidates/people-dna-land/README.md
 notes:
   - "This same-path update preserves the established navigation and sensitive-boundary contract; it creates no policy, source, evidence, release, or publication authority."
-  - "The consent review, living-person review, bounded no-network procedure, and rollback hold boundary are repository-grounded; promotion and source-refresh retain proposal-era assumptions."
+  - "The consent review, living-person review, bounded no-network procedure, rollback hold boundary, and promotion hold boundary are repository-grounded; source-refresh alone retains proposal-era assumptions."
   - "Five additional direct children remain explicit scaffolds and are not operational instructions."
   - "The current workflow executes two bounded synthetic consent profiles and explicitly holds broader semantics, policy runtime, proof, release, deployment, and publication."
   - "The consent runbook documents review and revocation handoff only; it does not issue real consent or execute revocation, cleanup, withdrawal, or publication."
+  - "v1.3.0 composes the promotion reconciliation after consent PR #3749 without taking over its runbook or unresolved review feedback."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -95,7 +99,7 @@ This README inherits the parent [`docs/runbooks/` contract](../README.md). It ow
 
 ## Current repository status
 
-The following observations were rechecked at `main@813ef14b1dbe5bd236fc902ce8fc3bb2e8ae7e80`.
+The baseline repository state was pinned at `main@813ef14b1dbe5bd236fc902ce8fc3bb2e8ae7e80`. The consent reconciliation is carried by merge `e99b1c5f798f1f708b201dcaab0db4e6212f7655`; the promotion row is bound to this draft PR's exact head. These later rows do not rewrite the older baseline snapshot.
 
 | Surface | Status | Bounded conclusion |
 |---|---:|---|
@@ -104,7 +108,8 @@ The following observations were rechecked at `main@813ef14b1dbe5bd236fc902ce8fc3
 | [`LIVING_PERSON_REVIEW.md`](./LIVING_PERSON_REVIEW.md) | **Repository-grounded draft** | Provides a bounded human review procedure and exact synthetic commands; real records and accountable review remain held |
 | [`NO_NETWORK_TEST_RUNBOOK.md`](./NO_NETWORK_TEST_RUNBOOK.md) | **Repository-grounded bounded procedure** | Reproduces the two current synthetic Python profiles and explicitly denies runner-wide, real-data, policy, proof, release, and publication claims |
 | Rollback procedure | **Repository-grounded hold boundary** | The same-path document retires unsafe proposal-era instructions and explicitly keeps operational rollback unavailable |
-| Remaining packet procedures | **Proposal-era / stale** | Promotion and source-refresh retain May 2026 proposal, placeholder-owner, or illustrative-command assumptions |
+| Promotion procedure | **Repository-grounded hold boundary** | The same-path document retires proposal-era operational language and keeps promotion unavailable pending owning evidence and accountable review |
+| Remaining packet procedure | **Proposal-era / stale** | Source-refresh retains May 2026 proposal, placeholder-owner, or illustrative-command assumptions |
 | Five additional children | **Explicit scaffolds** | Vendor-loss, rollback-drill, validation, vendor-watch, and revocation paths are not operational procedures |
 | Domain workflow | **Executable bounded hold gate** | Runs two synthetic consent profiles and explicitly holds broader semantics, policy runtime, evidence closure, proof, and release |
 | Test-lane overview | **Repository-grounded** | The consent-revocation README records both executable profiles; it does not claim complete domain validation or operational revocation |
@@ -120,7 +125,8 @@ The following observations were rechecked at `main@813ef14b1dbe5bd236fc902ce8fc3
 | Understand the current bounded executable checks | [`tests/domains/people-dna-land/README.md`](../../../tests/domains/people-dna-land/README.md) | Two synthetic profiles; not real-person, legal, title, release, or publication proof |
 | Reproduce the two current bounded synthetic profiles | [`NO_NETWORK_TEST_RUNBOOK.md`](./NO_NETWORK_TEST_RUNBOOK.md) | Named Python denial seams only; no runner-wide isolation, real consent handling, policy runtime, proof, release, or publication authority |
 | Review the current rollback posture | [`ROLLBACK_RUNBOOK.md`](./ROLLBACK_RUNBOOK.md) | Fail-closed documentation boundary only; no rollback target, mechanism, review authority, or operational execution is established |
-| Design a promotion or source-refresh procedure | Read the corresponding draft as proposal lineage | Reconcile every path, command, owner, authority, and output against current repository evidence before use |
+| Review the current promotion posture | [`PROMOTION_RUNBOOK.md`](./PROMOTION_RUNBOOK.md) | Fail-closed documentation boundary only; no promotion runtime, release decision, deployment, or publication authority is established |
+| Design a source-refresh procedure | Read [`SOURCE_REFRESH_RUNBOOK.md`](./SOURCE_REFRESH_RUNBOOK.md) as proposal lineage | Reconcile every path, command, owner, authority, and output against current repository evidence before use |
 | Vendor-loss, rollback-drill, validation, vendor-watch, or revocation operations | **STOP — scaffold only** | A scaffold cannot be executed or cited as operational admission |
 | Live or source-derived sensitive material | **STOP and escalate outside repository-visible surfaces** | Do not place sensitive details in Git or CI; obtain the required accountable review and approved handling environment |
 
@@ -135,10 +141,10 @@ docs/runbooks/people-dna-land/
 ├── DTC_VENDOR_LOSS_DRILL.md     # explicit scaffold
 ├── LIVING_PERSON_REVIEW.md      # repository-grounded bounded review
 ├── NO_NETWORK_TEST_RUNBOOK.md   # repository-grounded bounded procedure
-├── PROMOTION_RUNBOOK.md         # proposal-era promotion procedure
+├── PROMOTION_RUNBOOK.md         # repository-grounded promotion HOLD boundary
 ├── ROLLBACK_DRILL.md            # explicit scaffold
 ├── ROLLBACK_RUNBOOK.md          # repository-grounded rollback HOLD boundary
-├── SOURCE_REFRESH_RUNBOOK.md    # proposal-era illustrative commands
+├── SOURCE_REFRESH_RUNBOOK.md    # sole remaining proposal-era packet procedure
 ├── VALIDATION_RUNBOOK.md        # explicit scaffold
 ├── VENDOR_WATCH_SOP.md          # explicit scaffold
 └── revocation.md                # explicit scaffold
@@ -230,11 +236,11 @@ Re-review this boundary when child files, executable profiles, source admission,
 Open items remain:
 
 1. assign accountable privacy, consent, Indigenous/Tribal, legal, domain, source, evidence, policy, release, and independent-review roles;
-2. reconcile the two remaining proposal-era packet documents against current repository paths and tools;
+2. reconcile the one remaining proposal-era packet document, `SOURCE_REFRESH_RUNBOOK.md`, against current repository paths and tools;
 3. fill, supersede, or retire each of the five explicit scaffolds through file-specific review;
 4. verify active policy-runtime binding, real consent issuance, real revocation and derivative invalidation, approved sensitive-data handling, proof production, release dry-run, operational rollback, and publication controls before any maturity claim;
 5. preserve separate states for documentation, validation, review, admission, lifecycle promotion, release, deployment, and publication.
 
-To roll back this v1.2.0 status reconciliation, revert its focused commit and restore prior blob `d77ea6759157223308524dee0b41216c45a816fe`. Blob `8b137891791fe96927ad78e64b0aad7bded08bdc` remains the pre-boundary historical rollback target; restoring it would remove the entire local boundary, not just this status update. Neither action alters tests, policy, sources, evidence, lifecycle state, releases, deployments, revocations, or published material.
+To roll back this v1.3.0 promotion reconciliation, revert its focused documentation commit and restore prior blob `99c6e944ed4545482332adce7d91256e3a7ac21c`. Blob `d77ea6759157223308524dee0b41216c45a816fe` remains the pre-consent v1.1.1 snapshot, and blob `8b137891791fe96927ad78e64b0aad7bded08bdc` remains the pre-boundary historical target. Restoring either older blob would also discard later navigation and maturity evidence. None of these documentation actions alters tests, policy, sources, evidence, lifecycle state, releases, deployments, revocations, or published material.
 
 [Back to top](#top)
