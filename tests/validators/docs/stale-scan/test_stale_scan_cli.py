@@ -8,7 +8,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from _support import FIXTURE_ROOT, VALIDATOR_PATH, copy_fixture
+from stale_scan_support import FIXTURE_ROOT, VALIDATOR_PATH, copy_fixture
 
 
 class StaleScanCliTests(unittest.TestCase):
