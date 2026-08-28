@@ -674,7 +674,8 @@ verified current commands.
   state.
 - [ ] Rights, sensitivity, correction, rollback, and accountable review remain
   visible.
-- [ ] The Hydrology lane README maturity map was reviewed; any necessary index correction remains a separate same-path change.
+- [ ] The Hydrology lane README maturity map was reviewed; any necessary index
+  correction remains a separate same-path change.
 
 [Back to top](#top)
 
@@ -704,17 +705,19 @@ If a runbook claim is found false or stale:
 2. identify the exact repository revision and text at issue;
 3. classify the impact on prior handoffs or reviews;
 4. open the smallest forward correction or revert;
-5. record any resulting Hydrology lane README drift for a separate bounded correction;
+5. record any resulting Hydrology lane README drift for a separate bounded
+   correction;
 6. preserve the prior document in Git history rather than silently rewriting
    operational lineage.
 
 ### 11.2 Documentation rollback
 
-Before merge, close the draft pull request and delete only its task-owned
-feature branch. After merge, revert the documentation commit or submit a
-reviewed forward correction. Documentation rollback does not undo source
-activation, data retrieval, lifecycle writes, evidence, policy, release,
-deployment, or publication; those require their own governed rollback paths.
+If the change is abandoned before merge, close the draft pull request and
+delete only its task-owned feature branch. After an authorized merge, revert the
+documentation commit or submit a reviewed forward correction. Documentation
+rollback does not undo source activation, data retrieval, lifecycle writes,
+evidence, policy, release, deployment, or publication; those require their own
+governed rollback paths.
 
 [Back to top](#top)
 
