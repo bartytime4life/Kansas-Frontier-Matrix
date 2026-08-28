@@ -2,7 +2,7 @@
 doc_id: kfm://doc/docs-domains-archaeology-verification-backlog
 title: Archaeology — Verification Backlog and Open Questions
 type: standard
-version: v2.1.0
+version: v2.1.1
 owning_root: docs/
 responsibility: "Track current Archaeology verification gaps, bounded evidence, and fail-closed promotion holds."
 truth_posture: "Mixed: confirmed repository evidence with unresolved authority, binding, review, and release obligations."
@@ -25,7 +25,7 @@ notes: [CONTRACT_VERSION = "3.0.0" pinned; repository inspected at main@6207ce4c
 ![status](https://img.shields.io/badge/status-draft-orange)
 ![policy](https://img.shields.io/badge/policy-public_doc-blue)
 ![sensitivity](https://img.shields.io/badge/sensitive_domain-DENY_by_default-critical)
-![backlog](https://img.shields.io/badge/all_items-NEEDS_VERIFICATION-yellow)
+![backlog](https://img.shields.io/badge/mixed_states-CONFIRMED_PARTIAL_NEEDS_VERIFICATION-yellow)
 ![contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
 ![repo--state](https://img.shields.io/badge/repo-current_main_confirmed-success)
 
@@ -280,6 +280,8 @@ Current repository inspection resolves presence questions without resolving auth
 | Bumped version v1 → v2; meta `version` and changelog updated | housekeeping | Per contract §37 MINOR bump (additive, no anchor breakage) |
 | Reconciled repository presence, adopted placement, bounded EvidenceBundle convergence, placeholder behavior tests, route documentation, and ADR status at `main@6207ce4ca01aa6684bef2585464da369398d3010` | repository-state correction | Remove stale repository-unmounted and blanket-PROPOSED claims without implying evaluator, rights, review, runtime, release, or publication authority |
 | Bumped version v2 → v2.1.0 | housekeeping | Additive current-state reconciliation with stable section anchors |
+| Corrected the summary badge and ratcheted the topology waiver to the six remaining placeholder documents | post-merge correction | Align at-a-glance status with mixed evidence and remove the task-introduced stale baseline fingerprint |
+| Bumped version v2.1.0 → v2.1.1 | housekeeping | Patch correction with stable content and section anchors |
 
 > **Backward compatibility.** All v1 section anchors are preserved (`#1-scope` … `#8-promotion-readiness-checklist` semantics retained; promotion checklist moved to §11, "what settled means" to §9 — anchors `#what-settled-means`, `#promotion-readiness-checklist` unchanged). New sections inserted as §5–§6 and §10; no v1 content removed. The VB-/VT-/VS-/VR- IDs are local to this doc and `NEEDS VERIFICATION` against any repo-wide scheme.
 
