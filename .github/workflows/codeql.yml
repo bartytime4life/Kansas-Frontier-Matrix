@@ -1,0 +1,173 @@
+# KFM CI workflow: CodeQL static analysis
+# Status: implementation-bearing security analysis; non-authoritative for release.
+#
+# Responsibility:
+# - Analyze repository-owned Python, JavaScript/TypeScript, and GitHub Actions
+#   source with GitHub CodeQL's security-extended query suite.
+# - Run for pull requests to main, pushes to main, merge-queue checks, a weekly
+#   full scan, and explicit maintainer dispatch.
+# - Fail early when a configured language has no matching tracked source or the
+#   checkout does not materialize any matching regular source file.
+# Authority:
+# - A successful run means the configured CodeQL analysis completed for the
+#   checked revision. It is not proof that the repository is vulnerability-free,
+#   release approval, publication authority, or a substitute for threat modeling,
+#   dependency scanning, secret scanning, runtime controls, or human review.
+# Pull-request posture:
+# - Uses the merge-ref pull_request event, not a privileged target-context event.
+#   Untrusted code receives only the permissions needed to read and upload results.
+# Network:
+# - GitHub-hosted actions and CodeQL bundles may use GitHub-managed network
+#   access. This workflow does not call KFM source systems or public data APIs.
+# Outputs:
+# - Code-scanning results and bounded job summaries managed by GitHub. It creates
+#   no KFM proof, receipt, release, lifecycle, catalog, triplet, or published artifact.
+# Compatibility:
+# - Workflow name `codeql` and job id `codeql-scan` are retained because
+#   branch-protection dependencies have not been verified in this session.
+
+name: codeql
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  merge_group:
+    types:
+      - checks_requested
+  schedule:
+    - cron: "23 9 * * 3"
+  workflow_dispatch:
+
+# Deny permissions by default. The analysis job grants only its required token
+# capabilities; unspecified permissions remain `none`.
+permissions: {}
+
+concurrency:
+  group: codeql-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  codeql-scan:
+    name: codeql-scan (${{ matrix.language }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # Current entries intentionally use build-mode none. A future compiled
+        # language needs a clean build between CodeQL init and analyze.
+        include:
+          - language: actions
+            build-mode: none
+          - language: javascript-typescript
+            build-mode: none
+          - language: python
+            build-mode: none
+
+    steps:
+      - name: Check out analyzed revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Verify tracked source family
+        shell: bash
+        env:
+          CODEQL_LANGUAGE: ${{ matrix.language }}
+        run: |
+          set -euo pipefail
+
+          case "${CODEQL_LANGUAGE}" in
+            actions)
+              source_pattern='^\.github/(workflows/.+\.ya?ml|actions/.+/action\.ya?ml)$'
+              ;;
+            javascript-typescript)
+              source_pattern='\.(cjs|cts|js|jsx|mjs|mts|ts|tsx)$'
+              ;;
+            python)
+              source_pattern='\.(py|pyi|pyw)$'
+              ;;
+            *)
+              printf '%s\n' \
+                "::error title=CodeQL source census configuration failed::No tracked-source policy is defined for ${CODEQL_LANGUAGE}. Add an explicit policy before expanding the matrix."
+              exit 2
+              ;;
+          esac
+
+          tracked_count=0
+          materialized_count=0
+
+          while IFS= read -r -d '' path; do
+            if [[ "${path}" =~ ${source_pattern} ]]; then
+              tracked_count=$((tracked_count + 1))
+              if [[ -f "${path}" && ! -L "${path}" ]]; then
+                materialized_count=$((materialized_count + 1))
+              fi
+            fi
+          done < <(git ls-files -z)
+
+          if (( tracked_count == 0 )); then
+            printf '%s\n' \
+              "::error title=CodeQL source census failed::No tracked source files matched the configured ${CODEQL_LANGUAGE} source family. Check the language matrix and repository source placement."
+            exit 1
+          fi
+
+          if (( materialized_count == 0 )); then
+            printf '%s\n' \
+              "::error title=CodeQL source census failed::Tracked ${CODEQL_LANGUAGE} source exists in the Git index, but no matching regular file is materialized in the checkout. Check checkout and sparse-checkout scope."
+            exit 1
+          fi
+
+          {
+            printf '## CodeQL source census — `%s`\n\n' "${CODEQL_LANGUAGE}"
+            printf -- '- Outcome: `SOURCE_PRESENT`\n'
+            printf -- '- Matching tracked files: `%d`\n' "${tracked_count}"
+            printf -- '- Materialized regular files: `%d`\n\n' "${materialized_count}"
+            printf '%s\n' \
+              'This is an early matrix and checkout drift guard.' \
+              'The CodeQL analysis result remains the authoritative extractor outcome.'
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@db488ddef3bf6cb639b32c2e9a7c0a7ea8271d28 # v4.37.8
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+          queries: security-extended
+
+      - name: Analyze source
+        id: analyze
+        uses: github/codeql-action/analyze@db488ddef3bf6cb639b32c2e9a7c0a7ea8271d28 # v4.37.8
+        with:
+          category: /language:${{ matrix.language }}
+
+      - name: Record analysis boundary
+        if: ${{ always() }}
+        shell: bash
+        env:
+          ANALYSIS_OUTCOME: ${{ steps.analyze.outcome }}
+          COMMIT_SHA: ${{ github.sha }}
+          EVENT_NAME: ${{ github.event_name }}
+          LANGUAGE: ${{ matrix.language }}
+        run: |
+          set -euo pipefail
+
+          {
+            printf '## CodeQL — `%s`\n\n' "${LANGUAGE}"
+            printf -- '- Analysis outcome: `%s`\n' "${ANALYSIS_OUTCOME}"
+            printf -- '- Event: `%s`\n' "${EVENT_NAME}"
+            printf -- '- Revision: `%s`\n' "${COMMIT_SHA}"
+            printf -- '- Query suite: `security-extended`\n\n'
+            printf '%s\n' \
+              'Completion means CodeQL ran for this language and revision.' \
+              'It does not prove vulnerability absence or authorize release or publication.'
+          } >> "${GITHUB_STEP_SUMMARY}"

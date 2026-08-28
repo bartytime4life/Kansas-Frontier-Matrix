@@ -1,0 +1,129 @@
+{
+  "receipt_id": "genrec-geoparquet-ci-profile-ef9966e4c27417ee",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/geoparquet-2-rc-pyarrow-carrier-probe.yml",
+    "tests/ci/test_install_python_ci.py",
+    "tools/ci/geoparquet-pyarrow-25.lock",
+    "tools/ci/install_python_ci.py",
+    "tools/validators/release/validate_geoparquet_2_rc_pyarrow_carriers.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/geoparquet-2-rc-pyarrow-carrier-probe.yml": "sha256:b1b8d048fc9c76c3524e845da342fda0c23b7dac6247129cada31a938c91b709",
+    "tools/ci/install_python_ci.py": "sha256:72f6983a46b7bf53c62919b82d9625c09f94599fb594e700b9397773b4702a7c",
+    "tools/ci/geoparquet-pyarrow-25.lock": "sha256:3448392e420d16cfbfdf233f714b30e0452ae818147fbdb4faf760065eec41b1",
+    "tests/ci/test_install_python_ci.py": "sha256:fad96f8ae49b3f98eb4544af083a02f3cdb453cf229130661a9b854e898a73fd",
+    "tools/validators/release/validate_geoparquet_2_rc_pyarrow_carriers.py": "sha256:f5fcfd609559330e84e1aa49b3ddd47328d58051b9a2ef871f64d9031ed76c8c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6",
+    "version": "2026-08-20"
+  },
+  "prompt_or_contract": "sha256:ef9966e4c27417eee8bcb8ae3d848cea95b124fa0072f06ba62ca741c4876684",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "GitHub",
+      "python"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "github:repo:bartytime4life/Kansas-Frontier-Matrix@cadfb652d6e6963c8fb60a8977aeb0ca82b916d6",
+      "github:pr:bartytime4life/Kansas-Frontier-Matrix#3147",
+      "github:actions:run:32325895338",
+      "github:path:.github/workflows/geoparquet-2-rc-pyarrow-carrier-probe.yml@cadfb652d6e6963c8fb60a8977aeb0ca82b916d6",
+      "github:path:tools/ci/install_python_ci.py@cadfb652d6e6963c8fb60a8977aeb0ca82b916d6",
+      "github:path:tools/ci/geoparquet-pyarrow-25.lock@cadfb652d6e6963c8fb60a8977aeb0ca82b916d6",
+      "github:path:tests/ci/test_install_python_ci.py@cadfb652d6e6963c8fb60a8977aeb0ca82b916d6",
+      "github:actions:run:32385969493",
+      "github:actions:run:32385969977",
+      "github:actions:run:32386683234",
+      "github:path:tools/validators/release/validate_geoparquet_2_rc_pyarrow_carriers.py@84d3ab93ec541641d572d5bd64336022f1ab88b8"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/geoparquet-2-rc-pyarrow-carrier-probe.yml": "CONFIRMED",
+    "tools/ci/install_python_ci.py": "CONFIRMED",
+    "tools/ci/geoparquet-pyarrow-25.lock": "CONFIRMED",
+    "tests/ci/test_install_python_ci.py": "CONFIRMED",
+    "tools/validators/release/validate_geoparquet_2_rc_pyarrow_carriers.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-blob-reconstruction",
+      "outcome": "PASS",
+      "reason": "All four source files were fetched from and bound to the recorded current-main commit before editing."
+    },
+    {
+      "gate": "bounded-diff",
+      "outcome": "PASS",
+      "reason": "The correction is limited to one workflow, the finite installer, its existing PyArrow lock, and focused installer tests."
+    },
+    {
+      "gate": "python-syntax",
+      "outcome": "PASS",
+      "reason": "The modified installer and focused test module parsed successfully."
+    },
+    {
+      "gate": "yaml-syntax",
+      "outcome": "PASS",
+      "reason": "The modified workflow parsed successfully and retains its name and jobs mapping."
+    },
+    {
+      "gate": "direct-workflow-install-removal",
+      "outcome": "PASS",
+      "reason": "The affected workflow contains no direct python -m pip install command and selects exactly one fixed GeoParquet profile."
+    },
+    {
+      "gate": "pyarrow-lock-integrity",
+      "outcome": "PASS",
+      "reason": "The existing exact PyArrow 25.0.0 wheel SHA-256 remains unchanged; the redundant global wheel-only directive was removed for common finite-profile validation."
+    },
+    {
+      "gate": "repository-targeted-tests",
+      "outcome": "PASS",
+      "reason": "Exact-head hosted Python 3.11/3.12 unit tests passed, including the no-direct-workflow-install regression; the later finite migration-manifest check reported an unrelated current-hash mismatch for a manifest-tracked workflow that this patch does not change."
+    },
+    {
+      "gate": "geoparquet-locked-install",
+      "outcome": "PASS",
+      "reason": "The first exact-head run installed the locked PyArrow 25.0.0 wheel with its exact SHA-256 and generated the carrier fixture."
+    },
+    {
+      "gate": "geoparquet-validator-module-invocation",
+      "outcome": "PASS",
+      "reason": "The workflow now invokes the repository validator as a module so its repository-root tools namespace import resolves deterministically."
+    },
+    {
+      "gate": "geoparquet-reason-code-specificity",
+      "outcome": "PASS",
+      "reason": "The validator retains SCHEMA_INVALID while adding specific governance/outcome reasons, records digest mismatch before carrier parsing, and distinguishes declared metadata from actual carrier metadata."
+    },
+    {
+      "gate": "geoparquet-complete-hosted-run",
+      "outcome": "SKIPPED",
+      "reason": "Run 32386683234 confirmed the locked install, carrier generation, and module-invoked validator; four focused negative tests then exposed missing reason-code specificity that this amendment corrects without relaxing schema validation or assertions."
+    },
+    {
+      "gate": "hosted-code-scanning",
+      "outcome": "SKIPPED",
+      "reason": "CodeQL and Scorecard reevaluation belongs to the exact-head hosted and subsequent default-branch analysis."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-20T15:34:26.849Z",
+  "emitter": "ChatGPT GitHub implementation agent",
+  "notes": "Security and CI follow-up only. The direct workflow pip invocation is routed through one fixed repository-owned profile while preserving the exact PyArrow 25.0.0 artifact hash. Hosted runs confirmed the locked install, generation, and module-invoked validator, then exposed four pre-existing reason-code specificity defects. The validator amendment preserves schema rejection and negative assertions while adding specific diagnostic reasons. No alert is dismissed or suppressed; no schema const, action pin, permission, security gate, migration ledger, release, deployment, publication, or repository setting is changed."
+}

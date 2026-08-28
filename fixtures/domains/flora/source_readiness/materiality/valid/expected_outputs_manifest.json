@@ -1,0 +1,42 @@
+{
+  "valid_unchanged.json": {
+    "change_class": "UNCHANGED",
+    "outcome": "NON_EVENT"
+  },
+  "valid_byte_only.json": {
+    "change_class": "BYTE_ONLY",
+    "outcome": "NON_EVENT"
+  },
+  "valid_semantic_non_material.json": {
+    "change_class": "SEMANTIC_NON_MATERIAL",
+    "outcome": "NON_EVENT"
+  },
+  "valid_material_georeference.json": {
+    "change_class": "MATERIAL",
+    "outcome": "PROMOTION_CANDIDATE"
+  },
+  "valid_material_license_regression.json": {
+    "change_class": "MATERIAL",
+    "outcome": "PROMOTION_CANDIDATE"
+  },
+  "valid_material_access_change.json": {
+    "change_class": "MATERIAL",
+    "outcome": "PROMOTION_CANDIDATE"
+  },
+  "valid_material_stale_transition.json": {
+    "change_class": "MATERIAL",
+    "outcome": "PROMOTION_CANDIDATE"
+  },
+  "valid_material_sensitivity_change.json": {
+    "change_class": "MATERIAL",
+    "outcome": "PROMOTION_CANDIDATE"
+  },
+  "valid_hold_metric_unavailable.json": {
+    "change_class": "UNDETERMINED",
+    "outcome": "HOLD"
+  },
+  "valid_hold_wrong_analysis_unit.json": {
+    "change_class": "UNDETERMINED",
+    "outcome": "HOLD"
+  }
+}

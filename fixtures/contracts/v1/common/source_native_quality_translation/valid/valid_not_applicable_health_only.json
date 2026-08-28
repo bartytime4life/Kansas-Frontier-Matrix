@@ -1,0 +1,81 @@
+{
+  "object_type": "SourceNativeQualityTranslation",
+  "schema_version": "1.0.0",
+  "translation_id": "quality-translation:fixture:not-applicable-health-only",
+  "hash_profile": "kfm-fixture-json-v1",
+  "spec_hash": "sha256:a464cefd074504fcbd8cd69eeb4196b981f56d8a44bccdaaf177362e379c0099",
+  "source": {
+    "source_descriptor_ref": "kfm://source/fixture-station-network",
+    "source_role": "SENSOR_NETWORK",
+    "vocabulary_id": "quality-vocabulary:fixture-soil-network",
+    "vocabulary_version": "2026.1",
+    "vocabulary_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "native_code": "NA",
+    "native_label": "not applicable",
+    "native_detail": null,
+    "native_value_preserved": true
+  },
+  "mapping": {
+    "profile_id": "quality-mapping-profile:fixture-soil-network",
+    "profile_version": "1.0.0",
+    "profile_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "mapping_decision_ref": "kfm://quality-mapping-decision/fixture-soil-network-v1",
+    "outcome": "NOT_APPLICABLE",
+    "normalized_quality": "NOT_APPLICABLE",
+    "semantic_loss": "NONE",
+    "unmapped_state": "NOT_APPLICABLE",
+    "reason_codes": [
+      "QUALITY_NOT_EMITTED_FOR_HEALTH_RECORD"
+    ],
+    "review_required": false
+  },
+  "operational_health": {
+    "assessment_id": "health-assessment:fixture:not-applicable-health-only",
+    "state": "NOT_APPLICABLE",
+    "observed_at": "2026-04-15T14:04:00Z",
+    "reason_codes": [
+      "HEALTH_RECORD_NOT_REQUIRED"
+    ],
+    "evidence_refs": [],
+    "affects_current_observation_availability": false,
+    "observation_validity_decided": false,
+    "environmental_condition_claimed": false
+  },
+  "observation_validity": {
+    "assessment_id": "observation-validity:fixture:not-applicable-health-only",
+    "observation_ref": null,
+    "state": "NOT_ASSESSED",
+    "assessed_at": null,
+    "reason_codes": [
+      "NO_OBSERVATION_IN_RECORD"
+    ],
+    "evidence_refs": [],
+    "derived_from_operational_health": false
+  },
+  "separation": {
+    "health_and_validity_independent": true,
+    "offline_does_not_invalidate_prior_observations": true,
+    "no_data_is_not_environmental_condition": true,
+    "source_quality_is_not_source_authority": true
+  },
+  "provenance": {
+    "recorded_at": "2026-04-15T14:05:00Z",
+    "run_receipt_ref": "kfm://receipt/quality-translation/fixture-not-applicable",
+    "translator_id": "kfm://tool/fixture-quality-translator",
+    "translator_version": "1.0.0",
+    "input_refs": [
+      "kfm://input/fixture-health-only"
+    ]
+  },
+  "governance": {
+    "authority_created": false,
+    "source_admitted": false,
+    "evidence_closure_claimed": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  }
+}

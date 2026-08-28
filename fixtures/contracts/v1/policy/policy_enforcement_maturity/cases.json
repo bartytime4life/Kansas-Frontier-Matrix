@@ -1,0 +1,302 @@
+{
+  "cases": [
+    {
+      "name": "designed_only",
+      "expected": "PASS",
+      "record": {
+        "assessment_id": "policy-maturity-designed",
+        "policy_surface_ref": "policy://surface/example-v1",
+        "observed_commit": "1111111111111111111111111111111111111111",
+        "claimed_stage": "DESIGNED",
+        "evidence": [
+          {
+            "stage": "DESIGNED",
+            "evidence_kind": "CONTRACT_OR_POLICY",
+            "refs": [
+              "contract://policy/example-v1",
+              "policy://bundle/example-v1"
+            ]
+          }
+        ],
+        "deterministic": true,
+        "network_access": false,
+        "assessment_outcome": "PASS",
+        "reason_codes": [],
+        "spec_hash": "sha256:351e6f9f4c52588efdf270d0b08205617f266b67aa8acf5129297c5725e8fbcf",
+        "profile": "kfm.policy.enforcement-maturity.v1",
+        "schema_version": "1.0.0"
+      }
+    },
+    {
+      "name": "fixture_tested_chain",
+      "expected": "PASS",
+      "record": {
+        "assessment_id": "policy-maturity-tested",
+        "policy_surface_ref": "policy://surface/example-v1",
+        "observed_commit": "1111111111111111111111111111111111111111",
+        "claimed_stage": "FIXTURE_TESTED",
+        "evidence": [
+          {
+            "stage": "DESIGNED",
+            "evidence_kind": "CONTRACT_OR_POLICY",
+            "refs": [
+              "contract://policy/example-v1",
+              "policy://bundle/example-v1"
+            ]
+          },
+          {
+            "stage": "FIXTURE_TESTED",
+            "evidence_kind": "FIXTURE_OR_TEST",
+            "refs": [
+              "test://policy/example-positive-negative"
+            ]
+          }
+        ],
+        "deterministic": true,
+        "network_access": false,
+        "assessment_outcome": "PASS",
+        "reason_codes": [],
+        "spec_hash": "sha256:33c4edbe5afd42d9daf9ba4a6fc515aff70ec6043819667883ee4c8820bab998",
+        "profile": "kfm.policy.enforcement-maturity.v1",
+        "schema_version": "1.0.0"
+      }
+    },
+    {
+      "name": "runtime_enforced_full_chain",
+      "expected": "PASS",
+      "record": {
+        "assessment_id": "policy-maturity-runtime",
+        "policy_surface_ref": "policy://surface/example-v1",
+        "observed_commit": "1111111111111111111111111111111111111111",
+        "claimed_stage": "RUNTIME_ENFORCED",
+        "evidence": [
+          {
+            "stage": "DESIGNED",
+            "evidence_kind": "CONTRACT_OR_POLICY",
+            "refs": [
+              "contract://policy/example-v1",
+              "policy://bundle/example-v1"
+            ]
+          },
+          {
+            "stage": "FIXTURE_TESTED",
+            "evidence_kind": "FIXTURE_OR_TEST",
+            "refs": [
+              "test://policy/example-positive-negative"
+            ]
+          },
+          {
+            "stage": "MERGE_BLOCKING",
+            "evidence_kind": "REQUIRED_CHECK",
+            "refs": [
+              "required-check://policy-example"
+            ]
+          },
+          {
+            "stage": "PROMOTION_BLOCKING",
+            "evidence_kind": "PROMOTION_GATE",
+            "refs": [
+              "promotion-gate://policy-example"
+            ]
+          },
+          {
+            "stage": "RUNTIME_ENFORCED",
+            "evidence_kind": "RUNTIME_OBSERVATION",
+            "refs": [
+              "runtime-observation://governed-api/policy-example"
+            ]
+          }
+        ],
+        "deterministic": true,
+        "network_access": false,
+        "assessment_outcome": "PASS",
+        "reason_codes": [],
+        "spec_hash": "sha256:7f5e94c6faa83a95943fe398cbb8726e2b60a0c18b71bbbe9214ef6225def04b",
+        "profile": "kfm.policy.enforcement-maturity.v1",
+        "schema_version": "1.0.0"
+      }
+    },
+    {
+      "name": "leapfrogged_merge_blocking",
+      "expected": "DENY",
+      "record": {
+        "assessment_id": "policy-maturity-leapfrog",
+        "policy_surface_ref": "policy://surface/example-v1",
+        "observed_commit": "1111111111111111111111111111111111111111",
+        "claimed_stage": "MERGE_BLOCKING",
+        "evidence": [
+          {
+            "stage": "DESIGNED",
+            "evidence_kind": "CONTRACT_OR_POLICY",
+            "refs": [
+              "contract://policy/example-v1",
+              "policy://bundle/example-v1"
+            ]
+          },
+          {
+            "stage": "MERGE_BLOCKING",
+            "evidence_kind": "REQUIRED_CHECK",
+            "refs": [
+              "required-check://policy-example"
+            ]
+          }
+        ],
+        "deterministic": true,
+        "network_access": false,
+        "assessment_outcome": "PASS",
+        "reason_codes": [],
+        "spec_hash": "sha256:e8790e56b166140696779b8665ccb07d0324c9246786abd41d30e7f3e3e6c3f9",
+        "profile": "kfm.policy.enforcement-maturity.v1",
+        "schema_version": "1.0.0"
+      }
+    },
+    {
+      "name": "wrong_evidence_kind",
+      "expected": "DENY",
+      "record": {
+        "assessment_id": "policy-maturity-wrong-kind",
+        "policy_surface_ref": "policy://surface/example-v1",
+        "observed_commit": "1111111111111111111111111111111111111111",
+        "claimed_stage": "FIXTURE_TESTED",
+        "evidence": [
+          {
+            "stage": "DESIGNED",
+            "evidence_kind": "CONTRACT_OR_POLICY",
+            "refs": [
+              "contract://policy/example-v1",
+              "policy://bundle/example-v1"
+            ]
+          },
+          {
+            "stage": "FIXTURE_TESTED",
+            "evidence_kind": "REQUIRED_CHECK",
+            "refs": [
+              "test://policy/example-positive-negative"
+            ]
+          }
+        ],
+        "deterministic": true,
+        "network_access": false,
+        "assessment_outcome": "PASS",
+        "reason_codes": [],
+        "spec_hash": "sha256:7c92673ecf0d1e72994c4a758837ebceb66d8feda94b0da3ec6eb73a903b710a",
+        "profile": "kfm.policy.enforcement-maturity.v1",
+        "schema_version": "1.0.0"
+      }
+    },
+    {
+      "name": "later_stage_evidence_overclaims_declared_stage",
+      "expected": "DENY",
+      "record": {
+        "assessment_id": "policy-maturity-later-evidence",
+        "policy_surface_ref": "policy://surface/example-v1",
+        "observed_commit": "1111111111111111111111111111111111111111",
+        "claimed_stage": "DESIGNED",
+        "evidence": [
+          {
+            "stage": "DESIGNED",
+            "evidence_kind": "CONTRACT_OR_POLICY",
+            "refs": [
+              "contract://policy/example-v1",
+              "policy://bundle/example-v1"
+            ]
+          },
+          {
+            "stage": "FIXTURE_TESTED",
+            "evidence_kind": "FIXTURE_OR_TEST",
+            "refs": [
+              "test://policy/example-positive-negative"
+            ]
+          }
+        ],
+        "deterministic": true,
+        "network_access": false,
+        "assessment_outcome": "PASS",
+        "reason_codes": [],
+        "spec_hash": "sha256:0226a6a87bf693617f9ff179b271068010eea2c9fd37d9cc3d792ac48ea6b528",
+        "profile": "kfm.policy.enforcement-maturity.v1",
+        "schema_version": "1.0.0"
+      }
+    },
+    {
+      "name": "network_access_forbidden",
+      "expected": "DENY",
+      "record": {
+        "assessment_id": "policy-maturity-network",
+        "policy_surface_ref": "policy://surface/example-v1",
+        "observed_commit": "1111111111111111111111111111111111111111",
+        "claimed_stage": "DESIGNED",
+        "evidence": [
+          {
+            "stage": "DESIGNED",
+            "evidence_kind": "CONTRACT_OR_POLICY",
+            "refs": [
+              "contract://policy/example-v1",
+              "policy://bundle/example-v1"
+            ]
+          }
+        ],
+        "deterministic": true,
+        "network_access": true,
+        "assessment_outcome": "PASS",
+        "reason_codes": [],
+        "spec_hash": "sha256:4ee816021e229e0f2f1a5620e7155d4407a713ec421f9cc08d9e97c056dd5f75",
+        "profile": "kfm.policy.enforcement-maturity.v1",
+        "schema_version": "1.0.0"
+      }
+    },
+    {
+      "name": "malformed_missing_commit",
+      "expected": "ERROR",
+      "record": {
+        "assessment_id": "policy-maturity-malformed",
+        "policy_surface_ref": "policy://surface/example-v1",
+        "claimed_stage": "DESIGNED",
+        "evidence": [
+          {
+            "stage": "DESIGNED",
+            "evidence_kind": "CONTRACT_OR_POLICY",
+            "refs": [
+              "contract://policy/example-v1",
+              "policy://bundle/example-v1"
+            ]
+          }
+        ],
+        "deterministic": true,
+        "network_access": false,
+        "assessment_outcome": "PASS",
+        "reason_codes": [],
+        "spec_hash": "sha256:f8365062cce451ec8523e286ce40b9ce53c8f1fcbf08388de68a72baf0814f98",
+        "profile": "kfm.policy.enforcement-maturity.v1",
+        "schema_version": "1.0.0"
+      }
+    },
+    {
+      "name": "spec_hash_mismatch",
+      "expected": "ERROR",
+      "record": {
+        "assessment_id": "policy-maturity-hash-mismatch",
+        "policy_surface_ref": "policy://surface/example-v1",
+        "observed_commit": "1111111111111111111111111111111111111111",
+        "claimed_stage": "DESIGNED",
+        "evidence": [
+          {
+            "stage": "DESIGNED",
+            "evidence_kind": "CONTRACT_OR_POLICY",
+            "refs": [
+              "contract://policy/example-v1",
+              "policy://bundle/example-v1"
+            ]
+          }
+        ],
+        "deterministic": true,
+        "network_access": false,
+        "assessment_outcome": "PASS",
+        "reason_codes": [],
+        "spec_hash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "profile": "kfm.policy.enforcement-maturity.v1",
+        "schema_version": "1.0.0"
+      }
+    }
+  ]
+}

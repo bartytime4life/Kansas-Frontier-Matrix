@@ -1,0 +1,77 @@
+name: geoparquet-2-rc-compatibility-assessment
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/geoparquet-2-rc-compatibility-assessment.yml"
+      - "contracts/release/geoparquet_2_rc_compatibility_assessment.md"
+      - "schemas/contracts/v1/release/geoparquet_2_rc_compatibility_assessment.schema.json"
+      - "fixtures/contracts/v1/release/geoparquet_2_rc_compatibility_assessment/**"
+      - "tools/validators/release/validate_geoparquet_2_rc_compatibility_assessment.py"
+      - "tests/release/test_geoparquet_2_rc_compatibility_assessment.py"
+      - "data/receipts/generated/genrec-geoparquet-2-rc-compatibility-assessment-20260815.json"
+      - "data/receipts/generated/genrec-geoparquet-2-rc-pinned-toolchain-matrix-20260818.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/geoparquet-2-rc-compatibility-assessment.yml"
+      - "contracts/release/geoparquet_2_rc_compatibility_assessment.md"
+      - "schemas/contracts/v1/release/geoparquet_2_rc_compatibility_assessment.schema.json"
+      - "fixtures/contracts/v1/release/geoparquet_2_rc_compatibility_assessment/**"
+      - "tools/validators/release/validate_geoparquet_2_rc_compatibility_assessment.py"
+      - "tests/release/test_geoparquet_2_rc_compatibility_assessment.py"
+      - "data/receipts/generated/genrec-geoparquet-2-rc-compatibility-assessment-20260815.json"
+      - "data/receipts/generated/genrec-geoparquet-2-rc-pinned-toolchain-matrix-20260818.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: geoparquet-2-rc-compatibility-assessment-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared test dependencies
+        run: python tools/ci/install_python_ci.py project-test
+      - name: Run focused tests
+        run: python -m pytest -q tests/release/test_geoparquet_2_rc_compatibility_assessment.py
+      - name: Run exact synthetic fixture polarity
+        run: python tools/validators/release/validate_geoparquet_2_rc_compatibility_assessment.py --cases
+      - name: Verify successor authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-geoparquet-2-rc-pinned-toolchain-matrix-20260818.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### GeoParquet 2.0 RC exact-toolchain declaration"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: exact synthetic GDAL, DuckDB Spatial, SedonaSpark, SedonaDB, and PyArrow declarations for later carrier-byte probes."
+            echo "- Boundary: GeoParquet 1.1 remains the declared default; no carrier bytes, package artifacts, dependencies, migration, release, deployment, or publication are created."
+          } >> "$GITHUB_STEP_SUMMARY"

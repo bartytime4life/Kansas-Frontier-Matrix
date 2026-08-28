@@ -1,0 +1,16 @@
+# source descriptor: tornado_archive
+# domain: hazards
+# status: PROPOSED — greenfield template
+id: tornado_archive
+domain: hazards
+role: TBD            # primary | corroborating | context | restricted
+authority: TBD
+rights:
+  license: TBD
+  attribution_required: true
+  redistribution: TBD
+sensitivity_floor: TBD
+update_cadence: TBD
+access_posture: TBD   # public | api_key | steward_only
+citation_template: "TBD"
+ingest_receipt_template: "data/receipts/ingest/hazards/tornado_archive/<run_id>.json"

@@ -1,0 +1,170 @@
+{
+  "kind": "planning_scenario_manifest",
+  "manifest_id": "kfm:planning-scenario:water-planning:synthetic-kansas-drought:v1",
+  "version": "1.0.0",
+  "status": "HELD",
+  "synthetic": true,
+  "scenario_type": "EXPLORATORY",
+  "title": "Synthetic Kansas drought-planning exploration",
+  "purpose": "Explore how a generalized planning surface could compare long-horizon water-demand, precipitation, and storage assumptions without predicting conditions or recommending action.",
+  "geography": {
+    "scope_type": "STATEWIDE_GENERALIZED",
+    "scope_ref": "fixture:geography:kansas:generalized",
+    "location_precision": "GENERALIZED",
+    "exact_geometry": false
+  },
+  "time_horizon": {
+    "baseline_as_of": "2026-01-01",
+    "horizon_start": "2030-01-01",
+    "horizon_end": "2040-12-31"
+  },
+  "input_variables": [
+    {
+      "variable_id": "demand-index",
+      "label": "Synthetic generalized water-demand index",
+      "source_ref": "fixture:evidence:demand-series",
+      "uncertainty": "HIGH"
+    },
+    {
+      "variable_id": "precipitation-index",
+      "label": "Synthetic generalized precipitation index",
+      "source_ref": "fixture:evidence:precipitation-series",
+      "uncertainty": "HIGH"
+    },
+    {
+      "variable_id": "storage-index",
+      "label": "Synthetic generalized storage index",
+      "source_ref": "fixture:evidence:reservoir-series",
+      "uncertainty": "HIGH"
+    }
+  ],
+  "data_vintages": [
+    {
+      "dataset_ref": "fixture:dataset:demand-series:v1",
+      "evidence_ref": "fixture:evidence:demand-series",
+      "observed_through": "2025-12-31",
+      "limitations": ["Synthetic values are supplied only to exercise the manifest shape."]
+    },
+    {
+      "dataset_ref": "fixture:dataset:precipitation-series:v1",
+      "evidence_ref": "fixture:evidence:precipitation-series",
+      "observed_through": "2025-12-31",
+      "limitations": ["No observed or forecast precipitation value is asserted."]
+    },
+    {
+      "dataset_ref": "fixture:dataset:reservoir-series:v1",
+      "evidence_ref": "fixture:evidence:reservoir-series",
+      "observed_through": "2025-12-31",
+      "limitations": ["No facility-level or operational storage fact is asserted."]
+    }
+  ],
+  "assumptions": [
+    {
+      "assumption_id": "assumption-demand-comparison",
+      "statement": "The example compares only generalized demand-index changes and does not infer household, agricultural, municipal, or industrial demand.",
+      "evidence_refs": ["fixture:evidence:demand-series"],
+      "uncertainty": "HIGH"
+    },
+    {
+      "assumption_id": "assumption-no-forecast",
+      "statement": "The horizon is an exploratory comparison window and not a forecast interval.",
+      "evidence_refs": ["fixture:evidence:precipitation-series"],
+      "uncertainty": "UNRESOLVED"
+    },
+    {
+      "assumption_id": "assumption-storage-comparison",
+      "statement": "The storage index is generalized and cannot support facility operations or emergency decisions.",
+      "evidence_refs": ["fixture:evidence:reservoir-series"],
+      "uncertainty": "HIGH"
+    }
+  ],
+  "equity_dimensions": [
+    {
+      "dimension_id": "equity-service-continuity",
+      "description": "Ask whether scenario assumptions could affect continuity of basic water service differently across generalized communities.",
+      "evidence_refs": ["fixture:evidence:participation-record"],
+      "limitation": "The fixture contains no community-level measurement or finding."
+    },
+    {
+      "dimension_id": "equity-water-cost-burden",
+      "description": "Ask whether cost burdens would need separate evidence before interpreting a scenario.",
+      "evidence_refs": ["fixture:evidence:participation-record"],
+      "limitation": "The fixture contains no household, ratepayer, or affordability data."
+    }
+  ],
+  "participation_refs": [
+    "fixture:participation:generalized-community-review",
+    "fixture:participation:water-planning-steward-review"
+  ],
+  "evidence_refs": [
+    "fixture:evidence:demand-series",
+    "fixture:evidence:participation-record",
+    "fixture:evidence:precipitation-series",
+    "fixture:evidence:reservoir-series"
+  ],
+  "model_refs": [],
+  "policy_decision_refs": [],
+  "review_refs": [],
+  "public_summary": {
+    "outcome": "ABSTAIN",
+    "heading": "Synthetic Kansas water-planning scenario",
+    "text": "This fixture demonstrates how a generalized planning scenario could expose assumptions and uncertainty. It does not describe current conditions, predict drought, recommend action, or establish a regulatory determination.",
+    "data_vintage_label": "Synthetic inputs labeled through 2025-12-31; no source-freshness claim.",
+    "assumptions_label": "Three explicit high or unresolved uncertainty assumptions govern this example.",
+    "limitations": [
+      "No current-condition, forecast, facility-operation, household, or regulatory claim is made.",
+      "Participation references are synthetic and do not establish consent, consensus, or completeness."
+    ],
+    "evidence_refs": [
+      "fixture:evidence:demand-series",
+      "fixture:evidence:participation-record",
+      "fixture:evidence:precipitation-series",
+      "fixture:evidence:reservoir-series"
+    ],
+    "non_authority_labels": [
+      "NOT_A_PREDICTION",
+      "NOT_EMERGENCY_ALERTING",
+      "NOT_REGULATORY_DETERMINATION"
+    ]
+  },
+  "drawer_payload": {
+    "outcome": "ABSTAIN",
+    "title": "Why this scenario abstains",
+    "scope_text": "Generalized statewide Kansas fixture with no exact geometry and no operational water-system detail.",
+    "horizon_text": "Baseline label: 2026-01-01. Exploratory comparison horizon: 2030-01-01 through 2040-12-31.",
+    "assumption_refs": [
+      "assumption-demand-comparison",
+      "assumption-no-forecast",
+      "assumption-storage-comparison"
+    ],
+    "equity_dimension_refs": [
+      "equity-service-continuity",
+      "equity-water-cost-burden"
+    ],
+    "participation_refs": [
+      "fixture:participation:generalized-community-review",
+      "fixture:participation:water-planning-steward-review"
+    ],
+    "evidence_refs": [
+      "fixture:evidence:demand-series",
+      "fixture:evidence:participation-record",
+      "fixture:evidence:precipitation-series",
+      "fixture:evidence:reservoir-series"
+    ],
+    "limitations": [
+      "Evidence references are fixture identifiers and are not resolved EvidenceBundles.",
+      "No policy or human review record is attached."
+    ]
+  },
+  "correction_path_ref": "fixture:correction-path:planning-scenario:v1",
+  "rollback_ref": "fixture:rollback:planning-scenario:v1",
+  "governance": {
+    "fixture_only": true,
+    "evidence_resolved": false,
+    "policy_approved": false,
+    "review_approved": false,
+    "release_authorized": false,
+    "publication_authorized": false
+  },
+  "spec_hash": "sha256:acd9fa4948c10beeefe9f626e348ebe6ebd95f83a1911f56fbf04188d0bf7dce"
+}

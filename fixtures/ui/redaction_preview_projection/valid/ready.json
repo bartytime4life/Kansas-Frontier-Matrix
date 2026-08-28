@@ -1,0 +1,14 @@
+{
+  "profile": "kfm.explorer.redaction-preview.public-safe.v1",
+  "preview_id": "kfm:redaction-preview:synthetic:county-001",
+  "outcome": "ANSWER",
+  "reason_code": "PREVIEW_READY",
+  "evaluated_at": "2026-08-10T18:00:00Z",
+  "release_candidate_ref": "kfm://release-candidate/synthetic/county-001@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "policy_decision_ref": "kfm://policy-decision/synthetic/redaction-001@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "redaction_receipt_ref": "kfm://redaction-receipt/synthetic/county-001@sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "geometry_transform": "GEOMETRY_GENERALIZED",
+  "suppression_transform": "LOW_COUNT_SUPPRESSED",
+  "maximum_public_zoom": 10,
+  "abstraction_kind": "COUNTY_AGGREGATE"
+}

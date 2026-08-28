@@ -1,0 +1,1 @@
+AEM_SELF_SUPERSESSION_DENIED	$.correction.supersedes_ref

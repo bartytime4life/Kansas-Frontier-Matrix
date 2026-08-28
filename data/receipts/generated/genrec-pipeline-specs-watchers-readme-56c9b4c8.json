@@ -1,0 +1,158 @@
+{
+  "receipt_id": "genrec-pipeline-specs-watchers-readme-56c9b4c8",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipeline_specs/watchers/README.md"
+  ],
+  "artifact_hashes": {
+    "pipeline_specs/watchers/README.md": "sha256:56c9b4c881b8a263f9bbe119295c553a9eec08964367a7993d0ff3bbb46991f4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-18"
+  },
+  "prompt_or_contract": "sha256:f29586b6038093736748f76ba4021964544cf8ff29c59e716321d09b802eb145",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository code search",
+      "repository file reads",
+      "remote branch and contents writes",
+      "local deterministic content validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:f29586b6038093736748f76ba4021964544cf8ff29c59e716321d09b802eb145"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/d68cc7344d50e3d739dee555ca3dbe28960369fc",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d68cc7344d50e3d739dee555ca3dbe28960369fc/pipeline_specs/watchers/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/72b394e5399a082dfa767039cd10cd2ca322b3ce/pipeline_specs/watchers/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d68cc7344d50e3d739dee555ca3dbe28960369fc/pipeline_specs/watchers/plants_drift.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d68cc7344d50e3d739dee555ca3dbe28960369fc/pipeline_specs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d68cc7344d50e3d739dee555ca3dbe28960369fc/pipelines/watchers/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d68cc7344d50e3d739dee555ca3dbe28960369fc/tools/watchers/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d68cc7344d50e3d739dee555ca3dbe28960369fc/pipeline_specs/flora/watchers/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d68cc7344d50e3d739dee555ca3dbe28960369fc/pipeline_specs/fauna/watchers/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d68cc7344d50e3d739dee555ca3dbe28960369fc/docs/adr/ADR-0017-source-descriptor-admission-process.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d68cc7344d50e3d739dee555ca3dbe28960369fc/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d68cc7344d50e3d739dee555ca3dbe28960369fc/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d68cc7344d50e3d739dee555ca3dbe28960369fc/data/receipts/generated/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d68cc7344d50e3d739dee555ca3dbe28960369fc/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "pipeline_specs/watchers/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, public visibility, authenticated admin/push permission, target path, immutable base, target blob, scoped review-branch route, API-only profile, two-file change budget, acceptance criteria, and stop conditions were resolved before mutation."
+    },
+    {
+      "gate": "base-drift-reconciliation",
+      "outcome": "PASS",
+      "reason": "Main advanced from 92fdb7fb00c4229e8a975d4ca9c5aa0275b5a8ef to d68cc7344d50e3d739dee555ca3dbe28960369fc through unrelated People/DNA/Land workflow work. The target retained blob 4a1f642dd29d9894a52d5a5d2fe914025e9a02f4, and the branch was created from the newer base."
+    },
+    {
+      "gate": "directory-instructions-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "AGENTS.md was not found at the repository root, pipeline_specs/, or pipeline_specs/watchers/. Parent and adjacent watcher boundaries were inspected, and no open pull request targeting pipeline_specs/watchers/README.md was found."
+    },
+    {
+      "gate": "repository-inventory-and-no-overclaim",
+      "outcome": "PASS",
+      "reason": "Direct reads established one seven-line PROPOSED plants_drift.yaml placeholder. Shared executable, tooling, Flora, and Fauna watcher READMEs were classified without upgrading documentation or path presence to active schema, parser, consumer, scheduler, source activation, receipt emission, CI enforcement, or runtime proof."
+    },
+    {
+      "gate": "watcher-non-publisher-and-sensitive-content-boundary",
+      "outcome": "PASS",
+      "reason": "The revision preserves watcher-as-non-publisher, no-admission, metadata-first, source-role, rights, sensitivity, security, evidence, release, correction, and rollback controls. It contains no source credentials, private endpoints, exact sensitive locations, restricted payloads, living-person records, DNA data, or publication action."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Indexed searches did not establish pull_request_target or workflow_run use in workflow YAML, self-hosted runners, or watcher-specific OIDC. The only indexed id-token: write workflow is unrelated MapLibre performance governance. Branch protection, effective default token permissions, required checks, and immutable action pinning remain NEEDS VERIFICATION."
+    },
+    {
+      "gate": "markdown-meta-and-navigation",
+      "outcome": "PASS",
+      "reason": "The final README has one H1, unique heading slugs, complete internal navigation, balanced code fences, a parseable KFM Meta Block, no trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "repository-relative-link-validation",
+      "outcome": "PASS",
+      "reason": "Every repository-relative Markdown link added to the README was verified through direct GitHub file reads or exact repository search at the pinned base."
+    },
+    {
+      "gate": "remote-readback-and-scope",
+      "outcome": "PASS",
+      "reason": "GitHub returned target blob d3f554a87a994ae32b9f3a6211a6224e5084b99f on commit 72b394e5399a082dfa767039cd10cd2ca322b3ce, matching the locally recomputed Git blob SHA. Before receipt emission, the branch contained exactly one modified path: pipeline_specs/watchers/README.md."
+    },
+    {
+      "gate": "repository-native-execution",
+      "outcome": "SKIPPED",
+      "reason": "API_ONLY_STRICT was selected. The repository was not cloned and repository-native test commands were not executed locally. Pull-request workflow results will be inspected after PR creation; pending or unavailable checks will not be reported as passing."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "user-request",
+      "validated": true,
+      "evidence_ref": "prompt://update-pipeline-specs-watchers-readme#sha256=f29586b6038093736748f76ba4021964544cf8ff29c59e716321d09b802eb145"
+    },
+    {
+      "id": "target-baseline-and-remote-readback",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/72b394e5399a082dfa767039cd10cd2ca322b3ce/pipeline_specs/watchers/README.md"
+    },
+    {
+      "id": "direct-watcher-spec-inventory",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d68cc7344d50e3d739dee555ca3dbe28960369fc/pipeline_specs/watchers/plants_drift.yaml"
+    },
+    {
+      "id": "watcher-topology-and-placement",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d68cc7344d50e3d739dee555ca3dbe28960369fc/tools/watchers/README.md"
+    },
+    {
+      "id": "domain-watcher-placement-conflict",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d68cc7344d50e3d739dee555ca3dbe28960369fc/pipeline_specs/flora/watchers/README.md"
+    },
+    {
+      "id": "source-admission-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d68cc7344d50e3d739dee555ca3dbe28960369fc/docs/adr/ADR-0017-source-descriptor-admission-process.md"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d68cc7344d50e3d739dee555ca3dbe28960369fc/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-18T12:41:09-05:00",
+  "emitter": "openai-chatgpt/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only revision on a scoped API-only review branch. The README replaces speculative shared watcher planning with current repository evidence, preserves watcher non-publisher and sensitive-data boundaries, and changes no watcher YAML, executable code, source activation, policy, schema, test, workflow, lifecycle data, receipt instance beyond this provenance record, release object, runtime behavior, or public artifact. This receipt is process provenance only; it is not factual proof, policy permission, human approval, release authority, or publication authority."
+}

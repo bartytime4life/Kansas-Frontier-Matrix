@@ -1,0 +1,364 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/domains/agriculture/hls_ndvi_zonal_materiality_assessment.schema.json",
+  "title": "HlsNdviZonalMaterialityAssessment",
+  "description": "Fixture-only clear-pixel NDVI polygon materiality assessment; not a publish decision.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "assessment_id",
+    "assessed_at",
+    "support",
+    "product",
+    "grid",
+    "thresholds",
+    "prior",
+    "current",
+    "computed",
+    "decision",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "HlsNdviZonalMaterialityAssessment"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "assessment_id": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 180
+    },
+    "assessed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "id"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "county",
+            "huc12"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[0-9]{5,12}$"
+        }
+      }
+    },
+    "product": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "collection",
+        "ndvi_source",
+        "mask_profile",
+        "statistic_method"
+      ],
+      "properties": {
+        "collection": {
+          "const": "HLS"
+        },
+        "ndvi_source": {
+          "enum": [
+            "VI_ASSET",
+            "NIR_RED_FALLBACK"
+          ]
+        },
+        "mask_profile": {
+          "const": "clear_acceptable_aerosol_no_adjacent_cloud"
+        },
+        "statistic_method": {
+          "const": "area_weighted_clear_pixels"
+        }
+      }
+    },
+    "grid": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "crs",
+        "resolution_m",
+        "alignment_hash"
+      ],
+      "properties": {
+        "crs": {
+          "const": "EPSG:5070"
+        },
+        "resolution_m": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "alignment_hash": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      }
+    },
+    "thresholds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "min_valid_fraction",
+        "min_absolute_change",
+        "min_relative_change"
+      ],
+      "properties": {
+        "min_valid_fraction": {
+          "const": 0.6
+        },
+        "min_absolute_change": {
+          "const": 0.05
+        },
+        "min_relative_change": {
+          "const": 0.1
+        }
+      }
+    },
+    "prior": {
+      "$ref": "#/$defs/snapshot"
+    },
+    "current": {
+      "$ref": "#/$defs/snapshot"
+    },
+    "computed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_changed",
+        "absolute_change",
+        "relative_change",
+        "signal_changed",
+        "current_valid_fraction"
+      ],
+      "properties": {
+        "source_changed": {
+          "type": "boolean"
+        },
+        "absolute_change": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "relative_change": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "signal_changed": {
+          "type": "boolean"
+        },
+        "current_valid_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "reasons"
+      ],
+      "properties": {
+        "outcome": {
+          "enum": [
+            "MATERIAL_CHANGE_CANDIDATE",
+            "NO_MATERIAL_CHANGE",
+            "HOLD"
+          ]
+        },
+        "reasons": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "SIGNAL_BELOW_THRESHOLD",
+              "SOURCE_UNCHANGED",
+              "VALID_FRACTION_BELOW_MINIMUM"
+            ]
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "promotion_allowed",
+        "release_state",
+        "public_use_allowed"
+      ],
+      "properties": {
+        "fixture_only": {
+          "const": true
+        },
+        "promotion_allowed": {
+          "const": false
+        },
+        "release_state": {
+          "const": "not_released"
+        },
+        "public_use_allowed": {
+          "const": false
+        }
+      }
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  },
+  "$defs": {
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stac_item_id",
+        "collection_version",
+        "stac_updated",
+        "window_start",
+        "window_end",
+        "asset_digest",
+        "source_spec_hash",
+        "evidence_ref",
+        "pixel_counts",
+        "statistics",
+        "valid_mask_footprint_hash"
+      ],
+      "properties": {
+        "stac_item_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "collection_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stac_updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "window_start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "window_end": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "asset_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "source_spec_hash": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "evidence_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pixel_counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "total",
+            "valid",
+            "cloud",
+            "shadow",
+            "adjacent_cloud",
+            "high_aerosol",
+            "snow",
+            "water",
+            "other_invalid"
+          ],
+          "properties": {
+            "total": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "valid": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "cloud": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "shadow": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "adjacent_cloud": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "high_aerosol": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "snow": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "water": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "other_invalid": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "statistics": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mean_ndvi",
+            "median_ndvi",
+            "p95_ndvi"
+          ],
+          "properties": {
+            "mean_ndvi": {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            "median_ndvi": {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            "p95_ndvi": {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            }
+          }
+        },
+        "valid_mask_footprint_hash": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      }
+    }
+  }
+}

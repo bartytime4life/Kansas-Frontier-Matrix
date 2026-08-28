@@ -1,0 +1,194 @@
+{
+  "base": {
+    "schema_version": "1.0.0",
+    "manifest_id": "kfm:pm25-colocation-manifest:000000000000000000000000",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "status": "PROPOSED_INACTIVE",
+    "sensor_ids": [
+      "fixture://sensor/pm25-alpha",
+      "fixture://sensor/pm25-bravo"
+    ],
+    "reference_site": {
+      "site_ref": "fixture://reference-site/ks-central-01",
+      "source_descriptor_ref": "source://synthetic/reference-monitor-v1",
+      "evidence_refs": ["evidence://reference-site/ks-central-01"]
+    },
+    "window": {
+      "started_at": "2026-01-01T00:00:00Z",
+      "ended_at": "2026-04-01T00:00:00Z"
+    },
+    "data_completeness": {
+      "expected_interval_minutes": 60,
+      "coverage_status": "PARTIAL_DECLARED_INTERVAL",
+      "sensors": [
+        {
+          "sensor_id": "fixture://sensor/pm25-alpha",
+          "expected_count": 2160,
+          "observed_count": 2160,
+          "completeness_fraction": 1.0,
+          "evidence_refs": ["evidence://completeness/alpha"]
+        },
+        {
+          "sensor_id": "fixture://sensor/pm25-bravo",
+          "expected_count": 2160,
+          "observed_count": 1944,
+          "completeness_fraction": 0.9,
+          "evidence_refs": ["evidence://completeness/bravo"]
+        }
+      ]
+    },
+    "seasonal_coverage": {
+      "seasons": ["METEOROLOGICAL_SPRING", "METEOROLOGICAL_WINTER"],
+      "coverage_status": "PARTIAL_DECLARED_INTERVAL",
+      "evidence_refs": ["evidence://seasonal/2026-q1"]
+    },
+    "validation_split": {
+      "method": "TIME_BLOCKED",
+      "partitions": [
+        {
+          "name": "CALIBRATION",
+          "started_at": "2026-01-01T00:00:00Z",
+          "ended_at": "2026-02-01T00:00:00Z",
+          "sensor_ids": ["fixture://sensor/pm25-alpha", "fixture://sensor/pm25-bravo"],
+          "evidence_refs": ["evidence://split/calibration"]
+        },
+        {
+          "name": "VALIDATION",
+          "started_at": "2026-02-01T00:00:00Z",
+          "ended_at": "2026-03-01T00:00:00Z",
+          "sensor_ids": ["fixture://sensor/pm25-alpha", "fixture://sensor/pm25-bravo"],
+          "evidence_refs": ["evidence://split/validation"]
+        },
+        {
+          "name": "TEST",
+          "started_at": "2026-03-01T00:00:00Z",
+          "ended_at": "2026-04-01T00:00:00Z",
+          "sensor_ids": ["fixture://sensor/pm25-alpha", "fixture://sensor/pm25-bravo"],
+          "evidence_refs": ["evidence://split/test"]
+        }
+      ]
+    },
+    "generalization_assumptions": [
+      "Declared fixture intervals are representative only inside this synthetic corpus.",
+      "Fixture evidence is not a substitute for field validation."
+    ],
+    "evidence_refs": [
+      "evidence://completeness/alpha",
+      "evidence://completeness/bravo",
+      "evidence://reference-site/ks-central-01",
+      "evidence://seasonal/2026-q1",
+      "evidence://split/calibration",
+      "evidence://split/test",
+      "evidence://split/validation"
+    ],
+    "controls": {
+      "fixture_only": true,
+      "live_sensor_evaluated": false,
+      "scientific_validity_claimed": false,
+      "source_admitted": false,
+      "policy_evaluated": false,
+      "review_approved": false,
+      "promotion_eligible": false,
+      "release_authorized": false,
+      "publication_authorized": false,
+      "public_health_authority": false,
+      "reference_grade_equivalence_claimed": false
+    },
+    "non_effects": [
+      "NO_LIVE_SENSOR_EVALUATION",
+      "NO_POLICY_DECISION",
+      "NO_PROMOTION",
+      "NO_PUBLICATION",
+      "NO_PUBLIC_HEALTH_GUIDANCE",
+      "NO_REFERENCE_GRADE_EQUIVALENCE",
+      "NO_RELEASE",
+      "NO_SCIENTIFIC_VALIDITY_CLAIM",
+      "NO_SOURCE_ADMISSION"
+    ]
+  },
+  "cases": [
+    {
+      "id": "baseline-time-blocked-pass",
+      "expected": {"outcome": "PASS", "findings": []}
+    },
+    {
+      "id": "partial-coverage-pass",
+      "patch": {"seasonal_coverage": {"coverage_status": "PARTIAL_DECLARED_INTERVAL"}},
+      "expected": {"outcome": "PASS", "findings": []}
+    },
+    {
+      "id": "assumptions-not-canonical",
+      "patch": {"generalization_assumptions": ["Fixture evidence is not a substitute for field validation.", "Declared fixture intervals are representative only inside this synthetic corpus."]},
+      "expected": {"outcome": "FAIL", "findings": ["ARRAYS_NOT_CANONICAL"]}
+    },
+    {
+      "id": "sensor-set-drift",
+      "patch": {"sensor_ids": ["fixture://sensor/pm25-alpha", "fixture://sensor/pm25-charlie"]},
+      "expected": {"outcome": "FAIL", "findings": ["COMPLETENESS_SENSOR_SET_MISMATCH", "PARTITION_SENSOR_UNKNOWN"]}
+    },
+    {
+      "id": "completeness-fraction-drift",
+      "patch": {
+        "data_completeness": {
+          "sensors": [
+            {"sensor_id": "fixture://sensor/pm25-alpha", "expected_count": 2160, "observed_count": 2160, "completeness_fraction": 0.99, "evidence_refs": ["evidence://completeness/alpha"]},
+            {"sensor_id": "fixture://sensor/pm25-bravo", "expected_count": 2160, "observed_count": 1944, "completeness_fraction": 0.9, "evidence_refs": ["evidence://completeness/bravo"]}
+          ]
+        }
+      },
+      "expected": {"outcome": "FAIL", "findings": ["COMPLETENESS_FRACTION_MISMATCH"]}
+    },
+    {
+      "id": "window-order-invalid",
+      "patch": {"window": {"ended_at": "2026-01-01T00:00:00Z"}},
+      "expected": {"outcome": "FAIL", "findings": ["PARTITION_OUTSIDE_WINDOW", "WINDOW_ORDER_INVALID"]}
+    },
+    {
+      "id": "partition-outside-window",
+      "patch": {"window": {"ended_at": "2026-03-15T00:00:00Z"}},
+      "expected": {"outcome": "FAIL", "findings": ["PARTITION_OUTSIDE_WINDOW"]}
+    },
+    {
+      "id": "partition-overlap",
+      "patch": {
+        "validation_split": {
+          "partitions": [
+            {"name": "CALIBRATION", "started_at": "2026-01-01T00:00:00Z", "ended_at": "2026-02-01T00:00:00Z", "sensor_ids": ["fixture://sensor/pm25-alpha", "fixture://sensor/pm25-bravo"], "evidence_refs": ["evidence://split/calibration"]},
+            {"name": "VALIDATION", "started_at": "2026-01-15T00:00:00Z", "ended_at": "2026-03-01T00:00:00Z", "sensor_ids": ["fixture://sensor/pm25-alpha", "fixture://sensor/pm25-bravo"], "evidence_refs": ["evidence://split/validation"]},
+            {"name": "TEST", "started_at": "2026-03-01T00:00:00Z", "ended_at": "2026-04-01T00:00:00Z", "sensor_ids": ["fixture://sensor/pm25-alpha", "fixture://sensor/pm25-bravo"], "evidence_refs": ["evidence://split/test"]}
+          ]
+        }
+      },
+      "expected": {"outcome": "FAIL", "findings": ["PARTITION_OVERLAP"]}
+    },
+    {
+      "id": "validation-partition-missing",
+      "patch": {
+        "validation_split": {
+          "partitions": [
+            {"name": "CALIBRATION", "started_at": "2026-01-01T00:00:00Z", "ended_at": "2026-02-01T00:00:00Z", "sensor_ids": ["fixture://sensor/pm25-alpha", "fixture://sensor/pm25-bravo"], "evidence_refs": ["evidence://split/calibration"]},
+            {"name": "TEST", "started_at": "2026-02-01T00:00:00Z", "ended_at": "2026-03-01T00:00:00Z", "sensor_ids": ["fixture://sensor/pm25-alpha", "fixture://sensor/pm25-bravo"], "evidence_refs": ["evidence://split/validation"]},
+            {"name": "TEST", "started_at": "2026-03-01T00:00:00Z", "ended_at": "2026-04-01T00:00:00Z", "sensor_ids": ["fixture://sensor/pm25-alpha", "fixture://sensor/pm25-bravo"], "evidence_refs": ["evidence://split/test"]}
+          ]
+        }
+      },
+      "expected": {"outcome": "FAIL", "findings": ["VALIDATION_PARTITION_REQUIRED"]}
+    },
+    {
+      "id": "evidence-closure-drift",
+      "patch": {"evidence_refs": ["evidence://completeness/alpha", "evidence://completeness/bravo", "evidence://reference-site/ks-central-01", "evidence://seasonal/2026-q1", "evidence://split/calibration", "evidence://split/test"]},
+      "expected": {"outcome": "FAIL", "findings": ["EVIDENCE_REF_CLOSURE_MISMATCH"]}
+    },
+    {
+      "id": "promotion-overclaim",
+      "patch": {"controls": {"promotion_eligible": true}},
+      "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}
+    },
+    {
+      "id": "stale-spec-hash",
+      "patch": {"spec_hash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"},
+      "recompute_identity": false,
+      "expected": {"outcome": "FAIL", "findings": ["SPEC_HASH_MISMATCH"]}
+    }
+  ]
+}

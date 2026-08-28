@@ -1,0 +1,248 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/temporal_retention_disposition_assessment.schema.json",
+  "title": "TemporalRetentionDispositionAssessment",
+  "description": "Fixture-only assessment of a proposed temporal-record retention, archive, compaction, or erasure disposition without policy, mutation, deletion, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "assessment_id",
+    "assessment_state",
+    "subject",
+    "dependencies",
+    "retention_controls",
+    "decision",
+    "authority",
+    "limitations",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": { "const": "TemporalRetentionDispositionAssessment" },
+    "schema_version": { "const": "1.0.0" },
+    "profile": { "const": "kfm.governance.temporal-retention-disposition.fixture.v1" },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:temporal-retention:[a-f0-9]{24}$"
+    },
+    "assessment_state": { "enum": ["COMPLETE", "ERROR"] },
+    "subject": { "$ref": "#/$defs/subject" },
+    "dependencies": { "$ref": "#/$defs/dependencies" },
+    "retention_controls": { "$ref": "#/$defs/retention_controls" },
+    "decision": { "$ref": "#/$defs/decision" },
+    "authority": { "$ref": "#/$defs/authority" },
+    "limitations": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "fixture_only",
+          "no_disposition_execution",
+          "no_evidence_or_history_deletion",
+          "no_policy_or_erasure_authority",
+          "no_release_or_publication_authority"
+        ]
+      }
+    },
+    "spec_hash": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "nullable_datetime": {
+      "oneOf": [
+        { "$ref": "#/$defs/aware_datetime" },
+        { "type": "null" }
+      ]
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^kfm://[a-z][a-z0-9-]*/[A-Za-z0-9][A-Za-z0-9._~:/-]{2,255}$"
+        },
+        { "type": "null" }
+      ]
+    },
+    "ref_array": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^kfm://[a-z][a-z0-9-]*/[A-Za-z0-9][A-Za-z0-9._~:/-]{2,255}$"
+      }
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_family_id",
+        "record_scope_ref",
+        "disposition",
+        "proposed_at",
+        "effective_at",
+        "input_record_count",
+        "resulting_record_count",
+        "history_preserved",
+        "reversible"
+      ],
+      "properties": {
+        "record_family_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$",
+          "maxLength": 128
+        },
+        "record_scope_ref": {
+          "type": "string",
+          "pattern": "^kfm://record-scope/[A-Za-z0-9][A-Za-z0-9._~:/-]{2,255}$"
+        },
+        "disposition": { "enum": ["RETAIN", "ARCHIVE", "COMPACT", "ERASE"] },
+        "proposed_at": { "$ref": "#/$defs/aware_datetime" },
+        "effective_at": { "$ref": "#/$defs/nullable_datetime" },
+        "input_record_count": { "type": "integer", "minimum": 1, "maximum": 1000000000 },
+        "resulting_record_count": { "type": "integer", "minimum": 0, "maximum": 1000000000 },
+        "history_preserved": { "type": "boolean" },
+        "reversible": { "type": "boolean" }
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_state",
+        "evidence_refs",
+        "correction_state",
+        "correction_refs",
+        "release_state",
+        "release_refs",
+        "rollback_target_ref"
+      ],
+      "properties": {
+        "evidence_state": { "enum": ["NONE", "RESOLVED", "UNRESOLVED"] },
+        "evidence_refs": { "$ref": "#/$defs/ref_array" },
+        "correction_state": { "enum": ["NONE", "RESOLVED", "UNRESOLVED"] },
+        "correction_refs": { "$ref": "#/$defs/ref_array" },
+        "release_state": { "enum": ["NONE", "WITHDRAWN", "ACTIVE", "UNKNOWN"] },
+        "release_refs": { "$ref": "#/$defs/ref_array" },
+        "rollback_target_ref": { "$ref": "#/$defs/nullable_ref" }
+      }
+    },
+    "retention_controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy_state",
+        "policy_ref",
+        "legal_basis_state",
+        "legal_basis_ref",
+        "erasure_obligation",
+        "archive_ref",
+        "disposition_receipt_ref",
+        "tombstone_ref",
+        "proof_preservation",
+        "minimization_required"
+      ],
+      "properties": {
+        "policy_state": { "enum": ["VERIFIED", "UNKNOWN", "DENIED"] },
+        "policy_ref": { "$ref": "#/$defs/nullable_ref" },
+        "legal_basis_state": { "enum": ["NOT_REQUIRED", "VERIFIED", "UNKNOWN", "DENIED"] },
+        "legal_basis_ref": { "$ref": "#/$defs/nullable_ref" },
+        "erasure_obligation": { "enum": ["NONE", "VERIFIED", "UNRESOLVED"] },
+        "archive_ref": { "$ref": "#/$defs/nullable_ref" },
+        "disposition_receipt_ref": { "$ref": "#/$defs/nullable_ref" },
+        "tombstone_ref": { "$ref": "#/$defs/nullable_ref" },
+        "proof_preservation": { "enum": ["FULL", "DIGEST_ONLY", "NONE"] },
+        "minimization_required": { "type": "boolean" }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "recommendation",
+        "reason_codes",
+        "review_required",
+        "execution_authorized"
+      ],
+      "properties": {
+        "outcome": { "enum": ["PASS", "ABSTAIN", "DENY", "ERROR"] },
+        "recommendation": {
+          "enum": ["READY_FOR_REVIEW", "HOLD_FOR_POLICY", "REJECT", "VALIDATOR_ERROR"]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "ACTIVE_RELEASE_BLOCKS_ERASURE",
+              "ACTIVE_RELEASE_REQUIRES_HANDOFF",
+              "ARCHIVE_CONTROLS_COHERENT",
+              "ARCHIVE_CONTROLS_INCOMPLETE",
+              "COMPACTION_CONTROLS_COHERENT",
+              "COMPACTION_CONTROLS_INCOMPLETE",
+              "CONFLICTING_ERASURE_OBLIGATION",
+              "DEPENDENCY_CLOSURE_UNRESOLVED",
+              "ERASURE_OBLIGATION_UNRESOLVED",
+              "ERASURE_REQUIRES_SEPARATE_AUTHORITY",
+              "ERASURE_STATE_INCOHERENT",
+              "ERASURE_WITHOUT_OBLIGATION",
+              "POLICY_OR_LEGAL_BASIS_DENIED",
+              "RETENTION_CONTROLS_COHERENT",
+              "RETENTION_POLICY_UNRESOLVED",
+              "RETENTION_STATE_INCOHERENT",
+              "VALIDATOR_ERROR"
+            ]
+          }
+        },
+        "review_required": { "const": true },
+        "execution_authorized": { "const": false }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "retention_policy_authority",
+        "erasure_authority",
+        "deletion_authority",
+        "evidence_mutation_authority",
+        "correction_authority",
+        "release_authority",
+        "lifecycle_write_authority",
+        "publication_authority"
+      ],
+      "properties": {
+        "retention_policy_authority": { "const": false },
+        "erasure_authority": { "const": false },
+        "deletion_authority": { "const": false },
+        "evidence_mutation_authority": { "const": false },
+        "correction_authority": { "const": false },
+        "release_authority": { "const": false },
+        "lifecycle_write_authority": { "const": false },
+        "publication_authority": { "const": false }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/governance/temporal_retention_disposition_assessment.md",
+    "fixtures": "fixtures/contracts/v1/governance/temporal_retention_disposition_assessment/cases.json",
+    "validator": "tools/validators/governance/validate_temporal_retention_disposition_assessment.py",
+    "tests": "tests/validators/governance/test_temporal_retention_disposition_assessment.py"
+  }
+}

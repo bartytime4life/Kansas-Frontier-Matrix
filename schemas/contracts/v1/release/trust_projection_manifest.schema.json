@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/release/trust_projection_manifest.schema.json",
+  "title": "TrustProjectionManifest",
+  "description": "Fixture-first union of local integrity, time-slice, review-packet, and governance-change projections.",
+  "oneOf": [
+    {"$ref": "#/$defs/assetIntegrity"},
+    {"$ref": "#/$defs/timeSlice"},
+    {"$ref": "#/$defs/reviewPacket"},
+    {"$ref": "#/$defs/governanceChange"}
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "ref": {"type": "string", "minLength": 8, "maxLength": 320},
+    "commonGovernance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["fixture_only", "lifecycle_write", "promotion_authorized", "release_authorized", "publication_authorized"],
+      "properties": {
+        "fixture_only": {"const": true},
+        "lifecycle_write": {"const": false},
+        "promotion_authorized": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false}
+      }
+    },
+    "assetIntegrity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["object_type", "schema_version", "result_id", "evaluated_at", "asset_ref", "media_type", "expected_sha256", "observed_sha256", "byte_length", "outcome", "checkpoint_receipt_refs", "release_manifest_ref", "evidence_bundle_ref", "governance", "spec_hash"],
+      "properties": {
+        "object_type": {"const": "AssetIntegrityResult"},
+        "schema_version": {"const": "1.0.0"},
+        "result_id": {"$ref": "#/$defs/ref"},
+        "evaluated_at": {"type": "string", "format": "date-time"},
+        "asset_ref": {"$ref": "#/$defs/ref"},
+        "media_type": {"enum": ["PMTILES", "COG"]},
+        "expected_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "observed_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "byte_length": {"type": ["integer", "null"], "minimum": 0},
+        "outcome": {"enum": ["VERIFIED", "MISMATCH", "MISSING_DECLARATION", "INTERRUPTED", "ERROR"]},
+        "checkpoint_receipt_refs": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/ref"}},
+        "release_manifest_ref": {"$ref": "#/$defs/ref"},
+        "evidence_bundle_ref": {"$ref": "#/$defs/ref"},
+        "governance": {"$ref": "#/$defs/commonGovernance"},
+        "spec_hash": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "timeSlice": {
+      "type": "object", "additionalProperties": false,
+      "required": ["object_type", "schema_version", "time_slice_id", "valid_time", "assets", "release_manifest_ref", "evidence_bundle_ref", "status", "correction_ref", "rollback_ref", "governance", "spec_hash"],
+      "properties": {
+        "object_type": {"const": "TimeSliceManifest"},
+        "schema_version": {"const": "1.0.0"},
+        "time_slice_id": {"$ref": "#/$defs/ref"},
+        "valid_time": {
+          "type": "object", "additionalProperties": false,
+          "required": ["start", "end"],
+          "properties": {"start": {"type": "string", "format": "date-time"}, "end": {"type": "string", "format": "date-time"}}
+        },
+        "assets": {
+          "type": "array", "minItems": 1, "maxItems": 32,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["asset_ref", "media_type", "sha256"],
+            "properties": {"asset_ref": {"$ref": "#/$defs/ref"}, "media_type": {"enum": ["PMTILES", "COG"]}, "sha256": {"$ref": "#/$defs/sha256"}}
+          }
+        },
+        "release_manifest_ref": {"$ref": "#/$defs/ref"},
+        "evidence_bundle_ref": {"$ref": "#/$defs/ref"},
+        "status": {"enum": ["RELEASED", "CORRECTED", "WITHDRAWN"]},
+        "correction_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+        "rollback_ref": {"$ref": "#/$defs/ref"},
+        "governance": {"$ref": "#/$defs/commonGovernance"},
+        "spec_hash": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "reviewPacket": {
+      "type": "object", "additionalProperties": false,
+      "required": ["object_type", "schema_version", "packet_id", "subject_ref", "issued_at", "expires_at", "evaluated_at", "revoked_at", "status", "access_mode", "approval_authority", "review_record_refs", "release_manifest_ref", "governance", "spec_hash"],
+      "properties": {
+        "object_type": {"const": "ReviewPacketReference"},
+        "schema_version": {"const": "1.0.0"},
+        "packet_id": {"$ref": "#/$defs/ref"},
+        "subject_ref": {"$ref": "#/$defs/ref"},
+        "issued_at": {"type": "string", "format": "date-time"},
+        "expires_at": {"type": "string", "format": "date-time"},
+        "evaluated_at": {"type": "string", "format": "date-time"},
+        "revoked_at": {"oneOf": [{"type": "string", "format": "date-time"}, {"type": "null"}]},
+        "status": {"enum": ["ACTIVE", "EXPIRED", "REVOKED"]},
+        "access_mode": {"const": "READ_ONLY"},
+        "approval_authority": {"const": false},
+        "review_record_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/ref"}},
+        "release_manifest_ref": {"$ref": "#/$defs/ref"},
+        "governance": {"$ref": "#/$defs/commonGovernance"},
+        "spec_hash": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "governanceChange": {
+      "type": "object", "additionalProperties": false,
+      "required": ["object_type", "schema_version", "change_id", "event_type", "occurred_at", "owner_role", "changed_paths", "decision_refs", "rollback_refs", "append_only", "prior_record_ref", "governance", "spec_hash"],
+      "properties": {
+        "object_type": {"const": "GovernanceChangeRecord"},
+        "schema_version": {"const": "1.0.0"},
+        "change_id": {"$ref": "#/$defs/ref"},
+        "event_type": {"enum": ["POLICY_UPDATED", "WAIVER_ISSUED", "WAIVER_EXPIRED", "WAIVER_REVOKED", "MILESTONE_TRANSITION", "VOCABULARY_UPDATED", "REGISTER_UPDATED"]},
+        "occurred_at": {"type": "string", "format": "date-time"},
+        "owner_role": {"type": "string", "minLength": 3, "maxLength": 120},
+        "changed_paths": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 320}},
+        "decision_refs": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/ref"}},
+        "rollback_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/ref"}},
+        "append_only": {"const": true},
+        "prior_record_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+        "governance": {"$ref": "#/$defs/commonGovernance"},
+        "spec_hash": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}

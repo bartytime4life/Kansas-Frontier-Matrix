@@ -1,0 +1,4 @@
+# packages/domains/archaeology pyproject — greenfield placeholder
+[project]
+name = "kfm-domain-archaeology"
+version = "0.0.0"

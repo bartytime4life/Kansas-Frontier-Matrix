@@ -1,0 +1,52 @@
+{
+  "object_type": "RepresentationReceipt",
+  "schema_version": "1.0.0",
+  "receipt_id": "representation-receipt:example:synthetic-scene:20260804",
+  "subject_ref": "kfm://claim/example",
+  "representation_type": "THREE_D_SCENE",
+  "evidence_bundle_refs": [
+    "kfm://evidence-bundle/example"
+  ],
+  "inputs": [
+    {
+      "artifact_ref": "kfm://artifact/input/example",
+      "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ],
+  "outputs": [
+    {
+      "artifact_ref": "kfm://artifact/output/example",
+      "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "media_type": "model/gltf+json"
+    }
+  ],
+  "method": {
+    "method_id": "kfm://method/tile-export",
+    "method_version": "1.0.0",
+    "spec_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "parameters_hash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+  },
+  "fidelity": {
+    "evidence_fidelity": "MODELED",
+    "representation_fidelity": "SYNTHETIC",
+    "information_loss": true,
+    "loss_notes": "Scene is a reconstruction, not direct observation."
+  },
+  "reality_boundary_note_ref": null,
+  "timing": {
+    "represented_at": "2026-08-04T12:00:00Z",
+    "input_as_of": "2026-08-04T11:00:00Z"
+  },
+  "lineage": {
+    "supersedes": null,
+    "superseded_by": null
+  },
+  "governance": {
+    "authority_created": false,
+    "policy_evaluated": false,
+    "review_completed": false,
+    "release_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  }
+}

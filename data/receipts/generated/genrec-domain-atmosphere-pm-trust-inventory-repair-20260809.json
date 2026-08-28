@@ -1,0 +1,52 @@
+{
+  "receipt_id": "genrec-domain-atmosphere-pm-trust-inventory-repair-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/domain-atmosphere.yml",
+    ".github/workflows/pm25-trigger-candidate-assessment.yml",
+    "data/receipts/generated/genrec-pass32-pm25-trigger-candidate-20260810.json"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/domain-atmosphere.yml": "sha256:0982dbf93e731e67f5ee3d095de079a7234ebb328476a621395049d87cb6fefb",
+    ".github/workflows/pm25-trigger-candidate-assessment.yml": "sha256:4dab99867b702c28a614c2d65b9d00797521a0e82a73ee7f634f46181b6813e9",
+    "data/receipts/generated/genrec-pass32-pm25-trigger-candidate-20260810.json": "sha256:9312602aee2ca5477ee60a9233f4a375fdfeb0345192df1f6a0f2c6f98b66802"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "Codex", "version": "GPT-5"},
+  "prompt_or_contract": "sha256:3c98c9e41cc8540cae1092d0d617e698c8106390fe030daedc35a8f432662a24",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": ["GitHub connector", "local deterministic validation"]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@4e4eb979caae21922af2217247ade970bd70cf82:.github/workflows/domain-atmosphere.yml",
+      "github:bartytime4life/Kansas-Frontier-Matrix#2377"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/domain-atmosphere.yml": "PROPOSED",
+    ".github/workflows/pm25-trigger-candidate-assessment.yml": "PROPOSED",
+    "data/receipts/generated/genrec-pass32-pm25-trigger-candidate-20260810.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {"gate": "inherited-ci-defect-reproduction", "outcome": "PASS", "reason": "Merged PR #2377 added a substantive Atmosphere validator while the explicit validator inventory at the exact main head omitted its path."},
+    {"gate": "minimal-repair-scope", "outcome": "PASS", "reason": "The change adds exactly the already-merged validator path to the existing allowlist and changes no validator, fixture, semantic contract, policy, or authority surface."},
+    {"gate": "trigger-receipt-rollover", "outcome": "PASS", "reason": "The PM2.5 trigger workflow now validates a superseding current-byte receipt whose stable packet excludes the independently changing shared Atmosphere inventory."},
+    {"gate": "generated-receipt-integrity", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-checks", "outcome": "SKIPPED", "reason": "Recorded before the draft pull request existed; GitHub Actions remains authoritative for the branch head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Awaiting an authorized repository reviewer."}
+  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "docs/doctrine/directory-rules.md"],
+  "citations": [],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-10T00:28:11Z",
+  "emitter": "OpenAI Codex",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Narrow CI repair for an already-merged substantive validator plus the receipt rollover required because the prior trigger receipt bound the independently changing shared Atmosphere inventory. It adds no semantic, source, policy, review, promotion, release, publication, or merge authority."
+}

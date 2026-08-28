@@ -1,0 +1,71 @@
+{
+  "receipt_id": "genrec-pass18-clustering-output-role-assessment-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/clustering-output-role-assessment.yml",
+    "contracts/evidence/clustering_output_role_assessment.md",
+    "docs/intake/exploratory/pass-18-clustering-output-role-assessment-source-map.md",
+    "fixtures/contracts/v1/evidence/clustering_output_role_assessment/cases.json",
+    "schemas/contracts/v1/evidence/clustering_output_role_assessment.schema.json",
+    "tests/validators/evidence/test_validate_clustering_output_role_assessment.py",
+    "tools/validators/evidence/validate_clustering_output_role_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/clustering-output-role-assessment.yml": "sha256:b597a713a8612af0616488733df912ff3681f20eb62b34176f46779151398362",
+    "contracts/evidence/clustering_output_role_assessment.md": "sha256:0a02a752109e81a0d9e2643db7374b049672ea38e6152383f0c7d60fd45a7cc9",
+    "docs/intake/exploratory/pass-18-clustering-output-role-assessment-source-map.md": "sha256:af1e41d43524ee8058c536c471136635b71124a57d344aaf8de73c1ca5195138",
+    "fixtures/contracts/v1/evidence/clustering_output_role_assessment/cases.json": "sha256:7321fc321b3510e3b7022df82eeaa9413d6302e3f4f52fa24bdb09ba2b925abb",
+    "schemas/contracts/v1/evidence/clustering_output_role_assessment.schema.json": "sha256:6606f184d2f5985685340b0944732d4a888fca3eb501353b89ec6b1343e001d6",
+    "tests/validators/evidence/test_validate_clustering_output_role_assessment.py": "sha256:0b5e6cffcc72d2be40570f7d8064e694bb8971a767edaa190dc03c2e2b70651f",
+    "tools/validators/evidence/validate_clustering_output_role_assessment.py": "sha256:2a8b320dd1d5aacd332c13b9124aa9f7774683dcef4bb399a4b198e66b8082e1"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "GPT-5", "version": "2026-08-10"},
+  "prompt_or_contract": "sha256:0a02a752109e81a0d9e2643db7374b049672ea38e6152383f0c7d60fd45a7cc9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": ["Google Drive private-corpus discovery", "GitHub repository inspection and connector publication", "local PDF rendering and deterministic validation"]
+  },
+  "inputs": {
+    "evidence_hashes": ["sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e", "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9", "sha256:fab88e58f891e350cec2666d8334565d01b36959d7716ba39161aa767326f5ed"],
+    "attached_docs": ["Supplied Pass 18 atlas; private discovery identifier withheld"],
+    "evidence_refs": ["attachment://supplied-pass18-atlas#card=KFM-P18-INV-370", "github://bartytime4life/Kansas-Frontier-Matrix/blob/d14fc1a6a5e4a398d16089cb009c1e1696f7783a/contracts/evidence/representation_fitness_assessment.md", "github://bartytime4life/Kansas-Frontier-Matrix/blob/d14fc1a6a5e4a398d16089cb009c1e1696f7783a/docs/doctrine/directory-rules.md"]
+  },
+  "truth_labels": {
+    ".github/workflows/clustering-output-role-assessment.yml": "CONFIRMED",
+    "contracts/evidence/clustering_output_role_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-clustering-output-role-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/clustering_output_role_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/clustering_output_role_assessment.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_validate_clustering_output_role_assessment.py": "CONFIRMED",
+    "tools/validators/evidence/validate_clustering_output_role_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Seven deterministic clustering-output-role tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Twelve exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
+    {"gate": "adjacent-representation-fitness-regression", "outcome": "PASS", "reason": "Nine adjacent representation-fitness tests passed in separate repository-native collections."},
+    {"gate": "documentation-meta-block-profile", "outcome": "PASS"},
+    {"gate": "local-document-link-check", "outcome": "PASS"},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
+  "citations": [
+    {"id": "pass18-clustering-output-role-card", "validated": true, "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-370"},
+    {"id": "representation-fitness-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d14fc1a6a5e4a398d16089cb009c1e1696f7783a/contracts/evidence/representation_fitness_assessment.md"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d14fc1a6a5e4a398d16089cb009c1e1696f7783a/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-10T18:29:39Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Additive, inactive, fixture-only clustering-output-role assessment. Private connected-source identifiers and content are excluded. PASS proves local metadata coherence only; cluster labels remain exploratory and every authority effect remains false."
+}

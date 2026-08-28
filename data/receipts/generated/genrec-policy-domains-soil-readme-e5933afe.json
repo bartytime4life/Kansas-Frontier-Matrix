@@ -1,0 +1,310 @@
+{
+  "receipt_id": "genrec-policy-domains-soil-readme-e5933afe",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/domains/soil/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/domains/soil/README.md": "sha256:e5933afe8ef90fe860a94dd4a48c5c684a5c6758843b3ed5a5e4f027e68be979"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:9259b40fb673370bca14b92b4675552002e62ef0d423fed5eed206aa2f18261e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local git",
+      "complete sparse-expanded repository inspection",
+      "PDF text extraction and visual verification",
+      "repository-native deterministic documentation validation",
+      "bounded no-network Soil test execution",
+      "static Soil maturity and trust-boundary reconciliation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:7c2d498212b9ad56f3ba37bf91f841e9f328794e8aa4940f8f665a4116c5aaea",
+      "sha256:ab509c8d059ac6cd633436df59cb200ddb970a002a2000d70c3e385a1d151178",
+      "sha256:47eb7659ba121bd60b69fc8d878ba845185145b62eeaad7d69acdb5ef9bb2328",
+      "sha256:c95c98c128bc2a26ecb99ed9dac4795c26226ecf9eba54b05a6cdd70492c5888",
+      "sha256:449ae43e716b8ca812b3093574c165b8ffe55b477851fc515c06c465623b6a3b",
+      "sha256:19e8d376e9e1aa9193af7d2318a27453a380e27c768f1916ba77a97b238b370d",
+      "sha256:db2b79eed390d1ac2e7cacda30962a65a9b5d8d7c03420b5e8d54b2760794cad",
+      "sha256:3081bdefa7b1f0f3cdc01742067f5572187c3ad07744cbd7d7c89397fb418852",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:e9fbc5066d1a73a08642a214c1ef8bf171a01181e7718f808e92e5e9889c819c",
+      "sha256:4214628e7352586dcb12c2d2385a74d6f98e263171cff4bb9f23299edc33a722",
+      "sha256:9ded4be503b2545f701f24d8f56ee1d7bfdafb94f4dc7a5dcfd1055c4b5c7bf0",
+      "sha256:3982ac8d147117311d1b321d66c14f0a0425537dd9a48957e3ecbc08f8a13647",
+      "sha256:3ea4cea85eb7e9264f7e36fbf21a0810f8aa4bbd1b7d5d9087c382c53e4cf52a",
+      "sha256:5799ba9e4e395ca36c45d2028986e86d4d5ab224d3174188c758d91242958f30",
+      "sha256:c4cc2f44cf54b8c76bc05d2ed40b3475d5698ede84b8b62bff96e8c483680914",
+      "sha256:2996b5a0509513a2120c1732bb9694a03dcee08ecb60d05404653430e2845b50",
+      "sha256:3d70e251f3b84cc7600c58f4abb3201568b0882dafb1cf5d4d7d59cd41eccea3",
+      "sha256:1b1936bf354503b3704c81c620cad6de5feb17d46bb204b4863e84240a6c7cda",
+      "sha256:3a1008d0762fc39f6db89615be03f350d356c08ce3aa4d149f49ae3e26a09be9",
+      "sha256:510ee7f3aea7610c853e429bc02a9dec32b64eee970115be7dd4df1c86cc2dc5"
+    ],
+    "attached_docs": [
+      "KFM Soil Architecture Extended Pro PDF-Only Planning Report"
+    ],
+    "evidence_refs": [
+      "repo:commit@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:policy/domains/soil/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:policy/domains/soil/*.rego@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:policy/domains/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:policy/bundles/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:policy/decision/vocabulary.v1.json@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:packages/policy-runtime/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:docs/adr/ADR-0031-shared-watcher-ownership-and-placement.md@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:docs/doctrine/directory-rules.md@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:docs/domains/soil/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:contracts/domains/soil/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:schemas/contracts/v1/domains/soil/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:fixtures/domains/soil/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:tests/domains/soil/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:tools/validators/domains/soil/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:pipeline_specs/soil/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:pipeline_specs/watchers/soil_ssurgo_gnatsgo.json@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:pipelines/domains/soil/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:data/registry/soil/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:data/registry/sources/soil/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:data/proofs/soil/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:data/receipts/soil/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:data/published/layers/soil/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:release/candidates/soil/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:control_plane/watcher_registry.json@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:control_plane/cross_domain_seam_register.yaml@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:control_plane/policy_gate_register.yaml@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:.github/workflows/domain-soil.yml@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:.github/workflows/soil-*.yml@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "repo:.github/CODEOWNERS@96467cda05c74399b87b4ba9e8a5913c0d182c20",
+      "attachment:01-kfm_soil_architecture_extended_pro_pdf_only_report.pdf@sha256:7c2d498212b9ad56f3ba37bf91f841e9f328794e8aa4940f8f665a4116c5aaea"
+    ]
+  },
+  "truth_labels": {
+    "policy/domains/soil/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned current main, exact target bytes, direct lane tree, CODEOWNERS route, accepted directory placement, adjacent maturity surfaces, exact-target branch scope, and open-pull-request overlap before authoring."
+    },
+    {
+      "gate": "base-drift-review",
+      "outcome": "PASS",
+      "reason": "Main advanced during preparation from 8d2b71d08498 through an unrelated legacy policy/domains/air deletion and Settlements–Infrastructure README merge. The Soil target blob and cited Soil surfaces remained unchanged, and the candidate was repinned to 96467cda05c7."
+    },
+    {
+      "gate": "soil-static-inventory",
+      "outcome": "PASS",
+      "reason": "Deterministic assertions confirmed six direct Rego sources, one bounded watcher guard, five scaffolds, 28 direct contract-lane files, 38 schemas, 128 fixture-lane files including 89 JSON fixtures, 22 focused workflows, mixed validators/tests/pipelines, and zero direct proof, receipt, candidate, or published-layer payloads."
+    },
+    {
+      "gate": "authority-and-maturity-reconciliation",
+      "outcome": "PASS",
+      "reason": "Separated direct Rego maturity from bounded fixture/profile validation, the inactive manual-only watcher, duplicate source registries, held Agriculture–Soil seam, placeholder runtime/package/pipeline surfaces, empty trust-output lanes, and unproved public behavior."
+    },
+    {
+      "gate": "no-loss-document-reconciliation",
+      "outcome": "PASS",
+      "reason": "Preserved the prior purpose, policy-home, placement, input/output, validation, review, related-folder, and proposed-status intent while replacing overbroad canonical authority and greenfield-only implications with repository-grounded boundaries."
+    },
+    {
+      "gate": "markdown-structure-and-metadata",
+      "outcome": "PASS",
+      "reason": "The final README has one rendered H1, ordered headings, balanced language-tagged fences, no trailing whitespace, UTF-8-compatible text, a final newline, and one KFM_META_BLOCK_V2 envelope that passes the required profile with zero findings."
+    },
+    {
+      "gate": "local-links-and-fragments",
+      "outcome": "PASS",
+      "reason": "The repository-native no-network link checker resolved all 62 local README targets and fragments with zero findings and no external requests."
+    },
+    {
+      "gate": "document-graph-and-freshness",
+      "outcome": "PASS",
+      "reason": "The explicit-file document-graph and bounded-required stale-scan profiles passed with zero findings at the deterministic 2026-08-13 as-of date."
+    },
+    {
+      "gate": "documentation-validator-suites",
+      "outcome": "PASS",
+      "reason": "All 18 link-check, 24 metadata-block, 27 document-graph, and 23 stale-scan focused tests passed locally."
+    },
+    {
+      "gate": "markdown-render-parse",
+      "outcome": "PASS",
+      "reason": "Pandoc 3.1.3 parsed the final GitHub-Flavored Markdown successfully; fence, metadata-delimiter, tab, trailing-whitespace, final-newline, and git diff checks also passed."
+    },
+    {
+      "gate": "soil-json-integrity",
+      "outcome": "PASS",
+      "reason": "All 38 direct Soil schemas and 89 recursive Soil JSON fixtures parse as standards-conforming JSON. This is syntax integrity only, not schema, semantic, policy, or release acceptance."
+    },
+    {
+      "gate": "broad-soil-no-network-suites",
+      "outcome": "PASS",
+      "reason": "All 69 command-bearing broad Soil tests passed: 16 public-safe smoke, 12 station-moisture QC, 14 SMAP L4 anti-collapse, and 27 SSURGO package-drift tests."
+    },
+    {
+      "gate": "selected-standard-library-soil-validator-suites",
+      "outcome": "PASS",
+      "reason": "All 42 selected tests for decision-envelope convergence, domain identity, layer, observation, validation report, EvidenceDrawer convergence, map unit, component, and support-type aliases passed after expanding the local sparse checkout to the tracked UI schema."
+    },
+    {
+      "gate": "component-horizon-join-fixture-matrix",
+      "outcome": "FAIL",
+      "reason": "The pre-existing exact fixture matrix is not green: stored candidate spec_hash values differ from the current deterministic expected_identity calculation. The README records the drift; this exact-scope documentation change does not alter validator or fixture bytes."
+    },
+    {
+      "gate": "jsonschema-and-pytest-dependent-soil-suites",
+      "outcome": "SKIPPED",
+      "reason": "The local runtime lacks jsonschema and pytest, and dependency installation is unavailable. Those suites are not represented as local passes."
+    },
+    {
+      "gate": "direct-soil-rego-execution",
+      "outcome": "SKIPPED",
+      "reason": "OPA is unavailable locally and the lane has no accepted checksum-pinned evaluator, bundle manifest, or native Rego tests. Exact static source inspection is recorded without claiming parse or evaluator success."
+    },
+    {
+      "gate": "repository-generated-receipt-validator",
+      "outcome": "SKIPPED",
+      "reason": "The validator's jsonschema dependency is unavailable locally. Manual JSON, required-field, path/key parity, SHA-256, citation, policy-reference, pending-review, and artifact-integrity checks are performed separately without claiming full validator conformance."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The authored artifacts contain no credentials, private prompts, hidden reasoning, personal records, precise private-farm, parcel, station, or restricted-location payloads, signed URLs, production endpoints, or invented actor-authority claims."
+    },
+    {
+      "gate": "runtime-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no Rego source, policy value, source descriptor, watcher, contract, schema, fixture, validator, test, workflow, pipeline, bundle, evaluator, consumer, lifecycle state, proof, release, deployment, advisory, or publication behavior changes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "The draft remains pending authorized human review; no policy acceptance, source or scientific approval, proof graduation, independent approval, merge authority, release authority, deployment, advisory, publication, or public-use authority is created."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/adr/ADR-0031-shared-watcher-ownership-and-placement.md",
+    "policy/README.md",
+    "policy/domains/README.md"
+  ],
+  "citations": [
+    {
+      "id": "soil-direct-policy-baseline",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/soil/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20"
+    },
+    {
+      "id": "soil-direct-rego-polarity-and-guard-inventory",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/soil/*.rego@96467cda05c74399b87b4ba9e8a5913c0d182c20"
+    },
+    {
+      "id": "canonical-policy-root-and-general-evaluator-hold",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@96467cda05c74399b87b4ba9e8a5913c0d182c20"
+    },
+    {
+      "id": "soil-domain-scope-and-anti-collapse",
+      "validated": true,
+      "evidence_ref": "repo:docs/domains/soil/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20"
+    },
+    {
+      "id": "soil-contract-inventory",
+      "validated": true,
+      "evidence_ref": "repo:contracts/domains/soil/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20"
+    },
+    {
+      "id": "soil-schema-mixed-maturity",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/domains/soil/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20"
+    },
+    {
+      "id": "soil-fixture-test-and-validator-maturity",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/domains/soil/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20"
+    },
+    {
+      "id": "soil-bounded-validation-and-holds",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/domain-soil.yml@96467cda05c74399b87b4ba9e8a5913c0d182c20"
+    },
+    {
+      "id": "soil-inactive-watcher-boundary",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/watcher_registry.json@96467cda05c74399b87b4ba9e8a5913c0d182c20"
+    },
+    {
+      "id": "soil-agriculture-held-seam",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/cross_domain_seam_register.yaml@96467cda05c74399b87b4ba9e8a5913c0d182c20"
+    },
+    {
+      "id": "soil-no-proof-payload-posture",
+      "validated": true,
+      "evidence_ref": "repo:data/proofs/soil/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20"
+    },
+    {
+      "id": "soil-no-candidate-dossier-posture",
+      "validated": true,
+      "evidence_ref": "repo:release/candidates/soil/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20"
+    },
+    {
+      "id": "policy-bundle-and-runtime-boundary",
+      "validated": true,
+      "evidence_ref": "repo:policy/bundles/README.md@96467cda05c74399b87b4ba9e8a5913c0d182c20"
+    },
+    {
+      "id": "empty-policy-gate-register",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/policy_gate_register.yaml@96467cda05c74399b87b4ba9e8a5913c0d182c20"
+    },
+    {
+      "id": "verified-github-review-route",
+      "validated": true,
+      "evidence_ref": "repo:.github/CODEOWNERS@96467cda05c74399b87b4ba9e8a5913c0d182c20"
+    },
+    {
+      "id": "soil-planning-lineage-with-no-repository-limitation",
+      "validated": true,
+      "evidence_ref": "attachment:01-kfm_soil_architecture_extended_pro_pdf_only_report.pdf@sha256:7c2d498212b9ad56f3ba37bf91f841e9f328794e8aa4940f8f665a4116c5aaea"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T20:25:00Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation and provenance only. The receipt deliberately records a pre-existing component–horizon fixture-hash failure and does not represent dependency-limited or OPA-limited suites as passing. It creates no Soil truth, source admission, policy activation, proof, release, deployment, advice, publication, or public-use authority."
+}

@@ -1,0 +1,7 @@
+{
+  "kind": "ContractFixtureManifest",
+  "manifest_version": "1.0.0",
+  "wave": "wave-01-core",
+  "description": "Exact negative: a manifest cannot declare an empty family inventory.",
+  "families": []
+}

@@ -1,0 +1,52 @@
+{
+  "object_type": "RepresentationReceipt",
+  "schema_version": "1.0.0",
+  "receipt_id": "representation-receipt:example:generalized-vector:20260804",
+  "subject_ref": "kfm://claim/example",
+  "representation_type": "VECTOR_GENERALIZATION",
+  "evidence_bundle_refs": [
+    "kfm://evidence-bundle/example"
+  ],
+  "inputs": [
+    {
+      "artifact_ref": "kfm://artifact/input/example",
+      "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ],
+  "outputs": [
+    {
+      "artifact_ref": "kfm://artifact/output/example",
+      "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "media_type": "application/geo+json"
+    }
+  ],
+  "method": {
+    "method_id": "kfm://method/public-safe-generalization",
+    "method_version": "1.0.0",
+    "spec_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "parameters_hash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+  },
+  "fidelity": {
+    "evidence_fidelity": "EXACT",
+    "representation_fidelity": "GENERALIZED",
+    "information_loss": true,
+    "loss_notes": "Geometry simplified and precision reduced."
+  },
+  "reality_boundary_note_ref": null,
+  "timing": {
+    "represented_at": "2026-08-04T12:00:00Z",
+    "input_as_of": "2026-08-04T11:00:00Z"
+  },
+  "lineage": {
+    "supersedes": null,
+    "superseded_by": null
+  },
+  "governance": {
+    "authority_created": false,
+    "policy_evaluated": false,
+    "review_completed": false,
+    "release_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  }
+}

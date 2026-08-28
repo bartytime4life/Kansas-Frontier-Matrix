@@ -1,0 +1,35 @@
+{
+  "fixture_id": "fixture:geology:resource-class:invalid-precise-resource-location",
+  "profile_id": "kfm-geology-resource-class-fixture-v1",
+  "object_family": "ResourceDeposit",
+  "resource_character": "RESOURCE_DEPOSIT",
+  "source_role": "aggregate",
+  "source_descriptor_ref": "fixture://sources/geology/synthetic-deposit",
+  "evidence_refs": [
+    "fixture://evidence/geology/resource-class/invalid-precise-resource-location"
+  ],
+  "claim": {
+    "kind": "delineated_body",
+    "commodity": "synthetic_commodity",
+    "intended_use": "deposit_context"
+  },
+  "spatial_support": {
+    "kind": "exact_resource_location",
+    "county_fips": "99999",
+    "latitude": "SYNTHETIC_PRECISE_RESOURCE_SENTINEL"
+  },
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "rollback_state": "fixture_only"
+  },
+  "limitations": [
+    "not_an_estimate",
+    "not_a_permit_or_ownership_record",
+    "not_a_reserve",
+    "synthetic_fixture_only"
+  ]
+}

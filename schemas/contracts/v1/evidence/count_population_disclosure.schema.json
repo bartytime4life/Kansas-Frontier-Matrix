@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/count_population_disclosure.schema.json",
+  "title": "CountPopulationDisclosureCandidate",
+  "description": "Fixture-only disclosure of the population semantics attached to one count candidate without computation or authority effects.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_card",
+    "observed_at",
+    "metric_definition_ref",
+    "metric_definition_digest",
+    "query_receipt_ref",
+    "query_receipt_digest",
+    "evidence_scope",
+    "intended_surface",
+    "count_semantics",
+    "disclosure",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "CountPopulationDisclosureCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.evidence.count-population-disclosure.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-157"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "metric_definition_ref": {"$ref": "#/$defs/ref"},
+    "metric_definition_digest": {"$ref": "#/$defs/sha256"},
+    "query_receipt_ref": {"$ref": "#/$defs/ref"},
+    "query_receipt_digest": {"$ref": "#/$defs/sha256"},
+    "evidence_scope": {"$ref": "#/$defs/resolvable_ref"},
+    "intended_surface": {"enum": ["INTERNAL_REVIEW", "MAP_POPUP", "DASHBOARD", "FOCUS_MODE", "EXPORT_CANDIDATE"]},
+    "count_semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "count_kind",
+        "counted_field",
+        "distinct_fields",
+        "group_by_fields",
+        "filter_state",
+        "filter_predicate_ref",
+        "null_posture",
+        "population_basis"
+      ],
+      "properties": {
+        "count_kind": {"enum": ["ROWS", "NON_NULL_VALUES", "DISTINCT_NON_NULL_VALUES", "GROUPED_ROWS", "UNRESOLVED"]},
+        "counted_field": {"oneOf": [{"$ref": "#/$defs/name"}, {"type": "null"}]},
+        "distinct_fields": {"$ref": "#/$defs/name_array"},
+        "group_by_fields": {"$ref": "#/$defs/name_array"},
+        "filter_state": {"enum": ["UNFILTERED", "FILTERED", "UNRESOLVED"]},
+        "filter_predicate_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+        "null_posture": {"enum": ["INCLUDED_AS_ROW", "EXCLUDED", "GROUPED_AS_VALUE", "UNRESOLVED"]},
+        "population_basis": {"enum": ["ALL_INPUT_ROWS", "NON_NULL_FIELD_VALUES", "DISTINCT_VALUE_TUPLES", "GROUPED_OUTPUT_ROWS", "UNRESOLVED"]}
+      }
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "population_note", "details_surface", "review_record_refs"],
+      "properties": {
+        "state": {"enum": ["COMPLETE_FOR_DECLARED_SCOPE", "INCOMPLETE", "UNKNOWN"]},
+        "population_note": {"oneOf": [{"type": "string", "minLength": 16, "maxLength": 500}, {"type": "null"}]},
+        "details_surface": {"enum": ["NONE", "METRIC_NOTE", "DASHBOARD_METADATA", "EVIDENCE_DRAWER"]},
+        "review_record_refs": {"$ref": "#/$defs/ref_array"}
+      }
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metric_authority", "evidence_authority", "policy_authority", "review_authority", "promotion_authority", "release_authority", "publication_authority", "public_use_authority"],
+      "properties": {
+        "metric_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "ref": {"type": "string", "minLength": 5, "maxLength": 300, "pattern": "^kfm:[a-z0-9][a-z0-9._:/-]+$"},
+    "ref_array": {"type": "array", "maxItems": 32, "uniqueItems": true, "items": {"$ref": "#/$defs/ref"}},
+    "name": {"type": "string", "minLength": 1, "maxLength": 80, "pattern": "^[a-z][a-z0-9_]*$"},
+    "name_array": {"type": "array", "maxItems": 32, "uniqueItems": true, "items": {"$ref": "#/$defs/name"}},
+    "resolvable_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "digest", "resolution"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/ref"},
+        "digest": {"$ref": "#/$defs/sha256"},
+        "resolution": {"enum": ["RESOLVED", "UNRESOLVED"]}
+      }
+    }
+  }
+}

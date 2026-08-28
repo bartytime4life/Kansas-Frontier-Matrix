@@ -1,0 +1,16 @@
+{
+  "object_type": "RuntimeResponseHttpBinding",
+  "profile_version": "v1",
+  "http_status": 422,
+  "outcome": "DENY",
+  "failure_class": "INSUFFICIENT_EVIDENCE_OR_CONTEXT",
+  "envelope_body_required": true,
+  "governance": {
+    "http_status_is_authority": false,
+    "policy_evaluated": false,
+    "lifecycle_write_authorized": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "receipt_id": "genrec-infra-compose-context-a255c283",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "infra/README.md",
+    "infra/compose/README.md",
+    "infra/compose/docker-compose.yml",
+    "infra/docker/README.md"
+  ],
+  "artifact_hashes": {
+    "infra/README.md": "sha256:f73f27917cb31c13dfa7f37622cc8653b370d265124c9e51ba76b14b6aa5d828",
+    "infra/compose/README.md": "sha256:c8721a6f529d39196240c49548991deb9f9e8958866c7f2c6ebb63df15dee9b7",
+    "infra/compose/docker-compose.yml": "sha256:a255c283c7a6f9e203548616510ca3fc1e6bfa8e67051daaf8ce4944d7a642f9",
+    "infra/docker/README.md": "sha256:59497b9fdc6e9819598b774128bee015c771b47d8afd3e6b26cf4a037a3644f1"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:eb130cf893bb93ef3e28080db9013835af7519a3bb3413bf24ac2f245081ce82",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "workspace filesystem",
+      "Git",
+      "Ruby YAML parser",
+      "GitHub connector",
+      "multi-agent read-only inventory"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:eb130cf893bb93ef3e28080db9013835af7519a3bb3413bf24ac2f245081ce82",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:3159ee37d25a897bf2525fd7dafbc6ca28ee74594a3b52a9c0a01fa30aed777b",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a"
+    ],
+    "attached_docs": [
+      "goal-objective.md (session attachment; SHA-256 pinned above)"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3c410ca496f56a892b131af62465560fa298b1d2",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@3c410ca496f56a892b131af62465560fa298b1d2",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3c410ca496f56a892b131af62465560fa298b1d2",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/receipts/generated_receipt.schema.json@3c410ca496f56a892b131af62465560fa298b1d2",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:infra/README.md@3c410ca496f56a892b131af62465560fa298b1d2",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:infra/compose/README.md@3c410ca496f56a892b131af62465560fa298b1d2",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:infra/compose/docker-compose.yml@3c410ca496f56a892b131af62465560fa298b1d2",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:infra/docker/README.md@3c410ca496f56a892b131af62465560fa298b1d2",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:infra/docker/Dockerfile.governed-api@3c410ca496f56a892b131af62465560fa298b1d2",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:infra/docker/Dockerfile.explorer-web@3c410ca496f56a892b131af62465560fa298b1d2"
+    ]
+  },
+  "truth_labels": {
+    "infra/README.md": "CONFIRMED",
+    "infra/compose/README.md": "CONFIRMED",
+    "infra/compose/docker-compose.yml": "PROPOSED",
+    "infra/docker/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Verified repository identity, writable permissions, immutable main base commit, clean starting worktree, accepted ADR-0029, and the exact adopted Directory Rules bytes before editing."
+    },
+    {
+      "gate": "full-readme-and-reference-inventory",
+      "outcome": "PASS",
+      "reason": "Read all 2,261 tracked README.md files and scanned all 3,781 tracked Markdown files plus repository configs, schemas, tests, workflows, manifests, and code references before classifying candidates."
+    },
+    {
+      "gate": "directory-placement",
+      "outcome": "PASS",
+      "reason": "Authored implementation and documentation artifacts remain under the existing infra deployment/configuration responsibility root; the required provenance record is under data/receipts/generated/. No new authority root, lifecycle lane, or speculative directory was created."
+    },
+    {
+      "gate": "compose-yaml-and-path-resolution",
+      "outcome": "PASS",
+      "reason": "Ruby Psych parsed the Compose YAML, both .. contexts remained bounded to infra/, and each docker/Dockerfile.* reference resolved to an existing tracked file within that context."
+    },
+    {
+      "gate": "docker-build-context-hygiene",
+      "outcome": "PASS",
+      "reason": "The retained infra/ build context contained no ignored or untracked files at validation time; the repair does not widen Docker access to the repository root, where no root .dockerignore exists."
+    },
+    {
+      "gate": "docker-compose-render-and-image-build",
+      "outcome": "SKIPPED",
+      "reason": "Docker and Docker Compose are unavailable in this environment. Compose rendering, image builds, scans, and runtime behavior remain NEEDS VERIFICATION."
+    },
+    {
+      "gate": "repository-make-validate",
+      "outcome": "PASS",
+      "reason": "PATH=/private/tmp/kfm-repo-venv312/bin:$PATH make validate completed successfully; schema and contract tests reported 133 passed, and expected invalid fixtures failed validation as designed."
+    },
+    {
+      "gate": "full-pytest-suite",
+      "outcome": "PASS",
+      "reason": "PATH=/private/tmp/kfm-repo-venv312/bin:$PATH python -m pytest -q completed with 282 passed."
+    },
+    {
+      "gate": "diff-integrity",
+      "outcome": "PASS",
+      "reason": "git diff --check completed without whitespace errors."
+    },
+    {
+      "gate": "generated-receipt-schema-and-hashes",
+      "outcome": "PASS",
+      "reason": "The receipt was validated with Draft 2020-12 format checking, and every listed SHA-256 artifact hash was recomputed from the final working-tree bytes."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt is provenance, not approval, release authority, or deployment evidence."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@3c410ca496f56a892b131af62465560fa298b1d2"
+    },
+    {
+      "id": "accepted-directory-rules-adr",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3c410ca496f56a892b131af62465560fa298b1d2"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/receipts/generated_receipt.schema.json@3c410ca496f56a892b131af62465560fa298b1d2"
+    },
+    {
+      "id": "infra-root-boundary",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:infra/README.md@3c410ca496f56a892b131af62465560fa298b1d2"
+    },
+    {
+      "id": "compose-placeholder",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:infra/compose/docker-compose.yml@3c410ca496f56a892b131af62465560fa298b1d2"
+    },
+    {
+      "id": "governed-api-dockerfile-placeholder",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:infra/docker/Dockerfile.governed-api@3c410ca496f56a892b131af62465560fa298b1d2"
+    },
+    {
+      "id": "explorer-web-dockerfile-placeholder",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:infra/docker/Dockerfile.explorer-web@3c410ca496f56a892b131af62465560fa298b1d2"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-29T04:33:01Z",
+  "emitter": "OpenAI Codex (GPT-5)",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Scoped repair of two incorrect context-relative Dockerfile references while retaining the safer infra-bounded build context, plus truth-preserving tracked-inventory and Directory Rules corrections in the owning infrastructure READMEs. The Compose file, Dockerfiles, and Caddy file remain greenfield placeholders; the firewall sidecar is documentation only. No service behavior, deployment readiness, release state, publication state, policy approval, or human approval is claimed."
+}

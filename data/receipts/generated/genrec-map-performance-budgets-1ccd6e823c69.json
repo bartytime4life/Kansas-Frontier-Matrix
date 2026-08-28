@@ -1,0 +1,150 @@
+{
+  "artifact_hashes": {
+    "docs/architecture/map-master/PERFORMANCE_BUDGETS.md": "sha256:1ccd6e823c69e593756ab1388b601c24125a0bd81833a8b24b1f0e0a7f78ec51"
+  },
+  "artifact_paths": [
+    "docs/architecture/map-master/PERFORMANCE_BUDGETS.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "repo:docs/architecture/map-master/README.md@34ad2c64c5f15da148e3b63dd27bc14ca46e54da",
+      "id": "repo:map-master-parent-boundary",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/architecture/map-master/2D_3D_PARITY.md@34ad2c64c5f15da148e3b63dd27bc14ca46e54da",
+      "id": "repo:2d-3d-parity-boundary",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:apps/explorer-web/src/features/map_runtime/MOBILE_PMTILES_VERIFICATION_FIXTURE.md@34ad2c64c5f15da148e3b63dd27bc14ca46e54da",
+      "id": "repo:mobile-pmtiles-fixture-boundary",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/runtime/verified_rendering_resource_envelope.md@34ad2c64c5f15da148e3b63dd27bc14ca46e54da",
+      "id": "repo:verified-rendering-resource-envelope",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/validation/public_map_service_slo_assessment.md@34ad2c64c5f15da148e3b63dd27bc14ca46e54da",
+      "id": "repo:public-map-service-slo-assessment",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/architecture/ui/TELEMETRY.md@34ad2c64c5f15da148e3b63dd27bc14ca46e54da",
+      "id": "repo:ui-telemetry-boundary",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@34ad2c64c5f15da148e3b63dd27bc14ca46e54da",
+      "id": "repo:accepted-directory-rules",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-19T22:33:48Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM MapLibre Operating Architecture, Governed UI, and AI Interaction Manual — Revised Working Edition",
+      "KFM Directory Governance Standard v2.0.0-draft.1"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix@34ad2c64c5f15da148e3b63dd27bc14ca46e54da",
+      "repo:docs/architecture/map-master/PERFORMANCE_BUDGETS.md@34ad2c64c5f15da148e3b63dd27bc14ca46e54da",
+      "repo:docs/architecture/map-master/README.md@34ad2c64c5f15da148e3b63dd27bc14ca46e54da",
+      "repo:docs/architecture/map-master/2D_3D_PARITY.md@34ad2c64c5f15da148e3b63dd27bc14ca46e54da",
+      "repo:apps/explorer-web/src/features/map_runtime/mobile_pmtiles_verification.ts@34ad2c64c5f15da148e3b63dd27bc14ca46e54da",
+      "repo:contracts/runtime/verified_rendering_resource_envelope.md@34ad2c64c5f15da148e3b63dd27bc14ca46e54da",
+      "repo:contracts/validation/public_map_service_slo_assessment.md@34ad2c64c5f15da148e3b63dd27bc14ca46e54da",
+      "repo:docs/architecture/ui/TELEMETRY.md@34ad2c64c5f15da148e3b63dd27bc14ca46e54da",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-19"
+  },
+  "notes": "Repository-grounded same-path modernization of the Map Master performance-budget architecture. It separates current fixture-first evidence from production thresholds and operational telemetry, reconciles the newly grounded 2D/3D parity boundary, preserves visible fail-closed behavior, and creates no runtime, policy, release, deployment, or publication effect.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file inspection",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/doctrine/directory-rules.md"
+  ],
+  "prompt_or_contract": "sha256:237f63f2c280c85db747f440181ecc95db5d10a983379d8723b4cf45455958d3",
+  "receipt_id": "genrec-map-performance-budgets-1ccd6e823c69",
+  "truth_labels": {
+    "docs/architecture/map-master/PERFORMANCE_BUDGETS.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-repository-assay",
+      "outcome": "PASS",
+      "reason": "Pinned current main, complete prior target, parent boundary, newly grounded 2D/3D parity page, CODEOWNERS, accepted placement authority, three fixture-first performance families, Explorer boundary, and telemetry boundary were inspected."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The existing docs/architecture/map-master path is updated in place under accepted ADR-0029; no root, parallel authority, move, rename, or deletion is introduced."
+    },
+    {
+      "gate": "overlap-and-base-preflight",
+      "outcome": "PASS",
+      "reason": "Open pull-request and branch searches found no active target owner; target prior blob and immutable base were re-fetched after the adjacent 2D/3D parity merge and before mutation."
+    },
+    {
+      "gate": "metadata-and-markdown",
+      "outcome": "PASS",
+      "reason": "KFM metadata parsed as YAML, one H1 remained, the document parsed with CommonMark tooling, and fenced blocks were balanced."
+    },
+    {
+      "gate": "anchors-and-local-links",
+      "outcome": "PASS",
+      "reason": "Explicit anchors were unique, all internal fragments resolved, legacy section anchors 1 through 12 were retained, and introduced repository-relative links were verified against the pinned tree."
+    },
+    {
+      "gate": "source-integrity",
+      "outcome": "PASS",
+      "reason": "UTF-8/LF output has a final newline, no tabs or trailing whitespace, and the final artifact SHA-256 is bound in this receipt."
+    },
+    {
+      "gate": "repository-native-behavioral-tests",
+      "outcome": "SKIPPED",
+      "reason": "No mounted checkout was available; the change is documentation plus provenance only and does not claim a fresh execution of existing fixture families."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "The receipt was emitted before draft pull-request workflows ran."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt grants no approval, merge, release, deployment, promotion, publication, or public-use authority."
+    }
+  ]
+}

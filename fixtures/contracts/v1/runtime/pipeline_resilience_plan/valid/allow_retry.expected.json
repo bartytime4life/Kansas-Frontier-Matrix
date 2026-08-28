@@ -1,0 +1,93 @@
+{
+  "authority": {
+    "artifact_write": false,
+    "database_mutation": false,
+    "network_fetch": false,
+    "policy_evaluation": false,
+    "promotion": false,
+    "publication": false,
+    "release": false,
+    "secret_access": false,
+    "workflow_mutation": false
+  },
+  "backpressure": {
+    "decision": "ACCEPT",
+    "partition": "FULL",
+    "reason_codes": [
+      "QUEUE_WITHIN_BOUNDS"
+    ]
+  },
+  "circuit_breaker": {
+    "current_state": "CLOSED",
+    "decision": "ALLOW",
+    "next_state": "CLOSED",
+    "reason_codes": [
+      "BREAKER_CLOSED"
+    ]
+  },
+  "contract_version": "v1",
+  "decision": "ALLOW_RETRY",
+  "delivery": {
+    "decision": "ALLOW",
+    "durability_mode": "TRANSACTIONAL_OUTBOX",
+    "reason_codes": [
+      "DURABLE_IDEMPOTENT_DELIVERY_VERIFIED"
+    ]
+  },
+  "idempotency_key": "sha256:f7395ffe3da628ea6b4323fc5aea35a0b504802fb6235f7a5f59168cf4ed6f36",
+  "kill_switch": {
+    "decision": "ALLOW",
+    "mode": "RUNNING",
+    "previous_mode": "RUNNING",
+    "reason_codes": [
+      "KILL_SWITCH_RUNNING"
+    ]
+  },
+  "observability_requirements": [
+    "breaker_state",
+    "oldest_queue_age_seconds",
+    "queue_depth",
+    "retry_attempt_count",
+    "time_to_drain_seconds"
+  ],
+  "pipeline_id": "hydrology.daily-observations",
+  "plan_id": "pipeline-resilience:hydrology.daily-observations:normalize:5f59168cf4ed6f36",
+  "planner_version": "v1",
+  "reason_codes": [
+    "BREAKER_CLOSED",
+    "DURABLE_IDEMPOTENT_DELIVERY_VERIFIED",
+    "KILL_SWITCH_RUNNING",
+    "QUEUE_WITHIN_BOUNDS",
+    "RATE_LIMIT_RETRY",
+    "RETRY_AFTER_HONORED",
+    "TRIGGER_MATRIX_ALLOW"
+  ],
+  "required_receipts": [
+    "attempt_receipt",
+    "terminal_receipt"
+  ],
+  "retry": {
+    "classification": "RATE_LIMITED",
+    "decision": "RETRY",
+    "delay_seconds": 22.5,
+    "idempotency_retention_seconds": 604800,
+    "next_attempt": 3,
+    "reason_codes": [
+      "RATE_LIMIT_RETRY",
+      "RETRY_AFTER_HONORED"
+    ]
+  },
+  "spec_hash": "sha256:55ff8929fd4202ab209e2c04a06d7d2076b899594b87f0454e74c43f22981fda",
+  "step_id": "normalize",
+  "trigger": {
+    "concurrency_group": "hydrology.daily-observations",
+    "decision": "ALLOW",
+    "environment": "staging",
+    "reason_codes": [
+      "TRIGGER_MATRIX_ALLOW"
+    ],
+    "secret_scope": "DOMAIN_SCOPED",
+    "type": "schedule"
+  },
+  "write_authority": false
+}

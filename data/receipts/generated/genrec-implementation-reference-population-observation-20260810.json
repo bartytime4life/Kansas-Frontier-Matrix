@@ -1,0 +1,150 @@
+{
+  "receipt_id": "genrec-implementation-reference-population-observation-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/population-observation.yml",
+    "contracts/evidence/population_observation.md",
+    "docs/intake/exploratory/implementation-reference-population-observation-source-map.md",
+    "fixtures/contracts/v1/evidence/population_observation/cases.json",
+    "schemas/contracts/v1/evidence/population_observation.schema.json",
+    "tests/validators/evidence/test_validate_population_observation.py",
+    "tools/validators/evidence/validate_population_observation.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/population-observation.yml": "sha256:b45f6f9fe3a0c1f678a1c63039ad76a1d5b031ba2315c3f7397e8cf816b18d87",
+    "contracts/evidence/population_observation.md": "sha256:9c792d8b5cc4e3b3b88adf95c5cd3ba7da53593675cd57ce55610890dbee2d1d",
+    "docs/intake/exploratory/implementation-reference-population-observation-source-map.md": "sha256:4002cae93cbf196d2e1b35001fec4938c917cdf93149dad7ceae63190e130c9b",
+    "fixtures/contracts/v1/evidence/population_observation/cases.json": "sha256:40922550d0eb19d8a0b166a0801aee11089ef9613cfc286b354e44a01efb8a2d",
+    "schemas/contracts/v1/evidence/population_observation.schema.json": "sha256:348e57d94a791ddd7b3b71d081e97dc056190d7d0c27c15974d5215752ff231e",
+    "tests/validators/evidence/test_validate_population_observation.py": "sha256:becfc118aaf5624d7d6a7695c55d65f98c02a504bf2e186c6da69cac953897c4",
+    "tools/validators/evidence/validate_population_observation.py": "sha256:06903cb80eb43b7575b39341920732f9cf0b1da6082e57b75b3d97f1184f6d93"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:9c792d8b5cc4e3b3b88adf95c5cd3ba7da53593675cd57ce55610890dbee2d1d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and pull-request mutation",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:d948332b6c5bfcdd956cf6264f7bcb88d6881ac00ca8afc2534a02d288d4b3c2",
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "Supplied Kansas Frontier Matrix Implementation Reference",
+      "Supplied Pass 20 Part 2 idea atlas",
+      "Connected Drive architecture brief"
+    ],
+    "evidence_refs": [
+      "private-corpus:implementation-reference#PopulationObservation",
+      "private-corpus:pass20#KFM-IDX-APP-008",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/contracts/common/geography_version.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/contracts/evidence/frontier_definition.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/population-observation.yml": "CONFIRMED",
+    "contracts/evidence/population_observation.md": "PROPOSED",
+    "docs/intake/exploratory/implementation-reference-population-observation-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/population_observation/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/population_observation.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_validate_population_observation.py": "CONFIRMED",
+    "tools/validators/evidence/validate_population_observation.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-pr-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Exact object, path, pull-request, and branch probes found no checked-path PopulationObservation implementation or same-purpose open work at authoring time."
+    },
+    {
+      "gate": "json-and-workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-and-fixture-suite",
+      "outcome": "PASS",
+      "reason": "Ten deterministic tests and thirty-six exact PopulationObservation fixture cases passed."
+    },
+    {
+      "gate": "no-network-non-reflection-and-no-individual-payload-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "All seven declared artifacts were rebound to their final SHA-256 digests."
+    },
+    {
+      "gate": "adjacent-geography-version-suite",
+      "outcome": "SKIPPED",
+      "reason": "Configured for hosted exact-head execution because this connector-only workspace is not a repository checkout."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "implementation-reference-population-observation",
+      "validated": true,
+      "evidence_ref": "private-corpus:implementation-reference#PopulationObservation"
+    },
+    {
+      "id": "pass20-frontier-demography-card",
+      "validated": true,
+      "evidence_ref": "private-corpus:pass20#KFM-IDX-APP-008"
+    },
+    {
+      "id": "repository-geography-version-dependency",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/contracts/common/geography_version.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T01:47:13Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only PopulationObservation packet derived from the supplied implementation reference and Pass 20 KFM-IDX-APP-008. It declares one aggregate county-year population state, digest-bound geography and source lineage, explicit zero, suppression and missingness, uncertainty, correction, interpretation limits, and deterministic identity while preserving evidence, geography, classification, policy, review, release, deployment, publication, and public-use boundaries."
+}

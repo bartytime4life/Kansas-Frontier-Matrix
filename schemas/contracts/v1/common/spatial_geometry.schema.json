@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/spatial_geometry.schema.json",
+  "title": "spatial_geometry",
+  "type": "object",
+  "description": "KFM contract for spatial_geometry.",
+  "x-kfm": {
+    "contract_doc": "contracts/common/spatial_geometry.md",
+    "fixtures_root": "fixtures/contracts/v1/common/spatial_geometry/",
+    "validator": "tools/validators/validate_spatial_geometry.py",
+    "policy": "policy/common/",
+    "status": "PROPOSED"
+  },
+  "properties": {
+    "geometry": {
+      "type": "object",
+      "required": [
+        "type",
+        "coordinates"
+      ],
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "coordinates": {}
+      },
+      "additionalProperties": true
+    },
+    "crs": {
+      "type": "string"
+    },
+    "precision_bucket": {
+      "type": "string",
+      "enum": [
+        "survey",
+        "parcel",
+        "community",
+        "region",
+        "coarse"
+      ]
+    }
+  },
+  "required": [
+    "geometry",
+    "crs",
+    "precision_bucket"
+  ],
+  "additionalProperties": false
+}

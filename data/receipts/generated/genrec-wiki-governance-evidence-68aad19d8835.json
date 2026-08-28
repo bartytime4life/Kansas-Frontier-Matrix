@@ -1,0 +1,200 @@
+{
+  "artifact_hashes": {
+    "docs/wiki/Governance-and-Evidence.md": "sha256:68aad19d883595982b234f1c0aad143031adfee81690b397b59ae7aee7b2a78a"
+  },
+  "artifact_paths": [
+    "docs/wiki/Governance-and-Evidence.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "repo:docs/wiki/Governance-and-Evidence.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "id": "KFM-wiki-governance-evidence-base",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/wiki/README.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "id": "KFM-wiki-source-set-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/doctrine/evidence-first.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "id": "KFM-evidence-first-doctrine",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/doctrine/authority-ladder.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "id": "KFM-authority-ladder",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/doctrine/lifecycle-law.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "id": "KFM-lifecycle-law",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/doctrine/corrections-first-class.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "id": "KFM-corrections-first-class",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/doctrine/trust-membrane.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "id": "KFM-trust-membrane",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "id": "KFM-directory-rules-v2",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "id": "ADR-0029",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/architecture/contract-schema-policy-split.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "id": "KFM-contract-schema-policy-split",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/evidence/README.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "id": "KFM-evidence-contract-family",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/evidence/evidence_bundle.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "id": "KFM-evidence-bundle-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/evidence/evidence_bundle.schema.json@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "id": "KFM-evidence-bundle-schema",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:policy/evidence/README.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "id": "KFM-evidence-policy-boundary",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:packages/evidence-resolver/README.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "id": "KFM-evidence-resolver-candidate",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "id": "KFM-generated-receipt-schema",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-15T05:22:43Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:docs/wiki/Governance-and-Evidence.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "repo:docs/wiki/README.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "repo:docs/wiki/Architecture.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "repo:docs/wiki/Project-Status.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "repo:docs/doctrine/evidence-first.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "repo:docs/doctrine/authority-ladder.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "repo:docs/doctrine/lifecycle-law.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "repo:docs/doctrine/corrections-first-class.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "repo:docs/doctrine/trust-membrane.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "repo:docs/doctrine/directory-rules.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "repo:docs/architecture/contract-schema-policy-split.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "repo:contracts/evidence/README.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "repo:contracts/evidence/evidence_ref.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "repo:contracts/evidence/evidence_bundle.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "repo:schemas/contracts/v1/evidence/README.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "repo:schemas/contracts/v1/evidence/evidence_bundle.schema.json@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "repo:policy/evidence/README.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "repo:packages/evidence-resolver/README.md@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "repo:.github/workflows/evidence-resolver.yml@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@85fa02e81d0e8ca0b746d5b659aa987b910aecd2",
+      "user-request:sha256:69249d4282994e372e0f761d479aa177494239a479f94f74d23890a57969b5a7"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-15"
+  },
+  "notes": "Authoring provenance for the same-path modernization and polish of docs/wiki/Governance-and-Evidence.md. The update preserves the existing page identity while adding a clearer governance model, independent decision axes, EvidenceRef versus EvidenceBundle guidance, claim-support gates, source-role anti-collapse, responsibility boundaries, policy/review separation, promotion/release distinctions, correction propagation, finite runtime outcomes, a repository-grounded maturity checkpoint, anti-patterns, reader routes, and rollback guidance. No native-wiki synchronization, contract/schema/policy mutation, runtime change, source activation, release, deployment, promotion, publication, or repository-setting change occurred. The receipt excludes itself from artifact hashes. Base main was 85fa02e81d0e8ca0b746d5b659aa987b910aecd2.",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic Markdown validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:69249d4282994e372e0f761d479aa177494239a479f94f74d23890a57969b5a7",
+  "receipt_id": "genrec-wiki-governance-evidence-68aad19d8835",
+  "truth_labels": {
+    "docs/wiki/Governance-and-Evidence.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "target-authority-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "The complete target, parent wiki contract, current main SHA, target history, open-PR overlap, accepted ADR-0029, adopted Directory Rules, doctrine, evidence contracts and schemas, policy boundary, resolver candidate, and current wiki neighbors were inspected before authoring."
+    },
+    {
+      "gate": "markdown-source-structure",
+      "outcome": "PASS",
+      "reason": "The authored source has one H1, no heading-level skips, balanced fenced blocks, no trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "wiki-link-and-anchor-closure",
+      "outcome": "PASS",
+      "reason": "All authored internal anchors resolve, every relative wiki-page link targets an inspected page, and repository links use current or commit-pinned paths."
+    },
+    {
+      "gate": "evidence-and-authority-separation",
+      "outcome": "PASS",
+      "reason": "The page keeps truth labels, resolver states, policy dispositions, review, lifecycle, release, and placement outcomes independent and does not turn a schema, receipt, proof, workflow, merge, or path into truth or publication."
+    },
+    {
+      "gate": "repository-claim-bounding",
+      "outcome": "PASS",
+      "reason": "Current implementation statements are pinned to repository evidence and explicitly separate path presence, documented candidate behavior, policy enforcement, deployment, release integration, publication, and native-wiki synchronization."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The public documentation contains no credentials, private payloads, restricted evidence, living-person data, genomic data, or protected precise locations."
+    },
+    {
+      "gate": "generated-receipt-repository-validator",
+      "outcome": "SKIPPED",
+      "reason": "The repository-owned validator will run after the receipt is committed; the receipt was prepared against the inspected generated-receipt schema and the final artifact digest."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull-request creation and hosted check scheduling."
+    },
+    {
+      "gate": "native-wiki-readback",
+      "outcome": "SKIPPED",
+      "reason": "Native-wiki synchronization is a separate reviewed operation and is outside this source-only change."
+    }
+  ]
+}

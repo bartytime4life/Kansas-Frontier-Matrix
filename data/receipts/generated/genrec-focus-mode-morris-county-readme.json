@@ -1,0 +1,107 @@
+{
+  "receipt_id": "genrec-focus-mode-morris-county-readme-09a3dd7a5154",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/counties/morris_county/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/counties/morris_county/README.md": "sha256:NEEDS_VERIFICATION"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "ChatGPT",
+    "version": "GPT-5.6 Sol"
+  },
+  "prompt_or_contract": "sha256:NEEDS_VERIFICATION",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "ChatGPT GitHub connector"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@a973d2fff263db156677999a940e4f246e672f31",
+      "github:docs/focus-mode/counties/morris_county/README.md@a973d2fff263db156677999a940e4f246e672f31#blob:0e11c271d042d9689e5dd3d20b8724497f35a644",
+      "github:docs/focus-mode/counties/morris_county/morris_county_focus_mode_build_plan.md@a973d2fff263db156677999a940e4f246e672f31",
+      "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a973d2fff263db156677999a940e4f246e672f31#blob:a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "github:docs/adr/ADR-0027-county-focus-mode-control-plane.md@a973d2fff263db156677999a940e4f246e672f31#blob:4dfb29c963cd5662265d3cb97f98be82212d5e08",
+      "task-contract:kfm-focus-mode-morris-county-readme-20260821"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/counties/morris_county/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-base-target-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned current main, inspected the existing substantive Morris README and complete sibling plan, found no open Morris README PR or matching task branch, and created one feature branch from the pinned base."
+    },
+    {
+      "gate": "same-path-directory-governance-review",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 adopts Directory Rules v2 and supports same-path human documentation under docs/; ADR-0027 remains proposed, so migration was not inferred."
+    },
+    {
+      "gate": "material-no-loss-and-plan-reconciliation",
+      "outcome": "PASS",
+      "reason": "The complete Morris build plan was inspected; cultural-sovereignty, sensitive-place, hydrology, ecology, property, correction, and rollback boundaries were preserved while stale repository-presence claims were reconciled."
+    },
+    {
+      "gate": "markdown-structure-and-link-review",
+      "outcome": "PASS",
+      "reason": "The README retains one H1, explicit navigation, repository-relative links, truth labels, finite outcomes, and correction/rollback sections."
+    },
+    {
+      "gate": "security-rights-sensitivity-review",
+      "outcome": "PASS",
+      "reason": "No credentials, precise sensitive cultural locations, living-person data, exact wildlife occurrences, or live operational payloads were introduced; sensitive-place and cultural-sovereignty boundaries fail closed."
+    },
+    {
+      "gate": "artifact-sha256-integrity",
+      "outcome": "SKIPPED",
+      "reason": "The GitHub connector exposed final Git blob identity but no byte-stream SHA-256 primitive; SHA-256 remains NEEDS VERIFICATION before relying on this receipt for artifact-integrity enforcement."
+    },
+    {
+      "gate": "full-repository-validation",
+      "outcome": "SKIPPED",
+      "reason": "No mounted checkout was available for repository-native validation; hosted CI is observed after draft pull-request creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "github:docs/focus-mode/counties/morris_county/README.md@a973d2fff263db156677999a940e4f246e672f31",
+      "validated": true,
+      "evidence_ref": "blob:0e11c271d042d9689e5dd3d20b8724497f35a644"
+    },
+    {
+      "id": "github:docs/focus-mode/counties/morris_county/morris_county_focus_mode_build_plan.md@a973d2fff263db156677999a940e4f246e672f31",
+      "validated": true,
+      "evidence_ref": "repository-path:docs/focus-mode/counties/morris_county/morris_county_focus_mode_build_plan.md"
+    },
+    {
+      "id": "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a973d2fff263db156677999a940e4f246e672f31",
+      "validated": true,
+      "evidence_ref": "blob:a4de0d7a96b78da59cfc499d1025e1508afd8dd9"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T02:28:00Z",
+  "emitter": "OpenAI GPT-5.6 Sol via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0027-county-focus-mode-control-plane.md",
+    "drift_register_entry": null
+  },
+  "notes": "Generated authoring receipt for the Morris County README modernization. It records provenance only and preserves pending human review. It does not establish Nation-authoritative cultural meaning, approve sensitive-place exposure, admit sources, activate policy, prove runtime behavior, authorize release, or publish. SHA-256 binding remains NEEDS VERIFICATION in this connector-only run."
+}

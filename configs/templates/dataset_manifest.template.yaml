@@ -1,0 +1,5 @@
+# Dataset manifest template — greenfield
+id: TBD
+spec_hash: TBD
+valid_time: { start: null, end: null }
+provenance: []

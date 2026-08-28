@@ -1,0 +1,4 @@
+# pipeline_specs :: atmosphere :: ingest
+name: atmosphere-ingest
+version: 1
+stages: []

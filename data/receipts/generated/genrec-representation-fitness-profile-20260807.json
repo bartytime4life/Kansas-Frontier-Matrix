@@ -1,0 +1,149 @@
+{
+  "receipt_id": "genrec-representation-fitness-profile-20260807",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/representation-fitness-profile.yml",
+    "contracts/evidence/representation_fitness_assessment.md",
+    "fixtures/contracts/v1/evidence/representation_fitness_assessment/invalid/conditional_missing_obligation.json",
+    "fixtures/contracts/v1/evidence/representation_fitness_assessment/invalid/false_precision_marked_fit.json",
+    "fixtures/contracts/v1/evidence/representation_fitness_assessment/invalid/fit_missing_dimension_evidence.json",
+    "fixtures/contracts/v1/evidence/representation_fitness_assessment/valid/huc12_public_navigation_fit.json",
+    "fixtures/contracts/v1/evidence/representation_fitness_assessment/valid/modeled_raster_conditionally_fit.json",
+    "fixtures/contracts/v1/evidence/representation_fitness_assessment/valid/synthetic_scene_not_fit.json",
+    "schemas/contracts/v1/evidence/representation_fitness_assessment.schema.json",
+    "tests/evidence/test_representation_fitness_assessment.py",
+    "tools/validators/evidence/validate_representation_fitness_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/representation-fitness-profile.yml": "sha256:d20cae6ea3e617e03529ddeed6b6d3263dde3a28be07c9fade9855d56452a2eb",
+    "contracts/evidence/representation_fitness_assessment.md": "sha256:fab88e58f891e350cec2666d8334565d01b36959d7716ba39161aa767326f5ed",
+    "fixtures/contracts/v1/evidence/representation_fitness_assessment/invalid/conditional_missing_obligation.json": "sha256:71844bed9c308194487b49ebc0937bb60ca751382a1d9148b51c04067ce84747",
+    "fixtures/contracts/v1/evidence/representation_fitness_assessment/invalid/false_precision_marked_fit.json": "sha256:d2fc1c7d31a1db7ceccaa6f7c8485d31c487b6e9ebbca870d1a835fd1e65a5a3",
+    "fixtures/contracts/v1/evidence/representation_fitness_assessment/invalid/fit_missing_dimension_evidence.json": "sha256:a850963bdecf055d76eb79514fe2618911a7e79b1e97c34a6f567e899c1fee80",
+    "fixtures/contracts/v1/evidence/representation_fitness_assessment/valid/huc12_public_navigation_fit.json": "sha256:9142b54680579655263efdfad80090466d2482fa131796b130698bb0f66266c8",
+    "fixtures/contracts/v1/evidence/representation_fitness_assessment/valid/modeled_raster_conditionally_fit.json": "sha256:33b0954a02bd9a7f8361882c1ca00d2180f88d20db3366186b3703852899bfed",
+    "fixtures/contracts/v1/evidence/representation_fitness_assessment/valid/synthetic_scene_not_fit.json": "sha256:88fcb82776c64afdc5d932a3e2b78db8c5ab29b23b735960fc73c43bf20188a9",
+    "schemas/contracts/v1/evidence/representation_fitness_assessment.schema.json": "sha256:6b580ff95f74be6560130f6a2a4dca7ca71cd8f5701ef0d7eb3cbda883a6f3b3",
+    "tests/evidence/test_representation_fitness_assessment.py": "sha256:bbfbf3a83dcdccf194c20b9e0e34e7d9f88766a9f5d3c6f47a06c84efb1d4c16",
+    "tools/validators/evidence/validate_representation_fitness_assessment.py": "sha256:42ba42834187e244dbc21e0faa1f45ae85b3813601c34d236bd113f3ba6c9135"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-07"
+  },
+  "prompt_or_contract": "sha256:55a23a90141187ba6c287e402b2052759fdf9875c71c52944a3262dd98529eb9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Components_Pass_13_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual(1).pdf",
+      "KFM_Components_Pass_15_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual(1).pdf",
+      "KFM_Components_Pass_18_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM Components Pass 13#artifactization-and-proof-objects",
+      "attachment:KFM Components Pass 15#schema-wave-and-canonical-payloads",
+      "attachment:KFM Components Pass 18#KFM-11-and-expansion-agenda",
+      "repo:docs/doctrine/directory-rules.md@21f7b698112e2964064a0dae5ec5e1fab90a87d2"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/representation-fitness-profile.yml": "PROPOSED",
+    "contracts/evidence/representation_fitness_assessment.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/representation_fitness_assessment/invalid/conditional_missing_obligation.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/representation_fitness_assessment/invalid/false_precision_marked_fit.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/representation_fitness_assessment/invalid/fit_missing_dimension_evidence.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/representation_fitness_assessment/valid/huc12_public_navigation_fit.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/representation_fitness_assessment/valid/modeled_raster_conditionally_fit.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/representation_fitness_assessment/valid/synthetic_scene_not_fit.json": "PROPOSED",
+    "schemas/contracts/v1/evidence/representation_fitness_assessment.schema.json": "PROPOSED",
+    "tests/evidence/test_representation_fitness_assessment.py": "PROPOSED",
+    "tools/validators/evidence/validate_representation_fitness_assessment.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Four deterministic focused tests passed locally."
+    },
+    {
+      "gate": "fixture-matrix",
+      "outcome": "PASS",
+      "reason": "Three valid and three invalid representation-fitness fixtures produced expected polarity."
+    },
+    {
+      "gate": "schema-check",
+      "outcome": "PASS",
+      "reason": "The Draft 2020-12 schema passed schema validation."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The read-only workflow parsed locally."
+    },
+    {
+      "gate": "live-source-activation",
+      "outcome": "SKIPPED",
+      "reason": "No live source or network access is part of this profile."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI begins after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human evidence, spatial, policy, and release review remain pending."
+    }
+  ],
+  "policy_decisions": [
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@21f7b698112e2964064a0dae5ec5e1fab90a87d2"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass-13-artifactization",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Components Pass 13#artifactization-and-proof-objects"
+    },
+    {
+      "id": "attachment:pass-15-schema-wave",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Components Pass 15#schema-wave-and-canonical-payloads"
+    },
+    {
+      "id": "attachment:pass-18-representation-fitness",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Components Pass 18#KFM-11-and-expansion-agenda"
+    },
+    {
+      "id": "repo:directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@21f7b698112e2964064a0dae5ec5e1fab90a87d2"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-07T23:53:29Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first representation fitness assessment. No public or lifecycle authority is asserted."
+}

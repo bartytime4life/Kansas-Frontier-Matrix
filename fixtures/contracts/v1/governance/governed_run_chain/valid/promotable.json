@@ -1,0 +1,53 @@
+{
+  "chain_id": "chain:sample:promotable",
+  "evaluated_at": "2026-08-07T19:00:00Z",
+  "outcome": "PROMOTABLE",
+  "policy_decision": {
+    "decision_id": "policy:sample:promotable",
+    "evaluated_at": "2026-08-07T19:00:00Z",
+    "obligations": [],
+    "outcome": "ANSWER",
+    "policy_family": "promotion",
+    "reasons": [
+      "fixture outcome"
+    ]
+  },
+  "promotion_decision": {
+    "decided_at": "2026-08-07T19:00:00Z",
+    "decision": "APPROVE",
+    "domain": "governance",
+    "evidence_bundle_uri": "kfm://evidence-bundle/sample",
+    "evidence_ref": "kfm://evidence/sample",
+    "id": "promo:governance:sample-promotable",
+    "policy_bundle": "kfm://policy/promotion/v1",
+    "review": {
+      "reviewer": "@bartytime4life",
+      "ticket": "PR-PENDING"
+    },
+    "rollback_card_uri": "kfm://rollback/sample",
+    "run_id": "run:sample:promotable",
+    "version": "v1"
+  },
+  "quarantine_record": null,
+  "run_receipt": {
+    "code_ref": "repo:c9f9c6674df604c7ce247fdb23212607fe155357",
+    "inputs": [
+      "kfm://raw/sample"
+    ],
+    "outcome": "SUCCESS",
+    "outputs": [
+      "kfm://processed/sample"
+    ],
+    "run_id": "run:sample:promotable",
+    "source_descriptor_refs": [
+      "kfm://source/sample"
+    ],
+    "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "stage": "promotion_candidate",
+    "validation_refs": [
+      "kfm://validation/sample"
+    ]
+  },
+  "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "subject_ref": "kfm://candidate/sample"
+}

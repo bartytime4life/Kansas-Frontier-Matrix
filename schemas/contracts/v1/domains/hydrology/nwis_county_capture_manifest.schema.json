@@ -1,0 +1,233 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/domains/hydrology/nwis_county_capture_manifest.schema.json",
+  "title": "NwisCountyCaptureManifest",
+  "description": "Captured-input-only modern USGS Water Data county manifest; not transport, admission, evidence, policy, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "county_code",
+    "start_date",
+    "end_date",
+    "parameter_code",
+    "statistic_id",
+    "request_plan",
+    "capture_binding",
+    "monitoring_locations",
+    "observations",
+    "summary",
+    "governance",
+    "result_digest"
+  ],
+  "properties": {
+    "object_type": {"const": "NwisCountyCaptureManifest"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.usgs-water.nwis-county-capture.v1"},
+    "county_code": {"type": "string", "pattern": "^20[0-9]{3}$"},
+    "start_date": {"type": "string", "format": "date"},
+    "end_date": {"type": "string", "format": "date"},
+    "parameter_code": {"type": "string", "pattern": "^[0-9]{5}$"},
+    "statistic_id": {"type": "string", "pattern": "^[0-9]{5}$"},
+    "request_plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["monitoring_locations", "daily_values"],
+      "properties": {
+        "monitoring_locations": {"$ref": "#/$defs/request_step"},
+        "daily_values": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 10000,
+          "items": {"$ref": "#/$defs/request_step"}
+        }
+      }
+    },
+    "capture_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "captured_at",
+        "source_descriptor_ref",
+        "retrieval_receipt_ref",
+        "monitoring_location_page_digests",
+        "daily_value_capture_digests"
+      ],
+      "properties": {
+        "captured_at": {"type": "string", "format": "date-time"},
+        "source_descriptor_ref": {"type": "string", "minLength": 8, "maxLength": 512},
+        "retrieval_receipt_ref": {"type": "string", "minLength": 8, "maxLength": 512},
+        "monitoring_location_page_digests": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100,
+          "items": {"$ref": "#/$defs/digest"}
+        },
+        "daily_value_capture_digests": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 10000,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["monitoring_location_id", "page_digests"],
+            "properties": {
+              "monitoring_location_id": {"$ref": "#/$defs/location_id"},
+              "page_digests": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 100,
+                "items": {"$ref": "#/$defs/digest"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "monitoring_locations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "monitoring_location_id",
+          "agency_code",
+          "monitoring_location_number",
+          "monitoring_location_name",
+          "state_code",
+          "county_code",
+          "site_type_code",
+          "source_role"
+        ],
+        "properties": {
+          "monitoring_location_id": {"$ref": "#/$defs/location_id"},
+          "agency_code": {"type": "string", "minLength": 1, "maxLength": 16},
+          "monitoring_location_number": {"type": "string", "minLength": 4, "maxLength": 32},
+          "monitoring_location_name": {"type": "string", "minLength": 1, "maxLength": 256},
+          "state_code": {"const": "20"},
+          "county_code": {"type": "string", "pattern": "^20[0-9]{3}$"},
+          "site_type_code": {"type": "string", "minLength": 1, "maxLength": 16},
+          "source_role": {"const": "ADMINISTRATIVE"}
+        }
+      }
+    },
+    "observations": {
+      "type": "array",
+      "maxItems": 1000000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "feature_id",
+          "time_series_id",
+          "monitoring_location_id",
+          "parameter_code",
+          "statistic_id",
+          "time",
+          "value",
+          "unit_of_measure",
+          "approval_status",
+          "qualifier",
+          "last_modified",
+          "source_role"
+        ],
+        "properties": {
+          "feature_id": {"type": "string", "minLength": 1, "maxLength": 128},
+          "time_series_id": {"type": "string", "minLength": 1, "maxLength": 128},
+          "monitoring_location_id": {"$ref": "#/$defs/location_id"},
+          "parameter_code": {"type": "string", "pattern": "^[0-9]{5}$"},
+          "statistic_id": {"type": "string", "pattern": "^[0-9]{5}$"},
+          "time": {"type": "string", "format": "date"},
+          "value": {"type": "string", "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$", "maxLength": 128},
+          "unit_of_measure": {"type": "string", "minLength": 1, "maxLength": 64},
+          "approval_status": {"enum": ["Approved", "Provisional"]},
+          "qualifier": {
+            "oneOf": [
+              {"type": "string", "minLength": 1, "maxLength": 128},
+              {"type": "null"}
+            ]
+          },
+          "last_modified": {"type": "string", "format": "date-time"},
+          "source_role": {"const": "AGGREGATE_DAILY"}
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "monitoring_location_count",
+        "observation_count",
+        "approved_count",
+        "provisional_count",
+        "first_observation_date",
+        "last_observation_date"
+      ],
+      "properties": {
+        "monitoring_location_count": {"type": "integer", "minimum": 1, "maximum": 10000},
+        "observation_count": {"type": "integer", "minimum": 0, "maximum": 1000000},
+        "approved_count": {"type": "integer", "minimum": 0, "maximum": 1000000},
+        "provisional_count": {"type": "integer", "minimum": 0, "maximum": 1000000},
+        "first_observation_date": {"oneOf": [{"type": "string", "format": "date"}, {"type": "null"}]},
+        "last_observation_date": {"oneOf": [{"type": "string", "format": "date"}, {"type": "null"}]}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_mode",
+        "network_attempted",
+        "credentials_read",
+        "source_activated",
+        "raw_written",
+        "evidence_resolved",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_authorized"
+      ],
+      "properties": {
+        "execution_mode": {"const": "CAPTURED_INPUT_ONLY"},
+        "network_attempted": {"const": false},
+        "credentials_read": {"const": false},
+        "source_activated": {"const": false},
+        "raw_written": {"const": false},
+        "evidence_resolved": {"const": false},
+        "promotion_authorized": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false},
+        "public_use_authorized": {"const": false}
+      }
+    },
+    "result_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "location_id": {"type": "string", "pattern": "^[A-Z0-9]+-[0-9A-Za-z._-]{4,32}$"},
+    "request_step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "collection",
+        "url",
+        "expected_media_type",
+        "pagination_strategy",
+        "api_key_included"
+      ],
+      "properties": {
+        "method": {"const": "GET"},
+        "collection": {"enum": ["monitoring-locations", "daily"]},
+        "url": {"type": "string", "pattern": "^https://api\\.waterdata\\.usgs\\.gov/ogcapi/v0/collections/(monitoring-locations|daily)/items\\?"},
+        "expected_media_type": {"const": "application/geo+json"},
+        "pagination_strategy": {"const": "FOLLOW_REL_NEXT_UNTIL_ABSENT"},
+        "api_key_included": {"const": false}
+      }
+    }
+  }
+}

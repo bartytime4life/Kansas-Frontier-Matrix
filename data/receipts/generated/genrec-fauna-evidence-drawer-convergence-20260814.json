@@ -1,0 +1,161 @@
+{
+  "receipt_id": "genrec-fauna-evidence-drawer-convergence-20260814",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/fauna-evidence-drawer-convergence.yml",
+    "apps/explorer-web/src/features/domains/fauna/EvidenceDrawer.tsx",
+    "schemas/contracts/v1/domains/fauna/evidence_drawer_payload.schema.json",
+    "tests/validators/domains/fauna/test_evidence_drawer_convergence.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/fauna-evidence-drawer-convergence.yml": "sha256:533cbdd4bb615c8a6487303091432eceb33d50653e12af9b2b3fd669d7150b85",
+    "apps/explorer-web/src/features/domains/fauna/EvidenceDrawer.tsx": "sha256:b870d0a7d0227e5a65ff071d4d11e09efae6d8203b86fc8f2c644a4130856155",
+    "schemas/contracts/v1/domains/fauna/evidence_drawer_payload.schema.json": "sha256:3ba956d2ad1d550d438e0e05885bbab8660bfb9deafda113c93c866c11847937",
+    "tests/validators/domains/fauna/test_evidence_drawer_convergence.py": "sha256:fa5ee0ec5cd1bdf6b6e5a41ee0a4f4286d584edaaa9b6da4cefea91846c012bb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:6bc8411ec8e80f672e73f87901e89546f9fbf547d81afb34a33b36e9d2b2d5d5",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector (read-only)",
+      "local deterministic validation",
+      "PDF render and visual inspection"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md",
+      "Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf",
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#KFM-IDX-POL-005-and-KFM-IDX-APP-002",
+      "attachment:Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf#pdf-page-12-section-14",
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#pdf-page-506-printed-page-323-KFM-P1-IDEA-0071",
+      "attachment:KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf#pdf-pages-13-and-22",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@cbf3656da9cb092d6a0f2382fb80ac13e3f217ac",
+      "repo:docs/doctrine/directory-rules.md@cbf3656da9cb092d6a0f2382fb80ac13e3f217ac",
+      "repo:contracts/ui/evidence_drawer_payload.md@cbf3656da9cb092d6a0f2382fb80ac13e3f217ac",
+      "repo:schemas/contracts/v1/ui/evidence_drawer_payload.schema.json@cbf3656da9cb092d6a0f2382fb80ac13e3f217ac",
+      "repo:apps/explorer-web/src/features/evidence_drawer/index.tsx@cbf3656da9cb092d6a0f2382fb80ac13e3f217ac",
+      "repo:contracts/domains/fauna/occurrence_evidence.md@cbf3656da9cb092d6a0f2382fb80ac13e3f217ac"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/fauna-evidence-drawer-convergence.yml": "PROPOSED",
+    "apps/explorer-web/src/features/domains/fauna/EvidenceDrawer.tsx": "PROPOSED",
+    "schemas/contracts/v1/domains/fauna/evidence_drawer_payload.schema.json": "PROPOSED",
+    "tests/validators/domains/fauna/test_evidence_drawer_convergence.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap",
+      "outcome": "PASS",
+      "reason": "Current main was refreshed to cbf3656da9cb092d6a0f2382fb80ac13e3f217ac after unrelated ADR-0005 and PMTiles changes; no open pull request, branch, or recent commit owns Fauna Evidence Drawer convergence. Open PR #2782 changes only ADR-0005 metadata and graph guards."
+    },
+    {
+      "gate": "refreshed-baseline-failure-classification",
+      "outcome": "PASS",
+      "reason": "Untouched refreshed main passes repository guardrails and focused Fauna tests, but its ADR-0005 change fails docs-meta-block with two missing required fields and docs-document-graph with one missing relationship target. Draft PR #2782 already owns those inherited documentation failures; this slice does not touch docs."
+    },
+    {
+      "gate": "focused-standard-library-tests",
+      "outcome": "PASS",
+      "reason": "Three deterministic no-network convergence tests passed against the prepared artifact bytes and the current shared UI schema."
+    },
+    {
+      "gate": "fauna-smoke-regression",
+      "outcome": "PASS",
+      "reason": "Eight existing deterministic Fauna fixture-hygiene smoke tests passed on both the untouched baseline and the prepared branch."
+    },
+    {
+      "gate": "repository-guardrails",
+      "outcome": "PASS",
+      "reason": "The validator registry, 19 workflow-security tests plus the 435-workflow ratchet, and 24 topology tests plus the 13,417-path ratchet all passed with no invariant or new-drift findings."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "Every authored non-receipt artifact is bound to its prepared SHA-256 bytes; this receipt is excluded from self-reference."
+    },
+    {
+      "gate": "authority-preservation",
+      "outcome": "PASS",
+      "reason": "The Fauna path is a field-free compatibility projection; the shared contract, closed shape, parser, renderer, policy, review, release, sensitivity, and publication authorities are unchanged."
+    },
+    {
+      "gate": "repository-generated-receipt-validator",
+      "outcome": "SKIPPED",
+      "reason": "The local runtime lacks the repository-declared jsonschema dependency; exact-head hosted workflows install declared dependencies before running the repository validator."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted exact-head execution begins after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass-20-habitat-fauna-and-geoprivacy",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#KFM-IDX-POL-005-and-KFM-IDX-APP-002"
+    },
+    {
+      "id": "pipeline-domain-lane-first-use",
+      "validated": true,
+      "evidence_ref": "attachment:Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf#pdf-page-12-section-14"
+    },
+    {
+      "id": "consolidated-atlas-habitat-fauna-thin-slice",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#pdf-page-506-printed-page-323-KFM-P1-IDEA-0071"
+    },
+    {
+      "id": "maplibre-drawer-and-ui-closure",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf#pdf-pages-13-and-22"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@cbf3656da9cb092d6a0f2382fb80ac13e3f217ac"
+    },
+    {
+      "id": "shared-evidence-drawer-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/ui/evidence_drawer_payload.md@cbf3656da9cb092d6a0f2382fb80ac13e3f217ac"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-14T14:29:26Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Converges only the Fauna compatibility component and schema identity onto the existing shared closed Evidence Drawer profile as a bounded prerequisite for a later habitat-fauna thin slice. It does not implement domain-specific payload fields, occurrence-to-habitat assignment, transport, evidence resolution, geoprivacy transforms, policy, review, release, deployment, source activation, or publication."
+}

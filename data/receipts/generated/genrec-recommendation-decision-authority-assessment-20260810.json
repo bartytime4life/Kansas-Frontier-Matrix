@@ -1,0 +1,111 @@
+{
+  "receipt_id": "genrec-recommendation-decision-authority-assessment-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/recommendation-decision-authority-assessment.yml",
+    "contracts/governance/recommendation_decision_authority_assessment.md",
+    "docs/intake/exploratory/briefing-recommendation-decision-authority-source-map.md",
+    "fixtures/contracts/v1/governance/recommendation_decision_authority_assessment/cases.json",
+    "schemas/contracts/v1/governance/recommendation_decision_authority_assessment.schema.json",
+    "tests/validators/test_validate_recommendation_decision_authority_assessment.py",
+    "tools/validators/validate_recommendation_decision_authority_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/recommendation-decision-authority-assessment.yml": "sha256:42fb1dc38e365f297a9c600c5eb07140920f42a97018e81a3e452b8c89ba8eb3",
+    "contracts/governance/recommendation_decision_authority_assessment.md": "sha256:3b01ea82a5b49761c1ea66333cfdb519e78fe371049dc1a7d20ef46c85719018",
+    "docs/intake/exploratory/briefing-recommendation-decision-authority-source-map.md": "sha256:ff605a97583be814989d02b2eb26911457bf688f1c7d46ad71ec67620135d9db",
+    "fixtures/contracts/v1/governance/recommendation_decision_authority_assessment/cases.json": "sha256:4b849ec5b398bec27158f776e3e915809a04873b35812e3a68aef19448461c2c",
+    "schemas/contracts/v1/governance/recommendation_decision_authority_assessment.schema.json": "sha256:61dc159f4e5b875ffbc1c8bb88da8d7aff0158c637391f2db513a0633fdd27c6",
+    "tests/validators/test_validate_recommendation_decision_authority_assessment.py": "sha256:feddb7d8382139338f803d76f79230a2914e51c97bb01a9b751ff5600272c57f",
+    "tools/validators/validate_recommendation_decision_authority_assessment.py": "sha256:43195ffc918282909421aab4c1752c1fbef7a202eeaf83f56d7f1c7bc104eabb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:3b01ea82a5b49761c1ea66333cfdb519e78fe371049dc1a7d20ef46c85719018",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector source inspection",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:68872f9226c4e4a288e888b51fb9d80c4a621a4d660ee36dd6fef7edb3c34c4e",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "KFM_Briefing_to_System_Integration_Architecture.docx",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "https://drive.google.com/file/d/1UnJ3dl9ZFvWHM01pYnqdoh0OOWinSFUg",
+      "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#sections-15.1-15.3",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/7d3b894deeb82d3ecb0ddf3daeec9158f266edb1",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7d3b894deeb82d3ecb0ddf3daeec9158f266edb1/contracts/governance/governance_event.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7d3b894deeb82d3ecb0ddf3daeec9158f266edb1/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/recommendation-decision-authority-assessment.yml": "PROPOSED",
+    "contracts/governance/recommendation_decision_authority_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/briefing-recommendation-decision-authority-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/recommendation_decision_authority_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/governance/recommendation_decision_authority_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_recommendation_decision_authority_assessment.py": "CONFIRMED",
+    "tools/validators/validate_recommendation_decision_authority_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite-13-tests", "outcome": "PASS"},
+    {"gate": "fixture-polarity-7-pass-11-deny-1-error", "outcome": "PASS"},
+    {"gate": "advisory-decision-implementation-outcome-and-authority-boundary", "outcome": "PASS"},
+    {"gate": "no-network-no-policy-engine-and-value-free-diagnostics", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Hosted validation runs after the draft pull request is opened."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Human semantic, governance, policy, and legal review remains pending."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "briefing-recommendation-decision-boundary",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#sections-15.1-15.3"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7d3b894deeb82d3ecb0ddf3daeec9158f266edb1/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "current-governance-event-stage-separation",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7d3b894deeb82d3ecb0ddf3daeec9158f266edb1/contracts/governance/governance_event.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T17:18:51Z",
+  "emitter": "OpenAI GPT-5 Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Implements the briefing's Recommendation-versus-Decision boundary as an inactive, fixture-only assessment. It requires separate formal decision evidence, explicit comparison for adoption with changes, and separate implementation and outcome references while creating no recommendation, decision, policy, lifecycle, release, or publication authority."
+}

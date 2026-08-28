@@ -1,0 +1,128 @@
+{
+  "base": {
+    "schema_version": "1.0.0",
+    "object_type": "TypedReceiptAggregationCandidate",
+    "profile_status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "authority": "NONE",
+    "aggregation_id": "kfm:typed-receipt-aggregation:000000000000000000000000",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "dataset_ref": "fixture:dataset/kansas-environmental-snapshot",
+    "run_id": "fixture:run/20260809-001",
+    "entries": [
+      {
+        "receipt_type": "RUN_RECEIPT",
+        "receipt_ref": "fixture:receipt/run-001",
+        "receipt_schema_ref": "repo://schemas/contracts/v1/runtime/run_receipt.schema.json",
+        "receipt_sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "input_sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "rekor_entry_id": null,
+        "produced_artifacts": [
+          {"path": "artifacts/run/run-001.json", "sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}
+        ],
+        "materiality_delta": "NON_EVENT",
+        "publish_candidate": false
+      },
+      {
+        "receipt_type": "VALIDATION_RECEIPT",
+        "receipt_ref": "fixture:receipt/validation-001",
+        "receipt_schema_ref": "repo://schemas/contracts/v1/data/validation_report.schema.json",
+        "receipt_sha256": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "input_sha256": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "rekor_entry_id": "fixture:rekor/ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "produced_artifacts": [
+          {"path": "artifacts/qa/validation-001.json", "sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111"},
+          {"path": "data/processed/fixture/table.parquet", "sha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222"}
+        ],
+        "materiality_delta": "PROMOTION_CANDIDATE",
+        "publish_candidate": true
+      }
+    ],
+    "summary": {
+      "entry_count": 2,
+      "artifact_count": 3,
+      "input_sha256s": [
+        "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+      ],
+      "materiality_counts": {"NON_EVENT": 1, "PROMOTION_CANDIDATE": 1, "HOLD": 0, "ERROR": 0},
+      "publish_candidate_receipt_refs": ["fixture:receipt/validation-001"],
+      "unsigned_receipt_refs": ["fixture:receipt/run-001"],
+      "review_posture": "HOLD_FOR_SEPARATE_REVIEW"
+    },
+    "controls": {
+      "fixture_only": true,
+      "receipts_resolved": false,
+      "artifact_bytes_read": false,
+      "rekor_queried": false,
+      "signatures_verified": false,
+      "source_admitted": false,
+      "policy_evaluated": false,
+      "review_approved": false,
+      "promotion_eligible": false,
+      "release_authorized": false,
+      "publication_authorized": false
+    },
+    "non_effects": ["NO_ARTIFACT_READ", "NO_POLICY_DECISION", "NO_PROMOTION", "NO_PUBLICATION", "NO_RECEIPT_RESOLUTION", "NO_REKOR_QUERY", "NO_RELEASE", "NO_SIGNATURE_VERIFICATION", "NO_SOURCE_ADMISSION"]
+  },
+  "cases": [
+    {"id": "mixed-receipts-pass", "expected": {"outcome": "PASS", "findings": []}},
+    {
+      "id": "hold-receipt-pass",
+      "patch": {
+        "entries": [
+          {
+            "receipt_type": "RUN_RECEIPT",
+            "receipt_ref": "fixture:receipt/run-001",
+            "receipt_schema_ref": "repo://schemas/contracts/v1/runtime/run_receipt.schema.json",
+            "receipt_sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "input_sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "rekor_entry_id": null,
+            "produced_artifacts": [{"path": "artifacts/run/run-001.json", "sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}],
+            "materiality_delta": "NON_EVENT",
+            "publish_candidate": false
+          },
+          {
+            "receipt_type": "VALIDATION_RECEIPT",
+            "receipt_ref": "fixture:receipt/validation-001",
+            "receipt_schema_ref": "repo://schemas/contracts/v1/data/validation_report.schema.json",
+            "receipt_sha256": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "input_sha256": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "rekor_entry_id": "fixture:rekor/ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "produced_artifacts": [
+              {"path": "artifacts/qa/validation-001.json", "sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111"},
+              {"path": "data/processed/fixture/table.parquet", "sha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222"}
+            ],
+            "materiality_delta": "HOLD",
+            "publish_candidate": false
+          }
+        ],
+        "summary": {
+          "entry_count": 2,
+          "artifact_count": 3,
+          "input_sha256s": ["sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"],
+          "materiality_counts": {"NON_EVENT": 1, "PROMOTION_CANDIDATE": 0, "HOLD": 1, "ERROR": 0},
+          "publish_candidate_receipt_refs": [],
+          "unsigned_receipt_refs": ["fixture:receipt/run-001"],
+          "review_posture": "HOLD_FOR_SEPARATE_REVIEW"
+        }
+      },
+      "expected": {"outcome": "PASS", "findings": []}
+    },
+    {"id": "entry-order-invalid", "patch": {"entries": [{"receipt_type": "VALIDATION_RECEIPT", "receipt_ref": "fixture:receipt/validation-001", "receipt_schema_ref": "repo://schemas/contracts/v1/data/validation_report.schema.json", "receipt_sha256": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "input_sha256": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "rekor_entry_id": "fixture:rekor/ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "produced_artifacts": [{"path": "artifacts/qa/validation-001.json", "sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111"}], "materiality_delta": "PROMOTION_CANDIDATE", "publish_candidate": true}, {"receipt_type": "RUN_RECEIPT", "receipt_ref": "fixture:receipt/run-001", "receipt_schema_ref": "repo://schemas/contracts/v1/runtime/run_receipt.schema.json", "receipt_sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "input_sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "rekor_entry_id": null, "produced_artifacts": [{"path": "artifacts/run/run-001.json", "sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}], "materiality_delta": "NON_EVENT", "publish_candidate": false}]}, "expected": {"outcome": "FAIL", "findings": ["ARTIFACT_COUNT_MISMATCH", "ENTRY_ORDER_INVALID"]}},
+    {"id": "duplicate-receipt-ref", "patch": {"entries": [{"receipt_type": "RUN_RECEIPT", "receipt_ref": "fixture:receipt/run-001", "receipt_schema_ref": "repo://schemas/contracts/v1/runtime/run_receipt.schema.json", "receipt_sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "input_sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "rekor_entry_id": null, "produced_artifacts": [{"path": "artifacts/run/run-001.json", "sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}], "materiality_delta": "NON_EVENT", "publish_candidate": false}, {"receipt_type": "VALIDATION_RECEIPT", "receipt_ref": "fixture:receipt/run-001", "receipt_schema_ref": "repo://schemas/contracts/v1/data/validation_report.schema.json", "receipt_sha256": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "input_sha256": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "rekor_entry_id": "fixture:rekor/ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "produced_artifacts": [{"path": "artifacts/qa/validation-001.json", "sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111"}, {"path": "data/processed/fixture/table.parquet", "sha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222"}], "materiality_delta": "PROMOTION_CANDIDATE", "publish_candidate": true}]}, "expected": {"outcome": "FAIL", "findings": ["PUBLISH_REFS_MISMATCH", "RECEIPT_REF_DUPLICATE"]}},
+    {"id": "artifact-order-invalid", "patch": {"entries": [{"receipt_type": "RUN_RECEIPT", "receipt_ref": "fixture:receipt/run-001", "receipt_schema_ref": "repo://schemas/contracts/v1/runtime/run_receipt.schema.json", "receipt_sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "input_sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "rekor_entry_id": null, "produced_artifacts": [{"path": "artifacts/run/run-001.json", "sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}], "materiality_delta": "NON_EVENT", "publish_candidate": false}, {"receipt_type": "VALIDATION_RECEIPT", "receipt_ref": "fixture:receipt/validation-001", "receipt_schema_ref": "repo://schemas/contracts/v1/data/validation_report.schema.json", "receipt_sha256": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "input_sha256": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "rekor_entry_id": "fixture:rekor/ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "produced_artifacts": [{"path": "data/processed/fixture/table.parquet", "sha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222"}, {"path": "artifacts/qa/validation-001.json", "sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111"}], "materiality_delta": "PROMOTION_CANDIDATE", "publish_candidate": true}]}, "expected": {"outcome": "FAIL", "findings": ["ARTIFACT_ORDER_INVALID"]}},
+    {"id": "artifact-path-duplicate", "patch": {"entries": [{"receipt_type": "RUN_RECEIPT", "receipt_ref": "fixture:receipt/run-001", "receipt_schema_ref": "repo://schemas/contracts/v1/runtime/run_receipt.schema.json", "receipt_sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "input_sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "rekor_entry_id": null, "produced_artifacts": [{"path": "artifacts/run/run-001.json", "sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}], "materiality_delta": "NON_EVENT", "publish_candidate": false}, {"receipt_type": "VALIDATION_RECEIPT", "receipt_ref": "fixture:receipt/validation-001", "receipt_schema_ref": "repo://schemas/contracts/v1/data/validation_report.schema.json", "receipt_sha256": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "input_sha256": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "rekor_entry_id": "fixture:rekor/ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "produced_artifacts": [{"path": "artifacts/run/run-001.json", "sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111"}, {"path": "data/processed/fixture/table.parquet", "sha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222"}], "materiality_delta": "PROMOTION_CANDIDATE", "publish_candidate": true}]}, "expected": {"outcome": "FAIL", "findings": ["ARTIFACT_PATH_DUPLICATE"]}},
+    {"id": "publish-materiality-incoherent", "patch": {"entries": [{"receipt_type": "RUN_RECEIPT", "receipt_ref": "fixture:receipt/run-001", "receipt_schema_ref": "repo://schemas/contracts/v1/runtime/run_receipt.schema.json", "receipt_sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "input_sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "rekor_entry_id": null, "produced_artifacts": [{"path": "artifacts/run/run-001.json", "sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}], "materiality_delta": "NON_EVENT", "publish_candidate": true}, {"receipt_type": "VALIDATION_RECEIPT", "receipt_ref": "fixture:receipt/validation-001", "receipt_schema_ref": "repo://schemas/contracts/v1/data/validation_report.schema.json", "receipt_sha256": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "input_sha256": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "rekor_entry_id": "fixture:rekor/ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "produced_artifacts": [{"path": "artifacts/qa/validation-001.json", "sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111"}, {"path": "data/processed/fixture/table.parquet", "sha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222"}], "materiality_delta": "PROMOTION_CANDIDATE", "publish_candidate": true}]}, "expected": {"outcome": "FAIL", "findings": ["PUBLISH_MATERIALITY_INCOHERENT", "PUBLISH_REFS_MISMATCH"]}},
+    {"id": "entry-count-stale", "patch": {"summary": {"entry_count": 1}}, "expected": {"outcome": "FAIL", "findings": ["ENTRY_COUNT_MISMATCH"]}},
+    {"id": "artifact-count-stale", "patch": {"summary": {"artifact_count": 2}}, "expected": {"outcome": "FAIL", "findings": ["ARTIFACT_COUNT_MISMATCH"]}},
+    {"id": "materiality-counts-stale", "patch": {"summary": {"materiality_counts": {"NON_EVENT": 2, "PROMOTION_CANDIDATE": 0, "HOLD": 0, "ERROR": 0}}}, "expected": {"outcome": "FAIL", "findings": ["MATERIALITY_COUNTS_MISMATCH"]}},
+    {"id": "input-digest-closure-stale", "patch": {"summary": {"input_sha256s": ["sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"]}}, "expected": {"outcome": "FAIL", "findings": ["INPUT_DIGESTS_MISMATCH"]}},
+    {"id": "publish-reference-closure-stale", "patch": {"summary": {"publish_candidate_receipt_refs": []}}, "expected": {"outcome": "FAIL", "findings": ["PUBLISH_REFS_MISMATCH"]}},
+    {"id": "unsigned-reference-closure-stale", "patch": {"summary": {"unsigned_receipt_refs": []}}, "expected": {"outcome": "FAIL", "findings": ["UNSIGNED_REFS_MISMATCH"]}},
+    {"id": "summary-list-order-invalid", "patch": {"summary": {"input_sha256s": ["sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"]}}, "expected": {"outcome": "FAIL", "findings": ["SUMMARY_NOT_CANONICAL"]}},
+    {"id": "identity-stale", "patch": {"run_id": "fixture:run/20260809-002"}, "recompute_identity": false, "expected": {"outcome": "FAIL", "findings": ["AGGREGATION_ID_MISMATCH", "SPEC_HASH_MISMATCH"]}},
+    {"id": "verification-overclaim", "patch": {"controls": {"signatures_verified": true}}, "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}},
+    {"id": "unknown-field-denied", "patch": {"unexpected": true}, "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}}
+  ]
+}

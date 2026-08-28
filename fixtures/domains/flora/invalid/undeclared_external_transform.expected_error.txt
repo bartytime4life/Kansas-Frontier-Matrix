@@ -1,0 +1,6 @@
+EXTERNAL_REFERENCE_FORBIDDEN	$.public_representation.source_url
+NUMERIC_VALUE_FORBIDDEN	$.sensitivity.generalization_threshold
+TRANSFORM_SECRET_FIELD_FORBIDDEN	$.sensitivity.generalization_threshold
+UNDECLARED_PUBLIC_REPRESENTATION_FIELD	$.public_representation.source_url
+UNDECLARED_SENSITIVITY_FIELD	$.sensitivity.generalization_threshold
+UNDECLARED_TOP_LEVEL_FIELD	$.generated_claim

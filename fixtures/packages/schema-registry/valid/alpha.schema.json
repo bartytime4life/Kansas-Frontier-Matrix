@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/test/alpha.schema.json",
+  "title": "Alpha",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "name": { "type": "string" }
+  }
+}

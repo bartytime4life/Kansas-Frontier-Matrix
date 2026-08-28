@@ -1,0 +1,190 @@
+{
+  "receipt_id": "genrec-program-baseline-m01-20260822",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/program-baseline.yml",
+    "Makefile",
+    "contracts/governance/program_baseline.md",
+    "control_plane/README.md",
+    "control_plane/program_baseline.json",
+    "fixtures/contracts/v1/governance/program_baseline/cases.json",
+    "schemas/contracts/v1/governance/program_baseline.schema.json",
+    "tests/validators/test_validate_program_baseline.py",
+    "tools/validators/control_plane/validate_program_baseline.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/program-baseline.yml": "sha256:970bdab7555e9fb33c5a3825e78f09e1f1df67fe8ae3a1e31356d04941896684",
+    "Makefile": "sha256:5fda1f0b17d5790b1653fce8168b2b2bc116473d3c30fddb8f8082f5c5133567",
+    "contracts/governance/program_baseline.md": "sha256:a22d3509ac0e9bc9706311f7d86a98a4275a126c5da3a8dfebf004e44e169d0d",
+    "control_plane/README.md": "sha256:c7862d9efbe369d17beaac61b713b14416aa5fd9297cda9b95b40c5760a37bd9",
+    "control_plane/program_baseline.json": "sha256:7715f9ccde98f23db6f9e59b478c4e83aaabaf11989b384da006ac072b17805e",
+    "fixtures/contracts/v1/governance/program_baseline/cases.json": "sha256:e7fe7d519fe9c601691697acfa32c51eca5462e67c6af32bae0bb5c35e33e37f",
+    "schemas/contracts/v1/governance/program_baseline.schema.json": "sha256:27cf4797661f92844b66412612d8ce9f7aae065c2a2d031f8e30342c819ac474",
+    "tests/validators/test_validate_program_baseline.py": "sha256:870b9f0a39bfdcb64ce88df24badd8c057f9a5f71b67e5334f673e5be71a9ac1",
+    "tools/validators/control_plane/validate_program_baseline.py": "sha256:5d5729ef2715dd29dc1ac5d04304ec5c7890fefdfc8a97318cad58cce04283e5"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5-session-2026-08-22"
+  },
+  "prompt_or_contract": "sha256:a22d3509ac0e9bc9706311f7d86a98a4275a126c5da3a8dfebf004e44e169d0d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "local Git evidence inspection",
+      "no-network Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:27e5cb40b23964e63302c5c7eeef9f213e18c0d9ed58b1051b026ff2c99fbf91",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:510ee7f3aea7610c853e429bc02a9dec32b64eee970115be7dd4df1c86cc2dc5",
+      "sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641"
+    ],
+    "attached_docs": [
+      "Kansas Frontier Matrix Repository Structure Guiding Document",
+      "Kansas Frontier Matrix — AI Build Operating Contract",
+      "Kansas Frontier Matrix — Connected-Dots Architecture Brief"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/milestone/2",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/2768",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/2874",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/3365",
+      "repo:main@6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e",
+      "repo:.github/CODEOWNERS@6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e",
+      "repo:control_plane/object_family_register.yaml@6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e",
+      "repo:control_plane/path_alias_register.yaml@6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e",
+      "repo:control_plane/root_registry.yaml@6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e",
+      "repo:docs/adr/INDEX.md@6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e",
+      "repo:docs/doctrine/directory-rules.md@6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e",
+      "https://docs.google.com/document/d/1J0an6dk5VSq_mebS4TYvFUuBQZ_XLVtUlARGOSaMEaY/edit",
+      "https://docs.google.com/document/d/1sdiLNDLFr2cVD3Q8h3ZvHO4D96WLJ6V7vf5neNzEyTM/edit",
+      "https://docs.google.com/document/d/1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs/edit"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/program-baseline.yml": "PROPOSED",
+    "Makefile": "PROPOSED",
+    "contracts/governance/program_baseline.md": "PROPOSED",
+    "control_plane/README.md": "PROPOSED",
+    "control_plane/program_baseline.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/program_baseline/cases.json": "PROPOSED",
+    "schemas/contracts/v1/governance/program_baseline.schema.json": "PROPOSED",
+    "tests/validators/test_validate_program_baseline.py": "PROPOSED",
+    "tools/validators/control_plane/validate_program_baseline.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "authority_ownership_and_overlap_reconciliation",
+      "outcome": "PASS",
+      "reason": "The exact main SHA, accepted ADR index, Directory Rules digest, CODEOWNERS route, root and alias projections, issues #2768/#2874/#3365, and empty open-PR queue were inspected and pinned."
+    },
+    {
+      "gate": "program_baseline_profile",
+      "outcome": "PASS",
+      "reason": "Ten focused no-network tests, one positive and six negative fixture cases, pinned-byte digest replay, exact issue-set checks, and the canonical instance passed."
+    },
+    {
+      "gate": "drive_lineage_boundary",
+      "outcome": "PASS",
+      "reason": "The three connected Drive documents were recorded as advisory lineage with repository_authority=false and mutated=false."
+    },
+    {
+      "gate": "repository_topology_conformance",
+      "outcome": "FAIL",
+      "reason": "Exact-main topology validation retains nine inherited unbaselined findings and thirteen stale fingerprints; this slice neither expands nor waives the baseline."
+    },
+    {
+      "gate": "object_family_workflow_watch_coverage",
+      "outcome": "FAIL",
+      "reason": "The structural catalog validator passes for nineteen entries, while focused tests retain nine inherited missing workflow path-filter bindings."
+    },
+    {
+      "gate": "exact_main_hosted_checks",
+      "outcome": "SKIPPED",
+      "reason": "No hosted workflow run was observed for the exact merge commit; the baseline records NOT_RUN rather than PASS."
+    },
+    {
+      "gate": "hosted_exact_pr_head_checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks run after the draft pull-request head is published."
+    },
+    {
+      "gate": "accountable_human_review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and cannot be inferred from CODEOWNERS, a receipt, a workflow, or a pull request."
+    },
+    {
+      "gate": "artifact_sha256_integrity",
+      "outcome": "PASS",
+      "reason": "All nine AI-authored or substantively modified implementation artifacts are bound to their final local SHA-256 values; this receipt does not bind itself."
+    }
+  ],
+  "policy_decisions": [
+    "kfm://adr/ADR-0029"
+  ],
+  "citations": [
+    {
+      "id": "KFM-ADR-INDEX",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/INDEX.md@6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES-V2",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e"
+    },
+    {
+      "id": "KFM-GITHUB-M01",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3365"
+    },
+    {
+      "id": "KFM-GITHUB-PROGRAM-TRACKER",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2768"
+    },
+    {
+      "id": "KFM-GITHUB-SOURCE-CORPUS-TRACKER",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2874"
+    },
+    {
+      "id": "KFM-GDRIVE-REPOSITORY-STRUCTURE",
+      "validated": true,
+      "evidence_ref": "https://docs.google.com/document/d/1J0an6dk5VSq_mebS4TYvFUuBQZ_XLVtUlARGOSaMEaY/edit"
+    },
+    {
+      "id": "KFM-GDRIVE-CONNECTED-DOTS",
+      "validated": true,
+      "evidence_ref": "https://docs.google.com/document/d/1sdiLNDLFr2cVD3Q8h3ZvHO4D96WLJ6V7vf5neNzEyTM/edit"
+    },
+    {
+      "id": "KFM-GDRIVE-AI-BUILD-CONTRACT",
+      "validated": true,
+      "evidence_ref": "https://docs.google.com/document/d/1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs/edit"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T23:58:27Z",
+  "emitter": "OpenAI Codex Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "M01 adds one pinned, reversible program-baseline projection and its deterministic validation packet. It preserves inherited failures and unrun hosted checks exactly. It does not create authority, change issue state, accept an ADR, activate a source, approve policy or review, change repository settings, waive drift, mutate lifecycle state, release, deploy, promote, publish, or establish public-runtime behavior."
+}

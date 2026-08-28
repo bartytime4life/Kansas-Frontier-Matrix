@@ -1,0 +1,143 @@
+{
+  "cases": [
+    {
+      "expected_codes": [
+        "CHECK_OUTCOME_INVALID"
+      ],
+      "id": "check_not_run_claims_pass",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/checks/3/outcome",
+          "value": "PASS"
+        }
+      ]
+    },
+    {
+      "expected_codes": [
+        "CLOSURE_CRITERIA_INCOMPLETE",
+        "CLOSURE_HOSTED_EVIDENCE_MISSING",
+        "CLOSURE_REQUIRED_CHECKS",
+        "CLOSURE_REVIEW_MISSING",
+        "CLOSURE_UNRESOLVED"
+      ],
+      "id": "closure_ready_without_evidence",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/closure/state",
+          "value": "READY"
+        }
+      ]
+    },
+    {
+      "expected_codes": [
+        "AUTHORITY_EFFECT_DENIED",
+        "SCHEMA_MISMATCH"
+      ],
+      "id": "report_claims_release_authority",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/controls/release_authorized",
+          "value": true
+        }
+      ]
+    },
+    {
+      "expected_codes": [
+        "REPORT_DIGEST_MISMATCH"
+      ],
+      "id": "report_digest_mismatch",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/report_digest",
+          "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ],
+      "refresh_digest": false
+    },
+    {
+      "expected_codes": [
+        "REF_DIGEST_MISMATCH"
+      ],
+      "id": "source_digest_mismatch",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/authority_refs/0/sha256",
+          "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "expected_codes": [
+        "CHECK_OUTCOME_INVALID"
+      ],
+      "id": "skipped_claims_pass",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/checks/1/outcome",
+          "value": "PASS"
+        }
+      ]
+    },
+    {
+      "expected_codes": [
+        "STATUS_MISMATCH"
+      ],
+      "id": "status_hides_introduced_failure",
+      "mutations": [
+        {
+          "op": "append",
+          "path": "/failures/introduced",
+          "value": {
+            "blocking": true,
+            "code": "CANDIDATE_FINDING",
+            "count": 1,
+            "scope": "synthetic negative mutation"
+          }
+        }
+      ]
+    },
+    {
+      "expected_codes": [
+        "IDS_NOT_SORTED",
+        "IDS_NOT_UNIQUE",
+        "REF_DIGEST_MISMATCH",
+        "REF_PATH_DUPLICATE"
+      ],
+      "id": "version_ref_duplicate",
+      "mutations": [
+        {
+          "op": "append",
+          "path": "/schemas",
+          "value": {
+            "id": "ci-conformance-report",
+            "path": "schemas/contracts/v1/governance/ci_conformance_report.schema.json",
+            "scope": "BASE_TREE",
+            "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+            "status": "PROPOSED",
+            "version": "1.0.0"
+          }
+        }
+      ]
+    },
+    {
+      "expected_codes": [
+        "UNRESOLVED_COUNT_MISMATCH"
+      ],
+      "id": "wrong_unresolved_count",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/closure/unresolved_count",
+          "value": 5
+        }
+      ]
+    }
+  ],
+  "schema_version": "kfm.ci-conformance-report-cases.v1"
+}

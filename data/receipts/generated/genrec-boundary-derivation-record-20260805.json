@@ -1,0 +1,156 @@
+{
+  "receipt_id": "genrec-boundary-derivation-record-20260805",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/boundary-derivation-record.yml",
+    "contracts/spatial-foundation/README.md",
+    "contracts/spatial-foundation/boundary_derivation_record.md",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/README.md",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/expected_findings_manifest.json",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/invalid_accepted_without_review.json",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/invalid_control_after_recording.json",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/invalid_controls_not_canonical.json",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/invalid_governance_overclaim.json",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/invalid_hold_allows_analysis.json",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/invalid_legal_authority_overclaim.json",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/invalid_residual_count.json",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/invalid_spec_hash_mismatch.json",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/valid/valid_accepted_for_analysis.json",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/valid/valid_hold_unresolved.json",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/valid/valid_rejected_reviewed.json",
+    "schemas/contracts/v1/spatial-foundation/README.md",
+    "schemas/contracts/v1/spatial-foundation/boundary_derivation_record.schema.json",
+    "tests/validators/test_validate_boundary_derivation_record.py",
+    "tools/validators/validate_boundary_derivation_record.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/boundary-derivation-record.yml": "sha256:a6ae18b4f438f9edabb782596f0c88db4ca2d2a88b7cde58198299124e3547f5",
+    "contracts/spatial-foundation/README.md": "sha256:28980534ca2376666f8d524afe28f7a109fc70adca2db98ccc142dba6e38a4c5",
+    "contracts/spatial-foundation/boundary_derivation_record.md": "sha256:62cf7f9e1a3099484262984f391438985879681cafaab1609431f3829e12e4a3",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/README.md": "sha256:b88a325a0d210bf1a8486322c240f47e753811a54cf4d6ecada2c7116f8522af",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/expected_findings_manifest.json": "sha256:2fd1dec0f6267eb781eaf310e0e5d08cef0a3984c0e4e5163cbfb238d946f204",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/invalid_accepted_without_review.json": "sha256:1e46d2fb6b9b047bfc6c71bf3f255939bcc7942af1aa50c5521a1bcfdfabdf86",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/invalid_control_after_recording.json": "sha256:d3c055d8e6b030c0d813e44b455cb4e6e4d24818e11295a4d71e15f970467a37",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/invalid_controls_not_canonical.json": "sha256:7ed40a7a1bf270e8cb5a9902eb6fe1b9f11d9ddfbb4af796d3423271aa1977e1",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/invalid_governance_overclaim.json": "sha256:dddc5b47116889b98126138ee868f983655db08270c7b88756bdb9fdd5884b22",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/invalid_hold_allows_analysis.json": "sha256:88390f94838b922480d6501d6299ec48e982b5b20d5dbb2ae57506744c072359",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/invalid_legal_authority_overclaim.json": "sha256:9a40d781b9e1d5347f9d865bb560491da334db1c0415edb423550bf36b14a507",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/invalid_residual_count.json": "sha256:7fbd1c0fc7aa8852e45c52511dfdca031f5b19eee8bde0817b9646e78454951f",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/invalid_spec_hash_mismatch.json": "sha256:ab13b55e5d9a3bfbd96cf38d160768c4f1748ab93e1b6a77f3fcaca64818a774",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/valid/valid_accepted_for_analysis.json": "sha256:10965a83f4aeabd96463b472bda956ce70d84d221eb6982795248b3e64336f65",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/valid/valid_hold_unresolved.json": "sha256:cda324e2041b8dcc600d068c9889ce2b868aa3d12688eb6ba58d06b39032627c",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/valid/valid_rejected_reviewed.json": "sha256:87d3096d9a009655d6554b2dc9a8c06c9968aa3a11da8ec83c69386541e6b87e",
+    "schemas/contracts/v1/spatial-foundation/README.md": "sha256:a920095bc546d4d166053e46ab6ca03d9e5537bc1b41da272db74a89a0095dcf",
+    "schemas/contracts/v1/spatial-foundation/boundary_derivation_record.schema.json": "sha256:8fc1db3efbe094d35e6783e4f6b424eae71c3efdaf98b80309ba91729d490e32",
+    "tests/validators/test_validate_boundary_derivation_record.py": "sha256:15cf9696b2dce8cfa4331df513337c787a38ba7904eff2a57787b061916ad480",
+    "tools/validators/validate_boundary_derivation_record.py": "sha256:cc2adb7cefb9aaabf9eb68814384356c21d32600107980a645ba11cf7a513977"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05"
+  },
+  "prompt_or_contract": "sha256:429e58f73859e74c7706cb9b1037df8c0377b4d420bfbbe7ac12ec9927d1fc72",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (read/write)",
+      "uploaded-file search",
+      "local Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:47983cd76db4d3c0e971c61d6259f80f32ca861091d7f65020ad94c09ce76061"
+    ],
+    "attached_docs": [
+      "New Ideas 4-25-26(2).pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-25-26(2).pdf#survey-control-and-boundary-derivation-provenance",
+      "github:2fa0e5b261be8971dae1a685f72ced3c98773437",
+      "github:docs/intake/exploratory/new-ideas-4-25-source-map.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/boundary-derivation-record.yml": "PROPOSED",
+    "contracts/spatial-foundation/README.md": "PROPOSED",
+    "contracts/spatial-foundation/boundary_derivation_record.md": "PROPOSED",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/README.md": "PROPOSED",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/invalid_accepted_without_review.json": "PROPOSED",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/invalid_control_after_recording.json": "PROPOSED",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/invalid_controls_not_canonical.json": "PROPOSED",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/invalid_governance_overclaim.json": "PROPOSED",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/invalid_hold_allows_analysis.json": "PROPOSED",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/invalid_legal_authority_overclaim.json": "PROPOSED",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/invalid_residual_count.json": "PROPOSED",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/invalid/invalid_spec_hash_mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/valid/valid_accepted_for_analysis.json": "PROPOSED",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/valid/valid_hold_unresolved.json": "PROPOSED",
+    "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/valid/valid_rejected_reviewed.json": "PROPOSED",
+    "schemas/contracts/v1/spatial-foundation/README.md": "PROPOSED",
+    "schemas/contracts/v1/spatial-foundation/boundary_derivation_record.schema.json": "PROPOSED",
+    "tests/validators/test_validate_boundary_derivation_record.py": "PROPOSED",
+    "tools/validators/validate_boundary_derivation_record.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-focused-tests",
+      "outcome": "PASS",
+      "reason": "Nine focused tests passed; three valid and eight invalid synthetic fixtures replayed with exact reviewed finding sets."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "Artifact paths, SHA-256 bindings, truth-label keys, and receipt shape were verified against the final local bytes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Exact-head GitHub Actions results are available only after the branch and draft pull request are created."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-4-25-26",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-25-26(2).pdf#survey-control-and-boundary-derivation-provenance"
+    },
+    {
+      "id": "repository:intake-source-map",
+      "validated": true,
+      "evidence_ref": "github:docs/intake/exploratory/new-ideas-4-25-source-map.md"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-05T21:35:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Synthetic fixture-first implementation of KFM-TRIAD-062. The slice records source roles, controls, residuals, review, analytic-use limitations, and lineage without creating title, parcel, legal-boundary, source, evidence, policy, release, or publication authority. Proposed branch: agent/boundary-derivation-provenance-20260805. Base: 2fa0e5b261be8971dae1a685f72ced3c98773437."
+}

@@ -1,0 +1,4 @@
+# pipeline_specs :: hydrology :: catalog
+name: hydrology-catalog
+version: 1
+stages: []

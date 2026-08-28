@@ -1,0 +1,5 @@
+DEPTH_INTERVAL_INVALID	$.depth_interval_cm
+EVIDENCE_REF_MISSING	$.evidence_refs
+GOVERNANCE_INVALID	$.governance
+MEASUREMENT_INVALID	$.measurement
+SPATIAL_SUPPORT_INVALID	$.spatial_support

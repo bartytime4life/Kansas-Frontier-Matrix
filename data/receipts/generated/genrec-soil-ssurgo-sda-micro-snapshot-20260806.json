@@ -1,0 +1,139 @@
+{
+  "receipt_id": "genrec-soil-ssurgo-sda-micro-snapshot-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/soil-ssurgo-sda-micro-snapshot.yml",
+    "contracts/domains/soil/ssurgo_sda_micro_snapshot.md",
+    "schemas/contracts/v1/domains/soil/ssurgo_sda_micro_snapshot_report.schema.json",
+    "tests/ingest/ssurgo_watch/fixtures/sda_micro_snapshot/current_changed.json",
+    "tests/ingest/ssurgo_watch/fixtures/sda_micro_snapshot/current_unchanged.json",
+    "tests/ingest/ssurgo_watch/fixtures/sda_micro_snapshot/invalid_component_sum.json",
+    "tests/ingest/ssurgo_watch/fixtures/sda_micro_snapshot/invalid_slope.json",
+    "tests/ingest/ssurgo_watch/fixtures/sda_micro_snapshot/prior.json",
+    "tests/ingest/ssurgo_watch/test_sda_micro_snapshot.py",
+    "tools/ingest/ssurgo_watch/sda_micro_snapshot.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/soil-ssurgo-sda-micro-snapshot.yml": "sha256:8386f71dcfbaa6d5722a8c31351d2a1c8386c77cf371175f96119b3fcc3847cf",
+    "contracts/domains/soil/ssurgo_sda_micro_snapshot.md": "sha256:a50af19d25aef0ae15e2d624dd70aa4b7742ebaa5aacb752bedb4d5d38b800db",
+    "schemas/contracts/v1/domains/soil/ssurgo_sda_micro_snapshot_report.schema.json": "sha256:5a3bdf3c312fce6da3acd4806f8a973d18badd67144f9605610c152ece959221",
+    "tests/ingest/ssurgo_watch/fixtures/sda_micro_snapshot/current_changed.json": "sha256:d186d97b800a12ef06442bb7bccbd4b7c3de3f9b23bd699f62da848cfdd661df",
+    "tests/ingest/ssurgo_watch/fixtures/sda_micro_snapshot/current_unchanged.json": "sha256:169a7fc3806d1abcad14995dad2c64a509325b84efe23a0557c819c4c7efc27b",
+    "tests/ingest/ssurgo_watch/fixtures/sda_micro_snapshot/invalid_component_sum.json": "sha256:e5c8df275db32f3367f2b8c7c43d5e2c4b1efe15dba9c606fdf0801b6b9512ae",
+    "tests/ingest/ssurgo_watch/fixtures/sda_micro_snapshot/invalid_slope.json": "sha256:c3db0de63baad54f3fcad18f34cc81a2e459501d6fef923754711b26f29c75c5",
+    "tests/ingest/ssurgo_watch/fixtures/sda_micro_snapshot/prior.json": "sha256:4a26c98cc6d18d8385ca9063408b6e86062e7963f045bfbbedef80f0b4793d31",
+    "tests/ingest/ssurgo_watch/test_sda_micro_snapshot.py": "sha256:db4dd0bebaf81736114ddd45d0201b228329e07285ddb3d59fd5b3b1fed23470",
+    "tools/ingest/ssurgo_watch/sda_micro_snapshot.py": "sha256:a8f57e83ca9701aaa0b0a476fa8a19bd136cbb711ef72795f037ac13771af5f3"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:ecad3d1fb4d503e745aa3342e239e4ba0f8ad292ef0e7a87ead2a750d886dc28",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-2-26(1).pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-2-26(1).pdf#ssurgo-gssurgo-sda-watcher-and-domain-checks",
+      "repo:main@16a07f666dbaffbac98f7b9e4402ac55e69f99c3",
+      "repo:tools/ingest/ssurgo_watch/ssurgo_watch.py@16a07f666dbaffbac98f7b9e4402ac55e69f99c3",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@16a07f666dbaffbac98f7b9e4402ac55e69f99c3"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/soil-ssurgo-sda-micro-snapshot.yml": "PROPOSED",
+    "contracts/domains/soil/ssurgo_sda_micro_snapshot.md": "PROPOSED",
+    "schemas/contracts/v1/domains/soil/ssurgo_sda_micro_snapshot_report.schema.json": "PROPOSED",
+    "tests/ingest/ssurgo_watch/fixtures/sda_micro_snapshot/current_changed.json": "PROPOSED",
+    "tests/ingest/ssurgo_watch/fixtures/sda_micro_snapshot/current_unchanged.json": "PROPOSED",
+    "tests/ingest/ssurgo_watch/fixtures/sda_micro_snapshot/invalid_component_sum.json": "PROPOSED",
+    "tests/ingest/ssurgo_watch/fixtures/sda_micro_snapshot/invalid_slope.json": "PROPOSED",
+    "tests/ingest/ssurgo_watch/fixtures/sda_micro_snapshot/prior.json": "PROPOSED",
+    "tests/ingest/ssurgo_watch/test_sda_micro_snapshot.py": "PROPOSED",
+    "tools/ingest/ssurgo_watch/sda_micro_snapshot.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Five deterministic positive and negative SDA micro-snapshot tests passed locally."
+    },
+    {
+      "gate": "report-schema",
+      "outcome": "PASS",
+      "reason": "No-change and proposed-work reports validate against the new Draft 2020-12 schema in focused tests."
+    },
+    {
+      "gate": "hash-separation",
+      "outcome": "PASS",
+      "reason": "Focused tests prove retrieval timestamp/order changes alter retrieval hash without fabricating material content change."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS",
+      "reason": "The comparator imports only the Python standard library and reads caller-selected synthetic fixtures."
+    },
+    {
+      "gate": "receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values bind every authored artifact except this receipt, which cannot self-bind."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires a pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-4-2-26-ssurgo-sda",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-2-26(1).pdf#ssurgo-gssurgo-sda-watcher-and-domain-checks"
+    },
+    {
+      "id": "repository:ssurgo-watcher-boundary",
+      "validated": true,
+      "evidence_ref": "repo:tools/ingest/ssurgo_watch/ssurgo_watch.py@16a07f666dbaffbac98f7b9e4402ac55e69f99c3"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@16a07f666dbaffbac98f7b9e4402ac55e69f99c3"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T17:47:55Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a fixture-only SSURGO/SDA micro-snapshot validator and diff helper. It separates content and retrieval hashes and does not activate a live source, run an SDA query, write lifecycle data, sign an operational receipt, evaluate release policy, promote, release, or publish."
+}

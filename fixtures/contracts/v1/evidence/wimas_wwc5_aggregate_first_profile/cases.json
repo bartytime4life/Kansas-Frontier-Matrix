@@ -1,0 +1,427 @@
+{
+  "fixture_profile": "kfm.wimas_wwc5_fixture_suite.v1",
+  "base_document": {
+    "profile": "kfm.wimas_wwc5_aggregate_first_profile.v1",
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "assessment_id": "kfm:wimas-wwc5-assessment:sha256:507970fdd5b11272e8222626f97089da7236b8c090cf45c4f0a7509cc935b5f1",
+    "bundle": {
+      "bundle_id": "bundle:fixture:wimas-wwc5",
+      "claim_scope": "kfm:wimas-wwc5-assessment:sha256:507970fdd5b11272e8222626f97089da7236b8c090cf45c4f0a7509cc935b5f1",
+      "evidence_refs": [
+        "evidence:fixture:wimas-use",
+        "evidence:fixture:wimas-right",
+        "evidence:fixture:wwc5"
+      ],
+      "source_records": [
+        "src:wimas_use_fixture",
+        "src:wimas_right_fixture",
+        "src:wwc5_fixture"
+      ],
+      "citations": [
+        "attachment:pass2#KFM-P2-IDEA-0027"
+      ],
+      "rights": {
+        "license": "fixture-only-no-rights-claim"
+      },
+      "sensitivity": {
+        "level": "generalized",
+        "reason": "synthetic aggregate fixture",
+        "applied_at": "2026-08-08T00:00:00Z"
+      },
+      "transforms": [
+        "owner_suppression",
+        "coordinate_suppression",
+        "county_aggregation"
+      ],
+      "checksums": {
+        "wimas_wwc5_aggregate_first_profile": "sha256:507970fdd5b11272e8222626f97089da7236b8c090cf45c4f0a7509cc935b5f1"
+      },
+      "spec_hash": "sha256:a8f92ee076ef9369625b2c96ba7958fded9091222b61100fc516a9676ac751a4"
+    },
+    "wimas_wwc5_profile": {
+      "source_roles": [
+        {
+          "source_descriptor_ref": "src:wimas_use_fixture",
+          "role": "WIMAS_WATER_USE_AGGREGATE",
+          "support_ref_ids": [
+            "evidence:fixture:wimas-use"
+          ],
+          "source_time": "2025-12-31T00:00:00Z",
+          "retrieved_at": "2026-08-08T00:00:00Z",
+          "position_quality": "AGGREGATED"
+        },
+        {
+          "source_descriptor_ref": "src:wimas_right_fixture",
+          "role": "WIMAS_WATER_RIGHT_CONTEXT",
+          "support_ref_ids": [
+            "evidence:fixture:wimas-right"
+          ],
+          "source_time": "2025-12-31T00:00:00Z",
+          "retrieved_at": "2026-08-08T00:00:00Z",
+          "position_quality": "LEGAL_DESCRIPTION_DERIVED"
+        },
+        {
+          "source_descriptor_ref": "src:wwc5_fixture",
+          "role": "WWC5_WELL_RECORD_REFERENCE",
+          "support_ref_ids": [
+            "evidence:fixture:wwc5"
+          ],
+          "source_time": "2025-12-31T00:00:00Z",
+          "retrieved_at": "2026-08-08T00:00:00Z",
+          "position_quality": "GEOCODED"
+        }
+      ],
+      "public_aggregation": {
+        "geography_type": "COUNTY",
+        "exact_coordinates_present": false,
+        "record_level_public_output": false
+      },
+      "privacy_controls": {
+        "owner_names_suppressed": true,
+        "contact_details_suppressed": true,
+        "exact_private_well_coordinates_suppressed": true,
+        "minimum_group_size": 5
+      },
+      "aggregates": [
+        {
+          "aggregate_id": "fixture:aggregate:wimas-use",
+          "source_role": "WIMAS_WATER_USE_AGGREGATE",
+          "geography_type": "COUNTY",
+          "geography_ref": "county:fixture:001",
+          "group_count": 10,
+          "quantity_scaled": 2500,
+          "position_quality": "AGGREGATED",
+          "support_ref_ids": [
+            "evidence:fixture:wimas-use"
+          ]
+        },
+        {
+          "aggregate_id": "fixture:aggregate:wimas-right",
+          "source_role": "WIMAS_WATER_RIGHT_CONTEXT",
+          "geography_type": "COUNTY",
+          "geography_ref": "county:fixture:001",
+          "group_count": 8,
+          "quantity_scaled": 0,
+          "position_quality": "LEGAL_DESCRIPTION_DERIVED",
+          "support_ref_ids": [
+            "evidence:fixture:wimas-right"
+          ]
+        },
+        {
+          "aggregate_id": "fixture:aggregate:wwc5",
+          "source_role": "WWC5_WELL_RECORD_REFERENCE",
+          "geography_type": "COUNTY",
+          "geography_ref": "county:fixture:001",
+          "group_count": 7,
+          "quantity_scaled": 0,
+          "position_quality": "GEOCODED",
+          "support_ref_ids": [
+            "evidence:fixture:wwc5"
+          ]
+        }
+      ],
+      "policy_profile_ref": "policy:fixture:wimas-wwc5-public-safe",
+      "review_refs": {
+        "rights_review_ref": "review:fixture:wimas-wwc5-rights",
+        "privacy_review_ref": "review:fixture:wimas-wwc5-privacy"
+      },
+      "temporal_lineage": {
+        "period_start": "2025-01-01T00:00:00Z",
+        "period_end": "2025-12-31T23:59:59Z",
+        "computed_at": "2026-08-08T00:00:00Z"
+      },
+      "spec_hash": "sha256:507970fdd5b11272e8222626f97089da7236b8c090cf45c4f0a7509cc935b5f1"
+    },
+    "claims": {
+      "deterministic_identity": true,
+      "evidence_resolved": false,
+      "policy_evaluated": false,
+      "network_access_performed": false,
+      "source_activated": false,
+      "ownership_authority": false,
+      "legal_entitlement_authority": false,
+      "current_use_authority": false,
+      "current_well_condition_authority": false,
+      "lifecycle_write_performed": false,
+      "released": false,
+      "published": false
+    }
+  },
+  "cases": [
+    {
+      "case_id": "valid_aggregate_first",
+      "expected_outcome": "PASS",
+      "expected_findings": [],
+      "pre_hash_mutations": [],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "abstain_missing_policy",
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {
+          "code": "WATER_POLICY_UNRESOLVED",
+          "path": "/wimas_wwc5_profile/policy_profile_ref"
+        }
+      ],
+      "pre_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/wimas_wwc5_profile/policy_profile_ref",
+          "value": ""
+        }
+      ],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "abstain_missing_privacy_review",
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {
+          "code": "WATER_REVIEW_UNRESOLVED",
+          "path": "/wimas_wwc5_profile/review_refs/privacy_review_ref"
+        }
+      ],
+      "pre_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/wimas_wwc5_profile/review_refs/privacy_review_ref",
+          "value": ""
+        }
+      ],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "abstain_missing_support",
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {
+          "code": "WATER_SUPPORT_UNRESOLVED",
+          "path": "/wimas_wwc5_profile/aggregates/2/support_ref_ids/0"
+        }
+      ],
+      "pre_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/wimas_wwc5_profile/aggregates/2/support_ref_ids/0",
+          "value": "evidence:missing"
+        }
+      ],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "deny_exact_coordinates",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "WATER_SCHEMA_INVALID",
+          "path": "/wimas_wwc5_profile/public_aggregation/exact_coordinates_present"
+        }
+      ],
+      "pre_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/wimas_wwc5_profile/public_aggregation/exact_coordinates_present",
+          "value": true
+        }
+      ],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "deny_record_level_output",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "WATER_SCHEMA_INVALID",
+          "path": "/wimas_wwc5_profile/public_aggregation/record_level_public_output"
+        }
+      ],
+      "pre_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/wimas_wwc5_profile/public_aggregation/record_level_public_output",
+          "value": true
+        }
+      ],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "deny_owner_not_suppressed",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "WATER_SCHEMA_INVALID",
+          "path": "/wimas_wwc5_profile/privacy_controls/owner_names_suppressed"
+        }
+      ],
+      "pre_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/wimas_wwc5_profile/privacy_controls/owner_names_suppressed",
+          "value": false
+        }
+      ],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "deny_small_group",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "WATER_GROUP_BELOW_MINIMUM",
+          "path": "/wimas_wwc5_profile/aggregates/2/group_count"
+        }
+      ],
+      "pre_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/wimas_wwc5_profile/aggregates/2/group_count",
+          "value": 2
+        }
+      ],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "deny_role_collapse",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "WATER_SOURCE_ROLE_COLLAPSED",
+          "path": "/wimas_wwc5_profile/source_roles"
+        }
+      ],
+      "pre_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/wimas_wwc5_profile/source_roles/2/source_descriptor_ref",
+          "value": "src:wimas_use_fixture"
+        }
+      ],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "deny_ownership_claim",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "WATER_SCHEMA_INVALID",
+          "path": "/claims/ownership_authority"
+        }
+      ],
+      "pre_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/claims/ownership_authority",
+          "value": true
+        }
+      ],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "error_hash_mismatch",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {
+          "code": "WATER_PROFILE_HASH_MISMATCH",
+          "path": "/wimas_wwc5_profile/spec_hash"
+        }
+      ],
+      "pre_hash_mutations": [],
+      "post_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/wimas_wwc5_profile/spec_hash",
+          "value": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        }
+      ],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "error_time_order",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {
+          "code": "WATER_TIME_INVALID",
+          "path": "/wimas_wwc5_profile/temporal_lineage"
+        }
+      ],
+      "pre_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/wimas_wwc5_profile/temporal_lineage/computed_at",
+          "value": "2024-01-01T00:00:00Z"
+        }
+      ],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "error_duplicate_aggregate",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {
+          "code": "WATER_DUPLICATE_AGGREGATE_ID",
+          "path": "/wimas_wwc5_profile/aggregates/2/aggregate_id"
+        }
+      ],
+      "pre_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/wimas_wwc5_profile/aggregates/2/aggregate_id",
+          "value": "fixture:aggregate:wimas-use"
+        }
+      ],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "error_right_quantity",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {
+          "code": "WATER_ROLE_ARITHMETIC_CONTRADICTION",
+          "path": "/wimas_wwc5_profile/aggregates/1/quantity_scaled"
+        }
+      ],
+      "pre_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/wimas_wwc5_profile/aggregates/1/quantity_scaled",
+          "value": 4
+        }
+      ],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "deny_role_aggregate_mismatch",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "WATER_ROLE_AGGREGATE_MISMATCH",
+          "path": "/wimas_wwc5_profile/aggregates/2/source_role"
+        }
+      ],
+      "pre_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/wimas_wwc5_profile/aggregates/2/source_role",
+          "value": "WIMAS_WATER_USE_AGGREGATE"
+        }
+      ],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    }
+  ]
+}

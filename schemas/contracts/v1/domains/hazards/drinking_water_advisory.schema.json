@@ -1,0 +1,396 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/hazards/drinking_water_advisory.schema.json",
+  "title": "DrinkingWaterAdvisory candidate profile",
+  "description": "Closed, fixture-only Hazards profile for public-water-system advisory identity, authority, service-area scope, source failure, and authoritative rescission. No health, alert, release, or public-use authority is created.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "status",
+    "object_type",
+    "schema_version",
+    "advisory_id",
+    "spec_hash",
+    "shared_mechanics",
+    "source_surface",
+    "identity",
+    "authority",
+    "advisory",
+    "scope",
+    "controls",
+    "limitations",
+    "effects"
+  ],
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^\\S+$"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        {"$ref": "#/$defs/ref"},
+        {"type": "null"}
+      ]
+    },
+    "token": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,159}$"
+    },
+    "nullable_token": {
+      "oneOf": [
+        {"$ref": "#/$defs/token"},
+        {"type": "null"}
+      ]
+    },
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "nullable_datetime": {
+      "oneOf": [
+        {"$ref": "#/$defs/aware_datetime"},
+        {"type": "null"}
+      ]
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "canonical_strings": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 240,
+        "pattern": "\\S"
+      }
+    }
+  },
+  "properties": {
+    "profile": {
+      "const": "kfm.hazards.drinking-water-advisory.v1"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "object_type": {
+      "const": "DrinkingWaterAdvisory"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "advisory_id": {
+      "type": "string",
+      "pattern": "^drinking-water-advisory:[a-f0-9]{24}$"
+    },
+    "spec_hash": {"$ref": "#/$defs/sha256"},
+    "shared_mechanics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_ref",
+        "projected_profile_id",
+        "event_family",
+        "basis"
+      ],
+      "properties": {
+        "contract_ref": {
+          "const": "contracts/common/advisory_event_envelope.md"
+        },
+        "projected_profile_id": {
+          "const": "kfm.advisory-event.drinking-water.v1"
+        },
+        "event_family": {
+          "const": "DRINKING_WATER"
+        },
+        "basis": {
+          "const": "REGULATORY_ADVISORY"
+        }
+      }
+    },
+    "source_surface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_descriptor_ref",
+        "source_mode",
+        "source_check_outcome",
+        "checked_at",
+        "snapshot_complete",
+        "previous_record_present",
+        "current_record_present"
+      ],
+      "properties": {
+        "source_descriptor_ref": {"$ref": "#/$defs/ref"},
+        "source_mode": {
+          "enum": ["COMPLETE_SNAPSHOT", "INCREMENTAL_FEED", "SINGLE_EVENT"]
+        },
+        "source_check_outcome": {
+          "enum": [
+            "FETCHED",
+            "NOT_MODIFIED",
+            "NOT_FOUND",
+            "ACCESS_DENIED",
+            "RATE_LIMITED",
+            "MALFORMED",
+            "STATUS_CHECK_FAILED",
+            "SOURCE_CONFLICT"
+          ]
+        },
+        "checked_at": {"$ref": "#/$defs/aware_datetime"},
+        "snapshot_complete": {"type": "boolean"},
+        "previous_record_present": {"type": "boolean"},
+        "current_record_present": {"type": "boolean"}
+      }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "native_public_water_system_id",
+        "public_water_system_ref",
+        "resolution_status"
+      ],
+      "properties": {
+        "native_public_water_system_id": {"$ref": "#/$defs/token"},
+        "public_water_system_ref": {"$ref": "#/$defs/nullable_ref"},
+        "resolution_status": {
+          "enum": ["RESOLVED", "UNRESOLVED", "CONFLICT"]
+        }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "issue_notice_ref",
+        "issuance_authority_ref",
+        "issuance_authority_status",
+        "rescission_notice_ref",
+        "rescission_authority_ref",
+        "rescission_authority_status"
+      ],
+      "properties": {
+        "issue_notice_ref": {"$ref": "#/$defs/nullable_ref"},
+        "issuance_authority_ref": {"$ref": "#/$defs/nullable_ref"},
+        "issuance_authority_status": {
+          "enum": ["CONFIRMED", "UNRESOLVED", "CONFLICT"]
+        },
+        "rescission_notice_ref": {"$ref": "#/$defs/nullable_ref"},
+        "rescission_authority_ref": {"$ref": "#/$defs/nullable_ref"},
+        "rescission_authority_status": {
+          "enum": ["NOT_APPLICABLE", "CONFIRMED", "UNRESOLVED", "CONFLICT"]
+        }
+      }
+    },
+    "advisory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cause_code",
+        "native_status",
+        "normalized_status",
+        "last_confirmed_status",
+        "issued_at",
+        "effective_at",
+        "expires_at",
+        "rescinded_at",
+        "clears_prior_advisory"
+      ],
+      "properties": {
+        "cause_code": {
+          "enum": [
+            "BOIL_WATER",
+            "LOSS_OF_PRESSURE",
+            "MICROBIOLOGICAL",
+            "CHEMICAL",
+            "INFRASTRUCTURE",
+            "OTHER",
+            "UNKNOWN"
+          ]
+        },
+        "native_status": {"$ref": "#/$defs/nullable_token"},
+        "normalized_status": {
+          "enum": [
+            "ISSUED",
+            "ACTIVE_CONFIRMED",
+            "UPDATED",
+            "RESCINDED",
+            "STATUS_UNCONFIRMED",
+            "IDENTITY_CONFLICT",
+            "SOURCE_CONFLICT"
+          ]
+        },
+        "last_confirmed_status": {
+          "oneOf": [
+            {"enum": ["ISSUED", "ACTIVE_CONFIRMED", "UPDATED"]},
+            {"type": "null"}
+          ]
+        },
+        "issued_at": {"$ref": "#/$defs/aware_datetime"},
+        "effective_at": {"$ref": "#/$defs/aware_datetime"},
+        "expires_at": {"$ref": "#/$defs/nullable_datetime"},
+        "rescinded_at": {"$ref": "#/$defs/nullable_datetime"},
+        "clears_prior_advisory": {"type": "boolean"}
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope_role",
+        "service_area_ref",
+        "administrative_area_ref",
+        "geometry_ref",
+        "geometry_confidence"
+      ],
+      "properties": {
+        "scope_role": {
+          "enum": ["SERVICE_AREA", "ADMINISTRATIVE_CONTEXT", "UNRESOLVED"]
+        },
+        "service_area_ref": {"$ref": "#/$defs/nullable_ref"},
+        "administrative_area_ref": {"$ref": "#/$defs/nullable_ref"},
+        "geometry_ref": {"$ref": "#/$defs/nullable_ref"},
+        "geometry_confidence": {
+          "enum": ["CONFIRMED", "APPROXIMATE", "UNRESOLVED"]
+        }
+      }
+    },
+    "controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "prior_advisory_ref",
+        "evidence_refs",
+        "release_state",
+        "release_ref",
+        "public_use_allowed",
+        "alerts_allowed",
+        "not_for_life_safety"
+      ],
+      "properties": {
+        "prior_advisory_ref": {"$ref": "#/$defs/nullable_ref"},
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/ref"}
+        },
+        "release_state": {"const": "UNRELEASED"},
+        "release_ref": {"type": "null"},
+        "public_use_allowed": {"const": false},
+        "alerts_allowed": {"const": false},
+        "not_for_life_safety": {"const": true}
+      }
+    },
+    "limitations": {"$ref": "#/$defs/canonical_strings"},
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_activated",
+        "evidence_resolved",
+        "policy_evaluated",
+        "health_determined",
+        "lifecycle_written",
+        "alert_issued",
+        "released",
+        "deployed",
+        "published"
+      ],
+      "properties": {
+        "source_activated": {"const": false},
+        "evidence_resolved": {"const": false},
+        "policy_evaluated": {"const": false},
+        "health_determined": {"const": false},
+        "lifecycle_written": {"const": false},
+        "alert_issued": {"const": false},
+        "released": {"const": false},
+        "deployed": {"const": false},
+        "published": {"const": false}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "identity": {
+            "properties": {"resolution_status": {"const": "RESOLVED"}},
+            "required": ["resolution_status"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "identity": {
+            "properties": {"public_water_system_ref": {"$ref": "#/$defs/ref"}}
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "identity": {
+            "properties": {"public_water_system_ref": {"type": "null"}}
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "advisory": {
+            "properties": {"normalized_status": {"const": "RESCINDED"}},
+            "required": ["normalized_status"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "authority": {
+            "properties": {
+              "rescission_notice_ref": {"$ref": "#/$defs/ref"},
+              "rescission_authority_ref": {"$ref": "#/$defs/ref"},
+              "rescission_authority_status": {"const": "CONFIRMED"}
+            }
+          },
+          "advisory": {
+            "properties": {
+              "rescinded_at": {"$ref": "#/$defs/aware_datetime"},
+              "clears_prior_advisory": {"const": true}
+            }
+          },
+          "controls": {
+            "properties": {"prior_advisory_ref": {"$ref": "#/$defs/ref"}}
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "advisory": {
+            "properties": {"clears_prior_advisory": {"const": false}}
+          }
+        }
+      }
+    }
+  ],
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/domains/hazards/drinking_water_advisory.md",
+    "fixtures_root": "fixtures/domains/hazards/drinking_water_advisory/",
+    "validator": "tools/validators/domains/hazards/validate_drinking_water_advisory.py",
+    "tests": "tests/domains/hazards/test_drinking_water_advisory.py",
+    "activation": "disabled",
+    "not_for_life_safety": true
+  }
+}

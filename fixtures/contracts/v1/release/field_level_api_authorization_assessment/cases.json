@@ -1,0 +1,377 @@
+{
+  "base": {
+    "profile_version": "kfm.field-level-api-authorization-assessment-candidate.v1",
+    "assessment_id": "kfm:field-level-api-authorization:000000000000000000000000",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "request_context": {
+      "capability_ref": "kfm://api-capability/fixture/evidence-search",
+      "api_contract_ref": "kfm://api-contract/fixture/evidence-search-v1",
+      "audience_role": "AUTHENTICATED_RESEARCHER",
+      "operation": "READ",
+      "purpose": "Inspect published evidence through the governed API boundary."
+    },
+    "decision_context": {
+      "policy_decision_ref": "kfm://policy-decision/fixture/field-projection",
+      "policy_outcome": "ANSWER",
+      "grant_state": "ACTIVE",
+      "obligation_set_ref": "kfm://policy-obligation-set/fixture/researcher-field-projection",
+      "evaluated_at": "2026-08-11T00:00:00Z"
+    },
+    "fields": [
+      {
+        "field_name": "embargoed_scan",
+        "classification": "EMBARGOED",
+        "source_state": "PUBLISHED",
+        "requested": true,
+        "projected": false,
+        "required_role": "AUTHENTICATED_RESEARCHER",
+        "embargo_until": "2027-01-01T00:00:00Z",
+        "obligation_refs": [
+          "kfm://obligation/fixture/respect-embargo"
+        ],
+        "evidence_ref": "kfm://evidence-bundle/fixture/embargoed-scan",
+        "reason_code": "EMBARGO_ACTIVE"
+      },
+      {
+        "field_name": "internal_notes",
+        "classification": "NEVER_RETURN",
+        "source_state": "PUBLISHED",
+        "requested": true,
+        "projected": false,
+        "required_role": null,
+        "embargo_until": null,
+        "obligation_refs": [],
+        "evidence_ref": null,
+        "reason_code": "NEVER_RETURN"
+      },
+      {
+        "field_name": "published_title",
+        "classification": "PUBLIC",
+        "source_state": "PUBLISHED",
+        "requested": true,
+        "projected": true,
+        "required_role": null,
+        "embargo_until": null,
+        "obligation_refs": [],
+        "evidence_ref": "kfm://evidence-bundle/fixture/published-title",
+        "reason_code": "PROJECTED_PUBLIC"
+      },
+      {
+        "field_name": "research_geometry",
+        "classification": "ROLE_SCOPED",
+        "source_state": "PUBLISHED",
+        "requested": true,
+        "projected": true,
+        "required_role": "AUTHENTICATED_RESEARCHER",
+        "embargo_until": null,
+        "obligation_refs": [
+          "kfm://obligation/fixture/audit-use",
+          "kfm://obligation/fixture/non-redistribution"
+        ],
+        "evidence_ref": "kfm://evidence-bundle/fixture/research-geometry",
+        "reason_code": "PROJECTED_ROLE_MATCH"
+      },
+      {
+        "field_name": "unpublished_annotation",
+        "classification": "ROLE_SCOPED",
+        "source_state": "WORK",
+        "requested": true,
+        "projected": false,
+        "required_role": "STEWARD",
+        "embargo_until": null,
+        "obligation_refs": [
+          "kfm://obligation/fixture/steward-only"
+        ],
+        "evidence_ref": null,
+        "reason_code": "SOURCE_NOT_PUBLISHED"
+      }
+    ],
+    "downstream_surface": "API_RESPONSE",
+    "summary": {
+      "requested_count": 5,
+      "projected_count": 2,
+      "withheld_count": 3,
+      "classification_counts": {
+        "PUBLIC": 1,
+        "ROLE_SCOPED": 2,
+        "EMBARGOED": 1,
+        "NEVER_RETURN": 1
+      },
+      "assessment_state": "REVIEW_REQUIRED",
+      "response_emitted": false
+    },
+    "governance": {
+      "fixture_only": true,
+      "route_created": false,
+      "authentication_executed": false,
+      "policy_executed": false,
+      "response_emitted": false,
+      "release_authorized": false,
+      "published": false
+    }
+  },
+  "cases": [
+    {
+      "case_id": "valid_mixed_field_projection",
+      "expected_outcome": "PASS",
+      "expected_assessment_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid_revoked_grant_withholds_role_scoped_field",
+      "mutations": [
+        {"path": "/decision_context/grant_state", "value": "REVOKED"},
+        {"path": "/fields/3/projected", "value": false},
+        {"path": "/fields/3/reason_code", "value": "GRANT_INACTIVE"}
+      ],
+      "expected_outcome": "PASS",
+      "expected_assessment_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid_expired_embargo_projection",
+      "mutations": [
+        {"path": "/decision_context/evaluated_at", "value": "2028-01-01T00:00:00Z"},
+        {"path": "/fields/0/projected", "value": true},
+        {"path": "/fields/0/reason_code", "value": "PROJECTED_EMBARGO_EXPIRED"}
+      ],
+      "expected_outcome": "PASS",
+      "expected_assessment_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid_evidence_drawer_uses_same_projection_boundary",
+      "mutations": [
+        {"path": "/request_context/operation", "value": "DRAWER"},
+        {"path": "/downstream_surface", "value": "EVIDENCE_DRAWER"}
+      ],
+      "expected_outcome": "PASS",
+      "expected_assessment_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "operation_and_surface_mismatch",
+      "mutations": [
+        {"path": "/downstream_surface", "value": "EVIDENCE_DRAWER"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "FIELD_AUTH_OPERATION_SURFACE_MISMATCH", "path": "/downstream_surface"}
+      ]
+    },
+    {
+      "case_id": "field_order_invalid",
+      "mutations": [
+        {"path": "/fields/0/field_name", "value": "z_embargoed_scan"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "FIELD_AUTH_FIELD_ORDER_INVALID", "path": "/fields"}
+      ]
+    },
+    {
+      "case_id": "field_name_duplicate",
+      "mutations": [
+        {"path": "/fields/4/field_name", "value": "research_geometry"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "FIELD_AUTH_FIELD_NAME_DUPLICATE", "path": "/fields"}
+      ]
+    },
+    {
+      "case_id": "obligation_refs_unsorted",
+      "mutations": [
+        {
+          "path": "/fields/3/obligation_refs",
+          "value": [
+            "kfm://obligation/fixture/non-redistribution",
+            "kfm://obligation/fixture/audit-use"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "FIELD_AUTH_OBLIGATIONS_NOT_CANONICAL", "path": "/fields/3/obligation_refs"}
+      ]
+    },
+    {
+      "case_id": "public_field_has_role_metadata",
+      "mutations": [
+        {"path": "/fields/2/required_role", "value": "AUTHENTICATED_RESEARCHER"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "FIELD_AUTH_PUBLIC_METADATA_INVALID", "path": "/fields/2"}
+      ]
+    },
+    {
+      "case_id": "role_scoped_field_lacks_obligation",
+      "mutations": [
+        {"path": "/fields/3/obligation_refs", "value": []}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "FIELD_AUTH_OBLIGATION_REQUIRED", "path": "/fields/3/obligation_refs"}
+      ]
+    },
+    {
+      "case_id": "audience_role_mismatch_leaks_role_scoped_field",
+      "mutations": [
+        {"path": "/request_context/audience_role", "value": "PUBLIC_CLIENT"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "FIELD_AUTH_PROJECTION_MISMATCH", "path": "/fields/3"}
+      ]
+    },
+    {
+      "case_id": "revoked_grant_leaks_role_scoped_field",
+      "mutations": [
+        {"path": "/decision_context/grant_state", "value": "REVOKED"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "FIELD_AUTH_PROJECTION_MISMATCH", "path": "/fields/3"}
+      ]
+    },
+    {
+      "case_id": "unpublished_field_is_projected",
+      "mutations": [
+        {"path": "/fields/4/projected", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "FIELD_AUTH_PROJECTION_MISMATCH", "path": "/fields/4"}
+      ]
+    },
+    {
+      "case_id": "never_return_field_is_projected",
+      "mutations": [
+        {"path": "/fields/1/projected", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "FIELD_AUTH_PROJECTION_MISMATCH", "path": "/fields/1"}
+      ]
+    },
+    {
+      "case_id": "active_embargo_field_is_projected",
+      "mutations": [
+        {"path": "/fields/0/projected", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "FIELD_AUTH_PROJECTION_MISMATCH", "path": "/fields/0"}
+      ]
+    },
+    {
+      "case_id": "expired_embargo_remains_hidden_without_matching_decision",
+      "mutations": [
+        {"path": "/decision_context/evaluated_at", "value": "2028-01-01T00:00:00Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "FIELD_AUTH_PROJECTION_MISMATCH", "path": "/fields/0"}
+      ]
+    },
+    {
+      "case_id": "projected_public_field_lacks_evidence",
+      "mutations": [
+        {"path": "/fields/2/evidence_ref", "value": null}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "FIELD_AUTH_PROJECTION_MISMATCH", "path": "/fields/2"}
+      ]
+    },
+    {
+      "case_id": "denied_policy_still_projects_fields",
+      "mutations": [
+        {"path": "/decision_context/policy_outcome", "value": "DENY"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "FIELD_AUTH_PROJECTION_MISMATCH", "path": "/fields/2"},
+        {"code": "FIELD_AUTH_PROJECTION_MISMATCH", "path": "/fields/3"}
+      ]
+    },
+    {
+      "case_id": "not_requested_field_is_projected",
+      "mutations": [
+        {"path": "/fields/2/requested", "value": false}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "FIELD_AUTH_PROJECTION_MISMATCH", "path": "/fields/2"}
+      ]
+    },
+    {
+      "case_id": "reference_roles_collapse",
+      "mutations": [
+        {"path": "/decision_context/obligation_set_ref", "value": "kfm://api-contract/fixture/evidence-search-v1"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "FIELD_AUTH_REFERENCE_ROLE_COLLAPSE", "path": "/decision_context"}
+      ]
+    },
+    {
+      "case_id": "summary_mismatch",
+      "mutations": [
+        {"path": "/summary/projected_count", "value": 1}
+      ],
+      "preserve_summary": true,
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "FIELD_AUTH_SUMMARY_MISMATCH", "path": "/summary"}
+      ]
+    },
+    {
+      "case_id": "spec_hash_mismatch",
+      "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "FIELD_AUTH_SPEC_HASH_MISMATCH", "path": "/spec_hash"}
+      ]
+    },
+    {
+      "case_id": "assessment_id_mismatch",
+      "assessment_id_override": "kfm:field-level-api-authorization:ffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "FIELD_AUTH_ASSESSMENT_ID_MISMATCH", "path": "/assessment_id"}
+      ]
+    },
+    {
+      "case_id": "response_emission_overreach",
+      "mutations": [
+        {"path": "/governance/response_emitted", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "FIELD_AUTH_SCHEMA_INVALID", "path": "/governance/response_emitted"}
+      ]
+    }
+  ]
+}

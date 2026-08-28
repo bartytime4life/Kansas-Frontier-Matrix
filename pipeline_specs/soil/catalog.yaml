@@ -1,0 +1,4 @@
+# pipeline_specs :: soil :: catalog
+name: soil-catalog
+version: 1
+stages: []

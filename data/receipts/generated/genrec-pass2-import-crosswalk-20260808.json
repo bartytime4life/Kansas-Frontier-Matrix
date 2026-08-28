@@ -1,0 +1,112 @@
+{
+  "artifact_hashes": {
+    "docs/intake/exploratory/pass-2-idea-atlas-import-crosswalk.md": "sha256:76d4989561c46556ab360394f62e61bb4901d3fd2bbc41a38808e48d71b8d503",
+    "docs/intake/exploratory/pass-2-idea-atlas-stable-ids.md": "sha256:767cb3c1289b4c19fe1cdf2b83defd305436ccc158fdc448c79ea271870d970b"
+  },
+  "artifact_paths": [
+    "docs/intake/exploratory/pass-2-idea-atlas-import-crosswalk.md",
+    "docs/intake/exploratory/pass-2-idea-atlas-stable-ids.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf@sha256:60451562c8be005ed77afa8c7eada978a7cec05f406cdff137d38ff60123d408",
+      "id": "attachment:pass2-atlas",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@e28a83d286cd16743665436001d8544943b366e0",
+      "id": "repository:directory-governance",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/intake/exploratory/README.md@e28a83d286cd16743665436001d8544943b366e0",
+      "id": "repository:exploratory-intake",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T15:37:25Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_hashes": [
+      "sha256:60451562c8be005ed77afa8c7eada978a7cec05f406cdff137d38ff60123d408",
+      "sha256:af3c1abbacd08359109a3729b596797a74499579c990cbbcff92bd1fceae57c9"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@e28a83d286cd16743665436001d8544943b366e0"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Complete Pass 2 source-map and 110-card stable-ID ledger. No source activation, policy decision, release, deployment, or publication.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file extraction",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:58bbed2f1a0daf058f84c9905158b1dd90ff46a2e59cfa46981ca44e36f9ef4f",
+  "receipt_id": "genrec-pass2-import-crosswalk-20260808",
+  "truth_labels": {
+    "docs/intake/exploratory/pass-2-idea-atlas-import-crosswalk.md": "CONFIRMED",
+    "docs/intake/exploratory/pass-2-idea-atlas-stable-ids.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "manifest-card-closure",
+      "outcome": "PASS",
+      "reason": "All 110 unique stable IDs were emitted exactly once."
+    },
+    {
+      "gate": "carry-forward-accounting",
+      "outcome": "PASS",
+      "reason": "Counts close to 36 NEW, 39 EXPANDED, and 35 UNCHANGED."
+    },
+    {
+      "gate": "new-card-disposition-closure",
+      "outcome": "PASS",
+      "reason": "All 36 new cards have exactly one disposition."
+    },
+    {
+      "gate": "artifact-sha256",
+      "outcome": "PASS",
+      "reason": "Receipt hashes bind both final Markdown artifacts."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft-PR head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ]
+}

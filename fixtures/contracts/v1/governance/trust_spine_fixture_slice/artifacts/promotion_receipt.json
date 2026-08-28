@@ -1,0 +1,84 @@
+{
+  "promotion_id": "promotion:fixture:mrts-05",
+  "receipt_profile": "kfm/promotion-receipt/v1",
+  "candidate": {
+    "candidate_id": "dataset:fixture-public-safe-v1",
+    "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "artifact_digests": {
+      "fixtures/contracts/v1/governance/trust_spine_fixture_slice/artifacts/evidence_bundle.json": "sha256:2ca86ef55309f57a593b1ab409fee4a697fa8b7d2d405ec9bd2df6c4b5da6c76"
+    }
+  },
+  "evaluation": {
+    "profile": "kfm/promotion-readiness/A-G/v1",
+    "evaluated_at": "2026-08-22T00:30:00Z",
+    "status": "PASS",
+    "readiness": "APPROVE_READY"
+  },
+  "gates": [
+    {
+      "gate": "A",
+      "name": "identity_and_closure",
+      "status": "PASS",
+      "findings": []
+    },
+    {
+      "gate": "B",
+      "name": "asset_integrity",
+      "status": "PASS",
+      "findings": []
+    },
+    {
+      "gate": "C",
+      "name": "geometry_and_crs",
+      "status": "PASS",
+      "findings": []
+    },
+    {
+      "gate": "D",
+      "name": "temporal_semantics",
+      "status": "PASS",
+      "findings": []
+    },
+    {
+      "gate": "E",
+      "name": "rights_and_sensitivity",
+      "status": "PASS",
+      "findings": []
+    },
+    {
+      "gate": "F",
+      "name": "proof_and_catalog_support",
+      "status": "PASS",
+      "findings": []
+    },
+    {
+      "gate": "G",
+      "name": "review_and_rollback",
+      "status": "PASS",
+      "findings": []
+    }
+  ],
+  "transition": {
+    "from_state": "CATALOG",
+    "to_state": "PUBLISHED",
+    "applied": false
+  },
+  "decision_ref": null,
+  "evidence_refs": [
+    "evidence-bundle:fixture:mrts-05"
+  ],
+  "policy_refs": [
+    "policy-decision:fixture:mrts-05:allow"
+  ],
+  "review_refs": [
+    "review-record:fixture:mrts-05"
+  ],
+  "attestation_refs": [
+    "attestation:fixture:mrts-05"
+  ],
+  "integrity": {
+    "receipt_digest": "sha256:2d889e987bb2070b4c320de76ed84fa3ad412140a280c2a509bc73eb7e58a830"
+  },
+  "created_by": "actor://fixture/mrts-05-generator",
+  "created_at": "2026-08-22T00:30:00Z"
+}

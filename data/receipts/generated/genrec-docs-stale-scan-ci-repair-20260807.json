@@ -1,0 +1,165 @@
+{
+  "receipt_id": "genrec-docs-stale-scan-ci-repair-20260807",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/docs-stale-scan.yml",
+    "docs/intake/exploratory/docs-stale-scan-source-map.md",
+    "tests/validators/docs/stale-scan/README.md",
+    "tests/validators/docs/stale-scan/_support.py",
+    "tests/validators/docs/stale-scan/fixtures/valid_repo/README.md",
+    "tests/validators/docs/stale-scan/fixtures/valid_repo/docs/expired.md",
+    "tests/validators/docs/stale-scan/fixtures/valid_repo/docs/recent.md",
+    "tests/validators/docs/stale-scan/fixtures/valid_repo/expected_stale_scan_report.json",
+    "tests/validators/docs/stale-scan/test_stale_scan_cli.py",
+    "tests/validators/docs/stale-scan/test_stale_scan_core.py",
+    "tools/validators/docs/README.md",
+    "tools/validators/docs/stale-scan/README.md",
+    "tools/validators/docs/stale-scan/check_stale_docs.py",
+    "tools/validators/docs/stale-scan/stale_scan_build.py",
+    "tools/validators/docs/stale-scan/stale_scan_core.py",
+    "tools/validators/docs/stale-scan/stale_scan_parse.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/docs-stale-scan.yml": "sha256:6835e8d74fb7e957404fdf63a198b6bee00b1fbc3dc5806ad93618d1af7e628c",
+    "docs/intake/exploratory/docs-stale-scan-source-map.md": "sha256:3ae2bf8530085d93b4b5807b4c23cfb37285e40ca8271018fa9ec1df32ed2ffd",
+    "tests/validators/docs/stale-scan/README.md": "sha256:5f16bbe2631d5fc7876a5e724f2e6ddf6e6040cbeb1c59fd0b68ff75dbada03f",
+    "tests/validators/docs/stale-scan/_support.py": "sha256:5884b901c3a5c71071fcde5dffe86e39505907408010522dd350364552195e4c",
+    "tests/validators/docs/stale-scan/fixtures/valid_repo/README.md": "sha256:d92c6e09e7f0e750dc1b71b08882172c21ec96d61b9c75cbf043d54ac2f0407d",
+    "tests/validators/docs/stale-scan/fixtures/valid_repo/docs/expired.md": "sha256:d2fa7d1ad20963add521f6df71c7259d56b288b3c0d72b97ad1e7cd1742d89a1",
+    "tests/validators/docs/stale-scan/fixtures/valid_repo/docs/recent.md": "sha256:74783f5707f5aae93dc0477a93299255e8668c5cfbbab49251f2a1b0f8f385e5",
+    "tests/validators/docs/stale-scan/fixtures/valid_repo/expected_stale_scan_report.json": "sha256:012bea660b260587a176f59a2ddde975182eac240465ead8e17cefe8423a26dc",
+    "tests/validators/docs/stale-scan/test_stale_scan_cli.py": "sha256:54e5308ad988f669d44caf568e7cd7e9a6e41cbe1da4fde155f37639694a841a",
+    "tests/validators/docs/stale-scan/test_stale_scan_core.py": "sha256:10f70442fe9fe001e643eee5530414befb27d8eb077e78d2151255856549f9f2",
+    "tools/validators/docs/README.md": "sha256:784065833dad82016d66445429b2a04197d9d4944050fd782de0d3497921e902",
+    "tools/validators/docs/stale-scan/README.md": "sha256:593fec425bf1a394adf25f76194fd6a377cbabcdd02900a647ed6bbaa14feaa1",
+    "tools/validators/docs/stale-scan/check_stale_docs.py": "sha256:eb73b3546a352b69123b9f08756addc58af7a0675e181e116a7137f3028230d0",
+    "tools/validators/docs/stale-scan/stale_scan_build.py": "sha256:6a3ec69026cdc9e2c19002e4cc2bbee78d1d0ec2216584445aa4a26563689373",
+    "tools/validators/docs/stale-scan/stale_scan_core.py": "sha256:bdee59e5f488dcc81d4a4d18eb2fff5c6e8dca6ecc18d5910665b303415b975d",
+    "tools/validators/docs/stale-scan/stale_scan_parse.py": "sha256:6b0a852afa723f9b58d081f9a146ce2e970db2f47cfd925410f57290deb98b9b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-07"
+  },
+  "prompt_or_contract": "sha256:b7b8021f8cb652ae999db5be5c9d03559bb7986fbcb803e9132b079dadd26030",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "hosted exact-head validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf",
+      "# KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent.md",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "repo:pull/2100@f728ee4d4d4de3b0823ad8eda72c25b7ef686f95",
+      "repo:workflow-run/31146226746",
+      "repo:workflow-run/31147095062",
+      "repo:pull/2104",
+      "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/docs-stale-scan.yml": "PROPOSED",
+    "docs/intake/exploratory/docs-stale-scan-source-map.md": "PROPOSED",
+    "tests/validators/docs/stale-scan/README.md": "PROPOSED",
+    "tests/validators/docs/stale-scan/_support.py": "PROPOSED",
+    "tests/validators/docs/stale-scan/fixtures/valid_repo/README.md": "PROPOSED",
+    "tests/validators/docs/stale-scan/fixtures/valid_repo/docs/expired.md": "PROPOSED",
+    "tests/validators/docs/stale-scan/fixtures/valid_repo/docs/recent.md": "PROPOSED",
+    "tests/validators/docs/stale-scan/fixtures/valid_repo/expected_stale_scan_report.json": "PROPOSED",
+    "tests/validators/docs/stale-scan/test_stale_scan_cli.py": "PROPOSED",
+    "tests/validators/docs/stale-scan/test_stale_scan_core.py": "PROPOSED",
+    "tools/validators/docs/README.md": "PROPOSED",
+    "tools/validators/docs/stale-scan/README.md": "PROPOSED",
+    "tools/validators/docs/stale-scan/check_stale_docs.py": "PROPOSED",
+    "tools/validators/docs/stale-scan/stale_scan_build.py": "PROPOSED",
+    "tools/validators/docs/stale-scan/stale_scan_core.py": "PROPOSED",
+    "tools/validators/docs/stale-scan/stale_scan_parse.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "merged-failure-reconstruction",
+      "outcome": "PASS",
+      "reason": "Hosted run 31146226746 reached the focused test step and exposed malformed authored source bytes after PR #2100 merged."
+    },
+    {
+      "gate": "source-repair",
+      "outcome": "PASS",
+      "reason": "The two malformed Python files were replaced with reviewable UTF-8 source and diagnostic run 31147095062 executed the focused suite through the snapshot replay case."
+    },
+    {
+      "gate": "fixture-snapshot-repair",
+      "outcome": "PASS",
+      "reason": "The malformed expected JSON fixture was replaced with the canonical reviewed report bytes bound by sha256:012bea660b260587a176f59a2ddde975182eac240465ead8e17cefe8423a26dc."
+    },
+    {
+      "gate": "historical-receipt-preservation",
+      "outcome": "PASS",
+      "reason": "The original genrec-docs-stale-scan-20260807.json remains unchanged as historical authoring process memory."
+    },
+    {
+      "gate": "current-receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "This repair receipt binds the current workflow and all 15 non-receipt implementation artifacts with exact SHA-256 values."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "The final exact-head run occurs only after this current-state repair receipt and workflow are pushed."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on draft PR #2104."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "repository:merged-stale-scan-failure",
+      "validated": true,
+      "evidence_ref": "repo:workflow-run/31146226746"
+    },
+    {
+      "id": "repository:diagnostic-repair-run",
+      "validated": true,
+      "evidence_ref": "repo:workflow-run/31147095062"
+    },
+    {
+      "id": "repository:corrective-pull-request",
+      "validated": true,
+      "evidence_ref": "repo:pull/2104"
+    },
+    {
+      "id": "attachment:directory-governance-standard",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-07T04:28:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": 2104,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Repairs the documentation freshness QA implementation after PR #2100 merged malformed source and fixture bytes. The correction preserves the original generated receipt as immutable historical process memory, replaces only the corrupt files, binds the current complete stale-scan artifact set in this new repair receipt, and keeps the workflow read-only, no-network, advisory, and non-authoritative."
+}

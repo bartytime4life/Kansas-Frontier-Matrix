@@ -1,0 +1,33 @@
+{
+  "fixture_id": "fixture:atmosphere:knowledge-character:model-field",
+  "profile_id": "kfm-atmosphere-knowledge-character-fixture-v1",
+  "object_family": "ForecastContext",
+  "knowledge_character": "ATMOSPHERIC_MODEL_FIELD",
+  "source_role": "modeled",
+  "source_descriptor_ref": "fixture://sources/atmosphere/synthetic-model-field",
+  "evidence_refs": [
+    "fixture://evidence/atmosphere/knowledge-character/model-field"
+  ],
+  "claim": {
+    "kind": "modeled_field",
+    "parameter": "pm2_5_mass_concentration",
+    "unit": "ug/m3",
+    "intended_use": "forecast_context"
+  },
+  "spatial_support": {
+    "kind": "generalized_county",
+    "county_fips": "99999"
+  },
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "rollback_state": "fixture_only"
+  },
+  "limitations": [
+    "not_an_observation",
+    "synthetic_fixture_only"
+  ]
+}

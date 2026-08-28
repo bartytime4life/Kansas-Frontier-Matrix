@@ -1,0 +1,25 @@
+{
+  "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+  "id": "kfm:drawer:fixture:missing-sidecar",
+  "outcome": "ABSTAIN",
+  "reason_code": "MISSING_EVIDENCE",
+  "title": "Artifact support is incomplete",
+  "summary": "The required synthetic artifact sidecar is not available.",
+  "evidence_refs": [],
+  "citations": [],
+  "limitations": [
+    "No artifact-integrity claim is shown without the required sidecar."
+  ],
+  "trust_state": {
+    "source_role": "official",
+    "policy": "ABSTAIN",
+    "review": "PENDING",
+    "release": "UNRELEASED",
+    "freshness": "UNKNOWN",
+    "correction": "NONE"
+  },
+  "history": {
+    "negative_outcomes": [],
+    "corrections": []
+  }
+}

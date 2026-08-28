@@ -1,0 +1,290 @@
+{
+  "base_candidate": {
+    "object_type": "ParticipatoryPlanningWeightReceiptCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.evidence.participatory-planning-weight-receipt.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_cards": [
+      "KFM-P18-INV-060",
+      "KFM-P18-INV-203",
+      "KFM-P18-INV-421"
+    ],
+    "observed_at": "2026-08-11T00:00:00Z",
+    "planning_scope": {
+      "purpose": "Compare synthetic site-suitability criteria while preserving separate stakeholder-group preferences.",
+      "geography_scope_ref": "kfm://geography/synthetic/generalized-study-area",
+      "temporal_scope_ref": "kfm://temporal-scope/synthetic/2026-planning-cycle",
+      "scenario_ref": "kfm://planning-scenario/synthetic/community-services",
+      "target_population_refs": [
+        "kfm://population/synthetic/affected-community"
+      ],
+      "intended_output": "SITE_SUITABILITY"
+    },
+    "method": {
+      "method_ref": "kfm://method/synthetic/participatory-mca-v1",
+      "facilitation_record_ref": "kfm://facilitation/synthetic/session-001",
+      "facilitation_state": "DOCUMENTED",
+      "sensitivity_analysis_ref": "kfm://sensitivity-analysis/synthetic/weights-v1",
+      "sensitivity_analysis_state": "COMPLETE",
+      "normalization_basis": "BASIS_POINTS_10000",
+      "aggregation_mode": "SEPARATE_WEIGHT_SETS"
+    },
+    "criteria": [
+      {
+        "criterion_id": "criterion.access",
+        "criterion_ref": "kfm://criterion/synthetic/access",
+        "direction": "PREFER_HIGHER",
+        "sensitivity": "PUBLIC"
+      },
+      {
+        "criterion_id": "criterion.environmental-burden",
+        "criterion_ref": "kfm://criterion/synthetic/environmental-burden",
+        "direction": "PREFER_LOWER",
+        "sensitivity": "INTERNAL"
+      }
+    ],
+    "stakeholder_weight_sets": [
+      {
+        "group_ref": "kfm://stakeholder-group/synthetic/affected-community",
+        "stakeholder_role": "AFFECTED_GROUP",
+        "consent_ref": "kfm://consent/synthetic/affected-community-session",
+        "consent_state": "COMPLETE",
+        "evidence_ref": "kfm://evidence-ref/synthetic/affected-community-weights",
+        "dissent_state": "RECORDED",
+        "dissent_summary_ref": "kfm://dissent/synthetic/affected-community-minority-view",
+        "weights": [
+          {
+            "criterion_id": "criterion.access",
+            "basis_points": 6000
+          },
+          {
+            "criterion_id": "criterion.environmental-burden",
+            "basis_points": 4000
+          }
+        ]
+      },
+      {
+        "group_ref": "kfm://stakeholder-group/synthetic/service-provider",
+        "stakeholder_role": "SERVICE_PROVIDER",
+        "consent_ref": "kfm://consent/synthetic/service-provider-session",
+        "consent_state": "COMPLETE",
+        "evidence_ref": "kfm://evidence-ref/synthetic/service-provider-weights",
+        "dissent_state": "NONE",
+        "dissent_summary_ref": null,
+        "weights": [
+          {
+            "criterion_id": "criterion.access",
+            "basis_points": 4500
+          },
+          {
+            "criterion_id": "criterion.environmental-burden",
+            "basis_points": 5500
+          }
+        ]
+      }
+    ],
+    "deliberation": {
+      "consensus_posture": "NO_CONSENSUS_ASSERTED",
+      "unresolved_conflict_count": 1,
+      "conflict_summary_refs": [
+        "kfm://deliberation/synthetic/access-burden-tradeoff"
+      ],
+      "group_comparison_disclosed": true
+    },
+    "governance": {
+      "evidence_resolution": "RESOLVED",
+      "policy_ref": null,
+      "policy_state": "PENDING",
+      "review_ref": null,
+      "review_state": "PENDING",
+      "release_manifest_ref": null,
+      "release_state": "NOT_RELEASED",
+      "rollback_ref": "kfm://rollback/synthetic/participatory-weight-candidate"
+    },
+    "privacy": {
+      "direct_identifiers_present": false,
+      "raw_notes_present": false,
+      "exact_location_payload_present": false,
+      "participant_group_refs_only": true
+    },
+    "authority_claims": {
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "planning_decision_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "pass_separate_group_weights_with_dissent",
+      "mutations": [],
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_criteria_review_without_sensitivity_run",
+      "mutations": [
+        {"path": "/planning_scope/intended_output", "value": "CRITERIA_REVIEW"},
+        {"path": "/method/sensitivity_analysis_state", "value": "NOT_APPLICABLE"},
+        {"path": "/method/sensitivity_analysis_ref", "value": null}
+      ],
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "abstain_consent_incomplete",
+      "mutations": [
+        {"path": "/stakeholder_weight_sets/0/consent_state", "value": "INCOMPLETE"},
+        {"path": "/stakeholder_weight_sets/0/consent_ref", "value": null}
+      ],
+      "expected": {"outcome": "ABSTAIN", "codes": ["CONSENT_INCOMPLETE"]}
+    },
+    {
+      "name": "abstain_facilitation_incomplete",
+      "mutations": [
+        {"path": "/method/facilitation_state", "value": "INCOMPLETE"},
+        {"path": "/method/facilitation_record_ref", "value": null}
+      ],
+      "expected": {"outcome": "ABSTAIN", "codes": ["FACILITATION_INCOMPLETE"]}
+    },
+    {
+      "name": "abstain_evidence_unresolved",
+      "mutations": [
+        {"path": "/governance/evidence_resolution", "value": "UNRESOLVED"}
+      ],
+      "expected": {"outcome": "ABSTAIN", "codes": ["EVIDENCE_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_dissent_unknown",
+      "mutations": [
+        {"path": "/stakeholder_weight_sets/0/dissent_state", "value": "UNKNOWN"},
+        {"path": "/stakeholder_weight_sets/0/dissent_summary_ref", "value": null}
+      ],
+      "expected": {"outcome": "ABSTAIN", "codes": ["DISSENT_UNKNOWN"]}
+    },
+    {
+      "name": "abstain_sensitivity_analysis_incomplete",
+      "mutations": [
+        {"path": "/method/sensitivity_analysis_state", "value": "INCOMPLETE"},
+        {"path": "/method/sensitivity_analysis_ref", "value": null}
+      ],
+      "expected": {"outcome": "ABSTAIN", "codes": ["SENSITIVITY_ANALYSIS_INCOMPLETE"]}
+    },
+    {
+      "name": "deny_weight_sum_invalid",
+      "mutations": [
+        {"path": "/stakeholder_weight_sets/0/weights/0/basis_points", "value": 6001}
+      ],
+      "expected": {"outcome": "DENY", "codes": ["WEIGHT_SUM_INVALID"]}
+    },
+    {
+      "name": "deny_weight_criteria_mismatch",
+      "mutations": [
+        {"path": "/stakeholder_weight_sets/0/weights/1/criterion_id", "value": "criterion.unknown"}
+      ],
+      "expected": {"outcome": "DENY", "codes": ["WEIGHT_CRITERIA_MISMATCH"]}
+    },
+    {
+      "name": "deny_criteria_not_canonical",
+      "mutations": [
+        {"op": "reverse", "path": "/criteria"}
+      ],
+      "expected": {"outcome": "DENY", "codes": ["CRITERIA_NOT_CANONICAL"]}
+    },
+    {
+      "name": "deny_duplicate_group_ref",
+      "mutations": [
+        {"path": "/stakeholder_weight_sets/1/group_ref", "value": "kfm://stakeholder-group/synthetic/affected-community"}
+      ],
+      "expected": {"outcome": "DENY", "codes": ["DUPLICATE_STAKEHOLDER_GROUP_REF"]}
+    },
+    {
+      "name": "deny_groups_not_canonical",
+      "mutations": [
+        {"op": "reverse", "path": "/stakeholder_weight_sets"}
+      ],
+      "expected": {"outcome": "DENY", "codes": ["STAKEHOLDER_GROUPS_NOT_CANONICAL"]}
+    },
+    {
+      "name": "deny_dissent_summary_required",
+      "mutations": [
+        {"path": "/stakeholder_weight_sets/0/dissent_summary_ref", "value": null}
+      ],
+      "expected": {"outcome": "DENY", "codes": ["DISSENT_SUMMARY_REQUIRED"]}
+    },
+    {
+      "name": "deny_dissent_summary_unexpected",
+      "mutations": [
+        {"path": "/stakeholder_weight_sets/1/dissent_summary_ref", "value": "kfm://dissent/synthetic/unexpected"}
+      ],
+      "expected": {"outcome": "DENY", "codes": ["DISSENT_SUMMARY_UNEXPECTED"]}
+    },
+    {
+      "name": "deny_false_consensus_claim",
+      "mutations": [
+        {"path": "/deliberation/consensus_posture", "value": "CONSENSUS_ASSERTED"}
+      ],
+      "expected": {"outcome": "DENY", "codes": ["CONSENSUS_CLAIM_DENIED"]}
+    },
+    {
+      "name": "deny_conflict_summary_required",
+      "mutations": [
+        {"path": "/deliberation/conflict_summary_refs", "value": []}
+      ],
+      "expected": {"outcome": "DENY", "codes": ["CONFLICT_SUMMARY_REQUIRED"]}
+    },
+    {
+      "name": "deny_group_comparison_hidden",
+      "mutations": [
+        {"path": "/deliberation/group_comparison_disclosed", "value": false}
+      ],
+      "expected": {"outcome": "DENY", "codes": ["GROUP_COMPARISON_DISCLOSURE_REQUIRED"]}
+    },
+    {
+      "name": "deny_review_overclaim",
+      "mutations": [
+        {"path": "/governance/review_state", "value": "APPROVED"},
+        {"path": "/governance/review_ref", "value": "kfm://review/synthetic/unverified"}
+      ],
+      "expected": {"outcome": "DENY", "codes": ["REVIEW_STATE_OVERCLAIM"]}
+    },
+    {
+      "name": "deny_release_overclaim",
+      "mutations": [
+        {"path": "/governance/release_state", "value": "RELEASED"},
+        {"path": "/governance/release_manifest_ref", "value": "kfm://release-manifest/synthetic/unverified"}
+      ],
+      "expected": {"outcome": "DENY", "codes": ["RELEASE_STATE_OVERCLAIM"]}
+    },
+    {
+      "name": "deny_policy_outcome_overclaim",
+      "mutations": [
+        {"path": "/governance/policy_state", "value": "ALLOW"},
+        {"path": "/governance/policy_ref", "value": "kfm://policy-decision/synthetic/unverified"}
+      ],
+      "expected": {"outcome": "DENY", "codes": ["POLICY_OUTCOME_OVERCLAIM"]}
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "mutations": [],
+      "tamper": "profile_hash",
+      "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}
+    },
+    {
+      "name": "error_privacy_payload_claim",
+      "mutations": [
+        {"path": "/privacy/direct_identifiers_present", "value": true}
+      ],
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "name": "error_unknown_field",
+      "mutations": [
+        {"path": "/unexpected_field", "value": "blocked"}
+      ],
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    }
+  ]
+}

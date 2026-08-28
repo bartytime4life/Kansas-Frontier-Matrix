@@ -1,0 +1,12 @@
+{
+  "id": "resp3",
+  "spec_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "version": "v1",
+  "issued_at": "2026-05-09T00:00:00Z",
+  "outcome": "DENY",
+  "reason_code": "ACCESS_DENIED",
+  "evidence_refs": [],
+  "policy_state": "deny",
+  "freshness": "current",
+  "correction_state": "none"
+}

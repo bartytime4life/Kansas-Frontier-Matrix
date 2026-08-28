@@ -1,0 +1,132 @@
+{
+  "receipt_id": "genrec-repository-control-run-1872-classification-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/repository-control.yml",
+    "tests/validators/test_repository_transition_authorization.py",
+    "tools/validators/repository_control/validate_transition_authorization.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/repository-control.yml": "sha256:4aab041f07c006c55b1883fbf7c34a0999742073a30d8ac81476e6f71f2e017d",
+    "tests/validators/test_repository_transition_authorization.py": "sha256:13f80f0b8ff289b11682d28c080aaeca428917efe9c3f52c7669120ce98a3eb4",
+    "tools/validators/repository_control/validate_transition_authorization.py": "sha256:cc63ce857e5a5116736634fe65b8b1f91aaba4a005becf6231c2adbe24bf6ca6"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:0201edec17e968c438aa3093d91bb1b634683ac2d78dc4c7222041e337a01711",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31516264829",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/jobs/93862050401",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2546",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/1675",
+      "github://bartytime4life/Kansas-Frontier-Matrix/rules/15484585",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2556",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/9da4d024999acc4f9f94e0813ab970118f415f82"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/repository-control.yml": "PROPOSED",
+    "tests/validators/test_repository_transition_authorization.py": "CONFIRMED",
+    "tools/validators/repository_control/validate_transition_authorization.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "run-1872-incident-reproduction",
+      "outcome": "PASS",
+      "reason": "Workflow run 31516264829, job 93862050401, for PR #2546 head 03c3f3a7f90e04d9fc7ab4da6a867a3cc82b8e2c emitted EXPECTED_READINESS_HOLD / TRANSITION_AUTHORIZATION_MISSING with exit code 3."
+    },
+    {
+      "gate": "directory-placement-and-authority",
+      "outcome": "PASS",
+      "reason": "The change edits the existing .github orchestration, tools/validators implementation, and tests/validators conformance paths under accepted Directory Rules; no parallel authority or new root is introduced."
+    },
+    {
+      "gate": "focused-transition-authorization-tests",
+      "outcome": "PASS",
+      "reason": "Nineteen focused tests passed, including the exact run #1872 / PR #2546 regression, nonzero hold polarity, bounded job-summary fields, and refusal to copy untrusted comment fields or free-form reasons."
+    },
+    {
+      "gate": "workflow-threat-boundary",
+      "outcome": "PASS",
+      "reason": "The workflow retains pull_request_target trusted-base checkout, read-only contents/issues/pull-requests permissions, no head-code execution, unchanged workflow/job identities, and unchanged event coverage."
+    },
+    {
+      "gate": "hosted-validator-suite-functional-head",
+      "outcome": "PASS",
+      "reason": "Validator-suite run 31518462276 succeeded for functional head f52d0f7219748f06cfb4751cdb348f01fa777e96; the three bound artifacts are byte-identical in this receipt commit."
+    },
+    {
+      "gate": "ruleset-required-check-coupling",
+      "outcome": "SKIPPED",
+      "reason": "Ruleset 15484585 currently declares no required status checks. This repository slice does not authorize or perform repository-settings mutation."
+    },
+    {
+      "gate": "retroactive-transition-authorization",
+      "outcome": "SKIPPED",
+      "reason": "No backdated or fabricated ALLOW_READY_AND_MERGE record was created; the historical expected hold remains intact."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on draft PR #2556 and is not authored or inferred by the agent."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "workflow-run-1872",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31516264829"
+    },
+    {
+      "id": "remote-sensing-pr-2546",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/2546"
+    },
+    {
+      "id": "repository-control-authority-issue",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issues/1675"
+    },
+    {
+      "id": "active-ruleset-without-required-checks",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/rules/15484585"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T17:40:58Z",
+  "emitter": "openai/chatgpt-gpt-5.6-pro",
+  "links": {
+    "pr_number": 2556,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675"
+  },
+  "notes": "This receipt records a classification-visibility repair for repository-control run #1872. It does not authorize ready or merge transitions, prove independent or human review, identify the initiating client, change rulesets, alter telemetry behavior, activate a source, release, deploy, publish, or rewrite the historical hold as a pass. The prior 2026-07-30 repository-control receipt remains immutable process memory."
+}

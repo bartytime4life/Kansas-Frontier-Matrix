@@ -1,0 +1,179 @@
+{
+  "receipt_id": "genrec-contributing-md-3159fedb",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "CONTRIBUTING.md"
+  ],
+  "artifact_hashes": {
+    "CONTRIBUTING.md": "sha256:3159fedbeb27cfb78b15315562153dfc8a232ab8488cb54a95f20247426f65ee"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-17"
+  },
+  "prompt_or_contract": "sha256:0a879603a5448d5a176c0e6a221e05d29169f0e819e1cdfe72113305d4b0625d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository code search",
+      "repository file reads",
+      "local deterministic content validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:0a879603a5448d5a176c0e6a221e05d29169f0e819e1cdfe72113305d4b0625d"
+    ],
+    "attached_docs": [
+      "Pasted text(41).txt"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/99337e68ba4299b667f27d5dd35c3dc92295933e",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/99bc816eaed894d8d3d5e4055d43631d52422c43",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99bc816eaed894d8d3d5e4055d43631d52422c43/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/docs/architecture/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/docs/architecture/DIRECTORY_RULES.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/docs/registers/DRIFT_REGISTER.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/docs/architecture/contract-schema-policy-split.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/.github/workflows/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/Makefile",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/pyproject.toml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/SECURITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/CODE_OF_CONDUCT.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/data/receipts/generated/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "CONTRIBUTING.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, public visibility, default branch, authenticated admin/push permission, target path, target blob SHA, execution profile, delivery route, change budget, and non-goals were resolved before mutation."
+    },
+    {
+      "gate": "base-drift-reconciliation",
+      "outcome": "PASS",
+      "reason": "Main moved from 70cda3ba3d3d635fdc1ba8688b726aa89d55fa27 to 99337e68ba4299b667f27d5dd35c3dc92295933e. The intervening three commits changed only .github/ISSUE_TEMPLATE/README.md and its generated receipt; CONTRIBUTING.md retained blob SHA 4357f4f0627964fdbafcde7ec921cab3c428ba73."
+    },
+    {
+      "gate": "directory-adr-drift-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "The newer lowercase Directory Rules artifact, the older same-doc-id uppercase artifact, the drift register, the proposed schema-home ADR, contract/schema/policy split, PR template, CODEOWNERS, review duties, workflow inventory, and generated-receipt contract were inspected. The unresolved Directory Rules placement conflict is surfaced rather than silently resolved."
+    },
+    {
+      "gate": "no-loss-and-scope-design",
+      "outcome": "PASS",
+      "reason": "The 20-line baseline's governed-event posture, doctrine preflight, responsibility-root rule, contract/schema/policy/fixture/test separation, fail-closed validators, steward review, smallest reversible change, and core truth labels are retained and expanded. The intended remote diff is limited to CONTRIBUTING.md plus this provenance receipt."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Repository workflow evidence records no indexed pull_request_target, workflow_run, self-hosted, secrets., or ordinary write-scope match. Root documentation changes can trigger broad command-bearing and stub workflows; these are documented as CI signals rather than release authority. The only observed id-token: write workflow is path-scoped away from CONTRIBUTING.md."
+    },
+    {
+      "gate": "markdown-structure-and-content",
+      "outcome": "PASS",
+      "reason": "The prepared guide has one H1, unique H2 headings, balanced code fences, valid internal navigation anchors, no trailing whitespace, and a final newline. It does not add a fabricated KFM Meta Block."
+    },
+    {
+      "gate": "repository-relative-link-validation",
+      "outcome": "PASS",
+      "reason": "Every new repository-relative file target was verified by connector read or by an unchanged-path comparison at the rebased commit. The generated-receipt directory link resolves through its verified README."
+    },
+    {
+      "gate": "security-rights-and-sensitive-content",
+      "outcome": "PASS",
+      "reason": "The change contains no credential, token, private key, source payload, exact sensitive location, living-person private record, DNA/genomic material, restricted source content, or publication action. It reinforces private-first disclosure and fail-closed sensitivity handling."
+    },
+    {
+      "gate": "remote-contributing-readback",
+      "outcome": "PASS",
+      "reason": "GitHub returned CONTRIBUTING.md blob SHA 935f8bbefd8f966275887c9f58277746b9c67c28 on the scoped branch, matching the Git blob SHA recomputed from the prepared 3159fedbeb27cfb78b15315562153dfc8a232ab8488cb54a95f20247426f65ee SHA-256 content."
+    },
+    {
+      "gate": "repository-native-execution",
+      "outcome": "SKIPPED",
+      "reason": "API_ONLY_STRICT was selected. Repository code was not cloned or executed locally. Existing trusted pull-request workflows will be observed after the branch and draft PR are created; pending or unavailable checks will not be reported as passing."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "uploaded-documentation-implementation-prompt-v3-1",
+      "validated": true,
+      "evidence_ref": "attachment://Pasted text(41).txt#sha256=0a879603a5448d5a176c0e6a221e05d29169f0e819e1cdfe72113305d4b0625d"
+    },
+    {
+      "id": "contributing-baseline",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/CONTRIBUTING.md"
+    },
+    {
+      "id": "authored-contributing-remote-readback",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/99bc816eaed894d8d3d5e4055d43631d52422c43/CONTRIBUTING.md"
+    },
+    {
+      "id": "directory-rules-current-live-artifact",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/docs/architecture/directory-rules.md"
+    },
+    {
+      "id": "directory-rules-conflicting-older-artifact",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/docs/architecture/DIRECTORY_RULES.md"
+    },
+    {
+      "id": "schema-home-adr-and-layer-split",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md"
+    },
+    {
+      "id": "pull-request-and-codeowner-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/.github/PULL_REQUEST_TEMPLATE.md"
+    },
+    {
+      "id": "workflow-trigger-and-maturity-inventory",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/.github/workflows/README.md"
+    },
+    {
+      "id": "repository-native-command-surface",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/Makefile"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T16:20:17Z",
+  "emitter": "openai-chatgpt/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored root contribution-guide revision on a scoped API-only review branch. The guide is repository-grounded and explicitly exposes unresolved authority, workflow, CODEOWNERS, branch-protection, and enforcement limits. This receipt is process provenance only; it is not factual proof, policy permission, human approval, release authority, or publication authority."
+}

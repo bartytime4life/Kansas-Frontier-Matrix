@@ -1,0 +1,136 @@
+{
+  "profile": "kfm.runtime.decision-envelope.validation.v1",
+  "cases": [
+    {
+      "case_id": "valid-abstain",
+      "path": "valid/valid_1.json",
+      "case_kind": "VALID",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-answer-alias",
+      "path": "valid/valid_2.json",
+      "case_kind": "VALID",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "schema-missing-id",
+      "path": "invalid/invalid_1.json",
+      "case_kind": "SCHEMA_NEGATIVE",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ]
+    },
+    {
+      "case_id": "schema-extra-field",
+      "path": "invalid/invalid_2.json",
+      "case_kind": "SCHEMA_NEGATIVE",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ]
+    },
+    {
+      "case_id": "schema-bad-id",
+      "path": "invalid/invalid_3.json",
+      "case_kind": "SCHEMA_NEGATIVE",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ]
+    },
+    {
+      "case_id": "semantic-alias-mismatch",
+      "path": "semantic_invalid/semantic_invalid_alias_mismatch.json",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "OUTCOME_ALIAS_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "semantic-duplicate-reasons",
+      "path": "semantic_invalid/semantic_invalid_duplicate_reasons.json",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "REASONS_NOT_CANONICAL"
+      ]
+    },
+    {
+      "case_id": "semantic-time-order",
+      "path": "semantic_invalid/semantic_invalid_time_order.json",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "TIME_ORDER_INVALID"
+      ]
+    },
+    {
+      "case_id": "semantic-internal-ref",
+      "path": "semantic_invalid/semantic_invalid_internal_ref.json",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "INTERNAL_REFERENCE_DENIED"
+      ]
+    },
+    {
+      "case_id": "semantic-error-leak",
+      "path": "semantic_invalid/semantic_invalid_error_support_leak.json",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "ERROR_SUPPORT_LEAK"
+      ]
+    },
+    {
+      "case_id": "semantic-deny-leak",
+      "path": "semantic_invalid/semantic_invalid_deny_support_leak.json",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "DENY_SUPPORT_LEAK"
+      ]
+    },
+    {
+      "case_id": "semantic-spec-hash",
+      "path": "semantic_invalid/semantic_invalid_spec_hash.json",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "SPEC_HASH_INVALID"
+      ]
+    },
+    {
+      "case_id": "semantic-version",
+      "path": "semantic_invalid/semantic_invalid_version.json",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "VERSION_INVALID"
+      ]
+    },
+    {
+      "case_id": "semantic-sensitive-text",
+      "path": "semantic_invalid/semantic_invalid_sensitive_text.json",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "SENSITIVE_TEXT_DENIED"
+      ]
+    },
+    {
+      "case_id": "semantic-ref-order",
+      "path": "semantic_invalid/semantic_invalid_unsorted_refs.json",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "EVIDENCE_REFS_NOT_CANONICAL"
+      ]
+    }
+  ]
+}

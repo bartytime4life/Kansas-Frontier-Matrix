@@ -1,0 +1,159 @@
+{
+  "receipt_id": "genrec-pass20-geography-crosswalk-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/geography-crosswalk.yml",
+    "contracts/crosswalks/geography_crosswalk.md",
+    "docs/intake/exploratory/pass-20-geography-crosswalk-source-map.md",
+    "fixtures/contracts/v1/crosswalks/geography_crosswalk/cases.json",
+    "schemas/contracts/v1/crosswalks/geography_crosswalk.schema.json",
+    "tests/validators/test_validate_geography_crosswalk.py",
+    "tools/validators/validate_geography_crosswalk.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/geography-crosswalk.yml": "sha256:0ced7d5e81dfc950c6903df1e110b2cabaa4d3843ce1cdf2606bdc57f5e86afc",
+    "contracts/crosswalks/geography_crosswalk.md": "sha256:bc113f22823cc998c937171f9155281ff07d261e0e6025dc2072a7e63c370ba7",
+    "docs/intake/exploratory/pass-20-geography-crosswalk-source-map.md": "sha256:bdd047e69d7e78800c151b765cbc7f5458154f60bdda7a787ca1b4cc51ca7f71",
+    "fixtures/contracts/v1/crosswalks/geography_crosswalk/cases.json": "sha256:db104c1ff63bec6fafa7b04854b1c98697d8b0b5ff3ce0f33383e7adbc24c739",
+    "schemas/contracts/v1/crosswalks/geography_crosswalk.schema.json": "sha256:2b4c581e99c7ae1d47171090392d9fc1a39452b57964d1c9ea06347bf8eecef3",
+    "tests/validators/test_validate_geography_crosswalk.py": "sha256:093bc99d8dd54dfe2b3831412e419eeff0ecc9a61552abada830d8112a3804ef",
+    "tools/validators/validate_geography_crosswalk.py": "sha256:4f8ffd62735ad56280849ec401311e91bbd1664505a546727ba920832aee42e9"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:bc113f22823cc998c937171f9155281ff07d261e0e6025dc2072a7e63c370ba7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and pull-request mutation",
+      "local deterministic validation",
+      "local PDF text extraction and rendered-page inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639",
+      "sha256:28900a244e68c9599e7a8f3e2acae90475ebcf9ea2645b66aed1c5f3a0378ed3",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "Supplied Pass 20 idea atlas",
+      "Supplied consolidated Frontier Matrix atlas",
+      "Repository GeographyVersion contract",
+      "Repository Directory Rules"
+    ],
+    "evidence_refs": [
+      "private-corpus:pass20#KFM-IDX-APP-008",
+      "private-corpus:consolidated-frontier-atlas#county-year-panel-and-crosswalk",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/contracts/common/geography_version.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/geography-crosswalk.yml": "CONFIRMED",
+    "contracts/crosswalks/geography_crosswalk.md": "PROPOSED",
+    "docs/intake/exploratory/pass-20-geography-crosswalk-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/crosswalks/geography_crosswalk/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/crosswalks/geography_crosswalk.schema.json": "PROPOSED",
+    "tests/validators/test_validate_geography_crosswalk.py": "CONFIRMED",
+    "tools/validators/validate_geography_crosswalk.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-pr-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Bounded object-name, exact-path, branch, pull-request, and open-work probes found no checked-path GeographyCrosswalk implementation or same-purpose active work at authoring time."
+    },
+    { "gate": "json-and-workflow-yaml-parse", "outcome": "PASS" },
+    { "gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS" },
+    {
+      "gate": "focused-unittest-and-fixture-suite",
+      "outcome": "PASS",
+      "reason": "Nine deterministic tests and twenty-five exact GeographyCrosswalk fixture cases passed."
+    },
+    {
+      "gate": "adjacent-geography-version-suite",
+      "outcome": "PASS",
+      "reason": "Eight deterministic GeographyVersion tests passed against the authoring base."
+    },
+    {
+      "gate": "documentation-meta-and-local-link-check",
+      "outcome": "PASS",
+      "reason": "Both metadata blocks and local links passed; review-only registry add-candidate warnings remain non-blocking."
+    },
+    { "gate": "no-network-non-reflection-and-no-geometry-boundary", "outcome": "PASS" },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "All seven declared artifacts were rebound to their final SHA-256 digests."
+    },
+    {
+      "gate": "repository-wide-validator-orchestrator",
+      "outcome": "PASS",
+      "reason": "The registered full deterministic validator profile completed successfully on the candidate branch."
+    },
+    {
+      "gate": "legacy-global-unittest-discovery",
+      "outcome": "FAIL",
+      "reason": "Discovery ran 1,379 tests and reported five failures plus fourteen errors; the exact failing modules and counts reproduce on untouched main and do not touch this packet."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass20-frontier-demography-card",
+      "validated": true,
+      "evidence_ref": "private-corpus:pass20#KFM-IDX-APP-008"
+    },
+    {
+      "id": "consolidated-atlas-crosswalk-vocabulary",
+      "validated": true,
+      "evidence_ref": "private-corpus:consolidated-frontier-atlas#county-year-panel-and-crosswalk"
+    },
+    {
+      "id": "repository-geography-version-dependency",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/contracts/common/geography_version.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T01:48:50Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only GeographyCrosswalk packet derived from Pass 20 KFM-IDX-APP-008, the consolidated atlas vocabulary, and merged GeographyVersion semantics. It declares digest-bound version pairs, forward-only finite relations, integer-millionth weights, evidence references, disclosures, and deterministic identity while preserving geography, geometry, mapping, evidence, policy, review, release, publication, deployment, and public-use boundaries."
+}

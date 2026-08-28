@@ -1,0 +1,48 @@
+{
+  "object_type": "ThresholdPolicyRegistry",
+  "registry_id": "kfm://policy/thresholds/registry/v1",
+  "schema_version": "1.0.0",
+  "status": "PROPOSED_INACTIVE",
+  "canonicalization_profile": "RFC8785-JCS",
+  "spec_hash": "sha256:80f1bc7a9e2c91e0414d0a0e5252047f6e4d69ac7deb0c152f3be9601e7880d2",
+  "thresholds": [
+    {
+      "threshold_id": "kfm.threshold.atmosphere.synthetic-materiality.v1",
+      "domain": "atmosphere",
+      "metric": "synthetic_materiality",
+      "threshold_class": "MATERIALITY",
+      "purpose": "Exercise an unresolved synthetic threshold-policy slot without adopting a value or binding a consumer.",
+      "value_state": "UNRESOLVED",
+      "operator": null,
+      "value": null,
+      "unit": null,
+      "binding_state": "UNBOUND",
+      "review_state": "HOLD",
+      "effective_from": null,
+      "supersedes": null,
+      "reason_codes": [
+        "NO_VALUE_ADOPTED",
+        "STEWARD_REVIEW_REQUIRED"
+      ],
+      "steward_roles": [
+        "ATMOSPHERE_STEWARD",
+        "POLICY_STEWARD"
+      ],
+      "evidence_refs": [
+        "fixture://threshold-policy-registry/unresolved-slot"
+      ],
+      "pressure_refs": [
+        "docs/intake/IDEA_INTAKE.md"
+      ]
+    }
+  ],
+  "governance": {
+    "numeric_policy_adopted": false,
+    "policy_evaluation_authorized": false,
+    "watcher_binding_authorized": false,
+    "source_activation_authorized": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false
+  }
+}

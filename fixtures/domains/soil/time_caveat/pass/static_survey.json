@@ -1,0 +1,29 @@
+{
+  "candidate_id": "soil-time-static-survey-0001",
+  "schema_version": "1.0.0",
+  "support_type": "authoritative_static_soil",
+  "source_family": "nrcs_ssurgo",
+  "source_role": "official_static_survey",
+  "claim_kind": "static_survey_record",
+  "time_basis": {
+    "source_published_at": "2025-09-01T00:00:00Z",
+    "observed_at": null,
+    "valid_from": null,
+    "valid_to": null,
+    "retrieved_at": "2026-04-15T14:05:00Z",
+    "evaluated_at": "2026-04-15T14:10:00Z",
+    "source_timezone": null,
+    "cadence_seconds": null,
+    "stale_state": "NOT_APPLICABLE"
+  },
+  "evidence_refs": [
+    "evidence:synthetic-static-soil-vintage"
+  ],
+  "governance": {
+    "source_activated": false,
+    "policy_evaluated": false,
+    "release_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  }
+}

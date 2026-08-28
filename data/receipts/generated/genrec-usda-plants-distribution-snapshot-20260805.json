@@ -1,0 +1,167 @@
+{
+  "receipt_id": "genrec-usda-plants-distribution-snapshot-20260805",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/usda-plants-distribution-snapshot.yml",
+    "contracts/domains/flora/usda_plants_distribution_snapshot.md",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/README.md",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/input/counties.csv",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/input/distribution.csv",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/input/taxa.csv",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/coverage_incomplete.json",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/distribution_order_invalid.json",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/duplicate_source_row.json",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/exact_geometry_field.json",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/hash_mismatch.json",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/internal_lifecycle_ref.json",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/missing_row_as_absence.json",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/release_hold_removed.json",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/scientific_author_missing.json",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/valid/valid_snapshot.json",
+    "schemas/contracts/v1/domains/flora/usda_plants_distribution_snapshot.schema.json",
+    "tests/domains/flora/test_usda_plants_distribution_snapshot.py",
+    "tools/ingest/usda_plants/README.md",
+    "tools/ingest/usda_plants/normalize_distribution_snapshot.py",
+    "tools/validators/domains/flora/validate_usda_plants_distribution_snapshot.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/usda-plants-distribution-snapshot.yml": "sha256:36d9dea3b06eeaa03ab48fd61ae64de858728d74909c06053a3aa4cd61520919",
+    "contracts/domains/flora/usda_plants_distribution_snapshot.md": "sha256:b548e67909221f273ca3888a11d4230a40b5d76642b287aca4e3916398f47547",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/README.md": "sha256:de090e15109c1051859e7c63936598edd012ce1bbf3d2432551b0ec0ed171508",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/input/counties.csv": "sha256:a4d2457bb2f63a4d9a0baa2a99d326324307ba342710f0df5ef68c9dd1bdd435",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/input/distribution.csv": "sha256:272ae3b346d279c65be28c1852a276751c5f218b043700df8f6efbd3b7a1de04",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/input/taxa.csv": "sha256:6e8d03dfb56fd8aaf9d4180dadada537cb9ee0d7597b612824bce2cfb1ec1c42",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/coverage_incomplete.json": "sha256:a4babc0dff61eeeb56b34b4d1057ce97e1da78647bbb8edcc0c44a9567bffac0",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/distribution_order_invalid.json": "sha256:c671050d9dc2a625ccb2394d8952c37c705f3bdd5f80968b45493adc7438065e",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/duplicate_source_row.json": "sha256:c7c905ce459a84ab3f5b75ccc800c08ae89b383bcfb2c69e8133025636b51f83",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/exact_geometry_field.json": "sha256:411f6b97a5f761c04545df4747a06185173d40998c30208cb786e4cfcb155fed",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/hash_mismatch.json": "sha256:038eba323db05b48718dde1295eeb08048f4ace91adc4ba73be119fd5d18cb8b",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/internal_lifecycle_ref.json": "sha256:c266e7e43c103481128df5267bfe29ebdbe22fdb7831f4307d300ad7bdc002d8",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/missing_row_as_absence.json": "sha256:c6c874ce22cb08cfe31ced6229d08c0b7e56c77465e7f44546db72a2b131c7f4",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/release_hold_removed.json": "sha256:a2dc6c9d118b97587b982dd2fbdff04680e9753316ab63d061cee423ca3b0ba7",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/scientific_author_missing.json": "sha256:4d4f8df007f549a6b020148ec2d95b5b8f990f54d0c7392ae5b1bf9e10eccd43",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/valid/valid_snapshot.json": "sha256:3028e75fde91724c2bd704172fe3f290b1fb1b53c710d50c982cec810164123c",
+    "schemas/contracts/v1/domains/flora/usda_plants_distribution_snapshot.schema.json": "sha256:01215724d4e616acbf956adbf31029729c69ccf1a02e95db3d247823cce22c90",
+    "tests/domains/flora/test_usda_plants_distribution_snapshot.py": "sha256:9e14aab610ce649e4ac4cdb40ee20e74ae918c8a59a65b78cb24717201c2b2c6",
+    "tools/ingest/usda_plants/README.md": "sha256:6fb47f4e06389212e3edf940b6231735aae369cff357bd0d4f6a6a1a4cdff197",
+    "tools/ingest/usda_plants/normalize_distribution_snapshot.py": "sha256:aec5b2a3dd02cceb7d4205ace56c334096345d0108636e3ad07e510870df445e",
+    "tools/validators/domains/flora/validate_usda_plants_distribution_snapshot.py": "sha256:b301c8ea9163179fe6cb13126d2d0ec0b1e17a1d5500250cd4b9ea77f4443420"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05"
+  },
+  "prompt_or_contract": "sha256:ac4913c6baf437f067ab4c58840cbbeb8a0fb827876e5290eb5c6b02e9541083",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-30-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-30-26.pdf#pages-1-11-usda-plants",
+      "repo:docs/intake/exploratory/new-ideas-4-30-source-map.md#usda-plants-distribution-gap",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repo:docs/sources/catalog/usda/usda-plants.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/usda-plants-distribution-snapshot.yml": "PROPOSED",
+    "contracts/domains/flora/usda_plants_distribution_snapshot.md": "PROPOSED",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/README.md": "PROPOSED",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/input/counties.csv": "PROPOSED",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/input/distribution.csv": "PROPOSED",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/input/taxa.csv": "PROPOSED",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/coverage_incomplete.json": "PROPOSED",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/distribution_order_invalid.json": "PROPOSED",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/duplicate_source_row.json": "PROPOSED",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/exact_geometry_field.json": "PROPOSED",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/hash_mismatch.json": "PROPOSED",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/internal_lifecycle_ref.json": "PROPOSED",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/missing_row_as_absence.json": "PROPOSED",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/release_hold_removed.json": "PROPOSED",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/invalid/scientific_author_missing.json": "PROPOSED",
+    "fixtures/domains/flora/usda_plants_distribution_snapshot/valid/valid_snapshot.json": "PROPOSED",
+    "schemas/contracts/v1/domains/flora/usda_plants_distribution_snapshot.schema.json": "PROPOSED",
+    "tests/domains/flora/test_usda_plants_distribution_snapshot.py": "PROPOSED",
+    "tools/ingest/usda_plants/README.md": "PROPOSED",
+    "tools/ingest/usda_plants/normalize_distribution_snapshot.py": "PROPOSED",
+    "tools/validators/domains/flora/validate_usda_plants_distribution_snapshot.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-tests",
+      "outcome": "PASS",
+      "reason": "Eight focused tests plus nine exact-negative subtests passed with no network dependency."
+    },
+    {
+      "gate": "fixture-polarity-and-replay",
+      "outcome": "PASS",
+      "reason": "One valid fixture passed, nine invalid fixtures failed as expected, and normalization reproduced the golden fixture byte-for-byte."
+    },
+    {
+      "gate": "schema-and-parser-validation",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 schema validation, JSON parsing, Python compilation, and workflow YAML parsing passed."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-4-30-usda-plants",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-30-26.pdf#pages-1-11-usda-plants"
+    },
+    {
+      "id": "repository:new-ideas-4-30-source-map",
+      "validated": true,
+      "evidence_ref": "repo:docs/intake/exploratory/new-ideas-4-30-source-map.md#usda-plants-distribution-gap"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repository:usda-plants-product-page",
+      "validated": true,
+      "evidence_ref": "repo:docs/sources/catalog/usda/usda-plants.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-05T21:12:48Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first implementation of the repository-recorded USDA PLANTS distribution semantics gap. The prompt_or_contract digest covers the exact four-line task/source/selection string recorded by the authoring script. This receipt grants no source, taxonomy, evidence, rights, sensitivity, review, merge, promotion, release, deployment, publication, or public-use authority."
+}

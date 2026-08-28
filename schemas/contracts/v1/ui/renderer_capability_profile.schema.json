@@ -1,0 +1,255 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/ui/renderer_capability_profile.schema.json",
+  "title": "RendererCapabilityProfileCandidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile_version",
+    "candidate_id",
+    "spec_hash",
+    "renderer",
+    "contract_refs",
+    "required_capabilities",
+    "declared_capabilities",
+    "compatibility",
+    "boundary",
+    "governance"
+  ],
+  "properties": {
+    "profile_version": {
+      "const": "kfm.renderer-capability-candidate.v1"
+    },
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^kfm:renderer-capability:[a-f0-9]{24}$"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "renderer": {
+      "$ref": "#/$defs/renderer"
+    },
+    "contract_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": {
+        "type": "string",
+        "pattern": "^contracts/[A-Za-z0-9_./ -]+\\.md$",
+        "minLength": 13,
+        "maxLength": 240
+      },
+      "uniqueItems": true
+    },
+    "required_capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": {
+        "$ref": "#/$defs/capability"
+      },
+      "uniqueItems": true
+    },
+    "declared_capabilities": {
+      "type": "array",
+      "maxItems": 16,
+      "items": {
+        "$ref": "#/$defs/capability"
+      },
+      "uniqueItems": true
+    },
+    "compatibility": {
+      "$ref": "#/$defs/compatibility"
+    },
+    "boundary": {
+      "$ref": "#/$defs/boundary"
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    }
+  },
+  "$defs": {
+    "capability": {
+      "enum": [
+        "CAMERA_STATE",
+        "CUSTOM_LAYER",
+        "FILL_EXTRUSION",
+        "GLOBE",
+        "OFFLINE",
+        "PICK_EVENTS",
+        "RASTER",
+        "SCREENSHOT",
+        "TERRAIN",
+        "VECTOR_TILES"
+      ]
+    },
+    "renderer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "renderer_id",
+        "renderer_kind",
+        "runtime_surface",
+        "implementation_ref",
+        "abstract_interface_version",
+        "declaration_basis"
+      ],
+      "properties": {
+        "renderer_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{2,95}$"
+        },
+        "renderer_kind": {
+          "enum": [
+            "HEADLESS",
+            "MAPLIBRE_GL_JS",
+            "MAPLIBRE_NATIVE",
+            "MAPLIBRE_RS"
+          ]
+        },
+        "runtime_surface": {
+          "enum": [
+            "BROWSER",
+            "NATIVE",
+            "SERVER",
+            "TEST"
+          ]
+        },
+        "implementation_ref": {
+          "type": "string",
+          "pattern": "^urn:kfm:synthetic:renderer:[a-z0-9-]{3,96}$",
+          "maxLength": 128
+        },
+        "abstract_interface_version": {
+          "const": "kfm.renderer.abstract.v1"
+        },
+        "declaration_basis": {
+          "const": "SYNTHETIC_FIXTURE"
+        }
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "missing_capabilities",
+        "state",
+        "disposition",
+        "review_required",
+        "production_selection_authorized"
+      ],
+      "properties": {
+        "missing_capabilities": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/capability"
+          },
+          "uniqueItems": true
+        },
+        "state": {
+          "enum": [
+            "FULL",
+            "INCOMPATIBLE",
+            "PARTIAL"
+          ]
+        },
+        "disposition": {
+          "enum": [
+            "HOLD",
+            "REJECT",
+            "SUBSTITUTE_CANDIDATE"
+          ]
+        },
+        "review_required": {
+          "const": true
+        },
+        "production_selection_authorized": {
+          "const": false
+        }
+      }
+    },
+    "boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "consumes_governed_contracts_only",
+        "direct_store_access",
+        "embedded_query",
+        "evidence_authority",
+        "policy_authority",
+        "release_authority",
+        "publication_authority",
+        "network_probe_performed"
+      ],
+      "properties": {
+        "consumes_governed_contracts_only": {
+          "const": true
+        },
+        "direct_store_access": {
+          "const": false
+        },
+        "embedded_query": {
+          "const": false
+        },
+        "evidence_authority": {
+          "const": false
+        },
+        "policy_authority": {
+          "const": false
+        },
+        "release_authority": {
+          "const": false
+        },
+        "publication_authority": {
+          "const": false
+        },
+        "network_probe_performed": {
+          "const": false
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "browser_renderer_rule",
+        "adapter_seam_required",
+        "registry_write_authorized",
+        "release_authorized",
+        "deployment_authorized",
+        "publication_authorized",
+        "public_use_authorized"
+      ],
+      "properties": {
+        "fixture_only": {
+          "const": true
+        },
+        "browser_renderer_rule": {
+          "const": "MAPLIBRE_GL_JS_ONLY"
+        },
+        "adapter_seam_required": {
+          "const": true
+        },
+        "registry_write_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "deployment_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "public_use_authorized": {
+          "const": false
+        }
+      }
+    }
+  }
+}

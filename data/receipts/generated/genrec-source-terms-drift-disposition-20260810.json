@@ -1,0 +1,156 @@
+{
+  "receipt_id": "genrec-source-terms-drift-disposition-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/source-terms-drift-disposition.yml",
+    "contracts/source/source_terms_drift_disposition.md",
+    "docs/intake/exploratory/source-terms-drift-disposition-source-map.md",
+    "fixtures/contracts/v1/source/source_terms_drift_disposition/cases.json",
+    "schemas/contracts/v1/source/source_terms_drift_disposition.schema.json",
+    "tests/validators/test_validate_source_terms_drift_disposition.py",
+    "tools/validators/source/validate_source_terms_drift_disposition.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/source-terms-drift-disposition.yml": "sha256:8e6a60f8bc24cf021a4e37f1d7dcab57171a9735f58f521898333a456f52f9f9",
+    "contracts/source/source_terms_drift_disposition.md": "sha256:96970d538808415a94315823a82a994038c49133a79368ba5e02516a431dd3a3",
+    "docs/intake/exploratory/source-terms-drift-disposition-source-map.md": "sha256:0b7a4b768ce23be292328ab6444dee39804ecc60a29f550458058fd26f680c35",
+    "fixtures/contracts/v1/source/source_terms_drift_disposition/cases.json": "sha256:5f35cdd78f3dc5eb53f321a86ddf110b0ddd0fc92a22c9fae783824a2145ea61",
+    "schemas/contracts/v1/source/source_terms_drift_disposition.schema.json": "sha256:f21bab833f00a9c11f37e6304f98e015f5c8cd3da20ad894a2d396582078be2f",
+    "tests/validators/test_validate_source_terms_drift_disposition.py": "sha256:2a0f2bf1323ab75995b0fd41aece92561c5c7c13901c5084d5b64d04bed8d0ef",
+    "tools/validators/source/validate_source_terms_drift_disposition.py": "sha256:43ccf2ac8cf9d53a1702b6539ec40121e6429564635d7131bf4976d3df8ce6d0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:96970d538808415a94315823a82a994038c49133a79368ba5e02516a431dd3a3",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Markdown, JSON, YAML, and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:07c7765576df1997e0be88141bd3cd213930e7281d490a8ae62afd78abe8f445",
+      "sha256:eb71cf66c59363580d3e5d277ee32828baf9adfb5ecd17ae4d79d3acee10eadd"
+    ],
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards (Google Drive document)",
+      "New Ideas 4-30-26 (Google Drive document)"
+    ],
+    "evidence_refs": [
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-TRIAD-044",
+      "gdrive://1SqKpexb3rCBbAz3wCncPxhUM25v-C8V9OUiLI878fKY",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/docs/intake/exploratory/new-ideas-4-30-source-map.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/contracts/source/source_rights_currentness_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/source-terms-drift-disposition.yml": "CONFIRMED",
+    "contracts/source/source_terms_drift_disposition.md": "PROPOSED",
+    "docs/intake/exploratory/source-terms-drift-disposition-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_terms_drift_disposition/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/source/source_terms_drift_disposition.schema.json": "PROPOSED",
+    "tests/validators/test_validate_source_terms_drift_disposition.py": "CONFIRMED",
+    "tools/validators/source/validate_source_terms_drift_disposition.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Nine deterministic SourceTermsDriftDisposition tests passed in the declared-dependency environment."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Nineteen exact PASS and DENY cases matched reviewed states and findings."
+    },
+    {
+      "gate": "adjacent-source-rights-currentness-tests",
+      "outcome": "PASS",
+      "reason": "Eight adjacent SourceRightsCurrentnessAssessment tests passed."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "google-drive-full-atlas-triad-044",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-TRIAD-044"
+    },
+    {
+      "id": "google-drive-new-ideas-4-30",
+      "validated": true,
+      "evidence_ref": "gdrive://1SqKpexb3rCBbAz3wCncPxhUM25v-C8V9OUiLI878fKY"
+    },
+    {
+      "id": "repository-april-30-source-map",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/docs/intake/exploratory/new-ideas-4-30-source-map.md"
+    },
+    {
+      "id": "adjacent-rights-currentness-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/contracts/source/source_rights_currentness_assessment.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T16:02:44Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only SourceTermsDriftDisposition packet derived from the connected April 30 idea corpus and Full Atlas KFM-TRIAD-044, reconciled against current SourceDescriptor, SourceRightsCurrentnessAssessment, watcher, correction, and release boundaries. It compares declared prior/current snapshot digests and downstream review routing without fetching or reproducing governing terms, making a legal determination, activating a source, mutating lifecycle state, executing a hold/recomputation/withdrawal, or authorizing release or publication."
+}

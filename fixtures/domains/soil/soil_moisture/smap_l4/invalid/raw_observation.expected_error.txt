@@ -1,0 +1,1 @@
+RAW_OBSERVATION_TRUTH_FORBIDDEN	$.anti_collapse.raw_observation_truth

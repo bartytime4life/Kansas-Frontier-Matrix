@@ -1,0 +1,10 @@
+{
+  "status": "DEPRECATED_COMPATIBILITY_POINTER",
+  "path": "schemas/contracts/v1/source/source-intake-record.json",
+  "canonical_schema": "schemas/contracts/v1/source/source_intake_record.schema.json",
+  "contract_doc": "contracts/source/source_intake_record.md",
+  "writes_allowed": false,
+  "notes": [
+    "Legacy placeholder retained as a read-only pointer; it is not a JSON Schema and grants no authority."
+  ]
+}

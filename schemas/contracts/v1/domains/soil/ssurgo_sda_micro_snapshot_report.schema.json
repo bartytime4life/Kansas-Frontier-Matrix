@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/soil/ssurgo_sda_micro_snapshot_report.schema.json",
+  "title": "SyntheticSdaMicroSnapshotDiffReport",
+  "description": "Fixture-only SSURGO/SDA micro-snapshot validation and diff report.",
+  "type": "object",
+  "additionalProperties": false,
+  "x-kfm": {
+    "contract_doc": "contracts/domains/soil/ssurgo_sda_micro_snapshot.md",
+    "fixtures_root": "tests/ingest/ssurgo_watch/fixtures/sda_micro_snapshot/",
+    "evaluator": "tools/ingest/ssurgo_watch/sda_micro_snapshot.py",
+    "status": "PROPOSED_FIXTURE_ONLY"
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile_id",
+    "fixture_only",
+    "comparison_id",
+    "prior",
+    "current",
+    "validation",
+    "diff_summary",
+    "added_rows",
+    "removed_rows",
+    "field_changes",
+    "outcome",
+    "reason_codes",
+    "evidence_refs",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {"const": "SyntheticSdaMicroSnapshotDiffReport"},
+    "schema_version": {"const": "1.0.0"},
+    "profile_id": {"const": "kfm.ssurgo-sda-micro-snapshot.synthetic.v1"},
+    "fixture_only": {"const": true},
+    "comparison_id": {"$ref": "#/$defs/sha256"},
+    "prior": {"$ref": "#/$defs/snapshotSummary"},
+    "current": {"$ref": "#/$defs/snapshotSummary"},
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "checks"],
+      "properties": {
+        "status": {"const": "pass"},
+        "checks": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "diff_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "metadata_changed_fields",
+        "rows_added",
+        "rows_removed",
+        "fields_changed"
+      ],
+      "properties": {
+        "metadata_changed_fields": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"enum": ["product_version", "source_etag"]}
+        },
+        "rows_added": {"type": "integer", "minimum": 0},
+        "rows_removed": {"type": "integer", "minimum": 0},
+        "fields_changed": {"type": "integer", "minimum": 0}
+      }
+    },
+    "added_rows": {"type": "array", "items": {"$ref": "#/$defs/rowIdentity"}},
+    "removed_rows": {"type": "array", "items": {"$ref": "#/$defs/rowIdentity"}},
+    "field_changes": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/fieldChange"}
+    },
+    "outcome": {"enum": ["NO_MATERIAL_CHANGE", "PROPOSED_WORK_RECORD"]},
+    "reason_codes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "SOURCE_METADATA_CHANGED",
+          "SDA_ROWS_ADDED",
+          "SDA_ROWS_REMOVED",
+          "SDA_FIELDS_CHANGED"
+        ]
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "promotion_allowed",
+        "publication_allowed",
+        "release_state",
+        "review_state",
+        "steward_review_required"
+      ],
+      "properties": {
+        "promotion_allowed": {"const": false},
+        "publication_allowed": {"const": false},
+        "release_state": {"const": "not_released"},
+        "review_state": {"const": "fixture_only"},
+        "steward_review_required": {"type": "boolean"}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"outcome": {"const": "NO_MATERIAL_CHANGE"}}},
+      "then": {
+        "properties": {
+          "reason_codes": {"maxItems": 0},
+          "governance": {
+            "properties": {"steward_review_required": {"const": false}}
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"outcome": {"const": "PROPOSED_WORK_RECORD"}}},
+      "then": {
+        "properties": {
+          "reason_codes": {"minItems": 1},
+          "governance": {
+            "properties": {"steward_review_required": {"const": true}}
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "snapshotSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "content_spec_hash",
+        "retrieval_hash",
+        "row_set_hash",
+        "product_version",
+        "source_etag",
+        "retrieval_timestamp",
+        "row_count"
+      ],
+      "properties": {
+        "content_spec_hash": {"$ref": "#/$defs/sha256"},
+        "retrieval_hash": {"$ref": "#/$defs/sha256"},
+        "row_set_hash": {"$ref": "#/$defs/sha256"},
+        "product_version": {"type": "string", "pattern": "^SYNTHETIC-"},
+        "source_etag": {"type": "string", "minLength": 1},
+        "retrieval_timestamp": {"type": "string", "format": "date-time", "pattern": "Z$"},
+        "row_count": {"type": "integer", "minimum": 1}
+      }
+    },
+    "rowIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mukey", "cokey"],
+      "properties": {
+        "mukey": {"type": "string", "pattern": "^SYN-MU-"},
+        "cokey": {"type": "string", "pattern": "^SYN-CO-"}
+      }
+    },
+    "fieldChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mukey", "cokey", "field", "prior", "current"],
+      "properties": {
+        "mukey": {"type": "string", "pattern": "^SYN-MU-"},
+        "cokey": {"type": "string", "pattern": "^SYN-CO-"},
+        "field": {"enum": ["component_pct", "drainage_class", "slope_r"]},
+        "prior": {"type": ["number", "string"]},
+        "current": {"type": ["number", "string"]}
+      }
+    }
+  }
+}

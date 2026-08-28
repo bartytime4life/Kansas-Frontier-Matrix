@@ -1,0 +1,10 @@
+{
+  "status": "PROPOSED",
+  "path": "release/manifests/agri-county-crop-progress-2026Q2-001.json",
+  "source_docs": [
+    "docs/domains/agriculture/RELEASE_INDEX.md"
+  ],
+  "notes": [
+    "Placeholder created from the current docs/domains markdown inventory."
+  ]
+}

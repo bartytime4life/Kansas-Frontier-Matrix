@@ -1,0 +1,184 @@
+{
+  "receipt_id": "genrec-pipelines-cross-lane-parent-readme-24761c11",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipelines/cross_lane/README.md"
+  ],
+  "artifact_hashes": {
+    "pipelines/cross_lane/README.md": "sha256:24761c11e0a7d796cbaa82201fbb8ae13025ab5322f97a330ae07ca706c0450b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-19"
+  },
+  "prompt_or_contract": "sha256:e138f443ef849bf5f052857230a13c1b86f0ed599396d82defac820af9232f8b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository code search",
+      "repository file reads",
+      "remote branch and contents writes",
+      "local deterministic content validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:e138f443ef849bf5f052857230a13c1b86f0ed599396d82defac820af9232f8b"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/66adcd917bc77232f6eac2218849f812019631dd",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/4f2fd9e9ed8e4539cf4f91f6c39a004099f4b442",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66adcd917bc77232f6eac2218849f812019631dd/pipelines/cross_lane/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66adcd917bc77232f6eac2218849f812019631dd/pipelines/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66adcd917bc77232f6eac2218849f812019631dd/pipelines/domains/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66adcd917bc77232f6eac2218849f812019631dd/pipelines/cross_lane/riparian_vegetation/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66adcd917bc77232f6eac2218849f812019631dd/docs/architecture/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66adcd917bc77232f6eac2218849f812019631dd/docs/architecture/cross-domain/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66adcd917bc77232f6eac2218849f812019631dd/docs/architecture/cross-domain/multi-domain-placement.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66adcd917bc77232f6eac2218849f812019631dd/docs/architecture/cross-domain/cross-lane-relations.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66adcd917bc77232f6eac2218849f812019631dd/contracts/cross_domain/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66adcd917bc77232f6eac2218849f812019631dd/tools/validators/cross-lane/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66adcd917bc77232f6eac2218849f812019631dd/tools/validators/cross-domain-joins/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66adcd917bc77232f6eac2218849f812019631dd/tests/cross_domain/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66adcd917bc77232f6eac2218849f812019631dd/pipeline_specs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66adcd917bc77232f6eac2218849f812019631dd/tests/pipelines/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66adcd917bc77232f6eac2218849f812019631dd/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66adcd917bc77232f6eac2218849f812019631dd/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66adcd917bc77232f6eac2218849f812019631dd/data/receipts/generated/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66adcd917bc77232f6eac2218849f812019631dd/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "pipelines/cross_lane/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-change-budget",
+      "outcome": "PASS",
+      "reason": "Scope is limited to one existing parent README plus the required generated-work receipt; no executable, source activation, schema, contract, policy, fixture, test, workflow, lifecycle, proof, release, runtime, or public-surface behavior is changed."
+    },
+    {
+      "gate": "base-drift-reconciliation",
+      "outcome": "PASS",
+      "reason": "Main advanced from 25c0a66f3a722926828b32189802442d40b9b5fd to 66adcd917bc77232f6eac2218849f812019631dd through an unrelated apps/packages README update. The target retained blob cf3bb3a434cc29f0b21c64c7c2bc1faefc4e5b81, so the branch and evidence snapshot were re-pinned without overwriting related work."
+    },
+    {
+      "gate": "directory-authority-and-duplicate-preflight",
+      "outcome": "PASS",
+      "reason": "Existing pipelines/cross_lane placement and document identity were retained. Directory Rules, multi-domain placement, cross-lane doctrine, domain pipeline routing, child inventory, cross-domain contracts/tests/validators, open branch/PR state, specs, workflows, and review routing were inspected without creating parallel authority."
+    },
+    {
+      "gate": "repository-inventory-and-no-overclaim",
+      "outcome": "PASS",
+      "reason": "The README limits the direct inventory to the parent and one verified child and distinguishes those files from absent or unverified umbrella contract, registry, shared executor, spec parent, test parent, fixture parent, workflow, runtime, receipt corpus, release integration, and public behavior."
+    },
+    {
+      "gate": "placement-and-naming-conflict",
+      "outcome": "PASS",
+      "reason": "The revision keeps cross_lane versus cross-domain versus direct topic paths explicitly CONFLICTED and does not declare the current intermediate namespace canonical by assertion."
+    },
+    {
+      "gate": "markdown-meta-anchor-and-structure",
+      "outcome": "PASS",
+      "reason": "The final README has one H1, one closed KFM Meta Block v2, 74 unique heading slugs, 44 resolved internal anchors, balanced code fences, no trailing whitespace, a final newline, and plausible Mermaid decision-node syntax."
+    },
+    {
+      "gate": "repository-relative-link-validation",
+      "outcome": "PASS",
+      "reason": "All fifteen repository-relative links in the revised README resolve to files inspected at the pinned repository snapshot."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Broad pull-request workflows may run, but no dedicated cross-lane workflow was found. The revision creates no secret, write, OIDC, deployment, release, or publication path; workflow conclusions remain separate evidence."
+    },
+    {
+      "gate": "security-privacy-rights-and-sensitivity",
+      "outcome": "PASS",
+      "reason": "The revision contains no credentials, restricted payloads, exact protected ecological or archaeological locations, living-person or genomic data, private parcel/operator examples, infrastructure vulnerability detail, or redaction reversal instructions."
+    },
+    {
+      "gate": "no-loss-preservation",
+      "outcome": "PASS",
+      "reason": "Useful v0.1 multi-domain composition, ownership, source-role, evidence, sensitivity, lifecycle, no-direct-publish, promotion, correction, rollback, and child-safety obligations were retained. Proposed trees were reclassified rather than silently treated as implementation."
+    },
+    {
+      "gate": "remote-readback-and-content-hash",
+      "outcome": "PASS",
+      "reason": "GitHub returned README blob bef088f3064a49832d8b1b370ac7668c46325c26 on commit 4f2fd9e9ed8e4539cf4f91f6c39a004099f4b442, matching the locally recomputed Git blob SHA and SHA-256 artifact hash 24761c11e0a7d796cbaa82201fbb8ae13025ab5322f97a330ae07ca706c0450b."
+    },
+    {
+      "gate": "repository-native-execution",
+      "outcome": "SKIPPED",
+      "reason": "The API-only workflow did not clone or execute repository code, and no accepted parent runner or dedicated cross-lane test command was established. Pull-request checks are observed separately and never inferred as passing."
+    },
+    {
+      "gate": "generated-receipt-shape",
+      "outcome": "PASS",
+      "reason": "The receipt payload satisfies the fetched generated-receipt required fields, enums, hash patterns, date-time format, and additional-property restrictions in local structural validation."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human governance review remains pending and separate from generation, static validation, mergeability, release, and publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "user-request-cross-lane-parent-readme",
+      "validated": true,
+      "evidence_ref": "prompt://sha256:e138f443ef849bf5f052857230a13c1b86f0ed599396d82defac820af9232f8b"
+    },
+    {
+      "id": "cross-lane-parent-base",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/66adcd917bc77232f6eac2218849f812019631dd/pipelines/cross_lane/README.md"
+    },
+    {
+      "id": "riparian-child-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/66adcd917bc77232f6eac2218849f812019631dd/pipelines/cross_lane/riparian_vegetation/README.md"
+    },
+    {
+      "id": "multi-domain-placement-doctrine",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/66adcd917bc77232f6eac2218849f812019631dd/docs/architecture/cross-domain/multi-domain-placement.md"
+    },
+    {
+      "id": "cross-lane-four-invariants",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/66adcd917bc77232f6eac2218849f812019631dd/docs/architecture/cross-domain/cross-lane-relations.md"
+    },
+    {
+      "id": "cross-lane-validator-compatibility-pattern",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/66adcd917bc77232f6eac2218849f812019631dd/tools/validators/cross-lane/README.md"
+    },
+    {
+      "id": "final-readme-remote-readback",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/4f2fd9e9ed8e4539cf4f91f6c39a004099f4b442"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-19T16:37:34Z",
+  "emitter": "OpenAI GPT-5.6 Thinking via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Task kfm-pipelines-cross-lane-parent-readme-v0-2-20260719. Documentation-only update. This receipt records provenance and bounded validation outcomes; it is not cross-domain evidence, policy approval, human review, lifecycle promotion, release approval, or publication authority."
+}

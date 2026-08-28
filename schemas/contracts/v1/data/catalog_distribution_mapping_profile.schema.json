@@ -1,0 +1,333 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/data/catalog_distribution_mapping_profile.schema.json",
+  "title": "CatalogDistributionMappingProfileCandidate",
+  "description": "Fixture-only STAC/DCAT/PROV distribution-carrier alignment candidate. Validation grants no catalog, evidence, policy, review, release, registry, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile_version",
+    "candidate_id",
+    "spec_hash",
+    "artifact",
+    "carriers",
+    "alignment",
+    "governance"
+  ],
+  "properties": {
+    "profile_version": {
+      "const": "kfm.catalog-distribution-mapping-candidate.v1"
+    },
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^kfm:catalog-distribution-mapping:[a-f0-9]{24}$"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "artifact": {
+      "$ref": "#/$defs/artifact"
+    },
+    "carriers": {
+      "$ref": "#/$defs/carriers"
+    },
+    "alignment": {
+      "$ref": "#/$defs/alignment"
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "locator": {
+      "type": "string",
+      "pattern": "^urn:kfm:synthetic:distribution:[a-z0-9][a-z0-9-]{2,95}@sha256:[a-f0-9]{64}$",
+      "maxLength": 210
+    },
+    "mediaType": {
+      "enum": [
+        "application/geo+json",
+        "application/vnd.pmtiles",
+        "image/tiff; application=geotiff"
+      ]
+    },
+    "role": {
+      "enum": [
+        "data",
+        "metadata",
+        "thumbnail"
+      ]
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "locator",
+        "digest",
+        "media_type",
+        "asset_role"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "pattern": "^kfm:artifact:synthetic:[a-z0-9][a-z0-9-]{2,95}$"
+        },
+        "locator": {
+          "$ref": "#/$defs/locator"
+        },
+        "digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "media_type": {
+          "$ref": "#/$defs/mediaType"
+        },
+        "asset_role": {
+          "$ref": "#/$defs/role"
+        }
+      }
+    },
+    "stac": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "item_ref",
+        "asset_key",
+        "href",
+        "checksum",
+        "media_type",
+        "roles"
+      ],
+      "properties": {
+        "item_ref": {
+          "type": "string",
+          "pattern": "^urn:kfm:synthetic:stac:item:[a-z0-9][a-z0-9-]{2,95}$"
+        },
+        "asset_key": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{2,63}$"
+        },
+        "href": {
+          "$ref": "#/$defs/locator"
+        },
+        "checksum": {
+          "$ref": "#/$defs/digest"
+        },
+        "media_type": {
+          "$ref": "#/$defs/mediaType"
+        },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "$ref": "#/$defs/role"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "dcat": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "distribution_ref",
+        "access_url",
+        "checksum",
+        "media_type",
+        "role"
+      ],
+      "properties": {
+        "distribution_ref": {
+          "type": "string",
+          "pattern": "^urn:kfm:synthetic:dcat:distribution:[a-z0-9][a-z0-9-]{2,95}$"
+        },
+        "access_url": {
+          "$ref": "#/$defs/locator"
+        },
+        "checksum": {
+          "$ref": "#/$defs/digest"
+        },
+        "media_type": {
+          "$ref": "#/$defs/mediaType"
+        },
+        "role": {
+          "$ref": "#/$defs/role"
+        }
+      }
+    },
+    "prov": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bundle_ref",
+        "entity_ref",
+        "generated_entity_ref",
+        "generated_by_ref",
+        "attributed_to_ref",
+        "location",
+        "checksum",
+        "media_type",
+        "role"
+      ],
+      "properties": {
+        "bundle_ref": {
+          "type": "string",
+          "pattern": "^urn:kfm:synthetic:prov:bundle:[a-z0-9][a-z0-9-]{2,95}$"
+        },
+        "entity_ref": {
+          "type": "string",
+          "pattern": "^urn:kfm:synthetic:prov:entity:[a-z0-9][a-z0-9-]{2,95}$"
+        },
+        "generated_entity_ref": {
+          "type": "string",
+          "pattern": "^urn:kfm:synthetic:prov:entity:[a-z0-9][a-z0-9-]{2,95}$"
+        },
+        "generated_by_ref": {
+          "type": "string",
+          "pattern": "^urn:kfm:synthetic:prov:activity:[a-z0-9][a-z0-9-]{2,95}$"
+        },
+        "attributed_to_ref": {
+          "type": "string",
+          "pattern": "^urn:kfm:synthetic:prov:agent:[a-z0-9][a-z0-9-]{2,95}$"
+        },
+        "location": {
+          "$ref": "#/$defs/locator"
+        },
+        "checksum": {
+          "$ref": "#/$defs/digest"
+        },
+        "media_type": {
+          "$ref": "#/$defs/mediaType"
+        },
+        "role": {
+          "$ref": "#/$defs/role"
+        }
+      }
+    },
+    "carriers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stac",
+        "dcat",
+        "prov"
+      ],
+      "properties": {
+        "stac": {
+          "$ref": "#/$defs/stac"
+        },
+        "dcat": {
+          "$ref": "#/$defs/dcat"
+        },
+        "prov": {
+          "$ref": "#/$defs/prov"
+        }
+      }
+    },
+    "alignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "locator_match",
+        "digest_match",
+        "media_type_match",
+        "role_match",
+        "locator_digest_bound",
+        "prov_generation_bound",
+        "profile_state",
+        "catalog_records_emitted",
+        "publication_authorized"
+      ],
+      "properties": {
+        "locator_match": {
+          "type": "boolean"
+        },
+        "digest_match": {
+          "type": "boolean"
+        },
+        "media_type_match": {
+          "type": "boolean"
+        },
+        "role_match": {
+          "type": "boolean"
+        },
+        "locator_digest_bound": {
+          "type": "boolean"
+        },
+        "prov_generation_bound": {
+          "type": "boolean"
+        },
+        "profile_state": {
+          "const": "REVIEW_REQUIRED"
+        },
+        "catalog_records_emitted": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "network_access",
+        "writes_catalogs",
+        "resolves_evidence",
+        "decides_policy",
+        "approves_review",
+        "authorizes_release",
+        "activates_oci_or_oras",
+        "publishes",
+        "public_use_authorized"
+      ],
+      "properties": {
+        "fixture_only": {
+          "const": true
+        },
+        "network_access": {
+          "const": false
+        },
+        "writes_catalogs": {
+          "const": false
+        },
+        "resolves_evidence": {
+          "const": false
+        },
+        "decides_policy": {
+          "const": false
+        },
+        "approves_review": {
+          "const": false
+        },
+        "authorizes_release": {
+          "const": false
+        },
+        "activates_oci_or_oras": {
+          "const": false
+        },
+        "publishes": {
+          "const": false
+        },
+        "public_use_authorized": {
+          "const": false
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/data/catalog_distribution_mapping_profile.md",
+    "fixtures_root": "fixtures/contracts/v1/data/catalog_distribution_mapping_profile/",
+    "validator": "tools/validators/catalog_closure/validate_catalog_distribution_mapping_profile.py",
+    "status": "PROPOSED",
+    "authority_boundary": "fixture-only-carrier-alignment"
+  }
+}

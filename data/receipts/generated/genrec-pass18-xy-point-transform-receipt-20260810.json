@@ -1,0 +1,98 @@
+{
+  "receipt_id": "genrec-pass18-xy-point-transform-receipt-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/xy-point-transform-receipt.yml",
+    "contracts/spatial-foundation/xy_point_transform_receipt.md",
+    "docs/intake/exploratory/pass-18-xy-point-transform-receipt-source-map.md",
+    "fixtures/contracts/v1/spatial-foundation/xy_point_transform_receipt/cases.json",
+    "schemas/contracts/v1/spatial-foundation/xy_point_transform_receipt.schema.json",
+    "tests/validators/test_validate_xy_point_transform_receipt.py",
+    "tools/validators/validate_xy_point_transform_receipt.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/xy-point-transform-receipt.yml": "sha256:93705b7678203a25783f83d4ba50cf97e26dbf22431bfedf919073d70b8112bd",
+    "contracts/spatial-foundation/xy_point_transform_receipt.md": "sha256:503e12f3f8e30eade15da48ce4d27d6a6cb662b108f0c857d7761cf7f01e0508",
+    "docs/intake/exploratory/pass-18-xy-point-transform-receipt-source-map.md": "sha256:16720e886ccd695f14ebf9e0c8f9990291d2da917b4d1e24f9489fc77ca5f2f0",
+    "fixtures/contracts/v1/spatial-foundation/xy_point_transform_receipt/cases.json": "sha256:513c6c885ddbd26daebd5e94e8a075bb5a7b4b006d59ea2bfd96c26e4f4ad26a",
+    "schemas/contracts/v1/spatial-foundation/xy_point_transform_receipt.schema.json": "sha256:dfd47d37485610be5eba2016fc34f8d444d3d27d5cb45e5f88ad5730ff00c6bd",
+    "tests/validators/test_validate_xy_point_transform_receipt.py": "sha256:380528bcdb8eb824fdeb39d7e948945ac98ef2ae61c13c479dad999928506231",
+    "tools/validators/validate_xy_point_transform_receipt.py": "sha256:cdcd1c87a8d88d68cda00c1e9b0279c5d89408d899fa2c027ff492295df67140"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:503e12f3f8e30eade15da48ce4d27d6a6cb662b108f0c857d7761cf7f01e0508",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local PDF rendering and deterministic Markdown, JSON, YAML, and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"
+    ],
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=42&printed-page=39&card=KFM-P18-INV-174",
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#discovery=transform-receipt-pressure",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/contracts/spatial-foundation/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/xy-point-transform-receipt.yml": "CONFIRMED",
+    "contracts/spatial-foundation/xy_point_transform_receipt.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-xy-point-transform-receipt-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/spatial-foundation/xy_point_transform_receipt/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/spatial-foundation/xy_point_transform_receipt.schema.json": "PROPOSED",
+    "tests/validators/test_validate_xy_point_transform_receipt.py": "CONFIRMED",
+    "tools/validators/validate_xy_point_transform_receipt.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Eight deterministic XY point-transform receipt tests passed in an isolated declared-dependency environment."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Nineteen exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
+    {"gate": "documentation-meta-block-profile", "outcome": "PASS", "reason": "Both new Markdown artifacts passed the repository required metadata profile."},
+    {"gate": "repository-make-validate", "outcome": "PASS", "reason": "Eight aggregate validators passed; 401 schema/contract tests and 29 subtests passed."},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {"id": "pass18-xy-point-transform-card", "validated": true, "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=42&printed-page=39&card=KFM-P18-INV-174"},
+    {"id": "drive-transform-receipt-discovery", "validated": true, "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#discovery=transform-receipt-pressure"},
+    {"id": "spatial-foundation-lane", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/contracts/spatial-foundation/README.md"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T18:43:28Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only XYPointTransformReceiptCandidate packet derived from supplied Pass 18 card KFM-P18-INV-174 and discovered alongside broader connected-Drive transform-receipt pressure. It validates deterministic identity, explicit source/CRS bindings, axis roles, bounds, precision, count closure, output lineage, and canonical evidence references without opening tables, carrying coordinates, parsing CRS definitions, executing transforms, resolving evidence, deciding policy or review, promoting, releasing, deploying, publishing, or authorizing public use."
+}

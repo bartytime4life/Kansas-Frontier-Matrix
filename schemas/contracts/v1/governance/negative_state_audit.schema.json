@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/governance/negative-state-audit/v1",
+  "title": "KFM NegativeStateAudit",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "schema_version",
+    "audit_id",
+    "scope",
+    "deterministic",
+    "network_access",
+    "audit_outcome",
+    "spec_hash",
+    "cases"
+  ],
+  "properties": {
+    "profile": {
+      "const": "kfm.governance.negative-state-audit.v1"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "audit_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope": {
+      "const": "pass11-negative-state-audit"
+    },
+    "deterministic": {
+      "type": "boolean"
+    },
+    "network_access": {
+      "type": "boolean"
+    },
+    "audit_outcome": {
+      "enum": [
+        "PASS",
+        "DENY",
+        "ERROR"
+      ]
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "case_id",
+          "case_kind",
+          "public_outcome",
+          "lifecycle_state",
+          "policy_outcome",
+          "validation_outcome",
+          "citation_outcome",
+          "reason_codes"
+        ],
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "case_kind": {
+            "enum": [
+              "APPROVED_ARTIFACT",
+              "POLICY_DENIAL",
+              "CITATION_OR_VALIDATION_FAILURE"
+            ]
+          },
+          "public_outcome": {
+            "enum": [
+              "ANSWER",
+              "ABSTAIN",
+              "DENY",
+              "ERROR"
+            ]
+          },
+          "lifecycle_state": {
+            "enum": [
+              "WORK",
+              "QUARANTINE",
+              "PUBLISHED"
+            ]
+          },
+          "policy_outcome": {
+            "enum": [
+              "ALLOW",
+              "DENY",
+              "ERROR",
+              "NOT_EVALUATED"
+            ]
+          },
+          "validation_outcome": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "ERROR",
+              "NOT_EVALUATED"
+            ]
+          },
+          "citation_outcome": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "ERROR",
+              "NOT_EVALUATED"
+            ]
+          },
+          "artifact_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_bundle_refs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "policy_decision_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "validation_report_refs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "citation_validation_report_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "release_manifest_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "failure_report_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reason_codes": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    }
+  }
+}

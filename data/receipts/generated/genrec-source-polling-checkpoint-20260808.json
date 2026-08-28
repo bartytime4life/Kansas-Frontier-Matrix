@@ -1,0 +1,129 @@
+{
+  "receipt_id": "genrec-source-polling-checkpoint-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/source-polling-checkpoint.yml",
+    "contracts/source/source_polling_checkpoint.md",
+    "docs/intake/exploratory/pass-32-source-polling-checkpoint-source-map.md",
+    "fixtures/contracts/v1/source/source_polling_checkpoint/cases.json",
+    "schemas/contracts/v1/source/source_polling_checkpoint.schema.json",
+    "tests/validators/test_validate_source_polling_checkpoint.py",
+    "tools/validators/source/validate_source_polling_checkpoint.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/source-polling-checkpoint.yml": "sha256:06b2eb8bdc461c4ad1ec4edc336844bb9c004cdf4b3b7a54dcc551753c5386ae",
+    "contracts/source/source_polling_checkpoint.md": "sha256:a1bb3b2eb4357c8b8528b11946a5f189b2bad92056f8cac9fb4ab6a6b497a030",
+    "docs/intake/exploratory/pass-32-source-polling-checkpoint-source-map.md": "sha256:804a03cfcef4be1dbbbccbb734d9f7401d6f86d83c2dd0b7a0cc5eff614ab41d",
+    "fixtures/contracts/v1/source/source_polling_checkpoint/cases.json": "sha256:f613a289c2d538b43b2501d51e756dc5e79d4427f665aa1e934bd9a678eabfd3",
+    "schemas/contracts/v1/source/source_polling_checkpoint.schema.json": "sha256:a5e2bdb55fcbacb6f6f05213e2caed054c5421dc80a14aa14829d460a9fe3856",
+    "tests/validators/test_validate_source_polling_checkpoint.py": "sha256:fa492731d180288aa9d3b22a67c76f447c25a6f70d10ddbe1461a41587e9d81c",
+    "tools/validators/source/validate_source_polling_checkpoint.py": "sha256:cd5c3f42fef4c0e137e96ab10db64fa01ea7ef7d78edd1d3d9ba36b252a7db98"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:aeacb40b26a8518e04a60c03e23cd69292bdaed7996e3a4f9a68fe9e7319f92e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded-file search",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P18-PROG-0009",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/c76a4860693830a783579c29bf276977856e9f86"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/source-polling-checkpoint.yml": "CONFIRMED",
+    "contracts/source/source_polling_checkpoint.md": "PROPOSED",
+    "docs/intake/exploratory/pass-32-source-polling-checkpoint-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_polling_checkpoint/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/source/source_polling_checkpoint.schema.json": "PROPOSED",
+    "tests/validators/test_validate_source_polling_checkpoint.py": "CONFIRMED",
+    "tools/validators/source/validate_source_polling_checkpoint.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "8 focused tests passed."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "15 exact cases: 2 PASS, 2 ABSTAIN, 1 ERROR, 10 DENY."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-branch-preflight",
+      "outcome": "PASS",
+      "reason": "Run 31286909586 passed 8 tests, 15 exact fixtures, and digest readback at head 1e21b68bf51129b8ce3388f985c11557a67332bc."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "polling-source-basis",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P18-PROG-0009"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c76a4860693830a783579c29bf276977856e9f86/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T23:58:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only additive implementation. No network access, lifecycle mutation, source activation, policy approval, merge, release, deployment, publication, or public-use authority is created."
+}

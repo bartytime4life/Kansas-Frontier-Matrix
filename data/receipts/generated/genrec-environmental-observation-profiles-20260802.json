@@ -1,0 +1,246 @@
+{
+  "receipt_id": "genrec-environmental-observation-profiles-20260802",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/domain-atmosphere.yml",
+    ".github/workflows/domain-hydrology.yml",
+    "fixtures/domains/atmosphere/README.md",
+    "fixtures/domains/atmosphere/public_safe_precipitation/invalid/role_location_time_governance_collapse.expected_error.txt",
+    "fixtures/domains/atmosphere/public_safe_precipitation/invalid/role_location_time_governance_collapse.json",
+    "fixtures/domains/atmosphere/public_safe_precipitation/valid/public_safe_precipitation.json",
+    "fixtures/domains/hydrology/README.md",
+    "fixtures/domains/hydrology/public_safe_flow/invalid/role_location_time_governance_collapse.expected_error.txt",
+    "fixtures/domains/hydrology/public_safe_flow/invalid/role_location_time_governance_collapse.json",
+    "fixtures/domains/hydrology/public_safe_flow/valid/public_safe_flow.json",
+    "tests/cross_domain/README.md",
+    "tests/cross_domain/test_environmental_observation_boundaries.py",
+    "tests/domains/atmosphere/README.md",
+    "tests/domains/atmosphere/test_atmosphere_smoke.py",
+    "tests/domains/hydrology/README.md",
+    "tests/domains/hydrology/test_public_safe_flow_fixture.py",
+    "tools/validators/_common/README.md",
+    "tools/validators/_common/public_safe_fixture.py",
+    "tools/validators/domains/atmosphere/README.md",
+    "tools/validators/domains/atmosphere/validate_public_safe_precipitation_fixture.py",
+    "tools/validators/domains/hydrology/README.md",
+    "tools/validators/domains/hydrology/validate_public_safe_flow_fixture.py",
+    "tools/validators/domains/soil/README.md",
+    "tools/validators/domains/soil/validate_public_safe_fixture.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/domain-atmosphere.yml": "sha256:fd9ea244644bec2cdfdb0c4d359ab8f36edb1e2f4a03c8436dbf8b50e741f16a",
+    ".github/workflows/domain-hydrology.yml": "sha256:235e4458a1921ee225bf115f21140e9018b285e5706e3f034da2faff7bf4247a",
+    "fixtures/domains/atmosphere/README.md": "sha256:802ea9541fa5d897792bd6a099729ba2d06b1404b11f2e8b7765e017fc2ec7ec",
+    "fixtures/domains/atmosphere/public_safe_precipitation/invalid/role_location_time_governance_collapse.expected_error.txt": "sha256:2490db17e48cce9c21c55b86ad9a7e8a605aa000a8013229cc6c500a1b516f82",
+    "fixtures/domains/atmosphere/public_safe_precipitation/invalid/role_location_time_governance_collapse.json": "sha256:8a8201982ee7d73b809ba74730abe6eee2bbfa7a8800ba0109af40d380ceb437",
+    "fixtures/domains/atmosphere/public_safe_precipitation/valid/public_safe_precipitation.json": "sha256:175e7d0979ec9cb11c40c1e9ff5cdf4f3465857f87476ef81ee341900c5b150a",
+    "fixtures/domains/hydrology/README.md": "sha256:8cdb543e7f970759786bdd142f324babb65e9b14170e6fb5f31dca5cfdb2901c",
+    "fixtures/domains/hydrology/public_safe_flow/invalid/role_location_time_governance_collapse.expected_error.txt": "sha256:d8c81303a83265c71b137777f3d67046af1bcd11c574eec8018af2926ff7e872",
+    "fixtures/domains/hydrology/public_safe_flow/invalid/role_location_time_governance_collapse.json": "sha256:1dba00232cbb9411874d7d36d46748b538f7ade7ff6e2436e5639a6cd906e162",
+    "fixtures/domains/hydrology/public_safe_flow/valid/public_safe_flow.json": "sha256:2fa127e681d9b7b89be6226b39a40c8a06e514c31f85c86699958428903b4ce7",
+    "tests/cross_domain/README.md": "sha256:19cbe514e6db1f7e2b1a3ab9578780710c53a0d09708de20a30c2be24210fc98",
+    "tests/cross_domain/test_environmental_observation_boundaries.py": "sha256:1b9da564fa791f1f1452ec20e69093f9cfbc9dfebd9aa4b6fd71ba16bfe307da",
+    "tests/domains/atmosphere/README.md": "sha256:e848f63e629ec27718f53f237a15fd8037465b1855e6da50b9c3c3b4d9d68197",
+    "tests/domains/atmosphere/test_atmosphere_smoke.py": "sha256:ae40d747c1dd53f467c09aef6fa3af8bbd684048dbd788ce275a88abacffd464",
+    "tests/domains/hydrology/README.md": "sha256:58e1596a7dfec6ebf349117ce70c7d78344a49a62a549ff326eec8db66123902",
+    "tests/domains/hydrology/test_public_safe_flow_fixture.py": "sha256:0b4fd2fa90e10d09aed05b097dd4d5e4eb86729caaca83b47a5d8b66efc20d8a",
+    "tools/validators/_common/README.md": "sha256:e20fc8604d575056ec3533c8519b6280008f94fb6bc8c7d204e03deb95aa645c",
+    "tools/validators/_common/public_safe_fixture.py": "sha256:ef3b5fd35c8ac62468d3e590e13db0a2b4cb4e727c69c913ab6b6026d5dbab8b",
+    "tools/validators/domains/atmosphere/README.md": "sha256:1184d8cb8fc0d555519f4cc555d09864147386cdcd8a2942b44d6930cce1eeb8",
+    "tools/validators/domains/atmosphere/validate_public_safe_precipitation_fixture.py": "sha256:02eb951043a2b7127dc4af5eaf077846b9f20542b44d49b9e68f21d535f21872",
+    "tools/validators/domains/hydrology/README.md": "sha256:2d9706aca30ca9cee817a4e391fbdd5b2de53bbfe34986dd578d5dcd84f3b440",
+    "tools/validators/domains/hydrology/validate_public_safe_flow_fixture.py": "sha256:9ae2494f17fd3920f8b5916705bebe89098e26a20fd79d8de89bdfb36d305407",
+    "tools/validators/domains/soil/README.md": "sha256:1df0452f81480eaf7089ad3a93a4140b2cd59acef09f17ce0454d8012c448d32",
+    "tools/validators/domains/soil/validate_public_safe_fixture.py": "sha256:d72c7ae85bc2fe661a2e3bfd68017de36d16eca50966c654e0d4fd8ec0725b1d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 Work Mode 2026-08-02"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local attachment and repository inspection",
+      "PDF text extraction and rendered-page inspection",
+      "Git",
+      "GitHub connector",
+      "deterministic standard-library Python validation",
+      "isolated declared Python test environment",
+      "PyYAML syntax and workflow-step replay"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:3159ee37d25a897bf2525fd7dafbc6ca28ee74594a3b52a9c0a01fa30aed777b",
+      "sha256:6a75cd33d4868643fbc16c838e0e63616de76fc57103f2175f4f55afb325a184",
+      "sha256:3087d246cbb9c58b31419bbf21e7a4860d6d4f1d5751ebcf62821c5760e60112",
+      "sha256:7c2d498212b9ad56f3ba37bf91f841e9f328794e8aa4940f8f665a4116c5aaea",
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9",
+      "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639",
+      "sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1"
+    ],
+    "attached_docs": [
+      "kfm_soil_architecture_extended_pro_pdf_only_report.pdf",
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "Unified Implementation Architecture Build Manual.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/248aabf0dc038670560e570230bdc86cc7a1cb6a",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/7fed1f2ec00b89e749ab1e3ae3e767e24cfd2925",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/248aabf0dc038670560e570230bdc86cc7a1cb6a/docs/doctrine/ai-build-operating-contract.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/248aabf0dc038670560e570230bdc86cc7a1cb6a/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/248aabf0dc038670560e570230bdc86cc7a1cb6a/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/248aabf0dc038670560e570230bdc86cc7a1cb6a/docs/domains/hydrology/OBJECT_FAMILIES.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/248aabf0dc038670560e570230bdc86cc7a1cb6a/docs/domains/hydrology/ARCHITECTURE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/248aabf0dc038670560e570230bdc86cc7a1cb6a/docs/domains/atmosphere/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/248aabf0dc038670560e570230bdc86cc7a1cb6a/tools/validators/domains/soil/validate_public_safe_fixture.py",
+      "attachment://kfm_soil_architecture_extended_pro_pdf_only_report.pdf",
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "attachment://KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "attachment://Unified-Implementation-Architecture-Build-Manual.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/domain-atmosphere.yml": "PROPOSED",
+    ".github/workflows/domain-hydrology.yml": "PROPOSED",
+    "fixtures/domains/atmosphere/README.md": "PROPOSED",
+    "fixtures/domains/atmosphere/public_safe_precipitation/invalid/role_location_time_governance_collapse.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/atmosphere/public_safe_precipitation/invalid/role_location_time_governance_collapse.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/public_safe_precipitation/valid/public_safe_precipitation.json": "CONFIRMED",
+    "fixtures/domains/hydrology/README.md": "PROPOSED",
+    "fixtures/domains/hydrology/public_safe_flow/invalid/role_location_time_governance_collapse.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/hydrology/public_safe_flow/invalid/role_location_time_governance_collapse.json": "CONFIRMED",
+    "fixtures/domains/hydrology/public_safe_flow/valid/public_safe_flow.json": "CONFIRMED",
+    "tests/cross_domain/README.md": "PROPOSED",
+    "tests/cross_domain/test_environmental_observation_boundaries.py": "CONFIRMED",
+    "tests/domains/atmosphere/README.md": "PROPOSED",
+    "tests/domains/atmosphere/test_atmosphere_smoke.py": "CONFIRMED",
+    "tests/domains/hydrology/README.md": "PROPOSED",
+    "tests/domains/hydrology/test_public_safe_flow_fixture.py": "CONFIRMED",
+    "tools/validators/_common/README.md": "PROPOSED",
+    "tools/validators/_common/public_safe_fixture.py": "CONFIRMED",
+    "tools/validators/domains/atmosphere/README.md": "PROPOSED",
+    "tools/validators/domains/atmosphere/validate_public_safe_precipitation_fixture.py": "CONFIRMED",
+    "tools/validators/domains/hydrology/README.md": "PROPOSED",
+    "tools/validators/domains/hydrology/validate_public_safe_flow_fixture.py": "CONFIRMED",
+    "tools/validators/domains/soil/README.md": "PROPOSED",
+    "tools/validators/domains/soil/validate_public_safe_fixture.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "The repository, initial base main@248aabf0dc038670560e570230bdc86cc7a1cb6a, final delivery base main@7fed1f2ec00b89e749ab1e3ae3e767e24cfd2925, accepted ADR-0029, adopted Directory Rules, control-plane hold, current tree, domain workflows, validator/test/fixture lanes, branches, and open pull-request surface were inspected. The current directly authored build request authorizes bounded feature-branch work and one draft pull request while direct-main, force-push, ready, merge, source activation, release, deployment, publication, and repository-setting holds remain."
+    },
+    {
+      "gate": "evidence-assay-and-candidate-selection",
+      "outcome": "PASS",
+      "reason": "Current repository evidence showed a mature Soil public-safe moisture profile, an Atmosphere placeholder, and a Hydrology lane with bounded schema wrappers but no public-safe flow profile. The supplied Soil report and domain atlases supported source-role separation, observed support, fixture-first no-network validation, and Hydrology/Atmosphere context without proving implementation. The selected slice extends the existing Soil behavior through one shared runtime, implements synthetic Atmosphere precipitation and Hydrology flow profiles, and proves that the three domains reject one another's records."
+    },
+    {
+      "gate": "should-exist-can-exist-and-directory-placement",
+      "outcome": "PASS",
+      "reason": "Parser and CLI mechanics live in tools/validators/_common; Soil, Atmosphere, and Hydrology semantics stay in their existing domain validator roots; synthetic inputs and exact failure sidecars stay under fixtures/domains/<domain>; conformance proof stays under tests; and existing .github domain workflows only orchestrate the bounded checks. No contract, schema, policy, source-registry, evidence, proof, release, publication, or top-level authority root is created."
+    },
+    {
+      "gate": "focused-environmental-observation-suite",
+      "outcome": "PASS",
+      "reason": "Thirty-nine unique feature tests passed, with 57 subtests, under deterministic no-network environment variables. The suite covers Soil regression, exact Atmosphere and Hydrology positive/negative fixture polarity, closed shapes, object/source roles, generalized place, time ordering, measurement and unit bounds, boolean separation, governance, alert and life-safety denials, bounded and duplicate-free JSON, regular-file confinement inherited from Soil coverage, safe deterministic CLI output, explicit socket/DNS/URL denial, and cross-domain ownership isolation."
+    },
+    {
+      "gate": "domain-workflow-step-replay",
+      "outcome": "PASS",
+      "reason": "The Soil validation step, Atmosphere inventory and bounded-validation steps, and Hydrology inventory and bounded-validation steps were replayed from the parsed workflow definitions. The Hydrology step additionally passed 13 existing EvidenceBundle and aquifer regression tests and all expected-invalid schema and semantic fixture checks. Broader proof and release holds remain explicit."
+    },
+    {
+      "gate": "repository-make-validate",
+      "outcome": "PASS",
+      "reason": "make validate passed in an isolated environment created from the repository-declared .[test] extra. The aggregate schema runner accepted all valid fixtures and rejected all expected-invalid fixtures, and 139 schema/contract tests passed."
+    },
+    {
+      "gate": "documentation-link-check",
+      "outcome": "PASS",
+      "reason": "The repository's no-network link checker passed across all nine changed Markdown documents with 128 local targets. Twenty-two existing external badge targets were classified as unverified and were not requested. The link-checker's own 18-test suite also passed."
+    },
+    {
+      "gate": "workflow-syntax-and-trust-boundary",
+      "outcome": "PASS",
+      "reason": "PyYAML parsed both changed workflow files and confirmed their expected jobs. The validation jobs retain read-only contents permission, immutable action pins, GitHub-hosted runners, timeouts, no-network feature tests, expected-invalid polarity, and explicit broader holds. No live source, secret, artifact upload, publication, promotion, release, deployment, or settings step was added."
+    },
+    {
+      "gate": "python-json-diff-and-artifact-hash-integrity",
+      "outcome": "PASS",
+      "reason": "Changed Python files compile, fixture JSON and this receipt parse, workflow YAML parses, git diff --check passes, artifact_paths exactly match artifact_hashes and truth_labels, and all 24 SHA-256 hashes bind final artifact bytes. The receipt is excluded from its own artifact map to avoid a recursive self-hash."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Exact-head GitHub Actions conclusions are unavailable until the bounded branch and draft pull request are delivered. No hosted result will be interpreted as source admission, scientific validation, review, merge, release, deployment, publication, or source-activation authority."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored or inferred by the agent."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "ai-build-operating-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/248aabf0dc038670560e570230bdc86cc7a1cb6a/docs/doctrine/ai-build-operating-contract.md"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/248aabf0dc038670560e570230bdc86cc7a1cb6a/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/248aabf0dc038670560e570230bdc86cc7a1cb6a/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "baseline-soil-profile",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/248aabf0dc038670560e570230bdc86cc7a1cb6a/tools/validators/domains/soil/validate_public_safe_fixture.py"
+    },
+    {
+      "id": "hydrology-flow-object-lineage",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/248aabf0dc038670560e570230bdc86cc7a1cb6a/docs/domains/hydrology/OBJECT_FAMILIES.md"
+    },
+    {
+      "id": "soil-planning-lineage",
+      "validated": true,
+      "evidence_ref": "attachment://kfm_soil_architecture_extended_pro_pdf_only_report.pdf"
+    },
+    {
+      "id": "domain-atlas-planning-lineage",
+      "validated": true,
+      "evidence_ref": "attachment://KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-02T17:10:07Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "This batch preserves the accepted Soil fixture profile while moving its bounded parser and CLI mechanics into a shared standard-library runtime, adds one frozen synthetic Atmosphere PrecipitationObservation profile and one frozen synthetic Hydrology FlowObservation profile, and proves that common place or time support does not collapse domain ownership. It does not establish field-complete semantic contracts, real observations, source admission, live source access, evidence closure, policy approval, alerts or life-safety guidance, proof, release, deployment, publication, or promotion. Broader Atmosphere and Hydrology modules remain held. Rollback is a clean revert of this feature commit; no migration or published state exists."
+}

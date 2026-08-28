@@ -1,0 +1,4 @@
+# pipeline_specs :: soil :: normalize
+name: soil-normalize
+version: 1
+stages: []

@@ -1,0 +1,303 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/population_observation.schema.json",
+  "title": "PopulationObservation",
+  "description": "Fixture-only aggregate county-year population observation with versioned geography, missingness, uncertainty, source lineage, and non-authority posture.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "observation_id",
+    "subject",
+    "temporal",
+    "measure",
+    "uncertainty",
+    "source",
+    "lineage",
+    "disclosure",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": { "const": "PopulationObservation" },
+    "schema_version": { "const": "1.0.0" },
+    "profile": { "const": "kfm.population-observation.fixture.v1" },
+    "observation_id": {
+      "type": "string",
+      "pattern": "^kfm:population-observation:[a-f0-9]{24}$"
+    },
+    "subject": { "$ref": "#/$defs/subject" },
+    "temporal": { "$ref": "#/$defs/temporal" },
+    "measure": { "$ref": "#/$defs/measure" },
+    "uncertainty": { "$ref": "#/$defs/uncertainty" },
+    "source": { "$ref": "#/$defs/source" },
+    "lineage": { "$ref": "#/$defs/lineage" },
+    "disclosure": { "$ref": "#/$defs/disclosure" },
+    "governance": { "$ref": "#/$defs/governance" },
+    "spec_hash": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "digest_ref": {
+      "type": "string",
+      "pattern": "^kfm://[a-z0-9][a-z0-9._:/-]{2,191}@sha256:[a-f0-9]{64}$"
+    },
+    "nullable_digest_ref": {
+      "oneOf": [
+        { "$ref": "#/$defs/digest_ref" },
+        { "type": "null" }
+      ]
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "nullable_aware_datetime": {
+      "oneOf": [
+        { "$ref": "#/$defs/aware_datetime" },
+        { "type": "null" }
+      ]
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "geography_version_ref",
+        "geography_version_profile",
+        "geography_feature_key",
+        "unit_level",
+        "jurisdiction_code",
+        "identity_scope"
+      ],
+      "properties": {
+        "geography_version_ref": { "$ref": "#/$defs/digest_ref" },
+        "geography_version_profile": { "const": "kfm.geography-version.fixture.v1" },
+        "geography_feature_key": {
+          "type": "string",
+          "pattern": "^[0-9]{5}$"
+        },
+        "unit_level": { "const": "COUNTY" },
+        "jurisdiction_code": { "const": "US-KS" },
+        "identity_scope": { "const": "VERSION_LOCAL" }
+      }
+    },
+    "temporal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reference_period_kind",
+        "reference_year",
+        "observation_date",
+        "source_released_at",
+        "retrieved_at",
+        "corrected_at"
+      ],
+      "properties": {
+        "reference_period_kind": { "const": "CALENDAR_YEAR" },
+        "reference_year": {
+          "type": "integer",
+          "minimum": 1800,
+          "maximum": 2200
+        },
+        "observation_date": { "$ref": "#/$defs/date" },
+        "source_released_at": { "$ref": "#/$defs/aware_datetime" },
+        "retrieved_at": { "$ref": "#/$defs/aware_datetime" },
+        "corrected_at": { "$ref": "#/$defs/nullable_aware_datetime" }
+      }
+    },
+    "measure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "measure_key",
+        "population_scope",
+        "unit",
+        "result_state",
+        "value",
+        "missing_reason"
+      ],
+      "properties": {
+        "measure_key": { "const": "resident_population" },
+        "population_scope": { "const": "TOTAL_RESIDENT_POPULATION" },
+        "unit": { "const": "PERSONS" },
+        "result_state": {
+          "enum": ["OBSERVED", "SUPPRESSED", "MISSING"]
+        },
+        "value": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            { "type": "null" }
+          ]
+        },
+        "missing_reason": {
+          "enum": [
+            "NOT_APPLICABLE",
+            "SOURCE_SUPPRESSED",
+            "SOURCE_MISSING",
+            "NOT_COLLECTED",
+            "NOT_AVAILABLE"
+          ]
+        }
+      }
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "kind",
+        "value",
+        "confidence_level",
+        "method_ref"
+      ],
+      "properties": {
+        "state": {
+          "enum": ["REPORTED", "NOT_REPORTED", "NOT_APPLICABLE"]
+        },
+        "kind": {
+          "oneOf": [
+            { "enum": ["MARGIN_OF_ERROR", "STANDARD_ERROR", "SOURCE_DEFINED"] },
+            { "type": "null" }
+          ]
+        },
+        "value": {
+          "oneOf": [
+            { "type": "number", "minimum": 0 },
+            { "type": "null" }
+          ]
+        },
+        "confidence_level": {
+          "oneOf": [
+            {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 1
+            },
+            { "type": "null" }
+          ]
+        },
+        "method_ref": { "$ref": "#/$defs/nullable_digest_ref" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_descriptor_ref",
+        "dataset_version_ref",
+        "source_table_ref",
+        "source_variable_ref",
+        "source_role",
+        "source_state",
+        "evidence_refs",
+        "rights_state",
+        "sensitivity_state"
+      ],
+      "properties": {
+        "source_descriptor_ref": { "$ref": "#/$defs/digest_ref" },
+        "dataset_version_ref": { "$ref": "#/$defs/digest_ref" },
+        "source_table_ref": { "$ref": "#/$defs/digest_ref" },
+        "source_variable_ref": { "$ref": "#/$defs/digest_ref" },
+        "source_role": { "const": "OFFICIAL_STATISTICAL_AGGREGATE" },
+        "source_state": { "const": "REFERENCED_NOT_RESOLVED" },
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/digest_ref" }
+        },
+        "rights_state": { "const": "REFERENCED_NOT_EVALUATED" },
+        "sensitivity_state": { "const": "REFERENCED_NOT_EVALUATED" }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "correction_state",
+        "predecessor_ref",
+        "correction_record_ref"
+      ],
+      "properties": {
+        "correction_state": {
+          "enum": ["ORIGINAL", "CORRECTED"]
+        },
+        "predecessor_ref": { "$ref": "#/$defs/nullable_digest_ref" },
+        "correction_record_ref": { "$ref": "#/$defs/nullable_digest_ref" }
+      }
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["interpretation_limits"],
+      "properties": {
+        "interpretation_limits": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 6,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "AGGREGATE_ONLY",
+              "NO_CAUSAL_CLAIM",
+              "NO_INDIVIDUAL_INFERENCE",
+              "NO_PUBLICATION_AUTHORITY",
+              "SOURCE_ROLE_PRESERVED",
+              "VERSION_BOUND"
+            ]
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_mode",
+        "network_attempted",
+        "source_data_accessed",
+        "geography_resolved",
+        "evidence_resolved",
+        "rights_evaluated",
+        "sensitivity_evaluated",
+        "policy_evaluated",
+        "review_approved",
+        "promotion_authorized",
+        "release_authorized",
+        "public_use_allowed",
+        "publication_authorized"
+      ],
+      "properties": {
+        "execution_mode": { "const": "FIXTURE_ONLY" },
+        "network_attempted": { "const": false },
+        "source_data_accessed": { "const": false },
+        "geography_resolved": { "const": false },
+        "evidence_resolved": { "const": false },
+        "rights_evaluated": { "const": false },
+        "sensitivity_evaluated": { "const": false },
+        "policy_evaluated": { "const": false },
+        "review_approved": { "const": false },
+        "promotion_authorized": { "const": false },
+        "release_authorized": { "const": false },
+        "public_use_allowed": { "const": false },
+        "publication_authorized": { "const": false }
+      }
+    }
+  }
+}

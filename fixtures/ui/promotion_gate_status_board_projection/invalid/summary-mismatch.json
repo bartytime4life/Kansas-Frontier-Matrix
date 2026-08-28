@@ -1,0 +1,64 @@
+{
+  "profile": "kfm.explorer.promotion-gate-status-board.public-safe.v1",
+  "board_id": "kfm:promotion-gate-status-board:synthetic:candidate-001",
+  "outcome": "ANSWER",
+  "reason_code": "BOARD_AVAILABLE",
+  "observed_at": "2026-08-10T17:30:00Z",
+  "candidate_ref": "kfm://release-candidate/synthetic/candidate-001",
+  "board_state": "HOLD",
+  "components": [
+    {
+      "kind": "SOURCE_MONITOR",
+      "state": "PASS",
+      "artifact_ref": "kfm://source-monitor-projection/synthetic/candidate-001",
+      "reason_code": "CHECK_PASSED"
+    },
+    {
+      "kind": "SCORECARD",
+      "state": "PASS",
+      "artifact_ref": "kfm://scorecard/synthetic/candidate-001",
+      "reason_code": "CHECK_PASSED"
+    },
+    {
+      "kind": "SCHEMA_VALIDATOR",
+      "state": "PASS",
+      "artifact_ref": "kfm://validation-report/synthetic/candidate-001",
+      "reason_code": "CHECK_PASSED"
+    },
+    {
+      "kind": "OPA_DECISION",
+      "state": "HOLD",
+      "artifact_ref": "kfm://policy-decision/synthetic/candidate-001",
+      "reason_code": "CHECK_HELD"
+    },
+    {
+      "kind": "ATTESTATION",
+      "state": "NOT_RUN",
+      "artifact_ref": null,
+      "reason_code": "CHECK_NOT_RUN"
+    },
+    {
+      "kind": "RELEASE_MANIFEST_CANDIDATE",
+      "state": "NOT_RUN",
+      "artifact_ref": null,
+      "reason_code": "CHECK_NOT_RUN"
+    }
+  ],
+  "summary": {
+    "pass_count": 4,
+    "hold_count": 1,
+    "deny_count": 0,
+    "error_count": 0,
+    "not_run_count": 2
+  },
+  "governance": {
+    "source_monitor_executed": false,
+    "validator_executed": false,
+    "policy_evaluated": false,
+    "attestation_verified": false,
+    "review_authenticated": false,
+    "promotion_allowed": false,
+    "release_authorized": false,
+    "publication_allowed": false
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "artifact": {
+    "artifact_kind": "reusable_library",
+    "authority_owner": "root_distribution_facade",
+    "current_path": null,
+    "execution_role": "reusable_library",
+    "exposure": "internal",
+    "lifecycle_stage": "not_applicable",
+    "mutability": "versioned",
+    "name": "root_distribution_facade",
+    "physical_storage": "git",
+    "proposed_path": "src/kfm/facade.py",
+    "retention": "durable",
+    "scope_id": "root_facade",
+    "scope_kind": "object_family"
+  },
+  "base_ref": "29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf",
+  "candidate_roots": [
+    "src/"
+  ],
+  "canonical_source": null,
+  "consumer_refs": [],
+  "decision_id": "pathdec:root_distribution_facade_hold",
+  "doctrine": {
+    "decision_ref": "ADR-0029",
+    "digest": "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+    "path": "docs/doctrine/directory-rules.md"
+  },
+  "evaluated_at": "2026-08-07T20:30:00Z",
+  "evidence": [
+    "repo:control_plane/root_registry.yaml",
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "repo:pyproject.toml"
+  ],
+  "outcome": "HOLD",
+  "reason_codes": [
+    "conditional_root_not_accepted"
+  ],
+  "registry": {
+    "base_ref": "29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf",
+    "digest": "sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641",
+    "path": "control_plane/root_registry.yaml"
+  },
+  "rules": [
+    "DIR-OUTCOME-002",
+    "DIR-ROOTFILE-003"
+  ],
+  "split_targets": [],
+  "version": "v1"
+}

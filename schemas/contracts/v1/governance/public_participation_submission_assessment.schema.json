@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansas-frontier-matrix.local/schemas/contracts/v1/governance/public_participation_submission_assessment.schema.json",
+  "title": "PublicParticipationSubmissionAssessmentCandidate",
+  "description": "Inactive, fixture-only separation of a comment window from submission receipt, privacy, publication, review, and action posture.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "status",
+    "version",
+    "assessment_id",
+    "spec_hash",
+    "governance_event_ref",
+    "comment_window",
+    "submission",
+    "assessment",
+    "limitations",
+    "effects"
+  ],
+  "properties": {
+    "profile": {"const": "kfm.governance.public-participation-submission-assessment.v1"},
+    "status": {"const": "PROPOSED_INACTIVE"},
+    "version": {"const": "1.0.0"},
+    "assessment_id": {"type": "string", "pattern": "^public-participation-submission-assessment:[0-9a-f]{24}$"},
+    "spec_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "governance_event_ref": {"$ref": "#/$defs/reference"},
+    "comment_window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["comment_window_ref", "state", "opens_at", "closes_at", "cancelled_at", "timezone", "channel_refs", "source_snapshot_refs", "evidence_refs"],
+      "properties": {
+        "comment_window_ref": {"$ref": "#/$defs/reference"},
+        "state": {"enum": ["ANNOUNCED", "OPEN", "CLOSED", "CANCELLED", "STATUS_UNCONFIRMED"]},
+        "opens_at": {"type": "string", "format": "date-time"},
+        "closes_at": {"type": "string", "format": "date-time"},
+        "cancelled_at": {"type": ["string", "null"], "format": "date-time"},
+        "timezone": {"type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[A-Za-z_]+(?:/[A-Za-z_+-]+)+$"},
+        "channel_refs": {"$ref": "#/$defs/references"},
+        "source_snapshot_refs": {"$ref": "#/$defs/references"},
+        "evidence_refs": {"$ref": "#/$defs/references"}
+      }
+    },
+    "submission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["submission_ref", "receipt_state", "received_at", "payload_digest", "submitter_identity_posture", "privacy_class", "publication_posture", "release_ref", "source_snapshot_refs", "evidence_refs"],
+      "properties": {
+        "submission_ref": {"type": ["string", "null"], "minLength": 1, "maxLength": 512, "pattern": "^kfm(?::|://)[^\\s]+$"},
+        "receipt_state": {"enum": ["NOT_RECEIVED", "RECEIVED", "RECEIVED_LATE", "WITHDRAWN", "REJECTED", "STATUS_UNCONFIRMED"]},
+        "received_at": {"type": ["string", "null"], "format": "date-time"},
+        "payload_digest": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"},
+        "submitter_identity_posture": {"enum": ["ANONYMOUS", "PSEUDONYMOUS", "IDENTIFIED_RESTRICTED", "NOT_COLLECTED", "UNKNOWN"]},
+        "privacy_class": {"enum": ["PUBLIC_CANDIDATE", "RESTRICTED", "SENSITIVE", "UNKNOWN"]},
+        "publication_posture": {"enum": ["NOT_ASSESSED", "WITHHELD", "RELEASE_REFERENCE_ONLY"]},
+        "release_ref": {"type": ["string", "null"], "minLength": 1, "maxLength": 512, "pattern": "^kfm(?::|://)[^\\s]+$"},
+        "source_snapshot_refs": {"$ref": "#/$defs/references"},
+        "evidence_refs": {"$ref": "#/$defs/references"}
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["window_disposition", "review_state", "action_state", "boundary_outcome", "reason_codes"],
+      "properties": {
+        "window_disposition": {"enum": ["IN_WINDOW", "LATE", "NO_SUBMISSION", "UNRESOLVED"]},
+        "review_state": {"enum": ["NOT_REVIEWED", "REVIEWED", "REJECTED", "WITHDRAWN", "UNKNOWN"]},
+        "action_state": {"enum": ["NO_ACTION_RECORDED", "REFERRED", "ACTED_UPON", "UNKNOWN"]},
+        "boundary_outcome": {"enum": ["CONSISTENT", "HOLD", "ABSTAIN"]},
+        "reason_codes": {"$ref": "#/$defs/codes"}
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "uniqueItems": true,
+      "items": {"enum": ["NO_PUBLICATION_AUTHORITY", "RECEIPT_IS_NOT_ACCEPTANCE", "REVIEW_IS_NOT_ACTION", "SUBMISSION_IS_NOT_DECISION", "SUBMISSION_IS_NOT_ENDORSEMENT"]}
+    },
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["comment_accepted", "review_approved", "recommendation_created", "decision_created", "released", "published", "public_use_authorized", "source_activated"],
+      "properties": {
+        "comment_accepted": {"type": "boolean"},
+        "review_approved": {"type": "boolean"},
+        "recommendation_created": {"type": "boolean"},
+        "decision_created": {"type": "boolean"},
+        "released": {"type": "boolean"},
+        "published": {"type": "boolean"},
+        "public_use_authorized": {"type": "boolean"},
+        "source_activated": {"type": "boolean"}
+      }
+    }
+  },
+  "$defs": {
+    "reference": {"type": "string", "minLength": 1, "maxLength": 512, "pattern": "^kfm(?::|://)[^\\s]+$"},
+    "references": {"type": "array", "minItems": 1, "maxItems": 32, "uniqueItems": true, "items": {"$ref": "#/$defs/reference"}},
+    "codes": {"type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true, "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,63}$"}}
+  }
+}

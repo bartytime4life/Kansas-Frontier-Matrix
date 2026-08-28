@@ -1,0 +1,192 @@
+{
+  "receipt_id": "genrec-isric-soilgrids-readme-e71e1399",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "connectors/isric/soilgrids/README.md"
+  ],
+  "artifact_hashes": {
+    "connectors/isric/soilgrids/README.md": "sha256:5ecae51ce5e66e3bffaa63c18b053821816a42a5ed05278dc33f04747c767243"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-07-12-session"
+  },
+  "prompt_or_contract": "sha256:dea5e0641b0bcd4465311a7e0e21c28eebe6fea5ecda488ca9345cfda86f8fb6",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "file_search",
+      "web.run",
+      "python"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3",
+      "Directory Rules.pdf",
+      "KFM Soil Architecture Extended Pro PDF-Only Planning Report"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/66c3a125942c1a4187a4a7bb3152285b5c9d93e2",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66c3a125942c1a4187a4a7bb3152285b5c9d93e2/connectors/isric/soilgrids/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/e71e1399f8be9b2dfc43f44b639b9e51af90d9f5",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e71e1399f8be9b2dfc43f44b639b9e51af90d9f5/connectors/isric/soilgrids/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66c3a125942c1a4187a4a7bb3152285b5c9d93e2/connectors/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66c3a125942c1a4187a4a7bb3152285b5c9d93e2/connectors/isric/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66c3a125942c1a4187a4a7bb3152285b5c9d93e2/connectors/soil/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66c3a125942c1a4187a4a7bb3152285b5c9d93e2/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66c3a125942c1a4187a4a7bb3152285b5c9d93e2/docs/domains/soil/ARCHITECTURE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66c3a125942c1a4187a4a7bb3152285b5c9d93e2/docs/sources/catalog/isric/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66c3a125942c1a4187a4a7bb3152285b5c9d93e2/docs/sources/catalog/isric/isric-soilgrids.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66c3a125942c1a4187a4a7bb3152285b5c9d93e2/data/registry/sources/soil/isric-soilgrids.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66c3a125942c1a4187a4a7bb3152285b5c9d93e2/schemas/contracts/v1/receipts/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66c3a125942c1a4187a4a7bb3152285b5c9d93e2/tests/domains/soil/README.md",
+      "https://docs.isric.org/globaldata/soilgrids/SoilGrids_faqs.html",
+      "https://docs.isric.org/globaldata/soilgrids/SoilGrids_faqs_01.html",
+      "https://docs.isric.org/globaldata/soilgrids/SoilGrids_faqs_02.html"
+    ]
+  },
+  "truth_labels": {
+    "connectors/isric/soilgrids/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, permissions, default branch, pinned base commit, target blob/history, matching branch/PR state, and adjacent SoilGrids evidence were inspected."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The substantive update remains in the existing connectors/ responsibility root and creates no new canonical or parallel authority path."
+    },
+    {
+      "gate": "adjacent-contract-reconciliation",
+      "outcome": "PASS",
+      "reason": "The product README was reconciled with connector-root, ISRIC family, Soil domain, source catalog, registry placeholder, receipt schema index, and Soil test-index evidence without claiming runtime implementation."
+    },
+    {
+      "gate": "official-source-currentness",
+      "outcome": "PASS",
+      "reason": "Official ISRIC SoilGrids product, layer, access, license, projection, rolling-release, and REST-status documentation was rechecked on 2026-07-12."
+    },
+    {
+      "gate": "remote-readback",
+      "outcome": "PASS",
+      "reason": "The committed UTF-8 README was read back from agent/isric-soilgrids-readme at commit e71e1399f8be9b2dfc43f44b639b9e51af90d9f5."
+    },
+    {
+      "gate": "artifact-integrity",
+      "outcome": "PASS",
+      "reason": "Git blob a78ad18f56c970fa90f9c7bfc0aaeea3edbeb9fe pins the exact README bytes. The schema-required SHA-256 field hashes the canonical identifier git-blob-sha1:a78ad18f56c970fa90f9c7bfc0aaeea3edbeb9fe; a separate raw-byte SHA-256 remains NEEDS VERIFICATION."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Meta block, one H1, heading hierarchy, quick-jump targets, tables, fenced blocks, Mermaid flow, definition of done, verification backlog, and rollback were checked."
+    },
+    {
+      "gate": "authority-boundary-review",
+      "outcome": "PASS",
+      "reason": "Connector mechanics remain separated from descriptor, activation, contract, schema, policy, evidence, proof, catalog, release, public-client, and publication authority."
+    },
+    {
+      "gate": "sensitive-data-review",
+      "outcome": "PASS",
+      "reason": "No credentials, source payload, private endpoint, person data, field/farm identifier, exact sensitive join, or restricted material was introduced."
+    },
+    {
+      "gate": "live-source-access",
+      "outcome": "SKIPPED",
+      "reason": "No SoilGrids data service was invoked; only public official documentation was read."
+    },
+    {
+      "gate": "executable-connector-tests",
+      "outcome": "SKIPPED",
+      "reason": "This documentation-only change creates no connector package, fixture, or executable SoilGrids test."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "Required fields, hash patterns, truth labels, validation outcomes, review state, timestamps, and link shapes were checked against the inspected generated receipt schema."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-OPERATING-PROMPT-V3",
+      "validated": true,
+      "evidence_ref": "attached://KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "attached://Directory Rules.pdf"
+    },
+    {
+      "id": "KFM-SOIL-ARCHITECTURE",
+      "validated": true,
+      "evidence_ref": "attached://KFM Soil Architecture Extended Pro PDF-Only Planning Report"
+    },
+    {
+      "id": "REPO-DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/66c3a125942c1a4187a4a7bb3152285b5c9d93e2/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "CONNECTORS-ROOT-CONTRACT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/66c3a125942c1a4187a4a7bb3152285b5c9d93e2/connectors/README.md"
+    },
+    {
+      "id": "SOIL-DOMAIN-ARCHITECTURE",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/66c3a125942c1a4187a4a7bb3152285b5c9d93e2/docs/domains/soil/ARCHITECTURE.md"
+    },
+    {
+      "id": "ISRIC-SOILGRIDS-PRODUCT-PROFILE",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/66c3a125942c1a4187a4a7bb3152285b5c9d93e2/docs/sources/catalog/isric/isric-soilgrids.md"
+    },
+    {
+      "id": "SOILGRIDS-OFFICIAL-PRODUCT",
+      "validated": true,
+      "evidence_ref": "https://docs.isric.org/globaldata/soilgrids/SoilGrids_faqs.html"
+    },
+    {
+      "id": "SOILGRIDS-OFFICIAL-LAYERS",
+      "validated": true,
+      "evidence_ref": "https://docs.isric.org/globaldata/soilgrids/SoilGrids_faqs_01.html"
+    },
+    {
+      "id": "SOILGRIDS-OFFICIAL-ACCESS",
+      "validated": true,
+      "evidence_ref": "https://docs.isric.org/globaldata/soilgrids/SoilGrids_faqs_02.html"
+    },
+    {
+      "id": "GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/66c3a125942c1a4187a4a7bb3152285b5c9d93e2/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-12T15:29:42Z",
+  "emitter": "ai-builder/openai-gpt-5.6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation update on a scoped review branch. The exact committed README is pinned by Git blob SHA-1 a78ad18f56c970fa90f9c7bfc0aaeea3edbeb9fe. Because the connector response did not expose a reusable raw byte stream, artifact_hashes contains SHA-256 of the canonical Git-blob identifier rather than a separately recomputed raw-byte digest; this limitation is explicit and reversible. The revision separates modeled source role, gridded-derivative support type, distribution surfaces, depth/statistic identity, units, uncertainty, rights, rolling-release state, and lifecycle boundaries. No live data source, connector code, test fixture, descriptor, policy decision, model receipt, or public artifact was created. Human review remains pending; the receipt is well-formed but not merge-authorizing."
+}

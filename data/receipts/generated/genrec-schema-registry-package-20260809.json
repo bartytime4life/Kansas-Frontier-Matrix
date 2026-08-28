@@ -1,0 +1,152 @@
+{
+  "receipt_id": "genrec-schema-registry-package-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/schema-registry-package.yml",
+    "fixtures/packages/schema-registry/duplicate/one.schema.json",
+    "fixtures/packages/schema-registry/duplicate/two.schema.json",
+    "fixtures/packages/schema-registry/invalid/duplicate-key.schema.json",
+    "fixtures/packages/schema-registry/valid/alpha.schema.json",
+    "fixtures/packages/schema-registry/valid/beta.schema.json",
+    "fixtures/packages/schema-registry/valid/no-id.schema.json",
+    "packages/schema-registry/IMPLEMENTATION.md",
+    "packages/schema-registry/pyproject.toml",
+    "packages/schema-registry/src/schema_registry/__init__.py",
+    "packages/schema-registry/src/schema_registry/cli.py",
+    "packages/schema-registry/src/schema_registry/core.py",
+    "packages/schema-registry/src/schema_registry/py.typed",
+    "tests/packages/schema_registry/test_core.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/schema-registry-package.yml": "sha256:3419a43f2bd3cba066ecc7aae8b97988dbcc09bdd1ac79d994824ff08109bae1",
+    "fixtures/packages/schema-registry/duplicate/one.schema.json": "sha256:83711552e8245bde65faa4f75185a453f4ca5c3d427333cd159df99f8d55e02f",
+    "fixtures/packages/schema-registry/duplicate/two.schema.json": "sha256:ec833360d4885a642f51948f965c2c6083862d6ba4b5307865c4be3689df2919",
+    "fixtures/packages/schema-registry/invalid/duplicate-key.schema.json": "sha256:358aa5e567886961619dc7e33a36f94b371773f5dca7bdac7067127742d2636b",
+    "fixtures/packages/schema-registry/valid/alpha.schema.json": "sha256:161b9e725597b32f22a7aa0019a57cbf2c9d2460f0999e6fc6f2281b0bdb207f",
+    "fixtures/packages/schema-registry/valid/beta.schema.json": "sha256:1486b38d1cca1f452cbe8069aea81978705eecc9c857c0b33e6185d7d279f252",
+    "fixtures/packages/schema-registry/valid/no-id.schema.json": "sha256:38aaa1807e72e6c8b4ca29d489dcdf19636057fb96a071f2d7d4fb07a4af925d",
+    "packages/schema-registry/IMPLEMENTATION.md": "sha256:da1b4c9c785ebcd41a6af062f679713cd0d57174e079dd16553fb393c99d7327",
+    "packages/schema-registry/pyproject.toml": "sha256:632ea565784b9e14255d259c1bae0628e556a7585d7e1b00900ccaca9d36b292",
+    "packages/schema-registry/src/schema_registry/__init__.py": "sha256:500e8f643d59ca796fe77aa26ac12ed0907f892e1de7e6c9dc6140845f7a3a34",
+    "packages/schema-registry/src/schema_registry/cli.py": "sha256:0ab34493d9ad376148548f24a29f4f4790d539426c866bc06edb450505c7852a",
+    "packages/schema-registry/src/schema_registry/core.py": "sha256:599c044684918a504f30627a0c2f80a3d94bfb3bd21da55f279f1e26925dc1b3",
+    "packages/schema-registry/src/schema_registry/py.typed": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/packages/schema_registry/test_core.py": "sha256:fe9a327c9d928bd0a94bc539c4a5d2648995f9221d0d00432b1c75a03c933001"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Sol",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:673d0c33ce29256dd66d57d61b7752f42dfe4c14f33a57290354b45d70660034",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (read/write)",
+      "uploaded-file search",
+      "local deterministic validation",
+      "container patch builder"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Components_Pass_13_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual(1).pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM-Components-Pass-13#artifactization-and-proof-object-schema-pack",
+      "repo:packages/schema-registry@49db0ceeaf05e762035f2835ff2a7a2f4cede201",
+      "repo:tools/validators/_common/local_resolver.py@49db0ceeaf05e762035f2835ff2a7a2f4cede201",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@49db0ceeaf05e762035f2835ff2a7a2f4cede201"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/schema-registry-package.yml": "CONFIRMED",
+    "fixtures/packages/schema-registry/duplicate/one.schema.json": "CONFIRMED",
+    "fixtures/packages/schema-registry/duplicate/two.schema.json": "CONFIRMED",
+    "fixtures/packages/schema-registry/invalid/duplicate-key.schema.json": "CONFIRMED",
+    "fixtures/packages/schema-registry/valid/alpha.schema.json": "CONFIRMED",
+    "fixtures/packages/schema-registry/valid/beta.schema.json": "CONFIRMED",
+    "fixtures/packages/schema-registry/valid/no-id.schema.json": "CONFIRMED",
+    "packages/schema-registry/IMPLEMENTATION.md": "CONFIRMED",
+    "packages/schema-registry/pyproject.toml": "CONFIRMED",
+    "packages/schema-registry/src/schema_registry/__init__.py": "CONFIRMED",
+    "packages/schema-registry/src/schema_registry/cli.py": "CONFIRMED",
+    "packages/schema-registry/src/schema_registry/core.py": "CONFIRMED",
+    "packages/schema-registry/src/schema_registry/py.typed": "CONFIRMED",
+    "tests/packages/schema_registry/test_core.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "isolated-focused-tests",
+      "outcome": "PASS",
+      "reason": "Nine deterministic package unit and CLI tests passed against synthetic public-safe fixtures."
+    },
+    {
+      "gate": "strict-negative-fixtures",
+      "outcome": "PASS",
+      "reason": "Duplicate schema ids, duplicate JSON keys, missing roots, file limits, and symbolic links fail closed with stable codes."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "Every authored artifact is bound to its prepared SHA-256 bytes without receipt self-reference."
+    },
+    {
+      "gate": "editable-package-install",
+      "outcome": "SKIPPED",
+      "reason": "The local runner lacks hatchling and cannot reach a package index; hosted CI installs the declared build dependency."
+    },
+    {
+      "gate": "current-canonical-tree-parity",
+      "outcome": "SKIPPED",
+      "reason": "Parity with the existing validator-local resolver is intentionally reserved for the stacked follow-up PR."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires a pushed exact pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the proposed draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:kfm-components-pass-13-artifactization",
+      "validated": true,
+      "evidence_ref": "attachment:KFM-Components-Pass-13#artifactization-and-proof-object-schema-pack"
+    },
+    {
+      "id": "repository:schema-registry-placeholder",
+      "validated": true,
+      "evidence_ref": "repo:packages/schema-registry@49db0ceeaf05e762035f2835ff2a7a2f4cede201"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@49db0ceeaf05e762035f2835ff2a7a2f4cede201"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T00:58:12Z",
+  "emitter": "OpenAI GPT-5.6 Sol via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first extraction of a reusable, explicit-root schema registry helper. The package remains read-only and non-authoritative; canonical schemas remain under schemas/contracts/v1. No source, policy, evidence, review, promotion, release, publication, or public-use authority is created."
+}

@@ -1,0 +1,296 @@
+{
+  "object_type": "DroneCaptureAuthorizationMetadataFixtureManifest",
+  "schema_version": "1.0.0",
+  "bases": {
+    "complete": {
+      "object_type": "DroneCaptureAuthorizationMetadata",
+      "schema_version": "1.0.0",
+      "profile": "kfm.drone-capture-authorization-metadata.fixture.v1",
+      "source_card": "KFM-P18-INV-466",
+      "recorded_at": "2026-06-01T16:00:00Z",
+      "record_state": "COMPLETE",
+      "capture": {
+        "capture_ref": "fixture:capture:drone-001",
+        "field_handoff_assessment_ref": "fixture:field-capture-handoff:drone-001",
+        "source_descriptor_ref": "fixture:source-descriptor:drone-001",
+        "run_receipt_ref": "fixture:run-receipt:drone-001",
+        "aircraft_model_ref": "fixture:aircraft-model:synthetic-001",
+        "captured_from": "2026-06-01T14:00:00Z",
+        "captured_until": "2026-06-01T14:30:00Z"
+      },
+      "authorization": {
+        "evidence_state": "DOCUMENTED",
+        "evidence_ref": "fixture:authorization-evidence:drone-001",
+        "identifier_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "authority_source_ref": "fixture:authority-source:snapshot-001",
+        "reviewed_at": "2026-06-01T12:30:00Z",
+        "valid_from": "2026-06-01T13:00:00Z",
+        "valid_until": "2026-06-01T15:00:00Z",
+        "authorization_parameters_ref": "fixture:authorization-parameters:drone-001"
+      },
+      "operating_area": {
+        "geometry_posture": "EXACT_RESTRICTED",
+        "area_ref": "fixture:geometry:controlled-operating-area-001",
+        "area_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "matches_capture_area": true
+      },
+      "altitude": {
+        "reference": "AGL",
+        "authorized_ceiling_m": 120.0,
+        "observed_maximum_m": 90.0,
+        "units": "m",
+        "basis_ref": "fixture:altitude-basis:drone-001"
+      },
+      "airspace_review": {
+        "result": "CLEARED_WITH_CONSTRAINTS",
+        "review_ref": "fixture:airspace-review:drone-001",
+        "reviewed_at": "2026-06-01T12:35:00Z",
+        "constraints_ref": "fixture:airspace-constraints:drone-001"
+      },
+      "safety": {
+        "constraint_codes": ["ALTITUDE_CEILING", "VISUAL_OBSERVER_REQUIRED"],
+        "safety_plan_ref": "fixture:safety-plan:drone-001",
+        "acknowledgment_ref": "fixture:safety-acknowledgment:drone-001",
+        "unresolved_count": 0
+      },
+      "governance": {
+        "rights_ref": "fixture:rights:drone-capture-001",
+        "safety_policy_ref": "fixture:safety-policy:drone-capture-001",
+        "evidence_bundle_ref": "fixture:evidence-bundle:drone-capture-001",
+        "review_state": "APPROVED"
+      },
+      "limitations": [
+        "AUTHORIZATION_METADATA_ONLY",
+        "NO_COORDINATES_OR_AIRSPACE_QUERY",
+        "NO_CURRENT_LEGAL_OR_OPERATIONAL_ASSERTION",
+        "NO_EVIDENCE_OR_POLICY_AUTHORITY",
+        "NO_REVIEW_RELEASE_OR_PUBLICATION_AUTHORITY",
+        "SYNTHETIC_REFERENCES_ONLY"
+      ],
+      "authority_claims": {
+        "legal_authority": false,
+        "operational_authority": false,
+        "evidence_authority": false,
+        "policy_authority": false,
+        "review_authority": false,
+        "release_authority": false,
+        "publication_authority": false,
+        "public_use_authority": false
+      }
+    },
+    "withheld": {
+      "extends": "complete",
+      "operating_area": {
+        "geometry_posture": "WITHHELD",
+        "area_ref": null,
+        "area_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "matches_capture_area": true
+      }
+    }
+  },
+  "cases": [
+    {"name": "pass_complete_restricted", "base": "complete", "expected_outcome": "PASS", "expected_findings": []},
+    {"name": "pass_withheld_area", "base": "withheld", "expected_outcome": "PASS", "expected_findings": []},
+    {
+      "name": "abstain_record_incomplete",
+      "base": "complete",
+      "mutations": [{"path": "/record_state", "value": "INCOMPLETE"}],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": ["RECORD_INCOMPLETE"]
+    },
+    {
+      "name": "abstain_authorization_evidence_incomplete",
+      "base": "complete",
+      "mutations": [{"path": "/authorization/evidence_state", "value": "INCOMPLETE"}],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": ["AUTHORIZATION_EVIDENCE_INCOMPLETE"]
+    },
+    {
+      "name": "abstain_operating_area_match_unresolved",
+      "base": "complete",
+      "mutations": [{"path": "/operating_area/matches_capture_area", "value": null}],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": ["OPERATING_AREA_MATCH_UNRESOLVED"]
+    },
+    {
+      "name": "abstain_altitude_unresolved",
+      "base": "complete",
+      "mutations": [
+        {"path": "/altitude/reference", "value": "UNKNOWN"},
+        {"path": "/altitude/authorized_ceiling_m", "value": null},
+        {"path": "/altitude/observed_maximum_m", "value": null},
+        {"path": "/altitude/basis_ref", "value": null}
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": ["ALTITUDE_UNRESOLVED"]
+    },
+    {
+      "name": "abstain_airspace_review_incomplete",
+      "base": "complete",
+      "mutations": [{"path": "/airspace_review/result", "value": "INCOMPLETE"}],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": ["AIRSPACE_REVIEW_INCOMPLETE"]
+    },
+    {
+      "name": "abstain_safety_constraints_unresolved",
+      "base": "complete",
+      "mutations": [{"path": "/safety/unresolved_count", "value": 1}],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": ["SAFETY_CONSTRAINTS_UNRESOLVED"]
+    },
+    {
+      "name": "abstain_governance_reference_unresolved",
+      "base": "complete",
+      "mutations": [{"path": "/governance/rights_ref", "value": null}],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": ["GOVERNANCE_REFERENCE_UNRESOLVED"]
+    },
+    {
+      "name": "abstain_handoff_review_pending",
+      "base": "complete",
+      "mutations": [{"path": "/governance/review_state", "value": "PENDING"}],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": ["HANDOFF_REVIEW_PENDING"]
+    },
+    {
+      "name": "error_declared_record",
+      "base": "complete",
+      "mutations": [{"path": "/record_state", "value": "ERROR"}],
+      "expected_outcome": "ERROR",
+      "expected_findings": ["AUTHORIZATION_METADATA_ERROR"]
+    },
+    {
+      "name": "deny_capture_window_invalid",
+      "base": "complete",
+      "mutations": [{"path": "/capture/captured_from", "value": "2026-06-01T14:45:00Z"}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["CAPTURE_WINDOW_INVALID"]
+    },
+    {
+      "name": "deny_documented_authorization_closure_missing",
+      "base": "complete",
+      "mutations": [{"path": "/authorization/evidence_ref", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["DOCUMENTED_AUTHORIZATION_CLOSURE_REQUIRED"]
+    },
+    {
+      "name": "deny_authorization_window_invalid",
+      "base": "complete",
+      "mutations": [{"path": "/authorization/valid_from", "value": "2026-06-01T15:30:00Z"}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["AUTHORIZATION_WINDOW_INVALID"]
+    },
+    {
+      "name": "deny_capture_outside_declared_authorization_window",
+      "base": "complete",
+      "mutations": [{"path": "/capture/captured_until", "value": "2026-06-01T15:30:00Z"}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["CAPTURE_OUTSIDE_DECLARED_AUTHORIZATION_WINDOW"]
+    },
+    {
+      "name": "deny_withheld_area_reference",
+      "base": "complete",
+      "mutations": [{"path": "/operating_area/geometry_posture", "value": "WITHHELD"}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["WITHHELD_AREA_REFERENCE_FORBIDDEN"]
+    },
+    {
+      "name": "deny_missing_operating_area_reference",
+      "base": "complete",
+      "mutations": [{"path": "/operating_area/area_ref", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["OPERATING_AREA_REFERENCE_REQUIRED"]
+    },
+    {
+      "name": "deny_operating_area_mismatch",
+      "base": "complete",
+      "mutations": [{"path": "/operating_area/matches_capture_area", "value": false}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["OPERATING_AREA_MISMATCH"]
+    },
+    {
+      "name": "deny_altitude_declaration_partial",
+      "base": "complete",
+      "mutations": [{"path": "/altitude/basis_ref", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["ALTITUDE_DECLARATION_PARTIAL"]
+    },
+    {
+      "name": "deny_observed_altitude_exceeds_declared_ceiling",
+      "base": "complete",
+      "mutations": [{"path": "/altitude/observed_maximum_m", "value": 121.0}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["OBSERVED_ALTITUDE_EXCEEDS_DECLARED_CEILING"]
+    },
+    {
+      "name": "deny_airspace_review_closure_missing",
+      "base": "complete",
+      "mutations": [{"path": "/airspace_review/review_ref", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["AIRSPACE_REVIEW_CLOSURE_REQUIRED"]
+    },
+    {
+      "name": "deny_airspace_conflict_declared",
+      "base": "complete",
+      "mutations": [{"path": "/airspace_review/result", "value": "CONFLICT_DECLARED"}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["AIRSPACE_CONFLICT_DECLARED"]
+    },
+    {
+      "name": "deny_airspace_constraint_reference_missing",
+      "base": "complete",
+      "mutations": [{"path": "/airspace_review/constraints_ref", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["AIRSPACE_CONSTRAINT_REFERENCE_REQUIRED"]
+    },
+    {
+      "name": "deny_declared_constraints_not_enumerated",
+      "base": "complete",
+      "mutations": [{"path": "/safety/constraint_codes", "value": []}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["DECLARED_CONSTRAINTS_NOT_ENUMERATED"]
+    },
+    {
+      "name": "deny_safety_constraint_closure_missing",
+      "base": "complete",
+      "mutations": [{"path": "/safety/acknowledgment_ref", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["SAFETY_CONSTRAINT_CLOSURE_REQUIRED"]
+    },
+    {
+      "name": "deny_handoff_review",
+      "base": "complete",
+      "mutations": [{"path": "/governance/review_state", "value": "DENIED"}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["HANDOFF_REVIEW_DENIED"]
+    },
+    {
+      "name": "deny_safety_constraint_codes_not_canonical",
+      "base": "complete",
+      "mutations": [{"path": "/safety/constraint_codes", "value": ["VISUAL_OBSERVER_REQUIRED", "ALTITUDE_CEILING"]}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["SAFETY_CONSTRAINT_CODES_NOT_CANONICAL"]
+    },
+    {
+      "name": "deny_spec_hash_mismatch",
+      "base": "complete",
+      "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_findings": ["SPEC_HASH_MISMATCH"]
+    },
+    {
+      "name": "deny_metadata_id_mismatch",
+      "base": "complete",
+      "metadata_id_override": "kfm:drone-authorization-metadata:ffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_findings": ["METADATA_ID_MISMATCH"]
+    },
+    {
+      "name": "deny_authority_overreach",
+      "base": "complete",
+      "mutations": [{"path": "/authority_claims/operational_authority", "value": true}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["SCHEMA_INVALID"]
+    }
+  ]
+}

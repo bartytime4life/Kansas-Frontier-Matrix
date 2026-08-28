@@ -1,0 +1,192 @@
+{
+  "receipt_id": "genrec-governed-api-threat-model-4484bddad647",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/governed-api/THREAT_MODEL.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/governed-api/THREAT_MODEL.md": "sha256:4484bddad647295cef386db8151193938a1f044fe81d8eb7c6d3335937019b06"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-19"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (read/write branch and draft-PR action surface)",
+      "attached-file search",
+      "local deterministic Markdown, hash, and receipt validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM Directory Governance Standard v2.0.0-draft.1"
+    ],
+    "evidence_refs": [
+      "repo:commit/0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/architecture/governed-api/THREAT_MODEL.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/architecture/governed-api/README.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/architecture/governed-api.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/architecture/governed-api/AUDIENCE_CLASSES.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/architecture/governed-api/ENVELOPES.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/architecture/governed-api/LIFECYCLE_GATES.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/architecture/governed-api/ERROR_CODES.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/architecture/governed-api/DEPLOYMENT_RULES.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/security/THREAT_MODEL.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/adr/ADR-0016-telemetry-redaction-posture.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/doctrine/directory-rules.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:.github/CODEOWNERS@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:apps/governed-api/src/governed_api/main.py@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:apps/governed-api/src/governed_api/routes/registry.py@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:apps/governed-api/src/governed_api/stub.py@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:apps/governed-api/tests/test_abstain_routes.py@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:apps/governed-api/tests/test_boundary_guards.py@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:policy/access/README.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:packages/evidence-resolver/README.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:runtime/model_adapters/README.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:runtime/model_adapters/MockAdapter.py@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:tools/validators/citation/README.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:tests/runtime_proof/README.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:.github/workflows/api-test.yml@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:commit/573898f63ad8b2440d4c6b3042760efcbe746c85",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "attachment:KFM Directory Governance Standard v2.0.0-draft.1"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/governed-api/THREAT_MODEL.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned main at 0a547c12e7965565d397fcad46d94c1c7b41f0c7, verified prior target blob 1e30edf28991ad558e206d5f53d9cec81083c387, and found no open pull request claiming the exact target path."
+    },
+    {
+      "gate": "directory-rules-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and Directory Rules v2 support same-path human architecture guidance under docs/ while app, contract, schema, policy, test, runtime, data, infrastructure, release, and publication authority remain separate."
+    },
+    {
+      "gate": "current-runtime-route-inventory",
+      "outcome": "PASS",
+      "reason": "Inspected the WSGI dispatcher, exact route registry, negative stub builder, app-local tests, runtime envelope schema, and API workflow. The executable app has three GET ABSTAIN stubs plus finite 404/405 errors; no substantive ANSWER path was found."
+    },
+    {
+      "gate": "nine-boundary-reclassification",
+      "outcome": "PASS",
+      "reason": "Reclassified the legacy nine boundaries as a target threat inventory using NOT_CROSSED, SCAFFOLD_GUARD, COMPONENT_PROOF, COMPOSED_PROOF, OPERATIONAL_PROOF, and HOLD without presenting absent integration as mitigation."
+    },
+    {
+      "gate": "envelope-profile-reconciliation",
+      "outcome": "PASS",
+      "reason": "Reconciled the threat model with the grounded ENVELOPES.md profile: no current payload, nested DecisionEnvelope, release_ref, citation_validation, reason object, or trace member; reason and HTTP vocabularies remain conflicted."
+    },
+    {
+      "gate": "component-versus-composed-proof",
+      "outcome": "PASS",
+      "reason": "Separated internal evidence-resolver, MockAdapter, citation-report, telemetry-profile, runtime-envelope, and generated-receipt proof from Governed API composition, deployed enforcement, policy, release, evidence, audit, or publication authority."
+    },
+    {
+      "gate": "markdown-structure-anchor-and-link-check",
+      "outcome": "PASS",
+      "reason": "Verified YAML-readable metadata, one H1, no heading-level jumps, 20 unique explicit anchors, all 16 legacy numbered section fragments, 38 resolved internal fragment links, balanced fences/details, consistent tables, no tabs or trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "remote-artifact-hash-binding",
+      "outcome": "PASS",
+      "reason": "Remote branch content blob 583db17425073995b25828818ef63b4cc7d1db73 matches the locally computed Git blob; document SHA-256 is 4484bddad647295cef386db8151193938a1f044fe81d8eb7c6d3335937019b06."
+    },
+    {
+      "gate": "generated-receipt-shape",
+      "outcome": "PASS",
+      "reason": "Receipt JSON was checked for required fields, finite enums, hash patterns, artifact path/hash closure, pending human review, null override, and no unsupported top-level authority effects."
+    },
+    {
+      "gate": "repository-native-documentation-tests",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository dependency environment was available; deterministic source, parser, structure, link-target, hash, and receipt checks were completed, while repository-native commands remain separate execution evidence."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull request creation and hosted execution at receipt emission time."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt creates no security approval, access, policy, evidence, route, release, deployment, publication, or public-use authority."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-main-baseline",
+      "validated": true,
+      "evidence_ref": "repo:commit/0a547c12e7965565d397fcad46d94c1c7b41f0c7"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7"
+    },
+    {
+      "id": "current-route-registry",
+      "validated": true,
+      "evidence_ref": "repo:apps/governed-api/src/governed_api/routes/registry.py@0a547c12e7965565d397fcad46d94c1c7b41f0c7"
+    },
+    {
+      "id": "current-negative-runtime",
+      "validated": true,
+      "evidence_ref": "repo:apps/governed-api/src/governed_api/stub.py@0a547c12e7965565d397fcad46d94c1c7b41f0c7"
+    },
+    {
+      "id": "current-boundary-tests",
+      "validated": true,
+      "evidence_ref": "repo:apps/governed-api/tests/test_boundary_guards.py@0a547c12e7965565d397fcad46d94c1c7b41f0c7"
+    },
+    {
+      "id": "grounded-envelope-profile",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/governed-api/ENVELOPES.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7"
+    },
+    {
+      "id": "runtime-proof-boundary",
+      "validated": true,
+      "evidence_ref": "repo:tests/runtime_proof/README.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7"
+    },
+    {
+      "id": "implementation-contract",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-19T23:46:44Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md",
+    "drift_register_entry": null
+  },
+  "notes": "Same-path documentation modernization. It preserves the nine-boundary vocabulary as target threat inventory, grounds the current executable surface to three ABSTAIN stubs plus 404/405 and static boundary guards, separates component proof from composed and operational proof, removes unsupported auth/policy/release/provider/citation/telemetry/audit enforcement claims, retains explicit first-ANSWER and public-deployment HOLDs, and records correction and rollback. It changes no contract, schema, policy, fixture, validator, test, workflow, app, route, runtime, infrastructure, access grant, release, deployment, publication, source, or repository setting."
+}

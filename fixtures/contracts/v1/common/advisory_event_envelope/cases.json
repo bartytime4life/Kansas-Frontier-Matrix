@@ -1,0 +1,219 @@
+{
+  "profile": "kfm.advisory-event-envelope.fixture-cases.v1",
+  "description": "Synthetic no-network envelope bases plus deterministic JSON-pointer patches. Referenced KDHE HAB payloads are repository fixtures, not current advisories.",
+  "base_count": 6,
+  "case_count": 15,
+  "bases": {
+    "hab_watch": "bases/hab_watch.json",
+    "hab_status_check_failed": "bases/hab_status_check_failed.json",
+    "hab_status_unconfirmed": "bases/hab_status_unconfirmed.json",
+    "hab_rescinded": "bases/hab_rescinded.json",
+    "hab_identity_conflict": "bases/hab_identity_conflict.json",
+    "hab_zoned_warning": "bases/hab_zoned_warning.json"
+  },
+  "cases": [
+    {
+      "name": "valid_1_hab_watch",
+      "class": "valid",
+      "expected_ok": true,
+      "expected_code": null,
+      "base": "hab_watch",
+      "patches": []
+    },
+    {
+      "name": "valid_2_hab_status_check_failed",
+      "class": "valid",
+      "expected_ok": true,
+      "expected_code": null,
+      "base": "hab_status_check_failed",
+      "patches": []
+    },
+    {
+      "name": "valid_3_hab_status_unconfirmed",
+      "class": "valid",
+      "expected_ok": true,
+      "expected_code": null,
+      "base": "hab_status_unconfirmed",
+      "patches": []
+    },
+    {
+      "name": "valid_4_hab_rescinded",
+      "class": "valid",
+      "expected_ok": true,
+      "expected_code": null,
+      "base": "hab_rescinded",
+      "patches": []
+    },
+    {
+      "name": "valid_5_hab_identity_conflict",
+      "class": "valid",
+      "expected_ok": true,
+      "expected_code": null,
+      "base": "hab_identity_conflict",
+      "patches": []
+    },
+    {
+      "name": "valid_6_hab_zoned_warning",
+      "class": "valid",
+      "expected_ok": true,
+      "expected_code": null,
+      "base": "hab_zoned_warning",
+      "patches": []
+    },
+    {
+      "name": "invalid_1_missing_authority",
+      "class": "invalid",
+      "expected_ok": false,
+      "expected_code": "SCHEMA_INVALID",
+      "base": "hab_watch",
+      "patches": [
+        {
+          "op": "remove",
+          "path": "/temporal_authority/source/issuing_authority_ref"
+        }
+      ]
+    },
+    {
+      "name": "invalid_2_public_use",
+      "class": "invalid",
+      "expected_ok": false,
+      "expected_code": "SCHEMA_INVALID",
+      "base": "hab_watch",
+      "patches": [
+        {
+          "op": "replace",
+          "path": "/controls/public_use_allowed",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "invalid_1_false_clear_attempt",
+      "class": "semantic_invalid",
+      "expected_ok": false,
+      "expected_code": "FALSE_CLEAR_ATTEMPT",
+      "base": "hab_status_check_failed",
+      "patches": [
+        {
+          "op": "replace",
+          "path": "/advisory/normalized_status",
+          "value": "RESCINDED"
+        },
+        {
+          "op": "replace",
+          "path": "/advisory/rescinded_at",
+          "value": "2026-07-28T16:00:00Z"
+        },
+        {
+          "op": "replace",
+          "path": "/controls/rescission_ref",
+          "value": "kfm://rescission/synthetic/false-clear"
+        }
+      ]
+    },
+    {
+      "name": "invalid_2_zone_scope_collapse",
+      "class": "semantic_invalid",
+      "expected_ok": false,
+      "expected_code": "ZONE_SCOPE_COLLAPSE",
+      "base": "hab_zoned_warning",
+      "patches": [
+        {
+          "op": "replace",
+          "path": "/scope/zone_scope",
+          "value": "whole_water_body"
+        }
+      ]
+    },
+    {
+      "name": "invalid_3_missing_rescission",
+      "class": "semantic_invalid",
+      "expected_ok": false,
+      "expected_code": "RESCISSION_REQUIRED",
+      "base": "hab_rescinded",
+      "patches": [
+        {
+          "op": "replace",
+          "path": "/advisory/rescinded_at",
+          "value": null
+        },
+        {
+          "op": "replace",
+          "path": "/controls/rescission_ref",
+          "value": null
+        }
+      ]
+    },
+    {
+      "name": "invalid_4_source_role_collapse",
+      "class": "semantic_invalid",
+      "expected_ok": false,
+      "expected_code": "SOURCE_ROLE_COLLAPSE",
+      "base": "hab_watch",
+      "patches": [
+        {
+          "op": "replace",
+          "path": "/advisory/basis",
+          "value": "observation"
+        }
+      ]
+    },
+    {
+      "name": "invalid_5_stale_as_active",
+      "class": "semantic_invalid",
+      "expected_ok": false,
+      "expected_code": "SOURCE_STALE",
+      "base": "hab_status_unconfirmed",
+      "patches": [
+        {
+          "op": "replace",
+          "path": "/advisory/normalized_status",
+          "value": "ACTIVE_CONFIRMED"
+        }
+      ]
+    },
+    {
+      "name": "invalid_6_time_order",
+      "class": "semantic_invalid",
+      "expected_ok": false,
+      "expected_code": "TEMPORAL_ORDER_INVALID",
+      "base": "hab_watch",
+      "patches": [
+        {
+          "op": "replace",
+          "path": "/advisory/onset_at",
+          "value": "2026-07-25T16:00:00Z"
+        },
+        {
+          "op": "replace",
+          "path": "/advisory/expires_at",
+          "value": "2026-07-24T17:00:00Z"
+        }
+      ]
+    },
+    {
+      "name": "invalid_7_conflict_exposes_geometry",
+      "class": "semantic_invalid",
+      "expected_ok": false,
+      "expected_code": "IDENTITY_CONFLICT",
+      "base": "hab_identity_conflict",
+      "patches": [
+        {
+          "op": "replace",
+          "path": "/scope/affected_area_ref",
+          "value": "kfm://geometry/water-body/ks/kirwin-lake"
+        },
+        {
+          "op": "replace",
+          "path": "/scope/geometry_role",
+          "value": "advisory_area"
+        },
+        {
+          "op": "replace",
+          "path": "/scope/geometry_confidence",
+          "value": "approximate"
+        }
+      ]
+    }
+  ]
+}

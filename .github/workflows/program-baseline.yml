@@ -1,0 +1,92 @@
+# Validate the proposed M01 authority, ownership, overlap, and program baseline.
+#
+# A green result proves only the bounded schema, pinned-byte, fixture, state,
+# and receipt profile. It cannot accept an ADR, approve review, waive drift,
+# mutate an issue, activate a source, or authorize release or publication.
+name: program-baseline
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/program-baseline.yml"
+      - "Makefile"
+      - "contracts/governance/program_baseline.md"
+      - "control_plane/README.md"
+      - "control_plane/program_baseline.json"
+      - "fixtures/contracts/v1/governance/program_baseline/**"
+      - "schemas/contracts/v1/governance/program_baseline.schema.json"
+      - "tests/validators/test_validate_program_baseline.py"
+      - "tools/validators/control_plane/validate_program_baseline.py"
+      - "data/receipts/generated/genrec-program-baseline-m01-*.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/program-baseline.yml"
+      - "Makefile"
+      - "contracts/governance/program_baseline.md"
+      - "control_plane/README.md"
+      - "control_plane/program_baseline.json"
+      - "fixtures/contracts/v1/governance/program_baseline/**"
+      - "schemas/contracts/v1/governance/program_baseline.schema.json"
+      - "tests/validators/test_validate_program_baseline.py"
+      - "tools/validators/control_plane/validate_program_baseline.py"
+      - "data/receipts/generated/genrec-program-baseline-m01-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: program-baseline-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-program-baseline:
+    name: validate-program-baseline
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-test
+
+      - name: Run deterministic M01 program-baseline profile
+        shell: bash
+        run: make program-baseline
+
+      - name: Record validation boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### M01 program baseline"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: pinned authority/ownership bytes, exact tracker and PR snapshot, Drive-lineage non-authority, classification vocabulary, fixture polarity, and generated-receipt integrity."
+            echo "- Preserved inherited failures: repository topology remains FAIL with nine unbaselined findings; object-family workflow-watch coverage remains FAIL for nine paths."
+            echo "- Base hosted state: no run was observed for the exact merge commit, recorded as NOT_RUN rather than PASS."
+            echo "- Boundary: this projection cannot create authority, accept an ADR, mutate an issue, activate a source, approve review, or release, deploy, promote, or publish."
+          } >> "$GITHUB_STEP_SUMMARY"

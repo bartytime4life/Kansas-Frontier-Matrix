@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/evidence/paleoenvironmental_proxy_provenance.schema.json",
+  "title": "PaleoenvironmentalProxyProvenanceRecord",
+  "description": "Fixture-only proxy, reconstruction, temporal, and spatial-generalization provenance. Validation grants no evidence, policy, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "object_type", "profile_status", "execution_mode", "authority", "record_id", "proxy_source", "reconstruction", "temporal_scope", "spatial_generalization", "evidence_refs", "claims", "permissions", "non_effects", "spec_hash"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "object_type": {"const": "PaleoenvironmentalProxyProvenanceRecord"},
+    "profile_status": {"const": "PROPOSED_INACTIVE"},
+    "execution_mode": {"const": "FIXTURE_ONLY"},
+    "authority": {"const": "NONE"},
+    "record_id": {"type": "string", "pattern": "^kfm:paleoenvironmental-proxy-provenance:[0-9a-f]{24}$"},
+    "proxy_source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["proxy_kind", "source_record_ref", "sample_ref", "source_role", "original_chronology_ref", "rights_ref", "sensitivity"],
+      "properties": {
+        "proxy_kind": {"enum": ["POLLEN", "DIATOM", "CHARCOAL", "STABLE_ISOTOPE", "TREE_RING", "SPELEOTHEM", "SEDIMENT", "FOSSIL_ASSEMBLAGE", "OTHER"]},
+        "source_record_ref": {"$ref": "#/$defs/fixtureRef"},
+        "sample_ref": {"$ref": "#/$defs/fixtureRef"},
+        "source_role": {"const": "OBSERVED_PROXY"},
+        "original_chronology_ref": {"$ref": "#/$defs/fixtureRef"},
+        "rights_ref": {"$ref": "#/$defs/fixtureRef"},
+        "sensitivity": {"enum": ["PUBLIC", "SENSITIVE", "RESTRICTED"]}
+      }
+    },
+    "reconstruction": {
+      "type": "object", "additionalProperties": false,
+      "required": ["input_proxy_ref", "method_ref", "method_version", "parameters_spec_hash", "transform_receipt_refs", "output_artifact_ref", "output_artifact_hash", "uncertainty_model_ref", "output_role"],
+      "properties": {
+        "input_proxy_ref": {"$ref": "#/$defs/fixtureRef"},
+        "method_ref": {"$ref": "#/$defs/fixtureRef"},
+        "method_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "parameters_spec_hash": {"$ref": "#/$defs/hash"},
+        "transform_receipt_refs": {"$ref": "#/$defs/nonEmptyFixtureRefs"},
+        "output_artifact_ref": {"$ref": "#/$defs/fixtureRef"},
+        "output_artifact_hash": {"$ref": "#/$defs/hash"},
+        "uncertainty_model_ref": {"$ref": "#/$defs/fixtureRef"},
+        "output_role": {"const": "INTERPRETIVE_RECONSTRUCTION"}
+      }
+    },
+    "temporal_scope": {
+      "type": "object", "additionalProperties": false,
+      "required": ["timescale", "start_year", "end_year", "reference_epoch", "resolution_years", "uncertainty_years", "calibration_ref"],
+      "properties": {
+        "timescale": {"enum": ["CALENDAR_YEAR_CE", "BP1950"]},
+        "start_year": {"type": "integer", "minimum": -1000000, "maximum": 1000000},
+        "end_year": {"type": "integer", "minimum": -1000000, "maximum": 1000000},
+        "reference_epoch": {"type": "string", "minLength": 3, "maxLength": 80},
+        "resolution_years": {"type": "integer", "minimum": 1, "maximum": 100000},
+        "uncertainty_years": {"type": "integer", "minimum": 0, "maximum": 100000},
+        "calibration_ref": {"$ref": "#/$defs/fixtureRef"}
+      }
+    },
+    "spatial_generalization": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source_location_ref", "published_extent_ref", "method", "source_precision", "published_precision", "generalization_receipt_ref", "exact_location_withheld", "sensitivity_reason"],
+      "properties": {
+        "source_location_ref": {"$ref": "#/$defs/fixtureRef"},
+        "published_extent_ref": {"$ref": "#/$defs/fixtureRef"},
+        "method": {"enum": ["ADMINISTRATIVE_AGGREGATION", "REGIONAL_ENVELOPE", "GRID_GENERALIZATION", "REDACTION"]},
+        "source_precision": {"$ref": "#/$defs/precision"},
+        "published_precision": {"$ref": "#/$defs/precision"},
+        "generalization_receipt_ref": {"$ref": "#/$defs/fixtureRef"},
+        "exact_location_withheld": {"type": "boolean"},
+        "sensitivity_reason": {"enum": ["NONE", "ARCHAEOLOGICAL_SITE", "PRIVATE_LAND", "RARE_RESOURCE", "OTHER"]}
+      }
+    },
+    "evidence_refs": {"$ref": "#/$defs/nonEmptyFixtureRefs"},
+    "claims": {
+      "type": "object", "additionalProperties": false,
+      "required": ["direct_environment_observation", "exact_location_disclosed", "present_condition_equivalence", "predictive_authority", "policy_authority", "publication_authority"],
+      "properties": {
+        "direct_environment_observation": {"const": false}, "exact_location_disclosed": {"const": false}, "present_condition_equivalence": {"const": false}, "predictive_authority": {"const": false}, "policy_authority": {"const": false}, "publication_authority": {"const": false}
+      }
+    },
+    "permissions": {
+      "type": "object", "additionalProperties": false,
+      "required": ["network_access", "source_access", "coordinate_disclosure", "file_mutation", "policy_evaluation", "release", "publication"],
+      "properties": {
+        "network_access": {"const": false}, "source_access": {"const": false}, "coordinate_disclosure": {"const": false}, "file_mutation": {"const": false}, "policy_evaluation": {"const": false}, "release": {"const": false}, "publication": {"const": false}
+      }
+    },
+    "non_effects": {
+      "type": "array", "minItems": 9, "uniqueItems": true,
+      "items": {"enum": ["NO_SOURCE_ACCESS", "NO_COORDINATE_DISCLOSURE", "NO_PROXY_INGESTION", "NO_RECONSTRUCTION_EXECUTION", "NO_CURRENT_CONDITION_INFERENCE", "NO_FORECAST", "NO_EVIDENCE_MUTATION", "NO_POLICY_DECISION", "NO_LIFECYCLE_PROMOTION", "NO_RELEASE", "NO_PUBLICATION"]}
+    },
+    "spec_hash": {"$ref": "#/$defs/hash"}
+  },
+  "$defs": {
+    "fixtureRef": {"type": "string", "pattern": "^fixture:[A-Za-z0-9._:/-]+$"},
+    "nonEmptyFixtureRefs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/fixtureRef"}, "uniqueItems": true},
+    "hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "precision": {"enum": ["EXACT", "SITE", "LOCALITY", "COUNTY", "REGION", "STATE", "WITHHELD"]}
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "authority": "NONE",
+    "source_card": "KFM-P30-PROG-0029",
+    "source_spec_hash": "sha256:cd77280751f0bc76d55a2ecddff911b0b9f022b79bcad4ad90500320fdffc295"
+  }
+}

@@ -1,0 +1,418 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/validation/validator_assurance_report.schema.json",
+  "title": "ValidatorAssuranceReport",
+  "description": "Deterministic report for bounded adversarial and mutation assurance. Validation grants no universal adequacy threshold, policy, review, merge, promotion, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "assurance_id",
+    "hash_profile",
+    "spec_hash",
+    "target",
+    "campaign",
+    "results",
+    "survivors",
+    "adequacy",
+    "provenance",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "ValidatorAssuranceReport"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "assurance_id": {
+      "type": "string",
+      "pattern": "^validator-assurance:[a-z0-9][a-z0-9_.:-]{7,240}$"
+    },
+    "hash_profile": {
+      "const": "kfm-fixture-json-v1"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "validator_ref",
+        "target_digest",
+        "test_command_ref",
+        "profile_id",
+        "profile_version",
+        "profile_digest"
+      ],
+      "properties": {
+        "validator_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 640,
+          "pattern": "\\S"
+        },
+        "target_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "test_command_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 640,
+          "pattern": "\\S"
+        },
+        "profile_id": {
+          "type": "string",
+          "pattern": "^assurance-profile:[a-z0-9][a-z0-9_.:-]{4,200}$"
+        },
+        "profile_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "profile_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      }
+    },
+    "campaign": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "campaign_id",
+        "seed",
+        "generated_at",
+        "mutation_operators",
+        "mutant_manifest_digest",
+        "network_used"
+      ],
+      "properties": {
+        "campaign_id": {
+          "type": "string",
+          "pattern": "^mutation-campaign:[a-z0-9][a-z0-9_.:-]{4,240}$"
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "generated_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+        },
+        "mutation_operators": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "BOOLEAN_FLIP",
+              "BOUNDARY_SHIFT",
+              "ENUM_SUBSTITUTION",
+              "REFERENCE_CHECK_REMOVAL",
+              "REQUIRED_CHECK_REMOVAL",
+              "RETURN_CODE_CHANGE",
+              "SORTING_REMOVAL",
+              "TIME_COMPARISON_FLIP",
+              "UNKNOWN"
+            ]
+          }
+        },
+        "mutant_manifest_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "network_used": {
+          "const": false
+        }
+      }
+    },
+    "results": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total",
+        "killed",
+        "survived",
+        "invalid",
+        "timed_out",
+        "kill_rate_numerator",
+        "kill_rate_denominator"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "killed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "survived": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "invalid": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "timed_out": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "kill_rate_numerator": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "kill_rate_denominator": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        }
+      }
+    },
+    "survivors": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 10000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "mutant_id",
+          "operator",
+          "target_location_ref",
+          "semantic_gap_class",
+          "risk_class",
+          "disposition",
+          "reason_codes",
+          "issue_ref"
+        ],
+        "properties": {
+          "mutant_id": {
+            "type": "string",
+            "pattern": "^mutant:[a-z0-9][a-z0-9_.:-]{4,240}$"
+          },
+          "operator": {
+            "enum": [
+              "BOOLEAN_FLIP",
+              "BOUNDARY_SHIFT",
+              "ENUM_SUBSTITUTION",
+              "REFERENCE_CHECK_REMOVAL",
+              "REQUIRED_CHECK_REMOVAL",
+              "RETURN_CODE_CHANGE",
+              "SORTING_REMOVAL",
+              "TIME_COMPARISON_FLIP",
+              "UNKNOWN"
+            ]
+          },
+          "target_location_ref": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 640,
+            "pattern": "\\S"
+          },
+          "semantic_gap_class": {
+            "enum": [
+              "FAIL_OPEN",
+              "POLICY_BYPASS",
+              "REFERENCE_CLOSURE",
+              "TEMPORAL_ORDER",
+              "IDENTITY_COLLAPSE",
+              "ERROR_HANDLING",
+              "CANONICALIZATION",
+              "OTHER"
+            ]
+          },
+          "risk_class": {
+            "enum": [
+              "CRITICAL",
+              "HIGH",
+              "MEDIUM",
+              "LOW",
+              "UNKNOWN"
+            ]
+          },
+          "disposition": {
+            "enum": [
+              "FIX_REQUIRED",
+              "REVIEW_REQUIRED",
+              "ACCEPTED_EQUIVALENT",
+              "OUT_OF_SCOPE"
+            ]
+          },
+          "reason_codes": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 32,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Z][A-Z0-9_]{2,96}$"
+            },
+            "uniqueItems": true
+          },
+          "issue_ref": {
+            "oneOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 640,
+                "pattern": "\\S"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "adequacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "reason_codes",
+        "review_required",
+        "universal_threshold_applied",
+        "surviving_high_risk_count",
+        "surviving_unreviewed_count"
+      ],
+      "properties": {
+        "outcome": {
+          "enum": [
+            "PASS",
+            "HOLD",
+            "FAIL",
+            "ERROR"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]{2,96}$"
+          },
+          "uniqueItems": true
+        },
+        "review_required": {
+          "type": "boolean"
+        },
+        "universal_threshold_applied": {
+          "const": false
+        },
+        "surviving_high_risk_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        },
+        "surviving_unreviewed_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recorded_at",
+        "run_receipt_ref",
+        "input_refs"
+      ],
+      "properties": {
+        "recorded_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+        },
+        "run_receipt_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 640,
+          "pattern": "\\S"
+        },
+        "input_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 128,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 640,
+            "pattern": "\\S"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy_evaluated",
+        "validator_approved",
+        "merge_authorized",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed",
+        "release_ref"
+      ],
+      "properties": {
+        "policy_evaluated": {
+          "const": false
+        },
+        "validator_approved": {
+          "const": false
+        },
+        "merge_authorized": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "release_ref": {
+          "type": "null"
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/validation/validator_assurance_report.md",
+    "fixtures_root": "fixtures/contracts/v1/validation/validator_assurance_report/",
+    "validator": "tools/validators/validate_validator_assurance_report.py",
+    "tests": "tests/validators/test_validate_validator_assurance_report.py",
+    "authority": "bounded_validator_assurance_evidence_only",
+    "non_effects": [
+      "does_not_establish_a_universal_mutation_threshold",
+      "does_not_approve_a_validator_or_policy",
+      "does_not_authorize_merge_promotion_release_or_publication"
+    ]
+  }
+}

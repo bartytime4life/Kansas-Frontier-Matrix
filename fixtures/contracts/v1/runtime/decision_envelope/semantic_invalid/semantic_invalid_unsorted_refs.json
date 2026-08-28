@@ -1,0 +1,14 @@
+{
+  "decision_id": "dec-order",
+  "outcome": "ANSWER",
+  "policy_family": "access",
+  "reasons": [
+    "allowed"
+  ],
+  "obligations": [],
+  "evidence_refs": [
+    "evidence:fixture:z",
+    "evidence:fixture:a"
+  ],
+  "evaluated_at": "2026-08-07T00:00:00Z"
+}

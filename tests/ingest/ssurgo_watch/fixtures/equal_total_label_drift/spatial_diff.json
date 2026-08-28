@@ -1,0 +1,14 @@
+{
+  "area_unit": "m2",
+  "changed_label_area_m2": 6000,
+  "content_hash": "sha256:5d6bc6a44e339d59cb63e8fcc862fa5e6425972c29df6d1a5eae6407dc97d627",
+  "crs": "EPSG:5070",
+  "current_content_hash": "sha256:c0a2aeffe88a78e1b50d823a22f8c29b34384ed6d5fed0a9f1e10f9bc6544b87",
+  "current_geometry_set_hash": "sha256:6181a448e055f0661077a546bfc96220df35e52b355542af8534d2285e0135c3",
+  "fixture_only": true,
+  "geometry_profile_hash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "method": "synthetic_mapunit_partition_disagreement_v1",
+  "prior_content_hash": "sha256:215186e71bcee72c54478a3d49928540237a30c47d69f45e02c15000664bcf1c",
+  "prior_geometry_set_hash": "sha256:d8859a47aca191c592a1a2d08895f6dff2fbb553582dc8ac318ade8f270fa96a",
+  "profile_id": "kfm.ssurgo-watch.synthetic-spatial-diff.v1"
+}

@@ -1,0 +1,2 @@
+IDENTIFYING_KIT_FIELD_DENIED	$.vendor_kit_id
+UNDECLARED_TOP_LEVEL_FIELD	$.vendor_kit_id

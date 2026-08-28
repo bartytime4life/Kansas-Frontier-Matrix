@@ -1,0 +1,21 @@
+{
+  "object_type": "PolicyReviewerRoleVocabulary",
+  "vocabulary_id": "policy-reviewer-role-vocabulary:v1",
+  "version": "v1",
+  "status": "PROPOSED_INACTIVE",
+  "roles": [
+    {"code":"DOMAIN_STEWARD","review_scopes":["domain","policy"],"description":"Reviews domain-specific meaning, burden, and admissibility implications."},
+    {"code":"EVIDENCE_STEWARD","review_scopes":["evidence","policy","release"],"description":"Reviews EvidenceRef resolution, support, provenance, freshness, and evidence burden."},
+    {"code":"POLICY_STEWARD","review_scopes":["policy"],"description":"Reviews policy source, finite outcomes, reasons, obligations, and fail-closed behavior."},
+    {"code":"RELEASE_STEWARD","review_scopes":["release"],"description":"Reviews release eligibility, rollback, correction, proof, and publication separation."},
+    {"code":"SECURITY_PRIVACY_REVIEWER","review_scopes":["policy","security_privacy"],"description":"Reviews privacy, access, security, living-person, sensitive-location, and exposure controls."}
+  ],
+  "governance": {
+    "assigns_people": false,
+    "records_approval": false,
+    "policy_authorized": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false
+  }
+}

@@ -1,0 +1,6 @@
+status: PROPOSED
+path: "policy/sensitivity/flora/ethnobotanical.yaml"
+source_docs:
+  - "docs/domains/flora/VERIFICATION_BACKLOG.md"
+notes:
+  - "Placeholder created from the current docs/domains markdown inventory."

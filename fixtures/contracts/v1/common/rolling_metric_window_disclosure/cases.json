@@ -1,0 +1,161 @@
+{
+  "object_type": "RollingMetricWindowDisclosureFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.common.rolling-metric-window-disclosure.fixture.v1",
+  "base_candidate": {
+    "object_type": "RollingMetricWindowDisclosureCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.common.rolling-metric-window-disclosure.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-479",
+    "observed_at": "2026-08-10T21:00:00Z",
+    "metric_ref": "kfm:aggregate-statistic:synthetic:rolling-average:001",
+    "metric_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "claim_scope": {
+      "ref": "kfm:claim-scope:synthetic:rolling-metric:001",
+      "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "resolution": "RESOLVED"
+    },
+    "metric_family": "MOVING_AVERAGE",
+    "partition": {
+      "mode": "KEYED",
+      "keys": ["kfm:field:synthetic:county-id"]
+    },
+    "ordering": {
+      "keys": [
+        {"field_ref": "kfm:field:synthetic:valid-date", "direction": "ASC", "nulls": "DENY", "role": "WINDOW_TIME"},
+        {"field_ref": "kfm:field:synthetic:observation-id", "direction": "ASC", "nulls": "DENY", "role": "TIE_BREAKER"}
+      ],
+      "unique_order_guaranteed": false
+    },
+    "frame": {
+      "unit": "ROWS",
+      "start": {"kind": "OFFSET_PRECEDING", "offset": 2},
+      "end": {"kind": "CURRENT_ROW", "offset": null},
+      "offset_unit_ref": null,
+      "bounds_inclusive": true,
+      "exclusion": "NO_OTHERS"
+    },
+    "time_definition": {
+      "field_ref": "kfm:field:synthetic:valid-date",
+      "semantics": "VALID_TIME",
+      "timezone": "UTC",
+      "calendar": "GREGORIAN",
+      "resolution": "RESOLVED"
+    },
+    "missing_data": {
+      "treatment": "EXCLUDE_WITH_DISCLOSURE",
+      "method_ref": null,
+      "minimum_observations": 2,
+      "partial_window_behavior": "EMIT_WITH_OBSERVATION_COUNT"
+    },
+    "revision_behavior": {
+      "late_arrival_behavior": "RECOMPUTE_AND_VERSION",
+      "correction_ref": "kfm:correction-path:synthetic:rolling-metric",
+      "rollback_ref": "kfm:rollback:synthetic:rolling-metric"
+    },
+    "engine_parity": {
+      "engine_refs": ["kfm:engine-profile:synthetic:a", "kfm:engine-profile:synthetic:b"],
+      "state": "SYNTHETIC_PARITY_DECLARED",
+      "parity_fixture_refs": ["kfm:fixture:synthetic:rolling-window-parity:001"]
+    },
+    "disclosure": {
+      "intended_use": "PUBLIC_CANDIDATE",
+      "labels": {
+        "partition": "The synthetic rolling metric is partitioned independently by county identifier.",
+        "ordering": "Rows are ordered by valid date and then by a stable synthetic observation identifier.",
+        "frame": "The inclusive frame contains the current row and two preceding rows within each county.",
+        "missing_data": "Missing values are excluded with disclosure and each output reports its observation count."
+      },
+      "review_record_refs": ["kfm:review-record:synthetic:rolling-metric:001"],
+      "release_manifest_ref": "kfm:release-manifest:synthetic:rolling-metric:001"
+    },
+    "evidence_refs": [
+      "kfm:evidence-bundle:synthetic:rolling-metric:001",
+      "kfm:evidence-bundle:synthetic:rolling-metric:002"
+    ],
+    "authority_claims": {
+      "analytics_execution_authority": false,
+      "metric_truth_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_rows_moving_average", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {
+      "name": "pass_range_duration",
+      "patch": {"frame": {"unit": "RANGE", "start": {"offset": 7}, "offset_unit_ref": "kfm:unit:day"}},
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_groups_rank",
+      "patch": {"metric_family": "ROLLING_RANK", "frame": {"unit": "GROUPS", "start": {"offset": 1}}},
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_global_internal_single_engine",
+      "patch": {
+        "partition": {"mode": "GLOBAL", "keys": []},
+        "ordering": {
+          "keys": [{"field_ref": "kfm:field:synthetic:valid-date", "direction": "ASC", "nulls": "DENY", "role": "WINDOW_TIME"}],
+          "unique_order_guaranteed": true
+        },
+        "engine_parity": {"engine_refs": ["kfm:engine-profile:synthetic:a"], "state": "SINGLE_ENGINE_DECLARED", "parity_fixture_refs": []},
+        "disclosure": {"intended_use": "INTERNAL_REVIEW", "review_record_refs": [], "release_manifest_ref": null}
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {"name": "abstain_claim_scope_unresolved", "patch": {"claim_scope": {"resolution": "UNRESOLVED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["CLAIM_SCOPE_UNRESOLVED"]}},
+    {"name": "abstain_time_definition_unresolved", "patch": {"time_definition": {"resolution": "UNRESOLVED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["TIME_DEFINITION_UNRESOLVED"]}},
+    {"name": "abstain_engine_parity_unresolved", "patch": {"engine_parity": {"state": "UNRESOLVED", "parity_fixture_refs": []}}, "expected": {"outcome": "ABSTAIN", "codes": ["ENGINE_PARITY_UNRESOLVED"]}},
+    {"name": "deny_engine_parity_mismatch", "patch": {"engine_parity": {"state": "MISMATCH", "parity_fixture_refs": []}}, "expected": {"outcome": "DENY", "codes": ["CROSS_ENGINE_PARITY_MISMATCH"]}},
+    {"name": "deny_global_partition_has_keys", "patch": {"partition": {"mode": "GLOBAL"}}, "expected": {"outcome": "DENY", "codes": ["PARTITION_DECLARATION_MISMATCH"]}},
+    {"name": "deny_keyed_partition_has_no_keys", "patch": {"partition": {"keys": []}}, "expected": {"outcome": "DENY", "codes": ["PARTITION_DECLARATION_MISMATCH"]}},
+    {
+      "name": "deny_duplicate_ordering_field",
+      "patch": {"ordering": {"keys": [
+        {"field_ref": "kfm:field:synthetic:valid-date", "direction": "ASC", "nulls": "DENY", "role": "WINDOW_TIME"},
+        {"field_ref": "kfm:field:synthetic:valid-date", "direction": "ASC", "nulls": "DENY", "role": "TIE_BREAKER"}
+      ]}},
+      "expected": {"outcome": "DENY", "codes": ["ORDERING_FIELD_DUPLICATE"]}
+    },
+    {
+      "name": "deny_tie_breaker_missing",
+      "patch": {"ordering": {"keys": [{"field_ref": "kfm:field:synthetic:valid-date", "direction": "ASC", "nulls": "DENY", "role": "WINDOW_TIME"}]}},
+      "expected": {"outcome": "DENY", "codes": ["ORDERING_TIE_BREAKER_REQUIRED"]}
+    },
+    {
+      "name": "deny_window_time_not_first",
+      "patch": {"ordering": {"keys": [
+        {"field_ref": "kfm:field:synthetic:observation-id", "direction": "ASC", "nulls": "DENY", "role": "TIE_BREAKER"},
+        {"field_ref": "kfm:field:synthetic:valid-date", "direction": "ASC", "nulls": "DENY", "role": "WINDOW_TIME"}
+      ]}},
+      "expected": {"outcome": "DENY", "codes": ["TIME_FIELD_ORDERING_MISMATCH", "TIME_ORDERING_KEY_INVALID"]}
+    },
+    {"name": "deny_time_field_mismatch", "patch": {"time_definition": {"field_ref": "kfm:field:synthetic:observation-time"}}, "expected": {"outcome": "DENY", "codes": ["TIME_FIELD_ORDERING_MISMATCH"]}},
+    {"name": "deny_offset_missing", "patch": {"frame": {"start": {"offset": null}}}, "expected": {"outcome": "DENY", "codes": ["FRAME_OFFSET_MISMATCH"]}},
+    {"name": "deny_offset_unexpected", "patch": {"frame": {"start": {"kind": "CURRENT_ROW", "offset": 2}}}, "expected": {"outcome": "DENY", "codes": ["FRAME_OFFSET_MISMATCH"]}},
+    {
+      "name": "deny_frame_bounds_reversed",
+      "patch": {"frame": {"start": {"kind": "OFFSET_FOLLOWING", "offset": 2}, "end": {"kind": "OFFSET_PRECEDING", "offset": 1}}},
+      "expected": {"outcome": "DENY", "codes": ["FRAME_BOUNDS_INVALID"]}
+    },
+    {"name": "deny_range_offset_unit_missing", "patch": {"frame": {"unit": "RANGE"}}, "expected": {"outcome": "DENY", "codes": ["RANGE_OFFSET_UNIT_REQUIRED"]}},
+    {"name": "deny_rows_offset_unit_present", "patch": {"frame": {"offset_unit_ref": "kfm:unit:row"}}, "expected": {"outcome": "DENY", "codes": ["FRAME_OFFSET_UNIT_UNEXPECTED"]}},
+    {"name": "deny_missing_data_method_required", "patch": {"missing_data": {"treatment": "IMPUTE_DECLARED"}}, "expected": {"outcome": "DENY", "codes": ["MISSING_DATA_METHOD_REQUIRED"]}},
+    {"name": "deny_missing_data_method_unexpected", "patch": {"missing_data": {"method_ref": "kfm:method:synthetic:unexpected"}}, "expected": {"outcome": "DENY", "codes": ["MISSING_DATA_METHOD_UNEXPECTED"]}},
+    {"name": "deny_public_review_missing", "patch": {"disclosure": {"review_record_refs": []}}, "expected": {"outcome": "DENY", "codes": ["PUBLIC_REVIEW_REFERENCE_REQUIRED"]}},
+    {"name": "deny_public_release_reference_missing", "patch": {"disclosure": {"release_manifest_ref": null}}, "expected": {"outcome": "DENY", "codes": ["PUBLIC_RELEASE_REFERENCE_REQUIRED"]}},
+    {"name": "deny_engine_declaration_mismatch", "patch": {"engine_parity": {"state": "SINGLE_ENGINE_DECLARED", "parity_fixture_refs": []}}, "expected": {"outcome": "DENY", "codes": ["ENGINE_PARITY_DECLARATION_MISMATCH"]}},
+    {"name": "deny_noncanonical_evidence_refs", "patch": {"evidence_refs": ["kfm:evidence-bundle:synthetic:rolling-metric:002", "kfm:evidence-bundle:synthetic:rolling-metric:001"]}, "expected": {"outcome": "DENY", "codes": ["ARRAY_NOT_CANONICAL"]}},
+    {"name": "deny_profile_hash_tamper", "patch": {}, "tamper": "profile_hash", "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}},
+    {"name": "error_unknown_field", "patch": {"source_rows": [1, 2, 3]}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}},
+    {"name": "error_authority_overclaim", "patch": {"authority_claims": {"analytics_execution_authority": true}}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}

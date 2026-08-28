@@ -1,0 +1,120 @@
+{
+  "receipt_id": "genrec-pass32-streamflow-qc-context-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/streamflow-qc-context.yml",
+    "contracts/domains/hydrology/streamflow_qc_context_assessment.md",
+    "docs/intake/exploratory/pass-32-streamflow-qc-context-source-map.md",
+    "fixtures/contracts/v1/domains/hydrology/streamflow_qc_context_assessment/cases.json",
+    "schemas/contracts/v1/domains/hydrology/streamflow_qc_context_assessment.schema.json",
+    "tests/domains/hydrology/test_streamflow_qc_context_assessment.py",
+    "tools/validators/domains/hydrology/validate_streamflow_qc_context_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/streamflow-qc-context.yml": "sha256:175d82534f826d35eb4a77b700e69082161df6a3803ba34b1bb55c340d99a3cf",
+    "contracts/domains/hydrology/streamflow_qc_context_assessment.md": "sha256:c7da07ae79369369fb14a68b1dc752d0267a50980af7b2215fa250bdbaf06984",
+    "docs/intake/exploratory/pass-32-streamflow-qc-context-source-map.md": "sha256:a3de66b5c9ad21536c9ba113fe72f108939bfa6f62160018b60f36a3ef950376",
+    "fixtures/contracts/v1/domains/hydrology/streamflow_qc_context_assessment/cases.json": "sha256:e612c489ec60f773b1ba0e869fdcdb6a3c0598086bd682e77645c98295c97c13",
+    "schemas/contracts/v1/domains/hydrology/streamflow_qc_context_assessment.schema.json": "sha256:1a950e874f6d17694e32ed6959154d7779fdeaa9fad394749f591d7a7883c810",
+    "tests/domains/hydrology/test_streamflow_qc_context_assessment.py": "sha256:e45bca3043b1fbf174495d4c5ed5e41b9e3041151bec5e91092c3b6e3e50761c",
+    "tools/validators/domains/hydrology/validate_streamflow_qc_context_assessment.py": "sha256:ace1f653068a231da21df641d6b43b841af900e40feb069ca63293844fc88468"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:377479169bb085d61db0be7338caa04d78a954bea44623e93097527df88e05e0",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local PDF inspection",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-IDEA-0002",
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0001",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@164ed555503accc110235546c7493d7991711243"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/streamflow-qc-context.yml": "PROPOSED",
+    "contracts/domains/hydrology/streamflow_qc_context_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-32-streamflow-qc-context-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/domains/hydrology/streamflow_qc_context_assessment/cases.json": "PROPOSED",
+    "schemas/contracts/v1/domains/hydrology/streamflow_qc_context_assessment.schema.json": "PROPOSED",
+    "tests/domains/hydrology/test_streamflow_qc_context_assessment.py": "PROPOSED",
+    "tools/validators/domains/hydrology/validate_streamflow_qc_context_assessment.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-fixture-profile",
+      "outcome": "PASS",
+      "reason": "Four PASS, one ABSTAIN, one ERROR, and eight DENY cases passed exact deterministic polarity checks."
+    },
+    {
+      "gate": "focused-and-adjacent-unit-tests",
+      "outcome": "PASS",
+      "reason": "Eight focused tests and forty-one adjacent hydrology tests, including eleven subtests, passed locally."
+    },
+    {
+      "gate": "schema-fixture-workflow-parse",
+      "outcome": "PASS",
+      "reason": "The JSON Schema, fixture manifest, and GitHub Actions workflow parsed successfully."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact branch head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass32-streamflow-percentile-context",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-IDEA-0002"
+    },
+    {
+      "id": "attachment:pass32-streamflow-qc-dashboard",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0001"
+    },
+    {
+      "id": "repository:adr-0029-directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@164ed555503accc110235546c7493d7991711243"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T18:05:26Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first StreamflowQcContextAssessment profile derived from Pass 32. It consumes declared categorical context only and does not compute percentile rank, admit raw flow, invalidate a sensor, grant source authority, mutate records, promote data, release artifacts, or publish outputs."
+}

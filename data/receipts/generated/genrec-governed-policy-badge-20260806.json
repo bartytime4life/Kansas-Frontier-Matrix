@@ -1,0 +1,108 @@
+{
+  "receipt_id": "genrec-governed-policy-badge-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/features/trust_header/index.tsx",
+    "apps/explorer-web/src/features/trust_header/POLICY_BADGE.md",
+    "apps/explorer-web/tests/trust-header.test.ts",
+    "apps/explorer-web/tests/browser/trust-header.fixture.ts",
+    "apps/explorer-web/tests/browser/trust-header.html",
+    "apps/explorer-web/tests/browser/trust-header.spec.ts"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/features/trust_header/index.tsx": "sha256:57ae6b70353096decdea8f6b69abab2c53c77eefdff857c3b5ddc2699ac89e0d",
+    "apps/explorer-web/src/features/trust_header/POLICY_BADGE.md": "sha256:eae5e332f44bf67aed7ebf25c27a4c556696dcc385496b58732db02f487b9c49",
+    "apps/explorer-web/tests/trust-header.test.ts": "sha256:abb5b05375d1582a39c290a8c30d6209e1c90710a5420a206fc16be785fb2dff",
+    "apps/explorer-web/tests/browser/trust-header.fixture.ts": "sha256:55e50ed1d4bca4af829b06e1a306eba674b9a73ccb8fd8e48d986448c65cdca7",
+    "apps/explorer-web/tests/browser/trust-header.html": "sha256:f6f95f4a6647d556a2d0714b367ec071b97a2d1838f0cfc3e51b6cbd56e2ecbf",
+    "apps/explorer-web/tests/browser/trust-header.spec.ts": "sha256:abdddfe67e00f710018d2745d99d50c8dad0d042d643c6e5563dbbbdb3defdcc"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:e597149a04d2729848c8489f467aae32eb13e137a1e0f5afdedfb14abd613b8b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local TypeScript compiler"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:apps/explorer-web/src/features/trust_header/README.md",
+      "repo:apps/explorer-web/src/adapters/GovernedClient.ts",
+      "repo:apps/explorer-web/src/features/evidence_drawer/index.tsx",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/features/trust_header/index.tsx": "PROPOSED",
+    "apps/explorer-web/src/features/trust_header/POLICY_BADGE.md": "PROPOSED",
+    "apps/explorer-web/tests/trust-header.test.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/trust-header.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/trust-header.html": "PROPOSED",
+    "apps/explorer-web/tests/browser/trust-header.spec.ts": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-typescript-structural-compatibility",
+      "outcome": "PASS",
+      "reason": "The Trust Header module passed strict no-emit TypeScript 5.8.3 compilation against a minimal declaration-compatible GovernedClient surface; the repository declares TypeScript 7.0.2 and exact-head hosted validation remains separate."
+    },
+    {
+      "gate": "local-static-trust-boundary",
+      "outcome": "PASS",
+      "reason": "Authored browser code contains no fetch call, browser persistence access, lifecycle-store path, provider SDK, or model-runtime access and uses fixed generic copy for finite negative states."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending until the pull request is opened."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "repository:trust-header-boundary",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/features/trust_header/README.md"
+    },
+    {
+      "id": "repository:governed-browser-projection",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/adapters/GovernedClient.ts"
+    },
+    {
+      "id": "repository:evidence-drawer-handoff",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/features/evidence_drawer/index.tsx"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T17:26:30Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first governed Policy Badge / Trust Header slice. This receipt grants no evidence, policy, review, release, promotion, deployment, publication, route, source, or public-use authority."
+}

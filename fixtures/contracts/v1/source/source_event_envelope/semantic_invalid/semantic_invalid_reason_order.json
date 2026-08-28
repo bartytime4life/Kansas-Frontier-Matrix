@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0.0",
+  "profile": "kfm.source_event_envelope_candidate.v1",
+  "execution_mode": "FIXTURE_ONLY",
+  "specversion": "1.0",
+  "event_id": "kfm:source-event:sha256:a18b4950b4cb130188e808c38003b696f954a705f57ce51e0e7c49cb4d693222",
+  "source_descriptor_ref": "src:synthetic:unknown-rights-feed",
+  "source_role_ref": "src:synthetic:unknown-rights-feed#/source_role",
+  "event_type": "OBJECT_CREATED",
+  "subject": {
+    "subject_ref": "fixture://source-events/unknown-rights/new-object",
+    "native_id": "unknown-rights-object-1",
+    "media_type": "application/json",
+    "content_digest": "sha256:00823b15b47fb1ecacf4f7659c5fde6ec70a000635d17a2647ec26cfb24506f3",
+    "byte_count": 2048,
+    "etag": "\"unknown-rights-1\"",
+    "last_modified": "2026-08-06T16:55:00Z"
+  },
+  "occurred_at": "2026-08-06T17:00:00Z",
+  "received_at": "2026-08-06T17:00:05Z",
+  "producer": {
+    "producer_id": "kfm-fixture-watcher",
+    "kind": "WATCHER",
+    "version": "1.0.0"
+  },
+  "payload": {
+    "payload_spec_hash": "sha256:b2ed80543bb9f19ecd06b40abff342bac5cba272c7670a4b2fe71b781d796e28",
+    "attributes": {
+      "change_kind": "new_object",
+      "material": true,
+      "record_count": 1
+    }
+  },
+  "routing": {
+    "disposition": "PROPOSE_QUARANTINE",
+    "reason_codes": [
+      "SENSITIVITY_UNRESOLVED",
+      "RIGHTS_UNRESOLVED"
+    ],
+    "review_required": true,
+    "source_activation_allowed": false,
+    "raw_write_allowed": false,
+    "publication_allowed": false
+  },
+  "governance": {
+    "rights_state": "UNKNOWN",
+    "sensitivity_state": "UNKNOWN",
+    "evidence_refs": [],
+    "policy_refs": [
+      "policy:synthetic:source-admission-fixture"
+    ]
+  },
+  "claims": {
+    "deterministic_identity": true,
+    "idempotent_replay": true,
+    "cloudevents_core_attributes_present": true,
+    "cloudevents_conformance_claimed": false,
+    "network_access_performed": false,
+    "authority_created": false,
+    "source_activated": false,
+    "lifecycle_write_performed": false,
+    "released": false,
+    "published": false
+  }
+}

@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/object_family_domain_reference_profile.schema.json",
+  "title": "ObjectFamilyDomainReferenceProfileCandidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile_version",
+    "matrix_id",
+    "spec_hash",
+    "source_snapshot",
+    "families",
+    "summary",
+    "governance"
+  ],
+  "properties": {
+    "profile_version": {
+      "const": "kfm.object-family-domain-reference-candidate.v1"
+    },
+    "matrix_id": {
+      "type": "string",
+      "pattern": "^kfm:object-family-domain-reference:[a-f0-9]{24}$"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "source_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "atlas_ref",
+        "narrative_register_ref",
+        "domain_lane_register_ref",
+        "as_of",
+        "authority_state"
+      ],
+      "properties": {
+        "atlas_ref": {"type": "string", "minLength": 1, "maxLength": 240},
+        "narrative_register_ref": {"const": "docs/registers/OBJECT_FAMILY.md"},
+        "domain_lane_register_ref": {"const": "control_plane/domain_lane_register.yaml"},
+        "as_of": {"type": "string", "format": "date"},
+        "authority_state": {"const": "PROPOSAL_ONLY"}
+      }
+    },
+    "families": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {"$ref": "#/$defs/family"}
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family_count",
+        "domain_owned_count",
+        "cross_cutting_count",
+        "profile_state",
+        "canonical_register_written"
+      ],
+      "properties": {
+        "family_count": {"type": "integer", "minimum": 1, "maximum": 128},
+        "domain_owned_count": {"type": "integer", "minimum": 0, "maximum": 128},
+        "cross_cutting_count": {"type": "integer", "minimum": 0, "maximum": 128},
+        "profile_state": {"const": "REVIEW_REQUIRED"},
+        "canonical_register_written": {"const": false}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "owner_change_authorized",
+        "cross_domain_mutation_authorized",
+        "sensitivity_policy_evaluated",
+        "release_authorized",
+        "published",
+        "public_use_authorized"
+      ],
+      "properties": {
+        "fixture_only": {"const": true},
+        "owner_change_authorized": {"const": false},
+        "cross_domain_mutation_authorized": {"const": false},
+        "sensitivity_policy_evaluated": {"const": false},
+        "release_authorized": {"const": false},
+        "published": {"const": false},
+        "public_use_authorized": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "repo_path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 320,
+      "pattern": "^[a-zA-Z0-9_.-]+(?:/[a-zA-Z0-9_.-]+)+$"
+    },
+    "domain_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,63}$"
+    },
+    "owner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "domain_id",
+        "steward_role",
+        "contract_ref",
+        "assertion_basis"
+      ],
+      "properties": {
+        "kind": {"enum": ["DOMAIN", "CROSS_CUTTING"]},
+        "domain_id": {"oneOf": [{"$ref": "#/$defs/domain_id"}, {"type": "null"}]},
+        "steward_role": {
+          "oneOf": [
+            {"type": "string", "pattern": "^[a-z][a-z0-9_]{2,95}$"},
+            {"type": "null"}
+          ]
+        },
+        "contract_ref": {"$ref": "#/$defs/repo_path"},
+        "assertion_basis": {"const": "SOURCE_REPORTED"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"kind": {"const": "DOMAIN"}}},
+          "then": {
+            "properties": {
+              "domain_id": {"$ref": "#/$defs/domain_id"},
+              "steward_role": {"type": "null"}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"kind": {"const": "CROSS_CUTTING"}}},
+          "then": {
+            "properties": {
+              "domain_id": {"type": "null"},
+              "steward_role": {"type": "string", "pattern": "^[a-z][a-z0-9_]{2,95}$"}
+            }
+          }
+        }
+      ]
+    },
+    "sensitivity_default": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tier", "assertion_basis", "policy_effect"],
+      "properties": {
+        "tier": {"enum": ["T0", "T1", "T2", "T3", "T4", "VARIABLE", "CONTEXTUAL"]},
+        "assertion_basis": {"const": "PROPOSED_SOURCE_DEFAULT"},
+        "policy_effect": {"const": false}
+      }
+    },
+    "family": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family_id",
+        "display_name",
+        "owner",
+        "citing_domain_ids",
+        "sensitivity_default",
+        "relation_state",
+        "owner_change_authorized"
+      ],
+      "properties": {
+        "family_id": {"type": "string", "pattern": "^[a-z][a-z0-9_]{2,95}$"},
+        "display_name": {"type": "string", "minLength": 1, "maxLength": 160},
+        "owner": {"$ref": "#/$defs/owner"},
+        "citing_domain_ids": {
+          "type": "array",
+          "maxItems": 32,
+          "items": {"$ref": "#/$defs/domain_id"},
+          "uniqueItems": true
+        },
+        "sensitivity_default": {"$ref": "#/$defs/sensitivity_default"},
+        "relation_state": {"const": "CITE_ONLY"},
+        "owner_change_authorized": {"const": false}
+      }
+    }
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/source/source_probe_envelope.schema.json",
+  "title": "SourceProbeEnvelope",
+  "description": "Fixture-first, non-authoritative source probe envelope with profile-specific anti-collapse rules.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type", "schema_version", "probe_id", "profile", "observed_at",
+    "source_descriptor_ref", "source_head", "scope", "materiality",
+    "profile_data", "governance", "spec_hash"
+  ],
+  "properties": {
+    "object_type": {"const": "SourceProbeEnvelope"},
+    "schema_version": {"const": "1.0.0"},
+    "probe_id": {"type": "string", "pattern": "^source-probe:[a-z0-9][a-z0-9._:-]{7,191}$"},
+    "profile": {"enum": ["NASS_AGGREGATE", "EDNA_MONITORING", "KGS_GEOLOGY", "LOC_CHRONICLING_AMERICA"]},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "source_descriptor_ref": {"type": "string", "minLength": 1, "maxLength": 320},
+    "source_head": {
+      "type": "object", "additionalProperties": false,
+      "required": ["etag", "last_modified", "content_sha256"],
+      "properties": {
+        "etag": {"type": ["string", "null"]},
+        "last_modified": {"type": ["string", "null"]},
+        "content_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "scope": {
+      "type": "object", "additionalProperties": false,
+      "required": ["geography_level", "geography_id"],
+      "properties": {
+        "geography_level": {"enum": ["NATIONAL", "STATE", "COUNTY", "WATERSHED", "SITE", "FIELD", "PARCEL", "UNKNOWN"]},
+        "geography_id": {"type": "string", "minLength": 1, "maxLength": 160}
+      }
+    },
+    "materiality": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "reason_codes"],
+      "properties": {
+        "status": {"enum": ["NO_CHANGE", "CHANGED", "HOLD", "DENY", "ERROR"]},
+        "reason_codes": {
+          "type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[A-Z0-9_]+$"}
+        }
+      }
+    },
+    "profile_data": {"type": "object"},
+    "governance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["fixture_only", "network_access", "source_activation", "lifecycle_write", "promotion_allowed", "publication_allowed"],
+      "properties": {
+        "fixture_only": {"const": true},
+        "network_access": {"const": "DENIED"},
+        "source_activation": {"const": false},
+        "lifecycle_write": {"const": false},
+        "promotion_allowed": {"const": false},
+        "publication_allowed": {"const": false}
+      }
+    },
+    "spec_hash": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+  }
+}

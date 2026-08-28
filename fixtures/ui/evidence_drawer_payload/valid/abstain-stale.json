@@ -1,0 +1,23 @@
+{
+  "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+  "id": "kfm:ui:evidence-drawer:abstain-stale-001",
+  "outcome": "ABSTAIN",
+  "reason_code": "STALE_EVIDENCE",
+  "title": "Synthetic stale observation",
+  "summary": "STALE_SUMMARY_MUST_NOT_RENDER_AS_A_CLAIM",
+  "evidence_refs": [
+    "kfm:evidence:synthetic:stale-001"
+  ],
+  "citations": [],
+  "limitations": [
+    "The fixture is intentionally stale."
+  ],
+  "trust_state": {
+    "source_role": "official",
+    "policy": "ABSTAIN",
+    "review": "REVIEWED",
+    "release": "RELEASED",
+    "freshness": "STALE",
+    "correction": "NONE"
+  }
+}

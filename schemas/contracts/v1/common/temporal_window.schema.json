@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/temporal_window.schema.json",
+  "title": "temporal_window",
+  "type": "object",
+  "description": "KFM contract for temporal_window.",
+  "x-kfm": {
+    "contract_doc": "contracts/common/temporal_window.md",
+    "fixtures_root": "fixtures/contracts/v1/common/temporal_window/",
+    "validator": "tools/validators/validate_temporal_window.py",
+    "policy": "policy/common/",
+    "status": "PROPOSED"
+  },
+  "properties": {
+    "start": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "end": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "time_kind": {
+      "type": "string",
+      "enum": [
+        "observed",
+        "published",
+        "ingested",
+        "effective",
+        "corrected",
+        "superseded"
+      ]
+    }
+  },
+  "required": [
+    "start",
+    "end",
+    "time_kind"
+  ],
+  "additionalProperties": false
+}

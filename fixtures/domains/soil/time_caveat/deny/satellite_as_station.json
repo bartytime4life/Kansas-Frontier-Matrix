@@ -1,0 +1,29 @@
+{
+  "candidate_id": "soil-time-satellite-station-deny-0001",
+  "schema_version": "1.0.0",
+  "support_type": "satellite_soil_moisture_grid",
+  "source_family": "nasa_smap",
+  "source_role": "satellite_grid_measurement",
+  "claim_kind": "current_station_condition",
+  "time_basis": {
+    "source_published_at": "2026-04-15T12:00:00Z",
+    "observed_at": "2026-04-15T11:00:00Z",
+    "valid_from": "2026-04-15T11:00:00Z",
+    "valid_to": "2026-04-15T13:00:00Z",
+    "retrieved_at": "2026-04-15T14:05:00Z",
+    "evaluated_at": "2026-04-15T14:10:00Z",
+    "source_timezone": "UTC",
+    "cadence_seconds": null,
+    "stale_state": "FRESH"
+  },
+  "evidence_refs": [
+    "evidence:synthetic-satellite-grid"
+  ],
+  "governance": {
+    "source_activated": false,
+    "policy_evaluated": false,
+    "release_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  }
+}

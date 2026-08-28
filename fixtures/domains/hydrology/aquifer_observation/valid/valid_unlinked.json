@@ -1,0 +1,40 @@
+{
+  "id": "kfm:hydrology:aquifer-observation:synthetic-001",
+  "version": "v0.3",
+  "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "object_type": "AquiferObservation",
+  "source_descriptor_ref": "source:synthetic-groundwater-observations:v1",
+  "source_record_ref": "synthetic:groundwater-reading:001",
+  "source_role": "observed",
+  "parameter": {
+    "code": "GW_LEVEL",
+    "name": "groundwater level"
+  },
+  "measurement": {
+    "source_value": 42.5,
+    "unit": "ft",
+    "basis": {
+      "reference_type": "depth_below_measuring_point",
+      "reference_ref": "synthetic:measuring-point:001",
+      "method_ref": "synthetic:method:tape"
+    },
+    "qualifier": "synthetic test value",
+    "status": "final",
+    "no_data": false
+  },
+  "observed_time": "2026-01-15T12:00:00Z",
+  "source_time": "2026-01-16T00:00:00Z",
+  "retrieval_time": "2026-01-17T00:00:00Z",
+  "spatial_context": {
+    "site_ref": "synthetic:monitoring-site:001",
+    "groundwater_well_ref": "kfm:hydrology:groundwater-well:synthetic-001",
+    "geometry_role": "withheld"
+  },
+  "evidence_refs": [
+    "evidence:synthetic-groundwater-reading:001"
+  ],
+  "quality_flags": [
+    "synthetic_fixture",
+    "aquifer_context_unresolved"
+  ]
+}

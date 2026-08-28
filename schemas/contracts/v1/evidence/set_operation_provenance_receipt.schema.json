@@ -1,0 +1,200 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/set_operation_provenance_receipt.schema.json",
+  "title": "SetOperationProvenanceReceiptCandidate",
+  "description": "Fixture-only process-memory declaration for set-operation inputs, semantics, duplicate policy, output, and provenance without authority effects.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_card",
+    "observed_at",
+    "intended_use",
+    "execution_state",
+    "operator",
+    "inputs",
+    "output",
+    "evidence",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "SetOperationProvenanceReceiptCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.evidence.set-operation-provenance-receipt.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-068"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "intended_use": {
+      "enum": [
+        "INTERNAL_QA",
+        "CROSS_SOURCE_RECONCILIATION",
+        "CATALOG_CLOSURE_CANDIDATE",
+        "PUBLIC_CLAIM_SUPPORT_CANDIDATE"
+      ]
+    },
+    "execution_state": {"enum": ["COMPLETE", "INCOMPLETE", "ERROR"]},
+    "operator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_family",
+        "operation_type",
+        "duplicate_policy",
+        "alignment_policy",
+        "null_semantics",
+        "method_definition",
+        "rationale_ref"
+      ],
+      "properties": {
+        "execution_family": {"enum": ["SQL", "DATAFRAME", "ETL", "GRAPH", "CUSTOM"]},
+        "operation_type": {
+          "enum": [
+            "UNION_DISTINCT",
+            "UNION_ALL",
+            "INTERSECT",
+            "EXCEPT",
+            "SYMMETRIC_DIFFERENCE",
+            "CUSTOM"
+          ]
+        },
+        "duplicate_policy": {"enum": ["DISTINCT", "RETAIN_ALL", "CUSTOM"]},
+        "alignment_policy": {"enum": ["BY_NAME", "BY_POSITION", "GRAPH_IDENTITY", "CUSTOM"]},
+        "null_semantics": {"$ref": "#/$defs/resolved_reference"},
+        "method_definition": {"$ref": "#/$defs/resolved_reference"},
+        "rationale_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "inputs": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 16,
+      "items": {"$ref": "#/$defs/input_binding"}
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "digest", "row_count", "schema_ref"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/ref"},
+        "digest": {"$ref": "#/$defs/sha256"},
+        "row_count": {"$ref": "#/$defs/nullable_count"},
+        "schema_ref": {"$ref": "#/$defs/ref"}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "query_plan",
+        "reconciliation_rule",
+        "evidence_bundle_refs",
+        "review_record_refs",
+        "public_interpretation_caveat"
+      ],
+      "properties": {
+        "query_plan": {"$ref": "#/$defs/resolved_reference"},
+        "reconciliation_rule": {"$ref": "#/$defs/resolved_reference"},
+        "evidence_bundle_refs": {"$ref": "#/$defs/ref_array"},
+        "review_record_refs": {"$ref": "#/$defs/ref_array"},
+        "public_interpretation_caveat": {
+          "oneOf": [
+            {"type": "string", "minLength": 12, "maxLength": 1000},
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "DECLARATION_ONLY",
+          "NO_EVIDENCE_RESOLUTION",
+          "NO_PUBLICATION_AUTHORITY",
+          "NO_QUERY_EXECUTION"
+        ]
+      }
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_authority",
+        "reconciliation_authority",
+        "evidence_authority",
+        "catalog_authority",
+        "policy_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "source_authority": {"const": false},
+        "reconciliation_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "catalog_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "ref": {"type": "string", "minLength": 3, "maxLength": 512, "pattern": "^\\S+$"},
+    "nullable_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "nullable_count": {
+      "oneOf": [{"type": "integer", "minimum": 0, "maximum": 9007199254740991}, {"type": "null"}]
+    },
+    "ref_array": {
+      "type": "array",
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "resolved_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "digest", "resolution"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/ref"},
+        "digest": {"$ref": "#/$defs/sha256"},
+        "resolution": {"enum": ["RESOLVED", "UNRESOLVED"]}
+      }
+    },
+    "input_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ordinal", "role", "ref", "digest", "resolution", "row_count", "schema_ref"],
+      "properties": {
+        "ordinal": {"type": "integer", "minimum": 0, "maximum": 15},
+        "role": {"enum": ["MEMBER", "MINUEND", "SUBTRAHEND"]},
+        "ref": {"$ref": "#/$defs/ref"},
+        "digest": {"$ref": "#/$defs/sha256"},
+        "resolution": {"enum": ["RESOLVED", "UNRESOLVED"]},
+        "row_count": {"$ref": "#/$defs/nullable_count"},
+        "schema_ref": {"$ref": "#/$defs/ref"}
+      }
+    }
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/evidence/set_operation_provenance_receipt.md",
+    "fixtures_root": "fixtures/contracts/v1/evidence/set_operation_provenance_receipt/",
+    "validator": "tools/validators/evidence/validate_set_operation_provenance_receipt.py",
+    "status": "PROPOSED_INACTIVE",
+    "network": false,
+    "authority_effects": false
+  }
+}

@@ -1,0 +1,177 @@
+{
+  "receipt_id": "genrec-pass18-public-map-service-slo-assessment-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/public-map-service-slo-assessment.yml",
+    "contracts/validation/public_map_service_slo_assessment.md",
+    "docs/intake/exploratory/pass-18-public-map-service-slo-assessment-source-map.md",
+    "fixtures/contracts/v1/validation/public_map_service_slo_assessment/cases.json",
+    "schemas/contracts/v1/validation/public_map_service_slo_assessment.schema.json",
+    "tests/validators/test_validate_public_map_service_slo_assessment.py",
+    "tools/validators/validate_public_map_service_slo_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/public-map-service-slo-assessment.yml": "sha256:b6199ac23681d6c855014950e280ef14556e2176895fcb7390777057a0aafc5e",
+    "contracts/validation/public_map_service_slo_assessment.md": "sha256:fa493769aab48b8173c99ba5620c65447a3ff410e2b9f7d9a5f3b3a651f4ef72",
+    "docs/intake/exploratory/pass-18-public-map-service-slo-assessment-source-map.md": "sha256:b84b93c05a957278a4a4984a9d47b36f26d65174a0b87514bda41a1e4f454eb8",
+    "fixtures/contracts/v1/validation/public_map_service_slo_assessment/cases.json": "sha256:ec77fb104b7a0bfffe74ff4c9946b2bf26cc6765dea11b368ed1cb955c75cc06",
+    "schemas/contracts/v1/validation/public_map_service_slo_assessment.schema.json": "sha256:99a58af446c328c964d68235717f707c2eb001c24782fb6dc6020d99035aa8d9",
+    "tests/validators/test_validate_public_map_service_slo_assessment.py": "sha256:66e66b37181b0222c18455bb9df05072b25c851c8d0e7ed4ffae5527c6f8a673",
+    "tools/validators/validate_public_map_service_slo_assessment.py": "sha256:a1ddf74a31eccd583987403fd5c3e4baa3ead4b71d98c8a8894ef862dcc3632d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:fa493769aab48b8173c99ba5620c65447a3ff410e2b9f7d9a5f3b3a651f4ef72",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive private-corpus discovery",
+      "GitHub repository inspection and draft PR publication",
+      "local PDF rendering and deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9",
+      "sha256:662f96cabb591ac3e82bdcba26e33b4e82eec0a52a25dded18168ac096af70a8",
+      "sha256:e4f00d6d820f5abb26622da684618f9d5d0a466e9a4ddbdf5e597294aac73ea4",
+      "sha256:dc58742ff300319153c11e336b108fe59c213c4945db3c253aceceac9876a201",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "Supplied Pass 18 atlas; private discovery identifier withheld"
+    ],
+    "evidence_refs": [
+      "attachment://supplied-pass18-atlas#card=KFM-P18-INV-500",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5aa2818d4c16eaa7e2ff94a2591710e03979bebd/docs/architecture/map-master/PERFORMANCE_BUDGETS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5aa2818d4c16eaa7e2ff94a2591710e03979bebd/contracts/release/operational_trust_rollup.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5aa2818d4c16eaa7e2ff94a2591710e03979bebd/contracts/validation/pipeline_replay_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5aa2818d4c16eaa7e2ff94a2591710e03979bebd/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/public-map-service-slo-assessment.yml": "CONFIRMED",
+    "contracts/validation/public_map_service_slo_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-public-map-service-slo-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/validation/public_map_service_slo_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/validation/public_map_service_slo_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_public_map_service_slo_assessment.py": "CONFIRMED",
+    "tools/validators/validate_public_map_service_slo_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Eleven deterministic public-map service SLO assessment tests passed."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Thirty-four exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."
+    },
+    {
+      "gate": "adjacent-release-and-map-regression",
+      "outcome": "PASS",
+      "reason": "Forty-seven pipeline replay, operational trust, rollback, map release, promotion decision, and map performance-governance tests passed."
+    },
+    {
+      "gate": "documentation-meta-block-profile",
+      "outcome": "PASS",
+      "reason": "The twenty-four-test profile passed; the two new documents produced no failures and only expected review-only registry warnings."
+    },
+    {
+      "gate": "local-document-link-check",
+      "outcome": "PASS",
+      "reason": "The eighteen-test link-check profile and explicit checks of both new documents passed."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "full-validator-unittest-discovery",
+      "outcome": "FAIL",
+      "reason": "The 1,469-test repository lane reported five failures and thirteen errors in three pre-existing validator modules. An exact 31-test replay on untouched base commit 5aa2818d4c16eaa7e2ff94a2591710e03979bebd reproduced the same five failures and thirteen errors; the eleven new public-map service SLO tests passed inside the full run."
+    },
+    {
+      "gate": "git-diff-check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass18-public-map-service-slo-card",
+      "validated": true,
+      "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-500"
+    },
+    {
+      "id": "map-performance-budgets",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5aa2818d4c16eaa7e2ff94a2591710e03979bebd/docs/architecture/map-master/PERFORMANCE_BUDGETS.md"
+    },
+    {
+      "id": "operational-trust-adjacent-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5aa2818d4c16eaa7e2ff94a2591710e03979bebd/contracts/release/operational_trust_rollup.md"
+    },
+    {
+      "id": "pipeline-replay-adjacent-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5aa2818d4c16eaa7e2ff94a2591710e03979bebd/contracts/validation/pipeline_replay_assessment.md"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5aa2818d4c16eaa7e2ff94a2591710e03979bebd/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T17:18:20Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only public-map service SLO assessment. It evaluates a declared observation window, integer-basis-point availability objective, exact error budget, latency target, evidence references, review state, and rollback readiness without querying a live service, authenticating telemetry, setting production thresholds, or creating automatic promotion, rollback, policy, review, release, deployment, publication, or public-use authority."
+}

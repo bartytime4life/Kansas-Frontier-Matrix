@@ -1,0 +1,11 @@
+{
+  "case_id": "tile-manifest-minzoom-invalid",
+  "expected": {
+    "issue_codes": [
+      "TILE_MANIFEST_MINZOOM_INVALID"
+    ],
+    "status": "DENY"
+  },
+  "fixture_profile": "kfm.pmtiles.tile-artifact-manifest.compat.v1",
+  "mutation": "manifest_minzoom_invalid"
+}

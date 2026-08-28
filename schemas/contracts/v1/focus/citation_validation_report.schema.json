@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schemas/contracts/v1/focus/citation_validation_report.schema.json",
+  "title": "Citation Validation Report",
+  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {},
+  "x-kfm": {
+    "status": "PROPOSED",
+    "path": "schemas/contracts/v1/focus/citation_validation_report.schema.json",
+    "source_docs": [
+      "docs/domains/archaeology/MAP_UI_CONTRACTS.md"
+    ],
+    "contract_doc": null
+  }
+}

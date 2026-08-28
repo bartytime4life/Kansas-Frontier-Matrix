@@ -1,0 +1,82 @@
+{
+  "breaker": {
+    "consecutive_failures": 0,
+    "cooldown_elapsed": false,
+    "probe_succeeded": null,
+    "state": "CLOSED"
+  },
+  "contract_version": "v1",
+  "delivery": {
+    "atomic_commit_verified": true,
+    "consumer_idempotency_verified": true,
+    "dead_letter": null,
+    "durability_mode": "TRANSACTIONAL_OUTBOX",
+    "emits_event": true
+  },
+  "input_manifest": {
+    "dataset_id": "usgs-nwis-kansas",
+    "parameters": {
+      "period": "P1D",
+      "state": "KS"
+    },
+    "source_head": {
+      "etag": "\"fixture-etag\"",
+      "retrieved_at": "2026-08-08T00:00:00Z"
+    }
+  },
+  "kill_switch": {
+    "activation_receipt_ref": null,
+    "in_flight_policy": "CONTINUE",
+    "mode": "RUNNING",
+    "previous_mode": "RUNNING",
+    "reenable_review_ref": null
+  },
+  "pipeline_id": "hydrology.daily-observations",
+  "policy": {
+    "backpressure": {
+      "max_in_flight": 20,
+      "max_oldest_age_seconds": 900,
+      "max_queue_depth": 1000,
+      "shed_allowed": false
+    },
+    "breaker": {
+      "failure_threshold": 5
+    },
+    "retry": {
+      "base_delay_seconds": 2,
+      "deadline_seconds": 300,
+      "idempotency_retention_seconds": 604800,
+      "jitter_fraction": 0.25,
+      "max_attempts": 5,
+      "max_delay_seconds": 60,
+      "multiplier": 2
+    }
+  },
+  "queue": {
+    "contracts_match_production": true,
+    "depth": 12,
+    "in_flight": 2,
+    "isolated_outputs": true,
+    "oldest_age_seconds": 30,
+    "partition": "FULL",
+    "policies_match_production": true,
+    "public_side_effects": false,
+    "schemas_match_production": true
+  },
+  "retry_context": {
+    "attempt_number": 2,
+    "elapsed_seconds": 15,
+    "error_class": "RATE_LIMITED",
+    "jitter_unit": 0.75,
+    "retry_after_seconds": 20
+  },
+  "step_id": "normalize",
+  "trigger": {
+    "authorization_ref": null,
+    "concurrency_group": "hydrology.daily-observations",
+    "environment": "staging",
+    "environment_gate_ref": "kfm://decision/environment/staging-gate-001",
+    "secret_scope": "DOMAIN_SCOPED",
+    "type": "schedule"
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "receipt_id": "genrec-publication-deny-dry-run-current-20260814",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "Makefile",
+    "tests/release/README.md",
+    "tests/release/test_publication_deny_dry_run.py",
+    "tools/release/README.md",
+    "tools/release/release_dry_run.py"
+  ],
+  "artifact_hashes": {
+    "Makefile": "sha256:03c63f4513483fa7e1c64e70480c7f0b96202a8e53607978b69da75552d50486",
+    "tests/release/README.md": "sha256:f69b064bad7093bafe7f5d8faa330f6c9d45f465e5c3b6a176d990ed8fe37476",
+    "tests/release/test_publication_deny_dry_run.py": "sha256:41ac054d5b92e03f5f7b4900ccaf6cfcc5f34a1722e559163661bd62b3b2be50",
+    "tools/release/README.md": "sha256:d3e3a6e38e889ed52c7b65dd73060cb3a893d871a4423141b903ce83481454a4",
+    "tools/release/release_dry_run.py": "sha256:1b6aa53ebdde595e64f042ec41b24752431d168ff46c9568d1ff28004b8f358b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-14"
+  },
+  "prompt_or_contract": "sha256:7f3a8dc38a3dc1e05581c50516d2b9aac824da53b12458e2e373c29d6a25cc7e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "repository-native validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:03c63f4513483fa7e1c64e70480c7f0b96202a8e53607978b69da75552d50486"
+    ],
+    "attached_docs": [
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md",
+      "Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf"
+    ],
+    "evidence_refs": [
+      "repo:main@8bda119d223573a58035bd0ce420066c0f961640",
+      "repo:data/receipts/generated/genrec-publication-deny-dry-run-20260809.json@8bda119d223573a58035bd0ce420066c0f961640",
+      "repo:data/receipts/generated/genrec-makefile-validator-profiles-03c63f45.json@8bda119d223573a58035bd0ce420066c0f961640",
+      "actions:release-dry-run/run/31847632017/job/94917187909",
+      "repo:commit/a5ee509031f0bfb469dc23707796c013b9cfc2a0"
+    ]
+  },
+  "truth_labels": {
+    "Makefile": "CONFIRMED",
+    "tests/release/README.md": "CONFIRMED",
+    "tests/release/test_publication_deny_dry_run.py": "CONFIRMED",
+    "tools/release/README.md": "CONFIRMED",
+    "tools/release/release_dry_run.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "baseline-exact-head-failure",
+      "outcome": "PASS",
+      "reason": "Exact-head release-dry-run run 31847632017 failed only at artifact_paths/1 because the historical receipt retained the pre-profile Makefile digest."
+    },
+    {
+      "gate": "historical-receipt-preservation",
+      "outcome": "PASS",
+      "reason": "The 2026-08-09 receipt remains unchanged and is retained as process-memory lineage."
+    },
+    {
+      "gate": "current-makefile-binding",
+      "outcome": "PASS",
+      "reason": "The current Makefile SHA-256 is independently bound by genrec-makefile-validator-profiles-03c63f45.json."
+    },
+    {
+      "gate": "unchanged-support-artifacts",
+      "outcome": "PASS",
+      "reason": "Commit history shows the four release helper, test, and documentation artifacts have not changed since a5ee509031f0bfb469dc23707796c013b9cfc2a0."
+    },
+    {
+      "gate": "bounded-artifact-integrity",
+      "outcome": "PASS",
+      "reason": "The successor binds the current five-file implementation surface without binding itself or claiming proof, review, release, or publication authority."
+    },
+    {
+      "gate": "hosted-exact-head-release-dry-run",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull-request creation and exact-head Actions execution."
+    }
+  ],
+  "policy_decisions": [
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@8bda119d223573a58035bd0ce420066c0f961640"
+  ],
+  "citations": [
+    {
+      "id": "PASS20-EXP-010",
+      "validated": true,
+      "evidence_ref": "attached:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#EXP-010"
+    },
+    {
+      "id": "AI-BUILD-CONTRACT-GENERATED-RECEIPT",
+      "validated": true,
+      "evidence_ref": "attached:Kansas Frontier Matrix — AI Build Operating Contract.md#34"
+    },
+    {
+      "id": "ADR-0029-DIRECTORY-RULES-V2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@8bda119d223573a58035bd0ce420066c0f961640"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-14T23:30:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Current process-memory successor for the publication-denial dry-run implementation. The historical 2026-08-09 receipt is retained unchanged. This successor binds the current Makefile plus the unchanged helper, test, and documentation artifacts; the workflow orchestration change is covered separately by the repair PR receipt. It is not truth, proof, policy approval, review approval, release authority, or publication authority."
+}

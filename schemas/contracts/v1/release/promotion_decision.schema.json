@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/release/promotion_decision.schema.json",
+  "title": "promotion_decision",
+  "type": "object",
+  "description": "Governed promotion decision for moving a domain run from candidate to published readiness.",
+  "x-kfm": {
+    "contract_doc": "contracts/release/promotion_decision.md",
+    "fixtures_root": "fixtures/release/promotion_decision/",
+    "validator": "tools/validators/release/validate_promotion_decision.py",
+    "policy": "policy/promotion/",
+    "status": "PROPOSED"
+  },
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "version": {"type": "string", "const": "v1"},
+    "domain": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "decision": {"type": "string", "enum": ["APPROVE", "DENY", "ABSTAIN"]},
+    "evidence_ref": {"type": "string", "minLength": 1},
+    "evidence_bundle_uri": {"type": "string", "minLength": 1},
+    "rollback_card_uri": {"type": "string", "minLength": 1},
+    "policy_bundle": {"type": "string", "minLength": 1},
+    "decided_at": {"type": "string", "format": "date-time"},
+    "review": {
+      "type": "object",
+      "properties": {
+        "reviewer": {"type": "string", "minLength": 1},
+        "ticket": {"type": "string", "minLength": 1}
+      },
+      "required": ["reviewer", "ticket"],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "id", "version", "domain", "run_id", "decision", "evidence_ref", "evidence_bundle_uri", "rollback_card_uri", "policy_bundle", "decided_at", "review"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {"properties": {"domain": {"const": "hydrology"}}},
+      "then": {
+        "properties": {
+          "id": {"pattern": "^promo:hydrology:[A-Za-z0-9._:-]+$"}
+        }
+      }
+    }
+  ]
+}

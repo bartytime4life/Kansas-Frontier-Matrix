@@ -1,0 +1,353 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/data/catalog_closure_packet.schema.json",
+  "title": "CatalogClosurePacket",
+  "description": "Immutable catalog-closure readiness packet. Validation grants no proof, policy, review, promotion, release, publication, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "closure_id",
+    "hash_profile",
+    "spec_hash",
+    "scope",
+    "catalog_records",
+    "source_descriptor_refs",
+    "evidence_refs",
+    "validation_report_refs",
+    "policy",
+    "review",
+    "release",
+    "provenance",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "CatalogClosurePacket"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "closure_id": {
+      "type": "string",
+      "pattern": "^catalog-closure:[a-z0-9][a-z0-9_.:-]{7,240}$"
+    },
+    "hash_profile": {
+      "const": "kfm-fixture-json-v1"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "artifact_digest",
+        "requested_transition",
+        "audience"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 640,
+          "pattern": "\\S"
+        },
+        "artifact_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "requested_transition": {
+          "enum": [
+            "CATALOG_REVIEW",
+            "RELEASE_REVIEW"
+          ]
+        },
+        "audience": {
+          "enum": [
+            "INTERNAL",
+            "STEWARD",
+            "PUBLIC_CANDIDATE"
+          ]
+        }
+      }
+    },
+    "catalog_records": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "record_type",
+          "record_ref",
+          "artifact_id",
+          "artifact_digest",
+          "release_candidate_ref",
+          "resolved"
+        ],
+        "properties": {
+          "record_type": {
+            "enum": [
+              "DCAT",
+              "PROV",
+              "STAC"
+            ]
+          },
+          "record_ref": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 640,
+            "pattern": "\\S"
+          },
+          "artifact_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 640,
+            "pattern": "\\S"
+          },
+          "artifact_digest": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "release_candidate_ref": {
+            "oneOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 640,
+                "pattern": "\\S"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "resolved": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "source_descriptor_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 640,
+        "pattern": "\\S"
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 640,
+        "pattern": "\\S"
+      }
+    },
+    "validation_report_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 640,
+        "pattern": "\\S"
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "policy_decision_ref",
+        "rights_resolved",
+        "sensitivity_resolved"
+      ],
+      "properties": {
+        "outcome": {
+          "enum": [
+            "ALLOW",
+            "HOLD",
+            "DENY"
+          ]
+        },
+        "policy_decision_ref": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 640,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rights_resolved": {
+          "type": "boolean"
+        },
+        "sensitivity_resolved": {
+          "type": "boolean"
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "review_record_ref"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "NOT_REQUIRED",
+            "PENDING",
+            "APPROVED",
+            "REJECTED"
+          ]
+        },
+        "review_record_ref": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 640,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "release_candidate_ref",
+        "rollback_ref",
+        "correction_refs"
+      ],
+      "properties": {
+        "release_candidate_ref": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 640,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rollback_ref": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 640,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "correction_refs": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 128,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 640,
+            "pattern": "\\S"
+          }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "run_receipt_ref",
+        "recorded_at"
+      ],
+      "properties": {
+        "run_receipt_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 640,
+          "pattern": "\\S"
+        },
+        "recorded_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "proof_closed",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed"
+      ],
+      "properties": {
+        "proof_closed": {
+          "type": "boolean"
+        },
+        "promotion_authorized": {
+          "type": "boolean"
+        },
+        "release_authorized": {
+          "type": "boolean"
+        },
+        "publication_authorized": {
+          "type": "boolean"
+        },
+        "public_use_allowed": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/data/catalog_closure_packet.md",
+    "fixtures_root": "fixtures/data/catalog_closure_packet/",
+    "validator": "tools/validators/catalog_closure/validate_catalog_closure.py",
+    "tests": "tests/validators/test_validate_catalog_closure.py",
+    "authority": "catalog_closure_readiness_only",
+    "non_effects": [
+      "does_not_create_or_persist_catalog_records_or_catalog_matrix",
+      "does_not_close_evidence_or_proof",
+      "does_not_approve_policy_review_promotion_release_or_publication"
+    ]
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "receipt_id": "genrec-pass18-three-d-documentation-paradata-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/three-d-documentation-paradata.yml",
+    "contracts/domains/archaeology/three_d_documentation.md",
+    "docs/intake/exploratory/pass-18-three-d-documentation-paradata-source-map.md",
+    "fixtures/contracts/v1/domains/archaeology/three_d_documentation/cases.json",
+    "schemas/contracts/v1/domains/archaeology/three_d_documentation.schema.json",
+    "tests/validators/domains/archaeology/test_validate_three_d_documentation.py",
+    "tools/validators/domains/archaeology/validate_three_d_documentation.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/three-d-documentation-paradata.yml": "sha256:e6a6259178e300df455d6e26b3f388b31d7303bce577fac7850b666d56635dfb",
+    "contracts/domains/archaeology/three_d_documentation.md": "sha256:6f47ab6561c58a78718d139528747484463d5b3eeae875d921fd105449332b45",
+    "docs/intake/exploratory/pass-18-three-d-documentation-paradata-source-map.md": "sha256:c7798dec5a4bb9bf4bd890bf7b8ca68cb18a8501f1c9b040092b8031b868686e",
+    "fixtures/contracts/v1/domains/archaeology/three_d_documentation/cases.json": "sha256:8023a4401d0b52cacc9800539f6d1f667729db488b78a34bb20cda88312a5720",
+    "schemas/contracts/v1/domains/archaeology/three_d_documentation.schema.json": "sha256:f3e7a06dbd75f94585bc1fe7cff10b407d6f7c15b283d33ce702834fb1747934",
+    "tests/validators/domains/archaeology/test_validate_three_d_documentation.py": "sha256:8008c7da5308cc452d09f8e6fd1c52a516880391ba8b694e17588c357ca964f3",
+    "tools/validators/domains/archaeology/validate_three_d_documentation.py": "sha256:d5e55c0879358622434035641e78cc66cdfaaed531d48e34ea7b560f848df867"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:6f47ab6561c58a78718d139528747484463d5b3eeae875d921fd105449332b45",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connected-corpus discovery",
+      "GitHub repository inspection and publication",
+      "local PDF text and visual inspection",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"
+    ],
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#card=KFM-P18-INV-410",
+      "gdrive://1gDC9HlpspL5hlQUjOTlYnZe4XJBqzgDb#Archaeological-3D-GIS-pages-24-31-42",
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-Full-Atlas-seed-cards",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/contracts/domains/archaeology/three_d_documentation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/schemas/contracts/v1/domains/archaeology/three_d_documentation.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/three-d-documentation-paradata.yml": "CONFIRMED",
+    "contracts/domains/archaeology/three_d_documentation.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-three-d-documentation-paradata-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/domains/archaeology/three_d_documentation/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/domains/archaeology/three_d_documentation.schema.json": "PROPOSED",
+    "tests/validators/domains/archaeology/test_validate_three_d_documentation.py": "CONFIRMED",
+    "tools/validators/domains/archaeology/validate_three_d_documentation.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Eight deterministic focused tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Twenty-one exact synthetic PASS, ABSTAIN, DENY, and ERROR cases matched expected findings."},
+    {"gate": "adjacent-three-d-and-lidar-regression", "outcome": "PASS", "reason": "Thirty-nine focused ThreeDDocumentation, renderer-admission, LiDAR-manifest, and LiDAR-derived-lineage tests passed."},
+    {"gate": "aggregate-repository-validation", "outcome": "PASS", "reason": "All eight registered aggregate validators and 451 schema/contract tests plus 29 subtests passed."},
+    {"gate": "documentation-meta-block-profile", "outcome": "PASS", "reason": "Both changed metadata blocks passed the required profile."},
+    {"gate": "local-document-link-check", "outcome": "PASS"},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "git-diff-check", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed draft pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {"id": "pass18-three-d-paradata-card", "validated": true, "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#card=KFM-P18-INV-410"},
+    {"id": "archaeological-three-d-gis-source", "validated": true, "evidence_ref": "gdrive://1gDC9HlpspL5hlQUjOTlYnZe4XJBqzgDb#pages-24-31-42"},
+    {"id": "connected-seed-card-doctrine", "validated": true, "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho"},
+    {"id": "existing-three-d-semantic-owner", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/contracts/domains/archaeology/three_d_documentation.md"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T23:08:28Z",
+  "emitter": "OpenAI Codex via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Closes the existing ThreeDDocumentation scaffold with a fixture-only paradata profile derived from Pass 18 card KFM-P18-INV-410. The packet validates declaration coherence only and does not access or mutate assets, expose coordinates, establish evidence or interpretation, decide policy/review, or authorize release, deployment, publication, or public use."
+}

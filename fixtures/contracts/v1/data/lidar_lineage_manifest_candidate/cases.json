@@ -1,0 +1,337 @@
+{
+  "base": {
+    "profile_version": "kfm.lidar-lineage-manifest-candidate.v1",
+    "manifest_id": "kfm:lidar-lineage-manifest:000000000000000000000000",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_asset": {
+      "source_descriptor_ref": "kfm://source/usgs/3dep/synthetic-kansas-county",
+      "source_role": "OBSERVED_POINT_CLOUD",
+      "collection_program": "USGS 3DEP synthetic fixture",
+      "collection_id": "fixture:3dep:ks-county:2025",
+      "acquired_from": "2025-02-01T00:00:00Z",
+      "acquired_to": "2025-02-14T23:59:59Z",
+      "sensor": "synthetic airborne lidar",
+      "horizontal_crs": "EPSG:26914",
+      "vertical_crs": "EPSG:5703",
+      "vertical_datum": "NAVD88",
+      "vertical_unit": "metre",
+      "point_density_per_m2": 8.0,
+      "classification_standard": "ASPRS LAS 1.4 synthetic fixture",
+      "available_class_codes": [
+        1,
+        2,
+        6,
+        9,
+        17
+      ],
+      "asset_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "media_type": "application/vnd.laz"
+    },
+    "processing": {
+      "tool_name": "fixture-terrain-builder",
+      "tool_version": "1.0.0",
+      "parameters_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "selected_class_codes": [
+        2
+      ],
+      "vertical_transform": {
+        "applied": false,
+        "source_vertical_crs": "EPSG:5703",
+        "target_vertical_crs": "EPSG:5703",
+        "operation_ref": null,
+        "parameters_digest": null
+      }
+    },
+    "derived_artifacts": [
+      {
+        "artifact_id": "county-ground-copc",
+        "artifact_kind": "POINT_CLOUD_COPC",
+        "artifact_ref": "kfm://artifact/lidar/fixture/county-ground-copc",
+        "artifact_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "representation_role": "DERIVED_POINT_CLOUD",
+        "vertical_crs": "EPSG:5703",
+        "sensitivity_transform_ref": "kfm://transform/lidar/fixture/remove-sensitive-returns"
+      },
+      {
+        "artifact_id": "county-terrain-cog",
+        "artifact_kind": "TERRAIN_COG",
+        "artifact_ref": "kfm://artifact/lidar/fixture/county-terrain-cog",
+        "artifact_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "representation_role": "DERIVED_TERRAIN",
+        "vertical_crs": "EPSG:5703",
+        "sensitivity_transform_ref": "kfm://transform/lidar/fixture/remove-sensitive-returns"
+      },
+      {
+        "artifact_id": "county-terrain-scene",
+        "artifact_kind": "SCENE_DERIVATIVE",
+        "artifact_ref": "kfm://artifact/lidar/fixture/county-terrain-scene",
+        "artifact_digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+        "representation_role": "DERIVED_SCENE",
+        "vertical_crs": "EPSG:5703",
+        "sensitivity_transform_ref": "kfm://transform/lidar/fixture/remove-sensitive-returns"
+      }
+    ],
+    "evidence": {
+      "evidence_refs": [
+        "kfm://evidence-bundle/fixture/lidar-lineage-source-and-processing"
+      ],
+      "reality_boundary_note_ref": "kfm://reality-boundary-note/fixture/lidar-terrain-scene"
+    },
+    "public_safety": {
+      "exact_infrastructure_exposure": false,
+      "sensitive_feature_filter_applied": true,
+      "public_use_authorized": false
+    },
+    "summary": {
+      "derived_artifact_count": 3,
+      "scene_artifact_count": 1,
+      "vertical_transform_required": false,
+      "manifest_state": "REVIEW_REQUIRED",
+      "source_activated": false
+    },
+    "governance": {
+      "fixture_only": true,
+      "source_activation_authorized": false,
+      "transform_authorized": false,
+      "sensitivity_policy_evaluated": false,
+      "release_authorized": false,
+      "published": false
+    }
+  },
+  "cases": [
+    {
+      "case_id": "valid_bounded_lidar_lineage",
+      "expected_outcome": "PASS",
+      "expected_manifest_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "acquisition_window_reversed",
+      "mutations": [
+        {
+          "path": "/source_asset/acquired_from",
+          "value": "2025-03-01T00:00:00Z"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_manifest_state": null,
+      "expected_findings": [
+        {
+          "code": "LIDAR_ACQUISITION_WINDOW_REVERSED",
+          "path": "/source_asset/acquired_from"
+        }
+      ]
+    },
+    {
+      "case_id": "class_codes_unsorted",
+      "mutations": [
+        {
+          "path": "/source_asset/available_class_codes",
+          "value": [
+            2,
+            1,
+            6,
+            9,
+            17
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_manifest_state": null,
+      "expected_findings": [
+        {
+          "code": "LIDAR_AVAILABLE_CLASSES_NOT_CANONICAL",
+          "path": "/source_asset/available_class_codes"
+        }
+      ]
+    },
+    {
+      "case_id": "selected_class_not_available",
+      "mutations": [
+        {
+          "path": "/processing/selected_class_codes",
+          "value": [
+            42
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_manifest_state": null,
+      "expected_findings": [
+        {
+          "code": "LIDAR_SELECTED_CLASS_UNAVAILABLE",
+          "path": "/processing/selected_class_codes/0"
+        }
+      ]
+    },
+    {
+      "case_id": "vertical_transform_missing",
+      "mutations": [
+        {
+          "path": "/derived_artifacts/0/vertical_crs",
+          "value": "EPSG:3855"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_manifest_state": null,
+      "expected_findings": [
+        {
+          "code": "LIDAR_VERTICAL_TRANSFORM_REQUIRED",
+          "path": "/processing/vertical_transform/applied"
+        }
+      ]
+    },
+    {
+      "case_id": "vertical_transform_declaration_incoherent",
+      "mutations": [
+        {
+          "path": "/processing/vertical_transform/applied",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_manifest_state": null,
+      "expected_findings": [
+        {
+          "code": "LIDAR_VERTICAL_TRANSFORM_OPERATION_REQUIRED",
+          "path": "/processing/vertical_transform/operation_ref"
+        },
+        {
+          "code": "LIDAR_VERTICAL_TRANSFORM_PARAMETERS_REQUIRED",
+          "path": "/processing/vertical_transform/parameters_digest"
+        },
+        {
+          "code": "LIDAR_VERTICAL_TRANSFORM_TARGET_UNCHANGED",
+          "path": "/processing/vertical_transform/target_vertical_crs"
+        }
+      ]
+    },
+    {
+      "case_id": "scene_without_reality_boundary",
+      "mutations": [
+        {
+          "path": "/evidence/reality_boundary_note_ref",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_manifest_state": null,
+      "expected_findings": [
+        {
+          "code": "LIDAR_SCENE_REALITY_BOUNDARY_REQUIRED",
+          "path": "/evidence/reality_boundary_note_ref"
+        }
+      ]
+    },
+    {
+      "case_id": "artifact_order_invalid",
+      "mutations": [
+        {
+          "path": "/derived_artifacts/0/artifact_id",
+          "value": "zeta-point-cloud"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_manifest_state": null,
+      "expected_findings": [
+        {
+          "code": "LIDAR_ARTIFACT_ORDER_INVALID",
+          "path": "/derived_artifacts"
+        }
+      ]
+    },
+    {
+      "case_id": "artifact_kind_role_mismatch",
+      "mutations": [
+        {
+          "path": "/derived_artifacts/0/representation_role",
+          "value": "DERIVED_SCENE"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_manifest_state": null,
+      "expected_findings": [
+        {
+          "code": "LIDAR_ARTIFACT_ROLE_MISMATCH",
+          "path": "/derived_artifacts/0/representation_role"
+        }
+      ]
+    },
+    {
+      "case_id": "summary_mismatch",
+      "mutations": [
+        {
+          "path": "/summary/derived_artifact_count",
+          "value": 2
+        }
+      ],
+      "preserve_summary": true,
+      "expected_outcome": "DENY",
+      "expected_manifest_state": null,
+      "expected_findings": [
+        {
+          "code": "LIDAR_SUMMARY_MISMATCH",
+          "path": "/summary"
+        }
+      ]
+    },
+    {
+      "case_id": "spec_hash_mismatch",
+      "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_manifest_state": null,
+      "expected_findings": [
+        {
+          "code": "LIDAR_SPEC_HASH_MISMATCH",
+          "path": "/spec_hash"
+        }
+      ]
+    },
+    {
+      "case_id": "manifest_id_mismatch",
+      "manifest_id_override": "kfm:lidar-lineage-manifest:ffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_manifest_state": null,
+      "expected_findings": [
+        {
+          "code": "LIDAR_MANIFEST_ID_MISMATCH",
+          "path": "/manifest_id"
+        }
+      ]
+    },
+    {
+      "case_id": "infrastructure_exposure_overreach",
+      "mutations": [
+        {
+          "path": "/public_safety/exact_infrastructure_exposure",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_manifest_state": null,
+      "expected_findings": [
+        {
+          "code": "LIDAR_SCHEMA_INVALID",
+          "path": "/public_safety/exact_infrastructure_exposure"
+        }
+      ]
+    },
+    {
+      "case_id": "source_activation_overreach",
+      "mutations": [
+        {
+          "path": "/governance/source_activation_authorized",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_manifest_state": null,
+      "expected_findings": [
+        {
+          "code": "LIDAR_SCHEMA_INVALID",
+          "path": "/governance/source_activation_authorized"
+        }
+      ]
+    }
+  ]
+}

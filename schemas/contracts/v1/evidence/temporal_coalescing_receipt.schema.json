@@ -1,0 +1,258 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/temporal_coalescing_receipt.schema.json",
+  "title": "TemporalCoalescingReceiptCandidate",
+  "description": "Fixture-only temporal transform receipt profile that preserves exact interval coverage and lineage without granting evidence, policy, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_card",
+    "observed_at",
+    "run_receipt_ref",
+    "run_receipt_digest",
+    "method_ref",
+    "method_digest",
+    "method_resolution",
+    "operation",
+    "interval_policy",
+    "input_set",
+    "output_set",
+    "lineage",
+    "evidence_refs",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "TemporalCoalescingReceiptCandidate"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile": {
+      "const": "kfm.evidence.temporal-coalescing-receipt.fixture.v1"
+    },
+    "profile_spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_card": {
+      "const": "KFM-P18-INV-414"
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "run_receipt_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "run_receipt_digest": {
+      "$ref": "#/$defs/sha256"
+    },
+    "method_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "method_digest": {
+      "$ref": "#/$defs/sha256"
+    },
+    "method_resolution": {
+      "enum": [
+        "RESOLVED",
+        "UNRESOLVED"
+      ]
+    },
+    "operation": {
+      "enum": [
+        "COALESCE",
+        "SPLIT",
+        "PRESERVE"
+      ]
+    },
+    "interval_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bounds",
+        "overlap",
+        "adjacency",
+        "fact_key_rule"
+      ],
+      "properties": {
+        "bounds": {
+          "const": "HALF_OPEN_UTC"
+        },
+        "overlap": {
+          "enum": [
+            "COALESCE",
+            "SPLIT",
+            "PRESERVE"
+          ]
+        },
+        "adjacency": {
+          "enum": [
+            "COALESCE",
+            "PRESERVE"
+          ]
+        },
+        "fact_key_rule": {
+          "const": "EXACT_MATCH"
+        }
+      }
+    },
+    "input_set": {
+      "$ref": "#/$defs/interval_set"
+    },
+    "output_set": {
+      "$ref": "#/$defs/interval_set"
+    },
+    "lineage": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "output_interval_id",
+          "input_interval_ids"
+        ],
+        "properties": {
+          "output_interval_id": {
+            "$ref": "#/$defs/id"
+          },
+          "input_interval_ids": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 100,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/$defs/id"
+            }
+          }
+        }
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "publication_authority"
+      ],
+      "properties": {
+        "evidence_authority": {
+          "const": false
+        },
+        "policy_authority": {
+          "const": false
+        },
+        "review_authority": {
+          "const": false
+        },
+        "promotion_authority": {
+          "const": false
+        },
+        "release_authority": {
+          "const": false
+        },
+        "publication_authority": {
+          "const": false
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 512,
+      "pattern": "^\\S+$"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z][a-z0-9_.:-]*$"
+    },
+    "interval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "interval_id",
+        "fact_key",
+        "valid_from",
+        "valid_to"
+      ],
+      "properties": {
+        "interval_id": {
+          "$ref": "#/$defs/id"
+        },
+        "fact_key": {
+          "$ref": "#/$defs/id"
+        },
+        "valid_from": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "valid_to": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "interval_set": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref",
+        "digest",
+        "intervals"
+      ],
+      "properties": {
+        "ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "intervals": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/interval"
+          }
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/evidence/temporal_coalescing_receipt.md",
+    "fixtures_root": "fixtures/contracts/v1/evidence/temporal_coalescing_receipt/",
+    "validator": "tools/validators/evidence/validate_temporal_coalescing_receipt.py",
+    "status": "PROPOSED_INACTIVE",
+    "network": false,
+    "authority_effects": false
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "object_type": "RollbackCard",
+  "schema_version": "1.0.0",
+  "id": "rollback:example:hold-2026-08-04",
+  "version": "1.0.0",
+  "spec_hash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "disposition": "HOLD",
+  "trigger": {
+    "reason_code": "INSUFFICIENT_EVIDENCE",
+    "detected_at": "2026-08-04T10:00:00Z"
+  },
+  "affected_release_ref": "kfm://release/example/v2",
+  "target": {
+    "mode": "HOLD",
+    "release_ref": null
+  },
+  "evidence_bundle_refs": [],
+  "policy_decision_refs": [],
+  "review_record_refs": [],
+  "correction_notice_ref": null,
+  "invalidations": [
+    "API_CACHE",
+    "CATALOG",
+    "TILES"
+  ],
+  "restoration": {
+    "restore_release_ref": null,
+    "public_notice_required": false,
+    "validation_required": true
+  },
+  "timing": {
+    "decided_at": "2026-08-04T11:00:00Z",
+    "effective_at": "2026-08-04T12:00:00Z"
+  },
+  "lineage": {
+    "supersedes": null,
+    "superseded_by": null
+  },
+  "governance": {
+    "authority_created": false,
+    "policy_evaluated": false,
+    "review_completed": false,
+    "rollback_executed": false,
+    "public_state_mutated": false,
+    "release_ref": null
+  }
+}

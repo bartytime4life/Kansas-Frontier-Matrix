@@ -1,0 +1,84 @@
+{
+  "receipt_id": "genrec-domain-people-dna-land-workflow-47e91365",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T00:00:00-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "92fdb7fb00c4229e8a975d4ca9c5aa0275b5a8ef",
+  "branch": "agent/domain-people-dna-land-workflow-20260718",
+  "target_path": ".github/workflows/domain-people-dna-land.yml",
+  "previous_blob": "2f5c3403e5fcb59e692b9759e7f4902531fc90a1",
+  "new_blob": "47e913654a7b63c10e1e52c34db3eabb9e108ac9",
+  "content_digest": {
+    "algorithm": "git-blob-sha1",
+    "value": "47e913654a7b63c10e1e52c34db3eabb9e108ac9"
+  },
+  "truth_labels": {
+    "confirmed": [
+      "The prior validate-people-dna-land, build-proof-people-dna-land, and publish-dry-run-people-dna-land jobs only executed TODO echo commands.",
+      "Baseline workflow run 29653698733 completed successfully without People/DNA/Land validation, proof construction, consent or revocation enforcement, or release dry-run execution.",
+      "The parent People/DNA/Land test README remains a greenfield stub, while the consent-revocation child README describes only proposed deterministic no-network tests.",
+      "The per-domain People/DNA/Land validator index records executable validators, schemas, fixtures, policy bundles, consent bundles, and CI wiring as unverified.",
+      "The domain policy README remains a PROPOSED greenfield scaffold.",
+      "The consent policy README states that repository presence is not policy activation and records placement conflict, README-only maturity, and unproved runtime/CI enforcement.",
+      "The domain schema README records no confirmed concrete schema files and unresolved child-path topology.",
+      "The proof lane is draft and marks emitted proof files, validator wiring, CI enforcement, and release-gate coverage as needing verification.",
+      "The release-candidate lane is pre-publication and states that a candidate is not a release.",
+      "Workflow name domain-people-dna-land and all three job ids are preserved."
+    ],
+    "proposed": [
+      "Bounded structural checks and explicit fail-closed readiness holds are the safest current CI behavior for this T4 deny-by-default lane.",
+      "The workflow should refuse to open newly surfaced fixture, proof, or candidate payloads until independent privacy, consent, sensitivity, evidence, policy, and release review establishes a safe automated consumer."
+    ],
+    "needs_verification": [
+      "Final-head GitHub Actions conclusions.",
+      "Accepted People/DNA/Land validator ownership and deterministic no-network suite.",
+      "Resolved people versus people-dna-land contract, schema, policy, consent, sensitivity, and pipeline topology.",
+      "Executable consent and revocation policy, evaluator binding, reason codes, obligations, receipts, downstream invalidation, and cache withdrawal behavior.",
+      "Concrete EvidenceBundle and proof contracts, schemas, public-safe fixtures, access controls, manifests, and receipts.",
+      "Accepted candidate, ReleaseManifest, correction, withdrawal, supersession, and rollback contracts.",
+      "Branch-protection dependencies, independent privacy/consent review ownership, and immutable action pinning."
+    ]
+  },
+  "changes": [
+    "Added workflow_dispatch, contents: read permission, concurrency cancellation, deterministic Python setup, and five-minute job timeouts.",
+    "Disabled persisted checkout credentials.",
+    "Converted the validation TODO into a bounded structural readiness check with an explicit WORKFLOW_HOLD outcome.",
+    "Added required-boundary checks across domain doctrine, contracts, schemas, fixtures, policies, consent, tests, validators, source registry, proofs, release candidates, and published lanes.",
+    "Added AST-based detection for newly executable People/DNA/Land tests.",
+    "Added executable-body detection for the domain and genealogy validator lanes.",
+    "Added fail-closed detection for newly surfaced fixture payloads without reading their contents.",
+    "Added policy-posture checks for the domain scaffold and consent non-activation boundary.",
+    "Converted proof and release TODO jobs into explicit WORKFLOW_SKIPPED_EXPLICIT and WORKFLOW_HOLD readiness checks.",
+    "Added fail-closed detection for proof artifacts, proof producers, candidate records, Make targets, and changed candidate posture without opening sensitive payload contents.",
+    "Added bounded summaries preserving living-person, DNA/genomic, consent, revocation, title, parcel, privacy, legal, evidence, correction, withdrawal, cache invalidation, and rollback boundaries."
+  ],
+  "authority_boundary": "A green held result is repository-readiness evidence only. It is not person identity, kinship, DNA, consent, revocation, title, parcel-boundary, rights, privacy, legal, EvidenceBundle, proof, lifecycle promotion, release, or publication authority.",
+  "directory_rules_basis": [
+    ".github/workflows remains the existing CI orchestration location.",
+    "tests and fixtures remain the enforceability and bounded synthetic-input roots.",
+    "tools remains the validator and helper root.",
+    "policy remains the consent, sensitivity, privacy, and admissibility root.",
+    "data/registry remains the source-admission and registry root.",
+    "data/proofs remains the proof-support root.",
+    "release remains the release-decision root.",
+    "data/published remains the released-payload root.",
+    "data/receipts/generated remains the existing generated process-memory lane."
+  ],
+  "validation": {
+    "workflow_yaml_parse": "PASS",
+    "workflow_and_job_identities_preserved": "PASS",
+    "sensitive_payload_contents_opened": "NO",
+    "exact_changed_paths": [
+      ".github/workflows/domain-people-dna-land.yml",
+      "data/receipts/generated/genrec-domain-people-dna-land-workflow-47e91365.json"
+    ],
+    "final_head_ci": "PENDING",
+    "human_review": "PENDING"
+  },
+  "rollback": {
+    "strategy": "Close the pull request without merge or revert the receipt commit and workflow commit in reverse order.",
+    "restores_blob": "2f5c3403e5fcb59e692b9759e7f4902531fc90a1"
+  }
+}

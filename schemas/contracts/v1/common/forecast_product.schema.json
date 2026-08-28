@@ -1,0 +1,471 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/forecast_product.schema.json",
+  "title": "ForecastProduct candidate profile",
+  "description": "Closed, fixture-only source-issued forecast candidate preserving issue and valid time, source role, model/forecaster identity, method, spatial support, uncertainty, lineage, and release non-authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "status",
+    "forecast_product_id",
+    "version",
+    "spec_hash",
+    "forecast_family",
+    "product_ref",
+    "source_ref",
+    "source_native_id",
+    "issuing_authority_ref",
+    "source_role",
+    "support_type",
+    "source_snapshot_refs",
+    "temporal_authority_ref",
+    "times",
+    "space",
+    "method",
+    "uncertainty",
+    "forecast_artifact_refs",
+    "content_digests",
+    "evidence_refs",
+    "lineage",
+    "release_state",
+    "release_ref",
+    "limitations",
+    "public_use_allowed",
+    "effects"
+  ],
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^\\S+$"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullable_string": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "\\S"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "nullable_datetime": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "ref_array": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "required_ref_array": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    }
+  },
+  "properties": {
+    "profile": {
+      "const": "kfm.common.forecast-product.v1"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "forecast_product_id": {
+      "type": "string",
+      "pattern": "^forecast-product:[a-f0-9]{24}$"
+    },
+    "version": {
+      "const": "1.0.0"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "forecast_family": {
+      "enum": [
+        "WEATHER_OUTLOOK",
+        "HYDROLOGIC_OUTLOOK",
+        "AIR_QUALITY_FORECAST",
+        "AGRICULTURE_FORECAST",
+        "OTHER"
+      ]
+    },
+    "product_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "source_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "source_native_id": {
+      "$ref": "#/$defs/ref"
+    },
+    "issuing_authority_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "source_role": {
+      "enum": [
+        "FORECAST",
+        "OBSERVATION",
+        "CLASSIFICATION",
+        "MODEL",
+        "SURVEY",
+        "CONTEXT"
+      ]
+    },
+    "support_type": {
+      "enum": [
+        "PREDICTION",
+        "DIRECT_MEASUREMENT",
+        "DERIVED_CLASSIFICATION",
+        "MODELED_ESTIMATE",
+        "AGGREGATE_STATISTIC",
+        "CONTEXT_ONLY"
+      ]
+    },
+    "source_snapshot_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^kfm:source-snapshot:[a-f0-9]{64}$"
+      }
+    },
+    "temporal_authority_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "times": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_data_cutoff_at",
+        "issued_at",
+        "valid_from",
+        "valid_to",
+        "retrieved_at",
+        "corrected_at",
+        "superseded_at",
+        "native_timezone"
+      ],
+      "properties": {
+        "source_data_cutoff_at": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "issued_at": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "valid_from": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "valid_to": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "retrieved_at": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "corrected_at": {
+          "$ref": "#/$defs/nullable_datetime"
+        },
+        "superseded_at": {
+          "$ref": "#/$defs/nullable_datetime"
+        },
+        "native_timezone": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z][A-Za-z0-9_+\\-/]{1,127}$"
+        }
+      }
+    },
+    "space": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "geography_ref",
+        "scale",
+        "geometry_role",
+        "geometry_digest",
+        "geometry_confidence"
+      ],
+      "properties": {
+        "geography_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "scale": {
+          "enum": [
+            "POINT",
+            "GRID",
+            "POLYGON_SET",
+            "COUNTY",
+            "MULTI_COUNTY",
+            "REGIONAL",
+            "STATEWIDE",
+            "NATIONAL"
+          ]
+        },
+        "geometry_role": {
+          "enum": [
+            "AUTHORITATIVE",
+            "OPERATIONAL",
+            "INDICATIVE",
+            "APPROXIMATE",
+            "DISPLAY_ONLY",
+            "UNRESOLVED"
+          ]
+        },
+        "geometry_digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "geometry_confidence": {
+          "enum": [
+            "CONFIRMED",
+            "HIGH",
+            "MEDIUM",
+            "LOW",
+            "UNRESOLVED"
+          ]
+        }
+      }
+    },
+    "method": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "model_ref",
+        "model_version",
+        "forecaster_ref",
+        "method_ref",
+        "variable_id",
+        "unit",
+        "ensemble_ref",
+        "scenario_ref"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "MODEL",
+            "EXPERT",
+            "HYBRID"
+          ]
+        },
+        "model_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "model_version": {
+          "$ref": "#/$defs/nullable_string"
+        },
+        "forecaster_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "method_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "variable_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "\\S"
+        },
+        "ensemble_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "scenario_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        }
+      }
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "value_ref",
+        "confidence"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "PROBABILITY",
+            "RANGE",
+            "ENSEMBLE_SPREAD",
+            "CATEGORY_CONFIDENCE",
+            "NOT_PROVIDED"
+          ]
+        },
+        "value_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "confidence": {
+          "enum": [
+            "CONFIRMED",
+            "HIGH",
+            "MEDIUM",
+            "LOW",
+            "UNKNOWN"
+          ]
+        }
+      }
+    },
+    "forecast_artifact_refs": {
+      "$ref": "#/$defs/required_ref_array"
+    },
+    "content_digests": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/sha256"
+      }
+    },
+    "evidence_refs": {
+      "$ref": "#/$defs/required_ref_array"
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "corrects",
+        "superseded_by",
+        "conflict_refs"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "CURRENT",
+            "CORRECTED",
+            "SUPERSEDED",
+            "CONFLICTED"
+          ]
+        },
+        "corrects": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "superseded_by": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "conflict_refs": {
+          "$ref": "#/$defs/ref_array"
+        }
+      }
+    },
+    "release_state": {
+      "enum": [
+        "UNRELEASED",
+        "RELEASED"
+      ]
+    },
+    "release_ref": {
+      "$ref": "#/$defs/nullable_ref"
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 240,
+        "pattern": "\\S"
+      }
+    },
+    "public_use_allowed": {
+      "type": "boolean"
+    },
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_activated",
+        "evidence_resolved",
+        "policy_evaluated",
+        "promoted",
+        "released",
+        "published"
+      ],
+      "properties": {
+        "source_activated": {
+          "type": "boolean"
+        },
+        "evidence_resolved": {
+          "type": "boolean"
+        },
+        "policy_evaluated": {
+          "type": "boolean"
+        },
+        "promoted": {
+          "type": "boolean"
+        },
+        "released": {
+          "type": "boolean"
+        },
+        "published": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/common/forecast_product.md",
+    "fixtures_root": "fixtures/contracts/v1/common/forecast_product/",
+    "validator": "tools/validators/validate_forecast_product.py",
+    "tests": "tests/validators/test_validate_forecast_product.py",
+    "authority": "fixture_candidate_only",
+    "public_release_authority": false
+  }
+}

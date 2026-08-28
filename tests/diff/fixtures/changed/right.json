@@ -1,0 +1,12 @@
+{
+  "zeta_added": 26,
+  "stable": {
+    "a": 1,
+    "b": 2
+  },
+  "shared_changed": "after",
+  "nested_changed": {
+    "state": "after"
+  },
+  "alpha_added": 1
+}

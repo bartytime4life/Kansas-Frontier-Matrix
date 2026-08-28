@@ -1,0 +1,21 @@
+{
+  "_note": "ILLUSTRATIVE ONLY — PROPOSED shape, NEEDS VERIFICATION against schemas/contracts/v1/source/",
+  "@context": "https://www.w3.org/ns/dcat",
+  "@type": "dcat:Distribution",
+  "dct:title": "kfm-noaa-storm-events — PLACEHOLDER distribution",
+  "dcat:downloadURL": "s3://kfm-cataloged/PLACEHOLDER/events.parquet",
+  "dcat:mediaType": "application/vnd.apache.parquet",
+  "dct:license": "PLACEHOLDER — NEEDS VERIFICATION",
+  "kfm:provenance": {
+    "spec_hash": "sha256:<placeholder>",
+    "evidence_bundle_ref": "kfm://evidence/<placeholder>",
+    "policy_digest": "sha256:<placeholder>"
+  },
+  "kfm:care": {
+    "consent": "PLACEHOLDER",
+    "authority_to_control": "PLACEHOLDER",
+    "locality_restrictions": "PLACEHOLDER",
+    "review_expiry": "PLACEHOLDER"
+  },
+  "file:checksum": "sha256:<placeholder>"
+}

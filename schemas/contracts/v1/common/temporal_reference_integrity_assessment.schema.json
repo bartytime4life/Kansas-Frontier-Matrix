@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/temporal_reference_integrity_assessment.schema.json",
+  "title": "TemporalReferenceIntegrityAssessmentCandidate",
+  "description": "Fixture-only assessment of declared valid-time and transaction-time reference integrity without constraint-execution or lifecycle authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_card",
+    "assessed_at",
+    "relationship_ref",
+    "relationship_digest",
+    "subject",
+    "target",
+    "target_role",
+    "temporal_mode",
+    "checks",
+    "declared_overall_state",
+    "failure_handling",
+    "evidence_refs",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "TemporalReferenceIntegrityAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.common.temporal-reference-integrity-assessment.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-490"},
+    "assessed_at": {"type": "string", "format": "date-time"},
+    "relationship_ref": {"$ref": "#/$defs/ref"},
+    "relationship_digest": {"$ref": "#/$defs/sha256"},
+    "subject": {"$ref": "#/$defs/record"},
+    "target": {"$ref": "#/$defs/record"},
+    "target_role": {"enum": ["SOURCE_VERSION", "GEOGRAPHY_VERSION", "IDENTITY_VERSION", "OTHER"]},
+    "temporal_mode": {"enum": ["VALID_TIME", "TRANSACTION_TIME", "BITEMPORAL"]},
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "items": {"$ref": "#/$defs/axis_check"}
+    },
+    "declared_overall_state": {"enum": ["SATISFIED", "VIOLATED", "UNRESOLVED"]},
+    "failure_handling": {"$ref": "#/$defs/failure_handling"},
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reference_mutation_authority",
+        "constraint_execution_authority",
+        "quarantine_authority",
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "reference_mutation_authority": {"const": false},
+        "constraint_execution_authority": {"const": false},
+        "quarantine_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "ref": {"type": "string", "minLength": 3, "maxLength": 512, "pattern": "^\\S+$"},
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "digest", "record_kind", "presence"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/ref"},
+        "digest": {"$ref": "#/$defs/sha256"},
+        "record_kind": {"enum": ["OBSERVATION", "HISTORY_ROW", "SOURCE_VERSION", "GEOGRAPHY_VERSION", "IDENTITY_VERSION", "OTHER"]},
+        "presence": {"enum": ["PRESENT", "MISSING", "UNRESOLVED"]}
+      }
+    },
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["window_ref", "resolution", "start", "end", "start_inclusive", "end_inclusive"],
+      "properties": {
+        "window_ref": {"$ref": "#/$defs/ref"},
+        "resolution": {"enum": ["RESOLVED", "UNRESOLVED"]},
+        "start": {"type": "string", "format": "date-time"},
+        "end": {"type": "string", "format": "date-time"},
+        "start_inclusive": {"type": "boolean"},
+        "end_inclusive": {"type": "boolean"}
+      }
+    },
+    "axis_check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["axis", "constraint", "subject_window", "target_window", "declared_state", "evaluation_fixture_ref"],
+      "properties": {
+        "axis": {"enum": ["VALID_TIME", "TRANSACTION_TIME"]},
+        "constraint": {"enum": ["SUBJECT_WITHIN_TARGET", "SUBJECT_OVERLAPS_TARGET", "SUBJECT_START_WITHIN_TARGET", "SUBJECT_END_WITHIN_TARGET"]},
+        "subject_window": {"$ref": "#/$defs/window"},
+        "target_window": {"$ref": "#/$defs/window"},
+        "declared_state": {"enum": ["SATISFIED", "VIOLATED", "UNRESOLVED"]},
+        "evaluation_fixture_ref": {"$ref": "#/$defs/ref"}
+      }
+    },
+    "failure_handling": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recommended_action",
+        "recommendation_only",
+        "disposition_executed",
+        "failure_policy_profile_ref",
+        "review_record_refs",
+        "correction_ref",
+        "rollback_ref"
+      ],
+      "properties": {
+        "recommended_action": {"enum": ["NONE", "DENY_CANDIDATE", "QUARANTINE_CANDIDATE"]},
+        "recommendation_only": {"const": true},
+        "disposition_executed": {"const": false},
+        "failure_policy_profile_ref": {"$ref": "#/$defs/ref"},
+        "review_record_refs": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/ref"}
+        },
+        "correction_ref": {"$ref": "#/$defs/ref"},
+        "rollback_ref": {"$ref": "#/$defs/ref"}
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/common/temporal_reference_integrity_assessment.md",
+    "fixtures_root": "fixtures/contracts/v1/common/temporal_reference_integrity_assessment/",
+    "validator": "tools/validators/validate_temporal_reference_integrity_assessment.py",
+    "network": false,
+    "constraint_execution": false,
+    "authority_effects": false
+  }
+}

@@ -1,0 +1,204 @@
+{
+  "profile": "kfm.analytic-output-disclosure.fixture.v1",
+  "description": "Synthetic analytic disclosures only; no analysis runs, references resolve, or authority effects occur.",
+  "base": {
+    "object_type": "AnalyticOutputDisclosureAssessment",
+    "schema_version": "1.0.0",
+    "profile": "kfm.analytic-output-disclosure.fixture.v1",
+    "assessment_id": "kfm:analytic-output-disclosure:000000000000000000000000",
+    "assessment_state": "COMPLETE",
+    "output": {
+      "analytic_output_ref": "kfm://analytic-output/synthetic-statistic-001",
+      "analysis_kind": "STATISTIC",
+      "source_role": "DERIVED",
+      "support_state": "SUPPORTED",
+      "scope_ref": "kfm://scope/synthetic-county-001",
+      "valid_from": "2026-08-01T00:00:00Z",
+      "valid_to": "2026-08-02T00:00:00Z",
+      "computed_at": "2026-08-03T00:00:00Z"
+    },
+    "inputs": [
+      {
+        "input_ref": "kfm://input/synthetic-a",
+        "source_role": "OBSERVED",
+        "evidence_bundle_ref": "kfm://evidence-bundle/synthetic-a",
+        "source_lineage_ref": "kfm://lineage/synthetic-a"
+      }
+    ],
+    "method": {
+      "method_ref": "kfm://method/synthetic-statistic-v1",
+      "indicator_definition_ref": null,
+      "feature_set_manifest_ref": null,
+      "model_card_ref": null,
+      "model_run_receipt_ref": null,
+      "training_lineage_ref": null
+    },
+    "assumption_refs": ["kfm://assumption/synthetic-analytic-001"],
+    "uncertainty": {
+      "uncertainty_ref": "kfm://uncertainty/synthetic-analytic-001",
+      "uncertainty_class": "MEDIUM"
+    },
+    "validation": {
+      "validation_report_ref": "kfm://validation/synthetic-analytic-001",
+      "status": "PASS"
+    },
+    "disclosure": {
+      "confidence_class": "MEDIUM",
+      "citation_refs": ["kfm://citation/synthetic-analytic-001"],
+      "interpretation_limits": [
+        "NOT_OBSERVATION",
+        "NOT_ROOT_TRUTH",
+        "NO_CAUSAL_CLAIM",
+        "NO_PUBLICATION_AUTHORITY",
+        "SCOPE_BOUND"
+      ],
+      "policy_state": "NOT_EVALUATED",
+      "review_state": "PENDING",
+      "release_state": "UNRELEASED"
+    },
+    "decision": {"outcome": "PASS", "reason_codes": ["DISCLOSURE_COMPLETE"]},
+    "governance": {
+      "execution_mode": "FIXTURE_ONLY",
+      "network_attempted": false,
+      "reference_resolution_performed": false,
+      "analysis_executed": false,
+      "evidence_created": false,
+      "policy_evaluated": false,
+      "review_approved": false,
+      "promotion_authorized": false,
+      "release_authorized": false,
+      "public_use_allowed": false,
+      "publication_authorized": false
+    },
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "variants": {
+    "statistic": [],
+    "indicator": [
+      {"path": "/output/analytic_output_ref", "value": "kfm://analytic-output/synthetic-indicator-001"},
+      {"path": "/output/analysis_kind", "value": "INDICATOR"},
+      {"path": "/method/method_ref", "value": "kfm://method/synthetic-indicator-v1"},
+      {"path": "/method/indicator_definition_ref", "value": "kfm://indicator-definition/synthetic-001"}
+    ],
+    "ml_model": [
+      {"path": "/output/analytic_output_ref", "value": "kfm://analytic-output/synthetic-model-001"},
+      {"path": "/output/analysis_kind", "value": "ML_MODEL"},
+      {"path": "/output/source_role", "value": "MODELED"},
+      {"path": "/method/method_ref", "value": "kfm://method/synthetic-model-v1"},
+      {"path": "/method/feature_set_manifest_ref", "value": "kfm://feature-set/synthetic-001"},
+      {"path": "/method/model_card_ref", "value": "kfm://model-card/synthetic-001"},
+      {"path": "/method/model_run_receipt_ref", "value": "kfm://receipt/model-run/synthetic-001"},
+      {"path": "/method/training_lineage_ref", "value": "kfm://lineage/training/synthetic-001"},
+      {"path": "/disclosure/interpretation_limits", "value": ["MODEL_LIMITS_APPLY", "NOT_OBSERVATION", "NOT_ROOT_TRUTH", "NO_PUBLICATION_AUTHORITY", "SCOPE_BOUND"]}
+    ],
+    "model_interpretation": [
+      {"path": "/output/analytic_output_ref", "value": "kfm://analytic-output/synthetic-model-interpretation-001"},
+      {"path": "/output/analysis_kind", "value": "MODEL_INTERPRETATION"},
+      {"path": "/output/source_role", "value": "INTERPRETIVE"},
+      {"path": "/method/method_ref", "value": "kfm://method/synthetic-model-interpretation-v1"},
+      {"path": "/method/model_card_ref", "value": "kfm://model-card/synthetic-001"},
+      {"path": "/method/model_run_receipt_ref", "value": "kfm://receipt/model-run/synthetic-001"},
+      {"path": "/disclosure/interpretation_limits", "value": ["MODEL_LIMITS_APPLY", "NOT_OBSERVATION", "NOT_ROOT_TRUTH", "NO_PUBLICATION_AUTHORITY", "SCOPE_BOUND"]}
+    ],
+    "planning": [
+      {"path": "/output/analytic_output_ref", "value": "kfm://analytic-output/synthetic-planning-scenario-001"},
+      {"path": "/output/analysis_kind", "value": "PLANNING_SCENARIO"},
+      {"path": "/output/source_role", "value": "INTERPRETIVE"},
+      {"path": "/method/method_ref", "value": "kfm://method/synthetic-planning-scenario-v1"},
+      {"path": "/disclosure/interpretation_limits", "value": ["NOT_OBSERVATION", "NOT_ROOT_TRUTH", "NO_AUTOMATED_RECOMMENDATION", "NO_CAUSAL_CLAIM", "NO_PUBLICATION_AUTHORITY", "SCOPE_BOUND"]}
+    ],
+    "partial": [
+      {"path": "/output/support_state", "value": "PARTIAL"},
+      {"path": "/inputs", "value": [
+        {"input_ref": "kfm://input/synthetic-a", "source_role": "OBSERVED", "evidence_bundle_ref": "kfm://evidence-bundle/synthetic-a", "source_lineage_ref": "kfm://lineage/synthetic-a"},
+        {"input_ref": "kfm://input/synthetic-b", "source_role": "AGGREGATE", "evidence_bundle_ref": null, "source_lineage_ref": "kfm://lineage/synthetic-b"}
+      ]},
+      {"path": "/uncertainty/uncertainty_ref", "value": null},
+      {"path": "/uncertainty/uncertainty_class", "value": "UNKNOWN"},
+      {"path": "/validation/status", "value": "PARTIAL"},
+      {"path": "/disclosure/confidence_class", "value": "UNRESOLVED"}
+    ],
+    "unsupported": [
+      {"path": "/output/support_state", "value": "UNSUPPORTED"},
+      {"path": "/inputs/0/evidence_bundle_ref", "value": null},
+      {"path": "/uncertainty/uncertainty_ref", "value": null},
+      {"path": "/uncertainty/uncertainty_class", "value": "UNKNOWN"},
+      {"path": "/validation/validation_report_ref", "value": null},
+      {"path": "/validation/status", "value": "NOT_RUN"},
+      {"path": "/disclosure/confidence_class", "value": "UNRESOLVED"},
+      {"path": "/disclosure/citation_refs", "value": []}
+    ],
+    "error": [
+      {"path": "/assessment_state", "value": "ERROR"},
+      {"path": "/output/support_state", "value": "ERROR"},
+      {"path": "/uncertainty/uncertainty_ref", "value": null},
+      {"path": "/uncertainty/uncertainty_class", "value": "UNKNOWN"},
+      {"path": "/validation/validation_report_ref", "value": null},
+      {"path": "/validation/status", "value": "ERROR"},
+      {"path": "/disclosure/confidence_class", "value": "UNRESOLVED"},
+      {"path": "/disclosure/citation_refs", "value": []}
+    ]
+  },
+  "cases": [
+    {"case_id": "statistic_supported", "base": "statistic", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "indicator_supported", "base": "indicator", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "ml_model_supported", "base": "ml_model", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "model_interpretation_supported", "base": "model_interpretation", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "planning_scenario_supported", "base": "planning", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "partial_disclosure_abstains", "base": "partial", "expected_outcome": "ABSTAIN", "expected_findings": [{"code": "DISCLOSURE_PARTIAL", "path": "/decision/outcome"}]},
+    {"case_id": "unsupported_disclosure_abstains", "base": "unsupported", "expected_outcome": "ABSTAIN", "expected_findings": [{"code": "SUPPORT_UNRESOLVED", "path": "/decision/outcome"}]},
+    {"case_id": "assessment_error", "base": "error", "expected_outcome": "ERROR", "expected_findings": [{"code": "ASSESSMENT_ERROR", "path": "/decision/outcome"}]},
+    {"case_id": "source_role_mismatch", "base": "statistic", "mutations": [{"path": "/output/source_role", "value": "MODELED"}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_SOURCE_ROLE_MISMATCH", "path": "/output/source_role"}]},
+    {"case_id": "observed_output_role_denied", "base": "statistic", "mutations": [{"path": "/output/source_role", "value": "OBSERVED"}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_SCHEMA_INVALID", "path": "/output/source_role"}]},
+    {"case_id": "supported_evidence_missing", "base": "statistic", "mutations": [{"path": "/inputs/0/evidence_bundle_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_EVIDENCE_CLOSURE_REQUIRED", "path": "/inputs"}]},
+    {"case_id": "supported_validation_partial", "base": "statistic", "mutations": [{"path": "/validation/status", "value": "PARTIAL"}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_VALIDATION_PASS_REQUIRED", "path": "/validation"}]},
+    {"case_id": "supported_validation_report_missing", "base": "statistic", "mutations": [{"path": "/validation/validation_report_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_VALIDATION_PASS_REQUIRED", "path": "/validation"}]},
+    {"case_id": "supported_uncertainty_missing", "base": "statistic", "mutations": [{"path": "/uncertainty/uncertainty_ref", "value": null}, {"path": "/uncertainty/uncertainty_class", "value": "UNKNOWN"}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_UNCERTAINTY_REQUIRED", "path": "/uncertainty"}]},
+    {"case_id": "supported_confidence_unresolved", "base": "statistic", "mutations": [{"path": "/disclosure/confidence_class", "value": "UNRESOLVED"}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_CONFIDENCE_REQUIRED", "path": "/disclosure/confidence_class"}]},
+    {"case_id": "supported_citation_missing", "base": "statistic", "mutations": [{"path": "/disclosure/citation_refs", "value": []}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_CITATION_REQUIRED", "path": "/disclosure/citation_refs"}]},
+    {"case_id": "indicator_definition_missing", "base": "indicator", "mutations": [{"path": "/method/indicator_definition_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_METHOD_BINDING_REQUIRED", "path": "/method/indicator_definition_ref"}]},
+    {"case_id": "indicator_model_card_unexpected", "base": "indicator", "mutations": [{"path": "/method/model_card_ref", "value": "kfm://model-card/unexpected"}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_METHOD_BINDING_UNEXPECTED", "path": "/method/model_card_ref"}]},
+    {"case_id": "ml_feature_set_missing", "base": "ml_model", "mutations": [{"path": "/method/feature_set_manifest_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_METHOD_BINDING_REQUIRED", "path": "/method/feature_set_manifest_ref"}]},
+    {"case_id": "ml_model_card_missing", "base": "ml_model", "mutations": [{"path": "/method/model_card_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_METHOD_BINDING_REQUIRED", "path": "/method/model_card_ref"}]},
+    {"case_id": "ml_run_receipt_missing", "base": "ml_model", "mutations": [{"path": "/method/model_run_receipt_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_METHOD_BINDING_REQUIRED", "path": "/method/model_run_receipt_ref"}]},
+    {"case_id": "ml_training_lineage_missing", "base": "ml_model", "mutations": [{"path": "/method/training_lineage_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_METHOD_BINDING_REQUIRED", "path": "/method/training_lineage_ref"}]},
+    {"case_id": "ml_indicator_definition_unexpected", "base": "ml_model", "mutations": [{"path": "/method/indicator_definition_ref", "value": "kfm://indicator-definition/unexpected"}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_METHOD_BINDING_UNEXPECTED", "path": "/method/indicator_definition_ref"}]},
+    {"case_id": "common_limit_missing", "base": "statistic", "mutations": [{"path": "/disclosure/interpretation_limits", "value": ["NOT_ROOT_TRUTH", "NO_CAUSAL_CLAIM", "NO_PUBLICATION_AUTHORITY", "SCOPE_BOUND"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_REQUIRED_LIMIT_MISSING", "path": "/disclosure/interpretation_limits"}]},
+    {"case_id": "model_limit_missing", "base": "ml_model", "mutations": [{"path": "/disclosure/interpretation_limits", "value": ["NOT_OBSERVATION", "NOT_ROOT_TRUTH", "NO_PUBLICATION_AUTHORITY", "SCOPE_BOUND"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_REQUIRED_LIMIT_MISSING", "path": "/disclosure/interpretation_limits"}]},
+    {"case_id": "planning_recommendation_limit_missing", "base": "planning", "mutations": [{"path": "/disclosure/interpretation_limits", "value": ["NOT_OBSERVATION", "NOT_ROOT_TRUTH", "NO_CAUSAL_CLAIM", "NO_PUBLICATION_AUTHORITY", "SCOPE_BOUND"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_REQUIRED_LIMIT_MISSING", "path": "/disclosure/interpretation_limits"}]},
+    {"case_id": "input_order_invalid", "base": "statistic", "mutations": [{"path": "/inputs", "value": [
+      {"input_ref": "kfm://input/synthetic-b", "source_role": "AGGREGATE", "evidence_bundle_ref": "kfm://evidence-bundle/synthetic-b", "source_lineage_ref": "kfm://lineage/synthetic-b"},
+      {"input_ref": "kfm://input/synthetic-a", "source_role": "OBSERVED", "evidence_bundle_ref": "kfm://evidence-bundle/synthetic-a", "source_lineage_ref": "kfm://lineage/synthetic-a"}
+    ]}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_INPUT_ORDER_INVALID", "path": "/inputs"}]},
+    {"case_id": "input_duplicate", "base": "statistic", "mutations": [{"path": "/inputs", "value": [
+      {"input_ref": "kfm://input/synthetic-a", "source_role": "OBSERVED", "evidence_bundle_ref": "kfm://evidence-bundle/synthetic-a", "source_lineage_ref": "kfm://lineage/synthetic-a"},
+      {"input_ref": "kfm://input/synthetic-a", "source_role": "AGGREGATE", "evidence_bundle_ref": "kfm://evidence-bundle/synthetic-b", "source_lineage_ref": "kfm://lineage/synthetic-b"}
+    ]}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_INPUT_DUPLICATE", "path": "/inputs"}]},
+    {"case_id": "assumption_order_invalid", "base": "statistic", "mutations": [{"path": "/assumption_refs", "value": ["kfm://assumption/synthetic-b", "kfm://assumption/synthetic-a"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_ARRAY_ORDER_INVALID", "path": "/assumption_refs"}]},
+    {"case_id": "citation_order_invalid", "base": "statistic", "mutations": [{"path": "/disclosure/citation_refs", "value": ["kfm://citation/synthetic-b", "kfm://citation/synthetic-a"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_ARRAY_ORDER_INVALID", "path": "/disclosure/citation_refs"}]},
+    {"case_id": "limit_order_invalid", "base": "statistic", "mutations": [{"path": "/disclosure/interpretation_limits", "value": ["SCOPE_BOUND", "NOT_ROOT_TRUTH", "NOT_OBSERVATION", "NO_PUBLICATION_AUTHORITY", "NO_CAUSAL_CLAIM"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_ARRAY_ORDER_INVALID", "path": "/disclosure/interpretation_limits"}]},
+    {"case_id": "partial_state_unjustified", "base": "partial", "mutations": [
+      {"path": "/inputs/1/evidence_bundle_ref", "value": "kfm://evidence-bundle/synthetic-b"},
+      {"path": "/uncertainty/uncertainty_ref", "value": "kfm://uncertainty/synthetic-analytic-001"},
+      {"path": "/uncertainty/uncertainty_class", "value": "MEDIUM"},
+      {"path": "/validation/status", "value": "PASS"},
+      {"path": "/disclosure/confidence_class", "value": "MEDIUM"}
+    ], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_ABSTAIN_STATE_UNJUSTIFIED", "path": "/output/support_state"}]},
+    {"case_id": "unsupported_state_unjustified", "base": "unsupported", "mutations": [
+      {"path": "/inputs/0/evidence_bundle_ref", "value": "kfm://evidence-bundle/synthetic-a"},
+      {"path": "/uncertainty/uncertainty_ref", "value": "kfm://uncertainty/synthetic-analytic-001"},
+      {"path": "/uncertainty/uncertainty_class", "value": "MEDIUM"},
+      {"path": "/validation/validation_report_ref", "value": "kfm://validation/synthetic-analytic-001"},
+      {"path": "/validation/status", "value": "PASS"},
+      {"path": "/disclosure/confidence_class", "value": "MEDIUM"},
+      {"path": "/disclosure/citation_refs", "value": ["kfm://citation/synthetic-analytic-001"]}
+    ], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_ABSTAIN_STATE_UNJUSTIFIED", "path": "/output/support_state"}]},
+    {"case_id": "error_state_mismatch", "base": "statistic", "mutations": [{"path": "/assessment_state", "value": "ERROR"}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_ERROR_STATE_MISMATCH", "path": "/assessment_state"}]},
+    {"case_id": "error_validation_mismatch", "base": "error", "mutations": [{"path": "/validation/status", "value": "NOT_RUN"}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_ERROR_VALIDATION_MISMATCH", "path": "/validation/status"}]},
+    {"case_id": "time_order_invalid", "base": "statistic", "mutations": [{"path": "/output/computed_at", "value": "2026-07-31T00:00:00Z"}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_TIME_ORDER_INVALID", "path": "/output"}]},
+    {"case_id": "stored_decision_mismatch", "base": "statistic", "decision_override": {"outcome": "ABSTAIN", "reason_codes": ["DISCLOSURE_PARTIAL"]}, "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_DECISION_MISMATCH", "path": "/decision"}]},
+    {"case_id": "spec_hash_mismatch", "base": "indicator", "spec_hash_override": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_SPEC_HASH_MISMATCH", "path": "/spec_hash"}]},
+    {"case_id": "assessment_id_mismatch", "base": "ml_model", "assessment_id_override": "kfm:analytic-output-disclosure:111111111111111111111111", "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_ASSESSMENT_ID_MISMATCH", "path": "/assessment_id"}]},
+    {"case_id": "publication_authority_forbidden", "base": "planning", "mutations": [{"path": "/governance/publication_authorized", "value": true}], "expected_outcome": "DENY", "expected_findings": [{"code": "ANALYTIC_SCHEMA_INVALID", "path": "/governance/publication_authorized"}]}
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "_fixture_meta": {
+    "fixture_label": "invalid_wrong_object_type_substitution",
+    "fault": "wrong_object_type_substitution_attempt",
+    "notes": "DroughtDeclaration and DroughtObservation must not be substitutable. object_type must be exactly 'DroughtDeclaration'."
+  },
+  "object_type": "DroughtObservation",
+  "schema_version": "v1",
+  "declaration_id": "decl:kwo:2026-04-30:emergency",
+  "issuing_authority": "Kansas Water Office",
+  "legal_instrument_ref": "kfm://instrument/kwo/drought-proclamation-2026-04-30",
+  "legal_instrument_resolution_status": "bound",
+  "effective_at": "2026-04-30T00:00:00Z",
+  "rescinded_at": null,
+  "retrieved_at": "2026-08-03T12:00:00Z",
+  "source_ref": "src:kwo-drought-proclamation",
+  "source_resolution_status": "bound",
+  "county_scope": {
+    "all_105_counties": true,
+    "county_refs": null,
+    "county_scope_resolution_status": "bound"
+  },
+  "declaration_stage_vocabulary": "kansas_kwo_2016",
+  "declaration_stage": "emergency",
+  "predecessor_ref": null,
+  "successor_ref": null,
+  "correction_of": null,
+  "review_state": "needs_review",
+  "release_posture": "not_released"
+}

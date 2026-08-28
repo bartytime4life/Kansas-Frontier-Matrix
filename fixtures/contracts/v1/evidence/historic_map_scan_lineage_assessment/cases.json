@@ -1,0 +1,294 @@
+{
+  "base": {
+    "profile_version": "kfm.historic-map-scan-lineage-assessment-candidate.v1",
+    "assessment_id": "kfm:historic-map-scan-lineage:000000000000000000000000",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "original_map": {
+      "original_map_ref": "kfm://source-artifact/fixture/historic-map/original-sheet",
+      "original_format": "PAPER",
+      "citation_ref": "kfm://citation/fixture/historic-map/original-sheet",
+      "rights_status": "CLEARED",
+      "rights_review_ref": "kfm://review/fixture/historic-map/original-rights"
+    },
+    "scan": {
+      "scan_artifact_ref": "kfm://artifact/fixture/historic-map/raw-scan",
+      "scan_source_ref": "kfm://source/fixture/digital-map-library",
+      "capture_method": "PROVIDER_DIGITAL",
+      "captured_at": "2026-07-12T00:00:00Z",
+      "raw_scan_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "scan_receipt_ref": "kfm://receipt/fixture/historic-map/raw-scan"
+    },
+    "georeference": {
+      "status": "ASSESSABLE",
+      "method": "AFFINE",
+      "gcp_count": 6,
+      "control_point_set_ref": "kfm://control-point-set/fixture/historic-map/gcps",
+      "transform_quality_ref": "kfm://transform-quality/fixture/historic-map/affine",
+      "rms_error_meters": 4.25,
+      "reality_boundary_note_ref": "kfm://reality-boundary-note/fixture/historic-map/context-only",
+      "derivative_artifact_ref": "kfm://artifact/fixture/historic-map/georeferenced-derivative"
+    },
+    "derivative_use": {
+      "requested_use": "CONTEXT_OVERLAY",
+      "permitted_uses": [
+        "CATALOG_ONLY",
+        "CONTEXT_OVERLAY"
+      ],
+      "derivative_use_limits": [
+        "context-only",
+        "not-survey-grade"
+      ],
+      "source_role": "CONTEXT_REPRESENTATION",
+      "public_use_authorized": false
+    },
+    "evidence": {
+      "evidence_refs": [
+        "kfm://evidence-bundle/fixture/historic-map-original-and-rights",
+        "kfm://evidence-bundle/fixture/historic-map-scan-and-georeference"
+      ]
+    },
+    "summary": {
+      "rights_state": "CLEARED",
+      "georeference_state": "ASSESSABLE",
+      "permitted_use_count": 2,
+      "assessment_state": "REVIEW_REQUIRED",
+      "source_activated": false
+    },
+    "governance": {
+      "fixture_only": true,
+      "source_activation_authorized": false,
+      "georeferencing_authorized": false,
+      "rights_decision_authorized": false,
+      "evidence_admission_authorized": false,
+      "release_authorized": false,
+      "published": false
+    }
+  },
+  "cases": [
+    {
+      "case_id": "valid_context_overlay_lineage",
+      "expected_outcome": "PASS",
+      "expected_assessment_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid_catalog_only_without_georeference",
+      "mutations": [
+        {"path": "/georeference/status", "value": "NOT_ATTEMPTED"},
+        {"path": "/georeference/method", "value": "NONE"},
+        {"path": "/georeference/gcp_count", "value": 0},
+        {"path": "/georeference/control_point_set_ref", "value": null},
+        {"path": "/georeference/transform_quality_ref", "value": null},
+        {"path": "/georeference/rms_error_meters", "value": null},
+        {"path": "/georeference/reality_boundary_note_ref", "value": null},
+        {"path": "/georeference/derivative_artifact_ref", "value": null},
+        {"path": "/derivative_use/requested_use", "value": "CATALOG_ONLY"},
+        {"path": "/derivative_use/permitted_uses", "value": ["CATALOG_ONLY"]}
+      ],
+      "expected_outcome": "PASS",
+      "expected_assessment_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "original_and_scan_refs_collide",
+      "mutations": [
+        {"path": "/scan/scan_artifact_ref", "value": "kfm://source-artifact/fixture/historic-map/original-sheet"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "HISTORIC_MAP_ORIGINAL_SCAN_REF_COLLISION", "path": "/scan/scan_artifact_ref"}
+      ]
+    },
+    {
+      "case_id": "original_citation_missing",
+      "mutations": [
+        {"path": "/original_map/citation_ref", "value": null}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "HISTORIC_MAP_ORIGINAL_CITATION_REQUIRED", "path": "/original_map/citation_ref"}
+      ]
+    },
+    {
+      "case_id": "rights_review_missing",
+      "mutations": [
+        {"path": "/original_map/rights_review_ref", "value": null}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "HISTORIC_MAP_RIGHTS_REVIEW_REQUIRED", "path": "/original_map/rights_review_ref"}
+      ]
+    },
+    {
+      "case_id": "scan_receipt_missing",
+      "mutations": [
+        {"path": "/scan/scan_receipt_ref", "value": null}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "HISTORIC_MAP_SCAN_RECEIPT_REQUIRED", "path": "/scan/scan_receipt_ref"}
+      ]
+    },
+    {
+      "case_id": "evidence_refs_unsorted",
+      "mutations": [
+        {
+          "path": "/evidence/evidence_refs",
+          "value": [
+            "kfm://evidence-bundle/fixture/historic-map-scan-and-georeference",
+            "kfm://evidence-bundle/fixture/historic-map-original-and-rights"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "HISTORIC_MAP_EVIDENCE_REFS_NOT_CANONICAL", "path": "/evidence/evidence_refs"}
+      ]
+    },
+    {
+      "case_id": "permitted_uses_unsorted",
+      "mutations": [
+        {"path": "/derivative_use/permitted_uses", "value": ["CONTEXT_OVERLAY", "CATALOG_ONLY"]}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "HISTORIC_MAP_PERMITTED_USES_NOT_CANONICAL", "path": "/derivative_use/permitted_uses"}
+      ]
+    },
+    {
+      "case_id": "use_limits_unsorted",
+      "mutations": [
+        {"path": "/derivative_use/derivative_use_limits", "value": ["not-survey-grade", "context-only"]}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "HISTORIC_MAP_USE_LIMITS_NOT_CANONICAL", "path": "/derivative_use/derivative_use_limits"}
+      ]
+    },
+    {
+      "case_id": "assessable_georeference_has_too_few_gcps",
+      "mutations": [
+        {"path": "/georeference/gcp_count", "value": 2}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "HISTORIC_MAP_GCP_COUNT_INSUFFICIENT", "path": "/georeference/gcp_count"}
+      ]
+    },
+    {
+      "case_id": "assessable_georeference_lacks_quality_ref",
+      "mutations": [
+        {"path": "/georeference/transform_quality_ref", "value": null}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "HISTORIC_MAP_TRANSFORM_QUALITY_REQUIRED", "path": "/georeference/transform_quality_ref"}
+      ]
+    },
+    {
+      "case_id": "weak_georeference_cannot_support_context_overlay",
+      "mutations": [
+        {"path": "/georeference/status", "value": "WEAK"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "HISTORIC_MAP_CONTEXT_REQUIRES_ASSESSABLE_GEOREFERENCE", "path": "/georeference/status"}
+      ]
+    },
+    {
+      "case_id": "restricted_rights_cannot_support_context_overlay",
+      "mutations": [
+        {"path": "/original_map/rights_status", "value": "RESTRICTED"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "HISTORIC_MAP_CONTEXT_REQUIRES_CLEARED_RIGHTS", "path": "/original_map/rights_status"}
+      ]
+    },
+    {
+      "case_id": "positional_use_request_denied",
+      "mutations": [
+        {"path": "/derivative_use/requested_use", "value": "POSITIONAL_EVIDENCE"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "HISTORIC_MAP_POSITIONAL_USE_DENIED", "path": "/derivative_use/requested_use"}
+      ]
+    },
+    {
+      "case_id": "positional_permission_denied",
+      "mutations": [
+        {"path": "/derivative_use/permitted_uses", "value": ["CATALOG_ONLY", "CONTEXT_OVERLAY", "POSITIONAL_EVIDENCE"]}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "HISTORIC_MAP_POSITIONAL_PERMISSION_DENIED", "path": "/derivative_use/permitted_uses"}
+      ]
+    },
+    {
+      "case_id": "requested_use_not_permitted",
+      "mutations": [
+        {"path": "/derivative_use/permitted_uses", "value": ["CATALOG_ONLY"]}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "HISTORIC_MAP_REQUESTED_USE_NOT_PERMITTED", "path": "/derivative_use/requested_use"}
+      ]
+    },
+    {
+      "case_id": "summary_mismatch",
+      "mutations": [
+        {"path": "/summary/permitted_use_count", "value": 1}
+      ],
+      "preserve_summary": true,
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "HISTORIC_MAP_SUMMARY_MISMATCH", "path": "/summary"}
+      ]
+    },
+    {
+      "case_id": "spec_hash_mismatch",
+      "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "HISTORIC_MAP_SPEC_HASH_MISMATCH", "path": "/spec_hash"}
+      ]
+    },
+    {
+      "case_id": "assessment_id_mismatch",
+      "assessment_id_override": "kfm:historic-map-scan-lineage:ffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "HISTORIC_MAP_ASSESSMENT_ID_MISMATCH", "path": "/assessment_id"}
+      ]
+    },
+    {
+      "case_id": "source_activation_overreach",
+      "mutations": [
+        {"path": "/governance/source_activation_authorized", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "HISTORIC_MAP_SCHEMA_INVALID", "path": "/governance/source_activation_authorized"}
+      ]
+    }
+  ]
+}

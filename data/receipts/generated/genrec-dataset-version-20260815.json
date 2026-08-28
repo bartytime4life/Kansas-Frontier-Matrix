@@ -1,0 +1,167 @@
+{
+  "receipt_id": "genrec-dataset-version-20260815",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/dataset-version.yml",
+    "contracts/data/dataset_version.md",
+    "docs/intake/exploratory/dataset-version-source-reconciliation.md",
+    "fixtures/contracts/v1/data/dataset_version/README.md",
+    "fixtures/contracts/v1/data/dataset_version/invalid/expected_findings_manifest.json",
+    "fixtures/contracts/v1/data/dataset_version/invalid/invalid_schema_missing_source_ref.json",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_corrected_lineage.json",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_identity.json",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_placeholder_digest.json",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_processed_lineage.json",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_published_rights.json",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_published_without_release.json",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_refs_not_canonical.json",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_self_reference.json",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_temporal_order.json",
+    "fixtures/contracts/v1/data/dataset_version/valid/valid_processed_derivative.json",
+    "fixtures/contracts/v1/data/dataset_version/valid/valid_published_version.json",
+    "fixtures/contracts/v1/data/dataset_version/valid/valid_retrieval_snapshot.json",
+    "schemas/contracts/v1/data/dataset_version.schema.json",
+    "tests/validators/data/test_validate_dataset_version.py",
+    "tools/validators/data/validate_dataset_version.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/dataset-version.yml": "sha256:074b1fa53e57d135acad8adc541ec95d2ced99ffcd125a422a6a33ce51013af8",
+    "contracts/data/dataset_version.md": "sha256:c6ac73a956381f8346abffab76c150c4280df6fda0944ef80cc2579aaacf8f4b",
+    "docs/intake/exploratory/dataset-version-source-reconciliation.md": "sha256:211421fb361528fc9ee15230d43369d80e20718454a09a71267c4c2e597e4f13",
+    "fixtures/contracts/v1/data/dataset_version/README.md": "sha256:4a10228350889ab074ab7f56305c140a266bbda92e13cce0209f6231b8e3db8c",
+    "fixtures/contracts/v1/data/dataset_version/invalid/expected_findings_manifest.json": "sha256:17e49956d4c98eec4570f0cef838dc739cc10fc6efe753fef6dd264f21bd1469",
+    "fixtures/contracts/v1/data/dataset_version/invalid/invalid_schema_missing_source_ref.json": "sha256:dc7682e4425bfbaf982030e37ca1f07f5805052dc3636b1f7246bf88876d7325",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_corrected_lineage.json": "sha256:a0aa26c45824a204ac36a49979de405ad140c879bbbbadab104eca0d0d9e0ef0",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_identity.json": "sha256:f075b082cdfca52393c0d402a8674de885cd1817d2cbd3f2096cecf2dd61b879",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_placeholder_digest.json": "sha256:c517736a105e6f45805c477c573fb649e0874eb87ba9390a5784aa46953e39fc",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_processed_lineage.json": "sha256:16cab2ae6bb2ab0965da9784c0c9c9e06da85149cf5bd53a30d4fb69b6e6e4c7",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_published_rights.json": "sha256:0858e69560a6e8d88015b3c1c937e8b2660e02aad49b596f33a8b181a7b21bc3",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_published_without_release.json": "sha256:c90ea72a74077eafe6b3d96baead027d67ac1180011c82785699692260a0bd36",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_refs_not_canonical.json": "sha256:965791477e5d1ca08ffa6e205c611d43039b9cbbfe2c37e04d2705cbeb674d91",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_self_reference.json": "sha256:9a60b5c2e681b235153442a6ef943ce3a020e962fc2031e3297228daa0f96973",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_temporal_order.json": "sha256:a2e890f3516a8cdec5776f7ea09bdb74ab25a3b6fa2caca06e9cb156c15a9d4e",
+    "fixtures/contracts/v1/data/dataset_version/valid/valid_processed_derivative.json": "sha256:5531ac5f12715c2c3a217c4dd5b709351ad8c6183c4983c1f96b7f174ed24c17",
+    "fixtures/contracts/v1/data/dataset_version/valid/valid_published_version.json": "sha256:0e4046af630ff272e44a4a85b40acaf4d426d901c973bb29bcb66392e909430d",
+    "fixtures/contracts/v1/data/dataset_version/valid/valid_retrieval_snapshot.json": "sha256:39995cb9ead611788b8618cb11d15fe5869566f2716f10afa14cfa72267c5224",
+    "schemas/contracts/v1/data/dataset_version.schema.json": "sha256:e8a5d2eea76fbf668a0f73fd9b4a469eea41995c34787808dcc031584d1fc98e",
+    "tests/validators/data/test_validate_dataset_version.py": "sha256:4b83e189b28e442f927463aaf48eef663dd92858cef7b24c67cf150a97750884",
+    "tools/validators/data/validate_dataset_version.py": "sha256:1016689c08778d86f436422c28b4f8ce4954cdc778f76c35e85a3bc9ac7b2c74"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-15"
+  },
+  "prompt_or_contract": "sha256:d0b0f1741dad25766a84a02ee2394e4c22daa1e9a898dc01c074d9ad5cb93a36",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "uploaded-file inspection",
+      "local Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "# Kansas Frontier Matrix Implementation Reference.pdf",
+      "kfm_encyclopedia.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:# Kansas Frontier Matrix Implementation Reference.pdf#page-6",
+      "attachment:# Kansas Frontier Matrix Implementation Reference.pdf#page-9",
+      "attachment:kfm_encyclopedia.pdf#page-14",
+      "drive:Comprehensive Research and Verification Report#W04",
+      "repo:contracts/data/dataset_version.md@695c4e67063481236e627f8652faf17619260a5a",
+      "repo:schemas/contracts/v1/data/dataset_version.schema.json@695c4e67063481236e627f8652faf17619260a5a",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@695c4e67063481236e627f8652faf17619260a5a"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/dataset-version.yml": "PROPOSED",
+    "contracts/data/dataset_version.md": "PROPOSED",
+    "docs/intake/exploratory/dataset-version-source-reconciliation.md": "PROPOSED",
+    "fixtures/contracts/v1/data/dataset_version/README.md": "PROPOSED",
+    "fixtures/contracts/v1/data/dataset_version/invalid/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/data/dataset_version/invalid/invalid_schema_missing_source_ref.json": "PROPOSED",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_corrected_lineage.json": "PROPOSED",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_identity.json": "PROPOSED",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_placeholder_digest.json": "PROPOSED",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_processed_lineage.json": "PROPOSED",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_published_rights.json": "PROPOSED",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_published_without_release.json": "PROPOSED",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_refs_not_canonical.json": "PROPOSED",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_self_reference.json": "PROPOSED",
+    "fixtures/contracts/v1/data/dataset_version/invalid/semantic_invalid_temporal_order.json": "PROPOSED",
+    "fixtures/contracts/v1/data/dataset_version/valid/valid_processed_derivative.json": "PROPOSED",
+    "fixtures/contracts/v1/data/dataset_version/valid/valid_published_version.json": "PROPOSED",
+    "fixtures/contracts/v1/data/dataset_version/valid/valid_retrieval_snapshot.json": "PROPOSED",
+    "schemas/contracts/v1/data/dataset_version.schema.json": "PROPOSED",
+    "tests/validators/data/test_validate_dataset_version.py": "PROPOSED",
+    "tools/validators/data/validate_dataset_version.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-dataset-version-fixture-profile",
+      "outcome": "PASS",
+      "reason": "Three valid and ten exact-negative synthetic fixtures passed deterministic no-network validation."
+    },
+    {
+      "gate": "local-schema-workflow-and-receipt-closure",
+      "outcome": "PASS",
+      "reason": "Schema meta-validation, unit tests, fixture polarity, workflow syntax review, artifact hashes, and source-map references were checked against the authored bytes."
+    },
+    {
+      "gate": "baseline-repository-topology",
+      "outcome": "FAIL",
+      "reason": "INHERITED: current main already fails the repository-topology ratchet through schema-validation; this slice does not modify that validator or baseline."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:implementation-reference-dataset-version",
+      "validated": true,
+      "evidence_ref": "attachment:# Kansas Frontier Matrix Implementation Reference.pdf#pages-6-and-9"
+    },
+    {
+      "id": "attachment:kfm-encyclopedia-cross-domain-capability",
+      "validated": true,
+      "evidence_ref": "attachment:kfm_encyclopedia.pdf#page-14"
+    },
+    {
+      "id": "repository:directory-authority",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@695c4e67063481236e627f8652faf17619260a5a"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-15T04:12:58Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first DatasetVersion profile. This receipt grants no source, evidence, policy, review, promotion, release, publication, runtime, or public-use authority."
+}

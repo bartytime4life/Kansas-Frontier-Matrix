@@ -1,0 +1,4 @@
+# packages/domains/agriculture pyproject — greenfield placeholder
+[project]
+name = "kfm-domain-agriculture"
+version = "0.0.0"

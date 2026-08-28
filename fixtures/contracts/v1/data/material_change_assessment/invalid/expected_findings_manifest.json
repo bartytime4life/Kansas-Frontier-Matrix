@@ -1,0 +1,20 @@
+{
+  "invalid_digest_flag_mismatch.json": [
+    "BYTE_CHANGE_DIGEST_MISMATCH"
+  ],
+  "invalid_governance_authority.json": [
+    "GOVERNANCE_BOUNDARY_VIOLATION",
+    "SCHEMA_INVALID"
+  ],
+  "invalid_material_missing_criterion.json": [
+    "MATERIAL_CRITERIA_NOT_SATISFIED"
+  ],
+  "invalid_material_state.json": [
+    "MATERIAL_STATE_MISMATCH",
+    "OUTCOME_CLASS_MISMATCH"
+  ],
+  "invalid_time_order.json": [
+    "BASELINE_AFTER_CANDIDATE",
+    "CANDIDATE_AFTER_ASSESSMENT"
+  ]
+}

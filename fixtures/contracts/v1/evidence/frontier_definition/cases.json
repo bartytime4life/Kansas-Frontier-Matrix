@@ -1,0 +1,216 @@
+{
+  "profile": "kfm.frontier-definition.fixture-suite.v1",
+  "description": "Synthetic FrontierDefinition declarations only; no thresholds resolve, observations load, rules execute, counties classify, or authority effects occur.",
+  "base": {
+    "object_type": "FrontierDefinition",
+    "schema_version": "1.0.0",
+    "profile": "kfm.frontier-definition.fixture.v1",
+    "definition_id": "kfm:frontier-definition:000000000000000000000000",
+    "frontier": {
+      "definition_key": "synthetic_county_frontier",
+      "version_key": "v1",
+      "label": "Synthetic county frontier definition",
+      "description": "Fixture-only declaration with opaque indicator and threshold-policy references.",
+      "lifecycle_status": "PROPOSED_INACTIVE",
+      "unit_level": "COUNTY",
+      "jurisdiction_code": "US-KS-SYNTHETIC",
+      "intended_use": "RESEARCH_AND_REVIEW"
+    },
+    "temporal": {
+      "valid_from": "2020-01-01",
+      "valid_to": "2020-12-31",
+      "reference_period_kind": "CALENDAR_YEAR",
+      "observation_valid_time_required": true,
+      "geography_valid_time_alignment_required": true,
+      "definition_valid_time_required": true
+    },
+    "classification": {
+      "combination_rule": "ALL_CRITERIA",
+      "criteria": [
+        {
+          "criterion_key": "access_rule",
+          "indicator_definition_ref": "kfm://indicator-definition/synthetic-access@sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "comparison_operator": "GREATER_THAN_OR_EQUAL",
+          "threshold_policy_ref": "kfm://policy/threshold/synthetic-access@sha256:4444444444444444444444444444444444444444444444444444444444444444",
+          "missing_data_action": "ABSTAIN",
+          "uncertainty_action": "ABSTAIN"
+        },
+        {
+          "criterion_key": "density_rule",
+          "indicator_definition_ref": "kfm://indicator-definition/synthetic-population-density@sha256:3333333333333333333333333333333333333333333333333333333333333333",
+          "comparison_operator": "LESS_THAN_OR_EQUAL",
+          "threshold_policy_ref": "kfm://policy/threshold/synthetic-population-density@sha256:5555555555555555555555555555555555555555555555555555555555555555",
+          "missing_data_action": "ABSTAIN",
+          "uncertainty_action": "ABSTAIN"
+        }
+      ],
+      "threshold_resolution_state": "REFERENCED_NOT_RESOLVED",
+      "rule_execution_state": "NOT_EXECUTED",
+      "satisfied_result": "FRONTIER",
+      "unsatisfied_result": "NOT_FRONTIER",
+      "indeterminate_result": "UNCLASSIFIED"
+    },
+    "support": {
+      "geography_version_ref": "kfm://geography-version/synthetic-county-v1@sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "geography_version_profile": "kfm.geography-version.fixture.v1",
+      "indicator_definition_refs": [
+        "kfm://indicator-definition/synthetic-access@sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "kfm://indicator-definition/synthetic-population-density@sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      ],
+      "evidence_refs": [
+        "kfm://evidence-ref/frontier/synthetic-method@sha256:6666666666666666666666666666666666666666666666666666666666666666",
+        "kfm://evidence-ref/frontier/synthetic-scope@sha256:7777777777777777777777777777777777777777777777777777777777777777"
+      ],
+      "references_state": "REFERENCED_NOT_RESOLVED",
+      "different_version_join_policy": "CROSSWALK_REQUIRED"
+    },
+    "uncertainty": {
+      "uncertainty_method_ref": "kfm://method/uncertainty/synthetic-frontier@sha256:8888888888888888888888888888888888888888888888888888888888888888",
+      "classification_uncertainty_required": true,
+      "missingness_disclosure_required": true,
+      "provenance_required": true,
+      "source_role_preservation_required": true
+    },
+    "disclosure": {
+      "assumption_refs": [
+        "kfm://assumption/frontier/synthetic-limits@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "kfm://assumption/frontier/synthetic-purpose@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      ],
+      "interpretation_limits": [
+        "NOT_CLASSIFICATION_RESULT",
+        "NOT_OBSERVATION",
+        "NO_CAUSAL_CLAIM",
+        "NO_INDIVIDUAL_DECISION",
+        "NO_POLICY_DECISION",
+        "NO_PUBLICATION_AUTHORITY",
+        "SCOPE_BOUND",
+        "VERSION_BOUND"
+      ]
+    },
+    "governance": {
+      "execution_mode": "FIXTURE_ONLY",
+      "network_attempted": false,
+      "source_data_accessed": false,
+      "geography_resolved": false,
+      "indicator_definitions_resolved": false,
+      "thresholds_resolved": false,
+      "evidence_resolved": false,
+      "rule_executed": false,
+      "county_classified": false,
+      "policy_evaluated": false,
+      "review_approved": false,
+      "promotion_authorized": false,
+      "release_authorized": false,
+      "public_use_allowed": false,
+      "publication_authorized": false
+    },
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "variants": {
+    "all": [],
+    "any": [
+      { "path": "/frontier/definition_key", "value": "synthetic_any_frontier" },
+      { "path": "/classification/combination_rule", "value": "ANY_CRITERION" }
+    ],
+    "single_open": [
+      { "path": "/frontier/definition_key", "value": "synthetic_single_frontier" },
+      { "path": "/frontier/version_key", "value": "v2" },
+      { "path": "/temporal/valid_to", "value": null },
+      { "path": "/classification/criteria", "value": [
+        {
+          "criterion_key": "access_rule",
+          "indicator_definition_ref": "kfm://indicator-definition/synthetic-access@sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "comparison_operator": "GREATER_THAN_OR_EQUAL",
+          "threshold_policy_ref": "kfm://policy/threshold/synthetic-access@sha256:4444444444444444444444444444444444444444444444444444444444444444",
+          "missing_data_action": "ABSTAIN",
+          "uncertainty_action": "ABSTAIN"
+        }
+      ] },
+      { "path": "/support/indicator_definition_refs", "value": [
+        "kfm://indicator-definition/synthetic-access@sha256:2222222222222222222222222222222222222222222222222222222222222222"
+      ] }
+    ]
+  },
+  "cases": [
+    { "case_id": "all_criteria_valid", "base": "all", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "any_criterion_valid", "base": "any", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "single_criterion_open_interval_valid", "base": "single_open", "expected_outcome": "PASS", "expected_findings": [] },
+
+    { "case_id": "valid_interval_inverted", "base": "all", "mutations": [{ "path": "/temporal/valid_to", "value": "2019-12-31" }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_VALID_INTERVAL_INVALID", "path": "/temporal/valid_to" }] },
+    { "case_id": "valid_interval_empty", "base": "all", "mutations": [{ "path": "/temporal/valid_to", "value": "2020-01-01" }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_VALID_INTERVAL_INVALID", "path": "/temporal/valid_to" }] },
+    { "case_id": "criterion_order_invalid", "base": "all", "mutations": [{ "path": "/classification/criteria", "value": [
+      {
+        "criterion_key": "density_rule",
+        "indicator_definition_ref": "kfm://indicator-definition/synthetic-population-density@sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "comparison_operator": "LESS_THAN_OR_EQUAL",
+        "threshold_policy_ref": "kfm://policy/threshold/synthetic-population-density@sha256:5555555555555555555555555555555555555555555555555555555555555555",
+        "missing_data_action": "ABSTAIN",
+        "uncertainty_action": "ABSTAIN"
+      },
+      {
+        "criterion_key": "access_rule",
+        "indicator_definition_ref": "kfm://indicator-definition/synthetic-access@sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "comparison_operator": "GREATER_THAN_OR_EQUAL",
+        "threshold_policy_ref": "kfm://policy/threshold/synthetic-access@sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "missing_data_action": "ABSTAIN",
+        "uncertainty_action": "ABSTAIN"
+      }
+    ] }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_CRITERION_ORDER_INVALID", "path": "/classification/criteria" }] },
+    { "case_id": "criterion_key_duplicate", "base": "all", "mutations": [{ "path": "/classification/criteria/1/criterion_key", "value": "access_rule" }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_CRITERION_KEY_DUPLICATE", "path": "/classification/criteria" }] },
+    { "case_id": "indicator_reference_order_invalid", "base": "all", "mutations": [{ "path": "/support/indicator_definition_refs", "value": [
+      "kfm://indicator-definition/synthetic-population-density@sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "kfm://indicator-definition/synthetic-access@sha256:2222222222222222222222222222222222222222222222222222222222222222"
+    ] }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_INDICATOR_REFERENCE_ORDER_INVALID", "path": "/support/indicator_definition_refs" }] },
+    { "case_id": "indicator_reference_duplicate", "base": "all", "mutations": [{ "path": "/support/indicator_definition_refs", "value": [
+      "kfm://indicator-definition/synthetic-access@sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "kfm://indicator-definition/synthetic-access@sha256:2222222222222222222222222222222222222222222222222222222222222222"
+    ] }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_SCHEMA_INVALID", "path": "/support/indicator_definition_refs" }] },
+    { "case_id": "indicator_reference_set_mismatch", "base": "all", "mutations": [{ "path": "/support/indicator_definition_refs", "value": [
+      "kfm://indicator-definition/synthetic-access@sha256:2222222222222222222222222222222222222222222222222222222222222222"
+    ] }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_INDICATOR_REFERENCE_MISMATCH", "path": "/support/indicator_definition_refs" }] },
+    { "case_id": "criterion_indicator_duplicate", "base": "all", "mutations": [{ "path": "/classification/criteria/1/indicator_definition_ref", "value": "kfm://indicator-definition/synthetic-access@sha256:2222222222222222222222222222222222222222222222222222222222222222" }], "expected_outcome": "DENY", "expected_findings": [
+      { "code": "FRONTIER_CRITERION_INDICATOR_DUPLICATE", "path": "/classification/criteria" },
+      { "code": "FRONTIER_INDICATOR_REFERENCE_MISMATCH", "path": "/support/indicator_definition_refs" }
+    ] },
+    { "case_id": "evidence_order_invalid", "base": "all", "mutations": [{ "path": "/support/evidence_refs", "value": [
+      "kfm://evidence-ref/frontier/synthetic-scope@sha256:7777777777777777777777777777777777777777777777777777777777777777",
+      "kfm://evidence-ref/frontier/synthetic-method@sha256:6666666666666666666666666666666666666666666666666666666666666666"
+    ] }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_EVIDENCE_ORDER_INVALID", "path": "/support/evidence_refs" }] },
+    { "case_id": "evidence_duplicate", "base": "all", "mutations": [{ "path": "/support/evidence_refs", "value": [
+      "kfm://evidence-ref/frontier/synthetic-method@sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "kfm://evidence-ref/frontier/synthetic-method@sha256:6666666666666666666666666666666666666666666666666666666666666666"
+    ] }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_SCHEMA_INVALID", "path": "/support/evidence_refs" }] },
+    { "case_id": "assumption_order_invalid", "base": "all", "mutations": [{ "path": "/disclosure/assumption_refs", "value": [
+      "kfm://assumption/frontier/synthetic-purpose@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "kfm://assumption/frontier/synthetic-limits@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    ] }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_ASSUMPTION_ORDER_INVALID", "path": "/disclosure/assumption_refs" }] },
+    { "case_id": "assumption_duplicate", "base": "all", "mutations": [{ "path": "/disclosure/assumption_refs", "value": [
+      "kfm://assumption/frontier/synthetic-limits@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "kfm://assumption/frontier/synthetic-limits@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    ] }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_SCHEMA_INVALID", "path": "/disclosure/assumption_refs" }] },
+    { "case_id": "required_limit_missing", "base": "all", "mutations": [{ "path": "/disclosure/interpretation_limits", "value": [
+      "NOT_CLASSIFICATION_RESULT", "NOT_OBSERVATION", "NO_CAUSAL_CLAIM", "NO_INDIVIDUAL_DECISION", "NO_POLICY_DECISION", "NO_PUBLICATION_AUTHORITY", "SCOPE_BOUND"
+    ] }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_REQUIRED_LIMIT_MISSING", "path": "/disclosure/interpretation_limits" }] },
+    { "case_id": "limit_order_invalid", "base": "all", "mutations": [{ "path": "/disclosure/interpretation_limits", "value": [
+      "VERSION_BOUND", "SCOPE_BOUND", "NOT_OBSERVATION", "NOT_CLASSIFICATION_RESULT", "NO_PUBLICATION_AUTHORITY", "NO_POLICY_DECISION", "NO_INDIVIDUAL_DECISION", "NO_CAUSAL_CLAIM"
+    ] }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_LIMIT_ORDER_INVALID", "path": "/disclosure/interpretation_limits" }] },
+    { "case_id": "inline_threshold_denied", "base": "all", "mutations": [{ "path": "/classification/criteria/0/threshold_value", "value": 50 }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_SCHEMA_INVALID", "path": "/classification/criteria/0" }] },
+    { "case_id": "threshold_reference_not_digest_bound", "base": "all", "mutations": [{ "path": "/classification/criteria/0/threshold_policy_ref", "value": "kfm://policy/threshold/synthetic-access" }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_SCHEMA_INVALID", "path": "/classification/criteria/0/threshold_policy_ref" }] },
+    { "case_id": "geography_reference_not_digest_bound", "base": "all", "mutations": [{ "path": "/support/geography_version_ref", "value": "kfm://geography-version/synthetic-county-v1" }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_SCHEMA_INVALID", "path": "/support/geography_version_ref" }] },
+    { "case_id": "geography_profile_drift", "base": "all", "mutations": [{ "path": "/support/geography_version_profile", "value": "kfm.geography-version.runtime.v1" }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_SCHEMA_INVALID", "path": "/support/geography_version_profile" }] },
+    { "case_id": "missing_data_cannot_classify", "base": "all", "mutations": [{ "path": "/classification/criteria/0/missing_data_action", "value": "CLASSIFY" }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_SCHEMA_INVALID", "path": "/classification/criteria/0/missing_data_action" }] },
+    { "case_id": "uncertainty_cannot_classify", "base": "all", "mutations": [{ "path": "/classification/criteria/0/uncertainty_action", "value": "CLASSIFY" }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_SCHEMA_INVALID", "path": "/classification/criteria/0/uncertainty_action" }] },
+    { "case_id": "operator_invalid", "base": "all", "mutations": [{ "path": "/classification/criteria/0/comparison_operator", "value": "EQUAL" }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_SCHEMA_INVALID", "path": "/classification/criteria/0/comparison_operator" }] },
+    { "case_id": "criteria_empty", "base": "all", "mutations": [{ "path": "/classification/criteria", "value": [] }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_SCHEMA_INVALID", "path": "/classification/criteria" }] },
+    { "case_id": "inline_county_identifier_denied", "base": "all", "mutations": [{ "path": "/frontier/county_id", "value": "synthetic-001" }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_SCHEMA_INVALID", "path": "/frontier" }] },
+    { "case_id": "unit_level_not_county", "base": "all", "mutations": [{ "path": "/frontier/unit_level", "value": "TRACT" }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_SCHEMA_INVALID", "path": "/frontier/unit_level" }] },
+    { "case_id": "valid_time_alignment_forbidden_false", "base": "all", "mutations": [{ "path": "/temporal/geography_valid_time_alignment_required", "value": false }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_SCHEMA_INVALID", "path": "/temporal/geography_valid_time_alignment_required" }] },
+    { "case_id": "result_vocabulary_tampered", "base": "all", "mutations": [{ "path": "/classification/satisfied_result", "value": "RURAL" }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_SCHEMA_INVALID", "path": "/classification/satisfied_result" }] },
+    { "case_id": "thresholds_cannot_be_resolved", "base": "all", "mutations": [{ "path": "/classification/threshold_resolution_state", "value": "RESOLVED" }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_SCHEMA_INVALID", "path": "/classification/threshold_resolution_state" }] },
+    { "case_id": "rule_cannot_be_executed", "base": "all", "mutations": [{ "path": "/classification/rule_execution_state", "value": "EXECUTED" }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_SCHEMA_INVALID", "path": "/classification/rule_execution_state" }] },
+    { "case_id": "county_classification_forbidden", "base": "all", "mutations": [{ "path": "/governance/county_classified", "value": true }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_SCHEMA_INVALID", "path": "/governance/county_classified" }] },
+    { "case_id": "public_use_forbidden", "base": "all", "mutations": [{ "path": "/governance/public_use_allowed", "value": true }], "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_SCHEMA_INVALID", "path": "/governance/public_use_allowed" }] },
+    { "case_id": "spec_hash_mismatch", "base": "all", "spec_hash_override": "sha256:9999999999999999999999999999999999999999999999999999999999999999", "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_SPEC_HASH_MISMATCH", "path": "/spec_hash" }] },
+    { "case_id": "definition_id_mismatch", "base": "any", "definition_id_override": "kfm:frontier-definition:999999999999999999999999", "expected_outcome": "DENY", "expected_findings": [{ "code": "FRONTIER_DEFINITION_ID_MISMATCH", "path": "/definition_id" }] }
+  ]
+}

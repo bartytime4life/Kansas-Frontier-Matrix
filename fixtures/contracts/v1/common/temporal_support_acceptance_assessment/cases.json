@@ -1,0 +1,133 @@
+{
+  "object_type": "TemporalSupportAcceptanceFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.common.temporal-support-acceptance.fixture.v1",
+  "base_candidate": {
+    "object_type": "TemporalSupportAcceptanceAssessment",
+    "schema_version": "1.0.0",
+    "profile": "kfm.common.temporal-support-acceptance.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_item": "KFM-P20-EXP-013",
+    "evaluated_at": "2026-08-10T23:00:00Z",
+    "assessment_state": "COMPLETE",
+    "intended_use": "PUBLIC_SURFACE_CANDIDATE",
+    "subject": {
+      "kind": "LAYER_MANIFEST",
+      "ref": "kfm:layer-manifest:synthetic-temporal:001",
+      "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "resolution": "RESOLVED"
+    },
+    "temporal_support_assessment": {
+      "ref": "kfm:temporal-support-assessment:synthetic:001",
+      "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "resolution": "RESOLVED"
+    },
+    "release_state": "RELEASED",
+    "time_dimensions": {
+      "valid_time": {"start": "2026-01-01T00:00:00Z", "end": "2027-01-01T00:00:00Z"},
+      "observed_at": "2026-06-01T00:00:00Z",
+      "source_updated_at": "2026-06-02T00:00:00Z",
+      "retrieved_at": "2026-06-03T00:00:00Z",
+      "release_time": "2026-06-04T00:00:00Z",
+      "correction_time": null,
+      "as_of_time": "2026-06-03T00:00:00Z",
+      "freshness_ttl_seconds": 604800
+    },
+    "disclosure": {
+      "reason_codes": ["TEMPORAL_SUPPORT_DECLARED"],
+      "evidence_drawer_section_ref": "kfm:evidence-drawer-section:synthetic-temporal:001",
+      "temporal_caveat": "Synthetic temporal declaration; dates and freshness posture do not prove evidence, policy, review, release, publication, or currentness."
+    },
+    "limitations": [
+      "DECLARATION_ONLY",
+      "NO_REFERENCE_RESOLUTION",
+      "NO_FRESHNESS_POLICY_EVALUATION",
+      "NO_PUBLICATION_AUTHORITY"
+    ],
+    "authority_claims": {
+      "temporal_truth_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "lifecycle_write_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_released_layer", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {
+      "name": "pass_internal_evidence_bundle",
+      "patch": {
+        "intended_use": "INTERNAL_QA",
+        "subject": {"kind": "EVIDENCE_BUNDLE", "ref": "kfm:evidence-bundle:synthetic-temporal:001"},
+        "release_state": "UNRELEASED",
+        "time_dimensions": {"release_time": null},
+        "disclosure": {"evidence_drawer_section_ref": null, "temporal_caveat": null}
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_internal_policy_decision",
+      "patch": {
+        "intended_use": "INTERNAL_QA",
+        "subject": {"kind": "POLICY_DECISION", "ref": "kfm:policy-decision:synthetic-temporal:001"},
+        "release_state": "CANDIDATE",
+        "time_dimensions": {"release_time": null},
+        "disclosure": {"evidence_drawer_section_ref": null, "temporal_caveat": null}
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_public_ai_envelope",
+      "patch": {"subject": {"kind": "AI_ENVELOPE", "ref": "kfm:ai-envelope:synthetic-temporal:001"}},
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {"name": "abstain_incomplete_assessment", "patch": {"assessment_state": "INCOMPLETE"}, "expected": {"outcome": "ABSTAIN", "codes": ["ASSESSMENT_INCOMPLETE"]}},
+    {"name": "abstain_subject_unresolved", "patch": {"subject": {"resolution": "UNRESOLVED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["SUBJECT_UNRESOLVED"]}},
+    {"name": "abstain_support_unresolved", "patch": {"temporal_support_assessment": {"resolution": "UNRESOLVED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["TEMPORAL_SUPPORT_ASSESSMENT_UNRESOLVED"]}},
+    {"name": "deny_hash_mismatch", "patch": {}, "tamper_profile_hash": true, "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}},
+    {"name": "deny_undated_layer", "patch": {"time_dimensions": {"valid_time": null}}, "expected": {"outcome": "DENY", "codes": ["MISSING_VALID_TIME"]}},
+    {
+      "name": "deny_evidence_bundle_missing_observed",
+      "patch": {"intended_use": "INTERNAL_QA", "subject": {"kind": "EVIDENCE_BUNDLE"}, "time_dimensions": {"observed_at": null}},
+      "expected": {"outcome": "DENY", "codes": ["MISSING_OBSERVED_AT"]}
+    },
+    {
+      "name": "deny_ai_missing_as_of",
+      "patch": {"subject": {"kind": "AI_ENVELOPE"}, "time_dimensions": {"as_of_time": null}},
+      "expected": {"outcome": "DENY", "codes": ["MISSING_AS_OF_TIME"]}
+    },
+    {
+      "name": "deny_invalid_interval",
+      "patch": {"time_dimensions": {"valid_time": {"start": "2027-01-01T00:00:00Z", "end": "2026-01-01T00:00:00Z"}}},
+      "expected": {"outcome": "DENY", "codes": ["INVALID_VALID_TIME_INTERVAL"]}
+    },
+    {"name": "deny_release_time_missing", "patch": {"time_dimensions": {"release_time": null}}, "expected": {"outcome": "DENY", "codes": ["RELEASE_TIME_REQUIRED"]}},
+    {
+      "name": "deny_correction_time_missing",
+      "patch": {"release_state": "CORRECTED", "time_dimensions": {"correction_time": null}},
+      "expected": {"outcome": "DENY", "codes": ["CORRECTION_TIME_REQUIRED"]}
+    },
+    {"name": "deny_public_unreleased", "patch": {"release_state": "UNRELEASED"}, "expected": {"outcome": "DENY", "codes": ["PUBLIC_RELEASE_STATE_REQUIRED"]}},
+    {
+      "name": "deny_public_disclosure_missing",
+      "patch": {"disclosure": {"evidence_drawer_section_ref": null, "temporal_caveat": null}},
+      "expected": {"outcome": "DENY", "codes": ["PUBLIC_EVIDENCE_DRAWER_REFERENCE_REQUIRED", "PUBLIC_TEMPORAL_CAVEAT_REQUIRED"]}
+    },
+    {
+      "name": "deny_withdrawn_subject",
+      "patch": {"intended_use": "INTERNAL_QA", "release_state": "WITHDRAWN", "time_dimensions": {"correction_time": "2026-06-05T00:00:00Z"}},
+      "expected": {"outcome": "DENY", "codes": ["WITHDRAWN_SUBJECT_NOT_ACCEPTABLE"]}
+    },
+    {
+      "name": "deny_observed_after_retrieval",
+      "patch": {"time_dimensions": {"observed_at": "2026-06-04T00:00:00Z", "retrieved_at": "2026-06-03T00:00:00Z"}},
+      "expected": {"outcome": "DENY", "codes": ["OBSERVED_AFTER_RETRIEVAL"]}
+    },
+    {"name": "error_assessment_state", "patch": {"assessment_state": "ERROR"}, "expected": {"outcome": "ERROR", "codes": ["ASSESSMENT_EVALUATION_ERROR"]}},
+    {"name": "error_authority_overreach", "patch": {"authority_claims": {"publication_authority": true}}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}

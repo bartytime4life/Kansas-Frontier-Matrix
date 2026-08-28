@@ -1,0 +1,4 @@
+# pipeline_specs :: soil :: ingest
+name: soil-ingest
+version: 1
+stages: []

@@ -1,0 +1,125 @@
+{
+  "receipt_id": "genrec:geospatial-carrier-readiness:20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/geospatial-carrier-readiness.yml",
+    "contracts/release/geospatial_carrier_readiness.md",
+    "schemas/contracts/v1/release/geospatial_carrier_readiness.schema.json",
+    "fixtures/contracts/v1/release/geospatial_carrier_readiness/cases.json",
+    "tools/validators/release/validate_geospatial_carrier_readiness.py",
+    "tests/release/test_geospatial_carrier_readiness.py",
+    "docs/intake/exploratory/geospatial-carrier-readiness-source-map.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/geospatial-carrier-readiness.yml": "sha256:36948e4baa7c1f0fc68b24dd23b189badc5478cf88f684645009f9a76cfc5af8",
+    "contracts/release/geospatial_carrier_readiness.md": "sha256:e69d96bb948c8208fb609a43e0a538ae41b4b03eeacff17f3e7c8443b3e3423c",
+    "schemas/contracts/v1/release/geospatial_carrier_readiness.schema.json": "sha256:b9415eb40c12b1290aaaec889a93d4ec49440c18f633e176849cd4727735303a",
+    "fixtures/contracts/v1/release/geospatial_carrier_readiness/cases.json": "sha256:d8382b0fd1b194a9a3212939fc0c22ca25d8d673aaa37b9cedbf24b1f1e4485c",
+    "tools/validators/release/validate_geospatial_carrier_readiness.py": "sha256:d3891d3e10da3f1e540c4f27b5bd19cea60ba564c53336634cda1af57646f3f8",
+    "tests/release/test_geospatial_carrier_readiness.py": "sha256:7f4f0c02fd31154d04050d15b34c114400a6434b88eaecb61741e763a57a05b4",
+    "docs/intake/exploratory/geospatial-carrier-readiness-source-map.md": "sha256:aee504b2b8a7cb1abc90120b3374c1915f02a9b8a070d90e08c9abe466e8536b"
+  },
+  "model_identity": {
+    "provider": "openai",
+    "model": "gpt-5.6-thinking",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:18f17a0ce67e86fc8e8b7091a80629e56d4553752cc049cd319c225b079e602d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "github",
+      "python",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "git:main@1787b4ac71f51b6e46e9f087be844b18b387d1b2",
+      "docs/standards/COG.md",
+      "docs/standards/MVT.md",
+      "docs/standards/GEOPARQUET.md",
+      "docs/doctrine/directory-rules.md"
+    ],
+    "attached_docs": []
+  },
+  "truth_labels": {
+    ".github/workflows/geospatial-carrier-readiness.yml": "PROPOSED",
+    "contracts/release/geospatial_carrier_readiness.md": "PROPOSED",
+    "schemas/contracts/v1/release/geospatial_carrier_readiness.schema.json": "PROPOSED",
+    "fixtures/contracts/v1/release/geospatial_carrier_readiness/cases.json": "PROPOSED",
+    "tools/validators/release/validate_geospatial_carrier_readiness.py": "PROPOSED",
+    "tests/release/test_geospatial_carrier_readiness.py": "PROPOSED",
+    "docs/intake/exploratory/geospatial-carrier-readiness-source-map.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest-9",
+      "outcome": "PASS",
+      "reason": "Nine deterministic tests passed against final non-receipt authored bytes."
+    },
+    {
+      "gate": "carrier-case-polarity-9",
+      "outcome": "PASS",
+      "reason": "COG, MVT, and GeoParquet each include exact READY, HOLD, and ERROR cases."
+    },
+    {
+      "gate": "draft-2020-12-meta",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "python-compile",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "policy:ai-build-operating-contract:3.0.0"
+  ],
+  "citations": [
+    {
+      "id": "KFM_COG_STANDARD",
+      "validated": true,
+      "evidence_ref": "docs/standards/COG.md"
+    },
+    {
+      "id": "KFM_MVT_STANDARD",
+      "validated": true,
+      "evidence_ref": "docs/standards/MVT.md"
+    },
+    {
+      "id": "KFM_GEOPARQUET_STANDARD",
+      "validated": true,
+      "evidence_ref": "docs/standards/GEOPARQUET.md"
+    },
+    {
+      "id": "KFM_DIRECTORY_RULES",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T22:18:00Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only metadata preflight mined from existing KFM standards references. Receipt records authorship and byte hashes only; it does not authenticate standards claims, approve release, or authorize merge."
+}

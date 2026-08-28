@@ -1,0 +1,16 @@
+{
+  "asset_id": "kfm-mark-v1",
+  "family": "mark",
+  "version": "1.0.0",
+  "source_path": "docs/brand/logo/mark/kfm-mark.svg",
+  "derivative_paths": [
+    "docs/brand/logo/mark/derivatives/kfm-mark-16.png",
+    "docs/brand/logo/mark/derivatives/kfm-mark-32.png",
+    "docs/brand/logo/mark/derivatives/kfm-mark-48.png",
+    "docs/brand/logo/mark/derivatives/kfm-mark-192.png",
+    "docs/brand/logo/mark/derivatives/kfm-mark-512.png",
+    "docs/brand/logo/mark/derivatives/kfm-mark-1024.png"
+  ],
+  "review_state": "draft",
+  "release_state": "unreleased"
+}

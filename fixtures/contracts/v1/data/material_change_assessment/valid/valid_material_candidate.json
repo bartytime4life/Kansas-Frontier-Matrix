@@ -1,0 +1,67 @@
+{
+  "assessment_id": "material-change:dataset:ks-example:2026-08-04-material",
+  "baseline_ref": "kfm://dataset-version/ks-example/2026-07-01",
+  "candidate_ref": "kfm://dataset-version/ks-example/2026-08-01",
+  "classification": {
+    "change_class": "MATERIAL",
+    "material": true,
+    "outcome": "PROMOTION_CANDIDATE",
+    "reason_codes": [
+      "MATERIALITY_THRESHOLD_MET"
+    ]
+  },
+  "comparison": {
+    "baseline_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "byte_changed": true,
+    "candidate_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "semantic_changed": true
+  },
+  "criteria": [
+    {
+      "criterion_id": "area-delta-percent",
+      "evidence_refs": [
+        "kfm://validation/example-area-delta"
+      ],
+      "metric": "area_delta_percent",
+      "observed_value": 0.8,
+      "required": true,
+      "result": "PASS",
+      "threshold": 0.5,
+      "unit": "percent"
+    }
+  ],
+  "evidence": {
+    "diff_report_ref": "kfm://diff/example-2026-08-04",
+    "source_refs": [
+      "kfm://source/example"
+    ],
+    "validation_report_refs": []
+  },
+  "governance": {
+    "authority_created": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null,
+    "spec_hash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+  },
+  "lineage": {
+    "superseded_by": null,
+    "supersedes": null
+  },
+  "object_type": "MaterialChangeAssessment",
+  "profile": {
+    "canonicalization_profile": "kfm-canonical-json-v1",
+    "digest_algorithm": "sha256",
+    "profile_id": "kfm://materiality-profile/example/v1",
+    "profile_version": "1.0.0",
+    "spec_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "schema_version": "1.0.0",
+  "subject_ref": "kfm://dataset/ks-example",
+  "timing": {
+    "assessed_at": "2026-08-04T12:00:00Z",
+    "baseline_as_of": "2026-07-01T00:00:00Z",
+    "candidate_as_of": "2026-08-01T00:00:00Z"
+  }
+}

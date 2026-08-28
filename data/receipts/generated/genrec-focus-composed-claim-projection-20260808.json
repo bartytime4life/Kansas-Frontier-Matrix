@@ -1,0 +1,190 @@
+{
+  "receipt_id": "genrec-focus-composed-claim-projection-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/features/focus_panel/COMPOSED_CLAIM_FIXTURE.md",
+    "apps/explorer-web/src/features/focus_panel/index.tsx",
+    "apps/explorer-web/src/features/focus_panel/panel.ts",
+    "apps/explorer-web/src/features/focus_panel/parsers.ts",
+    "apps/explorer-web/src/features/focus_panel/resolver.ts",
+    "apps/explorer-web/src/features/focus_panel/types.ts",
+    "apps/explorer-web/tests/browser/focus-composed-claim.fixture.ts",
+    "apps/explorer-web/tests/browser/focus-composed-claim.html",
+    "apps/explorer-web/tests/browser/focus-composed-claim.spec.ts",
+    "apps/explorer-web/tests/focus-composed-claim.test.ts",
+    "fixtures/ui/focus_composed_claim_projection/README.md",
+    "fixtures/ui/focus_composed_claim_projection/valid/abstain-unresolved.json",
+    "fixtures/ui/focus_composed_claim_projection/valid/answer-qualified.json",
+    "fixtures/ui/focus_composed_claim_projection/valid/answer-supported.json",
+    "fixtures/ui/focus_composed_claim_projection/valid/deny-policy.json"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/features/focus_panel/COMPOSED_CLAIM_FIXTURE.md": "sha256:1af601987f27d7b238aba7fe1b62f061074e554793979e12ab6bc8363ce5142c",
+    "apps/explorer-web/src/features/focus_panel/index.tsx": "sha256:ad702bfd62a2166241d2ecad0e607ba081890ebdbf62d7aa0834977b1723c50e",
+    "apps/explorer-web/src/features/focus_panel/panel.ts": "sha256:277693d0fbcfd41977550c6daa919f71d90e62459c37a96335fe1616da002af8",
+    "apps/explorer-web/src/features/focus_panel/parsers.ts": "sha256:12186f0d991e96b40a6e15a03cbb3ee9c91d613e299310bb9291b5848576462c",
+    "apps/explorer-web/src/features/focus_panel/resolver.ts": "sha256:fbc4a90ef6a293e85cb9db3cdb95d974bc470cb0abc9217f317d6658f3199d10",
+    "apps/explorer-web/src/features/focus_panel/types.ts": "sha256:2ad177e66cc158a03c020963e64442aea786f284ebcba3f71cdc289f2c4db88e",
+    "apps/explorer-web/tests/browser/focus-composed-claim.fixture.ts": "sha256:727476c4e40ac641be5b6be6e4879ed505e84e70cd26a984296c3654ea1bef48",
+    "apps/explorer-web/tests/browser/focus-composed-claim.html": "sha256:057bb99d79396e95756d7f898fca90d3d6ed20533ff0f536944b8f27c8f8b41e",
+    "apps/explorer-web/tests/browser/focus-composed-claim.spec.ts": "sha256:f1251b554582edefd84c7a4ca207c8e8248ab33d1b619cd148ec1ad8a21fa43f",
+    "apps/explorer-web/tests/focus-composed-claim.test.ts": "sha256:b8375c02dd93b01e872fefa5db675cc88f1e7621d5fa5f2eced101ec68787faf",
+    "fixtures/ui/focus_composed_claim_projection/README.md": "sha256:00aa43572b9e29c599e13ba086209b0b1b9420f43eef9f2a92d0ca0ae2559981",
+    "fixtures/ui/focus_composed_claim_projection/valid/abstain-unresolved.json": "sha256:d7d868870068dc37f3dd18c9bde53f2f8b9934be1cb342701c3da292abf9fdf2",
+    "fixtures/ui/focus_composed_claim_projection/valid/answer-qualified.json": "sha256:d4f557b8f28cfbbc8cc56f2ed06854d0a94ff4b21330fd9b62fe292dc5509084",
+    "fixtures/ui/focus_composed_claim_projection/valid/answer-supported.json": "sha256:54dc4b6f1df778f3ffd2ee15af20e696f672ae3bab346306e980e92acd384438",
+    "fixtures/ui/focus_composed_claim_projection/valid/deny-policy.json": "sha256:4587074b15d63b3115838cb47c3671a3e9d0f3f7d7320df51827ffcc8f11fd90"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:460f6bdbf7ad5a1e30f57dd79c9bdc0c72b561e5b5c4d6d36e5b33be6e29ef1b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector read/write",
+      "uploaded-file search",
+      "local TypeScript static validation",
+      "local deterministic fixture replay"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:309cf67311059c549e144ae9961b2f49eddf1caab8739a51b47ae88c2f5c1c90",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "Master MapLibre Components-Functions-Features.pdf",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:Master MapLibre Components-Functions-Features.pdf#ML-Y-109",
+      "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf",
+      "github:f622ec9fc52dfb762aa39d709094e6c8af749dfb",
+      "github:contracts/evidence/composed_claim_dependency_closure.md",
+      "github:schemas/contracts/v1/evidence/composed_claim_dependency_closure.schema.json",
+      "github:apps/explorer-web/src/features/focus_panel/README.md",
+      "github:apps/explorer-web/src/features/evidence_drawer/index.tsx",
+      "github:apps/explorer-web/src/adapters/GovernedClient.ts"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/features/focus_panel/COMPOSED_CLAIM_FIXTURE.md": "PROPOSED",
+    "apps/explorer-web/src/features/focus_panel/index.tsx": "PROPOSED",
+    "apps/explorer-web/src/features/focus_panel/panel.ts": "PROPOSED",
+    "apps/explorer-web/src/features/focus_panel/parsers.ts": "PROPOSED",
+    "apps/explorer-web/src/features/focus_panel/resolver.ts": "PROPOSED",
+    "apps/explorer-web/src/features/focus_panel/types.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/focus-composed-claim.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/focus-composed-claim.html": "PROPOSED",
+    "apps/explorer-web/tests/browser/focus-composed-claim.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/focus-composed-claim.test.ts": "PROPOSED",
+    "fixtures/ui/focus_composed_claim_projection/README.md": "PROPOSED",
+    "fixtures/ui/focus_composed_claim_projection/valid/abstain-unresolved.json": "PROPOSED",
+    "fixtures/ui/focus_composed_claim_projection/valid/answer-qualified.json": "PROPOSED",
+    "fixtures/ui/focus_composed_claim_projection/valid/answer-supported.json": "PROPOSED",
+    "fixtures/ui/focus_composed_claim_projection/valid/deny-policy.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "typescript-strict-static-compile",
+      "outcome": "PASS",
+      "reason": "All app-local source modules and focused test sources compile under global TypeScript 5.8 strict mode against interface-compatible declarations; the repository pins TypeScript 7.0.2 and hosted build remains controlling."
+    },
+    {
+      "gate": "fixture-json-parse",
+      "outcome": "PASS",
+      "reason": "All four synthetic public-safe projections parse as finite standards-conforming JSON without duplicate keys."
+    },
+    {
+      "gate": "deterministic-projection-replay",
+      "outcome": "PASS",
+      "reason": "A local emitted-JavaScript replay parsed supported, qualified, abstained, and denied fixtures, resolved the supported request twice byte-identically, and preserved finite closure mapping."
+    },
+    {
+      "gate": "negative-payload-sanitization",
+      "outcome": "PASS",
+      "reason": "Local replay confirmed abstain and deny diagnostics are removed from retained Focus and Evidence Drawer browser state."
+    },
+    {
+      "gate": "artifact-hash-closure",
+      "outcome": "PASS",
+      "reason": "All fifteen authored artifacts were SHA-256 hashed and receipt path/hash/truth-label keys close exactly without self-reference."
+    },
+    {
+      "gate": "repository-native-explorer-build",
+      "outcome": "SKIPPED",
+      "reason": "The local environment cannot install the repository's pinned dependencies; hosted ui-build is the execution source of truth."
+    },
+    {
+      "gate": "vitest-focused-suite",
+      "outcome": "SKIPPED",
+      "reason": "Repository-native Vitest execution is pending on the draft pull request."
+    },
+    {
+      "gate": "playwright-browser-suite",
+      "outcome": "SKIPPED",
+      "reason": "Repository-native Playwright execution is pending on the draft pull request."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation begins after the receipt-bearing branch is pushed and the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0001-schema-home.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:master-maplibre-ml-y-109",
+      "validated": true,
+      "evidence_ref": "attachment:Master MapLibre Components-Functions-Features.pdf#ML-Y-109"
+    },
+    {
+      "id": "attachment:directory-governance-v2",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    },
+    {
+      "id": "repository:composed-claim-closure-contract",
+      "validated": true,
+      "evidence_ref": "github:contracts/evidence/composed_claim_dependency_closure.md"
+    },
+    {
+      "id": "repository:focus-panel-boundary",
+      "validated": true,
+      "evidence_ref": "github:apps/explorer-web/src/features/focus_panel/README.md"
+    },
+    {
+      "id": "repository:evidence-drawer-runtime",
+      "validated": true,
+      "evidence_ref": "github:apps/explorer-web/src/features/evidence_drawer/index.tsx"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T20:23:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Implements the fixture-first ML-Y-109 continuation over the existing composed-claim dependency-closure contract. The Explorer feature validates bounded requests and public-safe projections, maps SUPPORTED and QUALIFIED closure to cited ANSWER states, maps unresolved closure to ABSTAIN, preserves fixed DENY/ERROR copy, enforces request/claim identity and EvidenceRef subset binding, sanitizes negative Evidence Drawer state, labels AIReceipt references as process memory, and proves keyboard/focus/Escape behavior through browser fixtures. It adds no live API route, model call, source activation, policy authority, evidence resolution, release, deployment, publication, or public-use authority."
+}

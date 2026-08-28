@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/spec_hash.schema.json",
+  "title": "spec_hash",
+  "type": "object",
+  "description": "KFM contract for spec_hash.",
+  "x-kfm": {
+    "contract_doc": "contracts/common/spec_hash.md",
+    "fixtures_root": "fixtures/contracts/v1/common/spec_hash/",
+    "validator": "tools/validators/validate_spec_hash.py",
+    "policy": "policy/common/",
+    "status": "PROPOSED"
+  },
+  "properties": {
+    "value": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  },
+  "required": [
+    "value"
+  ],
+  "additionalProperties": false
+}

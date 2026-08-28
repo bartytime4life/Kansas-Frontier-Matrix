@@ -1,0 +1,331 @@
+{
+  "profile": "kfm.governance.published-language-review-fixtures.v1",
+  "source_idea_ids": [
+    "KFM-IDX-MOD-005",
+    "KFM-P18-INV-350",
+    "KFM-P18-INV-375"
+  ],
+  "bases": {
+    "stable": {
+      "profile": "kfm.governance.published-language-review.v1",
+      "status": "PROPOSED_INACTIVE",
+      "version": "1.0.0",
+      "term_id": "term:evidence-bundle",
+      "public_term": "EvidenceBundle",
+      "definition": "A resolved, scope-bounded evidence object that supports inspection and citation without transferring release or policy authority.",
+      "owning_context": "evidence",
+      "related_contexts": [
+        "governed-api",
+        "map"
+      ],
+      "context_map_ref": "kfm:context-map:cross-domain-seams:v1",
+      "object_family_refs": [
+        "kfm:object-family:evidence-bundle"
+      ],
+      "public_api_resource_refs": [
+        "kfm:api-resource:evidence-bundles"
+      ],
+      "internal_aliases": [
+        "resolved_evidence_bundle"
+      ],
+      "stability": "STABLE",
+      "change_kind": "ADDITIVE",
+      "migration_ref": null,
+      "compatibility_window": null,
+      "evidence_refs": [
+        "kfm:evidence:published-language-review:stable-term"
+      ],
+      "source_refs": [
+        "kfm:source:ddd-reference",
+        "kfm:source:kfm-pass-18"
+      ],
+      "limitations": [
+        "Fixture review does not adopt public vocabulary or change a runtime contract."
+      ],
+      "decision": "HOLD",
+      "adoption_ref": null,
+      "public_use_allowed": false,
+      "effects": {
+        "schema_changed": false,
+        "api_changed": false,
+        "context_map_changed": false,
+        "adopted": false,
+        "released": false,
+        "published": false
+      }
+    },
+    "deprecation": {
+      "profile": "kfm.governance.published-language-review.v1",
+      "status": "PROPOSED_INACTIVE",
+      "version": "1.0.0",
+      "term_id": "term:proof-pack",
+      "public_term": "ProofPack",
+      "definition": "A legacy public term proposed for replacement by ProofBundle while preserving compatibility and correction history.",
+      "owning_context": "release",
+      "related_contexts": [
+        "evidence",
+        "governed-api"
+      ],
+      "context_map_ref": "kfm:context-map:cross-domain-seams:v1",
+      "object_family_refs": [
+        "kfm:object-family:proof-pack"
+      ],
+      "public_api_resource_refs": [
+        "kfm:api-resource:proof-packs"
+      ],
+      "internal_aliases": [
+        "proof_pack_v1"
+      ],
+      "stability": "DEPRECATED",
+      "change_kind": "DEPRECATION",
+      "migration_ref": "kfm:migration:proof-pack-to-proof-bundle:v1",
+      "compatibility_window": {
+        "starts_at": "2026-08-08T00:00:00Z",
+        "ends_at": "2027-02-08T00:00:00Z"
+      },
+      "evidence_refs": [
+        "kfm:evidence:published-language-review:deprecation"
+      ],
+      "source_refs": [
+        "kfm:source:ddd-reference",
+        "kfm:source:kfm-pass-18"
+      ],
+      "limitations": [
+        "Fixture review does not authorize deprecation or remove compatibility aliases."
+      ],
+      "decision": "HOLD",
+      "adoption_ref": null,
+      "public_use_allowed": false,
+      "effects": {
+        "schema_changed": false,
+        "api_changed": false,
+        "context_map_changed": false,
+        "adopted": false,
+        "released": false,
+        "published": false
+      }
+    }
+  },
+  "cases": [
+    {
+      "name": "stable_public_term_candidate",
+      "base": "stable",
+      "mutations": [],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "deprecation_with_migration_window",
+      "base": "deprecation",
+      "mutations": [],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "public_term_alias_collision",
+      "base": "stable",
+      "mutations": [
+        {
+          "path": "/internal_aliases",
+          "value": [
+            "EvidenceBundle"
+          ]
+        }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "PUBLIC_TERM_ALIAS_COLLISION",
+          "path": "/internal_aliases"
+        }
+      ]
+    },
+    {
+      "name": "owning_context_repeated_as_consumer",
+      "base": "stable",
+      "mutations": [
+        {
+          "path": "/related_contexts",
+          "value": [
+            "evidence",
+            "governed-api",
+            "map"
+          ]
+        }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "OWNING_CONTEXT_SELF_REFERENCE",
+          "path": "/related_contexts"
+        }
+      ]
+    },
+    {
+      "name": "breaking_change_without_migration",
+      "base": "stable",
+      "mutations": [
+        {
+          "path": "/change_kind",
+          "value": "BREAKING"
+        }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "COMPATIBILITY_WINDOW_REQUIRED",
+          "path": "/compatibility_window"
+        },
+        {
+          "code": "MIGRATION_REQUIRED",
+          "path": "/migration_ref"
+        }
+      ]
+    },
+    {
+      "name": "additive_change_with_migration_authority",
+      "base": "stable",
+      "mutations": [
+        {
+          "path": "/migration_ref",
+          "value": "kfm:migration:unneeded"
+        }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "MIGRATION_NOT_ALLOWED",
+          "path": "/migration_ref"
+        }
+      ]
+    },
+    {
+      "name": "deprecated_state_without_deprecation_change",
+      "base": "stable",
+      "mutations": [
+        {
+          "path": "/stability",
+          "value": "DEPRECATED"
+        }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "DEPRECATION_STATE_MISMATCH",
+          "path": "/stability"
+        }
+      ]
+    },
+    {
+      "name": "invalid_compatibility_window_order",
+      "base": "deprecation",
+      "mutations": [
+        {
+          "path": "/compatibility_window/ends_at",
+          "value": "2026-07-01T00:00:00Z"
+        }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "COMPATIBILITY_WINDOW_INVALID",
+          "path": "/compatibility_window"
+        }
+      ]
+    },
+    {
+      "name": "noncanonical_context_order",
+      "base": "stable",
+      "mutations": [
+        {
+          "path": "/related_contexts",
+          "value": [
+            "map",
+            "governed-api"
+          ]
+        }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "NONCANONICAL_REFERENCE_ARRAY",
+          "path": "/related_contexts"
+        }
+      ]
+    },
+    {
+      "name": "adoption_overclaim",
+      "base": "stable",
+      "mutations": [
+        {
+          "path": "/decision",
+          "value": "ADOPTED"
+        },
+        {
+          "path": "/adoption_ref",
+          "value": "ADR-9999"
+        },
+        {
+          "path": "/effects/adopted",
+          "value": true
+        }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "ADOPTION_OVERCLAIM",
+          "path": "/adoption_ref"
+        },
+        {
+          "code": "DECISION_OVERCLAIM",
+          "path": "/decision"
+        },
+        {
+          "code": "EFFECT_OVERCLAIM",
+          "path": "/effects"
+        }
+      ]
+    },
+    {
+      "name": "public_use_overclaim",
+      "base": "stable",
+      "mutations": [
+        {
+          "path": "/public_use_allowed",
+          "value": true
+        }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "PUBLIC_USE_OVERCLAIM",
+          "path": "/public_use_allowed"
+        }
+      ]
+    },
+    {
+      "name": "spec_hash_corruption",
+      "base": "stable",
+      "mutations": [],
+      "identity_mode": "MISMATCH_SPEC_HASH",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {
+          "code": "SPEC_HASH_MISMATCH",
+          "path": "/spec_hash"
+        }
+      ]
+    }
+  ]
+}

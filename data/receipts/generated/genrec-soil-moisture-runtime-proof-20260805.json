@@ -1,0 +1,138 @@
+{
+  "receipt_id": "genrec-soil-moisture-runtime-proof-20260805",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/soil-moisture-runtime-proof.yml",
+    "packages/envelopes/src/envelopes/__init__.py",
+    "packages/envelopes/src/envelopes/runtime_response.py",
+    "tests/packages/README.md",
+    "tests/packages/envelopes/conftest.py",
+    "tests/packages/envelopes/test_runtime_response_candidate.py",
+    "tests/runtime_proof/domains/__init__.py",
+    "tests/runtime_proof/domains/soil/__init__.py",
+    "tests/runtime_proof/domains/soil/soil_moisture/README.md",
+    "tests/runtime_proof/domains/soil/soil_moisture/__init__.py",
+    "tests/runtime_proof/domains/soil/soil_moisture/conftest.py",
+    "tests/runtime_proof/domains/soil/soil_moisture/runtime_mapper.py",
+    "tests/runtime_proof/domains/soil/soil_moisture/test_runtime_mapper.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/soil-moisture-runtime-proof.yml": "sha256:8078e8e8935d5699175cff75a0a5a74d3d5b11d097e4631f12899855e03521e9",
+    "packages/envelopes/src/envelopes/__init__.py": "sha256:2f9cffc90c817e1f3651fa4db229c03645c798f12fba47ac68700da7231e1976",
+    "packages/envelopes/src/envelopes/runtime_response.py": "sha256:2a320822222e7e2f1fd4757906bb84ae4f1cd6c71283ed6c888f8cf50e572ec0",
+    "tests/packages/README.md": "sha256:a1cf4b7bbd6f1d1c2770de66e534446921ba9170ae2ecffc791ce03553657de2",
+    "tests/packages/envelopes/conftest.py": "sha256:25d00fc41abb0806af3e0f6eb0b0ed81f8e9c150e2576da3ebcb0fb71090db53",
+    "tests/packages/envelopes/test_runtime_response_candidate.py": "sha256:b0877335f5760913cba3ace1881f518179d9cba9d923eadbb5a792428b4bec80",
+    "tests/runtime_proof/domains/__init__.py": "sha256:6a94b7d6516bc76bc36f80ea88e26091dcf5e23ba8aa1a2212394cfb5c61a5f2",
+    "tests/runtime_proof/domains/soil/__init__.py": "sha256:b5ad8627ca000ca151fd66447e3b468ae252df48bf0133a980fbb2ca0b021487",
+    "tests/runtime_proof/domains/soil/soil_moisture/README.md": "sha256:afaa7febe6276087a7b344a8f913c1590556d949fef2d40e15769dc7b8082d87",
+    "tests/runtime_proof/domains/soil/soil_moisture/__init__.py": "sha256:6dcf58509624b5524c235b9915616a2005ae287c0db48373417fbe15d5105aec",
+    "tests/runtime_proof/domains/soil/soil_moisture/conftest.py": "sha256:41ca8294ec7d51e253d41dd1701a033b272246ab40843056e349fedaf4136919",
+    "tests/runtime_proof/domains/soil/soil_moisture/runtime_mapper.py": "sha256:cfbce84393d0b113f6652004ec3dd31e4ea194fa2543c846b0f609ceb6597f93",
+    "tests/runtime_proof/domains/soil/soil_moisture/test_runtime_mapper.py": "sha256:3ac49bf24401a527390ebe82938a06830d2de3bf67c93126d80bb5bf74ed3c3f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05"
+  },
+  "prompt_or_contract": "sha256:f596103842c648835753b035477e3fd26ea8167a974108555a8c48ac77d7e60e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-15-26(2).pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-15-26(2).pdf#soil-moisture-runtime-proof",
+      "repo:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json@739a84ffaae97f2ab61306c079c29aae3197f5a7",
+      "repo:tools/validators/domains/soil/moisture/validate_soil_moisture.py@739a84ffaae97f2ab61306c079c29aae3197f5a7",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@739a84ffaae97f2ab61306c079c29aae3197f5a7"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/soil-moisture-runtime-proof.yml": "PROPOSED",
+    "packages/envelopes/src/envelopes/__init__.py": "PROPOSED",
+    "packages/envelopes/src/envelopes/runtime_response.py": "PROPOSED",
+    "tests/packages/README.md": "PROPOSED",
+    "tests/packages/envelopes/conftest.py": "PROPOSED",
+    "tests/packages/envelopes/test_runtime_response_candidate.py": "PROPOSED",
+    "tests/runtime_proof/domains/__init__.py": "PROPOSED",
+    "tests/runtime_proof/domains/soil/__init__.py": "PROPOSED",
+    "tests/runtime_proof/domains/soil/soil_moisture/README.md": "PROPOSED",
+    "tests/runtime_proof/domains/soil/soil_moisture/__init__.py": "PROPOSED",
+    "tests/runtime_proof/domains/soil/soil_moisture/conftest.py": "PROPOSED",
+    "tests/runtime_proof/domains/soil/soil_moisture/runtime_mapper.py": "PROPOSED",
+    "tests/runtime_proof/domains/soil/soil_moisture/test_runtime_mapper.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-no-network-tests",
+      "outcome": "PASS",
+      "reason": "23 deterministic package and soil-moisture runtime-proof tests passed locally."
+    },
+    {
+      "gate": "runtime-envelope-schema",
+      "outcome": "PASS",
+      "reason": "All generated finite outcomes validated against the current closed RuntimeResponseEnvelope and EvidenceRef schemas."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-4-15-soil-runtime",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-15-26(2).pdf#runtime-schema-validation-and-replay"
+    },
+    {
+      "id": "repository:runtime-response-envelope-schema",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json@739a84ffaae97f2ab61306c079c29aae3197f5a7"
+    },
+    {
+      "id": "repository:soil-moisture-validator",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/domains/soil/moisture/validate_soil_moisture.py@739a84ffaae97f2ab61306c079c29aae3197f5a7"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@739a84ffaae97f2ab61306c079c29aae3197f5a7"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-05T21:47:27Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first implementation derived from New Ideas 4-15-26. The current soil-moisture fixtures are fixture-only, not released, and promotion-ineligible, so the runtime proof intentionally returns ABSTAIN rather than ANSWER for a validator-clean fixture. This receipt grants no source, evidence, policy, review, merge, promotion, release, deployment, publication, or public-use authority."
+}

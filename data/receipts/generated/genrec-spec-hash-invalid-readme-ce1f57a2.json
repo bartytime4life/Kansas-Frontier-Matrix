@@ -1,0 +1,121 @@
+{
+  "receipt_id": "genrec-spec-hash-invalid-readme-ce1f57a2",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "fixtures/contracts/v1/common/spec_hash/invalid/README.md"
+  ],
+  "artifact_hashes": {
+    "fixtures/contracts/v1/common/spec_hash/invalid/README.md": "sha256:ce1f57a2205dd8adf6853351030e0b545a48c785d8218074fe3e029a7b4047b8"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-19"
+  },
+  "prompt_or_contract": "sha256:026bda2c782f6bb26d2ceb879f9c54236863628460abc5b86543b57063975e19",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "python"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:026bda2c782f6bb26d2ceb879f9c54236863628460abc5b86543b57063975e19"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@2783739bba744f560772388a9969ed3107d08930:fixtures/contracts/v1/common/spec_hash/invalid/README.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@2783739bba744f560772388a9969ed3107d08930:fixtures/contracts/v1/common/spec_hash/invalid/invalid_1.json",
+      "github:bartytime4life/Kansas-Frontier-Matrix@2783739bba744f560772388a9969ed3107d08930:fixtures/contracts/v1/common/spec_hash/invalid/invalid_1.expected_error.txt",
+      "github:bartytime4life/Kansas-Frontier-Matrix@2783739bba744f560772388a9969ed3107d08930:fixtures/contracts/v1/common/spec_hash/valid/README.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@2783739bba744f560772388a9969ed3107d08930:fixtures/contracts/v1/common/spec_hash/README.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@2783739bba744f560772388a9969ed3107d08930:fixtures/contracts/v1/common/README.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@2783739bba744f560772388a9969ed3107d08930:schemas/contracts/v1/common/spec_hash.schema.json",
+      "github:bartytime4life/Kansas-Frontier-Matrix@2783739bba744f560772388a9969ed3107d08930:contracts/common/spec_hash.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@2783739bba744f560772388a9969ed3107d08930:tools/validators/validate_spec_hash.py",
+      "github:bartytime4life/Kansas-Frontier-Matrix@2783739bba744f560772388a9969ed3107d08930:tests/schemas/test_common_contracts.py"
+    ]
+  },
+  "truth_labels": {
+    "fixtures/contracts/v1/common/spec_hash/invalid/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Existing fixture path retained under the fixtures/contracts/v1/common/spec_hash/invalid responsibility lane; no authority root or path moved."
+    },
+    {
+      "gate": "repository-evidence-and-maturity",
+      "outcome": "PASS",
+      "reason": "README distinguishes one confirmed invalid fixture, executable generic pytest harness, proposed schema status, and placeholder dedicated validator."
+    },
+    {
+      "gate": "fixture-schema-polarity",
+      "outcome": "PASS",
+      "reason": "The exact invalid fixture {} produces the expected missing-value Draft 2020-12 validation error."
+    },
+    {
+      "gate": "markdown-structure-and-links",
+      "outcome": "PASS",
+      "reason": "One H1, closed meta block, consecutive hierarchy, balanced fences, unique internal anchors, final newline, and no tabs or trailing whitespace."
+    },
+    {
+      "gate": "sensitive-content-and-secrets",
+      "outcome": "PASS",
+      "reason": "No production hash, credential, token, source payload, personal data, or restricted material was introduced."
+    },
+    {
+      "gate": "repository-native-pytest",
+      "outcome": "SKIPPED",
+      "reason": "No full repository checkout was available; exact schema/fixture polarity was executed locally and remote CI will provide repository-level evidence."
+    },
+    {
+      "gate": "remote-ci",
+      "outcome": "SKIPPED",
+      "reason": "To be observed after draft pull request creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "spec-hash-schema",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@2783739bba744f560772388a9969ed3107d08930:schemas/contracts/v1/common/spec_hash.schema.json"
+    },
+    {
+      "id": "generic-schema-harness",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@2783739bba744f560772388a9969ed3107d08930:tests/schemas/test_common_contracts.py"
+    },
+    {
+      "id": "dedicated-validator-placeholder",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@2783739bba744f560772388a9969ed3107d08930:tools/validators/validate_spec_hash.py"
+    },
+    {
+      "id": "invalid-fixture",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@2783739bba744f560772388a9969ed3107d08930:fixtures/contracts/v1/common/spec_hash/invalid/invalid_1.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-19T17:30:00Z",
+  "emitter": "OpenAI GPT-5.6 Thinking via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only update for the SpecHash invalid fixture lane. The receipt records provenance and bounded validation; it is not schema authority, contract meaning, validator proof, policy approval, release approval, or human review."
+}

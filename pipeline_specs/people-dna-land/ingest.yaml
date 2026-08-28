@@ -1,0 +1,4 @@
+# pipeline_specs :: people-dna-land :: ingest
+name: people-dna-land-ingest
+version: 1
+stages: []

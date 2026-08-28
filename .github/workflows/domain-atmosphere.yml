@@ -1,0 +1,623 @@
+# KFM Atmosphere domain CI workflow.
+# Status: bounded synthetic precipitation, knowledge-character, low-cost
+# sensor calibration, observed-versus-modeled, and AirNow-to-AQS reconciliation
+# fixture profiles are executable; the correctable environmental-event suite is
+# separately governed; broader validation, proof, and release-dry-run producers
+# remain held.
+#
+# Authority boundary:
+# - This workflow inspects repository maturity without performing live source
+#   requests or issuing AQI, medical, regulatory, emergency, or life-safety advice.
+# - It does not validate Atmosphere truth, build an EvidenceBundle or ProofPack,
+#   admit sources, apply policy, promote lifecycle artifacts, approve release,
+#   write published data, deploy, or publish.
+name: domain-atmosphere
+
+"on":
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: domain-atmosphere-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TZ: UTC
+  PYTHONUNBUFFERED: "1"
+
+jobs:
+  validate-atmosphere:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out Atmosphere boundaries
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Install Atmosphere validation dependencies
+        run: python tools/ci/install_python_ci.py project-test
+
+      - name: Inspect Atmosphere validation boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "docs/domains/atmosphere/README.md"
+            "docs/domains/atmosphere/OBSERVED_MODELED_SEPARATION.md"
+            "contracts/domains/atmosphere/README.md"
+            "contracts/domains/atmosphere/airnow_aqs_reconciliation.md"
+            "contracts/domains/atmosphere/correctable_environmental_event_assessment.md"
+            "contracts/domains/atmosphere/pm25_trigger_candidate_assessment.md"
+            "schemas/contracts/v1/domains/atmosphere/README.md"
+            "schemas/contracts/v1/domains/atmosphere/air_observation.schema.json"
+            "schemas/contracts/v1/domains/atmosphere/forecast_context.schema.json"
+            "schemas/contracts/v1/domains/atmosphere/AirObservation.schema.json"
+            "schemas/contracts/v1/domains/atmosphere/ForecastContext.schema.json"
+            "schemas/contracts/v1/domains/atmosphere/airnow_aqs_reconciliation_candidate.schema.json"
+            "schemas/contracts/v1/domains/atmosphere/airnow_aqs_reconciliation_report.schema.json"
+            "schemas/contracts/v1/domains/atmosphere/correctable_environmental_event_assessment.schema.json"
+            "schemas/contracts/v1/domains/atmosphere/pm25_trigger_candidate_assessment.schema.json"
+            "fixtures/domains/atmosphere/README.md"
+            "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/certified_replacement.json"
+            "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/nowcast_derived.json"
+            "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/pending_certification.json"
+            "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/provisional_context_only.json"
+            "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/regulatory_without_aqs.json"
+            "fixtures/contracts/v1/domains/atmosphere/correctable_environmental_event_assessment/cases.json"
+            "policy/domains/atmosphere/README.md"
+            "tests/domains/atmosphere/README.md"
+            "tests/domains/atmosphere/test_atmosphere_smoke.py"
+            "tests/domains/atmosphere/test_knowledge_character_registry.py"
+            "tests/domains/atmosphere/test_low_cost_sensor_caveat_required.py"
+            "tests/domains/atmosphere/test_observed_modeled_separation.py"
+            "tests/domains/atmosphere/test_pm25_trigger_candidate_assessment.py"
+            "tests/domains/atmosphere/test_correctable_environmental_event_assessment.py"
+            "tests/validators/domains/atmosphere/airnow_aqs_reconciliation/test_validate_reconciliation.py"
+            "tests/cross_domain/test_environmental_observation_boundaries.py"
+            "tools/validators/domains/atmosphere/README.md"
+            "tools/validators/domains/atmosphere/validate_knowledge_character.py"
+            "tools/validators/domains/atmosphere/validate_low_cost_sensor_caveats.py"
+            "tools/validators/domains/atmosphere/validate_public_safe_precipitation_fixture.py"
+            "tools/validators/domains/atmosphere/validate_observed_modeled_separation.py"
+            "tools/validators/domains/atmosphere/validate_pm25_trigger_candidate_assessment.py"
+            "tools/validators/domains/atmosphere/validate_correctable_environmental_event_assessment.py"
+            "tools/validators/domains/atmosphere/airnow_aqs_reconciliation/README.md"
+            "tools/validators/domains/atmosphere/airnow_aqs_reconciliation/validate_reconciliation.py"
+            "fixtures/domains/atmosphere/knowledge_character/README.md"
+            "fixtures/domains/atmosphere/observed_modeled_separation/valid/air_observation_bound.json"
+            "fixtures/domains/atmosphere/observed_modeled_separation/valid/forecast_context_bound.json"
+            "fixtures/domains/atmosphere/observed_modeled_separation/valid/air_observation_unresolved.json"
+            "fixtures/domains/atmosphere/observed_modeled_separation/invalid/air_observation_model_run_ref.json"
+            "fixtures/domains/atmosphere/observed_modeled_separation/invalid/forecast_context_missing_lineage.json"
+            "fixtures/domains/atmosphere/low_cost_sensor_calibration/README.md"
+            ".github/workflows/atmosphere-airnow-aqs-reconciliation.yml"
+            ".github/workflows/correctable-environmental-event-assessment.yml"
+            "data/receipts/generated/genrec-atmosphere-airnow-aqs-reconciliation-20260806.json"
+            "data/receipts/generated/genrec-correctable-environmental-event-assessment-20260810.json"
+            "data/registry/sources/atmosphere/README.md"
+            "docs/intake/exploratory/correctable-environmental-event-lifecycle-source-map.md"
+            "release/candidates/atmosphere/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Atmosphere boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          python - <<'PY'
+          from pathlib import Path
+
+          from tools.validators.ci_readiness import (
+              classify_test_source,
+              classify_validator_source,
+          )
+
+          accepted_tests = {
+              Path("tests/domains/atmosphere/test_atmosphere_smoke.py"),
+              Path(
+                  "tests/domains/atmosphere/"
+                  "test_correctable_environmental_event_assessment.py"
+              ),
+              Path(
+                  "tests/domains/atmosphere/"
+                  "test_knowledge_character_registry.py"
+              ),
+              Path(
+                  "tests/domains/atmosphere/"
+                  "test_low_cost_sensor_caveat_required.py"
+              ),
+              Path(
+                  "tests/domains/atmosphere/"
+                  "test_observed_modeled_separation.py"
+              ),
+              Path(
+                  "tests/domains/atmosphere/"
+                  "test_prescribed_burn_quality_flag.py"
+              ),
+              Path(
+                  "tests/domains/atmosphere/"
+                  "test_pm25_trigger_candidate_assessment.py"
+              ),
+          }
+          accepted_validators = {
+              Path(
+                  "tools/validators/domains/atmosphere/"
+                  "validate_pm_sensor_trust_profile.py"
+              ),
+              Path(
+                  "tools/validators/domains/atmosphere/"
+                  "validate_pm25_sensor_colocation_manifest.py"
+              ),
+              Path(
+                  "tools/validators/domains/atmosphere/"
+                  "validate_correctable_environmental_event_assessment.py"
+              ),
+              Path(
+                  "tools/validators/domains/atmosphere/"
+                  "validate_knowledge_character.py"
+              ),
+              Path(
+                  "tools/validators/domains/atmosphere/"
+                  "validate_low_cost_sensor_caveats.py"
+              ),
+              Path(
+                  "tools/validators/domains/atmosphere/"
+                  "validate_public_safe_precipitation_fixture.py"
+              ),
+              Path(
+                  "tools/validators/domains/atmosphere/"
+                  "validate_observed_modeled_separation.py"
+              ),
+              Path(
+                  "tools/validators/domains/atmosphere/"
+                  "validate_prescribed_burn_quality_flag.py"
+              ),
+              Path(
+                  "tools/validators/domains/atmosphere/"
+                  "validate_pm25_trigger_candidate_assessment.py"
+              ),
+              Path(
+                  "tools/validators/domains/atmosphere/"
+                  "airnow_aqs_reconciliation/validate_reconciliation.py"
+              ),
+          }
+
+          for path in sorted(Path("tests/domains/atmosphere").rglob("*.py")):
+              classification = classify_test_source(path.read_text(encoding="utf-8"))
+              if path in accepted_tests:
+                  if classification.placeholder:
+                      raise SystemExit(f"Accepted Atmosphere test regressed: {path}")
+              elif not classification.placeholder:
+                  raise SystemExit(
+                      f"Unwired Atmosphere test became substantive: {path}"
+                  )
+
+          validator_roots = (
+              Path("tools/validators/domains/atmosphere"),
+              Path("tools/validators/air-hazards"),
+              Path("tools/validators/atmosphere_agriculture"),
+              Path("tools/validators/atmosphere_biodiversity"),
+              Path("tools/validators/atmosphere_hazards"),
+              Path("tools/validators/atmosphere_hydrology"),
+          )
+          for root in validator_roots:
+              for path in sorted(root.rglob("*.py")):
+                  classification = classify_validator_source(
+                      path.read_text(encoding="utf-8")
+                  )
+                  if path in accepted_validators:
+                      if classification.placeholder:
+                          raise SystemExit(
+                              f"Accepted Atmosphere validator regressed: {path}"
+                          )
+                  elif not classification.placeholder:
+                      raise SystemExit(
+                          f"Unwired Atmosphere validator became substantive: {path}"
+                      )
+
+          print("Atmosphere executable and placeholder inventories are explicit.")
+          PY
+
+          if grep -Eq '^(atmosphere-validate|validate-atmosphere):' Makefile; then
+            echo "::error::An Atmosphere validation target now exists. Wire and verify it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_CHECK_EXECUTED: atmosphere-validation-boundary-inventory"
+          echo "WORKFLOW_HOLD: broader Atmosphere validation is not established"
+
+      - name: Run bounded Atmosphere fixture validation
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONHASHSEED: "0"
+        run: |
+          set -euo pipefail
+
+          python tests/domains/atmosphere/test_atmosphere_smoke.py --verbose
+          python tests/domains/atmosphere/test_knowledge_character_registry.py --verbose
+          python tests/domains/atmosphere/test_low_cost_sensor_caveat_required.py --verbose
+          python tests/domains/atmosphere/test_observed_modeled_separation.py --verbose
+          python tests/cross_domain/test_environmental_observation_boundaries.py --verbose
+          python -m pytest \
+            tests/validators/domains/atmosphere/airnow_aqs_reconciliation/test_validate_reconciliation.py \
+            tests/domains/atmosphere/test_prescribed_burn_quality_flag.py \
+            tests/domains/atmosphere/test_pm25_trigger_candidate_assessment.py \
+            -q --strict-config --strict-markers
+
+          python tools/validators/domains/atmosphere/validate_public_safe_precipitation_fixture.py \
+            fixtures/domains/atmosphere/public_safe_precipitation/valid/public_safe_precipitation.json
+
+          if python tools/validators/domains/atmosphere/validate_public_safe_precipitation_fixture.py \
+            fixtures/domains/atmosphere/public_safe_precipitation/invalid/role_location_time_governance_collapse.json; then
+            echo "::error::The known-invalid Atmosphere precipitation fixture was accepted."
+            exit 1
+          fi
+
+          echo "EXPECTED_REJECTION: invalid Atmosphere precipitation fixture"
+          python tools/validators/domains/atmosphere/validate_knowledge_character.py \
+            fixtures/domains/atmosphere/knowledge_character/valid/*.json
+
+          if python tools/validators/domains/atmosphere/validate_knowledge_character.py \
+            fixtures/domains/atmosphere/knowledge_character/invalid/*.json; then
+            echo "::error::Known-invalid Atmosphere knowledge-character fixtures were accepted."
+            exit 1
+          fi
+
+          echo "EXPECTED_REJECTION: invalid Atmosphere knowledge-character fixtures"
+          python tools/validators/domains/atmosphere/validate_low_cost_sensor_caveats.py \
+            fixtures/domains/atmosphere/low_cost_sensor_calibration/valid/*.json
+
+          if python tools/validators/domains/atmosphere/validate_low_cost_sensor_caveats.py \
+            fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/*.json; then
+            echo "::error::Known-invalid Atmosphere low-cost-sensor calibration fixtures were accepted."
+            exit 1
+          fi
+
+          echo "EXPECTED_REJECTION: invalid Atmosphere low-cost-sensor calibration fixtures"
+
+          python tools/validators/domains/atmosphere/validate_observed_modeled_separation.py \
+            fixtures/domains/atmosphere/observed_modeled_separation/valid/air_observation_bound.json \
+            fixtures/domains/atmosphere/observed_modeled_separation/valid/forecast_context_bound.json \
+            fixtures/domains/atmosphere/observed_modeled_separation/valid/air_observation_unresolved.json
+
+          if python tools/validators/domains/atmosphere/validate_observed_modeled_separation.py \
+            fixtures/domains/atmosphere/observed_modeled_separation/invalid/air_observation_model_run_ref.json \
+            fixtures/domains/atmosphere/observed_modeled_separation/invalid/forecast_context_missing_lineage.json; then
+            echo "::error::Known-invalid Atmosphere observed-versus-modeled fixtures were accepted."
+            exit 1
+          fi
+
+          echo "EXPECTED_REJECTION: invalid Atmosphere observed-versus-modeled fixtures"
+          echo "WORKFLOW_CHECK_EXECUTED: atmosphere-public-safe-precipitation-fixture"
+          echo "WORKFLOW_CHECK_EXECUTED: atmosphere-knowledge-character-fixture"
+          echo "WORKFLOW_CHECK_EXECUTED: atmosphere-low-cost-sensor-calibration-fixture"
+          echo "WORKFLOW_CHECK_EXECUTED: atmosphere-observed-modeled-separation"
+          echo "WORKFLOW_CHECK_EXECUTED: atmosphere-airnow-aqs-reconciliation"
+          echo "WORKFLOW_CHECK_EXECUTED: atmosphere-prescribed-burn-quality-flag"
+
+      - name: Record Atmosphere validation result and broader hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Atmosphere validation status
+
+          `WORKFLOW_CHECK_EXECUTED: atmosphere-public-safe-precipitation-fixture`
+
+          `WORKFLOW_CHECK_EXECUTED: atmosphere-knowledge-character-fixture`
+
+          `WORKFLOW_CHECK_EXECUTED: atmosphere-low-cost-sensor-calibration-fixture`
+
+          `WORKFLOW_CHECK_EXECUTED: atmosphere-observed-modeled-separation`
+
+          `WORKFLOW_CHECK_EXECUTED: atmosphere-airnow-aqs-reconciliation`
+
+          `WORKFLOW_CHECK_EXECUTED: atmosphere-prescribed-burn-quality-flag`
+
+          `WORKFLOW_HOLD: broader Atmosphere semantics, evidence closure, proof, and release remain unestablished`
+
+          When green, this job has executed the frozen synthetic precipitation
+          profile and the Soil/Atmosphere/Hydrology ownership-isolation test.
+          It checks exact positive/negative polarity, observed-sensor character,
+          generalized county support, observed/retrieval time ordering,
+          millimetre units, accumulation bounds, fixture-only governance,
+          alert/life-safety denials, bounded JSON input, deterministic CLI
+          behavior, and explicit network denial.
+
+          The synthetic knowledge-character profile checks six distinct
+          characters plus exact denials for missing, unknown, or multiple
+          character state; model-as-observation, AQI-as-concentration,
+          AOD-as-ground-PM2.5, advisory-as-life-safety, and precise-site
+          exposure. The profile is not the canonical enum or registry and
+          does not evaluate live Atmosphere records or Rego policy.
+
+          The synthetic low-cost-sensor calibration profile checks a caveated
+          context-only state and a corrected-with-lineage state. It requires
+          explicit low-cost character and observation role, fixed caveat,
+          confidence and limitations; keeps raw and corrected identities
+          separate; pins exact fixture-local correction, training, specification,
+          and evidence identities plus identity-string digests; requires bounded
+          reference-collocation, held-out-evaluation metadata, declared validity,
+          and relative-humidity/temperature inputs; denies peer consensus as a
+          reference, modeled-as-raw, unbounded transfer, metric-driven promotion,
+          reference-grade, regulatory, public-release, real-county, and
+          precise-site claims; and rejects unknown transferability or drift. It is fixture-only,
+          uses synthetic evidence references, and does not evaluate live records,
+          choose a scientific correction, admit a source, or execute Rego policy.
+
+          The observed-versus-modeled profile checks closed AirObservation and
+          ForecastContext shapes, object and knowledge-character discrimination,
+          source and evidence resolution, station versus model-run identity,
+          observed/generated/valid time separation, measurement units,
+          DERIVED_FROM lineage, uncertainty, exact ABSTAIN behavior, false
+          release denial, and the not-for-life-safety boundary. CamelCase schema
+          paths are compatibility mirrors and cannot evolve independently.
+
+          The fixture-only AirNow-to-AQS profile checks canonical monitor-key
+          consistency, provisional-versus-regulatory source roles, AQS QA and
+          certification state, deterministic reconciliation identity, append-only
+          lineage, measurement-value non-echo, and finite PROPOSED_WORK_RECORD,
+          ABSTAIN, and DENY decisions. It performs no live EPA or KDHE request,
+          certifies no concentration, admits no source, and authorizes no
+          promotion, release, alert, or publication.
+
+          The prescribed-burn quality-flag profile keeps observed air quality as
+          direct measurement and burn-smoke support as context only. It checks
+          finite ANSWER, ABSTAIN, DENY, and ERROR outcomes, rejects causal
+          attribution and configuration mutation, and limits downstream use to
+          review recommendations. It performs no plume or dispersion modeling,
+          source attribution, health determination, detector mutation, or model
+          corpus mutation.
+
+          The synthetic correctable environmental-event lifecycle suite is
+          recognized here as a substantive test-and-validator pair, while its
+          deterministic cases and generated-receipt binding remain executed by
+          their own path-filtered workflow. Recognition does not promote a
+          candidate, approve review, declare a real-world event, apply a
+          correction, issue an alert, or authorize release or publication.
+
+          Other Atmosphere test and validator modules outside these accepted
+          profiles remain explicit placeholders or documentation-only lanes and
+          are checked as such.
+
+          This check performs no live source request. It does not establish
+          observation accuracy, AQI or concentration equivalence, model-as-observed
+          validity, source-role closure, health advice, regulatory status,
+          emergency-alert authority, evidence closure, or release readiness.
+          EOF
+
+  build-proof-atmosphere:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out Atmosphere proof boundaries
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Atmosphere proof readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "data/proofs/atmosphere/README.md"
+            "data/proofs/atmosphere/pm25_2026/README.md"
+            "data/proofs/atmosphere/pm25_2026/evidence_bundle.json"
+            "data/registry/sources/atmosphere/README.md"
+            "release/candidates/atmosphere/README.md"
+            "tests/domains/atmosphere/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Atmosphere proof boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path("data/proofs/atmosphere/README.md")
+          lines = path.read_text(encoding="utf-8").splitlines()
+          start_marker = "<!-- [KFM_META_BLOCK_V2]"
+          end_marker = "[/KFM_META_BLOCK_V2] -->"
+
+          try:
+              start = lines.index(start_marker)
+              end = lines.index(end_marker, start + 1)
+          except ValueError as exc:
+              raise SystemExit(f"{path} is missing its deterministic KFM metadata block.") from exc
+
+          status_lines = [line for line in lines[start + 1 : end] if line.startswith("status:")]
+          if len(status_lines) != 1:
+              raise SystemExit(f"{path} metadata block must contain exactly one status field.")
+
+          status = status_lines[0].partition(":")[2].strip()
+          status_tokens = set(re.findall(r"[a-z0-9_-]+", status.casefold()))
+          conflicting_statuses = {
+              "accepted", "adopted", "approved", "final", "rejected", "superseded"
+          }
+          if "draft" not in status_tokens or status_tokens & conflicting_statuses:
+              raise SystemExit(
+                  f"{path} metadata status is not an unconflicted draft; "
+                  "review proof posture before accepting this workflow."
+              )
+
+          print(f"Confirmed draft proof metadata status for {path}.")
+          PY
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          proof_root = Path("data/proofs/atmosphere")
+          expected_artifacts = {
+              Path("data/proofs/atmosphere/pm25_2026/evidence_bundle.json"),
+          }
+          observed_artifacts = {
+              path
+              for path in proof_root.rglob("*")
+              if path.is_file() and path.name not in {"README.md", ".gitkeep"}
+          }
+          if observed_artifacts != expected_artifacts:
+              missing = sorted(path.as_posix() for path in expected_artifacts - observed_artifacts)
+              unexpected = sorted(path.as_posix() for path in observed_artifacts - expected_artifacts)
+              raise SystemExit(
+                  "Atmosphere proof placeholder inventory changed; "
+                  f"missing={missing}; unexpected={unexpected}."
+              )
+
+          path = next(iter(expected_artifacts))
+          payload = json.loads(path.read_text(encoding="utf-8"))
+          expected_payload = {
+              "status": "PROPOSED",
+              "path": "data/proofs/atmosphere/pm25_2026/evidence_bundle.json",
+              "source_docs": ["docs/domains/atmosphere/RELEASE_INDEX.md"],
+              "notes": [
+                  "Placeholder created from the current docs/domains markdown inventory."
+              ],
+          }
+          if payload != expected_payload:
+              raise SystemExit(
+                  f"Atmosphere proof placeholder content changed at {path}; "
+                  "review it before accepting this workflow."
+              )
+
+          print(
+              "Recognized the exact PROPOSED Atmosphere placeholder proof inventory; "
+              "this is not proof validation."
+          )
+          PY
+
+          if grep -Eq '^(atmosphere-proof|proof-atmosphere):' Makefile; then
+            echo "::error::An Atmosphere proof target now exists. Wire and validate it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          proof_implementation="$(find . -path './.git' -prune -o -type f \( -iname '*atmosphere*proof*.py' -o -iname '*proof*atmosphere*.py' -o -iname '*atmosphere*proof*.mjs' -o -iname '*proof*atmosphere*.mjs' \) -print -quit)"
+          if [[ -n "$proof_implementation" ]]; then
+            echo "::error::Potential Atmosphere proof implementation surfaced at $proof_implementation. Establish its contract, fixtures, receipts, access controls, and rollback before wiring CI."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: build-proof-atmosphere"
+          echo "WORKFLOW_HOLD: no accepted Atmosphere proof producer or deterministic proof command"
+
+      - name: Record Atmosphere proof hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Atmosphere proof status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted Atmosphere proof producer or deterministic proof command`
+
+          The Atmosphere proof lane includes one inventoried, JSON-parseable,
+          PROPOSED PM2.5 placeholder named `evidence_bundle.json`. Recognizing
+          that placeholder is not evidence or proof validation. Source manifests,
+          schemas, validators, fixtures, access controls,
+          EvidenceRef-to-EvidenceBundle resolution, and release linkage remain
+          unverified.
+
+          A green held result is readiness evidence only. It is not an
+          EvidenceBundle, ProofPack, ValidationReport, AQI advisory, medical or
+          exposure claim, regulatory determination, emergency alert, release
+          decision, or publication authority.
+          EOF
+
+  publish-dry-run-atmosphere:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out Atmosphere release boundaries
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Atmosphere release dry-run readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "release/candidates/atmosphere/README.md"
+            "docs/domains/atmosphere/RELEASE_INDEX.md"
+            "data/published/atmosphere/README.md"
+            ".github/workflows/release-dry-run.yml"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Atmosphere release boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Fq "A candidate is not a release." "release/candidates/atmosphere/README.md"; then
+            echo "::error::The documented Atmosphere candidate posture changed. Re-evaluate evidence, rights, time validity, policy, validation, review, correction, and rollback gates."
+            exit 1
+          fi
+
+          candidate_record="$(find release/candidates/atmosphere -mindepth 1 -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$candidate_record" ]]; then
+            echo "::error::An Atmosphere candidate record surfaced at $candidate_record. Replace this hold with the independently reviewed domain dry-run path."
+            exit 1
+          fi
+
+          if grep -Eq '^(atmosphere-release-dry-run|release-dry-run-atmosphere):' Makefile; then
+            echo "::error::An Atmosphere release dry-run target now exists. Wire the accepted fail-closed command instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: publish-dry-run-atmosphere"
+          echo "WORKFLOW_HOLD: no accepted Atmosphere release dry-run command or candidate manifest contract"
+
+      - name: Record Atmosphere release dry-run hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Atmosphere release dry-run status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted Atmosphere release dry-run command or candidate manifest contract`
+
+          This lane performs no live fetch, source admission, alert generation,
+          release, promotion, manifest assembly, deployment, publication, or
+          write to processed, catalog, proof, receipt, release, or published
+          stores.
+
+          Graduate it only after candidate identity, immutable artifact pointer,
+          source and evidence closure, rights, time validity and stale-state
+          rules, policy result, validation receipts, independent review,
+          correction path, and rollback target are accepted.
+
+          A green held result does not mean Atmosphere data is accurate, current,
+          medically actionable, regulatory, emergency-authoritative, safe,
+          released, or published.
+          EOF

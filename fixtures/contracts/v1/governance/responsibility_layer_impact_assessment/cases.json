@@ -1,0 +1,306 @@
+{
+  "profile": "kfm.governance.responsibility-layer-impact-assessment.fixture-cases.v1",
+  "base_candidate": {
+    "object_type": "ResponsibilityLayerImpactAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.governance.responsibility-layer-impact-assessment.fixture.v1",
+    "assessment_id": "kfm:responsibility-layer-impact:000000000000000000000000",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-396",
+    "observed_at": "2026-08-11T21:00:00Z",
+    "layer_model_ref": "kfm://doc/architecture-cross-domain-responsibility-layers",
+    "change_ref": "kfm://change/synthetic-public-contract/v1",
+    "change_kind": "PUBLIC_SURFACE",
+    "artifacts": [
+      {
+        "path": ".github/workflows/synthetic.yml",
+        "owning_root": ".github/",
+        "primary_layer": "OPERATIONS",
+        "related_layers": ["RELEASE"]
+      },
+      {
+        "path": "apps/api/synthetic.py",
+        "owning_root": "apps/",
+        "primary_layer": "API",
+        "related_layers": ["POLICY"]
+      },
+      {
+        "path": "contracts/synthetic.md",
+        "owning_root": "contracts/",
+        "primary_layer": "POLICY",
+        "related_layers": ["EVIDENCE"]
+      },
+      {
+        "path": "data/receipts/synthetic.json",
+        "owning_root": "data/",
+        "primary_layer": "EVIDENCE",
+        "related_layers": ["RELEASE"]
+      },
+      {
+        "path": "release/synthetic.yaml",
+        "owning_root": "release/",
+        "primary_layer": "RELEASE",
+        "related_layers": []
+      }
+    ],
+    "layer_impacts": [
+      {
+        "layer": "API",
+        "impact_kind": "DIRECT",
+        "decision_ref": null,
+        "validation_refs": ["kfm://validation/synthetic/api-contract"],
+        "rollback_ref": null
+      },
+      {
+        "layer": "EVIDENCE",
+        "impact_kind": "DIRECT",
+        "decision_ref": null,
+        "validation_refs": ["kfm://validation/synthetic/evidence-closure"],
+        "rollback_ref": null
+      },
+      {
+        "layer": "OPERATIONS",
+        "impact_kind": "DIRECT",
+        "decision_ref": null,
+        "validation_refs": ["kfm://validation/synthetic/workflow"],
+        "rollback_ref": null
+      },
+      {
+        "layer": "POLICY",
+        "impact_kind": "DIRECT",
+        "decision_ref": "kfm://policy-decision/synthetic-public-contract",
+        "validation_refs": ["kfm://validation/synthetic/policy"],
+        "rollback_ref": null
+      },
+      {
+        "layer": "RELEASE",
+        "impact_kind": "DIRECT",
+        "decision_ref": null,
+        "validation_refs": ["kfm://validation/synthetic/release"],
+        "rollback_ref": "kfm://rollback/synthetic-public-contract/previous"
+      }
+    ],
+    "cross_layer_seams": [
+      {
+        "from_layer": "API",
+        "to_layer": "POLICY",
+        "contract_ref": "kfm://contract/synthetic/api-policy-seam",
+        "status": "DECLARED"
+      },
+      {
+        "from_layer": "EVIDENCE",
+        "to_layer": "POLICY",
+        "contract_ref": "kfm://contract/synthetic/evidence-policy-seam",
+        "status": "DECLARED"
+      },
+      {
+        "from_layer": "OPERATIONS",
+        "to_layer": "RELEASE",
+        "contract_ref": "kfm://contract/synthetic/operations-release-seam",
+        "status": "DECLARED"
+      },
+      {
+        "from_layer": "POLICY",
+        "to_layer": "RELEASE",
+        "contract_ref": "kfm://contract/synthetic/policy-release-seam",
+        "status": "DECLARED"
+      }
+    ],
+    "review": {
+      "state": "COMPLETE_FOR_DECLARED_SCOPE",
+      "record_refs": [
+        "kfm://review/responsibility-layer/design",
+        "kfm://review/responsibility-layer/validation"
+      ]
+    },
+    "limitations": [
+      "ASSESSMENT_ONLY",
+      "NO_DIRECTORY_PLACEMENT_OR_OWNERSHIP_AUTHORITY",
+      "NO_POLICY_OR_REVIEW_AUTHORITY",
+      "NO_RELEASE_DEPLOYMENT_OR_PUBLICATION_AUTHORITY",
+      "NO_RUNTIME_OR_DATA_MUTATION"
+    ],
+    "authority_claims": {
+      "directory_placement_authority": false,
+      "ownership_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "runtime_authority": false,
+      "data_mutation_authority": false,
+      "release_authority": false,
+      "deployment_authority": false,
+      "publication_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "pass_declared_public_surface_chain",
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_single_operations_layer",
+      "patch": {
+        "change_ref": "kfm://change/synthetic-runbook/v1",
+        "change_kind": "RELEASE_OR_OPERATIONS",
+        "artifacts": [
+          {
+            "path": "ops/runbooks/synthetic.md",
+            "owning_root": "ops/",
+            "primary_layer": "OPERATIONS",
+            "related_layers": []
+          }
+        ],
+        "layer_impacts": [
+          {
+            "layer": "OPERATIONS",
+            "impact_kind": "DIRECT",
+            "decision_ref": null,
+            "validation_refs": ["kfm://validation/synthetic/runbook"],
+            "rollback_ref": null
+          }
+        ],
+        "cross_layer_seams": []
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "abstain_review_pending",
+      "patch": {"review": {"state": "PENDING"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["REVIEW_PENDING"]}
+    },
+    {
+      "name": "abstain_review_unknown",
+      "patch": {"review": {"state": "UNKNOWN"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["REVIEW_UNKNOWN"]}
+    },
+    {
+      "name": "abstain_unresolved_seam",
+      "patch": {"cross_layer_seams": {"0": {"status": "UNRESOLVED"}}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["SEAM_UNRESOLVED"]}
+    },
+    {
+      "name": "deny_owner_path_mismatch",
+      "patch": {"artifacts": {"0": {"owning_root": "apps/"}}},
+      "expected": {"outcome": "DENY", "codes": ["OWNING_ROOT_PATH_MISMATCH"]}
+    },
+    {
+      "name": "deny_noncanonical_artifacts",
+      "patch": {"artifacts": {"0": {"path": "apps/zz-synthetic.py", "owning_root": "apps/"}}},
+      "expected": {"outcome": "DENY", "codes": ["ARTIFACTS_NOT_CANONICAL"]}
+    },
+    {
+      "name": "deny_noncanonical_related_layers",
+      "patch": {"artifacts": {"2": {"related_layers": ["RELEASE", "EVIDENCE"]}}},
+      "expected": {"outcome": "DENY", "codes": ["RELATED_LAYERS_NOT_CANONICAL"]}
+    },
+    {
+      "name": "deny_layer_impact_coverage_mismatch",
+      "patch": {
+        "layer_impacts": {"0": {"layer": "AI", "impact_kind": "RELATED"}},
+        "cross_layer_seams": {"0": {"from_layer": "AI"}}
+      },
+      "expected": {"outcome": "DENY", "codes": ["LAYER_IMPACT_COVERAGE_MISMATCH"]}
+    },
+    {
+      "name": "deny_impact_kind_mismatch",
+      "patch": {"layer_impacts": {"0": {"impact_kind": "RELATED"}}},
+      "expected": {"outcome": "DENY", "codes": ["IMPACT_KIND_INCOHERENT"]}
+    },
+    {
+      "name": "deny_public_surface_without_evidence_closure",
+      "patch": {
+        "artifacts": {"2": {"related_layers": ["CATALOG"]}, "3": {"primary_layer": "CATALOG"}},
+        "layer_impacts": {"1": {"layer": "CATALOG"}},
+        "cross_layer_seams": {"1": {"from_layer": "CATALOG"}}
+      },
+      "expected": {"outcome": "DENY", "codes": ["PUBLIC_SURFACE_CLOSURE_INCOMPLETE"]}
+    },
+    {
+      "name": "deny_release_without_rollback",
+      "patch": {"layer_impacts": {"4": {"rollback_ref": null}}},
+      "expected": {"outcome": "DENY", "codes": ["RELEASE_ROLLBACK_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_policy_without_decision_reference",
+      "patch": {"layer_impacts": {"3": {"decision_ref": null}}},
+      "expected": {"outcome": "DENY", "codes": ["POLICY_DECISION_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_seam_uses_undeclared_layer",
+      "patch": {"cross_layer_seams": {"0": {"from_layer": "AI"}}},
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["LAYER_GRAPH_DISCONNECTED", "SEAM_LAYER_NOT_DECLARED"]
+      }
+    },
+    {
+      "name": "deny_self_referential_seam",
+      "patch": {"cross_layer_seams": {"0": {"to_layer": "API"}}},
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["LAYER_GRAPH_DISCONNECTED", "SEAM_SELF_REFERENCE"]
+      }
+    },
+    {
+      "name": "deny_disconnected_layer_graph",
+      "patch": {
+        "cross_layer_seams": [
+          {
+            "from_layer": "API",
+            "to_layer": "POLICY",
+            "contract_ref": "kfm://contract/synthetic/api-policy-seam",
+            "status": "DECLARED"
+          },
+          {
+            "from_layer": "EVIDENCE",
+            "to_layer": "POLICY",
+            "contract_ref": "kfm://contract/synthetic/evidence-policy-seam",
+            "status": "DECLARED"
+          },
+          {
+            "from_layer": "OPERATIONS",
+            "to_layer": "RELEASE",
+            "contract_ref": "kfm://contract/synthetic/operations-release-seam",
+            "status": "DECLARED"
+          }
+        ]
+      },
+      "expected": {"outcome": "DENY", "codes": ["LAYER_GRAPH_DISCONNECTED"]}
+    },
+    {
+      "name": "deny_complete_review_without_record",
+      "patch": {"review": {"record_refs": []}},
+      "expected": {"outcome": "DENY", "codes": ["REVIEW_RECORD_REQUIRED"]}
+    },
+    {
+      "name": "deny_direct_store_reference",
+      "patch": {"change_ref": "kfm://change/data/raw/synthetic"},
+      "expected": {"outcome": "DENY", "codes": ["DIRECT_STORE_REFERENCE_DENIED"]}
+    },
+    {
+      "name": "deny_embedded_query_marker",
+      "patch": {"layer_model_ref": "kfm://architecture/cypher:match"},
+      "expected": {"outcome": "DENY", "codes": ["EMBEDDED_QUERY_DENIED"]}
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "tamper": "profile_hash",
+      "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}
+    },
+    {
+      "name": "deny_assessment_id_tamper",
+      "tamper": "assessment_id",
+      "expected": {"outcome": "DENY", "codes": ["ASSESSMENT_ID_MISMATCH"]}
+    },
+    {
+      "name": "error_unexpected_property",
+      "patch": {"unexpected_field": true},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "name": "error_invalid_ninth_layer",
+      "patch": {"artifacts": {"0": {"related_layers": ["NINTH"]}}},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    }
+  ]
+}

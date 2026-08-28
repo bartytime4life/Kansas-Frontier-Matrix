@@ -1,0 +1,198 @@
+{
+  "receipt_id": "genrec-source-event-envelope-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/source-event-envelope.yml",
+    "contracts/source/source_event_envelope.md",
+    "docs/intake/exploratory/new-ideas-3-11-26-source-event-envelope-source-map.md",
+    "fixtures/contracts/v1/source/source_event_envelope/README.md",
+    "fixtures/contracts/v1/source/source_event_envelope/expected_findings_manifest.json",
+    "fixtures/contracts/v1/source/source_event_envelope/invalid/invalid_authority_overreach.json",
+    "fixtures/contracts/v1/source/source_event_envelope/invalid/invalid_bad_hash_format.json",
+    "fixtures/contracts/v1/source/source_event_envelope/invalid/invalid_empty_reason_codes.json",
+    "fixtures/contracts/v1/source/source_event_envelope/invalid/invalid_missing_event_id.json",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_admission_without_evidence.json",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_deleted_content.json",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_event_id.json",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_last_modified.json",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_manual_replay_routing.json",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_missing_content.json",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_no_action_reason.json",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_payload_hash.json",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_reason_order.json",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_reference_order.json",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_source_role.json",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_time_order.json",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_unknown_rights_admission.json",
+    "fixtures/contracts/v1/source/source_event_envelope/valid/valid_admission_candidate.json",
+    "fixtures/contracts/v1/source/source_event_envelope/valid/valid_deletion_review.json",
+    "fixtures/contracts/v1/source/source_event_envelope/valid/valid_duplicate_replay_no_action.json",
+    "fixtures/contracts/v1/source/source_event_envelope/valid/valid_quarantine_unknown_rights.json",
+    "schemas/contracts/v1/source/source_event_envelope.schema.json",
+    "tests/validators/test_validate_source_event_envelope.py",
+    "tools/validators/validate_source_event_envelope.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/source-event-envelope.yml": "sha256:ad9229e1050c72ad958bc32566f77d779d8815d5acd0426efe746ebebf4e4668",
+    "contracts/source/source_event_envelope.md": "sha256:c6f160b07ec9787b8b9919c767f9486135b5ce886fff18e12f9fbe5804f6bb32",
+    "docs/intake/exploratory/new-ideas-3-11-26-source-event-envelope-source-map.md": "sha256:5a18e6e60fd01f3e6bf2940076984f2234347b09df52f810bc0c253529cacabf",
+    "fixtures/contracts/v1/source/source_event_envelope/README.md": "sha256:c07cbf225911d48cc8fe6c2ec1b0ade4f9777a4bcd3a3a4cf0417c658f8a356b",
+    "fixtures/contracts/v1/source/source_event_envelope/expected_findings_manifest.json": "sha256:3b3bab41ffedddedd05e840641fcd7a75cb39e7036f8d5c037ddde334e6e91f7",
+    "fixtures/contracts/v1/source/source_event_envelope/invalid/invalid_authority_overreach.json": "sha256:2aea2bda29e101e455d50d3142a2b9b72dd35c89fe8ab9366fef1dce92b1db74",
+    "fixtures/contracts/v1/source/source_event_envelope/invalid/invalid_bad_hash_format.json": "sha256:363af64b6c08dbb265f1ac5a9e0a7dddd0c327148009a7945532e8f7a8cb0742",
+    "fixtures/contracts/v1/source/source_event_envelope/invalid/invalid_empty_reason_codes.json": "sha256:cad1649d802c672e334f0c46b36682de1a1b874c50800edb86183eb94a2d418c",
+    "fixtures/contracts/v1/source/source_event_envelope/invalid/invalid_missing_event_id.json": "sha256:53867f5715ddc09b98aa1335efdb0c79dcaa870b44798e125be75bde17cd207a",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_admission_without_evidence.json": "sha256:3583f964533c1537762d9346d49bfdd376956649e0d55b5ad6be5197c348f18a",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_deleted_content.json": "sha256:e2bc60f8aeead9254452044379c09599d6d50207bf591948996606c15aae322a",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_event_id.json": "sha256:87ebd676ecc51e39ea9cc7de581366fb1e42fb785b2f1bbbce7769a659a67588",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_last_modified.json": "sha256:6691e9fe8e2cbc3bf84004439e6ec8d6411a9367123a2b368c3a5ed4b55f3d64",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_manual_replay_routing.json": "sha256:b3f0601c08bd56c147fb3cfbb565792262eb84c2734f1949c27408a0fa6847f6",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_missing_content.json": "sha256:ed3489ca7f76e365fc90aa9129512cb53a05a5e0fa762020a23d453423c1c493",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_no_action_reason.json": "sha256:aa7b1872bb014714e1833c5d30b11cdfbfdb45097daed714ebce772263d7bb79",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_payload_hash.json": "sha256:91431e55d9f9230a8853820961b3f620b0c02265bc7f9433ba2e6b2c6776feea",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_reason_order.json": "sha256:7278e393d4381f2e1399c0f7c3d50d5fc54498717d413fadad90aee32e94437f",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_reference_order.json": "sha256:f12224a11810cea658c2508d9318f05de4dc6fde118d82f9a1f8d9e9129f5c7c",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_source_role.json": "sha256:95402ac8436c63f1147c54c1fc133a4d0839a67fcf0bc2b760f20c82afec1eaa",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_time_order.json": "sha256:b04bf07191fc1696493dcefce74c616a6d99ccf6eaba830b9a0282f5a54015c7",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_unknown_rights_admission.json": "sha256:4f7a80176cfbbbfd7483cc8d26c9e7da967f5a7232d384653d0d4a88ecf9733a",
+    "fixtures/contracts/v1/source/source_event_envelope/valid/valid_admission_candidate.json": "sha256:64ab70eb13041eb87f8250e2a498d393198bc3a1e641ba3df0b1445c8ae34871",
+    "fixtures/contracts/v1/source/source_event_envelope/valid/valid_deletion_review.json": "sha256:1bc566f90800c167a3c73a98befee58e587f0356b431d42333f3809fbfaf7277",
+    "fixtures/contracts/v1/source/source_event_envelope/valid/valid_duplicate_replay_no_action.json": "sha256:716027d692ad58ce0daf83d9f87ebd1bf7b5093f9ab0fdb6fa9356db5949fdec",
+    "fixtures/contracts/v1/source/source_event_envelope/valid/valid_quarantine_unknown_rights.json": "sha256:a9918c21738e6c1dcd065f080878c8fff6784368871f7885c1dc2cbbc340f887",
+    "schemas/contracts/v1/source/source_event_envelope.schema.json": "sha256:52e5ba83800033f41a37f863a4ad1423db93f3b9e962c1b7c86a815b2913538f",
+    "tests/validators/test_validate_source_event_envelope.py": "sha256:ce3cc27a9fec364b05864dc364241eacf9709a682ba66793a64e2215e5635161",
+    "tools/validators/validate_source_event_envelope.py": "sha256:569263302d4e286e4f73c03b705695b73df77ea509cc53d3f4340edf1715d718"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:0aa49d090bd0ce7e4f34c7f2978a0f51bc216618394e410261f616f9ea009c73",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded-file search",
+      "GitHub connector repository inspection and mutation",
+      "deterministic local Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:ef632ec5d1bceec45a39bae8abd83b30d71f2abf0cf29aa77567733f336c688b"
+    ],
+    "attached_docs": [
+      "New Ideas 3-11-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://New-Ideas-3-11-26:sha256:ef632ec5d1bceec45a39bae8abd83b30d71f2abf0cf29aa77567733f336c688b#section=event-driven-webhooks-canonicalize-orchestrate-signed-receipts",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@fda5e18b486d89a91dba7d886e305fde302edf12",
+      "repo:docs/doctrine/directory-rules.md@fda5e18b486d89a91dba7d886e305fde302edf12",
+      "repo:packages/hashing/src/hashing/core.py@fda5e18b486d89a91dba7d886e305fde302edf12",
+      "repo:contracts/source/source_descriptor.md@fda5e18b486d89a91dba7d886e305fde302edf12"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/source-event-envelope.yml": "CONFIRMED",
+    "contracts/source/source_event_envelope.md": "PROPOSED",
+    "docs/intake/exploratory/new-ideas-3-11-26-source-event-envelope-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/source/source_event_envelope/README.md": "PROPOSED",
+    "fixtures/contracts/v1/source/source_event_envelope/expected_findings_manifest.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_envelope/invalid/invalid_authority_overreach.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_envelope/invalid/invalid_bad_hash_format.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_envelope/invalid/invalid_empty_reason_codes.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_envelope/invalid/invalid_missing_event_id.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_admission_without_evidence.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_deleted_content.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_event_id.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_last_modified.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_manual_replay_routing.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_missing_content.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_no_action_reason.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_payload_hash.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_reason_order.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_reference_order.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_source_role.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_time_order.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_envelope/semantic_invalid/semantic_invalid_unknown_rights_admission.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_envelope/valid/valid_admission_candidate.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_envelope/valid/valid_deletion_review.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_envelope/valid/valid_duplicate_replay_no_action.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_envelope/valid/valid_quarantine_unknown_rights.json": "CONFIRMED",
+    "schemas/contracts/v1/source/source_event_envelope.schema.json": "CONFIRMED",
+    "tests/validators/test_validate_source_event_envelope.py": "CONFIRMED",
+    "tools/validators/validate_source_event_envelope.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite-12-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "fixture-polarity-4-valid-4-schema-invalid-13-semantic-invalid",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generic-contract-schema-polarity",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-and-least-privilege-preflight",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-workflows",
+      "outcome": "SKIPPED",
+      "reason": "pending until the draft pull request runs on GitHub"
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "New Ideas 3-11-26.pdf — event-driven integration pattern",
+      "validated": true,
+      "evidence_ref": "attachment://New-Ideas-3-11-26#section=event-driven-webhooks-canonicalize-orchestrate-signed-receipts"
+    },
+    {
+      "id": "ADR-0029@fda5e18b486d89a91dba7d886e305fde302edf12",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@fda5e18b486d89a91dba7d886e305fde302edf12"
+    },
+    {
+      "id": "KFM hashing core@fda5e18b486d89a91dba7d886e305fde302edf12",
+      "validated": true,
+      "evidence_ref": "repo:packages/hashing/src/hashing/core.py@fda5e18b486d89a91dba7d886e305fde302edf12"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T17:36:04Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only SourceEventEnvelopeCandidate adapted from New Ideas 3-11-26.pdf. It carries CloudEvents-shaped core attributes but claims no CloudEvents conformance, performs no network or queue access, activates no source, writes no lifecycle state, and creates no evidence, policy, review, promotion, release, deployment, publication, or public-use authority."
+}

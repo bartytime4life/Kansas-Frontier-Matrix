@@ -1,0 +1,138 @@
+{
+  "receipt_id": "genrec-source-stac-head-prefilter-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/source-stac-head-prefilter.yml",
+    "contracts/source/stac_asset_head_prefilter.md",
+    "docs/intake/exploratory/pass-32-stac-head-prefilter-source-map.md",
+    "fixtures/contracts/v1/source/stac_asset_head_prefilter/cases.json",
+    "schemas/contracts/v1/source/stac_asset_head_prefilter.schema.json",
+    "tests/validators/test_validate_stac_asset_head_prefilter.py",
+    "tools/validators/validate_stac_asset_head_prefilter.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/source-stac-head-prefilter.yml": "sha256:37ec490db6b69f4dd087d58211ff1b0b838f2647b9e5b54e1594f01a48c58a05",
+    "contracts/source/stac_asset_head_prefilter.md": "sha256:ebdf4e63b3fd6382ed2f2fc385e1c6b5f36c1de64dd694f55a470fda39976543",
+    "docs/intake/exploratory/pass-32-stac-head-prefilter-source-map.md": "sha256:316a33f9208da0637d7708dfe33fe1513b386ebdf6b142ffa4ec8d5e374f4133",
+    "fixtures/contracts/v1/source/stac_asset_head_prefilter/cases.json": "sha256:d15c685744ab4d0e2cfbc1d908d376c5224e23b6d3c4de005a1aaeb7bf2ba604",
+    "schemas/contracts/v1/source/stac_asset_head_prefilter.schema.json": "sha256:3129f2f4fe84cf88ee2e31aab7bfa177c99e262227af724540d3a41414e32792",
+    "tests/validators/test_validate_stac_asset_head_prefilter.py": "sha256:b5eaf0b8c2c85525e4b9d71a78f74fd4f47cc7ec0b419555715f7a1082eceb79",
+    "tools/validators/validate_stac_asset_head_prefilter.py": "sha256:3e070405f23d49e18f91422eae66c6050879a774903427d0f639dff10cbf4bdf"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:86ffa710cc8cb6f9393eaa760c6724de7bf0ef3871fd55330ce40dcd93e72201",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded-file search",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python preflight"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:3e0b0c84bdc56d25d2c9de9984c0b30b4a92a6025f783869dbc5341260f3670c"
+    ],
+    "attached_docs": [
+      "KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://KFM-Pass-32#KFM-P32-PROG-0004",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@7da6dd8d6b9bb510c8a85057b15e358fa2d57810",
+      "repo:docs/doctrine/directory-rules.md@7da6dd8d6b9bb510c8a85057b15e358fa2d57810",
+      "repo:contracts/source/source_event_envelope.md@7da6dd8d6b9bb510c8a85057b15e358fa2d57810",
+      "repo:schemas/contracts/v1/source/source_event_envelope.schema.json@7da6dd8d6b9bb510c8a85057b15e358fa2d57810"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/source-stac-head-prefilter.yml": "CONFIRMED",
+    "contracts/source/stac_asset_head_prefilter.md": "PROPOSED",
+    "docs/intake/exploratory/pass-32-stac-head-prefilter-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/source/stac_asset_head_prefilter/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/source/stac_asset_head_prefilter.schema.json": "CONFIRMED",
+    "tests/validators/test_validate_stac_asset_head_prefilter.py": "CONFIRMED",
+    "tools/validators/validate_stac_asset_head_prefilter.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-compilation",
+      "outcome": "PASS",
+      "reason": "The authored validator and focused unittest module compile under Python 3.11-compatible syntax."
+    },
+    {
+      "gate": "draft-2020-12-profile-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "local-fixture-polarity-6-pass-4-deny",
+      "outcome": "PASS",
+      "reason": "A deterministic local compatibility harness materialized and replayed all 10 compact fixture descriptors with exact findings."
+    },
+    {
+      "gate": "no-network-profile-boundary",
+      "outcome": "PASS",
+      "reason": "The validator imports no network client and focused tests patch socket and urllib entry points."
+    },
+    {
+      "gate": "repository-native-base-envelope-validation",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed exact head in the full repository checkout."
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed exact head in the full repository checkout."
+    },
+    {
+      "gate": "hosted-exact-head-workflow",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull request creation."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "KFM-P32-PROG-0004",
+      "validated": true,
+      "evidence_ref": "attachment://KFM-Pass-32#KFM-P32-PROG-0004"
+    },
+    {
+      "id": "ADR-0029@7da6dd8",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@7da6dd8d6b9bb510c8a85057b15e358fa2d57810"
+    },
+    {
+      "id": "SourceEventEnvelopeCandidate@7da6dd8",
+      "validated": true,
+      "evidence_ref": "repo:contracts/source/source_event_envelope.md@7da6dd8d6b9bb510c8a85057b15e358fa2d57810"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T04:00:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only STAC asset HEAD prefilter profile adapted from Pass 32 card KFM-P32-PROG-0004. The slice evaluates recorded synthetic metadata for an already-known asset; it performs no network request or download, activates no source, writes no lifecycle state, and creates no evidence, policy, review, promotion, release, deployment, publication, or public-use authority."
+}

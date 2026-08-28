@@ -1,0 +1,34 @@
+{
+  "object_type": "TimeSliceManifest",
+  "schema_version": "1.0.0",
+  "time_slice_id": "time-slice:invalid-no-rollback",
+  "valid_time": {
+    "start": "2026-04-13T00:00:00Z",
+    "end": "2026-04-13T23:59:59Z"
+  },
+  "assets": [
+    {
+      "asset_ref": "asset:pmtiles:fixture:v1",
+      "media_type": "PMTILES",
+      "sha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+    },
+    {
+      "asset_ref": "asset:cog:fixture:v1",
+      "media_type": "COG",
+      "sha256": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+    }
+  ],
+  "release_manifest_ref": "release:fixture:v1",
+  "evidence_bundle_ref": "evidence:fixture:v1",
+  "status": "RELEASED",
+  "correction_ref": null,
+  "rollback_ref": "",
+  "governance": {
+    "fixture_only": true,
+    "lifecycle_write": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false
+  },
+  "spec_hash": "sha256:6f414b9e6ebdba80291f8c057170f67704a17affb7f810f37e0d22ce7fa9a290"
+}

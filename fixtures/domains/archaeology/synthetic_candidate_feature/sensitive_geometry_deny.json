@@ -1,0 +1,8 @@
+{
+  "status": "PROPOSED",
+  "source_doc": "docs/domains/archaeology/MISSING_OR_PLANNED_FILES.md",
+  "path": "fixtures/domains/archaeology/synthetic_candidate_feature/sensitive_geometry_deny.json",
+  "notes": [
+    "Placeholder created from docs/domains markdown inventory."
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "asset_id": "kfm-favicon-v1",
+  "family": "favicon",
+  "version": "1.0.0",
+  "derivative_paths": [
+    "docs/brand/logo/favicon/favicon.ico",
+    "docs/brand/logo/favicon/favicon-16.png",
+    "docs/brand/logo/favicon/favicon-32.png",
+    "docs/brand/logo/favicon/favicon-180.png"
+  ],
+  "review_state": "draft",
+  "release_state": "unreleased"
+}

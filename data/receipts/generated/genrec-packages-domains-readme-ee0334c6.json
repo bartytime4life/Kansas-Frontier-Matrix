@@ -1,0 +1,143 @@
+{
+  "receipt_id": "genrec-packages-domains-readme-ee0334c6",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "packages/domains/README.md"
+  ],
+  "artifact_hashes": {
+    "packages/domains/README.md": "sha256:ee0334c6e68b1697f9f5dd258352085c7c3064dc7e961da1b0434f0cea4179fb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-23"
+  },
+  "prompt_or_contract": "sha256:4a21e4409fc6775b1aacb73b3f118441f0ae84d55b99dfde4e3eeab6e18953d1",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "Markdown structure and anchor checks",
+      "generated-receipt schema-shape checks"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/939e1f1f742a9ed02997a3eef03f0c5b8a2e70a4",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/939e1f1f742a9ed02997a3eef03f0c5b8a2e70a4/packages/domains/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/939e1f1f742a9ed02997a3eef03f0c5b8a2e70a4/packages/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/939e1f1f742a9ed02997a3eef03f0c5b8a2e70a4/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/939e1f1f742a9ed02997a3eef03f0c5b8a2e70a4/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/939e1f1f742a9ed02997a3eef03f0c5b8a2e70a4/.github/workflows/domain-agriculture.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/939e1f1f742a9ed02997a3eef03f0c5b8a2e70a4/packages/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/939e1f1f742a9ed02997a3eef03f0c5b8a2e70a4/packages/domains/agriculture/pyproject.toml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/939e1f1f742a9ed02997a3eef03f0c5b8a2e70a4/packages/domains/settlement/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/939e1f1f742a9ed02997a3eef03f0c5b8a2e70a4/packages/domains/settlements-infrastructure/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/939e1f1f742a9ed02997a3eef03f0c5b8a2e70a4/packages/domains/transport/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/939e1f1f742a9ed02997a3eef03f0c5b8a2e70a4/packages/domains/roads-rail-trade/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/939e1f1f742a9ed02997a3eef03f0c5b8a2e70a4/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/cc3375a6c9a348461d505bda40cac372a0b8575a"
+    ]
+  },
+  "truth_labels": {
+    "packages/domains/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Verified the current repository, immutable base, target blob, parent packages contract, Directory Rules, CODEOWNERS route, current child lanes, and absence of overlapping open work before mutation."
+    },
+    {
+      "gate": "directory-readme-contract",
+      "outcome": "PASS",
+      "reason": "The first twelve H2 sections follow Directory Rules section 15 in the required order, and the file remains at the existing packages/domains responsibility-rooted path."
+    },
+    {
+      "gate": "bounded-current-inventory",
+      "outcome": "PASS",
+      "reason": "Replaced the proposed tree with fifteen checked direct README lanes, thirteen doctrine-aligned direct pyproject lanes surfaced by bounded search, sampled placeholder manifests, and explicit settlement/transport compatibility conflicts."
+    },
+    {
+      "gate": "truth-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "The README distinguishes tracked paths, scaffolds, executable maturity, package distribution, KFM publication, and unresolved UNKNOWN or NEEDS VERIFICATION items without upgrading helper code into truth, policy, lifecycle, evidence, or release authority."
+    },
+    {
+      "gate": "markdown-structure-and-navigation",
+      "outcome": "PASS",
+      "reason": "Remote readback confirmed the intended headings, tables, alerts, Mermaid block, anchors, back-to-top links, no-loss ledger, footer, and final content blob."
+    },
+    {
+      "gate": "no-loss-and-rollback",
+      "outcome": "PASS",
+      "reason": "The no-loss ledger maps v0.1 material into v0.2, records the prior blob, and defines a two-file documentation rollback without changing package code or runtime behavior."
+    },
+    {
+      "gate": "remote-readback-and-hash",
+      "outcome": "PASS",
+      "reason": "Read the branch file back from GitHub after commit cc3375a6c9a348461d505bda40cac372a0b8575a; the returned blob is 0036c28e3b148d38ae200f3ccd878ff8a0395a02 and the authored UTF-8 content hash is recorded above."
+    },
+    {
+      "gate": "pull-request-workflows",
+      "outcome": "SKIPPED",
+      "reason": "GitHub Actions evidence is not available until the draft pull request is created."
+    },
+    {
+      "gate": "branch-protection-and-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt is provenance only and does not authorize merge, release, or publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "prior-domain-packages-readme",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/939e1f1f742a9ed02997a3eef03f0c5b8a2e70a4/packages/domains/README.md"
+    },
+    {
+      "id": "parent-packages-root-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/939e1f1f742a9ed02997a3eef03f0c5b8a2e70a4/packages/README.md"
+    },
+    {
+      "id": "directory-rules-readme-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/939e1f1f742a9ed02997a3eef03f0c5b8a2e70a4/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "package-review-route",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/939e1f1f742a9ed02997a3eef03f0c5b8a2e70a4/.github/CODEOWNERS"
+    },
+    {
+      "id": "domain-readiness-hold",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/939e1f1f742a9ed02997a3eef03f0c5b8a2e70a4/.github/workflows/domain-agriculture.yml"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/939e1f1f742a9ed02997a3eef03f0c5b8a2e70a4/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-24T01:55:51.612745Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored same-path modernization of packages/domains/README.md. It preserves the helper-package boundary while replacing a proposed directory tree with bounded current repository evidence, a fifteen-lane registry, placeholder-aware maturity levels, dependency and sensitive-domain obligations, settlement/transport compatibility conflicts, corrected domain test and fixture counterparts, admission gates, a no-loss ledger, and rollback instructions. No package code, manifest, dependency, test, workflow, schema, contract, policy, lifecycle record, release object, deployment, runtime, or public artifact is changed. Human review is pending."
+}

@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/soil/time_caveat_candidate.schema.json",
+  "title": "SoilTimeCaveatCandidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "candidate_id",
+    "schema_version",
+    "support_type",
+    "source_family",
+    "source_role",
+    "claim_kind",
+    "time_basis",
+    "evidence_refs",
+    "governance"
+  ],
+  "properties": {
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9:._-]{7,127}$"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "support_type": {
+      "type": "string",
+      "enum": [
+        "authoritative_static_soil",
+        "gridded_derivative_soil",
+        "station_soil_moisture",
+        "reference_station_soil_climate",
+        "satellite_soil_moisture_grid",
+        "profile_soil_evidence",
+        "soil_interpretation"
+      ]
+    },
+    "source_family": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{2,63}$"
+    },
+    "source_role": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{2,63}$"
+    },
+    "claim_kind": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{2,63}$"
+    },
+    "time_basis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_published_at",
+        "observed_at",
+        "valid_from",
+        "valid_to",
+        "retrieved_at",
+        "evaluated_at",
+        "source_timezone",
+        "cadence_seconds",
+        "stale_state"
+      ],
+      "properties": {
+        "source_published_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "observed_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "valid_from": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "valid_to": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "retrieved_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "evaluated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "source_timezone": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "cadence_seconds": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "stale_state": {
+          "type": "string",
+          "enum": [
+            "FRESH",
+            "STALE",
+            "UNKNOWN",
+            "NOT_APPLICABLE"
+          ]
+        }
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "pattern": "^evidence:[A-Za-z0-9._:-]{4,128}$"
+      },
+      "uniqueItems": true
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_activated",
+        "policy_evaluated",
+        "release_authorized",
+        "public_use_allowed",
+        "release_ref"
+      ],
+      "properties": {
+        "source_activated": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "release_ref": {
+          "type": "null"
+        }
+      }
+    }
+  }
+}

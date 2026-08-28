@@ -1,0 +1,27 @@
+name: release-proof-pack-closure
+"on":
+  pull_request:
+    paths:
+      - "contracts/release/release_proof_pack_closure.md"
+      - "schemas/contracts/v1/release/release_proof_pack_closure.schema.json"
+      - "fixtures/contracts/v1/release/release_proof_pack_closure/**"
+      - "tools/validators/release/validate_release_proof_pack_closure.py"
+      - "tests/validators/test_validate_release_proof_pack_closure.py"
+      - "docs/intake/exploratory/pass9-release-proof-pack-closure-source-map.md"
+  workflow_dispatch:
+permissions: {contents: read}
+env: {KFM_NO_NETWORK: "1", PYTHONDONTWRITEBYTECODE: "1", PYTHONHASHSEED: "0", TZ: UTC}
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: {persist-credentials: false}
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with: {python-version: "3.11"}
+      - run: python -m py_compile tools/validators/release/validate_release_proof_pack_closure.py tests/validators/test_validate_release_proof_pack_closure.py
+      - run: python -m unittest tests.validators.test_validate_release_proof_pack_closure -v
+      - run: python tools/validators/release/validate_release_proof_pack_closure.py --fixtures
+      - if: always()
+        run: echo "Fixture-only closure validation; no promotion, release, publication, or mutation performed." >> "$GITHUB_STEP_SUMMARY"

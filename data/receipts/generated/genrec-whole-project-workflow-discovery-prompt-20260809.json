@@ -1,0 +1,113 @@
+{
+  "receipt_id": "genrec:whole-project-workflow-discovery-prompt:20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/prompts/kfm-whole-project-workflow-discovery-agent.md"
+  ],
+  "artifact_hashes": {
+    "docs/prompts/kfm-whole-project-workflow-discovery-agent.md": "sha256:6465257ae817ed27b97e7ddaf42fda870ca71b8d1c7df5b54c7f9d2aa3be9ee6"
+  },
+  "model_identity": {
+    "provider": "openai",
+    "model": "GPT-5",
+    "version": "Codex desktop session 2026-08-09"
+  },
+  "prompt_or_contract": "sha256:04a537c91b2706faa0630a845d920cd2bb808ea97ecca45feeb28ea3db414cf9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "google-drive",
+      "github",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "git:main@7c8bb411036a7cb12547d85532c78997162d2aa9",
+      "docs/prompts/kfm-repository-build-markdown-modernization-agent.md",
+      "docs/prompts/codex-repository-completion-agent.md",
+      "docs/architecture/directory-rules.md",
+      "docs/doctrine/ai-build-operating-contract.md",
+      ".github/PULL_REQUEST_TEMPLATE.md"
+    ],
+    "attached_docs": [
+      "Google Drive document 12rsr3JIt_HvCESLXNnGpRe-gNLn2LY0Fqv7lUw4dE08: KFM Whole-Project Workflow Discovery and Implementation Agent Prompt"
+    ]
+  },
+  "truth_labels": {
+    "docs/prompts/kfm-whole-project-workflow-discovery-agent.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "docs-meta-block-tests-24",
+      "outcome": "PASS",
+      "reason": "Twenty-four metadata-block structure and registry tests passed."
+    },
+    {
+      "gate": "docs-link-tests-18",
+      "outcome": "PASS",
+      "reason": "Eighteen bounded no-network documentation link tests passed."
+    },
+    {
+      "gate": "prompt-meta-block",
+      "outcome": "PASS",
+      "reason": "The prompt metadata block is structurally valid with zero findings."
+    },
+    {
+      "gate": "prompt-local-links",
+      "outcome": "PASS",
+      "reason": "The explicit prompt file has no unresolved repository-local target."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, fifty-two total headings, no heading-level jump, six balanced fence markers, no tab or CR characters, and a final newline were verified."
+    },
+    {
+      "gate": "targeted-diff-check",
+      "outcome": "PASS",
+      "reason": "The authored prompt contains no whitespace error reported by the scoped diff check."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "policy:ai-build-operating-contract:3.0.0"
+  ],
+  "citations": [
+    {
+      "id": "KFM_WORKFLOW_DISCOVERY_PROMPT_DRIVE",
+      "validated": true,
+      "evidence_ref": "Google Drive document 12rsr3JIt_HvCESLXNnGpRe-gNLn2LY0Fqv7lUw4dE08"
+    },
+    {
+      "id": "KFM_DIRECTORY_RULES",
+      "validated": true,
+      "evidence_ref": "docs/architecture/directory-rules.md"
+    },
+    {
+      "id": "KFM_EXISTING_PROMPT_LANE",
+      "validated": true,
+      "evidence_ref": "docs/prompts/"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T18:06:32Z",
+  "emitter": "openai/codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Adds a distinct portable workflow-discovery and campaign-continuation prompt to the established docs/prompts lane. Repository presence, generation, validation, a commit, or a pull request cannot activate the prompt or authorize merge, release, deployment, promotion, or publication. Receipt schema validation used latest-index jsonschema 4.25.1 because the repository-declared >=4.26.0 constraint was not available from the package index; no dependency declaration was changed."
+}

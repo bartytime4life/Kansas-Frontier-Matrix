@@ -1,0 +1,158 @@
+{
+  "receipt_id": "genrec-adr-0035-repository-wide-adr-identity-numbering-86fb7b02",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/adr/ADR-0035-repository-wide-adr-identity-numbering-and-domain-indexing.md",
+    "docs/adr/INDEX.md",
+    "docs/adr/README.md",
+    "docs/registers/ADR_INDEX.md"
+  ],
+  "artifact_hashes": {
+    "docs/adr/ADR-0035-repository-wide-adr-identity-numbering-and-domain-indexing.md": "sha256:86fb7b026edae90e347f48ebbd2df4d8838d1da87daf78e8cacf4bfd90c48dc6",
+    "docs/adr/INDEX.md": "sha256:d616b1e5c8e29d6b39dbae9647424ed925fcb9f637027fac2ffe2358ece09df5",
+    "docs/adr/README.md": "sha256:cced0d24502abaf704ed34292891a76a6648748899fc6134fade3521db8c7a5c",
+    "docs/registers/ADR_INDEX.md": "sha256:6d55454d59aa0145290cdee7b7ff37068d1813b27aa8506cb0d7f0dae2ea1c9b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-14"
+  },
+  "prompt_or_contract": "sha256:86fb7b026edae90e347f48ebbd2df4d8838d1da87daf78e8cacf4bfd90c48dc6",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "current-main branch, file, index, validator, branch, and pull-request inspection",
+      "deterministic local Markdown source checks",
+      "Pandoc GitHub-Flavored Markdown parsing",
+      "SHA-256 artifact binding"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/3974da9794fa11bd5355c49243c9193d22b9e81e",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/193f52bf6439ea9f39d762db905623ef31d78faf",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3974da9794fa11bd5355c49243c9193d22b9e81e/docs/adr/INDEX.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3974da9794fa11bd5355c49243c9193d22b9e81e/docs/adr/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3974da9794fa11bd5355c49243c9193d22b9e81e/docs/registers/ADR_INDEX.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3974da9794fa11bd5355c49243c9193d22b9e81e/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3974da9794fa11bd5355c49243c9193d22b9e81e/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3974da9794fa11bd5355c49243c9193d22b9e81e/docs/domains/fauna/adr/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3974da9794fa11bd5355c49243c9193d22b9e81e/tools/validators/validate_adr_index.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3974da9794fa11bd5355c49243c9193d22b9e81e/tests/validators/test_validate_adr_index.py"
+    ]
+  },
+  "truth_labels": {
+    "docs/adr/ADR-0035-repository-wide-adr-identity-numbering-and-domain-indexing.md": "PROPOSED",
+    "docs/adr/INDEX.md": "CONFIRMED",
+    "docs/adr/README.md": "CONFIRMED",
+    "docs/registers/ADR_INDEX.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "pinned-authority-and-overlap-check",
+      "outcome": "PASS",
+      "reason": "Pinned main 3974da9794fa11bd5355c49243c9193d22b9e81e and tree 193f52bf6439ea9f39d762db905623ef31d78faf; no open pull request, ADR-0035 branch, exact-path collision, or matching decision topic was found immediately before authoring."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and adopted Directory Rules v2 place human architecture decisions and decision history under docs/adr/ and domain guidance under docs/domains/."
+    },
+    {
+      "gate": "adr-status-and-non-effect",
+      "outcome": "PASS",
+      "reason": "The source record and canonical index both remain proposed; no scaffold, domain index, implementation, policy, release, deployment, publication, or repository setting is changed."
+    },
+    {
+      "gate": "canonical-index-coherence-source-check",
+      "outcome": "PASS",
+      "reason": "The authored index contains one contiguous sequence ADR-0001 through ADR-0035, 35 numbered-record metadata, one accepted and 34 proposed summaries, and the unchanged twelve-scaffold inventory."
+    },
+    {
+      "gate": "cross-register-non-duplication",
+      "outcome": "PASS",
+      "reason": "docs/registers/ADR_INDEX.md remains a pointer and summary with no numbered ADR row table or canonical-index marker duplication."
+    },
+    {
+      "gate": "markdown-source-and-parse",
+      "outcome": "PASS",
+      "reason": "All four Markdown artifacts passed UTF-8, final-newline, no-tab, no-trailing-whitespace checks and Pandoc GitHub-Flavored Markdown parsing."
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "The recorded SHA-256 values match the exact authored bytes for all four bound Markdown artifacts."
+    },
+    {
+      "gate": "repository-native-adr-validator-suite",
+      "outcome": "SKIPPED",
+      "reason": "The connector-first environment has no mounted repository checkout; exact-head hosted validation remains required after the draft pull request is opened."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks begin after the immutable branch and draft pull request are published."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review and any proposed-to-accepted transition remain pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/doctrine/directory-rules.md",
+    "docs/adr/ADR-0035-repository-wide-adr-identity-numbering-and-domain-indexing.md"
+  ],
+  "citations": [
+    {
+      "id": "canonical-adr-inventory",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/3974da9794fa11bd5355c49243c9193d22b9e81e/docs/adr/INDEX.md"
+    },
+    {
+      "id": "adr-operating-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/3974da9794fa11bd5355c49243c9193d22b9e81e/docs/adr/README.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/3974da9794fa11bd5355c49243c9193d22b9e81e/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "adopted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/3974da9794fa11bd5355c49243c9193d22b9e81e/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "domain-adr-index-ambiguity",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/3974da9794fa11bd5355c49243c9193d22b9e81e/docs/domains/fauna/adr/README.md"
+    },
+    {
+      "id": "adr-index-validator",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/3974da9794fa11bd5355c49243c9193d22b9e81e/tools/validators/validate_adr_index.py"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-14T19:22:41Z",
+  "emitter": "OpenAI GPT-5.6 Pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0035-repository-wide-adr-identity-numbering-and-domain-indexing.md",
+    "drift_register_entry": null
+  },
+  "notes": "Initial proposed ADR-0035 packet. This receipt records authorship and deterministic artifact binding only. It grants no ADR acceptance, domain-index authority, scaffold migration, policy, review approval, promotion, release, deployment, publication, merge, or repository-settings authority."
+}

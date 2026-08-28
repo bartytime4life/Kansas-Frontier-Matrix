@@ -1,0 +1,369 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/release/promotion_receipt.schema.json",
+  "title": "promotion_receipt",
+  "description": "Declared A-G evaluation and lifecycle-effect receipt for one governed promotion attempt.",
+  "type": "object",
+  "additionalProperties": false,
+  "x-kfm": {
+    "contract_doc": "contracts/release/promotion_receipt.md",
+    "fixtures_root": "fixtures/release/promotion_receipt/",
+    "validator": "tools/validators/release/validate_promotion_receipt.py",
+    "policy": "policy/promotion/",
+    "status": "PROPOSED"
+  },
+  "required": [
+    "promotion_id",
+    "receipt_profile",
+    "candidate",
+    "evaluation",
+    "gates",
+    "transition",
+    "decision_ref",
+    "evidence_refs",
+    "policy_refs",
+    "review_refs",
+    "attestation_refs",
+    "integrity",
+    "created_by",
+    "created_at"
+  ],
+  "properties": {
+    "promotion_id": {
+      "type": "string",
+      "pattern": "^promotion:[a-z0-9][a-z0-9_.:-]*$"
+    },
+    "receipt_profile": {
+      "const": "kfm/promotion-receipt/v1"
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_id",
+        "spec_hash",
+        "artifact_digests"
+      ],
+      "properties": {
+        "candidate_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_:.-]*$"
+        },
+        "spec_hash": {
+          "$ref": "#/$defs/digest"
+        },
+        "artifact_digests": {
+          "type": "object",
+          "minProperties": 1,
+          "maxProperties": 256,
+          "propertyNames": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]{0,255}$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/digest"
+          }
+        }
+      }
+    },
+    "evaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile",
+        "evaluated_at",
+        "status",
+        "readiness"
+      ],
+      "properties": {
+        "profile": {
+          "const": "kfm/promotion-readiness/A-G/v1"
+        },
+        "evaluated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "$ref": "#/$defs/status"
+        },
+        "readiness": {
+          "type": "string",
+          "enum": [
+            "APPROVE_READY",
+            "BLOCKED"
+          ]
+        }
+      }
+    },
+    "gates": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "prefixItems": [
+        {
+          "$ref": "#/$defs/gate_a"
+        },
+        {
+          "$ref": "#/$defs/gate_b"
+        },
+        {
+          "$ref": "#/$defs/gate_c"
+        },
+        {
+          "$ref": "#/$defs/gate_d"
+        },
+        {
+          "$ref": "#/$defs/gate_e"
+        },
+        {
+          "$ref": "#/$defs/gate_f"
+        },
+        {
+          "$ref": "#/$defs/gate_g"
+        }
+      ],
+      "items": false
+    },
+    "transition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "from_state",
+        "to_state",
+        "applied"
+      ],
+      "properties": {
+        "from_state": {
+          "type": "string",
+          "enum": [
+            "CATALOG",
+            "TRIPLET"
+          ]
+        },
+        "to_state": {
+          "const": "PUBLISHED"
+        },
+        "applied": {
+          "type": "boolean"
+        }
+      }
+    },
+    "decision_ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "evidence_refs": {
+      "$ref": "#/$defs/reference_array"
+    },
+    "policy_refs": {
+      "$ref": "#/$defs/reference_array"
+    },
+    "review_refs": {
+      "$ref": "#/$defs/reference_array"
+    },
+    "attestation_refs": {
+      "$ref": "#/$defs/reference_array"
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "receipt_digest"
+      ],
+      "properties": {
+        "receipt_digest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "created_by": {
+      "type": "string",
+      "pattern": "^actor://[A-Za-z0-9._:/-]+$"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "PASS",
+        "ABSTAIN",
+        "DENY",
+        "ERROR"
+      ]
+    },
+    "reference_array": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1024
+      }
+    },
+    "finding_code": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_/-]*$"
+    },
+    "gate_base": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gate",
+        "name",
+        "status",
+        "findings"
+      ],
+      "properties": {
+        "gate": {
+          "type": "string",
+          "pattern": "^[A-G]$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "$ref": "#/$defs/status"
+        },
+        "findings": {
+          "type": "array",
+          "maxItems": 128,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/finding_code"
+          }
+        }
+      }
+    },
+    "gate_a": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/gate_base"
+        },
+        {
+          "properties": {
+            "gate": {
+              "const": "A"
+            },
+            "name": {
+              "const": "identity_and_closure"
+            }
+          }
+        }
+      ]
+    },
+    "gate_b": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/gate_base"
+        },
+        {
+          "properties": {
+            "gate": {
+              "const": "B"
+            },
+            "name": {
+              "const": "asset_integrity"
+            }
+          }
+        }
+      ]
+    },
+    "gate_c": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/gate_base"
+        },
+        {
+          "properties": {
+            "gate": {
+              "const": "C"
+            },
+            "name": {
+              "const": "geometry_and_crs"
+            }
+          }
+        }
+      ]
+    },
+    "gate_d": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/gate_base"
+        },
+        {
+          "properties": {
+            "gate": {
+              "const": "D"
+            },
+            "name": {
+              "const": "temporal_semantics"
+            }
+          }
+        }
+      ]
+    },
+    "gate_e": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/gate_base"
+        },
+        {
+          "properties": {
+            "gate": {
+              "const": "E"
+            },
+            "name": {
+              "const": "rights_and_sensitivity"
+            }
+          }
+        }
+      ]
+    },
+    "gate_f": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/gate_base"
+        },
+        {
+          "properties": {
+            "gate": {
+              "const": "F"
+            },
+            "name": {
+              "const": "proof_and_catalog_support"
+            }
+          }
+        }
+      ]
+    },
+    "gate_g": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/gate_base"
+        },
+        {
+          "properties": {
+            "gate": {
+              "const": "G"
+            },
+            "name": {
+              "const": "review_and_rollback"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

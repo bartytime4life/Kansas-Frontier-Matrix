@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://contracts/atmosphere/air-observation.schema.json",
+  "title": "Air Observation",
+  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {},
+  "x-kfm": {
+    "status": "PROPOSED",
+    "path": "contracts/atmosphere/air-observation.schema.json",
+    "source_docs": [
+      "docs/domains/atmosphere/FILE_SYSTEM_PLAN.md"
+    ],
+    "contract_doc": null
+  }
+}

@@ -1,0 +1,4 @@
+# packages/redaction pyproject — greenfield placeholder
+[project]
+name = "kfm-redaction"
+version = "0.0.0"

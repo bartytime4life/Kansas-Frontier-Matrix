@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0.0",
+  "profile": "kfm.source_event_envelope_candidate.v1",
+  "execution_mode": "FIXTURE_ONLY",
+  "specversion": "1.0",
+  "event_id": "kfm:source-event:sha256:a399ecbe515f1bb31d78778cdfce7569d59058c1c2e4fe6dff27790e4521dd2d",
+  "source_descriptor_ref": "src:synthetic:county-boundary-feed",
+  "source_role_ref": "src:synthetic:county-boundary-feed#/source_role",
+  "event_type": "OBJECT_DELETED",
+  "subject": {
+    "subject_ref": "fixture://source-events/retired-object",
+    "native_id": "retired-object",
+    "media_type": "application/json",
+    "content_digest": "sha256:a7b70b25d31ba35ef55051440495a3baf45e988994bf8d9fafdd25e7a77e9bf6",
+    "byte_count": 42,
+    "etag": null,
+    "last_modified": "2026-08-06T16:55:00Z"
+  },
+  "occurred_at": "2026-08-06T17:00:00Z",
+  "received_at": "2026-08-06T17:00:05Z",
+  "producer": {
+    "producer_id": "kfm-fixture-watcher",
+    "kind": "WATCHER",
+    "version": "1.0.0"
+  },
+  "payload": {
+    "payload_spec_hash": "sha256:b5823859b2a24f71bea636a2cab4a02680e02bca7551e0dcc410066e6a2ef7dc",
+    "attributes": {
+      "change_kind": "deletion_notice",
+      "material": true,
+      "record_count": 0
+    }
+  },
+  "routing": {
+    "disposition": "PROPOSE_QUARANTINE",
+    "reason_codes": [
+      "DELETION_REQUIRES_REVIEW"
+    ],
+    "review_required": true,
+    "source_activation_allowed": false,
+    "raw_write_allowed": false,
+    "publication_allowed": false
+  },
+  "governance": {
+    "rights_state": "KNOWN",
+    "sensitivity_state": "KNOWN",
+    "evidence_refs": [
+      "evidence:synthetic:county-boundary-change"
+    ],
+    "policy_refs": [
+      "policy:synthetic:source-admission-fixture"
+    ]
+  },
+  "claims": {
+    "deterministic_identity": true,
+    "idempotent_replay": true,
+    "cloudevents_core_attributes_present": true,
+    "cloudevents_conformance_claimed": false,
+    "network_access_performed": false,
+    "authority_created": false,
+    "source_activated": false,
+    "lifecycle_write_performed": false,
+    "released": false,
+    "published": false
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "kfm:hydrology:aquifer-context-link:synthetic-invalid-geometry",
+  "version": "v0.1",
+  "spec_hash": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+  "object_type": "AquiferContextLink",
+  "hydrology_subject": {
+    "object_type": "GroundwaterWell",
+    "id": "kfm:hydrology:groundwater-well:synthetic-001"
+  },
+  "geology_endpoint": {
+    "owner_domain": "geology",
+    "object_type": "HydrostratigraphicUnit",
+    "id": "kfm:geology:hydrostratigraphic-unit:synthetic-001"
+  },
+  "relationship_type": "screened_in",
+  "source_roles": {
+    "hydrology": "administrative",
+    "geology": "observed"
+  },
+  "temporal_scope": {
+    "source_time": "2026-02-02T00:00:00Z"
+  },
+  "interpretation_basis": {
+    "method": "synthetic crosswalk",
+    "source_record_refs": [
+      "synthetic:relation:002"
+    ],
+    "confidence": "low"
+  },
+  "sensitivity": {
+    "geometry_posture": "restricted",
+    "policy_review_required": true
+  },
+  "aquifer_geometry": {
+    "type": "Polygon",
+    "coordinates": []
+  },
+  "evidence_refs": [
+    "evidence:synthetic-invalid-link:002"
+  ]
+}

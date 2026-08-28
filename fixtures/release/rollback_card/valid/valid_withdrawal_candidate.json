@@ -1,0 +1,51 @@
+{
+  "object_type": "RollbackCard",
+  "schema_version": "1.0.0",
+  "id": "rollback:example:withdrawal-2026-08-04",
+  "version": "1.0.0",
+  "spec_hash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "disposition": "WITHDRAWAL_CANDIDATE",
+  "trigger": {
+    "reason_code": "RIGHTS_CHANGE",
+    "detected_at": "2026-08-04T10:00:00Z"
+  },
+  "affected_release_ref": "kfm://release/example/v2",
+  "target": {
+    "mode": "WITHDRAWAL",
+    "release_ref": null
+  },
+  "evidence_bundle_refs": [
+    "kfm://evidence-bundle/rollback-example"
+  ],
+  "policy_decision_refs": [
+    "kfm://policy-decision/release-hold-example"
+  ],
+  "review_record_refs": [],
+  "correction_notice_ref": "kfm://correction-notice/example",
+  "invalidations": [
+    "API_CACHE",
+    "CATALOG",
+    "TILES"
+  ],
+  "restoration": {
+    "restore_release_ref": null,
+    "public_notice_required": true,
+    "validation_required": true
+  },
+  "timing": {
+    "decided_at": "2026-08-04T11:00:00Z",
+    "effective_at": "2026-08-04T12:00:00Z"
+  },
+  "lineage": {
+    "supersedes": null,
+    "superseded_by": null
+  },
+  "governance": {
+    "authority_created": false,
+    "policy_evaluated": false,
+    "review_completed": false,
+    "rollback_executed": false,
+    "public_state_mutated": false,
+    "release_ref": null
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "receipt_id": "genrec-flora-specimen-record-20260812",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/flora-specimen-record.yml",
+    "contracts/domains/flora/specimen_record.md",
+    "docs/intake/exploratory/specimen-record-conformance-source-map.md",
+    "fixtures/domains/flora/specimen_record/README.md",
+    "fixtures/domains/flora/specimen_record/cases.json",
+    "schemas/contracts/v1/domains/flora/specimen_record.schema.json",
+    "tests/domains/flora/test_specimen_record.py",
+    "tools/validators/domains/flora/validate_specimen_record.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/flora-specimen-record.yml": "sha256:3be555d7a9ea12d378c45da8bbd502236647a80cecc7c163c9a1c778918cb1dd",
+    "contracts/domains/flora/specimen_record.md": "sha256:c58c07aa6e52bd308b92716f8352196010a409efd19091914ed7979aca202ef8",
+    "docs/intake/exploratory/specimen-record-conformance-source-map.md": "sha256:8329b006a5c3dd5923441b477219f7307a0a2465f6f292d9b848a648ca9badd1",
+    "fixtures/domains/flora/specimen_record/README.md": "sha256:35dc93e847183a77d1070071b4901e5e45605e7929e6d1432156b3398f301cdd",
+    "fixtures/domains/flora/specimen_record/cases.json": "sha256:ea49478952b4f7772446836ba0858d846721639ea15d84a6e9037310c3c60c76",
+    "schemas/contracts/v1/domains/flora/specimen_record.schema.json": "sha256:2acf909d12fd7f79ce8586cc55ffd8354447a0418fc60d7b234bb090bbbd5c12",
+    "tests/domains/flora/test_specimen_record.py": "sha256:744b7a970f3b39ac9650b67399722609276d99246678754b0af6206a2b6357bc",
+    "tools/validators/domains/flora/validate_specimen_record.py": "sha256:9491348434d49f83292410f182c3a3b3ec0b0a51d09adbec22bf22fa92e0fdbb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "Codex Work session 2026-08-12"
+  },
+  "prompt_or_contract": "sha256:55e864637e673de737c160081b7dc3cb69d9d8bc16849c3a35caa2d813672f9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local git",
+      "Poppler PDF extraction",
+      "local Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf"
+    ],
+    "evidence_refs": [
+      "gdrive:1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ#New-Ideas-5-19-26",
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#pdf-pages-936-939",
+      "repo:contracts/domains/flora/specimen_record.md@753dfe4c4d17482c51bdf90ae8f8bb93e8644d3c",
+      "repo:docs/doctrine/directory-rules.md@753dfe4c4d17482c51bdf90ae8f8bb93e8644d3c"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/flora-specimen-record.yml": "PROPOSED",
+    "contracts/domains/flora/specimen_record.md": "PROPOSED",
+    "docs/intake/exploratory/specimen-record-conformance-source-map.md": "PROPOSED",
+    "fixtures/domains/flora/specimen_record/README.md": "PROPOSED",
+    "fixtures/domains/flora/specimen_record/cases.json": "PROPOSED",
+    "schemas/contracts/v1/domains/flora/specimen_record.schema.json": "PROPOSED",
+    "tests/domains/flora/test_specimen_record.py": "PROPOSED",
+    "tools/validators/domains/flora/validate_specimen_record.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-tests",
+      "outcome": "PASS",
+      "reason": "Seven focused tests and twenty-eight exact fixture subtests passed in an isolated environment using the repository-declared test dependencies."
+    },
+    {
+      "gate": "fixture-polarity-and-no-network",
+      "outcome": "PASS",
+      "reason": "Four valid cases passed, twenty-four invalid cases produced exact expected codes, and the replay completed with socket access denied."
+    },
+    {
+      "gate": "schema-parser-and-workflow-validation",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 schema meta-validation, JSON parsing, Python compilation, workflow YAML parsing, and git whitespace checks passed."
+    },
+    {
+      "gate": "repository-aggregate-validation",
+      "outcome": "PASS",
+      "reason": "make validate passed: all eight registered aggregate validators passed and the repository schema/contract suite completed with 470 tests and 29 subtests passing."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "gdrive:new-ideas-5-19-26",
+      "validated": true,
+      "evidence_ref": "gdrive:1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ#New-Ideas-5-19-26"
+    },
+    {
+      "id": "attachment:consolidated-atlas-flora-specimen",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#pdf-pages-936-939"
+    },
+    {
+      "id": "repository:specimen-record-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/domains/flora/specimen_record.md@753dfe4c4d17482c51bdf90ae8f8bb93e8644d3c"
+    },
+    {
+      "id": "repository:directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@753dfe4c4d17482c51bdf90ae8f8bb93e8644d3c"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-12T18:00:00Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Dependency-closed maturation of the existing Flora SpecimenRecord scaffold into an inactive, fixture-only conformance profile. This receipt grants no real specimen, source, taxonomy, evidence, rights, sensitivity, review, merge, promotion, release, deployment, publication, or public-use authority."
+}

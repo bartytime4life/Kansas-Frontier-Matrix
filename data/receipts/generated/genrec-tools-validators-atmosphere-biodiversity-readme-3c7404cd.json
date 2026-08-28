@@ -1,0 +1,194 @@
+{
+  "receipt_id": "genrec-tools-validators-atmosphere-biodiversity-readme-3c7404cd",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/atmosphere_biodiversity/README.md"
+  ],
+  "artifact_hashes": {
+    "tools/validators/atmosphere_biodiversity/README.md": "sha256:3c7404cdb1dcd076c9f7a558076414fd0cdc89e4416c8950fb51aacbf4a8141a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-16-session"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3.1",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/tools/validators/atmosphere_biodiversity/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/tools/validators/biodiversity/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/tools/validators/domains/atmosphere/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/tools/validators/freshness/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/docs/domains/atmosphere/CROSS_LANE_RELATIONS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/docs/architecture/ecology-cross-domain.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/schemas/contracts/v1/cross/atmosphere_biodiversity/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/docs/domains/fauna/SENSITIVITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/docs/domains/flora/SENSITIVITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/docs/domains/habitat/SENSITIVITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/policy/domains/atmosphere/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/policy/domains/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/policy/domains/flora/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/policy/domains/habitat/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/tests/domains/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/.github/workflows/domain-atmosphere.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/.github/workflows/domain-fauna.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/.github/workflows/domain-flora.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/.github/workflows/domain-habitat.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/docs/doctrine/directory-rules.md",
+      "project://KFM Documentation Implementation Agent v3.1"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/atmosphere_biodiversity/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, current main, target blob, validator topology, Atmosphere cross-lane doctrine, ecology architecture, cross-schema index, sensitivity posture, policy/test maturity, workflows, Directory Rules, and receipt requirements were inspected."
+    },
+    {
+      "gate": "base-and-target-concurrency",
+      "outcome": "PASS",
+      "reason": "Branch was created from main commit 80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5; target blob 3e54fa35d7fe0ade4ac5d572f667b2615aa5ddca was verified before mutation."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The existing README remains under tools/validators; no parallel domain, schema, contract, policy, source, evidence, lifecycle, release, runtime, or public authority home is created."
+    },
+    {
+      "gate": "direct-lane-inventory",
+      "outcome": "PASS",
+      "reason": "Bounded search surfaced only README.md under tools/validators/atmosphere_biodiversity and no seam executable, ATM_BIO_VALIDATION producer, or dedicated test implementation."
+    },
+    {
+      "gate": "topology-and-anti-duplication",
+      "outcome": "PASS",
+      "reason": "The update preserves the seam as narrow Atmosphere×Biodiversity validation, biodiversity/ as the broad composition parent, domains/atmosphere as child routing, freshness as shared logic, and ecology as cross-domain architecture rather than a domain."
+    },
+    {
+      "gate": "schema-authority-boundary",
+      "outcome": "PASS",
+      "reason": "The cross-schema path remains compatibility/index-only and is not promoted to canonical machine-shape authority."
+    },
+    {
+      "gate": "policy-test-ci-maturity",
+      "outcome": "PASS",
+      "reason": "Atmosphere, Fauna, Flora, and Habitat policy lanes are classified as greenfield scaffolds; dedicated seam tests are absent; sampled Fauna tests are scaffold/documentation-heavy; domain workflows are TODO-only."
+    },
+    {
+      "gate": "geoprivacy-and-domain-boundary",
+      "outcome": "PASS",
+      "reason": "The README denies exact or inferable sensitive taxa/sites, evaluates output-level join risk, preserves Atmosphere/Fauna/Flora/Habitat ownership, and requires evidence, policy, transforms, receipts, review, release, correction, and rollback."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, balanced fenced blocks, tables, finite outcomes, open verification register, evidence ledger, migration, correction, and rollback sections were checked."
+    },
+    {
+      "gate": "internal-link-resolution",
+      "outcome": "PASS",
+      "reason": "All 44 internal fragment links resolved in local validation."
+    },
+    {
+      "gate": "secret-pattern-review",
+      "outcome": "PASS",
+      "reason": "No common private-key, GitHub token, AWS credential, or OpenAI key pattern was found."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "No exact sensitive coordinates, protected identifiers, geoprivacy parameters, restricted payloads, or control-defeating details were included."
+    },
+    {
+      "gate": "artifact-integrity",
+      "outcome": "PASS",
+      "reason": "README SHA-256 is 3c7404cdb1dcd076c9f7a558076414fd0cdc89e4416c8950fb51aacbf4a8141a."
+    },
+    {
+      "gate": "executable-tests",
+      "outcome": "SKIPPED",
+      "reason": "No validator, schema, policy, fixture, test, workflow, runtime, or release implementation changed; seam enforcement remains unestablished."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "target-readme",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/tools/validators/atmosphere_biodiversity/README.md"
+    },
+    {
+      "id": "atmosphere-cross-lane",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/docs/domains/atmosphere/CROSS_LANE_RELATIONS.md"
+    },
+    {
+      "id": "ecology-cross-domain",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/docs/architecture/ecology-cross-domain.md"
+    },
+    {
+      "id": "cross-schema-index",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/schemas/contracts/v1/cross/atmosphere_biodiversity/README.md"
+    },
+    {
+      "id": "fauna-sensitivity",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/docs/domains/fauna/SENSITIVITY.md"
+    },
+    {
+      "id": "flora-sensitivity",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/docs/domains/flora/SENSITIVITY.md"
+    },
+    {
+      "id": "habitat-sensitivity",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/docs/domains/habitat/SENSITIVITY.md"
+    },
+    {
+      "id": "domain-workflows",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/.github/workflows/domain-fauna.yml"
+    },
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/80eb1bc7c9ae751125787db4f0054f2bfcf2c4e5/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-16T20:51:11Z",
+  "emitter": "openai:gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only update. No executable validator, policy decision, source admission, EvidenceBundle, lifecycle transition, release record, sensitive biodiversity payload, model call, or public artifact was created or modified. Human review remains pending."
+}

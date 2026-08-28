@@ -1,0 +1,111 @@
+{
+  "receipt_id": "genrec-public-participation-submission-assessment-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/public-participation-submission-assessment.yml",
+    "contracts/governance/public_participation_submission_assessment.md",
+    "docs/intake/exploratory/briefing-public-participation-submission-source-map.md",
+    "fixtures/contracts/v1/governance/public_participation_submission_assessment/cases.json",
+    "schemas/contracts/v1/governance/public_participation_submission_assessment.schema.json",
+    "tests/validators/test_validate_public_participation_submission_assessment.py",
+    "tools/validators/validate_public_participation_submission_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/public-participation-submission-assessment.yml": "sha256:dfd71f80e15861114ed9a791e84bd1496bf67dabad08e7c3e00f958e2d9d52b3",
+    "contracts/governance/public_participation_submission_assessment.md": "sha256:83863d822574df29016d00514bea72ababcbdc4857040648f1199c1d6ec9ea39",
+    "docs/intake/exploratory/briefing-public-participation-submission-source-map.md": "sha256:a2d40cf513a7ba971d3d86ab08a5a4ea1a70f0d9a8e95b935e6d8542ebb5b134",
+    "fixtures/contracts/v1/governance/public_participation_submission_assessment/cases.json": "sha256:8d90056ae2ad8df34f37b2fabb84e54ac8dac87cd0121250c6beacac8d7212c6",
+    "schemas/contracts/v1/governance/public_participation_submission_assessment.schema.json": "sha256:d5d3dda4ff1da9121fb8b37817fe7eb491742ecaeaeb61a0081f0efd3c6d0ad7",
+    "tests/validators/test_validate_public_participation_submission_assessment.py": "sha256:60e18ae93b91239ff7cfc4bf0843e2d9c910591f8308f9eac4a0d18899b8b537",
+    "tools/validators/validate_public_participation_submission_assessment.py": "sha256:6aca8ea1869ba847c9c421429d06c098528e489337411eefc222ec4a0f5e193a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:83863d822574df29016d00514bea72ababcbdc4857040648f1199c1d6ec9ea39",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector source inspection",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:68872f9226c4e4a288e888b51fb9d80c4a621a4d660ee36dd6fef7edb3c34c4e",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "KFM_Briefing_to_System_Integration_Architecture.docx",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "https://drive.google.com/file/d/1UnJ3dl9ZFvWHM01pYnqdoh0OOWinSFUg",
+      "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#sections-15.1-15.3",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/7d3b894deeb82d3ecb0ddf3daeec9158f266edb1",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7d3b894deeb82d3ecb0ddf3daeec9158f266edb1/contracts/governance/governance_event.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7d3b894deeb82d3ecb0ddf3daeec9158f266edb1/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/public-participation-submission-assessment.yml": "PROPOSED",
+    "contracts/governance/public_participation_submission_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/briefing-public-participation-submission-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/public_participation_submission_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/governance/public_participation_submission_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_public_participation_submission_assessment.py": "CONFIRMED",
+    "tools/validators/validate_public_participation_submission_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite-13-tests", "outcome": "PASS"},
+    {"gate": "fixture-polarity-5-pass-11-deny-1-error", "outcome": "PASS"},
+    {"gate": "window-receipt-privacy-publication-and-authority-boundary", "outcome": "PASS"},
+    {"gate": "no-network-no-intake-and-value-free-diagnostics", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Hosted validation runs after the draft pull request is opened."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Human semantic, privacy, governance, and release review remains pending."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "briefing-comment-window-submission-boundary",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#sections-15.1-15.3"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7d3b894deeb82d3ecb0ddf3daeec9158f266edb1/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "current-governance-event-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7d3b894deeb82d3ecb0ddf3daeec9158f266edb1/contracts/governance/governance_event.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T17:12:02Z",
+  "emitter": "OpenAI GPT-5 Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Implements the briefing's CommentWindow and Submission boundary as an inactive, fixture-only assessment. It records references and digests only, treats released material as an external reference, and creates no intake, acceptance, review-approval, recommendation, decision, source, release, publication, or public-use authority."
+}

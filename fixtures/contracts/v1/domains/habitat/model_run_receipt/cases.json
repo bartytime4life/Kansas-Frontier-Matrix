@@ -1,0 +1,353 @@
+{
+  "object_type": "HabitatModelRunReceiptFixtureManifest",
+  "schema_version": "1.0.0",
+  "bases": {
+    "completed": {
+      "object_type": "ModelRunReceipt",
+      "schema_version": "1.0.0",
+      "profile": "kfm.habitat-model-run-receipt.fixture.v1",
+      "receipt_id": "kfm:model-run-receipt:habitat:000000000000000000000000",
+      "domain": "HABITAT",
+      "run_kind": "SUITABILITY_INFERENCE",
+      "run_state": "COMPLETED",
+      "started_at": "2026-08-10T12:00:00Z",
+      "completed_at": "2026-08-10T12:05:00Z",
+      "recorded_at": "2026-08-10T12:06:00Z",
+      "model": {
+        "model_ref": "kfm://model/habitat/synthetic-suitability",
+        "model_version": "1.0.0-fixture",
+        "model_card_ref": "kfm://model-card/habitat/synthetic-suitability",
+        "code_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "environment_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+      },
+      "inputs": [
+        {
+          "input_ref": "kfm://input/habitat/baseline-observation",
+          "source_role": "OBSERVED",
+          "source_descriptor_ref": "kfm://source/habitat/synthetic-baseline",
+          "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+        },
+        {
+          "input_ref": "kfm://input/habitat/remote-context",
+          "source_role": "MODELED",
+          "source_descriptor_ref": "kfm://source/habitat/synthetic-context",
+          "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+        }
+      ],
+      "inputs_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "config": {
+        "config_ref": "kfm://config/habitat/synthetic-suitability",
+        "config_digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+        "random_seed": 17
+      },
+      "outputs": [
+        {
+          "output_ref": "kfm://output/habitat/synthetic-suitability-surface",
+          "source_role": "MODELED",
+          "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+          "sensitivity": "PUBLIC_SAFE",
+          "uncertainty_ref": "kfm://uncertainty/habitat/synthetic-suitability",
+          "validation_report_ref": "kfm://validation/habitat/synthetic-suitability"
+        }
+      ],
+      "failure_reason_codes": [],
+      "evidence_refs": [
+        "kfm://evidence/habitat/baseline-observation",
+        "kfm://evidence/habitat/remote-context"
+      ],
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "network_accessed": false,
+        "policy_evaluated": false,
+        "review_approved": false,
+        "release_authorized": false,
+        "publication_authorized": false,
+        "authority": "NONE"
+      },
+      "limitations": [
+        "FIXTURE_ONLY",
+        "MODEL_OUTPUT_NOT_OBSERVATION",
+        "NO_EVIDENCE_OR_PROOF_AUTHORITY",
+        "NO_POLICY_OR_REVIEW_AUTHORITY",
+        "NO_RELEASE_OR_PUBLICATION_AUTHORITY",
+        "RECEIPT_IS_PROCESS_MEMORY_ONLY"
+      ],
+      "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "failed": {
+      "object_type": "ModelRunReceipt",
+      "schema_version": "1.0.0",
+      "profile": "kfm.habitat-model-run-receipt.fixture.v1",
+      "receipt_id": "kfm:model-run-receipt:habitat:000000000000000000000000",
+      "domain": "HABITAT",
+      "run_kind": "QUALITY_SCORE",
+      "run_state": "FAILED",
+      "started_at": "2026-08-10T13:00:00Z",
+      "completed_at": "2026-08-10T13:01:00Z",
+      "recorded_at": "2026-08-10T13:02:00Z",
+      "model": {
+        "model_ref": "kfm://model/habitat/synthetic-quality-score",
+        "model_version": "1.0.0-fixture",
+        "model_card_ref": "kfm://model-card/habitat/synthetic-quality-score",
+        "code_digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+        "environment_digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888"
+      },
+      "inputs": [
+        {
+          "input_ref": "kfm://input/habitat/patch-candidate",
+          "source_role": "SYNTHETIC",
+          "source_descriptor_ref": "kfm://source/habitat/synthetic-patch",
+          "digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+        }
+      ],
+      "inputs_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "config": {
+        "config_ref": "kfm://config/habitat/synthetic-quality-score",
+        "config_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "random_seed": null
+      },
+      "outputs": [],
+      "failure_reason_codes": ["INPUT_VALIDATION_FAILED"],
+      "evidence_refs": ["kfm://evidence/habitat/patch-candidate"],
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "network_accessed": false,
+        "policy_evaluated": false,
+        "review_approved": false,
+        "release_authorized": false,
+        "publication_authorized": false,
+        "authority": "NONE"
+      },
+      "limitations": [
+        "FIXTURE_ONLY",
+        "MODEL_OUTPUT_NOT_OBSERVATION",
+        "NO_EVIDENCE_OR_PROOF_AUTHORITY",
+        "NO_POLICY_OR_REVIEW_AUTHORITY",
+        "NO_RELEASE_OR_PUBLICATION_AUTHORITY",
+        "RECEIPT_IS_PROCESS_MEMORY_ONLY"
+      ],
+      "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  },
+  "cases": [
+    {
+      "case_id": "completed-pass",
+      "base": "completed",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "failed-run-pass",
+      "base": "failed",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "spec-hash-mismatch",
+      "base": "completed",
+      "mutations": [],
+      "assertion_mutations": [
+        { "path": "/spec_hash", "value": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "MODEL_RUN_SPEC_HASH_MISMATCH", "path": "/spec_hash" }
+      ]
+    },
+    {
+      "case_id": "receipt-id-mismatch",
+      "base": "completed",
+      "mutations": [],
+      "assertion_mutations": [
+        { "path": "/receipt_id", "value": "kfm:model-run-receipt:habitat:ffffffffffffffffffffffff" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "MODEL_RUN_RECEIPT_ID_MISMATCH", "path": "/receipt_id" }
+      ]
+    },
+    {
+      "case_id": "inputs-digest-mismatch",
+      "base": "completed",
+      "mutations": [],
+      "assertion_mutations": [
+        { "path": "/inputs_digest", "value": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "MODEL_RUN_INPUTS_DIGEST_MISMATCH", "path": "/inputs_digest" },
+        { "code": "MODEL_RUN_RECEIPT_ID_MISMATCH", "path": "/receipt_id" },
+        { "code": "MODEL_RUN_SPEC_HASH_MISMATCH", "path": "/spec_hash" }
+      ]
+    },
+    {
+      "case_id": "modeled-output-role-required",
+      "base": "completed",
+      "mutations": [
+        { "path": "/outputs/0/source_role", "value": "OBSERVED" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "MODEL_RUN_SCHEMA_INVALID", "path": "/outputs/0/source_role" }
+      ]
+    },
+    {
+      "case_id": "time-order-invalid",
+      "base": "completed",
+      "mutations": [
+        { "path": "/completed_at", "value": "2026-08-10T11:59:00Z" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "MODEL_RUN_TIME_ORDER_INVALID", "path": "/completed_at" }
+      ]
+    },
+    {
+      "case_id": "duplicate-input-ref",
+      "base": "completed",
+      "mutations": [
+        { "path": "/inputs/1/input_ref", "value": "kfm://input/habitat/baseline-observation" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "MODEL_RUN_INPUT_REF_DUPLICATE", "path": "/inputs" }
+      ]
+    },
+    {
+      "case_id": "input-order-invalid",
+      "base": "completed",
+      "mutations": [
+        { "path": "/inputs/0/input_ref", "value": "kfm://input/habitat/z-last" },
+        { "path": "/inputs/1/input_ref", "value": "kfm://input/habitat/a-first" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "MODEL_RUN_INPUT_ORDER_INVALID", "path": "/inputs" }
+      ]
+    },
+    {
+      "case_id": "evidence-order-invalid",
+      "base": "completed",
+      "mutations": [
+        { "path": "/evidence_refs/0", "value": "kfm://evidence/habitat/z-last" },
+        { "path": "/evidence_refs/1", "value": "kfm://evidence/habitat/a-first" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "MODEL_RUN_EVIDENCE_ORDER_INVALID", "path": "/evidence_refs" }
+      ]
+    },
+    {
+      "case_id": "completed-output-required",
+      "base": "completed",
+      "mutations": [
+        { "path": "/outputs", "value": [] }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "MODEL_RUN_COMPLETED_OUTPUT_REQUIRED", "path": "/outputs" }
+      ]
+    },
+    {
+      "case_id": "completed-failure-reason-forbidden",
+      "base": "completed",
+      "mutations": [
+        { "path": "/failure_reason_codes", "value": ["MODEL_EXECUTION_FAILED"] }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "MODEL_RUN_COMPLETED_FAILURE_REASON_FORBIDDEN", "path": "/failure_reason_codes" }
+      ]
+    },
+    {
+      "case_id": "failed-output-forbidden",
+      "base": "failed",
+      "mutations": [
+        {
+          "path": "/outputs",
+          "value": [
+            {
+              "output_ref": "kfm://output/habitat/failed-run-output",
+              "source_role": "MODELED",
+              "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "sensitivity": "RESTRICTED",
+              "uncertainty_ref": "kfm://uncertainty/habitat/failed-run",
+              "validation_report_ref": "kfm://validation/habitat/failed-run"
+            }
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "MODEL_RUN_FAILED_OUTPUT_FORBIDDEN", "path": "/outputs" }
+      ]
+    },
+    {
+      "case_id": "failed-reason-required",
+      "base": "failed",
+      "mutations": [
+        { "path": "/failure_reason_codes", "value": [] }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "MODEL_RUN_FAILED_REASON_REQUIRED", "path": "/failure_reason_codes" }
+      ]
+    },
+    {
+      "case_id": "limitations-order-mismatch",
+      "base": "completed",
+      "mutations": [
+        {
+          "path": "/limitations",
+          "value": [
+            "MODEL_OUTPUT_NOT_OBSERVATION",
+            "FIXTURE_ONLY",
+            "NO_EVIDENCE_OR_PROOF_AUTHORITY",
+            "NO_POLICY_OR_REVIEW_AUTHORITY",
+            "NO_RELEASE_OR_PUBLICATION_AUTHORITY",
+            "RECEIPT_IS_PROCESS_MEMORY_ONLY"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "MODEL_RUN_LIMITATIONS_MISMATCH", "path": "/limitations" }
+      ]
+    },
+    {
+      "case_id": "publication-authority-denied",
+      "base": "completed",
+      "mutations": [
+        { "path": "/governance/publication_authorized", "value": true }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "MODEL_RUN_SCHEMA_INVALID", "path": "/governance/publication_authorized" }
+      ]
+    },
+    {
+      "case_id": "validation-ref-required",
+      "base": "completed",
+      "mutations": [
+        { "path": "/outputs/0/validation_report_ref", "value": null }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "MODEL_RUN_SCHEMA_INVALID", "path": "/outputs/0/validation_report_ref" }
+      ]
+    },
+    {
+      "case_id": "coordinate-field-denied",
+      "base": "completed",
+      "mutations": [
+        { "path": "/outputs/0/coordinates", "value": [-98.0, 38.5] }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "MODEL_RUN_SCHEMA_INVALID", "path": "/outputs/0" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,321 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/telemetry/trace_receipt_link.schema.json",
+  "title": "TraceReceiptLink",
+  "description": "Fixture-first positive assertion binding one run trace to a matching run receipt, immutable evidence-bundle digest, and attestation subjects within a bounded delay. Schema validity grants no evidence, policy, promotion, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "link_id",
+    "hash_profile",
+    "run_anchor",
+    "run_receipt",
+    "evidence_bundle",
+    "assessment",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "TraceReceiptLink"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "link_id": {
+      "type": "string",
+      "pattern": "^urn:kfm:trace-receipt-link:sha256:[0-9a-f]{64}$"
+    },
+    "hash_profile": {
+      "const": "kfm-trace-link-id-v1"
+    },
+    "run_anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "run_id",
+        "spec_hash",
+        "trace_id",
+        "root_span_id",
+        "started_at",
+        "ended_at",
+        "service_name",
+        "git_sha",
+        "dataset_id",
+        "sensitivity"
+      ],
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 160,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9:._/-]{7,159}$"
+        },
+        "spec_hash": {
+          "type": "string",
+          "pattern": "^jcs:sha256:[0-9a-f]{64}$"
+        },
+        "trace_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{32}$"
+        },
+        "root_span_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{16}$"
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "ended_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "service_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]{0,127}$"
+        },
+        "git_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "dataset_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 3,
+          "maxLength": 256
+        },
+        "sensitivity": {
+          "type": "string",
+          "enum": [
+            "public_default",
+            "restricted",
+            "sensitive_location"
+          ]
+        }
+      }
+    },
+    "run_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "receipt_ref",
+        "digest",
+        "run_id",
+        "spec_hash",
+        "trace_id",
+        "emitted_at"
+      ],
+      "properties": {
+        "receipt_ref": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 512,
+          "pattern": "^(?:kfm|urn):[A-Za-z0-9:/._#-]{6,}$"
+        },
+        "digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 160
+        },
+        "spec_hash": {
+          "type": "string",
+          "pattern": "^jcs:sha256:[0-9a-f]{64}$"
+        },
+        "trace_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{32}$"
+        },
+        "emitted_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "evidence_bundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bundle_ref",
+        "oci_ref",
+        "digest",
+        "run_id",
+        "spec_hash",
+        "trace_id",
+        "recorded_at",
+        "attestations"
+      ],
+      "properties": {
+        "bundle_ref": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 512,
+          "pattern": "^(?:kfm|urn):[A-Za-z0-9:/._#-]{6,}$"
+        },
+        "oci_ref": {
+          "type": "string",
+          "minLength": 32,
+          "maxLength": 1024,
+          "pattern": "^oci://[^\\s]+@sha256:[0-9a-f]{64}$"
+        },
+        "digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 160
+        },
+        "spec_hash": {
+          "type": "string",
+          "pattern": "^jcs:sha256:[0-9a-f]{64}$"
+        },
+        "trace_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{32}$"
+        },
+        "recorded_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "attestations": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "digest",
+              "ref",
+              "subject_digest"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "COSIGN",
+                  "SLSA",
+                  "IN_TOTO",
+                  "OTHER"
+                ]
+              },
+              "digest": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              },
+              "ref": {
+                "type": "string",
+                "minLength": 32,
+                "maxLength": 1024,
+                "pattern": "^oci://[^\\s]+@sha256:[0-9a-f]{64}$"
+              },
+              "subject_digest": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              }
+            }
+          }
+        }
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evaluated_at",
+        "max_link_delay_seconds",
+        "receipt_delay_seconds",
+        "evidence_delay_seconds",
+        "status",
+        "gate_disposition",
+        "reason_codes"
+      ],
+      "properties": {
+        "evaluated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "max_link_delay_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600
+        },
+        "receipt_delay_seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 86400
+        },
+        "evidence_delay_seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 86400
+        },
+        "status": {
+          "const": "LINKED"
+        },
+        "gate_disposition": {
+          "const": "PASS"
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]{2,63}$"
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "telemetry_truth_authority_created",
+        "evidence_truth_authority_created",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_route_created",
+        "sensitive_payload_included"
+      ],
+      "properties": {
+        "telemetry_truth_authority_created": {
+          "type": "boolean"
+        },
+        "evidence_truth_authority_created": {
+          "type": "boolean"
+        },
+        "promotion_authorized": {
+          "type": "boolean"
+        },
+        "release_authorized": {
+          "type": "boolean"
+        },
+        "publication_authorized": {
+          "type": "boolean"
+        },
+        "public_route_created": {
+          "type": "boolean"
+        },
+        "sensitive_payload_included": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

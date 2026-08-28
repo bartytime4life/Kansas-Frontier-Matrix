@@ -1,0 +1,52 @@
+{
+  "artifact": {
+    "artifact_kind": "data_instance",
+    "authority_owner": "catalog_instance_authority",
+    "current_path": "catalog/legacy-index.json",
+    "execution_role": "none",
+    "exposure": "internal",
+    "lifecycle_stage": "catalog",
+    "mutability": "generated",
+    "name": "legacy_catalog_instance",
+    "physical_storage": "git",
+    "proposed_path": "data/catalog/matrix/legacy-index.json",
+    "retention": "release_bound",
+    "scope_id": "legacy_catalog",
+    "scope_kind": "object_family"
+  },
+  "base_ref": "29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf",
+  "candidate_roots": [
+    "data/"
+  ],
+  "canonical_source": null,
+  "consumer_refs": [],
+  "decision_id": "pathdec:legacy_catalog_instance",
+  "doctrine": {
+    "decision_ref": "ADR-0029",
+    "digest": "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+    "path": "docs/doctrine/directory-rules.md"
+  },
+  "evaluated_at": "2026-08-07T20:30:00Z",
+  "evidence": [
+    "repo:catalog/legacy-index.json",
+    "repo:control_plane/root_registry.yaml",
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "outcome": "MIGRATE",
+  "reason_codes": [
+    "canonical_target_identified",
+    "legacy_root_deprecated"
+  ],
+  "registry": {
+    "base_ref": "29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf",
+    "digest": "sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641",
+    "path": "control_plane/root_registry.yaml"
+  },
+  "rules": [
+    "DIR-MIGRATE-001",
+    "DIR-OUTCOME-001",
+    "DIR-SIGNATURE-004"
+  ],
+  "split_targets": [],
+  "version": "v1"
+}

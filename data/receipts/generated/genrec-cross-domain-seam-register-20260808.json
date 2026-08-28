@@ -1,0 +1,155 @@
+{
+  "receipt_id": "genrec-cross-domain-seam-register-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/cross-domain-seam-register.yml",
+    "contracts/governance/cross_domain_seam_register.md",
+    "control_plane/cross_domain_seam_register.yaml",
+    "fixtures/contracts/v1/governance/cross_domain_seam_register/invalid/expected_findings.json",
+    "fixtures/contracts/v1/governance/cross_domain_seam_register/invalid/unknown_domain.json",
+    "fixtures/contracts/v1/governance/cross_domain_seam_register/valid/initial_hold.json",
+    "schemas/contracts/v1/governance/cross_domain_seam_register.schema.json",
+    "tests/validators/directory_governance/test_validate_cross_domain_seam_register.py",
+    "tools/validators/directory_governance/validate_cross_domain_seam_register.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/cross-domain-seam-register.yml": "sha256:ff7d9aaa263a3d6849f45bf49a007d356557c51db93973ae1f1bf80619a5d039",
+    "contracts/governance/cross_domain_seam_register.md": "sha256:a6aed0013baf5bc59ef3157120676970820f6dd51ee5fca904e470c301ba5f49",
+    "control_plane/cross_domain_seam_register.yaml": "sha256:3d70e251f3b84cc7600c58f4abb3201568b0882dafb1cf5d4d7d59cd41eccea3",
+    "fixtures/contracts/v1/governance/cross_domain_seam_register/invalid/expected_findings.json": "sha256:4739473007f77fb13fce995816471281817285fbee5d85bc76b3c5c04db48736",
+    "fixtures/contracts/v1/governance/cross_domain_seam_register/invalid/unknown_domain.json": "sha256:feec95e274d3ba599d4511046ff42d21ddae322f7f7d545bcf3e75209cc09883",
+    "fixtures/contracts/v1/governance/cross_domain_seam_register/valid/initial_hold.json": "sha256:3d70e251f3b84cc7600c58f4abb3201568b0882dafb1cf5d4d7d59cd41eccea3",
+    "schemas/contracts/v1/governance/cross_domain_seam_register.schema.json": "sha256:69b420100f0b67f71dce812eedd014b4497d0ef82a698809ac188a14818f1a55",
+    "tests/validators/directory_governance/test_validate_cross_domain_seam_register.py": "sha256:fdb61166239a43eb91531e97e6e57e8acde828b0e2a42b7dab8e166cc3d34deb",
+    "tools/validators/directory_governance/validate_cross_domain_seam_register.py": "sha256:1a07c31aaec8bb9761c48d7547cc09f2e712728bfc04fd46e182147ae9339afc"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:7d122edf9877f2abd4abd2640966789571918296b6ac330df5baf609b6d8a09b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf",
+      "Domain-Driven Design Reference.pdf",
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:directory-governance-standard#12.5-cross-domain-seams",
+      "attachment:domain-driven-design#context-map-published-language",
+      "attachment:kfm-domains-atlas#24.4-cross-lane-relation-atlas",
+      "repo:control_plane/domain_lane_register.yaml@e3cbe37d6024fb3bfc32cd3bedf4ec713d956d6a",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@e3cbe37d6024fb3bfc32cd3bedf4ec713d956d6a"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/cross-domain-seam-register.yml": "PROPOSED",
+    "contracts/governance/cross_domain_seam_register.md": "PROPOSED",
+    "control_plane/cross_domain_seam_register.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/cross_domain_seam_register/invalid/expected_findings.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/cross_domain_seam_register/invalid/unknown_domain.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/cross_domain_seam_register/valid/initial_hold.json": "PROPOSED",
+    "schemas/contracts/v1/governance/cross_domain_seam_register.schema.json": "PROPOSED",
+    "tests/validators/directory_governance/test_validate_cross_domain_seam_register.py": "PROPOSED",
+    "tools/validators/directory_governance/validate_cross_domain_seam_register.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-unittest",
+      "outcome": "PASS",
+      "reason": "Thirteen deterministic Cross-Domain Seam Register tests passed locally."
+    },
+    {
+      "gate": "schema-self-check",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 schema passed its self-check."
+    },
+    {
+      "gate": "fixture-matrix",
+      "outcome": "PASS",
+      "reason": "One valid and one invalid reviewed fixture produced expected polarity; focused tests cover the remaining fail-closed vectors."
+    },
+    {
+      "gate": "projection-semantic-replay",
+      "outcome": "PASS",
+      "reason": "The five-seam hold projection passed schema and semantic checks with repository and byte bindings disabled."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "Validator and tests compiled without syntax errors."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "Read-only workflow parsed as YAML."
+    },
+    {
+      "gate": "repository-and-byte-bindings",
+      "outcome": "SKIPPED",
+      "reason": "Exact repository and byte bindings run in hosted CI."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI starts after the draft PR opens."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:cross-domain-seam-placement",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf#12.5"
+    },
+    {
+      "id": "attachment:ddd-context-map",
+      "validated": true,
+      "evidence_ref": "attachment:Domain-Driven Design Reference.pdf#context-map-published-language"
+    },
+    {
+      "id": "attachment:cross-lane-relation-atlas",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#24.4"
+    },
+    {
+      "id": "repository:domain-lane-register",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/domain_lane_register.yaml@e3cbe37d6024fb3bfc32cd3bedf4ec713d956d6a"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T02:40:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a projection-only Context Map for five high-risk cross-domain seams. Every entry remains HOLD_UNRESOLVED, public use false, source roles preserved, most-restrictive policy/sensitivity required, and no mutation, join, release, or publication authority created."
+}

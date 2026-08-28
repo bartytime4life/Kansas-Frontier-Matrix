@@ -1,0 +1,181 @@
+{
+  "object_type": "SoilSupportTypeProfile",
+  "schema_version": "1.0.0",
+  "profile_id": "soil-support-type-profile",
+  "profile_version": "1.0.0",
+  "status": "PROPOSED_INACTIVE",
+  "spec_hash": "sha256:57924662c8952aafcc6c5ef007aff78b59357fd1ec7418d5c013fdf848c5bd23",
+  "support_types": [
+    {
+      "support_type": "authoritative_static_soil",
+      "source_families": [
+        "nrcs_sda",
+        "nrcs_ssurgo"
+      ],
+      "source_roles": [
+        "official_query",
+        "official_static_survey"
+      ],
+      "spatial_support": [
+        "map_unit_polygon"
+      ],
+      "claim_kinds": [
+        "static_survey_record"
+      ],
+      "forbidden_claim_kinds": [
+        "current_station_condition",
+        "management_advice",
+        "satellite_grid_condition"
+      ]
+    },
+    {
+      "support_type": "governed_change_evidence",
+      "source_families": [
+        "kfm_soil_change_assessment"
+      ],
+      "source_roles": [
+        "change_assessment"
+      ],
+      "spatial_support": [
+        "change_subject"
+      ],
+      "claim_kinds": [
+        "change_evidence"
+      ],
+      "forbidden_claim_kinds": [
+        "publication_state",
+        "release_authorization"
+      ]
+    },
+    {
+      "support_type": "gridded_derivative_soil",
+      "source_families": [
+        "nrcs_gnatsgo",
+        "nrcs_gssurgo"
+      ],
+      "source_roles": [
+        "derived_gridded_product"
+      ],
+      "spatial_support": [
+        "gridded_cell"
+      ],
+      "claim_kinds": [
+        "gridded_derivative"
+      ],
+      "forbidden_claim_kinds": [
+        "current_station_condition",
+        "static_survey_record"
+      ]
+    },
+    {
+      "support_type": "profile_soil_evidence",
+      "source_families": [
+        "nrcs_pedon"
+      ],
+      "source_roles": [
+        "profile_observation"
+      ],
+      "spatial_support": [
+        "pedon_profile"
+      ],
+      "claim_kinds": [
+        "profile_evidence"
+      ],
+      "forbidden_claim_kinds": [
+        "countywide_condition",
+        "map_unit_truth"
+      ]
+    },
+    {
+      "support_type": "reference_station_soil_climate",
+      "source_families": [
+        "noaa_uscrn",
+        "nrcs_scan"
+      ],
+      "source_roles": [
+        "reference_station_measurement"
+      ],
+      "spatial_support": [
+        "station_point"
+      ],
+      "claim_kinds": [
+        "reference_station_condition"
+      ],
+      "forbidden_claim_kinds": [
+        "countywide_condition",
+        "management_advice",
+        "static_survey_record"
+      ]
+    },
+    {
+      "support_type": "satellite_soil_moisture_grid",
+      "source_families": [
+        "nasa_smap"
+      ],
+      "source_roles": [
+        "satellite_grid_measurement"
+      ],
+      "spatial_support": [
+        "satellite_grid_cell"
+      ],
+      "claim_kinds": [
+        "satellite_grid_condition"
+      ],
+      "forbidden_claim_kinds": [
+        "current_station_condition",
+        "field_verified_condition",
+        "static_survey_record"
+      ]
+    },
+    {
+      "support_type": "soil_interpretation",
+      "source_families": [
+        "kfm_derived_soil_interpretation",
+        "nrcs_ssurgo_interpretation"
+      ],
+      "source_roles": [
+        "derived_interpretation"
+      ],
+      "spatial_support": [
+        "interpretation_scope"
+      ],
+      "claim_kinds": [
+        "interpretation"
+      ],
+      "forbidden_claim_kinds": [
+        "hazard_warning",
+        "legal_determination",
+        "management_advice"
+      ]
+    },
+    {
+      "support_type": "station_soil_moisture",
+      "source_families": [
+        "kansas_mesonet"
+      ],
+      "source_roles": [
+        "direct_observation_measurement"
+      ],
+      "spatial_support": [
+        "station_point"
+      ],
+      "claim_kinds": [
+        "current_station_condition"
+      ],
+      "forbidden_claim_kinds": [
+        "countywide_condition",
+        "management_advice",
+        "satellite_grid_condition",
+        "static_survey_record"
+      ]
+    }
+  ],
+  "governance": {
+    "source_activated": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  }
+}

@@ -1,0 +1,136 @@
+name: evidence-temporal-posture-assessment
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/evidence-temporal-posture-assessment.yml"
+      - ".github/workflows/temporal-authority-envelope.yml"
+      - ".github/workflows/temporal-authority-envelope-conflict-assessment.yml"
+      - "contracts/evidence/evidence_temporal_posture_assessment.md"
+      - "contracts/evidence/temporal_authority_envelope.md"
+      - "schemas/contracts/v1/evidence/evidence_temporal_posture_assessment.schema.json"
+      - "schemas/contracts/v1/evidence/temporal_authority_envelope.schema.json"
+      - "fixtures/contracts/v1/evidence/evidence_temporal_posture_assessment/**"
+      - "fixtures/contracts/v1/evidence/temporal_authority_envelope/**"
+      - "tools/validators/evidence/validate_evidence_temporal_posture_assessment.py"
+      - "tools/validators/evidence/validate_temporal_authority_envelope.py"
+      - "tools/validators/governance/assess_temporal_authority_envelope_conflict.py"
+      - "tools/validators/governance/temporal_authority_split_*.py"
+      - "tests/evidence/test_evidence_temporal_posture_assessment.py"
+      - "tests/evidence/test_temporal_authority_envelope.py"
+      - "tests/validators/governance/test_assess_temporal_authority_envelope_conflict.py"
+      - "schemas/contracts/v1/common/advisory_event_envelope.schema.json"
+      - "schemas/contracts/v1/common/temporal_authority_envelope.schema.json"
+      - "fixtures/contracts/v1/common/temporal_authority_envelope/**"
+      - "tools/validators/validate_temporal_authority_envelope.py"
+      - "tests/validators/test_validate_temporal_authority_envelope.py"
+      - "tools/validators/validate_advisory_event_envelope.py"
+      - "tests/validators/test_validate_advisory_event_envelope.py"
+      - "contracts/governance/program_outcome_chain.md"
+      - "schemas/contracts/v1/governance/program_outcome_chain.schema.json"
+      - "tools/validators/governance/*program_outcome_chain*.py"
+      - "tests/validators/governance/test_program_outcome_chain.py"
+      - "data/receipts/generated/genrec-evidence-temporal-posture-split-reconciliation-20260827.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+concurrency:
+  group: evidence-temporal-posture-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  KFM_NO_NETWORK: "1"
+  KFM_VALIDATION_NOW: "2026-08-17T00:00:00Z"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+jobs:
+  validate-split:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python tools/ci/install_python_ci.py project-test
+      - name: Run canonical, compatibility, and split assessment tests
+        run: |
+          set -euo pipefail
+          python -m unittest \
+            tests.evidence.test_evidence_temporal_posture_assessment \
+            tests.evidence.test_temporal_authority_envelope \
+            tests.validators.governance.test_assess_temporal_authority_envelope_conflict \
+            --verbose
+      - name: Replay canonical evidence assessment fixtures
+        run: |
+          set -euo pipefail
+          python tools/validators/evidence/validate_evidence_temporal_posture_assessment.py \
+            fixtures/contracts/v1/evidence/evidence_temporal_posture_assessment/valid/current_observation.json
+          for fixture in fixtures/contracts/v1/evidence/evidence_temporal_posture_assessment/invalid/*.json; do
+            if python tools/validators/evidence/validate_evidence_temporal_posture_assessment.py "$fixture"; then
+              echo "::error::Known-invalid assessment fixture was accepted: $fixture"
+              exit 1
+            fi
+          done
+      - name: Preserve common TemporalAuthorityEnvelope and Advisory chain
+        run: |
+          set -euo pipefail
+          python -m unittest discover --start-directory tests/validators --pattern 'test_validate_temporal_authority_envelope.py' --verbose
+          python tools/validators/validate_temporal_authority_envelope.py --fixtures
+          python -m unittest discover --start-directory tests/validators --pattern 'test_validate_advisory_event_envelope.py' --verbose
+          python tools/validators/validate_advisory_event_envelope.py --fixtures
+      - name: Preserve ProgramOutcomeChain reference-bearing behavior
+        run: |
+          set -euo pipefail
+          python -m unittest discover --start-directory tests/validators/governance --pattern 'test_program_outcome_chain.py' --verbose
+          python tools/validators/governance/validate_program_outcome_chain.py --fixtures
+      - name: Require split compatibility HOLD and central registry validity
+        run: |
+          set -euo pipefail
+          report="$RUNNER_TEMP/temporal-authority-envelope-split.json"
+          set +e
+          python tools/validators/governance/assess_temporal_authority_envelope_conflict.py \
+            --revision "$GITHUB_SHA" --format json > "$report"
+          status=$?
+          set -e
+          test "$status" -eq 3
+          python - "$report" <<'PY'
+          import json, sys
+          from pathlib import Path
+          report = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+          assert report["outcome"] == "HOLD_COMPATIBILITY"
+          assert report["disposition"] == "SPLIT"
+          assert report["scan_complete"] is True
+          assert report["findings"] == []
+          assert report["scan_gaps"] == []
+          assert all(value is False for value in report["authority"].values())
+          PY
+          python tools/validate_all.py --validate-registry
+      - name: Verify successor migration receipt
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-evidence-temporal-posture-split-reconciliation-20260827.json \
+            --repo-root .
+      - name: Record bounded result
+        if: always()
+        run: |
+          {
+            echo "### Evidence temporal-posture split"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Common TemporalAuthorityEnvelope remains unchanged and canonical."
+            echo "- EvidenceTemporalPostureAssessment is distinct; legacy evidence bytes and identifiers remain exact-shape compatibility surfaces."
+            echo "- HOLD remains for legacy removal and unresolved references until external inventory closes."
+            echo "- No source, evidence, policy, review, lifecycle, release, deployment, publication, access, or settings authority is created."
+          } >> "$GITHUB_STEP_SUMMARY"

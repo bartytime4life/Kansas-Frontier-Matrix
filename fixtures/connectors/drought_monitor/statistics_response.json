@@ -1,0 +1,102 @@
+{
+  "_fixture_meta": {
+    "fixture_type": "no_network_fixture",
+    "fixture_id": "usdm-statistics-response-v1",
+    "source_id": "src:usdm-weekly",
+    "product": "U.S. Drought Monitor (USDM) aggregate statistics from REST service",
+    "network_status": "no_network_required",
+    "truth_posture": "cite_or_abstain",
+    "content_posture": "synthetic_representative",
+    "sensitive_data": false,
+    "note": "Synthetic no-network fixture representing aggregate statistics for one USDM weekly release. Field shapes and structure are representative of the official USDM statistics REST service; values are synthetic and do not represent real conditions. This fixture is not source authority, evidence, or a validated catalog record.",
+    "created": "2026-07-28",
+    "service_reference": "https://droughtmonitor.unl.edu/DmData/DataDownload/WebServiceInfo.aspx",
+    "service_reference_note": "NEEDS VERIFICATION — endpoint behavior, format, rate limits, and authentication not yet verified against live service.",
+    "related_docs": [
+      "docs/sources/catalog/drought_monitor/drought-monitor.md",
+      "connectors/drought-monitor/README.md",
+      "fixtures/contracts/v1/source/source_descriptor/valid/valid_usdm_inactive.json",
+      "fixtures/connectors/drought_monitor/gis_metadata_response.json"
+    ]
+  },
+  "release_identity": {
+    "source_id": "src:usdm-weekly",
+    "source_product_id": "usdm_weekly_statistics",
+    "release_week": "2026-W30",
+    "release_week_iso": "2026-07-21",
+    "release_date_native": "July 24, 2026",
+    "source_released_at_native": "July 24, 2026 at 08:30 ET",
+    "source_released_at_normalized": "NEEDS VERIFICATION — normalize to UTC with verified timezone evidence",
+    "source_data_cutoff_native": "Tuesday July 21, 2026 at 08:00 EDT",
+    "source_data_cutoff_normalized": "NEEDS VERIFICATION — normalize to UTC with verified timezone evidence",
+    "source_valid_date": "2026-07-21",
+    "linkage_note": "Statistics artifact shares release identity with polygon spatial product for this release week. Artifacts are separate records linked by release identity and digest, not collapsed into one record type."
+  },
+  "artifact_type": "aggregate_statistics",
+  "artifact_identity": {
+    "source_locator": "NEEDS VERIFICATION — exact REST service URL and parameters not yet confirmed",
+    "native_format": "JSON",
+    "content_digest": "NEEDS VERIFICATION — digest of actual artifact not yet computed",
+    "geography_scope": "state",
+    "geography_scope_note": "Statistics are available by state, county, and other aggregation levels. NEEDS VERIFICATION of exact available aggregations."
+  },
+  "statistics_structure": {
+    "area_by_category": {
+      "description": "Percentage of geography area in each USDM drought category. Cumulative (D1 includes D1+D2+D3+D4).",
+      "cumulative_posture": "NEEDS VERIFICATION — confirm whether service returns cumulative or non-cumulative values.",
+      "categories": ["None", "D0", "D1", "D2", "D3", "D4"]
+    },
+    "impact_type_note": "Statistics may be broken out by short-term, long-term, or combined impact types. NEEDS VERIFICATION of exact service parameters.",
+    "temporal_aggregation_note": "Statistics represent the weekly release. Historical time-series queries may be available. NEEDS VERIFICATION."
+  },
+  "synthetic_state_statistics": [
+    {
+      "_note": "Synthetic example statistics for a single US state. Values are illustrative only and do not represent real conditions.",
+      "state_name": "Kansas",
+      "state_fips": "20",
+      "release_date": "20260724",
+      "valid_date": "20260721",
+      "none_pct": 42.3,
+      "D0_pct": 28.7,
+      "D1_pct": 16.4,
+      "D2_pct": 9.8,
+      "D3_pct": 2.8,
+      "D4_pct": 0.0,
+      "impact_type": "combined",
+      "note": "Synthetic values — not real conditions."
+    },
+    {
+      "_note": "Synthetic example for a second state.",
+      "state_name": "Nebraska",
+      "state_fips": "31",
+      "release_date": "20260724",
+      "valid_date": "20260721",
+      "none_pct": 61.5,
+      "D0_pct": 22.1,
+      "D1_pct": 11.4,
+      "D2_pct": 4.0,
+      "D3_pct": 1.0,
+      "D4_pct": 0.0,
+      "impact_type": "combined",
+      "note": "Synthetic values — not real conditions."
+    }
+  ],
+  "anti_collapse_rules": {
+    "statistics_not_spatial": "Aggregate statistics and polygon spatial products are separate artifacts. Do not collapse them into one record type.",
+    "statistics_not_local_truth": "Area percentages represent broad-scale classification summaries. Do not infer parcel, field, farm, person, facility, water-right, crop-loss, or emergency conditions from these statistics.",
+    "native_classifications_preserved": "D0-D4 category codes and impact markers must be preserved without silent recoding into KFM domain truth.",
+    "release_linkage": "Statistics artifact and polygon artifact from the same release week share a deterministic release identity but retain distinct artifact identities, formats, digests, and validation paths."
+  },
+  "attribution": {
+    "producers": ["NDMC (University of Nebraska-Lincoln)", "USDA", "NOAA"],
+    "host": "NDMC (University of Nebraska-Lincoln)",
+    "canonical_url": "https://droughtmonitor.unl.edu/",
+    "attribution_text": "U.S. Drought Monitor statistics, produced by NDMC (University of Nebraska-Lincoln), USDA, and NOAA.",
+    "attribution_note": "Rights and exact license string are NEEDS VERIFICATION for KFM use."
+  },
+  "connector_outcome_posture": {
+    "permitted_outcomes": ["admit_raw", "quarantine", "deny", "no_change", "superseded", "rate_limited", "skipped", "error"],
+    "forbidden_targets": ["data/processed", "data/catalog", "data/triplets", "data/proofs", "data/published", "release/"],
+    "note": "No connector outcome may silently promote material to processed, catalog, triplet, proof, published, or release state."
+  }
+}

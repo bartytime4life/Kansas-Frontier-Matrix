@@ -1,0 +1,180 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/elapsed_time_unit_disclosure.schema.json",
+  "title": "ElapsedTimeUnitDisclosureCandidate",
+  "description": "Fixture-only timestamp-difference unit disclosure without SQL execution, metric recomputation, evidence, policy, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_card",
+    "recorded_at",
+    "disclosure_ref",
+    "intended_use",
+    "assessment_state",
+    "query_run",
+    "method_definition",
+    "temporal_inputs",
+    "conversion",
+    "public_disclosure",
+    "evidence_bundle_refs",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "ElapsedTimeUnitDisclosureCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.common.elapsed-time-unit-disclosure.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-312"},
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "disclosure_ref": {"$ref": "#/$defs/ref"},
+    "intended_use": {"enum": ["INTERNAL_METRIC_QA", "ELIGIBILITY_WINDOW_CANDIDATE", "RESPONSE_METRIC_CANDIDATE", "PUBLIC_METRIC_SUPPORT_CANDIDATE"]},
+    "assessment_state": {"enum": ["COMPLETE", "INCOMPLETE", "ERROR"]},
+    "query_run": {"$ref": "#/$defs/resolved_reference"},
+    "method_definition": {"$ref": "#/$defs/resolved_reference"},
+    "temporal_inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start_timestamp_field", "end_timestamp_field", "subtraction_order", "timezone_assumption", "timezone_profile", "boundary_semantics", "boundary_profile"],
+      "properties": {
+        "start_timestamp_field": {"$ref": "#/$defs/field_name"},
+        "end_timestamp_field": {"$ref": "#/$defs/field_name"},
+        "subtraction_order": {"enum": ["END_MINUS_START", "START_MINUS_END"]},
+        "timezone_assumption": {"enum": ["UTC_NORMALIZED", "SOURCE_OFFSET_PRESERVED", "NAMED_ZONE_PINNED", "UNRESOLVED"]},
+        "timezone_profile": {"$ref": "#/$defs/resolved_reference"},
+        "boundary_semantics": {"enum": ["INSTANT_DIFFERENCE", "CALENDAR_BOUNDARY_COUNT", "BUSINESS_TIME_PROFILE"]},
+        "boundary_profile": {"$ref": "#/$defs/nullable_resolved_reference"}
+      }
+    },
+    "conversion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "engine_profile",
+        "extraction_method",
+        "extraction_unit",
+        "displayed_unit",
+        "conversion_numerator",
+        "conversion_denominator",
+        "rounding_mode",
+        "decimal_places",
+        "negative_interval_policy",
+        "null_interval_policy",
+        "parity_state",
+        "parity_fixture_ref"
+      ],
+      "properties": {
+        "engine_profile": {"$ref": "#/$defs/resolved_reference"},
+        "extraction_method": {"enum": ["EPOCH_DIFFERENCE", "TIMESTAMPDIFF", "DATEDIFF", "INTERVAL_ARITHMETIC", "CUSTOM"]},
+        "extraction_unit": {"$ref": "#/$defs/time_unit"},
+        "displayed_unit": {"$ref": "#/$defs/time_unit"},
+        "conversion_numerator": {"type": "integer", "minimum": 1, "maximum": 1000000000},
+        "conversion_denominator": {"type": "integer", "minimum": 1, "maximum": 1000000000},
+        "rounding_mode": {"enum": ["NONE", "FLOOR", "CEILING", "HALF_EVEN", "HALF_UP", "TRUNCATE"]},
+        "decimal_places": {"type": "integer", "minimum": 0, "maximum": 9},
+        "negative_interval_policy": {"enum": ["ALLOW_SIGNED", "ABSTAIN", "DENY", "ABSOLUTE_VALUE"]},
+        "null_interval_policy": {"enum": ["ABSTAIN", "DENY", "ERROR", "DROP"]},
+        "parity_state": {"enum": ["SINGLE_ENGINE_DECLARED", "SYNTHETIC_PARITY", "UNRESOLVED", "MISMATCH"]},
+        "parity_fixture_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "public_disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "extraction_unit_visible",
+        "conversion_rule_visible",
+        "timezone_assumption_visible",
+        "boundary_semantics_visible",
+        "rounding_visible",
+        "review_record_refs",
+        "release_manifest_refs"
+      ],
+      "properties": {
+        "extraction_unit_visible": {"type": "boolean"},
+        "conversion_rule_visible": {"type": "boolean"},
+        "timezone_assumption_visible": {"type": "boolean"},
+        "boundary_semantics_visible": {"type": "boolean"},
+        "rounding_visible": {"type": "boolean"},
+        "review_record_refs": {"$ref": "#/$defs/ref_array"},
+        "release_manifest_refs": {"$ref": "#/$defs/ref_array"}
+      }
+    },
+    "evidence_bundle_refs": {"$ref": "#/$defs/ref_array"},
+    "limitations": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": {"enum": ["DECLARATION_ONLY", "NO_METRIC_RECOMPUTATION", "NO_PUBLICATION_AUTHORITY", "NO_QUERY_EXECUTION"]}
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "metric_truth_authority",
+        "query_execution_authority",
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "metric_truth_authority": {"const": false},
+        "query_execution_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "ref": {"type": "string", "minLength": 3, "maxLength": 512, "pattern": "^\\S+$"},
+    "nullable_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "field_name": {"type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-z][a-z0-9_]*$"},
+    "time_unit": {"enum": ["NANOSECOND", "MICROSECOND", "MILLISECOND", "SECOND", "MINUTE", "HOUR", "DAY", "WEEK", "CALENDAR_MONTH", "CALENDAR_YEAR"]},
+    "ref_array": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "resolved_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "digest", "resolution"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/ref"},
+        "digest": {"$ref": "#/$defs/sha256"},
+        "resolution": {"enum": ["RESOLVED", "UNRESOLVED"]}
+      }
+    },
+    "nullable_resolved_reference": {
+      "oneOf": [{"$ref": "#/$defs/resolved_reference"}, {"type": "null"}]
+    }
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/common/elapsed_time_unit_disclosure.md",
+    "fixtures_root": "fixtures/contracts/v1/common/elapsed_time_unit_disclosure/",
+    "validator": "tools/validators/validate_elapsed_time_unit_disclosure.py",
+    "status": "PROPOSED_INACTIVE",
+    "network": false,
+    "authority_effects": false,
+    "timestamp_values_allowed": false,
+    "elapsed_values_allowed": false,
+    "sql_text_allowed": false,
+    "query_execution": false
+  }
+}

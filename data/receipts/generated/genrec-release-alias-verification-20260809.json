@@ -1,0 +1,122 @@
+{
+  "receipt_id": "genrec-release-alias-verification-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/release-alias-verification.yml",
+    "contracts/release/release_alias_verification.md",
+    "docs/intake/exploratory/release-alias-verification-source-map.md",
+    "fixtures/contracts/v1/release/release_alias_verification/cases.json",
+    "schemas/contracts/v1/release/release_alias_verification.schema.json",
+    "tests/validators/test_validate_release_alias_verification.py",
+    "tools/validators/release/validate_release_alias_verification.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/release-alias-verification.yml": "sha256:e110527f6190877cddce1b5d6b6c41e5a949e8abe8e027c9601f541c62d782af",
+    "contracts/release/release_alias_verification.md": "sha256:cdc94c785c088318a5e3571db4b82214477741f7b8b9cc96b2d18c2642a82a28",
+    "docs/intake/exploratory/release-alias-verification-source-map.md": "sha256:fb45ae85cabf9e8e29efdef750bf92e629a154779aa93c84c1eb09439b0e08f4",
+    "fixtures/contracts/v1/release/release_alias_verification/cases.json": "sha256:b215c6c27f707523253a3379a0d00bebb73eb88309b8ba7737342c3536249d2a",
+    "schemas/contracts/v1/release/release_alias_verification.schema.json": "sha256:e7e00c6799935365f96381febe816f6bd48c7e9a6a46d7c63f9890a4921c5602",
+    "tests/validators/test_validate_release_alias_verification.py": "sha256:07f92efcca87bd2147e3bf63c8b27e3dedee25a4d82db90c56053b20d00ffc76",
+    "tools/validators/release/validate_release_alias_verification.py": "sha256:bce99340f61fd84267b6933fb1a99c428bc646a487d7285a3901b2d43a19c546"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:aeacb40b26a8518e04a60c03e23cd69292bdaed7996e3a4f9a68fe9e7319f92e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded-file search",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "KFM_Briefing_to_System_Integration_Architecture.docx"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P22-PROG-0025"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/release-alias-verification.yml": "CONFIRMED",
+    "contracts/release/release_alias_verification.md": "PROPOSED",
+    "docs/intake/exploratory/release-alias-verification-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/release/release_alias_verification/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/release/release_alias_verification.schema.json": "PROPOSED",
+    "tests/validators/test_validate_release_alias_verification.py": "CONFIRMED",
+    "tools/validators/release/validate_release_alias_verification.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "source-basis",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P22-PROG-0025"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f8aaeb2c7a596686712523bf03c5b37c93b6e5ac/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T02:00:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only release-alias preflight. No alias mutation, release issue, cache invalidation, promotion, deployment, publication, or public-use authority is created."
+}

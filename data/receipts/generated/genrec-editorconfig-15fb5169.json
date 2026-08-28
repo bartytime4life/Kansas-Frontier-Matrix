@@ -1,0 +1,132 @@
+{
+  "receipt_id": "genrec-editorconfig-15fb5169",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".editorconfig"
+  ],
+  "artifact_hashes": {
+    ".editorconfig": "sha256:15fb5169aff07f8f6fbc6df4dc5c1cb52b2190cd4a961a41a64de68b0468b599"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-20"
+  },
+  "prompt_or_contract": "sha256:15f6c21621997a2fe1fa746bdfe2de6b0af67f86793cbb6457987fe35f35a184",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "EditorConfig Node.js Core 3.0.2",
+      "local whitespace and hash checks"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/7580166f9d3c3b91e2d7ba64ee082778ad37d98d",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7580166f9d3c3b91e2d7ba64ee082778ad37d98d/.editorconfig",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7580166f9d3c3b91e2d7ba64ee082778ad37d98d/.pre-commit-config.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7580166f9d3c3b91e2d7ba64ee082778ad37d98d/pyproject.toml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7580166f9d3c3b91e2d7ba64ee082778ad37d98d/package.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7580166f9d3c3b91e2d7ba64ee082778ad37d98d/scripts/maintenance/run_doctrine_artifact_test_suite.sh",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7580166f9d3c3b91e2d7ba64ee082778ad37d98d/.github/workflows/schema-validation.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7580166f9d3c3b91e2d7ba64ee082778ad37d98d/artifacts/qa/lint/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7580166f9d3c3b91e2d7ba64ee082778ad37d98d/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7580166f9d3c3b91e2d7ba64ee082778ad37d98d/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7580166f9d3c3b91e2d7ba64ee082778ad37d98d/docs/doctrine/ai-build-operating-contract.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7580166f9d3c3b91e2d7ba64ee082778ad37d98d/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/32d39d2a61a78ec1e8729be94b277b8e7553eaa0"
+    ]
+  },
+  "truth_labels": {
+    ".editorconfig": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Verified the repository, immutable main base, current .editorconfig blob, write capability, and absence of overlapping open pull requests or branches before mutation."
+    },
+    {
+      "gate": "directory-placement",
+      "outcome": "PASS",
+      "reason": "The existing root .editorconfig remains a repository-wide editor configuration; no responsibility root, lifecycle phase, or authority home was added or moved."
+    },
+    {
+      "gate": "editorconfig-syntax-and-resolution",
+      "outcome": "PASS",
+      "reason": "EditorConfig Node.js Core 3.0.2 parsed the file and resolved expected properties for Python, Python stubs, TOML, Makefile variants, Markdown, YAML, GeoJSON, shell, and Rego sample paths."
+    },
+    {
+      "gate": "repository-format-compatibility",
+      "outcome": "PASS",
+      "reason": "The defaults match inspected repository conventions: LF UTF-8 text with final newlines, two-space YAML/shell/Rego/general indentation, four-space Python and TOML continuations, semantic tabs for Make recipes, and unwrapped Markdown metadata/tables."
+    },
+    {
+      "gate": "formatter-authority-boundary",
+      "outcome": "PASS",
+      "reason": "The file explicitly remains editor guidance and does not claim to establish absent Ruff, Prettier, ESLint, Markdownlint, Yamllint, or dedicated lint-workflow policy."
+    },
+    {
+      "gate": "remote-readback-and-hash",
+      "outcome": "PASS",
+      "reason": "Read .editorconfig back from agent/update-editorconfig-20260720 after commit 32d39d2a61a78ec1e8729be94b277b8e7553eaa0 and verified exact content equality and SHA-256."
+    },
+    {
+      "gate": "pull-request-workflows",
+      "outcome": "SKIPPED",
+      "reason": "GitHub Actions evidence is not available until the draft pull request is created."
+    },
+    {
+      "gate": "branch-protection-and-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review is pending; this receipt is provenance only and does not authorize merge, release, or publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "base-editorconfig",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7580166f9d3c3b91e2d7ba64ee082778ad37d98d/.editorconfig"
+    },
+    {
+      "id": "precommit-whitespace-baseline",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7580166f9d3c3b91e2d7ba64ee082778ad37d98d/.pre-commit-config.yaml"
+    },
+    {
+      "id": "lint-maturity-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7580166f9d3c3b91e2d7ba64ee082778ad37d98d/artifacts/qa/lint/README.md"
+    },
+    {
+      "id": "directory-rules-root-map",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7580166f9d3c3b91e2d7ba64ee082778ad37d98d/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7580166f9d3c3b91e2d7ba64ee082778ad37d98d/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-20T08:54:52.303Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored update of the root .editorconfig on a scoped review branch. It preserves the established UTF-8, LF, final-newline, two-space general indentation, and trailing-whitespace baseline; extends four-space indentation to Python stub and TOML files; applies semantic tabs to recognized Makefile variants; and disables editor line wrapping for Markdown's long KFM metadata blocks and tables. It does not create or claim a formatter, lint rule set, CI gate, release decision, or publication authority. Human review is pending."
+}

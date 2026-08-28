@@ -1,0 +1,137 @@
+{
+  "receipt_id": "genrec-rollback-card-contract-current-binding-20260815",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/rollback-card.yml",
+    "contracts/release/rollback_card.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/rollback-card.yml": "sha256:9c038521ab80c85d1c730faf2b1edff97e56c7a39ff03de469f04c80a76260cb",
+    "contracts/release/rollback_card.md": "sha256:2b71e8133192e31998f582a75b1b6eefafa624614cb6acecdc42a61c2f828b14"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-15"
+  },
+  "prompt_or_contract": "sha256:4225fb3c7227a3d4e6af51ff5a099e43e87da50fee732a4c1b53bf53a79e6d94",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (read/write branch and draft-PR action surface)",
+      "Google Drive connector (read-only)",
+      "attached-file search",
+      "local deterministic packet validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:1eb07fe8cceed546a1d26bdca8b542f8d96a197d799e66a3b47c75102f40d76b",
+      "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639",
+      "sha256:e01665bac807a32fbd41764a2cbd85cec30f4e07d7cf7abaa5ee8ef6785dfc4d"
+    ],
+    "attached_docs": [
+      "KFM Unified Doctrine Synthesis.md",
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "KFM_Authoritative_Whole_System_Reference_PROPOSED_2026-08-15(1).docx"
+    ],
+    "evidence_refs": [
+      "repo:commit/466882632bf9ece1933eb13ca342897bf05ec357",
+      "repo:commit/7b0b31613f9623771dc893146826e053d1c248b5",
+      "repo:contracts/release/rollback_card.md@466882632bf9ece1933eb13ca342897bf05ec357",
+      "repo:schemas/contracts/v1/release/rollback_card.schema.json@466882632bf9ece1933eb13ca342897bf05ec357",
+      "repo:tools/validators/release/validate_rollback_card.py@466882632bf9ece1933eb13ca342897bf05ec357",
+      "repo:fixtures/release/rollback_card/@466882632bf9ece1933eb13ca342897bf05ec357",
+      "repo:docs/adr/ADR-0015-data-published-_domain_-current-alias-is-governed-by-rollback_card.md@466882632bf9ece1933eb13ca342897bf05ec357",
+      "attachment:KFM Unified Doctrine Synthesis.md#12",
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#24.5.3",
+      "attachment:KFM_Authoritative_Whole_System_Reference_PROPOSED_2026-08-15(1).docx#phase-8-and-appendix-a",
+      "repo:contracts/release/rollback_card.md@7b0b31613f9623771dc893146826e053d1c248b5",
+      "repo:schemas/contracts/v1/release/rollback_card.schema.json@7b0b31613f9623771dc893146826e053d1c248b5",
+      "repo:tools/validators/release/validate_rollback_card.py@7b0b31613f9623771dc893146826e053d1c248b5",
+      "repo:fixtures/release/rollback_card/@7b0b31613f9623771dc893146826e053d1c248b5",
+      "repo:docs/adr/ADR-0015-data-published-_domain_-current-alias-is-governed-by-rollback_card.md@7b0b31613f9623771dc893146826e053d1c248b5"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/rollback-card.yml": "PROPOSED",
+    "contracts/release/rollback_card.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Current contract, schema, validator, fixture trees, workflow, ADR-0015, recent PRs, and issue #2874 were inspected before authoring. Refreshed against main@7b0b31613f9623771dc893146826e053d1c248b5; target bytes remained unchanged and no exact-path overlap was found in the surviving open PR."
+    },
+    {
+      "gate": "contract-schema-validator-semantic-crosswalk",
+      "outcome": "PASS",
+      "reason": "The replacement contract enumerates the schema-required fields, finite vocabularies, and validator-enforced cross-field rules without changing their implementation."
+    },
+    {
+      "gate": "packet-shape-and-hash-check",
+      "outcome": "PASS",
+      "reason": "The packet parsed the workflow, checked contract anchors and stale-claim removal, and recomputed both artifact SHA-256 values successfully."
+    },
+    {
+      "gate": "repository-native-rollback-card-tests",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout or dependency environment was available to execute the repository validator and unit tests."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending application to a branch and a draft pull request."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "refreshed-current-main-baseline",
+      "validated": true,
+      "evidence_ref": "repo:commit/7b0b31613f9623771dc893146826e053d1c248b5"
+    },
+    {
+      "id": "current-rollback-card-schema",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/release/rollback_card.schema.json@466882632bf9ece1933eb13ca342897bf05ec357"
+    },
+    {
+      "id": "current-rollback-card-validator",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/release/validate_rollback_card.py@466882632bf9ece1933eb13ca342897bf05ec357"
+    },
+    {
+      "id": "adr-0015-drift-record",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0015-data-published-_domain_-current-alias-is-governed-by-rollback_card.md@466882632bf9ece1933eb13ca342897bf05ec357"
+    },
+    {
+      "id": "rollback-doctrine",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Unified Doctrine Synthesis.md#12"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-16T03:05:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0015-data-published-_domain_-current-alias-is-governed-by-rollback_card.md",
+    "drift_register_entry": null
+  },
+  "notes": "Same-path semantic contract convergence for the existing RollbackCard 1.0.0 candidate profile. It changes no schema, policy, review state, alias, rollback execution, release, deployment, publication, or public-use authority. Campaign delivery was refreshed from the original authoring baseline to main@7b0b31613f9623771dc893146826e053d1c248b5 before branch creation."
+}

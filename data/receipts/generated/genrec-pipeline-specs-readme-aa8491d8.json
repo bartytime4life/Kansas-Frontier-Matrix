@@ -1,0 +1,179 @@
+{
+  "receipt_id": "genrec-pipeline-specs-readme-aa8491d8",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipeline_specs/README.md"
+  ],
+  "artifact_hashes": {
+    "pipeline_specs/README.md": "sha256:aa8491d819a340e0a295ab4c92624d427ad65b5dd0319624275d68eae70112b2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-07-23-session"
+  },
+  "prompt_or_contract": "sha256:028998b9caed5df18eed4d8531b007ff545432a0b0689097487e6310dae13bd8",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "file_search",
+      "container validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/59938ab542b1ce5980fe2a93b2b806e362643ebd",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59938ab542b1ce5980fe2a93b2b806e362643ebd/pipeline_specs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59938ab542b1ce5980fe2a93b2b806e362643ebd/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59938ab542b1ce5980fe2a93b2b806e362643ebd/pipelines/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59938ab542b1ce5980fe2a93b2b806e362643ebd/pipelines/specs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59938ab542b1ce5980fe2a93b2b806e362643ebd/tests/pipelines/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59938ab542b1ce5980fe2a93b2b806e362643ebd/tests/policy/test_pipeline_connector_non_publisher.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59938ab542b1ce5980fe2a93b2b806e362643ebd/contracts/runtime/run_receipt.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59938ab542b1ce5980fe2a93b2b806e362643ebd/schemas/contracts/v1/runtime/run_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59938ab542b1ce5980fe2a93b2b806e362643ebd/tools/validators/validate_run_receipt.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59938ab542b1ce5980fe2a93b2b806e362643ebd/pipeline_specs/watchers/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59938ab542b1ce5980fe2a93b2b806e362643ebd/.github/workflows/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59938ab542b1ce5980fe2a93b2b806e362643ebd/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/42ad3537dcbede6d9c1b53dae320a8d40ddf0876",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/agent/modernize-pipeline-specs-readme-20260723/pipeline_specs/README.md",
+      "attached://KFM-Markdown-Engineering-Agent-v5.0.0"
+    ]
+  },
+  "truth_labels": {
+    "pipeline_specs/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, push permission, default branch, same-path target, current target blob, two-file change budget, draft-PR route, and non-goals were resolved before mutation."
+    },
+    {
+      "gate": "complete-baseline-read",
+      "outcome": "PASS",
+      "reason": "The complete v0.3 README was read, including metadata, all sections, links, payload examples, compatibility conflicts, open verification items, evidence ledger, change history, and final newline."
+    },
+    {
+      "gate": "base-drift-and-overlap-reconciliation",
+      "outcome": "PASS",
+      "reason": "Main advanced during authoring to 59938ab542b1ce5980fe2a93b2b806e362643ebd through unrelated policy/ADR work. pipeline_specs/README.md remained blob 7f35f1c06aaec08d03182cf71e88a812bf179ebf, no overlapping open PR or branch was surfaced, and the review branch was fast-forwarded before mutation."
+    },
+    {
+      "gate": "directory-rules-placement-and-readme-order",
+      "outcome": "PASS",
+      "reason": "The existing canonical pipeline_specs/ root README was updated in place. Its first twelve H2 sections now exactly follow Directory Rules section 15. No new root, lane, authority home, or lifecycle phase was created."
+    },
+    {
+      "gate": "current-evidence-refresh",
+      "outcome": "PASS",
+      "reason": "The README was reconciled against the current pipelines v0.3 executable-root contract, pipelines/specs v0.2 compatibility guardrail, tests/pipelines boundary, static non-publisher test, PROPOSED RunReceipt contract/schema/validator, watcher boundary, workflow inventory, and generated-receipt contract."
+    },
+    {
+      "gate": "markdown-structure-and-presentation",
+      "outcome": "PASS",
+      "reason": "UTF-8, LF endings, final newline, metadata parsing, one H1, required H2 order, balanced language-tagged fences, tables, alerts, HTML, static linked badges, navigation, and internal fragment resolution were checked."
+    },
+    {
+      "gate": "semantic-no-loss-and-vocabulary-separation",
+      "outcome": "PASS",
+      "reason": "Stable identity, same path, declarative/executable split, placeholder taxonomy, seventeen-lane registry, alias and watcher conflicts, lifecycle gates, finite outcomes, review/migration/rollback posture, definition of done, open register, evidence ledger, and history were preserved. Spec maturity, spec validation, RunReceipt, runtime response, lifecycle, and release vocabularies were kept distinct."
+    },
+    {
+      "gate": "security-rights-and-sensitive-content",
+      "outcome": "PASS",
+      "reason": "No credential, private endpoint, source payload, protected coordinate, living-person or genomic record, rare-species/plant location, archaeology detail, private-land join, infrastructure vulnerability, or hidden reasoning was introduced."
+    },
+    {
+      "gate": "remote-readback-hash-and-scope",
+      "outcome": "PASS",
+      "reason": "GitHub returned README blob de6919212a75dd626f9a786c3fb83d7539ff41e9 from commit 42ad3537dcbede6d9c1b53dae320a8d40ddf0876, matching the validated pre-write Git blob. The validated README SHA-256 is aa8491d819a340e0a295ab4c92624d427ad65b5dd0319624275d68eae70112b2. Before receipt emission, the branch changed only pipeline_specs/README.md."
+    },
+    {
+      "gate": "generated-receipt-structure",
+      "outcome": "PASS",
+      "reason": "Required fields, allowed truth labels, validation outcomes, artifact/hash closure, model metadata, prompt hash, evidence references, pending human-review state, timestamp, and process-memory boundary were checked against the inspected generated-receipt schema."
+    },
+    {
+      "gate": "runtime-and-executable-tests",
+      "outcome": "SKIPPED",
+      "reason": "Documentation/provenance-only change; no pipeline spec, parser, scheduler, pipeline code, source, contract, schema, policy, fixture, test, workflow, data, release, deployment, runtime, API, UI, or public behavior changed."
+    },
+    {
+      "gate": "repository-native-ci",
+      "outcome": "SKIPPED",
+      "reason": "Repository checks run after draft pull-request creation. No workflow-success, branch-protection, mergeability, or release-readiness claim is made in this receipt."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-MARKDOWN-ENGINEERING-V5",
+      "validated": true,
+      "evidence_ref": "attached://KFM-Markdown-Engineering-Agent-v5.0.0"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59938ab542b1ce5980fe2a93b2b806e362643ebd/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "PIPELINE-SPECS-README-PRIOR",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59938ab542b1ce5980fe2a93b2b806e362643ebd/pipeline_specs/README.md"
+    },
+    {
+      "id": "PIPELINES-EXECUTABLE-ROOT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59938ab542b1ce5980fe2a93b2b806e362643ebd/pipelines/README.md"
+    },
+    {
+      "id": "PIPELINES-SPECS-COMPATIBILITY",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59938ab542b1ce5980fe2a93b2b806e362643ebd/pipelines/specs/README.md"
+    },
+    {
+      "id": "PIPELINE-NON-PUBLISHER-GUARD",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59938ab542b1ce5980fe2a93b2b806e362643ebd/tests/policy/test_pipeline_connector_non_publisher.py"
+    },
+    {
+      "id": "RUN-RECEIPT-FAMILY",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59938ab542b1ce5980fe2a93b2b806e362643ebd/schemas/contracts/v1/runtime/run_receipt.schema.json"
+    },
+    {
+      "id": "GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59938ab542b1ce5980fe2a93b2b806e362643ebd/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "PIPELINE-SPECS-README-BRANCH",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/agent/modernize-pipeline-specs-readme-20260723/pipeline_specs/README.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-23T20:08:47Z",
+  "emitter": "ai-builder/openai-gpt-5.6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only modernization on a scoped review branch. pipeline_specs/README.md was upgraded in place to v0.4, reordered to the required root-README contract, and reconciled to current executable-pipeline, compatibility, test, receipt, workflow, correction, and rollback evidence. The generated receipt is process provenance only: it is not human approval, specification activation, pipeline execution proof, source admission, policy permission, lifecycle promotion, release authority, or KFM publication. Human review remains pending."
+}

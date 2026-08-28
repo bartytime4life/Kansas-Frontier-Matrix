@@ -1,0 +1,11 @@
+{
+  "asset_id": "kfm-social-v1",
+  "family": "social",
+  "version": "1.0.0",
+  "derivative_paths": [
+    "docs/brand/logo/social/og-default-1200x630.png",
+    "docs/brand/logo/social/og-default-1200x630.svg"
+  ],
+  "review_state": "draft",
+  "release_state": "unreleased"
+}

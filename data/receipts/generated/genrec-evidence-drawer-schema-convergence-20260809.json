@@ -1,0 +1,109 @@
+{
+  "receipt_id": "genrec-evidence-drawer-schema-convergence-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/evidence-drawer-schema-convergence.yml",
+    "tests/validators/test_evidence_drawer_schema_convergence.py",
+    "tools/validators/validate_evidence_drawer_schema_convergence.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/evidence-drawer-schema-convergence.yml": "sha256:9c47bf7103b3290485a871de34bad677dc4c333879b52806f71575673927bb27",
+    "tests/validators/test_evidence_drawer_schema_convergence.py": "sha256:c170ed9a44053b58ce6d9218277d08eac532574988443c3500a83152d6cc26c7",
+    "tools/validators/validate_evidence_drawer_schema_convergence.py": "sha256:23115b5364a77db99871916489c6e37a0e1d915a0ff237aef852bcc776a9cb24"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Sol",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:673d0c33ce29256dd66d57d61b7752f42dfe4c14f33a57290354b45d70660034",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (read/write)",
+      "uploaded-file search"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Components_Pass_13_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM-Components-Pass-13#evidence-drawer-payload-contract",
+      "repo:contracts/evidence/evidence_drawer_payload.md@main",
+      "repo:schemas/contracts/v1/evidence/evidence_drawer_payload.schema.json@main",
+      "repo:schemas/contracts/v1/runtime/evidence_drawer_payload.schema.json@main",
+      "repo:schemas/contracts/v1/ui/evidence_drawer_payload.schema.json@main",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@main"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/evidence-drawer-schema-convergence.yml": "CONFIRMED",
+    "tests/validators/test_evidence_drawer_schema_convergence.py": "CONFIRMED",
+    "tools/validators/validate_evidence_drawer_schema_convergence.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "Every authored artifact except this receipt is bound to its prepared SHA-256 bytes without receipt self-reference."
+    },
+    {
+      "gate": "placement-authority-preservation",
+      "outcome": "PASS",
+      "reason": "The audit emits placement_state NEEDS_REVIEW and does not select, move, delete, or promote any schema home."
+    },
+    {
+      "gate": "synthetic-negative-coverage",
+      "outcome": "PASS",
+      "reason": "Focused tests cover duplicate IDs, missing placement anchors, wrong draft declarations, and malformed JSON."
+    },
+    {
+      "gate": "hosted-current-tree-audit",
+      "outcome": "SKIPPED",
+      "reason": "Hosted exact-head execution begins after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:kfm-components-pass-13-evidence-drawer",
+      "validated": true,
+      "evidence_ref": "attachment:KFM-Components-Pass-13#evidence-drawer-payload-contract"
+    },
+    {
+      "id": "repository:evidence-drawer-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/evidence/evidence_drawer_payload.md@main"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@main"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T02:28:00Z",
+  "emitter": "OpenAI GPT-5.6 Sol via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Read-only schema-family convergence audit for EvidenceDrawerPayload. It records the unresolved evidence/runtime/UI placement boundary and inventories domain profiles without choosing a canonical winner, rewriting contracts, migrating consumers, or creating release/publication authority."
+}

@@ -1,0 +1,344 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/runtime/ai_output_artifact.schema.json",
+  "title": "AIOutputArtifact",
+  "description": "Fixture-only, non-authoritative per-input AI output artifact. The artifact binds one input, one governed AI run, one detached result digest, support references, finite outcome, and append-only revocation/supersession state. Schema validity creates no evidence, policy, review, promotion, release, publication, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile_status",
+    "execution_mode",
+    "artifact_id",
+    "spec_hash",
+    "input",
+    "model",
+    "generation",
+    "outcome",
+    "reason_codes",
+    "output",
+    "support",
+    "lineage",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "AIOutputArtifact"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile_status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "execution_mode": {
+      "const": "FIXTURE_ONLY"
+    },
+    "artifact_id": {
+      "type": "string",
+      "pattern": "^ai-output-artifact:[0-9a-f]{24}$"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_ref",
+        "input_digest",
+        "input_index"
+      ],
+      "properties": {
+        "input_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "input_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "input_index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000000
+        }
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adapter_ref",
+        "model_ref",
+        "prompt_profile_ref"
+      ],
+      "properties": {
+        "adapter_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "model_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "prompt_profile_ref": {
+          "$ref": "#/$defs/ref"
+        }
+      }
+    },
+    "generation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "run_id",
+        "ai_receipt_ref",
+        "generated_at"
+      ],
+      "properties": {
+        "run_id": {
+          "$ref": "#/$defs/ref"
+        },
+        "ai_receipt_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "generated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "outcome": {
+      "$ref": "#/$defs/outcome"
+    },
+    "reason_codes": {
+      "$ref": "#/$defs/reason_codes"
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "result_ref",
+        "result_digest",
+        "media_type",
+        "content_inlined"
+      ],
+      "properties": {
+        "result_ref": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "result_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "media_type": {
+          "oneOf": [
+            {
+              "type": "string",
+              "enum": [
+                "application/json",
+                "text/plain"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "content_inlined": {
+          "const": false
+        }
+      }
+    },
+    "support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_bundle_refs",
+        "citation_refs",
+        "policy_decision_ref",
+        "citation_validation_ref",
+        "review_record_refs",
+        "attestation_refs"
+      ],
+      "properties": {
+        "evidence_bundle_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "citation_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "policy_decision_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "citation_validation_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "review_record_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "attestation_refs": {
+          "$ref": "#/$defs/ref_array"
+        }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "correction_refs",
+        "successor_artifact_ref",
+        "revoked_at",
+        "revocation_reason_codes"
+      ],
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/lineage_status"
+        },
+        "correction_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "successor_artifact_ref": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "revoked_at": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "revocation_reason_codes": {
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]{2,95}$"
+          }
+        }
+      }
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    }
+  },
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 640,
+      "pattern": "\\S"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "ANSWER",
+        "ABSTAIN",
+        "DENY",
+        "ERROR"
+      ]
+    },
+    "lineage_status": {
+      "type": "string",
+      "enum": [
+        "ACTIVE",
+        "REVOKED",
+        "SUPERSEDED"
+      ]
+    },
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z][A-Z0-9_]{2,95}$"
+      }
+    },
+    "ref_array": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_resolved",
+        "policy_evaluated",
+        "citations_validated",
+        "review_authenticated",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed",
+        "canonical_state_mutated"
+      ],
+      "properties": {
+        "evidence_resolved": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "citations_validated": {
+          "const": false
+        },
+        "review_authenticated": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "canonical_state_mutated": {
+          "const": false
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/runtime/ai_output_artifact.md",
+    "fixtures_root": "fixtures/contracts/v1/runtime/ai_output_artifact/",
+    "validator": "tools/validators/ai/validate_ai_output_artifact.py",
+    "tests": "tests/validators/test_validate_ai_output_artifact.py",
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "source_idea": "KFM-P7-IDEA-0001",
+    "identity_profile": "RFC8785-JCS+SHA-256",
+    "authority": "per_input_ai_output_accountability_only"
+  }
+}

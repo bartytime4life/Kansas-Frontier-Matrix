@@ -1,0 +1,79 @@
+{
+  "receipt_id": "genrec-pass18-public-map-misuse-review-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/public-map-misuse-review.yml",
+    "contracts/data/public_map_misuse_review.md",
+    "docs/intake/exploratory/pass-18-public-map-misuse-review-source-map.md",
+    "fixtures/contracts/v1/data/public_map_misuse_review/cases.json",
+    "schemas/contracts/v1/data/public_map_misuse_review.schema.json",
+    "tests/validators/test_validate_public_map_misuse_review.py",
+    "tools/validators/data/validate_public_map_misuse_review.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/public-map-misuse-review.yml": "sha256:e05b007b42e48151db5a1d00b31ab2236fcd7228ad2f2660150d6e26b046c21e",
+    "contracts/data/public_map_misuse_review.md": "sha256:0962926c63d32a03d1b40fd1e533d28fd1e90195c6feecaf4d301160f1354840",
+    "docs/intake/exploratory/pass-18-public-map-misuse-review-source-map.md": "sha256:3f358a32c00d25d1c1b79f68f04fc2a484fe91f8203462cd8a37a115d97bf726",
+    "fixtures/contracts/v1/data/public_map_misuse_review/cases.json": "sha256:468ca3f2cc3a08330e0708d59db87a188aab44437802ceb81a1703dbcecfe634",
+    "schemas/contracts/v1/data/public_map_misuse_review.schema.json": "sha256:89a573b87b5316da8b20f7fa67f4c8fd3d9248bae1527b6660b2ce1999846d85",
+    "tests/validators/test_validate_public_map_misuse_review.py": "sha256:7c81ac0ff429472677765ed1ccddfb5e65d31f579690b293580593713aed6b92",
+    "tools/validators/data/validate_public_map_misuse_review.py": "sha256:964302c2a5a2f1a15497f00ee1b4e23c55a66d816315ff9b79b53de16667dc2f"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "GPT-5", "version": "2026-08-11"},
+  "prompt_or_contract": "sha256:0962926c63d32a03d1b40fd1e533d28fd1e90195c6feecaf4d301160f1354840",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local PDF rendering and deterministic Markdown, JSON, YAML, and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": ["sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"],
+    "attached_docs": ["KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"],
+    "evidence_refs": [
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-pages=46-47&printed-pages=43-44&card=KFM-P18-INV-352",
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#carrier=Renderer-Downstream-Map-Law-Capability",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14e7680f3cb75c34e636fd8daa507624a553bb78/contracts/data/cartographic_omission_disclosure.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14e7680f3cb75c34e636fd8daa507624a553bb78/contracts/evidence/representation_fitness_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14e7680f3cb75c34e636fd8daa507624a553bb78/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/public-map-misuse-review.yml": "CONFIRMED",
+    "contracts/data/public_map_misuse_review.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-public-map-misuse-review-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/data/public_map_misuse_review/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/data/public_map_misuse_review.schema.json": "PROPOSED",
+    "tests/validators/test_validate_public_map_misuse_review.py": "CONFIRMED",
+    "tools/validators/data/validate_public_map_misuse_review.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Eight deterministic public-map-misuse-review tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Fourteen exact PASS, ABSTAIN, DENY, and ERROR cases matched declared outcomes."},
+    {"gate": "no-network-boundary", "outcome": "PASS", "reason": "Validator and focused tests use only local bytes and declared Python dependencies."},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "repository-wide-validation", "outcome": "SKIPPED", "reason": "Connector-first authoring did not provide a local checkout of current main; hosted repository controls remain authoritative."},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
+  "citations": [
+    {"id": "pass18-public-map-misuse-card", "validated": true, "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-pages=46-47&printed-pages=43-44&card=KFM-P18-INV-352"},
+    {"id": "drive-renderer-downstream-carrier", "validated": true, "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#carrier=Renderer-Downstream-Map-Law-Capability"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/14e7680f3cb75c34e636fd8daa507624a553bb78/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-11T18:30:42Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Additive, inactive, fixture-only PublicMapMisuseReviewCandidate packet derived from Pass 18 card KFM-P18-INV-352 and thematically corroborated by the connected-Drive renderer-downstream carrier. It validates deterministic identity, prerequisite resolution declarations, exact five-dimension coverage, canonical ordering, material-concern disclosure, high-consequence review-reference presence, and conclusion coherence without resolving references, inspecting or mutating a map, deciding evidence strength or materiality, deciding policy or review, promoting, releasing, deploying, publishing, or authorizing public use."
+}

@@ -1,0 +1,5 @@
+status: PROPOSED
+source_doc: docs/domains/hydrology/CANONICAL_PATHS.md
+path: pipeline_specs/hydrology/ingest_nhdplus_hr.yaml
+notes:
+  - Placeholder created from docs/domains markdown inventory.

@@ -1,0 +1,4 @@
+# pipeline_specs :: atmosphere :: normalize
+name: atmosphere-normalize
+version: 1
+stages: []

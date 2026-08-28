@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/contracts/v1/data/stac-link-closure-assessment",
+  "title": "StacLinkClosureAssessment",
+  "description": "Fixture-only assessment of a supplied local STAC record graph. Shape validity grants no record, API, availability, catalog, policy, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["profile", "assessment_id", "spec_hash", "assessment_state", "graph_scope", "root_record_id", "records", "assessment", "governance"],
+  "properties": {
+    "profile": {"const": "STAC_LINK_CLOSURE_ASSESSMENT_V1"},
+    "assessment_id": {"type": "string", "pattern": "^kfm:stac-link-closure:[a-f0-9]{24}$"},
+    "spec_hash": {"$ref": "#/$defs/sha256"},
+    "assessment_state": {"enum": ["COMPLETE", "ERROR"]},
+    "graph_scope": {"enum": ["FULL_DECLARED_GRAPH", "PARTIAL_DECLARED_GRAPH"]},
+    "root_record_id": {"$ref": "#/$defs/record_id"},
+    "records": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {"$ref": "#/$defs/record"}
+    },
+    "assessment": {"$ref": "#/$defs/assessment"},
+    "governance": {"$ref": "#/$defs/governance"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "record_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._:-]{2,159}$"},
+    "record_type": {"enum": ["CATALOG", "COLLECTION", "ITEM"]},
+    "record_ref": {"type": "string", "pattern": "^kfm:stac-profile-assessment:[a-z0-9][a-z0-9._:-]{5,180}$"},
+    "edge_key": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._:-]{2,159}\\|(child|collection|item|parent|root)\\|[a-z0-9][a-z0-9._:-]{2,159}$"},
+    "canonical_record_ids": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/record_id"}
+    },
+    "canonical_edges": {
+      "type": "array",
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/edge_key"}
+    },
+    "link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rel", "target_record_id", "target_record_type"],
+      "properties": {
+        "rel": {"enum": ["child", "collection", "item", "parent", "root"]},
+        "target_record_id": {"$ref": "#/$defs/record_id"},
+        "target_record_type": {"$ref": "#/$defs/record_type"}
+      }
+    },
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["record_id", "record_type", "record_conformance_ref", "links"],
+      "properties": {
+        "record_id": {"$ref": "#/$defs/record_id"},
+        "record_type": {"$ref": "#/$defs/record_type"},
+        "record_conformance_ref": {"$ref": "#/$defs/record_ref"},
+        "links": {
+          "type": "array",
+          "maxItems": 32,
+          "items": {"$ref": "#/$defs/link"}
+        }
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "reason_code", "reachable_record_ids", "missing_target_record_ids", "nonreciprocal_edges", "type_mismatch_edges", "orphan_record_ids"],
+      "properties": {
+        "outcome": {"enum": ["LINK_GRAPH_CLOSED", "PARTIAL_GRAPH", "LINK_GRAPH_OPEN", "ERROR"]},
+        "reason_code": {"enum": ["FULL_LOCAL_CLOSURE_CONFIRMED", "PARTIAL_GRAPH_ONLY", "LOCAL_LINK_CONFLICT", "UPSTREAM_ERROR"]},
+        "reachable_record_ids": {"$ref": "#/$defs/canonical_record_ids"},
+        "missing_target_record_ids": {"$ref": "#/$defs/canonical_record_ids"},
+        "nonreciprocal_edges": {"$ref": "#/$defs/canonical_edges"},
+        "type_mismatch_edges": {"$ref": "#/$defs/canonical_edges"},
+        "orphan_record_ids": {"$ref": "#/$defs/canonical_record_ids"}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["execution_mode", "network_attempted", "record_content_validated", "remote_targets_resolved", "api_behavior_tested", "availability_tested", "catalog_mutated", "evidence_resolved", "policy_decided", "review_approved", "release_authorized", "publication_authorized", "public_use_allowed"],
+      "properties": {
+        "execution_mode": {"const": "FIXTURE_ONLY"},
+        "network_attempted": {"const": false},
+        "record_content_validated": {"const": false},
+        "remote_targets_resolved": {"const": false},
+        "api_behavior_tested": {"const": false},
+        "availability_tested": {"const": false},
+        "catalog_mutated": {"const": false},
+        "evidence_resolved": {"const": false},
+        "policy_decided": {"const": false},
+        "review_approved": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false},
+        "public_use_allowed": {"const": false}
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "source_ideas": ["KFM-TRIAD-040", "KFM-CAND-0120"],
+    "validator": "tools/validators/catalog/validate_stac_link_closure_assessment.py",
+    "authority": "supplied local graph consistency only"
+  }
+}

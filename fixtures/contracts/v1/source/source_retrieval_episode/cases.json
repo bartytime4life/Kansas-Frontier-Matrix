@@ -1,0 +1,1086 @@
+{
+  "bases": {
+    "get_success": {
+      "object_type": "SourceRetrievalEpisode",
+      "schema_version": "1.0.0",
+      "profile": "kfm.source-retrieval-episode.fixture.v1",
+      "episode_id": "",
+      "source_id": "synthetic.ks.source",
+      "source_descriptor_ref": "kfm://source/synthetic.ks.source",
+      "retrieval_profile_ref": "kfm:source-profile:synthetic-retrieval-v1",
+      "attempted_at": "2026-08-11T12:00:00Z",
+      "completed_at": "2026-08-11T12:00:01Z",
+      "method": "GET",
+      "redacted_locator": "https://official.example.invalid/source/current",
+      "request": {
+        "conditional": false,
+        "if_none_match_present": false,
+        "if_modified_since_present": false
+      },
+      "transport": {
+        "category": "SUCCESS",
+        "http_status": 200,
+        "retry_count": 0,
+        "elapsed_ms": 1000,
+        "etag": "\"synthetic-etag\"",
+        "last_modified": "2026-08-11T11:59:00Z",
+        "content_length": 128,
+        "body_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "body_bytes": 128,
+        "content_type": "application/json",
+        "schema_fingerprint": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "semantic_sentinel_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      },
+      "result": {
+        "status": "CAPTURED",
+        "reason_codes": [
+          "RETRIEVAL_BODY_CAPTURED"
+        ]
+      },
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "network_attempted": false,
+        "source_activated": false,
+        "source_artifact_created": false,
+        "receipt_created": false,
+        "evidence_created": false,
+        "raw_write_performed": false,
+        "current_data_claimed": false,
+        "no_current_data_claimed": false,
+        "promotion_authorized": false,
+        "release_authorized": false,
+        "publication_authorized": false,
+        "public_use_allowed": false
+      },
+      "spec_hash": ""
+    }
+  },
+  "cases": [
+    {
+      "case_id": "get-success",
+      "base": "get_success",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "not-modified",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/category",
+          "value": "NOT_MODIFIED"
+        },
+        {
+          "path": "/transport/http_status",
+          "value": 304
+        },
+        {
+          "path": "/request/conditional",
+          "value": true
+        },
+        {
+          "path": "/request/if_none_match_present",
+          "value": true
+        },
+        {
+          "path": "/transport/body_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/body_bytes",
+          "value": null
+        },
+        {
+          "path": "/transport/schema_fingerprint",
+          "value": null
+        },
+        {
+          "path": "/transport/semantic_sentinel_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/content_type",
+          "value": null
+        },
+        {
+          "path": "/transport/content_length",
+          "value": null
+        }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "head-only",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/method",
+          "value": "HEAD"
+        },
+        {
+          "path": "/transport/body_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/body_bytes",
+          "value": null
+        },
+        {
+          "path": "/transport/schema_fingerprint",
+          "value": null
+        },
+        {
+          "path": "/transport/semantic_sentinel_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/content_type",
+          "value": null
+        }
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {
+          "code": "FULL_GET_VERIFICATION_REQUIRED",
+          "path": "/result/status"
+        }
+      ]
+    },
+    {
+      "case_id": "timeout",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/category",
+          "value": "TIMEOUT"
+        },
+        {
+          "path": "/transport/http_status",
+          "value": null
+        },
+        {
+          "path": "/transport/body_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/body_bytes",
+          "value": null
+        },
+        {
+          "path": "/transport/schema_fingerprint",
+          "value": null
+        },
+        {
+          "path": "/transport/semantic_sentinel_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/content_type",
+          "value": null
+        },
+        {
+          "path": "/transport/content_length",
+          "value": null
+        }
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {
+          "code": "RETRIEVAL_TIMEOUT",
+          "path": "/result/status"
+        }
+      ]
+    },
+    {
+      "case_id": "rate-limited",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/category",
+          "value": "RATE_LIMITED"
+        },
+        {
+          "path": "/transport/http_status",
+          "value": 429
+        },
+        {
+          "path": "/transport/body_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/body_bytes",
+          "value": null
+        },
+        {
+          "path": "/transport/schema_fingerprint",
+          "value": null
+        },
+        {
+          "path": "/transport/semantic_sentinel_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/content_type",
+          "value": null
+        },
+        {
+          "path": "/transport/content_length",
+          "value": null
+        }
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {
+          "code": "SOURCE_RATE_LIMITED",
+          "path": "/result/status"
+        }
+      ]
+    },
+    {
+      "case_id": "retry-exhausted",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/category",
+          "value": "RETRY_EXHAUSTED"
+        },
+        {
+          "path": "/transport/http_status",
+          "value": null
+        },
+        {
+          "path": "/transport/retry_count",
+          "value": 3
+        },
+        {
+          "path": "/transport/body_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/body_bytes",
+          "value": null
+        },
+        {
+          "path": "/transport/schema_fingerprint",
+          "value": null
+        },
+        {
+          "path": "/transport/semantic_sentinel_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/content_type",
+          "value": null
+        },
+        {
+          "path": "/transport/content_length",
+          "value": null
+        }
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {
+          "code": "RETRY_BUDGET_EXHAUSTED",
+          "path": "/result/status"
+        }
+      ]
+    },
+    {
+      "case_id": "cancelled",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/category",
+          "value": "CANCELLED"
+        },
+        {
+          "path": "/transport/http_status",
+          "value": null
+        },
+        {
+          "path": "/transport/body_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/body_bytes",
+          "value": null
+        },
+        {
+          "path": "/transport/schema_fingerprint",
+          "value": null
+        },
+        {
+          "path": "/transport/semantic_sentinel_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/content_type",
+          "value": null
+        },
+        {
+          "path": "/transport/content_length",
+          "value": null
+        }
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {
+          "code": "RETRIEVAL_CANCELLED",
+          "path": "/result/status"
+        }
+      ]
+    },
+    {
+      "case_id": "auth-required",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/category",
+          "value": "AUTH_REQUIRED"
+        },
+        {
+          "path": "/transport/http_status",
+          "value": 401
+        },
+        {
+          "path": "/transport/body_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/body_bytes",
+          "value": null
+        },
+        {
+          "path": "/transport/schema_fingerprint",
+          "value": null
+        },
+        {
+          "path": "/transport/semantic_sentinel_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/content_type",
+          "value": null
+        },
+        {
+          "path": "/transport/content_length",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "AUTH_REQUIRED",
+          "path": "/result/status"
+        }
+      ]
+    },
+    {
+      "case_id": "access-denied",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/category",
+          "value": "ACCESS_DENIED"
+        },
+        {
+          "path": "/transport/http_status",
+          "value": 403
+        },
+        {
+          "path": "/transport/body_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/body_bytes",
+          "value": null
+        },
+        {
+          "path": "/transport/schema_fingerprint",
+          "value": null
+        },
+        {
+          "path": "/transport/semantic_sentinel_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/content_type",
+          "value": null
+        },
+        {
+          "path": "/transport/content_length",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "ACCESS_DENIED",
+          "path": "/result/status"
+        }
+      ]
+    },
+    {
+      "case_id": "access-denied-451",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/category",
+          "value": "ACCESS_DENIED"
+        },
+        {
+          "path": "/transport/http_status",
+          "value": 451
+        },
+        {
+          "path": "/transport/body_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/body_bytes",
+          "value": null
+        },
+        {
+          "path": "/transport/schema_fingerprint",
+          "value": null
+        },
+        {
+          "path": "/transport/semantic_sentinel_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/content_type",
+          "value": null
+        },
+        {
+          "path": "/transport/content_length",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "ACCESS_DENIED",
+          "path": "/result/status"
+        }
+      ]
+    },
+    {
+      "case_id": "not-found",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/category",
+          "value": "NOT_FOUND"
+        },
+        {
+          "path": "/transport/http_status",
+          "value": 404
+        },
+        {
+          "path": "/transport/body_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/body_bytes",
+          "value": null
+        },
+        {
+          "path": "/transport/schema_fingerprint",
+          "value": null
+        },
+        {
+          "path": "/transport/semantic_sentinel_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/content_type",
+          "value": null
+        },
+        {
+          "path": "/transport/content_length",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "SOURCE_NOT_FOUND",
+          "path": "/result/status"
+        }
+      ]
+    },
+    {
+      "case_id": "response-too-large",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/category",
+          "value": "RESPONSE_TOO_LARGE"
+        },
+        {
+          "path": "/transport/http_status",
+          "value": 200
+        },
+        {
+          "path": "/transport/body_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/body_bytes",
+          "value": null
+        },
+        {
+          "path": "/transport/schema_fingerprint",
+          "value": null
+        },
+        {
+          "path": "/transport/semantic_sentinel_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/content_type",
+          "value": null
+        },
+        {
+          "path": "/transport/content_length",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "RESPONSE_TOO_LARGE",
+          "path": "/result/status"
+        }
+      ]
+    },
+    {
+      "case_id": "integrity-mismatch",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/category",
+          "value": "INTEGRITY_MISMATCH"
+        },
+        {
+          "path": "/transport/http_status",
+          "value": 200
+        },
+        {
+          "path": "/transport/body_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/body_bytes",
+          "value": null
+        },
+        {
+          "path": "/transport/schema_fingerprint",
+          "value": null
+        },
+        {
+          "path": "/transport/semantic_sentinel_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/content_type",
+          "value": null
+        },
+        {
+          "path": "/transport/content_length",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "INTEGRITY_CHECK_FAILED",
+          "path": "/result/status"
+        }
+      ]
+    },
+    {
+      "case_id": "partial-response",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/category",
+          "value": "PARTIAL"
+        },
+        {
+          "path": "/transport/http_status",
+          "value": 206
+        },
+        {
+          "path": "/transport/body_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/body_bytes",
+          "value": null
+        },
+        {
+          "path": "/transport/schema_fingerprint",
+          "value": null
+        },
+        {
+          "path": "/transport/semantic_sentinel_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/content_type",
+          "value": null
+        },
+        {
+          "path": "/transport/content_length",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "PARTIAL_RESPONSE_DENIED",
+          "path": "/result/status"
+        }
+      ]
+    },
+    {
+      "case_id": "invalid-response-metadata",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/category",
+          "value": "INVALID_RESPONSE_METADATA"
+        },
+        {
+          "path": "/transport/http_status",
+          "value": 200
+        },
+        {
+          "path": "/transport/body_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/body_bytes",
+          "value": null
+        },
+        {
+          "path": "/transport/schema_fingerprint",
+          "value": null
+        },
+        {
+          "path": "/transport/semantic_sentinel_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/content_type",
+          "value": null
+        },
+        {
+          "path": "/transport/content_length",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "INVALID_RESPONSE_METADATA",
+          "path": "/result/status"
+        }
+      ]
+    },
+    {
+      "case_id": "unsafe-metadata",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/category",
+          "value": "UNSAFE_METADATA"
+        },
+        {
+          "path": "/transport/http_status",
+          "value": 200
+        },
+        {
+          "path": "/transport/body_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/body_bytes",
+          "value": null
+        },
+        {
+          "path": "/transport/schema_fingerprint",
+          "value": null
+        },
+        {
+          "path": "/transport/semantic_sentinel_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/content_type",
+          "value": null
+        },
+        {
+          "path": "/transport/content_length",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "UNSAFE_RESPONSE_DENIED",
+          "path": "/result/status"
+        }
+      ]
+    },
+    {
+      "case_id": "transport-error",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/category",
+          "value": "TRANSPORT_ERROR"
+        },
+        {
+          "path": "/transport/http_status",
+          "value": null
+        },
+        {
+          "path": "/transport/body_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/body_bytes",
+          "value": null
+        },
+        {
+          "path": "/transport/schema_fingerprint",
+          "value": null
+        },
+        {
+          "path": "/transport/semantic_sentinel_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/content_type",
+          "value": null
+        },
+        {
+          "path": "/transport/content_length",
+          "value": null
+        }
+      ],
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {
+          "code": "TRANSPORT_ERROR",
+          "path": "/result/status"
+        }
+      ]
+    },
+    {
+      "case_id": "success-body-required",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/body_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/body_bytes",
+          "value": null
+        },
+        {
+          "path": "/transport/content_type",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "RETRIEVAL_BODY_REQUIRED",
+          "path": "/transport"
+        }
+      ]
+    },
+    {
+      "case_id": "failure-body-forbidden",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/category",
+          "value": "TIMEOUT"
+        },
+        {
+          "path": "/transport/http_status",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "RETRIEVAL_BODY_FORBIDDEN",
+          "path": "/transport"
+        }
+      ]
+    },
+    {
+      "case_id": "not-modified-validator-required",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/category",
+          "value": "NOT_MODIFIED"
+        },
+        {
+          "path": "/transport/http_status",
+          "value": 304
+        },
+        {
+          "path": "/request/conditional",
+          "value": true
+        },
+        {
+          "path": "/request/if_none_match_present",
+          "value": true
+        },
+        {
+          "path": "/transport/etag",
+          "value": null
+        },
+        {
+          "path": "/transport/last_modified",
+          "value": null
+        },
+        {
+          "path": "/transport/body_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/body_bytes",
+          "value": null
+        },
+        {
+          "path": "/transport/schema_fingerprint",
+          "value": null
+        },
+        {
+          "path": "/transport/semantic_sentinel_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/content_type",
+          "value": null
+        },
+        {
+          "path": "/transport/content_length",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "RETRIEVAL_VALIDATOR_REQUIRED",
+          "path": "/transport"
+        }
+      ]
+    },
+    {
+      "case_id": "conditional-declaration-mismatch",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/request/conditional",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "RETRIEVAL_CONDITIONAL_MISMATCH",
+          "path": "/request/conditional"
+        }
+      ]
+    },
+    {
+      "case_id": "source-ref-mismatch",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/source_descriptor_ref",
+          "value": "kfm://source/other.source"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "RETRIEVAL_SOURCE_REF_MISMATCH",
+          "path": "/source_descriptor_ref"
+        }
+      ]
+    },
+    {
+      "case_id": "completion-before-attempt",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/completed_at",
+          "value": "2026-08-11T11:59:59Z"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "RETRIEVAL_TIME_ORDER_INVALID",
+          "path": "/completed_at"
+        }
+      ]
+    },
+    {
+      "case_id": "last-modified-after-completion",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/last_modified",
+          "value": "2026-08-11T12:00:02Z"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "RETRIEVAL_LAST_MODIFIED_AFTER_COMPLETION",
+          "path": "/transport/last_modified"
+        }
+      ]
+    },
+    {
+      "case_id": "locator-query-denied",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/redacted_locator",
+          "value": "https://official.example.invalid/source/current?token=redacted"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "RETRIEVAL_LOCATOR_UNSAFE",
+          "path": "/redacted_locator"
+        }
+      ]
+    },
+    {
+      "case_id": "locator-invalid-port-denied",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/redacted_locator",
+          "value": "https://official.example.invalid:bad/source"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "RETRIEVAL_LOCATOR_UNSAFE",
+          "path": "/redacted_locator"
+        }
+      ]
+    },
+    {
+      "case_id": "etag-unquoted-denied",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/etag",
+          "value": "not-an-http-etag"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "RETRIEVAL_SCHEMA_INVALID",
+          "path": "/transport/etag"
+        }
+      ]
+    },
+    {
+      "case_id": "content-length-mismatch",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/content_length",
+          "value": 127
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "RETRIEVAL_CONTENT_LENGTH_MISMATCH",
+          "path": "/transport/content_length"
+        }
+      ]
+    },
+    {
+      "case_id": "result-mismatch",
+      "base": "get_success",
+      "result_override": {
+        "status": "NO_CHANGE",
+        "reason_codes": [
+          "SOURCE_NOT_MODIFIED"
+        ]
+      },
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "RETRIEVAL_RESULT_MISMATCH",
+          "path": "/result"
+        }
+      ]
+    },
+    {
+      "case_id": "spec-hash-mismatch",
+      "base": "get_success",
+      "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "RETRIEVAL_SPEC_HASH_MISMATCH",
+          "path": "/spec_hash"
+        }
+      ]
+    },
+    {
+      "case_id": "episode-id-mismatch",
+      "base": "get_success",
+      "episode_id_override": "kfm:source-retrieval-episode:ffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "RETRIEVAL_ID_MISMATCH",
+          "path": "/episode_id"
+        }
+      ]
+    },
+    {
+      "case_id": "false-clear-overclaim",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/governance/no_current_data_claimed",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "RETRIEVAL_SCHEMA_INVALID",
+          "path": "/governance/no_current_data_claimed"
+        }
+      ]
+    }
+  ]
+}

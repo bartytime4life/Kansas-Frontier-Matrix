@@ -1,0 +1,54 @@
+name: habitat-model-run-receipt
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/habitat-model-run-receipt.yml"
+      - "contracts/domains/habitat/model_run_receipt.md"
+      - "schemas/contracts/v1/domains/habitat/model_run_receipt.schema.json"
+      - "fixtures/contracts/v1/domains/habitat/model_run_receipt/**"
+      - "tools/validators/domains/habitat/validate_model_run_receipt.py"
+      - "tests/validators/domains/habitat/test_validate_model_run_receipt.py"
+      - "docs/intake/exploratory/habitat-model-run-receipt-source-map.md"
+      - "data/receipts/generated/genrec-habitat-model-run-receipt-20260810.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install test dependencies
+        run: python tools/ci/install_python_ci.py project-test
+
+      - name: Run focused tests and fixture replay
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONHASHSEED: "0"
+        run: |
+          python -m pytest -q -p no:cacheprovider \
+            tests/validators/domains/habitat/test_validate_model_run_receipt.py
+          python tools/validators/domains/habitat/validate_model_run_receipt.py --fixtures
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-habitat-model-run-receipt-20260810.json \
+            --repo-root .
+
+      - name: Record authority boundary
+        run: |
+          echo "WORKFLOW_CHECK_EXECUTED: habitat-model-run-receipt-fixture"
+          echo "WORKFLOW_HOLD: model execution, evidence, policy, review, release, and publication remain unwired"

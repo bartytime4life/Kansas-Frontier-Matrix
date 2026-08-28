@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/gate_outcome_mapping.schema.json",
+  "title": "GateOutcomeMapping",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "kfm_ref": {
+      "type": "string",
+      "pattern": "^kfm:[a-z0-9][a-z0-9._:/-]{5,220}$"
+    },
+    "nullable_kfm_ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/kfm_ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "date_time": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    }
+  },
+  "properties": {
+    "object_type": {
+      "const": "GateOutcomeMapping"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile": {
+      "const": "kfm.gate-outcome-mapping.fixture.v1"
+    },
+    "mapping_id": {
+      "type": "string",
+      "pattern": "^kfm:gate-outcome-mapping:[0-9a-f]{24}$"
+    },
+    "evaluated_at": {
+      "$ref": "#/$defs/date_time"
+    },
+    "target_surface": {
+      "enum": [
+        "PROMOTION",
+        "ANSWER"
+      ]
+    },
+    "subject_ref": {
+      "$ref": "#/$defs/kfm_ref"
+    },
+    "gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "gate_ref": {
+          "$ref": "#/$defs/kfm_ref"
+        },
+        "state": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "INSUFFICIENT_EVIDENCE",
+            "ERROR"
+          ]
+        },
+        "evidence_state": {
+          "enum": [
+            "RESOLVED",
+            "UNRESOLVED",
+            "ERROR"
+          ]
+        },
+        "evidence_bundle_ref": {
+          "$ref": "#/$defs/nullable_kfm_ref"
+        },
+        "run_receipt_ref": {
+          "$ref": "#/$defs/kfm_ref"
+        },
+        "policy_decision_ref": {
+          "$ref": "#/$defs/kfm_ref"
+        }
+      },
+      "required": [
+        "gate_ref",
+        "state",
+        "evidence_state",
+        "evidence_bundle_ref",
+        "run_receipt_ref",
+        "policy_decision_ref"
+      ]
+    },
+    "mapped": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "destination_contract": {
+          "enum": [
+            "PromotionDecision",
+            "DecisionEnvelope"
+          ]
+        },
+        "outcome": {
+          "enum": [
+            "APPROVE",
+            "ANSWER",
+            "DENY",
+            "ABSTAIN",
+            "ERROR"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "GATE_PASS_APPROVE",
+              "GATE_PASS_ANSWER",
+              "GATE_FAILURE_DENY",
+              "GATE_EVIDENCE_INSUFFICIENT",
+              "GATE_EXECUTION_ERROR"
+            ]
+          }
+        }
+      },
+      "required": [
+        "destination_contract",
+        "outcome",
+        "reason_codes"
+      ]
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "execution_mode": {
+          "const": "FIXTURE_ONLY"
+        },
+        "policy_authored": {
+          "const": false
+        },
+        "evidence_resolved": {
+          "const": false
+        },
+        "decision_emitted": {
+          "const": false
+        },
+        "promotion_executed": {
+          "const": false
+        },
+        "answer_emitted": {
+          "const": false
+        },
+        "release_issued": {
+          "const": false
+        },
+        "deployment_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        }
+      },
+      "required": [
+        "execution_mode",
+        "policy_authored",
+        "evidence_resolved",
+        "decision_emitted",
+        "promotion_executed",
+        "answer_emitted",
+        "release_issued",
+        "deployment_authorized",
+        "publication_authorized"
+      ]
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/spec_hash"
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "mapping_id",
+    "evaluated_at",
+    "target_surface",
+    "subject_ref",
+    "gate",
+    "mapped",
+    "governance",
+    "spec_hash"
+  ],
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/governance/gate_outcome_mapping.md",
+    "fixtures_root": "fixtures/contracts/v1/governance/gate_outcome_mapping/",
+    "validator": "tools/validators/governance/validate_gate_outcome_mapping.py",
+    "authority": "NONE"
+  }
+}

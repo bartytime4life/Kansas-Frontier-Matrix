@@ -1,0 +1,164 @@
+{
+  "receipt_id": "genrec-briefing-classification-release-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/classification-release.yml",
+    "contracts/common/classification_release.md",
+    "docs/intake/exploratory/briefing-classification-release-source-map.md",
+    "fixtures/contracts/v1/common/classification_release/README.md",
+    "fixtures/contracts/v1/common/classification_release/cases.json",
+    "schemas/contracts/v1/common/classification_release.schema.json",
+    "tests/cross_domain/test_classification_observation_boundary.py",
+    "tests/validators/test_validate_classification_release.py",
+    "tools/validators/validate_classification_release.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/classification-release.yml": "sha256:ac2be0ce2b1887e88f8902a50b313461ee56a753a3bca74720261daa15dfdd37",
+    "contracts/common/classification_release.md": "sha256:cd5addd6e2fb8d020eeb0179bc20ba50fa12f3da6065d1591d44e93b59af1fd7",
+    "docs/intake/exploratory/briefing-classification-release-source-map.md": "sha256:3b30a471147145e1b051bd3c7fb8e38560bd5fde0863f622ae237a8750dbc60a",
+    "fixtures/contracts/v1/common/classification_release/README.md": "sha256:1aaa3aea9856921c9a85b7f17825866dee1802e574b17d9c4bae62737c948d4f",
+    "fixtures/contracts/v1/common/classification_release/cases.json": "sha256:5d8e9510dd3b41f688545a8d25fc6e62d61d9a4b9b463b39e292873a7f58b9b9",
+    "schemas/contracts/v1/common/classification_release.schema.json": "sha256:343e458c3b49d7b3096897a918f4bcb8ffdd67b800a03eb94e789c0374cbfadd",
+    "tests/cross_domain/test_classification_observation_boundary.py": "sha256:4e4af35025506139110d02799990c8b1522165b9b2fb8396b1bc37202840ab04",
+    "tests/validators/test_validate_classification_release.py": "sha256:b1090be2dc576c537bd2e348ddbf34716035dce1fbdc80fb2962d318f9057da7",
+    "tools/validators/validate_classification_release.py": "sha256:27f2ab0c711ffa8da844f5a1857698738cb038eeb1d527dcc65d7b69a5355a39"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:2622b07a529f286fdf2efb52758b0a6a693f816f00863da07579f22a4ecd5865",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded-file search",
+      "GitHub connector repository inspection",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:68872f9226c4e4a288e888b51fb9d80c4a621a4d660ee36dd6fef7edb3c34c4e",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "KFM_Briefing_to_System_Integration_Architecture.docx",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#sections-14.1-14.5-25.5-26.1",
+      "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf#sections-9.3-12.2",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/1001a87233e0f23695b6b12e60c654f938e6ffb5",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1001a87233e0f23695b6b12e60c654f938e6ffb5/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1001a87233e0f23695b6b12e60c654f938e6ffb5/schemas/contracts/v1/domains/soil/domain_observation.schema.json"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/classification-release.yml": "PROPOSED",
+    "contracts/common/classification_release.md": "PROPOSED",
+    "docs/intake/exploratory/briefing-classification-release-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/common/classification_release/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/common/classification_release/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/common/classification_release.schema.json": "PROPOSED",
+    "tests/cross_domain/test_classification_observation_boundary.py": "CONFIRMED",
+    "tests/validators/test_validate_classification_release.py": "CONFIRMED",
+    "tools/validators/validate_classification_release.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite-14-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "classification-observation-boundary-4-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "fixture-polarity-4-pass-3-deny-1-error",
+      "outcome": "PASS",
+      "reason": "Four coherent positive states, three fail-closed semantic/authority negatives, and one intentional identity-corruption error replay exactly."
+    },
+    {
+      "gate": "classification-role-scale-time-lineage-and-authority-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "existing-soil-mesonet-style-observation-fixture",
+      "outcome": "PASS",
+      "reason": ""
+    },
+    {
+      "gate": "no-network-and-value-free-diagnostics",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation runs after this draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human semantic, governance, and release review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "briefing-conditions-framework",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#sections-14.1-14.5"
+    },
+    {
+      "id": "briefing-priority-backlog",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#section-26.1"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1001a87233e0f23695b6b12e60c654f938e6ffb5/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "current-soil-observation-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1001a87233e0f23695b6b12e60c654f938e6ffb5/schemas/contracts/v1/domains/soil/domain_observation.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T21:39:49Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Implements the ClassificationRelease half of the briefing conditions backlog as an inactive fixture-only shared profile. Current repository evidence already provides domain-owned observation profiles, including a closed soil/Mesonet-style station candidate, so the packet adds a cross-profile boundary test rather than a competing ObservationRecord. The packet creates no source activation, evidence, policy, review, promotion, release, deployment, publication, or public-use authority."
+}

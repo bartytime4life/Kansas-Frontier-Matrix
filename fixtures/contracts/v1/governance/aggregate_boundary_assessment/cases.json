@@ -1,0 +1,412 @@
+{
+  "profile": "kfm.governance.aggregate-boundary-assessment.fixture-cases.v1",
+  "base_candidate": {
+    "object_type": "AggregateBoundaryAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.governance.aggregate-boundary-assessment.fixture.v1",
+    "assessment_id": "kfm:aggregate-boundary:000000000000000000000000",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-465",
+    "observed_at": "2026-08-11T19:00:00Z",
+    "bounded_context_ref": "kfm://bounded-context/synthetic-observation",
+    "aggregate_family_ref": "kfm://object-family/synthetic-aggregate",
+    "semantic_contract_ref": "kfm://contract/synthetic-aggregate/v1",
+    "semantic_contract_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "bindings": {
+      "object_family_register": {
+        "state": "RESOLVED",
+        "ref": "kfm://register/object-family/v1",
+        "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+      },
+      "identity_kind_assessment": {
+        "state": "RESOLVED",
+        "ref": "kfm://assessment/object-identity/synthetic-aggregate",
+        "root_identity_kind": "ENTITY"
+      }
+    },
+    "declaration": {
+      "boundary_state": "DECLARED",
+      "aggregate_root_ref": "kfm://object-family/synthetic-aggregate",
+      "members": [
+        {
+          "member_ref": "kfm://object-family/synthetic-aggregate",
+          "role": "ROOT"
+        },
+        {
+          "member_ref": "kfm://object-family/synthetic-aggregate/entry",
+          "role": "ENTITY"
+        },
+        {
+          "member_ref": "kfm://object-family/synthetic-aggregate/window",
+          "role": "VALUE_OBJECT"
+        }
+      ],
+      "invariant_refs": [
+        "kfm://invariant/synthetic/boundary-closed",
+        "kfm://invariant/synthetic/root-enforces"
+      ],
+      "invariant_coverage": "COMPLETE_FOR_DECLARED_SCOPE",
+      "external_reference_policy": "ROOT_ONLY",
+      "reference_edges": [
+        {
+          "source_ref": "kfm://consumer/synthetic-map",
+          "target_member_ref": "kfm://object-family/synthetic-aggregate",
+          "scope": "EXTERNAL"
+        },
+        {
+          "source_ref": "kfm://object-family/synthetic-aggregate",
+          "target_member_ref": "kfm://object-family/synthetic-aggregate/entry",
+          "scope": "SINGLE_OPERATION_INTERNAL"
+        }
+      ],
+      "repository": {
+        "state": "DECLARED",
+        "repository_ref": "kfm://repository/synthetic-aggregate/v1",
+        "exposed_root_ref": "kfm://object-family/synthetic-aggregate",
+        "return_scope": "WHOLE_AGGREGATE_OR_PROXY",
+        "direct_internal_member_access": false
+      },
+      "factory": {
+        "state": "DECLARED",
+        "factory_ref": "kfm://factory/synthetic-aggregate/v1",
+        "creation_scope": "WHOLE_AGGREGATE",
+        "enforces_invariants": true
+      },
+      "consistency": {
+        "transaction_unit": "AGGREGATE",
+        "within_boundary": "SYNCHRONOUS",
+        "cross_boundary": "ASYNCHRONOUS_OR_EXPLICIT_PROCESS"
+      },
+      "external_evidence": {
+        "evidence_bundle_refs": [
+          "kfm://evidence-bundle/synthetic-a",
+          "kfm://evidence-bundle/synthetic-b"
+        ],
+        "relationship": "REFERENCE_ONLY",
+        "consistency_scope": "OUTSIDE_AGGREGATE",
+        "resolution_authority": false
+      },
+      "review_state": "COMPLETE_FOR_DECLARED_SCOPE",
+      "review_record_refs": [
+        "kfm://review/aggregate-boundary/design",
+        "kfm://review/aggregate-boundary/validation"
+      ],
+      "rationale_summary": "The synthetic root encloses member invariants while external consumers retain references to the root only."
+    },
+    "limitations": [
+      "DECLARATION_ONLY",
+      "NO_OBJECT_CREATION_OR_MUTATION",
+      "NO_PERSISTENCE_OR_TRANSACTION_EXECUTION",
+      "NO_REFERENCE_OR_EVIDENCE_RESOLUTION",
+      "NO_SCHEMA_REGISTER_POLICY_OR_REVIEW_AUTHORITY",
+      "NO_PROMOTION_RELEASE_DEPLOYMENT_OR_PUBLICATION_AUTHORITY"
+    ],
+    "authority_claims": {
+      "object_creation_authority": false,
+      "object_mutation_authority": false,
+      "persistence_authority": false,
+      "transaction_authority": false,
+      "reference_resolution_authority": false,
+      "evidence_authority": false,
+      "schema_authority": false,
+      "register_write_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "deployment_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "pass_declared_repository_and_factory",
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_repository_and_factory_not_required",
+      "patch": {
+        "declaration": {
+          "repository": {
+            "state": "NOT_REQUIRED",
+            "repository_ref": null,
+            "exposed_root_ref": null,
+            "return_scope": null,
+            "direct_internal_member_access": false
+          },
+          "factory": {
+            "state": "NOT_REQUIRED",
+            "factory_ref": null,
+            "creation_scope": null,
+            "enforces_invariants": false
+          }
+        }
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "abstain_boundary_unresolved",
+      "patch": {"declaration": {"boundary_state": "UNRESOLVED"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["AGGREGATE_BOUNDARY_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_register_unresolved",
+      "patch": {
+        "bindings": {
+          "object_family_register": {"state": "UNRESOLVED", "ref": null, "digest": null}
+        }
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["OBJECT_FAMILY_BINDING_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_not_registered",
+      "patch": {
+        "bindings": {
+          "object_family_register": {"state": "NOT_REGISTERED", "ref": null, "digest": null}
+        }
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["OBJECT_FAMILY_NOT_REGISTERED"]}
+    },
+    {
+      "name": "abstain_identity_assessment_unresolved",
+      "patch": {
+        "bindings": {
+          "identity_kind_assessment": {"state": "UNRESOLVED", "ref": null, "root_identity_kind": "UNRESOLVED"}
+        }
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["IDENTITY_ASSESSMENT_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_invariant_coverage_incomplete",
+      "patch": {"declaration": {"invariant_coverage": "INCOMPLETE"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["INVARIANT_COVERAGE_INCOMPLETE"]}
+    },
+    {
+      "name": "abstain_repository_unresolved",
+      "patch": {
+        "declaration": {
+          "repository": {
+            "state": "UNRESOLVED",
+            "repository_ref": null,
+            "exposed_root_ref": null,
+            "return_scope": null,
+            "direct_internal_member_access": false
+          }
+        }
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["REPOSITORY_PROFILE_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_factory_unresolved",
+      "patch": {
+        "declaration": {
+          "factory": {
+            "state": "UNRESOLVED",
+            "factory_ref": null,
+            "creation_scope": null,
+            "enforces_invariants": false
+          }
+        }
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["FACTORY_PROFILE_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_review_pending",
+      "patch": {"declaration": {"review_state": "PENDING"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["REVIEW_PENDING"]}
+    },
+    {
+      "name": "deny_multiple_roots",
+      "patch": {"declaration": {"members": {"1": {"role": "ROOT"}}}},
+      "expected": {"outcome": "DENY", "codes": ["AGGREGATE_ROOT_CARDINALITY"]}
+    },
+    {
+      "name": "deny_root_declaration_mismatch",
+      "patch": {
+        "declaration": {
+          "members": {"0": {"role": "ENTITY"}, "1": {"role": "ROOT"}}
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["AGGREGATE_ROOT_DECLARATION_MISMATCH"]}
+    },
+    {
+      "name": "deny_aggregate_family_root_mismatch",
+      "patch": {"aggregate_family_ref": "kfm://object-family/other-aggregate"},
+      "expected": {"outcome": "DENY", "codes": ["AGGREGATE_FAMILY_ROOT_MISMATCH"]}
+    },
+    {
+      "name": "deny_root_identity_value_object",
+      "patch": {"bindings": {"identity_kind_assessment": {"root_identity_kind": "VALUE_OBJECT"}}},
+      "expected": {"outcome": "DENY", "codes": ["AGGREGATE_ROOT_IDENTITY_INCOHERENT"]}
+    },
+    {
+      "name": "deny_external_reference_to_internal_member",
+      "patch": {
+        "declaration": {
+          "reference_edges": {"0": {"target_member_ref": "kfm://object-family/synthetic-aggregate/entry"}}
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["EXTERNAL_REFERENCE_BOUNDARY_VIOLATION"]}
+    },
+    {
+      "name": "deny_external_reference_from_member",
+      "patch": {
+        "declaration": {
+          "reference_edges": {"0": {"source_ref": "kfm://object-family/synthetic-aggregate"}}
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["EXTERNAL_REFERENCE_BOUNDARY_VIOLATION"]}
+    },
+    {
+      "name": "deny_external_reference_policy",
+      "patch": {"declaration": {"external_reference_policy": "INTERNAL_MEMBERS_ALLOWED"}},
+      "expected": {"outcome": "DENY", "codes": ["EXTERNAL_REFERENCE_POLICY_INCOHERENT"]}
+    },
+    {
+      "name": "deny_internal_reference_outside_boundary",
+      "patch": {
+        "declaration": {
+          "reference_edges": {"1": {"target_member_ref": "kfm://object-family/outside-member"}}
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["INTERNAL_REFERENCE_SCOPE_INCOHERENT"]}
+    },
+    {
+      "name": "deny_repository_internal_fragment",
+      "patch": {"declaration": {"repository": {"return_scope": "INTERNAL_FRAGMENT"}}},
+      "expected": {"outcome": "DENY", "codes": ["REPOSITORY_AGGREGATE_SCOPE_INCOHERENT"]}
+    },
+    {
+      "name": "deny_repository_exposes_internal_member",
+      "patch": {
+        "declaration": {
+          "repository": {"exposed_root_ref": "kfm://object-family/synthetic-aggregate/entry"}
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["REPOSITORY_AGGREGATE_SCOPE_INCOHERENT"]}
+    },
+    {
+      "name": "deny_factory_internal_fragment",
+      "patch": {"declaration": {"factory": {"creation_scope": "INTERNAL_FRAGMENT"}}},
+      "expected": {"outcome": "DENY", "codes": ["FACTORY_AGGREGATE_SCOPE_INCOHERENT"]}
+    },
+    {
+      "name": "deny_factory_without_invariant_enforcement",
+      "patch": {"declaration": {"factory": {"enforces_invariants": false}}},
+      "expected": {"outcome": "DENY", "codes": ["FACTORY_AGGREGATE_SCOPE_INCOHERENT"]}
+    },
+    {
+      "name": "deny_eventual_internal_consistency",
+      "patch": {"declaration": {"consistency": {"within_boundary": "EVENTUAL"}}},
+      "expected": {"outcome": "DENY", "codes": ["CONSISTENCY_BOUNDARY_INCOHERENT"]}
+    },
+    {
+      "name": "deny_evidence_bundle_owned_member",
+      "patch": {"declaration": {"external_evidence": {"relationship": "OWNED_MEMBER"}}},
+      "expected": {"outcome": "DENY", "codes": ["EVIDENCE_REFERENCE_BOUNDARY_INCOHERENT"]}
+    },
+    {
+      "name": "deny_noncanonical_invariant_refs",
+      "patch": {
+        "declaration": {
+          "invariant_refs": [
+            "kfm://invariant/synthetic/root-enforces",
+            "kfm://invariant/synthetic/boundary-closed"
+          ]
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["ARRAY_NOT_CANONICAL"]}
+    },
+    {
+      "name": "deny_noncanonical_members",
+      "patch": {
+        "declaration": {
+          "members": [
+            {"member_ref": "kfm://object-family/synthetic-aggregate/entry", "role": "ENTITY"},
+            {"member_ref": "kfm://object-family/synthetic-aggregate", "role": "ROOT"},
+            {"member_ref": "kfm://object-family/synthetic-aggregate/window", "role": "VALUE_OBJECT"}
+          ]
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["MEMBERS_NOT_CANONICAL"]}
+    },
+    {
+      "name": "deny_noncanonical_reference_edges",
+      "patch": {
+        "declaration": {
+          "reference_edges": [
+            {
+              "source_ref": "kfm://object-family/synthetic-aggregate",
+              "target_member_ref": "kfm://object-family/synthetic-aggregate/entry",
+              "scope": "SINGLE_OPERATION_INTERNAL"
+            },
+            {
+              "source_ref": "kfm://consumer/synthetic-map",
+              "target_member_ref": "kfm://object-family/synthetic-aggregate",
+              "scope": "EXTERNAL"
+            }
+          ]
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["REFERENCE_EDGES_NOT_CANONICAL"]}
+    },
+    {
+      "name": "deny_resolved_register_binding_missing_digest",
+      "patch": {"bindings": {"object_family_register": {"digest": null}}},
+      "expected": {"outcome": "DENY", "codes": ["OBJECT_FAMILY_BINDING_REQUIRED"]}
+    },
+    {
+      "name": "deny_complete_review_without_record",
+      "patch": {"declaration": {"review_record_refs": []}},
+      "expected": {"outcome": "DENY", "codes": ["REVIEW_RECORD_REQUIRED"]}
+    },
+    {
+      "name": "deny_complete_review_without_rationale",
+      "patch": {"declaration": {"rationale_summary": null}},
+      "expected": {"outcome": "DENY", "codes": ["RATIONALE_SUMMARY_REQUIRED"]}
+    },
+    {
+      "name": "deny_direct_store_reference",
+      "patch": {"semantic_contract_ref": "kfm://contract/data/raw/synthetic-aggregate"},
+      "expected": {"outcome": "DENY", "codes": ["DIRECT_STORE_REFERENCE_DENIED"]}
+    },
+    {
+      "name": "deny_embedded_query_marker",
+      "patch": {"declaration": {"invariant_refs": ["kfm://invariant/graph_query/synthetic"]}},
+      "expected": {"outcome": "DENY", "codes": ["EMBEDDED_QUERY_DENIED"]}
+    },
+    {
+      "name": "deny_non_utc_observed_at",
+      "patch": {"observed_at": "2026-08-11T14:00:00-05:00"},
+      "expected": {"outcome": "DENY", "codes": ["OBSERVED_AT_NOT_UTC"]}
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "tamper": "profile_hash",
+      "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}
+    },
+    {
+      "name": "deny_assessment_id_tamper",
+      "tamper": "assessment_id",
+      "expected": {"outcome": "DENY", "codes": ["ASSESSMENT_ID_MISMATCH"]}
+    },
+    {
+      "name": "error_duplicate_member",
+      "patch": {
+        "declaration": {
+          "members": [
+            {"member_ref": "kfm://object-family/synthetic-aggregate", "role": "ROOT"},
+            {"member_ref": "kfm://object-family/synthetic-aggregate", "role": "ROOT"}
+          ]
+        }
+      },
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "name": "error_unknown_field",
+      "patch": {"unexpected": true},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    }
+  ]
+}

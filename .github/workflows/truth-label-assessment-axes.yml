@@ -1,0 +1,85 @@
+# Focused opt-in KFM assessment-axis documentation validator.
+#
+# Responsibility:
+#   Exercise the deterministic structural rule that an explicitly opted-in
+#   Markdown assessment records authority/epistemic posture separately from
+#   capability maturity.
+#
+# Trust boundary:
+#   Pull-request content is untrusted. The workflow uses a GitHub-hosted runner,
+#   a read-only repository token, immutable first-party action pins, no project
+#   dependency install, no secret, no OIDC, and no write, artifact, release,
+#   deployment, promotion, publication, or repository-settings authority.
+#
+# Output boundary:
+#   Job logs and conclusion only. A pass is documentation-structure QA, not
+#   truth, evidence, policy, review, release, or publication approval.
+
+name: truth-label-assessment-axes
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/truth-label-assessment-axes.yml"
+      - "tools/validators/docs/truth-label-lint/**"
+      - "tests/validators/docs/truth-label-lint/**"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/truth-label-assessment-axes.yml"
+      - "tools/validators/docs/truth-label-lint/**"
+      - "tests/validators/docs/truth-label-lint/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: truth-label-assessment-axes-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  assessment-axes:
+    name: assessment-axes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Run focused no-network tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators/docs/truth-label-lint \
+            --pattern 'test_*.py' \
+            --verbose
+
+      - name: Record authority boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Truth-label assessment axes"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: opted-in Markdown structure only."
+            echo "- A pass does not decide truth, evidence sufficiency, source admission, policy, review, implementation acceptance, release, deployment, promotion, publication, or public use."
+            echo "- No repository or external state was mutated by this job."
+          } >> "$GITHUB_STEP_SUMMARY"

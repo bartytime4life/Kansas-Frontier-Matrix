@@ -1,0 +1,4 @@
+# pipeline_specs :: settlements-infrastructure :: ingest
+name: settlements-infrastructure-ingest
+version: 1
+stages: []

@@ -1,0 +1,56 @@
+# Security-review placeholder for governed-api.
+# This image intentionally contains no application payload, secrets, lifecycle data,
+# receipts, proofs, release material, or published artifacts.
+FROM python:3.11.15-slim-trixie@sha256:90744cff8f32887f075c47d747a173ff333e9e98801667af93c357fa9f5e28ff
+
+# The pinned Debian base carries fixed CVEs in the util-linux and OpenSSL package families.
+# Upgrade only those families and fail closed if either remains below Debian's fix.
+RUN set -eux; \
+    apt-get update; \
+    apt-get install --yes --no-install-recommends --only-upgrade \
+        bsdutils \
+        libblkid1 \
+        liblastlog2-2 \
+        libmount1 \
+        libsmartcols1 \
+        libssl3t64 \
+        libuuid1 \
+        login \
+        mount \
+        openssl \
+        openssl-provider-legacy \
+        util-linux; \
+    dpkg --compare-versions \
+        "$(dpkg-query --show --showformat='${Version}' libblkid1)" \
+        ge \
+        "2.41.5-0+deb13u1"; \
+    dpkg --compare-versions \
+        "$(dpkg-query --show --showformat='${Version}' libssl3t64)" \
+        ge \
+        "3.5.7-1~deb13u2"; \
+    rm -rf /var/lib/apt/lists/*
+
+COPY governed-api-requirements.lock /tmp/governed-api-requirements.lock
+
+RUN set -eux; \
+    python -m pip install \
+        --disable-pip-version-check \
+        --no-cache-dir \
+        --no-compile \
+        --upgrade \
+        --require-hashes \
+        --requirement /tmp/governed-api-requirements.lock; \
+    rm /tmp/governed-api-requirements.lock; \
+    groupadd --gid 10001 kfm; \
+    useradd \
+        --uid 10001 \
+        --gid 10001 \
+        --create-home \
+        --home-dir /home/kfm \
+        --shell /usr/sbin/nologin \
+        kfm; \
+    mkdir -p /app; \
+    chown 10001:10001 /app
+
+WORKDIR /app
+USER 10001:10001

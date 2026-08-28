@@ -1,0 +1,128 @@
+{
+  "receipt_id": "genrec-topology-readme-materialization-85ac8b53",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/validators/directory_governance/test_validate_repository_topology.py",
+    "tools/validators/directory_governance/repository_topology_baseline.json",
+    "tools/validators/directory_governance/validate_repository_topology.py"
+  ],
+  "artifact_hashes": {
+    "tests/validators/directory_governance/test_validate_repository_topology.py": "sha256:5953f6a87f30fecda15d7bbdfedadb0a0ff49bd42e2112a3d3886cb9b22f2ba7",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "sha256:fef5654191c43a96d47c483cfbe2c4b6ba8387b8051dc8efe567f796a8dd4d43",
+    "tools/validators/directory_governance/validate_repository_topology.py": "sha256:85ac8b53e50bcce4151f23c7a69f9068ed717b96650d4f45bf7ad442958dc998"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:72c508d8f9417218b804a733a8857b959eea379ac958b4761f1b8385ccea94f4",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "GitHub Actions log inspection",
+      "deterministic local Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:bd57a57c9c168b51678cf863cd92ef92fb79689357a845dce17d97218acdbd09"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31734231001",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31733392020",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31733391973",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/43ca3e4751d91e205ceba18b844db7ff6705cc0f/tools/validators/directory_governance/validate_repository_topology.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/43ca3e4751d91e205ceba18b844db7ff6705cc0f/tools/validators/directory_governance/repository_topology_baseline.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/43ca3e4751d91e205ceba18b844db7ff6705cc0f/tests/validators/directory_governance/test_validate_repository_topology.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/43ca3e4751d91e205ceba18b844db7ff6705cc0f/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "tests/validators/directory_governance/test_validate_repository_topology.py": "PROPOSED",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "PROPOSED",
+    "tools/validators/directory_governance/validate_repository_topology.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "failure-attribution",
+      "outcome": "PASS",
+      "reason": "Current main and the merged pull request both failed only because repository-topology rejected three README-driven aggregate fingerprints and one resolved baseline entry; schema inventory and nine other aggregate validators passed."
+    },
+    {
+      "gate": "source-and-test-syntax",
+      "outcome": "PASS",
+      "reason": "The exact proposed validator and test module compile under Python without network access."
+    },
+    {
+      "gate": "affected-finding-replay",
+      "outcome": "PASS",
+      "reason": "Replayed all 13,380 tracked blobs from the untruncated main tree; affected uppercase and alias groups exactly match the proposed baseline."
+    },
+    {
+      "gate": "trusted-baseline-transition",
+      "outcome": "PASS",
+      "reason": "The repository transition validator accepted all six group replacements as strict evidence shrinkage and the resolved policy/rego waiver as removal-only."
+    },
+    {
+      "gate": "regression-coverage",
+      "outcome": "PASS",
+      "reason": "Added focused cases for conventional README materialization, a README-only alias directory without a placeholder, and a nonconventional uppercase filename."
+    },
+    {
+      "gate": "full-repository-checkout",
+      "outcome": "SKIPPED",
+      "reason": "No local Git checkout or gh CLI is available; exact-head hosted CI after draft pull-request creation is the authoritative full-suite evidence."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks begin only after the immutable draft branch is published."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt is provenance, not approval."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/doctrine/directory-rules.md"
+  ],
+  "citations": [
+    {
+      "id": "adopted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/43ca3e4751d91e205ceba18b844db7ff6705cc0f/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "current-main-failure",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31734231001"
+    },
+    {
+      "id": "topology-validator-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/43ca3e4751d91e205ceba18b844db7ff6705cc0f/tools/validators/directory_governance/validate_repository_topology.py"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T19:25:00Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "This receipt records a proposed CI repair. It does not amend Directory Rules, approve merge, or grant release, deployment, promotion, or publication authority."
+}

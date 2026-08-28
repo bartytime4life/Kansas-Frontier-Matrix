@@ -1,0 +1,340 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schemas/contracts/v1/map/pmtiles_delta_manifest.schema.json",
+  "title": "PMTiles Delta Manifest",
+  "description": "Closed, fixture-first profile binding a PMTiles delta archive to a base archive, per-tile digest lineage, bounded QC, receipts, and an attestation reference. Validation has no release or publication effect.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "object_type",
+    "delta_id",
+    "layer_id",
+    "valid_from",
+    "valid_to",
+    "base_archive",
+    "delta_archive",
+    "expected_tile_count",
+    "produced_tile_count",
+    "tiles",
+    "qc",
+    "source_manifest_refs",
+    "attestation_ref",
+    "spec_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "kfm.pmtiles.delta-manifest.v1"
+    },
+    "object_type": {
+      "const": "PMTilesDeltaManifest"
+    },
+    "delta_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^kfm://manifest/map/pmtiles-delta/[a-z0-9][a-z0-9._-]{0,127}/[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "layer_id": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 132,
+      "pattern": "^kfm:[a-z0-9][a-z0-9._-]{0,127}$"
+    },
+    "valid_from": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "valid_to": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "base_archive": {
+      "$ref": "#/$defs/baseArchive"
+    },
+    "delta_archive": {
+      "$ref": "#/$defs/deltaArchive"
+    },
+    "expected_tile_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10000000000
+    },
+    "produced_tile_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10000000000
+    },
+    "tiles": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2048,
+      "items": {
+        "$ref": "#/$defs/tileChange"
+      }
+    },
+    "qc": {
+      "$ref": "#/$defs/qc"
+    },
+    "source_manifest_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/versionBoundRef"
+      }
+    },
+    "attestation_ref": {
+      "$ref": "#/$defs/digestBoundRef"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "digestBoundRef": {
+      "type": "string",
+      "minLength": 80,
+      "maxLength": 1024,
+      "pattern": "^(?:kfm://|urn:)[^\\s@]+@sha256:[a-f0-9]{64}$"
+    },
+    "versionBoundRef": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 1024,
+      "pattern": "^(?:kfm://|urn:)[^\\s@]+@(?:sha256:[a-f0-9]{64}|[A-Za-z0-9][A-Za-z0-9._:-]{0,127})$"
+    },
+    "utcTimestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$"
+    },
+    "baseArchive": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_ref",
+        "archive_digest",
+        "index_digest",
+        "spec_hash",
+        "tile_count"
+      ],
+      "properties": {
+        "artifact_ref": {
+          "$ref": "#/$defs/digestBoundRef"
+        },
+        "archive_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "index_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "spec_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "tile_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000000
+        }
+      }
+    },
+    "deltaArchive": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_ref",
+        "archive_digest",
+        "index_digest",
+        "byte_size"
+      ],
+      "properties": {
+        "artifact_ref": {
+          "$ref": "#/$defs/digestBoundRef"
+        },
+        "archive_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "index_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "byte_size": {
+          "type": "integer",
+          "minimum": 127,
+          "maximum": 1099511627776
+        }
+      }
+    },
+    "tileChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tile_id",
+        "z",
+        "x",
+        "y",
+        "quadkey",
+        "change_type",
+        "digest",
+        "prior_digest",
+        "bytes",
+        "masked_pct",
+        "coverage_pct",
+        "run_receipt_ref"
+      ],
+      "properties": {
+        "tile_id": {
+          "type": "string",
+          "pattern": "^[0-9]{1,2}/[0-9]+/[0-9]+$"
+        },
+        "z": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 24
+        },
+        "x": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16777215
+        },
+        "y": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16777215
+        },
+        "quadkey": {
+          "type": "string",
+          "pattern": "^[0-3]{0,24}$"
+        },
+        "change_type": {
+          "enum": [
+            "added",
+            "modified",
+            "removed"
+          ]
+        },
+        "digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "prior_digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1073741824
+        },
+        "masked_pct": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "coverage_pct": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "run_receipt_ref": {
+          "$ref": "#/$defs/digestBoundRef"
+        }
+      }
+    },
+    "qc": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "thresholds",
+        "observed",
+        "decision"
+      ],
+      "properties": {
+        "thresholds": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "review_masked_pct",
+            "reject_masked_pct",
+            "max_average_tile_bytes",
+            "max_tile_count_deviation_pct"
+          ],
+          "properties": {
+            "review_masked_pct": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "reject_masked_pct": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "max_average_tile_bytes": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1073741824
+            },
+            "max_tile_count_deviation_pct": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            }
+          }
+        },
+        "observed": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "max_masked_pct",
+            "average_tile_bytes",
+            "tile_count_deviation_pct"
+          ],
+          "properties": {
+            "max_masked_pct": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "average_tile_bytes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1073741824
+            },
+            "tile_count_deviation_pct": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            }
+          }
+        },
+        "decision": {
+          "enum": [
+            "PASS",
+            "REVIEW",
+            "REJECT"
+          ]
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "authority_boundary": "Fixture-only shape and semantic validation. Cryptographic verification, policy evaluation, release approval, deployment, and publication remain outside this profile.",
+    "contract_doc": "contracts/release/pmtiles_delta_manifest.md"
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "receipt_id": "genrec-tools-validators-archaeology-readme-3c569d58",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/archaeology/README.md"
+  ],
+  "artifact_hashes": {
+    "tools/validators/archaeology/README.md": "sha256:3c569d583fa2288ba8a5a80604aa9e973c48b67decb1de13c474064f3bb8b413"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-16-session"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3.1",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/04e9cbac69305a5d708509ceef62c6f43ca1f41c",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/tools/validators/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/tools/validators/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/tools/validators/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/docs/domains/archaeology/VALIDATORS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/docs/domains/archaeology/SENSITIVITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/schemas/contracts/v1/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/schemas/contracts/v1/domains/archaeology/site.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/schemas/contracts/v1/domains/archaeology/evidence_bundle.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/policy/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/policy/domains/archaeology/candidate_not_site.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/policy/domains/archaeology/site.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/tests/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/tests/domains/archaeology/test_evidence_bundle_required.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/tests/domains/archaeology/test_public_no_leak.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/tools/validate_all.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/.github/workflows/domain-archaeology.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "attached://Pasted text(37).txt"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/archaeology/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, permissions, current main, target blob, Directory Rules, ADRs, validator topology, domain doctrine, contracts, schemas, policy, tests, fixtures, workflow, CODEOWNERS, PR template, and generated-receipt requirements were inspected."
+    },
+    {
+      "gate": "base-and-target-concurrency",
+      "outcome": "PASS",
+      "reason": "Authoring base is 04e9cbac69305a5d708509ceef62c6f43ca1f41c; the target blob remained ce0a80baa25538566fac39864c8f836505ce9aab immediately before mutation."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The existing README remains under tools/validators; no new schema, contract, policy, registry, lifecycle, release, public, or parallel authority home is created."
+    },
+    {
+      "gate": "validator-topology",
+      "outcome": "PASS",
+      "reason": "The revision preserves tools/validators/archaeology as the broad boundary and tools/validators/domains/archaeology as the child index, with no duplicate executable implementation."
+    },
+    {
+      "gate": "maturity-classification",
+      "outcome": "PASS",
+      "reason": "File presence is separated from enforcement maturity; sampled schemas, policy files, tests, orchestrator, and workflow are explicitly classified as scaffolds or placeholders."
+    },
+    {
+      "gate": "sensitive-domain-boundary",
+      "outcome": "PASS",
+      "reason": "The README denies exact protected location and cultural-information exposure, treats candidate output as non-site evidence, requires review and transform receipts, and introduces no sensitive payload."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "The inspected domain workflow triggers on PR/push, declares no secret, write, environment, release, or deployment step, and runs TODO-only echo commands; it has negligible validation value but no visible privileged publication path."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, balanced fenced blocks, internal anchors, tables, finite outcomes, maturity model, open verification register, evidence ledger, migration, correction, and rollback sections were checked."
+    },
+    {
+      "gate": "internal-link-resolution",
+      "outcome": "PASS",
+      "reason": "All 44 internal fragment links resolved in local validation."
+    },
+    {
+      "gate": "secret-pattern-review",
+      "outcome": "PASS",
+      "reason": "No common private-key, GitHub token, AWS credential, or OpenAI key pattern was found."
+    },
+    {
+      "gate": "artifact-integrity",
+      "outcome": "PASS",
+      "reason": "README SHA-256 is 3c569d583fa2288ba8a5a80604aa9e973c48b67decb1de13c474064f3bb8b413; remote Git blob is bae2eabb5d29bf7099ed74a66a17c0071ae98557."
+    },
+    {
+      "gate": "executable-tests",
+      "outcome": "SKIPPED",
+      "reason": "No executable validator, schema, policy, fixture, test, workflow, runtime, source, or release implementation changed; sampled existing tests are placeholders and the domain workflow is TODO-only."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "target-readme",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/tools/validators/archaeology/README.md"
+    },
+    {
+      "id": "child-validator-index",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/tools/validators/domains/archaeology/README.md"
+    },
+    {
+      "id": "validator-doctrine",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/docs/domains/archaeology/VALIDATORS.md"
+    },
+    {
+      "id": "sensitivity-doctrine",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/docs/domains/archaeology/SENSITIVITY.md"
+    },
+    {
+      "id": "sample-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/schemas/contracts/v1/domains/archaeology/site.schema.json"
+    },
+    {
+      "id": "sample-policy",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/policy/domains/archaeology/candidate_not_site.rego"
+    },
+    {
+      "id": "sample-test",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/tests/domains/archaeology/test_evidence_bundle_required.py"
+    },
+    {
+      "id": "domain-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/.github/workflows/domain-archaeology.yml"
+    },
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/04e9cbac69305a5d708509ceef62c6f43ca1f41c/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-16T19:47:24Z",
+  "emitter": "openai:gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only update. No executable validator, policy decision, source admission, protected payload, evidence bundle, lifecycle transition, release record, public output, map layer, or AI answer was created or modified. Human review remains pending."
+}

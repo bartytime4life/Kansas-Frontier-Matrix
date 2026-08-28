@@ -1,0 +1,22 @@
+{
+  "request": {
+    "profile": "kfm/evidence-ref-bundle-candidate/v1alpha1",
+    "evidence_ref": {"ref": "kfm://synthetic/evidence/item-001", "kind": "measurement", "bundle_ref": "bundle:synthetic:closure-001"},
+    "bundle_candidate": {"bundle_id": "bundle:synthetic:closure-001", "claim_scope": "Synthetic candidate-closure fixture only", "evidence_refs": [{"ref": "kfm://synthetic/evidence/item-001", "kind": "measurement"}], "source_records": ["source:synthetic:record-001"], "citations": ["Synthetic fixture citation; not a real source"], "rights": {"license": "CC0-1.0"}, "sensitivity": {"level": "public", "reason": "Synthetic fixture", "applied_at": "2026-08-02T00:00:00Z"}, "transforms": [], "checksums": {"bundle": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}, "spec_hash": {"value": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}},
+    "lookup_context": {"bundle_id": "bundle:synthetic:closure-001", "current_head": true, "policy_outcome": "ANSWER", "policy_decision_ref": "policy:synthetic:answer-001", "correction_state": "ACTIVE", "correction_ref": null},
+    "verification_history": {
+      "schema_version": "1.0.0",
+      "history_id": "kfm:verification-history:synthetic:resolver-001",
+      "subject_ref": "kfm://synthetic/evidence/item-001",
+      "profile_id": "kfm://profile/verification-state-replay/v1",
+      "spec_hash": "sha256:fa5149213fea798046eccd1fa1316400345521853b68712e19f5a9ac013b3599",
+      "events": [
+        {"event_id": "evt:001", "event_type": "VERIFIED", "state": "ACTIVE", "effective_at": "2026-01-01T00:00:00Z", "recorded_at": "2026-01-01T00:00:00Z", "reason_code": "INITIAL_VERIFICATION", "basis_refs": ["kfm://synthetic/receipt/verify-001"]},
+        {"event_id": "evt:002", "event_type": "REVOKED", "state": "REVOKED", "effective_at": "2026-01-20T00:00:00Z", "recorded_at": "2026-01-20T00:00:00Z", "reason_code": "VERIFICATION_REVOKED", "basis_refs": ["kfm://synthetic/evidence/revocation-basis-001"], "relates_to_event_id": "evt:001", "revocation_ref": "kfm://synthetic/correction/revocation-001"},
+        {"event_id": "evt:003", "event_type": "REVERIFIED", "state": "ACTIVE", "effective_at": "2026-01-10T00:00:00Z", "recorded_at": "2026-01-25T00:00:00Z", "reason_code": "INVALID_EARLY_REVERIFICATION", "basis_refs": ["kfm://synthetic/receipt/verify-002"], "relates_to_event_id": "evt:002"}
+      ]
+    },
+    "verification_as_of": {"effective_as_of": "2026-01-15T00:00:00Z", "recorded_as_of": "2026-01-30T00:00:00Z"}
+  },
+  "expected": {"status": "ERROR", "issue_codes": ["verification/history-invalid"]}
+}

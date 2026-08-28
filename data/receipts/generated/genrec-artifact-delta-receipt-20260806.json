@@ -1,0 +1,142 @@
+{
+  "receipt_id": "genrec-artifact-delta-receipt-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/artifact-delta-receipt.yml",
+    "contracts/receipts/README.md",
+    "contracts/receipts/artifact_delta_receipt.md",
+    "docs/intake/exploratory/new-ideas-3-11-26-artifact-delta-receipt-source-map.md",
+    "fixtures/contracts/v1/receipts/artifact_delta_receipt/README.md",
+    "fixtures/contracts/v1/receipts/artifact_delta_receipt/invalid/expected_findings_manifest.json",
+    "fixtures/contracts/v1/receipts/artifact_delta_receipt/invalid/invalid_approval_unverified_attestation.json",
+    "fixtures/contracts/v1/receipts/artifact_delta_receipt/invalid/invalid_digest_mismatch.json",
+    "fixtures/contracts/v1/receipts/artifact_delta_receipt/invalid/invalid_no_effect.json",
+    "fixtures/contracts/v1/receipts/artifact_delta_receipt/invalid/invalid_rollback_missing_target.json",
+    "fixtures/contracts/v1/receipts/artifact_delta_receipt/valid/valid_approved.json",
+    "fixtures/contracts/v1/receipts/artifact_delta_receipt/valid/valid_rollback.json",
+    "schemas/contracts/v1/receipts/artifact_delta_receipt.schema.json",
+    "tests/validators/test_validate_artifact_delta_receipt.py",
+    "tools/validators/validate_artifact_delta_receipt.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/artifact-delta-receipt.yml": "sha256:a653d39f6d99b17f4d002e290712dae5928854ae52b88653581dfc27446c1bfa",
+    "contracts/receipts/README.md": "sha256:7fa681c90a90fc0364059620c7c36aaa760578a648a7cbae2ff86d47e6e2353c",
+    "contracts/receipts/artifact_delta_receipt.md": "sha256:47198373fbcee887438050e80cd660ce2b7a8250a035fd20baa172975e92e095",
+    "docs/intake/exploratory/new-ideas-3-11-26-artifact-delta-receipt-source-map.md": "sha256:15ef2527431b86f605887ddea48b1a7b5cb431a035c298053ba73456d9688593",
+    "fixtures/contracts/v1/receipts/artifact_delta_receipt/README.md": "sha256:334a82675fb2091bc35ebd8fe4ebc48468eff94d782d30059176c2d844e5f558",
+    "fixtures/contracts/v1/receipts/artifact_delta_receipt/invalid/expected_findings_manifest.json": "sha256:5cadc65a8cbade51517387a00e346a339fe0baae8da418fd9cbe26b65a5651d2",
+    "fixtures/contracts/v1/receipts/artifact_delta_receipt/invalid/invalid_approval_unverified_attestation.json": "sha256:15537df8d7283a9135c9951b3ea13a9c29fc854ffeac63b76b152310397a65cf",
+    "fixtures/contracts/v1/receipts/artifact_delta_receipt/invalid/invalid_digest_mismatch.json": "sha256:5ed63abcdb0f644ca56c48891347d04bb7d702f0f4e73366b4fd15c99032ab1e",
+    "fixtures/contracts/v1/receipts/artifact_delta_receipt/invalid/invalid_no_effect.json": "sha256:c3992de41d0a1fb23dfdcce4eeb01e1cee729c70327d90d9ae948843dba0a9ac",
+    "fixtures/contracts/v1/receipts/artifact_delta_receipt/invalid/invalid_rollback_missing_target.json": "sha256:8dad4abd11891904a4047331d90a51fe343a3640ba0b8fc3c5b8ff8f8b20b26b",
+    "fixtures/contracts/v1/receipts/artifact_delta_receipt/valid/valid_approved.json": "sha256:54dcc1433209a1f807822a1d739cc3f23e20483ac06c57c9dc42cbffaeee5813",
+    "fixtures/contracts/v1/receipts/artifact_delta_receipt/valid/valid_rollback.json": "sha256:98841579c6b8c2f8fd7bc007e2672b36ee803fa90e60b04d6cf55ab2cd3e9040",
+    "schemas/contracts/v1/receipts/artifact_delta_receipt.schema.json": "sha256:2483b2d87cd22e1b81334422af48be20016632437982aecfbf631f3a4769885c",
+    "tests/validators/test_validate_artifact_delta_receipt.py": "sha256:9f4e30063aac77abf128aed30cd74087b54a9a48ec64362d01a1423ea339a37c",
+    "tools/validators/validate_artifact_delta_receipt.py": "sha256:246549aec62b543d57cd24bbc87506a03bc37fa05271659e82306b18c859d6a1"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05"
+  },
+  "prompt_or_contract": "sha256:8ac60c3678ac36dfaf2ceb66afc52cab47e2e5cad9f5eadd0f67b1e007bccdc8",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded source inspection",
+      "GitHub connector repository inspection and mutation",
+      "deterministic local Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:ef632ec5d1bceec45a39bae8abd83b30d71f2abf0cf29aa77567733f336c688b"
+    ],
+    "attached_docs": [
+      "New Ideas 3-11-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://New-Ideas-3-11-26:sha256:ef632ec5d1bceec45a39bae8abd83b30d71f2abf0cf29aa77567733f336c688b#section=artifact-delta-receipts",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/9960a2e22fb78cd6d6cf9bedb2379c09c8d5239c",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9960a2e22fb78cd6d6cf9bedb2379c09c8d5239c/contracts/receipts/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9960a2e22fb78cd6d6cf9bedb2379c09c8d5239c/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/artifact-delta-receipt.yml": "CONFIRMED",
+    "contracts/receipts/README.md": "PROPOSED",
+    "contracts/receipts/artifact_delta_receipt.md": "PROPOSED",
+    "docs/intake/exploratory/new-ideas-3-11-26-artifact-delta-receipt-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/receipts/artifact_delta_receipt/README.md": "PROPOSED",
+    "fixtures/contracts/v1/receipts/artifact_delta_receipt/invalid/expected_findings_manifest.json": "CONFIRMED",
+    "fixtures/contracts/v1/receipts/artifact_delta_receipt/invalid/invalid_approval_unverified_attestation.json": "CONFIRMED",
+    "fixtures/contracts/v1/receipts/artifact_delta_receipt/invalid/invalid_digest_mismatch.json": "CONFIRMED",
+    "fixtures/contracts/v1/receipts/artifact_delta_receipt/invalid/invalid_no_effect.json": "CONFIRMED",
+    "fixtures/contracts/v1/receipts/artifact_delta_receipt/invalid/invalid_rollback_missing_target.json": "CONFIRMED",
+    "fixtures/contracts/v1/receipts/artifact_delta_receipt/valid/valid_approved.json": "CONFIRMED",
+    "fixtures/contracts/v1/receipts/artifact_delta_receipt/valid/valid_rollback.json": "CONFIRMED",
+    "schemas/contracts/v1/receipts/artifact_delta_receipt.schema.json": "CONFIRMED",
+    "tests/validators/test_validate_artifact_delta_receipt.py": "CONFIRMED",
+    "tools/validators/validate_artifact_delta_receipt.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "schema-json-and-draft-2020-12",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-pytest-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "fixture-polarity-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "pending until the draft pull request runs on GitHub"
+    }
+  ],
+  "policy_decisions": [
+    "fixture-policy://receipts/artifact-delta/candidate-only-no-network-no-release"
+  ],
+  "citations": [
+    {
+      "id": "New Ideas 3-11-26.pdf — artifact delta receipt section",
+      "validated": true,
+      "evidence_ref": "attachment://New-Ideas-3-11-26#section=artifact-delta-receipts"
+    },
+    {
+      "id": "ADR-0029@9960a2e22fb78cd6d6cf9bedb2379c09c8d5239c",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9960a2e22fb78cd6d6cf9bedb2379c09c8d5239c/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T03:34:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Provenance only. The slice is synthetic, fixture-only, no-network, and does not perform or claim cryptographic verification, OCI publication, promotion, release, rollback execution, or publication."
+}

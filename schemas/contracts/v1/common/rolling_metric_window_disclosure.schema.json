@@ -1,0 +1,257 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/rolling_metric_window_disclosure.schema.json",
+  "title": "RollingMetricWindowDisclosureCandidate",
+  "description": "Fixture-only partition, ordering, frame, time, missing-data, revision, parity, and public-label disclosure for a rolling metric without analytical or release authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_card",
+    "observed_at",
+    "metric_ref",
+    "metric_digest",
+    "claim_scope",
+    "metric_family",
+    "partition",
+    "ordering",
+    "frame",
+    "time_definition",
+    "missing_data",
+    "revision_behavior",
+    "engine_parity",
+    "disclosure",
+    "evidence_refs",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "RollingMetricWindowDisclosureCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.common.rolling-metric-window-disclosure.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-479"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "metric_ref": {"$ref": "#/$defs/ref"},
+    "metric_digest": {"$ref": "#/$defs/sha256"},
+    "claim_scope": {"$ref": "#/$defs/resolved_reference"},
+    "metric_family": {"enum": ["MOVING_AVERAGE", "ROLLING_RANK", "TREND_INDICATOR", "OTHER"]},
+    "partition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "keys"],
+      "properties": {
+        "mode": {"enum": ["GLOBAL", "KEYED"]},
+        "keys": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/ref"}
+        }
+      }
+    },
+    "ordering": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["keys", "unique_order_guaranteed"],
+      "properties": {
+        "keys": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/ordering_key"}
+        },
+        "unique_order_guaranteed": {"type": "boolean"}
+      }
+    },
+    "frame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unit", "start", "end", "offset_unit_ref", "bounds_inclusive", "exclusion"],
+      "properties": {
+        "unit": {"enum": ["ROWS", "RANGE", "GROUPS"]},
+        "start": {"$ref": "#/$defs/start_bound"},
+        "end": {"$ref": "#/$defs/end_bound"},
+        "offset_unit_ref": {"$ref": "#/$defs/nullable_ref"},
+        "bounds_inclusive": {"const": true},
+        "exclusion": {"enum": ["NO_OTHERS", "CURRENT_ROW", "GROUP", "TIES"]}
+      }
+    },
+    "time_definition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field_ref", "semantics", "timezone", "calendar", "resolution"],
+      "properties": {
+        "field_ref": {"$ref": "#/$defs/ref"},
+        "semantics": {
+          "enum": ["VALID_TIME", "EVENT_TIME", "OBSERVATION_TIME", "SOURCE_RELEASE_TIME", "RETRIEVAL_TIME"]
+        },
+        "timezone": {"type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z][A-Za-z0-9_+\\-/]{0,127}$"},
+        "calendar": {"enum": ["GREGORIAN", "SOURCE_DEFINED"]},
+        "resolution": {"enum": ["RESOLVED", "UNRESOLVED"]}
+      }
+    },
+    "missing_data": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["treatment", "method_ref", "minimum_observations", "partial_window_behavior"],
+      "properties": {
+        "treatment": {"enum": ["EXCLUDE_WITH_DISCLOSURE", "PROPAGATE_UNKNOWN", "IMPUTE_DECLARED", "ZERO_FILL_DECLARED", "SOURCE_DEFINED"]},
+        "method_ref": {"$ref": "#/$defs/nullable_ref"},
+        "minimum_observations": {"type": "integer", "minimum": 1, "maximum": 1000000},
+        "partial_window_behavior": {"enum": ["EMIT_WITH_OBSERVATION_COUNT", "ABSTAIN_UNTIL_MINIMUM", "SOURCE_DEFINED"]}
+      }
+    },
+    "revision_behavior": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["late_arrival_behavior", "correction_ref", "rollback_ref"],
+      "properties": {
+        "late_arrival_behavior": {"enum": ["RECOMPUTE_AND_VERSION", "FREEZE_AND_CORRECT", "ABSTAIN"]},
+        "correction_ref": {"$ref": "#/$defs/ref"},
+        "rollback_ref": {"$ref": "#/$defs/ref"}
+      }
+    },
+    "engine_parity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["engine_refs", "state", "parity_fixture_refs"],
+      "properties": {
+        "engine_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/ref"}
+        },
+        "state": {"enum": ["SINGLE_ENGINE_DECLARED", "SYNTHETIC_PARITY_DECLARED", "UNRESOLVED", "MISMATCH"]},
+        "parity_fixture_refs": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/ref"}
+        }
+      }
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["intended_use", "labels", "review_record_refs", "release_manifest_ref"],
+      "properties": {
+        "intended_use": {"enum": ["INTERNAL_REVIEW", "PUBLIC_CANDIDATE"]},
+        "labels": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["partition", "ordering", "frame", "missing_data"],
+          "properties": {
+            "partition": {"type": "string", "minLength": 20, "maxLength": 600},
+            "ordering": {"type": "string", "minLength": 20, "maxLength": 600},
+            "frame": {"type": "string", "minLength": 20, "maxLength": 600},
+            "missing_data": {"type": "string", "minLength": 20, "maxLength": 600}
+          }
+        },
+        "review_record_refs": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/ref"}
+        },
+        "release_manifest_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "analytics_execution_authority",
+        "metric_truth_authority",
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "analytics_execution_authority": {"const": false},
+        "metric_truth_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "ref": {"type": "string", "minLength": 3, "maxLength": 512, "pattern": "^\\S+$"},
+    "nullable_ref": {
+      "oneOf": [
+        {"$ref": "#/$defs/ref"},
+        {"type": "null"}
+      ]
+    },
+    "resolved_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "digest", "resolution"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/ref"},
+        "digest": {"$ref": "#/$defs/sha256"},
+        "resolution": {"enum": ["RESOLVED", "UNRESOLVED"]}
+      }
+    },
+    "ordering_key": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field_ref", "direction", "nulls", "role"],
+      "properties": {
+        "field_ref": {"$ref": "#/$defs/ref"},
+        "direction": {"enum": ["ASC", "DESC"]},
+        "nulls": {"enum": ["FIRST", "LAST", "DENY"]},
+        "role": {"enum": ["WINDOW_TIME", "PARTITION_VALUE", "TIE_BREAKER"]}
+      }
+    },
+    "start_bound": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "offset"],
+      "properties": {
+        "kind": {"enum": ["UNBOUNDED_PRECEDING", "OFFSET_PRECEDING", "CURRENT_ROW", "OFFSET_FOLLOWING"]},
+        "offset": {"oneOf": [{"type": "integer", "minimum": 1, "maximum": 1000000}, {"type": "null"}]}
+      }
+    },
+    "end_bound": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "offset"],
+      "properties": {
+        "kind": {"enum": ["OFFSET_PRECEDING", "CURRENT_ROW", "OFFSET_FOLLOWING", "UNBOUNDED_FOLLOWING"]},
+        "offset": {"oneOf": [{"type": "integer", "minimum": 1, "maximum": 1000000}, {"type": "null"}]}
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/common/rolling_metric_window_disclosure.md",
+    "fixtures_root": "fixtures/contracts/v1/common/rolling_metric_window_disclosure/",
+    "validator": "tools/validators/validate_rolling_metric_window_disclosure.py",
+    "network": false,
+    "analytics_execution": false,
+    "authority_effects": false
+  }
+}

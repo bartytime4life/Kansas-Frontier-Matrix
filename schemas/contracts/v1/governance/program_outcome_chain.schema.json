@@ -1,0 +1,356 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/program_outcome_chain.schema.json",
+  "title": "ProgramOutcomeChain candidate profile",
+  "description": "Closed, fixture-only program-to-outcome candidate preserving eligibility, application, review, recommendation, award, agreement, project, payment, completion, observation, and evaluation as distinct evidence-bearing stages.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "status",
+    "program_outcome_chain_id",
+    "version",
+    "spec_hash",
+    "source_ref",
+    "source_native_program_id",
+    "issuing_authority_ref",
+    "temporal_authority_ref",
+    "source_snapshot_refs",
+    "evidence_refs",
+    "stages",
+    "lineage",
+    "release_state",
+    "release_ref",
+    "limitations",
+    "public_use_allowed",
+    "effects"
+  ],
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^\\S+$"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "ref_array": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "required_ref_array": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "amount": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "currency"
+          ],
+          "properties": {
+            "value": {
+              "type": "number",
+              "minimum": 0
+            },
+            "currency": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            }
+          }
+        }
+      ]
+    },
+    "stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stage_id",
+        "stage_type",
+        "stage_status",
+        "native_ref",
+        "recorded_at",
+        "depends_on",
+        "evidence_refs",
+        "public_claim_code",
+        "amount",
+        "geometry_ref",
+        "method_ref",
+        "uncertainty_ref"
+      ],
+      "properties": {
+        "stage_id": {
+          "type": "string",
+          "pattern": "^program-stage:[a-f0-9]{24}$"
+        },
+        "stage_type": {
+          "enum": [
+            "PROGRAM_VERSION",
+            "ELIGIBILITY_AREA",
+            "APPLICATION_WINDOW",
+            "APPLICATION",
+            "ADMINISTRATIVE_REVIEW",
+            "TECHNICAL_REVIEW",
+            "RECOMMENDATION",
+            "AWARD",
+            "AGREEMENT",
+            "PROJECT",
+            "PROJECT_FOOTPRINT",
+            "PAYMENT",
+            "MILESTONE",
+            "COMPLETION",
+            "OUTCOME_OBSERVATION",
+            "EVALUATION"
+          ]
+        },
+        "stage_status": {
+          "enum": [
+            "ASSERTED",
+            "OPEN",
+            "CLOSED",
+            "RECEIVED",
+            "UNDER_REVIEW",
+            "COMPLETED",
+            "RECOMMENDED",
+            "AWARDED",
+            "EXECUTED",
+            "PLANNED",
+            "ACTIVE",
+            "DISBURSED",
+            "ACCEPTED",
+            "OBSERVED",
+            "EVALUATED",
+            "CANCELLED",
+            "WITHDRAWN"
+          ]
+        },
+        "native_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "recorded_at": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "depends_on": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/required_ref_array"
+        },
+        "public_claim_code": {
+          "enum": [
+            "PROGRAM_VERSION_EXISTS",
+            "AREA_ELIGIBLE_NOT_FUNDED",
+            "APPLICATION_WINDOW_ONLY",
+            "APPLICATION_EXISTS_NOT_APPROVED",
+            "ADMIN_REVIEW_NOT_AWARD",
+            "TECHNICAL_REVIEW_NOT_AWARD",
+            "RECOMMENDATION_NOT_DECISION",
+            "AWARD_NOT_IMPLEMENTATION_OR_PAYMENT",
+            "AGREEMENT_NOT_COMPLETION",
+            "PROJECT_STATE_ONLY",
+            "FOOTPRINT_SCOPE_ONLY",
+            "PAYMENT_NOT_COMPLETION",
+            "MILESTONE_NOT_PROJECT_COMPLETION",
+            "COMPLETION_FOR_AGREED_SCOPE",
+            "OUTCOME_OBSERVED_NOT_CAUSAL",
+            "EVALUATION_BOUNDED_NOT_UNIVERSAL_CAUSATION"
+          ]
+        },
+        "amount": {
+          "$ref": "#/$defs/amount"
+        },
+        "geometry_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "method_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "uncertainty_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        }
+      }
+    }
+  },
+  "properties": {
+    "profile": {
+      "const": "kfm.governance.program-outcome-chain.v1"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "program_outcome_chain_id": {
+      "type": "string",
+      "pattern": "^program-outcome-chain:[a-f0-9]{24}$"
+    },
+    "version": {
+      "const": "1.0.0"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "source_native_program_id": {
+      "$ref": "#/$defs/ref"
+    },
+    "issuing_authority_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "temporal_authority_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "source_snapshot_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^kfm:source-snapshot:[a-f0-9]{64}$"
+      }
+    },
+    "evidence_refs": {
+      "$ref": "#/$defs/required_ref_array"
+    },
+    "stages": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/stage"
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "corrects",
+        "superseded_by",
+        "conflict_refs"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "CURRENT",
+            "CORRECTED",
+            "SUPERSEDED",
+            "CONFLICTED"
+          ]
+        },
+        "corrects": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "superseded_by": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "conflict_refs": {
+          "$ref": "#/$defs/ref_array"
+        }
+      }
+    },
+    "release_state": {
+      "const": "UNRELEASED"
+    },
+    "release_ref": {
+      "type": "null"
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 240,
+        "pattern": "\\S"
+      }
+    },
+    "public_use_allowed": {
+      "const": false
+    },
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_activated",
+        "evidence_resolved",
+        "policy_evaluated",
+        "review_approved",
+        "causation_established",
+        "promoted",
+        "released",
+        "published"
+      ],
+      "properties": {
+        "source_activated": {
+          "const": false
+        },
+        "evidence_resolved": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "review_approved": {
+          "const": false
+        },
+        "causation_established": {
+          "const": false
+        },
+        "promoted": {
+          "const": false
+        },
+        "released": {
+          "const": false
+        },
+        "published": {
+          "const": false
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/governance/program_outcome_chain.md",
+    "fixtures_root": "fixtures/contracts/v1/governance/program_outcome_chain/",
+    "validator": "tools/validators/governance/validate_program_outcome_chain.py",
+    "tests": "tests/validators/governance/test_program_outcome_chain.py",
+    "authority": "fixture_candidate_only",
+    "public_release_authority": false
+  }
+}

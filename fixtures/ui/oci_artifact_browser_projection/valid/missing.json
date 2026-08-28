@@ -1,0 +1,20 @@
+{
+  "profile": "kfm.explorer.oci-artifact-browser.fixture.v1",
+  "browser_id": "kfm:oci-artifact-browser:synthetic:missing",
+  "outcome": "ABSTAIN",
+  "reason_code": "ARTIFACTS_MISSING",
+  "status": "PROPOSED_INACTIVE",
+  "execution_mode": "FIXTURE_ONLY",
+  "registry_scope": null,
+  "reviewed_at": null,
+  "artifacts": [],
+  "rollback_candidate_ref": null,
+  "governance": {
+    "registry_contacted": false,
+    "signature_verification_performed": false,
+    "rollback_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "public_use_allowed": false
+  }
+}

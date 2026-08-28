@@ -1,0 +1,491 @@
+{
+  "base": {
+    "object_type": "SensitiveOverlayGatehousePreflight",
+    "schema_version": "1.0.0",
+    "profile": "kfm.sensitive-overlay-gatehouse-preflight.fixture.v1",
+    "preflight_id": "",
+    "evaluated_at": "2026-08-09T12:00:00Z",
+    "job_ref": "kfm:job:sensitive-overlay:synthetic-001",
+    "target_ref": "https://datasets.example.invalid/overlays/synthetic-001",
+    "requested_ttl_seconds": 3600,
+    "consent": {
+      "verification_status": "VERIFIED",
+      "status": "ACTIVE",
+      "token_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "issued_at": "2026-08-09T00:00:00Z",
+      "expires_at": "2026-08-10T00:00:00Z",
+      "revocation_checked_at": "2026-08-09T12:00:00Z",
+      "revoked": false,
+      "consent_receipt_ref": "kfm:consent-receipt:synthetic-001",
+      "scopes": [
+        "derived_match_summary",
+        "restricted_genealogy_overlay"
+      ],
+      "audience": "restricted_steward"
+    },
+    "identity": {
+      "passport_profile": "GA4GH_PASSPORT_1_2_1",
+      "passport_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "signature_status": "VERIFIED",
+      "broker_trust": "VERIFIED",
+      "audience_match": true,
+      "expires_at": "2026-08-10T00:00:00Z",
+      "visa_identity_link": "VERIFIED",
+      "visas": [
+        {
+          "type": "ControlledAccessGrants",
+          "value_ref": "https://datasets.example.invalid/overlays/synthetic-001",
+          "issuer_ref": "https://issuer.example.invalid/ga4gh",
+          "source_ref": "https://dac.example.invalid/synthetic",
+          "signature_status": "VERIFIED",
+          "issuer_trust": "VERIFIED",
+          "source_trust": "VERIFIED",
+          "revocation_status": "CURRENT",
+          "conditions_status": "SATISFIED",
+          "expires_at": "2026-08-10T00:00:00Z"
+        }
+      ]
+    },
+    "data_use": {
+      "ontology_profile": "GA4GH_DUO_DECLARATION_ONLY",
+      "dataset_terms": [
+        "DUO:0000042"
+      ],
+      "purpose_terms": [
+        "DUO:0000042"
+      ],
+      "match_status": "VERIFIED",
+      "evaluator_ref": "kfm:duo-evaluator:synthetic-001",
+      "evaluated_at": "2026-08-09T12:00:00Z",
+      "ontology_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+    },
+    "egress": {
+      "execution_environment": "SYNTHETIC_TRE",
+      "artifact_class": "MAP_TILES_ONLY",
+      "media_type": "application/vnd.pmtiles",
+      "contains_raw_genomic_material": false,
+      "contains_row_level_data": false,
+      "contains_direct_identifiers": false,
+      "outbound_network": false,
+      "public_exposure": false,
+      "release_state": "NOT_RELEASED"
+    },
+    "governance": {
+      "execution_mode": "FIXTURE_ONLY",
+      "token_parsed": false,
+      "signature_verified": false,
+      "issuer_trust_resolved": false,
+      "policy_evaluated": false,
+      "receipt_signed": false,
+      "job_started": false,
+      "artifact_emitted": false,
+      "release_issued": false,
+      "publication_authorized": false
+    },
+    "spec_hash": ""
+  },
+  "cases": [
+    {
+      "case_id": "verified-summaries-hold",
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "case_id": "consent-verification-unknown",
+      "mutations": [
+        {"path": "/consent/verification_status", "value": "UNKNOWN"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "CONSENT_VERIFICATION_UNCERTAIN", "path": "/consent/verification_status"}
+      ]
+    },
+    {
+      "case_id": "consent-status-revoked",
+      "mutations": [
+        {"path": "/consent/status", "value": "REVOKED"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "CONSENT_NOT_ACTIVE", "path": "/consent/status"}
+      ]
+    },
+    {
+      "case_id": "consent-revoked",
+      "mutations": [
+        {"path": "/consent/revoked", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "CONSENT_REVOKED", "path": "/consent/revoked"}
+      ]
+    },
+    {
+      "case_id": "consent-expired",
+      "mutations": [
+        {"path": "/consent/expires_at", "value": "2026-08-09T11:59:59Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "CONSENT_EXPIRED", "path": "/consent/expires_at"}
+      ]
+    },
+    {
+      "case_id": "consent-ttl-over-24-hours",
+      "mutations": [
+        {"path": "/consent/expires_at", "value": "2026-08-10T01:00:00Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "CONSENT_TTL_EXCEEDED", "path": "/consent/expires_at"}
+      ]
+    },
+    {
+      "case_id": "consent-ttl-insufficient-for-job",
+      "mutations": [
+        {"path": "/consent/expires_at", "value": "2026-08-09T12:30:00Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "CONSENT_TTL_INSUFFICIENT", "path": "/consent/expires_at"}
+      ]
+    },
+    {
+      "case_id": "consent-revocation-check-stale",
+      "mutations": [
+        {"path": "/consent/revocation_checked_at", "value": "2026-08-09T11:59:00Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "CONSENT_REVOCATION_CHECK_UNRESOLVED", "path": "/consent/revocation_checked_at"}
+      ]
+    },
+    {
+      "case_id": "consent-scope-mismatch",
+      "mutations": [
+        {"path": "/consent/scopes", "value": ["derived_match_summary"]}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "CONSENT_SCOPE_MISMATCH", "path": "/consent/scopes"}
+      ]
+    },
+    {
+      "case_id": "consent-receipt-missing",
+      "mutations": [
+        {"path": "/consent/consent_receipt_ref", "value": null}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "CONSENT_RECEIPT_REQUIRED", "path": "/consent/consent_receipt_ref"}
+      ]
+    },
+    {
+      "case_id": "passport-signature-unknown",
+      "mutations": [
+        {"path": "/identity/signature_status", "value": "UNKNOWN"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "PASSPORT_SIGNATURE_UNCERTAIN", "path": "/identity/signature_status"}
+      ]
+    },
+    {
+      "case_id": "passport-broker-trust-unknown",
+      "mutations": [
+        {"path": "/identity/broker_trust", "value": "UNKNOWN"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "PASSPORT_BROKER_TRUST_UNCERTAIN", "path": "/identity/broker_trust"}
+      ]
+    },
+    {
+      "case_id": "passport-audience-mismatch",
+      "mutations": [
+        {"path": "/identity/audience_match", "value": false}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "PASSPORT_AUDIENCE_MISMATCH", "path": "/identity/audience_match"}
+      ]
+    },
+    {
+      "case_id": "passport-expired",
+      "mutations": [
+        {"path": "/identity/expires_at", "value": "2026-08-09T11:59:59Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "PASSPORT_EXPIRED", "path": "/identity/expires_at"}
+      ]
+    },
+    {
+      "case_id": "passport-ttl-insufficient",
+      "mutations": [
+        {"path": "/identity/expires_at", "value": "2026-08-09T12:30:00Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "PASSPORT_TTL_INSUFFICIENT", "path": "/identity/expires_at"}
+      ]
+    },
+    {
+      "case_id": "visa-identity-link-unknown",
+      "mutations": [
+        {"path": "/identity/visa_identity_link", "value": "UNKNOWN"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "VISA_IDENTITY_LINK_UNCERTAIN", "path": "/identity/visa_identity_link"}
+      ]
+    },
+    {
+      "case_id": "visa-target-mismatch",
+      "mutations": [
+        {"path": "/identity/visas/0/value_ref", "value": "https://datasets.example.invalid/overlays/other"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "VISA_TARGET_MISMATCH", "path": "/identity/visas/0/value_ref"}
+      ]
+    },
+    {
+      "case_id": "visa-signature-unknown",
+      "mutations": [
+        {"path": "/identity/visas/0/signature_status", "value": "UNKNOWN"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "VISA_SIGNATURE_UNCERTAIN", "path": "/identity/visas/0/signature_status"}
+      ]
+    },
+    {
+      "case_id": "visa-issuer-trust-unknown",
+      "mutations": [
+        {"path": "/identity/visas/0/issuer_trust", "value": "UNKNOWN"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "VISA_ISSUER_TRUST_UNCERTAIN", "path": "/identity/visas/0/issuer_trust"}
+      ]
+    },
+    {
+      "case_id": "visa-source-trust-unknown",
+      "mutations": [
+        {"path": "/identity/visas/0/source_trust", "value": "UNKNOWN"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "VISA_SOURCE_TRUST_UNCERTAIN", "path": "/identity/visas/0/source_trust"}
+      ]
+    },
+    {
+      "case_id": "visa-revoked",
+      "mutations": [
+        {"path": "/identity/visas/0/revocation_status", "value": "REVOKED"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "VISA_REVOCATION_UNCERTAIN", "path": "/identity/visas/0/revocation_status"}
+      ]
+    },
+    {
+      "case_id": "visa-conditions-failed",
+      "mutations": [
+        {"path": "/identity/visas/0/conditions_status", "value": "FAILED"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "VISA_CONDITIONS_UNSATISFIED", "path": "/identity/visas/0/conditions_status"}
+      ]
+    },
+    {
+      "case_id": "visa-expired",
+      "mutations": [
+        {"path": "/identity/visas/0/expires_at", "value": "2026-08-09T11:59:59Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "VISA_EXPIRED", "path": "/identity/visas/0/expires_at"}
+      ]
+    },
+    {
+      "case_id": "controlled-access-grant-missing",
+      "mutations": [
+        {"path": "/identity/visas/0/type", "value": "ResearcherStatus"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "CONTROLLED_ACCESS_GRANT_REQUIRED", "path": "/identity/visas"}
+      ]
+    },
+    {
+      "case_id": "duo-match-unknown",
+      "mutations": [
+        {"path": "/data_use/match_status", "value": "UNKNOWN"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "DUO_MATCH_UNCERTAIN", "path": "/data_use/match_status"}
+      ]
+    },
+    {
+      "case_id": "duo-evaluator-missing",
+      "mutations": [
+        {"path": "/data_use/evaluator_ref", "value": null}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "DUO_EVALUATOR_REQUIRED", "path": "/data_use/evaluator_ref"}
+      ]
+    },
+    {
+      "case_id": "duo-ontology-digest-missing",
+      "mutations": [
+        {"path": "/data_use/ontology_digest", "value": null}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "DUO_ONTOLOGY_DIGEST_REQUIRED", "path": "/data_use/ontology_digest"}
+      ]
+    },
+    {
+      "case_id": "duo-time-unbound",
+      "mutations": [
+        {"path": "/data_use/evaluated_at", "value": "2026-08-09T11:59:00Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "DUO_EVALUATION_TIME_UNBOUND", "path": "/data_use/evaluated_at"}
+      ]
+    },
+    {
+      "case_id": "tre-environment-unknown",
+      "mutations": [
+        {"path": "/egress/execution_environment", "value": "UNKNOWN"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "TRE_ENVIRONMENT_UNCERTAIN", "path": "/egress/execution_environment"}
+      ]
+    },
+    {
+      "case_id": "raw-artifact-class",
+      "mutations": [
+        {"path": "/egress/artifact_class", "value": "RAW_GENOMIC"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "TILE_ONLY_EGRESS_REQUIRED", "path": "/egress/artifact_class"}
+      ]
+    },
+    {
+      "case_id": "non-tile-media-type",
+      "mutations": [
+        {"path": "/egress/media_type", "value": "application/octet-stream"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "TILE_MEDIA_TYPE_REQUIRED", "path": "/egress/media_type"}
+      ]
+    },
+    {
+      "case_id": "raw-genomic-egress",
+      "mutations": [
+        {"path": "/egress/contains_raw_genomic_material", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "RAW_GENOMIC_EGRESS_DENIED", "path": "/egress/contains_raw_genomic_material"}
+      ]
+    },
+    {
+      "case_id": "row-level-egress",
+      "mutations": [
+        {"path": "/egress/contains_row_level_data", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "ROW_LEVEL_EGRESS_DENIED", "path": "/egress/contains_row_level_data"}
+      ]
+    },
+    {
+      "case_id": "direct-identifier-egress",
+      "mutations": [
+        {"path": "/egress/contains_direct_identifiers", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "DIRECT_IDENTIFIER_EGRESS_DENIED", "path": "/egress/contains_direct_identifiers"}
+      ]
+    },
+    {
+      "case_id": "outbound-network",
+      "mutations": [
+        {"path": "/egress/outbound_network", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "OUTBOUND_NETWORK_DENIED", "path": "/egress/outbound_network"}
+      ]
+    },
+    {
+      "case_id": "public-exposure",
+      "mutations": [
+        {"path": "/egress/public_exposure", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "PUBLIC_EXPOSURE_DENIED", "path": "/egress/public_exposure"}
+      ]
+    },
+    {
+      "case_id": "released-egress",
+      "mutations": [
+        {"path": "/egress/release_state", "value": "RELEASED"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "RELEASE_STATE_DENIED", "path": "/egress/release_state"}
+      ]
+    },
+    {
+      "case_id": "governance-authority-overreach",
+      "mutations": [
+        {"path": "/governance/job_started", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "GATEHOUSE_SCHEMA_INVALID", "path": "/governance/job_started"}
+      ]
+    },
+    {
+      "case_id": "spec-hash-mismatch",
+      "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "GATEHOUSE_SPEC_HASH_MISMATCH", "path": "/spec_hash"}
+      ]
+    },
+    {
+      "case_id": "preflight-id-mismatch",
+      "preflight_id_override": "kfm:sensitive-overlay-gatehouse-preflight:ffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "GATEHOUSE_ID_MISMATCH", "path": "/preflight_id"}
+      ]
+    },
+    {
+      "case_id": "raw-token-field-denied",
+      "additional_field": {
+        "name": "raw_access_token",
+        "value": "SENSITIVE_TOKEN_SENTINEL"
+      },
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "GATEHOUSE_SCHEMA_INVALID", "path": "/"}
+      ]
+    }
+  ]
+}

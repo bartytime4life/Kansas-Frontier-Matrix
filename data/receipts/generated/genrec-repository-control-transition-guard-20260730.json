@@ -1,0 +1,182 @@
+{
+  "receipt_id": "genrec-repository-control-transition-guard-20260730",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/README.md",
+    ".github/workflows/repository-control.yml",
+    "contracts/governance/repository_control_state.md",
+    "schemas/contracts/v1/governance/README.md",
+    "schemas/contracts/v1/governance/repository_transition_authorization.schema.json",
+    "tests/fixtures/governance/repository_control/README.md",
+    "tests/fixtures/governance/repository_control/issue_comments_transition_authorization_valid.json",
+    "tests/fixtures/governance/repository_control/pull_request_target_event_ready.json",
+    "tests/validators/README.md",
+    "tests/validators/test_repository_transition_authorization.py",
+    "tools/validators/repository_control/validate_transition_authorization.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/README.md": "sha256:05fe324ce4f61312f37fcf3eb712b2e5972be5710d2a30ea244c84f36e545a71",
+    ".github/workflows/repository-control.yml": "sha256:840c6800ad83444c53cb010739d775615dd2f4140bc14914605bf320ac56560b",
+    "contracts/governance/repository_control_state.md": "sha256:dcaebf0d3c73ee1b9a2f24abe929a66a5da6936dea2c00a2ea92910778f8323b",
+    "schemas/contracts/v1/governance/README.md": "sha256:dff70001c92d463153111c5f491dc057d953c048c194e4eda06130f2d4b914ec",
+    "schemas/contracts/v1/governance/repository_transition_authorization.schema.json": "sha256:391ac71600d5e8729a2bb3804b2df922bf4fef9c0230fd330ba613c58a5a4261",
+    "tests/fixtures/governance/repository_control/README.md": "sha256:bbbf3a1b9bfe15fad3e7a995e0072687c3f2a1c51f44a6ec76982ab3ba4fe631",
+    "tests/fixtures/governance/repository_control/issue_comments_transition_authorization_valid.json": "sha256:2243aaf9385a9404e4e1510871b067c23c4d56b053176b51526517bdbadd7e02",
+    "tests/fixtures/governance/repository_control/pull_request_target_event_ready.json": "sha256:20194b74eadcf3a3715a456b04f93f687a9fc91ac99d7e6e1b82d6b4d078d628",
+    "tests/validators/README.md": "sha256:93de231309558d9bd791f0ee642d33c9765db7673b7b560a1431c5d571b44fcd",
+    "tests/validators/test_repository_transition_authorization.py": "sha256:a99d947e6707e7edad3c9b9a96e493ad8a3cc3efdfeb214b73c2bd8559a56a0c",
+    "tools/validators/repository_control/validate_transition_authorization.py": "sha256:e907157e49a4d810462a617b7381c5f72f487fb59a4f7b7960f45c9e7b389741"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:9a5f74a4eb0ea05e571f921ad7c1eb7dbe1122222218f8e2b530f2d94ef7a445",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local repository inspection",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:3159ee37d25a897bf2525fd7dafbc6ca28ee74594a3b52a9c0a01fa30aed777b",
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/149614a560de9ecb299de8ee9bb30b2f0ecfa7fe",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5121654499",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5121666345",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5136495687",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5136682127",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/1869",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/1870",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149614a560de9ecb299de8ee9bb30b2f0ecfa7fe/control_plane/repository_control_state.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149614a560de9ecb299de8ee9bb30b2f0ecfa7fe/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149614a560de9ecb299de8ee9bb30b2f0ecfa7fe/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149614a560de9ecb299de8ee9bb30b2f0ecfa7fe/docs/doctrine/ai-build-operating-contract.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149614a560de9ecb299de8ee9bb30b2f0ecfa7fe/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/README.md": "PROPOSED",
+    ".github/workflows/repository-control.yml": "PROPOSED",
+    "contracts/governance/repository_control_state.md": "PROPOSED",
+    "schemas/contracts/v1/governance/README.md": "PROPOSED",
+    "schemas/contracts/v1/governance/repository_transition_authorization.schema.json": "PROPOSED",
+    "tests/fixtures/governance/repository_control/README.md": "CONFIRMED",
+    "tests/fixtures/governance/repository_control/issue_comments_transition_authorization_valid.json": "CONFIRMED",
+    "tests/fixtures/governance/repository_control/pull_request_target_event_ready.json": "CONFIRMED",
+    "tests/validators/README.md": "PROPOSED",
+    "tests/validators/test_repository_transition_authorization.py": "CONFIRMED",
+    "tools/validators/repository_control/validate_transition_authorization.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, renewed base SHA 149614a560de9ecb299de8ee9bb30b2f0ecfa7fe, current open-PR set, issue #1675, prior ruleset evidence, Directory Rules, accepted ADR-0029, operating contract, target manifests, workflows, contracts, schemas, validators, tests, and exact allowed paths were inspected before mutation. Issue comments 5136495687 and 5136682127 record the bounded change authority and disjoint-base renewal."
+    },
+    {
+      "gate": "drift-reconciliation",
+      "outcome": "PASS",
+      "reason": "PR #1869 supplied the executable terminal-divergence regression case, and disjoint PR #1870 supplied the latest recurrence and base-renewal evidence. The tracked repository-control YAML remains an observation-time projection rather than a live-head oracle, so later main movement alone is not stale-state regression. GitHub API identity bartytime4life remains confirmed while the initiating browser, app, or token remains unknown."
+    },
+    {
+      "gate": "directory-placement-and-authority",
+      "outcome": "PASS",
+      "reason": "The workflow remains orchestration under .github; the contract defines meaning; the schema defines shape; the control-plane validator evaluates the record; fixtures and tests provide synthetic evidence; and the receipt remains process memory. No root directory or authority-collapsing placement was added."
+    },
+    {
+      "gate": "transition-authorization-focused-tests",
+      "outcome": "PASS",
+      "reason": "The focused repository-control set passed 56 tests, including strict schema/JSON shape, owner and unedited-comment binding, exact PR/base/head binding, draft and missing-record holds, expiry evaluation, duplicate/unknown-field refusal, schema/runtime alignment, safe shell parameterization, non-echoing diagnostics, CLI polarity, and the PR #1869 no-authorization regression case."
+    },
+    {
+      "gate": "full-repository-pytest",
+      "outcome": "PASS",
+      "reason": "With the documented temporary project test environment inherited by subprocesses, the full suite passed: 409 tests and 72 subtests."
+    },
+    {
+      "gate": "workflow-static-threat-preflight",
+      "outcome": "PASS",
+      "reason": "All 44 proposed-head workflow YAML files parsed. The new guard is the only pull_request_target workflow, grants read-only contents/issues/pull-requests permissions, checks out only the event base SHA, pins checkout to full SHA 3d3c42e5aac5ba805825da76410c181273ba90b1, does not execute head code, and is fully represented in the workflow README inventory."
+    },
+    {
+      "gate": "documentation-local-links-and-diff-hygiene",
+      "outcome": "PASS",
+      "reason": "Every local Markdown target in the five modified documents resolved, JSON and Python syntax validation passed through the test suite, and git diff whitespace validation passed."
+    },
+    {
+      "gate": "generated-receipt-schema-and-hash-closure",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 validation with date-time format checking passed; artifact_paths exactly matched artifact_hashes; and all eleven SHA-256 artifact hashes were recomputed against the final change packet. This receipt is intentionally excluded from its own artifact map to avoid a recursive self-hash."
+    },
+    {
+      "gate": "hosted-workflow-and-ruleset-coupling",
+      "outcome": "SKIPPED",
+      "reason": "The workflow is not active before merge, and the bounded authority does not permit marking the draft ready, merging it, or changing ruleset 15484585. Hosted execution and exact required-check read/write/read-back remain separate operations."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored or inferred by the agent."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "accepted-directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/149614a560de9ecb299de8ee9bb30b2f0ecfa7fe/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "accepted-directory-rules-bytes",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/149614a560de9ecb299de8ee9bb30b2f0ecfa7fe/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "repository-control-authority",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5136495687"
+    },
+    {
+      "id": "repository-control-base-renewal",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5136682127"
+    },
+    {
+      "id": "ruleset-before-and-after-evidence",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5121666345"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/149614a560de9ecb299de8ee9bb30b2f0ecfa7fe/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-30T22:04:54Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675"
+  },
+  "notes": "This packet adds an exact-base/exact-head owner transition record and a trusted-base read-only advisory check. It does not prove independent review, distinguish a human from an app or token using the same owner identity, identify the initiating client for earlier merges, make the workflow required, authorize ready or merge transitions, activate source truth, construct proof, release, deploy, or publish. Expiry and comment state are evaluated when the job runs; GitHub does not automatically expire the result or rerun it after a later issue-comment edit or deletion. Remove any future required-check coupling before reverting or renaming the workflow."
+}

@@ -1,0 +1,4 @@
+# pipeline_specs :: roads-rail-trade :: validate
+name: roads-rail-trade-validate
+version: 1
+stages: []

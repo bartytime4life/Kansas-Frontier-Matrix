@@ -1,0 +1,109 @@
+{
+  "receipt_id": "genrec-fixtures-public-safe-settlement-readme-02c64399",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "fixtures/public_safe/settlement/README.md"
+  ],
+  "artifact_hashes": {
+    "fixtures/public_safe/settlement/README.md": "sha256:02c643992947ed9e60ec2216dc333a40b3e101198beb19b7b054525938ca7417"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-07-22-session"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container",
+      "PDF inspection"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Pasted text(75).txt",
+      "Directory Rules.pdf",
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "Unified Implementation Architecture Build Manual.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/fixtures/public_safe/settlement/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/fixtures/public_safe/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/fixtures/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/fixtures/domains/settlements-infrastructure/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/tests/fixtures/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/docs/domains/settlements-infrastructure/CANONICAL_PATHS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/docs/domains/settlements-infrastructure/sublanes/settlements.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/docs/domains/settlements-infrastructure/DENY_BY_DEFAULT.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/contracts/domains/settlements-infrastructure/place-identity.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "fixtures/public_safe/settlement/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-drift-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned current main; re-read the unchanged target blob; checked applicable instructions, Directory Rules, parent/root fixture indexes, domain/test fixture lanes, domain path doctrine, contracts, schema indexes, duplicate PR state, and relevant pull-request workflows."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The revision remains in the parent-indexed shared public-safe fixture lane, distinguishes the domain-owned fixture root, and creates no competing contract, schema, data, policy, proof, release, or publication authority."
+    },
+    {
+      "gate": "path-and-authority-labels",
+      "outcome": "PASS",
+      "reason": "The singular settlement child is labeled as a shared fixture path only; settlements-infrastructure remains the working domain slug, and the singular schema path remains a compatibility index."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, unique section headings, balanced meta/fence structure, quick navigation, scenario tables, validation, evidence, and rollback sections were checked."
+    },
+    {
+      "gate": "public-safe-and-sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "No real place record, tribal/community identifier, exact sensitive geometry, archaeological location, private join, infrastructure vulnerability, credential, or private endpoint was introduced."
+    },
+    {
+      "gate": "runtime-and-repository-native-tests",
+      "outcome": "SKIPPED",
+      "reason": "API-only documentation change; no fixture payload, schema, validator, contract, code, policy implementation, release, or public route changed. Repository CI is left to the draft PR."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {"id":"EV-01","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/commit/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7"},
+    {"id":"EV-02","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/fixtures/public_safe/settlement/README.md"},
+    {"id":"EV-03","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/fixtures/public_safe/README.md"},
+    {"id":"EV-04","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/fixtures/README.md"},
+    {"id":"EV-05","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/fixtures/domains/settlements-infrastructure/README.md"},
+    {"id":"EV-06","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/docs/domains/settlements-infrastructure/CANONICAL_PATHS.md"},
+    {"id":"EV-07","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/contracts/domains/settlements-infrastructure/place-identity.md"},
+    {"id":"EV-08","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/docs/domains/settlements-infrastructure/DENY_BY_DEFAULT.md"},
+    {"id":"EV-09","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/schemas/contracts/v1/receipts/generated_receipt.schema.json"}
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-22T20:31:08Z",
+  "emitter": "OpenAI Codex / GPT-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only update. This receipt records generation provenance and validation process memory; it does not create fixture payloads, make the singular path canonical for the domain, validate a consumer, authorize real settlement data, or satisfy evidence, policy, review, sensitivity, sovereignty, or release gates. Human review remains pending."
+}

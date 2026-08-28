@@ -1,0 +1,239 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/domains/atmosphere/airnow_aqs_reconciliation_candidate.schema.json",
+  "title": "AirnowAqsReconciliationCandidate",
+  "description": "Fixture-only candidate for preserving AirNow provisional context and proposing matching certified AQS succession.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile_id",
+    "fixture_only",
+    "evaluation_id",
+    "evaluated_at",
+    "requested_use",
+    "airnow",
+    "aqs",
+    "governance"
+  ],
+  "properties": {
+    "profile_id": {
+      "const": "kfm.airnow-aqs-reconciliation.synthetic.v1"
+    },
+    "fixture_only": {
+      "const": true
+    },
+    "evaluation_id": {
+      "type": "string",
+      "pattern": "^fixture://airnow-aqs/[a-z0-9-]+$"
+    },
+    "evaluated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "requested_use": {
+      "enum": [
+        "public_context",
+        "regulatory_replacement"
+      ]
+    },
+    "airnow": {
+      "$ref": "#/$defs/airnow"
+    },
+    "aqs": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/aqs"
+        }
+      ]
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    }
+  },
+  "$defs": {
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state_code",
+        "county_code",
+        "site_number",
+        "parameter_code",
+        "poc"
+      ],
+      "properties": {
+        "state_code": {
+          "type": "string",
+          "pattern": "^[0-9]{2}$"
+        },
+        "county_code": {
+          "type": "string",
+          "pattern": "^[0-9]{3}$"
+        },
+        "site_number": {
+          "type": "string",
+          "pattern": "^[0-9]{4}$"
+        },
+        "parameter_code": {
+          "type": "string",
+          "pattern": "^[0-9]{5}$"
+        },
+        "poc": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 99
+        }
+      }
+    },
+    "airnow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_role",
+        "identity",
+        "observed_at",
+        "measurement_kind",
+        "unit",
+        "value",
+        "nowcast",
+        "payload_hash",
+        "evidence_ref"
+      ],
+      "properties": {
+        "source_role": {
+          "const": "provisional_public_report"
+        },
+        "identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "measurement_kind": {
+          "enum": [
+            "concentration",
+            "aqi_nowcast"
+          ]
+        },
+        "unit": {
+          "enum": [
+            "ug/m3",
+            "ppb",
+            "AQI"
+          ]
+        },
+        "value": {
+          "type": "number",
+          "minimum": 0
+        },
+        "nowcast": {
+          "type": "boolean"
+        },
+        "payload_hash": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "evidence_ref": {
+          "type": "string",
+          "pattern": "^fixture://evidence/[a-z0-9-]+$"
+        }
+      }
+    },
+    "aqs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_role",
+        "identity",
+        "observed_at",
+        "measurement_kind",
+        "unit",
+        "value",
+        "qa_state",
+        "certification_state",
+        "last_change_date",
+        "payload_hash",
+        "evidence_ref"
+      ],
+      "properties": {
+        "source_role": {
+          "const": "regulatory_archive"
+        },
+        "identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "measurement_kind": {
+          "const": "concentration"
+        },
+        "unit": {
+          "enum": [
+            "ug/m3",
+            "ppb"
+          ]
+        },
+        "value": {
+          "type": "number",
+          "minimum": 0
+        },
+        "qa_state": {
+          "enum": [
+            "validated",
+            "provisional",
+            "invalid"
+          ]
+        },
+        "certification_state": {
+          "enum": [
+            "certified",
+            "pending",
+            "not_certified"
+          ]
+        },
+        "last_change_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "payload_hash": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "evidence_ref": {
+          "type": "string",
+          "pattern": "^fixture://evidence/[a-z0-9-]+$"
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "review_state",
+        "release_state",
+        "promotion_eligible",
+        "public_use_allowed"
+      ],
+      "properties": {
+        "review_state": {
+          "const": "fixture_only"
+        },
+        "release_state": {
+          "const": "not_released"
+        },
+        "promotion_eligible": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        }
+      }
+    }
+  }
+}

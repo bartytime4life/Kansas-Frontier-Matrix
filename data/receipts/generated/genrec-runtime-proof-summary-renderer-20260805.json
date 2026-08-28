@@ -1,0 +1,106 @@
+{
+  "receipt_id": "genrec-runtime-proof-summary-renderer-20260805",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/ci/__init__.py",
+    "tools/ci/render_runtime_proof_summary.py",
+    "tests/ci/README.md",
+    "tests/ci/test_render_runtime_proof_summary.py"
+  ],
+  "artifact_hashes": {
+    "tools/ci/__init__.py": "sha256:34e6fe6fbadd3d56112250a8a24fe5c02e0dd2f75e9539dec99ad3d8f9e47124",
+    "tools/ci/render_runtime_proof_summary.py": "sha256:5bcff51e819127df6571d3a577a2277f6dd9f9104770608309a9374e44596f15",
+    "tests/ci/README.md": "sha256:d024fe70fb358ab3d0bcd24ed21a7f2ea7fc781709c60523ebe391b2dd49d2f3",
+    "tests/ci/test_render_runtime_proof_summary.py": "sha256:64715dcea01fa82898b2af22d1bcfffe15350fa18571a17bcc544879bbb1ebce"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05"
+  },
+  "prompt_or_contract": "sha256:3d82e903102b471b79da0fd7ae89174a0bf66fbf22ff4839e0c7440571d28045",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-15-26(2).pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-15-26(2).pdf#runtime-proof-summary-renderer",
+      "repo:tools/ci/README.md@9cc9342942afdcbdb917bd787b13aa088725a781",
+      "repo:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json@9cc9342942afdcbdb917bd787b13aa088725a781",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@9cc9342942afdcbdb917bd787b13aa088725a781"
+    ]
+  },
+  "truth_labels": {
+    "tools/ci/__init__.py": "PROPOSED",
+    "tools/ci/render_runtime_proof_summary.py": "PROPOSED",
+    "tests/ci/README.md": "PROPOSED",
+    "tests/ci/test_render_runtime_proof_summary.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-renderer-tests",
+      "outcome": "PASS",
+      "reason": "Four deterministic no-network renderer tests passed locally."
+    },
+    {
+      "gate": "malformed-and-contradictory-input",
+      "outcome": "PASS",
+      "reason": "Tests prove mismatches remain visible and contradictory match flags fail safely."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-runtime-summary",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-15-26(2).pdf#render-runtime-proof-summary"
+    },
+    {
+      "id": "repository:ci-tools-boundary",
+      "validated": true,
+      "evidence_ref": "repo:tools/ci/README.md@9cc9342942afdcbdb917bd787b13aa088725a781"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@9cc9342942afdcbdb917bd787b13aa088725a781"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-05T22:07:26Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Reviewer-only renderer mined from New Ideas 4-15-26(2). The helper reports expected-versus-actual runtime outcomes and fails visibly on contradictory report metadata. It does not validate source candidates, decide outcomes, resolve evidence, make policy, create proof, authorize release, or publish."
+}

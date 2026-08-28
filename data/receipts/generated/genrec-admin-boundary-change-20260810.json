@@ -1,0 +1,152 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/admin-boundary-change.yml": "sha256:1a9bd7f6d43f17c1772f97ef1355c4b1b538d4752b2116ca88d943ffdcbe33f7",
+    "contracts/common/admin_boundary_change.md": "sha256:64e6c8f660a621a9c24a9faf98c12f882081c5a782655b1a3854ce86a2354458",
+    "docs/intake/exploratory/admin-boundary-change-source-map.md": "sha256:38ebbc4104e28e854bf269736a95ca537b783c44a7cbd3c6cc23d385840df947",
+    "fixtures/contracts/v1/common/admin_boundary_change/cases.json": "sha256:57da2280c65d46d2d17a202fa3445f77fa21c2df4d6df7f89200ade05cd62d9d",
+    "schemas/contracts/v1/common/admin_boundary_change.schema.json": "sha256:57c374c55d46cfb6f985629c91d54b853fdab2a3c18283e257ae42bf4da7e738",
+    "tests/validators/test_validate_admin_boundary_change.py": "sha256:5d86fc5a1a8132b238685a5dd226255ef320c387b6915ceb8265d48eddf683e6",
+    "tools/validators/validate_admin_boundary_change.py": "sha256:4215d4f51a4393e0935f70f96be9589a0345c5aaa172b8e67572a98bfbb2c7d9"
+  },
+  "artifact_paths": [
+    ".github/workflows/admin-boundary-change.yml",
+    "contracts/common/admin_boundary_change.md",
+    "docs/intake/exploratory/admin-boundary-change-source-map.md",
+    "fixtures/contracts/v1/common/admin_boundary_change/cases.json",
+    "schemas/contracts/v1/common/admin_boundary_change.schema.json",
+    "tests/validators/test_validate_admin_boundary_change.py",
+    "tools/validators/validate_admin_boundary_change.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "google-drive:KFM_Full_Atlas_seed_cards@1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#frontier-demography-economy-settlement-land-time-matrix-lane-pattern",
+      "id": "google-drive:full-atlas-admin-boundary-change-object",
+      "validated": true
+    },
+    {
+      "evidence_ref": "attachment:Kansas-Frontier-Matrix-Implementation-Reference.pdf#pages-1-and-10",
+      "id": "attachment:implementation-reference-geography-version-crosswalk-discipline",
+      "validated": true
+    },
+    {
+      "evidence_ref": "google-drive:Directory Rules@1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs",
+      "id": "google-drive:accepted-directory-placement-rules",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/common/geography_version.md@97b9cb77bf57b1d1cf75c2768f8e550e399a1345",
+      "id": "repository:geography-version-identity-boundary",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/crosswalks/geography_crosswalk.md@97b9cb77bf57b1d1cf75c2768f8e550e399a1345",
+      "id": "repository:separate-geography-crosswalk-boundary",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-11T04:03:41Z",
+  "emitter": "OpenAI Codex (GPT-5) via ChatGPT Work",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards (Google Drive)",
+      "Kansas Frontier Matrix Implementation Reference PDF",
+      "Directory Rules (Google Drive)"
+    ],
+    "evidence_hashes": [
+      "sha256:d948332b6c5bfcdd956cf6264f7bcb88d6881ac00ca8afc2534a02d288d4b3c2"
+    ],
+    "evidence_refs": [
+      "google-drive:KFM_Full_Atlas_seed_cards@1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#frontier-demography-economy-settlement-land-time-matrix-lane-pattern",
+      "attachment:Kansas-Frontier-Matrix-Implementation-Reference.pdf#pages-1-and-10",
+      "google-drive:Directory Rules@1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs",
+      "repo:contracts/common/geography_version.md@97b9cb77bf57b1d1cf75c2768f8e550e399a1345",
+      "repo:contracts/crosswalks/geography_crosswalk.md@97b9cb77bf57b1d1cf75c2768f8e550e399a1345"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "Codex (GPT-5)",
+    "provider": "OpenAI",
+    "version": "2026-08-10"
+  },
+  "notes": "Adds an inactive fixture-only AdminBoundaryChange profile at existing common geography responsibility roots. It validates event cardinality, distinct version-local source/target lineage, explicit unresolved/referenced crosswalk posture, source publication and retrieval separation, mandatory non-effect disclosures, inactive governance flags, and deterministic identity. It carries no geometry, executes no crosswalk, infers no identity, transfers no observations, and grants no legal truth, evidence, policy, review, promotion, release, public-use, publication, or deployment authority.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local PDF extraction and rendered-page inspection",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:bf20ea61b1a45035c26875a642ca6d86ff712db38247f373156a1deaa58588d6",
+  "receipt_id": "genrec-admin-boundary-change-20260810",
+  "truth_labels": {
+    ".github/workflows/admin-boundary-change.yml": "CONFIRMED",
+    "contracts/common/admin_boundary_change.md": "PROPOSED",
+    "docs/intake/exploratory/admin-boundary-change-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/common/admin_boundary_change/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/common/admin_boundary_change.schema.json": "PROPOSED",
+    "tests/validators/test_validate_admin_boundary_change.py": "CONFIRMED",
+    "tools/validators/validate_admin_boundary_change.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-to-repo-collision-check",
+      "outcome": "PASS",
+      "reason": "Current main and open-work searches found no AdminBoundaryChange implementation, same-purpose branch, or pull request."
+    },
+    {
+      "gate": "json-schema-and-workflow-parse",
+      "outcome": "PASS",
+      "reason": "The closed Draft 2020-12 schema passed meta-validation and the read-only focused workflow parsed as YAML."
+    },
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Ten deterministic no-network AdminBoundaryChange tests passed locally."
+    },
+    {
+      "gate": "exact-fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Six positive event-family fixtures and twenty denial fixtures matched the exact expected findings."
+    },
+    {
+      "gate": "adjacent-geography-contract-tests",
+      "outcome": "PASS",
+      "reason": "Eight GeographyVersion and nine GeographyCrosswalk tests passed against current-main artifacts."
+    },
+    {
+      "gate": "generated-receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "This receipt binds all seven non-receipt authored artifacts to exact SHA-256 values."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}

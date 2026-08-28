@@ -1,0 +1,56 @@
+{
+  "assessment_id": "kfm:open-adr-backlog:9062fe3a5ca417cfc1d06454032cac4022a59edd57fb207ac1e75d9160d0e636",
+  "effects": {
+    "approves_decision": false,
+    "assigns_owner": false,
+    "changes_backlog": false,
+    "creates_adr": false,
+    "promotes": false,
+    "publishes": false,
+    "releases": false
+  },
+  "entries": [
+    {
+      "backlog_id": "ADR-S-01",
+      "blocker_refs": [],
+      "candidate_adr_ref": null,
+      "canonical_home_ref": "kfm:atlas:master-open-adr-backlog",
+      "decision_class": "AUTHORITY_BOUNDARY",
+      "decision_required": true,
+      "evidence_refs": ["kfm:evidence:fixture-open-adr-card-01"],
+      "owner_roles": ["architecture-steward"],
+      "state": "OPEN",
+      "superseded_by": null
+    },
+    {
+      "backlog_id": "ADR-S-02",
+      "blocker_refs": [],
+      "candidate_adr_ref": "docs/adr/ADR-0099-fixture-open-adr.md",
+      "canonical_home_ref": "kfm:atlas:master-open-adr-backlog",
+      "decision_class": "SCHEMA_HOME",
+      "decision_required": true,
+      "evidence_refs": ["kfm:evidence:fixture-open-adr-card-02"],
+      "owner_roles": ["architecture-steward", "schema-steward"],
+      "state": "IN_REVIEW",
+      "superseded_by": null
+    },
+    {
+      "backlog_id": "ADR-S-03",
+      "blocker_refs": [],
+      "candidate_adr_ref": "docs/adr/ADR-0098-fixture-resolved-adr.md",
+      "canonical_home_ref": "kfm:atlas:master-open-adr-backlog",
+      "decision_class": "POLICY_BOUNDARY",
+      "decision_required": false,
+      "evidence_refs": ["kfm:evidence:fixture-resolution-record-03"],
+      "owner_roles": ["policy-steward"],
+      "state": "RESOLVED",
+      "superseded_by": null
+    }
+  ],
+  "profile": "kfm.governance.open-adr-backlog-discipline-assessment.fixture.v1",
+  "review": {
+    "record_refs": ["kfm:review:fixture-open-adr-backlog"],
+    "state": "COMPLETE"
+  },
+  "snapshot_ref": "kfm:adr-backlog-snapshot:fixture-20260811"
+}

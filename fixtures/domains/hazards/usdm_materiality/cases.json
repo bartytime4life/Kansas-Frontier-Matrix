@@ -1,0 +1,254 @@
+{
+  "valid": [
+    {
+      "name": "hold_geometry_only",
+      "candidate": {
+        "profile": "kfm-usdm-materiality-v1",
+        "fixture_only": true,
+        "network_access": "forbidden",
+        "previous": {
+          "valid_date": "2026-07-28",
+          "geometry_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "area_percent": {
+            "d1_d4": 27.4,
+            "d2_d4": 6.2,
+            "d3_d4": 0.0,
+            "d4": 0.0
+          },
+          "population_in_drought": 244000
+        },
+        "current": {
+          "valid_date": "2026-08-04",
+          "geometry_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "area_percent": {
+            "d1_d4": 27.4,
+            "d2_d4": 6.2,
+            "d3_d4": 0.0,
+            "d4": 0.0
+          },
+          "population_in_drought": 244000
+        },
+        "thresholds": {
+          "statewide_area_percentage_points": 1.0,
+          "severe_area_percentage_points": 0.5,
+          "population_change_fraction": 0.01
+        },
+        "assessment": {
+          "state": "UNDETERMINED",
+          "outcome": "HOLD",
+          "triggered_criteria": [
+            "GEOMETRY_CHANGED_WITHOUT_METRICS"
+          ]
+        },
+        "governance": {
+          "authority_created": false,
+          "source_activated": false,
+          "promotion_authorized": false,
+          "release_authorized": false,
+          "publication_authorized": false
+        }
+      }
+    },
+    {
+      "name": "material",
+      "candidate": {
+        "profile": "kfm-usdm-materiality-v1",
+        "fixture_only": true,
+        "network_access": "forbidden",
+        "previous": {
+          "valid_date": "2026-07-28",
+          "geometry_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "area_percent": {
+            "d1_d4": 27.4,
+            "d2_d4": 6.2,
+            "d3_d4": 0.0,
+            "d4": 0.0
+          },
+          "population_in_drought": 244000
+        },
+        "current": {
+          "valid_date": "2026-08-04",
+          "geometry_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "area_percent": {
+            "d1_d4": 31.8,
+            "d2_d4": 5.4,
+            "d3_d4": 0.0,
+            "d4": 0.0
+          },
+          "population_in_drought": 245200
+        },
+        "thresholds": {
+          "statewide_area_percentage_points": 1.0,
+          "severe_area_percentage_points": 0.5,
+          "population_change_fraction": 0.01
+        },
+        "assessment": {
+          "state": "MATERIAL",
+          "outcome": "PROMOTION_CANDIDATE",
+          "triggered_criteria": [
+            "D1_D4_AREA_THRESHOLD",
+            "D2_D4_AREA_THRESHOLD",
+            "GEOMETRY_CHANGED_WITH_METRICS"
+          ]
+        },
+        "governance": {
+          "authority_created": false,
+          "source_activated": false,
+          "promotion_authorized": false,
+          "release_authorized": false,
+          "publication_authorized": false
+        }
+      }
+    },
+    {
+      "name": "non_material",
+      "candidate": {
+        "profile": "kfm-usdm-materiality-v1",
+        "fixture_only": true,
+        "network_access": "forbidden",
+        "previous": {
+          "valid_date": "2026-07-28",
+          "geometry_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "area_percent": {
+            "d1_d4": 27.4,
+            "d2_d4": 6.2,
+            "d3_d4": 0.0,
+            "d4": 0.0
+          },
+          "population_in_drought": 244000
+        },
+        "current": {
+          "valid_date": "2026-08-04",
+          "geometry_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "area_percent": {
+            "d1_d4": 27.8,
+            "d2_d4": 6.1,
+            "d3_d4": 0.0,
+            "d4": 0.0
+          },
+          "population_in_drought": 244500
+        },
+        "thresholds": {
+          "statewide_area_percentage_points": 1.0,
+          "severe_area_percentage_points": 0.5,
+          "population_change_fraction": 0.01
+        },
+        "assessment": {
+          "state": "SEMANTIC_NON_MATERIAL",
+          "outcome": "NON_EVENT",
+          "triggered_criteria": []
+        },
+        "governance": {
+          "authority_created": false,
+          "source_activated": false,
+          "promotion_authorized": false,
+          "release_authorized": false,
+          "publication_authorized": false
+        }
+      }
+    },
+    {
+      "name": "unchanged",
+      "candidate": {
+        "profile": "kfm-usdm-materiality-v1",
+        "fixture_only": true,
+        "network_access": "forbidden",
+        "previous": {
+          "valid_date": "2026-07-28",
+          "geometry_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "area_percent": {
+            "d1_d4": 27.4,
+            "d2_d4": 6.2,
+            "d3_d4": 0.0,
+            "d4": 0.0
+          },
+          "population_in_drought": 244000
+        },
+        "current": {
+          "valid_date": "2026-08-04",
+          "geometry_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "area_percent": {
+            "d1_d4": 27.4,
+            "d2_d4": 6.2,
+            "d3_d4": 0.0,
+            "d4": 0.0
+          },
+          "population_in_drought": 244000
+        },
+        "thresholds": {
+          "statewide_area_percentage_points": 1.0,
+          "severe_area_percentage_points": 0.5,
+          "population_change_fraction": 0.01
+        },
+        "assessment": {
+          "state": "UNCHANGED",
+          "outcome": "NON_EVENT",
+          "triggered_criteria": []
+        },
+        "governance": {
+          "authority_created": false,
+          "source_activated": false,
+          "promotion_authorized": false,
+          "release_authorized": false,
+          "publication_authorized": false
+        }
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "name": "invalid_declared_assessment",
+      "base": "material",
+      "set": {
+        "/assessment/outcome": "NON_EVENT",
+        "/assessment/state": "UNCHANGED",
+        "/assessment/triggered_criteria": []
+      },
+      "expected": [
+        "DECLARED_ASSESSMENT_MISMATCH"
+      ]
+    },
+    {
+      "name": "invalid_governance",
+      "base": "material",
+      "set": {
+        "/governance/publication_authorized": true
+      },
+      "expected": [
+        "GOVERNANCE_BOUNDARY_VIOLATION"
+      ]
+    },
+    {
+      "name": "invalid_hierarchy",
+      "base": "material",
+      "set": {
+        "/current/area_percent/d1_d4": 5.0,
+        "/current/area_percent/d2_d4": 6.0
+      },
+      "expected": [
+        "SEVERITY_AREA_HIERARCHY_INVALID"
+      ]
+    },
+    {
+      "name": "invalid_state_outcome",
+      "base": "material",
+      "set": {
+        "/assessment/outcome": "NON_EVENT"
+      },
+      "expected": [
+        "DECLARED_ASSESSMENT_MISMATCH",
+        "STATE_OUTCOME_MISMATCH"
+      ]
+    },
+    {
+      "name": "invalid_time_order",
+      "base": "material",
+      "set": {
+        "/current/valid_date": "2026-07-20"
+      },
+      "expected": [
+        "SNAPSHOT_TIME_ORDER_INVALID"
+      ]
+    }
+  ]
+}

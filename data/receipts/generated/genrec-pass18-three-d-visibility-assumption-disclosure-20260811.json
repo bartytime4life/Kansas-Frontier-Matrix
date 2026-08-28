@@ -1,0 +1,163 @@
+{
+  "receipt_id": "genrec:pass18-three-d-visibility-assumptions:20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/three-d-visibility-assumption-disclosure.yml",
+    "contracts/domains/archaeology/three_d_visibility_assumption_disclosure.md",
+    "docs/intake/exploratory/pass-18-three-d-visibility-assumption-disclosure-source-map.md",
+    "fixtures/contracts/v1/domains/archaeology/three_d_visibility_assumption_disclosure/cases.json",
+    "schemas/contracts/v1/domains/archaeology/three_d_visibility_assumption_disclosure.schema.json",
+    "tests/validators/domains/archaeology/test_validate_three_d_visibility_assumption_disclosure.py",
+    "tools/validators/domains/archaeology/validate_three_d_visibility_assumption_disclosure.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/three-d-visibility-assumption-disclosure.yml": "sha256:5e19fd48515d4e78f5501804c70d35f597b89e0e7644173efac39fa70f5e838d",
+    "contracts/domains/archaeology/three_d_visibility_assumption_disclosure.md": "sha256:529d41fe4f8227264cdcfc522eee7f011f8292362caef73315037965d6380bfc",
+    "docs/intake/exploratory/pass-18-three-d-visibility-assumption-disclosure-source-map.md": "sha256:b6c9b62a3b10755bf4e49cc0601a5db5989598d02deede4dd395a6edaa551171",
+    "fixtures/contracts/v1/domains/archaeology/three_d_visibility_assumption_disclosure/cases.json": "sha256:efae674b71ff4d7948015f9b885320b5f5d766997739f46c1ec418726cf900f8",
+    "schemas/contracts/v1/domains/archaeology/three_d_visibility_assumption_disclosure.schema.json": "sha256:e23c6ed55f632ff7bb46bb3f14ab168aaaee2d80774f9bfd2bf5dbe95d2f961d",
+    "tests/validators/domains/archaeology/test_validate_three_d_visibility_assumption_disclosure.py": "sha256:67d89fdb507a3d6cea19aaf368c77cca890b83492c77610dd6676aed9774a8a7",
+    "tools/validators/domains/archaeology/validate_three_d_visibility_assumption_disclosure.py": "sha256:666304472002fb1379aece524285c9fcd21f4a43dc1874af8706df8482512e95"
+  },
+  "model_identity": {
+    "provider": "openai",
+    "model": "gpt-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:84ff0152adcd03d2a1a7bd0c3bae8db074be6eafed4b85a0834b4cde1950ca62",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "container",
+      "google_drive",
+      "github"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"
+    ],
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "git:authoring-base@ded9a9755316fee97827d5d65b8fc26e31c2ae4b",
+      "drive:file:1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho",
+      "KFM-P18-INV-458",
+      "contracts/domains/archaeology/three_d_documentation.md",
+      "contracts/map/three_d_admission_decision.md",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/three-d-visibility-assumption-disclosure.yml": "PROPOSED",
+    "contracts/domains/archaeology/three_d_visibility_assumption_disclosure.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-three-d-visibility-assumption-disclosure-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/domains/archaeology/three_d_visibility_assumption_disclosure/cases.json": "PROPOSED",
+    "schemas/contracts/v1/domains/archaeology/three_d_visibility_assumption_disclosure.schema.json": "PROPOSED",
+    "tests/validators/domains/archaeology/test_validate_three_d_visibility_assumption_disclosure.py": "PROPOSED",
+    "tools/validators/domains/archaeology/validate_three_d_visibility_assumption_disclosure.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "pass18-card-visual-review",
+      "outcome": "PASS",
+      "reason": "Rendered physical PDF pages 342-343 were visually inspected; the card requires observer, target, obstacle, model-resolution, line-of-sight, and interpretation-scope disclosure while marking implementation maturity UNKNOWN."
+    },
+    {
+      "gate": "connected-drive-atlas-corroboration",
+      "outcome": "PASS",
+      "reason": "Connected Drive text corroborates the field/3D evidence, interpretation, sensitivity, policy/review, release, correction, and rollback boundaries."
+    },
+    {
+      "gate": "fixture-exact-four-way-polarity-23",
+      "outcome": "PASS",
+      "reason": "Twenty-three fixture cases reproduced exact PASS, ABSTAIN, DENY, and ERROR outcomes and findings."
+    },
+    {
+      "gate": "focused-unittest-8",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "docs-validator-unit-tests-51",
+      "outcome": "PASS",
+      "reason": "Twenty-four metadata and twenty-seven document-graph unit tests passed."
+    },
+    {
+      "gate": "docs-meta-block-present-profile",
+      "outcome": "PASS",
+      "reason": "Both new metadata blocks are valid; missing registry entries remain review-only add-candidate warnings."
+    },
+    {
+      "gate": "draft-2020-12-meta",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "python-compile",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-local-parity",
+      "outcome": "PASS",
+      "reason": "Artifact paths, SHA-256 hashes, and truth-label keys match all seven non-self artifacts."
+    },
+    {
+      "gate": "hosted-current-head",
+      "outcome": "SKIPPED",
+      "reason": "Pending exact-head GitHub Actions after draft PR publication."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "PASS18_IDEA_CARD_KFM-P18-INV-458",
+      "validated": true,
+      "evidence_ref": "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-pages=342-343"
+    },
+    {
+      "id": "CONNECTED_DRIVE_FULL_ATLAS",
+      "validated": true,
+      "evidence_ref": "https://docs.google.com/document/d/1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho/edit"
+    },
+    {
+      "id": "THREE_D_DOCUMENTATION",
+      "validated": true,
+      "evidence_ref": "contracts/domains/archaeology/three_d_documentation.md"
+    },
+    {
+      "id": "DIRECTORY_RULES",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "DIRECTORY_RULES_ADOPTION_ADR",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "GENERATED_RECEIPT_SCHEMA_V1",
+      "validated": true,
+      "evidence_ref": "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-12T01:26:08Z",
+  "emitter": "openai/gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only implementation of KFM-P18-INV-458's missing assumption-disclosure seam. PASS means internally coherent and ready for human review only; it does not establish visibility, archaeological fact, evidence, interpretation, policy, review, release, publication, or public-use authority."
+}

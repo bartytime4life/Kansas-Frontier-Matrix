@@ -1,0 +1,1 @@
+REFERENCE_SOURCE_DESCRIPTOR_REF_INVALID	$.calibration.reference_collocation.source_descriptor_ref

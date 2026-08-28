@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schemas/contracts/v1/source/source-descriptor.schema.json",
+  "title": "Source Descriptor",
+  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {},
+  "x-kfm": {
+    "status": "PROPOSED",
+    "path": "schemas/contracts/v1/source/source-descriptor.schema.json",
+    "source_docs": [
+      "docs/domains/agriculture/SOURCE_REGISTRY.md"
+    ],
+    "contract_doc": null
+  }
+}

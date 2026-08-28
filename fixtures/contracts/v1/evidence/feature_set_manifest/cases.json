@@ -1,0 +1,187 @@
+{
+  "profile": "kfm.feature-set-manifest.fixture.v1",
+  "description": "Synthetic feature declarations only; no extraction, training, inference, evidence resolution, or authority effects occur.",
+  "base": {
+    "object_type": "FeatureSetManifest",
+    "schema_version": "1.0.0",
+    "profile": "kfm.feature-set-manifest.fixture.v1",
+    "manifest_id": "kfm:feature-set-manifest:000000000000000000000000",
+    "model_context": {
+      "model_family_ref": "kfm://model-family/synthetic-frontier-v1",
+      "intended_use_ref": "kfm://intended-use/synthetic-prioritization",
+      "target_ref": "kfm://semantic/synthetic-outcome",
+      "use_phase": "TRAINING"
+    },
+    "features": [
+      {
+        "feature_key": "synthetic_age_band",
+        "semantic_ref": "kfm://semantic/synthetic-age-band",
+        "data_type": "CATEGORY",
+        "source_role": "ADMINISTRATIVE",
+        "unit": "category",
+        "spatial_support_ref": "kfm://scope/synthetic-county",
+        "temporal_support_ref": "kfm://temporal/synthetic-reference-year",
+        "evidence_required": true,
+        "missing_data_policy": "FORBIDDEN",
+        "imputation_method_ref": null,
+        "derivation_ref": null,
+        "sensitivity_class": "PUBLIC",
+        "policy_profile_ref": null,
+        "target_leakage": false
+      },
+      {
+        "feature_key": "synthetic_resolution_score",
+        "semantic_ref": "kfm://semantic/synthetic-resolution-score",
+        "data_type": "NUMBER",
+        "source_role": "DERIVED",
+        "unit": "1",
+        "spatial_support_ref": "kfm://scope/synthetic-county",
+        "temporal_support_ref": "kfm://temporal/synthetic-reference-year",
+        "evidence_required": true,
+        "missing_data_policy": "ALLOW_WITH_INDICATOR",
+        "imputation_method_ref": null,
+        "derivation_ref": "kfm://method/synthetic-resolution-score-v1",
+        "sensitivity_class": "INTERNAL",
+        "policy_profile_ref": null,
+        "target_leakage": false
+      }
+    ],
+    "lineage": {
+      "source_descriptor_refs": [
+        "kfm://source/synthetic-administrative",
+        "kfm://source/synthetic-derived"
+      ],
+      "evidence_bundle_refs": [
+        "kfm://evidence-bundle/synthetic-admin-feature",
+        "kfm://evidence-bundle/synthetic-derived-feature"
+      ],
+      "training_dataset_ref": "kfm://dataset/synthetic-training-v1",
+      "feature_extraction_receipt_ref": "kfm://receipt/synthetic-feature-extraction-v1"
+    },
+    "disclosure": {
+      "feature_list_required": true,
+      "missingness_required": true,
+      "lineage_required": true,
+      "sensitivity_required": true,
+      "interpretation_limits": [
+        "NOT_OBSERVATION",
+        "NOT_ROOT_TRUTH",
+        "NO_MODEL_VALIDITY_CLAIM",
+        "NO_PUBLICATION_AUTHORITY",
+        "SCOPE_BOUND"
+      ]
+    },
+    "governance": {
+      "execution_mode": "FIXTURE_ONLY",
+      "network_attempted": false,
+      "feature_extraction_executed": false,
+      "model_executed": false,
+      "evidence_resolved": false,
+      "policy_evaluated": false,
+      "review_approved": false,
+      "promotion_authorized": false,
+      "release_authorized": false,
+      "public_use_allowed": false,
+      "publication_authorized": false
+    },
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "variants": {
+    "training": [],
+    "inference": [
+      {"path": "/model_context/use_phase", "value": "INFERENCE"},
+      {"path": "/lineage/training_dataset_ref", "value": null}
+    ],
+    "both": [
+      {"path": "/model_context/use_phase", "value": "BOTH"}
+    ],
+    "aggregate": [
+      {"path": "/features/1/source_role", "value": "AGGREGATE"},
+      {"path": "/features/1/derivation_ref", "value": null}
+    ],
+    "interpretive": [
+      {"path": "/features/1/source_role", "value": "INTERPRETIVE"}
+    ],
+    "modeled": [
+      {"path": "/features/1/source_role", "value": "MODELED"}
+    ],
+    "observed": [
+      {"path": "/features/1/source_role", "value": "OBSERVED"},
+      {"path": "/features/1/derivation_ref", "value": null}
+    ],
+    "regulatory": [
+      {"path": "/features/1/source_role", "value": "REGULATORY"},
+      {"path": "/features/1/derivation_ref", "value": null}
+    ],
+    "synthetic": [
+      {"path": "/features/1/source_role", "value": "SYNTHETIC"},
+      {"path": "/features/1/derivation_ref", "value": null}
+    ],
+    "imputed": [
+      {"path": "/features/0/missing_data_policy", "value": "IMPUTE_WITH_METHOD_REF"},
+      {"path": "/features/0/imputation_method_ref", "value": "kfm://method/synthetic-mode-imputation-v1"}
+    ],
+    "restricted": [
+      {"path": "/features/0/sensitivity_class", "value": "RESTRICTED"},
+      {"path": "/features/0/policy_profile_ref", "value": "kfm://policy/sensitivity/restricted-v1"}
+    ],
+    "highly_restricted": [
+      {"path": "/features/0/sensitivity_class", "value": "HIGHLY_RESTRICTED"},
+      {"path": "/features/0/policy_profile_ref", "value": "kfm://policy/sensitivity/highly-restricted-v1"}
+    ],
+    "integer": [
+      {"path": "/features/1/data_type", "value": "INTEGER"}
+    ],
+    "boolean": [
+      {"path": "/features/1/data_type", "value": "BOOLEAN"}
+    ],
+    "string": [
+      {"path": "/features/1/data_type", "value": "STRING"}
+    ]
+  },
+  "cases": [
+    {"case_id": "training_valid", "base": "training", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "inference_valid", "base": "inference", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "both_valid", "base": "both", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "aggregate_role_valid", "base": "aggregate", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "interpretive_role_valid", "base": "interpretive", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "modeled_role_valid", "base": "modeled", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "observed_role_valid", "base": "observed", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "regulatory_role_valid", "base": "regulatory", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "synthetic_role_valid", "base": "synthetic", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "imputed_valid", "base": "imputed", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "restricted_valid", "base": "restricted", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "highly_restricted_valid", "base": "highly_restricted", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "integer_valid", "base": "integer", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "boolean_valid", "base": "boolean", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "string_valid", "base": "string", "expected_outcome": "PASS", "expected_findings": []},
+
+    {"case_id": "feature_order_invalid", "base": "training", "mutations": [{"path": "/features/0/feature_key", "value": "synthetic_z_age_band"}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_FEATURE_ORDER_INVALID", "path": "/features"}]},
+    {"case_id": "feature_duplicate", "base": "training", "mutations": [{"path": "/features/1/feature_key", "value": "synthetic_age_band"}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_FEATURE_DUPLICATE", "path": "/features"}]},
+    {"case_id": "source_order_invalid", "base": "training", "mutations": [{"path": "/lineage/source_descriptor_refs", "value": ["kfm://source/synthetic-derived", "kfm://source/synthetic-administrative"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_SOURCE_ORDER_INVALID", "path": "/lineage/source_descriptor_refs"}]},
+    {"case_id": "source_duplicate", "base": "training", "mutations": [{"path": "/lineage/source_descriptor_refs", "value": ["kfm://source/synthetic-administrative", "kfm://source/synthetic-administrative"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_SOURCE_DUPLICATE", "path": "/lineage/source_descriptor_refs"}]},
+    {"case_id": "evidence_order_invalid", "base": "training", "mutations": [{"path": "/lineage/evidence_bundle_refs", "value": ["kfm://evidence-bundle/synthetic-derived-feature", "kfm://evidence-bundle/synthetic-admin-feature"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_EVIDENCE_ORDER_INVALID", "path": "/lineage/evidence_bundle_refs"}]},
+    {"case_id": "evidence_duplicate", "base": "training", "mutations": [{"path": "/lineage/evidence_bundle_refs", "value": ["kfm://evidence-bundle/synthetic-admin-feature", "kfm://evidence-bundle/synthetic-admin-feature"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_EVIDENCE_DUPLICATE", "path": "/lineage/evidence_bundle_refs"}]},
+    {"case_id": "derivation_required", "base": "training", "mutations": [{"path": "/features/1/derivation_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_DERIVATION_REQUIRED", "path": "/features/1/derivation_ref"}]},
+    {"case_id": "derivation_unexpected", "base": "training", "mutations": [{"path": "/features/0/derivation_ref", "value": "kfm://method/unexpected-derivation"}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_DERIVATION_UNEXPECTED", "path": "/features/0/derivation_ref"}]},
+    {"case_id": "imputation_method_required", "base": "training", "mutations": [{"path": "/features/0/missing_data_policy", "value": "IMPUTE_WITH_METHOD_REF"}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_IMPUTATION_METHOD_REQUIRED", "path": "/features/0/imputation_method_ref"}]},
+    {"case_id": "imputation_method_unexpected", "base": "training", "mutations": [{"path": "/features/0/imputation_method_ref", "value": "kfm://method/unexpected-imputation"}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_IMPUTATION_METHOD_UNEXPECTED", "path": "/features/0/imputation_method_ref"}]},
+    {"case_id": "policy_profile_required", "base": "training", "mutations": [{"path": "/features/0/sensitivity_class", "value": "RESTRICTED"}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_POLICY_PROFILE_REQUIRED", "path": "/features/0/policy_profile_ref"}]},
+    {"case_id": "policy_profile_unexpected", "base": "training", "mutations": [{"path": "/features/0/policy_profile_ref", "value": "kfm://policy/sensitivity/unexpected"}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_POLICY_PROFILE_UNEXPECTED", "path": "/features/0/policy_profile_ref"}]},
+    {"case_id": "training_dataset_required", "base": "training", "mutations": [{"path": "/lineage/training_dataset_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_TRAINING_DATASET_REQUIRED", "path": "/lineage/training_dataset_ref"}]},
+    {"case_id": "training_dataset_unexpected", "base": "inference", "mutations": [{"path": "/lineage/training_dataset_ref", "value": "kfm://dataset/unexpected-training"}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_TRAINING_DATASET_UNEXPECTED", "path": "/lineage/training_dataset_ref"}]},
+    {"case_id": "target_leakage", "base": "training", "mutations": [{"path": "/model_context/target_ref", "value": "kfm://semantic/synthetic-age-band"}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_TARGET_LEAKAGE", "path": "/model_context/target_ref"}]},
+    {"case_id": "limit_order_invalid", "base": "training", "mutations": [{"path": "/disclosure/interpretation_limits", "value": ["SCOPE_BOUND", "NO_PUBLICATION_AUTHORITY", "NO_MODEL_VALIDITY_CLAIM", "NOT_ROOT_TRUTH", "NOT_OBSERVATION"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_LIMIT_ORDER_INVALID", "path": "/disclosure/interpretation_limits"}]},
+    {"case_id": "required_limit_missing", "base": "training", "mutations": [{"path": "/disclosure/interpretation_limits", "value": ["NOT_OBSERVATION", "NOT_ROOT_TRUTH", "NO_PUBLICATION_AUTHORITY", "SCOPE_BOUND"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_REQUIRED_LIMIT_MISSING", "path": "/disclosure/interpretation_limits"}]},
+    {"case_id": "evidence_requirement_disabled", "base": "training", "mutations": [{"path": "/features/0/evidence_required", "value": false}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_SCHEMA_INVALID", "path": "/features/0/evidence_required"}]},
+    {"case_id": "target_leakage_flag_forbidden", "base": "training", "mutations": [{"path": "/features/0/target_leakage", "value": true}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_SCHEMA_INVALID", "path": "/features/0/target_leakage"}]},
+    {"case_id": "source_role_invalid", "base": "training", "mutations": [{"path": "/features/0/source_role", "value": "ROOT_TRUTH"}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_SCHEMA_INVALID", "path": "/features/0/source_role"}]},
+    {"case_id": "inline_derivation_unrepresentable", "base": "training", "mutations": [{"path": "/features/1/derivation_ref", "value": "feature_a + feature_b"}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_SCHEMA_INVALID", "path": "/features/1/derivation_ref"}]},
+    {"case_id": "additional_property_denied", "base": "training", "mutations": [{"path": "/features/0/value", "value": "private-payload"}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_SCHEMA_INVALID", "path": "/features/0"}]},
+    {"case_id": "feature_list_empty", "base": "training", "mutations": [{"path": "/features", "value": []}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_SCHEMA_INVALID", "path": "/features"}]},
+    {"case_id": "evidence_lineage_empty", "base": "training", "mutations": [{"path": "/lineage/evidence_bundle_refs", "value": []}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_SCHEMA_INVALID", "path": "/lineage/evidence_bundle_refs"}]},
+    {"case_id": "spec_hash_mismatch", "base": "training", "spec_hash_override": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_SPEC_HASH_MISMATCH", "path": "/spec_hash"}]},
+    {"case_id": "manifest_id_mismatch", "base": "inference", "manifest_id_override": "kfm:feature-set-manifest:111111111111111111111111", "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_MANIFEST_ID_MISMATCH", "path": "/manifest_id"}]},
+    {"case_id": "publication_authority_forbidden", "base": "training", "mutations": [{"path": "/governance/publication_authorized", "value": true}], "expected_outcome": "DENY", "expected_findings": [{"code": "FEATURE_SET_SCHEMA_INVALID", "path": "/governance/publication_authorized"}]}
+  ]
+}

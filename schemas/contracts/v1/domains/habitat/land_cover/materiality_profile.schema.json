@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/habitat/land_cover/materiality_profile.schema.json",
+  "title": "LandCoverMaterialityProfile",
+  "description": "Inactive fixture-first county land-cover materiality profile for the shared MaterialChangeAssessment adapter.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "status",
+    "profile_id",
+    "profile_version",
+    "spec_hash",
+    "domain",
+    "sublane",
+    "analysis_unit_kind",
+    "digest_algorithm",
+    "canonicalization_profile",
+    "combination",
+    "triggers",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "LandCoverMaterialityProfile"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "profile_id": {
+      "type": "string",
+      "pattern": "^kfm://materiality-profile/habitat/land-cover/[a-z0-9_.:-]+$"
+    },
+    "profile_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "domain": {
+      "const": "habitat"
+    },
+    "sublane": {
+      "const": "land_cover"
+    },
+    "analysis_unit_kind": {
+      "const": "county"
+    },
+    "digest_algorithm": {
+      "const": "sha256"
+    },
+    "canonicalization_profile": {
+      "const": "kfm-canonical-json-v1"
+    },
+    "combination": {
+      "const": "ANY"
+    },
+    "triggers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reclassification_fraction",
+        "net_area_change"
+      ],
+      "properties": {
+        "reclassification_fraction": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "operator",
+            "threshold",
+            "unit"
+          ],
+          "properties": {
+            "operator": {
+              "const": ">"
+            },
+            "threshold": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 1
+            },
+            "unit": {
+              "const": "fraction"
+            }
+          }
+        },
+        "net_area_change": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "operator",
+            "absolute_threshold_ha",
+            "fraction_threshold",
+            "threshold_rule",
+            "unit"
+          ],
+          "properties": {
+            "operator": {
+              "const": ">"
+            },
+            "absolute_threshold_ha": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "fraction_threshold": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 1
+            },
+            "threshold_rule": {
+              "const": "max"
+            },
+            "unit": {
+              "const": "hectare"
+            }
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_activated",
+        "policy_evaluated",
+        "promotion_authorized",
+        "public_use_allowed",
+        "release_ref"
+      ],
+      "properties": {
+        "source_activated": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "release_ref": {
+          "type": "null"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/domains/habitat/land_cover/materiality_profile.md",
+    "profile_instance": "pipeline_specs/habitat/land_cover/materiality_profile.v1.json",
+    "validator": "tools/validators/domains/habitat/validate_land_cover_materiality.py",
+    "non_effects": [
+      "does_not_activate_source",
+      "does_not_define_policy",
+      "does_not_authorize_promotion",
+      "does_not_release_or_publish"
+    ]
+  }
+}

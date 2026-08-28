@@ -1,0 +1,16 @@
+# source descriptor: kansas_native_plants
+# domain: flora
+# status: PROPOSED — greenfield template
+id: kansas_native_plants
+domain: flora
+role: TBD            # primary | corroborating | context | restricted
+authority: TBD
+rights:
+  license: TBD
+  attribution_required: true
+  redistribution: TBD
+sensitivity_floor: TBD
+update_cadence: TBD
+access_posture: TBD   # public | api_key | steward_only
+citation_template: "TBD"
+ingest_receipt_template: "data/receipts/ingest/flora/kansas_native_plants/<run_id>.json"

@@ -1,0 +1,220 @@
+{
+  "receipt_id": "genrec-evidence-resolution-verification-history-20260802",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/README.md",
+    "contracts/evidence/README.md",
+    "contracts/evidence/verification_state_history.md",
+    "fixtures/packages/evidence_resolver/v1alpha1/README.md",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/bundle_id_mismatch.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/bundle_not_found.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/invalid_timestamp.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/member_bundle_ref_mismatch.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/missing_bundle_ref.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/not_current_head.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/policy_abstained.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/policy_denied.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/policy_error.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/ref_not_member.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/superseded.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/unsupported_profile.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/verification_corrected.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/verification_revoked.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/verification_subject_mismatch.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/verification_superseded.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/verification_temporally_inconsistent.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/verification_unknown.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/valid/resolved.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/valid/resolved_reverified.json",
+    "packages/evidence-resolver/README.md",
+    "packages/evidence-resolver/src/evidence_resolver/README.md",
+    "packages/evidence-resolver/src/evidence_resolver/core.py",
+    "packages/evidence-resolver/src/evidence_resolver/verification_history.py",
+    "tests/README.md",
+    "tests/packages/evidence_resolver/README.md",
+    "tests/packages/evidence_resolver/test_cli.py",
+    "tests/packages/evidence_resolver/test_core.py",
+    "tests/schemas/test_verification_state_history.py",
+    "tools/validators/evidence/README.md",
+    "tools/validators/evidence_resolver/README.md",
+    "tools/validators/evidence_resolver/validate_candidate.py",
+    "tools/validators/validate_verification_state_history.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/README.md": "sha256:bd3efd9db59471a53ed4a11ef1a38a882d1147a44ee03b68840f79b71c898192",
+    "contracts/evidence/README.md": "sha256:adaab56e4fb8ccb9147431a5200207d5713a00a6e089b3b8b6eb9f2ae7001fd1",
+    "contracts/evidence/verification_state_history.md": "sha256:3937f36cafb6b65ca4a2f4818b673aa80ef69bdc45d7b0f9ae9d0ff3eb536b8e",
+    "fixtures/packages/evidence_resolver/v1alpha1/README.md": "sha256:5cfae1289e63ce4b359c452913ec61787920e1390a4f382a11d2c5008fe733d5",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/bundle_id_mismatch.json": "sha256:4b97072e3b22195da099a75fbc26fae326f8bc9c5f2cee2f3e7109d166778477",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/bundle_not_found.json": "sha256:e3d87ad8f66a5dac6fd0fb2fa6a39d14d7ff784ff79ffe1cb84561a6574a5e13",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/invalid_timestamp.json": "sha256:5280204e429d9fb60fd815ea944a15c3fb50a24f4ab00bf52fbfc47ff929e4ec",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/member_bundle_ref_mismatch.json": "sha256:de6a670dd7c4fedeba5b35d75005d01702b5962115c8c6a8948973cb5bdd62c7",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/missing_bundle_ref.json": "sha256:0cd76968fa9eed3b1b5082c12eac7502ecc89eb7f52692a6ef77b8334f7a3c63",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/not_current_head.json": "sha256:6bfff1463511671b74c49fa757c3d906d2c43af8860975a86e2ba672b3c741ab",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/policy_abstained.json": "sha256:cd59059f0fc8dcfbafb4196031d48ce09ab0c14fd5b396739e4ec6258f56f965",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/policy_denied.json": "sha256:8e93e46e686ef3fbd895e96c846184bfb8e593dd22d56cb8af4c4d8f300e1220",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/policy_error.json": "sha256:6b1bc16c724d2a39d226939ea45fda5e9dd2a6331bf69290992573a71547f48b",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/ref_not_member.json": "sha256:b66a8bc5b402fea1b204d1684e811d9d99838ccaa68fb001da99117e38d037d6",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/superseded.json": "sha256:ef85e274d3cc3f5fb0b13a69af4f047943e070697e7d038026a035a9ccf4c3f6",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/unsupported_profile.json": "sha256:740f15b9919f3db9ad9acee07cb9a63c7ba7ffdb5a9bda4b00aefca02559d224",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/verification_corrected.json": "sha256:feb09e39e244da4ddf59337712124501655b59c6183745e78ce6ca69b2ae5e56",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/verification_revoked.json": "sha256:92d058ca0a781b86a0118d256c5875b92dd419e8e2a27a6fa6eb6add66b53772",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/verification_subject_mismatch.json": "sha256:ab540378a1a6411de962d864dd353b7c0de1d0c5e878207d9dd50ffba1080512",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/verification_superseded.json": "sha256:bef184c4a732c4752cf57e9a183bb7f34411081c452a7f73c9258c57e77eb521",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/verification_temporally_inconsistent.json": "sha256:37ee0788837ebb42a7ceb0895b779751425ce88ad479041dd1e298bba197bac0",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/verification_unknown.json": "sha256:a439bb7084e8213a987e23d50b96234e62645143c594bd046a798b9c2c4b0b53",
+    "fixtures/packages/evidence_resolver/v1alpha1/valid/resolved.json": "sha256:aff760244be727c174e89c4ab9207feaf7bf590f556f324b430571d21fd8b442",
+    "fixtures/packages/evidence_resolver/v1alpha1/valid/resolved_reverified.json": "sha256:c02f6fcd67ef2d20d001b9bc14b127345a0f4f9167cf02274744a1de9ee48513",
+    "packages/evidence-resolver/README.md": "sha256:1bd6cd369c81053851ed7ab1e7b388abad4b11b98ea69b16766d6a6b42794b60",
+    "packages/evidence-resolver/src/evidence_resolver/README.md": "sha256:528a3c89c6bcfd189597aea669eaecb4c8be59b1806ede21be9239e176ade00f",
+    "packages/evidence-resolver/src/evidence_resolver/core.py": "sha256:ae7f4b7e031c9c417dbaf96eea660605ab298037d70ab03d32fdc88357d68f90",
+    "packages/evidence-resolver/src/evidence_resolver/verification_history.py": "sha256:e70c66120ff48253a17ae8fa88adcfb9b2ae1cf848f10cfc8736e7ca450de66e",
+    "tests/README.md": "sha256:1f17ce84e34e48f36be2a55835ecf63cbefccefba33146948dcfc16306986ab7",
+    "tests/packages/evidence_resolver/README.md": "sha256:0b33346760e651f677c2955911ce5feacbbf5680c85aae40023ffb8f4c3d17e2",
+    "tests/packages/evidence_resolver/test_cli.py": "sha256:a62f50aab8d10b984b8f495d14a4c24a5f01e009fade6a5953f0d792491fcafc",
+    "tests/packages/evidence_resolver/test_core.py": "sha256:658231b2170c8b896ca010bf8b1896c6768a23f36f5462e91baa16e1d68069d2",
+    "tests/schemas/test_verification_state_history.py": "sha256:c30da255fb681e9c8d4ecb7fd142ab2150c162e353a85da1f569aa9524b6a6bf",
+    "tools/validators/evidence/README.md": "sha256:4943b9c1e468e236659b92db82a5e08ac028d6a1804b24ce35a01f03af6965e7",
+    "tools/validators/evidence_resolver/README.md": "sha256:640163a17e6029c9ebc0bbd849eeb1229d3a17ee0c5c1c9a3a2f3bfec7def135",
+    "tools/validators/evidence_resolver/validate_candidate.py": "sha256:bb84799b3c00ef280cfeb56d312460efd0cba1db9228349fa78c41d9985b7145",
+    "tools/validators/validate_verification_state_history.py": "sha256:2944fc5208c3987936673e8b4bc49e09ba9ee1fc1c157cd6f1c57f8457c623ba"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Work Mode 2026-08-02"
+  },
+  "prompt_or_contract": "sha256:9ed953bc26092556cbbb76fb6a3d72845adc575e147240138261efebfa998d08",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Git",
+      "public Git repository read",
+      "deterministic standard-library Python validation",
+      "isolated repository-declared Python test environment",
+      "repository no-network documentation link checker"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/5ce95ca390e766945f587d694be046c070b11fc1",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/e3d703fdb7f75473e27923b292be2361ec322ff8",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/f8d3a67b808bf3bbd75a73e1baeac61ce3171260"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/README.md": "PROPOSED",
+    "contracts/evidence/README.md": "PROPOSED",
+    "contracts/evidence/verification_state_history.md": "PROPOSED",
+    "fixtures/packages/evidence_resolver/v1alpha1/README.md": "PROPOSED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/bundle_id_mismatch.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/bundle_not_found.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/invalid_timestamp.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/member_bundle_ref_mismatch.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/missing_bundle_ref.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/not_current_head.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/policy_abstained.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/policy_denied.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/policy_error.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/ref_not_member.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/superseded.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/unsupported_profile.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/verification_corrected.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/verification_revoked.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/verification_subject_mismatch.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/verification_superseded.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/verification_temporally_inconsistent.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/verification_unknown.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/valid/resolved.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/valid/resolved_reverified.json": "CONFIRMED",
+    "packages/evidence-resolver/README.md": "PROPOSED",
+    "packages/evidence-resolver/src/evidence_resolver/README.md": "PROPOSED",
+    "packages/evidence-resolver/src/evidence_resolver/core.py": "CONFIRMED",
+    "packages/evidence-resolver/src/evidence_resolver/verification_history.py": "CONFIRMED",
+    "tests/README.md": "PROPOSED",
+    "tests/packages/evidence_resolver/README.md": "PROPOSED",
+    "tests/packages/evidence_resolver/test_cli.py": "CONFIRMED",
+    "tests/packages/evidence_resolver/test_core.py": "CONFIRMED",
+    "tests/schemas/test_verification_state_history.py": "CONFIRMED",
+    "tools/validators/evidence/README.md": "PROPOSED",
+    "tools/validators/evidence_resolver/README.md": "PROPOSED",
+    "tools/validators/evidence_resolver/validate_candidate.py": "CONFIRMED",
+    "tools/validators/validate_verification_state_history.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "post-merge-repository-authority",
+      "outcome": "PASS",
+      "reason": "Current main at 5ce95ca390e766945f587d694be046c070b11fc1 was inspected after merged PRs #1928 and #1923. The implementation stays within the existing evidence-resolver package, evidence contract, fixture, validator, test, workflow-documentation, and generated-receipt roots."
+    },
+    {
+      "gate": "focused-evidence-resolution-suite",
+      "outcome": "PASS",
+      "reason": "Both Make targets passed 20 exact synthetic fixtures and 19 standard-library tests with deterministic RESOLVED, UNRESOLVED, DENIED, and ERROR behavior, fail-closed history replay, subject binding, parser bounds, safe diagnostics, and active DNS/socket denial."
+    },
+    {
+      "gate": "verification-history-contract-regression",
+      "outcome": "PASS",
+      "reason": "The focused VerificationStateHistory suite passed 9 tests and 24 subtests, including exact canonical-validator parity for the shared standard-library consumer, bitemporal replay, malformed history, transition, hash, ordering, timestamp, parser, CLI, and no-network cases."
+    },
+    {
+      "gate": "repository-schema-and-contract-regression",
+      "outcome": "PASS",
+      "reason": "KFM_NO_NETWORK=1 make validate passed the configured validator aggregate and 149 schema/contract tests plus 24 subtests without changing any schema."
+    },
+    {
+      "gate": "changed-document-links",
+      "outcome": "PASS",
+      "reason": "The repository no-network documentation checker passed all 10 changed Markdown documents and resolved 215 local targets; 25 external targets were classified without requests."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted exact-head checks are unavailable until the branch and draft pull request are delivered; no hosted success is inferred."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is neither authored nor inferred."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5ce95ca390e766945f587d694be046c070b11fc1/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "merged-evidence-resolution-candidate",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/e3d703fdb7f75473e27923b292be2361ec322ff8"
+    },
+    {
+      "id": "merged-verification-state-history",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/f8d3a67b808bf3bbd75a73e1baeac61ce3171260"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-03T04:40:07Z",
+  "emitter": "OpenAI Codex via ChatGPT Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "This dependency-closed integration requires every v1alpha1 EvidenceRef-to-EvidenceBundle candidate to carry a bounded VerificationStateHistory and independent effective/recorded as-of instants. The resolver shares the standard-library validation and replay implementation with the existing history validator, binds history subject identity to the EvidenceRef, preserves ERROR > DENIED > UNRESOLVED > RESOLVED precedence, and exposes a bundle identifier only for RESOLVED. ACTIVE history is necessary but never sufficient; corrected, superseded, revoked, unknown, subject-mismatched, malformed, or temporally inconsistent history fails closed. No schema, live source, policy evaluation, public projection, lifecycle, release, deployment, publication, or repository-setting state is created or changed. Rollback is a normal revert of this integration commit."
+}

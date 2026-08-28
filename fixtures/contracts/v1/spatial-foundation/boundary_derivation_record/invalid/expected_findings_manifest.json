@@ -1,0 +1,28 @@
+{
+  "invalid_spec_hash_mismatch.json": [
+    "SPEC_HASH_MISMATCH"
+  ],
+  "invalid_controls_not_canonical.json": [
+    "CONTROLS_NOT_CANONICAL"
+  ],
+  "invalid_residual_count.json": [
+    "RESIDUAL_POINT_COUNT_MISMATCH"
+  ],
+  "invalid_accepted_without_review.json": [
+    "ACCEPTED_REVIEW_INCONSISTENT"
+  ],
+  "invalid_hold_allows_analysis.json": [
+    "HOLD_REVIEW_INCONSISTENT"
+  ],
+  "invalid_legal_authority_overclaim.json": [
+    "LEGAL_OR_SOURCE_AUTHORITY_OVERCLAIM",
+    "SCHEMA_INVALID"
+  ],
+  "invalid_control_after_recording.json": [
+    "TIMING_ORDER_INVALID"
+  ],
+  "invalid_governance_overclaim.json": [
+    "GOVERNANCE_BOUNDARY_VIOLATION",
+    "SCHEMA_INVALID"
+  ]
+}

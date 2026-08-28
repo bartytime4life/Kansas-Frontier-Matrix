@@ -1,0 +1,5 @@
+status: PROPOSED
+source_doc: docs/domains/archaeology/MISSING_OR_PLANNED_FILES.md
+path: pipeline_specs/archaeology/publish.spec.yaml
+notes:
+  - Placeholder created from docs/domains markdown inventory.

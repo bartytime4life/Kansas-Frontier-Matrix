@@ -1,0 +1,374 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/governance_event.schema.json",
+  "title": "GovernanceEvent candidate profile",
+  "description": "Closed, fixture-only governance-event candidate preserving announcements, scheduled sessions, held or cancelled state, public participation, recommendations, decisions, implementation, and outcome observations as explicitly linked but non-interchangeable object families.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "status",
+    "governance_event_id",
+    "version",
+    "spec_hash",
+    "event_type",
+    "event_state",
+    "source_ref",
+    "source_native_id",
+    "issuing_authority_ref",
+    "source_snapshot_refs",
+    "organizer_refs",
+    "jurisdiction_refs",
+    "venue_ref",
+    "geometry",
+    "times",
+    "agenda_refs",
+    "material_refs",
+    "comment_window_refs",
+    "submission_refs",
+    "recommendation_refs",
+    "decision_refs",
+    "implementation_refs",
+    "outcome_observation_refs",
+    "participation_receipt_refs",
+    "evidence_refs",
+    "lineage",
+    "release_state",
+    "release_ref",
+    "limitations",
+    "public_use_allowed",
+    "effects"
+  ],
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^\\S+$"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "nullable_datetime": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "ref_array": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "required_ref_array": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    }
+  },
+  "properties": {
+    "profile": {
+      "const": "kfm.governance.governance-event.v1"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "governance_event_id": {
+      "type": "string",
+      "pattern": "^governance-event:[a-f0-9]{24}$"
+    },
+    "version": {
+      "const": "1.0.0"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "event_type": {
+      "enum": [
+        "MEETING",
+        "HEARING",
+        "WORKSHOP",
+        "CONSULTATION",
+        "RULEMAKING_SESSION"
+      ]
+    },
+    "event_state": {
+      "enum": [
+        "ANNOUNCED",
+        "SCHEDULED",
+        "HELD",
+        "CANCELLED"
+      ]
+    },
+    "source_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "source_native_id": {
+      "$ref": "#/$defs/ref"
+    },
+    "issuing_authority_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "source_snapshot_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^kfm:source-snapshot:[a-f0-9]{64}$"
+      }
+    },
+    "organizer_refs": {
+      "$ref": "#/$defs/required_ref_array"
+    },
+    "jurisdiction_refs": {
+      "$ref": "#/$defs/required_ref_array"
+    },
+    "venue_ref": {
+      "$ref": "#/$defs/nullable_ref"
+    },
+    "geometry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "geography_ref",
+        "geometry_role",
+        "geometry_digest",
+        "geometry_confidence"
+      ],
+      "properties": {
+        "geography_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "geometry_role": {
+          "enum": [
+            "AUTHORITATIVE",
+            "OPERATIONAL",
+            "INDICATIVE",
+            "APPROXIMATE",
+            "DISPLAY_ONLY",
+            "UNRESOLVED"
+          ]
+        },
+        "geometry_digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "geometry_confidence": {
+          "enum": [
+            "CONFIRMED",
+            "HIGH",
+            "MEDIUM",
+            "LOW",
+            "UNRESOLVED"
+          ]
+        }
+      }
+    },
+    "times": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "announced_at",
+        "scheduled_start",
+        "scheduled_end",
+        "held_at",
+        "cancelled_at",
+        "retrieved_at",
+        "corrected_at",
+        "superseded_at",
+        "native_timezone"
+      ],
+      "properties": {
+        "announced_at": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "scheduled_start": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "scheduled_end": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "held_at": {
+          "$ref": "#/$defs/nullable_datetime"
+        },
+        "cancelled_at": {
+          "$ref": "#/$defs/nullable_datetime"
+        },
+        "retrieved_at": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "corrected_at": {
+          "$ref": "#/$defs/nullable_datetime"
+        },
+        "superseded_at": {
+          "$ref": "#/$defs/nullable_datetime"
+        },
+        "native_timezone": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z][A-Za-z0-9_+\\-/]{1,127}$"
+        }
+      }
+    },
+    "agenda_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "material_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "comment_window_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "submission_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "recommendation_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "decision_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "implementation_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "outcome_observation_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "participation_receipt_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "evidence_refs": {
+      "$ref": "#/$defs/required_ref_array"
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "corrects",
+        "superseded_by",
+        "conflict_refs"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "CURRENT",
+            "CORRECTED",
+            "SUPERSEDED",
+            "CONFLICTED"
+          ]
+        },
+        "corrects": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "superseded_by": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "conflict_refs": {
+          "$ref": "#/$defs/ref_array"
+        }
+      }
+    },
+    "release_state": {
+      "enum": [
+        "UNRELEASED",
+        "RELEASED"
+      ]
+    },
+    "release_ref": {
+      "$ref": "#/$defs/nullable_ref"
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 240,
+        "pattern": "\\S"
+      }
+    },
+    "public_use_allowed": {
+      "type": "boolean"
+    },
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_activated",
+        "evidence_resolved",
+        "policy_evaluated",
+        "promoted",
+        "released",
+        "published"
+      ],
+      "properties": {
+        "source_activated": {
+          "type": "boolean"
+        },
+        "evidence_resolved": {
+          "type": "boolean"
+        },
+        "policy_evaluated": {
+          "type": "boolean"
+        },
+        "promoted": {
+          "type": "boolean"
+        },
+        "released": {
+          "type": "boolean"
+        },
+        "published": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/governance/governance_event.md",
+    "fixtures_root": "fixtures/contracts/v1/governance/governance_event/",
+    "validator": "tools/validators/validate_governance_event.py",
+    "tests": "tests/validators/test_validate_governance_event.py",
+    "authority": "fixture_candidate_only",
+    "public_release_authority": false
+  }
+}

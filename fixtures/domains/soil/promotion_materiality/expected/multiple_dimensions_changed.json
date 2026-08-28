@@ -1,0 +1,130 @@
+{
+  "assessment_id": "material-change:soil:multiple-dimensions-changed",
+  "baseline_ref": "kfm://soil/fixture/baseline",
+  "candidate_ref": "kfm://soil/fixture/multiple-dimensions-changed",
+  "classification": {
+    "change_class": "MATERIAL",
+    "material": true,
+    "outcome": "PROMOTION_CANDIDATE",
+    "reason_codes": [
+      "DOMAIN_STATUS_CHANGE",
+      "MATERIALITY_THRESHOLD_MET"
+    ]
+  },
+  "comparison": {
+    "baseline_digest": "sha256:6e520e9e74fdd4b79dbd46de1eea4479a2864909e07428e8556f49f4679a3082",
+    "byte_changed": true,
+    "candidate_digest": "sha256:54512b5464a8b1478f5181b0d119563b58f474313d0044b3208ebd78aae48fd2",
+    "semantic_changed": true
+  },
+  "criteria": [
+    {
+      "criterion_id": "soil.hash.content_spec_hash",
+      "evidence_refs": [
+        "kfm://validation/soil/multiple-dimensions-changed/diff"
+      ],
+      "metric": "content_spec_hash",
+      "observed_value": false,
+      "required": false,
+      "result": "FAIL",
+      "threshold": true,
+      "unit": null
+    },
+    {
+      "criterion_id": "soil.hash.policy_hash",
+      "evidence_refs": [
+        "kfm://validation/soil/multiple-dimensions-changed/diff"
+      ],
+      "metric": "policy_hash",
+      "observed_value": true,
+      "required": false,
+      "result": "PASS",
+      "threshold": true,
+      "unit": null
+    },
+    {
+      "criterion_id": "soil.hash.schema_hash",
+      "evidence_refs": [
+        "kfm://validation/soil/multiple-dimensions-changed/diff"
+      ],
+      "metric": "schema_hash",
+      "observed_value": true,
+      "required": false,
+      "result": "PASS",
+      "threshold": true,
+      "unit": null
+    },
+    {
+      "criterion_id": "soil.hash.source_descriptor_hash",
+      "evidence_refs": [
+        "kfm://validation/soil/multiple-dimensions-changed/diff"
+      ],
+      "metric": "source_descriptor_hash",
+      "observed_value": true,
+      "required": false,
+      "result": "PASS",
+      "threshold": true,
+      "unit": null
+    },
+    {
+      "criterion_id": "soil.hash.validator_hash",
+      "evidence_refs": [
+        "kfm://validation/soil/multiple-dimensions-changed/diff"
+      ],
+      "metric": "validator_hash",
+      "observed_value": false,
+      "required": false,
+      "result": "FAIL",
+      "threshold": true,
+      "unit": null
+    },
+    {
+      "criterion_id": "soil.materiality.any_substantive_hash_changed",
+      "evidence_refs": [
+        "kfm://validation/soil/multiple-dimensions-changed/diff"
+      ],
+      "metric": "substantive_hash_change_count",
+      "observed_value": 3,
+      "required": true,
+      "result": "PASS",
+      "threshold": 1,
+      "unit": "dimension_count"
+    }
+  ],
+  "evidence": {
+    "diff_report_ref": "kfm://validation/soil/multiple-dimensions-changed/diff",
+    "source_refs": [
+      "kfm://source/nrcs-ssurgo"
+    ],
+    "validation_report_refs": [
+      "kfm://validation/soil/multiple-dimensions-changed/integrity"
+    ]
+  },
+  "governance": {
+    "authority_created": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null,
+    "spec_hash": "sha256:34bd35056d8796681c71234c76ad48e4c1b19ae33d5594a24bd3f38a0a35c961"
+  },
+  "lineage": {
+    "superseded_by": null,
+    "supersedes": null
+  },
+  "object_type": "MaterialChangeAssessment",
+  "profile": {
+    "canonicalization_profile": "kfm-canonical-json-v1",
+    "digest_algorithm": "sha256",
+    "profile_id": "kfm://materiality-profile/soil/promotion-hash-dimensions-v1",
+    "profile_version": "1.0.0",
+    "spec_hash": "sha256:f09f5db9fbe536de0eecbf051c6a38fc21ef18519a0e8a6610be707782be6682"
+  },
+  "schema_version": "1.0.0",
+  "subject_ref": "kfm://soil/fixture/kansas-static-survey",
+  "timing": {
+    "assessed_at": "2026-08-03T00:00:00Z",
+    "baseline_as_of": "2026-08-01T00:00:00Z",
+    "candidate_as_of": "2026-08-02T00:00:00Z"
+  }
+}

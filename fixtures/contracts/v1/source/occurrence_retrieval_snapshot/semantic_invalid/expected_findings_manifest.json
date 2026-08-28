@@ -1,0 +1,38 @@
+{
+  "semantic_invalid_ebird_non_detection_without_pair.json": [
+    "OCCURRENCE_RETRIEVAL_EBD_SED_PAIR_REQUIRED"
+  ],
+  "semantic_invalid_exact_coordinates_requested.json": [
+    "OCCURRENCE_RETRIEVAL_EXACT_COORDINATES_REQUESTED"
+  ],
+  "semantic_invalid_failed_transfer_as_zero_records.json": [
+    "OCCURRENCE_RETRIEVAL_RESULT_INTERPRETATION_MISMATCH"
+  ],
+  "semantic_invalid_gbif_absence_claim.json": [
+    "OCCURRENCE_RETRIEVAL_ABSENCE_CLAIM_DENIED"
+  ],
+  "semantic_invalid_gbif_missing_citation.json": [
+    "OCCURRENCE_RETRIEVAL_GBIF_CITATION_REQUIRED"
+  ],
+  "semantic_invalid_incomplete_checklist_non_detection.json": [
+    "OCCURRENCE_RETRIEVAL_COMPLETE_CHECKLIST_REQUIRED"
+  ],
+  "semantic_invalid_internal_lifecycle_ref.json": [
+    "OCCURRENCE_RETRIEVAL_INTERNAL_LIFECYCLE_REF_DENIED"
+  ],
+  "semantic_invalid_predicate_order.json": [
+    "OCCURRENCE_RETRIEVAL_PREDICATE_ORDER_INVALID"
+  ],
+  "semantic_invalid_query_hash.json": [
+    "OCCURRENCE_RETRIEVAL_QUERY_HASH_MISMATCH"
+  ],
+  "semantic_invalid_source_role.json": [
+    "OCCURRENCE_RETRIEVAL_SOURCE_ROLE_MISMATCH"
+  ],
+  "semantic_invalid_succeeded_without_artifact.json": [
+    "OCCURRENCE_RETRIEVAL_SUCCEEDED_ARTIFACT_REQUIRED"
+  ],
+  "semantic_invalid_transfer_transition.json": [
+    "OCCURRENCE_RETRIEVAL_TRANSFER_TRANSITION_INVALID"
+  ]
+}

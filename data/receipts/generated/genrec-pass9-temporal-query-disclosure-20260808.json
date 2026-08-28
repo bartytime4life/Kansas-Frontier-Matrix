@@ -1,0 +1,100 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/temporal-query-disclosure.yml": "sha256:2da632ca559d928e89556f6221fa125cdfae7b2f03616acaaac506a51f5bc1b7",
+    "contracts/governance/temporal_query_disclosure.md": "sha256:6a39d1a3c1e34a0ccd2755766be1708b8994c2a69774c4296574187189064a9d",
+    "fixtures/contracts/v1/governance/temporal_query_disclosure/README.md": "sha256:9b817b18d0de4dc1b04186d5d8477a3622038e617655e5d7ab2a649c36f370aa"
+  },
+  "artifact_paths": [
+    ".github/workflows/temporal-query-disclosure.yml",
+    "contracts/governance/temporal_query_disclosure.md",
+    "fixtures/contracts/v1/governance/temporal_query_disclosure/README.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_9_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P9-PROG-0033",
+      "id": "SRC-PASS9-TEMPORAL-QUERY-DISCLOSURE",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/governance/query_run_record.schema.json@825001c87b92a2559a38860c2cb75969963e4b2d",
+      "id": "REPOSITORY-QUERY-RUN-RECORD",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "id": "ADR-0029-DIRECTORY-RULES-V2",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-09T01:03:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_9_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_9_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P9-PROG-0033",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@825001c87b92a2559a38860c2cb75969963e4b2d",
+      "repo:schemas/contracts/v1/governance/query_run_record.schema.json@825001c87b92a2559a38860c2cb75969963e4b2d",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@825001c87b92a2559a38860c2cb75969963e4b2d"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Authoring receipt for the source-backed temporal-query disclosure slice. The receipt binds the workflow, semantic contract, and fixture-lane documentation exactly; the complete schema, builder, fixtures, validator, and tests are verified by the dedicated exact-head workflow. The profile is fixture-only and does not execute queries, read a database, resolve evidence, evaluate policy, approve review, release, deploy, publish, or create public-use authority.",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:6aed2244edab9c04764ff1ee495c72ebf571931f0b27c8606684564036027c86",
+  "receipt_id": "genrec-pass9-temporal-query-disclosure-20260808",
+  "truth_labels": {
+    ".github/workflows/temporal-query-disclosure.yml": "PROPOSED",
+    "contracts/governance/temporal_query_disclosure.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/temporal_query_disclosure/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "TemporalQueryDisclosure schema passed Draft 2020-12 meta-validation in focused local validation."
+    },
+    {
+      "gate": "focused-deterministic-tests",
+      "outcome": "PASS",
+      "reason": "Eight focused no-network unit tests passed."
+    },
+    {
+      "gate": "fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Twelve synthetic cases matched exact PASS or DENY outcomes and finding-code sets."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull-request delivery."
+    }
+  ]
+}

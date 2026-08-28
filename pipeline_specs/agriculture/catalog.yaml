@@ -1,0 +1,4 @@
+# pipeline_specs :: agriculture :: catalog
+name: agriculture-catalog
+version: 1
+stages: []

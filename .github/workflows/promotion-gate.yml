@@ -1,0 +1,450 @@
+# KFM promotion-gate validation and readiness workflow.
+#
+# Responsibility:
+#   Exercise the repository-owned doctrine and PromotionDecision shape checks,
+#   prove the currently documented doctrine-artifact failure is fail-closed,
+#   execute the bounded A-G promotion-readiness proof, and keep unresolved
+#   review and release authority visible as explicit holds.
+#   This workflow never promotes, publishes, or writes a release decision.
+#
+# Trigger and trust boundary:
+#   Pull requests, pushes to main, and explicit dispatch. Pull-request content
+#   is untrusted. The workflow has read-only repository permission. Network use
+#   after checkout is limited to installing dependencies declared by the root
+#   pyproject; no secrets, release credentials, or deployment permissions exist.
+#
+# Inputs:
+#   Doctrine registry/checker/tests, DoctrineArtifactDescriptor schema fixtures,
+#   PromotionDecision contract/schema/fixtures/validator/test, promotion policy
+#   source inventory, bounded promotion-gate and fixture-only ReviewRecord
+#   validators/fixtures/tests, the bounded promotion-verification execution
+#   package inventory, and the tracked hydrology automation-smoke decision.
+#
+# Outputs and outcomes:
+#   Test output and job summaries only. Shape checks may pass while promotion
+#   remains held. No EvidenceBundle, ReviewRecord, PromotionDecision, receipt,
+#   proof, manifest, rollback card, signature, release, or public artifact is
+#   emitted or authorized.
+#
+# Compatibility:
+#   Preserve workflow name `promotion-gate` and job ids
+#   `doctrine-artifact-prereq`, `doctrine-artifact-schema`,
+#   `promotion-prerequisites`, and `review-records-present`; repository rules
+#   may refer to those check names.
+#
+# Rollback:
+#   Revert this file. Do not restore execution of the hydrology promoter in CI:
+#   that scaffold writes an automation-approved decision with unresolved refs.
+#
+# Placement:
+#   `.github/workflows/` owns CI orchestration. Release authority remains under
+#   `release/`; contract, schema, policy, fixture, validator, test, evidence,
+#   receipt, proof, and lifecycle authority remain in their owning roots.
+
+name: promotion-gate
+
+"on":
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: promotion-gate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  doctrine-artifact-prereq:
+    name: doctrine-artifact-prereq
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install declared repository test dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-test
+
+      - name: Prove missing doctrine artifacts fail closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pytest -q tests/policy/test_doctrine_artifact_required.py
+
+      - name: Record doctrine prerequisite outcome
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Doctrine artifact prerequisite"
+            echo
+            echo "- **WORKFLOW_HOLD:** the doctrine registry still marks required artifacts as needs-verification and the repository check must deny readiness while at least one remains absent."
+            echo "- This job passes only when the repository-owned tests prove that absence is visible and fail-closed; it does not mean the doctrine prerequisite is satisfied."
+            echo "- Result: ${{ job.status }}. No doctrine artifact, admission descriptor, receipt, release decision, or publication authority was created."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  doctrine-artifact-schema:
+    name: doctrine-artifact-schema
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install declared repository test dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-test
+
+      - name: Require non-vacuous descriptor fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          root = Path("fixtures/contracts/v1/source/doctrine_artifact_descriptor")
+          valid = sorted((root / "valid").glob("*.json"))
+          invalid = sorted((root / "invalid").glob("*.json"))
+          expected = sorted((root / "invalid").glob("*.expected_error.txt"))
+          assert valid, "DoctrineArtifactDescriptor valid fixture set is empty"
+          assert invalid, "DoctrineArtifactDescriptor invalid fixture set is empty"
+          assert len(expected) == len(invalid), (
+              "every invalid DoctrineArtifactDescriptor fixture must retain an expected error"
+          )
+          print(
+              f"CONFIRMED: {len(valid)} valid and {len(invalid)} invalid "
+              "DoctrineArtifactDescriptor fixtures are discoverable."
+          )
+          PY
+
+      - name: Validate DoctrineArtifactDescriptor fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pytest -q tests/source/test_doctrine_artifact_descriptor_schema.py
+
+      - name: Record descriptor schema boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Doctrine artifact descriptor schema"
+            echo
+            echo "- The repository-owned dedicated fixture test ran after a non-empty valid/invalid inventory check."
+            echo "- Result: ${{ job.status }}. A pass proves the selected PROPOSED JSON shape fixtures only; it does not admit the referenced PDFs or prove provenance, authority, steward signoff, evidence closure, policy, promotion, or publication."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  promotion-prerequisites:
+    name: promotion-prerequisites
+    needs:
+      - doctrine-artifact-prereq
+      - doctrine-artifact-schema
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install declared repository test dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-test
+
+      - name: Require non-vacuous PromotionDecision fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          schema_path = Path("schemas/contracts/v1/release/promotion_decision.schema.json")
+          fixture_root = Path("fixtures/release/promotion_decision")
+          valid = sorted((fixture_root / "valid").glob("*.json"))
+          invalid = sorted((fixture_root / "invalid").glob("*.json"))
+          assert valid, "PromotionDecision valid fixture set is empty"
+          assert invalid, "PromotionDecision invalid fixture set is empty"
+
+          schema = json.loads(schema_path.read_text(encoding="utf-8"))
+          assert schema["x-kfm"] == {
+              "contract_doc": "contracts/release/promotion_decision.md",
+              "fixtures_root": "fixtures/release/promotion_decision/",
+              "validator": "tools/validators/release/validate_promotion_decision.py",
+              "policy": "policy/promotion/",
+              "status": "PROPOSED",
+          }, "PromotionDecision schema metadata changed; reconcile the gate deliberately"
+          assert schema["properties"]["decision"]["enum"] == [
+              "APPROVE", "DENY", "ABSTAIN"
+          ]
+          assert schema["additionalProperties"] is False
+
+          print(
+              f"CONFIRMED: {len(valid)} valid and {len(invalid)} invalid "
+              "PromotionDecision fixtures are discoverable."
+          )
+          print("CONFIRMED: the PromotionDecision schema remains PROPOSED.")
+          PY
+
+      - name: Validate PromotionDecision shape fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pytest -q tests/release/test_promotion_decision_schema.py
+
+      - name: Prove bounded promotion-gate readiness behavior
+        shell: bash
+        run: |
+          set -euo pipefail
+          make publish-check
+
+      - name: Record promotion prerequisite boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Promotion prerequisites"
+            echo
+            echo "- The repository-owned PromotionDecision shape test and bounded A-G promotion-gate proof ran after non-empty fixture checks."
+            echo "- A promotion-gate PASS means only APPROVE_READY for review. The PROPOSED PromotionDecision schema and every external support reference remain separately governed."
+            echo "- Gate G rejects noncanonical identities, identities issued after the review instant, supplied authority or valid-until intervals that do not cover evaluation, a declared non-null supersession marker, unavailable review context, self-review, scope mismatch, and unbound spec/artifact hashes; a nonempty approving-review obligations list abstains."
+            echo "- **WORKFLOW_HOLD:** this job does not authenticate EvidenceRefs, execute promotion policy, verify DSSE/cosign, authenticate live identities or authority assignments, resolve catalog records, execute rollback, or authorize a lifecycle transition."
+            echo "- Result: ${{ job.status }}. No PromotionDecision, receipt, proof, manifest, release, or publication authority was emitted."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  review-records-present:
+    name: review-records-present
+    needs:
+      - promotion-prerequisites
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up inspection Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Confirm review hold beside implemented promotion gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          import re
+
+          required = [
+              Path("pipelines/domains/hydrology/promote.py"),
+              Path("release/promotion_decisions/hydrology/run-local-smoke.json"),
+              Path("release/reviews/README.md"),
+              Path("tools/validators/validate_promotion_gate.py"),
+              Path("tools/validators/promotion_gate/validate_promotion_gate.py"),
+              Path("tools/validators/promotion_gate/execute_promotion_verification.py"),
+              Path("tools/validators/promotion_gate/execution/__init__.py"),
+              Path("tools/validators/promotion_gate/execution/common.py"),
+              Path("tools/validators/promotion_gate/execution/engine.py"),
+              Path("tools/validators/validate_review_record.py"),
+              Path("tools/validators/promotion_gate/README.md"),
+              Path("fixtures/release/promotion_gate/README.md"),
+              Path("tests/release/test_promotion_gate.py"),
+              Path("tests/release/test_review_record.py"),
+              Path("policy/promotion/promotion_prerequisites.rego"),
+              Path("policy/promotion/rollback_card_required.rego"),
+              Path("Makefile"),
+          ]
+          missing = [path.as_posix() for path in required if not path.is_file()]
+          assert not missing, f"required promotion readiness evidence is missing: {missing}"
+
+          review_inventory = {
+              path.relative_to("release/reviews").as_posix()
+              for path in Path("release/reviews").rglob("*")
+              if path.is_file()
+          }
+          assert review_inventory == {
+              "README.md", "atmosphere/.gitkeep", "atmosphere/README.md"
+          }, (
+              "release review records have appeared; validate their schema, subject binding, "
+              f"steward authority, and separation of duties deliberately: {sorted(review_inventory)}"
+          )
+
+          decision_path = Path(
+              "release/promotion_decisions/hydrology/run-local-smoke.json"
+          )
+          decision = json.loads(decision_path.read_text(encoding="utf-8"))
+          assert decision["decision"] == "APPROVE"
+          assert decision["review"] == {
+              "reviewer": "automation-smoke", "ticket": "REL-SMOKE"
+          }
+          assert decision["run_id"] == "run-local-smoke"
+          referenced_paths = [
+              Path(decision["evidence_bundle_uri"]),
+              Path(decision["rollback_card_uri"]),
+          ]
+          resolved = [path.as_posix() for path in referenced_paths if path.exists()]
+          assert not resolved, (
+              "the smoke decision support paths have appeared; replace this hold with "
+              f"governed reference validation and accountable review: {resolved}"
+          )
+
+          promoter = Path("pipelines/domains/hydrology/promote.py").read_text(
+              encoding="utf-8"
+          )
+          for marker in (
+              "Hydrology promotion gate stub.",
+              '"decision": "APPROVE"',
+              '"reviewer": "automation-smoke"',
+              'emit_stub("run-local-smoke")',
+          ):
+              assert marker in promoter, (
+                  "hydrology promoter changed; review the implementation and wire real "
+                  f"fail-closed tests before executing it in CI: missing marker {marker}"
+              )
+
+          review_validator = Path("tools/validators/validate_review_record.py").read_text(
+              encoding="utf-8"
+          )
+          for marker in (
+              "validate_packet_document",
+              "RR_AUTHORITY_MISSING",
+              "RR_AUTHORITY_NOT_CURRENT",
+              "RR_OBLIGATIONS_OPEN",
+              "RR_IDENTITY_NOT_CURRENT",
+              "RR_SELF_REVIEW",
+              "RR_REVIEW_STALE",
+              "RR_REVIEW_SUPERSEDED",
+              "RR_SCOPE_MISMATCH",
+              "RR_SPEC_HASH_UNBOUND",
+              "RR_ARTIFACT_HASH_UNBOUND",
+          ):
+              assert marker in review_validator, (
+                  "fixture-only ReviewRecord implementation drifted; "
+                  f"missing marker {marker}"
+              )
+
+          promotion_wrapper = Path(
+              "tools/validators/validate_promotion_gate.py"
+          ).read_text(encoding="utf-8")
+          assert "promotion_gate.validate_promotion_gate import main" in promotion_wrapper
+
+          validator_inventory = {
+              path.relative_to("tools/validators/promotion_gate").as_posix()
+              for path in Path("tools/validators/promotion_gate").rglob("*")
+              if path.is_file() and "__pycache__" not in path.parts
+          }
+          assert validator_inventory == {
+              "README.md",
+              "__init__.py",
+              "execute_promotion_verification.py",
+              "execution/__init__.py",
+              "execution/common.py",
+              "execution/engine.py",
+              "validate_promotion_gate.py",
+          }, f"promotion-gate implementation inventory drifted: {sorted(validator_inventory)}"
+
+          execution_entrypoint = Path(
+              "tools/validators/promotion_gate/execute_promotion_verification.py"
+          ).read_text(encoding="utf-8")
+          for marker in (
+              "--cosign-bin",
+              "--conftest-bin",
+              "execution.engine import execute as _execute",
+          ):
+              assert marker in execution_entrypoint, (
+                  "promotion-verification entry point drifted; "
+                  f"missing marker {marker}"
+              )
+
+          execution_engine = Path(
+              "tools/validators/promotion_gate/execution/engine.py"
+          ).read_text(encoding="utf-8")
+          for marker in (
+              '"lifecycle_write": False',
+              '"promotion_authorized": False',
+              '"release_authorized": False',
+              '"deployment_authorized": False',
+              '"publication_authorized": False',
+          ):
+              assert marker in execution_engine, (
+                  "promotion-verification authority boundary drifted; "
+                  f"missing marker {marker}"
+              )
+
+          makefile = Path("Makefile").read_text(encoding="utf-8")
+          target = re.search(r"(?m)^publish-check:\n(?P<body>(?:\t[^\n]*\n)+)", makefile)
+          assert target, "Makefile publish-check target is missing"
+          target_body = target.group("body")
+          assert "validate_review_record.py --fixtures" in target_body
+          assert "validate_promotion_gate.py --fixtures" in target_body
+          assert "tests.release.test_review_record" in target_body
+          assert "tests.release.test_promotion_gate" in target_body
+
+          print("CONFIRMED: release/reviews contains guidance only, not review records.")
+          print("CONFIRMED: bounded promotion gate and fixture-only ReviewRecord validator are wired.")
+          print("CONFIRMED: the separately tested promotion-verification executor inventory is recognized with every authority flag false.")
+          print("CONFIRMED: canonical identity syntax and review-time issuance, supplied authority/validity intervals, explicit supersession marking, and empty approving-review obligations were enforced over synthetic context.")
+          print("CONFIRMED: the fixture projection creates no governed ReviewRecord or actor authority.")
+          print("WORKFLOW_SKIPPED_EXPLICIT: the hydrology promoter was not executed.")
+          print("WORKFLOW_HOLD: its automation-approved smoke decision has unresolved support refs.")
+          print("No review, promotion, release, or publication authority was created.")
+          PY
+
+      - name: Re-run bounded promotion gate without release authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          make publish-check
+
+      - name: Record review readiness outcome
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Review records"
+            echo
+            echo "- The bounded promotion gate and fixture-only ReviewRecord profile re-ran here; canonical identity syntax, issuance by review time, a declared authority interval covering evaluation, and an empty approving-review obligations list were checked. PASS is only APPROVE_READY over synthetic declarations."
+            echo "- The known promotion-verification execution package is inventory-checked here, but its dedicated workflow remains the authority for its deterministic fixture execution; every lifecycle, promotion, release, deployment, and publication effect remains false."
+            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** no governed release ReviewRecord is present, and no live actor identity or authority assignment was authenticated."
+            echo "- The hydrology promoter was intentionally not run: it writes a timestamped automation-approved smoke decision whose EvidenceBundle and rollback-card paths are unresolved."
+            echo "- Result: ${{ job.status }}. This readiness inventory is not reviewer approval, separation-of-duties proof, promotion, release, rollback readiness, or publication authority."
+            echo "- **NEEDS VERIFICATION:** governed review records, authority resolution, support resolution, and the held hydrology promoter remain separate future work."
+          } >> "$GITHUB_STEP_SUMMARY"

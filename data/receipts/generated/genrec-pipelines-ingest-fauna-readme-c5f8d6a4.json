@@ -1,0 +1,191 @@
+{
+  "receipt_id": "genrec-pipelines-ingest-fauna-readme-c5f8d6a4",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipelines/ingest/fauna/README.md"
+  ],
+  "artifact_hashes": {
+    "pipelines/ingest/fauna/README.md": "sha256:c5f8d6a45b7ee9d7bc414292eabef8209701ede93cf704567edaf6781981d804"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-07-20"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository code search",
+      "repository file reads",
+      "remote branch and contents writes",
+      "local deterministic content validation",
+      "Poppler PDF text extraction"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+      "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335",
+      "sha256:43d0c6fea4cc64edb87238a13ac49b639934a82dcef0fab2ef49217add0ba8cf",
+      "sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1"
+    ],
+    "attached_docs": [
+      "Pasted text(55).txt",
+      "Directory Rules.pdf",
+      "Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf",
+      "Unified Implementation Architecture Build Manual.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/pipelines/ingest/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/pipelines/ingest/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/pipelines/domains/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/pipeline_specs/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/docs/domains/fauna/CANONICAL_PATHS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/docs/registers/DRIFT_REGISTER.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine-only.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/docs/adr/ADR-0018-promotion-gate-sequence.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/.github/workflows/domain-fauna.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/.github/workflows/docs-build.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/.github/workflows/link-check.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/.github/workflows/codeql.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/data/receipts/generated/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "pipelines/ingest/fauna/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, public visibility, authenticated push permission, exact target, immutable base, prior blob, review-branch route, API-only mutation profile, two-file change budget, acceptance criteria, and stop conditions were resolved before mutation."
+    },
+    {
+      "gate": "base-drift-reconciliation",
+      "outcome": "PASS",
+      "reason": "Repository evidence was refreshed from earlier commit 580ec77a001835625667acb58676009036170ac3 to current base 2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0 before branch creation. The target retained blob a03934112656906712313436f93f92f0f49c84d1."
+    },
+    {
+      "gate": "directory-adr-drift-and-path-instruction-preflight",
+      "outcome": "PASS",
+      "reason": "Root and path-scoped AGENTS.md probes were absent. Current Directory Rules, Fauna canonical-path guidance, drift register, contribution and PR guidance, adjacent READMEs, and relevant draft/proposed ADRs were inspected. The requested path's conflict with the canonical pipelines/domains/fauna lane is surfaced rather than normalized."
+    },
+    {
+      "gate": "document-authority-and-supersession-graph",
+      "outcome": "PASS",
+      "reason": "The existing README was revised in place. Its doc_id and creation date were preserved, v0.2 declares supersession of v0.1, and no duplicate Fauna ingest documentation authority was created."
+    },
+    {
+      "gate": "repository-inventory-and-no-overclaim",
+      "outcome": "PASS",
+      "reason": "Exact-path probes at the pinned base did not find the previously proposed adapter contract, executable helpers, dedicated ingest spec, dedicated ingest test README, or dedicated ingest fixture README. Current parent, domain, contract, schema, policy, registry, lifecycle, receipt, proof, and release README surfaces were classified without upgrading documentation presence to runtime proof."
+    },
+    {
+      "gate": "no-loss-and-fauna-sensitivity-boundary",
+      "outcome": "PASS",
+      "reason": "The prior source-role, occurrence/restricted-public split, geoprivacy, quarantine, lifecycle, evidence, policy, release, correction, and rollback controls were preserved and strengthened. No exact sensitive location or restricted source payload is included."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Inspected broad pull_request workflows use GitHub-hosted runners. Domain Fauna, docs-build, and link-check use read-only contents permissions and explicit held/scaffold postures. CodeQL uses pull_request rather than pull_request_target and has bounded security-events write permission. Contracts/schema workflows may install declared dependencies and run repository tests with read-only contents access. No deployment, release, publication, OIDC, protected environment, self-hosted runner, or secret-bearing path was verified for this documentation diff; mutable action tags and branch-protection coupling remain NEEDS VERIFICATION."
+    },
+    {
+      "gate": "markdown-meta-navigation-and-structure",
+      "outcome": "PASS",
+      "reason": "Local deterministic checks found one H1, balanced fences, one complete KFM Meta Block wrapper, logical headings, matched internal navigation targets, no placeholder base SHA, and a final newline."
+    },
+    {
+      "gate": "repository-relative-link-validation",
+      "outcome": "PASS",
+      "reason": "Repository-relative link targets used by the README were verified through direct GitHub reads at the pinned base; internal anchors were checked against the final headings."
+    },
+    {
+      "gate": "security-rights-and-sensitive-content",
+      "outcome": "PASS",
+      "reason": "The change contains no credentials, tokens, private endpoints, restricted source payloads, exact sensitive Fauna locations, living-person data, or release action. Source activation, endpoints, quotas, licenses, schemas, commands, and runtime outcomes are not invented."
+    },
+    {
+      "gate": "remote-readback-and-scope-before-receipt",
+      "outcome": "PASS",
+      "reason": "GitHub returned target blob 11220d55f4a358178ba1b8260c23ea3ab70ad8f2 on commit 856865d7a49519018cff91252b44f65068ce6c16. Remote content exactly matched the prepared 37,447-character document, and the base-to-head comparison contained only pipelines/ingest/fauna/README.md before receipt emission."
+    },
+    {
+      "gate": "repository-native-execution",
+      "outcome": "SKIPPED",
+      "reason": "API-only repository mutation was selected. The repository was not cloned and repository-native commands were not executed locally. Pull-request workflow results will be inspected after PR creation; pending or unavailable checks will not be reported as passing."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "uploaded-documentation-implementation-prompt-v3-1",
+      "validated": true,
+      "evidence_ref": "attachment://Pasted text(55).txt#sha256=b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    },
+    {
+      "id": "uploaded-directory-rules-doctrine",
+      "validated": true,
+      "evidence_ref": "attachment://Directory Rules.pdf#sha256=759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335"
+    },
+    {
+      "id": "target-baseline",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/pipelines/ingest/fauna/README.md"
+    },
+    {
+      "id": "target-remote-readback",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/856865d7a49519018cff91252b44f65068ce6c16/pipelines/ingest/fauna/README.md"
+    },
+    {
+      "id": "directory-rules-and-fauna-placement",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "fauna-domain-pipeline-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/pipelines/domains/fauna/README.md"
+    },
+    {
+      "id": "fauna-spec-maturity",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/pipeline_specs/fauna/README.md"
+    },
+    {
+      "id": "workflow-threat-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/.github/workflows/domain-fauna.yml"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-20T02:44:27-05:00",
+  "emitter": "openai-codex/gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only revision on a scoped API review branch. The README reclassifies the requested path as a README-only compatibility boundary, routes Fauna-owned executable behavior to the Directory Rules-aligned domain lane, and changes no executable pipeline, source activation, policy, schema, test, workflow, lifecycle artifact, proof, release state, public API, map, UI, or AI behavior. This receipt is process provenance only; it is not factual proof, policy permission, human approval, release authority, or publication authority."
+}

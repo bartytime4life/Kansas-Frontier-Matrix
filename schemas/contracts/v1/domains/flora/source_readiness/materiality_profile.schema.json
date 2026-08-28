@@ -1,0 +1,241 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/flora/source_readiness/materiality_profile.schema.json",
+  "title": "FloraSourceReadinessMaterialityProfile",
+  "description": "Inactive fixture-first materiality profile for transparent Flora source-readiness changes. It creates no source, policy, promotion, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "status",
+    "profile_id",
+    "profile_version",
+    "spec_hash",
+    "domain",
+    "sublane",
+    "analysis_unit_kind",
+    "digest_algorithm",
+    "canonicalization_profile",
+    "combination",
+    "triggers",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "FloraSourceReadinessMaterialityProfile"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "profile_id": {
+      "type": "string",
+      "pattern": "^kfm://materiality-profile/flora/source-readiness/[a-z0-9_.:-]+$"
+    },
+    "profile_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "domain": {
+      "const": "flora"
+    },
+    "sublane": {
+      "const": "source_readiness"
+    },
+    "analysis_unit_kind": {
+      "const": "occurrence_dataset"
+    },
+    "digest_algorithm": {
+      "const": "sha256"
+    },
+    "canonicalization_profile": {
+      "const": "kfm-canonical-json-v1"
+    },
+    "combination": {
+      "const": "ANY"
+    },
+    "triggers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "georeferenced_fraction_delta",
+        "specimen_backed_fraction_delta",
+        "license_resolved_fraction_delta",
+        "coordinate_uncertainty_p95_delta_km",
+        "freshness_stale_state_change",
+        "api_access_state_change",
+        "sensitivity_posture_change"
+      ],
+      "properties": {
+        "georeferenced_fraction_delta": {
+          "$ref": "#/$defs/fraction_delta"
+        },
+        "specimen_backed_fraction_delta": {
+          "$ref": "#/$defs/fraction_delta"
+        },
+        "license_resolved_fraction_delta": {
+          "$ref": "#/$defs/nonnegative_fraction_delta"
+        },
+        "coordinate_uncertainty_p95_delta_km": {
+          "$ref": "#/$defs/nonnegative_numeric_delta"
+        },
+        "freshness_stale_state_change": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "operator",
+            "stale_after_days",
+            "unit"
+          ],
+          "properties": {
+            "operator": {
+              "const": "changed"
+            },
+            "stale_after_days": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "unit": {
+              "const": "day"
+            }
+          }
+        },
+        "api_access_state_change": {
+          "$ref": "#/$defs/state_change"
+        },
+        "sensitivity_posture_change": {
+          "$ref": "#/$defs/state_change"
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_activated",
+        "policy_evaluated",
+        "promotion_authorized",
+        "public_use_allowed",
+        "release_ref"
+      ],
+      "properties": {
+        "source_activated": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "release_ref": {
+          "type": "null"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "fraction_delta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operator",
+        "threshold",
+        "unit"
+      ],
+      "properties": {
+        "operator": {
+          "const": ">"
+        },
+        "threshold": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "const": "fraction"
+        }
+      }
+    },
+    "nonnegative_fraction_delta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operator",
+        "threshold",
+        "unit"
+      ],
+      "properties": {
+        "operator": {
+          "const": ">"
+        },
+        "threshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "const": "fraction"
+        }
+      }
+    },
+    "nonnegative_numeric_delta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operator",
+        "threshold",
+        "unit"
+      ],
+      "properties": {
+        "operator": {
+          "const": ">"
+        },
+        "threshold": {
+          "type": "number",
+          "minimum": 0
+        },
+        "unit": {
+          "const": "kilometre"
+        }
+      }
+    },
+    "state_change": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operator"
+      ],
+      "properties": {
+        "operator": {
+          "const": "changed"
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/domains/flora/source_readiness/materiality_profile.md",
+    "profile_instance": "pipeline_specs/flora/source_readiness/materiality_profile.v1.json",
+    "validator": "tools/validators/domains/flora/validate_source_readiness_materiality.py",
+    "non_effects": [
+      "does_not_fetch_or_activate_sources",
+      "does_not_define_policy",
+      "does_not_authorize_promotion",
+      "does_not_release_or_publish"
+    ]
+  }
+}

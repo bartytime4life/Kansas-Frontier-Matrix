@@ -1,0 +1,197 @@
+{
+  "receipt_id": "genrec-policy-domains-flora-readme-a6e61a33",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/domains/flora/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/domains/flora/README.md": "sha256:a6e61a335f34de6d8cf218d05d34e7afb3130100ecbb58953422c7db7f9f23ad"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:52634fb782726f721e96f6b14bab646ba42deb8ed1e87f2bb01a3b1a8bd58d5e",
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    ],
+    "attached_docs": [
+      "Pasted text(20260813-044012).txt"
+    ],
+    "evidence_refs": [
+      "repo:commit@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:tree@3698ce464862410821e82593b036e2202e26929b",
+      "repo:policy/domains/README.md@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:policy/domains/flora/README.md@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:policy/domains/flora/abstain_on_ambiguous.rego@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:policy/domains/flora/citation.rego@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:policy/domains/flora/deny_unpublished.rego@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:policy/domains/flora/flora_publication_gate.rego@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:policy/domains/flora/flora_rights.rego@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:policy/domains/flora/flora_source_role.rego@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:policy/domains/flora/flora_taxonomy_resolution.rego@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:policy/domains/flora/geoprivacy.rego@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:policy/domains/flora/geoprivacy.yaml@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:policy/domains/flora/joins.rego@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:policy/domains/flora/promotion.rego@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:policy/domains/flora/promotion_gate.rego@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:policy/domains/flora/redaction.rego@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:policy/domains/flora/release_gate.rego@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:policy/domains/flora/rights.rego@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:policy/domains/flora/rights.yaml@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:policy/domains/flora/sensitivity.rego@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:policy/domains/flora/sensitivity.yaml@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:policy/domains/flora/source_role.rego@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:control_plane/domain_lane_register.yaml@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:docs/registers/DOMAIN_LANE.md@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:docs/domains/flora/README.md@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:docs/domains/flora/SENSITIVITY_POSTURE.md@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:policy/sensitivity/flora/README.md@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:policy/rights/README.md@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:data/registry/sources/flora/README.md@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:contracts/domains/flora/README.md@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:schemas/contracts/v1/domains/flora/README.md@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:fixtures/domains/flora/README.md@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:tests/domains/flora/README.md@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:tests/domains/flora/test_flora_smoke.py@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:tools/validators/domains/flora/README.md@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:packages/domains/flora/README.md@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:pipelines/domains/flora/README.md@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:.github/workflows/domain-flora.yml@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:.github/workflows/policy-test.yml@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:packages/policy-runtime/src/policy_runtime/core.py@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:release/candidates/flora/README.md@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:data/published/flora/README.md@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:docs/doctrine/directory-rules.md@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:control_plane/root_registry.yaml@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:.github/CODEOWNERS@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:.github/PULL_REQUEST_TEMPLATE.md@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@1cd3da895de521c70096f6d04b406c412b70f707",
+      "repo:tools/validators/validate_generated_receipt.py@1cd3da895de521c70096f6d04b406c412b70f707"
+    ]
+  },
+  "truth_labels": {
+    "policy/domains/flora/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, target bytes and history, complete recursive repository and lane trees, exact-target pull-request overlap, planned branch name, accepted Directory Rules and ADR-0029, parent domain-policy boundary, machine and human lane registers, root projection, CODEOWNERS, and directly related Flora doctrine, policy, contract, schema, registry, fixture, test, validator, workflow, runtime, release, proof, and public-carrier evidence were inspected before authoring."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, logical heading progression, one balanced language-tagged Mermaid fence pair, no tabs or trailing whitespace, UTF-8-compatible text, and a final newline were verified."
+    },
+    {
+      "gate": "local-links-and-fragments",
+      "outcome": "PASS",
+      "reason": "All 49 unique repository-relative targets were checked against the complete pinned base tree, all 20 unique local fragments resolve, and every direct child is represented. No network link checks were required."
+    },
+    {
+      "gate": "inventory-and-claim-alignment",
+      "outcome": "PASS",
+      "reason": "All 24 direct children, four nested .gitkeep placeholders, 16 local Rego modules, 14 allow-false defaults, two deny-false defaults, zero non-default executable rule bodies, three proposed YAML placeholders, absent native Rego tests, separate synthetic Flora validation, explicit proof/release holds, placeholder general runtime, and proposed lane-registration authority were reconciled without upgrading maturity."
+    },
+    {
+      "gate": "generated-receipt-schema-and-hash",
+      "outcome": "PASS",
+      "reason": "The receipt parses without duplicate keys, conforms to the current GENERATED_RECEIPT schema and cross-field rules, and the final README SHA-256 digest matches the declared artifact binding."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The authored artifacts contain no credentials, restricted payloads, exact sensitive locations, private agreements, personal data, genomic material, culturally protected knowledge, control-defeating transform parameters, production endpoints, hidden reasoning, legal conclusions, or collection guidance."
+    },
+    {
+      "gate": "runtime-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no Rego rule, YAML profile, contract, schema, registry record, fixture, validator, test, workflow, bundle, evaluator, package, pipeline, lifecycle record, release object, deployment, publication, or public behavior changes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "The draft remains pending authorized human review; no policy acceptance, sensitivity clearance, rights clearance, source admission, review approval, release, deployment, publication, or public-use authority is created."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "policy/domains/README.md"
+  ],
+  "citations": [
+    {
+      "id": "flora-policy-lane-inventory-and-rule-posture",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/flora/README.md@1cd3da895de521c70096f6d04b406c412b70f707"
+    },
+    {
+      "id": "parent-domain-policy-boundary",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/README.md@1cd3da895de521c70096f6d04b406c412b70f707"
+    },
+    {
+      "id": "flora-lane-projection-and-sensitivity-baseline",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/domain_lane_register.yaml@1cd3da895de521c70096f6d04b406c412b70f707"
+    },
+    {
+      "id": "flora-doctrine-and-implementation-qualification",
+      "validated": true,
+      "evidence_ref": "repo:docs/domains/flora/README.md@1cd3da895de521c70096f6d04b406c412b70f707"
+    },
+    {
+      "id": "bounded-synthetic-flora-validation",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/domain-flora.yml@1cd3da895de521c70096f6d04b406c412b70f707"
+    },
+    {
+      "id": "placeholder-general-policy-runtime",
+      "validated": true,
+      "evidence_ref": "repo:packages/policy-runtime/src/policy_runtime/core.py@1cd3da895de521c70096f6d04b406c412b70f707"
+    },
+    {
+      "id": "directory-placement-authority",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@1cd3da895de521c70096f6d04b406c412b70f707"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@1cd3da895de521c70096f6d04b406c412b70f707"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T18:57:59Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only modernization of the Flora domain-policy scaffold. The update records exact current rule and support-lane maturity, establishes a fail-closed authoring and activation contract, and preserves separation among Flora doctrine, source roles, taxonomy, evidence, rights, sensitivity, geoprivacy, runtime, lifecycle, review, release, correction, and publication. It changes no Rego, YAML profile, contract, schema, registry record, fixture, validator, test, workflow, bundle, evaluator, package, pipeline, lifecycle record, release object, deployment, publication, or public behavior. The receipt is provenance/process memory rather than policy approval, sensitivity clearance, rights clearance, proof, release authority, or public-use authority; authorized human review remains pending."
+}

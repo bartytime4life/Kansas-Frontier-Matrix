@@ -1,0 +1,125 @@
+{
+  "receipt_id": "genrec-api-test-workflow-8d542484",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/api-test.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/api-test.yml": "sha256:8d5424842e4fc783d38266c83adf40384054c3cb4cd13af40743e5e72d753d0a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-17"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "workflow YAML structure validation",
+      "shell-step validation",
+      "GitHub Actions execution observation",
+      "generated receipt validation",
+      "remote repository verification"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent v3.1"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/7f69199f0822a0c5081bb0cccf8d1daa69f6038c",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7f69199f0822a0c5081bb0cccf8d1daa69f6038c/.github/workflows/api-test.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7f69199f0822a0c5081bb0cccf8d1daa69f6038c/.github/workflows/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7f69199f0822a0c5081bb0cccf8d1daa69f6038c/Makefile",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7f69199f0822a0c5081bb0cccf8d1daa69f6038c/pyproject.toml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7f69199f0822a0c5081bb0cccf8d1daa69f6038c/apps/governed-api/tests/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7f69199f0822a0c5081bb0cccf8d1daa69f6038c/apps/governed-api/tests/test_abstain_routes.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7f69199f0822a0c5081bb0cccf8d1daa69f6038c/apps/governed-api/tests/conftest.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/29604085096",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/3b7ad9335ce79c0ecc0734681b700d52edff9695"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/api-test.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-base-target-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Verified repository, main base 7f69199f0822a0c5081bb0cccf8d1daa69f6038c, target blob c7e71fb0a672785e9710bb6f4ad6e6207d801a8b, executable Make targets and tests, recent successful workflow run, and no overlapping open branch or PR."
+    },
+    {
+      "gate": "workflow-identity-and-command-preservation",
+      "outcome": "PASS",
+      "reason": "Preserved workflow name api-test, job ids governed-api-tests and envelope-shape-tests, pull_request and push-to-main triggers, make governed-api-smoke, and the focused test_abstain_routes.py command."
+    },
+    {
+      "gate": "least-privilege-and-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Added explicit contents: read only; no secrets, write scopes, OIDC, deployment, publication, source-system calls, artifact upload, or privileged pull_request_target trigger."
+    },
+    {
+      "gate": "determinism-timeout-and-diagnostics",
+      "outcome": "PASS",
+      "reason": "Added concurrency cancellation, ten-minute job timeouts, deterministic Python/time environment, noninteractive pip settings, named steps, strict pytest options, and always-run bounded step summaries."
+    },
+    {
+      "gate": "yaml-and-shell-structure",
+      "outcome": "PASS",
+      "reason": "Parsed complete YAML structure, verified stable jobs and required keys, corrected a pre-PR shell quoting defect, and confirmed the final remote Git blob aa7f4e2021ec0e544da0948873774ee61d786b95 matches the computed content."
+    },
+    {
+      "gate": "github-actions-run-on-proposed-head",
+      "outcome": "SKIPPED",
+      "reason": "The final proposed head has not yet been exercised by GitHub Actions. A PR run must confirm both jobs, installation, tests, and summary steps."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-api-test-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7f69199f0822a0c5081bb0cccf8d1daa69f6038c/.github/workflows/api-test.yml"
+    },
+    {
+      "id": "workflow-governance-readme",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7f69199f0822a0c5081bb0cccf8d1daa69f6038c/.github/workflows/README.md"
+    },
+    {
+      "id": "governed-api-make-target",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7f69199f0822a0c5081bb0cccf8d1daa69f6038c/Makefile"
+    },
+    {
+      "id": "governed-api-test-lane",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7f69199f0822a0c5081bb0cccf8d1daa69f6038c/apps/governed-api/tests/README.md"
+    },
+    {
+      "id": "recent-api-test-run",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/29604085096"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T18:40:26Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored hardening of the command-bearing Governed API test workflow. The change preserves current commands and check identities while adding explicit authority boundaries, least privilege, deterministic environment settings, timeouts, concurrency, strict focused pytest options, and bounded summaries. A transient shell quoting defect was detected and corrected before PR creation. Human review and final-head GitHub Actions execution remain pending."
+}

@@ -1,0 +1,137 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/tiles3d-tree-hash-manifest.yml": "sha256:be422f878cd4cda0bada3a4d622b7c081392f0288c64e1bae72ce6c7833220a1",
+    "contracts/map/tiles3d_tree_hash_manifest.md": "sha256:00e78c3bd060636eaccd3489b48d24f715e16baac36e6c62e0c68355f9222f7c",
+    "fixtures/map/tiles3d_tree_hash_manifest/README.md": "sha256:d03aa23c8aabb00fe670c95ff68f5e1ca5ba9bcd2dec5d242c02fd99653b67fd",
+    "fixtures/map/tiles3d_tree_hash_manifest/expected/valid_manifest.json": "sha256:c3d0c2e244488686ccf7e405826fbed6d88d93d957ba314a6cb6c25485cd0264",
+    "fixtures/map/tiles3d_tree_hash_manifest/expected_findings_manifest.json": "sha256:fe83e79d58b2bb47e1365dea5ff610cd99b38105883e20a1e233615df96c4339",
+    "fixtures/map/tiles3d_tree_hash_manifest/invalid/invalid_tampered_manifest.json": "sha256:5ba5cd90efca8de9cf5ab60daaeabe4d891dd49c477c667f247c4629ba5ab854",
+    "fixtures/map/tiles3d_tree_hash_manifest/invalid_tree_missing_tileset/content.bin": "sha256:69f51b3b9702f15c160b8eb56ad1a3838092a4d812a0e8b343b5871cb1adbf13",
+    "fixtures/map/tiles3d_tree_hash_manifest/tree/subtrees/0/0/0.subtree": "sha256:860adc3ba5f9cf0cf61dafe0759735e39728717bca7c42e798d21e24519cbd86",
+    "fixtures/map/tiles3d_tree_hash_manifest/tree/tiles/0/0/0.glb": "sha256:30c1d0f7b03168d94b784473c6bc010457442597d1b95ccaaa568a7a28c0d35d",
+    "fixtures/map/tiles3d_tree_hash_manifest/tree/tileset.json": "sha256:827e28e04845681609a7b2eeb890c42e635f0ca670a7e8c49f4797edd8a6a11c",
+    "schemas/contracts/v1/map/tiles3d_tree_hash_manifest.schema.json": "sha256:9106b03228ddee05b2b42a6961276c2a557ed8539ee38516ba6acff6f90bdd94",
+    "tests/validators/map/tiles3d_tree_hash_manifest/test_build_tiles3d_tree_hash_manifest.py": "sha256:cb1b6863193cb51466d895f737a319ee36dd842852b8b808202328a0053b3340",
+    "tools/validators/map/tiles3d_tree_hash_manifest/build_tiles3d_tree_hash_manifest.py": "sha256:2a3542183a9b1b868d3876e3fa3438d89fee1e4a4d5892b35cab4e87adffa075"
+  },
+  "artifact_paths": [
+    ".github/workflows/tiles3d-tree-hash-manifest.yml",
+    "contracts/map/tiles3d_tree_hash_manifest.md",
+    "fixtures/map/tiles3d_tree_hash_manifest/README.md",
+    "fixtures/map/tiles3d_tree_hash_manifest/expected/valid_manifest.json",
+    "fixtures/map/tiles3d_tree_hash_manifest/expected_findings_manifest.json",
+    "fixtures/map/tiles3d_tree_hash_manifest/invalid/invalid_tampered_manifest.json",
+    "fixtures/map/tiles3d_tree_hash_manifest/invalid_tree_missing_tileset/content.bin",
+    "fixtures/map/tiles3d_tree_hash_manifest/tree/subtrees/0/0/0.subtree",
+    "fixtures/map/tiles3d_tree_hash_manifest/tree/tiles/0/0/0.glb",
+    "fixtures/map/tiles3d_tree_hash_manifest/tree/tileset.json",
+    "schemas/contracts/v1/map/tiles3d_tree_hash_manifest.schema.json",
+    "tests/validators/map/tiles3d_tree_hash_manifest/test_build_tiles3d_tree_hash_manifest.py",
+    "tools/validators/map/tiles3d_tree_hash_manifest/build_tiles3d_tree_hash_manifest.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P31-PROG-0006",
+      "id": "attachment:pass31-tiles3d-tree-hash",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/release/tile_artifact_manifest.md@7da6dd8d6b9bb510c8a85057b15e358fa2d57810",
+      "id": "repository:tile-artifact-manifest-boundary",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@7da6dd8d6b9bb510c8a85057b15e358fa2d57810",
+      "id": "repository:directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T04:50:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P31-PROG-0006",
+      "repo:contracts/release/tile_artifact_manifest.md@7da6dd8d6b9bb510c8a85057b15e358fa2d57810",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@7da6dd8d6b9bb510c8a85057b15e358fa2d57810"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Deterministic no-network 3D Tiles directory byte-integrity primitive. It emits a candidate integrity manifest only and does not create TileArtifactManifest, evidence, attestation, release, publication, or public-use authority.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:19b4636c7e95bc098cc81feeb0b8098c94eaee1bc9667ea35c4e26896ef53972",
+  "receipt_id": "genrec-tiles3d-tree-hash-20260808",
+  "truth_labels": {
+    ".github/workflows/tiles3d-tree-hash-manifest.yml": "CONFIRMED",
+    "contracts/map/tiles3d_tree_hash_manifest.md": "PROPOSED",
+    "fixtures/map/tiles3d_tree_hash_manifest/README.md": "CONFIRMED",
+    "fixtures/map/tiles3d_tree_hash_manifest/expected/valid_manifest.json": "CONFIRMED",
+    "fixtures/map/tiles3d_tree_hash_manifest/expected_findings_manifest.json": "CONFIRMED",
+    "fixtures/map/tiles3d_tree_hash_manifest/invalid/invalid_tampered_manifest.json": "CONFIRMED",
+    "fixtures/map/tiles3d_tree_hash_manifest/invalid_tree_missing_tileset/content.bin": "CONFIRMED",
+    "fixtures/map/tiles3d_tree_hash_manifest/tree/subtrees/0/0/0.subtree": "CONFIRMED",
+    "fixtures/map/tiles3d_tree_hash_manifest/tree/tiles/0/0/0.glb": "CONFIRMED",
+    "fixtures/map/tiles3d_tree_hash_manifest/tree/tileset.json": "CONFIRMED",
+    "schemas/contracts/v1/map/tiles3d_tree_hash_manifest.schema.json": "PROPOSED",
+    "tests/validators/map/tiles3d_tree_hash_manifest/test_build_tiles3d_tree_hash_manifest.py": "CONFIRMED",
+    "tools/validators/map/tiles3d_tree_hash_manifest/build_tiles3d_tree_hash_manifest.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Focused deterministic unit tests passed in the local authoring workspace."
+    },
+    {
+      "gate": "fixture-manifest-polarity",
+      "outcome": "PASS",
+      "reason": "Synthetic positive and negative fixtures matched their expected finite outcomes and reason codes."
+    },
+    {
+      "gate": "schema-and-spec-hash",
+      "outcome": "PASS",
+      "reason": "Closed Draft 2020-12 schemas and canonical spec_hash values validated locally."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}

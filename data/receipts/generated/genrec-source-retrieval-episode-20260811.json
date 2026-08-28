@@ -1,0 +1,142 @@
+{
+  "receipt_id": "genrec-source-retrieval-episode-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/source-retrieval-episode.yml",
+    "contracts/source/source_retrieval_episode.md",
+    "docs/intake/exploratory/source-retrieval-episode-source-map.md",
+    "fixtures/contracts/v1/source/source_retrieval_episode/cases.json",
+    "schemas/contracts/v1/source/source_retrieval_episode.schema.json",
+    "tests/validators/test_validate_source_retrieval_episode.py",
+    "tools/validators/source/validate_source_retrieval_episode.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/source-retrieval-episode.yml": "sha256:d46f67b31d451195e38dc2cc8e47c240bd31aca996062f7fd30553eb9444de0e",
+    "contracts/source/source_retrieval_episode.md": "sha256:2ebd34385cbbdc8271305ee2208593bcc4d9153d8d1c18a2bf5847142829e446",
+    "docs/intake/exploratory/source-retrieval-episode-source-map.md": "sha256:728d4f3357989fb3414fab2b6d91b6f0d264a93f658dddeedafae0329abf0f8f",
+    "fixtures/contracts/v1/source/source_retrieval_episode/cases.json": "sha256:db04c38b9a2b603aebc537d8a3b4512344de62d80e8cf620eada0cdc02d1606f",
+    "schemas/contracts/v1/source/source_retrieval_episode.schema.json": "sha256:c5842079633e113444cbf8e078b39e52371a3b0d86429e34c9a8bff5b7f04c91",
+    "tests/validators/test_validate_source_retrieval_episode.py": "sha256:9cc3b90b3f3c033f635b825278f2f4315aa2e289487b78821d4a905885e767e7",
+    "tools/validators/source/validate_source_retrieval_episode.py": "sha256:1db96ece5308cbc7883952b505da5c67cc7cca385d503221829c712324400495"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:2ebd34385cbbdc8271305ee2208593bcc4d9153d8d1c18a2bf5847142829e446",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector source discovery",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Briefing_to_System_Integration_Architecture.docx",
+      "KFM_Comprehensive_Research_and_Verification_Report.docx"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#official-source-verification-and-state-machines",
+      "attachment:KFM_Comprehensive_Research_and_Verification_Report.docx#W05-source-admission-and-retrieval-episodes",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/contracts/source/retrieval_artifact_handoff.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/source-retrieval-episode.yml": "CONFIRMED",
+    "contracts/source/source_retrieval_episode.md": "PROPOSED",
+    "docs/intake/exploratory/source-retrieval-episode-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_retrieval_episode/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/source/source_retrieval_episode.schema.json": "PROPOSED",
+    "tests/validators/test_validate_source_retrieval_episode.py": "CONFIRMED",
+    "tools/validators/source/validate_source_retrieval_episode.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "false-clear-negative-cases",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "non-echoing-diagnostics",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "briefing-source-basis",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#official-source-verification-and-state-machines"
+    },
+    {
+      "id": "research-source-basis",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Comprehensive_Research_and_Verification_Report.docx#W05-source-admission-and-retrieval-episodes"
+    },
+    {
+      "id": "existing-handoff-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/contracts/source/retrieval_artifact_handoff.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T22:57:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only SourceRetrievalEpisode candidate. It preserves failed and HEAD-only attempts as source-health observations and forbids network access, false-clear claims, source activation, SourceArtifact creation, evidence, lifecycle writes, release, publication, and public-use authority."
+}

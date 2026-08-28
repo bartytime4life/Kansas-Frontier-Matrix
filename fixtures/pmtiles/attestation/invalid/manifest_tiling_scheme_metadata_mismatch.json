@@ -1,0 +1,11 @@
+{
+  "case_id": "tile-manifest-tiling-scheme-metadata-mismatch",
+  "expected": {
+    "issue_codes": [
+      "TILE_MANIFEST_TILING_SCHEME_METADATA_MISMATCH"
+    ],
+    "status": "DENY"
+  },
+  "fixture_profile": "kfm.pmtiles.tile-artifact-manifest.compat.v1",
+  "mutation": "manifest_tiling_scheme_metadata_mismatch"
+}

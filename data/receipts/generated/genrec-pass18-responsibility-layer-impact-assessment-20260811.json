@@ -1,0 +1,148 @@
+{
+  "receipt_id": "genrec-pass18-responsibility-layer-impact-assessment-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/responsibility-layer-impact-assessment.yml",
+    "contracts/governance/responsibility_layer_impact_assessment.md",
+    "docs/intake/exploratory/pass-18-responsibility-layer-impact-assessment-source-map.md",
+    "fixtures/contracts/v1/governance/responsibility_layer_impact_assessment/cases.json",
+    "schemas/contracts/v1/governance/responsibility_layer_impact_assessment.schema.json",
+    "tests/validators/governance/test_validate_responsibility_layer_impact_assessment.py",
+    "tools/validators/governance/validate_responsibility_layer_impact_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/responsibility-layer-impact-assessment.yml": "sha256:0f27b9e4f9fc3ea14ef86418133c1995e286dfe49e06430a233695c3f63d8a35",
+    "contracts/governance/responsibility_layer_impact_assessment.md": "sha256:d8b2816b91c1c11b8f913ebd80e0821f0331524842abb90dcb22caf42be371d1",
+    "docs/intake/exploratory/pass-18-responsibility-layer-impact-assessment-source-map.md": "sha256:376d56f41427ae64c124898d047ddaa38b2c7d5b25ef0f9a024e448723fc7f87",
+    "fixtures/contracts/v1/governance/responsibility_layer_impact_assessment/cases.json": "sha256:25be798208742df9fc7dfd118857e58fe46506af573751471600ebb0f8ae42ca",
+    "schemas/contracts/v1/governance/responsibility_layer_impact_assessment.schema.json": "sha256:96fe6d90fe048cc944e00b4796007aed41fe75a6af4f25456333d457a1060a96",
+    "tests/validators/governance/test_validate_responsibility_layer_impact_assessment.py": "sha256:7a8fd36a6b6a4c91268ca111c1f00ad39715c7c124074d4e879de6ae4a8e855a",
+    "tools/validators/governance/validate_responsibility_layer_impact_assessment.py": "sha256:2562a7890235413a44a97cd7189002f1a386b2ac57961ec2cbe1527fcfa9e92a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:d8b2816b91c1c11b8f913ebd80e0821f0331524842abb90dcb22caf42be371d1",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive private-corpus discovery",
+      "GitHub repository inspection and draft PR publication",
+      "local PDF rendering and deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9",
+      "sha256:cd4b53f18ce82fd8b2eb321303de34947e1d4f3ddbb93ec78fe9ec2fb575aa85",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "Supplied Pass 18 atlas; card KFM-P18-INV-396 was text-located and both pages were visually verified",
+      "Connected Drive KFM_Full_Atlas_seed_cards; private corpus used only as thematic corroboration",
+      "Accepted repository Directory Rules and existing draft responsibility-layer architecture"
+    ],
+    "evidence_refs": [
+      "attachment://supplied-pass18-atlas#card=KFM-P18-INV-396",
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/docs/architecture/cross-domain/responsibility-layers.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/bd59127604f3ab7578fe43f30caaeef089c0fffc"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/responsibility-layer-impact-assessment.yml": "CONFIRMED",
+    "contracts/governance/responsibility_layer_impact_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-responsibility-layer-impact-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/governance/responsibility_layer_impact_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/governance/responsibility_layer_impact_assessment.schema.json": "PROPOSED",
+    "tests/validators/governance/test_validate_responsibility_layer_impact_assessment.py": "CONFIRMED",
+    "tools/validators/governance/validate_responsibility_layer_impact_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-pdf-visual-review",
+      "outcome": "PASS",
+      "reason": "Pass 18 physical pages 29-30 / printed pages 26-27 were rendered and inspected."
+    },
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Thirteen deterministic responsibility-layer impact-assessment tests passed."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Twenty-three exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."
+    },
+    {
+      "gate": "repository-schema-and-contract-suite",
+      "outcome": "PASS",
+      "reason": "Four hundred forty-five tests and twenty-nine subtests passed."
+    },
+    {
+      "gate": "documentation-and-ci-readiness-suite",
+      "outcome": "PASS",
+      "reason": "One hundred eleven metadata, link, document-graph, changed-receipt selection, and CI-readiness tests passed."
+    },
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "git-diff-check", "outcome": "PASS"},
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass18-responsibility-layer-card",
+      "validated": true,
+      "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-396"
+    },
+    {
+      "id": "drive-seed-atlas",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho"
+    },
+    {
+      "id": "existing-responsibility-layer-architecture",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/docs/architecture/cross-domain/responsibility-layers.md"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T21:30:31Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only responsibility-layer change-impact assessment. It reuses the existing proposed eight-layer vocabulary by opaque ref, creates no new root or layer folder, places or moves no artifact, assigns no owner, resolves no decision, validation, review, or rollback ref, mutates no data or runtime state, and grants no policy, review, promotion, release, deployment, publication, or public-use authority."
+}

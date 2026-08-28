@@ -1,0 +1,61 @@
+{
+  "object_type": "FloraOccurrenceIntakeDecision",
+  "schema_version": "1.0.0",
+  "decision_id": "flora-occurrence-intake-decision:f368b4e14f7646bd8dbecdde79938686",
+  "hash_profile": "kfm-fixture-json-v1",
+  "spec_hash": "sha256:4ea58fec51b1261d49a0e7987cd2b3893dede1dcfb18aec1af6b068f68e08f4d",
+  "candidate_ref": "flora-occurrence-candidate:4c733f0bcbb7cddab38605a5d1714ec6",
+  "candidate_spec_hash": "sha256:e86910c81ddf224121136c01588348be61491989e825b045cc111dcc4b81a5c1",
+  "duplicate": {
+    "method": "NONE",
+    "duplicate_of_candidate_ref": null,
+    "comparison_count": 0,
+    "fingerprint": null
+  },
+  "rights": {
+    "profile_id": "flora-occurrence-license-map-v1",
+    "input_license": "CC0-1.0",
+    "license_class": "OPEN_DECLARED",
+    "disposition": "ALLOW_WORK",
+    "reason_codes": [
+      "LICENSE_OPEN_PROFILE_MATCH"
+    ]
+  },
+  "sensitivity": {
+    "exact_geometry_present": true,
+    "source_hints": [
+      "SOURCE_DATA_GENERALIZED",
+      "SOURCE_INFORMATION_WITHHELD"
+    ],
+    "disposition": "GENERALIZE_REQUIRED",
+    "reason_codes": [
+      "SENSITIVE_EXACT_GEOMETRY_REQUIRES_REVIEW"
+    ]
+  },
+  "decision": {
+    "outcome": "HOLD_FOR_REVIEW",
+    "reason_codes": [
+      "SENSITIVE_EXACT_GEOMETRY_REQUIRES_REVIEW"
+    ],
+    "canonical_candidate_ref": null,
+    "proposed_target_lifecycle": "WORK"
+  },
+  "provenance": {
+    "candidate_digest": "sha256:e86910c81ddf224121136c01588348be61491989e825b045cc111dcc4b81a5c1",
+    "peer_set_digest": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "engine_id": "flora-occurrence-intake-governance",
+    "engine_version": "1.0.0"
+  },
+  "governance": {
+    "source_admission_decided": false,
+    "legal_rights_decided": false,
+    "policy_evaluated": false,
+    "review_completed": false,
+    "lifecycle_transition_executed": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  }
+}

@@ -1,0 +1,4 @@
+PUBLIC_RELEASE_ELIGIBILITY_DENIED	$.assessment.public_release_eligible
+REFERENCE_GRADE_OVERCLAIM_DENIED	$.assessment.reference_grade
+REGULATORY_USE_DENIED	$.assessment.regulatory_use
+

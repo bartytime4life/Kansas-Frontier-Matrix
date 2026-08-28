@@ -1,0 +1,297 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/atmosphere/prescribed_burn_quality_flag.schema.json",
+  "title": "prescribed_burn_quality_flag",
+  "description": "Context-only quality flag binding a PM2.5/AQI observation to reviewed smoke context without causal inference.",
+  "type": "object",
+  "additionalProperties": false,
+  "x-kfm": {
+    "contract_doc": "contracts/domains/atmosphere/prescribed_burn_quality_flag.md",
+    "fixtures_root": "fixtures/contracts/v1/domains/atmosphere/prescribed_burn_quality_flag/",
+    "validator": "tools/validators/domains/atmosphere/validate_prescribed_burn_quality_flag.py",
+    "status": "PROPOSED"
+  },
+  "$defs": {
+    "hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^\\S+$"
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    }
+  },
+  "required": [
+    "flag_id",
+    "schema_version",
+    "requested_claim_type",
+    "observation",
+    "smoke_context",
+    "assessment",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "flag_id": {
+      "type": "string",
+      "pattern": "^air-quality-smoke-flag:[a-f0-9]{24}$"
+    },
+    "schema_version": {
+      "const": "v1"
+    },
+    "requested_claim_type": {
+      "type": "string",
+      "enum": [
+        "CONTEXTUAL",
+        "CAUSAL"
+      ]
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observation_ref",
+        "parameter",
+        "observed_at",
+        "spatial_scope_ref",
+        "source_role",
+        "support_type",
+        "evidence_refs"
+      ],
+      "properties": {
+        "observation_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "parameter": {
+          "type": "string",
+          "enum": [
+            "PM2_5",
+            "AQI"
+          ]
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "spatial_scope_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "source_role": {
+          "const": "OBSERVATION"
+        },
+        "support_type": {
+          "const": "DIRECT_MEASUREMENT"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/evidenceRefs"
+        }
+      }
+    },
+    "smoke_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "context_ref",
+        "event_type",
+        "valid_start",
+        "valid_end",
+        "spatial_scope_ref",
+        "source_role",
+        "support_type",
+        "evidence_refs"
+      ],
+      "properties": {
+        "context_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "event_type": {
+          "type": "string",
+          "enum": [
+            "PRESCRIBED_BURN_SMOKE",
+            "WILDFIRE_SMOKE",
+            "UNKNOWN"
+          ]
+        },
+        "valid_start": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "valid_end": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "spatial_scope_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "source_role": {
+          "const": "CONTEXT"
+        },
+        "support_type": {
+          "const": "CONTEXT_ONLY"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/evidenceRefs"
+        }
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "spatial_relation",
+        "temporal_relation",
+        "influence_status",
+        "detector_disposition",
+        "model_training_disposition",
+        "causal_claim",
+        "reason_codes",
+        "evidence_refs"
+      ],
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "ANSWER",
+            "ABSTAIN",
+            "DENY",
+            "ERROR"
+          ]
+        },
+        "spatial_relation": {
+          "type": "string",
+          "enum": [
+            "OVERLAP",
+            "DISJOINT",
+            "UNKNOWN"
+          ]
+        },
+        "temporal_relation": {
+          "type": "string",
+          "enum": [
+            "OVERLAP",
+            "DISJOINT",
+            "UNKNOWN"
+          ]
+        },
+        "influence_status": {
+          "type": "string",
+          "enum": [
+            "SUPPORTED_CONTEXT",
+            "POSSIBLE_CONTEXT",
+            "NOT_SUPPORTED",
+            "UNRESOLVED",
+            "UNKNOWN"
+          ]
+        },
+        "detector_disposition": {
+          "type": "string",
+          "enum": [
+            "SUPPRESS_EVENT_CALLING",
+            "ALLOW_WITH_FLAG",
+            "ALLOW_UNFLAGGED",
+            "HOLD",
+            "UNKNOWN"
+          ]
+        },
+        "model_training_disposition": {
+          "type": "string",
+          "enum": [
+            "EXCLUDE",
+            "INCLUDE_WITH_FLAG",
+            "INCLUDE_UNFLAGGED",
+            "HOLD",
+            "UNKNOWN"
+          ]
+        },
+        "causal_claim": {
+          "const": false
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]{2,63}$"
+          }
+        },
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 128,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/ref"
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_roles_preserved",
+        "observation_not_context",
+        "context_not_observation",
+        "causality_not_inferred",
+        "configuration_mutated",
+        "network_fetch",
+        "policy_evaluated",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized"
+      ],
+      "properties": {
+        "source_roles_preserved": {
+          "const": true
+        },
+        "observation_not_context": {
+          "const": true
+        },
+        "context_not_observation": {
+          "const": true
+        },
+        "causality_not_inferred": {
+          "const": true
+        },
+        "configuration_mutated": {
+          "const": false
+        },
+        "network_fetch": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        }
+      }
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/hash"
+    }
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "receipt_id": "genrec-pipeline-specs-readme-d58f9e13",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipeline_specs/README.md"
+  ],
+  "artifact_hashes": {
+    "pipeline_specs/README.md": "sha256:d58f9e136c3f030c960453e38497c4db8c3c39193bd467b2cc171eac068ffe93"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08-session"
+  },
+  "prompt_or_contract": "sha256:16b654f3ad107acbdb84818293306210e51a229d968beee36fb4c4447b7feb09",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container validation",
+      "Python structural validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM Directory Governance Standard v2.0.0-draft.1",
+      "Kansas Frontier Matrix — AI Build Operating Contract"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/fa6da59b62aeb16336e889eebf93a3cab82f919e",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fa6da59b62aeb16336e889eebf93a3cab82f919e/pipeline_specs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/fa6da59b62aeb16336e889eebf93a3cab82f919e/pipeline_specs",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fa6da59b62aeb16336e889eebf93a3cab82f919e/docs/architecture/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fa6da59b62aeb16336e889eebf93a3cab82f919e/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fa6da59b62aeb16336e889eebf93a3cab82f919e/pipeline_specs/hydrology/wbd_huc12_ingest.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fa6da59b62aeb16336e889eebf93a3cab82f919e/pipeline_specs/soil/support_type_profile.v1.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fa6da59b62aeb16336e889eebf93a3cab82f919e/pipeline_specs/soil/ssurgo_yearly_diff_profile.v1.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fa6da59b62aeb16336e889eebf93a3cab82f919e/pipeline_specs/watchers/soil_ssurgo_gnatsgo.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fa6da59b62aeb16336e889eebf93a3cab82f919e/tools/validators/domains/soil/support_type/validate_support_type_profile.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fa6da59b62aeb16336e889eebf93a3cab82f919e/data/receipts/generated/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fa6da59b62aeb16336e889eebf93a3cab82f919e/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/29152b89809250781cd6979d626d4edffb84c06c",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/agent/modernize-pipeline-specs-readme-v0-5-20260808/pipeline_specs/README.md",
+      "current-user-request://update-pipeline_specs-readme-v6"
+    ]
+  },
+  "truth_labels": {
+    "pipeline_specs/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Repository, immutable base, same-path target, direct generated-receipt dependency, draft-PR route, terminal boundary, and rollback were resolved before mutation."
+    },
+    {
+      "gate": "complete-baseline-read",
+      "outcome": "PASS",
+      "reason": "The complete v0.4 README was read, including metadata, ordered root contract, inventories, taxonomy, validation, conflicts, rollback, evidence ledger, and history."
+    },
+    {
+      "gate": "base-drift-and-overlap-reconciliation",
+      "outcome": "PASS",
+      "reason": "Main advanced from 987d36b to fa6da59 through an unrelated fixtures merge. The target blob and pipeline_specs tree were unchanged, and no open PR touching pipeline_specs/README.md was found."
+    },
+    {
+      "gate": "directory-rules-placement-and-readme-order",
+      "outcome": "PASS",
+      "reason": "The existing canonical root README was updated in place. The first twelve H2 sections retain the current v1.3.1 README contract; the proposed v2 draft was not treated as adopted."
+    },
+    {
+      "gate": "current-evidence-refresh",
+      "outcome": "PASS",
+      "reason": "The document was repinned to current main and reconciled with selected Soil, Hydrology, Flora, Habitat, watcher, validator, workflow, and receipt evidence while preserving inactive and fixture-only boundaries."
+    },
+    {
+      "gate": "markdown-structure-and-presentation",
+      "outcome": "PASS",
+      "reason": "UTF-8, LF endings, final newline, one H1, required H2 order, balanced fences, unique custom anchors, internal fragments, HTML pairs, and secret-pattern checks passed locally."
+    },
+    {
+      "gate": "semantic-no-loss-and-vocabulary-separation",
+      "outcome": "PASS",
+      "reason": "The canonical path, declarative/executable split, seventeen-lane registry, five nested sublanes, placeholder taxonomy, compatibility conflicts, lifecycle gates, finite-state separation, review, correction, rollback, definition of done, open register, evidence ledger, and prior history were preserved."
+    },
+    {
+      "gate": "security-rights-and-sensitive-content",
+      "outcome": "PASS",
+      "reason": "No credential, private endpoint, source payload, protected coordinate, living-person or genomic record, rare-species location, archaeology detail, private-land join, infrastructure vulnerability, or hidden reasoning was introduced."
+    },
+    {
+      "gate": "remote-readback-hash-and-scope",
+      "outcome": "PASS",
+      "reason": "GitHub returned README blob 5f10d089757ac5d5cdd0117e7c04c076c9629228 from commit 29152b89809250781cd6979d626d4edffb84c06c, matching the locally computed Git blob; README SHA-256 is d58f9e136c3f030c960453e38497c4db8c3c39193bd467b2cc171eac068ffe93."
+    },
+    {
+      "gate": "generated-receipt-structure",
+      "outcome": "PASS",
+      "reason": "Required fields, artifact/hash closure, allowed truth label, finite validation outcomes, pending human review, ISO timestamp, citations, and non-authority notes were checked against the inspected generated-receipt schema."
+    },
+    {
+      "gate": "runtime-and-profile-tests",
+      "outcome": "SKIPPED",
+      "reason": "Documentation/provenance-only change; no pipeline spec, validator, fixture, test, workflow, implementation, source, lifecycle, release, deployment, runtime, or public behavior changed."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks trigger after draft pull-request creation. Their state is reported separately and is not represented as PASS in this receipt."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-REPO-BUILD-V6",
+      "validated": true,
+      "evidence_ref": "current-user-request://update-pipeline_specs-readme-v6"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES-CURRENT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fa6da59b62aeb16336e889eebf93a3cab82f919e/docs/architecture/directory-rules.md"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES-PROPOSED-SUCCESSOR",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fa6da59b62aeb16336e889eebf93a3cab82f919e/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "PIPELINE-SPECS-README-PRIOR",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fa6da59b62aeb16336e889eebf93a3cab82f919e/pipeline_specs/README.md"
+    },
+    {
+      "id": "HYDROLOGY-WBD-HUC12-FIXTURE-FIRST",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fa6da59b62aeb16336e889eebf93a3cab82f919e/pipeline_specs/hydrology/wbd_huc12_ingest.yaml"
+    },
+    {
+      "id": "SOIL-SUPPORT-TYPE-PROFILE",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fa6da59b62aeb16336e889eebf93a3cab82f919e/pipeline_specs/soil/support_type_profile.v1.json"
+    },
+    {
+      "id": "SOIL-WATCHER-SPEC",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fa6da59b62aeb16336e889eebf93a3cab82f919e/pipeline_specs/watchers/soil_ssurgo_gnatsgo.json"
+    },
+    {
+      "id": "GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fa6da59b62aeb16336e889eebf93a3cab82f919e/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T04:34:00Z",
+  "emitter": "ai-builder/openai-gpt-5.6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation and provenance change on a scoped feature branch. pipeline_specs/README.md was upgraded in place to v0.5 and repinned to current repository evidence. The receipt is process memory only: it is not human approval, source admission, specification activation, policy permission, lifecycle promotion, release authority, or KFM publication. Human review and hosted checks remain pending."
+}

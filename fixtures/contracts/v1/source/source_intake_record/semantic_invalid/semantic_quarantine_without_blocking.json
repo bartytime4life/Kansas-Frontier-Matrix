@@ -1,0 +1,37 @@
+{
+  "object_type": "SourceIntakeRecord",
+  "schema_version": "v1",
+  "intake_id": "kfm://source-intake/invalid/quarantine-not-blocking",
+  "source_descriptor_ref": "kfm://source/usda/plants",
+  "source_role": "official_reference",
+  "observed_at": "2026-08-08T15:40:00Z",
+  "publication_state": "QUARANTINE",
+  "promotion_required": true,
+  "evidence_bundle_resolved": false,
+  "policy_review_required": true,
+  "drift_summary": {
+    "object_type": "DriftSummary",
+    "schema_version": "v1",
+    "drift_id": "kfm://drift/usda-plants/2026-08-08/sensitivity-hold",
+    "source_descriptor_ref": "kfm://source/usda/plants",
+    "observed_at": "2026-08-08T15:40:00Z",
+    "drift_kind": "TAXONOMY",
+    "materiality": "REVIEW_REQUIRED",
+    "change_codes": [
+      "SENSITIVE_TAXON_INTERSECTION",
+      "TAXONOMY_REMAP_AMBIGUOUS"
+    ],
+    "changed_fields": [
+      "/taxa/fixture-sensitive"
+    ],
+    "summary": "Synthetic taxonomy drift intersects a governed sensitive-taxon fixture and requires steward review.",
+    "sensitive_implication": "STEWARD_REVIEW_REQUIRED",
+    "public_detail_allowed": false
+  },
+  "disposition": "QUARANTINED",
+  "reason_codes": [
+    "SENSITIVE_TAXON_INTERSECTION",
+    "TAXONOMY_REMAP_AMBIGUOUS"
+  ],
+  "emitted_by": "tool:fixture-plants-watch"
+}

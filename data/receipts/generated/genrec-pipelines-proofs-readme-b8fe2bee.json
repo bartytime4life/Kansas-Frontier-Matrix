@@ -1,0 +1,184 @@
+{
+  "receipt_id": "genrec-pipelines-proofs-readme-b8fe2bee",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipelines/proofs/README.md"
+  ],
+  "artifact_hashes": {
+    "pipelines/proofs/README.md": "sha256:b8fe2bee224590b41b2813f6637ac2ebee4f41601b2ab483098787c1d6c7cc81"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-07-21-session"
+  },
+  "prompt_or_contract": "sha256:0a879603a5448d5a176c0e6a221e05d29169f0e819e1cdfe72113305d4b0625d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository code search",
+      "repository file reads",
+      "remote branch and contents writes",
+      "deterministic content validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:0a879603a5448d5a176c0e6a221e05d29169f0e819e1cdfe72113305d4b0625d",
+      "sha256:e20519d562a9b034d410f2fe207197d01b97169cc3f7aee0bf4f20b3d397c057"
+    ],
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3.1",
+      "ChatGPT project AGENTS.md"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/proofs/README.md@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/README.md@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:CONTRIBUTING.md@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/architecture/directory-rules.md@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/architecture/DIRECTORY_RULES.md@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/proofs/habitat_fauna_thin_slice/README.md@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tests/cross_domain/README.md@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tests/cross_domain/fauna_habitat/README.md@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:data/proofs/README.md@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:catalog/proof/README.md@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/domain-habitat.yml@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/docs-build.yml@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/link-check.yml@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/CODEOWNERS@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/PULL_REQUEST_TEMPLATE.md@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:data/receipts/generated/README.md@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/receipts/generated_receipt.schema.json@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/proofs/README.md@7c36a95a21d0f1e02334e9b17b7e2969c965af93"
+    ]
+  },
+  "truth_labels": {
+    "pipelines/proofs/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-change-budget",
+      "outcome": "PASS",
+      "reason": "Scope is limited to the requested proof-pipeline README and the required generated-work receipt; no executable, fixture, workflow, schema, contract, policy, lifecycle, catalog, proof, release, runtime, deployment, or publication behavior is changed."
+    },
+    {
+      "gate": "base-drift-reconciliation",
+      "outcome": "PASS",
+      "reason": "Main advanced after branch creation from f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566 to 9e38544e3cde9b74895109c38f8ce128946a9c02 through unrelated temporal package documentation/provenance and generalized-infrastructure fixture documentation. The proof-index target and material proof evidence did not overlap, so branch history was preserved without force rewrite."
+    },
+    {
+      "gate": "directory-authority-and-duplicate-preflight",
+      "outcome": "PASS",
+      "reason": "The existing pipelines/proofs/README.md identity and responsibility root are retained. Conflicting Directory Rules surfaces, proposed ADRs, the catalog proof compatibility redirect, and unresolved cross-domain test placement are explicit; no parallel authority is created."
+    },
+    {
+      "gate": "repository-inventory-and-no-overclaim",
+      "outcome": "PASS",
+      "reason": "The README distinguishes confirmed documentation, readme-only/conflicted test surfaces, Habitat workflow holds, and separate proof/receipt/catalog/release surfaces from proposed runners, fixtures, specs, receipt contracts, CI commands, and public behavior."
+    },
+    {
+      "gate": "markdown-meta-anchor-and-structure",
+      "outcome": "PASS",
+      "reason": "The final README has one H1, one closed KFM Meta Block v2, balanced code fences, 31 resolved internal links, intentional Markdown hard breaks only, no invalid trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Inspected documentation and Habitat pull-request workflows use read-only contents permissions and explicit holds; no workflow, deployment, release, or publication path is changed by this documentation-only task."
+    },
+    {
+      "gate": "security-privacy-rights-and-sensitivity",
+      "outcome": "PASS",
+      "reason": "The revision contains no credentials, restricted payloads, precise sensitive locations, living-person or genomic data, private operational details, infrastructure vulnerability data, or redaction-reversal instructions."
+    },
+    {
+      "gate": "no-loss-preservation",
+      "outcome": "PASS",
+      "reason": "Existing lifecycle, evidence, policy, sensitivity, trust-membrane, no-direct-publish, correction, rollback, and release-separation rules are retained while implementation overclaims and speculative path authority are narrowed."
+    },
+    {
+      "gate": "remote-readback-and-content-hash",
+      "outcome": "PASS",
+      "reason": "GitHub returned README blob 79297af6fa63694f18563addcaedcfed4cafe047 on commit 7c36a95a21d0f1e02334e9b17b7e2969c965af93; remote bytes exactly match the prepared 28,276-byte README and SHA-256 b8fe2bee224590b41b2813f6637ac2ebee4f41601b2ab483098787c1d6c7cc81."
+    },
+    {
+      "gate": "base-to-head-diff-before-receipt",
+      "outcome": "PASS",
+      "reason": "Before this receipt was emitted, the review branch was one commit ahead of its pinned base with only pipelines/proofs/README.md changed."
+    },
+    {
+      "gate": "repository-native-execution",
+      "outcome": "SKIPPED",
+      "reason": "The connector-first workflow did not clone or execute repository code. Repository evidence does not establish a generic accepted proof command for this lane; pull-request checks are observed separately."
+    },
+    {
+      "gate": "generated-receipt-shape",
+      "outcome": "PASS",
+      "reason": "This receipt contains the schema-required fields, allowed truth/review/outcome enums, SHA-256 patterns, an ISO-8601 timestamp, and no undeclared top-level properties."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and separate from generation, validation, mergeability, release, and publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-OPERATING-PROMPT-V3.1",
+      "validated": true,
+      "evidence_ref": "prompt://sha256:0a879603a5448d5a176c0e6a221e05d29169f0e819e1cdfe72113305d4b0625d"
+    },
+    {
+      "id": "PIPELINES-PROOFS-README-BASE",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/proofs/README.md@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566"
+    },
+    {
+      "id": "DIRECTORY-RULES-LIVE-PREFLIGHT",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/architecture/directory-rules.md@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566"
+    },
+    {
+      "id": "HABITAT-FAUNA-PROOF-README",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/proofs/habitat_fauna_thin_slice/README.md@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566"
+    },
+    {
+      "id": "CROSS-DOMAIN-TEST-PLACEMENT",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:tests/cross_domain/README.md@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566"
+    },
+    {
+      "id": "HABITAT-WORKFLOW-HOLDS",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/domain-habitat.yml@f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566"
+    },
+    {
+      "id": "FINAL-README-REMOTE-READBACK",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/proofs/README.md@7c36a95a21d0f1e02334e9b17b7e2969c965af93"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-22T04:40:02.009Z",
+  "emitter": "OpenAI GPT-5 Codex via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md",
+    "drift_register_entry": null
+  },
+  "notes": "Task kfm-pipelines-proofs-readme-v0-2-20260721. Documentation-only revision plus provenance receipt. This receipt is process memory, not proof closure, evidence authority, policy approval, human review, release approval, or publication authority."
+}

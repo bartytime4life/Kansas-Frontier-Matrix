@@ -1,0 +1,181 @@
+{
+  "receipt_id": "genrec-source-interface-evolution-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/source-interface-evolution.yml",
+    "contracts/source/source_interface_evolution_assessment.md",
+    "docs/intake/exploratory/source-interface-evolution-source-map.md",
+    "fixtures/contracts/v1/source/source_interface_evolution_assessment/cases.json",
+    "schemas/contracts/v1/source/source_interface_evolution_assessment.schema.json",
+    "tests/validators/test_validate_source_interface_evolution_assessment.py",
+    "tools/validators/source/validate_source_interface_evolution_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/source-interface-evolution.yml": "sha256:1dcb6471c1534059682126cf94e0a3be407109cd505df6c71fec8b9215eb372e",
+    "contracts/source/source_interface_evolution_assessment.md": "sha256:3e8e09e6ea2f956ea3f3bb07c0ce60abbbdf1d97b54310b375a9a03fcfccae91",
+    "docs/intake/exploratory/source-interface-evolution-source-map.md": "sha256:40946f6d09832ffdd550763ee0cae0112b64b7994db0df2fd18ec89af4c394e8",
+    "fixtures/contracts/v1/source/source_interface_evolution_assessment/cases.json": "sha256:622a411583fa31aa812d7f56c9b41c02994d0b9a14e7cd867a4a43cb33b1899a",
+    "schemas/contracts/v1/source/source_interface_evolution_assessment.schema.json": "sha256:43109cab09fea1666a525e9e6f327a0e2fb57266c2d4fa4bb4569cbdea7b33ae",
+    "tests/validators/test_validate_source_interface_evolution_assessment.py": "sha256:59fc5d37253aa4c1fcd2930b95e40335232dc480ca2007c12532b7b62441d034",
+    "tools/validators/source/validate_source_interface_evolution_assessment.py": "sha256:e96340d9e9ba42b62dfab1f90aed344923fa3a8b5739f761814db3765f6482a3"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:563b13d18f9f5bdc5a919bec9b756cca7a15a4c4e0983dc19ff2921e088a4746",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md",
+      "New Ideas 4-14-26"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6947a2cbae6e02ce0bacedc74353f8dc3b430774/docs/kfm_full_atlas_seed_cards.md#KFM-TRIAD-070",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6947a2cbae6e02ce0bacedc74353f8dc3b430774/docs/kfm_full_atlas_seed_cards.md#KFM-CAND-0208",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6947a2cbae6e02ce0bacedc74353f8dc3b430774/docs/kfm_full_atlas_seed_cards.md#KFM-CAND-0209",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6947a2cbae6e02ce0bacedc74353f8dc3b430774/docs/kfm_full_atlas_seed_cards.md#KFM-CAND-0210",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6947a2cbae6e02ce0bacedc74353f8dc3b430774/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6947a2cbae6e02ce0bacedc74353f8dc3b430774/contracts/source/source_descriptor.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6947a2cbae6e02ce0bacedc74353f8dc3b430774/contracts/source/source_health_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6947a2cbae6e02ce0bacedc74353f8dc3b430774/contracts/source/web_delta_profile.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6947a2cbae6e02ce0bacedc74353f8dc3b430774/contracts/source/source_activation_decision.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/source-interface-evolution.yml": "CONFIRMED",
+    "contracts/source/source_interface_evolution_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/source-interface-evolution-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_interface_evolution_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/source/source_interface_evolution_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_source_interface_evolution_assessment.py": "CONFIRMED",
+    "tools/validators/source/validate_source_interface_evolution_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "13 deterministic tests passed in the isolated authoring worktree."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "25 exact cases passed across PASS, DENY, and ERROR."
+    },
+    {
+      "gate": "adjacent-source-contracts-and-common-contracts",
+      "outcome": "PASS",
+      "reason": "155 adjacent tests and 57 subtests passed."
+    },
+    {
+      "gate": "documentation-metadata-and-local-link-validation",
+      "outcome": "PASS",
+      "reason": "Both metadata blocks were structurally valid and local links passed; two unregistered identities were emitted as review-only registry candidates."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "full-atlas-source-interface-evolution-triad",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6947a2cbae6e02ce0bacedc74353f8dc3b430774/docs/kfm_full_atlas_seed_cards.md#KFM-TRIAD-070"
+    },
+    {
+      "id": "full-atlas-interface-observation",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6947a2cbae6e02ce0bacedc74353f8dc3b430774/docs/kfm_full_atlas_seed_cards.md#KFM-CAND-0208"
+    },
+    {
+      "id": "full-atlas-interface-migration",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6947a2cbae6e02ce0bacedc74353f8dc3b430774/docs/kfm_full_atlas_seed_cards.md#KFM-CAND-0209"
+    },
+    {
+      "id": "full-atlas-interface-retirement",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6947a2cbae6e02ce0bacedc74353f8dc3b430774/docs/kfm_full_atlas_seed_cards.md#KFM-CAND-0210"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6947a2cbae6e02ce0bacedc74353f8dc3b430774/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "source-identity-authority",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6947a2cbae6e02ce0bacedc74353f8dc3b430774/contracts/source/source_descriptor.md"
+    },
+    {
+      "id": "source-health-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6947a2cbae6e02ce0bacedc74353f8dc3b430774/contracts/source/source_health_assessment.md"
+    },
+    {
+      "id": "web-delta-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6947a2cbae6e02ce0bacedc74353f8dc3b430774/contracts/source/web_delta_profile.md"
+    },
+    {
+      "id": "source-activation-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6947a2cbae6e02ce0bacedc74353f8dc3b430774/contracts/source/source_activation_decision.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T22:04:04Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only SourceInterfaceEvolutionAssessmentCandidate packet derived from Full Atlas triad KFM-TRIAD-070 and candidates KFM-CAND-0208 through KFM-CAND-0210 plus a Drive interface-evolution proposal. It separates declaration, observation, compatibility, consumer readiness, dual-read, rollback, retirement blockers, and deterministic identity. It does not contact a source, resolve evidence, rewrite canonical identity, change a connector, activate or retire an interface, execute migration or rollback, release, publish, or authorize public use."
+}

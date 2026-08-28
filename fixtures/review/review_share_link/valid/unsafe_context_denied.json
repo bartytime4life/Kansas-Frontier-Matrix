@@ -1,0 +1,32 @@
+{
+  "object_type": "ReviewShareLink",
+  "schema_version": "1.0.0",
+  "share_link_id": "review-share:release-kfm-main-decision-123",
+  "token_hash": "sha256:eeddcc7e7eacc15473588d9f7fde0e510f442258590b157a498a1777998e44d8",
+  "created_at": "2026-04-11T20:00:05Z",
+  "evaluated_at": "2026-04-12T12:00:00Z",
+  "expires_at": "2026-04-18T20:00:05Z",
+  "audience": "reviewer",
+  "context": {
+    "release_id": "kfm-main",
+    "decision_id": "decision-123",
+    "decision_envelope_ref": "/release/kfm-main/decision-envelope.json",
+    "manifest_ref": "https://example.invalid/data/raw/manifest.json",
+    "receipts_summary_ref": "/reports/review-share-receipts-summary.json"
+  },
+  "state": "ACTIVE",
+  "decision": {
+    "outcome": "DENY",
+    "reasons": [
+      "UNSAFE_CONTEXT_REF"
+    ]
+  },
+  "governance": {
+    "fixture_only": true,
+    "plaintext_token_stored": false,
+    "public_access": false,
+    "lifecycle_write": false,
+    "release_authority": false
+  },
+  "spec_hash": "sha256:27bb8be2125764ad72b2a36b269cd399c468785dda636551ae13bbb06bb65f97"
+}

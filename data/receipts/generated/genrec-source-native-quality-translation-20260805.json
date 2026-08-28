@@ -1,0 +1,148 @@
+{
+  "receipt_id": "genrec-source-native-quality-translation-20260805",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/source-native-quality-translation.yml",
+    "contracts/common/source_native_quality_translation.md",
+    "fixtures/contracts/v1/common/source_native_quality_translation/README.md",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/expected_findings_manifest.json",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_ambiguous_semantic_loss_none.json",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_ambiguous_without_review.json",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_assessed_without_observation_ref.json",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_governance_overclaim.json",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_health_drives_validity.json",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_health_state_used_as_validity.json",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_missing_vocabulary_version.json",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_noncanonical_references.json",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_offline_availability_false.json",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_spec_hash_mismatch.json",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_timing_order.json",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_unmapped_marked_accepted.json",
+    "fixtures/contracts/v1/common/source_native_quality_translation/valid/valid_ambiguous_degraded_suspect.json",
+    "fixtures/contracts/v1/common/source_native_quality_translation/valid/valid_mapped_online_valid.json",
+    "fixtures/contracts/v1/common/source_native_quality_translation/valid/valid_not_applicable_health_only.json",
+    "fixtures/contracts/v1/common/source_native_quality_translation/valid/valid_offline_historical_valid.json",
+    "fixtures/contracts/v1/common/source_native_quality_translation/valid/valid_unmapped_degraded_not_assessed.json",
+    "schemas/contracts/v1/common/source_native_quality_translation.schema.json",
+    "tests/validators/test_validate_source_native_quality_translation.py",
+    "tools/validators/validate_source_native_quality_translation.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/source-native-quality-translation.yml": "sha256:21a695f1e779f6640e1ed724c8137fc159903eeab56364718aaa386293d94dbf",
+    "contracts/common/source_native_quality_translation.md": "sha256:b2cca66c6d3404c0dc6c353434911a7fb735f4e7c0d198eddc95ee837c1f1875",
+    "fixtures/contracts/v1/common/source_native_quality_translation/README.md": "sha256:d6165af719f7fdd1fd4eb6442c5d39a449308f83023786cf504ebe9d9736be59",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/expected_findings_manifest.json": "sha256:9c625ba0c94e812fe29a3c1541fe8362c7ab97b3b2771e09514cc8bc08f196ea",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_ambiguous_semantic_loss_none.json": "sha256:6c1075066a93ed554c36ea674f58c725328adff4bc231adb9ac0046ff354c8e8",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_ambiguous_without_review.json": "sha256:8327f64a5ba1c22dd19a0888d15442741fca587a69458272eeb53be1b5c2c24d",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_assessed_without_observation_ref.json": "sha256:f7af37e588babd5948e231f9b290cc8492ddb502d621104fbf1ad0d2c0b8f9d1",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_governance_overclaim.json": "sha256:d6ea23ce30ed4ce6ac68beda35aca57670445fa5aa7c9b1291523825407fe047",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_health_drives_validity.json": "sha256:e4a265245aeadec14821760565007d5e7c90e6a9b472a27564e201064d143546",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_health_state_used_as_validity.json": "sha256:1c19af28f069e60c992f6384d35399186423476c96eec55a7da746824ef7690d",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_missing_vocabulary_version.json": "sha256:dabc1bd7ecb7d04fe2a9b6fe43583e26421d4666680c15115622e01bcf0bd07e",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_noncanonical_references.json": "sha256:f3a654016ff4cbb6ae91cc545351696ff527aa4e3ff700009c8bd9fd97dc3e9f",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_offline_availability_false.json": "sha256:5de4ada54a70fcf635f5ee510bf54f9abbd65f47db0c5741f817b7bb37a44884",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_spec_hash_mismatch.json": "sha256:75294171d1ab926b9c0df817a187d678f0bb18e748790476fee364f0855c7dbd",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_timing_order.json": "sha256:43e6fd0b3df1ed01d4b8c028dedf447b4d66e9aa276b35e9ab34bb02ec0ced12",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_unmapped_marked_accepted.json": "sha256:2c20fb610387d02a83ab52f955f3dbd81e3561373076aac75a1f06d2cebb2438",
+    "fixtures/contracts/v1/common/source_native_quality_translation/valid/valid_ambiguous_degraded_suspect.json": "sha256:0180d8076a8a8250eb8a6c6266c4b8fb33ffa95314873376f5ed66cfab9478b1",
+    "fixtures/contracts/v1/common/source_native_quality_translation/valid/valid_mapped_online_valid.json": "sha256:0f812841bec9a0e95520c92d04127aee6d1f12c3d48966b98dde1020df688c99",
+    "fixtures/contracts/v1/common/source_native_quality_translation/valid/valid_not_applicable_health_only.json": "sha256:99fa608edd00d4c35c1ea0ec9b7ec3d14a0804b9b08102e1b6471577c364f48e",
+    "fixtures/contracts/v1/common/source_native_quality_translation/valid/valid_offline_historical_valid.json": "sha256:e60a8fe614349b441a14e059f24233d28b27aa179e99c938b55b3567ef896ec4",
+    "fixtures/contracts/v1/common/source_native_quality_translation/valid/valid_unmapped_degraded_not_assessed.json": "sha256:da3c997d5d08de30d39a7917f7a62f4ec7cafc67123c594d270667875c842646",
+    "schemas/contracts/v1/common/source_native_quality_translation.schema.json": "sha256:603cafe29eee92d9e4e860d72e3a93895cfe6a81011d8330dd60a8d3cb8a590c",
+    "tests/validators/test_validate_source_native_quality_translation.py": "sha256:e48d0f65c71b246e022b36dee11c81968292dd21a466f8c4e76915c5ca5c17fc",
+    "tools/validators/validate_source_native_quality_translation.py": "sha256:ca89ec8b40faca0955696d6411c03b99f72fffeebc61b1a7c80bb69131217462"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05"
+  },
+  "prompt_or_contract": "sha256:19ab4ba6e7554b8d46300af2979824dc96c19c2b6a01eaabc24638a6aa2e5b10",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-15-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-15-26.pdf#source-native-quality-and-health-separation"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/source-native-quality-translation.yml": "PROPOSED",
+    "contracts/common/source_native_quality_translation.md": "PROPOSED",
+    "fixtures/contracts/v1/common/source_native_quality_translation/README.md": "PROPOSED",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_ambiguous_semantic_loss_none.json": "PROPOSED",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_ambiguous_without_review.json": "PROPOSED",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_assessed_without_observation_ref.json": "PROPOSED",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_governance_overclaim.json": "PROPOSED",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_health_drives_validity.json": "PROPOSED",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_health_state_used_as_validity.json": "PROPOSED",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_missing_vocabulary_version.json": "PROPOSED",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_noncanonical_references.json": "PROPOSED",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_offline_availability_false.json": "PROPOSED",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_spec_hash_mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_timing_order.json": "PROPOSED",
+    "fixtures/contracts/v1/common/source_native_quality_translation/invalid/invalid_unmapped_marked_accepted.json": "PROPOSED",
+    "fixtures/contracts/v1/common/source_native_quality_translation/valid/valid_ambiguous_degraded_suspect.json": "PROPOSED",
+    "fixtures/contracts/v1/common/source_native_quality_translation/valid/valid_mapped_online_valid.json": "PROPOSED",
+    "fixtures/contracts/v1/common/source_native_quality_translation/valid/valid_not_applicable_health_only.json": "PROPOSED",
+    "fixtures/contracts/v1/common/source_native_quality_translation/valid/valid_offline_historical_valid.json": "PROPOSED",
+    "fixtures/contracts/v1/common/source_native_quality_translation/valid/valid_unmapped_degraded_not_assessed.json": "PROPOSED",
+    "schemas/contracts/v1/common/source_native_quality_translation.schema.json": "PROPOSED",
+    "tests/validators/test_validate_source_native_quality_translation.py": "PROPOSED",
+    "tools/validators/validate_source_native_quality_translation.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-fixture-profile",
+      "outcome": "PASS",
+      "reason": "Five valid and twelve invalid synthetic fixtures passed exact deterministic validation."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Re-run required after the CodeQL sentinel repair."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:source-native-quality-and-health-separation",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-15-26.pdf#source-native-quality-and-health-separation"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-05T08:35:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": 1984,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Synthetic fixture-first implementation of KFM-TRIAD-068. The receipt grants no source, evidence, policy, review, merge, promotion, release, deployment, publication, or public-use authority."
+}

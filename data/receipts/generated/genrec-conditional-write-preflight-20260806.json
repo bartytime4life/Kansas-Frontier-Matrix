@@ -1,0 +1,147 @@
+{
+  "receipt_id": "genrec-conditional-write-preflight-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/conditional-write-preflight.yml",
+    "contracts/release/conditional_write_preflight.md",
+    "docs/intake/exploratory/new-ideas-3-11-26-conditional-write-preflight-source-map.md",
+    "fixtures/contracts/v1/release/conditional_write_preflight/README.md",
+    "fixtures/contracts/v1/release/conditional_write_preflight/cases.json",
+    "fixtures/contracts/v1/release/conditional_write_preflight/valid/valid_propose_write.json",
+    "fixtures/contracts/v1/release/conditional_write_preflight/invalid/invalid_authority_overreach.json",
+    "fixtures/contracts/v1/release/conditional_write_preflight/invalid/invalid_authority_overreach.expected_error.txt",
+    "schemas/contracts/v1/release/conditional_write_preflight.schema.json",
+    "tests/validators/release/test_validate_conditional_write_preflight.py",
+    "tools/validators/release/_conditional_write_preflight_model.py",
+    "tools/validators/release/validate_conditional_write_preflight.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/conditional-write-preflight.yml": "sha256:ee7f20a20145cd9aaec1eaaeac056f8bc9167c5df3b59f699b7632a429443625",
+    "contracts/release/conditional_write_preflight.md": "sha256:6e22dff1e8e07440aa70cac60da30c6348633ea938d6cacd38c7d7c92534f28a",
+    "docs/intake/exploratory/new-ideas-3-11-26-conditional-write-preflight-source-map.md": "sha256:49620a5a9e5147919d6fac0f3421f7400c2067f117389da242cc804207517041",
+    "fixtures/contracts/v1/release/conditional_write_preflight/README.md": "sha256:762467300fc4acec3402af71f364096691cb32f5bcb1c2bd11e830ba59cfc42a",
+    "fixtures/contracts/v1/release/conditional_write_preflight/cases.json": "sha256:636cef605199802722fbb2b35a80acc3555fa0a27baf05b12628df43258a69ca",
+    "fixtures/contracts/v1/release/conditional_write_preflight/valid/valid_propose_write.json": "sha256:100904076a389825de510d45d4191af894aea672d21ecfe0108c25369f236607",
+    "fixtures/contracts/v1/release/conditional_write_preflight/invalid/invalid_authority_overreach.json": "sha256:f786a6cf4990e1835ed3355db6edd6a0aa6daccd93c3796ed455e1f5e1b255c6",
+    "fixtures/contracts/v1/release/conditional_write_preflight/invalid/invalid_authority_overreach.expected_error.txt": "sha256:a1905e7caf8933953270afc90731a0a1e8a1e19e8417bb180a91ba1e019938f4",
+    "schemas/contracts/v1/release/conditional_write_preflight.schema.json": "sha256:a966f096a1091cb7da30fc3b0a62816c9925e1152df8dc4c5f55bd35959430f3",
+    "tests/validators/release/test_validate_conditional_write_preflight.py": "sha256:8e5291b92cc7ea51ce4d5c258a7a6ed3802e33c512e899461cd8a6f765f9c0d7",
+    "tools/validators/release/_conditional_write_preflight_model.py": "sha256:9ae9745d0a1b7d7298cb2cf59a0c073ff7d4b5fe55f6aa60cbfaa9c8a6c6e0a2",
+    "tools/validators/release/validate_conditional_write_preflight.py": "sha256:efe2e66f29e67613a7e8589082a36c1d1b97107c3a2442ca6506117ebe857321"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:519d625d7ccdfe8d31d7a78812a7703da4822a9b35f311a8355b25d640485a1a",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded-file search",
+      "GitHub connector repository inspection and mutation",
+      "deterministic local Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:ef632ec5d1bceec45a39bae8abd83b30d71f2abf0cf29aa77567733f336c688b"
+    ],
+    "attached_docs": [
+      "New Ideas 3-11-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://New-Ideas-3-11-26:sha256:ef632ec5d1bceec45a39bae8abd83b30d71f2abf0cf29aa77567733f336c688b#section=conditional-publish-and-csv-geojson-cas",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@ead1250f2923d1532257ec50cb44729be6f6c751",
+      "repo:contracts/release/README.md@ead1250f2923d1532257ec50cb44729be6f6c751",
+      "repo:packages/hashing/src/hashing/core.py@ead1250f2923d1532257ec50cb44729be6f6c751",
+      "repo:tests/schemas/test_common_contracts.py@ead1250f2923d1532257ec50cb44729be6f6c751"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/conditional-write-preflight.yml": "CONFIRMED",
+    "contracts/release/conditional_write_preflight.md": "PROPOSED",
+    "docs/intake/exploratory/new-ideas-3-11-26-conditional-write-preflight-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/release/conditional_write_preflight/README.md": "PROPOSED",
+    "fixtures/contracts/v1/release/conditional_write_preflight/cases.json": "CONFIRMED",
+    "fixtures/contracts/v1/release/conditional_write_preflight/valid/valid_propose_write.json": "CONFIRMED",
+    "fixtures/contracts/v1/release/conditional_write_preflight/invalid/invalid_authority_overreach.json": "CONFIRMED",
+    "fixtures/contracts/v1/release/conditional_write_preflight/invalid/invalid_authority_overreach.expected_error.txt": "CONFIRMED",
+    "schemas/contracts/v1/release/conditional_write_preflight.schema.json": "CONFIRMED",
+    "tests/validators/release/test_validate_conditional_write_preflight.py": "CONFIRMED",
+    "tools/validators/release/validate_conditional_write_preflight.py": "CONFIRMED",
+    "tools/validators/release/_conditional_write_preflight_model.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite-16-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "ten-case-exact-outcome-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "schema-valid-and-authority-overreach-polarity",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-and-least-privilege-preflight",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "pending until the draft pull request runs on GitHub"
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "New Ideas 3-11-26.pdf — conditional publish and CSV-to-GeoJSON CAS",
+      "validated": true,
+      "evidence_ref": "attachment://New-Ideas-3-11-26#section=conditional-publish-and-csv-geojson-cas"
+    },
+    {
+      "id": "ADR-0029 directory authority",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@ead1250f2923d1532257ec50cb44729be6f6c751"
+    },
+    {
+      "id": "contracts/release responsibility boundary",
+      "validated": true,
+      "evidence_ref": "repo:contracts/release/README.md@ead1250f2923d1532257ec50cb44729be6f6c751"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T22:44:35Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only optimistic conditional-write preflight. No network request, external state resolution, write, lifecycle transition, release, deployment, publication, or public-use effect."
+}

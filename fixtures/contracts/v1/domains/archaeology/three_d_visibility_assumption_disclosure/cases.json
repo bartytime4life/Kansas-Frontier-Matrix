@@ -1,0 +1,311 @@
+{
+  "object_type": "ThreeDVisibilityAssumptionDisclosureFixtureManifest",
+  "schema_version": "1.0.0",
+  "bases": {
+    "internal": {
+      "object_type": "ThreeDVisibilityAssumptionDisclosure",
+      "schema_version": "1.0.0",
+      "profile": "kfm.archaeology.three-d-visibility-assumption-disclosure.fixture.v1",
+      "source_card": "KFM-P18-INV-458",
+      "recorded_at": "2026-08-11T20:00:00Z",
+      "analysis": {
+        "analysis_ref": "fixture:visibility-analysis:internal-001",
+        "analysis_receipt_ref": "fixture:receipt:visibility-analysis-001",
+        "state": "COMPLETE",
+        "kind": "VIEWSHED"
+      },
+      "scene_model": {
+        "model_ref": "fixture:three-d-model:controlled-001",
+        "model_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "horizontal_resolution_m": 0.5,
+        "vertical_resolution_m": 0.2,
+        "resolution_basis_ref": "fixture:method:model-resolution-001",
+        "vertical_datum_ref": "fixture:datum:vertical-001"
+      },
+      "observers": {
+        "count": 2,
+        "geometry_posture": "EXACT_RESTRICTED",
+        "geometry_ref": "fixture:geometry:controlled-observers-001",
+        "height_m": 1.65,
+        "height_basis_ref": "fixture:method:observer-height-001"
+      },
+      "targets": {
+        "count": 3,
+        "geometry_posture": "EXACT_RESTRICTED",
+        "geometry_ref": "fixture:geometry:controlled-targets-001",
+        "height_m": 1.0,
+        "height_basis_ref": "fixture:method:target-height-001"
+      },
+      "obstacles": {
+        "mode": "BUILT_AND_TERRAIN",
+        "model_refs": ["fixture:obstacle-model:synthetic-001"],
+        "completeness": "COMPLETE",
+        "transparency_rule": "OPAQUE",
+        "rule_statement": "Synthetic terrain and built surfaces are treated as opaque for this scenario."
+      },
+      "method": {
+        "algorithm": "RASTER_VIEWSHED",
+        "algorithm_statement": "Synthetic raster viewshed method with declared sampling assumptions.",
+        "line_of_sight_rule": "A target cell is visible only when no declared obstacle intersects the sampled ray.",
+        "earth_curvature": "EXCLUDED",
+        "atmospheric_refraction": "EXCLUDED",
+        "maximum_distance_m": 2500.0,
+        "scenario_ids": ["baseline", "low-observer"]
+      },
+      "interpretation": {
+        "result_character": "ASSUMPTION_BOUND_INTERPRETATION",
+        "scope_statement": "Synthetic output supports comparison of declared scenarios only and does not establish past human perception.",
+        "uncertainty_statement": "Small changes in geometry, resolution, height, or obstacle assumptions can change the visibility result.",
+        "archaeological_fact_asserted": false
+      },
+      "governance": {
+        "intended_use": "INTERNAL_REVIEW",
+        "sensitivity_state": "CONTROLLED",
+        "evidence_bundle_ref": "fixture:evidence-bundle:visibility-001",
+        "technical_review_ref": "fixture:review:technical-visibility-001",
+        "cultural_review_ref": "fixture:review:cultural-visibility-001",
+        "policy_decision_ref": "fixture:policy-decision:visibility-001",
+        "publication_transform_receipt_ref": null,
+        "release_manifest_ref": null,
+        "correction_ref": null,
+        "rollback_ref": null
+      },
+      "limitations": [
+        "ASSUMPTION_DISCLOSURE_ONLY",
+        "NO_COORDINATES_OR_ASSET_ACCESS",
+        "NO_EVIDENCE_OR_INTERPRETATION_AUTHORITY",
+        "NO_POLICY_OR_REVIEW_AUTHORITY",
+        "NO_RELEASE_OR_PUBLICATION_AUTHORITY",
+        "SYNTHETIC_REFERENCES_ONLY"
+      ],
+      "authority_claims": {
+        "analysis_execution_authority": false,
+        "evidence_authority": false,
+        "interpretation_authority": false,
+        "policy_authority": false,
+        "review_authority": false,
+        "release_authority": false,
+        "publication_authority": false,
+        "public_use_authority": false
+      }
+    },
+    "public": {
+      "extends": "internal",
+      "analysis": {
+        "analysis_ref": "fixture:visibility-analysis:public-candidate-001",
+        "analysis_receipt_ref": "fixture:receipt:visibility-analysis-public-001",
+        "state": "COMPLETE",
+        "kind": "VIEWSHED"
+      },
+      "observers": {
+        "count": 2,
+        "geometry_posture": "GENERALIZED",
+        "geometry_ref": "fixture:geometry:generalized-observers-001",
+        "height_m": 1.65,
+        "height_basis_ref": "fixture:method:observer-height-001"
+      },
+      "targets": {
+        "count": 3,
+        "geometry_posture": "WITHHELD",
+        "geometry_ref": null,
+        "height_m": 1.0,
+        "height_basis_ref": "fixture:method:target-height-001"
+      },
+      "governance": {
+        "intended_use": "PUBLIC_CANDIDATE",
+        "sensitivity_state": "PUBLIC_SAFE_REVIEWED",
+        "evidence_bundle_ref": "fixture:evidence-bundle:visibility-001",
+        "technical_review_ref": "fixture:review:technical-visibility-001",
+        "cultural_review_ref": "fixture:review:cultural-visibility-001",
+        "policy_decision_ref": "fixture:policy-decision:visibility-public-001",
+        "publication_transform_receipt_ref": "fixture:receipt:publication-transform-visibility-001",
+        "release_manifest_ref": "fixture:release-manifest:visibility-001",
+        "correction_ref": "fixture:correction:visibility-001",
+        "rollback_ref": "fixture:rollback:visibility-001"
+      }
+    }
+  },
+  "cases": [
+    {
+      "name": "pass_internal_controlled",
+      "base": "internal",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "pass_public_generalized_and_withheld",
+      "base": "public",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "abstain_analysis_incomplete",
+      "base": "internal",
+      "mutations": [{"path": "/analysis/state", "value": "INCOMPLETE"}],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": ["ANALYSIS_INCOMPLETE"]
+    },
+    {
+      "name": "abstain_analysis_receipt_unresolved",
+      "base": "internal",
+      "mutations": [{"path": "/analysis/analysis_receipt_ref", "value": null}],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": ["ANALYSIS_RECEIPT_UNRESOLVED"]
+    },
+    {
+      "name": "abstain_model_resolution_unresolved",
+      "base": "internal",
+      "mutations": [
+        {"path": "/scene_model/horizontal_resolution_m", "value": null},
+        {"path": "/scene_model/vertical_resolution_m", "value": null},
+        {"path": "/scene_model/resolution_basis_ref", "value": null}
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": ["MODEL_RESOLUTION_UNRESOLVED"]
+    },
+    {
+      "name": "abstain_observer_height_unresolved",
+      "base": "internal",
+      "mutations": [
+        {"path": "/observers/height_m", "value": null},
+        {"path": "/observers/height_basis_ref", "value": null}
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": ["OBSERVER_HEIGHT_UNRESOLVED"]
+    },
+    {
+      "name": "abstain_obstacle_assumptions_partial",
+      "base": "internal",
+      "mutations": [{"path": "/obstacles/completeness", "value": "PARTIAL"}],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": ["OBSTACLE_ASSUMPTIONS_PARTIAL"]
+    },
+    {
+      "name": "abstain_propagation_assumption_unresolved",
+      "base": "internal",
+      "mutations": [
+        {"path": "/method/earth_curvature", "value": "UNKNOWN"},
+        {"path": "/method/atmospheric_refraction", "value": "UNKNOWN"}
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": ["PROPAGATION_ASSUMPTION_UNRESOLVED"]
+    },
+    {
+      "name": "abstain_governance_reference_unresolved",
+      "base": "internal",
+      "mutations": [{"path": "/governance/cultural_review_ref", "value": null}],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": ["GOVERNANCE_REFERENCE_UNRESOLVED"]
+    },
+    {
+      "name": "error_declared_analysis",
+      "base": "internal",
+      "mutations": [{"path": "/analysis/state", "value": "ERROR"}],
+      "expected_outcome": "ERROR",
+      "expected_findings": ["VISIBILITY_ANALYSIS_ERROR"]
+    },
+    {
+      "name": "deny_withheld_observer_geometry_reference",
+      "base": "internal",
+      "mutations": [{"path": "/observers/geometry_posture", "value": "WITHHELD"}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["OBSERVER_WITHHELD_GEOMETRY_REFERENCE_FORBIDDEN"]
+    },
+    {
+      "name": "deny_missing_target_geometry_reference",
+      "base": "internal",
+      "mutations": [{"path": "/targets/geometry_ref", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["TARGET_GEOMETRY_REFERENCE_REQUIRED"]
+    },
+    {
+      "name": "deny_observer_height_basis_incoherent",
+      "base": "internal",
+      "mutations": [{"path": "/observers/height_basis_ref", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["OBSERVER_HEIGHT_BASIS_INCOHERENT"]
+    },
+    {
+      "name": "deny_model_resolution_partial",
+      "base": "internal",
+      "mutations": [{"path": "/scene_model/vertical_resolution_m", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["MODEL_RESOLUTION_PARTIAL"]
+    },
+    {
+      "name": "deny_custom_obstacle_rule_missing",
+      "base": "internal",
+      "mutations": [
+        {"path": "/obstacles/mode", "value": "CUSTOM"},
+        {"path": "/obstacles/rule_statement", "value": null}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["CUSTOM_OBSTACLE_RULE_REQUIRED"]
+    },
+    {
+      "name": "deny_other_algorithm_statement_missing",
+      "base": "internal",
+      "mutations": [
+        {"path": "/method/algorithm", "value": "OTHER"},
+        {"path": "/method/algorithm_statement", "value": null}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["ALGORITHM_STATEMENT_REQUIRED"]
+    },
+    {
+      "name": "deny_public_exact_geometry",
+      "base": "public",
+      "mutations": [
+        {"path": "/observers/geometry_posture", "value": "EXACT_RESTRICTED"},
+        {"path": "/observers/geometry_ref", "value": "fixture:geometry:controlled-observers-001"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "EXACT_GEOMETRY_REQUIRES_CONTROLLED_SENSITIVITY",
+        "PUBLIC_EXACT_GEOMETRY_FORBIDDEN"
+      ]
+    },
+    {
+      "name": "deny_public_release_closure_missing",
+      "base": "public",
+      "mutations": [{"path": "/governance/rollback_ref", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["PUBLIC_RELEASE_CLOSURE_REQUIRED"]
+    },
+    {
+      "name": "deny_internal_release_reference",
+      "base": "internal",
+      "mutations": [{"path": "/governance/release_manifest_ref", "value": "fixture:release-manifest:unexpected"}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["INTERNAL_RELEASE_REFERENCE_FORBIDDEN"]
+    },
+    {
+      "name": "deny_scenario_ids_not_canonical",
+      "base": "internal",
+      "mutations": [{"path": "/method/scenario_ids", "value": ["low-observer", "baseline"]}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["SCENARIO_IDS_NOT_CANONICAL"]
+    },
+    {
+      "name": "deny_spec_hash_mismatch",
+      "base": "internal",
+      "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_findings": ["SPEC_HASH_MISMATCH"]
+    },
+    {
+      "name": "deny_disclosure_id_mismatch",
+      "base": "internal",
+      "disclosure_id_override": "kfm:archaeology:visibility-disclosure:ffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_findings": ["DISCLOSURE_ID_MISMATCH"]
+    },
+    {
+      "name": "deny_authority_overreach",
+      "base": "internal",
+      "mutations": [{"path": "/authority_claims/public_use_authority", "value": true}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["SCHEMA_INVALID"]
+    }
+  ]
+}

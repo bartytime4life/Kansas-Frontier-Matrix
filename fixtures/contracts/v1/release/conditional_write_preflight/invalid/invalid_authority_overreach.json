@@ -1,0 +1,55 @@
+{
+  "claims": {
+    "deterministic_preflight": true,
+    "external_state_resolved": false,
+    "lifecycle_write_performed": false,
+    "network_accessed": false,
+    "public_use_authorized": false,
+    "published": true,
+    "release_created": false,
+    "upstream_authority_verified": false,
+    "write_performed": false,
+    "write_request_emitted": false
+  },
+  "execution_mode": "FIXTURE_ONLY",
+  "intent_id": "kfm:conditional-write-intent:e5db8659c6cc8407014d4df8dd8ab456495fc660e6dca2f22332d6be552c2ee4",
+  "object_type": "ConditionalWritePreflightCandidate",
+  "preflight": {
+    "condition_fingerprint": "sha256:1aef191b05b63d2b32d52450cad31dd3938717252c35a44a314cff4ee647d0a6",
+    "outcome": "PROPOSE_WRITE",
+    "reason_codes": [
+      "CONDITION_SATISFIED"
+    ],
+    "request_headers": {
+      "if_match": null,
+      "if_none_match": "*"
+    }
+  },
+  "profile": "kfm.release.conditional-write-preflight.v1",
+  "request": {
+    "content_type": "application/json",
+    "expected_etag": null,
+    "idempotency_key": "sha256:2288eb54da8dd306f1a2c0f99157202d5bbb9e4019acf87f4feb43ee7bd6c2f7",
+    "proposed_content_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "proposed_content_length": 128
+  },
+  "schema_version": "1.0.0",
+  "spec_hash": "sha256:e5db8659c6cc8407014d4df8dd8ab456495fc660e6dca2f22332d6be552c2ee4",
+  "target": {
+    "observed_content_digest": null,
+    "observed_etag": null,
+    "observed_state": "ABSENT",
+    "operation": "CREATE_IF_ABSENT",
+    "target_ref": "kfm://fixture/release/objects/create-absent"
+  },
+  "upstream": {
+    "policy_decision_ref": "kfm://fixture/policy/allow",
+    "policy_outcome": "ALLOW",
+    "promotion_decision_ref": "kfm://fixture/promotion/approved",
+    "promotion_state": "APPROVED",
+    "release_manifest_candidate_ref": "kfm://fixture/release-manifest/create-absent",
+    "review_record_ref": "kfm://fixture/review/approved",
+    "review_state": "APPROVED",
+    "rollback_ref": "kfm://fixture/rollback/previous-state"
+  }
+}

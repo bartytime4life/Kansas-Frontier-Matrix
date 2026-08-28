@@ -1,0 +1,120 @@
+{
+  "receipt_id": "genrec-agriculture-ndvi-readiness-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/agriculture-ndvi-readiness.yml",
+    "contracts/domains/agriculture/ndvi_readiness.md",
+    "fixtures/domains/agriculture/ndvi_readiness/valid/emit_candidate.json",
+    "schemas/contracts/v1/domains/agriculture/ndvi_readiness.schema.json",
+    "tests/validators/domains/agriculture/ndvi_readiness/test_validate_ndvi_readiness.py",
+    "tools/validators/domains/agriculture/ndvi_readiness/README.md",
+    "tools/validators/domains/agriculture/ndvi_readiness/validate_ndvi_readiness.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/agriculture-ndvi-readiness.yml": "sha256:860bc8133b7e2081c5d0c5c7a4d065866651db2b6d5db14d1ae010b36b2768a2",
+    "contracts/domains/agriculture/ndvi_readiness.md": "sha256:95225c7f4533a9ddc13e7e32bee0312004b4068ef2695cfc2b1c5848904b7192",
+    "fixtures/domains/agriculture/ndvi_readiness/valid/emit_candidate.json": "sha256:18ca54160b17a0779a92bc9a38eb62c197a63fea6fc1ca9a98a3830281bb070a",
+    "schemas/contracts/v1/domains/agriculture/ndvi_readiness.schema.json": "sha256:32604c224a389fd0166cad6cf1eedc410ad043e2aed71e7fe2ab3956008933f8",
+    "tests/validators/domains/agriculture/ndvi_readiness/test_validate_ndvi_readiness.py": "sha256:ddb9bd23d5f7395bba0f139f73c7d09b71236c0c2fcb0e1ae17b66c84fa95b91",
+    "tools/validators/domains/agriculture/ndvi_readiness/README.md": "sha256:0d4a84ce73d67eeb8450ad29509b236a8711c8cfdc8d2834b957d0456017b90b",
+    "tools/validators/domains/agriculture/ndvi_readiness/validate_ndvi_readiness.py": "sha256:501257584283c29cd5b00a0522a9933e7f1a99ed244390f61b3b792746b8f320"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:84ebe8c5d5c7024547b6ceb6e091de45e4b4d814f93582ddbcc3082cf9d3dfcf",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-2-26(1).pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-2-26(1).pdf#smoke-aware-ndvi-readiness-sidecar",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@91079035dbc2f66e87fe00e0ecbdc49cb79c4554",
+      "repo:docs/standards/COG.md@91079035dbc2f66e87fe00e0ecbdc49cb79c4554",
+      "repo:docs/domains/agriculture/MAP_UI_CONTRACTS.md@91079035dbc2f66e87fe00e0ecbdc49cb79c4554"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/agriculture-ndvi-readiness.yml": "PROPOSED",
+    "contracts/domains/agriculture/ndvi_readiness.md": "PROPOSED",
+    "fixtures/domains/agriculture/ndvi_readiness/valid/emit_candidate.json": "PROPOSED",
+    "schemas/contracts/v1/domains/agriculture/ndvi_readiness.schema.json": "PROPOSED",
+    "tests/validators/domains/agriculture/ndvi_readiness/test_validate_ndvi_readiness.py": "PROPOSED",
+    "tools/validators/domains/agriculture/ndvi_readiness/README.md": "PROPOSED",
+    "tools/validators/domains/agriculture/ndvi_readiness/validate_ndvi_readiness.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "6 deterministic smoke-aware NDVI readiness sidecar tests passed locally."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "Changed Python implementation and focused tests compile without syntax errors."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The new read-only workflow parses as YAML."
+    },
+    {
+      "gate": "receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "The receipt SHA-256 map binds every authored artifact except the receipt itself."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed exact pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:smoke-aware-ndvi-readiness-sidecar",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-2-26(1).pdf#smoke-aware-ndvi-readiness-sidecar"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@91079035dbc2f66e87fe00e0ecbdc49cb79c4554"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T17:45:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a fixture-only smoke-aware NDVI readiness contract and validator. EMIT_CANDIDATE is a bounded candidate state, not emission, promotion, release, or publication. No source access, NDVI calculation, COG creation, or health guidance occurs."
+}

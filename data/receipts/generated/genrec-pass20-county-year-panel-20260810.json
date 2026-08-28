@@ -1,0 +1,168 @@
+{
+  "receipt_id": "genrec-pass20-county-year-panel-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/county-year-panel.yml",
+    "contracts/data/county_year_panel.md",
+    "docs/intake/exploratory/pass-20-county-year-panel-source-map.md",
+    "fixtures/contracts/v1/data/county_year_panel/cases.json",
+    "schemas/contracts/v1/data/county_year_panel.schema.json",
+    "tests/data/test_county_year_panel.py",
+    "tools/validators/data/validate_county_year_panel.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/county-year-panel.yml": "sha256:d2960a10a1a7fca86f93671ef62fc94870f10d30e18f072867c7aeb6b1bd6b59",
+    "contracts/data/county_year_panel.md": "sha256:2e4ed08634075a2b5c62b85f6a24951020571543ae84a9111a7ceb3a2c08ef98",
+    "docs/intake/exploratory/pass-20-county-year-panel-source-map.md": "sha256:252d124573b45b1cc179560cf896b37ea69a896684a0cbd252412f1a35584898",
+    "fixtures/contracts/v1/data/county_year_panel/cases.json": "sha256:35b6de09137b3c3665e9c1cd2a55e657ac2591663aa765e6d7ff3b78c43ae243",
+    "schemas/contracts/v1/data/county_year_panel.schema.json": "sha256:693796a66675cc7f1cd41d2704c9864b512156c3eb638265e784acb936d60d4a",
+    "tests/data/test_county_year_panel.py": "sha256:c9b00d3e14f9787794a64069e868f765216a7f6b0f517bf92fdc8b2c50b9c678",
+    "tools/validators/data/validate_county_year_panel.py": "sha256:7e6f5a446b540699b49b507db388cdbc53d0ec356c1de02c202d80b69f630d9e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:2e4ed08634075a2b5c62b85f6a24951020571543ae84a9111a7ceb3a2c08ef98",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and pull-request mutation",
+      "local deterministic validation",
+      "local PDF text extraction and rendered-page inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639",
+      "sha256:28900a244e68c9599e7a8f3e2acae90475ebcf9ea2645b66aed1c5f3a0378ed3",
+      "sha256:d1ca0aee02dcc167eadf954aad55a9a716f7ff428aff62f92377adc4679b41ac",
+      "sha256:ed9398ff541b425ba41e4cd8352746787138fcf87538f229ac91d6ed52678cbe"
+    ],
+    "attached_docs": [
+      "Supplied Pass 20 idea atlas",
+      "Supplied consolidated Frontier Matrix atlas",
+      "Repository GeographyVersion contract",
+      "Repository FrontierDefinition contract",
+      "Repository IndicatorDefinition contract"
+    ],
+    "evidence_refs": [
+      "private-corpus:pass20#KFM-IDX-APP-008",
+      "private-corpus:consolidated-frontier-atlas#county-year-panel-and-crosswalk",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/contracts/common/geography_version.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/contracts/evidence/frontier_definition.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/contracts/evidence/indicator_definition.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/1398"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/county-year-panel.yml": "CONFIRMED",
+    "contracts/data/county_year_panel.md": "PROPOSED",
+    "docs/intake/exploratory/pass-20-county-year-panel-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/data/county_year_panel/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/data/county_year_panel.schema.json": "PROPOSED",
+    "tests/data/test_county_year_panel.py": "CONFIRMED",
+    "tools/validators/data/validate_county_year_panel.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-pr-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Bounded object-name, exact-path, branch, pull-request, and open-work probes found no checked-path CountyYearPanel implementation or same-purpose active work at authoring time."
+    },
+    { "gate": "json-and-workflow-yaml-parse", "outcome": "PASS" },
+    { "gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS" },
+    {
+      "gate": "focused-unittest-and-fixture-suite",
+      "outcome": "PASS",
+      "reason": "Nine deterministic tests and thirty-one exact CountyYearPanel fixture cases passed."
+    },
+    {
+      "gate": "adjacent-definition-suites",
+      "outcome": "PASS",
+      "reason": "Twenty-seven deterministic GeographyVersion, FrontierDefinition, and IndicatorDefinition tests passed against the authoring base."
+    },
+    {
+      "gate": "documentation-meta-and-local-link-check",
+      "outcome": "PASS",
+      "reason": "Both metadata blocks and local links passed; review-only registry add-candidate warnings remain non-blocking."
+    },
+    { "gate": "no-network-non-reflection-and-no-observation-value-boundary", "outcome": "PASS" },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "All seven declared artifacts were rebound to their final SHA-256 digests."
+    },
+    {
+      "gate": "repository-wide-validator-orchestrator",
+      "outcome": "PASS",
+      "reason": "The registered full deterministic validator profile completed successfully on the candidate branch."
+    },
+    {
+      "gate": "legacy-global-unittest-discovery",
+      "outcome": "FAIL",
+      "reason": "Discovery ran 1,379 tests and reported five failures plus fourteen errors; the exact failing modules and counts reproduce on untouched main and do not touch this packet."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass20-frontier-demography-card",
+      "validated": true,
+      "evidence_ref": "private-corpus:pass20#KFM-IDX-APP-008"
+    },
+    {
+      "id": "consolidated-atlas-county-year-vocabulary",
+      "validated": true,
+      "evidence_ref": "private-corpus:consolidated-frontier-atlas#county-year-panel-and-crosswalk"
+    },
+    {
+      "id": "repository-geography-version-dependency",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/contracts/common/geography_version.md"
+    },
+    {
+      "id": "repository-frontier-definition-dependency",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/contracts/evidence/frontier_definition.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T01:48:50Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only CountyYearPanel packet derived from Pass 20 KFM-IDX-APP-008, consolidated atlas vocabulary, and merged GeographyVersion and FrontierDefinition seams. It composes a synthetic county digest and year with four typed observation-reference slots, availability and geography-alignment posture, uncertainty and evidence references, deterministic summary, disclosures, and identity while preserving observation, source, evidence, geography, crosswalk, threshold, classification, policy, review, release, publication, deployment, and public-use boundaries."
+}

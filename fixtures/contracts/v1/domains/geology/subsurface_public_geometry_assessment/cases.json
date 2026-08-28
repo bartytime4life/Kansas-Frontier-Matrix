@@ -1,0 +1,501 @@
+{
+  "object_type": "GeologySubsurfacePublicGeometryAssessmentFixtureManifest",
+  "schema_version": "1.0.0",
+  "bases": {
+    "borehole_generalized": {
+      "object_type": "GeologySubsurfacePublicGeometryAssessmentCandidate",
+      "schema_version": "1.0.0",
+      "profile": "kfm.geology.subsurface-public-geometry-assessment.fixture.v1",
+      "source_packet": "KFM-GEOLOGY-PUBLIC-SAFE-GEOMETRY-2026-04-21",
+      "recorded_at": "2026-08-14T16:00:00Z",
+      "subject": {
+        "object_family": "BoreholeReference",
+        "subject_ref_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "source_descriptor_refs": [
+          "fixture:source-descriptor:synthetic-borehole-001"
+        ],
+        "source_roles": [
+          "DIRECT_OBSERVATION",
+          "SYNTHETIC_FIXTURE"
+        ],
+        "source_activation_state": "INACTIVE",
+        "rights_state": "VERIFIED",
+        "sensitivity_state": "CONTROLLED"
+      },
+      "internal_support": {
+        "geometry_state": "REFERENCED_NOT_EMBEDDED",
+        "geometry_precision_class": "EXACT",
+        "horizontal_crs_ref": "fixture:crs:epsg-26914",
+        "vertical_datum_ref": "fixture:vertical-datum:navd88",
+        "depth_reference_ref": "fixture:depth-reference:ground-surface-positive-down",
+        "restricted_access": true,
+        "payload_state": "METADATA_REFERENCE_ONLY"
+      },
+      "public_projection": {
+        "disposition": "GENERALIZED",
+        "precision_class": "GENERALIZED_POINT",
+        "public_geometry_ref_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "geometry_quality_scope_assessment_ref": "fixture:geometry-quality-scope:borehole-public-001",
+        "redaction_receipt_ref": "fixture:redaction-receipt:borehole-public-001",
+        "public_summary": "Synthetic borehole geometry is represented only by a non-reversible generalized reference for declaration testing.",
+        "reason_codes": [
+          "SENSITIVE_SUBSURFACE_GENERALIZED"
+        ]
+      },
+      "governance": {
+        "assessment_state": "COMPLETE",
+        "policy_decision_ref": "fixture:policy-decision:subsurface-public-001",
+        "review_record_ref": "fixture:review-record:subsurface-public-001",
+        "validation_report_ref": "fixture:validation-report:subsurface-public-001",
+        "correction_ref": "fixture:correction:subsurface-public-001",
+        "rollback_ref": "fixture:rollback:subsurface-public-001",
+        "execution_mode": "FIXTURE_ONLY",
+        "network_access": false,
+        "restricted_input_opened": false,
+        "lifecycle_mutated": false
+      },
+      "anti_collapse_assertions": [
+        "BOREHOLE_POINT_NOT_REGIONAL_CONTINUITY",
+        "EXACT_INTERNAL_GEOMETRY_NOT_PUBLIC",
+        "GENERALIZED_GEOMETRY_NOT_PUBLIC_APPROVAL",
+        "SUCCESSFUL_ASSESSMENT_NOT_POLICY_REVIEW_RELEASE",
+        "WELL_LOG_REFERENCE_NOT_PAYLOAD_RELEASE"
+      ],
+      "authority_claims": {
+        "source_admission_authority": false,
+        "policy_authority": false,
+        "review_authority": false,
+        "geometry_fitness_authority": false,
+        "evidence_authority": false,
+        "lifecycle_authority": false,
+        "release_authority": false,
+        "publication_authority": false,
+        "public_use_authority": false
+      }
+    },
+    "borehole_withheld": {
+      "extends": "borehole_generalized",
+      "public_projection": {
+        "disposition": "WITHHELD",
+        "precision_class": "WITHHELD",
+        "public_geometry_ref_digest": null,
+        "geometry_quality_scope_assessment_ref": null,
+        "redaction_receipt_ref": "fixture:redaction-receipt:borehole-withheld-001",
+        "public_summary": "Synthetic borehole geometry remains withheld; only a non-sensitive declaration summary is available.",
+        "reason_codes": [
+          "SENSITIVE_SUBSURFACE_WITHHELD"
+        ]
+      }
+    },
+    "well_log_generalized": {
+      "extends": "borehole_generalized",
+      "subject": {
+        "object_family": "WellLogReference",
+        "subject_ref_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "source_descriptor_refs": [
+          "fixture:source-descriptor:synthetic-well-log-001"
+        ]
+      },
+      "internal_support": {
+        "payload_state": "REFERENCE_ONLY"
+      },
+      "public_projection": {
+        "public_geometry_ref_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "geometry_quality_scope_assessment_ref": "fixture:geometry-quality-scope:well-log-public-001",
+        "redaction_receipt_ref": "fixture:redaction-receipt:well-log-public-001",
+        "public_summary": "Synthetic well-log location is represented only by a generalized reference; no log payload is released."
+      }
+    },
+    "well_log_withheld": {
+      "extends": "well_log_generalized",
+      "internal_support": {
+        "payload_state": "WITHHELD"
+      },
+      "public_projection": {
+        "disposition": "WITHHELD",
+        "precision_class": "WITHHELD",
+        "public_geometry_ref_digest": null,
+        "geometry_quality_scope_assessment_ref": null,
+        "redaction_receipt_ref": "fixture:redaction-receipt:well-log-withheld-001",
+        "public_summary": "Synthetic well-log geometry and payload remain withheld; only a declaration summary is available.",
+        "reason_codes": [
+          "SENSITIVE_SUBSURFACE_WITHHELD"
+        ]
+      }
+    },
+    "incomplete": {
+      "extends": "borehole_generalized",
+      "subject": {
+        "rights_state": "UNRESOLVED",
+        "sensitivity_state": "UNRESOLVED"
+      },
+      "public_projection": {
+        "disposition": "NONE",
+        "precision_class": "NONE",
+        "public_geometry_ref_digest": null,
+        "geometry_quality_scope_assessment_ref": null,
+        "redaction_receipt_ref": null,
+        "public_summary": null,
+        "reason_codes": [
+          "ASSESSMENT_INCOMPLETE",
+          "SENSITIVITY_UNRESOLVED",
+          "SOURCE_RIGHTS_UNRESOLVED"
+        ]
+      },
+      "governance": {
+        "assessment_state": "INCOMPLETE",
+        "policy_decision_ref": null,
+        "review_record_ref": null,
+        "validation_report_ref": null,
+        "correction_ref": null,
+        "rollback_ref": null
+      }
+    },
+    "error": {
+      "extends": "incomplete",
+      "governance": {
+        "assessment_state": "ERROR"
+      }
+    }
+  },
+  "cases": [
+    {
+      "name": "pass_borehole_generalized",
+      "base": "borehole_generalized",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "pass_borehole_withheld",
+      "base": "borehole_withheld",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "pass_well_log_generalized_reference",
+      "base": "well_log_generalized",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "pass_well_log_withheld",
+      "base": "well_log_withheld",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "abstain_incomplete_assessment",
+      "base": "incomplete",
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        "ASSESSMENT_INCOMPLETE",
+        "SENSITIVITY_UNRESOLVED",
+        "SOURCE_RIGHTS_UNRESOLVED"
+      ]
+    },
+    {
+      "name": "abstain_rights_unresolved",
+      "base": "borehole_generalized",
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        "SOURCE_RIGHTS_UNRESOLVED"
+      ],
+      "mutations": [
+        {
+          "path": "/subject/rights_state",
+          "value": "UNRESOLVED"
+        }
+      ]
+    },
+    {
+      "name": "abstain_sensitivity_unresolved",
+      "base": "borehole_generalized",
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        "SENSITIVITY_UNRESOLVED"
+      ],
+      "mutations": [
+        {
+          "path": "/subject/sensitivity_state",
+          "value": "UNRESOLVED"
+        }
+      ]
+    },
+    {
+      "name": "error_declared",
+      "base": "error",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "GEOLOGY_SUBSURFACE_PUBLIC_GEOMETRY_ASSESSMENT_ERROR"
+      ]
+    },
+    {
+      "name": "deny_exact_public_precision",
+      "base": "borehole_generalized",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "PUBLIC_PRECISION_NOT_SAFE"
+      ],
+      "mutations": [
+        {
+          "path": "/public_projection/precision_class",
+          "value": "EXACT"
+        }
+      ]
+    },
+    {
+      "name": "deny_source_precision_public",
+      "base": "borehole_generalized",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "PUBLIC_PRECISION_NOT_SAFE"
+      ],
+      "mutations": [
+        {
+          "path": "/public_projection/precision_class",
+          "value": "SOURCE_PRECISION"
+        }
+      ]
+    },
+    {
+      "name": "deny_generalized_missing_digest",
+      "base": "borehole_generalized",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "GENERALIZATION_CLOSURE_REQUIRED"
+      ],
+      "mutations": [
+        {
+          "path": "/public_projection/public_geometry_ref_digest",
+          "value": null
+        }
+      ]
+    },
+    {
+      "name": "deny_generalized_missing_redaction",
+      "base": "borehole_generalized",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "GENERALIZATION_CLOSURE_REQUIRED"
+      ],
+      "mutations": [
+        {
+          "path": "/public_projection/redaction_receipt_ref",
+          "value": null
+        }
+      ]
+    },
+    {
+      "name": "deny_generalized_missing_quality_scope",
+      "base": "borehole_generalized",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "GENERALIZATION_CLOSURE_REQUIRED"
+      ],
+      "mutations": [
+        {
+          "path": "/public_projection/geometry_quality_scope_assessment_ref",
+          "value": null
+        }
+      ]
+    },
+    {
+      "name": "deny_withheld_digest_present",
+      "base": "borehole_withheld",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "WITHHELD_GEOMETRY_MUST_BE_ABSENT"
+      ],
+      "mutations": [
+        {
+          "path": "/public_projection/public_geometry_ref_digest",
+          "value": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+        }
+      ]
+    },
+    {
+      "name": "deny_withheld_missing_receipt",
+      "base": "borehole_withheld",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "WITHHOLD_RECEIPT_REQUIRED"
+      ],
+      "mutations": [
+        {
+          "path": "/public_projection/redaction_receipt_ref",
+          "value": null
+        }
+      ]
+    },
+    {
+      "name": "deny_denied_digest_present",
+      "base": "borehole_withheld",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "DENIED_GEOMETRY_MUST_BE_ABSENT"
+      ],
+      "mutations": [
+        {
+          "path": "/public_projection/disposition",
+          "value": "DENIED"
+        },
+        {
+          "path": "/public_projection/precision_class",
+          "value": "NONE"
+        },
+        {
+          "path": "/public_projection/public_geometry_ref_digest",
+          "value": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+        },
+        {
+          "path": "/public_projection/redaction_receipt_ref",
+          "value": null
+        },
+        {
+          "path": "/public_projection/reason_codes",
+          "value": [
+            "PUBLIC_GEOMETRY_DENIED"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "deny_well_log_payload_public",
+      "base": "well_log_generalized",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "WELL_LOG_PAYLOAD_RELEASE_DENIED"
+      ],
+      "mutations": [
+        {
+          "path": "/internal_support/payload_state",
+          "value": "PAYLOAD_PUBLIC"
+        }
+      ]
+    },
+    {
+      "name": "deny_borehole_payload_public",
+      "base": "borehole_generalized",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "SUBSURFACE_PAYLOAD_RELEASE_DENIED"
+      ],
+      "mutations": [
+        {
+          "path": "/internal_support/payload_state",
+          "value": "PAYLOAD_PUBLIC"
+        }
+      ]
+    },
+    {
+      "name": "deny_well_log_missing_vertical_datum",
+      "base": "well_log_generalized",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "VERTICAL_DATUM_REQUIRED"
+      ],
+      "mutations": [
+        {
+          "path": "/internal_support/vertical_datum_ref",
+          "value": null
+        }
+      ]
+    },
+    {
+      "name": "deny_borehole_missing_depth_reference",
+      "base": "borehole_generalized",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "DEPTH_REFERENCE_REQUIRED"
+      ],
+      "mutations": [
+        {
+          "path": "/internal_support/depth_reference_ref",
+          "value": null
+        }
+      ]
+    },
+    {
+      "name": "deny_rights_denied",
+      "base": "borehole_generalized",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "SOURCE_RIGHTS_DENIED"
+      ],
+      "mutations": [
+        {
+          "path": "/subject/rights_state",
+          "value": "DENIED"
+        }
+      ]
+    },
+    {
+      "name": "deny_missing_anti_collapse",
+      "base": "borehole_generalized",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ],
+      "mutations": [
+        {
+          "path": "/anti_collapse_assertions",
+          "value": [
+            "BOREHOLE_POINT_NOT_REGIONAL_CONTINUITY",
+            "EXACT_INTERNAL_GEOMETRY_NOT_PUBLIC",
+            "GENERALIZED_GEOMETRY_NOT_PUBLIC_APPROVAL",
+            "SUCCESSFUL_ASSESSMENT_NOT_POLICY_REVIEW_RELEASE"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "deny_noncanonical_source_refs",
+      "base": "borehole_generalized",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "REFERENCE_OR_VOCABULARY_ARRAY_NOT_CANONICAL"
+      ],
+      "mutations": [
+        {
+          "path": "/subject/source_descriptor_refs",
+          "value": [
+            "fixture:source-descriptor:z",
+            "fixture:source-descriptor:a"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "deny_spec_hash_mismatch",
+      "base": "borehole_generalized",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "SPEC_HASH_MISMATCH"
+      ],
+      "spec_hash_override": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "name": "deny_assessment_id_mismatch",
+      "base": "borehole_generalized",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "ASSESSMENT_ID_MISMATCH"
+      ],
+      "assessment_id_override": "kfm:geology:subsurface-public-geometry-assessment:000000000000000000000000"
+    },
+    {
+      "name": "deny_schema_network_access",
+      "base": "borehole_generalized",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ],
+      "mutations": [
+        {
+          "path": "/governance/network_access",
+          "value": true
+        }
+      ]
+    }
+  ]
+}

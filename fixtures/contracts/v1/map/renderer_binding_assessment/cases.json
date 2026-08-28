@@ -1,0 +1,356 @@
+{
+  "profile": "kfm.map.renderer-binding-assessment.fixture-cases.v1",
+  "base_candidate": {
+    "object_type": "RendererBindingAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.map.renderer-binding-assessment.fixture.v1",
+    "assessment_id": "kfm:renderer-binding:000000000000000000000000",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_agenda": "PASS20_EXP_015_RENDERER_BINDING",
+    "evaluated_at": "2026-08-11T22:00:00Z",
+    "renderer": {
+      "renderer_family": "MAPLIBRE_GL_JS",
+      "runtime_surface": "BROWSER",
+      "adapter_ref": "kfm://adapter/maplibre/browser/v1",
+      "capability_profile_ref": "kfm://renderer-capability/maplibre-gl-js/v1",
+      "admission_ref": null,
+      "binding_state": "CANDIDATE_INACTIVE"
+    },
+    "layer": {
+      "layer_descriptor_ref": "kfm://layer-descriptor/synthetic/soil/v1",
+      "layer_manifest_ref": "kfm://layer-manifest/synthetic/soil/v1",
+      "style_manifest_ref": "kfm://style-manifest/synthetic/soil/v1",
+      "artifact_manifest_ref": "kfm://tile-artifact-manifest/synthetic/soil/v1",
+      "layer_version": "v1"
+    },
+    "delivery": {
+      "input_class": "RELEASED_CARRIER",
+      "delivery_ref": "kfm://released-carrier/map/synthetic-soil/v1",
+      "immutable_locator": true,
+      "direct_store_access": false,
+      "query_text_present": false
+    },
+    "trust": {
+      "evidence_bundle_refs": ["kfm://evidence-bundle/synthetic/soil/v1"],
+      "policy_decision_refs": ["kfm://policy-decision/synthetic/soil-public/v1"],
+      "review_record_refs": ["kfm://review/synthetic/soil-release/v1"],
+      "promotion_decision_ref": "kfm://promotion-decision/synthetic/soil/v1",
+      "release_manifest_ref": "kfm://release-manifest/synthetic/soil/v1",
+      "rollback_ref": "kfm://rollback/synthetic/soil/v0",
+      "correction_refs": [],
+      "sensitivity_state": "PUBLIC_SAFE",
+      "rights_state": "APPROVED",
+      "release_state": "PUBLISHED"
+    },
+    "interaction": {
+      "context_mode": "GOVERNED_API_CONTEXT_ONLY",
+      "evidence_resolution_ref": "kfm://governed-api/evidence/synthetic-soil/v1",
+      "feature_properties_as_authority": false,
+      "client_side_policy_decision": false,
+      "hidden_feature_inference": false,
+      "direct_internal_store_lookup": false
+    },
+    "review": {
+      "state": "COMPLETE_FOR_DECLARED_SCOPE",
+      "record_refs": ["kfm://review/renderer-binding/synthetic-soil/v1"]
+    },
+    "limitations": [
+      "ASSESSMENT_ONLY",
+      "FIXTURE_ONLY_NO_REGISTRATION",
+      "REFERENCES_UNRESOLVED",
+      "NO_ARTIFACT_SIGNATURE_OR_RUNTIME_PROOF",
+      "NO_POLICY_REVIEW_RELEASE_OR_PUBLICATION_AUTHORITY"
+    ],
+    "authority_claims": {
+      "identity_minting_authority": false,
+      "data_access_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "registry_write_authority": false,
+      "renderer_registration_authority": false,
+      "release_authority": false,
+      "deployment_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "review_required_published_released_carrier",
+      "expected": {"outcome": "REVIEW_REQUIRED", "codes": []}
+    },
+    {
+      "name": "review_required_candidate_governed_api",
+      "patch": {
+        "delivery": {
+          "input_class": "GOVERNED_API",
+          "delivery_ref": "kfm://governed-api/layers/synthetic-soil/v1",
+          "immutable_locator": false
+        },
+        "trust": {
+          "promotion_decision_ref": null,
+          "release_manifest_ref": null,
+          "rollback_ref": null,
+          "release_state": "CANDIDATE"
+        }
+      },
+      "expected": {"outcome": "REVIEW_REQUIRED", "codes": []}
+    },
+    {
+      "name": "abstain_renderer_family_unknown",
+      "patch": {"renderer": {"renderer_family": "UNKNOWN"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["RENDERER_FAMILY_UNKNOWN"]}
+    },
+    {
+      "name": "abstain_runtime_surface_unknown",
+      "patch": {"renderer": {"runtime_surface": "UNKNOWN"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["RUNTIME_SURFACE_UNKNOWN"]}
+    },
+    {
+      "name": "abstain_binding_state_unknown",
+      "patch": {"renderer": {"binding_state": "UNKNOWN"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["BINDING_STATE_UNKNOWN"]}
+    },
+    {
+      "name": "abstain_delivery_input_unknown",
+      "patch": {"delivery": {"input_class": "UNKNOWN"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["DELIVERY_INPUT_UNKNOWN"]}
+    },
+    {
+      "name": "abstain_evidence_support_unresolved",
+      "patch": {
+        "trust": {"evidence_bundle_refs": [], "release_state": "CANDIDATE"}
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["EVIDENCE_SUPPORT_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_policy_support_unresolved",
+      "patch": {
+        "trust": {"policy_decision_refs": [], "release_state": "CANDIDATE"}
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["POLICY_SUPPORT_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_review_support_unresolved",
+      "patch": {
+        "trust": {"review_record_refs": [], "release_state": "CANDIDATE"}
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["REVIEW_SUPPORT_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_sensitivity_unknown",
+      "patch": {"trust": {"sensitivity_state": "UNKNOWN"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["SENSITIVITY_STATE_UNKNOWN"]}
+    },
+    {
+      "name": "abstain_rights_unknown",
+      "patch": {"trust": {"rights_state": "UNKNOWN"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["RIGHTS_STATE_UNKNOWN"]}
+    },
+    {
+      "name": "abstain_release_state_unknown",
+      "patch": {"trust": {"release_state": "UNKNOWN"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["RELEASE_STATE_UNKNOWN"]}
+    },
+    {
+      "name": "abstain_interaction_context_unknown",
+      "patch": {"interaction": {"context_mode": "UNKNOWN"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["INTERACTION_CONTEXT_UNKNOWN"]}
+    },
+    {
+      "name": "abstain_evidence_resolution_unresolved",
+      "patch": {"interaction": {"evidence_resolution_ref": null}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["EVIDENCE_RESOLUTION_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_review_pending",
+      "patch": {"review": {"state": "PENDING"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["REVIEW_PENDING"]}
+    },
+    {
+      "name": "abstain_review_unknown",
+      "patch": {"review": {"state": "UNKNOWN"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["REVIEW_UNKNOWN"]}
+    },
+    {
+      "name": "abstain_peer_browser_policy_unresolved",
+      "patch": {"renderer": {"renderer_family": "PEER_BROWSER_RENDERER"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["RENDERER_POLICY_UNRESOLVED"]}
+    },
+    {
+      "name": "deny_headless_renderer_on_browser_surface",
+      "patch": {"renderer": {"renderer_family": "HEADLESS_RENDERER"}},
+      "expected": {"outcome": "DENY", "codes": ["BROWSER_RENDERER_FAMILY_INCOHERENT"]}
+    },
+    {
+      "name": "deny_active_binding",
+      "patch": {"renderer": {"binding_state": "ACTIVE"}},
+      "expected": {"outcome": "DENY", "codes": ["ACTIVE_BINDING_DENIED"]}
+    },
+    {
+      "name": "deny_raw_input",
+      "patch": {"delivery": {"input_class": "RAW"}},
+      "expected": {"outcome": "DENY", "codes": ["INTERNAL_INPUT_CLASS_DENIED"]}
+    },
+    {
+      "name": "deny_work_input",
+      "patch": {"delivery": {"input_class": "WORK"}},
+      "expected": {"outcome": "DENY", "codes": ["INTERNAL_INPUT_CLASS_DENIED"]}
+    },
+    {
+      "name": "deny_quarantine_input",
+      "patch": {"delivery": {"input_class": "QUARANTINE"}},
+      "expected": {"outcome": "DENY", "codes": ["INTERNAL_INPUT_CLASS_DENIED"]}
+    },
+    {
+      "name": "deny_internal_store_input",
+      "patch": {"delivery": {"input_class": "INTERNAL_STORE"}},
+      "expected": {"outcome": "DENY", "codes": ["INTERNAL_INPUT_CLASS_DENIED"]}
+    },
+    {
+      "name": "deny_direct_store_access",
+      "patch": {"delivery": {"direct_store_access": true}},
+      "expected": {"outcome": "DENY", "codes": ["DIRECT_STORE_ACCESS_DENIED"]}
+    },
+    {
+      "name": "deny_query_text",
+      "patch": {"delivery": {"query_text_present": true}},
+      "expected": {"outcome": "DENY", "codes": ["QUERY_TEXT_DENIED"]}
+    },
+    {
+      "name": "deny_mutable_published_locator",
+      "patch": {"delivery": {"immutable_locator": false}},
+      "expected": {"outcome": "DENY", "codes": ["IMMUTABLE_LOCATOR_REQUIRED"]}
+    },
+    {
+      "name": "deny_layer_reference_role_collapse",
+      "patch": {
+        "layer": {"artifact_manifest_ref": "kfm://layer-manifest/synthetic/soil/v1"}
+      },
+      "expected": {"outcome": "DENY", "codes": ["LAYER_REFERENCE_ROLE_COLLAPSE"]}
+    },
+    {
+      "name": "deny_restricted_sensitivity",
+      "patch": {"trust": {"sensitivity_state": "RESTRICTED"}},
+      "expected": {"outcome": "DENY", "codes": ["RESTRICTED_SENSITIVITY_DENIED"]}
+    },
+    {
+      "name": "deny_restricted_rights",
+      "patch": {"trust": {"rights_state": "RESTRICTED"}},
+      "expected": {"outcome": "DENY", "codes": ["RESTRICTED_RIGHTS_DENIED"]}
+    },
+    {
+      "name": "deny_withdrawn_release",
+      "patch": {"trust": {"release_state": "WITHDRAWN"}},
+      "expected": {"outcome": "DENY", "codes": ["WITHDRAWN_RELEASE_DENIED"]}
+    },
+    {
+      "name": "deny_published_without_evidence_closure",
+      "patch": {"trust": {"evidence_bundle_refs": []}},
+      "expected": {"outcome": "DENY", "codes": ["PUBLISHED_TRUST_CLOSURE_REQUIRED"]}
+    },
+    {
+      "name": "deny_published_without_promotion",
+      "patch": {"trust": {"promotion_decision_ref": null}},
+      "expected": {"outcome": "DENY", "codes": ["PUBLISHED_PROMOTION_REQUIRED"]}
+    },
+    {
+      "name": "deny_published_without_release_manifest",
+      "patch": {"trust": {"release_manifest_ref": null}},
+      "expected": {"outcome": "DENY", "codes": ["PUBLISHED_RELEASE_REQUIRED"]}
+    },
+    {
+      "name": "deny_published_without_rollback",
+      "patch": {"trust": {"rollback_ref": null}},
+      "expected": {"outcome": "DENY", "codes": ["PUBLISHED_ROLLBACK_REQUIRED"]}
+    },
+    {
+      "name": "deny_feature_properties_only_context",
+      "patch": {"interaction": {"context_mode": "FEATURE_PROPERTIES_ONLY"}},
+      "expected": {"outcome": "DENY", "codes": ["FEATURE_PROPERTIES_CONTEXT_DENIED"]}
+    },
+    {
+      "name": "deny_feature_properties_as_authority",
+      "patch": {"interaction": {"feature_properties_as_authority": true}},
+      "expected": {"outcome": "DENY", "codes": ["FEATURE_PROPERTIES_AUTHORITY_DENIED"]}
+    },
+    {
+      "name": "deny_client_policy_authority",
+      "patch": {"interaction": {"client_side_policy_decision": true}},
+      "expected": {"outcome": "DENY", "codes": ["CLIENT_POLICY_AUTHORITY_DENIED"]}
+    },
+    {
+      "name": "deny_hidden_feature_inference",
+      "patch": {"interaction": {"hidden_feature_inference": true}},
+      "expected": {"outcome": "DENY", "codes": ["HIDDEN_FEATURE_INFERENCE_DENIED"]}
+    },
+    {
+      "name": "deny_direct_internal_lookup",
+      "patch": {"interaction": {"direct_internal_store_lookup": true}},
+      "expected": {"outcome": "DENY", "codes": ["DIRECT_INTERNAL_LOOKUP_DENIED"]}
+    },
+    {
+      "name": "deny_direct_store_reference",
+      "patch": {"delivery": {"delivery_ref": "kfm://carrier/data/raw/synthetic"}},
+      "expected": {"outcome": "DENY", "codes": ["DIRECT_STORE_REFERENCE_DENIED"]}
+    },
+    {
+      "name": "deny_embedded_query_reference",
+      "patch": {"renderer": {"adapter_ref": "kfm://adapter/cypher:match"}},
+      "expected": {"outcome": "DENY", "codes": ["EMBEDDED_QUERY_DENIED"]}
+    },
+    {
+      "name": "deny_noncanonical_policy_refs",
+      "patch": {
+        "trust": {
+          "policy_decision_refs": [
+            "kfm://policy-decision/synthetic/zeta/v1",
+            "kfm://policy-decision/synthetic/alpha/v1"
+          ]
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["REFERENCES_NOT_CANONICAL"]}
+    },
+    {
+      "name": "deny_complete_review_without_record",
+      "patch": {"review": {"record_refs": []}},
+      "expected": {"outcome": "DENY", "codes": ["REVIEW_RECORD_REQUIRED"]}
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "tamper": "profile_hash",
+      "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}
+    },
+    {
+      "name": "deny_assessment_id_tamper",
+      "tamper": "assessment_id",
+      "expected": {"outcome": "DENY", "codes": ["ASSESSMENT_ID_MISMATCH"]}
+    },
+    {
+      "name": "error_unexpected_property",
+      "patch": {"unexpected_field": true},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "name": "error_invalid_timestamp",
+      "patch": {"evaluated_at": "not-a-time"},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "name": "error_invalid_reference",
+      "patch": {"layer": {"layer_descriptor_ref": "https://example.invalid/layer"}},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "name": "error_authority_claim",
+      "patch": {"authority_claims": {"renderer_registration_authority": true}},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "name": "error_limitations_changed",
+      "patch": {"limitations": ["ASSESSMENT_ONLY"]},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    }
+  ]
+}

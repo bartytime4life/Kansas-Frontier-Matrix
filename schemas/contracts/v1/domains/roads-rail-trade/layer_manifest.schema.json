@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/roads-rail-trade/layer_manifest.schema.json",
+  "title": "layer_manifest",
+  "type": "object",
+  "description": "KFM v1 contract schema stub for layer_manifest. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "x-kfm": {
+    "contract_doc": "contracts/domains/roads-rail-trade/layer_manifest.md",
+    "fixtures_root": "fixtures/domains/roads-rail-trade/layer_manifest/",
+    "validator": "tools/validators/domains/roads-rail-trade/validate_layer_manifest.py",
+    "policy": "policy/domains/roads-rail-trade/",
+    "status": "PROPOSED"
+  },
+  "properties": {
+    "spec_hash": {
+      "type": "string",
+      "description": "Deterministic content hash."
+    },
+    "id": {
+      "type": "string",
+      "description": "Canonical identifier."
+    },
+    "version": {
+      "type": "string",
+      "description": "Contract or object version."
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": true
+}

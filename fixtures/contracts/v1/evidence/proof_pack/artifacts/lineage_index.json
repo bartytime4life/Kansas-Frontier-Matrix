@@ -1,0 +1,8 @@
+{
+  "artifact_id": "lineage_index:fixture-05",
+  "artifact_kind": "LINEAGE_INDEX",
+  "fixture_only": true,
+  "release_id": "release:fixture-proof-pack-20260805",
+  "subject_id": "dataset:fixture-public-safe-v1",
+  "subject_spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+}

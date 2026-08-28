@@ -1,0 +1,73 @@
+{
+  "fixture_id": "atmo-lcs-caveated-context",
+  "profile_id": "kfm-atmosphere-low-cost-sensor-calibration-fixture-v1",
+  "object_family": "PM25Observation",
+  "knowledge_character": "LOW_COST_SENSOR",
+  "source_role": "observed",
+  "source_descriptor_ref": "fixture://source/atmosphere/low-cost-sensor",
+  "evidence_refs": [
+    "fixture://evidence/atmosphere/raw-observation"
+  ],
+  "assessment": {
+    "caveat": "LOW_COST_SENSOR_NOT_REFERENCE_GRADE",
+    "confidence_state": "CAVEATED_CONTEXT_ONLY",
+    "reference_grade": false,
+    "regulatory_use": false,
+    "public_release_eligible": false
+  },
+  "spatial_support": {
+    "kind": "exact_site",
+    "county_fips": "99999"
+  },
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "rollback_state": "fixture_only"
+  },
+  "calibration": {
+    "status": "UNCORRECTED_CONTEXT_ONLY",
+    "method_id": null,
+    "method_version": null,
+    "model_ref": null,
+    "model_sha256": null,
+    "training_data_ref": null,
+    "training_data_sha256": null,
+    "specification_ref": null,
+    "specification_sha256": null,
+    "raw_observation_ref": "fixture://observation/atmosphere/raw-context",
+    "raw_evidence_ref": "fixture://evidence/atmosphere/raw-observation",
+    "corrected_observation_ref": null,
+    "reference_collocation": {
+      "state": "NOT_CLAIMED",
+      "source_descriptor_ref": null,
+      "evidence_ref": null,
+      "period_start": null,
+      "period_end": null
+    },
+    "meteorology_inputs": [],
+    "applicability": {
+      "hardware_family": "synthetic-low-cost-optical-sensor",
+      "sampling_cadence": "hourly",
+      "deployment_regime": "synthetic-midcontinent-context",
+      "transfer_state": "NOT_ASSESSED",
+      "drift_state": "NOT_ASSESSED"
+    },
+    "evaluation": {
+      "state": "NOT_CLAIMED",
+      "evidence_ref": null,
+      "metric_names": [],
+      "uncertainty_state": "NOT_ASSESSED",
+      "validity_bound": "NOT_ASSESSED"
+    }
+  },
+  "limitations": [
+    "not_life_safety_guidance",
+    "not_reference_grade",
+    "not_regulatory_use",
+    "synthetic_fixture_only",
+    "uncorrected_context_only"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "status": "PROPOSED",
+  "path": "schemas/contracts/v1/layers/layer_descriptor.fauna-profile.example.json",
+  "source_docs": [
+    "docs/domains/fauna/MAP_UI_CONTRACTS.md"
+  ],
+  "notes": [
+    "Placeholder created from the current docs/domains markdown inventory."
+  ]
+}

@@ -1,0 +1,178 @@
+{
+  "profile": "kfm.evidence.non-detection-support.fixture.v1",
+  "base": {
+    "object_type": "NonDetectionSupportAssessment",
+    "schema_version": "0.1.0",
+    "profile": "kfm.evidence.non-detection-support.fixture.v1",
+    "assessment_id": "AUTO",
+    "subject_ref": "kfm:fixture:survey-unit:alpha",
+    "target_ref": "kfm:fixture:target:taxon-alpha",
+    "sampling_event": {
+      "event_ref": "kfm:fixture:sampling-event:alpha",
+      "protocol_id": "FIXTURE_PROTOCOL",
+      "protocol_version": "1.0.0",
+      "started_at": "2026-08-01T12:00:00Z",
+      "ended_at": "2026-08-01T12:30:00Z",
+      "spatial_support_ref": "kfm:fixture:spatial-support:generalized-alpha",
+      "temporal_support_ref": "kfm:fixture:temporal-support:2026-08-01",
+      "complete_checklist": true,
+      "effort_duration_minutes": 30,
+      "effort_distance_km": 1.5,
+      "observer_or_instrument_count": 2,
+      "coverage_current": true,
+      "privacy_class": "PUBLIC_SAFE",
+      "privacy_transform_ref": null
+    },
+    "detection_opportunity": {
+      "target_in_protocol_scope": true,
+      "method_suitable": "YES",
+      "season_supported": "YES",
+      "opportunity_state": "ADEQUATE",
+      "detectability_limits": ["WEATHER_NOT_MODELED"]
+    },
+    "assertion": {
+      "state": "SUPPORTED_NON_DETECTION",
+      "observed_count": 0,
+      "decision": "ANSWER",
+      "statement_scope": "WITHIN_DECLARED_SAMPLING_EFFORT",
+      "reason_codes": ["NON_DETECTION_SUPPORTED_BY_EFFORT"],
+      "obligations": ["DO_NOT_INFER_ABSENCE"],
+      "evidence_bundle_refs": ["kfm:fixture:evidence-bundle:sampling-alpha"]
+    },
+    "evaluated_at": "2026-08-01T13:00:00Z",
+    "governance": {
+      "fixture_only": true,
+      "no_network": true,
+      "lifecycle_write": false,
+      "truth_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "release_authority": false,
+      "publication_authority": false
+    },
+    "spec_hash": "AUTO"
+  },
+  "cases": [
+    {
+      "name": "supported_non_detection_with_complete_effort",
+      "mutations": [],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "observed_detection_is_bounded",
+      "mutations": [
+        {"path": "/assertion/observed_count", "value": 2},
+        {"path": "/assertion/state", "value": "OBSERVED_DETECTION"},
+        {"path": "/assertion/reason_codes", "value": ["DETECTION_RECORDED"]},
+        {"path": "/assertion/obligations", "value": ["VERIFY_OCCURRENCE_SCOPE"]}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "incomplete_checklist_abstains",
+      "mutations": [
+        {"path": "/sampling_event/complete_checklist", "value": false},
+        {"path": "/assertion/state", "value": "INCOMPLETE_EFFORT"},
+        {"path": "/assertion/decision", "value": "ABSTAIN"},
+        {"path": "/assertion/reason_codes", "value": ["SAMPLING_EFFORT_INCOMPLETE"]},
+        {"path": "/assertion/obligations", "value": ["COMPLETE_SAMPLING_EFFORT"]}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "unknown_detection_opportunity_abstains",
+      "mutations": [
+        {"path": "/detection_opportunity/method_suitable", "value": "UNKNOWN"},
+        {"path": "/detection_opportunity/opportunity_state", "value": "UNKNOWN"},
+        {"path": "/assertion/state", "value": "UNKNOWN_EFFORT"},
+        {"path": "/assertion/decision", "value": "ABSTAIN"},
+        {"path": "/assertion/reason_codes", "value": ["DETECTION_OPPORTUNITY_UNKNOWN"]},
+        {"path": "/assertion/obligations", "value": ["RESOLVE_DETECTION_OPPORTUNITY"]}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "restricted_event_is_suppressed",
+      "mutations": [
+        {"path": "/sampling_event/privacy_class", "value": "RESTRICTED"},
+        {"path": "/sampling_event/privacy_transform_ref", "value": "kfm:fixture:privacy-transform:generalize-v1"},
+        {"path": "/detection_opportunity/opportunity_state", "value": "SUPPRESSED"},
+        {"path": "/assertion/state", "value": "SUPPRESSED_RESULT"},
+        {"path": "/assertion/decision", "value": "DENY"},
+        {"path": "/assertion/reason_codes", "value": ["PRIVACY_SUPPRESSION_REQUIRED"]},
+        {"path": "/assertion/obligations", "value": ["WITHHOLD_RESTRICTED_RESULT"]}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "stale_coverage_abstains",
+      "mutations": [
+        {"path": "/sampling_event/coverage_current", "value": false},
+        {"path": "/assertion/state", "value": "STALE_COVERAGE"},
+        {"path": "/assertion/decision", "value": "ABSTAIN"},
+        {"path": "/assertion/reason_codes", "value": ["SAMPLING_COVERAGE_STALE"]},
+        {"path": "/assertion/obligations", "value": ["REFRESH_SAMPLING_COVERAGE"]}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "incomplete_effort_cannot_claim_supported_non_detection",
+      "mutations": [
+        {"path": "/sampling_event/complete_checklist", "value": false}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["ASSERTION_STATE_MISMATCH", "ASSERTION_DECISION_MISMATCH"]
+    },
+    {
+      "name": "positive_count_cannot_claim_non_detection",
+      "mutations": [
+        {"path": "/assertion/observed_count", "value": 1}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["ASSERTION_STATE_MISMATCH"]
+    },
+    {
+      "name": "restricted_event_requires_transform",
+      "mutations": [
+        {"path": "/sampling_event/privacy_class", "value": "RESTRICTED"},
+        {"path": "/assertion/state", "value": "SUPPRESSED_RESULT"},
+        {"path": "/assertion/decision", "value": "DENY"},
+        {"path": "/assertion/reason_codes", "value": ["PRIVACY_SUPPRESSION_REQUIRED"]},
+        {"path": "/assertion/obligations", "value": ["WITHHOLD_RESTRICTED_RESULT"]}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["PRIVACY_TRANSFORM_REQUIRED"]
+    },
+    {
+      "name": "stale_coverage_cannot_answer",
+      "mutations": [
+        {"path": "/sampling_event/coverage_current", "value": false}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["ASSERTION_STATE_MISMATCH", "ASSERTION_DECISION_MISMATCH"]
+    },
+    {
+      "name": "publication_authority_is_rejected",
+      "mutations": [
+        {"path": "/governance/publication_authority", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["SCHEMA_INVALID"]
+    },
+    {
+      "name": "identity_tamper_is_rejected",
+      "mutations": [
+        {"path": "/subject_ref", "value": "kfm:fixture:survey-unit:tampered"}
+      ],
+      "reseal": false,
+      "expected_outcome": "DENY",
+      "expected_findings": ["SPEC_HASH_MISMATCH", "ASSESSMENT_ID_MISMATCH"]
+    }
+  ]
+}

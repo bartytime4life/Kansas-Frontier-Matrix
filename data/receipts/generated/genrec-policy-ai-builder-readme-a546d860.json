@@ -1,0 +1,258 @@
+{
+  "receipt_id": "genrec-policy-ai-builder-readme-a546d860",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/ai_builder/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/ai_builder/README.md": "sha256:a546d860110866d463f3b1068fad3637f846cf7d7bff94685a2447208d5a82fa"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local git",
+      "repository-native deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:a1deb51074af4ea0786b35c69b4921aa451d1826f86f7f9c9c6095e2098a51f1",
+      "sha256:b767cdd3321d1f21bf5444938c339c07b30dbf3e2c16c2c745b5c5017a2096e3",
+      "sha256:db2b79eed390d1ac2e7cacda30962a65a9b5d8d7c03420b5e8d54b2760794cad",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:694bb4cdff218c7a779beab1de3bacd61b33b1dd8afe2cb9f9578cc02b6f8785",
+      "sha256:beb9c483650506c1b1dec72bd0cfdc89053081f62ebef39a263960d86f2beeb4",
+      "sha256:648045f3707d5333963f87731007a9b200fb5ca0c1442aeeb17851ebea18b5b9",
+      "sha256:c6b45ee1bcba7acb3d2a278664a0ade560ab563653e4b6e7ab60cacfe5bd6b2b",
+      "sha256:0030a367c8129b72fe9480930cc4583da041e534f81da5e2aca867ac3cd7db48",
+      "sha256:91416e1583fa24d6c7b538bdf2c2e1ab107675cc5917718b16e2d47298f971c2",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a",
+      "sha256:6441af79b3c9d2d8ee52f21bf0050af2f5504960a78c817960c4ab3e694a9fff",
+      "sha256:3c22acde53ebe9e4845391f029e4ab44b68a02e34c01efcf39b36f7883a94f89",
+      "sha256:0348f6117e64ab4e57d40d607e219f70e3c20b3a6e7489ecb1f60f471f0af20a",
+      "sha256:c40946273a5ec2c0b8d50b677f955c3f927c086eeaa0fef3e319ac35dec36510",
+      "sha256:9ca6264ef78de56fbddd38512a793d2edaf16348908c2c20700bc17e6c355272",
+      "sha256:806ac93d66c66ae526316d96159b3dfb4f614815ea615b25c69fe7e69768c5db",
+      "sha256:2929cf00c21f9a1d6804c8788224b935cb87372c1b60e0b6f3a678211747abfc",
+      "sha256:6b8e6b1b5b76a6ef1fa36c95c78269117827838059db8f77707be525e08d26dd",
+      "sha256:9d8b47712ce4529529741a73e0c705ddd9c28a0ae048c1f5827cc81f81c9b568",
+      "sha256:57c60274192b83c85f91c93f6ea77b83ebeafc68727f0e4a2a98167470a2122a",
+      "sha256:65bc6c7765bf25e9306ed181a99a6d254d005baf71cc58fcef52315ee12840ae",
+      "sha256:d1c5e49185fe56b77dd06b17768bc3f94eba20180826bc9423c08e76f5c41f70",
+      "sha256:ac2a52b1c23b276c5179971137c06daf5b9ab540fe714fd01bddc01c919c7ae5",
+      "sha256:9aba292db06bb0c09ec8d05895d25da0a42c304e95b4e1e25139182d14347675",
+      "sha256:12f5a62eb2b13dd85c741c7cb9c2f5aa8a58d299aaf2ef41aa4957df44b3eadf",
+      "sha256:d9c2838cf3949e62481edd6721f72d63638d3a8a8e5da486907a92c950476112",
+      "sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641",
+      "sha256:1b1936bf354503b3704c81c620cad6de5feb17d46bb204b4863e84240a6c7cda",
+      "sha256:510ee7f3aea7610c853e429bc02a9dec32b64eee970115be7dd4df1c86cc2dc5",
+      "sha256:4521abd8ba544aaf268d126d949071271a32a2002ac4586fcd3ef6ab1d32fe3c",
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    ],
+    "attached_docs": [
+      "Pasted text(20260813-130707).txt"
+    ],
+    "evidence_refs": [
+      "repo:commit@999ba5f2a7162dc3126d3dced73070ce101f8c15",
+      "repo:policy/ai_builder/README.md@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:policy/ai_builder/operating_contract.rego@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:policy/README.md@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:docs/doctrine/directory-rules.md@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:docs/doctrine/ai-build-operating-contract.md@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:docs/prompts/ai-builder-system-prompts.md@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:contracts/governance/agent_operation_envelope.md@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:contracts/governance/ai_change_proposal.md@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:contracts/runtime/ai_output_artifact.md@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:contracts/runtime/ai_output_batch_manifest.md@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:contracts/runtime/ai_receipt.md@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:schemas/contracts/v1/ai/ai_receipt.schema.json@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:schemas/contracts/v1/runtime/ai_receipt.schema.json@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:tools/validators/validate_generated_receipt.py@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:tools/validators/governance/validate_agent_operation_envelope.py@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:tools/validators/governance/validate_ai_change_proposal.py@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:tools/validators/ai/validate_ai_output_artifact.py@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:tools/validators/validate_ai_receipt.py@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:tests/validators/test_validate_generated_receipt.py@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:tests/validators/governance/test_agent_operation_envelope.py@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:tests/validators/governance/test_ai_change_proposal.py@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:tests/validators/test_validate_ai_output_artifact.py@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:tests/validators/test_validate_ai_receipt.py@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:.github/workflows/agent-operation-envelope.yml@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:.github/workflows/ai-change-proposal.yml@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:.github/workflows/ai-output-artifact.yml@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:.github/workflows/ai-receipt.yml@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:control_plane/root_registry.yaml@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:control_plane/policy_gate_register.yaml@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:.github/CODEOWNERS@a893b30f4dd1edfed151620c529734f4fd789a89",
+      "repo:.github/PULL_REQUEST_TEMPLATE.md@a893b30f4dd1edfed151620c529734f4fd789a89"
+    ]
+  },
+  "truth_labels": {
+    "policy/ai_builder/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, target history and bytes, exact two-file direct lane, exact-target open-pull-request overlap, accepted Directory Rules and ADR-0029, parent policy maturity, machine root projection, empty proposed policy-gate register, ownership routing, doctrine and prompt carriers, receipt families, profile contracts, schemas, fixtures, validators, tests, and workflows were inspected before authoring."
+    },
+    {
+      "gate": "markdown-structure-and-metadata",
+      "outcome": "PASS",
+      "reason": "The final README has one rendered H1, logical heading progression, six balanced fenced blocks, no trailing whitespace or diff-check error, UTF-8-compatible text, a final newline, and one KFM_META_BLOCK_V2 envelope that passes the bounded required profile."
+    },
+    {
+      "gate": "local-links-and-fragments",
+      "outcome": "PASS",
+      "reason": "The repository-native no-network link checker resolved all 40 local README targets and fragments; seven external badge targets were classified as unverified and were not requested."
+    },
+    {
+      "gate": "agent-operation-envelope-related-evidence",
+      "outcome": "PASS",
+      "reason": "All 12 focused tests and all 13 reviewed synthetic cases passed under the hash-locked project-test-hashing-test profile; the README preserves the profile's proposed-inactive, no-network, non-mutating, no-credential, and no-external-effect boundary."
+    },
+    {
+      "gate": "ai-change-proposal-related-evidence",
+      "outcome": "PASS",
+      "reason": "All 14 focused tests and all 13 reviewed synthetic proposal cases passed; deterministic identity, compare-and-set simulation, policy/review projection, and readiness are documented without claiming patch application or authority."
+    },
+    {
+      "gate": "ai-output-artifact-related-evidence",
+      "outcome": "PASS",
+      "reason": "All 14 focused tests and all 26 reviewed artifact and batch cases passed; the README preserves fixture-only identity, finite-outcome, batch-membership, partial-revocation, unresolved-reference, and no-public-use boundaries."
+    },
+    {
+      "gate": "runtime-ai-receipt-related-evidence",
+      "outcome": "PASS",
+      "reason": "All six focused tests and the two-valid/three-invalid fixture profile passed; the README keeps local shape and digest checks separate from evidence, policy, citation, review, answer, release, and publication authority."
+    },
+    {
+      "gate": "generated-receipt-focused-evidence",
+      "outcome": "PASS",
+      "reason": "All 26 focused generated-receipt tests and exact fixture polarity passed after the complete historical receipt fixture surface was materialized; the validator remains bounded and does not authenticate references, review claims, policy, merge, release, or publication."
+    },
+    {
+      "gate": "documentation-validator-suites",
+      "outcome": "PASS",
+      "reason": "All 18 local-link, 24 metadata-block, 27 document-graph, and 23 stale-scan focused tests passed; direct required-profile metadata and explicit-file local-link checks also passed for the final README."
+    },
+    {
+      "gate": "direct-ai-builder-rego-execution",
+      "outcome": "SKIPPED",
+      "reason": "OPA is unavailable locally and this lane has no accepted checksum-pinned OPA version, native Rego test, trusted input builder, or direct workflow invocation. Static source inspection is recorded without claiming parse or evaluator success."
+    },
+    {
+      "gate": "generated-receipt-schema-and-hash",
+      "outcome": "PASS",
+      "reason": "The receipt parses without duplicate keys, conforms to GENERATED_RECEIPT contract version 3.0.0 and bounded cross-field rules, and binds the final README SHA-256 digest."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The authored artifacts contain no credentials, private prompts, hidden reasoning, personal data, restricted payloads, exact sensitive locations, signed URLs, production endpoints, or invented actor-authority claims."
+    },
+    {
+      "gate": "runtime-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no Rego source, contract, schema, registry, fixture, validator, test, workflow, bundle, evaluator, model, credential, consumer, repository mutation, decision, review record, release, deployment, or publication behavior changes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "The draft remains pending authorized human review; no policy acceptance, independent approval, merge authority, lifecycle mutation, release, deployment, publication, or public-use authority is created."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "policy/README.md"
+  ],
+  "citations": [
+    {
+      "id": "ai-builder-lane-baseline-and-proposed-rego-source",
+      "validated": true,
+      "evidence_ref": "repo:policy/ai_builder/operating_contract.rego@a893b30f4dd1edfed151620c529734f4fd789a89"
+    },
+    {
+      "id": "parent-policy-authority-and-general-evaluator-hold",
+      "validated": true,
+      "evidence_ref": "repo:policy/README.md@a893b30f4dd1edfed151620c529734f4fd789a89"
+    },
+    {
+      "id": "directory-placement-and-root-contract",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@a893b30f4dd1edfed151620c529734f4fd789a89"
+    },
+    {
+      "id": "operating-contract-carrier-status-and-placement-conflict",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/ai-build-operating-contract.md@a893b30f4dd1edfed151620c529734f4fd789a89"
+    },
+    {
+      "id": "generated-authoring-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@a893b30f4dd1edfed151620c529734f4fd789a89"
+    },
+    {
+      "id": "fixture-only-agent-operation-envelope",
+      "validated": true,
+      "evidence_ref": "repo:contracts/governance/agent_operation_envelope.md@a893b30f4dd1edfed151620c529734f4fd789a89"
+    },
+    {
+      "id": "fixture-only-ai-change-proposal",
+      "validated": true,
+      "evidence_ref": "repo:contracts/governance/ai_change_proposal.md@a893b30f4dd1edfed151620c529734f4fd789a89"
+    },
+    {
+      "id": "fixture-only-ai-output-artifact-and-batch",
+      "validated": true,
+      "evidence_ref": "repo:contracts/runtime/ai_output_artifact.md@a893b30f4dd1edfed151620c529734f4fd789a89"
+    },
+    {
+      "id": "runtime-ai-receipt-profile",
+      "validated": true,
+      "evidence_ref": "repo:contracts/runtime/ai_receipt.md@a893b30f4dd1edfed151620c529734f4fd789a89"
+    },
+    {
+      "id": "ai-receipt-schema-home-conflict",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/ai/ai_receipt.schema.json@a893b30f4dd1edfed151620c529734f4fd789a89"
+    },
+    {
+      "id": "empty-proposed-policy-gate-register",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/policy_gate_register.yaml@a893b30f4dd1edfed151620c529734f4fd789a89"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T17:52:05Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only current-state reconciliation of policy/ai_builder/README.md. The update preserves the substantive v0.3 operating law, task, evidence, action, decision, obligation, receipt, review, mutation, prompt-injection, sensitivity, validation, correction, and rollback boundaries; pins the exact lane and prior bytes; separates six AI-adjacent record families; records bounded profile tests and read-only workflows; and surfaces the operating-contract carrier and AIReceipt schema-home conflicts without selecting new authority. It changes no Rego rule, contract, schema, registry, fixture, validator, test, workflow, bundle, evaluator, model, credential, consumer, repository permission, review record, decision, lifecycle state, release, deployment, publication, or public behavior. This receipt is provenance and process memory, not policy acceptance, factual evidence, independent review, merge authority, release authority, or publication authority; authorized human review remains pending."
+}

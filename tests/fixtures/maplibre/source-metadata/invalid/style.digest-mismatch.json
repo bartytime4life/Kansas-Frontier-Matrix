@@ -1,0 +1,18 @@
+{
+  "layers": [],
+  "sources": {
+    "soil_moisture_q1": {
+      "meta": {
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "epoch": "2026-01-01/2026-03-31",
+        "freshness": "closed-epoch",
+        "license": "CC-BY-4.0",
+        "manifest_ref": "kfm://release/map/soil-moisture/2026Q1/manifest",
+        "proof_ref": "kfm://proof/map/soil-moisture/2026Q1"
+      },
+      "type": "vector",
+      "url": "pmtiles://https://tiles.example.invalid/soil/2026Q1.pmtiles"
+    }
+  },
+  "version": 8
+}

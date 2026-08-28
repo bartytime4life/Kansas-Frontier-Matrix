@@ -1,0 +1,291 @@
+{
+  "base_candidate": {
+    "object_type": "DomainContextMapAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.governance.domain-context-map-assessment.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_basis": {
+      "ddd_reference": "Domain-Driven Design Reference: Context Mapping for Strategic Design",
+      "kfm_seed_card": "KFM Domains as DDD Bounded Contexts with Context Map",
+      "as_of": "2026-08-11",
+      "authority_state": "PROPOSAL_ONLY"
+    },
+    "projection_refs": {
+      "domain_lane_register_ref": "control_plane/domain_lane_register.yaml",
+      "cross_domain_seam_register_ref": "control_plane/cross_domain_seam_register.yaml"
+    },
+    "seam_binding": {
+      "seam_id": "atmosphere--hazards--condition-advisory-context",
+      "participant_contexts": [
+        "atmosphere",
+        "hazards"
+      ]
+    },
+    "relationship": {
+      "mapping_state": "PROPOSED_MAPPING",
+      "pattern": "ANTICORRUPTION_LAYER",
+      "upstream_context": "atmosphere",
+      "downstream_context": "hazards",
+      "translation_boundary_required": true,
+      "shared_mutation_authorized": false,
+      "rationale_summary": "Hazards may consume atmospheric context only through an explicit translation boundary that preserves observations, forecasts, models, and advisories as distinct source roles."
+    },
+    "controls": {
+      "evidence_rule": "EACH_PARTICIPANT_EVIDENCE_BUNDLE_REQUIRED",
+      "source_role_rule": "PRESERVE",
+      "sensitivity_rule": "MOST_RESTRICTIVE",
+      "policy_rule": "MOST_RESTRICTIVE",
+      "release_rule": "EACH_PARTICIPANT_RELEASE_REQUIRED",
+      "public_join_allowed": false
+    },
+    "assessment_state": "REVIEW_REQUIRED",
+    "limitations": [
+      "FIXTURE_ONLY",
+      "PROPOSAL_MAPPING_ONLY",
+      "NO_REGISTER_WRITE",
+      "NO_JOIN_OR_MUTATION_AUTHORITY",
+      "NO_EVIDENCE_POLICY_OR_REVIEW_AUTHORITY",
+      "NO_PROMOTION_RELEASE_OR_DEPLOYMENT_AUTHORITY",
+      "NO_PUBLICATION_OR_PUBLIC_USE_AUTHORITY"
+    ],
+    "authority_claims": {
+      "domain_authority": false,
+      "seam_authority": false,
+      "register_write_authority": false,
+      "join_authority": false,
+      "mutation_authority": false,
+      "lifecycle_write_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "deployment_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "valid_directional_mapping",
+      "expected": {
+        "outcome": "PASS",
+        "codes": []
+      }
+    },
+    {
+      "name": "unresolved_mapping_abstains",
+      "patch": {
+        "relationship": {
+          "mapping_state": "UNRESOLVED",
+          "pattern": "UNRESOLVED",
+          "upstream_context": null,
+          "downstream_context": null,
+          "translation_boundary_required": true,
+          "rationale_summary": null
+        }
+      },
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": [
+          "CONTEXT_MAP_PATTERN_UNRESOLVED"
+        ]
+      }
+    },
+    {
+      "name": "unknown_seam_denied",
+      "patch": {
+        "seam_binding": {
+          "seam_id": "atmosphere--soil--invented-context"
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "CONTEXT_MAP_SEAM_UNKNOWN"
+        ]
+      }
+    },
+    {
+      "name": "participant_mismatch_denied",
+      "patch": {
+        "seam_binding": {
+          "participant_contexts": [
+            "atmosphere",
+            "soil"
+          ]
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "CONTEXT_MAP_DIRECTION_ENDPOINTS_INVALID",
+          "CONTEXT_MAP_PARTICIPANTS_MISMATCH"
+        ]
+      }
+    },
+    {
+      "name": "unknown_context_denied",
+      "patch": {
+        "seam_binding": {
+          "participant_contexts": [
+            "atmosphere",
+            "invented-domain"
+          ]
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "CONTEXT_MAP_CONTEXT_UNKNOWN",
+          "CONTEXT_MAP_DIRECTION_ENDPOINTS_INVALID",
+          "CONTEXT_MAP_PARTICIPANTS_MISMATCH"
+        ]
+      }
+    },
+    {
+      "name": "unsorted_participants_denied",
+      "patch": {
+        "seam_binding": {
+          "participant_contexts": [
+            "hazards",
+            "atmosphere"
+          ]
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "CONTEXT_MAP_PARTICIPANTS_NOT_CANONICAL"
+        ]
+      }
+    },
+    {
+      "name": "directional_missing_upstream_denied",
+      "patch": {
+        "relationship": {
+          "upstream_context": null
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "CONTEXT_MAP_DIRECTION_REQUIRED"
+        ]
+      }
+    },
+    {
+      "name": "directional_same_endpoint_denied",
+      "patch": {
+        "relationship": {
+          "downstream_context": "atmosphere"
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "CONTEXT_MAP_DIRECTION_ENDPOINTS_INVALID"
+        ]
+      }
+    },
+    {
+      "name": "directional_endpoint_outside_seam_denied",
+      "patch": {
+        "relationship": {
+          "downstream_context": "soil"
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "CONTEXT_MAP_DIRECTION_ENDPOINTS_INVALID"
+        ]
+      }
+    },
+    {
+      "name": "symmetric_carries_direction_denied",
+      "patch": {
+        "relationship": {
+          "pattern": "PARTNERSHIP",
+          "translation_boundary_required": false
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "CONTEXT_MAP_DIRECTION_PROHIBITED"
+        ]
+      }
+    },
+    {
+      "name": "unresolved_has_rationale_denied",
+      "patch": {
+        "relationship": {
+          "mapping_state": "UNRESOLVED",
+          "pattern": "UNRESOLVED",
+          "upstream_context": null,
+          "downstream_context": null,
+          "rationale_summary": "This should be absent for unresolved mappings."
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "CONTEXT_MAP_UNRESOLVED_FIELDS_INVALID"
+        ]
+      }
+    },
+    {
+      "name": "weakened_evidence_rule_errors",
+      "patch": {
+        "controls": {
+          "evidence_rule": "ONE_SHARED_BUNDLE_IS_ENOUGH"
+        }
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "codes": [
+          "SCHEMA_INVALID"
+        ]
+      }
+    },
+    {
+      "name": "public_join_claim_errors",
+      "patch": {
+        "controls": {
+          "public_join_allowed": true
+        }
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "codes": [
+          "SCHEMA_INVALID"
+        ]
+      }
+    },
+    {
+      "name": "authority_overreach_errors",
+      "patch": {
+        "authority_claims": {
+          "join_authority": true
+        }
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "codes": [
+          "SCHEMA_INVALID"
+        ]
+      }
+    },
+    {
+      "name": "profile_hash_mismatch_denied",
+      "tamper": "profile_hash",
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "PROFILE_SPEC_HASH_MISMATCH"
+        ]
+      }
+    }
+  ]
+}

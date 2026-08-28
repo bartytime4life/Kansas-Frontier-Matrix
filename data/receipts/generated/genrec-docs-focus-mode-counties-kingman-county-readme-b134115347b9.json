@@ -1,0 +1,257 @@
+{
+  "receipt_id": "genrec-docs-focus-mode-counties-kingman-county-readme-b134115347b9",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/counties/kingman_county/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/counties/kingman_county/README.md": "sha256:b134115347b90bbde691e34c8c31a906f5b80259c4ff5a9a3c61a42614c314d0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "exact serving revision not exposed"
+  },
+  "prompt_or_contract": "sha256:8754548e0d6fa8eb1c0eb2f6dfbeb50441ccc2e6a3e9c5487ae035d2859c26c1",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "bounded current-repository inspection",
+      "deterministic Markdown source validation",
+      "repository generated-receipt schema constraint validation",
+      "SHA-256 and Git-blob verification"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:8754548e0d6fa8eb1c0eb2f6dfbeb50441ccc2e6a3e9c5487ae035d2859c26c1",
+      "sha256:01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "sha256:b134115347b90bbde691e34c8c31a906f5b80259c4ff5a9a3c61a42614c314d0"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/59350f29e29df23d52084c95e30878ba24fdd6a0",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/a6a42ad3214e9db160e15e635df7a5e56a601818",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/focus-mode/counties/kingman_county/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a6a42ad3214e9db160e15e635df7a5e56a601818/docs/focus-mode/counties/kingman_county/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/focus-mode/counties/kingman_county/kingman_county_focus_mode_build_plan.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/focus-mode/counties/kingman_county",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/focus-mode/counties/COUNTY_INDEX.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/focus-mode/counties/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/focus-mode/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/adr/ADR-0027-county-focus-mode-control-plane.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/contracts/focus_mode/focus_mode_payload.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/schemas/contracts/v1/focus/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/policy/focus/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/tools/validators/validate_focus_mode_index.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/.github/workflows/validator-suite.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/.github/workflows/security.yml"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/counties/kingman_county/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-target-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned main at 59350f29e29df23d52084c95e30878ba24fdd6a0; the target remained the one-byte newline blob 8b137891791fe96927ad78e64b0aad7bded08bdc. The complete target, sibling build plan, county index, accepted Directory Rules decision, Focus contract/schema/policy surfaces, CODEOWNERS, receipt schema, and triggered workflow definitions were inspected. Exact open-PR and branch searches found no overlapping Kingman README work."
+    },
+    {
+      "gate": "same-path-compatibility-placement",
+      "outcome": "PASS",
+      "reason": "The tracked README stays under docs/focus-mode/counties/kingman_county/ as human-facing documentation. Accepted ADR-0029 and Directory Rules v2 support responsibility-root ownership; proposed ADR-0027 does not authorize an unreviewed plural/kebab migration. No path, root, authority, mirror, or generated relationship changes."
+    },
+    {
+      "gate": "one-byte-placeholder-replacement",
+      "outcome": "PASS",
+      "reason": "The prior target was exactly one UTF-8 newline byte (SHA-256 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b). The replacement supplies complete lane orientation, plan reconciliation, source-role and time boundaries, finite outcomes, sensitivity controls, validation expectations, correction, and rollback."
+    },
+    {
+      "gate": "linked-build-plan-reconciliation",
+      "outcome": "PASS",
+      "reason": "The complete Kingman build plan was reviewed and left byte-unchanged. Its no-plan, not-started, and uncertain-path statements are marked superseded only for current repository presence; its 2026-06-08 source checks, proof slice, cards, reason codes, fixtures, milestones, repository proposals, and public-product ideas remain proposed planning evidence."
+    },
+    {
+      "gate": "county-index-staleness-disclosure",
+      "outcome": "PASS",
+      "reason": "The current county index records Kingman README_1_BYTE and the expected plan filename. Only the one-byte finding becomes stale after this leaf change. The shared index is deferred to a separately pinned full 105-county inventory reconciliation rather than partially edited during high county-lane churn."
+    },
+    {
+      "gate": "dated-source-and-temporal-fitness-boundary",
+      "outcome": "PASS",
+      "reason": "The README does not transform the plan's 2026-06-08 Kingman County, KDWP, or NWS checks—or future KDHE, utility, USBR, wildlife, road, burn, and emergency candidates—into current repository, operational, safety, health, access, legal, infrastructure, or emergency truth."
+    },
+    {
+      "gate": "reservoir-park-recreation-currentness-boundary",
+      "outcome": "PASS",
+      "reason": "The authored bytes make no current campsite, cabin, facility, reservation, water-service, ramp, dock, marina, closure, swimming, boating, hunting, fishing, burn, road, weather, or emergency determination. Dated operational material requires explicit time, expiry, correction, and release state or produces ABSTAIN."
+    },
+    {
+      "gate": "water-health-wildlife-property-and-infrastructure-boundary",
+      "outcome": "PASS",
+      "reason": "Algae, fish-consumption, recreation-water, drinking-water, wildlife/refuge, dam, intake, treatment, water-supply, property, owner, title, access, and vulnerability claims remain unresolved, generalized, withheld, denied, or redirected pending qualified authority, policy, evidence, rights, sensitivity, and accountable review."
+    },
+    {
+      "gate": "finite-outcome-and-reason-code-boundary",
+      "outcome": "PASS",
+      "reason": "The README preserves exactly ANSWER, ABSTAIN, DENY, and ERROR. Candidate Kingman reason codes remain proposed and must be reconciled with accepted runtime authority and deterministic negative tests before use."
+    },
+    {
+      "gate": "rights-sensitivity-and-public-path-review",
+      "outcome": "PASS",
+      "reason": "Source rights, caching, citation, privacy, ecological sensitivity, harmful precision, water health, infrastructure security, property/access, currentness, EvidenceRef resolution, policy, human review, release, correction, and rollback remain explicit future gates. Public clients remain limited to governed interfaces or released public-safe artifacts."
+    },
+    {
+      "gate": "markdown-structure-and-diff-hygiene",
+      "outcome": "PASS",
+      "reason": "The README has one H1, one KFM metadata block, 17 unique explicit anchors, consistent tables, resolved same-document fragments, LF endings, no tabs or trailing whitespace, and a final newline. CommonMark parsing succeeded and the diff contains no unrelated formatting churn."
+    },
+    {
+      "gate": "repository-relative-target-closure",
+      "outcome": "PASS",
+      "reason": "All repository-relative references were normalized from the current Kingman README path and resolved against the pinned repository evidence. No external URL was added; the build plan retains ownership of its dated external citations."
+    },
+    {
+      "gate": "shared-county-index-reconciliation",
+      "outcome": "SKIPPED",
+      "reason": "The shared index requires a full current-main count and finding recomputation across the high-churn 105-county inventory. This leaf packet discloses the stale Kingman README finding rather than making a partial shared-inventory edit."
+    },
+    {
+      "gate": "county-focus-mode-validator",
+      "outcome": "SKIPPED",
+      "reason": "The current validator targets docs/focus-modes/, kebab-case lanes, and seven required files; it is not a valid passing gate for the singular snake_case two-file compatibility lane and was not weakened or misrepresented."
+    },
+    {
+      "gate": "artifact-byte-and-hash-closure",
+      "outcome": "PASS",
+      "reason": "README SHA-256 b134115347b90bbde691e34c8c31a906f5b80259c4ff5a9a3c61a42614c314d0; Git blob 5d8f02874fa39322eac1532415b7dcd672834e34; 46,791 UTF-8 bytes. Artifact paths, hash keys, and truth-label keys are identical; the receipt is intentionally excluded from its own artifact map."
+    },
+    {
+      "gate": "generated-receipt-schema-constraint-validation",
+      "outcome": "PASS",
+      "reason": "The receipt was checked against the repository GENERATED_RECEIPT required fields, closed-object constraints, patterns, enums, artifact-map parity, canonical path form, citation shape, pending-review state, and README SHA-256 binding."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Relevant pull-request workflows use GitHub-hosted runners, bounded timeouts, immutable action pins, and read-only contents permission for untrusted PR code. No pull_request_target, workflow_run, self-hosted runner, OIDC, secret-bearing execution, deployment, release, publication, or administrative mutation was identified for this path set."
+    },
+    {
+      "gate": "hosted-exact-head-workflows",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks do not exist until the final receipt commit and draft pull request are created. Exact-head conclusions are inspected separately and are never inferred from prior county PRs."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending. CODEOWNERS routing is not source, rights, reservoir-safety, water-health, wildlife/refuge, property, infrastructure-security, policy, release, or publication approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-user-implementation-contract",
+      "validated": true,
+      "evidence_ref": "sha256:8754548e0d6fa8eb1c0eb2f6dfbeb50441ccc2e6a3e9c5487ae035d2859c26c1"
+    },
+    {
+      "id": "pinned-current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/59350f29e29df23d52084c95e30878ba24fdd6a0"
+    },
+    {
+      "id": "prior-one-byte-target",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/focus-mode/counties/kingman_county/README.md"
+    },
+    {
+      "id": "modernized-remote-readback",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a6a42ad3214e9db160e15e635df7a5e56a601818/docs/focus-mode/counties/kingman_county/README.md"
+    },
+    {
+      "id": "complete-kingman-build-plan",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/focus-mode/counties/kingman_county/kingman_county_focus_mode_build_plan.md"
+    },
+    {
+      "id": "current-county-index",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/focus-mode/counties/COUNTY_INDEX.md"
+    },
+    {
+      "id": "accepted-directory-rules-decision",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "proposed-county-focus-control-plane",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/adr/ADR-0027-county-focus-mode-control-plane.md"
+    },
+    {
+      "id": "focus-payload-semantic-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/contracts/focus_mode/focus_mode_payload.md"
+    },
+    {
+      "id": "focus-schema-family",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/schemas/contracts/v1/focus/README.md"
+    },
+    {
+      "id": "inactive-focus-policy-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/policy/focus/README.md"
+    },
+    {
+      "id": "county-index-validator",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/tools/validators/validate_focus_mode_index.py"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "codeowners-review-route",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/.github/CODEOWNERS"
+    },
+    {
+      "id": "validator-suite-threat-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/.github/workflows/validator-suite.yml"
+    },
+    {
+      "id": "security-workflow-threat-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/.github/workflows/security.yml"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T01:26:05Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-plus-generated-receipt packet. The README replaces a one-byte newline placeholder and leaves the Kingman build plan, county index, Focus contracts, schemas, policy, validators, lifecycle data, release state, repository settings, deployment, and publication unchanged. The shared index and plural/kebab county validator remain explicit follow-up boundaries. The receipt records pending review and is not approval, policy, release, or publication authority."
+}

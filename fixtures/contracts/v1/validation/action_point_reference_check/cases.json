@@ -1,0 +1,13 @@
+{
+  "profile": "kfm.validation.action-point-reference-check.v1",
+  "cases": [
+    {"case_id": "valid-match", "variant": "MATCH", "mutation": null, "expected": {"validation_outcome": "PASS", "finding_codes": []}},
+    {"case_id": "valid-mismatch", "variant": "MISMATCH", "mutation": null, "expected": {"validation_outcome": "PASS", "finding_codes": []}},
+    {"case_id": "valid-blocked-abbreviation", "variant": "ABBREVIATED", "mutation": null, "expected": {"validation_outcome": "PASS", "finding_codes": []}},
+    {"case_id": "valid-blocked-late-dereference", "variant": "LATE_DEREFERENCE", "mutation": null, "expected": {"validation_outcome": "PASS", "finding_codes": []}},
+    {"case_id": "valid-unclassifiable", "variant": "MISSING_RESIDUE", "mutation": null, "expected": {"validation_outcome": "PASS", "finding_codes": []}},
+    {"case_id": "invalid-line-number-only", "variant": "MATCH", "mutation": "LINE_NUMBER_ONLY", "expected": {"validation_outcome": "DENY", "finding_codes": ["SCHEMA_INVALID"]}},
+    {"case_id": "invalid-report-drift", "variant": "MISMATCH", "mutation": "REPORT_DRIFT", "expected": {"validation_outcome": "DENY", "finding_codes": ["REPORT_MISMATCH"]}},
+    {"case_id": "invalid-spec-hash", "variant": "MATCH", "mutation": "SPEC_HASH_DRIFT", "expected": {"validation_outcome": "DENY", "finding_codes": ["CHECK_ID_MISMATCH", "SPEC_HASH_MISMATCH"]}}
+  ]
+}

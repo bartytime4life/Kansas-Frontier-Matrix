@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/contracts/v1/domains/atmosphere/correctable-environmental-event-assessment",
+  "title": "CorrectableEnvironmentalEventAssessment",
+  "description": "Fixture-only lifecycle assessment preserving observation, candidate, review, event, and correction distinctions. Shape validity grants no event, alert, policy, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["profile", "assessment_id", "spec_hash", "assessment_state", "lifecycle_scope", "subject", "integrity", "assessment", "governance"],
+  "properties": {
+    "profile": {"const": "CORRECTABLE_ENVIRONMENTAL_EVENT_ASSESSMENT_V1"},
+    "assessment_id": {"type": "string", "pattern": "^kfm:correctable-event:[a-f0-9]{24}$"},
+    "spec_hash": {"$ref": "#/$defs/sha256"},
+    "assessment_state": {"enum": ["COMPLETE", "ERROR"]},
+    "lifecycle_scope": {"enum": ["CANDIDATE_ONLY", "EVENT_DECLARED", "EVENT_CORRECTED"]},
+    "subject": {"$ref": "#/$defs/subject"},
+    "integrity": {"$ref": "#/$defs/integrity"},
+    "assessment": {"$ref": "#/$defs/assessment"},
+    "governance": {"$ref": "#/$defs/governance"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "kfm_ref": {"type": "string", "pattern": "^kfm:[a-z0-9][a-z0-9:._/-]{5,240}$"},
+    "nullable_ref": {"oneOf": [{"$ref": "#/$defs/kfm_ref"}, {"type": "null"}]},
+    "aware_datetime": {"type": "string", "format": "date-time", "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"},
+    "nullable_datetime": {"oneOf": [{"$ref": "#/$defs/aware_datetime"}, {"type": "null"}]},
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^evidence:[a-z0-9][a-z0-9:._-]{5,200}$"}
+    },
+    "source_role": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "source_ref", "evidence_refs"],
+      "properties": {
+        "role": {"enum": ["BASELINE_SOURCE", "CORROBORATION_SOURCE", "OBSERVATION_SOURCE"]},
+        "source_ref": {"$ref": "#/$defs/kfm_ref"},
+        "evidence_refs": {"$ref": "#/$defs/evidence_refs"}
+      }
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["observation_ref", "candidate_ref", "candidate_basis_observation_refs", "baseline_snapshot_ref", "review_disposition_ref", "event_ref", "event_basis_candidate_ref", "correction_ref", "correction_of_event_ref", "replacement_event_ref", "observed_at", "candidate_at", "reviewed_at", "event_at", "corrected_at", "source_roles"],
+      "properties": {
+        "observation_ref": {"$ref": "#/$defs/kfm_ref"},
+        "candidate_ref": {"$ref": "#/$defs/kfm_ref"},
+        "candidate_basis_observation_refs": {"type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true, "items": {"$ref": "#/$defs/kfm_ref"}},
+        "baseline_snapshot_ref": {"$ref": "#/$defs/kfm_ref"},
+        "review_disposition_ref": {"$ref": "#/$defs/nullable_ref"},
+        "event_ref": {"$ref": "#/$defs/nullable_ref"},
+        "event_basis_candidate_ref": {"$ref": "#/$defs/nullable_ref"},
+        "correction_ref": {"$ref": "#/$defs/nullable_ref"},
+        "correction_of_event_ref": {"$ref": "#/$defs/nullable_ref"},
+        "replacement_event_ref": {"$ref": "#/$defs/nullable_ref"},
+        "observed_at": {"$ref": "#/$defs/aware_datetime"},
+        "candidate_at": {"$ref": "#/$defs/aware_datetime"},
+        "reviewed_at": {"$ref": "#/$defs/nullable_datetime"},
+        "event_at": {"$ref": "#/$defs/nullable_datetime"},
+        "corrected_at": {"$ref": "#/$defs/nullable_datetime"},
+        "source_roles": {"type": "array", "minItems": 2, "maxItems": 3, "items": {"$ref": "#/$defs/source_role"}}
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_state", "freshness"],
+      "properties": {
+        "source_state": {"enum": ["AVAILABLE", "ERROR"]},
+        "freshness": {"enum": ["FRESH", "STALE", "UNKNOWN"]}
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "reason_code"],
+      "properties": {
+        "outcome": {"enum": ["EVENT_CHAIN_CONFIRMED", "CORRECTION_CHAIN_CONFIRMED", "HOLD", "ERROR"]},
+        "reason_code": {"enum": ["EVENT_TRANSITION_CONFIRMED", "CORRECTION_LINEAGE_CONFIRMED", "CANDIDATE_REMAINS_PROVISIONAL", "SOURCE_INTEGRITY_HOLD", "UPSTREAM_ERROR"]}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["execution_mode", "network_attempted", "live_feed_read", "numeric_threshold_computed", "source_data_mutated", "candidate_promoted", "review_approved", "real_world_event_declared", "correction_applied", "event_withdrawn", "alert_issued", "health_advice_issued", "regulatory_compliance_decided", "policy_decided", "release_authorized", "publication_authorized", "public_use_allowed"],
+      "properties": {
+        "execution_mode": {"const": "FIXTURE_ONLY"},
+        "network_attempted": {"const": false},
+        "live_feed_read": {"const": false},
+        "numeric_threshold_computed": {"const": false},
+        "source_data_mutated": {"const": false},
+        "candidate_promoted": {"const": false},
+        "review_approved": {"const": false},
+        "real_world_event_declared": {"const": false},
+        "correction_applied": {"const": false},
+        "event_withdrawn": {"const": false},
+        "alert_issued": {"const": false},
+        "health_advice_issued": {"const": false},
+        "regulatory_compliance_decided": {"const": false},
+        "policy_decided": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false},
+        "public_use_allowed": {"const": false}
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "source_ideas": ["KFM-TRIAD-035", "KFM-CAND-0105"],
+    "validator": "tools/validators/domains/atmosphere/validate_correctable_environmental_event_assessment.py",
+    "authority": "synthetic lifecycle consistency only"
+  }
+}

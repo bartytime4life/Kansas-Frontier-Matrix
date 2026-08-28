@@ -1,0 +1,164 @@
+{
+  "profile": "spatial-geometry-carrier-structure-v1",
+  "cases": [
+    {
+      "case_id": "valid_point_4326",
+      "candidate": {
+        "geometry": {"type": "Point", "coordinates": [-98.0, 38.0]},
+        "crs": "EPSG:4326",
+        "precision_bucket": "region"
+      },
+      "expected_outcome": "PASS",
+      "expected_codes": []
+    },
+    {
+      "case_id": "valid_linestring_3d",
+      "candidate": {
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [[-100.0, 37.0, 300.0], [-99.0, 38.0, 305.0]]
+        },
+        "crs": "EPSG:4326",
+        "precision_bucket": "community"
+      },
+      "expected_outcome": "PASS",
+      "expected_codes": []
+    },
+    {
+      "case_id": "valid_polygon_projected",
+      "candidate": {
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[[0, 0], [10, 0], [10, 5], [0, 5], [0, 0]]]
+        },
+        "crs": "EPSG:26914",
+        "precision_bucket": "coarse"
+      },
+      "expected_outcome": "PASS",
+      "expected_codes": []
+    },
+    {
+      "case_id": "invalid_unsupported_type",
+      "candidate": {
+        "geometry": {"type": "CircularString", "coordinates": [[0, 0], [1, 1], [2, 0]]},
+        "crs": "EPSG:4326",
+        "precision_bucket": "coarse"
+      },
+      "expected_outcome": "FAIL",
+      "expected_codes": ["GEOMETRY_TYPE_UNSUPPORTED"]
+    },
+    {
+      "case_id": "invalid_geometry_collection",
+      "candidate": {
+        "geometry": {"type": "GeometryCollection", "coordinates": []},
+        "crs": "EPSG:4326",
+        "precision_bucket": "coarse"
+      },
+      "expected_outcome": "FAIL",
+      "expected_codes": ["GEOMETRY_TYPE_UNSUPPORTED"]
+    },
+    {
+      "case_id": "invalid_point_nesting",
+      "candidate": {
+        "geometry": {"type": "Point", "coordinates": [[-98.0, 38.0]]},
+        "crs": "EPSG:4326",
+        "precision_bucket": "region"
+      },
+      "expected_outcome": "FAIL",
+      "expected_codes": ["GEOMETRY_POSITION_INVALID"]
+    },
+    {
+      "case_id": "invalid_short_line",
+      "candidate": {
+        "geometry": {"type": "LineString", "coordinates": [[-98.0, 38.0]]},
+        "crs": "EPSG:4326",
+        "precision_bucket": "region"
+      },
+      "expected_outcome": "FAIL",
+      "expected_codes": ["GEOMETRY_DEGENERATE"]
+    },
+    {
+      "case_id": "invalid_open_polygon",
+      "candidate": {
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[[0, 0], [2, 0], [2, 2], [0, 2]]]
+        },
+        "crs": "EPSG:4326",
+        "precision_bucket": "coarse"
+      },
+      "expected_outcome": "FAIL",
+      "expected_codes": ["POLYGON_RING_OPEN"]
+    },
+    {
+      "case_id": "invalid_self_intersection",
+      "candidate": {
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[[0, 0], [2, 2], [0, 2], [2, 0], [0, 0]]]
+        },
+        "crs": "EPSG:4326",
+        "precision_bucket": "coarse"
+      },
+      "expected_outcome": "FAIL",
+      "expected_codes": ["GEOMETRY_DEGENERATE", "POLYGON_SELF_INTERSECTION"]
+    },
+    {
+      "case_id": "invalid_mixed_dimensions",
+      "candidate": {
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [[-100.0, 37.0], [-99.0, 38.0, 305.0]]
+        },
+        "crs": "EPSG:4326",
+        "precision_bucket": "community"
+      },
+      "expected_outcome": "FAIL",
+      "expected_codes": ["GEOMETRY_DIMENSION_MIXED"]
+    },
+    {
+      "case_id": "invalid_4326_bounds",
+      "candidate": {
+        "geometry": {"type": "Point", "coordinates": [181.0, 38.0]},
+        "crs": "EPSG:4326",
+        "precision_bucket": "coarse"
+      },
+      "expected_outcome": "FAIL",
+      "expected_codes": ["COORDINATE_OUT_OF_BOUNDS"]
+    },
+    {
+      "case_id": "invalid_crs_identifier",
+      "candidate": {
+        "geometry": {"type": "Point", "coordinates": [-98.0, 38.0]},
+        "crs": "WGS84",
+        "precision_bucket": "region"
+      },
+      "expected_outcome": "FAIL",
+      "expected_codes": ["CRS_IDENTIFIER_UNSUPPORTED"]
+    },
+    {
+      "case_id": "invalid_collinear_ring",
+      "candidate": {
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[[0, 0], [1, 0], [2, 0], [0, 0]]]
+        },
+        "crs": "EPSG:4326",
+        "precision_bucket": "coarse"
+      },
+      "expected_outcome": "FAIL",
+      "expected_codes": ["GEOMETRY_DEGENERATE"]
+    },
+    {
+      "case_id": "invalid_extra_top_level_property",
+      "candidate": {
+        "geometry": {"type": "Point", "coordinates": [-98.0, 38.0]},
+        "crs": "EPSG:4326",
+        "precision_bucket": "region",
+        "publish": true
+      },
+      "expected_outcome": "FAIL",
+      "expected_codes": ["SCHEMA_INVALID"]
+    }
+  ]
+}

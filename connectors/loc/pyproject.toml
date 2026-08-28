@@ -1,0 +1,4 @@
+# connectors/loc pyproject — greenfield placeholder
+[project]
+name = "kfm-connector-loc"
+version = "0.0.0"

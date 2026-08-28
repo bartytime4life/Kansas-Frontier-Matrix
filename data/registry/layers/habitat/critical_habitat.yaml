@@ -1,0 +1,5 @@
+status: PROPOSED
+source_doc: docs/domains/habitat/CANONICAL_PATHS.md
+path: data/registry/layers/habitat/critical_habitat.yaml
+notes:
+  - Placeholder created from docs/domains markdown inventory.

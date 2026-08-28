@@ -1,0 +1,512 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/crosswalks/taxonomy/taxonomic_concept_lineage.schema.json",
+  "title": "TaxonomicConceptLineagePacket",
+  "description": "Fixture-first packet separating source-native NameUsage from TaxonConcept and preserving typed concept lineage. Shape grants no taxonomic, evidence, policy, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "packet_id",
+    "hash_profile",
+    "spec_hash",
+    "name_usages",
+    "taxon_concepts",
+    "concept_relations",
+    "reconciliation_decisions",
+    "separation",
+    "provenance",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "TaxonomicConceptLineagePacket"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "packet_id": {
+      "type": "string",
+      "pattern": "^taxonomy-lineage:[a-z0-9][a-z0-9_.:-]{0,240}$"
+    },
+    "hash_profile": {
+      "const": "kfm-fixture-json-v1"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "name_usages": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/name_usage"
+      }
+    },
+    "taxon_concepts": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/taxon_concept"
+      }
+    },
+    "concept_relations": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {
+        "$ref": "#/$defs/concept_relation"
+      }
+    },
+    "reconciliation_decisions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/reconciliation_decision"
+      }
+    },
+    "separation": {
+      "$ref": "#/$defs/separation"
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    }
+  },
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 640,
+      "pattern": "\\S"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "ref_array": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/ref"
+      },
+      "uniqueItems": true
+    },
+    "nonempty_ref_array": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/ref"
+      },
+      "uniqueItems": true
+    },
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z][A-Z0-9_]{2,96}$"
+      },
+      "uniqueItems": true
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "nullable_datetime": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullable_text": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "\\S"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "name_usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "usage_id",
+        "source_descriptor_ref",
+        "source_role",
+        "source_native_id",
+        "name_string",
+        "authorship",
+        "rank",
+        "usage_status",
+        "treatment_ref",
+        "valid_from",
+        "valid_to",
+        "evidence_refs",
+        "native_identity_preserved"
+      ],
+      "properties": {
+        "usage_id": {
+          "type": "string",
+          "pattern": "^name-usage:[a-z0-9][a-z0-9_.:-]{0,240}$"
+        },
+        "source_descriptor_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "source_role": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{2,96}$"
+        },
+        "source_native_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "\\S"
+        },
+        "name_string": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "\\S"
+        },
+        "authorship": {
+          "$ref": "#/$defs/nullable_text"
+        },
+        "rank": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{1,63}$"
+        },
+        "usage_status": {
+          "enum": [
+            "ORIGINAL",
+            "ACCEPTED",
+            "SYNONYM",
+            "MISAPPLIED",
+            "HOMONYM",
+            "UNRESOLVED"
+          ]
+        },
+        "treatment_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "valid_from": {
+          "$ref": "#/$defs/nullable_datetime"
+        },
+        "valid_to": {
+          "$ref": "#/$defs/nullable_datetime"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/nonempty_ref_array"
+        },
+        "native_identity_preserved": {
+          "const": true
+        }
+      }
+    },
+    "taxon_concept": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "concept_id",
+        "source_descriptor_ref",
+        "source_native_id",
+        "circumscription_digest",
+        "accepted_usage_ref",
+        "rank",
+        "valid_from",
+        "valid_to",
+        "evidence_refs"
+      ],
+      "properties": {
+        "concept_id": {
+          "type": "string",
+          "pattern": "^taxon-concept:[a-z0-9][a-z0-9_.:-]{0,240}$"
+        },
+        "source_descriptor_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "source_native_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "\\S"
+        },
+        "circumscription_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "accepted_usage_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "rank": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{1,63}$"
+        },
+        "valid_from": {
+          "$ref": "#/$defs/nullable_datetime"
+        },
+        "valid_to": {
+          "$ref": "#/$defs/nullable_datetime"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/nonempty_ref_array"
+        }
+      }
+    },
+    "concept_relation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relation_id",
+        "from_concept_ref",
+        "to_concept_ref",
+        "relation_type",
+        "effective_at",
+        "evidence_refs",
+        "reversible"
+      ],
+      "properties": {
+        "relation_id": {
+          "type": "string",
+          "pattern": "^concept-relation:[a-z0-9][a-z0-9_.:-]{0,240}$"
+        },
+        "from_concept_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "to_concept_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "relation_type": {
+          "enum": [
+            "SAME_AS",
+            "OVERLAPS",
+            "INCLUDES",
+            "EXCLUDES",
+            "SPLIT_FROM",
+            "LUMPED_INTO",
+            "SUPERSEDES",
+            "UNRESOLVED"
+          ]
+        },
+        "effective_at": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/nonempty_ref_array"
+        },
+        "reversible": {
+          "const": true
+        }
+      }
+    },
+    "reconciliation_decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "decision_id",
+        "usage_refs",
+        "concept_refs",
+        "outcome",
+        "authority_role",
+        "profile_id",
+        "profile_version",
+        "rationale_codes",
+        "evidence_refs",
+        "recorded_at",
+        "supersedes_decision_ref",
+        "reversible",
+        "automatic_resolution"
+      ],
+      "properties": {
+        "decision_id": {
+          "type": "string",
+          "pattern": "^taxonomy-decision:[a-z0-9][a-z0-9_.:-]{0,240}$"
+        },
+        "usage_refs": {
+          "$ref": "#/$defs/nonempty_ref_array"
+        },
+        "concept_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "outcome": {
+          "enum": [
+            "ACCEPT",
+            "PROVISIONAL",
+            "HOLD",
+            "ABSTAIN",
+            "REJECT"
+          ]
+        },
+        "authority_role": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{2,96}$"
+        },
+        "profile_id": {
+          "type": "string",
+          "pattern": "^taxonomy-profile:[a-z0-9][a-z0-9_.:-]{0,240}$"
+        },
+        "profile_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "rationale_codes": {
+          "$ref": "#/$defs/reason_codes"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/nonempty_ref_array"
+        },
+        "recorded_at": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "supersedes_decision_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "reversible": {
+          "const": true
+        },
+        "automatic_resolution": {
+          "const": false
+        }
+      }
+    },
+    "separation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name_string_is_not_identity",
+        "source_native_ids_preserved",
+        "concept_circumscription_versioned",
+        "unresolved_conflict_preserved",
+        "taxonomy_is_not_occurrence_evidence"
+      ],
+      "properties": {
+        "name_string_is_not_identity": {
+          "const": true
+        },
+        "source_native_ids_preserved": {
+          "const": true
+        },
+        "concept_circumscription_versioned": {
+          "const": true
+        },
+        "unresolved_conflict_preserved": {
+          "const": true
+        },
+        "taxonomy_is_not_occurrence_evidence": {
+          "const": true
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recorded_at",
+        "run_receipt_ref",
+        "resolver_id",
+        "resolver_version",
+        "input_refs"
+      ],
+      "properties": {
+        "recorded_at": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "run_receipt_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "resolver_id": {
+          "$ref": "#/$defs/ref"
+        },
+        "resolver_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][A-Za-z0-9.-]+)?$"
+        },
+        "input_refs": {
+          "$ref": "#/$defs/nonempty_ref_array"
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "taxonomic_authority_created",
+        "occurrence_evidence_claimed",
+        "distribution_claimed",
+        "source_admitted",
+        "policy_evaluated",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "release_ref"
+      ],
+      "properties": {
+        "taxonomic_authority_created": {
+          "const": false
+        },
+        "occurrence_evidence_claimed": {
+          "const": false
+        },
+        "distribution_claimed": {
+          "const": false
+        },
+        "source_admitted": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "release_ref": {
+          "type": "null"
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/crosswalks/taxonomy/taxonomic_concept_lineage.md",
+    "fixtures_root": "fixtures/contracts/v1/crosswalks/taxonomy/taxonomic_concept_lineage/",
+    "validator": "tools/validators/validate_taxonomic_concept_lineage.py",
+    "tests": "tests/validators/test_validate_taxonomic_concept_lineage.py",
+    "authority": "taxonomy_lineage_and_reconciliation_only",
+    "non_effects": [
+      "does_not_create_taxonomic_authority",
+      "does_not_prove_occurrence_or_distribution",
+      "does_not_authorize_source_policy_release_or_publication"
+    ]
+  }
+}

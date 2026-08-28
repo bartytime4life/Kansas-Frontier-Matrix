@@ -1,0 +1,166 @@
+{
+  "receipt_id": "genrec-kfm-jsonschema-runner-fixture-integrity-20260801",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/README.md",
+    ".github/workflows/schema-validation.yml",
+    ".github/workflows/source-descriptor-validate.yml",
+    ".github/workflows/validator-suite.yml",
+    "schemas/README.md",
+    "tests/schemas/README.md",
+    "tests/validators/README.md",
+    "tests/validators/test_jsonschema_runner.py",
+    "tools/validators/_common/README.md",
+    "tools/validators/_common/jsonschema_runner.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/README.md": "sha256:9215e4a34df3d8f46b0c446a0bcde92c6a2cef1f3678477014fac2c9dba7e33b",
+    ".github/workflows/schema-validation.yml": "sha256:6ec1d9485a2d182dce5a9d7aedd3cb5aa84d9db248d935103726f9f53880abe0",
+    ".github/workflows/source-descriptor-validate.yml": "sha256:4ce46a07196fc136f3010c815af02e9460741b42d059ccbb26e4f5c9f451a00f",
+    ".github/workflows/validator-suite.yml": "sha256:d7e1f41a0fab19c61dc9727676b395dc888399a5db8c6c3ea72b9bd41a9ae352",
+    "schemas/README.md": "sha256:976f717473775bb444741737b7961ce65c23837c34f5089164a5880ccb5dd7d2",
+    "tests/schemas/README.md": "sha256:4e0210b4f64188eef49c31b59c09bb8db456b00a1161c8e244146dee2002bde2",
+    "tests/validators/README.md": "sha256:b6f8f70b6ceacdcb23420c6a57f27047b085a6957d4e2f2da3c53ab0ebd795f2",
+    "tests/validators/test_jsonschema_runner.py": "sha256:b0d9f7b51ae5566a081ddfc10f6d84c232e0b6f95045712a67e9e9cbd852dbbd",
+    "tools/validators/_common/README.md": "sha256:c3c411ceac832e10e54effb8df88192ce548485802a3231b1a1842d3c0db58af",
+    "tools/validators/_common/jsonschema_runner.py": "sha256:72517bce0adab98c9147f241a363d4591623331ac0914ac7e318d3aac5a0a137"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 Work Mode 2026-08-01"
+  },
+  "prompt_or_contract": "sha256:674bf5d3e419444b8e6603895887095bd2b53b137188983489e857f322aa9c1b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository inspection",
+      "Git",
+      "GitHub connector",
+      "deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:674bf5d3e419444b8e6603895887095bd2b53b137188983489e857f322aa9c1b"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/cb8a46fff89861b8f0ca57c1c29bacf1fec885a5",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@cb8a46fff89861b8f0ca57c1c29bacf1fec885a5",
+      "docs/doctrine/directory-rules.md@cb8a46fff89861b8f0ca57c1c29bacf1fec885a5",
+      "schemas/contracts/v1/receipts/generated_receipt.schema.json@cb8a46fff89861b8f0ca57c1c29bacf1fec885a5"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/README.md": "PROPOSED",
+    ".github/workflows/schema-validation.yml": "PROPOSED",
+    ".github/workflows/source-descriptor-validate.yml": "PROPOSED",
+    ".github/workflows/validator-suite.yml": "PROPOSED",
+    "schemas/README.md": "PROPOSED",
+    "tests/schemas/README.md": "PROPOSED",
+    "tests/validators/README.md": "PROPOSED",
+    "tests/validators/test_jsonschema_runner.py": "CONFIRMED",
+    "tools/validators/_common/README.md": "PROPOSED",
+    "tools/validators/_common/jsonschema_runner.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "authority-base-and-open-work-overlap",
+      "outcome": "PASS",
+      "reason": "Repository, immutable base, current owner authorization, open pull requests, and concurrent local work were inspected; the delivery tree excludes unrelated concurrent changes."
+    },
+    {
+      "gate": "directory-placement-and-dependency-closure",
+      "outcome": "PASS",
+      "reason": "Existing code, workflow, and README paths stay in their responsibility roots; the new focused test and generated receipt follow current Directory Rules and repository precedent."
+    },
+    {
+      "gate": "focused-jsonschema-runner-tests",
+      "outcome": "PASS",
+      "reason": "Credential-scrubbed no-network unittest discovery ran 10 focused cases; all passed."
+    },
+    {
+      "gate": "python-and-workflow-static-validation",
+      "outcome": "PASS",
+      "reason": "The changed Python sources compiled, three workflow definitions parsed, stable triggers and read-only permissions were preserved, and no privileged runner or deployment path was introduced."
+    },
+    {
+      "gate": "configured-fixture-lane-integrity",
+      "outcome": "PASS",
+      "reason": "All seven aggregate entries resolved to nonempty valid and invalid lanes; 17 valid and 21 invalid JSON fixtures parsed in a deterministic no-network check."
+    },
+    {
+      "gate": "changed-document-local-link-check",
+      "outcome": "PASS",
+      "reason": "The repository-owned no-network checker validated 5 changed Markdown documents and 293 local targets; 11 external badge targets were classified unverified and not requested."
+    },
+    {
+      "gate": "receipt-json-and-artifact-hash-integrity",
+      "outcome": "PASS",
+      "reason": "The receipt JSON parses, its artifact path/hash/truth-label keys agree, and all ten SHA-256 values match final non-receipt artifact bytes."
+    },
+    {
+      "gate": "dependency-backed-aggregate-and-pytest",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN: the isolated runtime lacks the repository-declared jsonschema, referencing, and pytest dependencies; no aggregate or schema/contract pytest result is inferred."
+    },
+    {
+      "gate": "generated-receipt-json-schema",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN: the isolated runtime lacks jsonschema, so the receipt was checked structurally and by hash but not executed against the Draft 2020-12 generated-receipt schema."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "PENDING: hosted checks are observable only after the draft pull-request head is published; no result is inferred."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not implied by this provenance receipt."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "MAIN-cb8a46fff898",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/cb8a46fff89861b8f0ca57c1c29bacf1fec885a5"
+    },
+    {
+      "id": "ISSUE-1675-COMMENT-5143810920",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920"
+    },
+    {
+      "id": "ADR-0029-3159ee37d25a",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@cb8a46fff89861b8f0ca57c1c29bacf1fec885a5"
+    },
+    {
+      "id": "DIRECTORY-RULES-44f7e94344cb",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md@cb8a46fff89861b8f0ca57c1c29bacf1fec885a5"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-01T07:23:04Z",
+  "emitter": "openai/codex-gpt-5-work-mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1820"
+  },
+  "notes": "Generated-work provenance for task kfm-jsonschema-runner-fixture-integrity-20260801 at base cb8a46fff89861b8f0ca57c1c29bacf1fec885a5. Canonical task contract: task_id=kfm-jsonschema-runner-fixture-integrity-20260801;repository=bartytime4life/Kansas-Frontier-Matrix;base=cb8a46fff89861b8f0ca57c1c29bacf1fec885a5;profile=REPOSITORY_SLICE;operation=IMPLEMENT_NEXT_GAP;goal=harden shared JSON Schema fixture mode with deterministic non-vacuous polarity tests and CI/docs closure;delivery=DRAFT_PR. The receipt file is intentionally excluded from artifact_paths and artifact_hashes to avoid recursive self-hashing. This receipt is process memory, not human approval, semantic truth, policy approval, release authority, or publication authority."
+}

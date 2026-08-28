@@ -1,0 +1,351 @@
+{
+  "bases": {
+    "generalized_public": {
+      "object_type": "RedactionReceipt",
+      "schema_version": "1.0.0",
+      "profile": "kfm.redaction-receipt.fixture.v1",
+      "receipt_id": "",
+      "issued_at": "2026-08-09T00:00:00Z",
+      "processing_state": "COMPLETE",
+      "target_ref": "kfm:feature:synthetic-sensitive-location",
+      "input_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "output_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "transform": {
+        "classes": [
+          "GENERALIZE"
+        ],
+        "profile_ref": "kfm:redaction-profile:public-grid-v1",
+        "hidden_parameters_withheld": true,
+        "public_summary": "Precise geometry was generalized to a public-safe grid."
+      },
+      "basis": {
+        "policy_decision_ref": "kfm:policy-decision:synthetic-redaction",
+        "review_record_ref": "kfm:review-record:synthetic-redaction",
+        "validation_report_ref": "kfm:validation-report:synthetic-redaction",
+        "evidence_refs": [
+          "kfm:evidence:synthetic-redaction-basis"
+        ],
+        "source_descriptor_refs": [
+          "kfm://source/synthetic.sensitive.source"
+        ]
+      },
+      "exposure": {
+        "input_sensitivity": "T4",
+        "output_sensitivity": "T1",
+        "output_public_candidate": true,
+        "protected_value_present": false,
+        "reversal_material_present": false
+      },
+      "release_context": {
+        "release_candidate_ref": "kfm:release-candidate:synthetic-public-safe",
+        "correction_ref": null,
+        "rollback_ref": "kfm:rollback:synthetic-public-safe"
+      },
+      "result": {
+        "status": "RECORDED",
+        "reason_codes": [
+          "PUBLIC_SAFE_TRANSFORM_RECORDED"
+        ]
+      },
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "policy_executed": false,
+        "human_review_authenticated": false,
+        "restricted_input_opened": false,
+        "lifecycle_mutated": false,
+        "release_authorized": false,
+        "publication_authorized": false
+      },
+      "spec_hash": ""
+    }
+  },
+  "cases": [
+    {
+      "case_id": "generalized-public",
+      "base": "generalized_public",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "masked-public",
+      "base": "generalized_public",
+      "mutations": [
+        {
+          "path": "/transform/classes",
+          "value": [
+            "MASK"
+          ]
+        },
+        {
+          "path": "/transform/public_summary",
+          "value": "A protected attribute was replaced with a safe category."
+        }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "withheld",
+      "base": "generalized_public",
+      "mutations": [
+        {
+          "path": "/transform/classes",
+          "value": [
+            "WITHHOLD"
+          ]
+        },
+        {
+          "path": "/output_digest",
+          "value": null
+        },
+        {
+          "path": "/exposure/output_sensitivity",
+          "value": null
+        },
+        {
+          "path": "/exposure/output_public_candidate",
+          "value": false
+        },
+        {
+          "path": "/release_context/release_candidate_ref",
+          "value": null
+        }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "review-hold",
+      "base": "generalized_public",
+      "mutations": [
+        {
+          "path": "/processing_state",
+          "value": "HOLD"
+        },
+        {
+          "path": "/exposure/output_public_candidate",
+          "value": false
+        },
+        {
+          "path": "/release_context/release_candidate_ref",
+          "value": null
+        }
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {
+          "code": "REDACTION_REVIEW_HOLD",
+          "path": "/result/status"
+        }
+      ]
+    },
+    {
+      "case_id": "processing-error",
+      "base": "generalized_public",
+      "mutations": [
+        {
+          "path": "/processing_state",
+          "value": "ERROR"
+        }
+      ],
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {
+          "code": "REDACTION_PROCESSING_ERROR",
+          "path": "/result/status"
+        }
+      ]
+    },
+    {
+      "case_id": "public-missing-policy",
+      "base": "generalized_public",
+      "mutations": [
+        {
+          "path": "/basis/policy_decision_ref",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "REDACTION_POLICY_REF_REQUIRED",
+          "path": "/basis/policy_decision_ref"
+        }
+      ]
+    },
+    {
+      "case_id": "public-missing-review",
+      "base": "generalized_public",
+      "mutations": [
+        {
+          "path": "/basis/review_record_ref",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "REDACTION_REVIEW_REF_REQUIRED",
+          "path": "/basis/review_record_ref"
+        }
+      ]
+    },
+    {
+      "case_id": "public-missing-validation",
+      "base": "generalized_public",
+      "mutations": [
+        {
+          "path": "/basis/validation_report_ref",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "REDACTION_VALIDATION_REF_REQUIRED",
+          "path": "/basis/validation_report_ref"
+        }
+      ]
+    },
+    {
+      "case_id": "public-missing-output",
+      "base": "generalized_public",
+      "mutations": [
+        {
+          "path": "/output_digest",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "REDACTION_OUTPUT_DIGEST_REQUIRED",
+          "path": "/output_digest"
+        }
+      ]
+    },
+    {
+      "case_id": "public-output-not-safe",
+      "base": "generalized_public",
+      "mutations": [
+        {
+          "path": "/exposure/output_sensitivity",
+          "value": "T2"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "REDACTION_PUBLIC_TIER_INVALID",
+          "path": "/exposure/output_sensitivity"
+        }
+      ]
+    },
+    {
+      "case_id": "withhold-output-forbidden",
+      "base": "generalized_public",
+      "mutations": [
+        {
+          "path": "/transform/classes",
+          "value": [
+            "WITHHOLD"
+          ]
+        },
+        {
+          "path": "/exposure/output_public_candidate",
+          "value": false
+        },
+        {
+          "path": "/exposure/output_sensitivity",
+          "value": null
+        },
+        {
+          "path": "/release_context/release_candidate_ref",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "REDACTION_WITHHOLD_OUTPUT_FORBIDDEN",
+          "path": "/output_digest"
+        }
+      ]
+    },
+    {
+      "case_id": "result-mismatch",
+      "base": "generalized_public",
+      "result_override": {
+        "status": "WITHHELD",
+        "reason_codes": [
+          "CONTENT_WITHHELD"
+        ]
+      },
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "REDACTION_RESULT_MISMATCH",
+          "path": "/result"
+        }
+      ]
+    },
+    {
+      "case_id": "spec-hash-mismatch",
+      "base": "generalized_public",
+      "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "REDACTION_SPEC_HASH_MISMATCH",
+          "path": "/spec_hash"
+        }
+      ]
+    },
+    {
+      "case_id": "receipt-id-mismatch",
+      "base": "generalized_public",
+      "receipt_id_override": "kfm:redaction-receipt:ffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "REDACTION_ID_MISMATCH",
+          "path": "/receipt_id"
+        }
+      ]
+    },
+    {
+      "case_id": "protected-value-leak",
+      "base": "generalized_public",
+      "mutations": [
+        {
+          "path": "/exposure/protected_value_present",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "REDACTION_SCHEMA_INVALID",
+          "path": "/exposure/protected_value_present"
+        }
+      ]
+    },
+    {
+      "case_id": "authority-overreach",
+      "base": "generalized_public",
+      "mutations": [
+        {
+          "path": "/governance/publication_authorized",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "REDACTION_SCHEMA_INVALID",
+          "path": "/governance/publication_authorized"
+        }
+      ]
+    }
+  ]
+}

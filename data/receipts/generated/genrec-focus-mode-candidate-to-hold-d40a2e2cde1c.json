@@ -1,0 +1,161 @@
+{
+  "receipt_id": "genrec-focus-mode-candidate-to-hold-d40a2e2cde1c",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/state/transitions/candidate-to-hold.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/state/transitions/candidate-to-hold.md": "sha256:d40a2e2cde1ca4a5e8b8e3d3693e6d3a5fc408cb75148d309792c30a7548413c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "ChatGPT",
+    "version": "GPT-5.6 Pro"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabbf",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "ChatGPT GitHub connector",
+      "local Python static validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabbf"
+    ],
+    "attached_docs": [
+      "Pasted text(20260822-152215).txt"
+    ],
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@4712e52f10a6c8f688cc1e158b7e010888fb4102",
+      "github:docs/focus-mode/state/transitions/candidate-to-hold.md@4712e52f10a6c8f688cc1e158b7e010888fb4102#blob:9d47a70af7aa76ca518cf19b457b1b49d77c0cff",
+      "github:docs/focus-mode/state/transitions/README.md@4712e52f10a6c8f688cc1e158b7e010888fb4102#blob:220f7d6b7c2cd486267490a986d943a509d54347",
+      "github:docs/focus-mode/state/README.md@4712e52f10a6c8f688cc1e158b7e010888fb4102#blob:f6eca0386c8cc6df249d85d15d33234ecbb81b34",
+      "github:docs/focus-mode/state/review-state.md@4712e52f10a6c8f688cc1e158b7e010888fb4102#blob:52aabf73e93a438a2116d5e28bc26a353da4c003",
+      "github:docs/focus-mode/state/lifecycle-states.md@4712e52f10a6c8f688cc1e158b7e010888fb4102#blob:8c39b4b5f211ef23c0ce51e2a83c1472dde82046",
+      "github:docs/focus-mode/state/finite-outcomes.md@4712e52f10a6c8f688cc1e158b7e010888fb4102#blob:bd188a69890f43698422b2bd27c76c74958c5feb",
+      "github:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json@4712e52f10a6c8f688cc1e158b7e010888fb4102#blob:8b86e7db8b18b65a56a4e639dfc54e1b2db93155",
+      "github:schemas/contracts/v1/governance/review_record.schema.json@4712e52f10a6c8f688cc1e158b7e010888fb4102#blob:fe2f2223af46481e7fb19b0baa94f62ce9c6c855",
+      "github:docs/doctrine/directory-rules.md@4712e52f10a6c8f688cc1e158b7e010888fb4102#blob:fd49a0b83e55cef52c1124281f093e263526898d",
+      "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@4712e52f10a6c8f688cc1e158b7e010888fb4102#blob:a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "github:CONTRIBUTING.md@4712e52f10a6c8f688cc1e158b7e010888fb4102#blob:de5bf143e601e36a794e6e5442ae8f91c6f75aad",
+      "task-contract:update-docs-focus-mode-state-transitions-candidate-to-hold-20260822"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/state/transitions/candidate-to-hold.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-base-target-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned main@4712e52f10a6c8f688cc1e158b7e010888fb4102, re-read the complete v0.1 target, confirmed blob 9d47a70af7aa76ca518cf19b457b1b49d77c0cff, inspected adjacent state/review/lifecycle/runtime/schema authority, and found no open pull request targeting candidate-to-hold before mutation."
+    },
+    {
+      "gate": "same-path-directory-governance-review",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 adopts Directory Rules v2; the tracked human-readable target remains under docs/ and receives same-path PLACE treatment without a move, split, mirror, root change, or parallel authority home."
+    },
+    {
+      "gate": "semantic-reconciliation-and-no-overclaim",
+      "outcome": "PASS",
+      "reason": "The document removes runtime-HOLD, ReviewRecord.state=held, verified PolicyDecision(HOLD), fixed-enum reason-code, Gate-F review/sensitivity, automatic prior-release ANSWER, and no-rollback-required claims; it preserves the four runtime outcomes and labels unresolved carriers and behavior."
+    },
+    {
+      "gate": "markdown-structure-anchors-and-links",
+      "outcome": "PASS",
+      "reason": "Static validation found one H1, one metadata block, balanced fences, 15 unique explicit anchors, all 26 internal fragments resolving, 15 repository-relative targets confirmed in the inspected repository, no trailing whitespace, UTF-8 content, and a final newline."
+    },
+    {
+      "gate": "security-rights-privacy-and-sensitivity-review",
+      "outcome": "PASS",
+      "reason": "No credentials, private person data, restricted payloads, exact sensitive locations, infrastructure vulnerability details, or protected hold reasons were introduced; public-safe reason categories and fail-closed handling remain explicit."
+    },
+    {
+      "gate": "artifact-sha256-and-git-blob-integrity",
+      "outcome": "PASS",
+      "reason": "Final Markdown SHA-256 is d40a2e2cde1ca4a5e8b8e3d3693e6d3a5fc408cb75148d309792c30a7548413c; locally computed Git blob 937c56643bc0c11d87a0c58cc6f40fcc3037b7f3 exactly matches the branch write response at commit bc22216e7022ca996bd8777ad76ff3e8c1de0dbd."
+    },
+    {
+      "gate": "generated-receipt-json-and-schema",
+      "outcome": "PASS",
+      "reason": "python -m json.tool parsed the receipt successfully, and Python jsonschema Draft202012Validator validated it against the inspected schemas/contracts/v1/receipts/generated_receipt.schema.json shape with zero errors."
+    },
+    {
+      "gate": "full-repository-native-validation",
+      "outcome": "SKIPPED",
+      "reason": "No mounted checkout was available for make validate, git diff --check, or repository-native Markdown tooling; the generated receipt's JSON and schema shape were checked separately, while hosted exact-head checks are reported after PR creation."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted workflow runs can be inspected only after the draft pull request exists; pending or absent runs are not treated as pass evidence."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "github:docs/focus-mode/state/transitions/candidate-to-hold.md@4712e52f10a6c8f688cc1e158b7e010888fb4102",
+      "validated": true,
+      "evidence_ref": "blob:9d47a70af7aa76ca518cf19b457b1b49d77c0cff"
+    },
+    {
+      "id": "github:docs/focus-mode/state/transitions/README.md@4712e52f10a6c8f688cc1e158b7e010888fb4102",
+      "validated": true,
+      "evidence_ref": "blob:220f7d6b7c2cd486267490a986d943a509d54347"
+    },
+    {
+      "id": "github:docs/focus-mode/state/review-state.md@4712e52f10a6c8f688cc1e158b7e010888fb4102",
+      "validated": true,
+      "evidence_ref": "blob:52aabf73e93a438a2116d5e28bc26a353da4c003"
+    },
+    {
+      "id": "github:docs/focus-mode/state/lifecycle-states.md@4712e52f10a6c8f688cc1e158b7e010888fb4102",
+      "validated": true,
+      "evidence_ref": "blob:8c39b4b5f211ef23c0ce51e2a83c1472dde82046"
+    },
+    {
+      "id": "github:docs/focus-mode/state/finite-outcomes.md@4712e52f10a6c8f688cc1e158b7e010888fb4102",
+      "validated": true,
+      "evidence_ref": "blob:bd188a69890f43698422b2bd27c76c74958c5feb"
+    },
+    {
+      "id": "github:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json@4712e52f10a6c8f688cc1e158b7e010888fb4102",
+      "validated": true,
+      "evidence_ref": "blob:8b86e7db8b18b65a56a4e639dfc54e1b2db93155"
+    },
+    {
+      "id": "github:schemas/contracts/v1/governance/review_record.schema.json@4712e52f10a6c8f688cc1e158b7e010888fb4102",
+      "validated": true,
+      "evidence_ref": "blob:fe2f2223af46481e7fb19b0baa94f62ce9c6c855"
+    },
+    {
+      "id": "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@4712e52f10a6c8f688cc1e158b7e010888fb4102",
+      "validated": true,
+      "evidence_ref": "blob:a4de0d7a96b78da59cfc499d1025e1508afd8dd9"
+    },
+    {
+      "id": "attachment:Pasted text(20260822-152215).txt",
+      "validated": true,
+      "evidence_ref": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabbf"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T15:43:04Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Generated authoring receipt for the repository-grounded candidate-to-HOLD documentation correction. It records process provenance only, preserves pending human review, and does not create an operational hold, authenticate a reviewer, resolve evidence, evaluate policy, apply promotion gates, issue or withdraw a release, correct public state, execute rollback, deploy, publish, or merge. The parent transition index remains unchanged in this slice; its pinned inventory may require a later bounded reconciliation after sibling transition updates."
+}

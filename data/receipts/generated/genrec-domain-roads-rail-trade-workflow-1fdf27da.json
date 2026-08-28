@@ -1,0 +1,85 @@
+{
+  "receipt_id": "genrec-domain-roads-rail-trade-workflow-1fdf27da",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T00:00:00-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "c992553eb080d6be44c17b04e11dcf9f4d47be2d",
+  "branch": "agent/domain-roads-rail-trade-workflow-20260718",
+  "target_path": ".github/workflows/domain-roads-rail-trade.yml",
+  "previous_blob": "c6f547b0acd8018284001ed67d25b153c0d9992b",
+  "new_blob": "1fdf27da8b88678429b3a7c5bb4ac7e950d8d348",
+  "content_digest": {
+    "algorithm": "git-blob-sha1",
+    "value": "1fdf27da8b88678429b3a7c5bb4ac7e950d8d348"
+  },
+  "truth_labels": {
+    "confirmed": [
+      "The prior validate-roads-rail-trade, build-proof-roads-rail-trade, and publish-dry-run-roads-rail-trade jobs only executed TODO echo commands.",
+      "Baseline workflow run 29654218946 completed successfully without Roads/Rail/Trade validation, proof construction, or release dry-run execution.",
+      "The Roads/Rail/Trade test index records executable tests, fixture bindings, CI coverage, release integration, and pass rates as needing verification.",
+      "Sampled Roads/Rail/Trade test modules contain only PROPOSED placeholder docstrings.",
+      "The per-domain validator index records executable validators and CI wiring as unverified.",
+      "Concrete JSON Schema and JSON fixture files exist under the domain schema and fixture roots, and sampled files are explicitly PROPOSED placeholders.",
+      "The domain policy README remains a PROPOSED greenfield scaffold.",
+      "The proof lane is draft and records emitted proof objects, schemas, validators, CI workflows, source descriptors, release gates, and rollback drills as needing verification.",
+      "The release-candidate lane is pre-publication and states that a candidate is not a release.",
+      "Workflow name domain-roads-rail-trade and all three job ids are preserved."
+    ],
+    "proposed": [
+      "Bounded schema and fixture parsing plus explicit semantic-validation, proof, and release holds are the safest current CI behavior.",
+      "AST-based test detection and executable-body detection are appropriate graduation signals while the domain remains scaffold-heavy."
+    ],
+    "needs_verification": [
+      "Final-head GitHub Actions conclusions.",
+      "Accepted roads-rail-trade versus transport schema and contract topology.",
+      "Accepted Roads/Rail/Trade validator ownership and deterministic no-network semantic test suite.",
+      "Executable policy for legal status, live closures, access, historic precision, facility sensitivity, and public-safe generalization.",
+      "Concrete EvidenceBundle and proof producer contracts, schemas, manifests, access controls, and receipts.",
+      "Accepted candidate, ReleaseManifest, correction, withdrawal, graph invalidation, cache invalidation, and rollback contracts.",
+      "Branch-protection dependencies, independent transport/safety review ownership, and immutable action pinning."
+    ]
+  },
+  "changes": [
+    "Added workflow_dispatch, contents: read permission, concurrency cancellation, deterministic Python setup, and five-minute job timeouts.",
+    "Disabled persisted checkout credentials.",
+    "Converted the validation TODO into a bounded static readiness check with an explicit WORKFLOW_HOLD outcome.",
+    "Added required-boundary checks across domain doctrine, contracts, schemas, fixtures, policy, tests, validators, source registry, proofs, release candidates, and published lanes.",
+    "Added AST-based detection for newly executable Roads/Rail/Trade tests.",
+    "Added deterministic JSON parsing and placeholder-posture checks for all domain JSON Schemas and JSON fixtures.",
+    "Added executable-body detection across per-domain, crossing, bridge/river-crossing, transport-facility-topology, and facilities validator lanes.",
+    "Added a policy-posture check for the current domain scaffold.",
+    "Converted proof and release TODO jobs into explicit WORKFLOW_SKIPPED_EXPLICIT and WORKFLOW_HOLD readiness checks.",
+    "Added fail-closed detection for proof artifacts, proof producers, candidate records, Make targets, and changed candidate posture.",
+    "Added bounded summaries preserving routing, legal-access, live-closure, bridge-condition, rail-status, source-role, historic-precision, sensitivity, graph, correction, withdrawal, and rollback boundaries."
+  ],
+  "authority_boundary": "A green held result is repository-readiness evidence only. It is not route, network, crossing, facility, legal-access, live-closure, safe-passage, bridge-condition, rail-status, EvidenceBundle, proof, lifecycle promotion, release, or publication authority.",
+  "directory_rules_basis": [
+    ".github/workflows remains the existing CI orchestration location.",
+    "contracts and schemas remain separate meaning and shape roots.",
+    "tests and fixtures remain the enforceability and bounded synthetic-input roots.",
+    "tools remains the validator and helper root.",
+    "policy remains the admissibility and restriction root.",
+    "data/registry remains the source-admission and registry root.",
+    "data/proofs remains the proof-support root.",
+    "release remains the release-decision root.",
+    "data/published remains the released-payload root.",
+    "data/receipts/generated remains the existing generated process-memory lane."
+  ],
+  "validation": {
+    "workflow_yaml_parse": "PASS",
+    "workflow_and_job_identities_preserved": "PASS",
+    "schema_and_fixture_runtime_checks": "PENDING_FINAL_HEAD_CI",
+    "exact_changed_paths": [
+      ".github/workflows/domain-roads-rail-trade.yml",
+      "data/receipts/generated/genrec-domain-roads-rail-trade-workflow-1fdf27da.json"
+    ],
+    "final_head_ci": "PENDING",
+    "human_review": "PENDING"
+  },
+  "rollback": {
+    "strategy": "Close the pull request without merge or revert the receipt commit and workflow commit in reverse order.",
+    "restores_blob": "c6f547b0acd8018284001ed67d25b153c0d9992b"
+  }
+}

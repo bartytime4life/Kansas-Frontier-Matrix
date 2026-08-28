@@ -1,0 +1,18 @@
+{
+  "object_type": "RuntimeVerificationProof",
+  "schema_version": "1.0.0",
+  "proof_id": "kfm://proof/runtime-verification/p-missing-declaration-001",
+  "job_id": "job-runtime-012",
+  "artifact_ref": "pmtiles://kansas/hydrology/v1",
+  "manifest_ref": null,
+  "outcome": "MISSING_DECLARATION",
+  "expected_digest": null,
+  "observed_digest": null,
+  "reason": "No declared expected digest was available.",
+  "verified_at": "2026-04-12T18:05:02Z",
+  "verifier": {
+    "surface": "runtime-worker",
+    "version": "0.1.0"
+  },
+  "receipt_ref": "kfm://receipt/runtime-verification/r-minimal-001"
+}

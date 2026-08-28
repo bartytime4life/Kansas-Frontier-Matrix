@@ -1,0 +1,299 @@
+{
+  "object_type": "OperationalTrustRollupFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.operational-trust-rollup.fixture.v1",
+  "base_candidate": {
+    "object_type": "OperationalTrustRollup",
+    "schema_version": "1.0.0",
+    "profile": "kfm.operational-trust-rollup.fixture.v1",
+    "rollup_id": "trust-rollup:hydrology:001",
+    "rollup_spec_hash": "sha256:c1957b20ee1a662dd50b94bfc2dbfdc4ccb56c2ff1fab7f8f0e5326159fad009",
+    "observed_at": "2026-08-09T00:55:00Z",
+    "release_candidate_ref": "kfm:release-candidate:hydrology:001",
+    "release_state": "CANDIDATE",
+    "scope": {
+      "domain": "hydrology",
+      "environment": "fixture",
+      "artifact_refs": [
+        "kfm:artifact:hydrology:001",
+        "kfm:artifact:hydrology:002"
+      ]
+    },
+    "evidence": {
+      "status": "RESOLVED",
+      "refs": [
+        "kfm:evidence-bundle:hydrology:001"
+      ]
+    },
+    "policy": {
+      "status": "ALLOW",
+      "refs": [
+        "kfm:policy-decision:hydrology:001"
+      ]
+    },
+    "signatures": {
+      "status": "VERIFIED",
+      "refs": [
+        "kfm:attestation:hydrology:001"
+      ]
+    },
+    "validation": {
+      "status": "PASS",
+      "refs": [
+        "kfm:validation-report:hydrology:001"
+      ]
+    },
+    "review": {
+      "status": "APPROVED",
+      "refs": [
+        "kfm:review:hydrology:001"
+      ]
+    },
+    "catalog": {
+      "status": "CLOSED",
+      "refs": [
+        "kfm:catalog-closure:hydrology:001"
+      ]
+    },
+    "correction": {
+      "status": "READY",
+      "refs": [
+        "kfm:correction-path:hydrology:001"
+      ]
+    },
+    "rollback": {
+      "status": "READY",
+      "refs": [
+        "kfm:rollback:hydrology:001"
+      ]
+    },
+    "authority_claims": {
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "ready_complete_rollup",
+      "patch": {},
+      "expected": {
+        "outcome": "READY",
+        "codes": []
+      }
+    },
+    {
+      "name": "hold_evidence_unresolved",
+      "patch": {
+        "rollup_spec_hash": "sha256:6b032e6e2b503cd84705d6d0a7268edeeb2b492373d714977a680f7c5bfd6328",
+        "evidence": {
+          "status": "UNRESOLVED",
+          "refs": []
+        }
+      },
+      "expected": {
+        "outcome": "HOLD",
+        "codes": [
+          "EVIDENCE_UNRESOLVED"
+        ]
+      }
+    },
+    {
+      "name": "hold_policy",
+      "patch": {
+        "rollup_spec_hash": "sha256:9a566f179ec88d1eab4f36ab3eaea09fbd6c58fe555ca6254a88a9d39a776cb2",
+        "policy": {
+          "status": "HOLD"
+        }
+      },
+      "expected": {
+        "outcome": "HOLD",
+        "codes": [
+          "POLICY_HOLD"
+        ]
+      }
+    },
+    {
+      "name": "hold_signatures_pending",
+      "patch": {
+        "rollup_spec_hash": "sha256:8380c2c02c1bbdb13b407ce1cba8322ebc47b732cb73c54630feef11c7e36b45",
+        "signatures": {
+          "status": "PENDING",
+          "refs": []
+        }
+      },
+      "expected": {
+        "outcome": "HOLD",
+        "codes": [
+          "SIGNATURE_PENDING"
+        ]
+      }
+    },
+    {
+      "name": "hold_review_pending",
+      "patch": {
+        "rollup_spec_hash": "sha256:b2e330d1b253e3224a7b2463a1f8bccba693c7ffa909d7fe1475135e8dea5bd8",
+        "review": {
+          "status": "PENDING",
+          "refs": []
+        }
+      },
+      "expected": {
+        "outcome": "HOLD",
+        "codes": [
+          "REVIEW_PENDING"
+        ]
+      }
+    },
+    {
+      "name": "hold_catalog_open",
+      "patch": {
+        "rollup_spec_hash": "sha256:388a6aec864787eb17475f24dfe719153785e8f5cf987ab64efae25b94b8ead8",
+        "catalog": {
+          "status": "OPEN",
+          "refs": []
+        }
+      },
+      "expected": {
+        "outcome": "HOLD",
+        "codes": [
+          "CATALOG_OPEN"
+        ]
+      }
+    },
+    {
+      "name": "deny_policy",
+      "patch": {
+        "rollup_spec_hash": "sha256:fcf9230e764f58fa2574362f97596a83be5464922967bd87f43db113e4fd2a87",
+        "policy": {
+          "status": "DENY"
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "POLICY_DENIED"
+        ]
+      }
+    },
+    {
+      "name": "deny_validation_failure",
+      "patch": {
+        "rollup_spec_hash": "sha256:59d3d82eb2e6adf6bd3653feecf904da6139294f21bc202481a3ee89bed1d425",
+        "validation": {
+          "status": "FAIL"
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "VALIDATION_FAILED"
+        ]
+      }
+    },
+    {
+      "name": "deny_rollback_missing",
+      "patch": {
+        "rollup_spec_hash": "sha256:a3dce1128e30c9d476f42f2baaa1a71e56b499ee5d164176480870f5174bc2b5",
+        "rollback": {
+          "status": "MISSING",
+          "refs": []
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "ROLLBACK_MISSING"
+        ]
+      }
+    },
+    {
+      "name": "deny_correction_missing",
+      "patch": {
+        "rollup_spec_hash": "sha256:af0ad06ad9b2c14d6d64171ba87d2b8c0c6ccf4247af88d5ac885e71e320192c",
+        "correction": {
+          "status": "MISSING",
+          "refs": []
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "CORRECTION_PATH_MISSING"
+        ]
+      }
+    },
+    {
+      "name": "deny_signature_failed",
+      "patch": {
+        "rollup_spec_hash": "sha256:f87049e80879698bfea5bb9b7ef9a11b81f7226e75b30660824e7226405ac569",
+        "signatures": {
+          "status": "FAILED"
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "SIGNATURE_FAILED"
+        ]
+      }
+    },
+    {
+      "name": "error_evidence_component",
+      "patch": {
+        "rollup_spec_hash": "sha256:a6f433557d6f8a25b23100c3697b985e702d5ae7b874571bc37510e19d7fd57e",
+        "evidence": {
+          "status": "ERROR",
+          "refs": []
+        }
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "codes": [
+          "EVIDENCE_ERROR"
+        ]
+      }
+    },
+    {
+      "name": "deny_rollup_hash_mismatch",
+      "patch": {
+        "rollup_spec_hash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "ROLLUP_SPEC_HASH_MISMATCH"
+        ]
+      }
+    },
+    {
+      "name": "error_authority_overclaim_schema",
+      "patch": {
+        "authority_claims": {
+          "promotion_authority": true
+        }
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "codes": [
+          "SCHEMA_INVALID"
+        ]
+      }
+    },
+    {
+      "name": "error_mutable_release_ref_schema",
+      "patch": {
+        "release_candidate_ref": "kfm:release-candidate:hydrology:latest"
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "codes": [
+          "SCHEMA_INVALID"
+        ]
+      }
+    }
+  ]
+}

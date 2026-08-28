@@ -1,0 +1,264 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/hydrology/adaptive_threshold_proposal.schema.json",
+  "title": "adaptive_threshold_proposal",
+  "description": "Non-authoritative drought-context recommendation to keep, review, or hold a hydrologic detector baseline.",
+  "type": "object",
+  "additionalProperties": false,
+  "x-kfm": {
+    "contract_doc": "contracts/domains/hydrology/adaptive_threshold_proposal.md",
+    "fixtures_root": "fixtures/contracts/v1/domains/hydrology/adaptive_threshold_proposal/",
+    "validator": "tools/validators/domains/hydrology/validate_adaptive_threshold_proposal.py",
+    "status": "PROPOSED"
+  },
+  "$defs": {
+    "hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^\\S+$"
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    }
+  },
+  "required": [
+    "proposal_id",
+    "schema_version",
+    "detector",
+    "drought_context",
+    "assessment",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "proposal_id": {
+      "type": "string",
+      "pattern": "^adaptive-threshold-proposal:[a-f0-9]{24}$"
+    },
+    "schema_version": {
+      "const": "v1"
+    },
+    "detector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "detector_ref",
+        "metric",
+        "baseline_spec_hash",
+        "analysis_start",
+        "analysis_end",
+        "evidence_refs"
+      ],
+      "properties": {
+        "detector_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "metric": {
+          "type": "string",
+          "enum": [
+            "STREAMFLOW_PERCENTILE",
+            "SOIL_MOISTURE_PERCENTILE",
+            "GROUNDWATER_PERCENTILE",
+            "COMPOSITE_HYDROLOGIC_INDEX"
+          ]
+        },
+        "baseline_spec_hash": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/hash"
+            }
+          ]
+        },
+        "analysis_start": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "analysis_end": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/evidenceRefs"
+        }
+      }
+    },
+    "drought_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification_ref",
+        "valid_start",
+        "valid_end",
+        "spatial_scope_ref",
+        "source_role",
+        "support_type",
+        "materiality_rule_ref",
+        "evidence_refs"
+      ],
+      "properties": {
+        "classification_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "valid_start": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "valid_end": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "spatial_scope_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "source_role": {
+          "const": "CLASSIFICATION"
+        },
+        "support_type": {
+          "const": "DERIVED_CLASSIFICATION"
+        },
+        "materiality_rule_ref": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/ref"
+            }
+          ]
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/evidenceRefs"
+        }
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "materiality",
+        "recommended_method",
+        "reason_codes",
+        "evidence_refs"
+      ],
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "KEEP_BASELINE",
+            "REVIEW_RECALIBRATION",
+            "HOLD",
+            "ERROR"
+          ]
+        },
+        "materiality": {
+          "type": "string",
+          "enum": [
+            "MATERIAL",
+            "NOT_MATERIAL",
+            "UNRESOLVED",
+            "UNKNOWN"
+          ]
+        },
+        "recommended_method": {
+          "type": "string",
+          "enum": [
+            "NONE",
+            "RECOMPUTE_SEASONAL_PERCENTILES",
+            "REVIEW_ADAPTIVE_THRESHOLD",
+            "HOLD",
+            "UNKNOWN"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 24,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]{2,63}$"
+          }
+        },
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 128,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/ref"
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification_not_observation",
+        "baseline_not_evidence",
+        "watcher_non_publisher",
+        "configuration_mutated",
+        "exact_threshold_proposed",
+        "network_fetch",
+        "policy_evaluated",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized"
+      ],
+      "properties": {
+        "classification_not_observation": {
+          "const": true
+        },
+        "baseline_not_evidence": {
+          "const": true
+        },
+        "watcher_non_publisher": {
+          "const": true
+        },
+        "configuration_mutated": {
+          "const": false
+        },
+        "exact_threshold_proposed": {
+          "const": false
+        },
+        "network_fetch": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        }
+      }
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/hash"
+    }
+  }
+}

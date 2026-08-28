@@ -1,0 +1,299 @@
+{
+  "schema_version": "v1",
+  "suite": "evidence-binding-chain-assessment",
+  "cases": [
+    {
+      "case_id": "valid-exact-reference-chain",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-deterministic-transformed-binding",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/claim_field_binding/normalized_value_digest",
+          "value": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        },
+        {
+          "op": "replace",
+          "path": "/claim_field_binding/transform/kind",
+          "value": "NORMALIZE_UNIT"
+        },
+        {
+          "op": "replace",
+          "path": "/claim_field_binding/transform/transform_ref",
+          "value": "kfm://transform/unit/synthetic-v1"
+        },
+        {
+          "op": "replace",
+          "path": "/claim_field_binding/transform/transform_receipt_ref",
+          "value": "kfm://transform-receipt/synthetic/value"
+        },
+        {
+          "op": "replace",
+          "path": "/claim_field_binding/support_scope",
+          "value": "DERIVED_FIELD"
+        },
+        {
+          "op": "replace",
+          "path": "/claim_field_binding/quality/state",
+          "value": "QUALIFIED"
+        },
+        {
+          "op": "replace",
+          "path": "/claim_field_binding/quality/confidence",
+          "value": "MEDIUM"
+        },
+        {
+          "op": "replace",
+          "path": "/claim_field_binding/quality/reason_codes",
+          "value": [
+            "DETERMINISTIC_TRANSFORM",
+            "SOURCE_FIELD_EXACT"
+          ]
+        },
+        {
+          "op": "replace",
+          "path": "/claim_field_binding/limitations",
+          "value": [
+            "Fixture-only field binding.",
+            "Normalized value depends on a deterministic unit transform.",
+            "Referenced evidence is not resolved outside this assessment."
+          ]
+        }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "source-artifact-not-fetched",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/source_artifact/retrieval_outcome",
+          "value": "MALFORMED"
+        }
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        "SOURCE_ARTIFACT_NOT_FETCHED"
+      ]
+    },
+    {
+      "case_id": "parse-result-artifact-ref-mismatch",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/parse_result/source_artifact_ref",
+          "value": "source-artifact:sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+        }
+      ],
+      "relink_parse_result": true,
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "PARSE_ARTIFACT_REF_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "parser-version-mismatch",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/parse_result/parser_version",
+          "value": "9.9.9"
+        }
+      ],
+      "relink_parse_result": true,
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "SOURCE_PARSER_IDENTITY_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "unsupported-parse-has-no-record-support",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/parse_result/outcome",
+          "value": "UNSUPPORTED"
+        },
+        {
+          "op": "replace",
+          "path": "/parse_result/records",
+          "value": []
+        },
+        {
+          "op": "replace",
+          "path": "/parse_result/unsupported_flags",
+          "value": [
+            "UNSUPPORTED_LAYOUT"
+          ]
+        }
+      ],
+      "relink_parse_result": true,
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        "PARSED_RECORD_UNRESOLVED",
+        "PARSE_RESULT_NOT_PARSED"
+      ]
+    },
+    {
+      "case_id": "parsed-record-ref-unresolved",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/evidence_resolution/parsed_record_ref",
+          "value": "parsed-record:missing"
+        }
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        "PARSED_RECORD_UNRESOLVED"
+      ]
+    },
+    {
+      "case_id": "evidence-resolution-ref-mismatch",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/evidence_resolution/evidence_ref",
+          "value": "evidence-ref:sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "EVIDENCE_REF_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "claim-binding-evidence-ref-mismatch",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/claim_field_binding/evidence_ref",
+          "value": "evidence-ref:sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "CLAIM_EVIDENCE_REF_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "parsed-record-digest-mismatch",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/evidence_resolution/parsed_record_digest",
+          "value": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "PARSED_RECORD_DIGEST_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "claim-native-locator-mismatch",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/claim_field_binding/native_locator/value",
+          "value": "/records/0/status"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "CLAIM_NATIVE_LOCATOR_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "no-transform-value-digest-mismatch",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/claim_field_binding/normalized_value_digest",
+          "value": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "NO_TRANSFORM_VALUE_DIGEST_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "nontrivial-transform-receipt-missing",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/claim_field_binding/transform/kind",
+          "value": "NORMALIZE_UNIT"
+        },
+        {
+          "op": "replace",
+          "path": "/claim_field_binding/transform/transform_ref",
+          "value": "kfm://transform/unit/synthetic-v1"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "TRANSFORM_RECEIPT_REQUIRED"
+      ]
+    },
+    {
+      "case_id": "evidence-bundle-field-forbidden",
+      "mutations": [
+        {
+          "op": "add",
+          "path": "/evidence_ref/bundle_ref",
+          "value": "evidence-bundle:synthetic-forbidden"
+        }
+      ],
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ]
+    },
+    {
+      "case_id": "publication-authority-overreach",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/effects/published",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "AUTHORITY_EFFECT_ENABLED"
+      ]
+    },
+    {
+      "case_id": "stale-assessment-spec-hash",
+      "mutations": [],
+      "assessment_identity_mode": "STALE_SPEC_HASH",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "ASSESSMENT_SPEC_HASH_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "source-content-digest-placeholder",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/source_artifact/content_digest",
+          "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ],
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "CLAIM_SOURCE_SNAPSHOT_MISMATCH",
+        "SOURCE_ARTIFACT_IDENTITY_INVALID",
+        "SOURCE_CONTENT_DIGEST_PLACEHOLDER"
+      ]
+    }
+  ]
+}

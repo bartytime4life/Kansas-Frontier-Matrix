@@ -1,0 +1,4 @@
+# pipeline_specs :: hydrology :: ingest
+name: hydrology-ingest
+version: 1
+stages: []

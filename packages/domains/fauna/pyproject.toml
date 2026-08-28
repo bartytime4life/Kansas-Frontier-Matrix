@@ -1,0 +1,4 @@
+# packages/domains/fauna pyproject — greenfield placeholder
+[project]
+name = "kfm-domain-fauna"
+version = "0.0.0"

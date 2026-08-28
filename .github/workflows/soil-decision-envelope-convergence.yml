@@ -1,0 +1,35 @@
+name: soil-decision-envelope-convergence
+
+on:
+  pull_request:
+    paths:
+      - 'contracts/domains/soil/decision_envelope.md'
+      - 'schemas/contracts/v1/domains/soil/decision_envelope.schema.json'
+      - 'schemas/contracts/v1/domains/soil/soil_decision_envelope.schema.json'
+      - 'tests/validators/domains/soil/test_decision_envelope_schema_convergence.py'
+      - '.github/workflows/soil-decision-envelope-convergence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  KFM_NO_NETWORK: '1'
+  PYTHONHASHSEED: '0'
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.11'
+      - name: Compile focused test
+        run: python -m py_compile tests/validators/domains/soil/test_decision_envelope_schema_convergence.py
+      - name: Run deterministic convergence tests
+        run: python -m unittest -q tests.validators.domains.soil.test_decision_envelope_schema_convergence

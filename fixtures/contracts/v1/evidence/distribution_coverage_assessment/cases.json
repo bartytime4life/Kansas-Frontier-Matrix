@@ -1,0 +1,253 @@
+{
+  "base": {
+    "object_type": "DistributionCoverageAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "fixture-only-distribution-coverage-v1",
+    "assessment_id": "kfm:distribution-coverage:0000000000000000000000000000000000000000000000000000000000000000",
+    "subject_ref": "kfm://taxon/synthetic/prairie-star",
+    "source_descriptor_ref": "kfm://source/usda-plants-synthetic@2026.04",
+    "source_descriptor_version": "2026.04",
+    "vocabulary_ref": "kfm://vocabulary/distribution-status/v1",
+    "geography_binding": {
+      "geography_ref": "kfm://geography/county/ks/20001@2025",
+      "geography_type": "COUNTY",
+      "geography_version_ref": "kfm://geography-version/tigerline-2025",
+      "geography_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "boundary_crosswalk_ref": null,
+      "boundary_relation": "EXACT"
+    },
+    "coverage_assessment": {
+      "source_row_state": "PRESENT",
+      "assessment_scope": "PARTIAL",
+      "subject_in_scope": true,
+      "coverage_current": true,
+      "disclosure_state": "PUBLIC_SAFE",
+      "source_native_status": "present",
+      "mapping_basis": "EXPLICIT_PRESENT",
+      "coverage_effort_evidence_refs": [],
+      "missing_row_policy": "NO_ROW_IS_UNKNOWN_NOT_ABSENCE",
+      "assessed_at": "2026-07-01T12:00:00Z"
+    },
+    "distribution_assertion": {
+      "status": "PRESENT",
+      "asserted_at": "2026-06-30T12:00:00Z",
+      "valid_from": "2025-01-01T00:00:00Z",
+      "valid_to": "2025-12-31T23:59:59Z",
+      "first_observed": null,
+      "evidence_refs": ["kfm://evidence/synthetic-distribution-row"],
+      "conflicting_assertion_refs": [],
+      "decision": "ANSWER",
+      "reason_codes": ["SOURCE_REPORTS_PRESENT"],
+      "obligations": ["DO_NOT_INFER_ABUNDANCE"]
+    },
+    "governance": {
+      "source_admitted": false,
+      "evidence_resolved": false,
+      "policy_evaluated": false,
+      "review_approved": false,
+      "release_authorized": false,
+      "publication_authorized": false,
+      "public_use_authorized": false
+    },
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "cases": [
+    {"name": "explicit_present_is_bounded_answer", "expected_outcome": "HOLD", "expected_findings": []},
+    {
+      "name": "explicit_absence_requires_complete_coverage",
+      "mutations": [
+        {"path": "/coverage_assessment/assessment_scope", "value": "COMPLETE"},
+        {"path": "/coverage_assessment/source_native_status", "value": "absent"},
+        {"path": "/coverage_assessment/mapping_basis", "value": "EXPLICIT_ABSENT"},
+        {"path": "/coverage_assessment/coverage_effort_evidence_refs", "value": ["kfm://evidence/synthetic-coverage-effort"]},
+        {"path": "/distribution_assertion/status", "value": "EXPLICITLY_ABSENT"},
+        {"path": "/distribution_assertion/decision", "value": "ANSWER"},
+        {"path": "/distribution_assertion/reason_codes", "value": ["SOURCE_EXPLICITLY_REPORTS_ABSENT"]},
+        {"path": "/distribution_assertion/obligations", "value": ["DO_NOT_GENERALIZE_ABSENCE"]}
+      ],
+      "expected_outcome": "HOLD", "expected_findings": []
+    },
+    {
+      "name": "undeclared_assessment_abstains",
+      "mutations": [
+        {"path": "/coverage_assessment/assessment_scope", "value": "NOT_DECLARED"},
+        {"path": "/coverage_assessment/source_native_status", "value": null},
+        {"path": "/coverage_assessment/mapping_basis", "value": "NO_EXPLICIT_STATUS"},
+        {"path": "/distribution_assertion/status", "value": "NOT_ASSESSED"},
+        {"path": "/distribution_assertion/evidence_refs", "value": []},
+        {"path": "/distribution_assertion/decision", "value": "ABSTAIN"},
+        {"path": "/distribution_assertion/reason_codes", "value": ["COVERAGE_NOT_ASSESSED"]},
+        {"path": "/distribution_assertion/obligations", "value": ["ASSESS_COVERAGE"]}
+      ],
+      "expected_outcome": "HOLD", "expected_findings": []
+    },
+    {
+      "name": "missing_row_is_unknown",
+      "mutations": [
+        {"path": "/coverage_assessment/source_row_state", "value": "MISSING"},
+        {"path": "/coverage_assessment/source_native_status", "value": null},
+        {"path": "/coverage_assessment/mapping_basis", "value": "NO_EXPLICIT_STATUS"},
+        {"path": "/distribution_assertion/status", "value": "UNKNOWN"},
+        {"path": "/distribution_assertion/evidence_refs", "value": []},
+        {"path": "/distribution_assertion/decision", "value": "ABSTAIN"},
+        {"path": "/distribution_assertion/reason_codes", "value": ["SOURCE_ROW_MISSING"]},
+        {"path": "/distribution_assertion/obligations", "value": ["DO_NOT_INFER_ABSENCE"]}
+      ],
+      "expected_outcome": "HOLD", "expected_findings": []
+    },
+    {
+      "name": "suppressed_distribution_denies",
+      "mutations": [
+        {"path": "/geography_binding/geography_type", "value": "SUPPRESSED"},
+        {"path": "/geography_binding/boundary_relation", "value": "WITHHELD"},
+        {"path": "/coverage_assessment/disclosure_state", "value": "SUPPRESSED"},
+        {"path": "/distribution_assertion/status", "value": "SUPPRESSED"},
+        {"path": "/distribution_assertion/decision", "value": "DENY"},
+        {"path": "/distribution_assertion/reason_codes", "value": ["DISTRIBUTION_SUPPRESSED"]},
+        {"path": "/distribution_assertion/obligations", "value": ["PRESERVE_SUPPRESSION"]}
+      ],
+      "expected_outcome": "HOLD", "expected_findings": []
+    },
+    {
+      "name": "conflicting_assertions_abstain",
+      "mutations": [
+        {"path": "/distribution_assertion/conflicting_assertion_refs", "value": ["kfm://distribution-assertion/synthetic-conflict"]},
+        {"path": "/distribution_assertion/status", "value": "DISPUTED"},
+        {"path": "/distribution_assertion/decision", "value": "ABSTAIN"},
+        {"path": "/distribution_assertion/reason_codes", "value": ["DISTRIBUTION_DISPUTED"]},
+        {"path": "/distribution_assertion/obligations", "value": ["RECONCILE_CONFLICTS"]}
+      ],
+      "expected_outcome": "HOLD", "expected_findings": []
+    },
+    {
+      "name": "stale_coverage_abstains",
+      "mutations": [
+        {"path": "/coverage_assessment/coverage_current", "value": false},
+        {"path": "/distribution_assertion/status", "value": "STALE"},
+        {"path": "/distribution_assertion/decision", "value": "ABSTAIN"},
+        {"path": "/distribution_assertion/reason_codes", "value": ["COVERAGE_STALE"]},
+        {"path": "/distribution_assertion/obligations", "value": ["REFRESH_COVERAGE"]}
+      ],
+      "expected_outcome": "HOLD", "expected_findings": []
+    },
+    {
+      "name": "out_of_scope_abstains",
+      "mutations": [
+        {"path": "/coverage_assessment/subject_in_scope", "value": false},
+        {"path": "/distribution_assertion/status", "value": "OUT_OF_SCOPE"},
+        {"path": "/distribution_assertion/decision", "value": "ABSTAIN"},
+        {"path": "/distribution_assertion/reason_codes", "value": ["SUBJECT_OUT_OF_SCOPE"]},
+        {"path": "/distribution_assertion/obligations", "value": ["DO_NOT_EXTEND_SCOPE"]}
+      ],
+      "expected_outcome": "HOLD", "expected_findings": []
+    },
+    {
+      "name": "unresolved_geography_is_unknown",
+      "mutations": [
+        {"path": "/geography_binding/boundary_relation", "value": "UNRESOLVED"},
+        {"path": "/distribution_assertion/status", "value": "UNKNOWN"},
+        {"path": "/distribution_assertion/decision", "value": "ABSTAIN"},
+        {"path": "/distribution_assertion/reason_codes", "value": ["GEOGRAPHY_BINDING_UNRESOLVED"]},
+        {"path": "/distribution_assertion/obligations", "value": ["RESOLVE_GEOGRAPHY_BINDING"]}
+      ],
+      "expected_outcome": "HOLD", "expected_findings": []
+    },
+    {
+      "name": "crosswalked_geography_preserves_presence",
+      "mutations": [
+        {"path": "/geography_binding/boundary_relation", "value": "CROSSWALKED"},
+        {"path": "/geography_binding/boundary_crosswalk_ref", "value": "kfm://crosswalk/geography/synthetic-20001-2025"}
+      ],
+      "expected_outcome": "HOLD", "expected_findings": []
+    },
+    {
+      "name": "missing_row_cannot_be_explicit_absence",
+      "mutations": [
+        {"path": "/coverage_assessment/source_row_state", "value": "MISSING"},
+        {"path": "/coverage_assessment/assessment_scope", "value": "COMPLETE"},
+        {"path": "/coverage_assessment/source_native_status", "value": "absent"},
+        {"path": "/coverage_assessment/mapping_basis", "value": "EXPLICIT_ABSENT"},
+        {"path": "/coverage_assessment/coverage_effort_evidence_refs", "value": ["kfm://evidence/synthetic-coverage-effort"]},
+        {"path": "/distribution_assertion/status", "value": "EXPLICITLY_ABSENT"},
+        {"path": "/distribution_assertion/reason_codes", "value": ["SOURCE_EXPLICITLY_REPORTS_ABSENT"]},
+        {"path": "/distribution_assertion/obligations", "value": ["DO_NOT_GENERALIZE_ABSENCE"]}
+      ],
+      "expected_outcome": "DENY", "expected_findings": ["MISSING_ROW_NATIVE_STATUS_FORBIDDEN", "DISTRIBUTION_STATUS_MISMATCH"]
+    },
+    {
+      "name": "explicit_absence_rejects_partial_scope",
+      "mutations": [
+        {"path": "/coverage_assessment/source_native_status", "value": "absent"},
+        {"path": "/coverage_assessment/mapping_basis", "value": "EXPLICIT_ABSENT"},
+        {"path": "/coverage_assessment/coverage_effort_evidence_refs", "value": ["kfm://evidence/synthetic-coverage-effort"]},
+        {"path": "/distribution_assertion/status", "value": "EXPLICITLY_ABSENT"},
+        {"path": "/distribution_assertion/reason_codes", "value": ["SOURCE_EXPLICITLY_REPORTS_ABSENT"]},
+        {"path": "/distribution_assertion/obligations", "value": ["DO_NOT_GENERALIZE_ABSENCE"]}
+      ],
+      "expected_outcome": "DENY", "expected_findings": ["DISTRIBUTION_STATUS_MISMATCH"]
+    },
+    {
+      "name": "explicit_absence_requires_effort_evidence",
+      "mutations": [
+        {"path": "/coverage_assessment/assessment_scope", "value": "COMPLETE"},
+        {"path": "/coverage_assessment/source_native_status", "value": "absent"},
+        {"path": "/coverage_assessment/mapping_basis", "value": "EXPLICIT_ABSENT"},
+        {"path": "/distribution_assertion/status", "value": "EXPLICITLY_ABSENT"},
+        {"path": "/distribution_assertion/reason_codes", "value": ["SOURCE_EXPLICITLY_REPORTS_ABSENT"]},
+        {"path": "/distribution_assertion/obligations", "value": ["DO_NOT_GENERALIZE_ABSENCE"]}
+      ],
+      "expected_outcome": "DENY", "expected_findings": ["DISTRIBUTION_STATUS_MISMATCH"]
+    },
+    {
+      "name": "evidence_refs_must_be_canonical",
+      "mutations": [
+        {"path": "/distribution_assertion/evidence_refs", "value": ["kfm://evidence/zeta", "kfm://evidence/alpha"]}
+      ],
+      "expected_outcome": "DENY", "expected_findings": ["NORMALIZED_COLLECTION_REQUIRED"]
+    },
+    {
+      "name": "crosswalked_boundary_requires_crosswalk_ref",
+      "mutations": [
+        {"path": "/geography_binding/boundary_relation", "value": "CROSSWALKED"}
+      ],
+      "expected_outcome": "DENY", "expected_findings": ["GEOGRAPHY_CROSSWALK_REQUIRED"]
+    },
+    {
+      "name": "first_observed_cannot_be_invented",
+      "mutations": [
+        {"path": "/distribution_assertion/first_observed", "value": "2020-01-01T00:00:00Z"}
+      ],
+      "expected_outcome": "DENY", "expected_findings": ["SCHEMA_INVALID"]
+    },
+    {
+      "name": "valid_time_cannot_reverse",
+      "mutations": [
+        {"path": "/distribution_assertion/valid_from", "value": "2025-12-31T23:59:59Z"},
+        {"path": "/distribution_assertion/valid_to", "value": "2025-01-01T00:00:00Z"}
+      ],
+      "expected_outcome": "DENY", "expected_findings": ["DISTRIBUTION_TIME_INVALID"]
+    },
+    {
+      "name": "descriptor_ref_must_match_version",
+      "mutations": [
+        {"path": "/source_descriptor_version", "value": "2026.05"}
+      ],
+      "expected_outcome": "DENY", "expected_findings": ["SOURCE_DESCRIPTOR_VERSION_MISMATCH"]
+    },
+    {
+      "name": "publication_authority_is_schema_denied",
+      "mutations": [
+        {"path": "/governance/publication_authorized", "value": true}
+      ],
+      "expected_outcome": "DENY", "expected_findings": ["SCHEMA_INVALID"]
+    },
+    {
+      "name": "identity_tamper_is_rejected",
+      "mutations": [
+        {"path": "/subject_ref", "value": "kfm://taxon/synthetic/tampered"}
+      ],
+      "reseal": false,
+      "expected_outcome": "DENY", "expected_findings": ["SPEC_HASH_MISMATCH", "ASSESSMENT_ID_MISMATCH"]
+    }
+  ]
+}

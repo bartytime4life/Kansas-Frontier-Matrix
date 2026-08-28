@@ -1,0 +1,1 @@
+{"case_id":"pmidx-range-out-of-bounds","expected":{"issue_codes":["PMIDX_RANGE_OUT_OF_BOUNDS"],"status":"DENY"},"mutation":"pmidx_range_out_of_bounds"}

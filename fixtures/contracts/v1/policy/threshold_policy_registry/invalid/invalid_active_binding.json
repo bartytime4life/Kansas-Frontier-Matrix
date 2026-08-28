@@ -1,0 +1,48 @@
+{
+  "object_type": "ThresholdPolicyRegistry",
+  "registry_id": "kfm://policy/thresholds/registry/v1",
+  "schema_version": "1.0.0",
+  "status": "PROPOSED_INACTIVE",
+  "canonicalization_profile": "RFC8785-JCS",
+  "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "thresholds": [
+    {
+      "threshold_id": "kfm.threshold.atmosphere.synthetic-materiality.v1",
+      "domain": "atmosphere",
+      "metric": "synthetic_materiality",
+      "threshold_class": "MATERIALITY",
+      "purpose": "Deliberately invalid fixture that attempts to bind an inactive threshold-policy slot.",
+      "value_state": "UNRESOLVED",
+      "operator": null,
+      "value": null,
+      "unit": null,
+      "binding_state": "ACTIVE",
+      "review_state": "HOLD",
+      "effective_from": null,
+      "supersedes": null,
+      "reason_codes": [
+        "NO_VALUE_ADOPTED",
+        "STEWARD_REVIEW_REQUIRED"
+      ],
+      "steward_roles": [
+        "ATMOSPHERE_STEWARD",
+        "POLICY_STEWARD"
+      ],
+      "evidence_refs": [
+        "fixture://threshold-policy-registry/invalid-binding"
+      ],
+      "pressure_refs": [
+        "docs/intake/IDEA_INTAKE.md"
+      ]
+    }
+  ],
+  "governance": {
+    "numeric_policy_adopted": false,
+    "policy_evaluation_authorized": false,
+    "watcher_binding_authorized": false,
+    "source_activation_authorized": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false
+  }
+}

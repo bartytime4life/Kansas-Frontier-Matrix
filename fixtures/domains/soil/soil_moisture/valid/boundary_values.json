@@ -1,0 +1,54 @@
+{
+  "record_id": "soil-moisture-fixture-boundary-0001",
+  "schema_version": "v1",
+  "support_type": "station_observation",
+  "source_descriptor_ref": "src:synthetic-soil-station",
+  "source_role": "fixture_only",
+  "evidence_refs": [
+    "evidence:synthetic-soil-moisture-boundary"
+  ],
+  "spec_hash": "sha256:a66686f8783156849eb5c0a2cc26fb03a5e0cfcd7283fcc35047088b12cbd8f1",
+  "run_receipt_ref": "receipt:synthetic-soil-moisture-run-0002",
+  "readings": [
+    {
+      "station_id": "SYNTHETIC-KS-BOUNDARY",
+      "spatial_support": {
+        "kind": "generalized_county",
+        "county_fips": "99999"
+      },
+      "depth_cm": 0,
+      "measure": "volumetric_water_content",
+      "value": 0,
+      "unit": "m3/m3",
+      "timestamp_iso": "2026-04-15T14:00:00.123456Z",
+      "source_timezone": "UTC",
+      "qc_flags": [
+        "synthetic-boundary"
+      ]
+    },
+    {
+      "station_id": "SYNTHETIC-KS-BOUNDARY",
+      "spatial_support": {
+        "kind": "generalized_county",
+        "county_fips": "99999"
+      },
+      "depth_cm": 0,
+      "measure": "volumetric_water_content",
+      "value": 1,
+      "unit": "m3/m3",
+      "timestamp_iso": "2026-04-15T14:05:00Z",
+      "source_timezone": "UTC",
+      "qc_flags": [
+        "synthetic-boundary"
+      ]
+    }
+  ],
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "rollback_state": "fixture_only"
+  }
+}

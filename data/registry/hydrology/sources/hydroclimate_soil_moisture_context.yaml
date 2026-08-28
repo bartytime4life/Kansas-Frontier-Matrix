@@ -1,0 +1,16 @@
+# source descriptor: hydroclimate_soil_moisture_context
+# domain: hydrology
+# status: PROPOSED — greenfield template
+id: hydroclimate_soil_moisture_context
+domain: hydrology
+role: TBD            # primary | corroborating | context | restricted
+authority: TBD
+rights:
+  license: TBD
+  attribution_required: true
+  redistribution: TBD
+sensitivity_floor: TBD
+update_cadence: TBD
+access_posture: TBD   # public | api_key | steward_only
+citation_template: "TBD"
+ingest_receipt_template: "data/receipts/ingest/hydrology/hydroclimate_soil_moisture_context/<run_id>.json"

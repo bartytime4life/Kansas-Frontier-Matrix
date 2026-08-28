@@ -1,0 +1,365 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/source_retrieval_episode.schema.json",
+  "title": "SourceRetrievalEpisode",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "spec": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "dt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "ref": {
+      "type": "string",
+      "pattern": "^kfm:[a-z0-9][a-z0-9._:/-]{5,220}$"
+    },
+    "nullableSpec": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/spec"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "transport": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "enum": [
+            "SUCCESS",
+            "NOT_MODIFIED",
+            "PARTIAL",
+            "TIMEOUT",
+            "RATE_LIMITED",
+            "AUTH_REQUIRED",
+            "ACCESS_DENIED",
+            "NOT_FOUND",
+            "RETRY_EXHAUSTED",
+            "CANCELLED",
+            "RESPONSE_TOO_LARGE",
+            "INTEGRITY_MISMATCH",
+            "INVALID_RESPONSE_METADATA",
+            "UNSAFE_METADATA",
+            "TRANSPORT_ERROR"
+          ]
+        },
+        "http_status": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 100,
+              "maximum": 599
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "retry_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "elapsed_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3600000
+        },
+        "etag": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 516,
+              "pattern": "^(?:W/)?\"[\\u0021\\u0023-\\u005B\\u005D-\\u007E]{0,512}\"$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "last_modified": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/dt"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "content_length": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "body_digest": {
+          "$ref": "#/$defs/nullableSpec"
+        },
+        "body_bytes": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "content_type": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-z0-9!#$&^_.+-]+/[a-z0-9!#$&^_.+-]+(?:;[ -~]{1,128})?$",
+              "maxLength": 192
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "schema_fingerprint": {
+          "$ref": "#/$defs/nullableSpec"
+        },
+        "semantic_sentinel_digest": {
+          "$ref": "#/$defs/nullableSpec"
+        }
+      },
+      "required": [
+        "category",
+        "http_status",
+        "retry_count",
+        "elapsed_ms",
+        "etag",
+        "last_modified",
+        "content_length",
+        "body_digest",
+        "body_bytes",
+        "content_type",
+        "schema_fingerprint",
+        "semantic_sentinel_digest"
+      ]
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "CAPTURED",
+            "NO_CHANGE",
+            "RETRY_REQUIRED",
+            "BLOCKED",
+            "ERROR"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "RETRIEVAL_BODY_CAPTURED",
+              "SOURCE_NOT_MODIFIED",
+              "FULL_GET_VERIFICATION_REQUIRED",
+              "RETRIEVAL_TIMEOUT",
+              "SOURCE_RATE_LIMITED",
+              "RETRY_BUDGET_EXHAUSTED",
+              "RETRIEVAL_CANCELLED",
+              "AUTH_REQUIRED",
+              "ACCESS_DENIED",
+              "SOURCE_NOT_FOUND",
+              "RESPONSE_TOO_LARGE",
+              "INTEGRITY_CHECK_FAILED",
+              "PARTIAL_RESPONSE_DENIED",
+              "INVALID_RESPONSE_METADATA",
+              "UNSAFE_RESPONSE_DENIED",
+              "TRANSPORT_ERROR"
+            ]
+          }
+        }
+      },
+      "required": [
+        "status",
+        "reason_codes"
+      ]
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "execution_mode": {
+          "const": "FIXTURE_ONLY"
+        },
+        "network_attempted": {
+          "const": false
+        },
+        "source_activated": {
+          "const": false
+        },
+        "source_artifact_created": {
+          "const": false
+        },
+        "receipt_created": {
+          "const": false
+        },
+        "evidence_created": {
+          "const": false
+        },
+        "raw_write_performed": {
+          "const": false
+        },
+        "current_data_claimed": {
+          "const": false
+        },
+        "no_current_data_claimed": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        }
+      },
+      "required": [
+        "execution_mode",
+        "network_attempted",
+        "source_activated",
+        "source_artifact_created",
+        "receipt_created",
+        "evidence_created",
+        "raw_write_performed",
+        "current_data_claimed",
+        "no_current_data_claimed",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed"
+      ]
+    }
+  },
+  "properties": {
+    "object_type": {
+      "const": "SourceRetrievalEpisode"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile": {
+      "const": "kfm.source-retrieval-episode.fixture.v1"
+    },
+    "episode_id": {
+      "type": "string",
+      "pattern": "^kfm:source-retrieval-episode:[a-f0-9]{24}$"
+    },
+    "source_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$"
+    },
+    "source_descriptor_ref": {
+      "type": "string",
+      "pattern": "^kfm://source/[a-z0-9][a-z0-9._:-]{2,127}$"
+    },
+    "retrieval_profile_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "attempted_at": {
+      "$ref": "#/$defs/dt"
+    },
+    "completed_at": {
+      "$ref": "#/$defs/dt"
+    },
+    "method": {
+      "enum": [
+        "GET",
+        "HEAD"
+      ]
+    },
+    "redacted_locator": {
+      "type": "string",
+      "format": "uri",
+      "minLength": 12,
+      "maxLength": 512
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "conditional": {
+          "type": "boolean"
+        },
+        "if_none_match_present": {
+          "type": "boolean"
+        },
+        "if_modified_since_present": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "conditional",
+        "if_none_match_present",
+        "if_modified_since_present"
+      ]
+    },
+    "transport": {
+      "$ref": "#/$defs/transport"
+    },
+    "result": {
+      "$ref": "#/$defs/result"
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/spec"
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "episode_id",
+    "source_id",
+    "source_descriptor_ref",
+    "retrieval_profile_ref",
+    "attempted_at",
+    "completed_at",
+    "method",
+    "redacted_locator",
+    "request",
+    "transport",
+    "result",
+    "governance",
+    "spec_hash"
+  ],
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/source/source_retrieval_episode.md",
+    "authority": "NONE"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "artifact": {
+    "artifact_kind": "semantic_contract",
+    "authority_owner": "semantic_contract_authority",
+    "current_path": null,
+    "execution_role": "none",
+    "exposure": "public",
+    "lifecycle_stage": "not_applicable",
+    "mutability": "versioned",
+    "name": "root_registry_contract",
+    "physical_storage": "git",
+    "proposed_path": "contracts/governance/root_registry.md",
+    "retention": "durable",
+    "scope_id": "directory_governance",
+    "scope_kind": "object_family"
+  },
+  "base_ref": "29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf",
+  "candidate_roots": [
+    "contracts/"
+  ],
+  "canonical_source": null,
+  "consumer_refs": [],
+  "decision_id": "pathdec:root_registry_contract",
+  "doctrine": {
+    "decision_ref": "ADR-0029",
+    "digest": "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+    "path": "docs/doctrine/directory-rules.md"
+  },
+  "evaluated_at": "2026-08-07T20:30:00Z",
+  "evidence": [
+    "repo:contracts/governance/root_registry.md",
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "repo:docs/doctrine/directory-rules.md"
+  ],
+  "outcome": "PLACE",
+  "reason_codes": [
+    "unique_canonical_root"
+  ],
+  "registry": {
+    "base_ref": "29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf",
+    "digest": "sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641",
+    "path": "control_plane/root_registry.yaml"
+  },
+  "rules": [
+    "DIR-AUTHROOT-002",
+    "DIR-OUTCOME-001",
+    "DIR-SIGNATURE-001"
+  ],
+  "split_targets": [],
+  "version": "v1"
+}

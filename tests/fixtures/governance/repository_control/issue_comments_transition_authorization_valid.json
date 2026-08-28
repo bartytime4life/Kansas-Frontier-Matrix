@@ -1,0 +1,15 @@
+[
+  [
+    {
+      "id": 9001001,
+      "html_url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-9001001",
+      "user": {
+        "login": "bartytime4life"
+      },
+      "author_association": "OWNER",
+      "created_at": "2026-07-30T20:00:00Z",
+      "updated_at": "2026-07-30T20:00:00Z",
+      "body": "## Exact ready-and-merge transition\n\n<!-- KFM_REPOSITORY_TRANSITION_AUTHORIZATION_V1\n{\"schema_version\":\"1.0.0\",\"authorization_id\":\"kfm-rta-pr-9001-head-222222222222\",\"repository\":\"bartytime4life/Kansas-Frontier-Matrix\",\"control_issue\":1675,\"pr_number\":9001,\"base_sha\":\"1111111111111111111111111111111111111111\",\"head_sha\":\"2222222222222222222222222222222222222222\",\"authorizing_actor\":\"bartytime4life\",\"decision\":\"ALLOW_READY_AND_MERGE\",\"expires_at\":\"2026-07-30T22:00:00Z\",\"reason\":\"Synthetic exact-head transition fixture.\",\"evidence_refs\":[\"fixture://repository-control/pr/9001/head/222222222222\"]}\n-->"
+    }
+  ]
+]

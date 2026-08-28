@@ -1,0 +1,427 @@
+{
+  "profile": "kfm.evidence.external-service-operation-receipt.fixture.v1",
+  "base_candidate": {
+    "object_type": "ExternalServiceOperationReceiptCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.evidence.external-service-operation-receipt.fixture.v1",
+    "profile_spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "receipt_ref": "kfm:external-service-operation-receipt:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "source_card": "KFM-P18-INV-419",
+    "observed_at": "2026-08-11T17:00:01Z",
+    "intended_use": "WORKFLOW_REPRODUCIBILITY",
+    "operation_state": "COMPLETE",
+    "operation": {
+      "platform_descriptor": {
+        "ref": "kfm://external-platform/synthetic-hosted-gis",
+        "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "resolution": "RESOLVED"
+      },
+      "service_name": "Synthetic hosted overlay analysis",
+      "service_version": {
+        "value": "2026.08",
+        "resolution": "RESOLVED"
+      },
+      "operation_kind": "HOSTED_ANALYSIS",
+      "operation_spec": {
+        "ref": "kfm://operation-spec/synthetic-overlay-v1",
+        "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "resolution": "RESOLVED"
+      },
+      "input_snapshot": {
+        "ref": "kfm://snapshot/synthetic-overlay-input",
+        "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "resolution": "RESOLVED"
+      },
+      "output_artifact": {
+        "ref": "kfm://artifact/synthetic-overlay-output",
+        "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "resolution": "RESOLVED"
+      }
+    },
+    "consumption": {
+      "status": "MEASURED",
+      "credit_quantity": "12.5",
+      "cost_minor_units": 2500,
+      "currency": "USD",
+      "measurement_ref": "kfm://receipt/synthetic-provider-usage",
+      "pricing_ref": "kfm://pricing/synthetic-provider-2026-08"
+    },
+    "dependency": {
+      "credential_required": true,
+      "network_required": true,
+      "vendor_locked": true,
+      "dependency_caveat": "Replay requires provider access, compatible credentials, and the declared service version."
+    },
+    "replay": {
+      "posture": "REFERENCE_ONLY",
+      "policy_ref": "kfm://policy/replay/external-service-reference-only",
+      "limitations": [
+        "CREDENTIALS_REQUIRED",
+        "SERVICE_VERSION_PINNED",
+        "VENDOR_RUNTIME_REQUIRED"
+      ]
+    },
+    "disclosure": {
+      "external_service_cost_caveat": "The declared credits and cost are unauthenticated workflow metadata and replay still depends on the named external service.",
+      "evidence_bundle_refs": [],
+      "review_record_refs": [],
+      "release_manifest_ref": null
+    },
+    "limitations": [
+      "DECLARATION_ONLY",
+      "NO_COST_AUTHENTICATION",
+      "NO_EVIDENCE_RESOLUTION",
+      "NO_EXTERNAL_OPERATION",
+      "NO_PUBLICATION_AUTHORITY"
+    ],
+    "authority_claims": {
+      "operation_correctness": false,
+      "cost_authentication": false,
+      "provider_endorsement": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "deployment_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "pass_measured_credits",
+      "patch": {},
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_estimated_cost",
+      "patch": {
+        "consumption": {
+          "status": "ESTIMATED",
+          "credit_quantity": null,
+          "measurement_ref": null
+        }
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_not_charged",
+      "patch": {
+        "consumption": {
+          "status": "NOT_CHARGED",
+          "credit_quantity": null,
+          "cost_minor_units": null,
+          "currency": null,
+          "measurement_ref": null,
+          "pricing_ref": null
+        }
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_exact_provider",
+      "patch": {
+        "replay": {
+          "posture": "EXACT_PROVIDER",
+          "limitations": [
+            "CREDENTIALS_REQUIRED",
+            "SERVICE_VERSION_PINNED",
+            "VENDOR_RUNTIME_REQUIRED"
+          ]
+        }
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_governed_replacement",
+      "patch": {
+        "dependency": {
+          "vendor_locked": false,
+          "dependency_caveat": "A governed replacement is declared, but numerical equivalence is not authenticated by this receipt."
+        },
+        "replay": {
+          "posture": "GOVERNED_REPLACEMENT",
+          "policy_ref": "kfm://policy/replay/synthetic-governed-replacement",
+          "limitations": [
+            "EQUIVALENCE_NOT_AUTHENTICATED",
+            "SERVICE_VERSION_PINNED"
+          ]
+        }
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_public_support",
+      "patch": {
+        "intended_use": "PUBLIC_CLAIM_SUPPORT_CANDIDATE",
+        "disclosure": {
+          "evidence_bundle_refs": [
+            "kfm://evidence-bundle/synthetic-external-operation"
+          ],
+          "review_record_refs": [
+            "kfm://review/synthetic-external-operation"
+          ]
+        }
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "abstain_incomplete",
+      "patch": {"operation_state": "INCOMPLETE"},
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": ["OPERATION_INCOMPLETE"]
+      }
+    },
+    {
+      "name": "abstain_platform_unresolved",
+      "patch": {
+        "operation": {
+          "platform_descriptor": {"resolution": "UNRESOLVED"}
+        }
+      },
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": ["REFERENCE_UNRESOLVED"]
+      }
+    },
+    {
+      "name": "abstain_service_version_unresolved",
+      "patch": {
+        "operation": {
+          "service_version": {
+            "value": null,
+            "resolution": "UNRESOLVED"
+          }
+        }
+      },
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": ["SERVICE_VERSION_UNRESOLVED"]
+      }
+    },
+    {
+      "name": "abstain_consumption_unresolved",
+      "patch": {
+        "consumption": {
+          "status": "UNRESOLVED",
+          "credit_quantity": null,
+          "cost_minor_units": null,
+          "currency": null,
+          "measurement_ref": null,
+          "pricing_ref": null
+        }
+      },
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": ["CONSUMPTION_UNRESOLVED"]
+      }
+    },
+    {
+      "name": "abstain_replay_policy_unresolved",
+      "patch": {
+        "replay": {
+          "posture": "UNRESOLVED",
+          "policy_ref": null
+        }
+      },
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": ["REPLAY_POLICY_UNRESOLVED"]
+      }
+    },
+    {
+      "name": "deny_receipt_ref_tamper",
+      "patch": {},
+      "tamper": "receipt_ref",
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["RECEIPT_REF_MISMATCH"]
+      }
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "patch": {},
+      "tamper": "profile_hash",
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["PROFILE_SPEC_HASH_MISMATCH"]
+      }
+    },
+    {
+      "name": "deny_measured_without_value",
+      "patch": {
+        "consumption": {
+          "credit_quantity": null,
+          "cost_minor_units": null,
+          "currency": null
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["MEASURED_CONSUMPTION_VALUE_REQUIRED"]
+      }
+    },
+    {
+      "name": "deny_measured_without_measurement_ref",
+      "patch": {
+        "consumption": {"measurement_ref": null}
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["MEASUREMENT_REFERENCE_REQUIRED"]
+      }
+    },
+    {
+      "name": "deny_estimated_without_pricing_ref",
+      "patch": {
+        "consumption": {
+          "status": "ESTIMATED",
+          "pricing_ref": null
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["PRICING_REFERENCE_REQUIRED"]
+      }
+    },
+    {
+      "name": "deny_cost_currency_pair",
+      "patch": {
+        "consumption": {"currency": null}
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["COST_CURRENCY_PAIR_REQUIRED"]
+      }
+    },
+    {
+      "name": "deny_not_charged_with_amount",
+      "patch": {
+        "consumption": {"status": "NOT_CHARGED"}
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["NOT_CHARGED_FIELDS_MUST_BE_EMPTY"]
+      }
+    },
+    {
+      "name": "deny_public_missing_caveat",
+      "patch": {
+        "intended_use": "PUBLIC_CLAIM_SUPPORT_CANDIDATE",
+        "disclosure": {
+          "external_service_cost_caveat": null,
+          "evidence_bundle_refs": ["kfm://evidence-bundle/synthetic"],
+          "review_record_refs": ["kfm://review/synthetic"]
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "EXTERNAL_SERVICE_COST_CAVEAT_REQUIRED",
+          "PUBLIC_COST_CAVEAT_REQUIRED"
+        ]
+      }
+    },
+    {
+      "name": "deny_public_missing_evidence",
+      "patch": {
+        "intended_use": "PUBLIC_CLAIM_SUPPORT_CANDIDATE",
+        "disclosure": {
+          "review_record_refs": ["kfm://review/synthetic"]
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["PUBLIC_EVIDENCE_REFERENCE_REQUIRED"]
+      }
+    },
+    {
+      "name": "deny_public_missing_review",
+      "patch": {
+        "intended_use": "PUBLIC_CLAIM_SUPPORT_CANDIDATE",
+        "disclosure": {
+          "evidence_bundle_refs": ["kfm://evidence-bundle/synthetic"]
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["PUBLIC_REVIEW_REFERENCE_REQUIRED"]
+      }
+    },
+    {
+      "name": "deny_noncanonical_evidence_refs",
+      "patch": {
+        "disclosure": {
+          "evidence_bundle_refs": [
+            "kfm://evidence-bundle/z",
+            "kfm://evidence-bundle/a"
+          ]
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["REFERENCE_ARRAY_NOT_CANONICAL"]
+      }
+    },
+    {
+      "name": "deny_replay_policy_missing",
+      "patch": {
+        "replay": {"policy_ref": null}
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["REPLAY_POLICY_REQUIRED"]
+      }
+    },
+    {
+      "name": "deny_replacement_vendor_lock",
+      "patch": {
+        "replay": {"posture": "GOVERNED_REPLACEMENT"}
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["REPLACEMENT_VENDOR_LOCK_CONFLICT"]
+      }
+    },
+    {
+      "name": "deny_unresolved_version_value_present",
+      "patch": {
+        "operation": {
+          "service_version": {"resolution": "UNRESOLVED"}
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["SERVICE_VERSION_RESOLUTION_MISMATCH"]
+      }
+    },
+    {
+      "name": "deny_unresolved_consumption_fields_present",
+      "patch": {
+        "consumption": {"status": "UNRESOLVED"}
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["UNRESOLVED_CONSUMPTION_FIELDS_PRESENT"]
+      }
+    },
+    {
+      "name": "error_operation",
+      "patch": {"operation_state": "ERROR"},
+      "expected": {
+        "outcome": "ERROR",
+        "codes": ["OPERATION_ERROR"]
+      }
+    },
+    {
+      "name": "error_schema_unknown_field",
+      "patch": {"unexpected_field": true},
+      "expected": {
+        "outcome": "ERROR",
+        "codes": ["SCHEMA_INVALID"]
+      }
+    }
+  ]
+}

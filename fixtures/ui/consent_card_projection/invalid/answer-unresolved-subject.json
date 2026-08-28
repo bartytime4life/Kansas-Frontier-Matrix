@@ -1,0 +1,14 @@
+{
+  "profile": "kfm.explorer.consent-card.public-safe.v1",
+  "id": "kfm:consent-card:synthetic:unresolved-subject",
+  "outcome": "ANSWER",
+  "reason_code": "CONSENT_CARD_READY",
+  "layer_ref": "kfm://layer/synthetic/unresolved-subject",
+  "layer_label": "Synthetic layer",
+  "basis": "Synthetic basis.",
+  "scope": ["Synthetic scope"],
+  "expires_at": null,
+  "subject_consent_state": "UNRESOLVED",
+  "obligation_set_ref": "kfm://policy/obligation-set/c05e17c05e17c05e17c05e17",
+  "policy_decision_ref": "kfm://policy/decision/synthetic-unresolved-subject"
+}

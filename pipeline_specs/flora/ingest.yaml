@@ -1,0 +1,4 @@
+# pipeline_specs :: flora :: ingest
+name: flora-ingest
+version: 1
+stages: []

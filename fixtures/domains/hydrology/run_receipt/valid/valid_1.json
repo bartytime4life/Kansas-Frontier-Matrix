@@ -1,0 +1,19 @@
+{
+  "run_id": "hrun1",
+  "stage": "ingest",
+  "inputs": [
+    "raw/hydro1"
+  ],
+  "outputs": [
+    "processed/hydro1"
+  ],
+  "code_ref": "git:hydro",
+  "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "source_descriptor_refs": [
+    "src:hydro"
+  ],
+  "validation_refs": [
+    "val:1"
+  ],
+  "outcome": "SUCCESS"
+}

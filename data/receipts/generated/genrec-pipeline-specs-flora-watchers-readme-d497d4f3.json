@@ -1,0 +1,152 @@
+{
+  "receipt_id": "genrec-pipeline-specs-flora-watchers-readme-d497d4f3",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipeline_specs/flora/watchers/README.md"
+  ],
+  "artifact_hashes": {
+    "pipeline_specs/flora/watchers/README.md": "sha256:d497d4f36ea1f1dc9e4e3398b81abbed95f99826155b84ed1b44dbede33f2df2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-15-session"
+  },
+  "prompt_or_contract": "sha256:13a34c056c550c5714f7e6b377ab310aa5305dd04cfe3e34996c80c4ee82ca7e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/pipeline_specs/flora/watchers/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/pipeline_specs/flora/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/pipeline_specs/watchers/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/pipeline_specs/flora/plants_drift_watcher.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/pipeline_specs/watchers/plants_drift.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/pipelines/watchers/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/pipelines/domains/flora/watchers/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/pipelines/watchers/plants/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/configs/domains/flora/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/data/registry/sources/flora/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/data/receipts/flora/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/docs/domains/flora/SENSITIVITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/policy/domains/flora/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/policy/sensitivity/flora/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/tests/domains/flora/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/fixtures/domains/flora/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/fixtures/domains/flora/plants_drift/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/.github/workflows/domain-flora.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    "pipeline_specs/flora/watchers/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Latest main commit, target blob, direct sublane inventory, external placeholders, parent/shared specs, executable watcher documentation, registry, receipt, sensitivity, policy, tests, fixtures, workflow, ownership, and duplicate branch/PR state were inspected."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The README remains under pipeline_specs/ as declarative intent; the receipt uses data/receipts/generated/. No canonical root, parallel authority home, lifecycle shortcut, or public path is introduced."
+    },
+    {
+      "gate": "bounded-direct-sublane-inventory",
+      "outcome": "PASS",
+      "reason": "The requested Flora watcher-spec sublane was bounded as README-only; no concrete profile was found directly under it."
+    },
+    {
+      "gate": "external-placeholder-classification",
+      "outcome": "PASS",
+      "reason": "pipeline_specs/flora/plants_drift_watcher.yaml and pipeline_specs/watchers/plants_drift.yaml were opened and confirmed as seven-line PROPOSED inventory placeholders, not active specs."
+    },
+    {
+      "gate": "placement-and-ownership-conflict",
+      "outcome": "PASS",
+      "reason": "The README surfaces three declarative placement candidates and two executable ownership candidates without selecting or duplicating authority."
+    },
+    {
+      "gate": "what-versus-how-boundary",
+      "outcome": "PASS",
+      "reason": "Declarative intent remains separate from executable watchers, connectors, source admission, lifecycle writers, policy, evidence, catalog, release, and public clients."
+    },
+    {
+      "gate": "flora-sensitivity-no-leak",
+      "outcome": "PASS",
+      "reason": "No exact rare-plant locality, herbarium clue, cultural knowledge, restoration-sensitive detail, private identity, geoprivacy parameter, credential, private endpoint, or reconstructive example was introduced."
+    },
+    {
+      "gate": "markdown-and-yaml-structure",
+      "outcome": "PASS",
+      "reason": "Final newline, headings, fences, internal links, tables, KFM meta block, and the explicitly inactive illustrative YAML were checked."
+    },
+    {
+      "gate": "receipt-proof-release-separation",
+      "outcome": "PASS",
+      "reason": "The README uses the verified data/receipts/flora/ parent, preserves unresolved subtype layout, and keeps receipts separate from proofs, catalogs, policy, and release decisions."
+    },
+    {
+      "gate": "runtime-and-executable-tests",
+      "outcome": "SKIPPED",
+      "reason": "Documentation-only change; no active spec, parser, scheduler, consumer, source activation, pipeline, or runtime behavior changed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {"id":"EV-01","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/commit/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b"},
+    {"id":"EV-02","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/pipeline_specs/flora/watchers/README.md"},
+    {"id":"EV-03","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/pipeline_specs/flora/README.md"},
+    {"id":"EV-04","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/pipeline_specs/watchers/README.md"},
+    {"id":"EV-05","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/pipeline_specs/flora/plants_drift_watcher.yaml"},
+    {"id":"EV-06","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/pipeline_specs/watchers/plants_drift.yaml"},
+    {"id":"EV-07","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/pipelines/watchers/README.md"},
+    {"id":"EV-08","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/pipelines/domains/flora/watchers/README.md"},
+    {"id":"EV-09","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/pipelines/watchers/plants/README.md"},
+    {"id":"EV-10","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/configs/domains/flora/README.md"},
+    {"id":"EV-11","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/data/registry/sources/flora/README.md"},
+    {"id":"EV-12","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/data/receipts/flora/README.md"},
+    {"id":"EV-13","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/docs/domains/flora/SENSITIVITY.md"},
+    {"id":"EV-14","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/policy/domains/flora/README.md"},
+    {"id":"EV-15","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/policy/sensitivity/flora/README.md"},
+    {"id":"EV-16","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/tests/domains/flora/README.md"},
+    {"id":"EV-17","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/fixtures/domains/flora/README.md"},
+    {"id":"EV-18","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/fixtures/domains/flora/plants_drift/README.md"},
+    {"id":"EV-19","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/.github/workflows/domain-flora.yml"},
+    {"id":"EV-20","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/.github/CODEOWNERS"},
+    {"id":"EV-21","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/.github/PULL_REQUEST_TEMPLATE.md"},
+    {"id":"EV-22","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/schemas/contracts/v1/receipts/generated_receipt.schema.json"},
+    {"id":"EV-23","validated":true,"evidence_ref":"github://bartytime4life/Kansas-Frontier-Matrix/blob/6a6abd1cfadf181c093f21d0eb36a38f7ca3ed8b/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-15T18:23:09Z",
+  "emitter": "OpenAI GPT-5.6 Thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Pending human review. This generated receipt does not authorize merge, source activation, watcher scheduling, network access, lifecycle admission, evidence closure, catalog updates, release, or publication. The README was normalized in a transparent second commit before receipt emission so this hash matches the final committed artifact."
+}

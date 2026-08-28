@@ -1,0 +1,180 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/hazards/drought_observation.schema.json",
+  "title": "DroughtObservation",
+  "type": "object",
+  "description": "A time-bounded physical drought observation or classification record. Preserves source identity, observed/valid time, geometry reference, severity vocabulary, and evidence binding. Must never carry a legal or administrative stage. Must never be derived from a DroughtDeclaration. This object cannot be substituted for DroughtDeclaration.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "anti_collapse_rule": "DroughtObservation and DroughtDeclaration are separate object families. USDM D0-D4 polygons must never be mapped to Kansas watch/warning/emergency stages.",
+    "contract_doc": "contracts/domains/hazards/drought_observation.md",
+    "fixtures_root": "fixtures/domains/hazards/drought_observation/",
+    "validator": "tools/validators/hazards/validate_drought_families.py",
+    "policy": "policy/domains/hazards/",
+    "not_for_life_safety": true
+  },
+  "properties": {
+    "_fixture_meta": {
+      "type": "object",
+      "description": "Optional fixture-only metadata. Not present in production records.",
+      "additionalProperties": true
+    },
+    "object_type": {
+      "type": "string",
+      "const": "DroughtObservation",
+      "description": "Discriminator field. Must be exactly 'DroughtObservation' to prevent substitution with DroughtDeclaration."
+    },
+    "schema_version": {
+      "type": "string",
+      "enum": ["v1"],
+      "description": "Schema version for this object."
+    },
+    "observation_id": {
+      "type": "string",
+      "pattern": "^obs:[a-z0-9_:-]+$",
+      "description": "Stable identifier for this observation record."
+    },
+    "profile_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Version of the source descriptor profile used when this observation was captured."
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Reference to the governed source descriptor. Required; must be bound to a known source identity."
+    },
+    "source_resolution_status": {
+      "type": "string",
+      "enum": ["bound", "unresolved"],
+      "description": "Resolution state of source_ref. Must be 'bound' before any downstream use."
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The observed or valid time of the physical phenomenon — the instant or start of the interval the observation describes."
+    },
+    "observed_interval_end": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "End of the observed interval, or null for point-in-time observations."
+    },
+    "retrieved_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Time at which the observation record was retrieved or ingested. Distinct from observed_at and publication_time."
+    },
+    "publication_time": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Time the source published or released this observation. Distinct from observed_at and retrieved_at."
+    },
+    "geometry_ref": {
+      "type": ["string", "null"],
+      "minLength": 1,
+      "description": "Reference to the governed geometry authority record, or null while unresolved."
+    },
+    "geometry_resolution_status": {
+      "type": "string",
+      "enum": ["bound", "unresolved"],
+      "description": "Resolution state of geometry_ref. Geometry overlap is evidence of relationship only — not identity or authority equivalence."
+    },
+    "geometry_version": {
+      "type": ["string", "null"],
+      "description": "Version of the geometry at time of observation, or null if unresolved."
+    },
+    "classification_vocabulary": {
+      "type": "string",
+      "enum": ["usdm_d0_d4", "palmer_pdsi", "spi", "spei", "custom"],
+      "description": "Source-native classification vocabulary. Must never be silently recoded."
+    },
+    "source_native_severity": {
+      "type": "string",
+      "enum": ["None", "D0", "D1", "D2", "D3", "D4"],
+      "description": "Source-native severity code. Preserved exactly as emitted by source. Must never be mapped to Kansas legal stages (watch/warning/emergency)."
+    },
+    "method_ref": {
+      "type": ["string", "null"],
+      "description": "Reference to the method or product identity used to produce this observation."
+    },
+    "superseded_by": {
+      "type": ["string", "null"],
+      "description": "Reference to the observation_id that supersedes this record, if any. Null means not superseded."
+    },
+    "correction_of": {
+      "type": ["string", "null"],
+      "description": "Reference to the observation_id this record corrects, if any."
+    },
+    "rights_status": {
+      "type": "string",
+      "enum": ["unknown", "public_domain", "open_license", "restricted", "proprietary"],
+      "description": "Rights posture for this observation record."
+    },
+    "sensitivity": {
+      "type": "string",
+      "enum": ["public", "internal", "restricted", "sensitive"],
+      "description": "Sensitivity classification for this record."
+    },
+    "release_posture": {
+      "type": "string",
+      "enum": ["not_released", "candidate", "released"],
+      "description": "Release state of this observation. Does not grant publication authority."
+    },
+    "legal_stage": {
+      "not": {},
+      "description": "DroughtObservation must never carry a legal stage. This field must not be present."
+    },
+    "declaration_derived": {
+      "not": {},
+      "description": "DroughtObservation must not be derived from a DroughtDeclaration. This field must not be present."
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "observation_id",
+    "profile_version",
+    "source_ref",
+    "source_resolution_status",
+    "observed_at",
+    "retrieved_at",
+    "geometry_ref",
+    "geometry_resolution_status",
+    "classification_vocabulary",
+    "source_native_severity",
+    "rights_status",
+    "sensitivity",
+    "release_posture"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "geometry_resolution_status": {"const": "bound"}
+        },
+        "required": ["geometry_resolution_status"]
+      },
+      "then": {
+        "properties": {
+          "geometry_ref": {"type": "string", "minLength": 1}
+        },
+        "required": ["geometry_ref"]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "source_resolution_status": {"const": "bound"}
+        },
+        "required": ["source_resolution_status"]
+      },
+      "then": {
+        "properties": {
+          "source_ref": {"type": "string", "minLength": 1}
+        },
+        "required": ["source_ref"]
+      }
+    }
+  ],
+  "additionalProperties": false
+}

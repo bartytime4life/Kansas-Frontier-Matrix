@@ -1,0 +1,79 @@
+{
+  "artifact_id": "runtime-proof-artifact:invalidated-answer",
+  "artifact_kind": "ACTUAL_RESPONSE",
+  "artifact_ref": "kfm://artifact/runtime-proof/invalidated-answer@sha256:1d7919d65032574b6efe78157ffeb98c24a949132274859540ea778c332c540b",
+  "case_id": "invalidated-answer",
+  "content": {
+    "byte_size": 256,
+    "canonicalization_profile": "kfm-canonical-json-v1",
+    "digest": "sha256:1d7919d65032574b6efe78157ffeb98c24a949132274859540ea778c332c540b",
+    "encoding": "utf-8",
+    "media_type": "application/json"
+  },
+  "golden_promotion": {
+    "artifact_digest": null,
+    "authority": "TEST_FIXTURE_ONLY",
+    "decided_at": null,
+    "decision": "NOT_REQUESTED",
+    "decision_id": null,
+    "expires_at": null,
+    "review_record_refs": []
+  },
+  "governance": {
+    "authority_created": false,
+    "evidence_closure_claimed": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "publication_authorized": false,
+    "release_authorized": false,
+    "release_ref": null
+  },
+  "invalidation": {
+    "correction_ref": null,
+    "deletion_receipt_ref": null,
+    "reason_codes": [
+      "SUPERSEDED"
+    ],
+    "superseded_by_ref": "kfm://artifact/runtime-proof/replacement-answer@sha256:95713e9cbdd1dfcb2d4080c2537f418d43ca0da25f0d7d6631f4f7c97b89dc47"
+  },
+  "lifecycle": {
+    "expires_at": null,
+    "previous_state": "STALE",
+    "prior_record_ref": "kfm://runtime-proof-record/stale-answer@v1",
+    "reason_codes": [
+      "STATE_INVALIDATED"
+    ],
+    "state": "INVALIDATED",
+    "transitioned_at": "2026-11-07T00:00:00Z"
+  },
+  "object_type": "GeneratedRuntimeProofArtifact",
+  "profile": {
+    "profile_id": "kfm://profile/runtime-proof/generated-artifact@v1",
+    "profile_version": "1.0.0",
+    "spec_hash": "sha256:8021456f8acaa98f1502ce75f93983f89f43390d133c24535623774440d31f45"
+  },
+  "provenance": {
+    "generated_at": "2026-08-05T00:00:00Z",
+    "generator_id": "kfm/runtime-proof-fixture-emitter",
+    "generator_version": "1.0.0",
+    "input_refs": [
+      "kfm://fixture/runtime-proof/invalidated-answer/expected",
+      "kfm://fixture/runtime-proof/invalidated-answer/request"
+    ],
+    "run_receipt_ref": "kfm://receipt/runtime-proof/invalidated-answer@v1"
+  },
+  "review": {
+    "review_record_refs": [
+      "kfm://review/runtime-proof/invalidated-answer@v1"
+    ],
+    "state": "APPROVED"
+  },
+  "safety": {
+    "contains_personal_data": false,
+    "contains_precise_sensitive_geometry": false,
+    "contains_secrets": false,
+    "data_class": "SYNTHETIC_PUBLIC_SAFE",
+    "public_use_allowed": false
+  },
+  "schema_version": "1.0.0"
+}

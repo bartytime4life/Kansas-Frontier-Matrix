@@ -1,0 +1,1323 @@
+{
+  "profile": "kfm.governance.temporal-retention-disposition.fixture.v1",
+  "cases": [
+    {
+      "case_id": "pass_retain_complete_history",
+      "expected_outcome": "PASS",
+      "expected_findings": [],
+      "candidate": {
+        "object_type": "TemporalRetentionDispositionAssessment",
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.temporal-retention-disposition.fixture.v1",
+        "assessment_id": "kfm:temporal-retention:d8380e5860403a8c0e7715fd",
+        "assessment_state": "COMPLETE",
+        "subject": {
+          "record_family_id": "synthetic-claim-history",
+          "record_scope_ref": "kfm://record-scope/synthetic-claim-history",
+          "disposition": "RETAIN",
+          "proposed_at": "2026-08-11T12:00:00Z",
+          "effective_at": null,
+          "input_record_count": 100,
+          "resulting_record_count": 100,
+          "history_preserved": true,
+          "reversible": true
+        },
+        "dependencies": {
+          "evidence_state": "RESOLVED",
+          "evidence_refs": [
+            "kfm://evidence/synthetic-history-support"
+          ],
+          "correction_state": "NONE",
+          "correction_refs": [],
+          "release_state": "ACTIVE",
+          "release_refs": [
+            "kfm://release/synthetic-history-v1"
+          ],
+          "rollback_target_ref": null
+        },
+        "retention_controls": {
+          "policy_state": "VERIFIED",
+          "policy_ref": "kfm://policy/synthetic-temporal-retention-v1",
+          "legal_basis_state": "NOT_REQUIRED",
+          "legal_basis_ref": null,
+          "erasure_obligation": "NONE",
+          "archive_ref": null,
+          "disposition_receipt_ref": null,
+          "tombstone_ref": null,
+          "proof_preservation": "FULL",
+          "minimization_required": false
+        },
+        "decision": {
+          "outcome": "PASS",
+          "recommendation": "READY_FOR_REVIEW",
+          "reason_codes": [
+            "RETENTION_CONTROLS_COHERENT"
+          ],
+          "review_required": true,
+          "execution_authorized": false
+        },
+        "authority": {
+          "retention_policy_authority": false,
+          "erasure_authority": false,
+          "deletion_authority": false,
+          "evidence_mutation_authority": false,
+          "correction_authority": false,
+          "release_authority": false,
+          "lifecycle_write_authority": false,
+          "publication_authority": false
+        },
+        "limitations": [
+          "fixture_only",
+          "no_disposition_execution",
+          "no_evidence_or_history_deletion",
+          "no_policy_or_erasure_authority",
+          "no_release_or_publication_authority"
+        ],
+        "spec_hash": "sha256:d8380e5860403a8c0e7715fd6403d2630f9929675c07d295412b5344bfc55f2e"
+      }
+    },
+    {
+      "case_id": "pass_archive_complete_history",
+      "expected_outcome": "PASS",
+      "expected_findings": [],
+      "candidate": {
+        "object_type": "TemporalRetentionDispositionAssessment",
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.temporal-retention-disposition.fixture.v1",
+        "assessment_id": "kfm:temporal-retention:83c6490bb11559d59154b179",
+        "assessment_state": "COMPLETE",
+        "subject": {
+          "record_family_id": "synthetic-observation-history",
+          "record_scope_ref": "kfm://record-scope/synthetic-observation-history",
+          "disposition": "ARCHIVE",
+          "proposed_at": "2026-08-11T12:00:00Z",
+          "effective_at": "2026-09-01T00:00:00Z",
+          "input_record_count": 100,
+          "resulting_record_count": 100,
+          "history_preserved": true,
+          "reversible": true
+        },
+        "dependencies": {
+          "evidence_state": "RESOLVED",
+          "evidence_refs": [
+            "kfm://evidence/synthetic-history-support"
+          ],
+          "correction_state": "RESOLVED",
+          "correction_refs": [
+            "kfm://correction/synthetic-history-corrections"
+          ],
+          "release_state": "ACTIVE",
+          "release_refs": [
+            "kfm://release/synthetic-history-v1"
+          ],
+          "rollback_target_ref": "kfm://rollback/synthetic-history-archive-v1"
+        },
+        "retention_controls": {
+          "policy_state": "VERIFIED",
+          "policy_ref": "kfm://policy/synthetic-temporal-retention-v1",
+          "legal_basis_state": "NOT_REQUIRED",
+          "legal_basis_ref": null,
+          "erasure_obligation": "NONE",
+          "archive_ref": "kfm://archive/synthetic-history-v1",
+          "disposition_receipt_ref": "kfm://receipt/synthetic-archive-plan-v1",
+          "tombstone_ref": null,
+          "proof_preservation": "FULL",
+          "minimization_required": false
+        },
+        "decision": {
+          "outcome": "PASS",
+          "recommendation": "READY_FOR_REVIEW",
+          "reason_codes": [
+            "ARCHIVE_CONTROLS_COHERENT"
+          ],
+          "review_required": true,
+          "execution_authorized": false
+        },
+        "authority": {
+          "retention_policy_authority": false,
+          "erasure_authority": false,
+          "deletion_authority": false,
+          "evidence_mutation_authority": false,
+          "correction_authority": false,
+          "release_authority": false,
+          "lifecycle_write_authority": false,
+          "publication_authority": false
+        },
+        "limitations": [
+          "fixture_only",
+          "no_disposition_execution",
+          "no_evidence_or_history_deletion",
+          "no_policy_or_erasure_authority",
+          "no_release_or_publication_authority"
+        ],
+        "spec_hash": "sha256:83c6490bb11559d59154b179e6f82040f7af86afca79fac4ea931b09c38738b3"
+      }
+    },
+    {
+      "case_id": "pass_compact_with_archive_and_rollback",
+      "expected_outcome": "PASS",
+      "expected_findings": [],
+      "candidate": {
+        "object_type": "TemporalRetentionDispositionAssessment",
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.temporal-retention-disposition.fixture.v1",
+        "assessment_id": "kfm:temporal-retention:6daf90a9cfe3d176111cc01d",
+        "assessment_state": "COMPLETE",
+        "subject": {
+          "record_family_id": "synthetic-event-history",
+          "record_scope_ref": "kfm://record-scope/synthetic-event-history",
+          "disposition": "COMPACT",
+          "proposed_at": "2026-08-11T12:00:00Z",
+          "effective_at": "2026-09-01T00:00:00Z",
+          "input_record_count": 100,
+          "resulting_record_count": 10,
+          "history_preserved": true,
+          "reversible": true
+        },
+        "dependencies": {
+          "evidence_state": "RESOLVED",
+          "evidence_refs": [
+            "kfm://evidence/synthetic-history-support"
+          ],
+          "correction_state": "RESOLVED",
+          "correction_refs": [
+            "kfm://correction/synthetic-event-corrections"
+          ],
+          "release_state": "WITHDRAWN",
+          "release_refs": [
+            "kfm://release/synthetic-event-v1"
+          ],
+          "rollback_target_ref": "kfm://rollback/synthetic-event-compaction-v1"
+        },
+        "retention_controls": {
+          "policy_state": "VERIFIED",
+          "policy_ref": "kfm://policy/synthetic-temporal-retention-v1",
+          "legal_basis_state": "NOT_REQUIRED",
+          "legal_basis_ref": null,
+          "erasure_obligation": "NONE",
+          "archive_ref": "kfm://archive/synthetic-event-history-v1",
+          "disposition_receipt_ref": "kfm://receipt/synthetic-compaction-plan-v1",
+          "tombstone_ref": "kfm://tombstone/synthetic-event-compaction-v1",
+          "proof_preservation": "DIGEST_ONLY",
+          "minimization_required": false
+        },
+        "decision": {
+          "outcome": "PASS",
+          "recommendation": "READY_FOR_REVIEW",
+          "reason_codes": [
+            "COMPACTION_CONTROLS_COHERENT"
+          ],
+          "review_required": true,
+          "execution_authorized": false
+        },
+        "authority": {
+          "retention_policy_authority": false,
+          "erasure_authority": false,
+          "deletion_authority": false,
+          "evidence_mutation_authority": false,
+          "correction_authority": false,
+          "release_authority": false,
+          "lifecycle_write_authority": false,
+          "publication_authority": false
+        },
+        "limitations": [
+          "fixture_only",
+          "no_disposition_execution",
+          "no_evidence_or_history_deletion",
+          "no_policy_or_erasure_authority",
+          "no_release_or_publication_authority"
+        ],
+        "spec_hash": "sha256:6daf90a9cfe3d176111cc01d15ddfe826e5ee34bbab90f460c1985f6d9ce6772"
+      }
+    },
+    {
+      "case_id": "abstain_retention_policy_unknown",
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        "RETENTION_POLICY_UNRESOLVED"
+      ],
+      "candidate": {
+        "object_type": "TemporalRetentionDispositionAssessment",
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.temporal-retention-disposition.fixture.v1",
+        "assessment_id": "kfm:temporal-retention:60c0ecfa81425430ca3edbe2",
+        "assessment_state": "COMPLETE",
+        "subject": {
+          "record_family_id": "synthetic-claim-history",
+          "record_scope_ref": "kfm://record-scope/synthetic-claim-history",
+          "disposition": "RETAIN",
+          "proposed_at": "2026-08-11T12:00:00Z",
+          "effective_at": null,
+          "input_record_count": 100,
+          "resulting_record_count": 100,
+          "history_preserved": true,
+          "reversible": true
+        },
+        "dependencies": {
+          "evidence_state": "RESOLVED",
+          "evidence_refs": [
+            "kfm://evidence/synthetic-history-support"
+          ],
+          "correction_state": "NONE",
+          "correction_refs": [],
+          "release_state": "ACTIVE",
+          "release_refs": [
+            "kfm://release/synthetic-history-v1"
+          ],
+          "rollback_target_ref": null
+        },
+        "retention_controls": {
+          "policy_state": "UNKNOWN",
+          "policy_ref": null,
+          "legal_basis_state": "NOT_REQUIRED",
+          "legal_basis_ref": null,
+          "erasure_obligation": "NONE",
+          "archive_ref": null,
+          "disposition_receipt_ref": null,
+          "tombstone_ref": null,
+          "proof_preservation": "FULL",
+          "minimization_required": false
+        },
+        "decision": {
+          "outcome": "ABSTAIN",
+          "recommendation": "HOLD_FOR_POLICY",
+          "reason_codes": [
+            "RETENTION_POLICY_UNRESOLVED"
+          ],
+          "review_required": true,
+          "execution_authorized": false
+        },
+        "authority": {
+          "retention_policy_authority": false,
+          "erasure_authority": false,
+          "deletion_authority": false,
+          "evidence_mutation_authority": false,
+          "correction_authority": false,
+          "release_authority": false,
+          "lifecycle_write_authority": false,
+          "publication_authority": false
+        },
+        "limitations": [
+          "fixture_only",
+          "no_disposition_execution",
+          "no_evidence_or_history_deletion",
+          "no_policy_or_erasure_authority",
+          "no_release_or_publication_authority"
+        ],
+        "spec_hash": "sha256:60c0ecfa81425430ca3edbe27f85b68d81a8fe1521250eaf7b7de65a6fc22e50"
+      }
+    },
+    {
+      "case_id": "abstain_evidence_dependency_unresolved",
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        "DEPENDENCY_CLOSURE_UNRESOLVED"
+      ],
+      "candidate": {
+        "object_type": "TemporalRetentionDispositionAssessment",
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.temporal-retention-disposition.fixture.v1",
+        "assessment_id": "kfm:temporal-retention:a141df982a84af25ca30e83d",
+        "assessment_state": "COMPLETE",
+        "subject": {
+          "record_family_id": "synthetic-claim-history",
+          "record_scope_ref": "kfm://record-scope/synthetic-claim-history",
+          "disposition": "RETAIN",
+          "proposed_at": "2026-08-11T12:00:00Z",
+          "effective_at": null,
+          "input_record_count": 100,
+          "resulting_record_count": 100,
+          "history_preserved": true,
+          "reversible": true
+        },
+        "dependencies": {
+          "evidence_state": "UNRESOLVED",
+          "evidence_refs": [],
+          "correction_state": "NONE",
+          "correction_refs": [],
+          "release_state": "ACTIVE",
+          "release_refs": [
+            "kfm://release/synthetic-history-v1"
+          ],
+          "rollback_target_ref": null
+        },
+        "retention_controls": {
+          "policy_state": "VERIFIED",
+          "policy_ref": "kfm://policy/synthetic-temporal-retention-v1",
+          "legal_basis_state": "NOT_REQUIRED",
+          "legal_basis_ref": null,
+          "erasure_obligation": "NONE",
+          "archive_ref": null,
+          "disposition_receipt_ref": null,
+          "tombstone_ref": null,
+          "proof_preservation": "FULL",
+          "minimization_required": false
+        },
+        "decision": {
+          "outcome": "ABSTAIN",
+          "recommendation": "HOLD_FOR_POLICY",
+          "reason_codes": [
+            "DEPENDENCY_CLOSURE_UNRESOLVED"
+          ],
+          "review_required": true,
+          "execution_authorized": false
+        },
+        "authority": {
+          "retention_policy_authority": false,
+          "erasure_authority": false,
+          "deletion_authority": false,
+          "evidence_mutation_authority": false,
+          "correction_authority": false,
+          "release_authority": false,
+          "lifecycle_write_authority": false,
+          "publication_authority": false
+        },
+        "limitations": [
+          "fixture_only",
+          "no_disposition_execution",
+          "no_evidence_or_history_deletion",
+          "no_policy_or_erasure_authority",
+          "no_release_or_publication_authority"
+        ],
+        "spec_hash": "sha256:a141df982a84af25ca30e83d5985d5aca030050a1d5e49ad1983e6be86d59748"
+      }
+    },
+    {
+      "case_id": "abstain_verified_erasure_handoff",
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        "ERASURE_REQUIRES_SEPARATE_AUTHORITY"
+      ],
+      "candidate": {
+        "object_type": "TemporalRetentionDispositionAssessment",
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.temporal-retention-disposition.fixture.v1",
+        "assessment_id": "kfm:temporal-retention:5953d1005068af50662c231a",
+        "assessment_state": "COMPLETE",
+        "subject": {
+          "record_family_id": "synthetic-consent-history",
+          "record_scope_ref": "kfm://record-scope/synthetic-consent-history",
+          "disposition": "ERASE",
+          "proposed_at": "2026-08-11T12:00:00Z",
+          "effective_at": "2026-09-01T00:00:00Z",
+          "input_record_count": 100,
+          "resulting_record_count": 0,
+          "history_preserved": false,
+          "reversible": false
+        },
+        "dependencies": {
+          "evidence_state": "RESOLVED",
+          "evidence_refs": [
+            "kfm://evidence/synthetic-history-support"
+          ],
+          "correction_state": "RESOLVED",
+          "correction_refs": [
+            "kfm://correction/synthetic-consent-corrections"
+          ],
+          "release_state": "WITHDRAWN",
+          "release_refs": [
+            "kfm://release/synthetic-consent-v1"
+          ],
+          "rollback_target_ref": null
+        },
+        "retention_controls": {
+          "policy_state": "VERIFIED",
+          "policy_ref": "kfm://policy/synthetic-temporal-retention-v1",
+          "legal_basis_state": "VERIFIED",
+          "legal_basis_ref": "kfm://legal-basis/synthetic-erasure-review",
+          "erasure_obligation": "VERIFIED",
+          "archive_ref": null,
+          "disposition_receipt_ref": null,
+          "tombstone_ref": "kfm://tombstone/synthetic-consent-erasure-v1",
+          "proof_preservation": "DIGEST_ONLY",
+          "minimization_required": true
+        },
+        "decision": {
+          "outcome": "ABSTAIN",
+          "recommendation": "HOLD_FOR_POLICY",
+          "reason_codes": [
+            "ERASURE_REQUIRES_SEPARATE_AUTHORITY"
+          ],
+          "review_required": true,
+          "execution_authorized": false
+        },
+        "authority": {
+          "retention_policy_authority": false,
+          "erasure_authority": false,
+          "deletion_authority": false,
+          "evidence_mutation_authority": false,
+          "correction_authority": false,
+          "release_authority": false,
+          "lifecycle_write_authority": false,
+          "publication_authority": false
+        },
+        "limitations": [
+          "fixture_only",
+          "no_disposition_execution",
+          "no_evidence_or_history_deletion",
+          "no_policy_or_erasure_authority",
+          "no_release_or_publication_authority"
+        ],
+        "spec_hash": "sha256:5953d1005068af50662c231a95fa4154c651f8910b2802d804c88034cb8a88f0"
+      }
+    },
+    {
+      "case_id": "abstain_active_release_before_compaction",
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        "ACTIVE_RELEASE_REQUIRES_HANDOFF"
+      ],
+      "candidate": {
+        "object_type": "TemporalRetentionDispositionAssessment",
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.temporal-retention-disposition.fixture.v1",
+        "assessment_id": "kfm:temporal-retention:9049779d92b3b57241c3a179",
+        "assessment_state": "COMPLETE",
+        "subject": {
+          "record_family_id": "synthetic-event-history",
+          "record_scope_ref": "kfm://record-scope/synthetic-event-history",
+          "disposition": "COMPACT",
+          "proposed_at": "2026-08-11T12:00:00Z",
+          "effective_at": "2026-09-01T00:00:00Z",
+          "input_record_count": 100,
+          "resulting_record_count": 10,
+          "history_preserved": true,
+          "reversible": true
+        },
+        "dependencies": {
+          "evidence_state": "RESOLVED",
+          "evidence_refs": [
+            "kfm://evidence/synthetic-history-support"
+          ],
+          "correction_state": "RESOLVED",
+          "correction_refs": [
+            "kfm://correction/synthetic-event-corrections"
+          ],
+          "release_state": "ACTIVE",
+          "release_refs": [
+            "kfm://release/synthetic-event-v1"
+          ],
+          "rollback_target_ref": "kfm://rollback/synthetic-event-compaction-v1"
+        },
+        "retention_controls": {
+          "policy_state": "VERIFIED",
+          "policy_ref": "kfm://policy/synthetic-temporal-retention-v1",
+          "legal_basis_state": "NOT_REQUIRED",
+          "legal_basis_ref": null,
+          "erasure_obligation": "NONE",
+          "archive_ref": "kfm://archive/synthetic-event-history-v1",
+          "disposition_receipt_ref": "kfm://receipt/synthetic-compaction-plan-v1",
+          "tombstone_ref": "kfm://tombstone/synthetic-event-compaction-v1",
+          "proof_preservation": "DIGEST_ONLY",
+          "minimization_required": false
+        },
+        "decision": {
+          "outcome": "ABSTAIN",
+          "recommendation": "HOLD_FOR_POLICY",
+          "reason_codes": [
+            "ACTIVE_RELEASE_REQUIRES_HANDOFF"
+          ],
+          "review_required": true,
+          "execution_authorized": false
+        },
+        "authority": {
+          "retention_policy_authority": false,
+          "erasure_authority": false,
+          "deletion_authority": false,
+          "evidence_mutation_authority": false,
+          "correction_authority": false,
+          "release_authority": false,
+          "lifecycle_write_authority": false,
+          "publication_authority": false
+        },
+        "limitations": [
+          "fixture_only",
+          "no_disposition_execution",
+          "no_evidence_or_history_deletion",
+          "no_policy_or_erasure_authority",
+          "no_release_or_publication_authority"
+        ],
+        "spec_hash": "sha256:9049779d92b3b57241c3a17941c59a4166988799498a768d70fc89419939a387"
+      }
+    },
+    {
+      "case_id": "deny_silent_compaction_history_loss",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "COMPACTION_CONTROLS_INCOMPLETE"
+      ],
+      "candidate": {
+        "object_type": "TemporalRetentionDispositionAssessment",
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.temporal-retention-disposition.fixture.v1",
+        "assessment_id": "kfm:temporal-retention:41079c2e1c0d066a9501fc5d",
+        "assessment_state": "COMPLETE",
+        "subject": {
+          "record_family_id": "synthetic-event-history",
+          "record_scope_ref": "kfm://record-scope/synthetic-event-history",
+          "disposition": "COMPACT",
+          "proposed_at": "2026-08-11T12:00:00Z",
+          "effective_at": "2026-09-01T00:00:00Z",
+          "input_record_count": 100,
+          "resulting_record_count": 10,
+          "history_preserved": false,
+          "reversible": true
+        },
+        "dependencies": {
+          "evidence_state": "RESOLVED",
+          "evidence_refs": [
+            "kfm://evidence/synthetic-history-support"
+          ],
+          "correction_state": "RESOLVED",
+          "correction_refs": [
+            "kfm://correction/synthetic-event-corrections"
+          ],
+          "release_state": "WITHDRAWN",
+          "release_refs": [
+            "kfm://release/synthetic-event-v1"
+          ],
+          "rollback_target_ref": "kfm://rollback/synthetic-event-compaction-v1"
+        },
+        "retention_controls": {
+          "policy_state": "VERIFIED",
+          "policy_ref": "kfm://policy/synthetic-temporal-retention-v1",
+          "legal_basis_state": "NOT_REQUIRED",
+          "legal_basis_ref": null,
+          "erasure_obligation": "NONE",
+          "archive_ref": "kfm://archive/synthetic-event-history-v1",
+          "disposition_receipt_ref": "kfm://receipt/synthetic-compaction-plan-v1",
+          "tombstone_ref": "kfm://tombstone/synthetic-event-compaction-v1",
+          "proof_preservation": "DIGEST_ONLY",
+          "minimization_required": false
+        },
+        "decision": {
+          "outcome": "DENY",
+          "recommendation": "REJECT",
+          "reason_codes": [
+            "COMPACTION_CONTROLS_INCOMPLETE"
+          ],
+          "review_required": true,
+          "execution_authorized": false
+        },
+        "authority": {
+          "retention_policy_authority": false,
+          "erasure_authority": false,
+          "deletion_authority": false,
+          "evidence_mutation_authority": false,
+          "correction_authority": false,
+          "release_authority": false,
+          "lifecycle_write_authority": false,
+          "publication_authority": false
+        },
+        "limitations": [
+          "fixture_only",
+          "no_disposition_execution",
+          "no_evidence_or_history_deletion",
+          "no_policy_or_erasure_authority",
+          "no_release_or_publication_authority"
+        ],
+        "spec_hash": "sha256:41079c2e1c0d066a9501fc5d763c788e79d90a7f0a48780c29e561ff354ea6e9"
+      }
+    },
+    {
+      "case_id": "deny_erasure_without_obligation",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "ERASURE_WITHOUT_OBLIGATION"
+      ],
+      "candidate": {
+        "object_type": "TemporalRetentionDispositionAssessment",
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.temporal-retention-disposition.fixture.v1",
+        "assessment_id": "kfm:temporal-retention:018660201ceaaf0e8fddc524",
+        "assessment_state": "COMPLETE",
+        "subject": {
+          "record_family_id": "synthetic-consent-history",
+          "record_scope_ref": "kfm://record-scope/synthetic-consent-history",
+          "disposition": "ERASE",
+          "proposed_at": "2026-08-11T12:00:00Z",
+          "effective_at": "2026-09-01T00:00:00Z",
+          "input_record_count": 100,
+          "resulting_record_count": 0,
+          "history_preserved": false,
+          "reversible": false
+        },
+        "dependencies": {
+          "evidence_state": "RESOLVED",
+          "evidence_refs": [
+            "kfm://evidence/synthetic-history-support"
+          ],
+          "correction_state": "RESOLVED",
+          "correction_refs": [
+            "kfm://correction/synthetic-consent-corrections"
+          ],
+          "release_state": "WITHDRAWN",
+          "release_refs": [
+            "kfm://release/synthetic-consent-v1"
+          ],
+          "rollback_target_ref": null
+        },
+        "retention_controls": {
+          "policy_state": "VERIFIED",
+          "policy_ref": "kfm://policy/synthetic-temporal-retention-v1",
+          "legal_basis_state": "NOT_REQUIRED",
+          "legal_basis_ref": null,
+          "erasure_obligation": "NONE",
+          "archive_ref": null,
+          "disposition_receipt_ref": null,
+          "tombstone_ref": "kfm://tombstone/synthetic-consent-erasure-v1",
+          "proof_preservation": "DIGEST_ONLY",
+          "minimization_required": false
+        },
+        "decision": {
+          "outcome": "DENY",
+          "recommendation": "REJECT",
+          "reason_codes": [
+            "ERASURE_WITHOUT_OBLIGATION"
+          ],
+          "review_required": true,
+          "execution_authorized": false
+        },
+        "authority": {
+          "retention_policy_authority": false,
+          "erasure_authority": false,
+          "deletion_authority": false,
+          "evidence_mutation_authority": false,
+          "correction_authority": false,
+          "release_authority": false,
+          "lifecycle_write_authority": false,
+          "publication_authority": false
+        },
+        "limitations": [
+          "fixture_only",
+          "no_disposition_execution",
+          "no_evidence_or_history_deletion",
+          "no_policy_or_erasure_authority",
+          "no_release_or_publication_authority"
+        ],
+        "spec_hash": "sha256:018660201ceaaf0e8fddc52436ef477818db3c9bcd87170b28f3e6748a1c5fcd"
+      }
+    },
+    {
+      "case_id": "deny_erasure_with_active_release",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "ACTIVE_RELEASE_BLOCKS_ERASURE"
+      ],
+      "candidate": {
+        "object_type": "TemporalRetentionDispositionAssessment",
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.temporal-retention-disposition.fixture.v1",
+        "assessment_id": "kfm:temporal-retention:b42d8d103c5053303d17fe2e",
+        "assessment_state": "COMPLETE",
+        "subject": {
+          "record_family_id": "synthetic-consent-history",
+          "record_scope_ref": "kfm://record-scope/synthetic-consent-history",
+          "disposition": "ERASE",
+          "proposed_at": "2026-08-11T12:00:00Z",
+          "effective_at": "2026-09-01T00:00:00Z",
+          "input_record_count": 100,
+          "resulting_record_count": 0,
+          "history_preserved": false,
+          "reversible": false
+        },
+        "dependencies": {
+          "evidence_state": "RESOLVED",
+          "evidence_refs": [
+            "kfm://evidence/synthetic-history-support"
+          ],
+          "correction_state": "RESOLVED",
+          "correction_refs": [
+            "kfm://correction/synthetic-consent-corrections"
+          ],
+          "release_state": "ACTIVE",
+          "release_refs": [
+            "kfm://release/synthetic-consent-v1"
+          ],
+          "rollback_target_ref": null
+        },
+        "retention_controls": {
+          "policy_state": "VERIFIED",
+          "policy_ref": "kfm://policy/synthetic-temporal-retention-v1",
+          "legal_basis_state": "VERIFIED",
+          "legal_basis_ref": "kfm://legal-basis/synthetic-erasure-review",
+          "erasure_obligation": "VERIFIED",
+          "archive_ref": null,
+          "disposition_receipt_ref": null,
+          "tombstone_ref": "kfm://tombstone/synthetic-consent-erasure-v1",
+          "proof_preservation": "DIGEST_ONLY",
+          "minimization_required": true
+        },
+        "decision": {
+          "outcome": "DENY",
+          "recommendation": "REJECT",
+          "reason_codes": [
+            "ACTIVE_RELEASE_BLOCKS_ERASURE"
+          ],
+          "review_required": true,
+          "execution_authorized": false
+        },
+        "authority": {
+          "retention_policy_authority": false,
+          "erasure_authority": false,
+          "deletion_authority": false,
+          "evidence_mutation_authority": false,
+          "correction_authority": false,
+          "release_authority": false,
+          "lifecycle_write_authority": false,
+          "publication_authority": false
+        },
+        "limitations": [
+          "fixture_only",
+          "no_disposition_execution",
+          "no_evidence_or_history_deletion",
+          "no_policy_or_erasure_authority",
+          "no_release_or_publication_authority"
+        ],
+        "spec_hash": "sha256:b42d8d103c5053303d17fe2ecd8142e98e2cf2a56abd806e7e642aa9f1ae5ccf"
+      }
+    },
+    {
+      "case_id": "deny_retention_policy_denied",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "POLICY_OR_LEGAL_BASIS_DENIED"
+      ],
+      "candidate": {
+        "object_type": "TemporalRetentionDispositionAssessment",
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.temporal-retention-disposition.fixture.v1",
+        "assessment_id": "kfm:temporal-retention:9f1256d9a5f1dccc2051e05d",
+        "assessment_state": "COMPLETE",
+        "subject": {
+          "record_family_id": "synthetic-claim-history",
+          "record_scope_ref": "kfm://record-scope/synthetic-claim-history",
+          "disposition": "RETAIN",
+          "proposed_at": "2026-08-11T12:00:00Z",
+          "effective_at": null,
+          "input_record_count": 100,
+          "resulting_record_count": 100,
+          "history_preserved": true,
+          "reversible": true
+        },
+        "dependencies": {
+          "evidence_state": "RESOLVED",
+          "evidence_refs": [
+            "kfm://evidence/synthetic-history-support"
+          ],
+          "correction_state": "NONE",
+          "correction_refs": [],
+          "release_state": "ACTIVE",
+          "release_refs": [
+            "kfm://release/synthetic-history-v1"
+          ],
+          "rollback_target_ref": null
+        },
+        "retention_controls": {
+          "policy_state": "DENIED",
+          "policy_ref": "kfm://policy/synthetic-temporal-retention-v1",
+          "legal_basis_state": "NOT_REQUIRED",
+          "legal_basis_ref": null,
+          "erasure_obligation": "NONE",
+          "archive_ref": null,
+          "disposition_receipt_ref": null,
+          "tombstone_ref": null,
+          "proof_preservation": "FULL",
+          "minimization_required": false
+        },
+        "decision": {
+          "outcome": "DENY",
+          "recommendation": "REJECT",
+          "reason_codes": [
+            "POLICY_OR_LEGAL_BASIS_DENIED"
+          ],
+          "review_required": true,
+          "execution_authorized": false
+        },
+        "authority": {
+          "retention_policy_authority": false,
+          "erasure_authority": false,
+          "deletion_authority": false,
+          "evidence_mutation_authority": false,
+          "correction_authority": false,
+          "release_authority": false,
+          "lifecycle_write_authority": false,
+          "publication_authority": false
+        },
+        "limitations": [
+          "fixture_only",
+          "no_disposition_execution",
+          "no_evidence_or_history_deletion",
+          "no_policy_or_erasure_authority",
+          "no_release_or_publication_authority"
+        ],
+        "spec_hash": "sha256:9f1256d9a5f1dccc2051e05d1aed0865acae5a641ed12c9b7fd66d1fe13885be"
+      }
+    },
+    {
+      "case_id": "deny_archive_missing_archive_reference",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "ARCHIVE_CONTROLS_INCOMPLETE"
+      ],
+      "candidate": {
+        "object_type": "TemporalRetentionDispositionAssessment",
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.temporal-retention-disposition.fixture.v1",
+        "assessment_id": "kfm:temporal-retention:1ab41a3f7f7e83c6e37f060d",
+        "assessment_state": "COMPLETE",
+        "subject": {
+          "record_family_id": "synthetic-observation-history",
+          "record_scope_ref": "kfm://record-scope/synthetic-observation-history",
+          "disposition": "ARCHIVE",
+          "proposed_at": "2026-08-11T12:00:00Z",
+          "effective_at": "2026-09-01T00:00:00Z",
+          "input_record_count": 100,
+          "resulting_record_count": 100,
+          "history_preserved": true,
+          "reversible": true
+        },
+        "dependencies": {
+          "evidence_state": "RESOLVED",
+          "evidence_refs": [
+            "kfm://evidence/synthetic-history-support"
+          ],
+          "correction_state": "RESOLVED",
+          "correction_refs": [
+            "kfm://correction/synthetic-history-corrections"
+          ],
+          "release_state": "ACTIVE",
+          "release_refs": [
+            "kfm://release/synthetic-history-v1"
+          ],
+          "rollback_target_ref": "kfm://rollback/synthetic-history-archive-v1"
+        },
+        "retention_controls": {
+          "policy_state": "VERIFIED",
+          "policy_ref": "kfm://policy/synthetic-temporal-retention-v1",
+          "legal_basis_state": "NOT_REQUIRED",
+          "legal_basis_ref": null,
+          "erasure_obligation": "NONE",
+          "archive_ref": null,
+          "disposition_receipt_ref": "kfm://receipt/synthetic-archive-plan-v1",
+          "tombstone_ref": null,
+          "proof_preservation": "FULL",
+          "minimization_required": false
+        },
+        "decision": {
+          "outcome": "DENY",
+          "recommendation": "REJECT",
+          "reason_codes": [
+            "ARCHIVE_CONTROLS_INCOMPLETE"
+          ],
+          "review_required": true,
+          "execution_authorized": false
+        },
+        "authority": {
+          "retention_policy_authority": false,
+          "erasure_authority": false,
+          "deletion_authority": false,
+          "evidence_mutation_authority": false,
+          "correction_authority": false,
+          "release_authority": false,
+          "lifecycle_write_authority": false,
+          "publication_authority": false
+        },
+        "limitations": [
+          "fixture_only",
+          "no_disposition_execution",
+          "no_evidence_or_history_deletion",
+          "no_policy_or_erasure_authority",
+          "no_release_or_publication_authority"
+        ],
+        "spec_hash": "sha256:1ab41a3f7f7e83c6e37f060dc1a2acacfd1acf5f0ea12673693566df93aa9a13"
+      }
+    },
+    {
+      "case_id": "deny_dependency_reference_state_mismatch",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "RETENTION_REFERENCE_STATE_MISMATCH"
+      ],
+      "candidate": {
+        "object_type": "TemporalRetentionDispositionAssessment",
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.temporal-retention-disposition.fixture.v1",
+        "assessment_id": "kfm:temporal-retention:52aa90c9a720c4847b8291e5",
+        "assessment_state": "COMPLETE",
+        "subject": {
+          "record_family_id": "synthetic-claim-history",
+          "record_scope_ref": "kfm://record-scope/synthetic-claim-history",
+          "disposition": "RETAIN",
+          "proposed_at": "2026-08-11T12:00:00Z",
+          "effective_at": null,
+          "input_record_count": 100,
+          "resulting_record_count": 100,
+          "history_preserved": true,
+          "reversible": true
+        },
+        "dependencies": {
+          "evidence_state": "NONE",
+          "evidence_refs": [
+            "kfm://evidence/synthetic-history-support"
+          ],
+          "correction_state": "NONE",
+          "correction_refs": [],
+          "release_state": "ACTIVE",
+          "release_refs": [
+            "kfm://release/synthetic-history-v1"
+          ],
+          "rollback_target_ref": null
+        },
+        "retention_controls": {
+          "policy_state": "VERIFIED",
+          "policy_ref": "kfm://policy/synthetic-temporal-retention-v1",
+          "legal_basis_state": "NOT_REQUIRED",
+          "legal_basis_ref": null,
+          "erasure_obligation": "NONE",
+          "archive_ref": null,
+          "disposition_receipt_ref": null,
+          "tombstone_ref": null,
+          "proof_preservation": "FULL",
+          "minimization_required": false
+        },
+        "decision": {
+          "outcome": "PASS",
+          "recommendation": "READY_FOR_REVIEW",
+          "reason_codes": [
+            "RETENTION_CONTROLS_COHERENT"
+          ],
+          "review_required": true,
+          "execution_authorized": false
+        },
+        "authority": {
+          "retention_policy_authority": false,
+          "erasure_authority": false,
+          "deletion_authority": false,
+          "evidence_mutation_authority": false,
+          "correction_authority": false,
+          "release_authority": false,
+          "lifecycle_write_authority": false,
+          "publication_authority": false
+        },
+        "limitations": [
+          "fixture_only",
+          "no_disposition_execution",
+          "no_evidence_or_history_deletion",
+          "no_policy_or_erasure_authority",
+          "no_release_or_publication_authority"
+        ],
+        "spec_hash": "sha256:52aa90c9a720c4847b8291e5be18f8f8051eed1d7ea218365aa8040af4b494d5"
+      }
+    },
+    {
+      "case_id": "deny_spec_hash_tamper",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "RETENTION_SPEC_HASH_MISMATCH"
+      ],
+      "candidate": {
+        "object_type": "TemporalRetentionDispositionAssessment",
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.temporal-retention-disposition.fixture.v1",
+        "assessment_id": "kfm:temporal-retention:d8380e5860403a8c0e7715fd",
+        "assessment_state": "COMPLETE",
+        "subject": {
+          "record_family_id": "synthetic-claim-history",
+          "record_scope_ref": "kfm://record-scope/synthetic-claim-history",
+          "disposition": "RETAIN",
+          "proposed_at": "2026-08-11T12:00:00Z",
+          "effective_at": null,
+          "input_record_count": 100,
+          "resulting_record_count": 100,
+          "history_preserved": true,
+          "reversible": true
+        },
+        "dependencies": {
+          "evidence_state": "RESOLVED",
+          "evidence_refs": [
+            "kfm://evidence/synthetic-history-support"
+          ],
+          "correction_state": "NONE",
+          "correction_refs": [],
+          "release_state": "ACTIVE",
+          "release_refs": [
+            "kfm://release/synthetic-history-v1"
+          ],
+          "rollback_target_ref": null
+        },
+        "retention_controls": {
+          "policy_state": "VERIFIED",
+          "policy_ref": "kfm://policy/synthetic-temporal-retention-v1",
+          "legal_basis_state": "NOT_REQUIRED",
+          "legal_basis_ref": null,
+          "erasure_obligation": "NONE",
+          "archive_ref": null,
+          "disposition_receipt_ref": null,
+          "tombstone_ref": null,
+          "proof_preservation": "FULL",
+          "minimization_required": false
+        },
+        "decision": {
+          "outcome": "PASS",
+          "recommendation": "READY_FOR_REVIEW",
+          "reason_codes": [
+            "RETENTION_CONTROLS_COHERENT"
+          ],
+          "review_required": true,
+          "execution_authorized": false
+        },
+        "authority": {
+          "retention_policy_authority": false,
+          "erasure_authority": false,
+          "deletion_authority": false,
+          "evidence_mutation_authority": false,
+          "correction_authority": false,
+          "release_authority": false,
+          "lifecycle_write_authority": false,
+          "publication_authority": false
+        },
+        "limitations": [
+          "fixture_only",
+          "no_disposition_execution",
+          "no_evidence_or_history_deletion",
+          "no_policy_or_erasure_authority",
+          "no_release_or_publication_authority"
+        ],
+        "spec_hash": "sha256:d8380e5860403a8c0e7715fd6403d2630f9929675c07d295412b5344bfc55f20"
+      }
+    },
+    {
+      "case_id": "deny_declared_decision_mismatch",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "RETENTION_DECISION_MISMATCH"
+      ],
+      "candidate": {
+        "object_type": "TemporalRetentionDispositionAssessment",
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.temporal-retention-disposition.fixture.v1",
+        "assessment_id": "kfm:temporal-retention:d946fcdd2260985d921ce537",
+        "assessment_state": "COMPLETE",
+        "subject": {
+          "record_family_id": "synthetic-claim-history",
+          "record_scope_ref": "kfm://record-scope/synthetic-claim-history",
+          "disposition": "RETAIN",
+          "proposed_at": "2026-08-11T12:00:00Z",
+          "effective_at": null,
+          "input_record_count": 100,
+          "resulting_record_count": 100,
+          "history_preserved": true,
+          "reversible": true
+        },
+        "dependencies": {
+          "evidence_state": "RESOLVED",
+          "evidence_refs": [
+            "kfm://evidence/synthetic-history-support"
+          ],
+          "correction_state": "NONE",
+          "correction_refs": [],
+          "release_state": "ACTIVE",
+          "release_refs": [
+            "kfm://release/synthetic-history-v1"
+          ],
+          "rollback_target_ref": null
+        },
+        "retention_controls": {
+          "policy_state": "VERIFIED",
+          "policy_ref": "kfm://policy/synthetic-temporal-retention-v1",
+          "legal_basis_state": "NOT_REQUIRED",
+          "legal_basis_ref": null,
+          "erasure_obligation": "NONE",
+          "archive_ref": null,
+          "disposition_receipt_ref": null,
+          "tombstone_ref": null,
+          "proof_preservation": "FULL",
+          "minimization_required": false
+        },
+        "decision": {
+          "outcome": "ABSTAIN",
+          "recommendation": "HOLD_FOR_POLICY",
+          "reason_codes": [
+            "RETENTION_POLICY_UNRESOLVED"
+          ],
+          "review_required": true,
+          "execution_authorized": false
+        },
+        "authority": {
+          "retention_policy_authority": false,
+          "erasure_authority": false,
+          "deletion_authority": false,
+          "evidence_mutation_authority": false,
+          "correction_authority": false,
+          "release_authority": false,
+          "lifecycle_write_authority": false,
+          "publication_authority": false
+        },
+        "limitations": [
+          "fixture_only",
+          "no_disposition_execution",
+          "no_evidence_or_history_deletion",
+          "no_policy_or_erasure_authority",
+          "no_release_or_publication_authority"
+        ],
+        "spec_hash": "sha256:d946fcdd2260985d921ce5372aa61639f73fbb0695e1dd7d41490eb7b4e10912"
+      }
+    },
+    {
+      "case_id": "deny_unknown_field",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "RETENTION_SCHEMA_INVALID"
+      ],
+      "candidate": {
+        "object_type": "TemporalRetentionDispositionAssessment",
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.temporal-retention-disposition.fixture.v1",
+        "assessment_id": "kfm:temporal-retention:c9e26e47b51795060282e3e4",
+        "assessment_state": "COMPLETE",
+        "subject": {
+          "record_family_id": "synthetic-claim-history",
+          "record_scope_ref": "kfm://record-scope/synthetic-claim-history",
+          "disposition": "RETAIN",
+          "proposed_at": "2026-08-11T12:00:00Z",
+          "effective_at": null,
+          "input_record_count": 100,
+          "resulting_record_count": 100,
+          "history_preserved": true,
+          "reversible": true
+        },
+        "dependencies": {
+          "evidence_state": "RESOLVED",
+          "evidence_refs": [
+            "kfm://evidence/synthetic-history-support"
+          ],
+          "correction_state": "NONE",
+          "correction_refs": [],
+          "release_state": "ACTIVE",
+          "release_refs": [
+            "kfm://release/synthetic-history-v1"
+          ],
+          "rollback_target_ref": null
+        },
+        "retention_controls": {
+          "policy_state": "VERIFIED",
+          "policy_ref": "kfm://policy/synthetic-temporal-retention-v1",
+          "legal_basis_state": "NOT_REQUIRED",
+          "legal_basis_ref": null,
+          "erasure_obligation": "NONE",
+          "archive_ref": null,
+          "disposition_receipt_ref": null,
+          "tombstone_ref": null,
+          "proof_preservation": "FULL",
+          "minimization_required": false
+        },
+        "decision": {
+          "outcome": "PASS",
+          "recommendation": "READY_FOR_REVIEW",
+          "reason_codes": [
+            "RETENTION_CONTROLS_COHERENT"
+          ],
+          "review_required": true,
+          "execution_authorized": false
+        },
+        "authority": {
+          "retention_policy_authority": false,
+          "erasure_authority": false,
+          "deletion_authority": false,
+          "evidence_mutation_authority": false,
+          "correction_authority": false,
+          "release_authority": false,
+          "lifecycle_write_authority": false,
+          "publication_authority": false
+        },
+        "limitations": [
+          "fixture_only",
+          "no_disposition_execution",
+          "no_evidence_or_history_deletion",
+          "no_policy_or_erasure_authority",
+          "no_release_or_publication_authority"
+        ],
+        "spec_hash": "sha256:c9e26e47b51795060282e3e41a8db7183dadd3f5012d7cf8da82bfbe34a42d06",
+        "unexpected": true
+      }
+    },
+    {
+      "case_id": "error_bounded_assessment_failure",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "VALIDATOR_ERROR"
+      ],
+      "candidate": {
+        "object_type": "TemporalRetentionDispositionAssessment",
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.temporal-retention-disposition.fixture.v1",
+        "assessment_id": "kfm:temporal-retention:c77d695facde84c47d9f0f88",
+        "assessment_state": "ERROR",
+        "subject": {
+          "record_family_id": "synthetic-claim-history",
+          "record_scope_ref": "kfm://record-scope/synthetic-claim-history",
+          "disposition": "RETAIN",
+          "proposed_at": "2026-08-11T12:00:00Z",
+          "effective_at": null,
+          "input_record_count": 100,
+          "resulting_record_count": 100,
+          "history_preserved": true,
+          "reversible": true
+        },
+        "dependencies": {
+          "evidence_state": "RESOLVED",
+          "evidence_refs": [
+            "kfm://evidence/synthetic-history-support"
+          ],
+          "correction_state": "NONE",
+          "correction_refs": [],
+          "release_state": "ACTIVE",
+          "release_refs": [
+            "kfm://release/synthetic-history-v1"
+          ],
+          "rollback_target_ref": null
+        },
+        "retention_controls": {
+          "policy_state": "VERIFIED",
+          "policy_ref": "kfm://policy/synthetic-temporal-retention-v1",
+          "legal_basis_state": "NOT_REQUIRED",
+          "legal_basis_ref": null,
+          "erasure_obligation": "NONE",
+          "archive_ref": null,
+          "disposition_receipt_ref": null,
+          "tombstone_ref": null,
+          "proof_preservation": "FULL",
+          "minimization_required": false
+        },
+        "decision": {
+          "outcome": "ERROR",
+          "recommendation": "VALIDATOR_ERROR",
+          "reason_codes": [
+            "VALIDATOR_ERROR"
+          ],
+          "review_required": true,
+          "execution_authorized": false
+        },
+        "authority": {
+          "retention_policy_authority": false,
+          "erasure_authority": false,
+          "deletion_authority": false,
+          "evidence_mutation_authority": false,
+          "correction_authority": false,
+          "release_authority": false,
+          "lifecycle_write_authority": false,
+          "publication_authority": false
+        },
+        "limitations": [
+          "fixture_only",
+          "no_disposition_execution",
+          "no_evidence_or_history_deletion",
+          "no_policy_or_erasure_authority",
+          "no_release_or_publication_authority"
+        ],
+        "spec_hash": "sha256:c77d695facde84c47d9f0f8817ee2fe10ce113bcce6113effef670480b085961"
+      }
+    }
+  ]
+}

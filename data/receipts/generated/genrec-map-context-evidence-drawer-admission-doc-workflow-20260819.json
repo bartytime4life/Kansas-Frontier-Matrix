@@ -1,0 +1,269 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/map-context-evidence-drawer-admission.yml": "sha256:0133b8192b0c2a8ddbc623d9561f8c9dcfe1c6cb4fbd1fea2e9e80b251049d89",
+    "docs/architecture/ui/map-context-evidence-drawer-admission.md": "sha256:23b017f4acfad018d83c1eb28a5c59ca1f1149a8c0b9814457cac2346b6fcdd2"
+  },
+  "artifact_paths": [
+    ".github/workflows/map-context-evidence-drawer-admission.yml",
+    "docs/architecture/ui/map-context-evidence-drawer-admission.md"
+  ],
+  "citations": [
+    {
+      "id": "KFM-docs-architecture-ui-map-context-evidence-drawer-admission-md",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/ui/map-context-evidence-drawer-admission.md@0764316bfb920d076219a26c06ce1e335dbaf9fd"
+    },
+    {
+      "id": "KFM-github-CODEOWNERS",
+      "validated": true,
+      "evidence_ref": "repo:.github/CODEOWNERS@0764316bfb920d076219a26c06ce1e335dbaf9fd"
+    },
+    {
+      "id": "KFM-docs-adr-ADR-0029-adopt-directory-governance-standard-v2-md",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0764316bfb920d076219a26c06ce1e335dbaf9fd"
+    },
+    {
+      "id": "KFM-docs-doctrine-directory-rules-md",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@0764316bfb920d076219a26c06ce1e335dbaf9fd"
+    },
+    {
+      "id": "KFM-docs-architecture-ui-README-md",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/ui/README.md@0764316bfb920d076219a26c06ce1e335dbaf9fd"
+    },
+    {
+      "id": "KFM-docs-architecture-ui-BOUNDARIES-md",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/ui/BOUNDARIES.md@0764316bfb920d076219a26c06ce1e335dbaf9fd"
+    },
+    {
+      "id": "KFM-docs-architecture-ui-EVIDENCE-DRAWER-md",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/ui/EVIDENCE_DRAWER.md@0764316bfb920d076219a26c06ce1e335dbaf9fd"
+    },
+    {
+      "id": "KFM-docs-architecture-ui-MAP-RUNTIME-BOUNDARY-md",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md@0764316bfb920d076219a26c06ce1e335dbaf9fd"
+    },
+    {
+      "id": "KFM-contracts-ui-map-context-envelope-md",
+      "validated": true,
+      "evidence_ref": "repo:contracts/ui/map_context_envelope.md@0764316bfb920d076219a26c06ce1e335dbaf9fd"
+    },
+    {
+      "id": "KFM-contracts-ui-evidence-drawer-payload-md",
+      "validated": true,
+      "evidence_ref": "repo:contracts/ui/evidence_drawer_payload.md@0764316bfb920d076219a26c06ce1e335dbaf9fd"
+    },
+    {
+      "id": "KFM-contracts-runtime-decision-envelope-md",
+      "validated": true,
+      "evidence_ref": "repo:contracts/runtime/decision_envelope.md@0764316bfb920d076219a26c06ce1e335dbaf9fd"
+    },
+    {
+      "id": "KFM-schemas-contracts-v1-ui-map-context-envelope-schema-json",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/ui/map_context_envelope.schema.json@0764316bfb920d076219a26c06ce1e335dbaf9fd"
+    },
+    {
+      "id": "KFM-schemas-contracts-v1-ui-evidence-drawer-payload-schema-json",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/ui/evidence_drawer_payload.schema.json@0764316bfb920d076219a26c06ce1e335dbaf9fd"
+    },
+    {
+      "id": "KFM-schemas-contracts-v1-runtime-decision-envelope-schema-json",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/runtime/decision_envelope.schema.json@0764316bfb920d076219a26c06ce1e335dbaf9fd"
+    },
+    {
+      "id": "KFM-packages-envelopes-src-envelopes-map-context-evidence-drawer-py",
+      "validated": true,
+      "evidence_ref": "repo:packages/envelopes/src/envelopes/map_context_evidence_drawer.py@0764316bfb920d076219a26c06ce1e335dbaf9fd"
+    },
+    {
+      "id": "KFM-packages-envelopes-src-envelopes-init-py",
+      "validated": true,
+      "evidence_ref": "repo:packages/envelopes/src/envelopes/__init__.py@0764316bfb920d076219a26c06ce1e335dbaf9fd"
+    },
+    {
+      "id": "KFM-fixtures-ui-map-context-evidence-drawer-admission-cases-json",
+      "validated": true,
+      "evidence_ref": "repo:fixtures/ui/map_context_evidence_drawer_admission/cases.json@0764316bfb920d076219a26c06ce1e335dbaf9fd"
+    },
+    {
+      "id": "KFM-tools-validators-ui-validate-map-context-evidence-drawer-admission-py",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/ui/validate_map_context_evidence_drawer_admission.py@0764316bfb920d076219a26c06ce1e335dbaf9fd"
+    },
+    {
+      "id": "KFM-tests-packages-envelopes-test-map-context-evidence-drawer-admission-py",
+      "validated": true,
+      "evidence_ref": "repo:tests/packages/envelopes/test_map_context_evidence_drawer_admission.py@0764316bfb920d076219a26c06ce1e335dbaf9fd"
+    },
+    {
+      "id": "KFM-github-workflows-map-context-evidence-drawer-admission-yml",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/map-context-evidence-drawer-admission.yml@0764316bfb920d076219a26c06ce1e335dbaf9fd"
+    },
+    {
+      "id": "KFM-data-receipts-generated-genrec-map-context-evidence-drawer-admission-20260807-json",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-map-context-evidence-drawer-admission-20260807.json@0764316bfb920d076219a26c06ce1e335dbaf9fd"
+    },
+    {
+      "id": "KFM-apps-explorer-web-src-adapters-GovernedClient-ts",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/adapters/GovernedClient.ts@0764316bfb920d076219a26c06ce1e335dbaf9fd"
+    },
+    {
+      "id": "KFM-repository-build-agent-v6",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    },
+    {
+      "id": "KFM-feature-PR-2105",
+      "validated": true,
+      "evidence_ref": "github:pull/2105@a889f8b596e0ddcac0955cfb4227f9b0c87625f9"
+    },
+    {
+      "id": "KFM-merged-PR-3104",
+      "validated": true,
+      "evidence_ref": "github:pull/3104@5a78dbd3a718301f1748c47c95dcb14e73aea681"
+    },
+    {
+      "id": "KFM-actions-run-32297102791",
+      "validated": true,
+      "evidence_ref": "github:actions/run/32297102791"
+    },
+    {
+      "id": "KFM-actions-job-96210854727",
+      "validated": true,
+      "evidence_ref": "github:actions/job/96210854727"
+    },
+    {
+      "id": "KFM-repair-PR-3106",
+      "validated": true,
+      "evidence_ref": "github:pull/3106@3e0f9d7205578ec84fe76ac9d37a16a4c7f20e22"
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-19T20:25:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_refs": [
+      "repo:docs/architecture/ui/map-context-evidence-drawer-admission.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:.github/CODEOWNERS@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:docs/doctrine/directory-rules.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:docs/architecture/ui/README.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:docs/architecture/ui/BOUNDARIES.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:docs/architecture/ui/EVIDENCE_DRAWER.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:contracts/ui/map_context_envelope.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:contracts/ui/evidence_drawer_payload.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:contracts/runtime/decision_envelope.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:schemas/contracts/v1/ui/map_context_envelope.schema.json@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:schemas/contracts/v1/ui/evidence_drawer_payload.schema.json@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:schemas/contracts/v1/runtime/decision_envelope.schema.json@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:packages/envelopes/src/envelopes/map_context_evidence_drawer.py@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:packages/envelopes/src/envelopes/__init__.py@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:fixtures/ui/map_context_evidence_drawer_admission/cases.json@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:tools/validators/ui/validate_map_context_evidence_drawer_admission.py@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:tests/packages/envelopes/test_map_context_evidence_drawer_admission.py@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:.github/workflows/map-context-evidence-drawer-admission.yml@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:data/receipts/generated/genrec-map-context-evidence-drawer-admission-20260807.json@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:apps/explorer-web/src/adapters/GovernedClient.ts@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "github:pull/2105@a889f8b596e0ddcac0955cfb4227f9b0c87625f9",
+      "github:pull/3104@5a78dbd3a718301f1748c47c95dcb14e73aea681",
+      "github:actions/run/32297102791",
+      "github:actions/job/96210854727",
+      "github:pull/3106@3e0f9d7205578ec84fe76ac9d37a16a4c7f20e22"
+    ]
+  },
+  "links": {
+    "pr_number": 3106,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-19"
+  },
+  "notes": "Follow-up authoring receipt for the repository-grounded map-context-to-Evidence-Drawer architecture maintenance and its directly required path-scoped workflow correction. Merged PR #3104 updated the documentation while hosted exact-head validation was still running. Run 32297102791 proved the source validators, 10 focused tests, all eight deterministic replay cases, schema conformance, and no-network posture, then failed only because the workflow still validated the immutable 2026 feature receipt whose artifact set contained the prior documentation bytes. This receipt binds the current documentation and workflow bytes instead; the original feature receipt and the first documentation receipt remain immutable lineage. No admission helper, contract, schema, policy, fixture, validator, focused test, package export, application, runtime, source, lifecycle state, release, deployment, publication, or repository setting is changed.",
+  "override_record": null,
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector read/write",
+      "uploaded-file search",
+      "local deterministic Markdown and metadata validation"
+    ]
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:01ca7eb9a562a0af9b7902dff21bee21744f2cdb2865810f57641a8718bf5192",
+  "receipt_id": "genrec-map-context-evidence-drawer-admission-doc-workflow-20260819",
+  "truth_labels": {
+    ".github/workflows/map-context-evidence-drawer-admission.yml": "PROPOSED",
+    "docs/architecture/ui/map-context-evidence-drawer-admission.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "merged-state-and-failure-reconciliation",
+      "outcome": "PASS",
+      "reason": "Merged PR #3104, main@5a78dbd3a718301f1748c47c95dcb14e73aea681, targeted run 32297102791, and job 96210854727 were inspected. The focused validators, 10 tests, eight exact replay cases, schema checks, and no-network proof passed; the only targeted failure was ARTIFACT_DIGEST_MISMATCH against the immutable 2026 feature receipt."
+    },
+    {
+      "gate": "historical-receipt-preservation",
+      "outcome": "PASS",
+      "reason": "The 2026 feature receipt and the first merged documentation receipt are not rewritten. The follow-up records a new authoring event for the current artifact set."
+    },
+    {
+      "gate": "directory-placement",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and Directory Rules v2 retain the human architecture page under docs/architecture/ui, hosted validation under .github/workflows, and generated authoring provenance under data/receipts/generated without creating a parallel authority root."
+    },
+    {
+      "gate": "markdown-and-metadata-structure",
+      "outcome": "PASS",
+      "reason": "The final KFM metadata block parsed as YAML; markdown-it-py parsed the complete source; one H1, 38 unique heading slugs, 38 resolved internal fragments, balanced fences, and a final newline were confirmed."
+    },
+    {
+      "gate": "workflow-structure-and-boundary",
+      "outcome": "PASS",
+      "reason": "The workflow YAML parsed successfully. Read-only contents permission, pinned actions, Python 3.11, repository-locked installation, source validators, focused tests, exact replay, no-network environment, and the trust-boundary summary remain present. The functional delta is limited to current receipt selection and deterministic artifact digest reporting."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "The workflow binds to sha256:0133b8192b0c2a8ddbc623d9561f8c9dcfe1c6cb4fbd1fea2e9e80b251049d89; the architecture page binds to sha256:23b017f4acfad018d83c1eb28a5c59ca1f1149a8c0b9814457cac2346b6fcdd2. The receipt does not bind its own bytes."
+    },
+    {
+      "gate": "final-hosted-exact-head",
+      "outcome": "SKIPPED",
+      "reason": "The final exact-head run is pending until this receipt is committed. Hosted outcomes must be checked on the resulting head before representing the follow-up as green."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending. This receipt is authoring provenance, not approval, merge authority, release, deployment, or publication."
+    }
+  ]
+}

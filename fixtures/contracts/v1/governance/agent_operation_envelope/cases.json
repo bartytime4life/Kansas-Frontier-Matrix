@@ -1,0 +1,173 @@
+{
+  "cases": [
+    {
+      "case_id": "valid-watcher-ready",
+      "expected": {
+        "finding_codes": [],
+        "validation_outcome": "PASS"
+      },
+      "expected_operation_id": "kfm:agent-operation:f67d8495813edfa37e17498501ad80a709c2d1a5774283ce0f7253fe74d79a4f",
+      "gate_overrides": {},
+      "kill_switch": "DISENGAGED",
+      "mutation": null,
+      "role": "WATCHER"
+    },
+    {
+      "case_id": "valid-planner-ready",
+      "expected": {
+        "finding_codes": [],
+        "validation_outcome": "PASS"
+      },
+      "expected_operation_id": "kfm:agent-operation:ff2def9d521fe0c262bd56c843d4c296c1a7efe8358fd26216928b3b991e3276",
+      "gate_overrides": {},
+      "kill_switch": "DISENGAGED",
+      "mutation": null,
+      "role": "PLANNER"
+    },
+    {
+      "case_id": "valid-executor-ready",
+      "expected": {
+        "finding_codes": [],
+        "validation_outcome": "PASS"
+      },
+      "expected_operation_id": "kfm:agent-operation:cc3d5b9a69d54eafa734dcbbd6d458dc8783418f4bf3be02464411260a65322a",
+      "gate_overrides": {},
+      "kill_switch": "DISENGAGED",
+      "mutation": null,
+      "role": "EXECUTOR"
+    },
+    {
+      "case_id": "valid-planner-kill-switch-hold",
+      "expected": {
+        "finding_codes": [],
+        "validation_outcome": "PASS"
+      },
+      "expected_operation_id": "kfm:agent-operation:50f3be0b098ba5d12731e9aff113fdd1890179766d97020625e4386c4ce5b993",
+      "gate_overrides": {},
+      "kill_switch": "ENGAGED",
+      "mutation": null,
+      "role": "PLANNER"
+    },
+    {
+      "case_id": "valid-executor-policy-deny",
+      "expected": {
+        "finding_codes": [],
+        "validation_outcome": "PASS"
+      },
+      "expected_operation_id": "kfm:agent-operation:c47bf181c209876904a82f04ffa136c6c2c4e9990985242a3e41509780f24a22",
+      "gate_overrides": {
+        "POLICY": "DENY"
+      },
+      "kill_switch": "DISENGAGED",
+      "mutation": null,
+      "role": "EXECUTOR"
+    },
+    {
+      "case_id": "valid-executor-gate-error",
+      "expected": {
+        "finding_codes": [],
+        "validation_outcome": "PASS"
+      },
+      "expected_operation_id": "kfm:agent-operation:246c28e190f5d74a480c3d7f4786c6d2c3e7d24077c9e84b12754b59828c6235",
+      "gate_overrides": {
+        "SCHEMA": "ERROR"
+      },
+      "kill_switch": "DISENGAGED",
+      "mutation": null,
+      "role": "EXECUTOR"
+    },
+    {
+      "case_id": "invalid-watcher-pr-write-overreach",
+      "expected": {
+        "finding_codes": [
+          "SCHEMA_INVALID"
+        ],
+        "validation_outcome": "DENY"
+      },
+      "gate_overrides": {},
+      "kill_switch": "DISENGAGED",
+      "mutation": "WATCHER_PR_WRITE_OVERREACH",
+      "role": "WATCHER"
+    },
+    {
+      "case_id": "invalid-executor-protected-head",
+      "expected": {
+        "finding_codes": [
+          "SCHEMA_INVALID"
+        ],
+        "validation_outcome": "DENY"
+      },
+      "gate_overrides": {},
+      "kill_switch": "DISENGAGED",
+      "mutation": "EXECUTOR_PROTECTED_HEAD",
+      "role": "EXECUTOR"
+    },
+    {
+      "case_id": "invalid-planner-pr-output",
+      "expected": {
+        "finding_codes": [
+          "OUTPUT_KIND_NOT_ALLOWED"
+        ],
+        "validation_outcome": "DENY"
+      },
+      "gate_overrides": {},
+      "kill_switch": "DISENGAGED",
+      "mutation": "PLANNER_PR_OUTPUT",
+      "role": "PLANNER"
+    },
+    {
+      "case_id": "invalid-executor-missing-attestation",
+      "expected": {
+        "finding_codes": [
+          "REQUIRED_INPUT_KIND_MISSING"
+        ],
+        "validation_outcome": "DENY"
+      },
+      "gate_overrides": {},
+      "kill_switch": "DISENGAGED",
+      "mutation": "EXECUTOR_MISSING_ATTESTATION",
+      "role": "EXECUTOR"
+    },
+    {
+      "case_id": "invalid-idempotency-key",
+      "expected": {
+        "finding_codes": [
+          "IDEMPOTENCY_KEY_MISMATCH"
+        ],
+        "validation_outcome": "DENY"
+      },
+      "gate_overrides": {},
+      "kill_switch": "DISENGAGED",
+      "mutation": "IDEMPOTENCY_DRIFT",
+      "role": "PLANNER"
+    },
+    {
+      "case_id": "invalid-disposition",
+      "expected": {
+        "finding_codes": [
+          "DISPOSITION_MISMATCH",
+          "REASON_CODES_MISMATCH"
+        ],
+        "validation_outcome": "DENY"
+      },
+      "gate_overrides": {},
+      "kill_switch": "DISENGAGED",
+      "mutation": "DISPOSITION_DRIFT",
+      "role": "WATCHER"
+    },
+    {
+      "case_id": "invalid-unsorted-evidence",
+      "expected": {
+        "finding_codes": [
+          "EVIDENCE_REFS_NOT_SORTED"
+        ],
+        "validation_outcome": "DENY"
+      },
+      "gate_overrides": {},
+      "kill_switch": "DISENGAGED",
+      "mutation": "UNSORTED_EVIDENCE",
+      "role": "EXECUTOR"
+    }
+  ],
+  "profile": "kfm.governance.agent-operation-envelope.v1"
+}

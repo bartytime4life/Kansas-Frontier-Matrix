@@ -1,0 +1,28 @@
+{
+  "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+  "id": "kfm:ui:evidence-drawer:soil-answer-001",
+  "outcome": "ANSWER",
+  "reason_code": "SUPPORTED",
+  "title": "Synthetic selected soil feature",
+  "summary": "The selected synthetic soil feature is supported by the cited fixture evidence.",
+  "evidence_refs": [
+    "evidence:soil:mukey:123"
+  ],
+  "citations": [
+    {
+      "label": "Synthetic soil fixture",
+      "href": "https://example.invalid/kfm/evidence/soil-mukey-123"
+    }
+  ],
+  "limitations": [
+    "Fixture-only admission proof; not a live soil claim."
+  ],
+  "trust_state": {
+    "source_role": "official",
+    "policy": "ALLOW",
+    "review": "REVIEWED",
+    "release": "RELEASED",
+    "freshness": "CURRENT",
+    "correction": "NONE"
+  }
+}

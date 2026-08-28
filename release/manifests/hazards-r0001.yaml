@@ -1,0 +1,6 @@
+status: PROPOSED
+path: "release/manifests/hazards-r0001.yaml"
+source_docs:
+  - "docs/domains/hazards/RELEASE_INDEX.md"
+notes:
+  - "Placeholder created from the current docs/domains markdown inventory."

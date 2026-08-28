@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/schemas/contracts/v1/domains/geology/resource_estimate.schema.json",
+  "title": "Resource Estimate",
+  "type": "object",
+  "description": "PROPOSED scaffold for schemas/contracts/v1/domains/geology/resource_estimate.schema.json. Fields are to be defined by the owning domain steward.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "source_doc": "docs/domains/geology/FILE_SYSTEM_PLAN.md",
+    "contract_doc": "contracts/domains/geology/resource_estimate.md"
+  },
+  "properties": {},
+  "additionalProperties": true
+}

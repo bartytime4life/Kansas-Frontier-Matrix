@@ -1,0 +1,5 @@
+status: PROPOSED
+source_doc: docs/domains/fauna/CANONICAL_PATHS.md
+path: pipeline_specs/fauna/refresh.yaml
+notes:
+  - Placeholder created from docs/domains markdown inventory.

@@ -1,0 +1,291 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/correction/correction_propagation_plan.schema.json",
+  "title": "CorrectionPropagationPlan",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "spec": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "dt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "ref": {
+      "type": "string",
+      "pattern": "^kfm:[a-z0-9][A-Za-z0-9_.:/-]{7,240}$"
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "surface_kind": {
+          "enum": [
+            "API_PROJECTION",
+            "CATALOG_RECORD",
+            "CITATION_INDEX",
+            "EXPORT_ARTIFACT",
+            "FOCUS_CACHE",
+            "GRAPH_PROJECTION",
+            "MAP_LAYER",
+            "SEARCH_INDEX",
+            "STORY_NODE",
+            "TILE_ARTIFACT"
+          ]
+        },
+        "artifact_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "visibility": {
+          "enum": [
+            "PUBLIC",
+            "SEMI_PUBLIC",
+            "INTERNAL"
+          ]
+        },
+        "action": {
+          "enum": [
+            "INVALIDATE",
+            "MARK_STALE",
+            "REBUILD",
+            "REPOINT_ALIAS",
+            "REPUBLISH",
+            "WITHDRAW",
+            "REVIEW_ONLY"
+          ]
+        },
+        "status": {
+          "enum": [
+            "PENDING",
+            "BLOCKED",
+            "COMPLETED",
+            "ERROR"
+          ]
+        },
+        "target_release_ref": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "completion_receipt_ref": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "updated_at": {
+          "$ref": "#/$defs/dt"
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "INVALIDATE_DERIVATIVE",
+              "MARK_STALE",
+              "REBUILD_DERIVATIVE",
+              "REPOINT_ALIAS",
+              "REPUBLISH_DERIVATIVE",
+              "WITHDRAW_DERIVATIVE",
+              "REVIEW_REQUIRED",
+              "PENDING_ACTION",
+              "BLOCKED_DEPENDENCY",
+              "COMPLETION_RECORDED",
+              "PROPAGATION_ERROR"
+            ]
+          }
+        }
+      },
+      "required": [
+        "surface_kind",
+        "artifact_ref",
+        "visibility",
+        "action",
+        "status",
+        "target_release_ref",
+        "completion_receipt_ref",
+        "updated_at",
+        "reason_codes"
+      ]
+    },
+    "gov": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "execution_mode": {
+          "const": "FIXTURE_ONLY"
+        },
+        "mutation_performed": {
+          "const": false
+        },
+        "cache_invalidated": {
+          "const": false
+        },
+        "alias_repointed": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "history_deleted": {
+          "const": false
+        }
+      },
+      "required": [
+        "execution_mode",
+        "mutation_performed",
+        "cache_invalidated",
+        "alias_repointed",
+        "release_authorized",
+        "publication_authorized",
+        "history_deleted"
+      ]
+    }
+  },
+  "properties": {
+    "object_type": {
+      "const": "CorrectionPropagationPlan"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile": {
+      "const": "kfm.correction-propagation.fixture.v1"
+    },
+    "plan_id": {
+      "type": "string",
+      "pattern": "^kfm:correction-propagation:[a-f0-9]{24}$"
+    },
+    "observed_at": {
+      "$ref": "#/$defs/dt"
+    },
+    "correction_notice_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "source_release_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "replacement_release_ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "declared_surface_kinds": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "API_PROJECTION",
+          "CATALOG_RECORD",
+          "CITATION_INDEX",
+          "EXPORT_ARTIFACT",
+          "FOCUS_CACHE",
+          "GRAPH_PROJECTION",
+          "MAP_LAYER",
+          "SEARCH_INDEX",
+          "STORY_NODE",
+          "TILE_ARTIFACT"
+        ]
+      }
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "entry_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "pending_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "blocked_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "completed_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "error_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "public_impact": {
+          "type": "boolean"
+        },
+        "overall_outcome": {
+          "enum": [
+            "READY",
+            "HOLD",
+            "COMPLETE",
+            "ERROR"
+          ]
+        }
+      },
+      "required": [
+        "entry_count",
+        "pending_count",
+        "blocked_count",
+        "completed_count",
+        "error_count",
+        "public_impact",
+        "overall_outcome"
+      ]
+    },
+    "governance": {
+      "$ref": "#/$defs/gov"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/spec"
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "plan_id",
+    "observed_at",
+    "correction_notice_ref",
+    "source_release_ref",
+    "replacement_release_ref",
+    "declared_surface_kinds",
+    "entries",
+    "summary",
+    "governance",
+    "spec_hash"
+  ]
+}

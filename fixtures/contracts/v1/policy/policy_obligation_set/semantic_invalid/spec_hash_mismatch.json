@@ -1,0 +1,114 @@
+{
+  "canonicalization_profile": "RFC8785-JCS",
+  "governance": {
+    "obligations_enforced": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "publication_authorized": false,
+    "release_authorized": false
+  },
+  "object_type": "PolicyObligationSet",
+  "obligation_set_id": "kfm://policy/obligation-set/35f52321fd85f68099ddce5a",
+  "obligations": [
+    {
+      "applies_to": [
+        "PUBLISH",
+        "REDISTRIBUTE"
+      ],
+      "basis_ref": "kfm://rights/basis/synthetic-aggregation",
+      "kind": "AGGREGATION_ONLY",
+      "obligation_id": "kfm://policy/obligation/aggregation-only",
+      "parameters": {
+        "attribution_ref": null,
+        "consent_ref": null,
+        "embargo_until": null,
+        "minimum_aggregation_count": 10,
+        "notice_ref": null,
+        "retention_days": null,
+        "share_alike_license": null
+      },
+      "policy_decision_ref": "kfm://policy/decision/synthetic-aggregation",
+      "reason_codes": [
+        "AGGREGATION_ONLY_SYNTHETIC"
+      ]
+    },
+    {
+      "applies_to": [
+        "DERIVE",
+        "DOWNLOAD",
+        "PUBLISH",
+        "REDISTRIBUTE",
+        "VIEW"
+      ],
+      "basis_ref": "kfm://rights/basis/synthetic-attribution",
+      "kind": "ATTRIBUTION_REQUIRED",
+      "obligation_id": "kfm://policy/obligation/attribution",
+      "parameters": {
+        "attribution_ref": "kfm://rights/attribution/synthetic-source",
+        "consent_ref": null,
+        "embargo_until": null,
+        "minimum_aggregation_count": null,
+        "notice_ref": null,
+        "retention_days": null,
+        "share_alike_license": null
+      },
+      "policy_decision_ref": "kfm://policy/decision/synthetic-attribution",
+      "reason_codes": [
+        "ATTRIBUTION_REQUIRED_SYNTHETIC"
+      ]
+    },
+    {
+      "applies_to": [
+        "CACHE"
+      ],
+      "basis_ref": "kfm://rights/basis/synthetic-retention",
+      "kind": "RETENTION_LIMIT",
+      "obligation_id": "kfm://policy/obligation/retention-limit",
+      "parameters": {
+        "attribution_ref": null,
+        "consent_ref": null,
+        "embargo_until": null,
+        "minimum_aggregation_count": null,
+        "notice_ref": null,
+        "retention_days": 30,
+        "share_alike_license": null
+      },
+      "policy_decision_ref": "kfm://policy/decision/synthetic-retention",
+      "reason_codes": [
+        "RETENTION_LIMIT_SYNTHETIC"
+      ]
+    },
+    {
+      "applies_to": [
+        "DERIVE",
+        "REDISTRIBUTE"
+      ],
+      "basis_ref": "kfm://rights/basis/synthetic-share-alike",
+      "kind": "SHARE_ALIKE_REQUIRED",
+      "obligation_id": "kfm://policy/obligation/share-alike",
+      "parameters": {
+        "attribution_ref": null,
+        "consent_ref": null,
+        "embargo_until": null,
+        "minimum_aggregation_count": null,
+        "notice_ref": null,
+        "retention_days": null,
+        "share_alike_license": "CC-BY-SA-4.0"
+      },
+      "policy_decision_ref": "kfm://policy/decision/synthetic-share-alike",
+      "reason_codes": [
+        "SHARE_ALIKE_REQUIRED_SYNTHETIC"
+      ]
+    }
+  ],
+  "policy_decision_refs": [
+    "kfm://policy/decision/synthetic-aggregation",
+    "kfm://policy/decision/synthetic-attribution",
+    "kfm://policy/decision/synthetic-retention",
+    "kfm://policy/decision/synthetic-share-alike"
+  ],
+  "schema_version": "1.0.0",
+  "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "status": "PROPOSED_INACTIVE",
+  "subject_ref": "kfm://evidence/bundle/synthetic-policy-obligations"
+}

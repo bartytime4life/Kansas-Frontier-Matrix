@@ -1,0 +1,170 @@
+{
+  "receipt_id": "genrec-pass32-huc-crosswalk-explorer-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/adapters/HucCrosswalkProjection.ts",
+    "apps/explorer-web/src/features/huc_crosswalk_explorer/README.md",
+    "apps/explorer-web/src/features/huc_crosswalk_explorer/index.ts",
+    "apps/explorer-web/tests/browser/huc-crosswalk-explorer.fixture.ts",
+    "apps/explorer-web/tests/browser/huc-crosswalk-explorer.html",
+    "apps/explorer-web/tests/browser/huc-crosswalk-explorer.spec.ts",
+    "apps/explorer-web/tests/huc-crosswalk-explorer.test.ts",
+    "docs/intake/exploratory/pass-32-huc-crosswalk-explorer-source-map.md",
+    "fixtures/ui/huc_crosswalk_projection/README.md",
+    "fixtures/ui/huc_crosswalk_projection/invalid/extra-field.json",
+    "fixtures/ui/huc_crosswalk_projection/invalid/outcome-status-mismatch.json",
+    "fixtures/ui/huc_crosswalk_projection/valid/ambiguous.json",
+    "fixtures/ui/huc_crosswalk_projection/valid/verified-exact.json"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/adapters/HucCrosswalkProjection.ts": "sha256:1fa140813ffffadbaea80b329ecb5c5f6577a49a601e1b7f9437b7cfcc8b244c",
+    "apps/explorer-web/src/features/huc_crosswalk_explorer/README.md": "sha256:a3867edb73b0b679c63cce596ed1e3de5fb41f9c5539b40187b7041e22daebf8",
+    "apps/explorer-web/src/features/huc_crosswalk_explorer/index.ts": "sha256:dfc3b4af0f01de742775a51d3bec668c3a4c61c29ea12f936918d5de0e46285e",
+    "apps/explorer-web/tests/browser/huc-crosswalk-explorer.fixture.ts": "sha256:a47a467bca1b40932483217c6cc5c519357e10cde081d80d24b5d386a39980fa",
+    "apps/explorer-web/tests/browser/huc-crosswalk-explorer.html": "sha256:6cdba6f874d033eb046775d70e04c58c2a7fe88bc80244c51de75862e8c7ab59",
+    "apps/explorer-web/tests/browser/huc-crosswalk-explorer.spec.ts": "sha256:cc88a4363ec42a578104f86b98dce343d25ff78a8c5e566e7477b133df9fa45e",
+    "apps/explorer-web/tests/huc-crosswalk-explorer.test.ts": "sha256:40e658d11384ddab5bb5c06163020571ac0bb3a601da35edee84c3cad052af47",
+    "docs/intake/exploratory/pass-32-huc-crosswalk-explorer-source-map.md": "sha256:8aaa78e611ac2f460d57d7cceaadb3da2887a8532e658850593cfd6a77fd4877",
+    "fixtures/ui/huc_crosswalk_projection/README.md": "sha256:63f1de68e5e0f50e7223d53debb18ef7d87427bb08996711a88fcde9d044077a",
+    "fixtures/ui/huc_crosswalk_projection/invalid/extra-field.json": "sha256:e4ddb3e19baa0006915b1ba8929defa6fdcb316c43aff13f9954b5ee519120ed",
+    "fixtures/ui/huc_crosswalk_projection/invalid/outcome-status-mismatch.json": "sha256:57712a21404bd5ae5d8afe3570ce3e315edb9b886f14122e41c6aaa585afae08",
+    "fixtures/ui/huc_crosswalk_projection/valid/ambiguous.json": "sha256:4dfd76b9c4c2fb1ba561952a244fd57276f9554c0368a6f6838da4fc4c125fbf",
+    "fixtures/ui/huc_crosswalk_projection/valid/verified-exact.json": "sha256:5f0cd3bc40e4addc289d7897125705865707fd0745ca285848ed60250f216713"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:90d8ebdbd2af64ab045164e734831e315e7dce648da8aa5ae06355d267ad14e8",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "TypeScript 7.0.2",
+      "Vitest 4.1.10",
+      "Playwright 1.62.1"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639"
+    ],
+    "attached_docs": [
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "New Ideas 5-17-26"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0008",
+      "gdrive:1cDAPrrPt_AxMB3lBH4z-wQGwKmcGEUt-nOMLLsAlxQQ",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@457e4fba09ef641efbddc0639bd8127e4c464b5a",
+      "repo:contracts/domains/hydrology/huc12_comid_crosswalk_manifest.md",
+      "repo:contracts/domains/hydrology/nhdplus_waterbody_crosswalk.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/adapters/HucCrosswalkProjection.ts": "PROPOSED",
+    "apps/explorer-web/src/features/huc_crosswalk_explorer/README.md": "PROPOSED",
+    "apps/explorer-web/src/features/huc_crosswalk_explorer/index.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/huc-crosswalk-explorer.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/huc-crosswalk-explorer.html": "PROPOSED",
+    "apps/explorer-web/tests/browser/huc-crosswalk-explorer.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/huc-crosswalk-explorer.test.ts": "PROPOSED",
+    "docs/intake/exploratory/pass-32-huc-crosswalk-explorer-source-map.md": "PROPOSED",
+    "fixtures/ui/huc_crosswalk_projection/README.md": "PROPOSED",
+    "fixtures/ui/huc_crosswalk_projection/invalid/extra-field.json": "PROPOSED",
+    "fixtures/ui/huc_crosswalk_projection/invalid/outcome-status-mismatch.json": "PROPOSED",
+    "fixtures/ui/huc_crosswalk_projection/valid/ambiguous.json": "PROPOSED",
+    "fixtures/ui/huc_crosswalk_projection/valid/verified-exact.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-pr-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main and open pull requests were searched for the selected card ID and feature terms; no implementation overlap was found."
+    },
+    {
+      "gate": "focused-explorer-unit-tests",
+      "outcome": "PASS",
+      "reason": "All seven HUC crosswalk Explorer unit tests passed."
+    },
+    {
+      "gate": "explorer-production-build",
+      "outcome": "PASS",
+      "reason": "Explorer TypeScript checking and Vite production build completed locally. The workspace Node 24 runtime emitted the expected engine warning; hosted CI uses the repository-pinned Node 22 line."
+    },
+    {
+      "gate": "explorer-full-unit-suite",
+      "outcome": "PASS",
+      "reason": "All 148 Explorer unit tests passed across 20 files."
+    },
+    {
+      "gate": "browser-fixture-typecheck",
+      "outcome": "PASS",
+      "reason": "The HUC crosswalk browser fixture and Playwright spec passed an isolated TypeScript no-emit check."
+    },
+    {
+      "gate": "local-playwright-browser",
+      "outcome": "SKIPPED",
+      "reason": "No Chrome or Chromium executable is installed in this workspace; the existing ui-build workflow installs Chrome and must validate the pushed exact head."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "The repository generated-receipt validator confirmed exact artifact hashes and bounded receipt shape."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass32-huc-crosswalk-explorer",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0008"
+    },
+    {
+      "id": "gdrive:new-ideas-5-17-26",
+      "validated": true,
+      "evidence_ref": "gdrive:1cDAPrrPt_AxMB3lBH4z-wQGwKmcGEUt-nOMLLsAlxQQ"
+    },
+    {
+      "id": "repository:huc12-comid-crosswalk-manifest",
+      "validated": true,
+      "evidence_ref": "repo:contracts/domains/hydrology/huc12_comid_crosswalk_manifest.md"
+    },
+    {
+      "id": "repository:nhdplus-crosswalk-ambiguity",
+      "validated": true,
+      "evidence_ref": "repo:contracts/domains/hydrology/nhdplus_waterbody_crosswalk.md"
+    },
+    {
+      "id": "repository:adr-0029-directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T17:21:14Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first implementation of Pass 32 KFM-P32-FEAT-0008. The UI accepts only a digest-bound, already-governed projection and does not fetch data, calculate or validate a crosswalk, inspect flow values, create or verify a signature, mutate ambiguity, or grant hydrology, evidence, policy, review, release, deployment, publication, or public-use authority."
+}

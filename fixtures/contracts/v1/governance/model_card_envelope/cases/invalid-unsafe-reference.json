@@ -1,0 +1,1 @@
+{"case_id":"invalid-unsafe-reference","expected":{"finding_codes":["REF_PATH_ESCAPE"],"outcome":"FAIL"},"mutations":[{"op":"set","path":"/document/model_card_ref/ref","value":"repo:model-card:../escape:v1"}],"rehash":true}

@@ -1,0 +1,112 @@
+{
+  "receipt_id": "genrec:repository-build-markdown-prompt:20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/prompts/kfm-repository-build-markdown-modernization-agent.md"
+  ],
+  "artifact_hashes": {
+    "docs/prompts/kfm-repository-build-markdown-modernization-agent.md": "sha256:f328805e972a92a7eac5c9bdba00ec5f767faab32942394aea8b91e11fe1935d"
+  },
+  "model_identity": {
+    "provider": "openai",
+    "model": "GPT-5",
+    "version": "Codex desktop session 2026-08-09"
+  },
+  "prompt_or_contract": "sha256:04a537c91b2706faa0630a845d920cd2bb808ea97ecca45feeb28ea3db414cf9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "google-drive",
+      "github",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "git:main@a98b631e637a481888d386efedae4625fa5a9341",
+      "docs/prompts/ai-builder-system-prompts.md",
+      "docs/prompts/codex-repository-completion-agent.md",
+      "docs/architecture/directory-rules.md",
+      ".github/PULL_REQUEST_TEMPLATE.md"
+    ],
+    "attached_docs": [
+      "Google Drive document 1xIoImud9WHBVW715WRPRjgoay_oPZm9wjLgUUvPPt5c: GPT Markdown Prompt 4.0 / KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ]
+  },
+  "truth_labels": {
+    "docs/prompts/kfm-repository-build-markdown-modernization-agent.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "docs-meta-block-tests-24",
+      "outcome": "PASS",
+      "reason": "Twenty-four metadata-block structure and registry tests passed."
+    },
+    {
+      "gate": "docs-link-tests-18",
+      "outcome": "PASS",
+      "reason": "Eighteen bounded no-network documentation link tests passed."
+    },
+    {
+      "gate": "prompt-meta-block",
+      "outcome": "PASS",
+      "reason": "The prompt metadata block is structurally valid; its expected unregistered-document condition is a review-only warning."
+    },
+    {
+      "gate": "prompt-local-links",
+      "outcome": "PASS",
+      "reason": "The explicit prompt file has no unresolved repository-local target."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, eighty-three total headings, no heading-level jump, balanced fences, and a final newline were verified."
+    },
+    {
+      "gate": "targeted-diff-check",
+      "outcome": "PASS",
+      "reason": "The authored prompt contains no whitespace error reported by the scoped diff check."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "policy:ai-build-operating-contract:3.0.0"
+  ],
+  "citations": [
+    {
+      "id": "KFM_REPOSITORY_BUILD_MARKDOWN_PROMPT_V6_DRIVE",
+      "validated": true,
+      "evidence_ref": "Google Drive document 1xIoImud9WHBVW715WRPRjgoay_oPZm9wjLgUUvPPt5c"
+    },
+    {
+      "id": "KFM_DIRECTORY_RULES",
+      "validated": true,
+      "evidence_ref": "docs/architecture/directory-rules.md"
+    },
+    {
+      "id": "KFM_EXISTING_PROMPT_LANE",
+      "validated": true,
+      "evidence_ref": "docs/prompts/"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T17:53:20Z",
+  "emitter": "openai/codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Adds a portable prompt reference to the established docs/prompts lane. Repository presence, a generated receipt, validation, a commit, or a pull request cannot activate the prompt or authorize merge, release, deployment, promotion, or publication."
+}

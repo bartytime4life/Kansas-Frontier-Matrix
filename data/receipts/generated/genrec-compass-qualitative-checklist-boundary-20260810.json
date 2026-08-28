@@ -1,0 +1,90 @@
+{
+  "receipt_id": "genrec-compass-qualitative-checklist-boundary-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/adr/ADR-0034-compass-qualitative-checklist-boundary.md",
+    "docs/adr/INDEX.md"
+  ],
+  "artifact_hashes": {
+    "docs/adr/ADR-0034-compass-qualitative-checklist-boundary.md": "sha256:b7d3830a8342754b4590da9c0f75cc1571dfb4f1abf8679f73743fba84a1d993",
+    "docs/adr/INDEX.md": "sha256:722da22af2a884e7aecca2897474d0bf0371f9620f335fa719cdab31cc7a92a2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:b7d3830a8342754b4590da9c0f75cc1571dfb4f1abf8679f73743fba84a1d993",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery and private source review",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic documentation validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:175589456a78a78e3047162f138961a02ba5f5e1987e6030dc00c9dc7aa8d18e",
+      "sha256:4395db306dbd0760060daa19faf8bb1e33d0bd3f3a76f1aa84b2fe6ca1658f61",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:4cb791217a9cd69e99b6821b2a9a35f53863431102edfe15c47e00809203ad6c",
+      "sha256:9123c01698646b563cf09ce8df4f8507d0ab651a007f8cfe308819a5b49d469b",
+      "sha256:d26c1c84ece7a35f95c6844c7df754286751f25a7c8a576aa7afc59168208982"
+    ],
+    "attached_docs": [
+      "KFM_Living_Compass_Working_Edition_1.0.docx"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9ce47bd7bfd61763f426c8e22e1c01eb6e96dc4c/docs/intake/exploratory/kfm-living-compass-working-edition-1-0-source-map.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9ce47bd7bfd61763f426c8e22e1c01eb6e96dc4c/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9ce47bd7bfd61763f426c8e22e1c01eb6e96dc4c/contracts/evidence/evidence_bundle.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9ce47bd7bfd61763f426c8e22e1c01eb6e96dc4c/contracts/policy/policy_decision.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9ce47bd7bfd61763f426c8e22e1c01eb6e96dc4c/contracts/release/release_manifest.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9ce47bd7bfd61763f426c8e22e1c01eb6e96dc4c/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "docs/adr/ADR-0034-compass-qualitative-checklist-boundary.md": "PROPOSED",
+    "docs/adr/INDEX.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "drive-source-review", "outcome": "PASS", "reason": "The private Living Compass DOCX was inspected in the authorized Drive session; provider identity is omitted from repository artifacts per the governed source map."},
+    {"gate": "current-repository-overlap-search", "outcome": "PASS", "reason": "No exact COMPASS rubric, workflow, schema, open pull request, matching branch, or ADR-0034 collision was found on the pinned snapshot."},
+    {"gate": "adr-index-coherence", "outcome": "PASS", "reason": "34 numbered ADRs and 12 unassigned scaffolds passed exact index validation."},
+    {"gate": "focused-adr-index-tests", "outcome": "PASS", "reason": "8 deterministic tests passed."},
+    {"gate": "documentation-metadata-validation", "outcome": "PASS", "reason": "Two affected metadata blocks passed the required profile."},
+    {"gate": "documentation-local-link-validation", "outcome": "PASS", "reason": "Two documents and 75 local targets passed; four external badge targets were classified without network requests."},
+    {"gate": "no-score-or-authority-surface", "outcome": "PASS", "reason": "The packet adds no schema, score, threshold, workflow, template, automation, policy, review, promotion, release, deployment, or publication effect."},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the pull request."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {"id": "governed-living-compass-source-map", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9ce47bd7bfd61763f426c8e22e1c01eb6e96dc4c/docs/intake/exploratory/kfm-living-compass-working-edition-1-0-source-map.md"},
+    {"id": "accepted-directory-governance", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9ce47bd7bfd61763f426c8e22e1c01eb6e96dc4c/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"},
+    {"id": "evidence-owner-boundary", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9ce47bd7bfd61763f426c8e22e1c01eb6e96dc4c/contracts/evidence/evidence_bundle.md"},
+    {"id": "policy-owner-boundary", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9ce47bd7bfd61763f426c8e22e1c01eb6e96dc4c/contracts/policy/policy_decision.md"},
+    {"id": "release-owner-boundary", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9ce47bd7bfd61763f426c8e22e1c01eb6e96dc4c/contracts/release/release_manifest.md"}
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T15:23:43Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0034-compass-qualitative-checklist-boundary.md",
+    "drift_register_entry": null
+  },
+  "notes": "Decision-only COMPASS crosswalk derived from the private Living Compass Drive source and its governed repository source map. It permits only an optional qualitative planning checklist, forbids aggregate totals and compensating hard-gate failures, maps every question to an existing owner, and creates no source, evidence, policy, review, promotion, release, deployment, publication, or public-use authority."
+}

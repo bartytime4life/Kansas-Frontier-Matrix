@@ -1,0 +1,138 @@
+{
+  "receipt_id": "genrec-agriculture-hls-ndvi-zonal-materiality-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/agriculture-hls-ndvi-zonal-materiality.yml",
+    "contracts/domains/agriculture/hls_ndvi_zonal_materiality.md",
+    "fixtures/domains/agriculture/hls_ndvi_zonal_materiality/valid/low_valid_hold.json",
+    "fixtures/domains/agriculture/hls_ndvi_zonal_materiality/valid/material_change_candidate.json",
+    "fixtures/domains/agriculture/hls_ndvi_zonal_materiality/valid/no_material_signal.json",
+    "fixtures/domains/agriculture/hls_ndvi_zonal_materiality/valid/source_unchanged.json",
+    "schemas/contracts/v1/domains/agriculture/hls_ndvi_zonal_materiality_assessment.schema.json",
+    "tests/validators/domains/agriculture/hls_ndvi_zonal_materiality/test_validate_hls_ndvi_zonal_materiality.py",
+    "tools/validators/domains/agriculture/hls_ndvi_zonal_materiality/README.md",
+    "tools/validators/domains/agriculture/hls_ndvi_zonal_materiality/validate_hls_ndvi_zonal_materiality.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/agriculture-hls-ndvi-zonal-materiality.yml": "sha256:f0b6cc56e736d248ca83336e64e5f580151190ccb938bda9218d74733a482cc2",
+    "contracts/domains/agriculture/hls_ndvi_zonal_materiality.md": "sha256:6c7336e01b73d12189398b5c0a0c5078bf35aadb68cf85c5cf6b030bfdfb90ed",
+    "fixtures/domains/agriculture/hls_ndvi_zonal_materiality/valid/low_valid_hold.json": "sha256:2a6524030d7c8e1dd727401b86fcdae392559945775a065c4d944b7790743bd3",
+    "fixtures/domains/agriculture/hls_ndvi_zonal_materiality/valid/material_change_candidate.json": "sha256:9ea07939d0eade27ff60972c1f9495c6a3adcc49677e2150a1221becc07fee17",
+    "fixtures/domains/agriculture/hls_ndvi_zonal_materiality/valid/no_material_signal.json": "sha256:ffb12cb01f332a552df95d4c3211ed8412563ced8645bc15bea0db0bd38da7eb",
+    "fixtures/domains/agriculture/hls_ndvi_zonal_materiality/valid/source_unchanged.json": "sha256:9174a6c31a47c6d6c1597c4fd2c94f4de76eba4a3d1cc5ae74496d6f913a918f",
+    "schemas/contracts/v1/domains/agriculture/hls_ndvi_zonal_materiality_assessment.schema.json": "sha256:76555e4c5fc329a70e995dff0d5378ee12d379f2ebd6e2faf55641ca4015284e",
+    "tests/validators/domains/agriculture/hls_ndvi_zonal_materiality/test_validate_hls_ndvi_zonal_materiality.py": "sha256:aa579f674137de0c004b06ac76aad3fae22e5b31774056944568e934f9333790",
+    "tools/validators/domains/agriculture/hls_ndvi_zonal_materiality/README.md": "sha256:5c3b090d3fb47b7c9e038e050f7d746eabe6a75262937cfa8d3dab930692337f",
+    "tools/validators/domains/agriculture/hls_ndvi_zonal_materiality/validate_hls_ndvi_zonal_materiality.py": "sha256:d235914ca3128ebda165b0fb89a259a5f046c397c220ead4af6a01a26f056dd9"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:9ec9aa430c0580e00232a531a3068eddcaa56e707dc1ab2b90137d83dc32ec89",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-2-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-2-26.pdf#hls-ndvi-clear-pixel-zonal-materiality",
+      "repo:contracts/domains/agriculture/ndvi_readiness.md@cb4eca90f2f59cee487673901c433bf077b1f233",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@cb4eca90f2f59cee487673901c433bf077b1f233"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/agriculture-hls-ndvi-zonal-materiality.yml": "PROPOSED",
+    "contracts/domains/agriculture/hls_ndvi_zonal_materiality.md": "PROPOSED",
+    "fixtures/domains/agriculture/hls_ndvi_zonal_materiality/valid/low_valid_hold.json": "PROPOSED",
+    "fixtures/domains/agriculture/hls_ndvi_zonal_materiality/valid/material_change_candidate.json": "PROPOSED",
+    "fixtures/domains/agriculture/hls_ndvi_zonal_materiality/valid/no_material_signal.json": "PROPOSED",
+    "fixtures/domains/agriculture/hls_ndvi_zonal_materiality/valid/source_unchanged.json": "PROPOSED",
+    "schemas/contracts/v1/domains/agriculture/hls_ndvi_zonal_materiality_assessment.schema.json": "PROPOSED",
+    "tests/validators/domains/agriculture/hls_ndvi_zonal_materiality/test_validate_hls_ndvi_zonal_materiality.py": "PROPOSED",
+    "tools/validators/domains/agriculture/hls_ndvi_zonal_materiality/README.md": "PROPOSED",
+    "tools/validators/domains/agriculture/hls_ndvi_zonal_materiality/validate_hls_ndvi_zonal_materiality.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Ten deterministic HLS NDVI zonal materiality tests passed locally."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "The validator and focused tests compile without syntax errors."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The new read-only workflow parses as YAML."
+    },
+    {
+      "gate": "fixture-cli-material-candidate",
+      "outcome": "PASS",
+      "reason": "The material-change fixture validates with a deterministic finite outcome."
+    },
+    {
+      "gate": "receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values bind every authored non-receipt artifact."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:hls-ndvi-clear-pixel-zonal-materiality",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-2-26.pdf#hls-ndvi-clear-pixel-zonal-materiality"
+    },
+    {
+      "id": "repository:ndvi-readiness-neighbor",
+      "validated": true,
+      "evidence_ref": "repo:contracts/domains/agriculture/ndvi_readiness.md@cb4eca90f2f59cee487673901c433bf077b1f233"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@cb4eca90f2f59cee487673901c433bf077b1f233"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T20:45:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a fixture-only HLS NDVI county/HUC12 materiality assessment. It validates equal-area grid identity, source-change evidence, clear-pixel count closure, NDVI summary semantics, strict materiality thresholds, valid-pixel coverage, deterministic spec hashing, and non-release governance without STAC or raster access."
+}

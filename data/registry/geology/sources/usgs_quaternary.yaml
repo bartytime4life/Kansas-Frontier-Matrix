@@ -1,0 +1,16 @@
+# source descriptor: usgs_quaternary
+# domain: geology
+# status: PROPOSED — greenfield template
+id: usgs_quaternary
+domain: geology
+role: TBD            # primary | corroborating | context | restricted
+authority: TBD
+rights:
+  license: TBD
+  attribution_required: true
+  redistribution: TBD
+sensitivity_floor: TBD
+update_cadence: TBD
+access_posture: TBD   # public | api_key | steward_only
+citation_template: "TBD"
+ingest_receipt_template: "data/receipts/ingest/geology/usgs_quaternary/<run_id>.json"

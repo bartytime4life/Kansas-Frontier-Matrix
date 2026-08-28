@@ -1,0 +1,139 @@
+{
+  "receipt_id": "genrec-briefing-drinking-water-advisory-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/drinking-water-advisory.yml",
+    "contracts/domains/hazards/drinking_water_advisory.md",
+    "docs/intake/exploratory/briefing-drinking-water-advisory-source-map.md",
+    "fixtures/domains/hazards/drinking_water_advisory/README.md",
+    "fixtures/domains/hazards/drinking_water_advisory/cases.json",
+    "schemas/contracts/v1/domains/hazards/drinking_water_advisory.schema.json",
+    "tests/domains/hazards/test_drinking_water_advisory.py",
+    "tools/validators/domains/hazards/validate_drinking_water_advisory.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/drinking-water-advisory.yml": "sha256:c8ffd7ee560c7ef5f44564c19a11cfd965c2c97f551947cda958e38cc3140eb0",
+    "contracts/domains/hazards/drinking_water_advisory.md": "sha256:97798514f81cdc519c1fbce7cc49a64c54f7011faf25337d1d2a4ce8c995dffa",
+    "docs/intake/exploratory/briefing-drinking-water-advisory-source-map.md": "sha256:588b0b9cc748325ee29cdc518bcd648da6713c9f2c336918a40d9707a4c94309",
+    "fixtures/domains/hazards/drinking_water_advisory/README.md": "sha256:06f2bf629fc800a83e973f2394a736e246d2b1a58382252261ca023f87a9dd84",
+    "fixtures/domains/hazards/drinking_water_advisory/cases.json": "sha256:cb9c8bcf3d070943386a4cc8ef76ec79859e641ee6607da2eac99193e1a979c8",
+    "schemas/contracts/v1/domains/hazards/drinking_water_advisory.schema.json": "sha256:3e31cc3c247662c5fd0df21b9cca8fc3b2b00a63752d4ed0054d8cd06601f47e",
+    "tests/domains/hazards/test_drinking_water_advisory.py": "sha256:358c9cb58fdc28582f2542927d2aa92f3696798a4a7e386bf731ba79ea5a6398",
+    "tools/validators/domains/hazards/validate_drinking_water_advisory.py": "sha256:5796549f91ec8b50605b12d875f28ee38221e82f8aa442c589291e1854a46bcb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:93547a4874c298fb5e2cd135992df20b65f5ed08b26ee707de9a2905f7d698e6",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "connected-google-drive-read",
+      "connected-github-read-write",
+      "local-repository-validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Briefing to System Integration Architecture"
+    ],
+    "evidence_refs": [
+      "connected-source://KFM-Briefing-to-System-Integration-Architecture#drinking-water-advisory",
+      "repo://contracts/common/advisory_event_envelope.md@463381703bcd6eada8eea05e95c4a88912ed4b02",
+      "repo://contracts/source/source_adapter.md@463381703bcd6eada8eea05e95c4a88912ed4b02",
+      "repo://contracts/source/source_record_absence_assessment.md@463381703bcd6eada8eea05e95c4a88912ed4b02",
+      "repo://docs/doctrine/directory-rules.md@463381703bcd6eada8eea05e95c4a88912ed4b02"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/drinking-water-advisory.yml": "PROPOSED",
+    "contracts/domains/hazards/drinking_water_advisory.md": "PROPOSED",
+    "docs/intake/exploratory/briefing-drinking-water-advisory-source-map.md": "PROPOSED",
+    "fixtures/domains/hazards/drinking_water_advisory/README.md": "PROPOSED",
+    "fixtures/domains/hazards/drinking_water_advisory/cases.json": "PROPOSED",
+    "schemas/contracts/v1/domains/hazards/drinking_water_advisory.schema.json": "PROPOSED",
+    "tests/domains/hazards/test_drinking_water_advisory.py": "PROPOSED",
+    "tools/validators/domains/hazards/validate_drinking_water_advisory.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused Hazards-domain unittest suite (12 tests)",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "exact drinking-water fixture replay (18 cases)",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "adjacent AdvisoryEventEnvelope and SourceRecordAbsenceAssessment suites (28 tests)",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "documentation metadata and local-link checks",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Python compilation, JSON parse, and workflow YAML parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted exact-head pull-request checks",
+      "outcome": "SKIPPED",
+      "reason": "Draft pull request did not exist when the receipt was emitted."
+    },
+    {
+      "gate": "human authority, health, and repository review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "connected-briefing-drinking-water-profile",
+      "validated": true,
+      "evidence_ref": "connected-source://KFM-Briefing-to-System-Integration-Architecture#drinking-water-advisory"
+    },
+    {
+      "id": "repository-advisory-event-envelope",
+      "validated": true,
+      "evidence_ref": "repo://contracts/common/advisory_event_envelope.md@463381703bcd6eada8eea05e95c4a88912ed4b02"
+    },
+    {
+      "id": "repository-source-adapter",
+      "validated": true,
+      "evidence_ref": "repo://contracts/source/source_adapter.md@463381703bcd6eada8eea05e95c4a88912ed4b02"
+    },
+    {
+      "id": "repository-source-record-absence",
+      "validated": true,
+      "evidence_ref": "repo://contracts/source/source_record_absence_assessment.md@463381703bcd6eada8eea05e95c4a88912ed4b02"
+    },
+    {
+      "id": "repository-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo://docs/doctrine/directory-rules.md@463381703bcd6eada8eea05e95c4a88912ed4b02"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T02:02:34Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Inactive, fixture-only, not-for-life-safety Hazards profile. It creates no live source, current health determination, public guidance, alert, evidence or policy decision, lifecycle write, release, deployment, publication, or public-use authority. Only a confirmed rescission authority plus notice, time, source success, and prior lineage can clear a prior advisory; expiry, record absence, and source failure cannot. Roll back by closing the draft before merge or reverting the additive packet after an authorized merge."
+}

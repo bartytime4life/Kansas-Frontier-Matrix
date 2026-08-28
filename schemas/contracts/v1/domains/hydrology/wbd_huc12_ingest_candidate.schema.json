@@ -1,0 +1,307 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/domains/hydrology/wbd_huc12_ingest_candidate.schema.json",
+  "title": "WbdHuc12IngestCandidate",
+  "description": "No-network WBD HUC12 source-edge candidate or no-change receipt projection.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "candidate_id",
+    "created_at",
+    "source_descriptor_ref",
+    "source_package_id",
+    "source_package_spec_hash",
+    "huc12",
+    "request_evidence",
+    "assessment",
+    "disposition",
+    "reason_codes",
+    "allowed_lifecycle_targets",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "WbdHuc12IngestCandidate"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^wbd-huc12-ingest:[0-9]{12}:[a-f0-9]{24}$"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_descriptor_ref": {
+      "const": "data/registry/hydrology/sources/wbd_huc12.yaml"
+    },
+    "source_package_id": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 180
+    },
+    "source_package_spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "huc12": {
+      "type": "string",
+      "pattern": "^[0-9]{12}$"
+    },
+    "request_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "url",
+        "where_clause",
+        "out_fields",
+        "http_status",
+        "etag",
+        "last_modified",
+        "content_type",
+        "body_sha256"
+      ],
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "where_clause": {
+          "type": "string",
+          "minLength": 1
+        },
+        "out_fields": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "http_status": {
+          "enum": [
+            200,
+            304
+          ]
+        },
+        "etag": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "last_modified": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content_type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "body_sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      }
+    },
+    "assessment": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "object_type",
+            "schema_version",
+            "assessment_id",
+            "assessed_at",
+            "source_descriptor_ref",
+            "huc12",
+            "normalization",
+            "prior",
+            "current",
+            "decision",
+            "governance",
+            "spec_hash"
+          ],
+          "properties": {
+            "object_type": {
+              "const": "WbdHuc12MaterialChangeAssessment"
+            },
+            "schema_version": {
+              "const": "1.0.0"
+            },
+            "assessment_id": {
+              "type": "string"
+            },
+            "assessed_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "source_descriptor_ref": {
+              "const": "data/registry/hydrology/sources/wbd_huc12.yaml"
+            },
+            "huc12": {
+              "type": "string",
+              "pattern": "^[0-9]{12}$"
+            },
+            "normalization": {
+              "type": "object"
+            },
+            "prior": {},
+            "current": {},
+            "decision": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "outcome",
+                "change_types"
+              ],
+              "properties": {
+                "outcome": {
+                  "enum": [
+                    "NO_CHANGE",
+                    "MATERIAL_CHANGE",
+                    "ADD",
+                    "REMOVE"
+                  ]
+                },
+                "change_types": {
+                  "type": "array",
+                  "uniqueItems": true
+                }
+              }
+            },
+            "governance": {
+              "type": "object"
+            },
+            "spec_hash": {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "disposition": {
+      "enum": [
+        "RAW_CANDIDATE",
+        "NO_CHANGE_RECEIPT"
+      ]
+    },
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "HTTP_NOT_MODIFIED",
+          "CONTENT_UNCHANGED",
+          "FEATURE_ADDED",
+          "FEATURE_REMOVED",
+          "FEATURE_MATERIAL_CHANGE"
+        ]
+      }
+    },
+    "allowed_lifecycle_targets": {
+      "const": [
+        "data/quarantine/hydrology/wbd_huc12/",
+        "data/raw/hydrology/wbd_huc12/"
+      ]
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "network_fetch",
+        "source_activation",
+        "lifecycle_write",
+        "promotion_allowed",
+        "release_allowed",
+        "publication_allowed"
+      ],
+      "properties": {
+        "fixture_only": {
+          "const": true
+        },
+        "network_fetch": {
+          "const": false
+        },
+        "source_activation": {
+          "const": false
+        },
+        "lifecycle_write": {
+          "const": false
+        },
+        "promotion_allowed": {
+          "const": false
+        },
+        "release_allowed": {
+          "const": false
+        },
+        "publication_allowed": {
+          "const": false
+        }
+      }
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "disposition": {
+            "const": "NO_CHANGE_RECEIPT"
+          },
+          "reason_codes": {
+            "contains": {
+              "const": "HTTP_NOT_MODIFIED"
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "assessment": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "disposition": {
+            "const": "RAW_CANDIDATE"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "assessment": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  ]
+}

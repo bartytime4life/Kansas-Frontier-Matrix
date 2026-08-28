@@ -1,0 +1,26 @@
+{
+  "invalid_1_unbound_descriptor_ref.json": [
+    "SOURCE_DESCRIPTOR_REF_UNBOUND"
+  ],
+  "invalid_2_unbound_source_role_ref.json": [
+    "SOURCE_ROLE_REF_UNBOUND"
+  ],
+  "invalid_3_placeholder_descriptor_digest.json": [
+    "PLACEHOLDER_DIGEST"
+  ],
+  "invalid_4_admit_unknown_rights.json": [
+    "ADMIT_RIGHTS_BLOCKED"
+  ],
+  "invalid_5_raw_capture_not_live_active.json": [
+    "RAW_CAPTURE_REQUIRES_LIVE_ACTIVE"
+  ],
+  "invalid_6_quarantine_missing_case_obligation.json": [
+    "QUARANTINE_OBLIGATION_MISSING"
+  ],
+  "invalid_7_hold_expiry_before_creation.json": [
+    "HOLD_EXPIRY_INVALID"
+  ],
+  "invalid_9_self_lineage.json": [
+    "SELF_LINEAGE_REFERENCE"
+  ]
+}

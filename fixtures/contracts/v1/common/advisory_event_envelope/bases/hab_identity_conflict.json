@@ -1,0 +1,103 @@
+{
+  "schema_version": "1.0.0",
+  "temporal_authority": {
+    "schema_version": "1.0.0",
+    "identity": {
+      "object_id": "kfm:advisory-object:kirwin-lake",
+      "object_type": "AdvisoryEventEnvelope",
+      "native_id": "kdhe-hab:05f2c81bd98728a451a52b8d00401e59d4e2d2d0bef88ebcb8ae35dae3e24c15",
+      "revision_id": "kfm:revision:advisory:05f2c81bd98728a451a52b8d00401e59d4e2d2d0bef88ebcb8ae35dae3e24c15"
+    },
+    "source": {
+      "source_descriptor_ref": "src:ks-kdhe-hab",
+      "source_role_ref": "src:ks-kdhe-hab#/source_role",
+      "issuing_authority_ref": "authority:ks:kdhe",
+      "authority_scope": "KDHE harmful-algal-bloom advisory snapshot fixture"
+    },
+    "time": {
+      "issued_at": "2026-07-24T15:00:00Z",
+      "effective_at": "2026-07-24T15:00:00Z",
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-07-24T16:00:00Z",
+      "retrieved_at": "2026-07-24T16:00:00Z",
+      "corrected_at": null,
+      "superseded_at": null
+    },
+    "space": {
+      "native_geography_text": "Kirwin Lake",
+      "geography_ref": null,
+      "geometry_role": "unresolved",
+      "geometry_confidence": "unresolved"
+    },
+    "state": {
+      "native_state": "IDENTITY_UNRESOLVED",
+      "normalized_state": "identity_conflict",
+      "certainty": "conflicted"
+    },
+    "lineage": {
+      "supersedes": [],
+      "superseded_by": [],
+      "correction_refs": [],
+      "withdrawal_refs": []
+    },
+    "governance": {
+      "evidence_refs": [
+        "kfm://evidence/hazards/kdhe/2026-07-24/table-1"
+      ],
+      "policy_refs": [],
+      "review_refs": [],
+      "release_ref": null,
+      "public_use_allowed": false
+    }
+  },
+  "event": {
+    "event_id": "kfm:advisory:8af38f67f7062910cec9cf514259dfa5ba85fa3a1450c5cc186aae7a9250ffd8",
+    "profile_id": "kfm.advisory-event.hab.v1",
+    "event_family": "harmful_algal_bloom",
+    "native_event_type": "KdheHabAdvisorySnapshot",
+    "native_event_id": "kdhe-hab:05f2c81bd98728a451a52b8d00401e59d4e2d2d0bef88ebcb8ae35dae3e24c15"
+  },
+  "source_surface": {
+    "semantics": "complete_snapshot",
+    "snapshot_complete": true,
+    "retrieval_status": "success",
+    "parse_status": "success",
+    "freshness_status": "current",
+    "checked_at": "2026-07-24T16:00:00Z",
+    "freshness_budget_hours": 24
+  },
+  "advisory": {
+    "native_status": "Warning",
+    "normalized_status": "IDENTITY_CONFLICT",
+    "last_confirmed_status": null,
+    "severity": "Warning",
+    "certainty": "conflicted",
+    "urgency": "normal",
+    "basis": "regulatory_advisory",
+    "onset_at": null,
+    "expires_at": null,
+    "cancelled_at": null,
+    "rescinded_at": null
+  },
+  "scope": {
+    "affected_area_ref": null,
+    "geometry_role": "unresolved",
+    "geometry_confidence": "unresolved",
+    "zone_scope": "unresolved"
+  },
+  "domain_payload": {
+    "payload_type": "KdheHabAdvisorySnapshot",
+    "payload_ref": "fixtures/domains/hazards/kdhe_hab_advisory_snapshot/valid/valid_duplicate_name_conflict.json",
+    "payload_schema_id": "https://schemas.kfm.local/contracts/v1/domains/hazards/kdhe_hab_advisory_snapshot.schema.json",
+    "payload_record_digest": "sha256:be206d9404941233ab6ff85beefc2777dce1094395b41e1546be91813a5697cf",
+    "payload_source_content_digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  },
+  "controls": {
+    "rescission_ref": null,
+    "public_guidance_ref": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "release_neutral": true,
+    "public_use_allowed": false,
+    "alerts_allowed": false
+  }
+}

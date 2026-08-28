@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/implementation_decision_record.schema.json",
+  "title": "ImplementationDecisionRecord",
+  "description": "Closed, non-authoritative review-support record for a bounded implementation decision. Conformance creates no evidence, policy, approval, mutation, promotion, release, deployment, publication, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile",
+    "profile_status",
+    "execution_mode",
+    "authority",
+    "record_id",
+    "change_ref",
+    "created_at",
+    "status",
+    "title",
+    "scope",
+    "decision",
+    "governance",
+    "evidence_refs",
+    "validation_refs",
+    "rollback",
+    "permissions",
+    "non_effects"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "profile": { "const": "kfm.governance.implementation-decision-record.v1" },
+    "profile_status": { "const": "PROPOSED_INACTIVE" },
+    "execution_mode": { "const": "LOCAL_NO_NETWORK" },
+    "authority": { "const": "NONE" },
+    "record_id": {
+      "type": "string",
+      "pattern": "^kfm:implementation-decision:[a-z0-9][a-z0-9-]{2,63}:[0-9]{4}$"
+    },
+    "change_ref": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "status": { "enum": ["DRAFT", "READY_FOR_REVIEW"] },
+    "title": { "type": "string", "minLength": 3, "maxLength": 160 },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["paths", "behavior", "object_families"],
+      "properties": {
+        "paths": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/repo_path" }
+        },
+        "behavior": { "type": "string", "minLength": 1, "maxLength": 1500 },
+        "object_families": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 128 }
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["chosen_option", "mechanism", "rationale", "alternatives", "reviewer_questions"],
+      "properties": {
+        "chosen_option": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "mechanism": { "type": "string", "minLength": 1, "maxLength": 2500 },
+        "rationale": { "type": "string", "minLength": 1, "maxLength": 2500 },
+        "alternatives": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": { "$ref": "#/$defs/alternative" }
+        },
+        "reviewer_questions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 3, "maxLength": 500 }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "truth_label",
+        "significance",
+        "adr_ref",
+        "decision_log_ref",
+        "review_record_ref",
+        "generated_receipt_ref"
+      ],
+      "properties": {
+        "truth_label": {
+          "enum": ["CONFIRMED", "PROPOSED", "NEEDS_VERIFICATION", "UNKNOWN"]
+        },
+        "significance": {
+          "enum": ["LOCAL_IMPLEMENTATION", "CROSS_COMPONENT", "AUTHORITY_SIGNIFICANT"]
+        },
+        "adr_ref": { "$ref": "#/$defs/nullable_ref" },
+        "decision_log_ref": { "$ref": "#/$defs/nullable_ref" },
+        "review_record_ref": { "$ref": "#/$defs/nullable_ref" },
+        "generated_receipt_ref": { "$ref": "#/$defs/nullable_ref" }
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1, "maxLength": 512 }
+    },
+    "validation_refs": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1, "maxLength": 512 }
+    },
+    "rollback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strategy", "target_ref"],
+      "properties": {
+        "strategy": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "target_ref": { "type": "string", "minLength": 1, "maxLength": 512 }
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "may_approve_review",
+        "may_mutate_repository",
+        "may_change_policy",
+        "may_promote",
+        "may_release",
+        "may_publish"
+      ],
+      "properties": {
+        "may_approve_review": { "const": false },
+        "may_mutate_repository": { "const": false },
+        "may_change_policy": { "const": false },
+        "may_promote": { "const": false },
+        "may_release": { "const": false },
+        "may_publish": { "const": false }
+      }
+    },
+    "non_effects": {
+      "const": [
+        "no_evidence_creation_or_resolution",
+        "no_policy_or_review_approval",
+        "no_repository_mutation_authority",
+        "no_promotion_release_deployment_or_publication",
+        "no_person_profile_or_hidden_reasoning"
+      ]
+    }
+  },
+  "$defs": {
+    "repo_path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?!/)(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*//)[A-Za-z0-9_.@ -]+(?:/[A-Za-z0-9_.@ -]+)*$"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        { "type": "null" },
+        { "type": "string", "minLength": 1, "maxLength": 512 }
+      ]
+    },
+    "alternative": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["option", "disposition", "reason"],
+      "properties": {
+        "option": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "disposition": { "enum": ["REJECTED", "DEFERRED"] },
+        "reason": { "type": "string", "minLength": 1, "maxLength": 1200 }
+      }
+    }
+  }
+}

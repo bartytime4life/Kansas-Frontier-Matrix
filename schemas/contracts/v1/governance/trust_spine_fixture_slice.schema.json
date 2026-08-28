@@ -1,0 +1,246 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/trust_spine_fixture_slice.schema.json",
+  "title": "MRTS-05 deterministic trust-spine fixture slice",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "flow_id",
+    "status",
+    "base_ref",
+    "artifact_count",
+    "artifacts",
+    "governing_refs",
+    "link_requirements",
+    "required_negative_cases",
+    "dry_run",
+    "controls"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "kfm.trust-spine-fixture-slice.v1"
+    },
+    "flow_id": {
+      "const": "kfm://fixture/trust-spine/mrts-05"
+    },
+    "status": {
+      "const": "PROPOSED_FIXTURE_ONLY"
+    },
+    "base_ref": {
+      "$ref": "#/$defs/git_sha"
+    },
+    "artifact_count": {
+      "const": 11
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 11,
+      "maxItems": 11,
+      "items": {
+        "$ref": "#/$defs/artifact"
+      }
+    },
+    "governing_refs": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "link_requirements": {
+      "type": "array",
+      "minItems": 18,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*$"
+      }
+    },
+    "required_negative_cases": {
+      "type": "array",
+      "minItems": 13,
+      "maxItems": 13,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*$"
+      }
+    },
+    "dry_run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "promotion_verification_plan",
+        "publication_deny_tool",
+        "expected_status",
+        "expected_readiness",
+        "expected_publication_created"
+      ],
+      "properties": {
+        "promotion_verification_plan": {
+          "$ref": "#/$defs/ref"
+        },
+        "publication_deny_tool": {
+          "$ref": "#/$defs/ref"
+        },
+        "expected_status": {
+          "const": "PASS"
+        },
+        "expected_readiness": {
+          "const": "APPROVE_READY"
+        },
+        "expected_publication_created": {
+          "const": false
+        }
+      }
+    },
+    "controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "network_used",
+        "source_activated",
+        "lifecycle_write",
+        "publication_attempted",
+        "publication_created",
+        "release_authorized",
+        "promotion_authorized",
+        "writer_path",
+        "public_route"
+      ],
+      "properties": {
+        "fixture_only": {
+          "const": true
+        },
+        "network_used": {
+          "const": false
+        },
+        "source_activated": {
+          "const": false
+        },
+        "lifecycle_write": {
+          "const": false
+        },
+        "publication_attempted": {
+          "const": false
+        },
+        "publication_created": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "writer_path": {
+          "const": "tools/validators/governance/validate_trust_spine_fixture_slice.py"
+        },
+        "public_route": {
+          "type": "null"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "git_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._/-]+$"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family_id",
+        "object_id",
+        "identity_field",
+        "path",
+        "schema_path",
+        "sha256",
+        "registry_identity_status",
+        "candidate_binding"
+      ],
+      "properties": {
+        "family_id": {
+          "enum": [
+            "evidence_bundle",
+            "evidence_ref",
+            "policy_decision",
+            "promotion_receipt",
+            "proof_pack",
+            "release_manifest",
+            "rollback_card",
+            "run_receipt",
+            "source_activation_decision",
+            "source_descriptor",
+            "validation_report"
+          ]
+        },
+        "object_id": {
+          "type": "string",
+          "minLength": 3
+        },
+        "identity_field": {
+          "enum": [
+            "activation_decision_id",
+            "bundle_id",
+            "decision_id",
+            "id",
+            "proof_pack_id",
+            "promotion_id",
+            "ref",
+            "release_id",
+            "run_id",
+            "source_id+descriptor_version"
+          ]
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^fixtures/[A-Za-z0-9._/-]+\\.json$"
+        },
+        "schema_path": {
+          "type": "string",
+          "pattern": "^schemas/contracts/v1/[A-Za-z0-9._/-]+\\.json$"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "registry_identity_status": {
+          "enum": [
+            "CONFLICTED",
+            "PARTIAL"
+          ]
+        },
+        "candidate_binding": {
+          "enum": [
+            "CONFLICTED_CANDIDATE_PIN",
+            "SINGLE_SURFACE_FIXTURE_PIN"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,218 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/sensitive_overlay_reveal_expiry.schema.json",
+  "title": "SensitiveOverlayRevealExpiryAssessment",
+  "description": "Closed fixture-only state-transition assessment over hashed reveal-lease summaries. It contains no raw token, key, identity, or genomic material and performs no cleanup, policy, release, or publication action.",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "kfm_ref": {
+      "type": "string",
+      "pattern": "^kfm:[a-z0-9][a-z0-9._:/-]{5,220}$"
+    },
+    "date_time": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    }
+  },
+  "properties": {
+    "object_type": {
+      "const": "SensitiveOverlayRevealExpiryAssessment"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile": {
+      "const": "kfm.sensitive-overlay-reveal-expiry.fixture.v1"
+    },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:sensitive-overlay-reveal-expiry:[0-9a-f]{24}$"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "evaluated_at": {
+      "$ref": "#/$defs/date_time"
+    },
+    "lease": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "reveal_token_hash": {"$ref": "#/$defs/sha256"},
+        "challenge_hash": {"$ref": "#/$defs/sha256"},
+        "consent_ref": {"$ref": "#/$defs/kfm_ref"},
+        "overlay_ref": {"$ref": "#/$defs/kfm_ref"},
+        "issued_at": {"$ref": "#/$defs/date_time"},
+        "expires_at": {"$ref": "#/$defs/date_time"},
+        "single_use": {"type": "boolean"},
+        "consumed": {"type": "boolean"},
+        "revocation_checked_at": {"$ref": "#/$defs/date_time"},
+        "revoked": {"type": "boolean"},
+        "revocation_status": {
+          "enum": ["CURRENT", "REVOKED", "UNKNOWN"]
+        },
+        "attestation_status": {
+          "enum": ["FAILED", "UNKNOWN", "VERIFIED"]
+        },
+        "policy_hash": {"$ref": "#/$defs/sha256"},
+        "current_policy_hash": {"$ref": "#/$defs/sha256"},
+        "client_state_before": {"const": "REVEALED"}
+      },
+      "required": [
+        "reveal_token_hash",
+        "challenge_hash",
+        "consent_ref",
+        "overlay_ref",
+        "issued_at",
+        "expires_at",
+        "single_use",
+        "consumed",
+        "revocation_checked_at",
+        "revoked",
+        "revocation_status",
+        "attestation_status",
+        "policy_hash",
+        "current_policy_hash",
+        "client_state_before"
+      ]
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "lease_state": {
+          "enum": ["ABSTAINED", "ACTIVE", "DENIED", "EXPIRED", "EXPIRING", "REVOKED"]
+        },
+        "outcome": {"enum": ["ABSTAIN", "DENY", "HOLD"]},
+        "seconds_remaining": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 86400
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "ATTESTATION_FAILED",
+              "ATTESTATION_UNKNOWN",
+              "LEASE_INTERVAL_INVALID",
+              "LEASE_TTL_EXCEEDED",
+              "POLICY_HASH_STALE",
+              "REVEAL_ACTIVE",
+              "REVEAL_EXPIRED",
+              "REVEAL_EXPIRING",
+              "REVEAL_REVOKED",
+              "REVOCATION_CHECK_STALE",
+              "REVOCATION_STATUS_UNKNOWN",
+              "TOKEN_ALREADY_CONSUMED",
+              "TOKEN_NOT_SINGLE_USE",
+              "TOKEN_NOT_YET_VALID"
+            ]
+          }
+        },
+        "required_actions": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "DISCARD_CLIENT_KEY",
+              "EMIT_REVEAL_AUDIT_RECEIPT",
+              "KEEP_COUNTDOWN_VISIBLE",
+              "REMOVE_DECRYPTED_OVERLAY",
+              "RESTORE_BLURRED_VIEW",
+              "SCHEDULE_EXPIRY_INVALIDATION",
+              "WARN_REVEAL_EXPIRING"
+            ]
+          }
+        },
+        "target_view_state": {
+          "enum": ["BLURRED", "REVEALED"]
+        },
+        "authority": {"const": "NONE"}
+      },
+      "required": [
+        "lease_state",
+        "outcome",
+        "seconds_remaining",
+        "reason_codes",
+        "required_actions",
+        "target_view_state",
+        "authority"
+      ]
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "execution_mode": {"const": "FIXTURE_ONLY"},
+        "raw_token_material_present": {"type": "boolean"},
+        "key_material_present": {"type": "boolean"},
+        "cleanup_performed": {"type": "boolean"},
+        "audit_receipt_emitted": {"type": "boolean"},
+        "policy_evaluated": {"type": "boolean"},
+        "release_issued": {"type": "boolean"},
+        "publication_authorized": {"type": "boolean"}
+      },
+      "required": [
+        "execution_mode",
+        "raw_token_material_present",
+        "key_material_present",
+        "cleanup_performed",
+        "audit_receipt_emitted",
+        "policy_evaluated",
+        "release_issued",
+        "publication_authorized"
+      ]
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "actions_are_declarative_only",
+          "fixture_only",
+          "no_cleanup_side_effects",
+          "no_key_or_raw_token_material",
+          "no_live_policy_or_attestation_verification",
+          "no_release_or_publication",
+          "no_ui_runtime_mutation"
+        ]
+      }
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "assessment_id",
+    "spec_hash",
+    "evaluated_at",
+    "lease",
+    "assessment",
+    "governance",
+    "limitations"
+  ],
+  "x-kfm": {
+    "status": "PROPOSED_FIXTURE_PROFILE",
+    "source_card": "KFM-P32-PROG-0019",
+    "authority": "NONE",
+    "raw_token_material": "DENIED",
+    "key_material": "DENIED",
+    "cleanup_side_effects": "UNWIRED",
+    "release_and_publication": "UNWIRED",
+    "contract_doc": "contracts/governance/sensitive_overlay_reveal_expiry.md"
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/hash_profile_readiness_matrix.schema.json",
+  "title": "HashProfileReadinessMatrix",
+  "description": "Closed, inactive readiness index for object-family hash roles. It records candidate tuples and one already-executable spec_hash baseline without adopting a cross-family hash policy.",
+  "type": "object",
+  "additionalProperties": false,
+  "x-kfm": {
+    "contract_doc": "contracts/common/hash_profile_readiness_matrix.md",
+    "control_plane_instance": "control_plane/hash_profile_readiness_matrix.json",
+    "fixtures_root": "fixtures/contracts/v1/common/hash_profile_readiness_matrix/",
+    "validator": "tools/validators/validate_hash_profile_readiness_matrix.py",
+    "status": "PROPOSED",
+    "object_family": "HashProfileReadinessMatrix",
+    "source_idea": "KFM-P4-PROG-0003",
+    "authority": "readiness-evidence-only"
+  },
+  "required": [
+    "schema_version",
+    "matrix_id",
+    "status",
+    "source_card",
+    "generated_at",
+    "decision_ref",
+    "profiles",
+    "spec_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v1"
+    },
+    "matrix_id": {
+      "const": "kfm://control-plane/hash-profile-readiness/v1"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "source_card": {
+      "const": "KFM-P4-PROG-0003"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "decision_ref": {
+      "type": "null"
+    },
+    "profiles": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "$ref": "#/$defs/profile"
+      }
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  },
+  "$defs": {
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile_id",
+        "hash_role",
+        "object_families",
+        "algorithm",
+        "digest_prefix",
+        "canonicalization_profile",
+        "proof_kind",
+        "implementation_state",
+        "activation_state",
+        "signature_required",
+        "migration_state",
+        "notes"
+      ],
+      "properties": {
+        "profile_id": {
+          "type": "string",
+          "pattern": "^kfm\\.hash\\.[a-z0-9][a-z0-9.-]{2,127}$"
+        },
+        "hash_role": {
+          "enum": [
+            "descriptor_hash",
+            "content_hash",
+            "root_hash",
+            "range_hash",
+            "spec_hash",
+            "signature_digest"
+          ]
+        },
+        "object_families": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]{1,63}$"
+          }
+        },
+        "algorithm": {
+          "enum": [
+            "SHA-256",
+            "BLAKE3"
+          ]
+        },
+        "digest_prefix": {
+          "enum": [
+            "sha256:",
+            "blake3:"
+          ]
+        },
+        "canonicalization_profile": {
+          "enum": [
+            "RFC8785-JCS",
+            "RAW-BYTES",
+            "ORDERED-FILESET-V1",
+            "BAO-TREE-V1",
+            "DSSE-PAYLOAD-BYTES"
+          ]
+        },
+        "proof_kind": {
+          "enum": [
+            "SEMANTIC_IDENTITY",
+            "BYTE_IDENTITY",
+            "FILESET_ROOT",
+            "RANGE_PROOF",
+            "SIGNATURE_INPUT"
+          ]
+        },
+        "implementation_state": {
+          "enum": [
+            "EXECUTABLE",
+            "SPEC_ONLY",
+            "UNAVAILABLE"
+          ]
+        },
+        "activation_state": {
+          "enum": [
+            "BASELINE",
+            "INACTIVE"
+          ]
+        },
+        "signature_required": {
+          "type": "boolean"
+        },
+        "migration_state": {
+          "const": "NO_MIGRATION_AUTHORIZED"
+        },
+        "notes": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 320
+        }
+      }
+    }
+  }
+}

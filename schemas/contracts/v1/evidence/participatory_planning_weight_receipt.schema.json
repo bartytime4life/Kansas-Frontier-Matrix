@@ -1,0 +1,289 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/participatory_planning_weight_receipt.schema.json",
+  "title": "ParticipatoryPlanningWeightReceiptCandidate",
+  "description": "Fixture-only declaration of separate stakeholder-group planning weights, facilitation, dissent, and sensitivity posture without evidence, policy, review, decision, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_cards",
+    "observed_at",
+    "planning_scope",
+    "method",
+    "criteria",
+    "stakeholder_weight_sets",
+    "deliberation",
+    "governance",
+    "privacy",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "ParticipatoryPlanningWeightReceiptCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.evidence.participatory-planning-weight-receipt.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_cards": {
+      "const": ["KFM-P18-INV-060", "KFM-P18-INV-203", "KFM-P18-INV-421"]
+    },
+    "observed_at": {"type": "string", "format": "date-time"},
+    "planning_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "purpose",
+        "geography_scope_ref",
+        "temporal_scope_ref",
+        "scenario_ref",
+        "target_population_refs",
+        "intended_output"
+      ],
+      "properties": {
+        "purpose": {"type": "string", "minLength": 20, "maxLength": 1000},
+        "geography_scope_ref": {"$ref": "#/$defs/ref"},
+        "temporal_scope_ref": {"$ref": "#/$defs/ref"},
+        "scenario_ref": {"$ref": "#/$defs/nullable_ref"},
+        "target_population_refs": {
+          "allOf": [
+            {"$ref": "#/$defs/ref_array"},
+            {"minItems": 1}
+          ]
+        },
+        "intended_output": {
+          "enum": [
+            "CRITERIA_REVIEW",
+            "SCENARIO_COMPARISON",
+            "SITE_SUITABILITY",
+            "ROUTE_SUITABILITY"
+          ]
+        }
+      }
+    },
+    "method": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method_ref",
+        "facilitation_record_ref",
+        "facilitation_state",
+        "sensitivity_analysis_ref",
+        "sensitivity_analysis_state",
+        "normalization_basis",
+        "aggregation_mode"
+      ],
+      "properties": {
+        "method_ref": {"$ref": "#/$defs/ref"},
+        "facilitation_record_ref": {"$ref": "#/$defs/nullable_ref"},
+        "facilitation_state": {"enum": ["DOCUMENTED", "INCOMPLETE", "UNKNOWN"]},
+        "sensitivity_analysis_ref": {"$ref": "#/$defs/nullable_ref"},
+        "sensitivity_analysis_state": {"enum": ["COMPLETE", "INCOMPLETE", "NOT_APPLICABLE"]},
+        "normalization_basis": {"const": "BASIS_POINTS_10000"},
+        "aggregation_mode": {"const": "SEPARATE_WEIGHT_SETS"}
+      }
+    },
+    "criteria": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 64,
+      "items": {"$ref": "#/$defs/criterion"}
+    },
+    "stakeholder_weight_sets": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {"$ref": "#/$defs/weight_set"}
+    },
+    "deliberation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "consensus_posture",
+        "unresolved_conflict_count",
+        "conflict_summary_refs",
+        "group_comparison_disclosed"
+      ],
+      "properties": {
+        "consensus_posture": {
+          "enum": [
+            "NO_CONSENSUS_ASSERTED",
+            "CONSENSUS_ASSERTED",
+            "MAJORITY_ASSERTED"
+          ]
+        },
+        "unresolved_conflict_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "conflict_summary_refs": {"$ref": "#/$defs/ref_array"},
+        "group_comparison_disclosed": {"type": "boolean"}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_resolution",
+        "policy_ref",
+        "policy_state",
+        "review_ref",
+        "review_state",
+        "release_manifest_ref",
+        "release_state",
+        "rollback_ref"
+      ],
+      "properties": {
+        "evidence_resolution": {"enum": ["RESOLVED", "UNRESOLVED"]},
+        "policy_ref": {"$ref": "#/$defs/nullable_ref"},
+        "policy_state": {"enum": ["NOT_EVALUATED", "PENDING", "ALLOW", "DENY"]},
+        "review_ref": {"$ref": "#/$defs/nullable_ref"},
+        "review_state": {"enum": ["PENDING", "APPROVED", "REJECTED"]},
+        "release_manifest_ref": {"$ref": "#/$defs/nullable_ref"},
+        "release_state": {"enum": ["NOT_RELEASED", "RELEASED", "WITHDRAWN"]},
+        "rollback_ref": {"$ref": "#/$defs/ref"}
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "direct_identifiers_present",
+        "raw_notes_present",
+        "exact_location_payload_present",
+        "participant_group_refs_only"
+      ],
+      "properties": {
+        "direct_identifiers_present": {"const": false},
+        "raw_notes_present": {"const": false},
+        "exact_location_payload_present": {"const": false},
+        "participant_group_refs_only": {"const": true}
+      }
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "planning_decision_authority",
+        "promotion_authority",
+        "release_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "planning_decision_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 512,
+      "pattern": "^\\S+$"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        {"$ref": "#/$defs/ref"},
+        {"type": "null"}
+      ]
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z][a-z0-9_.:-]*$"
+    },
+    "ref_array": {
+      "type": "array",
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "criterion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["criterion_id", "criterion_ref", "direction", "sensitivity"],
+      "properties": {
+        "criterion_id": {"$ref": "#/$defs/id"},
+        "criterion_ref": {"$ref": "#/$defs/ref"},
+        "direction": {"enum": ["PREFER_HIGHER", "PREFER_LOWER", "CONTEXT_DEPENDENT"]},
+        "sensitivity": {"enum": ["PUBLIC", "INTERNAL", "RESTRICTED"]}
+      }
+    },
+    "weight": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["criterion_id", "basis_points"],
+      "properties": {
+        "criterion_id": {"$ref": "#/$defs/id"},
+        "basis_points": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        }
+      }
+    },
+    "weight_set": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "group_ref",
+        "stakeholder_role",
+        "consent_ref",
+        "consent_state",
+        "evidence_ref",
+        "dissent_state",
+        "dissent_summary_ref",
+        "weights"
+      ],
+      "properties": {
+        "group_ref": {"$ref": "#/$defs/ref"},
+        "stakeholder_role": {
+          "enum": [
+            "AFFECTED_GROUP",
+            "COMMUNITY_MEMBER",
+            "COMMUNITY_ORGANIZATION",
+            "PUBLIC_OFFICIAL",
+            "SERVICE_PROVIDER",
+            "SUBJECT_MATTER_EXPERT",
+            "OTHER_DISCLOSED"
+          ]
+        },
+        "consent_ref": {"$ref": "#/$defs/nullable_ref"},
+        "consent_state": {"enum": ["COMPLETE", "INCOMPLETE", "UNKNOWN"]},
+        "evidence_ref": {"$ref": "#/$defs/ref"},
+        "dissent_state": {"enum": ["NONE", "RECORDED", "UNKNOWN"]},
+        "dissent_summary_ref": {"$ref": "#/$defs/nullable_ref"},
+        "weights": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 64,
+          "items": {"$ref": "#/$defs/weight"}
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "network": "forbidden",
+    "authority_effect": "none",
+    "positive_result": "local declaration coherence; human review remains pending"
+  }
+}

@@ -1,0 +1,4 @@
+# pipeline_specs :: geology :: normalize
+name: geology-normalize
+version: 1
+stages: []

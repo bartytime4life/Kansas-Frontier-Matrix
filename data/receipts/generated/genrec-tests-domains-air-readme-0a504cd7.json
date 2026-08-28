@@ -1,0 +1,169 @@
+{
+  "receipt_id": "genrec-tests-domains-air-readme-0a504cd7",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/domains/air/README.md"
+  ],
+  "artifact_hashes": {
+    "tests/domains/air/README.md": "sha256:0a504cd776881f1f1a0cd9fed272b424e2272c4022afa4a16e3992c6ca00d55d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-16-session"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3.1",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/ba141d8ee7092427936161ad7b954fc449036601",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba141d8ee7092427936161ad7b954fc449036601/tests/domains/air/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba141d8ee7092427936161ad7b954fc449036601/tests/domains/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba141d8ee7092427936161ad7b954fc449036601/tests/domains/atmosphere/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba141d8ee7092427936161ad7b954fc449036601/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba141d8ee7092427936161ad7b954fc449036601/docs/domains/atmosphere/CANONICAL_PATHS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba141d8ee7092427936161ad7b954fc449036601/policy/domains/air/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba141d8ee7092427936161ad7b954fc449036601/pipeline_specs/air/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba141d8ee7092427936161ad7b954fc449036601/pipelines/domains/air/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba141d8ee7092427936161ad7b954fc449036601/.github/workflows/domain-atmosphere.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba141d8ee7092427936161ad7b954fc449036601/Makefile",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba141d8ee7092427936161ad7b954fc449036601/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "tests/domains/air/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract",
+      "outcome": "PASS",
+      "reason": "Repository, pinned base, target path, two-file change budget, review-branch route, connector/API execution, non-goals, validation plan, and stop conditions were resolved before mutation."
+    },
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, visibility, permissions, default branch, immutable base SHA, target blob, path-scoped instructions, open PR state, and competing branch state were checked."
+    },
+    {
+      "gate": "directory-rules-adr-drift",
+      "outcome": "PASS",
+      "reason": "The README remains under the canonical tests responsibility root, classifies air as compatibility-only, redirects executable work to atmosphere, and records the unresolved slug choice as ADR-class rather than creating parallel authority."
+    },
+    {
+      "gate": "authority-duplicate-supersession",
+      "outcome": "PASS",
+      "reason": "No duplicate document ID, matching open PR, or task branch surfaced; v0.2 supersedes the nine-line stub at the same path and does not claim schema, contract, policy, source, evidence, release, UI, API, map, AI, or alert authority."
+    },
+    {
+      "gate": "bounded-inventory",
+      "outcome": "PASS",
+      "reason": "Bounded search surfaced only this README under tests/domains/air while preserving UNKNOWN for unindexed, historical, generated, external, or differently named files."
+    },
+    {
+      "gate": "compatibility-guardrail-profile",
+      "outcome": "PASS",
+      "reason": "The revision defines redirect behavior, duplicate-collection and fixture controls, finite outcomes, reason codes, no-network posture, official-authority redirection, migration acceptance, correction, and rollback without activating the alias."
+    },
+    {
+      "gate": "no-loss-revision",
+      "outcome": "PASS",
+      "reason": "The original instruction to use tests/domains/atmosphere for implementation work is retained and expanded; no strong existing material was removed."
+    },
+    {
+      "gate": "workflow-trigger-preflight",
+      "outcome": "PASS",
+      "reason": "The inspected domain-atmosphere workflow triggers on pull requests but contains checkout plus TODO echo steps; no secret-bearing, privileged write, deployment, or publication behavior was established."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "The remotely committed UTF-8 README has one H1, 854 lines, a final newline, balanced fences, unique heading slugs, and 42 internal links resolving under the local GitHub-style anchor check."
+    },
+    {
+      "gate": "sensitivity-rights-secret-review",
+      "outcome": "PASS",
+      "reason": "No credentials, private endpoints, proprietary observations, exact non-public sensor locations, operational emergency instructions, restricted payloads, or publication authorization were introduced."
+    },
+    {
+      "gate": "artifact-integrity",
+      "outcome": "PASS",
+      "reason": "Remote Git blob 57a1df863d1dfb25cfc9c902bf3ec81bb9795bed matches the locally reconstructed content; SHA-256 is 0a504cd776881f1f1a0cd9fed272b424e2272c4022afa4a16e3992c6ca00d55d."
+    },
+    {
+      "gate": "executable-tests",
+      "outcome": "SKIPPED",
+      "reason": "The scoped change creates no executable test or implementation and the compatibility lane is README-only in bounded evidence."
+    },
+    {
+      "gate": "repository-native-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pull-request checks are unavailable until the draft PR is opened; inspected Atmosphere CI is TODO-only and cannot establish substantive coverage."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "The receipt was checked against the inspected generated-receipt field, enum, pattern, and review-state requirements."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-REPOSITORY-DOC-PROMPT-V3.1",
+      "validated": true,
+      "evidence_ref": "attached://Pasted-text-v3.1#sha256-b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    },
+    {
+      "id": "AIR-COMPATIBILITY-TARGET",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba141d8ee7092427936161ad7b954fc449036601/tests/domains/air/README.md"
+    },
+    {
+      "id": "ATMOSPHERE-TEST-PARENT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba141d8ee7092427936161ad7b954fc449036601/tests/domains/atmosphere/README.md"
+    },
+    {
+      "id": "DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba141d8ee7092427936161ad7b954fc449036601/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "ATMOSPHERE-CANONICAL-PATHS",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba141d8ee7092427936161ad7b954fc449036601/docs/domains/atmosphere/CANONICAL_PATHS.md"
+    },
+    {
+      "id": "GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba141d8ee7092427936161ad7b954fc449036601/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-16T20:46:15Z",
+  "emitter": "ai-builder/openai-gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only compatibility revision prepared against pinned main-branch evidence under a two-file final change budget. The target remains a slug guardrail, not an executable test package or authority surface. Human review remains pending; the receipt records provenance and validation, not merge, slug approval, source activation, release, alerting, or publication."
+}

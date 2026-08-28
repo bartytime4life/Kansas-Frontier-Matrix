@@ -1,0 +1,10 @@
+{
+  "meeting_id": "kwo-pm-2026-09-01",
+  "meeting_type": "public_meeting",
+  "title": "FY2027 State Water Plan Public Meeting — Topeka",
+  "starts_at": "2026-09-01T10:00:00-05:00",
+  "virtual_access_posture": "hybrid",
+  "cancellation_state": "scheduled",
+  "source_ref": "kwo:events:2026-public-meeting-01",
+  "unexpected_field": "should-fail"
+}

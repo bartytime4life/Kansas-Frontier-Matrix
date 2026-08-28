@@ -1,0 +1,187 @@
+{
+  "receipt_id": "genrec-tools-validators-crossings-readme-3f2b35d0",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/crossings/README.md"
+  ],
+  "artifact_hashes": {
+    "tools/validators/crossings/README.md": "sha256:3f2b35d0d311fa15c6e89da532fc73f63a4d0b450dd68b563ede08bff4ba6bfc"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-17"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository file and commit reads",
+      "repository code and pull-request search",
+      "remote review-branch and contents writes",
+      "local deterministic content and hash validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    ],
+    "attached_docs": [
+      "Pasted text(44).txt"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/7af05fc50e5a1bab28b314532b0a66d2839a229b",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/30e46c9d80ce2fb19fb5e364ac5855b3d8c01e30",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/30e46c9d80ce2fb19fb5e364ac5855b3d8c01e30/tools/validators/crossings/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/tools/validators/crossings/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/tools/validators/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/tools/validators/_common/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/tools/validators/_common/run_all.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/tools/validators/bridge_river_crossing/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/tools/validators/domains/roads-rail-trade/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/tools/validators/transport-facility-topology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/contracts/domains/roads-rail-trade/crossing.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/schemas/contracts/v1/domains/roads-rail-trade/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/schemas/contracts/v1/crossings/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/policy/domains/roads-rail-trade/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/data/registry/sources/roads-rail-trade/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/tests/domains/roads-rail-trade/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/.github/workflows/domain-roads-rail-trade.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/docs/architecture/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/docs/registers/DRIFT_REGISTER.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/.github/workflows/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/data/receipts/generated/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/crossings/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, public visibility, authenticated admin/push permission, target path, immutable base, target blob, review-branch route, API_ONLY_STRICT profile, two-file change budget, acceptance criteria, and stop conditions were resolved before mutation."
+    },
+    {
+      "gate": "base-drift-reconciliation",
+      "outcome": "PASS",
+      "reason": "Main advanced from 8b016972c1509d2f618cf72ce259e925ec537d0a to 7af05fc50e5a1bab28b314532b0a66d2839a229b through unrelated merged work. The target retained blob 7807275a0afca4aa1518787a392225e2732a6757 and the branch was created from the newer base."
+    },
+    {
+      "gate": "directory-adr-drift-and-path-instruction-preflight",
+      "outcome": "PASS",
+      "reason": "Both Directory Rules copies, proposed schema-home ADR, drift register, validator parent/indexes, source registry, CODEOWNERS, PR contract, workflow documentation, domain workflow, and path-scoped AGENTS.md chain were checked. The document, schema, slug, and registry conflicts are surfaced rather than resolved."
+    },
+    {
+      "gate": "document-authority-and-supersession-graph",
+      "outcome": "PASS",
+      "reason": "The existing doc_id and created date were preserved, v0.2 explicitly supersedes v0.1, and the generic parent remains subordinate to semantic contracts, schemas, policy, evidence, tests, release records, and accepted child validators."
+    },
+    {
+      "gate": "repository-inventory-and-no-overclaim",
+      "outcome": "PASS",
+      "reason": "Direct probes and repository reads established a README-only generic lane, absent expected executable/test/schema paths, a working shared runtime not registered for crossings, README-only child/domain/topology lanes, a draft contract, compatibility/index-only schema surfaces, greenfield policy, documentation-led tests, and TODO-only domain workflow."
+    },
+    {
+      "gate": "parent-child-and-domain-boundary",
+      "outcome": "PASS",
+      "reason": "The README defines a thin generic parent, delegates Bridge/RiverCrossing, facility/topology, shared geometry/freshness, evidence, policy, release, and domain-owned truth, and prevents child specialization or graph projection from becoming Crossing authority."
+    },
+    {
+      "gate": "safety-rights-and-sensitive-content",
+      "outcome": "PASS",
+      "reason": "The README contains no current route conditions, operational instructions, exact sensitive locations, restricted infrastructure details, private access records, or source payloads. It explicitly denies live routing, legal access, structural/load, water/flood, safe-passage, rail-operating, and emergency authority."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "The relevant domain workflow uses pull_request/main-push triggers, ubuntu-latest, a major-tag checkout action, and TODO-only echo jobs. Workflow documentation records incomplete token, branch-protection, required-check, and immutable-pinning evidence; these gaps remain NEEDS VERIFICATION and no workflow is treated as publication authority."
+    },
+    {
+      "gate": "markdown-meta-and-navigation",
+      "outcome": "PASS",
+      "reason": "The final remote README has one H1, unique headings, explicit unique anchors, resolved internal navigation, balanced fences, parseable KFM Meta Block YAML, no trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "repository-relative-link-validation",
+      "outcome": "PASS",
+      "reason": "All eighteen repository-relative links added to the README were verified through GitHub reads at the pinned base."
+    },
+    {
+      "gate": "remote-readback-content-hash-and-scope",
+      "outcome": "PASS",
+      "reason": "GitHub returned README blob 82e9ab67c5e784814811684b4b9ffac7a283c0db on commit 30e46c9d80ce2fb19fb5e364ac5855b3d8c01e30. The locally reconstructed canonical bytes reproduce that exact Git blob and SHA-256 3f2b35d0d311fa15c6e89da532fc73f63a4d0b450dd68b563ede08bff4ba6bfc; pre-receipt scope contains exactly the target README."
+    },
+    {
+      "gate": "repository-native-execution",
+      "outcome": "SKIPPED",
+      "reason": "API_ONLY_STRICT was selected. The repository was not cloned and repository-native commands were not executed locally. Pull-request workflow state will be inspected after PR creation and pending or unavailable checks will not be reported as passing."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "uploaded-documentation-implementation-prompt-v3-1",
+      "validated": true,
+      "evidence_ref": "attachment://Pasted text(44).txt#sha256=b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    },
+    {
+      "id": "target-baseline-and-remote-readback",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/30e46c9d80ce2fb19fb5e364ac5855b3d8c01e30/tools/validators/crossings/README.md"
+    },
+    {
+      "id": "shared-validator-runtime-and-aggregate",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/tools/validators/_common/README.md"
+    },
+    {
+      "id": "crossing-contract-and-schema-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/contracts/domains/roads-rail-trade/crossing.md"
+    },
+    {
+      "id": "child-domain-and-topology-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/tools/validators/bridge_river_crossing/README.md"
+    },
+    {
+      "id": "directory-and-schema-home-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md"
+    },
+    {
+      "id": "workflow-and-codeowner-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/.github/workflows/README.md"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T18:23:18Z",
+  "emitter": "openai-chatgpt/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only revision on a scoped API-only review branch. The README replaces speculative parent guidance with current repository evidence, preserves the generic-parent/child/domain boundaries, and adds implementation acceptance, validation, security, correction, and rollback contracts without creating executable or publication authority. This receipt is process provenance only; it is not factual proof, policy permission, human approval, release authority, or publication authority."
+}

@@ -1,0 +1,11 @@
+{
+  "case_id": "tile-manifest-spec-hash-invalid",
+  "expected": {
+    "issue_codes": [
+      "TILE_MANIFEST_SPEC_HASH_INVALID"
+    ],
+    "status": "DENY"
+  },
+  "fixture_profile": "kfm.pmtiles.tile-artifact-manifest.compat.v1",
+  "mutation": "manifest_spec_hash_invalid"
+}

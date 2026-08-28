@@ -1,0 +1,114 @@
+{
+  "receipt_id": "genrec-stac-cdl-pmtiles-profile-decision-packet-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/intake/exploratory/stac-cdl-pmtiles-profile-decision-packet.md"
+  ],
+  "artifact_hashes": {
+    "docs/intake/exploratory/stac-cdl-pmtiles-profile-decision-packet.md": "sha256:ab55f5eb25081dcedb109b2d246379b315779f72b3ad9ab130068047a82d8839"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:a44642c55b55271e4807eaca14dbfc6a284ca55fa58943f2900562fa54c4dd58",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local deterministic repository inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md",
+      "Google Drive: New Ideas 5-15-26",
+      "Google Drive: New Ideas 5-19-26"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#EXP-006",
+      "gdrive://1boJrrqtqk9DcnzU8zymxFBv83r2-jvbep2kecj7WRCQ",
+      "gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ",
+      "repo:docs/doctrine/directory-rules.md@202976d687e76dfb928f714b61d4a4eaea925bdc",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@202976d687e76dfb928f714b61d4a4eaea925bdc"
+    ]
+  },
+  "truth_labels": {
+    "docs/intake/exploratory/stac-cdl-pmtiles-profile-decision-packet.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "directory-rules-and-duplicate-assay",
+      "outcome": "PASS",
+      "reason": "The packet uses the exploratory-intake documentation owner, identifies existing STAC and PMTiles authorities, and creates no schema, profile, policy, catalog, or release path."
+    },
+    {
+      "gate": "documentation-meta-block",
+      "outcome": "PASS",
+      "reason": "The bounded metadata-block validator accepted the required block."
+    },
+    {
+      "gate": "documentation-link-check",
+      "outcome": "PASS",
+      "reason": "The no-network local documentation link checker completed without findings."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review is pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass20-exp006",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#EXP-006"
+    },
+    {
+      "id": "gdrive:new-ideas-5-15-26",
+      "validated": true,
+      "evidence_ref": "gdrive://1boJrrqtqk9DcnzU8zymxFBv83r2-jvbep2kecj7WRCQ"
+    },
+    {
+      "id": "gdrive:new-ideas-5-19-26",
+      "validated": true,
+      "evidence_ref": "gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"
+    },
+    {
+      "id": "repository:directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@202976d687e76dfb928f714b61d4a4eaea925bdc"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T18:00:00Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Decision-only packet for Pass 20 EXP-006. It creates no STAC profile, namespace, source activation, catalog mutation, policy decision, release, deployment, or publication."
+}

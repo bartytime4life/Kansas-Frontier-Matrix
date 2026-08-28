@@ -1,0 +1,170 @@
+{
+  "receipt_id": "genrec-configs-hydrology-readme-3243b07c",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "configs/domains/hydrology/README.md"
+  ],
+  "artifact_hashes": {
+    "configs/domains/hydrology/README.md": "sha256:3243b07ccb292c5b30327f97e0bc0d47acf2894853df7dad6abf4dc4db158442"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-14-session"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "file_search",
+      "container"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3.1",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/14b59b6b84ee2b9fa46e002b60e922c97cab2761",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/configs/domains/hydrology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/configs/domains/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/configs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/docs/domains/hydrology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/contracts/domains/hydrology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/schemas/contracts/v1/domains/hydrology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/policy/domains/hydrology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/tests/domains/hydrology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/fixtures/domains/hydrology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/data/registry/sources/hydrology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/control_plane/domain_lane_register.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/docs/registers/DRIFT_REGISTER.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/.github/workflows/docs-build.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/.github/workflows/link-check.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/.github/workflows/citation-validation.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "configs/domains/hydrology/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, permissions, default branch, immutable base SHA, target blob, duplicate document ID, open pull request state, PR template, CODEOWNERS, and workflow triggers were inspected."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The README remains in the existing configs/domains/hydrology/ lane. The paired provenance receipt uses the established data/receipts/generated/ lane. No new root or parallel authority is created."
+    },
+    {
+      "gate": "authority-and-supersession-graph",
+      "outcome": "PASS",
+      "reason": "Repository search resolved the document ID only to the target README. v0.3 supersedes v0.2 at the same path while doctrine, contracts, schemas, policy, tests, fixtures, source registry, evidence, and release authority remain separate."
+    },
+    {
+      "gate": "bounded-inventory",
+      "outcome": "PASS",
+      "reason": "Indexed search returned only README.md inside configs/domains/hydrology/. The README labels that result as bounded and does not claim exhaustive absence of differently named or unindexed consumers."
+    },
+    {
+      "gate": "adjacent-surface-reconciliation",
+      "outcome": "PASS",
+      "reason": "Hydrology doctrine, semantic contracts, draft schema index, policy scaffold, test index, fixture index, source registry, empty domain-lane register, proposed ADRs, drift register, and placeholder documentation workflows were inspected and represented without maturity upgrades."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "The UTF-8 document has a final newline, balanced fences, valid internal anchors, a meta block, hierarchy, tables, Mermaid diagram, no-loss assessment, definition of done, rollback, and safe-language sections."
+    },
+    {
+      "gate": "secret-live-binding-review",
+      "outcome": "PASS",
+      "reason": "No private key blocks, common token patterns, credentials, private endpoints, personal paths, live source payloads, warning instructions, or protected well/owner/infrastructure details were introduced."
+    },
+    {
+      "gate": "hydrology-role-and-safety-review",
+      "outcome": "PASS",
+      "reason": "NFHL remains regulatory-only; observations, models, aggregates, administrative records, candidates, synthetic fixtures, and operational-warning context remain distinct; ambiguous reach identity abstains; outage is not safety; KFM remains non-alert authority."
+    },
+    {
+      "gate": "workflow-trigger-preflight",
+      "outcome": "PASS",
+      "reason": "The pull request triggers docs-build, link-check, and citation-validation workflows, but each inspected workflow is a TODO echo scaffold. The README and PR do not claim substantive CI coverage."
+    },
+    {
+      "gate": "executable-config-tests",
+      "outcome": "SKIPPED",
+      "reason": "No YAML, JSON, TOML, loader, consumer, source activation, policy, schema, runtime, pipeline, deployment, or public-output payload is created or changed."
+    },
+    {
+      "gate": "repository-native-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pull-request checks are not available until the branch and draft pull request exist; inspected documentation workflows are scaffolds rather than substantive validators."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "Required fields, hash formats, truth-label enum, validation-outcome enum, review state, citation records, links, and notes were validated against the inspected Draft 2020-12 generated receipt schema."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-OPERATING-PROMPT-V3.1",
+      "validated": true,
+      "evidence_ref": "attached://KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3.1"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "HYDROLOGY-DOMAIN-DOCTRINE",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/docs/domains/hydrology/README.md"
+    },
+    {
+      "id": "CONFIGS-DOMAIN-CONTRACT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/configs/domains/README.md"
+    },
+    {
+      "id": "KFM-PR-CONTRACT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/.github/PULL_REQUEST_TEMPLATE.md"
+    },
+    {
+      "id": "GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/14b59b6b84ee2b9fa46e002b60e922c97cab2761/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-14T18:22:58Z",
+  "emitter": "ai-builder/openai-gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only update on a scoped review branch. The README is reconciled with current main-branch evidence, Directory Rules, Hydrology authority surfaces, PR metadata, workflow triggers, and generated-receipt conventions. No executable Hydrology configuration, source activation, policy, schema, contract, validator, test, fixture payload, workflow, deployment binding, runtime behavior, lifecycle object, release decision, warning service, or public artifact is created or modified. Human review remains pending; this receipt is provenance evidence, not merge authorization."
+}

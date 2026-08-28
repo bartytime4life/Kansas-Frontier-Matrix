@@ -1,0 +1,186 @@
+{
+  "receipt_id": "genrec-docs-dashboard-geology-05599f216769",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/dashboards/domain/geology.md"
+  ],
+  "artifact_hashes": {
+    "docs/dashboards/domain/geology.md": "sha256:05599f21676958f25c066d35df221b2a94098675081b46dcfa1b1013624fc916"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "exact serving revision not exposed"
+  },
+  "prompt_or_contract": "sha256:2607218bc8d3dbc6b207d6611a48c82599a365a576adcb9a769008831bef1598",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "current-repository inspection",
+      "same-path Markdown modernization",
+      "Python SHA-256 and structural validation",
+      "remote branch, blob, diff, workflow, and pull-request verification"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM Geology & Natural Resources Architecture — planning lineage only; current repository evidence controls implementation claims"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/6aaea704230259e4fca30fcc0b9c1a168e12c2c2",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/docs/dashboards/domain/geology.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/docs/dashboards/domain/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/docs/dashboards/DASHBOARD_CATALOG.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/docs/domains/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/contracts/domains/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/schemas/contracts/v1/domains/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/schemas/contracts/v1/domains/geology/aem_survey_campaign.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/schemas/contracts/v1/domains/geology/geologic_unit.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/policy/domains/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/fixtures/domains/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/tools/validators/domains/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/tests/domains/geology/test_source_role_anti_collapse.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/tests/domains/geology/test_aem_campaign.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/.github/workflows/domain-geology.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/apps/explorer-web/src/features/domains/geology/EvidenceDrawer.tsx",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/apps/explorer-web/src/features/domains/geology/layers.ts",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/tests/validators/domains/geology/test_evidence_drawer_convergence.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/.github/workflows/geology-evidence-drawer-convergence.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/apps/governed-api/src/governed_api/routes/registry.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/data/registry/sources/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/data/proofs/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/release/candidates/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/.github/CODEOWNERS"
+    ]
+  },
+  "truth_labels": {
+    "docs/dashboards/domain/geology.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-target-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned main at 6aaea704230259e4fca30fcc0b9c1a168e12c2c2; exact target and catalog blobs were re-read; current open-PR and task-branch searches found no overlapping Geology dashboard work."
+    },
+    {
+      "gate": "complete-target-and-dependency-read",
+      "outcome": "PASS",
+      "reason": "Read the complete prior target, dashboard parent/catalog, current Geology docs/contracts/schemas/policy/source/fixtures/validators/tests/workflows/proof/release/UI/API boundaries, accepted Directory Rules, and CODEOWNERS."
+    },
+    {
+      "gate": "same-path-placement-review",
+      "outcome": "PASS",
+      "reason": "The existing dashboard specification remains under docs/dashboards/domain/. This documentation-only same-path repair is PLACE; no path, authority root, dashboard runtime, metric producer, schema, policy, source, proof, or release lane is created."
+    },
+    {
+      "gate": "repository-evidence-reconciliation",
+      "outcome": "PASS",
+      "reason": "The revision distinguishes four bounded no-network profiles and shared Evidence Drawer convergence from unbound policy, held proof/release, placeholder layer routing, absent dashboard/API route, and unverified telemetry/runtime state."
+    },
+    {
+      "gate": "legacy-anchor-compatibility",
+      "outcome": "PASS",
+      "reason": "All eight legacy section anchors, top, and the legacy title anchor are retained exactly once."
+    },
+    {
+      "gate": "markdown-structure-and-links",
+      "outcome": "PASS",
+      "reason": "One complete metadata block, one H1, unique explicit anchors, resolving same-document fragments, balanced fences, consistent table widths, UTF-8/LF text, final newline, and repository-relative links limited to inspected paths."
+    },
+    {
+      "gate": "security-rights-and-public-boundary",
+      "outcome": "PASS",
+      "reason": "The documentation contains no credentials, source payloads, private records, exact sensitive locations, transform secrets, or public-release claims and preserves fail-closed subsurface/resource handling."
+    },
+    {
+      "gate": "exact-sha256-artifact-binding",
+      "outcome": "PASS",
+      "reason": "Computed the exact final remote SHA-256 for docs/dashboards/domain/geology.md: 05599f21676958f25c066d35df221b2a94098675081b46dcfa1b1013624fc916; Git blob dafaaf487ada1ff4a79d79673e65a9609156bec7."
+    },
+    {
+      "gate": "json-schema-draft-2020-12-receipt-validation",
+      "outcome": "PASS",
+      "reason": "Validated this receipt in-session against the current generated-receipt schema required fields, closed object shapes, enums, hash patterns, and date-time constraints."
+    },
+    {
+      "gate": "repository-native-markdown-link-topology-and-validator-suite",
+      "outcome": "SKIPPED",
+      "reason": "No mounted checkout or repository-native command runner was exposed; hosted pull-request checks remain separate exact-head evidence."
+    },
+    {
+      "gate": "operational-dashboard-policy-evidence-release-deployment-validation",
+      "outcome": "SKIPPED",
+      "reason": "No live source, telemetry producer, policy evaluator, proof packet, release manifest, dashboard route, deployed panel, correction propagation, rollback drill, or public endpoint was exercised."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/6aaea704230259e4fca30fcc0b9c1a168e12c2c2"
+    },
+    {
+      "id": "prior-geology-dashboard",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/docs/dashboards/domain/geology.md"
+    },
+    {
+      "id": "dashboard-domain-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/docs/dashboards/domain/README.md"
+    },
+    {
+      "id": "dashboard-catalog",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/docs/dashboards/DASHBOARD_CATALOG.md"
+    },
+    {
+      "id": "geology-domain-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/.github/workflows/domain-geology.yml"
+    },
+    {
+      "id": "geology-policy-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/policy/domains/geology/README.md"
+    },
+    {
+      "id": "geology-evidence-drawer-convergence",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/tests/validators/domains/geology/test_evidence_drawer_convergence.py"
+    },
+    {
+      "id": "governed-api-route-registry",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/apps/governed-api/src/governed_api/routes/registry.py"
+    },
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T17:42:00Z",
+  "emitter": "ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation/provenance-only change. This receipt binds the exact final Geology dashboard bytes and records human review as pending. It does not prove metric correctness, scientific truth, source admission, rights, policy approval, evidence/proof closure, dashboard runtime, release, deployment, publication, or mergeability. The prompt hash binds the visible scoped task contract, not hidden reasoning."
+}

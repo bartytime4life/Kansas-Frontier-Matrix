@@ -1,0 +1,166 @@
+{
+  "canonicalization_profile": "RFC8785-JCS",
+  "execution_mode": "FIXTURE_ONLY",
+  "governance": {
+    "execution_authorized": false,
+    "network_authorized": false,
+    "promotion_authorized": false,
+    "publication_authorized": false,
+    "raw_admission_authorized": false,
+    "release_authorized": false,
+    "source_activation_authorized": false
+  },
+  "materiality_rules": [
+    {
+      "material_change_outcome": "WORK",
+      "no_change_outcome": "NO_ACTION",
+      "profile_id": "NRCS_GNATSGO_GRID_V1",
+      "rule_kind": "DIGEST_OR_GRID_SCHEMA_CHANGE",
+      "source_family": "GNATSGO",
+      "unknown_outcome": "QUARANTINE"
+    },
+    {
+      "material_change_outcome": "WORK",
+      "no_change_outcome": "NO_ACTION",
+      "profile_id": "NRCS_SSURGO_TABULAR_V1",
+      "rule_kind": "DIGEST_OR_KEYED_ROW_CHANGE",
+      "source_family": "SSURGO",
+      "unknown_outcome": "QUARANTINE"
+    }
+  ],
+  "network_mode": "DENY",
+  "object_type": "SoilWatcherSpec",
+  "outputs": [
+    {
+      "contract_ref": "contracts/domains/soil/soil_watcher_spec.md",
+      "output_type": "SOIL_CHANGE_CANDIDATE",
+      "schema_ref": "schemas/contracts/v1/domains/soil/soil_watcher_spec.schema.json",
+      "target_zone": "WORK"
+    },
+    {
+      "contract_ref": "contracts/domains/soil/soil_watcher_spec.md",
+      "output_type": "SOIL_WATCHER_HOLD",
+      "schema_ref": "schemas/contracts/v1/domains/soil/soil_watcher_spec.schema.json",
+      "target_zone": "QUARANTINE"
+    }
+  ],
+  "pipeline_phases": [
+    {
+      "input_zone": "FIXTURE",
+      "output_zone": "WORK",
+      "phase": "SNAPSHOT",
+      "required_receipt": "SOURCE_SNAPSHOT_RECEIPT"
+    },
+    {
+      "input_zone": "WORK",
+      "output_zone": "WORK",
+      "phase": "NORMALIZE",
+      "required_receipt": "TRANSFORM_RECEIPT"
+    },
+    {
+      "input_zone": "WORK",
+      "output_zone": "QUARANTINE",
+      "phase": "HARD_QA",
+      "required_receipt": "QA_RECEIPT"
+    },
+    {
+      "input_zone": "WORK",
+      "output_zone": "QUARANTINE",
+      "phase": "MATERIALITY",
+      "required_receipt": "MATERIALITY_RECEIPT"
+    },
+    {
+      "input_zone": "WORK",
+      "output_zone": "WORK",
+      "phase": "PACKAGE",
+      "required_receipt": "PACKAGE_RECEIPT"
+    },
+    {
+      "input_zone": "WORK",
+      "output_zone": "WORK",
+      "phase": "RECEIPT",
+      "required_receipt": "RUN_RECEIPT"
+    }
+  ],
+  "policy_ref": "policy/domains/soil/watcher_spec.rego",
+  "qa_rules": [
+    {
+      "applies_to": [
+        "GNATSGO",
+        "SSURGO"
+      ],
+      "failure_zone": "QUARANTINE",
+      "rule_id": "SOIL_GEOMETRY_VALIDITY"
+    },
+    {
+      "applies_to": [
+        "SSURGO"
+      ],
+      "failure_zone": "QUARANTINE",
+      "rule_id": "SOIL_REFERENTIAL_INTEGRITY"
+    },
+    {
+      "applies_to": [
+        "GNATSGO",
+        "SSURGO"
+      ],
+      "failure_zone": "QUARANTINE",
+      "rule_id": "SOIL_REQUIRED_KEYS"
+    },
+    {
+      "applies_to": [
+        "GNATSGO",
+        "SSURGO"
+      ],
+      "failure_zone": "QUARANTINE",
+      "rule_id": "SOIL_SCHEMA_CONFORMANCE"
+    }
+  ],
+  "reason_codes": [
+    "FIXTURE_ONLY",
+    "RIGHTS_AND_SENSITIVITY_UNRESOLVED",
+    "SOURCE_AUTHORITY_UNRESOLVED"
+  ],
+  "receipt_expectations": [
+    "MATERIALITY_RECEIPT",
+    "PACKAGE_RECEIPT",
+    "QA_RECEIPT",
+    "RUN_RECEIPT",
+    "SOURCE_SNAPSHOT_RECEIPT",
+    "TRANSFORM_RECEIPT"
+  ],
+  "schema_version": "1.0.0",
+  "source_scope": [
+    {
+      "acquisition_modes": [
+        "LOCAL_FIXTURE"
+      ],
+      "authority_state": "PLACEHOLDER_ONLY",
+      "materiality_profile": "NRCS_GNATSGO_GRID_V1",
+      "rights_state": "NEEDS_VERIFICATION",
+      "sensitivity_state": "NEEDS_VERIFICATION",
+      "source_family": "GNATSGO",
+      "source_id": "nrcs-gnatsgo",
+      "source_registry_ref": "data/registry/sources/soil/nrcs-gnatsgo.yaml",
+      "support_type": "GRIDDED_DERIVATIVE_SOIL"
+    },
+    {
+      "acquisition_modes": [
+        "LOCAL_FIXTURE",
+        "SDA_DECLARATION_ONLY"
+      ],
+      "authority_state": "PLACEHOLDER_ONLY",
+      "materiality_profile": "NRCS_SSURGO_TABULAR_V1",
+      "rights_state": "NEEDS_VERIFICATION",
+      "sensitivity_state": "NEEDS_VERIFICATION",
+      "source_family": "SSURGO",
+      "source_id": "nrcs-ssurgo",
+      "source_registry_ref": "data/registry/sources/soil/nrcs-ssurgo.yaml",
+      "support_type": "AUTHORITATIVE_STATIC_SOIL_SURVEY"
+    }
+  ],
+  "spec_hash": "sha256:12fe2a913c40a04f6eb087d18ef0f4b292ffd198dfaed8144002c7b0ca9b8b05",
+  "status": "PROPOSED_INACTIVE",
+  "version": "0.1.0",
+  "watcher_id": "kfm.watcher.soil.ssurgo_gnatsgo.candidate"
+}

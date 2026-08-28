@@ -1,0 +1,4 @@
+# packages/source-registry pyproject — greenfield placeholder
+[project]
+name = "kfm-source-registry"
+version = "0.0.0"

@@ -1,0 +1,202 @@
+{
+  "object_type": "AnalyticalQueryCostProfileFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.common.analytical-query-cost-profile.fixture.v1",
+  "base_candidate": {
+    "object_type": "AnalyticalQueryCostProfileCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.common.analytical-query-cost-profile.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-406",
+    "observed_at": "2026-08-11T16:00:00Z",
+    "query_ref": "kfm:analytical-query:synthetic-county-panel:001",
+    "query_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "engine": {
+      "kind": "POSTGRESQL",
+      "profile_ref": "kfm:engine-profile:synthetic-postgresql:001",
+      "portability": "SINGLE_ENGINE"
+    },
+    "input_scope": {
+      "basis": "ESTIMATED",
+      "dataset_refs": ["kfm:dataset:synthetic-county-observations:001"],
+      "estimated_rows": 500000,
+      "estimated_bytes": 32000000
+    },
+    "plan_capture": {
+      "state": "CAPTURED",
+      "format": "EXPLAIN_JSON",
+      "plan_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "parameter_names": ["county_fips", "valid_year"],
+      "raw_plan_stored": false,
+      "raw_sql_stored": false
+    },
+    "index_assumptions": {
+      "state": "DECLARED",
+      "items": [
+        {
+          "logical_name": "county_valid_year",
+          "field_names": ["county_fips", "valid_year"],
+          "access_kind": "BTREE",
+          "required_for_budget": true
+        }
+      ]
+    },
+    "budget": {
+      "max_duration_ms": 2000,
+      "max_rows_read": 1000000,
+      "max_bytes_read": 64000000,
+      "max_peak_memory_bytes": 134217728,
+      "cost_posture": "RESOURCE_BUDGET_ONLY",
+      "billing_profile_ref": null
+    },
+    "observation": {
+      "state": "MEASURED",
+      "duration_ms": 850,
+      "rows_read": 500000,
+      "bytes_read": 32000000,
+      "peak_memory_bytes": 67108864,
+      "run_receipt_ref": "kfm:run-receipt:synthetic-county-panel:001",
+      "telemetry_ref": "kfm:telemetry:synthetic-county-panel:001",
+      "budget_result": "WITHIN_BUDGET"
+    },
+    "disclosure": {
+      "state": "COMPLETE_FOR_DECLARED_SCOPE",
+      "intended_use": "INTERNAL_REVIEW",
+      "summary": "Synthetic county-panel query remained within its declared resource ceilings.",
+      "review_record_refs": []
+    },
+    "limitations": [
+      "DECLARATION_ONLY",
+      "NO_RAW_SQL_OR_PLAN_TEXT",
+      "NO_QUERY_EXECUTION",
+      "NO_TELEMETRY_AUTHENTICATION",
+      "NO_POLICY_OR_REVIEW_AUTHORITY",
+      "NO_RELEASE_OR_PUBLICATION_AUTHORITY"
+    ],
+    "authority_claims": {
+      "query_execution_authority": false,
+      "telemetry_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "deployment_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "pass_measured_resource_budget",
+      "patch": {},
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_billing_profile_reference",
+      "patch": {"budget": {"cost_posture": "BILLING_PROFILE_REFERENCED", "billing_profile_ref": "kfm:billing-profile:synthetic-warehouse:001"}},
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_public_candidate_with_review",
+      "patch": {"disclosure": {"intended_use": "PUBLIC_CANDIDATE", "review_record_refs": ["kfm:review-record:synthetic-query-cost:001"]}},
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_no_index_assumption",
+      "patch": {"index_assumptions": {"state": "NONE", "items": []}},
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "abstain_unresolved_engine",
+      "patch": {"engine": {"kind": "UNRESOLVED", "profile_ref": null, "portability": "UNRESOLVED"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["ENGINE_UNRESOLVED", "PORTABILITY_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_unresolved_input_scope",
+      "patch": {"input_scope": {"basis": "UNRESOLVED", "estimated_rows": null, "estimated_bytes": null}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["INPUT_SCOPE_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_plan_not_captured",
+      "patch": {"plan_capture": {"state": "NOT_CAPTURED", "format": "NONE", "plan_digest": null}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["PLAN_CAPTURE_MISSING"]}
+    },
+    {
+      "name": "abstain_unresolved_indexes",
+      "patch": {"index_assumptions": {"state": "UNRESOLVED", "items": []}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["INDEX_ASSUMPTIONS_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_unresolved_cost_posture",
+      "patch": {"budget": {"cost_posture": "UNRESOLVED"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["COST_POSTURE_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_not_run",
+      "patch": {"observation": {"state": "NOT_RUN", "duration_ms": null, "rows_read": null, "bytes_read": null, "peak_memory_bytes": null, "run_receipt_ref": null, "telemetry_ref": null, "budget_result": "NOT_RUN"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["OBSERVATION_NOT_RUN"]}
+    },
+    {
+      "name": "abstain_unknown_disclosure",
+      "patch": {"disclosure": {"state": "UNKNOWN", "summary": null}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["DISCLOSURE_UNKNOWN"]}
+    },
+    {
+      "name": "deny_input_estimate_exceeds_budget",
+      "patch": {"input_scope": {"estimated_rows": 1000001}},
+      "expected": {"outcome": "DENY", "codes": ["INPUT_ESTIMATE_EXCEEDS_BUDGET"]}
+    },
+    {
+      "name": "deny_plan_capture_incoherent",
+      "patch": {"plan_capture": {"format": "NONE", "plan_digest": null}},
+      "expected": {"outcome": "DENY", "codes": ["PLAN_CAPTURE_INCOHERENT"]}
+    },
+    {
+      "name": "deny_index_state_incoherent",
+      "patch": {"index_assumptions": {"state": "NONE"}},
+      "expected": {"outcome": "DENY", "codes": ["INDEX_STATE_INCOHERENT"]}
+    },
+    {
+      "name": "deny_billing_profile_missing",
+      "patch": {"budget": {"cost_posture": "BILLING_PROFILE_REFERENCED"}},
+      "expected": {"outcome": "DENY", "codes": ["BILLING_PROFILE_REQUIRED"]}
+    },
+    {
+      "name": "deny_observation_incomplete",
+      "patch": {"observation": {"duration_ms": null}},
+      "expected": {"outcome": "DENY", "codes": ["OBSERVATION_INCOMPLETE"]}
+    },
+    {
+      "name": "deny_budget_exceeded",
+      "patch": {"observation": {"duration_ms": 2001, "budget_result": "EXCEEDED"}},
+      "expected": {"outcome": "DENY", "codes": ["BUDGET_EXCEEDED"]}
+    },
+    {
+      "name": "deny_budget_result_drift",
+      "patch": {"observation": {"budget_result": "EXCEEDED"}},
+      "expected": {"outcome": "DENY", "codes": ["BUDGET_RESULT_MISMATCH"]}
+    },
+    {
+      "name": "deny_public_without_review",
+      "patch": {"disclosure": {"intended_use": "PUBLIC_CANDIDATE"}},
+      "expected": {"outcome": "DENY", "codes": ["PUBLIC_DISCLOSURE_REVIEW_REQUIRED"]}
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "patch": {},
+      "tamper": "profile_hash",
+      "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}
+    },
+    {
+      "name": "error_recorded_execution",
+      "patch": {"observation": {"state": "ERROR", "duration_ms": null, "rows_read": null, "bytes_read": null, "peak_memory_bytes": null, "telemetry_ref": null, "budget_result": "ERROR"}},
+      "expected": {"outcome": "ERROR", "codes": ["OBSERVATION_RECORDED_ERROR"]}
+    },
+    {
+      "name": "error_unknown_field",
+      "patch": {"raw_sql": null},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    }
+  ]
+}

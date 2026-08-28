@@ -1,0 +1,563 @@
+{
+  "fixture_version": "kfm.cog-byte-range-integrity-manifest.fixtures.v1",
+  "base_candidate": {
+    "manifest_version": "kfm.cog-byte-range-integrity-manifest.candidate.v1",
+    "manifest_id": "cog-range-manifest.synthetic.v1",
+    "observed_at": "2026-08-11T00:00:00Z",
+    "artifact": {
+      "artifact_ref": "fixture://fixtures/contracts/v1/evidence/cog_byte_range_integrity_manifest/synthetic-range-payload.bin",
+      "intended_format": "COG",
+      "media_type": "application/octet-stream",
+      "byte_length": 65,
+      "whole_digest": "sha256:07b71f27ee06e770a8b9adad6a7e3a0656f2f8c0b810cfc464fad8d1673524a8",
+      "payload_availability": "AVAILABLE",
+      "immutability_state": "IMMUTABLE",
+      "sidecar_freshness_state": "CURRENT",
+      "source_artifact_manifest_ref": "kfm://manifest/candidate.synthetic-cog.v1"
+    },
+    "range_profile": {
+      "profile": "EXPLICIT_SHA256_SEGMENTS",
+      "range_set_version": 1,
+      "algorithm": "sha256",
+      "coverage_mode": "FULL_ARTIFACT_CONTIGUOUS",
+      "entries": [
+        {
+          "range_id": "range.000.header",
+          "role": "HEADER",
+          "offset": 0,
+          "length": 16,
+          "digest": "sha256:6185d10d2cb4ca73d453793361de629821e3d5718898f678bdba9acf9c04fe83"
+        },
+        {
+          "range_id": "range.010.ifd",
+          "role": "IMAGE_FILE_DIRECTORY",
+          "offset": 16,
+          "length": 16,
+          "digest": "sha256:cd1fd67cb29c2c4526f8d6766263c34b637abf91626b8ea451cbf578db26f85d"
+        },
+        {
+          "range_id": "range.020.tile",
+          "role": "TILE_DATA",
+          "offset": 32,
+          "length": 16,
+          "digest": "sha256:147983877e251bc8be08877e4a9ee6153e5dc618d845eeddb8db129bc6416f3f"
+        },
+        {
+          "range_id": "range.030.overview",
+          "role": "OVERVIEW_DATA",
+          "offset": 48,
+          "length": 16,
+          "digest": "sha256:5aac65174cec0bf3e57770872bf1b1f202de5c5eab82b9e4c6491c2bc7f661fe"
+        },
+        {
+          "range_id": "range.040.auxiliary",
+          "role": "AUXILIARY",
+          "offset": 64,
+          "length": 1,
+          "digest": "sha256:01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+        }
+      ]
+    },
+    "format_validation": {
+      "tiff_structure_state": "NOT_EVALUATED",
+      "cog_layout_state": "NOT_EVALUATED",
+      "overview_layout_state": "NOT_EVALUATED",
+      "validator_report_ref": null
+    },
+    "governance": {
+      "evidence_refs": [
+        "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#candidate=KFM-CAND-0093",
+        "kfm://source-card/KFM-P18-INV-183"
+      ],
+      "policy_state": "NOT_EVALUATED",
+      "review_state": "PENDING",
+      "release_state": "NOT_RELEASED",
+      "release_manifest_ref": null,
+      "rollback_ref": null,
+      "interpretation_authority": false,
+      "format_conformance_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false
+    },
+    "manifest_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "cases": [
+    {
+      "name": "pass_complete_range_integrity_without_format_claim",
+      "mutations": [],
+      "expected": {
+        "outcome": "PASS",
+        "codes": []
+      }
+    },
+    {
+      "name": "abstain_payload_missing",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/artifact/payload_availability",
+          "value": "MISSING"
+        }
+      ],
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": [
+          "PAYLOAD_MISSING"
+        ]
+      }
+    },
+    {
+      "name": "abstain_payload_unknown",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/artifact/payload_availability",
+          "value": "UNKNOWN"
+        }
+      ],
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": [
+          "PAYLOAD_UNKNOWN"
+        ]
+      }
+    },
+    {
+      "name": "abstain_payload_unavailable",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/artifact/artifact_ref",
+          "value": "fixture://fixtures/contracts/v1/evidence/cog_byte_range_integrity_manifest/missing.bin"
+        }
+      ],
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": [
+          "PAYLOAD_UNAVAILABLE"
+        ]
+      }
+    },
+    {
+      "name": "abstain_sidecar_freshness_unknown",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/artifact/sidecar_freshness_state",
+          "value": "UNKNOWN"
+        }
+      ],
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": [
+          "SIDECAR_FRESHNESS_UNKNOWN"
+        ]
+      }
+    },
+    {
+      "name": "abstain_immutability_unknown",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/artifact/immutability_state",
+          "value": "UNKNOWN"
+        }
+      ],
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": [
+          "IMMUTABILITY_UNKNOWN"
+        ]
+      }
+    },
+    {
+      "name": "deny_sidecar_stale",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/artifact/sidecar_freshness_state",
+          "value": "STALE"
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "SIDECAR_STALE"
+        ]
+      }
+    },
+    {
+      "name": "deny_mutable_artifact",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/artifact/immutability_state",
+          "value": "MUTABLE"
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "ARTIFACT_MUTABLE"
+        ]
+      }
+    },
+    {
+      "name": "deny_byte_length_mismatch",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/artifact/byte_length",
+          "value": 66
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "BYTE_LENGTH_MISMATCH"
+        ]
+      }
+    },
+    {
+      "name": "deny_whole_digest_mismatch",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/artifact/whole_digest",
+          "value": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "WHOLE_DIGEST_MISMATCH"
+        ]
+      }
+    },
+    {
+      "name": "deny_range_digest_mismatch",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/range_profile/entries/2/digest",
+          "value": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "RANGE_DIGEST_MISMATCH"
+        ]
+      }
+    },
+    {
+      "name": "deny_range_gap",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/range_profile/entries/1/offset",
+          "value": 17
+        },
+        {
+          "op": "set",
+          "path": "/range_profile/entries/1/length",
+          "value": 15
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "RANGE_GAP"
+        ]
+      }
+    },
+    {
+      "name": "deny_range_overlap",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/range_profile/entries/1/offset",
+          "value": 15
+        },
+        {
+          "op": "set",
+          "path": "/range_profile/entries/1/length",
+          "value": 17
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "RANGE_OVERLAP"
+        ]
+      }
+    },
+    {
+      "name": "deny_range_out_of_bounds",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/range_profile/entries/4/length",
+          "value": 2
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "RANGE_OUT_OF_BOUNDS"
+        ]
+      }
+    },
+    {
+      "name": "deny_range_coverage_incomplete",
+      "mutations": [
+        {
+          "op": "remove",
+          "path": "/range_profile/entries/4"
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "RANGE_COVERAGE_INCOMPLETE"
+        ]
+      }
+    },
+    {
+      "name": "deny_ranges_not_canonical",
+      "mutations": [
+        {
+          "op": "reverse",
+          "path": "/range_profile/entries"
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "RANGES_NOT_CANONICAL"
+        ]
+      }
+    },
+    {
+      "name": "deny_duplicate_range_id",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/range_profile/entries/1/range_id",
+          "value": "range.000.header"
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "DUPLICATE_RANGE_ID"
+        ]
+      }
+    },
+    {
+      "name": "deny_required_role_missing",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/range_profile/entries/3/role",
+          "value": "AUXILIARY"
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "REQUIRED_RANGE_ROLE_MISSING"
+        ]
+      }
+    },
+    {
+      "name": "deny_manifest_spec_hash_tamper",
+      "mutations": [],
+      "tamper": "manifest_spec_hash",
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "MANIFEST_SPEC_HASH_MISMATCH"
+        ]
+      }
+    },
+    {
+      "name": "deny_format_validation_reference_required",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/format_validation/tiff_structure_state",
+          "value": "VALID"
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "FORMAT_VALIDATION_REFERENCE_REQUIRED"
+        ]
+      }
+    },
+    {
+      "name": "deny_format_validation_failed",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/format_validation/cog_layout_state",
+          "value": "INVALID"
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "FORMAT_VALIDATION_FAILED"
+        ]
+      }
+    },
+    {
+      "name": "deny_interpretation_authority",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/governance/interpretation_authority",
+          "value": true
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "INTERPRETATION_AUTHORITY_OVERCLAIM"
+        ]
+      }
+    },
+    {
+      "name": "deny_format_conformance_authority",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/governance/format_conformance_authority",
+          "value": true
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "FORMAT_CONFORMANCE_AUTHORITY_OVERCLAIM"
+        ]
+      }
+    },
+    {
+      "name": "deny_review_overclaim",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/governance/review_state",
+          "value": "APPROVED"
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "REVIEW_STATE_OVERCLAIM"
+        ]
+      }
+    },
+    {
+      "name": "deny_release_overclaim",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/governance/release_state",
+          "value": "RELEASED"
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "RELEASE_STATE_OVERCLAIM"
+        ]
+      }
+    },
+    {
+      "name": "deny_policy_overclaim",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/governance/policy_state",
+          "value": "ALLOW"
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "POLICY_STATE_OVERCLAIM"
+        ]
+      }
+    },
+    {
+      "name": "deny_release_manifest_reference_unexpected",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/governance/release_manifest_ref",
+          "value": "kfm://release/not-authorized"
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "RELEASE_MANIFEST_REFERENCE_UNEXPECTED"
+        ]
+      }
+    },
+    {
+      "name": "deny_evidence_refs_not_canonical",
+      "mutations": [
+        {
+          "op": "reverse",
+          "path": "/governance/evidence_refs"
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "EVIDENCE_REFS_NOT_CANONICAL"
+        ]
+      }
+    },
+    {
+      "name": "error_embedded_payload",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/payload_bytes",
+          "value": "forbidden"
+        }
+      ],
+      "expected": {
+        "outcome": "ERROR",
+        "codes": [
+          "SCHEMA_INVALID"
+        ]
+      }
+    },
+    {
+      "name": "error_invalid_range_role",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/range_profile/entries/0/role",
+          "value": "PIXEL_MEANING"
+        }
+      ],
+      "expected": {
+        "outcome": "ERROR",
+        "codes": [
+          "SCHEMA_INVALID"
+        ]
+      }
+    }
+  ]
+}

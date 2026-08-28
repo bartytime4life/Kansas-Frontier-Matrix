@@ -1,0 +1,60 @@
+{
+  "profile": "kfm.explorer.watcher-registry-browser.public-safe.v1",
+  "outcome": "AVAILABLE",
+  "reason_code": "REGISTRY_AVAILABLE",
+  "evaluated_at": "2026-08-10T21:00:00Z",
+  "registry_id": "kfm://control-plane/watcher-registry/v1",
+  "registry_spec_hash": "sha256:2fa3d43db474fc244bf9ba5fcb66ffb6e9a711fb905c4d117352edef75f66ab9",
+  "registry_status": "PROPOSED_INACTIVE",
+  "watchers": [
+    {
+      "watcher_id": "kfm.watcher.shared.plants_drift.placeholder",
+      "canonical_id": "kfm://watcher/shared/plants-drift-placeholder",
+      "version": "0.0.0-placeholder",
+      "state": "PLACEHOLDER",
+      "spec_ref": "kfm://watcher-spec/shared/plants-drift-placeholder",
+      "endpoint_ref": null,
+      "poll_mode": "MANUAL_ONLY",
+      "policy_ref": null,
+      "output_types": [],
+      "schema_ref": null,
+      "spec_hash": "sha256:b4fc0c444ee647d101c1a830d9b974e2cfc0cfd9e0e3b4fb5e14c792bdec939a",
+      "signature_ref": null,
+      "reason_codes": [
+        "PLACEHOLDER_ONLY",
+        "SOURCE_AUTHORITY_UNRESOLVED"
+      ]
+    },
+    {
+      "watcher_id": "kfm.watcher.soil.ssurgo_gnatsgo.candidate",
+      "canonical_id": "kfm://watcher/soil/ssurgo-gnatsgo-candidate",
+      "version": "0.1.0",
+      "state": "INACTIVE",
+      "spec_ref": "kfm://watcher-spec/soil/ssurgo-gnatsgo-candidate",
+      "endpoint_ref": null,
+      "poll_mode": "MANUAL_ONLY",
+      "policy_ref": "kfm://policy/soil/watcher-spec",
+      "output_types": [
+        "SOIL_CHANGE_CANDIDATE",
+        "SOIL_WATCHER_HOLD"
+      ],
+      "schema_ref": "kfm://schema/contracts/v1/domains/soil/soil-watcher-spec",
+      "spec_hash": "sha256:c4cc2f44cf54b8c76bc05d2ed40b3475d5698ede84b8b62bff96e8c483680914",
+      "signature_ref": null,
+      "reason_codes": [
+        "FIXTURE_ONLY",
+        "RIGHTS_AND_SENSITIVITY_UNRESOLVED",
+        "SOURCE_AUTHORITY_UNRESOLVED"
+      ]
+    }
+  ],
+  "governance": {
+    "network_attempted": false,
+    "registry_mutation_allowed": false,
+    "watcher_execution_allowed": false,
+    "source_activation_allowed": false,
+    "lifecycle_write_allowed": false,
+    "release_authorized": false,
+    "publication_allowed": false
+  }
+}

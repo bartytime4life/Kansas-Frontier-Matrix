@@ -1,0 +1,82 @@
+{
+  "object_type": "RepresentationFitnessAssessment",
+  "schema_version": "1.0.0",
+  "assessment_id": "kfm:representation-fitness:conditional-no-obligation:v1",
+  "subject": {
+    "artifact_ref": "kfm:artifact:soil-moisture:model:2026-08-07",
+    "representation_kind": "RASTER",
+    "source_role": "MODELED",
+    "crs": "EPSG:5070",
+    "spatial_support": {
+      "support_kind": "GRID",
+      "nominal_resolution_m": 1000.0,
+      "source_scale_denominator": null,
+      "declared_precision_m": 1000.0,
+      "generalized": false,
+      "geometry_version_ref": "kfm:geometry:grid:1km:ks"
+    },
+    "temporal_support_ref": "kfm:temporal-support:soil-moisture:model:2026-08-07"
+  },
+  "intended_use": {
+    "use_case_id": "explore-modeled-soil-moisture",
+    "use_class": "EXPLORATORY_ANALYSIS",
+    "consequence_level": "MEDIUM"
+  },
+  "dimensions": {
+    "positional": {
+      "outcome": "SUPPORTED",
+      "evidence_refs": [
+        "kfm:evidence:huc12-positional"
+      ],
+      "notes": ""
+    },
+    "thematic": {
+      "outcome": "CONDITIONALLY_SUPPORTED",
+      "evidence_refs": [
+        "kfm:evidence:model-card:soil-moisture-v1"
+      ],
+      "notes": "Model uncertainty must remain visible."
+    },
+    "temporal": {
+      "outcome": "SUPPORTED",
+      "evidence_refs": [
+        "kfm:evidence:huc12-temporal"
+      ],
+      "notes": ""
+    },
+    "completeness": {
+      "outcome": "SUPPORTED",
+      "evidence_refs": [
+        "kfm:evidence:huc12-completeness"
+      ],
+      "notes": ""
+    },
+    "lineage": {
+      "outcome": "SUPPORTED",
+      "evidence_refs": [
+        "kfm:evidence:huc12-lineage"
+      ],
+      "notes": ""
+    }
+  },
+  "overall_outcome": "CONDITIONALLY_FIT",
+  "reason_codes": [],
+  "obligations": [],
+  "evidence_bundle_refs": [
+    "kfm:evidence-bundle:soil-moisture:model:2026-08-07"
+  ],
+  "policy_decision_refs": [],
+  "review_state": "DRAFT",
+  "evaluated_at": "2026-08-07T23:00:00Z",
+  "expires_at": "2027-08-07T23:00:00Z",
+  "governance": {
+    "fixture_only": true,
+    "lifecycle_write": false,
+    "truth_authority": false,
+    "policy_authority": false,
+    "review_authority": false,
+    "release_authority": false,
+    "publication_authority": false
+  },
+  "spec_hash": "sha256:bb0729995f6facc20228d5c2f8096f45033987cc5b01a79ef2d83ddf9de7ee32"
+}

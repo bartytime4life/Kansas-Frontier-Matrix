@@ -1,0 +1,113 @@
+{
+  "receipt_id": "genrec-temporal-slice-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/temporal-slice.yml",
+    "contracts/data/temporal_slice.md",
+    "docs/intake/exploratory/new-ideas-3-16-26-temporal-slice-source-map.md",
+    "schemas/contracts/v1/data/temporal_slice.schema.json",
+    "tests/validators/test_validate_temporal_slice.py",
+    "tools/validators/validate_temporal_slice.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/temporal-slice.yml": "sha256:ef7a4da4deaa76cea4df3a8deb90608c7517fffa993b70e6f52b2dc72847891f",
+    "contracts/data/temporal_slice.md": "sha256:fdf5d22efff3a5611fe4da5f6f303260b797d47c2a5ddb15e559352988c1917d",
+    "docs/intake/exploratory/new-ideas-3-16-26-temporal-slice-source-map.md": "sha256:c43be0e3a7dd2eb8de7fc1737868b155b19d558e9eed0dcf32084c91ae9e33e0",
+    "schemas/contracts/v1/data/temporal_slice.schema.json": "sha256:3bc49d50c9e2496b3a44f1647ef66a976b64c71310c3cbda7000f405e8868bcd",
+    "tests/validators/test_validate_temporal_slice.py": "sha256:6cdbf501f2e99bc580751d59067823b603b431ae8d4d7ea1e797c27f1874851e",
+    "tools/validators/validate_temporal_slice.py": "sha256:aace48e1b4e67d971978d794be39ab2c1d65d9b68954b7d3a26ee2733cbde515"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:7391f03aed879ee0f91583fb6fbd33aca3cd79b90f1621c0c1020985591b1e11",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 3-16-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 3-16-26.pdf#temporal-slice-metablock",
+      "repo:contracts/common/temporal_window.md",
+      "repo:contracts/data/dataset_version.md",
+      "repo:contracts/data/material_change_assessment.md",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/temporal-slice.yml": "PROPOSED",
+    "contracts/data/temporal_slice.md": "PROPOSED",
+    "docs/intake/exploratory/new-ideas-3-16-26-temporal-slice-source-map.md": "PROPOSED",
+    "schemas/contracts/v1/data/temporal_slice.schema.json": "PROPOSED",
+    "tests/validators/test_validate_temporal_slice.py": "PROPOSED",
+    "tools/validators/validate_temporal_slice.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-temporal-slice-fixture-profile",
+      "outcome": "PASS",
+      "reason": "Two valid and eight exact-negative synthetic fixtures passed deterministic no-network validation."
+    },
+    {
+      "gate": "local-schema-workflow-and-receipt-closure",
+      "outcome": "PASS",
+      "reason": "Schema, workflow, compilation, artifact hashes, truth-label keys, and source citations were checked against the authored bytes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-3-16-26-temporal-slice",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 3-16-26.pdf#temporal-slice-metablock"
+    },
+    {
+      "id": "repository:directory-authority",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repository:temporal-window",
+      "validated": true,
+      "evidence_ref": "repo:contracts/common/temporal_window.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T03:44:41Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": 2036,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first TemporalSlice metadata profile. This receipt grants no source, evidence, policy, review, promotion, release, publication, database, runtime, or public-use authority."
+}

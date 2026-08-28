@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0.0",
+  "profile_state": "PROPOSED_INACTIVE",
+  "assessment_id": "kfm:source-snapshot-lineage:faa704fb0adc5e9465f3ad80a6a46ab5abaeb21f96b68170ab211c3418715451",
+  "source_id": "src:fixture:official",
+  "lineage_state": "CONFLICTED",
+  "snapshot_refs": ["kfm:source-snapshot:1111111111111111111111111111111111111111111111111111111111111111", "kfm:source-snapshot:2222222222222222222222222222222222222222222222222222222222222222"],
+  "preferred_snapshot_ref": null,
+  "supersedes": [],
+  "correction_refs": [],
+  "withdrawal_refs": [],
+  "reason_codes": ["SOURCE_CONFLICT_UNRESOLVED"],
+  "source_activation_authorized": false,
+  "evidence_bundle_emitted": false,
+  "lifecycle_mutation_allowed": false,
+  "release_authorized": false,
+  "publication_authorized": false,
+  "public_use_allowed": false
+}

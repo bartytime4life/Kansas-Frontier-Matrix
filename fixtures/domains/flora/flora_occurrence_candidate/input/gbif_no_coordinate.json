@@ -1,0 +1,10 @@
+{
+  "occurrenceID": "synthetic-gbif-no-coordinate-0001",
+  "institutionCode": "SYNTH",
+  "catalogNumber": "SYNTH-0002",
+  "scientificName": "Schizachyrium scoparium",
+  "basisOfRecord": "HUMAN_OBSERVATION",
+  "eventDate": "2023",
+  "occurrenceStatus": "present",
+  "license": "CC-BY-4.0"
+}

@@ -1,0 +1,13 @@
+{
+  "authority": "implementation_waivers_only",
+  "closure_ref": "current-change:workflow-security-hardening",
+  "entries": [],
+  "generated_from_ref": "worktree@c259404+workflow-security-hardening",
+  "non_effects": [
+    "does_not_define_or_amend_rules",
+    "does_not_waive_invariant_findings",
+    "does_not_authorize_workflow_or_repository_writes"
+  ],
+  "owner": "@bartytime4life",
+  "schema_version": "kfm.workflow-security-baseline.v1"
+}

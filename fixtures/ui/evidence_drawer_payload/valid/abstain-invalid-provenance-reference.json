@@ -1,0 +1,25 @@
+{
+  "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+  "id": "kfm:drawer:fixture:invalid-provenance-reference",
+  "outcome": "ABSTAIN",
+  "reason_code": "CITATION_UNRESOLVED",
+  "title": "Provenance support cannot be resolved",
+  "summary": "A required synthetic provenance reference did not resolve.",
+  "evidence_refs": [],
+  "citations": [],
+  "limitations": [
+    "No current claim is shown until provenance support resolves."
+  ],
+  "trust_state": {
+    "source_role": "official",
+    "policy": "ABSTAIN",
+    "review": "PENDING",
+    "release": "UNRELEASED",
+    "freshness": "UNKNOWN",
+    "correction": "NONE"
+  },
+  "history": {
+    "negative_outcomes": [],
+    "corrections": []
+  }
+}

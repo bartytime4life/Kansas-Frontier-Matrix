@@ -1,0 +1,6 @@
+status: PROPOSED
+path: "policy/sensitivity/roads-rail-trade/critical-facilities.yaml"
+source_docs:
+  - "docs/domains/roads-rail-trade/CANONICAL_PATHS.md"
+notes:
+  - "Placeholder created from the current docs/domains markdown inventory."

@@ -1,0 +1,133 @@
+{
+  "receipt_id": "genrec-pass20-geography-version-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/geography-version.yml",
+    "contracts/common/geography_version.md",
+    "docs/intake/exploratory/pass-20-geography-version-source-map.md",
+    "fixtures/contracts/v1/common/geography_version/cases.json",
+    "schemas/contracts/v1/common/geography_version.schema.json",
+    "tests/validators/test_validate_geography_version.py",
+    "tools/validators/validate_geography_version.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/geography-version.yml": "sha256:5f606cf9f05dc26bf29c37dbc7f51c11fe3c3559e3c090e11315ca299a81104a",
+    "contracts/common/geography_version.md": "sha256:28900a244e68c9599e7a8f3e2acae90475ebcf9ea2645b66aed1c5f3a0378ed3",
+    "docs/intake/exploratory/pass-20-geography-version-source-map.md": "sha256:5f6605860cca0da177527447cd4b0a88dbd562d8fbedeb421d48deb97ae27178",
+    "fixtures/contracts/v1/common/geography_version/cases.json": "sha256:179a97b4f95ee36da2aae86019c747fafb04fd022f5520fa06c6ac5ecc8553fb",
+    "schemas/contracts/v1/common/geography_version.schema.json": "sha256:f2f053682b557640730918a1eda109c4c07872a8030b8578c33ffcac05992d3b",
+    "tests/validators/test_validate_geography_version.py": "sha256:15b1b6814d9e57921e50741a9a955b31c908ff58eeb07020d3ee25c61c5c8f46",
+    "tools/validators/validate_geography_version.py": "sha256:6b17a8ce8055a7d47fa2c268e84f09f218603ebd9c3b2f34082ba0b857c166a5"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:28900a244e68c9599e7a8f3e2acae90475ebcf9ea2645b66aed1c5f3a0378ed3",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and pull-request mutation",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "Supplied Pass 20 idea atlas",
+      "Repository Directory Rules"
+    ],
+    "evidence_refs": [
+      "private-corpus:pass20#KFM-IDX-APP-008",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/18b5bba4bf53edcd5b9ac61779a0cccade35d186/contracts/evidence/indicator_definition.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/18b5bba4bf53edcd5b9ac61779a0cccade35d186/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/1398"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/geography-version.yml": "CONFIRMED",
+    "contracts/common/geography_version.md": "PROPOSED",
+    "docs/intake/exploratory/pass-20-geography-version-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/common/geography_version/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/common/geography_version.schema.json": "PROPOSED",
+    "tests/validators/test_validate_geography_version.py": "CONFIRMED",
+    "tools/validators/validate_geography_version.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-pr-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Exact object, path, and pull-request searches found no checked-path GeographyVersion implementation; the two open pull requests were responsibility-disjoint at authoring time."
+    },
+    { "gate": "json-and-workflow-yaml-parse", "outcome": "PASS" },
+    { "gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS" },
+    {
+      "gate": "focused-unittest-and-fixture-suite",
+      "outcome": "PASS",
+      "reason": "Eight deterministic tests and twenty exact fixture cases passed."
+    },
+    { "gate": "no-network-and-non-reflection-boundary", "outcome": "PASS" },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "All seven declared artifacts were rebound to their final SHA-256 digests."
+    },
+    {
+      "gate": "adjacent-indicator-definition-suite",
+      "outcome": "SKIPPED",
+      "reason": "Configured for hosted exact-head execution because this connector-only workspace is not a repository checkout."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass20-frontier-demography-card",
+      "validated": true,
+      "evidence_ref": "private-corpus:pass20#KFM-IDX-APP-008"
+    },
+    {
+      "id": "repository-indicator-definition-dependency",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/18b5bba4bf53edcd5b9ac61779a0cccade35d186/contracts/evidence/indicator_definition.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/18b5bba4bf53edcd5b9ac61779a0cccade35d186/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T23:02:29Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only GeographyVersion packet derived from Pass 20 KFM-IDX-APP-008 and the current IndicatorDefinition geography-version seam. It declares version, time, reference, representation, lineage, crosswalk, disclosure, and deterministic identity while preserving evidence, policy, review, release, deployment, publication, and public-use boundaries."
+}
