@@ -19,6 +19,10 @@ socket sends, direct resolver entry points, and `urllib` URL opens while leaving
 Unix-domain sockets available for local test harnesses. It is inactive unless
 `KFM_NO_NETWORK` is exactly `1`.
 
+When active, the public `socket.SocketType` constructor alias is routed through
+the guarded `socket.socket` subclass. Direct construction through the private
+`_socket.socket` extension type remains outside this named public-API proof.
+
 This is process-startup enforcement, not an operating-system firewall,
 container policy, network namespace, runner-wide sandbox, dependency-install
 control, or proof that non-Python commands cannot reach a network. A workflow

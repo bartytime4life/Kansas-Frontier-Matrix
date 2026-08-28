@@ -26,6 +26,7 @@ class NetworkAccessDenied(RuntimeError):
 
 
 _original_connect = socket.socket.connect
+_original_socket_type = socket.SocketType
 _original_connect_ex = socket.socket.connect_ex
 _original_send = socket.socket.send
 _original_sendall = socket.socket.sendall
@@ -139,6 +140,10 @@ def activate() -> bool:
         socket.socket.sendmsg = _guarded_sendmsg
     if _original_sendfile is not None:
         socket.socket.sendfile = _guarded_sendfile
+    # ``socket.SocketType`` normally aliases the unpatched ``_socket.socket``
+    # base type. Route the public constructor alias through the guarded
+    # subclass so it cannot bypass the method replacements above.
+    socket.SocketType = socket.socket
     socket.create_connection = _guarded_create_connection
     socket.getaddrinfo = _guarded_getaddrinfo
     socket.gethostbyname = _guarded_gethostbyname
