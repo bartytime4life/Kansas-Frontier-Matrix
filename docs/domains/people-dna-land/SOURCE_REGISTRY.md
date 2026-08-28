@@ -2,9 +2,9 @@
 doc_id: kfm://doc/docs/domains/people-dna-land/SOURCE_REGISTRY
 title: People / DNA / Land Domain — Source Registry
 type: standard
-version: v1.1.1
-prior_version: v1.1.0
-prior_state: repository-grounded registry boundary that still treated source-refresh placement and maturity as unresolved
+version: v1.1.2
+prior_version: v1.1.1
+prior_state: repository-grounded registry boundary that resolved source-refresh placement in metadata and the open-question register while retaining one contradictory repo-fit warning
 status: draft
 owners: TODO — people-dna-land domain steward; source-registry steward; rights-holder representative; sensitivity reviewer; release authority
 created: 2026-05-19
@@ -104,19 +104,19 @@ It is paired with — and **does not replace** — the machine-readable registry
 
 | Aspect | Value | Status |
 |---|---|---|
-| Proposed path | `docs/domains/people-dna-land/SOURCE_REGISTRY.md` | PROPOSED — Directory Rules §6 / §12 domain-lane pattern |
+| Current path | `docs/domains/people-dna-land/SOURCE_REGISTRY.md` | CONFIRMED — current repository path under the adopted `docs/` domain responsibility boundary |
 | Owning root | `docs/` (human-facing control plane) | CONFIRMED rule |
-| Domain segment | `people-dna-land/` inside `docs/domains/` | PROPOSED — slug unsettled (see callout) |
+| Domain segment | `people-dna-land/` inside `docs/domains/` | CONFIRMED repository segment; externally presented canonical lane name remains unsettled (see callout) |
 | Doc class | Standard (KFM Meta Block v2 applies) | CONFIRMED |
 | Upstream doctrine | `[DOM-PEOPLE]`, `[ENCY]`, `[DIRRULES]`, `[GAI]` | CONFIRMED |
 | Downstream artifacts | `data/registry/sources/people-dna-land/` · `policy/domains/people-dna-land/` · `policy/consent/people/` · per-source descriptors · `SourceActivationDecision` records | PROPOSED |
-| Pair documents | `README.md` · `SOURCE_LEDGER.md` · `SOURCE_FAMILIES.md` · `SENSITIVITY_PROFILE.md` · `SOURCE_REFRESH_RUNBOOK.md` | PROPOSED — NEEDS VERIFICATION |
+| Pair documents | `README.md` · `SOURCE_LEDGER.md` · `SOURCE_FAMILIES.md` · `SENSITIVITY_PROFILE.md` · `docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md` | CONFIRMED current repository paths; maturity remains file-specific |
 
 > [!WARNING]
 > **Slug is PROPOSED, not CONFIRMED (CONFLICTED → ADR).** A prior draft asserted the `people-dna-land` slug was "CONFIRMED by Directory Rules §6.1" with a "canonical illustration." Project evidence does not support that: Directory Rules illustrates domain lanes with `hydrology/ soil/ fauna/`, and the corpus slug-drift register records the People lane's canonical externally-presented name as **unsettled** — Atlas §16 names it "People / Genealogy / DNA / Land," schema/policy paths use `people/`, and `people-dna-land` appears only as a docs-slug variant. Treat the slug as PROPOSED until an ADR settles it; until then all cross-references resolve to this slug provisionally. Tracked as `OQ-PDL-REG-01`. [DIRRULES §6, §12; ATLAS §24.13; deep-research slug-drift register]
 
-> [!WARNING]
-> **Runbook placement conflict (CONFLICTED → ADR).** The related `SOURCE_REFRESH_RUNBOOK` is listed under `docs/domains/people-dna-land/` in earlier drafts, but Directory Rules §6.1.b makes `docs/runbooks/` the canonical home for operational procedures (source refresh explicitly named), with Pattern A (`docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md`) matching the existing fauna runbook. This registry now points at the `docs/runbooks/` location. Tracked as `OQ-PDL-REG-02`. [DIRRULES §6.1.b, §18 OPEN-DR-02]
+> [!NOTE]
+> **Runbook placement is resolved.** The canonical source-refresh boundary is `docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md` under Directory Rules §6.1.b. Earlier domain-path placement remains proposal lineage in Git history only; it does not create a second procedure home or reopen the retired `OQ-PDL-REG-02`.
 
 [↑ back to top](#top)
 
@@ -606,6 +606,6 @@ Current repository paths and proposal-lineage targets are listed together below;
 
 **Related docs:** [§15](#15-related-docs)
 **Last updated:** 2026-08-28
-**Version:** v1.1.1 (draft) · **Pinned** `CONTRACT_VERSION = "3.0.0"`
+**Version:** v1.1.2 (draft) · **Pinned** `CONTRACT_VERSION = "3.0.0"`
 
 [↑ back to top](#top)
