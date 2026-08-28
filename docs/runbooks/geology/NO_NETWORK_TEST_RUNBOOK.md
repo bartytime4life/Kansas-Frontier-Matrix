@@ -1,15 +1,15 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/geology-no-network-test-runbook
 title: Geology & Natural Resources — No-Network Test Runbook
-type: runbook; operational-procedure; domain-lane; sensitive-domain; non-authoritative
-version: v0.2
-prior_version: v0.1 planning-oriented draft
-status: draft; repository-grounded; four-bounded-no-network-fixture-profiles-executable; broader-source-evidence-policy-proof-release-and-live-operation-held; non-publisher
+type: runbook
+version: v0.3
+prior_version: v0.2 repository-grounded bounded-profile procedure
+status: draft; repository-grounded; four-bounded-fixture-profiles-under-shared-python-startup-guard; broader-source-evidence-policy-proof-release-and-live-operation-held; non-publisher
 owners:
   - "@bartytime4life — verified GitHub review route only"
 owner_status: "Geology, Natural Resources, source, rights, sensitivity, evidence, policy, validation, proof, review, release, correction, rollback, security, and operations assignments remain NEEDS VERIFICATION; CODEOWNERS routing does not create those authorities."
 created: 2026-05-12
-updated: 2026-08-25
+updated: 2026-08-28
 policy_label: public-review; geology; natural-resources; no-network; synthetic-fixtures; sensitive-location; fail-closed; non-release
 current_path: docs/runbooks/geology/NO_NETWORK_TEST_RUNBOOK.md
 owning_root: docs/
@@ -33,15 +33,10 @@ evidence_snapshot:
   source_authority_register_blob: 32729857bc8eb5001acb37b8ee8e60bcb6e0dc50
   geology_proof_readme_blob: fc07012855bb4019008a3b0dce035dc8088156f6
   geology_release_candidate_readme_blob: f0313cafc641c049d367af82418212e0bad1fc35
+guard_adoption_snapshot: "base e52165e820b07e65c54830fde519a9c90df8eb1c; merged PR 3709; shared guard blob e320d3a0fb70a3273a5d11fca513628a4a479d15; shared guard README blob d2de9893fec4923958cd4bbfcf2931fc02297117"
 drive_sources:
-  - title: KFM_Geology_Natural_Resources_Architecture_PDF_Only_Report_2026-04-21.pdf
-    file_id: 1kxONABD4knMG1HYaJR740tzZ_EBrt7Ca
-    sha256: d334f43df8fd74f17115cc0f51861cf8238c9cb99d37adaf95f5e4e1655fdf51
-    role: planning lineage; not current repository implementation proof
-  - title: KFM_Greenfield_Commissioning_Plan_v2_FULL.pdf
-    file_id: 161zjrR23nrv2b9ejne7iRDasVNnvCFwc
-    sha256: d0b27fc3a2e4c18637e978c67fb8e8bb7af5de4726d33ddc4ae2a6e1fbff51b5
-    role: commissioning and operating-law lineage; not current runtime, release, or publication proof
+  - "KFM_Geology_Natural_Resources_Architecture_PDF_Only_Report_2026-04-21.pdf; file 1kxONABD4knMG1HYaJR740tzZ_EBrt7Ca; sha256 d334f43df8fd74f17115cc0f51861cf8238c9cb99d37adaf95f5e4e1655fdf51; planning lineage only"
+  - "KFM_Greenfield_Commissioning_Plan_v2_FULL.pdf; file 161zjrR23nrv2b9ejne7iRDasVNnvCFwc; sha256 d0b27fc3a2e4c18637e978c67fb8e8bb7af5de4726d33ddc4ae2a6e1fbff51b5; commissioning lineage only"
 inspection_boundary: "Current-session GitHub reads of the target, accepted Directory Rules decision, Geology domain workflow, validators, tests, fixture inventories, source-authority projection, proof lane, release-candidate lane, and related documentation; plus connected Google Drive planning sources. Repository-native commands were not executed in a mounted checkout during authoring. No live source, credential, real subsurface record, geometry payload, restricted well log, evidence resolver, policy evaluator, proof producer, release service, deployed consumer, or public carrier was exercised."
 related:
   - docs/runbooks/README.md
@@ -60,6 +55,7 @@ related:
   - tools/validators/geology/public_safe_geometry/validate_public_safe_geometry.py
   - tests/domains/geology/test_source_role_anti_collapse.py
   - tests/domains/geology/test_aem_campaign.py
+  - tests/domains/geology/test_no_network_proof.py
   - tests/domains/geology/test_public_safe_geometry.py
   - tests/domains/geology/test_production_material_change.py
   - fixtures/domains/geology/resource_class/README.md
@@ -72,13 +68,14 @@ related:
   - data/proofs/geology/README.md
   - release/candidates/geology/README.md
   - .github/workflows/domain-geology.yml
+  - tools/ci/kfm_no_network/sitecustomize.py
 tags: [kfm, geology, natural-resources, runbook, no-network, synthetic-fixtures, validation, sensitive-location, anti-collapse, fail-closed]
 notes:
   - "v0.2 replaces the no-mounted-repository assumption, hypothetical PR-00 object chain, illustrative command placeholders, and unverified release-dry-run claims with the exact current bounded executable profiles."
   - "The retained operating principle is fixture-first, deterministic, reversible, synthetic, and no-live-source; the current implementation does not prove an end-to-end EvidenceBundle, policy, proof, release, rollback, or public-answer path."
-  - "Three focused test modules actively block common Python socket, DNS, HTTP, and urllib entry points; the production-material-change profile is file-only but does not install an active socket guard. No operating-system egress sandbox is established here."
-  - "The workflow body executes four bounded profiles even though its opening comment still says three; this documentation-only update records that conflict without changing workflow bytes or invalidating an existing workflow-bound receipt."
-  - "This document changes no source, contract, schema, policy, fixture, validator, test, workflow, evidence object, operational receipt, proof, candidate, lifecycle state, runtime, deployment, promotion, rollback execution, or publication state."
+  - "All four workflow profiles now start Python with the merged shared named-public-API guard; a Geology-owned fresh-process proof checks explicit activation, SocketType denial, Unix-domain preservation, and the private-extension limitation."
+  - "The shared guard is not an operating-system firewall, dependency-install control, non-Python sandbox, or proof against direct private _socket.socket construction."
+  - "This update changes only bounded workflow enforcement, its synthetic proof and documentation, and authoring provenance. It creates no source, contract, schema, policy, fixture, validator, evidence object, operational receipt, proof, candidate, lifecycle state, runtime, deployment, promotion, rollback execution, or publication state."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -101,7 +98,7 @@ notes:
 > **Never place real, exact, or reverse-engineerable subsurface or resource locations in this procedure.** Borehole, private-well, well-log, core, sample, geochemistry, operator/parcel, extraction-targetable, transform-secret, restricted endpoint, or credential detail does not belong in fixtures, logs, workflow summaries, issues, pull requests, screenshots, or review packets.
 
 > [!CAUTION]
-> **"No network" is bounded, not magical.** Three focused suites patch common Python socket, DNS, HTTP, and `urllib` entry points. The production-material-change profile is file-only and declares network fetch disabled, but its focused test does not install the same active guards. The workflow environment variable `KFM_NO_NETWORK=1` is a convention, not an operating-system firewall, namespace, proxy, or egress policy.
+> **"No network" is bounded, not magical.** All four workflow profiles load the shared Python startup guard for named public socket, resolver, and `urllib` APIs, and a Geology-owned fresh-process proof checks activation and representative denial. The guard does not cover dependency installation, non-Python commands, operating-system or runner egress, or direct construction through the private `_socket.socket` extension type.
 
 **Quick navigation:** [Purpose](#purpose-and-terminal-boundary) · [Authority](#authority-and-placement) · [Posture](#current-repository-posture) · [Profiles](#current-executable-profiles) · [Network](#no-network-contract) · [Fixtures](#fixture-inventory-and-frozen-invariants) · [Preflight](#preconditions-and-stop-conditions) · [Local run](#local-procedure) · [CI](#hosted-ci-procedure) · [Results](#finite-outcomes-and-result-interpretation) · [Failures](#failure-diagnosis) · [Sensitivity](#sensitivity-rights-and-security) · [Receipts](#evidence-receipts-and-proof-boundary) · [Handoff](#review-handoff) · [Holds](#current-holds-and-graduation-gates) · [Rollback](#correction-and-document-rollback) · [References](#related-current-surfaces) · [Checklist](#operator-checklist) · [Lineage](#v01-lineage-and-superseded-assumptions)
 
@@ -287,25 +284,32 @@ The profiles do not form a single end-to-end trust spine. They are separate, bou
 ### What is positively established
 
 1. The workflow uses repository fixtures and local validators; none of its four validation commands asks for a live source URL.
-2. Resource-class tests patch:
+2. The workflow sets `PYTHONPATH` to load `tools/ci/kfm_no_network/sitecustomize.py`; each of the four profile steps sets `KFM_NO_NETWORK=1` before starting Python.
+3. `test_no_network_proof.py` starts fresh interpreters and proves:
+   - the guard is inactive unless explicitly enabled;
+   - the public `socket.SocketType` alias routes through guarded `socket.socket`;
+   - a destination-bearing public socket send is denied before network access;
+   - Unix-domain routing remains available;
+   - the private `_socket.socket` extension type remains outside the named public-API proof.
+4. Resource-class tests additionally patch:
    - `socket.socket.connect`;
    - `socket.socket.connect_ex`;
    - `socket.create_connection`;
    - `socket.getaddrinfo`;
    - `urllib.request.urlopen`.
-3. AEM tests patch the same common entry points.
-4. Public-safe-geometry tests patch the same common entry points and additionally inspect validator source for common HTTP and geometry client imports.
-5. The public-safe fixture corpus contains no `https://` marker or coordinate-bearing fields named by its tests.
-6. The production-material-change validator reads one bounded local JSON packet and reports `network_fetch: false` and `publication: false` in its CLI authority summary.
-7. The workflow sets `KFM_NO_NETWORK=1` and `PYTHONDONTWRITEBYTECODE=1`; deterministic profiles also set `PYTHONHASHSEED=0` where configured.
+5. AEM tests patch the same common entry points.
+6. Public-safe-geometry tests patch the same common entry points and additionally inspect validator source for common HTTP and geometry client imports.
+7. The public-safe fixture corpus contains no `https://` marker or coordinate-bearing fields named by its tests.
+8. The production-material-change validator reads one bounded local JSON packet and reports `network_fetch: false` and `publication: false` in its CLI authority summary.
+9. The workflow also sets `PYTHONDONTWRITEBYTECODE=1`; deterministic profiles set `PYTHONHASHSEED=0` where configured.
 
 ### What is not established
 
 - an operating-system network namespace;
 - firewall, seccomp, container egress, proxy, DNS, or service-mesh denial;
-- interception of every possible Python, native, subprocess, package, or future network client;
+- interception of every possible Python, native, subprocess, package, or future network client, including direct private `_socket.socket` construction;
 - repository-wide no-network behavior;
-- a socket guard inside `test_production_material_change.py`;
+- standalone guard activation when a profile command is run without the documented `PYTHONPATH` and `KFM_NO_NETWORK=1` environment;
 - absence of network access in unrelated workflow setup actions or dependency installation;
 - offline package installation;
 - production runtime isolation.
@@ -584,11 +588,29 @@ export KFM_NO_NETWORK=1
 export PYTHONDONTWRITEBYTECODE=1
 export PYTHONHASHSEED=0
 export TZ=UTC
+export PYTHONPATH="$PWD/tools/ci/kfm_no_network:$PWD${PYTHONPATH:+:$PYTHONPATH}"
 ```
 
-These variables improve repeatability and communicate intent. They do not replace active guards or host-level isolation.
+`PYTHONPATH` loads the shared startup guard; `KFM_NO_NETWORK=1` activates it in each new Python process. These variables do not establish host-level isolation.
 
-### 4. Run the resource-class profile
+### 4. Prove startup and representative denial
+
+Run the Geology-owned fresh-process proof with the parent test runner itself inactive; the test controls activation in each child interpreter:
+
+```bash
+KFM_NO_NETWORK=0 python -m pytest -q -p no:cacheprovider \
+  tests/domains/geology/test_no_network_proof.py
+```
+
+Expected:
+
+- explicit-off posture preserves the original public socket-type alias;
+- explicit-on posture activates at interpreter startup;
+- the public `socket.SocketType` alias is guarded and a representative `sendmsg` is denied;
+- Unix-domain routing remains available;
+- the private extension limitation remains explicit without exercising network access.
+
+### 5. Run the resource-class profile
 
 ```bash
 python tests/domains/geology/test_source_role_anti_collapse.py --verbose
@@ -609,9 +631,9 @@ Expected:
 - all valid fixtures exit successfully;
 - the invalid batch exits nonzero;
 - no sensitive candidate value is echoed;
-- no network guard is called.
+- the shared startup guard remains active without being called by valid local-file behavior.
 
-### 5. Run the AEM campaign-candidate profile
+### 6. Run the AEM campaign-candidate profile
 
 ```bash
 python tests/domains/geology/test_aem_campaign.py --verbose
@@ -632,9 +654,9 @@ Expected:
 - all eleven invalid fixtures fail with exact sidecar findings;
 - the source descriptor remains citation-only/candidate-only and byte-pinned;
 - no current campaign state or acquisition evidence is asserted;
-- no network guard is called.
+- the shared startup guard remains active without being called by valid local-file behavior.
 
-### 6. Run the public-safe geometry profile
+### 7. Run the public-safe geometry profile
 
 ```bash
 python -m pytest -q -p no:cacheprovider \
@@ -663,7 +685,7 @@ python tools/validators/validate_generated_receipt.py \
 
 That check binds the artifacts named by that receipt. It is not part of the geometry-assessment semantics.
 
-### 7. Run the production-material-change profile
+### 8. Run the production-material-change profile
 
 ```bash
 python -m pytest -q -p no:cacheprovider \
@@ -681,9 +703,9 @@ Expected:
 - no live KGS request occurs.
 
 > [!CAUTION]
-> This focused module does not actively patch sockets. Treat it as a deterministic local-file profile, not proof of host-level egress denial.
+> This focused module does not patch sockets internally. Under the documented workflow or local environment, the shared startup guard still activates before the module imports. That remains a named public-Python-API control, not host-level egress denial.
 
-### 8. Optional workflow-parity inspection
+### 9. Optional workflow-parity inspection
 
 The workflow also checks explicit substantive-versus-placeholder inventories. Review its current source before claiming full parity:
 
@@ -693,7 +715,7 @@ sed -n '1,360p' .github/workflows/domain-geology.yml
 
 Do not create or invoke a `make geology-validate` target unless a reviewed change deliberately updates the workflow and its authority boundary.
 
-### 9. Record a bounded result
+### 10. Record a bounded result
 
 Capture:
 
@@ -859,6 +881,7 @@ The four profiles do not share one outward vocabulary. Preserve each layer's res
 | `REVIEW` survives unresolved rights or coverage regression | Fail-closed regression | Block; expected disposition is `HOLD` |
 | Hash or assessment ID changes on reordered equivalent input | Non-determinism | Fix canonicalization before relying on identity |
 | Common network mock called | Network-boundary regression | Block; identify call path and add deterministic denial |
+| Fresh-process startup proof fails | Shared guard wiring or public alias regression | Block all four profiles; repair workflow/helper binding before retaining the guarded claim |
 | Production profile imports a network client | Uncovered no-network expansion | Add an active guard and review the profile before retaining "no-network" |
 | Validator output echoes sentinel/candidate values | Sensitive-output regression | Block and redact; return only stable code/path findings |
 | Workflow says accepted file became placeholder | Implementation regression | Restore substantive implementation or deliberately revise inventory |
@@ -1172,8 +1195,10 @@ If any of those later become affected, use their owning correction, withdrawal, 
 - [Public-safe geometry validator](../../../tools/validators/geology/public_safe_geometry/validate_public_safe_geometry.py)
 - [Resource-class focused test](../../../tests/domains/geology/test_source_role_anti_collapse.py)
 - [AEM focused test](../../../tests/domains/geology/test_aem_campaign.py)
+- [Python startup-guard proof](../../../tests/domains/geology/test_no_network_proof.py)
 - [Public-safe geometry focused test](../../../tests/domains/geology/test_public_safe_geometry.py)
 - [Production-material-change focused test](../../../tests/domains/geology/test_production_material_change.py)
+- [Shared Python startup guard](../../../tools/ci/kfm_no_network/sitecustomize.py)
 
 ### Governance, proof, and release boundaries
 
@@ -1205,6 +1230,7 @@ If any of those later become affected, use their owning correction, withdrawal, 
 
 ### During
 
+- [ ] Fresh-process startup and representative public-alias denial proof passes.
 - [ ] Resource-class focused test passes.
 - [ ] Resource valid fixtures pass.
 - [ ] Resource invalid fixtures are rejected.
@@ -1215,7 +1241,7 @@ If any of those later become affected, use their owning correction, withdrawal, 
 - [ ] Public-safe replay remains 2 `HOLD` / 16 `DENY`.
 - [ ] Production focused test passes.
 - [ ] Production valid outcome set remains exact.
-- [ ] No common network guard is called.
+- [ ] No common network guard is called by valid local-file profile behavior.
 - [ ] No sensitive value is echoed.
 - [ ] No lifecycle, proof, candidate, release, or published path is written.
 
@@ -1250,7 +1276,7 @@ v0.1 remains useful planning lineage. This update preserves its strongest princi
 
 The following v0.1 claims are superseded as current implementation descriptions:
 
-| v0.1 assumption | v0.2 repository-grounded result |
+| v0.1 assumption | v0.3 repository-grounded result |
 |---|---|
 | No mounted-repository evidence; all paths proposed | Current GitHub bytes, blobs, tests, validators, fixtures, and workflow were inspected |
 | One hypothetical PR-00 chain from SourceDescriptor through ReleaseManifest and RollbackCard | Four separate bounded profiles are executable; no end-to-end release/proof chain is established |
@@ -1266,4 +1292,4 @@ The long object-family and source-family appendices from v0.1 are not repeated h
 
 ---
 
-<sub>**Current path:** `docs/runbooks/geology/NO_NETWORK_TEST_RUNBOOK.md` · **Version:** v0.2 · **Updated:** 2026-08-25 · **Status:** repository-grounded draft · **Truth posture:** cite-or-abstain · [Back to top](#top)</sub>
+<sub>**Current path:** `docs/runbooks/geology/NO_NETWORK_TEST_RUNBOOK.md` · **Version:** v0.3 · **Updated:** 2026-08-28 · **Status:** repository-grounded draft · **Truth posture:** cite-or-abstain · [Back to top](#top)</sub>

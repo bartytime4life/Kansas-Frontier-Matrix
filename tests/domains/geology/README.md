@@ -2,8 +2,9 @@
 doc_id: kfm://doc/tests-domains-geology-readme
 title: Geology Domain Tests README
 type: test-readme
-version: v0.2
-status: draft; stub-expanded; domain-test-index; PROPOSED / NEEDS VERIFICATION before promotion
+version: v0.3
+prior_version: v0.2 expanded domain-test index
+status: draft; repository-grounded; domain-test-index; four-bounded-profiles-and-shared-startup-guard-proof-executable; broader-integration-held
 owners:
   - OWNER_TBD — Geology domain steward
   - OWNER_TBD — QA steward
@@ -12,9 +13,12 @@ owners:
   - OWNER_TBD — Policy steward
   - OWNER_TBD — Validation steward
   - OWNER_TBD — Release steward
-created: NEEDS VERIFICATION — greenfield stub existed before v0.1 expansion
-updated: 2026-08-03
+created: 2026-05-08
+updated: 2026-08-28
 policy_label: public-doc; tests; geology; no-network; deny-by-default; cite-or-abstain; release-gated
+owning_root: tests/
+responsibility: "Index bounded Geology domain tests and their fixture, source-role, sensitivity, evidence, policy, release, correction, and rollback boundaries without granting truth, source admission, review, release, or publication authority."
+truth_posture: cite-or-abstain
 tags: [kfm, tests, geology, natural-resources, evidence, policy, source-role, catalog-closure, public-safe-geometry, well-rights, FocusMode, EvidenceBundle, PolicyDecision, ReleaseManifest]
 related:
   - ../../README.md
@@ -31,11 +35,13 @@ related:
   - ../../../data/proofs/
   - ../../../data/receipts/
   - ../../../release/
+  - ../../../tools/ci/kfm_no_network/sitecustomize.py
+  - ../../../.github/workflows/domain-geology.yml
 notes:
   - "This file replaces the prior greenfield stub at tests/domains/geology/README.md."
   - "This is a domain-test index and boundary README only. It does not define schemas, contracts, policy rules, source descriptors, fixtures, evidence bundles, receipts, proofs, release decisions, production code, or published artifacts."
   - "The default Geology test posture is deterministic, no-network, synthetic/public-safe fixtures only, and fail-closed for missing evidence, source role, policy, review, release, or rights context."
-  - "The bounded resource-class/source-role and document-specific 2026-05-11 announcement-bound GMD 3 AEM campaign-candidate suites are executable and CI-wired. The AEM profile keeps current campaign state unknown and binds no acquisition evidence. Catalog closure, evidence before AI, public-safe geometry, well-rights, broader schemas, policy, proof, and release integration remain NEEDS VERIFICATION."
+  - "Four bounded Geology profiles and a fresh-process proof for the merged shared Python startup guard are executable and CI-wired. The guard proof is limited to named public Python APIs and does not establish private-extension, dependency-install, non-Python, operating-system, or runner-wide egress denial."
   - "Rollback target for this replacement is previous stub blob SHA 1942e419bb84a7de7b8834cfe8b7a93747777849."
 [/KFM_META_BLOCK_V2] -->
 
@@ -55,11 +61,11 @@ notes:
 </p>
 
 **Path:** `tests/domains/geology/README.md`  
-**Status:** draft domain-test index / two bounded fixture suites executable / broader lane PROPOSED
+**Status:** draft repository-grounded index / four bounded profiles plus shared startup-guard proof executable / broader lane held
 **Owning root:** `tests/`  
 **Domain segment:** `geology`  
 **Default execution posture:** deterministic, synthetic, no-network, public-safe fixtures only  
-**Truth posture:** CONFIRMED `tests/` is the canonical root for enforceability proof · CONFIRMED `test_source_role_anti_collapse.py` executes the frozen synthetic resource-class profile and `test_aem_campaign.py` executes the document-specific, current-state-unknown AEM announcement candidate under `domain-geology.yml` · broader schema, policy, evidence, proof, live-source, runtime, and release-gate integration remains NEEDS VERIFICATION.
+**Truth posture:** CONFIRMED `tests/` is the canonical root for enforceability proof · CONFIRMED four named Geology profiles are CI-wired and `test_no_network_proof.py` proves fresh-process activation plus representative public-alias denial for the shared startup guard · broader schema, policy, evidence, proof, live-source, runtime, host-egress, and release-gate integration remains NEEDS VERIFICATION.
 
 **Quick jumps:** [Purpose](#purpose) · [Directory basis](#directory-basis) · [Geology invariants under test](#geology-invariants-under-test) · [README-backed test lanes](#readme-backed-test-lanes) · [Expected test scope](#expected-test-scope) · [Fixture posture](#fixture-posture) · [Assertions](#assertions) · [Forbidden shortcuts](#forbidden-shortcuts) · [Suggested layout](#suggested-layout) · [Run posture](#run-posture) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
 
@@ -213,14 +219,18 @@ Do not use `tests/domains/geology/` to:
 
 ## Suggested layout
 
-The two direct bounded modules are confirmed; broader executable modules remain
-NEEDS VERIFICATION. The current and proposed parent layout is:
+Five direct substantive modules are confirmed: four bounded semantic profiles
+and one shared-guard proof. Broader executable modules remain NEEDS VERIFICATION.
+The current and proposed parent layout is:
 
 ```text
 tests/domains/geology/
 ├── README.md
 ├── test_source_role_anti_collapse.py
 ├── test_aem_campaign.py
+├── test_no_network_proof.py
+├── test_production_material_change.py
+├── test_public_safe_geometry.py
 ├── test_catalog_closure/
 │   └── README.md
 ├── test_evidence_before_ai/
@@ -242,15 +252,27 @@ Executable test module names should follow the repo's accepted runner/import con
 Default run expectation:
 
 ```bash
+export PYTHONPATH="$PWD/tools/ci/kfm_no_network:$PWD${PYTHONPATH:+:$PYTHONPATH}"
+
+KFM_NO_NETWORK=0 PYTHONDONTWRITEBYTECODE=1 \
+  python -m pytest -q -p no:cacheprovider \
+  tests/domains/geology/test_no_network_proof.py
+
 PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
   python tests/domains/geology/test_source_role_anti_collapse.py --verbose
 
 PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
   python tests/domains/geology/test_aem_campaign.py --verbose
+
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 PYTHONHASHSEED=0 \
+  python -m pytest -q -p no:cacheprovider \
+  tests/domains/geology/test_public_safe_geometry.py \
+  tests/domains/geology/test_production_material_change.py
 ```
 
-Status of the commands above: **CONFIRMED bounded fixture execution**. They do
-not run every Geology test or establish broader domain maturity.
+Status of the commands above: **CONFIRMED bounded guard proof and fixture
+execution**. They do not run every Geology test, establish host-wide isolation,
+or establish broader domain maturity.
 
 Expected CI posture:
 
@@ -270,6 +292,7 @@ Expected CI posture:
 | `docs/domains/geology/README.md` | CONFIRMED doctrine / PROPOSED implementation | Geology scope, anti-collapse posture, evidence binding, deny-by-default exact subsurface/private-well exposure, lifecycle invariant, and public trust path. | Does not prove test implementations. |
 | `fixtures/domains/geology/README.md` | CONFIRMED | Synthetic, public-safe fixture posture and child fixture lanes. | Does not prove all fixture payloads or consumers. |
 | Child lane READMEs | CONFIRMED for documented README files in this session | Catalog closure, evidence-before-AI, public-safe geometry, source-role anti-collapse, and well-rights lane documentation exists or was expanded. | README presence does not prove executable tests, validators, schemas, policies, or CI. |
+| Shared startup guard and Geology fresh-process proof | CONFIRMED at the pinned implementation revision | Explicit activation, public `SocketType` denial, Unix-domain preservation, and the private-extension limitation are exercised without live data. | Does not prove dependency-install, non-Python, private `_socket.socket`, operating-system, or runner-wide egress denial. |
 | Cross-domain source-role, Focus Mode payload, boreholes/wells, hydrology boundary docs | CONFIRMED doctrine / PROPOSED implementation | Provide governing boundaries for geology test lanes. | Do not prove runtime enforcement. |
 
 ---
@@ -278,7 +301,7 @@ Expected CI posture:
 
 Before treating this README as implemented behavior, verify:
 
-- [x] The bounded resource-class and fixture-bound AEM campaign modules exist and are CI-wired; broader lanes remain unverified.
+- [x] Four bounded profile modules and the fresh-process shared-guard proof exist and are CI-wired; broader lanes remain unverified.
 - [ ] Test runner and import paths match the repo's accepted convention.
 - [ ] Synthetic fixtures exist for the documented positive and negative geology cases.
 - [ ] Geology schema, contract, policy, source-registry, evidence, receipt, proof, and release paths are accepted and not duplicated.
@@ -287,7 +310,7 @@ Before treating this README as implemented behavior, verify:
 - [ ] Public-safe geometry transform and receipt expectations are defined before enforcing them.
 - [ ] Source-role anti-collapse expectations are tied to accepted source-role vocabulary.
 - [ ] Hydrology and people/land boundary expectations are tied to accepted contracts before enforcing cross-lane assertions.
-- [ ] CI runs the no-network geology domain suite.
+- [x] CI loads the shared startup guard for all four bounded profile commands and runs the Geology fresh-process negative proof.
 - [ ] Failures block public carrier promotion or release candidate approval.
 
 ---
