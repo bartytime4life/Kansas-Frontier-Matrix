@@ -2,7 +2,7 @@
 doc_id: kfm://doc/registry/schema/readme
 title: docs/registry/schema/ — Schema Documentation Routing Boundary
 type: readme
-version: v1.3
+version: v1.4
 status: provisional
 owners:
   - "@bartytime4life"
@@ -15,8 +15,8 @@ truth_posture: "CONFIRMED current repository paths, fixture, validator, policy-r
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 630f468f9c7672309fdffade6e1537ebbafc4f03
-  prior_blob: d68d02c36b0ac6878fc84c20876f8ea845a89b97
+  base_commit: ba8856e1fc2bf930e9b44df1cfbf4f3dc369d084
+  prior_blob: 2c4d892491c1ce2982e4c367ad10d72e9b508452
 related:
   - ../README.md
   - ../../doctrine/directory-rules.md
@@ -115,12 +115,11 @@ python tools/validators/docs/link-check/check_links.py docs/registry/schema/READ
 python tools/validators/docs/meta-block/check_meta_blocks.py \
   --profile required \
   docs/registry/schema/README.md
-python tools/validators/docs/fragments/check_fragments.py \
-  docs/registry/schema/README.md
 ```
 
-A passing documentation check confirms only that the checked Markdown structure,
-metadata, links, and fragments satisfy the exercised rules at that revision. It
+The link checker covers repository-local files, directories, images, and
+fragments; the metadata checker covers the bounded metadata envelope. Passing
+either confirms only its exercised documentation QA scope at that revision. It
 does not implement or approve a schema, fixture contract, validator policy,
 dry-run capability, release, or publication.
 
@@ -137,7 +136,7 @@ dry-run capability, release, or publication.
   uncertainty until a separately reviewed placement decision authorizes migration
   or retirement.
 
-This v1.3 documentation slice changes no implementation. Before merge, close the
+This v1.4 documentation slice changes no implementation. Before merge, close the
 draft pull request and abandon its branch. After merge, prefer a focused forward
 correction. Do not restore the marker-only child state merely to revise wording,
 and do not move or delete the held path without an accepted placement decision
