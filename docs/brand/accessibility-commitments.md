@@ -20,27 +20,22 @@ release_effect: none
 deployment_effect: none
 promotion_effect: none
 publication_effect: none
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  base_ref: main
-  base_commit: bacb77cfbc04014a2c05da541f9cba8025629068
-  target_prior_blob: d80d2c3d185db41cd7f3c36bb5c1f6df13f1b7f9
-  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
-  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  accessibility_architecture_blob: 62bc5ab6e5ee9070bbaf3053356c35499dde45ed
-  accessibility_workflow_blob: 1b3137905c441d5f5fab52afe33599fdda2ced88
-  accessibility_workflow_test_blob: f512c0d4cb57133e78c7e4738bc1a3c4ddd32e69
-  explorer_manifest_blob: d9ada6539e07a4a5cd9b65ec9792105bd4856807
-  playwright_config_blob: 03fddcd1f34e1e07bb499e01dfc3cdc7bd235f16
-  a11y_report_readme_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
+evidence_repository: bartytime4life/Kansas-Frontier-Matrix
+evidence_base_ref: main
+evidence_base_commit: bacb77cfbc04014a2c05da541f9cba8025629068
+target_prior_blob: d80d2c3d185db41cd7f3c36bb5c1f6df13f1b7f9
+directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+accessibility_architecture_blob: 62bc5ab6e5ee9070bbaf3053356c35499dde45ed
+accessibility_workflow_blob: 1b3137905c441d5f5fab52afe33599fdda2ced88
+accessibility_workflow_test_blob: f512c0d4cb57133e78c7e4738bc1a3c4ddd32e69
+explorer_manifest_blob: d9ada6539e07a4a5cd9b65ec9792105bd4856807
+playwright_config_blob: 03fddcd1f34e1e07bb499e01dfc3cdc7bd235f16
+a11y_report_readme_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
 source_lineage:
-  - title: KFM_Comprehensive_Research_and_Verification_Report.docx
-    source_class: DRIVE_RESEARCH_LINEAGE
-    use: "Candidate accessibility targets and review ideas only; not repository implementation, adoption, or conformance evidence."
-  - title: KFM Repository Workbench
-    source_class: NOTION_COORDINATION_ONLY
-    use: "Current work and overlap discovery only; GitHub bytes remain controlling evidence."
+  - "Drive — KFM_Comprehensive_Research_and_Verification_Report.docx — candidate accessibility targets and review ideas only; not repository implementation, adoption, or conformance evidence."
+  - "Notion — KFM Repository Workbench — current work and overlap discovery only; GitHub bytes remain controlling evidence."
 related:
   - ./README.md
   - ../architecture/ui/ACCESSIBILITY.md
