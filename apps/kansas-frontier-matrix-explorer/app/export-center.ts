@@ -35,6 +35,7 @@ export type ExportSelectionInput = Readonly<{
   lastUpdate: string;
   reviewState: string;
   releaseState: ReleaseState;
+  layerReleaseState: ReleaseState;
   correctionState: string;
   geometry: Geometry;
   generalization: string;
@@ -54,7 +55,11 @@ export type PublicSafeExportInput = Readonly<{
 }>;
 
 const protectedSelection = (selection: ExportSelectionInput | null) =>
-  Boolean(selection && ["DENIED_BY_POLICY", "RESTRICTED_ACCESS"].includes(selection.evidenceState));
+  Boolean(selection && (
+    ["DENIED_BY_POLICY", "RESTRICTED_ACCESS"].includes(selection.evidenceState)
+    || selection.releaseState === "RESTRICTED"
+    || selection.layerReleaseState === "RESTRICTED"
+  ));
 
 export const buildPublicSafeExport = (input: PublicSafeExportInput) => {
   const isProtected = protectedSelection(input.selection);
@@ -116,6 +121,7 @@ export const buildPublicSafeExport = (input: PublicSafeExportInput) => {
       temporalScope: input.selection.temporalScope,
       reviewState: input.selection.reviewState,
       releaseState: input.selection.releaseState,
+      layerReleaseState: input.selection.layerReleaseState,
       correctionState: input.selection.correctionState,
       geometry: isProtected ? "WITHHELD_BY_POLICY" : input.selection.geometry,
       generalization: input.selection.generalization,

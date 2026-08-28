@@ -660,6 +660,7 @@ export default function Home() {
       lastUpdate: selected.properties.lastUpdate,
       reviewState: selected.properties.reviewState,
       releaseState: selected.properties.releaseState,
+      layerReleaseState: selected.layer.releaseState,
       correctionState: selected.properties.correctionState,
       geometry: selected.geometry.geometry,
       generalization: selected.properties.generalizationNote,

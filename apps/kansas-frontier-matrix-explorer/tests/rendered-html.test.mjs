@@ -311,7 +311,7 @@ test("reviews and redacts public-safe exports before download", async () => {
     layerOrder: ["planning"],
     activeYear: 2026,
     workspace: "trust",
-    layers: [{ id: "planning", title: "Planning", opacity: 1, attribution: "Site fixture", releaseState: "HELD", generalization: "Generalized", correction: "NONE" }],
+    layers: [{ id: "planning", title: "Planning", opacity: 1, attribution: "Site fixture", releaseState: "RESTRICTED", generalization: "Generalized", correction: "NONE" }],
     selection: {
       featureId: "protected-1",
       title: "Protected fixture",
@@ -325,7 +325,8 @@ test("reviews and redacts public-safe exports before download", async () => {
       releaseTime: "UNRELEASED",
       lastUpdate: "2026-08-24",
       reviewState: "HELD",
-      releaseState: "HELD",
+      releaseState: "RESTRICTED",
+      layerReleaseState: "RESTRICTED",
       correctionState: "NONE",
       geometry: { type: "Point", coordinates: [-97.5, 38.5] },
       generalization: "Generalized",
@@ -338,6 +339,56 @@ test("reviews and redacts public-safe exports before download", async () => {
   assert.equal(protectedReview.withheldFeatureCount, 1);
   assert.equal(protectedReview.downloadAllowed, true);
 
+  const supportedRestrictedRecordInput = {
+    exportedAt: "2026-08-24T18:30:30.000Z",
+    locationCameraRedacted: false,
+    view: { center: [-97.5, 38.5], zoom: 7, bearing: 0, pitch: 0 },
+    projection: "mercator",
+    basemap: "midnight",
+    layerOrder: ["fauna-sensitive"],
+    activeYear: 2026,
+    workspace: "trust",
+    layers: [{ id: "fauna-sensitive", title: "Sensitive Fauna", opacity: 1, attribution: "Synthetic fixture", releaseState: "DEMONSTRATION", generalization: "None", correction: "NONE" }],
+    selection: {
+      featureId: "fauna-restricted-record",
+      title: "Restricted Fauna record",
+      layerId: "fauna-sensitive",
+      evidenceState: "ANSWER",
+      evidenceReference: "fixture:fauna-restricted-record",
+      temporalScope: "2026 fixture",
+      sourceYear: 2026,
+      temporalMode: "exact",
+      sourceTime: "2026",
+      releaseTime: "UNRELEASED",
+      lastUpdate: "2026-08-24",
+      reviewState: "REVIEWED",
+      releaseState: "RESTRICTED",
+      layerReleaseState: "DEMONSTRATION",
+      correctionState: "NONE",
+      geometry: { type: "Point", coordinates: [-97.5, 38.5] },
+      generalization: "Exact geometry must not travel.",
+    },
+  };
+  const restrictedRecordReview = exports.buildPublicSafeExport(supportedRestrictedRecordInput);
+  assert.equal(restrictedRecordReview.payload.selection.geometry, "WITHHELD_BY_POLICY");
+  assert.equal(restrictedRecordReview.withheldFeatureCount, 1);
+  assert.equal(restrictedRecordReview.checks.find((check) => check.id === "selection").state, "REDACTED");
+
+  const restrictedLayerReview = exports.buildPublicSafeExport({
+    ...supportedRestrictedRecordInput,
+    layers: [{ ...supportedRestrictedRecordInput.layers[0], releaseState: "RESTRICTED" }],
+    selection: {
+      ...supportedRestrictedRecordInput.selection,
+      featureId: "fauna-restricted-layer",
+      evidenceReference: "fixture:fauna-restricted-layer",
+      releaseState: "DEMONSTRATION",
+      layerReleaseState: "RESTRICTED",
+    },
+  });
+  assert.equal(restrictedLayerReview.payload.selection.geometry, "WITHHELD_BY_POLICY");
+  assert.equal(restrictedLayerReview.payload.selection.layerReleaseState, "RESTRICTED");
+  assert.equal(restrictedLayerReview.withheldFeatureCount, 1);
+
   const blockedReview = exports.buildPublicSafeExport({
     ...protectedReview.payload,
     exportedAt: "2026-08-24T18:31:00.000Z",
@@ -348,7 +399,7 @@ test("reviews and redacts public-safe exports before download", async () => {
     layerOrder: ["planning"],
     activeYear: 2026,
     workspace: "trust",
-    layers: [{ id: "planning", title: "Planning", opacity: 1, attribution: "", releaseState: "HELD", generalization: "Generalized", correction: "NONE" }],
+    layers: [{ id: "planning", title: "Planning", opacity: 1, attribution: "", releaseState: "RESTRICTED", generalization: "Generalized", correction: "NONE" }],
     selection: null,
   });
   assert.equal(blockedReview.downloadAllowed, false);
