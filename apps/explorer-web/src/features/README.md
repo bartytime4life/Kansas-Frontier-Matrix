@@ -2,12 +2,15 @@
 doc_id: kfm://app/explorer-web/src/features/readme
 title: Explorer Web Features README
 type: app-readme
-version: v0.2
+version: v0.3
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Release steward · Evidence steward · Accessibility steward · Telemetry steward · Docs steward
 created: 2026-06-16
-updated: 2026-07-09
+updated: 2026-08-28
 policy_label: public
+owning_root: apps/
+responsibility: define the Explorer Web child-feature boundary and record verified feature-family maturity
+truth_posture: CONFIRMED bounded repository feature modules and tests / PROPOSED broader route families / UNKNOWN production composition and deployment behavior
 related:
   - ../README.md
   - ../adapters/README.md
@@ -45,6 +48,7 @@ notes:
   - "The shell baseline and a bounded fixture-only Evidence Drawer projection/view-state slice are executable; broader route inventory, child-feature maturity, telemetry policy wiring, complete accessibility, and runtime behavior remain NEEDS VERIFICATION."
   - "policy/telemetry/README.md may still be stub-level; executable telemetry policy wiring remains NEEDS VERIFICATION unless separately verified."
   - "v0.2 adds a current evidence basis, child-feature umbrella contract, minimum safe implementation slice, runtime anti-bypass matrix, stronger feature-family map, and validation/definition-of-done gates without claiming runtime maturity."
+  - "v0.3 records the tested, fixture-only planning_scenario_review child feature; it remains PROPOSED_INACTIVE and is not mounted on a production route."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -270,6 +274,7 @@ Exact feature modules and route maturity remain `NEEDS VERIFICATION`. Candidate 
 | `review_console_readonly` | Read-only review visibility | No review mutation or lifecycle move | PROPOSED |
 | `settings` | Display/accessibility preferences | Preference-not-policy | PROPOSED |
 | `diagnostics` | Trust, envelope, route, layer, and version diagnostics | Safe, non-secret display | PROPOSED |
+| `planning_scenario_review` | Text-first review of bounded planning scenarios, assumptions, uncertainty, equity questions, and evidence references | Fixture-only, held, no recommendation or publication authority | PROPOSED_INACTIVE / TESTED |
 
 > [!WARNING]
 > Candidate feature names and README paths are not implementation proof. Do not document a feature route as runnable until files, tests, fixtures, route wiring, package scripts, governed API envelopes, access policy, accessibility behavior, telemetry constraints, and downstream handoffs confirm it.
