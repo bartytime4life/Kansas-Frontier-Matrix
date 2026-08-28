@@ -2,8 +2,10 @@
 doc_id: kfm://doc/tools-validators-habitat-flora-underscore-readme
 title: tools/validators/habitat_flora README
 type: compatibility-readme
-version: v0.1.0
+version: v0.1.1
 status: repository-grounded draft; documentation-only HOLD
+owner: OWNER_TBD — Habitat steward · Flora steward · Validator steward
+created: 2026-08-28
 updated: 2026-08-28
 policy_label: repository-facing; habitat; flora; validator-routing; non-authoritative; fail-closed
 owning_root: tools/
