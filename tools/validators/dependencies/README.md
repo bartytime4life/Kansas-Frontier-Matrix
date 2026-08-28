@@ -2,14 +2,14 @@
 doc_id: kfm://doc/tools-validators-dependencies-readme
 title: tools/validators/dependencies — Dependency Audit Boundary
 type: README; validator-lane; supply-chain-readiness
-version: v0.1
+version: v0.2
 status: proposed; executable-validator; focused-tests; fail-closed; non-authoritative
 owner: OWNER_TBD — Supply-chain reviewer · Validator steward · CI steward
 created: 2026-07-29
-updated: 2026-07-29
-policy_label: repository-facing; dependency-audit; pnpm; deterministic-readiness; network-classification; fail-closed; non-release
+updated: 2026-08-28
+policy_label: repository-facing; dependency-audit; pnpm; npm; deterministic-readiness; network-classification; fail-closed; non-release
 owning_root: tools/
-responsibility: validate repository-local dependency-audit preconditions and classify external audit output without owning manifests, lockfiles, advisories, dependency admission, release, deployment, or publication
+responsibility: validate repository-local dependency-audit preconditions and classify external pnpm and npm audit output without owning manifests, lockfiles, advisories, dependency admission, release, deployment, or publication
 truth_posture: CONFIRMED implementation and focused no-network tests / PROPOSED workflow execution / NEEDS VERIFICATION exact-head remote audit result
 related:
   - ../README.md
@@ -20,9 +20,9 @@ related:
   - ../../../pnpm-workspace.yaml
   - ../../../pnpm-lock.yaml
 notes:
-  - "Repository readiness is no-network and deterministic; the pnpm audit itself is a point-in-time registry query."
+  - "Repository readiness is no-network and deterministic; the pnpm and npm audits are point-in-time registry queries."
   - "PASS means only that declared checks passed for the inspected revision and configured advisory response."
-  - "The stable workflow job id remains npm-audit for compatibility even though the accepted manager is pnpm."
+  - "The stable workflow job id remains npm-audit; root coordination uses pnpm while the Explorer installed graph uses npm."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -46,7 +46,8 @@ python tools/validators/dependencies/pnpm_audit_readiness.py \
   classify-audit \
   --report /path/to/pnpm-audit.json \
   --command-exit-code 0 \
-  --audit-level high
+  --audit-level high \
+  --manager pnpm
 ```
 
 `validate-repository` performs no network access. It checks:
@@ -60,8 +61,9 @@ python tools/validators/dependencies/pnpm_audit_readiness.py \
 - absence of npm, Yarn, or Bun root lockfiles that would make the authority
   ambiguous.
 
-`classify-audit` parses an already-produced pnpm JSON report. It never queries
-the registry itself.
+`classify-audit` parses an already-produced npm-compatible JSON report and
+labels the result for either `pnpm` or `npm`. It never queries the registry
+itself.
 
 ## Finite outcomes
 
@@ -80,8 +82,13 @@ The `dependency-scan` workflow:
 
 1. runs the no-network readiness command;
 2. activates the exact manager through Corepack;
-3. executes `pnpm audit --audit-level high --json`; and
-4. passes both the report and command exit code to the classifier.
+3. executes `pnpm audit --audit-level high --json` for the root coordination
+   graph;
+4. executes `npm --prefix apps/kansas-frontier-matrix-explorer audit
+   --package-lock-only --workspaces=false --audit-level high --json` for the
+   Explorer graph actually installed by its `npm ci` helper; and
+5. passes both reports and command exit codes to the classifier, then fails if
+   either graph reports a regression or error.
 
 The workflow does not use `--ignore-registry-errors`. An unavailable registry,
 unparseable response, command failure without qualifying findings, or
