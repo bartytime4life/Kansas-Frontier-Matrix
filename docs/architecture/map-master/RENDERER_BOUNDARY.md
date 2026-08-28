@@ -667,17 +667,18 @@ The bounded acquisition validator is designed to report:
 - raw renderer re-exports;
 - dynamic imports;
 - CommonJS `require`, Node `createRequire` aliases, and explicit `import.meta.resolve` / `require.resolve` module resolution;
+- stylesheet `@import` acquisition from renderer packages, including quoted and `url(...)` forms;
 - renderer CDN URLs and browser globals;
 - worker construction;
 - protocol registration; and
 - parallel active package homes.
 
-Before applying those patterns, the validator masks bounded JavaScript line/block
-comments and HTML comments while preserving quoted runtime strings, regular-expression
-literals, and line positions. A bounded expression-context check distinguishes regex
-literals from division before comment masking. This prevents regex contents from hiding
-active acquisition or exposing inert comment examples without treating a quoted CDN URL
-in executable code as inert.
+Before applying those patterns, the validator masks bounded JavaScript line/block,
+HTML, and stylesheet block comments while preserving quoted runtime strings,
+regular-expression literals, and line positions. A bounded expression-context check
+distinguishes regex literals from division before comment masking. This prevents regex
+contents from hiding active acquisition or exposing inert comment examples without
+treating a quoted CDN URL or active stylesheet import as inert.
 
 It treats only `packages/maplibre/**` as the accepted raw-renderer seam. Acquisition confined to that package yields structural `HOLD` while production runtime activation remains unresolved. Acquisition elsewhere produces `ACQUISITION_OUTSIDE_CANDIDATE_SEAM` and fails closed; parallel active package homes also fail closed. Documentation links, CSS class assertions, and package-local imports whose filenames contain `maplibre` are not renderer acquisition.
 
