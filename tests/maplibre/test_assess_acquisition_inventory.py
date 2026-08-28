@@ -453,6 +453,80 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(result.findings, ())
         self.assertEqual(result.scanned_bytes, 12)
 
+    def test_external_renderer_symlink_errors_without_becoming_acquisition(self) -> None:
+        with self._root() as tmp, self._root() as external_tmp:
+            root = Path(tmp)
+            external = Path(external_tmp) / "renderer.mjs"
+            external.write_text('require("maplibre-gl");\n', encoding="utf-8")
+            link = root / "scripts" / "linked.mjs"
+            link.parent.mkdir(parents=True)
+            link.symlink_to(external)
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.ERROR)
+        self.assertEqual(result.reasons, ("SCAN_INPUT_SYMLINK_DENIED",))
+        self.assertEqual(result.findings[0].kind, "SYMLINK_INPUT_DENIED")
+        self.assertEqual(result.findings[0].path, "scripts/linked.mjs")
+        self.assertNotIn("RENDERER_ACQUISITION_PRESENT", result.reasons)
+        self.assertNotIn("ACQUISITION_OUTSIDE_CANDIDATE_SEAM", result.reasons)
+
+    def test_benign_external_symlink_fails_closed(self) -> None:
+        with self._root() as tmp, self._root() as external_tmp:
+            root = Path(tmp)
+            external = Path(external_tmp) / "benign.mjs"
+            external.write_text("export const benign = true;\n", encoding="utf-8")
+            link = root / "scripts" / "linked.mjs"
+            link.parent.mkdir(parents=True)
+            link.symlink_to(external)
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.ERROR)
+        self.assertEqual(result.reasons, ("SCAN_INPUT_SYMLINK_DENIED",))
+        self.assertEqual(result.findings[0].kind, "SYMLINK_INPUT_DENIED")
+
+    def test_broken_symlink_fails_closed(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            link = root / "scripts" / "broken.mjs"
+            link.parent.mkdir(parents=True)
+            link.symlink_to(root / "missing.mjs")
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.ERROR)
+        self.assertEqual(result.reasons, ("SCAN_INPUT_SYMLINK_DENIED",))
+        self.assertEqual(result.findings[0].kind, "SYMLINK_INPUT_DENIED")
+
+    def test_symlinked_scan_root_fails_closed(self) -> None:
+        with self._root() as tmp, self._root() as external_tmp:
+            root = Path(tmp)
+            external = Path(external_tmp)
+            (external / "renderer.mjs").write_text(
+                'require("maplibre-gl");\n', encoding="utf-8"
+            )
+            (root / "scripts").symlink_to(external, target_is_directory=True)
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.ERROR)
+        self.assertEqual(result.reasons, ("SCAN_INPUT_SYMLINK_DENIED",))
+        self.assertEqual(result.findings[0].path, "scripts")
+
+    def test_resolved_path_outside_root_is_denied_before_read(self) -> None:
+        with self._root() as tmp, self._root() as external_tmp:
+            root = Path(tmp)
+            external = Path(external_tmp)
+            (external / "renderer.mjs").write_text(
+                'require("maplibre-gl");\n', encoding="utf-8"
+            )
+            scripts = root / "scripts"
+            scripts.symlink_to(external, target_is_directory=True)
+            result, finding = MODULE._read_bounded_text(
+                root,
+                scripts / "renderer.mjs",
+                MODULE.ScanBudget(),
+                unreadable_kind="TEXT_UNREADABLE",
+            )
+        self.assertIsNone(result)
+        self.assertIsNotNone(finding)
+        assert finding is not None
+        self.assertEqual(finding.kind, "INPUT_OUTSIDE_ROOT")
+        self.assertEqual(finding.path, "scripts/renderer.mjs")
+
     def test_summary_cli_hides_findings_but_keeps_counts(self) -> None:
         with self._root() as tmp:
             root = Path(tmp)
@@ -466,7 +540,7 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 3)
         payload = json.loads(completed.stdout)
         self.assertEqual(payload["outcome"], "HOLD")
-        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v8")
+        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v9")
         self.assertEqual(payload["max_input_bytes"], MODULE.MAX_INPUT_BYTES)
         self.assertEqual(payload["max_total_input_bytes"], MODULE.MAX_TOTAL_INPUT_BYTES)
         self.assertEqual(payload["findings"], [])

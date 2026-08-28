@@ -23,7 +23,7 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Sequence
 
-PROFILE = "kfm-maplibre-acquisition-inventory-v8"
+PROFILE = "kfm-maplibre-acquisition-inventory-v9"
 TEXT_SUFFIXES = frozenset({".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx", ".html"})
 MAX_FILES = 5000
 MAX_INPUT_BYTES = 1024 * 1024
@@ -35,6 +35,8 @@ INPUT_ERROR_KINDS = frozenset(
     {
         "INPUT_TOO_LARGE",
         "MANIFEST_UNREADABLE",
+        "INPUT_OUTSIDE_ROOT",
+        "SYMLINK_INPUT_DENIED",
         "TEXT_UNREADABLE",
         "TOTAL_INPUT_BUDGET_EXCEEDED",
     }
@@ -371,14 +373,26 @@ def _iter_files(root: Path) -> tuple[list[Path], bool]:
     files: list[Path] = []
     ignored_parts = {".git", "node_modules", "dist", "build", ".next", "coverage"}
     root_manifest = root / "package.json"
-    if root_manifest.is_file():
+    if root_manifest.is_symlink() or root_manifest.is_file():
         files.append(root_manifest)
     for root_name in SCAN_ROOTS:
         base = root / root_name
+        if base.is_symlink():
+            files.append(base)
+            if len(files) > MAX_FILES:
+                return files[:MAX_FILES], True
+            continue
         if not base.is_dir():
             continue
         for path in sorted(base.rglob("*")):
-            if not path.is_file() or any(part in ignored_parts for part in path.parts):
+            if any(part in ignored_parts for part in path.parts):
+                continue
+            if path.is_symlink():
+                files.append(path)
+                if len(files) > MAX_FILES:
+                    return files[:MAX_FILES], True
+                continue
+            if not path.is_file():
                 continue
             if path.name == "package.json" or path.suffix.lower() in TEXT_SUFFIXES:
                 files.append(path)
@@ -391,6 +405,15 @@ def _read_bounded_text(
     root: Path, path: Path, budget: ScanBudget, *, unreadable_kind: str
 ) -> tuple[str | None, Finding | None]:
     rel = path.relative_to(root).as_posix()
+    if path.is_symlink():
+        return None, Finding("SYMLINK_INPUT_DENIED", rel, "symlink", False)
+    try:
+        resolved_root = root.resolve(strict=True)
+        resolved_path = path.resolve(strict=True)
+    except OSError:
+        return None, Finding(unreadable_kind, rel, path.name, False)
+    if not resolved_path.is_relative_to(resolved_root):
+        return None, Finding("INPUT_OUTSIDE_ROOT", rel, "resolved-outside-root", False)
     remaining_bytes = max(MAX_TOTAL_INPUT_BYTES - budget.scanned_bytes, 0)
     read_limit = min(MAX_INPUT_BYTES, remaining_bytes) + 1
     try:
@@ -504,7 +527,13 @@ def scan(root: Path) -> Result:
         )
         findings.extend(path_findings)
         if any(
-            finding.kind in {"INPUT_TOO_LARGE", "TOTAL_INPUT_BUDGET_EXCEEDED"}
+            finding.kind
+            in {
+                "INPUT_OUTSIDE_ROOT",
+                "INPUT_TOO_LARGE",
+                "SYMLINK_INPUT_DENIED",
+                "TOTAL_INPUT_BUDGET_EXCEEDED",
+            }
             for finding in path_findings
         ):
             break
@@ -528,6 +557,10 @@ def scan(root: Path) -> Result:
         reasons.add("SCAN_INPUT_TOO_LARGE")
     if any(finding.kind == "TOTAL_INPUT_BUDGET_EXCEEDED" for finding in unique):
         reasons.add("SCAN_TOTAL_INPUT_TOO_LARGE")
+    if any(finding.kind == "SYMLINK_INPUT_DENIED" for finding in unique):
+        reasons.add("SCAN_INPUT_SYMLINK_DENIED")
+    if any(finding.kind == "INPUT_OUTSIDE_ROOT" for finding in unique):
+        reasons.add("SCAN_INPUT_OUTSIDE_ROOT")
     if truncated:
         reasons.add("SCAN_TRUNCATED")
     if any(not finding.candidate_seam for finding in acquisition_findings):
@@ -538,6 +571,8 @@ def scan(root: Path) -> Result:
     if reasons.intersection(
         {
             "SCAN_INPUT_TOO_LARGE",
+            "SCAN_INPUT_OUTSIDE_ROOT",
+            "SCAN_INPUT_SYMLINK_DENIED",
             "SCAN_INPUT_UNREADABLE",
             "SCAN_TOTAL_INPUT_TOO_LARGE",
             "SCAN_TRUNCATED",
