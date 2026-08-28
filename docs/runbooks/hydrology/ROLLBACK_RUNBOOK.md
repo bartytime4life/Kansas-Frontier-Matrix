@@ -2,7 +2,7 @@
 doc_id: kfm://doc/runbook-hydrology-rollback
 title: Hydrology Rollback Runbook
 type: operational-runbook
-version: v2.0.0
+version: v2.0.1
 status: DRAFT_REPOSITORY_GROUNDED; DECISION_AND_REVIEW_HANDOFF_ONLY; GENERIC_SYNTHETIC_REHEARSAL_AVAILABLE; HYDROLOGY_SPECIFIC_REHEARSAL_ABSENT; OPERATIONAL_ROLLBACK_HELD; NOT_FOR_LIFE_SAFETY; NON_RELEASE; NON_PUBLICATION
 owners: "@bartytime4life — verified CODEOWNERS route; accountable Hydrology, evidence, policy, rights, sensitivity, review, correction, rollback, release, operations, and public-recovery stewardship NEEDS VERIFICATION"
 created: 2026-05-12
@@ -22,9 +22,8 @@ evidence_snapshot:
   base_ref: main
   base_commit: 8e7c862f5bf91fb27038ef264549b565b4827711
   target_path: docs/runbooks/hydrology/ROLLBACK_RUNBOOK.md
-  target_prior_blob: 6c6f06f87de2b2b0e528e670ef43ae46bbc17d06
-  adjacent_scaffold_path: docs/runbooks/hydrology/ROLLBACK.md
-  adjacent_scaffold_blob: 4ec794c5bad3b13368de88b8b258c10b9972cb1b
+  target_original_blob: 6c6f06f87de2b2b0e528e670ef43ae46bbc17d06
+  immediate_prior_blob: 5ea7b9c922f7a39ab80663af9700996b9ba160d1
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
@@ -47,14 +46,17 @@ evidence_snapshot:
   hydrology_published_payloads: 0
   hydrology_rollback_card_instances: 0
   hydrology_release_review_records: 0
-  open_pull_requests_touching_target_before_branch: 0
+review_correction:
+  automated_finding: synthetic correction and invalidation records were incorrectly described as append-only
+  verified_behavior: helper writes deterministic paths with replacement semantics and does not reject an existing same-id record
+  disposition: documentation corrected; helper, tests, workflow, contracts, and schemas unchanged
 source_lineage:
   - title: KFM_Hydrology_Extended_Pro_PDF_Only_Reference_Report_2026-04-21.pdf
     source_class: PLANNING_LINEAGE
     use: hydrology-first, source-role, temporal, evidence, correction, and rollback framing only
   - title: Track Hazards synthetic rollback CI binding
     source_class: NOTION_COORDINATION_ONLY
-    use: distinguish the implemented generic-plus-Hazards synthetic proof from absent Hydrology-specific and operational rollback evidence
+    use: distinguish generic-plus-Hazards synthetic proof from absent Hydrology-specific and operational rollback evidence
   - title: KFM Markdown Update & Modernization Agent v1.0
     source_class: CURRENT_TASK_GUIDANCE
     use: same-path repository-grounded Markdown modernization and focused draft-pull-request delivery
@@ -86,8 +88,9 @@ related:
   - ../../../scripts/maintenance/audit_published_aliases.py
 notes:
   - The repository implements a deterministic, marker-protected synthetic rollback and withdrawal rehearsal over isolated temporary roots. It is not Hydrology-specific and is not a production rollback executor.
-  - The rollback-drill workflow currently combines eight generic rehearsal tests with four Hazards-specific tests; it does not establish a Hydrology rollback rehearsal.
+  - The rollback-drill workflow combines eight generic rehearsal tests with four Hazards-specific tests; it does not establish a Hydrology rollback rehearsal.
   - The RollbackCard contract, closed schema, fixtures, validator, and tests establish candidate shape and local consistency only. Every authority and public-mutation flag remains false.
+  - The current synthetic helper can replace an existing correction or invalidation record when a scenario-derived ID collides. Current evidence does not prove append-only rehearsal history.
   - The Hydrology candidate, proof, receipt, published-data, rollback-card, and accountable-review lanes contain no Hydrology payload or governed recovery record at the pinned base.
   - The production rollback pipeline and published-alias auditor remain one-line greenfield placeholders.
   - This runbook supports classification, fail-closed planning, bounded synthetic-mechanics validation, and accountable-review handoff. It never executes containment, rollback, withdrawal, correction, invalidation, alias mutation, release, deployment, promotion, or publication.
@@ -130,6 +133,7 @@ missing_evidence:
   - HYD_ALIAS_AUDITOR_PLACEHOLDER
   - HYD_INVALIDATION_ADAPTERS_ABSENT
   - HYD_PUBLIC_READBACK_ABSENT
+  - SYNTHETIC_RECORD_COLLISION_GUARD_ABSENT
 lifecycle_effect: none
 release_effect: none
 deployment_effect: none
@@ -137,7 +141,7 @@ promotion_effect: none
 publication_effect: none
 ```
 
-**Quick navigation:** [Goal](#goal-and-scope) · [Authority](#authority-and-terminal-boundary) · [Evidence](#current-repository-evidence) · [Vocabulary](#state-and-vocabulary-separation) · [Safety](#hydrology-safety-and-source-role-boundary) · [Decision](#rollback-decision-model) · [Preconditions](#preconditions) · [Procedure](#rollback-preflight-and-handoff-procedure) · [Defects](#hydrology-defect-and-recovery-matrix) · [Target](#prior-target-safety) · [Invalidation](#invalidation-and-cross-lane-impact) · [Synthetic proof](#generic-synthetic-rehearsal) · [Interpretation](#interpret-the-results) · [Handoff](#accountable-review-handoff-packet) · [Gap](#hydrology-specific-rehearsal-gap) · [Graduation](#operational-graduation-gate) · [Validation](#documentation-validation) · [Related](#related-repository-surfaces) · [Maintenance](#maintenance-and-document-rollback)
+**Quick navigation:** [Goal](#goal-and-scope) · [Authority](#authority-and-terminal-boundary) · [Evidence](#current-repository-evidence) · [Vocabulary](#state-and-vocabulary-separation) · [Safety](#hydrology-safety-and-source-role-boundary) · [Decision](#rollback-decision-model) · [Preconditions](#preconditions) · [Procedure](#rollback-preflight-and-handoff-procedure) · [Target](#prior-target-safety) · [Invalidation](#invalidation-and-cross-lane-impact) · [Synthetic proof](#generic-synthetic-rehearsal) · [Results](#interpret-the-results) · [Handoff](#accountable-review-handoff-packet) · [Gap](#hydrology-specific-rehearsal-gap) · [Graduation](#operational-graduation-gate) · [Validation](#documentation-validation) · [Related](#related-repository-surfaces) · [Maintenance](#maintenance-and-document-rollback)
 
 ---
 
@@ -162,7 +166,7 @@ defect signal
   -> accountable review handoff
   -> separately authorized operational execution
   -> invalidation and public read-back
-  -> append-only correction, receipts, proofs, and closure
+  -> governed correction, receipts, proofs, and closure
 ```
 
 Current repository evidence supports the classification, candidate-validation, generic-rehearsal, and review-handoff parts only. It does not support operational containment, target mutation, invalidation, alias change, or public recovery.
@@ -177,7 +181,7 @@ Current repository evidence supports the classification, candidate-validation, g
 - run the repository's generic marker-protected synthetic rehearsal as a mechanics check;
 - interpret exact-revision results without converting a green check into review, execution, release, deployment, promotion, or publication authority;
 - enumerate cross-lane and public-consumer effects for accountable review; and
-- preserve the affected and prior release history rather than deleting or rewriting it.
+- preserve affected and prior release history in the future operational design.
 
 ### Out of scope
 
@@ -185,11 +189,11 @@ This runbook does not:
 
 - issue or interpret a current flood warning, watch, evacuation instruction, dam-safety direction, or regulatory determination;
 - activate, admit, fetch, alter, or withdraw a live source;
-- create a Hydrology release, prior safe target, evidence bundle, proof, receipt, policy decision, review record, rollback card, correction notice, or public carrier;
+- create a Hydrology release, prior safe target, EvidenceBundle, proof, receipt, policy decision, review record, rollback card, correction notice, or public carrier;
 - authorize direct edits to `data/published/`, a public alias, API route, cache, CDN, tile store, catalog, triplet store, search index, vector index, AI cache, deployment, or downstream derivative;
 - execute the one-line production rollback pipeline placeholder;
-- treat the generic synthetic helper or the Hazards-specific workflow extension as Hydrology rollback proof;
-- treat `docs/runbooks/hydrology/ROLLBACK.md`, which remains a proposal scaffold, as an operational procedure or alternate release authority;
+- treat the generic synthetic helper or Hazards-specific workflow extension as Hydrology rollback proof;
+- treat [`ROLLBACK.md`](ROLLBACK.md), which remains a proposal scaffold, as an operational procedure or alternate release authority;
 - perform repository revert, database recovery, infrastructure failover, source deactivation, secret rotation, or incident-response command; or
 - claim operational recovery, release, deployment, promotion, publication, or public readiness.
 
@@ -207,21 +211,20 @@ This is a same-path modernization of an established file. It creates no new resp
 
 | Responsibility | Owning surface | Current bounded role |
 |---|---|---|
-| Human Hydrology rollback procedure | `docs/runbooks/hydrology/ROLLBACK_RUNBOOK.md` | Explain classification, prerequisites, current capability, stop conditions, and handoff |
-| Adjacent Hydrology rollback scaffold | [`ROLLBACK.md`](ROLLBACK.md) | Proposal-era placeholder only; no execution or authority effect |
-| Generic synthetic procedure | [`docs/runbooks/rollback-rehearsal.md`](../rollback-rehearsal.md) | Explain the isolated marker-protected rehearsal |
+| Human Hydrology rollback procedure | This file | Explain classification, prerequisites, capability, stop conditions, and handoff |
+| Adjacent Hydrology rollback scaffold | [`ROLLBACK.md`](ROLLBACK.md) | Proposal-era placeholder only |
+| Generic synthetic procedure | [`../rollback-rehearsal.md`](../rollback-rehearsal.md) | Explain the isolated marker-protected rehearsal |
 | Generic synthetic mechanics | [`tools/release/rollback_apply.py`](../../../tools/release/rollback_apply.py) | Plan or mutate only a marker-protected synthetic workspace |
 | Generic behavior proof | [`tests/release/test_synthetic_rollback_rehearsal.py`](../../../tests/release/test_synthetic_rollback_rehearsal.py) | Exercise eight generic rollback, withdrawal, integrity, and fail-closed cases |
 | `RollbackCard` meaning | [`contracts/release/rollback_card.md`](../../../contracts/release/rollback_card.md) | Define a candidate plan and explicit non-authority boundary |
-| `RollbackCard` machine shape | [`schemas/contracts/v1/release/rollback_card.schema.json`](../../../schemas/contracts/v1/release/rollback_card.schema.json) | Validate a closed `1.0.0` fixture-first candidate |
+| `RollbackCard` machine shape | [`schemas/contracts/v1/release/rollback_card.schema.json`](../../../schemas/contracts/v1/release/rollback_card.schema.json) | Validate a closed fixture-first candidate |
 | Candidate local consistency | [`tools/validators/release/validate_rollback_card.py`](../../../tools/validators/release/validate_rollback_card.py) | Validate shape and bounded cross-field rules without executing rollback |
-| Read-only CI inspection | [`.github/workflows/rollback-drill.yml`](../../../.github/workflows/rollback-drill.yml) | Run the candidate profile plus generic and Hazards synthetic checks while retaining production holds |
-| Hydrology release and review inputs | [`release/candidates/hydrology/`](../../../release/candidates/hydrology/README.md) and [`release/reviews/`](../../../release/reviews/README.md) | Guidance only at the pinned base; no Hydrology candidate or review record |
-| Hydrology proof, receipt, and published lanes | [`data/proofs/hydrology/`](../../../data/proofs/hydrology/README.md), [`data/receipts/hydrology/`](../../../data/receipts/hydrology/README.md), [`data/published/hydrology/`](../../../data/published/hydrology/README.md) | README and placeholder lanes only; no Hydrology payload |
+| Read-only CI inspection | [`.github/workflows/rollback-drill.yml`](../../../.github/workflows/rollback-drill.yml) | Run candidate, generic, and Hazards synthetic checks while retaining production holds |
+| Hydrology release and review inputs | [`release/candidates/hydrology/`](../../../release/candidates/hydrology/README.md) and [`release/reviews/`](../../../release/reviews/README.md) | Guidance only at the pinned base |
+| Hydrology proof, receipt, and published lanes | [`data/proofs/hydrology/`](../../../data/proofs/hydrology/README.md), [`data/receipts/hydrology/`](../../../data/receipts/hydrology/README.md), and [`data/published/hydrology/`](../../../data/published/hydrology/README.md) | README and placeholder lanes only |
 | Production rollback pipeline | [`pipelines/rollback/main.py`](../../../pipelines/rollback/main.py) | One-line greenfield placeholder |
 | Published-alias audit | [`scripts/maintenance/audit_published_aliases.py`](../../../scripts/maintenance/audit_published_aliases.py) | One-line greenfield placeholder |
-| Release decisions and records | [`release/`](../../../release/README.md) | Remain separate append-only governed records |
-| Public carriers and runtime state | Governed public delivery surfaces | Must not be mutated by this Markdown file or the synthetic helper |
+| Release decisions and records | [`release/`](../../../release/README.md) | Separate governed responsibility; current synthetic helper is not its persistence implementation |
 
 The highest result this procedure can establish is:
 
@@ -243,34 +246,31 @@ The observations below are pinned to `main@8e7c862f5bf91fb27038ef264549b565b4827
 
 | Surface | CONFIRMED repository evidence | Bounded conclusion |
 |---|---|---|
-| Requested file | The prior v0.1 runbook still claimed the repository was unmounted and named unverified operational commands and paths | Proposal-era operational claims required replacement, not cosmetic editing |
-| Generic helper | `rollback_apply.py` requires `.kfm-synthetic-rollback-rehearsal`, exact marker text, `synthetic: true`, safe relative paths, a current synthetic alias, matching manifest and artifact digests, a distinct target for rollback, and the complete invalidation vocabulary | Deterministic no-write `PLAN` and marker-protected synthetic `APPLY` exist; no real public state is touched |
-| Generic tests | Eight tests cover deterministic no-write plan, rollback apply, withdrawal apply, non-synthetic denial, incomplete invalidation denial, missing target, digest mismatch, and missing marker | Generic synthetic behavior is executable and fail-closed within the tested profile |
-| Rollback workflow | `rollback-drill` is read-only, receives no release or signing secret, and is configured to run the RollbackCard fixture profile plus eight generic and four Hazards tests, asserting twelve non-vacuous tests | A green workflow proves the configured candidate and synthetic profiles only; Hydrology-specific proof is absent |
-| RollbackCard profile | The v1.0 contract, closed `1.0.0` schema, three valid fixtures, six invalid fixtures, expected-findings manifest, validator, tests, and workflow integration exist | A passing candidate proves shape and local consistency only |
-| RollbackCard authority flags | Candidate validation requires authority creation, policy evaluation, completed review, rollback execution, and public mutation to remain false, with `release_ref` null | The candidate profile deliberately cannot represent an authorized or executed rollback |
-| Hydrology-specific rehearsal | No `fixtures/domains/hydrology/synthetic_rollback_rehearsal/` or `tests/domains/hydrology/test_synthetic_rollback_rehearsal.py` is established in the inspected tree | Generic or Hazards proof must not be relabeled as Hydrology proof |
-| Hydrology candidate lane | `release/candidates/hydrology/` contains its README only | No affected or target Hydrology candidate dossier is established |
-| Hydrology release reviews | `release/reviews/` contains guidance and an Atmosphere lane, but no Hydrology review record | Accountable Hydrology rollback review is absent |
-| Hydrology proof lane | `data/proofs/hydrology/` contains `.gitkeep` and README only | No Hydrology rollback or release proof instance is established |
-| Hydrology receipt lane | `data/receipts/hydrology/` contains `.gitkeep` and README only | No Hydrology rollback or release receipt instance is established |
-| Hydrology published lane | `data/published/hydrology/` contains `.gitkeep` and README only | No repository-carried Hydrology public payload or alias target is established |
-| Rollback-card records | `release/rollback_cards/` has guidance, two non-Hydrology placeholder JSON files, and other domain directories; no Hydrology card instance is present | No Hydrology recovery candidate or accepted record exists |
-| Production pipeline | `pipelines/rollback/main.py` is exactly a one-line greenfield placeholder | No accepted production rollback engine exists |
-| Alias auditor | `scripts/maintenance/audit_published_aliases.py` is exactly a one-line greenfield placeholder | No accepted live alias inventory, audit, or mutation exists |
-| GitHub review route | CODEOWNERS routes the repository to `@bartytime4life` and explicitly denies that routing is stewardship, approval, release authority, or proof of review | Accountable functional roles and separation of duties remain `NEEDS VERIFICATION` |
-| Open overlap | No open pull request touching the target path was returned before the task branch was created | This same-path documentation slice had no detected PR overlap at the authority freeze |
+| Prior runbook | The v0.1 file claimed the repository was unmounted and named unverified operational commands and paths | Proposal-era claims required replacement, not cosmetic editing |
+| Generic helper | Requires a synthetic-workspace marker, `synthetic: true`, safe relative paths, matching manifest/artifact digests, a distinct rollback target, and complete invalidation vocabulary | Deterministic no-write `PLAN` and marker-protected synthetic `APPLY` exist; real public state is not touched |
+| Generic tests | Eight tests cover deterministic plan, rollback apply, withdrawal apply, non-synthetic denial, incomplete invalidation denial, missing target, digest mismatch, and missing marker | Generic synthetic behavior is executable within the tested profile |
+| Synthetic record persistence | Correction and invalidation records use deterministic scenario-derived paths and replacement writes; existing same-ID records are not rejected | Reusing an ID can replace prior synthetic records; append-only or collision-safe history is **not proved** |
+| Rollback workflow | Read-only workflow runs the RollbackCard profile plus eight generic and four Hazards tests | A green workflow proves those bounded profiles only; Hydrology-specific proof is absent |
+| RollbackCard profile | Contract, closed schema, fixtures, expected findings, validator, tests, and workflow integration exist | A passing candidate proves shape and local consistency only |
+| RollbackCard authority flags | Candidate validation keeps authority creation, policy evaluation, completed review, execution, public mutation, and release binding false or null | The candidate cannot represent authorized or executed rollback |
+| Hydrology-specific rehearsal | No checked-in Hydrology rollback fixture or domain rehearsal test was found | Generic or Hazards proof must not be relabeled as Hydrology proof |
+| Hydrology candidate lane | README only | No affected or target Hydrology dossier is established |
+| Hydrology release reviews | No Hydrology review record | Accountable Hydrology rollback review is absent |
+| Hydrology proof lane | `.gitkeep` and README only | No Hydrology rollback or release proof instance is established |
+| Hydrology receipt lane | `.gitkeep` and README only | No Hydrology rollback or release receipt instance is established |
+| Hydrology published lane | `.gitkeep` and README only | No repository-carried Hydrology public payload or alias target is established |
+| Rollback-card records | No Hydrology card instance | No Hydrology recovery candidate or accepted record exists |
+| Production pipeline | One-line placeholder | No accepted production rollback engine exists |
+| Alias auditor | One-line placeholder | No accepted live alias inventory, audit, or mutation exists |
+| GitHub review route | CODEOWNERS routes the repository to `@bartytime4life` while denying that routing proves stewardship or approval | Functional owners and separation of duties remain `NEEDS VERIFICATION` |
 
 ### Evidence interpretation
-
-The current repository has more than a proposal: generic synthetic mechanics and candidate validation are implemented. It has less than operational rollback: Hydrology-specific evidence, accountable review, policy execution, target selection, public mutation, invalidation, and read-back are absent or held.
-
-Do not collapse these statements:
 
 ```text
 GENERIC SYNTHETIC MECHANICS: IMPLEMENTED
 ROLLBACKCARD CANDIDATE VALIDATION: IMPLEMENTED / NON-EXECUTING
 HAZARDS SYNTHETIC EXTENSION: IMPLEMENTED
+SYNTHETIC SAME-ID COLLISION SAFETY: ABSENT
 HYDROLOGY-SPECIFIC REHEARSAL: ABSENT
 OPERATIONAL HYDROLOGY ROLLBACK: HOLD
 PUBLIC RECOVERY: NOT ESTABLISHED
@@ -284,21 +284,17 @@ PUBLIC RECOVERY: NOT ESTABLISHED
 
 ## State and vocabulary separation
 
-Rollback decisions become unsafe when different state machines are translated by assumption.
-
 | Vocabulary | Examples | Question answered | Must not imply |
 |---|---|---|---|
-| Defect signal | evidence contradiction, rights change, validation failure, source withdrawal, policy failure | Why was recovery evaluation opened? | That rollback is the correct remedy |
-| `RollbackCard.disposition` | `ROLLBACK_CANDIDATE`, `WITHDRAWAL_CANDIDATE`, `HOLD`, `ERROR` | What candidate recovery posture is being proposed? | Review, execution, or public mutation |
-| Runtime or policy outcome | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`; `HOLD` where the owning policy uses it | What may a consumer return or do? | A release-recovery disposition |
-| Review state | unreviewed, review-ready, reviewed within an accepted profile | Has accountable review occurred? | Execution authority unless the governing profile says so |
-| Synthetic execution state | `PLAN`, marker-protected synthetic `APPLY` | What happened inside an isolated rehearsal root? | A real alias or public carrier changed |
-| Operational execution state | planned, authorized, applying, verified, failed, held | What happened in an accepted recovery executor? | Anything today; this executor is not established |
-| Public recovery state | active, stale, withdrawn, superseded, corrected, recovered | What can governed public consumers observe? | That repository state alone proves public parity |
+| Defect signal | evidence contradiction, rights change, validation failure, source withdrawal | Why was recovery evaluation opened? | That rollback is the correct remedy |
+| `RollbackCard.disposition` | `ROLLBACK_CANDIDATE`, `WITHDRAWAL_CANDIDATE`, `HOLD`, `ERROR` | What candidate posture is proposed? | Review, execution, or public mutation |
+| Runtime or policy outcome | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`; `HOLD` where owned | What may a consumer return or do? | A release-recovery disposition |
+| Review state | unreviewed, review-ready, reviewed in an accepted profile | Has accountable review occurred? | Execution authority unless an accepted control says so |
+| Synthetic execution | `PLAN`, marker-protected synthetic `APPLY` | What happened inside an isolated rehearsal root? | A real alias or public carrier changed |
+| Operational execution | planned, authorized, applying, verified, failed, held | What happened in an accepted recovery executor? | Anything today; the executor is absent |
+| Public recovery | stale, withdrawn, superseded, corrected, recovered | What can governed public consumers observe? | That repository state alone proves public parity |
 
-### Forward correction is separate
-
-`FORWARD_CORRECTION` is not a current `RollbackCard.disposition`. A corrected artifact should travel through the accepted candidate, validation, policy, review, promotion, release, correction, and publication path. This runbook may recommend that route, but it must not encode it as a schema value the current contract does not define.
+`FORWARD_CORRECTION` is not a current `RollbackCard.disposition`. A corrected artifact must use the accepted candidate, validation, policy, review, promotion, release, correction, and publication path. This runbook may recommend that route without inventing a schema value.
 
 [Back to top](#top)
 
@@ -308,20 +304,20 @@ Rollback decisions become unsafe when different state machines are translated by
 
 ## Hydrology safety and source-role boundary
 
-Rollback must preserve what each source can support. A prior release is unsafe when it restores a collapsed source role even if every byte digest matches.
+A prior release is unsafe when it restores a collapsed source role even if its bytes match.
 
 | Source or product family | Hydrology role | Prohibited upgrade during recovery |
 |---|---|---|
-| WBD / HUC units | Watershed and hydrologic-unit identity and boundary context | Flood prediction, observed inundation, or emergency status |
-| NHDPlus HR and related hydrography | Hydrographic identity, network, and crosswalk context | Regulatory flood determination or current flow observation |
-| USGS Water observations | Time-bounded gauge or water observations with unit, qualifier, provisional/final, and retrieval context | Forecast, warning, or timeless condition |
-| FEMA NFHL | Regulatory flood-hazard context | Observed inundation, current flood, forecast, warning, engineering conclusion, or insurance determination by KFM |
-| 3DEP or terrain-derived products | Terrain source or derived hydrologic context | Gauge observation, regulatory source, or hydraulic-model result |
-| Modeled hydrograph or derivative | Model or derived result with model/run support | Observation or official operational guidance |
-| Synthetic fixture | Test input for bounded validation | Real-world condition, admitted source, released artifact, or public evidence |
+| WBD / HUC | Watershed and hydrologic-unit identity and boundary context | Flood prediction, observed inundation, or emergency status |
+| NHDPlus HR and related hydrography | Hydrographic identity, network, and crosswalk context | Regulatory determination or current observation |
+| USGS Water observations | Time-bounded observations with unit, qualifier, status, and retrieval context | Forecast, warning, or timeless condition |
+| FEMA NFHL | Regulatory flood-hazard context | Observed inundation, current flood, forecast, warning, engineering, or insurance determination by KFM |
+| 3DEP or terrain derivatives | Terrain source or derived hydrologic context | Gauge observation, regulation, or hydraulic-model result |
+| Modeled hydrograph or derivative | Model or derived result with run support | Observation or official operational guidance |
+| Synthetic fixture | Test input | Real condition, admitted source, released artifact, or public evidence |
 
 > [!CAUTION]
-> A target that predates current source-role controls is not automatically safe. If its role, time, evidence, rights, sensitivity, or representation posture cannot be revalidated, choose `WITHDRAWAL_CANDIDATE` or `HOLD` rather than restoring it.
+> A target that predates current source-role controls is not automatically safe. When its role, time, evidence, rights, sensitivity, or representation posture cannot be revalidated, choose `WITHDRAWAL_CANDIDATE` or `HOLD` rather than restoring it.
 
 [Back to top](#top)
 
@@ -331,23 +327,17 @@ Rollback must preserve what each source can support. A prior release is unsafe w
 
 ## Rollback decision model
 
-Classify the recovery posture before preparing a candidate. Do not start from a desired target and reverse-engineer support.
-
-| Condition | Candidate posture | Required reason |
+| Condition | Candidate posture | Required interpretation |
 |---|---|---|
-| A distinct prior release is identified and revalidates as safer for the exact affected scope | `ROLLBACK_CANDIDATE` | Restore a verified predecessor through separately authorized execution |
-| No distinct safe predecessor exists, including a defective first release | `WITHDRAWAL_CANDIDATE` | Remove current public use without inventing a target |
-| Evidence, rights, sensitivity, policy, identity, review, target, invalidation, or public-readback support is incomplete | `HOLD` | Preserve current fail-closed containment and obtain missing support |
-| The recovery input or evaluation is malformed or cannot be completed safely | `ERROR` | Record the failure without public mutation |
-| The defect should be repaired in a new release rather than restoring old state | Forward-correction handoff | Use the normal governed correction and release path; not a RollbackCard disposition |
+| A distinct prior release is identified and revalidates as safer for the exact scope | `ROLLBACK_CANDIDATE` | Restore a verified predecessor only through separately authorized execution |
+| No distinct safe predecessor exists, including a defective first release | `WITHDRAWAL_CANDIDATE` | Remove current use without inventing a target |
+| Evidence, rights, sensitivity, policy, identity, review, target, invalidation, or read-back support is incomplete | `HOLD` | Preserve fail-closed containment and obtain support |
+| Input or evaluation is malformed or cannot finish safely | `ERROR` | Record failure without public mutation |
+| A new corrected release is safer than restoring old state | Forward-correction handoff | Use the normal governed correction and release path |
 
-### Trigger reason codes
+Current `RollbackCard` trigger reasons include `RELEASE_DEFECT`, `EVIDENCE_CONTRADICTION`, `RIGHTS_CHANGE`, `SENSITIVITY_DISCOVERY`, `VALIDATION_FAILURE`, `SOURCE_WITHDRAWAL`, `POLICY_FAILURE`, `SECURITY_ISSUE`, `OPERATIONAL_FAILURE`, `EMERGENCY_HOLD`, `INSUFFICIENT_EVIDENCE`, and `INPUT_INVALID`.
 
-Use the finite `RollbackCard` trigger vocabulary when a card is prepared:
-
-`RELEASE_DEFECT`, `EVIDENCE_CONTRADICTION`, `RIGHTS_CHANGE`, `SENSITIVITY_DISCOVERY`, `VALIDATION_FAILURE`, `SOURCE_WITHDRAWAL`, `POLICY_FAILURE`, `SECURITY_ISSUE`, `OPERATIONAL_FAILURE`, `EMERGENCY_HOLD`, `INSUFFICIENT_EVIDENCE`, or `INPUT_INVALID`.
-
-The reason code is public-safe classification. Do not put secrets, private review text, protected locations, exploit detail, or sensitive infrastructure information into it.
+Do not place secrets, protected locations, exploit details, or private review text in a public-safe reason code.
 
 [Back to top](#top)
 
@@ -357,41 +347,41 @@ The reason code is public-safe classification. Do not put secrets, private revie
 
 ## Preconditions
 
-### Planning and review-handoff preconditions
+### Review-handoff preconditions
 
-All items below are required before describing a packet as `READY_FOR_ACCOUNTABLE_ROLLBACK_REVIEW`:
-
-- [ ] The exact 40-character repository SHA and affected-release reference are recorded.
-- [ ] The affected artifact set, digests, claims, EvidenceRefs, source roles, geography, time interval, audience, and public consumers are bounded.
-- [ ] The defect and trigger reason are classified without exposing sensitive values.
-- [ ] The candidate disposition matches the current RollbackCard vocabulary or is explicitly a separate forward-correction recommendation.
+- [ ] Exact repository SHA and affected release reference are recorded.
+- [ ] Affected artifacts, digests, claims, EvidenceRefs, source roles, geography, time, audience, and consumers are bounded.
+- [ ] Defect and trigger reason are supported without exposing sensitive values.
+- [ ] Candidate disposition matches the current contract or is explicitly a separate forward-correction recommendation.
 - [ ] A rollback candidate names a distinct target; a withdrawal candidate has no target.
-- [ ] Every consequential claim has resolvable evidence support or is marked unsupported.
-- [ ] Rights, sensitivity, precision, source terms, and cross-lane reconstruction risks are reviewed.
-- [ ] A target release is revalidated rather than assumed safe because it is older.
-- [ ] Required invalidation classes and known consumer instances are enumerated.
-- [ ] A correction or notice reference is supplied when public notice is required.
-- [ ] The RollbackCard candidate passes its current fixture-first shape and local-consistency profile.
-- [ ] Generic synthetic rehearsal evidence is labeled generic and synthetic, not Hydrology-specific or operational.
-- [ ] Accountable reviewer roles, authority, separation, obligations, validity, and supersession state are named as established or missing.
-- [ ] All missing support remains an explicit `HOLD`, `ERROR`, withdrawal posture, or open obligation.
+- [ ] Consequential claims resolve to evidence or remain unsupported.
+- [ ] Rights, sensitivity, precision, source terms, and reconstruction risks are reviewed.
+- [ ] A proposed target is revalidated rather than presumed safe because it is older.
+- [ ] Required invalidation classes and concrete consumers are enumerated.
+- [ ] Correction or notice reference is supplied when public notice is required.
+- [ ] Candidate `RollbackCard` passes the current fixture-first profile.
+- [ ] Generic synthetic evidence is labeled generic and synthetic.
+- [ ] Synthetic same-ID collision behavior is disclosed; no append-only claim is made.
+- [ ] Reviewer identity, authority, separation, obligations, validity, and supersession are established or marked missing.
+- [ ] Missing support remains a `HOLD`, `ERROR`, withdrawal posture, or open obligation.
 
 ### Operational preconditions
 
-Current repository evidence does not satisfy these conditions. They are non-compensable before any real mutation:
+Current repository evidence does not establish:
 
-- an accepted operational rollback plan/apply executor;
+- an accepted production plan/apply executor;
 - authenticated authorization and separation of duties;
-- accepted policy evaluation bound to the exact affected and target releases;
-- evidence, proof, receipt, correction, and release-record resolution;
-- an accepted public alias or equivalent target model;
-- safe, idempotent consumer invalidation adapters;
+- accepted policy evaluation bound to affected and target releases;
+- resolved evidence, proof, receipt, correction, and release records;
+- an accepted public alias or equivalent release-state model;
+- collision-safe record persistence;
+- safe idempotent invalidation adapters;
 - partial-failure detection and resumable or compensating behavior;
-- deployment/environment identity and least-privilege credentials;
-- exact public read-back and stale-leak detection; and
-- a rehearsed Hydrology-specific synthetic profile before any non-public operational exercise.
+- deployment identity and least-privilege credentials;
+- exact public read-back and stale-leak detection; or
+- a Hydrology-specific synthetic rehearsal.
 
-Missing an operational precondition is a stop. Do not substitute repository file edits, manual cache clearing, or a green generic test.
+Missing an operational precondition is a stop. Do not substitute manual file edits, cache clearing, or a green generic test.
 
 [Back to top](#top)
 
@@ -401,51 +391,27 @@ Missing an operational precondition is a stop. Do not substitute repository file
 
 ## Rollback preflight and handoff procedure
 
-### 1. Freeze identity and active work
+### 1. Freeze identity and overlap
 
-Record:
+Record current `main`, evaluated SHA, affected release, artifact digests, public claims, source/evidence/policy/review/correction references, active PRs or incidents, known consumers, and the detector. Detection is not approval.
 
-- current `main` and task or incident SHA;
-- affected release and artifact references;
-- current public carrier or alias identity, when one exists;
-- exact source, evidence, policy, review, correction, and release references;
-- active pull requests, incidents, migrations, and recovery work touching the same surface;
-- known public and internal consumers; and
-- the person or system that detected the defect without treating detection as approval.
+### 2. Classify the defect
 
-Stop on unresolved overlap, unknown affected identity, or an inability to bound the exposed surface.
+Preserve every material defect class: evidence, source role, identity, time, unit/datum/qualifier, geometry/topology, rights, sensitivity, policy, catalog/citation, consumer drift, security, or operations.
 
-### 2. Classify the Hydrology defect
+### 3. Select a candidate posture
 
-Use the [Hydrology defect and recovery matrix](#hydrology-defect-and-recovery-matrix). A defect may have several classes. Preserve all material classes and apply the strictest rights, sensitivity, evidence, source-role, and public-safety posture.
+Apply the [decision model](#rollback-decision-model). Record why rollback is safer than withdrawal or forward correction. Use `HOLD` when the comparison is unsupported.
 
-### 3. Select a candidate disposition
+### 4. Revalidate the target
 
-Apply the [rollback decision model](#rollback-decision-model). Record why rollback is safer than withdrawal or forward correction. When the evidence does not support that comparison, use `HOLD`.
+Use [prior target safety](#prior-target-safety). Digest validity alone is insufficient.
 
-### 4. Revalidate a proposed prior target
+### 5. Prepare references, not payload copies
 
-Use [prior target safety](#prior-target-safety). A digest-valid predecessor can still be unsafe because its evidence, policy, source role, rights, sensitivity, time, schema, consumer compatibility, or correction state is stale.
+The packet should point to affected and target records, evidence, source roles, policy, review, correction, proof, receipts, manifests, invalidations, cross-lane impacts, and blockers. Do not copy governed payloads into this runbook or PR text.
 
-### 5. Build a review packet—not a public mutation
-
-Prepare stable references to:
-
-- the affected release and exact artifact set;
-- the target release or withdrawal posture;
-- defect evidence and limitations;
-- source descriptors and source roles;
-- evidence, policy, review, correction, proof, receipt, manifest, and lineage records;
-- invalidation classes and known consumer instances;
-- target validation and public-readback plan;
-- cross-lane impacts; and
-- every unresolved blocker.
-
-Do not copy governed payloads into this runbook or a pull-request body.
-
-### 6. Validate the RollbackCard candidate profile
-
-Repository-native candidate checks are:
+### 6. Validate the candidate profile
 
 ```bash
 python tools/validators/release/validate_rollback_card.py --fixtures
@@ -456,46 +422,23 @@ python -m unittest discover \
   --verbose
 ```
 
-A pass establishes the fixture matrix and bounded candidate semantics at the tested SHA. It does not resolve a Hydrology release, authenticate review, execute policy, select a target, mutate an alias, invalidate a consumer, issue a correction, or recover public state.
+A pass proves the fixture matrix and bounded candidate semantics only.
 
-### 7. Run the generic synthetic rehearsal
+### 7. Run the generic rehearsal
 
-Use the [generic synthetic rehearsal](#generic-synthetic-rehearsal) to check common mechanics. Keep the Hydrology-specific gap visible.
+```bash
+python -m unittest -q tests.release.test_synthetic_rollback_rehearsal
+```
 
-### 8. Interpret finite results
+Keep both the Hydrology-specific gap and the same-ID collision limitation visible.
 
-Use [interpret the results](#interpret-the-results). Record skipped, unavailable, inherited, introduced, non-comparable, and pending evidence separately.
+### 8. Prepare accountable-review handoff
 
-### 9. Prepare accountable-review handoff
+Use the [handoff packet](#accountable-review-handoff-packet). Ask for a decision; do not imply one occurred.
 
-Use the [handoff packet](#accountable-review-handoff-packet). The handoff must ask for a decision; it must not say a decision already occurred.
+### 9. Stop before mutation
 
-### 10. Stop before mutation
-
-Do not invoke `pipelines/rollback/main.py`; it is a placeholder. Do not invoke `audit_published_aliases.py`; it is a placeholder. Do not edit a real published lane, alias, cache, catalog, API route, search index, vector index, AI cache, deployment, or downstream derivative under this procedure.
-
-[Back to top](#top)
-
----
-
-<a id="hydrology-defect-and-recovery-matrix"></a>
-
-## Hydrology defect and recovery matrix
-
-| Defect class | Hydrology example | Candidate posture | Mandatory stop condition |
-|---|---|---|---|
-| Evidence contradiction or gap | Gauge, HUC, reach, or regulatory claim no longer resolves to admissible evidence | `HOLD`, withdrawal, or rollback to a revalidated target | No resolvable EvidenceBundle for the public claim |
-| Source-role collapse | NFHL represented as observed inundation; modeled hydrograph represented as observation | Withdrawal or rollback only to a target that preserves the correct role | Proposed target repeats or obscures the collapse |
-| Identity ambiguity | COMID, permanent identifier, HUC, gauge, or waterbody relation is split, merged, retired, or unresolved | `HOLD`, `ABSTAIN`, or rollback to an unambiguous target | Identity was inferred from name or geometry proximity alone |
-| Temporal defect | Provisional reading shown as final; observed, valid, source, retrieval, release, or correction times collapsed | Mark affected claims stale; choose withdrawal, rollback, or forward correction | Target cannot preserve distinct material time kinds |
-| Unit, datum, qualifier, or no-data defect | Flow, stage, water quality, or groundwater value changed meaning through normalization | Withdrawal, rollback, or forward correction after validation | Conversion or datum support cannot be reproduced |
-| Geometry or topology defect | HUC hierarchy mismatch, invalid geometry, network break, or version-crosswalk error | Rollback to a digest-pinned, revalidated target or withdraw | Target geometry, CRS, topology, or source vintage is unverified |
-| Rights or source withdrawal | Redistribution, attribution, access, or source terms no longer permit the released carrier | `WITHDRAWAL_CANDIDATE` or policy-directed `HOLD` | Rights remain unknown or inherited by assumption |
-| Sensitivity or harmful precision | Hydrology join exposes private-property, infrastructure, archaeology, cultural, or other restricted detail | Immediate fail-closed escalation plus withdrawal/generalization handoff | Exact sensitive values would remain reconstructable |
-| Policy failure | Accepted policy would deny current use or obligations cannot be enforced | `HOLD`, withdrawal, or rollback to a target that passes current policy | Policy result is a fixture declaration rather than accepted evaluation |
-| Catalog or citation defect | Public carrier cannot resolve catalog, provenance, EvidenceRef, or correction lineage | `ABSTAIN`, withdrawal, rollback, or forward correction | Public claim would remain uncitable or misleading |
-| Consumer drift | API, map, Evidence Drawer, export, search, graph, or AI surface retains the affected claim after release state changes | `HOLD` until invalidation and read-back are complete | Any known consumer cannot be enumerated or verified |
-| Security or operational failure | Integrity, tenant, credential, storage, or delivery failure affects release trust | Security/operations escalation; RollbackCard candidate only when appropriate | This runbook would expose secrets or replace incident response |
+Do not invoke [`pipelines/rollback/main.py`](../../../pipelines/rollback/main.py) or [`audit_published_aliases.py`](../../../scripts/maintenance/audit_published_aliases.py); both are placeholders. Do not edit a real published lane, alias, cache, catalog, API route, index, AI cache, deployment, or derivative under this procedure.
 
 [Back to top](#top)
 
@@ -505,24 +448,20 @@ Do not invoke `pipelines/rollback/main.py`; it is a placeholder. Do not invoke `
 
 ## Prior target safety
 
-A prior release is not safe merely because it existed before the defect.
-
-For `ROLLBACK_CANDIDATE`, reviewers must establish all of the following for the exact affected scope:
-
 | Target check | Required evidence | Failure posture |
 |---|---|---|
-| Distinct identity | Target release differs from the affected release and uses stable immutable identity | `ERROR` or `HOLD` |
-| Manifest and artifact integrity | Target manifest and every referenced artifact digest match | `HOLD`; investigate integrity drift |
-| Evidence resolution | Consequential target claims resolve to admissible EvidenceBundles | Choose an earlier target, withdraw, or hold |
+| Distinct identity | Target differs from the affected release and uses immutable identity | `ERROR` or `HOLD` |
+| Manifest and artifact integrity | Manifest and referenced artifact digests match | `HOLD` |
+| Evidence resolution | Consequential target claims resolve to admissible EvidenceBundles | Earlier target, withdrawal, or hold |
 | Source-role safety | Observation, regulatory, modeled, derived, contextual, and synthetic roles remain separate | Withdrawal or hold |
-| Spatial and temporal validity | CRS, geometry, identity, source vintage, observed/valid/retrieval/release time, freshness, and qualifiers remain valid | Withdrawal, earlier target, or forward correction |
-| Rights and sensitivity | Current rights, attribution, access, precision, and sensitivity policy permit the target use | `DENY` or `HOLD` through the owning policy |
-| Review and policy | Accepted review and policy records apply to the target and intended audience | `HOLD` |
-| Consumer compatibility | Governed APIs, maps, Evidence Drawer, exports, search, graph, AI, and downstream derivatives can consume the target safely | `HOLD` |
-| Correction lineage | Target restoration does not erase the affected release, defect, correction, withdrawal, or supersession record | `HOLD` |
-| Public read-back | A plan exists to prove every exposed consumer reflects the intended recovered state | `HOLD` |
+| Spatial and temporal validity | CRS, geometry, identity, vintage, observed/valid/retrieval/release time, freshness, and qualifiers remain valid | Withdrawal, earlier target, or forward correction |
+| Rights and sensitivity | Current terms, attribution, access, precision, and policy permit use | `DENY` or `HOLD` through owning policy |
+| Review and policy | Accepted records apply to the target and audience | `HOLD` |
+| Consumer compatibility | Governed API, map, Evidence Drawer, export, search, graph, AI, and derivatives can consume it safely | `HOLD` |
+| Correction lineage | Restoration does not erase the affected release or defect record | `HOLD` |
+| Public read-back | A plan can prove every exposed consumer reflects the intended state | `HOLD` |
 
-A first Hydrology release has no predecessor by definition. Its recovery posture is withdrawal, hold, or forward correction—not an invented rollback target.
+A first Hydrology release has no predecessor. Its posture is withdrawal, hold, or forward correction—not an invented rollback target.
 
 [Back to top](#top)
 
@@ -532,36 +471,22 @@ A first Hydrology release has no predecessor by definition. Its recovery posture
 
 ## Invalidation and cross-lane impact
 
-The generic synthetic helper requires this complete invalidation vocabulary:
+The generic scenario requires these invalidation classes:
 
-| Invalidation class | Hydrology-facing examples | Current operational status |
-|---|---|---|
-| `API_CACHE` | Governed Hydrology response cache | Adapter and public mutation not established |
-| `CDN` | Public tile, raster, document, or static-carrier edge cache | Adapter and credentials not established |
-| `TILES` | PMTiles, MVT, raster, or terrain carriers | No Hydrology published payload established |
-| `CATALOG` | STAC, DCAT, PROV, citation, or release catalog projections | Operational invalidation not established |
-| `TRIPLETS` | Hydrology graph/triplet projections | Operational invalidation not established |
-| `SEARCH_INDEX` | Feature, source, evidence, or catalog search | Operational invalidation not established |
-| `VECTOR_INDEX` | Retrieval or similarity derivatives | Operational invalidation not established |
-| `AI_CACHE` | Focus Mode or explanation cache | Operational invalidation not established |
-| `DOWNSTREAM_DERIVATIVES` | Joined maps, exports, dashboards, analyses, screenshots, or reports | Consumer inventory and fanout not established |
+`API_CACHE`, `CDN`, `TILES`, `CATALOG`, `TRIPLETS`, `SEARCH_INDEX`, `VECTOR_INDEX`, `AI_CACHE`, and `DOWNSTREAM_DERIVATIVES`.
 
-The vocabulary proves that a rehearsal scenario names every class. It does not prove that any live adapter was called.
-
-### Cross-lane review inventory
-
-A Hydrology defect can affect other responsibility lanes without transferring recovery authority to Hydrology:
+That vocabulary proves only that a rehearsal scenario names every class. It does not prove any live adapter was called.
 
 | Lane | Typical dependency | Hydrology handoff obligation |
 |---|---|---|
-| Hazards | Flood, drought, exposure, warning, or resilience context | Name affected claims and references; Hazards owns its recovery decision |
-| Soil | Soil-moisture, drainage, hydrologic group, wetness, or erosion context | Name joined carriers and stale-state risk |
-| Agriculture | Irrigation, crop-water, drought-stress, reservoir, or groundwater context | Name affected observations, models, and public summaries |
-| Settlements / Infrastructure | Floodplain, bridge, dam, utility, water-supply, or service-area context | Escalate sensitivity and harmful-precision review |
-| Habitat / Fauna / Flora | Aquatic habitat, wetland, riparian, occurrence, or restoration context | Preserve source ownership and sensitivity obligations |
-| Geology | Aquifer and hydrostratigraphic context | Preserve Geology-owned context and Hydrology-owned observation boundaries |
+| Hazards | Flood, drought, exposure, warning, resilience | Name affected claims; Hazards owns its recovery decision |
+| Soil | Soil moisture, drainage, wetness, erosion | Name joined carriers and stale-state risk |
+| Agriculture | Irrigation, crop-water, drought, reservoirs, groundwater | Name affected observations, models, and summaries |
+| Settlements / Infrastructure | Floodplain, bridge, dam, utility, supply, service area | Escalate sensitivity and harmful precision |
+| Habitat / Fauna / Flora | Aquatic habitat, wetland, riparian, occurrence, restoration | Preserve owning-lane evidence and sensitivity obligations |
+| Geology | Aquifer and hydrostratigraphic context | Preserve Geology context and Hydrology observation boundaries |
 
-Do not auto-mutate a sibling lane. Record the dependency, evidence intersection, requested action, owner, and unresolved state for its accountable steward.
+Do not auto-mutate a sibling lane. Record the dependency, evidence intersection, requested action, owner, and unresolved state.
 
 [Back to top](#top)
 
@@ -571,27 +496,21 @@ Do not auto-mutate a sibling lane. Record the dependency, evidence intersection,
 
 ## Generic synthetic rehearsal
 
-The repository's current executable rollback proof is deliberately generic and synthetic.
+### What current evidence proves
 
-### What it proves
+Inside an isolated marker-protected synthetic root, the helper and eight tests demonstrate:
 
-The generic helper and eight tests demonstrate, inside isolated temporary roots, that the current profile can:
+- deterministic no-write planning;
+- synthetic rollback to a distinct prior release;
+- synthetic withdrawal without a target;
+- affected manifest and artifact bytes remain present;
+- correction and invalidation records are written at deterministic scenario-derived paths;
+- every declared invalidation class is required;
+- non-synthetic, unmarked, unsafe-path, missing-target, and digest-mismatch cases fail closed; and
+- authority and public-mutation flags remain false.
 
-- produce deterministic no-write plans;
-- switch a synthetic current alias to a distinct prior synthetic release;
-- withdraw a synthetic current alias without selecting a target;
-- preserve the affected synthetic manifest and artifact bytes;
-- write append-only synthetic correction and invalidation records;
-- require every declared invalidation class;
-- deny non-synthetic scenarios;
-- deny missing markers, missing targets, unsafe paths, and digest mismatches; and
-- keep every authority and public-mutation flag false.
-
-### Repository-native command
-
-```bash
-python -m unittest -q tests.release.test_synthetic_rollback_rehearsal
-```
+> [!CAUTION]
+> **Current rehearsal history is not append-only.** The helper writes correction and invalidation JSON through replacement semantics and does not reject an existing record with the same scenario-derived ID. Reusing an ID can replace a prior synthetic record. The eight generic tests do not exercise that collision. Current evidence therefore proves neither reject-on-exist behavior nor versioned collision-safe history.
 
 ### CLI boundary
 
@@ -607,13 +526,13 @@ python tools/release/rollback_apply.py \
 
 ### Workflow boundary
 
-The current `rollback-drill` workflow is configured to run:
+The current `rollback-drill` workflow runs:
 
-- the release RollbackCard candidate fixture profile;
-- eight generic synthetic rehearsal tests; and
-- four Hazards-specific synthetic rehearsal tests.
+- the RollbackCard candidate fixture profile;
+- eight generic synthetic tests; and
+- four Hazards-specific synthetic tests.
 
-Its expected twelve-test result is **generic plus Hazards**, not generic plus Hydrology. A passing workflow must not be cited as Hydrology-specific rollback proof.
+Its expected twelve-test result is **generic plus Hazards**, not Hydrology. A green workflow does not prove Hydrology rollback, append-only recovery records, target mutation, or public recovery.
 
 [Back to top](#top)
 
@@ -623,20 +542,20 @@ Its expected twelve-test result is **generic plus Hazards**, not generic plus Hy
 
 ## Interpret the results
 
-| Observed result | Truthful interpretation | Prohibited interpretation |
-|---|---|---|
-| RollbackCard fixture validator passes | Current valid/invalid candidate matrix and bounded local consistency passed at the tested SHA | A Hydrology card exists, references resolve, or rollback is approved |
-| Generic eight-test suite passes | Marker-protected synthetic rollback and withdrawal mechanics passed | Hydrology behavior or production recovery passed |
-| `rollback-drill` passes | Candidate validation plus generic and Hazards synthetic checks passed; production holds remained visible | Hydrology rollback, target mutation, or public recovery passed |
-| Hydrology bounded validation passes | Named Hydrology fixture shape and polarity checks passed | The affected or target release is scientifically, legally, or operationally safe |
-| Candidate support is missing but not contradictory | `HOLD` or withdrawal posture, depending on consequence | Infer a prior safe target |
-| Policy denies the intended target or audience | Preserve policy `DENY`; candidate cannot advance | Translate `DENY` into a softer rollback recommendation |
-| Input is malformed or evaluation cannot finish safely | `ERROR`; no mutation | Retry through manual file edits that bypass validation |
-| Exact base and head cannot be compared | `NEEDS VERIFICATION` or `UNRESOLVED / NON-COMPARABLE` | Label the result inherited or introduced without proof |
-| Hosted check is skipped | `SKIPPED`, with reason when known | `PASS` |
-| Check did not run | `NOT RUN` | `PASS`, `FAIL`, or proof of absence |
+| Observation | Required interpretation |
+|---|---|
+| RollbackCard fixtures pass | Current candidate matrix and local consistency passed at the tested SHA |
+| Generic eight-test suite passes | Marker-protected synthetic mechanics passed; collision safety and Hydrology behavior remain unproved |
+| `rollback-drill` passes | Candidate, generic, and Hazards synthetic checks passed while operational holds remained visible |
+| Hydrology bounded validation passes | Named Hydrology fixture shape and polarity checks passed; release safety did not |
+| Candidate support is missing | `HOLD` or withdrawal posture, depending on consequence |
+| Accepted policy denies use | Preserve `DENY`; do not translate it into a softer recommendation |
+| Evaluation cannot finish safely | `ERROR`; no mutation |
+| Exact base/head comparison is unavailable | `NEEDS VERIFICATION` or `UNRESOLVED / NON-COMPARABLE` |
+| A check is skipped | `SKIPPED`, never `PASS` |
+| A check did not run | `NOT RUN`, never inferred success |
 
-Every validation result is revision-bound. Record the exact SHA, command or workflow, fixture inventory, result, and skipped or unavailable checks.
+Record exact SHA, command or workflow, fixture inventory, result, and skipped or unavailable checks.
 
 [Back to top](#top)
 
@@ -646,7 +565,7 @@ Every validation result is revision-bound. Record the exact SHA, command or work
 
 ## Accountable review handoff packet
 
-The following YAML is an **illustrative documentation handoff**, not a `RollbackCard`, `ReviewRecord`, `PolicyDecision`, `CorrectionNotice`, release record, or execution instruction.
+The YAML below is an **illustrative documentation handoff**, not a `RollbackCard`, `ReviewRecord`, `PolicyDecision`, `CorrectionNotice`, release record, or execution instruction.
 
 ```yaml
 handoff_type: HYDROLOGY_ROLLBACK_REVIEW
@@ -655,7 +574,7 @@ repository:
   evaluated_sha: <40-character SHA>
   active_overlaps: []
 affected:
-  release_ref: <stable release ref or ABSENT>
+  release_ref: <stable ref or ABSENT>
   artifact_refs: []
   artifact_digests: []
   public_claim_refs: []
@@ -701,8 +620,9 @@ invalidations:
   concrete_consumers: []
   unowned_consumers: []
 validation:
-  rollback_card_candidate: <PASS | FAIL | ERROR | NOT RUN>
-  generic_synthetic_rehearsal: <PASS | FAIL | NOT RUN>
+  rollback_card_candidate: <PASS | FAIL | ERROR | NOT_RUN>
+  generic_synthetic_rehearsal: <PASS | FAIL | NOT_RUN>
+  synthetic_record_collision_safety: ABSENT
   hydrology_specific_rehearsal: ABSENT
   hydrology_domain_checks: []
   tested_sha: <40-character SHA>
@@ -710,13 +630,12 @@ validation:
 review:
   required_roles: []
   authenticated_records: []
-  separation_of_duties: <confirmed | not confirmed>
+  separation_of_duties: <confirmed | not_confirmed>
   open_obligations: []
 public_recovery:
-  containment_authority: <ref or NEEDS VERIFICATION>
-  execution_authority: <ref or NEEDS VERIFICATION>
-  invalidation_plan: <ref or NEEDS VERIFICATION>
-  readback_plan: <ref or NEEDS VERIFICATION>
+  execution_authority: <ref or NEEDS_VERIFICATION>
+  invalidation_plan: <ref or NEEDS_VERIFICATION>
+  readback_plan: <ref or NEEDS_VERIFICATION>
 result:
   review_readiness: READY_FOR_ACCOUNTABLE_ROLLBACK_REVIEW | BLOCKED
   reason_codes: []
@@ -732,19 +651,6 @@ non_effects:
   publication_executed: false
 ```
 
-### Minimum reviewer questions
-
-1. Does the affected release exist, and are its artifacts, claims, and consumers bounded exactly?
-2. Is the defect supported by evidence rather than inference, generated prose, or map appearance?
-3. Are source roles, identity, spatial scope, time, units, datum, qualifiers, uncertainty, rights, sensitivity, and representation limits explicit?
-4. Is rollback safer than withdrawal and forward correction for the exact exposed scope?
-5. Does a distinct target revalidate under current evidence, policy, rights, sensitivity, schema, and consumer requirements?
-6. Does the candidate card use the current contract vocabulary without claiming authority or execution?
-7. Are reviewer identity, authority, scope, separation, obligations, validity, and supersession state authenticated?
-8. Can every required consumer be invalidated idempotently, and can public read-back detect stale leaks?
-9. Are sibling-lane dependencies named without mutating their state or assuming their decisions?
-10. Is the requested result still only review, with operational authorization and execution separate?
-
 [Back to top](#top)
 
 ---
@@ -753,25 +659,22 @@ non_effects:
 
 ## Hydrology-specific rehearsal gap
 
-No checked-in Hydrology synthetic rollback workspace, scenario, or domain test extends the generic helper at the pinned base. This is a material gap, not a reason to weaken the generic guard.
+No checked-in Hydrology synthetic rollback workspace, scenario, or domain test extends the generic helper at the pinned base.
 
-### Smallest dependency-closed follow-up
-
-A future implementation slice should add one non-locating, unreleased, unpublished, no-network Hydrology rehearsal that reuses the generic helper rather than creating a second rollback engine. It should remain under the existing fixture and test responsibility roots and should not create a Hydrology release record.
-
-Minimum negative and positive behavior should include:
+A future dependency-closed slice should add one non-locating, unreleased, unpublished, no-network Hydrology profile that reuses the generic helper rather than creating a second engine. It should prove:
 
 1. deterministic no-write planning over a synthetic Hydrology release pair;
-2. marker-protected synthetic alias restoration with affected history retained;
+2. marker-protected synthetic restoration with affected history retained;
 3. withdrawal when no distinct safe predecessor is declared;
-4. denial when NFHL regulatory context is relabeled as observed inundation or warning support;
+4. denial when NFHL is relabeled as observed inundation or warning support;
 5. denial when provisional/final, observation/model, or source-role state is collapsed;
-6. denial when HUC, reach, gauge, or crosswalk identity is ambiguous or the target equals the affected release;
-7. denial on artifact or manifest tampering;
-8. complete invalidation vocabulary and public-mutation flags remaining false; and
-9. workflow recognition that cannot pass with zero tests.
+6. denial when HUC, reach, gauge, or crosswalk identity is ambiguous;
+7. denial when target equals affected release or digests fail;
+8. complete invalidation vocabulary with public-mutation flags false;
+9. **reject-on-exist or versioned preservation when correction or invalidation IDs collide**; and
+10. workflow recognition that cannot pass with zero tests.
 
-The follow-up would prove a bounded Hydrology synthetic profile only. Production target selection, policy, review, signing, invalidation, alias mutation, deployment, and public recovery would remain separate.
+That follow-up would prove a bounded Hydrology synthetic profile only. Production target selection, policy, review, signing, invalidation, alias mutation, deployment, and public recovery would remain separate.
 
 [Back to top](#top)
 
@@ -783,23 +686,24 @@ The follow-up would prove a bounded Hydrology synthetic profile only. Production
 
 Operational Hydrology rollback remains `HOLD` until current evidence demonstrates all of the following together:
 
-1. one exact affected Hydrology release and immutable artifact/claim inventory;
-2. one distinct target that revalidates as safe, or an accepted withdrawal posture when no target exists;
+1. exact affected Hydrology release and immutable artifact/claim inventory;
+2. distinct revalidated target, or accepted withdrawal posture when no target exists;
 3. EvidenceRef-to-EvidenceBundle, proof, receipt, manifest, catalog, and correction closure;
 4. accepted source-role, identity, spatial, temporal, unit, datum, qualifier, uncertainty, and representation controls;
 5. current rights, sensitivity, precision, attribution, and source-term clearance;
-6. an accepted active policy bundle/evaluator with enforceable obligations;
+6. accepted active policy evaluator with enforceable obligations;
 7. authenticated accountable review, authority intervals, separation of duties, and revocation/supersession handling;
 8. accepted RollbackCard, CorrectionNotice, ReviewRecord, release-record, and execution-receipt profiles;
-9. an accepted plan/apply executor with least privilege, idempotency, concurrency control, resumability, partial-failure handling, and no-history-erasure tests;
-10. an accepted public alias or equivalent release-state model plus audit tooling;
-11. real API, CDN, tile, catalog, triplet, search, vector, AI, and downstream invalidation adapters;
-12. a Hydrology-specific no-network rehearsal and approved non-public operational exercise;
-13. deployment/environment identity, secrets custody, monitoring, logs, alerting, and rollback-of-rollback posture;
-14. exact public read-back proving every governed consumer reflects the intended state and correction lineage; and
-15. a documented reversal or forward-recovery path that preserves affected history.
+9. accepted plan/apply executor with least privilege, idempotency, concurrency control, resumability, partial-failure handling, and no-history-erasure tests;
+10. **collision-safe recovery-record persistence using reject-on-exist or versioned immutable records, with positive and negative tests**;
+11. accepted public alias or equivalent release-state model plus audit tooling;
+12. real API, CDN, tile, catalog, triplet, search, vector, AI, and downstream invalidation adapters;
+13. Hydrology-specific no-network rehearsal and approved non-public operational exercise;
+14. deployment identity, secrets custody, monitoring, logs, alerting, and rollback-of-rollback posture;
+15. exact public read-back proving every governed consumer reflects intended state and correction lineage; and
+16. documented reversal or forward-recovery path preserving affected history.
 
-No weighted score, deadline, green generic test, schema pass, pull request, merge, signature alone, or operator confidence may compensate for a failed trust or safety gate.
+No weighted score, deadline, green generic test, schema pass, PR, merge, signature alone, or operator confidence may compensate for a failed trust or safety gate.
 
 [Back to top](#top)
 
@@ -809,8 +713,6 @@ No weighted score, deadline, green generic test, schema pass, pull request, merg
 
 ## Documentation validation
 
-### Focused repository checks
-
 ```bash
 python tools/validators/docs/link-check/check_links.py \
   --repo-root . \
@@ -818,26 +720,23 @@ python tools/validators/docs/link-check/check_links.py \
   docs/runbooks/hydrology/ROLLBACK_RUNBOOK.md
 
 python tools/validators/release/validate_rollback_card.py --fixtures
-
 python -m unittest -q tests.release.test_synthetic_rollback_rehearsal
 ```
 
-Run the repository's hosted Markdown, documentation graph, metadata, rollback-drill, Hydrology, contract, schema, policy, security, and topology checks when this file changes. Classify each result at the exact tested SHA.
-
-### Documentation acceptance criteria
+Run hosted Markdown, document-graph, metadata, rollback-drill, Hydrology, contract, schema, policy, security, and topology checks at the exact changed SHA.
 
 This runbook is ready for accountable documentation review only when:
 
-- the proposal-era unmounted-repository posture and invented operational commands are removed;
-- current generic synthetic mechanics, RollbackCard profile, workflow composition, and production holds are stated accurately;
-- absence of a Hydrology-specific rehearsal, candidate, target, proof, receipt, card, review, published payload, executor, auditor, invalidation path, and read-back is explicit;
-- RollbackCard, policy/runtime, review, synthetic execution, operational execution, and public recovery vocabularies remain separate;
-- NFHL, observation, model, hydrography, terrain-derived, and synthetic roles cannot be collapsed by the procedure;
-- rollback, withdrawal, hold, error, and forward correction have distinct meanings;
+- proposal-era unmounted-repository posture and invented operational commands are removed;
+- current generic mechanics, RollbackCard profile, workflow composition, and production holds are accurate;
+- absent Hydrology candidate, target, proof, receipt, card, review, published payload, executor, auditor, invalidation path, and read-back are explicit;
+- rollback, withdrawal, hold, error, and forward correction remain distinct;
+- NFHL, observations, models, hydrography, terrain derivatives, and fixtures cannot be collapsed;
+- **synthetic same-ID replacement behavior is explicit and append-only history is not claimed**;
 - no command can touch a real public or lifecycle surface;
-- all relative links and stable anchors resolve;
-- no sensitive locations, secrets, private review text, or rights-unclear payloads are included; and
-- rollback of this Markdown is documented without implying reversal of operational state.
+- relative links and stable anchors resolve;
+- no sensitive values or rights-unclear payloads are included; and
+- document rollback is described without implying operational reversal.
 
 [Back to top](#top)
 
@@ -847,30 +746,29 @@ This runbook is ready for accountable documentation review only when:
 
 ## Related repository surfaces
 
-### Hydrology procedures and boundaries
+### Hydrology procedures
 
-- [Parent runbook index](../README.md)
 - [Hydrology domain boundary](../../domains/hydrology/README.md)
 - [Hydrology promotion preflight](PROMOTION_RUNBOOK.md)
 - [Hydrology bounded validation](VALIDATION.md)
 - [Hydrology no-network procedure](NO_NETWORK_TEST_RUNBOOK.md)
-- [Hydrology source-refresh procedure](SOURCE_REFRESH_RUNBOOK.md)
-- [Adjacent Hydrology rollback scaffold](ROLLBACK.md)
+- [Hydrology source refresh](SOURCE_REFRESH_RUNBOOK.md)
+- [Adjacent rollback scaffold](ROLLBACK.md)
 
-### Generic rollback contracts, mechanics, and checks
+### Generic rollback controls
 
-- [Generic synthetic rollback rehearsal](../rollback-rehearsal.md)
+- [Generic synthetic rehearsal](../rollback-rehearsal.md)
 - [RollbackCard contract](../../../contracts/release/rollback_card.md)
 - [RollbackCard schema](../../../schemas/contracts/v1/release/rollback_card.schema.json)
 - [RollbackCard fixtures](../../../fixtures/release/rollback_card/)
 - [RollbackCard validator](../../../tools/validators/release/validate_rollback_card.py)
-- [Synthetic rollback helper](../../../tools/release/rollback_apply.py)
-- [Generic synthetic rehearsal tests](../../../tests/release/test_synthetic_rollback_rehearsal.py)
+- [Synthetic helper](../../../tools/release/rollback_apply.py)
+- [Generic synthetic tests](../../../tests/release/test_synthetic_rollback_rehearsal.py)
 - [Rollback-drill workflow](../../../.github/workflows/rollback-drill.yml)
 
-### Release and Hydrology trust-artifact lanes
+### Release and Hydrology lanes
 
-- [Release governance root](../../../release/README.md)
+- [Release governance](../../../release/README.md)
 - [Rollback-card lane](../../../release/rollback_cards/README.md)
 - [Hydrology candidate lane](../../../release/candidates/hydrology/README.md)
 - [Release review lane](../../../release/reviews/README.md)
@@ -878,15 +776,10 @@ This runbook is ready for accountable documentation review only when:
 - [Hydrology receipt lane](../../../data/receipts/hydrology/README.md)
 - [Hydrology published lane](../../../data/published/hydrology/README.md)
 
-### Explicit held surfaces
+### Held surfaces
 
 - [Production rollback pipeline placeholder](../../../pipelines/rollback/main.py)
 - [Published-alias auditor placeholder](../../../scripts/maintenance/audit_published_aliases.py)
-
-### Placement authority
-
-- [Directory Rules v2](../../doctrine/directory-rules.md)
-- [ADR-0029 — adopt Directory Governance Standard v2](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
 
 [Back to top](#top)
 
@@ -898,16 +791,16 @@ This runbook is ready for accountable documentation review only when:
 
 Update this runbook when:
 
-- a Hydrology rollback rehearsal fixture or domain test is added, removed, or changed;
-- the generic helper, marker, scenario contract, invalidation vocabulary, test inventory, or workflow composition changes;
-- the RollbackCard contract, schema, fixture matrix, validator, or finite vocabulary changes;
-- a Hydrology candidate, prior target, proof, receipt, rollback card, correction notice, review record, release record, published carrier, or public alias appears;
-- accepted policy, reviewer authority, separation of duties, execution, invalidation, deployment, monitoring, or public-readback evidence changes;
-- the production pipeline or alias auditor stops being a placeholder;
-- a real correction, withdrawal, rollback, incident, or rehearsal exposes a procedural gap;
-- the adjacent `ROLLBACK.md` scaffold is retired, redirected, or assigned a distinct responsibility; or
+- a Hydrology rollback fixture or domain test changes;
+- helper marker, scenario contract, record-write semantics, invalidation vocabulary, test inventory, or workflow composition changes;
+- RollbackCard contract, schema, fixtures, validator, or vocabulary changes;
+- a Hydrology candidate, target, proof, receipt, card, correction notice, review record, release record, published carrier, or public alias appears;
+- policy, reviewer authority, execution, invalidation, deployment, monitoring, or public-readback evidence changes;
+- production pipeline or alias auditor stops being a placeholder;
+- a real correction, withdrawal, rollback, incident, or rehearsal exposes a gap;
+- the adjacent `ROLLBACK.md` scaffold is retired or assigned a distinct responsibility; or
 - Directory Rules, accepted ADRs, contracts, or release architecture change this file's responsibility.
 
-This is a documentation-only change. Before merge, close the draft pull request and discard only its task branch. After an authorized merge, revert the focused documentation commit or submit a smaller reviewed forward correction. The prior blob `6c6f06f87de2b2b0e528e670ef43ae46bbc17d06` restores the proposal-era document, but reverting this Markdown never reverses a source admission, lifecycle transition, release, correction, withdrawal, rollback, deployment, promotion, publication, alias, cache, public carrier, or operational state.
+This is a documentation-only change. Before merge, close the draft PR and discard only its task branch. After an authorized merge, revert the focused documentation commits or submit a smaller reviewed forward correction. Reverting this Markdown never reverses a source admission, lifecycle transition, release, correction, withdrawal, rollback, deployment, promotion, publication, alias, cache, public carrier, or operational state.
 
 [Back to top](#top)
