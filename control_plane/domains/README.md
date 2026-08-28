@@ -243,7 +243,7 @@ The dedicated [domain-lane-register workflow](../../.github/workflows/domain-lan
 2. validate it against the dedicated Draft 2020-12 schema;
 3. require the 13 canonical lane IDs, canonical order, documentation paths, code aliases, and three cross-cutting exclusions;
 4. bind the adopted Directory Rules digest, human narrative-register blob, root-registry blob/base, and ADR-0029 decision reference;
-5. reject invented owners, unexpected root domain directories, missing domain documentation, malformed aliases, and unrecognized fields;
+5. reject any non-null `lane_defaults.owner_identity`, unexpected root domain directories, missing domain documentation, malformed aliases, and unrecognized fields;
 6. execute focused positive and negative tests and verify the generated authoring receipt against its historical artifact ref.
 
 The broader [docs-control-plane workflow](../../.github/workflows/docs-control-plane.yml) separately parses root `control_plane/*.yaml`, enforces the legacy meta contract, and checks ADR-index coherence. That compatibility coverage does not replace the dedicated semantic validator.
@@ -257,6 +257,7 @@ These checks do **not** prove:
 - reference resolution across contracts, schemas, policy, sources, tests, evidence, and release;
 - agreement between the root domain register and child README or child YAML;
 - sensitivity or rights correctness;
+- repository-backed identity verification for `meta.owner` or `reviewers` handles;
 - accepted ADR or policy status;
 - consumer authorization, freshness handling, or failure behavior;
 - correction propagation, deprecation, or rollback drills;
