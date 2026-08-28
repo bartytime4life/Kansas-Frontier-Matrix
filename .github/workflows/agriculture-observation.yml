@@ -9,6 +9,7 @@ name: agriculture-observation
       - "schemas/contracts/v1/evidence/agriculture_observation.schema.json"
       - "fixtures/contracts/v1/evidence/agriculture_observation/**"
       - "tools/validators/evidence/validate_agriculture_observation.py"
+      - "tools/ci/kfm_no_network/sitecustomize.py"
       - "tests/validators/evidence/test_validate_agriculture_observation.py"
       - "docs/intake/exploratory/implementation-reference-agriculture-observation-source-map.md"
       - "contracts/common/geography_version.md"
@@ -17,7 +18,7 @@ name: agriculture-observation
       - "schemas/contracts/v1/data/county_year_panel.schema.json"
       - "packages/hashing/**"
       - "pyproject.toml"
-      - "data/receipts/generated/genrec-agriculture-observation-bounded-input-negative-20260828.json"
+      - "data/receipts/generated/genrec-agriculture-observation-no-network-guard-20260828.json"
   push:
     branches: [main]
     paths:
@@ -26,6 +27,7 @@ name: agriculture-observation
       - "schemas/contracts/v1/evidence/agriculture_observation.schema.json"
       - "fixtures/contracts/v1/evidence/agriculture_observation/**"
       - "tools/validators/evidence/validate_agriculture_observation.py"
+      - "tools/ci/kfm_no_network/sitecustomize.py"
       - "tests/validators/evidence/test_validate_agriculture_observation.py"
       - "docs/intake/exploratory/implementation-reference-agriculture-observation-source-map.md"
       - "contracts/common/geography_version.md"
@@ -34,7 +36,7 @@ name: agriculture-observation
       - "schemas/contracts/v1/data/county_year_panel.schema.json"
       - "packages/hashing/**"
       - "pyproject.toml"
-      - "data/receipts/generated/genrec-agriculture-observation-bounded-input-negative-20260828.json"
+      - "data/receipts/generated/genrec-agriculture-observation-no-network-guard-20260828.json"
   workflow_dispatch:
 
 permissions:
@@ -45,7 +47,6 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  KFM_NO_NETWORK: "1"
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
   PIP_NO_INPUT: "1"
   PYTHONDONTWRITEBYTECODE: "1"
@@ -71,7 +72,10 @@ jobs:
           cache-dependency-path: pyproject.toml
       - name: Install declared validation dependencies
         run: python tools/ci/install_python_ci.py project-test
-      - name: Run focused and adjacent deterministic tests
+      - name: Run focused and adjacent deterministic tests under shared no-network guard
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONPATH: ${{ github.workspace }}/tools/ci/kfm_no_network:${{ github.workspace }}
         run: |
           python -m unittest -v tests.validators.evidence.test_validate_agriculture_observation
           python -m unittest -v tests.validators.evidence.test_validate_population_observation
@@ -81,7 +85,7 @@ jobs:
       - name: Validate generated authoring receipt integrity
         run: |
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-agriculture-observation-bounded-input-negative-20260828.json \
+            data/receipts/generated/genrec-agriculture-observation-no-network-guard-20260828.json \
             --repo-root .
       - name: Record trust boundary
         if: always()
@@ -91,5 +95,6 @@ jobs:
             echo
             echo "- Result: ${{ job.status }}."
             echo "- Scope: fixture-only aggregate Kansas county-year agriculture state, units, source classification, missingness, correction lineage, disclosure, and deterministic identity."
+            echo "- No-network proof: focused and adjacent Python validation ran with the shared opt-in startup guard active; this is not host-, dependency-install-, or runner-wide isolation."
             echo "- Boundary: no live source access, geography or evidence resolution, farm/producer identification, classification resolution, frontier classification, policy evaluation, review approval, promotion, release, public use, publication, or deployment authority."
           } >> "$GITHUB_STEP_SUMMARY"
