@@ -2,8 +2,8 @@
 doc_id: kfm://doc/runbook-people-dna-land-rollback
 title: People · DNA · Land — Rollback Runbook
 type: standard
-version: v1.1
-prior_version: v1
+version: v1.1.1
+prior_version: v1.1
 prior_state: proposal-era operational procedure with placeholder owners, unverified routes, invented timing targets, and illustrative release objects
 status: draft; repository-grounded hold boundary; proposal lineage retained in Git history; operational rollback unavailable; non-release; non-publication
 owners:
@@ -22,9 +22,9 @@ canonical_relationship: same-path replacement of proposal-era instructions; prio
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: e52165e820b07e65c54830fde519a9c90df8eb1c
+  base_commit: cf3c5b76dafa74dee79e5249849e4174c2107638
   prior_blob: c370837c701f1e2a92e660e8223702ccee462b94
-  lane_readme_blob: ba16ef200e70d21e8156f34990a9500f4ef8823a
+  lane_readme_blob: d77ea6759157223308524dee0b41216c45a816fe
   domain_workflow_blob: bcf64c3e3b6653b9543489fc5a6031805ae3ef48
   tests_readme_blob: 5f1672f24a2992d83829d280cfd2f05b9b6848f6
   policy_readme_blob: 7260394c77d79629895da16d8d680e8d80c56b32
@@ -49,7 +49,7 @@ tags: [kfm, runbook, people-dna-land, rollback, sensitive-domain, hold, proposal
 notes:
   - "The prior 2026-05-12 body is retired from operational use because current repository evidence does not establish its kill switch, release target, derivative invalidator, signer route, timing targets, or end-to-end rollback runtime."
   - "This file does not execute rollback, revoke consent, delete data, invalidate derivatives or caches, restore a release, or authorize any public-path change."
-  - "The lane remains proposal-era for rollback maturity; this edition narrows unsafe claims without upgrading operational status."
+  - "The lane remains proposal-era for operational rollback maturity; this repository-grounded hold boundary narrows unsafe claims without upgrading operational status."
 [/KFM_META_BLOCK_V2] -->
 
 # People · DNA · Land — Rollback Runbook
@@ -72,7 +72,7 @@ This document is the current repository-grounded hold boundary for rollback invo
 
 ## Repository evidence
 
-- The [lane boundary](./README.md) classifies operational rollback as held and this file as proposal-era lineage.
+- The [lane boundary](./README.md) classifies operational rollback as held and this file as the current repository-grounded hold boundary; the superseded procedure remains proposal lineage in Git history.
 - The [domain test index](../../../tests/domains/people-dna-land/README.md) documents two deterministic, synthetic, no-network consent profiles. Neither performs a deployed rollback.
 - The [domain workflow](../../../.github/workflows/domain-people-dna-land.yml) runs those profiles and explicitly holds broader policy runtime, proof, real revocation, cleanup, release, and rollback work.
 - The [domain policy boundary](../../../policy/domains/people-dna-land/README.md) records proposed or evaluator-unbound policy surfaces; documentation does not activate them.
