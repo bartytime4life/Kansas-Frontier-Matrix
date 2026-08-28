@@ -17,6 +17,12 @@ ROOT = Path(__file__).resolve().parents[4]
 DOMAIN_SCHEMA = ROOT / "schemas/contracts/v1/domains/hazards/evidence_bundle.schema.json"
 SHARED_SCHEMA = ROOT / "schemas/contracts/v1/evidence/evidence_bundle.schema.json"
 SHARED_FIXTURES = ROOT / "fixtures/contracts/v1/evidence/evidence_bundle"
+DECLARED_VALIDATOR = (
+    ROOT / "tools/validators/validate_hazards_evidence_bundle_projection.py"
+)
+RETIRED_DOMAIN_PLACEHOLDER = (
+    ROOT / "tools/validators/domains/hazards/validate_evidence_bundle.py"
+)
 
 
 class HazardsEvidenceBundleSchemaConvergenceTests(unittest.TestCase):
@@ -66,6 +72,8 @@ class HazardsEvidenceBundleSchemaConvergenceTests(unittest.TestCase):
             schema["x-kfm"]["validator"],
             "tools/validators/validate_hazards_evidence_bundle_projection.py",
         )
+        self.assertTrue(DECLARED_VALIDATOR.is_file())
+        self.assertFalse(RETIRED_DOMAIN_PLACEHOLDER.exists())
         self.assertEqual(SCHEMA_PATH, DOMAIN_SCHEMA)
         self.assertEqual(FIXTURES_DIR, SHARED_FIXTURES)
 
