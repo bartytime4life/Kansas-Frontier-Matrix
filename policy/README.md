@@ -454,7 +454,7 @@ The fixture-only [`PolicyEnforcementMaturity`](../contracts/policy/policy_enforc
 | Axis | Examples | Meaning |
 |---|---|---|
 | Canonical outward `PolicyDecision.outcome` | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | Closed four-value candidate schema. |
-| Pass 12 engine-native result | `allow: true|false`, `deny_reasons[]` | Bounded Rego profile result; deliberately not normalized into `PolicyDecision`. |
+| Pass 12 engine-native result | `allow: true\|false`, `deny_reasons[]` | Bounded Rego profile result; deliberately not normalized into `PolicyDecision`. |
 | Other engine-native terms | `ALLOW`, `RESTRICT`, `HOLD`, `DENY`, sometimes `ABSTAIN`/`ERROR` | Lower-level semantics requiring explicit accepted normalization. |
 | Validation | `PASS`, `FAIL`, `DENY`, `ERROR`, validator codes | Check result; never policy permission or release state. |
 | Workflow readiness | `WORKFLOW_HOLD`, `WORKFLOW_SKIPPED_EXPLICIT` | CI statement that prerequisites are intentionally absent. |
