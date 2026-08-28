@@ -7,6 +7,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[2]
 MODULE_PATH = ROOT / "tools" / "validators" / "maplibre" / "assess_acquisition_inventory.py"
@@ -424,6 +425,34 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(result.outcome, MODULE.Outcome.PASS)
         self.assertEqual(result.findings, ())
 
+    def test_total_input_budget_errors_without_becoming_acquisition(self) -> None:
+        with self._root() as tmp, patch.object(MODULE, "MAX_TOTAL_INPUT_BYTES", 10):
+            root = Path(tmp)
+            self._write(root, "scripts/first.mjs", " " * 6)
+            self._write(root, "scripts/second.mjs", " " * 6)
+            self._write(root, "scripts/third.mjs", 'require("maplibre-gl");\n')
+            result = MODULE.scan(root)
+            payload = result.to_dict()
+        self.assertEqual(result.outcome, MODULE.Outcome.ERROR)
+        self.assertEqual(result.reasons, ("SCAN_TOTAL_INPUT_TOO_LARGE",))
+        self.assertEqual(result.findings[0].kind, "TOTAL_INPUT_BUDGET_EXCEEDED")
+        self.assertEqual(result.findings[0].path, "scripts/second.mjs")
+        self.assertNotIn("RENDERER_ACQUISITION_PRESENT", result.reasons)
+        self.assertNotIn("ACQUISITION_OUTSIDE_CANDIDATE_SEAM", result.reasons)
+        self.assertEqual(payload["max_total_input_bytes"], 10)
+        self.assertEqual(payload["scanned_bytes"], 11)
+        self.assertEqual(payload["scanned_files"], 2)
+
+    def test_input_at_total_budget_is_scanned(self) -> None:
+        with self._root() as tmp, patch.object(MODULE, "MAX_TOTAL_INPUT_BYTES", 12):
+            root = Path(tmp)
+            self._write(root, "scripts/first.mjs", " " * 6)
+            self._write(root, "scripts/second.mjs", " " * 6)
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.PASS)
+        self.assertEqual(result.findings, ())
+        self.assertEqual(result.scanned_bytes, 12)
+
     def test_summary_cli_hides_findings_but_keeps_counts(self) -> None:
         with self._root() as tmp:
             root = Path(tmp)
@@ -437,8 +466,9 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 3)
         payload = json.loads(completed.stdout)
         self.assertEqual(payload["outcome"], "HOLD")
-        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v7")
+        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v8")
         self.assertEqual(payload["max_input_bytes"], MODULE.MAX_INPUT_BYTES)
+        self.assertEqual(payload["max_total_input_bytes"], MODULE.MAX_TOTAL_INPUT_BYTES)
         self.assertEqual(payload["findings"], [])
         self.assertEqual(payload["finding_counts"]["STATIC_IMPORT"], 1)
         self.assertFalse(payload["authority_created"])

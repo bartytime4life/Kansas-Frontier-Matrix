@@ -23,15 +23,21 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Sequence
 
-PROFILE = "kfm-maplibre-acquisition-inventory-v7"
+PROFILE = "kfm-maplibre-acquisition-inventory-v8"
 TEXT_SUFFIXES = frozenset({".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx", ".html"})
 MAX_FILES = 5000
 MAX_INPUT_BYTES = 1024 * 1024
+MAX_TOTAL_INPUT_BYTES = 16 * 1024 * 1024
 SCAN_ROOTS = ("apps", "packages", "runtime", "scripts", "tests", "examples", "public")
 RENDERER_PACKAGES = ("maplibre-gl", "mapbox-gl", "cesium", "leaflet", "ol", "openlayers")
 KFM_RENDERER_FACADES = ("@kfm/maplibre",)
 INPUT_ERROR_KINDS = frozenset(
-    {"INPUT_TOO_LARGE", "MANIFEST_UNREADABLE", "TEXT_UNREADABLE"}
+    {
+        "INPUT_TOO_LARGE",
+        "MANIFEST_UNREADABLE",
+        "TEXT_UNREADABLE",
+        "TOTAL_INPUT_BUDGET_EXCEEDED",
+    }
 )
 
 PATTERNS = {
@@ -127,7 +133,9 @@ class Result:
     outcome: Outcome
     reasons: tuple[str, ...]
     findings: tuple[Finding, ...]
+    max_total_input_bytes: int
     scanned_files: int
+    scanned_bytes: int
     truncated: bool
 
     def to_dict(self) -> dict[str, object]:
@@ -144,9 +152,16 @@ class Result:
             "reasons": list(self.reasons),
             "renderer_selected": False,
             "max_input_bytes": MAX_INPUT_BYTES,
+            "max_total_input_bytes": self.max_total_input_bytes,
+            "scanned_bytes": self.scanned_bytes,
             "scanned_files": self.scanned_files,
             "truncated": self.truncated,
         }
+
+
+@dataclass
+class ScanBudget:
+    scanned_bytes: int = 0
 
 
 def _candidate_seam(path: str) -> bool:
@@ -373,17 +388,27 @@ def _iter_files(root: Path) -> tuple[list[Path], bool]:
 
 
 def _read_bounded_text(
-    root: Path, path: Path, *, unreadable_kind: str
+    root: Path, path: Path, budget: ScanBudget, *, unreadable_kind: str
 ) -> tuple[str | None, Finding | None]:
     rel = path.relative_to(root).as_posix()
+    remaining_bytes = max(MAX_TOTAL_INPUT_BYTES - budget.scanned_bytes, 0)
+    read_limit = min(MAX_INPUT_BYTES, remaining_bytes) + 1
     try:
         with path.open("rb") as stream:
-            raw = stream.read(MAX_INPUT_BYTES + 1)
+            raw = stream.read(read_limit)
     except OSError:
         return None, Finding(unreadable_kind, rel, path.name, False)
+    budget.scanned_bytes += len(raw)
     if len(raw) > MAX_INPUT_BYTES:
         return None, Finding(
             "INPUT_TOO_LARGE", rel, f"max-bytes-{MAX_INPUT_BYTES}", False
+        )
+    if len(raw) > remaining_bytes:
+        return None, Finding(
+            "TOTAL_INPUT_BUDGET_EXCEEDED",
+            rel,
+            f"max-total-bytes-{MAX_TOTAL_INPUT_BYTES}",
+            False,
         )
     try:
         return raw.decode("utf-8"), None
@@ -391,9 +416,11 @@ def _read_bounded_text(
         return None, Finding(unreadable_kind, rel, path.name, False)
 
 
-def _scan_manifest(root: Path, path: Path) -> list[Finding]:
+def _scan_manifest(root: Path, path: Path, budget: ScanBudget) -> list[Finding]:
     rel = path.relative_to(root).as_posix()
-    text, error = _read_bounded_text(root, path, unreadable_kind="MANIFEST_UNREADABLE")
+    text, error = _read_bounded_text(
+        root, path, budget, unreadable_kind="MANIFEST_UNREADABLE"
+    )
     if error:
         return [error]
     assert text is not None
@@ -415,8 +442,10 @@ def _scan_manifest(root: Path, path: Path) -> list[Finding]:
     return findings
 
 
-def _scan_text(root: Path, path: Path) -> list[Finding]:
-    text, error = _read_bounded_text(root, path, unreadable_kind="TEXT_UNREADABLE")
+def _scan_text(root: Path, path: Path, budget: ScanBudget) -> list[Finding]:
+    text, error = _read_bounded_text(
+        root, path, budget, unreadable_kind="TEXT_UNREADABLE"
+    )
     if error:
         return [error]
     assert text is not None
@@ -453,11 +482,32 @@ def _scan_text(root: Path, path: Path) -> list[Finding]:
 
 def scan(root: Path) -> Result:
     if not root.is_dir():
-        return Result(Outcome.ERROR, ("ROOT_NOT_DIRECTORY",), (), 0, False)
+        return Result(
+            Outcome.ERROR,
+            ("ROOT_NOT_DIRECTORY",),
+            (),
+            MAX_TOTAL_INPUT_BYTES,
+            0,
+            0,
+            False,
+        )
     files, truncated = _iter_files(root)
     findings: list[Finding] = []
+    budget = ScanBudget()
+    scanned_files = 0
     for path in files:
-        findings.extend(_scan_manifest(root, path) if path.name == "package.json" else _scan_text(root, path))
+        scanned_files += 1
+        path_findings = (
+            _scan_manifest(root, path, budget)
+            if path.name == "package.json"
+            else _scan_text(root, path, budget)
+        )
+        findings.extend(path_findings)
+        if any(
+            finding.kind in {"INPUT_TOO_LARGE", "TOTAL_INPUT_BUDGET_EXCEEDED"}
+            for finding in path_findings
+        ):
+            break
 
     unique = tuple(sorted(set(findings), key=lambda item: (item.path, item.kind, item.subject, item.candidate_seam)))
     acquisition_findings = tuple(
@@ -476,6 +526,8 @@ def scan(root: Path) -> Result:
         reasons.add("SCAN_INPUT_UNREADABLE")
     if any(finding.kind == "INPUT_TOO_LARGE" for finding in unique):
         reasons.add("SCAN_INPUT_TOO_LARGE")
+    if any(finding.kind == "TOTAL_INPUT_BUDGET_EXCEEDED" for finding in unique):
+        reasons.add("SCAN_TOTAL_INPUT_TOO_LARGE")
     if truncated:
         reasons.add("SCAN_TRUNCATED")
     if any(not finding.candidate_seam for finding in acquisition_findings):
@@ -484,7 +536,12 @@ def scan(root: Path) -> Result:
         reasons.add("RENDERER_ACQUISITION_PRESENT")
 
     if reasons.intersection(
-        {"SCAN_INPUT_TOO_LARGE", "SCAN_INPUT_UNREADABLE", "SCAN_TRUNCATED"}
+        {
+            "SCAN_INPUT_TOO_LARGE",
+            "SCAN_INPUT_UNREADABLE",
+            "SCAN_TOTAL_INPUT_TOO_LARGE",
+            "SCAN_TRUNCATED",
+        }
     ):
         outcome = Outcome.ERROR
     elif "PARALLEL_MAPLIBRE_PACKAGE_HOMES" in reasons or "ACQUISITION_OUTSIDE_CANDIDATE_SEAM" in reasons:
@@ -493,7 +550,15 @@ def scan(root: Path) -> Result:
         outcome = Outcome.HOLD
     else:
         outcome = Outcome.PASS
-    return Result(outcome, tuple(sorted(reasons)), unique, len(files), truncated)
+    return Result(
+        outcome,
+        tuple(sorted(reasons)),
+        unique,
+        MAX_TOTAL_INPUT_BYTES,
+        scanned_files,
+        budget.scanned_bytes,
+        truncated,
+    )
 
 
 def main(argv: Sequence[str] | None = None) -> int:
