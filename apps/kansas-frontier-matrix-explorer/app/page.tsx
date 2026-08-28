@@ -132,10 +132,11 @@ const defaultOrder = LAYER_REGISTRY.map((layer) => layer.id);
 const interactiveLayerIds = LAYER_REGISTRY.flatMap((layer) => layer.renderers.filter((renderer) => renderer.interactive).map((renderer) => renderer.id));
 const layerDomains = ["ALL", ...Array.from(new Set(LAYER_REGISTRY.map((layer) => layer.domain))).sort()] as const;
 const drawerViews = ["evidence", "metadata", "lineage", "focus"] as const satisfies readonly DrawerView[];
-const mapUtilityViews = ["navigate", "inspect", "display", "measure", "export", "diagnostics"] as const satisfies readonly MapUtilityView[];
+const mapUtilityViews = ["navigate", "inspect", "compare", "display", "measure", "export", "diagnostics"] as const satisfies readonly MapUtilityView[];
 const mapUtilityLabels: Record<MapUtilityView, string> = {
   navigate: "Navigate",
   inspect: "Inspect",
+  compare: "Compare",
   display: "Display",
   measure: "Measure",
   export: "Export",
@@ -193,6 +194,45 @@ const GUIDED_EXAMPLES = Object.freeze([
     state: "WITHHELD",
     title: "Protected context",
     summary: "See why precise detail remains unavailable instead of being inferred.",
+    layerId: "public-safe-planning",
+    featureId: "planning-generalized-envelope",
+    year: 2026,
+  }),
+] as const);
+
+const KFM_STORY_TRAIL = Object.freeze([
+  Object.freeze({
+    id: "supported",
+    eyebrow: "SUPPORTED",
+    title: "A claim with a visible evidence reference",
+    narrative: "Start in Topeka with a synthetic observation whose evidence reference matches the selected fixture. The map identifies a candidate; the Evidence Drawer carries the bounded support record.",
+    layerId: "atmosphere-observations",
+    featureId: "atmo-topeka-2026",
+    year: 2026,
+  }),
+  Object.freeze({
+    id: "corrected",
+    eyebrow: "CORRECTED",
+    title: "A correction stays attached to the record",
+    narrative: "Move west to Hays and back to 2024. The earlier value is not silently replaced: the correction state remains visible beside its current demonstration evidence reference.",
+    layerId: "atmosphere-observations",
+    featureId: "atmo-hays-2024",
+    year: 2024,
+  }),
+  Object.freeze({
+    id: "superseded",
+    eyebrow: "SUPERSEDED",
+    title: "History remains inspectable without becoming current",
+    narrative: "Jump to 1910. This illustrative historical-vintage line is retained for lineage, but its superseded state prevents it from supporting a current answer.",
+    layerId: "historical-context",
+    featureId: "history-route-1910",
+    year: 1910,
+  }),
+  Object.freeze({
+    id: "withheld",
+    eyebrow: "DENY",
+    title: "Protected detail fails closed",
+    narrative: "Finish at a deliberately coarse protected-context envelope. Policy denies precise disclosure, so the interface explains the boundary instead of inviting inference from the map.",
     layerId: "public-safe-planning",
     featureId: "planning-generalized-envelope",
     year: 2026,
@@ -408,6 +448,8 @@ export default function Home() {
   const [mapQueryCandidates, setMapQueryCandidates] = useState<readonly MapQueryCandidate[]>([]);
   const [inspectViewportOnly, setInspectViewportOnly] = useState(false);
   const [inspectVisibleLayersOnly, setInspectVisibleLayersOnly] = useState(false);
+  const [compareLeftId, setCompareLeftId] = useState("water-context");
+  const [compareRightId, setCompareRightId] = useState("atmosphere-observations");
   const [coordinateLatitude, setCoordinateLatitude] = useState(String(KANSAS_VIEW.center[1]));
   const [coordinateLongitude, setCoordinateLongitude] = useState(String(KANSAS_VIEW.center[0]));
   const [coordinateError, setCoordinateError] = useState("");
@@ -415,6 +457,8 @@ export default function Home() {
   const [helpOpen, setHelpOpen] = useState(false);
   const [repositoryOpen, setRepositoryOpen] = useState(false);
   const [guidedStartOpen, setGuidedStartOpen] = useState(false);
+  const [storyOpen, setStoryOpen] = useState(false);
+  const [storyStepIndex, setStoryStepIndex] = useState(0);
   const [currentWorkspace, setCurrentWorkspace] = useState<PublicWorkspaceId>("explore");
   const [repositoryView, setRepositoryView] = useState<RepositoryView>("updates");
   const [functionGroup, setFunctionGroup] = useState<FunctionGroup>("PUBLIC_INTERFACE");
@@ -595,6 +639,9 @@ export default function Home() {
   ), []);
   const activeTransition = TRANSITION_BOUNDARIES.find((transition) => transition.id === activeTransitionId) ?? TRANSITION_BOUNDARIES[0];
   const governedRouteResult = useMemo(() => inspectGovernedRoute(governedMethod, governedRoute), [governedMethod, governedRoute]);
+  const compareLeft = LAYER_REGISTRY.find((layer) => layer.id === compareLeftId) ?? LAYER_REGISTRY[0];
+  const compareRight = LAYER_REGISTRY.find((layer) => layer.id === compareRightId) ?? LAYER_REGISTRY[1];
+  const activeStoryStep = KFM_STORY_TRAIL[storyStepIndex] ?? KFM_STORY_TRAIL[0];
 
   const selectedLabel = selected?.properties.title ?? "Statewide Kansas";
   const selectedEvidence = selected ? evidenceLabels[selected.properties.evidenceState] : null;
@@ -689,6 +736,7 @@ export default function Home() {
       params.set("mapui", "open");
       params.set("maptab", mapUtilityView);
     }
+    if (mapUtilityView === "compare") params.set("compare", `${compareLeft.id},${compareRight.id}`);
     if (selected) {
       params.set("f", selected.featureId);
       params.set("panel", drawerView);
@@ -697,12 +745,60 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [activeLayers, basemap, currentWorkspace, drawerView, focusIntent, focusStage, layerOrder, locationCameraRedacted, mapUtilityOpen, mapUtilityView, measureUnit, opacity, projection, rightOpen, selected, view, year]);
+  }, [activeLayers, basemap, compareLeft.id, compareRight.id, currentWorkspace, drawerView, focusIntent, focusStage, layerOrder, locationCameraRedacted, mapUtilityOpen, mapUtilityView, measureUnit, opacity, projection, rightOpen, selected, view, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
     window.setTimeout(() => setToast(""), 3600);
   }, []);
+
+  const showComparedLayers = useCallback(() => {
+    setVisibility((current) => ({ ...current, [compareLeft.id]: true, [compareRight.id]: true }));
+    announce(`Showing ${compareLeft.title} and ${compareRight.title}; other visible layers were preserved`);
+  }, [announce, compareLeft, compareRight]);
+
+  const fitComparedLayers = useCallback(() => {
+    const bounds: [number, number, number, number] = [
+      Math.min(compareLeft.bounds[0], compareRight.bounds[0]),
+      Math.min(compareLeft.bounds[1], compareRight.bounds[1]),
+      Math.max(compareLeft.bounds[2], compareRight.bounds[2]),
+      Math.max(compareLeft.bounds[3], compareRight.bounds[3]),
+    ];
+    setVisibility((current) => ({ ...current, [compareLeft.id]: true, [compareRight.id]: true }));
+    mapRef.current?.fitBounds([[bounds[0], bounds[1]], [bounds[2], bounds[3]]], { padding: 70, maxZoom: 9, duration: motionDuration(650) });
+    announce("Fitted both comparison layers; camera and visibility changed only in this browser");
+  }, [announce, compareLeft, compareRight]);
+
+  const copyLayerComparison = useCallback(async () => {
+    const summarize = (layer: LayerRecord) => ({
+      id: layer.id,
+      title: layer.title,
+      domain: layer.domain,
+      geometry: layer.geometryType,
+      valid_time: layer.validTimeExtent,
+      source_time: layer.sourceTime,
+      release_time: layer.releaseTime,
+      freshness: layer.freshnessState,
+      release_state: layer.releaseState,
+      public_status: layer.publicStatus,
+      evidence_reference: layer.evidenceReference,
+      visible: Boolean(visibility[layer.id]),
+    });
+    const comparison = {
+      format: "kfm-site-layer-comparison-v1",
+      authority: "SITE_LOCAL_READ_ONLY_PROJECTION",
+      active_time: year,
+      layers: [summarize(compareLeft), summarize(compareRight)],
+      effects: { evidence: "NONE", policy: "NONE", review: "NONE", release: "NONE", publication: "NONE" },
+      limitation: "Metadata comparison does not prove equivalence, compatibility, source admission, or publication readiness.",
+    };
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(comparison, null, 2));
+      announce("Read-only layer comparison copied with no public effect");
+    } catch {
+      announce("Clipboard access was blocked; comparison stayed in the browser");
+    }
+  }, [announce, compareLeft, compareRight, visibility, year]);
 
   const activateDrawerView = useCallback((nextView: DrawerView, focusTab = false) => {
     setDrawerView(nextView);
@@ -953,6 +1049,29 @@ export default function Home() {
     announce(`Opened ${example.title} guided example at ${example.year}`);
   }, [announce, dismissGuidedStart, selectStoredFeature]);
 
+  const openStoryStep = useCallback((requestedIndex: number) => {
+    const nextIndex = Math.max(0, Math.min(KFM_STORY_TRAIL.length - 1, requestedIndex));
+    const step = KFM_STORY_TRAIL[nextIndex];
+    setStoryStepIndex(nextIndex);
+    setStoryOpen(true);
+    setGuidedStartOpen(false);
+    setHelpOpen(false);
+    setPlaying(false);
+    yearRef.current = step.year;
+    setYear(step.year);
+    setLeftOpen(false);
+    setTimelineOpen(false);
+    selectStoredFeature(step.layerId, step.featureId);
+    announce(`Story step ${nextIndex + 1} of ${KFM_STORY_TRAIL.length}: ${step.eyebrow}`);
+  }, [announce, selectStoredFeature]);
+
+  const startStoryTrail = useCallback(() => openStoryStep(0), [openStoryStep]);
+
+  const closeStoryTrail = useCallback(() => {
+    setStoryOpen(false);
+    announce("Guided story closed; the current map selection was preserved");
+  }, [announce]);
+
   const clearSelectionState = useCallback(() => {
     setFocusStage("outcome");
     setFocusIntent("explain");
@@ -1037,8 +1156,13 @@ export default function Home() {
       const restoredWorkspace = params.get("ws");
       setCurrentWorkspace(restoredWorkspace === "knowledge" || restoredWorkspace === "features" || restoredWorkspace === "trust" ? restoredWorkspace : "explore");
       const restoredMapUtilityView = params.get("maptab");
-      const nextMapUtilityView: MapUtilityView = restoredMapUtilityView === "inspect" || restoredMapUtilityView === "display" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "navigate";
+      const nextMapUtilityView: MapUtilityView = restoredMapUtilityView === "inspect" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "display" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "navigate";
       setMapUtilityView(nextMapUtilityView);
+      const restoredCompareIds = params.get("compare")?.split(",") ?? [];
+      if (restoredCompareIds.length === 2 && restoredCompareIds.every((id) => knownLayerIds.has(id)) && restoredCompareIds[0] !== restoredCompareIds[1]) {
+        setCompareLeftId(restoredCompareIds[0]);
+        setCompareRightId(restoredCompareIds[1]);
+      }
       if (nextMapUtilityView === "export") setExportGeneratedAt(new Date().toISOString());
       const restoredMapUtilityOpen = params.get("mapui") === "open";
       setMapUtilityOpen(restoredMapUtilityOpen);
@@ -1485,6 +1609,7 @@ export default function Home() {
       if (workspaceDetailsRef.current?.open) workspaceDetailsRef.current.open = false;
       else if (helpOpen) setHelpOpen(false);
       else if (guidedStartOpen) dismissGuidedStart();
+      else if (storyOpen) closeStoryTrail();
       else if (toolsExpanded) setToolsExpanded(false);
       else if (mapUtilityOpen) closeMapUtility();
       else if (measureModeRef.current) {
@@ -1501,7 +1626,7 @@ export default function Home() {
     };
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, [guidedStartOpen, helpOpen, isCompact, mapUtilityOpen, repositoryOpen, rightOpen, toolsExpanded, closeMapUtility, closeRightPanel, dismissGuidedStart]);
+  }, [guidedStartOpen, helpOpen, isCompact, mapUtilityOpen, repositoryOpen, rightOpen, storyOpen, toolsExpanded, closeMapUtility, closeRightPanel, closeStoryTrail, dismissGuidedStart]);
 
   const chooseSearchResult = (item: SearchItem) => {
     setGlobalQuery("");
@@ -2159,10 +2284,11 @@ export default function Home() {
         <div className="top-context" aria-label="Current map context">
           <span><small>AREA</small><strong>{selectedLabel}</strong></span>
           <span><small>TIME</small><strong>{formatTimelineStep(year)}</strong></span>
-          <span className="release-indicator"><i /> DEMONSTRATION</span>
+          <span className="release-indicator" data-selection-state={selected?.properties.evidenceState ?? "DEMONSTRATION"} title="Visible selection posture; not release or publication authority"><i /> {selected ? selectedEvidence?.label.toUpperCase() : "DEMONSTRATION"}</span>
         </div>
         <div className="top-actions">
           <button ref={repositoryButtonRef} className="repository-trigger" type="button" onClick={() => { setCurrentWorkspace("features"); setRepositoryOpen(true); setHelpOpen(false); setToolsExpanded(false); }} aria-expanded={repositoryOpen} aria-controls="repository-briefing" aria-label="Open repository and function briefing" title="Repository and function briefing"><span aria-hidden="true">R</span><i aria-hidden="true">{REPOSITORY_SNAPSHOT.counts.repositoryUpdates}</i></button>
+          <button className="story-trigger" type="button" onClick={startStoryTrail} aria-expanded={storyOpen} aria-controls="kfm-story-trail" aria-label="Start guided Kansas trust story" title="Guided Kansas trust story">S</button>
           <button className="share-action" type="button" onClick={shareView} aria-label="Share current map view" title="Share current view">↗</button>
           <button type="button" onClick={() => setHelpOpen((current) => !current)} aria-expanded={helpOpen} aria-label="Open map guide" title="Map guide">?</button>
           <button className="panel-toggle" type="button" onClick={() => { setLeftOpen((current) => { const next = !current; setCurrentWorkspace(next ? "knowledge" : "explore"); return next; }); if (isCompact) { dismissMapUtilityWithoutFocus(); setRightOpen(false); setTimelineOpen(false); } }} aria-expanded={leftOpen} aria-label="Toggle Layer Catalog">☰</button>
@@ -2171,7 +2297,7 @@ export default function Home() {
           <button className="icon-close" type="button" onClick={() => setHelpOpen(false)} aria-label="Close map guide">×</button>
           <p className="panel-kicker">MAP GUIDE</p><h2>Explore a feature, then check what supports it.</h2>
           <p>Every layer in this build uses site-local synthetic or generalized demonstration data—not released operational data. Choose an example or select any feature to inspect its evidence state.</p>
-          <button className="map-guide-start" type="button" onClick={showGuidedStart}>Try the guided examples</button>
+          <div className="map-guide-actions"><button className="map-guide-start" type="button" onClick={showGuidedStart}>Try quick examples</button><button className="map-guide-start" type="button" onClick={startStoryTrail}>Start four-step story</button></div>
           <ol><li>Search, choose an example, or enable a layer.</li><li>Select a feature.</li><li>Inspect what is supported, missing, corrected, or withheld.</li><li>Review time, lineage, and Focus Mode when you need more detail.</li></ol>
           <p><strong>Shift + drag</strong> uses MapLibre box zoom. The Map Workbench also supports coordinate navigation, camera orientation, and viewport-scoped feature discovery. Terrain and swipe comparison remain unavailable because this build has no audited DEM or compatible comparison source.</p>
         </aside>}
@@ -2444,7 +2570,7 @@ export default function Home() {
           {runtime.kind === "degraded" && <div className="runtime-degraded-banner" role="status" aria-live="polite"><strong>Partial map degradation</strong><span>{runtime.message}</span></div>}
           {temporalNoData.length > 0 && <div className="no-time-data" role="status"><strong>No {formatTimelineStep(year)} observation in {temporalNoData.map((layer) => layer.title).join(", ")}</strong><span>Other active layers remain visible; choose an available tick in the timeline.</span></div>}
 
-          {runtime.kind === "ready" && guidedStartOpen && !selected && <aside className="guided-start" aria-labelledby="guided-start-title">
+          {runtime.kind === "ready" && guidedStartOpen && <aside className="guided-start" aria-labelledby="guided-start-title">
             <header>
               <div><span>START HERE · DEMONSTRATION ONLY</span><h2 id="guided-start-title">Explore one feature in under a minute.</h2></div>
               <button className="icon-close" type="button" onClick={dismissGuidedStart} aria-label="Dismiss guided examples">×</button>
@@ -2456,6 +2582,29 @@ export default function Home() {
               </button>)}
             </div>
             <footer>Or search a place above, choose any map feature, or browse the Layer Catalog.</footer>
+          </aside>}
+
+          {runtime.kind === "ready" && storyOpen && <aside id="kfm-story-trail" className="story-trail" role="region" aria-labelledby="story-trail-title" aria-live="polite">
+            <header>
+              <div><span>GUIDED KANSAS TRUST STORY · SITE-LOCAL</span><small>Step {storyStepIndex + 1} of {KFM_STORY_TRAIL.length}</small></div>
+              <button className="icon-close" type="button" onClick={closeStoryTrail} aria-label="Close guided story">×</button>
+            </header>
+            <div className="story-progress" aria-label={`Story progress: step ${storyStepIndex + 1} of ${KFM_STORY_TRAIL.length}`}>
+              {KFM_STORY_TRAIL.map((step, index) => <button key={step.id} type="button" data-active={index === storyStepIndex} aria-label={`Open story step ${index + 1}: ${step.title}`} onClick={() => openStoryStep(index)}><span>{String(index + 1).padStart(2, "0")}</span></button>)}
+            </div>
+            <article data-state={activeStoryStep.id}>
+              <span>{activeStoryStep.eyebrow} · {formatTimelineStep(activeStoryStep.year)}</span>
+              <h2 id="story-trail-title">{activeStoryStep.title}</h2>
+              <p>{activeStoryStep.narrative}</p>
+            </article>
+            <div className="story-actions">
+              <button type="button" disabled={storyStepIndex === 0} onClick={() => openStoryStep(storyStepIndex - 1)}>Previous</button>
+              <button type="button" onClick={() => { setDrawerView("lineage"); setRightOpen(true); }}>Inspect lineage</button>
+              {storyStepIndex < KFM_STORY_TRAIL.length - 1
+                ? <button type="button" onClick={() => openStoryStep(storyStepIndex + 1)}>Next step</button>
+                : <button type="button" onClick={closeStoryTrail}>Finish story</button>}
+            </div>
+            <footer>Fixture-first 2D guidance only · no live StoryManifest playback · no evidence, policy, review, release, or publication effect.</footer>
           </aside>}
 
           <nav className="map-tool-rail" aria-label="Map tools">
@@ -2573,6 +2722,33 @@ export default function Home() {
                   </article>)}
                   {mapFeatureIndex.length === 0 && <div className="map-utility-empty"><strong>No compatible features</strong><p>Change the active time, clear a spatial filter or feature search, or choose another layer.</p></div>}
                 </div>
+              </section>}
+
+              {mapUtilityView === "compare" && <section id="map-utility-view-compare" role="tabpanel" aria-labelledby="map-utility-tab-compare" className="map-utility-section layer-compare-section">
+                <div className="map-utility-section-heading"><span>COMPARE</span><h3>Layer truth + capability matrix</h3><p>Compare two registry layers without flattening their time, source role, release posture, or sensitivity into a single score.</p></div>
+                <div className="layer-compare-selectors">
+                  <label><span>Layer A</span><select value={compareLeft.id} onChange={(event) => { const next = event.target.value; setCompareLeftId(next); if (next === compareRight.id) setCompareRightId(compareLeft.id); }}>{LAYER_REGISTRY.map((layer) => <option key={layer.id} value={layer.id}>{layer.title}</option>)}</select></label>
+                  <button type="button" onClick={() => { setCompareLeftId(compareRight.id); setCompareRightId(compareLeft.id); }} aria-label="Swap compared layers">⇄<span>Swap</span></button>
+                  <label><span>Layer B</span><select value={compareRight.id} onChange={(event) => { const next = event.target.value; setCompareRightId(next); if (next === compareLeft.id) setCompareLeftId(compareRight.id); }}>{LAYER_REGISTRY.map((layer) => <option key={layer.id} value={layer.id}>{layer.title}</option>)}</select></label>
+                </div>
+                <div className="layer-compare-grid">
+                  {[compareLeft, compareRight].map((layer, index) => <article key={`${index}:${layer.id}`} data-visible={visibility[layer.id]}>
+                    <header><span>LAYER {index === 0 ? "A" : "B"} · {layer.domain}</span><strong>{layer.releaseState}</strong></header>
+                    <h4>{layer.title}</h4><p>{layer.description}</p>
+                    <dl>
+                      <div><dt>Geometry / format</dt><dd>{layer.geometryType} · {layer.sourceType}</dd></div>
+                      <div><dt>Temporal basis</dt><dd>{layer.validTimeExtent}</dd></div>
+                      <div><dt>Source / release time</dt><dd>{layer.sourceTime} · {layer.releaseTime}</dd></div>
+                      <div><dt>Freshness</dt><dd>{layer.freshnessState}</dd></div>
+                      <div><dt>Public posture</dt><dd>{layer.publicStatus}</dd></div>
+                      <div><dt>Evidence reference</dt><dd><code>{layer.evidenceReference}</code></dd></div>
+                    </dl>
+                    <aside><strong>Sensitivity boundary</strong><p>{layer.sensitivityNote}</p></aside>
+                    <footer><span>{visibility[layer.id] ? "VISIBLE NOW" : "HIDDEN NOW"}</span><button type="button" onClick={() => zoomToLayer(layer)}>Show + zoom</button></footer>
+                  </article>)}
+                </div>
+                <div className="layer-compare-actions"><button type="button" onClick={showComparedLayers}>Show both</button><button type="button" onClick={fitComparedLayers}>Fit both extents</button><button type="button" onClick={() => void copyLayerComparison()}>Copy comparison</button></div>
+                <aside className="map-utility-boundary"><strong>Comparison is a read-only projection</strong><p>Side-by-side metadata helps reveal differences; it does not prove layer compatibility, equivalent authority, current source admission, policy approval, release readiness, or publication.</p></aside>
               </section>}
 
               {mapUtilityView === "display" && <section id="map-utility-view-display" role="tabpanel" aria-labelledby="map-utility-tab-display" className="map-utility-section">

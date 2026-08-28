@@ -57,6 +57,23 @@ test("gives first-time visitors plain-language guided examples", async () => {
   assert.match(css, /\.guided-example-list button/);
 });
 
+test("adds a bounded guided story and read-only layer comparison", async () => {
+  const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const mapInterface = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(source, /KFM_STORY_TRAIL/);
+  assert.match(source, /A correction stays attached to the record/);
+  assert.match(source, /Fixture-first 2D guidance only/);
+  assert.match(source, /no live StoryManifest playback/);
+  assert.match(source, /kfm-site-layer-comparison-v1/);
+  assert.match(source, /Comparison is a read-only projection/);
+  assert.match(source, /params\.set\("compare"/);
+  assert.match(mapInterface, /"compare"/);
+  assert.match(css, /\.story-trail/);
+  assert.match(css, /\.layer-compare-grid/);
+});
+
 test("uses a site-specific social card and request-host metadata", async () => {
   const layout = await readFile(new URL("../app/layout.tsx", import.meta.url), "utf8");
   const socialCard = await readFile(new URL("../public/og-guided.png", import.meta.url));
@@ -199,7 +216,7 @@ test("keeps the MapLibre Workbench complete, bounded, and responsive", async () 
   const tsconfig = await readFile(new URL("../tsconfig.json", import.meta.url), "utf8");
 
   assert.match(source, /id="map-utility-panel"/);
-  for (const view of ["Navigate", "Inspect", "Display", "Measure", "Export", "Diagnostics"]) assert.match(source, new RegExp(`${view}`));
+  for (const view of ["Navigate", "Inspect", "Compare", "Display", "Measure", "Export", "Diagnostics"]) assert.match(source, new RegExp(`${view}`));
   assert.match(source, /kfm-map-context-receipt-v1/);
   assert.match(source, /kfm-map-diagnostics-v1/);
   assert.match(exportCenter, /kfm-public-safe-map-export-v2/);
