@@ -66,31 +66,31 @@ source_lineage:
     source_class: CURRENT_TASK_GUIDANCE
     use: same-path repository-grounded Markdown modernization and focused draft-pull-request delivery
 related:
-  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
-  - ../../doctrine/directory-rules.md
-  - ../README.md
-  - ../../domains/hydrology/README.md
-  - PROMOTION_RUNBOOK.md
-  - VALIDATION.md
-  - NO_NETWORK_TEST_RUNBOOK.md
-  - SOURCE_REFRESH_RUNBOOK.md
-  - ROLLBACK.md
-  - ../rollback-rehearsal.md
-  - ../../../contracts/release/rollback_card.md
-  - ../../../schemas/contracts/v1/release/rollback_card.schema.json
-  - ../../../fixtures/release/rollback_card/
-  - ../../../tools/validators/release/validate_rollback_card.py
-  - ../../../tools/release/rollback_apply.py
-  - ../../../tests/release/test_synthetic_rollback_rehearsal.py
-  - ../../../.github/workflows/rollback-drill.yml
-  - ../../../release/rollback_cards/README.md
-  - ../../../release/candidates/hydrology/README.md
-  - ../../../release/reviews/README.md
-  - ../../../data/proofs/hydrology/README.md
-  - ../../../data/receipts/hydrology/README.md
-  - ../../../data/published/hydrology/README.md
-  - ../../../pipelines/rollback/main.py
-  - ../../../scripts/maintenance/audit_published_aliases.py
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/doctrine/directory-rules.md
+  - docs/runbooks/README.md
+  - docs/domains/hydrology/README.md
+  - docs/runbooks/hydrology/PROMOTION_RUNBOOK.md
+  - docs/runbooks/hydrology/VALIDATION.md
+  - docs/runbooks/hydrology/NO_NETWORK_TEST_RUNBOOK.md
+  - docs/runbooks/hydrology/SOURCE_REFRESH_RUNBOOK.md
+  - docs/runbooks/hydrology/ROLLBACK.md
+  - docs/runbooks/rollback-rehearsal.md
+  - contracts/release/rollback_card.md
+  - schemas/contracts/v1/release/rollback_card.schema.json
+  - fixtures/release/rollback_card/
+  - tools/validators/release/validate_rollback_card.py
+  - tools/release/rollback_apply.py
+  - tests/release/test_synthetic_rollback_rehearsal.py
+  - .github/workflows/rollback-drill.yml
+  - release/rollback_cards/README.md
+  - release/candidates/hydrology/README.md
+  - release/reviews/README.md
+  - data/proofs/hydrology/README.md
+  - data/receipts/hydrology/README.md
+  - data/published/hydrology/README.md
+  - pipelines/rollback/main.py
+  - scripts/maintenance/audit_published_aliases.py
 notes:
   - The repository implements a deterministic, marker-protected synthetic rollback and withdrawal rehearsal. The scenario workspace is guarded; an optional report path remains caller-controlled and can write outside that workspace.
   - The rollback-drill workflow combines eight generic rehearsal tests with four Hazards-specific tests; it does not establish a Hydrology rollback rehearsal.
@@ -199,7 +199,7 @@ This runbook does not:
 - authorize direct edits to `data/published/`, a public alias, API route, cache, CDN, tile store, catalog, triplet store, search index, vector index, AI cache, deployment, or downstream derivative;
 - execute the one-line production rollback pipeline placeholder;
 - treat the generic synthetic helper or Hazards-specific workflow extension as Hydrology rollback proof;
-- treat [`ROLLBACK.md`](ROLLBACK.md), which remains a proposal scaffold, as an operational procedure or alternate release authority;
+- treat the current [`ROLLBACK.md`](ROLLBACK.md) readiness companion as an operational procedure or alternate release authority;
 - perform repository revert, database recovery, infrastructure failover, source deactivation, secret rotation, or incident-response command; or
 - claim operational recovery, release, deployment, promotion, publication, or public readiness.
 
