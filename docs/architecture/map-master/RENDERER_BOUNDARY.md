@@ -673,9 +673,11 @@ The bounded acquisition validator is designed to report:
 - parallel active package homes.
 
 Before applying those patterns, the validator masks bounded JavaScript line/block
-comments and HTML comments while preserving quoted runtime strings and line positions.
-This prevents retired or explanatory comment examples from becoming active acquisition
-findings without treating a quoted CDN URL in executable code as inert.
+comments and HTML comments while preserving quoted runtime strings, regular-expression
+literals, and line positions. A bounded expression-context check distinguishes regex
+literals from division before comment masking. This prevents regex contents from hiding
+active acquisition or exposing inert comment examples without treating a quoted CDN URL
+in executable code as inert.
 
 It treats only `packages/maplibre/**` as the accepted raw-renderer seam. Acquisition confined to that package yields structural `HOLD` while production runtime activation remains unresolved. Acquisition elsewhere produces `ACQUISITION_OUTSIDE_CANDIDATE_SEAM` and fails closed; parallel active package homes also fail closed. Documentation links, CSS class assertions, and package-local imports whose filenames contain `maplibre` are not renderer acquisition.
 

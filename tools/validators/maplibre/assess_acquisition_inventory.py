@@ -23,7 +23,7 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Sequence
 
-PROFILE = "kfm-maplibre-acquisition-inventory-v5"
+PROFILE = "kfm-maplibre-acquisition-inventory-v6"
 TEXT_SUFFIXES = frozenset({".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx", ".html"})
 MAX_FILES = 5000
 SCAN_ROOTS = ("apps", "packages", "runtime", "scripts", "tests", "examples", "public")
@@ -74,6 +74,24 @@ CREATE_REQUIRE_NAMESPACE_IMPORT = re.compile(
 CREATE_REQUIRE_DESTRUCTURE = re.compile(
     rf"\b(?:const|let|var)\s*\{{(?P<bindings>[\s\S]{{0,240}}?)\}}\s*=\s*"
     rf"require\s*\(\s*['\"]{NODE_MODULE_SPECIFIER}['\"]\s*\)"
+)
+REGEX_PREFIX_KEYWORDS = frozenset(
+    {
+        "await",
+        "case",
+        "delete",
+        "do",
+        "else",
+        "in",
+        "instanceof",
+        "new",
+        "of",
+        "return",
+        "throw",
+        "typeof",
+        "void",
+        "yield",
+    }
 )
 
 
@@ -228,10 +246,35 @@ def _scan_create_require(text: str) -> list[tuple[str, str]]:
     return findings
 
 
+def _regex_literal_end(text: str, start: int) -> int | None:
+    """Return the end of a bounded JavaScript regex literal, or ``None``."""
+    index = start + 1
+    in_character_class = False
+    while index < len(text):
+        character = text[index]
+        if character in {"\r", "\n"}:
+            return None
+        if character == "\\":
+            index += 2
+            continue
+        if character == "[":
+            in_character_class = True
+        elif character == "]":
+            in_character_class = False
+        elif character == "/" and not in_character_class:
+            index += 1
+            while index < len(text) and text[index].isalpha():
+                index += 1
+            return index
+        index += 1
+    return None
+
+
 def _mask_comments(text: str) -> str:
-    """Blank bounded JavaScript and HTML comments while preserving strings and lines."""
+    """Blank bounded JS/HTML comments while preserving strings, regexes, and lines."""
     masked = list(text)
     quote: str | None = None
+    regex_allowed = True
     index = 0
     while index < len(text):
         character = text[index]
@@ -241,6 +284,7 @@ def _mask_comments(text: str) -> str:
                 continue
             if character == quote:
                 quote = None
+                regex_allowed = False
             index += 1
             continue
         if character in {"'", '"', "`"}:
@@ -260,6 +304,40 @@ def _mask_comments(text: str) -> str:
             end = len(text) if closing == -1 else closing + 3
 
         if end is None:
+            if character == "/":
+                regex_end = _regex_literal_end(text, index) if regex_allowed else None
+                if regex_end is not None:
+                    index = regex_end
+                    regex_allowed = False
+                    continue
+                index += 2 if text.startswith("/=", index) else 1
+                regex_allowed = True
+                continue
+            if character.isspace():
+                index += 1
+                continue
+            if character.isalpha() or character in {"_", "$"}:
+                token_end = index + 1
+                while token_end < len(text) and (
+                    text[token_end].isalnum() or text[token_end] in {"_", "$"}
+                ):
+                    token_end += 1
+                regex_allowed = text[index:token_end] in REGEX_PREFIX_KEYWORDS
+                index = token_end
+                continue
+            if character.isdigit():
+                token_end = index + 1
+                while token_end < len(text) and (
+                    text[token_end].isalnum() or text[token_end] in {"_", "."}
+                ):
+                    token_end += 1
+                regex_allowed = False
+                index = token_end
+                continue
+            if character in ")]}":
+                regex_allowed = False
+            elif character not in {".", "~"}:
+                regex_allowed = True
             index += 1
             continue
         for offset in range(index, end):
