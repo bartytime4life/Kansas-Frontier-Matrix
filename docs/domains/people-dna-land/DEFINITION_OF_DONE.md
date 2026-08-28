@@ -2,8 +2,8 @@
 doc_id: kfm://doc/people-dna-land/definition-of-done
 title: People / Genealogy / DNA / Land — Definition of Done
 type: standard
-version: v1.1
-prior_version: v1
+version: v1.2
+prior_version: v1.1
 status: draft
 owners: [TODO: domain steward — People/Genealogy/DNA/Land; TODO: release authority; TODO: sensitivity reviewer; TODO: rights-holder rep; TODO: docs steward]
 created: 2026-06-07
@@ -23,11 +23,12 @@ tags: [kfm, definition-of-done, people, genealogy, dna, land, promotion, governa
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned per ai-build-operating-contract.md v3.0.
   - Definition of Done is PROPOSED doctrine (Pass-10 C14-05); the corpus names the need but does not enumerate per-domain checklists. This is the People-lane enumeration.
-  - DoD gates promotion from CATALOG to PUBLISHED; it does not replace the lifecycle gates, it composes them.
+  - In a future governed implementation, the DoD could inform a CATALOG-to-PUBLISHED decision; the current document does not gate or authorize that transition.
   - SLUG CONFLICT (OQ-PEOPLE-SLUG-01) and GATE-LETTER CONFLICT (OQ-PEOPLE-GATE-01 / ADR-S-08) inherited from DATA_LIFECYCLE.md; checklist is written scheme-neutral.
   - Consent terms are ConsentGrant + RevocationReceipt (Atlas ubiquitous language); not ConsentReceipt.
   - Verify against mounted repo, ADRs, CI workflows, and policy bundles before treating any path, gate letter, schema, or CI check name as canonical.
   - The current promotion runbook is a repository-grounded HOLD boundary, not an operator procedure; satisfying this proposed checklist does not authorize promotion or publication.
+  - v1.2 removes the remaining executable-sounding walkthrough outcome and CI claims identified during review of merged PR #3764.
 [/KFM_META_BLOCK_V2] -->
 
 # People / Genealogy / DNA / Land — Definition of Done
@@ -49,7 +50,7 @@ notes:
 
 
 > [!IMPORTANT]
-> This Definition of Done **composes** the universal promotion gates and the lifecycle law; it does not weaken them. Where a shared envelope (run receipt, gate matrix, evidence closure) already applies repo-wide, this doc adds only the **domain-specific** checks that the corpus says differ per domain — living-person screening, DNA `ConsentGrant` verification, assessor-as-title denial, chain-of-title gap discipline, and graph-projection safety. [Pass-10 C14-05] [DOM-PEOPLE]
+> This proposed Definition of Done models domain-specific questions that a future governed path would need to compose with universal promotion gates and lifecycle law. It does not perform that composition today. The questions cover living-person screening, DNA `ConsentGrant` verification, assessor-as-title denial, chain-of-title gap discipline, and graph-projection safety. [Pass-10 C14-05] [DOM-PEOPLE]
 
 > [!WARNING]
 > The current [`PROMOTION_RUNBOOK.md`](../../runbooks/people-dna-land/PROMOTION_RUNBOOK.md) is a fail-closed documentation boundary with outcome `HOLD`. No step-by-step operator procedure, active policy binding, authenticated review route, proof producer, release decision, deployment, or publication path is established. This checklist cannot activate any of them.
@@ -69,7 +70,7 @@ notes:
 - [6. Separation-of-duties requirements](#6-separation-of-duties-requirements)
 - [7. Failure reason codes](#7-failure-reason-codes)
 - [8. Worked acceptance walkthrough](#8-worked-acceptance-walkthrough)
-- [9. CI wiring (PROPOSED)](#9-ci-wiring-proposed)
+- [9. Future CI wiring (PROPOSED / NOT IMPLEMENTED)](#9-future-ci-wiring-proposed--not-implemented)
 - [10. Open questions register](#10-open-questions-register)
 - [11. Open verification backlog](#11-open-verification-backlog)
 - [12. Changelog](#12-changelog)
@@ -110,9 +111,9 @@ flowchart LR
 
 |Layer                 |Owns                                                                               |This DoD’s relationship                                  |
 |----------------------|-----------------------------------------------------------------------------------|---------------------------------------------------------|
-|`lifecycle-law.md`    |The invariant `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`|DoD presupposes it; runs at the final transition         |
+|`lifecycle-law.md`    |The invariant `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`|Future dependency only; current promotion remains `HOLD` |
 |Universal gate matrix |The seven-gate sequence and required evidence                                      |DoD references it scheme-neutrally; does not re-letter it|
-|`DATA_LIFECYCLE.md`   |Domain stage handling, tiers, receipts, failure-closed scenarios                   |DoD is the acceptance checklist that doc’s gates imply   |
+|`DATA_LIFECYCLE.md`   |Domain stage handling, tiers, receipts, failure-closed scenarios                   |DoD proposes readiness questions; it does not run a gate |
 |`PROMOTION_RUNBOOK.md`|The current fail-closed promotion `HOLD` boundary; no operator procedure is established|DoD remains proposed readiness context and cannot activate promotion|
 
 
@@ -125,7 +126,7 @@ flowchart LR
 
 ## 3. The checklist
 
-**Default-deny.** Every box must be checkable `YES` with a recorded artifact. A box that cannot be evidenced is a `DENY`, not a deferred concern. Boxes are grouped by gate intent; status of each check is `PROPOSED` for this lane until repo-verified. [Pass-10 C5-02] [DOM-PEOPLE]
+**Default-deny.** In this proposed model, every box would need a recorded artifact and an unresolved box would be `DENY`, not a deferred concern. The boxes are grouped by gate intent and remain `PROPOSED`; checking every box in this document does not change the current promotion `HOLD`. [Pass-10 C5-02] [DOM-PEOPLE]
 
 ### 3.1 Identity, structure, and metadata
 
@@ -207,7 +208,7 @@ Receipts are governance memory; earlier receipts are **referenced** at later pha
 
 ## 5. Sensitivity gate detail
 
-The sensitivity gate is **additive** to policy parity: it runs even when parity passes, and a failure in either denies promotion. Tier defaults below are CONFIRMED in Atlas §24.5.2. [Atlas §24.5.2] [Pass-10 C5-02]
+In a future governed implementation, a sensitivity gate would be **additive** to policy parity and a failure in either dimension would keep the candidate held. No such operational gate is established here; current promotion remains `HOLD` regardless of checklist results. Tier defaults below are CONFIRMED in Atlas §24.5.2. [Atlas §24.5.2] [Pass-10 C5-02]
 
 |Object class                                   |Default tier|Only allowed path to public-safe                                                 |Required gates                                   |
 |-----------------------------------------------|------------|---------------------------------------------------------------------------------|-------------------------------------------------|
@@ -234,7 +235,7 @@ The sensitivity gate is **additive** to policy parity: it runs even when parity 
 |Source admission (— → RAW)                  |Yes for routine; **No** when rights / sovereignty / consent unresolved|Source steward                          |
 |Redaction / generalization / tier decision  |No                                                                    |Sensitivity reviewer                    |
 |Living-person / DNA release decision        |No                                                                    |Rights-holder representative            |
-|Promotion to PUBLISHED (materiality applies)|No                                                                    |Release authority (distinct from author)|
+|Future PUBLISHED transition (materiality applies; not currently executable)|No                                           |Release authority (distinct from author)|
 |Correction / rollback of a published claim  |No                                                                    |Correction reviewer                     |
 |Focus Mode answer / AI-drafted note         |n/a (AI is never root truth)                                          |AI surface steward (audit)              |
 
@@ -265,7 +266,7 @@ When a check fails, the `PolicyDecision` records a reason code. These are the la
 
 ## 8. Worked acceptance walkthrough
 
-*Illustrative, not sourced from a specific repo record.* A deceased-person residence timeline assembled from census + city-directory sources, targeting T1 public release.
+*Illustrative proposal only; not sourced from a specific repository record and not an executable release example.* A hypothetical deceased-person residence timeline assembled from census and city-directory sources, with a future T1 target.
 
 1. **Identity/structure** — `SourceDescriptor`s present, both `observation` role; Meta Block valid. ✅
 1. **Rights** — census public after release window; directory rights NEEDS VERIFICATION → resolved by steward. ✅
@@ -276,21 +277,21 @@ When a check fails, the `PolicyDecision` records a reason code. These are the la
 1. **Evidence** — `EvidenceRef` → `EvidenceBundle` resolves with both source descriptors + citations. ✅
 1. **Reviewability** — `ReviewRecord` by domain steward; `ReleaseManifest` with rollback target; release authority ≠ author. ✅
 
-Outcome: `ANSWER` — promote to PUBLISHED at T1. Had any single box failed, the outcome would be `DENY` / `HOLD`.
+Current outcome: `HOLD`. The checked rows illustrate questions a future governed review might ask; they are not repository evidence, do not resolve rights or living status, and cannot produce `ANSWER`, a release decision, or a `PUBLISHED` transition. A failed or unresolved row would remain `DENY` / `HOLD`, but satisfying every illustrative row still leaves current promotion at `HOLD`.
 
 [↑ Back to top](#quick-links)
 
 -----
 
-## 9. CI wiring (PROPOSED)
+## 9. Future CI wiring (PROPOSED / NOT IMPLEMENTED)
 
-> [!NOTE]
-> All CI names, paths, and check IDs below are **PROPOSED / NEEDS VERIFICATION** until confirmed against a mounted repo, `CODEOWNERS`, and `.github/workflows/`.
+> [!WARNING]
+> No current workflow, required check, policy-runtime binding, release decision, or branch-protection rule is established by this section. The items below are design questions only and cannot be cited as present enforcement.
 
-- A blocking CI check evaluates this DoD at the `CATALOG → PUBLISHED` transition and fails closed on any unchecked box.
-- The check reads the same digest-pinned OPA bundle used at runtime (policy parity).
-- A README/policy sync-check fails the merge if the policy bundle advances without a corresponding update here (mirrors the Quality README sync-check pattern).
-- The DoD check is named in branch-protection required-checks so auto-merge cannot fire without it.
+- A future blocking check would need an accepted owner and contract before evaluating any `CATALOG → PUBLISHED` candidate.
+- A future check would need verified, digest-pinned policy-runtime binding rather than a documentation assertion.
+- A future documentation/policy drift check would need a repository-owned workflow and deterministic negative proof.
+- Any future required-check or branch-protection change would remain a separate repository-administration decision outside this document.
 
 [↑ Back to top](#quick-links)
 
@@ -313,10 +314,10 @@ Outcome: `ANSWER` — promote to PUBLISHED at T1. Had any single box failed, the
 
 ## 11. Open verification backlog
 
-These remain `NEEDS VERIFICATION` before this doc is promoted from `draft` to `published`:
+These remain `NEEDS VERIFICATION` before this document could advance beyond `draft`:
 
 1. Exact OPA reason-code strings and bundle digest — verify against mounted policy bundle.
-1. CI check name, workflow file, and branch-protection wiring — verify against `.github/workflows/` and repo settings.
+1. Whether a DoD check should exist at all, plus its owner, contract, workflow, and administrative approval path.
 1. Schema file names and slug (`people` vs `people-dna-land`) — `OQ-PEOPLE-SLUG-01` / ADR.
 1. Gate lettering — `OQ-PEOPLE-GATE-01` / ADR-S-08.
 1. Identity-resolution confidence threshold value — `OQ-PEOPLE-DOD-01`.
@@ -335,6 +336,7 @@ These remain `NEEDS VERIFICATION` before this doc is promoted from `draft` to `p
 |Written scheme-neutral against gate intent        |clarification          |Inherits gate-letter conflict `OQ-PEOPLE-GATE-01` / ADR-S-08; avoids hard-coding a contested lettering|
 |Consent terms `ConsentGrant` + `RevocationReceipt`|reconciliation         |Atlas ubiquitous-language terms; not `ConsentReceipt`                                                 |
 |Tier rows aligned to Atlas §24.5.2; SoD to §24.7  |reconciliation         |Use Atlas-canonical defaults and roles                                                                |
+|Executable-sounding walkthrough and CI claims removed|safety correction  |Merged PR #3764 review found that later sections contradicted the current promotion `HOLD`             |
 
 
 > **Backward compatibility.** New document; no prior anchors to preserve. Consistent with sibling `DATA_LIFECYCLE.md` v2 and `PROMOTION_RUNBOOK.md`; if any gate-name divergence appears once ADR-S-08 lands, reconcile all three in one change and log in `DRIFT_REGISTER.md`.
@@ -352,7 +354,7 @@ This document is done enough to enter the repository when:
 - it is linked from the domain README, `DATA_LIFECYCLE.md`, and `PROMOTION_RUNBOOK.md`;
 - it does not conflict with accepted ADRs (notably ADR-S-08 and the slug ADR);
 - the slug, gate-letter, and threshold gaps are logged in `docs/registers/DRIFT_REGISTER.md` / `VERIFICATION_BACKLOG.md`;
-- the CI check in [§9](#9-ci-wiring-proposed) is wired and the `GENERATED_RECEIPT.json` is approved (`human_review.state: approved`);
+- the future CI questions in [§9](#9-future-ci-wiring-proposed--not-implemented) remain explicit backlog; this document claims no workflow, generated receipt, or human approval;
 - future changes follow the operating contract’s §37 lifecycle.
 
 [↑ Back to top](#quick-links)
