@@ -7,7 +7,7 @@ import unittest
 from datetime import date
 from pathlib import Path
 
-from _support import FIXTURE_ROOT, VALIDATOR_DIR, copy_fixture, load_validator
+from stale_scan_support import FIXTURE_ROOT, VALIDATOR_DIR, copy_fixture, load_validator
 
 
 stale_scan = load_validator()
