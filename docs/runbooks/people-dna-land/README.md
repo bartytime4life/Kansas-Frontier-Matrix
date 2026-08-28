@@ -3,10 +3,10 @@ doc_id: kfm://doc/runbooks-people-dna-land-readme
 title: docs/runbooks/people-dna-land/ — People, DNA, and Land Operational Procedure Boundary
 type: readme
 subtype: boundary-compact
-version: v1.5.0
-prior_version: v1.4.0
-prior_state: repository-grounded boundary with the dedicated revocation path still classified as an explicit scaffold
-status: draft; repository-grounded; sensitive-domain; two bounded synthetic consent profiles executable; DTC vendor-loss tabletop and revocation propagation review documented; broader source operation, policy runtime, cleanup, proof, release, deployment, and publication held
+version: v1.6.0
+prior_version: v1.5.0
+prior_state: repository-grounded boundary with source refresh still classified as the sole proposal-era procedure
+status: draft; repository-grounded; sensitive-domain; two bounded synthetic consent profiles executable; source refresh held; broader source operation, policy runtime, cleanup, proof, release, deployment, and publication held
 owners:
   - "@bartytime4life — verified GitHub review route"
   - "NEEDS VERIFICATION — accountable People/DNA/Land, privacy, consent, Indigenous/Tribal, legal, policy, source, data-custody, security, evidence, release, operations, and independent-review assignments"
@@ -23,8 +23,9 @@ canonical_relationship: same-path update of the established local boundary; no s
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  revocation_reconciliation_base_commit: f68fe0ff504562bb8d2b4aedacb3d46eb66f17f3
-  target_prior_blob: 30c4bf4c16ff46e118e439bf0ee4498a8c274737
+  source_refresh_reconciliation_base_commit: a3d66df629a3b18f01821761898879d7d4996a2f
+  target_prior_blob: 3b1441382983766c9fc5575c0fd3197cdf6bd0c2
+  source_refresh_prior_blob: 4c8eeaf660dbd416371a1a4f58838d43fddc50e3
   revocation_prior_blob: 4f8d5957114e3e8c5c90e5f226e7df0fdc5c837d
   consent_runbook_blob: e1670ce137abfef004682ff63e0449f091c95b17
   propagation_contract_blob: dbf1fdff6585f3db4213c17d8f18bfc81ecec04d
@@ -37,8 +38,8 @@ evidence_snapshot:
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   direct_markdown_files_including_this_readme: 12
-  repository_grounded_child_procedures: 7
-  proposal_or_stale_child_procedures: 1
+  repository_grounded_child_procedures: 8
+  proposal_or_stale_child_procedures: 0
   explicit_scaffold_children: 3
   bounded_executable_synthetic_profiles: 2
 related:
@@ -57,11 +58,11 @@ related:
   - ../../../release/candidates/people-dna-land/README.md
 notes:
   - "This same-path update preserves the established navigation and sensitive-boundary contract; it creates no policy, source, evidence, receipt, cleanup, release, or publication authority."
-  - "Seven direct children are repository-grounded procedures or hold boundaries; source-refresh alone retains proposal-era assumptions."
+  - "Eight direct children are repository-grounded procedures, reviews, tabletop guidance, or hold boundaries; no direct child remains classified as a proposal-era procedure."
   - "Three direct children remain explicit scaffolds and are not operational instructions."
   - "The current workflow still executes two bounded synthetic consent profiles. The dedicated revocation runbook documents one existing profile; it is not a third executable profile."
   - "The revocation runbook reviews declared propagation and prepares a closure handoff; it does not resolve real status, authenticate receipts, execute cleanup, or claim closure."
-  - "v1.5.0 reconciles the revocation scaffold without taking over consent policy, runtime operations, release, withdrawal, erasure, or rollback authority."
+  - "v1.6.0 reconciles source refresh as a fail-closed HOLD boundary without taking over source admission, connector, policy, receipt, lifecycle, release, or publication authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -93,7 +94,7 @@ Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
 
 ## Current repository status
 
-This revocation reconciliation is pinned to `main@f68fe0ff504562bb8d2b4aedacb3d46eb66f17f3`.
+This source-refresh reconciliation is pinned to `main@a3d66df629a3b18f01821761898879d7d4996a2f`.
 
 | Surface | Status | Bounded conclusion |
 |---|---:|---|
@@ -105,7 +106,7 @@ This revocation reconciliation is pinned to `main@f68fe0ff504562bb8d2b4aedacb3d4
 | [`NO_NETWORK_TEST_RUNBOOK.md`](./NO_NETWORK_TEST_RUNBOOK.md) | **Repository-grounded bounded procedure** | Reproduces the two current synthetic profiles and preserves their no-network limitations |
 | [`ROLLBACK_RUNBOOK.md`](./ROLLBACK_RUNBOOK.md) | **Repository-grounded hold boundary** | Retires unsafe proposal-era instructions and keeps operational rollback unavailable |
 | [`PROMOTION_RUNBOOK.md`](./PROMOTION_RUNBOOK.md) | **Repository-grounded hold boundary** | Retires proposal-era operational language and keeps promotion unavailable |
-| [`SOURCE_REFRESH_RUNBOOK.md`](./SOURCE_REFRESH_RUNBOOK.md) | **Proposal-era / stale** | Retains placeholder-owner or illustrative-command assumptions requiring separate reconciliation |
+| [`SOURCE_REFRESH_RUNBOOK.md`](./SOURCE_REFRESH_RUNBOOK.md) | **Repository-grounded hold boundary** | Permits repository-only source-head review and keeps live retrieval, source admission, receipt production, lifecycle mutation, and watcher behavior unavailable |
 | Three additional children | **Explicit scaffolds** | Rollback-drill, validation, and vendor-watch paths are not operational procedures |
 | Domain workflow | **Executable bounded hold gate** | Runs two synthetic consent profiles; broader semantics, policy runtime, evidence closure, proof, real revocation execution, cleanup, and release remain held |
 | Real source, vendor-account, person, consent, DNA, land, or culturally controlled material | **Not admitted by this documentation** | Remains outside repository-visible procedures, fixtures, and tabletop records |
@@ -120,7 +121,7 @@ This revocation reconciliation is pinned to `main@f68fe0ff504562bb8d2b4aedacb3d4
 | Review a change that may affect living people, DNA-derived material, relationships, consent, or land-linked identity | [`LIVING_PERSON_REVIEW.md`](./LIVING_PERSON_REVIEW.md) | Synthetic validation and human handoff only; accountable specialist review remains unverified |
 | Reproduce the two current bounded synthetic profiles | [`NO_NETWORK_TEST_RUNBOOK.md`](./NO_NETWORK_TEST_RUNBOOK.md) | Named Python denial seams only; no runner-wide isolation, real consent handling, policy runtime, proof, release, or publication authority |
 | Review rollback or promotion posture | [`ROLLBACK_RUNBOOK.md`](./ROLLBACK_RUNBOOK.md) or [`PROMOTION_RUNBOOK.md`](./PROMOTION_RUNBOOK.md) | Documentation hold boundaries only; no operational execution |
-| Design source refresh | Read [`SOURCE_REFRESH_RUNBOOK.md`](./SOURCE_REFRESH_RUNBOOK.md) as proposal lineage | Reconcile paths, commands, owners, authorities, and outputs before use |
+| Review the current source-refresh posture or repository-visible source-head metadata | [`SOURCE_REFRESH_RUNBOOK.md`](./SOURCE_REFRESH_RUNBOOK.md) | Repository-only review and minimized handoff; no network, credentials, source activation, payload placement, receipt emission, lifecycle mutation, or watcher authority |
 | Rollback-drill, validation, or vendor-watch operation | **STOP — scaffold only** | A scaffold cannot be executed or cited as operational admission |
 | Live or source-derived sensitive material | **STOP and escalate** | Use an approved handling environment and accountable reviewers |
 
@@ -136,7 +137,7 @@ docs/runbooks/people-dna-land/
 ├── PROMOTION_RUNBOOK.md         # promotion HOLD boundary
 ├── ROLLBACK_DRILL.md            # explicit scaffold
 ├── ROLLBACK_RUNBOOK.md          # rollback HOLD boundary
-├── SOURCE_REFRESH_RUNBOOK.md    # proposal-era procedure
+├── SOURCE_REFRESH_RUNBOOK.md    # source-refresh HOLD boundary
 ├── VALIDATION_RUNBOOK.md        # explicit scaffold
 ├── VENDOR_WATCH_SOP.md          # explicit scaffold
 └── revocation.md                # propagation review and closure handoff
@@ -232,11 +233,11 @@ Re-review this boundary when child files, executable profiles, tabletop procedur
 Open items remain:
 
 1. assign accountable privacy, consent, Indigenous/Tribal, legal, domain, source, data-custody, security, evidence, policy, operations, release, and independent-review roles;
-2. reconcile `SOURCE_REFRESH_RUNBOOK.md` against current repository paths and tools;
+2. resolve source-descriptor topology, admission ownership, connector implementation, policy-runtime, receipt, custody, and review bindings before any live source-refresh design;
 3. fill, supersede, or retire the three remaining explicit scaffolds through file-specific review;
 4. verify consent status, rights, retention/erasure decisions, complete dependency discovery, receipt authentication, action executors, post-action verification, active policy runtime, approved sensitive-data handling, proof production, release dry-run, operational rollback, and publication controls before any maturity claim;
 5. preserve separate states for documentation, tabletop rehearsal, validation, review, admission, source health, lifecycle promotion, cleanup, correction, withdrawal, erasure, release, deployment, and publication.
 
-To roll back this v1.5.0 revocation-index reconciliation, revert its focused documentation commit and restore prior blob `30c4bf4c16ff46e118e439bf0ee4498a8c274737`. Restoring the prior blob would also restore the obsolete scaffold classification. Neither documentation action alters tests, vendor accounts, policy, sources, evidence, lifecycle state, cleanup, releases, deployments, revocations, withdrawals, erasures, or published material.
+To roll back this v1.6.0 source-refresh index reconciliation, revert its focused documentation commit and restore prior blob `3b1441382983766c9fc5575c0fd3197cdf6bd0c2`. Restoring the prior blob would also restore the obsolete proposal-era classification. Neither documentation action retrieves a source or alters tests, vendor accounts, policy, source admission, evidence, receipts, lifecycle state, cleanup, releases, deployments, revocations, withdrawals, erasures, or published material.
 
 [Back to top](#top)
