@@ -25,7 +25,6 @@ related:
   - control_plane/source_authority_register.yaml
   - contracts/source/
   - schemas/contracts/v1/source/
-  - schemas/contracts/v1/events/
   - schemas/contracts/v1/receipts/
   - policy/sensitivity/
   - policy/sources/
