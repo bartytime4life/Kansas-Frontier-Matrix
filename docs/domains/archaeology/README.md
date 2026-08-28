@@ -2,7 +2,7 @@
 doc_id: kfm://doc/docs-domains-archaeology-readme
 title: Archaeology and Cultural Heritage — Domain Documentation
 type: standard
-version: v2.2.2
+version: v2.2.3
 owning_root: docs/
 responsibility: "Document Archaeology and Cultural Heritage domain boundaries, current evidence, holds, and non-effects."
 truth_posture: "Mixed: confirmed repository evidence with proposed, unverified, and held domain controls."
@@ -22,7 +22,7 @@ related:
 tags: [kfm, domains, archaeology, cultural-heritage, sensitivity, care, t4]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned (doctrine-adjacent landing doc).
-  - Repository paths were inspected at main@e52165e820b07e65c54830fde519a9c90df8eb1c; presence, implementation, evaluator binding, review, release, and publication remain separate states.
+  - Repository paths were inspected at main@eab60b430fe7557142a766402dff08945d880156; presence, implementation, evaluator binding, review, release, and publication remain separate states.
   - Sensitivity defaults follow Atlas v1.1 §24.5 (T0–T4); see Sensitivity section.
   - Per-source tier assignments in the Source families table are INFERRED, not Atlas §15.D doctrine (which leaves rights NEEDS VERIFICATION).
 [/KFM_META_BLOCK_V2] -->
@@ -106,7 +106,7 @@ The domain's mission, drawn from the *KFM Domains Culmination Atlas* v1.1 §15 a
 | Implementation maturity | **PARTIAL / MIXED.** Current main contains the documented responsibility-root lanes, contracts and schema projections, policy scaffolds, fixtures, lifecycle documentation, and a non-vacuous EvidenceBundle convergence validator/test/workflow. The governed API archaeology route has no executable handler, most named domain tests remain docstring-only placeholders, the exact-location ADR candidate is unassigned/proposed, and no release or publication state is established. |
 
 > [!NOTE]
-> The current repository was inspected at `main@e52165e820b07e65c54830fde519a9c90df8eb1c`. File presence and the bounded EvidenceBundle convergence proof are `CONFIRMED`; merged PR #3709 closes the public `socket.SocketType` alias bypass, while direct private `_socket.socket` construction remains outside the shared guard and keeps its broader no-egress posture on `HOLD`; evaluator binding, protected-data use, specialist review, release, deployment, promotion, and publication remain unproved or held. Google Drive doctrine is lineage, not repository implementation authority.
+> The current repository was inspected at `main@eab60b430fe7557142a766402dff08945d880156`. File presence and the bounded EvidenceBundle convergence proof are `CONFIRMED`; merged PRs #3709 and #3718 route both the public `socket.SocketType` alias and direct private `_socket.socket` constructor through the guarded subclass. Named Python-process enforcement is `CONFIRMED / BOUNDED`, while runner-wide, non-Python, and non-named API no-egress remains on `HOLD`; evaluator binding, protected-data use, specialist review, release, deployment, promotion, and publication remain unproved or held. Google Drive doctrine is lineage, not repository implementation authority.
 
 [Back to top](#contents)
 
@@ -443,7 +443,7 @@ The current repository has one bounded, non-vacuous Archaeology EvidenceBundle c
 | Surface | Current evidence | Disposition |
 |---|---|---|
 | EvidenceBundle projection | `tools/validators/validate_archaeology_evidence_bundle_projection.py`, three schema-convergence `unittest` cases, shared valid/invalid fixtures, and `.github/workflows/archaeology-evidence-bundle-convergence.yml` | **CONFIRMED bounded proof** — schema delegation and fixture polarity only. |
-| No-network fixture execution | `test_no_network_fixtures.py` starts fresh guarded Python interpreters, validates the shared fixtures, and exercises a denied `socket.socket` connection probe; merged PR #3709 routes the public `socket.SocketType` alias through the guarded subclass, while current main still leaves direct private `_socket.socket` construction outside the guard | **PARTIAL / HOLD** — the named fixture commands and public constructor path passed, but the remaining private constructor path prevents a complete Python no-egress claim; no runner-wide, non-Python, or non-named API isolation. |
+| No-network fixture execution | `test_no_network_fixtures.py` starts fresh guarded Python interpreters, validates the shared fixtures, and exercises a denied `socket.socket` connection probe; merged PRs #3709 and #3718 route both public `socket.SocketType` and direct private `_socket.socket` construction through the guarded subclass, with focused fresh-interpreter denial proofs | **CONFIRMED / BOUNDED** — named Python-process fixture and constructor paths pass; runner-wide, non-Python, dependency-install, and non-named API isolation remain `HOLD`. |
 | Exact sensitive geometry denial | `tests/domains/archaeology/test_exact_sensitive_geometry_denial.py` is docstring-only; exact-location Rego files are default-only or greenfield stubs | **HOLD** — no evaluator-backed denial proof. |
 | Public no-leak | `test_public_no_leak.py` is docstring-only | **HOLD** — no public-surface leakage proof. |
 | Candidate-not-site | `test_candidate_not_site.py` is docstring-only | **HOLD** — no executable anti-collapse proof. |
@@ -541,7 +541,7 @@ Current repository evidence supports the bounded checks below. Missing commands 
 
 | Check | Current surface | Failure / limit |
 |---|---|---|
-| Archaeology EvidenceBundle convergence | `.github/workflows/archaeology-evidence-bundle-convergence.yml` runs compile, five focused tests, guarded shared-fixture validation, and a denied `socket.socket` connection probe | The exact PR #3702 workflow passed and merged PR #3709 closes the public `socket.SocketType` alias bypass; direct private `_socket.socket` construction remains outside the current guard, so the broader no-egress posture stays on `HOLD`. Proves no runner-wide isolation, governed runtime, or release state. |
+| Archaeology EvidenceBundle convergence | `.github/workflows/archaeology-evidence-bundle-convergence.yml` runs compile, five focused tests, guarded shared-fixture validation, and a denied `socket.socket` connection probe | The exact PR #3702 workflow passed; merged PRs #3709 and #3718 close the public and direct private constructor gaps with focused proofs. This remains bounded Python-process evidence and proves no runner-wide isolation, governed runtime, or release state. |
 | Repository documentation checks | Use only repository-native checks that actually exist at the tested head | Do not invent the older illustrative `link-check`, `meta-block`, `terminology-parity`, `truth-label-lint`, or `stale-scan` commands. |
 | Review of this README | Confirm metadata markers, balanced fences, relative-path presence, no stale repository-unmounted claims, and no sensitive payloads | Documentation-only evidence; no policy, source, release, or publication authority. |
 
@@ -647,6 +647,7 @@ The live repository resolves several former path questions while leaving authori
 | v2.1.0 → v2.2.0 | Recorded the executable no-network fixture proof and guarded EvidenceBundle workflow commands | bounded validation correction | Distinguish Python-process enforcement from runner-wide, non-Python, runtime, policy, proof, release, or publication authority. |
 | v2.2.0 → v2.2.1 | Reclassified no-network fixture execution after the shared guard's post-merge review identified a `socket.SocketType` bypass; completed required ownership/truth metadata and repaired two repository-root related targets | evidence correction | Preserve the passed named-command proof while preventing it from being read as complete Python no-egress enforcement, and keep changed-path documentation QA reviewable. |
 | v2.2.1 → v2.2.2 | Reconciled the merged public constructor repair against the remaining direct private `_socket.socket` bypass on current main | evidence correction | Credit the bounded fix without overstating Python no-egress coverage or importing unmerged dependency bytes. |
+| v2.2.2 → v2.2.3 | Reconciled merged PR #3718 and current guard bytes after the direct private constructor repair | evidence correction | Mark the named Python-process proof confirmed and bounded while preserving runner-wide, non-Python, dependency-install, and non-named API holds. |
 
 > **Backward compatibility.** Renamed sections retain explicit aliases for the three v1 anchors (`#directory-tree-proposed`, `#api-contract-and-schema-surfaces-proposed`, and `#validators-tests-fixtures-proposed`). New sections (Open questions register, Changelog, Definition of done) remain before FAQ and Appendix; the Contents list is renumbered accordingly. Content was reconciled in v2.1.0, so compatibility here means stable legacy link targets rather than byte-for-byte preservation.
 
