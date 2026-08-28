@@ -3,13 +3,13 @@ doc_id: kfm://doc/architecture/maplibre-master
 title: MapLibre Master — Components, Functions, Features Architecture Register
 type: architecture
 subtype: component-capability-register
-version: v2.4-draft
+version: v2.5-draft
 status: "draft; repository-grounded; architecture-accepted; production-runtime-hold; no-release; no-publication"
 owners:
   - "@bartytime4life — verified default repository review route"
   - "NEEDS VERIFICATION — architecture, map-runtime, Explorer, security, accessibility, release, and independent-review stewardship"
 created: 2026-05-25
-updated: 2026-08-27
+updated: 2026-08-28
 policy_label: "repository-facing; architecture; maplibre; renderer-boundary; public"
 owning_root: docs/
 current_path: docs/architecture/maplibre-master.md
@@ -31,15 +31,15 @@ truth_posture: >
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 232f7aeda87abbc46c85a8dd37b75cc9def8a2c5
-  target_prior_blob: 6d7ff09d8d43b3175e9ff4ffb37816feadb5c5b6
+  base_commit: 2a205c8df31ff95a61f72a52489336b924a791ac
+  target_prior_blob: 45bfa58e3d57a7c2abd5ba60be3470031e1c1bde
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
-  adr_index_blob: 419ebd60db28404edb0d363125c85f6f15deaec0
-  adr_0006_blob: 3b789a623a07d27eb538ffaed10b0487ffc43d95
-  adr_0007_blob: 6bfd66b1169728d7fad08f0bb2d7e2a56e3577b2
-  maplibre_package_manifest_blob: b0582955feeb51016327113692fa5c98ecad8816
-  maplibre_package_entry_blob: 91664eb00583f9e3d0405eb7954fefa9a48f4ee9
+  adr_index_blob: dad651854ba7d37a3b29008dc8a90c0589caa030
+  adr_0006_blob: 4bf4292dc05a85fd4cd829c491808b13894bc223
+  adr_0007_blob: 2482eea382fd97e68544bb04bc2e2ea1e1cedebe
+  maplibre_package_manifest_blob: f6d450af19c33011e159e123c8a07ca2bca6dfd3
+  maplibre_package_entry_blob: 08a48ac008665317833a9476b21cd35b1679c595
   explorer_adapter_blob: 663ba0f7a05498948f67d644387c73ab19d5c16c
   acquisition_inventory_blob: 2d5b9f0cf494ebb6f3cfc6e4f12acb497572edcf
   readiness_validator_blob: d9f189fd6f726ff6085371f7d69f2b035474e3fc
@@ -80,8 +80,9 @@ tags: [kfm, architecture, maplibre, renderer, map-runtime, components, functions
 notes:
   - "Same-path documentation modernization only. No ADR, contract, schema, policy, dependency, lockfile, source, validator, runtime, release, deployment, or publication state changes."
   - "The prior edition repeatedly promoted planning lineage and absent paths into present-tense architecture facts. This revision separates upstream capability, maintainer direction, proposed ADR state, repository implementation, validation evidence, and release/publication state."
-  - "Issue #2957 records maintainer direction for seven of eight MapLibre architecture choices; acquisition enforcement remains HOLD and ADR-0006/0007 remain effectively proposed."
-  - "MapLibre GL JS 6.6.0 is an exact readiness candidate, not an admitted KFM dependency."
+  - "Issue #2957 is closed and ADR-0006/0007 are accepted architecture; exact dependency selection, bounded implementation, runtime readiness, and operational transitions remain separate evidence states."
+  - "Current main implements exact maplibre-gl 6.6.0 and lock closure at packages/maplibre, a renderer-neutral port, a bounded package-owned adapter, a Vite worker seam, focused tests, and an isolated browser fixture."
+  - "Explorer production composition remains on NullMapRuntime; the Sites-derived Explorer's direct acquisition remains a nonconforming reconciliation HOLD rather than a second renderer authority."
   - "Legacy section headings and anchors are retained for inbound-link compatibility."
 [/KFM_META_BLOCK_V2] -->
 
@@ -92,19 +93,19 @@ notes:
 
 > **Operating boundary.** MapLibre may become KFM's browser map renderer and interaction runtime only behind governed, reviewable interfaces. It is never the evidence source, canonical store, policy engine, citation authority, review authority, release authority, publisher, or AI authority.
 
-![status](https://img.shields.io/badge/status-v2.0--draft-d4a72c?style=flat-square)
+![status](https://img.shields.io/badge/status-v2.5--draft-d4a72c?style=flat-square)
 ![evidence](https://img.shields.io/badge/evidence-repository--grounded-1a7f37?style=flat-square)
-![decisions](https://img.shields.io/badge/ADR--0006%2F0007-proposed-b54708?style=flat-square)
+![decisions](https://img.shields.io/badge/ADR--0006%2F0007-accepted-1a7f37?style=flat-square)
 ![candidate](https://img.shields.io/badge/readiness_candidate-6.6.0-0969da?style=flat-square)
-![dependency](https://img.shields.io/badge/dependency-not__admitted-6e7781?style=flat-square)
+![dependency](https://img.shields.io/badge/dependency-6.6.0__implemented-0969da?style=flat-square)
 ![runtime](https://img.shields.io/badge/runtime-HOLD-b42318?style=flat-square)
 ![publication](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)
 
 > [!IMPORTANT]
-> **This register is not a renderer decision or conformance certificate.** It describes upstream MapLibre capabilities, KFM architecture intent, and the exact bounded implementation evidence present at the pinned revision. ADR-0006 and ADR-0007 remain effectively `proposed`; a component row marked `SUPPORTED UPSTREAM` or `DIRECTION RECORDED` does not admit a package, plugin, protocol, source, layer, artifact, release, or public route.
+> **This register is not a renderer conformance certificate.** It describes upstream MapLibre capabilities, accepted KFM architecture, and the exact bounded implementation evidence present at the pinned revision. ADR-0006 and ADR-0007 are accepted, but a component row marked `SUPPORTED_UPSTREAM`, `IMPLEMENTED_BOUNDED`, or `DIRECTION_RECORDED` does not admit a plugin, protocol, source, layer, artifact, release, deployment, or public route.
 
 > [!CAUTION]
-> **Current runtime posture is `HOLD`.** `packages/maplibre/` is a private dependency-free `0.0.0` scaffold, its entry point exports only a placeholder, and the Explorer `MapLibreAdapter.ts` is comment-only. The current readiness classifier targets exact MapLibre GL JS `6.6.0`, but the dependency is unpinned and the twelve browser/runtime probes are not established by this document.
+> **Current production-runtime posture is `HOLD`.** `packages/maplibre/` is a private `0.0.0` package with exact `maplibre-gl@6.6.0`, lock closure, a renderer-neutral `MapRuntimePort`, a bounded package-owned adapter, Vite worker configuration, focused tests, and an isolated real-browser fixture. The normal `explorer-web` composition still uses `NullMapRuntime`; the broader twelve-probe packet, governed source/layer behavior, accessibility, performance, long-session, release, deployment, and publication evidence remain incomplete or unestablished. The Sites-derived Explorer's direct MapLibre acquisition is a separate conformance HOLD under ADR-0006.
 
 > [!WARNING]
 > **Rendering success is not truth.** A map, hit-test result, popup, screenshot, performance sample, visual-diff image, tile, style, or feature property is a downstream representation. Consequential claims still require governed evidence resolution, policy and sensitivity checks, review and release state, correction lineage, and an appropriate rollback path.
@@ -113,18 +114,18 @@ notes:
 
 | Axis | Current bounded result |
 |---|---|
-| **Evidence snapshot** | `main@232f7aeda87abbc46c85a8dd37b75cc9def8a2c5` |
+| **Evidence snapshot** | `main@2a205c8df31ff95a61f72a52489336b924a791ac` |
 | **Placement** | `PLACE` at the existing `docs/architecture/maplibre-master.md`; accepted ADR-0029 assigns human architecture guidance to `docs/` |
-| **Decision authority** | ADR-0029 is accepted; ADR-0006 and ADR-0007 are proposed |
-| **Maintainer direction** | Issue #2957 records the intended physical home, port/adapter seam, dependency owner, renderer-family direction, consumer migration, admission split, and rollback; acquisition enforcement remains `HOLD` |
-| **Reusable package** | `packages/maplibre/` exists as private `@kfm/maplibre` `0.0.0`; no renderer dependency, scripts, exports, engines, or implementation API are established |
-| **Explorer application** | A real Vite/TypeScript, map-first, trust-visible shell exists; its map selection and Evidence Drawer laboratory remain renderer-neutral |
-| **Concrete adapter** | Not implemented; `apps/explorer-web/src/adapters/MapLibreAdapter.ts` is one boundary comment |
-| **Acquisition evidence** | Deterministic no-network inventory exists; its `HOLD` is structural evidence, not renderer admission or enforcement closure |
+| **Decision authority** | ADR-0029, ADR-0006, and ADR-0007 are accepted in their stated scopes |
+| **Architecture disposition** | ADR-0006 binds the package-owned port/adapter and acquisition seam; ADR-0007 binds MapLibre GL JS as the sole normal browser renderer family; neither decision grants runtime, source, release, deployment, or publication authority |
+| **Reusable package** | `packages/maplibre/` is private `@kfm/maplibre` `0.0.0` with exact `maplibre-gl@6.6.0`, lock closure, focused scripts, renderer-neutral root exports, and explicit adapter/Vite-adapter exports |
+| **Explorer applications** | `explorer-web` is a Vite/TypeScript, map-first, trust-visible shell whose normal composition remains renderer-neutral; `kansas-frontier-matrix-explorer` is a separately tracked Sites-derived app that directly acquires MapLibre and remains a package-seam/parallel-shell reconciliation HOLD |
+| **Concrete adapter** | `packages/maplibre/src/maplibre-adapter.ts` implements bounded construction, camera synchronization, finite failures, and teardown; the app-local `MapLibreAdapter.ts` remains a comment-only compatibility marker |
+| **Acquisition evidence** | Deterministic no-network inventory and fail-closed workflow enforcement exist; current main still reports the Sites-derived app's direct acquisition as outside the accepted candidate seam |
 | **Readiness evidence** | Exact `6.6.0` classifier and fixtures exist; a `READY` result would be review eligibility only, not admission or release |
 | **Renderer capability profile** | Fixture-only, inactive, review-pending candidate with no runtime or public effect |
 | **Map data carrier checks** | Inactive metadata and compatibility checks exist for selected declarations; production byte conformance and release are not established |
-| **Deployed/public MapLibre runtime** | `UNKNOWN` / not established by inspected repository evidence |
+| **Deployed/public MapLibre runtime** | Child documentation records Sites deployment lineage; current production health, repository-wide conformance, source/layer release, and publication authority remain `UNKNOWN`, held, or separately governed |
 
 **Quick navigation:** [Purpose](#1-purpose--scope) · [Method](#2-the-cff-method) · [Renderers](#3-renderers) · [Styles](#4-style-language--expressions) · [Assets](#5-assets--sprites-glyphs-images) · [Formats](#6-tile--data-formats) · [3D](#7-maplibre-3d--pointer-and-summary) · [Dependencies](#8-plugins-dependency-governance) · [Runtime evidence](#9-renderreceipt--runtime-probes) · [Objects](#10-required-object-families) · [Admission](#11-verify-before-addsource-sequence) · [Placement](#12-repository-placement) · [Validation](#13-tests-ci-gates--rollback) · [Anti-patterns](#14-anti-patterns) · [Open work](#15-open-questions--needs-verification) · [Related](#16-related-docs) · [State matrix](#appendix-a--component-state-matrix) · [No-loss ledger](#appendix-b--no-loss-modernization-ledger)
 
@@ -156,9 +157,9 @@ It is intentionally **not**:
 | Question | Owning authority | Role of this register |
 |---|---|---|
 | Where this architecture page belongs | Accepted ADR-0029 and [`directory-rules.md`](../doctrine/directory-rules.md) | Explain the same-path architecture placement |
-| Whether the adapter seam is binding | [`ADR-0006`](../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) after reviewed acceptance | Track current proposal and evidence; never accept it implicitly |
-| Whether MapLibre is the sole browser renderer family | [`ADR-0007`](<../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) after reviewed acceptance | Record current maintainer direction and remaining HOLD |
-| Which version/dependency may be acquired | Separate dependency-admission review, owning package manifest, lockfile, supply-chain evidence | Record candidate identity only |
+| Whether the adapter seam is binding | Accepted [`ADR-0006`](../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) | Record conformance evidence and unresolved acquisition drift without reopening the accepted seam |
+| Whether MapLibre is the sole browser renderer family | Accepted [`ADR-0007`](<../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) | Record accepted family scope and remaining implementation/runtime HOLDs |
+| Which version/dependency may be acquired | Separate dependency-admission review, owning package manifest, lockfile, and supply-chain evidence | Record exact implemented selection and unresolved review limits without converting implementation into release authority |
 | What a KFM object means | `contracts/` | Link semantic authority; do not redefine it |
 | What machine shape is valid | `schemas/` | Link machine authority; do not infer conformance from prose |
 | What is allowed, denied, held, generalized, or restricted | `policy/` and authorized review | State obligations; do not make policy decisions |
@@ -195,7 +196,8 @@ Each register row separates **capability**, **KFM intent**, **repository evidenc
 | `STRUCTURAL_HOLD` | Deterministic inspection completed but unresolved architecture, acquisition, or policy prevents admission. |
 | `RUNTIME_HOLD` | Browser/device/runtime evidence is missing, failed, unauthenticated, or not accepted. |
 | `REVIEW_REQUIRED` | Evidence exists but an authorized review or decision remains. |
-| `ADMITTED` | A specific dependency/capability is accepted for a named scope; this document does not currently establish this state for MapLibre. |
+| `IMPLEMENTED_BOUNDED` | Current code and focused tests establish a named implementation slice, while broader runtime, conformance, release, or public effects remain held. |
+| `ADMITTED` | A specific dependency/capability is accepted for a named scope. Exact package selection and lock closure alone do not establish this state. |
 | `RELEASED` | A governed release references verified public-safe artifacts with correction and rollback. Not established here. |
 | `UNKNOWN` | Current evidence does not support a stronger statement. |
 
@@ -242,24 +244,24 @@ Each capability row SHOULD identify:
 
 | Concern | Current state | Evidence-backed conclusion |
 |---|---|---|
-| Physical reusable home | `DIRECTION_RECORDED` | Issue #2957 accepts `packages/maplibre/` as the intended sole reusable home; ADR text has not yet made that decision accepted |
-| KFM-owned port | `DIRECTION_RECORDED` / not implemented | Maintainer direction calls for one renderer-neutral `MapRuntimePort`; no concrete TypeScript port was verified |
-| Concrete adapter | `PRESENT_SCAFFOLD` | Explorer `MapLibreAdapter.ts` is comment-only; package entry point is a placeholder |
-| Dependency owner | `DIRECTION_RECORDED` | Intended owner is `packages/maplibre/package.json`; it currently declares no dependencies |
-| Renderer family | `DIRECTION_RECORDED` / ADR proposed | Maintainer direction chooses MapLibre GL JS as the sole normal production browser renderer family; ADR-0007 remains proposed |
-| Peer-renderer exception | `DIRECTION_RECORDED` | A separately accepted scoped exception or successor ADR is intended for any independent engine owning map/scene lifecycle |
-| Exact version | `READINESS_CANDIDATE` | Current classifier targets `6.6.0` at upstream tag commit `407a8ce…`; no version is admitted |
+| Physical reusable home | `ACCEPTED / IMPLEMENTED_BOUNDED` | ADR-0006 binds `packages/maplibre/` as the sole reusable browser-renderer acquisition home, and current implementation occupies that path |
+| KFM-owned port | `IMPLEMENTED_BOUNDED` | `map-runtime-port.ts` defines the renderer-neutral lifecycle, camera, selection, snapshot, finite-state, and listener surface used by Explorer code and tests |
+| Concrete adapter | `IMPLEMENTED_BOUNDED` | The package-owned adapter constructs MapLibre with an empty inline style, synchronizes camera state, fails closed, and tears down; source/layer/protocol/plugin behavior remains absent |
+| Dependency owner | `ACCEPTED / IMPLEMENTED_BOUNDED` | ADR-0006 assigns the accepted seam to `packages/maplibre/`; its manifest owns exact `maplibre-gl@6.6.0` with matching root lock closure, while the Sites-derived app's duplicate direct dependency remains a conformance HOLD |
+| Renderer family | `ACCEPTED` | ADR-0007 selects MapLibre GL JS as the sole normal production browser renderer family without granting runtime or release authority |
+| Peer-renderer exception | `ACCEPTED` | A peer browser renderer requires a separately accepted scoped exception or successor ADR |
+| Exact version | `IMPLEMENTED_BOUNDED / READINESS_CANDIDATE` | Current package and lock select exact `6.6.0`; the readiness classifier targets the same version, while accountable supply-chain and broader runtime acceptance remain separate |
 | Browser/runtime proof | `RUNTIME_HOLD` | Twelve named probes are required by the current classifier; this page does not establish accepted results |
 | Release/publication | none | No renderer release or public MapLibre runtime is established by this register |
 
 > [!NOTE]
-> `ACCEPT` in issue #2957 records maintainer direction for decision-packet choices; it is not an ADR status transition. The canonical ADR index still records ADR-0006 and ADR-0007 as proposed.
+> Issue #2957 is closed decision-packet lineage. The canonical ADR index and both source records now establish ADR-0006 and ADR-0007 as accepted. Their acceptance does not by itself authenticate the implemented dependency, browser fixture, Sites deployment lineage, broader runtime probes, or any release/publication transition.
 
 ### 3.2 Renderer, plugin, protocol, custom layer, and peer renderer
 
-These definitions are **PROPOSED architecture vocabulary** pending the owning ADR packet:
+These definitions apply the accepted seam and renderer-family decisions from ADR-0006 and ADR-0007; concrete plugin, protocol, overlay, custom-layer, and exception admissions remain separate:
 
-| Term | Proposed KFM meaning |
+| Term | Bounded KFM meaning |
 |---|---|
 | **Renderer** | Browser engine that owns primary map/scene rendering, camera, hit testing, and map interaction lifecycle. |
 | **Adapter** | KFM-owned implementation translating governed descriptors and KFM events into renderer operations without leaking renderer-native types. |
@@ -270,7 +272,7 @@ These definitions are **PROPOSED architecture vocabulary** pending the owning AD
 
 ### 3.3 Port boundary target
 
-The intended `MapRuntimePort` exposes KFM-owned concepts only. Its final API remains an ADR/contract/implementation question, but it should cover no more than needed to:
+The implemented `MapRuntimePort` exposes KFM-owned concepts only for lifecycle, camera, finite state, selection, snapshots, subscriptions, and teardown. Future source/layer/style behavior remains a separate contract and implementation question and should cover no more than needed to:
 
 - initialize and dispose a map runtime;
 - apply admitted styles, sources, and layers through governed descriptors;
@@ -283,7 +285,7 @@ It must not expose raw MapLibre `Map`, style, source, layer, worker, protocol, i
 
 ### 3.4 Current Explorer relationship
 
-The merged Explorer site provides a real map-first, trust-visible shell and renderer-neutral selection → governed resolution → Evidence Drawer laboratory. That is useful downstream evidence, but it does not create a working MapLibre runtime. A later adapter must feed the existing governed selection contract rather than widening it with arbitrary feature properties.
+The normal `explorer-web` composition provides a real map-first, trust-visible shell and renderer-neutral selection → governed resolution → Evidence Drawer laboratory while retaining `NullMapRuntime`. The implemented package adapter is exercised only through a bounded browser fixture; any later normal-entrypoint activation must feed the existing governed selection contract rather than widening it with arbitrary feature properties.
 
 [Back to top](#top)
 
@@ -653,17 +655,17 @@ Accepted ADR-0029 adopts Directory Rules v2. This same-path update is a `PLACE` 
 | Responsibility | Current home | State |
 |---|---|---|
 | Architecture register | `docs/architecture/maplibre-master.md` | `CONFIRMED` same path |
-| Renderer decisions | `docs/adr/ADR-0006…`, `ADR-0007…`, canonical `docs/adr/INDEX.md` | `CONFIRMED` paths; decisions proposed |
-| Reusable package scaffold | `packages/maplibre/` | `CONFIRMED` path/scaffold; intended home direction recorded |
-| Package source entry | `packages/maplibre/src/index.ts` | `CONFIRMED` placeholder |
-| Explorer app | `apps/explorer-web/` | `CONFIRMED` deployable/application responsibility; actual deployment not established |
-| Explorer placeholder adapter | `apps/explorer-web/src/adapters/MapLibreAdapter.ts` | `CONFIRMED` comment-only; intended future role is renderer-neutral bootstrap/composition |
-| Acquisition inventory | `tools/validators/maplibre/assess_acquisition_inventory.py` | `CONFIRMED` non-authoritative structural assessment |
+| Renderer decisions | `docs/adr/ADR-0006…`, `ADR-0007…`, canonical `docs/adr/INDEX.md` | `CONFIRMED` paths and accepted decisions; operational transitions remain separate |
+| Reusable package implementation | `packages/maplibre/` | `CONFIRMED` accepted home with exact dependency, lock closure, renderer-neutral port/null runtime, bounded adapter, Vite worker seam, and focused tests |
+| Package source entry | `packages/maplibre/src/index.ts` | `CONFIRMED` renderer-neutral port and null-runtime facade; concrete adapters use explicit subpath exports |
+| Explorer apps | `apps/explorer-web/`, `apps/kansas-frontier-matrix-explorer/` | `CONFIRMED` deployable/application responsibility; normal `explorer-web` remains null-runtime, while the Sites-derived app's direct acquisition is a conformance HOLD |
+| App-local Explorer marker | `apps/explorer-web/src/adapters/MapLibreAdapter.ts` | `CONFIRMED` comment-only compatibility/boundary marker; not the package-owned renderer importer |
+| Acquisition inventory | `tools/validators/maplibre/assess_acquisition_inventory.py` | `CONFIRMED` fail-closed structural assessment and workflow signal; current direct-acquisition hold remains unresolved |
 | Readiness classifier | `tools/validators/maplibre/validate_v6_readiness.py` | `CONFIRMED` exact-candidate classifier |
 | MapLibre fixtures/tests | `fixtures/maplibre/`, `tests/maplibre/` | `CONFIRMED` bounded validation lanes |
 | Renderer capability candidate | `contracts/ui/`, `schemas/contracts/v1/ui/`, related fixtures/validator/tests | `CONFIRMED` inactive fixture-only packet |
 | Runtime configuration guidance | `configs/maplibre/README.md` and selected config files | `CONFIRMED` docs/config lane; production config not inferred |
-| Performance harness | `scripts/maplibre-smoke-perf.mjs`, `artifacts/perf/` outputs | `CONFIRMED` harness path; current CDN/global acquisition is architecture HOLD |
+| Performance harness | `scripts/maplibre-smoke-perf.mjs`, `artifacts/perf/` outputs | `CONFIRMED` retired finite-HOLD entrypoint; replacement performance execution and artifact authority remain unresolved |
 | Semantic map/release objects | Existing `contracts/` families | Mixed maturity; use owning family rather than a new MapLibre contract root |
 | Machine shapes | Existing `schemas/` responsibility root | Mixed maturity; no new `schemas/contracts/v1/maplibre/` authority is created here |
 | Admissibility | Existing `policy/` responsibility root | No active MapLibre policy bundle is asserted here |
@@ -675,7 +677,7 @@ Accepted ADR-0029 adopts Directory Rules v2. This same-path update is a `PLACE` 
 - `docs/architecture/maplibre-3d.md` is absent; references do not make it present.
 - `schemas/contracts/v1/maplibre/`, `schemas/contracts/v1/3d/`, and `policy/maplibre/` are not asserted as accepted canonical families by this page.
 - `artifacts/perf/` is a generated/performance surface, not release, proof, receipt, or canonical-data authority.
-- the Explorer adapter path must not become a second renderer importer if the package-owned seam is accepted.
+- the app-local Explorer adapter marker and Sites-derived app must not become parallel renderer import authorities outside the accepted package-owned seam.
 
 ### 12.4 Dependency direction target
 
@@ -714,6 +716,8 @@ python tools/validators/maplibre/assess_acquisition_inventory.py --repo-root . -
 python -m unittest tests.maplibre.test_validate_v6_readiness -v
 python tools/validators/maplibre/validate_v6_readiness.py --fixtures
 python tools/validators/maplibre/validate_v6_readiness.py --scan-root .
+
+pnpm --filter @kfm/maplibre test
 
 python -m unittest tests.validators.ui.test_renderer_capability_profile -v
 python tools/validators/ui/validate_renderer_capability_profile.py --fixtures
@@ -757,10 +761,10 @@ At minimum, later implementation should prove failure or hold for:
 
 | Transition | Rollback target |
 |---|---|
-| This documentation update | Restore prior blob `6d7ff09d8d43b3175e9ff4ffb37816feadb5c5b6` through reviewed history |
+| This documentation update | Restore prior blob `45bfa58e3d57a7c2abd5ba60be3470031e1c1bde` through reviewed history |
 | Architecture decision | Revert reviewed ADR/index transition; preserve decision history rather than silently editing it |
 | Port/consumer migration | Fake/null port plus renderer-neutral consumer types |
-| Dependency admission | Remove package dependency and deterministic lockfile closure; restore dependency-free package scaffold |
+| Dependency implementation/admission | Remove the package dependency and deterministic lockfile closure through reviewed history; retain or restore renderer-neutral consumer behavior and record why the exact dependency was withdrawn |
 | Adapter implementation | Restore prior package implementation while preserving consumer port API where compatible |
 | Runtime candidate | Mark candidate held/denied; do not silently select another version or peer renderer |
 | Released renderer artifacts | Restore prior release/style/layer/tile manifest set and invalidate affected caches |
@@ -777,7 +781,7 @@ No data/source release needs semantic rollback merely because a browser renderer
 | Anti-pattern | Why it fails | Required correction |
 |---|---|---|
 | Treating upstream support as KFM implementation | Confuses product capability with admitted repository behavior | Separate upstream, direction, decision, implementation, runtime, release, publication axes |
-| Treating issue `ACCEPT` as ADR acceptance | Bypasses source/index status and required review | Update ADR source and canonical index together only through explicit reviewed transition |
+| Treating historical issue disposition as current ADR or runtime evidence | Collapses decision lineage, current source/index status, and later implementation/runtime state | Read accepted ADR source/index state and exact-current implementation independently |
 | Two writable adapter/package homes | Creates parallel dependency and runtime authority | Retain one physical home or execute a governed migration |
 | App-owned direct renderer import | Leaks renderer types and defeats reusable seam/rollback | Depend on KFM-owned port/package types only |
 | Permanent CDN/global renderer harness | Bypasses package ownership, lockfile, CSP/network and supply-chain controls | Retire/migrate or grant one named time-bounded non-production exception |
@@ -802,26 +806,26 @@ No data/source release needs semantic rollback merely because a browser renderer
 
 ### 15.1 Governance and architecture
 
-- **HOLD — acquisition enforcement:** choose migration/retirement or a named, time-bounded exception for the current CDN/global performance harness; then revise the structural validator to enforce one exact package-owned importer.
-- **NEEDS VERIFICATION — ADR packet:** record the seven decided directions and final acquisition disposition in ADR-0006, ADR-0007, and the canonical index through an architecture-only reviewed change.
-- **NEEDS VERIFICATION — port contract:** exact KFM-owned `MapRuntimePort` types, finite outcomes, effect boundary, lifecycle, and compatibility/versioning.
-- **NEEDS VERIFICATION — Explorer bootstrap:** disposition of the current comment-only adapter path after the package-owned implementation is authorized.
-- **NEEDS VERIFICATION — peer-renderer exception:** exact criteria, evidence, and rollback for any future exception.
+- **HOLD — acquisition conformance:** keep the retired CDN/global performance harness inert and reconcile the Sites-derived Explorer's direct acquisition behind the accepted package seam or through an explicit governed migration; do not baseline the divergence as normal.
+- **CONFIRMED — ADR packet:** ADR-0006, ADR-0007, and the canonical index record the accepted package seam and renderer-family decisions; their historical dependency-free implementation snapshots do not override exact-current code.
+- **PARTIAL — port contract:** the exact TypeScript port, finite states, camera/selection surface, lifecycle, and compatibility profile are implemented; governed source/layer/style operations and broader consumer-version guarantees remain open.
+- **NEEDS VERIFICATION — Explorer bootstrap:** retire or clarify the comment-only app marker and activate the concrete adapter only through the package-owned Vite seam after consumer and runtime gates close.
+- **CONFIRMED architecture / NEEDS VERIFICATION future case — peer renderer:** accepted ADR-0007 requires a separately accepted scoped exception or successor ADR; no such exception is established.
 
 ### 15.2 Dependency and runtime
 
-- **NEEDS VERIFICATION — exact dependency admission:** integrity, license, notices, supply-chain, lockfile, browser support, CSP/worker/network, security, and removal review for the exact version selected after architecture closure.
+- **PARTIAL — exact dependency implementation:** exact `6.6.0`, package ownership, and lock closure are confirmed; accountable license, notices, provenance, vulnerability, transitive-dependency, CSP/worker/network, browser-support, and removal disposition remain `NEEDS VERIFICATION`.
 - **NEEDS VERIFICATION — candidate currentness:** `6.6.0` is the repository's current exact readiness candidate; later upstream releases must not silently retarget admission.
 - **NEEDS VERIFICATION — twelve probes:** exact runner identity, authenticated artifacts, browser/OS/device/GPU coverage, headless parity, and accepted thresholds.
-- **UNKNOWN — public/deployed runtime:** no current public MapLibre deployment or operational trace is established here.
-- **NEEDS VERIFICATION — performance harness:** source fixtures, external glyph dependency, network policy, result authority, artifact retention, and retirement plan.
+- **UNKNOWN — current deployed runtime health:** the Sites-derived child README records deployment lineage, but this register did not authenticate current service health, exact deployed bytes, repository-wide conformance, source/layer release, or publication authority.
+- **NEEDS VERIFICATION — replacement performance lane:** deterministic source fixtures, network policy, result authority, artifact retention, and reviewed execution remain open after retirement of the legacy acquisition harness.
 
 ### 15.3 Objects, artifacts, and release
 
 - **NEEDS VERIFICATION — canonical StyleManifest and TileArtifactManifest schema families.**
 - **NEEDS VERIFICATION — production byte validators** for selected vector/raster/archive carriers and authenticated range delivery.
 - **NEEDS VERIFICATION — RepresentationReceipt profile:** producer, consumer, authority, identity binding, retention, correction, and release linkage.
-- **CONFLICTED — renderer capability profile wording:** the inactive contract says the sole-browser rule is already accepted, while the canonical ADR index records ADR-0007 as proposed. The ADR index controls decision status; reconcile the contract wording in a separate bounded change.
+- **NEEDS VERIFICATION — renderer capability profile currentness:** ADR-0007 is now accepted; verify the inactive profile's implementation and validation claims against current bytes without treating fixture success as runtime or release authority.
 - **NEEDS VERIFICATION — source-layer/property allowlists** across layer, style, tile metadata, and public API payloads.
 - **NEEDS VERIFICATION — sensitive geometry transforms** and domain-specific review thresholds before map delivery.
 - **NEEDS VERIFICATION — correction propagation** through release manifests, endpoints, caches, search, Evidence Drawer, Focus Mode, screenshots, exports, and stories.
@@ -836,7 +840,7 @@ No data/source release needs semantic rollback merely because a browser renderer
 
 ### 15.5 Documentation drift
 
-Adjacent May-era MapLibre architecture and atlas pages still contain proposal-era paths, obsolete Directory Rules labels, absent 3D companion references, and stronger renderer-decision claims than the current ADR index supports. They remain visible drift and should be reconciled in separate, reviewable same-path changes rather than silently broadened into this one-file update.
+Adjacent May-era MapLibre architecture and atlas pages still contain proposal-era paths, obsolete Directory Rules labels, absent 3D companion references, and renderer-decision claims that have not all been repinned to the accepted ADR index and current implementation. They remain visible drift and should be reconciled in separate, reviewable same-path changes rather than silently broadened into this update.
 
 [Back to top](#top)
 
@@ -889,20 +893,20 @@ Adjacent May-era MapLibre architecture and atlas pages still contain proposal-er
 
 | Component / capability | Upstream | Direction / decision | Repository implementation | Validation | Runtime | Release / publication |
 |---|---|---|---|---|---|---|
-| MapLibre GL JS browser renderer | `SUPPORTED_UPSTREAM` | Sole-family direction recorded; ADR proposed | Dependency-free scaffold only | Exact `6.6.0` classifier | `HOLD` | none |
-| `MapRuntimePort` | KFM abstraction | Direction recorded | Not verified as concrete TS port | No complete port contract test | not run | none |
-| Package-owned `MapLibreAdapter` | KFM target | Revised direction recorded | Not implemented | Acquisition inventory incomplete for exact seam | not run | none |
-| Explorer bootstrap | KFM target | Renderer-neutral role intended | Comment-only adapter path; real renderer-neutral site/selection lab exists | Site and selection tests exist | no real renderer | none |
+| MapLibre GL JS browser renderer | `SUPPORTED_UPSTREAM` | Sole-family rule accepted in ADR-0007 | Exact `6.6.0` package and lock closure; bounded adapter and browser fixture | Package, adapter, and isolated browser tests; broader probe packet incomplete | `HOLD` for normal Explorer composition and broader runtime admission | none |
+| `MapRuntimePort` | KFM abstraction | Package seam accepted in ADR-0006 | Renderer-neutral lifecycle, camera, selection, snapshot, finite-state, and listener surface implemented | Focused package and Explorer tests | source/layer/style expansion held | none |
+| Package-owned `MapLibreAdapter` | KFM target | Sole reusable importer accepted in ADR-0006 | Bounded construction, camera synchronization, finite failure, and teardown implemented | Focused package tests plus isolated Vite browser fixture | normal Explorer activation and broader runtime probes held | none |
+| Explorer bootstrap | KFM target | Renderer-neutral role accepted | Normal `explorer-web` entrypoint uses `NullMapRuntime`; isolated package-adapter fixture exists; Sites-derived app acquires MapLibre directly | Unit and browser fixtures exist | package-seam reconciliation and governed activation held | none |
 | Style language | Supported upstream | Governed descriptor/release use intended | No admitted renderer consumer | Mixed schema/contract evidence | not run | none |
-| MVT | Supported upstream | KFM active profile not established | Inactive metadata/compatibility slices | Bounded deterministic checks | no admitted browser consumer | none |
+| MVT | Supported upstream | KFM active profile not established | Inactive metadata/compatibility slices | Bounded deterministic checks | no governed production source/layer consumer established | none |
 | MLT | Supported upstream | KFM posture open | No producer/profile/admission established | none accepted | none | none |
-| PMTiles | Supported ecosystem/carrier | Stable static delivery lineage | Synthetic compatibility and other partial slices | Bounded; cryptographic/public range closure held | no admitted browser consumer | none |
+| PMTiles | Supported ecosystem/carrier | Stable static delivery lineage | Synthetic compatibility and other partial slices | Bounded; cryptographic/public range closure held | no governed production source/layer consumer established | none |
 | Terrain / globe | Supported upstream | Conditional governed use lineage | No admitted dependency/runtime | Readiness probe names exist | not run | none |
 | Custom layers/plugins | Supported extension surface | Behind seam only; per-dependency admission required | No plugin admitted | Acquisition gate `HOLD` | none | none |
 | Renderer capability profile | N/A KFM contract | Inactive comparison candidate | Implemented fixture-only packet | Deterministic `PASS/ABSTAIN/DENY/ERROR` | none | none |
 | Representation receipt | KFM semantic family | Production binding open | Contract/fixtures present | Synthetic checks | no proven emitter | no release effect |
 | Evidence Drawer selection | KFM UI/governed API surface | Renderer-neutral contract retained | Explorer laboratory exists | Focused tests reported in merged site PR | fake/renderer-neutral only | no publication effect |
-| Performance harness | Development harness | Exception/retirement decision `HOLD` | Networked CDN/global `5.5.0` harness exists | Performance tooling exists | environment-specific | not release authority |
+| Performance harness | Development harness | No release authority | Legacy CDN/global entrypoint is retired to a finite `HOLD` response | Static retirement tests only | replacement execution and artifact authority unresolved | none |
 
 [Back to top](#top)
 
@@ -928,15 +932,15 @@ Adjacent May-era MapLibre architecture and atlas pages still contain proposal-er
 | Rollback | Expanded across documentation, ADR, port, dependency, adapter, runtime, release and correction transitions |
 | Anti-patterns | Expanded with current acquisition, authority, fixture, absent-path and evidence-collapse risks |
 | Open questions | Replaced with current issue/ADR/acquisition/readiness/object/release backlog |
-| Upstream version claims | Refreshed to exact repository candidate `6.6.0` at tag commit `407a8ce…`; admission remains separate |
+| Upstream version claims | Refreshed to exact implemented package/lock selection and readiness candidate `6.6.0` at tag commit `407a8ce…`; broader admission remains separate |
 | Legacy heading/anchor compatibility | Preserved for sections 1–16 and appendices |
 
 ### Evidence limits
 
-This modernization inspected repository bytes and selected GitHub issue/PR state at the pinned revision, plus official upstream MapLibre sources. It did not execute a mounted checkout, install dependencies, run browser probes, inspect a deployment, authenticate a public endpoint, or approve any ADR/dependency/release. Hosted pull-request checks are the next executable validation layer.
+This modernization inspected a pinned repository checkout and selected GitHub issue/PR state at the stated revision, plus current package, lock, test, and browser-fixture evidence. It did not authenticate a deployment or public endpoint, establish exact deployed bytes, execute the broader twelve-probe runtime packet, approve a release, or authorize publication. Pull-request validation remains evidence for the exact tested SHA only.
 
 ### Correction and rollback
 
-Before merge, close the draft pull request and delete its branch if the change is rejected. After an authorized merge, revert the documentation commit or restore prior blob `6d7ff09d8d43b3175e9ff4ffb37816feadb5c5b6`. Because this change modifies one architecture document only, rollback requires no package, dependency, lockfile, contract, schema, policy, fixture, validator, source, data, release, deployment, cache, or public correction operation.
+Before merge, close the draft pull request and delete its branch if the change is rejected. After an authorized merge, revert the documentation commit or restore this document's prior blob `45bfa58e3d57a7c2abd5ba60be3470031e1c1bde`. This documentation-only rollback requires no package, dependency, lockfile, contract, schema, policy, fixture, validator, source, data, release, deployment, cache, or public correction operation.
 
 [Back to top](#top)
