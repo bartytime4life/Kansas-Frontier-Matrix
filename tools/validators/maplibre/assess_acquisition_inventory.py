@@ -17,13 +17,15 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
+import stat
 from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import Path
 from typing import Sequence
 
-PROFILE = "kfm-maplibre-acquisition-inventory-v9"
+PROFILE = "kfm-maplibre-acquisition-inventory-v10"
 TEXT_SUFFIXES = frozenset({".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx", ".html"})
 MAX_FILES = 5000
 MAX_INPUT_BYTES = 1024 * 1024
@@ -31,9 +33,19 @@ MAX_TOTAL_INPUT_BYTES = 16 * 1024 * 1024
 SCAN_ROOTS = ("apps", "packages", "runtime", "scripts", "tests", "examples", "public")
 RENDERER_PACKAGES = ("maplibre-gl", "mapbox-gl", "cesium", "leaflet", "ol", "openlayers")
 KFM_RENDERER_FACADES = ("@kfm/maplibre",)
+DESCRIPTOR_SAFETY_SUPPORTED = (
+    hasattr(os, "O_DIRECTORY")
+    and hasattr(os, "O_NOFOLLOW")
+    and os.open in os.supports_dir_fd
+    and os.stat in os.supports_dir_fd
+    and os.stat in os.supports_follow_symlinks
+)
 INPUT_ERROR_KINDS = frozenset(
     {
         "INPUT_TOO_LARGE",
+        "INPUT_CHANGED_DURING_OPEN",
+        "INPUT_DESCRIPTOR_SAFETY_UNAVAILABLE",
+        "INPUT_NOT_REGULAR",
         "MANIFEST_UNREADABLE",
         "INPUT_OUTSIDE_ROOT",
         "SYMLINK_INPUT_DENIED",
@@ -164,6 +176,18 @@ class Result:
 @dataclass
 class ScanBudget:
     scanned_bytes: int = 0
+
+
+class _DescriptorSafetyUnavailable(Exception):
+    pass
+
+
+class _InputChangedDuringOpen(Exception):
+    pass
+
+
+class _InputNotRegular(Exception):
+    pass
 
 
 def _candidate_seam(path: str) -> bool:
@@ -401,6 +425,102 @@ def _iter_files(root: Path) -> tuple[list[Path], bool]:
     return files, False
 
 
+def _same_file_identity(left: os.stat_result, right: os.stat_result) -> bool:
+    return (
+        left.st_dev,
+        left.st_ino,
+        stat.S_IFMT(left.st_mode),
+    ) == (
+        right.st_dev,
+        right.st_ino,
+        stat.S_IFMT(right.st_mode),
+    )
+
+
+def _verified_open_at(
+    parent_fd: int, name: str, flags: int, *, require_directory: bool
+) -> int:
+    snapshot = os.stat(name, dir_fd=parent_fd, follow_symlinks=False)
+    expected_type = stat.S_ISDIR if require_directory else stat.S_ISREG
+    if not expected_type(snapshot.st_mode):
+        raise _InputNotRegular
+    try:
+        descriptor = os.open(name, flags, dir_fd=parent_fd)
+    except OSError as error:
+        try:
+            current = os.stat(name, dir_fd=parent_fd, follow_symlinks=False)
+        except OSError:
+            raise _InputChangedDuringOpen from error
+        if not _same_file_identity(snapshot, current):
+            raise _InputChangedDuringOpen from error
+        raise
+    opened = os.fstat(descriptor)
+    if not _same_file_identity(snapshot, opened):
+        os.close(descriptor)
+        raise _InputChangedDuringOpen
+    if not expected_type(opened.st_mode):
+        os.close(descriptor)
+        raise _InputNotRegular
+    return descriptor
+
+
+def _read_descriptor_bounded(root: Path, path: Path, read_limit: int) -> bytes:
+    if not DESCRIPTOR_SAFETY_SUPPORTED:
+        raise _DescriptorSafetyUnavailable
+
+    relative = path.relative_to(root)
+    if not relative.parts or any(part in {"", ".", ".."} for part in relative.parts):
+        raise _InputChangedDuringOpen
+
+    close_on_exec = getattr(os, "O_CLOEXEC", 0)
+    no_follow = os.O_NOFOLLOW
+    directory_flags = os.O_RDONLY | os.O_DIRECTORY | no_follow | close_on_exec
+    file_flags = (
+        os.O_RDONLY
+        | no_follow
+        | close_on_exec
+        | getattr(os, "O_NONBLOCK", 0)
+    )
+    resolved_root = root.resolve(strict=True)
+    root_snapshot = os.stat(resolved_root, follow_symlinks=False)
+    if not stat.S_ISDIR(root_snapshot.st_mode):
+        raise _InputNotRegular
+    root_fd = os.open(resolved_root, directory_flags)
+    opened_root = os.fstat(root_fd)
+    if not _same_file_identity(root_snapshot, opened_root):
+        os.close(root_fd)
+        raise _InputChangedDuringOpen
+
+    parent_fd = root_fd
+    try:
+        for part in relative.parts[:-1]:
+            next_fd = _verified_open_at(
+                parent_fd, part, directory_flags, require_directory=True
+            )
+            if parent_fd != root_fd:
+                os.close(parent_fd)
+            parent_fd = next_fd
+        file_fd = _verified_open_at(
+            parent_fd, relative.parts[-1], file_flags, require_directory=False
+        )
+        try:
+            chunks: list[bytes] = []
+            remaining = read_limit
+            while remaining:
+                chunk = os.read(file_fd, remaining)
+                if not chunk:
+                    break
+                chunks.append(chunk)
+                remaining -= len(chunk)
+            return b"".join(chunks)
+        finally:
+            os.close(file_fd)
+    finally:
+        if parent_fd != root_fd:
+            os.close(parent_fd)
+        os.close(root_fd)
+
+
 def _read_bounded_text(
     root: Path, path: Path, budget: ScanBudget, *, unreadable_kind: str
 ) -> tuple[str | None, Finding | None]:
@@ -417,8 +537,20 @@ def _read_bounded_text(
     remaining_bytes = max(MAX_TOTAL_INPUT_BYTES - budget.scanned_bytes, 0)
     read_limit = min(MAX_INPUT_BYTES, remaining_bytes) + 1
     try:
-        with path.open("rb") as stream:
-            raw = stream.read(read_limit)
+        raw = _read_descriptor_bounded(root, path, read_limit)
+    except _DescriptorSafetyUnavailable:
+        return None, Finding(
+            "INPUT_DESCRIPTOR_SAFETY_UNAVAILABLE",
+            rel,
+            "descriptor-no-follow-unavailable",
+            False,
+        )
+    except _InputChangedDuringOpen:
+        return None, Finding(
+            "INPUT_CHANGED_DURING_OPEN", rel, "inode-identity-changed", False
+        )
+    except _InputNotRegular:
+        return None, Finding("INPUT_NOT_REGULAR", rel, "not-regular-file", False)
     except OSError:
         return None, Finding(unreadable_kind, rel, path.name, False)
     budget.scanned_bytes += len(raw)
@@ -529,6 +661,9 @@ def scan(root: Path) -> Result:
         if any(
             finding.kind
             in {
+                "INPUT_CHANGED_DURING_OPEN",
+                "INPUT_DESCRIPTOR_SAFETY_UNAVAILABLE",
+                "INPUT_NOT_REGULAR",
                 "INPUT_OUTSIDE_ROOT",
                 "INPUT_TOO_LARGE",
                 "SYMLINK_INPUT_DENIED",
@@ -561,6 +696,14 @@ def scan(root: Path) -> Result:
         reasons.add("SCAN_INPUT_SYMLINK_DENIED")
     if any(finding.kind == "INPUT_OUTSIDE_ROOT" for finding in unique):
         reasons.add("SCAN_INPUT_OUTSIDE_ROOT")
+    if any(finding.kind == "INPUT_CHANGED_DURING_OPEN" for finding in unique):
+        reasons.add("SCAN_INPUT_CHANGED_DURING_OPEN")
+    if any(
+        finding.kind == "INPUT_DESCRIPTOR_SAFETY_UNAVAILABLE" for finding in unique
+    ):
+        reasons.add("SCAN_DESCRIPTOR_SAFETY_UNAVAILABLE")
+    if any(finding.kind == "INPUT_NOT_REGULAR" for finding in unique):
+        reasons.add("SCAN_INPUT_NOT_REGULAR")
     if truncated:
         reasons.add("SCAN_TRUNCATED")
     if any(not finding.candidate_seam for finding in acquisition_findings):
@@ -570,6 +713,9 @@ def scan(root: Path) -> Result:
 
     if reasons.intersection(
         {
+            "SCAN_DESCRIPTOR_SAFETY_UNAVAILABLE",
+            "SCAN_INPUT_CHANGED_DURING_OPEN",
+            "SCAN_INPUT_NOT_REGULAR",
             "SCAN_INPUT_TOO_LARGE",
             "SCAN_INPUT_OUTSIDE_ROOT",
             "SCAN_INPUT_SYMLINK_DENIED",

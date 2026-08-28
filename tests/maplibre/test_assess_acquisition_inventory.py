@@ -453,6 +453,97 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(result.findings, ())
         self.assertEqual(result.scanned_bytes, 12)
 
+    def test_final_symlink_replacement_fails_closed_before_read(self) -> None:
+        with self._root() as tmp, self._root() as external_tmp:
+            root = Path(tmp)
+            candidate = root / "scripts" / "candidate.mjs"
+            candidate.parent.mkdir(parents=True)
+            candidate.write_text("export const safe = true;\n", encoding="utf-8")
+            external = Path(external_tmp) / "renderer.mjs"
+            external.write_text('require("maplibre-gl");\n', encoding="utf-8")
+            real_open = MODULE.os.open
+            swapped = False
+
+            def racing_open(path, flags, mode=0o777, *, dir_fd=None):
+                nonlocal swapped
+                if path == candidate.name and dir_fd is not None and not swapped:
+                    swapped = True
+                    candidate.unlink()
+                    candidate.symlink_to(external)
+                return real_open(path, flags, mode, dir_fd=dir_fd)
+
+            with patch.object(MODULE.os, "open", racing_open):
+                result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.ERROR)
+        self.assertEqual(result.reasons, ("SCAN_INPUT_CHANGED_DURING_OPEN",))
+        self.assertEqual(result.findings[0].kind, "INPUT_CHANGED_DURING_OPEN")
+        self.assertNotIn("RENDERER_ACQUISITION_PRESENT", result.reasons)
+
+    def test_regular_file_replacement_fails_inode_consistency(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            candidate = root / "scripts" / "candidate.mjs"
+            candidate.parent.mkdir(parents=True)
+            candidate.write_text("export const safe = true;\n", encoding="utf-8")
+            replacement = candidate.with_suffix(".replacement")
+            replacement.write_text('require("maplibre-gl");\n', encoding="utf-8")
+            real_open = MODULE.os.open
+            swapped = False
+
+            def racing_open(path, flags, mode=0o777, *, dir_fd=None):
+                nonlocal swapped
+                if path == candidate.name and dir_fd is not None and not swapped:
+                    swapped = True
+                    replacement.replace(candidate)
+                return real_open(path, flags, mode, dir_fd=dir_fd)
+
+            with patch.object(MODULE.os, "open", racing_open):
+                result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.ERROR)
+        self.assertEqual(result.reasons, ("SCAN_INPUT_CHANGED_DURING_OPEN",))
+        self.assertEqual(result.findings[0].kind, "INPUT_CHANGED_DURING_OPEN")
+        self.assertNotIn("RENDERER_ACQUISITION_PRESENT", result.reasons)
+
+    def test_parent_swap_cannot_escape_pinned_directory_descriptor(self) -> None:
+        with self._root() as tmp, self._root() as external_tmp:
+            root = Path(tmp)
+            scripts = root / "scripts"
+            candidate = scripts / "candidate.mjs"
+            scripts.mkdir()
+            candidate.write_text("export const safe = true;\n", encoding="utf-8")
+            external = Path(external_tmp)
+            (external / candidate.name).write_text(
+                'require("maplibre-gl");\n', encoding="utf-8"
+            )
+            parked = root / "scripts-original"
+            real_open = MODULE.os.open
+            swapped = False
+
+            def racing_open(path, flags, mode=0o777, *, dir_fd=None):
+                nonlocal swapped
+                if path == candidate.name and dir_fd is not None and not swapped:
+                    swapped = True
+                    scripts.rename(parked)
+                    scripts.symlink_to(external, target_is_directory=True)
+                return real_open(path, flags, mode, dir_fd=dir_fd)
+
+            with patch.object(MODULE.os, "open", racing_open):
+                result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.PASS)
+        self.assertEqual(result.findings, ())
+
+    def test_missing_descriptor_safety_fails_closed(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(root, "scripts/candidate.mjs", "export const safe = true;\n")
+            with patch.object(MODULE, "DESCRIPTOR_SAFETY_SUPPORTED", False):
+                result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.ERROR)
+        self.assertEqual(result.reasons, ("SCAN_DESCRIPTOR_SAFETY_UNAVAILABLE",))
+        self.assertEqual(
+            result.findings[0].kind, "INPUT_DESCRIPTOR_SAFETY_UNAVAILABLE"
+        )
+
     def test_external_renderer_symlink_errors_without_becoming_acquisition(self) -> None:
         with self._root() as tmp, self._root() as external_tmp:
             root = Path(tmp)
@@ -540,7 +631,7 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 3)
         payload = json.loads(completed.stdout)
         self.assertEqual(payload["outcome"], "HOLD")
-        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v9")
+        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v10")
         self.assertEqual(payload["max_input_bytes"], MODULE.MAX_INPUT_BYTES)
         self.assertEqual(payload["max_total_input_bytes"], MODULE.MAX_TOTAL_INPUT_BYTES)
         self.assertEqual(payload["findings"], [])
