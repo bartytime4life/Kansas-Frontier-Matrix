@@ -2,15 +2,15 @@
 doc_id: kfm://doc/domains/atmosphere/readme
 title: Atmosphere · Domain Lane README
 type: readme
-version: v0.3
-status: draft
-owners: TBD (domain steward: Atmosphere/Air); TBD (governance reviewer)
+version: v0.4
+status: draft; repository-grounded; documentation-only; non-authoritative; non-publisher; not-for-life-safety
+owners: ["@bartytime4life — verified GitHub review route only"]
 created: 2026-05-15
-updated: 2026-08-03
+updated: 2026-08-28
 policy_label: public
 related: [docs/domains/README.md, docs/doctrine/directory-rules.md, docs/domains/atmosphere/SOURCE_REGISTRY.md, docs/domains/atmosphere/UBIQUITOUS_LANGUAGE.md, docs/domains/atmosphere/VERIFICATION_BACKLOG.md, control_plane/domain_lane_register.yaml, schemas/contracts/v1/domains/atmosphere/, policy/domains/atmosphere/, release/candidates/atmosphere/, ai-build-operating-contract.md]
 tags: [kfm, domain, atmosphere, air, climate, weather]
-notes: [CONTRACT_VERSION pinned 3.0.0 # domain doctrine CONFIRMED via Domains Atlas v1.1 §11 and Encyclopedia §7 # three bounded synthetic fixture profiles executable # broader live-record, source, policy, evidence, proof, and release behavior NEEDS VERIFICATION # schema/contract slug drift air vs atmosphere is CONFLICTED → ATM-OQ-09]
+notes: ["Repository paths inspected at main@f7af2c3dcefd38ae5e86141cfbc0931c0ef7d90f; Atmosphere responsibility-root lanes exist; pipelines/domains/air remains documentation-only compatibility; repository presence does not establish source admission, review, release, deployment, promotion, or publication."]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -20,15 +20,15 @@ notes: [CONTRACT_VERSION pinned 3.0.0 # domain doctrine CONFIRMED via Domains At
 > Governed, evidence-first orientation surface for the **Atmosphere / Air / Climate** domain — air-quality observations, weather, smoke, AOD, climate normals/anomalies, and model context — explicitly **not** an emergency advisory or life-safety system.
 
 ![status: draft](https://img.shields.io/badge/status-draft-orange)
-![authority: canonical](https://img.shields.io/badge/authority-canonical-blue)
+![authority: explanatory](https://img.shields.io/badge/authority-explanatory-blue)
 ![lane: docs%2Fdomains](https://img.shields.io/badge/lane-docs%2Fdomains-informational)
 ![sensitivity: public](https://img.shields.io/badge/sensitivity-public-green)
-![implementation: bounded fixture proof](https://img.shields.io/badge/implementation-bounded__fixture__proof-blue)
+![implementation: repository grounded](https://img.shields.io/badge/implementation-repository__grounded-blue)
 ![CONTRACT_VERSION: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-success)
 ![docs build: TODO](https://img.shields.io/badge/docs--build-TODO-lightgrey)
-![last reviewed: 2026--08--02](https://img.shields.io/badge/last%20reviewed-2026--08--02-blue)
+![last reviewed: 2026--08--28](https://img.shields.io/badge/last%20reviewed-2026--08--28-blue)
 
-**Status:** `draft` · **Authority level:** `canonical` (domain explanation) · **Owners:** TBD (Atmosphere steward), TBD (governance reviewer) — see [Review burden](#17-review-burden) · **Updated:** 2026-08-02 · `CONTRACT_VERSION = "3.0.0"`
+**Status:** `draft; repository-grounded; documentation-only` · **Authority level:** explanatory and subordinate to current repository controls · **GitHub review route:** `@bartytime4life` via default CODEOWNERS · **Domain stewardship and independent review:** `NEEDS VERIFICATION` · **Updated:** 2026-08-28 · `CONTRACT_VERSION = "3.0.0"`
 
 > [!IMPORTANT]
 > KFM Atmosphere is **not** an emergency alert system. It carries air-quality, weather, smoke, AOD, climate, and model-field **context** as evidence-labeled observations, archives, and derived products. Emergency advisories and life-safety direction belong to the **Hazards** lane and must redirect to the **official issuing authority**. See [§15 — Sensitivity, Rights, and Publication Posture](#15-sensitivity-rights-and-publication-posture).
@@ -65,7 +65,7 @@ notes: [CONTRACT_VERSION pinned 3.0.0 # domain doctrine CONFIRMED via Domains At
 
 ## 1. Purpose
 
-**CONFIRMED doctrine / PROPOSED implementation.** This folder is the **human-facing control surface for the Atmosphere / Air / Climate domain** inside `docs/`. It explains what the Atmosphere lane *owns*, what it *does not own*, how its evidence flows through the KFM lifecycle, and where the matching lanes live in the rest of the repo under each responsibility root.
+**REPOSITORY-GROUNDED documentation / MIXED implementation maturity.** This folder is the **human-facing control surface for the Atmosphere / Air / Climate domain** inside `docs/`. It explains what the Atmosphere lane *owns*, what it *does not own*, how its evidence flows through the KFM lifecycle, and where the matching lanes currently live under their responsibility roots. Repository presence is not proof of source admission, runtime use, evidence closure, review, release, deployment, promotion, or publication.
 
 The Atmosphere lane governs:
 
@@ -84,7 +84,7 @@ The folder is a **lane README**, not an implementation index. It cites doctrine 
 
 ## 2. Scope and boundary
 
-### 2.1 What this lane owns (CONFIRMED scope · PROPOSED implementation)
+### 2.1 What this lane owns (registered scope · mixed implementation maturity)
 
 > Source: Domains Culmination Atlas v1.1 §11 `[DOM-AIR]`; Encyclopedia §7.
 
@@ -109,7 +109,7 @@ The folder is a **lane README**, not an implementation index. It cites doctrine 
 
 ## 3. Authority level
 
-**Canonical** (human explanation surface). This README is the doctrinal entry point for the Atmosphere lane and is authoritative for *explanation*, not for *truth*. Truth lives in `EvidenceBundle`s, `ReleaseManifest`s, `LayerManifest`s, `SourceDescriptor`s, `ValidationReport`s, and other knowledge-system objects emitted by the lanes listed in [§5](#5-repo-fit--domain-lane-map). Documentation does not replace verification.
+**Repository-grounded explanatory surface.** `control_plane/domain_lane_register.yaml` registers `docs/domains/atmosphere/` as the Atmosphere documentation lane. This README is non-sovereign and subordinate to accepted Directory Rules, accepted ADRs, current contracts and schemas, policy, evidence, lifecycle records, validation, and release records. Documentation and path existence do not replace exact-head verification.
 
 [↑ Back to top](#top)
 
@@ -119,15 +119,15 @@ The folder is a **lane README**, not an implementation index. It cites doctrine 
 
 | Aspect | Status | Notes |
 |---|---|---|
-| Domain doctrine | **CONFIRMED** | Atlas v1.1 §11 `[DOM-AIR]`, Encyclopedia §7, project knowledge. |
-| Object-family spine | **CONFIRMED** | 15 canonical families enumerated in [§8](#8-canonical-object-families). |
-| Lane filesystem layout (under each responsibility root) | **PROPOSED** | Repo not mounted this session; mirror lanes pending verification per Directory Rules §12. |
-| Schema/contract path slug (`air` vs `atmosphere`) | **CONFLICTED** | Atlas §24.13 uses `…/v1/air/`; Directory Rules §12 uses `…/v1/domains/atmosphere/`. ADR required — see [§18](#18-open-verification-items). |
-| Source descriptors, rights, endpoint behavior | **NEEDS VERIFICATION** | Atlas §11.N backlog item. |
-| Knowledge-character registry implementation | **NEEDS VERIFICATION** | Atlas §11.N backlog item. |
-| Catalog / proof / release closure | **NEEDS VERIFICATION** | Atlas §11.N backlog item. |
-| MapLibre / Evidence Drawer / Focus Mode integration | **NEEDS VERIFICATION** | Atlas §11.N backlog item. |
-| Owners / CODEOWNERS for this lane | **UNKNOWN** | TBD; see [§17](#17-review-burden). |
+| Placement authority | **ACCEPTED / REPOSITORY-GROUNDED** | ADR-0029 accepts Directory Rules v2; the domain-lane register records `atmosphere` at `docs/domains/atmosphere/`. |
+| Object-family spine | **REPOSITORY CARRIERS CONFIRMED / MATURITY MIXED** | All 15 named families have Markdown contracts and JSON Schemas at the pinned base; acceptance, evaluator binding, and runtime consumption remain separate. |
+| Lane filesystem layout (under each responsibility root) | **CONFIRMED PRESENT** | The §5 paths were inspected at `main@f7af2c3dcefd38ae5e86141cfbc0931c0ef7d90f`; presence does not establish operational maturity. |
+| `atmosphere` implementation path and `air` compatibility | **ATMOSPHERE PRESENT / AIR COMPATIBILITY RETAINED** | Current contract, schema, policy, test, fixture, package, pipeline, specification, lifecycle, registry, catalog, published-carrier, and release-candidate lanes use `atmosphere`. `pipelines/domains/air/` remains documentation-only compatibility; retirement and reference closure remain open. |
+| Source descriptors, rights, endpoint behavior | **PARTIAL / NEEDS VERIFICATION** | Repository source-registry material exists, but source-by-source rights, terms, endpoints, and admission remain unverified. |
+| Knowledge-character registry implementation | **BOUNDED IMPLEMENTATION / NEEDS VERIFICATION BEYOND FIXTURES** | A registry object, contracts, schemas, fixtures, tests, and workflow binding exist; admitted live objects and production consumers remain unverified. |
+| Catalog / proof / release closure | **NEEDS VERIFICATION** | Carrier presence does not establish evidence, proof, review, correction, rollback, or release closure. |
+| MapLibre / Evidence Drawer / Focus Mode integration | **NEEDS VERIFICATION** | No public-path or runtime claim is inferred from repository presence. |
+| Owners / CODEOWNERS for this lane | **REVIEW ROUTE CONFIRMED / STEWARDSHIP UNASSIGNED** | Default `.github/CODEOWNERS` routes review to `@bartytime4life`; it does not assign domain, policy, release, or independent-review authority. |
 
 [↑ Back to top](#top)
 
@@ -135,12 +135,12 @@ The folder is a **lane README**, not an implementation index. It cites doctrine 
 
 ## 5. Repo fit — domain lane map
 
-The Atmosphere domain follows **Domain Placement Law** (Directory Rules §12): a domain is a *segment inside a responsibility root*, never a root folder. Every lane below is **PROPOSED** until inspected in a mounted repo.
+The Atmosphere domain follows accepted **Domain Placement Law** (Directory Rules §12): a domain is a *segment inside a responsibility root*, never a root folder. Every lane shown below exists at the pinned repository base. Each lane retains its own maturity, authority, review, lifecycle, and public-path state.
 
 > [!CAUTION]
-> **Schema/contract slug is CONFLICTED.** This README uses the Directory Rules §12 lane form (`schemas/contracts/v1/domains/atmosphere/`, `contracts/domains/atmosphere/`) because **Directory Rules outranks Atlas crosswalks** in the authority order. The Atlas §24.13 crosswalk instead lists `schemas/contracts/v1/air/` and `contracts/air/` (the `air` slug, no `domains/` segment). This is confirmed slug drift, in the same class as Roads (`transport`) and Settlements (`settlement`). Do not treat either path as canonical until an ADR resolves it; log the chosen path in `DRIFT_REGISTER.md`. See [§18](#18-open-verification-items) and [§21](#21-adrs).
+> **Current implementation placement is `atmosphere`; `air` remains compatibility lineage.** Accepted Directory Rules and current repository bytes place Atmosphere contracts and schemas at `contracts/domains/atmosphere/` and `schemas/contracts/v1/domains/atmosphere/`. The older Atlas crosswalk's `air` paths remain source lineage, while `pipelines/domains/air/` is intentionally retained as a documentation-only compatibility guardrail. Do not create executable, schema, contract, policy, or publication authority under `air`; migration, reference closure, and any retirement decision remain reviewable open work.
 
-### 5.1 Lane diagram (PROPOSED layout)
+### 5.1 Current repository layout (existence confirmed; maturity mixed)
 
 ```mermaid
 flowchart LR
@@ -195,13 +195,13 @@ flowchart LR
   DOC --> REL
 ```
 
-### 5.2 Lane path matrix (PROPOSED until verified)
+### 5.2 Current lane path matrix
 
-| Responsibility root | Atmosphere lane (PROPOSED) | What lives here |
+| Responsibility root | Current Atmosphere lane | What lives here |
 |---|---|---|
 | `docs/` | `docs/domains/atmosphere/` | This README; domain explanations, runbooks, ADR pointers. |
 | `contracts/` | `contracts/domains/atmosphere/` | Object-family **meaning** in Markdown (`AirStation.md`, `PM25Observation.md`, …). |
-| `schemas/` | `schemas/contracts/v1/domains/atmosphere/` | Machine-checkable **shape** (`*.schema.json` per object family). Canonical schema home per **ADR-0001**. Slug CONFLICTED — see §5 caution. |
+| `schemas/` | `schemas/contracts/v1/domains/atmosphere/` | Machine-checkable **shape** (`*.schema.json` per object family). Current placement follows accepted Directory Rules; ADR-0001 remains proposed as the dedicated routing and migration record. |
 | `policy/` | `policy/domains/atmosphere/` | Admissibility & release policy (AQI-vs-concentration, AOD-vs-PM2.5, low-cost sensor caveats, advisory passthrough). |
 | `tests/` | `tests/domains/atmosphere/` | Enforceability proofs for the validators in [§14](#14-validation). |
 | `fixtures/` | `fixtures/domains/atmosphere/` | Golden / valid / invalid no-network fixtures. |
@@ -265,28 +265,28 @@ This folder (`docs/domains/atmosphere/`) holds **human-facing documentation** fo
 
 ## 8. Canonical object families
 
-**CONFIRMED spine / PROPOSED implementation.** All identity rules are PROPOSED (deterministic basis: `source_id + object_role + temporal_scope + normalized_digest`); temporal handling is CONFIRMED to keep `source / observed / valid / retrieval / release / correction` times distinct where material.
+**Repository carriers confirmed / acceptance and runtime binding NEEDS VERIFICATION.** Markdown contracts and JSON Schemas exist for all 15 named families at the pinned base. Identity acceptance, evaluator binding, production consumption, and scientific validity remain unverified; temporal handling continues to keep `source / observed / valid / retrieval / release / correction` times distinct where material.
 
 | Object family | Purpose | Carries (representative) | Status |
 |---|---|---|---|
-| `AirStation` | Air-quality monitoring station identity | site metadata, network membership, instrument list | CONFIRMED spine / PROPOSED impl |
-| `AirObservation` | Generic air-quality observation | parameter, value, unit, QA flag, observed/valid time | CONFIRMED spine / PROPOSED impl |
-| `PM25Observation` | Particulate matter ≤ 2.5 µm observation | µg/m³, method, QA, freshness | CONFIRMED spine / PROPOSED impl |
-| `OzoneObservation` | Surface ozone observation | ppb/ppm, method, averaging window | CONFIRMED spine / PROPOSED impl |
-| `SmokeContext` | Smoke/plume polygon as **context only** | density class, source model, validity time | CONFIRMED spine / PROPOSED impl |
-| `AODRaster` | Aerosol Optical Depth raster | grid spec, QA, satellite source, retrieval time | CONFIRMED spine / PROPOSED impl |
-| `WeatherStation` | Weather / mesonet station identity | site metadata, network, sensor list | CONFIRMED spine / PROPOSED impl |
-| `WeatherObservation` | Generic weather observation | parameter, value, unit, QA | CONFIRMED spine / PROPOSED impl |
-| `WindField` | Wind raster/model field | grid spec, run time, valid time, source model | CONFIRMED spine / PROPOSED impl |
-| `PrecipitationObservation` | Precipitation observation | type, amount, period, method | CONFIRMED spine / PROPOSED impl |
-| `TemperatureObservation` | Air temperature observation | value, unit, height, method | CONFIRMED spine / PROPOSED impl |
-| `ClimateNormal` | Climatological normal | window (e.g., 1991–2020), basis, parameter | CONFIRMED spine / PROPOSED impl |
-| `ClimateAnomaly` | Departure from normal | reference normal, value, window | CONFIRMED spine / PROPOSED impl |
-| `ForecastContext` | Forecast / model field context | model id, run time, valid time, source | CONFIRMED spine / PROPOSED impl |
-| `AdvisoryContext` | Official advisory **context** (with redirection) | issuing authority, issue/expiry time, source URL | CONFIRMED spine / PROPOSED impl |
+| `AirStation` | Air-quality monitoring station identity | site metadata, network membership, instrument list | contract + schema present / runtime binding NEEDS VERIFICATION |
+| `AirObservation` | Generic air-quality observation | parameter, value, unit, QA flag, observed/valid time | contract + schema present / runtime binding NEEDS VERIFICATION |
+| `PM25Observation` | Particulate matter ≤ 2.5 µm observation | µg/m³, method, QA, freshness | contract + schema present / runtime binding NEEDS VERIFICATION |
+| `OzoneObservation` | Surface ozone observation | ppb/ppm, method, averaging window | contract + schema present / runtime binding NEEDS VERIFICATION |
+| `SmokeContext` | Smoke/plume polygon as **context only** | density class, source model, validity time | contract + schema present / runtime binding NEEDS VERIFICATION |
+| `AODRaster` | Aerosol Optical Depth raster | grid spec, QA, satellite source, retrieval time | contract + schema present / runtime binding NEEDS VERIFICATION |
+| `WeatherStation` | Weather / mesonet station identity | site metadata, network, sensor list | contract + schema present / runtime binding NEEDS VERIFICATION |
+| `WeatherObservation` | Generic weather observation | parameter, value, unit, QA | contract + schema present / runtime binding NEEDS VERIFICATION |
+| `WindField` | Wind raster/model field | grid spec, run time, valid time, source model | contract + schema present / runtime binding NEEDS VERIFICATION |
+| `PrecipitationObservation` | Precipitation observation | type, amount, period, method | contract + schema present / runtime binding NEEDS VERIFICATION |
+| `TemperatureObservation` | Air temperature observation | value, unit, height, method | contract + schema present / runtime binding NEEDS VERIFICATION |
+| `ClimateNormal` | Climatological normal | window (e.g., 1991–2020), basis, parameter | contract + schema present / runtime binding NEEDS VERIFICATION |
+| `ClimateAnomaly` | Departure from normal | reference normal, value, window | contract + schema present / runtime binding NEEDS VERIFICATION |
+| `ForecastContext` | Forecast / model field context | model id, run time, valid time, source | contract + schema present / runtime binding NEEDS VERIFICATION |
+| `AdvisoryContext` | Official advisory **context** (with redirection) | issuing authority, issue/expiry time, source URL | contract + schema present / runtime binding NEEDS VERIFICATION |
 
 > [!NOTE]
-> **Naming variance NEEDS VERIFICATION.** The Encyclopedia uses `PM25Observation` (PascalCase, no dot); the Atlas v1.1 prose uses `PM2.5 Observation` and `Weather Station` with spaces. This README adopts the Encyclopedia PascalCase form for consistency with the rest of the spine, pending an ADR or correction notice that picks a canonical form. This is the same drift class as the slug question in [§5](#5-repo-fit--domain-lane-map).
+> **Naming variance NEEDS VERIFICATION.** The Encyclopedia uses `PM25Observation` (PascalCase, no dot); the Atlas v1.1 prose uses `PM2.5 Observation` and `Weather Station` with spaces. This README adopts the Encyclopedia PascalCase form for consistency with the rest of the spine, pending an ADR or correction notice that picks a canonical form. This naming decision is separate from the repository-grounded `atmosphere` placement and the retained `air` compatibility boundary in [§5](#5-repo-fit--domain-lane-map).
 
 [↑ Back to top](#top)
 
@@ -509,10 +509,10 @@ Outcomes are wrapped in `RuntimeResponseEnvelope` with one of `ANSWER` / `ABSTAI
 | **Atmosphere domain steward** *(TBD)* | Owns object families, source-role discipline, public-safe transforms, validator coverage; approves promotion. |
 | **Governance reviewer** *(TBD)* | Reviews release candidates, separation of duties, correction & rollback paths. |
 | **Rights reviewer** *(TBD)* | Confirms source terms and redistribution class before public release. |
-| **CODEOWNERS entries** | UNKNOWN — see `CODEOWNERS` for this path once the file is mounted. |
+| **CODEOWNERS review route** | Default `.github/CODEOWNERS` routes repository review to `@bartytime4life`; this is routing only, not stewardship, approval, or independent review. |
 
 > [!NOTE]
-> CODEOWNERS bindings for `docs/domains/atmosphere/`, `schemas/contracts/v1/domains/atmosphere/`, `policy/domains/atmosphere/`, and `release/candidates/atmosphere/` are **PROPOSED** placeholders pending repo verification.
+> `.github/CODEOWNERS` has no Atmosphere-specific override at the pinned base, so its verified default `* @bartytime4life` route applies. Domain stewardship, policy authority, release authority, and independent review remain `NEEDS VERIFICATION`.
 
 [↑ Back to top](#top)
 
@@ -522,16 +522,16 @@ Outcomes are wrapped in `RuntimeResponseEnvelope` with one of `ANSWER` / `ABSTAI
 
 From Domains Culmination Atlas v1.1 §11.N and inferred for this lane. Row-level tracking lives in [`VERIFICATION_BACKLOG.md`](VERIFICATION_BACKLOG.md).
 
-- [ ] **Resolve schema/contract slug drift** — Atlas §24.13 (`…/v1/air/`, `contracts/air/`) vs Directory Rules §12 (`…/v1/domains/atmosphere/`). **ADR required; CONFLICTED.** *(tracked as ATM-OQ-09)*
+- [ ] **Close `air` compatibility and reference migration** — current contract and schema implementation uses `atmosphere`; preserve the documentation-only `pipelines/domains/air/` guardrail until consumer inventory, migration, rollback, and review evidence justify any retirement. *(tracked as ATM-OQ-09)*
 - [ ] **Verify source rights and endpoint behavior** for AQS, AirNow, NWS, Mesonet, MAIAC, GOES/ABI, HRRR-Smoke, HMS, VIIRS, CAMS. *(NEEDS VERIFICATION)*
-- [ ] **Implement knowledge-character registry** (`OBSERVED_SENSOR`, `PUBLIC_AQI_REPORT`, `REGULATORY_ARCHIVE`, `LOW_COST_SENSOR`, `ATMOSPHERIC_MODEL_FIELD`, `REMOTE_SENSING_MASK`, `CLIMATE_ANOMALY_CONTEXT`, `DERIVED_FUSION`, `METEOROLOGICAL_CONTEXT`, `ALERT_AND_ADVISORY_CONTEXT`, `NETWORK_AND_SITE_CONTEXT`). *(NEEDS VERIFICATION)*
+- [ ] **Verify knowledge-character registry closure beyond bounded fixtures** — registry, contract, schema, fixture, test, and workflow carriers exist; admitted live objects, canonical consumer binding, and production behavior remain unverified.
 - [ ] **Verify catalog / proof / release closure** for Atmosphere candidate releases. *(NEEDS VERIFICATION)*
 - [ ] **Verify MapLibre / Evidence Drawer / Focus Mode integration** for Atmosphere layers. *(NEEDS VERIFICATION)*
 - [ ] **Resolve `PM25Observation` vs `PM2.5 Observation` naming variance** via ADR or correction notice. *(NEEDS VERIFICATION — flagged in [§8](#8-canonical-object-families))*
 - [ ] **Resolve validator exit-code contract** (referenced in `tools/README.md`, PROPOSED). *(NEEDS VERIFICATION)*
 - [ ] **Record Kansas Mesonet written-consent artifact** (`kansas-wdl@k-state.edu`); one-time vs per-deployment renewal. *(NEEDS VERIFICATION)*
-- [ ] **Bind CODEOWNERS** for all Atmosphere lanes. *(UNKNOWN)*
-- [ ] **Inventory existing `docs/domains/atmosphere/` content** once the repo is mounted; reconcile with this README and the lane document set in [§19](#19-lane-document-set). *(UNKNOWN)*
+- [ ] **Decide whether Atmosphere-specific CODEOWNERS overrides are required**; the verified repository default already routes review to `@bartytime4life`, but stewardship and independent review remain unassigned.
+- [x] **Inventory the current Atmosphere repository surface** — reconciled this README against `main@f7af2c3dcefd38ae5e86141cfbc0931c0ef7d90f`; future runs must re-pin before relying on the inventory.
 
 Open items SHOULD be mirrored in `docs/registers/VERIFICATION_BACKLOG.md`.
 
@@ -541,7 +541,7 @@ Open items SHOULD be mirrored in `docs/registers/VERIFICATION_BACKLOG.md`.
 
 ## 19. Lane document set
 
-Companion docs already authored for this lane (all under `docs/domains/atmosphere/`, all `draft`):
+Core companion docs currently linked from this README (repository existence confirmed; each child retains its own status):
 
 | Doc | Role | Status |
 |---|---|---|
@@ -559,24 +559,24 @@ Companion docs already authored for this lane (all under `docs/domains/atmospher
 
 ## 20. Related folders and docs
 
-**External to this folder, inside the repo (PROPOSED paths):**
+**Repository-confirmed paths at `main@f7af2c3dcefd38ae5e86141cfbc0931c0ef7d90f`:** Path existence does not establish authority, maturity, runtime use, review, release, deployment, promotion, or publication.
 
-- [`docs/domains/README.md`](../README.md) — domain index *(TODO link target)*.
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law and README contract *(TODO link target)*.
+- [`docs/domains/README.md`](../README.md) — domain index.
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — accepted placement law; its pinned internal `PROPOSED_FOR_ADOPTION` label is superseded in authority by accepted ADR-0029.
 - [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`).
-- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — public-route-through-governed-API invariant *(TODO link target)*.
-- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED governance *(TODO link target)*.
-- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — `RuntimeResponseEnvelope`, ANSWER/ABSTAIN/DENY/ERROR *(TODO link target)*.
+- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — public-route-through-governed-API invariant.
+- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED governance.
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — `RuntimeResponseEnvelope`, ANSWER/ABSTAIN/DENY/ERROR.
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O / PAV crosswalk for evidence and receipts.
 - [`docs/standards/PMTILES.md`](../../standards/PMTILES.md) — tile artifact profile for Atmosphere layers.
 - [`docs/standards/OGC-API-TILES.md`](../../standards/OGC-API-TILES.md) — OGC Tiles integration for Atmosphere layers.
 - [`docs/standards/OAI-PMH.md`](../../standards/OAI-PMH.md) — harvest conformance brief.
 - [`docs/standards/ISO-19115.md`](../../standards/ISO-19115.md) — geographic metadata crosswalk.
-- [`docs/domains/hazards/README.md`](../hazards/README.md) — adjacent lane that owns life-safety context *(TODO link target)*.
-- [`docs/domains/hydrology/README.md`](../hydrology/README.md) — precipitation / drought relation *(TODO link target)*.
-- [`docs/domains/agriculture/README.md`](../agriculture/README.md) — heat / smoke / precipitation relation *(TODO link target)*.
-- [`control_plane/domain_lane_register.yaml`](../../../control_plane/domain_lane_register.yaml) — machine-readable lane register *(TODO link target)*.
-- [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — repo-wide open items *(TODO link target)*.
+- [`docs/domains/hazards/README.md`](../hazards/README.md) — adjacent lane that owns life-safety context.
+- [`docs/domains/hydrology/README.md`](../hydrology/README.md) — precipitation / drought relation.
+- [`docs/domains/agriculture/README.md`](../agriculture/README.md) — heat / smoke / precipitation relation.
+- [`control_plane/domain_lane_register.yaml`](../../../control_plane/domain_lane_register.yaml) — machine-readable lane register.
+- [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — repo-wide open items.
 
 [↑ Back to top](#top)
 
@@ -586,8 +586,9 @@ Companion docs already authored for this lane (all under `docs/domains/atmospher
 
 | ADR | Subject | Status |
 |---|---|---|
-| **ADR-0001** | Schema home (`schemas/contracts/v1/...` canonical) | accepted *(per Directory Rules §13.1)* |
-| **ADR-TBD (ADR-AIR-PATH)** | `air` vs `atmosphere` schema/contract slug + `domains/` segment | PROPOSED — CONFLICTED, blocks §5 paths |
+| [**ADR-0029**](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Adopt Directory Rules v2 and its responsibility-root/domain-lane placement law | **accepted** |
+| [**ADR-0001**](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | Dedicated schema-home routing, migration, and enforcement record | **proposed**; Directory Rules already provide the current placement default |
+| **ADR-TBD / ATM-OQ-09** | `air` compatibility reference closure and any retirement decision | OPEN; does not block current `atmosphere` paths |
 | **ADR-TBD** | `PM25Observation` vs `PM2.5 Observation` canonical form | PROPOSED |
 | **ADR-TBD** | Validator exit-code contract for `tests/domains/atmosphere/` | PROPOSED |
 | **ADR-TBD** | Low-cost sensor admission criteria (correction + caveats + confidence + limitations; Barkjohn version pin) | PROPOSED |
@@ -639,16 +640,16 @@ Companion docs already authored for this lane (all under `docs/domains/atmospher
 
 ## Last reviewed
 
-**2026-05-29** — v0.2 revision: meta block normalized to inline form; `CONTRACT_VERSION` pinned; schema-slug drift (`air` vs `atmosphere`) surfaced as CONFLICTED with §24.13-vs-§12 evidence; lane document set (§19) added; Mesonet consent and source-doc-factoring items added to backlog. Flag for review per Directory Rules README-freshness rule.
+**2026-08-28** — v0.4 repository reconciliation at `main@f7af2c3dcefd38ae5e86141cfbc0931c0ef7d90f`: removed source-session no-mounted-repository claims; confirmed current responsibility-root lane presence; classified `pipelines/domains/air/` as retained documentation-only compatibility; corrected CODEOWNERS routing, verified related links, and restored ADR-0001/ADR-0029 status separation. Runtime, source admission, rights, evidence, review, release, deployment, promotion, publication, and compatibility-retirement claims remain held or unverified.
 
 ---
 
 ### Related docs (footer)
 
 - [`UBIQUITOUS_LANGUAGE.md`](UBIQUITOUS_LANGUAGE.md) · [`SOURCE_REGISTRY.md`](SOURCE_REGISTRY.md) · [`VERIFICATION_BACKLOG.md`](VERIFICATION_BACKLOG.md)
-- [`docs/domains/README.md`](../README.md) *(TODO)*
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) *(TODO)*
+- [`docs/domains/README.md`](../README.md)
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md)
 - [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md)
-- [`docs/domains/hazards/README.md`](../hazards/README.md) *(TODO)*
+- [`docs/domains/hazards/README.md`](../hazards/README.md)
 
-**Last updated:** 2026-08-02 · `CONTRACT_VERSION = "3.0.0"` · [↑ Back to top](#top)
+**Last updated:** 2026-08-28 · `CONTRACT_VERSION = "3.0.0"` · [↑ Back to top](#top)
