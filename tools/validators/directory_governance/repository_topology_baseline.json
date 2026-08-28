@@ -297,13 +297,6 @@
       "subject": "data/triplet/"
     },
     {
-      "evidence_sha256": "sha256:c8b9d761c00b1ad5011dfae35b38dbfa2b4a7bd5add4e04cf28e0319325d07ac",
-      "evidence_zlib_base64": "eNpLyU8u1k/Jz03MzCvWT0wvykwuzSkpLUrVD3J1dPF11ctNYUjBrcTH1THYNd7Tz8U1AqgSADL/GxU=",
-      "fingerprint": "sha256:5268dcc69d895bf8ec70bd1a6ece33f5cea6289700b11cd6e5fe76302a67ade5",
-      "rule_id": "KFM-TOPO-016",
-      "subject": "doc-id:kfm://doc/docs/domains/agriculture/README-v2"
-    },
-    {
       "evidence_sha256": "sha256:9e0af73285d4040fcb1d32d40a19e26024bd90911c33c592f4143df8de0bcbeb",
       "evidence_zlib_base64": "eNp9zrsNwzAMBFAvFGsGA3HpxhvQyvkDUR+QVJHtUxhIgBSs7/iOAgYpglTmjWIK6zw9l3nMr0H+I5J4EirX4x3G47IENL/lYZarthMCz/qVHGqnXshR7twBFGaMjGL6uMoupCY9Wnd/c46+Ux8i24F1",
       "fingerprint": "sha256:531179c303074dc9b99c32f3bafd9eebb6b919395e6290be55ad5e21a22d400f",
