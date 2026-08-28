@@ -2,12 +2,16 @@
 doc_id: kfm://doc/sources/catalog/idigbio
 title: iDigBio — Integrated Digitized Biocollections (Source Dossier)
 type: standard
-version: v2
+version: v2.1
 status: draft
 owners: TODO — sources steward (docs/sources/); Fauna domain owner; Flora domain owner; Source-registry steward
 created: 2026-05-20
-updated: 2026-05-21
+updated: 2026-08-28
 policy_label: public
+responsibility_root: docs/
+owning_root: docs/
+responsibility: Human-readable iDigBio source-family dossier and proposal boundary; not source admission, policy, evidence, release, or publication authority.
+truth_posture: cite-or-abstain; current repository-placement claims are pinned to the recorded campaign baseline.
 related:
   - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
   - docs/sources/catalog/README.md
@@ -30,10 +34,10 @@ related:
   - policy/sensitivity/flora/
 tags: [kfm, sources, catalog, biodiversity, specimen, darwin-core, dwc, audubon-core, cc-by, c10-06, corroborative]
 notes:
-  - Path `docs/sources/catalog/idigbio.md` is PROPOSED (flat-dossier convention). It diverges from the family-folder convention used by sibling families (e.g., `docs/sources/catalog/gbif/`, `docs/sources/catalog/hifld/`). Reconciliation tracked as OQ-11 in §11.
+  - "Current repository placement is `docs/sources/catalog/idigbio/README.md`; no parallel `docs/sources/catalog/idigbio.md` file is tracked. The broader `docs/sources/catalog/` lane remains PROPOSED under its parent contract."
   - Owners, badge targets, related-doc URLs, and registry filenames are placeholders pending mounted-repo inspection.
   - iDigBio is positioned in the KFM biodiversity stack as a **corroborative specimen-backed source**, not the canonical aggregator. GBIF holds the canonical-aggregator role; see §3.
-  - v2 (2026-05-21):  EXTERNAL claims rewritten as paraphrased prose with traceable citations to iDigBio primary sources; license list corrected to include CC BY-NC-SA per the iDigBio IP Policy; UF/FSU/KU lead/subawardee framing corrected per idigbio.org; v1→v2 API supersession tightened; flat-path vs family-folder convention question surfaced as OQ-11.
+  - "v2.1 (2026-08-28): reconciled the tracked family-folder placement, retired stale flat-dossier claims, and kept the broader catalog-lane authority question separate."
 [/KFM_META_BLOCK_V2] -->
 
 # 🦋 iDigBio — Integrated Digitized Biocollections
@@ -46,15 +50,15 @@ notes:
 ![Source role: observation · corroborative](https://img.shields.io/badge/source--role-observation%20%C2%B7%20corroborative-informational)
 ![License: CC BY (default)](https://img.shields.io/badge/upstream%20license-CC%20BY%20(default)-green)
 ![Sensitivity: T0–T4 (record-dependent)](https://img.shields.io/badge/sensitivity-T0%E2%80%93T4%20record%E2%80%91dependent-yellow)
-![Path: PROPOSED (flat dossier)](https://img.shields.io/badge/path-PROPOSED%20(flat%20dossier%20%E2%9A%A0%EF%B8%8F)-lightgrey)
-![ADR: pending (OQ-1, OQ-11)](https://img.shields.io/badge/ADR-pending%20(OQ--1%2C%20OQ--11)-yellow)
+![Path: family dossier](https://img.shields.io/badge/path-family%20dossier-0969da)
+![Lane authority: proposed (OQ-1)](https://img.shields.io/badge/lane%20authority-PROPOSED%20(OQ--1)-yellow)
 
 | | |
 |---|---|
 | **Status** | `draft` — PROPOSED for review |
 | **Owners** | TODO — sources steward · Fauna domain owner · Flora domain owner |
-| **Last updated** | 2026-05-21 |
-| **Version** | v2 (citations + license-list correction + path-convention surfacing) |
+| **Last updated** | 2026-08-28 |
+| **Version** | v2.1 (repository-placement reconciliation) |
 
 ---
 
@@ -77,7 +81,7 @@ notes:
 
 ## 1. Why this document exists
 
-`docs/sources/catalog/idigbio.md` is the **human-readable per-source briefing** for iDigBio. It explains, in one place:
+`docs/sources/catalog/idigbio/README.md` is the **human-readable per-source briefing** for iDigBio. It explains, in one place:
 
 - what iDigBio is and what it is not,
 - how iDigBio is positioned in the KFM source-authority hierarchy,
@@ -97,7 +101,7 @@ The **normative shape** of the descriptor lives in `schemas/contracts/v1/source/
 
 ## 2. Path placement & repo fit
 
-**Proposed path:** `docs/sources/catalog/idigbio.md` *(flat-dossier convention — diverges from the family-folder pattern used by `docs/sources/catalog/gbif/` and `docs/sources/catalog/hifld/`; see OQ-11)*
+**Current tracked path:** `docs/sources/catalog/idigbio/README.md`.
 
 **Directory Rules basis** (CONFIRMED doctrine; specific path NEEDS VERIFICATION):
 
@@ -105,16 +109,12 @@ The **normative shape** of the descriptor lives in `schemas/contracts/v1/source/
 - `docs/sources/` is enumerated in Directory Rules v1.1 §6.1 as the home for **source-descriptor standards and source families** — i.e., human prose about sources, not the machine descriptor itself.
 - `catalog/` as a subdirectory of `docs/sources/` is a **PROPOSED convention** consistent with prior-session per-source dossier authoring; it is **not** explicitly enumerated in Directory Rules §6.1 and remains NEEDS VERIFICATION until a `docs/sources/README.md` or ADR freezes the layout.
 
-> [!WARNING]
-> **Convention divergence.** Two competing layouts exist in prior-session work:
-> - **Flat dossier** (this file): `docs/sources/catalog/<family>.md` — used by FamilySearch, KHRI, and this iDigBio dossier.
-> - **Family folder**: `docs/sources/catalog/<family>/README.md` plus per-surface product pages — used by `gbif/`, `hifld/`.
->
-> Both cannot coexist long-term without confusion. Reconciliation is **OQ-11** below. Either pick one; or document the rule for when each applies. Until then, this file uses the flat-dossier convention because it was the convention in force when authored.
+> [!NOTE]
+> **Repository checkpoint.** At `main@c7ef0eaa9170aec6def180261c560b1bfa7f91c8`, iDigBio has one family dossier at this path and no parallel `docs/sources/catalog/idigbio.md` file. This same-path repair records that implementation fact; it does not accept the broader `docs/sources/catalog/` lane or amend its `OPEN-DSC-01` authority hold.
 
 | Concern | Belongs here? | Where it actually lives |
 |---|---|---|
-| Human-readable description of iDigBio | ✅ this file | `docs/sources/catalog/idigbio.md` |
+| Human-readable description of iDigBio | ✅ this file | `docs/sources/catalog/idigbio/README.md` |
 | Machine source-descriptor record | ❌ | `data/registry/sources/<domain>/idigbio.<ext>` (PROPOSED; NEEDS VERIFICATION) |
 | Source-descriptor **schema** (shape) | ❌ | `schemas/contracts/v1/source/source-descriptor.schema.json` (PROPOSED home per ADR-0001) |
 | Source-descriptor **meaning** (semantics) | ❌ | `contracts/source/source_descriptor.md` (PROPOSED) |
@@ -428,7 +428,7 @@ CONFIRMED doctrine (KFM-P26-IDEA-0012 Canonical DwC normalizer before dedupe; KF
 | OQ-8 | What is the rollback target for an iDigBio-grounded PUBLISHED layer when a provider revokes a recordset's license? | PROPOSED | `release/candidates/<domain>/` rollback card; correction flow |
 | OQ-9 | Does Fauna or Flora maintain a `dataset_id_allowlist` against iDigBio recordsets to bias against low-quality recordsets at admission? | UNKNOWN | Source registry entry; connector config |
 | OQ-10 | iDigBio API v1 vs v2 — pin v2 explicitly. **CONFIRMED-EXTERNAL** that v1 is superseded; v1 endpoint behavior past EOL is still unknown. | NEEDS VERIFICATION (EXTERNAL); v1 deprecation CONFIRMED v1 has been superseded by v2 and the v1 spec advises migration to the current version  | iDigBio status page; current API docs |
-| OQ-11 | **Flat-dossier vs family-folder convention** under `docs/sources/catalog/`. iDigBio uses the flat-dossier pattern (`idigbio.md`); GBIF and HIFLD use the family-folder pattern (`gbif/`, `hifld/`). Both cannot coexist long-term. | OPEN — ADR-class | `docs/sources/catalog/README.md` or ADR fixing the rule; cross-cutting OPEN-DSC-* register entry |
+| OQ-11 | **Historical flat-dossier vs family-folder fork.** The current repository carries only `docs/sources/catalog/idigbio/README.md`; no parallel `idigbio.md` remains. | RESOLVED for current iDigBio docs placement; broader catalog-lane authority remains PROPOSED | Current repository tree plus `docs/sources/catalog/README.md`; `OPEN-DSC-01` remains the broader lane question |
 | OQ-12 | **Per-record CC BY-NC-SA records.** Are NonCommercial-licensed iDigBio records admissible to PUBLISHED at all, or always quarantined? | OPEN — policy-class | `policy/sensitivity/<domain>/`; ReviewRecord; steward decision |
 | OQ-13 | License-list completeness. iDigBio's IP Policy enumerates CC0 / CC BY / CC BY-SA / CC BY-NC-SA. Should KFM also handle records that arrive **without** a license value (legacy submissions)? Default: quarantine. | NEEDS VERIFICATION | `tools/validators/license_resolver/`; ingest fixture coverage |
 | OPEN-DSC-03 | KFM namespace token for STAC Collection summaries: `kfm:` vs `ks-kfm:`. Tracked lane-wide. | OPEN — corpus C4-01 unresolved | `docs/sources/catalog/OPEN-QUESTIONS.md` (lane-wide register) |
@@ -444,10 +444,10 @@ CONFIRMED doctrine (KFM-P26-IDEA-0012 Canonical DwC normalizer before dedupe; KF
 
 - `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` — the source-descriptor standard this dossier instantiates (PROPOSED)
 - `docs/sources/catalog/README.md` — catalog index (PROPOSED; OQ-1)
-- `docs/sources/catalog/OPEN-QUESTIONS.md` — lane-wide `OPEN-DSC-*` register (PROPOSED; bears OPEN-DSC-03 and OQ-11)
+- `docs/sources/catalog/OPEN-QUESTIONS.md` — lane-wide `OPEN-DSC-*` register (PROPOSED; includes the broader catalog-lane questions)
 - `docs/sources/catalog/IDENTITY.md` — Collection-id + namespace conventions (PROPOSED)
 - `docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md` — per-license + per-feature sensitivity map (PROPOSED)
-- `docs/sources/catalog/gbif.md` *or* `docs/sources/catalog/gbif/README.md` — companion dossier; GBIF is the canonical aggregator referenced throughout this file (path is **PROPOSED** and pending OQ-11 reconciliation)
+- `docs/sources/catalog/gbif/README.md` — tracked companion dossier; GBIF is the canonical aggregator referenced throughout this file
 - `docs/sources/catalog/gbif/dataset-metadata.md`, `docs/sources/catalog/gbif/occurrence-api.md` — per-surface product pages under the family-folder convention (PROPOSED)
 - `docs/sources/catalog/inaturalist.md` — companion dossier; distinct role (citizen-science observation) (PROPOSED)
 - `docs/sources/catalog/ebird.md` — companion dossier; distinct role (citizen-science avian) (PROPOSED)
@@ -484,4 +484,4 @@ External sources are version-sensitive; the v1 API spec page itself notes its su
 
 > *Where a file lives encodes who owns it, what governance it answers to, and what lifecycle it belongs to. iDigBio is a corroborative specimen-backed source; it does not get to be the authority just because it is convenient.* — paraphrased from KFM Directory Rules §0
 
-**Last updated:** 2026-05-21 · **Status:** `draft` · **Version:** v2 · **Path status:** PROPOSED (flat-dossier; see OQ-11) · [⬆ Back to top](#-idigbio--integrated-digitized-biocollections)
+**Last updated:** 2026-08-28 · **Status:** `draft` · **Version:** v2.1 · **Path status:** tracked family dossier; broader catalog lane remains PROPOSED · [⬆ Back to top](#-idigbio--integrated-digitized-biocollections)
