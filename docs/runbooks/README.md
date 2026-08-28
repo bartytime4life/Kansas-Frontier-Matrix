@@ -748,7 +748,7 @@ A documentation revert restores text only. It does not reverse an operational ac
 
 | Evidence | Use in this edition | Limitation |
 |---|---|---|
-| `main@f7af2c3dcefd38ae5e86141cfbc0931c0ef7d90f` | Pins the target, runbook tree, direct children, sampled documents, ADRs, and review routing | Commit bytes do not prove runtime behavior, operational admission, release, or publication |
+| `main@2de55d48ab35a41875eb9f094dc55dda18618ecc` | Pins the target, runbook tree, direct children, sampled documents, ADRs, and review routing | Commit bytes do not prove runtime behavior, operational admission, release, or publication |
 | Exact `docs/runbooks/` Git tree | Direct-child map and all recursive tracked paths | Tree presence does not prove content quality or use |
 | Exact Git-tree and repository-text counts | Base: 42 direct entries, 116 Markdown files, 11 substantive domain README paths, no one-byte placeholders, and 25 exact `PROPOSED scaffold` phrase matches. After this change: 117 Markdown files and 12 substantive domain README paths; other counts unchanged. | Tree and text counts are not a semantic maturity audit |
 | Accepted ADR-0029 and Directory Rules v2 | Placement authority, README inheritance, compatibility, migration, correction, and rollback rules | Does not validate individual procedures |
