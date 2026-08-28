@@ -23,7 +23,7 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Sequence
 
-PROFILE = "kfm-maplibre-acquisition-inventory-v3"
+PROFILE = "kfm-maplibre-acquisition-inventory-v4"
 TEXT_SUFFIXES = frozenset({".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx", ".html"})
 MAX_FILES = 5000
 SCAN_ROOTS = ("apps", "packages", "runtime", "scripts", "tests", "examples", "public")
@@ -60,6 +60,21 @@ PATTERNS = {
     "PROTOCOL_REGISTRATION": re.compile(r"\baddProtocol\s*\("),
     "WORKER_ACQUISITION": re.compile(r"\bnew\s+Worker\s*\("),
 }
+
+IDENTIFIER = r"[A-Za-z_$][\w$]*"
+NODE_MODULE_SPECIFIER = r"(?:node:)?module"
+CREATE_REQUIRE_NAMED_IMPORT = re.compile(
+    rf"(?:^|\n)\s*import\s*\{{(?P<bindings>[\s\S]{{0,240}}?)\}}"
+    rf"\s*from\s*['\"]{NODE_MODULE_SPECIFIER}['\"]"
+)
+CREATE_REQUIRE_NAMESPACE_IMPORT = re.compile(
+    rf"(?:^|\n)\s*import\s*\*\s*as\s*(?P<name>{IDENTIFIER})"
+    rf"\s*from\s*['\"]{NODE_MODULE_SPECIFIER}['\"]"
+)
+CREATE_REQUIRE_DESTRUCTURE = re.compile(
+    rf"\b(?:const|let|var)\s*\{{(?P<bindings>[\s\S]{{0,240}}?)\}}\s*=\s*"
+    rf"require\s*\(\s*['\"]{NODE_MODULE_SPECIFIER}['\"]\s*\)"
+)
 
 
 class Outcome(StrEnum):
@@ -152,6 +167,67 @@ def _renderer_import_subject(value: str) -> str | None:
     return _renderer_package_subject(lowered)
 
 
+def _create_require_factories(text: str) -> set[str]:
+    """Return bounded Node ``createRequire`` factory expressions imported by a file."""
+    factories: set[str] = set()
+    for match in CREATE_REQUIRE_NAMED_IMPORT.finditer(text):
+        for binding in match.group("bindings").split(","):
+            parsed = re.fullmatch(
+                rf"\s*createRequire(?:\s+as\s+(?P<alias>{IDENTIFIER}))?\s*",
+                binding,
+            )
+            if parsed:
+                factories.add(parsed.group("alias") or "createRequire")
+    for match in CREATE_REQUIRE_NAMESPACE_IMPORT.finditer(text):
+        factories.add(f'{match.group("name")}.createRequire')
+    for match in CREATE_REQUIRE_DESTRUCTURE.finditer(text):
+        for binding in match.group("bindings").split(","):
+            parsed = re.fullmatch(
+                rf"\s*createRequire(?:\s*:\s*(?P<alias>{IDENTIFIER}))?\s*",
+                binding,
+            )
+            if parsed:
+                factories.add(parsed.group("alias") or "createRequire")
+    return factories
+
+
+def _scan_create_require(text: str) -> list[tuple[str, str]]:
+    """Classify literal renderer acquisition through imported ``createRequire`` aliases."""
+    factories = _create_require_factories(text)
+    if not factories:
+        return []
+    factory_pattern = (
+        "(?:" + "|".join(re.escape(value) for value in sorted(factories)) + ")"
+    )
+    aliases = {
+        match.group("alias")
+        for match in re.finditer(
+            rf"\b(?:const|let|var)\s+(?P<alias>{IDENTIFIER})\s*=\s*"
+            rf"{factory_pattern}\s*\([^)]{{0,240}}\)",
+            text,
+        )
+    }
+    findings: list[tuple[str, str]] = []
+    targets = [(factory_pattern + r"\s*\([^)]{0,240}\)\s*", True)]
+    targets.extend((re.escape(alias), False) for alias in sorted(aliases))
+    for target, chained in targets:
+        prefix = r"(?<![\w$])" + target
+        for kind, suffix in (
+            ("CREATE_REQUIRE", ""),
+            ("CREATE_REQUIRE_RESOLVE", r"\s*\.\s*resolve"),
+        ):
+            if chained and kind == "CREATE_REQUIRE_RESOLVE":
+                suffix = r"\.\s*resolve"
+            pattern = re.compile(
+                prefix + suffix + r"\s*\(\s*['\"]([^'\"]+)['\"]\s*\)"
+            )
+            for match in pattern.finditer(text):
+                subject = _renderer_import_subject(match.group(1))
+                if subject:
+                    findings.append((kind, subject))
+    return findings
+
+
 def _iter_files(root: Path) -> tuple[list[Path], bool]:
     files: list[Path] = []
     ignored_parts = {".git", "node_modules", "dist", "build", ".next", "coverage"}
@@ -211,6 +287,8 @@ def _scan_text(root: Path, path: Path) -> list[Finding]:
             subject = _renderer_import_subject(match.group(1))
             if subject:
                 findings.append(Finding(kind, rel, subject, _candidate_seam(rel)))
+    for kind, subject in _scan_create_require(text):
+        findings.append(Finding(kind, rel, subject, _candidate_seam(rel)))
     for kind in ("CDN_URL", "GLOBAL_RUNTIME"):
         for match in PATTERNS[kind].finditer(text):
             subject = _renderer_subject(match.group(0))

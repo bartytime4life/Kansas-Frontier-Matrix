@@ -179,6 +179,74 @@ class AcquisitionInventoryTests(unittest.TestCase):
             ["IMPORT_META_RESOLVE", "REQUIRE_RESOLVE"],
         )
 
+    def test_create_require_alias_acquisition_outside_candidate_seam_fails(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "scripts/load-renderer.mjs",
+                'import { createRequire } from "node:module";\n'
+                "const localRequire = createRequire(import.meta.url);\n"
+                'localRequire("maplibre-gl");\n'
+                'localRequire.resolve("maplibre-gl");\n',
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.FAIL)
+        self.assertEqual(
+            [finding.kind for finding in result.findings],
+            ["CREATE_REQUIRE", "CREATE_REQUIRE_RESOLVE"],
+        )
+
+    def test_aliased_and_namespace_create_require_resolution_is_classified(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "scripts/resolve-renderer.mjs",
+                'import { createRequire as makeRequire } from "module";\n'
+                'import * as nodeModule from "node:module";\n'
+                "const resolveFromHere = makeRequire(import.meta.url);\n"
+                'resolveFromHere.resolve("maplibre-gl");\n'
+                'nodeModule.createRequire(import.meta.url)("maplibre-gl");\n',
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.FAIL)
+        self.assertEqual(
+            [finding.kind for finding in result.findings],
+            ["CREATE_REQUIRE", "CREATE_REQUIRE_RESOLVE"],
+        )
+
+    def test_package_owned_create_require_acquisition_is_hold(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "packages/maplibre/scripts/load-renderer.cjs",
+                'const { createRequire: makeRequire } = require("node:module");\n'
+                "const localRequire = makeRequire(__filename);\n"
+                'localRequire("maplibre-gl");\n',
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.HOLD)
+        self.assertEqual(result.findings[0].kind, "CREATE_REQUIRE")
+        self.assertTrue(result.findings[0].candidate_seam)
+
+    def test_unimported_create_require_and_kfm_facade_are_not_raw_acquisition(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "scripts/local-helper.mjs",
+                "const localRequire = createRequire(import.meta.url);\n"
+                'localRequire("maplibre-gl");\n'
+                'import { createRequire as makeRequire } from "node:module";\n'
+                "const facadeRequire = makeRequire(import.meta.url);\n"
+                'facadeRequire("@kfm/maplibre");\n',
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.PASS)
+        self.assertEqual(result.findings, ())
+
     def test_governance_link_and_maplibre_css_class_are_not_acquisition(self) -> None:
         with self._root() as tmp:
             root = Path(tmp)
@@ -266,7 +334,7 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 3)
         payload = json.loads(completed.stdout)
         self.assertEqual(payload["outcome"], "HOLD")
-        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v3")
+        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v4")
         self.assertEqual(payload["findings"], [])
         self.assertEqual(payload["finding_counts"]["STATIC_IMPORT"], 1)
         self.assertFalse(payload["authority_created"])

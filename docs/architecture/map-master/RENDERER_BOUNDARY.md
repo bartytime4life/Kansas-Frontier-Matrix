@@ -2,7 +2,7 @@
 doc_id: kfm://doc/architecture-map-master-renderer-boundary
 title: Map Master — Renderer Boundary
 type: architecture-reference
-version: v2.2-draft
+version: v2.3-draft
 status: draft; repository-grounded; mixed-maturity; renderer-neutral-bounded-slices; production-runtime-hold; non-authoritative; non-publication
 owners:
   - "@bartytime4life — current CODEOWNERS review route"
@@ -666,7 +666,7 @@ The bounded acquisition validator is designed to report:
 - static and type imports;
 - raw renderer re-exports;
 - dynamic imports;
-- CommonJS `require` and explicit `import.meta.resolve` / `require.resolve` module resolution;
+- CommonJS `require`, Node `createRequire` aliases, and explicit `import.meta.resolve` / `require.resolve` module resolution;
 - renderer CDN URLs and browser globals;
 - worker construction;
 - protocol registration; and
