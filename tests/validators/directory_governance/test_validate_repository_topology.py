@@ -125,7 +125,7 @@ class RepositoryTopologyTests(unittest.TestCase):
         report = json.loads(first.stdout)
         self.assertEqual("PASS", report["outcome"])
         self.assertEqual(0, report["counts"]["fail_new_drift"])
-        self.assertEqual(129, report["counts"]["baselined_warning"])
+        self.assertEqual(128, report["counts"]["baselined_warning"])
         self.assertEqual([], report["baseline"]["stale_fingerprints"])
         self.assertEqual(20, report["rule_count"])
         self.assertNotIn("duration", first.stdout)
