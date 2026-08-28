@@ -97,6 +97,19 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(result.outcome, MODULE.Outcome.PASS)
         self.assertEqual(result.findings, ())
 
+    def test_kfm_facade_and_package_local_re_exports_are_not_raw_acquisition(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "apps/explorer-web/src/map-runtime.ts",
+                'export type { MapRuntimePort } from "@kfm/maplibre";\n'
+                'export { createAdapter } from "./maplibre-adapter";\n',
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.PASS)
+        self.assertEqual(result.findings, ())
+
     def test_explorer_adapter_raw_import_is_outside_accepted_seam(self) -> None:
         with self._root() as tmp:
             root = Path(tmp)
@@ -117,6 +130,54 @@ class AcquisitionInventoryTests(unittest.TestCase):
             result = MODULE.scan(root)
         self.assertEqual(result.outcome, MODULE.Outcome.FAIL)
         self.assertIn("ACQUISITION_OUTSIDE_CANDIDATE_SEAM", result.reasons)
+
+    def test_renderer_re_exports_outside_candidate_seam_fail(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "apps/explorer-web/src/renderer.ts",
+                'export { Map } from "maplibre-gl";\n'
+                'export type { MapOptions } from "maplibre-gl";\n'
+                'export * as maplibregl from "maplibre-gl";\n'
+                'export * from "maplibre-gl";\n',
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.FAIL)
+        self.assertIn("ACQUISITION_OUTSIDE_CANDIDATE_SEAM", result.reasons)
+        self.assertEqual(
+            [finding.kind for finding in result.findings],
+            ["RE_EXPORT"],
+        )
+
+    def test_package_owned_renderer_re_export_is_hold(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "packages/maplibre/src/renderer.ts",
+                'export { Map } from "maplibre-gl";\n',
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.HOLD)
+        self.assertEqual(result.findings[0].kind, "RE_EXPORT")
+        self.assertTrue(result.findings[0].candidate_seam)
+
+    def test_renderer_module_resolution_outside_candidate_seam_fails(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "scripts/resolve-renderer.mjs",
+                'const esm = import.meta.resolve("maplibre-gl");\n'
+                'const cjs = require.resolve("maplibre-gl");\n',
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.FAIL)
+        self.assertEqual(
+            [finding.kind for finding in result.findings],
+            ["IMPORT_META_RESOLVE", "REQUIRE_RESOLVE"],
+        )
 
     def test_governance_link_and_maplibre_css_class_are_not_acquisition(self) -> None:
         with self._root() as tmp:
@@ -205,7 +266,7 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 3)
         payload = json.loads(completed.stdout)
         self.assertEqual(payload["outcome"], "HOLD")
-        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v2")
+        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v3")
         self.assertEqual(payload["findings"], [])
         self.assertEqual(payload["finding_counts"]["STATIC_IMPORT"], 1)
         self.assertFalse(payload["authority_created"])
