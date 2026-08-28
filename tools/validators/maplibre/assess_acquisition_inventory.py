@@ -23,7 +23,7 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Sequence
 
-PROFILE = "kfm-maplibre-acquisition-inventory-v2"
+PROFILE = "kfm-maplibre-acquisition-inventory-v3"
 TEXT_SUFFIXES = frozenset({".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx", ".html"})
 MAX_FILES = 5000
 SCAN_ROOTS = ("apps", "packages", "runtime", "scripts", "tests", "examples", "public")
@@ -34,6 +34,17 @@ PATTERNS = {
     "STATIC_IMPORT": re.compile(r"(?:^|\n)\s*import(?:\s+type)?(?:[\s\S]{0,160}?from\s*)?['\"]([^'\"]+)['\"]"),
     "DYNAMIC_IMPORT": re.compile(r"\bimport\s*\(\s*['\"]([^'\"]+)['\"]\s*\)"),
     "REQUIRE": re.compile(r"\brequire\s*\(\s*['\"]([^'\"]+)['\"]\s*\)"),
+    "RE_EXPORT": re.compile(
+        r"(?:^|\n)\s*export(?:\s+type)?(?:\s*\*(?:\s+as\s+[A-Za-z_$][\w$]*)?"
+        r"|\s*\{[\s\S]{0,160}?\})"
+        r"\s*from\s*['\"]([^'\"]+)['\"]"
+    ),
+    "IMPORT_META_RESOLVE": re.compile(
+        r"\bimport\s*\.\s*meta\s*\.\s*resolve\s*\(\s*['\"]([^'\"]+)['\"]\s*\)"
+    ),
+    "REQUIRE_RESOLVE": re.compile(
+        r"\brequire\s*\.\s*resolve\s*\(\s*['\"]([^'\"]+)['\"]\s*\)"
+    ),
     "CDN_URL": re.compile(
         r"https?://(?:"
         r"(?:unpkg\.com|cdn\.jsdelivr\.net|cdnjs\.cloudflare\.com|esm\.sh)/"
@@ -188,7 +199,14 @@ def _scan_text(root: Path, path: Path) -> list[Finding]:
     except (OSError, UnicodeError):
         return [Finding("TEXT_UNREADABLE", rel, path.name, False)]
     findings: list[Finding] = []
-    for kind in ("STATIC_IMPORT", "DYNAMIC_IMPORT", "REQUIRE"):
+    for kind in (
+        "STATIC_IMPORT",
+        "DYNAMIC_IMPORT",
+        "REQUIRE",
+        "RE_EXPORT",
+        "IMPORT_META_RESOLVE",
+        "REQUIRE_RESOLVE",
+    ):
         for match in PATTERNS[kind].finditer(text):
             subject = _renderer_import_subject(match.group(1))
             if subject:

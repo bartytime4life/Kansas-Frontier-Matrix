@@ -3,7 +3,7 @@ doc_id: kfm://doc/architecture/maplibre-master
 title: MapLibre Master — Components, Functions, Features Architecture Register
 type: architecture
 subtype: component-capability-register
-version: v2.1-draft
+version: v2.2-draft
 status: "draft; repository-grounded; architecture-accepted; production-runtime-hold; no-release; no-publication"
 owners:
   - "@bartytime4life — verified default repository review route"
@@ -440,7 +440,7 @@ A future 3D architecture document may be useful, but creating it is a separate s
 
 ### 8.1 Current acquisition state
 
-The repository contains a deterministic no-network acquisition inventory that scans package manifests and bounded code roots for static/dynamic imports, `require`, CDN/global use, protocol registration, workers, and renderer-family packages. Its current semantics are intentionally non-authoritative:
+The repository contains a deterministic no-network acquisition inventory that scans package manifests and bounded code roots for static/dynamic imports, re-exports, `require`, explicit `import.meta.resolve` / `require.resolve` module resolution, CDN/global use, protocol registration, workers, and renderer-family packages. Its current semantics are intentionally non-authoritative:
 
 - `PASS`: scan completed and found no renderer acquisition;
 - `HOLD`: raw renderer acquisition is confined to `packages/maplibre/` while production runtime activation remains unresolved;
