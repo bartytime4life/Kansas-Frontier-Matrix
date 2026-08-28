@@ -2,7 +2,7 @@
 doc_id: kfm://doc/policy-role-readme
 title: policy/role/ — Unresolved Role-Policy Routing Boundary
 type: readme
-version: v0.1.0
+version: v0.1.1
 status: draft; repository-grounded; routing-and-hold boundary; scope-unresolved; inactive; non-release; non-publication
 owner: NEEDS VERIFICATION — CODEOWNERS routes policy/ to @bartytime4life; no accepted role-policy steward or independent approver was established
 created: 2026-08-28
@@ -11,8 +11,8 @@ current_path: policy/role/README.md
 owning_root: policy/
 policy_label: internal; policy; role; routing; hold; non-release; non-publication
 responsibility: Route the unresolved role-policy namespace and its sensitivity child without defining role semantics, assigning authority, evaluating policy, approving release, or publishing.
-base_commit: e52165e820b07e65c54830fde519a9c90df8eb1c
-prior_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
+base_commit: 332a371f0be1aae68690853fba368a6289d2dab4
+prior_blob: 817a4c6b6728cfd3885d3b10d8ca5ae2d5dd97b5
 truth_posture: CONFIRMED one direct sensitivity child with a substantive hold README and no executable rule, contract binding, schema, fixture, test, validator, bundle, evaluator, consumer, decision record, or release integration / PROPOSED narrow routing boundary only / HOLD role-family meaning, canonical scope, owner, package, evaluator, consumer, and path-retention decisions / UNKNOWN whether role means actor, reviewer, source, service capability, or another governed family
 related:
   - ../README.md
@@ -37,7 +37,7 @@ related:
 > granting authority, or activating policy.
 
 > [!IMPORTANT]
-> **Safe current conclusion at `main@e52165e820b0`:** this directory
+> **Safe current conclusion at `main@332a371f0be1`:** this directory
 > contains only this README and the `sensitivity/` child. The child contains
 > only `.gitkeep` and its hold README. No executable rule, accepted role
 > contract, schema binding, fixture, test, validator, bundle, evaluator,
@@ -154,8 +154,12 @@ Current validation can prove only documentation and topology:
 python tools/validators/docs/link-check/check_links.py policy/role/README.md
 python tools/validators/docs/meta-block/check_meta_blocks.py \
   --profile required policy/role/README.md
-python tools/validators/docs/fragments/check_fragments.py policy/role/README.md
 ```
+
+The link checker covers repository-local files, directories, images, and
+fragments. The metadata checker covers the bounded metadata envelope. Passing
+either command confirms only its exercised documentation QA scope at this
+revision.
 
 These commands do not prove role resolution, authority binding, sensitivity
 composition, reviewer separation, runtime enforcement, release, or publication.
