@@ -1,660 +1,832 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runbooks/fauna/rollback
-title: Fauna — Rollback Runbook
-type: standard
-version: v0.1
-status: draft
-owners: <Fauna lane steward> + <Release steward> + <Docs steward>
+title: Fauna Rollback Runbook
+type: operational-runbook
+version: v2.0.0
+status: DRAFT_REPOSITORY_GROUNDED; DECISION_AND_REVIEW_HANDOFF_ONLY; SHARED_SYNTHETIC_REHEARSAL_AVAILABLE; FAUNA_TABLETOP_AVAILABLE; FAUNA_INTEGRATED_REHEARSAL_ABSENT; OPERATIONAL_ROLLBACK_HELD; SENSITIVE_LOCATION_FAIL_CLOSED; NON_RELEASE; NON_PUBLICATION; NOT_FOR_LIFE_SAFETY
+owners: "@bartytime4life — verified CODEOWNERS route only; accountable Fauna, taxonomy, source, rights, sensitivity, geoprivacy, evidence, policy, review, correction, rollback, release, operations, security, and public-recovery assignments NEEDS VERIFICATION"
 created: 2026-05-13
-updated: 2026-05-13
-policy_label: public
+updated: 2026-08-28
+policy_label: repository-facing; fauna; rollback; withdrawal; correction-aware; sensitive-location; synthetic-proof-bounded; fail-closed; non-publisher
+current_path: docs/runbooks/fauna/ROLLBACK_RUNBOOK.md
+owning_root: docs/
+path_authority: same-path modernization under accepted ADR-0029 and Directory Rules v2
+responsibility: Classify a defective Fauna release-facing surface, prepare a bounded rollback, withdrawal, hold, error, or forward-correction review handoff, and stop before any operational or public mutation.
+truth_posture: cite-or-abstain
+authority_effect: none
+source_activation_effect: none
+lifecycle_effect: none
+release_effect: none
+deployment_effect: none
+promotion_effect: none
+publication_effect: none
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 6e02ced04834c8f9f2210da8c655cdef626a3b08
+  target_path: docs/runbooks/fauna/ROLLBACK_RUNBOOK.md
+  target_prior_blob: d8d7d3bb9c40d3de50d484e6d13640bee5baaa58
+  lane_readme_prior_blob: 5989e996d317cace6d63c0fc6b22c2cdf9f0c207
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  rollback_drill_blob: 78a0c3663ef30e5edb9260c0c5ab58d6e7f860fb
+  rollback_card_contract_blob: c6d3c35c56b064e04c3a2532f4709d938d7b0c1a
+  rollback_card_schema_blob: e0a9edf02dd5d6997eda60a054a5bf19636c3dd4
+  rollback_card_validator_blob: 9e9ed5a92851935b41a36698e4bead13ef4edf57
+  rollback_card_validator_test_blob: c8aeac6348127fb768981e2b5b5588c6a7bdeb78
+  synthetic_rehearsal_helper_blob: a8f6bff350e79b453f425ebce9a9ded6801f8944
+  synthetic_rehearsal_test_blob: b644ca6c4185b3f81bc339c077eae85299833261
+  rollback_drill_workflow_blob: 2d0c39fc6ff8e44bd9cf753ce546475079e8ffd5
+  fauna_rollback_schema_stub_blob: 08b82778b3654ab7643a12770bdcb976eb12e9ff
+  fauna_rollback_test_lane_blob: 28853dc37d00981a405613f43b1860d5500db6bb
+  fauna_release_candidate_lane_blob: 653277efe3a44a96c29af481a73d7d90c41443ce
+  fauna_release_rollback_lane_blob: 7dbf5b5b93cb9a4b90b1f2270691a4069389e50f
+  fauna_data_rollback_lane_blob: e25a89750b448d902271d824fdad9273929c2748
+  fauna_proof_lane_blob: 70c2501e6d7c8ff4beeae7577fde9acd6b720b2e
+  fauna_receipt_lane_blob: c201b0d9c5882451ac31bd7c1ad725b98b635aad
+  fauna_published_layer_lane_blob: 571f90883e51558971ef639400bc6fef4b77405b
+  fauna_rollback_pipeline_lane_blob: 0eeeab638bbfcced8da7afddf3c8b076442ae96f
+source_lineage:
+  - title: KFM_Fauna_Architecture_PDF_Only_Report.pdf
+    source_class: PLANNING_LINEAGE
+    use: Preserve fauna source-role, sensitivity, geoprivacy, evidence, correction, and rollback framing only; its no-repository assumptions do not describe current implementation.
+  - title: KFM Evidence, Documentation & Ideas Atlas — 2026-08-24
+    source_class: NOTION_COORDINATION_ONLY
+    use: Keep implementation, review, merge, rollback authorization, execution, release, deployment, promotion, and publication as separate states.
+  - title: KFM Markdown Update & Modernization Agent v1.0
+    source_class: CURRENT_TASK_GUIDANCE
+    use: Same-path repository-grounded Markdown modernization and focused draft-pull-request delivery.
 related:
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/trust-membrane.md
+  - docs/runbooks/fauna/README.md
+  - docs/runbooks/fauna/ROLLBACK_DRILL.md
+  - docs/runbooks/fauna/PROMOTION_RUNBOOK.md
+  - docs/runbooks/fauna/PUBLICATION_GATE_DRY_RUN.md
+  - docs/runbooks/fauna/SENSITIVE_OCCURRENCE_REVIEW.md
+  - docs/runbooks/fauna/NO_NETWORK_TEST_RUNBOOK.md
   - docs/domains/fauna/README.md
-  - docs/runbooks/release/RELEASE_RUNBOOK.md
-  - docs/runbooks/release/CORRECTION_RUNBOOK.md
-  - docs/runbooks/fauna/VALIDATION_RUNBOOK.md
-  - release/rollback_cards/README.md
-  - policy/domains/fauna/README.md
+  - docs/domains/fauna/SENSITIVITY.md
+  - docs/domains/fauna/POLICY.md
+  - docs/doctrine/directory-rules.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/runbooks/rollback-rehearsal.md
   - contracts/release/rollback_card.md
   - schemas/contracts/v1/release/rollback_card.schema.json
-tags: [kfm, runbook, fauna, rollback, release, governance]
+  - schemas/contracts/v1/domains/fauna/rollback_card.schema.json
+  - fixtures/release/rollback_card/
+  - tools/validators/release/validate_rollback_card.py
+  - tools/release/rollback_apply.py
+  - tests/validators/test_validate_rollback_card.py
+  - tests/release/test_synthetic_rollback_rehearsal.py
+  - tests/domains/fauna/release/rollback/README.md
+  - .github/workflows/rollback-drill.yml
+  - release/candidates/fauna/README.md
+  - release/rollback/fauna/README.md
+  - release/rollback_cards/README.md
+  - data/rollback/fauna/README.md
+  - data/proofs/fauna/README.md
+  - data/receipts/fauna/README.md
+  - data/published/layers/fauna/README.md
+  - pipelines/rollback/fauna/README.md
 notes:
-  - All file paths in this document are PROPOSED until verified against mounted-repo evidence.
-  - The runbook describes governed rollback; it is NOT a hidden-file-copy procedure.
+  - The repository implements a closed, fixture-first shared RollbackCard candidate profile and a deterministic marker-protected synthetic rollback/withdrawal rehearsal.
+  - The shared profile proves candidate shape and local consistency only. Its governance flags remain false and release_ref remains null.
+  - The Fauna Rollback Drill adds a domain tabletop and public-safety review, but direct Fauna rollback fixtures, tests, an executor, an accepted target, and operational authority remain absent.
+  - The Fauna-specific rollback-card schema remains a permissive id-only greenfield stub and must not be used as operational proof.
+  - The helper's optional report path is caller-controlled and is not confined to the synthetic workspace.
+  - Scenario-derived correction and invalidation paths can replace existing files on collision; append-only synthetic history is not established.
+  - Fauna candidate, rollback, proof, and data-plane rollback roots contain README or placeholder material rather than an accepted Fauna rollback instance.
+  - Published Fauna delivery lanes exist in the repository; their presence does not prove current public deployment, safe target identity, or operational read-back.
+  - This runbook prepares classification and review evidence only. It never performs containment, withdrawal, rollback, correction, alias mutation, invalidation, release, deployment, promotion, or publication.
 [/KFM_META_BLOCK_V2] -->
 
-# Fauna — Rollback Runbook
+<a id="top"></a>
 
-> Operate a **governed**, evidence-preserving rollback of a Fauna release — restoring a prior safe artifact set through the same release path, never through a hidden file move.
+# Fauna Rollback Runbook
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Doctrine: CONFIRMED" src="https://img.shields.io/badge/doctrine-CONFIRMED-2ea44f">
-  <img alt="Implementation: PROPOSED" src="https://img.shields.io/badge/impl-PROPOSED-orange">
-  <img alt="Lane: fauna" src="https://img.shields.io/badge/lane-fauna-1f6feb">
-  <img alt="Sensitivity: fail-closed" src="https://img.shields.io/badge/sensitive--lane-fail--closed-critical">
-  <img alt="Last updated: 2026-05-13" src="https://img.shields.io/badge/updated-2026--05--13-informational">
-</p>
+> **One-line purpose.** Classify a defective Fauna release-facing surface, prepare a public-safe rollback, withdrawal, hold, error, or forward-correction handoff, and stop before any source, lifecycle, alias, consumer, release, deployment, promotion, or publication mutation.
 
-| Field | Value |
-|---|---|
-| **Status** | `draft` |
-| **Owners** | `<Fauna lane steward>` · `<Release steward>` · `<Docs steward>` *(placeholders — confirm in PR)* |
-| **Required co-signers for execution** | Release authority **distinct from** the affected release's original author when materiality applies *(per §24.6 closure rule)* |
-| **Last updated** | 2026-05-13 |
-| **Authority basis** | Lifecycle law · trust membrane · correction/rollback model · Fauna sensitivity posture |
-| **Trigger class** | Failed release · post-publication defect · sensitivity leak · rights revocation · stale-state escalation |
-
----
-
-## Quick jump
-
-- [1. Scope and audience](#1-scope-and-audience)
-- [2. When to invoke this runbook](#2-when-to-invoke-this-runbook)
-- [3. Fauna-specific sensitivity posture](#3-fauna-specific-sensitivity-posture)
-- [4. Preflight checks](#4-preflight-checks)
-- [5. The rollback flow](#5-the-rollback-flow)
-- [6. Defect classification — Fauna decision matrix](#6-defect-classification--fauna-decision-matrix)
-- [7. Step-by-step procedure](#7-step-by-step-procedure)
-- [8. Public-surface disablement details](#8-public-surface-disablement-details)
-- [9. RollbackCard, CorrectionNotice, and lineage artifacts](#9-rollbackcard-correctionnotice-and-lineage-artifacts)
-- [10. Stale-state and supersession markers](#10-stale-state-and-supersession-markers)
-- [11. Post-rollback validation](#11-post-rollback-validation)
-- [12. Rollback drill discipline](#12-rollback-drill-discipline)
-- [13. Anti-patterns](#13-anti-patterns)
-- [14. Affected files and homes](#14-affected-files-and-homes)
-- [15. Verification backlog](#15-verification-backlog)
-- [16. FAQ](#16-faq)
-- [17. Related docs](#17-related-docs)
-- [18. Appendix](#18-appendix)
-
----
-
-## 1. Scope and audience
-
-This runbook governs **rollback** of a published **Fauna** lane artifact — release manifest, layer, catalog record, EvidenceBundle, Focus Mode AI answer set, or generated derivative — back to a prior safe release.
-
-**In scope**
-
-- Fauna releases that touch `Taxon`, `Occurrence Public`, `Occurrence Restricted`, `RangePolygon`, `SeasonalRange`, `MigrationRoute`, `SensitiveSite`, `MortalityObservation`, `DiseaseObservation`, `Invasive Species Record`, `Conservation Status`, and `Redaction Receipt` objects. *(Object families per the Fauna domain dossier.)*
-- Public-safe Fauna map layers, generalized occurrence density grids, range/seasonal-range layers, species pages, and Focus Mode answers grounded in released Fauna EvidenceBundles.
-- The Fauna pipeline phases **only at and after PUBLISHED** — rollback restores `PUBLISHED → prior PUBLISHED`. Defects detected at `WORK`, `QUARANTINE`, `PROCESSED`, or `CATALOG / TRIPLET` are *gate failures*, not rollbacks; see [`VALIDATION_RUNBOOK.md`](VALIDATION_RUNBOOK.md).
-
-**Out of scope**
-
-- Habitat suitability surfaces, model cards, or habitat patches — owned by the Habitat lane *(per Fauna boundary)*.
-- Flora records *(per Fauna boundary)*.
-- Adjacent context layers (hydrology, soil, agriculture, roads, settlements, archaeology, people) — those are governed in their own lanes; Fauna's relation to them runs through governed joins only.
-- Schema or contract migrations not bound to a specific Fauna release. *(Use a schema-migration ADR + `migrations/rollback/`.)*
-
-**Audience**
-
-- **Primary:** Fauna lane steward, Release steward, operator-on-call.
-- **Secondary:** Reviewers, AI/Focus Mode owners (because Fauna AI answers must be invalidated when their evidence is withdrawn), and downstream derivative owners (Habitat–Fauna joins, indexes, tiles).
-
-> [!IMPORTANT]
-> **Doctrine — CONFIRMED.** Correction and rollback are *publication requirements*, not afterthoughts. A released Fauna claim, layer, or answer is only "safely published" if its **correction path and rollback target** are already in place. This runbook codifies the rollback half of that obligation.
-
-[Back to top](#fauna--rollback-runbook)
-
----
-
-## 2. When to invoke this runbook
-
-Invoke when **any** of the following is true *for a currently-PUBLISHED Fauna artifact*:
-
-| Trigger | Severity floor | Example (illustrative) |
-|---|---|---|
-| **Sensitivity leak** — exact sensitive-taxon geometry, nest/den/roost/hibernacula/spawning location, or restricted-occurrence row reached a public surface | **Critical — fail-closed; disable immediately** | Public tile reveals exact nest coordinate that should have been generalized through a geoprivacy transform. |
-| **Rights revocation / change** | High | Steward source rescinds redistribution permission on an occurrence dataset already in `data/published/layers/fauna/`. |
-| **Evidence defect** — `EvidenceRef` no longer resolves to a valid `EvidenceBundle`; uncited claim leaked to a public answer | High | Focus Mode ANSWER cites a withdrawn observation; cite-or-abstain posture is violated. |
-| **Geometry defect** — exact-vs-generalized confusion, CRS error, or topology corruption | Medium–High | A released `RangePolygon` was rebuilt against the wrong `GeographyVersion`. |
-| **Temporal defect** — `observed`, `valid`, `retrieval`, `release`, or `correction` time conflated; stale claim served as current | Medium | Historical occurrence served without a stale-state badge after source freshness expired. |
-| **Policy defect** — `PolicyDecision` for a public surface should have been DENY/RESTRICT/ABSTAIN | High | A sensitive-lane DENY rule was bypassed in the most recent release manifest. |
-| **AI answer defect** — `AIReceipt` references invalidated or stale Fauna evidence | Medium | Species-page Focus Mode answer cites an EvidenceBundle whose source admission was reversed. |
-| **Catalog defect** — `CatalogMatrix` closure broken (orphan artifact, dangling source) | Medium | Public layer manifest references a missing source descriptor. |
-| **Release-infrastructure defect** — `RELEASE_MANIFEST_INVALID` or `ROLLBACK_TARGET_MISSING` reason code surfaced after publication | High | Manifest signed off a candidate that no longer validates. |
-
-> [!CAUTION]
-> **Sensitive-lane rule — CONFIRMED.** For Fauna sensitivity leaks (sensitive taxa locations, nests, dens, roosts, hibernacula, spawning, or steward-controlled records), public surfaces **MUST be disabled before** the rollback discussion completes — fail closed first, deliberate after. The doctrine is "DENY by default" for unreviewed exact sensitive Fauna locations.
-
-[Back to top](#fauna--rollback-runbook)
-
----
-
-## 3. Fauna-specific sensitivity posture
-
-Fauna inherits the project-wide rollback doctrine but adds non-negotiable sensitivity rules. Understanding them keeps a rollback from making exposure *worse* — for example, by "restoring" a prior release that itself contained a redaction defect.
-
-**Sensitive geometry classes (CONFIRMED doctrine, PROPOSED enumeration in policy):**
-
-- Exact nest / den / roost / hibernacula / spawning-site coordinates.
-- Exact occurrence coordinates for sensitive taxa per Conservation Status and steward determination.
-- Steward-controlled records flagged as restricted in the source registry (e.g., KDWP-style heritage records, NatureServe heritage occurrences, USFWS ECOS-restricted listings).
-- Telemetry-derived exact location data from agency monitoring, eDNA / acoustic / GPS-collared programs.
-
-**Doctrine on public exposure:**
-
-- Public Fauna products serve **`Occurrence Public`**, generalized density grids, range / seasonal-range polygons, public-safe popups — not **`Occurrence Restricted`** or exact `SensitiveSite` geometry.
-- Geoprivacy transforms (generalization, H3 binning, jitter, withholding) **must emit a `RedactionReceipt`** that accompanies any public-safe derivative.
-- A rollback that restores a *prior* release MUST re-verify those rollback-target artifacts under **current** sensitivity policy — sensitivity rules may have tightened since the prior release shipped.
-
-[Back to top](#fauna--rollback-runbook)
-
----
-
-## 4. Preflight checks
-
-Run these before invoking any rollback step. The preflight is a **closure check**, not a formality.
-
-```text
-[ ] Defect class identified (see §6 matrix) and recorded with reason code.
-[ ] Affected release_id(s) identified — primary and any chained derivatives.
-[ ] Prior safe release_id (rollback target) located in release/manifests/.
-[ ] Rollback target digests and signatures verified (RELEASE_MANIFEST_INVALID risk).
-[ ] Downstream derivatives enumerated:
-      - data/published/layers/fauna/* affected
-      - tiles / PMTiles / GeoParquet / COG artifacts affected
-      - Evidence Drawer payloads referencing the rolled-back EvidenceBundle
-      - Focus Mode AIReceipts that resolve through the affected EvidenceBundle
-      - graph / triplet projections that depend on the affected catalog record
-      - search / vector indexes that ingested the affected artifact
-[ ] Sensitivity re-check on the rollback target under CURRENT policy version.
-[ ] Rights re-check on the rollback target under CURRENT source descriptor.
-[ ] Review state requirement confirmed (sensitive lane → ReviewRecord required).
-[ ] Release authority assigned — distinct from original author for material releases.
-[ ] Comms plan drafted: who is notified (stewards, downstream consumers, public).
-```
-
-> [!NOTE]
-> **Universal closure rule — CONFIRMED.** A governed transition (including rollback) is closed only when (i) the required artifacts exist, (ii) every required artifact *resolves* its dependencies (`EvidenceRef → EvidenceBundle`, `source_id → SourceDescriptor`, `model_id → ModelRunReceipt`), and (iii) the policy gate evaluated and recorded its decision. Missing any of these means the rollback **fails closed** and the current public state is preserved.
-
-[Back to top](#fauna--rollback-runbook)
-
----
-
-## 5. The rollback flow
-
-```mermaid
-flowchart TD
-  A[Defect detected on PUBLISHED Fauna artifact] --> B{Sensitivity leak<br/>or rights revocation?}
-  B -- Yes --> C[Disable public surface<br/>fail-closed FIRST]
-  B -- No --> D[Classify defect<br/>see §6 matrix]
-  C --> D
-  D --> E[Locate prior safe release<br/>release/manifests/fauna/]
-  E --> F[Verify rollback target<br/>digests + signatures + sensitivity<br/>under CURRENT policy]
-  F -->|fails| Z[HOLD — escalate to steward review]
-  F -->|passes| G[Enumerate downstream derivatives]
-  G --> H[Withdraw / supersede<br/>affected public artifacts]
-  H --> I[Mark UI state<br/>stale / withdrawn / superseded]
-  I --> J[Restore prior release<br/>via the SAME governed release path]
-  J --> K[Emit RollbackCard<br/>+ CorrectionNotice]
-  K --> L[Repoint aliases<br/>data/rollback/fauna/release_id/]
-  L --> M[Invalidate downstream:<br/>AIReceipts · indexes · tiles · graph]
-  M --> N[Run post-rollback validation<br/>see §11]
-  N -->|fails| Z
-  N -->|passes| O[Publish rollback notice<br/>+ correction lineage]
-  O --> P[Close incident<br/>archive receipts]
-
-  classDef warn fill:#fff3cd,stroke:#856404,color:#856404;
-  classDef stop fill:#f8d7da,stroke:#721c24,color:#721c24;
-  classDef ok fill:#d4edda,stroke:#155724,color:#155724;
-  class C,H,M warn;
-  class Z stop;
-  class O,P ok;
-```
-
-> [!NOTE]
-> **Diagram status — PROPOSED.** The flow encodes CONFIRMED doctrine (correction/rollback model, finite-outcome posture, fail-closed sensitive lanes). Specific step *names* (e.g., "Repoint aliases") map to PROPOSED implementation artifacts (`data/rollback/<domain>/<release_id>/`) per Directory Rules §9.1 and remain `NEEDS VERIFICATION` against the mounted repo.
-
-[Back to top](#fauna--rollback-runbook)
-
----
-
-## 6. Defect classification — Fauna decision matrix
-
-The defect class determines both the correction *posture* (how the public claim is treated *during* incident handling) and the rollback *posture* (how the prior release is restored). This table specializes the project-wide correction/rollback model for the Fauna lane.
-
-| Defect class | Fauna example | Correction posture | Rollback posture |
-|---|---|---|---|
-| **Evidence gap** | `Occurrence Public` cites a withdrawn observation; cited `EvidenceBundle` no longer closes | ABSTAIN or withdraw the unsupported claim | Restore prior evidence-supported release |
-| **Rights defect** | Steward source rescinds redistribution permission for occurrence dataset | DENY public use; quarantine source/artifact | Withdraw affected artifacts |
-| **Sensitivity leak** | Exact nest coordinate exposed in public tile or popup | Redact/generalize and notify stewards | **Immediate public disablement** before restore — verify target under current policy |
-| **Geometry defect** | `RangePolygon` rebuilt against wrong `GeographyVersion`; topology corruption | Rebuild derivative layer + Evidence payload | Restore previous digest-pinned artifact |
-| **Temporal defect** | Stale `Occurrence Public` served as current; `valid`/`retrieval`/`release` times conflated | Correct valid/source/retrieval/release time | Mark stale until rebuilt |
-| **Policy defect** | Sensitive-lane DENY rule bypassed in latest release | Re-run policy and decision envelope | Disable route/layer if gate failed |
-| **AI answer defect** | Focus Mode species-page ANSWER cites a now-invalid Fauna EvidenceBundle | Invalidate `AIReceipt` and Runtime Response Envelope | Remove the answer; preserve the EvidenceBundle for audit |
-| **Catalog defect** | `CatalogMatrix` orphan in fauna lane; layer manifest references missing source | Re-emit catalog closure after proof repair | Restore previous catalog state |
-
-> [!TIP]
-> When a single incident touches multiple defect classes (common when a sensitivity leak is also a rights defect, for example), **apply the strictest posture** in the affected row — escalate to *fail-closed* and let the milder rollback motions follow.
-
-[Back to top](#fauna--rollback-runbook)
-
----
-
-## 7. Step-by-step procedure
-
-The steps below are written for execution by a Release steward in coordination with the Fauna lane steward. They assume the preflight (§4) has cleared.
-
-### 7.1 Step 1 — Freeze the trust boundary
-
-1. Acquire a rollback lock for the affected `release_id` in `release/promotion_decisions/` (or its repo equivalent). **PROPOSED** mechanism — verify against mounted repo.
-2. Pause **all** Fauna promotion candidates queued for the next release.
-3. Notify on-call: Fauna lane steward, Release steward, Policy steward, Focus Mode owner (if affected).
-
-### 7.2 Step 2 — Disable affected public surfaces
-
-This is the irreversible-first step for sensitivity / rights / policy defects. For evidence / geometry / temporal / catalog / AI-answer defects, this step still runs but may be *narrower* (a single layer, a single feature, a single AI answer).
-
-| Surface | Disablement action | Owning system |
-|---|---|---|
-| `apps/governed-api/` Fauna feature lookup endpoint | Return `DENY` (sensitivity / rights / policy) or `ABSTAIN` (evidence / temporal) with reason code; **never silently fall through** | governed API |
-| `apps/governed-api/` Fauna `LayerManifest` resolver | Return `DENY` or `ERROR`; remove the affected `layer_id` from the published registry | governed API + `data/registry/layers/` |
-| `apps/explorer-web/` Fauna map layers | Removed by manifest, not by style filter (style-only hiding is an anti-pattern) | explorer-web |
-| Focus Mode answers grounded in the affected `EvidenceBundle` | Return `ABSTAIN`; invalidate the AIReceipts; do **not** remove the underlying EvidenceBundle (audit) | governed AI |
-| Evidence Drawer payloads | Surface lineage break as the abstain/deny reason rather than hiding it | governed API + Evidence Drawer |
-| Tiles / PMTiles / GeoParquet / COG | Remove from `MapReleaseManifest`; emit cache-invalidation record with old/new release ids | release + cache layer |
-| Search / vector indexes | Mark affected entries withdrawn; re-emit index after rollback completes | search / index workers |
-| Graph / triplet projections | Invalidate affected projections; do not delete history | graph workers |
+[![Operational rollback: held](https://img.shields.io/badge/operational%20rollback-HOLD-b42318?style=flat-square)](#current-disposition)
+[![Shared synthetic rehearsal: available](https://img.shields.io/badge/shared%20synthetic%20rehearsal-available-8250df?style=flat-square)](#shared-synthetic-rehearsal)
+[![Fauna integrated proof: absent](https://img.shields.io/badge/Fauna%20integrated%20proof-absent-b42318?style=flat-square)](#fauna-integrated-rehearsal-gap)
+[![Sensitive locations: fail closed](https://img.shields.io/badge/sensitive%20locations-fail%20closed-b42318?style=flat-square)](#fauna-safety-and-source-role-boundary)
+[![Public effect: none](https://img.shields.io/badge/public%20effect-none-6e7781?style=flat-square)](#authority-and-terminal-boundary)
 
 > [!WARNING]
-> **Anti-pattern.** Do **not** hide sensitive geometry with a style filter, a popup tweak, or an opacity change. Sensitive geometry must be transformed *before* publication and proven absent from the artifact. Style-only hiding leaves the bytes in the public artifact.
+> **KFM is not an official wildlife, law-enforcement, hunting, veterinary, legal-status, regulatory, disease-response, emergency, or life-safety authority.** Do not use this procedure to issue or replace agency determinations, operational instructions, enforcement actions, disease-control directions, harvest rules, or protective guidance. Direct current and authoritative decisions to the responsible issuing agency or steward.
 
-### 7.3 Step 3 — Verify the rollback target under current policy
-
-The prior release is your candidate target. Re-verify it under **today's** sensitivity, rights, schema, geography, and policy versions. The doctrine is explicit: **rollback is not a hidden file copy**.
-
-```text
-[ ] release_id locatable in release/manifests/fauna/
-[ ] manifest digests and signatures verify
-[ ] every EvidenceRef in the manifest resolves to an EvidenceBundle
-[ ] every source_id resolves to a current (non-superseded) SourceDescriptor
-[ ] sensitivity policy version applied today still permits the rollback target
-[ ] rights status on each source is still admissible
-[ ] schema versions referenced are not deprecated past tolerance
-[ ] GeographyVersion bindings are still valid (not silently superseded)
-[ ] review state (if required for sensitive content) is recordable today
-```
-
-If any item fails, **HOLD** and escalate to steward review. A failed target is not a rollback candidate; it is the trigger for a new release.
-
-### 7.4 Step 4 — Restore through the governed release path
-
-```text
-1. Build the rollback ReleaseManifest by reference (do not copy bytes blindly).
-2. Run the release-decision policy gate (it may DENY even on a rollback).
-3. Emit a ReleaseManifest update or supersession that points back to the prior release_id.
-4. Repoint published aliases via data/rollback/fauna/<release_id>/.
-5. Emit a RollbackCard (§9).
-6. Emit a CorrectionNotice referencing the defect class and invalidated derivatives (§9).
-7. Emit cache-invalidation records for tiles, styles, glyphs, sprites, and PMTiles.
-```
-
-### 7.5 Step 5 — Invalidate downstream derivatives
-
-- **AIReceipts:** any answer whose `evidence_refs[]` overlap the rolled-back bundle is invalidated. Preserve the receipt for audit; emit a successor `ABSTAIN` AIReceipt only when the user re-asks.
-- **Indexes:** rebuild the search and vector indexes against the restored release. Mark stale window in the index manifest.
-- **Tiles / PMTiles / GeoParquet / COG:** rebuild from the restored canonical state via the same governed publish path.
-- **Graph / triplet projections:** rebuild the affected projections.
-- **Habitat–Fauna joins (cross-lane):** notify the Habitat lane steward; cross-domain derivatives invalidate when either side rolls back.
-
-### 7.6 Step 6 — Mark UI state explicitly
-
-Public consumers must *see* that something changed:
-
-- `stale` badge — claim's underlying evidence aged past tolerance.
-- `superseded` badge — replaced by a newer claim with forward link.
-- `withdrawn` badge — claim removed; reason provided.
-- `correction posted` indicator — CorrectionNotice link surfaced on the species page / map popup / Evidence Drawer.
+<a id="current-disposition"></a>
 
 > [!IMPORTANT]
-> **Stale vs wrong — CONFIRMED.** KFM separates `stale` (evidence aged past tolerance) from `wrong` (substantively incorrect). Both have visible markers and traceable lifecycles. The rollback runbook handles `wrong`. The stale-state markers in §10 handle `stale`.
+> **Current disposition: `SHARED_SYNTHETIC_REHEARSAL_AVAILABLE / FAUNA_TABLETOP_AVAILABLE / FAUNA_INTEGRATED_REHEARSAL_ABSENT / OPERATIONAL_FAUNA_ROLLBACK_HOLD`.** The repository can validate shared `RollbackCard` candidates, run eight generic marker-protected synthetic rollback and withdrawal tests, and perform the public-safe Fauna tabletop defined in [`ROLLBACK_DRILL.md`](ROLLBACK_DRILL.md). It does not establish an affected Fauna release, a safe prior target, a schema-valid Fauna `RollbackCard` instance, accepted Fauna rollback policy, accountable approval, an operational executor, public-alias mutation, downstream invalidation adapters, or independent public read-back.
 
-[Back to top](#fauna--rollback-runbook)
-
----
-
-## 8. Public-surface disablement details
-
-The trust membrane forbids public clients from reaching `RAW`, `WORK`, `QUARANTINE`, canonical / internal stores, graph internals, vector indexes, source APIs, or direct model runtimes. During rollback, the membrane is the *only* place where disablement happens.
-
-### 8.1 governed API outcomes during rollback
-
-| Surface | Outcome during rollback | Forbidden during rollback |
-|---|---|---|
-| Fauna feature/detail lookup | `DENY` (rights/sensitivity/policy) · `ABSTAIN` (evidence/temporal) · `ERROR` (infra) | `ANSWER` with rolled-back evidence; silent fall-through |
-| Fauna `LayerManifest` resolver | `DENY` or `ERROR` for affected layers | Returning a layer that lacks a current `ReleaseManifest` |
-| Evidence Drawer payload | `ABSTAIN` or `DENY` with lineage-break reason | Hiding the lineage break |
-| Focus Mode (Fauna) | `ABSTAIN` with cite-or-abstain reason | Uncited authoritative claim; falling back to a generic answer |
-| Correction submit | `ACCEPTED` (intake only) or `DENY`/`ERROR` | Treating intake as approval |
-
-### 8.2 What clients see
-
-- Public web UI: layers vanish from the registry; popups reroute to a withdrawn-state Evidence Drawer; banner indicates a correction is in progress.
-- Focus Mode: `ABSTAIN` envelope with a stable reason code; no fluent paraphrase that smooths over the abstention.
-- API consumers: finite outcome from `{ANSWER, ABSTAIN, DENY, ERROR}`; reason codes from the documented enum.
-
-[Back to top](#fauna--rollback-runbook)
-
----
-
-## 9. RollbackCard, CorrectionNotice, and lineage artifacts
-
-Three artifacts close the rollback. They are the *durable* record of what happened.
-
-### 9.1 RollbackCard (CONFIRMED contract; PROPOSED schema home `schemas/contracts/v1/release/rollback_card.schema.json`)
-
-Illustrative shape — confirm field names against the schema before relying on this for code:
-
-```json
-{
-  "release_id": "<release_id_being_rolled_back>",
-  "rollback_to": "<prior_safe_release_id>",
-  "reason": "<defect_class + short narrative>",
-  "reason_code": "SENSITIVITY_LEAK | RIGHTS_UNKNOWN | MISSING_EVIDENCE | ROLLBACK_TARGET_MISSING | ...",
-  "invalidates": ["<derivative_id_1>", "<derivative_id_2>", "<aireceipt_id>", "..."],
-  "review_ref": "<review_record_id>",
-  "time": "<ISO-8601 timestamp>"
-}
+```yaml
+work_state: HOLD
+available_evidence:
+  - SHARED_ROLLBACKCARD_FIXTURE_PROFILE
+  - SHARED_ROLLBACKCARD_EXPLICIT_CANDIDATE_VALIDATION
+  - SHARED_MARKER_PROTECTED_SYNTHETIC_PLAN_AND_APPLY
+  - EIGHT_GENERIC_ROLLBACK_AND_WITHDRAWAL_TESTS
+  - FAUNA_PUBLIC_SAFE_TABLETOP_AND_HANDOFF
+missing_evidence:
+  - FAUNA_AFFECTED_RELEASE_NOT_ESTABLISHED
+  - FAUNA_PRIOR_SAFE_TARGET_NOT_ESTABLISHED
+  - FAUNA_ROLLBACKCARD_INSTANCE_NOT_ESTABLISHED
+  - FAUNA_POLICY_EXECUTION_NOT_BOUND
+  - FAUNA_ACCOUNTABLE_REVIEW_NOT_ESTABLISHED
+  - FAUNA_INTEGRATED_FIXTURE_AND_TEST_PROFILE_ABSENT
+  - FAUNA_OPERATIONAL_EXECUTOR_ABSENT
+  - FAUNA_PUBLIC_ALIAS_AUDITOR_NOT_OPERATIONAL
+  - FAUNA_INVALIDATION_ADAPTERS_NOT_ESTABLISHED
+  - FAUNA_PUBLIC_RECOVERY_READBACK_NOT_ESTABLISHED
+  - SYNTHETIC_REPORT_PATH_CONFINEMENT_ABSENT
+  - SYNTHETIC_COLLISION_SAFE_PERSISTENCE_ABSENT
+lifecycle_effect: none
+release_effect: none
+deployment_effect: none
+promotion_effect: none
+publication_effect: none
 ```
 
-**Home:** `release/rollback_cards/` *(per Directory Rules §9.2)*. Alias-revert receipts on the data plane live under `data/rollback/<domain>/<release_id>/` *(per Directory Rules §9.1; ADR pending on whether these collapse)*.
+**Quick navigation:** [Goal](#goal-and-scope) · [Authority](#authority-and-terminal-boundary) · [Evidence](#current-repository-evidence) · [Vocabulary](#state-and-vocabulary-separation) · [Safety](#fauna-safety-and-source-role-boundary) · [Decision](#rollback-decision-model) · [Preconditions](#preconditions) · [Procedure](#rollback-preflight-and-review-handoff) · [Target](#prior-target-safety) · [Invalidation](#invalidation-and-cross-lane-impact) · [Synthetic rehearsal](#shared-synthetic-rehearsal) · [Results](#interpret-the-results) · [Handoff](#accountable-review-handoff-packet) · [Gap](#fauna-integrated-rehearsal-gap) · [Graduation](#operational-graduation-gate) · [Validation](#documentation-validation) · [Related](#related-repository-surfaces) · [Maintenance](#maintenance-and-document-rollback)
 
-### 9.2 CorrectionNotice (CONFIRMED contract)
+---
 
-```json
-{
-  "claim_ref": "<published_claim_id_or_release_id>",
-  "prior_release_ref": "<previous_release_id>",
-  "change_summary": "<short prose; defect class; what changed; user-visible impact>",
-  "invalidates": ["<derivative_id_1>", "..."],
-  "review_ref": "<review_record_id>",
-  "time": "<ISO-8601 timestamp>"
-}
+<a id="goal-and-scope"></a>
+
+## Goal and scope
+
+Use this runbook when a released or release-facing Fauna carrier may be defective and maintainers need a bounded answer to this question:
+
+> Is there enough exact, current, public-safe support to prepare a rollback candidate, withdrawal candidate, hold, error record, or forward-correction handoff—and what must remain unchanged until accountable review and operational authority exist?
+
+The intended governed circle is:
+
+```text
+defect signal
+  -> public-safe incident summary and containment request
+  -> exact affected release, artifact, claim, source-role, time, and consumer freeze
+  -> rollback / withdrawal / hold / error / forward-correction classification
+  -> evidence, taxonomy, identity, rights, sensitivity, policy, review, and target assessment
+  -> RollbackCard candidate validation where applicable
+  -> shared synthetic-mechanics rehearsal
+  -> Fauna tabletop and accountable review handoff
+  -> separately authorized operational execution
+  -> invalidation, read-back, correction, receipts, proofs, and closure
 ```
 
-**Home:** `release/correction_notices/` *(per Directory Rules §9.2)*.
+Current repository evidence supports classification, shared candidate validation, generic synthetic mechanics, a Fauna tabletop, and review handoff only.
 
-### 9.3 Lineage that MUST be preserved
+### In scope
 
-- The original `ReleaseManifest` is **not deleted**. It is superseded with a forward link to the rollback target and the RollbackCard.
-- The original `EvidenceBundle` is **not deleted**. It is retained for audit; a CorrectionNotice records the defect.
-- AIReceipts referencing the invalidated answers are **not deleted**. They are retained with cross-reference to any successor receipt. (AIReceipts are never retroactively superseded — a new answer is a new receipt.)
-- `RedactionReceipt`s emitted on the rollback target remain in force.
+- Pin the exact repository revision and identify the affected release reference, artifact digests, public claims, source roles, spatial and temporal scope, and known consumers.
+- Distinguish rollback, withdrawal, hold, error, and forward correction without silently translating between them.
+- Preserve public versus restricted occurrence separation and prevent exact or reverse-engineerable sensitive wildlife detail from entering review packets.
+- Recheck the prior target under current taxonomy, source, rights, sensitivity, geoprivacy, evidence, policy, review, and compatibility controls.
+- Validate the shared `RollbackCard` fixture matrix and the actual candidate file prepared for review.
+- Run the repository's shared marker-protected synthetic rehearsal as a mechanics check.
+- Inventory all invalidation classes and cross-lane effects without executing them.
+- Produce a public-safe handoff that keeps review, authorization, execution, release, deployment, promotion, and publication separate.
 
-[Back to top](#fauna--rollback-runbook)
+### Out of scope
 
----
+This runbook does not:
 
-## 10. Stale-state and supersession markers
+- expose or process real exact sensitive locations, telemetry paths, observer identity, private-land joins, steward-restricted records, transform parameters, credentials, or protected source excerpts;
+- issue or interpret a legal, regulatory, conservation-status, hunting, disease-response, emergency, or life-safety determination;
+- activate, admit, fetch, alter, or withdraw a live source;
+- create a Fauna release, prior safe target, EvidenceBundle, proof, receipt, policy decision, review record, correction notice, or operational rollback authority;
+- mutate `data/published/`, an alias, API route, CDN, tile store, catalog, triplet store, search index, vector index, AI cache, Evidence Drawer, Focus Mode response, or deployed runtime;
+- treat the shared helper, the Hazards workflow extension, or a green workflow as integrated Fauna rollback proof;
+- execute repository revert, database recovery, infrastructure failover, source deactivation, secret rotation, incident command, release, deployment, promotion, or publication.
 
-Some incidents resolve to `stale` rather than `wrong`. The stale-state markers below are the *non-rollback* path; they coexist with the rollback path in the same UI surfaces.
-
-| Marker | Trigger | UI signal | Required action |
-|---|---|---|---|
-| Source freshness expired | `SourceDescriptor` cadence passed without re-admission | Stale-source badge in Evidence Drawer | Re-admit, supersede, or mark dependent claims stale |
-| Schema version drift | Object schema upgraded past the published claim's version | Schema-drift badge; show migration ADR | Migrate, re-validate, re-release; or mark stale |
-| Geography version drift | `GeographyVersion` replaced; published claim still bound to prior | Geography-version banner with prior-version cite | Rebind to current `GeographyVersion`; re-release; or mark stale |
-| Time-scope outside support | Claim's temporal scope falls outside current data window | Time-out-of-support indicator | Mark stale; do not refresh silently |
-| Model version superseded | `ModelRunReceipt` references an older model | Model-version badge with new model identity | Re-run; supersede; or mark stale |
-| Review aged out | `ReviewRecord` older than review-cycle tolerance for the sensitive lane | Review-aged badge | Trigger steward review; potentially downgrade tier |
-| Rights status changed | Rights change in `SourceDescriptor` or rights-holder communication | Rights-changed badge | Re-evaluate tier; potentially downgrade; emit `CorrectionNotice` if necessary |
-| Policy version changed | Policy referenced by `PolicyDecision` was superseded | Policy-version badge | Re-run gate; potentially supersede release |
-
-> [!TIP]
-> If a stale marker repeatedly fires for the same Fauna source — for example, a steward heritage feed whose cadence slips — that is a *governance* signal: open an entry in `docs/registers/VERIFICATION_BACKLOG.md`, not a rollback.
-
-[Back to top](#fauna--rollback-runbook)
+[Back to top](#top)
 
 ---
 
-## 11. Post-rollback validation
+<a id="authority-and-terminal-boundary"></a>
 
-After the rollback completes, run the validation set below before closing the incident. These mirror the Fauna tests-and-validators surface and the project-wide rollback-drill discipline.
+## Authority and terminal boundary
 
-| Check | Expectation |
-|---|---|
-| Schema validation | Restored manifest, EvidenceBundles, and layer manifests pass schema validation. |
-| Source-descriptor validation | Every restored source resolves to a current, admissible `SourceDescriptor`. |
-| Rights validation | Every restored source's redistribution class is still admissible. |
-| Sensitivity validation | No `Occurrence Restricted`, exact `SensitiveSite`, or sensitive-taxon exact geometry appears in any public-safe artifact. |
-| Evidence closure | Every `EvidenceRef` in restored artifacts resolves to an `EvidenceBundle`. |
-| Temporal logic | `observed` / `valid` / `retrieval` / `release` / `correction` times stay distinct where material. |
-| Geometry validity | Topology, CRS, generalization receipts hold. |
-| Policy deny tests | Sensitive-lane DENY tests still fail closed. |
-| Citation validation | Focus Mode answers grounded on restored evidence pass citation validation; otherwise ABSTAIN. |
-| Release-manifest validation | Restored `ReleaseManifest` validates and names a *new* rollback target for itself. |
-| Cache invalidation recorded | Old/new release ids and artifact digests captured in the invalidation record. |
-| No-network fixtures | Synthetic Fauna fixtures regression-pass against the restored release. |
-| Non-regression | Prior lineage tests still pass; downstream cross-lane joins (Habitat–Fauna) recompute. |
+Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts the exact [Directory Rules v2](../../doctrine/directory-rules.md) bytes. Human procedures remain under `docs/runbooks/`; semantic meaning remains under `contracts/`; machine shape under `schemas/`; policy under `policy/`; executable helpers under `tools/` and `pipelines/`; behavioral evidence under `tests/`; lifecycle, receipt, and proof artifacts under `data/`; and release decisions under `release/`.
 
-A rollback whose restored release lacks its own forward rollback target is **not done**. Every PUBLISHED release names a rollback target — including releases that *are themselves* rollbacks.
+This is a same-path modernization of an established file. It creates no new root, schema home, release family, rollback record, proof home, receipt home, pipeline, public carrier, or authority surface.
 
-[Back to top](#fauna--rollback-runbook)
-
----
-
-## 12. Rollback drill discipline
-
-> [!IMPORTANT]
-> **Doctrine — CONFIRMED.** "Rollback untested is not reliable." Every Fauna release MUST be associated with a `RollbackCard` and a rehearsed drill, not just a written procedure.
-
-The Fauna lane should rehearse rollback at least once per release window (cadence PROPOSED — confirm with Release steward). A drill is a *production-shaped* exercise, run against the synthetic / no-network Fauna fixture set, that:
-
-1. Picks an existing PUBLISHED release.
-2. Simulates one defect class from §6.
-3. Executes §7 end-to-end on the fixture release path.
-4. Confirms public surfaces moved to fail-closed outcomes within budget.
-5. Confirms downstream derivative invalidation fires.
-6. Confirms a RollbackCard, CorrectionNotice, and cache-invalidation record are emitted and validate.
-7. Restores the simulated environment and archives the drill receipt.
-
-Drill receipts live with other receipts. `docs/runbooks/fauna/` is for procedures; drill *records* belong under `data/receipts/` (proposed) or the equivalent fauna-lane receipt path — verify against mounted repo.
-
-[Back to top](#fauna--rollback-runbook)
-
----
-
-## 13. Anti-patterns
-
-| Anti-pattern | Why it is dangerous | Mitigation |
+| Responsibility | Owning surface | Current bounded role |
 |---|---|---|
-| Hidden file copy | "Restoring" a prior release by `cp`-ing bytes back into `data/published/` bypasses the trust membrane and produces no rollback record. | Always restore through the governed release path; emit a RollbackCard. |
-| Style-only hiding of sensitive geometry | The sensitive bytes remain in the public artifact; the leak persists. | Re-publish a generalized derivative; emit a `RedactionReceipt`; remove the offending artifact from the manifest. |
-| Silent supersession of evidence | Replacing an `EvidenceBundle` without a `CorrectionNotice` breaks the audit lineage. | Always emit a CorrectionNotice; retain the prior bundle for audit. |
-| Rolling back without re-verifying the target under current policy | A prior release may have shipped under a now-deprecated sensitivity rule; restoring it re-creates the leak. | Run §7.3 every time. |
-| Treating tiles, popup payloads, or AI text as proof | Tiles and AI text are *carriers*; they don't supersede the EvidenceBundle. | Anchor every claim to its `EvidenceBundle`; abstain when the bundle is invalid. |
-| Forgetting AI invalidation | Focus Mode keeps answering with stale citations because AIReceipts weren't invalidated. | Step 7.5 invalidates every AIReceipt whose `evidence_refs[]` overlap the rolled-back bundle. |
-| Forgetting cross-lane impact | Habitat–Fauna joins continue to depend on a withdrawn occurrence layer. | Notify the Habitat lane; invalidate cross-lane derivatives. |
-| Closing the incident before the rollback target has its own rollback target | The next failure has nowhere to go. | Re-verify that the *restored* release names a valid rollback target in its manifest. |
+| Human Fauna rollback procedure | This file | Classification, prerequisites, bounded commands, result interpretation, and review handoff |
+| Fauna rollback tabletop | [`ROLLBACK_DRILL.md`](ROLLBACK_DRILL.md) | Domain safety review layered over shared synthetic controls |
+| Shared rollback meaning | [`RollbackCard` contract](../../../contracts/release/rollback_card.md) | Candidate plan and explicit non-authority semantics |
+| Shared machine shape | [release `RollbackCard` schema](../../../schemas/contracts/v1/release/rollback_card.schema.json) | Closed `1.0.0` candidate shape |
+| Fauna schema stub | [Fauna `rollback_card` schema](../../../schemas/contracts/v1/domains/fauna/rollback_card.schema.json) | Permissive greenfield stub; not operational proof |
+| Shared candidate validator | [`validate_rollback_card.py`](../../../tools/validators/release/validate_rollback_card.py) | Fixture profile or explicit candidate validation |
+| Shared synthetic mechanics | [`rollback_apply.py`](../../../tools/release/rollback_apply.py) | Plan/apply inside marker-protected synthetic roots; optional report path is caller-controlled |
+| Generic behavioral evidence | [`test_synthetic_rollback_rehearsal.py`](../../../tests/release/test_synthetic_rollback_rehearsal.py) | Eight generic rollback, withdrawal, integrity, and fail-closed tests |
+| Fauna direct test lane | [`tests/domains/fauna/release/rollback/README.md`](../../../tests/domains/fauna/release/rollback/README.md) | Guidance/scaffold only; direct executable Fauna rollback proof absent |
+| Fauna candidate and rollback roots | [`release/candidates/fauna/`](../../../release/candidates/fauna/README.md) and [`release/rollback/fauna/`](../../../release/rollback/fauna/README.md) | Boundary documentation; no accepted candidate or execution record established |
+| Data-plane rollback support | [`data/rollback/fauna/`](../../../data/rollback/fauna/README.md) | Support-lane documentation; no operational alias mutation authority |
+| Public delivery | Governed APIs and released public-safe carriers | No mutation or direct access under this procedure |
 
-[Back to top](#fauna--rollback-runbook)
+The terminal result of this runbook is one of:
+
+```text
+REVIEW_HANDOFF_READY
+HOLD
+ERROR
+NO_ACTION
+```
+
+`REVIEW_HANDOFF_READY` means the candidate assessment is complete enough for accountable review. It does not mean rollback approved, rollback executed, public state restored, released, deployed, promoted, or published.
+
+[Back to top](#top)
 
 ---
 
-## 14. Affected files and homes
+<a id="current-repository-evidence"></a>
 
-> [!NOTE]
-> **Directory Rules basis.** The paths below follow Directory Rules §3 (responsibility roots), §9 (data and release), §12 (Domain Placement Law). Each path is **PROPOSED** until verified against mounted-repo evidence. Confirm before action.
+## Current repository evidence
 
-| Path / family | Role | Truth label |
+This checkpoint is pinned to `main@6e02ced04834c8f9f2210da8c655cdef626a3b08`. Re-read every named surface if the revision changes.
+
+| Surface | Confirmed repository state | Bounded conclusion |
 |---|---|---|
-| `docs/runbooks/fauna/ROLLBACK_RUNBOOK.md` | This document | PROPOSED |
-| `docs/runbooks/release/RELEASE_RUNBOOK.md` | Sibling release runbook | PROPOSED |
-| `docs/runbooks/release/CORRECTION_RUNBOOK.md` | Sibling correction runbook | PROPOSED |
-| `docs/domains/fauna/README.md` | Fauna lane dossier | PROPOSED |
-| `release/manifests/<release_id>/` | `ReleaseManifest` artifacts | PROPOSED |
-| `release/rollback_cards/<release_id>/` | `RollbackCard` artifacts | PROPOSED |
-| `release/correction_notices/<release_id>/` | `CorrectionNotice` artifacts | PROPOSED |
-| `release/withdrawal_notices/<release_id>/` | Withdrawal records | PROPOSED |
-| `data/rollback/fauna/<release_id>/` | Alias-revert receipts (data plane) | PROPOSED |
-| `data/published/layers/fauna/` | Released Fauna public-safe layers | PROPOSED |
-| `data/registry/sources/fauna/` | Fauna source descriptors | PROPOSED |
-| `data/registry/sensitivity/` | Sensitivity classes & redaction rules | PROPOSED |
-| `policy/domains/fauna/` | Fauna policy bundles & sensitivity rules | PROPOSED |
-| `policy/sensitivity/` | Cross-domain sensitivity rules | PROPOSED |
-| `contracts/release/rollback_card.md` | RollbackCard semantic contract | PROPOSED |
-| `schemas/contracts/v1/release/rollback_card.schema.json` | RollbackCard machine schema | PROPOSED (per ADR-0001) |
-| `apps/governed-api/` | Trust membrane — emits finite outcomes during rollback | PROPOSED |
-| `tests/domains/fauna/` | Fauna lane tests, including rollback-drill replay | PROPOSED |
-| `tests/runtime_proof/` | Finite-outcome and abstain proof | PROPOSED |
-| `fixtures/domains/fauna/` *or* `tests/fixtures/domains/fauna/` | No-network Fauna fixtures for drills | PROPOSED — single home per Directory Rules §6.6 |
+| Target runbook before this change | Proposal-era v0.1 with placeholder owners, proposed paths, an absent `VALIDATION_RUNBOOK.md` link, and operational instructions not supported by current implementation | Requires same-path grounding |
+| Fauna runbook index | Repository-grounded and explicitly identifies this file as the lone proposal-era substantive child | Index must be reconciled with this modernization |
+| Shared `RollbackCard` profile | Contract, closed schema, three valid fixtures, six invalid fixtures, expected findings, implemented validator, and tests exist | Candidate shape and local consistency only |
+| Shared synthetic helper | Marker-protected, synthetic-only plan/apply support with complete invalidation declaration and affected-history digest checks | Deterministic synthetic mechanics only |
+| Helper write boundary | Plan has no scenario-workspace mutation; apply replaces the synthetic alias and writes correction/invalidation records; optional `--report` accepts a caller-selected path | Report-path confinement is absent; operational use prohibited |
+| Synthetic record persistence | Scenario-derived correction and invalidation paths use atomic replacement | Append-only or collision-safe rehearsal history is not proved |
+| Hosted rollback workflow | Runs the shared fixture profile and twelve generic-plus-Hazards tests; contains no integrated Fauna rehearsal | Hosted success is not Fauna rollback proof |
+| Fauna rollback drill | Repository-grounded tabletop and shared-rehearsal procedure | Bounded `DRILL_HANDOFF_READY` evidence only |
+| Fauna direct rollback test lane | README/scaffold; direct Fauna rollback tests and reusable fixtures are not established | Integrated domain proof absent |
+| Fauna-specific rollback schema | `id`-required, `additionalProperties: true` greenfield stub with absent declared contract/fixtures/validator | Do not use as operational shape |
+| Fauna candidate, release-rollback, data-rollback, proof, and pipeline lanes | README or placeholder-oriented lane surfaces exist | Lane presence is not a candidate, proof, execution record, or runtime |
+| Root rollback-card inventory | Tracked root JSON placeholders are Agriculture and Atmosphere oriented; no Fauna card is present in the inspected root | Fauna `RollbackCard` instance absent |
+| Published Fauna layer lanes | Repository paths exist for Fauna delivery families | Presence does not prove deployment, current public state, or a safe rollback target |
+| Accountable authority | `@bartytime4life` is the verified GitHub route; functional roles remain unverified | Routing is not approval or rollback authority |
 
 > [!WARNING]
-> **Convention question — NEEDS VERIFICATION.** Prior expansion reports propose a *flat* `docs/runbooks/<subsystem>_<TYPE>.md` pattern (e.g., `ui_ROLLBACK.md`, `governed_ai_ROLLBACK.md`). This file uses the *lane-subdirectory* pattern `docs/runbooks/fauna/ROLLBACK_RUNBOOK.md` consistent with Domain Placement Law §12. Both are PROPOSED until mounted-repo evidence or an ADR pins one form. If the flat pattern is canonical, this file's logical successor is `docs/runbooks/fauna_ROLLBACK.md`. A drift entry in `docs/registers/DRIFT_REGISTER.md` is recommended either way.
+> Repository-tracked absence of a Fauna rollback record does not prove that no external, deployed, cached, or otherwise operational Fauna state exists. Deployed-state inventory and independent read-back remain separate evidence requirements.
 
-[Back to top](#fauna--rollback-runbook)
+[Back to top](#top)
 
 ---
 
-## 15. Verification backlog
+<a id="state-and-vocabulary-separation"></a>
 
-Items that this runbook can describe doctrinally but cannot confirm without mounted-repo evidence. Each item names the evidence that would settle it.
+## State and vocabulary separation
 
-| Item to verify | Evidence that would settle it | Status |
+Do not collapse the vocabularies below.
+
+| Vocabulary | Finite values | Meaning |
 |---|---|---|
-| `docs/runbooks/` convention (flat vs lane-subdirectory) | Mounted repo `docs/runbooks/` listing; ADR | NEEDS VERIFICATION |
-| RollbackCard schema field names and casing | `schemas/contracts/v1/release/rollback_card.schema.json` | NEEDS VERIFICATION |
-| Reason-code enum for rollback outcomes | `policy/release/` or governed-API contract | NEEDS VERIFICATION |
-| Fauna source registry and steward roles | `data/registry/sources/fauna/`; source descriptors | NEEDS VERIFICATION |
-| Fauna sensitivity policy text and geoprivacy transform rules | `policy/domains/fauna/`; `policy/sensitivity/` | NEEDS VERIFICATION |
-| Public/Restricted occurrence split implementation | Validators in `tools/validators/`; tests in `tests/domains/fauna/` | NEEDS VERIFICATION |
-| Cache-invalidation record schema for tiles/PMTiles/glyphs | Renderer / release contracts | NEEDS VERIFICATION |
-| Cross-lane invalidation API (Habitat–Fauna) | governed-API surface; test fixtures | NEEDS VERIFICATION |
-| Rollback drill cadence | Release steward governance | UNKNOWN |
-| Whether `data/rollback/fauna/` and `release/rollback_cards/` coexist or collapse | ADR (per Directory Rules §18 open question) | NEEDS VERIFICATION |
+| `RollbackCard.disposition` | `ROLLBACK_CANDIDATE`, `WITHDRAWAL_CANDIDATE`, `HOLD`, `ERROR` | Candidate recovery classification |
+| Work state | `HOLD`, `READY_FOR_REVIEW`, `BLOCKED`, `NO_ACTION` | Coordination state, not a schema field unless an owning contract says so |
+| Validator result | `PASS`, `FAIL` | Bounded check result |
+| Shared rehearsal result | `PASS` or helper `HOLD` with reason code | Synthetic mechanics result |
+| Governed runtime outcome | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | Public/API response behavior; not a rollback disposition |
+| Drill result | `DRILL_HANDOFF_READY`, `HOLD`, `ERROR` | Fauna tabletop/rehearsal handoff state |
+| Lifecycle/release state | Candidate, reviewed, released, withdrawn, superseded, or other owning-contract value | Governed state outside this runbook |
 
-[Back to top](#fauna--rollback-runbook)
+A sensitivity or rights issue may require an operational `DENY` response while the rollback candidate remains `HOLD` or `WITHDRAWAL_CANDIDATE`. Those facts can coexist; they must not be normalized into one invented vocabulary.
 
----
-
-## 16. FAQ
-
-**Q. Is a rollback the same as a correction?**
-No. A *correction* publishes a superseding release with the defect fixed. A *rollback* restores a prior safe release. Many incidents involve both — restore the prior release (rollback) while authoring a corrected next release (correction). Both emit their own records.
-
-**Q. Can a rollback delete the bad release?**
-No. The bad release is preserved as superseded. Rollback preserves history; it does not silently rewrite it.
-
-**Q. The defect is in a Focus Mode answer, not in the underlying evidence. Do I still need a release rollback?**
-Often no. Invalidate the affected `AIReceipt`s and emit a CorrectionNotice on the *answer set*. The underlying `EvidenceBundle` and `ReleaseManifest` stay put. A release rollback is needed only if the evidence itself is at fault.
-
-**Q. What if the prior release fails the §7.3 re-verification?**
-HOLD. Escalate to steward review. The prior release is not a candidate; the path forward is a new corrected release.
-
-**Q. Are cross-lane derivatives (Habitat–Fauna joins) the Fauna runbook's responsibility?**
-Fauna *notifies* the Habitat lane and lists affected joins in the RollbackCard `invalidates[]`. The Habitat lane runs its own invalidation for its derivatives.
-
-**Q. Does a rollback affect the Fauna pipeline lanes (RAW / WORK / QUARANTINE / PROCESSED / CATALOG / TRIPLET)?**
-No directly — rollback restores `PUBLISHED → prior PUBLISHED`. Upstream phases may run *new* validation/promotion in the wake of the rollback, but the rollback itself does not move bytes between upstream phases.
-
-**Q. Is the runbook itself versioned?**
-Yes — see the KFM Meta Block at the top of the file. Material changes update `version` and `updated`.
-
-[Back to top](#fauna--rollback-runbook)
+[Back to top](#top)
 
 ---
 
-## 17. Related docs
+<a id="fauna-safety-and-source-role-boundary"></a>
 
-- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED, and promotion as state transition. *(target PROPOSED)*
-- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — what the public path is allowed to touch. *(target PROPOSED)*
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement, §9 (data + release), §12 (Domain Placement Law). *(target PROPOSED)*
-- [`docs/domains/fauna/README.md`](../../domains/fauna/README.md) — Fauna lane dossier, source families, sensitivity posture. *(target PROPOSED)*
-- [`docs/runbooks/release/RELEASE_RUNBOOK.md`](../release/RELEASE_RUNBOOK.md) — sibling: how releases are made. *(target PROPOSED)*
-- [`docs/runbooks/release/CORRECTION_RUNBOOK.md`](../release/CORRECTION_RUNBOOK.md) — sibling: how corrections are issued. *(target PROPOSED)*
-- [`docs/runbooks/fauna/VALIDATION_RUNBOOK.md`](VALIDATION_RUNBOOK.md) — sibling: how pre-release Fauna validation runs. *(target PROPOSED)*
-- [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — record convention drift here, not in new doctrine. *(target PROPOSED)*
-- [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — open items needing mounted-repo evidence. *(target PROPOSED)*
-- [`docs/adr/`](../../adr/) — ADRs that pin file homes, schema homes, and boundary decisions. *(target PROPOSED)*
+## Fauna safety and source-role boundary
 
-[Back to top](#fauna--rollback-runbook)
+Fauna rollback is high-consequence because a recovery target can reintroduce an older sensitivity, rights, taxonomy, or role defect.
+
+Preserve these boundaries:
+
+- A taxonomic mapping is not an occurrence, legal status, conservation status, range, abundance estimate, habitat assignment, or release decision.
+- An occurrence is not a range polygon, absence claim, population estimate, habitat-suitability claim, disease conclusion, mortality cause, or regulatory determination.
+- Public and restricted occurrence families remain distinct.
+- Exact or reverse-engineerable nests, dens, roosts, hibernacula, spawning/breeding or aggregation sites, telemetry and movement traces, observer-linked records, steward-controlled detail, private-land joins, and transform parameters fail closed.
+- Style filters, opacity, popup suppression, or client-only hiding are not geoprivacy transforms. Sensitive bytes must not be present in a public-safe carrier.
+- Source roles remain explicit across direct observation, checklist/event data, specimen or collection record, agency/legal record, model or derived surface, and contextual material.
+- A public endpoint or public repository path does not establish redistribution rights.
+- Historical review, rights, or sensitivity clearance does not automatically remain valid for a prior target.
+- AI, maps, tiles, indexes, graphs, receipts, tests, and prose remain subordinate to evidence, policy, review, and release state.
+
+During a suspected exposure, prepare a public-safe containment request through the responsible operational and official-authority path. This runbook records the request and the known scope; it does not execute disablement.
+
+[Back to top](#top)
 
 ---
 
-## 18. Appendix
+<a id="rollback-decision-model"></a>
 
-<details>
-<summary><strong>A. Mapping of project-wide doctrine to Fauna rollback steps</strong></summary>
+## Rollback decision model
 
-| Doctrine source (citation) | Doctrine statement | Where it appears in this runbook |
+Use the strongest supported classification without forcing a rollback.
+
+| Condition | Candidate posture | Required next step |
 |---|---|---|
-| Correction & rollback model | Released claims must have a visible correction path and rollback target before publication. | §1 IMPORTANT callout; §11 final paragraph |
-| Universal closure rules | Transition is closed only when artifacts exist, dependencies resolve, and the policy gate evaluated. | §4 preflight; §7.3 re-verification |
-| Trust membrane | Public clients touch only governed APIs. | §8 |
-| Sensitive-lane fail-closed | Sensitive Fauna lanes default DENY. | §2 CAUTION; §3; §7.2 |
-| Stale vs wrong | Stale and wrong are different lifecycles. | §7.6 IMPORTANT; §10 |
-| Finite outcomes | Every governed surface returns from `{ANSWER, ABSTAIN, DENY, ERROR}` (plus validator `PASS`/`FAIL` and release `HOLD`). | §8.1 |
-| Receipts ↔ phase mapping | RollbackCard and CorrectionNotice are CATALOG and PUBLISHED phase artifacts. | §9 |
-| Rollback drill | "Rollback untested is not reliable." | §12 |
+| Corrected successor can use the normal governed promotion path and current public state can remain safely held | Forward correction | Use the promotion/correction path; preserve rollback readiness |
+| Distinct prior release is immutable, digest-verifiable, currently admissible, evidence-supported, taxonomy-compatible, rights-cleared, sensitivity-safe, reviewable, and consumer-compatible | `ROLLBACK_CANDIDATE` | Prepare and validate the exact candidate; stop before execution |
+| Current carrier must leave public use and no safe prior target exists | `WITHDRAWAL_CANDIDATE` | Prepare withdrawal/correction review and expected public non-answer |
+| Evidence, target, rights, sensitivity, taxonomy, policy, review, actor, executor, alias, invalidation, or read-back is unresolved | `HOLD` | Name every blocker and preserve history |
+| Input is malformed, contradictory, unsafe to inspect, or cannot produce a valid evaluation | `ERROR` | Record a public-safe reason code and no state change |
+| The signal is stale-only, already corrected, outside Fauna ownership, or produces no affected public state | `NO_ACTION` or route elsewhere | Record why rollback is not the correct mechanism |
 
-</details>
+Use the trigger reason codes defined by the shared contract rather than the proposal-era custom enumeration. Current codes include `RELEASE_DEFECT`, `EVIDENCE_CONTRADICTION`, `RIGHTS_CHANGE`, `SENSITIVITY_DISCOVERY`, `VALIDATION_FAILURE`, `SOURCE_WITHDRAWAL`, `POLICY_FAILURE`, `SECURITY_ISSUE`, `OPERATIONAL_FAILURE`, `EMERGENCY_HOLD`, `INSUFFICIENT_EVIDENCE`, and `INPUT_INVALID`.
 
-<details>
-<summary><strong>B. Rollback reason codes (PROPOSED enumeration — confirm against policy bundle)</strong></summary>
-
-| Reason code | Family | Typical trigger |
-|---|---|---|
-| `SENSITIVITY_LEAK` | Sensitivity | Exact sensitive-taxon geometry on public surface |
-| `RIGHTS_UNKNOWN` | Rights | Source redistribution permission unresolved or revoked |
-| `RIGHTS_REVOKED` | Rights | Steward source rescinded permission |
-| `MISSING_EVIDENCE` | Evidence | `EvidenceRef` no longer resolves |
-| `EVIDENCE_INVALIDATED` | Evidence | EvidenceBundle superseded for cause |
-| `SCHEMA_MISMATCH` | Schema | Object validates against deprecated schema |
-| `CONTRACT_DRIFT` | Contract | Field semantics changed without ADR |
-| `GEOGRAPHY_VERSION_DRIFT` | Geometry | Released claim bound to prior `GeographyVersion` |
-| `TEMPORAL_DEFECT` | Temporal | Time fields conflated or out-of-support |
-| `POLICY_GATE_BYPASSED` | Policy | DENY rule did not fire when it should have |
-| `RELEASE_MANIFEST_INVALID` | Release | Manifest references missing or invalid artifacts |
-| `ROLLBACK_TARGET_MISSING` | Release | No safe prior release exists |
-| `AI_ANSWER_INVALIDATED` | AI | AIReceipt's evidence refs no longer hold |
-| `CATALOG_CLOSURE_BROKEN` | Catalog | Orphan or dangling artifact in CatalogMatrix |
-| `ROLE_COLLAPSE` | Source role | Authoritative role downcast into observation, etc. |
-| `REVIEW_INSUFFICIENT` | Review | ReviewRecord lacks required reviewer separation |
-
-</details>
-
-<details>
-<summary><strong>C. Fauna sensitivity classes (illustrative, not exhaustive)</strong></summary>
-
-Sensitivity classes that Fauna releases must respect under current policy. Confirm against `policy/domains/fauna/` and `policy/sensitivity/` before relying on this list operationally.
-
-- Exact nest, den, roost, hibernacula, and spawning-site coordinates.
-- Exact occurrence coordinates for taxa above a conservation-status threshold.
-- Steward-restricted heritage occurrences.
-- Telemetry-derived exact location data (collar, acoustic, eDNA, camera, transmitter).
-- Pre-publication mortality and disease observations whose disclosure could compromise enforcement.
-- Locations of active surveys / monitoring programs whose disclosure could compromise the survey.
-
-For each class, the public-safe path is: generalization (H3 / grid / polygon), withholding, or denial — accompanied by a `RedactionReceipt`.
-
-</details>
-
-<details>
-<summary><strong>D. Glossary (Fauna-specific terms used here)</strong></summary>
-
-- **Taxon / Taxon Crosswalk** — animal taxonomic identity and cross-source mapping.
-- **Occurrence Public / Occurrence Restricted** — the public-safe and steward-controlled occurrence splits.
-- **SensitiveSite** — nest / den / roost / hibernacula / spawning / steward-restricted point or polygon.
-- **RangePolygon / SeasonalRange / MigrationRoute** — derived spatial-temporal range objects.
-- **Conservation Status** — legal or scientific status assignment, with source role distinguishing legal vs scientific.
-- **MortalityObservation / DiseaseObservation** — incident-class observations carrying their own sensitivity considerations.
-- **InvasiveSpeciesRecord** — observation/management record for invasive taxa.
-- **Redaction Receipt** — proof object that a geoprivacy transform was applied.
-- **Geoprivacy transform** — the public-safe operation (generalization, jitter, withholding) applied to sensitive geometry.
-- **Public-safe derivative** — the released artifact resulting from a geoprivacy transform.
-
-</details>
-
-[Back to top](#fauna--rollback-runbook)
+[Back to top](#top)
 
 ---
 
-**Related docs:** [Lifecycle law](../../doctrine/lifecycle-law.md) · [Trust membrane](../../doctrine/trust-membrane.md) · [Directory rules](../../doctrine/directory-rules.md) · [Fauna lane dossier](../../domains/fauna/README.md) · [Release runbook](../release/RELEASE_RUNBOOK.md) · [Correction runbook](../release/CORRECTION_RUNBOOK.md) *(targets PROPOSED)*
+<a id="preconditions"></a>
 
-**Last updated:** 2026-05-13 · **Version:** v0.1 · **Doc id:** `kfm://doc/runbooks/fauna/rollback`
+## Preconditions
 
-[↑ Back to top](#fauna--rollback-runbook)
+Before preparing a candidate, establish the following for one exact affected release and one exact repository revision.
+
+### Affected state
+
+- [ ] Affected release reference and immutable manifest identity.
+- [ ] Artifact digests, public audience, release time, spatial/time scope, and source-role inventory.
+- [ ] Exact affected claims, layer IDs, API surfaces, Evidence Drawer payloads, Focus Mode support, exports, caches, indexes, and cross-lane derivatives.
+- [ ] Public-safe incident summary that contains no protected detail.
+- [ ] Defect signal, detection time, reporter channel, and source of authority.
+
+### Support and policy
+
+- [ ] Evidence references resolve through the accepted evidence path.
+- [ ] Source IDs, product versions, native identifiers, taxonomy snapshot, and source roles are explicit.
+- [ ] Current rights, terms, attribution, access, and approved-purpose constraints are established.
+- [ ] Current sensitivity, geoprivacy transform, harmful-precision, and public/restricted conversion controls are established.
+- [ ] Current policy bundle and accountable review requirements are identified.
+- [ ] Correction/notice requirements and public status behavior are identified.
+
+### Target and execution boundary
+
+- [ ] Distinct prior target identified, or withdrawal/hold selected explicitly.
+- [ ] Prior target rechecked under current evidence, taxonomy, rights, sensitivity, policy, review, and consumer compatibility.
+- [ ] Required invalidation classes and downstream owners enumerated.
+- [ ] Qualified accountable roles and separation of duties identified.
+- [ ] Operational executor, alias profile, concurrency control, receipt, and read-back path identified—or named as blockers.
+- [ ] Rollback of the documentation change is separate from operational rollback.
+
+If a prerequisite is missing, stop at `HOLD`. Do not fill the gap with a plausible path, owner, source role, sensitivity transform, or prior release.
+
+[Back to top](#top)
+
+---
+
+<a id="rollback-preflight-and-review-handoff"></a>
+
+## Rollback preflight and review handoff
+
+### Step 1 — Freeze the exact question and evidence
+
+Record:
+
+- repository and exact commit;
+- affected release reference and manifest digest;
+- public-safe description of the suspected defect;
+- affected object families, source roles, time and geography;
+- known public carriers and governed consumers;
+- overlap with open branches or pull requests;
+- requested terminal boundary.
+
+Do not copy restricted payloads, exact locations, private review content, credentials, or secret-bearing URLs into the issue, pull request, candidate, log, or handoff.
+
+### Step 2 — Request containment where required
+
+For a sensitivity, rights, security, or policy signal, record the required operational containment and route it to the accountable operational/official authority. Until execution is proven, describe containment as `REQUESTED`, `UNKNOWN`, or `HOLD`—never as completed.
+
+### Step 3 — Classify the candidate posture
+
+Apply the decision model above. Record one `RollbackCard` disposition only when preparing a `RollbackCard`. Keep forward correction, runtime `DENY`/`ABSTAIN`, incident severity, and work-state labels in their own fields.
+
+### Step 4 — Assess the prior target under current controls
+
+Use [Prior target safety](#prior-target-safety). A target that passed an older policy or review is not automatically safe today. Missing current support yields `HOLD`; a target prohibited by current policy yields withdrawal or denial through the owning policy/runtime surface, not a fabricated rollback disposition.
+
+### Step 5 — Prepare the actual candidate
+
+Use the shared [`RollbackCard` contract](../../../contracts/release/rollback_card.md) and closed schema. Do not use the permissive Fauna schema stub.
+
+A review candidate must:
+
+- use one finite disposition;
+- name the exact affected release;
+- name a distinct prior release only for `ROLLBACK_CANDIDATE`;
+- include sorted, unique evidence, policy, review, and invalidation references;
+- require validation of the restored target;
+- link a correction notice when public notice is required;
+- preserve time ordering and non-self lineage; and
+- keep every governance flag false with `release_ref: null`.
+
+### Step 6 — Validate fixtures and the actual candidate
+
+From a clean checkout at the exact revision:
+
+```bash
+python tools/validators/release/validate_rollback_card.py --fixtures
+
+python tools/validators/release/validate_rollback_card.py \
+  <path-to-actual-candidate.json>
+
+python -m unittest discover \
+  --start-directory tests/validators \
+  --pattern 'test_validate_rollback_card.py' \
+  --verbose
+```
+
+The fixture command proves the tracked positive/negative profile. It does not validate a newly prepared candidate. Run both.
+
+### Step 7 — Run the shared synthetic mechanics check
+
+```bash
+python -m unittest -q \
+  tests.release.test_synthetic_rollback_rehearsal
+```
+
+Expected current result: eight generic tests. A hosted `rollback-drill` result currently exercises twelve generic-plus-Hazards tests. Neither result proves Fauna integration.
+
+Use [`ROLLBACK_DRILL.md`](ROLLBACK_DRILL.md) for the Fauna tabletop, public-safety review, and handoff requirements. Do not point the helper at repository lifecycle, release, or public paths.
+
+### Step 8 — Inventory invalidations and dependencies
+
+Use the exact shared invalidation vocabulary:
+
+```text
+API_CACHE
+CDN
+TILES
+CATALOG
+TRIPLETS
+SEARCH_INDEX
+VECTOR_INDEX
+AI_CACHE
+DOWNSTREAM_DERIVATIVES
+```
+
+For each class, identify the responsible implementation, expected action, verification/read-back, failure posture, and owner. Listing an invalidation is not executing it.
+
+### Step 9 — Prepare accountable review handoff
+
+Attach:
+
+- exact revision, candidate path/digest, commands, results, and logs;
+- affected and target release identities;
+- public-safe defect classification;
+- evidence, policy, review, correction, rights, sensitivity, taxonomy, time, and consumer analysis;
+- invalidation matrix and cross-lane effects;
+- unresolved blockers;
+- requested reviewer roles and separation;
+- explicit non-effects.
+
+Then stop. Operational execution requires a separate authorized transition.
+
+[Back to top](#top)
+
+---
+
+<a id="prior-target-safety"></a>
+
+## Prior target safety
+
+A prior release is a candidate, not a trusted backup.
+
+| Target question | Required evidence | Failure posture |
+|---|---|---|
+| Is the target distinct and immutable? | Stable release identity, manifest digest, artifact digests, no self-target | `HOLD` or `ERROR` |
+| Does evidence still resolve? | Current EvidenceRef-to-EvidenceBundle resolution and limitations | `HOLD` or withdrawal |
+| Are source roles still valid? | Source/product/version and claim-relative authority | `HOLD` |
+| Are rights and approved purpose current? | Current terms, attribution, license/access class, purpose constraints | `HOLD` or policy/runtime denial |
+| Is taxonomy identity still usable? | Version-pinned authority, crosswalk, ambiguity and synonym treatment | `HOLD` |
+| Is sensitive precision currently safe? | Current classification, geoprivacy transform support, public/restricted split, traceable review | `HOLD` or withdrawal |
+| Are time and geography correct? | Observation/source/retrieval/release/correction time and geography/version bindings | `HOLD` |
+| Does current policy permit the target? | Applicable policy evaluation and obligations | `HOLD` until separately evaluated |
+| Is accountable review possible? | Verified roles, scope, independence/separation, revocation path | `HOLD` |
+| Are consumers compatible? | API, map, Evidence Drawer, Focus Mode, export, cache, index, graph, and downstream derivative inventory | `HOLD` |
+| Is correction/public notice defined? | Correction/withdrawal relation and public status requirements | `HOLD` |
+| Can recovery be read back independently? | Governed public/API read-back and expected finite outcomes | `HOLD` |
+
+Never restore exact or reconstructable sensitive detail merely because it existed in an older release.
+
+[Back to top](#top)
+
+---
+
+<a id="invalidation-and-cross-lane-impact"></a>
+
+## Invalidation and cross-lane impact
+
+| Carrier or consumer | Candidate review question | Current implementation result |
+|---|---|---|
+| Governed API cache | Which exact resource/envelope keys use the affected release? | Adapter and completion proof not established |
+| CDN and static delivery | Which immutable objects and aliases are exposed? | Operational inventory/read-back not established |
+| Map tiles and layer manifests | Could old bytes expose sensitive detail or stale evidence? | Repository lanes exist; operational invalidation not established |
+| Catalog and triplets | Which projections reference the affected release or EvidenceBundle? | Invalidation adapter not established |
+| Search and vector indexes | Which entries can continue surfacing withdrawn support? | Invalidation and rebuild proof not established |
+| AI cache and Focus Mode | Which answers or prompts resolve through invalidated evidence? | Cache invalidation/read-back not established |
+| Evidence Drawer and species pages | Which public states must become withdrawn, corrected, stale, denied, or abstaining? | Consumer-specific recovery proof not established |
+| Habitat–Fauna and other derivatives | Which downstream products inherit the affected occurrence/range support? | Each sibling lane requires its own accountable decision |
+| Exports and offline bundles | Which downloaded/public artifacts cannot be recalled? | Correction and status strategy required |
+| Monitoring and audit | How will maintainers prove the old state is no longer served? | Independent public read-back absent |
+
+A style change, hidden layer, popup change, client-side filter, or AI prompt update is not sufficient containment when sensitive bytes remain in a public carrier.
+
+[Back to top](#top)
+
+---
+
+<a id="shared-synthetic-rehearsal"></a>
+
+## Shared synthetic rehearsal
+
+The shared helper is useful only inside its bounded synthetic contract.
+
+### Confirmed guards
+
+- the workspace must contain `.kfm-synthetic-rollback-rehearsal` as a regular file with exact marker content;
+- the scenario must set `synthetic: true`;
+- absolute paths, `..`, and symlink traversal are denied;
+- the current alias and affected/target manifest and artifact digests must match;
+- rollback requires a distinct target; withdrawal forbids a target;
+- all nine invalidation classes are required;
+- plan mode returns a deterministic report without scenario-workspace mutation;
+- apply mode changes only the marker-protected synthetic workspace and preserves affected release bytes.
+
+### Important limitations
+
+- `--report` accepts a caller-selected path and is not confined to the synthetic workspace.
+- Correction and invalidation files are written with atomic replacement; colliding scenario-derived IDs can replace existing synthetic records.
+- The report's `append_only_correction` field does not prove collision-safe append-only storage.
+- The helper does not resolve evidence, execute policy, authenticate reviewers, verify release signatures, contact external systems, mutate production aliases, invalidate real consumers, issue public notice, or read back public recovery.
+- The hosted workflow adds Hazards-specific tests, not a Fauna integrated fixture.
+
+Treat the helper as a mechanics rehearsal and negative-control surface only.
+
+[Back to top](#top)
+
+---
+
+<a id="interpret-the-results"></a>
+
+## Interpret the results
+
+| Result | What it proves | What it does not prove |
+|---|---|---|
+| Fixture validator `PASS` | Tracked valid/invalid candidates match the shared profile | Actual candidate validity, reference resolution, policy, review, target safety |
+| Actual candidate validator `PASS` | Candidate shape and local cross-field consistency | Approval, execution, release, public mutation |
+| Eight generic tests `OK` | Generic synthetic rollback/withdrawal mechanics and selected negative cases | Fauna integration or operational recovery |
+| Fauna drill `DRILL_HANDOFF_READY` | Shared checks plus public-safe Fauna tabletop completed at an exact revision | Rollback approval or execution |
+| Helper `HOLD` | A bounded synthetic prerequisite failed, with reason code | Operational incident result |
+| Hosted `rollback-drill` success | Shared fixture profile and generic-plus-Hazards workflow assertions passed at that SHA | Fauna proof, current-main proof, human approval, deployment, publication |
+| Documentation checks `PASS` | Markdown structure, links, and named repository paths are coherent | Scientific correctness, current wildlife conditions, safe target, operational authority |
+
+Classify unavailable, inherited, skipped, and not-run checks separately. Never convert a skipped job into a pass.
+
+[Back to top](#top)
+
+---
+
+<a id="accountable-review-handoff-packet"></a>
+
+## Accountable review handoff packet
+
+The following is an illustrative review packet, not a schema or authority object:
+
+```yaml
+fauna_rollback_handoff:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  repository_ref: <exact-commit>
+  affected_release_ref: <exact-release-ref-or-UNKNOWN>
+  affected_manifest_digest: <sha256-or-UNKNOWN>
+  public_safe_defect_summary: <no-sensitive-detail>
+  work_state: <READY_FOR_REVIEW|HOLD|ERROR|NO_ACTION>
+  proposed_path: <FORWARD_CORRECTION|ROLLBACK_CANDIDATE|WITHDRAWAL_CANDIDATE|HOLD|ERROR>
+  rollback_card:
+    path: <candidate-path-or-NOT_APPLICABLE>
+    digest: <sha256-or-UNKNOWN>
+    disposition: <ROLLBACK_CANDIDATE|WITHDRAWAL_CANDIDATE|HOLD|ERROR|NOT_APPLICABLE>
+  target:
+    release_ref: <prior-release-ref-or-null>
+    current_evidence_check: <PASS|FAIL|NOT_RUN>
+    current_rights_check: <PASS|FAIL|NOT_RUN>
+    current_sensitivity_check: <PASS|FAIL|NOT_RUN>
+    current_taxonomy_check: <PASS|FAIL|NOT_RUN>
+    current_policy_check: <PASS|FAIL|NOT_RUN>
+    current_review_check: <PASS|FAIL|NOT_RUN>
+  affected_scope:
+    object_families: []
+    source_roles: []
+    time_scope: <public-safe-summary>
+    geography_scope: <generalized-public-safe-summary>
+    sensitive_detail_in_packet: false
+  commands_run: []
+  results: []
+  invalidations:
+    - class: <shared-invalidation-class>
+      implementation: <path-or-UNKNOWN>
+      verification: <path-or-UNKNOWN>
+      owner_role: <role-or-NEEDS_VERIFICATION>
+  cross_lane_impacts: []
+  evidence_refs: []
+  policy_refs: []
+  review_refs: []
+  correction_notice_ref: <ref-or-null>
+  blockers: []
+  requested_review_roles: []
+  non_effects:
+    containment_executed: false
+    source_activated_or_withdrawn: false
+    lifecycle_written: false
+    rollback_executed: false
+    public_state_mutated: false
+    release_authorized: false
+    deployment_authorized: false
+    promotion_authorized: false
+    publication_authorized: false
+```
+
+Protected locations, private review text, credentials, secret URLs, vulnerable-source details, or unreviewed source excerpts do not belong in the packet.
+
+[Back to top](#top)
+
+---
+
+<a id="fauna-integrated-rehearsal-gap"></a>
+
+## Fauna integrated rehearsal gap
+
+The current repository does not establish a direct executable Fauna rollback proof.
+
+Missing dependency-closed evidence includes:
+
+- public-safe synthetic affected and prior-target Fauna releases;
+- a domain binding to the shared `RollbackCard` profile or an accepted successor;
+- direct Fauna positive and expected-negative rollback fixtures;
+- executable tests under the Fauna rollback test lane;
+- current-rights, current-sensitivity, taxonomy, geoprivacy, evidence, and policy integration;
+- public/restricted carrier assertions;
+- Habitat–Fauna and other downstream invalidation assertions;
+- an accepted operational executor and target/alias profile;
+- idempotency, concurrency, collision, report-path, safe-path, digest, signature/review, and recovery tests;
+- execution receipt and independent public read-back.
+
+The smallest useful next implementation slice is a **public-safe, no-network Fauna integrated rehearsal** that reuses the shared candidate profile and helper while adding domain-specific target, sensitivity, taxonomy, and downstream-consumer assertions. It should remain synthetic and non-publishing.
+
+[Back to top](#top)
+
+---
+
+<a id="operational-graduation-gate"></a>
+
+## Operational graduation gate
+
+Operational rollback remains held until all applicable gates close for one exact affected release.
+
+### Authority and release identity
+
+- [ ] Accepted affected-release, target-release, manifest, alias, correction, rollback, receipt, and read-back contracts.
+- [ ] Authenticated Fauna, taxonomy, source-rights, sensitivity/geoprivacy, evidence, policy, correction, release, operations, security, and independent-review roles.
+- [ ] Separation of generation, review, authorization, execution, and verification appropriate to consequence.
+
+### Policy, evidence, and target safety
+
+- [ ] Evidence resolution and limitations appropriate to the affected public claim.
+- [ ] Current source role, rights, approved purpose, attribution, taxonomy, time, geography, and sensitivity support.
+- [ ] Current policy evaluation and consumer obligations.
+- [ ] Distinct safe target or explicit withdrawal behavior.
+- [ ] Correction/public notice and immutable history.
+
+### Execution and invalidation
+
+- [ ] Accepted production plan/apply operator with no-write planning, safe paths, target and digest checks, policy/review verification, idempotency, concurrency control, recovery, and negative tests.
+- [ ] Collision-safe correction/invalidation persistence and confined report/output paths.
+- [ ] Least-privilege adapters for every required invalidation class.
+- [ ] Append-only or otherwise accepted execution receipt with before/after identity and result.
+- [ ] No direct browser, map, AI, or watcher authority over rollback.
+
+### Independent recovery proof
+
+- [ ] Public-safe synthetic Fauna rehearsal and negative cases.
+- [ ] Candidate-specific pre-production rehearsal.
+- [ ] Governed API, map, Evidence Drawer, Focus Mode, export, cache, catalog, search, vector, and cross-lane read-back.
+- [ ] Monitoring and correction behavior for partial invalidation or failed recovery.
+- [ ] Separate release, deployment, promotion, and publication authorization where applicable.
+
+No score, deadline, green workflow, or feature value compensates for a missing non-compensable gate.
+
+[Back to top](#top)
+
+---
+
+<a id="documentation-validation"></a>
+
+## Documentation validation
+
+For a change to this runbook:
+
+1. Freeze the target bytes, current `main`, open same-path work, and the accepted placement authority.
+2. Review the complete diff for stale commands, unsupported capability claims, sensitive-detail leakage, and unrelated churn.
+3. Check one H1, heading order, explicit anchors, quick navigation, code-fence balance, tables, alerts, and final newline.
+4. Resolve every changed relative link and verify every named contract, schema, validator, test, helper, workflow, lane, and command.
+5. Run the shared fixture validator, actual-candidate validator when a candidate exists, validator tests, and generic rehearsal tests in the repository's declared environment.
+6. Run the repository's focused Markdown, metadata, document-graph, link, and domain checks when available.
+7. Classify hosted checks at the exact head; keep skipped, inherited, unavailable, and pending results separate.
+8. Verify branch, changed paths, pull-request base/head, and draft state.
+9. Keep review, merge, rollback authorization, execution, release, deployment, promotion, and publication separate.
+
+Documentation acceptance criteria:
+
+- [ ] Current capability claims link to repository evidence.
+- [ ] Operational rollback remains explicitly held.
+- [ ] The shared candidate and rehearsal boundaries are accurate.
+- [ ] The permissive Fauna schema stub is not treated as proof.
+- [ ] Runtime outcomes and `RollbackCard` dispositions remain separate.
+- [ ] No protected wildlife detail appears.
+- [ ] The absent `VALIDATION_RUNBOOK.md` reference is removed.
+- [ ] The Fauna runbook index reflects this document's maturity without implying execution authority.
+
+[Back to top](#top)
+
+---
+
+<a id="related-repository-surfaces"></a>
+
+## Related repository surfaces
+
+### Fauna procedures and doctrine
+
+- [Fauna runbook index](README.md)
+- [Fauna rollback drill](ROLLBACK_DRILL.md)
+- [Fauna promotion preflight](PROMOTION_RUNBOOK.md)
+- [Fauna publication-gate dry run](PUBLICATION_GATE_DRY_RUN.md)
+- [Fauna sensitive-occurrence review](SENSITIVE_OCCURRENCE_REVIEW.md)
+- [Fauna no-network testing](NO_NETWORK_TEST_RUNBOOK.md)
+- [Fauna domain boundary](../../domains/fauna/README.md)
+- [Fauna sensitivity doctrine](../../domains/fauna/SENSITIVITY.md)
+- [Fauna policy documentation](../../domains/fauna/POLICY.md)
+
+### Governance and shared rollback controls
+
+- [Accepted Directory Rules decision](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+- [Directory Rules](../../doctrine/directory-rules.md)
+- [Shared rollback rehearsal](../rollback-rehearsal.md)
+- [`RollbackCard` contract](../../../contracts/release/rollback_card.md)
+- [`RollbackCard` schema](../../../schemas/contracts/v1/release/rollback_card.schema.json)
+- [Fauna rollback-card schema stub](../../../schemas/contracts/v1/domains/fauna/rollback_card.schema.json)
+- [Shared fixtures](../../../fixtures/release/rollback_card/)
+- [Shared validator](../../../tools/validators/release/validate_rollback_card.py)
+- [Shared helper](../../../tools/release/rollback_apply.py)
+- [Validator tests](../../../tests/validators/test_validate_rollback_card.py)
+- [Generic rehearsal tests](../../../tests/release/test_synthetic_rollback_rehearsal.py)
+- [Hosted rollback workflow](../../../.github/workflows/rollback-drill.yml)
+
+### Fauna release, recovery, and data lanes
+
+- [Fauna release candidates](../../../release/candidates/fauna/README.md)
+- [Fauna rollback decision lane](../../../release/rollback/fauna/README.md)
+- [Shared rollback-card root](../../../release/rollback_cards/README.md)
+- [Fauna data-plane rollback lane](../../../data/rollback/fauna/README.md)
+- [Fauna proof lane](../../../data/proofs/fauna/README.md)
+- [Fauna receipt lane](../../../data/receipts/fauna/README.md)
+- [Fauna published layer lane](../../../data/published/layers/fauna/README.md)
+- [Fauna rollback pipeline lane](../../../pipelines/rollback/fauna/README.md)
+- [Fauna rollback test lane](../../../tests/domains/fauna/release/rollback/README.md)
+
+GitHub review is routed through repository ownership controls. That route does not prove specialist assignment, independent review, rollback authorization, release, deployment, promotion, or publication authority.
+
+[Back to top](#top)
+
+---
+
+<a id="maintenance-and-document-rollback"></a>
+
+## Maintenance and document rollback
+
+Update this runbook when any of the following materially changes:
+
+- the shared `RollbackCard` contract, schema, fixtures, validator, or finite vocabularies;
+- the synthetic helper, its write boundary, collision behavior, tests, or hosted workflow;
+- Fauna release, rollback, published-carrier, proof, receipt, pipeline, policy, sensitivity, taxonomy, or test-lane maturity;
+- operational actor, alias, invalidation, receipt, monitoring, or public read-back implementation;
+- rights, sensitivity, geoprivacy, taxonomy, source-role, correction, or public-status requirements.
+
+When behavior changes, update the owning implementation and tests first or in the same dependency-closed change. Documentation must not manufacture maturity.
+
+### Correction path
+
+If a statement is false or stale:
+
+1. stop using the affected instruction;
+2. pin the exact revision and text at issue;
+3. assess whether prior handoffs or reviews relied on it;
+4. open the smallest forward correction or revert;
+5. update the Fauna runbook index when the maturity classification changes; and
+6. preserve prior documentation in Git history.
+
+### Documentation rollback
+
+If this documentation change is abandoned before merge, close the draft and remove only its task-owned branch. After an authorized merge, revert the documentation commits or submit a smaller reviewed forward correction. Documentation rollback does not reverse source, evidence, policy, release, deployed, public, or wildlife-management state.
+
+[Back to top](#top)
