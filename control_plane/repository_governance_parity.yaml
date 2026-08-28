@@ -13,7 +13,7 @@ governing_refs:
   - path: docs/doctrine/directory-rules.md
     sha256: sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e
   - path: tools/validators/directory_governance/repository_topology_baseline.json
-    sha256: sha256:17213f5e2fde3993f9c9b7af7f26eeb49a91635904d4a55ba92eddb53a66d60f
+    sha256: sha256:7cc830843cea2b046e260b9b8b745bd556981ed145051d09cd1153cfefd47dcc
   - path: tools/validators/directory_governance/validate_repository_topology.py
     sha256: sha256:52ed3199e0fa7bc3e6eb9316578c88219ebd688b81c326d3af05d5ba7a7ee8d4
 lanes:
@@ -67,7 +67,7 @@ expected_topology:
   rule_count: 20
   fail_invariant: 0
   fail_new_drift: 0
-  baselined_warning: 131
+  baselined_warning: 130
   stale_fingerprints: 0
 required_non_effects:
   - does_not_accept_or_amend_adr
