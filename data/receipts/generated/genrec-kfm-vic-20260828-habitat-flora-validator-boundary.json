@@ -5,7 +5,7 @@
     "tools/validators/habitat_flora/README.md"
   ],
   "artifact_hashes": {
-    "tools/validators/habitat_flora/README.md": "sha256:2e7e35136cd7f663ac1b91e8e7f05f04eb1f22b6d1d797730781e10087476935"
+    "tools/validators/habitat_flora/README.md": "sha256:85d89982aab6a451a00d3abec47a94b8b71424f4fa23d495b5f235d8ff41daea"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -51,7 +51,7 @@
     {
       "gate": "metadata-markdown-and-byte-hash",
       "outcome": "PASS",
-      "reason": "The metadata block is balanced, the final artifact has one H1, a final newline, no trailing whitespace, and a recomputed SHA-256."
+      "reason": "The metadata block includes the repository-required created and owner fields, remains balanced, has one H1, a final newline, no trailing whitespace, and a recomputed SHA-256."
     },
     {
       "gate": "sensitive-content-review",
