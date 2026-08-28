@@ -1,0 +1,112 @@
+{
+  "receipt_id": "genrec-agriculture-observation-io-failclosed-negative-20260828",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/agriculture-observation.yml",
+    "tests/validators/evidence/test_validate_agriculture_observation_io_failclosed.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/agriculture-observation.yml": "sha256:a4be20d5ccce5f401200c521919ae0d4b4f7b56d3f31da58e9ab902ffd78e51d",
+    "tests/validators/evidence/test_validate_agriculture_observation_io_failclosed.py": "sha256:78a03e7d6c6b86f8770cd84971c6816f8a6725264c2b8f574dbe368b10f821b4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Sol",
+    "version": "2026-08-28"
+  },
+  "prompt_or_contract": "sha256:8b3c6f0be9fcff401ee5915e0c779c8ab558cf7b24de8558867ee708c5821647",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector repository inspection and mutation",
+      "Notion connector coordination",
+      "Google Drive connector read-only lineage inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/369860945cebfdbda2b6cf72de94e22c37d1b337/tools/validators/evidence/validate_agriculture_observation.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/369860945cebfdbda2b6cf72de94e22c37d1b337/.github/workflows/agriculture-observation.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/369860945cebfdbda2b6cf72de94e22c37d1b337/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "drive://1TkFtqaDDtR9CiiEDdqGsyLgc2dDLX4qr"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/agriculture-observation.yml": "PROPOSED",
+    "tests/validators/evidence/test_validate_agriculture_observation_io_failclosed.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "active-work-and-overlap-reconciliation",
+      "outcome": "PASS",
+      "reason": "No open pull request contains KFM_HOURLY_AGRICULTURE_BUILDER_V1 or KFM_HOURLY_BUILDER_V1. Open PR #3780 is MapLibre-only and does not own this AgricultureObservation test/workflow/receipt boundary."
+    },
+    {
+      "gate": "io-failclosed-negative-coverage",
+      "outcome": "PASS",
+      "reason": "The AgricultureObservation bounded reader already catches OSError and fails closed with AGRICULTURE_JSON_INVALID, but focused tests did not directly prove metadata-read and content-read I/O failures. This slice adds deterministic synthetic negative proof without changing validator semantics."
+    },
+    {
+      "gate": "artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "SHA-256 digests were computed for the proposed final workflow and focused negative-test bytes; the workflow triggers on both paths and validates this immutable receipt."
+    },
+    {
+      "gate": "local-static-validation",
+      "outcome": "PASS",
+      "reason": "The proposed Python test module compiles structurally, the workflow remains valid YAML by inspection, and receipt hashes bind the exact proposed bytes."
+    },
+    {
+      "gate": "local-repository-native-tests",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout is available in this connector run; repository-native runtime execution is delegated to hosted exact-head CI after push."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending until the task-owned draft pull request head is created and hosted workflows run."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "The task stops at a draft pull request and does not approve or mark work ready."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "agriculture-observation-validator",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/369860945cebfdbda2b6cf72de94e22c37d1b337/tools/validators/evidence/validate_agriculture_observation.py"
+    },
+    {
+      "id": "agriculture-observation-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/369860945cebfdbda2b6cf72de94e22c37d1b337/.github/workflows/agriculture-observation.yml"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/369860945cebfdbda2b6cf72de94e22c37d1b337/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-28T20:18:04Z",
+  "emitter": "OpenAI ChatGPT automation runtime",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Dependency-closure receipt for explicit AgricultureObservation I/O-failure fail-closed negative proof. It binds the focused test and workflow bytes and preserves historical receipts unchanged. It changes no validator semantics and creates no source authority, evidence/proof authority, human review, lifecycle promotion, release, deployment, or publication authority."
+}
