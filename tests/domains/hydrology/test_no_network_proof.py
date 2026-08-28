@@ -78,6 +78,47 @@ def test_guard_requires_explicit_no_network_posture() -> None:
             "b'x', ('192.0.2.1', 53))",
         ),
         (
+            "socket.send",
+            "import socket; socket.socket(socket.AF_INET, socket.SOCK_DGRAM).send(b'x')",
+        ),
+        (
+            "socket.sendall",
+            "import socket; socket.socket(socket.AF_INET, socket.SOCK_DGRAM).sendall(b'x')",
+        ),
+        (
+            "socket.sendmsg",
+            "import socket; "
+            "assert hasattr(socket.socket, 'sendmsg'); "
+            "socket.socket(socket.AF_INET, socket.SOCK_DGRAM).sendmsg("
+            "[b'x'], [], 0, ('192.0.2.1', 53))",
+        ),
+        (
+            "socket.sendfile",
+            "import io, socket; "
+            "assert hasattr(socket.socket, 'sendfile'); "
+            "socket.socket(socket.AF_INET).sendfile(io.BytesIO(b'x'))",
+        ),
+        (
+            "socket.gethostbyname",
+            "import socket; socket.gethostbyname('example.invalid')",
+        ),
+        (
+            "socket.gethostbyname_ex",
+            "import socket; socket.gethostbyname_ex('example.invalid')",
+        ),
+        (
+            "socket.gethostbyaddr",
+            "import socket; socket.gethostbyaddr('192.0.2.1')",
+        ),
+        (
+            "socket.getnameinfo",
+            "import socket; socket.getnameinfo(('192.0.2.1', 53), 0)",
+        ),
+        (
+            "socket.getfqdn",
+            "import socket; socket.getfqdn('192.0.2.1')",
+        ),
+        (
             "urllib.request.urlopen",
             "import urllib.request; urllib.request.urlopen('https://example.invalid')",
         ),
@@ -95,6 +136,18 @@ def test_guard_preserves_unix_domain_socket_routing() -> None:
         "import socket; import sitecustomize; "
         "local_socket = type('LocalSocket', (), {'family': socket.AF_UNIX})(); "
         "sitecustomize._original_connect = lambda _socket, address: address; "
-        "assert sitecustomize._guarded_connect(local_socket, 'local.sock') == 'local.sock'"
+        "sitecustomize._original_send = lambda _socket, data: data; "
+        "sitecustomize._original_sendall = lambda _socket, data: data; "
+        "sitecustomize._original_sendto = lambda _socket, data, address: (data, address); "
+        "sitecustomize._original_sendmsg = lambda _socket, buffers: buffers; "
+        "sitecustomize._original_sendfile = lambda _socket, file: file; "
+        "assert sitecustomize._guarded_connect(local_socket, 'local.sock') == 'local.sock'; "
+        "assert sitecustomize._guarded_send(local_socket, b'x') == b'x'; "
+        "assert sitecustomize._guarded_sendall(local_socket, b'x') == b'x'; "
+        "assert sitecustomize._guarded_sendto(local_socket, b'x', 'local.sock') == "
+        "(b'x', 'local.sock'); "
+        "assert sitecustomize._guarded_sendmsg(local_socket, [b'x']) == [b'x']; "
+        "marker = object(); "
+        "assert sitecustomize._guarded_sendfile(local_socket, marker) is marker"
     )
     assert result.returncode == 0, result.stderr

@@ -14,9 +14,10 @@ python -c 'import sitecustomize; assert sitecustomize.GUARD_ACTIVE'
 ```
 
 Python imports `sitecustomize.py` during interpreter startup. The guard denies
-IPv4 and IPv6 socket connection attempts, DNS resolution, `urllib` URL opens,
-and datagram sends while leaving Unix-domain sockets available for local test
-harnesses. It is inactive unless `KFM_NO_NETWORK` is exactly `1`.
+IPv4 and IPv6 socket connection attempts, connected and destination-bearing
+socket sends, direct resolver entry points, and `urllib` URL opens while leaving
+Unix-domain sockets available for local test harnesses. It is inactive unless
+`KFM_NO_NETWORK` is exactly `1`.
 
 This is process-startup enforcement, not an operating-system firewall,
 container policy, network namespace, runner-wide sandbox, dependency-install

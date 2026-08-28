@@ -2,7 +2,7 @@
 doc_id: kfm://doc/tests-domains-hydrology-readme
 title: Hydrology Domain Tests README
 type: test-index-readme
-version: v0.4
+version: v0.5
 status: draft; parent-index; identity REMAIN_PROPOSED; bounded Python-process egress, EvidenceBundle, aquifer-pair, synthetic flow, and NHDPlus waterbody crosswalk checks executable
 owners:
   - OWNER_TBD — Hydrology domain steward
@@ -140,7 +140,7 @@ The documented lanes support these Hydrology trust families:
 | Policy | Rights, sensitivity, source-role, evidence, lifecycle, and release gates fail closed where unresolved. |
 | Redaction/generalization | Public-safe transforms are deterministic, named, receipt-backed, and release-gated. |
 | Continuity governance | Continuity records guide verification without upgrading PROPOSED material to CONFIRMED behavior. |
-| No-network discipline | The bounded workflow injects the reviewed startup guard into each Python process; the negative proof exercises named IPv4/IPv6 connection, DNS, URL-open, and datagram paths. |
+| No-network discipline | The bounded workflow injects the reviewed startup guard into each Python process; the negative proof exercises 15 named IPv4/IPv6 connection, socket-send, resolver, and URL-open APIs. |
 
 ---
 
@@ -201,7 +201,7 @@ crosswalk shape plus semantic validator. They check synthetic valid/invalid
 polarity, optional-link behavior, type separation, flow boundaries,
 waterbody-only scope, deterministic hashing, mapping cardinality, overlap-area
 honesty, finite ambiguity outcomes, and startup-time denial of the named
-Python-process connection, DNS, URL-open, and datagram paths.
+Python-process connection, socket-send, resolver, and URL-open APIs.
 It does not resolve endpoints or EvidenceRefs or establish source admission,
 scientific correctness, policy, review, proof, release, or publication.
 
@@ -231,7 +231,7 @@ VERIFICATION** and must not be inferred from the bounded pass.
 |---|---|---|---|
 | Previous target file | CONFIRMED | `tests/domains/hydrology/README.md` existed as a greenfield stub before this replacement. | Did not define the parent lane. |
 | `tests/README.md` | CONFIRMED | `tests/` is enforceability proof, canonical, trust-bearing, and failure should block promotion where trust-spine checks fail. | Does not prove Hydrology executable modules or pass rate. |
-| `test_no_network_proof.py`, `tools/ci/kfm_no_network/sitecustomize.py`, and `domain-hydrology.yml` | CONFIRMED bounded executable slice / hosted result pending | Explicit activation, fresh-interpreter denial of six common egress paths, and workflow-wide injection for Python processes in the bounded validation step. | Does not prove dependency-install, non-Python, host, container, namespace, or runner-wide isolation. |
+| `test_no_network_proof.py`, `tools/ci/kfm_no_network/sitecustomize.py`, and `domain-hydrology.yml` | CONFIRMED bounded executable slice / hosted result pending | Explicit activation, fresh-interpreter denial of 15 named connection, socket-send, resolver, and URL-open APIs, and workflow-wide injection for Python processes in the bounded validation step. | Does not prove dependency-install, non-Python, host, container, namespace, runner-wide, or non-named API isolation. |
 | `test_hydrology_smoke.py`, the EvidenceBundle alias schema/wrapper, and its fixture pair | CONFIRMED bounded executable slice | Local alias shape, valid/invalid polarity, and fail-closed process-level network guards. | Does not prove EvidenceRef resolution, EvidenceBundle closure, source or semantic validity, policy, proof, release, or publication. |
 | `test_aquifer_observation.py` and `test_aquifer_context_link.py` with their schemas, wrappers, and fixtures | CONFIRMED bounded executable slice | Closed local shapes, valid/invalid polarity, optional observation links, typed endpoints, responsibility separation, and network denial. | Does not prove endpoint resolution, aquifer membership, real source validity, evidence, policy, proof, release, or publication. |
 | `test_public_safe_flow_fixture.py` with its validator and fixture pair | CONFIRMED bounded executable slice | Frozen synthetic FlowObservation profile, exact fail-closed findings, 00060/ft3/s measurement shape, generalized county support, time ordering, fixture-only governance, not-flood-warning limitations, bounded parsing, CLI behavior, and network denial. | Does not prove a real observation, gauge/source identity, EvidenceBundle resolution, policy, flood warning, proof, release, or publication. |
@@ -257,7 +257,8 @@ Before treating this parent README as implemented behavior, verify:
   exact and many-to-many positive cases plus ambiguity, duplicate, scope,
   overlap-area, geometry-honesty, and hash negative cases.
 - [x] One bounded startup-guard proof launches fresh interpreters and exercises
-  named Python-process IPv4/IPv6 connection, DNS, URL-open, and datagram paths.
+  15 named Python-process IPv4/IPv6 connection, socket-send, resolver, and
+  URL-open APIs.
 - [ ] Executable test modules exist for each documented lane or the lane is explicitly documentation-only.
 - [ ] Test runner and import paths match the repo's accepted convention.
 - [ ] Synthetic fixtures exist in accepted fixture homes and are not source payloads.

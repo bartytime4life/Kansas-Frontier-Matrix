@@ -551,10 +551,10 @@ jobs:
           Soil/Atmosphere/Hydrology ownership-isolation test.
           Every Python process in the bounded validation step loads the opt-in
           startup guard before application imports. The negative proof confirms
-          denial of IPv4/IPv6 connect, connect-ex, connection creation, DNS,
-          datagram-send, and urllib URL-open paths. This is Python-process
-          enforcement, not a runner firewall, network namespace, container
-          policy, non-Python isolation, or dependency-install no-network proof.
+          denial of IPv4/IPv6 connection, standard socket-send, direct resolver,
+          and urllib URL-open paths. This is Python-process enforcement, not a
+          runner firewall, network namespace, container policy, non-Python
+          isolation, or dependency-install no-network proof.
 
           Hydrology uses the shared readiness source classifiers directly instead
           of the root-level CLI because its validator roots intentionally mix exact
