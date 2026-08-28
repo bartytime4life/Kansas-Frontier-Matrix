@@ -2,7 +2,7 @@
 doc_id: kfm://doc/registry/schema/readme
 title: docs/registry/schema/ — Schema Documentation Routing Boundary
 type: readme
-version: v1.1
+version: v1.2
 status: provisional
 owners:
   - "@bartytime4life"
@@ -11,12 +11,12 @@ updated: 2026-08-28
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "Route readers from the registry documentation tree to current schema, fixture, validator, test, and policy owners without becoming any of those authorities."
-truth_posture: "CONFIRMED current repository paths, fixture child routing boundary, and accepted placement doctrine / PARTIAL separate local schema-registry helper implementation / UNKNOWN intended ownership and future use of the remaining validator-policy dry-run lane"
+truth_posture: "CONFIRMED current repository paths, fixture and validator child routing boundaries, and accepted placement doctrine / PARTIAL separate local schema-registry helper and hosted-workflow evidence / NOT IMPLEMENTED policy dry-run binding"
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: ef4d1cb68327ad34afdb0d317740a0a01aa58848
-  prior_blob: 64228d0a53eadf3b3c7b8c3dd6e8c90256abd2bb
+  base_commit: debd3ceb1c9ce267cb26eaf8295e2371baf4ba0e
+  prior_blob: 66af3122c97bc58d0f09363f6a480f73bcc48821
 related:
   - ../README.md
   - ../../doctrine/directory-rules.md
@@ -83,12 +83,13 @@ docs/registry/schema/
                 └── .gitkeep
 ```
 
-The [fixture README](fixture/README.md) is now a substantive routing-and-hold
-boundary grounded in the canonical package fixtures and their current test
-consumer. The validator README remains a one-byte placeholder, and the
-`dry-run/` leaf contains only a keep marker. No schema file, fixture payload,
-validator implementation, policy rule, executable dry-run command, workflow, or
-consumer is established by this documentation subtree.
+The [fixture README](fixture/README.md) and
+[validator README](fixture/validator/README.md) are substantive routing-and-hold
+boundaries grounded in the canonical package fixtures, partial package helper,
+nine-test regression profile, and dedicated hosted workflow. The `dry-run/` leaf
+is the only remaining inert placeholder and contains only a keep marker. This
+documentation subtree implements no schema, fixture payload, validator, policy
+rule, dry-run evaluator, approval, release effect, or publication authority.
 
 ## Inputs and outputs
 
@@ -124,16 +125,16 @@ dry-run capability, release, or publication.
   parallel authority merely to preserve this document.
 - If an owning artifact contradicts this guide, preserve the owning artifact and
   correct this documentation through review.
-- If a child placeholder gains implementation, document its exact consumer,
-  validation, inputs, outputs, failure behavior, and authority boundary before
-  changing its maturity claim.
-- If the placeholder chain has no intended consumer, retain it as an explicit
-  open placement decision or remove it through a separately reviewed topology
-  change.
+- If the policy dry-run placeholder gains implementation, document its accepted
+  contract, executable evaluator, consumer, validation, failure behavior, and
+  authority boundary before changing its maturity claim.
+- If that remaining placeholder has no intended consumer, retain it as an
+  explicit open placement decision or remove it through a separately reviewed
+  topology change.
 
-Reverting this documentation commit restores this parent to v1.0 at blob
-`64228d0a53eadf3b3c7b8c3dd6e8c90256abd2bb` and restores the fixture child to
-its prior blank file. It does not roll back package behavior, schemas, fixtures,
+Reverting this documentation commit restores this parent to v1.1 at blob
+`66af3122c97bc58d0f09363f6a480f73bcc48821` and restores the validator child to
+its prior blank blob. It does not roll back package behavior, schemas, fixtures,
 validators, policy, tests, releases, deployments, or publication.
 
 ## Open verification register
@@ -141,9 +142,9 @@ validators, policy, tests, releases, deployments, or publication.
 | Question | Status |
 |---|---|
 | What scoped responsibility does `schema/fixture/README.md` own? | **CONFIRMED — documentation routing and evidence limits only** |
-| Is `schema/fixture/validator/README.md` intended to document an implemented consumer? | **UNKNOWN — no consumer is established by this subtree** |
-| Does `schema/fixture/validator/policy/dry-run/` have an accepted contract or executable entry point? | **NOT IMPLEMENTED in this subtree** |
-| Should the remaining validator-policy dry-run placeholder chain remain, migrate to an owning root, or be retired? | **NEEDS DIRECTORY REVIEW** |
+| What scoped responsibility does `schema/fixture/validator/README.md` own? | **CONFIRMED — documentation routing and evidence limits only** |
+| Does `schema/fixture/validator/policy/dry-run/` have an accepted contract, executable evaluator, or consumer? | **NOT IMPLEMENTED** |
+| Should the remaining policy dry-run placeholder remain, migrate to an owning root, or be retired? | **NEEDS DIRECTORY REVIEW** |
 | Which reviewer owns future child-lane semantics beyond the current repository route? | **NEEDS VERIFICATION** |
 
 [Back to registry documentation](../README.md) · [Back to top](#top)
