@@ -9,7 +9,7 @@
   ],
   "artifact_hashes": {
     ".github/workflows/domain-geology.yml": "sha256:cc0134432ace9ff483f1a11fec9affbf3f790477bdb6df9ea8e2fa2b69e6659e",
-    "docs/domains/geology/README.md": "sha256:c42aaa1a0ef1837c03d09883eb17b58ccd9fddba685e2fd3b4f4e56ef2934b8e",
+    "docs/domains/geology/README.md": "sha256:93a76b99c632e104eaffcd074b0fca169f2e6a8096b78c68e2c4a4f10e022584",
     "tools/validators/domains/geology/README.md": "sha256:b5a7756424eded117d01d0caa5969d0d3b3ee5ec2ccc9f96e8f75d2cd625225d",
     "tools/validators/geology/public_safe_geometry/README.md": "sha256:1054559223bf2a5443576c8811e6a2aeb5bb7bdfae84790ef9ba022b18513be8"
   },

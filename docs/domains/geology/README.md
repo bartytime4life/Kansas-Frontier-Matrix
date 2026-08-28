@@ -534,11 +534,9 @@ A green bounded profile proves only its declared fixture and structural assertio
 
 ## 16. Verification backlog and open questions
 
-| Item | What would settle it | Status |
-|---|---|---|
 | Item | Current evidence-backed posture | Status |
 |---|---|---|
-| Object-family short-form versus `…Reference` lineage | Current contract/schema filenames are the implementation carriers; historical terminology remains lineage and must not be normalized by label similarity. | PARTIAL / per-carrier review still required |
+| Object-family short-form versus `…Reference` lineage | Current contract/schema filenames are implementation carriers, but their presence does not resolve the canonical-name conflict across short and `…Reference` forms. | CONFLICTED / ADR or schema decision still required |
 | Responsibility-root placement | ADR-0029 is accepted; current segment paths under established roots control and historical flat Atlas forms must not create parallel authority. | CONFIRMED for current placement |
 | Live-source descriptor coverage and rights | `data/registry/sources/geology/` contains a lane README and a KGS M-118 descriptor; broader KGS/KCC/USGS/KDHE coverage, terms, automation permission, and steward authority remain unresolved. | HOLD / NEEDS VERIFICATION |
 | Schema, policy, pipeline, fixtures, tests, and validators | Current lanes and files are present; four bounded no-network profiles execute, while broader semantics, rights, evidence, proof, and release coverage remains held. | PRESENT / MATURITY MIXED |
