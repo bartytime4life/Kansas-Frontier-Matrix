@@ -657,7 +657,7 @@ For an update to this runbook:
 8. keep merge, source admission, release, deployment, promotion, and
    publication as separate transitions.
 
-The obsolete command pattern `kfm hydrology refresh fetch` must not reappear
+The former unimplemented Hydrology refresh CLI pattern must not reappear
 unless a future repository-grounded implementation, contract, tests, and review
 establish it. The old runbook's conditional-GET, lifecycle-writer, heartbeat,
 catalog-closure, and publication instructions were planning concepts, not
@@ -674,7 +674,7 @@ verified current commands.
   state.
 - [ ] Rights, sensitivity, correction, rollback, and accountable review remain
   visible.
-- [ ] The Hydrology lane README maturity map is reconciled with this document.
+- [ ] The Hydrology lane README maturity map was reviewed; any necessary index correction remains a separate same-path change.
 
 [Back to top](#top)
 
@@ -704,7 +704,7 @@ If a runbook claim is found false or stale:
 2. identify the exact repository revision and text at issue;
 3. classify the impact on prior handoffs or reviews;
 4. open the smallest forward correction or revert;
-5. update the Hydrology lane README maturity map;
+5. record any resulting Hydrology lane README drift for a separate bounded correction;
 6. preserve the prior document in Git history rather than silently rewriting
    operational lineage.
 
