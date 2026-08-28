@@ -2,12 +2,17 @@
 doc_id: kfm://doc/docs/domains/hazards/readme
 title: Hazards Domain — README
 type: standard
-version: v2
-status: draft
-owners: <hazards-lane-steward> + <directory-rules-steward>   # PLACEHOLDER — assign before publish
+version: v2.1
+status: draft; repository-grounded; documentation-only; not-for-life-safety; non-release; non-publication
+owners:
+  - "@bartytime4life — verified GitHub review route only"
+  - "NEEDS VERIFICATION — accountable Hazards, source, safety, policy, correction, rollback, and release stewardship"
 created: 2026-05-17
-updated: 2026-06-05
+updated: 2026-08-28
 policy_label: public
+owning_root: docs/
+truth_posture: "CONFIRMED current repository paths, accepted Directory Rules placement, and bounded synthetic validation / PARTIAL mixed implementation maturity / UNKNOWN source admission, production retrieval, runtime use, accountable stewardship, independent review, release, deployment, promotion, and publication until separately verified"
+responsibility: "Orient contributors to the Hazards lane, current responsibility-root surfaces, bounded executable evidence, life-safety limits, and unresolved source, policy, review, release, and publication holds without creating transition authority."
 related:
   - ai-build-operating-contract.md
   - directory-rules.md
@@ -28,7 +33,7 @@ tags: [kfm, domain, hazards, not-for-life-safety, source-role, freshness, regula
 notes:
   # CONTRACT_VERSION = "3.0.0" (ai-build-operating-contract.md v3.0)
   # Derived from ENC §7.10 (Hazards), Atlas v1.1 Ch. 12 (Hazards) + Ch. 24, UIAI Manual §30.6, Directory Rules §§4, 12, 13, 15.
-  # Lane is doctrine-grounded; implementation specifics remain PROPOSED until mounted-repo inspection.
+  # Lane is doctrine-grounded; current repository paths are confirmed present while implementation maturity remains file-specific.
   # The not-for-life-safety boundary is non-negotiable and applies across every surface; KFM-as-alert-authority is T4 forever (Atlas §24.5.2).
   # v2 crosswalks the §12.C hazards term vocabulary to the canonical seven-class source-role enum (Atlas §24.1.1) and aligns tier labels to T0–T4.
 [/KFM_META_BLOCK_V2] -->
@@ -45,7 +50,7 @@ notes:
 ![alert-authority](https://img.shields.io/badge/alert--authority-T4%20forever-b71c1c)
 ![publication](https://img.shields.io/badge/publication-default--deny%20without%20EvidenceBundle%20%2B%20freshness%20%2B%20disclaimer-important)
 
-**Status:** draft &nbsp;·&nbsp; **Owners:** `<hazards-lane-steward>` _(PLACEHOLDER)_ &nbsp;·&nbsp; **Last updated:** 2026-06-05 &nbsp;·&nbsp; **Pins:** `CONTRACT_VERSION = "3.0.0"`
+**Status:** draft · repository-grounded · documentation-only · non-release · non-publication &nbsp;·&nbsp; **Review route:** `@bartytime4life` &nbsp;·&nbsp; **Accountable stewardship:** NEEDS VERIFICATION &nbsp;·&nbsp; **Last updated:** 2026-08-28 &nbsp;·&nbsp; **Pins:** `CONTRACT_VERSION = "3.0.0"`
 
 ---
 
@@ -81,7 +86,7 @@ notes:
 
 ## 1. Mission and boundary
 
-**CONFIRMED doctrine / PROPOSED implementation.** The Hazards lane governs historical, regulatory, modeled, and operational-context hazard information for Kansas to support **analysis, research, planning, and resilience review**, while refusing to act as a life-safety alerting system. <small>[ENC §7.10.A] [Atlas v1.1 §12.A]</small>
+**CONFIRMED doctrine / PARTIAL repository implementation.** The Hazards lane governs historical, regulatory, modeled, and operational-context hazard information for Kansas to support **analysis, research, planning, and resilience review**, while refusing to act as a life-safety alerting system. Current path presence and bounded synthetic tests do not establish live-source operation, evidence closure, policy approval, release, deployment, promotion, publication, or life-safety authority. <small>[ENC §7.10.A] [Atlas v1.1 §12.A]</small>
 
 The lane is high-value precisely because hazards are consequential. KFM contributes to risk understanding by surfacing **historical hazards, modeled exposure, infrastructure proximity, regulatory hazard context, and policy-relevant scientific observation**. It does not warn in real time, it does not bind regulatory action, and it does not replace official alert channels. <small>[KFM-IDX-POL-007] [KFM-IDX-PLN-002] [UIAI §30.6]</small>
 
@@ -98,7 +103,7 @@ The lane is high-value precisely because hazards are consequential. KFM contribu
 
 ### 2.1 This domain owns
 
-**CONFIRMED / PROPOSED.** The Hazards lane owns the following object families:
+**CONFIRMED domain responsibility / IMPLEMENTATION MATURITY FILE-SPECIFIC.** The Hazards lane owns the following object families:
 
 `HazardEvent` · `HazardObservation` · `WarningContext` · `AdvisoryContext` · `DisasterDeclaration` · `FloodContext` · `WildfireDetection` · `SmokeContext` · `DroughtIndicator` · `EarthquakeEvent` · `HeatColdEvent` · `ExposureSummary` · `ResilienceSummary` · `HazardTimeline` · `ImpactArea`. <small>[ENC §7.10.C] [Atlas v1.1 §12.B, §12.E]</small>
 
@@ -106,7 +111,7 @@ It also owns the not-for-life-safety official-link viewing mode that surfaces ha
 
 ### 2.2 This domain does NOT own
 
-**CONFIRMED / PROPOSED.** The Hazards lane explicitly does not own:
+**CONFIRMED domain boundary / IMPLEMENTATION MATURITY FILE-SPECIFIC.** The Hazards lane explicitly does not own:
 
 - **Life-safety alerting, emergency instructions, or operational warning issuance.** Those belong to official authorities (NWS, FEMA, USGS, Kansas DEM, county/tribal emergency management). <small>[ENC §7.10.A] [Atlas v1.1 §12.B] [KFM-IDX-POL-007]</small>
 - **Canonical hydrology truth.** Stream-gauge readings, HUC topology, NHDPlus identity, and NFHL regulatory zones are owned by the **Hydrology** lane; Hazards consumes them as `FloodContext` references. <small>[Atlas v1.1 §12.F]</small>
@@ -127,10 +132,10 @@ Per Directory Rules §12, **the Hazards domain is _not_ a root folder.** It is a
 > [!NOTE]
 > **Crosswalk shorthand vs. segment form.** The Atlas §24.13 crosswalk lists hazards roots in non-segment shorthand (`contracts/hazards/`, `schemas/contracts/v1/hazards/`, `policy/release/hazards/`). Directory Rules §12 requires the `domains/` segment form used here, and the Atlas's own §24 authority rule treats a divergent Chapter 24 table as a drift entry, not a correction. **Directory Rules win**; the divergence is logged (see [`MISSING_OR_PLANNED_FILES.md`](./MISSING_OR_PLANNED_FILES.md) and the DRIFT_REGISTER). The one nuance: `policy/release/hazards/` is a legitimate home for the release-gate `.rego` per Directory Rules §13.5 (tracked as ADR-HAZ-07). <small>[directory-rules §12, §13.5] [Atlas v1.1 §24.13]</small>
 
-### 3.2 PROPOSED lane layout
+### 3.2 Current lane layout and maturity
 
 > [!NOTE]
-> The tree below is the **PROPOSED** application of Directory Rules §12 to the Hazards domain. Path existence is **NEEDS VERIFICATION** until inspected against a mounted repo. <small>[directory-rules §0, §12]</small>
+> At `main@e04181056bd714960992c5f11e7bd66e2ef4643a`, the Hazards responsibility-root lanes shown below are **CONFIRMED PRESENT**, except that source-specific connector ownership and canonicality remain file-specific. Presence is not maturity: many files remain placeholders, proposed controls, synthetic fixtures, or explicit holds. No source admission, live retrieval, lifecycle transition, proof acceptance, release, deployment, promotion, or publication is inferred. <small>[directory-rules §0, §12]</small>
 
 ```text
 docs/domains/hazards/              # this README + PUBLICATION_AND_BOUNDARY + PRESERVATION_MATRIX + MISSING_OR_PLANNED_FILES
@@ -158,6 +163,15 @@ data/published/layers/hazards/     # released public-safe layers (PMTiles, layer
 data/registry/sources/hazards/     # SourceDescriptor index for the lane
 release/candidates/hazards/        # release decisions, ReleaseManifests, RollbackCards
 ```
+
+| Current repository surface | CONFIRMED evidence at the pinned base | Bounded disposition |
+|---|---|---|
+| Human guidance | `docs/domains/hazards/` and `docs/runbooks/hazards/` contain the lane README, boundary documents, source-refresh, promotion, no-network, rollback, and life-safety procedures | Documentation is present; operational authority remains separate |
+| Contracts and schemas | `contracts/domains/hazards/` and `schemas/contracts/v1/domains/hazards/` contain Hazards-specific semantics and machine schemas | Presence does not accept proposed ADR-0001 or prove runtime consumption |
+| Policy, fixtures, tests, and validators | Hazards paths exist under `policy/`, `fixtures/`, `tests/`, and `tools/validators/` | Coverage is mixed; only exact executed profiles count as proof |
+| Shared implementation | Hazards paths exist under `packages/domains/`, `pipelines/domains/`, and `pipeline_specs/` | Maturity and production use remain file-specific |
+| Lifecycle and release lanes | Hazards paths exist under RAW, WORK, QUARANTINE, PROCESSED, CATALOG, PROOF, RECEIPT, PUBLISHED, registry, and release roots | Directory or record presence does not prove admission, promotion, release, deployment, or publication |
+| CI | `.github/workflows/domain-hazards.yml` runs bounded drought-family and USDM materiality validation; proof and release jobs remain explicit holds | Synthetic validation only; no current-condition or public-readiness claim |
 
 > [!TIP]
 > **Cross-cutting files** (e.g., a shared freshness validator used by Hazards, Atmosphere, and Hydrology) live under the **lowest common responsibility root without a domain segment** — e.g., `tools/validators/freshness/`, not `tools/validators/domains/hazards/`. <small>[directory-rules §12, "Multi-domain and cross-cutting files"]</small>
@@ -366,7 +380,7 @@ flowchart LR
 
 ## 10. Pipeline shape — RAW → PUBLISHED
 
-**CONFIRMED doctrine / PROPOSED lane application.** Hazards follows the canonical lifecycle invariant: **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED**, with promotion as a **governed state transition, not a file move**. <small>[directory-rules §0, §9.1, §12] [Atlas v1.1 §12.H, §24.6]</small>
+**CONFIRMED doctrine / PARTIAL repository control surfaces / OPERATIONAL USE UNKNOWN.** Hazards follows the canonical lifecycle invariant: **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED**, with promotion as a **governed state transition, not a file move**. <small>[directory-rules §0, §9.1, §12] [Atlas v1.1 §12.H, §24.6]</small>
 
 ### 10.1 Stage table
 
@@ -378,6 +392,8 @@ flowchart LR
 | **PROCESSED** | Emit validated normalized objects, receipts, and public-safe candidates. | `EvidenceRef`, `ValidationReport`, digest closure exist. | PROPOSED |
 | **CATALOG / TRIPLET** | Emit catalog records, `EvidenceBundle`s, graph/triplet projections, and release candidates. | Catalog/proof closure passes. | PROPOSED |
 | **PUBLISHED** | Serve released public-safe artifacts through governed APIs and manifests. | `ReleaseManifest`, correction path, rollback target, review/policy state exist. | PROPOSED |
+
+The status column describes the intended live operational transition, not directory presence. Existing lane directories, documentation, fixtures, manifests, or candidate records do not establish that any transition occurred.
 
 <small>[Atlas v1.1 §12.H, §24.6.1]</small>
 
@@ -448,7 +464,7 @@ flowchart TB
 
 ## 12. Governed API, contract, and schema surfaces
 
-**PROPOSED surfaces** (Atlas v1.1 §12.J). Exact routes are UNKNOWN until repo verification.
+**PARTIAL repository surfaces** (Atlas v1.1 §12.J). Hazards contracts and schemas are present; exact dedicated governed-API routes, accepted runtime bindings, and production consumers remain UNKNOWN until separately verified.
 
 | Surface | DTO / schema | Finite outcomes | Status |
 |---|---|---|---|
@@ -456,7 +472,7 @@ flowchart TB
 | Hazards layer manifest resolver | `LayerManifest` / domain layer descriptor | `ANSWER` / `DENY` / `ERROR` | PROPOSED; public-safe release only |
 | Hazards Evidence Drawer payload | `EvidenceDrawerPayload` + `EvidenceBundle` projection | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | PROPOSED; evidence + policy filtered; **not-for-life-safety disclaimer mandatory** |
 | Hazards Focus Mode answer | `RuntimeResponseEnvelope` + `AIReceipt` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | PROPOSED; AI never root truth |
-| Schema responsibility root | `schemas/contracts/v1/domains/hazards/` | Finite validator outcomes | PROPOSED per ADR-0001; verify against Directory Rules |
+| Schema responsibility root | `schemas/contracts/v1/domains/hazards/` | Finite validator outcomes | CONFIRMED PRESENT under accepted Directory Rules; ADR-0001 remains proposed and does not gain acceptance from path presence |
 
 <small>[Atlas v1.1 §12.J] [directory-rules §7.1 trust membrane]</small>
 
@@ -521,7 +537,11 @@ flowchart LR
 
 ## 14. Validators, tests, and fixtures
 
-**PROPOSED validator coverage** (Atlas v1.1 §12.K; ENC §7.10.K):
+**PARTIAL repository implementation / broader coverage PROPOSED** (Atlas v1.1 §12.K; ENC §7.10.K).
+
+At the pinned base, `.github/workflows/domain-hazards.yml` executes `python -m unittest -v tests.domains.hazards.test_hazards_smoke` and `make hazards-validate`. Those commands provide bounded no-network proof for drought-family schema/fixture polarity and deterministic USDM material-change outcomes. The same workflow keeps Hazards proof construction and release dry-run production as explicit holds. Other discovered Hazards tests and validators are present but are not claimed as executed by that workflow unless named in exact-head evidence.
+
+Broader candidate coverage remains:
 
 - Source-role anti-collapse tests (per [§13](#13-source-role-anti-collapse-for-hazards), seven-class enum)
 - Temporal-role validators (event vs. issue/expiry vs. valid vs. observed)
@@ -678,27 +698,31 @@ The full preservation and rollback contract lives in [`PRESERVATION_MATRIX.md`](
   - [`PRESERVATION_MATRIX.md`](./PRESERVATION_MATRIX.md) — what the lane preserves, per lifecycle stage and tier
   - [`MISSING_OR_PLANNED_FILES.md`](./MISSING_OR_PLANNED_FILES.md) — lane planning inventory across responsibility roots
 - **Doctrine and placement:** `directory-rules.md` (§4 Placement Protocol, §9.1 lifecycle, §12 Domain Placement Law, §13.4/§13.5 anti-patterns, §15 Required README Contract)
-- **Domain index (PROPOSED):** `docs/domains/README.md`
-- **Adjacent lane READMEs (PROPOSED targets):**
+- **Domain index:** `docs/domains/README.md`
+- **Adjacent lane READMEs:**
   - `docs/domains/hydrology/README.md` — flood / drought / water-event context
   - `docs/domains/atmosphere/README.md` — smoke / heat-cold / advisory context
   - `docs/domains/settlements-infrastructure/README.md` — exposure, lifelines, dependencies
   - `docs/domains/roads-rail-trade/README.md` — closures, detours, bridge / crossing exposure
 - **Standards already authored:** `docs/standards/PROV.md`, `docs/standards/PMTILES.md`, `docs/standards/OGC-API-TILES.md`, `docs/standards/OAI-PMH.md`, `docs/standards/ISO-19115.md`
-- **Operational runbooks (PROPOSED targets):**
-  - `docs/runbooks/hazards/SOURCE_REFRESH_RUNBOOK.md` — source refresh for Hazards (PROPOSED; subfolder convention NEEDS VERIFICATION vs. flat `hazards_*` prefix per §13.5 / OPEN-DR-02)
-  - `docs/runbooks/hazards/NOT_FOR_LIFE_SAFETY_AUDIT_RUNBOOK.md` — periodic audit of disclaimer presence and official-source redirect coverage (PROPOSED)
+- **Operational runbooks (CONFIRMED PRESENT; maturity file-specific):**
+  - `docs/runbooks/hazards/README.md` — local procedure index and terminal boundary
+  - `docs/runbooks/hazards/SOURCE_REFRESH_RUNBOOK.md` — repository-grounded source-refresh planning and synthetic-validation boundary
+  - `docs/runbooks/hazards/NO_NETWORK_TEST_RUNBOOK.md` — bounded no-network validation procedure
+  - `docs/runbooks/hazards/PROMOTION_RUNBOOK.md` — candidate review procedure; no promotion authority
+  - `docs/runbooks/hazards/ROLLBACK_DRILL.md` and `ROLLBACK_RUNBOOK.md` — synthetic rehearsal and operational hold
+  - `docs/runbooks/hazards/NOT_FOR_LIFE_SAFETY_AUDIT_RUNBOOK.md` — disclaimer and official-referral audit procedure
 - **Cross-cutting doctrine:**
   - Atlas v1.1 §24.1 (Master Source-Role Anti-Collapse Register), §24.5 (Sensitivity / Rights Tier Reference), §24.6 (Pipeline Gate Reference), §20.5 (Deny-by-Default Register)
   - ENC §13 (Sensitive / Deny-by-Default Register)
   - UIAI Manual §30.6 (Hazards lane assembly)
 - **ADRs likely to apply:**
-  - **ADR-0001** (schema home — `schemas/contracts/v1/...`) — applies.
+  - **ADR-0001** (schema-home routing and migration) — remains **PROPOSED**; accepted Directory Rules already provide the current default machine-schema route.
   - **ADR-S-04** (source-role enum vocabulary) — canonicalizes the seven-class enum referenced in §4 and §13.
   - **ADR-S-05** (sensitivity tier scheme T0–T4) — governs the tier labels in §6 and §11.
   - **ADR-HAZ-07** (release-gate `.rego` home) — resolves `policy/domains/hazards/` vs. `policy/release/hazards/`.
   - **ADR — not-for-life-safety contract** (PROPOSED) — decides whether the disclaimer is a DTO field, a policy fragment, or both (OQ-HAZ-RM-03).
-  - **ADR — hazards runbook subfolder** (PROPOSED) — resolves `docs/runbooks/hazards/*` vs. flat `hazards_*` naming (OPEN-DR-02).
+  - The current `docs/runbooks/hazards/*` path is **CONFIRMED PRESENT** under accepted Directory Rules; no additional placement ADR is inferred as accepted.
 
 [Back to top ↑](#top)
 
@@ -712,14 +736,14 @@ The full preservation and rollback contract lives in [`PRESERVATION_MATRIX.md`](
 | §15 section | Where covered above |
 |---|---|
 | Purpose | §1 Mission and boundary |
-| Authority level | "Domain lane README" (badge + meta block); doctrine is canonical, paths are PROPOSED |
+| Authority level | "Domain lane README" (badge + meta block); accepted doctrine controls placement, current paths are present, and maturity is file-specific |
 | Status | Meta block + status badge (draft) |
 | What belongs here | §2.1 + §3 (lane layout) |
 | What does NOT belong here | §2.2 (explicit non-ownership) + §11 (deny-by-default register row) |
 | Inputs | §5 source families + §10 RAW stage |
 | Outputs | §9 viewing products + §12 API surfaces + §10 PUBLISHED stage |
 | Validation | §14 validators + tests + fixtures |
-| Review burden | Owners line (PLACEHOLDER) + §16 publication gate + §11 sensitive class controls |
+| Review burden | Verified CODEOWNERS route plus NEEDS VERIFICATION stewardship + §16 publication gate + §11 sensitive class controls |
 | Related folders | §3 lane layout + §20 related docs |
 | ADRs | §20 ADRs list |
 | Last reviewed | "Last updated" line in header + footer |
@@ -728,6 +752,6 @@ The full preservation and rollback contract lives in [`PRESERVATION_MATRIX.md`](
 
 ---
 
-**Related docs:** [Directory Rules](../../directory-rules.md) · [Domains index (PROPOSED)](../README.md) · [Publication & Boundary](./PUBLICATION_AND_BOUNDARY.md) · [Preservation Matrix](./PRESERVATION_MATRIX.md) · [Hydrology](../hydrology/README.md) · [Atmosphere](../atmosphere/README.md) · [Settlements / Infrastructure](../settlements-infrastructure/README.md) · [Roads / Rail / Trade](../roads-rail-trade/README.md)
+**Related docs:** [Directory Rules](../../doctrine/directory-rules.md) · [Domains index](../README.md) · [Publication & Boundary](./PUBLICATION_AND_BOUNDARY.md) · [Preservation Matrix](./PRESERVATION_MATRIX.md) · [Hydrology](../hydrology/README.md) · [Atmosphere](../atmosphere/README.md) · [Settlements / Infrastructure](../settlements-infrastructure/README.md) · [Roads / Rail / Trade](../roads-rail-trade/README.md)
 
-**Last updated:** 2026-06-05 · **Doc version:** v2 · **Pins:** CONTRACT_VERSION = "3.0.0" · **Status:** draft · **Owners:** `<hazards-lane-steward>` _(PLACEHOLDER — NEEDS VERIFICATION)_ · [Back to top ↑](#top)
+**Last updated:** 2026-08-28 · **Doc version:** v2.1 · **Pins:** CONTRACT_VERSION = "3.0.0" · **Status:** draft · repository-grounded · documentation-only · **Review route:** `@bartytime4life` · **Accountable stewardship:** NEEDS VERIFICATION · [Back to top ↑](#top)
