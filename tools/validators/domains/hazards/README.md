@@ -1,297 +1,187 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/tools-validators-domains-hazards-readme
-title: tools/validators/domains/hazards README
-type: README
-version: v0.1
-status: draft
-owner: TODO-tooling-qa-owner-plus-hazards-steward-plus-release-steward-plus-policy-steward-plus-evidence-steward-plus-ui-boundary-reviewer
+title: tools/validators/domains/hazards/ — Hazards Validator Index
+type: readme
+version: v0.2
+status: draft; repository-grounded; mixed-maturity; non-semantic; non-policy; non-release; non-publication
+owner: NEEDS VERIFICATION — CODEOWNERS routes /tools/validators/ to @bartytime4life; no independently verified Hazards validation steward or required-review control was established
 created: 2026-07-07
-updated: 2026-07-07
-policy_label: repository-facing; per-domain-validator-index; hazards; not-for-life-safety; alert-authority-deny; freshness-aware; release-gated; non-authoritative
+updated: 2026-08-28
+policy_label: repository-facing; validators; hazards; deterministic; no-network; cite-or-abstain; not-for-life-safety; release-gated
+current_path: tools/validators/domains/hazards/README.md
 owning_root: tools/
-responsibility: proposed per-domain Hazards validator index for HazardEvent, HazardObservation, WarningContext, AdvisoryContext, DisasterDeclaration, FloodContext, WildfireDetection, SmokeContext, DroughtIndicator, EarthquakeEvent, HeatColdEvent, ExposureSummary, ResilienceSummary, HazardTimeline, ImpactArea, source-role separation, freshness/expiry, not-for-life-safety boundaries, evidence, policy, release, correction, rollback, and public-surface denial checks while deferring Hazards meaning, policy decisions, proof records, and release authority to their owning roots
-truth_posture: cite-or-abstain; implementation claims require current repo evidence
+responsibility: index current Hazards validator implementations and placeholders without defining Hazards meaning, policy, evidence, lifecycle, release, or publication authority
+truth_posture: cite-or-abstain; executable claims require current code plus paired deterministic proof; file presence or a green held workflow never establishes source admission, evidence closure, current hazard conditions, life-safety authority, release, or publication
+evidence_repository: bartytime4life/Kansas-Frontier-Matrix
+evidence_base_ref: main
+evidence_base_commit: e52165e820b07e65c54830fde519a9c90df8eb1c
+codeowners_route: /tools/validators/ @bartytime4life
+directory_rules_adoption_adr: docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
 related:
   - ../../README.md
   - ../../_common/README.md
   - ../README.md
-  - ../../air-hazards/README.md
-  - ../../atmosphere_hazards/README.md
-  - ../../atmosphere_hydrology/README.md
-  - ../../cross-domain-joins/README.md
-  - ../../cross-lane/README.md
   - ../../../../docs/domains/hazards/README.md
-  - ../../../../docs/domains/hazards/PUBLICATION_AND_BOUNDARY.md
-  - ../../../../docs/domains/hazards/PRESERVATION_MATRIX.md
-  - ../../../../docs/domains/hazards/MISSING_OR_PLANNED_FILES.md
-  - ../../../../docs/domains/hydrology/README.md
-  - ../../../../docs/domains/atmosphere/README.md
-  - ../../../../docs/domains/settlements-infrastructure/README.md
-  - ../../../../docs/domains/roads-rail-trade/README.md
-  - ../../../../contracts/domains/hazards/
-  - ../../../../schemas/contracts/v1/domains/hazards/
-  - ../../../../policy/domains/hazards/
-  - ../../../../policy/release/hazards/
-  - ../../../../data/registry/sources/hazards/
-  - ../../../../data/proofs/
-  - ../../../../data/receipts/
-  - ../../../../release/
+  - ../../../../contracts/domains/hazards/README.md
+  - ../../../../schemas/contracts/v1/domains/hazards/README.md
+  - ../../../../fixtures/domains/hazards/README.md
+  - ../../../../tests/domains/hazards/README.md
+  - ../../../../policy/domains/hazards/README.md
+  - ../../../../data/registry/sources/hazards/README.md
+  - ../../../../release/candidates/hazards/README.md
+  - ../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../../../docs/doctrine/directory-rules.md
 notes:
-  - "This README replaces a greenfield stub. It does not confirm executable files."
-  - "No broad tools/validators/hazards/README.md was found during this task, so this path currently serves as the inspected per-domain Hazards validator index."
-  - "KFM Hazards is not an emergency alert system, life-safety instruction surface, or regulatory determination authority. KFM-as-alert-authority is treated as T4 forever; no transform releases it."
-  - "Warning, advisory, watch, and operational-context products may be represented only as evidence-bound context with visible source role, validity, expiry, disclaimer, official-source redirect, release state, correction path, and rollback support."
-  - "Validators enforce declared contracts, schemas, and policy. They do not define Hazards meaning, create EvidenceBundles, issue alerts, approve release, or publish public outputs."
+  - "v0.2 replaces the stale index-only/no-executables posture with an exact seven-script inventory at the pinned tree."
+  - "Three scripts have substantive implementations and paired deterministic tests; four scripts are explicit NotImplementedError placeholders and are not validation evidence."
+  - "The domain-hazards workflow executes only the bounded smoke and USDM materiality lane; its proof and release jobs remain explicit holds."
+  - "This documentation-only change modifies no validator, schema, contract, fixture, workflow, policy, source, evidence, lifecycle object, release, deployment, or public surface."
 [/KFM_META_BLOCK_V2] -->
 
-<a id="top"></a>
+# `tools/validators/domains/hazards/` — Hazards Validator Index
 
-# tools/validators/domains/hazards
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Inventory: 7 scripts](https://img.shields.io/badge/inventory-7%20scripts-2da44e?style=flat-square)](#current-validator-inventory)
+[![Executable: 3](https://img.shields.io/badge/executable-3-1f6feb?style=flat-square)](#substantive-implementations)
+[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-boundary)
 
-![status](https://img.shields.io/badge/status-draft-orange)
-![root](https://img.shields.io/badge/root-tools%2F-blue)
-![scope](https://img.shields.io/badge/scope-hazards--validators-informational)
-![boundary](https://img.shields.io/badge/not--for--life--safety-critical)
-![authority](https://img.shields.io/badge/authority-index--only-lightgrey)
-![truth](https://img.shields.io/badge/truth-cite--or--abstain-success)
-
-> **One-line purpose.** `tools/validators/domains/hazards/` is the proposed per-domain Hazards validator index for hazard events, observations, warning/advisory context, declarations, flood/wildfire/smoke/drought/earthquake/heat/cold context, exposure/resilience summaries, timelines, impact areas, source-role separation, freshness/expiry, not-for-life-safety boundaries, evidence, policy, release, correction, rollback, and public-surface denial checks.
-
----
+> [!IMPORTANT]
+> **Validator success is bounded evidence, not Hazards truth.** These tools check declared synthetic or repository-local profiles. They do not admit sources, validate current hazard conditions, issue warnings, create EvidenceBundles, apply policy, promote lifecycle state, approve release, deploy, or publish.
 
 ## Purpose
 
-`tools/validators/domains/hazards/` exists to organize Hazards validators under the durable `tools/validators/` surface.
+This directory is the Hazards validation implementation lane under the `tools/` responsibility root. It owns repository validator code and this local inventory. Hazards meaning remains under [`contracts/`](../../../../contracts/domains/hazards/README.md); machine shape remains under [`schemas/`](../../../../schemas/contracts/v1/domains/hazards/README.md); fixtures and tests remain under their own roots.
 
-The durable KFM question for this index is:
-
-> Do Hazards candidates preserve object-family identity, source-role posture, operational-context freshness, official-source attribution, not-for-life-safety disclaimers, neighboring-domain ownership, evidence closure, review state, policy decisions, release readiness, correction paths, rollback support, and public-surface denial boundaries before they reach any governed output?
-
-The answer should be a navigable validator index and deterministic validation outputs from configured child lanes. This folder should not create Hazards truth, official warning authority, emergency instructions, regulatory determinations, EvidenceBundles, PolicyDecisions, release decisions, public map layers, API payloads, or AI answers.
-
-[Back to top](#top)
-
----
+The index reports the exact tree at `main@e52165e820b07e65c54830fde519a9c90df8eb1c`. It distinguishes substantive implementations from tracked placeholders so a file name or a green held job cannot be cited as validation that did not run.
 
 ## Status
 
-| Surface | Status | Notes |
-|---|---|---|
-| `tools/validators/domains/hazards/README.md` | **CONFIRMED** | This README replaces the previous greenfield stub. |
-| Parent per-domain validators README | **CONFIRMED stub** | `tools/validators/domains/README.md` currently says only `# Per-domain validators`; this file keeps its own boundary explicit. |
-| Broad `tools/validators/hazards/README.md` | **NOT FOUND in this task** | This path currently serves as the inspected Hazards validator index. |
-| Hazards domain doctrine | **CONFIRMED in repo evidence / draft** | `docs/domains/hazards/README.md` defines Hazards as historical, regulatory, observational, modeled, and operational-context information, explicitly not a life-safety alerting system. |
-| Publication and boundary doctrine | **CONFIRMED in repo evidence / draft** | `docs/domains/hazards/PUBLICATION_AND_BOUNDARY.md` defines what may be published and what KFM must never become, including the T4-forever alert-authority boundary. |
-| Existing related validator lanes | **CONFIRMED README siblings / executable proposed** | `air-hazards/`, `atmosphere_hazards/`, and other cross-domain lanes exist where scope overlaps; executable behavior remains unverified. |
-| Child README lanes | **NONE CONFIRMED IN THIS TASK** | No child Hazards validator README was verified while writing this index. |
-| Executables, schemas, fixtures, policy bundles, and CI wiring | **NEEDS VERIFICATION** | No script names, test paths, schema maturity, policy bundles, receipts, runtime behavior, or CI behavior are claimed as implemented here. |
-
-[Back to top](#top)
-
----
-
-## Child lanes
-
-No child README lanes were confirmed during this edit.
-
-Future child lanes should be added only when they represent a distinct Hazards validator specialty, fixture family, edge, or public-surface invariant with accepted contracts, schemas, policy posture, fixtures, receipts, and report semantics.
-
-Possible future children remain **PROPOSED** until verified:
-
-- `warning-context/` for warnings, watches, advisories, expiry, not-for-life-safety posture, and official-source redirects;
-- `flood-context/` for NFHL/FEMA/regulatory flood context without observed-inundation or forecast collapse;
-- `wildfire-smoke/` for wildfire detection, smoke context, thermal detections, perimeter caveats, and Atmosphere ownership boundaries;
-- `drought-indicator/` for drought time series, cadence, modeled/aggregate posture, and stale-state checks;
-- `earthquake-heat-cold/` for event identity, magnitude/type, uncertainty, and operational-advisory boundaries;
-- `exposure-summary/` for aggregate exposure/resilience rollups without critical-infrastructure or private-detail leakage;
-- `freshness-expiry/` for current-sensitive hazard context, stale warnings, supersession, correction, and rollback checks.
-
-[Back to top](#top)
-
----
+| Field | Repository-grounded value |
+|---|---|
+| Owning responsibility root | `tools/` — repository tooling and validators |
+| Local scope | Hazards validator implementations and inventory |
+| Python scripts | 7 |
+| Substantive implementations | 3 |
+| Explicit `NotImplementedError` placeholders | 4 |
+| Child directories | None |
+| CODEOWNERS route | `/tools/validators/ @bartytime4life` |
+| Steward assignment | **NEEDS VERIFICATION** beyond the repository route |
+| Source admission, policy, release, deployment, publication | Not granted by this lane |
 
 ## Authority boundary
 
-| Responsibility | Home |
+[Accepted ADR-0029](../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts the Directory Rules placement boundary. Validator implementation belongs under `tools/`; tests and fixtures remain separate. A validator reads declared contracts, schemas, fixtures, and policy inputs. It does not define their meaning or mutate their authority.
+
+The Hazards boundary remains fail-closed:
+
+- EvidenceBundle outranks generated language; unresolved evidence requires abstention.
+- Observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic roles must not collapse.
+- Current-sensitive hazard context requires source-specific time, freshness, expiry, correction, and official-source referral.
+- KFM is not an emergency-alert issuer, life-safety instruction surface, or regulatory determination authority.
+- Validation, proof construction, policy evaluation, lifecycle promotion, release, deployment, and publication are separate states.
+
+## Current validator inventory
+
+### Substantive implementations
+
+| Validator | Confirmed bounded behavior | Paired executable evidence | Workflow posture |
+|---|---|---|---|
+| [`validate_drinking_water_advisory.py`](./validate_drinking_water_advisory.py) | Closed proposed advisory profile with deterministic structural and semantic findings | [`test_drinking_water_advisory.py`](../../../../tests/domains/hazards/test_drinking_water_advisory.py) and the [`drinking_water_advisory/`](../../../../fixtures/domains/hazards/drinking_water_advisory/README.md) fixture family | Not part of the two commands executed by `domain-hazards`; covered by separate repository checks where configured |
+| [`validate_nfhl_nld_nid_source_role_profile.py`](./validate_nfhl_nld_nid_source_role_profile.py) | Fail-closed NFHL/NLD/NID source-role separation profile | [`test_validate_nfhl_nld_nid_source_role_profile.py`](../../../../tests/validators/domains/hazards/test_validate_nfhl_nld_nid_source_role_profile.py) | Not part of the two commands executed by `domain-hazards`; covered by separate repository checks where configured |
+| [`validate_usdm_materiality.py`](./validate_usdm_materiality.py) | Deterministic, no-network USDM material-change evaluation over committed synthetic cases | [`test_validate_usdm_materiality.py`](../../../../tests/domains/hazards/test_validate_usdm_materiality.py) and [`usdm_materiality/cases.json`](../../../../fixtures/domains/hazards/usdm_materiality/cases.json) | Executed by `make hazards-validate`, which is invoked by [`domain-hazards.yml`](../../../../.github/workflows/domain-hazards.yml) |
+
+These relationships prove only their tested profiles and fixture polarity. They do not prove live retrieval, source admission, rights, sensitivity, currentness, complete EvidenceRef resolution, policy activation, release, or public safety.
+
+### Explicit placeholders
+
+The following tracked scripts contain only a placeholder comment, `main()`, and `raise NotImplementedError`:
+
+| Placeholder | Current disposition |
 |---|---|
-| Per-domain Hazards validator index | `tools/validators/domains/hazards/` |
-| Shared validator plumbing | `tools/validators/_common/` |
-| Hazards and Atmosphere/Hazards validator context | `tools/validators/air-hazards/`, `tools/validators/atmosphere_hazards/` |
-| Cross-domain invariant validators | `tools/validators/cross-domain-joins/` |
-| Hazards domain meaning | `docs/domains/hazards/`, `contracts/domains/hazards/` |
-| Publication and not-for-life-safety doctrine | `docs/domains/hazards/PUBLICATION_AND_BOUNDARY.md` |
-| Hazards schemas | `schemas/contracts/v1/domains/hazards/` or ADR-selected homes |
-| Hazards policy rules | `policy/domains/hazards/`, `policy/release/hazards/`, or accepted policy homes |
-| Source descriptors | `data/registry/sources/hazards/` or accepted source registry home |
-| Evidence/proof support | `data/proofs/` |
-| Receipts | `data/receipts/` |
-| Release decisions, manifests, rollback, corrections | `release/` |
-| Tests and fixtures | `tests/validators/domains/hazards/`, `tests/domains/hazards/`, `fixtures/domains/hazards/`, or accepted conventions |
+| [`validate_catalog_matrix.py`](./validate_catalog_matrix.py) | **PROPOSED / NOT EXECUTABLE**; the paired Hazards-local contract and fixture family are absent at the pinned tree |
+| [`validate_evidence_bundle.py`](./validate_evidence_bundle.py) | **PROPOSED / NOT EXECUTABLE**; the separate schema-convergence test does not make this placeholder an implementation |
+| [`validate_schema.py`](./validate_schema.py) | **PROPOSED / NOT EXECUTABLE**; not a generic validation runner |
+| [`validate_source_descriptor.py`](./validate_source_descriptor.py) | **PROPOSED / NOT EXECUTABLE**; source admission and registry validation remain separate |
 
-Safe interpretation:
+Placeholder presence is **CONFIRMED**. Behavior, fixture polarity, registry wiring, consumers, and activation are absent or **NEEDS VERIFICATION**. Do not invoke these scripts as successful validators or add them to CI merely to make the inventory look complete.
 
-- **CONFIRMED:** this README exists.
-- **PROPOSED:** validator code may live below this folder when it checks declared Hazards invariants and delegates meaning, source roles, policy, evidence, and release authority to owning roots.
-- **NEEDS VERIFICATION:** exact executable names, schema homes, policy bundle digests, source descriptors, fixtures, report destinations, receipts, runtime behavior, and CI wiring.
-- **DENY:** using this folder as Hazards doctrine, emergency-alert authority, life-safety surface, regulatory-determination authority, contract home, schema home, policy home, source registry, evidence store, lifecycle data store, receipt store, release record store, public map product surface, or domain-meaning authority.
+## Current test and fixture map
 
-[Back to top](#top)
+The direct Hazards test surface is mixed maturity:
 
----
+- [`tests/domains/hazards/`](../../../../tests/domains/hazards/README.md) contains the bounded smoke, drinking-water advisory, USDM materiality, and synthetic rollback suites plus additional small boundary tests and child lanes.
+- `tests/validators/domains/hazards/` contains the NFHL/NLD/NID source-role test and an EvidenceBundle schema-convergence test. It has no README at the pinned tree.
+- [`fixtures/domains/hazards/`](../../../../fixtures/domains/hazards/README.md) contains committed drought, advisory, USDM, rollback, and supporting fixture families. A folder name is not proof that every contained object family has complete valid/invalid/golden coverage.
 
-## What belongs here
+The EvidenceBundle convergence test checks schema relationships directly. It does not call or validate the placeholder `validate_evidence_bundle.py`.
 
-Good fits for `tools/validators/domains/hazards/` include:
+## Workflow wiring
 
-- this parent/index README;
-- child README lanes for narrow Hazards validator families;
-- optional parent runner code that delegates to child validators without redefining their rules;
-- validators that check object-family separation, source-role discipline, official-source attribution, freshness windows, expiry, supersession, warning-context boundaries, public-surface disclaimers, evidence closure, review state, policy decisions, release references, correction cascade, and rollback support;
-- validators that check cross-lane joins preserve Hydrology, Atmosphere/Air, Settlements/Infrastructure, Roads/Rail/Trade, Geology, Habitat, Agriculture, People/Land, and other neighboring-domain authority boundaries;
-- synthetic fixture references and test-surface guidance;
-- docs or reports that explain validator scope without becoming authoritative Hazards doctrine.
-
-[Back to top](#top)
-
----
-
-## What does not belong here
-
-| Do not put in `tools/validators/domains/hazards/` | Correct home |
-|---|---|
-| Shared validator plumbing | `tools/validators/_common/` |
-| Hazards domain docs | `docs/domains/hazards/` |
-| Hazards contracts | `contracts/domains/hazards/` |
-| Schemas | `schemas/contracts/v1/...` |
-| Policy and release-gate rules | `policy/...` |
-| Source descriptors | `data/registry/sources/...` |
-| RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED data | dedicated `data/` lifecycle roots |
-| EvidenceBundles, proofs, receipts, ValidationReports | `data/proofs/`, `data/receipts/` |
-| Release manifests, decisions, rollback, corrections | `release/` |
-| Generated QA reports that are not source code | `artifacts/qa/` or accepted report lane |
-| Tests and fixtures | `tests/` and fixture conventions |
-| Public API, UI, map, tile, export, search, graph, Focus Mode, emergency alert, life-safety instruction, legal/regulatory determination, or AI runtime code | governed application/runtime roots |
-
-[Back to top](#top)
-
----
-
-## Hazards validator posture
-
-Hazards validators must fail closed, deny, abstain, or route to steward review when a candidate:
-
-- lacks EvidenceRef, EvidenceBundle, source descriptor, source-role, official-source attribution, validity/expiry, rights, or object-family support;
-- collapses HazardEvent, HazardObservation, WarningContext, AdvisoryContext, DisasterDeclaration, FloodContext, WildfireDetection, SmokeContext, DroughtIndicator, EarthquakeEvent, HeatColdEvent, ExposureSummary, ResilienceSummary, HazardTimeline, or ImpactArea into another role;
-- presents KFM as an emergency alert system, current warning authority, life-safety instruction surface, or regulatory determination authority;
-- displays an expired, superseded, or stale warning/advisory/watch as current;
-- treats NFHL/FEMA regulatory context as observed flood extent or forecast;
-- treats FIRMS or thermal detection as legal fire status, ground-truth perimeter, or emergency instruction;
-- treats smoke/AOD/model context as PM2.5, AQI, exposure, impact, or emergency guidance without owning-domain support and release posture;
-- joins hazards records to critical infrastructure, private property, people/land, roads, rail, facilities, agriculture, habitat, archaeology, or other sensitive context without preserving the most restrictive policy and ownership posture;
-- lacks a not-for-life-safety disclaimer, official-source redirect, ReviewRecord, PolicyDecision, ReleaseManifest, correction path, or rollback target where required;
-- maps, tiles, exports, searches, embeds, graphs, summarizes, or answers with Hazards content beyond the approved public-safe derivative;
-- bypasses lifecycle gates or treats validator output as release approval.
-
-The validator lane must preserve the KFM lifecycle invariant:
+The [`domain-hazards`](../../../../.github/workflows/domain-hazards.yml) workflow is executable for pull requests and `main` pushes. Its validation job requires the current Hazards boundary files, runs:
 
 ```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+python -m unittest -v tests.domains.hazards.test_hazards_smoke
+make hazards-validate
 ```
 
-[Back to top](#top)
+The Make target runs the USDM materiality unit tests and `validate_usdm_materiality.py --fixtures` with deterministic no-network environment controls.
 
----
+The workflow's proof and release-dry-run jobs intentionally emit explicit hold markers. A successful held job confirms that the absence conditions remain as expected; it does not prove that a Hazards ProofPack producer, EvidenceBundle resolver, candidate manifest, release command, or publication path exists.
 
-## Standard parent outcomes
+## Outcomes and interpretation
 
 | Outcome | Meaning |
 |---|---|
-| `HAZARDS_DOMAIN_VALIDATORS_PASS` | Configured Hazards validators passed. |
-| `HAZARDS_DOMAIN_VALIDATORS_FAIL` | One or more configured validators failed. |
-| `CHILD_VALIDATOR_MISSING` | Expected Hazards child validator lane or runner is absent. |
-| `CHILD_VALIDATOR_FAILED` | Child validator reported one or more findings. |
-| `EVIDENCE_REF_MISSING` | Required EvidenceRef or EvidenceBundle pointer is absent. |
-| `SOURCE_ROLE_COLLAPSE` | Candidate collapses source-role or object-family posture. |
-| `ALERT_AUTHORITY_DENIED` | Candidate presents KFM as alert authority or life-safety source. |
-| `NOT_FOR_LIFE_SAFETY_POSTURE_MISSING` | Required disclaimer or official-source redirect is absent. |
-| `FRESHNESS_WINDOW_EXPIRED` | Warning, advisory, watch, observation, model, report, or context is stale for the claimed use. |
-| `REGULATORY_CONTEXT_COLLAPSE` | Regulatory context is presented as observed event, forecast, or instruction. |
-| `SENSITIVE_JOIN_DENIED` | Hazards join reveals or infers restricted neighboring-domain context. |
-| `REVIEW_OR_POLICY_GAP` | Required review state or PolicyDecision is absent. |
-| `RELEASE_REFERENCE_MISSING` | Required ReleaseManifest, correction path, or rollback target is absent. |
-| `CROSS_DOMAIN_AUTHORITY_COLLAPSE` | Candidate absorbs another domain's truth into Hazards without preserving boundaries. |
-| `PUBLIC_SURFACE_LEAK_RISK` | Candidate is unsafe for public/governed output as shaped. |
-| `REPORT_DESTINATION_INVALID` | QA report or receipt destination is outside an accepted root. |
-| `IGNORED_WITH_REASON` | Finding was ignored under an explicit, reviewable rule. |
-| `IGNORE_RULE_EXPIRED` | Ignore rule is stale and must be reviewed. |
-| `ABSTAIN` | Validator cannot decide safely with available context. |
-| `ERROR` | Validator could not safely complete. |
+| `PASS` | The invoked validator completed and reported no finding within its declared profile. |
+| `FAIL` | The invoked validator reported a contract, schema, fixture, or invariant violation. |
+| `ABSTAIN` / `HOLD` | Available authority or evidence cannot safely support the requested conclusion. |
+| `ERROR` | The validator could not safely complete. |
+| `NotImplementedError` | Placeholder invoked; **not** a validation result and **not** a pass. |
+| `WORKFLOW_SKIPPED_EXPLICIT` | A readiness lane is intentionally held; **not** proof of implementation. |
 
-[Back to top](#top)
+Individual validators own their finite result grammar. This index does not normalize materially different findings into a shared approval state.
 
----
+## Inputs and outputs
+
+Permitted inputs are repository contracts, schemas, policy definitions, source descriptors, deterministic public-safe or synthetic fixtures, and explicit configuration within the validator's declared scope.
+
+Permitted outputs are process exit status and deterministic diagnostics or QA artifacts written to an accepted report location. Validator output is not an EvidenceBundle, PolicyDecision, ReviewRecord, ReleaseManifest, warning, alert, regulatory decision, or published object.
 
 ## Validation
 
-Suggested future test surface:
-
-```text
-tests/validators/domains/hazards/
-├── README.md
-├── test_hazards_domain_validator_parent.py
-└── fixtures/
-    ├── valid_historical_hazard_event/
-    ├── missing_evidence_ref/
-    ├── source_role_collapse/
-    ├── alert_authority_denied/
-    ├── expired_warning_denied/
-    ├── regulatory_context_collapse/
-    ├── stale_model_context_denied/
-    ├── sensitive_join_denied/
-    ├── release_reference_missing/
-    └── ignored_with_reason/
-```
-
-Suggested future command pattern:
+Current narrow commands include:
 
 ```bash
-pytest -q tests/validators/domains/hazards
+python -m unittest -v tests.domains.hazards.test_hazards_smoke
+make hazards-validate
+python -m unittest -v tests.domains.hazards.test_drinking_water_advisory
+python -m unittest -v tests.validators.domains.hazards.test_validate_nfhl_nld_nid_source_role_profile
+python -m unittest -v tests.validators.domains.hazards.test_evidence_bundle_schema_convergence
 ```
 
-```bash
-python tools/validators/domains/hazards/run_hazards_domain_validators.py --repo-root . --format json
-```
+Run only commands whose dependencies are present. Passing these commands remains head-specific evidence for the named surface; it does not activate live sources or advance evidence, policy, lifecycle, release, deployment, or publication state.
 
-> [!NOTE]
-> This is a proposed interface, not proof that `run_hazards_domain_validators.py` or the test path exists.
+## Review burden
 
-[Back to top](#top)
+Changes route through the repository's `tools/validators/` CODEOWNERS entry. A substantive validator change also requires review of the affected contract, schema, fixture, test, policy, evidence, and release boundaries. Named steward assignments, enforced code-owner review, and independent author/approver separation remain **NEEDS VERIFICATION**.
 
----
+## Open verification
 
-## Review checklist
+- Decide whether each placeholder should be implemented, delegated to a shared validator, or retired; do not infer a Hazards-local contract from a shared filename.
+- Add or verify complete valid, invalid, edge, and golden fixture polarity for each substantive validator.
+- Register validators only after their executable, dependency, result-grammar, and consumer boundaries are closed.
+- Verify source-descriptor admission, rights, sensitivity, freshness, EvidenceRef closure, policy, proof, correction, withdrawal, rollback, and release dependencies before operational use.
+- Verify every workflow claim against the exact tested head; `SKIPPED`, held, and `NOT_RUN` are not passes.
 
-- [ ] Parent runner delegates to child validators instead of redefining their rules.
-- [ ] Validator reads declared Hazards contracts, schemas, and policy rather than defining meaning locally.
-- [ ] KFM is never presented as alert authority, emergency-warning issuer, life-safety source, or regulatory decision-maker.
-- [ ] Historical, regulatory, observational, modeled, operational-context, exposure, resilience, and impact object families remain distinct.
-- [ ] Warning/advisory/watch context carries source, validity, expiry, not-for-life-safety posture, and official-source redirect.
-- [ ] Freshness windows, stale-state, supersession, correction, and rollback support are checked where required.
-- [ ] Cross-domain joins preserve ownership, source role, sensitivity, and EvidenceBundle support.
-- [ ] Map, tile, search, graph, export, Focus Mode, and AI surfaces do not reveal restricted details or reverse-engineerable derivatives.
-- [ ] Reports and receipts are written only to accepted roots.
-- [ ] Validator output is not described as truth, policy, release, publication, emergency alerting, or Directory Rules approval.
-- [ ] Tests use public-safe or synthetic fixtures.
-- [ ] Executable claims are backed by current repo evidence.
+## Rollback
 
-[Back to top](#top)
-
----
+This README is repository-facing documentation. Rollback is a reviewed revert of its commit. Reverting the index does not change validator code, source state, evidence, policy, lifecycle, release, deployment, or publication state.
 
 ## Last reviewed
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-07 |
-| Review state | Draft README replacement for greenfield stub and current parent index for Hazards validators. |
-| Next smallest safe change | Verify child validator scripts, accepted profiles, schemas, source descriptors, policy bundles, fixtures, report destinations, receipts, freshness/expiry behavior, release linkage, cross-domain join behavior, and CI/runtime wiring before promoting this lane beyond draft. |
+| Evidence date | 2026-08-28 |
+| Pinned repository commit | `e52165e820b07e65c54830fde519a9c90df8eb1c` |
+| Review result | Seven scripts confirmed: three substantive implementations and four explicit `NotImplementedError` placeholders; current test, fixture, and workflow relationships recorded without maturity overstatement |
+| Next trigger | Validator add/remove/rename, placeholder implementation, fixture/test/workflow change, validator-registry change, source-admission change, or consumer adoption |
