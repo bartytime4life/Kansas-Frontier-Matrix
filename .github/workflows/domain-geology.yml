@@ -2,7 +2,7 @@
 # Status: four bounded no-network fixture profiles are executable (resource
 # class, public-safe geometry metadata, a sparse announcement-bound GMD 3 AEM
 # campaign candidate, and production material-change assessment). Their Python
-# commands load the shared named-public-API startup guard;
+# commands load the shared Python startup guard;
 # broader validation, proof, and release-dry-run producers remain held.
 #
 # Authority boundary:
@@ -89,6 +89,7 @@ jobs:
             "data/receipts/generated/genrec-geology-public-safe-geometry-20260810.json"
             "data/receipts/generated/genrec-geology-post-merge-convergence-20260828.json"
             "data/receipts/generated/genrec-geology-no-network-guard-adoption-20260828.json"
+            "data/receipts/generated/genrec-geology-lowlevel-guard-convergence-20260828.json"
             "data/registry/sources/geology/README.md"
             "data/registry/sensitivity/geology/README.md"
             "release/candidates/geology/README.md"
@@ -191,7 +192,7 @@ jobs:
             tests/domains/geology/test_no_network_proof.py
 
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-geology-no-network-guard-adoption-20260828.json \
+            data/receipts/generated/genrec-geology-lowlevel-guard-convergence-20260828.json \
             --repo-root .
 
           echo "WORKFLOW_CHECK_EXECUTED: geology-python-no-network-startup-guard"
@@ -256,7 +257,7 @@ jobs:
             --fixtures
 
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-geology-no-network-guard-adoption-20260828.json \
+            data/receipts/generated/genrec-geology-lowlevel-guard-convergence-20260828.json \
             --repo-root .
 
           echo "WORKFLOW_CHECK_EXECUTED: geology-public-safe-geometry-fixture"
@@ -296,11 +297,12 @@ jobs:
 
           Fresh Python subprocesses prove that the shared startup guard is
           inactive without the explicit posture, activates for the four bounded
-          profile commands, routes the public `socket.SocketType` constructor
-          alias through the guarded class, denies a representative public
-          destination-bearing send, and preserves Unix-domain routing. Direct
-          `_socket.socket`, dependency installation, non-Python processes, and
-          operating-system or runner-wide egress remain outside this proof.
+          profile commands, routes the public `socket.SocketType` and direct
+          private `_socket.socket` constructor aliases through the guarded
+          class, denies representative destination-bearing sends through both,
+          and preserves Unix-domain routing. Other private extension factories,
+          dependency installation, non-Python processes, and operating-system
+          or runner-wide egress remain outside this proof.
 
           When green, this job has executed a frozen, synthetic fixture profile
           that keeps MineralOccurrence, ResourceDeposit, and ResourceEstimate

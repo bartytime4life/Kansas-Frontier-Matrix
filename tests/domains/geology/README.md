@@ -2,8 +2,8 @@
 doc_id: kfm://doc/tests-domains-geology-readme
 title: Geology Domain Tests README
 type: test-readme
-version: v0.3
-prior_version: v0.2 expanded domain-test index
+version: v0.4
+prior_version: v0.3 shared-startup-guard proof index
 status: draft; repository-grounded; domain-test-index; four-bounded-profiles-and-shared-startup-guard-proof-executable; broader-integration-held
 owners:
   - OWNER_TBD — Geology domain steward
@@ -41,7 +41,7 @@ notes:
   - "This file replaces the prior greenfield stub at tests/domains/geology/README.md."
   - "This is a domain-test index and boundary README only. It does not define schemas, contracts, policy rules, source descriptors, fixtures, evidence bundles, receipts, proofs, release decisions, production code, or published artifacts."
   - "The default Geology test posture is deterministic, no-network, synthetic/public-safe fixtures only, and fail-closed for missing evidence, source role, policy, review, release, or rights context."
-  - "Four bounded Geology profiles and a fresh-process proof for the merged shared Python startup guard are executable and CI-wired. The guard proof is limited to named public Python APIs and does not establish private-extension, dependency-install, non-Python, operating-system, or runner-wide egress denial."
+  - "Four bounded Geology profiles and a fresh-process proof for the merged shared Python startup guard are executable and CI-wired. The guard proof covers the public SocketType and direct private _socket.socket constructor aliases but does not establish every private-extension, dependency-install, non-Python, operating-system, or runner-wide egress denial."
   - "Rollback target for this replacement is previous stub blob SHA 1942e419bb84a7de7b8834cfe8b7a93747777849."
 [/KFM_META_BLOCK_V2] -->
 
@@ -292,7 +292,7 @@ Expected CI posture:
 | `docs/domains/geology/README.md` | CONFIRMED doctrine / PROPOSED implementation | Geology scope, anti-collapse posture, evidence binding, deny-by-default exact subsurface/private-well exposure, lifecycle invariant, and public trust path. | Does not prove test implementations. |
 | `fixtures/domains/geology/README.md` | CONFIRMED | Synthetic, public-safe fixture posture and child fixture lanes. | Does not prove all fixture payloads or consumers. |
 | Child lane READMEs | CONFIRMED for documented README files in this session | Catalog closure, evidence-before-AI, public-safe geometry, source-role anti-collapse, and well-rights lane documentation exists or was expanded. | README presence does not prove executable tests, validators, schemas, policies, or CI. |
-| Shared startup guard and Geology fresh-process proof | CONFIRMED at the pinned implementation revision | Explicit activation, public `SocketType` denial, Unix-domain preservation, and the private-extension limitation are exercised without live data. | Does not prove dependency-install, non-Python, private `_socket.socket`, operating-system, or runner-wide egress denial. |
+| Shared startup guard and Geology fresh-process proof | CONFIRMED at the pinned implementation revision | Explicit activation, public `SocketType` and direct private `_socket.socket` constructor denial, Unix-domain preservation, and the remaining private-extension limit are exercised without live data. | Does not prove dependency-install, non-Python, every other private extension factory/API, operating-system, or runner-wide egress denial. |
 | Cross-domain source-role, Focus Mode payload, boreholes/wells, hydrology boundary docs | CONFIRMED doctrine / PROPOSED implementation | Provide governing boundaries for geology test lanes. | Do not prove runtime enforcement. |
 
 ---

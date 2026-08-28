@@ -1,8 +1,9 @@
 """Fresh-process proof for the Geology Python no-network startup guard.
 
-The shared guard is intentionally limited to named public Python APIs. These
-tests do not claim a host firewall, dependency-install isolation, non-Python
-egress denial, or coverage of the private ``_socket.socket`` extension type.
+The shared guard covers its named public Python APIs and the direct private
+``_socket.socket`` constructor alias. These tests do not claim a host firewall,
+dependency-install isolation, non-Python egress denial, or coverage of every
+other private extension factory or API.
 """
 
 from __future__ import annotations
@@ -61,11 +62,22 @@ def test_guard_starts_and_denies_public_socket_type_alias() -> None:
     assert "socket.sendmsg" in result.stderr
 
 
-def test_guard_preserves_unix_routing_and_private_extension_limit() -> None:
+def test_guard_denies_private_extension_socket_constructor() -> None:
     result = _guarded_python(
         "import _socket, socket, sitecustomize; "
-        "assert _socket.socket is sitecustomize._original_socket_type; "
-        "assert socket.SocketType is not sitecustomize._original_socket_type; "
+        "assert _socket.socket is socket.socket; "
+        "assert socket.socket is not sitecustomize._original_socket_type; "
+        "_socket.socket(socket.AF_INET, socket.SOCK_DGRAM).sendmsg("
+        "[b'x'], [], 0, ('192.0.2.1', 53))"
+    )
+    assert result.returncode != 0
+    assert DENIAL_MESSAGE in result.stderr
+    assert "socket.sendmsg" in result.stderr
+
+
+def test_guard_preserves_unix_routing() -> None:
+    result = _guarded_python(
+        "import socket, sitecustomize; "
         "local_socket = type('LocalSocket', (), {'family': socket.AF_UNIX})(); "
         "sitecustomize._original_connect = lambda _socket, address: address; "
         "assert sitecustomize._guarded_connect(local_socket, 'local.sock') "
