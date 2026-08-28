@@ -8,7 +8,10 @@ owners: ["@bartytime4life — verified GitHub review route only"]
 created: 2026-05-15
 updated: 2026-08-28
 policy_label: public
-related: [docs/domains/README.md, docs/doctrine/directory-rules.md, docs/domains/atmosphere/SOURCE_REGISTRY.md, docs/domains/atmosphere/UBIQUITOUS_LANGUAGE.md, docs/domains/atmosphere/VERIFICATION_BACKLOG.md, control_plane/domain_lane_register.yaml, schemas/contracts/v1/domains/atmosphere/, policy/domains/atmosphere/, release/candidates/atmosphere/, ai-build-operating-contract.md]
+owning_root: docs/
+responsibility: Human-readable scope, boundaries, maturity, compatibility, and navigation for the Atmosphere domain lane
+truth_posture: "CONFIRMED current repository paths, accepted Directory Rules placement, default CODEOWNERS review routing, and bounded documentation validation / PARTIAL mixed implementation maturity and compatibility surfaces / UNKNOWN source admission, production retrieval, runtime behavior, accountable stewardship, independent review, release, deployment, promotion, and publication / NEEDS VERIFICATION before positive operational claims"
+related: [docs/domains/README.md, docs/doctrine/directory-rules.md, docs/domains/atmosphere/SOURCE_REGISTRY.md, docs/domains/atmosphere/UBIQUITOUS_LANGUAGE.md, docs/domains/atmosphere/VERIFICATION_BACKLOG.md, control_plane/domain_lane_register.yaml, schemas/contracts/v1/domains/atmosphere/, policy/domains/atmosphere/, release/candidates/atmosphere/, docs/doctrine/ai-build-operating-contract.md]
 tags: [kfm, domain, atmosphere, air, climate, weather]
 notes: ["Repository paths inspected at main@f7af2c3dcefd38ae5e86141cfbc0931c0ef7d90f; Atmosphere responsibility-root lanes exist; pipelines/domains/air remains documentation-only compatibility; repository presence does not establish source admission, review, release, deployment, promotion, or publication."]
 [/KFM_META_BLOCK_V2] -->
