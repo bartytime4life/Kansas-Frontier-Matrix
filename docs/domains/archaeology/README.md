@@ -3,6 +3,9 @@ doc_id: kfm://doc/docs-domains-archaeology-readme
 title: Archaeology and Cultural Heritage — Domain Documentation
 type: standard
 version: v2.2.1
+owning_root: docs/
+responsibility: "Document Archaeology and Cultural Heritage domain boundaries, current evidence, holds, and non-effects."
+truth_posture: "Mixed: confirmed repository evidence with proposed, unverified, and held domain controls."
 status: draft
 owners: NEEDS VERIFICATION — CODEOWNERS routes this lane to @bartytime4life; archaeology, cultural-review, and docs steward authority remains unverified
 created: 2026-05-15
@@ -10,12 +13,12 @@ updated: 2026-08-28
 policy_label: public
 related:
   - docs/domains/README.md
-  - directory-rules.md
+  - docs/doctrine/directory-rules.md
   - contracts/domains/archaeology/
   - schemas/contracts/v1/domains/archaeology/
   - policy/domains/archaeology/
   - data/published/layers/archaeology/
-  - ai-build-operating-contract.md
+  - docs/doctrine/ai-build-operating-contract.md
 tags: [kfm, domains, archaeology, cultural-heritage, sensitivity, care, t4]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned (doctrine-adjacent landing doc).
@@ -642,7 +645,7 @@ The live repository resolves several former path questions while leaving authori
 | v1 → v2 | Filled ADR-S numbers (04, 05, 09, 11, 12) from the backlog | historical gap closure | Retained as lineage; those planning identifiers are not current accepted ADR authority. |
 | v2 → v2.1.0 | Reconciled repository presence, mixed scaffold maturity, EvidenceBundle convergence, placeholder tests, CODEOWNERS routing, related paths, and ADR status against current main | repository-state correction | Remove false repository-unmounted and blanket-PROPOSED claims without implying enforcement, review, release, or publication. |
 | v2.1.0 → v2.2.0 | Recorded the executable no-network fixture proof and guarded EvidenceBundle workflow commands | bounded validation correction | Distinguish Python-process enforcement from runner-wide, non-Python, runtime, policy, proof, release, or publication authority. |
-| v2.2.0 → v2.2.1 | Reclassified no-network fixture execution after the shared guard's post-merge review identified a `socket.SocketType` bypass | evidence correction | Preserve the passed named-command proof while preventing it from being read as complete Python no-egress enforcement. |
+| v2.2.0 → v2.2.1 | Reclassified no-network fixture execution after the shared guard's post-merge review identified a `socket.SocketType` bypass; completed required ownership/truth metadata and repaired two repository-root related targets | evidence correction | Preserve the passed named-command proof while preventing it from being read as complete Python no-egress enforcement, and keep changed-path documentation QA reviewable. |
 
 > **Backward compatibility.** Renamed sections retain explicit aliases for the three v1 anchors (`#directory-tree-proposed`, `#api-contract-and-schema-surfaces-proposed`, and `#validators-tests-fixtures-proposed`). New sections (Open questions register, Changelog, Definition of done) remain before FAQ and Appendix; the Contents list is renumbered accordingly. Content was reconciled in v2.1.0, so compatibility here means stable legacy link targets rather than byte-for-byte preservation.
 
