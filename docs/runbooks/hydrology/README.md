@@ -3,14 +3,15 @@ doc_id: kfm://doc/runbooks-hydrology-readme
 title: docs/runbooks/hydrology/ — Hydrology Operational Procedure Boundary
 type: readme
 subtype: boundary-compact
-version: v1.0.1
+version: v1.0.2
+prior_version: v1.0.1
 prior_state: repository-grounded boundary with stale child maturity labels
 status: draft; repository-grounded; bounded synthetic validation executable; broader semantics, source operation, proof, release, deployment, and publication held; not for life safety
 owners:
   - "@bartytime4life — verified GitHub review route"
   - "NEEDS VERIFICATION — accountable Hydrology, evidence, policy, safety, source, and release assignments"
 created: 2026-08-27
-updated: 2026-08-27
+updated: 2026-08-28
 policy_label: repository-facing; mixed child sensitivity; fail-closed
 current_path: docs/runbooks/hydrology/README.md
 owning_root: docs/
@@ -25,7 +26,7 @@ evidence_snapshot:
   target_prior_blob: 67ac2ebd8208b2720c5765336aa9ac8af32fc11e
   source_refresh_runbook_blob: 0af9c08bdc432e234285f788e13d6d223f0796b4
   rollback_runbook_blob: c332a9098e0ca8fc8ff5d7fd66ccdff5378a51fc
-  parent_runbooks_readme_blob: e145e8044b8012c2fa563d4e6ef213c0f8b80885
+  parent_runbooks_readme_blob: 4f33dfa18cd69fe6a6b990aac71be08d59e7d13e
   domain_workflow_blob: 36a0287be04639cb75dc77ae2c274fee626f6a00
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
@@ -50,7 +51,8 @@ related:
   - ../../../data/proofs/hydrology/README.md
   - ../../../release/candidates/hydrology/README.md
 notes:
-  - "This one-file correction reconciles child maturity and navigation after the source-refresh and rollback runbook merges; it creates no new authority surface."
+  - "v1.0.2 corrects the parent runbook index blob pin to the bytes present at the stated base commit; it changes no maturity or operational claim."
+  - "v1.0.1 reconciled child maturity and navigation after the source-refresh and rollback runbook merges; it created no new authority surface."
   - "VALIDATION.md, PROMOTION_RUNBOOK.md, SOURCE_REFRESH_RUNBOOK.md, and ROLLBACK_RUNBOOK.md are repository-grounded; their executable or decision support remains bounded by each document's explicit holds."
   - "NO_NETWORK_TEST_RUNBOOK.md retains proposal-era or stale language, and ROLLBACK.md remains a scaffold; neither is current operational authority."
   - "A passing workflow establishes only the named synthetic and fixture-polarity checks at the tested SHA."
@@ -249,3 +251,4 @@ admission, evidence, policy, lifecycle, release, deployment, or publication
 state.
 
 [Back to top](#top)
+
