@@ -1,16 +1,19 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/PLACEHOLDER-uuid
+doc_id: kfm://doc/docs-domains-archaeology-source-families
 title: Archaeology — Source Families
 type: standard
-version: v1
+version: v1.0.1
 status: draft
 owners: <archaeology-domain-steward> + <source-steward> (PLACEHOLDER — confirm)
 created: 2026-05-28
-updated: 2026-05-28
+updated: 2026-08-28
 policy_label: public
-related: [docs/domains/archaeology/README.md, docs/domains/archaeology/pipeline-shape.md, docs/domains/archaeology/sensitivity-and-publication-posture.md, docs/domains/archaeology/cross-lane-relations.md, ai-build-operating-contract.md, directory-rules.md]
+owning_root: docs/
+responsibility: "Describe the Archaeology source-family, source-role, rights, sensitivity, freshness, and anti-collapse posture for human readers."
+truth_posture: "Mixed: confirmed source-family doctrine and current repository placement; proposed source-role mapping and descriptor authority; unresolved rights, terms, freshness, admission, reviewer, release, and publication authority."
+related: [docs/domains/archaeology/README.md, docs/domains/archaeology/pipeline-shape.md, docs/domains/archaeology/sensitivity-and-publication-posture.md, docs/domains/archaeology/cross-lane-relations.md, docs/doctrine/ai-build-operating-contract.md, docs/doctrine/directory-rules.md]
 tags: [kfm, archaeology, sources, source-role, SourceDescriptor, sensitive-domain]
-notes: [CONTRACT_VERSION = "3.0.0" pinned; source families CONFIRMED doctrine, rights/freshness NEEDS VERIFICATION, descriptor fields PROPOSED, repo not mounted this session]
+notes: [CONTRACT_VERSION = "3.0.0" pinned; source families CONFIRMED doctrine; rights/freshness NEEDS VERIFICATION; descriptor semantics and authority PROPOSED; repository paths observed; file presence does not admit a source or activate policy, release, or publication]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -26,10 +29,10 @@ notes: [CONTRACT_VERSION = "3.0.0" pinned; source families CONFIRMED doctrine, r
 ![contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
 ![repo--state](https://img.shields.io/badge/rights_&_terms-NEEDS_VERIFICATION-yellow)
 
-**Status:** `draft` · **Owners:** `<archaeology-domain-steward>` + `<source-steward>` (PLACEHOLDER) · **Updated:** 2026-05-28
+**Status:** `draft` · **Owners:** `<archaeology-domain-steward>` + `<source-steward>` (PLACEHOLDER) · **Updated:** 2026-08-28
 
 > [!CAUTION]
-> **Sensitive domain.** Several Archaeology source families carry exact site locations, burial, sacred, or steward-controlled content. **Sensitive joins fail closed.** No source family is admitted to a public surface without resolved rights, a fixed source role, and (where sensitivity applies) a transform receipt. Disposition is governed by `ai-build-operating-contract.md` §23.2.
+> **Sensitive domain.** Several Archaeology source families carry exact site locations, burial, sacred, or steward-controlled content. **Sensitive joins fail closed.** No source family is admitted to a public surface without resolved rights, a fixed source role, and (where sensitivity applies) a transform receipt. Disposition is governed by `docs/doctrine/ai-build-operating-contract.md` §23.2.
 
 ---
 
@@ -56,7 +59,7 @@ notes: [CONTRACT_VERSION = "3.0.0" pinned; source families CONFIRMED doctrine, r
 This document inventories the **key source families** for the Archaeology / Cultural Heritage domain, the **source roles** each may carry, and the **admission discipline** (`SourceDescriptor`, role fixing, anti-collapse) that governs how those sources become evidence.
 
 > [!NOTE]
-> **Truth labels in this doc.** The eight source families are `CONFIRMED` doctrine (Atlas §15.D). The canonical source-role classes and the "role fixed at admission, never upgraded" rule are `CONFIRMED` doctrine (Atlas §24.1.1). Rights, current terms, and access methods for each specific family are `NEEDS VERIFICATION` (the Atlas itself labels them so). The `SourceDescriptor` field surface is `PROPOSED` (Atlas §24.1.3). All repo paths/schema presence are `PROPOSED` / `NEEDS VERIFICATION` (no repository mounted).
+> **Truth labels in this doc.** The eight source families are `CONFIRMED` doctrine (Atlas §15.D). The canonical source-role classes and the "role fixed at admission, never upgraded" rule are `CONFIRMED` doctrine (Atlas §24.1.1). Rights, current terms, and access methods for each specific family are `NEEDS VERIFICATION` (the Atlas itself labels them so). The `SourceDescriptor` field surface and role mapping remain `PROPOSED` (Atlas §24.1.3). Repository placement below is grounded in current GitHub evidence; current files do not establish source admission, accepted semantic authority, evaluator activation, release, or publication.
 
 [↑ Back to top](#top)
 
@@ -66,15 +69,15 @@ This document inventories the **key source families** for the Archaeology / Cult
 
 | Aspect | Value | Status |
 |---|---|---|
-| Proposed path | `docs/domains/archaeology/source-families.md` | `PROPOSED` |
+| Current path | `docs/domains/archaeology/source-families.md` | `CONFIRMED` placement; document remains `draft` |
 | Owning responsibility root | `docs/` (explains something to humans) | `CONFIRMED` rule |
 | Domain segment | `archaeology` as a lane inside `docs/`, never a root | `CONFIRMED` rule |
-| Source registry counterpart | `data/registry/sources/archaeology/` | `PROPOSED` |
-| SourceDescriptor schema home | `schemas/contracts/v1/source/source-descriptor.json` (per Directory Rules §7.4 + ADR-0001) | `PROPOSED` / `NEEDS VERIFICATION` |
-| Policy counterpart | `policy/sensitivity/archaeology/` | `PROPOSED` |
-| Upstream (governs this doc) | `directory-rules.md`; `ai-build-operating-contract.md`; `[ENCY]` source doctrine | `CONFIRMED` rule / `PROPOSED` presence |
+| Source registry counterpart | `data/registry/sources/archaeology/` | `CONFIRMED` repository path; records and admission authority remain `PROPOSED` / `NEEDS VERIFICATION` |
+| SourceDescriptor schema surfaces | `schemas/contracts/v1/source/source-descriptor.json`; `schemas/contracts/v1/source/source-descriptor.schema.json`; `schemas/contracts/v1/source/source_descriptor.json`; `schemas/contracts/v1/source/source_descriptor.schema.json`; `schemas/contracts/v1/sources/source_descriptor.schema.json` | `CONFIRMED` repository paths; canonical authority and convergence remain unresolved |
+| Policy counterpart | `policy/sensitivity/archaeology/` | `CONFIRMED` rule lane; evaluator binding and activation remain unresolved |
+| Upstream (governs this doc) | `docs/doctrine/directory-rules.md`; `docs/doctrine/ai-build-operating-contract.md`; `[ENCY]` source doctrine | `CONFIRMED` repository paths / mixed doctrine maturity |
 
-**Directory Rules basis.** A doc that *explains to humans* lives under `docs/`. The source **registry** (identity, rights, sensitivity) lives under `data/registry/` (or `data/registry/sources/<domain>/`); the **descriptor schema** lives under `schemas/`. This doc is navigational — the machine-readable `SourceDescriptor` and registry entries govern actual admission.
+**Directory Rules basis.** A doc that *explains to humans* lives under `docs/`. The source **registry** (identity, rights, sensitivity) lives under `data/registry/` (or `data/registry/sources/<domain>/`); descriptor shapes live under `schemas/`. This doc is navigational. Current files do not themselves admit a source: accepted contract/schema authority, governed registry records, evaluator binding, and accountable review must remain separate.
 
 [↑ Back to top](#top)
 
@@ -144,7 +147,7 @@ This document inventories the **key source families** for the Archaeology / Cult
 
 ## 6. SourceDescriptor fields
 
-`PROPOSED` descriptor surface (Atlas §24.1.3) — illustrative, not authoritative. Schema home defaults to `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 and ADR-0001 unless an accepted ADR relocates it (`NEEDS VERIFICATION`: actual file presence and field names).
+`PROPOSED` descriptor surface (Atlas §24.1.3) — illustrative, not authoritative. Current GitHub evidence contains multiple SourceDescriptor contract/schema surfaces plus an Archaeology validator and synthetic fixture, while the source-role ADR candidate remains unassigned. Canonical semantic authority, field convergence, evaluator binding, and admission authority remain `NEEDS VERIFICATION`.
 
 <details>
 <summary><strong>Role-bearing SourceDescriptor fields (PROPOSED — §24.1.3)</strong></summary>
@@ -205,7 +208,7 @@ This document inventories the **key source families** for the Archaeology / Cult
 | ID | Question | Owner role | Resolution path |
 |---|---|---|---|
 | OQ-ARCH-SRC-01 | What are the actual rights and current terms for each of the eight families? | source steward | source-by-source review |
-| OQ-ARCH-SRC-02 | Does `SourceDescriptor` live at `schemas/contracts/v1/source/source-descriptor.json`, per ADR-0001? | schema steward | repo inspection / ADR confirmation |
+| OQ-ARCH-SRC-02 | Which current SourceDescriptor contract/schema surface is canonical, and what compatibility plan converges the others? | schema steward | accepted authority review plus consumer inventory |
 | OQ-ARCH-SRC-03 | Which families route through the Indigenous/cultural §23.2 row by default (oral history, steward-held records)? | tribal/cultural reviewer | steward ratification |
 | OQ-ARCH-SRC-04 | What is the freshness cadence and stale-out tolerance per active-inventory source? | source steward | repo inspection |
 
@@ -214,9 +217,9 @@ This document inventories the **key source families** for the Archaeology / Cult
 These items remain `NEEDS VERIFICATION` before promotion from `draft` to `published`:
 
 1. Verify rights and current terms for all eight source families.
-2. Verify the `SourceDescriptor` schema home and the §24.1.3 field set against the mounted repo.
-3. Verify `data/registry/sources/archaeology/` exists and records source roles.
-4. Verify the source-role anti-collapse validators exist (Atlas §15.K lists "candidate-not-site" as `PROPOSED`).
+2. Reconcile the current SourceDescriptor contract/schema surfaces and verify the §24.1.3 field set against accepted authority.
+3. Verify that `data/registry/sources/archaeology/source_roles.yaml` carries governed mappings; file presence alone is not source admission.
+4. Verify the source-role anti-collapse validators are bound to an accepted evaluator (Atlas §15.K lists "candidate-not-site" as `PROPOSED`).
 5. Confirm the per-family role assignment guidance (§5) against each source's terms.
 
 ## Changelog v0 → v1
@@ -225,14 +228,15 @@ These items remain `NEEDS VERIFICATION` before promotion from `draft` to `publis
 |---|---|---|
 | Initial draft of Archaeology source families | new | Synthesizes Atlas §15.D + §24.1.1–§24.1.3 source-role doctrine |
 | Pinned `CONTRACT_VERSION = "3.0.0"` | clarification | Doctrine-adjacent doc requirement |
+| Reconciled document identity and repository placement without changing source-role or admission authority | compatibility | Remove duplicate placeholder identity, stale repository-unavailable claims, and obsolete schema path assumptions |
 
 > **Backward compatibility.** New document; no prior anchors to preserve. Section anchors are stable for future revisions.
 
 ## Definition of done
 
-This document is done enough to enter the repository when:
+This document is done enough for accountable review at its current repository location when:
 
-- it is placed according to Directory Rules (`docs/domains/archaeology/`);
+- its current Directory Rules placement (`docs/domains/archaeology/`) is retained;
 - a docs steward, the archaeology domain steward, and a source/rights steward review it;
 - it is linked from the archaeology lane README and the source/doctrine index;
 - it does not conflict with accepted ADRs (notably ADR-0001 on the SourceDescriptor home);
@@ -244,13 +248,13 @@ This document is done enough to enter the repository when:
 
 ## Related docs
 
-- `docs/domains/archaeology/README.md` — archaeology lane landing page (`PROPOSED`)
-- `docs/domains/archaeology/sensitivity-and-publication-posture.md` — sibling sensitivity doc (`PROPOSED`)
-- `docs/domains/archaeology/pipeline-shape.md` — sibling lifecycle doc (`PROPOSED`)
-- `docs/domains/archaeology/cross-lane-relations.md` — sibling cross-lane doc (`PROPOSED`)
-- `ai-build-operating-contract.md` — source-role anti-collapse, §23.2 matrix (canonical)
-- `schemas/contracts/v1/source/source-descriptor.json` — SourceDescriptor schema home (`PROPOSED`, per ADR-0001)
+- `docs/domains/archaeology/README.md` — archaeology lane landing page (current repository path)
+- `docs/domains/archaeology/sensitivity-and-publication-posture.md` — sibling sensitivity doc (current repository path; draft)
+- `docs/domains/archaeology/pipeline-shape.md` — sibling lifecycle doc (current repository path; draft)
+- `docs/domains/archaeology/cross-lane-relations.md` — sibling cross-lane doc (current repository path; draft)
+- `docs/doctrine/ai-build-operating-contract.md` — source-role anti-collapse and §23.2 matrix (current repository path)
+- `schemas/contracts/v1/source/source-descriptor.json`; `schemas/contracts/v1/source/source-descriptor.schema.json`; `schemas/contracts/v1/source/source_descriptor.json`; `schemas/contracts/v1/source/source_descriptor.schema.json`; `schemas/contracts/v1/sources/source_descriptor.schema.json` — current SourceDescriptor schema surfaces; accepted canonical authority unresolved
 
-**Last updated:** 2026-05-28 · `CONTRACT_VERSION = "3.0.0"`
+**Last updated:** 2026-08-28 · `CONTRACT_VERSION = "3.0.0"`
 
 [↑ Back to top](#top)
