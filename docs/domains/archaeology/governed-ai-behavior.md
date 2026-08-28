@@ -1,14 +1,17 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/PLACEHOLDER-uuid
+doc_id: kfm://doc/docs-domains-archaeology-governed-ai-behavior
 title: Archaeology — Governed AI Behavior
 type: standard
 version: v1
 status: draft
 owners: <archaeology-domain-steward> + <governed-ai-steward> (PLACEHOLDER — confirm)
 created: 2026-05-28
-updated: 2026-05-28
+updated: 2026-08-28
 policy_label: public
-related: [docs/domains/archaeology/README.md, docs/domains/archaeology/cross-lane-relations.md, ai-build-operating-contract.md, policy/sensitivity/archaeology/]
+owning_root: docs/
+responsibility: Document draft governed-AI behavior for Archaeology without becoming evidence, policy, runtime, review, or publication authority.
+truth_posture: CONFIRMED tracked draft document and responsibility-root placement / PROPOSED runtime and route implementation unless current repository evidence is cited / NEEDS VERIFICATION validation, review, release, and publication
+related: [docs/domains/archaeology/README.md, docs/domains/archaeology/cross-lane-relations.md, docs/doctrine/ai-build-operating-contract.md, policy/sensitivity/archaeology/]
 tags: [kfm, archaeology, governed-ai, gai, sensitive-domain]
 notes: [CONTRACT_VERSION = "3.0.0" pinned; repo paths/routes PROPOSED, repo not mounted this session]
 [/KFM_META_BLOCK_V2] -->
