@@ -151,6 +151,31 @@ class AgricultureObservationTests(unittest.TestCase):
             self.assertIsNone(value)
             self.assertEqual("AGRICULTURE_JSON_ROOT_INVALID", findings[0].code)
 
+    def test_bounded_reader_rejects_symlinks_and_oversized_files(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+
+            target = root / "target.json"
+            target.write_text("{}", encoding="utf-8")
+            symlink = root / "symlink.json"
+            symlink.symlink_to(target)
+            value, findings = validator._read(symlink)
+            self.assertIsNone(value)
+            self.assertEqual(
+                (validator.Finding("AGRICULTURE_INPUT_SYMLINK_DENIED", "/"),),
+                findings,
+            )
+
+            oversized = root / "oversized.json"
+            with oversized.open("wb") as handle:
+                handle.truncate(validator.MAX_BYTES + 1)
+            value, findings = validator._read(oversized)
+            self.assertIsNone(value)
+            self.assertEqual(
+                (validator.Finding("AGRICULTURE_INPUT_TOO_LARGE", "/"),),
+                findings,
+            )
+
     def test_serialized_result_disclaims_authority(self) -> None:
         payload = json.loads(validator.serialize(None, validator.Result("PASS", ())))
         self.assertEqual("NONE", payload["authority"])
