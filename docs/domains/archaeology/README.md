@@ -2,7 +2,7 @@
 doc_id: kfm://doc/docs-domains-archaeology-readme
 title: Archaeology and Cultural Heritage — Domain Documentation
 type: standard
-version: v2.1.0
+version: v2.2.0
 status: draft
 owners: NEEDS VERIFICATION — CODEOWNERS routes this lane to @bartytime4life; archaeology, cultural-review, and docs steward authority remains unverified
 created: 2026-05-15
@@ -19,7 +19,7 @@ related:
 tags: [kfm, domains, archaeology, cultural-heritage, sensitivity, care, t4]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned (doctrine-adjacent landing doc).
-  - Repository paths were inspected at main@e4cb00293eba5b208b918e4f548bcd9c87878da9; presence, implementation, evaluator binding, review, release, and publication remain separate states.
+  - Repository paths were inspected at main@067d1524e5c1758e79227ca55009b9e31fc0379e; presence, implementation, evaluator binding, review, release, and publication remain separate states.
   - Sensitivity defaults follow Atlas v1.1 §24.5 (T0–T4); see Sensitivity section.
   - Per-source tier assignments in the Source families table are INFERRED, not Atlas §15.D doctrine (which leaves rights NEEDS VERIFICATION).
 [/KFM_META_BLOCK_V2] -->
@@ -103,7 +103,7 @@ The domain's mission, drawn from the *KFM Domains Culmination Atlas* v1.1 §15 a
 | Implementation maturity | **PARTIAL / MIXED.** Current main contains the documented responsibility-root lanes, contracts and schema projections, policy scaffolds, fixtures, lifecycle documentation, and a non-vacuous EvidenceBundle convergence validator/test/workflow. The governed API archaeology route has no executable handler, most named domain tests remain docstring-only placeholders, the exact-location ADR candidate is unassigned/proposed, and no release or publication state is established. |
 
 > [!NOTE]
-> The current repository was inspected at `main@e4cb00293eba5b208b918e4f548bcd9c87878da9`. File presence and the bounded EvidenceBundle convergence proof are `CONFIRMED`; evaluator binding, protected-data use, specialist review, release, deployment, promotion, and publication remain unproved or held. Google Drive doctrine is lineage, not repository implementation authority.
+> The current repository was inspected at `main@067d1524e5c1758e79227ca55009b9e31fc0379e`. File presence and the bounded EvidenceBundle convergence proof are `CONFIRMED`; evaluator binding, protected-data use, specialist review, release, deployment, promotion, and publication remain unproved or held. Google Drive doctrine is lineage, not repository implementation authority.
 
 [Back to top](#contents)
 
@@ -439,7 +439,8 @@ The current repository has one bounded, non-vacuous Archaeology EvidenceBundle c
 
 | Surface | Current evidence | Disposition |
 |---|---|---|
-| EvidenceBundle projection | `tools/validators/validate_archaeology_evidence_bundle_projection.py`, three `unittest` cases, shared valid/invalid fixtures, and `.github/workflows/archaeology-evidence-bundle-convergence.yml` | **CONFIRMED bounded proof** — schema delegation and fixture polarity only. |
+| EvidenceBundle projection | `tools/validators/validate_archaeology_evidence_bundle_projection.py`, three schema-convergence `unittest` cases, shared valid/invalid fixtures, and `.github/workflows/archaeology-evidence-bundle-convergence.yml` | **CONFIRMED bounded proof** — schema delegation and fixture polarity only. |
+| No-network fixture execution | `test_no_network_fixtures.py` starts fresh guarded Python interpreters, validates the shared fixtures, and exercises a denied connection probe | **CONFIRMED bounded proof** — Python-process startup enforcement for the named commands only; no runner-wide or non-Python isolation. |
 | Exact sensitive geometry denial | `tests/domains/archaeology/test_exact_sensitive_geometry_denial.py` is docstring-only; exact-location Rego files are default-only or greenfield stubs | **HOLD** — no evaluator-backed denial proof. |
 | Public no-leak | `test_public_no_leak.py` is docstring-only | **HOLD** — no public-surface leakage proof. |
 | Candidate-not-site | `test_candidate_not_site.py` is docstring-only | **HOLD** — no executable anti-collapse proof. |
@@ -537,7 +538,7 @@ Current repository evidence supports the bounded checks below. Missing commands 
 
 | Check | Current surface | Failure / limit |
 |---|---|---|
-| Archaeology EvidenceBundle convergence | `.github/workflows/archaeology-evidence-bundle-convergence.yml` runs compile, three focused tests, and shared fixture validation | Fails the bounded workflow; proves no runtime or release state. |
+| Archaeology EvidenceBundle convergence | `.github/workflows/archaeology-evidence-bundle-convergence.yml` runs compile, five focused tests, guarded shared-fixture validation, and a denied Python connection probe | Fails the bounded workflow; proves no runner-wide isolation, governed runtime, or release state. |
 | Repository documentation checks | Use only repository-native checks that actually exist at the tested head | Do not invent the older illustrative `link-check`, `meta-block`, `terminology-parity`, `truth-label-lint`, or `stale-scan` commands. |
 | Review of this README | Confirm metadata markers, balanced fences, relative-path presence, no stale repository-unmounted claims, and no sensitive payloads | Documentation-only evidence; no policy, source, release, or publication authority. |
 
@@ -640,6 +641,7 @@ The live repository resolves several former path questions while leaving authori
 | v1 → v2 | Added Open questions register, Changelog, Definition of done | gap closure | Doctrine companion sections |
 | v1 → v2 | Filled ADR-S numbers (04, 05, 09, 11, 12) from the backlog | historical gap closure | Retained as lineage; those planning identifiers are not current accepted ADR authority. |
 | v2 → v2.1.0 | Reconciled repository presence, mixed scaffold maturity, EvidenceBundle convergence, placeholder tests, CODEOWNERS routing, related paths, and ADR status against current main | repository-state correction | Remove false repository-unmounted and blanket-PROPOSED claims without implying enforcement, review, release, or publication. |
+| v2.1.0 → v2.2.0 | Recorded the executable no-network fixture proof and guarded EvidenceBundle workflow commands | bounded validation correction | Distinguish Python-process enforcement from runner-wide, non-Python, runtime, policy, proof, release, or publication authority. |
 
 > **Backward compatibility.** Renamed sections retain explicit aliases for the three v1 anchors (`#directory-tree-proposed`, `#api-contract-and-schema-surfaces-proposed`, and `#validators-tests-fixtures-proposed`). New sections (Open questions register, Changelog, Definition of done) remain before FAQ and Appendix; the Contents list is renumbered accordingly. Content was reconciled in v2.1.0, so compatibility here means stable legacy link targets rather than byte-for-byte preservation.
 
