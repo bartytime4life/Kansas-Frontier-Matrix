@@ -519,7 +519,7 @@ Client-side hiding is not a security control. Join-induced sensitivity must prop
 
 Material policy changes should be versioned, preserve prior source/bundle/evaluator/test identities for replay, record supersession and effective time, reevaluate affected decisions and releases, invalidate caches, emit correction or withdrawal records through owning roots, and restore a prior accepted bundle/selector during rollback rather than copying files into an ambiguous state.
 
-This v0.4.0 README changes no policy behavior. Before merge, close or abandon its draft PR and branch. After merge, revert the README commit and paired generated receipt together, or issue a transparent forward fix. The exact v0.3.1 baseline is blob `6c5021f9d92778581a4e9331a9dd6ddb7efc5e35`; reverting documentation must not restore the deleted `policy/living_persons_geoprivacy.md` path or roll back unrelated child-lane work by implication.
+This v0.4.1 README changes no policy behavior. Before merge, close or abandon its draft PR and branch. After merge, revert the focused documentation commit or issue a transparent forward fix. The exact v0.4.0 baseline is blob `52877f1befd3112f1aec0eb122669d3fdc2634e6`; reverting documentation must not remove the existing `policy/sources/rights/` files, restore the deleted `policy/living_persons_geoprivacy.md` path, or roll back unrelated child-lane work by implication.
 
 [Back to top](#top)
 
