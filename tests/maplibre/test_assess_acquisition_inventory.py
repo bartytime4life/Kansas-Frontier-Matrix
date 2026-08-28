@@ -478,6 +478,71 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(result.findings, ())
         self.assertEqual(result.scanned_bytes, 12)
 
+    def test_verification_reads_are_counted_in_physical_budget(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(root, "scripts/candidate.mjs", "abcdef")
+            actual_read_bytes = 0
+            real_read = MODULE.os.read
+
+            def counted_read(descriptor: int, count: int) -> bytes:
+                nonlocal actual_read_bytes
+                chunk = real_read(descriptor, count)
+                actual_read_bytes += len(chunk)
+                return chunk
+
+            with patch.object(MODULE.os, "read", counted_read):
+                result = MODULE.scan(root)
+
+        self.assertEqual(result.outcome, MODULE.Outcome.PASS)
+        self.assertEqual(result.scanned_bytes, 6)
+        self.assertEqual(result.physical_read_bytes, 12)
+        self.assertEqual(result.physical_read_bytes, actual_read_bytes)
+        payload = result.to_dict()
+        self.assertEqual(payload["physical_read_bytes"], 12)
+        self.assertEqual(
+            payload["max_total_physical_read_bytes"],
+            MODULE.MAX_TOTAL_PHYSICAL_READ_BYTES,
+        )
+
+    def test_physical_read_budget_fails_before_unbudgeted_verification(self) -> None:
+        with (
+            self._root() as tmp,
+            patch.object(MODULE, "MAX_TOTAL_PHYSICAL_READ_BYTES", 10),
+        ):
+            root = Path(tmp)
+            self._write(root, "scripts/first.mjs", " " * 3)
+            self._write(root, "scripts/second.mjs", " " * 3)
+            self._write(root, "scripts/third.mjs", 'require("maplibre-gl");\n')
+            result = MODULE.scan(root)
+            payload = result.to_dict()
+
+        self.assertEqual(result.outcome, MODULE.Outcome.ERROR)
+        self.assertEqual(result.reasons, ("SCAN_TOTAL_PHYSICAL_READ_TOO_LARGE",))
+        self.assertEqual(
+            result.findings[0].kind, "TOTAL_PHYSICAL_READ_BUDGET_EXCEEDED"
+        )
+        self.assertEqual(result.findings[0].path, "scripts/second.mjs")
+        self.assertEqual(result.scanned_bytes, 3)
+        self.assertEqual(result.physical_read_bytes, 6)
+        self.assertEqual(payload["max_total_physical_read_bytes"], 10)
+        self.assertNotIn("RENDERER_ACQUISITION_PRESENT", result.reasons)
+
+    def test_input_at_physical_read_budget_is_scanned(self) -> None:
+        with (
+            self._root() as tmp,
+            patch.object(MODULE, "MAX_TOTAL_PHYSICAL_READ_BYTES", 10),
+        ):
+            root = Path(tmp)
+            self._write(root, "scripts/first.mjs", " " * 3)
+            self._write(root, "scripts/second.mjs", " " * 2)
+            result = MODULE.scan(root)
+
+        self.assertEqual(result.outcome, MODULE.Outcome.PASS)
+        self.assertEqual(result.findings, ())
+        self.assertEqual(result.scanned_bytes, 5)
+        self.assertEqual(result.physical_read_bytes, 10)
+
     def test_final_symlink_replacement_fails_closed_before_read(self) -> None:
         with self._root() as tmp, self._root() as external_tmp:
             root = Path(tmp)
@@ -560,6 +625,7 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(result.outcome, MODULE.Outcome.ERROR)
         self.assertEqual(result.reasons, ("SCAN_INPUT_CHANGED_DURING_READ",))
         self.assertEqual(result.findings[0].kind, "INPUT_CHANGED_DURING_READ")
+        self.assertEqual(result.physical_read_bytes, len(active))
         self.assertNotIn("RENDERER_ACQUISITION_PRESENT", result.reasons)
 
     def test_stable_metadata_content_change_fails_digest_consistency(self) -> None:
@@ -605,6 +671,7 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(
             result.findings[0].kind, "INPUT_CONTENT_CHANGED_DURING_VERIFICATION"
         )
+        self.assertEqual(result.physical_read_bytes, len(active) * 2)
         self.assertNotIn("RENDERER_ACQUISITION_PRESENT", result.reasons)
 
     def test_parent_swap_cannot_escape_pinned_directory_descriptor(self) -> None:
@@ -734,9 +801,13 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 3)
         payload = json.loads(completed.stdout)
         self.assertEqual(payload["outcome"], "HOLD")
-        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v13")
+        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v14")
         self.assertEqual(payload["max_input_bytes"], MODULE.MAX_INPUT_BYTES)
         self.assertEqual(payload["max_total_input_bytes"], MODULE.MAX_TOTAL_INPUT_BYTES)
+        self.assertEqual(
+            payload["max_total_physical_read_bytes"],
+            MODULE.MAX_TOTAL_PHYSICAL_READ_BYTES,
+        )
         self.assertEqual(payload["findings"], [])
         self.assertEqual(payload["finding_counts"]["STATIC_IMPORT"], 1)
         self.assertFalse(payload["authority_created"])
