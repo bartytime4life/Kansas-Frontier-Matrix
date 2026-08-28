@@ -193,6 +193,10 @@ test("keeps the MapLibre Workbench complete, bounded, and responsive", async () 
   const exportCenter = await readFile(new URL("../app/export-center.ts", import.meta.url), "utf8");
   const explorerData = await readFile(new URL("../app/explorer-data.ts", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  const prepareMapLibreAssets = await readFile(new URL("../scripts/prepare-maplibre-assets.mjs", import.meta.url), "utf8");
+  const buildScript = await readFile(new URL("../scripts/build-verified.sh", import.meta.url), "utf8");
+  const installScript = await readFile(new URL("../scripts/install-ci.sh", import.meta.url), "utf8");
+  const tsconfig = await readFile(new URL("../tsconfig.json", import.meta.url), "utf8");
 
   assert.match(source, /id="map-utility-panel"/);
   for (const view of ["Navigate", "Inspect", "Display", "Measure", "Export", "Diagnostics"]) assert.match(source, new RegExp(`${view}`));
@@ -211,6 +215,21 @@ test("keeps the MapLibre Workbench complete, bounded, and responsive", async () 
   assert.match(source, /fitIndexedFeatures/);
   assert.match(source, /SUPPORTED_CONTEXT_BOUNDS/);
   assert.match(source, /site_package: "6\.6\.0"/);
+  assert.match(source, /setWorkerUrl\(MAPLIBRE_WORKER_URL\)/);
+  assert.match(source, /getWorkerUrl\(\) !== MAPLIBRE_WORKER_URL/);
+  assert.match(source, /getVersion\(\)/);
+  assert.match(source, /MAPLIBRE_RUNTIME_ASSET_URLS/);
+  assert.match(source, /if \(!response\.ok\) throw new Error/);
+  assert.match(source, /map\.on\("idle"/);
+  assert.match(source, /map\.areTilesLoaded\(\)/);
+  assert.match(source, /map\.isSourceLoaded\(layer\.sourceId\)/);
+  assert.match(source, /MapLibre \{EXPECTED_MAPLIBRE_VERSION\} runtime proof/);
+  assert.match(source, /SAME_ORIGIN_CONFIGURED/);
+  assert.match(prepareMapLibreAssets, /maplibre-gl-worker\.mjs/);
+  assert.match(prepareMapLibreAssets, /maplibre-gl-shared\.mjs/);
+  assert.match(buildScript, /exec bash "\$\{script_dir\}\/sites-env\.sh"/);
+  assert.match(installScript, /exec bash "\$\{script_dir\}\/sites-env\.sh"/);
+  assert.match(tsconfig, /"target": "ES2022"/);
   assert.match(source, /FULL TEMPORAL CAPACITY · 4\.54 GA BP TO 2026/);
   assert.match(source, /Deep-time and intermediate ticks are capacity markers, not claims/);
   assert.match(source, /TIMELINE_JUMPS/);
@@ -292,7 +311,7 @@ test("reviews and redacts public-safe exports before download", async () => {
     layerOrder: ["planning"],
     activeYear: 2026,
     workspace: "trust",
-    layers: [{ id: "planning", title: "Planning", opacity: 1, attribution: "Site fixture", releaseState: "HELD", generalization: "Generalized", correction: "NONE" }],
+    layers: [{ id: "planning", title: "Planning", opacity: 1, attribution: "Site fixture", releaseState: "RESTRICTED", generalization: "Generalized", correction: "NONE" }],
     selection: {
       featureId: "protected-1",
       title: "Protected fixture",
@@ -306,7 +325,8 @@ test("reviews and redacts public-safe exports before download", async () => {
       releaseTime: "UNRELEASED",
       lastUpdate: "2026-08-24",
       reviewState: "HELD",
-      releaseState: "HELD",
+      releaseState: "RESTRICTED",
+      layerReleaseState: "RESTRICTED",
       correctionState: "NONE",
       geometry: { type: "Point", coordinates: [-97.5, 38.5] },
       generalization: "Generalized",
@@ -319,6 +339,56 @@ test("reviews and redacts public-safe exports before download", async () => {
   assert.equal(protectedReview.withheldFeatureCount, 1);
   assert.equal(protectedReview.downloadAllowed, true);
 
+  const supportedRestrictedRecordInput = {
+    exportedAt: "2026-08-24T18:30:30.000Z",
+    locationCameraRedacted: false,
+    view: { center: [-97.5, 38.5], zoom: 7, bearing: 0, pitch: 0 },
+    projection: "mercator",
+    basemap: "midnight",
+    layerOrder: ["fauna-sensitive"],
+    activeYear: 2026,
+    workspace: "trust",
+    layers: [{ id: "fauna-sensitive", title: "Sensitive Fauna", opacity: 1, attribution: "Synthetic fixture", releaseState: "DEMONSTRATION", generalization: "None", correction: "NONE" }],
+    selection: {
+      featureId: "fauna-restricted-record",
+      title: "Restricted Fauna record",
+      layerId: "fauna-sensitive",
+      evidenceState: "ANSWER",
+      evidenceReference: "fixture:fauna-restricted-record",
+      temporalScope: "2026 fixture",
+      sourceYear: 2026,
+      temporalMode: "exact",
+      sourceTime: "2026",
+      releaseTime: "UNRELEASED",
+      lastUpdate: "2026-08-24",
+      reviewState: "REVIEWED",
+      releaseState: "RESTRICTED",
+      layerReleaseState: "DEMONSTRATION",
+      correctionState: "NONE",
+      geometry: { type: "Point", coordinates: [-97.5, 38.5] },
+      generalization: "Exact geometry must not travel.",
+    },
+  };
+  const restrictedRecordReview = exports.buildPublicSafeExport(supportedRestrictedRecordInput);
+  assert.equal(restrictedRecordReview.payload.selection.geometry, "WITHHELD_BY_POLICY");
+  assert.equal(restrictedRecordReview.withheldFeatureCount, 1);
+  assert.equal(restrictedRecordReview.checks.find((check) => check.id === "selection").state, "REDACTED");
+
+  const restrictedLayerReview = exports.buildPublicSafeExport({
+    ...supportedRestrictedRecordInput,
+    layers: [{ ...supportedRestrictedRecordInput.layers[0], releaseState: "RESTRICTED" }],
+    selection: {
+      ...supportedRestrictedRecordInput.selection,
+      featureId: "fauna-restricted-layer",
+      evidenceReference: "fixture:fauna-restricted-layer",
+      releaseState: "DEMONSTRATION",
+      layerReleaseState: "RESTRICTED",
+    },
+  });
+  assert.equal(restrictedLayerReview.payload.selection.geometry, "WITHHELD_BY_POLICY");
+  assert.equal(restrictedLayerReview.payload.selection.layerReleaseState, "RESTRICTED");
+  assert.equal(restrictedLayerReview.withheldFeatureCount, 1);
+
   const blockedReview = exports.buildPublicSafeExport({
     ...protectedReview.payload,
     exportedAt: "2026-08-24T18:31:00.000Z",
@@ -329,7 +399,7 @@ test("reviews and redacts public-safe exports before download", async () => {
     layerOrder: ["planning"],
     activeYear: 2026,
     workspace: "trust",
-    layers: [{ id: "planning", title: "Planning", opacity: 1, attribution: "", releaseState: "HELD", generalization: "Generalized", correction: "NONE" }],
+    layers: [{ id: "planning", title: "Planning", opacity: 1, attribution: "", releaseState: "RESTRICTED", generalization: "Generalized", correction: "NONE" }],
     selection: null,
   });
   assert.equal(blockedReview.downloadAllowed, false);
