@@ -2,8 +2,8 @@
 doc_id: kfm://doc/tests-domains-people-dna-land-consent-revocation-readme
 title: People DNA Land Consent Revocation Tests README
 type: test-lane-readme
-version: v0.1
-status: draft; directory-created-in-scratch; consent-revocation-test-lane; PROPOSED / NEEDS VERIFICATION before promotion
+version: v0.2
+status: executable-bounded-fixture-profiles; non-authoritative; broader-runtime-and-release-held
 owners:
   - OWNER_TBD - People DNA Land domain steward
   - OWNER_TBD - Consent steward
@@ -13,8 +13,11 @@ owners:
   - OWNER_TBD - Release steward
   - OWNER_TBD - QA steward
 created: 2026-07-05
-updated: 2026-07-05
+updated: 2026-08-28
 policy_label: public-doc; tests; people-dna-land; consent; revocation; living-person-sensitive; dna-sensitive; no-network; evidence-bound; policy-gated; release-gated; correction-aware; withdrawal-aware; rollback-aware
+owning_root: tests/
+responsibility: bounded deterministic proof for synthetic consent-overlay safety and declared consent-revocation propagation behavior
+truth_posture: CONFIRMED executable fixture profiles / HELD active policy runtime, evidence closure, operational revocation, cleanup, rollback, proof, release, deployment, and publication
 tags: [kfm, tests, people-dna-land, consent, revocation, withdrawal, living-person, dna, genealogy, land-relationship, EvidenceBundle, PolicyDecision, ConsentRecord, RedactionReceipt, ReleaseManifest, CorrectionNotice, WithdrawalNotice, RollbackCard, ABSTAIN, DENY, ERROR]
 related:
   - ../../README.md
@@ -28,14 +31,19 @@ related:
   - ../../../../../contracts/domains/people-dna-land/
   - ../../../../../schemas/contracts/v1/domains/people-dna-land/
   - ../../../../../policy/domains/people-dna-land/
-  - ../../../../../fixtures/domains/people-dna-land/consent/revocation/
+  - ../../../../../fixtures/domains/people-dna-land/consent_overlay/
+  - ../../../../../fixtures/domains/people-dna-land/consent_revocation_propagation/
+  - ../../../../../tools/validators/domains/people-dna-land/validate_consent_overlay.py
+  - ../../../../../tools/validators/domains/people-dna-land/validate_consent_revocation_propagation_assessment.py
+  - ../../../../../.github/workflows/domain-people-dna-land.yml
+  - ../../../../../.github/workflows/consent-revocation-propagation.yml
   - ../../../../../data/registry/sources/people-dna-land/
   - ../../../../../release/manifests/people-dna-land/
 notes:
-  - "This README replaces the placeholder content at tests/domains/people-dna-land/consent/revocation/README.md."
+  - "This edition reconciles the lane with the two tracked executable fixture profiles and their repository workflows."
   - "Directory Rules place enforceability proof under tests/ and identify people-dna-land as a domain lane pattern."
   - "This is a consent-revocation test-lane README only. It does not define People DNA Land doctrine, consent policy, consent-record storage, contracts, schemas, fixtures, source descriptors, EvidenceBundles, release decisions, pipeline code, public API material, public map material, public tiles, or published artifacts."
-  - "The tested invariant is that consent revocation blocks or withdraws affected People/DNA/Land public exposure without deleting audit history, evidence lineage, review records, receipts, release records, correction notices, withdrawal notices, or rollback targets."
+  - "The bounded profiles test fail-closed consent-overlay and revocation-propagation behavior over synthetic declarations; they do not execute real withdrawal, deletion, derivative invalidation, cache invalidation, rollback, or release operations."
   - "Default posture is deterministic and no-network. Live consent databases, genealogy providers, DNA services, people-search services, deed/title/assessor systems, source exports, credentials, and public release artifacts do not belong in this lane."
 [/KFM_META_BLOCK_V2] -->
 
@@ -46,7 +54,7 @@ notes:
 > Deterministic, no-network test documentation for proving that revoked consent blocks, withdraws, or re-scopes People DNA Land exposure without erasing the audit trail that makes the action inspectable.
 
 <p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
+  <img alt="Status: bounded fixture profiles executable" src="https://img.shields.io/badge/status-bounded__profiles__executable-green">
   <img alt="Root: tests" src="https://img.shields.io/badge/root-tests%2F-blue">
   <img alt="Domain: people-dna-land" src="https://img.shields.io/badge/domain-people--dna--land-blue">
   <img alt="Lane: consent revocation" src="https://img.shields.io/badge/lane-consent__revocation-purple">
@@ -55,18 +63,18 @@ notes:
 </p>
 
 **Path:** `tests/domains/people-dna-land/consent/revocation/README.md`  
-**Status:** draft / directory-created-in-scratch / consent revocation test lane / PROPOSED until executable tests are verified  
+**Status:** two executable bounded fixture profiles / non-authoritative / broader runtime, proof, release, and operational cleanup held
 **Owning root:** `tests/`  
 **Domain segment:** `people-dna-land`  
 **Test lane:** `consent/revocation`  
 **Default execution posture:** deterministic, synthetic, no-network, public-safe fixtures only  
-**Truth posture:** CONFIRMED by Directory Rules that `tests/` is the canonical root for enforceability proof and that `people-dna-land` is a domain lane pattern; CONFIRMED by attached doctrine that living-person and DNA-derived outputs are denied or restricted by default, that rights/consent affect admissibility, and that releases need correction, withdrawal, rollback, and cache invalidation paths; NEEDS VERIFICATION for executable consent-revocation tests, fixture shape, consent schemas, policy runtime, release integration, CI coverage, and pass rates.
+**Truth posture:** CONFIRMED on current repository evidence that two deterministic, synthetic, no-network profiles, their fixture families, validators, schemas, and workflow commands exist; HELD for active policy-runtime binding, EvidenceBundle resolution, real consent or revocation handling, derivative or cache invalidation, operational rollback, proof, release, deployment, and publication.
 
 ---
 
 ## Purpose
 
-`tests/domains/people-dna-land/consent/revocation/` is the requested test lane for consent-revocation guardrails in the People DNA Land domain.
+`tests/domains/people-dna-land/consent/revocation/` hosts the repository's bounded consent-overlay and consent-revocation propagation tests for the People DNA Land domain.
 
 This lane should prove that a revoked, expired, narrowed, disputed, or superseded consent signal changes what KFM may expose. If a fixture says that consent for a living-person, DNA-linked, genealogy, relationship, private-land, or owner-like assertion has been revoked, public carriers should return a finite `DENY`, `ABSTAIN`, withdrawal, redaction, or promotion-blocking outcome rather than continuing to publish stale consent assumptions.
 
@@ -83,8 +91,9 @@ This path is therefore a **test lane** for revocation behavior only. It is not t
 | Responsibility | Correct home | This lane's relationship |
 |---|---|---|
 | Consent revocation tests | `tests/domains/people-dna-land/consent/revocation/` | This directory. |
-| Consent parent test index | `tests/domains/people-dna-land/consent/README.md` | SHOULD exist or be created to index consent lanes. |
-| Reusable synthetic fixtures | `fixtures/domains/people-dna-land/consent/revocation/` | Preferred fixture home if populated. |
+| Consent parent test index | `tests/domains/people-dna-land/consent/README.md` | Existing parent navigation; it does not confer runtime or release authority. |
+| Consent-overlay fixtures | `fixtures/domains/people-dna-land/consent_overlay/` | Frozen synthetic valid/invalid cases and revocation manifest. |
+| Revocation-propagation fixtures | `fixtures/domains/people-dna-land/consent_revocation_propagation/` | Frozen synthetic 17-case assessment manifest. |
 | Semantic contracts | `contracts/domains/people-dna-land/` | Defines object meaning, not owned here. |
 | Machine schemas | `schemas/contracts/v1/domains/people-dna-land/` | Defines shape checks where accepted. |
 | Policy rules | `policy/domains/people-dna-land/` | Decides allow, deny, restrict, abstain, withdraw, and re-scope behavior. |
@@ -166,32 +175,32 @@ Fixture requirements:
 
 ---
 
-## Suggested Layout
+## Current Executable Layout
 
 ```text
 tests/domains/people-dna-land/consent/revocation/
 |-- README.md
-|-- test_revoked_consent_denies_public_exposure.py
-|-- test_scope_mismatch_abstains.py
-|-- test_expired_consent_denies.py
-|-- test_revocation_requires_withdrawal_for_released_carrier.py
-|-- test_revocation_preserves_evidence_lineage.py
-|-- test_dna_linked_revocation_denies.py
-|-- test_living_person_revocation_denies.py
-|-- test_derived_outputs_invalidate_after_revocation.py
-|-- test_release_correction_withdrawal_rollback_required.py
-`-- test_no_network_consent_provider_access.py
+|-- test_consent_overlay_safety.py
+`-- test_consent_revocation_propagation_assessment.py
 ```
 
 ---
 
 ## Run Posture
 
+The repository workflows invoke the test modules directly and then invoke their validators:
+
 ```bash
-pytest tests/domains/people-dna-land/consent/revocation
+python tests/domains/people-dna-land/consent/revocation/test_consent_overlay_safety.py --verbose
+python tools/validators/domains/people-dna-land/validate_consent_overlay.py \
+  --revocation-manifest fixtures/domains/people-dna-land/consent_overlay/revocation_manifest.json \
+  fixtures/domains/people-dna-land/consent_overlay/valid/*.json
+
+python tests/domains/people-dna-land/consent/revocation/test_consent_revocation_propagation_assessment.py --verbose
+python tools/validators/domains/people-dna-land/validate_consent_revocation_propagation_assessment.py --fixtures
 ```
 
-Status of the command above: **PROPOSED / NEEDS VERIFICATION**. It assumes `pytest` is the accepted runner and that executable test modules exist. This README does not claim the command currently passes.
+The `domain-people-dna-land` workflow also requires the known-invalid consent-overlay fixture set to be rejected. The dedicated `consent-revocation-propagation` workflow runs the second profile and validates its generated authoring receipt. These are fixture proofs only; workflow success is not human approval or operational authority.
 
 ---
 
@@ -199,25 +208,24 @@ Status of the command above: **PROPOSED / NEEDS VERIFICATION**. It assumes `pyte
 
 | Evidence | Status | Supports | Limits |
 |---|---|---|---|
-| `Directory Rules.pdf` | CONFIRMED | `tests/` is enforceability proof; domain-specific material belongs under `tests/domains/<domain>/`; `people-dna-land` is listed in the domain lane pattern. | Does not prove executable consent-revocation test coverage. |
-| `Unified Implementation Architecture Build Manual.md` | CONFIRMED doctrine / PROPOSED realization | Public clients use governed APIs and released artifacts; `DENY` applies where rights, sensitivity, living-person data, DNA, or source terms are unsafe or unclear; sensitivity review includes living-person and DNA; correction/withdrawal and rollback are release-significant paths. | Does not prove consent schemas, consent runtime, executable tests, fixtures, validators, or CI exist in this workspace. |
-| `KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md` | CONFIRMED corpus synthesis / PROPOSED realization | Public-safe defaults fail closed when rights, sensitivity, source authority, review state, release state, or evidence closure is unclear; source rights, source licenses, contacts, attribution, and written consent should be checked before ingest or release; living-person and DNA data require special protection. | Does not define jurisdiction-specific consent law, revocation mechanics, production policy, or storage location for consent records. |
-| Adjacent `people-dna-land` test README files | CONFIRMED upstream pattern | Existing sibling lanes use KFM Meta Block v2, impact badges, placement basis, no-network posture, finite outcomes, validation checklist, and rollback sections. | README-only; does not prove executable tests, fixtures, validators, CI, or pass rates. |
-| GitHub target file before this update | CONFIRMED | Existing `tests/domains/people-dna-land/consent/revocation/README.md` contained only `y`, so no substantive content was available to preserve. | Placeholder content did not prove implementation or doctrine. |
+| Accepted Directory Rules and ADR-0029 | CONFIRMED repository authority | `tests/` owns enforceability proof and `people-dna-land` is the domain segment. | Placement authority does not activate policy, sources, lifecycle movement, release, or publication. |
+| `test_consent_overlay_safety.py`, fixture family, schemas, and validator | CONFIRMED executable bounded profile | Sixteen deterministic tests cover inventory, hashes, consent posture, forbidden fields, precision limits, stable non-echoing findings, size bounds, and no-network behavior. | Synthetic fixture validation only; no real consent, identity, kinship, genomic, cleanup, or release operation. |
+| `test_consent_revocation_propagation_assessment.py`, 17-case fixture manifest, schema, and validator | CONFIRMED executable bounded profile | Nine deterministic tests cover finite consent states, a closed seven-surface dependency declaration, receipt-reference requirements, exact negative codes, stable hashing, and no-network replay. | The schema is `PROPOSED_INACTIVE`, authority is `NONE`, and the profile does not execute cleanup. |
+| `domain-people-dna-land.yml` and `consent-revocation-propagation.yml` | CONFIRMED hosted workflow bindings | Run the repository-owned commands over tracked synthetic inputs; the domain workflow also proves known-invalid overlay rejection. | A green workflow does not prove human review, runtime enforcement, evidence closure, operational revocation, rollback, release, deployment, or publication. |
 
 ---
 
 ## Validation Checklist
 
-- [ ] Parent `tests/domains/people-dna-land/consent/README.md` exists or is created to index consent test lanes.
-- [ ] Executable tests exist under this lane.
-- [ ] Test runner and import paths match repo convention.
-- [ ] Synthetic fixtures exist in the accepted fixture home.
-- [ ] ConsentRecord, revocation event, consent scope, public-exposure class, living-person posture, DNA/genomic derivation, source role, evidence posture, release state, correction path, withdrawal path, cache-invalidation posture, and rollback fields are accepted by schemas or safely stubbed.
+- [x] Parent `tests/domains/people-dna-land/consent/README.md` exists and indexes this lane.
+- [x] Two executable direct-entry Python test modules exist under this lane.
+- [x] Test imports and commands match the tracked domain workflows.
+- [x] Two synthetic, public-safe, no-network fixture families exist under `fixtures/domains/people-dna-land/`.
+- [x] The bounded profiles distinguish consent states, scope, exposure classes, living-person and DNA-sensitive posture, evidence references, declared dependency actions, and non-authority limits.
 - [ ] EvidenceRef / EvidenceBundle behavior is available to tests or safely stubbed.
 - [ ] PolicyDecision, RedactionReceipt, ReleaseManifest, CorrectionNotice, WithdrawalNotice, and RollbackCard expectations are defined before enforcing them.
-- [ ] Revocation behavior distinguishes exposure blocking from audit-history deletion.
-- [ ] CI runs this no-network consent-revocation lane or marks it as an expected gap.
+- [x] The bounded profiles distinguish exposure blocking and declared invalidation from audit-history deletion.
+- [x] Hosted workflows run both no-network profiles; exact-head hosted results remain separate run evidence.
 - [ ] Failures block public carrier promotion or release candidate approval where material.
 
 ---
