@@ -1,5 +1,5 @@
 # KFM Hazards bounded validation and readiness workflow.
-# Status: executable synthetic USDM materiality validation is established;
+# Status: executable synthetic Hazards validation is established;
 # governed proof and release-dry-run producers remain explicit holds.
 #
 # Authority boundary:
@@ -71,8 +71,12 @@ jobs:
             "policy/domains/hazards/README.md"
             "tests/domains/hazards/README.md"
             "tests/domains/hazards/test_hazards_smoke.py"
+            "tests/domains/hazards/test_drinking_water_advisory.py"
             "tests/domains/hazards/test_validate_usdm_materiality.py"
+            "tests/validators/domains/hazards/test_validate_nfhl_nld_nid_source_role_profile.py"
             "tools/validators/domains/hazards/README.md"
+            "tools/validators/domains/hazards/validate_drinking_water_advisory.py"
+            "tools/validators/domains/hazards/validate_nfhl_nld_nid_source_role_profile.py"
             "tools/validators/domains/hazards/validate_usdm_materiality.py"
             "data/registry/sources/hazards/README.md"
             "release/candidates/hazards/README.md"
@@ -92,8 +96,10 @@ jobs:
           fi
 
           python -m unittest -v tests.domains.hazards.test_hazards_smoke
+          python -m unittest -v tests.domains.hazards.test_drinking_water_advisory
+          python -m unittest -v tests.validators.domains.hazards.test_validate_nfhl_nld_nid_source_role_profile
           make hazards-validate
-          echo "HAZARDS_VALIDATION_PASS: drought-fixture-polarity usdm-materiality"
+          echo "HAZARDS_VALIDATION_PASS: drinking-water-advisory nfhl-nld-nid-source-role drought-fixture-polarity usdm-materiality"
 
       - name: Record Hazards validation scope
         if: always()
@@ -103,9 +109,9 @@ jobs:
             echo "### Hazards validation status"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Executed commands: \`python -m unittest -v tests.domains.hazards.test_hazards_smoke\` and \`make hazards-validate\`."
-            echo "- Covered surface: deterministic, no-network drought-family schema/fixture polarity plus USDM material-change unit tests and exact synthetic fixture polarity."
-            echo "- Remaining scope: other Hazards validator families, live-source retrieval, source admission, evidence resolution, policy evaluation, proof construction, release assembly, deployment, and publication remain outside this job."
+            echo "- Executed commands: bounded Hazards smoke; drinking-water advisory unit suite; NFHL/NLD/NID source-role unit suite; and \`make hazards-validate\`."
+            echo "- Covered surface: deterministic, no-network drought-family schema/fixture polarity, drinking-water advisory structural/semantic polarity, NFHL/NLD/NID source-role separation, and USDM material-change fixture polarity."
+            echo "- Remaining scope: placeholder validator families, live-source retrieval, source admission, evidence resolution, policy evaluation, proof construction, release assembly, deployment, and publication remain outside this job."
             echo "- Life-safety boundary: a green result does not establish current hazard conditions, warning validity, regulatory status, source freshness, EvidenceBundle closure, emergency authority, release readiness, or public-use safety."
           } >> "$GITHUB_STEP_SUMMARY"
 
