@@ -2,19 +2,20 @@
 doc_id: kfm://doc/policy-role-sensitivity-readme
 title: policy/role/sensitivity/ — Role-and-Sensitivity Policy Hold Boundary
 type: readme
-version: v0.1.0
+version: v0.1.1
 status: draft; BOUNDARY_COMPACT; repository-grounded; placeholder-only; scope-unresolved; inactive; non-release; non-publication
 owner: NEEDS VERIFICATION — CODEOWNERS routes policy/ to @bartytime4life; no accepted role-policy or sensitivity steward and no independent approver were established
 created: 2026-08-13
-updated: 2026-08-13
+updated: 2026-08-28
 current_path: policy/role/sensitivity/README.md
 owning_root: policy/
 policy_label: internal; policy; role; sensitivity; placeholder; hold; non-release; non-publication
 responsibility: Preserve a fail-closed boundary around the unresolved role-and-sensitivity placeholder without defining role semantics, assigning authority, classifying sensitivity, evaluating policy, approving release, or publishing.
-base_commit: 09a01ef8a71a557efc1c35bda6f9b762a429a1f3
-prior_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
-truth_posture: CONFIRMED README plus gitkeep only, no parent role README, no rule source, no contract binding, no tests, and no consumer / PROPOSED narrow composition boundary for an already-defined role and already-determined sensitivity posture / HOLD semantic scope, scope ID, owner, package, evaluator, and consumer decisions / UNKNOWN whether role means actor, reviewer, source, or another governed role family
+base_commit: e52165e820b07e65c54830fde519a9c90df8eb1c
+prior_blob: 3ece3153e0d1927f9f0282b5a8b5537d7b1eb543
+truth_posture: CONFIRMED README plus gitkeep only, substantive parent routing-and-hold README, no rule source, no contract binding, no tests, and no consumer / PROPOSED narrow composition boundary for an already-defined role and already-determined sensitivity posture / HOLD semantic scope, scope ID, owner, package, evaluator, and consumer decisions / UNKNOWN whether role means actor, reviewer, source, or another governed role family
 related:
+  - ../README.md
   - ../../README.md
   - ../../sensitivity/README.md
   - ../../decision/README.md
@@ -36,7 +37,7 @@ related:
 > operations that depend on this lane remain held.
 
 > [!IMPORTANT]
-> **Safe current conclusion at `main@09a01ef8a71a`:** the directory contains
+> **Safe current conclusion at `main@e52165e820b0`:** the directory contains
 > only `.gitkeep` and this README. It has no Rego, profile, contract binding,
 > schema, fixture, test, validator, bundle, evaluator, consumer, decision record,
 > or release integration. It implements no role or sensitivity control.
@@ -69,7 +70,7 @@ which role family belongs here or prove that this path should survive.
 | Field | Current boundary |
 |---|---|
 | Parent authority | [`policy/`](../../README.md), KFM's canonical policy-rule root. |
-| Immediate parent | `policy/role/` has no README or accepted local contract at the pinned base. This leaf cannot manufacture the missing parent semantics. |
+| Immediate parent | [`policy/role/`](../README.md) now has a routing-and-hold README. That parent documents the namespace but does not establish role semantics or authority. |
 | Related policy | [`policy/sensitivity/`](../../sensitivity/README.md) owns sensitivity-policy source; [`policy/decision/`](../../decision/README.md) documents finite outcome and normalization boundaries. |
 | README profile | `BOUNDARY_COMPACT` because the path implies role, access, sensitivity, exposure, and review trust changes. |
 | Placement basis | [ADR-0029](../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) and [Directory Rules v2](../../../docs/doctrine/directory-rules.md) place policy source under `policy/`; they do not accept this leaf's semantics. |
@@ -85,7 +86,7 @@ not an authority source for this path.
 
 | Surface | Confirmed state | Safe interpretation |
 |---|---|---|
-| README lineage | PR #2679 added a one-newline file; this revision documents the hold | Documentation only. |
+| README lineage | PR #2679 added a one-newline file; v0.1.0 documented the leaf hold; v0.1.1 reconciles parent navigation | Documentation only. |
 | Tracked payload | `.gitkeep` only | Placeholder presence; no implemented policy. |
 | Direct references | One atmosphere planning document uses the phrase `policy/role/sensitivity` without defining this leaf | Design lineage, not accepted scope or consumer binding. |
 | Rule source and package | Absent | No engine-native behavior exists. |
@@ -176,8 +177,8 @@ implicit permission.
 
 Current validation can prove only the documentation and topology boundary:
 
-- the repository topology validator observes that a populated policy boundary
-  has a README and detects new structural drift;
+- the repository topology validator observes that populated policy boundaries
+  have READMEs and detects new structural drift;
 - the metadata validator checks a present `KFM_META_BLOCK_V2` structurally;
 - the local-link checker validates repository-relative targets and fragments;
 - `policy-test` preserves repository-wide evaluator holds but does not execute
@@ -205,9 +206,10 @@ release integration for this directory.
 
 ## Correction and rollback
 
-For a README defect, revert or forward-fix this file. The prior blank blob is
-`8b137891791fe96927ad78e64b0aad7bded08bdc`; restoring it removes documentation
-only and does not change runtime behavior.
+For a README defect, revert or forward-fix this file and its parent navigation.
+The prior substantive blob is `3ece3153e0d1927f9f0282b5a8b5537d7b1eb543`; the original blank blob is
+`8b137891791fe96927ad78e64b0aad7bded08bdc`. Restoring either changes
+documentation only and does not change runtime behavior.
 
 If a future rule or role binding is defective, preserve prior identities and
 audit evidence, hold affected operations, revoke stale authority at its owning
