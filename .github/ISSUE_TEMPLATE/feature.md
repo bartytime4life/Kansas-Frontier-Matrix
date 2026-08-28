@@ -90,7 +90,7 @@ a governed feature, release, or artifact identity.
 | Default branch and exact baseline commit | `NEEDS VERIFICATION` |
 | Current target path, component, route, contract, or object ID | `UNKNOWN` |
 | Current target blob, digest, schema version, or release ID | `UNKNOWN` |
-| Canonical source / generator for the target | `UNKNOWN` / `N/A` |
+| Canonical source / generator for the target | `UNKNOWN` / `NOT_APPLICABLE` |
 | Direct producers and consumers inspected | `NOT_INSPECTED` / describe |
 | Last material target change | commit / PR / date / `UNKNOWN` |
 | Related issue(s), PR(s), ADR(s), register entries, or campaign | |
@@ -372,7 +372,7 @@ A candidate must pass every applicable gate before implementation. Value, urgenc
 | `NEEDS VERIFICATION` | | | |
 | `UNKNOWN` | | | |
 
-**EvidenceRef / EvidenceBundle implications:** `N/A / describe`
+**EvidenceRef / EvidenceBundle implications:** `NOT_APPLICABLE / describe`
 
 ### Evidence conflicts or alternative interpretations
 
@@ -413,7 +413,7 @@ A feature request must route to the ADR process when it would make a consequenti
 - [ ] No formal ADR trigger identified.
 - [ ] `NEEDS VERIFICATION`
 
-**ADR issue or proposed ADR path:** `N/A / ADR-XXXX / related issue`
+**ADR issue or proposed ADR path:** `NOT_APPLICABLE / ADR-XXXX / related issue`
 
 > [!IMPORTANT]
 > Do not use this feature issue to approve an ADR-triggering decision. Route the decision through `.github/ISSUE_TEMPLATE/adr.md` and the governed `docs/adr/` process. Dependent behavior must wait for acceptance and a repinned base unless it remains conspicuously non-authoritative and inactive behind an accepted boundary.
@@ -656,15 +656,15 @@ Make each criterion observable and independently evaluable. Include negative and
 | User or operator outcome | | Demonstration, test, or reviewed artifact |
 | Positive path | | Deterministic test or fixture |
 | Negative / denied / abstain path | | Negative fixture, policy test, or finite outcome |
-| Invalid, malformed, restricted, or unavailable input | | Fail-closed test or explicit N/A rationale |
-| Offline / no-network behavior | | No-network test or explicit N/A rationale |
+| Invalid, malformed, restricted, or unavailable input | | Fail-closed test or explicit NOT_APPLICABLE rationale |
+| Offline / no-network behavior | | No-network test or explicit NOT_APPLICABLE rationale |
 | Evidence and provenance | | Resolved evidence, receipt, or proof as applicable |
 | Public-surface safety | | Boundary or exposure test |
-| Security / rights / sensitivity | | Review, test, or explicit N/A rationale |
+| Security / rights / sensitivity | | Review, test, or explicit NOT_APPLICABLE rationale |
 | Accessibility / usability | | Review or test as applicable |
-| Documentation | | Updated path or explicit N/A rationale |
+| Documentation | | Updated path or explicit NOT_APPLICABLE rationale |
 | Compatibility / migration | | Compatibility test or migration evidence |
-| Generated-output closure | | Regeneration and drift evidence or N/A |
+| Generated-output closure | | Regeneration and drift evidence or NOT_APPLICABLE |
 | Rollback / correction / supersession | | Named reversal target and validation |
 | No unintended publication | | Evidence that issue, PR, CI, watcher, connector, or model cannot publish directly |
 
@@ -865,7 +865,7 @@ Any new commit invalidates earlier head-specific validation. Distinguish branch-
 | Required validation and negative cases | |
 | Stop conditions | |
 | Rollback boundary | |
-| Campaign / stacked PR order | `N/A` / describe |
+| Campaign / stacked PR order | `NOT_APPLICABLE` / describe |
 
 ### GitHub delivery state
 
@@ -887,13 +887,13 @@ Any new commit invalidates earlier head-specific validation. Distinguish branch-
 | Transition | State | Evidence / authority |
 |---|---|---|
 | Human review | `PENDING` / `APPROVED` / `CHANGES_REQUESTED` / `REJECTED` / `UNKNOWN` | |
-| ADR acceptance | `N/A` / `PROPOSED` / `ACCEPTED` / `SUPERSEDED` / `UNKNOWN` | |
-| Source admission / activation | `N/A` / `NOT_STARTED` / `HOLD` / `ADMITTED` / `ACTIVE` / `UNKNOWN` | |
-| Lifecycle promotion | `N/A` / `NOT_STARTED` / `HOLD` / `PROMOTED` / `UNKNOWN` | |
-| Release | `N/A` / `NOT_STARTED` / `HOLD` / `RELEASED` / `UNKNOWN` | |
-| Deployment | `N/A` / `NOT_STARTED` / `HOLD` / `DEPLOYED` / `UNKNOWN` | |
-| Publication | `N/A` / `NOT_STARTED` / `HOLD` / `PUBLISHED` / `UNKNOWN` | |
-| Correction / rollback | `N/A` / `PLANNED` / `EXECUTED` / `VERIFIED` / `UNKNOWN` | |
+| ADR acceptance | `NOT_APPLICABLE` / `PROPOSED` / `ACCEPTED` / `SUPERSEDED` / `UNKNOWN` | |
+| Source admission / activation | `NOT_APPLICABLE` / `NOT_STARTED` / `HOLD` / `ADMITTED` / `ACTIVE` / `UNKNOWN` | |
+| Lifecycle promotion | `NOT_APPLICABLE` / `NOT_STARTED` / `HOLD` / `PROMOTED` / `UNKNOWN` | |
+| Release | `NOT_APPLICABLE` / `NOT_STARTED` / `HOLD` / `RELEASED` / `UNKNOWN` | |
+| Deployment | `NOT_APPLICABLE` / `NOT_STARTED` / `HOLD` / `DEPLOYED` / `UNKNOWN` | |
+| Publication | `NOT_APPLICABLE` / `NOT_STARTED` / `HOLD` / `PUBLISHED` / `UNKNOWN` | |
+| Correction / rollback | `NOT_APPLICABLE` / `PLANNED` / `EXECUTED` / `VERIFIED` / `UNKNOWN` | |
 
 ### Useful terminal outcome
 
