@@ -1,8 +1,11 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/PLACEHOLDER-uuid
+doc_id: kfm://doc/docs-domains-archaeology-verification-backlog
 title: Archaeology — Verification Backlog and Open Questions
 type: standard
 version: v2.1.0
+owning_root: docs/
+responsibility: "Track current Archaeology verification gaps, bounded evidence, and fail-closed promotion holds."
+truth_posture: "Mixed: confirmed repository evidence with unresolved authority, binding, review, and release obligations."
 status: draft
 owners: "@bartytime4life via CODEOWNERS review routing; archaeology-domain stewardship remains NEEDS VERIFICATION"
 created: 2026-05-28
