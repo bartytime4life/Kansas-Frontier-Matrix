@@ -10,7 +10,7 @@
   ],
   "artifact_hashes": {
     ".github/workflows/domain-geology.yml": "sha256:7b5d45690fc77de48ee204db11233a21938d239a3f2958f9abf01a980ab02787",
-    "control_plane/repository_governance_parity.yaml": "sha256:63197a756d09c20d9d0521f08126292253fa5b0bd5b3b1588d3be5f8e9d848d1",
+    "control_plane/repository_governance_parity.yaml": "sha256:6ad4fb98db55cf1ad47651d11a5dd2811dcdc2902d67b460587914a99a9e4c40",
     "docs/domains/geology/README.md": "sha256:5a6a969ba6e8d7613669a06b0ed3b541ef978df835d02cfa98b8d33f4bcc6a24",
     "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "sha256:4328e2b33edac8cc6f7a44ae5294c3b6a06b6644530f5cccfb020f3f7975c0e6",
     "tests/validators/directory_governance/test_validate_repository_topology.py": "sha256:9e60f8c2028ba0296c17d6ed515b6cb3598d3933faf4e4b9a573748fa4d22a52"
@@ -68,7 +68,7 @@
     {
       "gate": "repository-topology-parity-convergence",
       "outcome": "PASS",
-      "reason": "The parity declaration and both regression assertions bind the unchanged 130-entry topology baseline and its exact SHA-256 digest."
+      "reason": "The current topology expectation and both regression assertions bind the unchanged 130-entry baseline; the parity governing reference retains the exact baseline digest at its pinned base_ref."
     },
     {
       "gate": "historical-receipt-immutability",
