@@ -402,7 +402,7 @@ maplibreSourceCreated: false
 
 A `PASS` means only that a closed synthetic projection is **registration eligible for a later governed loader**. It does not admit the underlying source, update a source registry, or call `addSource`.
 
-The acquisition inventory scans renderer dependencies and runtime-acquisition paths. It caps the number of candidate files, each candidate input at 1 MiB, and the complete scan at 16 MiB; exceeding any bound returns `ERROR` without classifying the limit finding as renderer acquisition. It is **not** a source registry, a package allowlist, or source admission.
+The acquisition inventory scans renderer dependencies and runtime-acquisition paths. It caps the number of candidate files, each candidate input at 1 MiB, and the complete scan at 16 MiB. Symlink entries under scanned roots are denied without reading their targets, and every regular input must resolve within the repository root. A limit or containment failure returns `ERROR` without classifying the diagnostic as renderer acquisition. It is **not** a source registry, a package allowlist, or source admission.
 
 ### Required posture
 
