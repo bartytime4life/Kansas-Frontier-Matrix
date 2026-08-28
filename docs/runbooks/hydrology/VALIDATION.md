@@ -2,13 +2,13 @@
 doc_id: kfm://doc/runbook-hydrology-validation
 title: Hydrology Validation Runbook
 type: runbook
-version: v1.0.0
+version: v1.0.1
 status: DRAFT_REPOSITORY_GROUNDED; BOUNDED_NO_NETWORK_VALIDATION_EXECUTABLE; LIVE_SOURCE_PROOF_RELEASE_DEPLOYMENT_AND_PUBLICATION_HELD; NOT_FOR_LIFE_SAFETY
 owners:
   - "@bartytime4life — verified GitHub review route"
   - "NEEDS VERIFICATION — accountable Hydrology, evidence, source, policy, safety, proof, release, and operations assignments"
 created: 2026-08-25
-updated: 2026-08-27
+updated: 2026-08-28
 policy_label: repository-facing; validation-sensitive; fail-closed
 current_path: docs/runbooks/hydrology/VALIDATION.md
 owning_root: docs/
@@ -28,8 +28,8 @@ reason_codes:
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 6cd656e44e9cd8415651fd9da30a56095e6bfbe6
-  target_prior_blob: c6c6ee9c89ad394847ef9e5ac053b7a136595678
+  base_commit: 5db2c81106aab76a1f4d0a02f3949c86947da43a
+  target_prior_blob: a9b3a24e4c42a69646181b613bdc26d216333b0c
   domain_workflow_blob: 36a0287be04639cb75dc77ae2c274fee626f6a00
   nwis_capture_workflow_blob: 3d324c7732b372e45bf6dd32ca67366b3550037d
   usgs_cutover_workflow_blob: 33d2091cf2f9d954adbff5e785361bcc196f0c93
@@ -257,12 +257,20 @@ successor.
 
 ### 3.3 Use the workflow toolchain
 
-Current workflows use Python 3.11 and install the repository's declared test
-dependencies with:
+Current workflows use Python 3.11. Before beginning the bounded no-network
+validation phase, install the repository's declared test dependencies with:
 
 ```bash
 python tools/ci/install_python_ci.py project-test
 ```
+
+The installer ultimately invokes `pip install` without `--no-index`. In a clean
+environment it may contact the configured package index, so treat this command
+as a separate dependency-bootstrap phase and record its network posture
+separately. Do not claim the bootstrap as no-network validation. This runbook
+does not define a verified offline wheelhouse; if zero-egress bootstrap is
+required and no reviewed local dependency source is available, stop with
+`HOLD`.
 
 Use a clean checkout and a materially equivalent environment for base/head
 comparison. Do not compare a lockfile-controlled CI run with an ad hoc
@@ -271,8 +279,8 @@ evidence.
 
 ### 3.4 Preserve deterministic, no-network posture
 
-Set the repository's no-network and deterministic environment before local
-execution:
+After dependency bootstrap completes, begin the bounded no-network validation
+phase by setting the repository's no-network and deterministic environment:
 
 ```bash
 export KFM_NO_NETWORK=1
@@ -286,9 +294,10 @@ export TZ=UTC
 
 The Hydrology tests install fail-closed socket, DNS, and URL guards around the
 local validators. The environment variable is not, by itself, proof of
-runner-level egress isolation. Any observed DNS lookup, socket connection,
-external URL access, credential request, or unverified registry access is a
-failure of this procedure.
+runner-level egress isolation. During this bounded phase, any observed DNS
+lookup, socket connection, external URL access, credential request, or
+unverified registry access is a failure of the validation procedure. Keep the
+earlier dependency-bootstrap record separate.
 
 ### 3.5 Confirm the aggregate-target hold
 
@@ -309,10 +318,15 @@ a target in a documentation change.
 The workflow file is authoritative for its CI behavior. The commands below
 reproduce its executable bounded test step; they do not duplicate the workflow's
 larger inline AST, placeholder, symlink, and exact-inventory readiness program.
+Run each multi-command block below as one Bash session. Its
+`set -euo pipefail` guard makes any failed required command stop the block; do
+not infer a profile pass from the final command's status alone.
 
 ### 4.1 Run the seven-module batch and standalone ownership checks
 
 ```bash
+set -euo pipefail
+
 python -m pytest -q -p no:cacheprovider \
   tests/domains/hydrology/test_hydrology_smoke.py \
   tests/domains/hydrology/test_aquifer_observation.py \
@@ -329,6 +343,8 @@ python tests/cross_domain/test_environmental_observation_boundaries.py --verbose
 ### 4.2 Run schema-wrapper and semantic fixture polarity
 
 ```bash
+set -euo pipefail
+
 python tools/validators/domains/hydrology/validate_evidence_bundle.py \
   fixtures/domains/hydrology/evidence_bundle/valid/valid_1.json
 
@@ -384,11 +400,17 @@ green.
 ## 5. Run the dedicated bounded workflows
 
 These workflows own separate validation stories. The broad domain workflow
-inventories their validator files but does not execute their fixture suites.
+inventories the USGS Water API cutover and WBD HUC12 material-change validator
+subtrees, but it does not inventory the NWIS county-capture workflow or its
+connector and test files. It does not execute any of the three dedicated fixture
+suites; each dedicated path-filtered workflow remains authoritative for its own
+CI execution.
 
 ### 5.1 Captured-input USGS Water county normalization
 
 ```bash
+set -euo pipefail
+
 python -m pytest \
   tests/connectors/usgs/water_data/test_nwis_county_capture.py \
   -q --strict-config --strict-markers
@@ -405,6 +427,8 @@ currentness, activate a source, write `RAW`, or resolve evidence.
 ### 5.2 Fixture-only USGS Water API cutover assessment
 
 ```bash
+set -euo pipefail
+
 python -m pytest \
   tests/validators/domains/hydrology/usgs_water_api_cutover/test_validate_usgs_water_api_cutover.py \
   -q --strict-config --strict-markers
@@ -421,6 +445,8 @@ credential, rights, source-role, or activation decision.
 ### 5.3 Fixture-only WBD HUC12 material-change assessment
 
 ```bash
+set -euo pipefail
+
 python -m pytest \
   tests/validators/domains/hydrology/wbd_huc12_material_change/test_validate_wbd_huc12_material_change.py \
   -q --strict-config --strict-markers
@@ -601,6 +627,7 @@ validation_record:
   no_network:
     kfm_no_network: true
     external_access_observed: false
+  overall_result: PASS
   profiles:
     hydrology_evidence_bundle_alias_shape: PASS
     hydrology_aquifer_separated_pair_shape: PASS
@@ -612,7 +639,7 @@ validation_record:
     invalid_fixture_rejection: PASS
     proof_producer: HOLD
     release_dry_run: HOLD
-  attribution: PASS
+  attribution: UNRESOLVED / NON_COMPARABLE
   human_review: ABSENT
   claims:
     demonstrated:
@@ -621,8 +648,10 @@ validation_record:
       - "Live source, real evidence, scientific, proof, release, deployment, publication, or life-safety authority."
 ```
 
-This example is a handoff shape, not a repository contract or schema. Do not
-store source payloads, credentials, temporary access links, precise restricted
+The illustrative `overall_result` records the exact-head outcome. Its
+`attribution` remains `UNRESOLVED / NON_COMPARABLE` because the example does
+not include a materially equivalent base execution. This example is a handoff
+shape, not a repository contract or schema. Do not store source payloads, credentials, temporary access links, precise restricted
 locations, culturally controlled information, or proprietary excerpts in the
 record.
 
