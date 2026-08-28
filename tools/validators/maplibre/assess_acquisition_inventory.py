@@ -2,8 +2,9 @@
 """Inventory browser-renderer acquisition surfaces without admitting a renderer.
 
 This assessment is intentionally non-authoritative. It inventories bounded executable,
-package, test, example, runtime, and public-web roots for renderer acquisition mechanisms
-so ADR-0006/0007 can be enforced with structural evidence. Descriptor reads fail closed
+package, test, example, runtime, and public-web roots for renderer acquisition mechanisms,
+including JavaScript and CSS imports, so ADR-0006/0007 can be enforced with structural
+evidence. Descriptor reads fail closed
 when identity, size, modification time, or change time differs across a bounded read, or
 when a second bounded read has a different SHA-256 digest. PASS means the scan completed
 with no renderer acquisition. HOLD means acquisition is confined to the accepted package
@@ -28,8 +29,10 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Sequence
 
-PROFILE = "kfm-maplibre-acquisition-inventory-v12"
-TEXT_SUFFIXES = frozenset({".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx", ".html"})
+PROFILE = "kfm-maplibre-acquisition-inventory-v13"
+TEXT_SUFFIXES = frozenset(
+    {".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx", ".html", ".css"}
+)
 MAX_FILES = 5000
 MAX_INPUT_BYTES = 1024 * 1024
 MAX_TOTAL_INPUT_BYTES = 16 * 1024 * 1024
@@ -73,6 +76,10 @@ PATTERNS = {
     ),
     "REQUIRE_RESOLVE": re.compile(
         r"\brequire\s*\.\s*resolve\s*\(\s*['\"]([^'\"]+)['\"]\s*\)"
+    ),
+    "CSS_IMPORT": re.compile(
+        r"(?:^|\n)\s*@import\s+(?:url\(\s*)?['\"]([^'\"]+)['\"]\s*\)?",
+        re.I,
     ),
     "CDN_URL": re.compile(
         r"https?://(?:"
@@ -665,6 +672,7 @@ def _scan_text(root: Path, path: Path, budget: ScanBudget) -> list[Finding]:
         "RE_EXPORT",
         "IMPORT_META_RESOLVE",
         "REQUIRE_RESOLVE",
+        "CSS_IMPORT",
     ):
         for match in PATTERNS[kind].finditer(scan_text):
             subject = _renderer_import_subject(match.group(1))

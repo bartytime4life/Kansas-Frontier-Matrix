@@ -355,6 +355,31 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(result.outcome, MODULE.Outcome.FAIL)
         self.assertTrue(any(f.kind == "CDN_URL" for f in result.findings))
 
+    def test_renderer_css_import_outside_candidate_seam_fails(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "apps/explorer/styles.css",
+                '@import "maplibre-gl/dist/maplibre-gl.css";\n',
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.FAIL)
+        self.assertEqual(result.findings[0].kind, "CSS_IMPORT")
+        self.assertEqual(result.findings[0].subject, "maplibre-gl")
+
+    def test_commented_renderer_css_import_remains_inert(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "apps/explorer/styles.css",
+                '/* retired: @import "maplibre-gl/dist/maplibre-gl.css"; */\n',
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.PASS)
+        self.assertEqual(result.findings, ())
+
     def test_extensionless_renderer_package_on_known_cdn_fails(self) -> None:
         with self._root() as tmp:
             root = Path(tmp)
@@ -709,7 +734,7 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 3)
         payload = json.loads(completed.stdout)
         self.assertEqual(payload["outcome"], "HOLD")
-        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v12")
+        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v13")
         self.assertEqual(payload["max_input_bytes"], MODULE.MAX_INPUT_BYTES)
         self.assertEqual(payload["max_total_input_bytes"], MODULE.MAX_TOTAL_INPUT_BYTES)
         self.assertEqual(payload["findings"], [])

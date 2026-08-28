@@ -2,25 +2,24 @@
 doc_id: kfm://doc/people-dna-land/dna-handling
 title: People / Genealogy / DNA / Land — DNA & Genomic Handling
 type: standard
-version: v1
+version: v1.1
+prior_version: v1
 status: draft
 owners: [TODO: domain steward — People/Genealogy/DNA/Land; TODO: sensitivity reviewer; TODO: rights-holder rep; TODO: release authority; TODO: docs steward]
 created: 2026-06-07
-updated: 2026-06-07
+updated: 2026-08-28
 policy_label: public
+owning_root: docs/
+responsibility: Document deny-by-default DNA and genomic handling constraints without authorizing sensitive-data access, operational consent or revocation, promotion, release, deployment, or publication.
+truth_posture: cite-or-abstain
 related:
   - docs/domains/people-dna-land/DATA_LIFECYCLE.md
   - docs/domains/people-dna-land/DEFINITION_OF_DONE.md
   - docs/runbooks/people-dna-land/PROMOTION_RUNBOOK.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
-  - docs/doctrine/directory-rules.md            # Directory Rules v1.3
-  - ai-build-operating-contract.md              # CONTRACT_VERSION = "3.0.0"
-  - policy/consent/people/
-  - policy/sensitivity/people/
-  - schemas/contracts/v1/people/                # PROPOSED canonical schema slug per Atlas §24.13
-  - docs/standards/CONSENT_TOKENS.md            # PROPOSED — consent-token standard (Pass-10 C6-07)
-  - docs/standards/DP_BUDGETS.md                # PROPOSED — DP epsilon budgets (Pass-10 C6-05)
+  - docs/doctrine/directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
 tags: [kfm, dna, genomic, genetic-genealogy, consent, revocation, k-anonymity, differential-privacy, sensitivity, deny-by-default]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned per ai-build-operating-contract.md v3.0.
@@ -29,6 +28,7 @@ notes:
   - SLUG (OQ-PEOPLE-SLUG-01) and GATE-LETTER (OQ-PEOPLE-GATE-01 / ADR-S-08) conflicts inherited from DATA_LIFECYCLE.md.
   - External standards (GA4GH AAI/DUO, OAuth2 RFC 7662, NIST SP 800-226, EDPB Guidelines 01/2025) are cited as attested in project knowledge (Pass-10 C9), not via external web research.
   - Verify against mounted repo, ADRs, policy bundles, and current vendor terms before treating any path, threshold, or vendor claim as canonical.
+  - The current promotion runbook is a repository-grounded HOLD boundary, not an operator procedure; this document cannot authorize promotion or publication.
 [/KFM_META_BLOCK_V2] -->
 
 # People / Genealogy / DNA / Land — DNA & Genomic Handling
@@ -46,7 +46,7 @@ notes:
 
 |Status|Owners                                                                                             |Last updated|
 |------|---------------------------------------------------------------------------------------------------|------------|
-|draft |TODO — domain steward + sensitivity reviewer + rights-holder rep + release authority + docs steward|2026-06-07  |
+|draft |TODO — domain steward + sensitivity reviewer + rights-holder rep + release authority + docs steward|2026-08-28  |
 
 
 > [!CAUTION]
@@ -83,7 +83,7 @@ notes:
 
 **In scope.** Direct-to-consumer (DTC) raw genomic exports; `DNA Match Evidence`; `DNASegment`; `DNAKitToken`; `ConsentGrant` / consent manifests and `RevocationReceipt` / revocation ledgers; IBD/relatedness derivations; ancestry-composition derivations; genetic-genealogy overlays; and the de-identification, tokenization, and render-time enforcement that govern all of them. [C9-03] [DOM-PEOPLE]
 
-**Out of scope (governed elsewhere, but constrained by this doc).** General living-person handling and land/title handling live in `DATA_LIFECYCLE.md`; promotion procedure lives in `PROMOTION_RUNBOOK.md`; the acceptance checklist lives in `DEFINITION_OF_DONE.md`. This doc is the DNA-specific layer those documents defer to.
+**Out of scope (governed elsewhere, but constrained by this doc).** General living-person handling and land/title handling live in `DATA_LIFECYCLE.md`; the current promotion `HOLD` boundary lives in `PROMOTION_RUNBOOK.md`; the proposed readiness checklist lives in `DEFINITION_OF_DONE.md`. No operational promotion procedure is established. This doc is the DNA-specific layer those documents defer to.
 
 > [!NOTE]
 > The capability tension is real and stated in doctrine: DTC inputs are the only practical source of fine-grained genomic data for genealogy work, so refusing them outright is a capability gap — but accepting them naïvely is a serious sensitivity violation. The whole point of this document is to make controlled acceptance auditable. [C9-03]
@@ -430,7 +430,7 @@ This document is done enough to enter the repository when:
 
 - `docs/domains/people-dna-land/DATA_LIFECYCLE.md` — domain lifecycle, tiers, receipts (sibling)
 - `docs/domains/people-dna-land/DEFINITION_OF_DONE.md` — promotion-readiness checklist (sibling)
-- `docs/runbooks/people-dna-land/PROMOTION_RUNBOOK.md` — operator promotion procedure (sibling)
+- `docs/runbooks/people-dna-land/PROMOTION_RUNBOOK.md` — repository-grounded promotion `HOLD` boundary; no operator procedure (sibling)
 - `docs/domains/people-dna-land/README.md` — domain orientation (TODO — separate doc)
 - `docs/standards/CONSENT_TOKENS.md` — consent-token standard (PROPOSED, Pass-10 C6-07)
 - `docs/standards/DP_BUDGETS.md` — DP epsilon budgets (PROPOSED, Pass-10 C6-05)
@@ -442,4 +442,4 @@ This document is done enough to enter the repository when:
 
 -----
 
-<sub>**Last updated:** 2026-06-07 · **Status:** draft · **CONTRACT_VERSION:** 3.0.0 · **Owners:** TODO (domain steward) · [↑ Back to top](#quick-links)</sub>
+<sub>**Last updated:** 2026-08-28 · **Status:** draft · **CONTRACT_VERSION:** 3.0.0 · **Owners:** TODO (domain steward) · [↑ Back to top](#quick-links)</sub>
