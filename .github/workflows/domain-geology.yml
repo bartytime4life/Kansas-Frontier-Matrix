@@ -1,7 +1,8 @@
 # KFM Geology domain CI readiness workflow.
-# Status: three bounded no-network fixture profiles are executable (resource
-# class, public-safe geometry metadata, and a sparse, announcement-bound GMD 3
-# AEM campaign candidate);
+# Status: four bounded no-network fixture profiles are executable (resource
+# class, public-safe geometry metadata, a sparse announcement-bound GMD 3 AEM
+# campaign candidate, and production material-change assessment). Their Python
+# commands load the shared named-public-API startup guard;
 # broader validation, proof, and release-dry-run producers remain held.
 #
 # Authority boundary:
@@ -34,6 +35,8 @@ jobs:
   validate-geology:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    env:
+      PYTHONPATH: ${{ github.workspace }}/tools/ci/kfm_no_network:${{ github.workspace }}
 
     steps:
       - name: Check out Geology boundaries
@@ -63,7 +66,9 @@ jobs:
             "tests/domains/geology/README.md"
             "tests/domains/geology/test_source_role_anti_collapse.py"
             "tests/domains/geology/test_aem_campaign.py"
+            "tests/domains/geology/test_no_network_proof.py"
             "tests/domains/geology/test_public_safe_geometry.py"
+            "tools/ci/kfm_no_network/sitecustomize.py"
             "tools/validators/domains/geology/README.md"
             "tools/validators/domains/geology/validate_resource_class_distinction.py"
             "tools/validators/domains/geology/validate_aem_campaign.py"
@@ -83,6 +88,7 @@ jobs:
             "docs/intake/exploratory/geology-public-safe-geometry-source-map.md"
             "data/receipts/generated/genrec-geology-public-safe-geometry-20260810.json"
             "data/receipts/generated/genrec-geology-post-merge-convergence-20260828.json"
+            "data/receipts/generated/genrec-geology-no-network-guard-adoption-20260828.json"
             "data/registry/sources/geology/README.md"
             "data/registry/sensitivity/geology/README.md"
             "release/candidates/geology/README.md"
@@ -109,6 +115,7 @@ jobs:
                   "test_source_role_anti_collapse.py"
               ),
               Path("tests/domains/geology/test_aem_campaign.py"),
+              Path("tests/domains/geology/test_no_network_proof.py"),
               Path("tests/domains/geology/test_public_safe_geometry.py"),
               Path("tests/domains/geology/test_production_material_change.py"),
           }
@@ -170,6 +177,24 @@ jobs:
 
           echo "WORKFLOW_CHECK_EXECUTED: geology-validation-boundary-inventory"
           echo "WORKFLOW_HOLD: broader Geology validation is not established"
+
+      - name: Prove shared Geology Python no-network startup guard
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "0"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONHASHSEED: "0"
+        run: |
+          set -euo pipefail
+
+          python -m pytest -q -p no:cacheprovider \
+            tests/domains/geology/test_no_network_proof.py
+
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-geology-no-network-guard-adoption-20260828.json \
+            --repo-root .
+
+          echo "WORKFLOW_CHECK_EXECUTED: geology-python-no-network-startup-guard"
 
       - name: Run bounded Geology resource-class fixture validation
         shell: bash
@@ -257,6 +282,8 @@ jobs:
           cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
           ### Geology validation status
 
+          `WORKFLOW_CHECK_EXECUTED: geology-python-no-network-startup-guard`
+
           `WORKFLOW_CHECK_EXECUTED: geology-resource-class-fixture`
 
           `WORKFLOW_CHECK_EXECUTED: geology-aem-campaign-fixture`
@@ -266,6 +293,14 @@ jobs:
           `WORKFLOW_CHECK_EXECUTED: geology-production-material-change`
 
           `WORKFLOW_HOLD: broader Geology semantics, evidence closure, proof, and release remain unestablished`
+
+          Fresh Python subprocesses prove that the shared startup guard is
+          inactive without the explicit posture, activates for the four bounded
+          profile commands, routes the public `socket.SocketType` constructor
+          alias through the guarded class, denies a representative public
+          destination-bearing send, and preserves Unix-domain routing. Direct
+          `_socket.socket`, dependency installation, non-Python processes, and
+          operating-system or runner-wide egress remain outside this proof.
 
           When green, this job has executed a frozen, synthetic fixture profile
           that keeps MineralOccurrence, ResourceDeposit, and ResourceEstimate
