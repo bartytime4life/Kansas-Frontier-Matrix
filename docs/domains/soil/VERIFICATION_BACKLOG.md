@@ -23,6 +23,7 @@ related:
   - data/registry/soil/verification_backlog.yaml
   - docs/registers/VERIFICATION_BACKLOG.md
   - .github/workflows/domain-soil.yml
+  - .github/workflows/soil-moisture-observation.yml
 tags: [kfm, soil, verification, backlog, evidence, no-network, source-admission, release-hold]
 notes:
   - "Replaces a three-line greenfield placeholder with a current-session repository inventory."
@@ -52,6 +53,10 @@ At `main@813ef14b1dbe5bd236fc902ce8fc3bb2e8ae7e80`, Soil is
 - [`domain-soil.yml`](../../../.github/workflows/domain-soil.yml) runs three
   bounded synthetic fixture suites plus the SSURGO package-drift fixture proof.
   Its proof and release-dry-run jobs are explicit holds.
+- [`soil-moisture-observation.yml`](../../../.github/workflows/soil-moisture-observation.yml)
+  separately runs the strict SoilMoistureObservation contract, schema, fixture,
+  validator, test, and retained-receipt profile. It does not yet inject the
+  shared Python startup no-network guard.
 - Ten files exist directly under the canonical Soil source-registry lane.
   None establishes source activation by itself.
 - No Soil candidate record or Soil proof artifact exists beyond README and
@@ -82,7 +87,7 @@ At `main@813ef14b1dbe5bd236fc902ce8fc3bb2e8ae7e80`, Soil is
 | `SOIL-VB-003` | Reconcile source-registry identity and path history | Canonical `data/registry/sources/soil/` exists; historical Soil registry shapes also remain | `PARTIAL` | Single-writer inventory, source-ID crosswalk, consumer map, migration or alias decision, and rollback |
 | `SOIL-VB-004` | Verify source rights and activation state | Source descriptors and human source pages are present; no activation decision is established here | `OPEN / HOLD` | Current terms, role, steward, cadence, sensitivity, redistribution, attribution, activation decision, fixture proof, and rollback for one source |
 | `SOIL-VB-005` | Classify strict, permissive, and compatibility schemas | Strict object-family profiles coexist with permissive three-property and alias schemas | `PARTIAL` | Per-schema authority classification, canonical target, consumer evidence, invalid fixtures, and compatibility exit criteria |
-| `SOIL-VB-006` | Bind implemented validators to declared CI profiles | Many bounded validators and tests exist outside the three suites currently named by `domain-soil` | `PARTIAL` | Exact profile registry, deterministic commands, no-network execution, expected outcomes, and hosted exact-head evidence |
+| `SOIL-VB-006` | Bind implemented validators to declared CI profiles | `domain-soil` names three suites while additional profiles use dedicated workflows or remain isolated; the repository has no reviewed aggregate coverage projection | `PARTIAL` | Exact profile registry, deterministic commands, startup no-network enforcement, expected outcomes, and hosted exact-head evidence |
 | `SOIL-VB-007` | Replace placeholder package and pipeline behavior | Soil package modules and lifecycle stage modules still identify as placeholders | `OPEN / HOLD` | One contract/schema/source/policy/fixture-closed offline transformation with tests and a reversible lifecycle boundary |
 | `SOIL-VB-008` | Establish executable Soil policy evaluation | Soil Rego files are present, but this review did not establish a bound policy runtime and decision receipt | `OPEN / HOLD` | Policy input contract, pinned evaluator, allow/deny/abstain fixtures, decision output, review, and CI evidence |
 | `SOIL-VB-009` | Close evidence and catalog support for one candidate | A fixture-only catalog-closure assessment exists; no accepted Soil EvidenceBundle/proof packet is present | `PARTIAL / HOLD` | Resolvable EvidenceRefs, EvidenceBundle, validation report, policy result, catalog identity, correction target, and reviewed closure |
