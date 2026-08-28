@@ -3,9 +3,9 @@ doc_id: kfm://doc/runbook/people-dna-land/promotion
 title: People, DNA, and Land Promotion HOLD Boundary
 type: runbook
 subtype: repository-grounded-hold-boundary
-version: v1.0.0
-prior_version: v0.1
-prior_state: proposal-era operational procedure
+version: v1.0.1
+prior_version: v1.0.0
+prior_state: repository-grounded promotion HOLD boundary with source refresh still described as proposal-era lineage
 status: draft; repository-grounded; fail-closed; operational promotion unavailable; review required
 owners:
   - "@bartytime4life — verified GitHub review route"
@@ -51,6 +51,7 @@ notes:
   - "The current workflow runs two bounded synthetic consent profiles and explicitly holds broader semantics, policy runtime, proof production, and release dry-run capability."
   - "No real personal, genealogical, DNA/genomic, consent, land, title, parcel, or protected cultural payload was accessed or added."
   - "Operational promotion remains unavailable until every required dependency is established by its owning authority and accountable review."
+  - "The source-refresh sibling is a repository-grounded HOLD boundary; it does not supply promotion authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -157,7 +158,7 @@ A green check does not establish human approval, source admission, policy activa
 
 The prior v0.1 body is superseded at this path and retained in Git history. It is not copied to another runbook, contract, schema, policy, registry, proof, or release directory. Its proposed object inventory, reason codes, sensitivity tiers, reviewer roles, receipt names, paths, CI commands, worked examples, and promotion steps must not be reconstructed as current authority without fresh evidence from the owning surfaces.
 
-The sibling [source-refresh document](./SOURCE_REFRESH_RUNBOOK.md) remains proposal-era lineage. The sibling [rollback boundary](./ROLLBACK_RUNBOOK.md) is also a `HOLD` boundary. Neither supplies missing promotion authority.
+The sibling [source-refresh boundary](./SOURCE_REFRESH_RUNBOOK.md) is a repository-grounded `HOLD` boundary whose prior procedure remains proposal lineage in Git history. The sibling [rollback boundary](./ROLLBACK_RUNBOOK.md) is also a `HOLD` boundary. Neither supplies missing promotion authority.
 
 ## Documentation rollback
 
@@ -167,7 +168,7 @@ Reverting this file restores proposal-era text only. It does not reverse a conse
 
 ## Next dependency-aware review points
 
-1. Reconcile the remaining proposal-era [source-refresh procedure](./SOURCE_REFRESH_RUNBOOK.md) independently.
+1. Preserve the repository-grounded [source-refresh `HOLD` boundary](./SOURCE_REFRESH_RUNBOOK.md); establish any future live implementation only in its owning source, connector, policy, evidence, custody, and review surfaces.
 2. Inventory each explicit lane scaffold before filling, superseding, retaining, or retiring it.
 3. Establish accepted contracts, schemas, and policy-runtime binding before designing any executable promotion mechanism.
 4. Preserve source, evidence, human-review, release, deployment, publication, correction, revocation, withdrawal, and rollback states as separate evidence gates.

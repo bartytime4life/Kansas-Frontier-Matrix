@@ -2,11 +2,13 @@
 doc_id: kfm://doc/docs/domains/people-dna-land/SOURCE_REGISTRY
 title: People / DNA / Land Domain — Source Registry
 type: standard
-version: v1
+version: v1.1.0
+prior_version: v1
+prior_state: proposal-era registry guidance that treated live cadence refresh and per-tick records as available
 status: draft
 owners: TODO — people-dna-land domain steward; source-registry steward; rights-holder representative; sensitivity reviewer; release authority
 created: 2026-05-19
-updated: 2026-06-07
+updated: 2026-08-28
 policy_label: restricted
 related:
   - docs/domains/people-dna-land/README.md
@@ -30,6 +32,7 @@ notes:
   - CONFLICTED — folder slug people-dna-land vs Atlas name "People / Genealogy / DNA / Land"; canonical lane name is unsettled (deep-research slug-drift register; Atlas §24.13). Slug is PROPOSED, not CONFIRMED. Resolve by ADR. See OQ-PDL-REG-01.
   - CONFLICTED — SOURCE_REFRESH_RUNBOOK belongs under docs/runbooks/ per Directory Rules §6.1.b, not docs/domains/. See OQ-PDL-REG-02.
   - Consent does NOT publish data — a ConsentSidecar constrains a render gate; publication still requires ReleaseManifest + Promotion Gate G.
+  - Live People/DNA/Land source refresh is not currently implemented or admitted; the canonical runbook is a repository-grounded HOLD boundary.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -46,9 +49,9 @@ notes:
 ![consent: required](https://img.shields.io/badge/consent-required-c2185b)
 ![contract: v3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-blue)
 ![ci: TODO](https://img.shields.io/badge/ci-TODO-lightgrey)
-![last updated: 2026--06--07](https://img.shields.io/badge/last%20updated-2026--06--07-informational)
+![last updated: 2026--08--28](https://img.shields.io/badge/last%20updated-2026--08--28-informational)
 
-**Status:** draft &middot; **Owners:** TODO — people-dna-land domain steward; source-registry steward; rights-holder representative; sensitivity reviewer; release authority &middot; **Updated:** 2026-06-07
+**Status:** draft &middot; **Owners:** TODO — people-dna-land domain steward; source-registry steward; rights-holder representative; sensitivity reviewer; release authority &middot; **Updated:** 2026-08-28
 **Pinned:** `CONTRACT_VERSION = "3.0.0"`
 
 > [!CAUTION]
@@ -362,15 +365,15 @@ For each render, `policy.consent.render` consumes the sidecar plus a request con
 
 ## 10. Admission flow
 
-PROPOSED source-activation flow, drawn from CONFIRMED doctrine. The watcher MUST NOT publish or rewrite catalog; it emits a `SourceIntakeRecord` / `RunReceipt`, after which admission decisions follow. [IMPL-PIPE §13; DIRRULES §13 watcher-as-non-publisher]
+PROPOSED source-activation design lineage, drawn from CONFIRMED doctrine. Current repository evidence does not establish a live People/DNA/Land watcher, admitted descriptor instance, activation decision, receipt producer, or cadence-refresh profile. The canonical [source-refresh boundary](../../runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md) therefore remains `HOLD`; the sequence below cannot be executed as current procedure. [IMPL-PIPE §13; DIRRULES §13 watcher-as-non-publisher]
 
 1. **Propose** a new or updated `SourceDescriptor` (this registry receives a new row in §5).
 2. **Review** source role, rights, sensitivity, cadence, access, and consent requirements.
 3. **Resolve** rights and sensitivity; for DNA-adjacent sources, resolve consent posture and vendor TOS.
 4. **Issue** a `SourceActivationDecision`: one of `allowed`, `restricted`, `denied`, `needs-review`.
 5. **Stand up** fixtures, validators, and policy gates **before** any connector or watcher becomes active.
-6. **Activate** the connector / watcher only after fixtures, validators, and policy gates exist and pass.
-7. **Refresh** on cadence per the [`SOURCE_REFRESH_RUNBOOK`](../../runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md); emit `SourceIntakeRecord` and `ValidationReport` every tick.
+6. **Keep activation at `HOLD`** unless the owning source, connector, policy, evidence, custody, and review surfaces establish the implementation and authority independently of this document.
+7. **Do not run cadence refresh or emit per-tick records.** The [`SOURCE_REFRESH_RUNBOOK`](../../runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md) permits repository-only metadata review and a minimized handoff; live retrieval, admission, receipt production, and lifecycle mutation remain unavailable.
 8. **Re-evaluate** annually, or earlier on rights change, vendor TOS change, vendor distress, consent change, or doctrinal change.
 
 ### Activation decision matrix
