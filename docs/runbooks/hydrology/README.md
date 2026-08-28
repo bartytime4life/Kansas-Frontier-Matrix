@@ -3,10 +3,10 @@ doc_id: kfm://doc/runbooks-hydrology-readme
 title: docs/runbooks/hydrology/ — Hydrology Operational Procedure Boundary
 type: readme
 subtype: boundary-compact
-version: v1.0.2
-prior_version: v1.0.1
-prior_state: repository-grounded boundary with stale child maturity labels
-status: draft; repository-grounded; bounded synthetic validation executable; broader semantics, source operation, proof, release, deployment, and publication held; not for life safety
+version: v1.1.0
+prior_version: v1.0.2
+prior_state: repository-grounded boundary with proposal-era no-network child
+status: draft; repository-grounded; bounded synthetic validation and no-network procedures executable; broader semantics, runner-wide egress denial, source operation, proof, release, deployment, and publication held; not for life safety
 owners:
   - "@bartytime4life — verified GitHub review route"
   - "NEEDS VERIFICATION — accountable Hydrology, evidence, policy, safety, source, and release assignments"
@@ -22,8 +22,10 @@ authority_rank: subordinate to accepted doctrine and ADRs, contracts, schemas, p
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: d994e95a6c584955b5dea8f0bd2e5b39e0b6735e
-  target_prior_blob: 67ac2ebd8208b2720c5765336aa9ac8af32fc11e
+  base_commit: 18754b94e73fff3d61c683651ea02125e601e9b4
+  target_prior_blob: 02e9afe9558eea339613077d01b74bd76a726e4e
+  no_network_runbook_prior_blob: 1a2a1480b7f2fe3d52aabd815395ac1b8fb97395
+  validation_runbook_blob: 53dd6e7be472d514106475ffe004fc6f98413af6
   source_refresh_runbook_blob: 0af9c08bdc432e234285f788e13d6d223f0796b4
   rollback_runbook_blob: c332a9098e0ca8fc8ff5d7fd66ccdff5378a51fc
   parent_runbooks_readme_blob: 4f33dfa18cd69fe6a6b990aac71be08d59e7d13e
@@ -32,8 +34,8 @@ evidence_snapshot:
   directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
   direct_markdown_files: 7
-  repository_grounded_child_procedures: 4
-  proposal_or_stale_child_procedures: 1
+  repository_grounded_child_procedures: 5
+  proposal_or_stale_child_procedures: 0
   explicit_scaffolds: 1
 related:
   - ../README.md
@@ -51,10 +53,11 @@ related:
   - ../../../data/proofs/hydrology/README.md
   - ../../../release/candidates/hydrology/README.md
 notes:
+  - "v1.1.0 reconciles the no-network child against current workflow and test evidence, including the boundary between in-process guards and unverified runner-wide egress denial."
   - "v1.0.2 corrects the parent runbook index blob pin to the bytes present at the stated base commit; it changes no maturity or operational claim."
   - "v1.0.1 reconciled child maturity and navigation after the source-refresh and rollback runbook merges; it created no new authority surface."
-  - "VALIDATION.md, PROMOTION_RUNBOOK.md, SOURCE_REFRESH_RUNBOOK.md, and ROLLBACK_RUNBOOK.md are repository-grounded; their executable or decision support remains bounded by each document's explicit holds."
-  - "NO_NETWORK_TEST_RUNBOOK.md retains proposal-era or stale language, and ROLLBACK.md remains a scaffold; neither is current operational authority."
+  - "VALIDATION.md, NO_NETWORK_TEST_RUNBOOK.md, PROMOTION_RUNBOOK.md, SOURCE_REFRESH_RUNBOOK.md, and ROLLBACK_RUNBOOK.md are repository-grounded; their executable or decision support remains bounded by each document's explicit holds."
+  - "ROLLBACK.md remains a scaffold and is not current operational authority."
   - "A passing workflow establishes only the named synthetic and fixture-polarity checks at the tested SHA."
 [/KFM_META_BLOCK_V2] -->
 
@@ -80,6 +83,7 @@ proof producer, release approval, or public warning surface.
 > deployment, publication, or current hydrologic conditions.
 
 **Start here:** [bounded validation](./VALIDATION.md) ·
+[no-network procedure](./NO_NETWORK_TEST_RUNBOOK.md) ·
 [source-refresh preflight](./SOURCE_REFRESH_RUNBOOK.md) ·
 [rollback readiness](./ROLLBACK_RUNBOOK.md) ·
 [promotion preflight](./PROMOTION_RUNBOOK.md) ·
@@ -105,6 +109,7 @@ itself make a Hydrology claim true or move material through the lifecycle.
 | Capability | Current evidence | Bounded conclusion |
 |---|---|---|
 | Synthetic validation | [`.github/workflows/domain-hydrology.yml`](../../../.github/workflows/domain-hydrology.yml) invokes named repository tests and validators with positive and expected-negative fixtures | Executable for the named fixture profiles at the tested SHA |
+| No-network behavior | Accepted modules use local fixtures and bounded in-process socket, DNS, URL, or dependency guards; `KFM_NO_NETWORK=1` records the intended posture | Process-level denial is executable for the named tests; runner-wide egress denial remains `NEEDS_VERIFICATION` |
 | Domain and cross-domain checks | Seven Hydrology `pytest` modules, public-safe flow fixture checks, and an environmental ownership test are named in the workflow | Bounded shape and ownership behavior only |
 | EvidenceBundle, aquifer pair, and NHDPlus crosswalk fixtures | The workflow executes their repository validators and checks invalid fixture rejection | Fixture shape and polarity; not live evidence resolution, scientific accuracy, membership, geometry, or identity closure |
 | Common validation target | The workflow holds if an unverified `hydrology-validate` or `validate-hydrology` Make target appears | Do not invent or document either target as a current command |
@@ -123,7 +128,7 @@ into a claim about current conditions.
 |---|---|---|
 | [`VALIDATION.md`](./VALIDATION.md) | **Repository-grounded; bounded executable procedure** | Primary route for the exact tests and fixture-polarity checks named by the active workflow |
 | [`PROMOTION_RUNBOOK.md`](./PROMOTION_RUNBOOK.md) | **Repository-grounded preflight; transition held** | Assemble and review promotion-readiness evidence, then stop before any transition |
-| [`NO_NETWORK_TEST_RUNBOOK.md`](./NO_NETWORK_TEST_RUNBOOK.md) | **Proposal-heavy and stale** | Planning reference only; it retains unverified commands, a proposed CI sketch, and outdated repository-unknown statements |
+| [`NO_NETWORK_TEST_RUNBOOK.md`](./NO_NETWORK_TEST_RUNBOOK.md) | **Repository-grounded; bounded executable procedure** | Reproduce and interpret the accepted in-process network guards and fixture-polarity commands; do not infer runner-wide egress denial or broader Hydrology authority |
 | [`SOURCE_REFRESH_RUNBOOK.md`](./SOURCE_REFRESH_RUNBOOK.md) | **Repository-grounded preflight; live refresh held** | Use for captured-input and fixture validation, source-role checks, explicit stop conditions, and review handoff; it performs no live retrieval, activation, lifecycle write, release, or publication |
 | [`ROLLBACK_RUNBOOK.md`](./ROLLBACK_RUNBOOK.md) | **Repository-grounded readiness and review handoff; operational rollback held** | Use to assess candidate rollback shape and generic synthetic rehearsal evidence; no Hydrology-specific rehearsal or operational rollback authority is established |
 | [`ROLLBACK.md`](./ROLLBACK.md) | **Explicit scaffold** | Do not use as an operational procedure; it contains no verified rollback steps |
@@ -137,6 +142,7 @@ reconcile every command and claim against the current repository before use.
 | Need | Route | Required stop |
 |---|---|---|
 | Run current bounded offline checks | [`VALIDATION.md`](./VALIDATION.md) | Stop if paths, workflow inventory, checkout SHA, fixture polarity, or no-network posture differs |
+| Verify current no-network behavior | [`NO_NETWORK_TEST_RUNBOOK.md`](./NO_NETWORK_TEST_RUNBOOK.md) | Stop on unguarded network access, accepted invalid fixtures, or any attempt to treat `KFM_NO_NETWORK=1` as runner-wide enforcement by itself |
 | Assess promotion readiness | [`PROMOTION_RUNBOOK.md`](./PROMOTION_RUNBOOK.md) | Stop before transition execution; passing checks do not approve promotion |
 | Assess source-refresh readiness or validate captured input | [`SOURCE_REFRESH_RUNBOOK.md`](./SOURCE_REFRESH_RUNBOOK.md) | Stop before live retrieval, source activation, lifecycle writes, promotion, release, deployment, or publication |
 | Assess rollback readiness | [`ROLLBACK_RUNBOOK.md`](./ROLLBACK_RUNBOOK.md) | Stop at decision and review handoff; Hydrology-specific rehearsal and operational rollback remain held |
@@ -251,4 +257,3 @@ admission, evidence, policy, lifecycle, release, deployment, or publication
 state.
 
 [Back to top](#top)
-
