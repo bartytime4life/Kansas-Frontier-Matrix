@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<uuid>
+doc_id: kfm://doc/domains/fauna/readme
 title: KFM Fauna Domain Lane
 type: standard
 version: v1.2.0
@@ -8,6 +8,9 @@ owners: ["@bartytime4life — CODEOWNERS review route", "NEEDS VERIFICATION — 
 created: 2026-05-16
 updated: 2026-08-28
 policy_label: public
+owning_root: docs/
+responsibility: Human-readable scope, boundaries, maturity, sensitivity posture, and navigation for the Fauna domain lane
+truth_posture: "CONFIRMED current repository paths, accepted Directory Rules placement, default CODEOWNERS review routing, and bounded synthetic validation / PARTIAL mixed implementation maturity / UNKNOWN source admission, production retrieval, runtime behavior, accountable stewardship, independent review, release, deployment, promotion, and publication / NEEDS VERIFICATION before positive operational claims"
 related:
   - docs/domains/README.md
   - docs/doctrine/directory-rules.md
@@ -24,7 +27,7 @@ related:
   - release/candidates/fauna/
 tags: [kfm, domain, fauna, sensitivity, geoprivacy, evidence-first]
 notes:
-  # Repository paths and bounded synthetic validation were inspected at main@f7af2c3dcefd38ae5e86141cfbc0931c0ef7d90f; presence, execution, review, release, and publication remain separate states.
+  # Repository paths and bounded synthetic validation were inspected at main@d0816eed65852b22577b9003e86159fd48f134df; presence, execution, review, release, and publication remain separate states.
   # Public exact sensitive occurrence release is denied by default (Fauna sensitive occurrence = T4).
   # Doctrine-adjacent doc; CONTRACT_VERSION = "3.0.0" pinned per AI Build Operating Contract v3.0.
   # Atlas anchors: v1.1 Ch. 7 (Fauna), §20.5 (Deny-by-Default Register), §24.3 (Outcome Envelope), §24.5 (Sensitivity Tiers).
