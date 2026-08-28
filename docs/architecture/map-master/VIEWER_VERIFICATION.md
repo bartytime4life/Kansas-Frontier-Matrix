@@ -2,13 +2,13 @@
 doc_id: kfm://doc/architecture-map-master-viewer-verification
 title: Map Master — Viewer Verification
 type: architecture-reference
-version: v2.0-draft
-status: draft; repository-grounded; fixture-only-admission; renderer-hold; non-publisher
+version: v2.1-draft
+status: draft; repository-grounded; fixture-only-admission; initial-renderer-slice; production-runtime-hold; non-publisher
 owners:
   - "@bartytime4life — verified CODEOWNERS review route"
   - "NEEDS VERIFICATION — independent UI, security, map-runtime, layer, evidence, policy, release, accessibility, and operations stewardship"
 created: 2026-05-24
-updated: 2026-08-19
+updated: 2026-08-28
 policy_label: public; architecture; map-master; viewer-verification; fail-closed; no-release; no-publication
 owning_root: docs/
 responsibility: Explain the current fixture-only LayerManifest runtime-admission projection, its exact finite outcomes and non-effects, the absent viewer loader and verification surfaces, and the evidence required before any governed renderer source may be created.
@@ -17,8 +17,8 @@ current_path: docs/architecture/map-master/VIEWER_VERIFICATION.md
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: eded2a83abfbb2e977b120c58cf4d0423d6aab96
-  target_prior_blob: 40d4e4ab96eb784d7cf219dffaaf14ae742c9a40
+  base_commit: ba8856e1fc2bf930e9b44df1cfbf4f3dc369d084
+  target_prior_blob: 3e1f7bfe7599bc658452468308d04b1eba24b2db
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_decision: ADR-0029 accepted
   layer_manifest_contract_blob: 234dca70e768ee744f7d78109afc6e0dc745af1b
@@ -31,9 +31,9 @@ evidence_snapshot:
   governed_layers_route_blob: eaddcc9bfe066aea29178f3973275bd7e0932284
   explorer_package_blob: ddd201b74a06001d84a14bf54ac62a6cc3607a29
   explorer_maplibre_adapter_blob: 663ba0f7a05498948f67d644387c73ab19d5c16c
-  maplibre_package_manifest_blob: b0582955feeb51016327113692fa5c98ecad8816
+  maplibre_package_manifest_blob: f6d450af19c33011e159e123c8a07ca2bca6dfd3
   performance_budgets_blob: c800cdd8d622ca2a4596cf80e9951f241fc70187
-  renderer_boundary_blob: 628872aa58f9f86e31337924025a8590405385b5
+  renderer_boundary_blob: 59dede0ee4c465d2b142d3154ce3685f7189c6bf
   layer_lifecycle_blob: 630557b79421e70033a9a2d906c3c472be714ecb
   tile_artifacts_blob: f68bf295761711e1cec6046c2ea0f54564a0d4a4
 related:
@@ -55,9 +55,11 @@ related:
   - ../../../apps/governed-api/src/governed_api/routes/layers.py
 tags: [kfm, architecture, map-master, verification, layer-manifest, runtime-admission, fail-closed, maplibre, evidence, policy, release, rollback]
 notes:
+  - "v2.1-draft reconciles renderer evidence after ADR-0006/0007 acceptance and the bounded package-owned MapLibre implementation; it does not change the fixture-only viewer-admission projection."
   - "v2.0-draft replaces an asserted active verify-before-addSource pipeline with the current fixture-only, no-side-effect admission projection."
   - "The implemented evaluator returns PASS, HOLD, DENY, or ERROR over one synthetic closed projection; PASS means registration eligibility only and always retains RUNTIME_REGISTRATION_NOT_EXECUTED."
-  - "No live LayerDescriptor resolver, registry mutation, MapLibre source creation, policy evaluation, signature or carrier-byte verification, BAO range verification, budget gate, released-layer loader, deployment, release, or publication is established."
+  - "MapRuntimePort, NullMapRuntime, exact maplibre-gl 6.6.0, an initial lifecycle/camera MapLibreAdapter, the Vite worker seam, focused tests, and a bounded browser fixture exist; normal Explorer still uses NullMapRuntime."
+  - "No live LayerDescriptor resolver, registry mutation, governed MapLibre source creation, policy evaluation, signature or carrier-byte verification, BAO range verification, budget gate, released-layer loader, production activation, deployment, release, or publication is established."
   - "The document path, doc_id, H1, top anchor, and every prior numbered section fragment are retained."
 [/KFM_META_BLOCK_V2] -->
 
@@ -71,12 +73,12 @@ notes:
 ![status](https://img.shields.io/badge/status-draft-d4a72c)
 ![repository evidence](https://img.shields.io/badge/repository%20evidence-CONFIRMED-2ea44f)
 ![admission profile](https://img.shields.io/badge/admission-fixture--only-8250df)
-![renderer](https://img.shields.io/badge/MapLibre%20runtime-HOLD-b42318)
+![renderer](https://img.shields.io/badge/MapLibre-initial%20slice-0969da)
 ![publication](https://img.shields.io/badge/publication-none-6e7781)
 
 | Field | Current bounded result |
 |---|---|
-| **Evidence snapshot** | `main@eded2a83abfbb2e977b120c58cf4d0423d6aab96` |
+| **Evidence snapshot** | `main@ba8856e1fc2bf930e9b44df1cfbf4f3dc369d084` |
 | **Document role** | Human-readable architecture reference; not a contract, schema, policy rule, runtime gate, release record, or publication authority |
 | **Placement authority** | **CONFIRMED:** accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [Directory Rules v2](../../doctrine/directory-rules.md); this existing `docs/architecture/map-master/` path has placement outcome `PLACE` |
 | **Current executable proof** | **CONFIRMED / BOUNDED:** a no-network TypeScript evaluator, 13 synthetic cases, three Vitest tests, and a path-scoped read-only workflow |
@@ -84,7 +86,7 @@ notes:
 | **Mandatory non-effects** | Every result has `authority: "NONE"`, `registryMutated: false`, `maplibreSourceCreated: false`, and hold `RUNTIME_REGISTRATION_NOT_EXECUTED` |
 | **Layer policy** | **INACTIVE:** the local Rego lane is a no-op proposed stub with no bound evaluator or governed consumer |
 | **Governed `/layers` route** | **ABSTAIN-only:** the current route returns the shared finite abstention envelope; it does not resolve or serve layers |
-| **Concrete renderer** | **HOLD:** Explorer does not declare `maplibre-gl`; `packages/maplibre/` is a private `0.0.0` scaffold; `MapLibreAdapter.ts` is comment-only |
+| **Concrete renderer** | **IMPLEMENTED / BOUNDED:** accepted ADR-0006/0007 govern the package seam and renderer family; `packages/maplibre/` owns exact `maplibre-gl@6.6.0`, `MapRuntimePort`, `NullMapRuntime`, an initial lifecycle/camera `MapLibreAdapter`, Vite worker setup, focused tests, and a bounded browser fixture. Normal Explorer still composes `NullMapRuntime`; governed source/layer loading and production activation remain `HOLD` |
 | **Live viewer verification** | **NOT ESTABLISHED:** no real descriptor resolver, manifest resolver, signature verifier, carrier-byte verifier, BAO verifier, policy engine, budget gate, registry mutation, `addSource`, or `addLayer` path is proved |
 | **Release / deployment / publication** | None established by this page or the bounded evaluator |
 
@@ -134,8 +136,8 @@ The prior page described a viewer-side gate as though it already sat between a `
 4. [`layer-manifest-admission.test.ts`](../../../apps/explorer-web/tests/layer-manifest-admission.test.ts) replays the cases and proves the module contains no transport, MapLibre import, `addSource`, or registry-mutation shortcut.
 5. [The focused workflow](../../../.github/workflows/layer-manifest-admission.yml) builds Explorer, runs the focused test, and validates the implementation packet's generated receipt.
 6. The current [`/layers` route](../../../apps/governed-api/src/governed_api/routes/layers.py) still returns an `ABSTAIN` stub.
-7. The current [`MapLibreAdapter.ts`](../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) is one comment; the private [`@kfm/maplibre`](../../../packages/maplibre/package.json) package is a `0.0.0` scaffold.
-8. Repository search found no functioning `addSource` call path; the focused test explicitly asserts that the evaluator source does not contain one.
+7. The app-local [`MapLibreAdapter.ts`](../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) remains a one-comment legacy boundary, but the accepted implementation home is now [`packages/maplibre/`](../../../packages/maplibre/README.md). That private package owns exact `maplibre-gl@6.6.0`, a renderer-neutral port and null runtime, the initial package adapter, and the Vite worker seam.
+8. Package tests and the isolated browser fixture exercise bounded lifecycle, camera, failure, teardown, and worker behavior. Repository search still found no functioning governed `addSource` / `addLayer` loader, and the focused admission test explicitly asserts that its evaluator source contains no such effect.
 
 The safe current conclusion is therefore **fixture-only runtime-admission classification plus explicit non-effects**. A viewer loader remains a future, dependency-closed implementation slice.
 
@@ -152,8 +154,8 @@ The safe current conclusion is therefore **fixture-only runtime-admission classi
 | Existing generated receipt | Binds the five implementation artifacts; human review remains pending | Authoring provenance, not release proof |
 | Layer policy | Proposed no-op Rego stub; no evaluator, bundle, reason, obligation, or consumer binding | Operational policy remains `HOLD` |
 | Governed route | Shared `ABSTAIN` response | Containment, not layer delivery |
-| Explorer shell | Executable synthetic map-evidence composition | No real basemap, released layer, or MapLibre boot |
-| Renderer package and adapter | Private scaffold plus comment-only adapter | Renderer runtime remains `HOLD` |
+| Explorer shell | Executable synthetic map-evidence composition using `NullMapRuntime` | No real basemap, released layer, or normal-composition MapLibre boot |
+| Renderer package and adapter | Exact package-owned dependency, renderer-neutral port/null runtime, initial lifecycle/camera adapter, Vite worker seam, focused tests, and isolated browser fixture | Bounded implementation; governed source/layer loading, broader readiness, and production activation remain `HOLD` |
 | This architecture page | Existing human documentation path | May explain evidence; cannot create the missing behavior |
 
 ### 0.3 Adjacent documentation reconciliation
@@ -162,11 +164,11 @@ The same-day map-master modernization chain has now grounded several sibling pag
 
 | Surface | Current contribution to viewer verification | Current disposition |
 |---|---|---|
-| [`RENDERER_BOUNDARY.md`](RENDERER_BOUNDARY.md) | Preserves the seven negative authorities, records renderer-neutral bounded slices, and keeps concrete MapLibre admission/runtime on hold | **CURRENT adjacent reconciliation**; it no longer claims this page is an active `addSource` gate |
+| [`RENDERER_BOUNDARY.md`](RENDERER_BOUNDARY.md) | Preserves the seven negative authorities; records the exact dependency, port/null runtime, initial adapter, Vite worker seam, tests, and browser fixture; keeps governed source/layer loading and production activation on hold | **CURRENT adjacent reconciliation**; it no longer claims this page is an active `addSource` gate |
 | [`LAYER_LIFECYCLE.md`](LAYER_LIFECYCLE.md) | Separates candidate validation, runtime eligibility, release readiness, decision, transition application, public serving, correction, withdrawal, and rollback | **CURRENT adjacent reconciliation**; the object families remain mixed-maturity |
 | [`TILE_ARTIFACTS.md`](TILE_ARTIFACTS.md) | Grounds bounded PMTiles/MVT/COG/Zarr and delivery-profile evidence, while explicitly holding trusted signing, BAO/BLAKE3 streaming, browser cryptographic verification, runtime admission, release, and publication | **CURRENT adjacent reconciliation** |
 | [`PERFORMANCE_BUDGETS.md`](PERFORMANCE_BUDGETS.md) | Grounds separate mobile-PMTiles, rendering-resource-envelope, and public-map-service-SLO fixture families while keeping production thresholds and operational telemetry on hold | **CURRENT adjacent reconciliation**; none of those bounded profiles is integrated into this admission evaluator |
-| [`README.md`](README.md) | Preserves the lane-wide renderer/runtime hold and classifies this page as draft guidance; some child summaries predate the same-day sibling modernizations | **CURRENT entry point with bounded summary lag** |
+| [`README.md`](README.md) | Records the accepted renderer decisions, exact dependency, bounded package implementation, normal Explorer null runtime, out-of-seam acquisition finding, and remaining production holds | **CURRENT repository-grounded entry point** |
 | [`ui/LAYERING.md`](../ui/LAYERING.md) | Records the exact fixture-only admission, inactive policy, abstain route, synthetic shell, and renderer hold | **CURRENT adjacent reconciliation** |
 
 This update consumes those corrected boundaries without rewriting their owning pages or turning any bounded fixture into an operational viewer gate.
@@ -200,11 +202,11 @@ This page does not:
 
 - define or change `LayerManifest`, `LayerDescriptor`, tile-artifact, release-manifest, policy-decision, review, correction, or rollback semantics;
 - select a canonical layer contract or schema lane;
-- accept [ADR-0001](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md), [ADR-0005](../../adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md), [ADR-0006](../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md), or [ADR-0007](<../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>);
+- accept [ADR-0001](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) or [ADR-0005](../../adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md), or amend or expand accepted [ADR-0006](../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) or [ADR-0007](<../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>);
 - activate `policy/layers/`, authenticate a reviewer, or evaluate an operative policy bundle;
 - resolve references, read carrier bytes, verify a signature, validate a BAO proof, or measure a browser budget;
 - create or mutate a layer registry;
-- install or pin MapLibre, implement `MapLibreAdapter`, or call `addSource` / `addLayer`;
+- change the exact MapLibre dependency, package adapter, Vite worker seam, Explorer composition, or any `addSource` / `addLayer` behavior;
 - approve, release, deploy, publish, correct, withdraw, supersede, or roll back a layer;
 - treat documentation, a fixture, a green workflow, or a rendered preview as authority.
 
@@ -803,10 +805,15 @@ apps/governed-api/src/governed_api/routes/layers.py
   ABSTAIN-only route
 
 apps/explorer-web/src/adapters/MapLibreAdapter.ts
-  comment-only placeholder
+  legacy boundary comment; not the accepted implementation home
 
 packages/maplibre/
-  private 0.0.0 scaffold
+  private 0.0.0 package with exact maplibre-gl 6.6.0, MapRuntimePort,
+  NullMapRuntime, initial lifecycle/camera MapLibreAdapter, Vite worker seam,
+  focused tests, and an isolated browser fixture
+
+apps/explorer-web/src/site/mount-explorer-site.ts
+  normal Explorer composition uses NullMapRuntime
 ```
 
 ### 10.2 Current dependency direction
@@ -857,9 +864,9 @@ renderer / URL / feature properties / client cache
 | Signature/attestation verifier | Absent | Accepted trust, revocation, and receipt profile |
 | Range/chunk verifier | Absent | Accepted proof primitive and measured implementation |
 | Runtime registry port | Absent | Atomic, idempotent, correction-aware registry behavior |
-| MapRuntimePort / MapLibre adapter | Placeholder | Functioning adapter behind reviewed dependency seam |
-| Renderer dependency | Unpinned/absent | Accepted decision, lockfile closure, security/license review |
-| Browser probes | Not established for this flow | Representative positive and negative execution evidence |
+| MapRuntimePort / MapLibre adapter | Implemented initial lifecycle/camera slice | Governed source/layer registration, selection, correction, and loader integration |
+| Renderer dependency | Exact `maplibre-gl@6.6.0` in the accepted package seam with lock closure | Remaining accountable license/provenance, supply-chain, and production-readiness review |
+| Browser probes | One bounded isolated adapter fixture; broader probes remain pending | Representative positive and negative carrier execution, CSP, worker, accessibility, and long-session evidence |
 | Correction/withdrawal propagation | Absent | Source eviction, cache invalidation, and visible state |
 | Budget gate | Absent | Accepted profiles, measurements, and accessible degrade behavior |
 | Production observability | Unknown | Health signals, bounded logs, alerting, incident and rollback runbooks |
@@ -913,7 +920,7 @@ The current focused workflow's path filter covers the runtime contract, evaluato
 | Item | Current status | Closure evidence |
 |---|---|---|
 | Canonical layer contract/schema profile and compatibility lane | `CONFLICTED / NEEDS VERIFICATION` | Accepted decision, migration/compatibility plan, closed profile |
-| Renderer shell, dependency seam, and renderer-family decisions | ADR-0005/0006/0007 remain proposed | Reviewed acceptance or explicit rejection with implementation plan |
+| Renderer shell, dependency seam, and renderer-family decisions | ADR-0005 remains proposed; ADR-0006/0007 are accepted and have bounded initial implementation | ADR-0005 disposition plus broader consumer, browser, source/layer, and production evidence |
 | Role-specific reference resolver | Absent | Contract, implementation, fixtures, negative tests, receipts |
 | Operative layer-policy bundle and evaluator | `HOLD` | Accepted policy, active bundle, deterministic replay, safe reasons |
 | Authenticated review and release authority | `HOLD` | Actor registry, role authority, separation of duties, decision records |
@@ -935,9 +942,9 @@ The smallest credible next runtime slice is not `addSource` itself. It is a no-n
 7. proves idempotent registration and no mutation on every negative case;
 8. simulates correction, withdrawal, supersession, and rollback invalidation;
 9. emits a bounded receipt;
-10. still uses no MapLibre dependency.
+10. uses the renderer-neutral port or a fake registry boundary and does not acquire or call MapLibre.
 
-Only after that slice is reviewed should a separate adapter slice connect an accepted registry output to an actual renderer.
+Only after that slice is reviewed should a separate integration slice connect its accepted registry output to the existing package adapter without widening the adapter into an evidence, policy, release, or publication authority.
 
 ### 12.3 P2 — browser and operations closure
 
@@ -959,7 +966,7 @@ A separate accepted decision is required before this work:
 | Proposed change | ADR / governance trigger |
 |---|---|
 | Selects or migrates the canonical layer contract/schema home | Authority-owner or compatibility change |
-| Accepts a renderer family or dependency acquisition seam | Architecture decision with supply-chain and rollback impact |
+| Changes the accepted renderer family or dependency acquisition seam | Architecture decision with supply-chain and rollback impact |
 | Creates a new registry, proof, receipt, policy, release, or public-carrier authority home | Parallel-authority risk |
 | Defines browser versus service responsibility for cryptographic/range verification | Trust-boundary change |
 | Changes lifecycle, release, correction, withdrawal, or rollback semantics | Trust-significant state transition |
@@ -981,9 +988,9 @@ Routine same-path documentation corrections, fixture additions inside an accepte
 | Reference | Current role | Truth posture for this page |
 |---|---|---|
 | [`README.md`](README.md) | Map-master entry point and current sibling map | **CONFIRMED current boundary** |
-| [`../map-shell.md`](../map-shell.md) | Current Explorer composition, synthetic map stage, and renderer hold | **CONFIRMED bounded implementation** |
+| [`../map-shell.md`](../map-shell.md) | Current Explorer composition and synthetic map stage; some renderer-status details lag the bounded package implementation | **CONFIRMED composition / STALE renderer summary** |
 | [`../ui/LAYERING.md`](../ui/LAYERING.md) | Current layer-object and runtime-admission reconciliation | **CONFIRMED bounded architecture** |
-| [`RENDERER_BOUNDARY.md`](RENDERER_BOUNDARY.md) | Repository-grounded seven-negative-authority boundary | **CONFIRMED bounded evidence / concrete renderer hold** |
+| [`RENDERER_BOUNDARY.md`](RENDERER_BOUNDARY.md) | Repository-grounded seven-negative-authority boundary | **CONFIRMED bounded evidence / initial renderer slice / production hold** |
 | [`TILE_ARTIFACTS.md`](TILE_ARTIFACTS.md) | Repository-grounded mixed-maturity carrier and integrity boundary | **CONFIRMED bounded profiles / signing, BAO, runtime, release, and publication holds** |
 | [`LAYER_LIFECYCLE.md`](LAYER_LIFECYCLE.md) | Repository-grounded mixed-maturity lifecycle separation | **CONFIRMED bounded candidate/release profiles / operational loader and release holds** |
 | [`PERFORMANCE_BUDGETS.md`](PERFORMANCE_BUDGETS.md) | Repository-grounded fixture-first performance boundary | **CONFIRMED bounded evidence / production and operational holds** |
@@ -997,12 +1004,14 @@ Routine same-path documentation corrections, fixture additions inside an accepte
 | [Layer policy boundary](../../../policy/layers/README.md) | Proposed rule-source lane | **CONFIRMED inactive** |
 | [Governed `/layers` route](../../../apps/governed-api/src/governed_api/routes/layers.py) | Shared abstention stub | **CONFIRMED negative scaffold** |
 | [Explorer package](../../../apps/explorer-web/package.json) | Build/test scripts, no MapLibre dependency | **CONFIRMED** |
-| [MapLibre adapter](../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) | Single boundary comment | **CONFIRMED placeholder** |
-| [MapLibre package manifest](../../../packages/maplibre/package.json) | Private `0.0.0` scaffold | **CONFIRMED placeholder** |
+| [Legacy app adapter path](../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) | Single boundary comment; does not acquire MapLibre | **CONFIRMED historical placeholder / not the implementation home** |
+| [MapLibre package manifest](../../../packages/maplibre/package.json) | Private `0.0.0` package with exact `maplibre-gl@6.6.0` and explicit exports | **CONFIRMED bounded dependency closure** |
+| [MapRuntimePort](../../../packages/maplibre/src/map-runtime-port.ts) and [NullMapRuntime](../../../packages/maplibre/src/null-map-runtime.ts) | Renderer-neutral finite port and deterministic no-effect implementation | **CONFIRMED bounded implementation** |
+| [Package MapLibre adapter](../../../packages/maplibre/src/maplibre-adapter.ts) and [Vite seam](../../../packages/maplibre/src/maplibre-vite-adapter.ts) | Initial lifecycle/camera adapter and package-owned worker configuration | **CONFIRMED bounded implementation / no source-layer loader** |
 | [ADR-0001](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | Proposed schema-home decision | **PROPOSED** |
 | [ADR-0005](../../adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md) | Proposed canonical Explorer shell | **PROPOSED** |
-| [ADR-0006](../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) | Proposed renderer dependency seam | **PROPOSED** |
-| [ADR-0007](<../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) | Proposed renderer-family choice | **PROPOSED** |
+| [ADR-0006](../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) | Package-owned renderer dependency and adapter seam | **ACCEPTED / bounded initial implementation** |
+| [ADR-0007](<../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) | Sole normal browser-renderer family | **ACCEPTED / broader runtime readiness held** |
 | [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Adopted Directory Rules v2 | **ACCEPTED / CONFIRMED placement authority** |
 
 [Back to top](#top)
@@ -1109,7 +1118,7 @@ A real viewer-verification gate is not complete until every applicable row has e
 - [ ] All obligations are enforceable before registration.
 - [ ] Admission decision is immutable, attributable, replayable, and expiring where needed.
 - [ ] Registry mutation is atomic, idempotent, and correction-aware.
-- [ ] Functioning `MapRuntimePort` and renderer adapter exist behind the accepted seam.
+- [x] A functioning `MapRuntimePort` and bounded lifecycle/camera renderer adapter exist behind the accepted seam; governed source/layer loading remains unchecked below.
 - [ ] No alternate `addSource` / `addLayer` bypass exists.
 - [ ] Positive and negative browser tests run against representative carriers.
 - [ ] Withdrawal, supersession, correction, and rollback remove or replace sources.
@@ -1140,7 +1149,7 @@ A real viewer-verification gate is not complete until every applicable row has e
 
 ### 15.1 No-loss disposition
 
-| Prior v0.1 material | v2.0-draft disposition |
+| Prior v0.1 material | v2.1-draft disposition |
 |---|---|
 | Viewer-side gate presented as current runtime | Corrected to fixture-only classifier plus operational target |
 | `LayerDescriptor -> addSource` pipeline | Retained as future graduation sequence; marked unimplemented |
@@ -1161,7 +1170,7 @@ This documentation update does not change:
 - a contract, schema, policy rule, fixture, validator, test, workflow, route, app, package, dependency, registry, receipt profile, proof, release record, carrier, source, or lifecycle state;
 - the current evaluator's fields, outcome order, codes, or non-effects;
 - the inactive layer-policy lane or abstain-only route;
-- the MapLibre scaffold, adapter, dependency, or browser behavior;
+- the exact MapLibre dependency, port/null runtime, package adapter, Vite worker seam, tests, browser fixture, or normal Explorer composition;
 - any review, promotion, release, correction, withdrawal, rollback, deployment, or publication state;
 - a repository setting, required check, approval rule, environment, permission, or secret.
 
@@ -1189,10 +1198,9 @@ Before merge, close the draft pull request and retire its feature branch.
 After an authorized merge:
 
 1. revert the pull-request merge or its scoped documentation commits;
-2. restore prior target blob `40d4e4ab96eb784d7cf219dffaaf14ae742c9a40`;
-3. remove or supersede the generated authoring receipt through the same reviewed revert path;
-4. rerun the same metadata, Markdown, anchor, link, receipt, and hosted checks;
-5. confirm no later documentation depends on v2-only claims or anchors.
+2. restore prior target blob `3e1f7bfe7599bc658452468308d04b1eba24b2db`;
+3. rerun the same metadata, Markdown, anchor, link, and hosted checks;
+4. confirm no later documentation depends on v2.1-only claims while preserving the stable path and anchors.
 
 No source, registry, renderer, cache, release, deployment, or public-state rollback is required because this change modifies documentation and authoring provenance only.
 
@@ -1200,6 +1208,6 @@ No source, registry, renderer, cache, release, deployment, or public-state rollb
 
 **Related:** [`README.md`](README.md) · [`../map-shell.md`](../map-shell.md) · [`../ui/LAYERING.md`](../ui/LAYERING.md) · [`RENDERER_BOUNDARY.md`](RENDERER_BOUNDARY.md) · [`TILE_ARTIFACTS.md`](TILE_ARTIFACTS.md) · [`LAYER_LIFECYCLE.md`](LAYER_LIFECYCLE.md) · [`PERFORMANCE_BUDGETS.md`](PERFORMANCE_BUDGETS.md)
 
-**Last updated:** 2026-08-19 · **Doc version:** v2.0-draft · **Doc status:** draft · **Runtime posture:** fixture-only admission / renderer `HOLD`
+**Last updated:** 2026-08-28 · **Doc version:** v2.1-draft · **Doc status:** draft · **Runtime posture:** fixture-only admission / initial renderer slice / governed source-layer and production `HOLD`
 
 [Back to top](#top)
