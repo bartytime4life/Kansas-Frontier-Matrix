@@ -12,7 +12,7 @@
   "model_identity": {
     "provider": "OpenAI",
     "model": "GPT-5.6 Sol",
-    "version": "2026-08-29"
+    "version": "2026-08-28"
   },
   "prompt_or_contract": "sha256:75aae19b741008db96ef385438672bd3f73dface2574febd444466f40dbc9eef",
   "parameters": {
