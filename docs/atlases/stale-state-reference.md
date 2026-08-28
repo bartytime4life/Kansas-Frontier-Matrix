@@ -1,13 +1,16 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/PATH_TBD_AFTER_REPO_INSPECTION
+doc_id: kfm://doc/docs-atlases-stale-state-reference
 title: Stale-State and Supersession Reference (Atlas v1.1 §24.8 register extract)
 type: standard
-version: v1
+version: v1.0.1
 status: draft
 owners: OWNER_TBD (docs steward; release/correction steward; sensitivity reviewer)
 created: 2026-05-25
-updated: 2026-05-25
+updated: 2026-08-28
 policy_label: public
+owning_root: docs/
+responsibility: "Provide a human navigational extract of Atlas v1.1 stale-state and supersession doctrine without becoming runtime, correction, policy, release, or publication authority."
+truth_posture: "CONFIRMED source extraction and current same-path repository identity / PROPOSED UI, schema, policy, and validator surfaces / NEEDS VERIFICATION adoption, ownership, implementation depth, review, release, and publication"
 related:
   - docs/atlases/KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md
   - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf
@@ -34,9 +37,9 @@ tags: [kfm, atlas, register, stale-state, supersession, lineage, correction, rol
 notes:
   - "Authority basis: faithful extraction of Atlas v1.1 §24.8. Atlas v1.1 explicitly states Chapter 24 tables are NAVIGATIONAL, not authoritative."
   - "EvidenceBundle, source dossiers, and schemas under schemas/contracts/v1/... remain the canonical sources for any specific claim (Atlas v1.1 Ch. 24 preamble)."
-  - "Implementation depth (UI badges, validators, policy packages, schema header syntax) is PROPOSED throughout and requires mounted-repo verification."
+  - "Implementation depth (UI badges, validators, policy packages, schema header syntax) remains PROPOSED; the 2026-08-28 same-path identity repair verifies only this document's repository placement, metadata, and topology relationship."
   - "ADR-S-10 (stale-state propagation across lanes) remains OPEN per Atlas v1.1 §24.12; this register surfaces but does not resolve it."
-  - "Owner, doc_id, exact ADR filenames are placeholders pending mounted-repo inspection and ADR acceptance."
+  - "Owner and exact ADR filenames remain placeholders pending accountable assignment and ADR acceptance; doc_id is resolved by the current same-path identity repair."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -490,7 +493,7 @@ Each contract above has a corresponding schema home per ADR-0001 (`schemas/contr
 | *KFM Repository Structure Guiding Document* — `data/receipts/`, `release/`, `policy/`, `contracts/` root contracts | `CONFIRMED doctrine` | Lineage-artifact placement in §8. | Doctrine, not implementation. |
 | ADR-S-02 (open) | `Open` | Justifies this file's placement at `docs/atlases/` rather than `docs/atlas/`. | ADR acceptance status `NEEDS VERIFICATION`. |
 
-**Memory is not evidence.** No mounted repo, CI run, workflow, dashboard, or branch state was inspected. Every implementation claim is `PROPOSED` and bounded to doctrine.
+**Current repository evidence boundary.** The 2026-08-28 same-path identity repair inspected this file, its parent lane, accepted Directory Rules, and the repository topology and documentation validators at `main@2a205c8df31ff95a61f72a52489336b924a791ac`. That confirms only this document's repository identity and human-reference responsibility. Every policy, contract, schema, validator, runtime, review, release, and publication claim remains `PROPOSED` or `NEEDS VERIFICATION` as labeled.
 
 </details>
 

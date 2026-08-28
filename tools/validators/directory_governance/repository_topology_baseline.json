@@ -745,13 +745,6 @@
       "subject": "data/manifests/"
     },
     {
-      "evidence_sha256": "sha256:083bb014ea118d24010d688053a7f42cd152841a08b5c40a8afd77877fbd631a",
-      "evidence_zlib_base64": "eNptzEEKgDAMBVEvFHumkH4hEBtJouDt7bbgZlaP6S7ZuIwT2RIjtfTReqkUQYEDgSHYz771hfodAgo3EI9SEjfjK39k8TSzheX3AT7eLm4=",
-      "fingerprint": "sha256:d208e37621a4b7d61435d6f01de9dfa1cff94801cbca7d6ddbdde2e9bdbaea6b",
-      "rule_id": "KFM-TOPO-016",
-      "subject": "doc-id:kfm://doc/PATH_TBD_AFTER_REPO_INSPECTION"
-    },
-    {
       "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
       "evidence_zlib_base64": "eNrLTS1JTEksSYwvzStLLcpMy0xNsUpNySyJL8jPyUyuZMjFIp+empdalFiSmhKfVpSfi09JfhF+2XigUHFmfh5WVcUZiUamZgA/JT9b",
       "fingerprint": "sha256:d31766806deaf4f8615b36f7cfc2c174978844e45afec99227e3c6e873f4f3dc",
