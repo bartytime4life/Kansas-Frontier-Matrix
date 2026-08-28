@@ -444,6 +444,13 @@
       "subject": "release/correction/"
     },
     {
+      "evidence_sha256": "sha256:9bd73bd81653fe68100480f25144a713d396deb00d8b92e8fe8715e5d12fa24d",
+      "evidence_zlib_base64": "eNp9zNENgDAIAFEXws6EhbQkFBowTdzeLqD/9468ZiEfKJYFo3ZkV29PqeGZoGgMwYq3uOU56KAv0HxxGBOgwMUdl3j8gimTVfY/O07e6Qu/rDVi",
+      "fingerprint": "sha256:7b9b910aad43a3065d599812ef6086fcc4e9c277b6a02d299ebe2442aee90b13",
+      "rule_id": "KFM-TOPO-016",
+      "subject": "doc-id:kfm://doc/PLACEHOLDER-uuid"
+    },
+    {
       "evidence_sha256": "sha256:4169e26e4c2bb0014c87d62c322e5ab107e8d616019ecbc9bba2e26c161295ad",
       "evidence_zlib_base64": "eNrLzCtLzMlMsUpNySyJL8jPyUyuZMiEiqWn5qUWJZakpsSnFeXnogvnF2GKxJelFhVn5ufBZYozEo1MzQDXxibJ",
       "fingerprint": "sha256:7c1ece611590bfe7b44b1756077c687a9d4175f21712a04062ce1cb58fa8934b",
@@ -603,13 +610,6 @@
       "fingerprint": "sha256:a2520f08d160dadd0c25f8d4041b4cd93067a5759ffc4bc33e0ec410163a8777",
       "rule_id": "KFM-TOPO-006",
       "subject": "scope-alias:transport"
-    },
-    {
-      "evidence_sha256": "sha256:98d99d888816ad35e38c3bc2ea628b053a8d0db7ca85190263b2746d7ceb8ee1",
-      "evidence_zlib_base64": "eNp9jtENhDAMxW6hXGcKzYNGSpsqASS2524A+Lcti9cs4p11ZOGojeHm21VqeCYZD1DAeFcf+e3ykSdh8xMxIMRKCxqf6vEqTJ0w/fWz8cQrmn5EBa3c1RT/jxteAUYY",
-      "fingerprint": "sha256:a44464f3631ccd859aca80f5744a217002314601af9595385e03c0381e9e73bb",
-      "rule_id": "KFM-TOPO-016",
-      "subject": "doc-id:kfm://doc/PLACEHOLDER-uuid"
     },
     {
       "evidence_sha256": "sha256:8f5bb01a698931d19f295c441a58de795fc27737747fe2ccdba3378f5822a064",
