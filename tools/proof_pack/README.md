@@ -1,341 +1,216 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/tools-proof-pack-readme
-title: tools/proof_pack README
-type: README
-version: v0.1
-status: draft
-owner: TODO-tooling-qa-owner-plus-proof-steward-plus-release-steward
+title: ProofPack Assembler and Checker
+type: readme
+version: v0.2
+status: draft; repository-grounded; bounded-executable; fixture-tested; no-network; no-release-authority; non-publication
+owner: NEEDS VERIFICATION — proof, evidence, validation, policy, release, correction, rollback, and tooling stewards
 created: 2026-07-07
-updated: 2026-07-07
-policy_label: public; tooling-boundary; proof-pack-builder-and-checker; no-release-authority
+updated: 2026-08-28
+current_path: tools/proof_pack/README.md
 owning_root: tools/
-responsibility: proposed executable tooling boundary for composing, checking, summarizing, and dry-running ProofPack support bundles
-truth_posture: cite-or-abstain; implementation claims require current repo evidence
-related:
-  - ../README.md
-  - ../../docs/doctrine/directory-rules.md
-  - ../../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md
-  - ../../data/proofs/proof_pack/README.md
-  - ../../data/proofs/evidence_bundle/README.md
-  - ../../data/proofs/catalog_matrix/README.md
-  - ../../data/receipts/README.md
-  - ../../data/catalog/README.md
-  - ../../release/README.md
-  - ../../contracts/
-  - ../../schemas/
-  - ../../policy/
-notes:
-  - "This README defines a proposed ProofPack tooling boundary, not a confirmed implementation."
-  - "ProofPack instances belong under data/proofs/proof_pack/. Release decisions, manifests, rollback cards, correction notices, and signatures belong under release/."
-  - "tools/proof_pack may compose, check, summarize, and dry-run ProofPack candidate envelopes; it does not store canonical ProofPacks, approve release, create source truth, or replace evidence/proof authority."
+policy_label: public; tooling-boundary; bounded-executable; proof-pack-builder-and-checker; no-release-authority
+responsibility: Document the implemented deterministic assembler and checker for the proposed release-support ProofPack profile without turning tooling, tests, fixtures, or workflow success into proof, policy, review, release, or publication authority.
+base_commit: 156e3288f21dc95d60daa744be4207681ad21655
+prior_blob: 3324d30b9fea44913f96a696b915d89ac48846e9
+truth_posture: CONFIRMED three Python modules, a proposed semantic contract and schema, synthetic candidate/valid/invalid fixtures, two focused pytest files, and a hosted proof-pack-closure workflow exist; the checker validates schema, required component families, cross-bindings, path safety, and local digests without network access; the assembler writes only to an explicit caller-selected path / PROPOSED profile semantics and future canonical instance admission / UNKNOWN production writers and consumers, required-check status, emitted canonical instances, authenticated review, release integration, retention, correction, rollback drills, deployment, and publication
 [/KFM_META_BLOCK_V2] -->
+
+# ProofPack assembler and checker
 
 <a id="top"></a>
 
-# tools/proof_pack
+> **One-line purpose.** `tools/proof_pack/` contains the implemented,
+> deterministic assembler and checker for the proposed
+> `kfm.proof-pack.release-support.v1` profile. The tools support review; they
+> do not create evidence, policy permission, release approval, or publication.
 
-![status](https://img.shields.io/badge/status-draft-orange)
-![root](https://img.shields.io/badge/root-tools%2F-blue)
-![scope](https://img.shields.io/badge/scope-proof--pack--tooling-informational)
-![authority](https://img.shields.io/badge/authority-builder--checker--only-blueviolet)
-![release](https://img.shields.io/badge/release--authority-denied-lightgrey)
-![truth](https://img.shields.io/badge/truth-cite--or--abstain-success)
+| Surface | Current evidence | Safe interpretation |
+|---|---|---|
+| Shared helpers | [`_common.py`](./_common.py) | Safe JSON loading, canonical repository-relative path checks, symlink denial, size limits, and SHA-256 calculation. |
+| Assembler | [`assemble_proof_pack.py`](./assemble_proof_pack.py) | Builds a deterministic candidate at an explicit output path; never writes canonical proof storage by default. |
+| Checker | [`proof_pack_check.py`](./proof_pack_check.py) | Validates schema, semantic bindings, required component families, safe local references, and digests. |
+| Tests | [assembler tests](../../tests/proof_pack/test_assemble_proof_pack.py) and [checker tests](../../tests/proof_pack/test_proof_pack_check.py) | Exercise deterministic assembly, CLI behavior, fixtures, path safety, and failure cases. |
+| Hosted orchestration | [`proof-pack-closure.yml`](../../.github/workflows/proof-pack-closure.yml) | Runs the bounded profile; workflow success is not release or publication. |
 
-> **One-line purpose.** `tools/proof_pack/` is the proposed tooling lane for building, checking, summarizing, and dry-running KFM ProofPack candidate envelopes. It is not the canonical ProofPack storage lane, not a receipt root, not an EvidenceBundle root, not a catalog root, not a release root, and not publication authority.
-
----
-
-## Quick jump
-
-- [Purpose](#purpose)
-- [Status](#status)
-- [Authority boundary](#authority-boundary)
-- [What belongs here](#what-belongs-here)
-- [What does not belong here](#what-does-not-belong-here)
-- [ProofPack tooling posture](#proofpack-tooling-posture)
-- [Standard finite outcomes](#standard-finite-outcomes)
-- [Standard report envelope](#standard-report-envelope)
-- [Validation](#validation)
-- [Review checklist](#review-checklist)
-- [Roadmap](#roadmap)
-
----
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-boundary) ·
+[Implementation](#implemented-surface) · [Inputs](#inputs) · [Outputs](#outputs) ·
+[Limits](#security-and-determinism-limits) · [Run](#run-the-focused-checks) ·
+[Results](#result-interpretation) · [Failures](#failure-and-recovery) ·
+[Maintenance](#maintenance-correction-and-rollback) · [Open questions](#open-questions) ·
+[Related](#related-repository-surfaces)
 
 ## Purpose
 
-`tools/proof_pack/` exists to hold durable executable support for ProofPack workflows.
+The tooling answers one bounded question:
 
-A helper in this lane may assemble candidate ProofPack envelopes from references, check that required support families are present, verify that release-adjacent references resolve, compare expected digests, render reviewer summaries, and produce dry-run reports.
+> Does a local release-support ProofPack candidate satisfy the proposed schema,
+> carry the required support families, preserve release/subject/spec-hash
+> bindings, use safe repository-relative files, and match their declared
+> SHA-256 digests?
 
-The durable KFM question for this lane is:
-
-> Does this ProofPack candidate have the required references and closure signals for steward review, without collapsing receipts, proofs, catalog records, release decisions, or published artifacts?
-
-The answer should be a tool report or candidate envelope written to an explicit caller-selected location. It should not be treated as release approval, publication, EvidenceBundle truth, catalog truth, or policy approval.
-
-[Back to top](#top)
-
----
-
-## Status
-
-| Surface | Status | Notes |
-|---|---|---|
-| `tools/proof_pack/README.md` | **CONFIRMED** | This README replaces the prior greenfield stub. |
-| ProofPack tooling executable | **PROPOSED-to-create / NEEDS VERIFICATION** | No script name is claimed as implemented by this README. |
-| `tools/` root authority | **CONFIRMED in repo evidence** | `tools/` owns durable executable support and does not own policy, contracts, schemas, or release authority. |
-| `data/proofs/proof_pack/` | **CONFIRMED in repo evidence** | Canonical ProofPack instance/storage lane. |
-| ADR-0011 separation | **CONFIRMED in repo evidence / proposed ADR** | Separates receipts, proofs, catalogs, release manifests, release decisions, and published artifacts. |
-| Release authority | **DENY here** | Release decisions live under `release/`, not this tooling lane. |
-| ProofPack instance authority | **DENY here** | Canonical instances belong under `data/proofs/proof_pack/`. |
-| EvidenceBundle authority | **DENY here** | EvidenceBundle creation/closure belongs under accepted proof/evidence lanes and governed workflows. |
-
-> [!IMPORTANT]
-> `tools/proof_pack/` may help build and check ProofPack candidates. It must not become a parallel home for ProofPack instances, receipts, catalogs, release manifests, rollback cards, correction notices, signatures, or published artifacts.
-
-[Back to top](#top)
-
----
+A pass proves only that declared local closure. It does not establish that an
+EvidenceBundle is true, a policy decision is correct, a reviewer approved the
+candidate, a signature is authentic, a release exists, or publication is allowed.
 
 ## Authority boundary
 
-`tools/proof_pack/` inherits the `tools/` root boundary.
-
-| Responsibility | Home |
-|---|---|
-| ProofPack builder/checker tooling | `tools/proof_pack/` |
-| ProofPack instances and domain ProofPack lanes | `data/proofs/proof_pack/` |
-| EvidenceBundles | `data/proofs/evidence_bundle/` or accepted evidence/proof lane |
-| CatalogMatrix / proof-side closure | `data/proofs/catalog_matrix/` or embedded/referenced in a ProofPack |
-| Process receipts | `data/receipts/` |
-| Discovery/interchange catalog records | `data/catalog/` |
-| Release manifests, promotion decisions, rollback/correction/withdrawal artifacts, signatures | `release/` |
-| Published public-safe carriers | `data/published/` |
-| Meaning, shape, admissibility | `contracts/`, `schemas/`, `policy/` |
-
-Safe interpretation for this path:
-
-- **CONFIRMED:** the README exists at `tools/proof_pack/README.md`.
-- **PROPOSED:** deterministic ProofPack builder/checker code may live here when report-oriented, fixture-tested, and unable to approve release by itself.
-- **NEEDS VERIFICATION:** exact executable names, schemas, CI wiring, and fixture locations.
-- **DENY:** using this folder as canonical storage for proof packs, evidence bundles, receipts, catalogs, release records, published artifacts, policy, or schemas.
-
-[Back to top](#top)
-
----
-
-## What belongs here
-
-Good fits for `tools/proof_pack/` include:
-
-- ProofPack candidate envelope builders;
-- required-reference checkers;
-- source descriptor / EvidenceBundle pointer checks;
-- receipt-reference presence checks;
-- catalog-reference presence checks;
-- release-candidate reference checks;
-- rollback-target reference checks;
-- digest and integrity reference checks;
-- citation-validation summary loaders;
-- policy-decision reference checks;
-- reviewer-summary renderers;
-- dry-run report emitters;
-- fixture-driven smoke checks.
-
-A helper belongs here only when it is deterministic, explicit about inputs and outputs, conservative about missing references, and clear that the output is support for review rather than release authority.
-
-[Back to top](#top)
-
----
-
-## What does not belong here
-
-| Do not put in `tools/proof_pack/` | Correct home | Reason |
+| Responsibility | Owning surface | Tooling relationship |
 |---|---|---|
-| Canonical ProofPack instances | `data/proofs/proof_pack/` | ProofPack storage is a proof lane, not tool code. |
-| EvidenceBundles | `data/proofs/evidence_bundle/` or accepted proof lane | Evidence support must remain inspectable outside tooling. |
-| Receipts | `data/receipts/` | Receipts record process memory. |
-| Catalog records | `data/catalog/` | Catalog is discovery/interchange. |
-| Release manifests or release decisions | `release/` | Release authority is separate. |
-| Rollback cards or correction notices | `release/` | Release-state artifacts belong with release authority. |
-| Published public-safe artifacts | `data/published/` | Published carriers are downstream of release. |
-| Policy bundles | `policy/` | Tools enforce or check policy references; they do not define policy. |
-| Contracts or schemas | `contracts/`, `schemas/` | Meaning and shape are authority roots. |
-| Raw, work, quarantine, or processed data | lifecycle data roots | ProofPack tooling references data; it does not store lifecycle data. |
-| Tests | `tests/proof_pack/` or existing test convention | Tests prove this tooling; they are not the tooling lane itself. |
+| ProofPack meaning | [`contracts/evidence/proof_pack.md`](../../contracts/evidence/proof_pack.md) | Implements the proposed release-support profile; does not accept it. |
+| Machine shape | [`proof_pack.schema.json`](../../schemas/contracts/v1/evidence/proof_pack.schema.json) | Loads and validates the schema; does not own schema meaning. |
+| Synthetic examples | [`fixtures/contracts/v1/evidence/proof_pack/`](../../fixtures/contracts/v1/evidence/proof_pack/) | Reads candidate, valid, and invalid fixtures; fixtures are not production proof. |
+| ProofPack records | [`data/proofs/proof_pack/`](../../data/proofs/proof_pack/README.md) | No automatic writes; canonical admission remains separately governed. |
+| Policy | [`policy/`](../../policy/README.md) | Checks referenced posture only; never emits policy decisions. |
+| Process receipts | [`data/receipts/`](../../data/receipts/README.md) | Tool output is not a receipt unless a governed writer adopts it. |
+| Release and rollback | [`release/`](../../release/README.md) | Tools never approve release or own rollback or correction records. |
+| Published carriers | [`data/published/`](../../data/published/README.md) | No direct write or public-serving authority. |
 
-[Back to top](#top)
+The empty [`policy/proof/`](../../policy/proof/README.md) lane is a routing hold,
+not the policy authority behind these tools.
 
----
+## Implemented surface
 
-## ProofPack tooling posture
+### Shared safeguards
 
-The tooling should be understood as a **builder/checker/summarizer**.
+`_common.py` rejects duplicate JSON keys, non-finite numbers, non-object roots,
+symlink JSON inputs, JSON inputs larger than 2 MiB, noncanonical or escaping
+paths, symlink components, missing or non-regular files, components larger than
+16 MiB, and aggregate component sets larger than 128 MiB. It computes streaming
+SHA-256 digests.
 
-It may create:
+### Assembler
 
-- a draft candidate envelope;
-- a missing-reference report;
-- an integrity-reference report;
-- a release-readiness checklist report;
-- a reviewer handoff summary;
-- a fixture comparison report.
+`assemble_proof_pack.py` requires an exact candidate envelope, copies release,
+subject, and spec-hash bindings into every component, calculates local digests,
+sorts components deterministically, validates the result, and writes only to the
+caller's explicit `--output` path.
 
-It must not create final authority by itself:
+It refuses to overwrite an existing output unless `--force` is passed. It does
+not invent a timestamp, sign, approve, write to `data/proofs/`, mutate lifecycle
+state, deploy, or publish.
 
-- no release decision;
-- no release manifest;
-- no rollback or correction authority;
-- no EvidenceBundle closure;
-- no catalog closure;
-- no published artifact;
-- no policy approval.
+### Checker
 
-When a tool writes a candidate envelope, the caller should choose the output path explicitly. A dry-run default should write to `.tmp/` or stdout, not to authority roots.
+`proof_pack_check.py` validates the Draft 2020-12 schema, requires the 11 named
+component families, requires correction history for a non-current correction
+state, rejects duplicate IDs and paths, enforces cross-bindings, verifies local
+paths and digests, and rejects manifest self-reference.
 
-[Back to top](#top)
+`--no-reference-check` intentionally skips local file and digest verification.
+It is for bounded diagnosis and must not be described as closure.
 
----
+## Inputs
 
-## Standard finite outcomes
+The checker accepts one JSON manifest or the repository fixture suite. The
+assembler accepts an exact candidate JSON object, an explicit repository root,
+an explicit output path, and optional `--force` replacement authorization. The
+implementation performs no network fetch.
 
-| Outcome | Meaning |
-|---|---|
-| `PROOF_PACK_CANDIDATE_BUILT` | A candidate envelope was generated for review. |
-| `PROOF_PACK_CHECK_PASS` | Required references passed the configured checks. |
-| `PROOF_PACK_CHECK_FAIL` | One or more required checks failed. |
-| `REFERENCE_MISSING` | A required pointer is absent. |
-| `REFERENCE_UNRESOLVED` | A required pointer is present but not resolvable in the checked context. |
-| `DIGEST_MISMATCH` | A referenced digest does not match expectation. |
-| `POLICY_REFERENCE_MISSING` | Required policy decision or policy posture reference is absent. |
-| `RELEASE_REFERENCE_MISSING` | Required release-candidate or rollback reference is absent. |
-| `CATALOG_REFERENCE_MISSING` | Required catalog or catalog-closure reference is absent. |
-| `ABSTAIN` | The tool cannot decide with available evidence. |
-| `ERROR` | The tool could not safely complete. |
+## Outputs
 
-[Back to top](#top)
+| Command | Success output | Failure behavior |
+|---|---|---|
+| Checker | `PROOF_PACK_CHECK_PASS ... release_authority=false` | Emits stable `PROOF_PACK_CHECK_FAIL` findings and exits nonzero. |
+| Fixture suite | `PROOF_PACK_FIXTURES_VALID ... no_network=true release_authority=false` | Names fixture polarity failures or an unusable fixture lane and exits nonzero. |
+| Assembler | Deterministic JSON at the explicit output plus `PROOF_PACK_CANDIDATE_BUILT ... release_authority=false` | Emits `PROOF_PACK_ASSEMBLY_FAIL` and does not claim a valid candidate. |
 
----
+These are tool results, not policy decisions, receipts, proof admission, review
+records, release decisions, signatures, deployments, or public artifacts.
 
-## Standard report envelope
+## Security and determinism limits
 
-A first-slice proof-pack tool report should be compact and deterministic.
+- The tools are local and no-network, but read every referenced component that
+  passes path and size checks. Do not use sensitive production payloads for
+  casual validation.
+- Path controls prevent traversal and symlink substitution within the declared
+  repository root; they do not authenticate the person or workflow supplying it.
+- SHA-256 agreement detects byte substitution relative to declared digests; it
+  does not prove source authority, truth, rights, consent, or audience fitness.
+- `assembled_at` and other candidate timestamps are supplied inputs. Repeated
+  assembly is deterministic only when inputs and referenced bytes are unchanged.
+- Tests and workflow runs prove the bounded profile at an exact revision, not
+  repository-wide proof readiness or release enforcement.
 
-```json
-{
-  "tool": "proof-pack-checker",
-  "status": "PROOF_PACK_CHECK_FAIL",
-  "proof_pack_candidate": "candidate_placeholder",
-  "checks": {
-    "source_descriptors": "present",
-    "evidence_bundles": "present",
-    "receipts": "present",
-    "catalog_records": "missing",
-    "policy_references": "present",
-    "release_references": "missing",
-    "rollback_target": "missing",
-    "digests": "not_checked"
-  },
-  "decision": {
-    "outcome": "PROOF_PACK_CHECK_FAIL",
-    "reason_codes": ["CATALOG_REFERENCE_MISSING", "RELEASE_REFERENCE_MISSING"],
-    "release_approved": false,
-    "publication": false,
-    "authority_created": false
-  },
-  "next_review": [
-    "resolve missing catalog reference",
-    "resolve release candidate and rollback references",
-    "rerun ProofPack checker before release review"
-  ]
-}
-```
+## Run the focused checks
 
-Reports are process outputs. They are not receipts unless separately adopted and stored under the receipt root by a governed workflow.
-
-[Back to top](#top)
-
----
-
-## Validation
-
-Recommended first test surface:
-
-```text
-tests/proof_pack/
-├── README.md
-├── test_proof_pack_checker.py
-└── fixtures/
-    ├── valid_candidate/
-    │   ├── proof_pack_candidate.json
-    │   └── expected_report.json
-    ├── missing_catalog_reference/
-    │   ├── proof_pack_candidate.json
-    │   └── expected_report.json
-    ├── missing_release_reference/
-    │   ├── proof_pack_candidate.json
-    │   └── expected_report.json
-    └── digest_mismatch/
-        ├── proof_pack_candidate.json
-        └── expected_report.json
-```
-
-Suggested future command pattern:
+From the repository root:
 
 ```bash
-pytest -q tests/proof_pack
+python tools/proof_pack/proof_pack_check.py --fixtures
+python -m pytest -q tests/proof_pack
+python -m pytest -q tests/schemas/test_common_contracts.py
+
+python tools/proof_pack/assemble_proof_pack.py \
+  --candidate fixtures/contracts/v1/evidence/proof_pack/candidates/release_support_candidate.json \
+  --repo-root . \
+  --output /tmp/kfm-proof-pack.json
+cmp /tmp/kfm-proof-pack.json \
+  fixtures/contracts/v1/evidence/proof_pack/valid/valid_release_support.json
 ```
 
-```bash
-python tools/proof_pack/proof_pack_check.py \
-  --candidate tests/proof_pack/fixtures/valid_candidate/proof_pack_candidate.json \
-  --output .tmp/proof-pack-check-report.json \
-  --dry-run
-```
+The commands validate fixture polarity, focused behavior, the shared schema
+harness, and deterministic assembly. They do not admit the generated file to
+`data/proofs/` or authorize release.
 
-> [!NOTE]
-> The command above is a proposed interface, not proof that `proof_pack_check.py` exists.
+## Result interpretation
 
-[Back to top](#top)
-
----
-
-## Review checklist
-
-Before adding or changing proof-pack tooling, reviewers should confirm:
-
-- [ ] The tool is deterministic and explicit about inputs/outputs.
-- [ ] The tool does not store canonical ProofPack instances under `tools/`.
-- [ ] The tool keeps receipts, proofs, catalogs, release decisions, and published artifacts separate.
-- [ ] Missing references fail closed.
-- [ ] Release approval is never inferred from a successful local check alone.
-- [ ] Output is machine-readable and reviewer-friendly.
-- [ ] Tests use public-safe or synthetic fixtures.
-- [ ] Any promotion into a trust gate is documented with schemas, tests, and rollback plan.
-
-[Back to top](#top)
-
----
-
-## Roadmap
-
-| Step | Status | Outcome |
-|---|---|---|
-| Replace greenfield stub with governed proof-pack tooling contract | **DONE in this README** | Establishes builder/checker boundary. |
-| Add `tests/proof_pack/README.md` | **PROPOSED** | Defines public-safe fixture rules and expected reports. |
-| Add `proof_pack_check.py` dry-run checker | **PROPOSED** | Emits deterministic reference-closure report. |
-| Add candidate builder helper | **PROPOSED** | Creates draft envelope from explicit references. |
-| Align with schemas/contracts | **PROPOSED / NEEDS VERIFICATION** | Match accepted ProofPack schema and contract once verified. |
-| Wire into CI or release review as non-authoritative summary | **PROPOSED / later** | Supports stewards without replacing release authority. |
-
-[Back to top](#top)
-
----
-
-## Last reviewed
-
-| Field | Value |
+| Finding family | Meaning |
 |---|---|
-| Last reviewed | 2026-07-07 |
-| Review state | Draft README replacement for greenfield stub. |
-| Next smallest safe change | Add `tests/proof_pack/README.md`, then add fixtures for valid candidate, missing references, unresolved references, and digest mismatch. |
+| `SCHEMA_INVALID` | The manifest violates the proposed JSON Schema. |
+| `REQUIRED_COMPONENT_MISSING` or `CORRECTION_HISTORY_REQUIRED` | Required support is absent. |
+| Duplicate or cross-binding findings | Component identity, path, release, subject, or spec-hash bindings conflict. |
+| Path or file findings | A reference is unsafe, missing, symlinked, oversized, self-referential, or not a regular file. |
+| `COMPONENT_DIGEST_MISMATCH` | Local bytes do not match the declared digest. |
+
+A failed or unavailable check keeps the candidate held for its governing review.
+Do not infer missing support or silently disable reference checking.
+
+## Failure and recovery
+
+1. Preserve the exact command, revision, manifest identity, and findings.
+2. Correct the candidate or governed dependency at the owning surface.
+3. Do not edit a digest merely to match unexpected bytes; investigate provenance.
+4. Rerun the focused checks with reference verification enabled.
+5. Version and review contract or schema changes before updating the tool.
+6. If a candidate was consumed, follow correction, withdrawal, invalidation, and rollback.
+
+## Maintenance, correction, and rollback
+
+Recheck this README when the contract, schema, required component families, size
+limits, CLI, fixtures, tests, workflow, proof-storage boundary, policy binding,
+or release integration changes.
+
+For this documentation-only revision, rollback means reverting the focused
+commit or closing the unmerged draft PR. Reverting documentation must not remove
+the assembler, checker, helpers, fixtures, tests, schema, contract, workflow,
+proof records, release records, or published artifacts.
+
+## Open questions
+
+| ID | Question | Current status |
+|---|---|---|
+| PROOF-TOOL-001 | Who owns and independently reviews the assembler and checker? | **NEEDS VERIFICATION** |
+| PROOF-TOOL-002 | Is `proof-pack-closure` required by repository rules or only available CI? | **UNKNOWN** |
+| PROOF-TOOL-003 | Which governed writer, if any, may admit a passing candidate to `data/proofs/proof_pack/`? | **UNKNOWN** |
+| PROOF-TOOL-004 | What authenticated review, receipt, retention, correction, and rollback chain binds output to release review? | **UNKNOWN** |
+| PROOF-TOOL-005 | Which production consumers or release workflows rely on this profile? | **NEEDS VERIFICATION** |
+
+## Related repository surfaces
+
+- [ProofPack semantic contract](../../contracts/evidence/proof_pack.md)
+- [ProofPack schema](../../schemas/contracts/v1/evidence/proof_pack.schema.json)
+- [ProofPack record lane](../../data/proofs/proof_pack/README.md)
+- [Policy proof routing hold](../../policy/proof/README.md)
+- [ProofPack closure workflow](../../.github/workflows/proof-pack-closure.yml)
+- [Directory Rules](../../docs/doctrine/directory-rules.md)
+- [ADR-0011](../../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md)
+
+[Back to top](#top)
+
+## Changelog
+
+| Version | Date | Change | Runtime effect |
+|---|---|---|---|
+| v0.1 | 2026-07-07 | Documented a proposed ProofPack tooling boundary before the executable profile existed. | None. |
+| v0.2 | 2026-08-28 | Reconciles the implemented assembler, checker, tests, schema, fixtures, workflow, commands, limits, and non-effects. | None; documentation only. |
