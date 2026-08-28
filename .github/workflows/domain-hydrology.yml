@@ -3,6 +3,8 @@
 # EvidenceBundle alias, separated AquiferObservation/AquiferContextLink pair,
 # frozen synthetic FlowObservation profile, and bounded synthetic NHDPlus
 # waterbody crosswalk profile, plus explicit broader holds;
+# every Python process in the bounded validation step also loads the reviewed
+# opt-in process-startup no-egress guard and its negative proof;
 # proof and release-dry-run producers are not established in current repository
 # evidence.
 #
@@ -68,12 +70,15 @@ jobs:
             "fixtures/domains/hydrology/public_safe_flow/invalid/role_location_time_governance_collapse.json"
             "policy/domains/hydrology/README.md"
             "tests/domains/hydrology/README.md"
+            "tests/domains/hydrology/test_no_network_proof.py"
             "tests/domains/hydrology/test_public_safe_flow_fixture.py"
             "tests/domains/hydrology/test_nhdplus_hr_ambiguity.py"
             "tests/cross_domain/test_environmental_observation_boundaries.py"
             "tools/validators/domains/hydrology/README.md"
             "tools/validators/domains/hydrology/validate_public_safe_flow_fixture.py"
             "tools/validators/domains/hydrology/validate_nhdplus_waterbody_crosswalk.py"
+            "tools/ci/kfm_no_network/README.md"
+            "tools/ci/kfm_no_network/sitecustomize.py"
             ".github/workflows/hydrology-usgs-water-api-cutover.yml"
             ".github/workflows/hydrology-wbd-huc12-material-change.yml"
             "contracts/domains/hydrology/nhdplus_waterbody_crosswalk.md"
@@ -116,6 +121,7 @@ jobs:
               test_root / "test_adaptive_threshold_proposal.py",
               test_root / "test_hydro_identity_bridge.py",
               test_root / "test_streamflow_qc_context_assessment.py",
+              test_root / "test_no_network_proof.py",
           }
           test_inventory = sorted(path for path in test_root.rglob("*") if path.is_file())
           test_symlinks = sorted(path for path in test_root.rglob("*") if path.is_symlink())
@@ -451,10 +457,14 @@ jobs:
         env:
           KFM_NO_NETWORK: "1"
           PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONPATH: "${{ github.workspace }}/tools/ci/kfm_no_network:${{ github.workspace }}"
         run: |
           set -euo pipefail
 
+          python -c 'import sitecustomize; assert sitecustomize.GUARD_ACTIVE'
+
           python -m pytest -q -p no:cacheprovider \
+            tests/domains/hydrology/test_no_network_proof.py \
             tests/domains/hydrology/test_hydrology_smoke.py \
             tests/domains/hydrology/test_aquifer_observation.py \
             tests/domains/hydrology/test_aquifer_context_link.py \
@@ -498,6 +508,7 @@ jobs:
             --fixtures
 
           echo "WORKFLOW_CHECK_EXECUTED: hydrology-evidence-bundle-alias-shape"
+          echo "WORKFLOW_CHECK_EXECUTED: hydrology-python-process-egress-denial"
           echo "WORKFLOW_CHECK_EXECUTED: hydrology-aquifer-separated-pair-shape"
           echo "WORKFLOW_CHECK_EXECUTED: hydrology-public-safe-flow-fixture"
           echo "WORKFLOW_CHECK_EXECUTED: hydrology-nhdplus-waterbody-crosswalk"
@@ -515,6 +526,8 @@ jobs:
 
           `WORKFLOW_CHECK_EXECUTED: hydrology-evidence-bundle-alias-shape`
 
+          `WORKFLOW_CHECK_EXECUTED: hydrology-python-process-egress-denial`
+
           `WORKFLOW_CHECK_EXECUTED: hydrology-aquifer-separated-pair-shape`
 
           `WORKFLOW_CHECK_EXECUTED: hydrology-public-safe-flow-fixture`
@@ -529,15 +542,19 @@ jobs:
 
           `WORKFLOW_HOLD: broader Hydrology semantics, evidence closure, proof, and release remain unestablished`
 
-          When this job is green, it has executed eight bounded domain modules
+          When this job is green, it has executed nine bounded domain modules
           and the EvidenceBundle, AquiferObservation, and AquiferContextLink
           wrappers plus the synthetic FlowObservation and NHDPlus waterbody
           crosswalk profiles against their valid and expected-invalid fixtures.
           The crosswalk coverage preserves exact/split/merge/complex overlap
           cardinality and abstains on non-exact lookups. It also runs the
           Soil/Atmosphere/Hydrology ownership-isolation test.
-          The tests install fail-closed socket, DNS, and URL guards before
-          invoking the local schema validators.
+          Every Python process in the bounded validation step loads the opt-in
+          startup guard before application imports. The negative proof confirms
+          denial of IPv4/IPv6 connect, connect-ex, connection creation, DNS,
+          datagram-send, and urllib URL-open paths. This is Python-process
+          enforcement, not a runner firewall, network namespace, container
+          policy, non-Python isolation, or dependency-install no-network proof.
 
           Hydrology uses the shared readiness source classifiers directly instead
           of the root-level CLI because its validator roots intentionally mix exact

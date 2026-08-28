@@ -2,8 +2,8 @@
 doc_id: kfm://doc/tests-domains-hydrology-no-network-readme
 title: Hydrology No-Network Test README
 type: test-readme
-version: v0.1
-status: draft; placeholder-expanded; no-network-test-lane; PROPOSED / NEEDS VERIFICATION before promotion
+version: v0.2
+status: draft; bounded-python-process-egress-proof-executable; runner-wide-and-non-python-isolation-held
 owners:
   - OWNER_TBD — Hydrology domain steward
   - OWNER_TBD — QA steward
@@ -12,9 +12,12 @@ owners:
   - OWNER_TBD — Evidence steward
   - OWNER_TBD — Policy steward
   - OWNER_TBD — Release steward
-created: NEEDS VERIFICATION — blank placeholder existed before v0.1 expansion
-updated: 2026-07-05
+created: 2026-05-14
+updated: 2026-08-28
 policy_label: public-doc; tests; hydrology; no-network; fixture-only; source-boundary; evidence-bound; policy-aware; release-gated; rollback-aware
+owning_root: tests/
+responsibility: Document and route the bounded Hydrology Python-process no-egress proof without claiming runner-wide isolation or broader Hydrology authority.
+truth_posture: cite-or-abstain
 tags: [kfm, tests, hydrology, no-network, fixture-only, source-admission, SourceDescriptor, EvidenceBundle, PolicyDecision, ReleaseManifest, CorrectionNotice, RollbackCard, ABSTAIN, DENY, ERROR]
 related:
   - ../../../README.md
@@ -35,10 +38,15 @@ related:
   - ../../../../schemas/contracts/v1/domains/hydrology/
   - ../../../../policy/domains/hydrology/
   - ../../../../release/manifests/hydrology/
+  - ../test_no_network_proof.py
+  - ../../../../tools/ci/kfm_no_network/
+  - ../../../../.github/workflows/domain-hydrology.yml
 notes:
   - "This file replaces a blank placeholder at tests/domains/hydrology/no_network/README.md."
   - "This is a test-lane README only. It does not define Hydrology doctrine, no-network policy, contracts, schemas, fixtures, source descriptors, lifecycle records, EvidenceBundles, policy rules, release decisions, pipeline code, public API material, public map material, public tiles, or published artifacts."
   - "The tested invariant is that default Hydrology tests remain deterministic and no-network: tests use fixtures, mocks, local schema/contract files, and recorded source descriptors rather than live source fetches, real upstream exports, public tiles, or direct lifecycle stores."
+  - "The bounded executable proof starts fresh Python interpreters and confirms that the opt-in sitecustomize guard denies named IPv4/IPv6 connection, DNS, URL-open, and datagram paths before application imports."
+  - "The guard is Python-process enforcement only; it does not establish runner-wide, operating-system, container, namespace, dependency-install, or non-Python isolation."
   - "Live network behavior, source-admission refresh, upstream watcher checks, and real ingest should belong only in separately gated integration lanes with explicit receipts, policy posture, review state, correction path, and rollback targets."
   - "Rollback target for this replacement is previous blank blob SHA 8b137891791fe96927ad78e64b0aad7bded08bdc."
 [/KFM_META_BLOCK_V2] -->
@@ -54,25 +62,32 @@ notes:
   <img alt="Root: tests" src="https://img.shields.io/badge/root-tests%2F-blue">
   <img alt="Domain: hydrology" src="https://img.shields.io/badge/domain-hydrology-2aa1c6">
   <img alt="Lane: no network" src="https://img.shields.io/badge/lane-no__network-blue">
-  <img alt="Network: disabled" src="https://img.shields.io/badge/network-disabled-critical">
+  <img alt="Python egress: guarded" src="https://img.shields.io/badge/python__egress-guarded-critical">
   <img alt="Boundary: fixture only" src="https://img.shields.io/badge/boundary-fixture__only-success">
 </p>
 
 **Path:** `tests/domains/hydrology/no_network/README.md`  
-**Status:** draft / placeholder-expanded / PROPOSED until executable tests are verified  
+**Status:** draft / bounded Python-process egress proof executable / runner-wide and non-Python isolation held
 **Owning root:** `tests/`  
 **Domain segment:** `hydrology`  
 **Test lane:** `no_network`  
 **Default execution posture:** deterministic, synthetic, no-network, public-safe fixtures only  
-**Truth posture:** CONFIRMED target was a blank placeholder before this expansion · CONFIRMED `tests/` is the canonical root for enforceability proof · CONFIRMED current Hydrology test-parent README remains a greenfield stub · CONFIRMED Hydrology pipeline docs state concrete executable behavior, source linkage, schedules, CI coverage, release wiring, and public API/map behavior remain NEEDS VERIFICATION where not implemented and tested · NEEDS VERIFICATION for executable no-network guards, monkeypatch behavior, fixture payload inventory, CI wiring, and pass rates.
+**Truth posture:** CONFIRMED `tests/` is the canonical root for enforceability proof · CONFIRMED `test_no_network_proof.py` starts fresh interpreters and exercises the shared opt-in Python startup guard · CONFIRMED the Hydrology workflow injects that guard into every Python process in its bounded validation step · NEEDS VERIFICATION for exact-head hosted results · runner-wide, non-Python, dependency-install, source, evidence, policy, proof, release, deployment, and publication claims remain held.
 
 ---
 
 ## Purpose
 
-`tests/domains/hydrology/no_network/` is the intended home for Hydrology tests that prove the default suite is isolated from live source systems.
+`tests/domains/hydrology/no_network/` documents the Hydrology no-network lane.
+The executable proof is the substantive parent-lane module
+`tests/domains/hydrology/test_no_network_proof.py`; the reusable startup helper
+is owned by `tools/ci/kfm_no_network/` and workflow injection remains owned by
+`.github/workflows/domain-hydrology.yml`.
 
-This lane should make sure Hydrology tests run from local fixtures, local schemas/contracts, recorded SourceDescriptor-like inputs, and deterministic stubs. It should block accidental network calls, direct upstream fetches, implicit watcher refreshes, real source exports, public tile access, and direct use of lifecycle stores as authority.
+The accepted bounded workflow path runs from local fixtures, schemas, contracts,
+and deterministic stubs. Every Python interpreter in the validation step loads
+the startup guard before application imports. The negative proof confirms denial
+for named socket, DNS, URL-open, and datagram operations.
 
 A passing test here should **not** mean that source admission is current, real hydrology data is refreshed, a watcher ran, a pipeline is complete, or a release is approved. It should mean only that the default Hydrology test path stayed deterministic and offline.
 
@@ -102,7 +117,7 @@ Core checks:
 
 | Check | Required behavior | Failure outcome |
 |---|---|---|
-| Network block | HTTP, object-store, remote API, tile, and source-download calls are blocked by default. | validation failure / `ERROR`. |
+| Python-process network block | Named IPv4/IPv6 connect, connect-ex, connection creation, DNS, `urllib` URL-open, and datagram-send paths are denied when the workflow injects the guard. | validation failure / `ERROR`. |
 | Fixture-only inputs | Tests use local fixtures or deterministic stubs. | validation failure. |
 | Source boundary | SourceDescriptor metadata may be inspected locally; upstream refresh belongs to gated integration lanes. | validation failure / `ABSTAIN`. |
 | Lifecycle boundary | Tests do not read RAW / WORK / QUARANTINE / PROCESSED / PUBLISHED as authority unless a scoped fixture explicitly models it. | validation failure. |
@@ -156,18 +171,17 @@ Fixture requirements:
 
 ---
 
-## Suggested layout
+## Current bounded layout
 
 ```text
-tests/domains/hydrology/no_network/
+tests/domains/hydrology/
+├── test_no_network_proof.py
+└── no_network/
+    └── README.md
+
+tools/ci/kfm_no_network/
 ├── README.md
-├── test_network_clients_blocked.py
-├── test_fixtures_are_local.py
-├── test_source_refresh_not_default.py
-├── test_no_lifecycle_store_authority.py
-├── test_no_public_tile_dependency.py
-├── test_missing_live_support_abstains.py
-└── test_integration_escape_hatches_are_explicit.py
+└── sitecustomize.py
 ```
 
 ---
@@ -175,10 +189,14 @@ tests/domains/hydrology/no_network/
 ## Run posture
 
 ```bash
-pytest tests/domains/hydrology/no_network
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+python -m pytest -q -p no:cacheprovider \
+  tests/domains/hydrology/test_no_network_proof.py
 ```
 
-Status of the command above: **PROPOSED / NEEDS VERIFICATION**. It assumes `pytest` is the accepted test runner and that executable test modules exist. This README does not claim the command currently passes.
+This command is executable locally. The authoritative hosted result remains the
+exact-head `domain-hydrology` run after a branch is pushed; absent that run,
+hosted status is `NOT_RUN`.
 
 ---
 
@@ -188,7 +206,9 @@ Status of the command above: **PROPOSED / NEEDS VERIFICATION**. It assumes `pyte
 |---|---|---|---|
 | Previous target file | CONFIRMED | `tests/domains/hydrology/no_network/README.md` existed as a blank placeholder before this replacement. | Did not define the lane. |
 | `tests/README.md` | CONFIRMED | `tests/` is enforceability proof and failure should block promotion where trust-spine checks fail. | Does not prove this lane's modules or pass rate. |
-| `tests/domains/hydrology/README.md` | CONFIRMED | Hydrology test parent currently exists as a greenfield stub. | Parent lane still needs expansion. |
+| `test_no_network_proof.py` | CONFIRMED bounded executable proof | Fresh Python interpreters deny six named egress paths, require explicit activation, and retain Unix-domain routing. | No host firewall, namespace, container, non-Python, or runner-wide proof. |
+| `tools/ci/kfm_no_network/sitecustomize.py` | CONFIRMED bounded CI helper | Guard loads at interpreter startup when its directory is on `PYTHONPATH` and `KFM_NO_NETWORK=1`. | Not active for commands outside the explicitly injected environment. |
+| `.github/workflows/domain-hydrology.yml` | CONFIRMED workflow definition / hosted result pending | Injects the guard into each Python process in the bounded validation step and runs the negative proof first. | Does not cover dependency installation, shell-native clients, actions, or the runner outside that step. |
 | Hydrology pipeline docs | CONFIRMED documentation evidence | Existing Hydrology pipeline documentation keeps source linkage, schedules, CI, release wiring, and public behavior as NEEDS VERIFICATION unless implemented and tested. | Pipeline docs are not no-network test implementation. |
 | Repo search | CONFIRMED | No Hydrology-specific no-network README was found before this replacement. | Search is not proof of absence or executable coverage. |
 
@@ -196,14 +216,14 @@ Status of the command above: **PROPOSED / NEEDS VERIFICATION**. It assumes `pyte
 
 ## Validation checklist
 
-- [ ] Executable test modules exist under this lane.
-- [ ] Test runner and import paths match the repo's accepted convention.
-- [ ] Network clients are actually blocked or monkeypatched by the test harness.
+- [x] Executable bounded proof module exists in the Hydrology parent test lane.
+- [x] Test runner and import paths match the accepted Hydrology workflow convention.
+- [x] Fresh interpreters deny the named Python-process network paths when explicitly guarded.
 - [ ] Synthetic fixtures exist for local-only success, accidental HTTP call, tile fetch attempt, source refresh attempt, credential reference, missing local descriptor, and integration-only escape hatch cases.
 - [ ] No default test requires production credentials, live source access, or public tiles.
 - [ ] EvidenceRef / EvidenceBundle behavior is available to tests or safely stubbed.
 - [ ] PolicyDecision, ReleaseManifest, CorrectionNotice, RedactionReceipt, and RollbackCard expectations remain referenced but not bypassed.
-- [ ] CI runs the no-network Hydrology suite before any integration suite.
+- [x] CI runs the no-network proof before the remaining bounded Hydrology modules and validators.
 - [ ] Failures block public carrier promotion or release candidate approval where material.
 
 ---
@@ -212,6 +232,9 @@ Status of the command above: **PROPOSED / NEEDS VERIFICATION**. It assumes `pyte
 
 Rollback is required if this lane becomes a live source-fetcher, lifecycle data store, source registry, contract root, schema authority, policy authority, proof store, release-decision root, public map/API/tile surface, AI surface, renderer implementation, pipeline implementation, or publication shortcut.
 
-Rollback target for this replacement: previous blank blob SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`.
+Rollback this slice by reverting the guard, proof, workflow wiring, and this
+documentation update together. That restores the prior declared-posture-only
+state; it does not authorize live access, source admission, lifecycle mutation,
+proof, release, deployment, or publication.
 
 <p align="right"><a href="#top">Back to top</a></p>

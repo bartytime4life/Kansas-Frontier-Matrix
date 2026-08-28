@@ -2,10 +2,10 @@
 doc_id: kfm://doc/runbook/hydrology/no-network-test
 title: Hydrology No-Network Test Runbook
 type: runbook
-version: v1.1.0
-prior_version: v1
-prior_state: proposal-era procedure with unverified paths, commands, fixture inventory, and CI posture
-status: DRAFT_REPOSITORY_GROUNDED; BOUNDED_IN_PROCESS_NETWORK_DENIAL_EXECUTABLE; RUNNER_WIDE_EGRESS_DENIAL_AND_BROADER_HYDROLOGY_AUTHORITY_HELD; NOT_FOR_LIFE_SAFETY
+version: v1.2.0
+prior_version: v1.1.0
+prior_state: repository-grounded procedure with test-local guards but no shared startup enforcement across the accepted Python command group
+status: DRAFT_REPOSITORY_GROUNDED; BOUNDED_PYTHON_PROCESS_EGRESS_DENIAL_EXECUTABLE; RUNNER_WIDE_AND_NON_PYTHON_EGRESS_DENIAL_HELD; BROADER_HYDROLOGY_AUTHORITY_HELD; NOT_FOR_LIFE_SAFETY
 owners:
   - "@bartytime4life — verified GitHub review route"
   - "NEEDS VERIFICATION — accountable Hydrology, QA, evidence, source, policy, safety, proof, release, and operations assignments"
@@ -14,14 +14,14 @@ updated: 2026-08-28
 policy_label: repository-facing; validation-sensitive; fail-closed
 current_path: docs/runbooks/hydrology/NO_NETWORK_TEST_RUNBOOK.md
 owning_root: docs/
-responsibility: Human procedure for reproducing and interpreting the Hydrology lane's current bounded no-network test behavior without claiming runner-wide isolation, live-source truth, evidence closure, policy approval, proof, release, deployment, publication, or life-safety authority.
+responsibility: Human procedure for reproducing and interpreting the Hydrology lane's current bounded Python-process no-network test behavior without claiming runner-wide or non-Python isolation, live-source truth, evidence closure, policy approval, proof, release, deployment, publication, or life-safety authority.
 truth_posture: cite-or-abstain
 authority_class: explanatory operational documentation
 authority_rank: subordinate to accepted doctrine and ADRs, contracts, schemas, source and evidence authority, executable validators and tests, workflow definitions, policy, review, lifecycle, proof, release, correction, rollback, and official authorities
-current_disposition: BOUNDED_IN_PROCESS_NETWORK_DENIAL_AVAILABLE / RUNNER_WIDE_EGRESS_AND_BROADER_TRUST_SPINE_HELD
+current_disposition: BOUNDED_PYTHON_PROCESS_EGRESS_DENIAL_AVAILABLE / RUNNER_WIDE_NON_PYTHON_EGRESS_AND_BROADER_TRUST_SPINE_HELD
 reason_codes:
   - HYD_NO_NETWORK_EXACT_SHA_REQUIRED
-  - HYD_NO_NETWORK_IN_PROCESS_GUARD_ONLY
+  - HYD_NO_NETWORK_PYTHON_PROCESS_GUARD_ONLY
   - HYD_NO_NETWORK_RUNNER_EGRESS_NEEDS_VERIFICATION
   - HYD_NO_NETWORK_FIXTURE_PROFILE_ONLY
   - HYD_NO_NETWORK_LIVE_SOURCE_AND_LIFECYCLE_HELD
@@ -30,7 +30,7 @@ reason_codes:
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 18754b94e73fff3d61c683651ea02125e601e9b4
+  base_commit: 1f0f1cff72abd610e9e80c5c894987eb7b9d568b
   target_prior_blob: 1a2a1480b7f2fe3d52aabd815395ac1b8fb97395
   lane_readme_blob: 02e9afe9558eea339613077d01b74bd76a726e4e
   validation_runbook_blob: 53dd6e7be472d514106475ffe004fc6f98413af6
@@ -50,6 +50,9 @@ related:
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - .github/workflows/domain-hydrology.yml
   - tests/domains/hydrology/README.md
+  - tests/domains/hydrology/test_no_network_proof.py
+  - tools/ci/kfm_no_network/README.md
+  - tools/ci/kfm_no_network/sitecustomize.py
   - tools/validators/domains/hydrology/README.md
   - fixtures/domains/hydrology/README.md
   - data/registry/sources/hydrology/README.md
@@ -58,6 +61,7 @@ related:
 non_effects:
   - does_not_contact_live_sources
   - does_not_establish_runner_wide_egress_denial
+  - does_not_establish_non_python_egress_denial
   - does_not_read_credentials
   - does_not_activate_or_admit_sources
   - does_not_write_raw_work_quarantine_processed_catalog_triplet_or_published_state
@@ -74,9 +78,10 @@ non_effects:
 
 Repository-grounded procedure for reproducing and interpreting the Hydrology
 lane's current deterministic, fixture-only checks at an exact repository
-revision. The current proof is bounded to repository tests and validators that
-install or verify process-level network-denial behavior. It is not evidence of
-a runner-wide network sandbox.
+revision. The current proof is bounded to Python processes in the accepted
+validation step: they load one reviewed startup guard before application
+imports, and a fresh-interpreter negative test exercises the named denial paths.
+It is not evidence of a runner-wide or non-Python network sandbox.
 
 > [!WARNING]
 > KFM is not a flood-warning, emergency-response, navigation, engineering,
@@ -85,11 +90,12 @@ a runner-wide network sandbox.
 > responsible official source for current conditions and life-safety decisions.
 
 > [!IMPORTANT]
-> `KFM_NO_NETWORK=1` records the intended execution posture; the environment
-> variable alone does not block network access. Current bounded tests patch or
-> inspect socket, DNS, URL, or client behavior inside their own processes. The
-> current Hydrology workflow does not establish operating-system, container, or
-> job-wide egress denial for every command.
+> `KFM_NO_NETWORK=1` alone records posture and does not block access. The
+> Hydrology validation step now combines it with the reviewed
+> `tools/ci/kfm_no_network/sitecustomize.py` startup path, so every Python
+> process in that step installs the same guard before application imports. The
+> workflow still does not establish operating-system, container, namespace,
+> non-Python, dependency-install, or job-wide egress denial.
 
 **Quick navigation:** [Scope](#1-purpose-authority-and-scope) ·
 [Current evidence](#2-current-no-network-evidence) ·
@@ -126,8 +132,8 @@ CorrectionNotice, rollback object, deployment, or publication state.
 
 - The bounded no-network commands in the current `domain-hydrology` workflow.
 - Synthetic or captured local fixtures named by those commands.
-- Process-level socket, DNS, URL, and dependency guards established by the
-  selected tests.
+- Startup-time IPv4/IPv6 socket connection, DNS, `urllib` URL-open, and
+  datagram-send denial for every Python process in the bounded validation step.
 - Positive and expected-negative fixture polarity.
 - Exact-SHA result identity and truthful failure attribution.
 
@@ -154,6 +160,7 @@ new substantive file cannot silently enter the accepted set.
 
 | Surface | Current evidence | Bounded conclusion | Not established |
 |---|---|---|---|
+| `test_no_network_proof.py` and `tools/ci/kfm_no_network/sitecustomize.py` | Fresh Python interpreters require explicit activation and exercise IPv4/IPv6 connect, connect-ex, connection creation, DNS, datagram-send, and `urllib` URL-open paths | Shared startup enforcement for Python processes in the bounded validation step | Runner-wide, non-Python, dependency-install, operating-system, container, or namespace isolation |
 | `test_hydrology_smoke.py` | Autouse fixture patches socket connect, connection creation, DNS resolution, and `urllib.request.urlopen`; a negative assertion exercises the guard | Process-level guard and EvidenceBundle alias fixture polarity | Runner-wide egress denial, evidence resolution, or evidence authenticity |
 | `test_aquifer_observation.py` and `test_aquifer_context_link.py` | Process-level socket/DNS/URL guards plus valid/invalid local schema fixtures | Closed local shapes, fixture polarity, optional links, and responsibility separation | Endpoint resolution, aquifer membership, real observations, or source validity |
 | `test_public_safe_flow_fixture.py` | Process-level network patches plus a frozen valid fixture and a known-invalid role/location/time/governance-collapse fixture | Bounded FlowObservation shape, limitations, and rejection behavior | A real gauge observation, warning, policy, proof, or release |
@@ -170,12 +177,17 @@ and public-safe-flow fixtures to be rejected.
 
 ### What `KFM_NO_NETWORK=1` means here
 
-The variable is a declared execution posture and a useful invariant for
-repository commands. It is not itself an enforcement mechanism. A claim of
-runner-wide isolation needs separate current evidence, such as a deny-all
-network namespace, firewall, or equivalent job-level control plus a failing
-egress probe. No such Hydrology-specific proof was verified at the pinned
-checkpoint.
+The variable remains only a declared posture by itself. In the current bounded
+Hydrology validation step, `PYTHONPATH` also names the reviewed startup-guard
+directory. Python imports `sitecustomize.py` before application code, and the
+guard activates only when `KFM_NO_NETWORK` is exactly `1`. The accepted negative
+proof starts fresh interpreters so a test-local monkeypatch cannot satisfy the
+claim accidentally.
+
+A claim of runner-wide or non-Python isolation still needs separate current
+evidence, such as a deny-all network namespace, firewall, or equivalent
+job-level control plus failing probes for every relevant runtime. No such proof
+is established here.
 
 [Back to top](#top)
 
@@ -201,6 +213,7 @@ Run from a clean checkout at the exact revision under review.
    export PYTHONDONTWRITEBYTECODE=1
    export PYTHONHASHSEED=0
    export PYTHONUNBUFFERED=1
+   export PYTHONPATH="$PWD/tools/ci/kfm_no_network:$PWD"
    export TZ=UTC
    ```
 
@@ -223,7 +236,9 @@ Run the smallest guard-bearing slice first:
 
 ```bash
 set -euo pipefail
+python -c 'import sitecustomize; assert sitecustomize.GUARD_ACTIVE'
 python -m pytest -q -p no:cacheprovider \
+  tests/domains/hydrology/test_no_network_proof.py \
   tests/domains/hydrology/test_hydrology_smoke.py \
   tests/domains/hydrology/test_aquifer_observation.py \
   tests/domains/hydrology/test_aquifer_context_link.py
@@ -239,6 +254,7 @@ binding.
 ```bash
 set -euo pipefail
 python -m pytest -q -p no:cacheprovider \
+  tests/domains/hydrology/test_no_network_proof.py \
   tests/domains/hydrology/test_hydrology_smoke.py \
   tests/domains/hydrology/test_aquifer_observation.py \
   tests/domains/hydrology/test_aquifer_context_link.py \
@@ -251,7 +267,7 @@ python tests/domains/hydrology/test_public_safe_flow_fixture.py --verbose
 python tests/cross_domain/test_environmental_observation_boundaries.py --verbose
 ```
 
-These are the eight accepted Hydrology modules plus the cross-domain ownership
+These are the nine accepted Hydrology modules plus the cross-domain ownership
 test currently invoked by `validate-hydrology`. Passing them does not establish
 coverage for the proposal-only modules inventoried elsewhere under
 `tests/domains/hydrology/`.
@@ -305,7 +321,8 @@ release jobs.
 
 | Observation | Classification | Supported statement |
 |---|---|---|
-| All section 4 commands pass at the recorded SHA | `PASS` for the named bounded profiles | The selected local fixtures, tests, validators, expected-negative polarity, and in-process guards behaved as recorded at that SHA |
+| The fresh-interpreter negative proof passes and every section 4 Python command loads the active startup guard | `PASS` for bounded Python-process denial | The named Python-process egress paths were denied for the accepted command environment at that SHA |
+| All section 4 commands pass at the recorded SHA | `PASS` for the named bounded profiles | The selected local fixtures, tests, validators, expected-negative polarity, startup guard, and test-local guards behaved as recorded at that SHA |
 | A network guard raises before socket, DNS, or URL access | Expected denial | The selected process blocked that attempted call |
 | A known-invalid fixture exits nonzero | Expected rejection | The validator preserved the named negative polarity |
 | A known-invalid fixture exits zero | `FAIL` | The validator accepted an invalid profile; do not continue or weaken the fixture |
@@ -362,7 +379,8 @@ tested_sha: <40-character SHA>
 result_kind: HEAD | BASELINE | MERGE_RESULT
 python_version: <version>
 commands: <exact commands from section 4 that ran>
-network_posture: KFM_NO_NETWORK=1 plus named in-process guards
+network_posture: KFM_NO_NETWORK=1 plus reviewed Python startup guard and named test-local guards
+python_process_egress_proof: NOT_RUN | PASS at exact SHA
 runner_wide_egress_proof: NOT_RUN | PASS with evidence URL
 valid_fixture_results: <path and exit status>
 expected_negative_results: <path and expected rejection>
@@ -383,10 +401,11 @@ commands, network guards, fixture polarity, dependency installer, aggregate
 target, proof posture, or release posture changes. Re-pin all executable claims
 to current repository bytes before editing.
 
-The next enforcement gap is a runner-wide no-egress proof or a shared reusable
-guard covering every accepted Hydrology command. That is `PROPOSED`; it requires
-a separately reviewed implementation and negative test. This documentation
-correction does not add that control.
+The remaining enforcement gap is runner-wide and non-Python no-egress proof,
+including dependency installation and any shell-native client. That remains
+`PROPOSED` and requires a separately reviewed host, container, or namespace
+control with exact-head negative probes. Do not relabel the current Python
+startup guard as that broader proof.
 
 Before merge, close the draft pull request and discard only its feature branch.
 After an authorized merge, revert this documentation commit or submit a reviewed

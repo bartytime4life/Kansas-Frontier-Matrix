@@ -2,8 +2,8 @@
 doc_id: kfm://doc/runbook-hydrology-validation
 title: Hydrology Validation Runbook
 type: runbook
-version: v1.0.1
-status: DRAFT_REPOSITORY_GROUNDED; BOUNDED_NO_NETWORK_VALIDATION_EXECUTABLE; LIVE_SOURCE_PROOF_RELEASE_DEPLOYMENT_AND_PUBLICATION_HELD; NOT_FOR_LIFE_SAFETY
+version: v1.1.0
+status: DRAFT_REPOSITORY_GROUNDED; BOUNDED_PYTHON_PROCESS_NO_NETWORK_VALIDATION_EXECUTABLE; RUNNER_WIDE_NON_PYTHON_LIVE_SOURCE_PROOF_RELEASE_DEPLOYMENT_AND_PUBLICATION_HELD; NOT_FOR_LIFE_SAFETY
 owners:
   - "@bartytime4life — verified GitHub review route"
   - "NEEDS VERIFICATION — accountable Hydrology, evidence, source, policy, safety, proof, release, and operations assignments"
@@ -12,7 +12,7 @@ updated: 2026-08-28
 policy_label: repository-facing; validation-sensitive; fail-closed
 current_path: docs/runbooks/hydrology/VALIDATION.md
 owning_root: docs/
-responsibility: Human procedure for reproducing, interpreting, and handing off the Hydrology lane's current bounded no-network validation without claiming live-source, scientific, evidence, proof, release, deployment, publication, or life-safety authority.
+responsibility: Human procedure for reproducing, interpreting, and handing off the Hydrology lane's current bounded Python-process no-network validation without claiming runner-wide or non-Python isolation, live-source, scientific, evidence, proof, release, deployment, publication, or life-safety authority.
 truth_posture: cite-or-abstain
 authority_class: explanatory operational documentation
 authority_rank: subordinate to accepted doctrine and ADRs, contracts, schemas, source and evidence authority, executable validators and tests, policy, review, lifecycle, proof, release, correction, rollback, and official authorities
@@ -28,7 +28,7 @@ reason_codes:
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 5db2c81106aab76a1f4d0a02f3949c86947da43a
+  base_commit: 1f0f1cff72abd610e9e80c5c894987eb7b9d568b
   target_prior_blob: a9b3a24e4c42a69646181b613bdc26d216333b0c
   domain_workflow_blob: 36a0287be04639cb75dc77ae2c274fee626f6a00
   nwis_capture_workflow_blob: 3d324c7732b372e45bf6dd32ca67366b3550037d
@@ -62,11 +62,14 @@ related:
   - schemas/contracts/v1/domains/hydrology/README.md
   - fixtures/domains/hydrology/README.md
   - tests/domains/hydrology/README.md
+  - tests/domains/hydrology/test_no_network_proof.py
+  - tools/ci/kfm_no_network/sitecustomize.py
   - tools/validators/domains/hydrology/README.md
   - data/proofs/hydrology/README.md
   - release/candidates/hydrology/README.md
 non_effects:
   - does_not_contact_live_sources
+  - does_not_establish_runner_wide_or_non_python_egress_denial
   - does_not_read_credentials
   - does_not_activate_or_admit_sources
   - does_not_write_raw_work_quarantine_processed_catalog_triplet_or_published_state
@@ -96,8 +99,9 @@ transition.
 > passing test is not an official warning.
 
 > [!IMPORTANT]
-> **Current disposition:** bounded no-network validation is executable for the
-> profiles named below. Live retrieval, source activation, lifecycle writes,
+> **Current disposition:** bounded Python-process no-network validation is
+> executable for the profiles named below. Runner-wide and non-Python egress
+> denial, dependency-install isolation, live retrieval, source activation, lifecycle writes,
 > real EvidenceRef resolution, EvidenceBundle closure, proof production,
 > promotion, release, deployment, publication, and public-use authority remain
 > held.
@@ -172,7 +176,7 @@ Hydrology readiness, proof, release, and source-operation surfaces.
 
 | Workflow / job | Current execution | What a green result supports | What remains held |
 |---|---|---|---|
-| [`.github/workflows/domain-hydrology.yml`](../../../.github/workflows/domain-hydrology.yml) / `validate-hydrology` | Explicit inventory checks; eight accepted domain modules; cross-domain ownership isolation; schema-wrapper and semantic fixture validators; positive and expected-negative fixtures | The named synthetic shape, polarity, finite-outcome, ownership, and abstention profiles passed at the tested SHA | Live sources, real evidence, scientific correctness, proof, promotion, release, deployment, publication, and life-safety authority |
+| [`.github/workflows/domain-hydrology.yml`](../../../.github/workflows/domain-hydrology.yml) / `validate-hydrology` | Explicit inventory checks; nine accepted domain modules including the Python-process egress proof; cross-domain ownership isolation; schema-wrapper and semantic fixture validators; positive and expected-negative fixtures | The named Python-process denial, synthetic shape, polarity, finite-outcome, ownership, and abstention profiles passed at the tested SHA | Dependency-install, runner-wide and non-Python isolation, live sources, real evidence, scientific correctness, proof, promotion, release, deployment, publication, and life-safety authority |
 | [`hydrology-nwis-county-capture.yml`](../../../.github/workflows/hydrology-nwis-county-capture.yml) / `validate-nwis-county-capture` | Captured-input-only USGS Water Data county normalizer tests and generated authoring-receipt integrity | Credential-free request planning and strict local normalization of caller-supplied captured pages for the tested fixtures | Network transport, source authenticity/currentness, source activation, RAW writes, evidence resolution, hydrologic interpretation, promotion, release, warning, and publication |
 | [`hydrology-usgs-water-api-cutover.yml`](../../../.github/workflows/hydrology-usgs-water-api-cutover.yml) / `validate-usgs-water-api-cutover` | Fixture-only endpoint-family, required-role, rewrite-map, legacy-dependency, and dual-run reconciliation tests plus authoring-receipt integrity | The deterministic cutover-assessment fixture contract passed | Production cutover, live USGS access, source activation, lifecycle writes, hydrologic assertions, safety guidance, promotion, release, and publication |
 | [`hydrology-wbd-huc12-material-change.yml`](../../../.github/workflows/hydrology-wbd-huc12-material-change.yml) / `validate-wbd-huc12-material-change` | Fixture-only geometry normalization, geometry-plus-area fingerprints, metadata-churn suppression, and finite material-change decisions plus authoring-receipt integrity | The supplied fixture assessment behaved deterministically | Live WBD retrieval, authoritative source comparison, source activation, lifecycle writes, promotion, release, deployment, and publication |
@@ -184,14 +188,15 @@ Hydrology readiness, proof, release, and source-operation surfaces.
 > held capability exists. `WORKFLOW_SKIPPED_EXPLICIT` is not a successful proof
 > build or release dry run.
 
-### 2.1 Eight accepted domain modules
+### 2.1 Nine accepted domain modules
 
-The broad workflow reserves eight substantive Hydrology modules. Seven execute
+The broad workflow reserves nine substantive Hydrology modules. Eight execute
 in one `pytest` invocation and the public-safe flow module executes as a
 standalone script:
 
 | Module | Bounded purpose |
 |---|---|
+| `test_no_network_proof.py` | Fresh-interpreter negative proof for the shared opt-in Python startup guard |
 | `test_hydrology_smoke.py` | Basic lane fixture and import posture |
 | `test_aquifer_observation.py` | Aquifer observation shape |
 | `test_aquifer_context_link.py` | Separate context-link shape |
@@ -289,12 +294,14 @@ export PIP_NO_INPUT=1
 export PYTHONDONTWRITEBYTECODE=1
 export PYTHONHASHSEED=0
 export PYTHONUNBUFFERED=1
+export PYTHONPATH="$PWD/tools/ci/kfm_no_network:$PWD"
 export TZ=UTC
 ```
 
-The Hydrology tests install fail-closed socket, DNS, and URL guards around the
-local validators. The environment variable is not, by itself, proof of
-runner-level egress isolation. During this bounded phase, any observed DNS
+Every Python process in the bounded validation phase loads the shared startup
+guard before application imports. The environment variable is not, by itself,
+proof of runner-level or non-Python egress isolation. During this bounded phase,
+any observed DNS
 lookup, socket connection, external URL access, credential request, or
 unverified registry access is a failure of the validation procedure. Keep the
 earlier dependency-bootstrap record separate.
@@ -322,12 +329,15 @@ Run each multi-command block below as one Bash session. Its
 `set -euo pipefail` guard makes any failed required command stop the block; do
 not infer a profile pass from the final command's status alone.
 
-### 4.1 Run the seven-module batch and standalone ownership checks
+### 4.1 Run the eight-module batch and standalone ownership checks
 
 ```bash
 set -euo pipefail
 
+python -c 'import sitecustomize; assert sitecustomize.GUARD_ACTIVE'
+
 python -m pytest -q -p no:cacheprovider \
+  tests/domains/hydrology/test_no_network_proof.py \
   tests/domains/hydrology/test_hydrology_smoke.py \
   tests/domains/hydrology/test_aquifer_observation.py \
   tests/domains/hydrology/test_aquifer_context_link.py \
@@ -380,6 +390,7 @@ fixtures is incomplete for this runbook.
 
 A green broad job records the following named profiles:
 
+- `hydrology-python-process-egress-denial`
 - `hydrology-evidence-bundle-alias-shape`
 - `hydrology-aquifer-separated-pair-shape`
 - `hydrology-public-safe-flow-fixture`
@@ -665,7 +676,7 @@ This document remains current only when:
 
 1. every executable command matches the named workflow at the pinned
    repository revision;
-2. the broad workflow's eight accepted domain modules are represented
+2. the broad workflow's nine accepted domain modules are represented
    accurately;
 3. the three dedicated workflows remain separate from the broad domain job;
 4. positive and expected-negative fixture behavior is explicit;
