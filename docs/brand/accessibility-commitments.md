@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/brand-accessibility-commitments
 title: Accessibility Commitments
-type: standard; brand-reference; accessibility-guidance
+type: standard
 version: v1.1
 prior_version: v1
 status: draft; repository-grounded; partial-keyboard-ci; no-conformance-authority; no-release-authority
