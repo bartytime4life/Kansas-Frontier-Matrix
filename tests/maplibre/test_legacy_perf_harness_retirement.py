@@ -42,6 +42,22 @@ def test_retired_harness_has_no_renderer_or_network_acquisition() -> None:
         assert forbidden not in text
 
     result = scan(ROOT)
-    assert result.outcome is Outcome.HOLD
-    assert "RENDERER_ACQUISITION_PRESENT" in result.reasons
     assert all(finding.path != "scripts/maplibre-smoke-perf.mjs" for finding in result.findings)
+
+
+def test_current_renderer_acquisition_fails_outside_package_seam() -> None:
+    result = scan(ROOT)
+    outside_seam = [
+        finding
+        for finding in result.findings
+        if not finding.candidate_seam
+    ]
+
+    assert result.outcome is Outcome.FAIL
+    assert "ACQUISITION_OUTSIDE_CANDIDATE_SEAM" in result.reasons
+    assert "RENDERER_ACQUISITION_PRESENT" in result.reasons
+    assert outside_seam
+    assert all(
+        finding.path != "scripts/maplibre-smoke-perf.mjs"
+        for finding in outside_seam
+    )

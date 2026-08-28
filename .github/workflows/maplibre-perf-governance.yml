@@ -198,6 +198,7 @@ jobs:
               test_rejects_zero_frame_budget,
           )
           from tests.maplibre.test_legacy_perf_harness_retirement import (
+              test_current_renderer_acquisition_fails_outside_package_seam,
               test_retired_harness_fails_with_a_finite_hold,
               test_retired_harness_has_no_renderer_or_network_acquisition,
           )
@@ -208,6 +209,7 @@ jobs:
               test_rejects_out_of_range_tile_error_rate,
               test_retired_harness_fails_with_a_finite_hold,
               test_retired_harness_has_no_renderer_or_network_acquisition,
+              test_current_renderer_acquisition_fails_outside_package_seam,
           )
           for test in tests:
               test()
