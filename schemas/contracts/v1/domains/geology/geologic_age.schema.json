@@ -7,7 +7,7 @@
   "x-kfm": {
     "status": "PROPOSED",
     "source_doc": "docs/domains/geology/FILE_SYSTEM_PLAN.md",
-    "contract_doc": "contracts/domains/geology/geologic_age.md"
+    "contract_doc": "contracts/domains/geology/GeologicAge.md"
   },
   "properties": {},
   "additionalProperties": true
