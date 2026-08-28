@@ -2,7 +2,7 @@
 doc_id: kfm://doc/registry/readme
 title: docs/registry/ — Registry Documentation Boundary
 type: readme
-version: v1.0
+version: v1.1
 status: provisional
 owners:
   - "@bartytime4life"
@@ -11,7 +11,7 @@ updated: 2026-08-28
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "Explain and navigate current registry families without becoming a registry, schema, policy, release, or publication authority."
-truth_posture: "CONFIRMED current repository paths and accepted placement doctrine / PROPOSED future child documentation / NEEDS VERIFICATION child-lane ownership and intended schema documentation scope"
+truth_posture: "CONFIRMED current repository paths, accepted placement doctrine, and schema child routing boundary / PROPOSED deeper child documentation / NEEDS VERIFICATION child-lane ownership and intended fixture-validator dry-run scope"
 related:
   - docs/README.md
   - docs/doctrine/directory-rules.md
@@ -120,18 +120,22 @@ deployment, promotion, or publication.
 
 ## Child documentation status
 
-The following current paths are placeholders, not substantive contracts:
+[`schema/README.md`](schema/README.md) is now a substantive routing-and-hold
+boundary. It directs readers to the established schema, fixture, validator, test,
+policy, and package implementation roots without making `docs/registry/schema/`
+an authority for those artifacts.
 
-- [`schema/README.md`](schema/README.md)
+The deeper current paths remain placeholders, not substantive contracts:
+
 - [`schema/fixture/README.md`](schema/fixture/README.md)
 - [`schema/fixture/validator/README.md`](schema/fixture/validator/README.md)
 
 The nested `schema/fixture/validator/policy/dry-run/` path contains only a
-`.gitkeep` marker. Do not infer an implemented schema registry, fixture contract,
-validator policy, or dry-run capability from these paths. Before expanding a
-child README, identify the current owning implementation and keep canonical
-schema, fixture, validator, and policy content in their established authority
-roots.
+`.gitkeep` marker. Do not infer a fixture contract, validator policy, dry-run
+capability, consumer, or accepted placement decision from these paths. Before
+expanding a child README, identify the current owning implementation and keep
+canonical schema, fixture, validator, and policy content in their established
+authority roots.
 
 ## Maintenance and correction
 
