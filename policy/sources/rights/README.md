@@ -2,11 +2,11 @@
 doc_id: kfm://doc/policy-sources-rights-readme
 title: policy/sources/rights/ — Source-Scoped Rights Policy Boundary
 type: readme
-version: v0.1.0
+version: v0.1.1
 status: draft; BOUNDARY_COMPACT; repository-grounded; proposed-scaffold-corpus; path-ownership-hold; non-release; non-publication
 owner: NEEDS VERIFICATION — CODEOWNERS routes policy/ to @bartytime4life; no accepted local source-rights steward or independent approver was established
 created: 2026-08-13
-updated: 2026-08-13
+updated: 2026-08-28
 current_path: policy/sources/rights/README.md
 owning_root: policy/
 policy_label: internal; policy; source-rights; proposed; fail-closed; non-legal; non-release; non-publication
@@ -43,11 +43,12 @@ related:
 > is rights-cleared or source-admissible.
 
 > [!CAUTION]
-> The plural `policy/sources/` path has no parent README, while the substantive
-> [`policy/source/`](../../source/README.md) boundary explicitly records the
-> singular/plural relationship as unresolved drift. This README narrows the
-> existing leaf; it does not select a canonical child path, authorize new rule
-> source here, or create a compatibility lane.
+> The plural [`policy/sources/`](../README.md) path now has a routing-and-hold
+> README, while the substantive [`policy/source/`](../../source/README.md)
+> boundary continues to record the singular/plural relationship as unresolved
+> drift. These documents narrow the existing paths; they do not select a
+> canonical child, authorize new rule source here, or create a compatibility
+> lane.
 
 **Quick navigation:** [Purpose](#purpose) · [Authority](#inherited-authority-owner-and-scope) · [Status](#current-status) · [Children](#current-direct-child-map) · [Belongs](#what-belongs-here) · [Prohibited](#what-is-prohibited) · [Lifecycle](#lifecycle-and-trust-boundary) · [Validation](#validation) · [Contributing](#contributor-guidance) · [Correction](#correction-and-rollback) · [Open work](#open-verification-register)
 
