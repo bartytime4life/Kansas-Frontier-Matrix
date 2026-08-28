@@ -2,9 +2,16 @@ from __future__ import annotations
 
 import json
 import unittest
+from contextlib import redirect_stdout
+from io import StringIO
 from pathlib import Path
 
 from tools.validators._common.jsonschema_runner import load_validator
+from tools.validators.validate_hazards_evidence_bundle_projection import (
+    FIXTURES_DIR,
+    SCHEMA_PATH,
+    main as validate_projection,
+)
 
 ROOT = Path(__file__).resolve().parents[4]
 DOMAIN_SCHEMA = ROOT / "schemas/contracts/v1/domains/hazards/evidence_bundle.schema.json"
@@ -52,6 +59,23 @@ class HazardsEvidenceBundleSchemaConvergenceTests(unittest.TestCase):
         invalid = self.load(SHARED_FIXTURES / "invalid/invalid_1.json")
         self.assertEqual(list(validator.iter_errors(valid)), [])
         self.assertNotEqual(list(validator.iter_errors(invalid)), [])
+
+    def test_named_projection_validator_runs_shared_fixture_polarity(self) -> None:
+        schema = self.load(DOMAIN_SCHEMA)
+        self.assertEqual(
+            schema["x-kfm"]["validator"],
+            "tools/validators/validate_hazards_evidence_bundle_projection.py",
+        )
+        self.assertEqual(SCHEMA_PATH, DOMAIN_SCHEMA)
+        self.assertEqual(FIXTURES_DIR, SHARED_FIXTURES)
+
+        output = StringIO()
+        with redirect_stdout(output):
+            result = validate_projection(["--fixtures"])
+
+        self.assertEqual(result, 0, output.getvalue())
+        self.assertIn("OK ", output.getvalue())
+        self.assertIn("EXPECTED_FAIL ", output.getvalue())
 
 
 if __name__ == "__main__":
