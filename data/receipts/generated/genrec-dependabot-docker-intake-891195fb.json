@@ -6,7 +6,7 @@
     ".github/dependabot.yml"
   ],
   "artifact_hashes": {
-    ".github/README.md": "sha256:a7ce89b5c346dfa0157175981983cd5ae573801ae7c0b5d6976ed76847348ea5",
+    ".github/README.md": "sha256:81183371304c246d5141c4ee82a74999a9ba69ede29aca1d47a8053c9a3651ed",
     ".github/dependabot.yml": "sha256:827dedcbb2e9fd4554f58a48e657cbe5dec2852653077d416c5fe9d1306d0194"
   },
   "model_identity": {
@@ -82,7 +82,12 @@
     {
       "gate": "documentation-sync",
       "outcome": "PASS",
-      "reason": "Updated the .github responsibility README from four to five covered ecosystems and bounded Docker proposals away from workflow, policy, lifecycle, release, deployment, and publication authority."
+      "reason": "Updated the .github responsibility README to distinguish the pinned four-ecosystem snapshot from the proposed current-change fifth Docker lane and bounded Docker proposals away from workflow, policy, lifecycle, release, deployment, and publication authority."
+    },
+    {
+      "gate": "pinned-tree-evidence-boundary",
+      "outcome": "PASS",
+      "reason": "The README explicitly attributes the four-ecosystem inventory to pinned main@d4586ec659d86e4bf07e59bccd65c6c3412755e7 and labels Docker as a proposed current-change overlay rather than evidence from that pinned tree."
     },
     {
       "gate": "prior-receipt-supersession",
