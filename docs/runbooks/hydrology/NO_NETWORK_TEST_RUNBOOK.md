@@ -2,9 +2,9 @@
 doc_id: kfm://doc/runbook/hydrology/no-network-test
 title: Hydrology No-Network Test Runbook
 type: runbook
-version: v1.2.3
-prior_version: v1.2.2
-prior_state: repository-grounded shared startup guard whose direct private _socket.socket constructor still exposed the unpatched extension socket type
+version: v1.2.4
+prior_version: v1.2.3
+prior_state: repository-grounded shared startup guard whose private _socket.SocketType alias still exposed the unpatched extension socket type
 status: DRAFT_REPOSITORY_GROUNDED; BOUNDED_PYTHON_PROCESS_EGRESS_DENIAL_EXECUTABLE; RUNNER_WIDE_AND_NON_PYTHON_EGRESS_DENIAL_HELD; BROADER_HYDROLOGY_AUTHORITY_HELD; NOT_FOR_LIFE_SAFETY
 owners:
   - "@bartytime4life — verified GitHub review route"
@@ -161,7 +161,7 @@ new substantive file cannot silently enter the accepted set.
 
 | Surface | Current evidence | Bounded conclusion | Not established |
 |---|---|---|---|
-| `test_no_network_proof.py` and `tools/ci/kfm_no_network/sitecustomize.py` | Fresh Python interpreters require explicit activation, route the public `socket.SocketType` and direct private `_socket.socket` constructor entries through the guarded subclass, and exercise IPv4/IPv6 connection, connected and destination-bearing socket-send, direct resolver, and `urllib` URL-open paths | Shared startup enforcement for the 15 named Python APIs and both guarded socket constructor paths in the bounded validation step | Runner-wide, non-Python, dependency-install, operating-system, container, namespace, other private extension factories/APIs, or non-named API isolation |
+| `test_no_network_proof.py` and `tools/ci/kfm_no_network/sitecustomize.py` | Fresh Python interpreters require explicit activation, route the public `socket.SocketType`, private `_socket.SocketType`, and direct private `_socket.socket` constructor entries through the guarded subclass, and exercise IPv4/IPv6 connection, connected and destination-bearing socket-send, direct resolver, and `urllib` URL-open paths | Shared startup enforcement for the 15 named Python APIs and all three guarded socket constructor entries in the bounded validation step | Runner-wide, non-Python, dependency-install, operating-system, container, namespace, other private extension factories/APIs, or non-named API isolation |
 | `test_hydrology_smoke.py` | Autouse fixture patches socket connect, connection creation, DNS resolution, and `urllib.request.urlopen`; a negative assertion exercises the guard | Process-level guard and EvidenceBundle alias fixture polarity | Runner-wide egress denial, evidence resolution, or evidence authenticity |
 | `test_aquifer_observation.py` and `test_aquifer_context_link.py` | Process-level socket/DNS/URL guards plus valid/invalid local schema fixtures | Closed local shapes, fixture polarity, optional links, and responsibility separation | Endpoint resolution, aquifer membership, real observations, or source validity |
 | `test_public_safe_flow_fixture.py` | Process-level network patches plus a frozen valid fixture and a known-invalid role/location/time/governance-collapse fixture | Bounded FlowObservation shape, limitations, and rejection behavior | A real gauge observation, warning, policy, proof, or release |
