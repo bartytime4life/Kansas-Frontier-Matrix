@@ -2,7 +2,7 @@
 doc_id: kfm://doc/policy-readme
 title: policy/ — Canonical Admissibility Root
 type: readme
-version: v0.4.5
+version: v0.4.6
 status: draft; repository-grounded; current-state-reconciled; mixed-maturity; direct-child-coverage-audited; bounded-Rego-evaluation; general-evaluator-unbound; active-bundle-unaccepted; non-release; non-publication
 owner: NEEDS VERIFICATION — CODEOWNERS routes /policy/ to @bartytime4life; accepted policy stewardship and independent approval controls were not established
 created: 2026-07-23
@@ -11,10 +11,10 @@ current_path: policy/README.md
 owning_root: policy/
 policy_label: public; policy; root-contract; mixed-maturity; non-release; non-publication
 responsibility: Define the canonical policy-source root, direct-child boundaries, maturity evidence, validation posture, and trust membrane without becoming semantic, schema, evidence, runtime, release, or publication authority.
-base_commit: f68fe0ff504562bb8d2b4aedacb3d46eb66f17f3
-prior_blob: 33061a1434c2c61e9f2b13da44b0eb8864363d21
+base_commit: 5d7ad1d7445debbc997fbab7292cf55c52382a3d
+prior_blob: d83979962d8b1660e1e9c3c1957283f6ac751910
 directory_governance: ADR-0029 accepted Directory Rules v2 for placement; ADR-0003 remains proposed for the policy/policies compatibility decision
-truth_posture: CONFIRMED canonical singular policy root, accepted Directory Rules placement, active Root Registry projection, exact 40-directory direct-child map, 523-entry recursive policy tree, 73 README files, 39 substantive direct-child READMEs, zero one-byte direct-child README placeholders, one direct child without a README, documented match-scoring routing and sensitive-people holds, 173 Rego files with exactly one native Rego test, one bounded PROPOSED_INACTIVE release-gate profile with checksum-pinned OPA 1.19.0 CI, multiple inactive fixture-first profiles and validators, 18-test structural boundary suite, placeholder policy-runtime package, and broad readiness holds / PROPOSED root contract, final direct-lane explanation, active-evaluator sequence, threshold values and bindings, and future consumer binding / CONFLICTED or unresolved source-vs-sources and test-vs-tests naming, compatibility-lane placement, schema homes, and inactive native-to-outward outcome binding / UNKNOWN repository-wide bundle selector, accepted evaluator, required-check configuration, production consumers, decision receipts, replay, promotion integration, deployment enforcement, and independent release approval
+truth_posture: CONFIRMED canonical singular policy root, accepted Directory Rules placement, active Root Registry projection, exact 40-directory direct-child map, 523-entry recursive policy tree, 73 README files, 39 substantive direct-child READMEs, zero one-byte direct-child README placeholders, one direct child without a README, documented match-scoring routing and sensitive-people holds, 173 Rego files with exactly one native Rego test, one bounded PROPOSED_INACTIVE release-gate profile with checksum-pinned OPA 1.19.0 CI, multiple inactive fixture-first profiles and validators, 18-test structural boundary suite, placeholder policy-runtime package, corrected post-merge documentation rollback guidance, and broad readiness holds / PROPOSED root contract, final direct-lane explanation, active-evaluator sequence, threshold values and bindings, and future consumer binding / CONFLICTED or unresolved source-vs-sources and test-vs-tests naming, compatibility-lane placement, schema homes, and inactive native-to-outward outcome binding / UNKNOWN repository-wide bundle selector, accepted evaluator, required-check configuration, production consumers, decision receipts, replay, promotion integration, deployment enforcement, and independent release approval
 [/KFM_META_BLOCK_V2] -->
 
 # policy
@@ -76,9 +76,9 @@ The [`Root Registry`](../control_plane/root_registry.yaml) projects this accepte
 
 ## Status
 
-| Surface | Current status at `main@f68fe0ff504562bb8d2b4aedacb3d46eb66f17f3` | Safe conclusion |
+| Surface | Current status at `main@5d7ad1d7445debbc997fbab7292cf55c52382a3d` | Safe conclusion |
 |---|---|---|
-| `policy/README.md` | **CONFIRMED v0.4.4 baseline; blob `33061a1434c2c61e9f2b13da44b0eb8864363d21`** | v0.4.5 documents the match-scoring routing hold and sensitive people-scoring boundary, and refreshes coverage in place; it changes no rule or decision. |
+| `policy/README.md` | **CONFIRMED v0.4.5 baseline; blob `d83979962d8b1660e1e9c3c1957283f6ac751910`** | v0.4.6 corrects contradictory post-merge rollback guidance for the merged three-path match-scoring documentation change; it changes no rule or decision. |
 | Singular `policy/` root | **CONFIRMED / accepted placement** | Directory Rules v2 is effective through ADR-0029; no second policy root is authorized. |
 | Root Registry projection | **CONFIRMED `root.policy` / `ACTIVE` registry status** | Projects accepted placement and artifact constraints; it does not create authority or activate rules. |
 | Recursive tree | **CONFIRMED 523 entries: 365 files and 158 directories** | Inventory proves tracked presence only. |
@@ -522,7 +522,7 @@ Client-side hiding is not a security control. Join-induced sensitivity must prop
 
 Material policy changes should be versioned, preserve prior source/bundle/evaluator/test identities for replay, record supersession and effective time, reevaluate affected decisions and releases, invalidate caches, emit correction or withdrawal records through owning roots, and restore a prior accepted bundle/selector during rollback rather than copying files into an ambiguous state.
 
-This v0.4.5 README changes no policy behavior. Before merge, close or abandon its draft PR and branch. After merge, revert the focused documentation commit or issue a transparent forward fix. The exact v0.4.4 baseline is blob `33061a1434c2c61e9f2b13da44b0eb8864363d21`; reverting documentation must not blank the existing `policy/sources/`, `policy/role/`, `policy/transport/`, `policy/proof/`, or `policy/match-scoring/` boundaries, remove `policy/sources/rights/` files, restore the deleted `policy/living_persons_geoprivacy.md` path, or roll back unrelated child-lane work by implication.
+This v0.4.6 README changes no policy behavior. Before merge, close or abandon its draft PR and branch. After merge, prefer a transparent corrective pull request. Do not mechanically revert PR #3773 merge commit `af96349707b93a22ae3a99c7ff446c8a3c74ba1d` or its three documentation commits as a unit merely to undo root wording: that would restore the one-byte `policy/match-scoring/README.md` and `policy/match-scoring/people/README.md` placeholders. If only the root inventory or rollback text must change, amend `policy/README.md` in a focused corrective pull request while preserving the substantive child boundaries. Any later retirement, alias, or migration of those paths requires its own accepted placement decision and link-preserving plan. A documentation correction must not restore a one-byte placeholder, blank a substantive child boundary, remove `policy/sources/rights/` files, restore the deleted `policy/living_persons_geoprivacy.md` path, or roll back unrelated child-lane work by implication.
 
 [Back to top](#top)
 
@@ -573,8 +573,9 @@ This v0.4.5 README changes no policy behavior. Before merge, close or abandon it
 | `source/`/`sources/` and `test/`/`tests/` drift | Preserved explicitly; no implied migration or parallel authority |
 | Deleted `living_persons_geoprivacy.md` direct path | Removed from current topology; semantic supersession and external consumers remain unknown |
 | Prior general evaluator, runtime, consumer, receipt, release, and publication holds | Preserved |
+| Post-merge rollback contradiction | Corrected: use a focused forward fix; do not revert the merged three-path match-scoring change as a unit and restore one-byte placeholders |
 
-Evidence used includes v0.4.4 blob `33061a1434c2c61e9f2b13da44b0eb8864363d21`, `main@f68fe0ff504562bb8d2b4aedacb3d46eb66f17f3`, accepted ADR-0029, adopted Directory Rules blob `fd49a0b83e55cef52c1124281f093e263526898d`, the `root.policy` projection, ADR-0002/0003/0020 status records, the complete recursive policy tree, direct child metadata, current scoring-family contracts, the synthetic historical person-place-event validator/test/workflow slice, Pass 12 Rego source/tests/fixtures/workflow, `policy-test`, `policy-boundary-guards`, focused policy contract/schema/validator workflows, and the policy-runtime placeholder.
+Evidence used includes v0.4.5 blob `d83979962d8b1660e1e9c3c1957283f6ac751910`, `main@5d7ad1d7445debbc997fbab7292cf55c52382a3d`, accepted ADR-0029, adopted Directory Rules blob `fd49a0b83e55cef52c1124281f093e263526898d`, the `root.policy` projection, ADR-0002/0003/0020 status records, the complete recursive policy tree, direct child metadata, current scoring-family contracts, the synthetic historical person-place-event validator/test/workflow slice, Pass 12 Rego source/tests/fixtures/workflow, `policy-test`, `policy-boundary-guards`, focused policy contract/schema/validator workflows, and the policy-runtime placeholder.
 
 [Back to top](#top)
 
@@ -589,10 +590,11 @@ Evidence used includes v0.4.4 blob `33061a1434c2c61e9f2b13da44b0eb8864363d21`, `
 | v0.3 | 2026-08-09 | Repins the root contract to current main; records ADR-0029 adoption, bounded OPA/Rego execution, inactive fixture-first policy profiles, 18 boundary tests, full direct-child inventory, preserved general readiness holds, and updated validation/rollback/open-work boundaries | Revert the v0.3 README and paired generated receipt together |
 | v0.3.1 | 2026-08-10 | Adds the inactive `thresholds/` child to the direct-child map and records that every candidate slot remains value-free, unbound, and held for review. | Revert the threshold-registry candidate commit; no active rule or consumer changes |
 | v0.4.0 | 2026-08-13 | Repins the root to current main; reconciles 40 direct lanes, exact README/Rego/native-test coverage, modernized child boundaries, the deleted direct file, current ADR and Root Registry evidence, and unchanged evaluator/release/publication holds. | Revert this README and its generated receipt together; do not restore deleted paths or roll back child lanes by implication. |
-| v0.4.1 | 2026-08-28 | Records the new `sources/` routing-and-hold boundary, updates direct README coverage to 35 substantive and four one-byte placeholders, and preserves the unresolved singular/plural path decision. | Revert this focused documentation commit; no policy source, rule activation, rights state, release, or publication changes. |
-| v0.4.2 | 2026-08-28 | Replaces the blank `role/` parent, reconciles its sensitivity-child navigation, and corrects direct README coverage to 36 substantive and three one-byte placeholders. | Revert this focused documentation commit; no role semantics, assignment, policy activation, review authority, release, or publication changes. |
-| v0.4.3 | 2026-08-28 | Replaces the blank `transport/` README with an unresolved-alias routing hold and corrects direct README coverage to 37 substantive and two one-byte placeholders. | Revert this focused documentation commit; no alias acceptance, policy activation, transport decision, release, or publication changes. |
-| v0.4.4 | 2026-08-28 | Replaces the blank `proof/` README with a proof-policy routing hold, reconciles current ProofPack tooling evidence, and corrects direct README coverage to 38 substantive and one one-byte placeholder. | Revert this focused documentation change; no proof record, policy activation, decision, release, or publication changes. |
-| v0.4.5 | 2026-08-28 | Replaces the blank `match-scoring/` parent and `people/` leaf with routing-and-hold boundaries, distinguishes current scoring families, and corrects direct README coverage to 39 substantive with no one-byte direct placeholder. | Revert this focused documentation change; no score, threshold, identity, policy activation, evaluator, consumer, release, or publication changes. |
+| v0.4.1 | 2026-08-28 | Records the new `sources/` routing-and-hold boundary, updates direct README coverage to 35 substantive and four one-byte placeholders, and preserves the unresolved singular/plural path decision. | Use a corrective pull request; do not restore the blank `sources/` parent or remove its rights documentation. |
+| v0.4.2 | 2026-08-28 | Replaces the blank `role/` parent, reconciles its sensitivity-child navigation, and corrects direct README coverage to 36 substantive and three one-byte placeholders. | Use a corrective pull request; do not restore the blank `role/` parent or erase its child navigation. |
+| v0.4.3 | 2026-08-28 | Replaces the blank `transport/` README with an unresolved-alias routing hold and corrects direct README coverage to 37 substantive and two one-byte placeholders. | Use a corrective pull request; do not restore the blank `transport/` boundary. |
+| v0.4.4 | 2026-08-28 | Replaces the blank `proof/` README with a proof-policy routing hold, reconciles current ProofPack tooling evidence, and corrects direct README coverage to 38 substantive and one one-byte placeholder. | Use a corrective pull request; do not restore the blank `proof/` boundary or stale ProofPack claims. |
+| v0.4.5 | 2026-08-28 | Replaces the blank `match-scoring/` parent and `people/` leaf with routing-and-hold boundaries, distinguishes current scoring families, and corrects direct README coverage to 39 substantive with no one-byte direct placeholder. | Use a focused corrective pull request; do not revert the merged three-path change as a unit and restore the placeholders. |
+| v0.4.6 | 2026-08-28 | Corrects the v0.4.5 post-merge rollback contradiction and pins the merged three-path boundary that must be preserved during a root-only correction. | Revert only this v0.4.6 root-text correction if necessary; preserve the substantive match-scoring parent and people leaf. |
 
 <p align="right"><a href="#top">Back to top</a></p>

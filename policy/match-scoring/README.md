@@ -2,7 +2,7 @@
 doc_id: kfm://doc/policy-match-scoring-readme
 title: policy/match-scoring/ — Scoring Policy Routing and Hold Boundary
 type: readme
-version: v1.0.0
+version: v1.0.1
 status: draft; routing-and-hold; implementation-empty; evaluator-unbound; non-release; non-publication
 owner: NEEDS VERIFICATION — policy stewardship and independent approval controls are not established
 created: 2026-08-28
@@ -11,9 +11,9 @@ current_path: policy/match-scoring/README.md
 owning_root: policy/
 policy_label: public; policy; scoring; routing; hold; non-release; non-publication
 responsibility: Route scoring-related admissibility work to its owning contract, schema, policy, validator, and consumer surfaces without creating a universal scoring rule or evaluator.
-base_commit: f68fe0ff504562bb8d2b4aedacb3d46eb66f17f3
-prior_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
-truth_posture: CONFIRMED tracked documentation-only lane with one sensitive child, no Rego, schema, fixture, validator, test, workflow, bundle, evaluator, receipt, or consumer under this directory / CONFIRMED separate scoring families in governance, Habitat, Water Planning, People-DNA-Land, and Explorer UI surfaces / PROPOSED routing-and-hold boundary / UNKNOWN accepted cross-family scoring policy, writers, readers, retention, evaluator binding, production consumers, and release significance
+base_commit: 5d7ad1d7445debbc997fbab7292cf55c52382a3d
+prior_blob: 2bcafda3eb4d504ed8a42a960b062a90197d2828
+truth_posture: CONFIRMED tracked documentation-only lane with one sensitive child, no Rego, schema, fixture, validator, test, workflow, bundle, evaluator, receipt, or consumer under this directory / CONFIRMED separate scoring families in governance, Habitat, Water Planning, People-DNA-Land, and Explorer UI surfaces / PROPOSED routing-and-hold boundary / UNKNOWN accepted cross-family scoring policy, writers, readers, retention, evaluator binding, production consumers, and release significance / CONFIRMED v1.0.1 corrects post-merge rollback guidance without changing scoring or policy behavior
 [/KFM_META_BLOCK_V2] -->
 
 # Scoring policy routing and hold boundary
@@ -130,8 +130,12 @@ schema, rule, validator, test, and consumer evidence. Do not report broader matu
 single bounded profile.
 
 Before merge, rollback is to close the draft pull request and abandon its branch. After
-merge, use a focused revert or corrective pull request. Reverting documentation does not
-reverse a score, policy decision, release, or external reliance.
+merge, prefer a focused corrective pull request. Do not mechanically revert PR #3773 merge
+commit `af96349707b93a22ae3a99c7ff446c8a3c74ba1d` or its three documentation commits as a
+unit solely to change this guidance; that would restore the one-byte parent and `people/`
+placeholders. Retiring, aliasing, or migrating this path requires its own accepted placement
+decision and link-preserving plan. Correcting documentation does not reverse a score, policy
+decision, release, or external reliance.
 
 ## Open questions
 

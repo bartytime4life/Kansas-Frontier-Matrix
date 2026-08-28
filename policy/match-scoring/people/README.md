@@ -2,7 +2,7 @@
 doc_id: kfm://doc/policy-match-scoring-people-readme
 title: policy/match-scoring/people/ — Sensitive People-Scoring Hold Boundary
 type: readme
-version: v1.0.0
+version: v1.0.1
 status: draft; sensitive-domain; routing-and-hold; implementation-empty; no-live-resolution; non-release; non-publication
 owner: NEEDS VERIFICATION — People/DNA/Land and policy stewardship plus independent approval controls are not established
 created: 2026-08-28
@@ -11,9 +11,9 @@ current_path: policy/match-scoring/people/README.md
 owning_root: policy/
 policy_label: restricted-review; people; identity; scoring; hold; no-live-resolution; non-release; non-publication
 responsibility: Prevent people-related scores from becoming identity, kinship, consent, rights, land, eligibility, release, or publication authority and route bounded synthetic historical-resolution evidence to its owning surfaces.
-base_commit: f68fe0ff504562bb8d2b4aedacb3d46eb66f17f3
-prior_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
-truth_posture: CONFIRMED documentation-only leaf with no executable artifacts or direct consumers / CONFIRMED separate proposed fixture-only historical person-place-event resolution contract, schema, synthetic fixtures, validator, tests, and workflow / PROPOSED sensitive routing-and-hold boundary / UNKNOWN accepted people-scoring policy, live resolver, steward, evaluator, consumer, retention, appeal, release, or publication path
+base_commit: 5d7ad1d7445debbc997fbab7292cf55c52382a3d
+prior_blob: bd6dccd29550385f713faab716803c73a485f915
+truth_posture: CONFIRMED documentation-only leaf with no executable artifacts or direct consumers / CONFIRMED separate proposed fixture-only historical person-place-event resolution contract, schema, synthetic fixtures, validator, tests, and workflow / PROPOSED sensitive routing-and-hold boundary / UNKNOWN accepted people-scoring policy, live resolver, steward, evaluator, consumer, retention, appeal, release, or publication path / CONFIRMED v1.0.1 corrects post-merge rollback guidance without changing sensitive-domain or policy behavior
 [/KFM_META_BLOCK_V2] -->
 
 # Sensitive people-scoring hold boundary
@@ -132,9 +132,13 @@ living persons, DNA/genomics, private land, sovereignty, harmful precision, and 
 exposure.
 
 Before merge, rollback is to close the draft pull request and abandon its branch. After
-merge, use a focused revert or corrective pull request. Reverting this documentation neither
-deletes sensitive data nor revokes an external decision; those require their owning
-correction, consent, retention, and release procedures.
+merge, prefer a focused corrective pull request. Do not mechanically revert PR #3773 merge
+commit `af96349707b93a22ae3a99c7ff446c8a3c74ba1d` or its three documentation commits as a
+unit solely to change this guidance; that would restore this one-byte placeholder and the
+one-byte parent placeholder. Retiring, aliasing, or migrating this sensitive boundary
+requires its own accepted placement decision and link-preserving plan. Correcting this
+documentation neither deletes sensitive data nor revokes an external decision; those require
+their owning correction, consent, retention, and release procedures.
 
 ## Open questions
 
