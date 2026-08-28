@@ -14,7 +14,7 @@ responsibility: index current Hazards validator implementations and placeholders
 truth_posture: cite-or-abstain; executable claims require current code plus paired deterministic proof; file presence or a green held workflow never establishes source admission, evidence closure, current hazard conditions, life-safety authority, release, or publication
 evidence_repository: bartytime4life/Kansas-Frontier-Matrix
 evidence_base_ref: main
-evidence_base_commit: a3d66df629a3b18f01821761898879d7d4996a2f
+evidence_base_commit: 630f468f9c7672309fdffade6e1537ebbafc4f03
 codeowners_route: /tools/validators/ @bartytime4life
 directory_rules_adoption_adr: docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
 related:
@@ -53,7 +53,7 @@ notes:
 
 This directory is the Hazards validation implementation lane under the `tools/` responsibility root. It owns repository validator code and this local inventory. Hazards meaning remains under [`contracts/`](../../../../contracts/domains/hazards/README.md); machine shape remains under [`schemas/`](../../../../schemas/contracts/v1/domains/hazards/README.md); fixtures and tests remain under their own roots.
 
-The index reports the exact tree at `main@a3d66df629a3b18f01821761898879d7d4996a2f`. It distinguishes substantive implementations from tracked placeholders so a file name or a green held job cannot be cited as validation that did not run.
+The index reports the exact tree at `main@630f468f9c7672309fdffade6e1537ebbafc4f03`. It distinguishes substantive implementations from tracked placeholders so a file name or a green held job cannot be cited as validation that did not run.
 
 ## Status
 
@@ -183,6 +183,6 @@ This README is repository-facing documentation. Rollback is a reviewed revert of
 | Field | Value |
 |---|---|
 | Evidence date | 2026-08-28 |
-| Pinned repository commit | `a3d66df629a3b18f01821761898879d7d4996a2f` |
+| Pinned repository commit | `630f468f9c7672309fdffade6e1537ebbafc4f03` |
 | Review result | Five scripts confirmed: three substantive implementations and two explicit `NotImplementedError` placeholders; unused EvidenceBundle and generic-schema aliases are retired in favor of their established repository-wide validation paths |
 | Next trigger | Validator add/remove/rename, placeholder implementation, fixture/test/workflow change, validator-registry change, source-admission change, or consumer adoption |
