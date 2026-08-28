@@ -15,6 +15,18 @@ from jsonschema import Draft202012Validator
 from tools.validators.evidence import validate_agriculture_observation as validator
 
 ROOT = Path(__file__).resolve().parents[3]
+GUARD_ROOT = ROOT / "tools/ci/kfm_no_network"
+DENIAL_MESSAGE = "KFM no-network guard denied Python network egress"
+
+
+def _shared_no_network_env() -> dict[str, str]:
+    env = os.environ.copy()
+    python_path = [str(GUARD_ROOT), str(ROOT)]
+    if env.get("PYTHONPATH"):
+        python_path.append(env["PYTHONPATH"])
+    env["PYTHONPATH"] = os.pathsep.join(python_path)
+    env["KFM_NO_NETWORK"] = "1"
+    return env
 
 
 class AgricultureObservationTests(unittest.TestCase):
@@ -123,11 +135,32 @@ class AgricultureObservationTests(unittest.TestCase):
         for token in ("requests", "urllib.request", "httpx", "socket.create_connection"):
             self.assertNotIn(token, source)
 
-    def test_cli_fixture_mode_matches_manifest(self) -> None:
+    def test_cli_fixture_mode_runs_under_shared_no_network_guard(self) -> None:
+        env = _shared_no_network_env()
+        probe = subprocess.run(
+            [
+                sys.executable,
+                "-c",
+                (
+                    "import socket, sitecustomize; "
+                    "assert sitecustomize.GUARD_ACTIVE; "
+                    "socket.create_connection(('192.0.2.1', 443), timeout=0.01)"
+                ),
+            ],
+            cwd=ROOT,
+            env=env,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertNotEqual(0, probe.returncode)
+        self.assertIn(DENIAL_MESSAGE, probe.stderr)
+        self.assertIn("socket.create_connection", probe.stderr)
+
         completed = subprocess.run(
             [sys.executable, str(Path(validator.__file__)), "--fixtures"],
             cwd=ROOT,
-            env=os.environ.copy(),
+            env=env,
             check=False,
             capture_output=True,
             text=True,
