@@ -8,32 +8,33 @@ owners: <PLACEHOLDER — Docs steward + Source steward for idigbio>
 created: 2026-05-20
 updated: 2026-05-21
 policy_label: public
+responsibility_root: docs/
+owning_root: docs/
+responsibility: Human-readable proposed iDigBio media-record surface and its rights, sensitivity, and custody boundaries.
+truth_posture: cite-or-abstain; absent companion artifacts remain explicitly proposed.
 related:
   - docs/sources/catalog/idigbio/README.md
-  - docs/sources/catalog/idigbio/occurrence-search.md
-  - docs/sources/catalog/idigbio.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/IDENTITY.md
   - docs/sources/catalog/PROFILES.md
   - docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/OPEN-QUESTIONS.md
   - docs/sources/catalog/_template/SOURCE_PRODUCT_TEMPLATE.md
-  - docs/sources/catalog/idigbio/_examples/audubon-core-example.json
   - docs/doctrine/directory-rules.md
   - docs/standards/PROV.md
   - docs/domains/fauna/README.md
   - docs/domains/flora/README.md
 tags: [kfm, docs, sources, catalog, idigbio, media, audubon-core, deny-default, exif-risk]
 notes:
-  - "PROPOSED product-page scaffold; sibling-link presence verified in prior Claude Code session, NEEDS VERIFICATION against mounted repo."
-  - "v0.2: applied KFM presentation standard; added Audubon Core ↔ Darwin Core surface contrast, accessURI / byte-handling section (hot-link vs mirror), EXIF / embedded-geo leak risk callout, per-media-license-not-occurrence-license enforcement, and parallel structure with the iDigBio dossier (which currently sits at the flat path — see OPEN-IDB-CONV-01)."
+  - "PROPOSED product-page scaffold; current tracked siblings are the family README, specimen-records, portal-dwca-downloads, and summary-counts pages."
+  - "v0.2.1: reconciles the family-dossier path and labels absent proposed siblings without creating them."
 [/KFM_META_BLOCK_V2] -->
 
 # 📷 iDigBio Media Records
 
 > Specimen-attached images, audio, video, and 3D scans — described under **Audubon Core** (not Darwin Core), with **byte locations hosted by the original provider, not by iDigBio or KFM**.
 
-[![Status: draft](https://img.shields.io/badge/status-draft-blue)](#) [![Type: product-page](https://img.shields.io/badge/type-product--page-informational)](#) [![Family: idigbio](https://img.shields.io/badge/family-idigbio-2e7d32)](./README.md) [![Vocabulary: Audubon Core](https://img.shields.io/badge/vocabulary-Audubon%20Core-blueviolet)](#3-audubon-core-vs-darwin-core--surface-contrast) [![Surface: metadata only](https://img.shields.io/badge/surface-metadata%20only%20(bytes%20at%20provider)-9a6700)](#14-media-byte-handling-and-caching) [![Rights: per-media license](https://img.shields.io/badge/rights-per--media%20license%20(%E2%89%A0%20occurrence)-orange)](#9-rights-and-sensitivity) [![Sensitivity: EXIF-leak risk](https://img.shields.io/badge/sensitivity-EXIF--leak%20risk-b00020)](#9-rights-and-sensitivity) [![Truth: receipt%E2%89%A0proof%E2%89%A0catalog%E2%89%A0publication](https://img.shields.io/badge/truth-receipt%E2%89%A0proof%E2%89%A0catalog%E2%89%A0publication-lightgrey)](#) [![ADR: pending (OPEN-IDB-CONV-01)](https://img.shields.io/badge/ADR-pending%20(OPEN--IDB--CONV--01)-yellow)](#16-open-questions)
+[![Status: draft](https://img.shields.io/badge/status-draft-blue)](#) [![Type: product-page](https://img.shields.io/badge/type-product--page-informational)](#) [![Family: idigbio](https://img.shields.io/badge/family-idigbio-2e7d32)](./README.md) [![Vocabulary: Audubon Core](https://img.shields.io/badge/vocabulary-Audubon%20Core-blueviolet)](#3-audubon-core-vs-darwin-core--surface-contrast) [![Surface: metadata only](https://img.shields.io/badge/surface-metadata%20only%20(bytes%20at%20provider)-9a6700)](#14-media-byte-handling-and-caching) [![Rights: per-media license](https://img.shields.io/badge/rights-per--media%20license%20(%E2%89%A0%20occurrence)-orange)](#9-rights-and-sensitivity) [![Sensitivity: EXIF-leak risk](https://img.shields.io/badge/sensitivity-EXIF--leak%20risk-b00020)](#9-rights-and-sensitivity) [![Truth: receipt%E2%89%A0proof%E2%89%A0catalog%E2%89%A0publication](https://img.shields.io/badge/truth-receipt%E2%89%A0proof%E2%89%A0catalog%E2%89%A0publication-lightgrey)](#) [![Placement: family folder](https://img.shields.io/badge/placement-family%20folder-0969da)](./README.md)
 
 **Status:** PROPOSED — scaffold + v0.2 polish · **Family:** [`idigbio`](./README.md) · **Owners:** `<PLACEHOLDER — Docs steward + Source steward for idigbio>` · **Last reviewed:** 2026-05-21
 
@@ -97,7 +98,7 @@ notes:
 | Rights / license matrix | [`policy/sensitivity/`](../../../../policy/sensitivity/) + license-map JSON. **Per-media license is independent of per-occurrence license**. | See §[9](#9-rights-and-sensitivity) |
 | Byte custody | **Provider-hosted at `accessURI`**, not at iDigBio, not at KFM | See §[14](#14-media-byte-handling-and-caching) |
 | Taxon backbone | ITIS TSN → GBIF Backbone fallback per **C7-08** (DOI `10.15468/39omei`); pinned in `RunReceipt` | CONFIRMED requirement |
-| Parent dossier | [`docs/sources/catalog/idigbio.md`](../idigbio.md) *(flat-dossier path; see OPEN-IDB-CONV-01)* | CONFIRMED authored prior session |
+| Parent dossier | [`docs/sources/catalog/idigbio/README.md`](./README.md) | CONFIRMED tracked at the campaign baseline |
 
 [Back to top](#-idigbio-media-records)
 
@@ -399,7 +400,7 @@ flowchart LR
 
 *Illustrative only — do not treat as authoritative.*
 
-See [`_examples/audubon-core-example.json`](./_examples/audubon-core-example.json) for the minimal Audubon Core + `kfm:provenance` shape *(PROPOSED sibling; NEEDS VERIFICATION)*.
+The proposed `_examples/audubon-core-example.json` companion is not tracked at the campaign baseline; the inline shape below remains illustrative and non-authoritative.
 
 <details>
 <summary>📷 Minimal Audubon Core record shape (illustrative)</summary>
@@ -520,7 +521,6 @@ Based on the iDigBio Audubon Core extension CSV pattern (coreid, identifier, typ
 | OPEN-IDB-MED-07 | **Thumbnail-only release tier.** Define the resolution / format / EXIF posture for the public thumbnail tier. | UX / policy | **OPEN** |
 | OPEN-IDB-MED-08 | **STAC modeling**: media as separate STAC Item per record, or as STAC Asset rows on the parent occurrence? Recommendation: **separate Item** (license-class legibility). | catalog | **OPEN** |
 | OPEN-IDB-MED-09 | **CC BY-NC-SA admissibility.** Is NonCommercial-licensed media admissible to KFM open public layers at all? Default: **no**. | rights / policy | **OPEN** |
-| **OPEN-IDB-CONV-01** | **Flat-dossier vs family-folder convention.** The parallel iDigBio dossier sits at the flat path [`docs/sources/catalog/idigbio.md`](../idigbio.md), while this product page sits in a family folder. Sibling families `gbif/` and `hifld/` use the family-folder pattern. Reconciliation required. | governance / ADR | **OPEN — ADR-class** (companion to OQ-11 in the iDigBio dossier) |
 | OPEN-DSC-03 | KFM namespace token (`kfm:` vs `ks-kfm:`) for STAC Collection summaries. | identity | **OPEN** — corpus C4-01 unresolved. |
 | OPEN-DSC-* | Lane-wide open items — see [`OPEN-QUESTIONS.md`](../OPEN-QUESTIONS.md). | various | various |
 
@@ -531,8 +531,7 @@ Based on the iDigBio Audubon Core extension CSV pattern (coreid, identifier, typ
 ## 17. Related docs
 
 - [`docs/sources/catalog/idigbio/README.md`](./README.md) — family landing page *(PROPOSED; NEEDS VERIFICATION)*
-- [`docs/sources/catalog/idigbio/occurrence-search.md`](./occurrence-search.md) — companion product page for the occurrence surface *(PROPOSED sibling; NEEDS VERIFICATION)*
-- [`docs/sources/catalog/idigbio.md`](../idigbio.md) — **parallel iDigBio source dossier (flat-path convention)**; reconciled by OPEN-IDB-CONV-01
+- `docs/sources/catalog/idigbio/occurrence-search.md` — proposed companion product page for the occurrence surface; **ABSENT** at the campaign baseline
 - [`docs/sources/catalog/README.md`](../README.md) — catalog source-pages index
 - [`docs/sources/catalog/IDENTITY.md`](../IDENTITY.md) — Collection-id + namespace conventions
 - [`docs/sources/catalog/PROFILES.md`](../PROFILES.md) — catalog profile lanes
@@ -542,7 +541,7 @@ Based on the iDigBio Audubon Core extension CSV pattern (coreid, identifier, typ
 - [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement, lifecycle, and naming authority
 - [`docs/standards/PROV.md`](../../../standards/PROV.md) — W3C PROV-O profile (filename `PROV.md` vs corpus `PROVENANCE.md` is OPEN-DR-01 in `directory-rules.md §18`)
 - [`docs/domains/fauna/README.md`](../../../domains/fauna/README.md), [`docs/domains/flora/README.md`](../../../domains/flora/README.md) — primary downstream consumers
-- **External (cited inline):** iDigBio Search API wiki, iDigBio Data Ingestion Guidance, iDigBio Darwin Core Hour on Audubon Core / 3D data — see the dossier appendix in [`../idigbio.md`](../idigbio.md) for primary-source URLs.
+- **External (cited inline):** iDigBio Search API wiki, iDigBio Data Ingestion Guidance, iDigBio Darwin Core Hour on Audubon Core / 3D data — see the dossier appendix in [`README.md`](./README.md) for primary-source URLs.
 
 <details>
 <summary>📎 Appendix — corpus citations grounding this product page</summary>

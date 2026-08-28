@@ -8,18 +8,19 @@ owners: <PLACEHOLDER — Docs steward + Source steward for idigbio>
 created: 2026-05-20
 updated: 2026-05-21
 policy_label: public
+responsibility_root: docs/
+owning_root: docs/
+responsibility: Human-readable proposed iDigBio DwC-A download surface and its replay, citation, rights, and sensitivity boundaries.
+truth_posture: cite-or-abstain; absent companion artifacts remain explicitly proposed.
 related:
   - docs/sources/catalog/idigbio/README.md
-  - docs/sources/catalog/idigbio/occurrence-search.md
   - docs/sources/catalog/idigbio/media-records.md
-  - docs/sources/catalog/idigbio.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/IDENTITY.md
   - docs/sources/catalog/PROFILES.md
   - docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/OPEN-QUESTIONS.md
   - docs/sources/catalog/_template/SOURCE_PRODUCT_TEMPLATE.md
-  - docs/sources/catalog/idigbio/_examples/dwca-package-example.json
   - docs/doctrine/directory-rules.md
   - docs/standards/PROV.md
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
@@ -27,8 +28,8 @@ related:
   - docs/domains/flora/README.md
 tags: [kfm, docs, sources, catalog, idigbio, dwca, bulk-download, citable, replay-stable, citation-bound]
 notes:
-  - "PROPOSED product-page scaffold; sibling-link presence verified in prior Claude Code session, NEEDS VERIFICATION against mounted repo."
-  - "v0.2: applied KFM presentation standard; added DwC-A package structure breakdown, Search-API ↔ Download surface contrast, citation-bound replay doctrine (corpus EXTERNAL via citations.txt), publication-class evidence posture parallel to GBIF Download DOI surface, and OPEN-IDB-CONV-01 carry-forward."
+  - "PROPOSED product-page scaffold; current tracked siblings are the family README, specimen-records, media-records, and summary-counts pages."
+  - "v0.2.1: reconciles the family-dossier path and labels absent proposed siblings without creating them."
 [/KFM_META_BLOCK_V2] -->
 
 # 📦 iDigBio Portal DwC-A Downloads
@@ -40,7 +41,7 @@ notes:
 **Status:** PROPOSED — scaffold + v0.2 polish · **Family:** [`idigbio`](./README.md) · **Owners:** `<PLACEHOLDER — Docs steward + Source steward for idigbio>` · **Last reviewed:** 2026-05-21
 
 > [!IMPORTANT]
-> **This surface is the publication anchor for iDigBio in KFM.** The bulk DwC-A download is **replay-stable** (frozen snapshot of records matching the query at request time) and arrives with a `citations.txt` file enumerating the contributing recordsets — the two operational properties the synchronous Search API lacks. Where [`occurrence-search.md`](./occurrence-search.md) ABSTAINS at publication, this product is the path that lets the same evidence resolve to ANSWER.
+> **This surface is the publication anchor for iDigBio in KFM.** The bulk DwC-A download is **replay-stable** (frozen snapshot of records matching the query at request time) and arrives with a `citations.txt` file enumerating the contributing recordsets — the two operational properties the synchronous Search API lacks. Where the proposed `occurrence-search.md` surface ABSTAINS at publication, this product is the path that lets the same evidence resolve to ANSWER. That companion file is not tracked at the campaign baseline.
 
 ---
 
@@ -82,7 +83,7 @@ notes:
 | Standing as the source of a PUBLISHED claim | **OK** when paired with EvidenceBundle, license map, sensitivity gate, and the bundle's `citations.txt`. |
 | Backing a Citation Validation Report | **OK** — `citations.txt` is the contributing-recordset enumeration. |
 | Periodic refresh against a steward-chosen cadence (PROPOSED quarterly) | **OK** — bulk-snapshot model with no-op RunReceipt when content unchanged (KFM-P21-PROG-0048). |
-| Real-time / per-call exploration | **DENY** — use [`occurrence-search.md`](./occurrence-search.md) (Search API) instead. |
+| Real-time / per-call exploration | **DENY** — use the proposed `occurrence-search.md` Search API surface instead; the companion file is not tracked at the campaign baseline. |
 | Sole evidence for a sensitive-taxon publication | **DENY** — DwC-A does not pre-filter for KFM sensitivity; redaction at WORK is non-negotiable. |
 | Replacement for direct IPT pulls from KANU / KSC / KU NHM / Sternberg | **DENY** — institutional IPT remains preferred for in-state Kansas material; DwC-A from iDigBio is the cross-check and coverage fill. |
 
@@ -102,7 +103,7 @@ notes:
 | Rights / license matrix | [`policy/sensitivity/`](../../../../policy/sensitivity/) + license-map JSON. Per-record license carried in the DwC-A record rows. | See §[9](#9-rights-citation-and-sensitivity) |
 | Citation custody | **`citations.txt` inside the DwC-A package**, paired with `meta.xml`, `occurrence.csv`, and extension CSVs | See §[4](#4-dwc-a-package-structure) and §[9](#9-rights-citation-and-sensitivity) |
 | Taxon backbone | ITIS TSN → GBIF Backbone fallback per **C7-08** (DOI `10.15468/39omei`); pinned in `RunReceipt` | CONFIRMED requirement |
-| Parent dossier | [`docs/sources/catalog/idigbio.md`](../idigbio.md) *(flat-dossier path; see OPEN-IDB-CONV-01)* | CONFIRMED authored prior session |
+| Parent dossier | [`docs/sources/catalog/idigbio/README.md`](./README.md) | CONFIRMED tracked at the campaign baseline |
 
 [Back to top](#-idigbio-portal-dwc-a-downloads)
 
@@ -113,7 +114,7 @@ notes:
 > [!NOTE]
 > The two iDigBio surfaces are **complementary**, not redundant. The Search API explores; the DwC-A download anchors. This page is the anchor.
 
-| Dimension | [Occurrence Search API](./occurrence-search.md) | **Portal DwC-A Download (this page)** |
+| Dimension | Occurrence Search API *(PROPOSED; file absent)* | **Portal DwC-A Download (this page)** |
 |---|---|---|
 | **Pattern** | Synchronous HTTP search (paginated) | Asynchronous bulk request → zipped DwC-Archive |
 | **Watcher class** | `watcher_type: api` | **`watcher_type: file`** (or `rss`-driven file fetch) |
@@ -405,7 +406,7 @@ flowchart LR
 
 **CONFIRMED doctrine.** Replay drift is a **build break**.
 
-**The DwC-A surface is the iDigBio replay anchor.** Where [`occurrence-search.md`](./occurrence-search.md) is non-deterministic (API responses drift across calls), this product is **byte-stable by construction**: the bundle is a frozen snapshot, content-addressed by `dwca_bundle_digest`, and reproducible because the bundle itself is the cached response.
+**The DwC-A surface is the iDigBio replay anchor.** Where the proposed `occurrence-search.md` surface is non-deterministic (API responses drift across calls), this product is **byte-stable by construction**: the bundle is a frozen snapshot, content-addressed by `dwca_bundle_digest`, and reproducible because the bundle itself is the cached response. The comparison names a proposed surface; it does not claim the absent companion file is implemented.
 
 | Strategy | When | Status |
 |---|---|---|
@@ -424,7 +425,7 @@ flowchart LR
 
 *Illustrative only — do not treat as authoritative.*
 
-See [`_examples/dwca-package-example.json`](./_examples/dwca-package-example.json) for the minimal DwC-A descriptor + `kfm:provenance` shape *(PROPOSED sibling; NEEDS VERIFICATION)*.
+The proposed `_examples/dwca-package-example.json` companion is not tracked at the campaign baseline; the inline shape below remains illustrative and non-authoritative.
 
 <details>
 <summary>📦 PROPOSED normalized portal-query envelope (input to <code>dwca_query_spec_hash</code>)</summary>
@@ -568,7 +569,6 @@ The content-address of this file (sha256 of bytes) is recorded as `kfm:provenanc
 | OPEN-IDB-DWCA-07 | **Whole-bundle redistribution.** May KFM mirror the verbatim DwC-A zip on KFM-controlled infrastructure, or only host derivative records? | rights / governance | **OPEN — ADR-class** |
 | OPEN-IDB-DWCA-08 | **Snapshot lineage in PROV.** Define the PROV-O shape that links a v2 bundle to its v1 predecessor (which records changed, which recordsets were revoked). | catalog | **OPEN** |
 | OPEN-IDB-DWCA-09 | **Post-normalize record-count tolerance.** PROPOSED 0% (exact match after dedupe). Confirm or relax with steward sign-off. | implementation | **OPEN** |
-| **OPEN-IDB-CONV-01** | **Flat-dossier vs family-folder convention.** Parallel iDigBio dossier sits at [`docs/sources/catalog/idigbio.md`](../idigbio.md); this product page sits in `docs/sources/catalog/idigbio/`. Reconciliation required. | governance / ADR | **OPEN — ADR-class** (companion to OQ-11 in the iDigBio dossier) |
 | OPEN-DSC-03 | KFM namespace token (`kfm:` vs `ks-kfm:`) for STAC Collection summaries. | identity | **OPEN** — corpus C4-01 unresolved. |
 | OPEN-DSC-* | Lane-wide open items — see [`OPEN-QUESTIONS.md`](../OPEN-QUESTIONS.md). | various | various |
 
@@ -579,9 +579,8 @@ The content-address of this file (sha256 of bytes) is recorded as `kfm:provenanc
 ## 17. Related docs
 
 - [`docs/sources/catalog/idigbio/README.md`](./README.md) — family landing page *(PROPOSED sibling; NEEDS VERIFICATION)*
-- [`docs/sources/catalog/idigbio/occurrence-search.md`](./occurrence-search.md) — companion product page for the synchronous Search API surface *(PROPOSED sibling; NEEDS VERIFICATION)*
+- `docs/sources/catalog/idigbio/occurrence-search.md` — proposed companion product page for the synchronous Search API surface; **ABSENT** at the campaign baseline
 - [`docs/sources/catalog/idigbio/media-records.md`](./media-records.md) — companion product page for media records *(PROPOSED sibling; NEEDS VERIFICATION)*
-- [`docs/sources/catalog/idigbio.md`](../idigbio.md) — **parallel iDigBio source dossier (flat-path convention)**; reconciled by OPEN-IDB-CONV-01
 - [`docs/sources/catalog/README.md`](../README.md) — catalog source-pages index
 - [`docs/sources/catalog/IDENTITY.md`](../IDENTITY.md) — Collection-id + namespace conventions
 - [`docs/sources/catalog/PROFILES.md`](../PROFILES.md) — catalog profile lanes
@@ -592,7 +591,7 @@ The content-address of this file (sha256 of bytes) is recorded as `kfm:provenanc
 - [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement, lifecycle, and naming authority
 - [`docs/standards/PROV.md`](../../../standards/PROV.md) — W3C PROV-O profile (filename `PROV.md` vs corpus `PROVENANCE.md` is OPEN-DR-01 in `directory-rules.md §18`)
 - [`docs/domains/fauna/README.md`](../../../domains/fauna/README.md), [`docs/domains/flora/README.md`](../../../domains/flora/README.md) — primary downstream consumers
-- **External (cited inline):** iDigBio Data Ingestion Guidance, iDigBio IP Policy — see the dossier appendix in [`../idigbio.md`](../idigbio.md) for primary-source URLs.
+- **External (cited inline):** iDigBio Data Ingestion Guidance, iDigBio IP Policy — see the dossier appendix in [`README.md`](./README.md) for primary-source URLs.
 
 <details>
 <summary>📎 Appendix — corpus citations grounding this product page</summary>
