@@ -23,7 +23,7 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Sequence
 
-PROFILE = "kfm-maplibre-acquisition-inventory-v4"
+PROFILE = "kfm-maplibre-acquisition-inventory-v5"
 TEXT_SUFFIXES = frozenset({".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx", ".html"})
 MAX_FILES = 5000
 SCAN_ROOTS = ("apps", "packages", "runtime", "scripts", "tests", "examples", "public")
@@ -228,6 +228,47 @@ def _scan_create_require(text: str) -> list[tuple[str, str]]:
     return findings
 
 
+def _mask_comments(text: str) -> str:
+    """Blank bounded JavaScript and HTML comments while preserving strings and lines."""
+    masked = list(text)
+    quote: str | None = None
+    index = 0
+    while index < len(text):
+        character = text[index]
+        if quote is not None:
+            if character == "\\":
+                index += 2
+                continue
+            if character == quote:
+                quote = None
+            index += 1
+            continue
+        if character in {"'", '"', "`"}:
+            quote = character
+            index += 1
+            continue
+
+        end: int | None = None
+        if text.startswith("//", index):
+            newline = text.find("\n", index + 2)
+            end = len(text) if newline == -1 else newline
+        elif text.startswith("/*", index):
+            closing = text.find("*/", index + 2)
+            end = len(text) if closing == -1 else closing + 2
+        elif text.startswith("<!--", index):
+            closing = text.find("-->", index + 4)
+            end = len(text) if closing == -1 else closing + 3
+
+        if end is None:
+            index += 1
+            continue
+        for offset in range(index, end):
+            if masked[offset] not in {"\r", "\n"}:
+                masked[offset] = " "
+        index = end
+    return "".join(masked)
+
+
 def _iter_files(root: Path) -> tuple[list[Path], bool]:
     files: list[Path] = []
     ignored_parts = {".git", "node_modules", "dist", "build", ".next", "coverage"}
@@ -274,6 +315,7 @@ def _scan_text(root: Path, path: Path) -> list[Finding]:
         text = path.read_text(encoding="utf-8")
     except (OSError, UnicodeError):
         return [Finding("TEXT_UNREADABLE", rel, path.name, False)]
+    scan_text = _mask_comments(text)
     findings: list[Finding] = []
     for kind in (
         "STATIC_IMPORT",
@@ -283,22 +325,22 @@ def _scan_text(root: Path, path: Path) -> list[Finding]:
         "IMPORT_META_RESOLVE",
         "REQUIRE_RESOLVE",
     ):
-        for match in PATTERNS[kind].finditer(text):
+        for match in PATTERNS[kind].finditer(scan_text):
             subject = _renderer_import_subject(match.group(1))
             if subject:
                 findings.append(Finding(kind, rel, subject, _candidate_seam(rel)))
-    for kind, subject in _scan_create_require(text):
+    for kind, subject in _scan_create_require(scan_text):
         findings.append(Finding(kind, rel, subject, _candidate_seam(rel)))
     for kind in ("CDN_URL", "GLOBAL_RUNTIME"):
-        for match in PATTERNS[kind].finditer(text):
+        for match in PATTERNS[kind].finditer(scan_text):
             subject = _renderer_subject(match.group(0))
             if subject:
                 findings.append(Finding(kind, rel, subject, _candidate_seam(rel)))
-    lower = text.lower()
+    lower = scan_text.lower()
     if "maplibre" in lower or "mapbox" in lower:
-        if PATTERNS["PROTOCOL_REGISTRATION"].search(text):
+        if PATTERNS["PROTOCOL_REGISTRATION"].search(scan_text):
             findings.append(Finding("PROTOCOL_REGISTRATION", rel, "renderer-protocol", _candidate_seam(rel)))
-        if PATTERNS["WORKER_ACQUISITION"].search(text):
+        if PATTERNS["WORKER_ACQUISITION"].search(scan_text):
             findings.append(Finding("WORKER_ACQUISITION", rel, "renderer-worker", _candidate_seam(rel)))
     return findings
 
