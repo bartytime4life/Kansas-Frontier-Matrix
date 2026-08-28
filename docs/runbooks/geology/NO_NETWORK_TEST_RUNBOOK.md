@@ -2,8 +2,8 @@
 doc_id: kfm://doc/geology-no-network-test-runbook
 title: Geology & Natural Resources — No-Network Test Runbook
 type: runbook
-version: v0.3
-prior_version: v0.2 repository-grounded bounded-profile procedure
+version: v0.4
+prior_version: v0.3 shared-guard adoption procedure
 status: draft; repository-grounded; four-bounded-fixture-profiles-under-shared-python-startup-guard; broader-source-evidence-policy-proof-release-and-live-operation-held; non-publisher
 owners:
   - "@bartytime4life — verified GitHub review route only"
@@ -34,6 +34,7 @@ evidence_snapshot:
   geology_proof_readme_blob: fc07012855bb4019008a3b0dce035dc8088156f6
   geology_release_candidate_readme_blob: f0313cafc641c049d367af82418212e0bad1fc35
 guard_adoption_snapshot: "base e52165e820b07e65c54830fde519a9c90df8eb1c; merged PR 3709; shared guard blob e320d3a0fb70a3273a5d11fca513628a4a479d15; shared guard README blob d2de9893fec4923958cd4bbfcf2931fc02297117"
+lowlevel_guard_convergence_snapshot: "base ef4d1cb68327ad34afdb0d317740a0a01aa58848; shared lower-level guard merged by PR 3718 before Geology PR 3722; direct _socket.socket now routes through guarded socket.socket"
 drive_sources:
   - "KFM_Geology_Natural_Resources_Architecture_PDF_Only_Report_2026-04-21.pdf; file 1kxONABD4knMG1HYaJR740tzZ_EBrt7Ca; sha256 d334f43df8fd74f17115cc0f51861cf8238c9cb99d37adaf95f5e4e1655fdf51; planning lineage only"
   - "KFM_Greenfield_Commissioning_Plan_v2_FULL.pdf; file 161zjrR23nrv2b9ejne7iRDasVNnvCFwc; sha256 d0b27fc3a2e4c18637e978c67fb8e8bb7af5de4726d33ddc4ae2a6e1fbff51b5; commissioning lineage only"
@@ -73,8 +74,8 @@ tags: [kfm, geology, natural-resources, runbook, no-network, synthetic-fixtures,
 notes:
   - "v0.2 replaces the no-mounted-repository assumption, hypothetical PR-00 object chain, illustrative command placeholders, and unverified release-dry-run claims with the exact current bounded executable profiles."
   - "The retained operating principle is fixture-first, deterministic, reversible, synthetic, and no-live-source; the current implementation does not prove an end-to-end EvidenceBundle, policy, proof, release, rollback, or public-answer path."
-  - "All four workflow profiles now start Python with the merged shared named-public-API guard; a Geology-owned fresh-process proof checks explicit activation, SocketType denial, Unix-domain preservation, and the private-extension limitation."
-  - "The shared guard is not an operating-system firewall, dependency-install control, non-Python sandbox, or proof against direct private _socket.socket construction."
+  - "All four workflow profiles start Python with the merged shared guard; a Geology-owned fresh-process proof checks explicit activation, public SocketType denial, direct private _socket.socket denial, and Unix-domain preservation."
+  - "The shared guard is not an operating-system firewall, dependency-install control, non-Python sandbox, or proof against every other private extension factory or API."
   - "This update changes only bounded workflow enforcement, its synthetic proof and documentation, and authoring provenance. It creates no source, contract, schema, policy, fixture, validator, evidence object, operational receipt, proof, candidate, lifecycle state, runtime, deployment, promotion, rollback execution, or publication state."
 [/KFM_META_BLOCK_V2] -->
 
@@ -98,7 +99,7 @@ notes:
 > **Never place real, exact, or reverse-engineerable subsurface or resource locations in this procedure.** Borehole, private-well, well-log, core, sample, geochemistry, operator/parcel, extraction-targetable, transform-secret, restricted endpoint, or credential detail does not belong in fixtures, logs, workflow summaries, issues, pull requests, screenshots, or review packets.
 
 > [!CAUTION]
-> **"No network" is bounded, not magical.** All four workflow profiles load the shared Python startup guard for named public socket, resolver, and `urllib` APIs, and a Geology-owned fresh-process proof checks activation and representative denial. The guard does not cover dependency installation, non-Python commands, operating-system or runner egress, or direct construction through the private `_socket.socket` extension type.
+> **"No network" is bounded, not magical.** All four workflow profiles load the shared Python startup guard for named public socket, resolver, and `urllib` APIs and the direct private `_socket.socket` constructor alias. A Geology-owned fresh-process proof checks activation and representative denial through both constructor routes. The guard does not cover dependency installation, non-Python commands, operating-system or runner egress, or every other private extension factory or API.
 
 **Quick navigation:** [Purpose](#purpose-and-terminal-boundary) · [Authority](#authority-and-placement) · [Posture](#current-repository-posture) · [Profiles](#current-executable-profiles) · [Network](#no-network-contract) · [Fixtures](#fixture-inventory-and-frozen-invariants) · [Preflight](#preconditions-and-stop-conditions) · [Local run](#local-procedure) · [CI](#hosted-ci-procedure) · [Results](#finite-outcomes-and-result-interpretation) · [Failures](#failure-diagnosis) · [Sensitivity](#sensitivity-rights-and-security) · [Receipts](#evidence-receipts-and-proof-boundary) · [Handoff](#review-handoff) · [Holds](#current-holds-and-graduation-gates) · [Rollback](#correction-and-document-rollback) · [References](#related-current-surfaces) · [Checklist](#operator-checklist) · [Lineage](#v01-lineage-and-superseded-assumptions)
 
@@ -288,9 +289,9 @@ The profiles do not form a single end-to-end trust spine. They are separate, bou
 3. `test_no_network_proof.py` starts fresh interpreters and proves:
    - the guard is inactive unless explicitly enabled;
    - the public `socket.SocketType` alias routes through guarded `socket.socket`;
-   - a destination-bearing public socket send is denied before network access;
+   - destination-bearing sends through the public alias and direct private `_socket.socket` constructor are denied before network access;
    - Unix-domain routing remains available;
-   - the private `_socket.socket` extension type remains outside the named public-API proof.
+   - other private extension factories and APIs remain outside the bounded constructor proof.
 4. Resource-class tests additionally patch:
    - `socket.socket.connect`;
    - `socket.socket.connect_ex`;
@@ -307,7 +308,7 @@ The profiles do not form a single end-to-end trust spine. They are separate, bou
 
 - an operating-system network namespace;
 - firewall, seccomp, container egress, proxy, DNS, or service-mesh denial;
-- interception of every possible Python, native, subprocess, package, or future network client, including direct private `_socket.socket` construction;
+- interception of every possible Python, native, subprocess, package, or future network client, including private extension factories or APIs other than the direct `_socket.socket` constructor alias;
 - repository-wide no-network behavior;
 - standalone guard activation when a profile command is run without the documented `PYTHONPATH` and `KFM_NO_NETWORK=1` environment;
 - absence of network access in unrelated workflow setup actions or dependency installation;
@@ -607,8 +608,9 @@ Expected:
 - explicit-off posture preserves the original public socket-type alias;
 - explicit-on posture activates at interpreter startup;
 - the public `socket.SocketType` alias is guarded and a representative `sendmsg` is denied;
+- the direct private `_socket.socket` constructor alias is guarded and a representative `sendmsg` is denied;
 - Unix-domain routing remains available;
-- the private extension limitation remains explicit without exercising network access.
+- other private extension factories and APIs remain explicitly outside this proof.
 
 ### 5. Run the resource-class profile
 
@@ -703,7 +705,7 @@ Expected:
 - no live KGS request occurs.
 
 > [!CAUTION]
-> This focused module does not patch sockets internally. Under the documented workflow or local environment, the shared startup guard still activates before the module imports. That remains a named public-Python-API control, not host-level egress denial.
+> This focused module does not patch sockets internally. Under the documented workflow or local environment, the shared startup guard still activates before the module imports. That remains a bounded Python-process control, not host-level egress denial.
 
 ### 9. Optional workflow-parity inspection
 

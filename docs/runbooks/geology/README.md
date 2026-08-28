@@ -3,8 +3,8 @@ doc_id: kfm://doc/runbooks/geology/readme
 title: Geology and Natural Resources Runbooks — Operational Procedure Index
 type: readme
 subtype: domain-runbook-boundary
-version: v0.2
-prior_version: v0.1 repository-grounded lane index
+version: v0.3
+prior_version: v0.2 repository-grounded lane index
 status: draft; repository-grounded; mixed-child-maturity; documentation-only; non-authoritative; non-publisher
 owners:
   - "@bartytime4life — verified GitHub review route"
@@ -49,10 +49,8 @@ evidence_snapshot:
   geology_policy_blob: 71e4a939510712346c3b80e62c47d1770e799c03
   geology_proof_readme_blob: fc07012855bb4019008a3b0dce035dc8088156f6
   geology_candidate_lane_blob: f0313cafc641c049d367af82418212e0bad1fc35
-guard_adoption_snapshot:
-  base_commit: e52165e820b07e65c54830fde519a9c90df8eb1c
-  merged_guard_pr: 3709
-  shared_guard_blob: e320d3a0fb70a3273a5d11fca513628a4a479d15
+guard_adoption_snapshot: "base e52165e820b07e65c54830fde519a9c90df8eb1c; merged guard PR 3709; shared guard blob e320d3a0fb70a3273a5d11fca513628a4a479d15"
+lowlevel_guard_convergence_snapshot: "base ef4d1cb68327ad34afdb0d317740a0a01aa58848; shared lower-level guard PR 3718 merged before Geology adoption PR 3722"
 drive_lineage:
   - title: KFM_Geology_Natural_Resources_Architecture_PDF_Only_Report_2026-04-21.pdf
     file_id: 1kxONABD4knMG1HYaJR740tzZ_EBrt7Ca
@@ -88,7 +86,7 @@ tags: [kfm, geology, natural-resources, runbooks, operations, validation, source
 notes:
   - "The prior target was a tracked one-byte file. This edition adds the missing BOUNDARY_COMPACT local contract without moving or renaming a procedure."
   - "BEDROCK_REVIEW.md, NO_NETWORK_TEST_RUNBOOK.md, and ROLLBACK_RUNBOOK.md are repository-grounded drafts; PROMOTION_RUNBOOK.md and SOURCE_REFRESH_RUNBOOK.md retain proposal-era assumptions and require their own reconciliation."
-  - "The Geology workflow truthfully names four bounded profiles and loads the merged shared named-public-API Python startup guard for each profile command; Geology owns a fresh-process activation and representative-denial proof."
+  - "The Geology workflow truthfully names four bounded profiles and loads the merged shared Python startup guard for each profile command; Geology owns fresh-process activation and representative-denial proofs for the public SocketType and direct private _socket.socket constructor aliases."
   - "The machine source-authority projection is PROPOSED, implementation_status ABSENT, and empty; source-registry topology remains conflicted between subtype-first and domain-first lanes."
   - "The parent docs/runbooks/README.md carries a historical inventory snapshot that predates this local boundary completion; a later whole-tree reconciliation should refresh it."
   - "This document changes no source, connector, contract, schema, policy, fixture, validator, test, workflow, evidence object, lifecycle object, release record, deployment, promotion, rollback execution, or publication state."
@@ -197,11 +195,11 @@ The observations below are pinned to `main@35d1c6c5b1adb4130ce6c24c37da40b1e7bf9
 | This README | Existing tracked file contains only a newline | Local lane boundary is absent in substance |
 | Direct procedure packet | Five tracked procedure files plus this README | A stable five-procedure documentation packet exists |
 | [`BEDROCK_REVIEW.md`](./BEDROCK_REVIEW.md) | Repository-grounded v0.1 draft; fixture-first candidate-review and handoff procedure | Useful for an immutable bedrock candidate or fixture packet; default disposition remains `HOLD` without complete prerequisites |
-| [`NO_NETWORK_TEST_RUNBOOK.md`](./NO_NETWORK_TEST_RUNBOOK.md) | Repository-grounded v0.3 draft; four bounded synthetic profiles under the shared Python startup guard | Useful for exact bounded profiles; broader Geology validation and operational maturity remain `HOLD` |
+| [`NO_NETWORK_TEST_RUNBOOK.md`](./NO_NETWORK_TEST_RUNBOOK.md) | Repository-grounded v0.4 draft; four bounded synthetic profiles under the shared Python startup guard | Useful for exact bounded profiles; broader Geology validation and operational maturity remain `HOLD` |
 | [`ROLLBACK_RUNBOOK.md`](./ROLLBACK_RUNBOOK.md) | Repository-grounded v0.2 draft; shared `RollbackCard` candidate validation and marker-protected synthetic rehearsal are present | Candidate shape and synthetic recovery behavior are bounded; production rollback and public-state mutation remain separate and held |
 | [`PROMOTION_RUNBOOK.md`](./PROMOTION_RUNBOOK.md) | v1 draft with placeholder owners/dates, proposed paths, and proposal-era implementation statements | Planning reference only until repository-grounded reconciliation |
 | [`SOURCE_REFRESH_RUNBOOK.md`](./SOURCE_REFRESH_RUNBOOK.md) | v1 draft with proposed path alternatives, hypothetical watcher/receipt flows, and no-mounted-repository assumptions | Planning reference only; it does not admit, activate, schedule, or fetch a live source |
-| [`domain-geology`](../../../.github/workflows/domain-geology.yml) | Read-only workflow executes four bounded profiles with the shared Python startup guard and a Geology-owned fresh-process proof; broader proof and release producers remain held | Current executable boundary is four named profiles plus bounded named-public-API egress denial |
+| [`domain-geology`](../../../.github/workflows/domain-geology.yml) | Read-only workflow executes four bounded profiles with the shared Python startup guard and a Geology-owned fresh-process proof; broader proof and release producers remain held | Current executable boundary is four named profiles plus bounded public and direct private-constructor egress denial |
 | Machine source-authority projection | `control_plane/source_authority_register.yaml` is `PROPOSED`, projection-only, implementation status `ABSENT`, completeness `empty`, and has no entries | No source authority is established by the machine projection |
 | Source-registry topology | Subtype-first `data/registry/sources/geology/` and domain-first `data/registry/geology/sources/` both exist; domain-first YAMLs include proposed templates and disabled records | Topology and canonical writer remain `CONFLICTED`; file presence is not source admission |
 | Geology policy | Geology policy README reports default-only scaffolds and an unbound evaluator | Active Geology policy evaluation is not established |
@@ -522,14 +520,14 @@ A fail-closed outcome can be the correct successful result of a runbook.
 | GMD 3 AEM campaign candidate | Document-specific descriptor, fixtures, validator, and focused test | Sparse announcement-bound candidate shape, time scope, and negative controls | Current flight, acquisition, inversion, product, rights, or release state |
 | Public-safe geometry | Metadata-only cases, validator, focused test, and generated documentation-convergence receipt | Denial of coordinate material and checks for declared generalized/withheld posture | Execution of a transform, safe public geometry, policy approval, or release |
 | Production material change | Version-pinned metadata comparison and focused test | `NO_CHANGE`, `REVIEW`, `HOLD`, or `ERROR` for bounded metadata | Live KGS fetch, production truth beyond the source role, lifecycle mutation, or publication |
-| Shared Python startup guard | Geology fresh-process proof and shared `sitecustomize.py` helper | Explicit activation, public `SocketType` denial, and Unix-domain preservation for named Python APIs | Private `_socket.socket`, dependency installation, non-Python, operating-system, or runner-wide egress denial |
+| Shared Python startup guard | Geology fresh-process proof and shared `sitecustomize.py` helper | Explicit activation, public `SocketType` and direct private `_socket.socket` constructor denial, and Unix-domain preservation | Other private extension factories/APIs, dependency installation, non-Python, operating-system, or runner-wide egress denial |
 | Shared rollback rehearsal | Marker-protected synthetic helper and tests referenced by the rollback runbook | Deterministic synthetic rollback/withdrawal planning and history preservation | Geology-specific operational rollback, public alias mutation, signer custody, or production invalidation |
 
 The workflow header and body now agree on four profiles. The guard proof is enforcement evidence for their Python process startup, not a fifth Geology semantic profile.
 
 ### No-network limit
 
-`PYTHONPATH` startup loading, `KFM_NO_NETWORK=1`, and in-process socket/resolver/`urllib` guards are bounded controls. They are not an operating-system firewall, namespace, proxy, dependency-install control, non-Python sandbox, or proof that every network path is blocked. Direct private `_socket.socket` construction is outside the named public-API proof. Use the exact child-runbook qualification.
+`PYTHONPATH` startup loading, `KFM_NO_NETWORK=1`, and in-process socket/resolver/`urllib` guards are bounded controls. They are not an operating-system firewall, namespace, proxy, dependency-install control, non-Python sandbox, or proof that every network path is blocked. The direct private `_socket.socket` constructor alias is covered; other private extension factories and APIs are not. Use the exact child-runbook qualification.
 
 ### Documentation checks
 
