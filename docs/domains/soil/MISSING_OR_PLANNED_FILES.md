@@ -60,7 +60,7 @@ path canonical.
 | Synthetic fixtures | `fixtures/domains/soil/` | `PRESENT_MIXED` | Several closed fixture profiles plus placeholder and compatibility material |
 | Repository validators | `tools/validators/domains/soil/` | `PRESENT_MIXED` | 23 Python files; substantive validators coexist with four-line wrappers and documentation-only lanes |
 | Tests | Soil-related files under `tests/` | `PRESENT_MIXED` | 41 Python files discovered; executable status and CI binding vary by profile |
-| Domain CI | `.github/workflows/domain-soil.yml` | `IMPLEMENTED_PROFILE` | Three fixture suites plus SSURGO package-drift proof; proof and release jobs remain held |
+| Domain CI | `.github/workflows/domain-soil.yml` and dedicated `.github/workflows/soil-*.yml` lanes | `PRESENT_MIXED` | The domain workflow runs three fixture suites plus SSURGO package-drift proof; strict profiles including SoilMoistureObservation have dedicated workflows; aggregate coverage and startup-guard parity remain unverified |
 | Source registry | `data/registry/sources/soil/` | `PRESENT_MIXED` | Ten direct files; presence does not activate a source |
 | Source watch | `tools/ingest/ssurgo_watch/` and paired tests | `IMPLEMENTED_PROFILE` | Fixture-only package-drift comparison, no live admission authority |
 | Package behavior | `packages/domains/soil/src/soil/` | `PLACEHOLDER` | Identity, layer, and observation modules still identify as greenfield placeholders |
