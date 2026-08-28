@@ -2,11 +2,11 @@
 doc_id: kfm://doc/github-folder-readme
 title: .github — GitHub Platform Governance Hooks
 type: README
-version: v1.5
+version: v1.6
 status: draft; repository-grounded; current tree counted; workflow maturity bounded
 owners: ["@bartytime4life"]
 created: 2026-05-11
-updated: 2026-08-08
+updated: 2026-08-28
 policy_label: public
 owning_root: .github/
 responsibility: GitHub-platform governance hooks, review routing, dependency intake, issue and pull-request intake, and CI orchestration
@@ -121,7 +121,7 @@ This edition is pinned to `main@d4586ec659d86e4bf07e59bccd65c6c3412755e7` and th
 | Issue intake | **6 Markdown chooser templates** plus [`ISSUE_TEMPLATE/README.md`](ISSUE_TEMPLATE/README.md) | No issue-form YAML or chooser `config.yml` is present in the pinned issue-template tree. Blank-issue behavior remains settings-dependent. |
 | Pull-request intake | [`PULL_REQUEST_TEMPLATE.md`](PULL_REQUEST_TEMPLATE.md) | Tracked and review-visible; completion and enforcement remain human/process questions. |
 | Review routing | [`CODEOWNERS`](CODEOWNERS) routes all paths to `@bartytime4life` with narrower path entries | File behavior is confirmed; required code-owner review and separation of duties remain **NEEDS VERIFICATION**. |
-| Dependency intake | [`dependabot.yml`](dependabot.yml) covers pip, npm, GitHub Actions, and pre-commit | Static configuration is confirmed. Execution history, alerts, and update state were not inspected. |
+| Dependency intake | [`dependabot.yml`](dependabot.yml) covers pip, npm, Docker, GitHub Actions, and pre-commit | Static configuration is confirmed. Execution history, alerts, and update state were not inspected. |
 | Funding | [`FUNDING.yml`](FUNDING.yml) is a comment-only placeholder | It configures no active funding provider. |
 | Root `CODEOWNERS` | Absent from the pinned repository root | `.github/CODEOWNERS` is the tracked GitHub-supported review-routing file. |
 
@@ -158,7 +158,7 @@ The workflow subtree README records the current filename-count boundary and the 
 |---|---|---|
 | [`CODEOWNERS`](CODEOWNERS) | Default and path-specific review routing | Not a `ReviewRecord`, stewardship assignment, or proof that review occurred. |
 | [`PULL_REQUEST_TEMPLATE.md`](PULL_REQUEST_TEMPLATE.md) | Task contract, evidence, Directory Rules, threat preflight, validation, and rollback prompts | Not approval, release, or publication authority. |
-| [`dependabot.yml`](dependabot.yml) | Weekly dependency-update proposals across four ecosystems | Proposal-only; no automatic compatibility or merge claim. |
+| [`dependabot.yml`](dependabot.yml) | Weekly dependency-update proposals across five ecosystems | Proposal-only; no automatic compatibility or merge claim. |
 | [`ISSUE_TEMPLATE/`](ISSUE_TEMPLATE/README.md) | Public-safe issue routing | Intake only; labels and settings may be external or unverified. |
 | [`workflows/`](workflows/README.md) | GitHub Actions orchestration | Non-publisher; every workflow must be interpreted from its exact steps and current run evidence. |
 | [`FUNDING.yml`](FUNDING.yml) | GitHub funding/community-health surface | Inactive placeholder. |
@@ -219,9 +219,11 @@ The companion [`workflows/README.md`](workflows/README.md) is updated with the c
 ### Confirmed in this documentation slice
 
 - `.github/CODEOWNERS` contains one verified executable owner identity, `@bartytime4life`, and explicitly disclaims review or release authority.
-- `dependabot.yml` defines reviewable proposals for four ecosystems and no private registry.
+- `dependabot.yml` defines reviewable proposals for five ecosystems and no private registry.
 - the issue-template tree contains six Markdown chooser templates and no issue-form YAML or chooser configuration file;
-- this change modifies documentation only; no workflow, permission, trigger, action reference, template behavior, dependency configuration, secret, or repository setting changes.
+- the paired `dependabot.yml` change only adds Docker base-image update
+  proposals; it changes no workflow, permission, trigger, action reference,
+  template behavior, secret, repository setting, or governed lifecycle state.
 
 ### Required for workflow changes
 
@@ -316,6 +318,7 @@ Before merge, close the draft pull request or revert the documentation commits o
 
 | Date | Version | Change |
 |---|---|---|
+| 2026-08-28 | v1.6 | Added bounded Dependabot coverage for the two digest-pinned `infra/docker/Dockerfile.*` placeholders, corrected the dependency-intake ecosystem inventory to five, and preserved image updates as proposal-only review boundaries. |
 | 2026-08-08 | v1.5 | Re-pinned the root to `main@d4586ec…`; reconciled 204 tracked `.github/` paths, 191 workflows, and six issue templates; retired the 44-workflow snapshot as current evidence; separated exact tree facts from unverified per-workflow behavior; and preserved the non-publisher authority boundary. |
 | 2026-07-31 | v1.4 | Reconciled the complete 57-path tree and 44-workflow static posture at `main@c455e51…`; recorded the trusted-base `pull_request_target` exception, mixed action-pinning posture, accepted Directory Rules authority, and corrected the workflow-threat-preflight fragment. |
 | 2026-07-22 | v1.3 | Reconciled the parent README to the complete 54-path tree, 41 workflows, six issue templates, current CODEOWNERS and Dependabot configuration, static permission posture, and explicit external-settings boundary. |

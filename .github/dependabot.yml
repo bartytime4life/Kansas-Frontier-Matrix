@@ -1,27 +1,32 @@
 # Kansas Frontier Matrix Dependabot configuration
-# Version: v1.3
-# Updated: 2026-08-12
+# Version: v1.4
+# Updated: 2026-08-28
 #
 # Authority boundary:
 # - Dependabot proposes dependency changes through pull requests.
 # - It does not approve, merge, release, publish, change policy, or establish
 #   that an update is compatible, secure, rights-cleared, or production-ready.
 # - Security updates stay on the default branch because no target-branch is set.
-# - Group rules and cooldowns below apply only to version updates; security
-#   updates remain isolated and are not delayed by cooldown.
+# - Group rules and cooldowns below apply only to version updates. Security
+#   updates are not delayed by cooldown; their grouping is controlled
+#   separately and must be read from each generated PR and current settings.
 # - Cross-directory Python groups use dependency-name grouping so the same
 #   dependency can be reviewed once across matching manifests.
 # - npm, GitHub Actions, and pre-commit major updates remain individual for
 #   focused compatibility and workflow-boundary review.
 # - SemVer ecosystems use 30-day major, 7-day minor, and 3-day patch
 #   stabilization windows. Pre-commit hooks use a 7-day default window.
-# - Repository labels route proposals by ecosystem and review state only; they
-#   do not establish compatibility, security, approval, or merge readiness.
+# - Configured labels are advisory routing only. GitHub ignores a configured
+#   label that does not already exist; labels never establish compatibility,
+#   security, approval, or merge readiness.
 # - The payload-free Explorer image override package is monitored separately
 #   because it is outside the root npm workspaces and owns an independent lock.
-# - Docker base-image monitoring is not enabled here because the current files
-#   use custom Dockerfile.* placeholder names; supported discovery and intended
-#   activation remain NEEDS VERIFICATION.
+# - Docker base-image updates are monitored from /infra/docker. Dependabot's
+#   Docker fetcher discovers case-insensitive filenames containing Dockerfile,
+#   including the current Dockerfile.* placeholders. Each image update remains
+#   isolated for digest, compatibility, and security review.
+# - Dependabot does not provide Docker security updates; this lane proposes
+#   version updates only, and vulnerability assessment remains a review step.
 # - Private registries are not configured; adding one requires a separate
 #   credentials, least-privilege, and external-code-execution review.
 
@@ -161,6 +166,32 @@ updates:
         update-types:
           - "minor"
           - "patch"
+
+  # Digest-pinned base images in the two repository Dockerfile.* placeholders.
+  # Dependabot's Docker fetcher recognizes these custom filenames. Keep each
+  # proposal isolated so the affected image, digest, and compatibility boundary
+  # remain independently reviewable.
+  - package-ecosystem: "docker"
+    directory: "/infra/docker"
+    schedule:
+      interval: "weekly"
+      day: "saturday"
+      time: "06:00"
+      timezone: "America/Chicago"
+    cooldown:
+      default-days: 3
+    open-pull-requests-limit: 2
+    assignees:
+      - "bartytime4life"
+    labels:
+      - "dependencies"
+      - "ci"
+      - "needs-review"
+    commit-message:
+      prefix: "deps(docker)"
+      include: "scope"
+    pull-request-branch-name:
+      separator: "-"
 
   # GitHub Actions references in .github/workflows and repository-local actions.
   # Minor/patch updates are grouped; major action boundary changes stay isolated.
