@@ -854,7 +854,7 @@
     {
       "path": ".github/workflows/domain-geology.yml",
       "base_sha256": "sha256:0f571d43ba894b30981f691a3d94e0cfd5684913fb7f393cbb1f2c8280c8444e",
-      "current_sha256": "sha256:482856d8e161d67eeddb4e8a4ee9ce27740ebbeca1bb70670788610ad8143431",
+      "current_sha256": "sha256:c4fecf5c0df2bb5bb07c2f6517a013ee1ce69affce3f2e97840974c8a27fb080",
       "profiles": [
         "project-test"
       ],
