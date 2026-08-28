@@ -225,6 +225,8 @@ This folder (`docs/domains/archaeology/`) holds **only human-facing documentatio
 
 ---
 
+<a id="directory-tree-proposed"></a>
+
 ## Directory tree (current representative subset)
 
 > [!NOTE]
@@ -408,6 +410,8 @@ CONFIRMED edges (Atlas v1.1 §15.F). Each relation must preserve ownership, sour
 
 ---
 
+<a id="api-contract-and-schema-surfaces-proposed"></a>
+
 ## API, contract, and schema surfaces
 
 Current main contains archaeology semantic contracts and schema projections, including `EvidenceBundle` and `EvidenceDrawerPayload`. The archaeology governed-API route contains documentation and a placeholder only; no executable route handler or released public carrier was established by this inspection.
@@ -426,6 +430,8 @@ Current main contains archaeology semantic contracts and schema projections, inc
 [Back to top](#contents)
 
 ---
+
+<a id="validators-tests-fixtures-proposed"></a>
 
 ## Validators, tests, and fixtures
 
@@ -635,7 +641,7 @@ The live repository resolves several former path questions while leaving authori
 | v1 → v2 | Filled ADR-S numbers (04, 05, 09, 11, 12) from the backlog | historical gap closure | Retained as lineage; those planning identifiers are not current accepted ADR authority. |
 | v2 → v2.1.0 | Reconciled repository presence, mixed scaffold maturity, EvidenceBundle convergence, placeholder tests, CODEOWNERS routing, related paths, and ADR status against current main | repository-state correction | Remove false repository-unmounted and blanket-PROPOSED claims without implying enforcement, review, release, or publication. |
 
-> **Backward compatibility.** All v1 section anchors are preserved (headings 1–25 unchanged in text). New sections (Open questions register, Changelog, Definition of done) were inserted before FAQ and Appendix; the Contents list was renumbered accordingly. No v1 content was removed.
+> **Backward compatibility.** Renamed sections retain explicit aliases for the three v1 anchors (`#directory-tree-proposed`, `#api-contract-and-schema-surfaces-proposed`, and `#validators-tests-fixtures-proposed`). New sections (Open questions register, Changelog, Definition of done) remain before FAQ and Appendix; the Contents list is renumbered accordingly. Content was reconciled in v2.1.0, so compatibility here means stable legacy link targets rather than byte-for-byte preservation.
 
 [Back to top](#contents)
 
