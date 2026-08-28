@@ -290,6 +290,42 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(result.outcome, MODULE.Outcome.FAIL)
         self.assertEqual(result.findings[0].kind, "STATIC_IMPORT")
 
+    def test_active_acquisition_after_regex_literal_still_fails(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "scripts/active-after-regex.mjs",
+                'const protocol = /https?:\\/\\//; require("maplibre-gl");\n',
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.FAIL)
+        self.assertEqual(result.findings[0].kind, "REQUIRE")
+
+    def test_comment_after_regex_literal_remains_inert(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "scripts/comment-after-regex.mjs",
+                '/["\']/; // require("maplibre-gl")\n',
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.PASS)
+        self.assertEqual(result.findings, ())
+
+    def test_division_before_comment_is_not_treated_as_regex(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "scripts/division-before-comment.mjs",
+                'const ratio = distance / duration; // require("maplibre-gl")\n',
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.PASS)
+        self.assertEqual(result.findings, ())
+
     def test_governance_link_and_maplibre_css_class_are_not_acquisition(self) -> None:
         with self._root() as tmp:
             root = Path(tmp)
@@ -377,7 +413,7 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 3)
         payload = json.loads(completed.stdout)
         self.assertEqual(payload["outcome"], "HOLD")
-        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v5")
+        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v6")
         self.assertEqual(payload["findings"], [])
         self.assertEqual(payload["finding_counts"]["STATIC_IMPORT"], 1)
         self.assertFalse(payload["authority_created"])
