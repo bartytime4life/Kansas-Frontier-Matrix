@@ -1,0 +1,372 @@
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import test from "node:test";
+
+test("renders the map-first Kansas explorer shell", async () => {
+  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
+  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
+  const { default: worker } = await import(workerUrl.href);
+
+  const response = await worker.fetch(
+    new Request("http://localhost/", {
+      headers: { accept: "text/html" },
+    }),
+    {
+      ASSETS: {
+        fetch: async () => new Response("Not found", { status: 404 }),
+      },
+    },
+    {
+      waitUntil() {},
+      passThroughOnException() {},
+    },
+  );
+
+  assert.equal(response.status, 200);
+  assert.match(
+    response.headers.get("content-type") ?? "",
+    /^text\/html\b/i,
+  );
+  const html = await response.text();
+  assert.match(html, /Kansas Frontier Matrix Explorer/i);
+  assert.match(html, /Layer Catalog/i);
+  assert.match(html, /MapLibre/i);
+  assert.match(html, /synthetic and generalized demonstration layers/i);
+  assert.match(html, /Repository briefing/i);
+  assert.match(html, /main@(?:<!-- -->)?129ac47/i);
+  assert.match(html, /Runtime lab/i);
+  assert.match(html, /Source observatory/i);
+  assert.match(html, /Transition inspector/i);
+  assert.match(html, /Readiness gates/i);
+  assert.match(html, /county inventory is useful but snapshot-sensitive/i);
+});
+
+test("gives first-time visitors plain-language guided examples", async () => {
+  const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(source, /GUIDED_EXAMPLES/);
+  assert.match(source, /atmo-topeka-2026/);
+  assert.match(source, /atmo-hays-2024/);
+  assert.match(source, /planning-generalized-envelope/);
+  assert.match(source, /Nothing in this build is a released operational dataset/);
+  assert.match(source, /Every current map layer is synthetic or generalized/);
+  assert.match(source, /kfm-guided-start-dismissed-v1/);
+  assert.match(source, /openGuidedExample/);
+  assert.match(css, /\.guided-start/);
+  assert.match(css, /\.guided-example-list button/);
+});
+
+test("uses a site-specific social card and request-host metadata", async () => {
+  const layout = await readFile(new URL("../app/layout.tsx", import.meta.url), "utf8");
+  const socialCard = await readFile(new URL("../public/og-guided.png", import.meta.url));
+
+  assert.match(layout, /x-forwarded-host/);
+  assert.match(layout, /new URL\("\/og-guided\.png", metadataBase\)/);
+  assert.match(layout, /Synthetic and generalized demonstration data only/);
+  assert.ok(socialCard.byteLength > 100_000);
+});
+
+test("keeps Focus Mode fail closed and share state complete", async () => {
+  const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const focus = await readFile(new URL("../app/focus-mode.ts", import.meta.url), "utf8");
+
+  assert.match(source, /focusResultForState/);
+  assert.match(focus, /GEOMETRY_IS_NOT_EVIDENCE/);
+  assert.match(focus, /TIME_SCOPE_MISMATCH/);
+  assert.match(source, /Outcomes cannot be manually overridden/);
+  assert.match(source, /kfm-focus-session-receipt-v1/);
+  assert.match(source, /Apply explicit change/);
+  assert.match(source, /context_is_evidence: false/);
+  assert.match(source, /aria-controls={`drawer-panel-/);
+  assert.doesNotMatch(source, /setFocusScenario|className="focus-scenarios"/);
+  assert.match(source, /params\.set\("proj", projection\)/);
+  assert.match(source, /params\.set\("order", layerOrder\.join\(","\)\)/);
+  assert.match(source, /params\.set\("focusStage", focusStage\)/);
+  assert.match(source, /params\.set\("focusIntent", focusIntent\)/);
+  assert.match(source, /params\.set\("ws", currentWorkspace\)/);
+  assert.match(source, /params\.get\("privacy"\) === "location-camera-redacted"/);
+  assert.match(source, /window\.addEventListener\("popstate", handlePopState\)/);
+  assert.match(source, /WebGL2 is unavailable in this browser/);
+  assert.match(source, /clamp\(parseNumber\(params\.get\("z"\), KANSAS_VIEW\.zoom\), 4, 16\)/);
+  assert.match(source, /value === null \|\| value\.trim\(\) === ""/);
+  assert.match(source, /params\.has\("l"\)/);
+  assert.match(source, /LAYER_REGISTRY\.map\(\(layer\) => `\$\{layer\.id\}:\$\{\(opacity/);
+  assert.match(source, /const params = buildExplorerParams\(\)/);
+  assert.doesNotMatch(source, /window\.history\.pushState/);
+});
+
+test("resolves Focus outcomes and temporal scope with fail-closed precedence", async () => {
+  const ts = await import("typescript");
+  const source = await readFile(new URL("../app/focus-mode.ts", import.meta.url), "utf8");
+  const javascript = ts.transpileModule(source, {
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+    fileName: "focus-mode.ts",
+  }).outputText;
+  const focus = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
+
+  const expected = {
+    ANSWER: "ANSWER",
+    CORRECTED: "ANSWER",
+    MISSING_EVIDENCE: "ABSTAIN",
+    SOURCE_STALE: "ABSTAIN",
+    GENERALIZED_GEOMETRY: "ABSTAIN",
+    SUPERSEDED: "ABSTAIN",
+    DENIED_BY_POLICY: "DENY",
+    RESTRICTED_ACCESS: "DENY",
+    ERROR: "ERROR",
+  };
+  for (const [state, outcome] of Object.entries(expected)) {
+    assert.equal(focus.focusResultForState(state, false).outcome, outcome, state);
+  }
+
+  assert.equal(focus.focusResultForState("ANSWER", true).code, "TIME_SCOPE_MISMATCH");
+  assert.equal(focus.focusResultForState("DENIED_BY_POLICY", true).outcome, "DENY");
+  assert.equal(focus.focusResultForState("ERROR", true).outcome, "ERROR");
+  assert.equal(focus.isFeatureTimeMismatch({ mode: "exact" }, 2026, 2024), true);
+  assert.equal(focus.isFeatureTimeMismatch({ mode: "exact" }, 2026, 2026), false);
+  assert.equal(focus.isFeatureTimeMismatch({ mode: "through" }, 1910, 1885), true);
+  assert.equal(focus.isFeatureTimeMismatch({ mode: "through" }, 1885, 1910), false);
+  assert.equal(focus.isFeatureTimeMismatch(undefined, 2026, 1885), false);
+
+  const mismatchActions = focus.buildFocusActionProposals({
+    state: "ANSWER",
+    timeMismatch: true,
+    activeYear: 2024,
+    featureYear: 2026,
+    currentCenter: [-98.4, 38.5],
+    focusCenter: [-95.7, 39.0],
+  });
+  assert.equal(mismatchActions[0].kind, "SET_TIME");
+  assert.equal(mismatchActions[0].targetYear, 2026);
+  const deniedActions = focus.buildFocusActionProposals({
+    state: "DENIED_BY_POLICY",
+    timeMismatch: true,
+    activeYear: 2024,
+    featureYear: 2026,
+    currentCenter: [-98.4, 38.5],
+    focusCenter: [-95.7, 39.0],
+  });
+  assert.equal(deniedActions.some((action) => action.kind === "SET_TIME"), false);
+});
+
+test("keeps repository updates pinned and boundary-labeled", async () => {
+  const updates = await readFile(new URL("../app/repository-updates.ts", import.meta.url), "utf8");
+
+  assert.match(updates, /129ac47f359be143ce8bbe43d8401f8660b8be5f/);
+  assert.match(updates, /exact maplibre-gl 6\.6\.0 lock closure/);
+  assert.match(updates, /177 commits after the prior Site pin/);
+  assert.match(updates, /The executable API checkpoint is intentionally negative-only/);
+  assert.match(updates, /Consent metadata is normalized; the fixture-first boundary remains/);
+  assert.match(updates, /Hydrology dashboard boundary is now repository-grounded/);
+  assert.match(updates, /The retained GeoParquet 1\.1 CRS fixture was corrected/);
+  assert.match(updates, /This Site remains a separate synthetic demonstration and is not KFM runtime-readiness evidence/);
+  assert.match(updates, /no county lifecycle readiness, release, or publication state/);
+  assert.match(updates, /HOLD is not a fifth client-facing runtime outcome/);
+  assert.match(updates, /PUBLISHED → PUBLISHED_SUPERSEDED/);
+  assert.match(updates, /HOLD_CURRENT_RELEASE/);
+});
+
+test("imports the complete repository feature catalog without maturity inflation", async () => {
+  const ts = await import("typescript");
+  const featureSource = await readFile(new URL("../app/feature-catalog.ts", import.meta.url), "utf8");
+  const compiled = ts.transpileModule(featureSource, {
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+    fileName: "feature-catalog.ts",
+  }).outputText;
+  const catalog = await import(`data:text/javascript;base64,${Buffer.from(compiled).toString("base64")}`);
+
+  assert.equal(catalog.FEATURE_CATALOG.length, 38);
+  assert.equal(new Set(catalog.FEATURE_CATALOG.map((feature) => feature.id)).size, 38);
+  assert.equal(new Set(catalog.FEATURE_CATALOG.map((feature) => feature.area)).size, 6);
+  assert.deepEqual(
+    Object.fromEntries(["VERIFIED_SLICE", "FIXTURE_FIRST", "DOCUMENTED", "HOLD"].map((maturity) => [maturity, catalog.FEATURE_CATALOG.filter((feature) => feature.maturity === maturity).length])),
+    { VERIFIED_SLICE: 4, FIXTURE_FIRST: 26, DOCUMENTED: 7, HOLD: 1 },
+  );
+  assert.equal(catalog.FEATURE_CATALOG.some((feature) => feature.id === "story-player" && feature.maturity === "FIXTURE_FIRST"), true);
+  assert.equal(catalog.FEATURE_CATALOG.every((feature) => feature.path && feature.summary), true);
+});
+
+test("keeps the MapLibre Workbench complete, bounded, and responsive", async () => {
+  const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const mapInterface = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
+  const exportCenter = await readFile(new URL("../app/export-center.ts", import.meta.url), "utf8");
+  const explorerData = await readFile(new URL("../app/explorer-data.ts", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(source, /id="map-utility-panel"/);
+  for (const view of ["Navigate", "Inspect", "Display", "Measure", "Export", "Diagnostics"]) assert.match(source, new RegExp(`${view}`));
+  assert.match(source, /kfm-map-context-receipt-v1/);
+  assert.match(source, /kfm-map-diagnostics-v1/);
+  assert.match(exportCenter, /kfm-public-safe-map-export-v2/);
+  assert.match(source, /Preview trust before download/);
+  assert.match(source, /Renderer-neutral runtime seam/);
+  assert.match(source, /location-camera-redacted/);
+  assert.match(source, /WITHHELD_BROWSER_LOCATION/);
+  assert.match(source, /Screen measurement — not survey, cadastral, legal, or evidence/);
+  assert.match(source, /Go to coordinates/);
+  assert.match(source, /Current viewport only/);
+  assert.match(source, /Visible layers only/);
+  assert.match(source, /copyMapCenter/);
+  assert.match(source, /fitIndexedFeatures/);
+  assert.match(source, /SUPPORTED_CONTEXT_BOUNDS/);
+  assert.match(source, /site_package: "6\.6\.0"/);
+  assert.match(source, /FULL TEMPORAL CAPACITY · 4\.54 GA BP TO 2026/);
+  assert.match(source, /Deep-time and intermediate ticks are capacity markers, not claims/);
+  assert.match(source, /TIMELINE_JUMPS/);
+  assert.match(explorerData, /-4_540_000_000/);
+  assert.match(explorerData, /-541_000_000/);
+  assert.match(explorerData, /-11_700/);
+  assert.match(source, /mapQueryCandidates/);
+  assert.match(source, /selected && !selectedTimeMismatch && !selectedLayerHidden/);
+  assert.match(source, /ACTIVE LAYERS AVAILABLE/);
+  assert.match(mapInterface, /Renderer architecture[\s\S]*ACCEPTED/);
+  assert.match(mapInterface, /MapRuntimePort \+ Null runtime[\s\S]*VERIFIED SLICE/);
+  assert.match(mapInterface, /Dependency admission[\s\S]*EXACT 6\.6\.0/);
+  assert.match(mapInterface, /Concrete MapLibre adapter[\s\S]*VERIFIED SLICE/);
+  assert.match(mapInterface, /Browser readiness[\s\S]*BOUNDED FIXTURE/);
+  assert.match(explorerData, /"fill-outline-color": \["case", \["boolean", \["feature-state", "hover"\]/);
+  assert.match(css, /\.map-utility-panel\[data-open="true"\]/);
+  assert.match(css, /\.mobile-hidden-control/);
+  assert.match(css, /grid-template-columns: repeat\(5,1fr\)/);
+  assert.doesNotMatch(css, /\.map-tool-rail > button:nth-child/);
+});
+
+test("resolves exact, through-time, and untimed Map Workbench availability", async () => {
+  const ts = await import("typescript");
+  const source = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
+  const javascript = ts.transpileModule(source, {
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+    fileName: "map-interface.ts",
+  }).outputText;
+  const mapInterface = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
+
+  const exact = { temporal: { mode: "exact", years: [2024, 2026] } };
+  const through = { temporal: { mode: "through", years: [1885, 1910] } };
+  assert.equal(mapInterface.isLayerAvailableAtTime(exact, 2024), true);
+  assert.equal(mapInterface.isLayerAvailableAtTime(exact, 2025), false);
+  assert.equal(mapInterface.isLayerAvailableAtTime(through, 1880), false);
+  assert.equal(mapInterface.isLayerAvailableAtTime(through, 1900), true);
+  assert.equal(mapInterface.isLayerAvailableAtTime({}, 1880), true);
+
+  const layer = {
+    temporal: { mode: "through", years: [1885, 1910] },
+    data: { features: [
+      { properties: { fid: "vintage-1885", year: 1885 } },
+      { properties: { fid: "vintage-1910", year: 1910 } },
+    ] },
+  };
+  assert.equal(mapInterface.inspectableFeatureId(layer, 1880), null);
+  assert.equal(mapInterface.inspectableFeatureId(layer, 1900), "vintage-1885");
+  assert.equal(mapInterface.inspectableFeatureId(layer, 2026), "vintage-1910");
+});
+
+test("keeps source discovery separate from admission and map ranges explicit", async () => {
+  const sources = await readFile(new URL("../app/source-intelligence.ts", import.meta.url), "utf8");
+  const runtime = await readFile(new URL("../app/map-runtime.ts", import.meta.url), "utf8");
+
+  assert.match(sources, /Source discovery is not source admission/);
+  assert.match(sources, /KFM Full Atlas Seed Cards/);
+  assert.match(sources, /sourceCount: 12/);
+  assert.match(sources, /DEFER DEPENDENCY/);
+  assert.match(sources, /National Flood Hazard Layer/);
+  assert.match(runtime, /attribution: record\.attribution/);
+  assert.match(runtime, /setLayerZoomRange\(renderer\.id, record\.minZoom, record\.maxZoom\)/);
+});
+
+test("reviews and redacts public-safe exports before download", async () => {
+  const ts = await import("typescript");
+  const source = await readFile(new URL("../app/export-center.ts", import.meta.url), "utf8");
+  const javascript = ts.transpileModule(source, {
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+    fileName: "export-center.ts",
+  }).outputText;
+  const exports = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
+
+  const protectedReview = exports.buildPublicSafeExport({
+    exportedAt: "2026-08-24T18:30:00.000Z",
+    locationCameraRedacted: true,
+    view: { center: [-97.5, 38.5], zoom: 7, bearing: 0, pitch: 0 },
+    projection: "mercator",
+    basemap: "midnight",
+    layerOrder: ["planning"],
+    activeYear: 2026,
+    workspace: "trust",
+    layers: [{ id: "planning", title: "Planning", opacity: 1, attribution: "Site fixture", releaseState: "HELD", generalization: "Generalized", correction: "NONE" }],
+    selection: {
+      featureId: "protected-1",
+      title: "Protected fixture",
+      layerId: "planning",
+      evidenceState: "DENIED_BY_POLICY",
+      evidenceReference: "fixture:protected-1",
+      temporalScope: "2026 fixture",
+      sourceYear: 2026,
+      temporalMode: "exact",
+      sourceTime: "2026",
+      releaseTime: "UNRELEASED",
+      lastUpdate: "2026-08-24",
+      reviewState: "HELD",
+      releaseState: "HELD",
+      correctionState: "NONE",
+      geometry: { type: "Point", coordinates: [-97.5, 38.5] },
+      generalization: "Generalized",
+    },
+  });
+
+  assert.equal(protectedReview.payload.format, "kfm-public-safe-map-export-v2");
+  assert.equal(protectedReview.payload.map.center, "WITHHELD_BROWSER_LOCATION");
+  assert.equal(protectedReview.payload.selection.geometry, "WITHHELD_BY_POLICY");
+  assert.equal(protectedReview.withheldFeatureCount, 1);
+  assert.equal(protectedReview.downloadAllowed, true);
+
+  const blockedReview = exports.buildPublicSafeExport({
+    ...protectedReview.payload,
+    exportedAt: "2026-08-24T18:31:00.000Z",
+    locationCameraRedacted: false,
+    view: { center: [-97.5, 38.5], zoom: 7, bearing: 0, pitch: 0 },
+    projection: "mercator",
+    basemap: "midnight",
+    layerOrder: ["planning"],
+    activeYear: 2026,
+    workspace: "trust",
+    layers: [{ id: "planning", title: "Planning", opacity: 1, attribution: "", releaseState: "HELD", generalization: "Generalized", correction: "NONE" }],
+    selection: null,
+  });
+  assert.equal(blockedReview.downloadAllowed, false);
+  assert.equal(blockedReview.checks.find((check) => check.id === "attribution").state, "BLOCK");
+});
+
+test("keeps the complete function inventory three-axis and runtime seam fail closed", async () => {
+  const ts = await import("typescript");
+  const registrySource = await readFile(new URL("../app/function-registry.ts", import.meta.url), "utf8");
+  const seamSource = await readFile(new URL("../app/runtime-seam.ts", import.meta.url), "utf8");
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const compile = (source, fileName) => ts.transpileModule(source, {
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+    fileName,
+  }).outputText;
+  const registry = await import(`data:text/javascript;base64,${Buffer.from(compile(registrySource, "function-registry.ts")).toString("base64")}`);
+  const seam = await import(`data:text/javascript;base64,${Buffer.from(compile(seamSource, "runtime-seam.ts")).toString("base64")}`);
+
+  assert.equal(registry.FUNCTION_REGISTRY.some((record) => record.title === "Export" && record.maturity === "IMPLEMENTED"), true);
+  assert.equal(registry.FUNCTION_REGISTRY.some((record) => record.title === "Compare" && record.state === "GATED"), true);
+  assert.equal(registry.MAP_FUNCTIONS.length, 20);
+  assert.equal(registry.SITE_EXTENSION_FUNCTIONS.length, 9);
+  assert.equal(registry.OPERATIONAL_HANDOFFS.length, 6);
+  assert.equal(registry.FUNCTION_REGISTRY.length, 35);
+  assert.equal(new Set(registry.FUNCTION_REGISTRY.map((record) => record.id)).size, 35);
+  assert.equal(registry.MAP_FUNCTIONS.every((record) => record.inventory === "MAP FUNCTION MATRIX"), true);
+  assert.equal(registry.MAP_FUNCTIONS.some((record) => record.id === "hover-summary" && record.maturity === "NOT IMPLEMENTED"), true);
+  assert.equal(registry.MAP_FUNCTIONS.some((record) => record.id === "story-node" && record.state === "BOUNDED"), true);
+  assert.equal(registry.functionsForGroup("OPERATIONAL_HANDOFF").every((record) => record.action === "COPY_HANDOFF"), true);
+  assert.equal(seam.runtimeSeamStepForSelection(null).state, "ABSTAINED");
+  assert.equal(seam.runtimeSeamStepForSelection("DENIED_BY_POLICY").state, "DENIED");
+  assert.equal(seam.runtimeSeamStepForSelection("SOURCE_STALE").state, "STALE");
+  assert.equal(seam.runtimeSeamStepForSelection("ERROR").state, "ERROR");
+  assert.equal(seam.runtimeSeamStepForSelection("ANSWER").state, "READY");
+  assert.match(page, /Function and interface navigator/);
+  assert.match(page, /record\.action === "OPEN_TIMELINE"/);
+  assert.match(page, /All 38 repository feature families/);
+  assert.match(page, /aria-current={currentWorkspace === workspace\.id \? "page" : undefined}/);
+  assert.match(page, /setRepositoryView\("functions"\); setRepositoryOpen\(true\); }}>Functions<\/button>/);
+});
