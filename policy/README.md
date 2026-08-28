@@ -2,7 +2,7 @@
 doc_id: kfm://doc/policy-readme
 title: policy/ — Canonical Admissibility Root
 type: readme
-version: v0.4.4
+version: v0.4.5
 status: draft; repository-grounded; current-state-reconciled; mixed-maturity; direct-child-coverage-audited; bounded-Rego-evaluation; general-evaluator-unbound; active-bundle-unaccepted; non-release; non-publication
 owner: NEEDS VERIFICATION — CODEOWNERS routes /policy/ to @bartytime4life; accepted policy stewardship and independent approval controls were not established
 created: 2026-07-23
@@ -11,10 +11,10 @@ current_path: policy/README.md
 owning_root: policy/
 policy_label: public; policy; root-contract; mixed-maturity; non-release; non-publication
 responsibility: Define the canonical policy-source root, direct-child boundaries, maturity evidence, validation posture, and trust membrane without becoming semantic, schema, evidence, runtime, release, or publication authority.
-base_commit: 156e3288f21dc95d60daa744be4207681ad21655
-prior_blob: 4a210efc4f267de5b2a54ad36ae87a863f51ffd1
+base_commit: f68fe0ff504562bb8d2b4aedacb3d46eb66f17f3
+prior_blob: 33061a1434c2c61e9f2b13da44b0eb8864363d21
 directory_governance: ADR-0029 accepted Directory Rules v2 for placement; ADR-0003 remains proposed for the policy/policies compatibility decision
-truth_posture: CONFIRMED canonical singular policy root, accepted Directory Rules placement, active Root Registry projection, exact 40-directory direct-child map, 523-entry recursive policy tree, 73 README files, 38 substantive direct-child READMEs, one one-byte direct-child README placeholder, one direct child without a README, 173 Rego files with exactly one native Rego test, one bounded PROPOSED_INACTIVE release-gate profile with checksum-pinned OPA 1.19.0 CI, multiple inactive fixture-first profiles and validators, 18-test structural boundary suite, placeholder policy-runtime package, and broad readiness holds / PROPOSED root contract, direct-lane completion, active-evaluator sequence, threshold values and bindings, and future consumer binding / CONFLICTED or unresolved source-vs-sources and test-vs-tests naming, compatibility-lane placement, schema homes, and inactive native-to-outward outcome binding / UNKNOWN repository-wide bundle selector, accepted evaluator, required-check configuration, production consumers, decision receipts, replay, promotion integration, deployment enforcement, and independent release approval
+truth_posture: CONFIRMED canonical singular policy root, accepted Directory Rules placement, active Root Registry projection, exact 40-directory direct-child map, 523-entry recursive policy tree, 73 README files, 39 substantive direct-child READMEs, zero one-byte direct-child README placeholders, one direct child without a README, documented match-scoring routing and sensitive-people holds, 173 Rego files with exactly one native Rego test, one bounded PROPOSED_INACTIVE release-gate profile with checksum-pinned OPA 1.19.0 CI, multiple inactive fixture-first profiles and validators, 18-test structural boundary suite, placeholder policy-runtime package, and broad readiness holds / PROPOSED root contract, final direct-lane explanation, active-evaluator sequence, threshold values and bindings, and future consumer binding / CONFLICTED or unresolved source-vs-sources and test-vs-tests naming, compatibility-lane placement, schema homes, and inactive native-to-outward outcome binding / UNKNOWN repository-wide bundle selector, accepted evaluator, required-check configuration, production consumers, decision receipts, replay, promotion integration, deployment enforcement, and independent release approval
 [/KFM_META_BLOCK_V2] -->
 
 # policy
@@ -25,12 +25,12 @@ truth_posture: CONFIRMED canonical singular policy root, accepted Directory Rule
 
 | Placement | Direct lanes | Substantive child READMEs | Native Rego tests | General evaluator | Publisher |
 |---|---:|---:|---:|---|---|
-| [Accepted `policy/` root](#authority-level) | [40](#current-direct-child-map) | [38](#readme-coverage) | [1 bounded profile](#validation) | [Unbound](#current-maturity) | **No** |
+| [Accepted `policy/` root](#authority-level) | [40](#current-direct-child-map) | [39](#readme-coverage) | [1 bounded profile](#validation) | [Unbound](#current-maturity) | **No** |
 
 **Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [Direct children](#current-direct-child-map) · [README coverage](#readme-coverage) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Maturity](#current-maturity) · [Outcomes](#outcome-vocabularies) · [Authoring](#policy-authoring-contract) · [Sensitive policy](#rights-sensitivity-consent-and-public-exposure) · [Trust membrane](#runtime-and-public-trust-membrane) · [Rollback](#correction-and-rollback) · [Open verification](#open-verification-register)
 
 > [!IMPORTANT]
-> **Safe current conclusion:** `policy/` is the adopted placement for policy source. Its direct documentation surface is now broad but not complete: 38 of 40 direct child lanes have substantive READMEs, one retains a one-byte placeholder README, and `policy/test/` has no README. One bounded, `PROPOSED_INACTIVE` Pass 12 release-gate profile has executable Rego, the repository's only native Rego test, exact-polarity fixtures, stable deny reasons, and checksum-pinned OPA 1.19.0 CI. These surfaces do **not** establish a repository-wide active bundle, accepted general evaluator, functional policy-runtime package, authenticated `PolicyDecision` flow, production consumer, promotion authority, release approval, deployment enforcement, or publication.
+> **Safe current conclusion:** `policy/` is the adopted placement for policy source. Its direct documentation surface is now broad but not complete: 39 of 40 direct child lanes have substantive READMEs, no direct child retains a one-byte README placeholder, and `policy/test/` has no README. One bounded, `PROPOSED_INACTIVE` Pass 12 release-gate profile has executable Rego, the repository's only native Rego test, exact-polarity fixtures, stable deny reasons, and checksum-pinned OPA 1.19.0 CI. These surfaces do **not** establish a repository-wide active bundle, accepted general evaluator, functional policy-runtime package, authenticated `PolicyDecision` flow, production consumer, promotion authority, release approval, deployment enforcement, or publication.
 
 > [!CAUTION]
 > A policy result cannot create evidence, clear rights by assertion, infer consent, downgrade sensitivity, authenticate review, promote lifecycle state, approve release, make generated language authoritative, or turn a map, tile, file path, workflow, commit, or pull request into public truth.
@@ -76,14 +76,14 @@ The [`Root Registry`](../control_plane/root_registry.yaml) projects this accepte
 
 ## Status
 
-| Surface | Current status at `main@e52165e820b07e65c54830fde519a9c90df8eb1c` | Safe conclusion |
+| Surface | Current status at `main@f68fe0ff504562bb8d2b4aedacb3d46eb66f17f3` | Safe conclusion |
 |---|---|---|
-| `policy/README.md` | **CONFIRMED v0.4.3 baseline; blob `4a210efc4f267de5b2a54ad36ae87a863f51ffd1`** | v0.4.4 documents the proof routing hold, current ProofPack tooling boundary, and coverage inventory in place; it changes no rule or decision. |
+| `policy/README.md` | **CONFIRMED v0.4.4 baseline; blob `33061a1434c2c61e9f2b13da44b0eb8864363d21`** | v0.4.5 documents the match-scoring routing hold and sensitive people-scoring boundary, and refreshes coverage in place; it changes no rule or decision. |
 | Singular `policy/` root | **CONFIRMED / accepted placement** | Directory Rules v2 is effective through ADR-0029; no second policy root is authorized. |
 | Root Registry projection | **CONFIRMED `root.policy` / `ACTIVE` registry status** | Projects accepted placement and artifact constraints; it does not create authority or activate rules. |
 | Recursive tree | **CONFIRMED 523 entries: 365 files and 158 directories** | Inventory proves tracked presence only. |
 | Direct-child topology | **CONFIRMED 40 directories and no direct file besides this README** | The prior `living_persons_geoprivacy.md` entry was deleted in `9d41bd04f559e25ea0cf2fc51c3e06955f9771b1` and is removed from the current map. |
-| README coverage | **CONFIRMED 73 total; 38 substantive direct-child READMEs** | One direct child retains a one-byte README placeholder; `policy/test/` has no README. Documentation coverage is not implementation maturity. |
+| README coverage | **CONFIRMED 73 total; 39 substantive direct-child READMEs** | No direct child retains a one-byte README placeholder; `policy/test/` has no README. Documentation coverage is not implementation maturity. |
 | Rego source inventory | **CONFIRMED 173 `.rego` files** | Exactly one tracked file matches the repository's native Rego-test naming convention; no broader test-to-source coverage is inferred. Source presence alone is not activation or correct evaluation. |
 | Pass 12 release gate | **CONFIRMED bounded executable profile; `PROPOSED_INACTIVE`** | `policy/rego/release_gate_v1.rego` defaults deny and exposes deterministic reasons. |
 | Native Rego tests | **CONFIRMED exactly one bounded test file** | `policy/rego/release_gate_v1_test.rego` is exercised by its dedicated workflow; no repository-wide native-test convention is accepted. |
@@ -315,7 +315,7 @@ policy/
 ├── intake/                # Pre-RAW intake admissibility boundary
 ├── joins/                 # Cross-domain join admissibility boundary
 ├── layers/                # Layer and public-exposure admissibility boundary
-├── match-scoring/         # Marker-only unresolved lane
+├── match-scoring/         # Scoring-family routing and sensitive-people hold
 ├── opa/                   # Placeholder and convergence-hold boundary
 ├── promotion/             # Promotion admissibility boundary
 ├── proof/                 # Documented proof-policy routing hold
@@ -349,7 +349,7 @@ policy/
 | `fixtures/`, `test/`, `tests/` | Policy-local compatibility or routing lanes. Reusable executable fixtures and tests remain owned by root `fixtures/` and `tests/`; `test/` lacks its required boundary explanation. |
 | `source/` and `sources/` | Both paths now have substantive boundary documentation. `sources/` is a routing-and-hold parent above two proposed rights scaffolds; documentation does not resolve the parallel naming or create two source-policy authorities. |
 | `thresholds/` | Inactive unresolved-slot candidate registry only; no threshold value, evaluator binding, watcher binding, activation, release, or publication authority. |
-| `match-scoring/` | The direct README is one byte. The path is tracked, but responsibility, writers, readers, retention, and graduation remain **NEEDS VERIFICATION**. |
+| [`match-scoring/`](./match-scoring/) | **Documented routing hold.** It separates governance, domain, and UI scoring families and preserves an explicit deny-by-default [`people/`](./match-scoring/people/) boundary. No universal score, threshold, evaluator, consumer, identity decision, release, or publication authority is established. |
 | [`proof/`](./proof/) | **Documented routing hold.** The directory remains implementation-empty; current proof records, semantics, shapes, tools, tests, workflows, policy evaluation, release, and publication remain separate responsibilities. |
 | [`transport/`](./transport/) | **Documented routing hold.** The directory remains implementation-empty and does not accept the unresolved `transport -> roads-rail-trade` alias, activate policy, or grant release/publication authority. |
 | `role/` | Substantive routing-and-hold parent above one unresolved `sensitivity/` leaf. Neither document defines a role family, rule, evaluator, consumer, approval, release, or publication authority. |
@@ -361,15 +361,15 @@ policy/
 | Coverage class | Count | Current evidence |
 |---|---:|---|
 | Total README files under `policy/` | 73 | Root, direct-child, and deeper boundary documents in the pinned Git tree. |
-| Substantive direct-child READMEs | 38 | More than one byte and independently reviewable; content maturity still varies from routing-and-hold contract to bounded executable profile. |
-| One-byte direct-child README placeholders | 1 | `match-scoring/`. |
+| Substantive direct-child READMEs | 39 | More than one byte and independently reviewable; content maturity still varies from routing-and-hold contract to bounded executable profile. |
+| One-byte direct-child README placeholders | 0 | The final one-byte direct placeholder is replaced by the documented `match-scoring/` boundary. |
 | Direct children without a README | 1 | `test/`; tracked contents do not explain its authority or compatibility relationship to `tests/`. |
 | Deeper READMEs | 33 | Owned by their nearest substantive parent boundary; not expanded into this root map. |
 
 Substantive direct-child indexes:
 
 - **Core admissibility and context:** [`access/`](./access/) · [`consent/`](./consent/) · [`contract/`](./contract/) · [`data/`](./data/) · [`evidence/`](./evidence/) · [`geoprivacy/`](./geoprivacy/) · [`identity/`](./identity/) · [`intake/`](./intake/) · [`rights/`](./rights/) · [`role/`](./role/) · [`sensitivity/`](./sensitivity/)
-- **Composition and decisions:** [`bundles/`](./bundles/) · [`decision/`](./decision/) · [`focus/`](./focus/) · [`joins/`](./joins/) · [`layers/`](./layers/) · [`opa/`](./opa/) · [`promotion/`](./promotion/) · [`proof/`](./proof/) · [`redaction/`](./redaction/) · [`rego/`](./rego/) · [`release/`](./release/) · [`review/`](./review/) · [`runtime/`](./runtime/) · [`thresholds/`](./thresholds/)
+- **Composition and decisions:** [`bundles/`](./bundles/) · [`decision/`](./decision/) · [`focus/`](./focus/) · [`joins/`](./joins/) · [`layers/`](./layers/) · [`match-scoring/`](./match-scoring/) · [`opa/`](./opa/) · [`promotion/`](./promotion/) · [`proof/`](./proof/) · [`redaction/`](./redaction/) · [`rego/`](./rego/) · [`release/`](./release/) · [`review/`](./review/) · [`runtime/`](./runtime/) · [`thresholds/`](./thresholds/)
 - **Domains and specialized policy:** [`biotopes/`](./biotopes/) · [`domains/`](./domains/) · [`genealogy/`](./genealogy/) · [`source/`](./source/) · [`sources/`](./sources/) · [`story/`](./story/) · [`supply_chain/`](./supply_chain/) · [`telemetry/`](./telemetry/) · [`transport/`](./transport/) · [`ui/`](./ui/)
 - **Authoring support boundaries:** [`ai_builder/`](./ai_builder/) · [`fixtures/`](./fixtures/) · [`tests/`](./tests/)
 
@@ -401,14 +401,14 @@ This README may document current bytes and open decisions. It must not accept an
 
 **2026-08-13** against `main@737dce6357d670e48df85e94ec0641aaa1a365cb`.
 
-**Focused child-coverage refreshes:** 2026-08-28 against `main@bacb77cfbc04014a2c05da541f9cba8025629068` for `policy/sources/`, its `rights/` child, the singular `source/` cross-reference, and direct README counts; 2026-08-28 against `main@e52165e820b07e65c54830fde519a9c90df8eb1c` for the `policy/role/` parent and its `sensitivity/` child navigation; 2026-08-28 against `main@813ef14b1dbe5bd236fc902ce8fc3bb2e8ae7e80` for the `policy/transport/` routing hold; and 2026-08-28 against `main@156e3288f21dc95d60daa744be4207681ad21655` for the `policy/proof/` routing hold, current ProofPack tooling boundary, and resulting coverage counts. The broader inventory below remains the 2026-08-13 review snapshot.
+**Focused child-coverage refreshes:** 2026-08-28 against `main@bacb77cfbc04014a2c05da541f9cba8025629068` for `policy/sources/`, its `rights/` child, the singular `source/` cross-reference, and direct README counts; 2026-08-28 against `main@e52165e820b07e65c54830fde519a9c90df8eb1c` for the `policy/role/` parent and its `sensitivity/` child navigation; 2026-08-28 against `main@813ef14b1dbe5bd236fc902ce8fc3bb2e8ae7e80` for the `policy/transport/` routing hold; 2026-08-28 against `main@156e3288f21dc95d60daa744be4207681ad21655` for the `policy/proof/` routing hold, current ProofPack tooling boundary, and resulting coverage counts; and 2026-08-28 against `main@f68fe0ff504562bb8d2b4aedacb3d46eb66f17f3` for the `policy/match-scoring/` routing hold, sensitive `people/` leaf, scoring-family evidence map, and resulting coverage counts. The broader inventory below remains the 2026-08-13 review snapshot.
 
 Reviewed:
 
 - the complete v0.3.1 root README and prior blob `6c5021f9d92778581a4e9331a9dd6ddb7efc5e35`;
 - accepted ADR-0029 v1.2, exact adopted Directory Rules blob `fd49a0b83e55cef52c1124281f093e263526898d`, and the active `root.policy` machine projection;
 - the complete 523-entry recursive `policy/` Git tree, all 40 direct directories, and all 73 README files;
-- direct documentation coverage: 38 substantive child READMEs, one one-byte README placeholder, and one direct child without a README;
+- direct documentation coverage: 39 substantive child READMEs, zero one-byte README placeholders, and one direct child without a README;
 - the 173-file policy Rego inventory and exact one-file native Rego-test inventory;
 - ADR-0002, ADR-0003, and ADR-0020 source and effective status boundaries;
 - substantive direct child indexes, including the current 14-child domain-policy map;
@@ -436,8 +436,8 @@ Not established:
 
 | Level | Evidence required | Root-wide posture |
 |---|---|---:|
-| M0 — Placeholder | stub README or default-only module | **CONFIRMED in one one-byte direct README, one unexplained direct lane, additional scaffold lanes, and `policy-runtime`** |
-| M1 — Boundary documented | responsibility, inputs, outputs, failures, authority split | **CONFIRMED for 38 direct child READMEs; completeness and exact profile compliance vary by lane** |
+| M0 — Placeholder | stub README or default-only module | **CONFIRMED in one unexplained direct lane, additional scaffold lanes, and `policy-runtime`; no one-byte direct README remains** |
+| M1 — Boundary documented | responsibility, inputs, outputs, failures, authority split | **CONFIRMED for 39 direct child READMEs; completeness and exact profile compliance vary by lane** |
 | M2 — Rule or profile candidate | reviewed source, contracts/schemas, synthetic fixtures, stable validator or entrypoint | **CONFIRMED in multiple inactive profiles** |
 | M3 — Evaluator-backed proof | accepted evaluator/bundle, native tests, input assembly, normalization, deterministic CI | **PARTIAL only for one bounded Rego profile; general M3 not established** |
 | M4 — Governed consumer and replay | consumer, authenticated decisions, receipts, replay, expiry, correction, cache invalidation | **NOT ESTABLISHED** |
@@ -522,7 +522,7 @@ Client-side hiding is not a security control. Join-induced sensitivity must prop
 
 Material policy changes should be versioned, preserve prior source/bundle/evaluator/test identities for replay, record supersession and effective time, reevaluate affected decisions and releases, invalidate caches, emit correction or withdrawal records through owning roots, and restore a prior accepted bundle/selector during rollback rather than copying files into an ambiguous state.
 
-This v0.4.4 README changes no policy behavior. Before merge, close or abandon its draft PR and branch. After merge, revert the focused documentation commit or issue a transparent forward fix. The exact v0.4.3 baseline is blob `4a210efc4f267de5b2a54ad36ae87a863f51ffd1`; reverting documentation must not blank the existing `policy/sources/`, `policy/role/`, `policy/transport/`, or `policy/proof/` boundaries, remove `policy/sources/rights/` files, restore the deleted `policy/living_persons_geoprivacy.md` path, or roll back unrelated child-lane work by implication.
+This v0.4.5 README changes no policy behavior. Before merge, close or abandon its draft PR and branch. After merge, revert the focused documentation commit or issue a transparent forward fix. The exact v0.4.4 baseline is blob `33061a1434c2c61e9f2b13da44b0eb8864363d21`; reverting documentation must not blank the existing `policy/sources/`, `policy/role/`, `policy/transport/`, `policy/proof/`, or `policy/match-scoring/` boundaries, remove `policy/sources/rights/` files, restore the deleted `policy/living_persons_geoprivacy.md` path, or roll back unrelated child-lane work by implication.
 
 [Back to top](#top)
 
@@ -545,7 +545,7 @@ This v0.4.4 README changes no policy behavior. Before merge, close or abandon it
 | POL-011 | How does the Pass 12 native result bind into `PolicyDecision`, PromotionDecision, ReleaseManifest, correction, and rollback? | **NEEDS IMPLEMENTATION** |
 | POL-012 | What rollback drill proves prior-bundle restoration and stale-decision invalidation? | **UNKNOWN** |
 | POL-013 | How should `source/` versus `sources/` and `test/` versus `tests/` converge without creating parallel authority or losing references? | **DRIFT / NEEDS DIRECTORY REVIEW** |
-| POL-014 | What are the intended writer, reader, retention, and graduation rules for `match-scoring/`, `proof/`, `role/`, `sources/`, `test/`, and `transport/`? | **NEEDS VERIFICATION — one one-byte README, four documented hold boundaries, and one missing README** |
+| POL-014 | What are the intended writer, reader, retention, and graduation rules for `match-scoring/`, `proof/`, `role/`, `sources/`, `test/`, and `transport/`? | **NEEDS VERIFICATION — five documented hold boundaries, no one-byte direct README, and one missing README** |
 | POL-015 | What process updates the OPA version and checksum while preserving reproducibility and supply-chain review? | **NEEDS VERIFICATION** |
 | POL-016 | Which threshold-policy slots, values, units, operators, owners, evidence bases, consumers, and effective windows are accepted? | **PROPOSED_INACTIVE / ALL VALUES UNRESOLVED** |
 | POL-017 | What semantics, if any, supersede deleted `policy/living_persons_geoprivacy.md`, and are any external consumers still unresolved? | **UNKNOWN — path absence confirmed; semantic and external-consumer closure not established** |
@@ -567,14 +567,14 @@ This v0.4.4 README changes no policy behavior. Before merge, close or abandon it
 | Inputs, outputs, validation, review, related folders, status | Preserved and refreshed |
 | Maturity, authoring, sensitivity, trust membrane, rollback, open verification | Preserved and updated |
 | Direct-child navigation | Repinned to 40 current directories; removed the deleted direct file; deeper detail remains delegated |
-| Direct README coverage | Current focused refresh records 73 total, 38 substantive direct children, one one-byte direct placeholder, and one missing direct README |
+| Direct README coverage | Current focused refresh records 73 total, 39 substantive direct children, zero one-byte direct placeholders, and one missing direct README |
 | Prior uncertainty about Rego tests and validators | Repaired with exact counts: 173 Rego files, one native Rego test, and multiple candidate validators |
-| Child-boundary modernization | Linked all 38 substantive direct child indexes without treating prose maturity as implementation |
+| Child-boundary modernization | Linked all 39 substantive direct child indexes without treating prose maturity as implementation |
 | `source/`/`sources/` and `test/`/`tests/` drift | Preserved explicitly; no implied migration or parallel authority |
 | Deleted `living_persons_geoprivacy.md` direct path | Removed from current topology; semantic supersession and external consumers remain unknown |
 | Prior general evaluator, runtime, consumer, receipt, release, and publication holds | Preserved |
 
-Evidence used includes v0.3.1 blob `6c5021f9d92778581a4e9331a9dd6ddb7efc5e35`, `main@156e3288f21dc95d60daa744be4207681ad21655`, accepted ADR-0029, adopted Directory Rules blob `fd49a0b83e55cef52c1124281f093e263526898d`, the `root.policy` projection, ADR-0002/0003/0020 status records, the complete recursive policy tree, direct child metadata, Pass 12 Rego source/tests/fixtures/workflow, `policy-test`, `policy-boundary-guards`, focused policy contract/schema/validator workflows, and the policy-runtime placeholder.
+Evidence used includes v0.4.4 blob `33061a1434c2c61e9f2b13da44b0eb8864363d21`, `main@f68fe0ff504562bb8d2b4aedacb3d46eb66f17f3`, accepted ADR-0029, adopted Directory Rules blob `fd49a0b83e55cef52c1124281f093e263526898d`, the `root.policy` projection, ADR-0002/0003/0020 status records, the complete recursive policy tree, direct child metadata, current scoring-family contracts, the synthetic historical person-place-event validator/test/workflow slice, Pass 12 Rego source/tests/fixtures/workflow, `policy-test`, `policy-boundary-guards`, focused policy contract/schema/validator workflows, and the policy-runtime placeholder.
 
 [Back to top](#top)
 
@@ -593,5 +593,6 @@ Evidence used includes v0.3.1 blob `6c5021f9d92778581a4e9331a9dd6ddb7efc5e35`, `
 | v0.4.2 | 2026-08-28 | Replaces the blank `role/` parent, reconciles its sensitivity-child navigation, and corrects direct README coverage to 36 substantive and three one-byte placeholders. | Revert this focused documentation commit; no role semantics, assignment, policy activation, review authority, release, or publication changes. |
 | v0.4.3 | 2026-08-28 | Replaces the blank `transport/` README with an unresolved-alias routing hold and corrects direct README coverage to 37 substantive and two one-byte placeholders. | Revert this focused documentation commit; no alias acceptance, policy activation, transport decision, release, or publication changes. |
 | v0.4.4 | 2026-08-28 | Replaces the blank `proof/` README with a proof-policy routing hold, reconciles current ProofPack tooling evidence, and corrects direct README coverage to 38 substantive and one one-byte placeholder. | Revert this focused documentation change; no proof record, policy activation, decision, release, or publication changes. |
+| v0.4.5 | 2026-08-28 | Replaces the blank `match-scoring/` parent and `people/` leaf with routing-and-hold boundaries, distinguishes current scoring families, and corrects direct README coverage to 39 substantive with no one-byte direct placeholder. | Revert this focused documentation change; no score, threshold, identity, policy activation, evaluator, consumer, release, or publication changes. |
 
 <p align="right"><a href="#top">Back to top</a></p>
