@@ -32,6 +32,24 @@ class AgricultureObservationIoFailClosedTests(unittest.TestCase):
                     findings,
                 )
 
+    def test_bounded_reader_fails_closed_on_json_recursion_error(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            candidate = Path(directory) / "candidate.json"
+            candidate.write_text("{}", encoding="utf-8")
+
+            with mock.patch.object(
+                validator.json,
+                "loads",
+                side_effect=RecursionError("maximum JSON nesting exceeded"),
+            ):
+                value, findings = validator._read(candidate)
+
+            self.assertIsNone(value)
+            self.assertEqual(
+                (validator.Finding("AGRICULTURE_JSON_INVALID", "/"),),
+                findings,
+            )
+
 
 if __name__ == "__main__":
     unittest.main()
