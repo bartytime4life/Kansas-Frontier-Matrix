@@ -2,8 +2,8 @@
 doc_id: kfm://doc/runbook-people-dna-land-rollback
 title: People · DNA · Land — Rollback Runbook
 type: standard
-version: v1.1.2
-prior_version: v1.1.1
+version: v1.1.3
+prior_version: v1.1.2
 prior_state: proposal-era operational procedure with placeholder owners, unverified routes, invented timing targets, and illustrative release objects
 status: draft; repository-grounded hold boundary; proposal lineage retained in Git history; operational rollback unavailable; non-release; non-publication
 owners:
@@ -24,7 +24,8 @@ evidence_snapshot:
   base_ref: main
   base_commit: cf3c5b76dafa74dee79e5249849e4174c2107638
   prior_blob: c370837c701f1e2a92e660e8223702ccee462b94
-  lane_readme_blob: d77ea6759157223308524dee0b41216c45a816fe
+  lane_readme_blob: 2418f3c5643bf8d119e3e97b38293f29721e7f92
+  promotion_runbook_blob: 6df0ed9fa7bd3800276f72889eeefe07c7706934
   domain_workflow_blob: bcf64c3e3b6653b9543489fc5a6031805ae3ef48
   tests_readme_blob: 5f1672f24a2992d83829d280cfd2f05b9b6848f6
   policy_readme_blob: 7260394c77d79629895da16d8d680e8d80c56b32
@@ -47,6 +48,7 @@ related:
   - .github/workflows/domain-people-dna-land.yml
 tags: [kfm, runbook, people-dna-land, rollback, sensitive-domain, hold, proposal-lineage, fail-closed]
 notes:
+  - "v1.1.3 pins the reconciled lane index and promotion HOLD boundary blobs so the rollback consumer's evidence snapshot matches its current maturity claim."
   - "The prior 2026-05-12 body is retired from operational use because current repository evidence does not establish its kill switch, release target, derivative invalidator, signer route, timing targets, or end-to-end rollback runtime."
   - "This file does not execute rollback, revoke consent, delete data, invalidate derivatives or caches, restore a release, or authorize any public-path change."
   - "The lane remains held for operational rollback maturity; this repository-grounded hold boundary narrows unsafe claims without upgrading operational status."
