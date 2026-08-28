@@ -6,7 +6,8 @@ package, test, example, runtime, and public-web roots for renderer acquisition m
 including JavaScript and CSS imports, so ADR-0006/0007 can be enforced with structural
 evidence. Descriptor reads fail closed
 when identity, size, modification time, or change time differs across a bounded read, or
-when a second bounded read has a different SHA-256 digest. PASS means the scan completed
+when a second bounded read has a different SHA-256 digest. Both verification passes count
+against an explicit aggregate physical-read budget. PASS means the scan completed
 with no renderer acquisition. HOLD means acquisition is confined to the accepted package
 seam while runtime admission remains unresolved. FAIL means raw renderer acquisition
 escaped that seam or parallel active MapLibre package homes surfaced. ERROR means the
@@ -29,13 +30,14 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Sequence
 
-PROFILE = "kfm-maplibre-acquisition-inventory-v13"
+PROFILE = "kfm-maplibre-acquisition-inventory-v14"
 TEXT_SUFFIXES = frozenset(
     {".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx", ".html", ".css"}
 )
 MAX_FILES = 5000
 MAX_INPUT_BYTES = 1024 * 1024
 MAX_TOTAL_INPUT_BYTES = 16 * 1024 * 1024
+MAX_TOTAL_PHYSICAL_READ_BYTES = 2 * MAX_TOTAL_INPUT_BYTES
 SCAN_ROOTS = ("apps", "packages", "runtime", "scripts", "tests", "examples", "public")
 RENDERER_PACKAGES = ("maplibre-gl", "mapbox-gl", "cesium", "leaflet", "ol", "openlayers")
 KFM_RENDERER_FACADES = ("@kfm/maplibre",)
@@ -59,6 +61,7 @@ INPUT_ERROR_KINDS = frozenset(
         "SYMLINK_INPUT_DENIED",
         "TEXT_UNREADABLE",
         "TOTAL_INPUT_BUDGET_EXCEEDED",
+        "TOTAL_PHYSICAL_READ_BUDGET_EXCEEDED",
     }
 )
 
@@ -160,8 +163,10 @@ class Result:
     reasons: tuple[str, ...]
     findings: tuple[Finding, ...]
     max_total_input_bytes: int
+    max_total_physical_read_bytes: int
     scanned_files: int
     scanned_bytes: int
+    physical_read_bytes: int
     truncated: bool
 
     def to_dict(self) -> dict[str, object]:
@@ -179,7 +184,9 @@ class Result:
             "renderer_selected": False,
             "max_input_bytes": MAX_INPUT_BYTES,
             "max_total_input_bytes": self.max_total_input_bytes,
+            "max_total_physical_read_bytes": self.max_total_physical_read_bytes,
             "scanned_bytes": self.scanned_bytes,
+            "physical_read_bytes": self.physical_read_bytes,
             "scanned_files": self.scanned_files,
             "truncated": self.truncated,
         }
@@ -188,6 +195,7 @@ class Result:
 @dataclass
 class ScanBudget:
     scanned_bytes: int = 0
+    physical_read_bytes: int = 0
 
 
 class _DescriptorSafetyUnavailable(Exception):
@@ -207,6 +215,10 @@ class _InputContentChangedDuringVerification(Exception):
 
 
 class _InputNotRegular(Exception):
+    pass
+
+
+class _TotalPhysicalReadBudgetExceeded(Exception):
     pass
 
 
@@ -496,7 +508,9 @@ def _verified_open_at(
     return descriptor
 
 
-def _read_descriptor_bounded(root: Path, path: Path, read_limit: int) -> bytes:
+def _read_descriptor_bounded(
+    root: Path, path: Path, read_limit: int, budget: ScanBudget
+) -> bytes:
     if not DESCRIPTOR_SAFETY_SUPPORTED:
         raise _DescriptorSafetyUnavailable
 
@@ -544,10 +558,18 @@ def _read_descriptor_bounded(root: Path, path: Path, read_limit: int) -> bytes:
                     if not chunk:
                         break
                     chunks.append(chunk)
+                    budget.physical_read_bytes += len(chunk)
                     remaining -= len(chunk)
                 return b"".join(chunks)
 
             before_read = os.fstat(file_fd)
+            planned_read_bytes = min(before_read.st_size, read_limit)
+            physical_read_limit = max(
+                MAX_TOTAL_PHYSICAL_READ_BYTES - budget.physical_read_bytes, 0
+            )
+            if planned_read_bytes * 2 > physical_read_limit:
+                raise _TotalPhysicalReadBudgetExceeded
+            read_limit = min(read_limit, physical_read_limit // 2)
             raw = read_once()
             after_read = os.fstat(file_fd)
             if not _same_read_metadata(before_read, after_read):
@@ -584,7 +606,14 @@ def _read_bounded_text(
     remaining_bytes = max(MAX_TOTAL_INPUT_BYTES - budget.scanned_bytes, 0)
     read_limit = min(MAX_INPUT_BYTES, remaining_bytes) + 1
     try:
-        raw = _read_descriptor_bounded(root, path, read_limit)
+        raw = _read_descriptor_bounded(root, path, read_limit, budget)
+    except _TotalPhysicalReadBudgetExceeded:
+        return None, Finding(
+            "TOTAL_PHYSICAL_READ_BUDGET_EXCEEDED",
+            rel,
+            f"max-total-physical-read-bytes-{MAX_TOTAL_PHYSICAL_READ_BYTES}",
+            False,
+        )
     except _DescriptorSafetyUnavailable:
         return None, Finding(
             "INPUT_DESCRIPTOR_SAFETY_UNAVAILABLE",
@@ -701,6 +730,8 @@ def scan(root: Path) -> Result:
             ("ROOT_NOT_DIRECTORY",),
             (),
             MAX_TOTAL_INPUT_BYTES,
+            MAX_TOTAL_PHYSICAL_READ_BYTES,
+            0,
             0,
             0,
             False,
@@ -729,6 +760,7 @@ def scan(root: Path) -> Result:
                 "INPUT_TOO_LARGE",
                 "SYMLINK_INPUT_DENIED",
                 "TOTAL_INPUT_BUDGET_EXCEEDED",
+                "TOTAL_PHYSICAL_READ_BUDGET_EXCEEDED",
             }
             for finding in path_findings
         ):
@@ -753,6 +785,11 @@ def scan(root: Path) -> Result:
         reasons.add("SCAN_INPUT_TOO_LARGE")
     if any(finding.kind == "TOTAL_INPUT_BUDGET_EXCEEDED" for finding in unique):
         reasons.add("SCAN_TOTAL_INPUT_TOO_LARGE")
+    if any(
+        finding.kind == "TOTAL_PHYSICAL_READ_BUDGET_EXCEEDED"
+        for finding in unique
+    ):
+        reasons.add("SCAN_TOTAL_PHYSICAL_READ_TOO_LARGE")
     if any(finding.kind == "SYMLINK_INPUT_DENIED" for finding in unique):
         reasons.add("SCAN_INPUT_SYMLINK_DENIED")
     if any(finding.kind == "INPUT_OUTSIDE_ROOT" for finding in unique):
@@ -791,6 +828,7 @@ def scan(root: Path) -> Result:
             "SCAN_INPUT_SYMLINK_DENIED",
             "SCAN_INPUT_UNREADABLE",
             "SCAN_TOTAL_INPUT_TOO_LARGE",
+            "SCAN_TOTAL_PHYSICAL_READ_TOO_LARGE",
             "SCAN_TRUNCATED",
         }
     ):
@@ -806,8 +844,10 @@ def scan(root: Path) -> Result:
         tuple(sorted(reasons)),
         unique,
         MAX_TOTAL_INPUT_BYTES,
+        MAX_TOTAL_PHYSICAL_READ_BYTES,
         scanned_files,
         budget.scanned_bytes,
+        budget.physical_read_bytes,
         truncated,
     )
 
