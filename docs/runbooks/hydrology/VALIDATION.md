@@ -166,8 +166,9 @@ CorrectionNotice, rollback object, deployment, or publication state.
 
 ## 2. Current executable validation landscape
 
-The repository currently has one broad Hydrology domain workflow and three
-dedicated bounded workflows. Their responsibilities must remain distinct.
+This runbook covers one broad Hydrology domain workflow and three dedicated
+bounded workflows. Their responsibilities must remain distinct from other
+Hydrology readiness, proof, release, and source-operation surfaces.
 
 | Workflow / job | Current execution | What a green result supports | What remains held |
 |---|---|---|---|
