@@ -2,28 +2,30 @@
 doc_id: kfm://doc/people-dna-land/api-contracts
 title: People / Genealogy / DNA / Land — API Contracts
 type: standard
-version: v1
+version: v1.1
+prior_version: v1
 status: draft
 owners: <People/DNA/Land domain steward — TODO>, <Governed API owner — TODO>, <privacy / consent steward — TODO>
 created: 2026-05-18
-updated: 2026-06-06
+updated: 2026-08-28
 policy_label: restricted
+owning_root: docs/
+responsibility: Define proposed governed-interface shapes and fail-closed response semantics for People/DNA/Land consumers without creating runtime, policy, release, or publication authority.
+truth_posture: cite-or-abstain
 related:
-  # NEEDS VERIFICATION — paths PROPOSED until checked against a mounted repo
   - docs/domains/people-dna-land/README.md
   - docs/domains/people-dna-land/sublanes/README.md
   - docs/runbooks/people-dna-land/PROMOTION_RUNBOOK.md
   - docs/standards/PROV.md
-  - directory-rules.md
-  - ai-build-operating-contract.md
-  - schemas/contracts/v1/domains/people-dna-land/
-  - policy/domains/people-dna-land/
+  - docs/doctrine/directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, api, contracts, people, genealogy, dna, land, trust-membrane]
 notes:
   # CONTRACT_VERSION = "3.0.0"
   # Routes, app paths, schema URIs, CI badge targets are PROPOSED until verified in a mounted repo.
   # Segment reconciliation: Directory Rules §12 uses people-dna-land; Atlas §24.13 crosswalk uses a shorter people/ segment for schemas/policy. Open ADR (Q-4 / OQ-PEOPLE-DNA-11).
   # Domain-level doc (NOT a sublane doc); the sublanes/ ADR does not govern its placement, but it cross-links it.
+  # The current promotion runbook is a repository-grounded HOLD boundary, not an operational lifecycle procedure.
 [/KFM_META_BLOCK_V2] -->
 
 # People / Genealogy / DNA / Land — API Contracts
@@ -46,7 +48,7 @@ notes:
 | **Contract** | `CONTRACT_VERSION = "3.0.0"` |
 | **Authority root (PROPOSED)** | `apps/governed-api/` (trust membrane) · `schemas/contracts/v1/domains/people-dna-land/` · `policy/domains/people-dna-land/` |
 | **Lifecycle anchor** | `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED` *(CONFIRMED doctrine)* |
-| **Last updated** | 2026-06-06 |
+| **Last updated** | 2026-08-28 |
 
 ---
 
@@ -56,7 +58,7 @@ notes:
 2. [Repo fit](#2-repo-fit)
 3. [Trust-membrane posture](#3-trust-membrane-posture)
 4. [Governed surface inventory](#4-governed-surface-inventory)
-5. [`PeopleDNALandDecisionEnvelope` — feature / detail resolver](#5-peopledndalanddecisionenvelope--feature--detail-resolver)
+5. [`PeopleDNALandDecisionEnvelope` — feature / detail resolver](#5-peoplednalanddecisionenvelope--feature--detail-resolver)
 6. [Layer manifest resolver](#6-layer-manifest-resolver)
 7. [Evidence Drawer payload](#7-evidence-drawer-payload)
 8. [Focus Mode (governed AI) surface](#8-focus-mode-governed-ai-surface)
@@ -79,7 +81,7 @@ This document specifies the **governed-API contract surfaces** that the People /
 
 In scope: the set of surface families and what each returns; the finite outcome envelope every surface MUST return; the deny-default posture for living-person, DNA-derived, raw-kit-ID, and private person↔parcel content; the cross-cutting object families (`EvidenceBundle`, `EvidenceRef`, `PolicyDecision`, `AIReceipt`, `LayerManifest`, `ReleaseManifest`, `RollbackCard`) this domain composes with; and the forbidden behaviors that would collapse the trust membrane.
 
-Out of scope: the internal pipeline shape (RAW→PUBLISHED — see the Promotion Runbook); source-family rights and intake-tier rules (see the domain `README.md`); renderer / MapLibre layer behaviors; and JSON-Schema form (see `schemas/contracts/v1/domains/people-dna-land/`, PROPOSED home).
+Out of scope: the internal pipeline shape (RAW→PUBLISHED — see the promotion `HOLD` boundary, which is not an operator procedure); source-family rights and intake-tier rules (see the domain `README.md`); renderer / MapLibre layer behaviors; and JSON-Schema form (see `schemas/contracts/v1/domains/people-dna-land/`, PROPOSED home).
 
 > [!IMPORTANT]
 > *People / DNA / Land* is one of KFM's most sensitive domains. The defaults here are deliberately strict: **deny first, redact and aggregate by exception, and never let fluent AI generation stand in for evidence, policy, review state, or release state.** Implementations MAY widen access only under an explicit, reviewed, recorded policy gate — never silently.
@@ -96,7 +98,7 @@ This document sits in the **`docs/`** responsibility root because its primary jo
 |---|---|---|---|
 | This document | `docs/domains/people-dna-land/API_CONTRACTS.md` | Standard doc | Contract doctrine |
 | Domain landing | `docs/domains/people-dna-land/README.md` | Standard doc | Domain doctrine |
-| Promotion runbook | `docs/runbooks/people-dna-land/PROMOTION_RUNBOOK.md` | Operational | Promotion lifecycle |
+| Promotion `HOLD` boundary | `docs/runbooks/people-dna-land/PROMOTION_RUNBOOK.md` | Documentation hold | No operational promotion path, release decision, deployment, or publication authority |
 | Object semantics | `contracts/domains/people-dna-land/` | Canonical | Object meaning |
 | Machine schemas | `schemas/contracts/v1/domains/people-dna-land/` | Canonical | Object shape *(per ADR-0001 default)* |
 | Domain policy | `policy/domains/people-dna-land/` | Canonical | Admissibility / release |
@@ -339,7 +341,7 @@ See [§11](#11-finite-outcome-semantics) for outcome definitions and [§18](#18-
 **Domain-specific deny vocabulary** Focus Mode MUST honor:
 
 - ABSTAIN — `evidence_missing` · `citation_unvalidated` · `source_roles_conflict` · `temporal_scope_insufficient` · `inference_unsupported`.
-- DENY — every code listed in [§5](#5-peopledndalanddecisionenvelope--feature--detail-resolver), plus the cross-cutting `raw_or_work_or_quarantine_access`, `restricted_personal_or_dna_inference`, and `uncited_authoritative_claim`.
+- DENY — every code listed in [§5](#5-peoplednalanddecisionenvelope--feature--detail-resolver), plus the cross-cutting `raw_or_work_or_quarantine_access`, `restricted_personal_or_dna_inference`, and `uncited_authoritative_claim`.
 
 **Permitted Focus Mode behaviors** (CONFIRMED doctrine, PROPOSED implementation): summarize released People/DNA/Land `EvidenceBundle`s; compare evidence across released sources; explain limitations of an assertion (e.g., parcel geometry ≠ title boundary); draft steward-review notes. [DOM-PEOPLE §L]
 
@@ -570,12 +572,12 @@ The People / DNA / Land surfaces compose with other domains under strict constra
 - `docs/domains/people-dna-land/README.md` — domain landing, scope, sources, posture *(PROPOSED; NEEDS VERIFICATION)*
 - `docs/domains/people-dna-land/sublanes/README.md` — sublanes index *(PROPOSED; convention pending the `sublanes/` ADR)*
 - `docs/adr/ADR-NNNN-sublanes-docs-convention.md` — `sublanes/` convention ADR *(proposed; relevant to the segment-naming Q-4)*
-- `docs/runbooks/people-dna-land/PROMOTION_RUNBOOK.md` — lifecycle promotion procedure *(PROPOSED)*
-- `docs/runbooks/people-dna-land/VALIDATION_RUNBOOK.md` · `…/ROLLBACK_RUNBOOK.md` — *(TODO — to be created)*
+- `docs/runbooks/people-dna-land/PROMOTION_RUNBOOK.md` — repository-grounded promotion `HOLD` boundary; no operator procedure
+- `docs/runbooks/people-dna-land/VALIDATION_RUNBOOK.md` — explicit scaffold; not operational · `…/ROLLBACK_RUNBOOK.md` — repository-grounded rollback `HOLD` boundary
 - `docs/architecture/` — cross-cutting trust-membrane doctrine *(exact filename NEEDS VERIFICATION; corpus uses `trust-membrane.md` under `docs/doctrine/` in some trees)*
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance standard profile
-- [`directory-rules.md`](../../../directory-rules.md) — §12 Domain Placement Law (source for the `people-dna-land` segment)
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`; §8 finite outcomes, §9.2 trust objects)
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — §12 Domain Placement Law (source for the `people-dna-land` segment)
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`; §8 finite outcomes, §9.2 trust objects)
 - Cross-domain surfaces: `docs/domains/settlements-infrastructure/`, `docs/domains/archaeology/`, `docs/domains/agriculture/`, `docs/domains/roads-rail-trade/` *(PROPOSED; NEEDS VERIFICATION)*
 
 [Back to top](#contents)
