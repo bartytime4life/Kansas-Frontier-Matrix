@@ -6,8 +6,12 @@ version: v1.1
 status: draft
 owners: Source steward (lead) + Docs steward; Rights-holder representative when applicable
 created: 2026-05-13
-updated: 2026-05-23
+updated: 2026-08-28
 policy_label: public
+responsibility_root: docs/
+owning_root: docs/
+responsibility: Human-readable source-admission standard and proposal boundary; not executable admission, policy, release, or publication authority.
+truth_posture: cite-or-abstain; current repository-path claims are pinned to the recorded campaign baseline.
 related:
   - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
   - docs/doctrine/lifecycle-law.md
@@ -16,8 +20,8 @@ related:
   - docs/architecture/contract-schema-policy-split.md
   - docs/governance/README.md
   - docs/registers/DRIFT_REGISTER.md
-  - docs/adr/ADR-0001-schema-home.md
-  - docs/adr/ADR-0003-policy-singular-is-canonical.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md
   - control_plane/source_authority_register.yaml
   - contracts/source/
   - schemas/contracts/v1/source/
@@ -50,7 +54,7 @@ notes:
 [![Posture: fail--closed](https://img.shields.io/badge/posture-fail--closed-critical)](#failure-modes-and-quarantine-conditions)
 [![Public path: governed only](https://img.shields.io/badge/public%20path-governed%20only-success)](#trust-membrane-at-admission)
 [![Version: v1.1](https://img.shields.io/badge/version-v1.1-lightgrey)](#document-lineage)
-[![Last updated](https://img.shields.io/badge/last%20updated-2026--05--23-lightgrey)](#document-lineage)
+[![Last updated](https://img.shields.io/badge/last%20updated-2026--08--28-lightgrey)](#document-lineage)
 
 | Status | Owners | Last reviewed | Authority |
 |---|---|---|---|
@@ -739,9 +743,9 @@ and policy bundles — not by prose alone. The default-deny posture from Pass 10
 - [`docs/architecture/contract-schema-policy-split.md`](../architecture/contract-schema-policy-split.md) — how meaning / shape / admissibility are separated. **PROPOSED placement.**
 - [`docs/governance/README.md`](../governance/README.md) — separation-of-duties matrix and reviewer roles. **PROPOSED placement.**
 - [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) — where mounted-repo conflicts with this doc are recorded. **PROPOSED placement.**
-- [`docs/runbooks/source-admission.md`](../runbooks/source-admission.md) — step-by-step operational runbook (companion runbook). **TODO — create.**
-- [`docs/adr/ADR-0001-schema-home.md`](../adr/ADR-0001-schema-home.md) — schema-home convention. **CONFIRMED reference.**
-- [`docs/adr/ADR-0003-policy-singular-is-canonical.md`](../adr/ADR-0003-policy-singular-is-canonical.md) — `policy/` canonical. **CONFIRMED reference.**
+- `docs/runbooks/source-admission.md` — **PROPOSED** step-by-step companion runbook; absent at the recorded campaign baseline. **TODO — create only after placement and scope are accepted.**
+- [`docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home convention. **CONFIRMED reference.**
+- [`docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md`](<../adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md>) — `policy/` canonical. **CONFIRMED reference.**
 - [`connectors/README.md`](../../connectors/README.md) — per-connector source descriptor reference and lane rules. **NEEDS VERIFICATION** of presence.
 - [`data/raw/README.md`](../../data/raw/README.md), [`data/quarantine/README.md`](../../data/quarantine/README.md), [`data/receipts/ingest/README.md`](../../data/receipts/ingest/README.md) — per-root READMEs in the lifecycle home. **NEEDS VERIFICATION** of presence.
 
@@ -890,4 +894,4 @@ flowchart LR
 
 ---
 
-**Last updated:** `2026-05-23` · **Owners:** Source steward (lead) · Docs steward · Rights-holder rep (when applicable) · [Back to top ↑](#kfm-source-admission-process)
+**Last updated:** `2026-08-28` · **Owners:** Source steward (lead) · Docs steward · Rights-holder rep (when applicable) · [Back to top ↑](#kfm-source-admission-process)
