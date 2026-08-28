@@ -131,6 +131,19 @@ def test_guard_denies_common_python_egress_paths(operation: str, source: str) ->
     assert operation in result.stderr
 
 
+def test_guard_denies_socket_type_alias_egress() -> None:
+    result = _guarded_python(
+        "import socket; "
+        "assert socket.SocketType is socket.socket; "
+        "assert hasattr(socket.SocketType, 'sendmsg'); "
+        "socket.SocketType(socket.AF_INET, socket.SOCK_DGRAM).sendmsg("
+        "[b'x'], [], 0, ('127.0.0.1', 9))"
+    )
+    assert result.returncode != 0
+    assert DENIAL_MESSAGE in result.stderr
+    assert "socket.sendmsg" in result.stderr
+
+
 def test_guard_preserves_unix_domain_socket_routing() -> None:
     result = _guarded_python(
         "import socket; import sitecustomize; "
