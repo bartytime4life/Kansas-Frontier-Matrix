@@ -14,8 +14,8 @@ owning_root: docs/
 truth_posture: "CONFIRMED current repository paths, accepted Directory Rules placement, and bounded synthetic validation / PARTIAL mixed implementation maturity / UNKNOWN source admission, production retrieval, runtime use, accountable stewardship, independent review, release, deployment, promotion, and publication until separately verified"
 responsibility: "Orient contributors to the Hazards lane, current responsibility-root surfaces, bounded executable evidence, life-safety limits, and unresolved source, policy, review, release, and publication holds without creating transition authority."
 related:
-  - ai-build-operating-contract.md
-  - directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
   - docs/domains/README.md
   - docs/domains/hazards/PUBLICATION_AND_BOUNDARY.md
   - docs/domains/hazards/PRESERVATION_MATRIX.md
@@ -135,11 +135,11 @@ Per Directory Rules §12, **the Hazards domain is _not_ a root folder.** It is a
 ### 3.2 Current lane layout and maturity
 
 > [!NOTE]
-> At `main@e04181056bd714960992c5f11e7bd66e2ef4643a`, the Hazards responsibility-root lanes shown below are **CONFIRMED PRESENT**, except that source-specific connector ownership and canonicality remain file-specific. Presence is not maturity: many files remain placeholders, proposed controls, synthetic fixtures, or explicit holds. No source admission, live retrieval, lifecycle transition, proof acceptance, release, deployment, promotion, or publication is inferred. <small>[directory-rules §0, §12]</small>
+> At `main@e04181056bd714960992c5f11e7bd66e2ef4643a`, the Hazards responsibility-root **directories** shown below are **CONFIRMED PRESENT**, except that source-specific connector ownership and canonicality remain file-specific. Parenthesized or enumerated leaf names are planning inventory unless the current-surface table separately identifies them as present; in particular, the object-family contract leaf list remains **PROPOSED**. Presence is not maturity: many current files remain placeholders, proposed controls, synthetic fixtures, or explicit holds. No source admission, live retrieval, lifecycle transition, proof acceptance, release, deployment, promotion, or publication is inferred. <small>[directory-rules §0, §12]</small>
 
 ```text
 docs/domains/hazards/              # this README + PUBLICATION_AND_BOUNDARY + PRESERVATION_MATRIX + MISSING_OR_PLANNED_FILES
-contracts/domains/hazards/         # object meaning (Markdown):
+contracts/domains/hazards/         # PROPOSED object-family leaf plan (Markdown):
                                    #   hazard_event.md, warning_context.md, advisory_context.md,
                                    #   disaster_declaration.md, flood_context.md, wildfire_detection.md,
                                    #   smoke_context.md, drought_indicator.md, earthquake_event.md,
