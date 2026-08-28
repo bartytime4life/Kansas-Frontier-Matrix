@@ -1,22 +1,23 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/control-plane-domains-habitat-readme
 title: control_plane/domains/habitat/README.md — Habitat Control-Plane Domain Lane README
-version: v0.2
+version: v0.3
 type: readme; control-plane-domain-index; governance-lane-guide; nested-folder-contract
 status: repository-grounded draft; PROPOSED register lane; child-registers-absent; nested-validation-not-implemented; non-authoritative
 owners: NEEDS VERIFICATION — Control-plane steward · Habitat steward · Policy steward · Evidence steward · Release steward · Docs steward
 created: NEEDS VERIFICATION — blank placeholder existed before v0.1 expansion
-updated: 2026-07-24
-supersedes: v0.1 at the same path
+updated: 2026-08-28
+supersedes: v0.2 at the same path
 prepared_under_prompt: KFM Markdown Modernization & GitHub Documentation Implementation Agent v4.0.0
 policy_label: repository-facing; control-plane; domains; habitat; governance-index; no-parallel-authority; no-direct-public-path; cite-or-abstain; correction-aware; rollback-aware
 current_path: control_plane/domains/habitat/README.md
 truth_posture: >
   CONFIRMED the tracked Habitat control-plane README, canonical control_plane responsibility root,
-  Directory Rules v1.4 placement doctrine and README contract, root control-plane validation workflow,
+  accepted Directory Rules v2 placement doctrine and README contract, root control-plane validation workflow,
   root register meta-contract tests, CODEOWNERS route, Habitat docs/contracts/schema/policy/fixtures/tests
-  sibling README surfaces, absence of the seven previously proposed Habitat child-register files, and
-  empty root domain-lane/object-family/policy-gate/release-state register bodies / PROPOSED future Habitat
+  sibling README surfaces, absence of the seven previously proposed Habitat child-register files, the
+  13-entry root domain-lane projection including Habitat, the 19-entry object-family projection, and empty
+  root policy-gate/release-state register bodies / PROPOSED future Habitat
   child registers and their admission contract / UNKNOWN exhaustive recursive lane inventory, semantic
   cross-root agreement, runtime consumers, branch-protection enforcement, deployment, and public effects /
   NEEDS VERIFICATION accountable owners, independent review, dedicated nested-register schemas,
@@ -69,7 +70,8 @@ related:
   - ../../../.github/CODEOWNERS
 tags: [kfm, control-plane, habitat, domain-lane, governance-index, policy-gates, release-state, evidence, sensitivity, geoprivacy, correction, rollback]
 notes:
-  - "v0.2 is a same-path, no-loss modernization of the existing Habitat control-plane lane README."
+  - "v0.3 is a same-path current-state correction to the existing Habitat control-plane lane README."
+  - "The v0.2 evidence_snapshot remains historical evidence pinned to main@85a939fd8a3fbac6e76fc4eaf3ce6172398d186f; it is not rewritten as current state."
   - "The first twelve H2 sections follow the Directory Rules §15 folder-README contract, with Status placed after Authority level as required."
   - "The seven child-register filenames named by v0.1 were checked at the pinned base and were absent."
   - "The current docs-control-plane workflow parses only control_plane/*.yaml and the current meta-contract test covers nine exact root registers; nested Habitat register validation is not implemented."
@@ -146,11 +148,11 @@ Authority is **referential** here. When a pointer is unresolved, stale, contradi
 | Habitat as a domain segment | `CONFIRMED doctrine` | Directory Rules place domains inside responsibility roots, not at repository root. |
 | Habitat sibling authority surfaces | `CONFIRMED bounded` | Habitat README surfaces were read under `docs/`, `contracts/`, `schemas/`, `policy/`, `fixtures/`, and `tests/`. |
 | Previously proposed child registers | `CONFIRMED absent` | All seven filenames named by v0.1 returned exact-path absence at the pinned base. |
-| Root domain/object/policy/release registers | `CONFIRMED present, sparse` | The four relevant root registers exist and each currently has `entries: []`. |
+| Root domain/object/policy/release registers | `CONFIRMED present, mixed` | The root domain-lane register has 13 entries including Habitat, the object-family register has 19 entries, and the policy-gate and release-state registers remain empty. |
 | Root YAML syntax validation | `CONFIRMED implemented` | The workflow parses `control_plane/*.yaml`, rejects duplicate keys, and requires a mapping root. |
 | Root register meta contract | `CONFIRMED implemented` | Tests cover nine exact root registers, required metadata, ISO review dates, related-doctrine paths, status vocabulary, owner presence, and an `entries:` body. |
 | Nested Habitat YAML validation | `NOT IMPLEMENTED / NEEDS VERIFICATION` | The current workflow glob and exact-file test do not cover future `control_plane/domains/habitat/*.yaml` files. |
-| Habitat register population | `UNKNOWN / absent` | No child register body exists to inspect; root Habitat mappings are not populated in the four relevant root registers. |
+| Habitat register population | `PARTIAL / PROPOSED projection` | No child register body exists. The root domain-lane register projects one Habitat identity; no Habitat-scoped mapping was found in the object-family, policy-gate, or release-state registers. |
 | Consumer correctness | `UNKNOWN` | No runtime or tool consumer of Habitat control-plane entries was established in this bounded review. |
 | Review routing | `CONFIRMED routing / NEEDS VERIFICATION enforcement` | CODEOWNERS routes `/control_plane/` to `@bartytime4life`; required-review enforcement and independent stewardship were not verified. |
 | Direct public use | `DENY` | Public and semi-public clients must use governed APIs and released, policy-allowed projections—not this lane. |
@@ -325,8 +327,8 @@ A reviewer should request changes when an entry lacks an owning artifact, eviden
 |---|---|---|
 | Control-plane root | [`control_plane/README.md`](../../README.md) | Defines the canonical machine-index root, root registers, validation boundary, and public-path denial. |
 | Domain-index parent | [`control_plane/domains/README.md`](../README.md) | Defines the nested domain governance-index pattern. |
-| Root domain register | [`control_plane/domain_lane_register.yaml`](../../domain_lane_register.yaml) | Intended root index for domain lanes; currently `PROPOSED` with `entries: []`. |
-| Root object-family register | [`control_plane/object_family_register.yaml`](../../object_family_register.yaml) | Intended object-family crosswalk; currently `PROPOSED` with `entries: []`. |
+| Root domain register | [`control_plane/domain_lane_register.yaml`](../../domain_lane_register.yaml) | `PROPOSED`, `machine_projection_only` root index with 13 entries including Habitat. |
+| Root object-family register | [`control_plane/object_family_register.yaml`](../../object_family_register.yaml) | `PROPOSED`, navigational-only crosswalk with 19 entries and no Habitat-scoped mapping. |
 | Root policy-gate register | [`control_plane/policy_gate_register.yaml`](../../policy_gate_register.yaml) | Intended policy-gate index; currently `PROPOSED` with `entries: []`. |
 | Root release-state register | [`control_plane/release_state_register.yaml`](../../release_state_register.yaml) | Intended release-state index; currently `PROPOSED` with `entries: []`. |
 | Human Habitat doctrine | [`docs/domains/habitat/README.md`](../../../docs/domains/habitat/README.md) | Defines Habitat scope, source-role distinctions, object language, lifecycle, and cross-lane boundaries. |
@@ -359,8 +361,8 @@ No ADR is created or accepted by this README. Any future change that creates a p
 
 | Field | Value |
 |---|---|
-| **Last reviewed** | `2026-07-24` |
-| **Review basis** | Exact repository file reads and exact-path absence probes on `main@85a939fd8a3fbac6e76fc4eaf3ce6172398d186f` |
+| **Last reviewed** | `2026-08-28` |
+| **Review basis** | Current register bytes and exact-path inspection on `main@369860945cebfdbda2b6cf72de94e22c37d1b337`; v0.2's pinned evidence snapshot remains preserved in metadata. |
 | **Next review trigger** | Creation of any Habitat child register; change to root register contract; nested-validation implementation; consumer admission; relevant ADR status change; Habitat sensitivity or release-gate change; correction or migration |
 | **Stale threshold** | Re-review within six months at the latest, or earlier when a trigger above occurs. |
 
@@ -388,16 +390,27 @@ No ADR is created or accepted by this README. Any future change that creates a p
 | `sensitivity_matrix_ref.yaml` | Not found | Keep `PROPOSED`; preserve deny-by-default and exact-location protections. |
 | `drift_register.yaml` | Not found | Keep `PROPOSED`; use the canonical human drift register until a nested machine lane is admitted. |
 
-### Relevant root registers
+### Historical v0.2 root-register snapshot
 
-| Root register | Current status | Entries at pinned base |
+The table below preserves the counts observed at the pinned v0.2 base; it is lineage evidence, not current register state.
+
+| Root register | Status at pinned base | Entries at pinned base |
 |---|---:|---:|
 | `domain_lane_register.yaml` | `PROPOSED` | `0` |
 | `object_family_register.yaml` | `PROPOSED` | `0` |
 | `policy_gate_register.yaml` | `PROPOSED` | `0` |
 | `release_state_register.yaml` | `PROPOSED` | `0` |
 
-The absence of Habitat entries is an implementation gap, not permission to generate them without source, authority, review, and validation closure.
+### Current root-register posture
+
+| Root register | Current status | Current entries | Habitat-scoped result |
+|---|---:|---:|---|
+| `domain_lane_register.yaml` | `PROPOSED` / `machine_projection_only` | `13` | One Habitat lane identity is projected. |
+| `object_family_register.yaml` | `PROPOSED` / `navigational_index_only` | `19` | No Habitat-scoped mapping was found. |
+| `policy_gate_register.yaml` | `PROPOSED` | `0` | No Habitat-scoped mapping is present. |
+| `release_state_register.yaml` | `PROPOSED` | `0` | No Habitat-scoped mapping is present. |
+
+The projected Habitat lane identity does not establish implementation maturity, ownership, sensitivity authority, consumer admission, release, or publication. Missing object, policy, or release mappings are not permission to generate them without authority, review, and validation closure.
 
 [Back to top](#top)
 
@@ -522,7 +535,7 @@ Rollback is required if this lane begins to:
 - bypass geoprivacy, sensitivity, review, release, correction, or rollback gates;
 - admit consumers before nested validation and stale-reference controls exist.
 
-For this README update, the immediate content rollback target is prior blob `14cf3852acf3b308329121e402d3beb2e779f004`.
+For this v0.3 update, the immediate content rollback target is prior blob `578407520c9b3f0ee275defd2f23f54e84581efb`. The earlier v0.2 rollback lineage remains recorded below.
 
 [Back to top](#top)
 
@@ -536,7 +549,7 @@ For this README update, the immediate content rollback target is prior blob `14c
 | `HCP-V-002` | Decide whether Habitat-specific child registers are needed or whether populated root registers are sufficient. | `OPEN / PROPOSED` | Reviewed design decision and consumer inventory. |
 | `HCP-V-003` | Define dedicated schemas for any admitted Habitat child registers. | `NOT IMPLEMENTED` | Schema files, valid/invalid fixtures, and tests. |
 | `HCP-V-004` | Extend CI to parse and validate nested control-plane YAML without overclaiming semantics. | `NOT IMPLEMENTED` | Workflow diff and passing negative-path tests. |
-| `HCP-V-005` | Populate root Habitat mappings in domain/object/policy/release registers if those registers remain the canonical machine index. | `OPEN` | Reviewed entries with resolvable evidence. |
+| `HCP-V-005` | Reconcile the implemented root Habitat lane projection with any future object, policy, or release mappings if those registers remain the canonical machine indexes. | `PARTIAL / REVIEW HELD` | One validated root domain entry exists; further mappings require reviewed, resolvable evidence. |
 | `HCP-V-006` | Verify cross-root Habitat object-family, path, and source-role agreement. | `UNKNOWN` | Contract/schema/policy/source/test crosswalk report. |
 | `HCP-V-007` | Define consumer-admission and fail-closed behavior for each machine consumer. | `UNKNOWN` | Consumer contract and integration tests. |
 | `HCP-V-008` | Verify stale-reference, correction propagation, deprecation, and rollback drills. | `NOT RUN` | Drill receipt and restored state. |
@@ -576,7 +589,7 @@ No v0.1 governance boundary was intentionally removed. The substantive change is
 | Document outcome | **UPGRADED** — same path, same stable ID, no parallel README. |
 | Lane authority | Canonical responsibility-root segment for Habitat governance indexes; non-authoritative with respect to the objects it indexes. |
 | Child register inventory | `0 / 7` previously proposed files confirmed present at the pinned base. |
-| Root register readiness | Relevant root registers exist but currently contain no entries. |
+| Root register readiness | Mixed: domain-lane has 13 entries including Habitat; object-family has 19 entries; policy-gate and release-state remain empty. All remain non-authorizing projections. |
 | Validation maturity | Root syntax/meta checks implemented; nested Habitat register validation not implemented. |
 | Consumer maturity | UNKNOWN; no admitted Habitat control-plane consumer established. |
 | Public path | DENY direct use; governed APIs and released artifacts only. |
