@@ -74,7 +74,7 @@ This document inventories the **key source families** for the Archaeology / Cult
 | Domain segment | `archaeology` as a lane inside `docs/`, never a root | `CONFIRMED` rule |
 | Source registry counterpart | `data/registry/sources/archaeology/` | `CONFIRMED` repository path; records and admission authority remain `PROPOSED` / `NEEDS VERIFICATION` |
 | SourceDescriptor schema surfaces | `schemas/contracts/v1/source/source-descriptor.json`; `schemas/contracts/v1/source/source-descriptor.schema.json`; `schemas/contracts/v1/source/source_descriptor.json`; `schemas/contracts/v1/source/source_descriptor.schema.json`; `schemas/contracts/v1/sources/source_descriptor.schema.json` | `CONFIRMED` repository paths; canonical authority and convergence remain unresolved |
-| Policy counterpart | `policy/sensitivity/archaeology/` | `CONFIRMED` rule lane; evaluator binding and activation remain unresolved |
+| Policy counterpart | `policy/sensitivity/archaeology/` | `CONFIRMED` repository path; rule and lane authority remain `PROPOSED` / `NEEDS VERIFICATION`; evaluator binding and activation remain unresolved |
 | Upstream (governs this doc) | `docs/doctrine/directory-rules.md`; `docs/doctrine/ai-build-operating-contract.md`; `[ENCY]` source doctrine | `CONFIRMED` repository paths / mixed doctrine maturity |
 
 **Directory Rules basis.** A doc that *explains to humans* lives under `docs/`. The source **registry** (identity, rights, sensitivity) lives under `data/registry/` (or `data/registry/sources/<domain>/`); descriptor shapes live under `schemas/`. This doc is navigational. Current files do not themselves admit a source: accepted contract/schema authority, governed registry records, evaluator binding, and accountable review must remain separate.
