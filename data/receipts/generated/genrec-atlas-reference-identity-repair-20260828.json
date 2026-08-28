@@ -11,13 +11,13 @@
     "tools/validators/directory_governance/repository_topology_baseline.json"
   ],
   "artifact_hashes": {
-    "control_plane/repository_governance_parity.yaml": "sha256:f8b6c0756fc6bb2e27840b48a953d056c4d506883b5aa3f08d6d745d3cb7a4f8",
+    "control_plane/repository_governance_parity.yaml": "sha256:97b114c61c846a00952c7f4f07bef09ba1283d194e31caf31456b938b8c187df",
     "docs/atlases/sensitivity-tier-reference.md": "sha256:2adcec64e543784966ba32337b56771e2f8b2aebf2ad31e154fa49f1184c659b",
     "docs/atlases/source-role-anti-collapse.md": "sha256:d07c8aac4bafe7da18e7dcb553c8ba007f6bdc1334b097725c52015d2a7b375a",
     "docs/atlases/stale-state-reference.md": "sha256:a358edce935502a033bdea879283f71bad859cffe0409b62e14a53dd4d488d6c",
-    "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "sha256:791b47e333c897d27a9a6c174ad1b8dffca646366c3e39eabec44303e6374ac3",
-    "tests/validators/directory_governance/test_validate_repository_topology.py": "sha256:d588232188006a48252a92a7ef25d00380dcd93213890a4c1acfbf29b3ba49b6",
-    "tools/validators/directory_governance/repository_topology_baseline.json": "sha256:5bee801306194f3c9e59fb96e3aaf022cb26b71176ff85e41667d8fa6d7839dd"
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "sha256:cbb08e2300855149b7196ab84c0cc705fec014ea23a2f1f04b43fa3ebc9b924b",
+    "tests/validators/directory_governance/test_validate_repository_topology.py": "sha256:f4a352dde1901ccedf3f3701ec51bd75930b369f87750fe4c18bdac2ce3aee9a",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "sha256:2ca7584646f763d056343f4cedb9691746f5cca85ce1d918796901687ea03c7b"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -47,6 +47,7 @@
     "attached_docs": [],
     "evidence_refs": [
       "repo:main@2a205c8df31ff95a61f72a52489336b924a791ac",
+      "repo:main@8449e853e556058033d9880141dc73bbc4444acd",
       "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@2a205c8df31ff95a61f72a52489336b924a791ac",
       "repo:docs/atlases/README.md@2a205c8df31ff95a61f72a52489336b924a791ac",
       "repo:issue/3361",
@@ -71,7 +72,7 @@
     {
       "gate": "topology-trusted-baseline-transition",
       "outcome": "PASS",
-      "reason": "The indexed branch state has 0 invariant findings, 0 new drift, 129 baselined warnings, and 0 stale entries against exact base 2a205c8df31ff95a61f72a52489336b924a791ac; the baseline shrinks by exactly the resolved placeholder-ID group."
+      "reason": "After non-force reconciliation with main 8449e853e556058033d9880141dc73bbc4444acd, the indexed branch state has 0 invariant findings, 0 new drift, 127 baselined warnings, and 0 stale entries. Main contributes the independently merged Agriculture and Archaeology reductions from 130 to 128; this slice removes exactly its own placeholder-ID group from 128 to 127."
     },
     {
       "gate": "focused-validator-tests",

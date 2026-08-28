@@ -1,14 +1,17 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/PLACEHOLDER-uuid
+doc_id: kfm://doc/docs-domains-archaeology-pipeline-shape
 title: Archaeology — Pipeline Shape (RAW → PUBLISHED)
 type: standard
 version: v1
 status: draft
 owners: <archaeology-domain-steward> (PLACEHOLDER — confirm)
 created: 2026-05-28
-updated: 2026-05-28
+updated: 2026-08-28
 policy_label: public
-related: [docs/domains/archaeology/README.md, docs/domains/archaeology/cross-lane-relations.md, docs/domains/archaeology/governed-ai-behavior.md, ai-build-operating-contract.md, directory-rules.md]
+owning_root: docs/
+responsibility: Document the draft Archaeology lifecycle and promotion-gate shape without activating sources, pipelines, or publication.
+truth_posture: CONFIRMED tracked draft document and responsibility-root placement / PROPOSED lane implementation unless current repository evidence is cited / NEEDS VERIFICATION validation, review, activation, release, and publication
+related: [docs/domains/archaeology/README.md, docs/domains/archaeology/cross-lane-relations.md, docs/domains/archaeology/governed-ai-behavior.md, docs/doctrine/ai-build-operating-contract.md, docs/doctrine/directory-rules.md]
 tags: [kfm, archaeology, pipeline, lifecycle, promotion, sensitive-domain]
 notes: [CONTRACT_VERSION = "3.0.0" pinned; lifecycle CONFIRMED doctrine, lane application & paths PROPOSED, repo not mounted this session]
 [/KFM_META_BLOCK_V2] -->

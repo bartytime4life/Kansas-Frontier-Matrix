@@ -2,544 +2,190 @@
 doc_id: kfm://doc/runbook/people-dna-land/source-refresh
 title: People · Genealogy · DNA · Land — Source Refresh Runbook
 type: standard
-version: v0.1
-status: draft
-owners: People/DNA/Land domain steward · Source intake steward · Privacy/sensitivity reviewer
+version: v1.1.0
+prior_version: v0.1
+prior_state: proposal-era operational procedure with placeholder owners, illustrative network commands, unverified lifecycle paths, and invented watcher and receipt behavior
+status: draft; repository-grounded hold boundary; source-head review only; live retrieval and source mutation unavailable; non-release; non-publication
+owners:
+  - "@bartytime4life — verified GitHub review route"
+  - "NEEDS VERIFICATION — accountable People/DNA/Land, privacy, consent, Indigenous/Tribal, legal, source, rights, data-custody, policy, security, evidence, operations, release, and independent-review assignments"
 created: 2026-05-12
-updated: 2026-05-12
-policy_label: public (procedure) · restricted-aware (operates on restricted sources)
+updated: 2026-08-28
+policy_label: repository-facing; sensitive-domain; source-refresh-held; fail-closed; no-network; non-release; non-publication
+current_path: docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md
+owning_root: docs/
+responsibility: Explain the current People/DNA/Land source-refresh hold, permit only repository-visible source-head review and minimized handoff, and prevent proposal-era fetch, admission, receipt, lifecycle, and watcher instructions from being executed as current authority.
+truth_posture: cite-or-abstain
+authority_class: explanatory source-refresh hold and proposal-lineage disposition
+authority_rank: subordinate to accepted doctrine and ADRs, source registry and activation authority, contracts, schemas, policy, consent, rights, evidence, accountable review, lifecycle, receipts, release, correction, withdrawal, revocation, and rollback authorities
+canonical_relationship: same-path replacement of proposal-era instructions; prior detail remains in Git history and is not current operational authority
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: a3d66df629a3b18f01821761898879d7d4996a2f
+  prior_blob: 4c8eeaf660dbd416371a1a4f58838d43fddc50e3
+  lane_readme_prior_blob: 3b1441382983766c9fc5575c0fd3197cdf6bd0c2
+  source_registry_readme_blob: 98a90286e6b3d7ad49a64158be666e34ba6c1720
+  connector_readme_blob: 2ab7b6677b077adba7406a42f56c1efead76dd51
+  policy_readme_blob: 7260394c77d79629895da16d8d680e8d80c56b32
+  contract_readme_blob: d99e7fc318f34fbeb90a1ee31658f5121b8ffd38
+  schema_readme_blob: fbe5557ff4e19d1b70a97d284ab1743dd3d08f29
+  fixtures_readme_blob: 8eb10804c587c62edf1eb9750c2c82b5cf237f2a
+  tests_readme_blob: 77bb1bfd3d3e576bc975c91bbe46dd3e6d8fee52
+  validator_readme_blob: 7a78d278aa03d843107d4d66a954c7a670d2ac19
+  domain_workflow_blob: bcf64c3e3b6653b9543489fc5a6031805ae3ef48
+  release_candidate_readme_blob: cbbef9394fbdbe94ed742957e1b764c84c9907f3
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
 related:
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/trust-membrane.md
-  - docs/domains/people-dna-land/README.md
-  - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
-  - docs/standards/SMART_SYNC.md
-  - docs/runbooks/people-dna-land/VALIDATION_RUNBOOK.md
+  - docs/runbooks/people-dna-land/README.md
+  - docs/runbooks/people-dna-land/PROMOTION_RUNBOOK.md
   - docs/runbooks/people-dna-land/ROLLBACK_RUNBOOK.md
-  - data/registry/sources/people-dna-land/
-  - policy/domains/people-dna-land/
-tags: [kfm, runbook, people-dna-land, source-refresh, intake, governance]
+  - docs/doctrine/directory-rules.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/domains/people-dna-land/README.md
+  - data/registry/sources/people-dna-land/README.md
+  - connectors/people-dna-land/README.md
+  - policy/domains/people-dna-land/README.md
+  - contracts/domains/people-dna-land/README.md
+  - schemas/contracts/v1/domains/people-dna-land/README.md
+  - fixtures/domains/people-dna-land/README.md
+  - tests/domains/people-dna-land/README.md
+  - tools/validators/domains/people-dna-land/README.md
+  - release/candidates/people-dna-land/README.md
+  - .github/workflows/domain-people-dna-land.yml
+tags: [kfm, runbook, people-dna-land, source-refresh, source-head, hold, no-network, sensitive-domain, proposal-lineage, fail-closed]
 notes:
-  - Operates on the most sensitivity-laden KFM domain; default-deny applies to living-person and DNA-derived material.
-  - Specific paths quoted herein are PROPOSED until verified against mounted-repo evidence.
+  - "The prior 2026-05-12 body is retired from operational use because current evidence does not establish an admitted descriptor, active connector, source-refresh profile, receipt producer, policy-runtime binding, or lifecycle mutation path."
+  - "This file authorizes no network request, credential use, source retrieval, descriptor edit, source activation, payload placement, receipt emission, lifecycle mutation, watcher PR, promotion, release, deployment, or publication."
+  - "Repository-visible review is limited to synthetic or public-safe metadata already admitted to Git; real source or sensitive payloads remain outside Git and CI."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # People · Genealogy · DNA · Land — Source Refresh Runbook
 
-Governed procedure for refreshing People / Genealogy / DNA / Land source material from upstream publishers, detecting material delta, holding sensitive content closed by default, and emitting auditable receipts before any catalog or publication change.
-
-![Status](https://img.shields.io/badge/status-draft-yellow)
-![Domain](https://img.shields.io/badge/domain-people--dna--land-blue)
-![Lifecycle](https://img.shields.io/badge/lifecycle-governed-informational)
-![Sensitivity](https://img.shields.io/badge/sensitivity-fail--closed-critical)
-![Authority](https://img.shields.io/badge/authority-runbook-lightgrey)
-![Repo Evidence](https://img.shields.io/badge/repo--evidence-NEEDS%20VERIFICATION-orange)
-
-**Status:** draft &middot; **Owners:** People/DNA/Land steward · Source intake steward · Privacy reviewer &middot; **Last updated:** 2026-05-12
-
-> [!IMPORTANT]
-> This runbook governs intake refresh for the most sensitivity-laden domain in KFM. **Living-person data and DNA-derived material are denied or restricted by default.** Assessor records are **not** title truth. Parcel geometry is **not** title-boundary proof. Refresh procedures that do not preserve these distinctions fail closed at the policy gate.
-
----
-
-## Quick Links
-
-- [1. Purpose & Scope](#1-purpose--scope)
-- [2. Inputs & Outputs](#2-inputs--outputs)
-- [3. Source Families in Scope](#3-source-families-in-scope)
-- [4. Refresh Flow](#4-refresh-flow)
-- [5. Step-by-Step Procedure](#5-step-by-step-procedure)
-- [6. Sensitivity & Source-Role Boundaries](#6-sensitivity--source-role-boundaries)
-- [7. Receipts, Manifests, and Lifecycle Gates](#7-receipts-manifests-and-lifecycle-gates)
-- [8. Failure Modes and Fail-Closed Behavior](#8-failure-modes-and-fail-closed-behavior)
-- [9. Dry-Run / No-Network CI](#9-dry-run--no-network-ci)
-- [10. Rollback & Correction Path](#10-rollback--correction-path)
-- [11. Operator Checklist](#11-operator-checklist)
-- [12. Open Verification Items](#12-open-verification-items)
-- [13. Related Docs](#13-related-docs)
-- [14. Appendix](#14-appendix)
-
----
-
-## 1. Purpose & Scope
-
-**Scope.** This runbook covers periodic and event-driven refresh of source material owned by the **People, Genealogy, DNA, and Land Ownership** domain. It addresses how to:
-
-- Probe upstream publishers using HTTP validators and / or manifest checksums.
-- Canonicalize source descriptors and compute a stable `spec_hash`.
-- Detect material change without re-downloading unchanged bytes.
-- Hold sensitive deltas in `data/quarantine/` until steward review.
-- Emit a `RunReceipt` that records the refresh decision, validators, and digests.
-- Open a watcher pull request that **proposes** — but does not publish — a catalog change.
-
-**Out of scope.** This runbook does **not** decide release. Release is governed by `ReleaseManifest`, review state, and the publication gate in `release/`. It does not decide rights, sensitivity tiers, or correction logic; those decisions live in `policy/`, `data/registry/`, and a separate correction runbook.
-
-**Truth posture of this document.**
-
-| Layer | Status |
-|---|---|
-| Doctrine (lifecycle invariant, default-deny for living-person and DNA, source-role anti-collapse) | CONFIRMED |
-| Procedure shape (HEAD probe · canonical hash · receipt · policy gate · draft PR) | CONFIRMED at the doctrinal level |
-| Specific repo paths, tool names, command flags, schema homes, fixture trees | PROPOSED until verified against mounted-repo evidence |
-| Current presence or enforcement state of the cited validators, watchers, and policies in the live repo | NEEDS VERIFICATION |
-
-[Back to top](#quick-links)
-
----
-
-## 2. Inputs & Outputs
-
-**Inputs.**
-
-- A `SourceDescriptor` under `data/registry/sources/people-dna-land/<source_id>/` (PROPOSED path).
-- A watcher trigger (cron schedule, dispatch event, or manual run).
-- The upstream publisher endpoint (HTTP, S3, OAI-PMH, file drop, or API).
-- The previous `RunReceipt` for delta comparison, if any.
-- Source rights and sensitivity tier from `data/registry/rights/` and `policy/sensitivity/` (PROPOSED).
-
-**Outputs.**
-
-- A canonicalized `source_descriptor.json` and recomputed `spec_hash`.
-- A `RunReceipt` recording URL, fetched-at time, ETag / Last-Modified, `spec_hash`, artifact digests, provider, and the linked `PolicyDecision`.
-- New artifacts placed under either `data/raw/people-dna-land/<source_id>/<run_id>/` or `data/quarantine/people-dna-land/<reason>/<run_id>/`, depending on policy outcome.
-- A **draft** pull request (the watcher PR) that proposes catalog / provenance updates *after* validation and policy gates pass — never a direct commit to a canonical branch.
-
-[Back to top](#quick-links)
-
----
-
-## 3. Source Families in Scope
-
-Each family carries a source-role intent (authority / observation / context / model) that **must** be preserved through refresh. Rights and sensitivity vary; sensitive joins fail closed.
-
-| Family | Role posture | Sensitivity floor | Refresh signal | Status |
-|---|---|---|---|---|
-| Vital records · census · cemetery · obituary · church · school · military · court · probate | authority / observation | public when source permits; **living-person fields fail closed** | publisher cadence; manifest | CONFIRMED doctrine / PROPOSED implementation |
-| GEDCOM / GEDZip / tree overlays | observation / context (hypotheses) | restricted while living individuals present | user submission or batch refresh | CONFIRMED doctrine / PROPOSED implementation |
-| DNA vendor match CSV / segment / triangulation | restricted observation | **DNA-derived — denied unless consent record present** | manual; consent-bound | CONFIRMED doctrine / PROPOSED implementation |
-| Patent · deed · mortgage · lien · easement · lease · mineral · water · access · probate instruments | authority | public per source terms | publisher cadence | CONFIRMED doctrine / PROPOSED implementation |
-| Assessor and tax roll records | observation (**not title**) | public per jurisdiction | publisher cadence | CONFIRMED doctrine / PROPOSED implementation |
-| Plat · survey · metes & bounds · PLSS · subdivision · derived geometry | observation / context (**not title boundary**) | public per source terms | publisher cadence | CONFIRMED doctrine / PROPOSED implementation |
-
 > [!CAUTION]
-> Assessor records and tax rolls record **what the assessor believes**, not who legally holds title. PLSS, plat, and survey geometry record **survey assertions and parcel polygons**, not legal title boundaries. Refresh runs must preserve these source-role distinctions, or fail closed.
+> **STOP — live People/DNA/Land source refresh is not established by current repository evidence.** Do not execute the prior `curl`, hashing, policy, attestation, quarantine, RAW-placement, or watcher instructions from this path. Their proposal lineage remains in Git history only.
 
-[Back to top](#quick-links)
+This document is the current repository-grounded hold boundary for People/DNA/Land source refresh. It permits an authorized reviewer to inspect repository-visible source-head metadata and prepare a minimized handoff. It is not a fetcher, source admission decision, connector, policy evaluator, receipt producer, lifecycle transition, incident procedure, release gate, or publication authority.
 
----
+## Current outcome
 
-## 4. Refresh Flow
-
-```mermaid
-flowchart LR
-    A[Scheduler / Dispatch] --> B[Resolve SourceDescriptor]
-    B --> C[HEAD probe<br/>ETag · Last-Modified · Length]
-    C --> D{Changed?}
-    D -- No --> Z1[Emit no-change<br/>RunReceipt · exit]
-    D -- Yes --> E[Conditional GET]
-    E --> F[Canonicalize descriptor<br/>compute spec_hash]
-    F --> G[Verify manifest<br/>SHA-256 if available]
-    G --> H{Policy gate<br/>rights · sensitivity · role}
-    H -- Deny --> Q[data/quarantine/<br/>record reason]
-    H -- Restrict --> R[data/raw/<br/>restricted partition]
-    H -- Allow --> S[data/raw/<br/>standard partition]
-    Q --> T[Emit RunReceipt]
-    R --> T
-    S --> T
-    T --> U[Open draft watcher PR<br/>propose · do not publish]
-    U --> V[CI: validators · policy · receipts]
-    V --> W{Gates pass?}
-    W -- No --> X[Block merge; comment failures]
-    W -- Yes --> Y[Steward review for promotion<br/>handled by a separate runbook]
-```
-
-The diagram reflects the conditional-fetch + canonical-hash + receipt + policy-gate pattern that the wider KFM source-refresh doctrine recommends. The **shape** of these steps is CONFIRMED at the doctrinal level; the **specific component names and paths** remain PROPOSED until verified against mounted-repo evidence.
-
-[Back to top](#quick-links)
-
----
-
-## 5. Step-by-Step Procedure
-
-> [!NOTE]
-> The commands below are **illustrative**. Tool names and flags labelled `PROPOSED` must be replaced with the actual verified tooling in the mounted repo before operational use. Treat the structure as authoritative; treat the literals as placeholders.
-
-### 5.1 Resolve the `SourceDescriptor`
-
-```bash
-# PROPOSED tool name — verify against repo
-kfm-source resolve \
-  --domain people-dna-land \
-  --source-id "$SOURCE_ID" \
-  --out source_descriptor.json
-```
-
-What this captures: source identity, source role (authority / observation / context / model), rights status, sensitivity tier, publisher endpoint, expected cadence, and prior `spec_hash`.
-
-### 5.2 HEAD probe for validators
-
-```bash
-SRC_URL="$(jq -r '.endpoint.url' source_descriptor.json)"
-
-curl -sI \
-  -H "If-None-Match: $(jq -r '.last_etag // empty' source_descriptor.json)" \
-  "$SRC_URL" \
-  > head_response.txt
-```
-
-Capture `ETag`, `Last-Modified`, and `Content-Length`. A `304 Not Modified` response short-circuits to a no-change `RunReceipt`.
-
-> [!NOTE]
-> Some publishers strip or weakly version ETags. Treat weak ETags (`W/...`) as advisory and fall through to manifest verification before promotion.
-
-### 5.3 Conditional fetch (only on change)
-
-```bash
-curl -sS -L \
-  --etag-compare etag.cache \
-  --etag-save etag.cache.new \
-  -o "raw_payload.bin" \
-  "$SRC_URL"
-```
-
-Skip this step entirely on `304`. On `200`, place the payload under `data/raw/people-dna-land/<source_id>/<run_id>/` (PROPOSED path).
-
-### 5.4 Canonicalize and hash
-
-```bash
-# Canonical JSON (JCS / RFC 8785) → stable digest for the descriptor
-jq -cS '.' source_descriptor.json \
-  | sha256sum | cut -d' ' -f1 \
-  > spec_hash.txt
-```
-
-`spec_hash` is the source descriptor's deterministic fingerprint. Equal evidence → equal hash; any field drift produces a new hash and is therefore an auditable delta.
-
-### 5.5 Verify the upstream manifest (if available)
-
-If the publisher exposes a checksums manifest (for example `SHA256SUMS`, or a `manifest.json` with per-file digests), fetch it and run:
-
-```bash
-sha256sum -c upstream_checksums.txt
-```
-
-Fail closed on any mismatch. Record `manifest_verified: true|false` in the `RunReceipt`.
-
-### 5.6 Policy gate — rights, sensitivity, source role
-
-Run the policy bundle. The decision must be one of `allow`, `restrict`, `quarantine`, or `deny`.
-
-```bash
-# PROPOSED policy entrypoint — verify against repo
-conftest test \
-  --policy policy/domains/people-dna-land/ \
-  --data data/registry/rights/people-dna-land.yaml \
-  source_descriptor.json
-```
-
-The gate **must** check, at minimum:
-
-- Rights status of the source family for this candidate refresh.
-- Sensitivity tier — living-person presence, DNA-derived material, restricted joins.
-- Source-role intent vs. how the data is described downstream (assessor ≠ title; parcel geometry ≠ title boundary).
-- Required temporal validity fields (source time, observed time, retrieval time).
-- Whether a steward consent record is required — **mandatory for DNA-derived material**.
-
-### 5.7 Emit the `RunReceipt`
-
-```bash
-# PROPOSED tool — verify against repo
-kfm-attest make-run-receipt \
-  --spec source_descriptor.json \
-  --decision policy_decision.json \
-  --target-zone RAW \
-  --source-url "$SRC_URL" \
-  --source-etag        "$(awk '/^ETag:/{print $2}' head_response.txt)" \
-  --source-last-modified "$(awk '/^Last-Modified:/{$1=""; print $0}' head_response.txt)" \
-  --source-content-length "$(awk '/^Content-Length:/{print $2}' head_response.txt)" \
-  --out data/receipts/ingest/people-dna-land/run-receipt.json
-```
-
-The receipt must carry: source URL, fetched-at, ETag, Last-Modified, `spec_hash`, artifact digests, provider / runner identity, the linked `PolicyDecision`, and an outcome from the finite envelope (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`).
-
-### 5.8 Open a draft watcher PR (propose, do not publish)
-
-The watcher **MUST NOT** commit to canonical catalog branches directly. It opens a **draft pull request** that includes the `RunReceipt`, the new or updated `SourceDescriptor`, and any candidate catalog / provenance updates. CI runs validators, policy parity checks, and receipt verification. Merge requires steward approval — and for any change that touches living-person or DNA-derived material, an additional privacy / sensitivity reviewer.
-
-[Back to top](#quick-links)
-
----
-
-## 6. Sensitivity & Source-Role Boundaries
-
-> [!WARNING]
-> **The default-deny rules for this domain are doctrinal, not optional.** A refresh that surfaces living-person or DNA-derived material to a public catalog path without an explicit, recorded consent and review trail is a publication-discipline failure regardless of intent.
-
-| Boundary | Default posture | What a refresh must do |
+| Question | Current answer | Required posture |
 |---|---|---|
-| Living-person fields | DENY public exposure | Hold record in `data/quarantine/people-dna-land/living_person/<run_id>/`; require steward review before any non-restricted placement. |
-| DNA / genomic material | RESTRICT or DENY | Place in restricted partition only; refuse public catalog emission; require a referenced consent record. |
-| Genealogy relationships involving living individuals | RESTRICT | Mark hypothesis status; never publish as confirmed fact. |
-| Assessor / tax records described as title | DENY (the description, not necessarily the record) | The record family is `observation`, never `authority for title`. Refuse the title framing. |
-| Parcel geometry described as legal boundary | DENY (the description, not necessarily the record) | Record family is `observation`; geometry version ≠ legal boundary. Refuse the boundary framing. |
-| Source rights unclear or stale | QUARANTINE | Hold pending source-rights review and steward decision. |
+| Is a live People/DNA/Land refresh implementation verified? | No. The connector lane contains documentation and a placeholder only. | `HOLD` |
+| Is a source admitted and activated for this procedure? | No admitted descriptor instance or activation decision is present in the inspected registry lane. | `HOLD` |
+| Can this document contact an upstream publisher or use credentials? | No. Network access and credentials are outside this documentation boundary. | `DENY` implied authority |
+| Can it place bytes in RAW or QUARANTINE? | No current connector, custody route, or receipt binding was verified. | `HOLD` |
+| Can existing synthetic tests authorize refresh? | No. They cover two consent profiles, not source retrieval or admission. | `DENY` implied authority |
+| What may happen now? | Review already repository-visible source-head metadata, record gaps, and prepare a minimized handoff without sensitive values. | `PASS` or `HOLD` for that review only |
 
-When in doubt, the safe state is **quarantine, deny, or restrict** until source rights, source role, access conditions, cadence, and release class are recorded.
+## Authority and current evidence
 
-[Back to top](#quick-links)
+- Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts the [Directory Rules](../../doctrine/directory-rules.md). They place human procedure under `docs/runbooks/`; this path cannot create source, contract, schema, policy, receipt, evidence, lifecycle, or release authority.
+- The [source-registry lane](../../../data/registry/sources/people-dna-land/README.md) is experimental, has `OWNER_TBD`, records unresolved topology, and currently contains README files plus placeholders rather than an admitted descriptor instance.
+- The [connector lane](../../../connectors/people-dna-land/README.md) is draft and explicitly says its implementation, descriptors, consent sidecars, policy, fixtures, tests, CI, and release behavior need verification. Its current tree contains no source adapter implementation.
+- The [policy lane](../../../policy/domains/people-dna-land/README.md) is a mixed-maturity documentation and rule surface. This runbook does not prove an active evaluator binding for source refresh.
+- The [contracts](../../../contracts/domains/people-dna-land/README.md), [schemas](../../../schemas/contracts/v1/domains/people-dna-land/README.md), [fixtures](../../../fixtures/domains/people-dna-land/README.md), and [validator index](../../../tools/validators/domains/people-dna-land/README.md) preserve domain boundaries but do not establish an executable source-refresh profile or receipt producer.
+- The [domain tests](../../../tests/domains/people-dna-land/README.md) and [workflow](../../../.github/workflows/domain-people-dna-land.yml) execute two deterministic synthetic consent profiles. Neither performs network access, source admission, payload placement, refresh receipt production, or lifecycle promotion.
+- The [release-candidate lane](../../../release/candidates/people-dna-land/README.md), [promotion boundary](./PROMOTION_RUNBOOK.md), and [rollback boundary](./ROLLBACK_RUNBOOK.md) do not supply missing refresh authority.
 
----
+Documentation and repository checks may confirm this boundary at a revision. They cannot close any missing operational dependency.
 
-## 7. Receipts, Manifests, and Lifecycle Gates
+## Permitted repository-only review
 
-A refresh participates in the lifecycle invariant. It does **not** transit lifecycle states by itself; promotion is a separate governed decision.
+An authorized reviewer may perform this bounded review only on metadata already present in the repository and safe for repository visibility:
 
-```text
-RAW  →  WORK / QUARANTINE  →  PROCESSED  →  CATALOG / TRIPLET  →  PUBLISHED
- ▲           ▲
- │           │
- this runbook ends here (RAW or QUARANTINE placement);
- promotion is governed by a separate validation + release path.
-```
+1. pin the exact repository revision and the source-registry, connector, policy, contract, schema, fixture, validator, test, workflow, evidence, receipt, release, correction, withdrawal, revocation, and rollback surfaces consulted;
+2. confirm whether one authoritative descriptor, activation decision, source-head record, connector implementation, immutable comparison profile, rights posture, sensitivity posture, consent posture, custody route, and receipt binding exist;
+3. inventory named consumers without opening a live endpoint, resolving a credential, or copying payload values;
+4. preserve source role and time distinctions, including source time, observation time, retrieval time, record time, transaction time, and publication time;
+5. assign a finite review outcome and reason from the table below; and
+6. hand off a minimized gap list to the owning responsibility roots.
 
-### 7.1 Required receipts at refresh time
-
-| Receipt | When emitted in this runbook | Required fields (PROPOSED minimum) |
-|---|---|---|
-| `SourceDescriptor` (updated) | On any descriptor field change | source id, role, rights, sensitivity, cadence, payload reference, hash |
-| `RunReceipt` | Every refresh run — change or no-change | URL, fetched-at, ETag, Last-Modified, `spec_hash`, artifact digests, provider, policy decision id, outcome |
-| `PolicyDecision` | Whenever the policy gate runs | decision (`allow` / `restrict` / `quarantine` / `deny`), reason codes, evidence refs |
-| `TransformReceipt` | Only if normalization runs in WORK as part of the refresh PR | inputs, outputs, transforms applied, validator outcomes |
-| `RedactionReceipt` | Only if generalization / redaction runs (uncommon at refresh) | scope, method, evidence refs |
-
-Receipts created earlier in the lifecycle remain referenced (not duplicated) at later phases through `EvidenceRef`.
-
-### 7.2 Gate posture at refresh
-
-| Gate | This runbook's responsibility | Fail-closed behavior |
-|---|---|---|
-| Admission ( → RAW) | Yes | Reject if `SourceDescriptor` or `RunReceipt` cannot close. |
-| Normalization (RAW → WORK / QUARANTINE) | Partial — only if a delta requires an immediate transform | Quarantine with recorded reason. |
-| Validation (WORK → PROCESSED) | No — runs in a separate validation runbook | Hold at WORK. |
-| Catalog closure (PROCESSED → CATALOG / TRIPLET) | No | Hold at PROCESSED. |
-| Release (CATALOG / TRIPLET → PUBLISHED) | No — runs via the release pipeline | Hold at CATALOG. |
-
-[Back to top](#quick-links)
-
----
-
-## 8. Failure Modes and Fail-Closed Behavior
-
-| Symptom | Cause | Action |
-|---|---|---|
-| `spec_hash` cannot be computed | Descriptor missing required fields, or canonicalization tool unavailable | Halt; treat run as `ERROR`; emit `RunReceipt` with `outcome: ERROR` and **no** payload placement. |
-| HEAD probe returns no validator and no manifest | Publisher exposes neither ETag, Last-Modified, nor a checksums file | Fall back to full `GET` + content digest; record `validator_strength: weak` in receipt. Promotion gates may require additional support. |
-| Manifest checksum mismatch | Bytes do not match publisher claims | Fail closed; do not place in RAW; record `manifest_verified: false` and quarantine the candidate. |
-| Source rights stale / unknown | Rights record older than cadence, or marked `NEEDS VERIFICATION` | Quarantine; open a `data/registry/rights/` review entry. |
-| Living-person field detected on a route claiming public scope | Policy gate caught it; or a downstream describer mismatched the source role | `DENY`; quarantine; alert privacy reviewer. |
-| DNA-derived field present without a consent record | Policy gate caught it | `DENY`; quarantine; alert privacy reviewer. |
-| Assessor record described as title | Source-role anti-collapse violation | `DENY` the **description**; the record itself may still be admitted as `observation`. |
-| Parcel geometry described as legal boundary | Source-role anti-collapse violation | `DENY` the **description**; the geometry may still be admitted as `observation`. |
-| Watcher attempts to commit to a canonical branch | Watcher-as-publisher anti-pattern | CI rejects; the watcher must use the draft-PR pattern instead. |
-| Compromised runner or credential rotation | Token / key leak or rotation event | Mark affected `RunReceipt` set as untrusted; reissue under new identity. |
-
-[Back to top](#quick-links)
-
----
-
-## 9. Dry-Run / No-Network CI
-
-The first run of any new refresher or source family **should** be a no-network, deterministic fixture run that emits receipts and validates structure without contacting the publisher. This protects the trust membrane during onboarding and catches schema and policy drift before live traffic hits the gate.
-
-Suggested fixtures (PROPOSED paths):
-
-```text
-fixtures/domains/people-dna-land/source-refresh/
-├── descriptor.valid.json
-├── descriptor.invalid.missing_rights.json
-├── descriptor.invalid.dna_no_consent.json
-├── descriptor.invalid.assessor_as_title.json
-├── head_response.changed.txt
-├── head_response.unchanged_304.txt
-├── manifest.matching.txt
-├── manifest.mismatch.txt
-└── expected/
-    ├── run_receipt.no_change.json
-    ├── run_receipt.changed.json
-    ├── policy_decision.deny.dna_no_consent.json
-    └── policy_decision.deny.assessor_as_title.json
-```
-
-CI invocation:
-
-```bash
-# PROPOSED entrypoint — verify against repo
-kfm-refresh dry-run \
-  --domain people-dna-land \
-  --fixture-dir fixtures/domains/people-dna-land/source-refresh \
-  --expected-dir fixtures/domains/people-dna-land/source-refresh/expected
-```
-
-> [!TIP]
-> A no-network fixture suite is also the most reliable surface for catching schema or policy drift, because it exercises the deny and quarantine paths in addition to the happy path. Negative fixtures matter at least as much as positive ones for this domain.
-
-[Back to top](#quick-links)
-
----
-
-## 10. Rollback & Correction Path
-
-Refresh itself is **reversible by construction** because it stops at RAW or QUARANTINE — no public surface changes during refresh. Rollback at this layer is therefore narrow but specific.
-
-| Defect class | Correction posture | Rollback posture |
-|---|---|---|
-| Wrong source description (rights, role) | Update `SourceDescriptor`; reissue refresh; emit `CorrectionNotice` if downstream is already PUBLISHED. | Restore prior `SourceDescriptor`; reissue affected `RunReceipt`. |
-| Wrong policy decision (false `allow`) | Re-run policy; quarantine affected records; emit `CorrectionNotice`. | Restore prior `PolicyDecision`; move records to the quarantine partition; consult privacy reviewer. |
-| Wrong manifest verification (false pass) | Re-fetch; recompute digests; quarantine. | Move RAW placement to QUARANTINE with reason. |
-| Compromised credentials or runner identity | Rotate; re-run with the new identity. | Mark affected `RunReceipt` set as untrusted; reissue. |
-| Living-person or DNA leakage to a non-restricted path | Quarantine immediately; emit `CorrectionNotice`; alert privacy reviewer. | Disable affected route; restore prior release manifest via the rollback runbook; preserve audit receipts. |
-
-If downstream lifecycle phases have already consumed the bad refresh, follow `docs/runbooks/people-dna-land/ROLLBACK_RUNBOOK.md` (PROPOSED) for the broader correction-and-rollback procedure, which preserves the original release record and publishes a superseding release rather than silently mutating the old one.
-
-[Back to top](#quick-links)
-
----
-
-## 11. Operator Checklist
-
-Use this checklist before merging a watcher PR generated by this runbook.
-
-- [ ] `SourceDescriptor` is current and includes source role, rights, sensitivity, and cadence.
-- [ ] HEAD probe captured ETag and / or Last-Modified; or a manifest checksum was captured.
-- [ ] `spec_hash` recomputes deterministically from the canonicalized descriptor.
-- [ ] No-change runs short-circuit and emit a `RunReceipt` without re-downloading bytes.
-- [ ] Changed runs verified the upstream manifest where one is available.
-- [ ] The policy gate ran and produced an `allow` / `restrict` / `quarantine` / `deny` decision with reasons.
-- [ ] Living-person, DNA-derived, and restricted-join checks fired and recorded outcomes.
-- [ ] Assessor and parcel-geometry records carry `observation` role; no record is described as title or title boundary.
-- [ ] `RunReceipt` is present, signed (or attested per repo policy), and references the `PolicyDecision`.
-- [ ] No commit to a canonical catalog branch from the watcher; only a draft PR.
-- [ ] No public surface changed as a result of refresh alone.
-- [ ] Verification-backlog entries (§12) were updated if new gaps surfaced.
-
-[Back to top](#quick-links)
-
----
-
-## 12. Open Verification Items
-
-These items remain `NEEDS VERIFICATION` against mounted-repo evidence. Each should be settled by inspecting actual files, schemas, registry entries, tests, logs, emitted artifacts, review records, or release manifests.
-
-| Item | What would settle it | Status |
-|---|---|---|
-| Living-person policy enforcement in `policy/domains/people-dna-land/` | Mounted policy bundle + negative tests | NEEDS VERIFICATION |
-| DNA consent / revocation enforcement and schema | Consent record schema; revocation receipt; deny fixtures | NEEDS VERIFICATION |
-| Land instrument chain logic (deed → title) | Chain-of-title contract; transition tests | NEEDS VERIFICATION |
-| Geometry-role boundary enforcement (PLSS / plat / parcel) | Schema role enums; fixtures rejecting a `title_boundary` framing | NEEDS VERIFICATION |
-| UI / API restricted-field no-leak behavior | API integration tests; redaction receipts; sensitive field masking | NEEDS VERIFICATION |
-| Canonical watcher tool name and path | Mounted `tools/ingest/watchers/` or equivalent | NEEDS VERIFICATION |
-| Canonical attestation tool (`kfm-attest`, `cosign`, or other) | Mounted toolchain + tool-versions pin | NEEDS VERIFICATION |
-| Canonical receipt-schema home (`schemas/contracts/v1/receipts/` vs. domain-scoped) | ADR + present-day repo evidence | NEEDS VERIFICATION |
-| Sensitivity tier scheme (T0–T4) adoption status | Mounted `policy/sensitivity/`; ADR | NEEDS VERIFICATION |
-| Runbook naming convention (flat `people_dna_land_*.md` vs. per-domain subdir) | Per-root README in `docs/runbooks/`; ADR; mounted convention | NEEDS VERIFICATION |
-| Drift register entry format for refresh-related conflicts | Mounted `docs/registers/DRIFT_REGISTER.md` | NEEDS VERIFICATION |
-
-[Back to top](#quick-links)
-
----
-
-## 13. Related Docs
-
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement authority for this file and the artifacts it touches.
-- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — the RAW → PUBLISHED invariant.
-- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — why watchers propose rather than publish.
-- [`docs/domains/people-dna-land/README.md`](../../domains/people-dna-land/README.md) — domain charter and boundaries (PROPOSED neighbor).
-- [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../sources/SOURCE_DESCRIPTOR_STANDARD.md) — source descriptor field standard (PROPOSED).
-- [`docs/standards/SMART_SYNC.md`](../../standards/SMART_SYNC.md) — HTTP-validator + manifest pattern (PROPOSED).
-- [`docs/runbooks/people-dna-land/VALIDATION_RUNBOOK.md`](./VALIDATION_RUNBOOK.md) — validation runbook (PROPOSED neighbor).
-- [`docs/runbooks/people-dna-land/ROLLBACK_RUNBOOK.md`](./ROLLBACK_RUNBOOK.md) — rollback runbook (PROPOSED neighbor).
-- [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — where §12 items file.
-
-[Back to top](#quick-links)
-
----
-
-## 14. Appendix
-
-<details>
-<summary><strong>A. Reference — fields a refresh <code>RunReceipt</code> should carry</strong></summary>
-
-```json
-{
-  "schema_version": "v1",
-  "object_type": "RunReceipt",
-  "domain": "people-dna-land",
-  "source_id": "<source_id>",
-  "source_url": "<endpoint>",
-  "fetched_at": "2026-05-12T00:00:00Z",
-  "validators": {
-    "etag": "<strong-or-weak-etag-or-null>",
-    "last_modified": "<rfc1123-or-null>",
-    "content_length": 0,
-    "manifest_verified": true
-  },
-  "spec_hash": "sha256:...",
-  "artifacts": [
-    {
-      "uri": "data/raw/people-dna-land/<source_id>/<run_id>/payload.ext",
-      "sha256": "..."
-    }
-  ],
-  "provider": {
-    "runner": "<runner-id>",
-    "tool_versions_ref": "<digest>"
-  },
-  "policy_decision_ref": "<uri-or-id>",
-  "outcome": "ANSWER | ABSTAIN | DENY | ERROR",
-  "evidence_refs": [],
-  "previous_run_receipt_ref": "<uri-or-null>"
-}
-```
-
-</details>
-
-<details>
-<summary><strong>B. Reference — example denial reasons specific to this domain</strong></summary>
-
-| Reason code (PROPOSED) | Trigger |
+| Review result | Meaning |
 |---|---|
-| `living_person_field_in_public_route` | A field whose presence implies a living individual reached a public-targeted refresh path. |
-| `dna_material_without_consent_record` | DNA / genomic data encountered without a referenced, valid consent record. |
-| `assessor_described_as_title` | A descriptor or downstream label declared assessor data as legal title. |
-| `parcel_geometry_described_as_title_boundary` | A descriptor or downstream label declared parcel polygons as legal boundaries. |
-| `rights_stale_or_unknown` | The rights record for this source is older than its cadence, or is marked `NEEDS VERIFICATION`. |
-| `manifest_checksum_mismatch` | Upstream manifest digest did not match observed bytes. |
-| `weak_validators_only` | Publisher exposed only weak ETag and no manifest; promotion gates may require additional support. |
+| `PASS` | The repository-only inventory completed at the pinned revision. It says nothing about source freshness or operational readiness. |
+| `HOLD` | One or more required authorities, implementations, reviews, or safe handling conditions are missing or unresolved. |
+| `ABSTAIN` | Available repository evidence cannot support a conclusion without live, restricted, disputed, or authority-controlled material. |
+| `DENY` | The requested action would expose prohibited material, exceed consent or rights, collapse a source role, or treat this document as operational authority. |
+| `ERROR` | A named repository dependency is missing, inconsistent, malformed, or cannot be inspected safely. |
+| `ESCALATE` | Accountable privacy, consent, sovereignty, legal, source, security, custody, policy, evidence, operations, release, or independent review is required. |
 
-</details>
+A `PASS` for this review does not activate a source or authorize a refresh. The current live-refresh outcome remains `HOLD`.
 
-<details>
-<summary><strong>C. Why "assessor ≠ title" and "parcel geometry ≠ title boundary" are doctrine, not pedantry</strong></summary>
+## Mandatory stop conditions
 
-Assessor and tax-roll data record the taxing authority's working belief about ownership at a moment in time, for taxation purposes. Title is a legal status established by recorded instruments (patent, deed, mortgage discharge, court order) interpreted by examiners and courts. The two correlate but are not the same surface; treating them as equivalent has practical consequences for people whose records were mis-entered, contested, or never updated after a transfer.
+Stop without network access or mutation when any of the following applies:
 
-Parcel polygons, similarly, are survey assertions and administrative shapes — useful, but not legal boundaries. The legal boundary is a description in an instrument; the polygon is one observation of that description.
+- no accepted, uniquely owned descriptor and activation decision identify the exact source product;
+- rights, terms, consent, revocation, purpose, audience, access role, sensitivity, sovereignty, stewardship, retention, deletion, custody, cadence, or source head is unknown or disputed;
+- a real living person, family relationship, DNA/genomic value, kit or vendor identifier, private address, exact private location, parcel-owner join, title dispute, burial location, or culturally restricted fact would enter Git, CI, logs, screenshots, fixtures, artifacts, or a public handoff;
+- no verified connector, immutable comparison profile, deterministic negative fixtures, validator, receipt producer, or accountable operator exists;
+- a proposed path, command, role, schema sketch, receipt-shaped JSON, status badge, test, workflow, or generated summary is the only support for the action;
+- the proposed refresh would collapse a relationship hypothesis into kinship, an assessor/tax observation into title, parcel geometry into a legal boundary, or a source record into current truth;
+- source admission, retrieval, validation, evidence closure, promotion, release, deployment, publication, correction, withdrawal, revocation, deletion, invalidation, and rollback are being treated as one state.
 
-These distinctions are first-class to this domain. A refresh that loses them — even briefly, even in a label — is a publication-discipline failure waiting to happen.
+Unknown or unresolved conditions produce `HOLD`, `ABSTAIN`, `DENY`, or `ESCALATE`, never implied approval.
 
-</details>
+## Sensitive-domain operating law
 
-<details>
-<summary><strong>D. Directory Rules basis for this file's path</strong></summary>
+- Living-person and DNA/genomic material is restricted or denied by default unless current evidence establishes explicit purpose-, audience-, role-, data-class-, and time-bounded authorization and applicable policy support.
+- Relationship assertions and DNA-derived links remain evidence-bound hypotheses. A model, match, cluster, household, surname, graph edge, or narrative does not prove identity or kinship.
+- Assessor and tax records are administrative observations, not title truth. Parcel geometry is context, not proof of legal boundary or ownership.
+- Indigenous, Tribal, descendant-community, burial, archaeological, sacred-site, cemetery, and culturally restricted material requires sovereignty-aware stewardship. Generalization alone does not authorize exposure.
+- Client-side filtering, masking, redaction, pseudonymization, aggregation, or generalized geometry is not access control and does not itself create authorization.
+- EvidenceRef must resolve to EvidenceBundle when a claim depends on evidence. Maps, tiles, graphs, indexes, summaries, dashboards, and generated text remain derived carriers.
 
-- **Responsibility root:** `docs/` (human-facing control plane). Runbooks are explicitly enumerated as docs/runbooks/ content.
-- **Domain segment:** `people-dna-land/` appears as a segment inside `docs/runbooks/`, not as a root folder. This follows Directory Rules §4 Step 3 — a domain MUST NOT become a root folder, but it MAY appear as a segment under a responsibility root.
-- **File name:** `SOURCE_REFRESH_RUNBOOK.md` describes the operation, not the topic alone, consistent with the runbook naming patterns seen in prior reports (e.g., `*_LOCAL_DEV.md`, `*_VALIDATION.md`, `*_ROLLBACK.md`).
-- **Convention caveat:** Prior reports show **flat** runbook names directly under `docs/runbooks/` (for example `ui_VALIDATION.md`). This file uses a **per-domain subdirectory**. Both forms are PROPOSED; an ADR or `docs/runbooks/README.md` should freeze the convention. Until then, this placement is marked NEEDS VERIFICATION for convention-fit.
+## Evidence required before future live refresh
 
-</details>
+A future operational procedure remains blocked until current implementation authority establishes all of the following in existing responsibility roots:
 
----
+1. one accepted descriptor topology, a unique admitted descriptor for the exact source product, and an authenticated activation decision;
+2. current rights, terms, consent, revocation, sensitivity, sovereignty, stewardship, cadence, retention, deletion, custody, and correction posture;
+3. a verified source-first connector with credential isolation, allowlisted egress, bounded retrieval, immutable source-head capture, digest verification, retry and error behavior, and quarantine-first handling;
+4. accepted contracts and schemas for the source head, material-change decision, finite outcomes, and every receipt or handoff object used;
+5. active policy-runtime binding for purpose, audience, role, data class, time, living status, consent, rights, source role, harmful precision, sovereignty, and public-path denial;
+6. deterministic, minimized, synthetic, no-network fixtures and negative tests covering changed, unchanged, missing-rights, consent-mismatch, revoked, living-person, DNA, title-role, parcel-boundary, precision, receipt, and publication-denial cases;
+7. a verified receipt producer and evidence resolver whose output identities bind the exact inputs, decision, runner, code, policy, and candidate revision;
+8. accountable source, privacy, consent, Indigenous/Tribal, legal, security, custody, policy, evidence, operations, release, and independent review as applicable;
+9. correction, withdrawal, revocation, deletion, derivative invalidation, cache invalidation, and rollback mechanisms that remain separate and are tested without production or restricted data; and
+10. exact-head no-network rehearsal plus hosted validation whose limits are recorded without being mistaken for source freshness, human approval, release, or publication.
 
-**Related docs:** see §13 &middot; **Last updated:** 2026-05-12 &middot; [Back to top](#quick-links)
+Missing any item keeps live refresh at `HOLD`.
+
+## Proposal-lineage disposition
+
+The prior v0.1 body is superseded at this path and retained in Git history. It is not copied to another runbook, connector, contract, schema, policy, registry, receipt, proof, or release directory.
+
+In particular, the prior `curl`, `jq`, `sha256sum`, `conftest`, `kfm-source`, `kfm-attest`, and `kfm-refresh` examples; suggested RAW, QUARANTINE, rights, receipt, and fixture paths; HTTP validator behavior; source-family activation assumptions; watcher PR behavior; receipt fields; reason codes; operator checklist; and rollback claims were not verified as a complete current implementation. Do not reconstruct or execute them from this document.
+
+The sibling promotion and rollback documents are repository-grounded `HOLD` boundaries. They do not fill source-refresh dependencies.
+
+## Validation and interpretation
+
+For a documentation-only change to this file:
+
+- run current repository-native metadata, link, topology, and changed-area documentation checks;
+- run the two current synthetic People/DNA/Land consent profiles when the workflow selects this lane;
+- classify every result as `PASS`, `FAIL`, `SKIPPED`, `NOT_RUN`, `PENDING`, `INHERITED`, `EXTERNAL`, or `UNKNOWN`; and
+- bind every result to the exact tested head.
+
+A green check proves only the named document or synthetic profile at that revision. It does not prove source freshness, source admission, rights, consent validity, policy activation, safe custody, evidence closure, receipt authenticity, operational refresh, lifecycle promotion, release, deployment, publication, correction, withdrawal, revocation, deletion, invalidation, or rollback.
+
+## Documentation rollback
+
+Before merge, close the draft pull request and delete only its task branch. After a separately authorized merge, revert the focused documentation commit or apply a reviewed forward correction.
+
+Reverting this file restores proposal-era prose only. It does not undo or execute source retrieval, source admission, consent, policy, evidence, lifecycle, release, deployment, publication, correction, withdrawal, revocation, deletion, invalidation, or rollback.
+
+## Next dependency-aware review points
+
+1. Resolve source-descriptor topology and ownership before creating a source instance or connector profile.
+2. Inventory the remaining rollback-drill, validation, and vendor-watch scaffolds independently.
+3. Establish active policy-runtime, receipt, evidence, custody, and accountable-review bindings before designing live source refresh.
+4. Keep real, restricted, disputed, or proprietary material outside repository-visible surfaces.
+5. Preserve source admission, retrieval, validation, lifecycle promotion, release, deployment, publication, correction, withdrawal, revocation, deletion, invalidation, and rollback as separate states.
+
+[Back to top](#top)

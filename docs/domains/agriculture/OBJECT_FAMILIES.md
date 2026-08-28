@@ -1,16 +1,19 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/00000000-0000-0000-0000-000000000000
+doc_id: kfm://doc/docs-domains-agriculture-object-families
 title: Agriculture — Object Family Register
 type: standard
 version: v1
 status: draft
 owners: agriculture-stewards (TODO confirm CODEOWNERS)
 created: 2026-05-26
-updated: 2026-05-26
+updated: 2026-08-28
 policy_label: public
+owning_root: docs/
+responsibility: Maintain the draft Agriculture object-family register without creating contract, schema, policy, or release authority.
+truth_posture: CONFIRMED tracked draft register and responsibility-root placement / PROPOSED object-family semantics unless current repository evidence is cited / NEEDS VERIFICATION implementation, validation, review, release, and publication
 related:
-  - ai-build-operating-contract.md
-  - directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
   - docs/domains/agriculture/README.md
   - docs/domains/agriculture/DOMAIN.md
   - docs/domains/agriculture/OBJECTS.md
