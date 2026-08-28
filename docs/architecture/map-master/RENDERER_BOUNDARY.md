@@ -2,13 +2,13 @@
 doc_id: kfm://doc/architecture-map-master-renderer-boundary
 title: Map Master — Renderer Boundary
 type: architecture-reference
-version: v2.0-draft
-status: draft; repository-grounded; mixed-maturity; renderer-neutral-bounded-slices; concrete-runtime-hold; non-authoritative; non-publication
+version: v2.1-draft
+status: draft; repository-grounded; mixed-maturity; renderer-neutral-bounded-slices; production-runtime-hold; non-authoritative; non-publication
 owners:
   - "@bartytime4life — current CODEOWNERS review route"
   - "NEEDS VERIFICATION — independent map-runtime, security, evidence, policy, review, release, correction, rollback, accessibility, and operations stewardship"
 created: 2026-05-24
-updated: 2026-08-19
+updated: 2026-08-27
 policy_label: public; architecture; map-master; renderer-boundary; trust-membrane; evidence-bound; fail-closed; non-publication
 owning_root: docs/
 current_path: docs/architecture/map-master/RENDERER_BOUNDARY.md
@@ -22,12 +22,11 @@ truth_posture: >-
   CONFIRMED current tracked path, accepted Directory Rules placement, the
   renderer-neutral selection-to-Evidence-Drawer bridge, fixture-only
   LayerManifest admission and release-scoped PMTiles cache decisions, bounded
-  acquisition inventory, exact 6.6.0 readiness classifier, dependency-free
-  MapLibre package scaffold, comment-only Explorer adapter, and current runtime
-  HOLD / PROPOSED MapRuntimePort, one concrete MapLibreAdapter seam,
-  sole-renderer choice, dependency ownership, plugin and protocol admission,
-  live governed transport, and browser integration until accepted and
-  implemented / UNKNOWN deployed renderer, public layer serving, production
+  acquisition inventory, exact 6.6.0 package dependency, package-owned
+  MapLibreAdapter and Vite worker seam, deterministic browser fixture, retired
+  legacy harness, and Explorer NullMapRuntime production HOLD / PROPOSED live
+  governed transport, plugin and protocol admission, broader browser evidence,
+  and production activation / UNKNOWN deployed renderer, public layer serving, production
   policy and evidence resolution, operational invalidation, and public parity /
   NEEDS VERIFICATION independent reviewers, complete acquisition enforcement,
   authenticated browser probes, release coupling, correction propagation, and
@@ -650,7 +649,7 @@ No step may be inferred from a later-looking file, a successful fixture, or a gr
 
 | Surface | Scope | Finite behavior | Current limit |
 |---|---|---|---|
-| `assess_acquisition_inventory.py` | Bounded manifests and executable/package/test/example/runtime/public-web roots | `PASS / HOLD / FAIL / ERROR` | Reports candidate seam; does not accept it |
+| `assess_acquisition_inventory.py` | Bounded manifests and executable/package/test/example/runtime/public-web roots | `PASS / HOLD / FAIL / ERROR` | Allows raw acquisition only in the accepted package seam; does not admit runtime activation |
 | `maplibre-acquisition-inventory.yml` | Read-only no-network orchestration | Allows structural `PASS` or `HOLD`; fails `FAIL`/`ERROR` | Path-scoped; docs target does not itself trigger it |
 | `validate_v6_readiness.py` | Exact `6.6.0`, ESM/ES2022, import/internal-access checks, twelve probe slots | `READY / HOLD / ERROR` | Candidate readiness only |
 | `test_explorer_web_adapter_boundary.py` | Explorer source imports and internal-store literals | Fails direct imports outside `adapters/` | Allows any adapter module and Cesium; incomplete for ADR-0006 |
@@ -672,9 +671,9 @@ The bounded acquisition validator is designed to report:
 - protocol registration; and
 - parallel active package homes.
 
-It treats acquisition in `packages/maplibre/**` or the exact current Explorer adapter path as a **candidate seam**, not an accepted seam. Acquisition elsewhere produces `ACQUISITION_OUTSIDE_CANDIDATE_SEAM`. Any acquisition yields structural `HOLD`; parallel active package homes fail closed.
+It treats only `packages/maplibre/**` as the accepted raw-renderer seam. Acquisition confined to that package yields structural `HOLD` while production runtime activation remains unresolved. Acquisition elsewhere produces `ACQUISITION_OUTSIDE_CANDIDATE_SEAM` and fails closed; parallel active package homes also fail closed. Documentation links, CSS class assertions, and package-local imports whose filenames contain `maplibre` are not renderer acquisition.
 
-The repository also contains a performance harness that historically acquires a MapLibre runtime from a public CDN. That is evidence of acquisition drift to inventory and reconcile, not evidence that the concrete Explorer runtime is admitted.
+The former standalone performance harness is retired and exits with a finite `WORKFLOW_HOLD` before acquiring a renderer or network endpoint. That retirement and a clean outside-seam inventory do not establish that the concrete Explorer runtime is activated, released, deployed, or published.
 
 ### 11.3 Twelve runtime probes still required
 

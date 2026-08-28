@@ -4,10 +4,10 @@
 This assessment is intentionally non-authoritative. It inventories bounded executable,
 package, test, example, runtime, and public-web roots for renderer acquisition mechanisms
 so ADR-0006/0007 can be enforced with structural evidence. PASS means the scan completed
-with no renderer acquisition. HOLD means acquisition is present while admission remains
-unresolved or a raw renderer is acquired outside the accepted package seam. FAIL means
-parallel active MapLibre package homes surfaced. ERROR means the bounded scan could not
-complete safely.
+with no renderer acquisition. HOLD means acquisition is confined to the accepted package
+seam while runtime admission remains unresolved. FAIL means raw renderer acquisition
+escaped that seam or parallel active MapLibre package homes surfaced. ERROR means the
+bounded scan could not complete safely.
 
 Imports of the KFM-owned ``@kfm/maplibre`` facade are consumer use of the accepted
 MapRuntimePort boundary, not raw renderer acquisition. Only ``packages/maplibre/`` is an
@@ -23,7 +23,7 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Sequence
 
-PROFILE = "kfm-maplibre-acquisition-inventory-v1"
+PROFILE = "kfm-maplibre-acquisition-inventory-v2"
 TEXT_SUFFIXES = frozenset({".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx", ".html"})
 MAX_FILES = 5000
 SCAN_ROOTS = ("apps", "packages", "runtime", "scripts", "tests", "examples", "public")
@@ -34,8 +34,18 @@ PATTERNS = {
     "STATIC_IMPORT": re.compile(r"(?:^|\n)\s*import(?:\s+type)?(?:[\s\S]{0,160}?from\s*)?['\"]([^'\"]+)['\"]"),
     "DYNAMIC_IMPORT": re.compile(r"\bimport\s*\(\s*['\"]([^'\"]+)['\"]\s*\)"),
     "REQUIRE": re.compile(r"\brequire\s*\(\s*['\"]([^'\"]+)['\"]\s*\)"),
-    "CDN_URL": re.compile(r"https?://[^\s'\"<>]*(?:maplibre|mapbox|cesium|leaflet|openlayers)[^\s'\"<>]*", re.I),
-    "GLOBAL_RUNTIME": re.compile(r"\b(?:maplibregl|mapboxgl|Cesium)\b"),
+    "CDN_URL": re.compile(
+        r"https?://(?:"
+        r"(?:unpkg\.com|cdn\.jsdelivr\.net|cdnjs\.cloudflare\.com|esm\.sh)/"
+        r"[^\s'\"<>`{}]*(?:maplibre|mapbox|cesium|leaflet|openlayers)[^\s'\"<>`{}]*"
+        r"|[^\s'\"<>`{}]*(?:maplibre|mapbox|cesium|leaflet|openlayers)"
+        r"[^\s'\"<>`{}]*\.(?:m?js|css)(?:[?#][^\s'\"<>`{}]*)?"
+        r")",
+        re.I,
+    ),
+    "GLOBAL_RUNTIME": re.compile(
+        r"\b(?:maplibregl|mapboxgl|Cesium)\b(?=\s*(?:[.([;,)}\]]|$))"
+    ),
     "PROTOCOL_REGISTRATION": re.compile(r"\baddProtocol\s*\("),
     "WORKER_ACQUISITION": re.compile(r"\bnew\s+Worker\s*\("),
 }
@@ -102,17 +112,33 @@ def _is_kfm_renderer_facade(value: str) -> bool:
     )
 
 
-def _renderer_subject(value: str) -> str | None:
+def _renderer_package_subject(value: str) -> str | None:
     lowered = value.lower()
     if _is_kfm_renderer_facade(lowered):
         return None
     for package in RENDERER_PACKAGES:
         if lowered == package or lowered.startswith(package + "/"):
             return package
+    return None
+
+
+def _renderer_subject(value: str) -> str | None:
+    package = _renderer_package_subject(value)
+    if package:
+        return package
+    lowered = value.lower()
     for marker in ("maplibre", "mapbox", "cesium", "leaflet", "openlayers"):
         if marker in lowered:
             return marker
     return None
+
+
+def _renderer_import_subject(value: str) -> str | None:
+    """Classify package or remote imports, not KFM-local filenames and aliases."""
+    lowered = value.lower()
+    if lowered.startswith(("http://", "https://")):
+        return _renderer_subject(lowered)
+    return _renderer_package_subject(lowered)
 
 
 def _iter_files(root: Path) -> tuple[list[Path], bool]:
@@ -149,7 +175,7 @@ def _scan_manifest(root: Path, path: Path) -> list[Finding]:
         if not isinstance(deps, dict):
             continue
         for name in sorted(deps):
-            subject = _renderer_subject(str(name))
+            subject = _renderer_package_subject(str(name))
             if subject:
                 findings.append(Finding("MANIFEST_DEPENDENCY", rel, subject, _candidate_seam(rel)))
     return findings
@@ -164,7 +190,7 @@ def _scan_text(root: Path, path: Path) -> list[Finding]:
     findings: list[Finding] = []
     for kind in ("STATIC_IMPORT", "DYNAMIC_IMPORT", "REQUIRE"):
         for match in PATTERNS[kind].finditer(text):
-            subject = _renderer_subject(match.group(1))
+            subject = _renderer_import_subject(match.group(1))
             if subject:
                 findings.append(Finding(kind, rel, subject, _candidate_seam(rel)))
     for kind in ("CDN_URL", "GLOBAL_RUNTIME"):
@@ -210,7 +236,7 @@ def scan(root: Path) -> Result:
 
     if "SCAN_INPUT_UNREADABLE" in reasons or "SCAN_TRUNCATED" in reasons:
         outcome = Outcome.ERROR
-    elif "PARALLEL_MAPLIBRE_PACKAGE_HOMES" in reasons:
+    elif "PARALLEL_MAPLIBRE_PACKAGE_HOMES" in reasons or "ACQUISITION_OUTSIDE_CANDIDATE_SEAM" in reasons:
         outcome = Outcome.FAIL
     elif reasons:
         outcome = Outcome.HOLD

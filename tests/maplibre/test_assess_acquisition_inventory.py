@@ -85,6 +85,18 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(result.findings[0].kind, "STATIC_IMPORT")
         self.assertTrue(result.findings[0].candidate_seam)
 
+    def test_package_local_maplibre_filename_is_not_raw_acquisition(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "packages/maplibre/tests/adapter.test.ts",
+                'import { create } from "../src/maplibre-adapter";\nexport { create };\n',
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.PASS)
+        self.assertEqual(result.findings, ())
+
     def test_explorer_adapter_raw_import_is_outside_accepted_seam(self) -> None:
         with self._root() as tmp:
             root = Path(tmp)
@@ -94,17 +106,73 @@ class AcquisitionInventoryTests(unittest.TestCase):
                 'import maplibregl from "maplibre-gl";\nexport { maplibregl };\n',
             )
             result = MODULE.scan(root)
-        self.assertEqual(result.outcome, MODULE.Outcome.HOLD)
+        self.assertEqual(result.outcome, MODULE.Outcome.FAIL)
         self.assertIn("ACQUISITION_OUTSIDE_CANDIDATE_SEAM", result.reasons)
         self.assertTrue(any(f.kind == "STATIC_IMPORT" and not f.candidate_seam for f in result.findings))
 
-    def test_renderer_import_outside_candidate_seam_holds(self) -> None:
+    def test_renderer_import_outside_candidate_seam_fails(self) -> None:
         with self._root() as tmp:
             root = Path(tmp)
             self._write(root, "scripts/demo.mjs", 'import maplibregl from "maplibre-gl";\n')
             result = MODULE.scan(root)
-        self.assertEqual(result.outcome, MODULE.Outcome.HOLD)
+        self.assertEqual(result.outcome, MODULE.Outcome.FAIL)
         self.assertIn("ACQUISITION_OUTSIDE_CANDIDATE_SEAM", result.reasons)
+
+    def test_governance_link_and_maplibre_css_class_are_not_acquisition(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "apps/explorer-web/src/site.ts",
+                """
+                const issue = `https://github.com/example/project/issues/${CURRENT_MAPLIBRE_READINESS.issue}`;
+                const docs = "https://maplibre.org/maplibre-gl-js/docs/";
+                expect(root).toHaveClass(/maplibregl-map/);
+                """,
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.PASS)
+        self.assertEqual(result.findings, ())
+
+    def test_renderer_cdn_asset_outside_candidate_seam_fails(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "public/demo.html",
+                '<script src="https://unpkg.com/maplibre-gl@6.6.0/dist/maplibre-gl.js"></script>\n',
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.FAIL)
+        self.assertTrue(any(f.kind == "CDN_URL" for f in result.findings))
+
+    def test_extensionless_renderer_package_on_known_cdn_fails(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "public/demo.html",
+                '<script type="module" src="https://esm.sh/maplibre-gl@6.6.0"></script>\n',
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.FAIL)
+        self.assertTrue(any(f.kind == "CDN_URL" for f in result.findings))
+
+    def test_renderer_global_usage_outside_candidate_seam_fails(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(root, "scripts/demo.js", "const map = new maplibregl.Map({});\n")
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.FAIL)
+        self.assertTrue(any(f.kind == "GLOBAL_RUNTIME" for f in result.findings))
+
+    def test_standalone_renderer_global_reference_fails(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(root, "scripts/demo.js", "const renderer = maplibregl;\n")
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.FAIL)
+        self.assertTrue(any(f.kind == "GLOBAL_RUNTIME" for f in result.findings))
 
     def test_parallel_maplibre_package_homes_fail(self) -> None:
         with self._root() as tmp:
@@ -127,7 +195,7 @@ class AcquisitionInventoryTests(unittest.TestCase):
     def test_summary_cli_hides_findings_but_keeps_counts(self) -> None:
         with self._root() as tmp:
             root = Path(tmp)
-            self._write(root, "scripts/demo.mjs", 'import maplibregl from "maplibre-gl";\n')
+            self._write(root, "packages/maplibre/src/demo.mjs", 'import { Map } from "maplibre-gl";\n')
             completed = subprocess.run(
                 [sys.executable, str(MODULE_PATH), "--repo-root", str(root), "--summary"],
                 check=False,
@@ -137,6 +205,7 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 3)
         payload = json.loads(completed.stdout)
         self.assertEqual(payload["outcome"], "HOLD")
+        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v2")
         self.assertEqual(payload["findings"], [])
         self.assertEqual(payload["finding_counts"]["STATIC_IMPORT"], 1)
         self.assertFalse(payload["authority_created"])
