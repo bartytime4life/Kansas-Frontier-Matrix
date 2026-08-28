@@ -2,7 +2,7 @@
 doc_id: kfm://doc/registry/schema/fixture/validator/policy/readme
 title: docs/registry/schema/fixture/validator/policy/ — Policy Documentation Routing Hold
 type: readme
-version: v1.0
+version: v1.1
 status: provisional
 owners:
   - "@bartytime4life"
@@ -15,7 +15,8 @@ truth_posture: "CONFIRMED documentation-only parent with one dry-run child and n
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 630f468f9c7672309fdffade6e1537ebbafc4f03
+  base_commit: ba8856e1fc2bf930e9b44df1cfbf4f3dc369d084
+  prior_blob: f1df24c29bc6f60fda6f61a641e4dcbdc3d44256
   prior_state: no README; directory contained only the dry-run child
 related:
   - ../README.md
@@ -114,12 +115,11 @@ python tools/validators/docs/link-check/check_links.py \
 python tools/validators/docs/meta-block/check_meta_blocks.py \
   --profile required \
   docs/registry/schema/fixture/validator/policy/README.md
-python tools/validators/docs/fragments/check_fragments.py \
-  docs/registry/schema/fixture/validator/policy/README.md
 ```
 
-Passing these checks confirms only the checked Markdown structure, metadata,
-links, and fragments.
+The link checker covers repository-local files, directories, images, and
+fragments; the metadata checker covers the bounded metadata envelope. Passing
+either confirms only its exercised documentation QA scope at that revision.
 
 ## Failure, correction, and rollback
 
@@ -150,6 +150,7 @@ reference closure.
 
 | Version | Date | Change |
 |---|---|---|
+| v1.1 | 2026-08-28 | Removes the nonexistent standalone fragment-checker command and records that the supported link checker covers local fragments. |
 | v1.0 | 2026-08-28 | Establishes the nested policy segment as a documentation-only routing and placement hold; no policy or runtime behavior is added. |
 
 [Back to validator documentation](../README.md) · [Open dry-run hold](dry-run/README.md) · [Back to top](#top)
