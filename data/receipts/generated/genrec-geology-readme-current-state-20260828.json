@@ -6,6 +6,7 @@
     "control_plane/repository_governance_parity.yaml",
     "docs/domains/geology/README.md",
     "tests/validators/directory_governance/test_validate_repository_governance_parity.py",
+    "tests/validators/directory_governance/test_validate_repository_topology.py",
     "tools/validators/directory_governance/repository_topology_baseline.json"
   ],
   "artifact_hashes": {
@@ -13,7 +14,8 @@
     "control_plane/repository_governance_parity.yaml": "sha256:63197a756d09c20d9d0521f08126292253fa5b0bd5b3b1588d3be5f8e9d848d1",
     "docs/domains/geology/README.md": "sha256:5a6a969ba6e8d7613669a06b0ed3b541ef978df835d02cfa98b8d33f4bcc6a24",
     "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "sha256:4328e2b33edac8cc6f7a44ae5294c3b6a06b6644530f5cccfb020f3f7975c0e6",
-    "tools/validators/directory_governance/repository_topology_baseline.json": "sha256:7cc830843cea2b046e260b9b8b745bd556981ed145051d09cd1153cfefd47dcc"
+    "tools/validators/directory_governance/repository_topology_baseline.json": "sha256:7cc830843cea2b046e260b9b8b745bd556981ed145051d09cd1153cfefd47dcc",
+    "tests/validators/directory_governance/test_validate_repository_topology.py": "sha256:9e60f8c2028ba0296c17d6ed515b6cb3598d3933faf4e4b9a573748fa4d22a52"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -51,7 +53,8 @@
     "control_plane/repository_governance_parity.yaml": "CONFIRMED",
     "docs/domains/geology/README.md": "CONFIRMED",
     "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "CONFIRMED",
-    "tools/validators/directory_governance/repository_topology_baseline.json": "CONFIRMED"
+    "tools/validators/directory_governance/repository_topology_baseline.json": "CONFIRMED",
+    "tests/validators/directory_governance/test_validate_repository_topology.py": "CONFIRMED"
   },
   "validation_gates": [
     {
@@ -67,7 +70,7 @@
     {
       "gate": "repository-governance-parity-projection",
       "outcome": "PASS",
-      "reason": "The existing parity projection and focused exact-count assertion bind the reviewed baseline shrink to 130 warnings and the exact current baseline digest; no lane, rule, coverage criterion, or authority outcome changed."
+      "reason": "The existing parity projection and both focused exact-count assertions bind the reviewed baseline shrink to 130 warnings and the exact current baseline digest; no lane, rule, coverage criterion, or authority outcome changed."
     },
     {
       "gate": "historical-receipt-immutability",
