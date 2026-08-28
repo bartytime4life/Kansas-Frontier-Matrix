@@ -269,13 +269,6 @@
       "subject": "data/prov/"
     },
     {
-      "evidence_sha256": "sha256:c64ca09635f243c43d88fa30721739fe5694f89a285af4724246b4f6882aecaf",
-      "evidence_zlib_base64": "eNpLyU8u1k/Jz03MzCvWT0wvykwuzSkpLUrV9/UMDvb0c4/3D4oP8HH083N1iXfz9HEN1stNYUjBpcnfycvVOYQYNfFujr6ePp4EzAvwDHD18fRzxa/I38fTORKupLgkMS8lsSgFzEoGCgMAn5RQNg==",
-      "fingerprint": "sha256:4dbce38a2f5c7915503958582e4b6d52e06fc88632c3cdb67443647d3b07ebb2",
-      "rule_id": "KFM-TOPO-016",
-      "subject": "doc-id:kfm://doc/00000000-0000-0000-0000-000000000000"
-    },
-    {
       "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
       "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
       "fingerprint": "sha256:5102623cd91d0e9500ac0066229a9539ea1f6ec6bc9b831a18cd3bc9fd1dc155",
