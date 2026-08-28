@@ -2,7 +2,7 @@
 doc_id: kfm://doc/tools-ci-readme
 title: CI Tools README
 type: tool-readme
-version: v0.2
+version: v0.3
 status: draft; ci-tooling-lane; verified-dependency-bootstrap; bounded-python-no-network-startup-guard; mixed-implementation-status
 owners:
   - OWNER_TBD - Tooling steward
@@ -121,7 +121,7 @@ CI helpers make governance signals readable and repeatable. They do not invent g
 |---|---|---|
 | `install_python_ci` | Install fixed third-party locks, then approved local packages without dependency resolution or build isolation. | VERIFIED with focused tests and Python 3.11/3.12 workflow coverage. |
 | `python-dependency-lock-migration.json` | Bind each historical workflow hash to exactly one reviewed locked-install transition. | VERIFIED by the installer and generated-receipt suites; one-time migration only. |
-| `kfm_no_network/sitecustomize.py` | Fail closed on common IPv4/IPv6 connection, DNS, URL-open, and datagram paths for explicitly guarded Python processes. | VERIFIED by the Hydrology subprocess negative proof; not runner-wide or non-Python isolation. |
+| `kfm_no_network/sitecustomize.py` | Fail closed on named IPv4/IPv6 connection, socket-send, resolver, and URL-open APIs for explicitly guarded Python processes. | VERIFIED by the Hydrology subprocess negative proof; not runner-wide, non-Python, or non-named API isolation. |
 | `render_validation_summary` | Convert validator/test output into reviewer-readable Markdown or JSON. | PROPOSED. |
 | `render_ui_validation_summary` | Render UI trust-state validation summaries. | PROPOSED in parent README. |
 | `normalize_test_report` | Normalize JUnit/coverage/QA reports for downstream checks. | PROPOSED. |
@@ -192,7 +192,7 @@ Default operation should be deterministic, local, and no-network. Workflow-speci
 | Dependency installer and lockfiles | VERIFIED by `tests/ci/test_install_python_ci.py`. |
 | Dependency CLI shape and Python runtime | VERIFIED for fixed profiles; arbitrary package, URL, index, and shell input are denied by construction. |
 | Dependency workflow wiring | VERIFIED in `.github/workflows/python-dependency-lock.yml` and migrated callers. |
-| Python no-network startup guard | VERIFIED for the named Python-process socket, DNS, URL-open, and datagram probes; runner-wide and non-Python isolation remain NEEDS VERIFICATION. |
+| Python no-network startup guard | VERIFIED for 15 named Python-process connection, socket-send, resolver, and URL-open APIs; runner-wide, non-Python, and non-named API isolation remain NEEDS VERIFICATION. |
 | Artifact/report destinations | NEEDS VERIFICATION. |
 | Focused dependency tests | VERIFIED locally; hosted Python 3.11/3.12 checks remain the PR evidence boundary. |
 | Unrelated tests and validators | Not claimed by this dependency-bootstrap update. |

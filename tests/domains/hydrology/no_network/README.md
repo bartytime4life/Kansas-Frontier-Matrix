@@ -2,7 +2,7 @@
 doc_id: kfm://doc/tests-domains-hydrology-no-network-readme
 title: Hydrology No-Network Test README
 type: test-readme
-version: v0.2
+version: v0.3
 status: draft; bounded-python-process-egress-proof-executable; runner-wide-and-non-python-isolation-held
 owners:
   - OWNER_TBD — Hydrology domain steward
@@ -45,7 +45,7 @@ notes:
   - "This file replaces a blank placeholder at tests/domains/hydrology/no_network/README.md."
   - "This is a test-lane README only. It does not define Hydrology doctrine, no-network policy, contracts, schemas, fixtures, source descriptors, lifecycle records, EvidenceBundles, policy rules, release decisions, pipeline code, public API material, public map material, public tiles, or published artifacts."
   - "The tested invariant is that default Hydrology tests remain deterministic and no-network: tests use fixtures, mocks, local schema/contract files, and recorded source descriptors rather than live source fetches, real upstream exports, public tiles, or direct lifecycle stores."
-  - "The bounded executable proof starts fresh Python interpreters and confirms that the opt-in sitecustomize guard denies named IPv4/IPv6 connection, DNS, URL-open, and datagram paths before application imports."
+  - "The bounded executable proof starts fresh Python interpreters and confirms that the opt-in sitecustomize guard denies 15 named IPv4/IPv6 connection, socket-send, resolver, and URL-open APIs before application imports."
   - "The guard is Python-process enforcement only; it does not establish runner-wide, operating-system, container, namespace, dependency-install, or non-Python isolation."
   - "Live network behavior, source-admission refresh, upstream watcher checks, and real ingest should belong only in separately gated integration lanes with explicit receipts, policy posture, review state, correction path, and rollback targets."
   - "Rollback target for this replacement is previous blank blob SHA 8b137891791fe96927ad78e64b0aad7bded08bdc."
@@ -87,7 +87,7 @@ is owned by `tools/ci/kfm_no_network/` and workflow injection remains owned by
 The accepted bounded workflow path runs from local fixtures, schemas, contracts,
 and deterministic stubs. Every Python interpreter in the validation step loads
 the startup guard before application imports. The negative proof confirms denial
-for named socket, DNS, URL-open, and datagram operations.
+for 15 named connection, socket-send, resolver, and URL-open APIs.
 
 A passing test here should **not** mean that source admission is current, real hydrology data is refreshed, a watcher ran, a pipeline is complete, or a release is approved. It should mean only that the default Hydrology test path stayed deterministic and offline.
 
@@ -117,7 +117,7 @@ Core checks:
 
 | Check | Required behavior | Failure outcome |
 |---|---|---|
-| Python-process network block | Named IPv4/IPv6 connect, connect-ex, connection creation, DNS, `urllib` URL-open, and datagram-send paths are denied when the workflow injects the guard. | validation failure / `ERROR`. |
+| Python-process network block | Fifteen named IPv4/IPv6 connection, socket-send, resolver, and `urllib` URL-open APIs are denied when the workflow injects the guard. | validation failure / `ERROR`. |
 | Fixture-only inputs | Tests use local fixtures or deterministic stubs. | validation failure. |
 | Source boundary | SourceDescriptor metadata may be inspected locally; upstream refresh belongs to gated integration lanes. | validation failure / `ABSTAIN`. |
 | Lifecycle boundary | Tests do not read RAW / WORK / QUARANTINE / PROCESSED / PUBLISHED as authority unless a scoped fixture explicitly models it. | validation failure. |
@@ -206,7 +206,7 @@ hosted status is `NOT_RUN`.
 |---|---|---|---|
 | Previous target file | CONFIRMED | `tests/domains/hydrology/no_network/README.md` existed as a blank placeholder before this replacement. | Did not define the lane. |
 | `tests/README.md` | CONFIRMED | `tests/` is enforceability proof and failure should block promotion where trust-spine checks fail. | Does not prove this lane's modules or pass rate. |
-| `test_no_network_proof.py` | CONFIRMED bounded executable proof | Fresh Python interpreters deny six named egress paths, require explicit activation, and retain Unix-domain routing. | No host firewall, namespace, container, non-Python, or runner-wide proof. |
+| `test_no_network_proof.py` | CONFIRMED bounded executable proof | Fresh Python interpreters deny 15 named egress APIs, require explicit activation, and retain Unix-domain routing. | No host firewall, namespace, container, non-Python, runner-wide, or non-named API proof. |
 | `tools/ci/kfm_no_network/sitecustomize.py` | CONFIRMED bounded CI helper | Guard loads at interpreter startup when its directory is on `PYTHONPATH` and `KFM_NO_NETWORK=1`. | Not active for commands outside the explicitly injected environment. |
 | `.github/workflows/domain-hydrology.yml` | CONFIRMED workflow definition / hosted result pending | Injects the guard into each Python process in the bounded validation step and runs the negative proof first. | Does not cover dependency installation, shell-native clients, actions, or the runner outside that step. |
 | Hydrology pipeline docs | CONFIRMED documentation evidence | Existing Hydrology pipeline documentation keeps source linkage, schedules, CI, release wiring, and public behavior as NEEDS VERIFICATION unless implemented and tested. | Pipeline docs are not no-network test implementation. |

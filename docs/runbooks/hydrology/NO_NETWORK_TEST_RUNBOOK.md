@@ -2,9 +2,9 @@
 doc_id: kfm://doc/runbook/hydrology/no-network-test
 title: Hydrology No-Network Test Runbook
 type: runbook
-version: v1.2.0
-prior_version: v1.1.0
-prior_state: repository-grounded procedure with test-local guards but no shared startup enforcement across the accepted Python command group
+version: v1.2.1
+prior_version: v1.2.0
+prior_state: repository-grounded shared startup guard whose first proof omitted standard direct socket-send and resolver entry points
 status: DRAFT_REPOSITORY_GROUNDED; BOUNDED_PYTHON_PROCESS_EGRESS_DENIAL_EXECUTABLE; RUNNER_WIDE_AND_NON_PYTHON_EGRESS_DENIAL_HELD; BROADER_HYDROLOGY_AUTHORITY_HELD; NOT_FOR_LIFE_SAFETY
 owners:
   - "@bartytime4life — verified GitHub review route"
@@ -30,12 +30,12 @@ reason_codes:
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 1f0f1cff72abd610e9e80c5c894987eb7b9d568b
-  target_prior_blob: 1a2a1480b7f2fe3d52aabd815395ac1b8fb97395
-  lane_readme_blob: 02e9afe9558eea339613077d01b74bd76a726e4e
-  validation_runbook_blob: 53dd6e7be472d514106475ffe004fc6f98413af6
-  domain_workflow_blob: 36a0287be04639cb75dc77ae2c274fee626f6a00
-  tests_parent_readme_blob: 8af73abbe4874578473161cf9368699733d46ddb
+  base_commit: 067d1524e5c1758e79227ca55009b9e31fc0379e
+  target_prior_blob: 9390f37db7c29a31b184283ac8c8f0b2a46bdd97
+  lane_readme_blob: 3310a20797f5860439b5fb7515691922f801fd4c
+  validation_runbook_blob: db5764f535550763ab5da7c78623132278f3d8eb
+  domain_workflow_blob: d836c8c65b6953132878549fee88782f61a455e5
+  tests_parent_readme_blob: a1204b896ee67a9e9380ee8f40e9c1eadfe9649d
   validators_parent_readme_blob: b3fea3126e01d95996f8234f8670a6896992817a
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
@@ -132,8 +132,9 @@ CorrectionNotice, rollback object, deployment, or publication state.
 
 - The bounded no-network commands in the current `domain-hydrology` workflow.
 - Synthetic or captured local fixtures named by those commands.
-- Startup-time IPv4/IPv6 socket connection, DNS, `urllib` URL-open, and
-  datagram-send denial for every Python process in the bounded validation step.
+- Startup-time IPv4/IPv6 socket connection and send, direct resolver, and
+  `urllib` URL-open denial for every Python process in the bounded validation
+  step.
 - Positive and expected-negative fixture polarity.
 - Exact-SHA result identity and truthful failure attribution.
 
@@ -160,7 +161,7 @@ new substantive file cannot silently enter the accepted set.
 
 | Surface | Current evidence | Bounded conclusion | Not established |
 |---|---|---|---|
-| `test_no_network_proof.py` and `tools/ci/kfm_no_network/sitecustomize.py` | Fresh Python interpreters require explicit activation and exercise IPv4/IPv6 connect, connect-ex, connection creation, DNS, datagram-send, and `urllib` URL-open paths | Shared startup enforcement for Python processes in the bounded validation step | Runner-wide, non-Python, dependency-install, operating-system, container, or namespace isolation |
+| `test_no_network_proof.py` and `tools/ci/kfm_no_network/sitecustomize.py` | Fresh Python interpreters require explicit activation and exercise IPv4/IPv6 connection, connected and destination-bearing socket-send, direct resolver, and `urllib` URL-open paths | Shared startup enforcement for the 15 named Python APIs in the bounded validation step | Runner-wide, non-Python, dependency-install, operating-system, container, namespace, or non-named API isolation |
 | `test_hydrology_smoke.py` | Autouse fixture patches socket connect, connection creation, DNS resolution, and `urllib.request.urlopen`; a negative assertion exercises the guard | Process-level guard and EvidenceBundle alias fixture polarity | Runner-wide egress denial, evidence resolution, or evidence authenticity |
 | `test_aquifer_observation.py` and `test_aquifer_context_link.py` | Process-level socket/DNS/URL guards plus valid/invalid local schema fixtures | Closed local shapes, fixture polarity, optional links, and responsibility separation | Endpoint resolution, aquifer membership, real observations, or source validity |
 | `test_public_safe_flow_fixture.py` | Process-level network patches plus a frozen valid fixture and a known-invalid role/location/time/governance-collapse fixture | Bounded FlowObservation shape, limitations, and rejection behavior | A real gauge observation, warning, policy, proof, or release |
