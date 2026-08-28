@@ -10,6 +10,9 @@ owners: TODO — people-dna-land domain steward; source-registry steward; rights
 created: 2026-05-19
 updated: 2026-08-28
 policy_label: restricted
+owning_root: docs/
+responsibility: Explain the current People/DNA/Land source-family and admission-control documentation boundary without activating a source, connector, refresh cadence, consent decision, release, or publication.
+truth_posture: CONFIRMED current repository paths and source-refresh HOLD / PROPOSED source-family and admission design lineage / NEEDS VERIFICATION accountable ownership, admitted descriptors, connector implementation, policy runtime, receipts, custody, evidence, and review
 related:
   - docs/domains/people-dna-land/README.md
   - docs/domains/people-dna-land/SOURCE_LEDGER.md
@@ -17,13 +20,11 @@ related:
   - docs/domains/people-dna-land/SENSITIVITY_PROFILE.md
   - docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md
   - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
-  - directory-rules.md
+  - docs/doctrine/directory-rules.md
   - schemas/contracts/v1/source/source-descriptor.json
-  - schemas/contracts/v1/consent/consent_sidecar.schema.json
   - data/registry/sources/people-dna-land/
   - policy/domains/people-dna-land/
   - policy/consent/people/
-  - policy/sensitivity/people/
 tags: [kfm, people, dna, land, genealogy, source-registry, governance, admission, sensitivity, consent]
 notes:
   - CONTRACT_VERSION = "3.0.0".

@@ -10,7 +10,19 @@ owners: People-DNA-Land domain steward; Rights & Sovereignty reviewer; Docs stew
 created: 2026-06-07
 updated: 2026-08-28
 policy_label: public
-related: [ai-build-operating-contract.md, directory-rules.md, docs/domains/people-dna-land/README.md, docs/domains/people-dna-land/SENSITIVITY_PROFILE.md, docs/domains/people-dna-land/SOURCE_FAMILIES.md, docs/domains/people-dna-land/SOURCE_LEDGER.md, docs/domains/people-dna-land/SOURCE_REGISTRY.md, docs/domains/people-dna-land/VERIFICATION_BACKLOG.md, docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md]
+owning_root: docs/
+responsibility: Route readers through the People/DNA/Land domain meaning and sensitivity boundary without deciding identity, kinship, consent validity, title, source admission, release, or publication.
+truth_posture: CONFIRMED current repository paths and fail-closed sensitivity boundary / PROPOSED domain design lineage / NEEDS VERIFICATION accountable ownership, policy runtime, live consent and revocation implementation, evidence, and review
+related:
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
+  - docs/domains/people-dna-land/README.md
+  - docs/domains/people-dna-land/SENSITIVITY_PROFILE.md
+  - docs/domains/people-dna-land/SOURCE_FAMILIES.md
+  - docs/domains/people-dna-land/SOURCE_LEDGER.md
+  - docs/domains/people-dna-land/SOURCE_REGISTRY.md
+  - docs/domains/people-dna-land/VERIFICATION_BACKLOG.md
+  - docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md
 tags: [kfm, people, dna, land, genealogy, ownership, domain-landing, deny-by-default]
 notes:
   - CONTRACT_VERSION = "3.0.0".
