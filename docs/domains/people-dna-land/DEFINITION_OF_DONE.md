@@ -2,22 +2,23 @@
 doc_id: kfm://doc/people-dna-land/definition-of-done
 title: People / Genealogy / DNA / Land — Definition of Done
 type: standard
-version: v1
+version: v1.1
+prior_version: v1
 status: draft
 owners: [TODO: domain steward — People/Genealogy/DNA/Land; TODO: release authority; TODO: sensitivity reviewer; TODO: rights-holder rep; TODO: docs steward]
 created: 2026-06-07
-updated: 2026-06-07
+updated: 2026-08-28
 policy_label: public
+owning_root: docs/
+responsibility: Enumerate proposed People/DNA/Land readiness conditions while preserving the current promotion HOLD and keeping review, proof, release, deployment, and publication authority separate.
+truth_posture: cite-or-abstain
 related:
   - docs/domains/people-dna-land/DATA_LIFECYCLE.md
   - docs/runbooks/people-dna-land/PROMOTION_RUNBOOK.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
-  - docs/doctrine/directory-rules.md            # Directory Rules v1.3
-  - ai-build-operating-contract.md              # CONTRACT_VERSION = "3.0.0"
-  - schemas/contracts/v1/people/                # PROPOSED canonical schema slug per Atlas §24.13
-  - policy/sensitivity/people/
-  - policy/consent/people/
+  - docs/doctrine/directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
 tags: [kfm, definition-of-done, people, genealogy, dna, land, promotion, governance, sensitivity, consent]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned per ai-build-operating-contract.md v3.0.
@@ -26,11 +27,12 @@ notes:
   - SLUG CONFLICT (OQ-PEOPLE-SLUG-01) and GATE-LETTER CONFLICT (OQ-PEOPLE-GATE-01 / ADR-S-08) inherited from DATA_LIFECYCLE.md; checklist is written scheme-neutral.
   - Consent terms are ConsentGrant + RevocationReceipt (Atlas ubiquitous language); not ConsentReceipt.
   - Verify against mounted repo, ADRs, CI workflows, and policy bundles before treating any path, gate letter, schema, or CI check name as canonical.
+  - The current promotion runbook is a repository-grounded HOLD boundary, not an operator procedure; satisfying this proposed checklist does not authorize promotion or publication.
 [/KFM_META_BLOCK_V2] -->
 
 # People / Genealogy / DNA / Land — Definition of Done
 
-> The per-domain promotion-readiness contract. A People/DNA/Land artifact is **done** — eligible to move from `CATALOG / TRIPLET` to `PUBLISHED` — only when every check below is satisfiable and recorded. Absence of evidence is a `DENY`, not a pass.
+> A proposed per-domain promotion-readiness checklist. It records conditions that a future governed path would need to assess; it does not make an artifact eligible for promotion or publication. Current operational promotion is unavailable, and absence of evidence remains a `DENY`, not a pass.
 
 [![Status: draft](https://img.shields.io/badge/status-draft-blue)](#)
 [![Domain: people](https://img.shields.io/badge/domain-people-7a4cff)](./README.md)
@@ -43,11 +45,14 @@ notes:
 
 |Status|Owners                                                                                             |Last updated|
 |------|---------------------------------------------------------------------------------------------------|------------|
-|draft |TODO — domain steward + release authority + sensitivity reviewer + rights-holder rep + docs steward|2026-06-07  |
+|draft |TODO — domain steward + release authority + sensitivity reviewer + rights-holder rep + docs steward|2026-08-28  |
 
 
 > [!IMPORTANT]
 > This Definition of Done **composes** the universal promotion gates and the lifecycle law; it does not weaken them. Where a shared envelope (run receipt, gate matrix, evidence closure) already applies repo-wide, this doc adds only the **domain-specific** checks that the corpus says differ per domain — living-person screening, DNA `ConsentGrant` verification, assessor-as-title denial, chain-of-title gap discipline, and graph-projection safety. [Pass-10 C14-05] [DOM-PEOPLE]
+
+> [!WARNING]
+> The current [`PROMOTION_RUNBOOK.md`](../../runbooks/people-dna-land/PROMOTION_RUNBOOK.md) is a fail-closed documentation boundary with outcome `HOLD`. No step-by-step operator procedure, active policy binding, authenticated review route, proof producer, release decision, deployment, or publication path is established. This checklist cannot activate any of them.
 
 > [!CAUTION]
 > **Sensitive domain.** This lane spans five §23.2 categories (living people, genealogy, DNA/genomic, private land, ownership). The **most restrictive applicable row** governs any object. This checklist names governance conditions only; it MUST NOT carry living-person identifiers, raw `DNAKitToken`s, DNA segment endpoints, or precise person-parcel joins. Disposition defers to operating contract §23.2.
@@ -87,15 +92,15 @@ notes:
 
 ## 2. How this DoD composes other gates
 
-This checklist is the **final acceptance layer**. Earlier governance has already run by the time an artifact reaches it.
+This proposed checklist models a **future final readiness layer**. Current repository evidence does not establish that earlier gates have run, that an artifact can reach this layer, or that promotion can execute.
 
 ```mermaid
 flowchart LR
-    L["Lifecycle law<br/>RAW to PUBLISHED"] --> G["Universal promotion gates<br/>(scheme A or B, ADR-S-08)"]
-    G --> R["PROMOTION_RUNBOOK<br/>step-by-step procedure"]
-    R --> DOD["THIS Definition of Done<br/>domain-specific acceptance"]
-    DOD --> P["PUBLISHED"]
-    DOD -.->|any check fails| DENY["DENY / HOLD<br/>(default-deny)"]
+    L["Lifecycle law<br/>RAW to PUBLISHED"] --> G["Proposed promotion gates<br/>(scheme A or B, ADR-S-08)"]
+    G --> R["PROMOTION_RUNBOOK<br/>repository-grounded HOLD boundary"]
+    R --> DOD["THIS Definition of Done<br/>proposed readiness conditions"]
+    DOD -.->|future governed path only| P["PUBLISHED<br/>not currently authorized"]
+    DOD -->|current posture| DENY["DENY / HOLD<br/>(default-deny)"]
 
     classDef pub fill:#e0f0e0,stroke:#2d8f4e,color:#2b2b2b
     classDef deny fill:#fce4e4,stroke:#c0392b,color:#2b2b2b
@@ -108,7 +113,7 @@ flowchart LR
 |`lifecycle-law.md`    |The invariant `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`|DoD presupposes it; runs at the final transition         |
 |Universal gate matrix |The seven-gate sequence and required evidence                                      |DoD references it scheme-neutrally; does not re-letter it|
 |`DATA_LIFECYCLE.md`   |Domain stage handling, tiers, receipts, failure-closed scenarios                   |DoD is the acceptance checklist that doc’s gates imply   |
-|`PROMOTION_RUNBOOK.md`|The operator procedure for executing promotion                                     |DoD is the pass/fail contract the runbook checks against |
+|`PROMOTION_RUNBOOK.md`|The current fail-closed promotion `HOLD` boundary; no operator procedure is established|DoD remains proposed readiness context and cannot activate promotion|
 
 
 > [!NOTE]
@@ -357,7 +362,7 @@ This document is done enough to enter the repository when:
 ## 14. Related docs
 
 - `docs/domains/people-dna-land/DATA_LIFECYCLE.md` — domain lifecycle, tiers, receipts (sibling)
-- `docs/runbooks/people-dna-land/PROMOTION_RUNBOOK.md` — operator promotion procedure (sibling)
+- `docs/runbooks/people-dna-land/PROMOTION_RUNBOOK.md` — repository-grounded promotion `HOLD` boundary; no operator procedure (sibling)
 - `docs/domains/people-dna-land/README.md` — domain orientation (TODO — separate doc)
 - `docs/domains/people-dna-land/SENSITIVITY.md` — sensitivity tier rules (PROPOSED)
 - `docs/doctrine/lifecycle-law.md` — lifecycle invariant
@@ -369,4 +374,4 @@ This document is done enough to enter the repository when:
 
 -----
 
-<sub>**Last updated:** 2026-06-07 · **Status:** draft · **CONTRACT_VERSION:** 3.0.0 · **Owners:** TODO (domain steward) · [↑ Back to top](#quick-links)</sub>
+<sub>**Last updated:** 2026-08-28 · **Status:** draft · **CONTRACT_VERSION:** 3.0.0 · **Owners:** TODO (domain steward) · [↑ Back to top](#quick-links)</sub>
