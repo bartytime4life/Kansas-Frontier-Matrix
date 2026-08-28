@@ -209,7 +209,7 @@ class AgricultureObservationTests(unittest.TestCase):
                 findings,
             )
 
-    def test_bounded_reader_rejects_non_files_nonfinite_and_malformed_json(self) -> None:
+    def test_bounded_reader_rejects_non_files_nonfinite_malformed_and_invalid_utf8(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
 
@@ -234,6 +234,15 @@ class AgricultureObservationTests(unittest.TestCase):
             malformed = root / "malformed.json"
             malformed.write_text('{"value":', encoding="utf-8")
             value, findings = validator._read(malformed)
+            self.assertIsNone(value)
+            self.assertEqual(
+                (validator.Finding("AGRICULTURE_JSON_INVALID", "/"),),
+                findings,
+            )
+
+            invalid_utf8 = root / "invalid-utf8.json"
+            invalid_utf8.write_bytes(b'{"value":"\xff"}')
+            value, findings = validator._read(invalid_utf8)
             self.assertIsNone(value)
             self.assertEqual(
                 (validator.Finding("AGRICULTURE_JSON_INVALID", "/"),),
