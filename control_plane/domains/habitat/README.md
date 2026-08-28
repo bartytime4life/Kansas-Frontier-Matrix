@@ -1,13 +1,15 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/control-plane-domains-habitat-readme
 title: control_plane/domains/habitat/README.md — Habitat Control-Plane Domain Lane README
-version: v0.3
-type: readme; control-plane-domain-index; governance-lane-guide; nested-folder-contract
+version: v0.4
+type: README
 status: repository-grounded draft; PROPOSED register lane; child-registers-absent; nested-validation-not-implemented; non-authoritative
 owners: NEEDS VERIFICATION — Control-plane steward · Habitat steward · Policy steward · Evidence steward · Release steward · Docs steward
-created: NEEDS VERIFICATION — blank placeholder existed before v0.1 expansion
+created: 2026-05-14
 updated: 2026-08-28
-supersedes: v0.2 at the same path
+supersedes: v0.3 at the same path
+owning_root: control_plane/
+responsibility: Document the Habitat control-plane governance-index lane, its current bounded register relationships, validation limits, consumer holds, correction path, and no-direct-public-use boundary without creating indexed authority.
 prepared_under_prompt: KFM Markdown Modernization & GitHub Documentation Implementation Agent v4.0.0
 policy_label: repository-facing; control-plane; domains; habitat; governance-index; no-parallel-authority; no-direct-public-path; cite-or-abstain; correction-aware; rollback-aware
 current_path: control_plane/domains/habitat/README.md
@@ -70,7 +72,8 @@ related:
   - ../../../.github/CODEOWNERS
 tags: [kfm, control-plane, habitat, domain-lane, governance-index, policy-gates, release-state, evidence, sensitivity, geoprivacy, correction, rollback]
 notes:
-  - "v0.3 is a same-path current-state correction to the existing Habitat control-plane lane README."
+  - "v0.4 repairs the same-path required metadata contract without changing the Habitat governance-index boundary."
+  - "v0.3 reconciled current root-register posture; its content lineage is preserved."
   - "The v0.2 evidence_snapshot remains historical evidence pinned to main@85a939fd8a3fbac6e76fc4eaf3ce6172398d186f; it is not rewritten as current state."
   - "The first twelve H2 sections follow the Directory Rules §15 folder-README contract, with Status placed after Authority level as required."
   - "The seven child-register filenames named by v0.1 were checked at the pinned base and were absent."
@@ -535,7 +538,7 @@ Rollback is required if this lane begins to:
 - bypass geoprivacy, sensitivity, review, release, correction, or rollback gates;
 - admit consumers before nested validation and stale-reference controls exist.
 
-For this v0.3 update, the immediate content rollback target is prior blob `578407520c9b3f0ee275defd2f23f54e84581efb`. The earlier v0.2 rollback lineage remains recorded below.
+For this v0.4 update, the immediate content rollback target is prior blob `8109257239b6c0a5ea4899d7ad7eeeb9719f230e`. The earlier rollback lineage remains recorded below.
 
 [Back to top](#top)
 
