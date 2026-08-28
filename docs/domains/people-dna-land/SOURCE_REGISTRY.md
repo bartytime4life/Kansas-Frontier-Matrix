@@ -2,9 +2,9 @@
 doc_id: kfm://doc/docs/domains/people-dna-land/SOURCE_REGISTRY
 title: People / DNA / Land Domain — Source Registry
 type: standard
-version: v1.1.2
-prior_version: v1.1.1
-prior_state: repository-grounded registry boundary that resolved source-refresh placement in metadata and the open-question register while retaining one contradictory repo-fit warning
+version: v1.1.3
+prior_version: v1.1.2
+prior_state: repository-grounded registry boundary that resolved the placement warning while citing a nonexistent Directory Rules subsection
 status: draft
 owners: TODO — people-dna-land domain steward; source-registry steward; rights-holder representative; sensitivity reviewer; release authority
 created: 2026-05-19
@@ -31,7 +31,7 @@ notes:
   - Human-facing control surface, not the machine-readable registry; not a bibliography; not a publication authority; not a substitute for consent.
   - This domain carries the highest publication-sensitivity posture in KFM. T4 (Denied) is the default for living-person fields, raw DNA segments, and private person-parcel joins.
   - CONFLICTED — folder slug people-dna-land vs Atlas name "People / Genealogy / DNA / Land"; canonical lane name is unsettled (deep-research slug-drift register; Atlas §24.13). Slug is PROPOSED, not CONFIRMED. Resolve by ADR. See OQ-PDL-REG-01.
-  - RESOLVED — SOURCE_REFRESH_RUNBOOK is homed at docs/runbooks/people-dna-land/ under Directory Rules §6.1.b; the canonical file is a repository-grounded HOLD boundary.
+  - RESOLVED — SOURCE_REFRESH_RUNBOOK is homed at docs/runbooks/people-dna-land/ under Directory Rules §9.1; the canonical file is a repository-grounded HOLD boundary.
   - Consent does NOT publish data — a ConsentSidecar constrains a render gate; publication still requires ReleaseManifest + Promotion Gate G.
   - Live People/DNA/Land source refresh is not currently implemented or admitted; the canonical runbook is a repository-grounded HOLD boundary.
 [/KFM_META_BLOCK_V2] -->
@@ -116,7 +116,7 @@ It is paired with — and **does not replace** — the machine-readable registry
 > **Slug is PROPOSED, not CONFIRMED (CONFLICTED → ADR).** A prior draft asserted the `people-dna-land` slug was "CONFIRMED by Directory Rules §6.1" with a "canonical illustration." Project evidence does not support that: Directory Rules illustrates domain lanes with `hydrology/ soil/ fauna/`, and the corpus slug-drift register records the People lane's canonical externally-presented name as **unsettled** — Atlas §16 names it "People / Genealogy / DNA / Land," schema/policy paths use `people/`, and `people-dna-land` appears only as a docs-slug variant. Treat the slug as PROPOSED until an ADR settles it; until then all cross-references resolve to this slug provisionally. Tracked as `OQ-PDL-REG-01`. [DIRRULES §6, §12; ATLAS §24.13; deep-research slug-drift register]
 
 > [!NOTE]
-> **Runbook placement is resolved.** The canonical source-refresh boundary is `docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md` under Directory Rules §6.1.b. Earlier domain-path placement remains proposal lineage in Git history only; it does not create a second procedure home or reopen the retired `OQ-PDL-REG-02`.
+> **Runbook placement is resolved.** The canonical source-refresh boundary is `docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md` under Directory Rules §9.1. Earlier domain-path placement remains proposal lineage in Git history only; it does not create a second procedure home or reopen the retired `OQ-PDL-REG-02`.
 
 [↑ back to top](#top)
 
@@ -606,6 +606,6 @@ Current repository paths and proposal-lineage targets are listed together below;
 
 **Related docs:** [§15](#15-related-docs)
 **Last updated:** 2026-08-28
-**Version:** v1.1.2 (draft) · **Pinned** `CONTRACT_VERSION = "3.0.0"`
+**Version:** v1.1.3 (draft) · **Pinned** `CONTRACT_VERSION = "3.0.0"`
 
 [↑ back to top](#top)
