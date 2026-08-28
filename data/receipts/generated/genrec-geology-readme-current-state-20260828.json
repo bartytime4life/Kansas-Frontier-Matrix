@@ -3,12 +3,16 @@
   "contract_version": "3.0.0",
   "artifact_paths": [
     ".github/workflows/domain-geology.yml",
+    "control_plane/repository_governance_parity.yaml",
     "docs/domains/geology/README.md",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py",
     "tools/validators/directory_governance/repository_topology_baseline.json"
   ],
   "artifact_hashes": {
     ".github/workflows/domain-geology.yml": "sha256:20df77289fb47c64581aaf67d8a29894f7b073ed2dfc7d90526148220f69ade8",
-    "docs/domains/geology/README.md": "sha256:93a76b99c632e104eaffcd074b0fca169f2e6a8096b78c68e2c4a4f10e022584",
+    "control_plane/repository_governance_parity.yaml": "sha256:63197a756d09c20d9d0521f08126292253fa5b0bd5b3b1588d3be5f8e9d848d1",
+    "docs/domains/geology/README.md": "sha256:5a6a969ba6e8d7613669a06b0ed3b541ef978df835d02cfa98b8d33f4bcc6a24",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "sha256:4328e2b33edac8cc6f7a44ae5294c3b6a06b6644530f5cccfb020f3f7975c0e6",
     "tools/validators/directory_governance/repository_topology_baseline.json": "sha256:7cc830843cea2b046e260b9b8b745bd556981ed145051d09cd1153cfefd47dcc"
   },
   "model_identity": {
@@ -44,7 +48,9 @@
   },
   "truth_labels": {
     ".github/workflows/domain-geology.yml": "CONFIRMED",
+    "control_plane/repository_governance_parity.yaml": "CONFIRMED",
     "docs/domains/geology/README.md": "CONFIRMED",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "CONFIRMED",
     "tools/validators/directory_governance/repository_topology_baseline.json": "CONFIRMED"
   },
   "validation_gates": [
@@ -56,7 +62,12 @@
     {
       "gate": "geology-readme-structure-and-links",
       "outcome": "PASS",
-      "reason": "The current README preserves all 21 headings and 9 relative-link targets, balanced fences, and contains no exact-coordinate pattern."
+      "reason": "The current README preserves all 21 headings and 9 relative-link targets, balanced fences, no exact-coordinate pattern, and the documented RuntimeResponseEnvelope replacement for the proposed/retired bespoke envelope."
+    },
+    {
+      "gate": "repository-governance-parity-projection",
+      "outcome": "PASS",
+      "reason": "The existing parity projection and focused exact-count assertion bind the reviewed baseline shrink to 130 warnings and the exact current baseline digest; no lane, rule, coverage criterion, or authority outcome changed."
     },
     {
       "gate": "historical-receipt-immutability",
@@ -112,5 +123,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Current-run authoring provenance for the Geology lane-status reconciliation, the workflow pointer to this receipt, and the exact one-entry repository-topology baseline shrink. The 2026-08-24 receipt remains byte-for-byte historical. This receipt records process memory only. It creates no source admission, geometry transform, rights or sensitivity decision, evidence closure, policy result, review approval, lifecycle transition, release, deployment, promotion, publication, or public-use authority."
+  "notes": "Current-run authoring provenance for the Geology lane-status reconciliation, the workflow pointer to this receipt, the exact one-entry repository-topology baseline shrink, and its existing parity projection/assertion bindings. The 2026-08-24 receipt remains byte-for-byte historical. This receipt records process memory only. It creates no source admission, geometry transform, rights or sensitivity decision, evidence closure, policy result, review approval, lifecycle transition, release, deployment, promotion, publication, or public-use authority."
 }
