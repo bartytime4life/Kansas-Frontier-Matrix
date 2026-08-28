@@ -2,7 +2,7 @@
 doc_id: kfm://doc/tools-validators-domains-habitat-readme
 title: tools/validators/domains/habitat README
 type: README
-version: v0.2
+version: v0.3
 status: draft
 owner: TODO-tooling-qa-owner-plus-habitat-steward-plus-ecology-steward-plus-geoprivacy-reviewer-plus-policy-steward-plus-evidence-steward
 created: 2026-07-07
@@ -34,7 +34,7 @@ related:
   - ../../../../data/receipts/
   - ../../../../release/
 notes:
-  - "v0.2 reconciles this index with current repository executables, focused tests and fixtures, and CI wiring without changing validator behavior or maturity."
+  - "v0.3 closes the post-workflow inventory gap by recording the dedicated critical-habitat source-role workflow without changing validator behavior or maturity."
   - "No broad tools/validators/habitat/README.md was found during this task, so this path currently serves as the inspected per-domain Habitat validator index."
   - "Habitat owns landscape, patches, suitability, connectivity, restoration opportunity, and stewardship-zone products. It does not own Fauna occurrence truth, Flora taxon/specimen truth, Hydrology water truth, Soil substrate truth, or regulatory hazard truth."
   - "Habitat sensitivity is often join-induced. Outputs that reveal sensitive Fauna, Flora, archaeology, stewardship, private-land, infrastructure, or other restricted context must fail closed unless public-safe geoprivacy, review, policy, evidence, release, correction, and rollback support exists."
@@ -82,7 +82,7 @@ The answer should be a navigable validator index and deterministic validation ou
 | Subdirectories | **NONE** | Current validator implementations are direct children of this directory. |
 | Substantive executables | **FOUR CONFIRMED** | Cover-class crosswalk, land-cover materiality, model-run receipt, and critical-habitat source-role validators are implemented with focused tests. |
 | Placeholder executables | **SIX CONFIRMED** | Catalog matrix, EvidenceBundle, HabitatPatch, schema, source descriptor, and suitability-model files remain inert placeholders and must not be cited as enforcement. |
-| Focused CI | **CONFIRMED / bounded** | Three focused workflows cover crosswalk, materiality, and model-run receipt; `domain-habitat` runs the materiality slice and explicit proof/release holds. Critical-habitat source-role tests have no dedicated focused workflow. |
+| Focused CI | **CONFIRMED / bounded** | Four focused workflows cover crosswalk, materiality, model-run receipt, and critical-habitat source-role validation; `domain-habitat` also runs the materiality slice and explicit proof/release holds. |
 
 [Back to top](#top)
 
@@ -97,7 +97,7 @@ Current main establishes four substantive direct-child validators:
 | `validate_cover_class_crosswalk_profile.py` | Fixture-only ontology version, directionality, coverage, and lossiness checks. | `tests/domains/habitat/land_cover/crosswalk/test_cover_class_crosswalk_profile.py`; `fixtures/domains/habitat/land_cover/crosswalk/profile_cases.json` | `cover-class-crosswalk-profile.yml` |
 | `validate_land_cover_materiality.py` | Deterministic material-change classification for the inactive land-cover profile. | `tests/validators/domains/habitat/test_land_cover_materiality.py`; `fixtures/domains/habitat/land_cover/materiality/` | `habitat-land-cover-materiality.yml`; also exercised by `domain-habitat.yml` |
 | `validate_model_run_receipt.py` | Fixture-only model-run receipt shape, identity, temporal, digest, uncertainty, and authority-boundary checks. | `tests/validators/domains/habitat/test_validate_model_run_receipt.py`; `fixtures/contracts/v1/domains/habitat/model_run_receipt/` | `habitat-model-run-receipt.yml` |
-| `validate_critical_habitat_source_role.py` | Synthetic source-role anti-collapse for regulatory critical habitat and modeled habitat, including species-presence denial. | `tests/domains/habitat/test_critical_habitat_source_role.py` | **No dedicated focused workflow**; local execution is confirmed. |
+| `validate_critical_habitat_source_role.py` | Synthetic source-role anti-collapse for regulatory critical habitat and modeled habitat, including species-presence denial. | `tests/domains/habitat/test_critical_habitat_source_role.py` | `habitat-critical-habitat-source-role.yml` |
 
 The following direct-child files remain placeholders: `validate_catalog_matrix.py`, `validate_evidence_bundle.py`, `validate_habitat_patch.py`, `validate_schema.py`, `validate_source_descriptor.py`, and `validate_suitability_model.py`. Their existence proves no validation behavior.
 
@@ -283,6 +283,6 @@ There is no confirmed `run_habitat_domain_validators.py` aggregate entry point. 
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-08-28 against `main@bacb77cfbc04014a2c05da541f9cba8025629068` |
-| Review state | Draft index reconciled to current executable, placeholder, test/fixture, and workflow evidence. |
-| Next smallest safe change | Add dedicated hosted coverage for the critical-habitat source-role guard or implement one currently inert placeholder only with an accepted contract/schema boundary, synthetic negative fixtures, and a complete focused test/workflow seam. |
+| Last reviewed | 2026-08-28 against `main@ef4d1cb68327ad34afdb0d317740a0a01aa58848` |
+| Review state | Draft index reconciled to current executables, placeholders, tests/fixtures, and all four focused direct-child workflows. |
+| Next smallest safe change | Implement one currently inert placeholder only with an accepted contract/schema boundary, synthetic negative fixtures, and a complete focused test/workflow seam; otherwise keep this inventory synchronized with repository evidence. |
