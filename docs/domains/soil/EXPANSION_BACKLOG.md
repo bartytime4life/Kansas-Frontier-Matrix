@@ -49,7 +49,7 @@ documented forward-fix rollback. A healthy pass may end with no code change.
 | 0 | `SOIL-EXP-002` | Refresh the Soil README and architecture maturity claims | `READY_CANDIDATE` | Current implemented profiles, placeholders, workflow scope, exact snapshot, and holds agree across docs without broad rewrite |
 | 0 | `SOIL-EXP-003` | Replace short `VERIFICATION.md`, `DEFINITION_OF_DONE.md`, `EXPANSION_PLAN.md`, `FILE_SYSTEM_PLAN.md`, `PRESERVATION_MATRIX.md`, `MAP_UI_CONTRACTS.md`, and `RELEASE_INDEX.md` scaffolds one coherent family at a time | `DEPENDENCY_READY` | Each file is grounded in exact paths and explicit non-effects; no proposed path becomes authority |
 | 0 | `SOIL-EXP-004` | Assign accountable Soil roles | `BLOCKED_OWNER_DECISION` | Owner/reviewer route is explicit; no self-approval or CODEOWNERS-as-review claim |
-| 1 | `SOIL-EXP-005` | Bind the existing SoilMoistureObservation fixture profile into `domain-soil` | `READY_CANDIDATE` | Existing schema, 14 fixtures, validator, contract, and test run under the shared no-network startup guard; workflow summary preserves `PROPOSED_INACTIVE` and no-authority boundaries |
+| 1 | `SOIL-EXP-005` | Harden the existing dedicated SoilMoistureObservation workflow | `READY_CANDIDATE` | Existing schema, 14 fixtures, validator, contract, test, and retained receipt run under the shared no-network startup guard; workflow summary preserves `PROPOSED_INACTIVE` and no-authority boundaries |
 | 1 | `SOIL-EXP-006` | Inventory every Soil validator/test profile against CI | `READY_CANDIDATE` | Each profile is classified `ACTIVE`, `ISOLATED`, `PLACEHOLDER`, `COMPATIBILITY`, or `HOLD`; no path presence is counted as coverage |
 | 1 | `SOIL-EXP-007` | Converge support-type vocabulary | `BLOCKED_SEMANTIC_REVIEW` | One semantic contract, alias map, strict schema, positive/negative fixtures, consumer crosswalk, and deprecation plan agree |
 | 1 | `SOIL-EXP-008` | Classify permissive and compatibility Soil schemas | `DEPENDENCY_READY` | Every permissive/alias schema has a canonical target or explicit hold, consumer evidence, negative-test posture, and retirement/rollback rule |
@@ -70,9 +70,10 @@ documented forward-fix rollback. A healthy pass may end with no code change.
 After this documentation repair, `SOIL-EXP-005` is the smallest executable
 candidate: the contract, strict schema, six valid fixtures, eight reviewed
 invalid fixtures, validator, and focused test already exist. The change should
-only inject the shared startup no-network guard, add that existing suite to the
-Soil workflow, and update the workflow's scope statement. It must not activate
-a source or widen the fixture profile.
+only inject and assert the shared startup no-network guard in the existing
+`soil-moisture-observation` workflow, bind the guard path into that workflow's
+change scope, and update its trust-boundary statement. It must not duplicate
+the suite in `domain-soil`, activate a source, or widen the fixture profile.
 
 ## Non-effects
 
