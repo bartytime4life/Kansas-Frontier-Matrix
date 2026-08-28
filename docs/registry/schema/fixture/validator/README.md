@@ -2,7 +2,7 @@
 doc_id: kfm://doc/registry/schema/fixture/validator/readme
 title: docs/registry/schema/fixture/validator/ — Schema Fixture Validator Documentation Boundary
 type: readme
-version: v1.1
+version: v1.2
 status: provisional
 owners:
   - "@bartytime4life"
@@ -15,8 +15,8 @@ truth_posture: "CONFIRMED package tests, fixture snapshot checks, dedicated work
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 630f468f9c7672309fdffade6e1537ebbafc4f03
-  prior_blob: cd05cb184e6b91ea249dde69279b9ebde0f65fa0
+  base_commit: ba8856e1fc2bf930e9b44df1cfbf4f3dc369d084
+  prior_blob: cb7e3b060d5293827a0a884f62ddcc76076e07dc
 related:
   - ../README.md
   - ../../README.md
@@ -181,12 +181,11 @@ python tools/validators/docs/link-check/check_links.py \
 python tools/validators/docs/meta-block/check_meta_blocks.py \
   --profile required \
   docs/registry/schema/fixture/validator/README.md
-python tools/validators/docs/fragments/check_fragments.py \
-  docs/registry/schema/fixture/validator/README.md
 ```
 
-Passing documentation checks confirm only the checked Markdown metadata, links,
-and fragments at that revision.
+The link checker covers repository-local files, directories, images, and
+fragments; the metadata checker covers the bounded metadata envelope. Passing
+either confirms only its exercised documentation QA scope at that revision.
 
 ## Failure, maintenance, and rollback
 
@@ -199,7 +198,7 @@ and fragments at that revision.
 - Keep validation output free of sensitive payloads and harmful precision; a
   verbose local diagnostic is not automatically public-safe evidence.
 
-This v1.1 documentation slice changes no package, validator, or policy behavior.
+This v1.2 documentation slice changes no package, validator, or policy behavior.
 Before merge, close the draft pull request and abandon its branch. After merge,
 prefer a focused forward correction. Do not restore marker-only child
 status merely to revise wording, and do not move or delete the held path without
