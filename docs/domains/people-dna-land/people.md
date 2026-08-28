@@ -2,9 +2,9 @@
 doc_id: kfm://doc/people-dna-land/landing
 title: People / Genealogy / DNA / Land Ownership — Domain Landing
 type: standard
-version: v1.1.0
-prior_version: v1
-prior_state: proposal-era domain landing that described unverified live consent introspection and source-refresh procedure
+version: v1.1.1
+prior_version: v1.1.0
+prior_state: repository-grounded domain landing whose dossier map and related links still described source refresh as proposed operations
 status: draft
 owners: People-DNA-Land domain steward; Rights & Sovereignty reviewer; Docs steward (placeholders — NEEDS VERIFICATION)
 created: 2026-06-07
@@ -266,7 +266,7 @@ flowchart LR
 
 ## 12. Dossier map
 
-The People/DNA/Land dossier under `docs/domains/people-dna-land/` (all PROPOSED; presence NEEDS VERIFICATION):
+The People/DNA/Land dossier spans the current repository paths below; maturity remains file-specific and a listed path does not imply operational authority:
 
 | Doc | Role |
 |---|---|
@@ -276,7 +276,7 @@ The People/DNA/Land dossier under `docs/domains/people-dna-land/` (all PROPOSED;
 | [`SOURCE_LEDGER.md`](./SOURCE_LEDGER.md) | Instance-level "what each source cannot prove" |
 | [`SOURCE_REGISTRY.md`](./SOURCE_REGISTRY.md) | Admission / authority-control surface |
 | [`VERIFICATION_BACKLOG.md`](./VERIFICATION_BACKLOG.md) | Claimed-but-unproven items |
-| `SOURCE_REFRESH_RUNBOOK.md` | Refresh operations *(homed under `docs/runbooks/people-dna-land/` per §6.1.b)* |
+| [`SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md) | Canonical repository-grounded source-refresh `HOLD` boundary; live retrieval, admission, cadence refresh, and receipt production remain unavailable |
 | `ARCHITECTURE.md` · `PRESERVATION_MATRIX.md` | Bounded context · preservation *(PROPOSED)* |
 
 [↑ Back to top](#top)
@@ -294,11 +294,11 @@ The People/DNA/Land dossier under `docs/domains/people-dna-land/` (all PROPOSED;
 ## Related docs
 
 - [`SENSITIVITY_PROFILE.md`](./SENSITIVITY_PROFILE.md) · [`SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md) · [`SOURCE_LEDGER.md`](./SOURCE_LEDGER.md) · [`SOURCE_REGISTRY.md`](./SOURCE_REGISTRY.md) · [`VERIFICATION_BACKLOG.md`](./VERIFICATION_BACKLOG.md)
-- `docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md` — refresh operations *(PROPOSED)*
-- `ai-build-operating-contract.md` — operating contract (`CONTRACT_VERSION = "3.0.0"`)
-- `directory-rules.md` — §12 Domain Placement Law
+- [`docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md) — canonical repository-grounded source-refresh `HOLD` boundary
+- [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract (`CONTRACT_VERSION = "3.0.0"`)
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — §12 Domain Placement Law
 - Atlas v1.1 §16 (People / Genealogy / DNA / Land Ownership), §24.13 (responsibility-root crosswalk)
 
 ---
 
-<sub>Last updated 2026-06-07 · Pinned `CONTRACT_VERSION = "3.0.0"` · Status: draft · [↑ Back to top](#top)</sub>
+<sub>Last updated 2026-08-28 · Pinned `CONTRACT_VERSION = "3.0.0"` · Status: draft · [↑ Back to top](#top)</sub>

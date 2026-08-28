@@ -2,9 +2,9 @@
 doc_id: kfm://doc/runbook-people-dna-land-rollback
 title: People · DNA · Land — Rollback Runbook
 type: standard
-version: v1.1.4
-prior_version: v1.1.3
-prior_state: repository-grounded rollback HOLD boundary with source refresh still described as proposal-era
+version: v1.1.5
+prior_version: v1.1.4
+prior_state: repository-grounded rollback HOLD boundary whose next-review inventory still described source refresh as proposal-era and counted five scaffolds
 status: draft; repository-grounded hold boundary; proposal lineage retained in Git history; operational rollback unavailable; non-release; non-publication
 owners:
   - "@bartytime4life — verified GitHub review route"
@@ -151,7 +151,7 @@ Before merge, close the draft and delete only its task branch. After a separatel
 
 ## Next dependency-aware review points
 
-1. Review the promotion `HOLD` boundary as a separate non-operational consumer; reconcile the proposal-era source-refresh procedure independently.
-2. Inventory the five explicit lane scaffolds file by file before filling, superseding, retaining, or retiring them.
+1. Preserve promotion and source refresh as separate repository-grounded `HOLD` boundaries; establish any future operational implementation only in its owning authority surfaces.
+2. Inventory the three remaining explicit lane scaffolds file by file before filling, superseding, retaining, or retiring them.
 3. Review any future generic release or rollback work for a real People/DNA/Land consumer before claiming domain readiness.
 4. Preserve the current sensitive-domain holds until accountable privacy, consent, Indigenous/Tribal, legal, policy, evidence, release, operations, security, and independent review exist.
