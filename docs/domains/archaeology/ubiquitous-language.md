@@ -3,12 +3,15 @@ doc_id: kfm://doc/docs-domains-archaeology-ubiquitous-language
 title: Archaeology — Ubiquitous Language
 type: standard
 version: v1.0.1
+owning_root: docs/
+responsibility: "Define bounded Archaeology terms and preserve evidence, candidate-status, temporal, sensitivity, and release distinctions for human readers."
+truth_posture: "Mixed: confirmed doctrine and repository placement with proposed field realization, identity rules, and accepted bindings still needing verification."
 status: draft
 owners: <archaeology-domain-steward> (PLACEHOLDER — confirm)
 created: 2026-05-28
 updated: 2026-08-28
 policy_label: public
-related: [docs/domains/archaeology/README.md, docs/domains/archaeology/source-families.md, docs/domains/archaeology/sensitivity-and-publication-posture.md, docs/domains/archaeology/cross-lane-relations.md, ai-build-operating-contract.md, DomainDriven_Design_Reference.pdf]
+related: [docs/domains/archaeology/README.md, docs/domains/archaeology/source-families.md, docs/domains/archaeology/sensitivity-and-publication-posture.md, docs/domains/archaeology/cross-lane-relations.md, docs/doctrine/ai-build-operating-contract.md]
 tags: [kfm, archaeology, ubiquitous-language, glossary, DDD, sensitive-domain]
 notes: [CONTRACT_VERSION = "3.0.0" pinned; terms CONFIRMED doctrine; repository placement CONFIRMED; field realization and accepted binding remain NEEDS VERIFICATION]
 [/KFM_META_BLOCK_V2] -->
@@ -29,7 +32,7 @@ notes: [CONTRACT_VERSION = "3.0.0" pinned; terms CONFIRMED doctrine; repository 
 **Status:** `draft` · **Owners:** `<archaeology-domain-steward>` (PLACEHOLDER) · **Updated:** 2026-08-28
 
 > [!CAUTION]
-> **Sensitive domain.** Several terms below name objects whose exact geometry fails closed (sites, provenience, excavation units). Using a term correctly is part of the trust posture: a `CandidateFeature` is **not** an `Archaeological Site`. Disposition is governed by `ai-build-operating-contract.md` §23.2.
+> **Sensitive domain.** Several terms below name objects whose exact geometry fails closed (sites, provenience, excavation units). Using a term correctly is part of the trust posture: a `CandidateFeature` is **not** an `Archaeological Site`. Disposition is governed by `docs/doctrine/ai-build-operating-contract.md` §23.2.
 
 ---
 
@@ -68,12 +71,12 @@ The domain's one-line purpose (`CONFIRMED` doctrine / `PROPOSED` implementation)
 
 | Aspect | Value | Status |
 |---|---|---|
-| Proposed path | `docs/domains/archaeology/ubiquitous-language.md` | `PROPOSED` |
+| Current path | `docs/domains/archaeology/ubiquitous-language.md` | `CONFIRMED` |
 | Owning responsibility root | `docs/` (explains something to humans) | `CONFIRMED` rule |
 | Domain segment | `archaeology` as a lane inside `docs/`, never a root | `CONFIRMED` rule |
 | Contract counterpart (meaning) | `contracts/domains/archaeology/` | `PROPOSED` |
 | Schema counterpart (shape) | `schemas/contracts/v1/domains/archaeology/` | `PROPOSED` |
-| Upstream | `ai-build-operating-contract.md`; `[DDD]` bounded-context doctrine; `[ENCY]` | `CONFIRMED` rule / `PROPOSED` presence |
+| Upstream | `docs/doctrine/ai-build-operating-contract.md`; `[DDD]` bounded-context doctrine; `[ENCY]` | `CONFIRMED` rule / `PROPOSED` presence |
 
 **Directory Rules basis.** A doc that *explains to humans* lives under `docs/`. The **meaning** of each term is formalized in `contracts/`; the **machine shape** in `schemas/`. This glossary is navigational; the contracts and schemas govern actual field realization.
 
@@ -250,7 +253,7 @@ This document is done enough to enter the repository when:
 - `docs/domains/archaeology/source-families.md` — sibling source doc (`CONFIRMED` path; content remains draft)
 - `docs/domains/archaeology/sensitivity-and-publication-posture.md` — sibling sensitivity doc (`CONFIRMED` path; content remains draft)
 - `docs/domains/archaeology/cross-lane-relations.md` — sibling cross-lane doc (`CONFIRMED` path; content remains draft)
-- `ai-build-operating-contract.md` — source-role anti-collapse, §23.2 matrix (canonical)
+- `docs/doctrine/ai-build-operating-contract.md` — source-role anti-collapse, §23.2 matrix (canonical)
 - `contracts/domains/archaeology/` — term meaning home (`PROPOSED`)
 
 **Last updated:** 2026-08-28 · `CONTRACT_VERSION = "3.0.0"`

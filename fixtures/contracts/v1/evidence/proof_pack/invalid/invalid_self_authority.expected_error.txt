@@ -1,5 +1,0 @@
-{
-  "field": "/decision/release_approved",
-  "keyword": "const",
-  "kind": "schema"
-}

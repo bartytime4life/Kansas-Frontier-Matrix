@@ -1,4 +1,0 @@
-# pipeline_specs :: settlements-infrastructure :: validate
-name: settlements-infrastructure-validate
-version: 1
-stages: []

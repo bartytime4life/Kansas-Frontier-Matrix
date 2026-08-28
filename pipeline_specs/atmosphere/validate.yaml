@@ -1,4 +1,0 @@
-# pipeline_specs :: atmosphere :: validate
-name: atmosphere-validate
-version: 1
-stages: []

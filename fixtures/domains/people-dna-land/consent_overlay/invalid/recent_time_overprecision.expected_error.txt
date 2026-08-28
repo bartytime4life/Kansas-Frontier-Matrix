@@ -1,1 +1,0 @@
-RECENT_TIME_BUCKET_TOO_PRECISE	$.events[0].time_bucket

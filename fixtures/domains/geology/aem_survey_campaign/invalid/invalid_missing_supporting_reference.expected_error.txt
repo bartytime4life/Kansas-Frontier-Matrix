@@ -1,1 +1,0 @@
-AEM_REFERENCE_CANDIDATES_INVALID	$.supporting_reference_candidates

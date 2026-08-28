@@ -1,4 +1,0 @@
-# connectors/local_upload pyproject — greenfield placeholder
-[project]
-name = "kfm-connector-local_upload"
-version = "0.0.0"

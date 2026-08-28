@@ -1,1 +1,0 @@
-# hazards :: publish — greenfield placeholder

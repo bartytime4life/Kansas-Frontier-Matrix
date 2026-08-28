@@ -1,4 +1,0 @@
-# pipeline_specs :: fauna :: validate
-name: fauna-validate
-version: 1
-stages: []

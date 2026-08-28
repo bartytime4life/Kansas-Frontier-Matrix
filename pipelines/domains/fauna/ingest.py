@@ -1,1 +1,0 @@
-# fauna :: ingest — greenfield placeholder

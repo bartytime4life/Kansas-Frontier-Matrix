@@ -1,1 +1,0 @@
-# openstreetmap fetcher — greenfield placeholder

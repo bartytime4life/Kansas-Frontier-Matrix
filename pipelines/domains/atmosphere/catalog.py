@@ -1,1 +1,0 @@
-# atmosphere :: catalog — greenfield placeholder

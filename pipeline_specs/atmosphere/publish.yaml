@@ -1,4 +1,0 @@
-# pipeline_specs :: atmosphere :: publish
-name: atmosphere-publish
-version: 1
-stages: []

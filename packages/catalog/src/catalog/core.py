@@ -1,1 +1,0 @@
-# catalog core — greenfield placeholder

@@ -1,4 +1,0 @@
-# pipeline_specs :: settlements-infrastructure :: publish
-name: settlements-infrastructure-publish
-version: 1
-stages: []

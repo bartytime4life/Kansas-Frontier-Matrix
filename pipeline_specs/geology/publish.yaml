@@ -1,4 +1,0 @@
-# pipeline_specs :: geology :: publish
-name: geology-publish
-version: 1
-stages: []

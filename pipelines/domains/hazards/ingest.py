@@ -1,1 +1,0 @@
-# hazards :: ingest — greenfield placeholder

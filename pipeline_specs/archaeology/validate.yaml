@@ -1,4 +1,0 @@
-# pipeline_specs :: archaeology :: validate
-name: archaeology-validate
-version: 1
-stages: []

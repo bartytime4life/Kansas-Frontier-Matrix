@@ -1,4 +1,0 @@
-# connectors/gbif pyproject — greenfield placeholder
-[project]
-name = "kfm-connector-gbif"
-version = "0.0.0"

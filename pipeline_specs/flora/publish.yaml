@@ -1,4 +1,0 @@
-# pipeline_specs :: flora :: publish
-name: flora-publish
-version: 1
-stages: []
