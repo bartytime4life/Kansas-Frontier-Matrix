@@ -7,7 +7,7 @@
   "x-kfm": {
     "status": "PROPOSED",
     "source_doc": "docs/domains/geology/FILE_SYSTEM_PLAN.md",
-    "contract_doc": "contracts/domains/geology/resource_estimate.md"
+    "contract_doc": "contracts/domains/geology/ResourceEstimate.md"
   },
   "properties": {},
   "additionalProperties": true

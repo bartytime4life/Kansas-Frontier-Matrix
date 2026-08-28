@@ -7,7 +7,7 @@
   "x-kfm": {
     "status": "PROPOSED",
     "source_doc": "docs/domains/geology/FILE_SYSTEM_PLAN.md",
-    "contract_doc": "contracts/domains/geology/cross_section.md"
+    "contract_doc": "contracts/domains/geology/CrossSection.md"
   },
   "properties": {},
   "additionalProperties": true

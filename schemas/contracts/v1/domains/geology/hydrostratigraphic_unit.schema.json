@@ -7,7 +7,7 @@
   "x-kfm": {
     "status": "PROPOSED",
     "source_doc": "docs/domains/geology/FILE_SYSTEM_PLAN.md",
-    "contract_doc": "contracts/domains/geology/hydrostratigraphic_unit.md"
+    "contract_doc": "contracts/domains/geology/HydrostratigraphicUnit.md"
   },
   "properties": {},
   "additionalProperties": true
