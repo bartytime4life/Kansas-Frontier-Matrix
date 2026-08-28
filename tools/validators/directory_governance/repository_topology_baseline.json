@@ -675,13 +675,6 @@
       "subject": "release/rollback/->release/rollback_cards/"
     },
     {
-      "evidence_sha256": "sha256:c4da74c22628b7944a41bbf47abe487d11c005e5d69f83113a0e72cbec7863b1",
-      "evidence_zlib_base64": "eNqFj1EOwyAMQ3ehrGcKkFJrQBiBSr39UKV9jv1afpZfUG9b0MwotnHzB4smjdfmm5pR4iLUJHGHFnvm8Ai/gKintCKBGOTk4BPalkBFlYS5bwdXWVZNiqHjRL+IS6A6XIK/T1FV66P94XU0L7RzRoKsPYbDe6DruO3j4LjentbYv2cc+9dMJ/ABJy2EIQ==",
-      "fingerprint": "sha256:b74c060db794e2d6ef80217bd07f1322cb2211c1ac0bacfda624e9459ff3ea22",
-      "rule_id": "KFM-TOPO-016",
-      "subject": "doc-id:kfm://doc/PLACEHOLDER-uuid"
-    },
-    {
       "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
       "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
       "fingerprint": "sha256:bb382acfa086f4c69e44bd8cf57e622f7732b1651d4ac3beda9e662de0388218",
@@ -799,6 +792,13 @@
       "fingerprint": "sha256:e2f82d843a14e6606521f1bde3b7e0b9174b438bbcaf203400a8bee3d28acda2",
       "rule_id": "KFM-TOPO-017",
       "subject": "artifacts/qa/coverage/coverage.xml"
+    },
+    {
+      "evidence_sha256": "sha256:b8e02a766e54bcccd418b8bb6cbd76a080b887f017d4c8f7c33496574d8c6ddf",
+      "evidence_zlib_base64": "eNqFj0EOwjAMBPmQyZvcxKQrpXGw40r9PdA77X1ntFM0eyq6MbontryyaNN6pGzqTo27kEnjCe3+3Mqj/AOq7mJdCjFokZV3qF0CA0Mavn5fecjl1KU7JnbMg7gXGrE05PMUDfUZdsNrWBZ68YYGue6IBe/A1Djra3D9uT+jYnFw",
+      "fingerprint": "sha256:e3711c1d4330144c128272115c5895b755943ef6b4bb2544acaa4f813c6bb84e",
+      "rule_id": "KFM-TOPO-016",
+      "subject": "doc-id:kfm://doc/PLACEHOLDER-uuid"
     },
     {
       "evidence_sha256": "sha256:cbfaa350ae6037e7126529f9ab34165dbe471e14e51aacf13eb4dfa8bd511bac",
