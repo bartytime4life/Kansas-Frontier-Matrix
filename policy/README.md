@@ -76,7 +76,7 @@ The [`Root Registry`](../control_plane/root_registry.yaml) projects this accepte
 
 ## Status
 
-| Surface | Current status at `main@737dce6357d670e48df85e94ec0641aaa1a365cb` | Safe conclusion |
+| Surface | Current status at `main@e52165e820b07e65c54830fde519a9c90df8eb1c` | Safe conclusion |
 |---|---|---|
 | `policy/README.md` | **CONFIRMED v0.4.1 baseline; blob `a9a89b8fd08ed29ef52a06c9286a6ed9729538ba`** | v0.4.2 reconciles the role parent/child boundary and coverage inventory in place; it changes no rule or decision. |
 | Singular `policy/` root | **CONFIRMED / accepted placement** | Directory Rules v2 is effective through ADR-0029; no second policy root is authorized. |
@@ -435,7 +435,7 @@ Not established:
 | Level | Evidence required | Root-wide posture |
 |---|---|---:|
 | M0 — Placeholder | stub README or default-only module | **CONFIRMED in three one-byte direct READMEs, one unexplained direct lane, additional scaffold lanes, and `policy-runtime`** |
-| M1 — Boundary documented | responsibility, inputs, outputs, failures, authority split | **CONFIRMED for 35 direct child READMEs; completeness and exact profile compliance vary by lane** |
+| M1 — Boundary documented | responsibility, inputs, outputs, failures, authority split | **CONFIRMED for 36 direct child READMEs; completeness and exact profile compliance vary by lane** |
 | M2 — Rule or profile candidate | reviewed source, contracts/schemas, synthetic fixtures, stable validator or entrypoint | **CONFIRMED in multiple inactive profiles** |
 | M3 — Evaluator-backed proof | accepted evaluator/bundle, native tests, input assembly, normalization, deterministic CI | **PARTIAL only for one bounded Rego profile; general M3 not established** |
 | M4 — Governed consumer and replay | consumer, authenticated decisions, receipts, replay, expiry, correction, cache invalidation | **NOT ESTABLISHED** |
