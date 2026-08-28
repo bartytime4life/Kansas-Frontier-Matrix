@@ -14,8 +14,8 @@ owning_root: docs/
 truth_posture: "CONFIRMED current repository paths, accepted Directory Rules placement, and bounded synthetic validation / PARTIAL mixed implementation maturity / UNKNOWN source admission, production retrieval, runtime use, accountable stewardship, independent review, release, deployment, promotion, and publication until separately verified"
 responsibility: "Orient contributors to the Hazards lane, current responsibility-root surfaces, bounded executable evidence, life-safety limits, and unresolved source, policy, review, release, and publication holds without creating transition authority."
 related:
-  - ai-build-operating-contract.md
-  - directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
   - docs/domains/README.md
   - docs/domains/hazards/PUBLICATION_AND_BOUNDARY.md
   - docs/domains/hazards/PRESERVATION_MATRIX.md
