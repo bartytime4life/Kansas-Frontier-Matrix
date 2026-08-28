@@ -6,8 +6,12 @@ version: v0.2
 status: draft
 owners: <kfm-source-stewards@TBD> · domain liaison: <flora-steward@TBD> + <fauna-steward@TBD>
 created: 2026-05-20
-updated: 2026-05-21
+updated: 2026-08-28
 policy_label: public
+responsibility_root: docs/
+owning_root: docs/
+responsibility: Human-readable EDDMapS source-family dossier and proposal boundary; not source admission, policy, evidence, release, or publication authority.
+truth_posture: cite-or-abstain; current repository-placement claims are pinned to the recorded campaign baseline.
 related:
   - docs/sources/README.md                                 # PROPOSED — NEEDS VERIFICATION
   - docs/sources/catalog/README.md                         # PROPOSED — NEEDS VERIFICATION (catalog lane index)
@@ -418,7 +422,7 @@ EDDMapS-derived county-presence observations are a **candidate corroborating sig
 - [`docs/standards/PROV.md`](../../../standards/PROV.md) — provenance standard profile (**CONFIRMED authored** prior session; naming variance vs `PROVENANCE.md` → OPEN-DR-01)
 - [`docs/standards/ISO-19115.md`](../../../standards/ISO-19115.md) — metadata standard profile (**CONFIRMED authored** prior session)
 - [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) — operational source-refresh runbook (**CONFIRMED authored** prior session)
-- [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home rule for SourceDescriptor placement (**CONFIRMED** referenced in Directory Rules)
+- [`docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home rule for SourceDescriptor placement (**CONFIRMED** referenced in Directory Rules)
 - `control_plane/source_authority_register.yaml` — register entry for `kfm:source/eddmaps` (**PROPOSED** — NEEDS VERIFICATION)
 - `schemas/contracts/v1/source/source-descriptor.json` — SourceDescriptor schema home (**PROPOSED** path per ADR-0001; **NEEDS VERIFICATION**)
 - `policy/sensitivity/` — sensitive-species/sensitive-fauna policy bundle (**PROPOSED** — NEEDS VERIFICATION)

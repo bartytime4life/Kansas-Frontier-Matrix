@@ -6,16 +6,20 @@ version: v0.2
 status: draft
 owners: <PLACEHOLDER — Docs steward + Source steward for eddmaps>
 created: 2026-05-20
-updated: 2026-05-21
+updated: 2026-08-28
 policy_label: public
+responsibility_root: docs/
+owning_root: docs/
+responsibility: Human-readable EDDMapS product proposal; not source admission, policy, evidence, release, or publication authority.
+truth_posture: cite-or-abstain; repository-path claims are pinned to the recorded campaign baseline.
 related:
   - docs/sources/catalog/eddmaps/README.md
   - docs/sources/catalog/README.md
-  - docs/sources/catalog/eddmaps/IDENTITY.md
-  - docs/sources/catalog/eddmaps/RIGHTS-AND-SENSITIVITY-MAP.md
+  - docs/sources/catalog/IDENTITY.md
+  - docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/doctrine/directory-rules.md
   - docs/standards/STAC_KFM_PROFILE.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 tags: [kfm, docs, sources, catalog, eddmaps, fauna, flora, invasive]
 notes:
   - "PROPOSED product-page scaffold; presentation lifted to standard v2."
@@ -141,7 +145,7 @@ flowchart LR
 
 ## Collection identity
 
-- `PROPOSED` Collection id pattern: `kfm-<org>-<product>` — see [`IDENTITY.md`](./IDENTITY.md).
+- `PROPOSED` Collection id pattern: `kfm-<org>-<product>` — see [`IDENTITY.md`](../IDENTITY.md).
 - `PROPOSED` namespace: `kfm:` *(see open item `OPEN-DSC-03`; `kfm:` vs `ks-kfm:` is unsettled per C4-01 corpus note).*
 - Asset roles: `NEEDS VERIFICATION` — confirm against `schemas/contracts/v1/source/` per ADR-0001.
 
@@ -207,7 +211,7 @@ flowchart LR
 ## Rights and sensitivity
 
 > [!WARNING]
-> **Do not restate policy on this page.** Rights and sensitivity authority lives in [`policy/sensitivity/`](../../../../policy/sensitivity/) and is summarized in the eddmaps family [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). This page only **points to** those authorities.
+> **Do not restate policy on this page.** Rights and sensitivity authority lives in [`policy/sensitivity/`](../../../../policy/sensitivity/) and is summarized in the catalog-level [`RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md). This page only **points to** those authorities.
 
 `NEEDS VERIFICATION`:
 
@@ -337,12 +341,12 @@ See also: [`../_examples/stac-item-example.json`](../_examples/stac-item-example
 ## Related docs
 
 - [`./README.md`](./README.md) — eddmaps family overview
-- [`./IDENTITY.md`](./IDENTITY.md) — eddmaps family Collection identity
-- [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — eddmaps family rights/sensitivity map
+- [`../IDENTITY.md`](../IDENTITY.md) — catalog Collection identity conventions
+- [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) — catalog rights/sensitivity map
 - [`../README.md`](../README.md) — sources catalog overview
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Directory Rules
 - [`../../../standards/STAC_KFM_PROFILE.md`](../../../standards/STAC_KFM_PROFILE.md) — STAC × KFM provenance profile *(TODO: confirm path)*
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — Schema home *(TODO: confirm filename)*
+- [`../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — accepted schema-home decision
 
 ---
 
