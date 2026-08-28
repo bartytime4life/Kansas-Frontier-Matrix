@@ -2,16 +2,19 @@
 doc_id: kfm://doc/tools-ci-readme
 title: CI Tools README
 type: tool-readme
-version: v0.1
-status: draft; ci-tooling-lane; verified-dependency-bootstrap; mixed-implementation-status
+version: v0.2
+status: draft; ci-tooling-lane; verified-dependency-bootstrap; bounded-python-no-network-startup-guard; mixed-implementation-status
 owners:
   - OWNER_TBD - Tooling steward
   - OWNER_TBD - CI steward
   - OWNER_TBD - QA steward
   - OWNER_TBD - Governance steward
 created: 2026-07-07
-updated: 2026-08-12
+updated: 2026-08-28
 policy_label: public-doc; tools; ci; qa; reviewer-summary; no-network-default; workflow-support
+owning_root: tools/
+responsibility: Long-lived CI support helpers for deterministic dependency bootstrap, bounded process controls, and reviewer-readable signals; never workflow, policy, test, proof, or release authority.
+truth_posture: cite-or-abstain
 tags: [kfm, tools, ci, github-actions, qa, reviewer-summary, validation-summary, workflows, NEEDS_VERIFICATION]
 related:
   - ../README.md
@@ -30,6 +33,7 @@ notes:
   - "This lane contains CI support helper code only. GitHub workflow definitions belong under .github/workflows/."
   - "CI helper scripts render and normalize signals; they do not author policy, schemas, contracts, release decisions, or test truth."
   - "The hash-locked Python CI installer, its finite profiles, lockfiles, focused tests, and workflow wiring are VERIFIED; unrelated proposed helper families retain their stated status."
+  - "kfm_no_network/sitecustomize.py is an opt-in Python-process startup guard verified by the Hydrology negative proof; it is not runner-wide or non-Python isolation."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -46,12 +50,12 @@ notes:
 </p>
 
 **Path:** `tools/ci/README.md`  
-**Status:** draft / CI tooling lane / dependency-bootstrap helper verified / mixed implementation status
+**Status:** draft / CI tooling lane / dependency-bootstrap helper verified / bounded Python startup guard verified / mixed implementation status
 **Owning root:** `tools/`  
 **Lane family:** `ci`  
 **Workflow companion:** `.github/workflows/`  
 **Default posture:** deterministic, no-network by default, read-only over inputs, summary/report output only  
-**Truth posture:** CONFIRMED `.github/` invokes validators, policies, and tools that live elsewhere and does not own their logic; VERIFIED `install_python_ci.py`, its finite profiles, SHA-256 lock enforcement, focused tests, and `python-dependency-lock.yml` wiring; unrelated helper inventory and artifact destinations retain their file-level status.
+**Truth posture:** CONFIRMED `.github/` invokes validators, policies, and tools that live elsewhere and does not own their logic; VERIFIED `install_python_ci.py`, its finite profiles, SHA-256 lock enforcement, focused tests, and `python-dependency-lock.yml` wiring; VERIFIED the opt-in `kfm_no_network/sitecustomize.py` guard denies named Python-process egress paths when explicitly injected; runner-wide and non-Python isolation remain unproved; unrelated helper inventory and artifact destinations retain their file-level status.
 
 ---
 
@@ -117,6 +121,7 @@ CI helpers make governance signals readable and repeatable. They do not invent g
 |---|---|---|
 | `install_python_ci` | Install fixed third-party locks, then approved local packages without dependency resolution or build isolation. | VERIFIED with focused tests and Python 3.11/3.12 workflow coverage. |
 | `python-dependency-lock-migration.json` | Bind each historical workflow hash to exactly one reviewed locked-install transition. | VERIFIED by the installer and generated-receipt suites; one-time migration only. |
+| `kfm_no_network/sitecustomize.py` | Fail closed on common IPv4/IPv6 connection, DNS, URL-open, and datagram paths for explicitly guarded Python processes. | VERIFIED by the Hydrology subprocess negative proof; not runner-wide or non-Python isolation. |
 | `render_validation_summary` | Convert validator/test output into reviewer-readable Markdown or JSON. | PROPOSED. |
 | `render_ui_validation_summary` | Render UI trust-state validation summaries. | PROPOSED in parent README. |
 | `normalize_test_report` | Normalize JUnit/coverage/QA reports for downstream checks. | PROPOSED. |
@@ -132,6 +137,9 @@ CI helpers make governance signals readable and repeatable. They do not invent g
 tools/ci/
 |-- README.md
 |-- install_python_ci.py
+|-- kfm_no_network/
+|   |-- README.md
+|   `-- sitecustomize.py
 |-- python-dependency-lock-migration.json
 |-- python-audit.lock
 |-- python-test.lock
@@ -154,6 +162,8 @@ Inspect the finite install profiles and run their invariant tests without perfor
 ```bash
 python tools/ci/install_python_ci.py --help
 python -m unittest tests/ci/test_install_python_ci.py -v
+python -m pytest -q -p no:cacheprovider \
+  tests/domains/hydrology/test_no_network_proof.py
 ```
 
 Default operation should be deterministic, local, and no-network. Workflow-specific live checks must be explicit, gated, and reviewed.
@@ -182,6 +192,7 @@ Default operation should be deterministic, local, and no-network. Workflow-speci
 | Dependency installer and lockfiles | VERIFIED by `tests/ci/test_install_python_ci.py`. |
 | Dependency CLI shape and Python runtime | VERIFIED for fixed profiles; arbitrary package, URL, index, and shell input are denied by construction. |
 | Dependency workflow wiring | VERIFIED in `.github/workflows/python-dependency-lock.yml` and migrated callers. |
+| Python no-network startup guard | VERIFIED for the named Python-process socket, DNS, URL-open, and datagram probes; runner-wide and non-Python isolation remain NEEDS VERIFICATION. |
 | Artifact/report destinations | NEEDS VERIFICATION. |
 | Focused dependency tests | VERIFIED locally; hosted Python 3.11/3.12 checks remain the PR evidence boundary. |
 | Unrelated tests and validators | Not claimed by this dependency-bootstrap update. |

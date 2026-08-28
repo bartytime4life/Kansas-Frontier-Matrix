@@ -2,8 +2,8 @@
 doc_id: kfm://doc/tests-domains-hydrology-readme
 title: Hydrology Domain Tests README
 type: test-index-readme
-version: v0.3
-status: draft; parent-index; identity REMAIN_PROPOSED; bounded EvidenceBundle, aquifer-pair, synthetic flow, and NHDPlus waterbody crosswalk checks executable
+version: v0.4
+status: draft; parent-index; identity REMAIN_PROPOSED; bounded Python-process egress, EvidenceBundle, aquifer-pair, synthetic flow, and NHDPlus waterbody crosswalk checks executable
 owners:
   - OWNER_TBD — Hydrology domain steward
   - OWNER_TBD — Source steward
@@ -15,9 +15,12 @@ owners:
   - OWNER_TBD — Evidence steward
   - OWNER_TBD — Release steward
   - OWNER_TBD — QA steward
-created: NEEDS VERIFICATION — greenfield stub existed before v0.1 expansion
-updated: 2026-08-02
+created: 2026-05-08
+updated: 2026-08-28
 policy_label: public-doc; tests; hydrology; parent-index; no-network; evidence-bound; source-role-aware; temporal-aware; policy-filtered; release-gated; rollback-aware
+owning_root: tests/
+responsibility: Executable Hydrology conformance and boundary-evidence index; never source, policy, proof, release, or publication authority.
+truth_posture: cite-or-abstain
 tags: [kfm, tests, hydrology, parent-index, enforceability, no-network, fixtures, SourceDescriptor, ReachIdentity, JSON-Schema, PolicyDecision, RedactionReceipt, EvidenceBundle, ReleaseManifest, CorrectionNotice, RollbackCard, ABSTAIN, DENY, ERROR]
 related:
   - ../../README.md
@@ -46,7 +49,8 @@ related:
 notes:
   - "This file replaces the greenfield stub at tests/domains/hydrology/README.md."
   - "This is a parent test index only. It does not define Hydrology doctrine, contracts, schemas, fixtures, source descriptors, lifecycle records, EvidenceBundles, policy rules, release decisions, pipeline code, public API material, public map material, public tiles, or published artifacts."
-  - "The current executable slice checks the proposed Hydrology EvidenceBundle alias, closed AquiferObservation and AquiferContextLink shapes, a frozen synthetic public-safe FlowObservation profile, and a version-bound synthetic NHDPlus waterbody crosswalk profile with fail-closed in-process network guards."
+  - "The current executable slice checks the shared opt-in Python-process egress guard, proposed Hydrology EvidenceBundle alias, closed AquiferObservation and AquiferContextLink shapes, a frozen synthetic public-safe FlowObservation profile, and a version-bound synthetic NHDPlus waterbody crosswalk profile."
+  - "The startup guard is injected into every Python process in the bounded Hydrology validation step; it does not establish runner-wide, non-Python, dependency-install, operating-system, container, or namespace isolation."
   - "The broader parent invariant remains proposed: Hydrology tests should prove enforceable trust boundaries across continuity inventory, identity, no-network discipline, policy gates, redaction/generalization, schemas, source descriptors, temporal state, evidence posture, release relationship, correction, and rollback."
   - "Decision #1886 keeps the common feature-identity tuple REMAIN_PROPOSED; the identity and temporal child lanes document graduation tests but contain no dedicated executable common-profile modules."
   - "Default posture is deterministic and no-network. Live source checks, upstream fetches, real source exports, lifecycle data, public tiles, and restricted records do not belong in default Hydrology tests."
@@ -68,12 +72,12 @@ notes:
 </p>
 
 **Path:** `tests/domains/hydrology/README.md`  
-**Status:** draft / parent index / common feature identity `REMAIN_PROPOSED` / bounded EvidenceBundle, aquifer-pair, synthetic flow, and NHDPlus waterbody crosswalk slices executable
+**Status:** draft / parent index / common feature identity `REMAIN_PROPOSED` / bounded Python-process egress, EvidenceBundle, aquifer-pair, synthetic flow, and NHDPlus waterbody crosswalk slices executable
 
 **Owning root:** `tests/`  
 **Domain segment:** `hydrology`  
 **Default execution posture:** deterministic, synthetic, no-network, public-safe fixtures only  
-**Truth posture:** CONFIRMED `tests/` is the canonical enforceability root · CONFIRMED five bounded modules exercise EvidenceBundle, AquiferObservation, AquiferContextLink, fixture-only FlowObservation, and fixture-only NHDPlus waterbody crosswalk profiles with synthetic polarity and network denial · CONFIRMED the Hydrology workflow runs those modules · NEEDS VERIFICATION for source bytes, endpoint/evidence resolution, broader semantics, policy runtime, release integration, public route/UI behavior, and broader pass rates.
+**Truth posture:** CONFIRMED `tests/` is the canonical enforceability root · CONFIRMED `test_no_network_proof.py` exercises the opt-in Python startup guard in fresh interpreters · CONFIRMED the Hydrology workflow injects that guard into each Python process in its bounded validation step and runs the remaining accepted fixture profiles · NEEDS VERIFICATION for exact-head hosted results, runner-wide or non-Python isolation, source bytes, endpoint/evidence resolution, broader semantics, policy runtime, release integration, public route/UI behavior, and broader pass rates.
 
 ---
 
@@ -136,7 +140,7 @@ The documented lanes support these Hydrology trust families:
 | Policy | Rights, sensitivity, source-role, evidence, lifecycle, and release gates fail closed where unresolved. |
 | Redaction/generalization | Public-safe transforms are deterministic, named, receipt-backed, and release-gated. |
 | Continuity governance | Continuity records guide verification without upgrading PROPOSED material to CONFIRMED behavior. |
-| No-network discipline | Default tests run from local fixtures, stubs, and local contract/schema files. |
+| No-network discipline | The bounded workflow injects the reviewed startup guard into each Python process; the negative proof exercises named IPv4/IPv6 connection, DNS, URL-open, and datagram paths. |
 
 ---
 
@@ -175,18 +179,20 @@ Any test that needs live source access, production source data, connector execut
 Accepted bounded command:
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+export KFM_NO_NETWORK=1
+export PYTHONDONTWRITEBYTECODE=1
+export PYTHONPATH="$PWD/tools/ci/kfm_no_network:$PWD"
+
 python -m pytest -q -p no:cacheprovider \
+  tests/domains/hydrology/test_no_network_proof.py \
   tests/domains/hydrology/test_hydrology_smoke.py \
   tests/domains/hydrology/test_aquifer_observation.py \
   tests/domains/hydrology/test_aquifer_context_link.py \
   tests/domains/hydrology/test_nhdplus_hr_ambiguity.py
 
-PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
-  python tests/domains/hydrology/test_public_safe_flow_fixture.py --verbose
+python tests/domains/hydrology/test_public_safe_flow_fixture.py --verbose
 
-PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
-  python tools/validators/domains/hydrology/validate_nhdplus_waterbody_crosswalk.py --fixtures
+python tools/validators/domains/hydrology/validate_nhdplus_waterbody_crosswalk.py --fixtures
 ```
 
 These commands run the proposed EvidenceBundle alias, two closed aquifer
@@ -194,7 +200,8 @@ schemas, the frozen synthetic flow profile, and the closed NHDPlus waterbody
 crosswalk shape plus semantic validator. They check synthetic valid/invalid
 polarity, optional-link behavior, type separation, flow boundaries,
 waterbody-only scope, deterministic hashing, mapping cardinality, overlap-area
-honesty, finite ambiguity outcomes, and in-process socket/DNS/URL denial.
+honesty, finite ambiguity outcomes, and startup-time denial of the named
+Python-process connection, DNS, URL-open, and datagram paths.
 It does not resolve endpoints or EvidenceRefs or establish source admission,
 scientific correctness, policy, review, proof, release, or publication.
 
@@ -224,6 +231,7 @@ VERIFICATION** and must not be inferred from the bounded pass.
 |---|---|---|---|
 | Previous target file | CONFIRMED | `tests/domains/hydrology/README.md` existed as a greenfield stub before this replacement. | Did not define the parent lane. |
 | `tests/README.md` | CONFIRMED | `tests/` is enforceability proof, canonical, trust-bearing, and failure should block promotion where trust-spine checks fail. | Does not prove Hydrology executable modules or pass rate. |
+| `test_no_network_proof.py`, `tools/ci/kfm_no_network/sitecustomize.py`, and `domain-hydrology.yml` | CONFIRMED bounded executable slice / hosted result pending | Explicit activation, fresh-interpreter denial of six common egress paths, and workflow-wide injection for Python processes in the bounded validation step. | Does not prove dependency-install, non-Python, host, container, namespace, or runner-wide isolation. |
 | `test_hydrology_smoke.py`, the EvidenceBundle alias schema/wrapper, and its fixture pair | CONFIRMED bounded executable slice | Local alias shape, valid/invalid polarity, and fail-closed process-level network guards. | Does not prove EvidenceRef resolution, EvidenceBundle closure, source or semantic validity, policy, proof, release, or publication. |
 | `test_aquifer_observation.py` and `test_aquifer_context_link.py` with their schemas, wrappers, and fixtures | CONFIRMED bounded executable slice | Closed local shapes, valid/invalid polarity, optional observation links, typed endpoints, responsibility separation, and network denial. | Does not prove endpoint resolution, aquifer membership, real source validity, evidence, policy, proof, release, or publication. |
 | `test_public_safe_flow_fixture.py` with its validator and fixture pair | CONFIRMED bounded executable slice | Frozen synthetic FlowObservation profile, exact fail-closed findings, 00060/ft3/s measurement shape, generalized county support, time ordering, fixture-only governance, not-flood-warning limitations, bounded parsing, CLI behavior, and network denial. | Does not prove a real observation, gauge/source identity, EvidenceBundle resolution, policy, flood warning, proof, release, or publication. |
@@ -248,6 +256,8 @@ Before treating this parent README as implemented behavior, verify:
 - [x] One bounded synthetic NHDPlus waterbody crosswalk module executes with
   exact and many-to-many positive cases plus ambiguity, duplicate, scope,
   overlap-area, geometry-honesty, and hash negative cases.
+- [x] One bounded startup-guard proof launches fresh interpreters and exercises
+  named Python-process IPv4/IPv6 connection, DNS, URL-open, and datagram paths.
 - [ ] Executable test modules exist for each documented lane or the lane is explicitly documentation-only.
 - [ ] Test runner and import paths match the repo's accepted convention.
 - [ ] Synthetic fixtures exist in accepted fixture homes and are not source payloads.
