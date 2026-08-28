@@ -3,8 +3,8 @@ doc_id: kfm://doc/docs-runbooks-readme
 title: docs/runbooks/ — Operational Procedure and Recovery Index
 type: readme
 subtype: nested-directory-landing-page
-version: v1.9
-prior_version: v1.8
+version: v1.10
+prior_version: v1.9
 status: draft; repository-grounded; documentation-only; non-authoritative
 owners:
   - "@bartytime4life — verified GitHub review route"
@@ -23,8 +23,8 @@ canonical_relationship: same-path update; no sibling authority created
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 2de55d48ab35a41875eb9f094dc55dda18618ecc
-  target_prior_blob: 26f9e77d329d58fb140fd4cfe814b4590e62952c
+  base_commit: cf3c5b76dafa74dee79e5249849e4174c2107638
+  target_prior_blob: abc31ffc853cf4ec978fd749d386daa25c68d722
   runbooks_tree: 4c25b5e2f1254ff276e1ba5b7a10974fb33b8e85
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
@@ -62,6 +62,7 @@ related:
   - data/README.md
   - release/README.md
 notes:
+  - "v1.10 reconciles the People/DNA/Land rollback child from proposal-era procedure to repository-grounded hold boundary without changing operational maturity."
   - "v1.9 adds the missing Settlements/Infrastructure boundary and reconciles the parent inventory against the exact current tree before and after that addition."
   - "The base subtree contains 117 Markdown files: 25 contain the exact phrase PROPOSED scaffold and 92 do not. This two-file change produces 118, 25, and 93 respectively."
   - "All 13 domain directories retain the recurring four-file packet and now have substantive local README boundaries."
@@ -343,7 +344,7 @@ That pattern is **CONFIRMED current repository structure**, not proof that the f
 | [`habitat/`](./habitat/README.md) | 4 files | Substantive local `README.md`; nested `ecoregions/` boundary and source-refresh procedure | Boundary contract and one bounded synthetic profile are documented; modeled habitat is not occurrence or regulatory designation and broader operations remain held |
 | [`hazards/`](./hazards/README.md) | 4 files | Substantive local `README.md`; not-for-life-safety audit, no-network, promotion, source-refresh, rollback, and rollback-drill procedures | Boundary contract is documented; executable coverage remains bounded and KFM never becomes alert authority |
 | [`hydrology/`](./hydrology/README.md) | 4 files | Substantive local `README.md`; bounded validation, promotion preflight, proposal-era no-network/source-refresh/rollback guides, and one explicit rollback scaffold | Boundary and child maturity are documented; current executable coverage is synthetic and fixture-bounded, broader operations remain held, and NFHL is regulatory context rather than observed inundation |
-| [`people-dna-land/`](./people-dna-land/README.md) | 4 files | Substantive local `README.md`; repository-grounded living-person review and bounded no-network procedure, three proposal-era packet procedures, and six explicit scaffolds | Sensitive boundary and two bounded synthetic consent profiles are documented; runner-wide isolation, real-person material, active policy runtime, proof, release, deployment, and publication remain held |
+| [`people-dna-land/`](./people-dna-land/README.md) | 4 files | Substantive local `README.md`; repository-grounded living-person review, bounded no-network procedure, and rollback hold boundary, plus two proposal-era packet procedures and six explicit scaffolds | Sensitive boundary and two bounded synthetic consent profiles are documented; operational rollback, runner-wide isolation, real-person material, active policy runtime, proof, release, deployment, and publication remain held |
 | [`roads-rail-trade/`](./roads-rail-trade/README.md) | 4 files | Substantive local `README.md`; one executable no-network CorridorRoute profile and four proposal-era or stale packet procedures | Boundary routes the bounded synthetic profile, preserves infrastructure and cultural-corridor restrictions, and keeps broader source, policy, proof, promotion, rollback, release, deployment, and publication work held |
 | [`settlements-infrastructure/`](./settlements-infrastructure/README.md) | 4 files | Substantive local `README.md`; executable static readiness and bounded EvidenceBundle schema-convergence checks, four proposal-era packet procedures, seven direct docstring-only test placeholders, one direct assert-true smoke test, and four direct `NotImplementedError` validators | Boundary routes both bounded profiles, preserves critical-asset, cultural, sovereignty, legal/census, evidence, policy, proof, and release holds, and establishes no real-record or operational maturity |
 | [`soil/`](./soil/README.md) | 4 files | Substantive local `README.md` | Boundary routes four bounded synthetic fixture profiles and classifies all four packet procedures as proposal-heavy; live source, proof, policy activation, promotion, rollback, release, deployment, and publication remain held |
@@ -780,7 +781,7 @@ This edition does not assume:
 
 ## Last reviewed and rollback
 
-**2026-08-28** — v1.9 automated repository-evidence refresh against `main@bacb77cfbc04014a2c05da541f9cba8025629068`. Human review remains pending; this refresh records repository bytes and does not approve any procedure.
+**2026-08-28** — v1.10 automated People/DNA/Land maturity reconciliation against `main@cf3c5b76dafa74dee79e5249849e4174c2107638`. Human review remains pending; this refresh records repository bytes and does not approve any procedure.
 
 Re-review this README when:
 
@@ -794,6 +795,7 @@ Re-review this README when:
 
 | Edition | Date | Change | Effect |
 |---|---|---|---|
+| **v1.10** | 2026-08-28 | Reclassified the People/DNA/Land rollback child as a repository-grounded hold boundary and reduced its remaining proposal-era packet count from three to two. | Documentation only; operational rollback, human review, source admission, policy, proof, promotion, release, deployment, and publication remain separate |
 | **v1.9** | 2026-08-28 | Added the Settlements/Infrastructure boundary and recorded the resulting 118 Markdown files, 25 exact-phrase matches, 93 other files, and substantive local boundaries for all 13 domain directories. | Documentation only; semantic validation, human review, source admission, policy, proof, promotion, rollback, release, deployment, and publication remain separate |
 | **v1.8** | 2026-08-28 | Added the Roads/Rail/Trade boundary and recorded the resulting 117 Markdown files, 25 exact-phrase matches, 92 other files, 12 substantive boundaries, and one remaining gap. | Documentation only; Roads/Rail/Trade operations, human review, source admission, policy, proof, promotion, rollback, release, deployment, and publication remain separate |
 | **v1.7** | 2026-08-28 | Added the Soil boundary, reconciled the exact base inventory from stale 114/26/88 claims to 115/25/90, and recorded the resulting 116 Markdown files, 25 exact-phrase matches, 91 other files, 11 substantive boundaries, and two remaining gaps. | Documentation only; Soil operations, human review, source admission, proof, promotion, rollback, release, deployment, and publication remain separate |
@@ -811,9 +813,9 @@ Restore the prior file blob:
 
 ```text
 path: docs/runbooks/README.md
-prior_blob: 4f33dfa18cd69fe6a6b990aac71be08d59e7d13e
+prior_blob: abc31ffc853cf4ec978fd749d386daa25c68d722
 ```
 
-or revert the focused content commit created by this change. That rollback restores the v1.6 documentation snapshot. It does not remove current runbooks, undo a procedure, reverse an incident response, change source/evidence/policy/release state, restore a public carrier, deploy, promote, publish, or change repository settings.
+or revert the focused content commit created by this change. That rollback restores the v1.9 documentation snapshot. It does not remove current runbooks, undo a procedure, reverse an incident response, change source/evidence/policy/release state, restore a public carrier, deploy, promote, publish, or change repository settings.
 
 [Back to top](#top)
