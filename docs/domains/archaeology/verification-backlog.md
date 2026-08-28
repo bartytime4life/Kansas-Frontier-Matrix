@@ -2,34 +2,34 @@
 doc_id: kfm://doc/PLACEHOLDER-uuid
 title: Archaeology — Verification Backlog and Open Questions
 type: standard
-version: v2
+version: v2.1.0
 status: draft
-owners: <archaeology-domain-steward> (PLACEHOLDER — confirm)
+owners: "@bartytime4life via CODEOWNERS review routing; archaeology-domain stewardship remains NEEDS VERIFICATION"
 created: 2026-05-28
-updated: 2026-05-28
+updated: 2026-08-28
 policy_label: public
 related: [docs/domains/archaeology/README.md, docs/domains/archaeology/sensitivity-and-publication-posture.md, docs/domains/archaeology/pipeline-shape.md, docs/domains/archaeology/source-families.md, docs/domains/archaeology/governed-ai-behavior.md, docs/domains/archaeology/cross-lane-relations.md, docs/registers/VERIFICATION_BACKLOG.md, docs/registers/DRIFT_REGISTER.md, ai-build-operating-contract.md]
 tags: [kfm, archaeology, verification, backlog, open-questions, ADR, sensitive-domain]
-notes: [CONTRACT_VERSION = "3.0.0" pinned; every item NEEDS VERIFICATION by design, repo not mounted this session]
+notes: [CONTRACT_VERSION = "3.0.0" pinned; repository inspected at main@6207ce4ca01aa6684bef2585464da369398d3010; placement and selected bounded evidence are confirmed while authority, evaluator binding, rights, review, release, and publication remain separate]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # 🏺 Archaeology — Verification Backlog and Open Questions
 
-> What must be checked against a mounted repository before any Archaeology claim, control, or layer can be promoted from PROPOSED to CONFIRMED.
+> Current repository evidence, unresolved verification work, and fail-closed promotion holds for the Archaeology domain.
 
 ![status](https://img.shields.io/badge/status-draft-orange)
 ![policy](https://img.shields.io/badge/policy-public_doc-blue)
 ![sensitivity](https://img.shields.io/badge/sensitive_domain-DENY_by_default-critical)
 ![backlog](https://img.shields.io/badge/all_items-NEEDS_VERIFICATION-yellow)
 ![contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
-![repo--state](https://img.shields.io/badge/repo-not_mounted-lightgrey)
+![repo--state](https://img.shields.io/badge/repo-current_main_confirmed-success)
 
-**Status:** `draft` · **Owners:** `<archaeology-domain-steward>` (PLACEHOLDER) · **Updated:** 2026-05-28
+**Status:** `draft` · **Review route:** `@bartytime4life` via CODEOWNERS · **Specialist stewardship:** `NEEDS VERIFICATION` · **Updated:** 2026-08-28
 
 > [!IMPORTANT]
-> **Everything in this document is `NEEDS VERIFICATION` by design.** No repository is mounted in this session. This backlog exists precisely so that no Archaeology control is asserted as implemented without evidence. The main project risk is not lack of ideas — it is overclaiming maturity before repo, runtime, rights, and proof-object evidence exists.
+> The repository was inspected at `main@6207ce4ca01aa6684bef2585464da369398d3010`. Placement, current files, and one bounded EvidenceBundle schema/fixture convergence seam are `CONFIRMED`; most named domain behavior tests remain docstring-only placeholders, and evaluator binding, rights, cultural review, runtime behavior, release, and publication remain `NEEDS VERIFICATION` or `HOLD`. File presence never upgrades those separate states.
 
 ---
 
@@ -55,10 +55,10 @@ notes: [CONTRACT_VERSION = "3.0.0" pinned; every item NEEDS VERIFICATION by desi
 
 ## 1. Scope
 
-This document consolidates the **verification backlog and open questions** for the Archaeology / Cultural Heritage domain: the doctrine items that must be checked against a mounted repository, the validators that must be proven to exist and pass, the API / governed-AI / map surfaces awaiting confirmation, the source-rights and tier items, the open questions awaiting steward or ADR resolution, and what evidence would settle each.
+This document consolidates the **verification backlog and open questions** for the Archaeology / Cultural Heritage domain after current-repository inspection: unresolved doctrine and authority items, validators and negative states still needing proof, API / governed-AI / map surfaces awaiting executable binding, source-rights and tier items, open steward or ADR questions, and the evidence that would settle each.
 
 > [!NOTE]
-> **Truth labels in this doc.** The backlog items themselves are `CONFIRMED` doctrine (Atlas §15.J–§15.N, §24.5) — it is `CONFIRMED` that these are the open items. Each item's *resolution* is `NEEDS VERIFICATION` until checked against repository evidence. All repo paths are `PROPOSED`.
+> **Truth labels in this doc.** The backlog categories are doctrine-derived. Repository paths and bounded executable seams carry the file-specific status shown below; path presence is not enforcement, review, release, or publication proof. Unresolved authority-significant items remain `NEEDS VERIFICATION`, `PROPOSED`, or `HOLD`.
 
 [↑ Back to top](#top)
 
@@ -68,13 +68,13 @@ This document consolidates the **verification backlog and open questions** for t
 
 | Aspect | Value | Status |
 |---|---|---|
-| Proposed path | `docs/domains/archaeology/verification-backlog.md` | `PROPOSED` |
+| Current path | `docs/domains/archaeology/verification-backlog.md` | `CONFIRMED` present |
 | Owning responsibility root | `docs/` (explains something to humans) | `CONFIRMED` rule |
-| Repo-wide register counterpart | `docs/registers/VERIFICATION_BACKLOG.md` | `PROPOSED` |
-| Drift register | `docs/registers/DRIFT_REGISTER.md` | `PROPOSED` |
-| Upstream | `ai-build-operating-contract.md`; `directory-rules.md` §2.5; `[ENCY]` | `CONFIRMED` rule / `PROPOSED` presence |
+| Repo-wide register counterpart | `docs/registers/VERIFICATION_BACKLOG.md` | `CONFIRMED` present; roll-up semantics remain `NEEDS VERIFICATION` |
+| Drift register | `docs/registers/DRIFT_REGISTER.md` | `CONFIRMED` present |
+| Upstream | `docs/doctrine/ai-build-operating-contract.md`; `docs/doctrine/directory-rules.md`; accepted ADR-0029 | `CONFIRMED` present; file-specific authority applies |
 
-**Directory Rules basis.** A doc that *explains to humans* lives under `docs/`. This is the **domain-scoped** backlog; the repo-wide register is `docs/registers/VERIFICATION_BACKLOG.md`, and conflicts between doctrine and a mounted repo are logged in `docs/registers/DRIFT_REGISTER.md` per Directory Rules §2.5.
+**Directory Rules basis.** Accepted ADR-0029 adopts the Directory Rules placement decision. A doc that *explains to humans* lives under `docs/`. This is the **domain-scoped** backlog; the repo-wide register is `docs/registers/VERIFICATION_BACKLOG.md`, and confirmed drift is recorded in `docs/registers/DRIFT_REGISTER.md`.
 
 [↑ Back to top](#top)
 
@@ -100,11 +100,11 @@ This document consolidates the **verification backlog and open questions** for t
 
 ## 4. Validator and test backlog (§15.K)
 
-`PROPOSED` (Atlas §15.K). These validators/tests are named in doctrine but unverified as implemented. Each must be proven to exist and to exercise its `DENY`/`ABSTAIN` paths, not just happy paths.
+Current implementation is **mixed**. The archaeology EvidenceBundle projection has an executable schema/fixture convergence validator, tests, and focused workflow; the named domain behavior tests below remain placeholders unless stated otherwise. Each behavioral seam must prove its negative state, not just a happy path.
 
 | ID | Validator / test | Negative state it must exercise | Status |
 |---|---|---|---|
-| **VT-ARCH-01** | EvidenceBundle-required tests | Claim without resolvable evidence → `ABSTAIN` | `PROPOSED` |
+| **VT-ARCH-01** | EvidenceBundle-required behavior | Invalid shared fixture → rejection; runtime claim without resolvable evidence → `ABSTAIN` | `PARTIAL` — projection/schema fixture polarity is executable; `test_evidence_bundle_required.py` remains a placeholder and runtime claim gating is unproved |
 | **VT-ARCH-02** | Candidate-not-site tests | `CandidateFeature` queried as confirmed site → `DENY` | `PROPOSED` |
 | **VT-ARCH-03** | Public no-leak tests | Exact geometry reaching a public surface → `DENY` | `PROPOSED` |
 | **VT-ARCH-04** | Rights and cultural-review tests | Unresolved rights / missing cultural review → `HOLD`/`DENY` | `PROPOSED` |
@@ -121,11 +121,11 @@ This document consolidates the **verification backlog and open questions** for t
 
 ## 5. API, governed-AI, and map-surface backlog
 
-`PROPOSED` governed surfaces (Atlas §15.J, §15.L, §15.G). These are named in doctrine; their routes, schema homes, and implementation are unverified.
+Governed-surface documentation and contracts are present, but current repository evidence does not establish an executable archaeology route handler, evaluator binding, released carrier, or runtime deployment. Preserve the finite outcomes and fail-closed boundary without promoting documentation into runtime authority.
 
 | ID | Surface / behavior to verify | Expected outcomes / shape | Status |
 |---|---|---|---|
-| **VS-ARCH-01** | Archaeology feature/detail resolver route | `ArchaeologyDecisionEnvelope` → `ANSWER`/`ABSTAIN`/`DENY`/`ERROR` | `PROPOSED`; route `UNKNOWN` |
+| **VS-ARCH-01** | Archaeology feature/detail resolver route | `ArchaeologyDecisionEnvelope` → `ANSWER`/`ABSTAIN`/`DENY`/`ERROR` | `PRESENT / HOLD` — route-family README and semantic contract exist; executable handler and binding are not established |
 | **VS-ARCH-02** | Archaeology layer manifest resolver | `LayerManifest` → `ANSWER`/`DENY`/`ERROR`; public-safe release only | `PROPOSED` |
 | **VS-ARCH-03** | Archaeology Evidence Drawer payload | `EvidenceDrawerPayload` + `EvidenceBundle` projection; evidence + policy filtered | `PROPOSED` |
 | **VS-ARCH-04** | Archaeology Focus Mode answer | `RuntimeResponseEnvelope` + `AIReceipt`; AI never root truth | `PROPOSED` |
@@ -257,13 +257,13 @@ Before any Archaeology public layer or claim is promoted from `PROPOSED`/`draft`
 
 ## Open verification backlog
 
-These items remain `NEEDS VERIFICATION` before this *document* is promoted from `draft` to `published`:
+Current repository inspection resolves presence questions without resolving authority or enforcement:
 
-1. Confirm `docs/registers/VERIFICATION_BACKLOG.md` exists and whether per-domain backlogs roll up into it.
-2. Confirm the VB-/VT-/VS-/VR- ID schemes used here match any repo-wide convention (or log the mismatch in `DRIFT_REGISTER.md`).
-3. Confirm the ADR-S item numbers against the live ADR index.
-4. Confirm the §24.5 tier assignments and the human-remains T4 ceiling are enforced in policy.
-5. Confirm the §15.J route names and `ArchaeologyDecisionEnvelope` schema home.
+1. `CONFIRMED`: `docs/registers/VERIFICATION_BACKLOG.md` exists; whether and how domain-local IDs roll up remains `NEEDS VERIFICATION`.
+2. Confirm the VB-/VT-/VS-/VR- ID schemes used here match any repo-wide convention, or record a confirmed mismatch in `docs/registers/DRIFT_REGISTER.md`.
+3. `CONFIRMED`: the live ADR index does not make the historical ADR-S planning identifiers accepted archaeology implementation authority; archaeology-specific exact-location and source-role candidates remain proposed/unassigned.
+4. Confirm the §24.5 tier assignments and the human-remains T4 ceiling are evaluator-bound and negatively tested; current policy/test placeholders do not establish enforcement.
+5. `PARTIAL`: route-family documentation and the `ArchaeologyDecisionEnvelope` semantic contract exist; executable handler, machine-schema binding, policy/evidence resolution, and governed runtime behavior remain held.
 
 ## Changelog v1 → v2
 
@@ -275,12 +275,14 @@ These items remain `NEEDS VERIFICATION` before this *document* is promoted from 
 | Expanded open questions (OQ-06, OQ-07) and ADR table (ADR-S-09) | gap closure | Cover anomaly-review and governed-AI adapter |
 | Extended promotion checklist with VS-/VR- and the T4 ceiling | reconciliation | Keep checklist complete against new sections |
 | Bumped version v1 → v2; meta `version` and changelog updated | housekeeping | Per contract §37 MINOR bump (additive, no anchor breakage) |
+| Reconciled repository presence, adopted placement, bounded EvidenceBundle convergence, placeholder behavior tests, route documentation, and ADR status at `main@6207ce4ca01aa6684bef2585464da369398d3010` | repository-state correction | Remove stale repository-unmounted and blanket-PROPOSED claims without implying evaluator, rights, review, runtime, release, or publication authority |
+| Bumped version v2 → v2.1.0 | housekeeping | Additive current-state reconciliation with stable section anchors |
 
 > **Backward compatibility.** All v1 section anchors are preserved (`#1-scope` … `#8-promotion-readiness-checklist` semantics retained; promotion checklist moved to §11, "what settled means" to §9 — anchors `#what-settled-means`, `#promotion-readiness-checklist` unchanged). New sections inserted as §5–§6 and §10; no v1 content removed. The VB-/VT-/VS-/VR- IDs are local to this doc and `NEEDS VERIFICATION` against any repo-wide scheme.
 
 ## Definition of done
 
-This document is done enough to enter the repository when:
+This document remains reviewable when:
 
 - it is placed according to Directory Rules (`docs/domains/archaeology/`);
 - a docs steward and the archaeology domain steward review it;
@@ -294,15 +296,15 @@ This document is done enough to enter the repository when:
 
 ## Related docs
 
-- `docs/domains/archaeology/README.md` — archaeology lane landing page (`PROPOSED`)
-- `docs/domains/archaeology/sensitivity-and-publication-posture.md` — sibling sensitivity doc (`PROPOSED`)
-- `docs/domains/archaeology/pipeline-shape.md` — sibling lifecycle doc (`PROPOSED`)
-- `docs/domains/archaeology/source-families.md` — sibling source doc (`PROPOSED`)
-- `docs/domains/archaeology/governed-ai-behavior.md` — sibling governed-AI doc (`PROPOSED`)
-- `docs/domains/archaeology/cross-lane-relations.md` — sibling cross-lane doc (`PROPOSED`)
-- `docs/registers/VERIFICATION_BACKLOG.md` — repo-wide backlog register (`PROPOSED`)
-- `ai-build-operating-contract.md` — verification threshold, §23.2 matrix, §24.5 tiers (canonical)
+- `docs/domains/archaeology/README.md` — archaeology lane landing page (`CONFIRMED` present; mixed maturity)
+- `docs/domains/archaeology/sensitivity-and-publication-posture.md` — sibling sensitivity doc (`CONFIRMED` present; file-specific maturity)
+- `docs/domains/archaeology/pipeline-shape.md` — sibling lifecycle doc (`CONFIRMED` present; file-specific maturity)
+- `docs/domains/archaeology/source-families.md` — sibling source doc (`CONFIRMED` present; file-specific maturity)
+- `docs/domains/archaeology/governed-ai-behavior.md` — sibling governed-AI doc (`CONFIRMED` present; file-specific maturity)
+- `docs/domains/archaeology/cross-lane-relations.md` — sibling cross-lane doc (`CONFIRMED` present; file-specific maturity)
+- `docs/registers/VERIFICATION_BACKLOG.md` — repo-wide backlog register (`CONFIRMED` present; roll-up semantics unverified)
+- `docs/doctrine/ai-build-operating-contract.md` — present draft operating-contract carrier; file-specific authority applies
 
-**Last updated:** 2026-05-28 · `CONTRACT_VERSION = "3.0.0"`
+**Last updated:** 2026-08-28 · `CONTRACT_VERSION = "3.0.0"`
 
 [↑ Back to top](#top)
