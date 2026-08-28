@@ -2,7 +2,7 @@
 doc_id: kfm://doc/registry/schema/fixture/readme
 title: docs/registry/schema/fixture/ — Schema Fixture Documentation Boundary
 type: readme
-version: v1.0
+version: v1.1
 status: provisional
 owners:
   - "@bartytime4life"
@@ -11,12 +11,12 @@ updated: 2026-08-28
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "Explain the current schema-registry fixture profiles and route readers to their canonical fixture, package, and test owners without storing fixture payloads or executable behavior here."
-truth_posture: "CONFIRMED current fixture profiles and consumers at the pinned base / PARTIAL package implementation and bounded test evidence / UNKNOWN intended ownership and future use of the nested validator-policy dry-run lane"
+truth_posture: "CONFIRMED current fixture profiles, consumers, and validator documentation route / PARTIAL package and hosted-workflow evidence / NOT IMPLEMENTED policy dry-run binding"
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: ef4d1cb68327ad34afdb0d317740a0a01aa58848
-  prior_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
+  base_commit: debd3ceb1c9ce267cb26eaf8295e2371baf4ba0e
+  prior_blob: e37d9e04bd31aabd53a1c088dca17f8d4b78dcb6
 related:
   - ../README.md
   - ../../README.md
@@ -26,6 +26,7 @@ related:
   - ../../../../fixtures/packages/schema-registry/
   - ../../../../packages/schema-registry/IMPLEMENTATION.md
   - ../../../../tests/packages/schema_registry/test_core.py
+  - validator/README.md
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -118,10 +119,12 @@ docs/registry/schema/fixture/
             └── .gitkeep
 ```
 
-The validator README is still a one-byte placeholder, and the `dry-run/` leaf
-contains only a keep marker. No validator policy, executable dry-run command,
-test, workflow, consumer, receipt, or release effect is established by those
-paths.
+The [validator boundary](validator/README.md) now routes readers to the partial
+package implementation, nine-test regression profile, dedicated hosted workflow,
+and generated authoring receipt that currently own this bounded evidence. The
+`dry-run/` leaf still contains only a keep marker. No policy dry-run contract,
+registered orchestrator entry, executable policy evaluator, approval, release
+effect, or publication authority is established by this documentation tree.
 
 ## Focused documentation validation
 
@@ -148,21 +151,23 @@ and fragments at that revision.
   consumer, and focused reproduction command together.
 - Keep real, restricted, rights-unclear, sensitive, or harmful-precision data out
   of repository fixtures; use minimized synthetic public-safe cases.
-- Do not expand the validator or dry-run child documentation until an owning
-  implementation and consumer are identifiable.
+- Do not expand the policy dry-run child until an accepted contract, executable
+  evaluator, and identified consumer are present in an owning implementation
+  root.
 
-Reverting this documentation commit restores the prior blank file. It does not
-remove or change fixture payloads, package code, tests, schemas, validators,
-policy, releases, deployments, or publication.
+Reverting this documentation commit restores this parent to v1.0 at blob
+`e37d9e04bd31aabd53a1c088dca17f8d4b78dcb6` and restores the validator child to
+its prior blank blob. It does not remove or change fixture payloads, package code,
+tests, schemas, validators, policy, releases, deployments, or publication.
 
 ## Open verification register
 
 | Question | Status |
 |---|---|
 | Does the package achieve identifier and document-resolution parity with the current canonical schema tree? | **NOT ESTABLISHED — separate parity proof required** |
-| What scoped responsibility, if any, should `validator/README.md` own? | **UNKNOWN** |
-| Does `validator/policy/dry-run/` have an accepted contract, executable entry point, or consumer? | **NOT IMPLEMENTED in this subtree** |
-| Should the remaining placeholder chain stay here, migrate to an owning root, or be retired? | **NEEDS DIRECTORY REVIEW** |
+| What scoped responsibility does `validator/README.md` own today? | **CONFIRMED — documentation routing and evidence limits only** |
+| Does `validator/policy/dry-run/` have an accepted contract, executable entry point, or consumer? | **NOT IMPLEMENTED** |
+| Should the remaining policy dry-run placeholder stay here, migrate to an owning root, or be retired? | **NEEDS DIRECTORY REVIEW** |
 | Which reviewer owns future child-lane semantics beyond the current repository route? | **NEEDS VERIFICATION** |
 
 [Back to schema documentation](../README.md) · [Back to top](#top)
