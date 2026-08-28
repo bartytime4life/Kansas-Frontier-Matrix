@@ -1,0 +1,111 @@
+{
+  "receipt_id": "genrec-kfm-vic-20260828-fauna-policy-fixture-boundary",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/fixtures/domains/fauna/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/fixtures/domains/fauna/README.md": "sha256:0d83719d0d32976b1e5680dc8362feb478dc72ad01f69c2434d0d817834b055d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6",
+    "version": "2026-08-28"
+  },
+  "prompt_or_contract": "sha256:a0139b81960e4472378757562d9712819396fd35095cbf7363778ebff93ad2fc",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive read-only discovery",
+      "Notion read-only coordination",
+      "local deterministic Markdown and SHA-256 validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba8856e1fc2bf930e9b44df1cfbf4f3dc369d084/policy/fixtures/domains/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba8856e1fc2bf930e9b44df1cfbf4f3dc369d084/policy/domains/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba8856e1fc2bf930e9b44df1cfbf4f3dc369d084/fixtures/domains/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba8856e1fc2bf930e9b44df1cfbf4f3dc369d084/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    "policy/fixtures/domains/fauna/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "exact-baseline-target-role",
+      "outcome": "PASS",
+      "reason": "The exact base contains only an empty README and .gitkeep; no policy fixture, executable rule, evaluator, or test consumer is claimed."
+    },
+    {
+      "gate": "policy-and-reusable-fixture-routing",
+      "outcome": "PASS",
+      "reason": "The current Fauna policy README and reusable Fauna fixture README were verified and linked without duplicating their responsibilities."
+    },
+    {
+      "gate": "markdown-structure-and-byte-hash",
+      "outcome": "PASS",
+      "reason": "The final artifact has one H1, a final newline, no trailing whitespace, and a recomputed SHA-256."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The repair contains no animal occurrence, rare-species location, telemetry, private-land detail, restricted source payload, credential, or concrete transform parameter."
+    },
+    {
+      "gate": "generated-receipt-repository-validator",
+      "outcome": "SKIPPED",
+      "reason": "The repository-owned final-byte validator runs after the receipt and artifact exist on the campaign branch."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull-request creation."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "empty-target-blob",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba8856e1fc2bf930e9b44df1cfbf4f3dc369d084/policy/fixtures/domains/fauna/README.md"
+    },
+    {
+      "id": "fauna-policy-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba8856e1fc2bf930e9b44df1cfbf4f3dc369d084/policy/domains/fauna/README.md"
+    },
+    {
+      "id": "fauna-reusable-fixture-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba8856e1fc2bf930e9b44df1cfbf4f3dc369d084/fixtures/domains/fauna/README.md"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba8856e1fc2bf930e9b44df1cfbf4f3dc369d084/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-28T22:28:00Z",
+  "emitter": "openai/codex-gpt-5.6-sol",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only classification of an empty policy-fixture scaffold. It activates no policy rule, fixture payload, evaluator, source, release, deployment, promotion, or publication effect. Rollback is a focused revert of the README and this pending-review receipt."
+}
