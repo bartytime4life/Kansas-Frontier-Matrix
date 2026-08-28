@@ -19,7 +19,7 @@ name: agriculture-observation
       - "schemas/contracts/v1/data/county_year_panel.schema.json"
       - "packages/hashing/**"
       - "pyproject.toml"
-      - "data/receipts/generated/genrec-agriculture-observation-recursion-failclosed-negative-20260828.json"
+      - "data/receipts/generated/genrec-agriculture-observation-identity-failclosed-negative-20260828.json"
   push:
     branches: [main]
     paths:
@@ -38,7 +38,7 @@ name: agriculture-observation
       - "schemas/contracts/v1/data/county_year_panel.schema.json"
       - "packages/hashing/**"
       - "pyproject.toml"
-      - "data/receipts/generated/genrec-agriculture-observation-recursion-failclosed-negative-20260828.json"
+      - "data/receipts/generated/genrec-agriculture-observation-identity-failclosed-negative-20260828.json"
   workflow_dispatch:
 
 permissions:
@@ -88,7 +88,7 @@ jobs:
       - name: Validate generated authoring receipt integrity
         run: |
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-agriculture-observation-recursion-failclosed-negative-20260828.json \
+            data/receipts/generated/genrec-agriculture-observation-identity-failclosed-negative-20260828.json \
             --repo-root .
       - name: Record trust boundary
         if: always()

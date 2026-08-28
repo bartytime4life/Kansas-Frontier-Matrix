@@ -50,6 +50,30 @@ class AgricultureObservationIoFailClosedTests(unittest.TestCase):
                 findings,
             )
 
+    def test_identity_failures_are_denied(self) -> None:
+        manifest = validator.load_fixtures()
+        case = next(case for case in manifest["cases"] if case["expected_outcome"] == "PASS")
+        document = validator.materialize_case(manifest, case)
+
+        for failure in (
+            TypeError("canonical identity type failure"),
+            ValueError("canonical identity value failure"),
+            RecursionError("canonical identity recursion failure"),
+        ):
+            with self.subTest(exception=type(failure).__name__):
+                with mock.patch.object(
+                    validator,
+                    "canonical_identity",
+                    side_effect=failure,
+                ):
+                    result = validator.validate_payload(document)
+
+                self.assertEqual("DENY", result.outcome)
+                self.assertEqual(
+                    (validator.Finding("AGRICULTURE_IDENTITY_ERROR", "/spec_hash"),),
+                    result.findings,
+                )
+
 
 if __name__ == "__main__":
     unittest.main()
