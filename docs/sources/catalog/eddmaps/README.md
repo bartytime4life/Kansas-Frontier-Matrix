@@ -13,17 +13,17 @@ owning_root: docs/
 responsibility: Human-readable EDDMapS source-family dossier and proposal boundary; not source admission, policy, evidence, release, or publication authority.
 truth_posture: cite-or-abstain; current repository-placement claims are pinned to the recorded campaign baseline.
 related:
-  - docs/sources/README.md                                 # PROPOSED — NEEDS VERIFICATION
-  - docs/sources/catalog/README.md                         # PROPOSED — NEEDS VERIFICATION (catalog lane index)
-  - docs/domains/flora/README.md                           # PROPOSED — NEEDS VERIFICATION
-  - docs/domains/fauna/README.md                           # PROPOSED — NEEDS VERIFICATION
-  - docs/standards/PROV.md                                 # CONFIRMED authored (prior session)
-  - docs/standards/ISO-19115.md                            # CONFIRMED authored (prior session)
-  - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md          # CONFIRMED authored (prior session)
-  - control_plane/source_authority_register.yaml           # PROPOSED — NEEDS VERIFICATION
-  - schemas/contracts/v1/source/source-descriptor.json     # PROPOSED per ADR-0001
-  - policy/sensitivity/                                    # PROPOSED — referenced for sensitive-fauna/flora rules
-  - policy/sources/                                        # PROPOSED — referenced for source-role admission rules
+  - docs/sources/README.md
+  - docs/sources/catalog/README.md
+  - docs/domains/flora/README.md
+  - docs/domains/fauna/README.md
+  - docs/standards/PROV.md
+  - docs/standards/ISO-19115.md
+  - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
+  - control_plane/source_authority_register.yaml
+  - schemas/contracts/v1/source/source-descriptor.json
+  - policy/sensitivity/
+  - policy/sources/
 tags: [kfm, source-catalog, fauna, flora, invasive-species, sensitive-geometry, geoprivacy]
 notes:
   - "Placement (docs/sources/catalog/) is PROPOSED. The Directory Rules §6.1 tree lists docs/sources/ as the home for 'source-descriptor standards, source families' but does not lock a catalog/ subfolder convention. Treat as parallel to OPEN-DR-02 (docs/runbooks/<domain>/ vs flat)."
@@ -569,8 +569,8 @@ flowchart TB
 
 ---
 
-**Related:** [Flora](../../../domains/flora/README.md) · [Fauna](../../../domains/fauna/README.md) · [PROV](../../../standards/PROV.md) · [ISO-19115](../../../standards/ISO-19115.md) · [Source-refresh runbook (fauna)](../../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) · [Sibling catalog entries: `ebird/`, `drought_monitor/`](../)
+**Related:** [Flora](../../../domains/flora/README.md) · [Fauna](../../../domains/fauna/README.md) · [PROV](../../../standards/PROV.md) · [ISO-19115](../../../standards/ISO-19115.md) · [Source-refresh runbook (fauna)](../../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) · [Sibling catalog entries: `ebird/`, `drought_monitor/`](../README.md)
 
-**Last updated:** 2026-05-21 · **Doc id:** `kfm://doc/source-catalog-eddmaps` · **Version:** v0.2
+**Last updated:** 2026-08-28 · **Doc id:** `kfm://doc/source-catalog-eddmaps` · **Version:** v0.2
 
 [↑ Back to top](#eddmaps--source-catalog-entry)
