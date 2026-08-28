@@ -23,7 +23,8 @@ evidence_snapshot:
   base_ref: main
   base_commit: d994e95a6c584955b5dea8f0bd2e5b39e0b6735e
   target_prior_blob: 67ac2ebd8208b2720c5765336aa9ac8af32fc11e
-  hydrology_runbooks_tree: e9b223adeb06fd71c9822996759d660f9c561199
+  source_refresh_runbook_blob: 0af9c08bdc432e234285f788e13d6d223f0796b4
+  rollback_runbook_blob: c332a9098e0ca8fc8ff5d7fd66ccdff5378a51fc
   parent_runbooks_readme_blob: e145e8044b8012c2fa563d4e6ef213c0f8b80885
   domain_workflow_blob: 36a0287be04639cb75dc77ae2c274fee626f6a00
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
@@ -49,7 +50,7 @@ related:
   - ../../../data/proofs/hydrology/README.md
   - ../../../release/candidates/hydrology/README.md
 notes:
-  - "This same-path replacement closes a one-byte navigation and boundary gap; it creates no new authority surface."
+  - "This one-file correction reconciles child maturity and navigation after the source-refresh and rollback runbook merges; it creates no new authority surface."
   - "VALIDATION.md, PROMOTION_RUNBOOK.md, SOURCE_REFRESH_RUNBOOK.md, and ROLLBACK_RUNBOOK.md are repository-grounded; their executable or decision support remains bounded by each document's explicit holds."
   - "NO_NETWORK_TEST_RUNBOOK.md retains proposal-era or stale language, and ROLLBACK.md remains a scaffold; neither is current operational authority."
   - "A passing workflow establishes only the named synthetic and fixture-polarity checks at the tested SHA."
@@ -168,8 +169,8 @@ reconcile every command and claim against the current repository before use.
 |---|---|---|---|
 | Validation | Exact repository SHA, active workflow inventory, local fixtures, named tests and validators | Result record naming command, SHA, fixture polarity, classification, and unresolved holds | Scientific truth, evidence closure, policy approval, proof, release readiness |
 | Promotion preflight | Candidate identity, lifecycle pointers, evidence and policy references, review prerequisites | Review handoff or explicit `HOLD` | PromotionDecision, lifecycle mutation, release approval |
-| Source refresh planning | Governed source descriptor and authorized activation evidence | Plan, checklist, or `NEEDS VERIFICATION` record | Network fetch, source admission, RAW capture, publication |
-| Rollback planning | Exact released identity, authoritative correction and rollback objects | Bounded assessment or escalation | Withdrawal, republish, correction, deployment rollback |
+| Source refresh preflight | Captured input or fixtures, governed source descriptor, and activation evidence when available | Bounded validation record, review handoff, checklist, or `HOLD` | Network fetch, source admission, lifecycle write, promotion, release, deployment, publication |
+| Rollback readiness | Exact candidate or released identity, authoritative correction and rollback objects, and bounded rehearsal evidence | Decision and review handoff, bounded assessment, `HOLD`, or escalation | Withdrawal, republish, correction, lifecycle mutation, deployment rollback |
 
 Public clients must consume governed interfaces or released public-safe
 artifacts. They must not bind directly to canonical internal stores, registry
