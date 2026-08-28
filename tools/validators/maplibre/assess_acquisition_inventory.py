@@ -4,11 +4,12 @@
 This assessment is intentionally non-authoritative. It inventories bounded executable,
 package, test, example, runtime, and public-web roots for renderer acquisition mechanisms
 so ADR-0006/0007 can be enforced with structural evidence. Descriptor reads fail closed
-when identity, size, modification time, or change time differs across a bounded read.
-PASS means the scan completed with no renderer acquisition. HOLD means acquisition is
-confined to the accepted package seam while runtime admission remains unresolved. FAIL
-means raw renderer acquisition escaped that seam or parallel active MapLibre package
-homes surfaced. ERROR means the bounded scan could not complete safely.
+when identity, size, modification time, or change time differs across a bounded read, or
+when a second bounded read has a different SHA-256 digest. PASS means the scan completed
+with no renderer acquisition. HOLD means acquisition is confined to the accepted package
+seam while runtime admission remains unresolved. FAIL means raw renderer acquisition
+escaped that seam or parallel active MapLibre package homes surfaced. ERROR means the
+bounded scan could not complete safely.
 
 Imports of the KFM-owned ``@kfm/maplibre`` facade are consumer use of the accepted
 MapRuntimePort boundary, not raw renderer acquisition. Only ``packages/maplibre/`` is an
@@ -17,6 +18,7 @@ approved candidate seam for a future raw renderer dependency or import.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -26,7 +28,7 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Sequence
 
-PROFILE = "kfm-maplibre-acquisition-inventory-v11"
+PROFILE = "kfm-maplibre-acquisition-inventory-v12"
 TEXT_SUFFIXES = frozenset({".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx", ".html"})
 MAX_FILES = 5000
 MAX_INPUT_BYTES = 1024 * 1024
@@ -44,6 +46,7 @@ DESCRIPTOR_SAFETY_SUPPORTED = (
 INPUT_ERROR_KINDS = frozenset(
     {
         "INPUT_TOO_LARGE",
+        "INPUT_CONTENT_CHANGED_DURING_VERIFICATION",
         "INPUT_CHANGED_DURING_READ",
         "INPUT_CHANGED_DURING_OPEN",
         "INPUT_DESCRIPTOR_SAFETY_UNAVAILABLE",
@@ -189,6 +192,10 @@ class _InputChangedDuringOpen(Exception):
 
 
 class _InputChangedDuringRead(Exception):
+    pass
+
+
+class _InputContentChangedDuringVerification(Exception):
     pass
 
 
@@ -522,19 +529,29 @@ def _read_descriptor_bounded(root: Path, path: Path, read_limit: int) -> bytes:
             parent_fd, relative.parts[-1], file_flags, require_directory=False
         )
         try:
+            def read_once() -> bytes:
+                chunks: list[bytes] = []
+                remaining = read_limit
+                while remaining:
+                    chunk = os.read(file_fd, remaining)
+                    if not chunk:
+                        break
+                    chunks.append(chunk)
+                    remaining -= len(chunk)
+                return b"".join(chunks)
+
             before_read = os.fstat(file_fd)
-            chunks: list[bytes] = []
-            remaining = read_limit
-            while remaining:
-                chunk = os.read(file_fd, remaining)
-                if not chunk:
-                    break
-                chunks.append(chunk)
-                remaining -= len(chunk)
-            raw = b"".join(chunks)
+            raw = read_once()
             after_read = os.fstat(file_fd)
             if not _same_read_metadata(before_read, after_read):
                 raise _InputChangedDuringRead
+            os.lseek(file_fd, 0, os.SEEK_SET)
+            verification = read_once()
+            after_verification = os.fstat(file_fd)
+            if not _same_read_metadata(after_read, after_verification):
+                raise _InputChangedDuringRead
+            if hashlib.sha256(raw).digest() != hashlib.sha256(verification).digest():
+                raise _InputContentChangedDuringVerification
             return raw
         finally:
             os.close(file_fd)
@@ -575,6 +592,13 @@ def _read_bounded_text(
     except _InputChangedDuringRead:
         return None, Finding(
             "INPUT_CHANGED_DURING_READ", rel, "descriptor-metadata-changed", False
+        )
+    except _InputContentChangedDuringVerification:
+        return None, Finding(
+            "INPUT_CONTENT_CHANGED_DURING_VERIFICATION",
+            rel,
+            "descriptor-content-digest-changed",
+            False,
         )
     except _InputNotRegular:
         return None, Finding("INPUT_NOT_REGULAR", rel, "not-regular-file", False)
@@ -690,6 +714,7 @@ def scan(root: Path) -> Result:
             in {
                 "INPUT_CHANGED_DURING_OPEN",
                 "INPUT_CHANGED_DURING_READ",
+                "INPUT_CONTENT_CHANGED_DURING_VERIFICATION",
                 "INPUT_DESCRIPTOR_SAFETY_UNAVAILABLE",
                 "INPUT_NOT_REGULAR",
                 "INPUT_OUTSIDE_ROOT",
@@ -729,6 +754,11 @@ def scan(root: Path) -> Result:
     if any(finding.kind == "INPUT_CHANGED_DURING_READ" for finding in unique):
         reasons.add("SCAN_INPUT_CHANGED_DURING_READ")
     if any(
+        finding.kind == "INPUT_CONTENT_CHANGED_DURING_VERIFICATION"
+        for finding in unique
+    ):
+        reasons.add("SCAN_INPUT_CONTENT_CHANGED_DURING_VERIFICATION")
+    if any(
         finding.kind == "INPUT_DESCRIPTOR_SAFETY_UNAVAILABLE" for finding in unique
     ):
         reasons.add("SCAN_DESCRIPTOR_SAFETY_UNAVAILABLE")
@@ -746,6 +776,7 @@ def scan(root: Path) -> Result:
             "SCAN_DESCRIPTOR_SAFETY_UNAVAILABLE",
             "SCAN_INPUT_CHANGED_DURING_OPEN",
             "SCAN_INPUT_CHANGED_DURING_READ",
+            "SCAN_INPUT_CONTENT_CHANGED_DURING_VERIFICATION",
             "SCAN_INPUT_NOT_REGULAR",
             "SCAN_INPUT_TOO_LARGE",
             "SCAN_INPUT_OUTSIDE_ROOT",

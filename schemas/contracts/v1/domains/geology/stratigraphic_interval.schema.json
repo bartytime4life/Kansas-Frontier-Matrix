@@ -7,7 +7,7 @@
   "x-kfm": {
     "status": "PROPOSED",
     "source_doc": "docs/domains/geology/FILE_SYSTEM_PLAN.md",
-    "contract_doc": "contracts/domains/geology/stratigraphic_interval.md"
+    "contract_doc": "contracts/domains/geology/StratigraphicInterval.md"
   },
   "properties": {},
   "additionalProperties": true

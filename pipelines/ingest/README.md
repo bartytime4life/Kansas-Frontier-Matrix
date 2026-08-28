@@ -1,76 +1,35 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/pipelines-ingest-readme
 title: pipelines/ingest/ — Shared Ingest Pipeline Boundary
-type: readme; directory-readme; shared-ingest-pipeline-boundary; compatibility-index
-version: v0.2
+type: readme
+version: v0.3
 status: draft; repository-grounded; documentation-only-direct-lane; no-shared-executable-system-established
-owners:
-  - OWNER_TBD — Pipeline steward
-  - OWNER_TBD — Ingest and connector steward
-  - OWNER_TBD — Domain pipeline stewards
-  - OWNER_TBD — Source, rights, and sensitivity steward
-  - OWNER_TBD — Contract and schema steward
-  - OWNER_TBD — Validation and CI steward
-  - OWNER_TBD — Evidence and receipt steward
-  - OWNER_TBD — Policy and release steward
-  - OWNER_TBD — Docs steward
+owners: ["OWNER_TBD — pipeline, ingest, source, rights, sensitivity, contract, schema, validation, evidence, policy, release, and documentation stewards"]
 created: 2026-06-13
-updated: 2026-07-20
-supersedes: v0.1
+updated: 2026-08-28
 policy_label: public-doc; pipelines; shared-ingest; no-source-activation; no-direct-publication; fail-closed; receipt-aware; correction-aware; rollback-aware
-current_path: pipelines/ingest/README.md
-truth_posture: CONFIRMED canonical pipelines responsibility root, Directory Rules shared ingest lane, current README, Fauna compatibility child, proposed IngestReceipt contract and schema, paired fixtures, common schema fixture harness, pipeline/spec/tool/test responsibility boundaries, and bounded checked absences / PROPOSED future shared ingest interface, producer-writer handoff, shared consumers, no-network harness, dedicated behavior tests, receipt integration, and substantive CI / CONFLICTED connector RAW-or-QUARANTINE writer rule versus pre-RAW executable ingest placement, and domain child placement outside pipelines/domains / UNKNOWN exhaustive history and branch inventory, runtime consumers, source activation, scheduler use, emitted ingest receipts, production effects, branch protection, and public use / NEEDS VERIFICATION named owners, accepted handoff decision, canonical source-registry topology, active spec binding, finite gate vocabulary, reason codes, policy wiring, correction propagation, and release dependency
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  repository_id: "1059091169"
-  visibility: public
-  base_ref: main
-  base_commit: 13e1b27bf8cc4fdd4d88305532e69c444c07a4b5
-  target_prior_blob: da14498b6a94c0aa52ebe73d5c4d7056e9f7011e
-  bounded_direct_inventory:
-    - README.md
-    - fauna/README.md
-  checked_absent_paths:
-    - pipelines/ingest/INGEST_SHARED_CONTRACT.md
-    - pipelines/ingest/run_dry_fixture.py
-    - pipelines/ingest/validate_source_descriptor.py
-    - pipelines/ingest/validate_source_intake.py
-    - pipelines/ingest/validate_payload_integrity.py
-    - pipelines/ingest/validate_rights_citation.py
-    - pipelines/ingest/preserve_source_role.py
-    - pipelines/ingest/admit_raw_capture.py
-    - pipelines/ingest/route_quarantine_reason.py
-    - pipelines/ingest/emit_ingest_receipt.py
-    - pipelines/ingest/adapters/README.md
-    - pipeline_specs/ingest/README.md
-    - tests/pipelines/ingest/README.md
-    - fixtures/ingest/README.md
-    - tools/validators/validate_ingest_receipt.py
-    - tests/schemas/test_ingest_receipt_validator.py
-  inventory_method: GitHub connector exact reads and bounded repository-index queries; absence claims are path-specific, not exhaustive history, branch, generated-file, or external-system assertions
+owning_root: pipelines/
+responsibility: Document the shared ingest executable boundary, current receipt-validation evidence, unresolved producer and writer handoff, and fail-closed admission criteria without owning source truth, lifecycle data, policy, evidence, release, or publication authority.
+truth_posture: "CONFIRMED current direct inventory plus bounded no-network IngestReceipt validator, tests, fixtures, registry, and workflow wiring / PROPOSED shared ingest interface, consumers, receipt emission, and persistence / CONFLICTED connector writer versus pre-RAW ingest placement / UNKNOWN runtime consumers, connector-emitted receipts, required-check enforcement, release, and public use"
 related:
-  - ../README.md
-  - fauna/README.md
-  - ../../docs/doctrine/directory-rules.md
-  - ../../docs/sources/ADMISSION_PROCESS.md
-  - ../../docs/runbooks/FIRST_INGEST.md
-  - ../../docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine-only.md
-  - ../../docs/adr/ADR-0017-source-descriptor-admission-process.md
-  - ../../docs/adr/ADR-0021-quarantine-has-structured-exit-paths.md
-  - ../../contracts/source/ingest_receipt.md
-  - ../../schemas/contracts/v1/source/ingest_receipt.schema.json
-  - ../../fixtures/contracts/v1/source/ingest_receipt/README.md
-  - ../../tests/schemas/test_common_contracts.py
-  - ../../tests/pipelines/README.md
-  - ../../pipeline_specs/README.md
-  - ../../tools/ingest/README.md
-  - ../../data/receipts/generated/README.md
+  - pipelines/README.md
+  - pipelines/ingest/fauna/README.md
+  - docs/doctrine/directory-rules.md
+  - docs/sources/ADMISSION_PROCESS.md
+  - contracts/source/ingest_receipt.md
+  - schemas/contracts/v1/source/ingest_receipt.schema.json
+  - fixtures/contracts/v1/source/ingest_receipt/README.md
+  - tests/validators/test_validate_ingest_receipt.py
+  - tools/validators/validate_ingest_receipt.py
+  - tools/validators/validator_registry.json
+  - .github/workflows/connector-gate.yml
+  - .github/workflows/schema-validation.yml
+tags: [kfm, pipelines, ingest, receipt, validation, no-network, fail-closed]
 notes:
-  - "v0.2 replaces a planning-oriented proposed file tree with a commit-pinned maturity, routing, and admission boundary."
-  - "The direct lane contains this README and the Fauna compatibility child at the bounded snapshot; no shared executable sibling was established."
-  - "Directory Rules place connectors at the RAW-or-QUARANTINE write edge, while source-admission documentation also assigns pre-RAW executable ingest to this lane. This README records the conflict and does not invent a winner."
-  - "IngestReceipt shape and fixtures are present but PROPOSED; a dedicated validator path named by the schema is absent at the checked path, while the common schema fixture harness can discover the family."
-  - "This documentation-only revision changes no executable, specification, source activation, contract, schema, fixture, test, workflow, lifecycle record, policy decision, proof, release object, runtime, or public artifact."
+  - The direct lane contains this README and a Fauna compatibility child; no shared executable sibling is established.
+  - Directory Rules and source-admission documents leave the pre-RAW decision and RAW-or-QUARANTINE writer boundary conflicted.
+  - IngestReceipt validation is executable and no-network, but the contract remains PROPOSED and no connector-emitted receipt is established.
+  - This correction changes documentation only and grants no source, lifecycle, review, release, deployment, promotion, or publication authority.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -88,7 +47,7 @@ notes:
 
 **Path:** `pipelines/ingest/README.md`
 
-**Version:** `v0.2`
+**Version:** `v0.3`
 
 **Current maturity:** documentation boundary; no shared executable system established
 
@@ -123,7 +82,7 @@ notes:
 
 ## Current repository status
 
-The table is bounded to the pinned evidence snapshot in the metadata block. A confirmed path proves presence only.
+This table is bounded to `main@249974ba480fd68dc749ad0258c84e09477d523a`. The direct-lane inventory contains this README and `fauna/README.md`. Exact-path checks did not find the previously proposed shared helper set, `pipeline_specs/ingest/README.md`, `tests/pipelines/ingest/README.md`, or `fixtures/ingest/README.md`; those bounded absences are not exhaustive history, branch, generated-file, or external-system claims. A confirmed path proves presence only.
 
 | Surface | Observed state | Truth status | What it does **not** prove |
 |---|---|---|---|
@@ -134,8 +93,10 @@ The table is bounded to the pinned evidence snapshot in the metadata block. A co
 | Declarative ingest root | [`pipeline_specs/`](../../pipeline_specs/README.md) exists, but `pipeline_specs/ingest/README.md` was not found. | CONFIRMED bounded result | No relevant domain specification exists elsewhere. |
 | Shared behavior tests | [`tests/pipelines/`](../../tests/pipelines/README.md) is a README-only direct lane at its snapshot; `tests/pipelines/ingest/README.md` was not found. | CONFIRMED bounded result | No distributed or dynamically collected pipeline tests. |
 | Shared ingest fixtures | `fixtures/ingest/README.md` was not found. | CONFIRMED exact-path absence | No ingest-shaped fixture exists anywhere else. |
-| `IngestReceipt` family | Proposed contract, Draft 2020-12 schema, and one valid/one invalid fixture family exist. | CONFIRMED files; semantic status PROPOSED | A real ingest ran, hashes bind real bytes, source policy passed, or release is allowed. |
-| Dedicated receipt validator | Schema names `tools/validators/validate_ingest_receipt.py`; that path and a focused test path were not found. | CONFLICTED reference; CONFIRMED exact-path absence | Lack of all schema validation: the common fixture harness can discover this family. |
+| `IngestReceipt` family | Proposed contract, Draft 2020-12 schema, two valid fixtures, and three invalid fixtures exist. | CONFIRMED files; semantic status PROPOSED | A real ingest ran, hashes bind real source bytes, source policy passed, or release is allowed. |
+| Dedicated receipt validator | [`validate_ingest_receipt.py`](../../tools/validators/validate_ingest_receipt.py) provides bounded, duplicate-free finite-JSON parsing, schema and format checks, temporal and placeholder checks, optional source-head and local-artifact binding, byte totals, SUCCESS gating, and deterministic non-echoing diagnostics. | CONFIRMED no-network implementation | Connector execution, source admission, governed persistence, evidence closure, or release authority. |
+| Focused receipt tests | [`test_validate_ingest_receipt.py`](../../tests/validators/test_validate_ingest_receipt.py) contains fifteen focused tests and the fixture-mode command verifies nonempty positive and negative polarity. | CONFIRMED executable tests | A connector-emitted receipt, source-specific profile, replay behavior, or production use. |
+| Receipt validation wiring | [`validator_registry.json`](../../tools/validators/validator_registry.json) registers `ingest-receipt`; [`connector-gate.yml`](../../.github/workflows/connector-gate.yml) runs the focused suite and fixture command; [`schema-validation.yml`](../../.github/workflows/schema-validation.yml) includes the validator in its aggregate inventory. | CONFIRMED repository wiring | Required-check enforcement, source activation, or connector-run presence. |
 | Runtime consumers and emitted receipts | No consumer, scheduler, active source, emitted run, or production dependency was established by this review. | UNKNOWN | Inactivity in every branch or external runtime. |
 
 ### Truth labels used here
@@ -407,17 +368,17 @@ A `SUCCESS` receipt can coexist with QUARANTINE when capture succeeded but downs
 
 | Surface | Current evidence | Limit |
 |---|---|---|
-| [`contracts/source/ingest_receipt.md`](../../contracts/source/ingest_receipt.md) | v0.2 semantic contract; status `draft / PROPOSED`. | Does not prove pipeline integration or source truth. |
+| [`contracts/source/ingest_receipt.md`](../../contracts/source/ingest_receipt.md) | v0.5 semantic contract; status `draft / PROPOSED`; documents the bounded validator and its limits. | Does not prove pipeline integration or source truth. |
 | [`ingest_receipt.schema.json`](../../schemas/contracts/v1/source/ingest_receipt.schema.json) | Draft 2020-12, closed object, required identity/time/outcome/bytes/digest fields; status `PROPOSED`. | Shape only. |
-| [`ingest_receipt` fixtures](../../fixtures/contracts/v1/source/ingest_receipt/README.md) | One valid fixture and one invalid missing-`id` fixture. | Narrow shape polarity only. |
+| [`ingest_receipt` fixtures](../../fixtures/contracts/v1/source/ingest_receipt/README.md) | Two valid and three invalid fixtures cover `SUCCESS`, `PARTIAL`, required-field, enum/pattern, and date-time shape polarity. | Synthetic fixture coverage only. |
 | [`test_common_contracts.py`](../../tests/schemas/test_common_contracts.py) | Discovers `source` schemas with matching fixture families and checks valid/invalid polarity. | No focused ingest semantics, filesystem side effects, or handoff behavior. |
+| [`validate_ingest_receipt.py`](../../tools/validators/validate_ingest_receipt.py) and [`test_validate_ingest_receipt.py`](../../tests/validators/test_validate_ingest_receipt.py) | Dedicated no-network validation and fifteen focused schema, semantics, source-head, local-artifact, byte-total, outcome, deterministic-diagnostic, and fixture-polarity tests. | Does not run a connector, persist a receipt, admit a source, or authorize promotion or publication. |
 | [`tests/pipelines/README.md`](../../tests/pipelines/README.md) | Repository-grounded parent says its direct lane is README-only at its snapshot. | No dedicated shared pipeline behavior suite established. |
 
 ### Confirmed gaps and conflicts
 
-- The schema and fixture documentation name `tools/validators/validate_ingest_receipt.py`, but that exact path was not found.
-- No focused `tests/schemas/test_ingest_receipt_validator.py` was found.
-- The common fixture harness provides discoverable schema polarity coverage, but it is not a dedicated CLI validator and does not prove an ingest event.
+- The dedicated validator and focused suite prove bounded no-network receipt validation, not an ingest event or connector-emitted receipt.
+- No accepted source-specific profile, shared ingest handoff contract, writer adapter, governed receipt persistence route, replay protocol, or correction propagation was established.
 - No accepted shared ingest handoff contract, active shared ingest specification, shared fixture lane, executable consumer, or dedicated pipeline test lane was established.
 - No emitted `IngestReceipt` instance was inspected as runtime proof.
 
@@ -533,7 +494,7 @@ An ingest implementation must make correction and replay possible without rewrit
 
 ### Rollback of this change
 
-This revision is documentation plus its generated-work provenance receipt. Rollback is a normal reviewed Git revert of those scoped commits. It does not imply a lifecycle rollback because no source, data, pipeline execution, release, or public artifact changes here.
+This revision changes this documentation boundary only; it adds no generated-work receipt. Rollback is a normal reviewed Git revert of the scoped commit. It does not imply a lifecycle rollback because no source, data, pipeline execution, release, or public artifact changes here.
 
 ---
 
@@ -546,10 +507,10 @@ This revision is documentation plus its generated-work provenance receipt. Rollb
 | `PIPE-INGEST-003` | Should this lane remain documentation-only, become a small shared pipeline module, or delegate reusable logic to a package? | NEEDS VERIFICATION |
 | `PIPE-INGEST-004` | Which source-registry topology is canonical for descriptor resolution? | CONFLICTED / NEEDS VERIFICATION |
 | `PIPE-INGEST-005` | Is the proposed `IngestReceipt` contract ready for acceptance, and who owns versioning? | PROPOSED / NEEDS REVIEW |
-| `PIPE-INGEST-006` | Will the named dedicated validator be implemented, or should schema metadata point to the common harness? | CONFLICTED |
+| `PIPE-INGEST-006` | Is the schema-named dedicated validator implemented and directly tested? | RESOLVED AT SNAPSHOT — implementation, focused suite, fixture polarity, registry entry, connector-gate prerequisite, and schema-validation aggregate wiring confirmed; connector-emitted receipt presence remains held. |
 | `PIPE-INGEST-007` | Which accepted finite gate and reason-code vocabularies govern partial, hold, quarantine, retry, and fail behavior? | NEEDS VERIFICATION |
-| `PIPE-INGEST-008` | Where should shared no-network fixtures and behavior tests live? | NEEDS VERIFICATION |
-| `PIPE-INGEST-009` | Which CI check proves non-vacuous shared ingest behavior and blocks unsafe changes? | UNKNOWN |
+| `PIPE-INGEST-008` | Where should shared pipeline handoff fixtures and behavior tests live beyond the receipt validator's contract fixtures and focused tests? | NEEDS VERIFICATION |
+| `PIPE-INGEST-009` | Which CI check proves non-vacuous shared ingest behavior and blocks unsafe changes? | PARTIAL — connector-gate and schema-validation run receipt validation; shared pipeline behavior and required-check enforcement remain UNKNOWN. |
 | `PIPE-INGEST-010` | Which review roles own source, rights, sensitivity, pipeline, receipt, and rollback approval? | NEEDS VERIFICATION |
 | `PIPE-INGEST-011` | Are any current external runtimes or branches consuming this path? | UNKNOWN |
 | `PIPE-INGEST-012` | Should the Fauna compatibility child be migrated, retained as a pointer, or removed after an accepted plan? | NEEDS VERIFICATION |
@@ -569,9 +530,11 @@ This revision is documentation plus its generated-work provenance receipt. Rollb
 | [`ADR-0017`](../../docs/adr/ADR-0017-source-descriptor-admission-process.md) | Proposed source descriptor admission process. | CONFIRMED file; proposed | Not accepted implementation authority. |
 | [`ADR-0021`](../../docs/adr/ADR-0021-quarantine-has-structured-exit-paths.md) | Proposed structured quarantine exits. | CONFIRMED file; proposed | No accepted exit implementation established. |
 | [`IngestReceipt` contract](../../contracts/source/ingest_receipt.md) and [schema](../../schemas/contracts/v1/source/ingest_receipt.schema.json) | Proposed receipt meaning and closed field shape. | CONFIRMED files; PROPOSED object family | Not runtime proof. |
-| [`IngestReceipt` fixtures](../../fixtures/contracts/v1/source/ingest_receipt/README.md) | One valid and one missing-id invalid example. | CONFIRMED fixture documentation | Narrow shape coverage. |
+| [`IngestReceipt` fixtures](../../fixtures/contracts/v1/source/ingest_receipt/README.md) | Two valid and three invalid synthetic examples with deterministic polarity. | CONFIRMED fixture documentation and files | No connector or real-source execution. |
 | [`test_common_contracts.py`](../../tests/schemas/test_common_contracts.py) | Dynamic schema/fixture polarity harness includes the `source` family. | CONFIRMED executable test code | No dedicated ingest behavior semantics. |
-| exact-path probes in metadata | Prior proposed helpers, shared ingest spec/test/fixture README, and focused validator/test were not found. | CONFIRMED bounded absence | No exhaustive repository absence claim. |
+| [`validate_ingest_receipt.py`](../../tools/validators/validate_ingest_receipt.py) and [`test_validate_ingest_receipt.py`](../../tests/validators/test_validate_ingest_receipt.py) | Dedicated no-network validator and fifteen focused tests cover strict input, schema/format, time order, placeholder denial, source-head/local-artifact/byte binding, SUCCESS gating, deterministic non-echoing output, and fixture polarity. | CONFIRMED executable evidence | Does not emit or persist a receipt, execute a connector, admit a source, or authorize downstream use. |
+| [`validator_registry.json`](../../tools/validators/validator_registry.json), [`connector-gate.yml`](../../.github/workflows/connector-gate.yml), and [`schema-validation.yml`](../../.github/workflows/schema-validation.yml) | Register and execute the receipt validator as repository validation. | CONFIRMED wiring | Required-check significance, production invocation, and connector-run presence remain unproved. |
+| exact-path probes in metadata | Prior proposed shared ingest helpers and shared ingest spec/test/fixture README were not found; the previously absent receipt validator and focused suite are now present. | CONFIRMED bounded current-tree result | No exhaustive repository absence claim. |
 | [`pipeline_specs/README.md`](../../pipeline_specs/README.md) | Declarative root is placeholder-heavy and no active root spec system is established. | CONFIRMED repository-grounded doc | Its snapshot predates this review. |
 | [`tests/pipelines/README.md`](../../tests/pipelines/README.md) | Direct pipeline-test lane is README-only at its snapshot; distributed negative coverage exists. | CONFIRMED repository-grounded doc | No exhaustive test inventory. |
 | [`tools/ingest/README.md`](../../tools/ingest/README.md) | Separate inspect/preflight/watcher support boundary. | CONFIRMED current doc | Does not prove all child executables. |
@@ -615,6 +578,13 @@ Until then, the correct status is **documentation boundary / no shared executabl
 ---
 
 ## Changelog
+
+### v0.3 — 2026-08-28
+
+- reconciled the stale validator-absence claim with the current repository;
+- recorded the dedicated no-network validator, fifteen focused tests, two-valid/three-invalid fixture family, validator registry entry, connector-gate prerequisite, and schema-validation aggregate wiring;
+- kept the direct `pipelines/ingest/` lane classified as documentation-only and preserved the producer/writer, source activation, receipt persistence, release, and publication holds;
+- changed documentation only.
 
 ### v0.2 — 2026-07-20
 

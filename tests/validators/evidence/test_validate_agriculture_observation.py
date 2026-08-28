@@ -209,6 +209,37 @@ class AgricultureObservationTests(unittest.TestCase):
                 findings,
             )
 
+    def test_bounded_reader_rejects_non_files_nonfinite_and_malformed_json(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+
+            non_file = root / "directory"
+            non_file.mkdir()
+            value, findings = validator._read(non_file)
+            self.assertIsNone(value)
+            self.assertEqual(
+                (validator.Finding("AGRICULTURE_INPUT_NOT_FILE", "/"),),
+                findings,
+            )
+
+            nonfinite = root / "nonfinite.json"
+            nonfinite.write_text('{"value":NaN}', encoding="utf-8")
+            value, findings = validator._read(nonfinite)
+            self.assertIsNone(value)
+            self.assertEqual(
+                (validator.Finding("AGRICULTURE_JSON_NONFINITE_NUMBER", "/"),),
+                findings,
+            )
+
+            malformed = root / "malformed.json"
+            malformed.write_text('{"value":', encoding="utf-8")
+            value, findings = validator._read(malformed)
+            self.assertIsNone(value)
+            self.assertEqual(
+                (validator.Finding("AGRICULTURE_JSON_INVALID", "/"),),
+                findings,
+            )
+
     def test_serialized_result_disclaims_authority(self) -> None:
         payload = json.loads(validator.serialize(None, validator.Result("PASS", ())))
         self.assertEqual("NONE", payload["authority"])

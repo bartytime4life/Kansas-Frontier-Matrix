@@ -1,0 +1,94 @@
+# Validate fixture-only guarded-action attempt accounting semantics.
+name: gate-attempt-coverage-assessment
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/gate-attempt-coverage-assessment.yml"
+      - "contracts/validation/gate_attempt_coverage_assessment.md"
+      - "schemas/contracts/v1/validation/gate_attempt_coverage_assessment.schema.json"
+      - "fixtures/contracts/v1/validation/gate_attempt_coverage_assessment/**"
+      - "tools/generators/gate_attempt_coverage_assessment/**"
+      - "tools/validators/validate_gate_attempt_coverage_assessment.py"
+      - "tests/validators/test_validate_gate_attempt_coverage_assessment.py"
+      - "docs/intake/exploratory/cairnwake-gate-attempt-coverage-source-map.md"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-cairnwake-gate-attempt-coverage-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/gate-attempt-coverage-assessment.yml"
+      - "contracts/validation/gate_attempt_coverage_assessment.md"
+      - "schemas/contracts/v1/validation/gate_attempt_coverage_assessment.schema.json"
+      - "fixtures/contracts/v1/validation/gate_attempt_coverage_assessment/**"
+      - "tools/generators/gate_attempt_coverage_assessment/**"
+      - "tools/validators/validate_gate_attempt_coverage_assessment.py"
+      - "tests/validators/test_validate_gate_attempt_coverage_assessment.py"
+      - "docs/intake/exploratory/cairnwake-gate-attempt-coverage-source-map.md"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-cairnwake-gate-attempt-coverage-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gate-attempt-coverage-assessment-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-gate-attempt-coverage-assessment
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: |
+            pyproject.toml
+            packages/hashing/pyproject.toml
+
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python tools/ci/install_python_ci.py project-test-hashing-test
+
+      - name: Run deterministic no-network checks
+        run: |
+          set -euo pipefail
+          python -m unittest tests.validators.test_validate_gate_attempt_coverage_assessment --verbose
+          python tools/generators/gate_attempt_coverage_assessment/build_gate_attempt_coverage_assessment.py --case valid-accounted-with-refusal-and-unobserved
+          python tools/validators/validate_gate_attempt_coverage_assessment.py --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-cairnwake-gate-attempt-coverage-20260828.json --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### GateAttemptCoverageAssessment validation"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only attempt classification, count reconciliation, signature-domain separation, denominator declarations, refusal feedback exclusion, terminal coverage, and identity."
+            echo "- Boundary: a green result does not execute or authenticate a guarded action, configure or feed a gate, bind a live receipt carrier, admit a source, mutate lifecycle, or authorize release, deployment, publication, or public use."
+          } >> "$GITHUB_STEP_SUMMARY"
