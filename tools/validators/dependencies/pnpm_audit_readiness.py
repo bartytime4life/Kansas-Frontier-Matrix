@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Validate pnpm audit readiness and classify pnpm's JSON audit result.
+"""Validate pnpm audit readiness and classify Node audit JSON results.
 
 The repository check is deliberately no-network. The audit classifier consumes
-only a report produced by a separate ``pnpm audit --json`` process so registry
-or command failures cannot be mistaken for a clean dependency result.
+only a report produced by a separate Node package-manager audit process so
+registry or command failures cannot be mistaken for a clean dependency result.
 """
 
 from __future__ import annotations
@@ -25,6 +25,7 @@ PNPM_VERSION = "11.17.0"
 SEVERITIES = ("info", "low", "moderate", "high", "critical")
 SEVERITY_INDEX = {severity: index for index, severity in enumerate(SEVERITIES)}
 AUDIT_LEVELS = ("low", "moderate", "high", "critical")
+AUDIT_MANAGERS = ("npm", "pnpm")
 COMPETING_LOCKFILES = (
     "package-lock.json",
     "npm-shrinkwrap.json",
@@ -543,10 +544,15 @@ def classify_audit(
     *,
     command_exit_code: int,
     audit_level: str,
+    manager: str = "pnpm",
 ) -> dict[str, Any]:
-    """Classify a pnpm JSON audit as PASS, REGRESSION, or ERROR."""
+    """Classify an npm-compatible JSON audit as PASS, REGRESSION, or ERROR."""
 
     findings: list[dict[str, str]] = []
+    if manager not in AUDIT_MANAGERS:
+        findings.append(
+            _finding("AUDIT_MANAGER_INVALID", f"unsupported audit manager: {manager}")
+        )
     if audit_level not in AUDIT_LEVELS:
         findings.append(
             _finding("AUDIT_LEVEL_INVALID", f"unsupported audit level: {audit_level}")
@@ -568,7 +574,7 @@ def classify_audit(
     )
     raw_report = _load_json_object(
         report_text,
-        label="pnpm audit report",
+        label=f"{manager} audit report",
         invalid_code="AUDIT_REPORT_INVALID",
         findings=findings,
     )
@@ -582,6 +588,7 @@ def classify_audit(
     outcome = "ERROR"
     if (
         counts is not None
+        and manager in AUDIT_MANAGERS
         and audit_level in AUDIT_LEVELS
         and 0 <= command_exit_code <= 255
     ):
@@ -617,9 +624,14 @@ def classify_audit(
             )
 
     return _finalize_report(
-        "pnpm_audit_result",
+        (
+            f"{manager}_audit_result"
+            if manager in AUDIT_MANAGERS
+            else "node_audit_result"
+        ),
         outcome,
         findings,
+        manager=manager,
         audit_level=audit_level,
         command_exit_code=command_exit_code,
         threshold_count=threshold_count,
@@ -629,7 +641,7 @@ def classify_audit(
 
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Validate locked pnpm audit readiness and result polarity."
+        description="Validate locked Node audit readiness and result polarity."
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -641,11 +653,12 @@ def _parser() -> argparse.ArgumentParser:
 
     classify = subparsers.add_parser(
         "classify-audit",
-        help="classify a pnpm audit JSON report without querying the network",
+        help="classify an npm-compatible audit JSON report without querying the network",
     )
     classify.add_argument("--report", required=True)
     classify.add_argument("--command-exit-code", required=True, type=int)
     classify.add_argument("--audit-level", default="high", choices=AUDIT_LEVELS)
+    classify.add_argument("--manager", default="pnpm", choices=AUDIT_MANAGERS)
     return parser
 
 
@@ -658,6 +671,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             args.report,
             command_exit_code=args.command_exit_code,
             audit_level=args.audit_level,
+            manager=args.manager,
         )
     print(render_report(report))
     if report["outcome"] == "PASS":
