@@ -504,6 +504,39 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(result.findings[0].kind, "INPUT_CHANGED_DURING_OPEN")
         self.assertNotIn("RENDERER_ACQUISITION_PRESENT", result.reasons)
 
+    def test_same_inode_rewrite_during_read_fails_closed(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            candidate = root / "scripts" / "candidate.mjs"
+            candidate.parent.mkdir(parents=True)
+            active = 'require("maplibre-gl");\n'
+            benign = "export {};\n".ljust(len(active))
+            candidate.write_text(benign, encoding="utf-8")
+            initial_inode = candidate.stat().st_ino
+            initial_size = candidate.stat().st_size
+            real_read = MODULE.os.read
+            changed = False
+
+            def racing_read(descriptor: int, count: int) -> bytes:
+                nonlocal changed
+                if not changed:
+                    changed = True
+                    candidate.write_text(active, encoding="utf-8")
+                return real_read(descriptor, count)
+
+            with patch.object(MODULE.os, "read", racing_read):
+                result = MODULE.scan(root)
+            resulting_inode = candidate.stat().st_ino
+            resulting_size = candidate.stat().st_size
+
+        self.assertTrue(changed)
+        self.assertEqual(resulting_inode, initial_inode)
+        self.assertEqual(resulting_size, initial_size)
+        self.assertEqual(result.outcome, MODULE.Outcome.ERROR)
+        self.assertEqual(result.reasons, ("SCAN_INPUT_CHANGED_DURING_READ",))
+        self.assertEqual(result.findings[0].kind, "INPUT_CHANGED_DURING_READ")
+        self.assertNotIn("RENDERER_ACQUISITION_PRESENT", result.reasons)
+
     def test_parent_swap_cannot_escape_pinned_directory_descriptor(self) -> None:
         with self._root() as tmp, self._root() as external_tmp:
             root = Path(tmp)
@@ -631,7 +664,7 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 3)
         payload = json.loads(completed.stdout)
         self.assertEqual(payload["outcome"], "HOLD")
-        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v10")
+        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v11")
         self.assertEqual(payload["max_input_bytes"], MODULE.MAX_INPUT_BYTES)
         self.assertEqual(payload["max_total_input_bytes"], MODULE.MAX_TOTAL_INPUT_BYTES)
         self.assertEqual(payload["findings"], [])

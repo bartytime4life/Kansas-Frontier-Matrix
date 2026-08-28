@@ -3,11 +3,12 @@
 
 This assessment is intentionally non-authoritative. It inventories bounded executable,
 package, test, example, runtime, and public-web roots for renderer acquisition mechanisms
-so ADR-0006/0007 can be enforced with structural evidence. PASS means the scan completed
-with no renderer acquisition. HOLD means acquisition is confined to the accepted package
-seam while runtime admission remains unresolved. FAIL means raw renderer acquisition
-escaped that seam or parallel active MapLibre package homes surfaced. ERROR means the
-bounded scan could not complete safely.
+so ADR-0006/0007 can be enforced with structural evidence. Descriptor reads fail closed
+when identity, size, modification time, or change time differs across a bounded read.
+PASS means the scan completed with no renderer acquisition. HOLD means acquisition is
+confined to the accepted package seam while runtime admission remains unresolved. FAIL
+means raw renderer acquisition escaped that seam or parallel active MapLibre package
+homes surfaced. ERROR means the bounded scan could not complete safely.
 
 Imports of the KFM-owned ``@kfm/maplibre`` facade are consumer use of the accepted
 MapRuntimePort boundary, not raw renderer acquisition. Only ``packages/maplibre/`` is an
@@ -25,7 +26,7 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Sequence
 
-PROFILE = "kfm-maplibre-acquisition-inventory-v10"
+PROFILE = "kfm-maplibre-acquisition-inventory-v11"
 TEXT_SUFFIXES = frozenset({".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx", ".html"})
 MAX_FILES = 5000
 MAX_INPUT_BYTES = 1024 * 1024
@@ -43,6 +44,7 @@ DESCRIPTOR_SAFETY_SUPPORTED = (
 INPUT_ERROR_KINDS = frozenset(
     {
         "INPUT_TOO_LARGE",
+        "INPUT_CHANGED_DURING_READ",
         "INPUT_CHANGED_DURING_OPEN",
         "INPUT_DESCRIPTOR_SAFETY_UNAVAILABLE",
         "INPUT_NOT_REGULAR",
@@ -183,6 +185,10 @@ class _DescriptorSafetyUnavailable(Exception):
 
 
 class _InputChangedDuringOpen(Exception):
+    pass
+
+
+class _InputChangedDuringRead(Exception):
     pass
 
 
@@ -437,6 +443,18 @@ def _same_file_identity(left: os.stat_result, right: os.stat_result) -> bool:
     )
 
 
+def _same_read_metadata(left: os.stat_result, right: os.stat_result) -> bool:
+    return _same_file_identity(left, right) and (
+        left.st_size,
+        left.st_mtime_ns,
+        left.st_ctime_ns,
+    ) == (
+        right.st_size,
+        right.st_mtime_ns,
+        right.st_ctime_ns,
+    )
+
+
 def _verified_open_at(
     parent_fd: int, name: str, flags: int, *, require_directory: bool
 ) -> int:
@@ -504,6 +522,7 @@ def _read_descriptor_bounded(root: Path, path: Path, read_limit: int) -> bytes:
             parent_fd, relative.parts[-1], file_flags, require_directory=False
         )
         try:
+            before_read = os.fstat(file_fd)
             chunks: list[bytes] = []
             remaining = read_limit
             while remaining:
@@ -512,7 +531,11 @@ def _read_descriptor_bounded(root: Path, path: Path, read_limit: int) -> bytes:
                     break
                 chunks.append(chunk)
                 remaining -= len(chunk)
-            return b"".join(chunks)
+            raw = b"".join(chunks)
+            after_read = os.fstat(file_fd)
+            if not _same_read_metadata(before_read, after_read):
+                raise _InputChangedDuringRead
+            return raw
         finally:
             os.close(file_fd)
     finally:
@@ -548,6 +571,10 @@ def _read_bounded_text(
     except _InputChangedDuringOpen:
         return None, Finding(
             "INPUT_CHANGED_DURING_OPEN", rel, "inode-identity-changed", False
+        )
+    except _InputChangedDuringRead:
+        return None, Finding(
+            "INPUT_CHANGED_DURING_READ", rel, "descriptor-metadata-changed", False
         )
     except _InputNotRegular:
         return None, Finding("INPUT_NOT_REGULAR", rel, "not-regular-file", False)
@@ -662,6 +689,7 @@ def scan(root: Path) -> Result:
             finding.kind
             in {
                 "INPUT_CHANGED_DURING_OPEN",
+                "INPUT_CHANGED_DURING_READ",
                 "INPUT_DESCRIPTOR_SAFETY_UNAVAILABLE",
                 "INPUT_NOT_REGULAR",
                 "INPUT_OUTSIDE_ROOT",
@@ -698,6 +726,8 @@ def scan(root: Path) -> Result:
         reasons.add("SCAN_INPUT_OUTSIDE_ROOT")
     if any(finding.kind == "INPUT_CHANGED_DURING_OPEN" for finding in unique):
         reasons.add("SCAN_INPUT_CHANGED_DURING_OPEN")
+    if any(finding.kind == "INPUT_CHANGED_DURING_READ" for finding in unique):
+        reasons.add("SCAN_INPUT_CHANGED_DURING_READ")
     if any(
         finding.kind == "INPUT_DESCRIPTOR_SAFETY_UNAVAILABLE" for finding in unique
     ):
@@ -715,6 +745,7 @@ def scan(root: Path) -> Result:
         {
             "SCAN_DESCRIPTOR_SAFETY_UNAVAILABLE",
             "SCAN_INPUT_CHANGED_DURING_OPEN",
+            "SCAN_INPUT_CHANGED_DURING_READ",
             "SCAN_INPUT_NOT_REGULAR",
             "SCAN_INPUT_TOO_LARGE",
             "SCAN_INPUT_OUTSIDE_ROOT",
