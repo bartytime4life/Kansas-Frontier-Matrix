@@ -1,0 +1,18 @@
+{
+  "profile": "kfm.validation.gate-attempt-coverage-assessment.v1",
+  "cases": [
+    {"case_id": "valid-accounted-with-refusal-and-unobserved", "mutation": null, "expected": {"validation_outcome": "PASS", "finding_codes": []}},
+    {"case_id": "invalid-attempt-count", "mutation": "ATTEMPT_COUNT_DRIFT", "expected": {"validation_outcome": "DENY", "finding_codes": ["ATTEMPT_COUNT_MISMATCH"]}},
+    {"case_id": "invalid-class-count", "mutation": "CLASS_COUNT_DRIFT", "expected": {"validation_outcome": "DENY", "finding_codes": ["CLASS_COUNT_MISMATCH"]}},
+    {"case_id": "invalid-duplicate-attempt-ref", "mutation": "DUPLICATE_ATTEMPT_REF", "expected": {"validation_outcome": "DENY", "finding_codes": ["ATTEMPT_REFS_NOT_UNIQUE"]}},
+    {"case_id": "invalid-duplicate-record-ref", "mutation": "DUPLICATE_RECORD_REF", "expected": {"validation_outcome": "DENY", "finding_codes": ["RECORD_REFS_NOT_UNIQUE"]}},
+    {"case_id": "invalid-denominator-count", "mutation": "DENOMINATOR_COUNT_DRIFT", "expected": {"validation_outcome": "DENY", "finding_codes": ["DENOMINATOR_COUNT_MISMATCH"]}},
+    {"case_id": "invalid-denominator-partition", "mutation": "DENOMINATOR_PARTITION_DRIFT", "expected": {"validation_outcome": "DENY", "finding_codes": ["DENOMINATOR_CLASS_PARTITION_MISMATCH"]}},
+    {"case_id": "invalid-refusal-feedback", "mutation": "REFUSAL_FEEDBACK_ENABLED", "expected": {"validation_outcome": "DENY", "finding_codes": ["REFUSAL_FEEDBACK_PROHIBITED"]}},
+    {"case_id": "invalid-refusal-occurrence", "mutation": "REFUSAL_OCCURRENCE_DRIFT", "expected": {"validation_outcome": "DENY", "finding_codes": ["REFUSAL_ACTION_EVIDENCE_PROHIBITED"]}},
+    {"case_id": "invalid-signature-domain", "mutation": "SIGNATURE_DOMAIN_DRIFT", "expected": {"validation_outcome": "DENY", "finding_codes": ["SIGNATURE_DOMAIN_MISMATCH"]}},
+    {"case_id": "invalid-terminal-coverage", "mutation": "TERMINAL_COVERAGE_DRIFT", "expected": {"validation_outcome": "DENY", "finding_codes": ["TERMINAL_COVERAGE_STATE_MISMATCH"]}},
+    {"case_id": "invalid-window-order", "mutation": "WINDOW_ORDER_DRIFT", "expected": {"validation_outcome": "DENY", "finding_codes": ["WINDOW_NOT_ORDERED"]}},
+    {"case_id": "invalid-identity", "mutation": "IDENTITY_DRIFT", "expected": {"validation_outcome": "DENY", "finding_codes": ["ASSESSMENT_ID_MISMATCH", "SPEC_HASH_MISMATCH"]}}
+  ]
+}
