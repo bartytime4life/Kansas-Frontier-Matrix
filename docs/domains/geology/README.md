@@ -471,7 +471,7 @@ Current main contains Geology contract/schema documentation and a bounded shared
 
 | Surface | DTO / schema | Finite outcomes | Status |
 |---|---|---|---|
-| Geology feature / detail resolver | `GeologyDecisionEnvelope` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | Contract/schema carriers present; dedicated governed route unverified |
+| Geology feature / detail resolver | `RuntimeResponseEnvelope` (replacement); bespoke `GeologyDecisionEnvelope` is `PROPOSED` / retired | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | Shared replacement documented; dedicated governed route and migration at that route remain unverified |
 | Geology layer manifest resolver | `LayerManifest` / domain layer descriptor | `ANSWER` / `DENY` / `ERROR` | Carriers present; layer adapter remains placeholder and public route unverified |
 | Geology Evidence Drawer payload | `EvidenceDrawerPayload` + `EvidenceBundle` projection | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | Shared bounded projection/delegation present; policy binding, released payload, and runtime route remain held |
 | Geology Focus Mode answer | `RuntimeResponseEnvelope` + `AIReceipt` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | Dedicated Geology route and released evidence path unverified |
