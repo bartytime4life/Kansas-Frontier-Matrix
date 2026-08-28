@@ -326,15 +326,16 @@ governed transitions.
 ## Parallel naming and authority drift
 
 The parent policy inventory contains both `policy/source/` and
-`policy/sources/`. At the evidence base, the plural path contains a `rights/`
-child and no direct README. This is observed drift, not evidence of two
-accepted source-policy authorities.
+`policy/sources/`. The plural path now has a routing-and-hold README above its
+existing `rights/` child. That added explanation removes a documentation gap;
+it does not resolve the observed naming drift or establish two accepted
+source-policy authorities.
 
-This documentation-only update preserves `policy/source/` because it is the
-existing tracked target and because workflows and source catalog documents
-refer to its descriptor prerequisite module. It does **not** decide that the
-singular child name is canonical, authorize new content under the plural path,
-or migrate either lane.
+The plural parent guide and this document preserve `policy/source/` because it
+is the existing tracked target and because workflows and source catalog
+documents refer to its descriptor prerequisite module. Neither document decides
+that a child name is canonical, authorizes new authority-bearing content under
+the plural path, or migrates either lane.
 
 Any convergence must first inventory writers and consumers, classify the
 `rights/` child, choose one writable authority through an accepted path
