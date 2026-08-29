@@ -13,7 +13,7 @@ contract_version: "3.0.0"
 related:
   - docs/doctrine/directory-rules.md
   - docs/domains/people-dna-land/PEOPLE_DOMAIN_MODEL.md         # authored prior session (v0.1)
-  - docs/domains/people-dna-land/PEOPLE_PRESERVATION_MATRIX.md  # authored prior session (v0.2)
+  - docs/domains/people-dna-land/PRESERVATION_MATRIX.md  # authored prior session (v0.2)
   - docs/domains/people-dna-land/MISSING_OR_PLANNED_FILES.md    # authored prior session (v0.2)
   - docs/domains/people-dna-land/EXPANSION_PLAN.md
   - docs/domains/people-dna-land/sublanes/genealogy.md
@@ -176,7 +176,7 @@ This folder (`docs/domains/people-dna-land/`) holds **human-facing doctrine** fo
 
 - A landing README (this file).
 - A domain model (`PEOPLE_DOMAIN_MODEL.md`) — bounded context, identity rules, aggregates, invariants. *(CONFIRMED authored, prior session; mounted-repo presence NEEDS VERIFICATION.)*
-- A preservation matrix (`PEOPLE_PRESERVATION_MATRIX.md`) — retention, tombstone, erasure duties. *(CONFIRMED authored, prior session.)*
+- A preservation matrix (`PRESERVATION_MATRIX.md`) — retention, tombstone, erasure duties. *(CONFIRMED authored, prior session.)*
 - A file inventory (`MISSING_OR_PLANNED_FILES.md`). *(CONFIRMED authored, prior session.)*
 - One Markdown file per **sublane** (genealogy, DNA, land, person identity) — *sublane folder convention PROPOSED, see [§22](#22-adrs)*.
 - A domain `EXPANSION_PLAN.md` describing roadmap and thin-slice ordering. *(CONFIRMED authored, prior session.)*
@@ -226,7 +226,7 @@ Segments marked `<segment>` are subject to the [§2.1 conflict](#21-segment-nami
 | **Parent**              | [`../README.md`](../README.md) — `docs/domains/` landing *(PROPOSED authoring)*                                                                    |
 | **Authority root**      | `docs/` (canonical) — Directory Rules §6.1                                                                                                         |
 | **Upstream doctrine**   | Atlas v1.1 Ch. 16; Encyclopedia §7.14 *(section NEEDS VERIFICATION)*; Directory Rules §6.1 & §12; Pass-10 C6, C9, C14; Unified Implementation Architecture Build Manual |
-| **Sibling docs (this folder)** | [`PEOPLE_DOMAIN_MODEL.md`](PEOPLE_DOMAIN_MODEL.md) *(CONFIRMED authored)* · [`PEOPLE_PRESERVATION_MATRIX.md`](PEOPLE_PRESERVATION_MATRIX.md) *(CONFIRMED authored)* · [`MISSING_OR_PLANNED_FILES.md`](MISSING_OR_PLANNED_FILES.md) *(CONFIRMED authored)* |
+| **Sibling docs (this folder)** | [`PEOPLE_DOMAIN_MODEL.md`](PEOPLE_DOMAIN_MODEL.md) *(CONFIRMED authored)* · [`PRESERVATION_MATRIX.md`](PRESERVATION_MATRIX.md) *(CONFIRMED authored)* · [`MISSING_OR_PLANNED_FILES.md`](MISSING_OR_PLANNED_FILES.md) *(CONFIRMED authored)* |
 | **Sublanes (children)** | [`sublanes/genealogy.md`](sublanes/genealogy.md) *(CONFIRMED authored)* · `sublanes/dna.md` *(PROPOSED)* · `sublanes/land.md` *(PROPOSED)* · `sublanes/person-identity.md` *(PROPOSED)* |
 | **Roadmap**             | [`EXPANSION_PLAN.md`](EXPANSION_PLAN.md) *(CONFIRMED authored)*                                                                                    |
 | **Downstream implementation** | `contracts/<segment>/…` · `schemas/contracts/v1/<segment>/…` · `policy/domains/people-dna-land/…` · `tests/domains/people-dna-land/…` · `fixtures/domains/people-dna-land/…` — **all PROPOSED** |
@@ -245,7 +245,7 @@ Segments marked `<segment>` are subject to the [§2.1 conflict](#21-segment-nami
 docs/domains/people-dna-land/
 ├── README.md                          # this file
 ├── PEOPLE_DOMAIN_MODEL.md             # CONFIRMED authored — bounded context, identity, aggregates, invariants
-├── PEOPLE_PRESERVATION_MATRIX.md      # CONFIRMED authored — retention, tombstone, erasure duties
+├── PRESERVATION_MATRIX.md      # CONFIRMED authored — retention, tombstone, erasure duties
 ├── MISSING_OR_PLANNED_FILES.md        # CONFIRMED authored — file inventory across responsibility roots
 ├── EXPANSION_PLAN.md                  # CONFIRMED authored — roadmap, thin-slice ordering
 └── sublanes/                          # PROPOSED — convention pending ADR (see §22)
@@ -268,7 +268,7 @@ flowchart LR
     subgraph DOCS["docs/domains/people-dna-land/  (this folder — CANONICAL doctrine)"]
         R["README.md"]
         M["PEOPLE_DOMAIN_MODEL.md"]
-        PM["PEOPLE_PRESERVATION_MATRIX.md"]
+        PM["PRESERVATION_MATRIX.md"]
         E["EXPANSION_PLAN.md"]
         SG["sublanes/genealogy.md"]
         SD["sublanes/dna.md"]
@@ -694,7 +694,7 @@ Corrections follow the `CorrectionNotice` flow; rollbacks follow `RollbackCard`.
 **Inside this folder**
 
 - [`PEOPLE_DOMAIN_MODEL.md`](PEOPLE_DOMAIN_MODEL.md) — bounded context, identity, aggregates, invariants *(CONFIRMED authored)*
-- [`PEOPLE_PRESERVATION_MATRIX.md`](PEOPLE_PRESERVATION_MATRIX.md) — retention, tombstone, erasure duties *(CONFIRMED authored)*
+- [`PRESERVATION_MATRIX.md`](PRESERVATION_MATRIX.md) — retention, tombstone, erasure duties *(CONFIRMED authored)*
 - [`MISSING_OR_PLANNED_FILES.md`](MISSING_OR_PLANNED_FILES.md) — file inventory; source of OQ-PDL-SEG-01 *(CONFIRMED authored)*
 - [`EXPANSION_PLAN.md`](EXPANSION_PLAN.md) — roadmap and thin-slice ordering *(CONFIRMED authored)*
 - [`sublanes/genealogy.md`](sublanes/genealogy.md) — kinship & life-event slice *(CONFIRMED authored)*
@@ -847,7 +847,7 @@ Aligned with Atlas Ch. 24.9.2 (trust-membrane anti-patterns) and Ch. 24.9.3 (gov
 
 ---
 
-**Related docs:** [`PEOPLE_DOMAIN_MODEL.md`](PEOPLE_DOMAIN_MODEL.md) · [`PEOPLE_PRESERVATION_MATRIX.md`](PEOPLE_PRESERVATION_MATRIX.md) · [`EXPANSION_PLAN.md`](EXPANSION_PLAN.md) · [`sublanes/genealogy.md`](sublanes/genealogy.md) · [`../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`../../standards/PROV.md`](../../standards/PROV.md)
+**Related docs:** [`PEOPLE_DOMAIN_MODEL.md`](PEOPLE_DOMAIN_MODEL.md) · [`PRESERVATION_MATRIX.md`](PRESERVATION_MATRIX.md) · [`EXPANSION_PLAN.md`](EXPANSION_PLAN.md) · [`sublanes/genealogy.md`](sublanes/genealogy.md) · [`../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`../../standards/PROV.md`](../../standards/PROV.md)
 
 **Last updated:** 2026-08-29 · **Edition:** v1.2.0 · **CONTRACT_VERSION:** 3.0.0
 
