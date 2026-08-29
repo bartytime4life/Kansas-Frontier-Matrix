@@ -208,6 +208,21 @@ const waterDemo: FeatureCollection<Geometry, FeatureProperties> = {
       focusLng: -97.93,
       focusLat: 38.06,
     }),
+    feature("water-cimarron-context", { type: "LineString", coordinates: [[-101.95, 37.12], [-100.72, 37.05], [-99.55, 37.2], [-98.47, 37.13], [-97.26, 37.05]] }, {
+      ...baseProps,
+      title: "Cimarron basin demonstration context",
+      summary: "A simplified southern-basin line for multi-layer report and regional-scope testing.",
+      sourceRole: "synthetic",
+      spatialScope: "Southern Kansas corridor, generalized",
+      temporalScope: "Valid for the 2026 demonstration snapshot",
+      lastUpdate: "2026-08-29",
+      evidenceState: "GENERALIZED_GEOMETRY",
+      citation: "kfm:evidence:synthetic:cimarron-context-v1",
+      generalizationNote: "Illustrative corridor only; no flow, allocation, monitoring, or legal-water claim.",
+      relatedLayers: "Agricultural context; Communities",
+      focusLng: -99.55,
+      focusLat: 37.16,
+    }),
   ],
 };
 
@@ -281,6 +296,37 @@ const agricultureDemo: FeatureCollection<Geometry, FeatureProperties> = {
       focusLng: -100.8,
       focusLat: 38.35,
     }),
+    feature("ag-generalized-central", { type: "Polygon", coordinates: [[[-99.72, 39.35], [-97.35, 39.35], [-97.35, 37.45], [-99.72, 37.45], [-99.72, 39.35]]] }, {
+      ...baseProps,
+      title: "Central agriculture demonstration region",
+      summary: "A coarse regional fixture for comparing agriculture, water, transport, and community context without farm-level claims.",
+      sourceRole: "aggregate",
+      spatialScope: "Central Kansas regional envelope",
+      temporalScope: "Demonstration snapshot only",
+      lastUpdate: "2026-08-29",
+      evidenceState: "CORRECTED",
+      citation: "kfm:evidence:synthetic:ag-central-r2",
+      correctionState: "CORRECTED · eastern edge generalized in revision 2",
+      generalizationNote: "No parcel, owner, operator, crop, yield, livestock, or production attribute is present.",
+      relatedLayers: "Hydrology context; Communities; Roads, rail & movement",
+      focusLng: -98.55,
+      focusLat: 38.4,
+    }),
+    feature("ag-generalized-east", { type: "Polygon", coordinates: [[[-97.32, 39.45], [-95.15, 39.45], [-95.15, 37.25], [-97.32, 37.25], [-97.32, 39.45]]] }, {
+      ...baseProps,
+      title: "Eastern agriculture demonstration region",
+      summary: "A generalized regional fixture designed for habitat and community-context report recipes.",
+      sourceRole: "aggregate",
+      spatialScope: "Eastern Kansas regional envelope",
+      temporalScope: "Demonstration snapshot only",
+      lastUpdate: "2026-08-29",
+      evidenceState: "GENERALIZED_GEOMETRY",
+      citation: "kfm:evidence:synthetic:ag-east-context-v1",
+      generalizationNote: "Regional context only; no field, ownership, operation, production, or private-land detail.",
+      relatedLayers: "Prairie & ecological regions; Communities",
+      focusLng: -96.25,
+      focusLat: 38.35,
+    }),
   ],
 };
 
@@ -341,7 +387,9 @@ const communitiesDemo: FeatureCollection<Geometry, FeatureProperties> = {
     ["place-goodland", "Goodland", -101.71, 39.35], ["place-hays", "Hays", -99.33, 38.88],
     ["place-ellsworth", "Ellsworth", -98.23, 38.73], ["place-wichita", "Wichita", -97.34, 37.69],
     ["place-manhattan", "Manhattan", -96.58, 39.18], ["place-topeka", "Topeka", -95.68, 39.05],
-    ["place-kansas-city", "Kansas City", -94.63, 39.11],
+    ["place-kansas-city", "Kansas City", -94.63, 39.11], ["place-garden-city", "Garden City", -100.87, 37.97],
+    ["place-dodge-city", "Dodge City", -100.02, 37.75], ["place-salina", "Salina", -97.61, 38.84],
+    ["place-emporia", "Emporia", -96.18, 38.4], ["place-pittsburg", "Pittsburg", -94.7, 37.41],
   ].map(([id, name, lng, lat]) => feature(String(id), { type: "Point", coordinates: [Number(lng), Number(lat)] }, {
     ...baseProps,
     title: `${name} place context`,
@@ -371,6 +419,21 @@ const transportDemo: FeatureCollection<Geometry, FeatureProperties> = {
       generalizationNote: "Approximate corridor only; no routing, lane, bridge, or operational detail.",
       focusLng: -98.2,
       focusLat: 38.9,
+    }),
+    feature("transport-north-south-context", { type: "LineString", coordinates: [[-97.62, 39.95], [-97.61, 38.84], [-97.34, 37.69], [-97.33, 37.05]] }, {
+      ...baseProps,
+      title: "North–south movement corridor",
+      summary: "A generalized corridor fixture for comparing community access, report coverage, and map extent.",
+      sourceRole: "aggregate",
+      spatialScope: "Central Kansas public route context",
+      temporalScope: "Current demonstration context",
+      lastUpdate: "2026-08-29",
+      evidenceState: "GENERALIZED_GEOMETRY",
+      citation: "kfm:evidence:synthetic:transport-ns-v1",
+      generalizationNote: "Approximate corridor only; no routing, traffic, lane, bridge, schedule, or operational detail.",
+      relatedLayers: "Communities; Agricultural context",
+      focusLng: -97.5,
+      focusLat: 38.5,
     }),
   ],
 };
@@ -518,7 +581,7 @@ export const LAYER_REGISTRY: LayerRecord[] = [
     renderers: [fill("kansas-extent-fill", "kfm-kansas-extent", "#244f45", 0.42, "#d9bc77"), line("kansas-extent-line", "kfm-kansas-extent", "#d9bc77", 1.8, 0.9)],
   },
   {
-    id: "water-context", title: "Hydrology context", description: "Simplified Kansas river corridors with explicit evidence states.", domain: "Hydrology", category: "Hydrology & water", sourceType: "GeoJSON", sourceId: "kfm-water", datasetName: "KFM synthetic hydrology interaction fixture", geometryType: "LineString", minZoom: 5, maxZoom: 14, defaultVisibility: true, defaultOpacity: 0.9,
+    id: "water-context", title: "Hydrology context", description: "Simplified Kansas river and basin corridors with explicit evidence states.", domain: "Hydrology", category: "Hydrology & water", sourceType: "GeoJSON", sourceId: "kfm-water", datasetName: "KFM synthetic hydrology interaction fixtures", geometryType: "LineString", minZoom: 5, maxZoom: 14, defaultVisibility: true, defaultOpacity: 0.9,
     legend: [{ label: "Demonstration water corridor", color: "#63c8db", shape: "line" }], units: "not applicable", scaleNote: "Generalized statewide corridor", validTimeExtent: "2022–2026 demonstration context", sourceTime: "Mixed synthetic source time", releaseTime: "Demonstration build", freshnessState: "MIXED", attribution: "KFM site-local synthetic fixture", evidenceReference: "Per-feature EvidenceRef", publicStatus: "GENERALIZED", sensitivityNote: "No monitoring location, measurement, or operational status is asserted.", releaseState: "DEMONSTRATION", correctionNote: "Stale and missing evidence remain visible.", relatedLayers: ["Atmosphere observations", "Communities"], interactions: ["hover", "select", "zoom", "evidence"], filters: ["time context"], viewingModes: ["2D", "globe"], bounds: [-102.05, 37.0, -94.6, 39.2], data: waterDemo,
     renderers: [line("water-context-line", "kfm-water", "#63c8db", 3, 0.9)],
   },
@@ -533,7 +596,7 @@ export const LAYER_REGISTRY: LayerRecord[] = [
     renderers: [fill("geology-context-fill", "kfm-geology", "#b98962", 0.34, "#e0b98d")],
   },
   {
-    id: "agriculture-context", title: "Agricultural context", description: "Coarse, public-safe regional fixture without farm-level attributes.", domain: "Agriculture", category: "Agriculture", sourceType: "GeoJSON", sourceId: "kfm-agriculture", datasetName: "KFM public-safe agriculture fixture", geometryType: "Polygon", minZoom: 5, maxZoom: 12, defaultVisibility: false, defaultOpacity: 0.24,
+    id: "agriculture-context", title: "Agricultural context", description: "Coarse, public-safe regional fixtures without farm-level attributes.", domain: "Agriculture", category: "Agriculture", sourceType: "GeoJSON", sourceId: "kfm-agriculture", datasetName: "KFM public-safe agriculture fixtures", geometryType: "Polygon", minZoom: 5, maxZoom: 12, defaultVisibility: false, defaultOpacity: 0.24,
     legend: [{ label: "Generalized agricultural context", color: "#b4a45f", shape: "fill" }], units: "regional context", scaleNote: "Coarse public-safe envelope", validTimeExtent: "Demonstration snapshot", sourceTime: "Site build", releaseTime: "Demonstration build", freshnessState: "NOT_APPLICABLE", attribution: "KFM site-local synthetic fixture", evidenceReference: "No claim-bearing evidence", publicStatus: "GENERALIZED", sensitivityNote: "No parcel, operator, yield, or private-land detail.", releaseState: "GENERALIZED", correctionNote: "No operational agriculture claim is made.", relatedLayers: ["Prairie & ecological regions"], interactions: ["hover", "select", "zoom"], filters: [], viewingModes: ["2D"], bounds: [-101.8, 37.35, -99.75, 39.35], data: agricultureDemo,
     renderers: [fill("agriculture-context-fill", "kfm-agriculture", "#b4a45f", 0.24, "#d8c97c")],
   },
@@ -552,7 +615,7 @@ export const LAYER_REGISTRY: LayerRecord[] = [
     ],
   },
   {
-    id: "transport-context", title: "Roads, rail & movement", description: "Generalized route context for system relationships, not navigation.", domain: "Transport", category: "Roads, rail & movement", sourceType: "GeoJSON", sourceId: "kfm-transport", datasetName: "KFM movement corridor fixture", geometryType: "LineString", minZoom: 5, maxZoom: 14, defaultVisibility: false, defaultOpacity: 0.75,
+    id: "transport-context", title: "Roads, rail & movement", description: "Generalized corridor context for system relationships, not navigation.", domain: "Transport", category: "Roads, rail & movement", sourceType: "GeoJSON", sourceId: "kfm-transport", datasetName: "KFM movement corridor fixtures", geometryType: "LineString", minZoom: 5, maxZoom: 14, defaultVisibility: false, defaultOpacity: 0.75,
     legend: [{ label: "Generalized movement corridor", color: "#dc9d72", shape: "line" }], units: "not navigable", scaleNote: "Statewide generalized corridor", validTimeExtent: "Current demonstration context", sourceTime: "Site build", releaseTime: "Demonstration build", freshnessState: "NOT_APPLICABLE", attribution: "KFM site-local synthetic fixture", evidenceReference: "kfm:demo:site-local:v1", publicStatus: "GENERALIZED", sensitivityNote: "No operational infrastructure detail.", releaseState: "GENERALIZED", correctionNote: "Not suitable for routing or asset inspection.", relatedLayers: ["Communities"], interactions: ["hover", "select", "zoom"], filters: [], viewingModes: ["2D", "globe"], bounds: [-102.0, 38.7, -94.6, 39.35], data: transportDemo,
     renderers: [line("transport-context-line", "kfm-transport", "#dc9d72", 2.2, 0.75, [3, 2])],
   },
@@ -632,3 +695,4 @@ export const findFeature = (featureId: string) => {
   }
   return null;
 };
+

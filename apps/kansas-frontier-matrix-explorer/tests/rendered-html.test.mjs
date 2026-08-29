@@ -31,6 +31,7 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /Kansas Frontier Matrix Explorer/i);
   assert.match(html, /Layer Catalog/i);
   assert.match(html, /MapLibre/i);
+  assert.match(html, /Build report/i);
   assert.match(html, /synthetic and generalized demonstration layers/i);
   assert.match(html, /Repository briefing/i);
   assert.match(html, /main@(?:<!-- -->)?2b0ea9b/i);
@@ -42,16 +43,91 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /county inventory is useful but snapshot-sensitive/i);
 });
 
-test("gives first-time visitors plain-language guided examples", async () => {
+test("centers the primary workflow on map-scoped custom reports", async () => {
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const mapInterface = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
+  const about = await readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(mapInterface, /"report"/);
+  assert.match(source, /kfm-custom-map-report-v1/);
+  assert.match(source, /Custom report builder/);
+  assert.match(source, /Build from the map you are using/);
+  assert.match(source, /Map extent/);
+  assert.match(source, /Visible layers/);
+  assert.match(source, /Report \.html/);
+  assert.match(source, /Data \.json/);
+  assert.match(source, /setReportLayerIds\(activeLayers\.map/);
+  assert.match(source, /const \[leftOpen, setLeftOpen\] = useState\(false\)/);
+  assert.match(about, /Start with a question, finish with a report/);
+  assert.match(about, /EVIDENCE STATES/);
+  assert.match(css, /\.report-builder-grid/);
+  assert.match(css, /\.about-page/);
+});
+
+test("adds reusable analysis recipes, device-local workspaces, report filters, and richer fixtures", async () => {
+  const ts = await import("typescript");
+  const recipeSource = await readFile(new URL("../app/analysis-recipes.ts", import.meta.url), "utf8");
+  const explorerSource = await readFile(new URL("../app/explorer-data.ts", import.meta.url), "utf8");
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  const compile = (source, fileName) => ts.transpileModule(source, {
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+    fileName,
+  }).outputText;
+  const recipes = await import(`data:text/javascript;base64,${Buffer.from(compile(recipeSource, "analysis-recipes.ts")).toString("base64")}`);
+  const explorer = await import(`data:text/javascript;base64,${Buffer.from(compile(explorerSource, "explorer-data.ts")).toString("base64")}`);
+  const layer = (id) => explorer.LAYER_REGISTRY.find((candidate) => candidate.id === id);
+
+  assert.equal(recipes.ANALYSIS_RECIPES.length, 6);
+  assert.equal(recipes.ANALYSIS_RECIPES.every((recipe) => recipe.layerIds.every((id) => Boolean(layer(id)))), true);
+  assert.equal(layer("water-context").data.features.length, 4);
+  assert.equal(layer("agriculture-context").data.features.length, 3);
+  assert.equal(layer("communities").data.features.length, 12);
+  assert.equal(layer("transport-context").data.features.length, 2);
+  assert.match(page, /kfm-map-workspaces-v1/);
+  assert.match(page, /saveCurrentWorkspace/);
+  assert.match(page, /loadSavedWorkspace/);
+  assert.match(page, /reportEvidenceFilter/);
+  assert.match(page, /handleWorkspaceShortcut/);
+  assert.match(page, /shortcut R/);
+  assert.match(css, /\.analysis-recipes/);
+  assert.match(css, /\.saved-workspace-list/);
+  assert.match(css, /\.report-active-filters/);
+});
+
+test("adds a renderer-neutral area-of-interest workflow and browser-local camera history", async () => {
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const runtime = await readFile(new URL("../app/map-runtime.ts", import.meta.url), "utf8");
+  const mapInterface = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.doesNotMatch(runtime, /kfm-analysis-area|addSource|addLayer/);
+  assert.match(page, /"ANALYSIS_AREA"/);
+  assert.match(page, /captureAnalysisArea/);
+  assert.match(page, /Locked the current renderer-neutral view bounds as the report area of interest/);
+  assert.match(page, /params\.set\("aoi"/);
+  assert.match(page, /cameraHistoryRef/);
+  assert.match(page, /travelCameraHistory/);
+  assert.match(page, /Previous view/);
+  assert.match(page, /compatible_record_count/);
+  assert.match(css, /\.analysis-area-card/);
+  assert.match(mapInterface, /Terrain \+ hillshade[\s\S]*HOLD/);
+  assert.match(mapInterface, /Offline \/ PMTiles[\s\S]*HOLD/);
+});
+
+test("keeps optional guided examples while moving explanatory copy to About", async () => {
+  const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const about = await readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
   assert.match(source, /GUIDED_EXAMPLES/);
   assert.match(source, /atmo-topeka-2026/);
   assert.match(source, /atmo-hays-2024/);
   assert.match(source, /planning-generalized-envelope/);
-  assert.match(source, /Nothing in this build is a released operational dataset/);
   assert.match(source, /Every current map layer is synthetic or generalized/);
+  assert.match(source, /Guided material remains available from About/);
+  assert.match(about, /site-local synthetic and generalized demonstration records/);
   assert.match(source, /kfm-guided-start-dismissed-v1/);
   assert.match(source, /openGuidedExample/);
   assert.match(css, /\.guided-start/);
@@ -491,6 +567,6 @@ test("keeps the complete function inventory three-axis and runtime seam fail clo
   assert.match(page, /Function and interface navigator/);
   assert.match(page, /record\.action === "OPEN_TIMELINE"/);
   assert.match(page, /All 38 repository feature families/);
-  assert.match(page, /aria-current={currentWorkspace === workspace\.id \? "page" : undefined}/);
-  assert.match(page, /setRepositoryView\("functions"\); setRepositoryOpen\(true\); }}>Functions<\/button>/);
+  assert.match(page, /<Link className="about-action" href="\/about">About<\/Link>/);
+  assert.match(page, /id="repository-tab-functions"[\s\S]*setRepositoryView\("functions"\)[\s\S]*<span>Functions<\/span>/);
 });
