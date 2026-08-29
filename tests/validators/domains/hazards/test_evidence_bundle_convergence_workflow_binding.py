@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import shlex
 import unittest
 from pathlib import Path
 
@@ -48,16 +49,25 @@ class HazardsEvidenceBundleConvergenceWorkflowBindingTests(unittest.TestCase):
 
     def test_hosted_job_executes_the_binding_proof(self) -> None:
         workflow = self.load_workflow()
-        commands = "\n".join(
-            str(step.get("run", ""))
+        steps = {
+            str(step.get("name", "")): str(step.get("run", ""))
             for step in workflow["jobs"]["validate"]["steps"]
-        )
+        }
 
-        self.assertIn(
-            "test_evidence_bundle_convergence_workflow_binding.py",
-            commands,
+        self.assertEqual(
+            shlex.split(steps["Prove hosted trigger closure"]),
+            [
+                "python",
+                "-m",
+                "unittest",
+                "discover",
+                "--start-directory",
+                "tests/validators/domains/hazards",
+                "--pattern",
+                "test_evidence_bundle_convergence_workflow_binding.py",
+                "--verbose",
+            ],
         )
-        self.assertIn("test_evidence_bundle_schema_convergence.py", commands)
 
 
 if __name__ == "__main__":
