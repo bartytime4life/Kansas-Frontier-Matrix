@@ -2,7 +2,7 @@
 doc_id: kfm://doc/runbook-people-dna-land-living-person-review
 title: People, DNA, and Land Living-Person Review Runbook
 type: runbook
-version: 0.3.1
+version: 0.3.2
 status: DRAFT_REPOSITORY_GROUNDED; SYNTHETIC_VALIDATION_ONLY; POLICY_RUNTIME_UNBOUND; ACCOUNTABLE_REVIEW_UNVERIFIED; NON_RELEASE; NON_PUBLICATION
 owners: "@bartytime4life — verified CODEOWNERS route; accountable privacy, consent, Indigenous/Tribal, legal, security, and domain stewardship NEEDS VERIFICATION"
 created: 2026-08-25
@@ -272,7 +272,7 @@ Keep test execution, subject posture, and work state separate.
 | Test execution | `PASS`, `FAIL`, `NOT_RUN` | Whether the named synthetic profile behaved as expected at the tested revision |
 | Subject posture | `HISTORICAL_SUPPORTED`, `LIVING_OR_PLAUSIBLY_LIVING`, `UNKNOWN` | The minimized living-status category for review routing; not an identity or legal determination |
 | Work state | `PROCEED_TO_OTHER_GATES`, `HOLD`, `ESCALATE`, `ERROR` | The next repository-safe action; never a release or publication decision |
-| Progression hold | `true`, `false` | Whether further repository progression is blocked; an independent Boolean, not a second work-state value |
+| Progression hold | `true`, `false` | Boolean derived from `work_state`: `false` only for `PROCEED_TO_OTHER_GATES`; `true` for `HOLD`, `ESCALATE`, or `ERROR` |
 
 | Condition | Required work state | Interpretation |
 |---|---|---|
@@ -287,6 +287,8 @@ Keep test execution, subject posture, and work state separate.
 `work_state` must contain exactly one enum value. An unexpected failure uses
 `work_state: ERROR` with `progression_hold: true`; the Boolean records that
 progression is blocked without inventing an unencodable composite work state.
+A completed handoff must derive the Boolean from `work_state`; it is not an
+independent reviewer choice.
 
 `PROCEED_TO_OTHER_GATES` clears no evidence, rights, sensitivity, policy,
 review, lifecycle, release, or publication gate.
@@ -345,7 +347,7 @@ independent_gates:
   accountable_review: "UNRESOLVED | HELD | SATISFIED_BY_SEPARATE_AUTHORITY"
   release: "HELD"
 work_state: "PROCEED_TO_OTHER_GATES | HOLD | ESCALATE | ERROR"
-progression_hold: true
+progression_hold: "DERIVE_FROM_WORK_STATE"
 reason_codes:
   - "<non-sensitive reason code>"
 limitations:
@@ -358,7 +360,11 @@ next_action: "<one bounded repository-safe action>"
 
 The handoff is evidence for accountable review, not the review decision. Opaque
 references record that a separately governed authority must be consulted; they
-do not prove that authority is valid or resolved. Do not include names,
+do not prove that authority is valid or resolved. Replace
+`DERIVE_FROM_WORK_STATE` with the Boolean `false` only when `work_state` is
+`PROCEED_TO_OTHER_GATES`; use `true` for `HOLD`, `ESCALATE`, or `ERROR`. A
+handoff that retains the placeholder or pairs the Boolean with another state is
+invalid. Do not include names,
 sequences, dates of birth, addresses, coordinates, relationship details,
 consent credentials, protected cultural information, or proprietary excerpts.
 
@@ -402,8 +408,8 @@ This documentation slice is complete only when:
 7. the minimized handoff records consent status, scope, purpose, audience,
    valid-time and revocation posture plus evidence, exposure, and accountable
    review posture without protected values;
-8. `work_state` contains one finite value and any independent progression hold
-   is encoded separately; and
+8. `work_state` contains one finite value and the separately encoded
+   `progression_hold` Boolean is derived consistently from it; and
 9. rollback is limited to documentation and cannot be mistaken for consent
    revocation, data deletion, correction, withdrawal, or public-state change.
 
