@@ -2,7 +2,8 @@
 doc_id: kfm://doc/runbook-people-dna-land-validation
 title: People/DNA/Land Validation Runbook
 type: runbook
-version: v1.0.0
+version: v1.0.1
+prior_version: v1.0.0
 prior_state: explicit scaffold with no operational procedure
 status: DRAFT_REPOSITORY_GROUNDED; TWO_BOUNDED_DOMAIN_WORKFLOW_PROFILES_EXECUTABLE; FOCUSED_HISTORICAL_RESOLUTION_AND_EVIDENCE_BUNDLE_CONVERGENCE_SUITES_EXECUTABLE; BROADER_SEMANTICS_POLICY_PROOF_RELEASE_AND_PUBLICATION_HELD
 owners:
@@ -29,13 +30,13 @@ reason_codes:
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 93752ca61000e317c1c8846ffa4031a1f3268731
+  base_commit: c00096f904c66053938355e52f4a5cb9402be6a4
   target_prior_blob: 9ac1079ed880d3c94d52aabe083541987a9afc39
-  lane_readme_prior_blob: 49c5fe79f9c788c669d86b22b9c1af93ad8dd398
+  lane_readme_prior_blob: 1ba3f28deaaea1fc9811ee1eb58e59558c2ecd84
   domain_workflow_blob: bcf64c3e3b6653b9543489fc5a6031805ae3ef48
   evidence_convergence_workflow_blob: d8414de26b72507689c92f61f5d0953cd4b63391
-  consent_overlay_test_blob: 4f529582d961ed2b87df20a7f158e03d52eccbc8
-  consent_overlay_validator_blob: b2ff0e5037de0f1c22486743ab5e20926c68474d
+  consent_overlay_test_blob: 2ee112baeb352846dd0ef4d065baf0177e7aa38b
+  consent_overlay_validator_blob: 6ea7a2904b2062df2ef080785035c43588a4e633
   revocation_assessment_test_blob: bceeef36e5c4e456e6f8a3fc192cd1c349d34fb5
   revocation_assessment_validator_blob: 76c7805428f253a7a711c7bc68a27e9cbcce40e7
   historical_resolution_test_blob: 9c98ad5b6b4e11ed6625305121e0e39026eac1c1
@@ -127,7 +128,7 @@ surfaces. It does not become their authority.
 
 ## Current repository status
 
-This runbook is grounded in `main@93752ca61000e317c1c8846ffa4031a1f3268731`.
+This runbook is grounded in `main@c00096f904c66053938355e52f4a5cb9402be6a4`.
 Re-check paths and commands if the tested revision differs.
 
 | Surface | Current state | Bounded conclusion |
