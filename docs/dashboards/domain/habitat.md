@@ -2,7 +2,7 @@
 doc_id: kfm://doc/dashboards-domain-habitat
 title: Habitat Dashboard Specification
 type: standard
-version: v1.0
+version: v1.0.1
 status: repository-grounded; specification-only; placement-hold; runtime-needs-verification; non-release; non-publication
 owners:
   - "@bartytime4life — CONFIRMED GitHub review route through the repository default CODEOWNERS rule"
@@ -11,7 +11,7 @@ owners:
   - "Sensitivity and geoprivacy reviewer — NEEDS VERIFICATION"
 owner_status: "CODEOWNERS confirms repository review routing only; domain, metric, source, sensitivity, evidence, policy, UI, release, and independent-review authority remain NEEDS VERIFICATION"
 created: 2026-05-26
-updated: 2026-08-21
+updated: 2026-08-29
 policy_label: repository-facing; sensitivity-aware; no-restricted-payload
 truth_posture: cite-or-abstain
 owning_root: docs/
@@ -19,7 +19,7 @@ responsibility: "Specify a Habitat domain-health dashboard boundary, metric inte
 current_path: docs/dashboards/domain/habitat.md
 placement_status: "CONFIRMED existing path under canonical docs/ root; HOLD as part of the unadmitted docs/dashboards/ direct-child lane"
 runtime_status: "NEEDS VERIFICATION — Explorer Habitat files are placeholders and no dashboard route, metric producer, telemetry series, query, deployed panel, or live feed was verified"
-evidence_snapshot: main@60714d75d7f2b578131204768d1ca6c4bb04b730; tree 15f32e0e0f4587a89fe8e70433cedb73b6cae39d; prior target blob 28d2905e89e945ebe37e390dc6d935fa87b69905; prior catalog blob 3142b10a6bfea2d1f7c2bed51ca0f0859e77055f.
+evidence_snapshot: main@1bc300c5aeaf5323edead670d648edfb8c3f21c2; prior target blob f7312a45157372a72600e738b14912bba23756d8; critical-habitat source-role validator blob 0e1c859b493f9c485885a1e4ae66ff60bf376a6d; focused test blob 3fb512a9812affb8caec9750fc29cd749f82cddf; focused workflow blob 704d911bd976acb65ba6beeadc5eb7df25660f73.
 related:
   - ../README.md
   - ./README.md
@@ -32,14 +32,18 @@ related:
   - ../../../apps/explorer-web/src/features/domains/habitat/README.md
   - ../../../contracts/cross_domain/fauna_habitat/public_safe_assignment_profile.md
   - ../../../.github/workflows/domain-habitat.yml
+  - ../../../.github/workflows/habitat-critical-habitat-source-role.yml
+  - ../../../tools/validators/domains/habitat/validate_critical_habitat_source_role.py
+  - ../../../tests/domains/habitat/test_critical_habitat_source_role.py
   - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../doctrine/directory-rules.md
 tags: [kfm, dashboards, domain, habitat, evidence, source-role, land-cover, sensitivity, geoprivacy, finite-outcomes, cite-or-abstain]
 notes:
   - "v1.0 is a same-path repository reconciliation of the v0.1 Atlas-derived proposal."
+  - "v1.0.1 records the landed fixture-only critical-habitat source-role guard without upgrading policy, source, runtime, dashboard, or regulatory maturity."
   - "The dashboard specification reports posture; it does not create EvidenceBundles, PolicyDecisions, review decisions, release decisions, or Habitat truth."
   - "Current executable evidence is bounded to synthetic no-network validators and fixtures; UI and operational dashboard behavior remain unverified."
-  - "This revision changes documentation and the shared dashboard catalog only. It does not execute a source, change policy, deploy an application, release data, or publish KFM knowledge."
+  - "This revision changes only docs/dashboards/domain/habitat.md. It does not execute a source, change policy, deploy an application, release data, or publish KFM knowledge."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -55,7 +59,7 @@ notes:
 > **Habitat can become sensitive through composition.** A seemingly ordinary polygon, class, corridor, model surface, count, filter, or trend can disclose protected fauna or flora locations, steward-withheld knowledge, private-parcel relationships, corridor endpoints, or model support. Public outputs must be transformed and evaluated before they reach the client; client-side hiding is not a safety control.
 
 > [!NOTE]
-> Current executable Habitat evidence is narrow: a proposed-inactive land-cover materiality profile, a shared EvidenceBundle projection convergence check, and a synthetic Fauna–Habitat candidate profile. These checks prove only their fixture contracts. They do not admit a source, establish habitat or species truth, enforce production policy, authorize release, or publish data.
+> Current executable Habitat evidence is narrow: a proposed-inactive land-cover materiality profile, a shared EvidenceBundle projection convergence check, a synthetic Fauna–Habitat candidate profile, and a fixture-only critical-habitat source-role guard. These checks prove only their fixture contracts. They do not admit a source, establish habitat or species truth, create regulatory authority, enforce production policy, authorize release, or publish data.
 
 ## Quick jump
 
@@ -158,7 +162,7 @@ Until then, the surface may report measured finite outcomes with their limitatio
 |---|---|---|---|
 | Land-cover class-scheme/version skew | Are compared observations and derived products bound to compatible native class schemes, crosswalks, and vintages? | Accepted metric contract, source descriptors, crosswalk profile, fixtures, validator, producer, owner | `PROPOSED` |
 | Material-change disposition profile | Which declared changes are `NON_EVENT`, `PROMOTION_CANDIDATE`, `HOLD`, or invalid under one profile version? | Current materiality profile and deterministic assessment output; scientific/operational threshold review for live use | Executable fixture slice; live use `HOLD` |
-| Modeled/regulatory anti-collapse | Is every modeled suitability or habitat output kept distinct from designated critical habitat and observed occurrence? | Admitted source roles, model card, policy, negative fixtures, validator, API/UI tests | Policy and domain tests are placeholders; `NEEDS VERIFICATION` |
+| Modeled/regulatory anti-collapse | Is every modeled suitability or habitat output kept distinct from designated critical habitat and observed occurrence? | Admitted source roles, model card, policy, negative fixtures, validator, API/UI tests | Fixture-only validator, negative tests, and focused workflow are `CONFIRMED`; policy activation, source admission, model-card binding, API/UI behavior, and runtime enforcement remain `HOLD` / `NEEDS VERIFICATION` |
 | Uncertainty and fitness coverage | Do modeled views carry uncertainty, intended-use, unsupported-use, source-role, and valid-time context? | Accepted model/run contracts, validators, representative fixtures, release binding | `NEEDS VERIFICATION` |
 | Habitat × Fauna candidate disposition | Does the pair profile preserve evidence, source role, sensitivity, generalized geometry, and non-publisher effects? | Pair profile, ten-case synthetic fixture matrix, validator and tests | Fixture behavior `CONFIRMED`; relationship truth and runtime not established |
 | Protected-detail side-channel review | Could polygons, vertex density, filters, counts, errors, timing, exports, or correlation reveal protected detail? | Threat model, adversarial fixtures, transform policy, receipts, public/steward parity tests | `NEEDS VERIFICATION` |
@@ -291,10 +295,11 @@ The panel itself needs explicit loading, unavailable, stale, restricted, malform
 | [EvidenceBundle convergence workflow](../../../.github/workflows/habitat-evidence-bundle-convergence.yml) | Shared-fixture projection convergence | Projection does not diverge from shared shape within test scope | Evidence truth, UI resolution, policy, or release |
 | [Fauna–Habitat candidate workflow](../../../.github/workflows/fauna-habitat-public-safe-assignment.yml) | Ten-case synthetic, no-coordinate, non-publisher profile validation | Pair-profile fixture behavior | Real relationship, geoprivacy transform, policy review, or publication |
 | [Habitat domain workflow](../../../.github/workflows/domain-habitat.yml) | Executable materiality slice plus explicit proof and release-dry-run holds | Current workflow maturity and hold semantics | Proof pack, release candidate, deployment, or publication |
+| [Critical-habitat source-role workflow](../../../.github/workflows/habitat-critical-habitat-source-role.yml) | Deterministic fixture-only validator and negative tests | Regulatory designation and modeled habitat remain separate source roles; presence and movement claims are denied within fixture scope | Source admission, policy activation, regulatory authority, occurrence truth, runtime enforcement, release, or publication |
 
 ### Current maturity summary
 
-- **CONFIRMED:** documentation, contract/schema/policy/test paths, placeholder UI files, bounded synthetic validator slices, path-scoped workflows, and one executable synthetic cross-domain candidate profile.
+- **CONFIRMED:** documentation, contract/schema/policy/test paths, placeholder UI files, bounded synthetic validator slices, path-scoped workflows, one executable synthetic cross-domain candidate profile, and the fixture-only critical-habitat source-role guard.
 - **PROPOSED:** dashboard metrics, producers, panels, queries, routes, telemetry, thresholds, SLOs, and alerts.
 - **NEEDS VERIFICATION:** application wiring, governed API envelopes, source admission/currentness, production policy enforcement, public-safe transform pipeline, release artifacts, metric ownership, hosted controls, deployment, and runtime observation.
 - **UNKNOWN:** a running Habitat dashboard URL, active telemetry store, current dashboard feed, and production health posture.
@@ -341,6 +346,8 @@ python -m unittest discover \
   --pattern 'test_land_cover_materiality.py' \
   --verbose
 python tools/validators/domains/habitat/validate_land_cover_materiality.py --fixtures
+
+python -m unittest -v tests.domains.habitat.test_critical_habitat_source_role
 
 python -m unittest -q \
   tests.validators.domains.habitat.test_evidence_bundle_schema_convergence
@@ -466,7 +473,10 @@ Recheck this specification when:
 - [Occurrence geoprivacy policy scaffold](../../../policy/domains/habitat/occurrence_geoprivacy.rego)
 - [Model-versus-observation policy scaffold](../../../policy/domains/habitat/model_vs_observation.rego)
 - [Fauna–Habitat candidate tests](../../../tests/cross_domain/fauna_habitat/test_public_safe_assignment.py)
+- [Critical-habitat source-role validator](../../../tools/validators/domains/habitat/validate_critical_habitat_source_role.py)
+- [Critical-habitat source-role tests](../../../tests/domains/habitat/test_critical_habitat_source_role.py)
 - [Habitat domain workflow](../../../.github/workflows/domain-habitat.yml)
+- [Critical-habitat source-role workflow](../../../.github/workflows/habitat-critical-habitat-source-role.yml)
 - [Habitat land-cover materiality workflow](../../../.github/workflows/habitat-land-cover-materiality.yml)
 - [Habitat EvidenceBundle convergence workflow](../../../.github/workflows/habitat-evidence-bundle-convergence.yml)
 - [Fauna–Habitat candidate workflow](../../../.github/workflows/fauna-habitat-public-safe-assignment.yml)
@@ -531,5 +541,6 @@ This documentation change creates no source, metric, runtime, data, cache, relea
 |---|---|---|---|
 | v0.1 | 2026-05-26 | Initial Atlas-derived per-domain indicator proposal | No implementation or publication |
 | v1.0 | 2026-08-21 | Reconciled against current main; replaced unsupported thresholds/cadence and stale implementation pointers; added metric, source-role, sensitivity, finite-outcome, evidence, validation, correction, and rollback boundaries | No source admission, policy activation, runtime change, release, deployment, or publication |
+| v1.0.1 | 2026-08-29 | Corrected the executable inventory for the landed fixture-only critical-habitat source-role guard and focused workflow | No source admission, policy activation, regulatory authority, runtime change, release, deployment, or publication |
 
 [Back to top](#top)
