@@ -76,7 +76,12 @@ def _write_repository(
     )
 
 
-def _write_audit_report(path: Path, **counts: int) -> None:
+def _write_audit_report(
+    path: Path,
+    *,
+    vulnerability_records: dict[str, object] | None = None,
+    **counts: int,
+) -> None:
     vulnerabilities = {
         "info": 0,
         "low": 0,
@@ -90,6 +95,11 @@ def _write_audit_report(path: Path, **counts: int) -> None:
             {
                 "actions": [],
                 "advisories": {},
+                **(
+                    {"vulnerabilities": vulnerability_records}
+                    if vulnerability_records is not None
+                    else {}
+                ),
                 "metadata": {
                     "vulnerabilities": vulnerabilities,
                     "dependencies": 5,
@@ -330,6 +340,80 @@ def test_threshold_vulnerability_is_regression(
     assert report["outcome"] == "REGRESSION"
     assert report["threshold_count"] == expected_count
     assert report["reason_codes"] == ["VULNERABILITY_THRESHOLD_EXCEEDED"]
+
+
+def test_threshold_projection_is_actionable_bounded_and_deterministic(
+    tmp_path: Path,
+) -> None:
+    report_path = tmp_path / "audit.json"
+    records = {
+        f"package-{index:02d}": {
+            "name": f"package-{index:02d}",
+            "severity": "critical" if index == 59 else "high",
+            "via": [
+                {"source": 9000 + index},
+                {"source": 8000 + index},
+                "transitive-package",
+            ],
+            "fixAvailable": {
+                "name": f"package-{index:02d}",
+                "version": f"2.0.{index}",
+                "isSemVerMajor": False,
+            },
+        }
+        for index in range(60)
+    }
+    _write_audit_report(
+        report_path,
+        vulnerability_records=records,
+        high=59,
+        critical=1,
+    )
+
+    first = classify_audit(
+        report_path, command_exit_code=1, audit_level="high"
+    )
+    second = classify_audit(
+        report_path, command_exit_code=1, audit_level="high"
+    )
+
+    projection = first["threshold_vulnerabilities"]
+    assert first["outcome"] == "REGRESSION"
+    assert projection["status"] == "PRESENT"
+    assert projection["total"] == 60
+    assert projection["truncated"] is True
+    assert projection["invalid_records"] == 0
+    assert len(projection["items"]) == 50
+    assert projection["items"][0] == {
+        "package": "package-59",
+        "severity": "critical",
+        "advisory_ids": ["8059", "9059"],
+        "advisory_ids_truncated": False,
+        "fix_available": True,
+        "fix_version": "2.0.59",
+    }
+    assert render_report(first) == render_report(second)
+
+
+def test_threshold_projection_marks_missing_and_count_mismatch(
+    tmp_path: Path,
+) -> None:
+    report_path = tmp_path / "audit.json"
+    _write_audit_report(report_path, high=1)
+    missing = classify_audit(
+        report_path, command_exit_code=1, audit_level="high"
+    )
+    assert missing["threshold_vulnerabilities"]["status"] == "NOT_PROVIDED"
+
+    _write_audit_report(
+        report_path,
+        vulnerability_records={},
+        high=1,
+    )
+    mismatch = classify_audit(
+        report_path, command_exit_code=1, audit_level="high"
+    )
+    assert mismatch["threshold_vulnerabilities"]["status"] == "COUNT_MISMATCH"
 
 
 @pytest.mark.parametrize("report_body", ["", "not json", "{}"])
