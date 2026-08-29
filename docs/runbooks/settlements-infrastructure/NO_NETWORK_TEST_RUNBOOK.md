@@ -2,9 +2,9 @@
 doc_id: kfm://doc/runbook/settlements-infrastructure/no-network-test
 title: No-Network Test Runbook — Settlements / Infrastructure
 type: runbook
-version: v1.0.0
-prior_version: v0.1
-prior_state: proposal-era domain-wide procedure with unverified commands, fixture trees, policy outcomes, proof production, release closure, and rollback execution
+version: v1.0.1
+prior_version: v1.0.0
+prior_state: repository-grounded procedure with an incorrect adjacent README blob and incomplete validator fixture inventory
 status: DRAFT_REPOSITORY_GROUNDED; BOUNDED_EVIDENCEBUNDLE_SCHEMA_CONVERGENCE_EXECUTABLE; GUARDED_LOCAL_COMMAND_AVAILABLE; WORKFLOW_GUARD_INJECTION_HELD; DOMAIN_SEMANTIC_PROOF_RELEASE_AND_PUBLICATION_HELD; NOT_FOR_OPERATIONAL_USE
 owners:
   - "@bartytime4life — verified GitHub review route"
@@ -21,8 +21,10 @@ authority_rank: subordinate to accepted doctrine and ADRs, contracts, schemas, s
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  target_prior_blob: 6608cef57d32ffcfef5b2f394892e11dbdd495ae
-  lane_readme_blob: 5de90772b7ae420f42ed2794e7f545e55035aaa9
+  base_commit: 2b0ea9bbbc9d9a120ea94d92fb4617d96fe7d2a0
+  target_prior_blob: 0463c7dcc61ecb1021ead152abcb594e7ceadf99
+  proposal_era_blob: 6608cef57d32ffcfef5b2f394892e11dbdd495ae
+  lane_readme_blob: 0ab5135c16dae9eeda177921a89a18897ad41cf3
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   domain_workflow_blob: a47d89c40efd58ac31bc44dbc56bdfb1ccc3a325
@@ -32,10 +34,15 @@ evidence_snapshot:
   projection_validator_blob: 407c99ad07442e0b4802d057b695e391bdf4f8eb
   convergence_tests_blob: d1cfa0e9064e250dc3d157372d0091ae835d05c1
   shared_fixture_readme_blob: 89ace659414a757c14a4d3e516fd31d44c6a9969
+  shared_valid_fixture_1_blob: c0e41762e4318907acbc8425f2be77da4af43b8c
+  shared_valid_fixture_2_blob: 701df928d598b33844790fdd8d4e1d24d0f94182
+  shared_invalid_fixture_1_blob: 63986c0b9e3f09415a3f41290f64df229fd1d603
+  shared_invalid_fixture_2_blob: d3326b9640d9c5d7ea3700774ab89b64b2d468bb
+  shared_invalid_fixture_3_blob: 737bfc9e344ff3ba031d569320bc1176fddc09ca
   shared_python_guard_readme_blob: d0e89356c9a9175f2c9798daa1923d73a9034eca
   bounded_test_count: 3
-  valid_fixture_count: 1
-  invalid_fixture_count: 1
+  valid_fixture_count: 2
+  invalid_fixture_count: 3
 related:
   - ./README.md
   - ../../domains/settlements-infrastructure/README.md
@@ -76,8 +83,10 @@ deterministic, read-only, and limited to the exact revision under review.
 
 > [!IMPORTANT]
 > Current executable scope is schema convergence only: one proposed domain
-> projection, one shared schema, one shared valid fixture, one shared invalid
-> fixture, three focused tests, and one validator wrapper. It does not establish
+> projection, one shared schema, two shared valid fixtures, three shared invalid
+> fixtures, three focused tests, and one validator wrapper. The focused test
+> samples one positive and one negative fixture; the validator command replays
+> all five. This scope does not establish
 > materialized evidence, real source admission, policy execution, accountable
 > review, proof, release, deployment, promotion, rollback execution, or
 > publication.
@@ -115,11 +124,11 @@ This document explains those authorities. It does not replace or amend them.
 |---|---|---|---|
 | Domain projection | `schemas/contracts/v1/domains/settlements-infrastructure/evidence_bundle.schema.json` | Proposed projection delegates its complete shape to the shared schema and denies independent fields or exposure authority | Accepted domain evidence semantics or a materialized domain EvidenceBundle |
 | Shared schema | `schemas/contracts/v1/evidence/evidence_bundle.schema.json` | Closed draft object shape requires ten top-level fields | Claim truth, source authority, rights correctness, sensitivity correctness, or evidence closure |
-| Shared fixtures | `valid/valid_1.json` and `invalid/invalid_1.json` under the shared EvidenceBundle fixture root | One example is accepted and one example without `bundle_id` is rejected | Settlements/Infrastructure source, geometry, facility, operator, network, or dependency coverage |
+| Shared fixtures | `valid/valid_1.json`, `valid/valid_2.json`, and `invalid/invalid_1.json` through `invalid/invalid_3.json` under the shared EvidenceBundle fixture root | Two examples are accepted; three controls are rejected for a missing `bundle_id`, an undeclared `extra_field`, and a nonconforming `bundle_id` | Settlements/Infrastructure source, geometry, facility, operator, network, or dependency coverage |
 | Validator wrapper | `validate_settlements_infrastructure_evidence_bundle_projection.py` | Runs the shared JSON Schema harness against the domain projection | Domain policy, evidence resolution, proof production, or release decision |
 | Focused tests | Three tests in `test_evidence_bundle_schema_convergence.py` | Projection delegation, shared required fields, and positive/negative fixture behavior are checked | A substantive Settlements/Infrastructure domain suite |
 | Shared guard | `tools/ci/kfm_no_network/sitecustomize.py` and its README | Opt-in startup denial for named Python IPv4/IPv6 connection, send, resolver, and URL-open paths | Operating-system, runner-wide, container, namespace, dependency-install, non-Python, or arbitrary private-API isolation |
-| Convergence workflow | `.github/workflows/settlements-infrastructure-evidence-bundle-convergence.yml` | Compiles the focused files, runs three tests, and replays two shared fixtures with deterministic environment values | Shared startup-guard injection or runner-wide no-egress enforcement |
+| Convergence workflow | `.github/workflows/settlements-infrastructure-evidence-bundle-convergence.yml` | Compiles the focused files, runs three tests, and replays all five shared fixtures with deterministic environment values | Shared startup-guard injection or runner-wide no-egress enforcement |
 | Domain readiness workflow | `.github/workflows/domain-settlements-infrastructure.yml` | Checks current paths, parses tracked JSON, classifies placeholders, and records proof and release holds | Semantic domain validation, proof, release dry run, or publication readiness |
 
 ### Guard wiring gap
@@ -189,7 +198,10 @@ reviewed.
    schemas/contracts/v1/domains/settlements-infrastructure/evidence_bundle.schema.json
    schemas/contracts/v1/evidence/evidence_bundle.schema.json
    fixtures/contracts/v1/evidence/evidence_bundle/valid/valid_1.json
+   fixtures/contracts/v1/evidence/evidence_bundle/valid/valid_2.json
    fixtures/contracts/v1/evidence/evidence_bundle/invalid/invalid_1.json
+   fixtures/contracts/v1/evidence/evidence_bundle/invalid/invalid_2.json
+   fixtures/contracts/v1/evidence/evidence_bundle/invalid/invalid_3.json
    tools/validators/validate_settlements_infrastructure_evidence_bundle_projection.py
    tests/validators/domains/settlements-infrastructure/test_evidence_bundle_schema_convergence.py
    tools/ci/kfm_no_network/sitecustomize.py
@@ -291,13 +303,17 @@ python \
 
 Expected result at the evidence snapshot:
 
-- `valid/valid_1.json` prints `OK`;
+- `valid/valid_1.json` and `valid/valid_2.json` each print `OK`;
 - `invalid/invalid_1.json` prints `EXPECTED_FAIL` because `bundle_id` is
-  required; and
-- the command exits `0` only when both expectations hold.
+  required;
+- `invalid/invalid_2.json` prints `EXPECTED_FAIL` because the closed schema
+  rejects the undeclared `extra_field`;
+- `invalid/invalid_3.json` prints `EXPECTED_FAIL` because `BAD` does not
+  match the lowercase `bundle_id` pattern; and
+- the command exits `0` only when all five expectations hold.
 
-The successful exit does not mean both fixtures are valid. It means the positive
-fixture was accepted and the negative fixture was rejected as declared.
+The successful exit does not mean every fixture is valid. It means both positive
+fixtures were accepted and all three negative fixtures were rejected as declared.
 
 ### 5. Confirm the procedure wrote no repository content
 
@@ -319,9 +335,9 @@ pass.
 | Output | Implemented meaning | Permitted conclusion |
 |---|---|---|
 | `OK <valid fixture>` | The tracked positive fixture satisfied the proposed projection and shared schema | This example satisfied the bounded schema profile |
-| `EXPECTED_FAIL <invalid fixture>` | The tracked negative fixture was rejected as declared | The required-field negative control remains effective |
+| `EXPECTED_FAIL <invalid fixture>` | A tracked negative fixture was rejected as declared | The applicable missing-field, closed-shape, or identifier-pattern control remains effective for that example |
 | `FAIL <path>: <reason>` | A positive fixture failed, a negative fixture was accepted, input could not be read, or evaluation failed | Stop and diagnose; no trust conclusion is available |
-| Exit `0` from `--fixtures` | Every tracked positive and negative expectation matched | The two-fixture schema profile is internally consistent at this revision |
+| Exit `0` from `--fixtures` | Every tracked positive and negative expectation matched | The five-fixture schema profile is internally consistent at this revision |
 | Exit `1` or `2` | Validation failed or required input was absent | Use `HOLD` or `ERROR`; do not report convergence |
 
 These are harness outputs, not `ANSWER`, `ABSTAIN`, `DENY`, or governed runtime
@@ -336,7 +352,7 @@ Use `READY_FOR_HUMAN_REVIEW` only when all applicable items hold:
 - [ ] Shared guard activation succeeded in the validation process.
 - [ ] The representative denial probe succeeded.
 - [ ] All three focused tests passed without weakened or skipped checks.
-- [ ] The valid fixture returned `OK` and the invalid fixture returned
+- [ ] Both valid fixtures returned `OK` and all three invalid fixtures returned
       `EXPECTED_FAIL`.
 - [ ] No new repository content was written.
 - [ ] No live source, real infrastructure detail, restricted material,
