@@ -64,8 +64,8 @@ reconciliation_snapshot:
   base_commit: 1bc300c5aeaf5323edead670d648edfb8c3f21c2
   target_prior_blob: 08c1f76ff328ff0636ca8d1f8e2a6dd03275ee3c
   flora_raw_prior_blob: 5a43f1788b887bd38fc54e593c566a915976413b
-  flora_raw_head_blob: b43d9ef27b100b26d6b72f516d84ff1c44cb3287
-  scope: "Same-path reconciliation of the Flora RAW README boundary only; the original v1.0 evidence snapshot and all other evidence pins remain historical."
+  flora_raw_head_blob: c4dc8c0bea01a33990a213bab4b6c26d070718d6
+  scope: "Same-path reconciliation of the Flora RAW README as a source-first-safe compatibility/reference hold; the original v1.0 evidence snapshot and all other evidence pins remain historical."
 drive_source: KFM_Flora_Architecture_PDF_Only_Implementation_Blueprint.pdf
 drive_source_date: 2026-04-21
 inspection_boundary: >-
@@ -128,7 +128,7 @@ notes:
   - "The subtype-first Flora source-registry lane contains a README and one PROPOSED placeholder file, not a schema-valid admitted SourceDescriptor or activation decision. The parallel domain-first lane remains unresolved. Live Flora refresh therefore remains HOLD."
   - "The current rich SourceDescriptor source_role vocabulary differs materially from the older seven-role vocabulary in draft Flora source-role documentation. Operators must validate against the implemented schema and must not guess or silently translate roles."
   - "KFM is not an official botanical, conservation-status, foraging, poison-control, land-access, regulatory, emergency, or life-safety authority."
-  - "v1.1 reconciles the same-path Flora RAW README after its documentation-only modernization. It does not admit a source, activate a connector, write payloads, establish restricted storage or receipts, or change the live-refresh hold."
+  - "v1.1 reconciles the same-path Flora RAW README as a source-first-safe compatibility/reference hold. It does not establish a physical capture home, admit a source, activate a connector, write payloads, establish restricted storage or receipts, or change the live-refresh hold."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -306,7 +306,7 @@ LIVE_FLORA_SOURCE_REFRESH = HOLD
 | USDA PLANTS connector identity | `connectors/usda-plants/`, `connectors/usda_plants/`, and `connectors/usda/plants/` are competing path candidates. | Exact implementation home and command remain unresolved; do not activate by convenience. |
 | Flora domain policy | `policy/domains/flora/` is repository-grounded but scaffolded, inactive, evaluator-unbound, and internally conflicted. | Do not claim operational source-edge policy enforcement. |
 | Flora sensitivity policy | `policy/sensitivity/flora/README.md` is a proposed scaffold. | Exact rare-plant and cultural-sensitivity enforcement remains unproved. |
-| Flora RAW lane | `data/raw/flora/README.md` is a substantive repository-grounded routing-and-hold boundary; the tracked lane contains only its README, a root `.gitkeep`, and four source-label subdirectories containing `.gitkeep` files. | The logical lifecycle home and fail-closed routing are documented, but accepted source-specific writer, restricted storage, readback, receipt, and live payload behavior remain unproved. |
+| Flora RAW lane | `data/raw/flora/README.md` is a substantive source-first-safe compatibility/reference hold; the tracked domain lane contains only its README, a root `.gitkeep`, and four inherited source-label subdirectories containing `.gitkeep` files. | Domain-scoped copies are prohibited. Accepted source-first physical capture placement, writers, restricted storage, readback, receipts, and live payload behavior remain unproved. |
 | Flora quarantine lane | `data/quarantine/flora/README.md` documents a fail-closed no-public-path hold lane and two confirmed reason sublanes. | Quarantine semantics are documented, but payload writers, policy automation, and review completion remain unproved. |
 
 ### 2.3 Evidence labels
@@ -324,7 +324,7 @@ LIVE_FLORA_SOURCE_REFRESH = HOLD
 - `connectors/flora/` is documentation-only;
 - Flora policy is scaffolded and inactive;
 - the sensitivity README is a scaffold;
-- the RAW README and quarantine README are substantive boundaries, while the RAW payload and source-label subdirectories remain empty;
+- the RAW README is a substantive compatibility/reference hold, the quarantine README is a substantive boundary, and the domain-local RAW payload/source-label subdirectories remain empty;
 - no upstream source was contacted during this documentation update.
 
 **PROPOSED**
