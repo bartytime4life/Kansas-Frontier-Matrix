@@ -559,16 +559,11 @@ def _threshold_vulnerability_projection(
 
     raw_vulnerabilities = report.get("vulnerabilities")
     if raw_vulnerabilities is None:
-        return {
-            "status": "NOT_PROVIDED",
-            "total": 0,
-            "truncated": False,
-            "invalid_records": 0,
-            "items": [],
-        }
+        return _legacy_threshold_advisory_projection(report, audit_level)
     if not isinstance(raw_vulnerabilities, dict):
         return {
             "status": "INVALID",
+            "source_format": "modern_vulnerabilities",
             "total": 0,
             "truncated": False,
             "invalid_records": 1,
@@ -579,6 +574,7 @@ def _threshold_vulnerability_projection(
     if threshold_index is None:
         return {
             "status": "INVALID",
+            "source_format": "modern_vulnerabilities",
             "total": 0,
             "truncated": False,
             "invalid_records": len(raw_vulnerabilities),
@@ -645,6 +641,96 @@ def _threshold_vulnerability_projection(
     )
     return {
         "status": "PRESENT" if invalid_records == 0 else "PARTIAL_INVALID",
+        "source_format": "modern_vulnerabilities",
+        "total": len(ordered_items),
+        "truncated": len(ordered_items) > MAX_THRESHOLD_VULNERABILITIES,
+        "invalid_records": invalid_records,
+        "items": ordered_items[:MAX_THRESHOLD_VULNERABILITIES],
+    }
+
+
+def _legacy_threshold_advisory_projection(
+    report: dict[str, Any], audit_level: str
+) -> dict[str, Any]:
+    raw_advisories = report.get("advisories")
+    if raw_advisories is None or raw_advisories == {}:
+        return {
+            "status": "NOT_PROVIDED",
+            "source_format": None,
+            "total": 0,
+            "truncated": False,
+            "invalid_records": 0,
+            "items": [],
+        }
+    if not isinstance(raw_advisories, dict):
+        return {
+            "status": "INVALID",
+            "source_format": "legacy_advisories",
+            "total": 0,
+            "truncated": False,
+            "invalid_records": 1,
+            "items": [],
+        }
+
+    threshold_index = SEVERITY_INDEX.get(audit_level)
+    if threshold_index is None:
+        return {
+            "status": "INVALID",
+            "source_format": "legacy_advisories",
+            "total": 0,
+            "truncated": False,
+            "invalid_records": len(raw_advisories),
+            "items": [],
+        }
+
+    items: list[dict[str, Any]] = []
+    invalid_records = 0
+    for advisory_key, raw_entry in raw_advisories.items():
+        advisory_id = _bounded_audit_text(advisory_key)
+        if advisory_id is None or not isinstance(raw_entry, dict):
+            invalid_records += 1
+            continue
+        package = _bounded_audit_text(raw_entry.get("module_name"))
+        severity = raw_entry.get("severity")
+        if package is None or severity not in SEVERITIES:
+            invalid_records += 1
+            continue
+        if SEVERITY_INDEX[severity] < threshold_index:
+            continue
+
+        advisory_ids = {advisory_id}
+        github_advisory_id = _bounded_audit_text(
+            raw_entry.get("github_advisory_id")
+        )
+        if github_advisory_id is not None:
+            advisory_ids.add(github_advisory_id)
+        ordered_ids = sorted(advisory_ids)
+        items.append(
+            {
+                "package": package,
+                "severity": severity,
+                "advisory_ids": ordered_ids[
+                    :MAX_ADVISORY_IDS_PER_VULNERABILITY
+                ],
+                "advisory_ids_truncated": (
+                    len(ordered_ids) > MAX_ADVISORY_IDS_PER_VULNERABILITY
+                ),
+                "fix_available": None,
+                "fix_version": None,
+            }
+        )
+
+    ordered_items = sorted(
+        items,
+        key=lambda item: (
+            -SEVERITY_INDEX[item["severity"]],
+            item["package"],
+            item["advisory_ids"],
+        ),
+    )
+    return {
+        "status": "PRESENT" if invalid_records == 0 else "PARTIAL_INVALID",
+        "source_format": "legacy_advisories",
         "total": len(ordered_items),
         "truncated": len(ordered_items) > MAX_THRESHOLD_VULNERABILITIES,
         "invalid_records": invalid_records,
@@ -701,6 +787,7 @@ def classify_audit(
         if raw_report is not None
         else {
             "status": "NOT_PROVIDED",
+            "source_format": None,
             "total": 0,
             "truncated": False,
             "invalid_records": 0,
