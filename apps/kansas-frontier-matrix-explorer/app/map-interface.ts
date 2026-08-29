@@ -66,7 +66,8 @@ export const MAPLIBRE_REPOSITORY_STATUS = Object.freeze([
   Object.freeze({ id: "port", label: "MapRuntimePort + Null runtime", state: "VERIFIED SLICE", detail: "Current main proves a strict renderer-neutral port, deterministic no-network NullMapRuntime, and governed evidence binding." }),
   Object.freeze({ id: "dependency", label: "Dependency admission", state: "EXACT 6.6.0", detail: "The private @kfm/maplibre workspace package and pnpm lock admit exact maplibre-gl 6.6.0." }),
   Object.freeze({ id: "runtime", label: "Concrete MapLibre adapter", state: "VERIFIED SLICE", detail: "Current main implements a bounded package-owned lifecycle and camera adapter plus the Vite worker seam; broader production activation remains held." }),
-  Object.freeze({ id: "probes", label: "Browser readiness", state: "BOUNDED FIXTURE", detail: "A bounded real-browser fixture is recorded; broader authenticated, performance, CSP, PMTiles, terrain, accessibility, and long-session evidence remains held." }),
+  Object.freeze({ id: "consumer", label: "Sites renderer consumer", state: "NULL RUNTIME / HOLD", detail: "The Explorer imports the package-owned renderer-neutral surface and fail-closes through NullMapRuntime; full style, source, layer, interaction, and measurement migration remains held." }),
+  Object.freeze({ id: "probes", label: "Browser readiness", state: "HOLD", detail: "The package retains a bounded historical fixture, but this fail-closed Sites consumer does not run renderer probes; authenticated, performance, CSP, PMTiles, terrain, accessibility, and long-session evidence remains held." }),
 ]);
 
 export const MAP_CAPABILITY_GATES = Object.freeze([
