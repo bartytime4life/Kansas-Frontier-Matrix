@@ -2,15 +2,15 @@
 doc_id: kfm://doc/runbook/people-dna-land/source-refresh
 title: People · Genealogy · DNA · Land — Source Refresh Runbook
 type: standard
-version: v1.1.0
-prior_version: v0.1
-prior_state: proposal-era operational procedure with placeholder owners, illustrative network commands, unverified lifecycle paths, and invented watcher and receipt behavior
+version: v1.1.1
+prior_version: v1.1.0
+prior_state: repository-grounded source-refresh HOLD boundary whose next-review inventory still classified vendor watch as an explicit scaffold
 status: draft; repository-grounded hold boundary; source-head review only; live retrieval and source mutation unavailable; non-release; non-publication
 owners:
   - "@bartytime4life — verified GitHub review route"
   - "NEEDS VERIFICATION — accountable People/DNA/Land, privacy, consent, Indigenous/Tribal, legal, source, rights, data-custody, policy, security, evidence, operations, release, and independent-review assignments"
 created: 2026-05-12
-updated: 2026-08-28
+updated: 2026-08-29
 policy_label: repository-facing; sensitive-domain; source-refresh-held; fail-closed; no-network; non-release; non-publication
 current_path: docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md
 owning_root: docs/
@@ -183,7 +183,7 @@ Reverting this file restores proposal-era prose only. It does not undo or execut
 ## Next dependency-aware review points
 
 1. Resolve source-descriptor topology and ownership before creating a source instance or connector profile.
-2. Inventory the remaining rollback-drill, validation, and vendor-watch scaffolds independently.
+2. Inventory the remaining rollback-drill and validation scaffolds independently; keep the vendor-signal procedure manual and repository-visible until its operational graduation gaps close.
 3. Establish active policy-runtime, receipt, evidence, custody, and accountable-review bindings before designing live source refresh.
 4. Keep real, restricted, disputed, or proprietary material outside repository-visible surfaces.
 5. Preserve source admission, retrieval, validation, lifecycle promotion, release, deployment, publication, correction, withdrawal, revocation, deletion, invalidation, and rollback as separate states.

@@ -2,14 +2,15 @@
 doc_id: kfm://doc/runbook-people-dna-land-dtc-vendor-loss-drill
 title: People/DNA/Land Direct-to-Consumer Vendor-Loss Tabletop Drill
 type: runbook
-version: v1.0.0
-prior_state: explicit scaffold with no executable or review procedure
+version: v1.0.1
+prior_version: v1.0.0
+prior_state: repository-grounded synthetic-metadata tabletop whose vendor-watch references still classified the sibling SOP as an explicit scaffold
 status: DRAFT_REPOSITORY_GROUNDED; TABLETOP_AND_SYNTHETIC_METADATA_ONLY; NO_VENDOR_ACCESS; NO_REAL_DNA; NO_OPERATIONAL_CONTAINMENT; NON_RELEASE; NON_PUBLICATION
 owners:
   - "@bartytime4life — verified GitHub review route"
   - "NEEDS VERIFICATION — accountable People/DNA/Land, privacy, consent, legal, Indigenous/Tribal, source, data-custody, security, policy, evidence, release, operations, and independent-review assignments"
 created: 2026-08-28
-updated: 2026-08-28
+updated: 2026-08-29
 policy_label: repository-facing; sensitive-domain; direct-to-consumer-vendor; tabletop-only; synthetic-metadata-only; fail-closed; non-release; non-publication
 current_path: docs/runbooks/people-dna-land/DTC_VENDOR_LOSS_DRILL.md
 owning_root: docs/
@@ -21,9 +22,11 @@ evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
   base_commit: 8f74d6d7d10d576062dda51684ef4eb6e97f4831
+  vendor_watch_reconciliation_base_commit: 7809fe45aeae513ebcc71c31beffab6c75bcbd84
   target_prior_blob: 571bbc05eba34df936d825b3b75fafb00593e0be
   runbook_index_prior_blob: 2418f3c5643bf8d119e3e97b38293f29721e7f92
-  vendor_watch_sop_state: EXPLICIT_SCAFFOLD
+  vendor_watch_sop_state: REPOSITORY_GROUNDED_MANUAL_REVIEW_ONLY
+  vendor_watch_prior_blob: 84d77e7e9a9d4afb2ee367ff11841a837bdf1a8c
   inspected_ftdna_connector_state: GREENFIELD_PLACEHOLDER_NOT_ACTIVATED
   verified_vendor_loss_fixture_or_validator: NONE_FOUND_AT_PINNED_REVISION
   verified_operational_vendor_loss_execution: NONE_FOUND_AT_PINNED_REVISION
@@ -103,7 +106,7 @@ The following boundary was checked against `main@8f74d6d7d10d576062dda51684ef4eb
 | [`SOURCE_REGISTRY.md`](../../domains/people-dna-land/SOURCE_REGISTRY.md) | Documents a proposed vendor capability/TOS register and a documentary `vendor_solvency_class` field | Vendor-risk concepts exist in prose; a binding machine schema, resolver, and activation effect were not found |
 | [`PRESERVATION_MATRIX.md`](../../domains/people-dna-land/PRESERVATION_MATRIX.md) | Draft reading aid proposes embargo, promotion hold, correction, tombstone, and cache-response considerations | It informs the tabletop but does not authorize operational containment, retention, erasure, or cleanup |
 | [`DNA_HANDLING.md`](../../domains/people-dna-land/DNA_HANDLING.md) | Requires deny-by-default handling, encrypted/access-scoped raw DTC material, revocable consent, and no raw-genotype republication | Vendor loss cannot weaken DNA, living-person, consent, or publication controls |
-| [`VENDOR_WATCH_SOP.md`](./VENDOR_WATCH_SOP.md) | Explicit scaffold | Continuous monitoring, alerting, escalation, and current-vendor assessment remain unavailable as an approved procedure |
+| [`VENDOR_WATCH_SOP.md`](./VENDOR_WATCH_SOP.md) | Repository-grounded manual-review draft | It classifies already available, repository-visible signals and prepares a minimized handoff; continuous monitoring, external acquisition, current-vendor certification, and response execution remain unavailable |
 | [`connectors/ftDNA/README.md`](../../../connectors/ftDNA/README.md) | Greenfield placeholder lane; no approved account path, parser, consent integration, executable tests, source activation, or live access | This runbook cannot invoke or treat that connector as operational |
 | [People/DNA/Land workflow](../../../.github/workflows/domain-people-dna-land.yml) | Executes two bounded synthetic consent profiles | No vendor-loss fixture, validator, or operational containment profile was found at the pinned revision |
 | Real DTC accounts or exports | Not admitted or inspected by this documentation task | Keep all real material outside repository-visible drill records |
@@ -221,7 +224,7 @@ Do not start until all of the following are true:
 - [ ] The fictional source ID and synthetic dependency IDs are fixed.
 - [ ] No real account, export, payload, credential, consent record, or private communication will be used.
 - [ ] Network access and external writes are out of scope.
-- [ ] Participants understand that [`VENDOR_WATCH_SOP.md`](./VENDOR_WATCH_SOP.md) remains a scaffold.
+- [ ] Participants understand that [`VENDOR_WATCH_SOP.md`](./VENDOR_WATCH_SOP.md) is a manual repository-visible review procedure, not a monitor, external acquisition path, vendor-state authority, or response executor.
 - [ ] Participants understand that no vendor-loss fixture, validator, cleanup executor, or operational source-state transition is proved at the pinned revision.
 - [ ] A safe place for the minimized result record is selected.
 - [ ] Stop conditions and the escalation contact route are named or recorded as `NEEDS VERIFICATION`.

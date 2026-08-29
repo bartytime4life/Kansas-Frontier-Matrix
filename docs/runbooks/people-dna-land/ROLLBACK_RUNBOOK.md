@@ -2,15 +2,15 @@
 doc_id: kfm://doc/runbook-people-dna-land-rollback
 title: People · DNA · Land — Rollback Runbook
 type: standard
-version: v1.1.5
-prior_version: v1.1.4
-prior_state: repository-grounded rollback HOLD boundary whose next-review inventory still described source refresh as proposal-era and counted five scaffolds
+version: v1.1.6
+prior_version: v1.1.5
+prior_state: repository-grounded rollback HOLD boundary whose next-review inventory still counted vendor watch as an explicit scaffold
 status: draft; repository-grounded hold boundary; proposal lineage retained in Git history; operational rollback unavailable; non-release; non-publication
 owners:
   - "@bartytime4life — verified GitHub review route"
   - "NEEDS VERIFICATION — accountable People/DNA/Land, privacy, consent, Indigenous/Tribal, legal, policy, evidence, release, operations, security, and independent-review assignments"
 created: 2026-05-12
-updated: 2026-08-28
+updated: 2026-08-29
 policy_label: repository-facing; sensitive-domain; fail-closed; rollback-held; non-release; non-publication
 current_path: docs/runbooks/people-dna-land/ROLLBACK_RUNBOOK.md
 owning_root: docs/
@@ -52,7 +52,7 @@ notes:
   - "The prior 2026-05-12 body is retired from operational use because current repository evidence does not establish its kill switch, release target, derivative invalidator, signer route, timing targets, or end-to-end rollback runtime."
   - "This file does not execute rollback, revoke consent, delete data, invalidate derivatives or caches, restore a release, or authorize any public-path change."
   - "The lane remains held for operational rollback maturity; this repository-grounded hold boundary narrows unsafe claims without upgrading operational status."
-  - "Promotion and source refresh are separate repository-grounded HOLD boundaries; three other children remain explicit scaffolds."
+  - "Promotion and source refresh are separate repository-grounded HOLD boundaries; vendor watch is a manual repository-visible review procedure; two other children remain explicit scaffolds."
 [/KFM_META_BLOCK_V2] -->
 
 # People · DNA · Land — Rollback Runbook
@@ -152,6 +152,6 @@ Before merge, close the draft and delete only its task branch. After a separatel
 ## Next dependency-aware review points
 
 1. Preserve promotion and source refresh as separate repository-grounded `HOLD` boundaries; establish any future operational implementation only in its owning authority surfaces.
-2. Inventory the three remaining explicit lane scaffolds file by file before filling, superseding, retaining, or retiring them.
+2. Inventory the two remaining explicit lane scaffolds file by file before filling, superseding, retaining, or retiring them; do not treat the vendor-signal review procedure as live monitoring or response authority.
 3. Review any future generic release or rollback work for a real People/DNA/Land consumer before claiming domain readiness.
 4. Preserve the current sensitive-domain holds until accountable privacy, consent, Indigenous/Tribal, legal, policy, evidence, release, operations, security, and independent review exist.
