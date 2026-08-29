@@ -253,7 +253,7 @@ promote, or publish anything.
 
 | Procedure | Current classification | Safe use |
 |---|---|---|
-| [`NO_NETWORK_TEST_RUNBOOK.md`](./NO_NETWORK_TEST_RUNBOOK.md) | Proposal-era procedure with unverified commands and no-mounted-repository language | Review intended safety properties only; use the current workflow as evidence of static readiness, not as the runbook's proposed semantic suite |
+| [`NO_NETWORK_TEST_RUNBOOK.md`](./NO_NETWORK_TEST_RUNBOOK.md) | Repository-grounded bounded EvidenceBundle schema-convergence procedure; guarded local command available, workflow guard injection held | Run the exact shared-schema profile locally with the Python startup guard; report only schema convergence and retain semantic, policy, proof, release, Sites, and publication holds |
 | [`PROMOTION_RUNBOOK.md`](./PROMOTION_RUNBOOK.md) | Proposal-heavy lifecycle design with unverified validators, artifacts, owners, and routes | Review concepts only; do not execute or infer a lifecycle transition |
 | [`ROLLBACK_RUNBOOK.md`](./ROLLBACK_RUNBOOK.md) | Proposal-heavy rollback design without an accepted proof, manifest, or rehearsed release target | Review failure classes and boundaries only; no operational rollback capability is established |
 | [`SOURCE_REFRESH_RUNBOOK.md`](./SOURCE_REFRESH_RUNBOOK.md) | Proposal-era source-refresh design with unverified paths, sources, commands, and authority | Lineage only; do not fetch, admit, transform, promote, or publish a source from this document |
