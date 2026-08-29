@@ -259,18 +259,7 @@ This probe demonstrates the named `socket.create_connection` path at the exact
 revision. It does not prove every Python extension, private socket factory,
 subprocess, shell command, dependency installer, host process, or runner path.
 
-### 3. Compile the focused validator and tests
-
-```bash
-python -m py_compile \
-  tools/validators/validate_settlements_infrastructure_evidence_bundle_projection.py \
-  tests/validators/domains/settlements-infrastructure/test_evidence_bundle_schema_convergence.py
-```
-
-Expected result: exit code `0` and no repository output because
-`PYTHONDONTWRITEBYTECODE=1` is active.
-
-### 4. Run the focused convergence tests
+### 3. Run the focused convergence tests
 
 ```bash
 python -m unittest discover \
@@ -292,7 +281,7 @@ A different test count is a review trigger, not automatically a defect. Inspect
 the exact diff and update this runbook only after the changed coverage is
 understood.
 
-### 5. Replay the shared fixtures through the domain projection
+### 4. Replay the shared fixtures through the domain projection
 
 ```bash
 python \
@@ -310,7 +299,7 @@ Expected result at the evidence snapshot:
 The successful exit does not mean both fixtures are valid. It means the positive
 fixture was accepted and the negative fixture was rejected as declared.
 
-### 6. Confirm the procedure wrote no repository content
+### 5. Confirm the procedure wrote no repository content
 
 ```bash
 git diff --exit-code
@@ -346,7 +335,7 @@ Use `READY_FOR_HUMAN_REVIEW` only when all applicable items hold:
 - [ ] Exact repository revision and worktree baseline were recorded.
 - [ ] Shared guard activation succeeded in the validation process.
 - [ ] The representative denial probe succeeded.
-- [ ] Focused compilation and all three tests passed without weakened checks.
+- [ ] All three focused tests passed without weakened or skipped checks.
 - [ ] The valid fixture returned `OK` and the invalid fixture returned
       `EXPECTED_FAIL`.
 - [ ] No new repository content was written.
@@ -365,7 +354,7 @@ packet.
 |---|---|---|
 | Guard import or activation fails | Environment or `PYTHONPATH` error | Stop; correct the command or checkout before testing |
 | Representative connection is not denied | No-network enforcement regression | Stop; do not retain the guarded claim; inspect the shared helper and exact revision |
-| Compilation fails | Syntax, import, or environment error | Record the exact file and revision; repair without bypassing compilation |
+| Focused test import fails | Syntax, import, dependency, or environment error | Record the exact file and revision; repair without bypassing the test |
 | Projection gains independent fields or authority | Schema-authority drift | Stop; reconcile shared/domain authority rather than duplicating fields |
 | Shared required fields change | Contract/schema drift | Review the shared contract, schema, fixtures, consumers, and compatibility impact |
 | Valid fixture is rejected | Positive-profile regression | Compare schema, resolver, fixture, and validator bytes |
