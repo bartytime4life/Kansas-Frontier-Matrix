@@ -28,15 +28,15 @@ export type RepositoryUpdate = Readonly<{
 export const REPOSITORY_SNAPSHOT = Object.freeze({
   repository: "bartytime4life/Kansas-Frontier-Matrix",
   ref: "main",
-  commit: "129ac47f359be143ce8bbe43d8401f8660b8be5f",
-  shortCommit: "129ac47",
-  inspectedAt: "2026-08-28T01:12:07Z",
+  commit: "2b0ea9bbbc9d9a120ea94d92fb4617d96fe7d2a0",
+  shortCommit: "2b0ea9b",
+  inspectedAt: "2026-08-29T06:11:19Z",
   counts: Object.freeze({
     knowledgeDomains: 13,
     explorerFeatureFamilies: 38,
     mapFunctions: 20,
     countyPlanningLanes: 105,
-    repositoryUpdates: 12,
+    repositoryUpdates: 14,
     transitionBoundaries: 4,
     readinessGates: 7,
   }),
@@ -45,6 +45,36 @@ export const REPOSITORY_SNAPSHOT = Object.freeze({
 const repoAtSnapshot = `https://github.com/${REPOSITORY_SNAPSHOT.repository}/blob/${REPOSITORY_SNAPSHOT.commit}`;
 
 export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
+  Object.freeze({
+    id: "planning-scenario-review",
+    area: "Explorer UI",
+    title: "Planning scenarios now have a strict review projection",
+    state: "BOUNDED PROOF",
+    maturity: "PARTIAL",
+    date: "29 Aug 2026",
+    summary:
+      "Current main adds a fixture-only, text-first planning-scenario review with a held ABSTAIN state, explicit horizon and uncertainty, equity questions, participation and evidence references, limitations, and fixed negative-state copy.",
+    boundary:
+      "The repository feature is not mounted on a production route and performs no transport, scenario computation, policy evaluation, preference aggregation, lifecycle write, recommendation, release, or publication action. This Site replays only the public synthetic fixture and negative states.",
+    sourceLabel: "Planning scenario review",
+    sourceUrl: `${repoAtSnapshot}/apps/explorer-web/src/features/planning_scenario_review/README.md`,
+    layerId: "public-safe-planning",
+    featureId: "planning-generalized-envelope",
+  }),
+  Object.freeze({
+    id: "accessibility-evidence-boundary",
+    area: "Accessibility",
+    title: "Accessibility guidance now separates targets from proof",
+    state: "CORRECTED",
+    maturity: "PARTIAL",
+    date: "28 Aug 2026",
+    summary:
+      "The revised repository guidance records an eight-spec keyboard and focus smoke as bounded fixture evidence while keeping axe coverage, whole-application review, non-map parity, reduced motion, touch, zoom, reflow, contrast, and assistive-technology testing explicitly held or unverified.",
+    boundary:
+      "A passing bounded workflow is not WCAG conformance, a manual accessibility review, a release gate, deployment approval, or publication authority. WCAG 2.2 Level AA remains a proposed target in this draft guidance.",
+    sourceLabel: "Accessibility commitments v1.1",
+    sourceUrl: `${repoAtSnapshot}/docs/brand/accessibility-commitments.md`,
+  }),
   Object.freeze({
     id: "public-workspace-registry",
     area: "Explorer UI",
@@ -215,7 +245,7 @@ export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
     maturity: "DOCUMENTED",
     date: "25 Aug 2026",
     summary:
-      "The current snapshot is 177 commits after the prior Site pin; 24 runbook files changed across Flora, Geology, Habitat, Atmosphere, Hazards, Hydrology, and People, DNA, and land.",
+      "The current snapshot is 521 commits after the prior Site evidence pin; the inspected change set includes the earlier multi-domain runbook wave alongside newer Explorer and accessibility work.",
     boundary:
       "Documentation depth improves navigation and handoff shape only. It does not prove executable commands, live source access, policy evaluation, reviewer authority, release, deployment, promotion, or publication; the parent inventory remains snapshot-sensitive.",
     sourceLabel: "Atmosphere runbook boundary",
