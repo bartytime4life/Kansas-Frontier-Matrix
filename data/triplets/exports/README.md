@@ -132,7 +132,7 @@ release, deployment, promotion, or publication.
 
 | Question | Status |
 |---|---|
-| Accountable owner and indepent reviewer route | `NEEDS VERIFICATION` |
+| Accountable owner and independent reviewer route | `NEEDS VERIFICATION` |
 | Intended serialization formats and relationship vocabulary | `UNKNOWN` |
 | Writer and consumer identities | `UNKNOWN` |
 | Contract, schema, fixtures, and validator | `UNKNOWN` |
