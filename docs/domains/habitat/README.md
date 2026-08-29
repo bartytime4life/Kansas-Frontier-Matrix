@@ -8,6 +8,9 @@ owners: [NEEDS_VERIFICATION — habitat domain steward, docs steward]
 created: 2026-05-17
 updated: 2026-08-29
 policy_label: public
+owning_root: docs/
+responsibility: Human-readable Habitat scope, domain boundaries, repository fit, safety posture, implementation status, and navigation
+truth_posture: "CONFIRMED current repository paths, accepted placement doctrine, and the bounded fixture-only critical-habitat source-role guard / PROPOSED broader source, policy, runtime, release, and publication closure / NEEDS VERIFICATION rights, sensitivity, live-data permissions, model fitness, accountable stewardship, and independent review"
 contract_version: "3.0.0"   # pinned per docs/doctrine/ai-build-operating-contract.md
 related:
   - docs/domains/README.md
@@ -546,6 +549,6 @@ Acceptance is reached when each of (1)–(9) exists, is digest-closed, and a no-
 
 ---
 
-**Last updated:** 2026-06-05 · **Status:** draft · **Authority:** canonical (under `docs/`) · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Lifecycle posture:** deny-by-default for sensitive joins.
+**Last updated:** 2026-08-29 · **Status:** draft · **Authority:** canonical (under `docs/`) · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Lifecycle posture:** deny-by-default for sensitive joins.
 
 [⬆ back to top](#top)
