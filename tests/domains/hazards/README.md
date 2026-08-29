@@ -2,8 +2,8 @@
 doc_id: kfm://doc/tests-domains-hazards-readme
 title: Hazards Domain Tests README
 type: test-index-readme
-version: v0.2
-status: draft; stub-expanded; parent-index; PROPOSED / NEEDS VERIFICATION before promotion
+version: v0.3
+status: draft; parent-index; executable-parent-suite; documentation-only child lanes
 owners:
   - OWNER_TBD — Hazards domain steward
   - OWNER_TBD — Evidence steward
@@ -13,7 +13,7 @@ owners:
   - OWNER_TBD — Release steward
   - OWNER_TBD — QA steward
 created: NEEDS VERIFICATION — greenfield stub existed before v0.1 expansion
-updated: 2026-08-27
+updated: 2026-08-29
 policy_label: public-doc; tests; hazards; parent-index; no-network; evidence-bound; source-role-aware; policy-filtered; finite-outcomes; release-gated; rollback-aware
 tags: [kfm, tests, hazards, parent-index, enforceability, no-network, fixtures, LayerManifest, EvidenceDrawerPayload, FocusModeResponse, EvidenceBundle, PolicyDecision, ReleaseManifest, CorrectionNotice, RollbackCard, ABSTAIN, DENY, ERROR]
 related:
@@ -47,6 +47,7 @@ notes:
   - "Default posture is deterministic and no-network. Live source checks, real source exports, live feeds, lifecycle data, public tiles, and restricted records do not belong in default Hazards tests."
   - "Rollback target for this replacement is previous stub blob SHA 1e4180a3df4bffeeb38324b7806b583e6104a725."
   - "v0.2 indexes the first tracked, marker-protected Hazards synthetic rollback rehearsal; the helper remains generic and operational recovery remains unverified."
+  - "v0.3 records exact main 4e714b639861e340b0c35a5360f9ffaecdf1f53c: the parent suite and rollback rehearsal execute, while the five listed child directories contain no test modules and their direct pytest commands exit 5 with no tests collected."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -64,11 +65,11 @@ notes:
 </p>
 
 **Path:** `tests/domains/hazards/README.md`  
-**Status:** draft / stub-expanded / parent index / PROPOSED until executable tests are verified  
+**Status:** draft / parent index / executable parent suite / documentation-only child lanes
 **Owning root:** `tests/`  
 **Domain segment:** `hazards`  
 **Default execution posture:** deterministic, synthetic, no-network, public-safe fixtures only  
-**Truth posture:** CONFIRMED target was a greenfield stub before this expansion · CONFIRMED `tests/` is the canonical root for enforceability proof · CONFIRMED documented child lanes now exist for drawer payloads, feature resolution, Focus Mode, boundary denial, layer manifests, and source-role anti-collapse · CONFIRMED one tracked Hazards synthetic rollback fixture has deterministic plan/apply and fail-closed executable coverage · CONFIRMED Hazards map/UI doctrine requires governed public flow, context labeling, source-role visibility, finite outcomes, release relationship, freshness state, correction, and rollback · NEEDS VERIFICATION for the remaining executable test families, validators, policy runtime, operational release integration, public route/UI behavior, hosted CI coverage, and operational pass rates.
+**Truth posture:** CONFIRMED target was a greenfield stub before this expansion · CONFIRMED `tests/` is the canonical root for enforceability proof · CONFIRMED the parent suite executes 28 tests plus 34 subtests at exact main `4e714b639861e340b0c35a5360f9ffaecdf1f53c` · CONFIRMED the synthetic rollback rehearsal executes four tests · CONFIRMED the drawer, feature-resolver, Focus, layer-manifest, and source-role child directories are documentation-only and collect zero tests · CONFIRMED Hazards map/UI doctrine requires governed public flow, context labeling, source-role visibility, finite outcomes, release relationship, freshness state, correction, and rollback · NEEDS VERIFICATION for unimplemented child test families, policy runtime, operational release integration, public route/UI behavior, full-parent hosted CI coverage, and operational pass rates.
 
 ---
 
@@ -105,12 +106,12 @@ Core checks:
 
 | Lane | Primary responsibility | Boundary |
 |---|---|---|
-| [`drawer/`](drawer/README.md) | Hazards `EvidenceDrawerPayload` trust-state tests. | Drawer payload is a projection, not evidence, policy, release, source, public-layer, or AI authority. |
-| [`feature_resolver/`](feature_resolver/README.md) | Governed click/feature resolution tests. | Resolver is a bridge to governed evidence and policy, not source truth or release authority. |
-| [`focus/`](focus/README.md) | Hazards Focus Mode finite-outcome parent lane. | Focus answers are downstream of evidence and policy; generated wording is not KFM authority. |
-| [`focus/emergency_alert_denial/`](focus/emergency_alert_denial/README.md) | Boundary-crossing prompt denial/referral tests. | KFM remains planning/context posture and returns finite denial/referral where required. |
-| [`layer_manifest/`](layer_manifest/README.md) | Hazards `LayerManifest` metadata tests. | Manifest is release-gated metadata, not source truth, policy decision, release approval, or public-layer truth. |
-| [`source_role_anti_collapse_test/`](source_role_anti_collapse_test/README.md) | Canonical source-role preservation tests. | Roles remain first-class identity attributes and cannot collapse across map, drawer, resolver, Focus, release, or AI paths. |
+| [`drawer/`](drawer/README.md) | Documentation-only proposal for Hazards `EvidenceDrawerPayload` trust-state tests; no executable module exists. | Drawer payload is a projection, not evidence, policy, release, source, public-layer, or AI authority. |
+| [`feature_resolver/`](feature_resolver/README.md) | Documentation-only proposal for governed click/feature resolution tests; no executable module exists. | Resolver is a bridge to governed evidence and policy, not source truth or release authority. |
+| [`focus/`](focus/README.md) | Documentation-only proposal for a Hazards Focus Mode finite-outcome lane; no executable module exists in this directory or its denial child. | Focus answers are downstream of evidence and policy; generated wording is not KFM authority. |
+| [`focus/emergency_alert_denial/`](focus/emergency_alert_denial/README.md) | Documentation-only proposal for boundary-crossing prompt denial/referral tests; no executable module exists. | KFM remains planning/context posture and returns finite denial/referral where required. |
+| [`layer_manifest/`](layer_manifest/README.md) | Documentation-only proposal for Hazards `LayerManifest` metadata tests; no executable module exists. | Manifest is release-gated metadata, not source truth, policy decision, release approval, or public-layer truth. |
+| [`source_role_anti_collapse_test/`](source_role_anti_collapse_test/README.md) | Documentation-only proposal for canonical source-role preservation tests; no executable module exists. | Roles remain first-class identity attributes and cannot collapse across map, drawer, resolver, Focus, release, or AI paths. |
 | [`test_synthetic_rollback_rehearsal.py`](test_synthetic_rollback_rehearsal.py) | Stale-context rollback rehearsal against a copied marker-protected fixture. | Proves bounded synthetic mechanics only; no real rollback, release, recovery, or publication effect. |
 
 ---
@@ -162,24 +163,33 @@ Any test that needs live source access, production source data, or public tile o
 
 ## Run posture
 
-Parent subtree smoke command:
+Executable parent suite:
 
 ```bash
-pytest tests/domains/hazards
+KFM_NO_NETWORK=1 PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 TZ=UTC \
+  python -m pytest tests/domains/hazards -q
 ```
 
-Selected child-lane examples:
+At exact main `4e714b639861e340b0c35a5360f9ffaecdf1f53c`, this command passes 28 tests plus 34 subtests. The focused rollback rehearsal also executes independently:
 
 ```bash
-pytest tests/domains/hazards/layer_manifest
-pytest tests/domains/hazards/feature_resolver
-pytest tests/domains/hazards/drawer
-pytest tests/domains/hazards/focus
-pytest tests/domains/hazards/source_role_anti_collapse_test
-python -m unittest -q tests.domains.hazards.test_synthetic_rollback_rehearsal
+KFM_NO_NETWORK=1 PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 TZ=UTC \
+  python -m unittest -q tests.domains.hazards.test_synthetic_rollback_rehearsal
 ```
 
-The focused `unittest` command is implemented and no-network. Other listed subtree commands remain **PROPOSED / NEEDS VERIFICATION** until their executable coverage and runner behavior are checked at the exact head.
+That command passes four tests at the same revision.
+
+The child directories below are **DOCUMENTATION_ONLY / NO TESTS COLLECTED**. Each contains README or placeholder material but no executable test module. Invoking `python -m pytest <path> -q` for any of them exits `5` with `no tests ran`; those commands are discovery diagnostics, not validation evidence.
+
+| Child path | Exact-head result | Classification |
+|---|---|---|
+| `tests/domains/hazards/layer_manifest` | zero tests collected; exit `5` | `DOCUMENTATION_ONLY / NOT_VALIDATION` |
+| `tests/domains/hazards/feature_resolver` | zero tests collected; exit `5` | `DOCUMENTATION_ONLY / NOT_VALIDATION` |
+| `tests/domains/hazards/drawer` | zero tests collected; exit `5` | `DOCUMENTATION_ONLY / NOT_VALIDATION` |
+| `tests/domains/hazards/focus` | zero tests collected; exit `5` | `DOCUMENTATION_ONLY / NOT_VALIDATION` |
+| `tests/domains/hazards/source_role_anti_collapse_test` | zero tests collected; exit `5` | `DOCUMENTATION_ONLY / NOT_VALIDATION` |
+
+Do not report these child lanes as passing until executable modules and deterministic fixtures land in accepted responsibility roots and their direct commands collect and pass non-zero tests.
 
 ---
 
@@ -190,6 +200,7 @@ The focused `unittest` command is implemented and no-network. Other listed subtr
 | Previous target file | CONFIRMED | `tests/domains/hazards/README.md` existed as a greenfield stub before this replacement. | Did not define the parent lane. |
 | `tests/README.md` | CONFIRMED | `tests/` is enforceability proof, canonical, trust-bearing, and failure should block promotion where trust-spine checks fail. | Does not prove Hazards executable modules or pass rate. |
 | Child README files under this subtree | CONFIRMED for files updated in this documentation pass | Provide lane-specific scope and boundary statements. | Do not prove executable tests, fixtures, validators, CI, or release wiring. |
+| Exact-main local replay at `4e714b639861e340b0c35a5360f9ffaecdf1f53c` | CONFIRMED | Parent suite: 28 tests plus 34 subtests; rollback rehearsal: four tests; five child directories: zero tests and exit `5`. | Local execution is not hosted CI, production behavior, evidence closure, release approval, or publication authority. |
 | `docs/domains/hazards/MAP_UI_CONTRACTS.md` | CONFIRMED doctrine | Provides governed public flow, layer-manifest obligations, drawer obligations, Focus finite outcomes, source-role anti-collapse, and trust-visible UI states. | Concrete validators, fixtures, routes, policy runtime, and pass rates remain NEEDS VERIFICATION. |
 | `docs/domains/hazards/LIFE_SAFETY_BOUNDARY.md` | CONFIRMED doctrine | Defines the Hazards life-safety boundary and referral/denial posture. | Enforcement mechanics remain PROPOSED until routes, flags, validators, policy bundles, fixtures, and tests are verified. |
 
@@ -199,8 +210,8 @@ The focused `unittest` command is implemented and no-network. Other listed subtr
 
 Before treating this parent README as implemented behavior, verify:
 
-- [ ] Executable test modules exist for each documented lane or the lane is explicitly documentation-only.
-- [ ] Test runner and import paths match the repo's accepted convention.
+- [x] Executable test modules exist for each documented lane or the lane is explicitly documentation-only.
+- [x] Test runner and import paths match the repository's current accepted convention for the executable parent and rollback suites.
 - [ ] Synthetic fixtures exist in accepted fixture homes and are not source payloads.
 - [ ] Schema paths and field expectations are accepted beyond scaffold status where tests enforce them.
 - [ ] EvidenceRef / EvidenceBundle behavior is available to tests or safely stubbed.
