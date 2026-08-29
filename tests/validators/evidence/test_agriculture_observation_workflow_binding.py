@@ -19,10 +19,22 @@ CI_BOOTSTRAP_TRIGGER_PATHS = {
     "tools/ci/python-test.lock",
     "pyproject.toml",
 }
+ADJACENT_OBSERVATION_TRIGGER_PATHS = {
+    "contracts/evidence/population_observation.md",
+    "schemas/contracts/v1/evidence/population_observation.schema.json",
+    "fixtures/contracts/v1/evidence/population_observation/**",
+    "tools/validators/evidence/validate_population_observation.py",
+    "tests/validators/evidence/test_validate_population_observation.py",
+    "contracts/evidence/economic_observation.md",
+    "schemas/contracts/v1/evidence/economic_observation.schema.json",
+    "fixtures/contracts/v1/evidence/economic_observation/**",
+    "tools/validators/evidence/validate_economic_observation.py",
+    "tests/validators/evidence/test_validate_economic_observation.py",
+}
 SELF_PATH = "tests/validators/evidence/test_agriculture_observation_workflow_binding.py"
 RECEIPT_PATH = (
     "data/receipts/generated/"
-    "genrec-agriculture-observation-ci-bootstrap-trigger-closure-20260828.json"
+    "genrec-agriculture-observation-adjacent-observation-trigger-closure-20260828.json"
 )
 
 
@@ -50,6 +62,23 @@ class AgricultureObservationWorkflowBindingTests(unittest.TestCase):
                 self.assertTrue(
                     CI_BOOTSTRAP_TRIGGER_PATHS.issubset(paths),
                     f"{event} paths must include the complete project-test CI bootstrap seam",
+                )
+                self.assertIn(SELF_PATH, paths)
+                self.assertIn(RECEIPT_PATH, paths)
+
+    def test_adjacent_observation_dependency_changes_trigger_agriculture_observation(self) -> None:
+        workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
+        triggers = workflow["on"]
+
+        for event in ("pull_request", "push"):
+            with self.subTest(event=event):
+                paths = set(triggers[event]["paths"])
+                self.assertTrue(
+                    ADJACENT_OBSERVATION_TRIGGER_PATHS.issubset(paths),
+                    (
+                        f"{event} paths must include the PopulationObservation and "
+                        "EconomicObservation dependency seams executed by AgricultureObservation"
+                    ),
                 )
                 self.assertIn(SELF_PATH, paths)
                 self.assertIn(RECEIPT_PATH, paths)
