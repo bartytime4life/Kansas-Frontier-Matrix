@@ -105,7 +105,7 @@ test("keeps Focus Mode fail closed and share state complete", async () => {
   assert.match(source, /params\.set\("ws", currentWorkspace\)/);
   assert.match(source, /params\.get\("privacy"\) === "location-camera-redacted"/);
   assert.match(source, /window\.addEventListener\("popstate", handlePopState\)/);
-  assert.match(source, /WebGL2 is unavailable in this browser/);
+  assert.match(source, /Renderer acquisition is held/);
   assert.match(source, /clamp\(parseNumber\(params\.get\("z"\), KANSAS_VIEW\.zoom\), 4, 16\)/);
   assert.match(source, /value === null \|\| value\.trim\(\) === ""/);
   assert.match(source, /params\.has\("l"\)/);
@@ -233,16 +233,18 @@ test("imports the complete repository feature catalog without maturity inflation
   assert.equal(catalog.FEATURE_CATALOG.every((feature) => feature.path && feature.summary), true);
 });
 
-test("keeps the MapLibre Workbench complete, bounded, and responsive", async () => {
+test("keeps the renderer-neutral Workbench complete, bounded, and fail closed", async () => {
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const mapInterface = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
   const exportCenter = await readFile(new URL("../app/export-center.ts", import.meta.url), "utf8");
   const explorerData = await readFile(new URL("../app/explorer-data.ts", import.meta.url), "utf8");
+  const runtime = await readFile(new URL("../app/map-runtime.ts", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
-  const prepareMapLibreAssets = await readFile(new URL("../scripts/prepare-maplibre-assets.mjs", import.meta.url), "utf8");
+  const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
   const buildScript = await readFile(new URL("../scripts/build-verified.sh", import.meta.url), "utf8");
   const installScript = await readFile(new URL("../scripts/install-ci.sh", import.meta.url), "utf8");
   const tsconfig = await readFile(new URL("../tsconfig.json", import.meta.url), "utf8");
+  const viteConfig = await readFile(new URL("../vite.config.ts", import.meta.url), "utf8");
 
   assert.match(source, /id="map-utility-panel"/);
   for (const view of ["Navigate", "Inspect", "Compare", "Display", "Measure", "Export", "Diagnostics"]) assert.match(source, new RegExp(`${view}`));
@@ -260,22 +262,25 @@ test("keeps the MapLibre Workbench complete, bounded, and responsive", async () 
   assert.match(source, /copyMapCenter/);
   assert.match(source, /fitIndexedFeatures/);
   assert.match(source, /SUPPORTED_CONTEXT_BOUNDS/);
-  assert.match(source, /site_package: "6\.6\.0"/);
-  assert.match(source, /setWorkerUrl\(MAPLIBRE_WORKER_URL\)/);
-  assert.match(source, /getWorkerUrl\(\) !== MAPLIBRE_WORKER_URL/);
-  assert.match(source, /getVersion\(\)/);
-  assert.match(source, /MAPLIBRE_RUNTIME_ASSET_URLS/);
-  assert.match(source, /if \(!response\.ok\) throw new Error/);
-  assert.match(source, /map\.on\("idle"/);
-  assert.match(source, /map\.areTilesLoaded\(\)/);
-  assert.match(source, /map\.isSourceLoaded\(layer\.sourceId\)/);
-  assert.match(source, /MapLibre \{EXPECTED_MAPLIBRE_VERSION\} runtime proof/);
-  assert.match(source, /SAME_ORIGIN_CONFIGURED/);
-  assert.match(prepareMapLibreAssets, /maplibre-gl-worker\.mjs/);
-  assert.match(prepareMapLibreAssets, /maplibre-gl-shared\.mjs/);
+  assert.match(source, /createNullMapRuntime/);
+  assert.match(source, /DIRECT_CONSUMER_MIGRATION_HOLD/);
+  assert.match(source, /Renderer HOLD · MapLibre candidate/);
+  assert.match(source, /runtime_assets: "NOT_RUN"/);
+  assert.match(source, /map_constructed: false/);
+  assert.match(source, /MapLibre \{EXPECTED_MAPLIBRE_VERSION\} acquisition boundary/);
+  assert.doesNotMatch(source, /from "maplibre-gl"|import\("maplibre-gl"\)|new maplibregl/);
+  assert.doesNotMatch(explorerData, /from "maplibre-gl"/);
+  assert.doesNotMatch(css, /maplibre-gl\/dist|\.maplibregl-/);
+  assert.equal(Object.hasOwn(packageJson.dependencies, "@kfm/maplibre"), false);
+  assert.equal(Object.hasOwn(packageJson.dependencies, "maplibre-gl"), false);
+  assert.match(runtime, /Renderer-neutral high-contrast preference descriptor/);
+  assert.doesNotMatch(runtime, /maplibre-gl|addSource|addLayer|setFilter/);
   assert.match(buildScript, /exec bash "\$\{script_dir\}\/sites-env\.sh"/);
   assert.match(installScript, /exec bash "\$\{script_dir\}\/sites-env\.sh"/);
   assert.match(tsconfig, /"target": "ES2022"/);
+  assert.match(tsconfig, /"@kfm\/maplibre": \["\.\.\/\.\.\/packages\/maplibre\/src\/index\.ts"\]/);
+  assert.match(viteConfig, /find: "@kfm\/maplibre"/);
+  assert.match(viteConfig, /packages\/maplibre\/src\/index\.ts/);
   assert.match(source, /FULL TEMPORAL CAPACITY · 4\.54 GA BP TO 2026/);
   assert.match(source, /Deep-time and intermediate ticks are capacity markers, not claims/);
   assert.match(source, /TIMELINE_JUMPS/);
@@ -283,13 +288,15 @@ test("keeps the MapLibre Workbench complete, bounded, and responsive", async () 
   assert.match(explorerData, /-541_000_000/);
   assert.match(explorerData, /-11_700/);
   assert.match(source, /mapQueryCandidates/);
-  assert.match(source, /selected && !selectedTimeMismatch && !selectedLayerHidden/);
+  assert.match(source, /time_compatible: !selectedTimeMismatch/);
+  assert.match(source, /renderer hit testing remains held/);
   assert.match(source, /ACTIVE LAYERS AVAILABLE/);
   assert.match(mapInterface, /Renderer architecture[\s\S]*ACCEPTED/);
   assert.match(mapInterface, /MapRuntimePort \+ Null runtime[\s\S]*VERIFIED SLICE/);
   assert.match(mapInterface, /Dependency admission[\s\S]*EXACT 6\.6\.0/);
   assert.match(mapInterface, /Concrete MapLibre adapter[\s\S]*VERIFIED SLICE/);
-  assert.match(mapInterface, /Browser readiness[\s\S]*BOUNDED FIXTURE/);
+  assert.match(mapInterface, /Sites renderer consumer[\s\S]*NULL RUNTIME \/ HOLD/);
+  assert.match(mapInterface, /Browser readiness[\s\S]*HOLD/);
   assert.match(explorerData, /"fill-outline-color": \["case", \["boolean", \["feature-state", "hover"\]/);
   assert.match(css, /\.map-utility-panel\[data-open="true"\]/);
   assert.match(css, /\.mobile-hidden-control/);
@@ -326,7 +333,7 @@ test("resolves exact, through-time, and untimed Map Workbench availability", asy
   assert.equal(mapInterface.inspectableFeatureId(layer, 2026), "vintage-1910");
 });
 
-test("keeps source discovery separate from admission and map ranges explicit", async () => {
+test("keeps source discovery separate from admission and renderer descriptors inert", async () => {
   const sources = await readFile(new URL("../app/source-intelligence.ts", import.meta.url), "utf8");
   const runtime = await readFile(new URL("../app/map-runtime.ts", import.meta.url), "utf8");
 
@@ -335,8 +342,9 @@ test("keeps source discovery separate from admission and map ranges explicit", a
   assert.match(sources, /sourceCount: 12/);
   assert.match(sources, /DEFER DEPENDENCY/);
   assert.match(sources, /National Flood Hazard Layer/);
-  assert.match(runtime, /attribution: record\.attribution/);
-  assert.match(runtime, /setLayerZoomRange\(renderer\.id, record\.minZoom, record\.maxZoom\)/);
+  assert.match(runtime, /BasemapDescriptor/);
+  assert.match(runtime, /Renderer-neutral high-contrast preference descriptor/);
+  assert.doesNotMatch(runtime, /addSource|addLayer|setLayerZoomRange/);
 });
 
 test("reviews and redacts public-safe exports before download", async () => {

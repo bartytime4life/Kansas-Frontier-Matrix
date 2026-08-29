@@ -2,11 +2,14 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Feature, Geometry } from "geojson";
-import type { GeoJSONSource, Map as MapLibreMap, Popup, ScaleControl } from "maplibre-gl";
+import {
+  createNullMapRuntime,
+  type MapRuntimeCamera,
+  type MapRuntimePort,
+} from "@kfm/maplibre";
 import {
   CATEGORY_ORDER,
   findFeature,
-  findLayerByRenderer,
   LAYER_REGISTRY,
   SEARCH_INDEX,
   TIME_STEPS,
@@ -16,14 +19,7 @@ import {
   type SearchItem,
 } from "./explorer-data";
 import {
-  applyRegistryState,
-  areaSquareMiles,
   BASEMAPS,
-  buildMeasurementData,
-  distanceMiles,
-  reorderRegistryLayers,
-  updateMeasurementSource,
-  updateSelectionSource,
   type BasemapKey,
 } from "./map-runtime";
 import {
@@ -86,22 +82,6 @@ import {
 type ViewState = { center: [number, number]; zoom: number; bearing: number; pitch: number };
 type MapBoundsState = { west: number; south: number; east: number; north: number };
 type RuntimeState = { kind: "loading" | "ready" | "degraded" | "error"; message: string };
-type MapLibreRuntimeProbe = {
-  version: string | null;
-  workerConfigured: boolean;
-  runtimeAssetsReady: boolean;
-  webgl2: boolean | null;
-  mapConstructed: boolean;
-  canvasReady: boolean;
-  styleLoaded: boolean;
-  idle: boolean;
-  tilesLoaded: boolean;
-  controlsReady: boolean;
-  interactionsReady: boolean;
-  sourcesReady: number;
-  projection: "mercator" | "globe";
-  error: string | null;
-};
 type DrawerView = "evidence" | "metadata" | "lineage" | "focus";
 type MeasureMode = "distance" | "area" | null;
 type RepositoryView = "updates" | "functions" | "scenario" | "runtime" | "transitions" | "readiness" | "sources";
@@ -128,8 +108,7 @@ type SelectedContext = {
 
 const KANSAS_VIEW: ViewState = { center: [-98.38, 38.48], zoom: 5.45, bearing: 0, pitch: 0 };
 const EXPECTED_MAPLIBRE_VERSION = "6.6.0";
-const MAPLIBRE_WORKER_URL = "/maplibre/maplibre-gl-worker.mjs";
-const MAPLIBRE_RUNTIME_ASSET_URLS = [MAPLIBRE_WORKER_URL, "/maplibre/maplibre-gl-shared.mjs"] as const;
+const MAP_RUNTIME_CONSUMER_HOLD = "DIRECT_CONSUMER_MIGRATION_HOLD";
 const SUPPORTED_CONTEXT_BOUNDS = Object.freeze({ west: -104.8, south: 34.8, east: -92, north: 42.2 });
 const defaultVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, layer.defaultVisibility]));
 const defaultOpacity = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, layer.defaultOpacity]));
@@ -149,19 +128,6 @@ const mapUtilityLabels: Record<MapUtilityView, string> = {
 };
 const governedRoutes = new Set<GovernedRoute>(["/bootstrap", "/layers", "/evidence"]);
 
-const loadConfiguredMapLibre = async () => {
-  await Promise.all(MAPLIBRE_RUNTIME_ASSET_URLS.map(async (url) => {
-    const response = await fetch(url, { cache: "no-store" });
-    if (!response.ok) throw new Error(`MapLibre runtime asset unavailable (${response.status})`);
-    await response.body?.cancel();
-  }));
-  const maplibregl = await import("maplibre-gl");
-  maplibregl.setWorkerUrl(MAPLIBRE_WORKER_URL);
-  const version = maplibregl.getVersion();
-  if (version !== EXPECTED_MAPLIBRE_VERSION) throw new Error(`Expected MapLibre ${EXPECTED_MAPLIBRE_VERSION}, received ${version}`);
-  if (maplibregl.getWorkerUrl() !== MAPLIBRE_WORKER_URL) throw new Error("MapLibre worker configuration did not persist");
-  return { maplibregl, version };
-};
 const publicWorkspaces: readonly Readonly<{
   id: PublicWorkspaceId;
   label: string;
@@ -351,27 +317,9 @@ const scaleAtView = (view: ViewState) => {
   return metersPerPixel >= 1000 ? `≈ ${(metersPerPixel / 1000).toFixed(1)} km/px` : `≈ ${Math.round(metersPerPixel)} m/px`;
 };
 
-const motionDuration = (duration: number) => window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : duration;
-
-const measurementLabelFor = (mode: Exclude<MeasureMode, null>, coordinates: [number, number][], unit: MeasureUnit) => {
-  if (mode === "distance") {
-    if (coordinates.length < 2) return "Add another point";
-    const miles = distanceMiles(coordinates);
-    return unit === "metric" ? `${(miles * 1.609344).toFixed(1)} km approximate` : `${miles.toFixed(1)} mi approximate`;
-  }
-  if (coordinates.length < 3) return `Add ${3 - coordinates.length} more point${coordinates.length === 2 ? "" : "s"}`;
-  const squareMiles = areaSquareMiles(coordinates);
-  return unit === "metric" ? `${(squareMiles * 2.58999).toFixed(1)} km² approximate` : `${squareMiles.toFixed(1)} sq mi approximate`;
-};
-
 export default function Home() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<MapLibreMap | null>(null);
-  const popupRef = useRef<Popup | null>(null);
-  const scaleControlRef = useRef<ScaleControl | null>(null);
-  const hoveredRef = useRef<{ source: string; id: string | number } | null>(null);
-  const pointerFrameRef = useRef<number | null>(null);
-  const pendingPointerRef = useRef<[number, number]>(KANSAS_VIEW.center);
+  const mapRuntimeRef = useRef<MapRuntimePort | null>(null);
   const visibilityRef = useRef(defaultVisibility);
   const opacityRef = useRef(defaultOpacity);
   const orderRef = useRef(defaultOrder);
@@ -408,24 +356,7 @@ export default function Home() {
   const [view, setView] = useState<ViewState>(KANSAS_VIEW);
   const [pointer, setPointer] = useState<[number, number]>(KANSAS_VIEW.center);
   const [mapViewportBounds, setMapViewportBounds] = useState<MapBoundsState>(SUPPORTED_CONTEXT_BOUNDS);
-  const [runtime, setRuntime] = useState<RuntimeState>({ kind: "loading", message: "Starting the MapLibre renderer…" });
-  const [maplibreProbe, setMaplibreProbe] = useState<MapLibreRuntimeProbe>({
-    version: null,
-    workerConfigured: false,
-    runtimeAssetsReady: false,
-    webgl2: null,
-    mapConstructed: false,
-    canvasReady: false,
-    styleLoaded: false,
-    idle: false,
-    tilesLoaded: false,
-    controlsReady: false,
-    interactionsReady: false,
-    sourcesReady: 0,
-    projection: "mercator",
-    error: null,
-  });
-  const [styleReady, setStyleReady] = useState(false);
+  const [runtime, setRuntime] = useState<RuntimeState>({ kind: "loading", message: "Starting the renderer-neutral map boundary…" });
   const [locationCameraRedacted, setLocationCameraRedacted] = useState(false);
   const [selected, setSelected] = useState<SelectedContext | null>(null);
   const [leftOpen, setLeftOpen] = useState(true);
@@ -486,8 +417,8 @@ export default function Home() {
   const [runtimeSeamReason, setRuntimeSeamReason] = useState("Awaiting deterministic replay");
   const [toast, setToast] = useState("");
   const [isCompact, setIsCompact] = useState(false);
-  const [sourceStates, setSourceStates] = useState<Record<string, "loading" | "ready" | "error">>(
-    Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, "loading"])),
+  const [sourceStates] = useState<Record<string, "held">>(
+    Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, "held"])),
   );
 
   const debouncedGlobalQuery = useDebounced(globalQuery, 140);
@@ -528,58 +459,54 @@ export default function Home() {
   const temporalNoData = useMemo(() => activeLayers.filter((layer) => layer.temporal?.mode === "exact" && !layer.temporal.years.includes(year)), [activeLayers, year]);
   const availabilityByStep = useMemo(() => Object.fromEntries(TIME_STEPS.map((step) => [step, activeLayers.filter((layer) => isLayerAvailableAtTime(layer, step)).length])), [activeLayers]);
   const sourceStateCounts = useMemo(() => ({
-    ready: Object.values(sourceStates).filter((state) => state === "ready").length,
-    loading: Object.values(sourceStates).filter((state) => state === "loading").length,
-    error: Object.values(sourceStates).filter((state) => state === "error").length,
+    held: Object.values(sourceStates).filter((state) => state === "held").length,
   }), [sourceStates]);
   const maplibreCapabilityChecks = useMemo(() => {
-    const state = (ready: boolean, failed = false): "READY" | "CHECKING" | "ERROR" => failed ? "ERROR" : ready ? "READY" : "CHECKING";
-    const startupFailed = Boolean(maplibreProbe.error);
     return [
       {
+        id: "package-seam",
+        label: "Package-owned candidate",
+        detail: `@kfm/maplibre owns exact ${EXPECTED_MAPLIBRE_VERSION}; this Site imports only the renderer-neutral package surface`,
+        state: "READY",
+      },
+      {
+        id: "consumer-runtime",
+        label: "Sites consumer runtime",
+        detail: `${MAP_RUNTIME_CONSUMER_HOLD} · NullMapRuntime performs no renderer, worker, WebGL, source, tile, or network work`,
+        state: "HOLD",
+      },
+      {
         id: "module-worker",
-        label: "ESM runtime + worker",
-        detail: `${maplibreProbe.version ?? "Loading version"} · same-origin worker + shared module ${maplibreProbe.runtimeAssetsReady ? "verified" : "pending"}`,
-        state: state(maplibreProbe.version === EXPECTED_MAPLIBRE_VERSION && maplibreProbe.workerConfigured && maplibreProbe.runtimeAssetsReady, startupFailed && !maplibreProbe.workerConfigured),
-      },
-      {
-        id: "webgl2",
-        label: "WebGL2 context",
-        detail: "Required by MapLibre GL JS 6; catalog metadata remains readable if unavailable",
-        state: state(maplibreProbe.webgl2 === true, maplibreProbe.webgl2 === false),
-      },
-      {
-        id: "canvas",
-        label: "Map + canvas",
-        detail: maplibreProbe.canvasReady ? "Map constructed with a non-zero render surface" : "Waiting for the render surface",
-        state: state(maplibreProbe.mapConstructed && maplibreProbe.canvasReady, startupFailed && !maplibreProbe.mapConstructed),
+        label: "Renderer module + worker",
+        detail: "NOT RUN in this Site; package-owned Vite fixture evidence does not activate this consumer",
+        state: "HOLD",
       },
       {
         id: "style",
-        label: "Style Specification v8",
-        detail: `${BASEMAPS[basemap].title} · ${maplibreProbe.styleLoaded ? "style loaded" : "style pending"}`,
-        state: state(maplibreProbe.styleLoaded, startupFailed),
+        label: "Style + projection",
+        detail: `${BASEMAPS[basemap].title} and ${projection} are view-state choices only; no renderer style is loaded`,
+        state: "HOLD",
       },
       {
         id: "sources",
-        label: "Admitted local sources",
-        detail: `${maplibreProbe.sourcesReady}/${LAYER_REGISTRY.length} GeoJSON sources · ${maplibreProbe.idle ? "idle" : "working"} · ${maplibreProbe.tilesLoaded ? "tiles settled" : "tiles pending"}`,
-        state: state(maplibreProbe.sourcesReady === LAYER_REGISTRY.length && maplibreProbe.idle && maplibreProbe.tilesLoaded, startupFailed || sourceStateCounts.error > 0),
+        label: "Site-local layer descriptors",
+        detail: `${sourceStateCounts.held}/${LAYER_REGISTRY.length} held from renderer loading; catalog and evidence metadata remain readable`,
+        state: "HOLD",
       },
       {
         id: "interaction",
-        label: "Controls + interactions",
-        detail: "Scale, pan, zoom, keyboard, hover, selection, cluster expansion, and measurement handlers",
-        state: state(maplibreProbe.controlsReady && maplibreProbe.interactionsReady, startupFailed),
+        label: "Renderer interactions",
+        detail: "Hit testing, hover, cluster expansion, popups, and screen measurement are unavailable until consumer migration and probes close",
+        state: "HOLD",
       },
       {
-        id: "projection",
-        label: "Projection + fallback",
-        detail: maplibreProbe.mapConstructed ? `${maplibreProbe.projection} active · Mercator remains the explicit 2D fallback` : "Renderer unavailable · catalog and evidence interfaces remain active",
-        state: state(maplibreProbe.mapConstructed, startupFailed),
+        id: "readiness",
+        label: "Broader browser readiness",
+        detail: "The governed twelve-probe packet remains pending; this fail-closed repair creates no readiness result",
+        state: "HOLD",
       },
     ] as const;
-  }, [basemap, maplibreProbe, sourceStateCounts.error]);
+  }, [basemap, projection, sourceStateCounts.held]);
   const mapFeatureIndex = useMemo(() => {
     const query = mapFeatureQuery.trim().toLowerCase();
     return LAYER_REGISTRY
@@ -759,6 +686,60 @@ export default function Home() {
     window.setTimeout(() => setToast(""), 3600);
   }, []);
 
+  const applyRendererNeutralView = useCallback((nextView: ViewState) => {
+    const camera: MapRuntimeCamera = {
+      longitude: nextView.center[0],
+      latitude: nextView.center[1],
+      zoom: nextView.zoom,
+      bearing: nextView.bearing,
+      pitch: nextView.pitch,
+    };
+    try {
+      mapRuntimeRef.current?.setCamera(camera);
+    } catch {
+      // The serializable view remains usable even if the null port is not ready yet.
+    }
+    setView((current) => {
+      lastKnownGoodViewRef.current = current;
+      return nextView;
+    });
+    setPointer([...nextView.center] as [number, number]);
+  }, []);
+
+  const updateRendererNeutralView = useCallback((update: Partial<Omit<ViewState, "center">> & { center?: [number, number] }) => {
+    setView((current) => {
+      const nextView: ViewState = {
+        center: update.center ?? current.center,
+        zoom: update.zoom ?? current.zoom,
+        bearing: update.bearing ?? current.bearing,
+        pitch: update.pitch ?? current.pitch,
+      };
+      const camera: MapRuntimeCamera = {
+        longitude: nextView.center[0],
+        latitude: nextView.center[1],
+        zoom: nextView.zoom,
+        bearing: nextView.bearing,
+        pitch: nextView.pitch,
+      };
+      try {
+        mapRuntimeRef.current?.setCamera(camera);
+      } catch {
+        // URL and catalog state remain deterministic while runtime setup is pending.
+      }
+      lastKnownGoodViewRef.current = current;
+      setPointer([...nextView.center] as [number, number]);
+      return nextView;
+    });
+  }, []);
+
+  const fitRendererNeutralBounds = useCallback((bounds: [number, number, number, number], maxZoom = 9) => {
+    const [west, south, east, north] = bounds;
+    const span = Math.max(east - west, north - south, 0.01);
+    const zoom = Math.min(maxZoom, Math.max(4, Math.log2(360 / span) - 1));
+    setMapViewportBounds({ west, south, east, north });
+    updateRendererNeutralView({ center: [(west + east) / 2, (south + north) / 2], zoom });
+  }, [updateRendererNeutralView]);
+
   const showComparedLayers = useCallback(() => {
     setVisibility((current) => ({ ...current, [compareLeft.id]: true, [compareRight.id]: true }));
     announce(`Showing ${compareLeft.title} and ${compareRight.title}; other visible layers were preserved`);
@@ -772,9 +753,9 @@ export default function Home() {
       Math.max(compareLeft.bounds[3], compareRight.bounds[3]),
     ];
     setVisibility((current) => ({ ...current, [compareLeft.id]: true, [compareRight.id]: true }));
-    mapRef.current?.fitBounds([[bounds[0], bounds[1]], [bounds[2], bounds[3]]], { padding: 70, maxZoom: 9, duration: motionDuration(650) });
-    announce("Fitted both comparison layers; camera and visibility changed only in this browser");
-  }, [announce, compareLeft, compareRight]);
+    fitRendererNeutralBounds(bounds);
+    announce("Framed both comparison layers in renderer-neutral camera state; visibility changed only in this browser");
+  }, [announce, compareLeft, compareRight, fitRendererNeutralBounds]);
 
   const copyLayerComparison = useCallback(async () => {
     const summarize = (layer: LayerRecord) => ({
@@ -896,12 +877,11 @@ export default function Home() {
       return;
     }
     if (proposal.kind === "CENTER_SELECTION") {
-      mapRef.current?.easeTo({
+      updateRendererNeutralView({
         center: [selected.properties.focusLng, selected.properties.focusLat],
-        zoom: Math.max(mapRef.current.getZoom(), 7),
-        duration: motionDuration(650),
+        zoom: Math.max(mapRuntimeRef.current?.getSnapshot().camera.zoom ?? KANSAS_VIEW.zoom, 7),
       });
-      announce("Applied camera-only Focus action");
+      announce("Applied renderer-neutral camera-only Focus action");
       return;
     }
     if (proposal.kind === "OPEN_SOURCES") {
@@ -914,7 +894,7 @@ export default function Home() {
     const targetView: DrawerView = proposal.kind === "OPEN_METADATA" ? "metadata" : proposal.kind === "OPEN_LINEAGE" ? "lineage" : "evidence";
     activateDrawerView(targetView, true);
     announce("Applied review-navigation action only");
-  }, [activateDrawerView, announce, selected]);
+  }, [activateDrawerView, announce, selected, updateRendererNeutralView]);
 
   const closeRepository = useCallback(() => {
     setRepositoryOpen(false);
@@ -925,7 +905,6 @@ export default function Home() {
   const closeRightPanel = useCallback(() => {
     setRightOpen(false);
     setCurrentWorkspace("explore");
-    popupRef.current?.remove();
     const returnTarget = returnFocusRef.current;
     returnFocusRef.current = null;
     window.setTimeout(() => {
@@ -1038,12 +1017,11 @@ export default function Home() {
     setVisibility((current) => ({ ...current, [layerId]: true }));
     openSelection(context, returnElement);
     const focus: [number, number] = [context.properties.focusLng, context.properties.focusLat];
-    mapRef.current?.easeTo({ center: focus, zoom: Math.max(mapRef.current.getZoom(), 7), duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 700 });
-    if (mapRef.current?.isStyleLoaded()) {
-      const mismatch = isFeatureTimeMismatch(context.layer.temporal, context.properties.year, yearRef.current);
-      updateSelectionSource(mapRef.current, mismatch ? null : context.geometry);
-    }
-  }, [openSelection]);
+    updateRendererNeutralView({
+      center: focus,
+      zoom: Math.max(mapRuntimeRef.current?.getSnapshot().camera.zoom ?? KANSAS_VIEW.zoom, 7),
+    });
+  }, [openSelection, updateRendererNeutralView]);
 
   const openGuidedExample = useCallback((example: (typeof GUIDED_EXAMPLES)[number]) => {
     yearRef.current = example.year;
@@ -1087,8 +1065,6 @@ export default function Home() {
     returnFocusRef.current = null;
     setSelected(null);
     setRightOpen(false);
-    popupRef.current?.remove();
-    if (mapRef.current?.isStyleLoaded()) updateSelectionSource(mapRef.current, null);
   }, []);
 
   const clearSelection = useCallback(() => {
@@ -1128,8 +1104,7 @@ export default function Home() {
       locationDerivedViewRef.current = restoredCameraRedaction;
       setLocationCameraRedacted(restoredCameraRedaction);
       pendingViewRef.current = restoredView;
-      setView(restoredView);
-      mapRef.current?.jumpTo(restoredView);
+      applyRendererNeutralView(restoredView);
 
       const knownLayerIds = new Set(LAYER_REGISTRY.map((layer) => layer.id));
       const visibleIds = params.get("l")?.split(",").filter((id) => knownLayerIds.has(id)) ?? [];
@@ -1222,7 +1197,7 @@ export default function Home() {
         setSelected(null);
         setRightOpen(false);
       }
-  }, []);
+  }, [applyRendererNeutralView]);
 
   useEffect(() => {
     const restore = window.setTimeout(restoreExplorerFromUrl, 0);
@@ -1236,315 +1211,48 @@ export default function Home() {
 
   useEffect(() => {
     let disposed = false;
-    const mapContainer = mapContainerRef.current;
-    if (!mapContainer) return;
+    const initialView = pendingViewRef.current ?? KANSAS_VIEW;
+    const runtimePort = createNullMapRuntime({
+      longitude: initialView.center[0],
+      latitude: initialView.center[1],
+      zoom: initialView.zoom,
+      bearing: initialView.bearing,
+      pitch: initialView.pitch,
+    });
+    mapRuntimeRef.current = runtimePort;
+    const unsubscribe = runtimePort.subscribeSnapshot((snapshot) => {
+      if (disposed || snapshot.state === "DISPOSED") return;
+      const nextView: ViewState = {
+        center: [snapshot.camera.longitude, snapshot.camera.latitude],
+        zoom: snapshot.camera.zoom,
+        bearing: snapshot.camera.bearing,
+        pitch: snapshot.camera.pitch,
+      };
+      setView(nextView);
+      setPointer([...nextView.center] as [number, number]);
+    });
 
-    loadConfiguredMapLibre().then(({ maplibregl, version }) => {
-      if (disposed || !mapContainerRef.current) return;
-      setMaplibreProbe((current) => ({ ...current, version, workerConfigured: true, runtimeAssetsReady: true, error: null }));
-      try {
-        const webgl2 = document.createElement("canvas").getContext("webgl2");
-        setMaplibreProbe((current) => ({ ...current, webgl2: Boolean(webgl2) }));
-        if (!webgl2) {
-          setSourceStates(Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, "error"])));
-          setMaplibreProbe((current) => ({ ...current, error: "WebGL2 is unavailable" }));
-          setRuntime({ kind: "error", message: "WebGL2 is unavailable in this browser. The Layer Catalog and trust metadata remain readable, but the interactive map cannot start." });
-          return;
-        }
-        const initialView = pendingViewRef.current ?? KANSAS_VIEW;
-        const map = new maplibregl.Map({
-          container: mapContainerRef.current,
-          style: BASEMAPS[basemapRef.current].style,
-          center: initialView.center,
-          zoom: initialView.zoom,
-          bearing: initialView.bearing,
-          pitch: initialView.pitch,
-          minZoom: 4,
-          maxZoom: 16,
-          maxBounds: [[-104.8, 34.8], [-92.0, 42.2]],
-          attributionControl: { compact: true },
-          cooperativeGestures: true,
-        });
-        mapRef.current = map;
-        setMaplibreProbe((current) => ({ ...current, mapConstructed: true }));
-        const scaleControl = new maplibregl.ScaleControl({ unit: measureUnitRef.current, maxWidth: 110 });
-        scaleControlRef.current = scaleControl;
-        map.addControl(scaleControl, "bottom-left");
-        let interactionHandlersBound = false;
-        let runtimeError: string | null = null;
-        const failedSourceIds = new Set<string>();
-
-        const refreshMaplibreProbe = () => {
-          const nextSourceStates = Object.fromEntries(LAYER_REGISTRY.map((layer) => {
-            const sourceReady = Boolean(map.getSource(layer.sourceId)) && map.isSourceLoaded(layer.sourceId);
-            return [layer.id, sourceReady ? "ready" : failedSourceIds.has(layer.sourceId) ? "error" : "loading"];
-          })) as Record<string, "loading" | "ready" | "error">;
-          const sourcesReady = Object.values(nextSourceStates).filter((state) => state === "ready").length;
-          const styleLoaded = Boolean(map.isStyleLoaded());
-          const canvasBounds = map.getCanvas().getBoundingClientRect();
-          const canvasReady = canvasBounds.width > 0 && canvasBounds.height > 0 && map.getCanvas().width > 0 && map.getCanvas().height > 0;
-          const projectionType = map.getProjection().type === "globe" ? "globe" : "mercator";
-          const interactionsReady = interactionHandlersBound
-            && map.dragPan.isEnabled()
-            && map.scrollZoom.isEnabled()
-            && map.keyboard.isEnabled()
-            && map.touchZoomRotate.isEnabled();
-          const nextProbe = {
-            styleLoaded,
-            canvasReady,
-            idle: map.loaded(),
-            tilesLoaded: map.areTilesLoaded(),
-            controlsReady: Boolean(scaleControlRef.current),
-            interactionsReady,
-            sourcesReady,
-            projection: projectionType,
-            error: runtimeError,
-          } satisfies Partial<MapLibreRuntimeProbe>;
-          setSourceStates(nextSourceStates);
-          setStyleReady(styleLoaded);
-          setMaplibreProbe((current) => ({ ...current, ...nextProbe }));
-          return nextProbe;
-        };
-
-        const syncStyle = () => {
-          hoveredRef.current = null;
-          map.getCanvas().style.cursor = "";
-          applyRegistryState(map, visibilityRef.current, opacityRef.current, yearRef.current, orderRef.current);
-          map.setProjection({ type: projectionRef.current });
-          const currentSelection = selectedRef.current;
-          if (currentSelection) {
-            const mismatch = isFeatureTimeMismatch(currentSelection.layer.temporal, currentSelection.properties.year, yearRef.current);
-            const layerVisible = visibilityRef.current[currentSelection.layerId];
-            updateSelectionSource(map, mismatch || !layerVisible ? null : currentSelection.geometry);
-          }
-          updateMeasurementSource(map, buildMeasurementData(measureCoordinatesRef.current, measurementGeometryModeRef.current));
-          refreshMaplibreProbe();
-        };
-
-        map.on("style.load", syncStyle);
-        map.once("load", () => {
-          syncStyle();
-          map.setProjection({ type: projectionRef.current });
-          setRuntime({ kind: "loading", message: `MapLibre ${version} loaded · verifying local sources and interactions…` });
-          map.resize();
-        });
-
-        map.on("mousemove", (event) => {
-          pendingPointerRef.current = [event.lngLat.lng, event.lngLat.lat];
-          if (pointerFrameRef.current === null) {
-            pointerFrameRef.current = window.requestAnimationFrame(() => {
-              setPointer(pendingPointerRef.current);
-              pointerFrameRef.current = null;
-            });
-          }
-          const availableLayers = interactiveLayerIds.filter((id) => map.getLayer(id));
-          const candidate = map.queryRenderedFeatures(event.point, { layers: availableLayers })[0];
-          if (!candidate) {
-            map.getCanvas().style.cursor = "";
-            if (hoveredRef.current) map.setFeatureState(hoveredRef.current, { hover: false });
-            hoveredRef.current = null;
-            return;
-          }
-          map.getCanvas().style.cursor = "pointer";
-          if (candidate.id !== undefined) {
-            const next = { source: candidate.source, id: candidate.id };
-            if (hoveredRef.current?.source === next.source && hoveredRef.current.id === next.id) return;
-            if (hoveredRef.current) map.setFeatureState(hoveredRef.current, { hover: false });
-            hoveredRef.current = next;
-            map.setFeatureState(hoveredRef.current, { hover: true });
-          } else if (hoveredRef.current) {
-            map.setFeatureState(hoveredRef.current, { hover: false });
-            hoveredRef.current = null;
-          }
-        });
-
-        map.on("click", (event) => {
-          if (measureModeRef.current) {
-            measureCoordinatesRef.current = [...measureCoordinatesRef.current, [event.lngLat.lng, event.lngLat.lat]];
-            const coordinates = measureCoordinatesRef.current;
-            updateMeasurementSource(map, buildMeasurementData(coordinates, measureModeRef.current));
-            setMeasurement(measurementLabelFor(measureModeRef.current, coordinates, measureUnitRef.current));
-            return;
-          }
-
-          const availableLayers = interactiveLayerIds.filter((id) => map.getLayer(id));
-          const renderedCandidates = map.queryRenderedFeatures(event.point, { layers: availableLayers });
-          const candidate = renderedCandidates[0];
-          if (!candidate) {
-            setMapQueryCandidates([]);
-            return;
-          }
-
-          if (candidate.properties?.cluster) {
-            setMapQueryCandidates([]);
-            const source = map.getSource(candidate.source) as GeoJSONSource;
-            void source.getClusterExpansionZoom(Number(candidate.properties.cluster_id)).then((zoom) => {
-              const coordinates = (candidate.geometry as GeoJSON.Point).coordinates as [number, number];
-              map.easeTo({ center: coordinates, zoom, duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 500 });
-            });
-            return;
-          }
-
-          const stableCandidates = new Map<string, MapQueryCandidate>();
-          for (const rendered of renderedCandidates) {
-            if (rendered.properties?.cluster) continue;
-            const layer = findLayerByRenderer(rendered.layer.id);
-            const featureId = String(rendered.properties?.fid ?? rendered.id ?? "");
-            const match = featureId ? findFeature(featureId) : null;
-            if (!layer || !match || match.layer.id !== layer.id) continue;
-            stableCandidates.set(`${layer.id}:${featureId}`, {
-              featureId,
-              layerId: layer.id,
-              title: match.feature.properties.title,
-              layerTitle: layer.title,
-              evidenceState: match.feature.properties.evidenceState,
-              sourceYear: match.feature.properties.year,
-            });
-          }
-          let candidateStack = [...stableCandidates.values()];
-          if (candidateStack.some((item) => item.layerId !== "kansas-extent")) candidateStack = candidateStack.filter((item) => item.layerId !== "kansas-extent");
-          if (candidateStack.length > 1) {
-            popupRef.current?.remove();
-            mapUtilityReturnRef.current = mapContainerRef.current;
-            setMapQueryCandidates(candidateStack);
-            setMapFeatureLayer("ALL");
-            setMapUtilityView("inspect");
-            setMapUtilityOpen(true);
-            setToolsExpanded(false);
-            if (compactRef.current) {
-              setLeftOpen(false);
-              setRightOpen(false);
-              setTimelineOpen(false);
-            }
-            window.setTimeout(() => mapUtilityPanelRef.current?.querySelector<HTMLElement>("button:not([disabled])")?.focus(), 0);
-            return;
-          }
-
-          const stableCandidate = candidateStack[0];
-          const layer = stableCandidate ? LAYER_REGISTRY.find((item) => item.id === stableCandidate.layerId) : undefined;
-          const featureId = stableCandidate?.featureId ?? "";
-          if (!layer || !featureId) {
-            setRuntime({ kind: "degraded", message: "A rendered candidate could not be translated into a stable Explorer feature." });
-            return;
-          }
-          const context = copyFeature(layer, featureId);
-          if (!context) {
-            setRuntime({ kind: "degraded", message: "The selected candidate has no stable application-level registry record." });
-            return;
-          }
-
-          setMapQueryCandidates([]);
-          openSelectionRef.current(context, mapContainerRef.current);
-          updateSelectionSource(map, context.geometry);
-          popupRef.current?.remove();
-          const popupNode = document.createElement("div");
-          popupNode.className = "map-popup-content";
-          const title = document.createElement("strong");
-          title.textContent = context.properties.title;
-          const state = document.createElement("span");
-          state.textContent = evidenceLabels[context.properties.evidenceState].label;
-          popupNode.append(title, state);
-          popupRef.current = new maplibregl.Popup({ closeButton: true, closeOnClick: false, maxWidth: "260px" })
-            .setLngLat(event.lngLat)
-            .setDOMContent(popupNode)
-            .addTo(map);
-        });
-        interactionHandlersBound = true;
-
-        map.on("movestart", () => {
-          const center = map.getCenter();
-          lastKnownGoodViewRef.current = { center: [center.lng, center.lat], zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch() };
-        });
-        map.on("moveend", () => {
-          const center = map.getCenter();
-          const nextView: ViewState = { center: [center.lng, center.lat], zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch() };
-          const bounds = map.getBounds();
-          setMapViewportBounds({ west: bounds.getWest(), south: bounds.getSouth(), east: bounds.getEast(), north: bounds.getNorth() });
-          setView(nextView);
-        });
-        map.on("error", (event) => {
-          const message = event.error?.message || "The map reported an unknown rendering error.";
-          const sourceId = (event as typeof event & { sourceId?: string }).sourceId;
-          const affectedLayer = sourceId ? LAYER_REGISTRY.find((layer) => layer.sourceId === sourceId) : undefined;
-          runtimeError = message;
-          if (sourceId) failedSourceIds.add(sourceId);
-          setMaplibreProbe((current) => ({ ...current, error: message }));
-          if (affectedLayer) {
-            setSourceStates((current) => ({ ...current, [affectedLayer.id]: "error" }));
-            setRuntime({ kind: "degraded", message: `${affectedLayer.title} could not load; other map layers remain available. ${message}` });
-          } else {
-            setRuntime({ kind: "error", message: `Map runtime error: ${message}` });
-          }
-        });
-        map.on("idle", () => {
-          const probe = refreshMaplibreProbe();
-          const ready = probe.styleLoaded
-            && probe.canvasReady
-            && probe.tilesLoaded
-            && probe.sourcesReady === LAYER_REGISTRY.length
-            && probe.interactionsReady
-            && !runtimeError;
-          if (!ready) {
-            setRuntime({ kind: runtimeError ? "degraded" : "loading", message: runtimeError ? `MapLibre runtime proof is incomplete: ${runtimeError}` : "MapLibre is waiting for all admitted local capabilities to settle…" });
-            return;
-          }
-          setRuntime({ kind: "ready", message: `MapLibre ${version} ready · ${LAYER_REGISTRY.length} local sources · interactions proven` });
-        });
-      } catch (error) {
-        const message = error instanceof Error ? error.message : "unknown failure";
-        setMaplibreProbe((current) => ({ ...current, error: message }));
-        setRuntime({ kind: "error", message: `MapLibre could not start: ${message}` });
-      }
-    }).catch((error: unknown) => {
-      const message = error instanceof Error ? error.message : "unknown failure";
-      setMaplibreProbe((current) => ({ ...current, error: message }));
-      setRuntime({ kind: "error", message: `MapLibre could not load: ${message}` });
+    void runtimePort.initialize().then(() => {
+      if (disposed) return;
+      setRuntime({
+        kind: "degraded",
+        message: "Renderer acquisition is held. NullMapRuntime preserves serializable camera and catalog state without MapLibre, WebGL, workers, sources, tiles, or network access.",
+      });
+    }).catch(() => {
+      if (disposed) return;
+      setRuntime({
+        kind: "error",
+        message: "The renderer-neutral fallback could not initialize; catalog and evidence metadata remain readable.",
+      });
     });
 
     return () => {
       disposed = true;
-      popupRef.current?.remove();
-      if (pointerFrameRef.current !== null) window.cancelAnimationFrame(pointerFrameRef.current);
-      mapRef.current?.remove();
-      mapRef.current = null;
+      unsubscribe();
+      runtimePort.dispose();
+      if (mapRuntimeRef.current === runtimePort) mapRuntimeRef.current = null;
     };
   }, []);
-
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map || !map.isStyleLoaded()) return;
-    applyRegistryState(map, visibility, opacity, year, layerOrder);
-  }, [visibility, opacity, year, layerOrder]);
-
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map || !map.isStyleLoaded()) return;
-    map.setStyle(BASEMAPS[basemap].style);
-    setStyleReady(false);
-    setMaplibreProbe((current) => ({ ...current, styleLoaded: false, idle: false, tilesLoaded: false, sourcesReady: 0 }));
-    setRuntime({ kind: "loading", message: `Applying ${BASEMAPS[basemap].title} style…` });
-  }, [basemap]);
-
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map?.isStyleLoaded()) return;
-    updateSelectionSource(map, selected && !selectedTimeMismatch && !selectedLayerHidden ? selected.geometry : null);
-  }, [selected, selectedLayerHidden, selectedTimeMismatch]);
-
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map?.isStyleLoaded()) return;
-    map.setProjection({ type: projection });
-    setMaplibreProbe((current) => ({ ...current, projection }));
-  }, [projection]);
-
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
-    const first = window.requestAnimationFrame(() => map.resize());
-    const second = window.setTimeout(() => map.resize(), 260);
-    return () => { window.cancelAnimationFrame(first); window.clearTimeout(second); };
-  }, [leftOpen, rightOpen, timelineOpen]);
 
   useEffect(() => {
     if (!playing) return;
@@ -1626,8 +1334,6 @@ export default function Home() {
         setMeasureMode(null);
         setMeasurementGeometryMode(null);
         setMeasurement("Measurement cancelled");
-        mapRef.current?.doubleClickZoom.enable();
-        if (mapRef.current?.isStyleLoaded()) updateMeasurementSource(mapRef.current, buildMeasurementData([], null));
       }
       else if (!isCompact && rightOpen) closeRightPanel();
     };
@@ -1644,7 +1350,7 @@ export default function Home() {
     const layer = LAYER_REGISTRY.find((candidate) => candidate.id === item.layerId);
     if (!layer) return;
     setVisibility((current) => ({ ...current, [layer.id]: true }));
-    mapRef.current?.fitBounds([[layer.bounds[0], layer.bounds[1]], [layer.bounds[2], layer.bounds[3]]], { padding: 70, maxZoom: 9, duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 650 });
+    fitRendererNeutralBounds(layer.bounds);
   };
 
   const activatePublicWorkspace = (workspaceId: PublicWorkspaceId) => {
@@ -1703,19 +1409,19 @@ export default function Home() {
     locationDerivedViewRef.current = false;
     setLocationCameraRedacted(false);
     setVisibility((current) => ({ ...current, [layer.id]: true }));
-    mapRef.current?.fitBounds([[layer.bounds[0], layer.bounds[1]], [layer.bounds[2], layer.bounds[3]]], { padding: 70, maxZoom: 9, duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 650 });
+    fitRendererNeutralBounds(layer.bounds);
   };
 
   const fitKansasView = () => {
     if (locationDerivedViewRef.current) {
       locationDerivedViewRef.current = false;
       setLocationCameraRedacted(false);
-      mapRef.current?.jumpTo(KANSAS_VIEW);
+      applyRendererNeutralView(KANSAS_VIEW);
       announce("Private location camera cleared and reset to the generalized Kansas extent");
       return;
     }
-    mapRef.current?.fitBounds([[-102.1, 36.95], [-94.55, 40.05]], { padding: 48, duration: motionDuration(600) });
-    announce("Fit the generalized Kansas demonstration extent");
+    fitRendererNeutralBounds([-102.1, 36.95, -94.55, 40.05]);
+    announce("Framed the generalized Kansas demonstration extent in renderer-neutral camera state");
   };
 
   const inspectLayer = (layer: LayerRecord, returnElement: HTMLElement) => {
@@ -1736,7 +1442,6 @@ export default function Home() {
       const target = index + direction;
       if (index < 0 || target < 0 || target >= next.length) return current;
       [next[index], next[target]] = [next[target], next[index]];
-      if (mapRef.current?.isStyleLoaded()) reorderRegistryLayers(mapRef.current, next);
       return next;
     });
   };
@@ -1753,8 +1458,11 @@ export default function Home() {
     if (!match || match.layer.id !== layerId) return;
     locationDerivedViewRef.current = false;
     setLocationCameraRedacted(false);
-    mapRef.current?.easeTo({ center: [match.feature.properties.focusLng, match.feature.properties.focusLat], zoom: Math.max(mapRef.current.getZoom(), 8), duration: motionDuration(550) });
-    announce(`Centered ${match.feature.properties.title} · camera only`);
+    updateRendererNeutralView({
+      center: [match.feature.properties.focusLng, match.feature.properties.focusLat],
+      zoom: Math.max(mapRuntimeRef.current?.getSnapshot().camera.zoom ?? KANSAS_VIEW.zoom, 8),
+    });
+    announce(`Centered ${match.feature.properties.title} in renderer-neutral camera state`);
   };
 
   const goToCoordinates = (event: React.FormEvent<HTMLFormElement>) => {
@@ -1774,8 +1482,11 @@ export default function Home() {
     setCoordinateLongitude(longitude.toFixed(5));
     locationDerivedViewRef.current = false;
     setLocationCameraRedacted(false);
-    mapRef.current?.easeTo({ center: [longitude, latitude], zoom: Math.max(mapRef.current.getZoom(), 9), duration: motionDuration(600) });
-    announce(`Centered ${latitude.toFixed(4)}°, ${longitude.toFixed(4)}° · camera only`);
+    updateRendererNeutralView({
+      center: [longitude, latitude],
+      zoom: Math.max(mapRuntimeRef.current?.getSnapshot().camera.zoom ?? KANSAS_VIEW.zoom, 9),
+    });
+    announce(`Centered ${latitude.toFixed(4)}°, ${longitude.toFixed(4)}° in renderer-neutral camera state`);
   };
 
   const copyMapCenter = async () => {
@@ -1801,11 +1512,19 @@ export default function Home() {
     setLocationCameraRedacted(false);
     const points = mapFeatureIndex.map(({ feature }) => [feature.properties.focusLng, feature.properties.focusLat] as [number, number]);
     if (points.length === 1) {
-      mapRef.current?.easeTo({ center: points[0], zoom: Math.max(mapRef.current.getZoom(), 9), duration: motionDuration(550) });
+      updateRendererNeutralView({
+        center: points[0],
+        zoom: Math.max(mapRuntimeRef.current?.getSnapshot().camera.zoom ?? KANSAS_VIEW.zoom, 9),
+      });
     } else {
       const longitudes = points.map(([longitude]) => longitude);
       const latitudes = points.map(([, latitude]) => latitude);
-      mapRef.current?.fitBounds([[Math.min(...longitudes), Math.min(...latitudes)], [Math.max(...longitudes), Math.max(...latitudes)]], { padding: 64, maxZoom: 10, duration: motionDuration(650) });
+      fitRendererNeutralBounds([
+        Math.min(...longitudes),
+        Math.min(...latitudes),
+        Math.max(...longitudes),
+        Math.max(...latitudes),
+      ], 10);
     }
     announce(`Fit ${mapFeatureIndex.length} compatible indexed feature${mapFeatureIndex.length === 1 ? "" : "s"}`);
   };
@@ -1825,41 +1544,35 @@ export default function Home() {
     locationDerivedViewRef.current = false;
     setLocationCameraRedacted(false);
     clearSelectionState();
-    mapRef.current?.fitBounds([[-102.1, 36.95], [-94.55, 40.05]], { padding: 54, duration: motionDuration(600) });
+    fitRendererNeutralBounds([-102.1, 36.95, -94.55, 40.05]);
     announce(`${profile.title} applied · view state only`);
   };
 
   const restoreLastKnownGoodView = () => {
     const lastView = lastKnownGoodViewRef.current;
-    mapRef.current?.jumpTo({ ...lastView, center: [...lastView.center] as [number, number] });
+    applyRendererNeutralView({ ...lastView, center: [...lastView.center] as [number, number] });
     announce("Restored the last known local camera state");
   };
 
   const reapplyRendererState = () => {
-    const map = mapRef.current;
-    if (!map?.isStyleLoaded()) {
-      announce("Style is not ready; renderer state was not changed");
+    const runtimePort = mapRuntimeRef.current;
+    if (!runtimePort) {
+      announce("Renderer-neutral runtime is unavailable; no state was changed");
       return;
     }
     try {
-      applyRegistryState(map, visibilityRef.current, opacityRef.current, yearRef.current, orderRef.current);
-      map.setProjection({ type: projectionRef.current });
-      const currentSelection = selectedRef.current;
-      const selectionAvailable = currentSelection && visibilityRef.current[currentSelection.layerId] && !isFeatureTimeMismatch(currentSelection.layer.temporal, currentSelection.properties.year, yearRef.current);
-      updateSelectionSource(map, selectionAvailable ? currentSelection.geometry : null);
-      updateMeasurementSource(map, buildMeasurementData(measureCoordinatesRef.current, measurementGeometryModeRef.current));
-      setSourceStates((current) => Object.fromEntries(LAYER_REGISTRY.map((layer) => [
-        layer.id,
-        current[layer.id] === "error" ? "error" : map.getSource(layer.sourceId) ? "ready" : "loading",
-      ])));
-      const hasKnownSourceError = Object.values(sourceStates).includes("error");
-      setRuntime(hasKnownSourceError
-        ? { kind: "degraded", message: "Renderer state reapplied; known source errors remain visible for diagnosis" }
-        : { kind: "ready", message: "MapLibre renderer state reapplied from the site registry" });
-      announce(hasKnownSourceError ? "Reapplied renderer state without clearing known source errors" : "Reapplied local style, layers, time, selection, and measurement state");
-    } catch (error) {
-      setRuntime({ kind: "degraded", message: `Registry reapply failed safely: ${error instanceof Error ? error.message : "unknown failure"}` });
-      announce("Renderer state could not be fully reapplied; diagnostics remain available");
+      const snapshot = runtimePort.getSnapshot();
+      applyRendererNeutralView({
+        center: [snapshot.camera.longitude, snapshot.camera.latitude],
+        zoom: snapshot.camera.zoom,
+        bearing: snapshot.camera.bearing,
+        pitch: snapshot.camera.pitch,
+      });
+      setRuntime({ kind: "degraded", message: "Renderer acquisition remains held; serializable NullMapRuntime camera state was reasserted without loading styles, sources, tiles, or workers." });
+      announce("Reasserted renderer-neutral camera state; renderer capabilities remain held");
+    } catch {
+      setRuntime({ kind: "error", message: "Renderer-neutral state could not be reasserted; catalog and evidence metadata remain readable." });
+      announce("Renderer-neutral state could not be reasserted; no renderer was acquired");
     }
   };
 
@@ -1882,11 +1595,9 @@ export default function Home() {
     measurementGeometryModeRef.current = null;
     measureCoordinatesRef.current = [];
     setMeasurement("Select a measurement tool");
-    mapRef.current?.doubleClickZoom.enable();
     locationDerivedViewRef.current = false;
     setLocationCameraRedacted(false);
-    mapRef.current?.jumpTo(KANSAS_VIEW);
-    if (mapRef.current?.isStyleLoaded()) updateMeasurementSource(mapRef.current, buildMeasurementData([], null));
+    applyRendererNeutralView(KANSAS_VIEW);
     clearSelection();
     setMapQueryCandidates([]);
     showGuidedStart();
@@ -1894,61 +1605,23 @@ export default function Home() {
   };
 
   const toggleMeasure = (mode: Exclude<MeasureMode, null>) => {
-    if (measureMode === mode) {
-      setMeasureMode(null);
-      setMeasurementGeometryMode(null);
-      measureModeRef.current = null;
-      measurementGeometryModeRef.current = null;
-      measureCoordinatesRef.current = [];
-      setMeasurement("Measurement cancelled");
-      mapRef.current?.doubleClickZoom.enable();
-      if (mapRef.current?.isStyleLoaded()) updateMeasurementSource(mapRef.current, buildMeasurementData([], null));
-      return;
-    }
-    setMeasureMode(mode);
-    setMeasurementGeometryMode(mode);
-    measureModeRef.current = mode;
-    measurementGeometryModeRef.current = mode;
+    setMeasureMode(null);
+    setMeasurementGeometryMode(null);
+    measureModeRef.current = null;
+    measurementGeometryModeRef.current = null;
     measureCoordinatesRef.current = [];
-    setMeasurement(`Click the map to start measuring ${mode}`);
+    setMeasurement(`HOLD · ${mode} measurement requires the conforming renderer consumer migration`);
     setToolsExpanded(false);
     setMapQueryCandidates([]);
-    const map = mapRef.current;
-    if (map) {
-      map.doubleClickZoom.disable();
-      if (map.isStyleLoaded()) updateMeasurementSource(map, buildMeasurementData([], mode));
-    }
+    announce(`Screen ${mode} measurement remains held until renderer interactions cross MapRuntimePort`);
   };
 
   const undoMeasurementPoint = () => {
-    const mode = measurementGeometryModeRef.current;
-    if (!mode || measureCoordinatesRef.current.length === 0) {
-      announce("No measurement point to undo");
-      return;
-    }
-    measureCoordinatesRef.current = measureCoordinatesRef.current.slice(0, -1);
-    if (!measureModeRef.current) {
-      measureModeRef.current = mode;
-      setMeasureMode(mode);
-      mapRef.current?.doubleClickZoom.disable();
-    }
-    if (mapRef.current?.isStyleLoaded()) updateMeasurementSource(mapRef.current, buildMeasurementData(measureCoordinatesRef.current, mode));
-    setMeasurement(measureCoordinatesRef.current.length ? measurementLabelFor(mode, measureCoordinatesRef.current, measureUnitRef.current) : `Click the map to start measuring ${mode}`);
+    announce("No renderer-backed measurement points are available while the consumer migration is held");
   };
 
   const finishMeasurement = () => {
-    const mode = measurementGeometryModeRef.current;
-    if (!mode) return;
-    const minimum = mode === "distance" ? 2 : 3;
-    if (measureCoordinatesRef.current.length < minimum) {
-      announce(`Add ${minimum - measureCoordinatesRef.current.length} more point${minimum - measureCoordinatesRef.current.length === 1 ? "" : "s"} before finishing`);
-      return;
-    }
-    measureModeRef.current = null;
-    setMeasureMode(null);
-    mapRef.current?.doubleClickZoom.enable();
-    setMeasurement(`Complete · ${measurementLabelFor(mode, measureCoordinatesRef.current, measureUnitRef.current)}`);
-    announce("Screen measurement finished locally; it is not survey or evidence");
+    announce("Screen measurement remains held until renderer interactions cross MapRuntimePort");
   };
 
   const clearMeasurement = () => {
@@ -1958,20 +1631,12 @@ export default function Home() {
     setMeasureMode(null);
     setMeasurementGeometryMode(null);
     setMeasurement("Select a measurement tool");
-    mapRef.current?.doubleClickZoom.enable();
-    if (mapRef.current?.isStyleLoaded()) updateMeasurementSource(mapRef.current, buildMeasurementData([], null));
     announce("Screen measurement cleared");
   };
 
   const changeMeasureUnit = (unit: MeasureUnit) => {
     measureUnitRef.current = unit;
     setMeasureUnit(unit);
-    scaleControlRef.current?.setUnit(unit);
-    const mode = measurementGeometryModeRef.current;
-    if (mode && measureCoordinatesRef.current.length) {
-      const prefix = measureModeRef.current ? "" : "Complete · ";
-      setMeasurement(`${prefix}${measurementLabelFor(mode, measureCoordinatesRef.current, unit)}`);
-    }
   };
 
   const shareView = async () => {
@@ -1997,7 +1662,7 @@ export default function Home() {
       issued_at: issuedAt.toISOString(),
       expires_at: new Date(issuedAt.getTime() + 15 * 60 * 1000).toISOString(),
       context_is_evidence: false,
-      renderer: { family: "MapLibre GL JS", site_package: "6.6.0", repository_runtime_proven: false },
+      renderer: { family: "NullMapRuntime", package_candidate: "6.6.0", consumer_state: MAP_RUNTIME_CONSUMER_HOLD, repository_runtime_proven: false },
       camera: locationDerivedViewRef.current
         ? { center: "WITHHELD_BROWSER_LOCATION", zoom: "WITHHELD", bearing: "WITHHELD", pitch: "WITHHELD", projection }
         : { center: view.center, zoom: view.zoom, bearing: view.bearing, pitch: view.pitch, projection },
@@ -2028,22 +1693,22 @@ export default function Home() {
       format: "kfm-map-diagnostics-v1",
       authority: "SITE_LOCAL_REDACTED_DIAGNOSTIC",
       generated_at: new Date().toISOString(),
-      site_renderer: { family: "MapLibre GL JS", package: maplibreProbe.version ?? EXPECTED_MAPLIBRE_VERSION, runtime_state: runtime.kind, message_class: runtime.kind.toUpperCase() },
+      site_renderer: { family: "NullMapRuntime", package_candidate: EXPECTED_MAPLIBRE_VERSION, consumer_state: MAP_RUNTIME_CONSUMER_HOLD, runtime_state: runtime.kind },
       runtime_proof: {
         expected_version: EXPECTED_MAPLIBRE_VERSION,
-        worker: maplibreProbe.workerConfigured ? "SAME_ORIGIN_CONFIGURED" : "NOT_CONFIRMED",
-        runtime_assets: maplibreProbe.runtimeAssetsReady ? "WORKER_AND_SHARED_VERIFIED" : "NOT_CONFIRMED",
-        webgl2: maplibreProbe.webgl2,
-        map_constructed: maplibreProbe.mapConstructed,
-        canvas_ready: maplibreProbe.canvasReady,
-        style_loaded: maplibreProbe.styleLoaded,
-        idle: maplibreProbe.idle,
-        tiles_loaded: maplibreProbe.tilesLoaded,
-        sources_ready: `${maplibreProbe.sourcesReady}/${LAYER_REGISTRY.length}`,
-        controls_ready: maplibreProbe.controlsReady,
-        interactions_ready: maplibreProbe.interactionsReady,
-        projection: maplibreProbe.projection,
-        error_class: maplibreProbe.error ? "FINITE_MAP_RUNTIME_ERROR" : null,
+        worker: "NOT_RUN",
+        runtime_assets: "NOT_RUN",
+        webgl2: "NOT_RUN",
+        map_constructed: false,
+        canvas_ready: false,
+        style_loaded: false,
+        idle: false,
+        tiles_loaded: false,
+        sources_ready: `0/${LAYER_REGISTRY.length} · HELD`,
+        controls_ready: false,
+        interactions_ready: false,
+        projection,
+        reason: MAP_RUNTIME_CONSUMER_HOLD,
       },
       repository_boundary: {
         snapshot: REPOSITORY_SNAPSHOT.commit,
@@ -2053,7 +1718,7 @@ export default function Home() {
         governed_probes: "0/12 NOT_RUN",
       },
       camera: { zoom: Number(view.zoom.toFixed(2)), bearing: Math.round(view.bearing), pitch: Math.round(view.pitch), projection },
-      style: { basemap, style_loaded: mapRef.current?.isStyleLoaded() ?? false },
+      style: { basemap_descriptor: basemap, style_loaded: false, state: "HOLD" },
       registry: { sources: LAYER_REGISTRY.length, renderers: interactiveLayerIds.length, visible_layers: visibleCount, source_states: sourceStates },
       active_time: year,
       workspace: currentWorkspace,
@@ -2063,7 +1728,7 @@ export default function Home() {
     };
     try {
       await navigator.clipboard.writeText(JSON.stringify(diagnostics, null, 2));
-      announce("Redacted MapLibre diagnostics copied with no public effect");
+      announce("Redacted renderer-neutral diagnostics copied with no public effect");
     } catch {
       announce("Clipboard access was blocked; diagnostics stayed in the browser");
     }
@@ -2157,7 +1822,7 @@ export default function Home() {
     }
     if (record.action === "OPEN_DIAGNOSTICS") {
       openMapUtility("diagnostics");
-      announce("Opened redacted MapLibre and runtime-seam diagnostics");
+      announce("Opened redacted renderer-neutral and runtime-seam diagnostics");
       return;
     }
     if (!selected) {
@@ -2238,7 +1903,7 @@ export default function Home() {
         }
         locationDerivedViewRef.current = true;
         setLocationCameraRedacted(true);
-        mapRef.current?.easeTo({ center: [coords.longitude, coords.latitude], zoom: 10, duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 650 });
+        updateRendererNeutralView({ center: [coords.longitude, coords.latitude], zoom: 10 });
         announce("Map centered locally; the location-derived camera is redacted from URLs, shares, receipts, exports, and diagnostics");
       },
       () => announce("Location permission was unavailable or denied"),
@@ -2306,7 +1971,7 @@ export default function Home() {
           <p>Every layer in this build uses site-local synthetic or generalized demonstration data—not released operational data. Choose an example or select any feature to inspect its evidence state.</p>
           <div className="map-guide-actions"><button className="map-guide-start" type="button" onClick={showGuidedStart}>Try quick examples</button><button className="map-guide-start" type="button" onClick={startStoryTrail}>Start four-step story</button></div>
           <ol><li>Search, choose an example, or enable a layer.</li><li>Select a feature.</li><li>Inspect what is supported, missing, corrected, or withheld.</li><li>Review time, lineage, and Focus Mode when you need more detail.</li></ol>
-          <p><strong>Shift + drag</strong> uses MapLibre box zoom. The Map Workbench also supports coordinate navigation, camera orientation, and viewport-scoped feature discovery. Terrain and swipe comparison remain unavailable because this build has no audited DEM or compatible comparison source.</p>
+          <p><strong>Renderer interactions are held.</strong> The Map Workbench retains renderer-neutral coordinate navigation, camera state, and catalog-scoped feature discovery. Box zoom, terrain, and swipe comparison remain unavailable pending a conforming consumer and admitted sources.</p>
         </aside>}
       </header>
 
@@ -2595,9 +2260,9 @@ export default function Home() {
           <div className="panel-footer-actions"><button type="button" onClick={resetExplorer}>Reset Explorer</button><button type="button" onClick={(event) => openMapUtility("export", event.currentTarget)}>Review public-safe export</button></div>
         </aside>
 
-        <section className="map-stage" aria-label="Kansas MapLibre Explorer">
-          <div className="mission-band"><span data-runtime={runtime.kind}><i /> {runtime.kind === "ready" ? `MAPLIBRE ${maplibreProbe.version ?? EXPECTED_MAPLIBRE_VERSION} READY` : runtime.kind === "loading" ? "MAPLIBRE STARTING" : "EXPLORER FALLBACK"}</span><p>Synthetic and generalized data only · Select a feature to inspect what is supported, missing, corrected, or withheld.</p></div>
-          <div id="map-canvas" ref={mapContainerRef} className="map-canvas" tabIndex={0} role="application" aria-label="Interactive MapLibre map of Kansas demonstration layers. Use arrow keys to pan and plus or minus to zoom; use Map Workbench Inspect or the Layer Catalog for a keyboard feature alternative." />
+        <section className="map-stage" aria-label="Kansas renderer-neutral Explorer">
+          <div className="mission-band"><span data-runtime={runtime.kind}><i /> RENDERER HOLD · NULL RUNTIME</span><p>Synthetic and generalized catalog data only · renderer acquisition, styles, sources, layers, hit testing, and measurement remain held.</p></div>
+          <div id="map-canvas" ref={mapContainerRef} className="map-canvas" tabIndex={0} role="application" aria-label="Renderer-neutral Kansas Explorer shell. Use Map Workbench Inspect or the Layer Catalog to inspect catalog and evidence metadata; renderer interactions remain held." />
 
           {(runtime.kind === "loading" || runtime.kind === "error") && <div className={`runtime-overlay ${runtime.kind}`} role="status" aria-live="assertive"><span className="runtime-spinner" aria-hidden="true" /><strong>{runtime.kind === "loading" ? "Preparing spatial explorer" : "Map runtime unavailable"}</strong><p>{runtime.message}</p>{runtime.kind === "error" && <button type="button" onClick={() => window.location.reload()}>Reload map</button>}</div>}
           {runtime.kind === "degraded" && <div className="runtime-degraded-banner" role="status" aria-live="polite"><strong>Partial map degradation</strong><span>{runtime.message}</span></div>}
@@ -2641,9 +2306,9 @@ export default function Home() {
           </aside>}
 
           <nav className="map-tool-rail" aria-label="Map tools">
-            <button type="button" onClick={() => mapRef.current?.zoomIn({ duration: motionDuration(250) })} aria-label="Zoom in" data-tooltip="Zoom in">+</button>
-            <button type="button" onClick={() => mapRef.current?.zoomOut({ duration: motionDuration(250) })} aria-label="Zoom out" data-tooltip="Zoom out">−</button>
-            <button className="mobile-hidden-control" type="button" onClick={() => mapRef.current?.resetNorthPitch({ duration: motionDuration(450) })} aria-label="Reset compass and pitch" data-tooltip="Reset north">N</button>
+            <button type="button" onClick={() => updateRendererNeutralView({ zoom: Math.min(16, view.zoom + 1) })} aria-label="Zoom in" data-tooltip="Zoom in">+</button>
+            <button type="button" onClick={() => updateRendererNeutralView({ zoom: Math.max(4, view.zoom - 1) })} aria-label="Zoom out" data-tooltip="Zoom out">−</button>
+            <button className="mobile-hidden-control" type="button" onClick={() => updateRendererNeutralView({ bearing: 0, pitch: 0 })} aria-label="Reset compass and pitch" data-tooltip="Reset north">N</button>
             <button type="button" onClick={fitKansasView} aria-label="Reset view to Kansas" data-tooltip="Kansas extent">KS</button>
             <button ref={mapUtilityButtonRef} type="button" onClick={(event) => mapUtilityOpen ? closeMapUtility() : openMapUtility("navigate", event.currentTarget)} aria-expanded={mapUtilityOpen} aria-controls="map-utility-panel" aria-label="Open Map Workbench" data-tooltip="Map Workbench">UI</button>
             <button className="mobile-hidden-control" type="button" onClick={locateUser} aria-label="Use my location" data-tooltip="My location">⌾</button>
@@ -2691,7 +2356,7 @@ export default function Home() {
             </nav>
             <div className="map-utility-scroll">
               {mapUtilityView === "navigate" && <section id="map-utility-view-navigate" role="tabpanel" aria-labelledby="map-utility-tab-navigate" className="map-utility-section">
-                <div className="map-utility-section-heading"><span>NAVIGATE</span><h3>Camera, coordinates + private location</h3><p>MapLibre camera actions change only this browser view. They never change evidence, policy, review, release, or publication state.</p></div>
+                <div className="map-utility-section-heading"><span>NAVIGATE</span><h3>Camera, coordinates + private location</h3><p>Renderer-neutral camera state changes only this browser shell. It never acquires a renderer or changes evidence, policy, review, release, or publication state.</p></div>
                 <dl className="map-camera-facts">
                   <div><dt>Center</dt><dd>{locationCameraRedacted ? "Private camera · redacted" : `${formatCoordinate(view.center[1], "N", "S")} · ${formatCoordinate(view.center[0], "E", "W")}`}</dd></div>
                   <div><dt>Zoom</dt><dd>{view.zoom.toFixed(2)}</dd></div>
@@ -2699,9 +2364,9 @@ export default function Home() {
                   <div><dt>Projection</dt><dd>{projection}</dd></div>
                 </dl>
                 <div className="map-utility-actions map-navigation-actions">
-                  <button type="button" onClick={() => mapRef.current?.zoomIn({ duration: motionDuration(250) })}>Zoom in</button>
-                  <button type="button" onClick={() => mapRef.current?.zoomOut({ duration: motionDuration(250) })}>Zoom out</button>
-                  <button type="button" onClick={() => mapRef.current?.resetNorthPitch({ duration: motionDuration(450) })}>Reset north</button>
+                  <button type="button" onClick={() => updateRendererNeutralView({ zoom: Math.min(16, view.zoom + 1) })}>Zoom in</button>
+                  <button type="button" onClick={() => updateRendererNeutralView({ zoom: Math.max(4, view.zoom - 1) })}>Zoom out</button>
+                  <button type="button" onClick={() => updateRendererNeutralView({ bearing: 0, pitch: 0 })}>Reset north</button>
                   <button type="button" onClick={fitKansasView}>Fit Kansas</button>
                   <button type="button" onClick={toggleFullscreen}>Fullscreen</button>
                   <button type="button" onClick={locateUser}>Use my location</button>
@@ -2717,8 +2382,8 @@ export default function Home() {
                   {coordinateError ? <p role="alert">{coordinateError}</p> : <small>Manual coordinates become ordinary shareable camera state. Browser location remains separately redacted.</small>}
                 </form>
                 <div className="map-orientation-controls">
-                  <label><span><strong>Bearing</strong><output>{Math.round(view.bearing)}°</output></span><input type="range" min="-180" max="180" step="1" value={Math.round(view.bearing)} onChange={(event) => mapRef.current?.easeTo({ bearing: Number(event.target.value), duration: 0 })} /></label>
-                  <label><span><strong>Pitch</strong><output>{Math.round(view.pitch)}°</output></span><input type="range" min="0" max="60" step="1" value={Math.round(view.pitch)} onChange={(event) => mapRef.current?.easeTo({ pitch: Number(event.target.value), duration: 0 })} /></label>
+                  <label><span><strong>Bearing</strong><output>{Math.round(view.bearing)}°</output></span><input type="range" min="-180" max="180" step="1" value={Math.round(view.bearing)} onChange={(event) => updateRendererNeutralView({ bearing: Number(event.target.value) })} /></label>
+                  <label><span><strong>Pitch</strong><output>{Math.round(view.pitch)}°</output></span><input type="range" min="0" max="60" step="1" value={Math.round(view.pitch)} onChange={(event) => updateRendererNeutralView({ pitch: Number(event.target.value) })} /></label>
                 </div>
                 <aside className="map-utility-boundary" data-tone="privacy"><strong>Location privacy</strong><p>Browser location is used only to move the local camera. While that camera remains location-derived, shared URLs use generalized Kansas defaults plus a redaction marker, receipts and exports use withheld markers, and diagnostics omit coordinates. Fit Kansas clears the private camera.</p></aside>
                 <aside className="map-utility-boundary"><strong>Keyboard alternative</strong><p>Use Inspect for a searchable feature list, Layer Catalog for visibility and opacity, and these controls for camera actions without relying on pointer gestures.</p></aside>
@@ -2733,7 +2398,7 @@ export default function Home() {
                 </article>
 
                 {mapQueryCandidates.length > 1 && <section className="map-overlap-chooser" aria-labelledby="overlap-title">
-                  <div><span>OVERLAP CHOOSER</span><h4 id="overlap-title">{mapQueryCandidates.length} features share this map point</h4><p>Choose one explicitly; the renderer will not silently prefer draw order.</p></div>
+                  <div><span>OVERLAP CHOOSER</span><h4 id="overlap-title">{mapQueryCandidates.length} catalog features share this context</h4><p>Choose one explicitly; the shell will not silently prefer descriptor order.</p></div>
                   {mapQueryCandidates.map((candidate) => <button key={`${candidate.layerId}:${candidate.featureId}`} type="button" onClick={() => selectIndexedFeature(candidate.layerId, candidate.featureId)}><span>{candidate.layerTitle} · {candidate.sourceYear}</span><strong>{candidate.title}</strong><small>{candidate.evidenceState}</small></button>)}
                 </section>}
 
@@ -2787,16 +2452,16 @@ export default function Home() {
               {mapUtilityView === "display" && <section id="map-utility-view-display" role="tabpanel" aria-labelledby="map-utility-tab-display" className="map-utility-section">
                 <div className="map-utility-section-heading"><span>DISPLAY</span><h3>Styles, projections + view profiles</h3><p>Style changes preserve registry layers, time, selection eligibility, measurement geometry, camera, and attribution.</p></div>
                 <div className="map-control-group"><header><strong>Basemap style</strong><span>Display context · not evidence</span></header><div className="map-choice-grid">{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <button key={key} type="button" aria-pressed={basemap === key} onClick={() => setBasemap(key)}><strong>{BASEMAPS[key].title}</strong><small>{BASEMAPS[key].note}</small></button>)}</div></div>
-                <div className="map-control-group"><header><strong>Projection</strong><span>Camera display only</span></header><div className="map-choice-grid"><button type="button" aria-pressed={projection === "mercator"} onClick={() => setProjection("mercator")}><strong>Mercator</strong><small>Stable 2D inspection</small></button><button type="button" aria-pressed={projection === "globe"} onClick={() => setProjection("globe")}><strong>Globe</strong><small>MapLibre globe display</small></button></div></div>
+                <div className="map-control-group"><header><strong>Projection</strong><span>Preference descriptor only</span></header><div className="map-choice-grid"><button type="button" aria-pressed={projection === "mercator"} onClick={() => setProjection("mercator")}><strong>Mercator</strong><small>Stored 2D preference</small></button><button type="button" aria-pressed={projection === "globe"} onClick={() => setProjection("globe")}><strong>Globe</strong><small>Stored globe preference · renderer held</small></button></div></div>
                 <div className="map-control-group"><header><strong>View profiles</strong><span>View state only · reversible</span></header><div className="map-profile-list">{MAP_VIEW_PROFILES.map((profile) => <article key={profile.id}><div><strong>{profile.title}</strong><p>{profile.summary}</p><small>{profile.year} · {profile.basemap} · {profile.visibleLayerIds.length} layers</small></div><button type="button" onClick={() => applyViewProfile(profile)}>Apply profile</button></article>)}</div></div>
                 <button className="map-catalog-launch" type="button" onClick={openLayerCatalogFromUtility}>Open full Layer Catalog for visibility, opacity, order, legends, time, and trust metadata</button>
               </section>}
 
               {mapUtilityView === "measure" && <section id="map-utility-view-measure" role="tabpanel" aria-labelledby="map-utility-tab-measure" className="map-utility-section">
                 <div className="map-utility-section-heading"><span>MEASURE</span><h3>Browser-local screen measurement</h3><p>Choose a geometry, then click the map to add points. Undo resumes a completed measurement for explicit editing.</p></div>
-                <div className="map-control-group"><header><strong>Geometry</strong><span>{measureMode ? "ADDING POINTS" : measurementGeometryMode ? "COMPLETE / PAUSED" : "IDLE"}</span></header><div className="map-choice-grid"><button type="button" aria-pressed={measurementGeometryMode === "distance"} onClick={() => toggleMeasure("distance")}><strong>Distance</strong><small>Polyline approximation</small></button><button type="button" aria-pressed={measurementGeometryMode === "area"} onClick={() => toggleMeasure("area")}><strong>Area</strong><small>Polygon approximation</small></button></div></div>
-                <div className="map-control-group"><header><strong>Units</strong><span>Also updates the MapLibre scale bar</span></header><div className="map-segmented-control"><button type="button" aria-pressed={measureUnit === "imperial"} onClick={() => changeMeasureUnit("imperial")}>Miles / sq mi</button><button type="button" aria-pressed={measureUnit === "metric"} onClick={() => changeMeasureUnit("metric")}>Kilometers / km²</button></div></div>
-                <article className="map-measure-status" aria-live="polite"><span>{measurementGeometryMode?.toUpperCase() ?? "NO MEASUREMENT"}</span><strong>{measurement}</strong><small>{measureMode ? "Click the map to add points." : measurementGeometryMode ? "Finished geometry remains on the map until cleared." : "Select distance or area to begin."}</small></article>
+                <div className="map-control-group"><header><strong>Geometry</strong><span>RENDERER HOLD</span></header><div className="map-choice-grid"><button type="button" aria-pressed={false} onClick={() => toggleMeasure("distance")}><strong>Distance</strong><small>Requires conforming renderer interaction</small></button><button type="button" aria-pressed={false} onClick={() => toggleMeasure("area")}><strong>Area</strong><small>Requires conforming renderer interaction</small></button></div></div>
+                <div className="map-control-group"><header><strong>Units</strong><span>Stored preference only</span></header><div className="map-segmented-control"><button type="button" aria-pressed={measureUnit === "imperial"} onClick={() => changeMeasureUnit("imperial")}>Miles / sq mi</button><button type="button" aria-pressed={measureUnit === "metric"} onClick={() => changeMeasureUnit("metric")}>Kilometers / km²</button></div></div>
+                <article className="map-measure-status" aria-live="polite"><span>NO MEASUREMENT</span><strong>{measurement}</strong><small>Distance and area measurement remain held until renderer interactions cross MapRuntimePort.</small></article>
                 <div className="map-utility-actions"><button type="button" onClick={undoMeasurementPoint} disabled={!measurementGeometryMode}>Undo point</button><button type="button" onClick={finishMeasurement} disabled={!measureMode}>Finish</button><button type="button" onClick={clearMeasurement} disabled={!measurementGeometryMode}>Clear</button></div>
                 <aside className="map-utility-boundary" data-tone="warning"><strong>Screen measurement — not survey, cadastral, legal, or evidence.</strong><p>Results are approximate, browser-local, and excluded from context receipts and public-safe exports.</p></aside>
               </section>}
@@ -2831,15 +2496,15 @@ export default function Home() {
                 <div className="map-utility-section-heading"><span>DIAGNOSTICS</span><h3>Site runtime + repository boundary</h3><p>Local browser health is separate from KFM dependency admission, governed readiness, release, or publication.</p></div>
                 <div className="map-runtime-summary">
                   <article data-state={runtime.kind}><span>SITE RUNTIME</span><strong>{runtime.kind.toUpperCase()}</strong><small>{runtime.message}</small></article>
-                  <article><span>STYLE</span><strong>{styleReady ? "LOADED" : "WAITING"}</strong><small>{BASEMAPS[basemap].title} · {projection}</small></article>
-                  <article><span>SOURCES</span><strong>{sourceStateCounts.ready} READY</strong><small>{sourceStateCounts.loading} loading · {sourceStateCounts.error} error</small></article>
+                  <article><span>STYLE</span><strong>HELD</strong><small>{BASEMAPS[basemap].title} descriptor · {projection}</small></article>
+                  <article><span>SOURCES</span><strong>{sourceStateCounts.held} HELD</strong><small>Catalog metadata remains readable</small></article>
                 </div>
                 <section className="map-control-group maplibre-runtime-proof" aria-labelledby="maplibre-runtime-proof-title">
-                  <header><strong id="maplibre-runtime-proof-title">MapLibre {EXPECTED_MAPLIBRE_VERSION} runtime proof</strong><span>Live browser checks</span></header>
+                  <header><strong id="maplibre-runtime-proof-title">MapLibre {EXPECTED_MAPLIBRE_VERSION} acquisition boundary</strong><span>Runtime probes held</span></header>
                   <div className="map-status-list" aria-label="MapLibre browser capability status">{maplibreCapabilityChecks.map((check) => <article className="map-status-row" key={check.id} data-state={check.state}><div><span>{check.label}</span><p>{check.detail}</p></div><strong>{check.state}</strong></article>)}</div>
                 </section>
                 <section className="runtime-seam-lab" aria-labelledby="runtime-seam-title">
-                  <header><div><span>REPOSITORY-PROVEN PORT · SITE-LOCAL REPLAY</span><h4 id="runtime-seam-title">Renderer-neutral runtime seam</h4><p>Replay initialize → validated selection binding → dispose without importing the repository package, MapLibre, or a network source.</p></div><strong data-state={runtimeSeamState}>{runtimeSeamState}</strong></header>
+                  <header><div><span>REPOSITORY-PROVEN PORT · SITE-LOCAL REPLAY</span><h4 id="runtime-seam-title">Renderer-neutral runtime seam</h4><p>Replay initialize → validated selection binding → dispose through the repository package without acquiring MapLibre or a network source.</p></div><strong data-state={runtimeSeamState}>{runtimeSeamState}</strong></header>
                   <div className="runtime-seam-state"><span>Reason / effect</span><p>{runtimeSeamReason}</p><small>Current selection: {selected ? `${selected.featureId} · ${selected.properties.evidenceState}` : "NONE"}</small></div>
                   <div className="map-utility-actions"><button type="button" onClick={initializeRuntimeSeam}>Initialize Null seam</button><button type="button" onClick={bindRuntimeSeamSelection} disabled={runtimeSeamState === "IDLE" || runtimeSeamState === "DISPOSED"}>Bind current selection</button><button type="button" onClick={disposeRuntimeSeam} disabled={runtimeSeamState === "IDLE" || runtimeSeamState === "DISPOSED"}>Dispose</button><button type="button" onClick={() => { setRuntimeSeamState("IDLE"); setRuntimeSeamReason("Awaiting deterministic replay"); }}>Reset replay</button></div>
                   <footer>VERIFIED REPOSITORY SLICE: MapRuntimePort + NullMapRuntime + governed evidence binding · CONCRETE MAPLIBRE ADAPTER: HOLD</footer>
@@ -2847,7 +2512,7 @@ export default function Home() {
                 <div className="map-status-list" aria-label="MapLibre repository status">{MAPLIBRE_REPOSITORY_STATUS.map((status) => <article className="map-status-row" key={status.id} data-state={status.state}><div><span>{status.label}</span><p>{status.detail}</p></div><strong>{status.state}</strong></article>)}</div>
                 <div className="map-utility-actions"><button type="button" onClick={reapplyRendererState}>Reapply local state</button><button type="button" onClick={restoreLastKnownGoodView}>Restore prior camera</button><button type="button" onClick={() => void copyMapDiagnostics()}>Copy redacted diagnostics</button></div>
                 <div className="map-control-group"><header><strong>Capability gates</strong><span>Honest interfaces for unavailable work</span></header><div className="map-capability-grid">{MAP_CAPABILITY_GATES.map((gate) => <article className="map-capability-card" key={gate.id}><header><strong>{gate.title}</strong><span>{gate.state}</span></header><p>{gate.reason}</p><small>{gate.safeInterface}</small></article>)}</div></div>
-                <aside className="map-utility-boundary"><strong>Renderer evidence boundary</strong><p>This Site runs MapLibre {EXPECTED_MAPLIBRE_VERSION} against site-local GeoJSON fixtures. GitHub proves an exact dependency, a bounded concrete adapter, the renderer-neutral port, and deterministic Null runtime; broader authenticated, performance, terrain, accessibility, and long-session readiness remain held.</p></aside>
+                <aside className="map-utility-boundary"><strong>Renderer evidence boundary</strong><p>This Site runs the package-owned NullMapRuntime and does not acquire MapLibre. GitHub proves the exact package dependency, bounded adapter, renderer-neutral port, and deterministic Null runtime; full consumer migration and all renderer runtime probes remain held.</p></aside>
               </section>}
             </div>
           </aside>
@@ -2902,7 +2567,7 @@ export default function Home() {
                 <div className="legend-detail"><strong>Legend</strong>{selected.layer.legend.map((item) => <p key={item.label}><i className={`legend-swatch ${item.shape}`} style={{ "--swatch": item.color } as React.CSSProperties} />{item.label}</p>)}</div>
               </section>}
               {drawerView === "lineage" && <section role="tabpanel" id="drawer-panel-lineage" aria-labelledby="drawer-tab-lineage" className="drawer-section">
-                <h3>Selection-to-evidence trace</h3><ol className="lineage-list"><li><span>01</span><div><strong>MapLibre candidate</strong><small>queryRenderedFeatures identified a candidate only</small></div></li><li><span>02</span><div><strong>Stable registry context</strong><small>{selected.featureId}</small></div></li><li><span>03</span><div><strong>Evidence resolution</strong><small>{selected.properties.citation}</small></div></li><li><span>04</span><div><strong>Policy / rights</strong><small>{selected.properties.evidenceState}</small></div></li><li><span>05</span><div><strong>Public-safe view</strong><small>Drawer + bounded Focus Mode</small></div></li></ol>
+                <h3>Selection-to-evidence trace</h3><ol className="lineage-list"><li><span>01</span><div><strong>Catalog selection</strong><small>Stable registry lookup selected a fixture; renderer hit testing remains held</small></div></li><li><span>02</span><div><strong>Stable registry context</strong><small>{selected.featureId}</small></div></li><li><span>03</span><div><strong>Evidence resolution</strong><small>{selected.properties.citation}</small></div></li><li><span>04</span><div><strong>Policy / rights</strong><small>{selected.properties.evidenceState}</small></div></li><li><span>05</span><div><strong>Public-safe view</strong><small>Drawer + bounded Focus Mode</small></div></li></ol>
                 <div className="boundary-law"><span>Renderer</span><b>≠</b><span>truth store</span><b>·</b><span>pixel</span><b>≠</b><span>proof</span></div>
               </section>}
               {drawerView === "focus" && <section role="tabpanel" id="drawer-panel-focus" aria-labelledby="drawer-tab-focus" className="drawer-section focus-mode">
@@ -2972,7 +2637,7 @@ export default function Home() {
         </section>
 
         <footer className="status-bar" aria-label="Map status">
-          <span data-runtime={runtime.kind}><i />{runtime.kind.toUpperCase()}</span><span>{formatCoordinate(pointer[1], "N", "S")} · {formatCoordinate(pointer[0], "E", "W")}</span><span>{scaleAtView(view)}</span><span>Zoom {view.zoom.toFixed(2)}</span><span>Bearing {Math.round(view.bearing)}° · Pitch {Math.round(view.pitch)}°</span><span>{formatTimelineStep(year)} active time</span><span>{visibleCount} layers visible</span><span>GeoJSON fixtures · MapLibre {maplibreProbe.version ?? EXPECTED_MAPLIBRE_VERSION}</span><span>Repo main@{REPOSITORY_SNAPSHOT.shortCommit}</span>
+          <span data-runtime={runtime.kind}><i />{runtime.kind.toUpperCase()}</span><span>{formatCoordinate(pointer[1], "N", "S")} · {formatCoordinate(pointer[0], "E", "W")}</span><span>{scaleAtView(view)}</span><span>Zoom {view.zoom.toFixed(2)}</span><span>Bearing {Math.round(view.bearing)}° · Pitch {Math.round(view.pitch)}°</span><span>{formatTimelineStep(year)} active time</span><span>{visibleCount} catalog layers visible</span><span>Renderer HOLD · MapLibre candidate {EXPECTED_MAPLIBRE_VERSION}</span><span>Repo main@{REPOSITORY_SNAPSHOT.shortCommit}</span>
         </footer>
       </main>
 

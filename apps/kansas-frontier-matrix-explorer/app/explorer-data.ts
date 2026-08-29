@@ -1,5 +1,12 @@
 import type { FeatureCollection, Geometry } from "geojson";
-import type { FilterSpecification, LayerSpecification } from "maplibre-gl";
+
+export type RendererFilterDescriptor = readonly unknown[];
+export type RendererLayerDescriptor = Readonly<Record<string, unknown> & {
+  id: string;
+  type: string;
+  source?: string;
+  filter?: RendererFilterDescriptor;
+}>;
 
 export type EvidenceState =
   | "ANSWER"
@@ -34,10 +41,10 @@ export type TemporalDefinition = {
 
 export type RendererDefinition = {
   id: string;
-  spec: LayerSpecification;
+  spec: RendererLayerDescriptor;
   interactive?: boolean;
   opacityProperties?: ("fill-opacity" | "line-opacity" | "circle-opacity" | "text-opacity")[];
-  baseFilter?: FilterSpecification;
+  baseFilter?: RendererFilterDescriptor;
 };
 
 export type LayerRecord = {
@@ -484,7 +491,7 @@ const line = (id: string, sourceId: string, color: string, width: number, opacit
   },
 });
 
-const point = (id: string, sourceId: string, color: string, radius: number, opacity = 0.95, filter?: FilterSpecification): RendererDefinition => ({
+const point = (id: string, sourceId: string, color: string, radius: number, opacity = 0.95, filter?: RendererFilterDescriptor): RendererDefinition => ({
   id,
   interactive: true,
   opacityProperties: ["circle-opacity"],
@@ -539,9 +546,9 @@ export const LAYER_REGISTRY: LayerRecord[] = [
     id: "communities", title: "Communities", description: "Public place-name points with stable identifiers and clustering.", domain: "Settlements", category: "Boundaries & places", sourceType: "GeoJSON", sourceId: "kfm-communities", datasetName: "KFM place search fixture", geometryType: "Point", minZoom: 4, maxZoom: 16, defaultVisibility: true, defaultOpacity: 0.95,
     legend: [{ label: "Place context", color: "#f0f4e9", shape: "point" }], units: "place point", scaleNote: "Generalized place center", validTimeExtent: "Current demonstration context", sourceTime: "Site build", releaseTime: "Demonstration build", freshnessState: "NOT_APPLICABLE", attribution: "KFM site-local place fixture", evidenceReference: "kfm:demo:site-local:v1", publicStatus: "PUBLIC_SAFE", sensitivityNote: "Public place names only.", releaseState: "DEMONSTRATION", correctionNote: "Not a gazetteer or municipal boundary source.", relatedLayers: ["Hydrology context", "Transportation"], interactions: ["cluster", "hover", "select", "search", "zoom"], filters: [], viewingModes: ["2D", "globe"], bounds: [-101.8, 37.6, -94.55, 39.45], sourceOptions: { cluster: true, clusterRadius: 54, clusterMaxZoom: 7 }, data: communitiesDemo,
     renderers: [
-      point("communities-clusters", "kfm-communities", "#8fc8b0", 12, 0.9, ["has", "point_count"] as FilterSpecification),
-      { id: "communities-count", baseFilter: ["has", "point_count"] as FilterSpecification, spec: { id: "communities-count", type: "symbol", source: "kfm-communities", filter: ["has", "point_count"], layout: { "text-field": ["get", "point_count_abbreviated"], "text-size": 11 }, paint: { "text-color": "#071719" } } },
-      point("communities-points", "kfm-communities", "#f0f4e9", 5.5, 0.95, ["!", ["has", "point_count"]] as FilterSpecification),
+      point("communities-clusters", "kfm-communities", "#8fc8b0", 12, 0.9, ["has", "point_count"]),
+      { id: "communities-count", baseFilter: ["has", "point_count"], spec: { id: "communities-count", type: "symbol", source: "kfm-communities", filter: ["has", "point_count"], layout: { "text-field": ["get", "point_count_abbreviated"], "text-size": 11 }, paint: { "text-color": "#071719" } } },
+      point("communities-points", "kfm-communities", "#f0f4e9", 5.5, 0.95, ["!", ["has", "point_count"]]),
     ],
   },
   {
@@ -625,6 +632,3 @@ export const findFeature = (featureId: string) => {
   }
   return null;
 };
-
-export const findLayerByRenderer = (rendererId: string) =>
-  LAYER_REGISTRY.find((layer) => layer.renderers.some((renderer) => renderer.id === rendererId));

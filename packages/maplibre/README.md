@@ -2,16 +2,16 @@
 doc_id: kfm://doc/packages-maplibre-readme
 title: packages/maplibre/ — MapLibre Package, Adapter, Distribution, and Compatibility Boundary
 type: readme
-version: v1.6
+version: v1.7
 status: draft
 owners: OWNER_TBD — Package steward · MapLibre adapter steward · Map-runtime steward · UI steward · Governed API steward · Contract steward · Schema steward · Policy steward · Security steward · Privacy/sensitivity reviewer · Dependency steward · Supply-chain steward · Validation steward · Release steward · Migration steward · CI steward · Docs steward
 created: 2026-08-23
-updated: 2026-08-28
+updated: 2026-08-29
 policy_label: "public-doctrine; package-boundary; maplibre; renderer-adapter; exact-dependency-admitted; concrete-adapter-initial-slice; vite-worker-configured; bounded-browser-fixture-implemented; legacy-cdn-harness-retired; null-runtime-implemented; browser-readiness-hold; private-npm-package; workspace-enrolled; distribution-not-authorized; accepted-single-importer; accepted-renderer-family; renderer-downstream; fail-closed; no-truth-authority; no-publication-authority; rollback-aware"
 current_path: packages/maplibre/README.md
 owning_root: packages/
 responsibility: Document current package metadata, accepted renderer-boundary ownership, dependency and distribution posture, consumer compatibility, and held concrete-renderer work without becoming runtime, policy, release, or publication authority.
-truth_posture: CONFIRMED accepted ADR-0006 package-owned seam, accepted ADR-0007 renderer family, renderer-neutral MapRuntimePort, deterministic NullMapRuntime, exact maplibre-gl 6.6.0 package dependency and lock closure, minimal package-owned MapLibreAdapter lifecycle/camera slice, Vite worker configuration, package-local positive and fail-closed tests, bounded real-browser fixture evidence, fail-closed detection of the Sites-derived Explorer's out-of-seam acquisition, and retired CDN/global performance acquisition / HOLD consumer migration, Explorer production activation, governed performance execution, authenticated browser, broader CSP, PMTiles, terrain, accessibility, long-session, release, deployment, and publication evidence / CONFLICTED direct renderer acquisition outside packages/maplibre, stale packages/maplibre-runtime references, legacy apps/web workflow filter, permissive performance schema, and trust-shaped candidate builders under artifacts/perf / NEEDS VERIFICATION owners, license/provenance review, broader browser probes, performance authority, correction, and rollback
+truth_posture: CONFIRMED accepted ADR-0006 package-owned seam, accepted ADR-0007 renderer family, renderer-neutral MapRuntimePort, deterministic NullMapRuntime, exact maplibre-gl 6.6.0 package dependency and lock closure, minimal package-owned MapLibreAdapter lifecycle/camera slice, Vite worker configuration, package-local positive and fail-closed tests, bounded real-browser fixture evidence, Sites-derived Explorer fail-closed use of the package-owned NullMapRuntime, acquisition profile v14 structural HOLD with raw acquisition confined to packages/maplibre, and retired CDN/global performance acquisition / HOLD full Sites consumer capability migration, Explorer production activation, governed performance execution, authenticated browser, broader CSP, PMTiles, terrain, accessibility, long-session, release, deployment, and publication evidence / CONFLICTED stale packages/maplibre-runtime references, legacy apps/web workflow filter, permissive performance schema, and trust-shaped candidate builders under artifacts/perf / NEEDS VERIFICATION owners, license/provenance review, broader browser probes, performance authority, correction, and rollback
 evidence_snapshot:
   snapshot_role: exact_main_contradiction_repair
   repository: bartytime4life/Kansas-Frontier-Matrix
@@ -58,7 +58,7 @@ evidence_snapshot:
     - packages/maplibre/tests contains seven focused tests across adapter and Vite-adapter suites; tests/maplibre also contains executable acquisition, readiness, source-metadata, negative-path, and legacy-harness-retirement coverage
     - tests/maplibre/README.md and tests/fixtures/maplibre/README.md exist as draft documentation lanes
     - packages/maplibre-runtime/README.md was not found
-    - Explorer Web source and tests import @kfm/maplibre through explicit TypeScript and Vite aliases; the separately tracked Sites-derived Explorer declares and imports maplibre-gl directly outside the accepted seam
+    - Explorer Web source and tests import @kfm/maplibre through explicit TypeScript and Vite aliases; the Sites-derived Explorer now imports the package-owned renderer-neutral root and fail-closes through NullMapRuntime without direct MapLibre acquisition
     - ADR-0006 and ADR-0007 are accepted architecture decisions; the package-owned dependency and initial adapter are implemented while production runtime readiness remains held
     - scripts/maplibre-smoke-perf.mjs is a finite exit-3 hold that names the retired external-CDN behavior and performs no renderer, browser, network, source, screenshot, receipt, or artifact acquisition
     - .github/workflows/maplibre-perf-governance.yml watches packages/maplibre/** and apps/explorer-web/**, retains a legacy apps/web/** filter, executes five static negative-path and retirement checks without installing a browser, and explicitly holds performance execution
@@ -103,8 +103,8 @@ related:
   - ../../release/
 tags: [kfm, packages, maplibre, typescript, npm-workspace, renderer-adapter, map-runtime-port, source-descriptor, layer-descriptor, style-manifest, release-manifest, evidence-ref, negative-state, protocol-admission, plugin-admission, pmtiles, cog, performance, import-boundary, supply-chain, privacy, distribution, compatibility, migration, rollback]
 notes:
-  - "This v1.6 checkpoint makes the Sites-derived Explorer's out-of-seam MapLibre acquisition explicit while preserving the accepted package boundary and consumer-migration hold."
-  - "Current main selects exact maplibre-gl 6.6.0 in the accepted package and the nonconforming Sites-derived Explorer; the bounded acquisition inventory detects both and fails closed on the latter."
+  - "This v1.7 checkpoint records the smallest dependency-closed Sites repair: direct acquisition is removed, the renderer-neutral shell uses NullMapRuntime, and full renderer capability migration remains held."
+  - "The exact maplibre-gl 6.6.0 acquisition remains package-owned; profile v14 reports structural HOLD because renderer acquisition exists only in the accepted seam and no runtime authority is created."
   - "Repository implementation remains separate from accountable review and #2906 broader browser readiness; it does not admit plugins, protocols, sources, release, deployment, or publication."
   - "The renderer may consume only governed, released, public-safe artifacts. Descriptor validity, package installation, and successful visual rendering are not truth, evidence closure, policy approval, or release approval."
   - "Package release is a software-distribution event, not KFM map/data/claim publication."
@@ -119,7 +119,7 @@ notes:
 > Private npm workspace package at KFM's accepted renderer-adapter seam. Exact `maplibre-gl@6.6.0`, the first package-owned lifecycle/camera adapter, the Vite worker seam, and a bounded real-browser fixture are implemented while Explorer production activation, broader browser readiness, source/layer admission, distribution, release, deployment, and publication remain on hold.
 
 ![status](https://img.shields.io/badge/status-draft-yellow)
-![version](https://img.shields.io/badge/version-v1.6-informational)
+![version](https://img.shields.io/badge/version-v1.7-informational)
 ![maturity](https://img.shields.io/badge/maturity-initial__adapter-blue)
 ![package](https://img.shields.io/badge/package-%40kfm%2Fmaplibre-blue)
 ![distribution](https://img.shields.io/badge/distribution-private__not__authorized-critical)
@@ -179,7 +179,7 @@ The merged [`src/README.md`](src/README.md) governs source placement, module dec
 
 | Surface | Status | Safe conclusion |
 |---|---:|---|
-| This README | **CONFIRMED v1.5 before correction** | Dependency, adapter, browser, and retired-harness status were current, but package-only acquisition claims became stale after the Sites-derived Explorer began acquiring MapLibre directly. |
+| This README | **CONFIRMED v1.7 repair** | Records the package-only raw acquisition boundary, Sites NullMapRuntime fallback, and held full consumer capability migration. |
 | `src/README.md` | **CONFIRMED v1.5** | The source envelope accurately records the bounded implementation, hosted browser fixture, retired legacy harness, and remaining performance hold. |
 | `package.json` | **CONFIRMED admitted on current main** | Private `0.0.0` package with exact `maplibre-gl@6.6.0`, focused test scripts, explicit exports, and no publication authority. |
 | Root workspace enrollment | **CONFIRMED** | Root `package.json` includes `packages/*`, so this folder is inside the npm workspace pattern. |
@@ -189,13 +189,13 @@ The merged [`src/README.md`](src/README.md) governs source placement, module dec
 | Package exports | **IMPLEMENTED / SPLIT** | The root facade exports the renderer-neutral port/null runtime; `@kfm/maplibre/adapter` exports the package-owned adapter without raw renderer types. |
 | Renderer-neutral source modules | **IMPLEMENTED / BOUNDED** | `MapRuntimePort`, `NullMapRuntime`, serializable values, strict validators, finite states, reason codes, listeners, and disposal behavior exist. |
 | Concrete renderer modules | **IMPLEMENTED / INITIAL SLICE** | `MapLibreAdapter` owns inline empty-style construction, camera synchronization, finite errors, and teardown; source/layer/selection/plugin/protocol behavior remains absent. |
-| Package dependencies | **CONFIRMED / EXACT / CONFLICTED ACQUISITION** | `packages/maplibre/package.json` owns the accepted exact `maplibre-gl@6.6.0` declaration, while the Sites-derived Explorer declares the same version outside the seam; `pnpm-lock.yaml` records both importers. Accountable review and broader supply-chain disposition remain separate. |
-| Acquisition conformance | **FAIL-CLOSED / HOLD** | Profile v14 detects the accepted package imports and the Sites-derived Explorer's manifest, static, dynamic, CSS, and global-runtime acquisition; consumer migration remains required. |
-| Package consumers | **CONFIRMED** | Explorer Web source and tests import the KFM facade through explicit TypeScript/Vite aliases. |
+| Package dependencies | **CONFIRMED / EXACT / PACKAGE-OWNED** | `packages/maplibre/package.json` owns the accepted exact `maplibre-gl@6.6.0` declaration; both Explorer applications consume the renderer-neutral facade. Accountable review and broader supply-chain disposition remain separate. |
+| Acquisition conformance | **STRUCTURAL HOLD / CONFORMING** | Profile v14 detects raw acquisition only in the accepted package seam. Sites renderer capabilities and runtime probes remain held. |
+| Package consumers | **CONFIRMED / MIXED CAPABILITY** | Explorer Web uses explicit TypeScript/Vite aliases; the Sites Explorer imports the root facade and runs `NullMapRuntime` while full capability migration remains held. |
 | Package-local tests | **IMPLEMENTED / FOCUSED** | Seven deterministic tests cover lifecycle/camera success, invalid container, construction/error, in-flight disposal, Vite worker ordering, and factory forwarding. |
 | MapLibre test lane | **IMPLEMENTED / MIXED MATURITY** | Executable acquisition, v6-readiness, source-metadata, negative-path, and harness-retirement tests exist; full performance and operational proof remain held. |
 | MapLibre fixture lane | **CONFIRMED draft documentation** | `tests/fixtures/maplibre/README.md` documents synthetic fixtures; payload coverage and consumers remain unproved. |
-| ADR-0006 | **CONFIRMED accepted architecture / CONFORMANCE HOLD** | The package dependency and adapter follow the accepted seam; the Sites-derived Explorer remains a visible out-of-seam importer requiring consumer-closed migration. |
+| ADR-0006 | **CONFIRMED accepted architecture / STRUCTURAL HOLD** | Raw renderer acquisition is confined to the package seam; the Sites-derived Explorer fail-closes through the root facade while full consumer capability migration remains held. |
 | ADR-0007 | **CONFIRMED accepted architecture** | The selected renderer family is followed; plugins, protocols, browser readiness, and operations remain held. |
 | Referenced runtime package | **NOT FOUND at named README path** | `packages/maplibre-runtime/README.md` remains unresolved architecture drift. |
 | Performance harness | **RETIRED / FINITE HOLD** | The root command exits `3` before renderer, browser, network, source, screenshot, receipt, or artifact acquisition; retirement guards fail if legacy acquisition markers return. |
@@ -400,7 +400,7 @@ The former root harness acquired MapLibre GL JS 5.5.0, CSS, and glyphs from publ
 **Current conformance boundary:**
 
 - the retired entry point must remain inert unless a reviewed replacement closes its dependencies;
-- the acquisition inventory must fail closed on the current out-of-seam Explorer acquisition until every consumer routes through the accepted package surface;
+- the acquisition inventory must continue to fail closed if any consumer regresses to raw renderer acquisition outside the accepted package surface;
 - a replacement needs the package-owned v6 runtime, deterministic local fixtures, meaningful thresholds and schemas, accepted QA artifact homes, browser execution authority, and reviewed performance evidence;
 - examples, tests, and root scripts must not recreate a production bypass or external-CDN exception.
 
@@ -638,7 +638,7 @@ The current root `lint`, `test`, and `build` scripts are placeholders. Package m
 
 ## Dependency and supply-chain boundary
 
-This bounded package slice declares exact `maplibre-gl@6.6.0` in the accepted package manifest and records its lockfile integrity closure. The Sites-derived Explorer independently declares the same version outside the accepted seam; that duplication is a conformance `HOLD`, not a second dependency authority. Human dependency-admission review still requires:
+This bounded package slice declares exact `maplibre-gl@6.6.0` in the accepted package manifest and records its lockfile integrity closure. The Sites-derived Explorer now depends on the renderer-neutral package root and does not create a second raw renderer authority. Human dependency-admission review still requires:
 
 1. accepted adapter/runtime ownership;
 2. dependency purpose and import location;
@@ -660,7 +660,7 @@ This bounded package slice declares exact `maplibre-gl@6.6.0` in the accepted pa
 
 | Class | Examples | Required posture |
 |---|---|---|
-| Core renderer | `maplibre-gl` | One exact `6.6.0` version is selected; the accepted package owns dependency authority, while the Sites-derived Explorer's duplicate declaration/imports remain a conformance hold. |
+| Core renderer | `maplibre-gl` | One exact `6.6.0` version is selected and the accepted package owns dependency authority; consumer runtime activation remains held. |
 | Style/type support | style-spec packages | Keep renderer-specific types inside package boundary. |
 | Protocols | PMTiles, COG, vector-text protocols | Explicit registration, endpoint controls, integrity, cleanup, and admission. |
 | 3D/custom layers | three.js, 3D Tiles, glTF, lidar, deck.gl integrations | Per-version PluginAdmission, supply-chain review, capability tests, fallback state. |
@@ -1502,7 +1502,7 @@ The package may be described as implemented only when:
 - [x] ADR-0007 accepts the renderer family; plugin admission and broader runtime readiness remain separate.
 - [x] Current workspace package manager/version, exact renderer dependency, and root lockfile closure are declared; review and readiness remain separate.
 - [ ] Package metadata is complete and tested beyond the exact dependency and focused test-script slice.
-- [ ] Exact `maplibre-gl@6.6.0` is declared only in the accepted package. The root lockfile also records the Sites-derived Explorer's out-of-seam declaration, so consumer migration remains open.
+- [x] Exact `maplibre-gl@6.6.0` is declared only in the accepted package; the Sites-derived Explorer consumes the renderer-neutral root and keeps full capability migration open.
 - [ ] License, provenance, vulnerability, and transitive dependency reviews exist.
 - [ ] Build, typecheck, lint, and package commands are real; the focused package test command is implemented.
 - [x] The explicit export map keeps the root facade renderer-neutral and exposes the initial package-owned adapter only through `@kfm/maplibre/adapter`, without raw renderer types.
@@ -1564,8 +1564,8 @@ Until review and browser gates close, describe the package as a **private packag
 | MAPLIBRE-PKG-027 | Ratify KFM-shaped public API. | PARTIAL — renderer-neutral port accepted and implemented |
 | MAPLIBRE-PKG-028 | Ratify finite outcomes/reason codes. | PARTIAL — renderer-neutral states/reasons implemented |
 | MAPLIBRE-PKG-029 | Enforce raw renderer type containment. | PARTIAL — current facade contains no raw types |
-| MAPLIBRE-PKG-030 | Enforce single-importer boundary. | PARTIAL — acquisition inventory fails on renderer acquisition outside the package seam; complete CI/runtime enforcement remains open |
-| MAPLIBRE-PKG-031 | Inventory direct MapLibre imports. | PARTIAL — executable bounded acquisition inventory exists; complete consumer and deployment inventory remains open |
+| MAPLIBRE-PKG-030 | Enforce single-importer boundary. | IMPLEMENTED / STRUCTURAL HOLD — profile v14 confines raw acquisition to the accepted seam; complete runtime enforcement remains open |
+| MAPLIBRE-PKG-031 | Inventory direct MapLibre imports. | IMPLEMENTED / BOUNDED — executable inventory covers the repaired Sites consumer; deployment inventory remains open |
 | MAPLIBRE-PKG-032 | Classify or migrate external-CDN smoke harness. | RESOLVED — legacy harness is retired behind a finite hold and regression guards; governed replacement performance execution remains open |
 | MAPLIBRE-PKG-033 | Define production endpoint allowlist/resolver. | NEEDS VERIFICATION |
 | MAPLIBRE-PKG-034 | Define CSP/worker/asset posture. | NEEDS VERIFICATION |
@@ -1682,19 +1682,19 @@ Deprecation requires:
 | Source boundary README | CONFIRMED v1.5 implementation and retirement status |
 | Renderer-neutral port/null runtime | IMPLEMENTED / BOUNDED |
 | Concrete `MapLibreAdapter` | IMPLEMENTED / INITIAL LIFECYCLE-CAMERA SLICE |
-| Package dependencies | CONFIRMED exact `maplibre-gl@6.6.0` / LOCKED; acquisition CONFLICTED / HOLD |
+| Package dependencies | CONFIRMED exact `maplibre-gl@6.6.0` / LOCKED; acquisition confined to accepted seam |
 | Package build/export | PARTIAL — source export map; no build output |
 | Package tests | IMPLEMENTED / SEVEN FOCUSED TESTS PLUS BOUNDED BROWSER FIXTURE |
-| Consumers | PARTIAL — Explorer Web uses the package seam; Sites-derived Explorer acquires MapLibre directly outside it |
-| ADR-0006 | ACCEPTED architecture; package implementation conforms, parallel consumer acquisition does not |
+| Consumers | PARTIAL — both Explorers use the package seam; Sites-derived Explorer is intentionally limited to NullMapRuntime pending full capability migration |
+| ADR-0006 | ACCEPTED architecture; raw acquisition conforms, runtime activation remains held |
 | ADR-0007 | ACCEPTED renderer family; browser/runtime HOLD |
-| Runtime package ownership | CONFLICTED |
+| Runtime package ownership | ACCEPTED / PACKAGE-OWNED |
 | Performance tooling | PARTIAL — legacy acquisition retired; bounded hold workflow remains; actual performance execution is NOT_RUN |
 | Package-specific CI | PARTIAL — bounded performance workflow watches package paths |
 | Package publication | NOT AUTHORIZED |
 | Truth/policy/release authority | NONE |
 | Operational health | UNKNOWN |
 
-> **Current safe description:** `packages/maplibre/` is the private accepted MapLibre seam. Exact `maplibre-gl@6.6.0`, the package-owned lifecycle/camera adapter, Vite worker configuration, and a bounded browser fixture are implemented. The acquisition inventory fails closed because the Sites-derived Explorer also declares and imports MapLibre outside this seam. The legacy CDN/global performance harness is retired; consumer migration and replacement performance execution remain held or `NOT_RUN`. #2906 broader browser readiness, source/layer/plugin/protocol admission, distribution, release, deployment, and publication remain held or unauthorized.
+> **Current safe description:** `packages/maplibre/` is the private accepted MapLibre seam. Exact `maplibre-gl@6.6.0`, the package-owned lifecycle/camera adapter, Vite worker configuration, and a bounded browser fixture are implemented. Profile v14 reports structural `HOLD` with raw acquisition confined to this seam; the Sites-derived Explorer runs the package-owned `NullMapRuntime`, and its full renderer capability migration remains held. The legacy CDN/global performance harness is retired; replacement performance execution remains `NOT_RUN`. #2906 broader browser readiness, source/layer/plugin/protocol admission, distribution, release, deployment, and publication remain held or unauthorized.
 
 [Back to top](#top)

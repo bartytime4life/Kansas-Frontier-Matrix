@@ -3,12 +3,12 @@ doc_id: kfm://doc/apps-readme
 title: apps/ - Deployable Applications
 type: root-readme
 subtype: canonical-root-landing-page
-version: v0.8
-prior_version: v0.7
+version: v0.9
+prior_version: v0.8
 status: draft; repository-grounded; mixed-maturity
 owner: "NEEDS VERIFICATION — CODEOWNERS routes repository review to @bartytime4life and explicitly covers apps/governed-api/ and apps/explorer-web/; no accepted application-steward assignment, required independent-review rule, or release authority was verified"
 created: 2026-05-10
-updated: 2026-08-28
+updated: 2026-08-29
 policy_label: public
 current_path: apps/README.md
 owning_root: apps/
@@ -70,11 +70,10 @@ related:
   - ../tests/README.md
 tags: [kfm, apps, deployables, trust-membrane, governed-api, explorer-web, finite-outcomes, mixed-maturity]
 notes:
-  - "v0.8 repins the root after the package-owned MapLibre implementation and the separately tracked Sites-derived Explorer app reached main."
-  - "v0.8 distinguishes explorer-web's NullMapRuntime production composition and bounded concrete-adapter browser fixture from the Sites-derived app's direct MapLibre acquisition and deployed-site lineage."
+  - "v0.9 records the dependency-closed Sites repair: both Explorer compositions use NullMapRuntime through the accepted package seam, while full Sites renderer capabilities remain held."
   - "The attached KFM manuals, Drive Atlas, and Notion reconciliation are read-only design and coordination inputs; they do not establish repository behavior, source admission, review, release, deployment, promotion, or publication."
-  - "Exact maplibre-gl 6.6.0, the package-owned adapter, and Vite worker seam are implemented; Explorer production composition, direct-acquisition reconciliation, broader runtime proof, and public release remain held or separately governed."
-  - "No application code, route, workflow, dependency, deployment, policy, release, promotion, or publication behavior is changed by this README update."
+  - "Exact maplibre-gl 6.6.0, the package-owned adapter, and Vite worker seam are implemented; full consumer capabilities, broader runtime proof, and public release remain held or separately governed."
+  - "The Sites code and dependency edge change only to fail closed; no source, deployment, policy, release, promotion, or publication authority is created."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -164,7 +163,7 @@ This edition is pinned to `main@2a205c8df31ff95a61f72a52489336b924a791ac` and ap
 | Governed API route stubs return bounded `ABSTAIN / NOT_IMPLEMENTED` envelopes. | CONFIRMED | Current stub and bounded API tests | Does not prove authorization, EvidenceBundle resolution, deployment, or load behavior. |
 | Explorer Web mounts a repository-grounded local site with Map, Knowledge, Features, and Trust regions, public anchor navigation, a synthetic Focus workspace, and a shared public trust surface. | CONFIRMED | `explorer-web/src/main.ts`, `src/site/`, unit tests, and browser tests | The composition is deterministic and fixture-first; it is not a production route tree, live service, or release. |
 | The normal `explorer-web` composition uses `NullMapRuntime`, while `@kfm/maplibre` owns exact `maplibre-gl@6.6.0`, a bounded concrete adapter, a Vite worker seam, package tests, and an isolated real-browser fixture. | CONFIRMED | Package manifest/lockfile, package adapters/tests, Explorer aliases, and `maplibre-vite-adapter` browser fixture | The isolated fixture does not activate the renderer in the normal Explorer composition, admit sources/layers, or establish release or deployment. |
-| The separately tracked `kansas-frontier-matrix-explorer` app declares and boots `maplibre-gl@6.6.0` directly as Sites-derived implementation lineage. | CONFIRMED | Child package manifest, entrypoint, tests, and child README | Direct acquisition remains outside accepted ADR-0006's package seam and is a reconciliation HOLD, not a second renderer authority or a repository-wide readiness claim. |
+| The separately tracked `kansas-frontier-matrix-explorer` app resolves the `@kfm/maplibre` facade to the accepted workspace package root and boots `NullMapRuntime` as Sites-derived implementation lineage. | CONFIRMED | Child TypeScript/Vite aliases, manifest, entrypoint, focused tests, and child README | Styles, sources, layers, workers, hit testing, measurement, and runtime probes remain held; this is not renderer activation or repository-wide readiness. |
 | `explorer-web` currently contains 38 named feature lanes, 24 TypeScript adapter modules, 45 top-level unit tests, and 36 browser specs. | CONFIRMED | Pinned apps tree | File and test inventory demonstrates bounded implementation breadth, not integrated product or operational maturity. |
 | Explorer package scripts run TypeScript/Vite build, Vitest unit tests, and Playwright browser tests. | CONFIRMED | Current `package.json`, lockfile, Playwright config, and `ui-build` workflow | Workflow wiring is not a hosted-run conclusion or deployment proof. |
 | Review Console and Admin remain documentation-led; CLI and Worker Python entrypoints remain explicit greenfield placeholders. | CONFIRMED | Pinned child trees, CLI `__main__.py`, and worker `main.py` files | No review mutation, operator workflow, queue, schedule, or product readiness is established. |
@@ -183,7 +182,7 @@ flowchart TD
     explorer -. "denied" .-> internal["RAW / WORK / QUARANTINE<br/>canonical or model stores"]
 ```
 
-The Governed API and both Explorer lanes provide bounded executable slices with different maturity and conformance postures. `explorer-web` composes a meaningful local shell, synthetic map/runtime status, Focus request, and trust/evidence interaction surface, but its normal entrypoint still does not call the API, activate the concrete MapLibre adapter, resolve live evidence, or expose a production claim surface. The Sites-derived app boots MapLibre directly and records deployment lineage, while its direct acquisition and parallel-shell relationship remain explicit reconciliation holds. Internal-app mutation, worker execution, release assembly, and repository-wide operational observability remain placeholder, held, or unverified.
+The Governed API and both Explorer lanes provide bounded executable slices with different maturity postures. `explorer-web` composes a meaningful local shell, synthetic map/runtime status, Focus request, and trust/evidence interaction surface, but its normal entrypoint still does not call the API, activate the concrete MapLibre adapter, resolve live evidence, or expose a production claim surface. The Sites-derived app now boots the package-owned `NullMapRuntime`, retains its catalog/evidence shell, and holds all renderer-specific capabilities. Internal-app mutation, worker execution, release assembly, and repository-wide operational observability remain placeholder, held, or unverified.
 
 ## What belongs here
 
@@ -359,7 +358,7 @@ Re-review after any app-lane creation or removal, public-route change, package-m
 | Explorer public trust surface | blob `b92b486d…` | Shared finite trust states and mounted header, drawer, time, citation, and denial components | Backend policy evaluation or operational authorization |
 | App-local MapLibre marker | blob `663ba0f7…` | Comment-only `explorer-web` compatibility/boundary marker | Package-owned adapter implementation |
 | MapLibre package manifest and adapters | blobs `f6d450af…`, `f198c5b5…`, `e9cf6606…` | Exact `maplibre-gl@6.6.0`, bounded lifecycle/camera adapter, and Vite worker seam | Normal Explorer activation, source/layer admission, or public release |
-| Sites-derived Explorer | README/manifest/entrypoint blobs `64321420…`, `6a1554ec…`, `80460ea6…` | Separately tracked app identity, direct MapLibre dependency, and implementation lineage | ADR-0006 conformance, repository-wide readiness, or current production health |
+| Sites-derived Explorer | Child README, TypeScript/Vite aliases, manifest, entrypoint, and focused tests | Separately tracked app identity, package-root facade resolution, NullMapRuntime fallback, and implementation lineage | Full renderer capability, repository-wide readiness, or current production health |
 | Explorer governed projection adapter | blob `21f6e4d1…` | Strict fixture-only payload parsing, trust state, and correction/history validation | Canonical payload schema adoption or transport |
 | API workflow | blob `84ba16a3…` | Bounded API hosted orchestration definition | Human review, hosted pass at this README head, or deployment |
 | UI workflow | blob `52382d79…` | Locked build plus unit/browser test orchestration | A functional map, release, or publication |
@@ -385,7 +384,7 @@ Source-derived ideas advance only through the normal sequence: classify the clai
 |---|---|---|---|
 | [`governed-api/`](governed-api/README.md) | Bounded executable WSGI, three fail-closed routes, route/envelope tests | `make governed-api-smoke`; `make governed-api-verify`; `api-test` | `ABSTAIN`, 404, or 405; no renderer/model/internal-store shortcut |
 | [`explorer-web/`](explorer-web/README.md) | Mounted local site, public workspace navigation, renderer-neutral synthetic map/status and map/evidence fixtures, bounded synthetic Focus workspace, shared trust surface, and many independently tested projections | `make ui-build`; `pnpm --filter explorer-web test`; `ui-build` | Missing or unsafe support resolves to bounded `ABSTAIN`, `DENY`, or `ERROR`; the normal entrypoint does not activate the package-owned renderer or a released layer and establishes no deployment or publication path |
-| [`kansas-frontier-matrix-explorer/`](kansas-frontier-matrix-explorer/README.md) | Sites-derived Vinext/Vite app with direct `maplibre-gl@6.6.0`, same-origin worker preparation, deterministic repository-backed demonstration data, and restricted-export negatives | child `npm run build`, `npm test`, and child README deployment lineage | Direct renderer acquisition and the parallel-shell relationship remain HOLD; child deployment evidence does not release repository data or establish repo-wide conformance |
+| [`kansas-frontier-matrix-explorer/`](kansas-frontier-matrix-explorer/README.md) | Sites-derived Vinext/Vite app with package-root `NullMapRuntime`, deterministic repository-backed demonstration data, and restricted-export negatives | child `npm run build`, `npm test`, acquisition profile v14, and child README lineage | Full renderer capability and the parallel-shell relationship remain HOLD; child evidence does not release repository data or establish repo-wide readiness |
 | [`review-console/`](review-console/README.md) | README-led feature boundaries and a minimal package manifest | No accepted executable review flow | No review, promotion, correction, or rollback mutation is proven |
 | [`cli/`](cli/README.md) | Python package skeleton with an explicit greenfield placeholder entrypoint and placeholder command modules | `apps/cli/src/kfm_cli/__main__.py` | No operator shortcut is review, release, or publication authority |
 | [`workers/`](workers/README.md) | Named worker directories with explicit greenfield placeholder entrypoints | No accepted queue, schedule, worker behavior, or worker test suite | Watcher and worker outputs remain candidates or receipts, never publication |
@@ -412,7 +411,7 @@ Source-derived ideas advance only through the normal sequence: classify the clai
 **UNKNOWN, held, or not implemented as a current integrated product flow:**
 
 - activation of the implemented package-owned `MapLibreAdapter` in the normal `explorer-web` entrypoint;
-- reconciliation of the Sites-derived app's direct MapLibre acquisition and parallel-shell relationship with ADR-0006 and proposed ADR-0005;
+- full Sites renderer capability migration through ADR-0006's accepted package seam and reconciliation of the parallel-shell relationship with proposed ADR-0005;
 - admitted, released source/layer/style catalogs for either Explorer lane;
 - live Governed API transport;
 - canonical Evidence Drawer schema binding;
@@ -428,7 +427,7 @@ Source-derived ideas advance only through the normal sequence: classify the clai
 
 | Gap | Truth | Disposition | Dependency-safe next step |
 |---|---|---|---|
-| The package-owned exact dependency and concrete adapter exist, but normal `explorer-web` composition remains on `NullMapRuntime`; the Sites-derived app acquires MapLibre directly outside the accepted seam. | CONFIRMED | HOLD / CONFLICTED | Reconcile the direct-acquisition and parallel-shell consumers, then activate only through the accepted package seam after focused browser, CSP, source/layer, accessibility, performance, and rollback evidence. |
+| The package-owned exact dependency and concrete adapter exist, while both Explorer compositions remain on `NullMapRuntime` and the Sites renderer-specific capabilities are held. | CONFIRMED | STRUCTURAL CONFORMANCE / CAPABILITY HOLD | Expand `MapRuntimePort` and the Sites consumer only through dependency-closed slices after focused browser, CSP, source/layer, accessibility, performance, and rollback evidence. |
 | Explorer has no live Governed API transport or production EvidenceBundle resolution flow. | CONFIRMED | DEFERRED | Add one contract/schema/policy-closed transport slice with public-safe fixtures, negative cases, and no direct internal-store path. |
 | The mounted Focus and map/evidence flows are synthetic even though their visible trust continuity is real local implementation. | CONFIRMED | PARTIAL | Prove one bounded end-to-end governed transaction before describing live integration; keep release and publication separate. |
 | Root and child README checkpoints do not all share the same repository base or maturity vocabulary. | CONFIRMED | FOLLOW-UP | Refresh lane-local documentation only when its current bytes can be repinned without broad cross-root rewrite. |
@@ -466,6 +465,7 @@ The root is not complete while child lanes are placeholders. For a declared app 
 
 | Version | Date | Change | Runtime effect |
 |---|---|---|---|
+| v0.9 | 2026-08-29 | Recorded package-root NullMapRuntime conformance for the Sites-derived app and the held full renderer capability migration. | Fail-closed shell only; no source, release, deployment, promotion, or publication authority. |
 | v0.3 | 2026-07-22 | Reconciled the root contract with the seven app lanes and mixed implementation maturity. | None; documentation and receipt only. |
 | v0.4 | 2026-07-23 | Repinned the evidence snapshot, clarified review routing versus stewardship, recorded the then-unresolved Directory Rules duplicate, and added an evidence ledger. | None; documentation and receipt only. |
 | v0.5 | 2026-07-29 | Recorded the locked, buildable, tested, fail-closed Explorer Web shell baseline. | Static shell only; no API, renderer, claim, release, or deployment behavior. |
@@ -481,6 +481,6 @@ A README rollback changes no application code, dependency, route, test, workflow
 
 ---
 
-> **Current conclusion:** `apps/` is correctly placed but not uniformly implemented. Governed API provides a small fail-closed route slice. `explorer-web` provides a substantial mounted local composition with synthetic map/runtime, Focus, evidence, correction, and public trust interactions; the package-owned exact MapLibre dependency, adapter, worker seam, and bounded browser fixture now exist, but the normal entrypoint remains on `NullMapRuntime`. The separately tracked Sites-derived Explorer boots MapLibre directly and records deployment lineage while its package-seam and parallel-shell reconciliation remain held. Neither lane establishes live Governed API transport, production EvidenceBundle resolution, released sources/layers, repository-wide deployment authority, or publication authority. Review Console and Admin remain documentation-led, CLI and Workers remain explicit placeholders, and `apps/packages/` remains a drift guard.
+> **Current conclusion:** `apps/` is correctly placed but not uniformly implemented. Governed API provides a small fail-closed route slice. `explorer-web` provides a substantial mounted local composition with synthetic map/runtime, Focus, evidence, correction, and public trust interactions; the package-owned exact MapLibre dependency, adapter, worker seam, and bounded browser fixture now exist, but its normal entrypoint remains on `NullMapRuntime`. The separately tracked Sites-derived Explorer also boots `NullMapRuntime`; full renderer capability and parallel-shell reconciliation remain held. Neither lane establishes live Governed API transport, production EvidenceBundle resolution, released sources/layers, repository-wide deployment authority, or publication authority. Review Console and Admin remain documentation-led, CLI and Workers remain explicit placeholders, and `apps/packages/` remains a drift guard.
 
 <p align="right"><a href="#top">Back to top</a></p>
