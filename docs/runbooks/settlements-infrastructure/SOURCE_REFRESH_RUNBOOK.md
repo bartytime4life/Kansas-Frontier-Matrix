@@ -285,8 +285,12 @@ as passing.
 Use this precedence:
 
 ```text
-ERROR > DENY > ABSTAIN > HOLD > READY_FOR_ACCOUNTABLE_SOURCE_REFRESH_REVIEW
+ERROR > DENY > ESCALATE > ABSTAIN > HOLD > READY_FOR_ACCOUNTABLE_SOURCE_REFRESH_REVIEW
 ```
+
+Select `ESCALATE` when the review can be classified but must move to a
+protected or competent-authority channel. It does not override a concrete
+`ERROR` or `DENY`.
 
 A fixture `PASS` cannot override a source-refresh `HOLD`.
 
