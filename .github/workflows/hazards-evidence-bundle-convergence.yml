@@ -1,13 +1,37 @@
 name: hazards-evidence-bundle-convergence
 
-on:
+"on":
   pull_request:
     paths:
       - 'schemas/contracts/v1/evidence/evidence_bundle.schema.json'
       - 'schemas/contracts/v1/domains/hazards/evidence_bundle.schema.json'
+      - 'schemas/contracts/v1/**'
       - 'fixtures/contracts/v1/evidence/evidence_bundle/**'
+      - 'tools/validators/_common/jsonschema_runner.py'
+      - 'tools/validators/_common/local_resolver.py'
       - 'tools/validators/validate_hazards_evidence_bundle_projection.py'
       - 'tests/validators/domains/hazards/test_evidence_bundle_schema_convergence.py'
+      - 'tests/validators/domains/hazards/test_evidence_bundle_convergence_workflow_binding.py'
+      - 'tools/ci/install_python_ci.py'
+      - 'tools/ci/python-test.lock'
+      - 'pyproject.toml'
+      - '.github/workflows/hazards-evidence-bundle-convergence.yml'
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'schemas/contracts/v1/evidence/evidence_bundle.schema.json'
+      - 'schemas/contracts/v1/domains/hazards/evidence_bundle.schema.json'
+      - 'schemas/contracts/v1/**'
+      - 'fixtures/contracts/v1/evidence/evidence_bundle/**'
+      - 'tools/validators/_common/jsonschema_runner.py'
+      - 'tools/validators/_common/local_resolver.py'
+      - 'tools/validators/validate_hazards_evidence_bundle_projection.py'
+      - 'tests/validators/domains/hazards/test_evidence_bundle_schema_convergence.py'
+      - 'tests/validators/domains/hazards/test_evidence_bundle_convergence_workflow_binding.py'
+      - 'tools/ci/install_python_ci.py'
+      - 'tools/ci/python-test.lock'
+      - 'pyproject.toml'
       - '.github/workflows/hazards-evidence-bundle-convergence.yml'
   workflow_dispatch:
 
@@ -37,11 +61,18 @@ jobs:
           python -m py_compile
           tools/validators/validate_hazards_evidence_bundle_projection.py
           tests/validators/domains/hazards/test_evidence_bundle_schema_convergence.py
+          tests/validators/domains/hazards/test_evidence_bundle_convergence_workflow_binding.py
       - name: Run deterministic convergence tests
         run: >-
           python -m unittest discover
           --start-directory tests/validators/domains/hazards
           --pattern 'test_evidence_bundle_schema_convergence.py'
+          --verbose
+      - name: Prove hosted trigger closure
+        run: >-
+          python -m unittest discover
+          --start-directory tests/validators/domains/hazards
+          --pattern 'test_evidence_bundle_convergence_workflow_binding.py'
           --verbose
       - name: Validate shared fixtures through the Hazards projection
         run: python tools/validators/validate_hazards_evidence_bundle_projection.py --fixtures
