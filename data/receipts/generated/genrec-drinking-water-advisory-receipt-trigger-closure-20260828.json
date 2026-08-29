@@ -6,8 +6,8 @@
     "tests/domains/hazards/test_drinking_water_advisory_workflow_binding.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/drinking-water-advisory.yml": "sha256:c4b830b09421ea372f5d058de382c03543490d640abf1a37381667d3916bdd32",
-    "tests/domains/hazards/test_drinking_water_advisory_workflow_binding.py": "sha256:7e08e96567a79e3248a95f69bcd4cbee6ccf45992d652d3a0e3a10a4af6de5d2"
+    ".github/workflows/drinking-water-advisory.yml": "sha256:db28d729d870749950d09599ad8fdc079c4d1bfd68dc52c536f6fed37d9955b7",
+    "tests/domains/hazards/test_drinking_water_advisory_workflow_binding.py": "sha256:7349dffae6008579fb9de1df642bbb7858889377bc04951af8d79dc4f43345b0"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -48,7 +48,7 @@
     {
       "gate": "drinking-water-advisory-trigger-closure",
       "outcome": "PASS",
-      "reason": "The workflow executes generated-receipt validation but omitted its validator, schema, local resolver, installation helper, migration manifest, and locked dependency file from pull-request and main-push path filters. The proposed workflow adds that finite execution seam and a deterministic test for both trigger sets."
+      "reason": "The workflow executes generated-receipt validation but omitted its validator, the full contract-schema tree recursively consumed by the local resolver, the resolver itself, the installation helper, migration manifest, and locked dependency file from pull-request and main-push path filters. The proposed workflow adds that execution seam and a deterministic test for both trigger sets."
     },
     {
       "gate": "artifact-hash-replay",
