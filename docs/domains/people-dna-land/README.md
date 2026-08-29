@@ -3,11 +3,11 @@ doc_id: kfm://doc/docs-domains-people-dna-land-readme
 title: People, Genealogy, DNA, and Land Ownership — Domain Landing Doc
 type: standard
 subtype: domain-readme
-version: v1.1
-status: draft
+version: v1.2.0
+status: draft; repository-grounded landing boundary; mixed implementation maturity; sensitive-domain holds preserved; non-release; non-publication
 owners: Docs steward; Domain steward (People/DNA/Land); Sensitivity reviewer; Rights-holder representative; Release authority
 created: 2026-05-19
-updated: 2026-06-07
+updated: 2026-08-29
 policy_label: public-doctrine
 contract_version: "3.0.0"
 related:
@@ -17,13 +17,16 @@ related:
   - docs/domains/people-dna-land/MISSING_OR_PLANNED_FILES.md    # authored prior session (v0.2)
   - docs/domains/people-dna-land/EXPANSION_PLAN.md
   - docs/domains/people-dna-land/sublanes/genealogy.md
+  - docs/runbooks/people-dna-land/README.md
+  - tests/domains/people-dna-land/README.md
   - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf
   - docs/standards/PROV.md
 tags: [kfm, domain, people, genealogy, dna, land, sensitive]
 notes:
   - CONTRACT_VERSION pinned to 3.0.0 per ai-build-operating-contract.md.
   - Domain landing doc for the most sensitivity-loaded lane in KFM.
-  - All repo-state claims are PROPOSED until verified against a mounted repository.
+  - Current GitHub repository evidence is implementation authority; proposal-era path and maturity statements in retained design sections are lineage when current repository evidence differs.
+  - The current runbook lane contains eight repository-grounded procedures or HOLD boundaries, three explicit scaffolds, and two bounded executable synthetic consent profiles.
   - Default sensitivity posture for living-person, DNA, and private person-parcel joins is deny-by-default (T4).
   - "OPEN CONFLICT (new in v1.1): Atlas Ch. 24.13 crosswalk uses the short segment 'people' for schemas/contracts/policy-sensitivity/policy-consent roots; Directory Rules §6.1/§12 examples use 'people-dna-land' for docs/ and domains/ segments. Tracked as OQ-PDL-SEG-01; see §2.1 and §22."
 [/KFM_META_BLOCK_V2] -->
@@ -34,27 +37,27 @@ notes:
 
 <!-- Badges -->
 ![Status: draft](https://img.shields.io/badge/status-draft-blue)
-![Authority: canonical](https://img.shields.io/badge/authority-canonical-1f6feb)
+![Authority: explanatory](https://img.shields.io/badge/authority-explanatory-1f6feb)
 ![Sensitivity: T4 default](https://img.shields.io/badge/sensitivity-T4%20default-critical)
 ![Promotion: deny-by-default](https://img.shields.io/badge/promotion-deny--by--default-darkred)
 ![Doctrine: Atlas v1.1 Ch. 16](https://img.shields.io/badge/doctrine-Atlas%20v1.1%20Ch.%2016-purple)
-![Segment: CONFLICTED](https://img.shields.io/badge/segment%20naming-CONFLICTED-orange)
+![Segment: repository-present](https://img.shields.io/badge/segment-repository--present-informational)
 ![CONTRACT_VERSION: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
-![Last reviewed: 2026-06-07](https://img.shields.io/badge/last%20reviewed-2026--06--07-lightgrey)
+![Last reviewed: 2026-08-29](https://img.shields.io/badge/last%20reviewed-2026--08--29-lightgrey)
 
 | Field          | Value                                                                                                                       |
 | -------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| **Status**     | `draft` — landing doc seeded; sublane docs and verification backlog open                                                    |
+| **Status**     | `draft` — repository-grounded landing boundary; current implementation maturity is file-specific and operational use remains held |
 | **Owners**     | Docs steward · Domain steward (People/DNA/Land) · Sensitivity reviewer · Rights-holder representative · Release authority   |
-| **Updated**    | 2026-06-07                                                                                                                  |
-| **Authority**  | Canonical for the People/Genealogy/DNA/Land doctrine surface inside `docs/` *(per Directory Rules §6.1)*                    |
-| **Implements** | Atlas v1.1 Ch. 16; Encyclopedia §7.14 *(section number NEEDS VERIFICATION)*; Directory Rules §6.1, §12; Pass-10 C6 (Sensitivity) & C9 (Genealogy/DNA) |
+| **Updated**    | 2026-08-29                                                                                                                  |
+| **Authority**  | Explanatory domain landing page under `docs/`; subordinate to accepted governance, contracts, schemas, policy, evidence, review, lifecycle, and release authority |
+| **Explains**   | Atlas and blueprint lineage reconciled against current repository paths; implementation, policy runtime, source admission, proof, release, deployment, and publication remain file-specific |
 
 > [!IMPORTANT]
 > This domain inherits the strictest defaults in KFM. Living-person fields, raw DNA segment data, private person-parcel joins, and DNA-derived hypotheses are **T4 (Denied) by default**. Promotion to any public tier requires an explicit transform, a recorded receipt, named review, and — for living persons and DNA — scoped, revocable consent. Doctrine: `[DOM-PEOPLE]`, `[ENCY]`, Atlas v1.1 Ch. 24.5.
 
 > [!WARNING]
-> **Segment-name conflict (OQ-PDL-SEG-01, new in v1.1).** Two CONFIRMED sources disagree on the domain segment. Directory Rules §6.1/§12 examples use **`people-dna-land`** (for `docs/domains/`, `policy/domains/`, `tests/domains/`, etc.); Atlas Ch. 24.13 crosswalk row 16 uses the short segment **`people`** (for `schemas/contracts/v1/people/`, `contracts/people/`, `policy/sensitivity/people/`, `policy/consent/people/`). This README uses `people-dna-land` where Directory Rules gives an explicit example, and `<segment>` for the four crosswalk-only roots, pending ADR. See [§2.1](#21-segment-naming-conflict) and [§22](#22-adrs).
+> **Current path posture.** The `people-dna-land` repository segment is present across the inspected domain documentation, contract, schema, policy, fixture, test, and validator roots. That implementation fact does not settle the externally presented canonical lane name or authorize a parallel `people` home. Preserve current paths until an accepted decision and migration plan establish a different outcome. See [§2.1](#21-segment-naming-conflict) and [§22](#22-adrs).
 
 ---
 
@@ -111,24 +114,34 @@ This domain is the most ethically loaded lane in KFM. The corpus is explicit tha
 
 ## 2. Authority level
 
-**Authority class:** **Canonical** for the People/Genealogy/DNA/Land doctrine surface inside `docs/`. *(CONFIRMED per Directory Rules §6.1 — `docs/domains/people-dna-land/` is listed as a canonical sub-tree of the human-facing control plane.)*
+**Authority class:** **Explanatory domain landing page** inside `docs/`, subordinate to accepted ADR-0029 and the adopted Directory Rules. Repository presence proves that this documentation lane exists; it does not make this README contract, schema, policy, source, evidence, lifecycle, release, title, consent, or publication authority.
 
-This README **explains**. It does not define schemas (those live under `schemas/contracts/v1/<segment>/` — *PROPOSED; segment CONFLICTED*), does not define object meaning machine-readably (that lives under `contracts/<segment>/` — *PROPOSED*), does not decide allow/deny (that lives under `policy/domains/people-dna-land/` plus `policy/sensitivity/<segment>/` and `policy/consent/<segment>/` — *PROPOSED*), and does not store data (that lives under `data/<phase>/people-dna-land/` — *PROPOSED*).
+This README **explains**. Current repository paths under `contracts/domains/people-dna-land/`, `schemas/contracts/v1/domains/people-dna-land/`, `policy/domains/people-dna-land/`, `fixtures/domains/people-dna-land/`, `tests/domains/people-dna-land/`, and `tools/validators/domains/people-dna-land/` have their own file-specific maturity. Their presence supersedes proposal-era claims that the roots are absent, but it does not establish completeness, activation, approval, or public use.
 
 > [!NOTE]
 > Per Directory Rules §5/§6.1, `docs/` **explains**; `control_plane/` **indexes**; `contracts/` **defines meaning**; `schemas/` **defines shape**; `policy/` **decides admissibility**; `tests/fixtures/` **proves rules are enforceable**. This README sits in the first row of that table.
 
 ### 2.1 Segment-naming conflict
 
-> [!WARNING]
-> **CONFLICTED — resolve before any `schemas/`, `contracts/`, or `policy/sensitivity/` file in this lane is authored as canonical.** Tracked as **OQ-PDL-SEG-01** (see [§22](#22-adrs)).
+> [!NOTE]
+> **Repository segment confirmed; external naming unsettled.** Current repository
+> evidence establishes the existing `people-dna-land` segment. The source registry
+> still records the externally presented canonical lane name as unsettled. That
+> naming question is not permission to create a parallel `people` contract,
+> schema, policy, fixture, test, validator, data, or runbook home.
 
-| Source (CONFIRMED) | Root family | Segment | Example |
-|---|---|---|---|
-| **Directory Rules §6.1, §6.5, §6.6, §12** | `docs/domains/`, `policy/domains/`, `tests/domains/`, `fixtures/domains/`, `packages/domains/`, `pipelines/domains/`, `data/<phase>/` | **`people-dna-land`** | `docs/domains/people-dna-land/`, `policy/domains/people-dna-land/` |
-| **Atlas Ch. 24.13 crosswalk (row 16)** | `schemas/`, `contracts/`, `policy/sensitivity/`, `policy/consent/` | **`people`** | `schemas/contracts/v1/people/`, `policy/consent/people/` |
+| Inspected responsibility | Current repository path | Safe conclusion |
+|---|---|---|
+| Domain explanation | `docs/domains/people-dna-land/` | Repository-present explanatory lane |
+| Semantic contracts | `contracts/domains/people-dna-land/` | Repository-present mixed-maturity contract lane |
+| Machine schemas | `schemas/contracts/v1/domains/people-dna-land/` | Repository-present draft schema lane |
+| Policy | `policy/domains/people-dna-land/` and `policy/consent/people-dna-land/` | Repository-present; active production binding remains held |
+| Synthetic proof | `fixtures/domains/people-dna-land/`, `tests/domains/people-dna-land/`, and `tools/validators/domains/people-dna-land/` | Two bounded consent profiles are executable; broader proof is held |
+| Human procedures | `docs/runbooks/people-dna-land/` | Eight repository-grounded children, three explicit scaffolds |
 
-**Resolution posture (per operating-contract source hierarchy + Directory Rules §0):** Directory Rules wins on placement where it gives an explicit example, so the `docs/domains/`, `policy/domains/`, `tests/domains/`, `fixtures/domains/`, and `data/<phase>/` segments are written **`people-dna-land`**. The four crosswalk-only roots are written **`<segment>`** and annotated, because the crosswalk says `people` while the lane convention says `people-dna-land`. No `schemas/`, `contracts/`, or `policy/sensitivity/` file is authored as canonical until the ADR lands. v1 of this README used `people-dna-land`/`domains/` for *all* roots, including the four the crosswalk assigns to `people`; v1.1 surfaces the divergence.
+Preserve these implementation paths. Any rename, alias, split, or migration requires
+current consumer inventory, accepted authority, compatibility treatment, correction,
+and rollback; documentation alone cannot make that decision.
 
 [↑ back to top](#people-genealogy-dna-and-land-ownership)
 
@@ -136,16 +149,22 @@ This README **explains**. It does not define schemas (those live under `schemas/
 
 ## 3. Status
 
-| Item                                  | Status                                                                                            |
-| ------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| Doctrine source (Atlas v1.1 Ch. 16)   | **CONFIRMED**                                                                                     |
-| Folder placement (`docs/domains/people-dna-land/`) | **CONFIRMED** (Directory Rules §6.1)                                                 |
-| Segment name for `schemas/`/`contracts/`/`policy/sensitivity/` | **CONFLICTED** — `people` vs `people-dna-land` (OQ-PDL-SEG-01)               |
-| Sublane convention (`sublanes/<x>.md`)| **PROPOSED** — pending ADR (see [§22](#22-adrs))                                                   |
-| Schema home, contracts, policy paths  | **PROPOSED** — all segments labeled PROPOSED until mounted-repo check                              |
-| Validator and CI coverage             | **NEEDS VERIFICATION** — no workflow, log, or test inspected this session                          |
-| Source-family rights and currentness  | **NEEDS VERIFICATION** per source                                                                  |
-| Living-person, DNA, and parcel-join lanes | **CONFIRMED doctrine** for deny-by-default / **PROPOSED implementation**                       |
+| Item | Current status |
+|---|---|
+| Domain landing and `people-dna-land` repository segment | **CONFIRMED repository-present**; explanatory only |
+| Accepted placement authority | **CONFIRMED** — ADR-0029 accepts the current Directory Rules bytes |
+| Contracts, schemas, policy, fixtures, tests, and validators | **CONFIRMED repository-present / mixed maturity**; presence is not activation or completeness |
+| Consent-overlay and revocation-propagation profiles | **TWO BOUNDED SYNTHETIC PROFILES EXECUTABLE**; deterministic and no-network |
+| Runbook lane | **Eight repository-grounded children, three explicit scaffolds** |
+| Source refresh, promotion, and rollback | **Repository-grounded HOLD boundaries**; no operational execution |
+| Active policy runtime, real consent or revocation, cleanup, proof, release, deployment, and publication | **HOLD / NEEDS VERIFICATION** |
+| Source-family rights, currentness, sovereignty, custody, and accountable ownership | **NEEDS VERIFICATION per source and use** |
+| Living-person, DNA, private person-land, title, and harmful-precision output | **DENY or restrict by default**; no inference of approval |
+
+Proposal-era architecture and path statements retained later in this long-form
+landing document are design lineage when they conflict with the current table or
+the linked responsibility-root READMEs. Current repository evidence and governing
+authority take precedence.
 
 [↑ back to top](#people-genealogy-dna-and-land-ownership)
 
@@ -188,7 +207,7 @@ The following **explicitly do not belong** under `docs/domains/people-dna-land/`
 | Release manifests, rollback cards, correction notices      | `release/` *(PROPOSED)*                                                        |
 | Source descriptors (per-source admission records)          | `data/registry/sources/people-dna-land/` *(PROPOSED)*                          |
 | Settlements/roads/archaeology context that *cites* this lane | The owning domain's `docs/domains/<…>/` folder                               |
-| Runbooks for refreshes, rollbacks, drills                  | `docs/runbooks/people-dna-land/` *(PROPOSED, subfolder convention pending ADR)* |
+| Human procedures and HOLD boundaries                      | `docs/runbooks/people-dna-land/` — repository-present under adopted Directory Rules §9.1; maturity remains file-specific |
 
 > [!WARNING]
 > **Living-person sample data must never appear in this folder, even as an example.** Use synthetic fixtures (`fixtures/synthetic/people-dna-land/`) or census-historical (deceased, public-domain) data only. *(CONFIRMED doctrine; Pass-10 C6.)*
@@ -620,7 +639,7 @@ Publication in this domain requires, at minimum:
 
 Corrections follow the `CorrectionNotice` flow; rollbacks follow `RollbackCard`. Both are reviewed by the correction reviewer before they amend a PUBLISHED claim.
 
-*Detailed flow: see `docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md` (PROPOSED, not yet authored). The pattern follows the fauna runbook (`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`; CONFIRMED authored prior session per Directory Rules §6.1.b note; mounted-repo presence NEEDS VERIFICATION).*
+*Current boundary: [`docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md) is a repository-grounded, fail-closed `HOLD` document. It permits repository-visible source-head review only; it does not retrieve a live source, admit or activate a source, emit receipts, mutate lifecycle state, execute rollback, release, deploy, or publish.*
 
 [↑ back to top](#people-genealogy-dna-and-land-ownership)
 
@@ -630,15 +649,15 @@ Corrections follow the `CorrectionNotice` flow; rollbacks follow `RollbackCard`.
 
 | ID        | Item                                                                                              | Evidence that would settle it                                                            | Status              |
 | --------- | ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ------------------- |
-| **OQ-PDL-SEG-01** | Segment name: `people` (Atlas Ch. 24.13) vs `people-dna-land` (DIRRULES §6.1/§12)         | ADR — carried across the domain doc set (model, matrix, inventory)                       | **CONFLICTED — BLOCKING** |
+| **OQ-PDL-SEG-01** | Externally presented lane name and any future cross-root rename or alias | Accepted decision plus consumer, compatibility, migration, correction, and rollback inventory | **OPEN — existing `people-dna-land` paths preserved** |
 | OQ-PDL-01 | Verify living-person policy enforcement                                                           | Mounted repo files, schemas, registry entries, tests, logs, review records, manifests    | NEEDS VERIFICATION  |
 | OQ-PDL-02 | Verify DNA consent / revocation enforcement                                                       | Mounted repo files + consent-token verifier + revocation cleanup tests                   | NEEDS VERIFICATION  |
 | OQ-PDL-03 | Verify land-instrument chain logic and gap/overlap surfacing                                      | Mounted repo files + chain-of-title gap tests + fixtures                                  | NEEDS VERIFICATION  |
 | OQ-PDL-04 | Verify geometry-role boundary logic (parcel is not title)                                          | Mounted repo files + assessor-as-title denial tests                                       | NEEDS VERIFICATION  |
 | OQ-PDL-05 | Verify UI / API restricted-field no-leak behavior                                                  | Mounted repo files + tile field-allowlist tests + Evidence Drawer negative-case tests    | NEEDS VERIFICATION  |
 | OQ-PDL-06 | Resolve sublane folder convention (`sublanes/`) vs flat (`docs/domains/people-dna-land/<x>.md`)   | ADR — see [§22](#22-adrs); parallel to Directory Rules OPEN-DR-02                        | OPEN                |
-| OQ-PDL-07 | Resolve runbook subfolder convention for this domain (parallel to fauna's `runbooks/fauna/`)       | ADR — Directory Rules OPEN-DR-02                                                          | OPEN                |
-| OQ-PDL-09 | Codify DTC-vendor compatibility matrix and vendor-loss-simulation playbook                         | `docs/runbooks/people-dna-land/DTC_VENDOR_LOSS_DRILL.md` (PROPOSED)                       | OPEN                |
+| OQ-PDL-07 | Runbook subfolder convention for this domain | ADR-0029 and adopted Directory Rules §9.1; current path `docs/runbooks/people-dna-land/` | **RESOLVED for current placement** |
+| OQ-PDL-09 | DTC-vendor compatibility and vendor-loss rehearsal | Repository-grounded synthetic-metadata tabletop exists; live monitoring, containment, and vendor-state authority do not | **PARTIAL / OPERATIONAL HOLD** |
 | OQ-PDL-10 | Specify retention boundary: tombstone vs erasure for revoked living-person and DNA data            | Joint ADR with `docs/doctrine/lifecycle-law.md`; align with GDPR and Tribal data policies | OPEN                |
 | OQ-PDL-11 | Define non-conforming GEDCOM acceptance thresholds (fail vs accept-with-warning)                   | ADR + per-source policy fragment + conformance-reporter test corpus (Pass-10 C9-01)       | OPEN                |
 
@@ -653,7 +672,7 @@ Corrections follow the `CorrectionNotice` flow; rollbacks follow `RollbackCard`.
 
 | ADR ID                | Topic                                                                                            | Status      |
 | --------------------- | ------------------------------------------------------------------------------------------------ | ----------- |
-| **OQ-PDL-SEG-01 → ADR (proposed)** | Segment name: `people` vs `people-dna-land` for `schemas/`/`contracts/`/`policy/sensitivity/` | **PROPOSED — BLOCKING** |
+| **OQ-PDL-SEG-01 → ADR (proposed)** | Externally presented lane name and any future cross-root rename, alias, split, or migration | **PROPOSED — non-blocking for existing paths; blocks parallel homes and unreviewed migration** |
 | ADR-D-01 *(PROPOSED, local)* | Sublane folder convention for `docs/domains/<domain>/` (subfolder vs flat) — covers OQ-PDL-06    | PROPOSED    |
 | ADR-S-04 *(corpus backlog)* | Source-role vocabulary v1 — covers the §11 role-label reconciliation                            | PROPOSED    |
 | ADR-S-05 *(corpus backlog)* | Sensitivity tier scheme (T0–T4) — governs §10 and §14                                           | PROPOSED    |
@@ -824,12 +843,12 @@ Aligned with Atlas Ch. 24.9.2 (trust-membrane anti-patterns) and Ch. 24.9.3 (gov
 | **EXTERNAL**         | Sourced from authoritative external research; never used for KFM-specific repo or doctrine claims.   |
 
 > [!NOTE]
-> No mounted repo, CI workflow, dashboard, or runtime log was inspected during authoring. Every path under `contracts/`, `schemas/`, `policy/`, `tests/`, `fixtures/`, `data/`, `release/`, `apps/`, and `runtime/` named here is **PROPOSED** until mounted-repo verification. Doctrine claims grounded in Atlas v1.1, Encyclopedia, Directory Rules, Pass-10, Unified Manual, MapLibre-Master, and Governed-AI sources are **CONFIRMED**.
+> The repository is now inspected. Current paths, the two bounded synthetic profiles, and repository-grounded runbook or HOLD documents are **CONFIRMED only to the extent stated in §3 and their owning READMEs**. Proposal-era architecture remains lineage. Repository presence, workflow success, or documentation maturity does not establish source admission, active policy, evidence closure, accountable review, real revocation or cleanup, proof, release, deployment, or publication.
 
 ---
 
 **Related docs:** [`PEOPLE_DOMAIN_MODEL.md`](PEOPLE_DOMAIN_MODEL.md) · [`PEOPLE_PRESERVATION_MATRIX.md`](PEOPLE_PRESERVATION_MATRIX.md) · [`EXPANSION_PLAN.md`](EXPANSION_PLAN.md) · [`sublanes/genealogy.md`](sublanes/genealogy.md) · [`../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`../../standards/PROV.md`](../../standards/PROV.md)
 
-**Last updated:** 2026-06-07 · **Edition:** v1.1 · **CONTRACT_VERSION:** 3.0.0
+**Last updated:** 2026-08-29 · **Edition:** v1.2.0 · **CONTRACT_VERSION:** 3.0.0
 
 [↑ back to top](#people-genealogy-dna-and-land-ownership)
