@@ -29,6 +29,7 @@ evidence_snapshot:
   settlements_fixtures_readme_blob: 7c72dba10228decae24e9b46561e1370fa6a6cec
   settlements_schema_readme_blob: 5b8d78c55ca6872e54e5ad99ed418427313a62e9
   settlements_policy_readme_blob: 792a67caab14d119cf4a21dee1365216bfaefb11
+  settlements_workflow_blob: a47d89c40efd58ac31bc44dbc56bdfb1ccc3a325
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
 related:
@@ -43,6 +44,7 @@ related:
   - ../../../fixtures/domains/settlements-infrastructure/README.md
   - ../../../schemas/contracts/v1/domains/settlements-infrastructure/README.md
   - ../../../policy/domains/settlements-infrastructure/README.md
+  - ../../../.github/workflows/domain-settlements-infrastructure.yml
 non_effects:
   - does_not_contact_or_validate_live_sources
   - does_not_establish_runner_wide_or_non_python_egress_denial
@@ -117,7 +119,7 @@ Out of scope:
 | [`schemas/contracts/v1/domains/settlements-infrastructure/`](../../../schemas/contracts/v1/domains/settlements-infrastructure/README.md) | Domain schemas are present | The current lane test package does not bind or validate them. |
 | [`policy/domains/settlements-infrastructure/`](../../../policy/domains/settlements-infrastructure/README.md) | Domain Rego files are present | No current Settlements/Infrastructure no-network suite proves their evaluation or expected decisions. |
 | `pipelines/domains/settlements-infrastructure/` | Mostly tiny greenfield modules | No offline pipeline behavior or lifecycle transition is established. |
-| `.github/workflows/` | No Settlements/Infrastructure domain or no-network workflow was found | CI enforcement, required-check coupling, exact-head execution, and hosted results are absent for this lane. |
+| [`.github/workflows/domain-settlements-infrastructure.yml`](../../../.github/workflows/domain-settlements-infrastructure.yml) | Read-only static readiness workflow; parses schema and fixture structure, recognizes placeholders, and records explicit semantic-validation, proof, and release holds; it does not run the lane tests or shared no-network guard | Static responsibility/readiness checks are present. Settlements-specific no-network execution, semantic validation, proof production, and release dry-run execution are not established. |
 
 Planning material in connected Google Drive correctly emphasizes source-role
 separation, public-safe synthetic fixtures, restricted-infrastructure caution,
@@ -289,7 +291,9 @@ The lane remains held until a reviewed change establishes all applicable items:
 - an accepted command that binds those fixtures to current contracts and schemas;
 - a Settlements/Infrastructure-specific negative no-network proof or an accepted
   domain-neutral shared proof location;
-- a read-only workflow with exact inventory and negative-proof execution;
+- deliberate no-network execution in the current read-only readiness workflow,
+  including the shared guard and a negative proof without removing its semantic,
+  proof, or release holds;
 - hosted exact-head evidence and any required-check coupling separately verified;
 - accountable review assignments and rollback guidance.
 
@@ -323,6 +327,7 @@ as current implementation claims without new repository evidence.
 - [Shared Python no-network guard](../../../tools/ci/kfm_no_network/README.md)
 - [Settlements / Infrastructure tests](../../../tests/domains/settlements-infrastructure/README.md)
 - [Settlements / Infrastructure fixtures](../../../fixtures/domains/settlements-infrastructure/README.md)
+- [Settlements / Infrastructure readiness workflow](../../../.github/workflows/domain-settlements-infrastructure.yml)
 - [Accepted Directory Rules adoption](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
 - [Adopted Directory Rules](../../doctrine/directory-rules.md)
 
