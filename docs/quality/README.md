@@ -2,11 +2,11 @@
 doc_id: kfm://doc/docs-quality-readme
 title: docs/quality/ — Quality Guidance and Validation Index
 type: README
-version: v1.0
+version: v1.1
 status: draft; repository-grounded; BOUNDARY_COMPACT; documentation-only; non-authoritative
 owner: NEEDS VERIFICATION — no independent quality steward or separation-of-duties assignment was verified for this lane
 created: 2026-08-16
-updated: 2026-08-16
+updated: 2026-08-29
 prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
 policy_label: repository-facing; public-safe; quality-guidance; non-publisher
 owning_root: docs/
@@ -25,6 +25,7 @@ notes:
   - "The created date records this first substantive boundary README; the placeholder file's original creation date was not verified."
   - "Accepted ADR-0029 adopts the exact current Directory Rules v2 bytes; this same-path documentation change uses the existing docs/ authority boundary."
   - "The parent docs README records quality as an existing child lane but does not make every observed child a new canonical direct-child category."
+  - "PR #3824 established a hold at docs/qa/temporary; current Directory Rules and repository evidence support retiring the unsupported docs/qa lane without canonizing docs/quality/."
   - "This document changes no contract, schema, policy, validator, test, workflow, runtime, receipt, proof, release, deployment, promotion, publication, or repository setting."
 [/KFM_META_BLOCK_V2] -->
 
@@ -77,7 +78,7 @@ This lane does **not**:
 
 ## Status and evidence boundary
 
-This revision was prepared against `main@46a6fb9d8abad66c1d7df98717d4e6ea4a057660`.
+This revision was reconciled against `main@1bc300c5aeaf5323edead670d648edfb8c3f21c2`. Its original same-path replacement evidence remains pinned to `main@46a6fb9d8abad66c1d7df98717d4e6ea4a057660`.
 
 | Surface | CONFIRMED observation | Bounded conclusion |
 |---|---|---|
@@ -88,6 +89,7 @@ This revision was prepared against `main@46a6fb9d8abad66c1d7df98717d4e6ea4a05766
 | Repository validation surface | The root [`Makefile`](../../Makefile) exposes registry-driven validation, repository-topology, workflow-security, release-prerequisite, and MapLibre quality targets | Commands may be cited as current entry points; results must be tied to an exact run and revision |
 | Hosted validation | [`validator-suite.yml`](../../.github/workflows/validator-suite.yml) runs on pull requests with read-only repository permissions | Its conclusion is a bounded CI signal, not release or publication authority |
 | Open overlap | No open pull request was returned during preflight | No active PR owned the target path at preflight |
+| Former QA sibling | `docs/qa/` contained only its boundary README and the PR #3824 child hold; exact repository search found no producer, consumer, or reference outside that lane | Retire the unsupported sibling without moving its prose or changing this lane's held canonical classification |
 | Runtime, production, release, deployment, publication | Not established by this documentation review | `UNKNOWN` unless proven by their owning surfaces at an exact revision |
 
 ### State separation
@@ -108,6 +110,24 @@ Do not collapse these independent states:
 | Production parity | The released behavior matches the deployed environment |
 
 A change may be well documented while unimplemented, implemented while unverified, verified for a narrow fixture while not release-ready, or released while not yet published.
+
+[Back to top](#top)
+
+---
+
+## QA lane reconciliation after PR #3824
+
+PR #3824 correctly held five decisions at `docs/qa/temporary/`. The accepted Directory Rules require one authority owner, prohibit reserved and README-only speculative scaffolding, route generated QA output outside `docs/`, and require old-path producer and consumer closure before structural retirement. Current repository evidence supports one bounded resolution:
+
+| Held item | Resolution carried forward |
+|---|---|
+| Legitimate responsibility | **RETIRE `docs/qa/` and its `temporary/` child.** The lane contains no unique QA payload, executable behavior, producer, consumer, retention need, or outside reference. Its two READMEs describe holds; they do not create an admitted responsibility. |
+| `qa/` versus `quality/` versus generated output | **PARTIALLY RESOLVED.** Generated QA output belongs in `artifacts/qa/` or declared external CI storage. The existing `docs/quality/` lane has a substantive MapLibre governance document, workflow coupling, and inbound consumers, so its current bytes remain in place. That implementation evidence does not make `quality/` a canonical docs category; its classification remains **HOLD**. |
+| Steward, writers, readers, format, retention, cleanup | **RESOLVED FOR THE RETIRED LANE / HOLD FOR THIS LANE.** A retired `docs/qa/` has no active writer or retention contract. CODEOWNERS routes review to `@bartytime4life` but does not establish accountable or independent quality stewardship for `docs/quality/`. |
+| Migration or retirement | **RETIRE WITHOUT CONTENT MIGRATION.** Delete the two `docs/qa/` hold READMEs after zero-outside-reference verification. No QA result or authority object moves. Git history is the rollback source; recreating the lane requires an admitted responsibility, owner, consumer, retention contract, and placement decision. |
+| Checks and independent review | **BOUNDED.** Run exact reference inventory, link and metadata checks for this surviving README, changed-area selection, and the topology ratchet with its baseline allowed to shrink only. Independent placement review remains unverified, so any future rename, merge, canonical admission, or retirement of `docs/quality/` stays on hold. |
+
+This retirement does not select `docs/quality/` as canonical, move the MapLibre document, change its workflow, or establish a QA result, evidence object, policy decision, release, deployment, promotion, or publication state.
 
 [Back to top](#top)
 
@@ -367,7 +387,7 @@ Review this README and its direct child when any of these changes occur:
 
 ## Correction, rollback, and last evidence review
 
-**Last evidence review:** 2026-08-16 against `main@46a6fb9d8abad66c1d7df98717d4e6ea4a057660`.
+**Last evidence review:** 2026-08-29 against `main@1bc300c5aeaf5323edead670d648edfb8c3f21c2`; original same-path replacement evidence remains pinned to `main@46a6fb9d8abad66c1d7df98717d4e6ea4a057660`.
 
 Before merge, rollback is to close or abandon the unmerged pull request and retain the baseline branch. After merge, use a transparent revert or forward-fix pull request against the actual merged commit; never rewrite shared history.
 
