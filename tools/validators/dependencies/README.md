@@ -67,11 +67,14 @@ labels the result for either `pnpm` or `npm`. It never queries the registry
 itself. When the report supplies package-level vulnerability records, the
 one-line result also includes a deterministic `threshold_vulnerabilities`
 projection with package name, severity, bounded advisory IDs, and a bounded
-fix hint. The projection is limited to 50 sorted package records and 10 sorted
-advisory IDs per record. It does not echo titles, descriptions, dependency
-paths, registry payloads, or arbitrary advisory URLs. `NOT_PROVIDED`,
-`PARTIAL_INVALID`, and `COUNT_MISMATCH` remain explicit instead of being
-misrepresented as a complete finding inventory.
+fix hint when available. The parser accepts npm's package-keyed
+`vulnerabilities` shape and pnpm's legacy advisory-keyed `advisories`
+shape, and labels the selected `source_format`. The projection is limited to
+50 sorted records and 10 sorted advisory IDs per record. It does not echo
+titles, descriptions, recommendations, dependency paths, registry payloads,
+or arbitrary advisory URLs. `NOT_PROVIDED`, `PARTIAL_INVALID`, and
+`COUNT_MISMATCH` remain explicit instead of being misrepresented as a
+complete finding inventory.
 
 ## Finite outcomes
 
@@ -134,9 +137,10 @@ python -m pytest tests/validators/test_pnpm_audit_readiness.py -q
 
 The suite covers the positive repository contract plus manager, engine,
 workspace, lockfile, importer, malformed-manifest, symlink, threshold,
-bounded advisory-projection, missing-detail, count-mismatch, malformed-report,
-command-failure, polarity, deterministic-output, and CLI-exit cases. Fixtures
-are temporary, synthetic, and no-network.
+bounded npm and legacy-pnpm advisory projections, raw-text exclusion,
+missing-detail, count-mismatch, malformed-report, command-failure, polarity,
+deterministic-output, and CLI-exit cases. Fixtures are temporary, synthetic,
+and no-network.
 
 ## Correction and rollback
 
