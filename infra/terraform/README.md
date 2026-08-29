@@ -1,461 +1,272 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/infra-terraform-readme
-title: infra/terraform/ — Terraform Infrastructure-as-Code, Provisioning Boundaries, and State Safety
-type: per-directory-readme
-version: v1
-status: draft
-owners:
-  - <infra-steward>
-  - <security-owner>
-  - <ops-steward>
+title: infra/terraform/ — Infrastructure-as-Code Adoption and State Hold
+type: per-directory-readme; infrastructure-boundary; adoption-hold
+version: v2
+status: draft; repository-grounded; documentation-only; adoption-hold; non-provisioning; non-deployment; non-release; non-publication
+owner: NEEDS VERIFICATION — CODEOWNERS routes /infra/ to @bartytime4life; accountable infrastructure, security, platform, state, and operations stewardship remain unverified
 created: 2026-07-03
-updated: 2026-07-03
-policy_label: public
+updated: 2026-08-29
+policy_label: repository-facing; infra; infrastructure-as-code; terraform; state-sensitive; deny-by-default; least-privilege; rollback-aware
+current_path: infra/terraform/README.md
+owning_root: infra/
+responsibility: document the repository boundary for any future Terraform or compatible infrastructure-as-code slice without claiming tool adoption, provider selection, backend configuration, planned or applied resources, drift control, deployment, or rollback readiness
+truth_posture: >
+  CONFIRMED accepted Directory Rules through ADR-0029; infra/ as the deployment and exposure
+  responsibility root; this directory contains only this README; no tracked .tf file, variable file,
+  provider lock, backend template, module, environment stack, Terraform/OpenTofu workflow, or
+  Terraform-specific validator; CODEOWNERS routing for /infra/; and no Terraform-specific ignore
+  rule in the tracked root .gitignore / UNKNOWN whether any externally managed Terraform state,
+  workspace, backend, provider account, plan, apply, resource, or drift process exists / HOLD tool,
+  version, providers, modules, environments, state, credentials, commands, validation, apply,
+  recovery, and rollback until repository-backed inputs and accountable evidence exist
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 349d0097e5f7533abe6cd8253f4bd7a30eccd003
+  base_tree: ce0ed867de0ed08fafcc2495018e9c1f16e0e410
+  target_prior_blob: 0de5bd49fdbfc5bff1189f36c684eb62f8f87219
+  directory_tree_blob: 5c9ca98da75dcb9a55eee2272a993750806d3799
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_adoption: docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md; accepted
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  inspection_method: exact target read; recursive repository tree; targeted infrastructure-as-code path, command, workflow, and ignore-pattern searches; direct doctrine, infra root, CODEOWNERS, exposure, incident, and key-rotation reads; no provider account, backend, state, plan, workspace, or deployed environment inspected
 related:
-  - infra/README.md
-  - infra/hardening/README.md
-  - infra/hardening/CHECKLIST.md
-  - infra/reverse_proxy/
-  - infra/firewall/
-  - infra/vpn/
-  - infra/systemd/
-  - infra/docker/
-  - infra/compose/
-  - infra/kubernetes/
-  - configs/
-  - runtime/
-  - apps/governed-api/
-  - apps/explorer-web/
-  - apps/workers/
-  - docs/doctrine/directory-rules.md
-  - docs/security/README.md
-  - docs/security/EXPOSURE_PLAN.md
-  - docs/security/INCIDENT_RESPONSE.md
-  - docs/security/KEY_ROTATION.md
-  - docs/architecture/deployment-topology.md
-  - docs/runbooks/
-  - policy/
-  - release/
-  - data/published/
-tags:
-  - kfm
-  - infra
-  - terraform
-  - infrastructure-as-code
-  - provisioning
-  - state
-  - deny-by-default
-  - least-privilege
-  - trust-membrane
-  - rollback
+  - ../README.md
+  - ../hardening/CHECKLIST.md
+  - ../kubernetes/README.md
+  - ../systemd/README.md
+  - ../../docs/doctrine/directory-rules.md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../docs/security/EXPOSURE_PLAN.md
+  - ../../docs/security/INCIDENT_RESPONSE.md
+  - ../../docs/security/KEY_ROTATION.md
+  - ../../.github/CODEOWNERS
+  - ../../.gitignore
 notes:
-  - "Terraform files are provisioning mechanics. They must not become KFM policy authority, schema authority, release authority, runtime implementation, or a secret store."
-  - "Terraform-managed resources must preserve KFM exposure boundaries: governed API and released artifacts are public; RAW, WORK, QUARANTINE, internal stores, model runtimes, source credentials, and steward/admin paths are denied by default."
+  - "v2 removes proposal-era providers, modules, environments, state practices, object topology, reviewers, file trees, and Terraform commands that lacked repository or environment evidence."
+  - "The README is a placement, state-safety, and adoption boundary; it is not configuration, a plan, an apply receipt, a state inventory, a deployment record, or a release decision."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# `infra/terraform/` — Terraform Infrastructure-as-Code, Provisioning Boundaries, and State Safety
+# `infra/terraform/` — Infrastructure-as-Code Adoption and State Hold
 
-> **One-line purpose.** Hold Terraform infrastructure-as-code for KFM while preserving deny-by-default exposure, least privilege, state safety, secret hygiene, governed API routing, auditability, and rollback.
+`infra/terraform/` is the established repository lane for a future, reviewed
+Terraform or compatible infrastructure-as-code slice. It currently contains
+this README only.
 
-![status](https://img.shields.io/badge/status-draft-yellow)
-![root](https://img.shields.io/badge/root-infra%2F-blue)
-![iac](https://img.shields.io/badge/iac-terraform-blueviolet)
-![posture](https://img.shields.io/badge/posture-deny--by--default-red)
-![state](https://img.shields.io/badge/state-protect_sensitive-red)
-![secrets](https://img.shields.io/badge/secrets-never_commit-red)
+> [!IMPORTANT]
+> No tracked Terraform configuration, module, environment stack, provider lock,
+> backend template, plan, state, installer, or Terraform-specific validator
+> exists here. Do not infer that KFM has selected Terraform, OpenTofu, a cloud
+> provider, a state backend, an account, a workspace, or any managed resource.
 
----
+## Current state
 
-## Quick jump
+| Question | Repository evidence | Safe conclusion |
+|---|---|---|
+| What is tracked in this lane? | `infra/terraform/README.md` only | **CONFIRMED:** documentation-only lane |
+| Are configuration or rendering inputs tracked? | No `.tf`, variable, backend, provider-lock, module, or environment-stack file in the repository tree | **CONFIRMED:** no repository-backed configuration |
+| Is Terraform or OpenTofu selected? | No implementation-bearing decision or executable input found | **HOLD** |
+| Is there an IaC validator or CI gate? | No Terraform/OpenTofu-specific test, command, or workflow found | **CONFIRMED:** validation is unestablished |
+| Does the repository ignore Terraform state and working files? | No Terraform-specific pattern found in the root `.gitignore` | **CONFIRMED:** repository-specific prevention is unestablished |
+| Does an external backend, workspace, plan, state, or managed environment exist? | No provider or environment evidence was inspected | **UNKNOWN** |
+| Can this README authorize planning or applying? | Documentation is not an operational transition record | **No** |
 
-[Purpose](#purpose) · [Status & authority](#status--authority) · [Repo fit](#repo-fit) · [What belongs here](#what-belongs-here) · [What does not belong here](#what-does-not-belong-here) · [Provisioning boundary model](#provisioning-boundary-model) · [Terraform expectations](#terraform-expectations) · [State and secrets](#state-and-secrets) · [Proposed structure](#proposed-structure) · [Validation](#validation) · [Review burden](#review-burden) · [Open verification](#open-verification)
+The current [`infra/` root](../README.md) records Terraform adoption,
+implementation-bearing payloads, applied state, and deployed behavior as
+unverified. Accepted
+[Directory Rules](../../docs/doctrine/directory-rules.md), adopted through
+[ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md),
+place infrastructure-as-code under `infra/`; they do not select a tool,
+provider, backend, account, resource topology, or environment.
 
----
+## Evidence boundaries
 
-## Purpose
+Repository-adjacent surfaces do not close this lane:
 
-`infra/terraform/` is the Terraform infrastructure-as-code lane for Kansas Frontier Matrix. It may hold Terraform modules, environment stacks, backend templates, provider configuration templates, variable definitions, policy-adjacent validation notes, provisioning diagrams, and rollback notes.
+- [`infra/kubernetes/README.md`](../kubernetes/README.md) and
+  [`infra/systemd/README.md`](../systemd/README.md) are documentation-only
+  adoption holds. They do not establish resources for Terraform to create.
+- [`infra/hardening/CHECKLIST.md`](../hardening/CHECKLIST.md) provides review
+  questions, not provider, backend, state, IAM, network, storage, or drift
+  enforcement.
+- The [exposure plan](../../docs/security/EXPOSURE_PLAN.md) defines a
+  deny-by-default trust boundary while concrete infrastructure controls remain
+  proposed or need verification. Desired posture is not a planned or applied
+  resource graph.
+- [`CODEOWNERS`](../../.github/CODEOWNERS) routes `/infra/` review to
+  `@bartytime4life`. Repository routing does not establish provider custody,
+  state access, apply approval, separation of duties, or operational ownership.
+- The root [`.gitignore`](../../.gitignore) contains no Terraform-specific
+  state, plan, variable, lock, or working-directory rule. This observation does
+  not prove that sensitive state has been committed; it means this repository
+  has not established a Terraform-specific ignore boundary.
 
-This folder exists to provision infrastructure without weakening KFM's trust membrane:
+Externally managed infrastructure may exist, but its state is **UNKNOWN**, not
+absent. Credentials, state, private endpoints, account or tenant identifiers,
+resource inventories, unredacted plans, and sensitive outputs must not be
+committed to manufacture implementation proof.
 
-```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
-```
+## Lane contract
 
-Terraform may create or manage infrastructure that hosts KFM, but it must not decide what KFM publishes, certify evidence, store secrets, bypass governed APIs, or expose non-public lifecycle data.
+Future portable infrastructure-as-code material may live here when a concrete
+provisioning slice exists. Appropriate content includes:
 
-Public infrastructure should expose only reviewed public surfaces:
+- one declared canonical configuration and module convention;
+- non-secret provider, backend, variable, and environment templates;
+- an intentionally reviewed dependency lock when the selected tool supports
+  one;
+- exact format, initialization, validation, plan-review, apply, drift,
+  recovery, destroy, and rollback instructions tied to tracked files;
+- sanitized evidence describing resource identity, exposure, IAM, storage,
+  state custody, plan disposition, and finite failure behavior.
 
-```text
-public client -> edge / ingress -> apps/governed-api/ or released static artifacts
-```
+This lane must not contain:
 
-Infrastructure must deny direct access to RAW, WORK, QUARANTINE, unpublished candidates, internal/canonical stores, source credentials, direct model endpoints, admin/review surfaces, and debug endpoints unless a steward-only private path is explicitly reviewed and audited.
+- KFM policy, schema, evidence, lifecycle, application, runtime, release, or
+  publication implementation;
+- live credentials, tokens, certificates, private keys, kubeconfigs, provider
+  configuration with secrets, or production variable values;
+- state, state backups, working directories, crash logs, saved plans, or
+  outputs whose sensitivity and retention are unresolved;
+- private account, tenant, subscription, project, host, address, route, or
+  resource inventories;
+- generated configuration whose canonical source and regeneration procedure
+  are unknown;
+- provider, module, environment, resource, command, or backend names presented
+  as current before their defining files and operational evidence exist.
 
-[Back to top](#top)
+## Adoption packet
 
----
+Keep infrastructure-as-code adoption on **HOLD** until one reviewable packet
+establishes all applicable items below.
 
-## Status & authority
-
-| Field | Value |
+| Required item | Evidence needed |
 |---|---|
-| **Document type** | Per-directory README |
-| **Owning responsibility root** | `infra/` |
-| **Subpath role** | `terraform/` — Terraform modules, stacks, backend templates, provisioning guidance, state-safety notes, and IaC validation records |
-| **Authority level** | Draft deployment guidance. KFM doctrine, accepted ADRs, `policy/`, release gates, and security runbooks outrank this README. |
-| **Lifecycle phase** | n/a — provisioning mechanics, not lifecycle data |
-| **Default posture** | Deny-by-default exposure, least privilege, no secret commits, protected state, auditable plan/apply, rollback path |
-| **Owners** | `<infra-steward>`, `<security-owner>`, `<ops-steward>` — fill from CODEOWNERS when assigned |
-| **Reviewers required** | Infra steward + security owner for providers, state backend, identity/RBAC, network, firewall, ingress, storage, secrets, model-runtime, public exposure, or production changes |
-| **Directory Rules basis** | `infra/` owns deployment, host, network, and exposure posture; `terraform/` is a named lane under the expected `infra/` tree. |
-
-[Back to top](#top)
-
----
-
-## Repo fit
-
-```text
-Kansas-Frontier-Matrix/
-└── infra/
-    ├── README.md
-    ├── docker/
-    ├── compose/
-    ├── reverse_proxy/
-    ├── vpn/
-    ├── firewall/
-    ├── systemd/
-    ├── kubernetes/
-    ├── terraform/        ◀── you are here
-    │   └── README.md
-    └── hardening/
-```
-
-### Responsibility split
-
-| Location | Owns | Does not own |
-|---|---|---|
-| `infra/terraform/` | Terraform modules, stacks, backend templates, providers, provisioning docs, plan/apply validation notes, rollback notes | KFM policy semantics, app code, runtime code, real secrets, release decisions, schemas |
-| `infra/hardening/` | Cross-infra hardening baseline and checklist | Terraform module implementation unless delegated here |
-| `infra/reverse_proxy/` | Reverse-proxy route config and edge behavior | Cloud edge resource provisioning unless Terraform manages it here |
-| `infra/firewall/` | Firewall policy/config where not Terraform-managed | Terraform state or backend management |
-| `infra/kubernetes/` | Kubernetes manifests and cluster deployment mechanics | Terraform cloud/resource provisioning unless using Terraform to create cluster resources |
-| `configs/` | Non-secret application/deployment templates | Terraform state, secrets, live credentials |
-| `policy/` | Enforceable allow / deny / restrict / abstain decisions | Terraform syntax or provisioning mechanics |
-| `apps/governed-api/` | Trust membrane application behavior | Infrastructure provisioning |
-| `runtime/` | Runtime/model adapters and local runtime implementation | Terraform resource definitions |
-| `release/` | Release decisions, manifests, rollback cards, corrections | Terraform plans, state, or modules |
-
-[Back to top](#top)
-
----
-
-## What belongs here
-
-Use `infra/terraform/` for Terraform-specific materials such as:
-
-- Terraform modules for networking, compute, storage, DNS, TLS references, logging, artifact hosting, and deployment support resources.
-- Environment stacks for local, staging, production, or lab deployments when Terraform is the chosen provisioning layer.
-- Backend configuration templates with no live secrets.
-- Provider configuration templates with version constraints and no live credentials.
-- Variables and outputs that are safe to publish.
-- IAM/RBAC/service-account provisioning that follows least privilege.
-- Network, firewall, route, ingress, object-storage, and artifact-hosting provisioning.
-- Secret-manager references that point to external secret stores without storing secret values.
-- Terraform plan review notes and sanitized outputs.
-- Policy-as-code validation notes for Terraform security posture, if those checks are tooling around Terraform rather than KFM domain policy.
-- Rollback and drift-handling notes for infrastructure changes.
-
-Accepted file types are Markdown, `.tf`, `.tfvars.example`, `.tfbackend.example`, `.terraform.lock.hcl` when intentionally pinned, sanitized plan summaries, and validation notes. Live `.tfstate`, real `.tfvars`, credentials, private keys, and provider tokens are never accepted.
-
-[Back to top](#top)
-
----
-
-## What does not belong here
-
-Do **not** use `infra/terraform/` as a secret store, release authority, or policy bypass.
-
-The following must not live here:
-
-- `terraform.tfstate`, `*.tfstate`, `*.tfstate.backup`, crash logs containing secrets, or unredacted plan files containing sensitive values.
-- Real `.tfvars` files with credentials, private hostnames, private IP inventories, source credentials, database passwords, API keys, tokens, certificate material, or private keys.
-- Provider credentials, cloud keys, SSH keys, kubeconfigs, service-account JSON, OAuth credentials, or production secrets.
-- Raw source data, WORK data, QUARANTINE data, catalog records, triplets, proofs, receipts, release manifests, or published data artifacts.
-- KFM policy bundles, Rego rules, release decisions, promotion receipts, correction notices, or rollback cards.
-- Application source code, runtime adapters, model code, or schema definitions.
-- Terraform resources that intentionally expose direct public access to model runtimes, source credentials, RAW / WORK / QUARANTINE stores, internal stores, admin panels, review consoles, or debug endpoints.
-- Unreviewed broad IAM roles, wildcard security groups, public buckets, default-open databases, or open ingress rules.
-- Unredacted incident data, exploit payloads, private hostnames, or vulnerability working notes for unfixed issues.
-
-If state, secrets, or sensitive deployment details are committed here, treat it as a security incident: rotate, audit, remove, and record the response through the incident/runbook process.
-
-[Back to top](#top)
-
----
-
-## Provisioning boundary model
-
-Terraform can provision the delivery environment, but it cannot become KFM truth or publication authority.
-
-```mermaid
-flowchart LR
-    TF[Terraform plan/apply]
-    Net[Network / firewall / DNS]
-    Edge[Edge / reverse proxy / ingress]
-    Compute[Compute / cluster / host]
-    Storage[Storage / artifact hosting]
-    Secrets[External secret store references]
-    GovAPI[apps-governed-api]
-    Public[Public client]
-    Published[Released artifacts]
-    Raw[RAW / WORK / QUARANTINE]
-    Model[model runtime]
-    Admin[admin / review]
-
-    TF --> Net
-    TF --> Edge
-    TF --> Compute
-    TF --> Storage
-    TF --> Secrets
-    Public --> Edge --> GovAPI
-    GovAPI --> Published
-    GovAPI --> Model
-
-    Edge -. DENY .-> Raw
-    Edge -. DENY direct .-> Model
-    Edge -. DENY public .-> Admin
-    TF -. MUST NOT store live secret values .-> Secrets
-```
-
-### Required provisioning guarantees
-
-A Terraform-managed environment is not acceptable until it can show these negative states:
-
-1. No direct public access to model runtime.
-2. No direct public access to RAW / WORK / QUARANTINE.
-3. No direct public access to internal/canonical stores.
-4. No public buckets or static hosts for unpublished candidates.
-5. No broad public ingress to databases, object stores, admin consoles, review surfaces, debug endpoints, or source credentials.
-6. No live secrets in repo, plan artifacts, logs, or state committed to Git.
-7. Service identities follow least privilege.
-8. Terraform changes are plan-reviewed before apply.
-9. State backend is protected and access-controlled.
-10. Rollback or forward-fix path is recorded before production apply.
-
-[Back to top](#top)
-
----
-
-## Terraform expectations
-
-### Providers and versions
-
-- Pin provider versions intentionally.
-- Keep `.terraform.lock.hcl` only when it is intentionally part of the reproducibility strategy.
-- Document provider purpose and permission needs.
-- Avoid provider sprawl; each provider expands the trust surface.
-
-### Modules and stacks
-
-- Prefer small modules with narrow responsibility.
-- Keep environment stacks thin and reviewable.
-- Do not hide public exposure in deeply nested defaults.
-- Use explicit variable names for exposure posture, public/private status, and sensitivity-adjacent resources.
-- Do not provision public ingress by default.
-
-### Variables and outputs
-
-- Variables may describe secret names, secret-store paths, or credential references, but must not contain live values.
-- Outputs must not print secrets, tokens, private keys, passwords, raw data paths, or sensitive internal endpoints.
-- Public outputs should be reviewed as an exposure surface.
-
-### IAM / RBAC / identities
-
-- Use least privilege.
-- Prefer separate identities for public API, workers, runtime/model services, admin/review surfaces, and release operations.
-- Avoid wildcard permissions.
-- Document any broad role with reason, expiration/review trigger, and rollback path.
-
-### Networking
-
-- Start with private-by-default networks and explicit public ingress.
-- Public ingress must route to governed API, public UI, or released artifact hosting only.
-- Databases, model runtimes, source stores, raw data stores, admin surfaces, and internal stores should not be publicly reachable.
-- Keep firewall/security-group rules narrow and named.
-
-### Storage and artifacts
-
-- Public object storage must serve released artifacts only.
-- Unpublished candidates, proofs, receipts, raw data, work data, quarantine data, and internal stores must be private.
-- Storage policies should separate public artifacts from private lifecycle stores.
-- Avoid accidental public access through default ACLs or broad bucket policies.
-
-### Logging and audit
-
-- Provision audit logs for infrastructure changes and security-relevant access where practical.
-- Logs must not leak secrets or restricted KFM data.
-- Retention and access controls are **NEEDS VERIFICATION** until deployment is known.
-
-[Back to top](#top)
-
----
-
-## State and secrets
-
-Terraform state is sensitive by default because it may contain provider outputs, generated IDs, endpoints, and sometimes secret-adjacent values.
-
-### State rules
-
-- Do not commit state files.
-- Do not commit unredacted plan files if they contain sensitive values.
-- Use a protected backend for shared environments.
-- Restrict state backend access.
-- Record backend type and owner without exposing credentials.
-- Treat accidental state commit as a security incident.
-
-### Secret rules
-
-- Do not commit provider credentials.
-- Do not commit live `.tfvars` secrets.
-- Do not commit cloud keys, service-account JSON, SSH keys, kubeconfigs, private TLS keys, or source credentials.
-- Reference secret stores by name only.
-- Mark sensitive variables and outputs appropriately.
-- Redact plan/apply logs before sharing.
-
-[Back to top](#top)
-
----
-
-## Proposed structure
-
-The exact provider and deployment topology are **NEEDS VERIFICATION**. Keep the structure small until Terraform adoption is confirmed.
-
-```text
-infra/terraform/
-├── README.md
-├── modules/
-│   ├── network/
-│   ├── compute/
-│   ├── object-storage/
-│   ├── dns/
-│   ├── logging/
-│   ├── secrets-reference/
-│   └── artifact-hosting/
-├── environments/
-│   ├── local/
-│   ├── staging/
-│   └── production/
-├── backend/
-│   ├── README.md
-│   └── backend.example.tfbackend
-├── providers/
-│   ├── README.md
-│   └── versions.tf
-├── validation/
-│   ├── README.md
-│   ├── plan-review-checklist.md
-│   └── exposure-deny-checks.md
-└── rollback/
-    └── README.md
-```
-
-### Naming conventions
-
-- Use lowercase kebab-case for module directories.
-- Use environment names that reflect deployment role, not secret names.
-- Use `.example` suffix for templates that maintainers must copy locally.
-- Never commit live environment values.
-
-[Back to top](#top)
-
----
-
-## Validation
-
-Terraform changes require both plan evidence and negative exposure checks.
-
-| Check | Expected result | Evidence |
-|---|---|---|
-| Format | Terraform files are formatted | `terraform fmt -check` |
-| Init | Providers/modules initialize in a safe validation context | `terraform init -backend=false` or safe equivalent |
-| Validate | Terraform configuration validates | `terraform validate` |
-| Lock review | Provider lock file is intentional | PR note |
-| Secret scan | No real secrets, state, or sensitive plan output committed | Secret scan result |
-| State safety | Backend is protected or local-only status is documented | Backend note |
-| Plan review | Plan is reviewed before apply | Redacted plan summary |
-| IAM/RBAC review | No unnecessary wildcard or broad admin privileges | Role summary |
-| Network review | No public ingress to denied surfaces | Rule summary |
-| Storage review | Public buckets/static hosting serve released artifacts only | Storage policy summary |
-| Model denial | Direct model runtime public access is denied | Route/security-group proof |
-| Raw-data denial | RAW/WORK/QUARANTINE public access is denied | Rule proof |
-| Admin isolation | Admin/review surfaces are private and audited | Access proof |
-| Rollback | Rollback or forward-fix path exists | Runbook / rollback note |
-
-### Suggested checks
-
-Use the project's chosen Terraform version once verified. Examples:
+| Adoption decision | Why Terraform, OpenTofu, or another tool is required for the selected resource slice and what manual or existing mechanism it supersedes |
+| Tool identity | Product, exact version policy, installation source, compatibility boundary, and upgrade ownership |
+| Canonical source | Configuration root, module layout, environment strategy, generated-file relationship, and formatting convention |
+| Provider identity | Exact providers, version constraints, permission needs, account/environment classes, and provider-custody boundary |
+| Resource identity | Exact resource purposes, dependencies, inputs, outputs, consumers, sensitivity, and lifecycle |
+| State custody | Backend type, encryption, locking, access, backup, retention, recovery, migration, and deletion behavior |
+| Credentials | External credential mechanism, workload identity, rotation, revocation, missing-credential behavior, and log/output redaction |
+| Isolation and network | Public/private boundaries, DNS, ingress, egress, firewall rules, denied surfaces, and negative reachability checks |
+| IAM | Least-privilege plan/apply/read identities, administrative separation, exception handling, and escalation checks |
+| Storage and data | Public-safe versus internal stores, encryption, retention, backup/restore, harmful-precision constraints, and deletion semantics |
+| Planning | Initialization boundary, dependency resolution, refresh behavior, plan storage, redaction, review, expiry, and stale-plan rejection |
+| Apply control | Accountable authorization, exact plan binding, concurrency, locks, timeouts, partial failure, receipts, and post-apply verification |
+| Drift | Detection scope, cadence, refresh-only behavior, alerting, remediation authority, and unmanaged-resource handling |
+| Validation | Format, initialize, validate, static policy, secrets, plan semantics, IAM, network, storage, and negative-access checks |
+| Recovery | State restoration, import/move/remove procedures, provider outage behavior, data compatibility, and orphan handling |
+| Rollback | Prior known-good configuration or forward-fix target, state/data consequences, traffic containment, verification, and recovery owner |
+| Review | CODEOWNERS review plus accountable infrastructure, security, data, release, and operations decisions as applicable |
+
+Names such as `local`, `staging`, `production`, `network`, `compute`,
+`artifact-hosting`, AWS, Azure, GCP, Kubernetes, or a particular backend are not
+reserved or adopted by this README. Select them only with the files, consumers,
+accounts, and evidence that make them real.
+
+## State and trust requirements
+
+Any future infrastructure-as-code slice must preserve KFM's governed boundary:
+
+- Public clients use governed interfaces or released public-safe artifacts.
+- Planned or applied resources do not gain evidence, policy, lifecycle,
+  admission, correction, release, or publication authority.
+- Public routes and storage cannot expose RAW, WORK, QUARANTINE,
+  canonical/internal stores, source credentials, model runtimes, review/admin
+  surfaces, or unpublished candidates.
+- State is sensitive by default because it can contain identifiers, addresses,
+  outputs, relationships, and secret-adjacent values even when configuration
+  contains no literal secret.
+- Plans, logs, outputs, and drift reports exclude secrets, raw payloads,
+  living-person data, restricted geometry, culturally sensitive locations,
+  harmful precision, and full sensitive evidence bodies.
+- Apply automation does not silently admit sources, promote lifecycle state,
+  publish, release, correct, withdraw, or bypass review.
+- Missing rights, sensitivity, provenance, identity, backend, credential,
+  dependency, policy, plan, state, recovery, or rollback evidence keeps the
+  provisioning slice on hold.
+
+Follow the [incident-response process](../../docs/security/INCIDENT_RESPONSE.md)
+and [key-rotation guidance](../../docs/security/KEY_ROTATION.md) if credentials,
+state, saved plans, or sensitive outputs are exposed. Do not commit additional
+sensitive material as evidence of the incident.
+
+## Repository inspection
+
+These commands inspect tracked repository state only. They do not initialize a
+provider, read state, refresh resources, create a plan, contact an account, or
+change infrastructure.
 
 ```bash
-# Examples only. Do not paste secrets, state, private endpoints, or unredacted sensitive plan output.
-terraform fmt -check -recursive infra/terraform
-terraform init -backend=false
-terraform validate
-terraform plan -out=tfplan
-terraform show -no-color tfplan > plan.redacted.txt
+git ls-tree -r --name-only HEAD -- infra/terraform
+git ls-files -- 'infra/terraform/*.tf' 'infra/terraform/**/*.tf' \
+  'infra/terraform/*.tfvars*' 'infra/terraform/**/*.tfvars*'
+git grep -n -E 'terraform (fmt|init|validate|plan|apply)|tofu (fmt|init|validate|plan|apply)' \
+  HEAD -- .github tools tests Makefile pyproject.toml package.json
 ```
 
-Do not commit `tfplan`, `terraform.tfstate`, `.terraform/`, real `.tfvars`, or unredacted `plan.redacted.txt` if it contains sensitive material.
+At the pinned evidence snapshot, the first command lists only this README; the
+configuration pathspec and executable-command search return no implementation
+surface.
 
-[Back to top](#top)
+Do not publish generic `terraform init`, `terraform validate`, `terraform
+plan`, `terraform apply`, `terraform destroy`, or OpenTofu equivalents as
+executable runbook steps until exact inputs, versions, backend behavior,
+authentication, environment scope, safe output handling, approval, and
+rollback prerequisites exist. `-backend=false` is not a universal safe mode,
+and a successful format, validation, or plan result does not prove correct
+state, authorization, isolation, apply safety, runtime health, recovery, or
+rollback.
 
----
+## Failure, correction, and rollback
 
-## Review burden
+If a proposed infrastructure slice cannot establish canonical inputs,
+provider and resource identities, state custody, credentials, negative-access
+checks, accountable apply control, recovery, or rollback, do not plan against
+live state or apply it.
 
-| Change type | Required review |
-|---|---|
-| README-only wording with no posture change | Infra steward or docs steward |
-| Provider, backend, state, identity, or credential-reference change | Infra steward + security owner |
-| Network, firewall, DNS, edge, ingress, or public route provisioning | Infra steward + security owner + governed API owner |
-| Public artifact hosting or object-storage policy | Infra steward + release steward + security owner |
-| Storage for RAW / WORK / QUARANTINE / internal stores | Data steward + infra steward + security owner |
-| Model-runtime compute/network provisioning | Runtime owner + security owner |
-| Admin/review-console infrastructure | Ops steward + security owner |
-| Production environment stack | Infra steward + security owner + release steward |
-| Broad IAM/RBAC or exception to least privilege | ADR or documented risk acceptance with rollback path |
-| Exception to deny-by-default exposure | ADR or documented risk acceptance with rollback path |
+If repository documentation overstates Terraform adoption:
 
-[Back to top](#top)
+1. correct the claim against current repository and sanitized provider/state
+   evidence;
+2. keep operational state **UNKNOWN** where provider evidence is unavailable;
+3. do not expose state, credentials, private topology, or account identifiers
+   to manufacture proof;
+4. close or revert the unmerged documentation change if the correction is
+   wrong.
 
----
+If future managed infrastructure violates the trust boundary, contain traffic
+and credentials according to an approved operational runbook, preserve
+sanitized evidence, and follow incident response. A Git revert does not roll
+back an apply, restore state or data, destroy resources, revoke credentials, or
+remove external exposure.
 
 ## Open verification
 
-- [ ] Confirm whether Terraform is adopted for local, staging, production, cloud, homelab, or mixed deployment.
-- [ ] Confirm Terraform version and provider version constraints.
-- [ ] Confirm state backend and access-control model.
-- [ ] Confirm secret-store integration and credential-reference pattern.
-- [ ] Confirm provider set and owner for each provider.
-- [ ] Confirm environment naming convention.
-- [ ] Confirm whether Kubernetes, reverse proxy, firewall, DNS, artifact hosting, and model-runtime resources are Terraform-managed.
-- [ ] Confirm plan-review and apply approval process.
-- [ ] Confirm CI validation commands.
-- [ ] Confirm policy-as-code scanner for Terraform, if adopted.
-- [ ] Confirm rollback or forward-fix procedure for Terraform-managed resources.
-- [ ] Confirm CODEOWNERS for `infra/terraform/`.
+- [ ] Decide whether Terraform, OpenTofu, or another infrastructure-as-code
+      mechanism is adopted by KFM.
+- [ ] Identify the first exact resource slice and canonical configuration root.
+- [ ] Establish tool, provider, account, environment, and resource identities.
+- [ ] Establish backend locking, encryption, access, backup, retention,
+      recovery, migration, and deletion behavior.
+- [ ] Establish credential sourcing, least-privilege identities, rotation,
+      revocation, and redaction.
+- [ ] Establish repository ignore and secret/state/plan prevention controls.
+- [ ] Bind formatting, initialization, validation, policy, plan, IAM, network,
+      storage, and negative-access checks to exact files and environments.
+- [ ] Establish accountable plan review, apply authorization, concurrency,
+      receipts, post-apply verification, drift handling, and partial-failure
+      recovery.
+- [ ] Establish rollback or forward-fix, state/data recovery, orphan cleanup,
+      credential containment, and provider-outage behavior.
+- [ ] Confirm accountable infrastructure, security, data, release, and
+      operations review beyond repository routing.
 
-[Back to top](#top)
-
----
-
-## Last reviewed
-
-| Field | Value |
-|---|---|
-| Last reviewed | 2026-07-03 |
-| Review status | Draft README replacing greenfield stub |
-| Next review trigger | First concrete Terraform module, environment stack, provider, backend, network, storage, IAM/RBAC, artifact-hosting, model-runtime, or production apply PR |
+Until those items close, this directory remains a documentation-only adoption
+and state hold. A merged README, successful format, validation, plan, or policy
+scan does not imply provider selection, resource creation, applied state,
+deployment, release, promotion, publication, or rollback readiness.
