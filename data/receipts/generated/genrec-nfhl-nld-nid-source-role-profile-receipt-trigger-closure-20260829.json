@@ -6,8 +6,8 @@
     "tests/validators/domains/hazards/test_nfhl_nld_nid_source_role_profile_workflow_binding.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/nfhl-nld-nid-source-role-profile.yml": "sha256:0f42940349d30a836ebb09e90beb1d1f350970e98186b1f172875cf6c28aae36",
-    "tests/validators/domains/hazards/test_nfhl_nld_nid_source_role_profile_workflow_binding.py": "sha256:6f882fc491963bcff159bbf3752e3e5dd3f55a81663cb27fa69c4b7e799a0b6f"
+    ".github/workflows/nfhl-nld-nid-source-role-profile.yml": "sha256:22c33712c0c13cebb8d3e3429c9b26085afd3c90bc82aa8718244a66b1352420",
+    "tests/validators/domains/hazards/test_nfhl_nld_nid_source_role_profile_workflow_binding.py": "sha256:804751f3e795e5162cc56dfe42c8eba2d378e24c7f4cf5310bfac40ba96ecf0d"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -55,7 +55,12 @@
     {
       "gate": "historical-receipt-preservation",
       "outcome": "PASS",
-      "reason": "The 2026-08-08 receipt remains immutable. This new receipt binds the exact proposed workflow and binding-test bytes after the workflow dependency closure changes."
+      "reason": "The 2026-08-08 receipt remains immutable and continues to be validated through the hash-exact migration ledger. This new receipt binds the exact proposed workflow and binding-test bytes after the workflow dependency closure changes."
+    },
+    {
+      "gate": "migration-ledger-entry-closure",
+      "outcome": "PASS",
+      "reason": "The NFHL/NLD/NID workflow's current SHA-256 matches its migration-ledger entry, and the generated-receipt validator's manifest pin matches the exact updated ledger bytes."
     },
     {
       "gate": "artifact-hash-replay",
@@ -65,7 +70,7 @@
     {
       "gate": "local-focused-validation",
       "outcome": "PASS",
-      "reason": "The workflow-binding test, focused source-role suite, exact fixture replay, generated-receipt integrity validation, YAML and JSON parsing, Python compilation, content-identity verification, and whitespace checks pass on the proposed bytes."
+      "reason": "The two workflow-binding tests, focused source-role suite, exact fixture replay, both generated-receipt integrity validations, YAML and JSON parsing, Python compilation, content-identity verification, and whitespace checks pass on the proposed bytes."
     },
     {
       "gate": "hosted-exact-head-ci",
