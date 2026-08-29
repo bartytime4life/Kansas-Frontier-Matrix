@@ -111,6 +111,9 @@ jobs:
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-pass2-nfhl-nld-nid-source-role-profile-20260808.json \
+            --repo-root .
+          python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-nfhl-nld-nid-source-role-profile-receipt-trigger-closure-20260829.json \
             --repo-root .
 
