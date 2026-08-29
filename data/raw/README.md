@@ -2,21 +2,28 @@
 doc_id: kfm://data/raw/readme
 title: data/raw/ — Immutable Source Capture
 type: README; data-parent-contract; canonical-lane; authority-boundary
-version: v0.2.0
-status: repository-grounded draft; payload/runtime enforcement unverified
+version: v0.2.1
+prior_version: v0.2.0
+status: repository-grounded draft; source-first identity required; physical placement and payload/runtime enforcement unverified
 owners: NEEDS VERIFICATION — source and data stewards
-updated: 2026-07-24
+updated: 2026-08-28
 supersedes: prior README at the same path; no payload, lifecycle, release, runtime, or publication state
 prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
 policy_label: "restricted-review; no-direct-public-path; release-gated"
 current_path: data/raw/README.md
+owning_root: data/
+responsibility: Own the canonical RAW lifecycle boundary while requiring one source-first capture identity, preventing duplicated domain-scoped RAW bytes, and leaving exact physical capture placement and legacy domain-lane disposition to an accepted migration decision.
 review_packet_id: kfm-data-parent-wave-20260724
 truth_posture: >
-  CONFIRMED exact path, prior blob, Directory Rules v1.4, parent data-root contract,
-  and prior substantive boundary material / PROPOSED normalized folder contract /
-  UNKNOWN recursive payloads, active writers/consumers, runtime, release, hosting,
-  and public effects / NEEDS VERIFICATION owners, accepted ADRs, enforcement,
-  retention, correction propagation, cache invalidation, and rollback drills
+  CONFIRMED exact path, accepted Directory Rules rule DIR-SOURCE-001 requiring
+  source-first capture identity, parent data-root contract, and current tracked
+  domain-lane topology / CONFIRMED a domain directory does not authorize a second
+  physical capture / PROPOSED same-path correction of the prior domain-first
+  operating example / HOLD exact physical source-first placement and legacy
+  domain-lane migration or reference contracts / UNKNOWN recursive payloads,
+  active writers/consumers, runtime, release, hosting, and public effects / NEEDS
+  VERIFICATION owners, enforcement, retention, correction propagation, cache
+  invalidation, and rollback drills
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_commit: b125a21e83f727c45a2d36709bbb594d38a904ad
@@ -25,9 +32,16 @@ evidence_snapshot:
   prior_blob: 771a4684341622aa684a3724f0c1a95b900f7335
   directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
   method: exact parent README read plus carried-forward child/path evidence; no recursive clone or runtime inspection
+reconciliation_snapshot:
+  base_commit: 8739edbfecabbde6367a2084740b6c94f07a0425
+  target_prior_blob: 46dd82857f5e881452f39580ffa73bfc9a43b7c8
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  scope: "Same-path correction of the RAW operating contract and domain-lane interpretation only; no path, payload, writer, descriptor, lifecycle object, runtime, or public state changes."
 notes:
   - "The first twelve H2 sections follow Directory Rules section 15 exactly."
   - "Markdown-only parent-lane convergence; no payload or operational state changed."
+  - "v0.2.1 removes a domain-first physical-path prescription that conflicted with accepted DIR-SOURCE-001. Exact source-first physical placement and legacy child-lane disposition remain HOLD."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -60,22 +74,25 @@ Artifacts here may carry or support inspectable claims, but directory placement 
 
 This path does not own object meaning, machine shape, policy, release decisions, public serving, or factual truth. Those remain under `contracts/`, `schemas/`, `policy/`, `release/`, and governed delivery interfaces.
 
+Accepted Directory Rules rule `DIR-SOURCE-001` governs capture identity: one source-first capture may support several domains without duplicated RAW bytes. This README cannot select an exact physical source-first path until an accepted placement and migration decision establishes one.
+
 ## Status
 
 | Field | Bounded result |
 |---|---|
 | Path | `data/raw/` |
-| Version | `v0.2.0` |
+| Version | `v0.2.1` |
 | Prior blob | `771a4684341622aa684a3724f0c1a95b900f7335` |
-| Evidence base | `main@b125a21e83f727c45a2d36709bbb594d38a904ad`; parent branch `0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f` |
+| Evidence base | Original v0.2.0 snapshot retained in metadata; source-first reconciliation at `main@8739edbfecabbde6367a2084740b6c94f07a0425` |
 | Recursive payload inventory | `UNKNOWN` |
 | Active writers/consumers | `UNKNOWN` |
 | Public readiness | `DENY BY DEFAULT` |
 
 ## What belongs here
 
-- source-native payloads or immutable references after governed admission;
+- one source-first capture identity for admitted source-native payloads or immutable references;
 - retrieval metadata, source-head snapshots, checksums, digests, and capture indexes;
+- domain references or projections that point to the source-first capture without duplicating bytes;
 - source-role, source-version, observation/source/retrieval-time, rights, sensitivity, and citation sidecars;
 - RAW-local README and inventory material that does not become registry, proof, receipt, catalog, or release authority;
 
@@ -94,13 +111,13 @@ Local README, inventory, digest, migration, and disposition sidecars may explain
 
 ## Inputs
 
-Governed connectors and source-admission processes. Connectors may write RAW or QUARANTINE candidates only; they do not publish.
+Governed connectors and source-admission processes. Connectors may write RAW or QUARANTINE candidates only through an accepted source-first physical placement; a domain lane does not become that placement by convention. Connectors do not publish.
 
 As applicable, inputs must resolve stable identity, source role, space/time scope, rights, sensitivity, contract/schema, code/spec/run, validation/receipt, evidence/proof, policy/review, release, correction, and rollback references.
 
 ## Outputs
 
-Immutable inputs for governed WORK processing or QUARANTINE review. RAW has no direct public-client path.
+One source-first immutable capture identity plus governed references or projections for WORK processing or QUARANTINE review. RAW has no direct public-client path.
 
 Public clients must not use an internal or compatibility lane as a direct data service.
 
@@ -109,6 +126,16 @@ Public clients must not use an internal or compatibility lane as a direct data s
 Validate placement; identity/digest/version; source role and lineage; rights/sensitivity; spatial/temporal support; contract/schema; execution and receipts; evidence/citations/proofs; policy/review; catalog/triplet parity; release/correction/rollback dependencies; links/anchors/metadata; and sensitive-content exposure.
 
 No complete lane-wide validator was verified. A pass proves only the check’s declared scope.
+
+Focused documentation checks from the repository root:
+
+```bash
+python tools/validators/docs/link-check/check_links.py data/raw/README.md
+python tools/validators/docs/meta-block/check_meta_blocks.py \
+  --profile required data/raw/README.md
+```
+
+These commands do not select a physical RAW path, inspect external or restricted payloads, admit a source, exercise a writer, or authorize release or publication.
 
 ## Review burden
 
@@ -139,12 +166,20 @@ Re-review on authority/topology, writer, policy, release, public-consumer, corre
 ## Operating contract
 
 ```text
-admitted source edge -> data/raw/<domain>/<source_id>/<run_id>/ -> WORK or QUARANTINE
+admitted source edge
+  -> one registered source_id + one source-first capture identity
+  -> accepted physical RAW placement (NEEDS VERIFICATION)
+  -> zero or more governed domain references or projections
+  -> WORK or QUARANTINE through their owning procedures
 ```
+
+The accepted rules determine identity, not an exact physical RAW path. Do not infer `data/raw/<domain>/` or any other existing directory as the capture home. Physical placement, writer interfaces, reference shape, migration, deduplication, readback, and rollback require a separate accepted decision.
 
 Every transition must preserve immutable input identity, source role, rights/sensitivity posture, temporal context, retrieval context, content digest, and receipt references. A filename, directory, successful fetch, or connector run does not establish source authority or admissibility.
 
 ## Current bounded child-lane index
+
+The child directories below are tracked topology, not default physical capture homes. Until an accepted source-first placement and migration decision says otherwise, treat domain lanes as compatibility/reference projections or unresolved legacy paths. Do not create domain-scoped copies of cross-domain captures.
 
 | Child lane | Bounded posture |
 |---|---|
@@ -152,7 +187,7 @@ Every transition must preserve immutable input identity, source role, rights/sen
 | `archaeology/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
 | `atmosphere/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
 | `fauna/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
-| `flora/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `flora/` | Source-first-safe compatibility/reference hold; payloads absent and physical capture placement unresolved. |
 | `geology/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
 | `habitat/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
 | `hazards/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
@@ -170,6 +205,7 @@ Every transition must preserve immutable input identity, source role, rights/sen
 | Item | Status | Required evidence |
 |---|---:|---|
 | Recursive subtree/payload inventory | `NEEDS VERIFICATION` | Pinned tree, payload families, LFS/external stores, rights/sensitivity, owners |
+| Source-first physical placement and child-lane disposition | `HOLD` | Accepted path/contract decision, reference shape, migration, deduplication, readback, and rollback |
 | Writers and consumers | `UNKNOWN` | Connector, pipeline, tool, runtime, API/UI, workflow, deployed consumer inventory |
 | Contract/schema/policy enforcement | `UNKNOWN` | Accepted versions, fixtures, validators, decisions, CI and negative cases |
 | Receipt/proof/catalog/release closure | `UNKNOWN` | Emitted instances, identity agreement, review, release and rollback links |
@@ -182,7 +218,7 @@ Unknowns narrow claims and block higher-risk transitions; they do not invite pla
 | Prior element | Disposition |
 |---|---|
 | Stable path/document identity | Preserved |
-| Core lifecycle or compatibility role | Preserved and clarified |
+| Core lifecycle or compatibility role | Preserved; source-first identity clarified and domain-first path prescription removed |
 | Child-lane index | Preserved where present; omission is not retirement |
 | Trust membrane and anti-collapse rules | Preserved and strengthened |
 | Rights, sensitivity, evidence, policy, release, correction, rollback controls | Preserved |
@@ -190,6 +226,13 @@ Unknowns narrow claims and block higher-risk transitions; they do not invite pla
 | Payload, move, deletion, redirect, migration, or public-state change | None |
 
 ### Change history
+
+#### v0.2.1 — 2026-08-28
+
+- replaced the conflicting domain-first operating path with the accepted source-first identity flow;
+- classified domain child lanes as compatibility/reference or unresolved legacy topology rather than default physical capture homes;
+- left physical placement, migration, writers, payloads, runtime, release, and publication on hold;
+- changed Markdown only.
 
 #### v0.2.0 — 2026-07-24
 
