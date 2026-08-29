@@ -99,6 +99,8 @@ type WorkspaceSnapshot = Readonly<{
   name: string;
   savedAt: string;
   view: ViewState;
+  // Optional for device-local v1 compatibility; missing legacy markers fail closed on restore.
+  locationCameraRedacted?: boolean;
   visibility: Record<string, boolean>;
   opacity: Record<string, number>;
   layerOrder: string[];
@@ -1851,6 +1853,7 @@ export default function Home() {
       name: workspaceName.trim() || `Kansas workspace ${savedWorkspaces.length + 1}`,
       savedAt,
       view: { center: [...view.center] as [number, number], zoom: view.zoom, bearing: view.bearing, pitch: view.pitch },
+      locationCameraRedacted: locationCameraRedacted || locationDerivedViewRef.current,
       visibility: { ...visibility },
       opacity: { ...opacity },
       layerOrder: [...layerOrder],
@@ -1883,6 +1886,8 @@ export default function Home() {
     const nextYear = TIME_STEPS.includes(snapshot.year as (typeof TIME_STEPS)[number]) ? snapshot.year : 2026;
     const nextBasemap: BasemapKey = snapshot.basemap === "prairie" ? "prairie" : "midnight";
     const nextProjection = snapshot.projection === "globe" ? "globe" : "mercator";
+    // Legacy snapshots predate the marker, so fail closed instead of exposing a possibly location-derived camera.
+    const restoredLocationCameraRedaction = snapshot.locationCameraRedacted !== false;
     visibilityRef.current = nextVisibility;
     opacityRef.current = nextOpacity;
     orderRef.current = nextOrder;
@@ -1920,8 +1925,8 @@ export default function Home() {
     setReportGeneratedAt(new Date().toISOString());
     const savedView = snapshot.view;
     if (savedView && Array.isArray(savedView.center) && savedView.center.length === 2) {
-      locationDerivedViewRef.current = false;
-      setLocationCameraRedacted(false);
+      locationDerivedViewRef.current = restoredLocationCameraRedaction;
+      setLocationCameraRedacted(restoredLocationCameraRedaction);
       updateRendererNeutralView({ center: [...savedView.center] as [number, number], zoom: savedView.zoom, bearing: savedView.bearing, pitch: savedView.pitch });
     }
     const restoredSelection = snapshot.selection ? copyFeature(LAYER_REGISTRY.find((layer) => layer.id === snapshot.selection?.layerId) ?? LAYER_REGISTRY[0], snapshot.selection.featureId) : null;

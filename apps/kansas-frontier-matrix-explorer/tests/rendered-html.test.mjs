@@ -88,6 +88,11 @@ test("adds reusable analysis recipes, device-local workspaces, report filters, a
   assert.match(page, /kfm-map-workspaces-v1/);
   assert.match(page, /saveCurrentWorkspace/);
   assert.match(page, /loadSavedWorkspace/);
+  assert.match(page, /locationCameraRedacted\?: boolean/);
+  assert.match(page, /locationCameraRedacted: locationCameraRedacted \|\| locationDerivedViewRef\.current/);
+  assert.match(page, /snapshot\.locationCameraRedacted !== false/);
+  assert.match(page, /locationDerivedViewRef\.current = restoredLocationCameraRedaction/);
+  assert.match(page, /setLocationCameraRedacted\(restoredLocationCameraRedaction\)/);
   assert.match(page, /reportEvidenceFilter/);
   assert.match(page, /handleWorkspaceShortcut/);
   assert.match(page, /shortcut R/);
