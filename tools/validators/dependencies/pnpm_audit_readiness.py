@@ -26,6 +26,9 @@ SEVERITIES = ("info", "low", "moderate", "high", "critical")
 SEVERITY_INDEX = {severity: index for index, severity in enumerate(SEVERITIES)}
 AUDIT_LEVELS = ("low", "moderate", "high", "critical")
 AUDIT_MANAGERS = ("npm", "pnpm")
+MAX_THRESHOLD_VULNERABILITIES = 50
+MAX_ADVISORY_IDS_PER_VULNERABILITY = 10
+MAX_AUDIT_TEXT_LENGTH = 256
 COMPETING_LOCKFILES = (
     "package-lock.json",
     "npm-shrinkwrap.json",
@@ -539,6 +542,116 @@ def _vulnerability_counts(
     return counts if len(counts) == len(SEVERITIES) else None
 
 
+def _bounded_audit_text(value: Any) -> str | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        value = str(value)
+    if not isinstance(value, str) or not value or len(value) > MAX_AUDIT_TEXT_LENGTH:
+        return None
+    return value
+
+
+def _threshold_vulnerability_projection(
+    report: dict[str, Any], audit_level: str
+) -> dict[str, Any]:
+    """Return bounded package/advisory identity without echoing raw audit data."""
+
+    raw_vulnerabilities = report.get("vulnerabilities")
+    if raw_vulnerabilities is None:
+        return {
+            "status": "NOT_PROVIDED",
+            "total": 0,
+            "truncated": False,
+            "invalid_records": 0,
+            "items": [],
+        }
+    if not isinstance(raw_vulnerabilities, dict):
+        return {
+            "status": "INVALID",
+            "total": 0,
+            "truncated": False,
+            "invalid_records": 1,
+            "items": [],
+        }
+
+    threshold_index = SEVERITY_INDEX.get(audit_level)
+    if threshold_index is None:
+        return {
+            "status": "INVALID",
+            "total": 0,
+            "truncated": False,
+            "invalid_records": len(raw_vulnerabilities),
+            "items": [],
+        }
+
+    items: list[dict[str, Any]] = []
+    invalid_records = 0
+    for package_key, raw_entry in raw_vulnerabilities.items():
+        package = _bounded_audit_text(package_key)
+        if package is None or not isinstance(raw_entry, dict):
+            invalid_records += 1
+            continue
+
+        declared_name = _bounded_audit_text(raw_entry.get("name"))
+        if declared_name is not None:
+            package = declared_name
+        severity = raw_entry.get("severity")
+        if severity not in SEVERITIES:
+            invalid_records += 1
+            continue
+        if SEVERITY_INDEX[severity] < threshold_index:
+            continue
+
+        raw_via = raw_entry.get("via", [])
+        if not isinstance(raw_via, list):
+            invalid_records += 1
+            raw_via = []
+        advisory_ids: set[str] = set()
+        for via_item in raw_via:
+            if isinstance(via_item, dict):
+                advisory_id = _bounded_audit_text(via_item.get("source"))
+                if advisory_id is not None:
+                    advisory_ids.add(advisory_id)
+
+        ordered_ids = sorted(advisory_ids)
+        raw_fix = raw_entry.get("fixAvailable")
+        fix_available: bool | None = None
+        fix_version: str | None = None
+        if isinstance(raw_fix, bool):
+            fix_available = raw_fix
+        elif isinstance(raw_fix, dict):
+            fix_available = True
+            fix_version = _bounded_audit_text(raw_fix.get("version"))
+
+        items.append(
+            {
+                "package": package,
+                "severity": severity,
+                "advisory_ids": ordered_ids[
+                    :MAX_ADVISORY_IDS_PER_VULNERABILITY
+                ],
+                "advisory_ids_truncated": (
+                    len(ordered_ids) > MAX_ADVISORY_IDS_PER_VULNERABILITY
+                ),
+                "fix_available": fix_available,
+                "fix_version": fix_version,
+            }
+        )
+
+    ordered_items = sorted(
+        items,
+        key=lambda item: (-SEVERITY_INDEX[item["severity"]], item["package"]),
+    )
+    return {
+        "status": "PRESENT" if invalid_records == 0 else "PARTIAL_INVALID",
+        "total": len(ordered_items),
+        "truncated": len(ordered_items) > MAX_THRESHOLD_VULNERABILITIES,
+        "invalid_records": invalid_records,
+        "items": ordered_items[:MAX_THRESHOLD_VULNERABILITIES],
+    }
+
+
 def classify_audit(
     report_path: Path | str,
     *,
@@ -583,6 +696,17 @@ def classify_audit(
         if raw_report is not None
         else None
     )
+    threshold_vulnerabilities = (
+        _threshold_vulnerability_projection(raw_report, audit_level)
+        if raw_report is not None
+        else {
+            "status": "NOT_PROVIDED",
+            "total": 0,
+            "truncated": False,
+            "invalid_records": 0,
+            "items": [],
+        }
+    )
 
     threshold_count: int | None = None
     outcome = "ERROR"
@@ -598,6 +722,11 @@ def classify_audit(
             for severity, count in counts.items()
             if SEVERITY_INDEX[severity] >= threshold_index
         )
+        if (
+            threshold_vulnerabilities["status"] == "PRESENT"
+            and threshold_vulnerabilities["total"] != threshold_count
+        ):
+            threshold_vulnerabilities["status"] = "COUNT_MISMATCH"
         if command_exit_code == 0 and threshold_count == 0:
             outcome = "PASS"
         elif command_exit_code == 1 and threshold_count > 0:
@@ -635,6 +764,7 @@ def classify_audit(
         audit_level=audit_level,
         command_exit_code=command_exit_code,
         threshold_count=threshold_count,
+        threshold_vulnerabilities=threshold_vulnerabilities,
         vulnerability_counts=counts,
     )
 
