@@ -1,373 +1,235 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/infra-hardening-readme
-title: infra/hardening/ — Host Hardening, Exposure Controls, and Operational Guardrails
-type: per-directory-readme
-version: v1
-status: draft
+title: infra/hardening/README.md — Infrastructure Hardening Evidence Boundary
+type: standard
+version: v2
+status: repository-grounded; review-only; non-enforcement; non-deployment
 owners:
-  - <infra-steward>
-  - <security-owner>
-  - <ops-steward>
+  - "NEEDS VERIFICATION — CODEOWNERS routes /infra/ to @bartytime4life; operational stewardship and approval authority are not established here"
 created: 2026-07-03
-updated: 2026-07-03
+updated: 2026-08-29
 policy_label: public
 related:
   - infra/README.md
-  - infra/docker/
-  - infra/compose/
-  - infra/reverse_proxy/
-  - infra/vpn/
-  - infra/firewall/
-  - infra/systemd/
+  - infra/hardening/CHECKLIST.md
+  - infra/docker/README.md
+  - infra/compose/README.md
+  - infra/firewall/README.md
+  - infra/reverse_proxy/README.md
+  - infra/vpn/README.md
+  - infra/systemd/README.md
+  - infra/kubernetes/README.md
+  - infra/terraform/README.md
   - docs/doctrine/directory-rules.md
-  - docs/security/README.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - docs/security/EXPOSURE_PLAN.md
   - docs/security/INCIDENT_RESPONSE.md
-  - docs/security/KEY_ROTATION.md
-  - docs/architecture/deployment-topology.md
-  - docs/architecture/governed-api/README.md
-  - docs/runbooks/
-  - policy/
-  - configs/
-  - runtime/
-  - apps/governed-api/
 tags:
   - kfm
   - infra
   - hardening
-  - security
-  - exposure
+  - evidence
+  - review
   - deny-by-default
-  - least-privilege
-  - auditability
 notes:
-  - "This README orients the hardening lane under infra/. It is not a policy bundle, not a secret store, and not runtime code."
-  - "Host, network, and exposure controls must preserve the KFM trust membrane: public clients use governed APIs and released artifacts only."
-  - "Concrete deployment manifests, firewall rules, VPN profiles, reverse-proxy configs, and systemd units belong in their neighboring infra lanes, with this folder carrying hardening baselines, checklists, and validation notes."
+  - "This lane contains documentation and a review checklist, not deployed hardening controls."
+  - "Repository checks named here have bounded static or image-build scope and are not operational enforcement evidence."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# `infra/hardening/` — Host Hardening, Exposure Controls, and Operational Guardrails
+# Infrastructure Hardening Evidence Boundary
 
-> **One-line purpose.** Keep KFM deployment surfaces deny-by-default, least-privilege, auditable, reversible, and subordinate to the governed API trust membrane.
+This directory defines how to review infrastructure-hardening evidence without
+turning a checklist or a passing repository check into a claim about deployed
+controls. It does not configure a host, network, proxy, VPN, service manager,
+cluster, cloud account, secret store, backup system, or monitoring service.
 
-![status](https://img.shields.io/badge/status-draft-yellow)
-![root](https://img.shields.io/badge/root-infra%2F-blue)
-![posture](https://img.shields.io/badge/posture-deny--by--default-red)
-![exposure](https://img.shields.io/badge/direct_raw_or_model_exposure-DENY-red)
-![secrets](https://img.shields.io/badge/secrets-never_here-red)
-![review](https://img.shields.io/badge/review-infra%20%2B%20security%20required-orange)
+> [!IMPORTANT]
+> Current disposition: **HOLD** for any claim of deployed or effective
+> infrastructure hardening. The repository contains this README and an
+> uncompleted review checklist in this lane. Bounded Docker and Compose checks
+> exist elsewhere, but no aggregate hardening validator or deployed-environment
+> evidence is present here.
 
----
+## Authority and scope
 
-## Quick jump
+[Directory Rules](../../docs/doctrine/directory-rules.md) and
+[ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+place deployment, host, network, and exposure mechanics under `infra/`.
+Machine-enforceable policy belongs under `policy/`; schemas and contracts belong
+under their canonical roots; release decisions and rollback artifacts belong
+under `release/`.
 
-[Purpose](#purpose) · [Status & authority](#status--authority) · [Repo fit](#repo-fit) · [What belongs here](#what-belongs-here) · [What does not belong here](#what-does-not-belong-here) · [Hardening baseline](#hardening-baseline) · [Trust membrane controls](#trust-membrane-controls) · [Validation](#validation) · [Review burden](#review-burden) · [Open verification](#open-verification)
+Within that boundary, `infra/hardening/` may hold:
 
----
+- repository-grounded hardening review guidance;
+- checklists that point to evidence owned by an implementation lane; and
+- redacted validation notes that do not expose secrets or private topology.
 
-## Purpose
+This directory must not become a parallel home for firewall rules, proxy
+configuration, credentials, service units, cluster manifests, Terraform state,
+policy bundles, release approvals, or incident working data.
 
-`infra/hardening/` is the operational hardening lane for KFM deployment environments. It documents and organizes host, network, service, exposure, audit, and local-administration guardrails that keep infrastructure from bypassing KFM governance.
+## Repository evidence snapshot
 
-This folder exists because KFM can only publish trustworthy public surfaces when the surrounding infrastructure also preserves the same boundary:
+The following state was confirmed on `main` at
+`977cd78c127e297317ca0806b2e95b69458b256e`:
 
-```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
-```
-
-Public clients and normal UI surfaces must not reach RAW, WORK, QUARANTINE, internal/canonical stores, source credentials, unpublished candidates, direct model endpoints, or operator-only admin paths. Infrastructure must enforce that rule before application code ever gets a chance to fail.
-
-`infra/hardening/` **does not replace** `docs/security/`, `policy/`, `apps/governed-api/`, or `runtime/`. It turns their security posture into deployable operating constraints and review checklists.
-
-[Back to top](#top)
-
----
-
-## Status & authority
-
-| Field | Value |
-|---|---|
-| **Document type** | Per-directory README |
-| **Owning responsibility root** | `infra/` |
-| **Subpath role** | `hardening/` — deployment hardening baselines, exposure guardrails, host/network control checklists, and validation notes |
-| **Authority level** | **Draft operational guidance.** Doctrine and policy outrank this README. Concrete infrastructure files must still be reviewed. |
-| **Lifecycle phase** | n/a — infrastructure guidance, not lifecycle data |
-| **Default posture** | **DENY** unless explicitly permitted by policy, release state, and governed API routing |
-| **Owners** | `<infra-steward>`, `<security-owner>`, `<ops-steward>` — fill from CODEOWNERS when assigned |
-| **Reviewers required** | Infrastructure steward + security owner for any public exposure, firewall, reverse proxy, VPN, systemd, secret-boundary, model-runtime, or raw-data-adjacent change |
-| **Directory Rules basis** | `infra/` owns deployment, host, network, and exposure posture; `hardening/` is named under the expected `infra/` tree. |
-
-[Back to top](#top)
-
----
-
-## Repo fit
-
-```text
-Kansas-Frontier-Matrix/
-└── infra/
-    ├── README.md
-    ├── docker/
-    ├── compose/
-    ├── reverse_proxy/
-    ├── vpn/
-    ├── firewall/
-    ├── systemd/
-    ├── kubernetes/
-    ├── terraform/
-    └── hardening/        ◀── you are here
-        └── README.md
-```
-
-### Responsibility split
-
-| Location | Owns | Does not own |
+| Evidence | Confirmed repository fact | What it does not prove |
 |---|---|---|
-| `infra/hardening/` | Hardening baselines, exposure checklists, host/network guardrails, validation notes | Policy decisions, secrets, app code, runtime adapters, release manifests |
-| `infra/firewall/` | Firewall configuration and deployable firewall artifacts | Policy semantics or source sensitivity rules |
-| `infra/reverse_proxy/` | Reverse proxy configuration, TLS termination notes, header policy wiring | Governed API business logic |
-| `infra/vpn/` | Steward-only private access patterns | Public access paths |
-| `infra/systemd/` | Service unit hardening and local service boundaries | Application source code |
-| `docs/security/` | Human-facing security doctrine, threat model, exposure plan, incident response | Executable infrastructure configuration |
-| `policy/` | Allow / deny / restrict / abstain rules | Deployment mechanics |
-| `runtime/` | Local model/runtime adapters behind governed APIs | Public endpoint exposure |
-| `apps/governed-api/` | Trust membrane implementation | Host hardening |
+| [`README.md`](README.md) and [`CHECKLIST.md`](CHECKLIST.md) | These are the only files in `infra/hardening/`. | That any checklist item was reviewed, approved, applied, or monitored. |
+| [Infrastructure root](../README.md) | `infra/` is the responsibility root for deployment and exposure mechanics. | The existence or state of any deployed environment. |
+| [Compose file](../compose/docker-compose.yml) | Two placeholder services build from checked-in Dockerfiles and publish loopback-only ports. | Service startup, health, application behavior, network isolation, or public reachability. |
+| [Static Compose tests](../../tests/infra/test_compose_static.py) | The checked-in placeholder has resolvable build paths, final non-root users, loopback port bindings, and none of the enumerated sensitive mounts or privileged escape strings. | Runtime identity, kernel confinement, filesystem permissions, egress denial, secret handling, or deployed configuration. |
+| [Docker security-overlay tests](../../tests/infra/test_docker_security_overrides.py) | Exact Explorer review-image dependency overrides, lock integrity, and Dockerfile assertions are checked. | The absence of all vulnerabilities, provenance of a deployed image, registry custody, or runtime hardening. |
+| [`infra-compose-smoke` workflow](../../.github/workflows/infra-compose-smoke.yml) | CI renders the Compose file and builds placeholder images without starting services. | Deployment, release, publication, health checks, governed API behavior, or effective network controls. |
+| [CODEOWNERS](../../.github/CODEOWNERS) | `/infra/` review requests route to `@bartytime4life`. | Operational ownership, required approval, independent review, or separation of duties. |
 
-[Back to top](#top)
+The snapshot is repository evidence, not a statement about a machine or service
+outside the repository. Re-check it against the review head whenever the files
+or workflows above change.
 
----
+## Evidence states
 
-## What belongs here
+Use these labels in a hardening review:
 
-Use `infra/hardening/` for operational security material that governs how KFM is deployed or exposed:
+| State | Meaning |
+|---|---|
+| `CONFIRMED` | The cited repository path or redacted environment record directly supports the claim at an identified revision or observation time. |
+| `PROPOSED` | A desired control or design exists, but adoption or implementation is not established. |
+| `UNKNOWN` | The repository does not contain enough evidence to determine the state. |
+| `NEEDS VERIFICATION` | A named check must be performed against a specific repository revision or environment. |
+| `HOLD` | Do not claim enforcement, exposure safety, deployment readiness, or rollback readiness until required evidence resolves. |
 
-- **Host hardening baselines** for local machines, servers, containers, and deployment hosts.
-- **Network exposure checklists** for public, semi-public, VPN-only, and steward-only surfaces.
-- **Reverse-proxy hardening guidance** that confirms only governed public routes are exposed.
-- **Model-runtime isolation guidance** proving that local AI runtimes stay behind `apps/governed-api/` and never receive direct browser traffic.
-- **Raw-data denial guidance** proving public services cannot read `data/raw/`, `data/work/`, `data/quarantine/`, unpublished candidates, or internal canonical stores.
-- **Admin-surface constraints** for `apps/admin/`, `apps/review-console/`, operator CLIs, and emergency-only operations.
-- **Audit logging expectations** that record security-relevant actions without leaking secrets, raw payloads, private geometry, living-person data, prompt text, or restricted source material.
-- **Secret-boundary checklists** that reference environment-specific secret stores by name only.
-- **Validation checklists** for firewall posture, service exposure, TLS/proxy headers, CORS, VPN scope, systemd service restrictions, and release-readiness gates.
-- **Rollback and recovery hardening notes** that link infrastructure changes to runbooks and rollback cards.
+A checklist answer is not self-validating. `PASS` is meaningful only when each
+applicable item links to evidence with a defined scope and observation point.
+Unchecked items, placeholders, missing evidence, or unverifiable external state
+remain `HOLD`.
 
-Accepted file types are Markdown checklists, diagrams, sanitized example snippets, validation notes, and non-secret templates. Executable deployment artifacts may live in neighboring `infra/` lanes when that lane owns the artifact.
+## Control-evidence matrix
 
-[Back to top](#top)
-
----
-
-## What does not belong here
-
-`infra/hardening/` must not become a parallel policy, secrets, runtime, or release authority.
-
-Do **not** place any of the following here:
-
-- Real secrets, tokens, private keys, certificates, password files, `.env` files, API keys, SSH private keys, or production credentials.
-- Full vulnerability working data, exploit payloads, or unredacted scanner output for unfixed issues.
-- Raw source data, work data, quarantine data, published artifacts, catalog records, triplets, proofs, receipts, or release manifests.
-- Policy bundles or allow/deny rules that belong in `policy/`.
-- Runtime model adapters or service implementation code that belongs in `runtime/`, `packages/`, or `apps/`.
-- Application route handlers, UI components, or governed API implementation details.
-- Live incident notes containing private data, internal IPs, credentials, or sensitive operational details.
-- Admin shortcuts that bypass normal review, policy, evidence resolution, release checks, or audit logging.
-- Convenience copies of `docs/security/` doctrine. Link to doctrine instead of duplicating it.
-
-If a secret or sensitive operational artifact lands here, treat it as a security incident: rotate the credential, audit access, remove the file, and record the response through the incident and runbook process.
-
-[Back to top](#top)
-
----
-
-## Hardening baseline
-
-Every deployment surface should be reviewed against this baseline before it is treated as public, semi-public, or steward-accessible.
-
-| Control | Required posture | Evidence expected |
+| Control area | Current repository evidence | Required evidence before an enforcement claim |
 |---|---|---|
-| Default ingress | Deny-by-default | Firewall / reverse proxy / cloud rule review |
-| Public route exposure | Governed API and released public assets only | Route inventory and exposure plan link |
-| Model endpoint | No direct public or browser access | Proxy deny rule, network segmentation, service binding review |
-| Raw data path | No public or UI read path | Mount review, service account scope, integration test |
-| Admin surface | Private, authenticated, audited, not normal public path | VPN/auth configuration and audit-log check |
-| Secrets | Secret store reference only; no repo secrets | Secret scan and rotation runbook link |
-| Logging | Audit security events; redact sensitive payloads | Log sample review and retention note |
-| CORS / headers | Explicit origin and header policy | Reverse proxy / app config review |
-| TLS | Terminated and renewed through approved infra lane | Certificate management note, not private key material |
-| Release access | Published artifacts only, tied to manifest | Release manifest and rollback reference |
-| Backups | Protected, access-controlled, restore-tested | Runbook and restore drill evidence |
-| Change rollback | Reversible or documented forward-fix only | Rollback note or ADR / runbook link |
+| Host baseline | No host configuration is present in this lane. | Identified hosts or image class, applied configuration, versioned baseline, inspection output, exception handling, and tested recovery. |
+| Firewall and network policy | The [firewall lane](../firewall/README.md) documents a posture boundary. | Versioned rules tied to an environment, ingress and egress inventories, negative tests, monitoring, change authority, and rollback rehearsal. |
+| Public edge, TLS, and CORS | The [reverse-proxy lane](../reverse_proxy/README.md) documents a routing hold. | Provider and domain identity, versioned routes, upstream bindings, certificates, headers, negative route tests, observation evidence, and rollback. |
+| Private access | The [VPN lane](../vpn/README.md) documents a private-access hold. | Product and control-plane identity, routes, ACLs, identity lifecycle, revocation test, monitoring, recovery, and accountable stewardship. |
+| Service management | The [systemd lane](../systemd/README.md) contains no adopted unit inventory. | Versioned units, target hosts, least-privilege settings, dependency and restart behavior, logs, install/disable procedure, and rollback rehearsal. |
+| Containers and Compose | Dockerfiles, a bounded Compose placeholder, static tests, and an image-build workflow exist. | Immutable image identity, scan and provenance records, runtime configuration, secret and capability controls, service-start/health evidence, network behavior, and operational rollback. |
+| Kubernetes | The [Kubernetes lane](../kubernetes/README.md) is an adoption hold. | Cluster identity, versioned manifests, namespaces, RBAC, network policy, storage, admission controls, observed rollout, and rollback rehearsal. |
+| Terraform | The [Terraform lane](../terraform/README.md) is an adoption and state-safety hold. | Selected tool/provider, versioned configuration, backend and state custody, reviewed plan, apply authority, drift detection, recovery, and rollback evidence. |
+| Secrets and keys | Repository doctrine says not to commit secrets; no secret store or custody is established here. | Named secret-store boundary, identities and access controls, redacted retrieval/rotation evidence, leak response, audit records, and verified owners. |
+| Logging and monitoring | No deployed sink, retention rule, alert, or dashboard is established by this lane. | Event inventory, redaction tests, sink and access controls, retention, detection route, alert ownership, and incident exercise evidence. |
+| Backup and restore | No backup target or restore exercise is established by this lane. | Protected asset inventory, backup identity and access, retention, integrity checks, tested restore, recovery objective, and recorded exercise result. |
+| Incident containment | Draft security guidance is linked below. | Environment-specific detection and containment procedure, reachable escalation path, redacted exercise record, and tested restoration path. |
 
-[Back to top](#top)
+An artifact may satisfy one row without satisfying another. For example, a
+Dockerfile ending with a non-root `USER` does not prove host hardening, firewall
+enforcement, application authorization, or safe publication.
 
----
+## Review procedure
 
-## Trust membrane controls
+1. Record the exact base, head, affected paths, and environment scope. If no
+   environment is in scope, say `repository-only`.
+2. Identify the implementation lane that owns each claimed control. Do not use
+   this README as substitute evidence for that lane.
+3. Complete a review copy of [`CHECKLIST.md`](CHECKLIST.md). Replace every
+   placeholder, mark non-applicable items with a reason, and link redacted
+   evidence for every checked item.
+4. Separate repository evidence from environment evidence. Include revision,
+   artifact digest, environment identity, and observation time where relevant.
+5. Run only the validators that exist and record their exact scope. A green
+   check must not be summarized more broadly than the check itself.
+6. Classify missing, stale, inaccessible, or conflicting evidence as
+   `UNKNOWN`, `NEEDS VERIFICATION`, or `HOLD`; do not infer the safer state.
+7. Record correction and rollback paths separately. Reverting a documentation
+   commit is not operational rollback.
 
-Infrastructure must enforce the same trust membrane that KFM application doctrine requires.
+Do not paste credentials, private keys, tokens, internal IPs, private hostnames,
+restricted routes, exploit payloads, sensitive logs, or exact sensitive
+locations into Markdown, pull requests, or workflow output. Use an approved
+restricted evidence store and link only a redacted reference when one exists.
 
-```mermaid
-flowchart LR
-    Browser[Browser / public client]
-    Proxy[Reverse proxy / network edge]
-    GovAPI[apps/governed-api/]
-    Public[Released public artifacts]
-    Model[runtime/ model runtime]
-    Raw[data/raw · data/work · data/quarantine]
-    Internal[canonical/internal stores]
-    Admin[admin/review surfaces]
+## Bounded repository checks
 
-    Browser --> Proxy --> GovAPI
-    GovAPI --> Public
-    GovAPI --> Model
+These commands inspect the checked-out repository; they do not contact or
+inspect a deployed environment:
 
-    Browser -. DENY .-> Model
-    Browser -. DENY .-> Raw
-    Browser -. DENY .-> Internal
-    Browser -. DENY .-> Admin
-    Proxy -. DENY direct path .-> Raw
-    Proxy -. DENY direct path .-> Internal
+```bash
+git ls-tree -r --name-only HEAD -- infra/hardening
+git grep -n -E \
+  'infra-compose-smoke|test_compose_static|test_docker_security_overrides' \
+  HEAD -- .github tests Makefile infra
+python -m unittest discover \
+  --start-directory tests/infra \
+  --pattern 'test_compose_static.py' \
+  --verbose
+python -m unittest discover \
+  --start-directory tests/infra \
+  --pattern 'test_docker_security_overrides.py' \
+  --verbose
+docker compose -f infra/compose/docker-compose.yml config --quiet
 ```
 
-### Required negative guarantees
+The two Python profiles are static, no-network checks. The Compose render
+requires Docker Compose. Image builds are performed by the linked workflow, but
+services are deliberately not started there. A missing tool or inaccessible
+environment is `NOT_RUN` or `UNAVAILABLE`, never a pass.
 
-A hardening review is incomplete until it proves the negative states:
+Do not publish generic `iptables`, `nft`, proxy, VPN, `systemctl`, `kubectl`, or
+`terraform` commands here. Operational commands require an adopted technology,
+exact versioned files, an identified environment, authorization, validation,
+and a tested recovery path.
 
-1. **Browser → model runtime:** denied.
-2. **Browser → RAW / WORK / QUARANTINE:** denied.
-3. **Browser → unpublished release candidate:** denied.
-4. **Browser → internal canonical store:** denied.
-5. **Public UI → source credentials:** denied.
-6. **Admin shortcut → public path:** denied.
-7. **Unreviewed artifact → published route:** denied.
-8. **Missing policy decision → public exposure:** denied.
-9. **Missing EvidenceBundle closure → public answer:** abstain or deny, never silently answer.
-10. **Sensitive geometry / living-person / DNA / archaeology / rare-species exact location / critical infrastructure uncertainty:** fail closed.
+## Trust and exposure requirements
 
-[Back to top](#top)
+The [Exposure Plan](../../docs/security/EXPOSURE_PLAN.md) describes desired
+deny-by-default and governed-interface posture. Until environment evidence
+exists, treat it as a requirement to verify, not proof that the requirement is
+enforced.
 
----
+Any hardening review that touches data or public surfaces must keep the
+following boundaries visible:
 
-## Proposed file map
+- public clients use governed interfaces or released public-safe artifacts,
+  not RAW, WORK, QUARANTINE, internal stores, credentials, or direct model
+  runtimes;
+- rights, privacy, sovereignty, provenance, consent, and harmful precision are
+  fail-closed inputs to exposure decisions;
+- generated language, maps, dashboards, indexes, and passing tests are not
+  sovereign truth; and
+- review, merge, release, deployment, and publication are distinct states.
 
-The following subfiles are useful future additions. They are **PROPOSED** until created and reviewed.
+## Failure, correction, and rollback
 
-```text
-infra/hardening/
-├── README.md
-├── baseline.md                    # shared hardening checklist
-├── exposure-checklist.md          # public/semi-public/steward-only exposure gates
-├── governed-api-edge.md           # reverse proxy / edge expectations for apps/governed-api/
-├── model-runtime-isolation.md     # no direct runtime/Ollama/model endpoint exposure
-├── raw-data-denial.md             # public path denial for RAW/WORK/QUARANTINE/internal stores
-├── admin-surface.md               # admin/review-console/CLI restrictions
-├── audit-logging.md               # audit events, redaction, retention questions
-├── secrets-boundary.md            # what references are allowed; no secret material
-├── local-host-hardening.md        # local-machine/server posture
-├── systemd-hardening.md           # companion to infra/systemd/
-├── reverse-proxy-hardening.md     # companion to infra/reverse_proxy/
-├── firewall-hardening.md          # companion to infra/firewall/
-├── vpn-hardening.md               # companion to infra/vpn/
-└── validation.md                  # checks, evidence, open verification items
-```
+Stop the review and retain `HOLD` when evidence is missing, the observation
+scope is unclear, a result cannot be reproduced, a control conflicts with
+current repository doctrine, or sensitive material would need to be disclosed
+to substantiate the claim.
 
-Do not create these all at once unless the PR has review capacity. Prefer small, reversible additions tied to a concrete deployment or validation need.
+For a repository-documentation defect, correct the file in a new reviewable
+change or revert the unmerged branch. For a suspected exposure or operational
+failure, follow the scoped containment path in
+[Incident Response](../../docs/security/INCIDENT_RESPONSE.md); do not assume a
+Git revert changes live infrastructure. Key or credential compromise requires
+separately verified rotation and containment procedures; the draft
+[Key Rotation Policy](../../docs/security/KEY_ROTATION.md) is guidance, not
+evidence that rotation infrastructure or custody exists.
 
-[Back to top](#top)
+## Open verification backlog
 
----
-
-## Validation
-
-Hardening validation should be repeatable and evidence-producing. At minimum, changes touching this folder should pass these review checks:
-
-| Check | Expected result | Owner |
-|---|---|---|
-| Path placement | File belongs under `infra/hardening/` and does not duplicate `docs/security/`, `policy/`, `runtime/`, or `release/` | Infra steward |
-| Secret scan | No secrets, credentials, private keys, tokens, or private endpoint details | Security owner |
-| Exposure review | Public paths route through governed API or released artifacts only | Infra + governed API reviewers |
-| Raw-data denial | No direct public read path to RAW/WORK/QUARANTINE/internal stores | Data + security reviewers |
-| Model isolation | No direct public model endpoint, no browser-to-runtime path | Runtime + security reviewers |
-| Admin isolation | Admin/review surfaces are private, authenticated, audited, and not the normal public path | Ops + security reviewers |
-| Audit hygiene | Logs are useful for review but do not leak restricted data or secrets | Ops steward |
-| Rollback note | Infrastructure change has rollback or forward-fix note | Release / ops steward |
-| Drift register | Any conflict with Directory Rules or repo convention is recorded | Docs steward |
-
-### Suggested validation commands
-
-This README intentionally does not prescribe one universal command because deployment environments differ. A future `infra/hardening/validation.md` should name the exact no-secret, no-network or controlled-network checks once the deployment topology is verified.
-
-Until then, reviewers should require evidence from the relevant lane: firewall review from `infra/firewall/`, proxy review from `infra/reverse_proxy/`, service-boundary review from `infra/systemd/`, secret scan evidence from the security toolchain, and public-route tests from `tests/` or `tools/validators/`.
+- [ ] Confirm operational stewardship and accountable approval authority.
+- [ ] Decide whether `CHECKLIST.md` should be revised to encode evidence states
+      and the repository-only/deployed-environment distinction.
+- [ ] Identify any deployed environments and the authoritative inventory for
+      each one.
+- [ ] Bind every claimed control to versioned implementation and observation
+      evidence.
+- [ ] Establish aggregate hardening validation only after the underlying lanes
+      expose reliable, scoped checks.
+- [ ] Verify secret custody, logging, monitoring, incident escalation, backup,
+      restore, and operational rollback.
+- [ ] Rehearse recovery without publishing sensitive topology or credentials.
 
 [Back to top](#top)
-
----
-
-## Review burden
-
-Changes under `infra/hardening/` are security-significant when they touch exposure, credentials, raw-data access, model-runtime access, admin access, or audit trails.
-
-| Change type | Required review |
-|---|---|
-| Documentation-only wording with no posture change | Infra steward or docs steward |
-| Public exposure posture | Infra steward + security owner + governed API owner |
-| Reverse proxy, firewall, VPN, systemd, Kubernetes, Terraform hardening | Infra steward + security owner |
-| Model-runtime isolation | Runtime owner + security owner |
-| RAW/internal-store access boundary | Data steward + security owner |
-| Admin/review surface access | Ops steward + security owner |
-| Secret-handling language | Security owner |
-| Any exception to deny-by-default | ADR or documented risk acceptance + rollback path |
-
-[Back to top](#top)
-
----
-
-## Related folders
-
-| Folder | Relationship |
-|---|---|
-| `infra/README.md` | Parent infrastructure root contract. |
-| `infra/firewall/` | Concrete firewall artifacts and firewall-specific README material. |
-| `infra/reverse_proxy/` | Concrete reverse-proxy artifacts and edge-routing configuration. |
-| `infra/vpn/` | Steward-only private access pattern. |
-| `infra/systemd/` | Service units and service-level hardening. |
-| `configs/` | Non-secret defaults and templates only. Never real secrets. |
-| `docs/security/` | Human-facing security doctrine, threat model, exposure plan, incident response. |
-| `policy/` | Enforceable allow / deny / restrict / abstain rules. |
-| `apps/governed-api/` | Public trust membrane implementation. |
-| `runtime/` | Local runtime/model adapters that must remain behind governed APIs. |
-| `release/` | Release decisions, manifests, rollback cards, correction notices. |
-| `data/published/` | Published downstream artifacts that may be served only after release gates. |
-| `data/raw/`, `data/work/`, `data/quarantine/` | Non-public lifecycle stores. Public/direct infra exposure is denied. |
-
-[Back to top](#top)
-
----
-
-## Open verification
-
-- [ ] Confirm CODEOWNERS for `infra/`, `infra/hardening/`, `docs/security/`, and `apps/governed-api/`.
-- [ ] Confirm current deployment topology and whether KFM is local-only, VPN-only, public-facing, or mixed.
-- [ ] Confirm reverse-proxy product and exact place for public-route allowlists.
-- [ ] Confirm firewall baseline and whether it is host-based, network-based, cloud-based, or mixed.
-- [ ] Confirm log-retention, redaction, and access-review requirements.
-- [ ] Confirm where secret references are named and where real secrets are stored.
-- [ ] Confirm whether model runtimes are present and how they are bound to the network.
-- [ ] Confirm raw-data and internal-store mount boundaries for every public-serving process.
-- [ ] Confirm rollback procedure for infrastructure changes.
-- [ ] Add validation evidence or links once hardening checks are executable.
-
-[Back to top](#top)
-
----
-
-## Last reviewed
-
-| Field | Value |
-|---|---|
-| Last reviewed | 2026-07-03 |
-| Review status | Draft README replacing greenfield stub |
-| Next review trigger | First concrete firewall, reverse proxy, VPN, systemd, model-runtime, public-route, or deployment-topology hardening PR |
