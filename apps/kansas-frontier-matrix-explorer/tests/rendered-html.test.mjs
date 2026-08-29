@@ -34,7 +34,7 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /Build report/i);
   assert.match(html, /synthetic and generalized demonstration layers/i);
   assert.match(html, /Repository briefing/i);
-  assert.match(html, /main@(?:<!-- -->)?2b0ea9b/i);
+  assert.match(html, /main@(?:<!-- -->)?c321610/i);
   assert.match(html, /Scenario review/i);
   assert.match(html, /Runtime lab/i);
   assert.match(html, /Source observatory/i);
@@ -79,7 +79,7 @@ test("adds reusable analysis recipes, device-local workspaces, report filters, a
   const explorer = await import(`data:text/javascript;base64,${Buffer.from(compile(explorerSource, "explorer-data.ts")).toString("base64")}`);
   const layer = (id) => explorer.LAYER_REGISTRY.find((candidate) => candidate.id === id);
 
-  assert.equal(recipes.ANALYSIS_RECIPES.length, 6);
+  assert.equal(recipes.ANALYSIS_RECIPES.length, 8);
   assert.equal(recipes.ANALYSIS_RECIPES.every((recipe) => recipe.layerIds.every((id) => Boolean(layer(id)))), true);
   assert.equal(layer("water-context").data.features.length, 4);
   assert.equal(layer("agriculture-context").data.features.length, 3);
@@ -94,6 +94,55 @@ test("adds reusable analysis recipes, device-local workspaces, report filters, a
   assert.match(css, /\.analysis-recipes/);
   assert.match(css, /\.saved-workspace-list/);
   assert.match(css, /\.report-active-filters/);
+});
+
+test("adds bounded renderer-neutral smoke, water, elevation, tile, and scene navigation features", async () => {
+  const ts = await import("typescript");
+  const explorerSource = await readFile(new URL("../app/explorer-data.ts", import.meta.url), "utf8");
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const runtime = await readFile(new URL("../app/map-runtime.ts", import.meta.url), "utf8");
+  const mapInterface = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  const compiled = ts.transpileModule(explorerSource, {
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+    fileName: "explorer-data.ts",
+  }).outputText;
+  const explorer = await import(`data:text/javascript;base64,${Buffer.from(compiled).toString("base64")}`);
+  const layer = (id) => explorer.LAYER_REGISTRY.find((candidate) => candidate.id === id);
+
+  assert.equal(explorer.LAYER_REGISTRY.length, 15);
+  assert.equal(layer("watershed-context").data.features.length, 3);
+  assert.equal(layer("smoke-context").data.features.length, 3);
+  assert.equal(layer("elevation-concept").data.features.length, 6);
+  assert.equal(layer("tile-matrix-grid").data.features.length, 24);
+  assert.equal(layer("water-context").sourceOptions.lineMetrics, true);
+  assert.match(explorerSource, /"line-gradient"/);
+  assert.match(explorerSource, /type: "fill-extrusion"/);
+  assert.match(explorerSource, /not observed smoke, a forecast, an advisory/i);
+  assert.match(explorerSource, /not a fetched vector tile, PMTiles archive/i);
+  assert.match(runtime, /lngLatToTile/);
+  assert.match(runtime, /SCENE_ENVIRONMENTS/);
+  assert.doesNotMatch(runtime, /setElevationExaggeration|applySceneEnvironment|setSky|setLight|maplibre-gl|addSource|addLayer/);
+  assert.match(page, /SCENE \+ 3D LAB/);
+  assert.match(page, /Relative vertical scale/);
+  assert.match(page, /Renderer-neutral globe overview/);
+  assert.match(page, /reversible 90° renderer-neutral camera turn/);
+  assert.match(page, /No PMTiles, MVT, COG, or DEM fetch/);
+  assert.match(page, /createNullMapRuntime/);
+  assert.doesNotMatch(page, /NavigationControl|FullscreenControl|setVerticalFieldOfView|querySourceFeatures|\bmapRef\.current|from "maplibre-gl"|new maplibregl/);
+  assert.match(page, /aria-label="Unified map controls"/);
+  assert.match(page, /SOURCE CONNECTIONS/);
+  assert.match(page, /Inspect fixture/);
+  assert.match(page, /params\.set\("scene"/);
+  assert.match(page, /params\.set\("zscale"/);
+  assert.match(page, /params\.set\("sky"/);
+  assert.match(page, /params\.set\("fov"/);
+  assert.match(mapInterface, /Terrain \+ hillshade[\s\S]*HOLD/);
+  assert.match(mapInterface, /Offline \/ PMTiles[\s\S]*HOLD/);
+  assert.match(css, /\.scene-preset-grid/);
+  assert.match(css, /\.scene-tile-ledger/);
+  assert.match(css, /\.source-connection-card/);
+  assert.match(css, /\.scene-environment-grid/);
 });
 
 test("adds a renderer-neutral area-of-interest workflow and browser-local camera history", async () => {
@@ -247,7 +296,7 @@ test("resolves Focus outcomes and temporal scope with fail-closed precedence", a
 test("keeps repository updates pinned and boundary-labeled", async () => {
   const updates = await readFile(new URL("../app/repository-updates.ts", import.meta.url), "utf8");
 
-  assert.match(updates, /2b0ea9bbbc9d9a120ea94d92fb4617d96fe7d2a0/);
+  assert.match(updates, /c3216103ac049cd39f5f03883d7146046ef7bccd/);
   assert.match(updates, /exact maplibre-gl 6\.6\.0 lock closure/);
   assert.match(updates, /521 commits after the prior Site evidence pin/);
   assert.match(updates, /Planning scenarios now have a strict review projection/);

@@ -43,7 +43,7 @@ export type RendererDefinition = {
   id: string;
   spec: RendererLayerDescriptor;
   interactive?: boolean;
-  opacityProperties?: ("fill-opacity" | "line-opacity" | "circle-opacity" | "text-opacity")[];
+  opacityProperties?: ("fill-opacity" | "line-opacity" | "circle-opacity" | "text-opacity" | "fill-extrusion-opacity")[];
   baseFilter?: RendererFilterDescriptor;
 };
 
@@ -80,7 +80,7 @@ export type LayerRecord = {
   viewingModes: string[];
   bounds: [number, number, number, number];
   temporal?: TemporalDefinition;
-  sourceOptions?: { cluster?: boolean; clusterRadius?: number; clusterMaxZoom?: number };
+  sourceOptions?: { cluster?: boolean; clusterRadius?: number; clusterMaxZoom?: number; lineMetrics?: boolean };
   data: FeatureCollection<Geometry, FeatureProperties>;
   renderers: RendererDefinition[];
 };
@@ -107,6 +107,11 @@ export type FeatureProperties = {
   year: number;
   focusLng: number;
   focusLat: number;
+  displayElevationFt?: number;
+  relativeHeightM?: number;
+  smokeDensity?: "LOW" | "MODERATE" | "HIGH";
+  watershedClass?: string;
+  tileLabel?: string;
 };
 
 const feature = (
@@ -530,6 +535,187 @@ const diagnosticsDemo: FeatureCollection<Geometry, FeatureProperties> = {
   ],
 };
 
+const watershedDemo: FeatureCollection<Geometry, FeatureProperties> = {
+  type: "FeatureCollection",
+  features: [
+    feature("watershed-upper-arkansas", { type: "Polygon", coordinates: [[[-102.0, 37.25], [-99.65, 37.25], [-99.65, 38.35], [-102.0, 38.35], [-102.0, 37.25]]] }, {
+      ...baseProps,
+      title: "Upper Arkansas watershed concept",
+      summary: "A coarse synthetic basin envelope for inspecting water relationships without hydrologic or regulatory claims.",
+      sourceRole: "synthetic context",
+      spatialScope: "Western Kansas, deliberately generalized",
+      temporalScope: "Static 2026 demonstration context",
+      lastUpdate: "2026-08-29",
+      evidenceState: "GENERALIZED_GEOMETRY",
+      citation: "kfm:evidence:synthetic:watershed-upper-arkansas-v1",
+      watershedClass: "WESTERN",
+      generalizationNote: "This polygon is not a HUC, drainage divide, flood zone, allocation area, or legal boundary.",
+      uncertainty: "Synthetic basin shape created only for interface and report testing.",
+      relatedLayers: "Hydrology context; Elevation concept",
+      focusLng: -100.82,
+      focusLat: 37.8,
+    }),
+    feature("watershed-smoky-hill", { type: "Polygon", coordinates: [[[-101.15, 38.35], [-97.05, 38.35], [-97.05, 39.45], [-101.15, 39.45], [-101.15, 38.35]]] }, {
+      ...baseProps,
+      title: "Smoky Hill watershed concept",
+      summary: "A generalized synthetic planning envelope aligned only loosely with the demonstration river corridor.",
+      sourceRole: "synthetic context",
+      spatialScope: "North-central Kansas, deliberately generalized",
+      temporalScope: "Static 2026 demonstration context",
+      lastUpdate: "2026-08-29",
+      evidenceState: "ANSWER",
+      citation: "kfm:evidence:synthetic:watershed-smoky-hill-v1",
+      watershedClass: "CENTRAL",
+      generalizationNote: "No gauge, flow, storage, water-quality, flood, or legal-water conclusion is supported.",
+      uncertainty: "Synthetic basin shape and attributes; not derived from a watershed product.",
+      relatedLayers: "Hydrology context; Communities",
+      focusLng: -99.1,
+      focusLat: 38.9,
+    }),
+    feature("watershed-kansas-lower", { type: "Polygon", coordinates: [[[-97.25, 38.35], [-94.68, 38.35], [-94.68, 40.0], [-97.25, 40.0], [-97.25, 38.35]]] }, {
+      ...baseProps,
+      title: "Lower Kansas watershed concept",
+      summary: "A coarse eastern envelope for testing watershed, community, and smoke-context reports.",
+      sourceRole: "synthetic context",
+      spatialScope: "Eastern Kansas, deliberately generalized",
+      temporalScope: "Static 2026 demonstration context",
+      lastUpdate: "2026-08-29",
+      evidenceState: "MISSING_EVIDENCE",
+      citation: "No released evidence reference available",
+      watershedClass: "EASTERN",
+      generalizationNote: "This geometry is not an admitted watershed, regulatory, flood, or water-quality layer.",
+      uncertainty: "Synthetic basin shape created only for interface and report testing.",
+      relatedLayers: "Hydrology context; Smoke context",
+      focusLng: -95.95,
+      focusLat: 39.15,
+    }),
+  ],
+};
+
+const elevationBands = [
+  { west: -102.02, east: -100.8, feet: 3400, height: 780, label: "Western high concept" },
+  { west: -100.8, east: -99.55, feet: 2600, height: 590, label: "West-central rise concept" },
+  { west: -99.55, east: -98.3, feet: 2100, height: 470, label: "Central upland concept" },
+  { west: -98.3, east: -97.05, feet: 1650, height: 350, label: "Central transition concept" },
+  { west: -97.05, east: -95.8, feet: 1250, height: 250, label: "Eastern transition concept" },
+  { west: -95.8, east: -94.65, feet: 850, height: 150, label: "Eastern low concept" },
+] as const;
+
+const elevationDemo: FeatureCollection<Geometry, FeatureProperties> = {
+  type: "FeatureCollection",
+  features: elevationBands.map((band, index) => feature(`elevation-band-${index + 1}`, {
+    type: "Polygon",
+    coordinates: [[[band.west, 37.05], [band.east, 37.05], [band.east, 39.95], [band.west, 39.95], [band.west, 37.05]]],
+  }, {
+    ...baseProps,
+    title: band.label,
+    summary: `A synthetic relative-elevation band rendered at ${band.feet.toLocaleString()} display feet for reversible 3D interface testing.`,
+    sourceRole: "synthetic display context",
+    spatialScope: "Statewide longitudinal band, deliberately generalized",
+    temporalScope: "Static 2026 display concept",
+    lastUpdate: "2026-08-29",
+    evidenceState: "GENERALIZED_GEOMETRY",
+    citation: `kfm:evidence:synthetic:elevation-band-${index + 1}`,
+    displayElevationFt: band.feet,
+    relativeHeightM: band.height,
+    generalizationNote: "Display heights are invented relative bins, not DEM samples, contours, survey elevations, terrain, hillshade, or topographic evidence.",
+    uncertainty: "Synthetic east-west gradient used only to prove extrusion, camera, selection, and 2D evidence parity.",
+    relatedLayers: "Geology & landforms; Watershed context",
+    focusLng: (band.west + band.east) / 2,
+    focusLat: 38.5,
+  })),
+};
+
+const smokeDemo: FeatureCollection<Geometry, FeatureProperties> = {
+  type: "FeatureCollection",
+  features: [
+    feature("smoke-west-2022", { type: "Polygon", coordinates: [[[-102.0, 38.2], [-100.3, 37.65], [-98.9, 38.15], [-99.55, 39.0], [-101.4, 39.35], [-102.0, 38.2]]] }, {
+      ...baseProps,
+      title: "Western smoke-context fixture · 2022",
+      summary: "A synthetic stale plume envelope for testing time filters and negative freshness states.",
+      sourceRole: "synthetic model context",
+      spatialScope: "Western Kansas generalized envelope",
+      temporalScope: "Synthetic 2022 snapshot",
+      lastUpdate: "2022-08-01",
+      freshnessState: "STALE",
+      evidenceState: "SOURCE_STALE",
+      citation: "kfm:evidence:synthetic:smoke-2022",
+      smokeDensity: "LOW",
+      year: 2022,
+      generalizationNote: "Not observed smoke, a forecast, an advisory, an exposure surface, or a fire perimeter.",
+      uncertainty: "Shape, timing, and density are invented for temporal interface testing.",
+      relatedLayers: "Atmosphere observations; Watershed context",
+      focusLng: -100.45,
+      focusLat: 38.45,
+    }),
+    feature("smoke-central-2024", { type: "Polygon", coordinates: [[[-100.1, 38.95], [-98.4, 38.25], [-96.75, 38.5], [-97.35, 39.45], [-99.15, 39.65], [-100.1, 38.95]]] }, {
+      ...baseProps,
+      title: "Central smoke-context fixture · 2024",
+      summary: "A corrected synthetic plume retained to keep correction state visible in a time-aware map layer.",
+      sourceRole: "synthetic model context",
+      spatialScope: "Central Kansas generalized envelope",
+      temporalScope: "Synthetic 2024 snapshot",
+      lastUpdate: "2024-09-15",
+      evidenceState: "CORRECTED",
+      citation: "kfm:evidence:synthetic:smoke-2024-corrected",
+      smokeDensity: "HIGH",
+      year: 2024,
+      correctionState: "CORRECTED_FIXTURE",
+      generalizationNote: "Not observed smoke, a forecast, an advisory, an exposure surface, or a fire perimeter.",
+      uncertainty: "Shape, timing, and density are invented for correction and timeline testing.",
+      relatedLayers: "Atmosphere observations; Communities",
+      focusLng: -98.45,
+      focusLat: 39.0,
+    }),
+    feature("smoke-east-2026", { type: "Polygon", coordinates: [[[-98.35, 38.1], [-96.45, 37.65], [-94.7, 38.15], [-95.15, 39.2], [-96.95, 39.55], [-98.35, 38.1]]] }, {
+      ...baseProps,
+      title: "Eastern smoke-context fixture · 2026",
+      summary: "A generalized synthetic plume demonstrating map, report, and Evidence Drawer parity without current-condition claims.",
+      sourceRole: "synthetic model context",
+      spatialScope: "Eastern Kansas generalized envelope",
+      temporalScope: "Synthetic 2026 snapshot",
+      lastUpdate: "2026-08-29",
+      evidenceState: "GENERALIZED_GEOMETRY",
+      citation: "kfm:evidence:synthetic:smoke-2026",
+      smokeDensity: "MODERATE",
+      generalizationNote: "Not observed smoke, a forecast, an advisory, an exposure surface, or a fire perimeter.",
+      uncertainty: "Shape, timing, and density are invented for public-safe UI testing.",
+      relatedLayers: "Atmosphere observations; Watershed context",
+      focusLng: -96.35,
+      focusLat: 38.65,
+    }),
+  ],
+};
+
+const tileGridDemo: FeatureCollection<Geometry, FeatureProperties> = {
+  type: "FeatureCollection",
+  features: Array.from({ length: 24 }, (_, index) => {
+    const column = index % 6;
+    const row = Math.floor(index / 6);
+    const west = -102 + column * 1.22;
+    const east = Math.min(-94.68, west + 1.22);
+    const south = 37.05 + row * 0.72;
+    const north = Math.min(39.95, south + 0.72);
+    return feature(`tile-cell-${column}-${row}`, { type: "Polygon", coordinates: [[[west, south], [east, south], [east, north], [west, north], [west, south]]] }, {
+      ...baseProps,
+      title: `Diagnostic tile cell ${column + 1}.${row + 1}`,
+      summary: "A site-local GeoJSON grid cell labeled like a tile matrix for viewport and selection diagnostics.",
+      sourceRole: "synthetic diagnostics",
+      spatialScope: "Kansas diagnostic grid",
+      temporalScope: "Not time-varying",
+      lastUpdate: "2026-08-29",
+      evidenceState: "GENERALIZED_GEOMETRY",
+      citation: `kfm:demo:tile-grid:${column}:${row}`,
+      tileLabel: `SIM/${column}/${row}`,
+      generalizationNote: "This is not a fetched vector tile, PMTiles archive, cache entry, source-layer, or release artifact.",
+      uncertainty: "Grid boundaries are arbitrary and exist only to exercise tile-style navigation and diagnostics.",
+      relatedLayers: "All local layers",
+      focusLng: (west + east) / 2,
+      focusLat: (south + north) / 2,
+    });
+  }),
+};
+
 const fill = (id: string, sourceId: string, color: string, opacity: number, outline: string): RendererDefinition => ({
   id,
   interactive: true,
@@ -582,8 +768,16 @@ export const LAYER_REGISTRY: LayerRecord[] = [
   },
   {
     id: "water-context", title: "Hydrology context", description: "Simplified Kansas river and basin corridors with explicit evidence states.", domain: "Hydrology", category: "Hydrology & water", sourceType: "GeoJSON", sourceId: "kfm-water", datasetName: "KFM synthetic hydrology interaction fixtures", geometryType: "LineString", minZoom: 5, maxZoom: 14, defaultVisibility: true, defaultOpacity: 0.9,
-    legend: [{ label: "Demonstration water corridor", color: "#63c8db", shape: "line" }], units: "not applicable", scaleNote: "Generalized statewide corridor", validTimeExtent: "2022–2026 demonstration context", sourceTime: "Mixed synthetic source time", releaseTime: "Demonstration build", freshnessState: "MIXED", attribution: "KFM site-local synthetic fixture", evidenceReference: "Per-feature EvidenceRef", publicStatus: "GENERALIZED", sensitivityNote: "No monitoring location, measurement, or operational status is asserted.", releaseState: "DEMONSTRATION", correctionNote: "Stale and missing evidence remain visible.", relatedLayers: ["Atmosphere observations", "Communities"], interactions: ["hover", "select", "zoom", "evidence"], filters: ["time context"], viewingModes: ["2D", "globe"], bounds: [-102.05, 37.0, -94.6, 39.2], data: waterDemo,
-    renderers: [line("water-context-line", "kfm-water", "#63c8db", 3, 0.9)],
+    legend: [{ label: "Demonstration water corridor", color: "#63c8db", shape: "line" }], units: "not applicable", scaleNote: "Generalized statewide corridor", validTimeExtent: "2022–2026 demonstration context", sourceTime: "Mixed synthetic source time", releaseTime: "Demonstration build", freshnessState: "MIXED", attribution: "KFM site-local synthetic fixture", evidenceReference: "Per-feature EvidenceRef", publicStatus: "GENERALIZED", sensitivityNote: "No monitoring location, measurement, or operational status is asserted.", releaseState: "DEMONSTRATION", correctionNote: "Stale and missing evidence remain visible.", relatedLayers: ["Watershed context", "Atmosphere observations", "Communities"], interactions: ["hover", "select", "zoom", "evidence", "flow-direction display"], filters: ["time context"], viewingModes: ["2D", "globe", "pitched"], bounds: [-102.05, 37.0, -94.6, 39.2], sourceOptions: { lineMetrics: true }, data: waterDemo,
+    renderers: [
+      line("water-context-line", "kfm-water", "#2d7d9a", 5, 0.72),
+      { id: "water-context-flow", spec: { id: "water-context-flow", type: "line", source: "kfm-water", paint: { "line-color": "#7fe8f5", "line-width": 2.2, "line-opacity": 0.96, "line-gradient": ["interpolate", ["linear"], ["line-progress"], 0, "#9af2ff", 0.5, "#4cb6d3", 1, "#e6fbff"] } } },
+    ],
+  },
+  {
+    id: "watershed-context", title: "Watershed & storage context", description: "Three coarse synthetic basin envelopes for water-system navigation and reporting.", domain: "Hydrology", category: "Hydrology & water", sourceType: "GeoJSON", sourceId: "kfm-watersheds", datasetName: "KFM synthetic watershed concept fixtures", geometryType: "Polygon", minZoom: 4, maxZoom: 12, defaultVisibility: true, defaultOpacity: 0.18,
+    legend: [{ label: "Synthetic basin envelope", color: "#2b7f91", shape: "fill" }], units: "not applicable", scaleNote: "Coarse statewide concept only", validTimeExtent: "Static 2026 demonstration context", sourceTime: "Site build", releaseTime: "Demonstration build", freshnessState: "NOT_APPLICABLE", attribution: "KFM site-local synthetic fixture", evidenceReference: "Per-feature demonstration reference", publicStatus: "GENERALIZED", sensitivityNote: "No HUC, flow, storage, allocation, flood, monitoring, or regulatory claim.", releaseState: "DEMONSTRATION", correctionNote: "Replace only through an admitted public-safe watershed adapter.", relatedLayers: ["Hydrology context", "Elevation concept"], interactions: ["hover", "select", "zoom", "evidence", "report"], filters: [], viewingModes: ["2D", "globe", "pitched"], bounds: [-102.0, 37.2, -94.65, 40.0], data: watershedDemo,
+    renderers: [{ id: "watershed-context-fill", interactive: true, opacityProperties: ["fill-opacity"], spec: { id: "watershed-context-fill", type: "fill", source: "kfm-watersheds", paint: { "fill-color": ["match", ["get", "watershedClass"], "WESTERN", "#245f71", "CENTRAL", "#287f8a", "EASTERN", "#2f9fb2", "#2b7f91"], "fill-opacity": 0.18, "fill-outline-color": "#76d5df" } } }],
   },
   {
     id: "prairie-context", title: "Prairie & ecological regions", description: "Generalized regional ecology fixtures with no protected-species coordinates.", domain: "Habitat", category: "Land cover & ecology", sourceType: "GeoJSON", sourceId: "kfm-prairie", datasetName: "KFM generalized ecological region fixture", geometryType: "Polygon", minZoom: 4, maxZoom: 12, defaultVisibility: true, defaultOpacity: 0.25,
@@ -596,6 +790,14 @@ export const LAYER_REGISTRY: LayerRecord[] = [
     renderers: [fill("geology-context-fill", "kfm-geology", "#b98962", 0.34, "#e0b98d")],
   },
   {
+    id: "elevation-concept", title: "Elevation extrusion concept", description: "Six invented relative-height bands for 3D camera, extrusion, selection, and 2D evidence-parity testing.", domain: "Geology", category: "Geology & landforms", sourceType: "GeoJSON", sourceId: "kfm-elevation-concept", datasetName: "KFM synthetic relative-elevation display fixture", geometryType: "Polygon", minZoom: 4, maxZoom: 12, defaultVisibility: false, defaultOpacity: 0.72,
+    legend: [{ label: "Relative display height · synthetic", color: "#c59058", shape: "fill" }], units: "invented relative display feet", scaleNote: "Six statewide longitudinal bands", validTimeExtent: "Static 2026 display concept", sourceTime: "Site build", releaseTime: "Demonstration build", freshnessState: "NOT_APPLICABLE", attribution: "KFM site-local synthetic fixture", evidenceReference: "Per-band demonstration reference", publicStatus: "GENERALIZED", sensitivityNote: "No DEM, contour, survey elevation, hillshade, terrain source, or protected vertical detail.", releaseState: "DEMONSTRATION", correctionNote: "A real elevation carrier remains held pending source, rights, manifest, performance, evidence-parity, and rollback proof.", relatedLayers: ["Geology & landforms", "Watershed context"], interactions: ["hover", "select", "zoom", "pitch", "extrusion"], filters: [], viewingModes: ["2D fallback", "pitched extrusion"], bounds: [-102.02, 37.05, -94.65, 39.95], data: elevationDemo,
+    renderers: [
+      { id: "elevation-concept-underlay", spec: { id: "elevation-concept-underlay", type: "fill", source: "kfm-elevation-concept", paint: { "fill-color": ["interpolate", ["linear"], ["get", "displayElevationFt"], 800, "#294f4e", 1800, "#777348", 2600, "#ad7448", 3500, "#dfad68"], "fill-opacity": 0.08, "fill-outline-color": "#d9b978" } } },
+      { id: "elevation-concept-extrusion", interactive: true, opacityProperties: ["fill-extrusion-opacity"], spec: { id: "elevation-concept-extrusion", type: "fill-extrusion", source: "kfm-elevation-concept", paint: { "fill-extrusion-color": ["interpolate", ["linear"], ["get", "displayElevationFt"], 800, "#315b57", 1800, "#8b7c4a", 2600, "#b9794b", 3500, "#e2ae6a"], "fill-extrusion-height": ["get", "relativeHeightM"], "fill-extrusion-base": 0, "fill-extrusion-opacity": 0.72, "fill-extrusion-vertical-gradient": true } } },
+    ],
+  },
+  {
     id: "agriculture-context", title: "Agricultural context", description: "Coarse, public-safe regional fixtures without farm-level attributes.", domain: "Agriculture", category: "Agriculture", sourceType: "GeoJSON", sourceId: "kfm-agriculture", datasetName: "KFM public-safe agriculture fixtures", geometryType: "Polygon", minZoom: 5, maxZoom: 12, defaultVisibility: false, defaultOpacity: 0.24,
     legend: [{ label: "Generalized agricultural context", color: "#b4a45f", shape: "fill" }], units: "regional context", scaleNote: "Coarse public-safe envelope", validTimeExtent: "Demonstration snapshot", sourceTime: "Site build", releaseTime: "Demonstration build", freshnessState: "NOT_APPLICABLE", attribution: "KFM site-local synthetic fixture", evidenceReference: "No claim-bearing evidence", publicStatus: "GENERALIZED", sensitivityNote: "No parcel, operator, yield, or private-land detail.", releaseState: "GENERALIZED", correctionNote: "No operational agriculture claim is made.", relatedLayers: ["Prairie & ecological regions"], interactions: ["hover", "select", "zoom"], filters: [], viewingModes: ["2D"], bounds: [-101.8, 37.35, -99.75, 39.35], data: agricultureDemo,
     renderers: [fill("agriculture-context-fill", "kfm-agriculture", "#b4a45f", 0.24, "#d8c97c")],
@@ -604,6 +806,11 @@ export const LAYER_REGISTRY: LayerRecord[] = [
     id: "atmosphere-observations", title: "Atmosphere observations", description: "Three year-specific synthetic observations for temporal and correction-state testing.", domain: "Atmosphere", category: "Weather & hazards", sourceType: "GeoJSON", sourceId: "kfm-atmosphere", datasetName: "KFM temporal observation fixture", geometryType: "Point", minZoom: 5, maxZoom: 15, defaultVisibility: true, defaultOpacity: 0.95,
     legend: [{ label: "Synthetic observation", color: "#efc86e", shape: "point" }], units: "no measured variable", scaleNote: "Generalized place points", validTimeExtent: "Observation years 2022, 2024, 2026", sourceTime: "Per-feature observation year", releaseTime: "Demonstration build", freshnessState: "MIXED", attribution: "KFM site-local synthetic fixture", evidenceReference: "Per-feature EvidenceRef", publicStatus: "GENERALIZED", sensitivityNote: "No real weather measurement or hazard advisory.", releaseState: "DEMONSTRATION", correctionNote: "Corrected and stale states are explicit.", relatedLayers: ["Hydrology context"], interactions: ["hover", "select", "zoom", "evidence"], filters: ["observation year"], viewingModes: ["2D", "globe"], bounds: [-101.75, 38.8, -95.6, 39.4], temporal: { field: "year", mode: "exact", years: [2022, 2024, 2026], label: "Observation time" }, data: atmosphereDemo,
     renderers: [point("atmosphere-observations-circle", "kfm-atmosphere", "#efc86e", 7)],
+  },
+  {
+    id: "smoke-context", title: "Smoke-context timeline", description: "Three year-specific synthetic plume envelopes for time, correction, reporting, and not-for-life-safety testing.", domain: "Atmosphere", category: "Weather & hazards", sourceType: "GeoJSON", sourceId: "kfm-smoke-context", datasetName: "KFM synthetic smoke-context fixture", geometryType: "Polygon", minZoom: 4, maxZoom: 12, defaultVisibility: false, defaultOpacity: 0.28,
+    legend: [{ label: "Synthetic smoke-context envelope", color: "#b99ab8", shape: "fill" }], units: "qualitative synthetic density", scaleNote: "Generalized statewide envelopes", validTimeExtent: "Synthetic snapshots for 2022, 2024, and 2026", sourceTime: "Per-feature synthetic year", releaseTime: "Demonstration build", freshnessState: "MIXED", attribution: "KFM site-local synthetic fixture", evidenceReference: "Per-feature demonstration reference", publicStatus: "GENERALIZED", sensitivityNote: "Not observed smoke, a forecast, an AQI product, a fire perimeter, an exposure estimate, or an emergency advisory.", releaseState: "DEMONSTRATION", correctionNote: "The 2024 fixture preserves a visible correction state.", relatedLayers: ["Atmosphere observations", "Watershed context", "Communities"], interactions: ["hover", "select", "zoom", "time", "evidence", "report"], filters: ["synthetic year"], viewingModes: ["2D", "globe", "pitched"], bounds: [-102.0, 37.6, -94.7, 39.65], temporal: { field: "year", mode: "exact", years: [2022, 2024, 2026], label: "Synthetic smoke context" }, data: smokeDemo,
+    renderers: [{ id: "smoke-context-fill", interactive: true, opacityProperties: ["fill-opacity"], spec: { id: "smoke-context-fill", type: "fill", source: "kfm-smoke-context", paint: { "fill-color": ["match", ["get", "smokeDensity"], "LOW", "#8ba0aa", "MODERATE", "#b29aa8", "HIGH", "#d18787", "#a99aa8"], "fill-opacity": 0.28, "fill-outline-color": "#e4c5cf" } } }],
   },
   {
     id: "communities", title: "Communities", description: "Public place-name points with stable identifiers and clustering.", domain: "Settlements", category: "Boundaries & places", sourceType: "GeoJSON", sourceId: "kfm-communities", datasetName: "KFM place search fixture", geometryType: "Point", minZoom: 4, maxZoom: 16, defaultVisibility: true, defaultOpacity: 0.95,
@@ -628,6 +835,15 @@ export const LAYER_REGISTRY: LayerRecord[] = [
     id: "public-safe-planning", title: "Generalized protected context", description: "Coarse envelope demonstrating policy denial without revealing a protected subject.", domain: "Planning", category: "Public-safe planning", sourceType: "GeoJSON", sourceId: "kfm-planning", datasetName: "KFM denied-context fixture", geometryType: "Polygon", minZoom: 5, maxZoom: 11, defaultVisibility: false, defaultOpacity: 0.18,
     legend: [{ label: "Policy-generalized envelope", color: "#ee8f7c", shape: "fill" }], units: "withheld", scaleNote: "Coarse regional envelope", validTimeExtent: "Not disclosed", sourceTime: "Withheld", releaseTime: "Demonstration build", freshnessState: "NOT_APPLICABLE", attribution: "KFM public-safe policy fixture", evidenceReference: "kfm:policy:public-safe:deny-demo", publicStatus: "RESTRICTED", sensitivityNote: "Exact subject, attributes, and coordinates are absent.", releaseState: "RESTRICTED", correctionNote: "No client-side style can reveal withheld detail.", relatedLayers: [], interactions: ["hover", "select", "policy explanation"], filters: [], viewingModes: ["2D"], bounds: [-96.2, 38.65, -95.15, 39.55], data: restrictedDemo,
     renderers: [fill("public-safe-planning-fill", "kfm-planning", "#ee8f7c", 0.18, "#ee8f7c")],
+  },
+  {
+    id: "tile-matrix-grid", title: "Tile matrix diagnostic grid", description: "A labeled site-local GeoJSON grid for tile-style viewport navigation and source-boundary inspection.", domain: "Diagnostics", category: "Review & diagnostics", sourceType: "GeoJSON", sourceId: "kfm-tile-grid", datasetName: "KFM synthetic tile matrix diagnostics fixture", geometryType: "Polygon", minZoom: 4, maxZoom: 11, defaultVisibility: false, defaultOpacity: 0.72,
+    legend: [{ label: "Simulated tile cell", color: "#d5bd75", shape: "line" }], units: "SIM/column/row", scaleNote: "24 arbitrary statewide cells", validTimeExtent: "Not time-varying", sourceTime: "Site build", releaseTime: "Demonstration build", freshnessState: "NOT_APPLICABLE", attribution: "KFM site-local diagnostic fixture", evidenceReference: "kfm:demo:tile-grid", publicStatus: "PUBLIC_SAFE", sensitivityNote: "No tile archive, source layer, cache key, range response, protected property, or released geometry is present.", releaseState: "DEMONSTRATION", correctionNote: "PMTiles, MVT, COG, DEM, and offline delivery remain separate held capabilities.", relatedLayers: ["All site-local layers"], interactions: ["hover", "select", "zoom", "tile-coordinate inspection"], filters: [], viewingModes: ["2D", "globe", "pitched"], bounds: [-102.0, 37.05, -94.68, 39.95], data: tileGridDemo,
+    renderers: [
+      { id: "tile-matrix-grid-fill", interactive: true, spec: { id: "tile-matrix-grid-fill", type: "fill", source: "kfm-tile-grid", paint: { "fill-color": "#d5bd75", "fill-opacity": 0.025 } } },
+      line("tile-matrix-grid-line", "kfm-tile-grid", "#d5bd75", 1.1, 0.72, [2, 2]),
+      { id: "tile-matrix-grid-label", opacityProperties: ["text-opacity"], spec: { id: "tile-matrix-grid-label", type: "symbol", source: "kfm-tile-grid", layout: { "text-field": ["get", "tileLabel"], "text-size": 9, "text-allow-overlap": false }, paint: { "text-color": "#ead79c", "text-halo-color": "#07171a", "text-halo-width": 1.5, "text-opacity": 0.72 } } },
+    ],
   },
   {
     id: "review-diagnostics", title: "Finite-state diagnostics", description: "Clearly separated test fixtures for ERROR and RESTRICTED_ACCESS paths.", domain: "Diagnostics", category: "Review & diagnostics", sourceType: "GeoJSON", sourceId: "kfm-diagnostics", datasetName: "KFM deterministic UI negative fixtures", geometryType: "Point", minZoom: 5, maxZoom: 15, defaultVisibility: false, defaultOpacity: 0.95,
@@ -695,4 +911,3 @@ export const findFeature = (featureId: string) => {
   }
   return null;
 };
-
