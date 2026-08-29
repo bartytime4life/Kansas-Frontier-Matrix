@@ -2,15 +2,19 @@
 doc_id: kfm://doc/runbook-people-dna-land-living-person-review
 title: People, DNA, and Land Living-Person Review Runbook
 type: runbook
-version: 0.2.0
-status: DRAFT_REPOSITORY_GROUNDED; SYNTHETIC_VALIDATION_ONLY; POLICY_RUNTIME_UNBOUND; NON_RELEASE; NON_PUBLICATION
-owners: "@bartytime4life — verified CODEOWNERS route; accountable privacy, consent, Indigenous/Tribal, legal, and domain stewardship NEEDS VERIFICATION"
+version: 0.3.0
+status: DRAFT_REPOSITORY_GROUNDED; SYNTHETIC_VALIDATION_ONLY; POLICY_RUNTIME_UNBOUND; ACCOUNTABLE_REVIEW_UNVERIFIED; NON_RELEASE; NON_PUBLICATION
+owners: "@bartytime4life — verified CODEOWNERS route; accountable privacy, consent, Indigenous/Tribal, legal, security, and domain stewardship NEEDS VERIFICATION"
 created: 2026-08-25
-updated: 2026-08-25
+updated: 2026-08-29
 owning_root: docs/
 responsibility: human review procedure for the existing people-dna-land lane
 related:
-  - docs/domains/people-dna-land/EXPANSION_BACKLOG.md
+  - docs/runbooks/people-dna-land/README.md
+  - docs/runbooks/people-dna-land/CONSENT_RUNBOOK.md
+  - docs/runbooks/people-dna-land/revocation.md
+  - docs/runbooks/people-dna-land/NO_NETWORK_TEST_RUNBOOK.md
+  - docs/domains/people-dna-land/README.md
   - docs/policy/living_persons_geoprivacy.md
   - policy/domains/people-dna-land/README.md
   - policy/consent/people-dna-land/README.md
@@ -19,80 +23,205 @@ related:
   - tools/validators/domains/people-dna-land/validate_consent_revocation_propagation_assessment.py
 [/KFM_META_BLOCK_V2] -->
 
+<a id="top"></a>
+
 # People, DNA, and Land Living-Person Review Runbook
+
+> **One-line purpose.** Keep repository work that could expose or affect a
+> living or plausibly living person on a fail-closed path until evidence,
+> purpose, audience, consent, rights, sensitivity, and accountable review are
+> established without placing protected detail in repository-visible systems.
+
+> [!CAUTION]
+> Do not place real names paired with private locations, DNA or genomic
+> material, consent credentials, private relationship data, protected cultural
+> information, precise person-land joins, or proprietary source excerpts in
+> Git, pull requests, issues, CI output, fixtures, screenshots, or artifacts.
+
+> [!IMPORTANT]
+> This is a human review procedure. It does not determine living status, grant
+> or validate real consent, activate policy, recognize authority on behalf of
+> an Indigenous Nation or Tribe, approve sensitive-data handling, or authorize
+> source admission, lifecycle mutation, release, deployment, or publication.
+
+**Quick navigation:** [Authority](#purpose-and-authority-boundary) ·
+[Evidence](#current-evidence-boundary) · [Rules](#keystone-rules) ·
+[Stop](#mandatory-stop-conditions) · [Inputs](#required-inputs) ·
+[Procedure](#review-procedure) · [Outcomes](#finite-outcomes) ·
+[Handoff](#minimum-review-handoff) · [Validation](#validation-and-interpretation) ·
+[Sources](#proposal-source-reconciliation) · [Rollback](#rollback-and-non-effects)
 
 ## Purpose and authority boundary
 
-Use this procedure to keep a repository change involving living people, DNA-derived material, family or kin relationships, or land-linked identity on hold until its evidence, consent, purpose, audience, sensitivity, and accountable-review requirements are established.
+Use this procedure for a repository change involving living or plausibly living
+people, DNA-derived material, family or kin relationships, consent, private
+location, or land-linked identity. The procedure prepares a bounded repository
+review and an accountable-review handoff; it is not the accountable review.
 
-This runbook is a human procedure. It does not activate policy, grant consent, make a legal determination, recognize authority on behalf of an Indigenous Nation or Tribe, approve a lifecycle transition, or publish data. Accepted ADR-0029 and the adopted Directory Rules place human procedures under `docs/`; this file remains at its existing path and creates no new responsibility root or parallel authority home.
+Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+adopts the [Directory Rules](../../doctrine/directory-rules.md), which place
+human procedures under `docs/runbooks/`. This same-path update remains in the
+`docs/` responsibility root and creates no parallel contract, schema, policy,
+registry, evidence, receipt, proof, release, or publication home.
 
-When repository documentation and executable evidence differ, preserve both facts: accepted governance defines the boundary, while executable evidence establishes only the behavior actually demonstrated. Do not infer operational maturity from an asserted policy posture.
+When documentation and executable evidence differ, preserve both facts:
+accepted governance defines the boundary, while executable evidence establishes
+only the behavior actually demonstrated at the tested revision. Do not infer
+operational maturity from policy prose, a file name, or a green workflow.
+
+[Back to top](#top)
 
 ## Current evidence boundary
 
-| Surface | Current-session repository evidence | Review consequence |
+| Surface | Repository evidence | Bounded conclusion |
 |---|---|---|
-| Consent-overlay fixture profile | `.github/workflows/domain-people-dna-land.yml`, `validate_consent_overlay.py`, and `test_consent_overlay_safety.py` execute deterministic checks over repository-owned synthetic fixtures. | A passing check confirms only the bounded fixture profile. |
-| Revocation-propagation assessment | The workflow, validator, and tests exercise synthetic `ACTIVE`, `REVOKED`, `EXPIRED`, `UNKNOWN`, and `ERROR` states. The schema remains `PROPOSED_INACTIVE`, and the satisfied result is consent-dimension-only. | Do not describe this as an active policy runtime or complete release decision. |
-| Policy sources | The domain and consent policy READMEs describe a fail-closed posture but also record inactive or evaluator-unbound implementation. | Policy activation and production binding remain **NEEDS VERIFICATION**. |
-| Real-person or culturally controlled material | The executable lane deliberately uses synthetic fixtures and does not establish legal authority, consent sufficiency, sovereignty review, or safe handling of real records. | Real or source-derived material remains **HOLD** pending accountable review outside Git and CI. |
-| Proof, promotion, release, and publication | The workflow reports that accepted proof production and release dry-run capability are not established. | No runbook result authorizes promotion, release, deployment, or publication. |
+| [Consent-overlay profile](../../../.github/workflows/domain-people-dna-land.yml) | The workflow runs deterministic checks over repository-owned synthetic fixtures with `KFM_NO_NETWORK=1`, including a negative-fixture loop. | A pass confirms only that named synthetic profile at the tested revision. |
+| [Revocation-propagation assessment](./revocation.md) | The validator and tests exercise synthetic `ACTIVE`, `REVOKED`, `EXPIRED`, `UNKNOWN`, and `ERROR` states across a declared seven-surface inventory. | The profile checks declared fail-closed consistency; it does not execute or prove cleanup. |
+| [Domain policy boundary](../../../policy/domains/people-dna-land/README.md) and [consent boundary](../../../policy/consent/people-dna-land/README.md) | Both describe fail-closed intent while recording inactive, incomplete, or evaluator-unbound implementation. | Production policy binding remains **NEEDS VERIFICATION**. |
+| [Living-person geoprivacy crosswalk](../../policy/living_persons_geoprivacy.md) | Human-readable containment and routing guidance; it explicitly is not policy authority or protected-data storage. | Use it for routing and exposure review, not as an allow decision. |
+| Real-person or culturally controlled material | The executable lane deliberately uses synthetic fixtures. | Legal authority, real consent sufficiency, sovereignty review, and safe handling of real records remain **HOLD** outside Git and CI. |
+| Proof, promotion, release, and publication | Current lane documentation and workflow keep these states separate and held. | No result from this runbook authorizes any governed transition. |
+
+[Back to top](#top)
+
+## Keystone rules
+
+1. **Unknown living status is not a deceased-person determination.** When safe,
+   require evidence appropriate to the claim. Otherwise treat the person as
+   plausibly living and fail closed.
+2. **Living status, identity, consent, rights, sensitivity, and release are
+   separate determinations.** Satisfying one does not satisfy another.
+3. **Consent is scoped.** Purpose, operation, audience, fields, relationships,
+   precision, geography, retention, export, and valid time must fit the exact
+   proposed use.
+4. **Consent does not prove a claim.** It cannot establish identity, kinship,
+   DNA-derived relationship, residence, ownership, title, or legal boundary.
+5. **Evidence outranks generated language.** Evidence-dependent claims must
+   resolve through EvidenceRef to EvidenceBundle and follow cite-or-abstain.
+6. **Derived carriers are not sovereign truth.** Maps, tiles, graphs, indexes,
+   caches, embeddings, summaries, dashboards, and AI output inherit upstream
+   restrictions and can preserve reconstruction risk.
+7. **Client-side concealment is not a public-safe transform.** Hiding a field,
+   popup, layer, label, or model response does not make protected data safe to
+   deliver.
+8. **Absence of denial is not approval.** `UNKNOWN`, missing, invalid, errored,
+   or unreviewed evidence remains fail-closed.
+
+[Back to top](#top)
 
 ## Mandatory stop conditions
 
-Stop and record **HOLD** without placing sensitive detail in Git, a PR, an issue, CI output, or an artifact when any of these conditions applies:
+Stop and record `HOLD` or `ESCALATE` without copying sensitive detail into a
+repository-visible surface when any of these conditions applies:
 
-- whether a person is living cannot be established safely;
-- purpose, audience, allowed use, retention, or data minimization is missing or ambiguous;
-- consent is missing, expired, revoked, disputed, unverifiable, or narrower than the proposed use;
-- the material includes or may reveal genomic data, kinship, living-person location, precise land relationships, protected cultural knowledge, burial or archaeology locations, rare-species associations, critical infrastructure, or another restricted attribute;
-- Indigenous or Tribal sovereignty, consent, cultural protocol, data-governance authority, or appropriate representative cannot be resolved;
-- rights, license, provenance, EvidenceRef, or chain of custody is insufficient;
-- a requested public or lower-trust audience exceeds the established consent and sensitivity boundary;
-- a workflow would expose payloads, identifiers, locations, credentials, or source excerpts in repository-visible output;
-- a required accountable reviewer or policy binding cannot be identified from current repository authority; or
-- the change would require source activation, access widening, lifecycle mutation, publication, deployment, or a repository-setting change.
+- living status cannot be established safely, or evidence conflicts;
+- identity, subject, representative, joint holder, or affected party is
+  unresolved;
+- purpose, operation, audience, fields, relationships, precision, geography,
+  retention, export, allowed use, or valid time is missing or ambiguous;
+- consent is missing, expired, revoked, suspended, disputed, unverifiable, or
+  narrower than the proposed use;
+- rights, license, source terms, provenance, EvidenceRef, EvidenceBundle, source
+  role, or chain of custody is insufficient;
+- the material includes or may reveal genomic data, kinship, health or biometric
+  data, living-person location, precise land relationships, protected cultural
+  knowledge, burial or archaeology locations, rare-species associations,
+  critical infrastructure, or another restricted attribute;
+- Indigenous or Tribal sovereignty, consent, cultural protocol, data-governance
+  authority, or appropriate representative cannot be resolved;
+- a public or lower-trust audience exceeds the established consent, rights,
+  sensitivity, or harmful-precision boundary;
+- the proposed repository record, workflow, log, screenshot, issue, PR, fixture,
+  or artifact would expose a protected value;
+- a required accountable reviewer or active policy binding cannot be identified;
+- a command would contact a live provider, use a credential, fetch a sensitive
+  payload, or mutate repository, data, lifecycle, release, or public state; or
+- deletion, erasure, notification, correction, withdrawal, cache invalidation,
+  source activation, access widening, release, deployment, publication, or a
+  repository-setting change is required.
 
-Absence of a denial is not approval. Unresolved evidence remains **UNKNOWN**; a checkable but unproved control remains **NEEDS VERIFICATION**.
+Use `ERROR` when the review mechanism or validation fails. Do not reinterpret an
+error as approval, denial, or proof that a protected action occurred.
+
+[Back to top](#top)
+
+## Required inputs
+
+Record only minimized, non-sensitive facts.
+
+| Input | Requirement |
+|---|---|
+| Repository identity | Exact commit SHA or pull-request head and affected paths |
+| Proposed action | One explicit operation, such as documentation review, answer, export, tile, graph, index, or cache use |
+| Purpose and audience | Named, finite, and no broader than the proposed action requires |
+| Data posture | `SYNTHETIC_ONLY`, `NO_REAL_PAYLOAD`, or `REAL_OR_SOURCE_DERIVED_REQUIRES_ESCALATION` |
+| Living-status posture | `HISTORICAL_SUPPORTED`, `LIVING_OR_PLAUSIBLY_LIVING`, or `UNKNOWN`; include only an opaque evidence reference |
+| Consent posture | Status, scope, audience, valid time, and revocation category; no credential or identifying value |
+| Evidence and source posture | EvidenceRef resolution, source role, rights, provenance, custody, and currentness |
+| Exposure posture | Sensitivity categories, precision, geography, downstream carriers, and reconstruction risk |
+| Accountability | Required reviewer roles and the approved non-repository review channel |
+| Containment path | Safe stop, correction, withdrawal, rollback, or escalation route if exposure is possible |
+
+If the action cannot be described with these minimized fields, keep the details
+out of repository systems and stop for an approved handling environment.
+
+[Back to top](#top)
 
 ## Review procedure
 
-### 1. Bound the proposed action
+### 1. Freeze the repository boundary
 
-Record only a minimized, non-sensitive description of:
+1. Record the exact revision and affected paths.
+2. Classify each path by responsibility root and artifact role.
+3. Confirm that the diff and fixtures contain no real sensitive payload.
+4. Identify overlapping pull requests and direct documentation consumers.
+5. Stop if the requested work requires a live external effect or unestablished
+   authority.
 
-- the repository surface and owning responsibility root;
-- whether the change is documentation, code, contract, schema, policy, validator, test, fixture, registry, or manifest work;
-- the intended purpose and audience;
-- the lifecycle state the change reads or proposes to affect; and
-- whether real data, an external source, or a publication surface would be touched.
+### 2. Establish the living-status posture
 
-If the action cannot be described without disclosing protected details, keep those details out of repository systems and stop for an approved handling channel.
+Determine whether admissible evidence supports a historical, non-living posture.
+Do not use a guessed age, missing recent record, generated profile, tree label,
+obituary-like text, or public availability as proof. A recent or unresolved
+record remains `LIVING_OR_PLAUSIBLY_LIVING` or `UNKNOWN` for this procedure.
 
-### 2. Classify the evidence and sensitivity boundary
+Record only the posture and an opaque evidence reference. Do not copy dates,
+names, addresses, relationship details, or source excerpts into the handoff.
 
-Confirm, without copying source payloads, whether the proposal concerns:
+### 3. Classify evidence, sensitivity, and downstream exposure
 
-- a demonstrably non-living historical person or a person who may be living;
-- DNA, genomic, biometric, health, family, kinship, or inferential identity material;
-- land tenure, allotment, parcel, address, mobility, or precise-location information;
-- Indigenous or Tribal people, knowledge, places, governance, or cultural controls; and
-- an EvidenceBundle/EvidenceRef or only generated, summarized, or asserted language.
+Confirm whether the proposal concerns DNA, genomic, biometric, health, family,
+kinship, inferential identity, land tenure, parcel, address, mobility,
+precise-location, Indigenous or Tribal material, protected cultural knowledge,
+or a combination that increases reconstruction risk.
 
-Treat generated text, indexes, embeddings, maps, tiles, and summaries as derived material, not canonical truth. Evidence-dependent claims must resolve through EvidenceRef and follow cite-or-abstain.
+Trace the proposed output through every named carrier: API response, export,
+tile, map, graph, index, cache, summary, evidence drawer, or AI context. A safe UI
+appearance does not prove a safe delivered payload.
 
-### 3. Verify consent dimensions
+### 4. Verify consent, rights, and accountable authority separately
 
-For a synthetic validation profile, verify that the recorded consent is active, unexpired, not revoked, within purpose and audience, and limited to the requested operation. For any real case, the repository validators are insufficient: require the accountable privacy, consent, legal, domain, and—when implicated—Indigenous or Tribal governance review appropriate to the material.
+For the synthetic validation profile, verify that recorded consent is active,
+unexpired, unrevoked, and within purpose, audience, and operation. For a real
+case, repository validators are insufficient. Require accountable privacy,
+consent, legal, domain, security, and—when implicated—Indigenous or Tribal
+governance review in an approved environment.
 
-Do not convert `UNKNOWN`, missing, or errored consent into approval. Revocation and expiry must block the next use within the bounded synthetic assessment; broader deletion, propagation, notification, and proof obligations remain unestablished unless separately demonstrated.
+Do not convert missing, unknown, disputed, or errored consent into approval.
+Revocation or expiry must block the next consequential use. Deletion,
+propagation, notification, correction, withdrawal, release replacement, and
+proof remain separate obligations until independently demonstrated.
 
-### 4. Run only the bounded synthetic checks
+### 5. Run only the bounded synthetic checks
 
-From a clean checkout at the exact SHA under review, with network access disabled by the workflow profile, run:
+From a clean checkout at the exact revision under review, reproduce the current
+workflow profile:
 
 ```bash
+export KFM_NO_NETWORK=1
+export PYTHONDONTWRITEBYTECODE=1
+export PYTHONHASHSEED=0
+
 python tests/domains/people-dna-land/consent/revocation/test_consent_overlay_safety.py --verbose
 python tools/validators/domains/people-dna-land/validate_consent_overlay.py \
   --revocation-manifest fixtures/domains/people-dna-land/consent_overlay/revocation_manifest.json \
@@ -101,46 +230,178 @@ python tests/domains/people-dna-land/consent/revocation/test_consent_revocation_
 python tools/validators/domains/people-dna-land/validate_consent_revocation_propagation_assessment.py --fixtures
 ```
 
-Also confirm that the workflow's invalid consent-overlay fixtures are rejected. Prefer the repository workflow for the complete negative-fixture loop; do not invent a broader parent validator or publication command.
+Use the [domain workflow](../../../.github/workflows/domain-people-dna-land.yml)
+or the [no-network runbook](./NO_NETWORK_TEST_RUNBOOK.md) for the complete
+negative-fixture loop. Do not invent a broader parent validator, source-access
+command, policy evaluator, proof producer, or publication command.
 
-A pass is **HEAD VALIDATION** only when the tested commit is the exact branch head. A pull-request merge ref is **MERGE-RESULT VALIDATION** and must be labeled with its synthetic merge SHA. Any other result is **NEEDS VERIFICATION**.
+### 6. Classify validation identity
 
-### 5. Interpret the result without overclaiming
+- `HEAD` applies only when the tested commit is the exact branch head.
+- `MERGE_RESULT` applies only to the exact synthetic merge SHA.
+- `STALE` applies when the tested revision is no longer the asserted head.
+- `NOT_RUN` applies when the check was not performed.
 
-| Observation | Required interpretation |
-|---|---|
-| Valid synthetic fixture accepted and invalid synthetic fixtures rejected | The bounded fixture profile passed; policy activation, real-data suitability, and release readiness remain unproved. |
-| `REVOKED` or `EXPIRED` does not deny and block next use | **HOLD**; the bounded fail-closed acceptance criterion failed. |
-| `UNKNOWN` does not abstain, or `ERROR` does not remain an error | **HOLD**; uncertainty or failure was converted into an unsafe result. |
-| Consent scope, audience, evidence, sensitivity, rights, or accountable ownership is unresolved | **HOLD** with **UNKNOWN** or **NEEDS VERIFICATION**, as applicable. |
-| The requested action reaches promotion, release, deployment, publication, or access control | Stop. This runbook has no authority to perform that action. |
+Do not transfer a result across revisions or describe a merge-result check as
+branch-head validation.
 
-### 6. Prepare a minimized review handoff
+### 7. Route accountable review
 
-Record the exact repository SHA, affected paths, synthetic checks and tested SHAs, evidence-reference presence, consent-state category, sensitivity categories, unresolved authorities, and the reason for **HOLD**, **UNKNOWN**, or **NEEDS VERIFICATION**. Use opaque internal references where an approved review system supports them; do not place personal identifiers, sequences, precise locations, protected cultural information, or proprietary excerpts in repository-visible surfaces.
+| Condition | Required review route | Repository-safe output |
+|---|---|---|
+| Any living or plausibly living person | Privacy, consent, legal, domain, and security roles | Opaque handoff with `ESCALATE`; accountable names and channel remain **NEEDS VERIFICATION** |
+| Indigenous or Tribal person, place, knowledge, governance, or cultural protocol | Appropriate Nation/Tribe-designated or otherwise accountable governance route plus privacy/legal review | Record only that authority is unresolved or satisfied outside Git; never reproduce protected content |
+| DNA, genomic, kinship, biometric, or health material | Privacy, consent, legal, domain, security, and data-custody roles | `HOLD` pending approved handling and separate policy evidence |
+| Precise person-land, residential, parcel, or mobility exposure | Privacy, geoprivacy, source/rights, domain, security, and release roles | `HOLD` pending public-safe transform and reconstruction-risk review |
+| Historical person with supported non-living posture | Domain, evidence/source, rights, and sensitivity roles | May proceed only to remaining gates; no automatic release or publication |
 
-The handoff is evidence for accountable review, not the review decision itself.
+`@bartytime4life` is the confirmed CODEOWNERS review route. The accountable
+specialist assignments and approved private handling channel remain **NEEDS
+VERIFICATION** and must not be invented in a public handoff.
 
-## Acceptance criteria
+[Back to top](#top)
+
+## Finite outcomes
+
+Keep test execution, subject posture, and work state separate.
+
+| Axis | Values | Meaning |
+|---|---|---|
+| Test execution | `PASS`, `FAIL`, `NOT_RUN` | Whether the named synthetic profile behaved as expected at the tested revision |
+| Subject posture | `HISTORICAL_SUPPORTED`, `LIVING_OR_PLAUSIBLY_LIVING`, `UNKNOWN` | The minimized living-status category for review routing; not an identity or legal determination |
+| Work state | `PROCEED_TO_OTHER_GATES`, `HOLD`, `ESCALATE`, `ERROR` | The next repository-safe action; never a release or publication decision |
+
+| Condition | Required work state | Interpretation |
+|---|---|---|
+| Exact synthetic profile passes and the change contains no real or source-derived sensitive material | `PROCEED_TO_OTHER_GATES` | Only the named synthetic and documentation gates may continue |
+| Living or plausibly living person, real DNA, real consent, protected cultural material, or precise private location is implicated | `ESCALATE` | Use the approved non-repository handling and accountable review route |
+| Living status, evidence, consent, rights, sensitivity, source role, custody, audience, policy binding, or reviewer authority is unresolved | `HOLD` or `ESCALATE` | Preserve the fail-closed boundary |
+| `REVOKED`, `EXPIRED`, or scope-mismatched consent does not block next use | `HOLD` | The bounded fail-closed acceptance criterion failed |
+| `UNKNOWN` is treated as satisfied, or `ERROR` is coerced to another outcome | `HOLD` | Uncertainty or failure was converted unsafely |
+| Test, fixture, schema, validator, dependency, or review mechanism fails unexpectedly | `ERROR` and `HOLD` | Preserve the failure and correct it before relying on the profile |
+| Promotion, release, deployment, publication, access widening, or repository settings are requested | `HOLD` | Route the request to its separately governed authority |
+
+`PROCEED_TO_OTHER_GATES` clears no evidence, rights, sensitivity, policy,
+review, lifecycle, release, or publication gate.
+
+[Back to top](#top)
+
+## Minimum review handoff
+
+Use a repository-safe record such as this. It is an illustrative handoff, not a
+canonical contract or schema.
+
+```yaml
+repository_revision: "<exact commit SHA>"
+affected_paths:
+  - "<repository path>"
+material_posture: "SYNTHETIC_ONLY | NO_REAL_PAYLOAD | ESCALATION_REQUIRED"
+proposed_action: "<one bounded operation>"
+purpose: "<minimized purpose>"
+audience: "<bounded audience class>"
+subject_posture: "HISTORICAL_SUPPORTED | LIVING_OR_PLAUSIBLY_LIVING | UNKNOWN"
+evidence_reference_posture: "RESOLVED | UNRESOLVED | NOT_APPLICABLE"
+sensitivity_categories:
+  - "<non-sensitive category label>"
+validation:
+  identity: "HEAD | MERGE_RESULT | STALE | NOT_RUN"
+  profile: "consent_overlay | consent_revocation_propagation | documentation_only"
+  result: "PASS | FAIL | NOT_RUN"
+independent_gates:
+  consent: "UNRESOLVED | HELD | SATISFIED_BY_SEPARATE_AUTHORITY"
+  rights: "UNRESOLVED | HELD | SATISFIED_BY_SEPARATE_AUTHORITY"
+  sensitivity: "UNRESOLVED | HELD | SATISFIED_BY_SEPARATE_AUTHORITY"
+  accountable_review: "UNRESOLVED | HELD | SATISFIED_BY_SEPARATE_AUTHORITY"
+  release: "HELD"
+work_state: "PROCEED_TO_OTHER_GATES | HOLD | ESCALATE | ERROR"
+reason_codes:
+  - "<non-sensitive reason code>"
+limitations:
+  - "NO_IDENTITY_OR_LIVING_STATUS_AUTHORITY"
+  - "NO_REAL_CONSENT_AUTHORITY"
+  - "NO_POLICY_RUNTIME_OR_CLEANUP_PROOF"
+  - "NO_RELEASE_OR_PUBLICATION_AUTHORITY"
+next_action: "<one bounded repository-safe action>"
+```
+
+The handoff is evidence for accountable review, not the review decision. Do not
+include names, sequences, dates of birth, addresses, coordinates, relationship
+details, consent credentials, protected cultural information, or proprietary
+excerpts.
+
+[Back to top](#top)
+
+## Validation and interpretation
+
+Before handing off this runbook change:
+
+1. review the complete diff for unrelated churn or lost limitations;
+2. confirm one H1, balanced fences, valid tables, stable anchors, and a final
+   newline;
+3. resolve every changed relative link and cited repository path;
+4. confirm the four exact Python entry points and fixture manifest still exist;
+5. run the repository's focused Markdown, metadata, document-graph, and link
+   checks when available; and
+6. label hosted results with the exact tested SHA and separate introduced,
+   inherited, skipped, pending, and external failures.
+
+A green documentation or domain workflow does not establish real-person
+correctness, consent sufficiency, policy activation, complete revocation
+propagation, public-safe transformation, proof closure, release readiness,
+deployment, or publication safety.
+
+### Acceptance criteria
 
 This documentation slice is complete only when:
 
-1. the runbook distinguishes the current synthetic executable profile from inactive or unverified policy runtime;
-2. missing, revoked, expired, unknown, and errored consent cannot be described as approval;
-3. living-person, genomic, land-linked, Indigenous/Tribal, precise-location, rights, and publication risks have explicit stop conditions;
-4. exact existing commands are provided without inventing a parent validator, source activation, proof producer, release, or publication path;
-5. HEAD and MERGE-RESULT validation are distinguished;
-6. no real, private, proprietary, culturally controlled, or rights-unclear material appears in the file; and
-7. rollback is limited to this documentation change and cannot be mistaken for data deletion or consent revocation.
+1. the synthetic executable profile is distinct from real-person review and an
+   unverified policy runtime;
+2. living status, consent, evidence, rights, sensitivity, and release remain
+   separate determinations;
+3. missing, revoked, expired, unknown, and errored states cannot be described as
+   approval;
+4. living-person, DNA/genomic, land-linked, Indigenous/Tribal,
+   precise-location, rights, and publication risks have explicit stop and
+   reviewer-routing conditions;
+5. exact existing commands are provided without inventing live access, policy,
+   proof, release, or publication paths;
+6. validation identity and finite outcomes are explicit;
+7. the minimized handoff contains no protected value; and
+8. rollback is limited to documentation and cannot be mistaken for consent
+   revocation, data deletion, correction, withdrawal, or public-state change.
+
+[Back to top](#top)
 
 ## Proposal-source reconciliation
 
-`KFM_Full_Atlas_seed_cards.md`, v2 expansion section, “People / DNA / Land Safety Lane” (lines 2794–2901 in the inspected Markdown copy; SHA-256 `9a95ab510bd984c257a8c578f8646993c7fe55d76f7d3c5f60d8bb9ad04ec3a2`, retrieved 2026-08-25) proposes bounded consent, sensitivity, evidence, and denial controls. It also says repository implementation maturity is unknown. That source is proposal material, not repository authority.
+The read-only Google Drive
+`KFM_People_Genealogy_DNA_Land_Ownership_Architecture_Blueprint.pdf` proposes
+assertion-first identity, restricted-by-default DNA, fail-closed living-person
+output, scoped consent, tokenized identifiers, synthetic-only fixtures, and
+separate evidence, policy, review, and release states. It was prepared without a
+mounted repository and marks current implementation maturity unknown; it is
+lineage, not implementation authority.
 
-The later `KFM Circled Sources — Distinctive Delta Synthesis` (modified 2026-08-23), section 3.1, reinforces the need to separate authority posture from executable capability. It does not adopt this runbook or activate policy. The procedure above keeps only ideas corroborated by accepted ADR-0029 and exact-baseline repository evidence.
+`KFM_Full_Atlas_seed_cards.md`, v2 expansion section “People / DNA / Land Safety
+Lane” (inspected copy SHA-256
+`9a95ab510bd984c257a8c578f8646993c7fe55d76f7d3c5f60d8bb9ad04ec3a2`), and the
+later `KFM Circled Sources — Distinctive Delta Synthesis` reinforce
+bounded consent, sensitivity, evidence, denial, and the separation of authority
+posture from executable capability. They do not adopt this runbook or activate
+policy. Current GitHub evidence and accepted ADR-0029 control the procedure and
+placement above.
+
+[Back to top](#top)
 
 ## Rollback and non-effects
 
-Before merge, close the draft PR and discard only its campaign branch. After merge, revert the single documentation commit or submit a reviewed forward correction. Either action changes documentation only; it does not revoke consent, delete data, alter policy, undo a lifecycle event, retract a release, or change public state.
+Before merge, close the draft pull request and delete only its task branch.
+After an independently authorized merge, revert the focused documentation
+commit or submit a reviewed same-path forward correction.
 
-This runbook and its validation commands do not contact a live source, process real person data, admit a source, activate a policy, establish legal or sovereign authority, create proof, apply a promotion transition, issue a receipt, release, deploy, publish, widen access, or change repository settings.
+Either action changes documentation only. It does not determine living status,
+revoke consent, delete or erase data, invalidate a cache, correct or withdraw a
+release, alter policy, undo a lifecycle event, admit or contact a source, create
+proof, release, deploy, publish, widen access, or change repository settings.
+
+[Back to top](#top)
