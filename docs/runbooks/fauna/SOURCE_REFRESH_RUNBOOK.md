@@ -3,14 +3,14 @@ doc_id: kfm://doc/runbook-fauna-source-refresh
 title: Fauna — Source Refresh Runbook
 type: standard
 profile: repository-grounded-source-edge-refresh-and-handoff
-version: v1.0.1
-prior_version: v1.0
+version: v1.0.2
+prior_version: v1.0.1
 status: draft; repository-grounded; documentation-only; fixture-first; live-refresh-hold; non-authoritative; non-publisher
 owners:
   - "@bartytime4life — verified GitHub review route only"
 owner_status: "Fauna, source, connector, rights, sensitivity, taxonomy, evidence, policy, operations, correction, release, and publication assignments remain NEEDS VERIFICATION; repository ownership and review routing do not create those authorities."
 created: 2026-05-13
-updated: 2026-08-28
+updated: 2026-08-29
 policy_label: restricted-review; fauna; source-refresh; source-edge; fixture-first; no-live-source; non-release; not-for-life-safety
 current_path: docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
 owning_root: docs/
@@ -114,6 +114,7 @@ notes:
   - "The SourceDescriptor role vocabulary in the current rich schema differs from the older seven-class vocabulary in draft Fauna source docs. Operators must validate against the implemented schema and must not guess or silently translate roles."
   - "KFM is not a wildlife emergency, law-enforcement, hunting, veterinary, regulatory, or life-safety authority."
   - "v1.0.1 removes the illustrative domain-first RAW path after the canonical RAW parent adopted one source-first capture identity. Exact physical placement, writer binding, child-document migration, and legacy payload disposition remain HOLD."
+  - "v1.0.2 restores unique backlog identifiers after the source-first reconciliation introduced a second FSR-23; no operational state changes."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -1412,8 +1413,8 @@ title: Fauna source refresh handoff
 | `FSR-21` | Public Fauna releases and consumers | Unknown | Inventory exact releases, APIs, maps, tiles, indexes, AI receipts, caches, and rollback targets |
 | `FSR-22` | Source terms/cadences | Needs source-by-source verification | Current source-owned terms, product docs, cadence, endpoint, limits, and attribution |
 | `FSR-23` | Fauna RAW compatibility subtree | Parent index reconciled; six child READMEs retain legacy physical-lane language | Inventory payloads and consumers; accept source-first physical placement and reference/migration contract; reconcile children without copying or deleting bytes |
-| `FSR-23` | Taxonomy-change handling | Downstream procedure not verified | Accepted taxon authority/crosswalk/correction workflow |
-| `FSR-24` | Live-source authorization | Not granted by this document | Separate review after every graduation gate closes |
+| `FSR-24` | Taxonomy-change handling | Downstream procedure not verified | Accepted taxon authority/crosswalk/correction workflow |
+| `FSR-25` | Live-source authorization | Not granted by this document | Separate review after every graduation gate closes |
 
 [Back to top](#top)
 
