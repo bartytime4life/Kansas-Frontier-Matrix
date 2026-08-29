@@ -2,7 +2,7 @@
 doc_id: kfm://doc/docs-domains-archaeology-governed-ai-behavior
 title: Archaeology — Governed AI Behavior
 type: standard
-version: v1
+version: v1.0.2
 status: draft
 owners: <archaeology-domain-steward> + <governed-ai-steward> (PLACEHOLDER — confirm)
 created: 2026-05-28
@@ -10,10 +10,10 @@ updated: 2026-08-28
 policy_label: public
 owning_root: docs/
 responsibility: Document draft governed-AI behavior for Archaeology without becoming evidence, policy, runtime, review, or publication authority.
-truth_posture: CONFIRMED tracked draft document and responsibility-root placement / PROPOSED runtime and route implementation unless current repository evidence is cited / NEEDS VERIFICATION validation, review, release, and publication
+truth_posture: CONFIRMED tracked draft document and responsibility-root placement / CONFLICTED operating-contract identity and section mappings / PROPOSED runtime and route implementation unless current repository evidence is cited / NEEDS VERIFICATION validation, review, release, and publication
 related: [docs/domains/archaeology/README.md, docs/domains/archaeology/cross-lane-relations.md, docs/doctrine/ai-build-operating-contract.md, policy/sensitivity/archaeology/]
 tags: [kfm, archaeology, governed-ai, gai, sensitive-domain]
-notes: [CONTRACT_VERSION = "3.0.0" pinned; repo paths/routes PROPOSED, repo not mounted this session]
+notes: [CONTRACT_VERSION = "3.0.0" pinned; tracked path presence confirmed at the observed main revision; docs/doctrine/ai-build-operating-contract.md is CONFLICTED and must not be used as independent authority; route handlers, schemas, validators, policy execution, review, release, and publication remain unverified unless separately cited]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -27,12 +27,12 @@ notes: [CONTRACT_VERSION = "3.0.0" pinned; repo paths/routes PROPOSED, repo not 
 ![sensitivity](https://img.shields.io/badge/sensitive_domain-DENY_by_default-critical)
 ![ai--posture](https://img.shields.io/badge/AI-interpretive_not_root_truth-purple)
 ![contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
-![repo--state](https://img.shields.io/badge/routes_&_schemas-PROPOSED-lightgrey)
+![repo--state](https://img.shields.io/badge/repository_evidence-MIXED-yellow)
 
-**Status:** `draft` · **Owners:** `<archaeology-domain-steward>` + `<governed-ai-steward>` (PLACEHOLDER) · **Updated:** 2026-05-28
+**Status:** `draft` · **Owners:** `<archaeology-domain-steward>` + `<governed-ai-steward>` (PLACEHOLDER) · **Updated:** 2026-08-28
 
 > [!CAUTION]
-> **Sensitive domain.** AI over Archaeology operates under a `DENY`-by-default posture. Exact site coordinates, burial, human remains, sacred sites, collection-security detail, and looting-risk exposure **fail closed** — the AI cannot disclose, infer, or reconstruct them, and must `DENY` requests that would. Disposition is governed by `ai-build-operating-contract.md` §23.2; this doc does **not** re-derive it.
+> **Sensitive domain.** AI over Archaeology operates under a `DENY`-by-default posture. Exact site coordinates, burial, human remains, sacred sites, collection-security detail, and looting-risk exposure **fail closed** — the AI cannot disclose, infer, or reconstruct them, and must `DENY` requests that would. This safety boundary is retained from the task's controlling specification and lane doctrine; this document does not assign it to an unresolved contract section.
 
 ---
 
@@ -61,7 +61,7 @@ notes: [CONTRACT_VERSION = "3.0.0" pinned; repo paths/routes PROPOSED, repo not 
 This document specifies **governed AI behavior** for the Archaeology / Cultural Heritage domain: the order in which AI must work, what it may produce, what it must refuse, the finite outcomes it can return, and the accountability artifacts it must emit.
 
 > [!NOTE]
-> **Truth labels in this doc.** The governed-AI behavior statement is `CONFIRMED` doctrine (Atlas §15.L), as is the contract's governed-AI ordering (`ai-build-operating-contract.md` §1.8) and the runtime outcome set (§8). API routes, schema homes, and validators are `PROPOSED` — doctrine names the surfaces; implementation is unverified in this session. No repository is mounted, so all paths/routes are `PROPOSED`.
+> **Truth labels in this doc.** The governed-AI behavior statement is retained as lane doctrine (Atlas §15.L). Current repository inspection confirms this document, its named sibling documents, the tracked `docs/doctrine/ai-build-operating-contract.md` path, the schema responsibility root, the archaeology policy path, and the documentation-only archaeology route inventory. The doctrine index classifies that operating-contract file's identity as `CONFLICTED`, so its authority and section mappings are `HOLD` and the file must not be used independently. Path presence does **not** prove route handlers, DTOs, schemas, validators, policy execution, review, release, or publication; those claims remain `PROPOSED` or `NEEDS VERIFICATION` as labeled.
 
 The single anchoring statement (`CONFIRMED` doctrine / `PROPOSED` implementation, Atlas §15.L):
 
@@ -75,13 +75,13 @@ The single anchoring statement (`CONFIRMED` doctrine / `PROPOSED` implementation
 
 | Aspect | Value | Status |
 |---|---|---|
-| Proposed path | `docs/domains/archaeology/governed-ai-behavior.md` | `PROPOSED` |
+| Current path | `docs/domains/archaeology/governed-ai-behavior.md` | `CONFIRMED` tracked draft document |
 | Owning responsibility root | `docs/` (explains something to humans) | `CONFIRMED` rule |
 | Domain segment | `archaeology` as a lane inside `docs/`, never a root | `CONFIRMED` rule |
-| Upstream (governs this doc) | `ai-build-operating-contract.md` §1.8, §8, §23.2; `[GAI]` doctrine | `CONFIRMED` rule / `PROPOSED` presence |
-| Sibling lanes | `docs/domains/archaeology/README.md`, `docs/domains/archaeology/cross-lane-relations.md` | `PROPOSED` |
-| Runtime counterpart | Provider-neutral model adapter + policy pre/post check + `AIReceipt` | `PROPOSED` |
-| Policy counterpart | `policy/sensitivity/archaeology/` | `PROPOSED` |
+| Tracked doctrine reference | `docs/doctrine/ai-build-operating-contract.md`; `[GAI]` doctrine | Path `CONFIRMED`; identity, authority, and section mappings `CONFLICTED / HOLD` |
+| Sibling lanes | `docs/domains/archaeology/README.md`, `docs/domains/archaeology/cross-lane-relations.md` | `CONFIRMED` tracked paths; content remains independently governed |
+| Runtime counterpart | Provider-neutral model adapter + policy pre/post check + `AIReceipt` | `PROPOSED`; implementation and binding unverified |
+| Policy counterpart | `policy/sensitivity/archaeology/` | `CONFIRMED` tracked path; executable coverage and activation unverified |
 
 **Directory Rules basis.** A doc that *explains to humans* belongs under `docs/`; a domain name is a **segment inside** a responsibility root, never a root folder. `archaeology` lives at `docs/domains/archaeology/`.
 
@@ -91,7 +91,7 @@ The single anchoring statement (`CONFIRMED` doctrine / `PROPOSED` implementation
 
 ## 3. The governed-AI ordering
 
-`CONFIRMED` doctrine — `ai-build-operating-contract.md` §1.8. AI is **interpretive, not the root truth source**; `EvidenceBundle` outranks generated language. The AI MUST work in this order and MUST NOT let fluent generation stand in for evidence, policy, review state, source authority, or release state.
+Draft lane doctrine — the tracked operating-contract file is `CONFLICTED` and is not evidence for this section's authority or numbering. AI is **interpretive, not the root truth source**; `EvidenceBundle` outranks generated language. The AI MUST work in this order and MUST NOT let fluent generation stand in for evidence, policy, review state, source authority, or release state.
 
 ```text
 define scope
@@ -125,11 +125,11 @@ All four are *interpretive acts over released, policy-cleared evidence*. None of
 
 ## 5. What AI must not do
 
-`CONFIRMED` doctrine (`[GAI]` guardrails; contract §1.8). The AI MUST NOT:
+Retained fail-closed lane guardrails (`[GAI]`; accepted contract binding `NEEDS VERIFICATION`). The AI MUST NOT:
 
 | Must not | Why |
 |---|---|
-| Disclose, infer, or reconstruct **exact site locations** | Looting / cultural-harm risk; fails closed under §23.2 |
+| Disclose, infer, or reconstruct **exact site locations** | Looting / cultural-harm risk; fails closed under the controlling safety boundary |
 | Treat rendered map features as evidence | Rendered features are *candidates*; `EvidenceBundle` carries truth support |
 | Invent support from map pixels, feature properties, vector search, or model memory | Generation is not evidence |
 | Return uncited authoritative claims | Every `ANSWER` claim must cite a resolvable `EvidenceRef` |
@@ -147,7 +147,7 @@ All four are *interpretive acts over released, policy-cleared evidence*. None of
 
 ## 6. Outcomes: when to ANSWER, ABSTAIN, DENY, ERROR
 
-`CONFIRMED` doctrine — the finite runtime outcome set (`ai-build-operating-contract.md` §8). For Archaeology, the trigger conditions are:
+Draft lane runtime vocabulary; accepted authority and schema binding remain `NEEDS VERIFICATION`. The current §8 of the conflicted operating-contract file does not define this outcome set. For Archaeology, the trigger conditions are:
 
 | Outcome | Trigger | Receipt |
 |---|---|---|
@@ -184,7 +184,7 @@ flowchart TD
 ```
 
 > [!NOTE]
-> `NEEDS VERIFICATION` — this flow reflects **doctrine ordering** (contract §1.8 + §8 + §21), not a verified runtime implementation. The sensitivity gate is placed first deliberately: it fails closed before any retrieval cost.
+> `NEEDS VERIFICATION` — this flow reflects draft lane evidence and policy ordering, not a verified runtime implementation. Operating-contract section mappings are `CONFLICTED / HOLD`. The sensitivity gate is placed first deliberately: it fails closed before any retrieval cost.
 
 [↑ Back to top](#top)
 
@@ -192,7 +192,7 @@ flowchart TD
 
 ## 8. API and runtime surfaces
 
-`PROPOSED` governed surfaces (Atlas §15.J). Exact routes are `UNKNOWN` (no mounted repo).
+`PROPOSED` governed surfaces (Atlas §15.J). Repository inspection confirms the documentation-only inventory at `apps/governed-api/routes/domains/archaeology/README.md`; that file explicitly does not prove handlers, DTOs, middleware, authorization, policy enforcement, evidence resolution, tests, or runtime behavior. Exact executable routes therefore remain `UNKNOWN`.
 
 | Endpoint or artifact | DTO / schema | Outcomes | Status |
 |---|---|---|---|
@@ -210,10 +210,10 @@ flowchart TD
 
 ## 9. AIReceipt and citation validation
 
-Every Archaeology inference emits an **`AIReceipt`** — the AI's promise of accountability. It records what the AI saw, what it was told to do, and what it produced, **without** persisting hidden chain-of-thought as evidence (`CONFIRMED` doctrine; schema `PROPOSED`, §21).
+Every Archaeology inference is proposed to emit an **`AIReceipt`** — an accountability shape that records what the AI saw, what it was told to do, and what it produced, **without** persisting hidden chain-of-thought as evidence. Accepted authority and schema binding remain `NEEDS VERIFICATION`; the current §21 of the conflicted operating-contract file does not define `AIReceipt`.
 
 <details>
-<summary><strong>AIReceipt shape (PROPOSED — §21)</strong></summary>
+<summary><strong>AIReceipt shape (PROPOSED)</strong></summary>
 
 ```text
 AIReceipt {
@@ -236,7 +236,7 @@ AIReceipt {
 
 </details>
 
-**Citation validation rules** (`PROPOSED`, §21) applied to every Archaeology `ANSWER`:
+**Citation validation rules** (`PROPOSED`) applied to every Archaeology `ANSWER`:
 
 1. Every claim cites at least one `EvidenceRef`.
 2. Each cited `EvidenceRef` resolves to an `EvidenceBundle` in a **released** state.
@@ -253,7 +253,7 @@ AIReceipt {
 
 ## 10. Sensitivity posture for AI output
 
-The §23.2 row that governs AI output for this lane (`CONFIRMED` doctrine; defaults `PROPOSED` until steward ratification):
+Draft lane sensitivity posture (`PROPOSED` until accepted authority and steward ratification are verified). The current §23.2 of the conflicted operating-contract file contains README minimums and does not govern this table:
 
 | Field | Value |
 |---|---|
@@ -281,17 +281,33 @@ The AI does not perform these transforms or reviews; it **respects their outcome
 
 These items remain `NEEDS VERIFICATION` before promotion from `draft` to `published`:
 
-1. Confirm `docs/domains/archaeology/` exists or is created with a lane README.
+1. `RESOLVED 2026-08-28`: `docs/domains/archaeology/` and its lane README are tracked at the observed main revision; content maturity remains file-specific.
 2. Confirm the `AIReceipt` schema home and field set against the mounted repo.
-3. Confirm citation-validation rules are implemented (currently `PROPOSED`, §21).
-4. Confirm the §23.2 Archaeology defaults are ratified.
+3. Confirm citation-validation rules are implemented (currently `PROPOSED`).
+4. Confirm the Archaeology sensitivity disposition against accepted policy and authority; the prior §23.2 mapping is `CONFLICTED / HOLD`.
 5. Confirm the "AI exact-location denial" test exists (Atlas §15.K lists it as `PROPOSED`).
 
 ## Changelog v0 → v1
 
+### v1.0.1 → v1.0.2 — PATCH
+
+| Change | Type | Reason |
+|---|---|---|
+| Downgraded operating-contract authority and section mappings to `CONFLICTED / HOLD` while preserving confirmed path presence. | authority correction | The doctrine index explicitly records an unresolved identity conflict and prohibits independent use. |
+| Removed false §1.8, §8, §21, and §23.2 bindings from ordering, outcomes, `AIReceipt`, and sensitivity claims. | evidence correction | The current tracked file's sections do not define those subjects. |
+| Preserved fail-closed Archaeology safety boundaries without assigning an unresolved reconstruction recipe. | safety clarification | Sensitive-domain protections remain controlling while authority resolution stays human-governed. |
+
+### v1 → v1.0.1 — PATCH
+
 | Change | Type (per contract §37) | Reason |
 |---|---|---|
-| Initial draft of Archaeology governed-AI behavior | new | Synthesizes Atlas §15.L + §15.J, contract §1.8/§8/§21, §23.2 |
+| Replaced the stale repository-unavailable posture with exact current path evidence. | status correction | The document, siblings, doctrine path, schema root, policy path, and documentation-only route inventory are tracked. |
+| Preserved `PROPOSED` / `NEEDS VERIFICATION` labels for executable routes, DTOs, schemas, validators, policy execution, review, release, and publication. | truth-boundary clarification | Repository presence is not implementation or governance approval. |
+| Corrected the operating-contract path. | link repair | Align with the current doctrine responsibility root. |
+
+| Change | Type (per contract §37) | Reason |
+|---|---|---|
+| Initial draft of Archaeology governed-AI behavior | new | Synthesizes Atlas §15.L + §15.J and then-proposed operating-contract mappings; those mappings are now `CONFLICTED / HOLD` |
 | Pinned `CONTRACT_VERSION = "3.0.0"` | clarification | Doctrine-adjacent doc requirement |
 
 > **Backward compatibility.** New document; no prior anchors to preserve. Section anchors are stable for future revisions.
@@ -312,12 +328,12 @@ This document is done enough to enter the repository when:
 
 ## Related docs
 
-- `docs/domains/archaeology/README.md` — archaeology lane landing page (`PROPOSED`)
-- `docs/domains/archaeology/cross-lane-relations.md` — sibling cross-lane doc (`PROPOSED`)
-- `ai-build-operating-contract.md` — §1.8 governed-AI rule, §8 outcomes, §21 AIReceipt, §23.2 matrix (canonical)
-- `policy/sensitivity/archaeology/` — fail-closed policy home (`PROPOSED`)
-- `docs/registers/DRIFT_REGISTER.md` — conflict log (`PROPOSED`)
+- `docs/domains/archaeology/README.md` — archaeology lane landing page (`CONFIRMED` tracked path; content `draft`)
+- `docs/domains/archaeology/cross-lane-relations.md` — sibling cross-lane doc (`CONFIRMED` tracked path; content `draft`)
+- `docs/doctrine/ai-build-operating-contract.md` — tracked path; identity, authority, and section mappings are `CONFLICTED / HOLD`, so it is not independent authority
+- `policy/sensitivity/archaeology/` — tracked policy path; rule coverage and activation remain `NEEDS VERIFICATION`
+- `docs/registers/DRIFT_REGISTER.md` — tracked conflict register; entry relevance remains case-specific
 
-**Last updated:** 2026-05-28 · `CONTRACT_VERSION = "3.0.0"`
+**Last updated:** 2026-08-28 · `CONTRACT_VERSION = "3.0.0"`
 
 [↑ Back to top](#top)
