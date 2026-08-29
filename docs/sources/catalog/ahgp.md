@@ -6,7 +6,6 @@ version: v1.0.0
 status: repository-grounded; navigation-only; source-not-admitted; connector-placeholder
 owners: NEEDS VERIFICATION — source, archaeology, people/genealogy, rights, sensitivity, and connector stewards
 updated: 2026-08-29
-supersedes: proposal-era flat source-family stub at the same path; no source, descriptor, connector, lifecycle, release, or publication state
 policy_label: source-candidate; rights-review-required; sensitivity-review-required; non-publisher
 current_path: docs/sources/catalog/ahgp.md
 owning_root: docs/
@@ -21,6 +20,9 @@ evidence_snapshot:
   base_commit: 2b0ea9bbbc9d9a120ea94d92fb4617d96fe7d2a0
   prior_blob: 3cf7b62914a0ffeff41d37e7bfe59aba6f19aae8
   method: complete target read; catalog family, product pages, registry template, connector tree, schema index, open-PR, Drive, and Notion inspection
+notes:
+  - "Replaces proposal-era prose at the same path without declaring a document-identity supersession relationship."
+  - "No source, descriptor, connector, lifecycle, release, or publication state is superseded."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
