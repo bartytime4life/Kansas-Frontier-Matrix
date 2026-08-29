@@ -14,7 +14,16 @@ COUNTY_YEAR_PANEL_TRIGGER_PATHS = {
     "tools/validators/data/validate_county_year_panel.py",
     "tests/data/test_county_year_panel.py",
 }
+CI_BOOTSTRAP_TRIGGER_PATHS = {
+    "tools/ci/install_python_ci.py",
+    "tools/ci/python-test.lock",
+    "pyproject.toml",
+}
 SELF_PATH = "tests/validators/evidence/test_agriculture_observation_workflow_binding.py"
+RECEIPT_PATH = (
+    "data/receipts/generated/"
+    "genrec-agriculture-observation-ci-bootstrap-trigger-closure-20260828.json"
+)
 
 
 class AgricultureObservationWorkflowBindingTests(unittest.TestCase):
@@ -30,6 +39,20 @@ class AgricultureObservationWorkflowBindingTests(unittest.TestCase):
                     f"{event} paths must include the complete CountyYearPanel dependency seam",
                 )
                 self.assertIn(SELF_PATH, paths)
+
+    def test_ci_bootstrap_dependency_changes_trigger_agriculture_observation(self) -> None:
+        workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
+        triggers = workflow["on"]
+
+        for event in ("pull_request", "push"):
+            with self.subTest(event=event):
+                paths = set(triggers[event]["paths"])
+                self.assertTrue(
+                    CI_BOOTSTRAP_TRIGGER_PATHS.issubset(paths),
+                    f"{event} paths must include the complete project-test CI bootstrap seam",
+                )
+                self.assertIn(SELF_PATH, paths)
+                self.assertIn(RECEIPT_PATH, paths)
 
 
 if __name__ == "__main__":
