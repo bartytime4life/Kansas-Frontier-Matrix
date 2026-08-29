@@ -46,7 +46,7 @@ notes:
 ![Doctrine: Atlas v1.1 Ch. 16](https://img.shields.io/badge/doctrine-Atlas%20v1.1%20Ch.%2016-purple)
 ![Segment: repository-present](https://img.shields.io/badge/segment-repository--present-informational)
 ![CONTRACT_VERSION: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
-![Last reviewed: 2026-08-29](https://img.shields.io/badge/last%20reviewed-2026--08--29-lightgrey)
+![Last updated: 2026-08-29](https://img.shields.io/badge/last%20updated-2026--08--29-lightgrey)
 
 | Field          | Value                                                                                                                       |
 | -------------- | --------------------------------------------------------------------------------------------------------------------------- |
@@ -60,7 +60,7 @@ notes:
 > This domain inherits the strictest defaults in KFM. Living-person fields, raw DNA segment data, private person-parcel joins, and DNA-derived hypotheses are **T4 (Denied) by default**. Promotion to any public tier requires an explicit transform, a recorded receipt, named review, and — for living persons and DNA — scoped, revocable consent. Doctrine: `[DOM-PEOPLE]`, `[ENCY]`, Atlas v1.1 Ch. 24.5.
 
 > [!WARNING]
-> **Current path posture.** The `people-dna-land` repository segment is present across the inspected domain documentation, contract, schema, policy, fixture, test, and validator roots. That implementation fact does not settle the externally presented canonical lane name or authorize a parallel `people` home. Preserve current paths until an accepted decision and migration plan establish a different outcome. See [§2.1](#21-segment-naming-conflict) and [§22](#22-adrs).
+> **Current path posture.** The `people-dna-land` repository segment is present across the inspected domain documentation, contract, schema, policy, fixture, test, and validator roots. Existing `people` compatibility guardrails and source-registry lanes also remain repository evidence; their topology is explicitly **NEEDS VERIFICATION**. Preserve every existing path and do not create new authority in a compatibility lane until an accepted decision and migration plan establish a different outcome. See [§2.1](#21-segment-naming-conflict) and [§22](#22-adrs).
 
 ---
 
@@ -127,24 +127,32 @@ This README **explains**. Current repository paths under `contracts/domains/peop
 ### 2.1 Segment-naming conflict
 
 > [!NOTE]
-> **Repository segment confirmed; external naming unsettled.** Current repository
-> evidence establishes the existing `people-dna-land` segment. The source registry
-> still records the externally presented canonical lane name as unsettled. That
-> naming question is not permission to create a parallel `people` contract,
-> schema, policy, fixture, test, validator, data, or runbook home.
+> **Repository segment confirmed; compatibility topology unsettled.** Current
+> repository evidence establishes the broader `people-dna-land` implementation
+> lane and several existing `people` compatibility guardrails or registry lanes.
+> The source registry classifies the relationship among those registry paths as
+> **NEEDS VERIFICATION**. Their presence is not permission to treat them as new
+> authority homes or to infer that a canonical rename, alias, split, or migration
+> has been approved.
 
 | Inspected responsibility | Current repository path | Safe conclusion |
 |---|---|---|
 | Domain explanation | `docs/domains/people-dna-land/` | Repository-present explanatory lane |
 | Semantic contracts | `contracts/domains/people-dna-land/` | Repository-present mixed-maturity contract lane |
+| Contract compatibility guardrail | `contracts/people/` | Repository-present alias guardrail; not a new contract authority home |
 | Machine schemas | `schemas/contracts/v1/domains/people-dna-land/` | Repository-present draft schema lane |
+| Schema compatibility guardrail | `schemas/contracts/v1/people/` | Repository-present alias guardrail; not a new schema authority home |
 | Policy | `policy/domains/people-dna-land/` and `policy/consent/people-dna-land/` | Repository-present; active production binding remains held |
+| Consent-policy compatibility lane | `policy/consent/people/` | Repository-present README guardrail; placement remains conflicted and production activation is held |
+| Source registry topology | `data/registry/sources/people-dna-land/`, `data/registry/sources/people/`, `data/registry/people-dna-land/`, and `data/registry/people-dna-land/sources/` | Repository-present compatibility topology; relationship remains **NEEDS VERIFICATION** |
 | Synthetic proof | `fixtures/domains/people-dna-land/`, `tests/domains/people-dna-land/`, and `tools/validators/domains/people-dna-land/` | Two bounded consent profiles are executable; broader proof is held |
 | Human procedures | `docs/runbooks/people-dna-land/` | Eight repository-grounded children, three explicit scaffolds |
 
-Preserve these implementation paths. Any rename, alias, split, or migration requires
-current consumer inventory, accepted authority, compatibility treatment, correction,
-and rollback; documentation alone cannot make that decision.
+Preserve these implementation and compatibility paths. Keep one authoritative source
+descriptor record and use pointers, redirects, or migration notes for compatibility;
+do not create divergent descriptor copies. Any rename, alias, split, or migration
+requires current consumer inventory, accepted authority, compatibility treatment,
+correction, and rollback; documentation alone cannot make that decision.
 
 [↑ back to top](#people-genealogy-dna-and-land-ownership)
 
