@@ -216,6 +216,23 @@ class ConsentOverlayFixtureTests(unittest.TestCase):
         self.assertIn("revocation_root", overlay_schema["required"])
         self.assertIn("revoked_overlay_ids", manifest_schema["required"])
 
+        for subject_posture in (
+            "not_established",
+            ["living_person"],
+            {"value": "living_person"},
+        ):
+            candidate = _load_json(_valid_fixture())
+            candidate["subject_posture"] = subject_posture
+            candidate["spec_hash"] = VALIDATOR.overlay_spec_hash(candidate)
+            with self.subTest(subject_posture=subject_posture):
+                self.assertEqual(
+                    VALIDATOR.validate_candidate(
+                        candidate,
+                        revocation_manifest=self.manifest,
+                    ),
+                    [Finding("SUBJECT_POSTURE_INVALID", "$.subject_posture")],
+                )
+
     def test_manifest_hash_and_shape_are_deterministic(self) -> None:
         manifest = _load_json(MANIFEST_PATH)
         self.assertEqual(
