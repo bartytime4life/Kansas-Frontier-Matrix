@@ -3,14 +3,15 @@ doc_id: kfm://doc/runbooks-soil-readme
 title: docs/runbooks/soil/ — Soil Operational Procedure Boundary
 type: readme
 subtype: boundary-compact
-version: v1.0
-prior_state: no local README boundary
-status: draft; repository-grounded; bounded synthetic validation executable; live source operation, proof, policy activation, promotion, rollback, release, deployment, and publication held
+version: v1.1
+prior_version: v1.0
+prior_state: repository-grounded boundary that correctly identified the no-network child as proposal-heavy and stale
+status: draft; repository-grounded; bounded synthetic validation executable; no-network procedure reconciled; live source operation, proof, policy activation, promotion, rollback, release, deployment, and publication held
 owners:
   - "@bartytime4life — verified GitHub review route"
   - "NEEDS VERIFICATION — accountable Soil, source, scientific, evidence, policy, release, and independent-review assignments"
 created: 2026-08-28
-updated: 2026-08-28
+updated: 2026-08-29
 policy_label: repository-facing; mixed child maturity; potentially sensitive location and land context; fail-closed
 current_path: docs/runbooks/soil/README.md
 owning_root: docs/
@@ -21,22 +22,19 @@ authority_rank: subordinate to accepted doctrine and ADRs, contracts, schemas, p
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: f7af2c3dcefd38ae5e86141cfbc0931c0ef7d90f
-  prior_path_state: absent
-  soil_runbook_tree: 46cd4a218c76f44cc8647c7ede49cc3d87d7839f
-  no_network_runbook_blob: d42e18386911dcc008a9045c38e052ce673bfda4
+  base_commit: a0fcc311577512b23c9ed69ed32a72132f06a773
+  lane_readme_prior_blob: d50303c8f4edc6a9427d61135ba2048b0ba01a03
+  no_network_runbook_prior_blob: d42e18386911dcc008a9045c38e052ce673bfda4
+  no_network_runbook_head_blob: 66debc96fd7dc4d7be9db33f14beab498ee88e0e
   promotion_runbook_blob: ace5df133481918157faa902a9450b0f7f9cace8
   rollback_runbook_blob: 60ff25bf877a610627ff36430227382a68228a7e
   source_refresh_runbook_blob: f1c27e02280f9ed52e1b18c2d4b83f10e8dd4d37
-  parent_runbooks_readme_blob: 4f33dfa18cd69fe6a6b990aac71be08d59e7d13e
   domain_workflow_blob: e009e00d5743d907461289c1c6571cab69ea2672
-  domain_tests_readme_blob: ff39df062df22583c9dd762f8c4ca36f902cac71
-  domain_readme_blob: 06cfbebc3ce130753d4aff766645765747e1dae6
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   direct_markdown_files_after_change: 5
   bounded_executable_fixture_profiles: 4
-  proposal_or_stale_child_procedures: 4
+  proposal_or_stale_child_procedures: 3
 related:
   - ../README.md
   - ../../domains/soil/README.md
@@ -54,7 +52,8 @@ related:
   - ../../../release/candidates/soil/README.md
 notes:
   - "Current executable coverage is limited to three bounded Soil fixture profiles and one fixture-only SSURGO package-drift comparator named by the active domain workflow."
-  - "The four child runbooks remain proposal-heavy and contain illustrative, unverified, or nonexistent command surfaces; this README prevents them from being mistaken for current operational procedures."
+  - "The no-network child now documents the current commands, fixtures, test-level Python guards, finite results, and explicit proof/release holds."
+  - "The other three child runbooks remain proposal-heavy and contain illustrative, unverified, or nonexistent command surfaces."
   - "A passing workflow establishes only the named synthetic checks at the tested SHA."
   - "This documentation change creates no source admission, evidence closure, policy decision, lifecycle transition, promotion, rollback, release, deployment, or publication authority."
 [/KFM_META_BLOCK_V2] -->
@@ -63,11 +62,10 @@ notes:
 
 # Soil Operational Procedure Boundary
 
-This directory routes maintainers to Soil procedure drafts and to the bounded
-checks the repository actually runs. It is an index and boundary contract, not
-a soil survey, station or satellite feed, scientific interpretation, policy
-decision, proof producer, lifecycle writer, release approval, or public advice
-surface.
+This directory routes maintainers to Soil procedures and to the bounded checks
+the repository actually runs. It is an index and boundary contract, not a soil
+survey, station or satellite feed, scientific interpretation, policy decision,
+proof producer, lifecycle writer, release approval, or public advice surface.
 
 > [!IMPORTANT]
 > The active Soil workflow runs only three deterministic synthetic validator
@@ -111,15 +109,17 @@ lifecycle.
 | Station soil-moisture validation | The workflow invokes `test_soil_moisture_qc.py` against the bounded station validator | Executable checks for the documented synthetic unit, depth, time, QC, deduplication, geometry, and no-network profile only |
 | SMAP L4 anti-collapse validation | The workflow invokes `test_smap_l4_anti_collapse.py` against the profile-local SMAP L4 validator | Executable checks for the documented synthetic grid/model profile and support-type separation only |
 | SSURGO package-drift comparison | The workflow invokes `python -m unittest tests.ingest.ssurgo_watch.test_ssurgo_watch --verbose` | Fixture-only comparator proof; no live SSURGO retrieval, currentness, rights, identity, or admission is established |
+| No-network isolation | Each named suite installs targeted Python test-level socket, DNS, or URL-open guards | Bounded to the APIs and process paths explicitly tested; runner-wide and non-Python egress denial remains unproved |
 | Proof | The workflow emits an explicit hold because no accepted Soil proof producer or deterministic proof command is wired | Proof remains held |
 | Release dry run | The workflow emits an explicit hold because no accepted Soil release dry-run command or candidate manifest contract is wired | Promotion, release, deployment, and publication remain held |
-| Four child procedure documents | Each child is long-form but retains proposal-era assumptions, unverified command names, or conceptual steps | Planning and review context only; length is not operational maturity |
+| Child procedures | The no-network runbook is repository-grounded; the promotion, rollback, and source-refresh children remain proposal-era procedures | Use each child only within its stated maturity and stop boundary |
 
 ## Current bounded checks
 
-Run from a clean checkout at the exact SHA under review, with no live endpoints,
-real secrets, production logs, sensitive field or station details, or writes to
-governed data and release stores:
+Use the repository-grounded
+[`NO_NETWORK_TEST_RUNBOOK.md`](./NO_NETWORK_TEST_RUNBOOK.md) for preflight,
+execution, interpretation, failure classification, and result recording. Its
+current command inventory is:
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
@@ -142,15 +142,16 @@ Use the active workflow as the current command inventory; record the checkout
 SHA, command, result, and any skipped or held job. Do not describe a held job as
 an executed proof or release check.
 
-These commands are repository-grounded entry points, but they were **NOT RUN**
-as part of this Markdown-only change. A future result belongs to the exact SHA
-and environment in which it is produced.
+A result belongs to the exact SHA and environment in which it is produced.
+`KFM_NO_NETWORK=1` does not itself block traffic, and the current tests do not
+establish runner-wide, operating-system, container, namespace, dependency-
+install, or non-Python isolation.
 
 ## Child procedure map
 
 | Document | Current maturity | Safe use |
 |---|---|---|
-| [`NO_NETWORK_TEST_RUNBOOK.md`](./NO_NETWORK_TEST_RUNBOOK.md) | **Proposal-heavy and stale** | Planning reference only. Its `make test-soil-no-network`, `pytest tests/domains/soil/no_network/`, proposed environment variable, curl probes, and receipt paths are not the active repository command surface. Use [Current bounded checks](#current-bounded-checks) instead. |
+| [`NO_NETWORK_TEST_RUNBOOK.md`](./NO_NETWORK_TEST_RUNBOOK.md) | **Repository-grounded bounded procedure** | Reproduce the four active synthetic fixture suites, interpret exact fixture polarity and SSURGO comparator outcomes, and record the limits of the test-level Python network guards. It does not establish runner-wide isolation, Soil truth, proof, release, or publication. |
 | [`PROMOTION_RUNBOOK.md`](./PROMOTION_RUNBOOK.md) | **Proposal-era readiness model; transition held** | Review lifecycle, support-type, rights, sensitivity, evidence, and rollback questions. Do not run its illustrative `kfm` or `conftest` commands as current repository procedures. |
 | [`ROLLBACK_RUNBOOK.md`](./ROLLBACK_RUNBOOK.md) | **Conceptual proposal; operational rollback held** | Review defect classes, required accountability objects, and stop conditions. No accepted Soil rollback executor, safe target, drill result, withdrawal path, or operational authority is established here. |
 | [`SOURCE_REFRESH_RUNBOOK.md`](./SOURCE_REFRESH_RUNBOOK.md) | **Proposal-era watcher and lifecycle model; live refresh held** | Review source-role and support-type questions. Its illustrative `kfm-tools` commands are not established current entry points and must not be used for live retrieval, admission, or lifecycle writes. |
@@ -165,7 +166,7 @@ procedure.
 
 | Need | Route | Required stop |
 |---|---|---|
-| Run current bounded offline checks | [Current bounded checks](#current-bounded-checks) and the active workflow | Stop if paths, SHA, fixture inventory, expected-negative polarity, or no-network posture differs |
+| Run current bounded no-network checks | [`NO_NETWORK_TEST_RUNBOOK.md`](./NO_NETWORK_TEST_RUNBOOK.md) and the active workflow | Stop if paths, SHA, fixture inventory, expected-negative polarity, or no-network posture differs |
 | Assess a proposed source refresh | [`SOURCE_REFRESH_RUNBOOK.md`](./SOURCE_REFRESH_RUNBOOK.md) as planning context plus the owning source registry | Stop before network retrieval, source activation, rights acceptance, or any lifecycle write |
 | Assess promotion readiness | [`PROMOTION_RUNBOOK.md`](./PROMOTION_RUNBOOK.md) as planning context plus owning evidence, policy, review, and release surfaces | Stop before transition execution; passing fixture checks do not approve promotion |
 | Assess rollback requirements | [`ROLLBACK_RUNBOOK.md`](./ROLLBACK_RUNBOOK.md) as planning context plus authoritative correction and rollback objects | Stop before withdrawal, republish, data mutation, deployment rollback, or public communication |
