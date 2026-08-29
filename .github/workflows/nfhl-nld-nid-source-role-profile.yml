@@ -9,10 +9,18 @@ name: nfhl-nld-nid-source-role-profile
       - "fixtures/contracts/v1/domains/hazards/nfhl_nld_nid_source_role_profile/**"
       - "tools/validators/domains/hazards/validate_nfhl_nld_nid_source_role_profile.py"
       - "tests/validators/domains/hazards/test_validate_nfhl_nld_nid_source_role_profile.py"
+      - "tests/validators/domains/hazards/test_nfhl_nld_nid_source_role_profile_workflow_binding.py"
       - "docs/intake/exploratory/pass-2-nfhl-nld-nid-source-role-profile-source-map.md"
       - "data/receipts/generated/genrec-pass2-nfhl-nld-nid-source-role-profile-20260808.json"
+      - "data/receipts/generated/genrec-nfhl-nld-nid-source-role-profile-receipt-trigger-closure-20260829.json"
+      - "schemas/contracts/v1/**"
+      - "schemas/contracts/v1/receipts/generated_receipt.schema.json"
       - "packages/hashing/src/hashing/**"
       - "tools/validators/validate_generated_receipt.py"
+      - "tools/validators/_common/local_resolver.py"
+      - "tools/ci/install_python_ci.py"
+      - "tools/ci/python-dependency-lock-migration.json"
+      - "tools/ci/python-test.lock"
       - "pyproject.toml"
   push:
     branches:
@@ -24,10 +32,18 @@ name: nfhl-nld-nid-source-role-profile
       - "fixtures/contracts/v1/domains/hazards/nfhl_nld_nid_source_role_profile/**"
       - "tools/validators/domains/hazards/validate_nfhl_nld_nid_source_role_profile.py"
       - "tests/validators/domains/hazards/test_validate_nfhl_nld_nid_source_role_profile.py"
+      - "tests/validators/domains/hazards/test_nfhl_nld_nid_source_role_profile_workflow_binding.py"
       - "docs/intake/exploratory/pass-2-nfhl-nld-nid-source-role-profile-source-map.md"
       - "data/receipts/generated/genrec-pass2-nfhl-nld-nid-source-role-profile-20260808.json"
+      - "data/receipts/generated/genrec-nfhl-nld-nid-source-role-profile-receipt-trigger-closure-20260829.json"
+      - "schemas/contracts/v1/**"
+      - "schemas/contracts/v1/receipts/generated_receipt.schema.json"
       - "packages/hashing/src/hashing/**"
       - "tools/validators/validate_generated_receipt.py"
+      - "tools/validators/_common/local_resolver.py"
+      - "tools/ci/install_python_ci.py"
+      - "tools/ci/python-dependency-lock-migration.json"
+      - "tools/ci/python-test.lock"
       - "pyproject.toml"
   workflow_dispatch:
 
@@ -78,6 +94,10 @@ jobs:
             --start-directory tests/validators/domains/hazards \
             --pattern 'test_validate_nfhl_nld_nid_source_role_profile.py' \
             --verbose
+          python -m unittest discover \
+            --start-directory tests/validators/domains/hazards \
+            --pattern 'test_nfhl_nld_nid_source_role_profile_workflow_binding.py' \
+            --verbose
 
       - name: Replay exact fixture outcomes and findings
         shell: bash
@@ -92,6 +112,9 @@ jobs:
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-pass2-nfhl-nld-nid-source-role-profile-20260808.json \
+            --repo-root .
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-nfhl-nld-nid-source-role-profile-receipt-trigger-closure-20260829.json \
             --repo-root .
 
       - name: Record trust boundary
