@@ -12,14 +12,18 @@ name: agriculture-observation
       - "tools/ci/kfm_no_network/sitecustomize.py"
       - "tests/validators/evidence/test_validate_agriculture_observation.py"
       - "tests/validators/evidence/test_validate_agriculture_observation_io_failclosed.py"
+      - "tests/validators/evidence/test_agriculture_observation_workflow_binding.py"
       - "docs/intake/exploratory/implementation-reference-agriculture-observation-source-map.md"
       - "contracts/common/geography_version.md"
       - "schemas/contracts/v1/common/geography_version.schema.json"
       - "contracts/data/county_year_panel.md"
       - "schemas/contracts/v1/data/county_year_panel.schema.json"
+      - "fixtures/contracts/v1/data/county_year_panel/**"
+      - "tools/validators/data/validate_county_year_panel.py"
+      - "tests/data/test_county_year_panel.py"
       - "packages/hashing/**"
       - "pyproject.toml"
-      - "data/receipts/generated/genrec-agriculture-observation-canonicalization-failclosed-negative-20260828.json"
+      - "data/receipts/generated/genrec-agriculture-observation-county-year-trigger-closure-20260828.json"
   push:
     branches: [main]
     paths:
@@ -31,14 +35,18 @@ name: agriculture-observation
       - "tools/ci/kfm_no_network/sitecustomize.py"
       - "tests/validators/evidence/test_validate_agriculture_observation.py"
       - "tests/validators/evidence/test_validate_agriculture_observation_io_failclosed.py"
+      - "tests/validators/evidence/test_agriculture_observation_workflow_binding.py"
       - "docs/intake/exploratory/implementation-reference-agriculture-observation-source-map.md"
       - "contracts/common/geography_version.md"
       - "schemas/contracts/v1/common/geography_version.schema.json"
       - "contracts/data/county_year_panel.md"
       - "schemas/contracts/v1/data/county_year_panel.schema.json"
+      - "fixtures/contracts/v1/data/county_year_panel/**"
+      - "tools/validators/data/validate_county_year_panel.py"
+      - "tests/data/test_county_year_panel.py"
       - "packages/hashing/**"
       - "pyproject.toml"
-      - "data/receipts/generated/genrec-agriculture-observation-canonicalization-failclosed-negative-20260828.json"
+      - "data/receipts/generated/genrec-agriculture-observation-county-year-trigger-closure-20260828.json"
   workflow_dispatch:
 
 permissions:
@@ -81,6 +89,7 @@ jobs:
         run: |
           python -m unittest -v tests.validators.evidence.test_validate_agriculture_observation
           python -m unittest -v tests.validators.evidence.test_validate_agriculture_observation_io_failclosed
+          python -m unittest -v tests.validators.evidence.test_agriculture_observation_workflow_binding
           python -m unittest -v tests.validators.evidence.test_validate_population_observation
           python -m unittest -v tests.validators.evidence.test_validate_economic_observation
           python -m unittest -v tests.data.test_county_year_panel
@@ -88,7 +97,7 @@ jobs:
       - name: Validate generated authoring receipt integrity
         run: |
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-agriculture-observation-canonicalization-failclosed-negative-20260828.json \
+            data/receipts/generated/genrec-agriculture-observation-county-year-trigger-closure-20260828.json \
             --repo-root .
       - name: Record trust boundary
         if: always()
