@@ -10,11 +10,14 @@ created: 2026-05-19
 updated: 2026-08-29
 policy_label: public-doctrine
 contract_version: "3.0.0"
+owning_root: docs/
+responsibility: Human-readable scope, boundaries, current repository maturity, sensitivity posture, and navigation for the People, Genealogy, DNA, and Land Ownership domain lane without defining machine contracts, policy, source admission, evidence, release, or publication authority.
+truth_posture: "CONFIRMED current repository paths, accepted Directory Rules placement, and bounded synthetic validation / PARTIAL mixed implementation and documentation maturity / UNKNOWN source admission, production retrieval, accountable stewardship, independent review, policy-runtime enforcement, operational consent or revocation, release, deployment, promotion, and publication / NEEDS VERIFICATION before positive operational claims"
 related:
   - docs/doctrine/directory-rules.md
-  - docs/domains/people-dna-land/PEOPLE_DOMAIN_MODEL.md         # authored prior session (v0.1)
-  - docs/domains/people-dna-land/PRESERVATION_MATRIX.md  # authored prior session (v0.2)
-  - docs/domains/people-dna-land/MISSING_OR_PLANNED_FILES.md    # authored prior session (v0.2)
+  - docs/domains/people-dna-land/PEOPLE_DOMAIN_MODEL.md
+  - docs/domains/people-dna-land/PRESERVATION_MATRIX.md
+  - docs/domains/people-dna-land/MISSING_OR_PLANNED_FILES.md
   - docs/domains/people-dna-land/EXPANSION_PLAN.md
   - docs/domains/people-dna-land/sublanes/genealogy.md
   - docs/runbooks/people-dna-land/README.md
