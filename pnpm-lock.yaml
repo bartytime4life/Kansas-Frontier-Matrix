@@ -38,9 +38,6 @@ importers:
 
   apps/kansas-frontier-matrix-explorer:
     dependencies:
-      '@kfm/maplibre':
-        specifier: file:../../packages/maplibre
-        version: link:../../packages/maplibre
       drizzle-orm:
         specifier: 0.45.2
         version: 0.45.2

@@ -244,6 +244,7 @@ test("keeps the renderer-neutral Workbench complete, bounded, and fail closed", 
   const buildScript = await readFile(new URL("../scripts/build-verified.sh", import.meta.url), "utf8");
   const installScript = await readFile(new URL("../scripts/install-ci.sh", import.meta.url), "utf8");
   const tsconfig = await readFile(new URL("../tsconfig.json", import.meta.url), "utf8");
+  const viteConfig = await readFile(new URL("../vite.config.ts", import.meta.url), "utf8");
 
   assert.match(source, /id="map-utility-panel"/);
   for (const view of ["Navigate", "Inspect", "Compare", "Display", "Measure", "Export", "Diagnostics"]) assert.match(source, new RegExp(`${view}`));
@@ -270,13 +271,16 @@ test("keeps the renderer-neutral Workbench complete, bounded, and fail closed", 
   assert.doesNotMatch(source, /from "maplibre-gl"|import\("maplibre-gl"\)|new maplibregl/);
   assert.doesNotMatch(explorerData, /from "maplibre-gl"/);
   assert.doesNotMatch(css, /maplibre-gl\/dist|\.maplibregl-/);
-  assert.equal(packageJson.dependencies["@kfm/maplibre"], "file:../../packages/maplibre");
+  assert.equal(Object.hasOwn(packageJson.dependencies, "@kfm/maplibre"), false);
   assert.equal(Object.hasOwn(packageJson.dependencies, "maplibre-gl"), false);
   assert.match(runtime, /Renderer-neutral high-contrast preference descriptor/);
   assert.doesNotMatch(runtime, /maplibre-gl|addSource|addLayer|setFilter/);
   assert.match(buildScript, /exec bash "\$\{script_dir\}\/sites-env\.sh"/);
   assert.match(installScript, /exec bash "\$\{script_dir\}\/sites-env\.sh"/);
   assert.match(tsconfig, /"target": "ES2022"/);
+  assert.match(tsconfig, /"@kfm\/maplibre": \["\.\.\/\.\.\/packages\/maplibre\/src\/index\.ts"\]/);
+  assert.match(viteConfig, /find: "@kfm\/maplibre"/);
+  assert.match(viteConfig, /packages\/maplibre\/src\/index\.ts/);
   assert.match(source, /FULL TEMPORAL CAPACITY · 4\.54 GA BP TO 2026/);
   assert.match(source, /Deep-time and intermediate ticks are capacity markers, not claims/);
   assert.match(source, /TIMELINE_JUMPS/);

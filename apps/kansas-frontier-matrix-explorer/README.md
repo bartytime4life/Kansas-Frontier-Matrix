@@ -15,10 +15,13 @@ fit together.
   not release or publish data.
 
 The application runs as a single-route Vinext site through the package-owned
-`NullMapRuntime`. It does not directly acquire MapLibre GL JS; styles, sources,
-layers, workers, hit testing, and screen measurement remain held pending a
-dependency-closed consumer migration. D1 and R2 are intentionally unbound in
-the current deployment.
+`NullMapRuntime`. TypeScript and Vite resolve the `@kfm/maplibre` facade to the
+accepted workspace package root, following the same renderer-neutral pattern as
+`explorer-web`; the child manifest acquires no renderer or internal package by
+an external or `file:` dependency. Styles, sources, layers, workers, hit
+testing, and screen measurement remain held pending a dependency-closed
+consumer migration. D1 and R2 are intentionally unbound in the current
+deployment.
 
 ## Prerequisites
 

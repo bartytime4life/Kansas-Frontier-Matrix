@@ -19,7 +19,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@kfm/maplibre": ["../../packages/maplibre/src/index.ts"]
     }
   },
   "include": [
