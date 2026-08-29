@@ -1,4 +1,5 @@
 import vinext from "vinext";
+import { fileURLToPath, URL } from "node:url";
 import { defineConfig } from "vite";
 import hostingConfig from "./.openai/hosting.json";
 import { sites } from "./build/sites-vite-plugin";
@@ -44,6 +45,16 @@ export default defineConfig(async () => {
   const { cloudflare } = await import("@cloudflare/vite-plugin");
 
   return {
+    resolve: {
+      alias: [
+        {
+          find: "@kfm/maplibre",
+          replacement: fileURLToPath(
+            new URL("../../packages/maplibre/src/index.ts", import.meta.url),
+          ),
+        },
+      ],
+    },
     server: {
       host: "0.0.0.0",
       allowedHosts: ["terminal.local"],

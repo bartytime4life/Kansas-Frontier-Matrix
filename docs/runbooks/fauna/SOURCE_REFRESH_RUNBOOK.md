@@ -3,22 +3,25 @@ doc_id: kfm://doc/runbook-fauna-source-refresh
 title: Fauna — Source Refresh Runbook
 type: standard
 profile: repository-grounded-source-edge-refresh-and-handoff
-version: v1.0
-prior_version: v0.1
+version: v1.0.2
+prior_version: v1.0.1
 status: draft; repository-grounded; documentation-only; fixture-first; live-refresh-hold; non-authoritative; non-publisher
 owners:
   - "@bartytime4life — verified GitHub review route only"
 owner_status: "Fauna, source, connector, rights, sensitivity, taxonomy, evidence, policy, operations, correction, release, and publication assignments remain NEEDS VERIFICATION; repository ownership and review routing do not create those authorities."
 created: 2026-05-13
-updated: 2026-08-24
+updated: 2026-08-29
 policy_label: restricted-review; fauna; source-refresh; source-edge; fixture-first; no-live-source; non-release; not-for-life-safety
 current_path: docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
 owning_root: docs/
-responsibility: "Document the bounded procedure for rechecking and capturing an already admitted Fauna source at the source edge, routing results only to governed RAW or QUARANTINE handoffs, and stopping before normalization, evidence closure, promotion, release, deployment, or publication."
+responsibility: "Document the bounded procedure for rechecking and capturing an already admitted Fauna source at the source edge, routing results only to an accepted source-first RAW writer or governed QUARANTINE handoff, and stopping before normalization, evidence closure, promotion, release, deployment, or publication."
 truth_posture: >-
   CONFIRMED same-path repository placement under adopted Directory Rules,
-  canonical subtype-first Fauna source-registry boundary, empty proposed
-  source-authority projection, rich proposed SourceDescriptor schema and
+  merged RAW parent contract requiring one source-first capture identity,
+  Fauna RAW subtree as compatibility/reference topology rather than an accepted
+  physical capture home, canonical subtype-first Fauna source-registry
+  boundary, empty proposed source-authority projection, rich proposed
+  SourceDescriptor schema and
   compatibility validator/fixtures, deterministic no-network Fauna fixture
   validation, held Fauna proof/release jobs, placeholder source-first eBird
   and iNaturalist connectors, and scaffold-only Fauna sensitivity policy /
@@ -63,6 +66,12 @@ inspection_boundary: >-
   during authoring. No upstream source was contacted, no credential was used,
   no payload was retrieved, and no source, lifecycle object, evidence object,
   policy result, release, deployment, promotion, or publication state changed.
+reconciliation_snapshot:
+  base_commit: 702d61158d601ab12ef3c7b4d5e83fd0636ae9d5
+  raw_parent_blob: 560113c00e257725c0a440cb489510af44c13b12
+  fauna_raw_prior_blob: 0a5354c15ba71c68ac121d0ee2364057b272df24
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  scope: "Documentation-only reconciliation of source-first RAW routing and the Fauna compatibility/reference index; no path, payload, connector, source, lifecycle, release, deployment, promotion, or publication state change."
 related:
   - docs/runbooks/fauna/README.md
   - docs/runbooks/fauna/NO_NETWORK_TEST_RUNBOOK.md
@@ -104,6 +113,8 @@ notes:
   - "The canonical Fauna source-registry directory has no concrete descriptor record at this evidence snapshot, and the source-authority projection is proposed and empty. Live Fauna refresh therefore remains HOLD."
   - "The SourceDescriptor role vocabulary in the current rich schema differs from the older seven-class vocabulary in draft Fauna source docs. Operators must validate against the implemented schema and must not guess or silently translate roles."
   - "KFM is not a wildlife emergency, law-enforcement, hunting, veterinary, regulatory, or life-safety authority."
+  - "v1.0.1 removes the illustrative domain-first RAW path after the canonical RAW parent adopted one source-first capture identity. Exact physical placement, writer binding, child-document migration, and legacy payload disposition remain HOLD."
+  - "v1.0.2 restores unique backlog identifiers after the source-first reconciliation introduced a second FSR-23; no operational state changes."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -200,7 +211,7 @@ flowchart LR
 - bounded retrieval through an accepted connector;
 - integrity, completeness, response-metadata, and source-head capture;
 - source-edge rights and sensitivity checks;
-- routing to approved `data/raw/fauna/` or `data/quarantine/fauna/` interfaces;
+- routing to an accepted source-first RAW writer or the governed `data/quarantine/fauna/` interface;
 - no-change, capture, quarantine, hold, abstain, deny, and error handoffs;
 - source-run/capture receipt requirements;
 - stale-source evidence and supersession handoff;
@@ -716,13 +727,16 @@ Use the accepted RAW interface only when:
 - immutable identity and prior-version lineage are preserved;
 - the RAW writer cannot write downstream lifecycle state.
 
-A typical responsibility shape is:
+The responsibility shape is source-first:
 
 ```text
-data/raw/fauna/<source_id>/<source_product_id>/<run_id>/
+one registered source_id
+  -> one immutable source-first capture identity
+  -> accepted physical RAW writer/path (NEEDS VERIFICATION)
+  -> governed Fauna reference or WORK/QUARANTINE handoff
 ```
 
-This path is illustrative. Use the exact accepted writer/path contract for the source product; do not create directories from this example.
+The accepted rules determine identity, not an exact physical RAW path. Do not infer `data/raw/fauna/`, a source-named child directory, or any other tracked directory as the capture home. Use only an accepted writer/path contract for the source product; none is established by this runbook.
 
 #### QUARANTINE
 
@@ -1134,7 +1148,7 @@ A source product may move from `HOLD` to an executable refresh candidate only wh
 
 | Gate | Minimum evidence |
 |---|---|
-| Placement | Source-first connector path accepted; no domain-first duplicate implementation |
+| Placement | Source-first connector path and one-capture identity accepted; physical RAW writer/path verified; no domain-first duplicate implementation or payload copy |
 | Source identity | Canonical stable `source_id` and exact product identity |
 | Descriptor | Concrete descriptor in accepted registry; rich schema pass; digest/version |
 | Vocabulary | Source-role value accepted by schema, contract, policy, and consumers |
@@ -1398,8 +1412,9 @@ title: Fauna source refresh handoff
 | `FSR-20` | Deployed scheduler/operations | Unknown | Verify scheduler, disable switch, alerting, audit, SLOs, incident ownership |
 | `FSR-21` | Public Fauna releases and consumers | Unknown | Inventory exact releases, APIs, maps, tiles, indexes, AI receipts, caches, and rollback targets |
 | `FSR-22` | Source terms/cadences | Needs source-by-source verification | Current source-owned terms, product docs, cadence, endpoint, limits, and attribution |
-| `FSR-23` | Taxonomy-change handling | Downstream procedure not verified | Accepted taxon authority/crosswalk/correction workflow |
-| `FSR-24` | Live-source authorization | Not granted by this document | Separate review after every graduation gate closes |
+| `FSR-23` | Fauna RAW compatibility subtree | Parent index reconciled; six child READMEs retain legacy physical-lane language | Inventory payloads and consumers; accept source-first physical placement and reference/migration contract; reconcile children without copying or deleting bytes |
+| `FSR-24` | Taxonomy-change handling | Downstream procedure not verified | Accepted taxon authority/crosswalk/correction workflow |
+| `FSR-25` | Live-source authorization | Not granted by this document | Separate review after every graduation gate closes |
 
 [Back to top](#top)
 
@@ -1526,6 +1541,6 @@ Do not use file deletion or force-push as a substitute for any of these.
 
 ## Final operating rule
 
-> **Resolve authority first; fetch only the exact approved product; preserve source-native identity, rights, sensitivity, time, and lineage; route only to governed RAW or QUARANTINE; emit a bounded handoff; then stop. A watcher may observe and propose. It does not decide truth, policy, release, or publication.**
+> **Resolve authority first; fetch only the exact approved product; preserve one source-first capture identity plus source-native rights, sensitivity, time, and lineage; route only through an accepted RAW writer or governed QUARANTINE handoff; emit a bounded handoff; then stop. A watcher may observe and propose. It does not decide truth, policy, release, or publication.**
 
 [Back to top](#top)

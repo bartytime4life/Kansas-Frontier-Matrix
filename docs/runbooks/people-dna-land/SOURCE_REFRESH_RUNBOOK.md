@@ -4,7 +4,7 @@ title: People · Genealogy · DNA · Land — Source Refresh Runbook
 type: standard
 version: v1.1.1
 prior_version: v1.1.0
-prior_state: repository-grounded source-refresh HOLD boundary whose next-review inventory still classified vendor watch as an explicit scaffold
+prior_state: repository-grounded source-refresh HOLD boundary whose next-review inventory still counted the rollback drill, validation runbook, and vendor watch as scaffolds
 status: draft; repository-grounded hold boundary; source-head review only; live retrieval and source mutation unavailable; non-release; non-publication
 owners:
   - "@bartytime4life — verified GitHub review route"
@@ -23,8 +23,12 @@ evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
   base_commit: a3d66df629a3b18f01821761898879d7d4996a2f
+  current_reconciliation_commit: 4e714b639861e340b0c35a5360f9ffaecdf1f53c
   prior_blob: 4c8eeaf660dbd416371a1a4f58838d43fddc50e3
-  lane_readme_prior_blob: 3b1441382983766c9fc5575c0fd3197cdf6bd0c2
+  lane_readme_prior_blob: 1ba3f28deaaea1fc9811ee1eb58e59558c2ecd84
+  rollback_drill_blob: 9088cbff694297613882bfae86b259f93023ff03
+  validation_runbook_blob: c1987d5f3b4a0419fa9aa970a71d7cef9d1c341e
+  vendor_watch_prior_blob: 84d77e7e9a9d4afb2ee367ff11841a837bdf1a8c
   source_registry_readme_blob: 98a90286e6b3d7ad49a64158be666e34ba6c1720
   connector_readme_blob: 2ab7b6677b077adba7406a42f56c1efead76dd51
   policy_readme_blob: 7260394c77d79629895da16d8d680e8d80c56b32
@@ -41,6 +45,9 @@ related:
   - docs/runbooks/people-dna-land/README.md
   - docs/runbooks/people-dna-land/PROMOTION_RUNBOOK.md
   - docs/runbooks/people-dna-land/ROLLBACK_RUNBOOK.md
+  - docs/runbooks/people-dna-land/ROLLBACK_DRILL.md
+  - docs/runbooks/people-dna-land/VALIDATION_RUNBOOK.md
+  - docs/runbooks/people-dna-land/VENDOR_WATCH_SOP.md
   - docs/doctrine/directory-rules.md
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - docs/domains/people-dna-land/README.md
@@ -59,6 +66,7 @@ notes:
   - "The prior 2026-05-12 body is retired from operational use because current evidence does not establish an admitted descriptor, active connector, source-refresh profile, receipt producer, policy-runtime binding, or lifecycle mutation path."
   - "This file authorizes no network request, credential use, source retrieval, descriptor edit, source activation, payload placement, receipt emission, lifecycle mutation, watcher PR, promotion, release, deployment, or publication."
   - "Repository-visible review is limited to synthetic or public-safe metadata already admitted to Git; real source or sensitive payloads remain outside Git and CI."
+  - "v1.1.1 corrects only the sibling-document inventory: the rollback drill and validation runbook are repository-grounded documentation, and vendor-signal review is manual and repository-visible; none creates live refresh or monitoring authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -183,7 +191,7 @@ Reverting this file restores proposal-era prose only. It does not undo or execut
 ## Next dependency-aware review points
 
 1. Resolve source-descriptor topology and ownership before creating a source instance or connector profile.
-2. Inventory the remaining rollback-drill and validation scaffolds independently; keep the vendor-signal procedure manual and repository-visible until its operational graduation gaps close.
+2. Preserve the rollback drill and validation runbook as repository-grounded documentation, and keep vendor-signal review manual and repository-visible; no direct child remains a scaffold, but none of these documents creates live refresh, monitoring, or response authority.
 3. Establish active policy-runtime, receipt, evidence, custody, and accountable-review bindings before designing live source refresh.
 4. Keep real, restricted, disputed, or proprietary material outside repository-visible surfaces.
 5. Preserve source admission, retrieval, validation, lifecycle promotion, release, deployment, publication, correction, withdrawal, revocation, deletion, invalidation, and rollback as separate states.

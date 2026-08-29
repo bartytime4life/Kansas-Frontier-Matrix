@@ -2,34 +2,34 @@
 doc_id: kfm://doc/people-dna-land/expansion-backlog
 title: People / DNA / Land — Expansion Backlog
 type: standard
-version: v0.3
-prior_version: v0.2
+version: v0.2
 status: draft
 owners: [TODO: Domain steward — People/DNA/Land] ; [TODO: Sensitivity reviewer] ; [TODO: Rights-holder representative] ; [TODO: Docs steward]
 created: 2026-05-18
-updated: 2026-08-29
+updated: 2026-06-07
 policy_label: restricted-by-default
-owning_root: docs/
-responsibility: Prioritized People/DNA/Land candidate-work register; records proposed work and partial delivery without creating implementation, policy, source, release, or publication authority.
-truth_posture: cite-or-abstain; current repository evidence overrides proposal-era path and maturity assumptions
 related:
-  - ../../doctrine/directory-rules.md
-  - ../../doctrine/ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md          # Directory Rules v1.3
+  - ../../../ai-build-operating-contract.md     # CONTRACT_VERSION = "3.0.0"
   - ./DATA_LIFECYCLE.md
   - ./DEFINITION_OF_DONE.md
   - ./DNA_HANDLING.md
   - ../../standards/PROV.md
   - ../../registers/VERIFICATION_BACKLOG.md
+  - kfm://atlas/domains-v1.1/ch16
+  - kfm://atlas/domains-v1.1/ch24.12
+  - kfm://atlas/domains-v1.1/ch24.13
+  - kfm://pass10/c9
+  - kfm://pass10/c6
 tags: [kfm, domain, people-dna-land, backlog, governance, sensitivity]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned per ai-build-operating-contract.md v3.0.
-  - Proposal-era paths remain candidate locations unless current repository evidence and the owning surface confirm their presence and role.
+  - PROPOSED paths; mounted-repo presence NEEDS VERIFICATION.
   - Living-person, DNA-derived, raw kit/vendor IDs, DNASegment, and private person-parcel joins are T4 (denied) by default.
   - SLUG CONFLICT (OQ-PDL-SLUG-01): docs lane `people-dna-land` is CONFIRMED in Directory Rules v1.3 §6.1; responsibility-root slug is `people` per Atlas §24.13. The two diverge; ADR pending. Both forms appear below, each labeled.
   - ADR-S NUMBERING CONFLICT (OQ-PDL-ADR-NUM-01): the corpus carries two different ADR-S-* lists (Atlas §24.12 / Directory Rules §18.c vs Unified Doctrine §49). The same number (e.g. ADR-S-08) means different things in each. Cross-refs below cite the source list explicitly.
   - Consent terms are ConsentGrant + RevocationReceipt (Atlas ubiquitous language); DNA-overlay cards also use ConsentManifest / revocation ledger / DNAKitToken (naming reconciliation OPEN — see DNA_HANDLING.md OQ-PEOPLE-DNA-NAME-01).
   - Owners are placeholders pending CODEOWNERS resolution.
-  - D-PDL-03 is partially delivered as repository-grounded documentation: the SOP supports manual review of already available repository-visible signals; live acquisition, monitoring, and response execution remain held.
 [/KFM_META_BLOCK_V2] -->
 
 # People / DNA / Land — Expansion Backlog
@@ -45,7 +45,7 @@ notes:
 ![sensitivity](https://img.shields.io/badge/default_tier-T4-red?style=flat-square)
 ![ci](https://img.shields.io/badge/ci-TODO-lightgrey?style=flat-square)
 
-**Status:** `draft` · **Owners:** `[Domain steward — TODO]` · `[Sensitivity reviewer — TODO]` · `[Rights-holder rep — TODO]` · **Last updated:** `2026-08-29`
+**Status:** `draft` · **Owners:** `[Domain steward — TODO]` · `[Sensitivity reviewer — TODO]` · `[Rights-holder rep — TODO]` · **Last reviewed:** `2026-06-07`
 
 > [!IMPORTANT]
 > **This file is a backlog, not a roadmap commitment.** Items are PROPOSED until each one is opened against current repository evidence (mounted files, schemas, tests, workflows, policies, release manifests). Nothing here promotes a path, schema, route, or policy. Promotion remains a governed state transition — never a backlog entry alone.
@@ -389,7 +389,7 @@ CONFIRMED / PROPOSED source families (Atlas Ch. 16 §D). All rights and current 
 |------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|--------|--------------------------------------------------|
 |**D-PDL-01**|Per-domain Definition of Done (the gate matrix expressed as a checklist).                                                                                                                                                                                |`docs/domains/people-dna-land/DEFINITION_OF_DONE.md`                                                                     |H       |**in-flight** (drafted this sprint)               |
 |**D-PDL-02**|Consent runbook (envelope, revocation, tombstone, embargo invalidation).                                                                                                                                                                                 |`docs/runbooks/people-dna-land/CONSENT_RUNBOOK.md` (PROPOSED — subfolder vs flat per Directory Rules §6.1.b / OPEN-DR-02)|H       |proposed (design captured in `DNA_HANDLING.md` §5)|
-|**D-PDL-03**|Vendor-signal review SOP (cadence boundary, triggers, evidence rules, finite outcomes, and escalation).                                                                                                                                                   |`docs/runbooks/people-dna-land/VENDOR_WATCH_SOP.md`                                                                      |H       |**partial** — manual repository-visible review documented; live monitoring and response held|
+|**D-PDL-03**|Vendor-watch SOP (cadence, triggers, escalation; aligned with C9-07 23andMe scenario).                                                                                                                                                                   |`docs/runbooks/people-dna-land/VENDOR_WATCH_SOP.md` (PROPOSED)                                                           |H       |proposed                                          |
 |**D-PDL-04**|Living-person review runbook.                                                                                                                                                                                                                            |`docs/runbooks/people-dna-land/LIVING_PERSON_REVIEW.md` (PROPOSED)                                                       |M       |proposed                                          |
 |**D-PDL-05**|Rollback drill for People/DNA/Land releases (RollbackCard → CorrectionNotice → derivative invalidation).                                                                                                                                                 |`docs/runbooks/people-dna-land/ROLLBACK_DRILL.md` (PROPOSED)                                                             |M       |proposed                                          |
 |**D-PDL-06**|Map and viewing products spec (person profile maps; residence/event timelines; migration paths with uncertainty; parcel context with warnings; chain-of-title summaries; instrument timeline views; restricted DNA/consent review; living-person review).|`docs/domains/people-dna-land/MAP_AND_VIEWING_PRODUCTS.md` (PROPOSED)                                                    |M       |proposed                                          |
@@ -479,7 +479,7 @@ flowchart TB
 ## 15. Related docs
 
 - [`../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules v1.3; placement authority (responsibility roots, lifecycle, compatibility roots).
-- [`../../doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract v3.0 (`CONTRACT_VERSION = "3.0.0"`).
+- [`../../../ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract v3.0 (`CONTRACT_VERSION = "3.0.0"`).
 - [`./DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — domain lifecycle, tiers, receipts (sibling; in-flight).
 - [`./DEFINITION_OF_DONE.md`](./DEFINITION_OF_DONE.md) — per-domain promotion-readiness checklist (sibling; in-flight; closes D-PDL-01).
 - [`./DNA_HANDLING.md`](./DNA_HANDLING.md) — DNA & genomic handling sub-policy (sibling; in-flight; closes D-PDL-08).
@@ -493,4 +493,4 @@ flowchart TB
 
 -----
 
-**Last updated:** 2026-08-29 · **Edition:** v0.3 (draft) · **CONTRACT_VERSION:** 3.0.0 · [Back to top ↑](#quick-jump)
+**Last reviewed:** 2026-06-07 · **Edition:** v0.2 (draft) · **CONTRACT_VERSION:** 3.0.0 · [Back to top ↑](#quick-jump)

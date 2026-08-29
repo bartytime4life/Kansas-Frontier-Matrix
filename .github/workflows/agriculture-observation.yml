@@ -16,6 +16,16 @@ name: agriculture-observation
       - "tests/validators/evidence/test_validate_agriculture_observation_io_failclosed.py"
       - "tests/validators/evidence/test_agriculture_observation_workflow_binding.py"
       - "docs/intake/exploratory/implementation-reference-agriculture-observation-source-map.md"
+      - "contracts/evidence/population_observation.md"
+      - "schemas/contracts/v1/evidence/population_observation.schema.json"
+      - "fixtures/contracts/v1/evidence/population_observation/**"
+      - "tools/validators/evidence/validate_population_observation.py"
+      - "tests/validators/evidence/test_validate_population_observation.py"
+      - "contracts/evidence/economic_observation.md"
+      - "schemas/contracts/v1/evidence/economic_observation.schema.json"
+      - "fixtures/contracts/v1/evidence/economic_observation/**"
+      - "tools/validators/evidence/validate_economic_observation.py"
+      - "tests/validators/evidence/test_validate_economic_observation.py"
       - "contracts/common/geography_version.md"
       - "schemas/contracts/v1/common/geography_version.schema.json"
       - "contracts/data/county_year_panel.md"
@@ -25,7 +35,7 @@ name: agriculture-observation
       - "tests/data/test_county_year_panel.py"
       - "packages/hashing/**"
       - "pyproject.toml"
-      - "data/receipts/generated/genrec-agriculture-observation-ci-bootstrap-trigger-closure-20260828.json"
+      - "data/receipts/generated/genrec-agriculture-observation-adjacent-observation-trigger-closure-20260828.json"
   push:
     branches: [main]
     paths:
@@ -41,6 +51,16 @@ name: agriculture-observation
       - "tests/validators/evidence/test_validate_agriculture_observation_io_failclosed.py"
       - "tests/validators/evidence/test_agriculture_observation_workflow_binding.py"
       - "docs/intake/exploratory/implementation-reference-agriculture-observation-source-map.md"
+      - "contracts/evidence/population_observation.md"
+      - "schemas/contracts/v1/evidence/population_observation.schema.json"
+      - "fixtures/contracts/v1/evidence/population_observation/**"
+      - "tools/validators/evidence/validate_population_observation.py"
+      - "tests/validators/evidence/test_validate_population_observation.py"
+      - "contracts/evidence/economic_observation.md"
+      - "schemas/contracts/v1/evidence/economic_observation.schema.json"
+      - "fixtures/contracts/v1/evidence/economic_observation/**"
+      - "tools/validators/evidence/validate_economic_observation.py"
+      - "tests/validators/evidence/test_validate_economic_observation.py"
       - "contracts/common/geography_version.md"
       - "schemas/contracts/v1/common/geography_version.schema.json"
       - "contracts/data/county_year_panel.md"
@@ -50,7 +70,7 @@ name: agriculture-observation
       - "tests/data/test_county_year_panel.py"
       - "packages/hashing/**"
       - "pyproject.toml"
-      - "data/receipts/generated/genrec-agriculture-observation-ci-bootstrap-trigger-closure-20260828.json"
+      - "data/receipts/generated/genrec-agriculture-observation-adjacent-observation-trigger-closure-20260828.json"
   workflow_dispatch:
 
 permissions:
@@ -101,7 +121,7 @@ jobs:
       - name: Validate generated authoring receipt integrity
         run: |
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-agriculture-observation-ci-bootstrap-trigger-closure-20260828.json \
+            data/receipts/generated/genrec-agriculture-observation-adjacent-observation-trigger-closure-20260828.json \
             --repo-root .
       - name: Record trust boundary
         if: always()

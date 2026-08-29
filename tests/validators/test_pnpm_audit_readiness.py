@@ -76,7 +76,13 @@ def _write_repository(
     )
 
 
-def _write_audit_report(path: Path, **counts: int) -> None:
+def _write_audit_report(
+    path: Path,
+    *,
+    legacy_advisories: dict[str, object] | None = None,
+    vulnerability_records: dict[str, object] | None = None,
+    **counts: int,
+) -> None:
     vulnerabilities = {
         "info": 0,
         "low": 0,
@@ -89,7 +95,12 @@ def _write_audit_report(path: Path, **counts: int) -> None:
         json.dumps(
             {
                 "actions": [],
-                "advisories": {},
+                "advisories": legacy_advisories or {},
+                **(
+                    {"vulnerabilities": vulnerability_records}
+                    if vulnerability_records is not None
+                    else {}
+                ),
                 "metadata": {
                     "vulnerabilities": vulnerabilities,
                     "dependencies": 5,
@@ -330,6 +341,145 @@ def test_threshold_vulnerability_is_regression(
     assert report["outcome"] == "REGRESSION"
     assert report["threshold_count"] == expected_count
     assert report["reason_codes"] == ["VULNERABILITY_THRESHOLD_EXCEEDED"]
+
+
+def test_threshold_projection_is_actionable_bounded_and_deterministic(
+    tmp_path: Path,
+) -> None:
+    report_path = tmp_path / "audit.json"
+    records = {
+        f"package-{index:02d}": {
+            "name": f"package-{index:02d}",
+            "severity": "critical" if index == 59 else "high",
+            "via": [
+                {"source": 9000 + index},
+                {"source": 8000 + index},
+                "transitive-package",
+            ],
+            "fixAvailable": {
+                "name": f"package-{index:02d}",
+                "version": f"2.0.{index}",
+                "isSemVerMajor": False,
+            },
+        }
+        for index in range(60)
+    }
+    _write_audit_report(
+        report_path,
+        vulnerability_records=records,
+        high=59,
+        critical=1,
+    )
+
+    first = classify_audit(
+        report_path, command_exit_code=1, audit_level="high"
+    )
+    second = classify_audit(
+        report_path, command_exit_code=1, audit_level="high"
+    )
+
+    projection = first["threshold_vulnerabilities"]
+    assert first["outcome"] == "REGRESSION"
+    assert projection["status"] == "PRESENT"
+    assert projection["total"] == 60
+    assert projection["truncated"] is True
+    assert projection["invalid_records"] == 0
+    assert len(projection["items"]) == 50
+    assert projection["items"][0] == {
+        "package": "package-59",
+        "severity": "critical",
+        "advisory_ids": ["8059", "9059"],
+        "advisory_ids_truncated": False,
+        "fix_available": True,
+        "fix_version": "2.0.59",
+    }
+    assert render_report(first) == render_report(second)
+
+
+def test_threshold_projection_marks_missing_and_count_mismatch(
+    tmp_path: Path,
+) -> None:
+    report_path = tmp_path / "audit.json"
+    _write_audit_report(report_path, high=1)
+    missing = classify_audit(
+        report_path, command_exit_code=1, audit_level="high"
+    )
+    assert missing["threshold_vulnerabilities"]["status"] == "NOT_PROVIDED"
+
+    _write_audit_report(
+        report_path,
+        vulnerability_records={},
+        high=1,
+    )
+    mismatch = classify_audit(
+        report_path, command_exit_code=1, audit_level="high"
+    )
+    assert mismatch["threshold_vulnerabilities"]["status"] == "COUNT_MISMATCH"
+
+
+def test_legacy_pnpm_advisories_are_projected_without_raw_text(
+    tmp_path: Path,
+) -> None:
+    report_path = tmp_path / "audit.json"
+    _write_audit_report(
+        report_path,
+        legacy_advisories={
+            "1138809": {
+                "module_name": "vinext",
+                "severity": "high",
+                "github_advisory_id": "GHSA-example-2",
+                "title": "must not be copied",
+                "url": "https://untrusted.example/advisory",
+                "recommendation": "must not be copied",
+            },
+            "1138808": {
+                "module_name": "image-size",
+                "severity": "high",
+                "github_advisory_id": "GHSA-example-1",
+                "title": "must not be copied",
+            },
+            "1138810": {
+                "module_name": "below-threshold",
+                "severity": "moderate",
+            },
+        },
+        high=2,
+        moderate=1,
+    )
+
+    report = classify_audit(
+        report_path,
+        command_exit_code=1,
+        audit_level="high",
+        manager="pnpm",
+    )
+
+    projection = report["threshold_vulnerabilities"]
+    assert report["outcome"] == "REGRESSION"
+    assert projection["status"] == "PRESENT"
+    assert projection["source_format"] == "legacy_advisories"
+    assert projection["total"] == 2
+    assert projection["items"] == [
+        {
+            "package": "image-size",
+            "severity": "high",
+            "advisory_ids": ["1138808", "GHSA-example-1"],
+            "advisory_ids_truncated": False,
+            "fix_available": None,
+            "fix_version": None,
+        },
+        {
+            "package": "vinext",
+            "severity": "high",
+            "advisory_ids": ["1138809", "GHSA-example-2"],
+            "advisory_ids_truncated": False,
+            "fix_available": None,
+            "fix_version": None,
+        },
+    ]
+    rendered = render_report(report)
+    assert "must not be copied" not in rendered
+    assert "untrusted.example" not in rendered
 
 
 @pytest.mark.parametrize("report_body", ["", "not json", "{}"])

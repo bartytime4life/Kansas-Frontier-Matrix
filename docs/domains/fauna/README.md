@@ -2,11 +2,11 @@
 doc_id: kfm://doc/domains/fauna/readme
 title: KFM Fauna Domain Lane
 type: standard
-version: v1.2.1
+version: v1.2.3
 status: draft
 owners: ["@bartytime4life — CODEOWNERS review route", "NEEDS VERIFICATION — fauna domain steward; docs steward; independent reviewer"]
 created: 2026-05-16
-updated: 2026-08-28
+updated: 2026-08-29
 policy_label: public
 owning_root: docs/
 responsibility: Human-readable scope, boundaries, maturity, sensitivity posture, and navigation for the Fauna domain lane
@@ -27,7 +27,7 @@ related:
   - release/candidates/fauna/
 tags: [kfm, domain, fauna, sensitivity, geoprivacy, evidence-first]
 notes:
-  # Repository paths and bounded synthetic validation were inspected at main@d0816eed65852b22577b9003e86159fd48f134df; presence, execution, review, release, and publication remain separate states.
+  # Repository paths and bounded synthetic validation were re-pinned at main@2b0ea9bbbc9d9a120ea94d92fb4617d96fe7d2a0; the Fauna RAW reference is explicitly optional while physical placement, execution, review, release, and publication remain separate states.
   # Public exact sensitive occurrence release is denied by default (Fauna sensitive occurrence = T4).
   # Doctrine-adjacent doc; CONTRACT_VERSION = "3.0.0" pinned per AI Build Operating Contract v3.0.
   # Atlas anchors: v1.1 Ch. 7 (Fauna), §20.5 (Deny-by-Default Register), §24.3 (Outcome Envelope), §24.5 (Sensitivity Tiers).
@@ -56,7 +56,7 @@ notes:
 ![First PR](https://img.shields.io/badge/first%20PR-synthetic--only-lightgrey)
 ![Build](https://img.shields.io/badge/CI-bounded%20synthetic%20active-brightgreen)
 
-**Status:** draft; repository-grounded; mixed implementation maturity · **Review route:** `@bartytime4life` via CODEOWNERS; Fauna stewardship and independent review remain `NEEDS VERIFICATION` · **Last updated:** 2026-08-28 · **`CONTRACT_VERSION = "3.0.0"`**
+**Status:** draft; repository-grounded; mixed implementation maturity · **Review route:** `@bartytime4life` via CODEOWNERS; Fauna stewardship and independent review remain `NEEDS VERIFICATION` · **Last updated:** 2026-08-29 · **`CONTRACT_VERSION = "3.0.0"`**
 
 ---
 
@@ -152,9 +152,10 @@ Current repository-grounded content under `docs/domains/fauna/` includes:
 | A policy / OPA bundle | `policy/domains/fauna/` or `policy/sensitivity/fauna/` | Admissibility decisions are policy |
 | A validator (runnable) | `tools/validators/...` (with `domains/fauna/` only if fauna-specific) | Validators are tools, not docs |
 | A test or fixture | `tests/domains/fauna/`, `fixtures/domains/fauna/` | Proof and golden data are separate |
-| A connector / fetcher | `connectors/<source_id>/` | Output goes to `data/raw/fauna/...` |
+| A connector / fetcher | `connectors/<source_id>/` | Output may route only through an accepted source-first RAW writer; exact physical placement remains **NEEDS VERIFICATION** |
 | A pipeline step | `pipelines/domains/fauna/` (or shared `pipelines/<phase>/`) | Pipelines are executable logic |
-| RAW, WORK, PROCESSED, CATALOG, or PUBLISHED artifact | `data/<phase>/fauna/...` | Lifecycle phases live in `data/` |
+| A RAW source capture | Accepted source-first RAW writer/path; exact physical placement **NEEDS VERIFICATION** | Preserve one source capture identity; `data/raw/fauna/` is compatibility/reference topology, not an accepted payload home |
+| A post-RAW Fauna artifact | Exact governed lifecycle path, including `data/work/fauna/`, `data/processed/fauna/`, or `data/catalog/domain/fauna/` as applicable | Verify the current contract before placement; published carrier topology remains **CONFLICTED / NEEDS VERIFICATION** |
 | A release manifest / rollback card | `release/candidates/fauna/`, `release/manifests/`, `release/rollback_cards/` | Release decisions live in `release/` |
 | A habitat patch, suitability surface, or habitat assignment | **Habitat** lane (`[DOM-HAB]`) | Habitat owns habitat patches and suitability |
 | A plant record (specimen/observation) | **Flora** lane (`[DOM-FLORA]`) | Flora owns plant records |
@@ -248,8 +249,10 @@ The active workflow inventory contains `domain-fauna.yml`, `fauna-evidence-bundl
 
 ```mermaid
 flowchart LR
-  A["Source<br/>(KDWP, USFWS, GBIF,<br/>eBird, EDDMapS, …)"] --> B["RAW<br/>data/raw/fauna/"]
+  A["Source<br/>(KDWP, USFWS, GBIF,<br/>eBird, EDDMapS, …)"] --> B["RAW CAPTURE<br/>one source-first identity<br/>physical placement NEEDS VERIFICATION"]
   B --> C{"Sensitive<br/>taxon / site?"}
+  B -. "optional Fauna reference" .-> R["OPTIONAL FAUNA REFERENCE<br/>data/raw/fauna/<br/>compatibility only; no duplicate bytes"]
+  R -. "same capture; optional handoff" .-> C
   C -- "yes" --> Q["QUARANTINE<br/>data/quarantine/fauna/<br/>(deny-by-default)"]
   C -- "no" --> W["WORK<br/>data/work/fauna/"]
   Q -- "steward review +<br/>Geoprivacy transform +<br/>RedactionReceipt" --> W
@@ -265,11 +268,11 @@ flowchart LR
   classDef pub fill:#e6f4ea,stroke:#137333,color:#0b5e1e;
 
   class Q deny;
-  class C,K,RC gov;
+  class R,C,K,RC gov;
   class PUB,API,UI pub;
 ```
 
-**Reading the diagram.** Sensitive taxa, nests, dens, roosts, hibernacula, and spawning sites land in **QUARANTINE** by default; they only re-enter the WORK lane after **steward review + geoprivacy transform + RedactionReceipt**. Publication is a **governed state transition**, not a file move — every transition emits receipts, and rollback is always a valid target. Current repository guidance contains both `data/published/fauna/` and the map-layer delivery surface `data/published/layers/fauna/`; their canonical relationship is **CONFLICTED / NEEDS VERIFICATION**. The diagram records both without selecting a canonical carrier, and neither path grants release authority. [DIRRULES]
+**Reading the diagram.** RAW capture has one source-first identity and reaches the sensitivity decision directly. `data/raw/fauna/` is an optional compatibility/reference and handoff surface, not a required lifecycle stage or an accepted physical payload home; a reference may point to the same capture without duplicating bytes, and exact writer binding and placement remain **NEEDS VERIFICATION**. Sensitive taxa, nests, dens, roosts, hibernacula, and spawning sites land in **QUARANTINE** by default; they only re-enter the WORK lane after **steward review + geoprivacy transform + RedactionReceipt**. Publication is a **governed state transition**, not a file move — every transition emits receipts, and rollback is always a valid target. Current repository guidance contains both `data/published/fauna/` and the map-layer delivery surface `data/published/layers/fauna/`; their canonical relationship is **CONFLICTED / NEEDS VERIFICATION**. The diagram records both without selecting a canonical carrier, and neither path grants release authority. [DIRRULES]
 
 [Back to top ↑](#top)
 
@@ -446,6 +449,9 @@ A: Cross-domain files live under their **lowest common responsibility root witho
 **Q: How does Focus Mode answer Fauna questions?**
 A: Through finite envelopes only — ANSWER / ABSTAIN / DENY / ERROR — over **released** EvidenceBundles, with AIReceipt and citation validation. A `RuntimeResponseEnvelope` carries the outcome; direct model output is never the authority. [GAI]
 
+**Q: Where does a Fauna RAW capture live?**
+A: It routes through the accepted source-first RAW writer/path for that source. Exact physical placement remains **NEEDS VERIFICATION**. `data/raw/fauna/` and its children are compatibility/reference or unresolved legacy surfaces, not permission to place or duplicate payload bytes.
+
 **Q: Where does an aggregator (e.g., GBIF) sit in source-role terms?**
 A: As **observation / aggregator**. An aggregator is **never** a legal-status authority and **never** a regulatory authority. Crossing roles is a tested failure mode (Atlas §24.1 Source-Role Anti-Collapse).
 
@@ -546,6 +552,6 @@ A Fauna lane PR is acceptable when: the file lives in the correct responsibility
 
 **Related docs:** [docs/domains/README.md](../README.md) · [docs/doctrine/directory-rules.md](../../doctrine/directory-rules.md) · [docs/doctrine/ai-build-operating-contract.md](../../doctrine/ai-build-operating-contract.md) · [docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md](../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) · [docs/standards/PROV.md](../../standards/PROV.md)
 
-**Last updated:** 2026-08-28 · **Review route:** `@bartytime4life` via CODEOWNERS; specialist stewardship remains _NEEDS VERIFICATION_ · **Status:** draft; repository-grounded; mixed maturity · **`CONTRACT_VERSION = "3.0.0"`**
+**Last updated:** 2026-08-29 · **Review route:** `@bartytime4life` via CODEOWNERS; specialist stewardship remains _NEEDS VERIFICATION_ · **Status:** draft; repository-grounded; mixed maturity · **`CONTRACT_VERSION = "3.0.0"`**
 
 [Back to top ↑](#top)

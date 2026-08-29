@@ -316,8 +316,14 @@ def validate_candidate(candidate: object, *, revocation_manifest: Mapping[str, A
         add_finding(findings, "OVERLAY_ID_INVALID", "$.overlay_id")
     if candidate.get("source_role") != "fixture_only":
         add_finding(findings, "SOURCE_ROLE_INVALID", "$.source_role")
-    if candidate.get("subject_posture") == "unknown":
+    subject_posture = candidate.get("subject_posture")
+    if subject_posture == "unknown":
         add_finding(findings, "SUBJECT_POSTURE_UNRESOLVED", "$.subject_posture")
+    elif (
+        not isinstance(subject_posture, str)
+        or subject_posture not in {"living_person", "deceased_or_historical"}
+    ):
+        add_finding(findings, "SUBJECT_POSTURE_INVALID", "$.subject_posture")
     if candidate.get("disclosure_level") not in {"restricted", "internal"}:
         add_finding(findings, "DISCLOSURE_LEVEL_INVALID", "$.disclosure_level")
     evaluation = _datetime(candidate.get("evaluation_time"))

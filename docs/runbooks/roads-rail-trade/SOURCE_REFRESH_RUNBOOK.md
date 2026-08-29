@@ -1,637 +1,511 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runbooks/roads-rail-trade/source-refresh
 title: Roads, Rail, and Trade Routes — Source Refresh Runbook
-type: standard
-version: v0.1
-status: draft
-owners: TODO — Roads/Rail domain steward; Docs steward; Sources steward
+type: runbook
+version: v1.0.0
+prior_version: v0.1
+prior_state: proposal-era live-refresh procedure with placeholder owners, unverified source authority, invented gate and validator commands, proposed receipt behavior, and unsupported promotion language
+status: draft; repository-grounded hold boundary; bounded synthetic CorridorRoute validation available; live source refresh unavailable; non-release; non-deployment; non-publication
+owners:
+  - "@bartytime4life — verified GitHub review route"
+  - "NEEDS VERIFICATION — accountable Roads/Rail/Trade, source, transport, rights, sensitivity, Indigenous/Tribal stewardship, evidence, policy, security, operations, release, and independent-review assignments"
 created: 2026-05-12
-updated: 2026-05-12
-policy_label: public
+updated: 2026-08-29
+policy_label: repository-facing; infrastructure-sensitive; historic-and-cultural-corridor-sensitive; no-network; fail-closed; non-release; non-publication
+current_path: docs/runbooks/roads-rail-trade/SOURCE_REFRESH_RUNBOOK.md
+owning_root: docs/
+responsibility: explain the current source-refresh hold, provide a repository-only readiness review, and route maintainers to the exact bounded synthetic CorridorRoute validation procedure
+truth_posture: cite-or-abstain
+authority_class: explanatory operational documentation
+authority_rank: subordinate to accepted doctrine and ADRs, source registry and activation records, contracts, schemas, policy, evidence, review, lifecycle, proof, release, correction, and rollback authorities
+canonical_relationship: same-path replacement of proposal-era instructions; prior detail remains in Git history and is not current operational authority
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 011bebd5ab51d22d4355eb754b5a921fb45243a0
+  prior_blob: 2b403f3a6ca9bad993a30a0c8c609e712f3e4029
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  domain_readme_blob: f2d1250dad3eefd2f148483ddcc388e66d2a2186
+  source_registry_readme_blob: e5ada8f7dc9eee48ed758bd4ec5c08bc4be15c0a
+  subtype_source_registry_readme_blob: 54087e02e329b98c595807e4c9041c97972c0179
+  source_authority_register_blob: 32729857bc8eb5001acb37b8ee8e60bcb6e0dc50
+  domain_connector_readme_blob: 20b94a2fa27844ae32da758c38f8570d016634ee
+  corridor_route_contract_blob: 2bef2e964b8afa855ca7e72c86ca72dad2b63f52
+  corridor_route_schema_blob: 663afd8aa09c52a2626d84cfbc6c76965df79942
+  corridor_route_validator_blob: 9b75fd5d15d348ec788057fa1e1371f82e685415
+  corridor_route_tests_blob: 4df9495c441810e5ad196d88ad67f64e00426136
+  domain_workflow_blob: 391fead3fdd0d7ecead6464be7946cbaf68247e0
+  proof_lane_readme_blob: 91c109d463c45c925f1d104d4cd8aaf742cd28af
+  candidate_lane_readme_blob: c989bf2bed10472bc46a168231b2269f17bbda48
+  proposal_descriptor_count: 5
+  bounded_test_count: 14
+  valid_fixture_count: 2
+  invalid_fixture_count: 8
 related:
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/trust-membrane.md
-  - docs/domains/roads-rail-trade/README.md            # PROPOSED
-  - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md         # PROPOSED
-  - docs/runbooks/roads-rail-trade/VALIDATION.md       # PROPOSED sibling
-  - docs/runbooks/roads-rail-trade/ROLLBACK.md         # PROPOSED sibling
-  - docs/adr/ADR-watcher-non-publisher.md              # PROPOSED
-tags: [kfm, runbook, roads-rail-trade, sources, refresh, governed-pipeline]
+  - ./README.md
+  - ./NO_NETWORK_TEST_RUNBOOK.md
+  - ./PROMOTION_RUNBOOK.md
+  - ./ROLLBACK_RUNBOOK.md
+  - ../../domains/roads-rail-trade/README.md
+  - ../../domains/roads-rail-trade/DATA_LIFECYCLE.md
+  - ../../domains/roads-rail-trade/SENSITIVITY.md
+  - ../../doctrine/directory-rules.md
+  - ../../doctrine/lifecycle-law.md
+  - ../../doctrine/trust-membrane.md
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../../data/registry/roads-rail-trade/sources/README.md
+  - ../../../data/registry/sources/roads-rail-trade/README.md
+  - ../../../connectors/domains/roads-rail-trade/README.md
+  - ../../../contracts/domains/roads-rail-trade/corridor_route.md
+  - ../../../schemas/contracts/v1/domains/roads-rail-trade/corridor_route.schema.json
+  - ../../../fixtures/domains/roads-rail-trade/corridor_route/
+  - ../../../tools/validators/domains/roads-rail-trade/validate_corridor_route.py
+  - ../../../tests/schemas/test_corridor_route_contract.py
+  - ../../../.github/workflows/domain-roads-rail-trade.yml
 notes:
-  - All repo paths are PROPOSED until verified against mounted-repo evidence.
-  - Source-family inventory CONFIRMED via DOM-ROADS / ENCY; cadence and rights NEEDS VERIFICATION per-source.
+  - "v1.0.0 retires proposal-era live-fetch, watcher, gate, receipt, lifecycle-write, and promotion instructions that current repository evidence does not implement."
+  - "Five domain-first source YAML files exist, but each is explicitly a PROPOSED greenfield template with unresolved role, authority, rights, cadence, sensitivity, and access fields."
+  - "The domain connector lane contains documentation and a placeholder only; no source-refresh implementation is established there."
+  - "The only executable domain slice verified for this update is synthetic, no-network CorridorRoute validation."
+  - "This runbook does not admit or activate a source, fetch data, emit a receipt, write a lifecycle lane, approve policy, promote, release, deploy, or publish."
 [/KFM_META_BLOCK_V2] -->
 
-# 🛤️ Roads, Rail, and Trade Routes — Source Refresh Runbook
+<a id="top"></a>
 
-> **Operational procedure for refreshing modern and historical transport sources into the KFM Roads/Rail/Trade Routes lane — without bypassing evidence, policy, review, or release controls.**
-
-![status: draft](https://img.shields.io/badge/status-draft-orange)
-![type: runbook](https://img.shields.io/badge/type-runbook-blue)
-![domain: roads--rail--trade](https://img.shields.io/badge/domain-roads--rail--trade-1f6feb)
-![lifecycle: RAW→PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-555)
-![default posture: deny--by--default](https://img.shields.io/badge/posture-deny--by--default-critical)
-![last updated: 2026-05-12](https://img.shields.io/badge/last%20updated-2026--05--12-lightgrey)
-<!-- All badges above are decorative until wired to Shields.io endpoints; targets are TODO. -->
-
-| | |
-|---|---|
-| **Status** | `draft` |
-| **Owners** | TODO — Roads/Rail domain steward · Docs steward · Sources steward |
-| **Last updated** | 2026-05-12 |
-| **Authority** | This runbook OPERATIONALIZES doctrine; it does not override `docs/doctrine/lifecycle-law.md`, Directory Rules, or `policy/`. |
-| **Repo verification** | UNKNOWN — no mounted repo this session. All paths PROPOSED. |
-
----
-
-## 📑 Contents
-
-1. [Purpose & non-purpose](#1-purpose--non-purpose)
-2. [Repo fit](#2-repo-fit)
-3. [Prerequisites](#3-prerequisites)
-4. [Source family inventory](#4-source-family-inventory)
-5. [Refresh cadence & triggers](#5-refresh-cadence--triggers)
-6. [Lifecycle walkthrough · RAW → PUBLISHED](#6-lifecycle-walkthrough--raw--published)
-7. [Promotion gates (A–G)](#7-promotion-gates-ag)
-8. [Sensitivity, rights, and generalization](#8-sensitivity-rights-and-generalization)
-9. [Stale-state and supersession](#9-stale-state-and-supersession)
-10. [Negative paths & quarantine reasons](#10-negative-paths--quarantine-reasons)
-11. [Validation hooks](#11-validation-hooks)
-12. [Correction & rollback](#12-correction--rollback)
-13. [Receipts & emitted artifacts](#13-receipts--emitted-artifacts)
-14. [Failure modes & anti-patterns](#14-failure-modes--anti-patterns)
-15. [FAQ](#15-faq)
-16. [Related docs](#16-related-docs)
-17. [Appendix · pseudocode and command stubs](#17-appendix--pseudocode-and-command-stubs)
-
----
-
-## 1. Purpose & non-purpose
-
-CONFIRMED doctrine basis: Roads/Rail/Trade Routes is a governed domain lane that owns modern roads, historic roads, wagon/military/emigrant/stage/cattle trails, rail corridors, depots, sidings, yards, crossings, bridges, ferries, river crossings, freight corridors, and derived network graph projections; **it must not expose culturally sensitive corridors or confuse route narrative with surveyed alignment** (DOM-ROADS / ENCY).
-
-This runbook describes **how to refresh upstream source data into that lane** while preserving the lifecycle invariant **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED**.
-
-> [!IMPORTANT]
-> **A refresh is not a publish.** Promotion across phases is a governed state transition supported by receipts, validators, and review — **never a file move, mirror, or watcher auto-publish**.
-
-### Out of scope
-
-- Defining object meaning. That lives in `contracts/domains/roads-rail-trade/` (PROPOSED).
-- Defining object shape. That lives in `schemas/contracts/v1/domains/roads-rail-trade/` (PROPOSED).
-- Deciding allow / deny / restrict. That lives in `policy/domains/roads-rail-trade/` (PROPOSED).
-- Public render styling, MapLibre style packs, or 3D scene assembly.
-- Live operational alerting. KFM is never an alert authority.
-
----
-
-## 2. Repo fit
-
-> [!NOTE]
-> All paths below are **PROPOSED** until verified against mounted-repo evidence. Convention conflict flagged: prior Whole-UI Expansion Report uses flat `docs/runbooks/<subsystem>_<phase>.md`; Directory Rules §12 favors a domain segment. This file uses the §12 form. Reconcile via ADR if the repo uses a single canonical pattern.
-
-```text
-docs/runbooks/roads-rail-trade/
-├── SOURCE_REFRESH_RUNBOOK.md      # ← this file
-├── VALIDATION.md                  # PROPOSED sibling — validation runs
-├── ROLLBACK.md                    # PROPOSED sibling — rollback drills
-└── LOCAL_DEV.md                   # PROPOSED sibling — local fixture setup
-```
-
-```mermaid
-flowchart LR
-    subgraph Upstream["Upstream sources (DOM-ROADS)"]
-        KDOT[KDOT / KanPlan / KanDrive / KS GIS]:::ext
-        TIGER[Census TIGER/Line roads]:::ext
-        HPMS[FHWA HPMS / NHFN]:::ext
-        WZDx[WZDx feeds]:::ext
-        BRIDGE[County/state bridge & restriction]:::ext
-        GNIS[GNIS names]:::ext
-        OSM[OpenStreetMap]:::ext
-        HIST[Historical maps · trail archives]:::ext
-        STEWARD[Steward sources<br/>sensitive cultural corridors]:::sens
-    end
-
-    subgraph Connectors["connectors/domains/roads-rail-trade/  (PROPOSED)"]
-        WATCH[Watcher · conditional GET]:::kfm
-        FETCH[Fetcher · spec_hash + HEAD proof]:::kfm
-    end
-
-    subgraph Lifecycle["data/  (lifecycle invariant)"]
-        RAW[(data/raw/<br/>roads-rail-trade)]:::raw
-        WORK[(data/work/<br/>roads-rail-trade)]:::work
-        QUAR[(data/quarantine/<br/>roads-rail-trade)]:::quar
-        PROC[(data/processed/<br/>roads-rail-trade)]:::proc
-        CAT[(data/catalog/domain/<br/>roads-rail-trade)]:::cat
-        PUB[(data/published/layers/<br/>roads-rail-trade)]:::pub
-    end
-
-    subgraph Release["release/  (decisions)"]
-        MAN[ReleaseManifest]:::rel
-        ROLL[RollbackCard]:::rel
-        CORR[CorrectionNotice]:::rel
-    end
-
-    Upstream --> WATCH --> FETCH --> RAW --> WORK --> PROC --> CAT --> PUB
-    WORK -. fail-closed .-> QUAR
-    CAT --> MAN --> PUB
-    PUB -. when defects found .-> CORR
-    PUB -. when defects found .-> ROLL
-
-    classDef ext fill:#eef5ff,stroke:#5b8def,color:#1a3a8a
-    classDef sens fill:#f8e3e3,stroke:#b54242,color:#7a1f1f
-    classDef kfm fill:#fff7e0,stroke:#caa54b,color:#5a4310
-    classDef raw fill:#e6e6e6,stroke:#888,color:#333
-    classDef work fill:#fff3c2,stroke:#bb9a26,color:#5a4310
-    classDef quar fill:#f8d7da,stroke:#a33,color:#7a1f1f
-    classDef proc fill:#dde9ff,stroke:#5b8def,color:#1a3a8a
-    classDef cat fill:#d4edda,stroke:#3c8a4a,color:#1c4d28
-    classDef pub fill:#cfe9c6,stroke:#2e7d32,color:#1a4d1a
-    classDef rel fill:#ede0ff,stroke:#6f42c1,color:#3b1a78
-```
-
-<sub>Diagram reflects doctrine (lifecycle-law.md, DOM-ROADS, watcher-as-non-publisher). Path names PROPOSED.</sub>
-
-[⤴ Back to top](#-roads-rail-and-trade-routes--source-refresh-runbook)
-
----
-
-## 3. Prerequisites
-
-Before you run a refresh, confirm:
-
-- [ ] `SourceDescriptor` exists for each source you will touch, with **source role**, **authority**, **rights / SPDX**, **sensitivity class**, **cadence**, **steward**, and **release class** populated (CONFIRMED doctrine; per-source values **NEEDS VERIFICATION**).
-- [ ] You have **read** access to the source endpoints. Do **not** request elevated/secret credentials to refresh a public-safe layer.
-- [ ] A current `ReviewRecord` is on file for any source feeding a **sensitive** lane (cultural corridors, historic route claims, critical facilities). Refresh is **deny-by-default** without it.
-- [ ] CI runners for the Roads/Rail promotion workflow are healthy (`gate_a_identity_integrity` through `gate_g_release` — PROPOSED job names).
-- [ ] Cosign / DSSE signing keys are reachable to the runner (or the run is a **dry-run** that explicitly skips signing and is **forbidden from promotion**).
-- [ ] No active kill-switch is set for Roads/Rail map promotion.
+# Roads, Rail, and Trade Routes — Source Refresh Runbook
 
 > [!CAUTION]
-> If any prerequisite is **UNKNOWN**, treat the run as a dry-run, emit a `RunReceipt` with `outcome: ABSTAIN`, and do not write anything past `data/work/roads-rail-trade/`.
+> **STOP — live Roads/Rail/Trade source refresh is not established by current
+> repository evidence.** Do not execute the retired fetch, hashing, watcher,
+> receipt, lifecycle-write, or promotion examples from this path. Use the
+> repository-only review below and the bounded synthetic
+> [no-network procedure](./NO_NETWORK_TEST_RUNBOOK.md) only.
 
----
+This runbook is a fail-closed readiness and handoff procedure. It does not
+contact KDOT, FHWA, FRA, Census, WZDx, OSM, GNIS, a railroad, a local
+government, a Tribal or Indigenous steward, an archive, or any other source.
+It does not make KFM a navigation, dispatch, traffic-control,
+railroad-operating, bridge-safety, emergency-routing, legal-access,
+right-of-way, regulatory, or current-closure authority.
 
-## 4. Source family inventory
+**Use:** [current outcome](#current-outcome) ·
+[authority](#authority-and-placement) ·
+[repository review](#repository-only-readiness-review) ·
+[synthetic validation](#bounded-synthetic-validation) ·
+[live-refresh gates](#requirements-before-any-future-live-refresh) ·
+[handoff](#review-handoff) ·
+[rollback](#documentation-correction-and-rollback)
 
-Source families and roles are **CONFIRMED** via DOM-ROADS / ENCY. Rights, cadence, and current API surfaces are per-source and **NEEDS VERIFICATION** before activation.
+## Current outcome
 
-| Source family | Typical role | Sensitivity defaults | Cadence (PROPOSED) | Rights / SPDX |
-|---|---|---|---|---|
-| **KDOT / KanPlan / KanDrive / Kansas GIS** | authority (state roads, restrictions) | public-safe; restrictions may be operationally sensitive | quarterly + event-driven WZDx | NEEDS VERIFICATION |
-| **Census TIGER/Line roads** | authority / observation (admin geometry) | public-safe | annual (TIGER vintage) | US Public Domain (NEEDS VERIFICATION) |
-| **FHWA HPMS** | authority (highway performance) | public-safe (aggregate) | annual | NEEDS VERIFICATION |
-| **FHWA National Highway Freight Network** | authority (freight designation) | public-safe | annual | NEEDS VERIFICATION |
-| **WZDx work-zone feeds** | observation (status / events) | public-safe; transient | live / 5–300 s debounce | NEEDS VERIFICATION |
-| **County / state bridge & restriction data** | authority / observation | mixed; weight/closure can be sensitive | varies | NEEDS VERIFICATION per county |
-| **GNIS names** | observation / context (gazetteer) | public-safe | low-cadence | US Public Domain (NEEDS VERIFICATION) |
-| **OpenStreetMap (OSM)** | observation / context (community) | public-safe; **NOT legal/regulatory authority** | continuous; sample on cadence | ODbL (NEEDS VERIFICATION) |
-| **County atlases · historical maps · trail archives** | context / source-of-claim (historic) | uncertainty + generalization required | one-shot per scan vintage | per-archive |
-| **Military · emigrant · stage · cattle trail sources** | source-of-claim (historic) | **sensitive when overlapping Indigenous corridors** | per-archive | per-archive |
-| **Bridges / ferries / river-crossing records** | authority / observation | mixed | per-source | per-source |
-| **Steward sources for sensitive cultural corridors** | source-of-claim under stewardship | **default DENY public exposure; generalized geometry only** | by steward consent | restricted |
-
-> [!WARNING]
-> **OSM and GNIS are observation/context, not legal authority.** Validators MUST refuse to promote OSM- or GNIS-derived claims that imply legal road status, jurisdictional ownership, or freight designation. (PROPOSED test: *OSM/GNIS legal-status denial.*)
-
-[⤴ Back to top](#-roads-rail-and-trade-routes--source-refresh-runbook)
-
----
-
-## 5. Refresh cadence & triggers
-
-Three trigger classes apply. Each emits a `RunReceipt` regardless of outcome.
-
-| Trigger class | When it fires | Required guards |
+| Surface | Current repository evidence | Result |
 |---|---|---|
-| **Scheduled** | Per-source cadence from `SourceDescriptor` (e.g. KDOT quarterly, TIGER annual) | Conditional GET (ETag / Last-Modified); no-change → heartbeat receipt only |
-| **Event-driven** | Upstream notification (WZDx push, partner webhook, change-data-capture stream) | Debounce/coalesce window per source class; aggregate to delta manifest |
-| **Manual / steward-initiated** | Steward correction, rights change, or rollback rehearsal | Justification in PR body; full receipt chain |
+| Source authority | `data/registry/roads-rail-trade/sources/` contains five YAML files, each marked `PROPOSED — greenfield template` with `TBD` role, authority, rights, sensitivity, cadence, access, and citation fields. The subtype-first lane contains a README and placeholder. `control_plane/source_authority_register.yaml` is `PROPOSED`, `implementation_status: ABSENT`, and empty. | `HOLD` |
+| Connector | `connectors/domains/roads-rail-trade/` contains a draft README and placeholder. Product-family lanes such as TIGER/Line and WZDx describe proposed boundaries; the inspected documentation says code, descriptors, endpoints, fixtures, tests, receipts, CI wiring, and runtime behavior remain unverified. | `HOLD` |
+| Executable validation | The paired `CorridorRoute` contract and Draft 2020-12 schema, two valid fixtures, eight invalid fixtures, one validator, and fourteen focused tests are present. | `AVAILABLE` for synthetic validation only |
+| No-network enforcement | The shared Python startup guard is available for explicit local activation. The domain workflow sets `KFM_NO_NETWORK=1` but does not add the guard directory to `PYTHONPATH` before Python starts. | local guarded command `AVAILABLE`; workflow-wide injection `HOLD` |
+| Lifecycle write | No verified connector or source-refresh writer binds an admitted descriptor to RAW or QUARANTINE with an accepted receipt and collision policy. | `HOLD` |
+| Proof and release | The domain workflow records explicit holds for proof production and release dry-run. The proof and candidate lanes contain no domain records beyond README/placeholder material. | `HOLD` |
+| Live refresh, promotion, or publication | No complete source admission, transport, lifecycle, evidence, policy, review, proof, release, correction, and rollback chain is established. | `HOLD` |
 
-**Debounce windows (PROPOSED starting points, from KFM ingestion doctrine):**
+A passing fixture suite changes none of these held states. It proves only the
+bounded synthetic profile at the exact tested revision.
 
-| Source class | Window | Notes |
-|---|---|---|
-| High-churn (WZDx live events) | 5–30 s | Aggregate to delta manifest; emit only if `spec_hash` changes |
-| Moderate (KanDrive incident feeds) | 30–120 s | Same |
-| Heavy batch (KDOT vintage, TIGER, HPMS) | 120–300 s (or per-batch) | Materialize only on `spec_hash` change |
+## Authority and placement
 
-> [!TIP]
-> **Unchanged sources must not invalidate caches or emit new catalog entities.** A no-change poll should emit a heartbeat receipt and nothing else. This protects downstream tile / style caches from churn.
+Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+adopts the [Directory Rules](../../doctrine/directory-rules.md). The same-path
+update remains under `docs/runbooks/` because this file is a human procedure.
+It may explain other authorities but cannot replace them.
 
-[⤴ Back to top](#-roads-rail-and-trade-routes--source-refresh-runbook)
-
----
-
-## 6. Lifecycle walkthrough · RAW → PUBLISHED
-
-CONFIRMED doctrine: every Roads/Rail refresh traverses the lifecycle invariant. Each transition has a gate; **no gate, no transition**.
-
-```mermaid
-flowchart TB
-    A((Admission)) -->|SourceDescriptor + payload hash| RAW[RAW]
-    RAW -->|Normalize schema · geometry · time · identity · evidence · rights · policy| WORK[WORK]
-    WORK -.->|Validation or policy fail| QUAR[QUARANTINE]
-    WORK -->|ValidationReport pass · receipts present| PROC[PROCESSED]
-    PROC -->|EvidenceBundle · catalog matrix close| CAT[CATALOG / TRIPLET]
-    CAT -->|ReleaseManifest · ReviewRecord · rollback target| PUB[PUBLISHED]
-    PUB -.->|Defect detected| CORR[CorrectionNotice → PUBLISHED']
-
-    style RAW fill:#e6e6e6,stroke:#888
-    style WORK fill:#fff3c2,stroke:#bb9a26
-    style QUAR fill:#f8d7da,stroke:#a33
-    style PROC fill:#dde9ff,stroke:#5b8def
-    style CAT fill:#d4edda,stroke:#3c8a4a
-    style PUB fill:#cfe9c6,stroke:#2e7d32
-    style CORR fill:#ede0ff,stroke:#6f42c1
-```
-
-### Phase responsibilities
-
-| Phase | What happens | What gets emitted | Failure-closed outcome |
+| Responsibility | Owning surface | This runbook may | This runbook must not |
 |---|---|---|---|
-| **RAW** | Capture immutable payload (or reference) + source-role, rights, sensitivity, citation, time, hash. | `SourceDescriptor`, raw payload, fetch `RunReceipt`. | Source not admitted; logged as candidate awaiting steward. |
-| **WORK** | Normalize schema · geometry · time · identity · evidence · rights · policy. | `TransformReceipt`, `ValidationReport` (working set), `PolicyDecision`. | **Quarantine** with structured reason; **never silently promote**. |
-| **QUARANTINE** | Hold failing records; record why. | Quarantine entry with reason class (license, schema, policy, sensitivity, hash mismatch, …). | Stay until steward disposition (refresh / supersede / mark stale). |
-| **PROCESSED** | Emit validated normalized objects + public-safe candidates. | `EvidenceRef` resolves, `ValidationReport` pass, `RedactionReceipt` if sensitivity applies. | Stay in WORK; structured FAIL. |
-| **CATALOG / TRIPLET** | Catalog records + `EvidenceBundle` + graph/triplet projections + release candidates. | `CatalogMatrix` entry, `EvidenceBundle`, graph projection. | HOLD at PROCESSED; no public edge. |
-| **PUBLISHED** | Serve released public-safe artifacts through governed APIs / manifests. | `ReleaseManifest`, rollback target, correction path, `ReviewRecord` where required. | HOLD at CATALOG; no public surface change. |
+| Source admission and role | Governed source registry and activation records | Inspect status and report gaps | Treat a template, filename, README, or source name as admission |
+| Retrieval and admission code | `connectors/` | Require descriptor-gated, bounded behavior | Invent or activate an endpoint, credential, schedule, or writer |
+| Semantic meaning | `contracts/` | Link the current contract | Redefine route meaning or source role |
+| Machine shape | `schemas/` | Link the current schema | Make a documentation sketch executable |
+| Policy and sensitivity | `policy/` and accountable review | Require decisions and reviewers | Approve rights, public precision, legal access, safety, or release |
+| Lifecycle state | `data/raw`, `data/work`, `data/quarantine`, `data/processed`, `data/catalog`, `data/triplets`, and `data/published` | Explain boundaries | Move, copy, or label material into a stronger state |
+| Evidence and proof | Evidence contracts, resolvers, and `data/proofs/` | Require resolvable support | Treat a digest, test, receipt, map, graph, or summary as an EvidenceBundle |
+| Release and rollback | `release/` and governed runbooks | Prepare a review handoff | Promote, release, deploy, publish, withdraw, or roll back production |
 
-> [!IMPORTANT]
-> **Watcher-as-non-publisher.** Connectors and watchers emit candidates and receipts only. They MUST NOT publish, mutate canonical records, mutate the graph projection, or invalidate map caches without going through the release path.
+The repository currently has both domain-first and subtype-first
+Roads/Rail/Trade source-registry lanes. Their READMEs record unresolved topology.
+Do not create or update parallel descriptor sets until an accepted decision or
+migration note selects the authoritative home.
 
-[⤴ Back to top](#-roads-rail-and-trade-routes--source-refresh-runbook)
+## Source-role and truth rules
 
----
+Source refresh must preserve what a source is qualified to support. Processing,
+conflation, graph projection, map rendering, or generated explanation cannot
+upgrade that role.
 
-## 7. Promotion gates (A–G)
-
-CONFIRMED doctrine basis: KFM uses default-deny promotion gates with signed receipts and a deterministic `spec_hash`. The seven gates apply uniformly to Roads/Rail.
-
-| Gate | Name | Primary check | Fail-closed result |
-|---|---|---|---|
-| **A** | Identity & Integrity | `spec_hash` computed via JCS-canonicalized JSON; HEAD probe with ETag + Last-Modified + Content-Length | Block; emit `RunReceipt(status=quarantine, reason=identity_integrity)` |
-| **B** | License & Provenance | SPDX in allowlist; rights status resolves; provenance chain present | Quarantine if SPDX absent / ambiguous; restricted-with-obligations if conditional |
-| **C** | Schema & Shape | Validate against `schemas/contracts/v1/domains/roads-rail-trade/*.schema.json` (PROPOSED home) | Quarantine with schema-diff diagnostic |
-| **D** | Sensitivity & Generalization | Per-policy check for cultural/Indigenous corridor exposure, historic overprecision, critical-facility detail | DENY public path; route to steward review |
-| **E** | Evidence Closure | Every consequential claim has a resolving `EvidenceRef → EvidenceBundle` | ABSTAIN; record gap in `VERIFICATION_BACKLOG` |
-| **F** | Steward Review | `ReviewRecord` present where required by source role or sensitivity tier | HOLD; emit review-pending receipt |
-| **G** | Release Authority | `ReleaseManifest` issued; **release authority distinct from author** when materiality applies; rollback target named | HOLD at CATALOG; no public surface change |
-
-**Validator commands** (PROPOSED — verify names against the repo before quoting them in PRs):
-
-```bash
-# PROPOSED — actual tool names NEEDS VERIFICATION
-tools/validators/identity/compute_spec_hash.py --spec spec.json
-tools/validators/license/check_spdx.py        --descriptor source_descriptor.yaml
-tools/validators/schemas/validate_jsonschema.py \
-    --schema schemas/contracts/v1/domains/roads-rail-trade/road_segment.schema.json \
-    --instance data/work/roads-rail-trade/road_segment.candidate.json
-tools/validators/sensitivity/check_generalization.py --layer roads-rail-trade
-tools/validators/evidence/verify_evidence_refs.py    --bundle evidence_bundle.json
-tools/validators/release/check_release_manifest.py   --manifest release/manifests/roads-rail-trade-<vintage>.yaml
-```
-
-> [!WARNING]
-> The fail-closed posture means **absence of evidence blocks promotion**. A missing `ReviewRecord`, an unresolvable `EvidenceRef`, or an unknown SPDX is *enough* to quarantine — even if everything else looks fine.
-
-[⤴ Back to top](#-roads-rail-and-trade-routes--source-refresh-runbook)
-
----
-
-## 8. Sensitivity, rights, and generalization
-
-CONFIRMED doctrine: Indigenous trade and mobility corridors, oral history, treaty, cultural, and interpretive evidence default to **steward review and generalized public geometry**. Critical transport facilities require review.
-
-### Per-class refresh posture
-
-| Sensitivity class | Default public posture | Refresh-time requirement |
+| Material | Permitted interpretation | Prohibited substitution |
 |---|---|---|
-| **Public-safe modern road / rail geometry** | Public layer + Evidence Drawer | Standard gates A–G |
-| **Operator status / restriction event (WZDx, KanDrive)** | Public, time-aware | Gate A integrity proof; honor source freshness markers |
-| **Historic route claim (low-uncertainty)** | Public with uncertainty class + generalization receipt | Gate C must include `RouteUncertaintyProfile` (PROPOSED) |
-| **Historic route claim (high-uncertainty / multi-source disagreement)** | Generalized corridor view only | Steward review (Gate F); explicit generalization transform receipt |
-| **Indigenous / culturally sensitive corridor** | **DENY exact geometry by default**; generalized corridor only with steward consent | Steward review **mandatory**; rights status must explicitly authorize the granularity |
-| **Critical transport facility (exact)** | **DENY exact precision by default** | Steward review; published only after threat-model check |
+| Official road, rail, crossing, or freight records | Time-, jurisdiction-, product-, and field-bounded administrative or regulatory assertions | Universal route truth, safe passage, legal access, or current condition |
+| TIGER/Line and similar geometry | Administrative or observed geometry at a named vintage and scale | Legal right-of-way, ownership, cadastral truth, road openness, or name authority |
+| WZDx or other operational event feeds | Time-bound source observations with update, expiry, and stale-state handling | Permanent network truth, traveler instruction, or emergency authority |
+| OSM or other community material | Community observation or context with license and source-role limits | Legal status, official designation, jurisdiction, or safety authority |
+| Archival maps and historic route records | Evidence for a claim with source vintage, method, uncertainty, and limitations | Surveyed alignment, exact continuous path, or present-day access |
+| Indigenous, Tribal, oral-history, burial, sacred, or cultural-corridor material | Steward-controlled evidence under sovereignty, sensitivity, consent, and harmful-precision review | Unreviewed public geometry, inferred permission, or ownership by KFM |
+| Modeled or inferred network output | Derived candidate with method, inputs, uncertainty, and evidence references | Source observation, official fact, or routable public graph edge |
 
-### Generalization receipts
+Keep source time, observation or event time, valid/effective time, retrieval
+time, record time, publication time, and supersession time distinct whenever
+they apply. Geometry does not prove legal access; a route name does not prove
+continuity; a mapped rail line does not prove active service.
 
-When geometry is generalized for public release, the transform MUST emit a `GeneralizationReceipt` recording: input bundle digest, transform parameters (snap distance, simplification tolerance, corridor buffer), output digest, justification, and reviewer. The receipt resolves through `EvidenceRef → EvidenceBundle`.
+## Repository-only readiness review
 
-> [!CAUTION]
-> Do **not** publish raw historic-trail geometry derived from archival scans without a generalization step. *Historic overprecision denial* is a PROPOSED required validator for this lane.
+This is the only source-refresh review authorized by this document.
 
-[⤴ Back to top](#-roads-rail-and-trade-routes--source-refresh-runbook)
+### 1. Freeze the evidence revision
 
----
+Run from a clean checkout or dedicated worktree:
 
-## 9. Stale-state and supersession
+~~~bash
+git remote get-url origin
+git rev-parse HEAD
+git status --short
+~~~
 
-CONFIRMED doctrine: a **stale** claim has aged past declared tolerance; a **wrong** claim is substantively incorrect. Both have visible markers.
+Record the exact commit and any inherited changes. Do not attribute a result to
+`main` without the commit SHA.
 
-Refresh time is when stale-state is discovered. The runbook MUST check the following markers and act:
+### 2. Inspect the authority surfaces
 
-| Marker | What to do |
+Confirm the current contents of:
+
+~~~text
+data/registry/roads-rail-trade/sources/
+data/registry/sources/roads-rail-trade/
+control_plane/source_authority_register.yaml
+connectors/domains/roads-rail-trade/
+contracts/domains/roads-rail-trade/corridor_route.md
+schemas/contracts/v1/domains/roads-rail-trade/corridor_route.schema.json
+fixtures/domains/roads-rail-trade/corridor_route/
+tools/validators/domains/roads-rail-trade/validate_corridor_route.py
+tests/schemas/test_corridor_route_contract.py
+.github/workflows/domain-roads-rail-trade.yml
+data/proofs/roads-rail-trade/
+release/candidates/roads-rail-trade/
+~~~
+
+Use repository bytes, not this snapshot, if any path has changed.
+
+### 3. Confirm descriptor and connector posture
+
+The current five domain-first YAML files are proposals, not admitted sources.
+Verify that status without interpreting their IDs as activation:
+
+~~~bash
+git grep -n 'status: PROPOSED — greenfield template' -- \
+  data/registry/roads-rail-trade/sources/*.yaml
+git grep -n 'TBD' -- data/registry/roads-rail-trade/sources/*.yaml
+~~~
+
+Also inspect directory contents. A README or placeholder does not establish
+runtime code:
+
+~~~bash
+find connectors/domains/roads-rail-trade -maxdepth 2 -type f -print | sort
+find data/registry/sources/roads-rail-trade -maxdepth 2 -type f -print | sort
+find data/proofs/roads-rail-trade -maxdepth 2 -type f -print | sort
+find release/candidates/roads-rail-trade -maxdepth 2 -type f -print | sort
+~~~
+
+If a real descriptor, connector module, receipt, proof, or candidate appears,
+stop using this snapshot as current truth and review the new owning object
+before changing the result.
+
+### 4. Assign a finite review result
+
+| Result | Meaning |
 |---|---|
-| **Source freshness expired** (cadence in `SourceDescriptor` passed without a new admission) | Re-admit; if upstream is gone, supersede or mark dependents stale |
-| **Schema version drift** (object schema upgraded past the published claim's schema version) | Migrate, re-validate, re-release; or mark stale with migration ADR link |
-| **Geography version drift** (`GeographyVersion` replaced; published claim still bound to prior version) | Rebind, re-release; or mark stale |
-| **Time-scope outside support** | Mark stale; do not silently refresh |
-| **Rights status changed** | Re-evaluate tier; emit `CorrectionNotice` if needed; potentially downgrade public access |
-| **Policy version changed** | Re-run Gate D / F; potentially supersede release |
-| **Review aged out** (`ReviewRecord` past tolerance for a sensitive lane) | Trigger steward review; potentially downgrade tier |
+| `PASS` | The repository-only inventory or named synthetic check completed at the pinned revision. It says nothing about source freshness or live-refresh readiness. |
+| `FAIL` | A bounded check ran and rejected its input or declared expectation. |
+| `HOLD` | One or more dependencies for retrieval, admission, lifecycle write, evidence, policy, review, proof, release, correction, or rollback are incomplete. |
+| `ABSTAIN` | Available evidence cannot support the requested transport or operational claim. |
+| `DENY` | Rights, sensitivity, sovereignty, source role, harmful precision, security, or an authority boundary prohibits the request. |
+| `ERROR` | The procedure or environment could not produce a valid result. |
+| `ESCALATE` | An accountable source, rights, sensitivity, Indigenous/Tribal, transport, safety, policy, evidence, security, operations, release, or independent reviewer is required. |
 
-Supersession lineage MUST be preserved: prior `SourceDescriptor`, `EvidenceBundle`, schema, and `ReleaseManifest` versions remain queryable with forward links.
+Always pair `PASS` with its exact scope. The current live-refresh result remains
+`HOLD`.
 
-[⤴ Back to top](#-roads-rail-and-trade-routes--source-refresh-runbook)
+## Bounded synthetic validation
 
----
+Use the sibling
+[No-Network Test Runbook](./NO_NETWORK_TEST_RUNBOOK.md) as the canonical command
+procedure. Its scope is the synthetic `CorridorRoute` contract, schema,
+fixtures, validator, and focused tests.
 
-## 10. Negative paths & quarantine reasons
+Dependency bootstrap is a separate network and supply-chain boundary:
 
-Refresh runs that **must quarantine** rather than promote:
+~~~bash
+python tools/ci/install_python_ci.py project-test
+~~~
 
-| Condition | Quarantine reason class |
-|---|---|
-| Missing or invalid signature on a candidate `RunReceipt` | `signature_invalid` |
-| DSSE envelope malformed | `dsse_invalid` |
-| Unknown / disallowed SPDX | `license_unknown` |
-| `EvidenceRef` does not resolve | `evidence_missing` |
-| Policy decision returns DENY | `policy_mismatch` |
-| `spec_hash` re-computation does not match signed payload | `hash_mismatch` |
-| Source-role conflict (OSM-derived claim asserting legal authority) | `role_overreach` |
-| Historic geometry exceeds documented precision support | `overprecision` |
-| Sensitive lane lacks steward consent | `sensitivity_unresolved` |
-| Source freshness expired beyond stale tolerance | `freshness_expired` |
+After dependencies are available, enter the explicitly guarded Python window:
 
-Each quarantine MUST emit a `RunReceipt(status=quarantine, reason=<class>, actor=<who>)` and a structured note for the steward queue.
+~~~bash
+export KFM_NO_NETWORK=1
+export PYTHONDONTWRITEBYTECODE=1
+export PYTHONHASHSEED=0
+export PYTHONPATH="$PWD/tools/ci/kfm_no_network:$PWD${PYTHONPATH:+:$PYTHONPATH}"
 
-> [!NOTE]
-> **Validators MUST include negative fixtures.** A validator that has never seen a deny case has not been proven to deny. Fixtures live under `tests/fixtures/domains/roads-rail-trade/` (PROPOSED).
+python -c 'import sitecustomize; assert sitecustomize.GUARD_ACTIVE'
 
-[⤴ Back to top](#-roads-rail-and-trade-routes--source-refresh-runbook)
+python -m pytest -q -p no:cacheprovider \
+  tests/schemas/test_corridor_route_contract.py
 
----
+python tools/validators/domains/roads-rail-trade/validate_corridor_route.py \
+  --fixtures
+~~~
 
-## 11. Validation hooks
+Expected bounded evidence:
 
-PROPOSED Roads/Rail-specific validators (DOM-ROADS / ENCY):
+- the startup assertion exits `0`;
+- fourteen focused tests pass;
+- two valid fixtures produce their declared `PASS` or `ABSTAIN` outcomes;
+- eight invalid fixtures produce `DENY`; and
+- fixture mode exits `0` only when every fixture matches its declared outcome.
 
-- **Route membership and designation separation tests** — a freight designation MUST NOT be inferred from observation-only sources (OSM, GNIS).
-- **Operator / status temporal tests** — operator-of-record and status events have distinct, non-overlapping time scopes per segment.
-- **OSM / GNIS legal-status denial** — claims of legal road status, jurisdiction, or designation derived from observation sources fail closed.
-- **Historic overprecision denial** — historic geometry whose declared precision exceeds source support fails closed.
-- **Public generalization receipt tests** — every public-sensitive layer release has a matching `GeneralizationReceipt`.
-- **Transport graph projection rollback tests** — graph projections can be rolled back without orphaning canonical records.
+The validator's finite outcomes are `PASS`, `ABSTAIN`, `DENY`, and `ERROR`.
+It does not implement a live fetch, SourceDescriptor validation, activation
+decision, RAW or QUARANTINE writer, receipt producer, EvidenceBundle resolver,
+policy engine, review authenticator, proof producer, promotion executor,
+release manifest, or publication path.
 
-CI should also run the shared promotion-pipeline checks (Gates A–G), STAC / DCAT / PROV catalog validation, and tile-artifact digest checks where the refresh feeds map tiles.
+After validation, inspect `git status --short`. Do not claim that dependency
+installation or the hosted workflow ran under the startup guard unless the
+evidence proves that exact boundary.
 
-See the sibling [VALIDATION runbook](./VALIDATION.md) (PROPOSED) for execution details.
+## Requirements before any future live refresh
 
-[⤴ Back to top](#-roads-rail-and-trade-routes--source-refresh-runbook)
+Live source access remains `HOLD` until current implementation authority closes
+every applicable dependency below.
 
----
+### Source and authority
 
-## 12. Correction & rollback
+- one authoritative registry topology and one schema-valid descriptor for the
+  exact product, feed, archive, or steward-controlled collection;
+- explicit source role, authority scope, native identifiers, product/vintage,
+  cadence, endpoint or delivery form, rights, terms, attribution, access class,
+  sensitivity, public-use limits, and steward;
+- an authenticated activation decision for the exact source, mode, purpose,
+  audience, and time window; and
+- accountable owner and reviewer assignments without placeholder roles.
 
-CONFIRMED doctrine: a released claim, layer, catalog record, artifact, or answer MUST have a visible correction path and rollback target before it is treated as safely publishable.
+### Transport and source edge
 
-| Defect class | Correction posture | Rollback posture |
+- accepted connector placement and implementation, with explicit configuration,
+  credential isolation, allowlisted egress, bounded retries, timeouts,
+  rate-limit handling, size limits, and safe logs;
+- conditional retrieval or immutable package comparison where the source
+  supports it, without equating HTTP status to semantic no-change;
+- deterministic digests, source-head identity, source-native time, retrieval
+  time, and stale-state rules;
+- minimized no-network fixtures and negative tests for changed, unchanged,
+  malformed, unavailable, unauthorized, rate-limited, stale, superseded,
+  rights-unknown, sensitive, and overprecise inputs; and
+- finite outcomes that cannot publish or mutate stronger truth.
+
+### Lifecycle, evidence, and policy
+
+- idempotent, collision-safe RAW or QUARANTINE handoff with an accepted contract,
+  schema, receipt binding, denial reasons, replay behavior, and rollback target;
+- normalization that preserves source role, identity, time, geometry accuracy,
+  uncertainty, rights, sensitivity, and correction lineage;
+- EvidenceRef resolution to admissible EvidenceBundle support for consequential
+  claims;
+- active policy decisions for rights, sensitivity, sovereignty, harmful
+  precision, infrastructure detail, legal-access implications, and public use;
+  and
+- accountable review that is distinct from authorship and CI.
+
+### Proof, release, and public use
+
+- proof and catalog/triplet closure without treating receipts, tests, maps,
+  tiles, indexes, or graph projections as sovereign truth;
+- a reviewable candidate with immutable artifact references and digests;
+- promotion decision, release manifest, rollback target, correction and
+  withdrawal paths, stale-state behavior, and readback evidence; and
+- separate authorization for promotion, release, deployment, source activation,
+  and publication.
+
+Missing any item keeps live refresh at `HOLD`.
+
+## No-change, stale, and supersession handling
+
+The current repository does not establish a live source comparison, heartbeat
+receipt, debounce scheduler, or refresh writer for this lane. Therefore:
+
+- do not claim a live `304`, no-change result, source freshness, or emitted
+  heartbeat from the synthetic profile;
+- do not create a catalog version, graph edge, proof, candidate, or public
+  artifact merely because bytes or a digest appear unchanged;
+- preserve a stale or unknown state when accepted freshness evidence is absent;
+- preserve prior identities and forward supersession or correction links rather
+  than overwriting history; and
+- require a reviewed source manifest, digest scope, semantic comparison rule,
+  receipt contract, and retry policy before automating no-change behavior.
+
+A future connector may preserve ETag, Last-Modified, package manifests, feed
+sequence, source revision, or content digests when appropriate. This paragraph
+does not activate that behavior.
+
+## Mandatory stop conditions
+
+| Condition | Result | Required action |
 |---|---|---|
-| Evidence gap | ABSTAIN or withdraw unsupported claim; emit `CorrectionNotice` | Restore prior evidence-supported release |
-| Source-role overreach (e.g. OSM-as-authority) | Re-classify source role; supersede `SourceDescriptor`; emit notice | Restore prior release that respected role |
-| Rights change | Tier downgrade or withdrawal; notice with rationale | Restore prior compliant release |
-| Sensitivity exposure (cultural corridor leak) | Immediate withdrawal; redaction receipt; steward notice | Restore prior generalized release |
-| Geometry / temporal error | Republish corrected; notice with diff | Restore prior release |
-| Policy version change | Re-run gates; possibly supersede | Restore prior policy-aligned release |
-| Render / API regression | Forward fix preferred; rollback if regression is material | Restore prior `ReleaseManifest` + invalidate caches |
-| AI-output defect | Receipt-level correction; new `AIReceipt`, never retroactive overwrite | N/A — AI output is not source truth |
+| Descriptor is `PROPOSED`, contains `TBD`, or lacks activation | `HOLD` | Resolve the owning source record and review; do not fetch |
+| Registry topology remains ambiguous | `HOLD` | Avoid parallel descriptor mutation and request an accepted placement decision |
+| Connector surface is README/placeholder only | `HOLD` | Do not invent a client, endpoint, credential, schedule, or writer |
+| Shared no-network guard is not proven active for the process | `ERROR` | Stop the guarded procedure and correct the environment |
+| Rights, terms, attribution, source role, cadence, or authority scope is unresolved | `HOLD` or `DENY` | Do not retrieve for a public-capable path |
+| Sensitive infrastructure, private access, cultural corridor, burial, sacred, archaeological, or steward-controlled detail may be exposed | `DENY` or `ESCALATE` | Withhold; use the accountable policy and stewardship route |
+| Historic geometry would be presented more precisely than evidence supports | `HOLD` or `DENY` | Preserve uncertainty and generalize or withhold only under reviewed policy |
+| A current closure, safety, legal-access, operating, or emergency claim is requested | `ABSTAIN` | Direct the user to the applicable current official authority |
+| A green workflow, test, digest, receipt, map, or graph is offered as proof of release | `DENY` implied authority | Narrow the claim to the exact bounded evidence |
+| EvidenceRef does not resolve to admissible evidence | `ABSTAIN` or `HOLD` | Record the gap; do not strengthen the claim |
+| Proof, candidate, promotion, rollback, or release dependencies are absent | `HOLD` | Stop at review handoff |
+| A secret, token, restricted payload, private movement record, or harmful coordinate could enter Git, CI, logs, or a public artifact | `DENY` | Stop propagation and use the approved secure or quarantine process |
 
-Rollback steps (operational summary):
+Unknown conditions never imply approval.
 
-1. Identify the affected `ReleaseManifest` and its declared rollback target.
-2. Verify digests on the rollback target (no silent file-copy rollbacks).
-3. Disable / withdraw the affected public surface (layer, manifest entry, API route).
-4. Restore the rollback target through the **same governed release path**.
-5. Invalidate downstream caches; emit a cache-invalidation record.
-6. Mark UI state stale / withdrawn; preserve audit receipts.
+## Review handoff
 
-See the sibling [ROLLBACK runbook](./ROLLBACK.md) (PROPOSED) for the rehearsal procedure.
+Record only references and minimized, non-sensitive findings. The following is a
+documentation checklist, not an accepted schema or release object:
 
-[⤴ Back to top](#-roads-rail-and-trade-routes--source-refresh-runbook)
+~~~yaml
+roads_rail_trade_source_refresh_review:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  revision: "<exact commit SHA>"
+  source_family: "<named product, feed, archive, or steward collection>"
+  mode: repository_only
+  result: "<PASS|FAIL|HOLD|ABSTAIN|DENY|ERROR|ESCALATE>"
+  scope: "<exact inventory or synthetic check>"
+  descriptor:
+    path: "<authoritative path or unresolved>"
+    status: "<proposal|admitted|activated|denied|unknown>"
+    activation_ref: "<reference or null>"
+  connector:
+    path: "<path or unresolved>"
+    implementation_verified: false
+    network_used: false
+  validation:
+    commands: []
+    tested_revision: "<exact commit SHA>"
+    introduced_failures: []
+    inherited_failures: []
+    pending_checks: []
+  non_effects:
+    source_retrieved: false
+    lifecycle_written: false
+    receipt_emitted: false
+    evidence_closed: false
+    policy_approved: false
+    promotion_authorized: false
+    released: false
+    deployed: false
+    published: false
+  blockers: []
+  accountable_reviewers_needed: []
+~~~
 
----
+Do not include credentials, endpoint tokens, restricted source excerpts,
+sensitive coordinates, private access detail, movement histories, or
+unreviewed cultural material.
 
-## 13. Receipts & emitted artifacts
+## Proposal-lineage disposition
 
-Each refresh leaves a paper trail. **Every** outcome (APPROVE, QUARANTINE, ABSTAIN, DENY, ERROR) emits at least one receipt.
+The prior v0.1 body is superseded at this path and retained in Git history. Its
+proposed source inventory remains research lineage only. The following items
+were not verified as a complete current implementation and must not be
+reconstructed as operational authority:
 
-| Object | Purpose | Proposed home |
-|---|---|---|
-| `SourceDescriptor` | Source identity, role, rights, sensitivity, cadence, steward | `data/registry/sources/roads-rail-trade/` |
-| `RunReceipt` | Per-run evidence: source URL, ETag, `spec_hash`, artifacts, actor, outcome | `data/receipts/roads-rail-trade/` |
-| `ValidationReport` | Pass/fail per validator with fixture binding | `data/receipts/roads-rail-trade/validation/` |
-| `PolicyDecision` | ALLOW / DENY / ABSTAIN / ERROR + policy version | `data/receipts/roads-rail-trade/policy/` |
-| `TransformReceipt` | Normalization transforms applied | `data/receipts/roads-rail-trade/transform/` |
-| `GeneralizationReceipt` | Public-safe geometry transform (sensitive lanes) | `data/receipts/roads-rail-trade/generalization/` |
-| `RedactionReceipt` | Sensitivity redactions applied | `data/receipts/roads-rail-trade/redaction/` |
-| `EvidenceBundle` | Resolved support package for claims | `data/proofs/roads-rail-trade/` |
-| `CatalogMatrix` entry | Catalog membership and digest closure | `data/catalog/domain/roads-rail-trade/` |
-| `ReviewRecord` | Steward review state | `data/receipts/roads-rail-trade/review/` |
-| `ReleaseManifest` | Release decision, rollback target, correction path | `release/manifests/roads-rail-trade/` |
-| `CorrectionNotice` | Public notice of a corrected claim | `release/correction_notices/roads-rail-trade/` |
-| `RollbackCard` | Rollback decision artifact | `release/rollback_cards/roads-rail-trade/` |
+- proposal-era watcher, fetcher, conditional-GET, debounce, and schedule
+  behavior;
+- invented gate job names and validator paths;
+- proposed SourceDescriptor, receipt, proof, catalog, candidate, release, and
+  lifecycle destinations;
+- suggested live-source commands, signing behavior, kill switches, cache
+  invalidation, heartbeat receipts, and watcher-created pull requests; and
+- claims that a missing prerequisite permits writes through WORK, creates an
+  `ABSTAIN` receipt, or otherwise authorizes partial live ingestion.
 
-> [!NOTE]
-> All paths above are **PROPOSED**. Verify against Directory Rules §6 / §12 and the current `data/`, `release/`, and `data/registry/` layouts before committing.
+Connected Drive Roads/Rail/Trade documents remain doctrine, research, and
+design lineage. Notion remains coordination. Current GitHub repository evidence
+controls claims about implemented behavior.
 
-[⤴ Back to top](#-roads-rail-and-trade-routes--source-refresh-runbook)
+## Documentation validation
 
----
+For a documentation-only change to this file:
 
-## 14. Failure modes & anti-patterns
+1. review the complete diff for accuracy and unrelated churn;
+2. confirm one H1, logical headings, balanced fences/comments, and no trailing
+   whitespace;
+3. resolve every changed relative link and repository path at the pinned base;
+4. reconcile commands with the current validator, tests, workflow, and
+   no-network helper;
+5. run the bounded synthetic profile when dependencies are available, or report
+   it as not run rather than inferring a result;
+6. classify hosted checks as introduced, inherited, skipped, pending, or not
+   run and bind them to the exact head; and
+7. keep source admission, merge, promotion, release, deployment, publication,
+   and ready-for-review transitions separately authorized.
 
-> [!WARNING]
-> If you find yourself doing any of these, **stop the refresh and re-plan.**
+A documentation check or synthetic profile cannot prove source freshness,
+rights clearance, activation, live retrieval, lifecycle mutation, evidence
+closure, review, proof, promotion, release, deployment, publication,
+correction, or rollback execution.
 
-- **Watcher auto-publish.** A connector or watcher writes directly to `data/published/` or to the live tile cache. Watchers are non-publishers.
-- **OSM-as-authority.** Promoting an OSM-derived claim as legal road status, jurisdictional ownership, or freight designation.
-- **Generalization skip.** Releasing raw historic-trail geometry from archival scans without a `GeneralizationReceipt`.
-- **Cultural-corridor leak.** Releasing exact Indigenous / cultural corridor geometry without explicit steward consent at the requested granularity.
-- **Operator-status retro-overwrite.** Silently mutating a prior `OperatorStatus` event instead of superseding it.
-- **Stale-without-marker.** Letting a source age past its cadence without either re-admission or a stale marker on dependents.
-- **Cache invalidation on no-change.** Emitting tile / style cache invalidations on a heartbeat poll.
-- **Polished-but-unreceipted refresh.** Producing a beautiful run with no `RunReceipt`, no `ValidationReport`, no `PolicyDecision`.
-- **Graph as truth.** Treating the derived transport-network graph as the canonical record rather than as a derivative of released objects.
+## Documentation correction and rollback
 
-[⤴ Back to top](#-roads-rail-and-trade-routes--source-refresh-runbook)
+If this file becomes stale, compare the exact repository revision and correct
+the same path through a focused review. Do not preserve a convenient command
+after its owning implementation changes.
 
----
+Before merge, close the draft pull request and delete only its task branch.
+After a separately authorized merge, revert the focused documentation commit
+or apply a reviewed forward correction.
 
-## 15. FAQ
+Reverting this file does not undo or perform source retrieval, source admission,
+lifecycle writes, policy decisions, proof production, promotion, release,
+deployment, publication, correction, withdrawal, or operational rollback.
 
-**Q. Can I refresh a single source by hand without going through CI?**
-A. You can fetch and inspect locally. You cannot promote anything past `data/work/roads-rail-trade/`. Any promotion requires CI-signed receipts and a `ReleaseManifest`.
+## Related repository surfaces
 
-**Q. WZDx is live and noisy. How do I avoid cache thrash?**
-A. Use the debounce/coalesce window for the source class (5–30 s for high-churn). Materialize only when `spec_hash` changes. Heartbeat receipts emit on no-change without invalidating caches.
+### Domain and procedure boundaries
 
-**Q. A county sent a corrected bridge restriction. What do I do?**
-A. Treat it as a corrective refresh: re-run Gates A–G; if it materially changes a published claim, issue a `CorrectionNotice`, supersede the affected `ReleaseManifest`, and invalidate caches.
+- [Roads/Rail/Trade domain](../../domains/roads-rail-trade/README.md)
+- [Data lifecycle](../../domains/roads-rail-trade/DATA_LIFECYCLE.md)
+- [Sensitivity and public precision](../../domains/roads-rail-trade/SENSITIVITY.md)
+- [No-network test procedure](./NO_NETWORK_TEST_RUNBOOK.md)
+- [Promotion preflight](./PROMOTION_RUNBOOK.md)
+- [Rollback readiness](./ROLLBACK_RUNBOOK.md)
 
-**Q. An OSM contributor relabeled a road as US-50 Business; should we publish?**
-A. No. OSM is **observation/context**, not legal authority. The *role-overreach* validator should refuse. If a separate authoritative source (KDOT) confirms, refresh from that source instead.
+### Governance and source admission
 
-**Q. The historic-trail scan shows exact alignment. Why can't I publish that?**
-A. Source precision rarely supports it, and the corridor may overlap a sensitive Indigenous mobility line. Default to a generalized corridor view; require steward review and a `GeneralizationReceipt`.
+- [Accepted Directory Rules decision](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+- [Directory Rules](../../doctrine/directory-rules.md)
+- [Lifecycle Law](../../doctrine/lifecycle-law.md)
+- [Trust Membrane](../../doctrine/trust-membrane.md)
+- [Domain-first source registry](../../../data/registry/roads-rail-trade/sources/README.md)
+- [Subtype-first source registry](../../../data/registry/sources/roads-rail-trade/README.md)
+- [Domain connector boundary](../../../connectors/domains/roads-rail-trade/README.md)
 
-**Q. What if the upstream source disappears?**
-A. Mark dependents stale. Open a supersession entry in the source register. Decide via steward whether to withdraw the affected releases or to preserve them as historic claims with a stale-source badge.
+### Executable bounded profile
 
-[⤴ Back to top](#-roads-rail-and-trade-routes--source-refresh-runbook)
+- [`CorridorRoute` semantic contract](../../../contracts/domains/roads-rail-trade/corridor_route.md)
+- [`CorridorRoute` schema](../../../schemas/contracts/v1/domains/roads-rail-trade/corridor_route.schema.json)
+- [Synthetic fixtures](../../../fixtures/domains/roads-rail-trade/corridor_route/)
+- [Validator](../../../tools/validators/domains/roads-rail-trade/validate_corridor_route.py)
+- [Focused tests](../../../tests/schemas/test_corridor_route_contract.py)
+- [Domain workflow](../../../.github/workflows/domain-roads-rail-trade.yml)
+- [No-network helper](../../../tools/ci/kfm_no_network/README.md)
 
----
-
-## 16. Related docs
-
-- `docs/doctrine/directory-rules.md` — placement and authority roots
-- `docs/doctrine/lifecycle-law.md` — RAW → PUBLISHED invariant
-- `docs/doctrine/trust-membrane.md` — public-client boundary
-- `docs/domains/roads-rail-trade/README.md` *(PROPOSED — domain landing page)*
-- `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` *(PROPOSED — descriptor fields)*
-- `docs/runbooks/roads-rail-trade/VALIDATION.md` *(PROPOSED sibling)*
-- `docs/runbooks/roads-rail-trade/ROLLBACK.md` *(PROPOSED sibling)*
-- `docs/runbooks/roads-rail-trade/LOCAL_DEV.md` *(PROPOSED sibling)*
-- `docs/adr/ADR-watcher-non-publisher.md` *(PROPOSED — codifies the non-publisher rule)*
-- `docs/registers/VERIFICATION_BACKLOG.md` — open verification items for this lane
-
-[⤴ Back to top](#-roads-rail-and-trade-routes--source-refresh-runbook)
-
----
-
-## 17. Appendix · pseudocode and command stubs
-
-<details>
-<summary><strong>A. Watcher → proposal → human gate → attestation → promotion (fail-closed)</strong></summary>
-
-<sub>Doctrinal sketch from KFM ingestion notes. Function names PROPOSED. The shape is the point, not the names.</sub>
-
-```python
-# PROPOSED — pseudocode; verify tool paths before adopting.
-def watcher_tick(source):
-    manifest = fetch_manifest(source)                 # ETag/Last-Modified or event payload
-    new_fp = content_fingerprint(manifest)            # sha256 over normalized content
-    old_fp = load_last_fingerprint(source)
-    if new_fp == old_fp:
-        emit_heartbeat_receipt(source); return        # no-change; do NOT invalidate caches
-
-    delta = compute_delta(load_snapshot(source), manifest)
-    spec_hash = sha256(JCS(serialize_delta_record(delta)))
-
-    proposed = {
-        "decision_id": uuid4(),
-        "spec_hash": spec_hash,
-        "delta": delta,
-        "source_refs": build_source_refs(manifest),
-        "ingest_lane": "RAW→WORK",
-    }
-    score, explain = ai_change_scorer(proposed,
-                        context=source_policy_context(source))   # advisory only
-    proposal_ref = write_to_WORK(proposed, score=score, explain=explain)
-    notify_steward(proposal_ref, score=score, explain=explain)   # human review required
-
-
-def steward_decision(proposal_ref, approve: bool, reason: str | None):
-    proposed = read_WORK(proposal_ref)
-    if not approve:
-        mark_status(proposal_ref, status="quarantine", reason=reason)
-        emit_run_receipt(decision_id=proposed["decision_id"],
-                         status="quarantine", reason=reason, actor="steward")
-        return ABSTAIN
-
-    evidence = buildEvidenceBundle(
-        proposed,
-        run_metadata=collect_run_metadata(),
-        policy_label=resolve_policy_label(proposed),
-        rights_status=resolve_rights(proposed),
-        sensitivity=resolve_sensitivity(proposed),
-    )
-    signed_att = dsse_sign_or_cosign(evidence)
-    emit_run_receipt(decision_id=proposed["decision_id"],
-                     spec_hash=proposed["spec_hash"],
-                     attestation_ref=signed_att.ref,
-                     timestamps=now_iso(), actor="steward")
-    promote(record=proposed, status="active",
-            attestation_ref=signed_att.ref,
-            lane="WORK→PROCESSED→CATALOG/TRIPLET→PUBLISHED")
-    return ANSWER
-```
-
-</details>
-
-<details>
-<summary><strong>B. Gate A · identity & integrity (POSIX shell sketch)</strong></summary>
-
-<sub>Adapted from KFM promotion-gate notes. Tooling presence in the repo is **NEEDS VERIFICATION**.</sub>
-
-```bash
-# PROPOSED — verify against actual workflow files before quoting in PRs.
-set -euo pipefail
-HEADERS=$(mktemp)
-curl -sI "$SOURCE_URL" > "$HEADERS"
-ETAG=$(awk         '/ETag/{print $2}'         "$HEADERS" | tr -d '\r"')
-LAST_MODIFIED=$(awk -F": " '/Last-Modified/{print $2}'   "$HEADERS" | tr -d '\r')
-CONTENT_LENGTH=$(awk -F": " '/Content-Length/{print $2}' "$HEADERS" | tr -d '\r')
-
-SPEC_HASH=$(python3 - <<'PY'
-import json, hashlib
-with open("spec.json", "r", encoding="utf-8") as f:
-    payload = json.dumps(json.load(f), sort_keys=True, separators=(",", ":"))
-print(hashlib.sha256(payload.encode()).hexdigest())
-PY
-)
-
-test -n "$ETAG" -a -n "$LAST_MODIFIED" -a -n "$SPEC_HASH"
-echo "spec_hash=$SPEC_HASH"
-```
-
-</details>
-
-<details>
-<summary><strong>C. DSSE / cosign verification on a run receipt</strong></summary>
-
-```bash
-# PROPOSED — keys and paths NEEDS VERIFICATION against repo conventions.
-cosign verify-blob \
-  --key cosign.pub \
-  --signature run_receipt.sig \
-  envelope.json
-```
-
-DSSE structural checks the validator MUST make: `payload` exists, `payloadType` matches, `signatures` array exists, signature count ≥ 1.
-
-</details>
-
-<details>
-<summary><strong>D. Truth-label legend used in this runbook</strong></summary>
-
-| Label | Meaning |
-|---|---|
-| **CONFIRMED** | Verified this session against attached KFM doctrine documents |
-| **PROPOSED** | Design / path / placement not yet verified in mounted-repo evidence |
-| **NEEDS VERIFICATION** | Checkable, but not yet checked strongly enough to act as fact |
-| **UNKNOWN** | Not resolvable without more evidence |
-| **EXTERNAL** | Sourced from authoritative external research (not used in this file) |
-
-</details>
-
-[⤴ Back to top](#-roads-rail-and-trade-routes--source-refresh-runbook)
-
----
-
-**Related docs:** [Directory Rules](../../doctrine/directory-rules.md) · [Lifecycle Law](../../doctrine/lifecycle-law.md) · [Trust Membrane](../../doctrine/trust-membrane.md) · [Roads/Rail Domain README](../../domains/roads-rail-trade/README.md) *(PROPOSED)* · [Source Descriptor Standard](../../sources/SOURCE_DESCRIPTOR_STANDARD.md) *(PROPOSED)*
-
-**Last updated:** 2026-05-12 · **Version:** v0.1 (draft) · **Status:** awaiting Roads/Rail steward + repo verification
-
-[⤴ Back to top](#-roads-rail-and-trade-routes--source-refresh-runbook)
+[Back to top](#top)

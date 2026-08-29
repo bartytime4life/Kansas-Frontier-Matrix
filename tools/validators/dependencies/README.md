@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-validators-dependencies-readme
 title: tools/validators/dependencies — Dependency Audit Boundary
 type: README; validator-lane; supply-chain-readiness
-version: v0.2
+version: v0.3
 status: proposed; executable-validator; focused-tests; fail-closed; non-authoritative
 owner: OWNER_TBD — Supply-chain reviewer · Validator steward · CI steward
 created: 2026-07-29
-updated: 2026-08-28
+updated: 2026-08-29
 policy_label: repository-facing; dependency-audit; pnpm; npm; deterministic-readiness; network-classification; fail-closed; non-release
 owning_root: tools/
 responsibility: validate repository-local dependency-audit preconditions and classify external pnpm and npm audit output without owning manifests, lockfiles, advisories, dependency admission, release, deployment, or publication
@@ -23,6 +23,7 @@ notes:
   - "Repository readiness is no-network and deterministic; the pnpm and npm audits are point-in-time registry queries."
   - "PASS means only that declared checks passed for the inspected revision and configured advisory response."
   - "The stable workflow job id remains npm-audit; root coordination uses pnpm while the Explorer installed graph uses npm."
+  - "Audit classification emits a bounded package/advisory identity projection; it never echoes the complete registry response."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -63,7 +64,17 @@ python tools/validators/dependencies/pnpm_audit_readiness.py \
 
 `classify-audit` parses an already-produced npm-compatible JSON report and
 labels the result for either `pnpm` or `npm`. It never queries the registry
-itself.
+itself. When the report supplies package-level vulnerability records, the
+one-line result also includes a deterministic `threshold_vulnerabilities`
+projection with package name, severity, bounded advisory IDs, and a bounded
+fix hint when available. The parser accepts npm's package-keyed
+`vulnerabilities` shape and pnpm's legacy advisory-keyed `advisories`
+shape, and labels the selected `source_format`. The projection is limited to
+50 sorted records and 10 sorted advisory IDs per record. It does not echo
+titles, descriptions, recommendations, dependency paths, registry payloads,
+or arbitrary advisory URLs. `NOT_PROVIDED`, `PARTIAL_INVALID`, and
+`COUNT_MISMATCH` remain explicit instead of being misrepresented as a
+complete finding inventory.
 
 ## Finite outcomes
 
@@ -73,8 +84,8 @@ itself.
 | `REGRESSION` | `1` | The command failed and the structured report confirms one or more findings at or above the selected threshold. |
 | `ERROR` | `2` | Inputs are missing, unsafe, malformed, inconsistent, unsupported, or the audit failed without confirmed threshold findings. |
 
-Reason codes and findings are sorted before one-line JSON emission. Identical
-inputs therefore produce identical output.
+Reason codes, findings, and the bounded threshold projection are sorted before
+one-line JSON emission. Identical inputs therefore produce identical output.
 
 ## Workflow boundary
 
@@ -126,8 +137,10 @@ python -m pytest tests/validators/test_pnpm_audit_readiness.py -q
 
 The suite covers the positive repository contract plus manager, engine,
 workspace, lockfile, importer, malformed-manifest, symlink, threshold,
-malformed-report, command-failure, polarity, deterministic-output, and CLI-exit
-cases. Fixtures are temporary, synthetic, and no-network.
+bounded npm and legacy-pnpm advisory projections, raw-text exclusion,
+missing-detail, count-mismatch, malformed-report, command-failure, polarity,
+deterministic-output, and CLI-exit cases. Fixtures are temporary, synthetic,
+and no-network.
 
 ## Correction and rollback
 

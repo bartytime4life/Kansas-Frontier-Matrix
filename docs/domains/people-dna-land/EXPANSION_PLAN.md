@@ -2,29 +2,25 @@
 doc_id: kfm://doc/people-dna-land/expansion-plan
 title: People · Genealogy · DNA · Land — Domain Expansion Plan
 type: standard
-version: v2.1
-prior_version: v2
+version: v2
 status: draft
 owners: [TODO: People/DNA/Land domain steward] ; [TODO: Sensitivity reviewer] ; [TODO: Rights-holder representative] ; [TODO: Release authority]
 created: 2026-05-18
-updated: 2026-08-29
+updated: 2026-06-07
 policy_label: public
-owning_root: docs/
-responsibility: Forward-looking People/DNA/Land expansion planning and verification backlog; explanatory only and subordinate to current repository evidence and governing authority surfaces.
-truth_posture: cite-or-abstain; current repository evidence overrides proposal-era implementation assumptions
 related:
   - ./DATA_LIFECYCLE.md
   - ./DEFINITION_OF_DONE.md
   - ./DNA_HANDLING.md
   - ./EXPANSION_BACKLOG.md
-  - ../README.md
-  - ../../doctrine/directory-rules.md
-  - ../../doctrine/ai-build-operating-contract.md
-  - ../../doctrine/lifecycle-law.md
-  - ../../doctrine/trust-membrane.md
-  - ../../standards/PROV.md
-  - ../../registers/VERIFICATION_BACKLOG.md
-  - ../../registers/DRIFT_REGISTER.md
+  - ../README.md                                  # NEEDS VERIFICATION (presence)
+  - ../../doctrine/directory-rules.md             # Directory Rules v1.3 (CONFIRMED, attached corpus)
+  - ../../../ai-build-operating-contract.md        # CONTRACT_VERSION = "3.0.0"
+  - ../../doctrine/lifecycle-law.md               # NEEDS VERIFICATION (presence)
+  - ../../doctrine/trust-membrane.md              # NEEDS VERIFICATION (presence)
+  - ../../standards/PROV.md                       # CONFIRMED authored prior session
+  - ../../registers/VERIFICATION_BACKLOG.md       # NEEDS VERIFICATION (presence)
+  - ../../registers/DRIFT_REGISTER.md             # NEEDS VERIFICATION (presence)
 tags: [kfm, domain, people, genealogy, dna, land, ownership, sensitivity, deny-default]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned per ai-build-operating-contract.md v3.0.
@@ -32,8 +28,7 @@ notes:
   - SLUG CONFLICT (OPEN-PDL-01): docs lane `people-dna-land` is CONFIRMED in Directory Rules v1.3 §6.1; responsibility-root slug is `people` per Atlas §24.13. Both forms appear below, each labeled.
   - GATE-LETTER NOTE: v1 invented domain gate labels A–E; two real A–G matrices already exist in the corpus (Pass-10 C5-01 vs Build-Manual §6.2 / Unified §8) and disagree on letters. §3/§10 now reference gate intent, not a third lettering. See sibling DATA_LIFECYCLE.md §5.
   - Consent terms are ConsentGrant + RevocationReceipt (Atlas ubiquitous language).
-  - Retained implementation-layer paths and maturity claims remain proposal lineage unless reconciled against current repository evidence and their owning authority surfaces.
-  - Vendor-watch status is reconciled against current GitHub evidence: a manual repository-visible signal-review SOP and synthetic vendor-loss tabletop now exist; live acquisition, monitoring, response execution, and vendor-state authority remain held.
+  - All implementation-layer path claims are PROPOSED until checked against a mounted repo.
 [/KFM_META_BLOCK_V2] -->
 
 # People · Genealogy · DNA · Land — Domain Expansion Plan
@@ -52,14 +47,14 @@ notes:
 |----------------------------|-----------------------------------------------------------------------------------------------|
 |**Status**                  |Draft (governance-first; no public release planned in this expansion alone)                    |
 |**Owners**                  |`TODO` — People/DNA/Land domain stewards (placeholder pending steward register entry)          |
-|**Last updated**            |2026-08-29                                                                                     |
+|**Last updated**            |2026-06-07                                                                                     |
 |**Source basis**            |`[DOM-PEOPLE]`, `[ENCY]`, `[DIRRULES]` (v1.3), `[GAI]`, `[UNIFIED]`, Pass-10 Category C9       |
 |**Default sensitivity tier**|**T4** — living-person, DNA-derived, private person-parcel join (deny-default)                 |
 |**KFM-wide build position** |**Phase 12** (sensitive-lane staged builds, default DENY) per Atlas §21 / Build Manual Phase 10|
 
 
 > [!IMPORTANT]
-> This is a **plan**, not an implementation claim. The repository is now available for inspection, but retained path, schema, route, validator, fixture, and CI claims remain **PROPOSED / NEEDS VERIFICATION** unless current repository evidence and the owning surface support them. Doctrine claims grounded in governing KFM sources remain distinct from implementation maturity. See §13.
+> This is a **plan**, not an implementation claim. Every path, schema name, route, validator, fixture, and CI gate referenced below is **PROPOSED** until verified against a mounted repository. Doctrine claims grounded in attached KFM corpus are **CONFIRMED**; implementation-layer claims remain **PROPOSED / NEEDS VERIFICATION**. See §13.
 
 > [!WARNING]
 > **This lane is built late, on purpose.** The corpus build sequence places the **Hydrology** proof slice first (Atlas §21 Phase 5; Build Manual Phase 3) and People/DNA/Land **last among ingest lanes** (Build Manual Phase 10 #8; Atlas §21 Phase 12, “default DENY”). This plan therefore assumes the trust spine, governed API, Evidence Drawer, Focus Mode, and release/rollback machinery are already proven on a lower-sensitivity lane before any slice here begins. See [§4](#4-first-internally-releasable-slice).
@@ -120,7 +115,7 @@ The People/DNA/Land lane is the **most ethically loaded** lane in KFM. Three pro
 
 > [!WARNING]
 > Three failure modes that this plan must structurally prevent — not document away:
->
+> 
 > 1. **Living-person leak** — a record about a living individual reaches a public surface (popup, AI text, layer manifest, Evidence Drawer payload, tile).
 > 1. **DNA segment leak** — raw DTC genotype or segment data crosses any boundary other than restricted-store-to-restricted-surface.
 > 1. **Assessor-as-title collapse** — assessor or parcel geometry is rendered, summarized, or AI-generated *as if* it were authoritative title.
@@ -450,7 +445,7 @@ Every governed-API or Focus-Mode surface for this domain returns a finite envelo
 |**OPEN-PDL-06**|UI/API restricted-field no-leak invariant: side-channel audit cadence and pass/fail thresholds.                                                                                                                                 |Test + Policy                   |NEEDS VERIFICATION                                 |
 |**OPEN-PDL-07**|GEDCOM-conformance test corpus + reject/warn thresholds.                                                                                                                                                                        |Test                            |NEEDS VERIFICATION `[C9-01]`                       |
 |**OPEN-PDL-08**|FamilySearch retention policy aligned with GA4GH revocation semantics.                                                                                                                                                          |Policy + ADR                    |NEEDS VERIFICATION `[C9-02]`                       |
-|**OPEN-PDL-09**|DTC vendor-signal review and vendor-loss tabletop; live acquisition, monitoring, and response remain held.                                                                                                                     |Runbook                         |PARTIAL — repository-grounded documentation; operational gaps remain `[C9-07]`|
+|**OPEN-PDL-09**|DTC vendor-watch SOP and vendor-loss tabletop (post-23andMe Chapter 11).                                                                                                                                                        |Runbook                         |NEEDS VERIFICATION `[C9-07]`                       |
 |**OPEN-PDL-10**|Differential-privacy epsilon defaults for demographic / genealogical aggregates (aggregates only).                                                                                                                              |Policy + ADR                    |NEEDS VERIFICATION `[C9-05]`                       |
 |**OPEN-PDL-11**|k-anonymity threshold for any aggregate that could touch a living individual (default k=10 / cell≈500 m / fallback radius mask≈250 m).                                                                                          |Policy                          |NEEDS VERIFICATION `[C9-05]` `[C6-06]`             |
 |**OPEN-PDL-12**|Steward roles and separation of duties for promotion/rollback in this lane.                                                                                                                                                     |Governance                      |NEEDS VERIFICATION `[Atlas §24.7]`                 |
@@ -522,4 +517,4 @@ This plan is **accepted** when **all** of the following are true. Each criterion
 
 -----
 
-<sub>Last updated: 2026-08-29 · Status: draft · CONTRACT_VERSION: 3.0.0 · Segment naming: see §13 OPEN-PDL-01 · First-slice attribution: see §4 / OPEN-PDL-13 · [⬆ Back to top](#quick-navigation)</sub>
+<sub>Last updated: 2026-06-07 · Status: draft · CONTRACT_VERSION: 3.0.0 · Segment naming: see §13 OPEN-PDL-01 · First-slice attribution: see §4 / OPEN-PDL-13 · [⬆ Back to top](#quick-navigation)</sub>

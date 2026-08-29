@@ -1,499 +1,542 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runbook/settlements-infrastructure/source-refresh
-title: Settlements / Infrastructure — Source Refresh Runbook
-type: standard
-version: v0.1
-status: draft
-owners: Settlements/Infrastructure domain steward, Source steward, Release steward
+title: Settlements and Infrastructure — Source Refresh Readiness Runbook
+type: runbook
+version: v1.0.0
+prior_version: v0.1
+prior_state: proposal-era live-refresh procedure with unverified sources, writers, paths, commands, receipts, promotion behavior, and public-state effects
+status: draft; repository-grounded; LIVE_SOURCE_REFRESH_HELD; BOUNDED_SOURCE_DESCRIPTOR_VALIDATION; BOUNDED_EVIDENCEBUNDLE_CONVERGENCE; NON_RELEASE; NON_DEPLOYMENT; NON_PUBLICATION
+owners:
+  - "@bartytime4life — verified GitHub review route"
+  - "NEEDS VERIFICATION — accountable source, registry, rights, sensitivity, cultural, sovereignty, infrastructure-security, evidence, policy, operations, correction, rollback, release, and independent-review assignments"
 created: 2026-05-12
-updated: 2026-05-12
-policy_label: public
+updated: 2026-08-29
+policy_label: repository-facing; critical-infrastructure-sensitive; cultural-and-sovereignty-sensitive; source-admission-held; fail-closed
+current_path: docs/runbooks/settlements-infrastructure/SOURCE_REFRESH_RUNBOOK.md
+owning_root: docs/
+responsibility: repository-only source-refresh readiness review and accountable handoff for the Settlements/Infrastructure lane
+truth_posture: cite-or-abstain
+authority_class: explanatory operational documentation
+authority_rank: subordinate to accepted doctrine and ADRs, source identities and activation records, contracts, schemas, policy, evidence, review, lifecycle, proof, release, correction, rollback, and competent official authorities
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: bd4eb1fd42e947a21f2d7679dd318f79973c0067
+  target_before_update_blob: c8895a5e90d2d8bd2628c6ca72dd9f216c3a724e
+  local_runbook_boundary_blob: 3ff33de15249486f520df1fafd934451b268012b
+  canonical_source_registry_readme_blob: 913d694acbe8fbd1660790c9b4c8c614a9cdd627
+  domain_first_source_registry_readme_blob: 9defa909410d4fba6d16ecf7f8ae6ea66da16d6e
+  source_authority_register_blob: 32729857bc8eb5001acb37b8ee8e60bcb6e0dc50
+  domain_connector_readme_blob: a6fc165cd2c1a2ed3baef5df06b02ea754f7a68f
+  census_fetch_placeholder_blob: 1d9bbb1097c64a44b53650b38ed3c6262cb3c4a7
+  census_admission_placeholder_blob: 04d57cd624f226fe1517cda4a7854c60570d91de
+  census_descriptor_placeholder_blob: f3c1bd326d29065e41761a98b3535f8112604dcf
+  source_descriptor_schema_blob: 582e70b834278c3c6ca9a8b31efbe0989c96f0bc
+  source_descriptor_alias_blob: 42da54b28a527850cce88ad89f68921c101fc56b
+  source_descriptor_validator_blob: a0420731a1b80ce6d156f8e4cfd928a6b13699f4
+  source_descriptor_workflow_blob: 6d3f900efcddc17d24a528a92190544fc350b63b
+  domain_workflow_blob: a47d89c40efd58ac31bc44dbc56bdfb1ccc3a325
+  convergence_workflow_blob: 584ac26dcaf5791b1a560cb71bd059e889f55791
+  no_network_runbook_blob: 90133c88ddf2d053a9ca1021e1951e2b241a4ebd
+  raw_boundary_blob: 560113c00e257725c0a440cb489510af44c13b12
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  canonical_registry_placeholder_records: 1
+  parallel_domain_first_descriptor_templates: 5
+  source_authority_register_entries: 0
+  verified_live_refresh_profiles: 0
 related:
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/trust-membrane.md
-  - docs/domains/settlements-infrastructure/README.md
-  - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
-  - docs/runbooks/README.md
-  - docs/registers/VERIFICATION_BACKLOG.md
-tags: [kfm, runbook, settlements, infrastructure, source-refresh, governance]
+  - ./README.md
+  - ./NO_NETWORK_TEST_RUNBOOK.md
+  - ./PROMOTION_RUNBOOK.md
+  - ./ROLLBACK_RUNBOOK.md
+  - ../../domains/settlements-infrastructure/README.md
+  - ../../domains/settlements-infrastructure/SOURCE_REGISTRY.md
+  - ../../domains/settlements-infrastructure/CANONICAL_PATHS.md
+  - ../../domains/settlements-infrastructure/SENSITIVITY.md
+  - ../../sources/ADMISSION_PROCESS.md
+  - ../../sources/SOURCE_DESCRIPTOR_STANDARD.md
+  - ../../doctrine/directory-rules.md
+  - ../../doctrine/lifecycle-law.md
+  - ../../doctrine/trust-membrane.md
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../../.github/CODEOWNERS
+  - ../../../.github/workflows/source-descriptor-validate.yml
+  - ../../../.github/workflows/domain-settlements-infrastructure.yml
+  - ../../../.github/workflows/settlements-infrastructure-evidence-bundle-convergence.yml
+  - ../../../control_plane/source_authority_register.yaml
+  - ../../../data/registry/sources/README.md
+  - ../../../data/registry/sources/settlements-infrastructure/README.md
+  - ../../../data/registry/settlements-infrastructure/sources/README.md
+  - ../../../data/raw/README.md
+  - ../../../connectors/settlements-infrastructure/README.md
+  - ../../../schemas/contracts/v1/source/source_descriptor.schema.json
+  - ../../../schemas/contracts/v1/sources/source_descriptor.schema.json
+  - ../../../fixtures/contracts/v1/source/source_descriptor/
+  - ../../../tools/validators/validate_source_descriptor.py
+  - ../../../tools/validators/sources/validate_source_descriptor.py
+  - ../../../tests/validators/test_validate_source_descriptor_entrypoints.py
+  - ../../../tests/schemas/test_common_contracts.py
+  - ../../../schemas/contracts/v1/domains/settlements-infrastructure/evidence_bundle.schema.json
+  - ../../../tools/validators/validate_settlements_infrastructure_evidence_bundle_projection.py
+  - ../../../tests/validators/domains/settlements-infrastructure/test_evidence_bundle_schema_convergence.py
 notes:
-  - Path PROPOSED until verified against mounted repo evidence.
-  - Implementation maturity UNKNOWN; gates and validators are PROPOSED unless verified.
+  - "This revision replaces unverified live-refresh instructions with a current repository readiness procedure."
+  - "The available SourceDescriptor and EvidenceBundle profiles are synthetic and fixture-bound; they do not admit, activate, retrieve, transform, promote, release, deploy, or publish a source."
+  - "Connected Drive material is planning lineage and Notion is coordination; GitHub controls current-behavior claims."
 [/KFM_META_BLOCK_V2] -->
 
-# Settlements / Infrastructure — Source Refresh Runbook
+<a id="top"></a>
 
-Operational procedure for refreshing settlements and infrastructure source data through KFM's governed `RAW → PUBLISHED` lifecycle, with critical-infrastructure sensitivity gates and PR-first promotion.
-
-![status](https://img.shields.io/badge/status-draft-yellow)
-![authority](https://img.shields.io/badge/authority-doctrinal--PROPOSED--impl-blue)
-![policy](https://img.shields.io/badge/sensitivity-critical--infra--default--deny-red)
-![lifecycle](https://img.shields.io/badge/lifecycle-RAW%20%E2%86%92%20PUBLISHED-purple)
-![review](https://img.shields.io/badge/review-PR--first-success)
-![rollback](https://img.shields.io/badge/rollback-required-orange)
-
-| Field | Value |
-|---|---|
-| **Document type** | Operations runbook |
-| **Status** | `draft` — PROPOSED until verified against mounted repo evidence |
-| **Authority** | Doctrine CONFIRMED; implementation paths PROPOSED / NEEDS VERIFICATION |
-| **Domain** | `settlements-infrastructure` |
-| **Owners** | Settlements/Infrastructure steward · Source steward · Release steward |
-| **Last updated** | 2026-05-12 |
-| **Schema home (default)** | `schemas/contracts/v1/...` per ADR-0001 (verify against repo) |
-
-> [!IMPORTANT]
-> This domain owns critical-infrastructure context. Bridge / condition / inspection details, private or security-sensitive assets, and exact vulnerable facility geometry **default to restricted, generalized, staged, or denied** — never to "publish unless flagged." Default deny is the floor, not the ceiling.
-
----
-
-## Contents
-
-1. [Scope and boundary](#1-scope-and-boundary)
-2. [When to run this runbook](#2-when-to-run-this-runbook)
-3. [Preflight checks](#3-preflight-checks)
-4. [Lifecycle map](#4-lifecycle-map)
-5. [Source family reference](#5-source-family-reference)
-6. [Refresh procedure](#6-refresh-procedure)
-7. [Sensitivity, rights, and publication posture](#7-sensitivity-rights-and-publication-posture)
-8. [Validation gates](#8-validation-gates)
-9. [Receipts and proof objects emitted](#9-receipts-and-proof-objects-emitted)
-10. [Failure modes and rollback](#10-failure-modes-and-rollback)
-11. [Verification backlog](#11-verification-backlog)
-12. [Related docs](#12-related-docs)
-13. [Appendix A — Domain object families](#appendix-a--domain-object-families)
-14. [Appendix B — Path-by-path placement notes](#appendix-b--path-by-path-placement-notes)
-
----
-
-## 1. Scope and boundary
-
-**CONFIRMED doctrine / PROPOSED implementation.** This runbook governs the periodic refresh of source data feeding the **Settlements / Infrastructure** lane: legal municipalities, census places, historic townsites, ghost towns, forts, missions, reservation communities, infrastructure assets, networks, nodes, segments, facilities, service areas, operators, condition observations, dependencies, and the public-safe representations derived from them.
-
-**In scope**
-
-- Periodic and event-driven refresh of admitted Settlements / Infrastructure sources.
-- Promotion of refreshed material through `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`.
-- Sensitivity, rights, and review gates specific to critical infrastructure.
-- Receipts, manifests, correction, and rollback artifacts produced by the refresh.
-
-**Out of scope (owned elsewhere)**
-
-| Concern | Owner | Why excluded here |
-|---|---|---|
-| Transport route geometry, depots, crossings | Roads / Rail / Trade Routes lane | Facility identity is settlement-owned; **route geometry is not** |
-| Living-person ownership and parcel privacy | People / Genealogy / DNA / Land lane | Settlements does not own person-level data |
-| Hazard event records and warnings | Hazards lane | KFM is **never** an alert authority |
-| Water, wastewater, hydrology evidence | Hydrology lane | Cross-lane relation only |
-| Archaeological site coordinates | Archaeology / Cultural Heritage lane | Sites denied at exact coords; settlements may reference generalized context |
-
-> [!NOTE]
-> Cross-lane relations (depot/crossing, exposure, water/wastewater, parcel context) **must preserve ownership, source role, sensitivity, and EvidenceBundle support** even when this runbook touches data that crosses a lane boundary. PROPOSED.
-
-[↑ Back to top](#contents)
-
----
-
-## 2. When to run this runbook
-
-Trigger this runbook for any of the following, **and only after** a watcher or operator has produced a material-change signal — never as a standing background "always-on publish."
-
-| Trigger | Description | Default cadence | Status |
-|---|---|---|---|
-| **Authoritative vintage release** | New Census/TIGER vintage; GNIS bulk update; KDOT bridge inventory release. | Source-specific (annual / quarterly) | PROPOSED |
-| **Watcher delta detected** | Watcher (`stac` / `gtfs` / `tile` / `file` / `api` family) reports a material change against signed prior state. | Event-driven | PROPOSED |
-| **Operator submission** | Steward or operator-supplied municipal record, annexation, or facility update with rights documented. | Event-driven | PROPOSED |
-| **Correction request** | Verified correction against a published settlement, place, or facility. | Event-driven | PROPOSED |
-| **Scheduled review drill** | Quarterly steward-led drill exercising rollback and policy gates without changing public artifacts. | Quarterly | PROPOSED |
+# Settlements and Infrastructure — Source Refresh Readiness Runbook
 
 > [!CAUTION]
-> **Do not run a refresh** purely because the calendar says it is time. A no-change poll **MUST NOT** emit new catalog entities, manifests, or cache invalidations. CONFIRMED doctrine from the watcher / no-change posture.
+> **Current result: `HOLD`.** Live Settlements/Infrastructure source refresh is
+> not established by current repository evidence. Do not execute the retired
+> fetch, watcher, source-write, receipt, signing, cache-invalidation, or
+> promotion examples from the prior version of this file.
 
-[↑ Back to top](#contents)
+This runbook supports **repository-only readiness review** and bounded synthetic
+validation. It does not contact Census, TIGER/Line, GNIS, KDOT, FEMA,
+municipalities, infrastructure operators, archives, Tribal or Indigenous
+stewards, OpenStreetMap, or any other source.
 
----
+It is not municipal-law, census, address, ownership, utility, infrastructure-
+condition, service-availability, emergency, safety, security, planning,
+inspection, access, or regulatory authority.
 
-## 3. Preflight checks
+**Navigate:** [current disposition](#current-repository-disposition) ·
+[procedure](#repository-only-procedure) ·
+[validation](#bounded-validation-profiles) ·
+[live-refresh gates](#requirements-before-a-future-live-refresh) ·
+[stop conditions](#mandatory-stop-conditions) ·
+[handoff](#review-handoff) ·
+[rollback](#documentation-correction-and-rollback)
 
-Before any RAW admission, confirm every item below. If any item is **NO** or **UNKNOWN**, stop and route to the correct register (`VERIFICATION_BACKLOG.md`, `DRIFT_REGISTER.md`, or a steward review issue).
+## Purpose and terminal boundary
 
-- [ ] **SourceDescriptor exists** for each source in scope (role, authority, rights, sensitivity, cadence, license, payload hash or reference). PROPOSED — verify against `data/registry/` and `docs/sources/`.
-- [ ] **Source role is set** (authority / observation / context / model). Mixed-role payloads are split before admission.
-- [ ] **Rights and license are current.** License travels with deltas; unknown license → fail closed.
-- [ ] **Sensitivity class set.** Critical infrastructure, condition, inspection, operator-sensitive, or exact vulnerable geometry → default deny on public detail.
-- [ ] **Cadence and freshness window** declared; stale-source threshold known.
-- [ ] **No direct route from this refresh to PUBLISHED.** Promotion is a governed state transition, not a file move.
-- [ ] **Rollback target identified** for any path that could reach a public surface.
-- [ ] **Kill-switch** state checked (refresh halts if asserted).
-- [ ] **No browser / public client touches `RAW`, `WORK`, `QUARANTINE`, canonical stores, or unpublished candidates.** CONFIRMED doctrine.
-- [ ] **Configs are non-secret.** Real secrets MUST NOT live under `configs/` — even for "test" or "local."
+Use this runbook to determine whether the repository contains enough verified
+source identity, rights, sensitivity, connector, lifecycle, evidence, policy,
+review, correction, and rollback support to consider a future refresh.
 
-> [!WARNING]
-> If a real secret is found anywhere in `configs/` during preflight, treat it as a **security incident**: rotate, audit, and open an entry in `docs/runbooks/` (per `directory-rules.md` §10.3).
-
-[↑ Back to top](#contents)
-
----
-
-## 4. Lifecycle map
-
-**CONFIRMED doctrine:** every refresh follows the lifecycle invariant. Promotion between phases is a **governed state transition** — it requires the artifacts listed in §8 and §9, not a file move.
-
-```mermaid
-flowchart LR
-  classDef ok fill:#e6f4ea,stroke:#188038,color:#0b3d17;
-  classDef hold fill:#fff7e0,stroke:#b06000,color:#5b3700;
-  classDef deny fill:#fdecea,stroke:#b00020,color:#5b0010;
-  classDef pub  fill:#e3eafc,stroke:#1a47b8,color:#0b2766;
-
-  W[Watcher / Operator] -->|material change| A[Admission]
-  A -->|SourceDescriptor + hash| RAW[(RAW)]:::ok
-  RAW -->|normalize| WK[(WORK)]:::ok
-  RAW -->|policy / shape / role failure| QN[(QUARANTINE)]:::deny
-  WK -->|ValidationReport pass| PR[(PROCESSED)]:::ok
-  WK -->|fail or pending| WK
-  PR -->|EvidenceRef → EvidenceBundle, digest closure| CT[(CATALOG / TRIPLET)]:::ok
-  CT -->|ReleaseManifest + rollback target + review| PB[(PUBLISHED)]:::pub
-  PB -->|correction / rollback| CT
-  PB -.->|kill switch| HALT[Promotion halted]:::deny
-```
-
-Per-phase posture:
-
-| Phase | Handling | Gate (must pass) | Default failure |
-|---|---|---|---|
-| **Admission → RAW** | Capture immutable payload or reference with source role, rights, sensitivity, citation, time, and hash. | `SourceDescriptor` exists. | Reject; log candidate. |
-| **WORK / QUARANTINE** | Normalize schema, geometry, time, identity, evidence, rights, policy. Hold failures. | Validation + policy gate pass, or quarantine reason recorded. | Quarantine with reason. |
-| **PROCESSED** | Emit validated, normalized objects, receipts, and public-safe candidates. | `EvidenceRef`, `ValidationReport`, and digest closure exist. | Stay in WORK. |
-| **CATALOG / TRIPLET** | Emit catalog records, `EvidenceBundle`, graph/triplet projections, release candidates. | Catalog / proof closure passes. | Hold at PROCESSED. |
-| **PUBLISHED** | Serve released public-safe artifacts through the governed API and manifests. | `ReleaseManifest`, correction path, rollback target, review/policy state present. | Hold at CATALOG. |
-
-> [!NOTE]
-> Settlements / Infrastructure first-slice posture is **schema-and-fixture-first**: source descriptors, deterministic identity, validators, deny policies, no-network fixtures, and proof-pack / promotion fixtures should land **before** any live source is activated. PROPOSED.
-
-[↑ Back to top](#contents)
-
----
-
-## 5. Source family reference
-
-Source families admitted into the Settlements / Infrastructure lane. Roles, rights, and freshness are source-specific — the table below names the **family** and the burden the runbook places on it. Specific authorities, endpoints, and license text are tracked in `data/registry/sources/` and the source descriptors (PROPOSED).
-
-| Source family | Typical role | Sensitivity default | Freshness cadence | Status |
-|---|---|---|---|---|
-| Census TIGER / Census Place geography | authority / observation | T0 aggregate; restricted joins | Decennial + annual | CONFIRMED doctrine, PROPOSED impl |
-| GNIS and historical gazetteers | authority (place names) / observation | T0 | Periodic | CONFIRMED doctrine, PROPOSED impl |
-| State / local GIS (Kansas Geoportal-style) | authority / observation / context | Source-specific | Source-specific | PROPOSED |
-| Municipal and local legal records | authority (legal place) | T0 / T1 where draft | Event-driven | PROPOSED |
-| Historical gazetteers and maps | context / observation | T0 generalized | Vintage-specific | PROPOSED |
-| Infrastructure operators and providers | authority / observation | **T2–T4** (default restricted) | Operator-specific | PROPOSED |
-| KDOT / bridge / facility sources | authority / observation | T2–T4 for condition, inspection | Periodic | PROPOSED |
-| FEMA / hazards / resilience context | context only (Hazards owns events) | T0 context | Event-driven | PROPOSED |
-| Roads / rail records (facility identity only) | context (Roads/Rail owns route) | T0 facility identity | Periodic | PROPOSED |
-| Fort / mission / reservation community archives | authority / context | Steward-reviewed | Source-specific | PROPOSED |
-
-> [!IMPORTANT]
-> **Sensitive joins fail closed.** A refresh that would combine, for example, infrastructure asset condition with operator identity and exact geometry must produce **no public artifact** until policy, review, and generalization gates have signed off. PROPOSED implementation; CONFIRMED doctrine.
-
-[↑ Back to top](#contents)
-
----
-
-## 6. Refresh procedure
-
-The procedure is **PR-first**. Detected material change → branch + PR with machine-readable manifests + required checks → human review → governed promotion. Direct publication from a watcher or refresh job is forbidden.
-
-### 6.1 Detect and capture (Admission → RAW)
-
-> [!NOTE]
-> Connectors and watchers **do not publish**. Their output goes to `data/raw/<domain>/<source_id>/<run_id>/` or `data/quarantine/...` only. CONFIRMED placement rule.
-
-1. Watcher (or operator) records: source URL, ETag, `spec_hash`, license, version, retrieved_at, payload digest. This becomes the basis of the `RunReceipt`.
-2. Confirm the **SourceDescriptor** for this source is current (role, rights, sensitivity, cadence). If drift is detected, update the descriptor in its own PR before admitting payload.
-3. Compute deterministic identity per object. PROPOSED basis for this domain: `source_id + object_role + temporal_scope + normalized_digest`.
-4. Compare against signed prior state. If response is "no change," **emit a heartbeat only** and stop — no new catalog entities, no manifest churn, no cache invalidation.
-
-<details>
-<summary><strong>Example — SourceDescriptor fields commonly recorded</strong> (illustrative; verify against schema)</summary>
+The highest result this procedure can emit is:
 
 ```text
-source_id            : <stable id>
-source_family        : census_tiger | gnis | kdot_bridge | municipal_legal | ...
-role                 : authority | observation | context | model
-authority            : <issuing body>
-rights               : <license / terms / use posture>
-sensitivity_class    : T0 | T1 | T2 | T3 | T4
-cadence              : <annual | quarterly | event-driven | ...>
-retrieved_at         : <ISO 8601>
-etag / version       : <provider value>
-payload_digest       : <sha256 of payload or reference>
-notes                : <free text>
+READY_FOR_ACCOUNTABLE_SOURCE_REFRESH_REVIEW
 ```
 
-The list above is illustrative. The authoritative shape lives in `schemas/contracts/v1/source/source_descriptor.schema.json` (PROPOSED home — verify against `directory-rules.md` §6.1 and ADR-0001).
-</details>
+That result is a review handoff only. It is not source admission, activation,
+retrieval, lifecycle mutation, evidence closure, approval, release, deployment,
+promotion, or publication.
 
-### 6.2 Normalize and validate (RAW → WORK / QUARANTINE → PROCESSED)
+Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+adopts the [Directory Rules](../../doctrine/directory-rules.md). The current path
+is therefore retained: `docs/runbooks/` owns human operational procedures.
+Source records, connectors, lifecycle objects, policy, proofs, and release
+objects remain in their own responsibility roots.
 
-1. Normalize schema, geometry, time, identity, evidence, rights, and policy.
-2. Run gates in cheap-to-expensive order (see §8). Hold any failure as `QUARANTINE` with a structured reason.
-3. Emit `TransformReceipt` and `ValidationReport`. If sensitivity applies, emit `RedactionReceipt`. If aggregation applies, emit `AggregationReceipt`.
-4. Distinguish **observed**, **valid**, **retrieval**, **release**, and **correction** times where material — they are kept distinct, never collapsed.
+## Current repository disposition
 
-### 6.3 Catalog and bundle (PROCESSED → CATALOG / TRIPLET)
+The following findings are pinned to the metadata snapshot. Re-inspect them at a
+later revision before relying on this table.
 
-1. Resolve every `EvidenceRef` to an `EvidenceBundle` and prove digest closure.
-2. Emit catalog records and graph/triplet projections.
-3. Open a PR with the manifest diff. Required checks include OPA / Conftest policy gates, signature verification, citation validation, and acceptance harness checks (STAC / DCAT / PROV where applicable).
-4. Do **not** treat catalog, graph, triplet, or vector index as sovereign truth — they are derivative indexes built from released or review-authorized evidence.
-
-### 6.4 Promote (CATALOG / TRIPLET → PUBLISHED)
-
-1. Confirm the release authority is **distinct from the author** when materiality applies (separation of duties).
-2. `ReleaseManifest` MUST include: linked `EvidenceBundle`, `PolicyDecision`, `PromotionDecision`, `RunReceipt(s)`, rollback target, correction path, and review state where required.
-3. Run the Promotion Gate Summary. Any negative outcome fails closed.
-4. On merge, post-promotion jobs update STAC / DCAT / PROV records, graph deltas, API indices, Story Nodes, and Focus diffs — strictly downstream of the release manifest. PROPOSED implementation.
-
-### 6.5 Refresh-complete checklist
-
-- [ ] No direct route from connector / watcher to `data/published/` or to public routes.
-- [ ] All RAW payloads recorded with descriptor + digest; nothing admitted without a `SourceDescriptor`.
-- [ ] No-change polls emitted heartbeats only.
-- [ ] All gates in §8 passed or failed-closed with reason.
-- [ ] `ReleaseManifest` carries proof, correction path, and rollback target.
-- [ ] Critical-infrastructure precision audit ran and recorded its result.
-- [ ] Update-propagation matrix items handled (Object Map, fixtures, runbooks, continuity notes, rollback notes, verification backlog).
-
-[↑ Back to top](#contents)
-
----
-
-## 7. Sensitivity, rights, and publication posture
-
-**Default posture for this domain is restrictive.** Critical infrastructure, condition observations, inspection data, dependencies, operator-sensitive details, and exact facility geometry default to restricted or review.
-
-| Concern | Default | Acceptable transforms before public release |
+| Surface | Verified repository evidence | Bounded conclusion |
 |---|---|---|
-| Exact geometry of vulnerable facilities | **Deny** on public detail | Generalize, redact, or staged access only |
-| Bridge / inspection / condition records | **Restricted / review** | Aggregate or steward-approved generalization |
-| Operator identity tied to asset condition | **Restricted** | Generalized footprint; operator id withheld or staged |
-| Living-person ownership joined to facility | **Deny** | Owned by People/Land lane — not this runbook |
-| Critical infrastructure dependency graphs | **Restricted / review** | Aggregate, anonymized, steward-approved publication |
-| Historic forts / missions (non-sensitive) | T0 with provenance | Standard publication path |
+| Canonical source-registry family | Directory Rules identify `data/registry/sources/` as canonical. Its Settlements/Infrastructure lane contains documentation, a Census/TIGER child, and one placeholder YAML. | No admitted source inventory established |
+| Parallel domain-first view | `data/registry/settlements-infrastructure/sources/` contains five `PROPOSED — greenfield template` YAML files with unresolved fields. | Not an independent writer or activation surface |
+| Source-authority projection | `control_plane/source_authority_register.yaml` is projection-only, implementation-absent, empty, and has `entries: []`. | No machine authority entry for a live refresh |
+| Domain connector | `connectors/settlements-infrastructure/` contains documentation and `.gitkeep`. | No executable domain connector |
+| Census connector | `fetch.py` and `admit.py` are comments-only placeholders; the descriptor retains unresolved role and rights fields. | No live Census retrieval or admission path |
+| SourceDescriptor validation | Rich proposed schema, plural compatibility alias, two validator entrypoints, synthetic fixtures, focused tests, and a workflow exist. | Fixture shape and convergence only |
+| EvidenceBundle projection | A no-network-compatible projection profile and workflow exist. | Schema delegation and fixture behavior only |
+| RAW boundary | Source-first identity is required, but exact physical placement, writer interface, deduplication, migration, and rollback remain held. | Do not invent a RAW path |
+| Domain policy, proof, and release | Policy remains evaluator-unbound; domain workflow records semantic-validation, proof-production, and release-dry-run holds. | No candidate may advance |
 
-> [!WARNING]
-> **Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state blocks public promotion.** This is a doctrinal stop, not a warning. CONFIRMED doctrine.
+### Finite current result
 
-Cross-lane sensitivity reminders:
+```yaml
+work_state: HOLD
+reason_codes:
+  - SI_SOURCE_INVENTORY_UNADMITTED
+  - SI_SOURCE_AUTHORITY_REGISTER_EMPTY
+  - SI_REGISTRY_WRITER_UNVERIFIED
+  - SI_CONNECTOR_UNIMPLEMENTED
+  - SI_RAW_PLACEMENT_UNRESOLVED
+  - SI_POLICY_RUNTIME_UNVERIFIED
+  - SI_PROOF_AND_RELEASE_PATHS_HELD
+terminal_boundary: ACCOUNTABLE_REVIEW_HANDOFF_ONLY
+network_access: NOT_PERFORMED
+source_activation: NOT_PERFORMED
+lifecycle_write: NOT_PERFORMED
+release: NOT_PERFORMED
+deployment: NOT_PERFORMED
+publication: NOT_PERFORMED
+```
 
-- **Hazards** owns hazard events. Settlements may carry exposure context only; never present settlement data as a life-safety alert.
-- **People / Land** owns living-person privacy. Joining facility records to person-level data MUST follow that lane's rules.
-- **Archaeology** owns cultural sensitivity. Settlement history that touches sacred or sensitive sites must follow archaeology's denial / generalization rules.
+## Source-role and safety rules
 
-[↑ Back to top](#contents)
+Retrieval, normalization, joining, cataloging, graph projection, mapping, or
+generated language cannot upgrade a source's role.
 
----
-
-## 8. Validation gates
-
-Validation is a **promotion boundary, not a cleanup pass.** Run gates in cheap-to-expensive order; fail closed on the first definitive failure.
-
-| Order | Gate family | Must answer | Default failure |
-|---|---|---|---|
-| 1 | **Shape** | Does each object match its schema and required version? | `ERROR` / quarantine |
-| 2 | **Meaning** | Does it conform to contract and vocabulary (legal place vs census place vs historic place)? | `ERROR` / review |
-| 3 | **Source** | Is source role, rights, cadence, and sensitivity known and current? | `DENY` / quarantine |
-| 4 | **Evidence** | Do `EvidenceRef`s resolve to `EvidenceBundle`s? | `ABSTAIN` |
-| 5 | **Policy** | Is exposure allowed for this user, purpose, and release class? | `DENY` |
-| 6 | **Lifecycle** | Is object in the correct phase along `RAW → PUBLISHED`? | `DENY` |
-| 7 | **Receipt** | Are `RunReceipt`, `PromotionReceipt`, decision logs present? | `ERROR` |
-| 8 | **Release** | Does the manifest include proof, correction path, and rollback target? | `ERROR` |
-
-Domain-specific validators (PROPOSED — verify against `tests/` and `tools/validators/`):
-
-- Legal municipality evidence test (legal place ↔ source role correctness).
-- Census-vs-municipality distinction test (no silent collapse).
-- Infrastructure topology test (nodes / segments / facilities consistent).
-- `condition.observed_at` temporal field test (observed time preserved separately from retrieval and release time).
-- Restricted geometry no-leak test (precision audit; sensitive geometry never appears in public artifacts).
-- Catalog / proof / release closure test.
-
-Cross-cutting validators (PROPOSED):
-
-- `SourceDescriptor` schema validation.
-- OPA / Conftest policy-as-code on run manifests (fail closed on missing fields, rights, sensitivity, or release state).
-- Cosign / Rekor attestation check; UUID recorded back into the run manifest.
-- Acceptance harness for STAC / DCAT / PROV closure before release.
-- `spec_hash` reproducibility gate (drift blocks promotion).
-
-[↑ Back to top](#contents)
-
----
-
-## 9. Receipts and proof objects emitted
-
-A successful refresh produces, at minimum, the artifacts below. Specific shapes live in `schemas/contracts/v1/...` (PROPOSED home; verify against ADR-0001).
-
-| Artifact | Purpose | Where it lives | Status |
-|---|---|---|---|
-| `SourceDescriptor` | Source identity, role, rights, sensitivity, cadence. | `data/registry/sources/<domain>/` (PROPOSED) | PROPOSED |
-| `RunReceipt` | Pipeline run inputs/outputs/`spec_hash`/timestamp/operator/result. | `data/receipts/` | PROPOSED |
-| `TransformReceipt` | Per-transform inputs, outputs, tool versions. | `data/receipts/` | PROPOSED |
-| `ValidationReport` | Pass/fail per gate; structured reasons. | `data/proofs/` | PROPOSED |
-| `EvidenceBundle` | Closed evidence for public claims. | `data/catalog/` projection | PROPOSED |
-| `RedactionReceipt` | Records generalization / redaction transforms and reasons. | `data/receipts/` | PROPOSED |
-| `PolicyDecision` | Allow / deny / restrict / abstain with rule ids. | `data/proofs/` | PROPOSED |
-| `PromotionDecision` | Gate results, proof, review state, target release, rollback target. | `release/` | PROPOSED |
-| `ReleaseManifest` | Coordinates layer / style / tile / catalog release and rollback. | `release/` | PROPOSED |
-| `CorrectionNotice` | Correction path for any released artifact. | `release/` | PROPOSED |
-| `RollbackCard` | Reversal anchor restoring prior manifest and invalidating caches. | `release/rollback/` | PROPOSED |
-
-> [!TIP]
-> Trust-bearing artifacts (receipts, proofs, manifests, release decisions) **do not** belong in `artifacts/`. Per `directory-rules.md` §8, `artifacts/` is build / docs / qa / temporary only.
-
-[↑ Back to top](#contents)
-
----
-
-## 10. Failure modes and rollback
-
-Common failure modes and their default response. Every public release MUST have a rollback target before promotion.
-
-| Failure mode | Where it surfaces | Default response |
+| Material | May support | Must not be substituted for |
 |---|---|---|
-| **Unknown or expired license** on a refreshed source | Source / policy gate | `DENY` — block layer admission; license-deny policy fixture asserts |
-| **Sensitive geometry attempt to publish** | Policy / precision audit | `DENY` — fail closed; emit `RedactionReceipt` if generalized re-attempt is permitted |
-| **Stale source** beyond declared threshold | Source / freshness check | UI stale badge; `ABSTAIN` on dependent claims; **never** rebrand as denial |
-| **Unsigned artifact** (tile / catalog / style / manifest) | Signature / Cosign / Rekor gate | `DENY` — unsigned artifact deny fixture asserts |
-| **Missing `RunReceipt` or `PromotionReceipt`** | Receipt gate | `ERROR` — promotion blocked |
-| **Catalog / proof closure fails** | Catalog closure gate | Hold at `PROCESSED`; no public edge |
-| **Kill switch asserted** | Promotion aggregator | Promotion fails closed; merge blocked |
-| **Released artifact found defective post-publication** | Correction path | Emit `CorrectionNotice`; execute rollback; invalidate caches with `cache invalidation record` |
+| Census/TIGER and census-place geography | Vintage-bound statistical geography and identifiers | Legal municipal status, ownership, cadastral truth, address validity, or current service status |
+| GNIS, gazetteers, post-office records, and map labels | Name, location, or historical context within the source scope | Incorporation, continued existence, jurisdiction, or exact historic boundary |
+| Municipal legal records | Bounded legal or administrative evidence for the issuing jurisdiction and effective period | Universal or current status without current review |
+| State/local GIS and infrastructure inventories | Publisher-scoped administrative, observed, or contextual information | Current condition, capacity, availability, safety, ownership, dependency, or access |
+| Historic maps and records | Dated evidence with scale, method, uncertainty, rights, and limitations | Surveyed exact geometry, present access, or unrestricted cultural publication |
+| Community or volunteered data | Candidate or contextual evidence under license and role limits | Official designation, legal status, ownership, condition, or safety authority |
+| Modeled, mapped, inferred, or AI-generated output | Derived representation with method, inputs, uncertainty, and evidence references | Source observation or sovereign truth |
 
-Rollback drill (PROPOSED steps):
+Keep source, observed, valid/effective, retrieval, record, publication,
+correction, and supersession time distinct where material.
 
-1. Identify the prior `ReleaseManifest` and its referenced artifact digests.
-2. Restore prior manifest; revert layer / tile / style / catalog references.
-3. Issue `cache invalidation record` (no no-change invalidations).
-4. Emit a **rollback attestation** linking the prior release.
-5. Update the verification backlog and any affected continuity notes.
-6. Run the rollback replay test to prove the restored state matches the prior digest.
+Sensitive infrastructure, exact facility geometry, dependencies, condition
+observations, operator-sensitive details, private-property or living-person
+joins, culturally sensitive places, archaeology, and sovereignty-bearing
+information fail closed until rights, policy, public-safe transformation, and
+accountable review are established.
 
-> [!CAUTION]
-> Rollback is a **first-class release operation**, not an emergency improvisation. If a rollback path cannot be drawn, the release is not ready to publish. CONFIRMED doctrine.
+Cross-domain joins do not transfer authority. Roads/Rail/Trade owns route
+semantics; Hydrology owns water evidence; Hazards owns hazard events and
+warnings; People/DNA/Land owns living-person and parcel-sensitive material;
+Archaeology and relevant cultural or sovereignty stewards govern protected
+historic and cultural context.
 
-[↑ Back to top](#contents)
+## Repository-only procedure
 
----
+### Step 1 — Freeze the evidence revision
 
-## 11. Verification backlog
+Run from a clean checkout or dedicated worktree:
 
-These items are explicitly **not resolved** by this runbook and SHOULD be tracked in `docs/registers/VERIFICATION_BACKLOG.md`.
+```bash
+git remote get-url origin
+git rev-parse HEAD
+git status --short
+```
 
-| Item | Evidence that would settle it | Status |
-|---|---|---|
-| Exact schema home for `SourceDescriptor`, `RunReceipt`, `ReleaseManifest`, `EvidenceBundle` in mounted repo | Mounted `schemas/`, ADR-0001, per-root README | NEEDS VERIFICATION |
-| Connector module names and locations for Settlements / Infrastructure sources | Mounted `connectors/` and per-source README | UNKNOWN |
-| CI workflow names enforcing the gates in §8 | Mounted `.github/workflows/` | UNKNOWN |
-| Current Settlements / Infrastructure source rights and license text | `data/registry/sources/<domain>/` evidence | NEEDS VERIFICATION |
-| Validator names and entry points for the domain-specific tests in §8 | Mounted `tools/validators/` and `tests/` | NEEDS VERIFICATION |
-| Critical-infrastructure precision-audit tool name and thresholds | Mounted tool + threshold config | UNKNOWN |
-| Stale-source threshold values per source family | Source registry + `policy/` | UNKNOWN |
-| Whether `docs/runbooks/` uses flat `<subsystem>_TOPIC.md` or domain-segmented layout | Mounted `docs/runbooks/` listing + any local README | NEEDS VERIFICATION |
+Record the exact commit and inherited changes. Do not report a result against a
+floating `main`.
 
-[↑ Back to top](#contents)
+### Step 2 — Inspect source authority and overlap
 
----
+Review these surfaces at the exact revision:
 
-## 12. Related docs
+```text
+data/registry/sources/README.md
+data/registry/sources/settlements-infrastructure/
+data/registry/settlements-infrastructure/sources/
+control_plane/source_authority_register.yaml
+connectors/settlements-infrastructure/
+connectors/census/src/census/
+docs/sources/ADMISSION_PROCESS.md
+docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
+data/raw/README.md
+```
 
-> [!NOTE]
-> Links below are relative paths that assume the doc tree described in `directory-rules.md` §6.1. Verify against the mounted repo before relying on a specific target. Targets marked `TODO` indicate files not yet confirmed present.
+Confirm:
 
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law and lifecycle invariant.
-- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — `RAW → PUBLISHED` invariant. `TODO` confirm.
-- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — public client posture. `TODO` confirm.
-- [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — cite-or-abstain. `TODO` confirm.
-- [`docs/domains/settlements-infrastructure/README.md`](../../domains/settlements-infrastructure/README.md) — domain lane overview. `TODO` confirm.
-- [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../sources/SOURCE_DESCRIPTOR_STANDARD.md) — source descriptor contract. `TODO` confirm.
-- [`docs/runbooks/README.md`](../README.md) — runbook index. `TODO` confirm.
-- [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — open verification items.
-- [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — drift entries (e.g., runbook-layout convention).
-- [`docs/adr/`](../../adr/) — ADRs, including ADR-0001 (schema home) and any future Settlements / Infrastructure ADRs.
+1. which record is authoritative for each source identity;
+2. whether the domain-first view is generated or independently writable;
+3. whether a stable source ID, complete descriptor, and activation decision
+   exist;
+4. whether the connector and writer are substantive and tested;
+5. whether exact RAW/QUARANTINE placement is accepted;
+6. whether another branch, PR, migration, or steward owns the same source or
+   topology.
 
-[↑ Back to top](#contents)
+A README, template, source name, URL, map layer, workflow, or passing fixture
+does not establish admission or activation.
 
----
+### Step 3 — Inspect placeholder posture
 
-## Appendix A — Domain object families
+Use read-only repository checks:
 
-PROPOSED object families owned by the Settlements / Infrastructure lane. Identity rule defaults shown for each.
+```bash
+git grep -n 'PROPOSED — greenfield template' -- \
+  data/registry/settlements-infrastructure/sources/*.yaml
 
-<details>
-<summary><strong>Object families and identity rule defaults</strong></summary>
+git grep -n 'TBD' -- \
+  data/registry/settlements-infrastructure/sources/*.yaml
 
-| Object | Purpose | PROPOSED identity basis |
-|---|---|---|
-| `Settlement` | Generic settlement evidence or derivative. | `source_id + object_role + temporal_scope + normalized_digest` |
-| `Municipality` | Legal municipality. | same pattern |
-| `CensusPlace` | Census-defined place. | same pattern |
-| `Townsite` | Historic townsite. | same pattern |
-| `GhostTown` | Abandoned / non-extant place. | same pattern |
-| `Fort` | Military fort, historic. | same pattern |
-| `Mission` | Historic mission. | same pattern |
-| `ReservationCommunity` | Reservation community context. | same pattern; steward review burden |
-| `InfrastructureAsset` | Infrastructure asset evidence or derivative. | same pattern; **default restricted** |
-| `NetworkNode` | Network node evidence or derivative. | same pattern; **default restricted** |
-| `NetworkSegment` | Network segment evidence or derivative. | same pattern; **default restricted** |
-| `Facility` | Facility evidence or derivative. | same pattern |
-| `ServiceArea` | Service area aggregate. | same pattern; aggregate preferred for publication |
-| `Operator` | Operator identity. | same pattern; **default restricted** |
-| `ConditionObservation` | Condition / inspection observation. | same pattern; **default restricted** |
-| `Dependency` | Dependency relation. | same pattern; **default restricted** |
-| `AnnexationEvent` | Annexation event. | same pattern |
-| `UrbanGrowthObservation` | Urban-growth observation derivative. | same pattern |
+find data/registry/sources/settlements-infrastructure \
+  -maxdepth 2 -type f -print | sort
 
-Temporal handling for all of the above: **observed**, **valid**, **retrieval**, **release**, and **correction** times stay distinct where material. CONFIRMED doctrine.
+find connectors/settlements-infrastructure \
+  -maxdepth 3 -type f -print | sort
 
-</details>
+find connectors/census/src/census \
+  -maxdepth 2 -type f -print | sort
+```
 
-[↑ Back to top](#contents)
+If a real descriptor, activation record, substantive connector, writer, proof,
+candidate, or published payload appears, stop using the pinned disposition and
+inspect the new owning object.
 
----
+### Step 4 — Run only bounded validation
 
-## Appendix B — Path-by-path placement notes
+Run the profiles in the next section. Record exact commands, environment,
+inputs, commit, outcomes, and limitations. Do not classify unavailable checks
+as passing.
 
-PROPOSED placements for files this runbook touches. Each row should be verified against `directory-rules.md` and the mounted repo. Do not treat as the current tree.
+### Step 5 — Reconcile the result
 
-<details>
-<summary><strong>Placement table (PROPOSED — verify against repo)</strong></summary>
+Use this precedence:
 
-| Path | Action | Status | Directory Rules basis |
-|---|---|---|---|
-| `docs/runbooks/settlements-infrastructure/SOURCE_REFRESH_RUNBOOK.md` | CREATE | PROPOSED | §6.1 `docs/runbooks/`; §4 Step 3 domain-as-segment |
-| `docs/domains/settlements-infrastructure/README.md` | CREATE if absent | PROPOSED | §6.1 `docs/domains/<domain>/` |
-| `data/registry/sources/settlements-infrastructure/` | POPULATE per source | PROPOSED | §6.1 / §10.1; lifecycle and source-registry rules |
-| `connectors/<source>/` | EXTEND per source family | PROPOSED | §7.3 — connectors output to `data/raw/...` or `data/quarantine/...` only |
-| `schemas/contracts/v1/source/source_descriptor.schema.json` | CONFIRM | NEEDS VERIFICATION | ADR-0001 schema-home default |
-| `policy/domains/settlements-infrastructure/` | CREATE if absent | PROPOSED | §4 Step 3 domain-as-segment |
-| `tests/domains/settlements-infrastructure/` | CREATE if absent | PROPOSED | §4 Step 3 |
-| `fixtures/domains/settlements-infrastructure/` | CREATE if absent | PROPOSED | §4 Step 3 |
-| `release/candidates/settlements-infrastructure/` | CREATE if absent | PROPOSED | §4 Step 3 |
-| `tools/validators/domains/settlements-infrastructure/` | CREATE if absent | PROPOSED | §7.5 |
+```text
+ERROR > DENY > ESCALATE > ABSTAIN > HOLD > READY_FOR_ACCOUNTABLE_SOURCE_REFRESH_REVIEW
+```
 
-</details>
+Select `ESCALATE` when the review can be classified but must move to a
+protected or competent-authority channel. It does not override a concrete
+`ERROR` or `DENY`.
 
-[↑ Back to top](#contents)
+A fixture `PASS` cannot override a source-refresh `HOLD`.
 
----
+### Step 6 — Hand off; do not refresh
 
-### Last reviewed
+When every applicable prerequisite is supported, produce the minimized packet
+in [Review handoff](#review-handoff) and route it to accountable reviewers.
+This runbook ends there.
 
-`2026-05-12` — initial draft. Older than 6 months → flag for review (per `directory-rules.md` §15).
+## Bounded validation profiles
 
-### Related docs
+### SourceDescriptor fixture profile
 
-See [§12](#12-related-docs) above.
+From the repository root:
 
-[↑ Back to top](#contents)
+```bash
+python tools/validators/validate_source_descriptor.py --fixtures
+python tools/validators/sources/validate_source_descriptor.py --fixtures
+python -m pytest -q \
+  tests/validators/test_validate_source_descriptor_entrypoints.py \
+  tests/schemas/test_common_contracts.py \
+  -k source_descriptor
+```
+
+The corresponding workflow is
+[`.github/workflows/source-descriptor-validate.yml`](../../../.github/workflows/source-descriptor-validate.yml).
+
+A pass supports only the tested schema, alias, entrypoint, rights-field, and
+fixture expectations. It does not inventory registry records, choose a writer,
+resolve naming drift, decide rights or sensitivity, admit or activate a source,
+retrieve data, or authorize release.
+
+### EvidenceBundle projection profile
+
+Follow the complete guarded procedure in
+[`NO_NETWORK_TEST_RUNBOOK.md`](./NO_NETWORK_TEST_RUNBOOK.md). The focused
+repository commands are:
+
+```bash
+python -m unittest discover \
+  --start-directory tests/validators/domains/settlements-infrastructure \
+  --pattern 'test_evidence_bundle_schema_convergence.py' \
+  --verbose
+
+python \
+  tools/validators/validate_settlements_infrastructure_evidence_bundle_projection.py \
+  --fixtures
+```
+
+This profile checks the domain projection's delegation to the shared schema and
+tracked synthetic fixtures. It does not construct or resolve a materialized
+EvidenceBundle, evaluate domain semantics or policy, contact a source, produce
+proof, or authorize release.
+
+`KFM_NO_NETWORK=1` is not host-wide or runner-wide egress proof by itself.
+Report only the exact guard and code path that ran.
+
+## Requirements before a future live refresh
+
+Do not add a live command to this runbook until all applicable items are
+implemented, accepted, and verified at one exact revision.
+
+### Source and authority closure
+
+- stable source identity and one authoritative descriptor record;
+- accepted SourceDescriptor vocabulary/path or explicit compatibility binding;
+- source role, authority scope, rights, attribution, redistribution, access,
+  sensitivity, cadence, source head, stale threshold, and permitted claim
+  families;
+- separately accountable activation decision;
+- current endpoint or delivery identity, terms, versioning, rate limits, and
+  retrieval constraints verified from the source owner;
+- cultural, sovereignty, community, infrastructure-security, privacy, or legal
+  review where applicable.
+
+### Connector and lifecycle closure
+
+- one verified registry writer and deterministic generated-view contract;
+- accepted source-first RAW or QUARANTINE placement;
+- substantive connector with timeouts, rate limits, retries, size limits,
+  content-type checks, digesting, and safe error handling;
+- deterministic capture identity, collision handling, idempotency, replay, and
+  readback tests;
+- accepted receipt contracts, schemas, validators, and storage responsibility;
+- explicit no-change behavior that manufactures no new authority or state;
+- no credential, private endpoint, restricted payload, or harmful precision in
+  Git, public logs, PRs, or unapproved storage.
+
+### Evidence, policy, review, and recovery closure
+
+- domain semantic validation with positive, negative, stale, restricted, and
+  cross-domain fixtures;
+- EvidenceRef-to-EvidenceBundle closure for consequential claims;
+- accepted candidate-bound policy result with finite outcome, reasons, and
+  obligations;
+- authenticated accountable review and separation of duties appropriate to
+  risk;
+- proof, catalog, correction, withdrawal, invalidation, rollback, candidate,
+  and manifest support;
+- governed public interfaces or immutable released public-safe carriers only.
+
+Live source contact, admission, activation, lifecycle writes, release,
+deployment, promotion, and publication remain separate governed operations.
+
+## Mandatory stop conditions
+
+| Condition | Result |
+|---|---|
+| Descriptor is a template, incomplete, or lacks activation | `HOLD` |
+| Canonical writer, generated view, or path migration is unresolved | `HOLD` |
+| Connector is documentation, `.gitkeep`, or comments-only code | `HOLD` |
+| Rights, terms, role, authority, cadence, source head, or sensitivity is unresolved | `HOLD` or `DENY` |
+| Exact RAW/QUARANTINE placement is unresolved | `HOLD` |
+| Consequential EvidenceRef does not resolve | `ABSTAIN` or `HOLD` |
+| Sensitive precision or protected information may be exposed | `DENY` or `ESCALATE` |
+| A legal, operational, service, condition, ownership, access, safety, emergency, or regulatory answer lacks competent current authority | `ABSTAIN` |
+| A test, workflow, digest, receipt, map, graph, or AI summary is offered as proof of admission or release | `DENY` the implied authority |
+| Tooling or environment failure prevents a trustworthy result | `ERROR` |
+
+Unknown conditions never imply approval.
+
+## Review handoff
+
+Use a public-safe, reference-only record. This example is documentation, not an
+accepted schema or activation decision.
+
+```yaml
+settlements_infrastructure_source_refresh_review:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  revision: "<exact commit SHA>"
+  source_family: "<source product, archive, feed, or steward collection>"
+  result: "<HOLD|ABSTAIN|DENY|ERROR|ESCALATE|READY_FOR_ACCOUNTABLE_SOURCE_REFRESH_REVIEW>"
+  registry:
+    authoritative_descriptor: "<path or NOT_AVAILABLE>"
+    writer_verified: false
+    generated_view_binding_verified: false
+  descriptor:
+    source_id: "<stable ID or NOT_AVAILABLE>"
+    status: "<template|candidate|admitted|activated|denied|unknown>"
+    activation_ref: null
+  connector:
+    path: "<path or unresolved>"
+    implementation_verified: false
+    network_used: false
+  validation:
+    commands: []
+    exact_results: []
+    limitations: []
+  non_effects:
+    source_contacted: false
+    source_retrieved: false
+    source_admitted: false
+    source_activated: false
+    lifecycle_written: false
+    evidence_closed: false
+    policy_approved: false
+    released: false
+    deployed: false
+    promoted: false
+    published: false
+  blockers: []
+  accountable_reviewers_needed: []
+```
+
+Do not include credentials, temporary download URLs, restricted excerpts,
+facility interiors, dependency topology, precise sensitive coordinates,
+private-person or private-property detail, or protected cultural material.
+
+## Proposal-lineage disposition
+
+The prior v0.1 body is superseded at this path and remains available in Git
+history. Its source-family ideas may inform future admitted descriptors, but
+current evidence does not support its live polling, watcher cadence, domain-
+first lifecycle destinations, signing, Rekor, cache invalidation, heartbeat,
+kill-switch, receipt, or direct promotion instructions.
+
+Connected Drive Settlements/Infrastructure material remains read-only doctrine,
+research, and design lineage. Notion remains coordination. Current GitHub bytes
+control claims about implemented behavior.
+
+## Documentation validation
+
+For changes to this runbook:
+
+1. review the complete diff for accuracy and unrelated churn;
+2. check one H1, heading order, anchors, fences, tables, alerts, whitespace, and
+   every changed relative link;
+3. reconcile commands and paths against the exact schemas, validators,
+   fixtures, tests, workflows, source-admission docs, registry boundary, and
+   no-network procedure;
+4. run focused repository checks when the environment is available, otherwise
+   report them as not run;
+5. bind hosted results to the exact head and separate introduced, inherited,
+   skipped, pending, and unavailable checks.
+
+Documentation and fixture checks cannot prove source freshness, rights,
+activation, retrieval, lifecycle mutation, evidence closure, policy approval,
+proof, release, deployment, publication, correction, or rollback execution.
+
+## Documentation correction and rollback
+
+Re-review this runbook when a real descriptor or activation record appears, the
+registry writer or topology changes, a substantive connector lands, exact RAW
+placement is accepted, policy becomes executable, domain semantics graduate,
+or proof/release/correction/rollback support changes.
+
+Before merge, close the draft PR and delete only its feature branch. After a
+separately authorized merge, revert the focused documentation commit or apply a
+reviewed forward correction.
+
+A documentation revert does not undo or perform source retrieval, admission,
+activation, lifecycle writes, policy decisions, proof, promotion, release,
+deployment, publication, correction, withdrawal, cache invalidation, or
+operational rollback.
+
+## Related repository surfaces
+
+- [Local procedure boundary](./README.md)
+- [No-network validation](./NO_NETWORK_TEST_RUNBOOK.md)
+- [Promotion preflight](./PROMOTION_RUNBOOK.md)
+- [Rollback readiness](./ROLLBACK_RUNBOOK.md)
+- [Domain boundary](../../domains/settlements-infrastructure/README.md)
+- [Domain source-registry guidance](../../domains/settlements-infrastructure/SOURCE_REGISTRY.md)
+- [Canonical path guidance](../../domains/settlements-infrastructure/CANONICAL_PATHS.md)
+- [Sensitivity guidance](../../domains/settlements-infrastructure/SENSITIVITY.md)
+- [Source admission process](../../sources/ADMISSION_PROCESS.md)
+- [SourceDescriptor standard](../../sources/SOURCE_DESCRIPTOR_STANDARD.md)
+- [Directory Rules](../../doctrine/directory-rules.md)
+- [Lifecycle Law](../../doctrine/lifecycle-law.md)
+- [Trust Membrane](../../doctrine/trust-membrane.md)
+- [Canonical source registry](../../../data/registry/sources/README.md)
+- [Domain source-registry lane](../../../data/registry/sources/settlements-infrastructure/README.md)
+- [Parallel domain-first source view](../../../data/registry/settlements-infrastructure/sources/README.md)
+- [Source-authority projection](../../../control_plane/source_authority_register.yaml)
+- [RAW boundary](../../../data/raw/README.md)
+- [Domain connector boundary](../../../connectors/settlements-infrastructure/README.md)
+- [SourceDescriptor schema](../../../schemas/contracts/v1/source/source_descriptor.schema.json)
+- [SourceDescriptor compatibility alias](../../../schemas/contracts/v1/sources/source_descriptor.schema.json)
+- [SourceDescriptor fixtures](../../../fixtures/contracts/v1/source/source_descriptor/)
+- [Generic SourceDescriptor validator](../../../tools/validators/validate_source_descriptor.py)
+- [Compatibility validator](../../../tools/validators/sources/validate_source_descriptor.py)
+- [SourceDescriptor entrypoint tests](../../../tests/validators/test_validate_source_descriptor_entrypoints.py)
+- [SourceDescriptor workflow](../../../.github/workflows/source-descriptor-validate.yml)
+- [EvidenceBundle projection schema](../../../schemas/contracts/v1/domains/settlements-infrastructure/evidence_bundle.schema.json)
+- [Projection validator](../../../tools/validators/validate_settlements_infrastructure_evidence_bundle_projection.py)
+- [Projection tests](../../../tests/validators/domains/settlements-infrastructure/test_evidence_bundle_schema_convergence.py)
+- [Projection workflow](../../../.github/workflows/settlements-infrastructure-evidence-bundle-convergence.yml)
+
+[Back to top](#top)

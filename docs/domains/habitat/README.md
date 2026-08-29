@@ -2,13 +2,16 @@
 doc_id: kfm://doc/domains/habitat/readme
 title: Habitat Domain — Lane README
 type: standard
-version: v1.1
+version: v1.3
 status: draft
 owners: [NEEDS_VERIFICATION — habitat domain steward, docs steward]
 created: 2026-05-17
-updated: 2026-06-05
+updated: 2026-08-29
 policy_label: public
-contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md
+owning_root: docs/
+responsibility: Human-readable Habitat scope, domain boundaries, repository fit, safety posture, implementation status, and navigation
+truth_posture: "CONFIRMED current repository paths, accepted placement doctrine, and the bounded fixture-only critical-habitat source-role guard / PROPOSED broader source, policy, runtime, release, and publication closure / NEEDS VERIFICATION rights, sensitivity, live-data permissions, model fitness, accountable stewardship, and independent review"
+contract_version: "3.0.0"   # pinned per docs/doctrine/ai-build-operating-contract.md
 related:
   - docs/domains/README.md
   - docs/domains/fauna/README.md
@@ -18,11 +21,11 @@ related:
   - docs/doctrine/trust-membrane.md
   - docs/standards/PROV.md
   - docs/standards/ISO-19115.md
-  - ai-build-operating-contract.md
+  - docs/doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, habitat, ecology, suitability, connectivity, sensitivity]
 notes:
   - "Domain README — orients the Habitat lane across all responsibility roots."
-  - "Implementation maturity is PROPOSED pending mounted-repo verification."
+  - "Implementation maturity is mixed: the fixture-only critical-habitat source-role guard, focused tests, and dedicated workflow are CONFIRMED; broader source, policy, runtime, release, and publication closure remains PROPOSED or NEEDS VERIFICATION."
   - "PATH DOCTRINE: this README uses the Directory Rules §12 segment form (docs/domains/habitat/, contracts/domains/habitat/, schemas/contracts/v1/domains/habitat/). The Atlas §24.13 crosswalk uses a flat form (contracts/habitat/). The Atlas's own §24 authority rule makes its tables navigational-not-authoritative, so §12 segment form governs placement; the flat form is a drift candidate. Conflict surfaced in §16 / HAB-V-009."
   - "Source-role labels in §3 align to the CONFIRMED 7-role enum (Atlas §24.1): observed | regulatory | modeled | aggregate | administrative | candidate | synthetic."
   - "CONTRACT_VERSION = \"3.0.0\""
@@ -52,11 +55,11 @@ notes:
 | **Domain** | `habitat` |
 | **Path** | `docs/domains/habitat/README.md` (Directory Rules §12 segment form — **CONFIRMED pattern**) |
 | **Authority level** | **Canonical** (under `docs/`, the human-facing control plane) |
-| **Status** | **PROPOSED** lane implementation; **CONFIRMED** doctrine |
+| **Status** | **MIXED MATURITY** implementation; **CONFIRMED** doctrine; bounded fixture-only guard confirmed |
 | **Contract** | `CONTRACT_VERSION = "3.0.0"` |
 | **Owners** | NEEDS VERIFICATION — habitat domain steward (CODEOWNERS placeholder) |
 | **Reviewers** | Habitat domain steward + docs steward; policy steward for sensitivity changes |
-| **Last reviewed** | 2026-06-05 |
+| **Last reviewed** | 2026-08-29 |
 
 ---
 
@@ -86,7 +89,7 @@ notes:
 **Habitat** models land cover, ecological systems, habitat quality and connectivity as **evidence-backed observations and models**, and emits **public-safe derivatives** for sensitive ecological contexts. Habitat is the landscape lane: it owns *places of habitat* and *modeled habitat suitability*, and joins to species records owned by **Fauna** and **Flora** through governed relationships only.
 
 - **Status — doctrine.** CONFIRMED via the KFM Encyclopedia §7.4 and the Domains Culmination Atlas v1.1 Ch. 6 (Habitat dossier §A–§N).
-- **Status — implementation.** PROPOSED. Existing habitat files, schema home, source rights, model fitness, live-data permissions, and MapLibre/Evidence-Drawer wiring remain NEEDS VERIFICATION pending mounted-repo inspection.
+- **Status — implementation.** MIXED MATURITY. Current repository evidence confirms a synthetic, deterministic, no-network critical-habitat source-role guard, seven focused tests, and a dedicated workflow. Official source descriptors, rights, sensitivity, model fitness, live-data permissions, policy/runtime activation, MapLibre/Evidence-Drawer wiring, release, and publication remain PROPOSED or NEEDS VERIFICATION.
 
 > [!IMPORTANT]
 > **Habitat owns landscape, not species.** Occurrence truth belongs to **Fauna**; plant records belong to **Flora**. A modeled habitat patch is not a critical-habitat designation, and a suitability raster is not an occurrence. Source-role anti-collapse is enforced: the seven roles *observed*, *regulatory*, *modeled*, *aggregate*, *administrative*, *candidate*, and *synthetic* are never interchangeable. **(CONFIRMED — Atlas §24.1; Habitat dossier §I.)**
@@ -100,27 +103,27 @@ notes:
 Per **Directory Rules §12 — Domain Placement Law**, a domain MUST NOT become a root folder. The Habitat lane appears as a **segment** inside each responsibility root. This README anchors only the `docs/` segment; sibling segments live in their own responsibility roots and link back here.
 
 ```text
-docs/domains/habitat/                         ← this README (canonical)
-contracts/domains/habitat/                    ← object meanings — PROPOSED
-schemas/contracts/v1/domains/habitat/         ← machine shape (ADR-0001 home) — PROPOSED
-policy/domains/habitat/                       ← allow/deny/restrict/abstain — PROPOSED
-tests/domains/habitat/                        ← enforceability proofs — PROPOSED
-fixtures/domains/habitat/                     ← golden / negative samples — PROPOSED
-packages/domains/habitat/                     ← shared lane library — PROPOSED
-pipelines/domains/habitat/                    ← executable pipeline logic — PROPOSED
-pipeline_specs/habitat/                       ← declarative pipeline configs — PROPOSED
-data/raw/habitat/                             ← immutable source payloads
-data/work/habitat/                            ← in-progress normalization
-data/quarantine/habitat/                      ← failed-gate holds
-data/processed/habitat/                       ← validated normalized objects
-data/catalog/domain/habitat/                  ← catalog/triplet/bundles
-data/published/layers/habitat/                ← released, public-safe artifacts
-data/registry/sources/habitat/                ← SourceDescriptors for the lane
-release/candidates/habitat/                   ← release candidates + manifests
+docs/domains/habitat/                         ← PRESENT — canonical docs lane
+contracts/domains/habitat/                    ← PRESENT — object meanings; mixed maturity
+schemas/contracts/v1/domains/habitat/         ← PRESENT — machine shape (ADR-0001 home); mixed maturity
+policy/domains/habitat/                       ← PRESENT — policy files; activation is not inferred
+tests/domains/habitat/                        ← PRESENT — enforceability proofs; mixed maturity
+fixtures/domains/habitat/                     ← PRESENT — fixture lane; live-data fitness is not inferred
+packages/domains/habitat/                     ← PRESENT — shared lane library
+pipelines/domains/habitat/                    ← PRESENT — pipeline logic; production activation is not inferred
+pipeline_specs/habitat/                       ← PRESENT — declarative configs; activation is not inferred
+data/raw/habitat/                             ← PRESENT — directory presence does not prove source admission
+data/work/habitat/                            ← PRESENT — in-progress normalization lane
+data/quarantine/habitat/                      ← PRESENT — failed-gate hold lane
+data/processed/habitat/                       ← PRESENT — directory presence does not prove lifecycle promotion
+data/catalog/domain/habitat/                  ← PRESENT — catalog/triplet/bundle lane
+data/published/layers/habitat/                ← PRESENT — directory presence does not prove release or public serving
+data/registry/sources/habitat/                ← PRESENT — descriptor lane; source admission remains separately governed
+release/candidates/habitat/                   ← PRESENT — candidate lane; approval or release is not inferred
 ```
 
 > [!NOTE]
-> The segment **pattern** above is **CONFIRMED** by Directory Rules §12 (which lists habitat among the domains it governs); the **specific siblings present in your branch** are **PROPOSED** until verified against the mounted repo.
+> The segment pattern is **CONFIRMED** by adopted Directory Rules §12. All sixteen listed Habitat segments were verified present at repository pin `2b0ea9bbbc9d9a120ea94d92fb4617d96fe7d2a0` on 2026-08-29. **PRESENT means repository bytes exist only**; it does not establish source admission, rights, sensitivity clearance, evidence closure, policy approval, runtime activation, lifecycle promotion, release, deployment, or publication.
 
 > [!WARNING]
 > **Path-form conflict between two governing docs (CONFLICTED — see HAB-V-009).** Directory Rules §12 uses the **segment form** (`contracts/domains/habitat/`, `schemas/contracts/v1/domains/habitat/`). The Atlas §24.13 responsibility-root crosswalk uses a **flat form** (`contracts/habitat/`, `schemas/contracts/v1/habitat/`). The Atlas's own Chapter-24 authority rule states its master tables are *navigational, not authoritative*, and that a Chapter-24 table disagreeing with v1.0/Directory Rules is *a drift entry, not a correction*. **Disposition:** this README follows the Directory Rules §12 segment form as governing; the Atlas flat form is logged as a drift candidate for ADR/DRIFT_REGISTER resolution. This README does not silently adopt the flat form.
@@ -197,7 +200,7 @@ Habitat's eleven canonical object families. The Atlas Habitat dossier §B/§E na
 `HabitatPatch`, `LandCoverObservation`, `EcologicalSystem`, `Habitat Quality Score`, `SuitabilityModel`, `ConnectivityEdge`, `Corridor`, `Restoration Opportunity`, `StewardshipZone`, `Regulatory critical habitat`, `Modeled habitat`, `Geoprivacy transform`.
 
 > [!IMPORTANT]
-> **"Modeled habitat" is not "regulatory critical habitat."** A suitability surface, however confident, is a **modeled** product and MUST NOT be presented or labeled as a **regulatory** determination. The Atlas anti-collapse register names *"modeled product labeled or queried as observed"* and *"synthetic content presented as observed reality"* as DENY conditions for which Habitat is among the at-risk domains. The validator suite includes a modeled-as-critical denial test (PROPOSED). **(CONFIRMED — Atlas §24.1.2.)**
+> **"Modeled habitat" is not "regulatory critical habitat."** A suitability surface, however confident, is a **modeled** product and MUST NOT be presented or labeled as a **regulatory** determination. Current repository evidence confirms the fixture-only [`validate_critical_habitat_source_role.py`](../../../tools/validators/domains/habitat/validate_critical_habitat_source_role.py) guard and focused [`test_critical_habitat_source_role.py`](../../../tests/domains/habitat/test_critical_habitat_source_role.py) denial tests for modeled-as-critical, regulatory-as-modeled, and designation-as-presence collapse. That bounded pass creates no source, regulatory, occurrence, policy, release, or publication authority. **(CONFIRMED fixture behavior; broader authority held.)**
 
 [⬆ back to top](#top)
 
@@ -310,11 +313,10 @@ CONFIRMED doctrine / PROPOSED implementation. Within this lane, AI is interpreti
 
 ## 11. Validation, tests, fixtures
 
-PROPOSED test families for the Habitat lane (all expected to fail closed):
+Habitat validation is mixed maturity and must fail closed:
 
-- Source-descriptor tests — rights, role, sensitivity, freshness completeness.
-- Critical-habitat source-role tests — never relabel a regulatory designation as observed or modeled (and vice versa).
-- **Modeled-as-critical denial tests** — a suitability surface MUST NOT be served as a regulatory critical-habitat designation.
+- Source-descriptor tests — rights, role, sensitivity, freshness completeness (**PROPOSED / NEEDS VERIFICATION**).
+- Critical-habitat source-role and **modeled-as-critical denial tests** — **CONFIRMED fixture-only** in [`test_critical_habitat_source_role.py`](../../../tests/domains/habitat/test_critical_habitat_source_role.py), executed by the dedicated [`habitat-critical-habitat-source-role`](../../../.github/workflows/habitat-critical-habitat-source-role.yml) workflow. They keep regulatory and modeled lanes separate and deny species-presence claims; they do not verify live sources or authorize public use.
 - Occurrence geoprivacy tests — generalized, redacted, or denied outputs for sensitive joins.
 - Geometry validity, identity-determinism, and temporal-logic tests.
 - Catalog-closure & digest-closure tests.
@@ -398,7 +400,7 @@ flowchart LR
 ```
 
 > [!NOTE]
-> Diagram reflects **CONFIRMED doctrine** (lifecycle invariant, trust membrane, source-role anti-collapse, governed joins). Specific path siblings are **PROPOSED** until the mounted repo confirms them. Source-role labels updated to the CONFIRMED 7-role enum.
+> Diagram reflects **CONFIRMED doctrine** (lifecycle invariant, trust membrane, source-role anti-collapse, governed joins). Its Habitat path siblings are **PRESENT** at the §2 repository pin, while their implementation and lifecycle maturity remains independently governed. Source-role labels use the CONFIRMED 7-role enum.
 
 [⬆ back to top](#top)
 
@@ -427,7 +429,24 @@ The following items remain **NEEDS VERIFICATION** until resolved against mounted
 
 ## 15. Changelog & definition of done
 
-### 15.1 Changelog v1 → v1.1
+### 15.1 Changelog
+
+#### v1.3 — 2026-08-29
+
+| Change | Type (per contract §37) | Reason |
+|---|---|---|
+| Reconciled all sixteen §2 Habitat responsibility-root segments from unverified / PROPOSED presence claims to exact repository evidence, with explicit non-authority and non-release qualifiers. | reconciliation | Current GitHub bytes disprove the stale pending-mounted-repository claim; presence alone does not establish source admission, policy approval, lifecycle promotion, runtime activation, release, or publication. |
+| Corrected the repeated diagram and related-folder presence notes. | reconciliation | Keeps one repository-fit truth throughout the README without changing any implementation surface. |
+| Bumped version v1.2 → v1.3. | housekeeping | MINOR repository-fit status reconciliation; no operating-law or authority change. |
+
+#### v1.2 — 2026-08-29
+
+| Change | Type (per contract §37) | Reason |
+|---|---|---|
+| Corrected the implementation and validation status for the landed fixture-only critical-habitat source-role guard, seven-test suite, and dedicated workflow. | reconciliation | Current GitHub evidence supersedes the stale pending-repository-inspection and PROPOSED-test claims without activating sources, policy, runtime, release, or publication. |
+| Bumped version v1.1 → v1.2; `updated` and `Last reviewed` → 2026-08-29. | housekeeping | MINOR status reconciliation; no operating-law or authority change. |
+
+#### v1.1 — 2026-06-05
 
 | Change | Type (per contract §37) | Reason |
 |---|---|---|
@@ -467,7 +486,7 @@ This README is done enough to enter the repository when:
 - **Standards.** [`docs/standards/PROV.md`](../../standards/PROV.md) · [`docs/standards/ISO-19115.md`](../../standards/ISO-19115.md) · [`docs/standards/PMTILES.md`](../../standards/PMTILES.md) · [`docs/standards/OGC-API-TILES.md`](../../standards/OGC-API-TILES.md) · [`docs/standards/OAI-PMH.md`](../../standards/OAI-PMH.md)
 - **Sources.** [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../sources/SOURCE_DESCRIPTOR_STANDARD.md)
 - **Registers.** [`docs/registers/AUTHORITY_LADDER.md`](../../registers/AUTHORITY_LADDER.md) · [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) · [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md)
-- **Operating contract.** [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) *(`CONTRACT_VERSION = "3.0.0"`)*
+- **Operating contract.** [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) *(`CONTRACT_VERSION = "3.0.0"`)*
 - **Lane siblings (responsibility roots — Directory Rules §12 segment form).**
   - `contracts/domains/habitat/` — object meanings
   - `schemas/contracts/v1/domains/habitat/` — object shape (ADR-0001 home)
@@ -479,7 +498,7 @@ This README is done enough to enter the repository when:
   - `release/candidates/habitat/`
 
 > [!NOTE]
-> Links above are **relative** and **PROPOSED**. Any link to a file not yet present should remain in this list as a placeholder so the verification backlog stays explicit. Path form follows Directory Rules §12 (segment form), pending HAB-V-009 resolution.
+> Links above are relative. The listed Habitat responsibility-root segments are **PRESENT** at the §2 repository pin; this presence statement does not upgrade the authority, maturity, activation, or release posture of any file within them. Path form follows Directory Rules §12 (segment form), pending HAB-V-009 resolution.
 
 ### 16.2 ADRs
 
@@ -538,6 +557,6 @@ Acceptance is reached when each of (1)–(9) exists, is digest-closed, and a no-
 
 ---
 
-**Last updated:** 2026-06-05 · **Status:** draft · **Authority:** canonical (under `docs/`) · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Lifecycle posture:** deny-by-default for sensitive joins.
+**Last updated:** 2026-08-29 · **Status:** draft · **Authority:** canonical (under `docs/`) · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Lifecycle posture:** deny-by-default for sensitive joins.
 
 [⬆ back to top](#top)
