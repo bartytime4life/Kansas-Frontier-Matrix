@@ -8,7 +8,7 @@ owners: [NEEDS_VERIFICATION — habitat domain steward, docs steward]
 created: 2026-05-17
 updated: 2026-08-29
 policy_label: public
-contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md
+contract_version: "3.0.0"   # pinned per docs/doctrine/ai-build-operating-contract.md
 related:
   - docs/domains/README.md
   - docs/domains/fauna/README.md
@@ -18,7 +18,7 @@ related:
   - docs/doctrine/trust-membrane.md
   - docs/standards/PROV.md
   - docs/standards/ISO-19115.md
-  - ai-build-operating-contract.md
+  - docs/doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, habitat, ecology, suitability, connectivity, sensitivity]
 notes:
   - "Domain README — orients the Habitat lane across all responsibility roots."
@@ -475,7 +475,7 @@ This README is done enough to enter the repository when:
 - **Standards.** [`docs/standards/PROV.md`](../../standards/PROV.md) · [`docs/standards/ISO-19115.md`](../../standards/ISO-19115.md) · [`docs/standards/PMTILES.md`](../../standards/PMTILES.md) · [`docs/standards/OGC-API-TILES.md`](../../standards/OGC-API-TILES.md) · [`docs/standards/OAI-PMH.md`](../../standards/OAI-PMH.md)
 - **Sources.** [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../sources/SOURCE_DESCRIPTOR_STANDARD.md)
 - **Registers.** [`docs/registers/AUTHORITY_LADDER.md`](../../registers/AUTHORITY_LADDER.md) · [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) · [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md)
-- **Operating contract.** [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) *(`CONTRACT_VERSION = "3.0.0"`)*
+- **Operating contract.** [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) *(`CONTRACT_VERSION = "3.0.0"`)*
 - **Lane siblings (responsibility roots — Directory Rules §12 segment form).**
   - `contracts/domains/habitat/` — object meanings
   - `schemas/contracts/v1/domains/habitat/` — object shape (ADR-0001 home)
