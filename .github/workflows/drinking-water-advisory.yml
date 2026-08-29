@@ -10,8 +10,10 @@ name: drinking-water-advisory
       - "fixtures/domains/hazards/drinking_water_advisory/**"
       - "tools/validators/domains/hazards/validate_drinking_water_advisory.py"
       - "tests/domains/hazards/test_drinking_water_advisory.py"
+      - "tests/domains/hazards/test_drinking_water_advisory_workflow_binding.py"
       - "docs/intake/exploratory/briefing-drinking-water-advisory-source-map.md"
       - "data/receipts/generated/genrec-briefing-drinking-water-advisory-20260810.json"
+      - "data/receipts/generated/genrec-drinking-water-advisory-receipt-trigger-closure-20260828.json"
       - "contracts/common/advisory_event_envelope.md"
       - "schemas/contracts/v1/common/advisory_event_envelope.schema.json"
       - "fixtures/contracts/v1/common/advisory_event_envelope/**"
@@ -24,6 +26,13 @@ name: drinking-water-advisory
       - "fixtures/contracts/v1/source/source_record_absence_assessment/**"
       - "tools/validators/validate_source_record_absence_assessment.py"
       - "tests/validators/test_validate_source_record_absence_assessment.py"
+      - "schemas/contracts/v1/**"
+      - "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+      - "tools/validators/validate_generated_receipt.py"
+      - "tools/validators/_common/local_resolver.py"
+      - "tools/ci/install_python_ci.py"
+      - "tools/ci/python-dependency-lock-migration.json"
+      - "tools/ci/python-test.lock"
       - "packages/hashing/src/hashing/**"
       - "pyproject.toml"
   push:
@@ -36,8 +45,10 @@ name: drinking-water-advisory
       - "fixtures/domains/hazards/drinking_water_advisory/**"
       - "tools/validators/domains/hazards/validate_drinking_water_advisory.py"
       - "tests/domains/hazards/test_drinking_water_advisory.py"
+      - "tests/domains/hazards/test_drinking_water_advisory_workflow_binding.py"
       - "docs/intake/exploratory/briefing-drinking-water-advisory-source-map.md"
       - "data/receipts/generated/genrec-briefing-drinking-water-advisory-20260810.json"
+      - "data/receipts/generated/genrec-drinking-water-advisory-receipt-trigger-closure-20260828.json"
       - "contracts/common/advisory_event_envelope.md"
       - "schemas/contracts/v1/common/advisory_event_envelope.schema.json"
       - "fixtures/contracts/v1/common/advisory_event_envelope/**"
@@ -50,6 +61,13 @@ name: drinking-water-advisory
       - "fixtures/contracts/v1/source/source_record_absence_assessment/**"
       - "tools/validators/validate_source_record_absence_assessment.py"
       - "tests/validators/test_validate_source_record_absence_assessment.py"
+      - "schemas/contracts/v1/**"
+      - "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+      - "tools/validators/validate_generated_receipt.py"
+      - "tools/validators/_common/local_resolver.py"
+      - "tools/ci/install_python_ci.py"
+      - "tools/ci/python-dependency-lock-migration.json"
+      - "tools/ci/python-test.lock"
       - "packages/hashing/src/hashing/**"
       - "pyproject.toml"
   workflow_dispatch:
@@ -98,6 +116,7 @@ jobs:
         run: |
           set -euo pipefail
           python -m unittest tests.domains.hazards.test_drinking_water_advisory --verbose
+          python -m unittest tests.domains.hazards.test_drinking_water_advisory_workflow_binding --verbose
 
       - name: Replay exact drinking-water fixture outcomes
         shell: bash
@@ -116,7 +135,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-briefing-drinking-water-advisory-20260810.json --repo-root .
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-drinking-water-advisory-receipt-trigger-closure-20260828.json \
+            --repo-root .
 
       - name: Record trust boundary
         if: always()
