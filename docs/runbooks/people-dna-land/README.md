@@ -3,15 +3,15 @@ doc_id: kfm://doc/runbooks-people-dna-land-readme
 title: docs/runbooks/people-dna-land/ — People, DNA, and Land Operational Procedure Boundary
 type: readme
 subtype: boundary-compact
-version: v1.6.0
-prior_version: v1.5.0
-prior_state: repository-grounded boundary with source refresh still classified as the sole proposal-era procedure
-status: draft; repository-grounded; sensitive-domain; two bounded synthetic consent profiles executable; source refresh held; broader source operation, policy runtime, cleanup, proof, release, deployment, and publication held
+version: v1.7.0
+prior_version: v1.6.0
+prior_state: repository-grounded boundary with validation, rollback-drill, and vendor-watch children still classified as explicit scaffolds
+status: draft; repository-grounded; sensitive-domain; validation runbook and two bounded synthetic consent profiles executable; source refresh held; broader source operation, policy runtime, cleanup, proof, release, deployment, and publication held
 owners:
   - "@bartytime4life — verified GitHub review route"
   - "NEEDS VERIFICATION — accountable People/DNA/Land, privacy, consent, Indigenous/Tribal, legal, policy, source, data-custody, security, evidence, release, operations, and independent-review assignments"
 created: 2026-08-27
-updated: 2026-08-28
+updated: 2026-08-29
 policy_label: repository-facing; sensitive-domain; operational-procedure index; fail-closed; non-release; non-publication
 current_path: docs/runbooks/people-dna-land/README.md
 owning_root: docs/
@@ -23,8 +23,10 @@ canonical_relationship: same-path update of the established local boundary; no s
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
+  validation_reconciliation_base_commit: 93752ca61000e317c1c8846ffa4031a1f3268731
   source_refresh_reconciliation_base_commit: a3d66df629a3b18f01821761898879d7d4996a2f
-  target_prior_blob: 3b1441382983766c9fc5575c0fd3197cdf6bd0c2
+  target_prior_blob: 49c5fe79f9c788c669d86b22b9c1af93ad8dd398
+  validation_runbook_prior_blob: 9ac1079ed880d3c94d52aabe083541987a9afc39
   source_refresh_prior_blob: 4c8eeaf660dbd416371a1a4f58838d43fddc50e3
   revocation_prior_blob: 4f8d5957114e3e8c5c90e5f226e7df0fdc5c837d
   consent_runbook_blob: e1670ce137abfef004682ff63e0449f091c95b17
@@ -38,9 +40,9 @@ evidence_snapshot:
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   direct_markdown_files_including_this_readme: 12
-  repository_grounded_child_procedures: 8
+  repository_grounded_child_procedures: 9
   proposal_or_stale_child_procedures: 0
-  explicit_scaffold_children: 3
+  explicit_scaffold_children: 2
   bounded_executable_synthetic_profiles: 2
 related:
   - ../README.md
@@ -58,11 +60,11 @@ related:
   - ../../../release/candidates/people-dna-land/README.md
 notes:
   - "This same-path update preserves the established navigation and sensitive-boundary contract; it creates no policy, source, evidence, receipt, cleanup, release, or publication authority."
-  - "Eight direct children are repository-grounded procedures, reviews, tabletop guidance, or hold boundaries; no direct child remains classified as a proposal-era procedure."
-  - "Three direct children remain explicit scaffolds and are not operational instructions."
+  - "Nine direct children are repository-grounded procedures, reviews, tabletop guidance, or hold boundaries; no direct child remains classified as a proposal-era procedure."
+  - "Two direct children remain explicit scaffolds and are not operational instructions."
   - "The current workflow still executes two bounded synthetic consent profiles. The dedicated revocation runbook documents one existing profile; it is not a third executable profile."
   - "The revocation runbook reviews declared propagation and prepares a closure handoff; it does not resolve real status, authenticate receipts, execute cleanup, or claim closure."
-  - "v1.6.0 reconciles source refresh as a fail-closed HOLD boundary without taking over source admission, connector, policy, receipt, lifecycle, release, or publication authority."
+  - "v1.7.0 replaces the validation scaffold with a synthetic-only procedure and documents focused historical-resolution and EvidenceBundle-convergence suites without taking over policy, evidence, proof, release, or publication authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -94,7 +96,7 @@ Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
 
 ## Current repository status
 
-This source-refresh reconciliation is pinned to `main@a3d66df629a3b18f01821761898879d7d4996a2f`.
+This validation reconciliation is pinned to `main@93752ca61000e317c1c8846ffa4031a1f3268731`.
 
 | Surface | Status | Bounded conclusion |
 |---|---:|---|
@@ -107,7 +109,8 @@ This source-refresh reconciliation is pinned to `main@a3d66df629a3b18f0182176189
 | [`ROLLBACK_RUNBOOK.md`](./ROLLBACK_RUNBOOK.md) | **Repository-grounded hold boundary** | Retires unsafe proposal-era instructions and keeps operational rollback unavailable |
 | [`PROMOTION_RUNBOOK.md`](./PROMOTION_RUNBOOK.md) | **Repository-grounded hold boundary** | Retires proposal-era operational language and keeps promotion unavailable |
 | [`SOURCE_REFRESH_RUNBOOK.md`](./SOURCE_REFRESH_RUNBOOK.md) | **Repository-grounded hold boundary** | Permits repository-only source-head review and keeps live retrieval, source admission, receipt production, lifecycle mutation, and watcher behavior unavailable |
-| Three additional children | **Explicit scaffolds** | Rollback-drill, validation, and vendor-watch paths are not operational procedures |
+| [`VALIDATION_RUNBOOK.md`](./VALIDATION_RUNBOOK.md) | **Repository-grounded bounded procedure** | Selects and interprets current synthetic-only validation profiles without claiming real-data, policy, evidence, proof, release, or publication authority |
+| Two additional children | **Explicit scaffolds** | Rollback-drill and vendor-watch paths are not operational procedures |
 | Domain workflow | **Executable bounded hold gate** | Runs two synthetic consent profiles; broader semantics, policy runtime, evidence closure, proof, real revocation execution, cleanup, and release remain held |
 | Real source, vendor-account, person, consent, DNA, land, or culturally controlled material | **Not admitted by this documentation** | Remains outside repository-visible procedures, fixtures, and tabletop records |
 
@@ -122,7 +125,8 @@ This source-refresh reconciliation is pinned to `main@a3d66df629a3b18f0182176189
 | Reproduce the two current bounded synthetic profiles | [`NO_NETWORK_TEST_RUNBOOK.md`](./NO_NETWORK_TEST_RUNBOOK.md) | Named Python denial seams only; no runner-wide isolation, real consent handling, policy runtime, proof, release, or publication authority |
 | Review rollback or promotion posture | [`ROLLBACK_RUNBOOK.md`](./ROLLBACK_RUNBOOK.md) or [`PROMOTION_RUNBOOK.md`](./PROMOTION_RUNBOOK.md) | Documentation hold boundaries only; no operational execution |
 | Review the current source-refresh posture or repository-visible source-head metadata | [`SOURCE_REFRESH_RUNBOOK.md`](./SOURCE_REFRESH_RUNBOOK.md) | Repository-only review and minimized handoff; no network, credentials, source activation, payload placement, receipt emission, lifecycle mutation, or watcher authority |
-| Rollback-drill, validation, or vendor-watch operation | **STOP — scaffold only** | A scaffold cannot be executed or cited as operational admission |
+| Select, run, interpret, and record current repository-backed synthetic validation | [`VALIDATION_RUNBOOK.md`](./VALIDATION_RUNBOOK.md) | Exact named profiles only; no real sensitive input, active policy, evidence closure, proof, release, or publication authority |
+| Rollback-drill or vendor-watch operation | **STOP — scaffold only** | A scaffold cannot be executed or cited as operational admission |
 | Live or source-derived sensitive material | **STOP and escalate** | Use an approved handling environment and accountable reviewers |
 
 ## Direct child map
@@ -138,7 +142,7 @@ docs/runbooks/people-dna-land/
 ├── ROLLBACK_DRILL.md            # explicit scaffold
 ├── ROLLBACK_RUNBOOK.md          # rollback HOLD boundary
 ├── SOURCE_REFRESH_RUNBOOK.md    # source-refresh HOLD boundary
-├── VALIDATION_RUNBOOK.md        # explicit scaffold
+├── VALIDATION_RUNBOOK.md        # bounded synthetic validation procedure
 ├── VENDOR_WATCH_SOP.md          # explicit scaffold
 └── revocation.md                # propagation review and closure handoff
 ```
@@ -234,10 +238,10 @@ Open items remain:
 
 1. assign accountable privacy, consent, Indigenous/Tribal, legal, domain, source, data-custody, security, evidence, policy, operations, release, and independent-review roles;
 2. resolve source-descriptor topology, admission ownership, connector implementation, policy-runtime, receipt, custody, and review bindings before any live source-refresh design;
-3. fill, supersede, or retire the three remaining explicit scaffolds through file-specific review;
+3. fill, supersede, or retire the two remaining explicit scaffolds through file-specific review;
 4. verify consent status, rights, retention/erasure decisions, complete dependency discovery, receipt authentication, action executors, post-action verification, active policy runtime, approved sensitive-data handling, proof production, release dry-run, operational rollback, and publication controls before any maturity claim;
 5. preserve separate states for documentation, tabletop rehearsal, validation, review, admission, source health, lifecycle promotion, cleanup, correction, withdrawal, erasure, release, deployment, and publication.
 
-To roll back this v1.6.0 source-refresh index reconciliation, revert its focused documentation commit and restore prior blob `3b1441382983766c9fc5575c0fd3197cdf6bd0c2`. Restoring the prior blob would also restore the obsolete proposal-era classification. Neither documentation action retrieves a source or alters tests, vendor accounts, policy, source admission, evidence, receipts, lifecycle state, cleanup, releases, deployments, revocations, withdrawals, erasures, or published material.
+To roll back this v1.7.0 validation index reconciliation, revert its focused documentation commit and restore prior blob `49c5fe79f9c788c669d86b22b9c1af93ad8dd398`. Restoring the prior blob would also restore the obsolete validation-scaffold classification. Neither documentation action retrieves a source or alters tests, vendor accounts, policy, source admission, evidence, receipts, lifecycle state, cleanup, releases, deployments, revocations, withdrawals, erasures, or published material.
 
 [Back to top](#top)
