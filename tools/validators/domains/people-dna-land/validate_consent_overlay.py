@@ -319,7 +319,10 @@ def validate_candidate(candidate: object, *, revocation_manifest: Mapping[str, A
     subject_posture = candidate.get("subject_posture")
     if subject_posture == "unknown":
         add_finding(findings, "SUBJECT_POSTURE_UNRESOLVED", "$.subject_posture")
-    elif subject_posture not in {"living_person", "deceased_or_historical"}:
+    elif (
+        not isinstance(subject_posture, str)
+        or subject_posture not in {"living_person", "deceased_or_historical"}
+    ):
         add_finding(findings, "SUBJECT_POSTURE_INVALID", "$.subject_posture")
     if candidate.get("disclosure_level") not in {"restricted", "internal"}:
         add_finding(findings, "DISCLOSURE_LEVEL_INVALID", "$.disclosure_level")
