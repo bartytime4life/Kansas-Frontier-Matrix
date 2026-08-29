@@ -32,13 +32,13 @@ related:
   - ../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../../../docs/doctrine/directory-rules.md
 notes:
-  - "v0.6 wires the paired deterministic tests for all three substantive Hazards validators into the existing domain-hazards hosted validation job; exact-head workflow results remain required evidence and are not implied by this index."
-  - "v0.5 makes the prior hosted-workflow posture explicit for the drinking-water advisory and NFHL/NLD/NID validators; their direct tests were executable but no hosted workflow invoked them at that revision."
+  - "v0.6 corrects the hosted-workflow inventory: drinking-water advisory and NFHL/NLD/NID already have dedicated hosted workflows on the pinned base, while domain-hazards remains the bounded smoke and USDM materiality lane."
+  - "v0.5 incorrectly classified the drinking-water advisory and NFHL/NLD/NID test families as not run in hosted workflows; that statement is superseded by current workflow evidence."
   - "v0.4 retires the unused domain-local generic-schema placeholder after confirming that no Hazards schema or consumer names it and repository-wide schema validation is already established."
   - "Three scripts have substantive implementations and paired deterministic tests; two scripts remain explicit NotImplementedError placeholders and are not validation evidence."
   - "The EvidenceBundle convergence test enforces the single declared validator path and shared-fixture polarity."
-  - "The domain-hazards workflow executes the bounded smoke, all three substantive validator test families, and USDM materiality lane; its proof and release jobs remain explicit holds."
-  - "This correction changes hosted validation wiring and documentation only; it changes no validator implementation, schema, contract, fixture, policy, source, evidence, lifecycle object, release, deployment, or public surface."
+  - "The domain-hazards workflow executes the bounded smoke and USDM materiality lane; dedicated profile workflows execute the drinking-water advisory and NFHL/NLD/NID suites; proof and release jobs remain explicit holds."
+  - "This correction changes documentation only; it changes no validator implementation, schema, contract, fixture, test, workflow, policy, source, evidence, lifecycle object, release, deployment, or public surface."
 [/KFM_META_BLOCK_V2] -->
 
 # `tools/validators/domains/hazards/` — Hazards Validator Index
@@ -55,7 +55,7 @@ notes:
 
 This directory is the Hazards validation implementation lane under the `tools/` responsibility root. It owns repository validator code and this local inventory. Hazards meaning remains under [`contracts/`](../../../../contracts/domains/hazards/README.md); machine shape remains under [`schemas/`](../../../../schemas/contracts/v1/domains/hazards/README.md); fixtures and tests remain under their own roots.
 
-The index reports the exact tree at `main@332a371f0be1aae68690853fba368a6289d2dab4` as the branch base and describes the workflow wiring proposed by this review boundary. It distinguishes substantive implementations from tracked placeholders so a file name or a green held job cannot be cited as validation that did not run.
+The index reports the exact tree at `main@332a371f0be1aae68690853fba368a6289d2dab4`. It distinguishes substantive implementations from tracked placeholders and distinguishes the aggregate Hazards workflow from dedicated profile workflows so hosted evidence is not understated or overstated.
 
 ## Status
 
@@ -89,8 +89,8 @@ The Hazards boundary remains fail-closed:
 
 | Validator | Confirmed bounded behavior | Paired executable evidence | Workflow posture |
 |---|---|---|---|
-| [`validate_drinking_water_advisory.py`](./validate_drinking_water_advisory.py) | Closed proposed advisory profile with deterministic structural and semantic findings | [`test_drinking_water_advisory.py`](../../../../tests/domains/hazards/test_drinking_water_advisory.py) and the [`drinking_water_advisory/`](../../../../fixtures/domains/hazards/drinking_water_advisory/README.md) fixture family | Configured in [`domain-hazards.yml`](../../../../.github/workflows/domain-hazards.yml) through the direct advisory unittest command; exact-head hosted result is required before claiming PASS |
-| [`validate_nfhl_nld_nid_source_role_profile.py`](./validate_nfhl_nld_nid_source_role_profile.py) | Fail-closed NFHL/NLD/NID source-role separation profile | [`test_validate_nfhl_nld_nid_source_role_profile.py`](../../../../tests/validators/domains/hazards/test_validate_nfhl_nld_nid_source_role_profile.py) | Configured in [`domain-hazards.yml`](../../../../.github/workflows/domain-hazards.yml) through the direct NFHL/NLD/NID unittest command; exact-head hosted result is required before claiming PASS |
+| [`validate_drinking_water_advisory.py`](./validate_drinking_water_advisory.py) | Closed proposed advisory profile with deterministic structural and semantic findings | [`test_drinking_water_advisory.py`](../../../../tests/domains/hazards/test_drinking_water_advisory.py) and the [`drinking_water_advisory/`](../../../../fixtures/domains/hazards/drinking_water_advisory/README.md) fixture family | Hosted by dedicated [`drinking-water-advisory.yml`](../../../../.github/workflows/drinking-water-advisory.yml), which runs the focused unit suite and exact fixture replay; exact-head hosted result is required before claiming PASS |
+| [`validate_nfhl_nld_nid_source_role_profile.py`](./validate_nfhl_nld_nid_source_role_profile.py) | Fail-closed NFHL/NLD/NID source-role separation profile | [`test_validate_nfhl_nld_nid_source_role_profile.py`](../../../../tests/validators/domains/hazards/test_validate_nfhl_nld_nid_source_role_profile.py) | Hosted by dedicated [`nfhl-nld-nid-source-role-profile.yml`](../../../../.github/workflows/nfhl-nld-nid-source-role-profile.yml), which runs the focused deterministic no-network suite and exact fixture replay; exact-head hosted result is required before claiming PASS |
 | [`validate_usdm_materiality.py`](./validate_usdm_materiality.py) | Deterministic, no-network USDM material-change evaluation over committed synthetic cases | [`test_validate_usdm_materiality.py`](../../../../tests/domains/hazards/test_validate_usdm_materiality.py) and [`usdm_materiality/cases.json`](../../../../fixtures/domains/hazards/usdm_materiality/cases.json) | Executed by `make hazards-validate`, which is invoked by [`domain-hazards.yml`](../../../../.github/workflows/domain-hazards.yml) |
 
 These relationships prove only their tested profiles and fixture polarity. They do not prove live retrieval, source admission, rights, sensitivity, currentness, complete EvidenceRef resolution, policy activation, release, or public safety.
@@ -120,18 +120,30 @@ Repository-wide schema validation remains owned by [`schema-validation.yml`](../
 
 ## Workflow wiring
 
-The [`domain-hazards`](../../../../.github/workflows/domain-hazards.yml) workflow is executable for pull requests and `main` pushes. Its validation job requires the current Hazards boundary files and, on this review branch, invokes:
+The [`domain-hazards`](../../../../.github/workflows/domain-hazards.yml) workflow is executable for pull requests and `main` pushes. Its validation job requires the bounded Hazards materiality boundary and runs:
 
 ```text
 python -m unittest -v tests.domains.hazards.test_hazards_smoke
-python -m unittest -v tests.domains.hazards.test_drinking_water_advisory
-python -m unittest -v tests.validators.domains.hazards.test_validate_nfhl_nld_nid_source_role_profile
 make hazards-validate
 ```
 
-The first added hosted suite exercises the closed synthetic drinking-water advisory profile. The second exercises the proposed-inactive, fixture-only NFHL/NLD/NID source-role separation profile and includes explicit no-network assertions. The Make target continues to run the USDM materiality unit tests and `validate_usdm_materiality.py --fixtures` with deterministic no-network environment controls.
+The Make target runs the USDM materiality unit tests and `validate_usdm_materiality.py --fixtures` with deterministic no-network environment controls.
 
-The workflow's proof and release-dry-run jobs intentionally emit explicit hold markers. A successful held job confirms that the absence conditions remain as expected; it does not prove that a Hazards ProofPack producer, EvidenceBundle resolver, candidate manifest, release command, or publication path exists.
+Two additional substantive profiles are already hosted through dedicated workflows rather than through `domain-hazards`:
+
+```text
+.github/workflows/drinking-water-advisory.yml
+  -> python -m unittest tests.domains.hazards.test_drinking_water_advisory --verbose
+  -> python tools/validators/domains/hazards/validate_drinking_water_advisory.py --fixtures
+
+.github/workflows/nfhl-nld-nid-source-role-profile.yml
+  -> focused unittest discovery for test_validate_nfhl_nld_nid_source_role_profile.py
+  -> python tools/validators/domains/hazards/validate_nfhl_nld_nid_source_role_profile.py --fixtures
+```
+
+That dedicated coverage is hosted evidence only when an exact-head run actually executes and succeeds. It does not imply that the aggregate `domain-hazards` workflow owns those profile triggers, and duplicating the suites into that aggregate lane is not required to establish that they are hosted.
+
+The `domain-hazards` proof and release-dry-run jobs intentionally emit explicit hold markers. A successful held job confirms that the absence conditions remain as expected; it does not prove that a Hazards ProofPack producer, EvidenceBundle resolver, candidate manifest, release command, or publication path exists.
 
 ## Outcomes and interpretation
 
@@ -188,5 +200,5 @@ This README is repository-facing documentation. Rollback is a reviewed revert of
 |---|---|
 | Evidence date | 2026-08-28 |
 | Pinned repository commit | `332a371f0be1aae68690853fba368a6289d2dab4` |
-| Review result | Five scripts confirmed: three substantive implementations with paired deterministic tests; this review branch wires all three substantive test families into the existing hosted Hazards validation job while two `NotImplementedError` placeholders remain explicitly non-evidence |
+| Review result | Five scripts confirmed: three substantive implementations and two explicit `NotImplementedError` placeholders; dedicated hosted workflows already exercise the drinking-water advisory and NFHL/NLD/NID profiles, while `domain-hazards` remains the bounded smoke and USDM materiality lane |
 | Next trigger | Validator add/remove/rename, placeholder implementation, fixture/test/workflow change, validator-registry change, source-admission change, or consumer adoption |
