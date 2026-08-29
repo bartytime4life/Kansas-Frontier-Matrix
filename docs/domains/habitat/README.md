@@ -2,7 +2,7 @@
 doc_id: kfm://doc/domains/habitat/readme
 title: Habitat Domain — Lane README
 type: standard
-version: v1.2
+version: v1.3
 status: draft
 owners: [NEEDS_VERIFICATION — habitat domain steward, docs steward]
 created: 2026-05-17
@@ -103,27 +103,27 @@ notes:
 Per **Directory Rules §12 — Domain Placement Law**, a domain MUST NOT become a root folder. The Habitat lane appears as a **segment** inside each responsibility root. This README anchors only the `docs/` segment; sibling segments live in their own responsibility roots and link back here.
 
 ```text
-docs/domains/habitat/                         ← this README (canonical)
-contracts/domains/habitat/                    ← object meanings — PROPOSED
-schemas/contracts/v1/domains/habitat/         ← machine shape (ADR-0001 home) — PROPOSED
-policy/domains/habitat/                       ← allow/deny/restrict/abstain — PROPOSED
-tests/domains/habitat/                        ← enforceability proofs — PROPOSED
-fixtures/domains/habitat/                     ← golden / negative samples — PROPOSED
-packages/domains/habitat/                     ← shared lane library — PROPOSED
-pipelines/domains/habitat/                    ← executable pipeline logic — PROPOSED
-pipeline_specs/habitat/                       ← declarative pipeline configs — PROPOSED
-data/raw/habitat/                             ← immutable source payloads
-data/work/habitat/                            ← in-progress normalization
-data/quarantine/habitat/                      ← failed-gate holds
-data/processed/habitat/                       ← validated normalized objects
-data/catalog/domain/habitat/                  ← catalog/triplet/bundles
-data/published/layers/habitat/                ← released, public-safe artifacts
-data/registry/sources/habitat/                ← SourceDescriptors for the lane
-release/candidates/habitat/                   ← release candidates + manifests
+docs/domains/habitat/                         ← PRESENT — canonical docs lane
+contracts/domains/habitat/                    ← PRESENT — object meanings; mixed maturity
+schemas/contracts/v1/domains/habitat/         ← PRESENT — machine shape (ADR-0001 home); mixed maturity
+policy/domains/habitat/                       ← PRESENT — policy files; activation is not inferred
+tests/domains/habitat/                        ← PRESENT — enforceability proofs; mixed maturity
+fixtures/domains/habitat/                     ← PRESENT — fixture lane; live-data fitness is not inferred
+packages/domains/habitat/                     ← PRESENT — shared lane library
+pipelines/domains/habitat/                    ← PRESENT — pipeline logic; production activation is not inferred
+pipeline_specs/habitat/                       ← PRESENT — declarative configs; activation is not inferred
+data/raw/habitat/                             ← PRESENT — directory presence does not prove source admission
+data/work/habitat/                            ← PRESENT — in-progress normalization lane
+data/quarantine/habitat/                      ← PRESENT — failed-gate hold lane
+data/processed/habitat/                       ← PRESENT — directory presence does not prove lifecycle promotion
+data/catalog/domain/habitat/                  ← PRESENT — catalog/triplet/bundle lane
+data/published/layers/habitat/                ← PRESENT — directory presence does not prove release or public serving
+data/registry/sources/habitat/                ← PRESENT — descriptor lane; source admission remains separately governed
+release/candidates/habitat/                   ← PRESENT — candidate lane; approval or release is not inferred
 ```
 
 > [!NOTE]
-> The segment **pattern** above is **CONFIRMED** by Directory Rules §12 (which lists habitat among the domains it governs); the **specific siblings present in your branch** are **PROPOSED** until verified against the mounted repo.
+> The segment pattern is **CONFIRMED** by adopted Directory Rules §12. All sixteen listed Habitat segments were verified present at repository pin `2b0ea9bbbc9d9a120ea94d92fb4617d96fe7d2a0` on 2026-08-29. **PRESENT means repository bytes exist only**; it does not establish source admission, rights, sensitivity clearance, evidence closure, policy approval, runtime activation, lifecycle promotion, release, deployment, or publication.
 
 > [!WARNING]
 > **Path-form conflict between two governing docs (CONFLICTED — see HAB-V-009).** Directory Rules §12 uses the **segment form** (`contracts/domains/habitat/`, `schemas/contracts/v1/domains/habitat/`). The Atlas §24.13 responsibility-root crosswalk uses a **flat form** (`contracts/habitat/`, `schemas/contracts/v1/habitat/`). The Atlas's own Chapter-24 authority rule states its master tables are *navigational, not authoritative*, and that a Chapter-24 table disagreeing with v1.0/Directory Rules is *a drift entry, not a correction*. **Disposition:** this README follows the Directory Rules §12 segment form as governing; the Atlas flat form is logged as a drift candidate for ADR/DRIFT_REGISTER resolution. This README does not silently adopt the flat form.
@@ -400,7 +400,7 @@ flowchart LR
 ```
 
 > [!NOTE]
-> Diagram reflects **CONFIRMED doctrine** (lifecycle invariant, trust membrane, source-role anti-collapse, governed joins). Specific path siblings are **PROPOSED** until the mounted repo confirms them. Source-role labels updated to the CONFIRMED 7-role enum.
+> Diagram reflects **CONFIRMED doctrine** (lifecycle invariant, trust membrane, source-role anti-collapse, governed joins). Its Habitat path siblings are **PRESENT** at the §2 repository pin, while their implementation and lifecycle maturity remains independently governed. Source-role labels use the CONFIRMED 7-role enum.
 
 [⬆ back to top](#top)
 
@@ -430,6 +430,14 @@ The following items remain **NEEDS VERIFICATION** until resolved against mounted
 ## 15. Changelog & definition of done
 
 ### 15.1 Changelog
+
+#### v1.3 — 2026-08-29
+
+| Change | Type (per contract §37) | Reason |
+|---|---|---|
+| Reconciled all sixteen §2 Habitat responsibility-root segments from unverified / PROPOSED presence claims to exact repository evidence, with explicit non-authority and non-release qualifiers. | reconciliation | Current GitHub bytes disprove the stale pending-mounted-repository claim; presence alone does not establish source admission, policy approval, lifecycle promotion, runtime activation, release, or publication. |
+| Corrected the repeated diagram and related-folder presence notes. | reconciliation | Keeps one repository-fit truth throughout the README without changing any implementation surface. |
+| Bumped version v1.2 → v1.3. | housekeeping | MINOR repository-fit status reconciliation; no operating-law or authority change. |
 
 #### v1.2 — 2026-08-29
 
@@ -490,7 +498,7 @@ This README is done enough to enter the repository when:
   - `release/candidates/habitat/`
 
 > [!NOTE]
-> Links above are **relative** and **PROPOSED**. Any link to a file not yet present should remain in this list as a placeholder so the verification backlog stays explicit. Path form follows Directory Rules §12 (segment form), pending HAB-V-009 resolution.
+> Links above are relative. The listed Habitat responsibility-root segments are **PRESENT** at the §2 repository pin; this presence statement does not upgrade the authority, maturity, activation, or release posture of any file within them. Path form follows Directory Rules §12 (segment form), pending HAB-V-009 resolution.
 
 ### 16.2 ADRs
 
