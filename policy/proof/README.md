@@ -2,7 +2,7 @@
 doc_id: kfm://doc/policy/proof/readme
 title: Proof Policy Routing and Hold Boundary
 type: readme
-version: v1.0
+version: v1.1
 status: provisional; routing-only; implementation-empty; evaluator-unbound; non-release; non-publication
 owner: NEEDS VERIFICATION — CODEOWNERS routes policy changes to @bartytime4life; proof-policy stewardship, evaluator ownership, independent review, retention, and release authority are not established here
 created: 2026-08-28
@@ -11,8 +11,8 @@ current_path: policy/proof/README.md
 owning_root: policy/
 policy_label: public; policy; routing-boundary; hold; non-release; non-publication
 responsibility: Prevent the direct policy/proof marker lane from being mistaken for ProofPack meaning, proof storage, proof tooling, an active policy bundle, an evaluator entrypoint, release approval, or publication authority, and route contributors to current repository-backed proof responsibilities.
-base_commit: 156e3288f21dc95d60daa744be4207681ad21655
-prior_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
+base_commit: 332a371f0be1aae68690853fba368a6289d2dab4
+prior_blob: 79f6e1fa60f8df2b6610b28f54fb13a8e69d9d34
 directory_governance: ADR-0029 accepted Directory Rules v2 for responsibility-first placement; proof, receipt, catalog, policy, release, and published carriers remain distinct responsibilities
 truth_posture: CONFIRMED this directory contains only .gitkeep and this README; no Rego, bundle, evaluator, fixture, test, workflow, consumer, decision, receipt, proof instance, release artifact, or public behavior exists here; current GitHub evidence places ProofPack meaning, shape, instances, tooling, tests, and orchestration in separate owning surfaces / PROPOSED this routing-and-hold boundary / UNKNOWN future policy family, writer, reader, retention, evaluator, consumer, decision-receipt, release, correction, rollback, and publication bindings
 [/KFM_META_BLOCK_V2] -->
@@ -58,7 +58,7 @@ migration, compatibility, evaluation, release, deployment, or publication.
 
 ## Authority and current state
 
-The repository at `main@156e3288f21dc95d60daa744be4207681ad21655`
+The repository at `main@332a371f0be1aae68690853fba368a6289d2dab4`
 provides the controlling evidence for this boundary.
 
 | Evidence | What it establishes | What it does not establish |
@@ -153,18 +153,21 @@ python tools/validators/docs/link-check/check_links.py \
   policy/proof/README.md policy/README.md tools/proof_pack/README.md
 python tools/validators/docs/meta-block/check_meta_blocks.py \
   --profile required policy/proof/README.md policy/README.md tools/proof_pack/README.md
-python tools/validators/docs/fragments/check_fragments.py \
-  policy/proof/README.md policy/README.md tools/proof_pack/README.md
 ```
+
+The link checker covers repository-local files, directories, images, and
+fragments. The metadata checker covers the bounded metadata envelope. Passing
+either command confirms only its exercised documentation QA scope at this
+revision.
 
 Focused ProofPack implementation checks are documented in the
 [tooling README](../../tools/proof_pack/README.md). They validate only the named
 fixture-first profile.
 
 Reviewers should also verify that this directory contains only `.gitkeep` and
-this README, the parent inventory counts 38 substantive and one one-byte direct
-child README, every relative target resolves, and the base-to-head diff changes
-Markdown only.
+this README, the current parent inventory records 40 substantive direct-child
+READMEs, zero one-byte direct-child placeholders, and no missing direct README;
+every relative target resolves, and the base-to-head diff changes Markdown only.
 
 ## Maintenance, correction, and rollback
 
@@ -204,4 +207,5 @@ artifacts, deployments, or published state.
 
 | Version | Date | Change | Runtime effect |
 |---|---|---|---|
+| v1.1 | 2026-08-28 | Removed a nonexistent fragment-checker command, documented the supported link checker's fragment scope, and reconciled the parent policy inventory. | None; documentation only. |
 | v1.0 | 2026-08-28 | Replaced the one-byte placeholder with a repository-grounded routing-and-hold boundary and separated proof support, policy, tooling, receipts, release, and publication responsibilities. | None; documentation only. |

@@ -2,7 +2,7 @@
 doc_id: kfm://doc/policy/transport/readme
 title: Transport Policy Routing and Hold Boundary
 type: readme
-version: v1.0
+version: v1.1
 status: provisional; routing-only; alias-unresolved; implementation-empty; evaluator-unbound; non-release; non-publication
 owner: NEEDS VERIFICATION — CODEOWNERS routes policy changes to @bartytime4life; transport policy stewardship, alias authority, evaluator ownership, independent review, and release authority are not established here
 created: 2026-08-28
@@ -11,8 +11,8 @@ current_path: policy/transport/README.md
 owning_root: policy/
 policy_label: public; policy; routing-boundary; hold; non-release; non-publication
 responsibility: Prevent the direct policy/transport marker lane from being mistaken for an accepted alias, active policy bundle, evaluator entrypoint, transport authority, release gate, or publication surface, and route current contributors to repository-backed Roads/Rail/Trade policy evidence.
-base_commit: 813ef14b1dbe5bd236fc902ce8fc3bb2e8ae7e80
-prior_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
+base_commit: 332a371f0be1aae68690853fba368a6289d2dab4
+prior_blob: 5cd811259e322619b6f151b1f0e41d73571a49e4
 directory_governance: ADR-0029 accepted Directory Rules v2; the machine domain-lane register is a PROPOSED projection and records transport as an unresolved alias for roads-rail-trade
 truth_posture: CONFIRMED this directory contains only .gitkeep and this README, no Rego source, test, evaluator, workflow, consumer, receipt, bundle, release artifact, or publication behavior, and the current domain-specific policy source is under policy/domains/roads-rail-trade/ as 16 unbound scaffolds / PROPOSED this routing-and-hold boundary / CONFLICTED or unresolved transport-to-roads-rail-trade alias and compatibility posture / UNKNOWN future writer, reader, retention, migration, evaluator, consumer, decision-receipt, release, and publication bindings
 [/KFM_META_BLOCK_V2] -->
@@ -60,7 +60,7 @@ accepted decision.
 
 ## Authority and current state
 
-The repository at `main@813ef14b1dbe5bd236fc902ce8fc3bb2e8ae7e80`
+The repository at `main@332a371f0be1aae68690853fba368a6289d2dab4`
 provides the controlling evidence for this boundary.
 
 | Evidence | What it establishes | What it does not establish |
@@ -153,15 +153,21 @@ locations. This empty lane supplies no rules for those cases.
 Focused documentation checks:
 
 ```bash
-python tools/validators/docs/link-check/check_links.py   policy/transport/README.md policy/README.md
-python tools/validators/docs/meta-block/check_meta_blocks.py   --profile required policy/transport/README.md policy/README.md
-python tools/validators/docs/fragments/check_fragments.py   policy/transport/README.md policy/README.md
+python tools/validators/docs/link-check/check_links.py \
+  policy/transport/README.md policy/README.md
+python tools/validators/docs/meta-block/check_meta_blocks.py \
+  --profile required policy/transport/README.md policy/README.md
 ```
 
+The link checker covers repository-local files, directories, images, and
+fragments. The metadata checker covers the bounded metadata envelope. Passing
+either command confirms only its exercised documentation QA scope at this
+revision.
+
 Reviewers should also verify that this directory contains only `.gitkeep` and
-this README, the parent inventory counts 37 substantive and two one-byte direct
-child READMEs, every relative target resolves, and the base-to-head diff changes
-Markdown only.
+this README, the current parent inventory records 40 substantive direct-child
+READMEs, zero one-byte direct-child placeholders, and no missing direct README;
+every relative target resolves, and the base-to-head diff changes Markdown only.
 
 These checks prove documentation structure and link integrity. They do not parse
 or execute Rego, accept an alias, establish policy semantics, prove transport
@@ -211,4 +217,5 @@ validators, release artifacts, deployments, or published state.
 
 | Version | Date | Change | Runtime effect |
 |---|---|---|---|
+| v1.1 | 2026-08-28 | Removed a nonexistent fragment-checker command, documented the supported link checker's fragment scope, and reconciled the parent policy inventory. | None; documentation only. |
 | v1.0 | 2026-08-28 | Replaced the one-byte placeholder with a repository-grounded routing-and-hold boundary; preserved the unresolved alias and routed current policy work to the documented Roads/Rail/Trade lane. | None; documentation only. |
