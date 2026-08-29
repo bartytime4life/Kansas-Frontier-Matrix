@@ -2,13 +2,15 @@
 doc_id: kfm://doc/runbook-people-dna-land-living-person-review
 title: People, DNA, and Land Living-Person Review Runbook
 type: runbook
-version: 0.3.0
+version: 0.3.1
 status: DRAFT_REPOSITORY_GROUNDED; SYNTHETIC_VALIDATION_ONLY; POLICY_RUNTIME_UNBOUND; ACCOUNTABLE_REVIEW_UNVERIFIED; NON_RELEASE; NON_PUBLICATION
 owners: "@bartytime4life — verified CODEOWNERS route; accountable privacy, consent, Indigenous/Tribal, legal, security, and domain stewardship NEEDS VERIFICATION"
 created: 2026-08-25
 updated: 2026-08-29
 owning_root: docs/
 responsibility: human review procedure for the existing people-dna-land lane
+policy_label: "people-dna-land; living-person; privacy; consent; evidence; rights; sensitivity; fail-closed; synthetic-only; human-review; non-release; non-publication"
+truth_posture: "CONFIRMED repository-grounded review procedure and exact synthetic commands / NEEDS VERIFICATION accountable specialist routes, policy runtime, real consent authority, production handling, release, deployment, and publication"
 related:
   - docs/runbooks/people-dna-land/README.md
   - docs/runbooks/people-dna-land/CONSENT_RUNBOOK.md
@@ -270,6 +272,7 @@ Keep test execution, subject posture, and work state separate.
 | Test execution | `PASS`, `FAIL`, `NOT_RUN` | Whether the named synthetic profile behaved as expected at the tested revision |
 | Subject posture | `HISTORICAL_SUPPORTED`, `LIVING_OR_PLAUSIBLY_LIVING`, `UNKNOWN` | The minimized living-status category for review routing; not an identity or legal determination |
 | Work state | `PROCEED_TO_OTHER_GATES`, `HOLD`, `ESCALATE`, `ERROR` | The next repository-safe action; never a release or publication decision |
+| Progression hold | `true`, `false` | Whether further repository progression is blocked; an independent Boolean, not a second work-state value |
 
 | Condition | Required work state | Interpretation |
 |---|---|---|
@@ -278,8 +281,12 @@ Keep test execution, subject posture, and work state separate.
 | Living status, evidence, consent, rights, sensitivity, source role, custody, audience, policy binding, or reviewer authority is unresolved | `HOLD` or `ESCALATE` | Preserve the fail-closed boundary |
 | `REVOKED`, `EXPIRED`, or scope-mismatched consent does not block next use | `HOLD` | The bounded fail-closed acceptance criterion failed |
 | `UNKNOWN` is treated as satisfied, or `ERROR` is coerced to another outcome | `HOLD` | Uncertainty or failure was converted unsafely |
-| Test, fixture, schema, validator, dependency, or review mechanism fails unexpectedly | `ERROR` and `HOLD` | Preserve the failure and correct it before relying on the profile |
+| Test, fixture, schema, validator, dependency, or review mechanism fails unexpectedly | `ERROR` | Set `progression_hold: true`; preserve the failure and correct it before relying on the profile |
 | Promotion, release, deployment, publication, access widening, or repository settings are requested | `HOLD` | Route the request to its separately governed authority |
+
+`work_state` must contain exactly one enum value. An unexpected failure uses
+`work_state: ERROR` with `progression_hold: true`; the Boolean records that
+progression is blocked without inventing an unencodable composite work state.
 
 `PROCEED_TO_OTHER_GATES` clears no evidence, rights, sensitivity, policy,
 review, lifecycle, release, or publication gate.
@@ -300,9 +307,33 @@ proposed_action: "<one bounded operation>"
 purpose: "<minimized purpose>"
 audience: "<bounded audience class>"
 subject_posture: "HISTORICAL_SUPPORTED | LIVING_OR_PLAUSIBLY_LIVING | UNKNOWN"
-evidence_reference_posture: "RESOLVED | UNRESOLVED | NOT_APPLICABLE"
+living_status_evidence_ref: "<opaque authority reference | UNRESOLVED>"
+consent:
+  status: "ACTIVE | EXPIRED | REVOKED | SUSPENDED | DISPUTED | UNKNOWN | NOT_APPLICABLE"
+  scope_posture: "COVERS_PROPOSED_USE | DOES_NOT_COVER | UNRESOLVED | NOT_APPLICABLE"
+  purpose_posture: "COVERS_PROPOSED_USE | DOES_NOT_COVER | UNRESOLVED | NOT_APPLICABLE"
+  audience_posture: "COVERS_PROPOSED_AUDIENCE | DOES_NOT_COVER | UNRESOLVED | NOT_APPLICABLE"
+  valid_time_posture: "CURRENT | EXPIRED | UNRESOLVED | NOT_APPLICABLE"
+  revocation_posture: "NOT_REVOKED | REVOKED | UNKNOWN | NOT_APPLICABLE"
+  authority_ref: "<opaque authority reference | UNRESOLVED | NOT_APPLICABLE>"
+evidence:
+  bundle_ref: "<opaque EvidenceBundle reference | UNRESOLVED | NOT_APPLICABLE>"
+  source_role: "<non-sensitive role label | UNRESOLVED>"
+  rights_posture: "RESOLVED | HELD | UNRESOLVED | NOT_APPLICABLE"
+  provenance_custody_currentness: "RESOLVED | UNRESOLVED | NOT_APPLICABLE"
 sensitivity_categories:
   - "<non-sensitive category label>"
+exposure:
+  precision_posture: "PUBLIC_SAFE | GENERALIZATION_UNVERIFIED | HARMFUL | UNRESOLVED"
+  geography_posture: "NONE | PUBLIC_CONTEXT_ONLY | PRIVATE_OR_PRECISE | UNRESOLVED"
+  downstream_carriers:
+    - "<bounded carrier class | NONE>"
+  reconstruction_risk: "RESOLVED | HELD | UNRESOLVED"
+accountability:
+  required_roles:
+    - "<non-sensitive role label>"
+  review_authority_ref: "<opaque authority reference | UNRESOLVED>"
+  approved_channel_posture: "CONFIRMED | UNRESOLVED"
 validation:
   identity: "HEAD | MERGE_RESULT | STALE | NOT_RUN"
   profile: "consent_overlay | consent_revocation_propagation | documentation_only"
@@ -314,6 +345,7 @@ independent_gates:
   accountable_review: "UNRESOLVED | HELD | SATISFIED_BY_SEPARATE_AUTHORITY"
   release: "HELD"
 work_state: "PROCEED_TO_OTHER_GATES | HOLD | ESCALATE | ERROR"
+progression_hold: true
 reason_codes:
   - "<non-sensitive reason code>"
 limitations:
@@ -324,10 +356,11 @@ limitations:
 next_action: "<one bounded repository-safe action>"
 ```
 
-The handoff is evidence for accountable review, not the review decision. Do not
-include names, sequences, dates of birth, addresses, coordinates, relationship
-details, consent credentials, protected cultural information, or proprietary
-excerpts.
+The handoff is evidence for accountable review, not the review decision. Opaque
+references record that a separately governed authority must be consulted; they
+do not prove that authority is valid or resolved. Do not include names,
+sequences, dates of birth, addresses, coordinates, relationship details,
+consent credentials, protected cultural information, or proprietary excerpts.
 
 [Back to top](#top)
 
@@ -366,8 +399,12 @@ This documentation slice is complete only when:
 5. exact existing commands are provided without inventing live access, policy,
    proof, release, or publication paths;
 6. validation identity and finite outcomes are explicit;
-7. the minimized handoff contains no protected value; and
-8. rollback is limited to documentation and cannot be mistaken for consent
+7. the minimized handoff records consent status, scope, purpose, audience,
+   valid-time and revocation posture plus evidence, exposure, and accountable
+   review posture without protected values;
+8. `work_state` contains one finite value and any independent progression hold
+   is encoded separately; and
+9. rollback is limited to documentation and cannot be mistaken for consent
    revocation, data deletion, correction, withdrawal, or public-state change.
 
 [Back to top](#top)
