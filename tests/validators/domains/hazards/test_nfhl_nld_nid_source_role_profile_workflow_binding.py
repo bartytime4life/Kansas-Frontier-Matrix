@@ -1,12 +1,19 @@
 from __future__ import annotations
 
+import hashlib
+import json
 import unittest
 from pathlib import Path
 
 import yaml
 
+from tools.validators.validate_generated_receipt import (
+    WORKFLOW_MIGRATION_MANIFEST_SHA256,
+)
+
 ROOT = Path(__file__).resolve().parents[4]
 WORKFLOW = ROOT / ".github/workflows/nfhl-nld-nid-source-role-profile.yml"
+MIGRATION_MANIFEST = ROOT / "tools/ci/python-dependency-lock-migration.json"
 SELF_PATH = (
     "tests/validators/domains/hazards/"
     "test_nfhl_nld_nid_source_role_profile_workflow_binding.py"
@@ -47,6 +54,23 @@ class NfhlNldNidSourceRoleProfileWorkflowBindingTests(unittest.TestCase):
                 )
                 self.assertIn(SELF_PATH, paths)
                 self.assertIn(RECEIPT_PATH, paths)
+
+    def test_workflow_and_manifest_hashes_match_migration_pins(self) -> None:
+        manifest = json.loads(MIGRATION_MANIFEST.read_text(encoding="utf-8"))
+        entries = {
+            entry["path"]: entry
+            for entry in manifest["entries"]
+        }
+        workflow_path = WORKFLOW.relative_to(ROOT).as_posix()
+
+        self.assertEqual(
+            entries[workflow_path]["current_sha256"],
+            "sha256:" + hashlib.sha256(WORKFLOW.read_bytes()).hexdigest(),
+        )
+        self.assertEqual(
+            WORKFLOW_MIGRATION_MANIFEST_SHA256,
+            "sha256:" + hashlib.sha256(MIGRATION_MANIFEST.read_bytes()).hexdigest(),
+        )
 
 
 if __name__ == "__main__":
