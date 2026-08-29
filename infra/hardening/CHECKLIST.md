@@ -1,371 +1,362 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/infra-hardening-checklist
-title: infra/hardening/CHECKLIST.md — Infrastructure Hardening Review Checklist
+title: infra/hardening/CHECKLIST.md — Infrastructure Hardening Evidence Checklist
 type: checklist
-version: v1
-status: draft
+version: v2
+status: repository-grounded review template; non-enforcement; non-approval
 owners:
-  - <infra-steward>
-  - <security-owner>
-  - <ops-steward>
+  - "NEEDS VERIFICATION — CODEOWNERS routes /infra/ to @bartytime4life; operational stewardship and approval authority are not established here"
 created: 2026-07-03
-updated: 2026-07-03
+updated: 2026-08-29
 policy_label: public
 related:
   - infra/hardening/README.md
   - infra/README.md
-  - infra/firewall/
-  - infra/reverse_proxy/
-  - infra/vpn/
-  - infra/systemd/
-  - configs/
-  - runtime/
-  - apps/governed-api/
-  - docs/security/README.md
+  - infra/firewall/README.md
+  - infra/reverse_proxy/README.md
+  - infra/vpn/README.md
+  - infra/systemd/README.md
+  - infra/docker/README.md
+  - infra/compose/README.md
+  - infra/kubernetes/README.md
+  - infra/terraform/README.md
   - docs/security/EXPOSURE_PLAN.md
   - docs/security/INCIDENT_RESPONSE.md
   - docs/security/KEY_ROTATION.md
   - docs/doctrine/directory-rules.md
-  - policy/
-  - release/
-  - data/published/
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - .github/CODEOWNERS
 tags:
   - kfm
   - infra
   - hardening
+  - evidence
   - checklist
   - exposure
   - deny-by-default
-  - least-privilege
-  - trust-membrane
-  - auditability
 notes:
-  - "Use this checklist before merging infrastructure changes that affect exposure, host hardening, reverse proxy, firewall, VPN, systemd, model runtime, raw-data boundaries, admin surfaces, or audit logging."
-  - "This checklist records review evidence. It does not store secrets, policy bundles, release manifests, firewall configs, or incident working data."
+  - "Complete a copy for a specific change and evidence scope; do not mark this source template as a project-wide pass."
+  - "A completed checklist records bounded review evidence. It does not approve merge, release, deployment, promotion, publication, or source activation."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Infrastructure Hardening Review Checklist
+# Infrastructure Hardening Evidence Checklist
 
-> **Purpose.** Give reviewers a repeatable, evidence-producing checklist for infrastructure changes that might expose KFM services, data, models, admin surfaces, or release artifacts.
+Use this template to review an infrastructure change that may affect exposure,
+host posture, service isolation, secrets, auditability, recovery, or public
+delivery. Complete it against one identified change and one defined evidence
+scope.
 
-![status](https://img.shields.io/badge/status-draft-yellow)
-![posture](https://img.shields.io/badge/posture-deny--by--default-red)
-![raw](https://img.shields.io/badge/raw_data-public_access_DENY-red)
-![model](https://img.shields.io/badge/model_endpoint-direct_access_DENY-red)
-![secrets](https://img.shields.io/badge/secrets-never_commit-red)
+> [!IMPORTANT]
+> The source template's default outcome is **HOLD / NOT ASSESSED**. An unchecked
+> box, placeholder, inaccessible environment, or undocumented observation is not
+> a pass. Completing this checklist does not prove that a control is deployed or
+> effective and does not authorize merge, release, deployment, promotion, or
+> publication.
 
----
+The companion [hardening evidence boundary](README.md) defines the repository
+facts and limitations inherited by this worksheet.
 
-## How to use this checklist
+## 1. Choose the evidence scope
 
-Use this file in PRs that touch any of these areas:
+Select every scope actually reviewed:
 
-- `infra/hardening/`
-- `infra/firewall/`
-- `infra/reverse_proxy/`
-- `infra/vpn/`
-- `infra/systemd/`
-- `infra/docker/`, `infra/compose/`, `infra/kubernetes/`, or `infra/terraform/`
-- public route exposure or asset hosting
-- model/runtime network access
-- raw-data, internal-store, catalog, or release artifact exposure
-- admin/review-console/operator access
-- logging, audit, backup, restore, or secret-boundary behavior
+- [ ] **Repository-only** — versioned paths, diffs, tests, workflow definitions,
+      and hosted results were inspected.
+- [ ] **Environment observation** — an identified environment was inspected at
+      a recorded time using an authorized, redacted procedure.
+- [ ] **Mixed** — repository evidence and environment observations were both
+      inspected and kept distinguishable below.
 
-For each item, mark one of:
+A repository-only review may confirm configuration or static-test facts. It
+cannot confirm deployed routes, effective firewall rules, runtime identities,
+secret custody, monitoring, backup health, or operational rollback.
 
-- `[x]` checked and supported by evidence
-- `[ ]` not yet checked
-- `N/A — <reason>` not applicable for this PR
+## 2. Evidence-state vocabulary
 
-Do not paste secrets, internal IPs, private hostnames, exploit payloads, or sensitive operational data into this checklist. Link to redacted evidence or approved runbook records instead.
+Use one state for every applicable item:
 
----
-
-## 0. Review header
-
-| Field | Value |
+| State | Meaning |
 |---|---|
-| PR / change ID | `<link or ID>` |
-| Reviewer | `<name>` |
-| Review date | `<YYYY-MM-DD>` |
-| Deployment scope | `local-only / VPN-only / steward-only / public-facing / mixed / unknown` |
-| Affected infra lane(s) | `<firewall / reverse_proxy / vpn / systemd / docker / compose / kubernetes / terraform / hardening>` |
-| Public exposure changed? | `yes / no / unknown` |
-| Model runtime exposure changed? | `yes / no / unknown` |
-| Raw/internal data access changed? | `yes / no / unknown` |
-| Admin/review access changed? | `yes / no / unknown` |
-| Rollback path recorded? | `yes / no / N/A` |
-
----
-
-## 1. Directory and authority placement
-
-- [ ] The changed file belongs under the correct responsibility root.
-- [ ] `infra/` changes are deployment, host, network, or exposure posture changes, not policy, schema, source, release, or data lifecycle artifacts.
-- [ ] No enforceable policy bundle was added under `infra/hardening/`; policy lives in `policy/`.
-- [ ] No schema or machine contract was added under `infra/hardening/`; machine-checkable schemas live under `schemas/contracts/v1/...`.
-- [ ] No release manifest, rollback card, correction notice, proof, receipt, or signed artifact was added under `infra/hardening/`.
-- [ ] Any conflict with Directory Rules or existing repo convention is recorded in the drift register or PR notes.
-
-**Evidence / notes:**
-
-```text
-<paths reviewed, Directory Rules reference, drift note if any>
-```
-
----
-
-## 2. Secret boundary
-
-- [ ] No real secrets were committed.
-- [ ] No private keys, certificates, password files, `.env` files, tokens, API keys, OAuth secrets, webhook secrets, or production credentials were added.
-- [ ] Secret references are by environment variable name, secret-store key name, or deployment secret reference only.
-- [ ] Example values are clearly fake and cannot be used against a real service.
-- [ ] Any accidental secret exposure triggered rotation, audit, and incident/runbook handling.
-- [ ] `configs/` remains non-secret; no hardening note tells maintainers to store real secrets in repo config files.
-
-**Evidence / notes:**
-
-```text
-<secret scan result, files checked, rotation note if applicable>
-```
-
----
-
-## 3. Default ingress and network exposure
-
-- [ ] Default ingress remains deny-by-default.
-- [ ] Only explicitly reviewed public routes are allowed.
-- [ ] Public HTTP routes terminate at the governed public boundary or released static artifact hosting.
-- [ ] No public route points directly to raw stores, work stores, quarantine stores, internal stores, source credentials, model runtimes, or admin paths.
-- [ ] Any new listener, port, host, container port, service binding, VPN route, firewall rule, or reverse-proxy location is named in the PR.
-- [ ] Local-only services bind to loopback or private interfaces as appropriate.
-- [ ] Public-facing services are separated from steward-only services.
-- [ ] CORS is explicit and not wildcarded for sensitive or credentialed routes.
-
-**Evidence / notes:**
-
-```text
-<route inventory, port/listener review, firewall/proxy diff, CORS check>
-```
-
----
-
-## 4. Governed API trust membrane
-
-- [ ] Browser/public clients reach KFM through `apps/governed-api/` or released public assets, not internal stores.
-- [ ] Public UI does not call model-runtime endpoints directly.
-- [ ] Public UI does not call raw data, work data, quarantine data, unpublished candidates, source credentials, or internal/canonical stores directly.
-- [ ] Public API responses preserve finite outcome behavior: `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`.
-- [ ] Routes that cannot resolve evidence or policy state abstain or deny; they do not silently answer.
-- [ ] Infrastructure does not add a bypass route around governed API checks.
-- [ ] Any public asset route serves only released artifacts tied to release state and rollback target.
-
-**Required negative-state checks:**
-
-- [ ] Browser -> model runtime is denied.
-- [ ] Browser -> `data/raw/` is denied.
-- [ ] Browser -> `data/work/` is denied.
-- [ ] Browser -> `data/quarantine/` is denied.
-- [ ] Browser -> unpublished release candidates is denied.
-- [ ] Browser -> internal/canonical store is denied.
-- [ ] Browser -> admin/review console without steward auth is denied.
-
-**Evidence / notes:**
-
-```text
-<negative tests, proxy deny evidence, API route inventory, release route notes>
-```
-
----
-
-## 5. Raw, work, quarantine, and internal-store denial
-
-- [ ] No public-serving process mounts or reads `data/raw/` directly.
-- [ ] No public-serving process mounts or reads `data/work/` directly.
-- [ ] No public-serving process mounts or reads `data/quarantine/` directly.
-- [ ] No public-serving process reads unpublished release candidates directly.
-- [ ] No public route exposes catalog/triplet/internal stores without governed API mediation.
-- [ ] If a service needs data, it consumes released artifacts, governed API payloads, or policy-approved internal service calls.
-- [ ] Mounts and container volumes are scoped to the minimum needed paths.
-- [ ] File permissions and service accounts follow least privilege.
-
-**Evidence / notes:**
-
-```text
-<mount review, service account review, volume diff, path-denial test>
-```
-
----
-
-## 6. Model runtime isolation
-
-- [ ] Model runtimes are not publicly exposed.
-- [ ] Model runtimes are not directly reachable from browser code.
-- [ ] Model runtimes are behind governed API adapters and policy checks.
-- [ ] Runtime services cannot read RAW, WORK, QUARANTINE, source credentials, or internal stores directly unless an explicitly reviewed internal path requires it.
-- [ ] Model prompts, outputs, and traces are not logged with secrets, raw payloads, restricted geometry, living-person data, or private source material.
-- [ ] Generated language is never treated as root truth, release authority, or evidence.
-- [ ] AI-related errors fail closed through finite outcome envelopes.
-
-**Evidence / notes:**
-
-```text
-<runtime binding, proxy deny evidence, adapter route review, log redaction evidence>
-```
-
----
-
-## 7. Admin, review, and steward surfaces
-
-- [ ] Admin and review consoles are not on the normal public path.
-- [ ] Steward-only paths require authentication and role checks.
-- [ ] Admin shortcuts are justified, constrained, documented, and audited.
-- [ ] Emergency access is time-bounded or separately reviewed.
-- [ ] Admin paths do not bypass publication, policy, evidence, or review state for normal public outputs.
-- [ ] Logs record admin actions without leaking restricted data or secrets.
-- [ ] Public users cannot discover or access admin routes through default navigation, wildcard proxy rules, or static file serving.
-
-**Evidence / notes:**
-
-```text
-<auth review, route review, proxy rules, audit event sample, exception note>
-```
-
----
-
-## 8. Public artifacts, tiles, exports, and static hosting
-
-- [ ] Static hosting serves only released public artifacts.
-- [ ] PMTiles, COGs, GeoParquet, styles, sprites, glyphs, manifests, and exports are tied to release state where applicable.
-- [ ] Public asset routes do not expose build caches, temporary artifacts, proof internals, unpublished candidates, or local workspace files.
-- [ ] Range/CORS behavior is reviewed for tile and object hosting.
-- [ ] Sensitive geometry, living-person, DNA, archaeology, rare-species exact location, critical infrastructure, or rights-uncertain material fails closed or is generalized/redacted before release.
-- [ ] Exported files carry or reference rights, sensitivity, provenance, evidence, and rollback information as required by the release process.
-
-**Evidence / notes:**
-
-```text
-<asset route list, release manifest refs, Range/CORS review, sensitivity gate evidence>
-```
-
----
-
-## 9. Logging, telemetry, and auditability
-
-- [ ] Security-relevant events are logged: auth failures, admin actions, denied public access, proxy denials, secret-rotation events, release-route changes, and model-runtime access attempts.
-- [ ] Logs do not include real secrets, raw payloads, private geometry, source credentials, unrestricted EvidenceBundle bodies, living-person data, prompt text, or sensitive incident details.
-- [ ] Audit logs are access-controlled.
-- [ ] Retention expectations are named or marked `NEEDS VERIFICATION`.
-- [ ] Logs are useful enough to reconstruct what happened during an exposure incident.
-- [ ] Telemetry is minimized and safe-by-construction.
-
-**Evidence / notes:**
-
-```text
-<sample redacted log, retention note, access control review, telemetry schema note>
-```
-
----
-
-## 10. Service hardening
-
-- [ ] Services run with least privilege.
-- [ ] Services use dedicated service accounts where practical.
-- [ ] Write access is limited to required directories only.
-- [ ] Read access is limited to required directories only.
-- [ ] Restart behavior is documented for critical services.
-- [ ] Service units or containers do not expose unnecessary capabilities.
-- [ ] Health checks do not leak internal details.
-- [ ] Debug modes are disabled on public or semi-public deployments.
-- [ ] Dependency/network access is constrained to known needs.
-
-**Evidence / notes:**
-
-```text
-<systemd/container/compose/kubernetes/terraform review notes>
-```
-
----
-
-## 11. Backup, restore, and rollback
-
-- [ ] The infrastructure change has a rollback procedure or a documented forward-fix-only reason.
-- [ ] Rollback does not require exposing secrets or bypassing the trust membrane.
-- [ ] Backup location and access control are reviewed where applicable.
-- [ ] Restore path is documented for critical state.
-- [ ] Release-impacting infrastructure changes link to release/rollback records where applicable.
-- [ ] Recovery procedures preserve auditability.
-
-**Evidence / notes:**
-
-```text
-<rollback steps, backup/restore note, release or runbook link>
-```
-
----
-
-## 12. Incident response readiness
-
-- [ ] The change does not weaken incident detection.
-- [ ] The change does not hide security-relevant logs.
-- [ ] The change does not remove the path to disable or isolate a public route quickly.
-- [ ] The change does not remove the path to isolate model runtimes quickly.
-- [ ] The change does not remove the path to block raw/internal store exposure quickly.
-- [ ] Reporting and escalation paths remain linked from security/runbook docs.
-- [ ] Any security exception includes an expiration date or review trigger.
-
-**Evidence / notes:**
-
-```text
-<incident path review, emergency isolation step, exception review trigger>
-```
-
----
-
-## 13. Final hardening decision
-
-| Decision | Meaning |
+| `CONFIRMED` | The cited path, result, or redacted observation directly supports the bounded claim. |
+| `N/A` | The item is outside this change; a specific reason is recorded. |
+| `UNKNOWN` | Available evidence cannot determine the state. |
+| `NEEDS VERIFICATION` | A named check against a revision, artifact, or environment remains to be run. |
+| `HOLD` | Do not make the affected enforcement, exposure-safety, deployment-readiness, or rollback-readiness claim. |
+| `NOT_RUN` | A required command or observation was not executed. |
+| `UNAVAILABLE` | A required tool or environment could not be accessed. |
+
+Mark a checkbox only after recording its state and evidence reference. A green
+workflow supports only the assertions that workflow actually checks.
+
+## 3. Review record
+
+| Field | Required value |
 |---|---|
-| `PASS` | All required checks passed; evidence is recorded. |
-| `PASS_WITH_WARNINGS` | Non-blocking warnings exist and are tracked. |
-| `BLOCK` | Do not merge until listed items are fixed. |
-| `ESCALATE` | Requires security, infra, release, governance, or ADR review before merge. |
+| PR or change | `<URL or immutable ID>` |
+| Base and head | `<full commit SHAs>` |
+| Reviewer | `<verified identity; do not use an unverified role placeholder>` |
+| Review time | `<ISO 8601 timestamp with offset>` |
+| Evidence scope | `repository-only / environment observation / mixed` |
+| Environment | `<repository-only, or redacted stable environment ID>` |
+| Affected paths | `<exact path list or diff link>` |
+| Affected infrastructure lanes | `<exact lane list>` |
+| Public exposure changed | `yes / no / UNKNOWN` |
+| Model-runtime exposure changed | `yes / no / UNKNOWN` |
+| RAW, WORK, QUARANTINE, or internal access changed | `yes / no / UNKNOWN` |
+| Admin or steward access changed | `yes / no / UNKNOWN` |
+| Release or deployment behavior changed | `yes / no / UNKNOWN` |
+| Correction path | `<link or NEEDS VERIFICATION>` |
+| Operational rollback path | `<link / N/A with reason / HOLD>` |
 
-**Decision:** `<PASS / PASS_WITH_WARNINGS / BLOCK / ESCALATE>`
+Do not place credentials, private keys, tokens, internal IPs, private hostnames,
+restricted routes, exploit payloads, sensitive logs, or exact sensitive
+locations in this worksheet. Link only to an approved redacted reference.
 
-**Blocking items:**
+## 4. Placement and change boundary
 
-```text
-<list blockers or N/A>
+- [ ] Every changed artifact has one responsibility owner and is placed under
+      the correct root.
+- [ ] Infrastructure implementation remains under `infra/`; machine policy,
+      schemas, contracts, release decisions, proofs, receipts, and lifecycle
+      data remain in their owning roots.
+- [ ] A review checklist or README is not presented as deployed configuration,
+      policy enforcement, approval, or operational evidence.
+- [ ] The review names all changed ports, listeners, routes, build contexts,
+      mounts, identities, service definitions, and public assets.
+- [ ] CODEOWNERS is treated only as review routing, not proof of review,
+      operational ownership, or approval authority.
+
+**State and evidence**
+
+| Item | State | Evidence reference or `N/A` reason |
+|---|---|---|
+| Placement | `<state>` | `<path, Directory Rules section, or drift record>` |
+| Change inventory | `<state>` | `<diff or immutable path list>` |
+| Review routing | `<state>` | `<CODEOWNERS evidence and limitation>` |
+
+## 5. Secrets and sensitive material
+
+- [ ] No real secret, credential, private key, production certificate, token,
+      private environment file, or secret-bearing backup was committed.
+- [ ] Examples are unmistakably fake; configuration refers only to environment
+      variables or verified secret-store references.
+- [ ] Logs and traces avoid secrets, raw payloads, restricted geometry,
+      living-person data, private source material, and sensitive prompts.
+- [ ] Any suspected exposure is routed to containment and separately verified
+      rotation; deleting Git history or reverting a commit is not sufficient.
+- [ ] Rights, privacy, sovereignty, consent, provenance, and harmful-precision
+      controls remain fail closed where the change touches governed material.
+
+**State and evidence**
+
+| Item | State | Evidence reference or `N/A` reason |
+|---|---|---|
+| Repository secret boundary | `<state>` | `<scan result and reviewed paths>` |
+| Runtime secret custody | `<state>` | `<redacted observation or HOLD>` |
+| Sensitive-data handling | `<state>` | `<policy/release evidence or N/A reason>` |
+| Exposure response | `<state>` | `<incident and rotation references>` |
+
+## 6. Ingress, egress, and public edge
+
+- [ ] Every new or changed listener, port, hostname, route, proxy rule, VPN
+      route, firewall rule, and container publication is inventoried.
+- [ ] Public routes terminate at a governed interface or released public-safe
+      artifact boundary.
+- [ ] No public route reaches RAW, WORK, QUARANTINE, internal stores, source
+      credentials, direct model runtimes, or steward-only surfaces.
+- [ ] Local-only bindings remain loopback or otherwise explicitly private.
+- [ ] Ingress and egress defaults, exceptions, TLS, headers, and CORS are
+      supported by versioned implementation and observation evidence.
+- [ ] Negative route tests cover every changed trust-boundary path.
+
+**State and evidence**
+
+| Item | State | Evidence reference or `N/A` reason |
+|---|---|---|
+| Listener and route inventory | `<state>` | `<versioned configuration>` |
+| Public-boundary routing | `<state>` | `<route tests and observation>` |
+| RAW/internal/model/admin denials | `<state>` | `<negative-test evidence>` |
+| TLS, headers, and CORS | `<state>` | `<redacted result or HOLD>` |
+| Egress posture | `<state>` | `<rules and negative observation>` |
+
+## 7. Service and workload isolation
+
+- [ ] Runtime identities and service accounts use the least privilege supported
+      by the identified environment.
+- [ ] Filesystem reads, writes, mounts, volumes, capabilities, and devices are
+      limited to the named workload need.
+- [ ] Debug behavior and unnecessary interfaces are disabled for public or
+      semi-public workloads.
+- [ ] Startup, dependency, restart, health-check, and failure behavior are
+      documented and observed where operational readiness is claimed.
+- [ ] Image or artifact identity, dependency locks, scan evidence, provenance,
+      and registry custody are recorded where containers are in scope.
+- [ ] Kubernetes, systemd, Compose, Docker, or Terraform evidence is not
+      generalized beyond the exact implementation lane reviewed.
+
+**State and evidence**
+
+| Item | State | Evidence reference or `N/A` reason |
+|---|---|---|
+| Runtime identity | `<state>` | `<configuration and observation>` |
+| Filesystem and capability scope | `<state>` | `<configuration and observation>` |
+| Startup and health | `<state>` | `<test or observation>` |
+| Container or artifact integrity | `<state>` | `<digest, scan, provenance, custody>` |
+| Orchestrator/service-manager controls | `<state>` | `<lane-specific evidence>` |
+
+## 8. Governed data and public artifacts
+
+- [ ] Public clients use governed interfaces or released public-safe artifacts,
+      not canonical stores or pre-publication lifecycle paths.
+- [ ] Public-serving processes do not directly mount or read RAW, WORK,
+      QUARANTINE, or unpublished candidate material.
+- [ ] Tiles, exports, static assets, and downloadable artifacts are bound to a
+      release identity and correction or rollback target where applicable.
+- [ ] Range and CORS behavior is verified for public object or tile delivery.
+- [ ] Sensitive geometry and rights-uncertain material is denied, withheld,
+      generalized, or redacted before any public release.
+
+**State and evidence**
+
+| Item | State | Evidence reference or `N/A` reason |
+|---|---|---|
+| Governed client path | `<state>` | `<route and negative-test evidence>` |
+| Lifecycle-store denial | `<state>` | `<mount/access review>` |
+| Released artifact binding | `<state>` | `<release identity and manifest>` |
+| Sensitivity and rights gate | `<state>` | `<review evidence>` |
+| Correction and rollback binding | `<state>` | `<target and procedure>` |
+
+## 9. Authentication, administration, and audit
+
+- [ ] Admin and review surfaces are outside the normal public path.
+- [ ] Steward-only paths require verified authentication and authorization.
+- [ ] Emergency access is constrained, reviewable, and separately recorded.
+- [ ] Security-relevant events are logged without exposing restricted content.
+- [ ] Log sinks, access controls, retention, redaction, alerts, and response
+      routing are identified and observed where monitoring is claimed.
+- [ ] Audit evidence can reconstruct the reviewed change and material access
+      events without treating a dashboard as sovereign truth.
+
+**State and evidence**
+
+| Item | State | Evidence reference or `N/A` reason |
+|---|---|---|
+| Authentication and authorization | `<state>` | `<redacted test or observation>` |
+| Admin-path isolation | `<state>` | `<negative route evidence>` |
+| Audit events and redaction | `<state>` | `<redacted sample or test>` |
+| Retention, alerting, and response | `<state>` | `<configuration and observation>` |
+
+## 10. Backup, incident response, correction, and rollback
+
+- [ ] Protected assets and state are inventoried.
+- [ ] Backup location, custody, retention, integrity, and access controls are
+      verified where backup readiness is claimed.
+- [ ] Restore has been rehearsed against an identified environment and result.
+- [ ] Detection, containment, isolation, escalation, and restoration paths are
+      reachable and do not require publishing sensitive topology.
+- [ ] Repository correction, release rollback, and operational rollback are
+      recorded as distinct actions.
+- [ ] Any exception has a verified authority, bounded scope, expiration or
+      review trigger, and containment path.
+
+**State and evidence**
+
+| Item | State | Evidence reference or `N/A` reason |
+|---|---|---|
+| Backup custody and integrity | `<state>` | `<redacted evidence or HOLD>` |
+| Restore rehearsal | `<state>` | `<exercise record or HOLD>` |
+| Incident containment | `<state>` | `<procedure and exercise evidence>` |
+| Repository correction | `<state>` | `<revert or corrective-change path>` |
+| Operational rollback | `<state>` | `<environment procedure and rehearsal>` |
+| Exceptions | `<state>` | `<decision record or N/A reason>` |
+
+## 11. Bounded repository checks
+
+Run only checks relevant to the changed paths and record the exact revision and
+result. These commands inspect repository configuration; they do not inspect a
+deployed environment.
+
+```bash
+git ls-tree -r --name-only HEAD -- infra/hardening
+git grep -n -E \
+  'infra-compose-smoke|test_compose_static|test_docker_security_overrides' \
+  HEAD -- .github tests Makefile infra
+python -m unittest discover \
+  --start-directory tests/infra \
+  --pattern 'test_compose_static.py' \
+  --verbose
+python -m unittest discover \
+  --start-directory tests/infra \
+  --pattern 'test_docker_security_overrides.py' \
+  --verbose
+docker compose -f infra/compose/docker-compose.yml config --quiet
 ```
 
-**Warnings / follow-up:**
+| Check | Revision | Result | Bounded interpretation |
+|---|---|---|---|
+| Hardening-lane inventory | `<SHA>` | `<result>` | Confirms tracked paths only. |
+| Compose static tests | `<SHA>` | `<result / NOT_RUN>` | Confirms only enumerated source-level assertions. |
+| Docker overlay tests | `<SHA>` | `<result / NOT_RUN>` | Confirms only declared lock and Dockerfile assertions. |
+| Compose render | `<SHA>` | `<result / NOT_RUN / UNAVAILABLE>` | Confirms the file renders; does not start services. |
+| Hosted image build or scan | `<run URL and SHA>` | `<result / NOT_RUN>` | Point-in-time evidence for the built bytes and configured scanner policy. |
 
-```text
-<list follow-up issues, drift entries, ADRs, or N/A>
-```
+Do not substitute generic firewall, proxy, VPN, `systemctl`, `kubectl`, or
+`terraform` commands. Operational commands require an adopted technology,
+versioned implementation, identified environment, authorization, validation,
+and a tested recovery path.
 
-**Reviewer sign-off:**
+## 12. Findings and disposition
 
-```text
-<name / role / date>
-```
+### Blocking findings
 
----
+| ID | Finding | State | Evidence | Required resolution |
+|---|---|---|---|---|
+| `<ID>` | `<description>` | `<UNKNOWN / NEEDS VERIFICATION / HOLD>` | `<reference>` | `<action>` |
 
-## Open verification backlog
+### Non-blocking follow-up
 
-- [ ] Confirm CODEOWNERS for all hardening-adjacent paths.
-- [ ] Confirm exact firewall, reverse-proxy, VPN, systemd, container, and hosting stack.
-- [ ] Confirm executable validation commands for route denial checks.
-- [ ] Confirm secret-scanning command used in CI.
-- [ ] Confirm audit-log retention and redaction policy.
-- [ ] Confirm model-runtime network binding and denial tests.
-- [ ] Confirm public artifact hosting headers and Range/CORS behavior.
-- [ ] Confirm rollback template for infrastructure changes.
+| ID | Follow-up | Evidence | Tracking reference |
+|---|---|---|---|
+| `<ID>` | `<description>` | `<reference>` | `<issue, backlog, or drift record>` |
+
+### Review outcome
+
+| Outcome | Meaning |
+|---|---|
+| `EVIDENCE_COMPLETE` | Every applicable item has bounded evidence and no checklist blocker remains. |
+| `EVIDENCE_COMPLETE_WITH_FOLLOW_UP` | Bounded review evidence is complete; explicitly non-blocking follow-up remains tracked. |
+| `HOLD` | Required evidence is missing, stale, inaccessible, conflicting, or unsafe to disclose. |
+| `ESCALATE` | A separate security, infrastructure, release, governance, or ADR decision is required. |
+
+**Outcome:** `<HOLD / EVIDENCE_COMPLETE / EVIDENCE_COMPLETE_WITH_FOLLOW_UP / ESCALATE>`
+
+**Outcome scope:** `<repository-only / identified environment / mixed>`
+
+**Outcome rationale and evidence:** `<references>`
+
+**Recorded by:** `<verified identity and timestamp>`
+
+The outcome describes completion of this bounded evidence review only. It is not
+a merge approval, security certification, release decision, deployment record,
+promotion receipt, publication decision, or proof that a control is effective
+outside the observed scope.
+
+## Current repository holds
+
+At the repository checkpoint documented by the companion README:
+
+- operational stewardship and accountable approval authority remain
+  `NEEDS VERIFICATION`;
+- deployed environments and their authoritative inventories are `UNKNOWN`;
+- no aggregate hardening validator exists;
+- firewall, reverse-proxy, VPN, systemd, Kubernetes, and Terraform lanes
+  document holds rather than deployed enforcement; and
+- Docker and Compose evidence is bounded to static checks and review-image
+  build or scan behavior.
+
+Re-check those facts at the review head. Do not copy them forward as permanent
+state.
 
 [Back to top](#top)
