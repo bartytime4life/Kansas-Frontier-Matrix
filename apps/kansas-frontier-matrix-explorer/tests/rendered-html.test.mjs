@@ -33,7 +33,8 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /MapLibre/i);
   assert.match(html, /synthetic and generalized demonstration layers/i);
   assert.match(html, /Repository briefing/i);
-  assert.match(html, /main@(?:<!-- -->)?129ac47/i);
+  assert.match(html, /main@(?:<!-- -->)?2b0ea9b/i);
+  assert.match(html, /Scenario review/i);
   assert.match(html, /Runtime lab/i);
   assert.match(html, /Source observatory/i);
   assert.match(html, /Transition inspector/i);
@@ -170,9 +171,11 @@ test("resolves Focus outcomes and temporal scope with fail-closed precedence", a
 test("keeps repository updates pinned and boundary-labeled", async () => {
   const updates = await readFile(new URL("../app/repository-updates.ts", import.meta.url), "utf8");
 
-  assert.match(updates, /129ac47f359be143ce8bbe43d8401f8660b8be5f/);
+  assert.match(updates, /2b0ea9bbbc9d9a120ea94d92fb4617d96fe7d2a0/);
   assert.match(updates, /exact maplibre-gl 6\.6\.0 lock closure/);
-  assert.match(updates, /177 commits after the prior Site pin/);
+  assert.match(updates, /521 commits after the prior Site evidence pin/);
+  assert.match(updates, /Planning scenarios now have a strict review projection/);
+  assert.match(updates, /Accessibility guidance now separates targets from proof/);
   assert.match(updates, /The executable API checkpoint is intentionally negative-only/);
   assert.match(updates, /Consent metadata is normalized; the fixture-first boundary remains/);
   assert.match(updates, /Hydrology dashboard boundary is now repository-grounded/);
@@ -182,6 +185,32 @@ test("keeps repository updates pinned and boundary-labeled", async () => {
   assert.match(updates, /HOLD is not a fifth client-facing runtime outcome/);
   assert.match(updates, /PUBLISHED → PUBLISHED_SUPERSEDED/);
   assert.match(updates, /HOLD_CURRENT_RELEASE/);
+});
+
+test("replays the strict planning-scenario fixture and finite negative states", async () => {
+  const ts = await import("typescript");
+  const source = await readFile(new URL("../app/planning-scenario.ts", import.meta.url), "utf8");
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  const compiled = ts.transpileModule(source, {
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+    fileName: "planning-scenario.ts",
+  }).outputText;
+  const scenario = await import(`data:text/javascript;base64,${Buffer.from(compiled).toString("base64")}`);
+
+  assert.deepEqual(Object.keys(scenario.PLANNING_SCENARIO_REVIEWS), ["held", "missing", "denied", "error"]);
+  assert.equal(scenario.PLANNING_SCENARIO_REVIEWS.held.outcome, "ABSTAIN");
+  assert.equal(scenario.PLANNING_SCENARIO_REVIEWS.held.inputs.length, 3);
+  assert.equal(scenario.PLANNING_SCENARIO_REVIEWS.held.assumptions.length, 3);
+  assert.equal(scenario.PLANNING_SCENARIO_REVIEWS.held.equityQuestions.length, 2);
+  assert.equal(scenario.PLANNING_SCENARIO_REVIEWS.denied.evidenceRefs.length, 0);
+  assert.equal(scenario.PLANNING_SCENARIO_REVIEWS.error.scenarioStatus, null);
+  assert.match(page, /FIXTURE-ONLY · TEXT-FIRST REVIEW/);
+  assert.match(page, /Evidence resolved <b>FALSE/);
+  assert.match(page, /performs no transport, source retrieval, scenario computation/);
+  assert.match(css, /\.planning-scenario-review/);
+  assert.doesNotMatch(source, /\bfetch\s*\(/);
+  assert.doesNotMatch(source, /localStorage|sessionStorage/);
 });
 
 test("imports the complete repository feature catalog without maturity inflation", async () => {
