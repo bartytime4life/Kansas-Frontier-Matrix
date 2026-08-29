@@ -2,11 +2,11 @@
 doc_id: kfm://doc/sources/admission-process
 title: KFM Source Admission Process
 type: standard
-version: v1.1
-status: draft
+version: v1.2
+status: repository-grounded draft; registry topology conflicted; source-first physical placement held
 owners: Source steward (lead) + Docs steward; Rights-holder representative when applicable
 created: 2026-05-13
-updated: 2026-08-28
+updated: 2026-08-29
 policy_label: public
 responsibility_root: docs/
 owning_root: docs/
@@ -31,14 +31,22 @@ related:
   - data/raw/
   - data/quarantine/
   - data/receipts/ingest/
+  - data/registry/
   - data/registry/sources/
   - connectors/
 tags: [kfm, sources, admission, governance, lifecycle, pre-raw, source-descriptor, source-intake-record, source-activation-decision]
 notes:
   - Defines the membrane between an external source and KFM's governed lifecycle.
   - Companion to SOURCE_DESCRIPTOR_STANDARD.md (field-level standard).
-  - Specific paths and schema homes are PROPOSED per Directory Rules unless verified.
-  - v1.1 adds the Promotion-Gates-A–G crosswalk, canonical-object-name reconciliation (SourceIntakeRecord), and verification-backlog updates.
+  - Current implementation and placement claims are pinned to main@2b0ea9bbbc9d9a120ea94d92fb4617d96fe7d2a0.
+  - v1.2 records the live source-registry topology conflict and removes domain-first RAW path prescriptions.
+reconciliation_snapshot:
+  base_commit: 2b0ea9bbbc9d9a120ea94d92fb4617d96fe7d2a0
+  prior_blob: 5735a172a1dcfa2814cc03d8b5c0e7e2181bbde4
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  registry_readme_blob: b327d22956f5454482a35dbf265f45b901c1f2a3
+  raw_readme_blob: 560113c00e257725c0a440cb489510af44c13b12
+  scope: same-path documentation correction only; no registry, descriptor, payload, writer, admission, lifecycle, release, or publication mutation
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Source Admission Process
@@ -52,12 +60,12 @@ notes:
 [![Lifecycle: pre--RAW → RAW](https://img.shields.io/badge/lifecycle-pre--RAW%20%E2%86%92%20RAW-informational)](#admission-and-the-lifecycle-invariant)
 [![Posture: fail--closed](https://img.shields.io/badge/posture-fail--closed-critical)](#failure-modes-and-quarantine-conditions)
 [![Public path: governed only](https://img.shields.io/badge/public%20path-governed%20only-success)](#trust-membrane-at-admission)
-[![Version: v1.1](https://img.shields.io/badge/version-v1.1-lightgrey)](#document-lineage)
-[![Last updated](https://img.shields.io/badge/last%20updated-2026--08--28-lightgrey)](#document-lineage)
+[![Version: v1.2](https://img.shields.io/badge/version-v1.2-lightgrey)](#document-lineage)
+[![Last updated](https://img.shields.io/badge/last%20updated-2026--08--29-lightgrey)](#document-lineage)
 
 | Status | Owners | Last reviewed | Authority |
 |---|---|---|---|
-| `draft` · `PROPOSED` paths | Source steward (lead) · Docs steward · Rights-holder rep (when applicable) | `2026-05-23` | Standard doc; subordinate to Directory Rules and Lifecycle Law |
+| `repository-grounded draft` · topology conflict held | Source steward (lead) · Docs steward · Rights-holder rep (when applicable) | `2026-08-29` | Standard doc; subordinate to Directory Rules and Lifecycle Law |
 
 ---
 
@@ -145,9 +153,15 @@ silently):
 4. **This document.**
 5. **Per-root READMEs** (`connectors/README.md`, `data/raw/README.md`, `data/quarantine/README.md`,
    `data/receipts/ingest/README.md`).
-6. **Convention from the current mounted repo state.** **UNKNOWN in this session.** Drift between
-   doctrine and repo, if any, becomes a `docs/registers/DRIFT_REGISTER.md` entry rather than new
-   authority.
+6. **Current repository evidence.** At
+   `main@2b0ea9bbbc9d9a120ea94d92fb4617d96fe7d2a0`, both
+   `data/registry/sources/<domain>/` and
+   `data/registry/<domain>/sources/` exist. Directory Rules
+   `DIR-SOURCE-003` makes `data/registry/sources/` canonical, while
+   `DIR-SOURCE-004` permits a domain-first generated view but not an independent
+   writer. The current tree does not prove which paths are active writers,
+   generated views, compatibility lanes, or migration targets. That conflict is
+   held; this document does not resolve it by implication.
 
 **Out of scope.** This document does not define:
 
@@ -157,12 +171,12 @@ silently):
 - Release manifests, correction notices, rollback cards → see `release/` and `docs/governance/`.
 
 > [!NOTE]
-> Specific repo paths in this document are **PROPOSED** under Directory Rules unless the path has
-> been verified against a mounted-repo checkout. No mounted repo was inspected in this session;
-> implementation maturity is **UNKNOWN**. Where corpus documents disagree on a path (e.g., singular
-> `schemas/contracts/v1/source/` vs plural `schemas/contracts/v1/sources/`), this document records
-> the divergence in [Open questions and verification backlog](#open-questions-and-verification-backlog)
-> rather than pre-deciding it.
+> Repository paths in this document were reconciled against the pinned base above.
+> Presence proves only topology. It does not prove canonical writer status,
+> descriptor acceptance, source activation, runtime enforcement, or migration
+> completion. Conflicting registry layouts and unresolved physical RAW placement
+> remain explicit in
+> [Open questions and verification backlog](#open-questions-and-verification-backlog).
 
 [Back to top ↑](#kfm-source-admission-process)
 
@@ -226,8 +240,8 @@ sequenceDiagram
     participant Reg as Source registry
     participant Pol as Policy / sensitivity check
     participant Stw as Source steward (and rights-holder rep, when needed)
-    participant Raw as data/raw/<domain>/<source_id>/<run_id>/
-    participant Quar as data/quarantine/<domain>/<reason>/<run_id>/
+    participant Raw as accepted source-first RAW placement (HOLD)
+    participant Quar as governed quarantine route
 
     Ext->>Con: Material observed (HTTP / event / upload / feed)
     Con->>Pre: Emit event_envelope (PROPOSED) + fetch metadata
@@ -429,18 +443,19 @@ role must:
 
 ## Outputs emitted at admission
 
-**CONFIRMED doctrine; PROPOSED paths.** A successful admission emits artifacts into specific
-lifecycle homes. Paths below follow Directory Rules §9.1 (lifecycle invariant) but remain
-PROPOSED until verified against a mounted repo.
+**CONFIRMED doctrine; repository-grounded topology; unresolved writers.** A
+successful admission emits artifacts into governed lifecycle homes. Presence of
+either current registry layout does not identify an accepted writer or complete
+the migration required by Directory Rules.
 
-| Artifact | Path (PROPOSED) | Always emitted? | Notes |
+| Artifact | Path or boundary | Always emitted? | Notes |
 |---|---|---|---|
 | `event_envelope` | `data/events/<source_id>/<run_id>/event_envelope.json` | On every observed event | Transient; DENY for public access. |
 | `prefilter_output` | `data/events/<source_id>/<run_id>/prefilter_output.json` | On every observed event | Records pre-RAW decision. |
 | `event_run_receipt` | `data/events/<source_id>/<run_id>/event_run_receipt.json` | On every observed event | Tamper-evident pre-RAW log. |
-| `SourceDescriptor` (or supersession) | `data/registry/sources/<domain>/<source_id>.yaml` | When a descriptor is created or updated | Versioned; old descriptor retained on supersession. |
+| `SourceDescriptor` (or supersession) | Canonical family: `data/registry/sources/`; exact source-ID shape and writer binding **HOLD** | When a descriptor is created or updated | Current main also contains `data/registry/<domain>/sources/`; no second active identity is authorized. |
 | `SourceActivationDecision` | `data/receipts/ingest/<domain>/<source_id>/<run_id>/activation.json` | When admission requires explicit activation | Records `allow` / `restrict` / `quarantine` / `deny` / `hold`. |
-| RAW payload | `data/raw/<domain>/<source_id>/<run_id>/` | On ADMIT outcome | Source-native bytes preserved; checksum captured. |
+| RAW payload | Accepted source-first physical placement **HOLD** | On ADMIT outcome | `DIR-SOURCE-001` forbids duplicated domain-scoped RAW bytes; the current RAW contract does not select an exact path. |
 | Ingest `RunReceipt` + `SourceIntakeRecord` | `data/receipts/ingest/<domain>/<source_id>/<run_id>/run_receipt.json` (PROPOSED) | On ADMIT outcome | Pairs with the RAW payload it captured; carries `spec_hash`, HTTP validators, source URL, fetch time. |
 | Quarantine entry (reason-coded) | `data/quarantine/<domain>/<reason>/<run_id>/` | On QUARANTINE outcome | Reason code + steward routing; **PROPOSED naming**: see [Object-name reconciliation](#object-name-reconciliation-canonical-vs-proposed). |
 
@@ -649,9 +664,9 @@ apply:
 
 ## Repo placement of admission artifacts
 
-**PROPOSED placement per Directory Rules; NEEDS VERIFICATION against mounted repo.** Admission
-artifacts span several responsibility roots; the table below names each artifact's owning root and
-the Directory Rules basis.
+**Repository-grounded placement boundary.** Admission artifacts span several
+responsibility roots. The table distinguishes accepted identity rules from
+physical paths and writers that remain unresolved.
 
 | Artifact / file | Owning root | Directory Rules basis |
 |---|---|---|
@@ -661,8 +676,8 @@ the Directory Rules basis.
 | Pre-RAW event schemas | `schemas/contracts/v1/events/` | §7.4 / §6.4 — schemas (machine shape) |
 | `SourceDescriptor` schema | `schemas/contracts/v1/source/source_descriptor.schema.json` (PROPOSED; singular/plural OPEN) | §7.4 / `ADR-0001` — schema home |
 | `SourceDescriptor` contract (object meaning) | `contracts/source/` | §6.3 — object meaning |
-| Source registry entries | `data/registry/sources/<domain>/` | §9.1 — lifecycle registry |
-| RAW payload | `data/raw/<domain>/<source_id>/<run_id>/` | §9.1 / §7.3 |
+| Source registry entries | `data/registry/sources/` canonical family; exact source-ID shape and writer binding **HOLD** | §12.3 `DIR-SOURCE-003` and `DIR-SOURCE-004`; current subtype-first and domain-first layouts conflict |
+| RAW payload | One source-first capture identity; exact physical path **HOLD** | §12.3 `DIR-SOURCE-001`; current `data/raw/` contract forbids inferring a domain lane as the capture home |
 | Quarantine payload + record | `data/quarantine/<domain>/<reason>/<run_id>/` | §9.1 |
 | Ingest receipts (including `SourceIntakeRecord`-anchored `RunReceipt`) | `data/receipts/ingest/<domain>/<source_id>/<run_id>/` | §9.1 — receipt class |
 | Admission policy bundles | `policy/sensitivity/`, `policy/sources/` (PROPOSED) | §6.1 — single canonical `policy/` home (`ADR-0003`) |
@@ -721,13 +736,14 @@ and policy bundles — not by prose alone. The default-deny posture from Pass 10
 | 7 | Rights-change detection across third-party sources — currently not automated. | `RESIDUAL RISK` |
 | 8 | CODEOWNERS coverage for admission paths. | `NEEDS VERIFICATION` |
 | 9 | DSSE / cosign legal constraints for regulated sources at admission time. | `NEEDS VERIFICATION` |
-| 10 | Current mounted repo topology and admission implementation maturity. | `UNKNOWN` |
-| 11 | **Singular `schemas/contracts/v1/source/` vs plural `schemas/contracts/v1/sources/`.** Atlas v1.1 §24.1.3 uses singular; `KFM_Unified_Implementation_Architecture_Build_Manual.md` §11 uses plural; `data/registry/sources/` uses plural. | `OPEN ADR — schema-home affirmation under ADR-0001` |
+| 10 | Current repository topology at the pinned base. | `CONFIRMED PRESENCE / WRITERS AND RUNTIME UNKNOWN` |
+| 11 | **Singular `schemas/contracts/v1/source/` vs plural `schemas/contracts/v1/sources/`.** Atlas v1.1 §24.1.3 uses singular; `KFM_Unified_Implementation_Architecture_Build_Manual.md` §11 uses plural. Registry naming does not decide schema placement. | `OPEN ADR — schema-home affirmation under ADR-0001` |
 | 12 | **`RawCaptureReceipt` and `QuarantineRecord` naming.** Neither appears in the consolidated corpus; doctrine-anchored equivalents are `SourceIntakeRecord` + ingest `RunReceipt`, and a composed quarantine entry (`PolicyDecision` with `hold`/`deny` + reason code). | `OPEN ADR — admission-receipt naming` |
 | 13 | **Connector cadence + quarantine recovery policy** (per the connectors README skeleton). | `OPEN ADR — ADR-S-12 (PROPOSED)` |
 | 14 | Receipt class home — `schemas/contracts/v1/receipts/` vs `schemas/contracts/v1/<domain>/receipts/`. | `OPEN ADR — ADR-S-03 (PROPOSED)` |
 | 15 | HTTP-validator persistence (ETag, Last-Modified) per `SourceRef` — canonical sidecar / checkpoint table (per `KFM-P18-PROG-0009`). | `NEEDS VERIFICATION` |
 | 16 | Canonical `run_receipt.v1` schema — Pass 10 C1-01 names it; ADR-class commit pending. | `OPEN ADR — run_receipt.v1 home` |
+| 17 | Reconcile `data/registry/sources/<domain>/` with `data/registry/<domain>/sources/` under `DIR-SOURCE-003` and `DIR-SOURCE-004`; identify canonical writer, generated/compatibility views, migration, validation, and rollback. | `HOLD — LIVE TOPOLOGY CONFLICT` |
 
 [Back to top ↑](#kfm-source-admission-process)
 
@@ -745,8 +761,13 @@ and policy bundles — not by prose alone. The default-deny posture from Pass 10
 - `docs/runbooks/source-admission.md` — **PROPOSED** step-by-step companion runbook; absent at the recorded campaign baseline. **TODO — create only after placement and scope are accepted.**
 - [`docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home convention. **CONFIRMED reference.**
 - [`docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md`](<../adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md>) — `policy/` canonical. **CONFIRMED reference.**
-- [`connectors/README.md`](../../connectors/README.md) — per-connector source descriptor reference and lane rules. **NEEDS VERIFICATION** of presence.
-- [`data/raw/README.md`](../../data/raw/README.md), [`data/quarantine/README.md`](../../data/quarantine/README.md), [`data/receipts/ingest/README.md`](../../data/receipts/ingest/README.md) — per-root READMEs in the lifecycle home. **NEEDS VERIFICATION** of presence.
+- [`connectors/README.md`](../../connectors/README.md) — present connector-family
+  boundary; implementation and writer maturity remain independently bounded.
+- [`data/raw/README.md`](../../data/raw/README.md),
+  [`data/quarantine/README.md`](../../data/quarantine/README.md), and
+  [`data/receipts/ingest/README.md`](../../data/receipts/ingest/README.md) —
+  present per-root lifecycle documentation; presence does not establish an
+  admitted source or executable admission path.
 
 [Back to top ↑](#kfm-source-admission-process)
 
@@ -883,14 +904,14 @@ flowchart LR
 
 | Field | Value |
 |---|---|
-| Document version | `v1.1` (draft) |
+| Document version | `v1.2` (repository-grounded draft) |
 | Created | `2026-05-13` |
-| Last reviewed | `2026-05-23` |
-| Supersedes | `v1` (2026-05-13) |
+| Last reviewed | `2026-08-29` |
+| Supersedes | `v1.1` (2026-08-28) |
 | Replaces | — |
-| Lineage note | v1.1 adds the **Crosswalk to Promotion Gates A–G** section, an **Object-name reconciliation** section aligning the doc with canonical KFM object families (`SourceIntakeRecord`), a **Determinism and integrity at admission** section anchoring `spec_hash` / HTTP-validator / attestation evidence, and an expanded **verification backlog** including the singular/plural schema-home divergence and `ADR-S-03` / `ADR-S-04` / `ADR-S-05` / `ADR-S-12` open items. No anchor in v1 is dropped; new anchors are additive. |
+| Lineage note | v1.2 preserves the v1.1 gate and object-family content while reconciling current repository presence, recording the live registry-topology conflict, and removing domain-first RAW path prescriptions contradicted by accepted source-first identity rules. |
 | Drift policy | Conflicts between this document and the mounted repo are recorded in `docs/registers/DRIFT_REGISTER.md` rather than treated as authority. |
 
 ---
 
-**Last updated:** `2026-08-28` · **Owners:** Source steward (lead) · Docs steward · Rights-holder rep (when applicable) · [Back to top ↑](#kfm-source-admission-process)
+**Last updated:** `2026-08-29` · **Owners:** Source steward (lead) · Docs steward · Rights-holder rep (when applicable) · [Back to top ↑](#kfm-source-admission-process)
