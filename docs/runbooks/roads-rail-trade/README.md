@@ -3,14 +3,14 @@ doc_id: kfm://doc/runbooks-roads-rail-trade-readme
 title: docs/runbooks/roads-rail-trade/ — Roads, Rail, and Trade Operational Procedure Boundary
 type: readme
 subtype: boundary-compact
-version: v1.1
+version: v1.2
 prior_state: no local README path
-status: draft; repository-grounded; bounded synthetic CorridorRoute validation executable; promotion preflight reconciled; promotion execution, broader source operation, policy, proof, rollback, release, deployment, and publication held
+status: draft; repository-grounded; bounded synthetic CorridorRoute validation executable; no-network, promotion preflight, and rollback preflight reconciled; shared no-network workflow guard injection, broader source operation, policy, proof, operational rollback, release, deployment, and publication held
 owners:
   - "@bartytime4life — verified GitHub review route"
   - "NEEDS VERIFICATION — accountable Roads/Rail/Trade, transport, evidence, policy, safety, source, and release assignments"
 created: 2026-08-28
-updated: 2026-08-28
+updated: 2026-08-29
 policy_label: repository-facing; infrastructure-sensitive; historic and cultural corridor precision-sensitive; fail-closed
 current_path: docs/runbooks/roads-rail-trade/README.md
 owning_root: docs/
@@ -21,13 +21,13 @@ authority_rank: subordinate to accepted doctrine and ADRs, contracts, schemas, s
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 3009a477071271c9a1d2ac0a1fcac98d26e40976
+  base_commit: 702d61158d601ab12ef3c7b4d5e83fd0636ae9d5
   parent_runbooks_readme_blob: 26f9e77d329d58fb140fd4cfe814b4590e62952c
   domain_readme_blob: f2d1250dad3eefd2f148483ddcc388e66d2a2186
   workflow_blob: 391fead3fdd0d7ecead6464be7946cbaf68247e0
-  no_network_runbook_blob: 96445de559fd98fedde6924f047625f611a0b596
+  no_network_runbook_blob: 0f35d67dda52c89086c76e18a551ea8687f63d9d
   promotion_runbook_blob: 3425d1d64994861ee98acdfbcff0c9a6b3b39c22
-  rollback_runbook_blob: a097a2aa95bda465227a4103aa5da7416a72622d
+  rollback_runbook_blob: 7fd8f5171980c98b6425d742851131ebb3224e44
   source_refresh_runbook_blob: 2b403f3a6ca9bad993a30a0c8c609e712f3e4029
   corridor_route_contract_blob: 2bef2e964b8afa855ca7e72c86ca72dad2b63f52
   corridor_route_schema_blob: 663afd8aa09c52a2626d84cfbc6c76965df79942
@@ -39,7 +39,8 @@ evidence_snapshot:
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
   direct_markdown_files_before_this_readme: 4
   bounded_executable_profiles: 1
-  proposal_or_stale_child_procedures: 3
+  repository_grounded_child_procedures: 3
+  proposal_or_stale_child_procedures: 1
 related:
   - ../README.md
   - ../../domains/roads-rail-trade/README.md
@@ -56,10 +57,10 @@ related:
   - ../../../data/proofs/roads-rail-trade/README.md
   - ../../../release/candidates/roads-rail-trade/README.md
 notes:
-  - "v1.1 reconciles the promotion child as a repository-grounded preflight and accountable-review handoff."
+  - "v1.2 reconciles the no-network, promotion, and rollback children as repository-grounded bounded procedures while preserving their distinct terminal holds."
   - "The CorridorRoute contract, schema, validator, synthetic fixtures, and focused tests form one executable no-network profile with PASS, ABSTAIN, DENY, and ERROR outcomes."
-  - "Promotion execution remains held: no candidate record, accepted proof producer, domain release-dry-run command, verified policy runtime, or accountable release authority was established."
-  - "The remaining three child runbooks retain proposal-era paths, commands, roles, or no-mounted-repository claims and are not current operational authority."
+  - "Promotion and operational rollback remain held: no candidate or affected release, prior safe target, domain rollback card or rehearsal, accepted proof producer, production executor, verified invalidation integration, or accountable release/rollback authority was established."
+  - "SOURCE_REFRESH_RUNBOOK.md remains the one proposal-era child; its paths, commands, roles, source endpoints, and lifecycle actions are lineage only until separately reconciled."
   - "The domain smoke test remains an assert-true placeholder; the fixture README remains a greenfield stub; broader validation and proof production remain held."
 [/KFM_META_BLOCK_V2] -->
 
@@ -68,8 +69,8 @@ notes:
 # Roads, Rail, and Trade Operational Procedure Boundary
 
 This directory routes maintainers to Roads/Rail/Trade procedures while keeping
-one implemented synthetic validation profile separate from proposal-era source
-and rollback instructions. It is an index and boundary contract, not
+one implemented synthetic validation profile separate from held source,
+promotion, and rollback execution. It is an index and boundary contract, not
 a route, network, source, policy, evidence, proof, release, or publication
 authority.
 
@@ -175,9 +176,9 @@ It does not prove:
 
 | Procedure | Current classification | Safe use |
 |---|---|---|
-| [`NO_NETWORK_TEST_RUNBOOK.md`](./NO_NETWORK_TEST_RUNBOOK.md) | Proposal-era procedure; not the canonical description of the implemented CorridorRoute profile | Use the commands above and current workflow as executable evidence; treat unmatched commands and paths as illustrative until verified |
+| [`NO_NETWORK_TEST_RUNBOOK.md`](./NO_NETWORK_TEST_RUNBOOK.md) | Repository-grounded bounded no-network procedure; workflow-wide shared-guard injection remains held | Use its explicit local guard wiring and synthetic `CorridorRoute` commands; do not claim runner-wide isolation or broader domain proof |
 | [`PROMOTION_RUNBOOK.md`](./PROMOTION_RUNBOOK.md) | Repository-grounded preflight and accountable-review handoff; promotion execution held | Use it to inventory a candidate, run bounded validation, preserve finite results, and prepare review; it does not execute a lifecycle transition or create release authority |
-| [`ROLLBACK_RUNBOOK.md`](./ROLLBACK_RUNBOOK.md) | Proposal-heavy operational rollback design with unverified release infrastructure | Review defect classes and boundaries only; no operational rollback capability is established |
+| [`ROLLBACK_RUNBOOK.md`](./ROLLBACK_RUNBOOK.md) | Repository-grounded rollback-candidate preflight and accountable-review handoff; operational rollback held | Use it to classify a defect, validate a non-executing candidate, preserve finite outcomes, and assemble review; it does not mutate release or public state |
 | [`SOURCE_REFRESH_RUNBOOK.md`](./SOURCE_REFRESH_RUNBOOK.md) | Stale May 2026 source-refresh draft that states the repository was not mounted | Lineage only; do not use its proposed paths, roles, source endpoints, commands, or lifecycle actions as current implementation |
 
 No child runbook may be upgraded from proposal to executable merely because a
