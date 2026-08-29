@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import type { Feature, Geometry } from "geojson";
 import {
   createNullMapRuntime,
@@ -89,6 +90,9 @@ type SourceObservatoryView = "candidates" | "corpus" | "gaps";
 type GovernedRoute = "/bootstrap" | "/layers" | "/evidence" | "/focus";
 type GovernedMethod = "GET" | "POST";
 type PublicWorkspaceId = "explore" | "knowledge" | "features" | "trust";
+type ReportScope = "VIEWPORT" | "VISIBLE_LAYERS" | "SELECTION";
+type ReportDetail = "EXECUTIVE" | "STANDARD" | "TECHNICAL";
+type ReportSection = "summary" | "findings" | "records" | "evidence" | "limitations";
 type MapQueryCandidate = Readonly<{
   featureId: string;
   layerId: string;
@@ -116,8 +120,9 @@ const defaultOrder = LAYER_REGISTRY.map((layer) => layer.id);
 const interactiveLayerIds = LAYER_REGISTRY.flatMap((layer) => layer.renderers.filter((renderer) => renderer.interactive).map((renderer) => renderer.id));
 const layerDomains = ["ALL", ...Array.from(new Set(LAYER_REGISTRY.map((layer) => layer.domain))).sort()] as const;
 const drawerViews = ["evidence", "metadata", "lineage", "focus"] as const satisfies readonly DrawerView[];
-const mapUtilityViews = ["navigate", "inspect", "compare", "display", "measure", "export", "diagnostics"] as const satisfies readonly MapUtilityView[];
+const mapUtilityViews = ["report", "inspect", "navigate", "compare", "display", "measure", "export", "diagnostics"] as const satisfies readonly MapUtilityView[];
 const mapUtilityLabels: Record<MapUtilityView, string> = {
+  report: "Report",
   navigate: "Navigate",
   inspect: "Inspect",
   compare: "Compare",
@@ -126,6 +131,26 @@ const mapUtilityLabels: Record<MapUtilityView, string> = {
   export: "Export",
   diagnostics: "Diagnostics",
 };
+const REPORT_SECTIONS: readonly Readonly<{ id: ReportSection; label: string; detail: string }>[] = Object.freeze([
+  Object.freeze({ id: "summary", label: "Summary", detail: "Scope, time, record, and layer totals" }),
+  Object.freeze({ id: "findings", label: "Findings", detail: "Deterministic observations from the filtered records" }),
+  Object.freeze({ id: "records", label: "Record table", detail: "Feature-level data rows and evidence states" }),
+  Object.freeze({ id: "evidence", label: "Evidence notes", detail: "Source roles, citations, freshness, and release posture" }),
+  Object.freeze({ id: "limitations", label: "Limitations", detail: "Generalization, uncertainty, and use boundaries" }),
+]);
+const defaultReportSections: Record<ReportSection, boolean> = {
+  summary: true,
+  findings: true,
+  records: true,
+  evidence: true,
+  limitations: true,
+};
+const escapeReportHtml = (value: unknown) => String(value)
+  .replaceAll("&", "&amp;")
+  .replaceAll("<", "&lt;")
+  .replaceAll(">", "&gt;")
+  .replaceAll('"', "&quot;")
+  .replaceAll("'", "&#039;");
 const governedRoutes = new Set<GovernedRoute>(["/bootstrap", "/layers", "/evidence"]);
 
 const publicWorkspaces: readonly Readonly<{
@@ -359,7 +384,7 @@ export default function Home() {
   const [runtime, setRuntime] = useState<RuntimeState>({ kind: "loading", message: "Starting the renderer-neutral map boundary…" });
   const [locationCameraRedacted, setLocationCameraRedacted] = useState(false);
   const [selected, setSelected] = useState<SelectedContext | null>(null);
-  const [leftOpen, setLeftOpen] = useState(true);
+  const [leftOpen, setLeftOpen] = useState(false);
   const [rightOpen, setRightOpen] = useState(false);
   const [timelineOpen, setTimelineOpen] = useState(true);
   const [drawerView, setDrawerView] = useState<DrawerView>("evidence");
@@ -413,6 +438,12 @@ export default function Home() {
   const [sourceQuery, setSourceQuery] = useState("");
   const [sourceDomain, setSourceDomain] = useState("ALL");
   const [exportGeneratedAt, setExportGeneratedAt] = useState("PREVIEW_NOT_OPENED");
+  const [reportGeneratedAt, setReportGeneratedAt] = useState("LIVE PREVIEW");
+  const [reportTitle, setReportTitle] = useState("Kansas map data report");
+  const [reportScope, setReportScope] = useState<ReportScope>("VIEWPORT");
+  const [reportDetail, setReportDetail] = useState<ReportDetail>("STANDARD");
+  const [reportLayerIds, setReportLayerIds] = useState<string[]>(() => LAYER_REGISTRY.filter((layer) => layer.defaultVisibility).map((layer) => layer.id));
+  const [reportSections, setReportSections] = useState<Record<ReportSection, boolean>>(defaultReportSections);
   const [runtimeSeamState, setRuntimeSeamState] = useState<RuntimeSeamState>("IDLE");
   const [runtimeSeamReason, setRuntimeSeamReason] = useState("Awaiting deterministic replay");
   const [toast, setToast] = useState("");
@@ -442,13 +473,7 @@ export default function Home() {
     try { window.localStorage.removeItem(GUIDED_START_STORAGE_KEY); } catch { /* Device storage is optional. */ }
   }, []);
 
-  useEffect(() => {
-    const hasSharedFeature = new URLSearchParams(window.location.search).has("f");
-    let dismissed = false;
-    try { dismissed = window.localStorage.getItem(GUIDED_START_STORAGE_KEY) === "1"; } catch { /* Device storage is optional. */ }
-    const openGuide = window.setTimeout(() => setGuidedStartOpen(!hasSharedFeature && !dismissed), 0);
-    return () => window.clearTimeout(openGuide);
-  }, []);
+  // The map opens as a working surface. Guided material remains available from About.
   useEffect(() => { selectedRef.current = selected; }, [selected]);
   useEffect(() => { measureModeRef.current = measureMode; }, [measureMode]);
   useEffect(() => { measurementGeometryModeRef.current = measurementGeometryMode; }, [measurementGeometryMode]);
@@ -523,6 +548,53 @@ export default function Home() {
       ))
       .filter(({ layer, feature }) => !query || `${feature.properties.title} ${feature.properties.fid} ${feature.properties.evidenceState} ${layer.title}`.toLowerCase().includes(query));
   }, [inspectViewportOnly, inspectVisibleLayersOnly, mapFeatureLayer, mapFeatureQuery, mapViewportBounds, visibility, year]);
+  const reportRecords = useMemo(() => {
+    const includedLayers = new Set(reportLayerIds);
+    if (reportScope === "SELECTION") {
+      return selected && includedLayers.has(selected.layerId)
+        ? [{ layer: selected.layer, properties: selected.properties }]
+        : [];
+    }
+    return LAYER_REGISTRY
+      .filter((layer) => includedLayers.has(layer.id))
+      .filter((layer) => reportScope !== "VISIBLE_LAYERS" || visibility[layer.id])
+      .flatMap((layer) => layer.data.features
+        .filter((feature) => isFeatureAvailableAtTime(layer, feature.properties.year, year))
+        .filter((feature) => reportScope !== "VIEWPORT" || (
+          feature.properties.focusLng >= mapViewportBounds.west
+          && feature.properties.focusLng <= mapViewportBounds.east
+          && feature.properties.focusLat >= mapViewportBounds.south
+          && feature.properties.focusLat <= mapViewportBounds.north
+        ))
+        .map((feature) => ({ layer, properties: feature.properties })));
+  }, [mapViewportBounds, reportLayerIds, reportScope, selected, visibility, year]);
+  const reportEvidenceCounts = useMemo(() => reportRecords.reduce<Record<string, number>>((counts, record) => {
+    counts[record.properties.evidenceState] = (counts[record.properties.evidenceState] ?? 0) + 1;
+    return counts;
+  }, {}), [reportRecords]);
+  const reportLayerSummary = useMemo(() => LAYER_REGISTRY
+    .filter((layer) => reportLayerIds.includes(layer.id))
+    .map((layer) => ({
+      id: layer.id,
+      title: layer.title,
+      domain: layer.domain,
+      releaseState: layer.releaseState,
+      attribution: layer.attribution,
+      recordCount: reportRecords.filter((record) => record.layer.id === layer.id).length,
+    }))
+    .filter((layer) => layer.recordCount > 0), [reportLayerIds, reportRecords]);
+  const reportFindings = useMemo(() => {
+    const supported = (reportEvidenceCounts.ANSWER ?? 0) + (reportEvidenceCounts.CORRECTED ?? 0);
+    const bounded = reportRecords.length - supported;
+    const mostRepresented = [...reportLayerSummary].sort((left, right) => right.recordCount - left.recordCount)[0];
+    return [
+      `${reportRecords.length} record${reportRecords.length === 1 ? "" : "s"} match the ${reportScope === "VIEWPORT" ? "current map extent" : reportScope === "VISIBLE_LAYERS" ? "visible-layer" : "selected-feature"} scope at ${formatTimelineStep(year)}.`,
+      `${supported} record${supported === 1 ? "" : "s"} carry supported or corrected evidence states; ${bounded} remain generalized, missing, stale, restricted, denied, superseded, or error states.`,
+      mostRepresented
+        ? `${mostRepresented.title} contributes the largest share of this report (${mostRepresented.recordCount} record${mostRepresented.recordCount === 1 ? "" : "s"}).`
+        : "No records match the current report filters; widen the map, change time, or include another layer.",
+    ];
+  }, [reportEvidenceCounts, reportLayerSummary, reportRecords.length, reportScope, year]);
   const filteredLayerIds = useMemo(() => {
     const query = debouncedLayerQuery.trim().toLowerCase();
     return new Set(LAYER_REGISTRY.filter((layer) => {
@@ -948,6 +1020,7 @@ export default function Home() {
     setMapUtilityOpen(true);
     setCurrentWorkspace("explore");
     if (nextView === "export") setExportGeneratedAt(new Date().toISOString());
+    if (nextView === "report") setReportGeneratedAt(new Date().toISOString());
     setToolsExpanded(false);
     setHelpOpen(false);
     if (isCompact) {
@@ -961,6 +1034,7 @@ export default function Home() {
   const activateMapUtilityView = useCallback((nextView: MapUtilityView, focusTab = false) => {
     setMapUtilityView(nextView);
     if (nextView === "export") setExportGeneratedAt(new Date().toISOString());
+    if (nextView === "report") setReportGeneratedAt(new Date().toISOString());
     if (focusTab) {
       const nextIndex = mapUtilityViews.indexOf(nextView);
       window.setTimeout(() => mapUtilityTabRefs.current[nextIndex]?.focus(), 0);
@@ -1138,7 +1212,7 @@ export default function Home() {
       const restoredWorkspace = params.get("ws");
       setCurrentWorkspace(restoredWorkspace === "knowledge" || restoredWorkspace === "features" || restoredWorkspace === "trust" ? restoredWorkspace : "explore");
       const restoredMapUtilityView = params.get("maptab");
-      const nextMapUtilityView: MapUtilityView = restoredMapUtilityView === "inspect" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "display" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "navigate";
+      const nextMapUtilityView: MapUtilityView = restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "display" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "navigate";
       setMapUtilityView(nextMapUtilityView);
       const restoredCompareIds = params.get("compare")?.split(",") ?? [];
       if (restoredCompareIds.length === 2 && restoredCompareIds.every((id) => knownLayerIds.has(id)) && restoredCompareIds[0] !== restoredCompareIds[1]) {
@@ -1146,6 +1220,7 @@ export default function Home() {
         setCompareRightId(restoredCompareIds[1]);
       }
       if (nextMapUtilityView === "export") setExportGeneratedAt(new Date().toISOString());
+      if (nextMapUtilityView === "report") setReportGeneratedAt(new Date().toISOString());
       const restoredMapUtilityOpen = params.get("mapui") === "open";
       setMapUtilityOpen(restoredMapUtilityOpen);
       if (restoredMapUtilityOpen && compactRef.current) {
@@ -1839,6 +1914,109 @@ export default function Home() {
     announce(`Opened ${record.title} for ${selected.properties.title}`);
   };
 
+  const buildCustomReportPayload = (generatedAt: string) => {
+    const recordLimit = reportDetail === "EXECUTIVE" ? 8 : reportDetail === "STANDARD" ? 30 : reportRecords.length;
+    const records = reportRecords.slice(0, recordLimit).map(({ layer, properties }) => ({
+      id: properties.fid,
+      title: properties.title,
+      layer: layer.title,
+      domain: layer.domain,
+      year: properties.year,
+      summary: properties.summary,
+      evidenceState: properties.evidenceState,
+      evidenceReference: properties.citation,
+      sourceRole: properties.sourceRole,
+      sourceOrganization: properties.sourceOrganization,
+      freshness: properties.freshnessState,
+      reviewState: properties.reviewState,
+      releaseState: properties.releaseState,
+      uncertainty: properties.uncertainty,
+      generalization: properties.generalizationNote,
+    }));
+    return {
+      format: "kfm-custom-map-report-v1",
+      title: reportTitle.trim() || "Kansas map data report",
+      generatedAt,
+      detail: reportDetail,
+      scope: reportScope,
+      activeTime: { value: year, label: formatTimelineStep(year) },
+      mapContext: {
+        center: locationCameraRedacted ? "WITHHELD_BROWSER_LOCATION" : view.center,
+        zoom: view.zoom,
+        projection,
+        basemap,
+        viewport: reportScope === "VIEWPORT" ? mapViewportBounds : null,
+      },
+      selection: selected ? { id: selected.featureId, title: selected.properties.title, layer: selected.layer.title, evidenceState: selected.properties.evidenceState } : null,
+      summary: reportSections.summary ? {
+        matchedRecords: reportRecords.length,
+        includedRecords: records.length,
+        includedLayers: reportLayerSummary.length,
+        evidenceStates: reportEvidenceCounts,
+      } : null,
+      findings: reportSections.findings ? reportFindings : null,
+      layers: reportLayerSummary,
+      records: reportSections.records ? records : null,
+      evidenceNotes: reportSections.evidence ? records.map((record) => ({
+        id: record.id,
+        state: record.evidenceState,
+        reference: record.evidenceReference,
+        sourceRole: record.sourceRole,
+        sourceOrganization: record.sourceOrganization,
+        freshness: record.freshness,
+        reviewState: record.reviewState,
+        releaseState: record.releaseState,
+      })) : null,
+      limitations: reportSections.limitations ? [
+        "Current records are site-local synthetic or generalized demonstration data, not released operational KFM data.",
+        "Map display, proximity, overlap, and screen measurement are not evidence or proof of a relationship.",
+        "Protected geometry is not reconstructed; location-derived camera coordinates remain withheld.",
+        ...Array.from(new Set(records.map((record) => `${record.title}: ${record.generalization} ${record.uncertainty}`))),
+      ] : null,
+      attribution: reportLayerSummary.map((layer) => ({ layer: layer.title, source: layer.attribution })),
+    };
+  };
+
+  const copyCustomReport = async () => {
+    const generatedAt = new Date().toISOString();
+    const report = buildCustomReportPayload(generatedAt);
+    setReportGeneratedAt(generatedAt);
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(report, null, 2));
+      announce(`Custom report copied with ${reportRecords.length} matching records`);
+    } catch {
+      announce("Clipboard access was blocked; the report preview stayed in the browser");
+    }
+  };
+
+  const downloadCustomReport = (format: "html" | "json") => {
+    const generatedAt = new Date().toISOString();
+    const report = buildCustomReportPayload(generatedAt);
+    setReportGeneratedAt(generatedAt);
+    const safeName = (report.title || "kansas-map-report").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) || "kansas-map-report";
+    let content: string;
+    let mime: string;
+    if (format === "json") {
+      content = JSON.stringify(report, null, 2);
+      mime = "application/json";
+    } else {
+      const records = report.records ?? [];
+      const findings = report.findings ?? [];
+      const limitations = report.limitations ?? [];
+      content = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeReportHtml(report.title)}</title><style>body{font:15px/1.55 Inter,system-ui,sans-serif;color:#17201d;max-width:1100px;margin:0 auto;padding:48px}header{border-bottom:3px solid #b88b38;padding-bottom:22px;margin-bottom:28px}h1{font-size:36px;letter-spacing:-.04em;margin:0 0 8px}h2{margin-top:34px}small,.muted{color:#607069}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric{border:1px solid #ccd6d1;padding:15px}.metric strong{display:block;font-size:24px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid #dce3df;padding:10px;text-align:left;vertical-align:top}th{background:#f1f5f2}code{font-size:11px}li{margin:8px 0}.boundary{border-left:4px solid #b88b38;background:#f7f3ea;padding:14px 18px}@media print{body{padding:0}.boundary{break-inside:avoid}}@media(max-width:700px){body{padding:24px}.metrics{grid-template-columns:1fr 1fr}table{display:block;overflow:auto}}</style></head><body><header><small>KANSAS FRONTIER MATRIX · CUSTOM MAP REPORT</small><h1>${escapeReportHtml(report.title)}</h1><p>${escapeReportHtml(report.scope.replaceAll("_", " "))} · active time ${escapeReportHtml(report.activeTime.label)} · generated ${escapeReportHtml(generatedAt)}</p></header>${report.summary ? `<section><h2>Report summary</h2><div class="metrics"><div class="metric"><small>MATCHED RECORDS</small><strong>${report.summary.matchedRecords}</strong></div><div class="metric"><small>INCLUDED RECORDS</small><strong>${report.summary.includedRecords}</strong></div><div class="metric"><small>LAYERS</small><strong>${report.summary.includedLayers}</strong></div><div class="metric"><small>EVIDENCE STATES</small><strong>${Object.keys(report.summary.evidenceStates).length}</strong></div></div></section>` : ""}${findings.length ? `<section><h2>Findings</h2><ol>${findings.map((finding) => `<li>${escapeReportHtml(finding)}</li>`).join("")}</ol></section>` : ""}${records.length ? `<section><h2>Included records</h2><table><thead><tr><th>Record</th><th>Layer / time</th><th>Evidence</th><th>Summary</th></tr></thead><tbody>${records.map((record) => `<tr><td><strong>${escapeReportHtml(record.title)}</strong><br><code>${escapeReportHtml(record.id)}</code></td><td>${escapeReportHtml(record.layer)}<br>${escapeReportHtml(record.year)}</td><td>${escapeReportHtml(record.evidenceState)}<br><code>${escapeReportHtml(record.evidenceReference)}</code></td><td>${escapeReportHtml(record.summary)}</td></tr>`).join("")}</tbody></table></section>` : ""}${limitations.length ? `<section><h2>Limitations</h2><ul>${limitations.map((limitation) => `<li>${escapeReportHtml(limitation)}</li>`).join("")}</ul></section>` : ""}<section><h2>Attribution</h2><ul>${report.attribution.map((item) => `<li><strong>${escapeReportHtml(item.layer)}:</strong> ${escapeReportHtml(item.source)}</li>`).join("")}</ul></section><p class="boundary">This report is a browser-generated public-safe demonstration artifact. It does not release, publish, admit, or authorize KFM data.</p></body></html>`;
+      mime = "text/html";
+    }
+    const url = URL.createObjectURL(new Blob([content], { type: mime }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${safeName}.${format}`;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 0);
+    announce(`${format.toUpperCase()} report downloaded with ${reportRecords.length} matching records`);
+  };
+
   const copyExportManifest = async () => {
     const review = buildExportReview(new Date().toISOString());
     setExportGeneratedAt(review.payload.exportedAt);
@@ -1929,18 +2107,10 @@ export default function Home() {
           <span className="mark" aria-hidden="true">KFM</span>
           <span><strong>Kansas Frontier Matrix</strong><small>Spatial evidence explorer</small></span>
         </div>
-        <details ref={workspaceDetailsRef} className="workspace-switcher">
-          <summary aria-label={`Current workspace: ${publicWorkspaces.find((workspace) => workspace.id === currentWorkspace)?.label}. Open workspace switcher.`}>
-            <span>Workspace</span><strong>{publicWorkspaces.find((workspace) => workspace.id === currentWorkspace)?.shortLabel}</strong><b aria-hidden="true">⌄</b>
-          </summary>
-          <div className="workspace-menu" aria-label="Public Explorer workspaces">
-            <header><span>PUBLIC WORKSPACE REGISTRY</span><strong>Move context, not authority</strong><p>These destinations expose public-safe views only.</p></header>
-            {publicWorkspaces.map((workspace, index) => <button key={workspace.id} type="button" data-active={currentWorkspace === workspace.id} aria-current={currentWorkspace === workspace.id ? "page" : undefined} onClick={() => activatePublicWorkspace(workspace.id)}>
-              <span>{String(index + 1).padStart(2, "0")}</span><div><strong>{workspace.label}</strong><p>{workspace.summary}</p><small>{workspace.capability}</small></div>
-            </button>)}
-            <footer>Review, operations, source admission, release, and publication remain separate authorized surfaces.</footer>
-          </div>
-        </details>
+        <nav className="header-workflows" aria-label="Primary Explorer actions">
+          <button type="button" aria-pressed={leftOpen} onClick={() => { setLeftOpen((current) => !current); setCurrentWorkspace("knowledge"); if (isCompact) { dismissMapUtilityWithoutFocus(); setRightOpen(false); setTimelineOpen(false); } }}><span aria-hidden="true">▦</span>Layers</button>
+          <button className="header-report-action" type="button" aria-pressed={mapUtilityOpen && mapUtilityView === "report"} onClick={(event) => openMapUtility("report", event.currentTarget)}><span aria-hidden="true">＋</span>Build report</button>
+        </nav>
         <div className="global-search">
           <label>
             <span className="sr-only">Search current layers and demonstration features</span>
@@ -1959,16 +2129,13 @@ export default function Home() {
           <span className="release-indicator" data-selection-state={selected?.properties.evidenceState ?? "DEMONSTRATION"} title="Visible selection posture; not release or publication authority"><i /> {selected ? selectedEvidence?.label.toUpperCase() : "DEMONSTRATION"}</span>
         </div>
         <div className="top-actions">
-          <button ref={repositoryButtonRef} className="repository-trigger" type="button" onClick={() => { setCurrentWorkspace("features"); setRepositoryOpen(true); setHelpOpen(false); setToolsExpanded(false); }} aria-expanded={repositoryOpen} aria-controls="repository-briefing" aria-label="Open repository and function briefing" title="Repository and function briefing"><span aria-hidden="true">R</span><i aria-hidden="true">{REPOSITORY_SNAPSHOT.counts.repositoryUpdates}</i></button>
-          <button className="story-trigger" type="button" onClick={startStoryTrail} aria-expanded={storyOpen} aria-controls="kfm-story-trail" aria-label="Start guided Kansas trust story" title="Guided Kansas trust story">S</button>
           <button className="share-action" type="button" onClick={shareView} aria-label="Share current map view" title="Share current view">↗</button>
-          <button type="button" onClick={() => setHelpOpen((current) => !current)} aria-expanded={helpOpen} aria-label="Open map guide" title="Map guide">?</button>
-          <button className="panel-toggle" type="button" onClick={() => { setLeftOpen((current) => { const next = !current; setCurrentWorkspace(next ? "knowledge" : "explore"); return next; }); if (isCompact) { dismissMapUtilityWithoutFocus(); setRightOpen(false); setTimelineOpen(false); } }} aria-expanded={leftOpen} aria-label="Toggle Layer Catalog">☰</button>
+          <Link className="about-action" href="/about">About</Link>
         </div>
         {helpOpen && <aside className="map-guide" role="dialog" aria-modal="false" aria-label="Map guide">
           <button className="icon-close" type="button" onClick={() => setHelpOpen(false)} aria-label="Close map guide">×</button>
           <p className="panel-kicker">MAP GUIDE</p><h2>Explore a feature, then check what supports it.</h2>
-          <p>Every layer in this build uses site-local synthetic or generalized demonstration data—not released operational data. Choose an example or select any feature to inspect its evidence state.</p>
+          <p>Nothing in this build is a released operational dataset. Every layer uses site-local synthetic or generalized demonstration data. Choose an example or select any feature to inspect its evidence state.</p>
           <div className="map-guide-actions"><button className="map-guide-start" type="button" onClick={showGuidedStart}>Try quick examples</button><button className="map-guide-start" type="button" onClick={startStoryTrail}>Start four-step story</button></div>
           <ol><li>Search, choose an example, or enable a layer.</li><li>Select a feature.</li><li>Inspect what is supported, missing, corrected, or withheld.</li><li>Review time, lineage, and Focus Mode when you need more detail.</li></ol>
           <p><strong>Renderer interactions are held.</strong> The Map Workbench retains renderer-neutral coordinate navigation, camera state, and catalog-scoped feature discovery. Box zoom, terrain, and swipe comparison remain unavailable pending a conforming consumer and admitted sources.</p>
@@ -2218,7 +2385,7 @@ export default function Home() {
             <div><p className="panel-kicker">LAYER CATALOG</p><h1>Explore Kansas</h1></div>
             <button className="icon-close" type="button" onClick={closeLeftPanel} aria-label="Close Layer Catalog">×</button>
           </div>
-          <p className="panel-intro">Browse clearly labeled synthetic and generalized demonstration layers. Nothing in this build is a released operational dataset.</p>
+          <p className="panel-intro">Choose synthetic and generalized demonstration layers for the map and your next report.</p>
           <label className="catalog-search"><span aria-hidden="true">⌕</span><span className="sr-only">Search Layer Catalog</span><input type="search" value={layerQuery} onChange={(event) => setLayerQuery(event.target.value)} placeholder="Filter layers and datasets" /></label>
 
           <section className="active-layers" aria-labelledby="active-title">
@@ -2257,11 +2424,15 @@ export default function Home() {
             {filteredLayerIds.size === 0 && <div className="catalog-empty"><strong>No layers found</strong><p>Try a domain, dataset, or geometry term.</p></div>}
           </div>
 
-          <div className="panel-footer-actions"><button type="button" onClick={resetExplorer}>Reset Explorer</button><button type="button" onClick={(event) => openMapUtility("export", event.currentTarget)}>Review public-safe export</button></div>
+          <div className="panel-footer-actions"><button type="button" onClick={resetExplorer}>Reset map</button><button type="button" onClick={(event) => { setReportLayerIds(activeLayers.map((layer) => layer.id)); openMapUtility("report", event.currentTarget); }}>Report visible layers</button></div>
         </aside>
 
         <section className="map-stage" aria-label="Kansas renderer-neutral Explorer">
-          <div className="mission-band"><span data-runtime={runtime.kind}><i /> RENDERER HOLD · NULL RUNTIME</span><p>Synthetic and generalized catalog data only · renderer acquisition, styles, sources, layers, hit testing, and measurement remain held.</p></div>
+          <div className="mission-band map-command-bar">
+            <span data-runtime={runtime.kind}><i /> RENDERER HOLD · NULL RUNTIME</span>
+            <p>Synthetic and generalized catalog data only · <b>{visibleCount}</b> layers · <b>{formatTimelineStep(year)}</b> · <b>{selected ? selected.properties.title : "No selection"}</b></p>
+            <button type="button" onClick={(event) => openMapUtility("report", event.currentTarget)}>Build report</button>
+          </div>
           <div id="map-canvas" ref={mapContainerRef} className="map-canvas" tabIndex={0} role="application" aria-label="Renderer-neutral Kansas Explorer shell. Use Map Workbench Inspect or the Layer Catalog to inspect catalog and evidence metadata; renderer interactions remain held." />
 
           {(runtime.kind === "loading" || runtime.kind === "error") && <div className={`runtime-overlay ${runtime.kind}`} role="status" aria-live="assertive"><span className="runtime-spinner" aria-hidden="true" /><strong>{runtime.kind === "loading" ? "Preparing spatial explorer" : "Map runtime unavailable"}</strong><p>{runtime.message}</p>{runtime.kind === "error" && <button type="button" onClick={() => window.location.reload()}>Reload map</button>}</div>}
@@ -2310,11 +2481,12 @@ export default function Home() {
             <button type="button" onClick={() => updateRendererNeutralView({ zoom: Math.max(4, view.zoom - 1) })} aria-label="Zoom out" data-tooltip="Zoom out">−</button>
             <button className="mobile-hidden-control" type="button" onClick={() => updateRendererNeutralView({ bearing: 0, pitch: 0 })} aria-label="Reset compass and pitch" data-tooltip="Reset north">N</button>
             <button type="button" onClick={fitKansasView} aria-label="Reset view to Kansas" data-tooltip="Kansas extent">KS</button>
-            <button ref={mapUtilityButtonRef} type="button" onClick={(event) => mapUtilityOpen ? closeMapUtility() : openMapUtility("navigate", event.currentTarget)} aria-expanded={mapUtilityOpen} aria-controls="map-utility-panel" aria-label="Open Map Workbench" data-tooltip="Map Workbench">UI</button>
+            <button ref={mapUtilityButtonRef} className="map-report-tool" type="button" onClick={(event) => mapUtilityOpen && mapUtilityView === "report" ? closeMapUtility() : openMapUtility("report", event.currentTarget)} aria-expanded={mapUtilityOpen && mapUtilityView === "report"} aria-controls="map-utility-panel" aria-label="Build a custom report" data-tooltip="Build report">R</button>
             <button className="mobile-hidden-control" type="button" onClick={locateUser} aria-label="Use my location" data-tooltip="My location">⌾</button>
             <button type="button" onClick={() => setToolsExpanded((current) => !current)} aria-expanded={toolsExpanded} aria-controls="more-map-tools" aria-label="More map tools" data-tooltip="More tools">•••</button>
             {toolsExpanded && <div className="secondary-tools" id="more-map-tools">
-              <button type="button" onClick={(event) => openMapUtility("navigate", event.currentTarget)}><span>UI</span>Map Workbench</button>
+              <button type="button" onClick={(event) => openMapUtility("report", event.currentTarget)}><span>R</span>Build report</button>
+              <button type="button" onClick={(event) => openMapUtility("navigate", event.currentTarget)}><span>⌖</span>Map controls</button>
               <button type="button" onClick={toggleFullscreen} aria-label="Toggle fullscreen"><span>⛶</span>Fullscreen</button>
               <button type="button" aria-pressed={projection === "globe"} onClick={() => setProjection((current) => current === "globe" ? "mercator" : "globe")}><span>◎</span>{projection === "globe" ? "2D view" : "Globe"}</button>
               <button type="button" aria-pressed={measureMode === "distance"} onClick={() => toggleMeasure("distance")}><span>↔</span>Distance</button>
@@ -2330,6 +2502,7 @@ export default function Home() {
             id="map-utility-panel"
             className="map-utility-panel"
             data-open={mapUtilityOpen}
+            data-view={mapUtilityView}
             aria-hidden={!mapUtilityOpen}
             inert={!mapUtilityOpen}
             aria-modal={isCompact && mapUtilityOpen || undefined}
@@ -2337,7 +2510,7 @@ export default function Home() {
             aria-labelledby="map-utility-title"
           >
             <header className="map-utility-heading">
-              <div><p className="panel-kicker">MAP OPERATIONS</p><h2 id="map-utility-title">Map Workbench</h2><span>One interface for renderer controls, inspection, display, measurement, trust-aware export, and recovery.</span></div>
+              <div><p className="panel-kicker">MAP WORKBENCH</p><h2 id="map-utility-title">{mapUtilityView === "report" ? "Custom report builder" : "Map tools"}</h2><span>{mapUtilityView === "report" ? "Turn the current map, time, layers, and selected data into a usable report." : "Inspect, navigate, compare, display, measure, export, and diagnose the active map."}</span></div>
               <button className="icon-close" type="button" onClick={closeMapUtility} aria-label="Close Map Workbench">×</button>
             </header>
             <nav className="map-utility-tabs" role="tablist" aria-label="Map Workbench views">
@@ -2355,6 +2528,51 @@ export default function Home() {
               >{mapUtilityLabels[utilityView]}</button>)}
             </nav>
             <div className="map-utility-scroll">
+              {mapUtilityView === "report" && <section id="map-utility-view-report" role="tabpanel" aria-labelledby="map-utility-tab-report" className="map-utility-section report-builder-section">
+                <div className="map-utility-section-heading"><span>CUSTOM REPORT</span><h3>Build from the map you are using</h3><p>Filters apply immediately. The report uses current Explorer records and keeps evidence states, source roles, attribution, uncertainty, and time visible.</p></div>
+
+                <div className="report-builder-grid">
+                  <div className="report-controls">
+                    <label className="report-title-field"><span>Report title</span><input type="text" value={reportTitle} maxLength={90} onChange={(event) => setReportTitle(event.target.value)} /></label>
+
+                    <fieldset className="report-control-group"><legend>Geographic scope</legend><div className="report-scope-grid">
+                      <button type="button" aria-pressed={reportScope === "VIEWPORT"} onClick={() => setReportScope("VIEWPORT")}><strong>Map extent</strong><small>Records inside the current viewport</small></button>
+                      <button type="button" aria-pressed={reportScope === "VISIBLE_LAYERS"} onClick={() => setReportScope("VISIBLE_LAYERS")}><strong>Visible layers</strong><small>Statewide records in active layers</small></button>
+                      <button type="button" aria-pressed={reportScope === "SELECTION"} disabled={!selected} onClick={() => setReportScope("SELECTION")}><strong>Selection</strong><small>{selected?.properties.title ?? "Select a map feature first"}</small></button>
+                    </div></fieldset>
+
+                    <fieldset className="report-control-group"><legend>Detail level</legend><div className="report-detail-grid">
+                      {(["EXECUTIVE", "STANDARD", "TECHNICAL"] as ReportDetail[]).map((detail) => <button key={detail} type="button" aria-pressed={reportDetail === detail} onClick={() => setReportDetail(detail)}>{detail === "EXECUTIVE" ? "Brief" : detail === "STANDARD" ? "Standard" : "Full detail"}</button>)}
+                    </div></fieldset>
+
+                    <fieldset className="report-control-group"><legend>Report sections</legend><div className="report-section-list">
+                      {REPORT_SECTIONS.map((section) => <label key={section.id}><input type="checkbox" checked={reportSections[section.id]} onChange={(event) => setReportSections((current) => ({ ...current, [section.id]: event.target.checked }))} /><span><strong>{section.label}</strong><small>{section.detail}</small></span></label>)}
+                    </div></fieldset>
+
+                    <fieldset className="report-control-group"><legend>Included layers</legend>
+                      <div className="report-layer-actions"><button type="button" onClick={() => setReportLayerIds(activeLayers.map((layer) => layer.id))}>Use visible</button><button type="button" onClick={() => setReportLayerIds(LAYER_REGISTRY.map((layer) => layer.id))}>Select all</button><button type="button" onClick={() => setReportLayerIds([])}>Clear</button></div>
+                      <div className="report-layer-list">{LAYER_REGISTRY.map((layer) => {
+                        const compatibleCount = layer.data.features.filter((feature) => isFeatureAvailableAtTime(layer, feature.properties.year, year)).length;
+                        return <label key={layer.id} data-visible={visibility[layer.id]}><input type="checkbox" checked={reportLayerIds.includes(layer.id)} onChange={(event) => setReportLayerIds((current) => event.target.checked ? [...new Set([...current, layer.id])] : current.filter((id) => id !== layer.id))} /><span><strong>{layer.title}</strong><small>{layer.domain} · {compatibleCount} time-compatible · {visibility[layer.id] ? "visible" : "hidden"}</small></span></label>;
+                      })}</div>
+                    </fieldset>
+                  </div>
+
+                  <article className="report-preview" aria-live="polite">
+                    <header><div><span>LIVE REPORT PREVIEW</span><h4>{reportTitle.trim() || "Kansas map data report"}</h4><p>{reportScope.replaceAll("_", " ")} · {formatTimelineStep(year)} · {reportDetail}</p></div><strong>{reportRecords.length} RECORD{reportRecords.length === 1 ? "" : "S"}</strong></header>
+                    {reportSections.summary && <div className="report-metrics" aria-label="Report summary metrics"><article><span>Records</span><strong>{reportRecords.length}</strong></article><article><span>Layers</span><strong>{reportLayerSummary.length}</strong></article><article><span>States</span><strong>{Object.keys(reportEvidenceCounts).length}</strong></article><article><span>Selection</span><strong>{selected ? "1" : "0"}</strong></article></div>}
+                    {reportSections.findings && <section className="report-preview-section"><span>FINDINGS</span><ol>{reportFindings.map((finding) => <li key={finding}>{finding}</li>)}</ol></section>}
+                    {reportSections.records && <section className="report-preview-section"><span>RECORDS</span><div className="report-record-table" role="table" aria-label="Included report records">
+                      {reportRecords.slice(0, reportDetail === "EXECUTIVE" ? 8 : reportDetail === "STANDARD" ? 30 : reportRecords.length).map(({ layer, properties }) => <article key={`${layer.id}:${properties.fid}`} role="row"><div><strong>{properties.title}</strong><small>{layer.title} · {properties.year}</small></div><span data-state={properties.evidenceState}>{properties.evidenceState}</span><p>{properties.summary}</p></article>)}
+                      {reportRecords.length === 0 && <div className="report-empty"><strong>No records match</strong><p>Move or widen the map, change time, choose another scope, or include more layers.</p></div>}
+                    </div></section>}
+                    {reportSections.evidence && reportRecords.length > 0 && <section className="report-preview-section"><span>EVIDENCE DISTRIBUTION</span><div className="report-evidence-grid">{Object.entries(reportEvidenceCounts).sort((left, right) => right[1] - left[1]).map(([state, count]) => <article key={state}><strong>{count}</strong><span>{state}</span></article>)}</div></section>}
+                    {reportSections.limitations && <aside className="report-boundary"><strong>Use boundary</strong><p>Site-local synthetic and generalized demonstration data only. The generated report preserves limitations and cannot release, publish, admit, or authorize KFM data.</p></aside>}
+                    <footer><span>Updated {reportGeneratedAt}</span><div><button type="button" onClick={() => void copyCustomReport()} disabled={!reportLayerIds.length}>Copy</button><button type="button" onClick={() => downloadCustomReport("json")} disabled={!reportLayerIds.length}>Data .json</button><button className="report-download-primary" type="button" onClick={() => downloadCustomReport("html")} disabled={!reportLayerIds.length}>Report .html</button></div></footer>
+                  </article>
+                </div>
+              </section>}
+
               {mapUtilityView === "navigate" && <section id="map-utility-view-navigate" role="tabpanel" aria-labelledby="map-utility-tab-navigate" className="map-utility-section">
                 <div className="map-utility-section-heading"><span>NAVIGATE</span><h3>Camera, coordinates + private location</h3><p>Renderer-neutral camera state changes only this browser shell. It never acquires a renderer or changes evidence, policy, review, release, or publication state.</p></div>
                 <dl className="map-camera-facts">
@@ -2522,9 +2740,9 @@ export default function Home() {
           <div className="map-mobile-actions">
             <button type="button" onClick={() => { setCurrentWorkspace("knowledge"); dismissMapUtilityWithoutFocus(); setLeftOpen(true); setRightOpen(false); setTimelineOpen(false); }}>Layers <b>{visibleCount}</b></button>
             <button type="button" onClick={() => { if (selected) { setCurrentWorkspace("trust"); dismissMapUtilityWithoutFocus(); setRightOpen(true); setLeftOpen(false); setTimelineOpen(false); } }} disabled={!selected}>Evidence</button>
-            <button type="button" onClick={() => openMapUtility("navigate")}>Map</button>
+            <button type="button" onClick={(event) => openMapUtility("report", event.currentTarget)}>Report</button>
             <button type="button" onClick={() => { setCurrentWorkspace("explore"); dismissMapUtilityWithoutFocus(); setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); }}>Time <b>{formatTimelineStep(year)}</b></button>
-            <button type="button" onClick={() => { setCurrentWorkspace("features"); setRepositoryView("functions"); setRepositoryOpen(true); }}>Functions</button>
+            <Link href="/about">About</Link>
           </div>
 
           <div className="screenreader-status sr-only" aria-live="polite">{runtime.message}. Map center {formatCoordinate(view.center[1], "N", "S")}, {formatCoordinate(view.center[0], "E", "W")}. {visibleCount} layers visible. {selected ? `Selected ${selected.properties.title}; evidence state ${selectedEvidence?.label}.` : "No feature selected."}</div>

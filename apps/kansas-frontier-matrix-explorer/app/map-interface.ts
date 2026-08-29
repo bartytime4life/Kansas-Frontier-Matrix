@@ -1,6 +1,6 @@
 import type { LayerRecord } from "./explorer-data";
 
-export type MapUtilityView = "navigate" | "inspect" | "compare" | "display" | "measure" | "export" | "diagnostics";
+export type MapUtilityView = "report" | "inspect" | "navigate" | "compare" | "display" | "measure" | "export" | "diagnostics";
 export type MeasureUnit = "imperial" | "metric";
 
 export type MapViewProfile = Readonly<{
@@ -97,3 +97,4 @@ export const inspectableFeatureId = (layer: LayerRecord, activeYear: number) => 
   }
   return available[0].properties.fid;
 };
+

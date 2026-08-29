@@ -31,6 +31,7 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /Kansas Frontier Matrix Explorer/i);
   assert.match(html, /Layer Catalog/i);
   assert.match(html, /MapLibre/i);
+  assert.match(html, /Build report/i);
   assert.match(html, /synthetic and generalized demonstration layers/i);
   assert.match(html, /Repository briefing/i);
   assert.match(html, /main@(?:<!-- -->)?2b0ea9b/i);
@@ -40,6 +41,28 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /Transition inspector/i);
   assert.match(html, /Readiness gates/i);
   assert.match(html, /county inventory is useful but snapshot-sensitive/i);
+});
+
+test("centers the primary workflow on map-scoped custom reports", async () => {
+  const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const mapInterface = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
+  const about = await readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(mapInterface, /"report"/);
+  assert.match(source, /kfm-custom-map-report-v1/);
+  assert.match(source, /Custom report builder/);
+  assert.match(source, /Build from the map you are using/);
+  assert.match(source, /Map extent/);
+  assert.match(source, /Visible layers/);
+  assert.match(source, /Report \.html/);
+  assert.match(source, /Data \.json/);
+  assert.match(source, /setReportLayerIds\(activeLayers\.map/);
+  assert.match(source, /const \[leftOpen, setLeftOpen\] = useState\(false\)/);
+  assert.match(about, /Start with a question, finish with a report/);
+  assert.match(about, /EVIDENCE STATES/);
+  assert.match(css, /\.report-builder-grid/);
+  assert.match(css, /\.about-page/);
 });
 
 test("gives first-time visitors plain-language guided examples", async () => {
@@ -491,6 +514,6 @@ test("keeps the complete function inventory three-axis and runtime seam fail clo
   assert.match(page, /Function and interface navigator/);
   assert.match(page, /record\.action === "OPEN_TIMELINE"/);
   assert.match(page, /All 38 repository feature families/);
-  assert.match(page, /aria-current={currentWorkspace === workspace\.id \? "page" : undefined}/);
-  assert.match(page, /setRepositoryView\("functions"\); setRepositoryOpen\(true\); }}>Functions<\/button>/);
+  assert.match(page, /<Link className="about-action" href="\/about">About<\/Link>/);
+  assert.match(page, /id="repository-tab-functions"[\s\S]*setRepositoryView\("functions"\)[\s\S]*<span>Functions<\/span>/);
 });
