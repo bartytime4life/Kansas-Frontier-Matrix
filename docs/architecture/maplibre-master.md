@@ -3,7 +3,7 @@ doc_id: kfm://doc/architecture/maplibre-master
 title: MapLibre Master — Components, Functions, Features Architecture Register
 type: architecture
 subtype: component-capability-register
-version: v2.5-draft
+version: v2.6-draft
 status: "draft; repository-grounded; architecture-accepted; production-runtime-hold; no-release; no-publication"
 owners:
   - "@bartytime4life — verified default repository review route"
@@ -31,8 +31,8 @@ truth_posture: >
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 2a205c8df31ff95a61f72a52489336b924a791ac
-  target_prior_blob: 45bfa58e3d57a7c2abd5ba60be3470031e1c1bde
+  base_commit: 1bc300c5aeaf5323edead670d648edfb8c3f21c2
+  target_prior_blob: 0eb2ce92496d9fec1ad5e100a5952bb4035396e9
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   adr_index_blob: dad651854ba7d37a3b29008dc8a90c0589caa030
@@ -41,14 +41,14 @@ evidence_snapshot:
   maplibre_package_manifest_blob: f6d450af19c33011e159e123c8a07ca2bca6dfd3
   maplibre_package_entry_blob: 08a48ac008665317833a9476b21cd35b1679c595
   explorer_adapter_blob: 663ba0f7a05498948f67d644387c73ab19d5c16c
-  acquisition_inventory_blob: 2d5b9f0cf494ebb6f3cfc6e4f12acb497572edcf
-  readiness_validator_blob: d9f189fd6f726ff6085371f7d69f2b035474e3fc
+  acquisition_inventory_blob: 2c6d2b709e2cf4a519b32c2274820008a18ad0f4
+  readiness_validator_blob: 2e79257aa64890ff7e2fca4d8b793970baa27f89
   renderer_capability_contract_blob: 5b172bd279ed2f18c5d6339b6c635512a6c3ff25
   performance_harness_blob: 699dd4cf42d355dd2ed7620852b7fd1f3000bbe2
   upstream_candidate:
     version: 6.6.0
     tag_commit: 407a8ce9e379c16066b13c3a6729e404b69743c6
-    checked: 2026-08-27
+    checked: 2026-08-29
 related:
   - ./maplibre.md
   - ./map-master/README.md
@@ -93,7 +93,7 @@ notes:
 
 > **Operating boundary.** MapLibre may become KFM's browser map renderer and interaction runtime only behind governed, reviewable interfaces. It is never the evidence source, canonical store, policy engine, citation authority, review authority, release authority, publisher, or AI authority.
 
-![status](https://img.shields.io/badge/status-v2.5--draft-d4a72c?style=flat-square)
+![status](https://img.shields.io/badge/status-v2.6--draft-d4a72c?style=flat-square)
 ![evidence](https://img.shields.io/badge/evidence-repository--grounded-1a7f37?style=flat-square)
 ![decisions](https://img.shields.io/badge/ADR--0006%2F0007-accepted-1a7f37?style=flat-square)
 ![candidate](https://img.shields.io/badge/readiness_candidate-6.6.0-0969da?style=flat-square)
@@ -114,7 +114,7 @@ notes:
 
 | Axis | Current bounded result |
 |---|---|
-| **Evidence snapshot** | `main@2a205c8df31ff95a61f72a52489336b924a791ac` |
+| **Evidence snapshot** | `main@1bc300c5aeaf5323edead670d648edfb8c3f21c2` |
 | **Placement** | `PLACE` at the existing `docs/architecture/maplibre-master.md`; accepted ADR-0029 assigns human architecture guidance to `docs/` |
 | **Decision authority** | ADR-0029, ADR-0006, and ADR-0007 are accepted in their stated scopes |
 | **Architecture disposition** | ADR-0006 binds the package-owned port/adapter and acquisition seam; ADR-0007 binds MapLibre GL JS as the sole normal browser renderer family; neither decision grants runtime, source, release, deployment, or publication authority |
@@ -442,10 +442,10 @@ A future 3D architecture document may be useful, but creating it is a separate s
 
 ### 8.1 Current acquisition state
 
-The repository contains a deterministic no-network acquisition inventory that masks bounded JavaScript and HTML comments while preserving strings, line positions, and regular-expression literals through a bounded expression-context check. It then scans package manifests and bounded code roots for static/dynamic imports, re-exports, `require`, Node `createRequire` aliases, explicit `import.meta.resolve` / `require.resolve` module resolution, CDN/global use, protocol registration, workers, and renderer-family packages. Quoted executable strings remain visible to the scan. The inventory caps candidate count, each input at 1 MiB, and the complete scan at 16 MiB. It denies symlink entries without reading their targets, requires regular inputs to resolve within the repository root, traverses from a pinned root directory descriptor with no-follow protection, and verifies device, inode, and file type across every open. Any limit, unavailable descriptor safeguard, containment failure, or detected replacement returns `ERROR`, and its diagnostic is not itself renderer acquisition. Its current semantics are intentionally non-authoritative:
+The repository contains a deterministic no-network acquisition inventory that masks bounded JavaScript, HTML, and stylesheet comments while preserving executable strings, line positions, and regular-expression literals through a bounded expression-context check. It then scans package manifests and bounded code roots for static/dynamic imports, re-exports, `require`, Node `createRequire` aliases, explicit `import.meta.resolve` / `require.resolve` module resolution, CSS `@import` acquisition, CDN/global use, protocol registration, workers, and renderer-family packages. The inventory caps candidate count, each input at 1 MiB, the logical scan at 16 MiB, and its two content-verification reads at 32 MiB of aggregate physical input. It denies symlink entries without reading their targets, requires regular inputs to resolve within the repository root, traverses from a pinned root directory descriptor with no-follow protection, verifies device, inode, file type, size, modification time, and change time around each bounded read, and compares SHA-256 digests across both reads. Any limit, unavailable descriptor safeguard, containment failure, detected replacement, metadata change, or content-digest change returns `ERROR`, and its diagnostic is not itself renderer acquisition. Its current semantics are intentionally non-authoritative:
 
 - `PASS`: scan completed and found no renderer acquisition;
-- `HOLD`: raw renderer acquisition is confined to `packages/maplibre/` while production runtime activation remains unresolved;
+- `HOLD`: raw renderer acquisition is confined to `packages/maplibre/` while production runtime activation remains unresolved (not the current repository-wide result);
 - `FAIL`: raw renderer acquisition escaped the accepted package seam or parallel active MapLibre package homes surfaced;
 - `ERROR`: the scan could not complete safely.
 
@@ -453,7 +453,7 @@ The validator treats only `packages/maplibre/` as the accepted raw-renderer seam
 
 ### 8.2 Current acquisition HOLD
 
-`scripts/maplibre-smoke-perf.mjs` is retired and exits with a finite `WORKFLOW_HOLD` before renderer or network acquisition. The remaining structural `HOLD` is the exact package-owned MapLibre dependency and imports under `packages/maplibre/`; it does not authorize Explorer production activation, live sources, performance execution, release, deployment, or publication. Any future CDN/global or direct consumer acquisition outside that package fails the inventory.
+`scripts/maplibre-smoke-perf.mjs` is retired and exits with a finite `WORKFLOW_HOLD` before renderer or network acquisition. Exact package-owned MapLibre acquisition under `packages/maplibre/` is accepted by ADR-0006, but it does not authorize Explorer production activation, live sources, performance execution, release, deployment, or publication. The current repository-wide result is `FAIL`: the Sites-derived Explorer directly acquires MapLibre outside the accepted seam. The inventory must continue to fail closed until that consumer is migrated behind the package boundary or a separately governed architecture change is accepted.
 
 ### 8.3 Admission record
 
@@ -516,7 +516,7 @@ The prior edition treated a `RenderReceipt` as an established emitted object. Cu
 - ESM module mode;
 - TypeScript target `ES2022`;
 - no known internal `map.transform` access;
-- no direct `maplibre-gl` import outside the bounded package source; and
+- a bounded package-source import/internal-API scan; repository-wide acquisition conformance is assessed separately and currently fails on the Sites-derived Explorer; and
 - twelve declared browser/runtime probes.
 
 A `READY` result is only eligibility evidence for human review of that exact candidate. It does not admit a dependency or authorize upgrade, release, deployment, publication, or public use.
@@ -761,7 +761,7 @@ At minimum, later implementation should prove failure or hold for:
 
 | Transition | Rollback target |
 |---|---|
-| This documentation update | Restore prior blob `45bfa58e3d57a7c2abd5ba60be3470031e1c1bde` through reviewed history |
+| This documentation update | Restore prior blob `0eb2ce92496d9fec1ad5e100a5952bb4035396e9` through reviewed history |
 | Architecture decision | Revert reviewed ADR/index transition; preserve decision history rather than silently editing it |
 | Port/consumer migration | Fake/null port plus renderer-neutral consumer types |
 | Dependency implementation/admission | Remove the package dependency and deterministic lockfile closure through reviewed history; retain or restore renderer-neutral consumer behavior and record why the exact dependency was withdrawn |
@@ -853,8 +853,8 @@ Adjacent May-era MapLibre architecture and atlas pages still contain proposal-er
 - [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — accepted placement bytes through ADR-0029.
 - [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — accepted directory-governance decision.
 - [`docs/adr/INDEX.md`](../adr/INDEX.md) — canonical human ADR inventory and effective-status crosswalk.
-- [`ADR-0006`](../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) — proposed adapter/acquisition boundary.
-- [`ADR-0007`](<../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) — proposed renderer-family decision.
+- [`ADR-0006`](../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) — accepted adapter/acquisition boundary.
+- [`ADR-0007`](<../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) — accepted renderer-family decision.
 - [Issue #2957](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2957) — maintainer direction and remaining acquisition HOLD.
 - [Issue #2906](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2906) — separate exact browser/runtime readiness evidence lane.
 
@@ -941,6 +941,6 @@ This modernization inspected a pinned repository checkout and selected GitHub is
 
 ### Correction and rollback
 
-Before merge, close the draft pull request and delete its branch if the change is rejected. After an authorized merge, revert the documentation commit or restore this document's prior blob `45bfa58e3d57a7c2abd5ba60be3470031e1c1bde`. This documentation-only rollback requires no package, dependency, lockfile, contract, schema, policy, fixture, validator, source, data, release, deployment, cache, or public correction operation.
+Before merge, close the draft pull request and delete its branch if the change is rejected. After an authorized merge, revert the documentation commit or restore this document's prior blob `0eb2ce92496d9fec1ad5e100a5952bb4035396e9`. This documentation-only rollback requires no package, dependency, lockfile, contract, schema, policy, fixture, validator, source, data, release, deployment, cache, or public correction operation.
 
 [Back to top](#top)
