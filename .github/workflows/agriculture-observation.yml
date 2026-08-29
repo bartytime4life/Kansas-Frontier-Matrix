@@ -11,7 +11,11 @@ name: agriculture-observation
       - "tools/validators/evidence/validate_agriculture_observation.py"
       - "tools/ci/install_python_ci.py"
       - "tools/ci/python-test.lock"
+      - "tools/ci/python-dependency-lock-migration.json"
       - "tools/ci/kfm_no_network/sitecustomize.py"
+      - "tools/validators/validate_generated_receipt.py"
+      - "tools/validators/_common/local_resolver.py"
+      - "schemas/contracts/v1/receipts/generated_receipt.schema.json"
       - "tests/validators/evidence/test_validate_agriculture_observation.py"
       - "tests/validators/evidence/test_validate_agriculture_observation_io_failclosed.py"
       - "tests/validators/evidence/test_agriculture_observation_workflow_binding.py"
@@ -35,7 +39,7 @@ name: agriculture-observation
       - "tests/data/test_county_year_panel.py"
       - "packages/hashing/**"
       - "pyproject.toml"
-      - "data/receipts/generated/genrec-agriculture-observation-adjacent-observation-trigger-closure-20260828.json"
+      - "data/receipts/generated/genrec-agriculture-observation-generated-receipt-trigger-closure-20260829.json"
   push:
     branches: [main]
     paths:
@@ -46,7 +50,11 @@ name: agriculture-observation
       - "tools/validators/evidence/validate_agriculture_observation.py"
       - "tools/ci/install_python_ci.py"
       - "tools/ci/python-test.lock"
+      - "tools/ci/python-dependency-lock-migration.json"
       - "tools/ci/kfm_no_network/sitecustomize.py"
+      - "tools/validators/validate_generated_receipt.py"
+      - "tools/validators/_common/local_resolver.py"
+      - "schemas/contracts/v1/receipts/generated_receipt.schema.json"
       - "tests/validators/evidence/test_validate_agriculture_observation.py"
       - "tests/validators/evidence/test_validate_agriculture_observation_io_failclosed.py"
       - "tests/validators/evidence/test_agriculture_observation_workflow_binding.py"
@@ -70,7 +78,7 @@ name: agriculture-observation
       - "tests/data/test_county_year_panel.py"
       - "packages/hashing/**"
       - "pyproject.toml"
-      - "data/receipts/generated/genrec-agriculture-observation-adjacent-observation-trigger-closure-20260828.json"
+      - "data/receipts/generated/genrec-agriculture-observation-generated-receipt-trigger-closure-20260829.json"
   workflow_dispatch:
 
 permissions:
@@ -121,7 +129,7 @@ jobs:
       - name: Validate generated authoring receipt integrity
         run: |
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-agriculture-observation-adjacent-observation-trigger-closure-20260828.json \
+            data/receipts/generated/genrec-agriculture-observation-generated-receipt-trigger-closure-20260829.json \
             --repo-root .
       - name: Record trust boundary
         if: always()
