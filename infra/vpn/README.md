@@ -1,394 +1,255 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/infra-vpn-readme
-title: infra/vpn/ — Private Access, Steward-Only Boundaries, and VPN Governance
-type: per-directory-readme
-version: v1
-status: draft
-owners:
-  - <infra-steward>
-  - <security-owner>
-  - <ops-steward>
+title: infra/vpn/ — Private Access Hold Boundary
+type: per-directory-readme; infrastructure-boundary; operational-hold
+version: v1.1.0
+status: draft; repository-grounded; documentation-only; implementation-absent; external-state-unknown; deny-by-default; non-release; non-publication
+owner: NEEDS VERIFICATION — CODEOWNERS routes /infra/ to @bartytime4life; accountable infrastructure, security, and operations stewardship remains unverified
 created: 2026-07-03
-updated: 2026-07-03
-policy_label: public
+updated: 2026-08-29
+policy_label: repository-facing; infra; private-access; vpn; deny-by-default; least-privilege; no-public-raw-path; no-public-model-path
+current_path: infra/vpn/README.md
+owning_root: infra/
+responsibility: document the repository-visible private-access boundary without claiming a selected VPN product, access grant, route, identity control, or deployed enforcement
+truth_posture: >
+  CONFIRMED same-path target; accepted Directory Rules v2 through ADR-0029; infra/ as the
+  deployment, host, network, and exposure responsibility root; this README as the lane's only
+  tracked file; a documentation-only review-console lane; a local governed API entry-point bind;
+  a placeholder development Compose file; and an uncompleted hardening checklist / UNKNOWN any
+  external VPN or overlay, product, peer, identity provider, device posture, route, ACL, firewall,
+  DNS, secret store, access grant, log, monitor, environment, deployment, revocation, or recovery
+  state / NEEDS VERIFICATION accountable stewards, access lifecycle, independent review, negative
+  public-path proof, and operational rollback
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 2b0ea9bbbc9d9a120ea94d92fb4617d96fe7d2a0
+  target_prior_blob: c15c1caa99f29eddf53f7a4befa9918e1bc8434e
+  infra_readme_blob: 618f2578c4a0e00caefee7371bf83d2ee0102161
+  hardening_checklist_blob: e1dffb88106ca22f82aff6fe8c67df0e34d2709f
+  exposure_plan_blob: 787c68fe0bf30ad84e0ea89520e2169429097b99
+  compose_blob: 8a45891700a501f6e18a921ce8d260956441e4b3
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  inspection_method: current main tree and direct file reads; no external host, VPN control plane, identity provider, device, network, secret store, access record, log, or runtime inspected
 related:
-  - infra/README.md
-  - infra/hardening/README.md
-  - infra/hardening/CHECKLIST.md
-  - infra/reverse_proxy/
-  - infra/firewall/
-  - infra/systemd/
-  - infra/docker/
-  - infra/compose/
-  - infra/kubernetes/
-  - infra/terraform/
-  - configs/
-  - runtime/
-  - apps/governed-api/
-  - apps/explorer-web/
-  - apps/review-console/
-  - docs/doctrine/directory-rules.md
-  - docs/security/README.md
-  - docs/security/EXPOSURE_PLAN.md
-  - docs/security/INCIDENT_RESPONSE.md
-  - docs/security/KEY_ROTATION.md
-  - docs/architecture/deployment-topology.md
-  - docs/runbooks/
-  - policy/
-  - release/
-  - data/published/
+  - ../README.md
+  - ../compose/docker-compose.yml
+  - ../firewall/README.md
+  - ../hardening/CHECKLIST.md
+  - ../reverse_proxy/README.md
+  - ../../apps/governed-api/src/governed_api/main.py
+  - ../../apps/review-console/README.md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../docs/doctrine/directory-rules.md
+  - ../../docs/security/EXPOSURE_PLAN.md
+  - ../../docs/security/INCIDENT_RESPONSE.md
+  - ../../docs/security/KEY_ROTATION.md
+  - ../../.github/CODEOWNERS
 tags:
   - kfm
   - infra
   - vpn
   - private-access
-  - steward-access
+  - operational-hold
   - deny-by-default
   - least-privilege
-  - auditability
-  - key-rotation
-  - trust-membrane
-notes:
-  - "VPN documentation in this repository is governance and review guidance only. Do not commit live VPN configs, private keys, peer inventories, credentials, tokens, certificates, or production access material."
-  - "VPN/private access may protect steward-only operations, but it does not authorize publication, raw-data exposure, direct model access, or bypasses around governed APIs, policy checks, evidence checks, review state, or release gates."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# `infra/vpn/` — Private Access, Steward-Only Boundaries, and VPN Governance
+# Private access hold
 
-> **One-line purpose.** Keep KFM private-access documentation inspectable and reviewable while ensuring VPN access remains deny-by-default, least-privilege, auditable, reversible, and subordinate to governed APIs and release controls.
+`infra/vpn/` is the repository lane for non-secret private-access boundary
+documentation. It is currently a **documentation-only hold**, not a configured
+VPN, overlay network, identity control, or access system.
 
-![status](https://img.shields.io/badge/status-draft-yellow)
-![root](https://img.shields.io/badge/root-infra%2F-blue)
-![access](https://img.shields.io/badge/access-steward--only-blueviolet)
-![posture](https://img.shields.io/badge/posture-deny--by--default-red)
-![trust](https://img.shields.io/badge/public_path-governed_API_only-success)
-![secrets](https://img.shields.io/badge/private_access_material-never_commit-red)
+The tracked repository does not select WireGuard, OpenVPN, Tailscale, ZeroTier,
+or another product; define peers or groups; grant access; advertise routes;
+apply ACLs; manage keys; or prove a connection. No person, device, service, or
+environment should be described as privately reachable from this README.
 
----
+> [!IMPORTANT]
+> Repository absence does not prove that an externally managed private-access
+> system is absent. External state is `UNKNOWN` until its accountable inventory,
+> configuration identity, and runtime evidence are inspected through an
+> authorized process.
 
-## Quick jump
+## Current repository state
 
-[Purpose](#purpose) · [Status & authority](#status--authority) · [Repo fit](#repo-fit) · [What belongs here](#what-belongs-here) · [What does not belong here](#what-does-not-belong-here) · [Private access boundary](#private-access-boundary) · [Access classes](#access-classes) · [Governance expectations](#governance-expectations) · [Proposed structure](#proposed-structure) · [Validation](#validation) · [Review burden](#review-burden) · [Open verification](#open-verification)
+The lane contains exactly one tracked file:
 
----
-
-## Purpose
-
-`infra/vpn/` is the KFM lane for private-access governance. It may document how steward-only access is requested, reviewed, granted, rotated, revoked, audited, and rolled back. It may also document non-sensitive route intent, access classes, denial requirements, and review checklists.
-
-This folder is **not** a place for runnable VPN setup material or live access credentials. It exists to keep the governance boundary clear:
-
-```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
-```
-
-VPN/private access can protect internal review, steward, maintenance, or emergency workflows. It does not replace KFM policy checks, evidence checks, release gates, correction paths, rollback paths, or governed API behavior.
-
-Public users still use governed public routes:
-
-```text
-public client -> public edge -> apps/governed-api/ or released public artifacts
-```
-
-Private access must not create a quiet shortcut to RAW stores, WORK stores, QUARANTINE stores, unpublished candidates, direct model endpoints, source credentials, internal/canonical stores, admin actions, or release authority.
-
-[Back to top](#top)
-
----
-
-## Status & authority
-
-| Field | Value |
-|---|---|
-| **Document type** | Per-directory README |
-| **Owning responsibility root** | `infra/` |
-| **Subpath role** | `vpn/` — private-access governance, steward-only access boundaries, peer/access lifecycle notes, route-intent notes, validation expectations, and rollback guidance |
-| **Authority level** | Draft governance guidance. KFM doctrine, accepted ADRs, `policy/`, security runbooks, and release gates outrank this README. |
-| **Lifecycle phase** | n/a — private-access infrastructure governance, not lifecycle data |
-| **Default posture** | Deny-by-default access; least privilege by role, route intent, owner, purpose, and review state |
-| **Owners** | `<infra-steward>`, `<security-owner>`, `<ops-steward>` — fill from CODEOWNERS when assigned |
-| **Reviewers required** | Infra steward + security owner for access model, route intent, admin/review access, model-runtime maintenance access, raw/internal-store access, key-rotation references, or production private-access changes |
-| **Directory Rules basis** | `infra/` owns deployment, host, network, and exposure posture; `vpn/` is a named lane under the expected `infra/` tree. |
-
-[Back to top](#top)
-
----
-
-## Repo fit
-
-```text
-Kansas-Frontier-Matrix/
-└── infra/
-    ├── README.md
-    ├── docker/
-    ├── compose/
-    ├── reverse_proxy/
-    ├── vpn/              ◀── you are here
-    │   └── README.md
-    ├── firewall/
-    ├── systemd/
-    ├── kubernetes/
-    ├── terraform/
-    └── hardening/
-```
-
-### Responsibility split
-
-| Location | Owns | Does not own |
+| Path | Observed content | What it establishes |
 |---|---|---|
-| `infra/vpn/` | Private-access governance, steward-only route intent, access lifecycle checklists, rotation/revocation notes, validation expectations | Live VPN configs, private keys, policy semantics, app code, release decisions, schemas, raw data |
-| `infra/firewall/` | Network firewall boundaries and deny rules around public/private access | Peer identity lifecycle unless delegated by docs |
-| `infra/reverse_proxy/` | HTTP/TLS/CORS route behavior and public edge | Private tunnel governance |
-| `infra/hardening/` | Cross-infra hardening checklist and review burden | VPN-specific access model details unless delegated here |
-| `infra/systemd/` | Host service units if private-access services are systemd-managed | Private-access policy semantics |
-| `infra/terraform/` | Provisioned private-network resources when Terraform-managed | Live credentials, private keys, peer inventories |
-| `configs/` | Non-secret examples and templates | Live private-access configs or credentials |
-| `policy/` | Enforceable allow / deny / restrict / abstain rules | Network tunnel mechanics |
-| `apps/review-console/` | Review/admin application behavior | Private transport control |
-| `release/` | Release decisions, manifests, rollback cards, corrections | Access grants or private routes |
+| [`README.md`](README.md) | This private-access boundary | Documentation placement and hold guidance only |
 
-[Back to top](#top)
+The recursive repository tree contains no other path named for VPN, WireGuard,
+OpenVPN, Tailscale, ZeroTier, or private access at the pinned evidence snapshot.
+In particular, current GitHub evidence does not establish:
 
----
+- a client, server, control plane, gateway, relay, exit node, or subnet router;
+- peer, user, group, role, device, service-account, or emergency-access records;
+- private address space, DNS, advertised routes, split/full-tunnel posture, ACLs,
+  firewall rules, or network segmentation;
+- authentication, MFA, SSO, device posture, enrollment, expiration, revocation,
+  rotation, offboarding, audit, monitoring, alerting, or retention controls; or
+- an installed configuration, running environment, connectivity test, isolation
+  test, access review, incident rehearsal, or recovery record.
 
-## What belongs here
+Adjacent repository surfaces identify design candidates, not private access:
 
-Use `infra/vpn/` for non-sensitive private-access governance material such as:
-
-- Access model documentation for steward-only, admin-only, review-only, maintenance-only, and emergency-only paths.
-- Access request, approval, review, expiration, rotation, revocation, and offboarding checklists.
-- Route-intent documentation that labels routes by class without exposing private host inventories.
-- Private-access validation checklists.
-- Key-rotation references that point to security runbooks without storing key material.
-- Sanitized diagrams showing trust boundaries and denied public paths.
-- Audit expectations for access grants, access removals, route changes, and emergency exceptions.
-- Rollback/revocation guidance for bad access grants or incorrect route exposure.
-
-Accepted file types are Markdown checklists, sanitized diagrams, governance notes, redacted validation summaries, and non-sensitive templates. Keep this folder useful for reviewers without making it useful to someone trying to access private systems.
-
-[Back to top](#top)
-
----
-
-## What does not belong here
-
-Do **not** use `infra/vpn/` as a secret store, live access inventory, or hidden admin authority.
-
-The following must not live here:
-
-- Private keys, shared secrets, live peer configs, production access bundles, tokens, certificates, QR codes, passwords, kubeconfigs, SSH keys, cloud credentials, or source credentials.
-- Real peer inventories containing personal device details, private address assignments, private hostnames, home networks, internal service maps, or sensitive access metadata.
-- Raw source data, WORK data, QUARANTINE data, catalog records, triplets, proofs, receipts, release manifests, or published data artifacts.
-- KFM policy bundles, release decisions, promotion receipts, correction notices, or rollback cards.
-- App source code, runtime adapters, model code, or schema definitions.
-- Public routes to model runtimes, RAW / WORK / QUARANTINE, internal/canonical stores, source credentials, admin panels, review consoles, or debug endpoints.
-- Broad private-network access notes that lack role, owner, purpose, expiration/review trigger, and rollback/revocation path.
-- Unredacted incident data or sensitive vulnerability working notes.
-
-If private access material is accidentally committed here, treat it as a security incident: revoke or rotate affected access, audit repository exposure, remove the material, and record the response through the incident/runbook process.
-
-[Back to top](#top)
-
----
-
-## Private access boundary
-
-VPN/private access is a controlled steward path, not a public path and not a publication shortcut.
-
-```mermaid
-flowchart LR
-    Steward[Approved steward]
-    Private[Private access boundary]
-    Review[Review / admin surfaces]
-    Obs[Internal observability]
-    GovAPI[apps-governed-api]
-    Runtime[Private runtime maintenance]
-    Raw[RAW / WORK / QUARANTINE]
-    Internal[Internal stores]
-    Public[Public client]
-    Edge[Public edge]
-    Published[Released artifacts]
-
-    Steward --> Private
-    Private --> Review
-    Private --> Obs
-    Private --> GovAPI
-    GovAPI --> Published
-    GovAPI --> Runtime
-    Public --> Edge --> GovAPI
-
-    Public -. DENY .-> Private
-    Public -. DENY direct .-> Runtime
-    Public -. DENY .-> Raw
-    Public -. DENY .-> Internal
-    Private -. RESTRICT / role required .-> Raw
-    Private -. RESTRICT / role required .-> Internal
-```
-
-### Required private-access guarantees
-
-A private-access design is not acceptable until it can show these negative states:
-
-1. Public traffic cannot enter private-access paths.
-2. Public traffic cannot reach steward-only routes.
-3. Public traffic cannot reach direct model-runtime endpoints.
-4. Public traffic cannot reach RAW / WORK / QUARANTINE.
-5. Public traffic cannot reach internal/canonical stores.
-6. Private access does not grant publication authority.
-7. Private access does not automatically grant raw-data access.
-8. Private access does not bypass KFM policy, evidence, review, correction, or release gates.
-9. Access can be revoked quickly.
-10. Route-intent changes are auditable and rollback-safe.
-
-[Back to top](#top)
-
----
-
-## Access classes
-
-| Access class | Default | Notes |
-|---|---:|---|
-| Public user traffic | DENY to private access | Public clients use the public edge and governed API only. |
-| Steward review access | RESTRICT | For review console, admin tools, private dashboards, and evidence review workflows. |
-| Admin maintenance access | RESTRICT | Requires owner, reason, audit trail, and rollback path. |
-| Model-runtime maintenance access | RESTRICT | Direct access is maintenance-only; normal use should flow through governed API adapters. |
-| RAW / WORK / QUARANTINE access | RESTRICT | Only for approved pipeline/source/data stewardship tasks; never public. |
-| Internal/canonical store access | RESTRICT | Least privilege and logged where practical. |
-| Released artifact access | ALLOW when released | Public release path should not require private access unless intentionally staged. |
-| Debug endpoints | DENY by default | Temporary exception requires owner, expiration, and rollback. |
-| Emergency access | RESTRICT | Time-bounded, audited, documented, and revoked after use. |
-
-[Back to top](#top)
-
----
-
-## Governance expectations
-
-### Access lifecycle
-
-- Every access grant should have an owner, purpose, approval, creation date, and review trigger.
-- Temporary access requires an expiration date.
-- Offboarding must revoke access and rotate affected shared material when needed.
-- Shared identities are discouraged because they weaken auditability.
-- Emergency access should be time-bounded and reviewed after use.
-
-### Secrets and credentials
-
-- Do not commit private access credentials or live access bundles.
-- Do not commit production route files that reveal sensitive private topology.
-- Document secret names or secret-store references only when needed for governance.
-- Key rotation and credential handling should link to the security runbook rather than duplicating sensitive procedures here.
-
-### Route intent
-
-- Route intent should be explicit, narrow, and reviewable.
-- Private access should not grant broad internal access without documented reason.
-- Route documents should label access class without exposing sensitive host inventories.
-- Admin/review routes must still require application-level authentication and audit where practical.
-
-### Audit and logging
-
-- Access grants, access removals, route-intent changes, and emergency exceptions should produce audit evidence.
-- Logs and review notes must not leak credentials, private topology, restricted data, or sensitive source material.
-- Retention and access control are **NEEDS VERIFICATION** until deployment topology is known.
-
-[Back to top](#top)
-
----
-
-## Proposed structure
-
-The exact private-access implementation is **NEEDS VERIFICATION**. Keep the structure governance-focused until the deployment choice is known.
-
-```text
-infra/vpn/
-├── README.md
-├── ACCESS_MODEL.md              # roles, route classes, approvals, expiration, revocation
-├── ROUTE_INTENT.md              # non-sensitive route classes; no private inventory
-├── ACCESS_LIFECYCLE.md          # request, approve, review, rotate, revoke, offboard
-├── EMERGENCY_ACCESS.md          # time-bounded exception governance
-├── validation/
-│   ├── README.md
-│   └── private-access-checklist.md
-└── rollback/
-    └── README.md
-```
-
-Do not create live configuration examples in this folder until the security owner approves a safe redaction convention.
-
-[Back to top](#top)
-
----
-
-## Validation
-
-Private-access changes require positive authorization evidence and negative public-exposure evidence.
-
-| Check | Expected result | Evidence |
+| Surface | Confirmed repository evidence | Private-access conclusion |
 |---|---|---|
-| Path placement | Material belongs under `infra/vpn/` and is governance/access-boundary documentation | PR review |
-| Secret scan | No credentials, private keys, live configs, tokens, certificates, or sensitive access inventories committed | Secret scan result |
-| Access owner | Each access class has an owner or steward role | Access model note |
-| Purpose | Each access class has a documented operational purpose | Access model note |
-| Expiration/review | Temporary or elevated access has expiration or review trigger | Lifecycle note |
-| Public denial | Public users cannot enter private-access paths | Redacted negative test summary |
-| Model denial | Public users cannot reach model runtime directly | Redacted negative test summary |
-| Raw-data denial | Public users cannot reach RAW/WORK/QUARANTINE | Redacted negative test summary |
-| Admin auth | Private admin/review paths still require authentication/audit where practical | Review note |
-| Revocation | Access can be removed quickly | Revocation note |
-| Logging | Access changes are auditable without leaking secrets | Redacted audit note |
-| Rollback | Bad access or route changes can be reverted or disabled | Rollback note |
+| [`infra/compose/docker-compose.yml`](../compose/docker-compose.yml) | A greenfield development placeholder publishes two loopback-only port mappings | Loopback text is not VPN configuration, reachability proof, or an environment inventory |
+| [Governed API entry point](../../apps/governed-api/src/governed_api/main.py) | Its direct entry point binds to loopback | A local bind does not prove an upstream, tunnel, ACL, deployment, or client path |
+| [`apps/review-console/README.md`](../../apps/review-console/README.md) | A draft application boundary document exists; it explicitly leaves source, routes, auth, tests, and deployment unverified | A proposed steward surface is not reachable or authorized private access |
+| [Hardening checklist](../hardening/CHECKLIST.md) | A reusable review template exists | Unchecked questions are not completed controls or validation evidence |
+| [Exposure Plan](../../docs/security/EXPOSURE_PLAN.md) | Draft exposure guidance records private/admin verification gaps | Posture guidance is not network enforcement |
 
-Do not paste private topology, credentials, live peer details, private hostnames, internal address inventories, or sensitive logs into public PR discussion.
+## Authority and scope
 
-[Back to top](#top)
+[Accepted ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+adopts the [Directory Rules](../../docs/doctrine/directory-rules.md) standard.
+Together with the [`infra/` index](../README.md), it places host, network,
+exposure, and private-access mechanics under `infra/`. That placement does not
+turn this lane into identity, application, policy, evidence, lifecycle, release,
+or publication authority.
 
----
+This lane may eventually hold reviewed, sanitized documentation and
+implementation-bearing private-access configuration when an adopted topology
+assigns those artifacts here. It must not hold:
 
-## Review burden
+- private keys, shared secrets, enrollment tokens, certificates, recovery
+  codes, passwords, production bundles, QR codes, kubeconfigs, or credentials;
+- unredacted peer, user, device, private address, hostname, route, DNS, access,
+  vulnerability, or incident inventories;
+- application roles, source admission, policy decisions, evidence truth,
+  lifecycle data, release decisions, or publication approvals; or
+- a shortcut around governed APIs, application authorization, sensitivity and
+  rights controls, review state, correction, or rollback.
 
-| Change type | Required review |
-|---|---|
-| README-only wording with no posture change | Infra steward or docs steward |
-| Private-access stack adoption or replacement | Infra steward + security owner + ADR or architecture note |
-| Access model, access lifecycle, or revocation process | Security owner + ops steward |
-| Route-intent change touching admin/review surfaces | Ops steward + security owner |
-| Route-intent change touching RAW / WORK / QUARANTINE / internal stores | Data steward + security owner |
-| Model-runtime maintenance access | Runtime owner + security owner |
-| Key-rotation or credential-reference language | Security owner + infra steward |
-| Production private-access boundary | Infra steward + security owner |
-| Emergency access exception | Security owner + ops steward + rollback/revocation note |
-| Exception to least privilege or deny-by-default | ADR or documented risk acceptance with rollback path |
+[`CODEOWNERS`](../../.github/CODEOWNERS) routes `infra/` changes to
+`@bartytime4life`. That is a GitHub review route only. It does not establish
+accountable infrastructure, security, operations, identity, data, or application
+stewardship, and it does not prove that review occurred.
 
-[Back to top](#top)
+## Access posture
 
----
+The repository can state requirements, but it cannot claim they are applied:
+
+| Access class | Repository posture | Meaning at this snapshot |
+|---|---|---|
+| Public client to a private-access entry point | `DENY` required; enforcement `UNKNOWN` | Public clients must use governed public interfaces or released public-safe artifacts; no network denial was inspected |
+| Steward, reviewer, administrator, or operator | `HOLD` | No verified identity, device, approval, route, application authorization, audit, expiration, or revocation chain exists |
+| Model or AI runtime maintenance | `HOLD`; direct public access `DENY` required | No private maintenance path or applied public denial is established |
+| RAW, WORK, or QUARANTINE access | `HOLD`; public access `DENY` required | Network membership alone must never grant lifecycle-data authority |
+| Canonical/internal stores | `HOLD`; public access `DENY` required | No least-privilege grant, route, service identity, or audit evidence exists |
+| Review or admin application | `HOLD` | Private transport would not replace application authentication, role checks, policy, provenance, or audit |
+| Emergency access | `HOLD` | No accountable trigger, expiry, revocation, monitoring, or post-use review is established |
+| Released public-safe artifact | Outside private-access authority | Release and publication remain separate governed states |
+
+`HOLD` means the repository does not contain enough evidence to authorize or
+describe an access path. It is not an applied firewall or ACL result.
+
+Private connectivity, if later established, proves only transport reachability.
+It must not be treated as permission to view restricted evidence, mutate
+lifecycle state, approve a candidate, operate a model, release an artifact,
+publish data, or bypass rights, privacy, sovereignty, sensitivity, and harmful
+precision controls.
+
+## Adoption packet
+
+Before this lane describes an operational private-access system, one coherent
+review packet must bind:
+
+1. **Decision and scope** — product or provider, architecture decision,
+   accountable maintainers, configuration authority, environments, intended
+   users and services, and explicit non-goals.
+2. **Identity and device controls** — verified identities, groups, MFA/SSO or
+   equivalent, enrollment and recovery, device posture where applicable,
+   service accounts, separation of duties, and application-level authorization.
+3. **Route and trust inventory** — sanitized address and DNS classes, ingress
+   and egress intent, advertised routes, split/full-tunnel posture, gateway and
+   relay roles, ACL/firewall bindings, and explicit denied surfaces.
+4. **Access lifecycle** — request, approval, provisioning, purpose, least
+   privilege, start, expiry, periodic review, suspension, revocation,
+   offboarding, emergency use, and shared-material rotation.
+5. **Secrets and privacy** — secret-system references, key custody and rotation,
+   recovery handling, log redaction, peer/device privacy, retention, and
+   prohibition on sensitive topology in public review artifacts.
+6. **Validation** — configuration identity, native syntax or plan result,
+   authorized connectivity tests, unauthorized and public-path denial tests,
+   route containment, DNS behavior, application authorization, logging, and
+   evidence from each intended environment.
+7. **Operations and recovery** — health, monitoring, alerting, incident path,
+   rapid isolation, lockout recovery, prior configuration identity, rollback or
+   forward-fix procedure, rehearsal, and post-change verification.
+
+Do not add setup commands for an unselected product. Product adoption must pin
+commands to the reviewed configuration format and supported version without
+committing access material or exposing sensitive topology.
+
+## Repository-only inspection
+
+These commands inspect tracked repository evidence only; they do not contact or
+test a VPN, identity system, device, host, or network:
+
+```bash
+git ls-tree -r --name-only HEAD -- infra/vpn
+git grep -n -E 'vpn|wireguard|openvpn|tailscale|zerotier|private[-_ ]access' HEAD -- \
+  infra apps docs .github
+```
+
+A passing documentation, security, deny-path, or application test remains
+bounded to what it executes. It cannot prove tunnel reachability, public
+isolation, identity assurance, route containment, access revocation, or an
+external control plane without the corresponding configuration and environment
+evidence.
+
+## Exposure or credential response
+
+If private-access material or an unintended route is exposed:
+
+1. use the separately authorized operational path to isolate the affected
+   access, route, identity, device, or environment;
+2. revoke or rotate affected credentials and keys through their responsible
+   secret and identity systems;
+3. preserve configuration identities and redacted audit evidence without
+   copying secrets, personal device details, private topology, or harmful
+   precision into GitHub;
+4. determine affected users, services, data classes, environments, and time
+   bounds through accountable incident review;
+5. verify public denial, route containment, application authorization, log
+   hygiene, and revocation before restoration; and
+6. record incident, correction, recovery, and follow-up evidence in their
+   governing systems.
+
+Use the repository's [incident-response](../../docs/security/INCIDENT_RESPONSE.md)
+and [key-rotation](../../docs/security/KEY_ROTATION.md) guidance as review inputs;
+their presence does not prove an operational responder, secret store, or
+completed action.
+
+This README cannot authorize access, revocation, rotation, isolation,
+restoration, release, deployment, promotion, publication, or production
+rollback.
 
 ## Open verification
 
-- [ ] Confirm chosen private-access approach and whether detailed config belongs here, in host-local secure storage, or in another protected system.
-- [ ] Confirm whether private access is used for local-only, homelab, staging, production, or emergency workflows.
-- [ ] Confirm access approval, expiration, revocation, and review process.
-- [ ] Confirm key rotation process and where real credentials are stored.
-- [ ] Confirm route-intent documentation convention that avoids sensitive private topology.
-- [ ] Confirm whether admin/review surfaces require private access plus application authentication.
-- [ ] Confirm model-runtime maintenance access pattern.
-- [ ] Confirm RAW / WORK / QUARANTINE access boundaries for steward tasks.
-- [ ] Confirm logging, retention, and redaction posture.
-- [ ] Confirm validation evidence format for private-access changes.
-- [ ] Confirm rollback/revocation procedure for incorrect access grants.
-- [ ] Confirm CODEOWNERS for `infra/vpn/`.
+- [ ] Identify any externally managed VPN or private-access system, or confirm
+  through accountable review that none is in scope.
+- [ ] Select and record the product, configuration authority, environments,
+  owners, identity model, device posture, and secret system.
+- [ ] Establish a sanitized route, DNS, ACL, firewall, and denied-surface
+  inventory without committing sensitive topology.
+- [ ] Establish request, approval, least-privilege, expiry, review, revocation,
+  offboarding, emergency-access, and shared-material rotation procedures.
+- [ ] Establish positive connectivity, unauthorized/public denial, route
+  containment, application authorization, log-redaction, and revocation tests.
+- [ ] Establish monitoring, alerts, retention, incident isolation, lockout
+  recovery, rollback, and rehearsal evidence.
+- [ ] Verify accountable infrastructure, security, operations, identity,
+  application, data, and release review responsibilities.
 
-[Back to top](#top)
-
----
-
-## Last reviewed
-
-| Field | Value |
-|---|---|
-| Last reviewed | 2026-07-03 |
-| Review status | Draft README replacing greenfield stub |
-| Next review trigger | First concrete private-access design, access lifecycle, route-intent, key-rotation reference, admin/review access, model-runtime maintenance access, or production private-access PR |
+Closing an item requires direct evidence. A document, pull request, merge,
+access grant, network connection, release, deployment, promotion, and publication
+are distinct states.
