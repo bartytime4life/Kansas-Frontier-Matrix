@@ -54,20 +54,30 @@ class HazardsEvidenceBundleConvergenceWorkflowBindingTests(unittest.TestCase):
             for step in workflow["jobs"]["validate"]["steps"]
         }
 
-        self.assertEqual(
-            shlex.split(steps["Prove hosted trigger closure"]),
-            [
-                "python",
-                "-m",
-                "unittest",
-                "discover",
-                "--start-directory",
-                "tests/validators/domains/hazards",
-                "--pattern",
-                "test_evidence_bundle_convergence_workflow_binding.py",
-                "--verbose",
-            ],
-        )
+        expected_patterns = {
+            "Run deterministic convergence tests": (
+                "test_evidence_bundle_schema_convergence.py"
+            ),
+            "Prove hosted trigger closure": (
+                "test_evidence_bundle_convergence_workflow_binding.py"
+            ),
+        }
+        for step_name, pattern in expected_patterns.items():
+            with self.subTest(step_name=step_name):
+                self.assertEqual(
+                    shlex.split(steps[step_name]),
+                    [
+                        "python",
+                        "-m",
+                        "unittest",
+                        "discover",
+                        "--start-directory",
+                        "tests/validators/domains/hazards",
+                        "--pattern",
+                        pattern,
+                        "--verbose",
+                    ],
+                )
 
 
 if __name__ == "__main__":
