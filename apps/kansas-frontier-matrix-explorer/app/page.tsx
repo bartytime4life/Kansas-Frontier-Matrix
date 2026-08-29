@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import type { Feature, Geometry } from "geojson";
 import {
   createNullMapRuntime,
@@ -78,6 +79,7 @@ import {
   PLANNING_SCENARIO_REVIEWS,
   type ScenarioReviewMode,
 } from "./planning-scenario";
+import { ANALYSIS_RECIPES, type AnalysisRecipe } from "./analysis-recipes";
 
 type ViewState = { center: [number, number]; zoom: number; bearing: number; pitch: number };
 type MapBoundsState = { west: number; south: number; east: number; north: number };
@@ -89,6 +91,32 @@ type SourceObservatoryView = "candidates" | "corpus" | "gaps";
 type GovernedRoute = "/bootstrap" | "/layers" | "/evidence" | "/focus";
 type GovernedMethod = "GET" | "POST";
 type PublicWorkspaceId = "explore" | "knowledge" | "features" | "trust";
+type ReportScope = "VIEWPORT" | "ANALYSIS_AREA" | "VISIBLE_LAYERS" | "SELECTION";
+type ReportDetail = "EXECUTIVE" | "STANDARD" | "TECHNICAL";
+type ReportSection = "summary" | "findings" | "records" | "evidence" | "limitations";
+type WorkspaceSnapshot = Readonly<{
+  id: string;
+  name: string;
+  savedAt: string;
+  view: ViewState;
+  visibility: Record<string, boolean>;
+  opacity: Record<string, number>;
+  layerOrder: string[];
+  year: number;
+  basemap: BasemapKey;
+  projection: "mercator" | "globe";
+  analysisArea?: MapBoundsState | null;
+  report: {
+    title: string;
+    scope: ReportScope;
+    detail: ReportDetail;
+    layerIds: string[];
+    sections: Record<ReportSection, boolean>;
+    query: string;
+    evidenceFilter: EvidenceState | "ALL";
+  };
+  selection: { layerId: string; featureId: string } | null;
+}>;
 type MapQueryCandidate = Readonly<{
   featureId: string;
   layerId: string;
@@ -116,8 +144,9 @@ const defaultOrder = LAYER_REGISTRY.map((layer) => layer.id);
 const interactiveLayerIds = LAYER_REGISTRY.flatMap((layer) => layer.renderers.filter((renderer) => renderer.interactive).map((renderer) => renderer.id));
 const layerDomains = ["ALL", ...Array.from(new Set(LAYER_REGISTRY.map((layer) => layer.domain))).sort()] as const;
 const drawerViews = ["evidence", "metadata", "lineage", "focus"] as const satisfies readonly DrawerView[];
-const mapUtilityViews = ["navigate", "inspect", "compare", "display", "measure", "export", "diagnostics"] as const satisfies readonly MapUtilityView[];
+const mapUtilityViews = ["report", "inspect", "navigate", "compare", "display", "measure", "export", "diagnostics"] as const satisfies readonly MapUtilityView[];
 const mapUtilityLabels: Record<MapUtilityView, string> = {
+  report: "Report",
   navigate: "Navigate",
   inspect: "Inspect",
   compare: "Compare",
@@ -126,6 +155,26 @@ const mapUtilityLabels: Record<MapUtilityView, string> = {
   export: "Export",
   diagnostics: "Diagnostics",
 };
+const REPORT_SECTIONS: readonly Readonly<{ id: ReportSection; label: string; detail: string }>[] = Object.freeze([
+  Object.freeze({ id: "summary", label: "Summary", detail: "Scope, time, record, and layer totals" }),
+  Object.freeze({ id: "findings", label: "Findings", detail: "Deterministic observations from the filtered records" }),
+  Object.freeze({ id: "records", label: "Record table", detail: "Feature-level data rows and evidence states" }),
+  Object.freeze({ id: "evidence", label: "Evidence notes", detail: "Source roles, citations, freshness, and release posture" }),
+  Object.freeze({ id: "limitations", label: "Limitations", detail: "Generalization, uncertainty, and use boundaries" }),
+]);
+const defaultReportSections: Record<ReportSection, boolean> = {
+  summary: true,
+  findings: true,
+  records: true,
+  evidence: true,
+  limitations: true,
+};
+const escapeReportHtml = (value: unknown) => String(value)
+  .replaceAll("&", "&amp;")
+  .replaceAll("<", "&lt;")
+  .replaceAll(">", "&gt;")
+  .replaceAll('"', "&quot;")
+  .replaceAll("'", "&#039;");
 const governedRoutes = new Set<GovernedRoute>(["/bootstrap", "/layers", "/evidence"]);
 
 const publicWorkspaces: readonly Readonly<{
@@ -211,6 +260,7 @@ const KFM_STORY_TRAIL = Object.freeze([
 ] as const);
 
 const GUIDED_START_STORAGE_KEY = "kfm-guided-start-dismissed-v1";
+const WORKSPACE_STORAGE_KEY = "kfm-map-workspaces-v1";
 
 const inspectGovernedRoute = (method: GovernedMethod, path: GovernedRoute) => {
   const registered = governedRoutes.has(path);
@@ -317,6 +367,21 @@ const scaleAtView = (view: ViewState) => {
   return metersPerPixel >= 1000 ? `≈ ${(metersPerPixel / 1000).toFixed(1)} km/px` : `≈ ${Math.round(metersPerPixel)} m/px`;
 };
 
+const isFeatureInsideBounds = (properties: Pick<FeatureProperties, "focusLng" | "focusLat">, bounds: MapBoundsState) => (
+  properties.focusLng >= bounds.west
+  && properties.focusLng <= bounds.east
+  && properties.focusLat >= bounds.south
+  && properties.focusLat <= bounds.north
+);
+
+const cameraViewsEquivalent = (left: ViewState, right: ViewState) => (
+  Math.abs(left.center[0] - right.center[0]) < 0.00001
+  && Math.abs(left.center[1] - right.center[1]) < 0.00001
+  && Math.abs(left.zoom - right.zoom) < 0.01
+  && Math.abs(left.bearing - right.bearing) < 0.1
+  && Math.abs(left.pitch - right.pitch) < 0.1
+);
+
 export default function Home() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRuntimeRef = useRef<MapRuntimePort | null>(null);
@@ -331,6 +396,10 @@ export default function Home() {
   const measurementGeometryModeRef = useRef<MeasureMode>(null);
   const measureUnitRef = useRef<MeasureUnit>("imperial");
   const measureCoordinatesRef = useRef<[number, number][]>([]);
+  const analysisAreaRef = useRef<MapBoundsState | null>(null);
+  const cameraHistoryRef = useRef<ViewState[]>([KANSAS_VIEW]);
+  const cameraHistoryIndexRef = useRef(0);
+  const replayingCameraHistoryRef = useRef(false);
   const returnFocusRef = useRef<HTMLElement | null>(null);
   const leftPanelRef = useRef<HTMLElement>(null);
   const rightPanelRef = useRef<HTMLElement>(null);
@@ -339,6 +408,7 @@ export default function Home() {
   const repositoryPanelRef = useRef<HTMLElement>(null);
   const workspaceDetailsRef = useRef<HTMLDetailsElement>(null);
   const mapUtilityButtonRef = useRef<HTMLButtonElement>(null);
+  const globalSearchInputRef = useRef<HTMLInputElement>(null);
   const mapUtilityPanelRef = useRef<HTMLElement>(null);
   const mapUtilityReturnRef = useRef<HTMLElement | null>(null);
   const mapUtilityTabRefs = useRef<Array<HTMLButtonElement | null>>([]);
@@ -356,10 +426,13 @@ export default function Home() {
   const [view, setView] = useState<ViewState>(KANSAS_VIEW);
   const [pointer, setPointer] = useState<[number, number]>(KANSAS_VIEW.center);
   const [mapViewportBounds, setMapViewportBounds] = useState<MapBoundsState>(SUPPORTED_CONTEXT_BOUNDS);
+  const [analysisArea, setAnalysisArea] = useState<MapBoundsState | null>(null);
+  const [cameraHistoryIndex, setCameraHistoryIndex] = useState(0);
+  const [cameraHistoryLength, setCameraHistoryLength] = useState(1);
   const [runtime, setRuntime] = useState<RuntimeState>({ kind: "loading", message: "Starting the renderer-neutral map boundary…" });
   const [locationCameraRedacted, setLocationCameraRedacted] = useState(false);
   const [selected, setSelected] = useState<SelectedContext | null>(null);
-  const [leftOpen, setLeftOpen] = useState(true);
+  const [leftOpen, setLeftOpen] = useState(false);
   const [rightOpen, setRightOpen] = useState(false);
   const [timelineOpen, setTimelineOpen] = useState(true);
   const [drawerView, setDrawerView] = useState<DrawerView>("evidence");
@@ -413,6 +486,16 @@ export default function Home() {
   const [sourceQuery, setSourceQuery] = useState("");
   const [sourceDomain, setSourceDomain] = useState("ALL");
   const [exportGeneratedAt, setExportGeneratedAt] = useState("PREVIEW_NOT_OPENED");
+  const [reportGeneratedAt, setReportGeneratedAt] = useState("LIVE PREVIEW");
+  const [reportTitle, setReportTitle] = useState("Kansas map data report");
+  const [reportScope, setReportScope] = useState<ReportScope>("VIEWPORT");
+  const [reportDetail, setReportDetail] = useState<ReportDetail>("STANDARD");
+  const [reportLayerIds, setReportLayerIds] = useState<string[]>(() => LAYER_REGISTRY.filter((layer) => layer.defaultVisibility).map((layer) => layer.id));
+  const [reportSections, setReportSections] = useState<Record<ReportSection, boolean>>(defaultReportSections);
+  const [reportQuery, setReportQuery] = useState("");
+  const [reportEvidenceFilter, setReportEvidenceFilter] = useState<EvidenceState | "ALL">("ALL");
+  const [workspaceName, setWorkspaceName] = useState("");
+  const [savedWorkspaces, setSavedWorkspaces] = useState<WorkspaceSnapshot[]>([]);
   const [runtimeSeamState, setRuntimeSeamState] = useState<RuntimeSeamState>("IDLE");
   const [runtimeSeamReason, setRuntimeSeamReason] = useState("Awaiting deterministic replay");
   const [toast, setToast] = useState("");
@@ -430,6 +513,15 @@ export default function Home() {
   useEffect(() => { yearRef.current = year; }, [year]);
   useEffect(() => { basemapRef.current = basemap; }, [basemap]);
   useEffect(() => { projectionRef.current = projection; }, [projection]);
+  useEffect(() => {
+    const restoreSavedWorkspaces = window.setTimeout(() => {
+      try {
+        const stored = JSON.parse(window.localStorage.getItem(WORKSPACE_STORAGE_KEY) ?? "[]");
+        if (Array.isArray(stored)) setSavedWorkspaces(stored.slice(0, 8));
+      } catch { /* Device-local workspace storage is optional. */ }
+    }, 0);
+    return () => window.clearTimeout(restoreSavedWorkspaces);
+  }, []);
 
   const dismissGuidedStart = useCallback(() => {
     setGuidedStartOpen(false);
@@ -442,13 +534,7 @@ export default function Home() {
     try { window.localStorage.removeItem(GUIDED_START_STORAGE_KEY); } catch { /* Device storage is optional. */ }
   }, []);
 
-  useEffect(() => {
-    const hasSharedFeature = new URLSearchParams(window.location.search).has("f");
-    let dismissed = false;
-    try { dismissed = window.localStorage.getItem(GUIDED_START_STORAGE_KEY) === "1"; } catch { /* Device storage is optional. */ }
-    const openGuide = window.setTimeout(() => setGuidedStartOpen(!hasSharedFeature && !dismissed), 0);
-    return () => window.clearTimeout(openGuide);
-  }, []);
+  // The map opens as a working surface. Guided material remains available from About.
   useEffect(() => { selectedRef.current = selected; }, [selected]);
   useEffect(() => { measureModeRef.current = measureMode; }, [measureMode]);
   useEffect(() => { measurementGeometryModeRef.current = measurementGeometryMode; }, [measurementGeometryMode]);
@@ -496,7 +582,7 @@ export default function Home() {
       {
         id: "interaction",
         label: "Renderer interactions",
-        detail: "Hit testing, hover, cluster expansion, popups, and screen measurement are unavailable until consumer migration and probes close",
+        detail: "Renderer-neutral camera history and report-area filtering are available; hit testing, hover, cluster expansion, popups, and screen measurement remain held",
         state: "HOLD",
       },
       {
@@ -523,6 +609,67 @@ export default function Home() {
       ))
       .filter(({ layer, feature }) => !query || `${feature.properties.title} ${feature.properties.fid} ${feature.properties.evidenceState} ${layer.title}`.toLowerCase().includes(query));
   }, [inspectViewportOnly, inspectVisibleLayersOnly, mapFeatureLayer, mapFeatureQuery, mapViewportBounds, visibility, year]);
+  const analysisAreaRecordCount = useMemo(() => analysisArea
+    ? LAYER_REGISTRY.reduce((count, layer) => count + layer.data.features.filter((feature) => (
+      isFeatureAvailableAtTime(layer, feature.properties.year, year)
+      && isFeatureInsideBounds(feature.properties, analysisArea)
+    )).length, 0)
+    : 0, [analysisArea, year]);
+  const reportRecords = useMemo(() => {
+    const includedLayers = new Set(reportLayerIds);
+    const query = reportQuery.trim().toLowerCase();
+    const matchesReportFilters = ({ layer, properties }: { layer: LayerRecord; properties: FeatureProperties }) => (
+      (reportEvidenceFilter === "ALL" || properties.evidenceState === reportEvidenceFilter)
+      && (!query || `${properties.title} ${properties.fid} ${properties.summary} ${properties.sourceOrganization} ${properties.sourceRole} ${properties.evidenceState} ${layer.title} ${layer.domain}`.toLowerCase().includes(query))
+    );
+    if (reportScope === "SELECTION") {
+      const selectionRecords = selected && includedLayers.has(selected.layerId)
+        ? [{ layer: selected.layer, properties: selected.properties }]
+        : [];
+      return selectionRecords.filter(matchesReportFilters);
+    }
+    return LAYER_REGISTRY
+      .filter((layer) => includedLayers.has(layer.id))
+      .filter((layer) => reportScope !== "VISIBLE_LAYERS" || visibility[layer.id])
+      .flatMap((layer) => layer.data.features
+        .filter((feature) => isFeatureAvailableAtTime(layer, feature.properties.year, year))
+        .filter((feature) => reportScope !== "VIEWPORT" || (
+          feature.properties.focusLng >= mapViewportBounds.west
+          && feature.properties.focusLng <= mapViewportBounds.east
+          && feature.properties.focusLat >= mapViewportBounds.south
+          && feature.properties.focusLat <= mapViewportBounds.north
+        ))
+        .filter((feature) => reportScope !== "ANALYSIS_AREA" || (analysisArea && isFeatureInsideBounds(feature.properties, analysisArea)))
+        .map((feature) => ({ layer, properties: feature.properties })))
+      .filter(matchesReportFilters);
+  }, [analysisArea, mapViewportBounds, reportEvidenceFilter, reportLayerIds, reportQuery, reportScope, selected, visibility, year]);
+  const reportEvidenceCounts = useMemo(() => reportRecords.reduce<Record<string, number>>((counts, record) => {
+    counts[record.properties.evidenceState] = (counts[record.properties.evidenceState] ?? 0) + 1;
+    return counts;
+  }, {}), [reportRecords]);
+  const reportLayerSummary = useMemo(() => LAYER_REGISTRY
+    .filter((layer) => reportLayerIds.includes(layer.id))
+    .map((layer) => ({
+      id: layer.id,
+      title: layer.title,
+      domain: layer.domain,
+      releaseState: layer.releaseState,
+      attribution: layer.attribution,
+      recordCount: reportRecords.filter((record) => record.layer.id === layer.id).length,
+    }))
+    .filter((layer) => layer.recordCount > 0), [reportLayerIds, reportRecords]);
+  const reportFindings = useMemo(() => {
+    const supported = (reportEvidenceCounts.ANSWER ?? 0) + (reportEvidenceCounts.CORRECTED ?? 0);
+    const bounded = reportRecords.length - supported;
+    const mostRepresented = [...reportLayerSummary].sort((left, right) => right.recordCount - left.recordCount)[0];
+    return [
+      `${reportRecords.length} record${reportRecords.length === 1 ? "" : "s"} match the ${reportScope === "VIEWPORT" ? "current map extent" : reportScope === "ANALYSIS_AREA" ? "locked area-of-interest" : reportScope === "VISIBLE_LAYERS" ? "visible-layer" : "selected-feature"} scope at ${formatTimelineStep(year)}.`,
+      `${supported} record${supported === 1 ? "" : "s"} carry supported or corrected evidence states; ${bounded} remain generalized, missing, stale, restricted, denied, superseded, or error states.`,
+      mostRepresented
+        ? `${mostRepresented.title} contributes the largest share of this report (${mostRepresented.recordCount} record${mostRepresented.recordCount === 1 ? "" : "s"}).`
+        : "No records match the current report filters; widen the map, change time, or include another layer.",
+    ];
+  }, [reportEvidenceCounts, reportLayerSummary, reportRecords.length, reportScope, year]);
   const filteredLayerIds = useMemo(() => {
     const query = debouncedLayerQuery.trim().toLowerCase();
     return new Set(LAYER_REGISTRY.filter((layer) => {
@@ -666,6 +813,9 @@ export default function Home() {
     params.set("order", layerOrder.join(","));
     params.set("units", measureUnit);
     params.set("ws", currentWorkspace);
+    if (analysisArea && !redactLocationCamera) {
+      params.set("aoi", [analysisArea.west, analysisArea.south, analysisArea.east, analysisArea.north].map((value) => value.toFixed(5)).join(","));
+    }
     if (mapUtilityOpen) {
       params.set("mapui", "open");
       params.set("maptab", mapUtilityView);
@@ -679,7 +829,7 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [activeLayers, basemap, compareLeft.id, compareRight.id, currentWorkspace, drawerView, focusIntent, focusStage, layerOrder, locationCameraRedacted, mapUtilityOpen, mapUtilityView, measureUnit, opacity, projection, rightOpen, selected, view, year]);
+  }, [activeLayers, analysisArea, basemap, compareLeft.id, compareRight.id, currentWorkspace, drawerView, focusIntent, focusStage, layerOrder, locationCameraRedacted, mapUtilityOpen, mapUtilityView, measureUnit, opacity, projection, rightOpen, selected, view, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
@@ -728,6 +878,20 @@ export default function Home() {
       }
       lastKnownGoodViewRef.current = current;
       setPointer([...nextView.center] as [number, number]);
+      if (replayingCameraHistoryRef.current) {
+        replayingCameraHistoryRef.current = false;
+      } else if (!locationDerivedViewRef.current) {
+        const retained = cameraHistoryRef.current.slice(0, cameraHistoryIndexRef.current + 1);
+        const previous = retained.at(-1);
+        if (!previous || !cameraViewsEquivalent(previous, nextView)) {
+          const nextHistory = [...retained, nextView].slice(-16);
+          const nextIndex = nextHistory.length - 1;
+          cameraHistoryRef.current = nextHistory;
+          cameraHistoryIndexRef.current = nextIndex;
+          setCameraHistoryIndex(nextIndex);
+          setCameraHistoryLength(nextHistory.length);
+        }
+      }
       return nextView;
     });
   }, []);
@@ -948,6 +1112,7 @@ export default function Home() {
     setMapUtilityOpen(true);
     setCurrentWorkspace("explore");
     if (nextView === "export") setExportGeneratedAt(new Date().toISOString());
+    if (nextView === "report") setReportGeneratedAt(new Date().toISOString());
     setToolsExpanded(false);
     setHelpOpen(false);
     if (isCompact) {
@@ -961,6 +1126,7 @@ export default function Home() {
   const activateMapUtilityView = useCallback((nextView: MapUtilityView, focusTab = false) => {
     setMapUtilityView(nextView);
     if (nextView === "export") setExportGeneratedAt(new Date().toISOString());
+    if (nextView === "report") setReportGeneratedAt(new Date().toISOString());
     if (focusTab) {
       const nextIndex = mapUtilityViews.indexOf(nextView);
       window.setTimeout(() => mapUtilityTabRefs.current[nextIndex]?.focus(), 0);
@@ -977,6 +1143,32 @@ export default function Home() {
     event.preventDefault();
     activateMapUtilityView(mapUtilityViews[nextIndex], true);
   }, [activateMapUtilityView]);
+
+  useEffect(() => {
+    const handleWorkspaceShortcut = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) return;
+      const target = event.target as HTMLElement | null;
+      const isEditing = target?.matches("input, textarea, select, [contenteditable='true']");
+      if (event.key === "/" && !isEditing) {
+        event.preventDefault();
+        globalSearchInputRef.current?.focus();
+        return;
+      }
+      if (isEditing) return;
+      if (event.key.toLowerCase() === "r") {
+        event.preventDefault();
+        openMapUtility("report");
+      }
+      if (event.key.toLowerCase() === "l") {
+        event.preventDefault();
+        dismissMapUtilityWithoutFocus();
+        setLeftOpen((current) => !current);
+        if (isCompact) { setRightOpen(false); setTimelineOpen(false); }
+      }
+    };
+    document.addEventListener("keydown", handleWorkspaceShortcut);
+    return () => document.removeEventListener("keydown", handleWorkspaceShortcut);
+  }, [dismissMapUtilityWithoutFocus, isCompact, openMapUtility]);
 
   const openLayerCatalogFromUtility = useCallback(() => {
     mapUtilityReturnRef.current = null;
@@ -1104,7 +1296,26 @@ export default function Home() {
       locationDerivedViewRef.current = restoredCameraRedaction;
       setLocationCameraRedacted(restoredCameraRedaction);
       pendingViewRef.current = restoredView;
+      replayingCameraHistoryRef.current = true;
       applyRendererNeutralView(restoredView);
+      cameraHistoryRef.current = [restoredView];
+      cameraHistoryIndexRef.current = 0;
+      setCameraHistoryIndex(0);
+      setCameraHistoryLength(1);
+      const analysisTokens = params.get("aoi")?.split(",").map((token) => token.trim() === "" ? Number.NaN : Number(token));
+      const restoredAnalysisArea = !restoredCameraRedaction && analysisTokens?.length === 4 && analysisTokens.every(Number.isFinite)
+        ? {
+          west: clamp(analysisTokens[0], SUPPORTED_CONTEXT_BOUNDS.west, SUPPORTED_CONTEXT_BOUNDS.east),
+          south: clamp(analysisTokens[1], SUPPORTED_CONTEXT_BOUNDS.south, SUPPORTED_CONTEXT_BOUNDS.north),
+          east: clamp(analysisTokens[2], SUPPORTED_CONTEXT_BOUNDS.west, SUPPORTED_CONTEXT_BOUNDS.east),
+          north: clamp(analysisTokens[3], SUPPORTED_CONTEXT_BOUNDS.south, SUPPORTED_CONTEXT_BOUNDS.north),
+        }
+        : null;
+      const nextAnalysisArea = restoredAnalysisArea && restoredAnalysisArea.west < restoredAnalysisArea.east && restoredAnalysisArea.south < restoredAnalysisArea.north
+        ? restoredAnalysisArea
+        : null;
+      analysisAreaRef.current = nextAnalysisArea;
+      setAnalysisArea(nextAnalysisArea);
 
       const knownLayerIds = new Set(LAYER_REGISTRY.map((layer) => layer.id));
       const visibleIds = params.get("l")?.split(",").filter((id) => knownLayerIds.has(id)) ?? [];
@@ -1138,7 +1349,7 @@ export default function Home() {
       const restoredWorkspace = params.get("ws");
       setCurrentWorkspace(restoredWorkspace === "knowledge" || restoredWorkspace === "features" || restoredWorkspace === "trust" ? restoredWorkspace : "explore");
       const restoredMapUtilityView = params.get("maptab");
-      const nextMapUtilityView: MapUtilityView = restoredMapUtilityView === "inspect" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "display" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "navigate";
+      const nextMapUtilityView: MapUtilityView = restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "display" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "navigate";
       setMapUtilityView(nextMapUtilityView);
       const restoredCompareIds = params.get("compare")?.split(",") ?? [];
       if (restoredCompareIds.length === 2 && restoredCompareIds.every((id) => knownLayerIds.has(id)) && restoredCompareIds[0] !== restoredCompareIds[1]) {
@@ -1146,6 +1357,7 @@ export default function Home() {
         setCompareRightId(restoredCompareIds[1]);
       }
       if (nextMapUtilityView === "export") setExportGeneratedAt(new Date().toISOString());
+      if (nextMapUtilityView === "report") setReportGeneratedAt(new Date().toISOString());
       const restoredMapUtilityOpen = params.get("mapui") === "open";
       setMapUtilityOpen(restoredMapUtilityOpen);
       if (restoredMapUtilityOpen && compactRef.current) {
@@ -1424,6 +1636,58 @@ export default function Home() {
     announce("Framed the generalized Kansas demonstration extent in renderer-neutral camera state");
   };
 
+  const captureAnalysisArea = () => {
+    if (locationDerivedViewRef.current) {
+      announce("Clear the private location camera before capturing a shareable analysis area");
+      return;
+    }
+    const nextArea: MapBoundsState = {
+      west: clamp(mapViewportBounds.west, SUPPORTED_CONTEXT_BOUNDS.west, SUPPORTED_CONTEXT_BOUNDS.east),
+      south: clamp(mapViewportBounds.south, SUPPORTED_CONTEXT_BOUNDS.south, SUPPORTED_CONTEXT_BOUNDS.north),
+      east: clamp(mapViewportBounds.east, SUPPORTED_CONTEXT_BOUNDS.west, SUPPORTED_CONTEXT_BOUNDS.east),
+      north: clamp(mapViewportBounds.north, SUPPORTED_CONTEXT_BOUNDS.south, SUPPORTED_CONTEXT_BOUNDS.north),
+    };
+    analysisAreaRef.current = nextArea;
+    setAnalysisArea(nextArea);
+    setReportScope("ANALYSIS_AREA");
+    setReportGeneratedAt(new Date().toISOString());
+    announce("Locked the current renderer-neutral view bounds as the report area of interest");
+  };
+
+  const clearAnalysisArea = () => {
+    analysisAreaRef.current = null;
+    setAnalysisArea(null);
+    if (reportScope === "ANALYSIS_AREA") setReportScope("VIEWPORT");
+    announce("Cleared the locked analysis area");
+  };
+
+  const fitAnalysisArea = () => {
+    if (!analysisArea) {
+      announce("No analysis area is locked");
+      return;
+    }
+    locationDerivedViewRef.current = false;
+    setLocationCameraRedacted(false);
+    fitRendererNeutralBounds([analysisArea.west, analysisArea.south, analysisArea.east, analysisArea.north], 11);
+    announce("Fit the locked analysis area");
+  };
+
+  const travelCameraHistory = (direction: -1 | 1) => {
+    const nextIndex = cameraHistoryIndexRef.current + direction;
+    const nextView = cameraHistoryRef.current[nextIndex];
+    if (!nextView) {
+      announce(direction < 0 ? "No earlier camera view" : "No later camera view");
+      return;
+    }
+    cameraHistoryIndexRef.current = nextIndex;
+    setCameraHistoryIndex(nextIndex);
+    replayingCameraHistoryRef.current = true;
+    locationDerivedViewRef.current = false;
+    setLocationCameraRedacted(false);
+    updateRendererNeutralView({ ...nextView, center: [...nextView.center] as [number, number] });
+    announce(direction < 0 ? "Returned to the previous map view" : "Advanced to the next map view");
+  };
+
   const inspectLayer = (layer: LayerRecord, returnElement: HTMLElement) => {
     const featureId = inspectableFeatureId(layer, year);
     if (!featureId) {
@@ -1548,6 +1812,131 @@ export default function Home() {
     announce(`${profile.title} applied · view state only`);
   };
 
+  const applyAnalysisRecipe = (recipe: AnalysisRecipe) => {
+    const nextVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, recipe.layerIds.includes(layer.id)]));
+    visibilityRef.current = nextVisibility;
+    yearRef.current = recipe.year;
+    basemapRef.current = recipe.basemap;
+    projectionRef.current = "mercator";
+    setVisibility(nextVisibility);
+    setYear(recipe.year);
+    setPlaying(false);
+    setBasemap(recipe.basemap);
+    setProjection("mercator");
+    setReportTitle(recipe.title);
+    setReportScope(recipe.scope);
+    setReportDetail(recipe.detail);
+    setReportLayerIds([...recipe.layerIds]);
+    setReportQuery("");
+    setReportEvidenceFilter("ALL");
+    setReportGeneratedAt(new Date().toISOString());
+    setMapQueryCandidates([]);
+    locationDerivedViewRef.current = false;
+    setLocationCameraRedacted(false);
+    clearSelectionState();
+    updateRendererNeutralView({ center: [...recipe.center] as [number, number], zoom: recipe.zoom, bearing: 0, pitch: 0 });
+    announce(`${recipe.title} recipe applied · map, time, layers, and report updated`);
+  };
+
+  const persistSavedWorkspaces = (next: WorkspaceSnapshot[]) => {
+    const bounded = next.slice(0, 8);
+    setSavedWorkspaces(bounded);
+    try { window.localStorage.setItem(WORKSPACE_STORAGE_KEY, JSON.stringify(bounded)); } catch { /* Device-local workspace storage is optional. */ }
+  };
+
+  const saveCurrentWorkspace = () => {
+    const savedAt = new Date().toISOString();
+    const snapshot: WorkspaceSnapshot = {
+      id: `workspace-${Date.now()}`,
+      name: workspaceName.trim() || `Kansas workspace ${savedWorkspaces.length + 1}`,
+      savedAt,
+      view: { center: [...view.center] as [number, number], zoom: view.zoom, bearing: view.bearing, pitch: view.pitch },
+      visibility: { ...visibility },
+      opacity: { ...opacity },
+      layerOrder: [...layerOrder],
+      year,
+      basemap,
+      projection,
+      analysisArea: analysisArea ? { ...analysisArea } : null,
+      report: {
+        title: reportTitle,
+        scope: reportScope,
+        detail: reportDetail,
+        layerIds: [...reportLayerIds],
+        sections: { ...reportSections },
+        query: reportQuery,
+        evidenceFilter: reportEvidenceFilter,
+      },
+      selection: selected ? { layerId: selected.layerId, featureId: selected.featureId } : null,
+    };
+    persistSavedWorkspaces([snapshot, ...savedWorkspaces]);
+    setWorkspaceName("");
+    announce(`${snapshot.name} saved on this device`);
+  };
+
+  const loadSavedWorkspace = (snapshot: WorkspaceSnapshot) => {
+    const knownLayerIds = new Set(LAYER_REGISTRY.map((layer) => layer.id));
+    const nextVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, snapshot.visibility?.[layer.id] === true]));
+    const nextOpacity = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, clamp(Number(snapshot.opacity?.[layer.id] ?? layer.defaultOpacity), .1, 1)]));
+    const savedOrder = Array.isArray(snapshot.layerOrder) ? snapshot.layerOrder.filter((id) => knownLayerIds.has(id)) : [];
+    const nextOrder = [...savedOrder, ...defaultOrder.filter((id) => !savedOrder.includes(id))];
+    const nextYear = TIME_STEPS.includes(snapshot.year as (typeof TIME_STEPS)[number]) ? snapshot.year : 2026;
+    const nextBasemap: BasemapKey = snapshot.basemap === "prairie" ? "prairie" : "midnight";
+    const nextProjection = snapshot.projection === "globe" ? "globe" : "mercator";
+    visibilityRef.current = nextVisibility;
+    opacityRef.current = nextOpacity;
+    orderRef.current = nextOrder;
+    yearRef.current = nextYear;
+    basemapRef.current = nextBasemap;
+    projectionRef.current = nextProjection;
+    setVisibility(nextVisibility);
+    setOpacity(nextOpacity);
+    setLayerOrder(nextOrder);
+    setYear(nextYear);
+    setPlaying(false);
+    setBasemap(nextBasemap);
+    setProjection(nextProjection);
+    const savedAnalysisArea = snapshot.analysisArea;
+    const nextAnalysisArea = savedAnalysisArea
+      && Number.isFinite(savedAnalysisArea.west)
+      && Number.isFinite(savedAnalysisArea.south)
+      && Number.isFinite(savedAnalysisArea.east)
+      && Number.isFinite(savedAnalysisArea.north)
+      && savedAnalysisArea.west < savedAnalysisArea.east
+      && savedAnalysisArea.south < savedAnalysisArea.north
+      ? { ...savedAnalysisArea }
+      : null;
+    analysisAreaRef.current = nextAnalysisArea;
+    setAnalysisArea(nextAnalysisArea);
+    setReportTitle(snapshot.report?.title || "Kansas map data report");
+    setReportScope(snapshot.report?.scope === "SELECTION" || snapshot.report?.scope === "VISIBLE_LAYERS" || (snapshot.report?.scope === "ANALYSIS_AREA" && nextAnalysisArea) ? snapshot.report.scope : "VIEWPORT");
+    setReportDetail(snapshot.report?.detail === "EXECUTIVE" || snapshot.report?.detail === "TECHNICAL" ? snapshot.report.detail : "STANDARD");
+    const savedReportLayerIds = (snapshot.report?.layerIds ?? []).filter((id) => knownLayerIds.has(id));
+    setReportLayerIds(savedReportLayerIds.length ? savedReportLayerIds : LAYER_REGISTRY.filter((layer) => nextVisibility[layer.id]).map((layer) => layer.id));
+    setReportSections({ ...defaultReportSections, ...(snapshot.report?.sections ?? {}) });
+    setReportQuery(snapshot.report?.query ?? "");
+    const savedEvidenceFilter = snapshot.report?.evidenceFilter;
+    setReportEvidenceFilter(savedEvidenceFilter === "ALL" || (savedEvidenceFilter && savedEvidenceFilter in evidenceLabels) ? savedEvidenceFilter : "ALL");
+    setReportGeneratedAt(new Date().toISOString());
+    const savedView = snapshot.view;
+    if (savedView && Array.isArray(savedView.center) && savedView.center.length === 2) {
+      locationDerivedViewRef.current = false;
+      setLocationCameraRedacted(false);
+      updateRendererNeutralView({ center: [...savedView.center] as [number, number], zoom: savedView.zoom, bearing: savedView.bearing, pitch: savedView.pitch });
+    }
+    const restoredSelection = snapshot.selection ? copyFeature(LAYER_REGISTRY.find((layer) => layer.id === snapshot.selection?.layerId) ?? LAYER_REGISTRY[0], snapshot.selection.featureId) : null;
+    selectedRef.current = restoredSelection;
+    setSelected(restoredSelection);
+    setRightOpen(false);
+    setMapQueryCandidates([]);
+    announce(`${snapshot.name} restored from this device`);
+  };
+
+  const deleteSavedWorkspace = (snapshot: WorkspaceSnapshot) => {
+    persistSavedWorkspaces(savedWorkspaces.filter((candidate) => candidate.id !== snapshot.id));
+    announce(`${snapshot.name} removed from this device`);
+  };
+
   const restoreLastKnownGoodView = () => {
     const lastView = lastKnownGoodViewRef.current;
     applyRendererNeutralView({ ...lastView, center: [...lastView.center] as [number, number] });
@@ -1597,10 +1986,24 @@ export default function Home() {
     setMeasurement("Select a measurement tool");
     locationDerivedViewRef.current = false;
     setLocationCameraRedacted(false);
+    replayingCameraHistoryRef.current = true;
+    cameraHistoryRef.current = [KANSAS_VIEW];
+    cameraHistoryIndexRef.current = 0;
+    setCameraHistoryIndex(0);
+    setCameraHistoryLength(1);
+    analysisAreaRef.current = null;
+    setAnalysisArea(null);
     applyRendererNeutralView(KANSAS_VIEW);
     clearSelection();
     setMapQueryCandidates([]);
-    showGuidedStart();
+    setGuidedStartOpen(false);
+    setReportTitle("Kansas map data report");
+    setReportScope("VIEWPORT");
+    setReportDetail("STANDARD");
+    setReportLayerIds(LAYER_REGISTRY.filter((layer) => layer.defaultVisibility).map((layer) => layer.id));
+    setReportSections(defaultReportSections);
+    setReportQuery("");
+    setReportEvidenceFilter("ALL");
     announce("Explorer reset to the Kansas demonstration view");
   };
 
@@ -1648,7 +2051,7 @@ export default function Home() {
       await navigator.clipboard.writeText(shareUrl);
       announce(locationDerivedViewRef.current
         ? "Share link copied with the location-derived camera redacted"
-        : "Share link copied with camera, layer order, opacity, time, projection, and evidence state");
+        : `Share link copied with camera, layer order, opacity, time, projection, evidence state${analysisArea ? ", and analysis area" : ""}`);
     } catch {
       announce("Share state is in the address bar and ready to copy");
     }
@@ -1667,6 +2070,9 @@ export default function Home() {
         ? { center: "WITHHELD_BROWSER_LOCATION", zoom: "WITHHELD", bearing: "WITHHELD", pitch: "WITHHELD", projection }
         : { center: view.center, zoom: view.zoom, bearing: view.bearing, pitch: view.pitch, projection },
       display: { basemap, active_time: year, visible_layer_ids: activeLayers.map((layer) => layer.id) },
+      analysis_area: locationDerivedViewRef.current || !analysisArea
+        ? null
+        : { bounds: analysisArea, compatible_record_count: analysisAreaRecordCount, role: "SITE_LOCAL_CONTEXT_ONLY" },
       workspace: currentWorkspace,
       selection: selected ? {
         feature_id: selected.featureId,
@@ -1713,9 +2119,9 @@ export default function Home() {
       repository_boundary: {
         snapshot: REPOSITORY_SNAPSHOT.commit,
         architecture: "ACCEPTED",
-        dependency: "HOLD",
-        runtime: "HOLD",
-        governed_probes: "0/12 NOT_RUN",
+        dependency: "EXACT_6.6.0",
+        runtime: "BOUNDED_PACKAGE_OWNED_ADAPTER_SLICE",
+        broader_production_activation: "HOLD",
       },
       camera: { zoom: Number(view.zoom.toFixed(2)), bearing: Math.round(view.bearing), pitch: Math.round(view.pitch), projection },
       style: { basemap_descriptor: basemap, style_loaded: false, state: "HOLD" },
@@ -1723,6 +2129,7 @@ export default function Home() {
       active_time: year,
       workspace: currentWorkspace,
       selection: selected ? { feature_id: selected.featureId, layer_id: selected.layerId, layer_visible: !selectedLayerHidden, time_compatible: !selectedTimeMismatch } : null,
+      analysis_area: { active: Boolean(analysisArea), compatible_record_count: analysisAreaRecordCount, coordinates: "OMITTED_FROM_REDACTED_DIAGNOSTIC" },
       redaction: "No raw coordinates, source URLs, tokens, stacks, prompts, private payloads, or browser location included.",
       public_effect: "NONE",
     };
@@ -1839,6 +2246,111 @@ export default function Home() {
     announce(`Opened ${record.title} for ${selected.properties.title}`);
   };
 
+  const buildCustomReportPayload = (generatedAt: string) => {
+    const recordLimit = reportDetail === "EXECUTIVE" ? 8 : reportDetail === "STANDARD" ? 30 : reportRecords.length;
+    const records = reportRecords.slice(0, recordLimit).map(({ layer, properties }) => ({
+      id: properties.fid,
+      title: properties.title,
+      layer: layer.title,
+      domain: layer.domain,
+      year: properties.year,
+      summary: properties.summary,
+      evidenceState: properties.evidenceState,
+      evidenceReference: properties.citation,
+      sourceRole: properties.sourceRole,
+      sourceOrganization: properties.sourceOrganization,
+      freshness: properties.freshnessState,
+      reviewState: properties.reviewState,
+      releaseState: properties.releaseState,
+      uncertainty: properties.uncertainty,
+      generalization: properties.generalizationNote,
+    }));
+    return {
+      format: "kfm-custom-map-report-v1",
+      title: reportTitle.trim() || "Kansas map data report",
+      generatedAt,
+      detail: reportDetail,
+      scope: reportScope,
+      filters: { query: reportQuery || null, evidenceState: reportEvidenceFilter, layerIds: reportLayerIds },
+      activeTime: { value: year, label: formatTimelineStep(year) },
+      mapContext: {
+        center: locationCameraRedacted ? "WITHHELD_BROWSER_LOCATION" : view.center,
+        zoom: view.zoom,
+        projection,
+        basemap,
+        viewport: reportScope === "VIEWPORT" ? mapViewportBounds : null,
+        analysisArea: reportScope === "ANALYSIS_AREA" ? analysisArea : null,
+      },
+      selection: selected ? { id: selected.featureId, title: selected.properties.title, layer: selected.layer.title, evidenceState: selected.properties.evidenceState } : null,
+      summary: reportSections.summary ? {
+        matchedRecords: reportRecords.length,
+        includedRecords: records.length,
+        includedLayers: reportLayerSummary.length,
+        evidenceStates: reportEvidenceCounts,
+      } : null,
+      findings: reportSections.findings ? reportFindings : null,
+      layers: reportLayerSummary,
+      records: reportSections.records ? records : null,
+      evidenceNotes: reportSections.evidence ? records.map((record) => ({
+        id: record.id,
+        state: record.evidenceState,
+        reference: record.evidenceReference,
+        sourceRole: record.sourceRole,
+        sourceOrganization: record.sourceOrganization,
+        freshness: record.freshness,
+        reviewState: record.reviewState,
+        releaseState: record.releaseState,
+      })) : null,
+      limitations: reportSections.limitations ? [
+        "Current records are site-local synthetic or generalized demonstration data, not released operational KFM data.",
+        "Map display, proximity, overlap, and screen measurement are not evidence or proof of a relationship.",
+        "Protected geometry is not reconstructed; location-derived camera coordinates remain withheld.",
+        ...Array.from(new Set(records.map((record) => `${record.title}: ${record.generalization} ${record.uncertainty}`))),
+      ] : null,
+      attribution: reportLayerSummary.map((layer) => ({ layer: layer.title, source: layer.attribution })),
+    };
+  };
+
+  const copyCustomReport = async () => {
+    const generatedAt = new Date().toISOString();
+    const report = buildCustomReportPayload(generatedAt);
+    setReportGeneratedAt(generatedAt);
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(report, null, 2));
+      announce(`Custom report copied with ${reportRecords.length} matching records`);
+    } catch {
+      announce("Clipboard access was blocked; the report preview stayed in the browser");
+    }
+  };
+
+  const downloadCustomReport = (format: "html" | "json") => {
+    const generatedAt = new Date().toISOString();
+    const report = buildCustomReportPayload(generatedAt);
+    setReportGeneratedAt(generatedAt);
+    const safeName = (report.title || "kansas-map-report").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) || "kansas-map-report";
+    let content: string;
+    let mime: string;
+    if (format === "json") {
+      content = JSON.stringify(report, null, 2);
+      mime = "application/json";
+    } else {
+      const records = report.records ?? [];
+      const findings = report.findings ?? [];
+      const limitations = report.limitations ?? [];
+      content = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeReportHtml(report.title)}</title><style>body{font:15px/1.55 Inter,system-ui,sans-serif;color:#17201d;max-width:1100px;margin:0 auto;padding:48px}header{border-bottom:3px solid #b88b38;padding-bottom:22px;margin-bottom:28px}h1{font-size:36px;letter-spacing:-.04em;margin:0 0 8px}h2{margin-top:34px}small,.muted{color:#607069}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric{border:1px solid #ccd6d1;padding:15px}.metric strong{display:block;font-size:24px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid #dce3df;padding:10px;text-align:left;vertical-align:top}th{background:#f1f5f2}code{font-size:11px}li{margin:8px 0}.boundary{border-left:4px solid #b88b38;background:#f7f3ea;padding:14px 18px}@media print{body{padding:0}.boundary{break-inside:avoid}}@media(max-width:700px){body{padding:24px}.metrics{grid-template-columns:1fr 1fr}table{display:block;overflow:auto}}</style></head><body><header><small>KANSAS FRONTIER MATRIX · CUSTOM MAP REPORT</small><h1>${escapeReportHtml(report.title)}</h1><p>${escapeReportHtml(report.scope.replaceAll("_", " "))} · active time ${escapeReportHtml(report.activeTime.label)} · generated ${escapeReportHtml(generatedAt)}</p></header>${report.summary ? `<section><h2>Report summary</h2><div class="metrics"><div class="metric"><small>MATCHED RECORDS</small><strong>${report.summary.matchedRecords}</strong></div><div class="metric"><small>INCLUDED RECORDS</small><strong>${report.summary.includedRecords}</strong></div><div class="metric"><small>LAYERS</small><strong>${report.summary.includedLayers}</strong></div><div class="metric"><small>EVIDENCE STATES</small><strong>${Object.keys(report.summary.evidenceStates).length}</strong></div></div></section>` : ""}${findings.length ? `<section><h2>Findings</h2><ol>${findings.map((finding) => `<li>${escapeReportHtml(finding)}</li>`).join("")}</ol></section>` : ""}${records.length ? `<section><h2>Included records</h2><table><thead><tr><th>Record</th><th>Layer / time</th><th>Evidence</th><th>Summary</th></tr></thead><tbody>${records.map((record) => `<tr><td><strong>${escapeReportHtml(record.title)}</strong><br><code>${escapeReportHtml(record.id)}</code></td><td>${escapeReportHtml(record.layer)}<br>${escapeReportHtml(record.year)}</td><td>${escapeReportHtml(record.evidenceState)}<br><code>${escapeReportHtml(record.evidenceReference)}</code></td><td>${escapeReportHtml(record.summary)}</td></tr>`).join("")}</tbody></table></section>` : ""}${limitations.length ? `<section><h2>Limitations</h2><ul>${limitations.map((limitation) => `<li>${escapeReportHtml(limitation)}</li>`).join("")}</ul></section>` : ""}<section><h2>Attribution</h2><ul>${report.attribution.map((item) => `<li><strong>${escapeReportHtml(item.layer)}:</strong> ${escapeReportHtml(item.source)}</li>`).join("")}</ul></section><p class="boundary">This report is a browser-generated public-safe demonstration artifact. It does not release, publish, admit, or authorize KFM data.</p></body></html>`;
+      mime = "text/html";
+    }
+    const url = URL.createObjectURL(new Blob([content], { type: mime }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${safeName}.${format}`;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 0);
+    announce(`${format.toUpperCase()} report downloaded with ${reportRecords.length} matching records`);
+  };
+
   const copyExportManifest = async () => {
     const review = buildExportReview(new Date().toISOString());
     setExportGeneratedAt(review.payload.exportedAt);
@@ -1929,23 +2441,15 @@ export default function Home() {
           <span className="mark" aria-hidden="true">KFM</span>
           <span><strong>Kansas Frontier Matrix</strong><small>Spatial evidence explorer</small></span>
         </div>
-        <details ref={workspaceDetailsRef} className="workspace-switcher">
-          <summary aria-label={`Current workspace: ${publicWorkspaces.find((workspace) => workspace.id === currentWorkspace)?.label}. Open workspace switcher.`}>
-            <span>Workspace</span><strong>{publicWorkspaces.find((workspace) => workspace.id === currentWorkspace)?.shortLabel}</strong><b aria-hidden="true">⌄</b>
-          </summary>
-          <div className="workspace-menu" aria-label="Public Explorer workspaces">
-            <header><span>PUBLIC WORKSPACE REGISTRY</span><strong>Move context, not authority</strong><p>These destinations expose public-safe views only.</p></header>
-            {publicWorkspaces.map((workspace, index) => <button key={workspace.id} type="button" data-active={currentWorkspace === workspace.id} aria-current={currentWorkspace === workspace.id ? "page" : undefined} onClick={() => activatePublicWorkspace(workspace.id)}>
-              <span>{String(index + 1).padStart(2, "0")}</span><div><strong>{workspace.label}</strong><p>{workspace.summary}</p><small>{workspace.capability}</small></div>
-            </button>)}
-            <footer>Review, operations, source admission, release, and publication remain separate authorized surfaces.</footer>
-          </div>
-        </details>
+        <nav className="header-workflows" aria-label="Primary Explorer actions">
+          <button type="button" title="Layers · shortcut L" aria-pressed={leftOpen} onClick={() => { setLeftOpen((current) => !current); setCurrentWorkspace("knowledge"); if (isCompact) { dismissMapUtilityWithoutFocus(); setRightOpen(false); setTimelineOpen(false); } }}><span aria-hidden="true">▦</span>Layers</button>
+          <button className="header-report-action" type="button" title="Build report · shortcut R" aria-pressed={mapUtilityOpen && mapUtilityView === "report"} onClick={(event) => openMapUtility("report", event.currentTarget)}><span aria-hidden="true">＋</span>Build report</button>
+        </nav>
         <div className="global-search">
           <label>
             <span className="sr-only">Search current layers and demonstration features</span>
             <span aria-hidden="true">⌕</span>
-            <input value={globalQuery} onChange={(event) => setGlobalQuery(event.target.value)} type="search" placeholder="Search places, layers, feature IDs…" aria-describedby="global-search-help" />
+            <input ref={globalSearchInputRef} value={globalQuery} onChange={(event) => setGlobalQuery(event.target.value)} type="search" placeholder="Search places, layers, feature IDs…" aria-describedby="global-search-help" title="Search · shortcut /" />
           </label>
           <span id="global-search-help" className="sr-only">Search results appear as keyboard-focusable buttons.</span>
           {globalQuery && <div className="search-results" id="global-search-results" aria-label="Search results">
@@ -1959,16 +2463,13 @@ export default function Home() {
           <span className="release-indicator" data-selection-state={selected?.properties.evidenceState ?? "DEMONSTRATION"} title="Visible selection posture; not release or publication authority"><i /> {selected ? selectedEvidence?.label.toUpperCase() : "DEMONSTRATION"}</span>
         </div>
         <div className="top-actions">
-          <button ref={repositoryButtonRef} className="repository-trigger" type="button" onClick={() => { setCurrentWorkspace("features"); setRepositoryOpen(true); setHelpOpen(false); setToolsExpanded(false); }} aria-expanded={repositoryOpen} aria-controls="repository-briefing" aria-label="Open repository and function briefing" title="Repository and function briefing"><span aria-hidden="true">R</span><i aria-hidden="true">{REPOSITORY_SNAPSHOT.counts.repositoryUpdates}</i></button>
-          <button className="story-trigger" type="button" onClick={startStoryTrail} aria-expanded={storyOpen} aria-controls="kfm-story-trail" aria-label="Start guided Kansas trust story" title="Guided Kansas trust story">S</button>
           <button className="share-action" type="button" onClick={shareView} aria-label="Share current map view" title="Share current view">↗</button>
-          <button type="button" onClick={() => setHelpOpen((current) => !current)} aria-expanded={helpOpen} aria-label="Open map guide" title="Map guide">?</button>
-          <button className="panel-toggle" type="button" onClick={() => { setLeftOpen((current) => { const next = !current; setCurrentWorkspace(next ? "knowledge" : "explore"); return next; }); if (isCompact) { dismissMapUtilityWithoutFocus(); setRightOpen(false); setTimelineOpen(false); } }} aria-expanded={leftOpen} aria-label="Toggle Layer Catalog">☰</button>
+          <Link className="about-action" href="/about">About</Link>
         </div>
         {helpOpen && <aside className="map-guide" role="dialog" aria-modal="false" aria-label="Map guide">
           <button className="icon-close" type="button" onClick={() => setHelpOpen(false)} aria-label="Close map guide">×</button>
           <p className="panel-kicker">MAP GUIDE</p><h2>Explore a feature, then check what supports it.</h2>
-          <p>Every layer in this build uses site-local synthetic or generalized demonstration data—not released operational data. Choose an example or select any feature to inspect its evidence state.</p>
+          <p>Nothing in this build is a released operational dataset. Every layer uses site-local synthetic or generalized demonstration data. Choose an example or select any feature to inspect its evidence state.</p>
           <div className="map-guide-actions"><button className="map-guide-start" type="button" onClick={showGuidedStart}>Try quick examples</button><button className="map-guide-start" type="button" onClick={startStoryTrail}>Start four-step story</button></div>
           <ol><li>Search, choose an example, or enable a layer.</li><li>Select a feature.</li><li>Inspect what is supported, missing, corrected, or withheld.</li><li>Review time, lineage, and Focus Mode when you need more detail.</li></ol>
           <p><strong>Renderer interactions are held.</strong> The Map Workbench retains renderer-neutral coordinate navigation, camera state, and catalog-scoped feature discovery. Box zoom, terrain, and swipe comparison remain unavailable pending a conforming consumer and admitted sources.</p>
@@ -2218,7 +2719,7 @@ export default function Home() {
             <div><p className="panel-kicker">LAYER CATALOG</p><h1>Explore Kansas</h1></div>
             <button className="icon-close" type="button" onClick={closeLeftPanel} aria-label="Close Layer Catalog">×</button>
           </div>
-          <p className="panel-intro">Browse clearly labeled synthetic and generalized demonstration layers. Nothing in this build is a released operational dataset.</p>
+          <p className="panel-intro">Choose synthetic and generalized demonstration layers for the map and your next report.</p>
           <label className="catalog-search"><span aria-hidden="true">⌕</span><span className="sr-only">Search Layer Catalog</span><input type="search" value={layerQuery} onChange={(event) => setLayerQuery(event.target.value)} placeholder="Filter layers and datasets" /></label>
 
           <section className="active-layers" aria-labelledby="active-title">
@@ -2257,11 +2758,15 @@ export default function Home() {
             {filteredLayerIds.size === 0 && <div className="catalog-empty"><strong>No layers found</strong><p>Try a domain, dataset, or geometry term.</p></div>}
           </div>
 
-          <div className="panel-footer-actions"><button type="button" onClick={resetExplorer}>Reset Explorer</button><button type="button" onClick={(event) => openMapUtility("export", event.currentTarget)}>Review public-safe export</button></div>
+          <div className="panel-footer-actions"><button type="button" onClick={resetExplorer}>Reset map</button><button type="button" onClick={(event) => { setReportLayerIds(activeLayers.map((layer) => layer.id)); openMapUtility("report", event.currentTarget); }}>Report visible layers</button></div>
         </aside>
 
         <section className="map-stage" aria-label="Kansas renderer-neutral Explorer">
-          <div className="mission-band"><span data-runtime={runtime.kind}><i /> RENDERER HOLD · NULL RUNTIME</span><p>Synthetic and generalized catalog data only · renderer acquisition, styles, sources, layers, hit testing, and measurement remain held.</p></div>
+          <div className="mission-band map-command-bar">
+            <span data-runtime={runtime.kind}><i /> RENDERER HOLD · NULL RUNTIME</span>
+            <p>Synthetic and generalized catalog data only · <b>{visibleCount}</b> layers · <b>{formatTimelineStep(year)}</b> · <b>{selected ? selected.properties.title : "No selection"}</b></p>
+            <div><button type="button" onClick={saveCurrentWorkspace}>Save view</button><button type="button" onClick={(event) => openMapUtility("report", event.currentTarget)}>Build report</button></div>
+          </div>
           <div id="map-canvas" ref={mapContainerRef} className="map-canvas" tabIndex={0} role="application" aria-label="Renderer-neutral Kansas Explorer shell. Use Map Workbench Inspect or the Layer Catalog to inspect catalog and evidence metadata; renderer interactions remain held." />
 
           {(runtime.kind === "loading" || runtime.kind === "error") && <div className={`runtime-overlay ${runtime.kind}`} role="status" aria-live="assertive"><span className="runtime-spinner" aria-hidden="true" /><strong>{runtime.kind === "loading" ? "Preparing spatial explorer" : "Map runtime unavailable"}</strong><p>{runtime.message}</p>{runtime.kind === "error" && <button type="button" onClick={() => window.location.reload()}>Reload map</button>}</div>}
@@ -2310,11 +2815,13 @@ export default function Home() {
             <button type="button" onClick={() => updateRendererNeutralView({ zoom: Math.max(4, view.zoom - 1) })} aria-label="Zoom out" data-tooltip="Zoom out">−</button>
             <button className="mobile-hidden-control" type="button" onClick={() => updateRendererNeutralView({ bearing: 0, pitch: 0 })} aria-label="Reset compass and pitch" data-tooltip="Reset north">N</button>
             <button type="button" onClick={fitKansasView} aria-label="Reset view to Kansas" data-tooltip="Kansas extent">KS</button>
-            <button ref={mapUtilityButtonRef} type="button" onClick={(event) => mapUtilityOpen ? closeMapUtility() : openMapUtility("navigate", event.currentTarget)} aria-expanded={mapUtilityOpen} aria-controls="map-utility-panel" aria-label="Open Map Workbench" data-tooltip="Map Workbench">UI</button>
+            <button ref={mapUtilityButtonRef} className="map-report-tool" type="button" onClick={(event) => mapUtilityOpen && mapUtilityView === "report" ? closeMapUtility() : openMapUtility("report", event.currentTarget)} aria-expanded={mapUtilityOpen && mapUtilityView === "report"} aria-controls="map-utility-panel" aria-label="Build a custom report" data-tooltip="Build report">R</button>
             <button className="mobile-hidden-control" type="button" onClick={locateUser} aria-label="Use my location" data-tooltip="My location">⌾</button>
             <button type="button" onClick={() => setToolsExpanded((current) => !current)} aria-expanded={toolsExpanded} aria-controls="more-map-tools" aria-label="More map tools" data-tooltip="More tools">•••</button>
             {toolsExpanded && <div className="secondary-tools" id="more-map-tools">
-              <button type="button" onClick={(event) => openMapUtility("navigate", event.currentTarget)}><span>UI</span>Map Workbench</button>
+              <button type="button" onClick={(event) => openMapUtility("report", event.currentTarget)}><span>R</span>Build report</button>
+              <button type="button" onClick={(event) => openMapUtility("navigate", event.currentTarget)}><span>⌖</span>Map controls</button>
+              <button type="button" onClick={captureAnalysisArea} disabled={locationCameraRedacted}><span>▣</span>{analysisArea ? "Update report area" : "Lock report area"}</button>
               <button type="button" onClick={toggleFullscreen} aria-label="Toggle fullscreen"><span>⛶</span>Fullscreen</button>
               <button type="button" aria-pressed={projection === "globe"} onClick={() => setProjection((current) => current === "globe" ? "mercator" : "globe")}><span>◎</span>{projection === "globe" ? "2D view" : "Globe"}</button>
               <button type="button" aria-pressed={measureMode === "distance"} onClick={() => toggleMeasure("distance")}><span>↔</span>Distance</button>
@@ -2330,6 +2837,7 @@ export default function Home() {
             id="map-utility-panel"
             className="map-utility-panel"
             data-open={mapUtilityOpen}
+            data-view={mapUtilityView}
             aria-hidden={!mapUtilityOpen}
             inert={!mapUtilityOpen}
             aria-modal={isCompact && mapUtilityOpen || undefined}
@@ -2337,7 +2845,7 @@ export default function Home() {
             aria-labelledby="map-utility-title"
           >
             <header className="map-utility-heading">
-              <div><p className="panel-kicker">MAP OPERATIONS</p><h2 id="map-utility-title">Map Workbench</h2><span>One interface for renderer controls, inspection, display, measurement, trust-aware export, and recovery.</span></div>
+              <div><p className="panel-kicker">MAP WORKBENCH</p><h2 id="map-utility-title">{mapUtilityView === "report" ? "Custom report builder" : "Map tools"}</h2><span>{mapUtilityView === "report" ? "Turn the current map, time, layers, and selected data into a usable report." : "Inspect, navigate, compare, display, measure, export, and diagnose the active map."}</span></div>
               <button className="icon-close" type="button" onClick={closeMapUtility} aria-label="Close Map Workbench">×</button>
             </header>
             <nav className="map-utility-tabs" role="tablist" aria-label="Map Workbench views">
@@ -2355,6 +2863,69 @@ export default function Home() {
               >{mapUtilityLabels[utilityView]}</button>)}
             </nav>
             <div className="map-utility-scroll">
+              {mapUtilityView === "report" && <section id="map-utility-view-report" role="tabpanel" aria-labelledby="map-utility-tab-report" className="map-utility-section report-builder-section">
+                <div className="map-utility-section-heading"><span>CUSTOM REPORT</span><h3>Build from the map you are using</h3><p>Filters apply immediately. The report uses current Explorer records and keeps evidence states, source roles, attribution, uncertainty, and time visible.</p></div>
+
+                <section className="analysis-recipes" aria-labelledby="analysis-recipes-title">
+                  <header><div><span>ANALYSIS RECIPES</span><h4 id="analysis-recipes-title">Configure map + report together</h4></div><small>Reversible view state</small></header>
+                  <div>{ANALYSIS_RECIPES.map((recipe) => <button key={recipe.id} type="button" onClick={() => applyAnalysisRecipe(recipe)}><span>{recipe.eyebrow}</span><strong>{recipe.title}</strong><p>{recipe.summary}</p><small>{recipe.year} · {recipe.layerIds.length} layers · {recipe.detail.toLowerCase()}</small></button>)}</div>
+                </section>
+
+                <div className="report-builder-grid">
+                  <div className="report-controls">
+                    <label className="report-title-field"><span>Report title</span><input type="text" value={reportTitle} maxLength={90} onChange={(event) => setReportTitle(event.target.value)} /></label>
+
+                    <fieldset className="report-control-group"><legend>Record filters</legend><div className="report-filter-grid">
+                      <label><span className="sr-only">Search records included in the report</span><i aria-hidden="true">⌕</i><input type="search" value={reportQuery} onChange={(event) => setReportQuery(event.target.value)} placeholder="Record, layer, source, or domain" /></label>
+                      <label><span className="sr-only">Filter report by evidence state</span><select value={reportEvidenceFilter} onChange={(event) => setReportEvidenceFilter(event.target.value as EvidenceState | "ALL")}><option value="ALL">All evidence states</option>{(Object.keys(evidenceLabels) as EvidenceState[]).map((state) => <option key={state} value={state}>{state.replaceAll("_", " ")}</option>)}</select></label>
+                    </div></fieldset>
+
+                    <fieldset className="report-control-group"><legend>Geographic scope</legend><div className="report-scope-grid">
+                      <button type="button" aria-pressed={reportScope === "VIEWPORT"} onClick={() => setReportScope("VIEWPORT")}><strong>Map extent</strong><small>Records inside the current viewport</small></button>
+                      <button type="button" aria-pressed={reportScope === "ANALYSIS_AREA"} disabled={!analysisArea} onClick={() => setReportScope("ANALYSIS_AREA")}><strong>Locked area</strong><small>{analysisArea ? `${analysisAreaRecordCount} compatible records` : "Capture an area from Map controls"}</small></button>
+                      <button type="button" aria-pressed={reportScope === "VISIBLE_LAYERS"} onClick={() => setReportScope("VISIBLE_LAYERS")}><strong>Visible layers</strong><small>Statewide records in active layers</small></button>
+                      <button type="button" aria-pressed={reportScope === "SELECTION"} disabled={!selected} onClick={() => setReportScope("SELECTION")}><strong>Selection</strong><small>{selected?.properties.title ?? "Select a map feature first"}</small></button>
+                    </div></fieldset>
+
+                    <fieldset className="report-control-group"><legend>Detail level</legend><div className="report-detail-grid">
+                      {(["EXECUTIVE", "STANDARD", "TECHNICAL"] as ReportDetail[]).map((detail) => <button key={detail} type="button" aria-pressed={reportDetail === detail} onClick={() => setReportDetail(detail)}>{detail === "EXECUTIVE" ? "Brief" : detail === "STANDARD" ? "Standard" : "Full detail"}</button>)}
+                    </div></fieldset>
+
+                    <fieldset className="report-control-group"><legend>Report sections</legend><div className="report-section-list">
+                      {REPORT_SECTIONS.map((section) => <label key={section.id}><input type="checkbox" checked={reportSections[section.id]} onChange={(event) => setReportSections((current) => ({ ...current, [section.id]: event.target.checked }))} /><span><strong>{section.label}</strong><small>{section.detail}</small></span></label>)}
+                    </div></fieldset>
+
+                    <fieldset className="report-control-group"><legend>Included layers</legend>
+                      <div className="report-layer-actions"><button type="button" onClick={() => setReportLayerIds(activeLayers.map((layer) => layer.id))}>Use visible</button><button type="button" onClick={() => setReportLayerIds(LAYER_REGISTRY.map((layer) => layer.id))}>Select all</button><button type="button" onClick={() => setReportLayerIds([])}>Clear</button></div>
+                      <div className="report-layer-list">{LAYER_REGISTRY.map((layer) => {
+                        const compatibleCount = layer.data.features.filter((feature) => isFeatureAvailableAtTime(layer, feature.properties.year, year)).length;
+                        return <label key={layer.id} data-visible={visibility[layer.id]}><input type="checkbox" checked={reportLayerIds.includes(layer.id)} onChange={(event) => setReportLayerIds((current) => event.target.checked ? [...new Set([...current, layer.id])] : current.filter((id) => id !== layer.id))} /><span><strong>{layer.title}</strong><small>{layer.domain} · {compatibleCount} time-compatible · {visibility[layer.id] ? "visible" : "hidden"}</small></span></label>;
+                      })}</div>
+                    </fieldset>
+
+                    <fieldset className="report-control-group saved-workspace-control"><legend>Saved workspaces</legend>
+                      <div className="workspace-save-row"><input type="text" value={workspaceName} maxLength={50} onChange={(event) => setWorkspaceName(event.target.value)} placeholder="Optional workspace name" /><button type="button" onClick={saveCurrentWorkspace}>Save current</button></div>
+                      <p>Stores camera, time, layers, opacity, selection, and report settings only on this device.</p>
+                      <div className="saved-workspace-list">{savedWorkspaces.map((snapshot) => <article key={snapshot.id}><button type="button" onClick={() => loadSavedWorkspace(snapshot)}><strong>{snapshot.name}</strong><small>{new Date(snapshot.savedAt).toLocaleString()} · {snapshot.report?.layerIds?.length ?? 0} report layers</small></button><button type="button" onClick={() => deleteSavedWorkspace(snapshot)} aria-label={`Delete ${snapshot.name}`}>×</button></article>)}{savedWorkspaces.length === 0 && <div><strong>No saved workspaces</strong><small>Save the current analysis setup to return to it later on this device.</small></div>}</div>
+                    </fieldset>
+                  </div>
+
+                  <article className="report-preview" aria-live="polite">
+                    <header><div><span>LIVE REPORT PREVIEW</span><h4>{reportTitle.trim() || "Kansas map data report"}</h4><p>{reportScope.replaceAll("_", " ")} · {formatTimelineStep(year)} · {reportDetail}</p></div><strong>{reportRecords.length} RECORD{reportRecords.length === 1 ? "" : "S"}</strong></header>
+                    {(reportQuery || reportEvidenceFilter !== "ALL") && <div className="report-active-filters"><span>ACTIVE FILTERS</span>{reportQuery && <b>Search: {reportQuery}</b>}{reportEvidenceFilter !== "ALL" && <b>{reportEvidenceFilter.replaceAll("_", " ")}</b>}<button type="button" onClick={() => { setReportQuery(""); setReportEvidenceFilter("ALL"); }}>Clear</button></div>}
+                    {reportSections.summary && <div className="report-metrics" aria-label="Report summary metrics"><article><span>Records</span><strong>{reportRecords.length}</strong></article><article><span>Layers</span><strong>{reportLayerSummary.length}</strong></article><article><span>States</span><strong>{Object.keys(reportEvidenceCounts).length}</strong></article><article><span>Selection</span><strong>{selected ? "1" : "0"}</strong></article></div>}
+                    {reportSections.findings && <section className="report-preview-section"><span>FINDINGS</span><ol>{reportFindings.map((finding) => <li key={finding}>{finding}</li>)}</ol></section>}
+                    {reportSections.records && <section className="report-preview-section"><span>RECORDS</span><div className="report-record-table" role="table" aria-label="Included report records">
+                      {reportRecords.slice(0, reportDetail === "EXECUTIVE" ? 8 : reportDetail === "STANDARD" ? 30 : reportRecords.length).map(({ layer, properties }) => <article key={`${layer.id}:${properties.fid}`} role="row"><div><strong>{properties.title}</strong><small>{layer.title} · {properties.year}</small></div><span data-state={properties.evidenceState}>{properties.evidenceState}</span><p>{properties.summary}</p></article>)}
+                      {reportRecords.length === 0 && <div className="report-empty"><strong>No records match</strong><p>Move or widen the map, change time, choose another scope, or include more layers.</p></div>}
+                    </div></section>}
+                    {reportSections.evidence && reportRecords.length > 0 && <section className="report-preview-section"><span>EVIDENCE DISTRIBUTION</span><div className="report-evidence-grid">{Object.entries(reportEvidenceCounts).sort((left, right) => right[1] - left[1]).map(([state, count]) => <article key={state}><strong>{count}</strong><span>{state}</span></article>)}</div></section>}
+                    {reportSections.limitations && <aside className="report-boundary"><strong>Use boundary</strong><p>Site-local synthetic and generalized demonstration data only. The generated report preserves limitations and cannot release, publish, admit, or authorize KFM data.</p></aside>}
+                    <footer><span>Updated {reportGeneratedAt}</span><div><button type="button" onClick={() => void copyCustomReport()} disabled={!reportLayerIds.length}>Copy</button><button type="button" onClick={() => downloadCustomReport("json")} disabled={!reportLayerIds.length}>Data .json</button><button className="report-download-primary" type="button" onClick={() => downloadCustomReport("html")} disabled={!reportLayerIds.length}>Report .html</button></div></footer>
+                  </article>
+                </div>
+              </section>}
+
               {mapUtilityView === "navigate" && <section id="map-utility-view-navigate" role="tabpanel" aria-labelledby="map-utility-tab-navigate" className="map-utility-section">
                 <div className="map-utility-section-heading"><span>NAVIGATE</span><h3>Camera, coordinates + private location</h3><p>Renderer-neutral camera state changes only this browser shell. It never acquires a renderer or changes evidence, policy, review, release, or publication state.</p></div>
                 <dl className="map-camera-facts">
@@ -2364,6 +2935,8 @@ export default function Home() {
                   <div><dt>Projection</dt><dd>{projection}</dd></div>
                 </dl>
                 <div className="map-utility-actions map-navigation-actions">
+                  <button type="button" onClick={() => travelCameraHistory(-1)} disabled={cameraHistoryIndex === 0}>Previous view</button>
+                  <button type="button" onClick={() => travelCameraHistory(1)} disabled={cameraHistoryIndex >= cameraHistoryLength - 1}>Next view</button>
                   <button type="button" onClick={() => updateRendererNeutralView({ zoom: Math.min(16, view.zoom + 1) })}>Zoom in</button>
                   <button type="button" onClick={() => updateRendererNeutralView({ zoom: Math.max(4, view.zoom - 1) })}>Zoom out</button>
                   <button type="button" onClick={() => updateRendererNeutralView({ bearing: 0, pitch: 0 })}>Reset north</button>
@@ -2372,6 +2945,13 @@ export default function Home() {
                   <button type="button" onClick={locateUser}>Use my location</button>
                   <button type="button" onClick={() => void copyMapCenter()} disabled={locationCameraRedacted}>Copy center</button>
                 </div>
+                <section className="analysis-area-card" data-active={Boolean(analysisArea)} aria-labelledby="analysis-area-title">
+                  <header><div><span>RENDERER-NEUTRAL VIEW ANALYSIS</span><h4 id="analysis-area-title">Area of interest</h4></div><strong>{analysisArea ? "LOCKED" : "NOT SET"}</strong></header>
+                  {analysisArea
+                    ? <><dl><div><dt>West / east</dt><dd>{analysisArea.west.toFixed(4)}° / {analysisArea.east.toFixed(4)}°</dd></div><div><dt>South / north</dt><dd>{analysisArea.south.toFixed(4)}° / {analysisArea.north.toFixed(4)}°</dd></div><div><dt>Compatible records</dt><dd>{analysisAreaRecordCount}</dd></div><div><dt>Report scope</dt><dd>{reportScope === "ANALYSIS_AREA" ? "ACTIVE" : "AVAILABLE"}</dd></div></dl><div><button type="button" onClick={captureAnalysisArea}>Update from viewport</button><button type="button" onClick={fitAnalysisArea}>Fit area</button><button type="button" onClick={() => { setReportScope("ANALYSIS_AREA"); setReportGeneratedAt(new Date().toISOString()); openMapUtility("report"); }}>Build area report</button><button type="button" onClick={clearAnalysisArea}>Clear</button></div></>
+                    : <><p>Lock the current viewport as a stable rectangular analysis area. You can pan elsewhere while reports continue using the locked extent.</p><button type="button" onClick={captureAnalysisArea} disabled={locationCameraRedacted}>Lock current viewport</button></>}
+                  <footer>Site-local fixture query only · viewport geometry is context, not evidence</footer>
+                </section>
                 <form className="map-coordinate-form" onSubmit={goToCoordinates}>
                   <header><strong>Go to coordinates</strong><span>Supported Kansas context extent</span></header>
                   <div>
@@ -2522,9 +3102,9 @@ export default function Home() {
           <div className="map-mobile-actions">
             <button type="button" onClick={() => { setCurrentWorkspace("knowledge"); dismissMapUtilityWithoutFocus(); setLeftOpen(true); setRightOpen(false); setTimelineOpen(false); }}>Layers <b>{visibleCount}</b></button>
             <button type="button" onClick={() => { if (selected) { setCurrentWorkspace("trust"); dismissMapUtilityWithoutFocus(); setRightOpen(true); setLeftOpen(false); setTimelineOpen(false); } }} disabled={!selected}>Evidence</button>
-            <button type="button" onClick={() => openMapUtility("navigate")}>Map</button>
+            <button type="button" onClick={(event) => openMapUtility("report", event.currentTarget)}>Report</button>
             <button type="button" onClick={() => { setCurrentWorkspace("explore"); dismissMapUtilityWithoutFocus(); setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); }}>Time <b>{formatTimelineStep(year)}</b></button>
-            <button type="button" onClick={() => { setCurrentWorkspace("features"); setRepositoryView("functions"); setRepositoryOpen(true); }}>Functions</button>
+            <Link href="/about">About</Link>
           </div>
 
           <div className="screenreader-status sr-only" aria-live="polite">{runtime.message}. Map center {formatCoordinate(view.center[1], "N", "S")}, {formatCoordinate(view.center[0], "E", "W")}. {visibleCount} layers visible. {selected ? `Selected ${selected.properties.title}; evidence state ${selectedEvidence?.label}.` : "No feature selected."}</div>

@@ -19,18 +19,18 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: "Kansas Frontier Matrix Explorer",
-    description: "Explore one Kansas demonstration feature, then inspect what supports it, what changed, and what remains withheld.",
+    description: "Explore Kansas map data, inspect evidence and time, and build custom public-safe reports from the active map context.",
     metadataBase,
     openGraph: {
       title: "Kansas Frontier Matrix Explorer",
-      description: "Explore one feature. Check what supports it. Synthetic and generalized demonstration data only.",
+      description: "Explore the map, inspect records, and build custom reports. Synthetic and generalized demonstration data only.",
       type: "website",
       images: [{ url: socialImage, width: 1731, height: 909, alt: "Kansas Frontier Matrix demonstration evidence network" }],
     },
     twitter: {
       card: "summary_large_image",
       title: "Kansas Frontier Matrix Explorer",
-      description: "Explore one feature. Check what supports it. Synthetic and generalized demonstration data only.",
+      description: "Explore the map, inspect records, and build custom reports. Synthetic and generalized demonstration data only.",
       images: [socialImage],
     },
     icons: {
@@ -51,3 +51,4 @@ export default function RootLayout({
     </html>
   );
 }
+
