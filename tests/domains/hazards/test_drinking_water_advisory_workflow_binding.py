@@ -30,6 +30,7 @@ DIRECT_EXECUTION_TRIGGER_PATHS = {
     "fixtures/contracts/v1/source/source_record_absence_assessment/**",
     "tools/validators/validate_source_record_absence_assessment.py",
     "tests/validators/test_validate_source_record_absence_assessment.py",
+    "schemas/contracts/v1/**",
     "schemas/contracts/v1/receipts/generated_receipt.schema.json",
     "tools/validators/validate_generated_receipt.py",
     "tools/validators/_common/local_resolver.py",
