@@ -2,7 +2,7 @@
 doc_id: kfm://doc/domains/fauna/readme
 title: KFM Fauna Domain Lane
 type: standard
-version: v1.2.2
+version: v1.2.3
 status: draft
 owners: ["@bartytime4life — CODEOWNERS review route", "NEEDS VERIFICATION — fauna domain steward; docs steward; independent reviewer"]
 created: 2026-05-16
@@ -27,7 +27,7 @@ related:
   - release/candidates/fauna/
 tags: [kfm, domain, fauna, sensitivity, geoprivacy, evidence-first]
 notes:
-  # Repository paths and bounded synthetic validation were re-pinned at main@ab312c693eb7315bb111bc6484d78d2a28d6f3d5; source-first RAW routing is reconciled here while physical placement, execution, review, release, and publication remain separate states.
+  # Repository paths and bounded synthetic validation were re-pinned at main@2b0ea9bbbc9d9a120ea94d92fb4617d96fe7d2a0; the Fauna RAW reference is explicitly optional while physical placement, execution, review, release, and publication remain separate states.
   # Public exact sensitive occurrence release is denied by default (Fauna sensitive occurrence = T4).
   # Doctrine-adjacent doc; CONTRACT_VERSION = "3.0.0" pinned per AI Build Operating Contract v3.0.
   # Atlas anchors: v1.1 Ch. 7 (Fauna), §20.5 (Deny-by-Default Register), §24.3 (Outcome Envelope), §24.5 (Sensitivity Tiers).
@@ -250,8 +250,9 @@ The active workflow inventory contains `domain-fauna.yml`, `fauna-evidence-bundl
 ```mermaid
 flowchart LR
   A["Source<br/>(KDWP, USFWS, GBIF,<br/>eBird, EDDMapS, …)"] --> B["RAW CAPTURE<br/>one source-first identity<br/>physical placement NEEDS VERIFICATION"]
-  B --> R["FAUNA REFERENCE / HANDOFF<br/>data/raw/fauna/<br/>compatibility only; no duplicate bytes"]
-  R --> C{"Sensitive<br/>taxon / site?"}
+  B --> C{"Sensitive<br/>taxon / site?"}
+  B -. "optional Fauna reference" .-> R["OPTIONAL FAUNA REFERENCE<br/>data/raw/fauna/<br/>compatibility only; no duplicate bytes"]
+  R -. "same capture; optional handoff" .-> C
   C -- "yes" --> Q["QUARANTINE<br/>data/quarantine/fauna/<br/>(deny-by-default)"]
   C -- "no" --> W["WORK<br/>data/work/fauna/"]
   Q -- "steward review +<br/>Geoprivacy transform +<br/>RedactionReceipt" --> W
@@ -271,7 +272,7 @@ flowchart LR
   class PUB,API,UI pub;
 ```
 
-**Reading the diagram.** RAW capture has one source-first identity. `data/raw/fauna/` is a compatibility/reference and handoff surface, not an accepted physical payload home; exact writer binding and placement remain **NEEDS VERIFICATION**. Sensitive taxa, nests, dens, roosts, hibernacula, and spawning sites land in **QUARANTINE** by default; they only re-enter the WORK lane after **steward review + geoprivacy transform + RedactionReceipt**. Publication is a **governed state transition**, not a file move — every transition emits receipts, and rollback is always a valid target. Current repository guidance contains both `data/published/fauna/` and the map-layer delivery surface `data/published/layers/fauna/`; their canonical relationship is **CONFLICTED / NEEDS VERIFICATION**. The diagram records both without selecting a canonical carrier, and neither path grants release authority. [DIRRULES]
+**Reading the diagram.** RAW capture has one source-first identity and reaches the sensitivity decision directly. `data/raw/fauna/` is an optional compatibility/reference and handoff surface, not a required lifecycle stage or an accepted physical payload home; a reference may point to the same capture without duplicating bytes, and exact writer binding and placement remain **NEEDS VERIFICATION**. Sensitive taxa, nests, dens, roosts, hibernacula, and spawning sites land in **QUARANTINE** by default; they only re-enter the WORK lane after **steward review + geoprivacy transform + RedactionReceipt**. Publication is a **governed state transition**, not a file move — every transition emits receipts, and rollback is always a valid target. Current repository guidance contains both `data/published/fauna/` and the map-layer delivery surface `data/published/layers/fauna/`; their canonical relationship is **CONFLICTED / NEEDS VERIFICATION**. The diagram records both without selecting a canonical carrier, and neither path grants release authority. [DIRRULES]
 
 [Back to top ↑](#top)
 
