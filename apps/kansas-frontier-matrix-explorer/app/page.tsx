@@ -21,6 +21,7 @@ import {
 } from "./explorer-data";
 import {
   BASEMAPS,
+  lngLatToTile,
   type BasemapKey,
 } from "./map-runtime";
 import {
@@ -125,6 +126,7 @@ type MapQueryCandidate = Readonly<{
   evidenceState: EvidenceState;
   sourceYear: number;
 }>;
+type ScenePresetId = "overview-2d" | "water-systems" | "smoke-context" | "elevation-3d" | "tile-grid";
 
 type SelectedContext = {
   featureId: string;
@@ -144,11 +146,12 @@ const defaultOrder = LAYER_REGISTRY.map((layer) => layer.id);
 const interactiveLayerIds = LAYER_REGISTRY.flatMap((layer) => layer.renderers.filter((renderer) => renderer.interactive).map((renderer) => renderer.id));
 const layerDomains = ["ALL", ...Array.from(new Set(LAYER_REGISTRY.map((layer) => layer.domain))).sort()] as const;
 const drawerViews = ["evidence", "metadata", "lineage", "focus"] as const satisfies readonly DrawerView[];
-const mapUtilityViews = ["report", "inspect", "navigate", "compare", "display", "measure", "export", "diagnostics"] as const satisfies readonly MapUtilityView[];
+const mapUtilityViews = ["report", "inspect", "navigate", "scene", "compare", "display", "measure", "export", "diagnostics"] as const satisfies readonly MapUtilityView[];
 const mapUtilityLabels: Record<MapUtilityView, string> = {
   report: "Report",
   navigate: "Navigate",
   inspect: "Inspect",
+  scene: "Scene",
   compare: "Compare",
   display: "Display",
   measure: "Measure",
@@ -391,6 +394,7 @@ export default function Home() {
   const yearRef = useRef<number>(2026);
   const basemapRef = useRef<BasemapKey>("midnight");
   const projectionRef = useRef<"mercator" | "globe">("mercator");
+  const verticalExaggerationRef = useRef(1);
   const selectedRef = useRef<SelectedContext | null>(null);
   const measureModeRef = useRef<MeasureMode>(null);
   const measurementGeometryModeRef = useRef<MeasureMode>(null);
@@ -424,6 +428,8 @@ export default function Home() {
   const [layerOrder, setLayerOrder] = useState<string[]>(defaultOrder);
   const [basemap, setBasemap] = useState<BasemapKey>("midnight");
   const [view, setView] = useState<ViewState>(KANSAS_VIEW);
+  const [scenePreset, setScenePreset] = useState<ScenePresetId>("overview-2d");
+  const [verticalExaggeration, setVerticalExaggeration] = useState(1);
   const [pointer, setPointer] = useState<[number, number]>(KANSAS_VIEW.center);
   const [mapViewportBounds, setMapViewportBounds] = useState<MapBoundsState>(SUPPORTED_CONTEXT_BOUNDS);
   const [analysisArea, setAnalysisArea] = useState<MapBoundsState | null>(null);
@@ -513,6 +519,7 @@ export default function Home() {
   useEffect(() => { yearRef.current = year; }, [year]);
   useEffect(() => { basemapRef.current = basemap; }, [basemap]);
   useEffect(() => { projectionRef.current = projection; }, [projection]);
+  useEffect(() => { verticalExaggerationRef.current = verticalExaggeration; }, [verticalExaggeration]);
   useEffect(() => {
     const restoreSavedWorkspaces = window.setTimeout(() => {
       try {
@@ -547,6 +554,7 @@ export default function Home() {
   const sourceStateCounts = useMemo(() => ({
     held: Object.values(sourceStates).filter((state) => state === "held").length,
   }), [sourceStates]);
+  const centerTile = useMemo(() => lngLatToTile(view.center[0], view.center[1], view.zoom), [view.center, view.zoom]);
   const maplibreCapabilityChecks = useMemo(() => {
     return [
       {
@@ -810,6 +818,8 @@ export default function Home() {
     params.set("t", String(year));
     params.set("base", basemap);
     params.set("proj", projection);
+    params.set("scene", scenePreset);
+    params.set("zscale", verticalExaggeration.toFixed(1));
     params.set("order", layerOrder.join(","));
     params.set("units", measureUnit);
     params.set("ws", currentWorkspace);
@@ -829,7 +839,7 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [activeLayers, analysisArea, basemap, compareLeft.id, compareRight.id, currentWorkspace, drawerView, focusIntent, focusStage, layerOrder, locationCameraRedacted, mapUtilityOpen, mapUtilityView, measureUnit, opacity, projection, rightOpen, selected, view, year]);
+  }, [activeLayers, analysisArea, basemap, compareLeft.id, compareRight.id, currentWorkspace, drawerView, focusIntent, focusStage, layerOrder, locationCameraRedacted, mapUtilityOpen, mapUtilityView, measureUnit, opacity, projection, rightOpen, scenePreset, selected, verticalExaggeration, view, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
@@ -1343,13 +1353,19 @@ export default function Home() {
       const nextProjection = restoredProjection === "globe" ? "globe" : "mercator";
       projectionRef.current = nextProjection;
       setProjection(nextProjection);
+      const restoredScene = params.get("scene");
+      const nextScenePreset: ScenePresetId = restoredScene === "water-systems" || restoredScene === "smoke-context" || restoredScene === "elevation-3d" || restoredScene === "tile-grid" ? restoredScene : "overview-2d";
+      setScenePreset(nextScenePreset);
+      const nextVerticalExaggeration = clamp(parseNumber(params.get("zscale"), 1), 0, 2);
+      verticalExaggerationRef.current = nextVerticalExaggeration;
+      setVerticalExaggeration(nextVerticalExaggeration);
       const restoredMeasureUnit: MeasureUnit = params.get("units") === "metric" ? "metric" : "imperial";
       measureUnitRef.current = restoredMeasureUnit;
       setMeasureUnit(restoredMeasureUnit);
       const restoredWorkspace = params.get("ws");
       setCurrentWorkspace(restoredWorkspace === "knowledge" || restoredWorkspace === "features" || restoredWorkspace === "trust" ? restoredWorkspace : "explore");
       const restoredMapUtilityView = params.get("maptab");
-      const nextMapUtilityView: MapUtilityView = restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "display" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "navigate";
+      const nextMapUtilityView: MapUtilityView = restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "scene" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "display" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "navigate";
       setMapUtilityView(nextMapUtilityView);
       const restoredCompareIds = params.get("compare")?.split(",") ?? [];
       if (restoredCompareIds.length === 2 && restoredCompareIds.every((id) => knownLayerIds.has(id)) && restoredCompareIds[0] !== restoredCompareIds[1]) {
@@ -1793,6 +1809,77 @@ export default function Home() {
     announce(`Fit ${mapFeatureIndex.length} compatible indexed feature${mapFeatureIndex.length === 1 ? "" : "s"}`);
   };
 
+  const applyScenePreset = (preset: ScenePresetId) => {
+    const scene = {
+      "overview-2d": {
+        layers: ["kansas-extent", "watershed-context", "water-context", "prairie-context", "atmosphere-observations", "communities"],
+        basemap: "midnight" as BasemapKey,
+        camera: { ...KANSAS_VIEW },
+        scale: 1,
+        label: "2D Kansas overview",
+      },
+      "water-systems": {
+        layers: ["kansas-extent", "watershed-context", "water-context", "communities"],
+        basemap: "midnight" as BasemapKey,
+        camera: { center: [-98.25, 38.55] as [number, number], zoom: 6.05, bearing: 0, pitch: 18 },
+        scale: 1,
+        label: "Water systems scene",
+      },
+      "smoke-context": {
+        layers: ["kansas-extent", "watershed-context", "smoke-context", "atmosphere-observations", "communities"],
+        basemap: "midnight" as BasemapKey,
+        camera: { center: [-97.05, 38.65] as [number, number], zoom: 6.0, bearing: -8, pitch: 28 },
+        scale: 1,
+        label: "Synthetic smoke context scene",
+      },
+      "elevation-3d": {
+        layers: ["kansas-extent", "watershed-context", "water-context", "elevation-concept", "communities"],
+        basemap: "prairie" as BasemapKey,
+        camera: { center: [-98.38, 38.48] as [number, number], zoom: 5.8, bearing: -18, pitch: 52 },
+        scale: 1.2,
+        label: "Synthetic elevation extrusion scene",
+      },
+      "tile-grid": {
+        layers: ["kansas-extent", "tile-matrix-grid", "water-context", "communities"],
+        basemap: "midnight" as BasemapKey,
+        camera: { center: [-98.38, 38.48] as [number, number], zoom: 6.2, bearing: 0, pitch: 0 },
+        scale: 1,
+        label: "Tile diagnostic grid scene",
+      },
+    }[preset];
+    const nextVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, scene.layers.includes(layer.id)]));
+    visibilityRef.current = nextVisibility;
+    yearRef.current = 2026;
+    basemapRef.current = scene.basemap;
+    projectionRef.current = "mercator";
+    verticalExaggerationRef.current = scene.scale;
+    setVisibility(nextVisibility);
+    setYear(2026);
+    setPlaying(false);
+    setBasemap(scene.basemap);
+    setProjection("mercator");
+    setScenePreset(preset);
+    setVerticalExaggeration(scene.scale);
+    setMapQueryCandidates([]);
+    locationDerivedViewRef.current = false;
+    setLocationCameraRedacted(false);
+    clearSelectionState();
+    updateRendererNeutralView(scene.camera);
+    announce(`${scene.label} applied · reversible browser-only view state`);
+  };
+
+  const toggleSceneLayer = (layerId: "watershed-context" | "smoke-context" | "elevation-concept" | "tile-matrix-grid") => {
+    setVisibility((current) => {
+      const next = { ...current, [layerId]: !current[layerId] };
+      visibilityRef.current = next;
+      return next;
+    });
+  };
+
+  const orientSceneCamera = (pitch: number, bearing = view.bearing) => {
+    updateRendererNeutralView({ pitch, bearing });
+  };
+
   const applyViewProfile = (profile: MapViewProfile) => {
     const nextVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, profile.visibleLayerIds.includes(layer.id)]));
     visibilityRef.current = nextVisibility;
@@ -1804,6 +1891,7 @@ export default function Home() {
     setPlaying(false);
     setBasemap(profile.basemap);
     setProjection(profile.projection);
+    setScenePreset(profile.id === "smoke" ? "smoke-context" : profile.id === "elevation" ? "elevation-3d" : "overview-2d");
     setMapQueryCandidates([]);
     locationDerivedViewRef.current = false;
     setLocationCameraRedacted(false);
@@ -1972,12 +2060,15 @@ export default function Home() {
     yearRef.current = 2026;
     basemapRef.current = "midnight";
     projectionRef.current = "mercator";
+    verticalExaggerationRef.current = 1;
     setVisibility(defaultVisibility);
     setOpacity(defaultOpacity);
     setLayerOrder(defaultOrder);
     setYear(2026);
     setBasemap("midnight");
     setProjection("mercator");
+    setScenePreset("overview-2d");
+    setVerticalExaggeration(1);
     setMeasureMode(null);
     setMeasurementGeometryMode(null);
     measureModeRef.current = null;
@@ -2815,12 +2906,14 @@ export default function Home() {
             <button type="button" onClick={() => updateRendererNeutralView({ zoom: Math.max(4, view.zoom - 1) })} aria-label="Zoom out" data-tooltip="Zoom out">−</button>
             <button className="mobile-hidden-control" type="button" onClick={() => updateRendererNeutralView({ bearing: 0, pitch: 0 })} aria-label="Reset compass and pitch" data-tooltip="Reset north">N</button>
             <button type="button" onClick={fitKansasView} aria-label="Reset view to Kansas" data-tooltip="Kansas extent">KS</button>
+            <button type="button" onClick={(event) => mapUtilityOpen && mapUtilityView === "scene" ? closeMapUtility() : openMapUtility("scene", event.currentTarget)} aria-expanded={mapUtilityOpen && mapUtilityView === "scene"} aria-controls="map-utility-panel" aria-label="Open scene and tile lab" data-tooltip="Scene + tiles">3D</button>
             <button ref={mapUtilityButtonRef} className="map-report-tool" type="button" onClick={(event) => mapUtilityOpen && mapUtilityView === "report" ? closeMapUtility() : openMapUtility("report", event.currentTarget)} aria-expanded={mapUtilityOpen && mapUtilityView === "report"} aria-controls="map-utility-panel" aria-label="Build a custom report" data-tooltip="Build report">R</button>
             <button className="mobile-hidden-control" type="button" onClick={locateUser} aria-label="Use my location" data-tooltip="My location">⌾</button>
             <button type="button" onClick={() => setToolsExpanded((current) => !current)} aria-expanded={toolsExpanded} aria-controls="more-map-tools" aria-label="More map tools" data-tooltip="More tools">•••</button>
             {toolsExpanded && <div className="secondary-tools" id="more-map-tools">
               <button type="button" onClick={(event) => openMapUtility("report", event.currentTarget)}><span>R</span>Build report</button>
               <button type="button" onClick={(event) => openMapUtility("navigate", event.currentTarget)}><span>⌖</span>Map controls</button>
+              <button type="button" onClick={(event) => openMapUtility("scene", event.currentTarget)}><span>3D</span>Scene + tiles</button>
               <button type="button" onClick={captureAnalysisArea} disabled={locationCameraRedacted}><span>▣</span>{analysisArea ? "Update report area" : "Lock report area"}</button>
               <button type="button" onClick={toggleFullscreen} aria-label="Toggle fullscreen"><span>⛶</span>Fullscreen</button>
               <button type="button" aria-pressed={projection === "globe"} onClick={() => setProjection((current) => current === "globe" ? "mercator" : "globe")}><span>◎</span>{projection === "globe" ? "2D view" : "Globe"}</button>
@@ -2845,7 +2938,7 @@ export default function Home() {
             aria-labelledby="map-utility-title"
           >
             <header className="map-utility-heading">
-              <div><p className="panel-kicker">MAP WORKBENCH</p><h2 id="map-utility-title">{mapUtilityView === "report" ? "Custom report builder" : "Map tools"}</h2><span>{mapUtilityView === "report" ? "Turn the current map, time, layers, and selected data into a usable report." : "Inspect, navigate, compare, display, measure, export, and diagnose the active map."}</span></div>
+              <div><p className="panel-kicker">MAP WORKBENCH</p><h2 id="map-utility-title">{mapUtilityView === "report" ? "Custom report builder" : mapUtilityView === "scene" ? "Scene + tile lab" : "Map tools"}</h2><span>{mapUtilityView === "report" ? "Turn the current map, time, layers, and selected data into a usable report." : "Inspect, navigate, explore scenes and tiles, compare, display, measure, export, and diagnose the active map."}</span></div>
               <button className="icon-close" type="button" onClick={closeMapUtility} aria-label="Close Map Workbench">×</button>
             </header>
             <nav className="map-utility-tabs" role="tablist" aria-label="Map Workbench views">
@@ -3000,6 +3093,59 @@ export default function Home() {
                   </article>)}
                   {mapFeatureIndex.length === 0 && <div className="map-utility-empty"><strong>No compatible features</strong><p>Change the active time, clear a spatial filter or feature search, or choose another layer.</p></div>}
                 </div>
+              </section>}
+
+              {mapUtilityView === "scene" && <section id="map-utility-view-scene" role="tabpanel" aria-labelledby="map-utility-tab-scene" className="map-utility-section scene-lab-section">
+                <div className="map-utility-section-heading"><span>SCENE + TILE LAB</span><h3>Navigate water, smoke, elevation + tiles</h3><p>Use reversible scene presets and browser-local diagnostics. Every advanced layer remains synthetic or generalized; real terrain and operational sources stay held.</p></div>
+
+                <section className="scene-preset-grid" aria-label="Map scene presets">
+                  {([
+                    ["overview-2d", "2D overview", "Default evidence-first camera"],
+                    ["water-systems", "Water systems", "Basins + directional corridors"],
+                    ["smoke-context", "Smoke timeline", "Synthetic plume context"],
+                    ["elevation-3d", "Elevation 3D", "Relative-height extrusions"],
+                    ["tile-grid", "Tile grid", "Viewport diagnostics"],
+                  ] as const).map(([id, title, detail]) => <button key={id} type="button" aria-pressed={scenePreset === id} onClick={() => applyScenePreset(id)}><span>{id === "elevation-3d" ? "3D" : id === "tile-grid" ? "XYZ" : id === "smoke-context" ? "AIR" : id === "water-systems" ? "H₂O" : "2D"}</span><strong>{title}</strong><small>{detail}</small></button>)}
+                </section>
+
+                <div className="scene-layer-toggles" role="group" aria-label="Advanced layer visibility">
+                  {([
+                    ["watershed-context", "Watersheds"],
+                    ["smoke-context", "Smoke"],
+                    ["elevation-concept", "Elevation"],
+                    ["tile-matrix-grid", "Tile matrix"],
+                  ] as const).map(([id, label]) => <button key={id} type="button" aria-pressed={visibility[id]} onClick={() => toggleSceneLayer(id)}><i aria-hidden="true" />{label}</button>)}
+                </div>
+
+                <div className="scene-control-grid">
+                  <section className="scene-height-control" aria-labelledby="scene-height-title">
+                    <header><div><strong id="scene-height-title">Relative vertical scale</strong><small>Synthetic extrusion only</small></div><output htmlFor="scene-height">{verticalExaggeration.toFixed(1)}×</output></header>
+                    <input id="scene-height" type="range" min="0" max="2" step="0.1" value={verticalExaggeration} onChange={(event) => { const next = Number(event.target.value); verticalExaggerationRef.current = next; setVerticalExaggeration(next); }} />
+                    <div><span>Flat</span><span>1× fixture</span><span>2× concept</span></div>
+                  </section>
+                  <section className="scene-camera-controls" aria-label="3D camera orientation">
+                    <header><strong>Camera</strong><small>{Math.round(view.pitch)}° pitch · {Math.round(view.bearing)}° bearing</small></header>
+                    <div><button type="button" onClick={() => orientSceneCamera(48, -18)}>Pitch 48°</button><button type="button" onClick={() => orientSceneCamera(0, view.bearing)}>Top down</button><button type="button" onClick={() => orientSceneCamera(view.pitch, 0)}>North up</button></div>
+                  </section>
+                </div>
+
+                <section className="scene-time-strip" aria-labelledby="scene-time-title">
+                  <header><strong id="scene-time-title">Smoke context time</strong><small>Exact fixture years · not current conditions</small></header>
+                  <div>{([2022, 2024, 2026] as const).map((step) => <button key={step} type="button" aria-pressed={year === step} onClick={() => { yearRef.current = step; setYear(step); setPlaying(false); }}>{step}</button>)}</div>
+                </section>
+
+                <section className="scene-tile-ledger" aria-labelledby="tile-ledger-title">
+                  <header><div><span>VIEWPORT DIAGNOSTICS</span><h4 id="tile-ledger-title">Tile matrix reader</h4></div><strong>{maplibreProbe.tilesLoaded ? "SETTLED" : "WORKING"}</strong></header>
+                  <div className="scene-metrics">
+                    <article><span>CENTER XYZ</span><strong>{centerTile.label}</strong><small>Web Mercator address at floor zoom</small></article>
+                    <article><span>SOURCES</span><strong>{sourceStateCounts.ready}/{LAYER_REGISTRY.length}</strong><small>Site-local GeoJSON ready</small></article>
+                    <article><span>RENDER MODE</span><strong>{projection.toUpperCase()}</strong><small>{Math.round(view.pitch)}° pitch · {scenePreset}</small></article>
+                    <article><span>CARRIER</span><strong>LOCAL GEOJSON</strong><small>No PMTiles, MVT, COG, or DEM fetch</small></article>
+                  </div>
+                  <p>The optional grid is a labeled GeoJSON simulation for viewport, selection, and matrix-orientation testing. It is not proof of a tile request, cache hit, archive range response, or KFM source admission.</p>
+                </section>
+
+                <aside className="map-utility-boundary" data-tone="warning"><strong>3D preserves the 2D evidence path.</strong><p>The elevation scene extrudes invented relative-height bands; it does not sample a DEM or assert elevation. Smoke is not an advisory or exposure surface. Water is not flow, storage, quality, flood, or legal-water authority. Select any visible feature to inspect the same Evidence Drawer used in 2D.</p></aside>
               </section>}
 
               {mapUtilityView === "compare" && <section id="map-utility-view-compare" role="tabpanel" aria-labelledby="map-utility-tab-compare" className="map-utility-section layer-compare-section">
