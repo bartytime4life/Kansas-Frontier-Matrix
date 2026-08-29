@@ -1,0 +1,122 @@
+{
+  "receipt_id": "genrec-agriculture-observation-generated-receipt-trigger-closure-20260829",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/agriculture-observation.yml",
+    "tests/validators/evidence/test_agriculture_observation_workflow_binding.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/agriculture-observation.yml": "sha256:1690053c6513827aa8c8c4bce1586b3cf07c528b70805ee30cdfe496e71e2582",
+    "tests/validators/evidence/test_agriculture_observation_workflow_binding.py": "sha256:fe67ab5e31378816b87cbae1f7540785aca0c0ef7189a83b090113c8dfd687e4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Sol",
+    "version": "2026-08-29"
+  },
+  "prompt_or_contract": "sha256:a06833a2a449286a91bc4288dc2dc2674e8d114a9c8560d6767ce032fd4c0e11",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector repository inspection and mutation",
+      "Notion connector coordination",
+      "Google Drive connector read-only lineage inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0be20c926651b0f21ce49107fe77ae8a55c9b7b6/.github/workflows/agriculture-observation.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0be20c926651b0f21ce49107fe77ae8a55c9b7b6/tools/validators/validate_generated_receipt.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0be20c926651b0f21ce49107fe77ae8a55c9b7b6/tools/validators/_common/local_resolver.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0be20c926651b0f21ce49107fe77ae8a55c9b7b6/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0be20c926651b0f21ce49107fe77ae8a55c9b7b6/tools/ci/python-dependency-lock-migration.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0be20c926651b0f21ce49107fe77ae8a55c9b7b6/tests/validators/evidence/test_agriculture_observation_workflow_binding.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0be20c926651b0f21ce49107fe77ae8a55c9b7b6/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/3668",
+      "drive://1TkFtqaDDtR9CiiEDdqGsyLgc2dDLX4qr"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/agriculture-observation.yml": "PROPOSED",
+    "tests/validators/evidence/test_agriculture_observation_workflow_binding.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "active-work-and-overlap-reconciliation",
+      "outcome": "PASS",
+      "reason": "No open pull request contains KFM_HOURLY_AGRICULTURE_BUILDER_V1 or KFM_HOURLY_BUILDER_V1. Open PRs #3835 and #3838 are People/DNA/Land documentation and path- and authority-disjoint from the AgricultureObservation workflow, binding test, and generated receipt."
+    },
+    {
+      "gate": "generated-receipt-validation-trigger-closure",
+      "outcome": "PASS",
+      "reason": "The AgricultureObservation workflow directly executes validate_generated_receipt.py, which consumes its generated-receipt schema, shared local schema resolver, and Python dependency-lock migration ledger, but current pull_request and main-push filters omit those inputs. The proposed workflow adds that direct validation seam and a deterministic test protects both trigger sets."
+    },
+    {
+      "gate": "artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "SHA-256 digests bind the exact proposed workflow and workflow-binding test bytes; the workflow triggers on both artifacts and validates this immutable receipt."
+    },
+    {
+      "gate": "local-static-validation",
+      "outcome": "PASS",
+      "reason": "The proposed workflow parses as YAML, the proposed Python test parses, the complete generated-receipt validation dependency set is present in both event filters, and the receipt JSON is syntactically valid with matching artifact SHA-256 values."
+    },
+    {
+      "gate": "local-repository-native-tests",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout is available in this connector run; repository-native runtime execution is delegated to hosted exact-head CI after push."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending until the task-owned draft pull request head is created and hosted workflows run."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "The task stops at a draft pull request and does not approve or mark work ready."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "agriculture-observation-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0be20c926651b0f21ce49107fe77ae8a55c9b7b6/.github/workflows/agriculture-observation.yml"
+    },
+    {
+      "id": "generated-receipt-validator",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0be20c926651b0f21ce49107fe77ae8a55c9b7b6/tools/validators/validate_generated_receipt.py"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0be20c926651b0f21ce49107fe77ae8a55c9b7b6/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0be20c926651b0f21ce49107fe77ae8a55c9b7b6/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-29T05:23:02Z",
+  "emitter": "OpenAI ChatGPT automation runtime",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Dependency-closure receipt for AgricultureObservation pull-request and main-push trigger coverage of the generated-receipt validator, schema, resolver, and migration-ledger seam it executes. It adds no source retrieval, observation loading, evidence resolution, policy decision, lifecycle transition, release, deployment, promotion, or publication authority."
+}
