@@ -3,8 +3,8 @@ doc_id: kfm://doc/docs-runbooks-readme
 title: docs/runbooks/ — Operational Procedure and Recovery Index
 type: readme
 subtype: nested-directory-landing-page
-version: v1.11
-prior_version: v1.10
+version: v1.12
+prior_version: v1.11
 status: draft; repository-grounded; documentation-only; non-authoritative
 owners:
   - "@bartytime4life — verified GitHub review route"
@@ -24,7 +24,8 @@ evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
   base_commit: cf3c5b76dafa74dee79e5249849e4174c2107638
-  target_prior_blob: d7e65d0f0fbaa4051f0d2704b8f41b1568cd71e6
+  rollback_drill_reconciliation_base_commit: 93752ca61000e317c1c8846ffa4031a1f3268731
+  target_prior_blob: 6441666a7fc3a76feb640e48ae6b8a7703b24d64
   runbooks_tree: 4c25b5e2f1254ff276e1ba5b7a10974fb33b8e85
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
@@ -36,7 +37,7 @@ evidence_snapshot:
     direct_markdown_files_including_this_readme: 29
     direct_domain_directories: 13
     recursive_markdown_files: 118
-    files_with_exact_proposed_scaffold_marker: 25
+    files_with_exact_proposed_scaffold_marker: 24
     recurring_domain_packet_directories: 13
     recurring_domain_packet_files: 52
     direct_domain_directory_readme_paths: 13
@@ -62,10 +63,11 @@ related:
   - data/README.md
   - release/README.md
 notes:
+  - "v1.12 reconciles the People/DNA/Land rollback-drill consumer as a synthetic tabletop, reduces the exact scaffold-phrase inventory by one, and preserves operational rollback at HOLD; broader tree evidence remains pinned to v1.9."
   - "v1.11 reconciles the People/DNA/Land parent-row consumer with the current consent, promotion-HOLD, rollback-HOLD, source-refresh, and scaffold maturity split; broader inventory evidence remains pinned to v1.10."
   - "v1.10 reconciles the People/DNA/Land rollback child from proposal-era procedure to repository-grounded hold boundary without changing operational maturity."
   - "v1.9 adds the missing Settlements/Infrastructure boundary and reconciles the parent inventory against the exact current tree before and after that addition."
-  - "The base subtree contains 117 Markdown files: 25 contain the exact phrase PROPOSED scaffold and 92 do not. This two-file change produces 118, 25, and 93 respectively."
+  - "The v1.9 inventory contains 118 Markdown files: 25 contained the exact phrase PROPOSED scaffold and 93 did not. This same-path rollback-drill reconciliation preserves 118 files and changes those text counts to 24 and 94."
   - "All 13 domain directories retain the recurring four-file packet and now have substantive local README boundaries."
   - "The Settlements/Infrastructure boundary distinguishes executable static readiness and bounded EvidenceBundle schema-convergence checks from held domain semantic validation, proof production, release dry run, and proposal-era child procedures."
   - "Naming aliases, flat-versus-domain placement, scaffold disposition, and stale no-mounted-repo language remain separate dependency-aware cleanup work."
@@ -81,7 +83,7 @@ notes:
 [![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status-and-evidence-boundary)
 [![Tracked Markdown: 118](https://img.shields.io/badge/tracked%20Markdown-118-0969da?style=flat-square)](#status-and-evidence-boundary)
 [![Direct domain lanes: 13](https://img.shields.io/badge/direct%20domain%20lanes-13-1f6feb?style=flat-square)](#domain-lane-inventory)
-[![Scaffold phrase files: 25](https://img.shields.io/badge/scaffold%20phrase%20files-25-d4a72c?style=flat-square)](#scaffolds-aliases-and-drift)
+[![Scaffold phrase files: 24](https://img.shields.io/badge/scaffold%20phrase%20files-24-d4a72c?style=flat-square)](#scaffolds-aliases-and-drift)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-and-negative-authority)
 [![Evidence refreshed: 2026-08-28](https://img.shields.io/badge/evidence%20refreshed-2026--08--28-0969da?style=flat-square)](#last-reviewed-and-rollback)
 
@@ -146,9 +148,9 @@ The observations below are pinned to `main@2de55d48ab35a41875eb9f094dc55dda18618
 |---|---|---|
 | This README | Prior v1.8 blob `f3b11475...`, current before this change | Same-path v1.9 reconciliation; no sibling authority |
 | Direct subtree | 42 direct entries: this README, 28 other Markdown files, and 13 domain directories | Current direct-child map is known at the pinned revision |
-| Recursive Markdown inventory | 117 Markdown files on the pinned base; 118 after adding the Settlements/Infrastructure boundary | The lane is materially implemented as documentation, but document count is not procedure maturity |
-| Exact scaffold phrase | 25 files contain the exact phrase `PROPOSED scaffold` before and after this change | This is a lexical drift signal, not proof that every matching file is presently a scaffold |
-| Remaining Markdown | 92 files on the pinned base and 93 after this change do not contain that exact phrase | Absence of the phrase is not validation, rehearsal, review, admission, or release proof |
+| Recursive Markdown inventory | 118 Markdown files in the v1.9 pinned snapshot; unchanged by this same-path update | The lane is materially implemented as documentation, but document count is not procedure maturity |
+| Exact scaffold phrase | 25 files matched in the pinned snapshot; 24 after this same-path rollback-drill reconciliation | This is a lexical drift signal, not proof that every matching file is presently a scaffold |
+| Remaining Markdown | 93 files did not match in the pinned snapshot; 94 after this change | Absence of the phrase is not validation, rehearsal, review, admission, or release proof |
 | Domain packet pattern | Every one of the 13 domain directories contains `NO_NETWORK_TEST_RUNBOOK.md`, `PROMOTION_RUNBOOK.md`, `ROLLBACK_RUNBOOK.md`, and `SOURCE_REFRESH_RUNBOOK.md` | A repeated documentation pattern exists; parity and current correctness remain separate checks |
 | Domain-lane boundary READMEs | 12 of 13 direct domain directories contain a substantive `README.md` on the pinned base; 13 after this change | The Settlements/Infrastructure gap is closed; every direct domain directory now has a local boundary |
 | Sampled long-form runbooks | Promotion, rollback, correction, release dry-run, and incident response are substantive drafts | Useful content exists, but several retain May 2026 proposal or no-mounted-repo language |
@@ -345,7 +347,7 @@ That pattern is **CONFIRMED current repository structure**, not proof that the f
 | [`habitat/`](./habitat/README.md) | 4 files | Substantive local `README.md`; nested `ecoregions/` boundary and source-refresh procedure | Boundary contract and one bounded synthetic profile are documented; modeled habitat is not occurrence or regulatory designation and broader operations remain held |
 | [`hazards/`](./hazards/README.md) | 4 files | Substantive local `README.md`; not-for-life-safety audit, no-network, promotion, source-refresh, rollback, and rollback-drill procedures | Boundary contract is documented; executable coverage remains bounded and KFM never becomes alert authority |
 | [`hydrology/`](./hydrology/README.md) | 4 files | Substantive local `README.md`; bounded validation, promotion preflight, proposal-era no-network/source-refresh/rollback guides, and one explicit rollback scaffold | Boundary and child maturity are documented; current executable coverage is synthetic and fixture-bounded, broader operations remain held, and NFHL is regulatory context rather than observed inundation |
-| [`people-dna-land/`](./people-dna-land/README.md) | 4 files | Substantive local `README.md`; repository-grounded consent and living-person review, bounded no-network procedure, promotion and rollback `HOLD` boundaries, one proposal-era source-refresh procedure, and five explicit scaffolds | Sensitive boundary and two bounded synthetic consent profiles are documented; operational promotion, rollback, real consent/revocation cleanup, runner-wide isolation, real-person material, active policy runtime, proof, release, deployment, and publication remain held |
+| [`people-dna-land/`](./people-dna-land/README.md) | 4 files | Substantive local `README.md`; nine repository-grounded procedures, reviews, tabletop or hold boundaries—including a synthetic rollback drill—and two explicit scaffolds | Sensitive boundary, two bounded synthetic consent profiles, and a no-network rollback tabletop are documented; operational promotion, rollback, real consent/revocation cleanup, runner-wide isolation, real-person material, active policy runtime, proof, release, deployment, and publication remain held |
 | [`roads-rail-trade/`](./roads-rail-trade/README.md) | 4 files | Substantive local `README.md`; one executable no-network CorridorRoute profile and four proposal-era or stale packet procedures | Boundary routes the bounded synthetic profile, preserves infrastructure and cultural-corridor restrictions, and keeps broader source, policy, proof, promotion, rollback, release, deployment, and publication work held |
 | [`settlements-infrastructure/`](./settlements-infrastructure/README.md) | 4 files | Substantive local `README.md`; executable static readiness and bounded EvidenceBundle schema-convergence checks, four proposal-era packet procedures, seven direct docstring-only test placeholders, one direct assert-true smoke test, and four direct `NotImplementedError` validators | Boundary routes both bounded profiles, preserves critical-asset, cultural, sovereignty, legal/census, evidence, policy, proof, and release holds, and establishes no real-record or operational maturity |
 | [`soil/`](./soil/README.md) | 4 files | Substantive local `README.md` | Boundary routes four bounded synthetic fixture profiles and classifies all four packet procedures as proposal-heavy; live source, proof, policy activation, promotion, rollback, release, deployment, and publication remain held |
@@ -728,7 +730,7 @@ A documentation revert restores text only. It does not reverse an operational ac
 ### P1 — structure and conformance
 
 6. **CONFIRMED — local domain boundary coverage.** All 13 direct domain directories have substantive local README boundaries. Preserve coverage and audit each lane's child-procedure maturity separately.
-7. **NEEDS VERIFICATION — scaffold disposition.** Inspect the 25 exact-phrase matches, distinguish current scaffolds from historical mentions, and classify actual scaffolds as fill, supersede, migrate, mirror, retain as lineage, or retire; do not mass-delete by size or wording alone.
+7. **NEEDS VERIFICATION — scaffold disposition.** Inspect the 24 exact-phrase matches after this change, distinguish current scaffolds from historical mentions, and classify actual scaffolds as fill, supersede, migrate, mirror, retain as lineage, or retire; do not mass-delete by size or wording alone.
 8. **CONFLICTED — naming and aliases.** Resolve flat versus nested, snake versus kebab, and duplicate-scope paths through consumer inventories and reviewed migration.
 9. **NEEDS VERIFICATION — shared packet ownership.** Determine which parts of the 13 repeated four-file packets are shared kernel, generated projection, domain delta, or independent procedure.
 10. **NEEDS VERIFICATION — current metadata.** Reconcile stale May 2026 owner, status, link, and no-mounted-repo statements in individual runbooks through file-specific inspection.
@@ -752,7 +754,7 @@ A documentation revert restores text only. It does not reverse an operational ac
 |---|---|---|
 | `main@bacb77cfbc04014a2c05da541f9cba8025629068` | Pins the target, runbook tree, direct children, sampled documents, ADRs, and review routing | Commit bytes do not prove runtime behavior, operational admission, release, or publication |
 | Exact `docs/runbooks/` Git tree | Direct-child map and all recursive tracked paths | Tree presence does not prove content quality or use |
-| Exact Git-tree and repository-text counts | Base: 42 direct entries, 117 Markdown files, 12 substantive domain README paths, no one-byte placeholders, and 25 exact `PROPOSED scaffold` phrase matches. After this change: 118 Markdown files and 13 substantive domain README paths; other counts unchanged. | Tree and text counts are not a semantic maturity audit |
+| Exact Git-tree and repository-text counts | The v1.9 snapshot records 42 direct entries, 118 Markdown files, 13 substantive domain README paths, no one-byte placeholders, 25 exact `PROPOSED scaffold` phrase matches, and 93 other Markdown files. This same-path update preserves the file and boundary counts while changing the text counts to 24 matches and 94 others. | Tree and text counts are not a semantic maturity audit |
 | Accepted ADR-0029 and Directory Rules v2 | Placement authority, README inheritance, compatibility, migration, correction, and rollback rules | Does not validate individual procedures |
 | Current ADR index | Three accepted and 34 proposed numbered decisions | Index cannot accept a decision itself |
 | Current CODEOWNERS | Verifies GitHub review routing | Does not establish stewardship, expertise, independent approval, policy, or release authority |
@@ -782,6 +784,8 @@ This edition does not assume:
 
 ## Last reviewed and rollback
 
+**2026-08-29** — v1.12 targeted the People/DNA/Land rollback-drill consumer from `main@93752ca61000e317c1c8846ffa4031a1f3268731`. The scaffold became a synthetic, no-network tabletop; the lane and parent indexes were reconciled; operational rollback remains held; broader tree evidence remains the v1.9 snapshot. Human review remains pending, and this correction approves no operational procedure.
+
 **2026-08-28** — v1.11 targeted People/DNA/Land consumer reconciliation composed from `main@a7b42e6134685f86c936a1850771f5ade6b4cf2f`. Only the People/DNA/Land row was rechecked against the current lane files; broader inventory evidence remains the v1.10 snapshot. Human review remains pending, and this correction approves no procedure.
 
 Re-review this README when:
@@ -796,6 +800,7 @@ Re-review this README when:
 
 | Edition | Date | Change | Effect |
 |---|---|---|---|
+| **v1.12** | 2026-08-29 | Reconciled the People/DNA/Land rollback drill as a synthetic, no-network tabletop; two explicit lane scaffolds remain. | Documentation only; a passing tabletop preserves operational rollback at `HOLD` and does not authorize cleanup, release, deployment, promotion, or publication |
 | **v1.11** | 2026-08-28 | Reconciled the People/DNA/Land parent-row consumer after consent, promotion-HOLD, and rollback-HOLD changes; one source-refresh proposal and five scaffolds remain. | Documentation only; consent, operational promotion/rollback, human review, source admission, policy, proof, release, deployment, and publication remain separate |
 | **v1.10** | 2026-08-28 | Reclassified the People/DNA/Land rollback child as a repository-grounded hold boundary and reduced its remaining proposal-era packet count from three to two. | Documentation only; operational rollback, human review, source admission, policy, proof, promotion, release, deployment, and publication remain separate |
 | **v1.9** | 2026-08-28 | Added the Settlements/Infrastructure boundary and recorded the resulting 118 Markdown files, 25 exact-phrase matches, 93 other files, and substantive local boundaries for all 13 domain directories. | Documentation only; semantic validation, human review, source admission, policy, proof, promotion, rollback, release, deployment, and publication remain separate |
@@ -818,6 +823,6 @@ path: docs/runbooks/README.md
 prior_blob: d7e65d0f0fbaa4051f0d2704b8f41b1568cd71e6
 ```
 
-or revert the focused documentation commit created by this change. That rollback restores the v1.10 documentation snapshot. It does not remove current runbooks, undo a procedure, reverse an incident response, change source/evidence/policy/release state, restore a public carrier, deploy, promote, publish, or change repository settings.
+or revert the focused documentation commit created by this change. That rollback restores the v1.11 parent-index snapshot and the prior rollback-drill scaffold classification. It does not remove current runbooks, undo a tabletop or operational procedure, reverse an incident response, change source/evidence/policy/release state, restore a public carrier, deploy, promote, publish, or change repository settings.
 
 [Back to top](#top)
