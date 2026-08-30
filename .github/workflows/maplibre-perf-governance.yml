@@ -20,8 +20,8 @@
 #   browsers are installed; checks are no-network after action bootstrap.
 # Commands:
 # - `node --check` for the seven repository-owned MapLibre scripts.
-# - Five repository-owned pure-Python negative-path/retirement test functions
-#   are invoked
+# - Nine repository-owned pure-Python negative-path, retirement, and
+#   export-contract test functions are invoked
 #   directly; this lane does not install workspace dependencies or browsers.
 # - Readiness inspection is standard-library-only and does not replace validators.
 # - The repository pnpm lock records the exact package-owned MapLibre dependency
@@ -186,12 +186,17 @@ jobs:
               print(f"parsed Python syntax: {path}")
           PY
 
-      - name: Run deterministic MapLibre negative-path tests
+      - name: Run deterministic MapLibre no-network tests
         shell: bash
         run: |
           set -euo pipefail
 
           python - <<'PY'
+          from tests.maplibre.test_package_exports import (
+              test_export_map_points_each_public_specifier_at_its_owned_source,
+              test_node_resolves_root_and_adapter_subpaths_through_package_exports,
+              test_root_facade_reexports_only_renderer_neutral_modules,
+          )
           from tests.maplibre.test_perf_governance_negative_paths import (
               test_rejects_negative_memory_budget,
               test_rejects_out_of_range_tile_error_rate,
@@ -210,6 +215,9 @@ jobs:
               test_retired_harness_fails_with_a_finite_hold,
               test_retired_harness_has_no_renderer_or_network_acquisition,
               test_current_renderer_acquisition_is_confined_to_package_seam,
+              test_export_map_points_each_public_specifier_at_its_owned_source,
+              test_root_facade_reexports_only_renderer_neutral_modules,
+              test_node_resolves_root_and_adapter_subpaths_through_package_exports,
           )
           for test in tests:
               test()
@@ -252,6 +260,7 @@ jobs:
             "tests/maplibre/perf_fixture_builder.py"
             "tests/maplibre/test_assess_acquisition_inventory.py"
             "tests/maplibre/test_legacy_perf_harness_retirement.py"
+            "tests/maplibre/test_package_exports.py"
             "tests/maplibre/test_perf_governance_negative_paths.py"
             "tests/maplibre/test_validate_v6_readiness.py"
             "tools/validators/maplibre/README.md"
@@ -710,7 +719,7 @@ jobs:
           set -euo pipefail
           {
             echo "### MapLibre performance governance"
-            echo "- Executed: Node syntax checks and five deterministic negative-path/retirement tests."
+            echo "- Executed: Node syntax checks and nine deterministic negative-path, retirement, and package export-contract tests."
             echo "- Outcome: WORKFLOW_SKIPPED_EXPLICIT for browser/perf/render/trust stages."
             echo "- Gate: WORKFLOW_HOLD"
             echo "- Toolchain: the reviewed pnpm workspace lock is accepted as dependency state only; no dependency install or browser run occurred."
