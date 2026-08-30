@@ -682,11 +682,13 @@
     {
       "path": ".github/workflows/cross-lane-join-assessment.yml",
       "base_sha256": "sha256:b06bc6c2af1e9d946ec5199a99e7f4a20eb74a998ea5d30ec673a8f4cbeb3ff4",
-      "current_sha256": "sha256:3ddba25f500ebcf0ddc69f7f40fe9ed9975f85255d17179c0d91852a85f4f800",
+      "current_sha256": "sha256:eb1ceacafbad82d03c2f5cdd5f217de4a38a4c4dfd118cc2bfe7a42cfcc9177b",
       "profiles": [
         "project-test"
       ],
-      "superseded_receipt_sha256s": []
+      "superseded_receipt_sha256s": [
+        "sha256:3ddba25f500ebcf0ddc69f7f40fe9ed9975f85255d17179c0d91852a85f4f800"
+      ]
     },
     {
       "path": ".github/workflows/csv-geojson-preflight.yml",
