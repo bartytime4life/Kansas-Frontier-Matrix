@@ -96,7 +96,21 @@ IDENTIFYING_KEYS = frozenset({
 
 
 def _canonical_json(value: object) -> bytes:
-    return json.dumps(value, ensure_ascii=False, separators=(",", ":"), sort_keys=True).encode("utf-8")
+    serialized = json.dumps(
+        value,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    )
+    try:
+        return serialized.encode("utf-8")
+    except UnicodeEncodeError:
+        return json.dumps(
+            value,
+            ensure_ascii=True,
+            separators=(",", ":"),
+            sort_keys=True,
+        ).encode("ascii")
 
 
 def overlay_spec_hash(candidate: Mapping[str, Any]) -> str:
