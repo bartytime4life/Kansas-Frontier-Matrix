@@ -28,15 +28,15 @@ export type RepositoryUpdate = Readonly<{
 export const REPOSITORY_SNAPSHOT = Object.freeze({
   repository: "bartytime4life/Kansas-Frontier-Matrix",
   ref: "main",
-  commit: "c3216103ac049cd39f5f03883d7146046ef7bccd",
-  shortCommit: "c321610",
-  inspectedAt: "2026-08-29T21:19:30Z",
+  commit: "1ea6593ede80d5ce10f561c7eec72135d6ccf806",
+  shortCommit: "1ea6593",
+  inspectedAt: "2026-08-30T11:07:34Z",
   counts: Object.freeze({
     knowledgeDomains: 13,
     explorerFeatureFamilies: 38,
     mapFunctions: 20,
     countyPlanningLanes: 105,
-    repositoryUpdates: 14,
+    repositoryUpdates: 16,
     transitionBoundaries: 4,
     readinessGates: 7,
   }),
@@ -45,6 +45,35 @@ export const REPOSITORY_SNAPSHOT = Object.freeze({
 const repoAtSnapshot = `https://github.com/${REPOSITORY_SNAPSHOT.repository}/blob/${REPOSITORY_SNAPSHOT.commit}`;
 
 export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
+  Object.freeze({
+    id: "county-starter-slice",
+    area: "MapLibre and search",
+    title: "All 105 Kansas counties now have public locator starters",
+    state: "ACCEPTED",
+    maturity: "IMPLEMENTED",
+    date: "30 Aug 2026",
+    summary:
+      "Current main adds one 2025 U.S. Census Gazetteer representative internal point for each Kansas county, with stable GEOIDs and registry metadata for search, selection, evidence inspection, report scoping, and future governed county slices.",
+    boundary:
+      "These are public reference locators, not county boundaries, centroids, county seats, parcels, conditions, protected geometry, jurisdictional determinations, source admission, or a KFM data release.",
+    sourceLabel: "County starter slice",
+    sourceUrl: `${repoAtSnapshot}/apps/kansas-frontier-matrix-explorer/app/county-starter-slice.ts`,
+    layerId: "county-starter-points",
+  }),
+  Object.freeze({
+    id: "temporal-catalog-comparison",
+    area: "Timeline and report",
+    title: "Time A / Time B comparison preserves report scope",
+    state: "ACCEPTED",
+    maturity: "IMPLEMENTED",
+    date: "30 Aug 2026",
+    summary:
+      "Current main compares which site-local records are compatible at two timeline steps and binds the same layer, query, evidence, selection, visibility, viewport, or analysis-area scope into generated report comparisons.",
+    boundary:
+      "Entered and exited identifiers describe fixture catalog availability under declared temporal rules. They are not observed real-world change, imagery analysis, causation, an event claim, evidence, policy approval, release, or publication authority.",
+    sourceLabel: "Temporal catalog comparison",
+    sourceUrl: `${repoAtSnapshot}/apps/kansas-frontier-matrix-explorer/app/temporal-comparison.ts`,
+  }),
   Object.freeze({
     id: "planning-scenario-review",
     area: "Explorer UI",
