@@ -2,11 +2,11 @@
 doc_id: kfm://doc/domains/habitat/readme
 title: Habitat Domain — Lane README
 type: standard
-version: v1.3
+version: v1.4
 status: draft
 owners: [NEEDS_VERIFICATION — habitat domain steward, docs steward]
 created: 2026-05-17
-updated: 2026-08-29
+updated: 2026-08-30
 policy_label: public
 owning_root: docs/
 responsibility: Human-readable Habitat scope, domain boundaries, repository fit, safety posture, implementation status, and navigation
@@ -59,7 +59,7 @@ notes:
 | **Contract** | `CONTRACT_VERSION = "3.0.0"` |
 | **Owners** | NEEDS VERIFICATION — habitat domain steward (CODEOWNERS placeholder) |
 | **Reviewers** | Habitat domain steward + docs steward; policy steward for sensitivity changes |
-| **Last reviewed** | 2026-08-29 |
+| **Last reviewed** | 2026-08-30 |
 
 ---
 
@@ -140,7 +140,7 @@ The Habitat lane admits sources only via a `SourceDescriptor` carrying source ro
 |---|---|---|---|---|
 | **USFWS ECOS / Critical Habitat services** | **regulatory** (designated critical-habitat unit) | rights & current terms NEEDS VERIFICATION; sensitive joins fail closed | source-vintage / cadence specific | PROPOSED |
 | **NLCD land cover** | **observed** (remote-sensed) → may feed **modeled** classification | rights & current terms NEEDS VERIFICATION | source-vintage / cadence specific | PROPOSED |
-| **NWI wetlands** | **regulatory** (wetland regulatory class) | rights & current terms NEEDS VERIFICATION | source-vintage / cadence specific | PROPOSED |
+| **NWI wetlands** | **candidate** (wetland inventory; source role awaits an admitted descriptor) | rights & current terms NEEDS VERIFICATION | source-vintage / cadence specific | PROPOSED / NEEDS VERIFICATION |
 | **GAP / LANDFIRE ecological systems** | **modeled** (classification) | rights & current terms NEEDS VERIFICATION | source-vintage / cadence specific | PROPOSED |
 | **NatureServe & controlled biodiversity** | **aggregate** (summary) / authority context | rights & current terms NEEDS VERIFICATION; **steward-controlled** | source-vintage / cadence specific | PROPOSED |
 | **KDWP state ecological / habitat context** | **regulatory** / **aggregate** as the descriptor sets | rights & current terms NEEDS VERIFICATION | source-vintage / cadence specific | PROPOSED |
@@ -361,7 +361,7 @@ flowchart LR
 
   subgraph SOURCES["Source families (SourceDescriptor required)"]
     direction TB
-    NLCD["NLCD / NWI / GAP / LANDFIRE<br/>(observed / regulatory / modeled)"]:::ext
+    NLCD["NLCD / NWI / GAP / LANDFIRE<br/>(role fixed only at source admission)"]:::ext
     USFWS["USFWS Critical Habitat<br/>(regulatory)"]:::ext
     NSERVE["NatureServe / KDWP / PAD-US<br/>(aggregate / administrative)"]:::ext
     OCC["GBIF / iNat / iDigBio<br/>(occurrence — Fauna-owned)"]:::ext
@@ -430,6 +430,14 @@ The following items remain **NEEDS VERIFICATION** until resolved against mounted
 ## 15. Changelog & definition of done
 
 ### 15.1 Changelog
+
+#### v1.4 — 2026-08-30
+
+| Change | Type (per contract §37) | Reason |
+|---|---|---|
+| Removed the unsupported regulatory role from NWI wetlands and retained NWI as a candidate until an admitted `SourceDescriptor` fixes its role. | reconciliation | Current repository evidence contains only inactive `pipeline_specs/habitat/nwi_wetlands.yaml`, no admitted Habitat source descriptor, and the `SOURCE_ADMISSION_UNVERIFIED` hold. Inventory classification is not a regulatory designation. |
+| Narrowed the lane diagram and Appendix A examples so only USFWS designated critical habitat is presented as the regulatory Habitat example. | reconciliation | Prevents source-role and designation collapse without assigning unverified rights, sensitivity, or publication posture. |
+| Bumped version v1.3 → v1.4; `updated` and `Last reviewed` → 2026-08-30. | housekeeping | MINOR truth-boundary correction; no source admission, lifecycle, policy, release, or publication change. |
 
 #### v1.3 — 2026-08-29
 
@@ -525,11 +533,11 @@ KFM treats source role as a first-class identity attribute (Atlas §24.1, CONFIR
 | Role | Habitat example | Forbidden relabeling |
 |---|---|---|
 | **observed** | NLCD land-cover classification at a place + time; field survey | Never call an observed land-cover sample a "regulatory" designation. |
-| **regulatory** | USFWS designated critical-habitat unit; NWI wetland regulatory class | Never call a critical-habitat unit an "observation" or a "modeled" estimate. |
+| **regulatory** | USFWS designated critical-habitat unit | Never call a critical-habitat unit an "observation" or a "modeled" estimate. |
 | **modeled** | GAP/LANDFIRE ecological-system classification; suitability raster; corridor least-cost surface | Never serve a modeled suitability surface as a regulatory critical habitat. |
 | **aggregate** | NatureServe summary; county-level habitat totals | Never treat as per-place evidence; carry an aggregation receipt. |
 | **administrative** | PAD-US stewardship boundary | Never collapse with observation or regulation. |
-| **candidate** | Quarantined connector output; unmerged habitat-model candidate | May be cited as candidate in WORK / QUARANTINE; no PUBLISHED edge until promoted. |
+| **candidate** | Quarantined connector output; inactive NWI wetland inventory source candidate; unmerged habitat-model candidate | May be cited as candidate in WORK / QUARANTINE; no PUBLISHED edge until its source role is admitted and the artifact is promoted. |
 | **synthetic** | Reconstructed scene; AI-drafted habitat summary | Carries a Reality Boundary Note + Representation Receipt; never presented as observed reality. |
 
 The lifecycle and the governed API both fail closed when these roles are conflated. **(CONFIRMED — Atlas §24.1.1–§24.1.2.)**
@@ -557,6 +565,6 @@ Acceptance is reached when each of (1)–(9) exists, is digest-closed, and a no-
 
 ---
 
-**Last updated:** 2026-08-29 · **Status:** draft · **Authority:** canonical (under `docs/`) · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Lifecycle posture:** deny-by-default for sensitive joins.
+**Last updated:** 2026-08-30 · **Status:** draft · **Authority:** canonical (under `docs/`) · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Lifecycle posture:** deny-by-default for sensitive joins.
 
 [⬆ back to top](#top)
