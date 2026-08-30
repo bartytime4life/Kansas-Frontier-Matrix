@@ -415,6 +415,19 @@ class ConsentOverlayFixtureTests(unittest.TestCase):
                     wanted,
                 )
 
+            surrogate_path = Path(directory) / "unpaired-surrogate.json"
+            surrogate_path.write_bytes(
+                b'{"spec_hash":"sha256:0000000000000000000000000000000000000000000000000000000000000000",'
+                b'"limitations":["\\ud800"]}'
+            )
+            findings = VALIDATOR.validate_file(
+                surrogate_path,
+                revocation_manifest=self.manifest,
+            )
+            self.assertIn(Finding("LIMITATIONS_INVALID", "$.limitations"), findings)
+            self.assertIn(Finding("SPEC_HASH_MISMATCH", "$.spec_hash"), findings)
+            self.assertTrue(all(finding.path.isascii() for finding in findings))
+
     def test_file_size_is_bounded(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "large.json"
