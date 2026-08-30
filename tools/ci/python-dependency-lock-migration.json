@@ -152,13 +152,11 @@
     {
       "path": ".github/workflows/ai-receipt.yml",
       "base_sha256": "sha256:24661d0f94d38d554b0f3b184854bd1d0c6457166b6cc375f0d935246e7a3f14",
-      "current_sha256": "sha256:9fbb9872ebccaff7d569dd189a9db40080229fc5a84863a24c538a3a953d6664",
+      "current_sha256": "sha256:d9c2838cf3949e62481edd6721f72d63638d3a8a8e5da486907a92c950476112",
       "profiles": [
         "project-test"
       ],
-      "superseded_receipt_sha256s": [
-        "sha256:d9c2838cf3949e62481edd6721f72d63638d3a8a8e5da486907a92c950476112"
-      ]
+      "superseded_receipt_sha256s": []
     },
     {
       "path": ".github/workflows/analytic-output-disclosure-assessment.yml",
@@ -417,13 +415,11 @@
     {
       "path": ".github/workflows/citation-validation.yml",
       "base_sha256": "sha256:ae298f6fbfd906ebd88be22f395d42c3f09098f72599a9d95f8f07d8d4eed687",
-      "current_sha256": "sha256:7306af1d97fa5914d8ca73de16aabcee1927ca96f55de7d970414719b72e9e1b",
+      "current_sha256": "sha256:5dbce7eb4f55a3669c964faa501e6c9156a43810e37fc750a4c38ef035edf243",
       "profiles": [
         "project-test"
       ],
-      "superseded_receipt_sha256s": [
-        "sha256:5dbce7eb4f55a3669c964faa501e6c9156a43810e37fc750a4c38ef035edf243"
-      ]
+      "superseded_receipt_sha256s": []
     },
     {
       "path": ".github/workflows/claim-envelope-validation.yml",
@@ -536,14 +532,12 @@
     {
       "path": ".github/workflows/connector-gate.yml",
       "base_sha256": "sha256:24fd039e9b4fa400cf271e0b603e0a3751c197fa16582745ce3e3468fa6506fb",
-      "current_sha256": "sha256:72276ee679bb5bf689c835264df1d7fc9d130d6147d603895f664073900bb424",
+      "current_sha256": "sha256:0505bf3be36e62123ad0d14b4dc60f5718b269195e3121b1464f0faf71e9ea0b",
       "profiles": [
         "connectors-core",
         "project-test"
       ],
-      "superseded_receipt_sha256s": [
-        "sha256:0505bf3b09e23fa2292981c6991184c479eaa1be87f2615dd3258b44f65119bd"
-      ]
+      "superseded_receipt_sha256s": []
     },
     {
       "path": ".github/workflows/connector-load-budget-assessment.yml",
@@ -2287,13 +2281,11 @@
     {
       "path": ".github/workflows/promotion-verification-execution.yml",
       "base_sha256": "sha256:4f5ef4439b9bb2ff6c4218f84cf8d8828ea3f27ed18750bf901995e94e52222b",
-      "current_sha256": "sha256:e84ff6554e1824fb8fff3b9ee1c0f115ba876264e5cedb35b985606889653de8",
+      "current_sha256": "sha256:af39f8bc08ae800e020a7ca5b92ff2324757941082056b484401ff05ba7b0fab",
       "profiles": [
         "project-test"
       ],
-      "superseded_receipt_sha256s": [
-        "sha256:af39f8bc6c9aca18264eb4b7dd690680d93733bbea062db4d2263d30bfd7d0bd"
-      ]
+      "superseded_receipt_sha256s": []
     },
     {
       "path": ".github/workflows/proof-pack-closure.yml",
@@ -2596,12 +2588,12 @@
     {
       "path": ".github/workflows/rollback-drill.yml",
       "base_sha256": "sha256:b8895e25ab4e2d3cd3eab55fbb22f01a7bf87d1de3fa5e469cd0d60372b720d4",
-      "current_sha256": "sha256:0f81f60f3250874032f1aeaccef649dd58bf65f82b9cc84976f6bb2a483bad5f",
+      "current_sha256": "sha256:a1f86b03963f7c7edda59a7a950a750de6d6561ad19605905fb9d7e1078b4b55",
       "profiles": [
         "project-test"
       ],
       "superseded_receipt_sha256s": [
-        "sha256:7143365264d4c76a434b002f37a8a0c67e748627c5463ad741df1faeea996af1"
+        "sha256:7143365218f3a799f1c6bd6c72ae00a768cc20d83e8a6524d4ab0151fcaf896c"
       ]
     },
     {
@@ -2661,12 +2653,12 @@
     {
       "path": ".github/workflows/schema-validation.yml",
       "base_sha256": "sha256:6badd3af48a9c6c1a995bfa44abc227a1524e1bc4720fb272ca4ae961afae86c",
-      "current_sha256": "sha256:19c70514d9dc9c63bae37cf32830f5a2c7b2f6d2238aadc74032c6614de03074",
+      "current_sha256": "sha256:5c342d2ed1029851314c511621903cb4710b8952fdc0f9b9182168517243b0ae",
       "profiles": [
         "project-test"
       ],
       "superseded_receipt_sha256s": [
-        "sha256:92dd9059654b1f57a494a5f17cf5889910c5c39a4dab3eb06787eae2aba4c600"
+        "sha256:92dd9059ef6b40e3b2cebe6168acc214756816655505882fa96279fa8a61fc11"
       ]
     },
     {
