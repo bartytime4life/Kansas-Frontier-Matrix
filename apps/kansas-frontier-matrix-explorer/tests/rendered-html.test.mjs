@@ -222,6 +222,94 @@ test("converts a reversible screen box into a bounded geographic query envelope"
   ), null);
 });
 
+test("adds a no-upload KML and GeoJSON inspection preview without admission or renderer effects", async () => {
+  const ts = await import("typescript");
+  const importSource = await readFile(new URL("../app/import-preview.ts", import.meta.url), "utf8");
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const mapInterface = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  const javascript = ts.transpileModule(importSource, {
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+    fileName: "import-preview.ts",
+  }).outputText;
+  const imports = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
+  const preview = imports.buildLocalImportPreview({
+    fileName: "test.geojson",
+    fileSizeBytes: 480,
+    inspectedAt: "2026-08-30T18:30:00.000Z",
+    supportedBounds: { west: -104.8, south: 34.8, east: -92, north: 42.2 },
+    text: JSON.stringify({
+      type: "FeatureCollection",
+      attribution: "Synthetic test fixture",
+      features: [{
+        type: "Feature",
+        id: "preview-1",
+        properties: { name: "Preview point", observed_time: "2026-08-30" },
+        geometry: { type: "Point", coordinates: [-98.4, 38.5] },
+      }],
+    }),
+  });
+
+  assert.equal(preview.featureCount, 1);
+  assert.equal(preview.coverage, "WITHIN_KANSAS_CONTEXT");
+  assert.equal(preview.renderAllowed, true);
+  assert.deepEqual(preview.temporalFields, ["observed_time"]);
+  assert.equal(imports.importPreviewAudit(preview).effects, "NO_UPLOAD_NO_SAVE_NO_SOURCE_ADMISSION_NO_REPORT_DATA_NO_PUBLICATION");
+
+  const invalidPreview = imports.buildLocalImportPreview({
+    fileName: "invalid-structures.geojson",
+    fileSizeBytes: 600,
+    inspectedAt: "2026-08-30T18:31:00.000Z",
+    supportedBounds: { west: -104.8, south: 34.8, east: -92, north: 42.2 },
+    text: JSON.stringify({
+      type: "FeatureCollection",
+      features: [
+        { type: "Feature", properties: {}, geometry: { type: "Point", coordinates: [[-98, 38]] } },
+        { type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: [[-98, 38]] } },
+        { type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [[[-99, 37], [-98, 37], [-98, 38], [-99, 38]]] } },
+      ],
+    }),
+  });
+  assert.equal(invalidPreview.featureCount, 0);
+  assert.equal(invalidPreview.invalidFeatureCount, 3);
+  assert.equal(invalidPreview.renderAllowed, false);
+
+  const largeCoordinates = Array.from({ length: 150_000 }, (_, index) => [-98.5 + (index % 2) * 0.1, 38.5]);
+  const largeText = JSON.stringify({ type: "MultiPoint", coordinates: largeCoordinates });
+  assert.ok(Buffer.byteLength(largeText) < imports.IMPORT_PREVIEW_MAX_BYTES);
+  const largePreview = imports.buildLocalImportPreview({
+    fileName: "large.geojson",
+    fileSizeBytes: Buffer.byteLength(largeText),
+    inspectedAt: "2026-08-30T18:32:00.000Z",
+    supportedBounds: { west: -104.8, south: 34.8, east: -92, north: 42.2 },
+    text: largeText,
+  });
+  assert.deepEqual(largePreview.bounds, [-98.5, 38.5, -98.4, 38.5]);
+
+  const kmlPreview = imports.buildLocalImportPreview({
+    fileName: "local.kml",
+    fileSizeBytes: 800,
+    inspectedAt: "2026-08-30T18:33:00.000Z",
+    supportedBounds: { west: -104.8, south: 34.8, east: -92, north: 42.2 },
+    text: `<?xml version="1.0"?><kml xmlns="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom"><Document><atom:author><atom:name>Synthetic fixture</atom:name></atom:author><NetworkLink><Link><href>https://example.invalid/held.kml</href></Link></NetworkLink><Placemark><name>Local point</name><description><![CDATA[<b>not HTML</b>]]></description><Point><coordinates>-98.4,38.5</coordinates></Point></Placemark></Document></kml>`,
+  });
+  assert.equal(kmlPreview.featureCount, 1);
+  assert.equal(kmlPreview.unsupportedElementCount, 1);
+  assert.equal(kmlPreview.externalReferenceCount, 1);
+  assert.equal(kmlPreview.attribution, "Synthetic fixture");
+  assert.match(importSource, /KML/);
+  assert.match(importSource, /NetworkLink/);
+  assert.doesNotMatch(importSource, /DOMParser|Math\.min\(\.\.\.positions/);
+  assert.match(page, /LOCAL IMPORT PREVIEW/);
+  assert.match(page, /Temporary Places, KFM-style/);
+  assert.match(page, /accept="\.kml,\.geojson,\.json/);
+  assert.match(page, /setImportError\(""\);\s+setImportPreview\(null\);\s+setImportPreviewVisible\(false\);\s+try/);
+  assert.doesNotMatch(page, /updateImportPreviewSource|from "maplibre-gl"|new maplibregl/);
+  assert.match(mapInterface, /External data admission[\s\S]*HOLD/);
+  assert.match(css, /\.import-dropzone/);
+  assert.match(css, /\.import-check-list/);
+});
+
 test("keeps optional guided examples while moving explanatory copy to About", async () => {
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const about = await readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8");
@@ -463,7 +551,7 @@ test("keeps the renderer-neutral Workbench complete, bounded, and fail closed", 
   const viteConfig = await readFile(new URL("../vite.config.ts", import.meta.url), "utf8");
 
   assert.match(source, /id="map-utility-panel"/);
-  for (const view of ["Navigate", "Inspect", "Compare", "Display", "Measure", "Export", "Diagnostics"]) assert.match(source, new RegExp(`${view}`));
+  for (const view of ["Navigate", "Inspect", "Import", "Compare", "Display", "Measure", "Export", "Diagnostics"]) assert.match(source, new RegExp(`${view}`));
   assert.match(source, /kfm-map-context-receipt-v1/);
   assert.match(source, /kfm-map-diagnostics-v1/);
   assert.match(exportCenter, /kfm-public-safe-map-export-v2/);

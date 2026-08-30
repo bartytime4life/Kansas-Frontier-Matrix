@@ -84,6 +84,12 @@ import {
 } from "./planning-scenario";
 import { ANALYSIS_RECIPES, type AnalysisRecipe } from "./analysis-recipes";
 import { buildTemporalComparison } from "./temporal-comparison";
+import {
+  buildLocalImportPreview,
+  IMPORT_PREVIEW_MAX_BYTES,
+  importPreviewAudit,
+  type LocalImportPreview,
+} from "./import-preview";
 
 type ViewState = { center: [number, number]; zoom: number; bearing: number; pitch: number };
 type MapBoundsState = { west: number; south: number; east: number; north: number };
@@ -163,13 +169,14 @@ const defaultOrder = LAYER_REGISTRY.map((layer) => layer.id);
 const interactiveLayerIds = LAYER_REGISTRY.flatMap((layer) => layer.renderers.filter((renderer) => renderer.interactive).map((renderer) => renderer.id));
 const layerDomains = ["ALL", ...Array.from(new Set(LAYER_REGISTRY.map((layer) => layer.domain))).sort()] as const;
 const drawerViews = ["evidence", "metadata", "lineage", "focus"] as const satisfies readonly DrawerView[];
-const mapUtilityViews = ["report", "inspect", "navigate", "scene", "connections", "compare", "display", "measure", "export", "diagnostics"] as const satisfies readonly MapUtilityView[];
+const mapUtilityViews = ["report", "inspect", "navigate", "scene", "connections", "import", "compare", "display", "measure", "export", "diagnostics"] as const satisfies readonly MapUtilityView[];
 const mapUtilityLabels: Record<MapUtilityView, string> = {
   report: "Report",
   navigate: "Navigate",
   inspect: "Inspect",
   scene: "Scene",
   connections: "Sources",
+  import: "Import",
   compare: "Compare",
   display: "Display",
   measure: "Measure",
@@ -412,6 +419,7 @@ export default function Home() {
   const measureCoordinatesRef = useRef<[number, number][]>([]);
   const analysisAreaRef = useRef<MapBoundsState | null>(null);
   const areaDrawRef = useRef<{ pointerId: number; startX: number; startY: number; width: number; height: number } | null>(null);
+  const importInputRef = useRef<HTMLInputElement>(null);
   const cameraHistoryRef = useRef<ViewState[]>([KANSAS_VIEW]);
   const cameraHistoryIndexRef = useRef(0);
   const replayingCameraHistoryRef = useRef(false);
@@ -451,6 +459,10 @@ export default function Home() {
   const [analysisArea, setAnalysisArea] = useState<MapBoundsState | null>(null);
   const [areaDrawMode, setAreaDrawMode] = useState(false);
   const [areaDrawBox, setAreaDrawBox] = useState<MapAreaDrawBox | null>(null);
+  const [importPreview, setImportPreview] = useState<LocalImportPreview | null>(null);
+  const [importPreviewVisible, setImportPreviewVisible] = useState(false);
+  const [importError, setImportError] = useState("");
+  const [importBusy, setImportBusy] = useState(false);
   const [cameraHistoryIndex, setCameraHistoryIndex] = useState(0);
   const [cameraHistoryLength, setCameraHistoryLength] = useState(1);
   const [runtime, setRuntime] = useState<RuntimeState>({ kind: "loading", message: "Starting the renderer-neutral map boundary…" });
@@ -1511,7 +1523,7 @@ export default function Home() {
       const restoredWorkspace = params.get("ws");
       setCurrentWorkspace(restoredWorkspace === "knowledge" || restoredWorkspace === "features" || restoredWorkspace === "trust" ? restoredWorkspace : "explore");
       const restoredMapUtilityView = params.get("maptab");
-      const nextMapUtilityView: MapUtilityView = restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "scene" || restoredMapUtilityView === "connections" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "display" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "navigate";
+      const nextMapUtilityView: MapUtilityView = restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "scene" || restoredMapUtilityView === "connections" || restoredMapUtilityView === "import" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "display" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "navigate";
       setMapUtilityView(nextMapUtilityView);
       const restoredCompareIds = params.get("compare")?.split(",") ?? [];
       if (restoredCompareIds.length === 2 && restoredCompareIds.every((id) => knownLayerIds.has(id)) && restoredCompareIds[0] !== restoredCompareIds[1]) {
@@ -1923,6 +1935,81 @@ export default function Home() {
     setLocationCameraRedacted(false);
     fitRendererNeutralBounds([analysisArea.west, analysisArea.south, analysisArea.east, analysisArea.north], 11);
     announce("Fit the locked analysis area");
+  };
+
+  const fitImportPreview = (preview = importPreview) => {
+    if (!preview?.bounds || !preview.renderAllowed) {
+      announce("The inspected file has no previewable geometry inside the supported Kansas context");
+      return;
+    }
+    const [west, south, east, north] = preview.bounds;
+    locationDerivedViewRef.current = false;
+    setLocationCameraRedacted(false);
+    fitRendererNeutralBounds([
+      clamp(west, SUPPORTED_CONTEXT_BOUNDS.west, SUPPORTED_CONTEXT_BOUNDS.east),
+      clamp(south, SUPPORTED_CONTEXT_BOUNDS.south, SUPPORTED_CONTEXT_BOUNDS.north),
+      clamp(east, SUPPORTED_CONTEXT_BOUNDS.west, SUPPORTED_CONTEXT_BOUNDS.east),
+      clamp(north, SUPPORTED_CONTEXT_BOUNDS.south, SUPPORTED_CONTEXT_BOUNDS.north),
+    ], 12);
+    announce("Fit the browser-local import inspection bounds without acquiring a renderer");
+  };
+
+  const inspectImportFile = async (file?: File | null) => {
+    if (!file) return;
+    setImportBusy(true);
+    setImportError("");
+    setImportPreview(null);
+    setImportPreviewVisible(false);
+    try {
+      if (file.size > IMPORT_PREVIEW_MAX_BYTES) throw new Error("The preview is limited to files no larger than 2 MB.");
+      const preview = buildLocalImportPreview({
+        fileName: file.name,
+        fileSizeBytes: file.size,
+        text: await file.text(),
+        inspectedAt: new Date().toISOString(),
+        supportedBounds: SUPPORTED_CONTEXT_BOUNDS,
+      });
+      setImportPreview(preview);
+      setImportPreviewVisible(preview.renderAllowed);
+      if (preview.renderAllowed) fitImportPreview(preview);
+      announce(preview.renderAllowed
+        ? `Inspected ${preview.featureCount} browser-local ${preview.sourceFormat} feature${preview.featureCount === 1 ? "" : "s"}; renderer acquisition remains held`
+        : "File inspected, but the preview is blocked outside the supported Kansas context");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "The selected file could not be inspected.";
+      setImportError(message);
+      announce(message);
+    } finally {
+      setImportBusy(false);
+      if (importInputRef.current) importInputRef.current.value = "";
+    }
+  };
+
+  const toggleImportPreview = () => {
+    if (!importPreview?.renderAllowed) {
+      announce("The inspected file has no previewable geometry inside the supported Kansas context");
+      return;
+    }
+    const nextVisible = !importPreviewVisible;
+    setImportPreviewVisible(nextVisible);
+    announce(nextVisible ? "Displayed the browser-local import inspection" : "Hid the browser-local import inspection");
+  };
+
+  const clearImportPreview = () => {
+    setImportPreview(null);
+    setImportPreviewVisible(false);
+    setImportError("");
+    announce("Cleared the browser-local import inspection");
+  };
+
+  const copyImportPreviewAudit = async () => {
+    if (!importPreview) return;
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(importPreviewAudit(importPreview), null, 2));
+      announce("Copied the no-effect import inspection record");
+    } catch {
+      announce("Clipboard access was blocked; no import inspection record left the browser");
+    }
   };
 
   const travelCameraHistory = (direction: -1 | 1) => {
@@ -3310,6 +3397,7 @@ export default function Home() {
             {toolsExpanded && <div className="secondary-tools" id="more-map-tools">
               <button type="button" onClick={(event) => openMapUtility("navigate", event.currentTarget)}><span>⌖</span>Map controls</button>
               <button type="button" onClick={(event) => openMapUtility("connections", event.currentTarget)}><span>⛓</span>Source connections</button>
+              <button type="button" onClick={(event) => openMapUtility("import", event.currentTarget)}><span>⇧</span>Import preview</button>
               <button type="button" onClick={startAreaDraw} disabled={locationCameraRedacted}><span>▣</span>{analysisArea ? "Redraw report area" : "Draw report area"}</button>
               <button type="button" onClick={locateUser}><span>⌾</span>My location</button>
               <button type="button" onClick={toggleFullscreen} aria-label="Toggle fullscreen"><span>⛶</span>Fullscreen</button>
@@ -3335,7 +3423,7 @@ export default function Home() {
             aria-labelledby="map-utility-title"
           >
             <header className="map-utility-heading">
-              <div><p className="panel-kicker">MAP WORKBENCH</p><h2 id="map-utility-title">{mapUtilityView === "report" ? "Custom report builder" : mapUtilityView === "scene" ? "Scene + 3D lab" : mapUtilityView === "connections" ? "Source connections" : "Map tools"}</h2><span>{mapUtilityView === "report" ? "Turn the current map, time, layers, and selected data into a usable report." : mapUtilityView === "connections" ? "Inspect the held relationship between the layer registry, renderer descriptors, and site-local records." : "Inspect, navigate, explore scene intent, compare, display, measure, export, and diagnose the renderer-neutral map state."}</span></div>
+              <div><p className="panel-kicker">MAP WORKBENCH</p><h2 id="map-utility-title">{mapUtilityView === "report" ? "Custom report builder" : mapUtilityView === "scene" ? "Scene + 3D lab" : mapUtilityView === "connections" ? "Source connections" : mapUtilityView === "import" ? "Local import preview" : "Map tools"}</h2><span>{mapUtilityView === "report" ? "Turn the current map, time, layers, and selected data into a usable report." : mapUtilityView === "connections" ? "Inspect the held relationship between the layer registry, renderer descriptors, and site-local records." : mapUtilityView === "import" ? "Inspect KML or GeoJSON locally while admission, renderer, report, export, and publication effects remain at none." : "Inspect, navigate, explore scene intent, compare, display, measure, export, and diagnose the renderer-neutral map state."}</span></div>
               <button className="icon-close" type="button" onClick={closeMapUtility} aria-label="Close Map Workbench">×</button>
             </header>
             <nav className="map-utility-tabs" role="tablist" aria-label="Map Workbench views">
@@ -3590,6 +3678,40 @@ export default function Home() {
                   {filteredSourceConnections.length === 0 && <div className="map-utility-empty"><strong>No source connections match</strong><p>Clear the search or choose another connection state.</p></div>}
                 </div>
                 <aside className="map-utility-boundary" data-tone="warning"><strong>Connection status is held renderer context, not source admission.</strong><p>These carriers expose only site-local fixtures already in the Explorer registry. A fixture inspection does not acquire MapLibre or prove rights, freshness, evidence, policy approval, release, deployment, or publication.</p></aside>
+              </section>}
+
+              {mapUtilityView === "import" && <section id="map-utility-view-import" role="tabpanel" aria-labelledby="map-utility-tab-import" className="map-utility-section import-preview-section">
+                <div className="map-utility-section-heading"><span>LOCAL IMPORT PREVIEW</span><h3>Inspect before any admission handoff</h3><p>Open a small KML or GeoJSON file in this browser. Supported geometry, extent, temporal fields, attribution gaps, and sensitivity signals remain explicit while renderer acquisition stays held.</p></div>
+                <div className="import-path-grid" aria-label="Import preview boundary">
+                  <article><span>01</span><strong>Parse locally</strong><small>No upload, network link, or external asset fetch.</small></article>
+                  <article><span>02</span><strong>Inspect structure</strong><small>Geometry and bounds remain browser-local context.</small></article>
+                  <article><span>03</span><strong>Stop at review</strong><small>No catalog, report-data, evidence, or publication effect.</small></article>
+                </div>
+                <label className="import-dropzone" data-busy={importBusy} onDragOver={(event) => { event.preventDefault(); event.dataTransfer.dropEffect = "copy"; }} onDrop={(event) => { event.preventDefault(); void inspectImportFile(event.dataTransfer.files[0]); }}>
+                  <input ref={importInputRef} type="file" accept=".kml,.geojson,.json,application/geo+json,application/vnd.google-earth.kml+xml" onChange={(event) => void inspectImportFile(event.target.files?.[0])} />
+                  <span aria-hidden="true">⇧</span><strong>{importBusy ? "Inspecting file…" : "Choose or drop KML / GeoJSON"}</strong><small>Maximum 2 MB · browser memory only · raw file is never stored</small>
+                </label>
+                {importError && <div className="import-error" role="alert"><strong>Preview blocked</strong><p>{importError}</p></div>}
+                {!importPreview && !importError && <div className="map-utility-empty import-empty"><strong>No local file inspected</strong><p>This is a structure-review surface, not a source-ingestion or upload workflow.</p></div>}
+                {importPreview && <>
+                  <div className="import-preview-summary" aria-label="Local import preview summary">
+                    <article><span>FORMAT</span><strong>{importPreview.sourceFormat}</strong><small>{(importPreview.fileSizeBytes / 1024).toFixed(1)} KB</small></article>
+                    <article><span>FEATURES</span><strong>{importPreview.featureCount}</strong><small>{importPreview.invalidFeatureCount} invalid</small></article>
+                    <article><span>GEOMETRIES</span><strong>{Object.values(importPreview.geometryCounts).reduce((sum, count) => sum + count, 0)}</strong><small>{Object.keys(importPreview.geometryCounts).length} types</small></article>
+                    <article data-state={importPreview.renderAllowed ? "PASS" : "BLOCK"}><span>LOCAL PREVIEW</span><strong>{importPreview.renderAllowed ? importPreviewVisible ? "VISIBLE" : "HIDDEN" : "BLOCKED"}</strong><small>{importPreview.coverage.replaceAll("_", " ").toLowerCase()}</small></article>
+                  </div>
+                  <article className="import-file-card"><header><div><span>INSPECTED FILE</span><h4>{importPreview.fileName}</h4></div><strong>{importPreview.authority}</strong></header><dl>
+                    <div><dt>Bounds</dt><dd>{importPreview.bounds ? importPreview.bounds.map((value) => value.toFixed(4)).join(" · ") : "NO GEOMETRY"}</dd></div>
+                    <div><dt>Attribution</dt><dd>{importPreview.attribution ?? "NOT FOUND"}</dd></div>
+                    <div><dt>Temporal fields</dt><dd>{importPreview.temporalFields.join(", ") || "NONE DETECTED"}</dd></div>
+                    <div><dt>Potential sensitivity keys</dt><dd>{importPreview.sensitivitySignals.join(", ") || "NONE DETECTED"}</dd></div>
+                  </dl></article>
+                  {importPreviewVisible && <div className="import-preview-notice" role="status"><strong>Renderer-neutral preview enabled</strong><p>The inspected geometry remains in browser memory; only its bounded structure and fit context are shown while MapLibre acquisition is held.</p></div>}
+                  <div className="import-geometry-grid">{Object.entries(importPreview.geometryCounts).map(([geometry, count]) => <article key={geometry}><span>{geometry}</span><strong>{count}</strong></article>)}</div>
+                  <div className="import-check-list" aria-label="Import inspection checks">{importPreview.checks.map((check) => <article key={check.id} data-state={check.state}><span>{check.label}</span><p>{check.detail}</p><strong>{check.state}</strong></article>)}</div>
+                  <div className="map-utility-actions import-preview-actions"><button type="button" disabled={!importPreview.renderAllowed} onClick={toggleImportPreview}>{importPreviewVisible ? "Hide preview" : "Show preview"}</button><button type="button" disabled={!importPreview.renderAllowed} onClick={() => fitImportPreview()}>Fit bounds</button><button type="button" onClick={() => void copyImportPreviewAudit()}>Copy inspection</button><button type="button" onClick={clearImportPreview}>Clear</button></div>
+                </>}
+                <aside className="map-utility-boundary" data-tone="warning"><strong>Temporary Places, KFM-style: inspectable but unadmitted.</strong><p>The file never enters the Layer Catalog, Evidence Drawer, saved workspaces, reports, exports, registry, repository, or renderer. URL references, KML network links, overlays, models, tracks, and external resources are counted or warned about and never fetched.</p></aside>
               </section>}
 
               {mapUtilityView === "compare" && <section id="map-utility-view-compare" role="tabpanel" aria-labelledby="map-utility-tab-compare" className="map-utility-section layer-compare-section">
