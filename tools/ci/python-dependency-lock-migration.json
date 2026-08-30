@@ -105,11 +105,13 @@
     {
       "path": ".github/workflows/agriculture-observation.yml",
       "base_sha256": "sha256:b355d9530133b9707603094fec52804c9b37bc1a3b02f6186ba3a559f392f078",
-      "current_sha256": "sha256:54951cc54ccb892b7cabc74efd00e14d3d800aecaa9837d727d91ce98456ade2",
+      "current_sha256": "sha256:c5ae52c318760f97c197f0c3efb377c1cbb5b4d652f08a4e2c4a3647570d88ff",
       "profiles": [
         "project-test"
       ],
-      "superseded_receipt_sha256s": []
+      "superseded_receipt_sha256s": [
+        "sha256:54951cc54ccb892b7cabc74efd00e14d3d800aecaa9837d727d91ce98456ade2"
+      ]
     },
     {
       "path": ".github/workflows/agriculture-vegetation-connectivity-gate.yml",
@@ -874,11 +876,13 @@
     {
       "path": ".github/workflows/domain-hydrology.yml",
       "base_sha256": "sha256:603af477fd9f9a76da6734318d845b8f95aeed0ad167328497f15266368c2ada",
-      "current_sha256": "sha256:0ef0bb564f914acc25a35c21ceced6059bf254f25a80c5e86535c2d99c740d2f",
+      "current_sha256": "sha256:6abacc80fb4e65971cc4cca4e7bf4a9e7c2a49ecdab942a4748a0bee4c8b7e86",
       "profiles": [
         "project-test"
       ],
-      "superseded_receipt_sha256s": []
+      "superseded_receipt_sha256s": [
+        "sha256:0ef0bb564f914acc25a35c21ceced6059bf254f25a80c5e86535c2d99c740d2f"
+      ]
     },
     {
       "path": ".github/workflows/domain-lane-register.yml",
@@ -3041,20 +3045,24 @@
     {
       "path": ".github/workflows/stable-diff-review-handoff.yml",
       "base_sha256": "sha256:faeb726793457267d6d8e1764f5bbfaf17269e715f0545ab71087aaf67c18808",
-      "current_sha256": "sha256:468476792d05fdcbaf7d5beb802f7de261a9d0f7667262ae5c45b5da5eb58968",
+      "current_sha256": "sha256:ea8e103524df4c06db926223c8d8812a492aca3375d80f582580953c68613f2b",
       "profiles": [
         "project-test"
       ],
-      "superseded_receipt_sha256s": []
+      "superseded_receipt_sha256s": [
+        "sha256:468476792d05fdcbaf7d5beb802f7de261a9d0f7667262ae5c45b5da5eb58968"
+      ]
     },
     {
       "path": ".github/workflows/stable-diff-review-summary.yml",
       "base_sha256": "sha256:fa9301d140ed5e394c7318b71e99614ee0557ab20e5a2ca401886abeed8da9ae",
-      "current_sha256": "sha256:bde8bccaa00b217e204ec2442ffca3b1061239c68ce5ba152799d60170ff3c1f",
+      "current_sha256": "sha256:83637c9c5386c3bacf154ea9bca85158bfe20c42c47fcf1ddb437a655a147f3e",
       "profiles": [
         "project-test"
       ],
-      "superseded_receipt_sha256s": []
+      "superseded_receipt_sha256s": [
+        "sha256:bde8bccaa00b217e204ec2442ffca3b1061239c68ce5ba152799d60170ff3c1f"
+      ]
     },
     {
       "path": ".github/workflows/stac-attestation-hook.yml",
