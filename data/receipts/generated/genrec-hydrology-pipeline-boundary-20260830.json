@@ -1,0 +1,101 @@
+{
+  "artifact_hashes": {
+    "pipeline_specs/hydrology/README.md": "sha256:14295054fd02f1c7045f9c97879338f890df48a1a1d67b02229650293f16729c"
+  },
+  "artifact_paths": [
+    "pipeline_specs/hydrology/README.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "id": "ADR-0029",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/doctrine/directory-rules.md",
+      "id": "Directory-Rules-v2",
+      "validated": true
+    },
+    {
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3947",
+      "id": "PR-3947-merged-projection-lineage",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-30T18:57:10.813Z",
+  "emitter": "openai-codex",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_hashes": [
+      "sha256:14295054fd02f1c7045f9c97879338f890df48a1a1d67b02229650293f16729c"
+    ],
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@a98eb4b20c0c003087a9953df5ea0d609cbe0d28",
+      "github:bartytime4life/Kansas-Frontier-Matrix@43af9346c883aa57d82fa18404ccfa71792aef69"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "Codex",
+    "provider": "OpenAI",
+    "version": "GPT-5"
+  },
+  "notes": "Binds the Hydrology pipeline boundary convergence document. The declarations remain proposed-inactive; the WBD binding remains fixture-only; network, source activation, lifecycle-write, promotion, release, and publication capabilities remain denied.",
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "Notion",
+      "deterministic document checks"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:3caff5355b08468f66b319af9c29bdb904b11083a1140937f564dc3f96cffa1b",
+  "receipt_id": "kfm:genrec:pipeline-specs-hydrology:14295054fd02f1c7045f9c9",
+  "truth_labels": {
+    "pipeline_specs/hydrology/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "DECLARATION_INVENTORY",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "DOCUMENT_METADATA",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "MARKDOWN_LOCAL_LINKS",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "MARKDOWN_STRUCTURE",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "HOSTED_CHECKS",
+      "outcome": "SKIPPED",
+      "reason": "Draft pull request not yet open when this receipt was emitted."
+    },
+    {
+      "gate": "HUMAN_REVIEW",
+      "outcome": "SKIPPED",
+      "reason": "Draft pull request; review is pending."
+    }
+  ]
+}
