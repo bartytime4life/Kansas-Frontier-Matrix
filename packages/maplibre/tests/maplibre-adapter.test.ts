@@ -309,4 +309,46 @@ describe("package-owned MapLibreAdapter", () => {
       reason: "MAP_RUNTIME_DISPOSED",
     });
   });
+
+  it("fails finitely when an initializing snapshot listener throws", async () => {
+    const runtime = createMapLibreAdapter({ containerId: "kfm-map-root" });
+    let throwOnce = true;
+    runtime.subscribeSnapshot((snapshot) => {
+      if (snapshot.state === "INITIALIZING" && throwOnce) {
+        throwOnce = false;
+        throw new Error("synthetic listener failure");
+      }
+    });
+
+    await expect(runtime.initialize()).rejects.toMatchObject({
+      code: "MAP_RUNTIME_INITIALIZATION_FAILED",
+    });
+    expect(renderer.instances).toHaveLength(0);
+    expect(runtime.getSnapshot()).toMatchObject({
+      state: "ERROR",
+      reason: "MAP_RUNTIME_ERROR",
+    });
+
+    const retry = runtime.initialize();
+    renderer.instances[0].emit("load");
+    await expect(retry).resolves.toMatchObject({ state: "READY", reason: null });
+  });
+
+  it("preserves disposal when an initializing listener disposes then throws", async () => {
+    const runtime = createMapLibreAdapter({ containerId: "kfm-map-root" });
+    runtime.subscribeSnapshot((snapshot) => {
+      if (snapshot.state !== "INITIALIZING") return;
+      runtime.dispose();
+      throw new Error("synthetic listener failure after disposal");
+    });
+
+    const pending = runtime.initialize();
+
+    expect(renderer.instances).toHaveLength(0);
+    await expect(pending).rejects.toMatchObject({ code: "MAP_RUNTIME_DISPOSED" });
+    expect(runtime.getSnapshot()).toMatchObject({
+      state: "DISPOSED",
+      reason: "MAP_RUNTIME_DISPOSED",
+    });
+  });
 });
