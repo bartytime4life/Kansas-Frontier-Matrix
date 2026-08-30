@@ -2,15 +2,15 @@
 doc_id: kfm://doc/runbook-people-dna-land-no-network-test
 title: People/DNA/Land No-Network Test Runbook
 type: runbook
-version: v1.0.0
-prior_version: v0.1-draft
-prior_state: proposal-era procedure with placeholder commands, paths, owners, and unimplemented full-trust-spine claims
+version: v1.0.1
+prior_version: v1.0.0
+prior_state: repository-grounded procedure whose consent-overlay inventory lagged the tracked suite at 16 tests
 status: DRAFT_REPOSITORY_GROUNDED; TWO_BOUNDED_SYNTHETIC_PYTHON_PROFILES_EXECUTABLE; RUNNER_WIDE_AND_NON_PYTHON_EGRESS_DENIAL_HELD; BROADER_PEOPLE_DNA_LAND_AUTHORITY_HELD
 owners:
   - "@bartytime4life — verified GitHub review route"
   - "NEEDS VERIFICATION — accountable People/DNA/Land, privacy, consent, Indigenous/Tribal, legal, policy, source, evidence, proof, release, operations, and independent-review assignments"
 created: 2026-05-12
-updated: 2026-08-28
+updated: 2026-08-30
 policy_label: repository-facing; sensitive-domain; validation-sensitive; fail-closed; non-release; non-publication
 current_path: docs/runbooks/people-dna-land/NO_NETWORK_TEST_RUNBOOK.md
 owning_root: docs/
@@ -152,7 +152,7 @@ context; it is not, by itself, a firewall or shared startup guard.
 
 | Profile | Current evidence | Bounded conclusion | Not established |
 |---|---|---|---|
-| Consent-safe genealogy overlay | `test_consent_overlay_safety.py` runs 16 tests; its per-test setup patches `socket.connect`, `connect_ex`, `create_connection`, `getaddrinfo`, and `urllib.request.urlopen`. The validator accepts two valid fixtures and the workflow requires all 13 known-invalid fixtures to be rejected against the frozen revocation manifest. | Local shape, consent/expiry/revocation precedence, fixture refs, coarse synthetic place/time, deterministic hashes, identifying-field and raw-genomic denial, and non-release posture for this profile. | Runner-wide isolation, real identity or kinship, real consent, evidence resolution, policy enforcement, public-safe transformation, release, or publication. |
+| Consent-safe genealogy overlay | `test_consent_overlay_safety.py` runs 17 tests; its per-test setup patches `socket.connect`, `connect_ex`, `create_connection`, `getaddrinfo`, and `urllib.request.urlopen`. The validator accepts two valid fixtures and the workflow requires all 13 known-invalid fixtures to be rejected against the frozen revocation manifest. | Local shape, consent/expiry/revocation precedence, fixture refs, coarse synthetic place/time, deterministic hashes, identifying-field and raw-genomic denial, and non-release posture for this profile. | Runner-wide isolation, real identity or kinship, real consent, evidence resolution, policy enforcement, public-safe transformation, release, or publication. |
 | Consent-revocation propagation assessment | `test_consent_revocation_propagation_assessment.py` runs nine tests; its replay test patches socket construction and connection creation. The validator evaluates 17 frozen cases spanning `PASS`, `DENY`, and `ERROR` expectations over seven declared downstream surfaces. | Deterministic assessment of declared scope and declared propagation receipt posture for synthetic cases. | Receipt authenticity, real revocation, cleanup, withdrawal, derivative or cache invalidation, rollback execution, evidence or policy authority, release, or publication. |
 | Workflow inventory and hold jobs | The workflow allows only the two named test modules, two named validators, and two fixture roots as substantive validation surfaces; proof and release jobs remain explicit holds. | New substantive files cannot silently become accepted validation, proof, or release authority. | Complete domain coverage, policy runtime, proof production, release dry-run, deployment, or human approval. |
 
