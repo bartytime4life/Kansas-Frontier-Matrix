@@ -111,14 +111,19 @@ All ten YAML files use `KfmPipelineSpecDeclaration`. The JSON materiality profil
 
 ## Validation
 
-Run from the repository root:
+Run both validation families from the repository root:
 
 ```bash
 python tools/validators/validate_pipeline_spec_declarations.py
 python -m pytest tests/validators/test_validate_pipeline_spec_declarations.py -q
+python -m unittest discover \
+  --start-directory tests/validators/domains/habitat \
+  --pattern 'test_land_cover_materiality.py' \
+  --verbose
+python tools/validators/domains/habitat/validate_land_cover_materiality.py --fixtures
 ```
 
-Validation must reject duplicate keys, aliases, unknown fields, invalid hashes or paths, active status, permissive execution, and missing fixture-first bindings. Habitat-specific validation must also preserve framework, vintage, scale, topology, materiality, and public-safety boundaries.
+Declaration validation must reject duplicate keys, aliases, unknown fields, invalid hashes or paths, active status, permissive execution, and missing fixture-first bindings. The dedicated land-cover materiality family must also preserve framework, vintage, scale, topology, materiality, fixture polarity, and public-safety boundaries.
 
 ## Related authority families
 
