@@ -34,7 +34,7 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /Build report/i);
   assert.match(html, /synthetic and generalized demonstration layers/i);
   assert.match(html, /Repository briefing/i);
-  assert.match(html, /main@(?:<!-- -->)?c321610/i);
+  assert.match(html, /main@(?:<!-- -->)?1ea6593/i);
   assert.match(html, /Scenario review/i);
   assert.match(html, /Runtime lab/i);
   assert.match(html, /Source observatory/i);
@@ -87,7 +87,7 @@ test("adds reusable analysis recipes, device-local workspaces, report filters, a
   const layer = (id) => explorer.LAYER_REGISTRY.find((candidate) => candidate.id === id);
 
   assert.equal(recipes.ANALYSIS_RECIPES.length, 8);
-  assert.equal(recipes.ANALYSIS_RECIPES.every((recipe) => recipe.layerIds.every((id) => Boolean(layer(id)))), true);
+  assert.equal(recipes.ANALYSIS_RECIPES.every((recipe) => recipe.layerIds.every((id) => id === "county-starter-points" || Boolean(layer(id)))), true);
   assert.equal(layer("water-context").data.features.length, 4);
   assert.equal(layer("agriculture-context").data.features.length, 3);
   assert.equal(layer("communities").data.features.length, 12);
@@ -373,7 +373,9 @@ test("resolves Focus outcomes and temporal scope with fail-closed precedence", a
 test("keeps repository updates pinned and boundary-labeled", async () => {
   const updates = await readFile(new URL("../app/repository-updates.ts", import.meta.url), "utf8");
 
-  assert.match(updates, /c3216103ac049cd39f5f03883d7146046ef7bccd/);
+  assert.match(updates, /1ea6593ede80d5ce10f561c7eec72135d6ccf806/);
+  assert.match(updates, /All 105 Kansas counties now have public locator starters/);
+  assert.match(updates, /Time A \/ Time B comparison preserves report scope/);
   assert.match(updates, /exact maplibre-gl 6\.6\.0 lock closure/);
   assert.match(updates, /521 commits after the prior Site evidence pin/);
   assert.match(updates, /Planning scenarios now have a strict review projection/);
