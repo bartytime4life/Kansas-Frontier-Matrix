@@ -62,6 +62,8 @@ test("centers the primary workflow on map-scoped custom reports", async () => {
   assert.match(source, /Catalog availability comparison/);
   assert.match(source, /const matchesReportRecord = useCallback/);
   assert.match(source, /matchesReportRecord\(layer, feature\.properties\)/);
+  assert.match(source, /reportScope === "SELECTION"\s*\n\s*\|\| isFeatureAvailableAtTime/);
+  assert.match(source, /\[matchesReportRecord, reportLayerIds, reportScope, year\]/);
   assert.match(source, /}\n    params\.set\("times",/);
   assert.match(source, /setReportLayerIds\(activeLayers\.map/);
   assert.match(source, /const \[leftOpen, setLeftOpen\] = useState\(false\)/);
