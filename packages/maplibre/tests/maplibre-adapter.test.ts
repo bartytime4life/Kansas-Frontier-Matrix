@@ -293,4 +293,20 @@ describe("package-owned MapLibreAdapter", () => {
     expect(map.removed).toBe(true);
     expect(runtime.getSnapshot().state).toBe("DISPOSED");
   });
+
+  it("stops initialization when a snapshot listener disposes synchronously", async () => {
+    const runtime = createMapLibreAdapter({ containerId: "kfm-map-root" });
+    runtime.subscribeSnapshot((snapshot) => {
+      if (snapshot.state === "INITIALIZING") runtime.dispose();
+    });
+
+    const pending = runtime.initialize();
+
+    expect(renderer.instances).toHaveLength(0);
+    await expect(pending).rejects.toMatchObject({ code: "MAP_RUNTIME_DISPOSED" });
+    expect(runtime.getSnapshot()).toMatchObject({
+      state: "DISPOSED",
+      reason: "MAP_RUNTIME_DISPOSED",
+    });
+  });
 });
