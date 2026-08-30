@@ -20,7 +20,7 @@ current_path: tests/pipelines/README.md
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 1ea6593ede80d5ce10f561c7eec72135d6ccf806
+  base_commit: 3b23c473fe3778242ecaabeeaf86fd7914ad7225
   target_prior_blob: 08fa70cd33af2c04f03aadbf7d973c6f4e29fbf3
   source_defined_test_count: 23
   executable_test_modules: 3
