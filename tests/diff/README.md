@@ -101,8 +101,8 @@ receipts, proofs, release records, or published artifacts.
 
 | Workflow | Trigger and collection behavior | Evidence limit |
 |---|---|---|
-| [`stable-diff-review-summary.yml`](../../.github/workflows/stable-diff-review-summary.yml) | Changes under `tests/diff/**` trigger the workflow. Its `unittest` command collects the renderer class, and a separate step exercises comparator-to-summary CLI output. | `test_stable_diff.py` uses pytest-style top-level functions, so naming it in the workflow's `unittest` command does **not** collect that module's assertions. |
-| [`stable-diff-review-handoff.yml`](../../.github/workflows/stable-diff-review-handoff.yml) | Changes under `tests/diff/**` trigger the workflow. Its `unittest` command collects the renderer and handoff classes, and a separate step exercises the comparator, renderer, and handoff CLIs together. | The same collection gap applies to the pytest-style comparator module; the CLI exercise is narrower than that module's full assertion set. |
+| [`stable-diff-review-summary.yml`](../../.github/workflows/stable-diff-review-summary.yml) | Changes under `tests/diff/**` trigger the workflow. Its focused `pytest` command directly collects the comparator's pytest-style assertions together with the renderer tests, and a separate step exercises comparator-to-summary CLI output. | Success proves only the explicitly collected comparator/renderer modules and the bounded CLI exercise at the checked-out revision. |
+| [`stable-diff-review-handoff.yml`](../../.github/workflows/stable-diff-review-handoff.yml) | Changes under `tests/diff/**` trigger the workflow. Its focused `pytest` command directly collects the comparator, renderer, and handoff modules, and a separate step exercises the comparator, renderer, and handoff CLIs together. | Success proves only those explicitly collected modules and the bounded exact-input CLI handoff at the checked-out revision. |
 
 Workflow success is evidence only for the checked-out revision and the commands
 that actually ran. Required-check status and any broader workflow that may also
