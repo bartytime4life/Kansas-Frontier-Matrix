@@ -1,1005 +1,304 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/tests-release-readme
-title: tests/release/ — Release Governance Enforceability and Promotion-Safety Boundary
-type: readme; directory-readme; release-test-boundary; promotion-safety; correction-and-rollback
-version: v1.1
-status: implemented-promotion-gate-thin-slice; repository-grounded; unittest-and-pytest-compatible; no-network; fail-closed; non-authoritative; broader-release-suite-partial
-owners: OWNER_TBD — QA steward · Release steward · Promotion steward · Contract steward · Schema steward · Fixture steward · Validator steward · Evidence steward · Policy steward · Correction steward · Rollback steward · CI steward · Security reviewer · Docs steward
+title: tests/release/ — Release-Prerequisite Test Inventory and Authority Boundary
+type: readme; directory-readme; release-test-boundary; executable-inventory
+version: v1.2
+status: repository-grounded; executable; mixed-dependency; no-release-authority
+owner: "@bartytime4life — CONFIRMED CODEOWNERS review route; independent QA, release, and separation-of-duties stewardship remain NEEDS VERIFICATION"
 created: 2026-07-06
-updated: 2026-08-03
-supersedes: v0.1 planning-oriented release-test README
-policy_label: public-doc; tests; release; promotion; correction; rollback; withdrawal; supersession; synthetic-only; no-network; evidence-aware; policy-aware; review-aware; fail-closed; no-release-authority
+updated: 2026-08-30
+supersedes: v1.1 documentation at the same path; no test, fixture, validator, workflow, release object, or public surface is superseded
+policy_label: public-doc; tests; release-prerequisites; promotion-safety; synthetic; fail-closed; non-authoritative
 current_path: tests/release/README.md
-truth_posture: CONFIRMED bounded promotion-gate implementation, direct release tests, synthetic fixture matrix, Make target, and workflow invocation / PARTIAL broader release, policy, review, evidence, signature, correction, rollback, and publication coverage / NEEDS VERIFICATION hosted exact-head enforcement and accepted owners
+truth_posture: CONFIRMED fifteen direct modules and 123 source-defined tests at the pinned snapshot / PARTIAL aggregate local execution and cross-family coverage / UNKNOWN required-check status, complete collection count, and independent stewardship
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: 04e9cbac69305a5d708509ceef62c6f43ca1f41c
-  implementation_base_commit: 68069dce9e292649697f63f96fa57edd07181a27
-  target_prior_blob: 011984d8e32031d07d1e4590d8ced348b1ab206f
-  direct_lane_files_confirmed:
-    - tests/release/README.md
-    - tests/release/test_promotion_decision_schema.py
-    - tests/release/test_promotion_gate.py
-    - tests/release/test_review_record.py
-  bounded_inventory_note: the v0.2 snapshot was README-oriented; v1.0 records the implemented promotion-gate thin slice without claiming complete release-governance coverage
+  base_commit: 1ea6593ede80d5ce10f561c7eec72135d6ccf806
+  target_prior_blob: 8e4e14eb35dcd2026b7bf0de37ec9751f75a710d
+  direct_modules: 15
+  source_defined_tests: 123
+  count_note: source-defined test functions or methods; parametrization and collection behavior may change collected-case totals
 related:
   - ../README.md
-  - ../schemas/README.md
-  - ../contracts/README.md
-  - ../schemas/test_common_contracts.py
   - ../../release/README.md
   - ../../contracts/release/README.md
   - ../../schemas/contracts/v1/release/README.md
   - ../../fixtures/release/README.md
-  - ../../fixtures/release/promotion_gate/README.md
-  - ../../fixtures/contracts/v1/README.md
   - ../../tools/release/README.md
   - ../../tools/validators/release/README.md
-  - ../../tools/validators/promotion_gate/README.md
-  - ../../tools/validators/validate_promotion_gate.py
-  - ../../policy/release/README.md
-  - ../../policy/promotion/README.md
   - ../../docs/doctrine/directory-rules.md
-  - ../../docs/adr/ADR-0018-promotion-gate-sequence.md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../Makefile
   - ../../pyproject.toml
-  - ../../.github/workflows/contracts-validate.yml
-  - ../../.github/workflows/schema-validation.yml
-  - ../../.github/workflows/validator-suite.yml
-  - ../../.github/workflows/promotion-gate.yml
-  - ../../.github/workflows/policy-boundary-guards.yml
-tags: [kfm, tests, release, promotion, ReleaseManifest, PromotionDecision, RollbackCard, CorrectionNotice, WithdrawalNotice, fixtures, pytest, no-network, fail-closed, correction, rollback, CI, trust-spine]
+tags: [kfm, tests, release, promotion, rollback, publication-deny, compatibility, no-network, fail-closed]
 notes:
-  - "v1.0 adds an implemented bounded promotion-gate thin slice while preserving the broader release maturity gaps documented by v0.2."
-  - "The direct bounded gate lane now includes 19 promotion-gate tests and 11 ReviewRecord tests, plus the separate PromotionDecision schema-fixture test."
-  - "The generic schema fixture harness names the release family but only creates a case when fixtures/contracts/v1/release/<schema_name>/ exists; the fixture parent records release schema-fixture coverage as unresolved."
-  - "fixtures/release/promotion_gate contains one PASS, twelve DENY, three ABSTAIN, and two ERROR packets with exact consumer bindings."
-  - "make test executes tests/schemas and tests/contracts only; it does not directly execute tests/release."
-  - "policy/release and policy/promotion remain separate greenfield/stub surfaces; the validator checks only declared policy evaluation and never executes policy."
-  - "No test or validator creates a release record, receipt, proof, lifecycle artifact, or public output."
+  - "v1.2 replaces a stale three-module thin-slice inventory and proposed future tree with the complete direct current-main inventory."
+  - "Every direct module has a workflow binding, but the workflows use different dependency sets and commands; no single canonical full-lane target is established."
+  - "Passing tests and workflows are bounded evidence only and never approve review, promotion, release, deployment, publication, correction, withdrawal, or rollback."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# `tests/release/` — Release Governance Enforceability and Promotion-Safety Boundary
+# `tests/release/` — Release-Prerequisite Test Inventory and Authority Boundary
 
-> **Purpose.** Define the executable proof boundary for KFM release governance: candidates must not become releases by naming, placement, merge, deployment, schema validity, fixture success, tool output, or generated prose. A mature suite must prove that evidence, validation, policy, review, promotion, manifest, correction, withdrawal, supersession, and rollback requirements fail closed and remain auditable.
-
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Direct inventory: executable thin slice" src="https://img.shields.io/badge/direct__inventory-executable__thin__slice-green">
-  <img alt="Runner: pytest configured" src="https://img.shields.io/badge/runner-pytest__configured-blue">
-  <img alt="Dedicated suite: promotion gate" src="https://img.shields.io/badge/dedicated__suite-promotion__gate-green">
-  <img alt="Fixture coverage: bounded matrix" src="https://img.shields.io/badge/fixture__coverage-bounded__matrix-blue">
-  <img alt="Failure posture: fail closed" src="https://img.shields.io/badge/failure-fail__closed-critical">
-  <img alt="Authority: tests only" src="https://img.shields.io/badge/authority-tests__only-purple">
-</p>
-
-**Quick navigation:** [Status](#status-and-evidence-boundary) · [Purpose](#purpose-and-audience) · [Authority](#authority-and-repository-fit) · [Current state](#confirmed-current-state) · [Scope](#test-scope-and-non-scope) · [Outcomes](#finite-outcome-vocabulary) · [Fixtures](#fixture-and-test-data-contract) · [Test model](#release-governance-test-model) · [Gates](#promotion-gate-coverage) · [Execution](#deterministic-execution-and-no-network-posture) · [CI](#ci-and-promotion-boundary) · [Failures](#failure-interpretation) · [Passing](#what-a-passing-suite-does-not-prove) · [Maintenance](#maintenance-and-fixture-update-rules) · [Done](#definition-of-done) · [Open](#open-verification-register) · [Evidence](#evidence-ledger) · [Rollback](#documentation-correction-and-rollback)
-
----
-
-## Status and evidence boundary
+`tests/release/` contains executable checks for bounded release prerequisites,
+negative publication behavior, compatibility assessments, review projections,
+promotion verification, and synthetic rollback behavior. It does not create or
+approve a release.
 
 > [!IMPORTANT]
-> **CONFIRMED direct lane:** `tests/release/test_review_record.py` proves the fixture-only ReviewRecord projection, `test_promotion_gate.py` executes the bounded A-G profile, and `test_promotion_decision_schema.py` preserves the separate PromotionDecision shape check.
->
-> **CONFIRMED adjacent execution:** the repository configures pytest, and `tests/schemas/test_common_contracts.py` can include the `release` schema family when a matching fixture directory exists.
->
-> **PARTIAL:** the promotion-gate thin slice and synthetic reviewer-authority declaration checks are implemented; live identity/authority authentication, full ReleaseManifest, policy-engine, evidence-resolution, signature, rollback-execution, correction-cascade, publication, and required-check closure remain outside this proof.
+> A green test or workflow supports only its named assertions at the checked
+> revision. It does not establish source truth, evidence sufficiency, policy
+> approval, human review, promotion, release, deployment, publication, or
+> successful operational rollback.
 
-### Safe conclusion
+## Status
 
-`tests/release/` is the correct cross-cutting test boundary for release governance. It now contains one executable thin slice while the broader suite remains partial:
+At `main@1ea6593ede80d5ce10f561c7eec72135d6ccf806`, this directory has
+15 direct `test_*.py` modules containing 123 source-defined `test_*` functions
+or methods. The prior README described three direct modules and a proposed
+future tree, so it materially understated current implementation.
 
-- `pyproject.toml` configures Python 3.11+, pytest as a test extra, and the repository root on `pythonpath`.
-- `make test` still runs `tests/schemas` and `tests/contracts`; `make publish-check` owns the focused promotion-gate suite.
-- `tests/schemas/test_common_contracts.py` names `release` in its hard-coded family list, but it creates a test case only when `fixtures/contracts/v1/release/<schema_name>/` exists.
-- `fixtures/contracts/v1/README.md` records release schema-fixture coverage as `NEEDS VERIFICATION`.
-- `fixtures/release/promotion_gate/` contains an exact finite-outcome packet matrix consumed by the validator and focused suite.
-- `policy/release/README.md` and `policy/promotion/README.md` are greenfield stubs.
-- `tools/validators/promotion_gate/validate_promotion_gate.py` is implemented; broader release helpers and validators remain mixed-maturity.
-- `tools/validators/validate_review_record.py` validates only repository-owned synthetic projections and creates no governed ReviewRecord.
-- `schemas/contracts/v1/release/README.md` records a mixed-maturity schema family: one concrete PromotionDecision schema, several permissive stubs, and several empty scaffolds.
+The count is a source inventory, not a pytest collection result. Parametrized
+tests can produce more collected cases, and dependency or discovery behavior
+can prevent collection.
 
-### Truth labels used here
-
-| Label | Meaning in this README |
+| Property | Confirmed boundary |
 |---|---|
-| `CONFIRMED` | Verified from repository files or bounded connector search at the pinned snapshot. |
-| `PROPOSED` | A recommended test, fixture, command, gate, artifact, or path relationship not established as current implementation. |
-| `UNKNOWN` | Not resolved by inspected evidence. |
-| `NEEDS VERIFICATION` | Checkable, but not sufficiently verified to act as fact. |
-| `CONFLICTED` | Repository documents disagree or carry stale relationship claims; no silent winner is selected. |
-| `DENY` | A prohibited release or authority interpretation. |
+| Placement | Canonical executable conformance evidence under `tests/` |
+| Direct inventory | 15 modules; 123 source-defined tests |
+| Runners | Mix of pytest-compatible `unittest` and pytest functions |
+| Inputs | Repository-owned synthetic fixtures, schemas, validators, helpers, and temporary files |
+| Network posture | Bounded tests and workflows deny or avoid network use; no universal lane-wide network guard is proven |
+| Side effects | Tests use temporary paths or read-only fixtures; some probe workflows build synthetic carriers in controlled environments |
+| Aggregate command | No canonical dependency-complete full-lane target is established |
+| Review route | `/tests/` routes to `@bartytime4life` through CODEOWNERS |
+| Authority | Test evidence only; never a release, review, policy, or publication decision |
 
-[Back to top](#top)
+## Authority and placement
 
----
+Accepted [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+makes the [Directory Rules](../../docs/doctrine/directory-rules.md) the writable
+human placement authority. Those rules assign executable conformance,
+boundary, negative, integration, and end-to-end evidence to `tests/`. This
+same-path README update does not create a new authority root or move an
+artifact.
 
-## Purpose and audience
-
-`tests/release/` should prove that KFM release governance is enforceable across the transition from release candidate to governed public state and through later correction, withdrawal, supersession, or rollback.
-
-This README is for:
-
-- QA and test stewards;
-- release and promotion stewards;
-- schema, contract, policy, evidence, receipt, proof, correction, and rollback owners;
-- domain-lane maintainers who need cross-cutting release behavior;
-- CI maintainers deciding which checks may support promotion;
-- reviewers evaluating whether a passing result has enough scope to matter.
-
-The durable test question is:
-
-> Can the repository demonstrate, with deterministic and public-safe evidence, that a release transition is explicit, supported, reviewable, fail-closed, correctable, and reversible without treating tests as release authority?
-
-A mature suite should expose both positive and negative behavior. It should make unsupported release claims fail visibly rather than disappear through skipped discovery, empty fixture sets, permissive schemas, TODO tooling, or undocumented CI behavior.
-
-[Back to top](#top)
-
----
-
-## Authority and repository fit
-
-Directory Rules place enforceability proof under `tests/` and release governance under `release/`. The current path is therefore correctly placed and requires no move or new ADR.
-
-| Responsibility | Authority home | Role of `tests/release/` |
+| Responsibility | Authority home | Role of this lane |
 |---|---|---|
-| Release governance records and decisions | `release/` | Assert required behavior; never create or store authoritative release records. |
-| Release object meaning | `contracts/release/` and adjacent correction contracts | Test semantic invariants; never redefine them here. |
-| Release object machine shape | `schemas/contracts/v1/release/` and accepted adjacent schema families | Validate selected shapes; never become schema authority. |
-| Release and promotion policy | `policy/release/`, `policy/promotion/`, and accepted policy roots | Exercise policy behavior; never author or infer policy. |
-| Synthetic release examples | `fixtures/release/` | Consume behavior-oriented fixtures when confirmed and linked. |
-| Schema fixture examples | `fixtures/contracts/v1/release/<schema_name>/` | Consume shape fixtures through the schema harness when present. |
-| Release-support tooling | `tools/release/` | Test deterministic helpers when implemented. |
-| Release validation routing | `tools/validators/release/` and specialized validator lanes | Exercise validator behavior when implemented. |
-| Evidence, proofs, and receipts | `data/proofs/`, `data/receipts/`, and accepted evidence homes | Use synthetic references and assert closure; never store trust artifacts here. |
-| Published public-safe carriers | `data/published/` and governed delivery roots | Assert public-boundary controls; never store published payloads here. |
-| Release enforceability proof | `tests/release/` | This lane. |
+| Release records and state | [`release/`](../../release/README.md) | Exercise prerequisites and denial paths; never create state |
+| Semantic meaning | [`contracts/release/`](../../contracts/release/README.md) | Assert bounded invariants; never redefine them |
+| Machine shape | [`schemas/contracts/v1/release/`](../../schemas/contracts/v1/release/README.md) | Validate selected profiles; never select schema authority |
+| Reusable synthetic examples | [`fixtures/release/`](../../fixtures/release/README.md) and `fixtures/contracts/v1/release/` | Consume reviewed inputs; never become fixture authority |
+| Release helpers | [`tools/release/`](../../tools/release/README.md) | Exercise deterministic behavior and non-effects |
+| Release validators | [`tools/validators/release/`](../../tools/validators/release/README.md) and specialized validator paths | Test diagnostics, polarity, and fail-closed behavior |
+| Executable evidence | `tests/release/` | This lane |
 
-> [!WARNING]
-> A passing test, green workflow, valid schema, generated report, merged pull request, copied file, deployed artifact, public URL, map layer, or AI answer is **not** a release decision. Only governed release records and the required supporting evidence, policy, review, manifest, correction, and rollback state can support that conclusion.
+Promotion, review, merge, release, deployment, publication, correction,
+withdrawal, supersession, and rollback are distinct states. Test naming,
+fixture validity, workflow success, or a generated report does not collapse
+those distinctions.
 
-### Placement prohibitions
+## Direct module inventory
 
-Do not use this lane as:
-
-- a second release record store;
-- a release manifest registry;
-- a schema, contract, policy, fixture, source, receipt, proof, catalog, or lifecycle data authority;
-- a public artifact or export store;
-- a place to hide validator or release implementation logic;
-- a shortcut around review, separation of duties, correction, or rollback;
-- a normal public-client path into RAW, WORK, QUARANTINE, candidate, canonical, or internal stores.
-
-[Back to top](#top)
-
----
-
-## Confirmed current state
-
-### Direct lane inventory
-
-| Surface | Status | Evidence-bounded conclusion |
+| Module | Source-defined tests | Implemented boundary |
 |---|---:|---|
-| `tests/release/README.md` | `CONFIRMED` | Existing v0.1 planning README; this revision replaces it. |
-| `tests/release/test_review_record.py` | `CONFIRMED` | Eleven standard-library tests cover exact positive/negative ReviewRecord fixtures, canonical identities and timestamps, identity issuance, exclusive declared expiry boundaries, explicit supersession marking, redacted external and symlink-loop paths, no-network behavior, non-emission, and deterministic CLI polarity. |
-| `tests/release/test_promotion_gate.py` | `CONFIRMED` | Nineteen standard-library-compatible tests cover the bounded A-G promotion profile, unavailable Gate G context, supplied authority intervals, exclusive declared expiry boundaries, nonempty obligations, canonical identity/time behavior, redacted external and symlink-loop paths, and outcome precedence. |
-| `tests/release/test_publication_deny_dry_run.py` | `CONFIRMED` | Four tests prove exact five-case denial coverage, authority non-creation, no-network execution, deterministic JSON, and no file emission. |
-| `tests/release/test_promotion_decision_schema.py` | `CONFIRMED` | Preserves the separate proposed PromotionDecision shape-fixture boundary. |
-| Direct test-local fixtures | `NOT ESTABLISHED` | No test-local fixture inventory was established for this lane. |
-| Dedicated command | `CONFIRMED` | `make publish-check` runs fixture polarity plus the focused direct suite with no network. |
-| Dedicated CI invocation | `CONFIRMED definition / hosted result NEEDS VERIFICATION` | `promotion-gate.yml` preserves workflow/job identities and invokes the bounded proof. |
-
-The bounded search limit matters: absence from search results is not proof of permanent nonexistence across history, other refs, ignored files, generated workspaces, or dynamic test generation.
-
-### Repository-native test execution
-
-| Surface | Confirmed behavior | Release-lane consequence |
-|---|---|---|
-| `pyproject.toml` | Python `>=3.11`; pytest test extra; root `pythonpath`. | Pytest is the grounded repository runner family. |
-| `make test` | Runs `python -m pytest tests/schemas tests/contracts -q`. | Direct `tests/release/` coverage is excluded. |
-| `make schemas` | Runs `python tools/validators/_common/run_all.py`. | Runs an aggregate validator path, not a dedicated release suite. |
-| `make release-dry-run` | Runs the bounded five-case publication-denial report and its focused test module. | Proves only synthetic negative-path behavior; it assembles no candidate and creates no release or publication authority. |
-| `make publish-check` | Runs the eighteen-file promotion matrix, eleven-case ReviewRecord subset, and thirty focused tests. | Proves bounded fixture behavior only; never review approval, promotion, release, or publication. |
-| `make deny-test` | Runs the five app-owned route, method, manifest, internal-store-literal, and forbidden-import structural guards as one local aggregate. | The aggregate and three existing CI jobs cover the same bounded five-test set; this is not release readiness, promotion, or publication proof. |
-
-### Adjacent schema coverage
-
-`tests/schemas/test_common_contracts.py`:
-
-1. scans immediate `*.schema.json` files in seven hard-coded families, including `release`;
-2. derives `fixtures/contracts/v1/<family>/<schema_name>/`;
-3. silently omits a schema when that fixture directory does not exist;
-4. accepts `valid/valid_*.json` only when no schema errors occur;
-5. accepts `invalid/invalid_*.json` only when at least one schema error occurs;
-6. optionally checks expected error text.
-
-That harness is relevant but insufficient for release governance. It does not by itself prove:
-
-- release semantic completeness;
-- evidence resolution;
-- policy or rights evaluation;
-- review or separation of duties;
-- receipt/proof closure;
-- correction, withdrawal, supersession, or rollback behavior;
-- public-boundary denial;
-- release runtime integration;
-- actual promotion or publication.
-
-### Release fixture surfaces
-
-Two fixture responsibilities are present and must not be collapsed:
-
-| Fixture home | Intended role | Current evidence |
-|---|---|---|
-| `fixtures/contracts/v1/release/<schema_name>/` | Shape fixtures consumed by the generic schema harness. | Parent fixture README records release coverage as unresolved. |
-| `fixtures/release/` | PromotionDecision shape fixtures plus the bounded promotion-gate behavior matrix. | Selected promotion-gate payloads and consumers are verified; broader family inventory remains partial. |
-
-There is a documentation freshness conflict: `fixtures/release/README.md` now exists, but older PromotionDecision child READMEs still state that the parent was not found. Treat this as `CONFLICTED / NEEDS VERIFICATION`; do not infer payload or consumer maturity from README hierarchy alone.
-
-### Release contract and schema maturity
-
-| Family | Current documented maturity | Test implication |
-|---|---|---|
-| `PromotionDecision` | Semantic contract present; schema described as concrete and closed. | First credible shape/semantic thin slice, but policy/review/runtime behavior remains unproven. |
-| `ReleaseManifest` | Semantic contract present; schema described as permissive. | Do not treat schema validity as manifest completeness. |
-| `RollbackCard` | Semantic scaffold; permissive schema. | Rollback-readiness tests must remain proposed until fields/validator are accepted. |
-| `WithdrawalNotice` | Semantic scaffold; permissive schema. | Withdrawal tests need accepted meaning and negative fixtures. |
-| `ReleaseState` | Empty permissive schema scaffold. | Documented release-state vocabulary is not proven schema-enforced. |
-| `CorrectionNotice` | Adjacent semantic contract; empty release-family schema scaffold and placement seam. | Correction tests must expose the seam instead of hiding it. |
-| `RedactionReceipt` and `PublicationTransformReceipt` | Receipt-like release schema scaffolds. | Receipt-family placement and semantics need explicit migration/profile decisions. |
-
-### Policy, validator, and tooling maturity
-
-- `policy/release/README.md` is a greenfield stub.
-- `policy/promotion/README.md` is a greenfield stub.
-- `tools/release/README.md` defines support-only tooling expectations but confirms no executable helper.
-- `tools/validators/release/README.md` defines routing expectations but confirms no executable release validator.
-- `ADR-0018` proposes a canonical Promotion Gates A–G sequence; its status is `proposed`, so the sequence must not be presented as accepted implementation.
-
-### Workflow posture
-
-| Workflow | Trigger/command | What it establishes | What it does not establish |
-|---|---|---|---|
-| `contracts-validate.yml` | `push`, `pull_request`; installs `.[test]`; runs `make test`. | Schema and contract directories are part of a repo workflow path. | Direct `tests/release/` execution, release semantic coverage, or release gate status. |
-| `schema-validation.yml` | Pull request and push to `main`; runs `make schemas`. | Aggregate validators run in CI. | Direct release tests or complete release schema coverage. |
-| `validator-suite.yml` | Pull request and push to `main`; runs `make schemas` and one evidence fail-closed check. | Some fail-closed validation is exercised. | Release policy, promotion gates, rollback, correction, or release runtime. |
-| `policy-boundary-guards.yml` | Path-filtered pull request plus manual dispatch; runs boundary tests. | Selected policy and trust-membrane guards exist. | A change only to `tests/release/README.md` is not in its inspected path filter. |
-
-[Back to top](#top)
-
----
-
-## Test scope and non-scope
-
-### In scope
-
-A mature cross-cutting release suite should test:
-
-- candidate-versus-release separation;
-- `ReleaseManifest` required structure and dependency closure;
-- `PromotionDecision` finite release-transition vocabulary and support refs;
-- evidence, proof, receipt, validation, policy, review, signature, correction, and rollback references;
-- lifecycle transition rules from CATALOG/TRIPLET toward PUBLISHED;
-- hold, deny, abstain, error, correction, withdrawal, supersession, and rollback paths;
-- separation of ReleaseManifest, PromotionDecision, PolicyDecision, ReviewRecord, EvidenceBundle, RunReceipt, ProofPack, CorrectionNotice, WithdrawalNotice, and RollbackCard responsibilities;
-- public-boundary denial for unreleased, stale, withdrawn, or superseded material;
-- no-network and deterministic fixture behavior;
-- report and receipt accuracy when a validator or test runner emits governed test evidence;
-- no-op behavior when the requested release state already exists and is valid;
-- correction and rollback propagation to downstream APIs, maps, exports, and bounded AI surfaces when those consumers are implemented.
-
-### Out of scope
-
-This lane must not:
-
-- author or approve real release records;
-- publish or copy artifacts into public paths;
-- implement release policy inside test code;
-- redefine schemas or semantic contracts;
-- store production EvidenceBundles, proofs, receipts, signatures, release manifests, correction notices, rollback cards, or reviewer identities;
-- use real sensitive source material or exact protected locations;
-- require live network access in the default tier;
-- treat fixture success, schema validity, validator output, or CI success as public truth;
-- merge, deploy, sign, release, correct, withdraw, supersede, or roll back production state;
-- silently skip unsupported categories and count the omission as success.
-
-[Back to top](#top)
-
----
-
-## Finite outcome vocabulary
-
-Release tests must keep three vocabularies separate.
-
-### Test execution outcomes
-
-| Outcome | Meaning |
-|---|---|
-| `PASS` | The asserted test condition is supported by the tested inputs and harness. |
-| `FAIL` | A required invariant was violated. |
-| `ABSTAIN` | Required evidence, policy, schema, contract, or fixture context is unavailable or ambiguous. |
-| `SKIP_EXPLICIT` | The category is intentionally inapplicable, with a recorded reason and owner. |
-| `ERROR` | Test infrastructure failed; no release conclusion is valid. |
-
-### Release-transition decision vocabulary
-
-The current PromotionDecision fixture documentation uses:
-
-| Outcome | Meaning |
-|---|---|
-| `APPROVE` | The tested decision object records approval for the scoped transition; it is not publication by itself. |
-| `DENY` | The transition is refused and prior state remains. |
-| `ABSTAIN` | The decision cannot safely authorize or deny because context is insufficient, stale, unresolved, conflicted, or unsafe. |
-
-### Documented release states
-
-`release/README.md` documents states including `DRAFT`, `READY_FOR_REVIEW`, `HELD`, `READY_FOR_MANIFEST`, `APPROVED`, `RELEASED`, `CORRECTED`, `SUPERSEDED`, `WITHDRAWN`, and `NO_ACTION`.
-
-These are documented release-root vocabulary, not confirmed schema enforcement. Tests must not conflate them with runtime response outcomes such as `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`.
-
-> [!CAUTION]
-> The same word may appear in more than one vocabulary. Always bind an outcome to its object family, schema/contract version, tested operation, and evidence scope.
-
-[Back to top](#top)
-
----
-
-## Fixture and test data contract
-
-### Fixture families required for credible coverage
-
-| Family | Purpose | Minimum expected posture |
-|---|---|---|
-| Valid | Complete public-safe positive path. | `PASS`; never implies real release. |
-| Invalid | Malformed or semantically unsupported object. | `FAIL`. |
-| Denied | Rights, sensitivity, access, policy, or public-boundary refusal. | `DENY` or test `PASS` proving denial. |
-| Abstained | Missing, stale, unresolved, conflicted, or insufficient evidence/context. | `ABSTAIN`. |
-| Held/quarantined | Candidate remains before release because gates or review are incomplete. | `HELD`, quarantine/hold reason, or test `PASS` proving block. |
-| Error | Validator, resolver, signature, digest, or test infrastructure failure. | `ERROR`; no unsafe fallback. |
-| Correction | Existing released state requires a visible correction. | `CORRECTED` or test `PASS` proving correction path. |
-| Withdrawal | Release must become unavailable with audit history preserved. | `WITHDRAWN`. |
-| Supersession | A newer governed record replaces an older state without silent mutation. | `SUPERSEDED`. |
-| Rollback | Prior release target and reversal instructions are resolvable. | Rollback-readiness `PASS`; not proof rollback executed. |
-| No action | Evaluation produces no authorized change. | `NO_ACTION`; no empty release mutation. |
-
-### Fixture home rules
-
-Use the primary responsibility to choose the fixture home:
-
-```text
-fixtures/contracts/v1/release/<schema_name>/
-  valid/valid_*.json
-  invalid/invalid_*.json
-  invalid/invalid_*.expected_error.txt
-
-fixtures/release/
-  promotion_decision/
-    valid/
-    invalid/
-  <future release-behavior families only after placement and consumer review>
-```
-
-- Shape fixtures for the common schema harness belong under `fixtures/contracts/v1/release/`.
-- Cross-cutting behavior fixtures may belong under `fixtures/release/` when they are synthetic, deterministic, public-safe, and linked to a consumer.
-- Domain-specific release fixtures belong under the applicable `fixtures/domains/<domain>/` lane when the primary concern is domain release behavior.
-- Avoid `tests/release/fixtures/` unless an accepted test-local fixture convention explicitly owns those examples.
-- Do not duplicate the same authoritative fixture across homes. Use pointers, profiles, or a migration note.
-
-### Required fixture metadata or companion documentation
-
-Each stable fixture should identify, directly or through an accepted manifest:
-
-- fixture ID and scenario family;
-- input object family and version;
-- semantic contract reference;
-- schema reference when applicable;
-- expected test and release-transition outcomes;
-- evidence/policy/review/rollback assumptions;
-- rights and sensitivity posture;
-- whether the example is valid, invalid, denied, abstained, held, corrected, withdrawn, superseded, rollback-ready, or error-inducing;
-- consumer test or validator path;
-- correction/supersession lineage when a fixture changes.
-
-### Rights and sensitivity posture
-
-All default fixtures must be synthetic and public-safe.
-
-Do not include:
-
-- real living-person identifiers;
-- DNA/genomic data;
-- exact archaeology or rare-species locations;
-- exact sensitive infrastructure locations or configurations;
-- private landowner-sensitive joins;
-- secrets, access tokens, credentials, signatures, or private keys;
-- unreleased source-system exports;
-- real reviewer identities or private review notes;
-- proprietary payloads without explicit test rights.
-
-When a sensitive-domain behavior must be tested, use a transformed toy fixture that proves denial, redaction, generalization, withheld fields, staged access, or restricted review without preserving real sensitive detail.
-
-[Back to top](#top)
-
----
-
-## Release-governance test model
-
-A cross-cutting release test should evaluate an explicit packet rather than infer state from directories.
-
-```text
-release candidate
-  -> contract and schema posture
-  -> evidence and provenance support
-  -> validation results
-  -> policy and rights/sensitivity decision
-  -> review and separation-of-duties state
-  -> promotion decision
-  -> release manifest readiness
-  -> receipt/proof/signature support
-  -> correction and rollback readiness
-  -> public-boundary decision
-  -> finite test result
-```
-
-### Proposed test packet
-
-The following is a design aid, not a repository schema:
-
-```text
-ReleaseTestCase {
-  case_id
-  scenario_family
-  candidate_ref
-  contract_refs[]
-  schema_refs[]
-  fixture_refs[]
-  evidence_refs[]
-  validation_refs[]
-  policy_refs[]
-  review_refs[]
-  promotion_decision_ref
-  release_manifest_ref
-  receipt_refs[]
-  proof_refs[]
-  rollback_ref
-  correction_ref
-  withdrawal_ref
-  supersedes_ref
-  expected_test_outcome
-  expected_release_state
-  public_surface_expectation
-}
-```
-
-### Required validation layers
-
-| Layer | Question | Failure posture |
-|---|---|---|
-| Shape | Does the object conform to an accepted schema version? | `FAIL` or `ABSTAIN`; never auto-release. |
-| Semantics | Does the object mean what its contract says and preserve non-ownership? | `FAIL`. |
-| Identity | Are IDs, versions, refs, hashes, and supersession links stable and resolvable? | `FAIL` or `ABSTAIN`. |
-| Evidence | Do release-visible claims resolve through EvidenceRef to admissible support? | `ABSTAIN` or `DENY`. |
-| Validation | Are required validator results present, current, scoped, and successful? | `HELD`, `FAIL`, or `ERROR`. |
-| Policy | Are rights, sensitivity, access, public-surface, and obligations evaluated? | `DENY`, `ABSTAIN`, or `ERROR`. |
-| Review | Is required human review bound to the candidate and decision? | `HELD`. |
-| Separation of duties | Are policy-significant release roles separated where required? | `HELD` or `DENY`. |
-| Provenance/receipt | Do receipts describe what actually ran and bind relevant inputs/outputs? | `FAIL`, `ABSTAIN`, or `ERROR`. |
-| Manifest | Does the manifest bind the intended artifact set and required support refs? | `HELD` or `FAIL`. |
-| Integrity/signature | Do required digests/signatures verify against pinned content? | `DENY` or `ERROR`. |
-| Correction/rollback | Can the release be corrected, withdrawn, superseded, or rolled back visibly? | `HELD` or `FAIL`. |
-| Public boundary | Are unreleased, stale, withdrawn, superseded, or sensitive carriers denied? | `DENY`; boundary failure is critical. |
-
-### Required negative assertions
-
-At minimum, future tests should prove:
-
-- a candidate is not a release;
-- a review is not approval;
-- schema validity is not release readiness;
-- a PromotionDecision is not a ReleaseManifest;
-- a ReleaseManifest is not EvidenceBundle or policy approval;
-- a merged pull request is not KFM publication;
-- a copied file is not promotion;
-- a generated tile, export, screenshot, graph, or AI answer is not release authority;
-- missing evidence does not become an invented claim;
-- unknown rights or sensitivity does not default allow;
-- missing review does not auto-approve;
-- missing rollback support does not silently pass;
-- stale or withdrawn material does not remain public-active;
-- a test infrastructure error does not fall back to `PASS`;
-- zero discovered fixtures or zero collected tests does not count as coverage.
-
-[Back to top](#top)
-
----
-
-## Promotion gate coverage
-
-`ADR-0018-promotion-gate-sequence.md` remains `proposed`. The implemented
-validator therefore uses A-G only as a bounded readiness profile derived from
-current repository documentation and the supplied design packet; it does not
-accept the ADR or create release authority.
-
-### Implemented bounded A–G mapping
-
-| Gate | Implemented check | Release-test responsibility |
-|:---:|---|---|
-| A | Identity and closure | Candidate, author, spec hash, lifecycle boundary, and manifest identity. |
-| B | Asset integrity | Candidate/manifest/receipt hashes and declared digest-set agreement. |
-| C | Geometry and CRS | Validity, deterministic processing, CRS, and bounded bbox. |
-| D | Temporal semantics | Strict real UTC seconds and ordered interval. |
-| E | Policy context | Known profile/labels and finite declared policy result. |
-| F | Proof and catalog support | Evidence, attestation, run receipt, STAC/DCAT/PROV, conditional AI receipt. |
-| G | Review and rollback | Approval, separation of duties, rollback target, and correction linkage. |
-
-Tests preserve these caveats:
-
-- The ADR is proposed, so this profile cannot amend or accept it.
-- Gate success yields only `APPROVE_READY`; it is not a PromotionDecision or publication.
-- A missing gate result is a failure or hold, not implicit success.
-- Gate H Merkle integrity and Gate I ReleaseManifest closure are explicitly outside that ADR and must not be silently claimed.
-- Per-domain tests may strengthen checks inside a gate but must not invent competing gate authority.
-
-[Back to top](#top)
-
----
-
-## Current thin slice and future layout
-
-The direct lane should remain small and cross-cutting. Domain-specific release behavior belongs under domain test lanes.
-
-```text
-tests/release/
-|-- README.md
-|-- test_promotion_gate.py                          # CONFIRMED
-|-- test_promotion_decision_schema.py               # CONFIRMED
-|-- test_candidate_is_not_release.py                 # PROPOSED
-|-- test_release_manifest_closure.py                 # PROPOSED
-|-- test_promotion_decision_boundary.py              # PROPOSED
-|-- test_policy_review_and_hold_states.py            # PROPOSED
-|-- test_receipt_proof_and_signature_links.py        # PROPOSED
-|-- test_correction_withdrawal_supersession.py       # PROPOSED
-|-- test_rollback_readiness.py                       # PROPOSED
-|-- test_public_surface_denial.py                    # PROPOSED
-`-- test_release_coverage_manifest.py                # PROPOSED; fail on zero/unknown coverage
-```
-
-This layout is intentionally proposed. Do not create empty placeholder tests merely to make the tree look complete.
-
-### Cross-cutting versus domain test ownership
-
-| Primary assertion | Preferred test home |
-|---|---|
-| Universal release object separation and finite outcomes | `tests/release/` |
-| Generic release schema shape | `tests/schemas/` with `fixtures/contracts/v1/release/` |
-| Semantic contract text and link discipline | `tests/contracts/` |
-| Release/promotion policy behavior | `tests/policy/` and/or `tests/release/` depending on primary assertion |
-| Domain-specific release manifest behavior | `tests/domains/<domain>/...` |
-| Domain-specific sensitive geometry/publication denial | `tests/domains/<domain>/...` with policy/security review |
-| Release tooling helper behavior | `tests/release/` when cross-cutting; package/tool tests when implementation-local |
-| Governed API/UI release-state rendering | API/UI/e2e lanes with release fixtures and explicit trust-boundary assertions |
-
-[Back to top](#top)
-
----
-
-## Deterministic execution and no-network posture
-
-### Confirmed commands
-
-These commands are grounded in current repository tooling:
+| [`test_cosign_attestation_verification_plan.py`](test_cosign_attestation_verification_plan.py) | 10 | Draft 2020-12 schema, valid/invalid fixture polarity, unsafe JSON and path rejection, deterministic CLI output, and absence of network or Cosign execution |
+| [`test_geoparquet_2_rc_compatibility_assessment.py`](test_geoparquet_2_rc_compatibility_assessment.py) | 10 | Exact synthetic toolchain matrix, finite `READY`/`HOLD`/`ERROR` assessment, evidence-ref uniqueness, and non-governance boundary |
+| [`test_geoparquet_2_rc_gdal_consumer_probe.py`](test_geoparquet_2_rc_gdal_consumer_probe.py) | 8 | Synthetic GDAL-probe result classification, carrier and image integrity, semantic comparison, and refusal of interoperability or governance claims |
+| [`test_geoparquet_2_rc_pyarrow_carriers.py`](test_geoparquet_2_rc_pyarrow_carriers.py) | 5 | Synthetic PyArrow carrier generation, digest and CRS checks, partial outcome, and governance-claim denial |
+| [`test_geospatial_carrier_readiness.py`](test_geospatial_carrier_readiness.py) | 14 | Closed schema, finite carrier-readiness cases, MVT/COG/GeoParquet profile rules, deterministic case CLI, and no-network validation |
+| [`test_promotion_decision_schema.py`](test_promotion_decision_schema.py) | 1 | PromotionDecision fixture validation through the release validator |
+| [`test_promotion_gate.py`](test_promotion_gate.py) | 19 | Bounded A–G candidate readiness, outcome precedence, review separation, temporal/identity checks, safe diagnostics, no-network behavior, and finite CLI exits |
+| [`test_promotion_receipt.py`](test_promotion_receipt.py) | 6 | Receipt schema metadata, gate ordering, positive/negative fixtures, fail-closed status precedence, deterministic CLI, and no network/process client imports |
+| [`test_promotion_verification_execution.py`](test_promotion_verification_execution.py) | 5 | Synthetic verification execution, subject/spec/tool binding, result-schema validation, and explicit non-authorization of promotion |
+| [`test_publication_deny_dry_run.py`](test_publication_deny_dry_run.py) | 4 | Five required negative publication paths, deterministic no-network report, no file emission, and no authority or assembly claim |
+| [`test_review_record.py`](test_review_record.py) | 11 | Synthetic ReviewRecord fixture polarity, identity/time/separation rules, supersession and expiry boundaries, safe diagnostics, and non-emission of governed state |
+| [`test_signed_bundle_timestamp_evidence.py`](test_signed_bundle_timestamp_evidence.py) | 7 | Closed timestamp-evidence schema, finite fixture outcomes, public identity replay, unsafe-input rejection, deterministic CLI, and no cryptographic or network effect |
+| [`test_synthetic_rollback_rehearsal.py`](test_synthetic_rollback_rehearsal.py) | 8 | Deterministic plan mode, synthetic alias switch or withdrawal, history preservation, invalidation completeness, digest/target checks, and denial of non-synthetic input |
+| [`test_tile_delivery_strategy_assessment.py`](test_tile_delivery_strategy_assessment.py) | 11 | Closed schema, 20-case finite strategy matrix, public-safety and mediation checks, identity binding, deterministic no-network replay, and non-effect claims |
+| [`test_trust_projection_manifest.py`](test_trust_projection_manifest.py) | 4 | Valid/invalid trust projection types, digest-equality meaning, read-only review packets, expiry, and denial of approval authority |
+
+### What the inventory proves
+
+The inventory proves that these files and assertions exist at the pinned
+revision. It does not prove complete semantic coverage, a complete fixture
+crosswalk, dependency-complete local collection, required-check status, or
+production parity.
+
+## Execution
+
+Install the repository test extra before running Python tests:
 
 ```bash
-# Current aggregate test target; does not directly execute tests/release.
-make test
-
-# Equivalent confirmed command from the Makefile.
-python -m pytest tests/schemas tests/contracts -q
-
-# Directly inspect the generic schema fixture harness.
-python -m pytest tests/schemas/test_common_contracts.py -q
-
-# Current aggregate schema-validator target; not a dedicated release suite.
-make schemas
+python -m pip install -e '.[test]'
 ```
 
-### Proposed direct command after executable tests exist
+The following repository targets are confirmed:
 
 ```bash
-# PROPOSED — do not treat as a working release suite until test modules are added.
-python -m pytest tests/release -q
+# ReviewRecord and promotion-gate fixtures and tests.
+make publish-check
+
+# Five synthetic publication-denial paths and their focused test module.
+make release-dry-run
 ```
 
-Until at least one direct executable test is present, a command targeting only `tests/release/` may collect zero tests. Zero collection must not be reported as release coverage.
+Focused modules can be run with the runner used by their workflow, for example:
 
-### No-network default
-
-The default release suite must:
-
-- use only repository-local synthetic fixtures;
-- freeze or control time where time affects outcomes;
-- avoid live APIs, artifact registries, transparency logs, signing services, model endpoints, tile servers, source systems, or public sites;
-- avoid ambient credentials and user-specific environment state;
-- use deterministic IDs, hashes, timestamps, and expected outputs where practical;
-- write temporary outputs only to isolated test directories;
-- clean up after itself;
-- produce the same semantic outcome from the same pinned inputs.
-
-### Separate live tier
-
-Live integration checks may exist only as an explicitly separate tier with:
-
-- an opt-in marker or workflow;
-- least-privilege credentials;
-- explicit host allowlist;
-- timeout, retry, rate-limit, and circuit-breaker behavior;
-- no production mutation by default;
-- no release or publication side effect;
-- redacted logs and artifacts;
-- clear ownership and retention;
-- a statement that live availability does not prove release correctness.
-
-[Back to top](#top)
-
----
-
-## CI and promotion boundary
-
-### Current CI conclusion
-
-The inspected workflows do not establish a release-test gate:
-
-- `contracts-validate` runs `make test`, which excludes the direct release lane.
-- `schema-validation` and `validator-suite` run `make schemas`, not `pytest tests/release`.
-- `policy-boundary-guards` does not include `tests/release/**` in its inspected pull-request path filter.
-- Current pass rates, branch-protection requirements, required-check configuration, and promotion dependency are `UNKNOWN`.
-
-### Proposed mature CI contract
-
-A future release-test job should:
-
-1. install pinned test dependencies;
-2. run a dedicated deterministic release suite;
-3. fail if zero direct release tests are collected;
-4. fail if required fixture families are absent or unconsumed;
-5. report schema, semantic, evidence, policy, review, receipt/proof, correction, rollback, and public-boundary coverage separately;
-6. distinguish test failures from infrastructure errors and explicit skips;
-7. emit a machine-readable report with repository SHA, test command, collected count, passed/failed/skipped/error counts, fixture manifest digest, and coverage gaps;
-8. upload only public-safe artifacts;
-9. avoid release mutation and publication side effects;
-10. remain support for promotion review, not release approval.
-
-### Proposed coverage report fields
-
-```json
-{
-  "suite": "tests/release",
-  "repository_sha": "<commit>",
-  "command": "python -m pytest tests/release -q",
-  "collected": 0,
-  "passed": 0,
-  "failed": 0,
-  "skipped_explicit": 0,
-  "errors": 0,
-  "fixture_manifest_sha256": "<digest-or-null>",
-  "layers": {
-    "shape": "NOT_RUN",
-    "semantics": "NOT_RUN",
-    "evidence": "NOT_RUN",
-    "policy": "NOT_RUN",
-    "review": "NOT_RUN",
-    "receipts_and_proofs": "NOT_RUN",
-    "correction_and_rollback": "NOT_RUN",
-    "public_boundary": "NOT_RUN"
-  },
-  "release_decision_created": false,
-  "publication_created": false
-}
+```bash
+python -m pytest -q tests/release/test_geospatial_carrier_readiness.py
+python -m unittest -q tests.release.test_promotion_receipt
+python -m pytest -q tests/release/test_tile_delivery_strategy_assessment.py
 ```
 
-The example is proposed. `collected: 0` must be a failing coverage state, not a green result.
+For inventory or collection investigation, pytest can target the directory:
 
-### Workflow-trigger safety for this README change
+```bash
+python -m pytest -q tests/release
+```
 
-A documentation-only edit to this path may trigger broad pull-request workflows, but the inspected target-specific path does not trigger a privileged release or deployment action. Do not manually dispatch release, signing, publication, rollback, or environment workflows merely to validate this README.
+That directory command is not a canonical full-lane target. Several carrier
+and execution modules have additional pinned dependencies or synthetic tool
+setup in their dedicated workflows. Use the matching workflow definition as
+the environment contract before interpreting a local import or collection
+failure as an assertion failure.
 
-[Back to top](#top)
+`make test` does not run this directory. It is limited to `tests/schemas` and
+`tests/contracts`.
 
----
+## Workflow bindings
+
+Every direct module is named by at least one current workflow definition.
+Bindings are still bounded: a path filter can skip a workflow, a command can
+name only selected modules, and a workflow definition does not prove required
+branch protection.
+
+| Workflow | Direct release modules named by its current definition |
+|---|---|
+| [`cosign-attestation-verification-plan.yml`](../../.github/workflows/cosign-attestation-verification-plan.yml) | Cosign verification plan |
+| [`geoparquet-2-rc-compatibility-assessment.yml`](../../.github/workflows/geoparquet-2-rc-compatibility-assessment.yml) | GeoParquet compatibility assessment |
+| [`geoparquet-2-rc-gdal-consumer-probe.yml`](../../.github/workflows/geoparquet-2-rc-gdal-consumer-probe.yml) | PyArrow carriers and GDAL consumer probe |
+| [`geoparquet-2-rc-pyarrow-carrier-probe.yml`](../../.github/workflows/geoparquet-2-rc-pyarrow-carrier-probe.yml) | PyArrow carriers |
+| [`geospatial-carrier-readiness.yml`](../../.github/workflows/geospatial-carrier-readiness.yml) | Geospatial carrier readiness |
+| [`promotion-gate.yml`](../../.github/workflows/promotion-gate.yml) | PromotionDecision shape, promotion gate, and ReviewRecord |
+| [`promotion-receipt.yml`](../../.github/workflows/promotion-receipt.yml) | Promotion receipt |
+| [`promotion-verification-execution.yml`](../../.github/workflows/promotion-verification-execution.yml) | Verification execution, Cosign plan, and promotion gate |
+| [`release-dry-run.yml`](../../.github/workflows/release-dry-run.yml) | Publication deny, PromotionDecision shape, promotion gate, ReviewRecord, and synthetic rollback references |
+| [`rollback-drill.yml`](../../.github/workflows/rollback-drill.yml) | Synthetic rollback rehearsal |
+| [`signed-bundle-timestamp-evidence.yml`](../../.github/workflows/signed-bundle-timestamp-evidence.yml) | Signed-bundle timestamp evidence |
+| [`tile-delivery-strategy-assessment.yml`](../../.github/workflows/tile-delivery-strategy-assessment.yml) | Tile-delivery strategy assessment |
+| [`source-and-trust-projection-profiles.yml`](../../.github/workflows/source-and-trust-projection-profiles.yml) | Trust projection manifest |
+
+## Inputs, outputs, and side effects
+
+### Inputs
+
+Depending on the module, tests read:
+
+- versioned schemas and semantic contracts;
+- synthetic valid, invalid, hold, deny, partial, and error fixtures;
+- validator or release-helper source;
+- pinned compatibility and toolchain declarations;
+- temporary files created inside the test process;
+- controlled fake executables or generated synthetic carriers in dedicated
+  probe workflows.
+
+### Outputs
+
+Normal test output is runner status and diagnostics. Temporary carriers,
+packets, aliases, and reports are test evidence only and must remain isolated
+from governed release and public artifact stores.
+
+The tests do not create a PromotionDecision, ReleaseManifest, ReviewRecord,
+PromotionReceipt, release approval, deployment, publication, correction,
+withdrawal, or operational rollback by passing.
+
+### Safety boundary
+
+- Keep committed fixtures synthetic and public-safe.
+- Do not place credentials, private keys, real reviewer identities, restricted
+  payloads, or harmful-precision locations in tests or logs.
+- Preserve no-network and safe-diagnostic assertions when validators change.
+- A probe that invokes a tool in a controlled workflow must not gain ambient
+  credentials, writable production mounts, or publication side effects.
+- Treat missing rights, sensitivity, sovereignty, provenance, review, or
+  rollback support as a hold, deny, abstention, or explicit unknown according
+  to the tested contract; never infer permission from test success.
 
 ## Failure interpretation
 
-| Signal | Safe interpretation | Unsafe interpretation |
+| Failure class | First check | Safe conclusion |
 |---|---|---|
-| Schema test fails | The tested object does not meet the selected machine-shape expectation. | The source claim is false or the release must be withdrawn automatically. |
-| Contract test fails | The documented semantic boundary is incomplete or inconsistent. | The schema or policy must be rewritten without review. |
-| Evidence test abstains | Required support could not be resolved for the tested case. | Treat missing evidence as approval. |
-| Policy test denies | The tested action is blocked under the selected policy inputs. | The data must be deleted or the denial applies beyond its scope. |
-| Review test holds | Required review binding is missing or incomplete. | A developer or test runner may self-approve. |
-| Signature/digest test fails | Required integrity support is missing or mismatched. | Ignore the failure because the artifact renders. |
-| Rollback test fails | The tested release lacks a verified reversal path. | Publish now and document rollback later. |
-| Public-boundary test fails | Unreleased or unsafe material may be exposed. | Downgrade to a warning. |
-| Test infrastructure errors | No release conclusion is valid. | Fall back to pass or continue promotion. |
-| Zero tests collected | Coverage is absent. | Treat process exit or empty output as success. |
-| Explicit skip | The category was knowingly not run with a reason. | Count the category as covered. |
+| Import or collection failure | Compare the module's dedicated workflow dependencies and command | The test did not establish an assertion result |
+| Schema or fixture polarity failure | Schema version, fixture family, expected findings, and validator change | The bounded profile drifted or the test/fixture is stale |
+| Integrity or identity failure | Digest, subject, tool pin, timestamp, and stable-ID inputs | Required binding is absent or mismatched for this case |
+| Network, unsafe path, or diagnostic leak | Validator/helper effect surface and redaction behavior | Fail closed; do not retry with broader access or expose input values |
+| Review or promotion-gate failure | Evidence, identity, time, separation, obligations, and rollback context | Candidate remains unapproved; tests cannot self-approve |
+| Publication-deny failure | Negative case inventory and report non-effects | Potential boundary regression; never downgrade to a warning |
+| Rollback rehearsal failure | Synthetic marker, target, digest, invalidations, alias, and history | Reversal evidence is incomplete; no operational rollback conclusion is valid |
+| Workflow skipped by paths | Workflow trigger and changed paths | No exact-head execution evidence for that workflow |
+| Infrastructure error | Install/tooling logs and base-versus-head attribution | No release-prerequisite conclusion is valid |
 
-Failure routing should be finite and reviewable: fix the test or implementation, add missing evidence, hold the candidate, deny the transition, quarantine affected material, narrow scope, or record an explicit abstention. Do not patch around trust-spine failures with direct publication or admin shortcuts.
+Do not change implementation, schema, fixture, policy, workflow, or release
+state merely to make this README or a green check appear consistent. Repair the
+owning artifact in a separately scoped, reviewed change.
 
-[Back to top](#top)
+## Maintenance
 
----
+Update this README when a direct module is added, removed, renamed, or split;
+when its source-defined count changes materially; or when a Make target,
+workflow binding, dependency, fixture family, authority limit, or side-effect
+posture changes.
 
-## What a passing suite does not prove
+For a test or fixture change:
 
-Even a comprehensive green release suite does **not** prove:
-
-- that a source claim is true;
-- that evidence is authoritative outside its declared role;
-- that current rights or terms permit publication;
-- that sensitivity review is complete for every audience;
-- that human review actually occurred unless the reviewed record is verified;
-- that a signature identity is authorized merely because cryptography verifies;
-- that a ReleaseManifest contains every relevant artifact unless closure is checked;
-- that rollback has been executed successfully merely because a RollbackCard validates;
-- that downstream API/UI/map/AI surfaces enforce release state unless those consumers are tested;
-- that a workflow is required by branch protection;
-- that production deployment, publication, correction, withdrawal, supersession, or rollback occurred;
-- that untested domains or fixture categories are safe;
-- that future changes preserve behavior;
-- that KFM publication authority has been granted.
-
-A passing suite is enforceability evidence within a defined scope. It is never sovereign truth or release authority.
-
-[Back to top](#top)
-
----
-
-## Maintenance and fixture-update rules
-
-### When tests change
-
-Update this README, the relevant fixture indexes, and CI documentation when:
-
-- a direct release test module is added, renamed, split, or retired;
-- the runner, marker, Make target, or workflow changes;
-- a release object family becomes accepted, deprecated, superseded, or migrated;
-- fixture discovery or naming changes;
-- release policy or promotion policy becomes executable;
-- a validator or release-support tool becomes executable;
-- an A–G gate ADR is accepted, superseded, or rejected;
-- correction, withdrawal, supersession, rollback, signature, or receipt requirements change;
-- a public consumer starts relying on release test evidence;
-- a fixture contains sensitive or rights-restricted material;
-- a coverage gap is closed or newly discovered.
-
-### Fixture update discipline
-
-For each fixture change:
-
-1. identify the consuming test and object family;
-2. state why behavior changed;
-3. preserve the prior fixture or record supersession when it remains historically relevant;
-4. update paired expected outputs;
-5. verify valid and invalid polarity;
-6. review rights and sensitivity;
-7. recompute deterministic hashes where used;
-8. update fixture parent and child README indexes;
-9. run the narrow consumer and relevant aggregate suites;
-10. avoid mass snapshot acceptance without semantic review.
-
-### Skips and gaps
-
-Every skip must include:
-
-- category;
-- reason;
-- owner or resolution role;
-- expected follow-up;
-- whether the gap blocks promotion;
-- review date or trigger.
-
-Unknown coverage must not be converted into `PASS` by omission.
-
-### Documentation consistency
-
-The current fixture tree contains stale parent-not-found statements in child READMEs after `fixtures/release/README.md` was added. Correct those documents in a separate scoped change or a coordinated fixture-documentation PR. This README records the conflict; it does not silently rewrite unrelated files.
-
-[Back to top](#top)
-
----
-
-## Review burden
-
-| Change type | Minimum review roles | Required focus |
-|---|---|---|
-| Direct release test | QA + release owner + affected implementation owner | Test scope, false positives/negatives, authority boundary. |
-| Release fixture | QA + fixture owner + release owner | Synthetic/public-safe posture, expected outcome, consumer link. |
-| Sensitive-domain fixture | QA + domain steward + policy/sensitivity/security reviewer | No real sensitive data; denial/generalization behavior. |
-| Release schema assertion | QA + schema + contract + release owner | Shape versus meaning; no schema-valid-is-release collapse. |
-| Promotion-policy assertion | QA + policy + release/promotion owner | Policy version, obligations, finite outcomes, human review. |
-| Correction/rollback test | QA + correction/rollback + release owner | Audit history, reversibility, stale-state propagation. |
-| CI promotion dependency | QA + CI + release + governance owner | Required-check semantics, artifacts, failure routing, separation of duties. |
-| Removal or broad skip | QA + release + affected subsystem owner | Lost trust-spine coverage and migration/rollback plan. |
-
-Owner names and CODEOWNERS mappings remain `NEEDS VERIFICATION`; do not invent reviewers or treat an automated actor as human approval.
-
-[Back to top](#top)
-
----
-
-## Definition of done
-
-The direct release lane is not mature until all applicable criteria pass.
-
-| Criterion | Required result |
-|---|---|
-| Direct executable inventory | At least one real test module is collected from `tests/release/`. |
-| Zero-case protection | CI fails when no direct tests or required cases are collected. |
-| Fixture inventory | Stable release fixture manifest exists; each fixture has a consumer and expected outcome. |
-| Shape coverage | Accepted release schemas have positive and negative fixture coverage. |
-| Semantic coverage | Release object boundaries are tested against accepted contracts. |
-| Evidence coverage | Missing/unresolved evidence produces abstention, denial, or hold as specified. |
-| Policy coverage | Rights, sensitivity, access, public-surface, and obligation cases are exercised. |
-| Review coverage | Required human review and separation-of-duties holds are testable. |
-| Receipt/proof coverage | Required receipt, proof, digest, signature, and provenance refs are checked. |
-| Correction/rollback coverage | Correction, withdrawal, supersession, and rollback states have positive and negative cases. |
-| Public-boundary coverage | Unreleased, stale, withdrawn, superseded, and sensitive material is denied. |
-| No-network default | Default target is deterministic and offline. |
-| CI artifact | Machine-readable report records command, commit, counts, fixture digest, and gaps. |
-| Local/CI parity | Documented local command matches CI semantics. |
-| Promotion use | Any promotion dependency is explicit, reviewed, and never equated with release approval. |
-| Documentation | README, fixture indexes, contracts/schemas/policy links, and open gaps are current. |
-
-Current status: **PARTIAL / IMPLEMENTED THIN SLICE**. The direct promotion-gate
-suite and fixture matrix are established; full release-governance and public-path
-proof remain outside this slice.
-
-[Back to top](#top)
-
----
-
-## Incremental implementation sequence
-
-Prefer the smallest proof-bearing sequence:
-
-1. **Inventory and drift check** — enumerate the direct lane, release fixtures, release schemas, contracts, policy stubs, validators, tools, workflows, and domain release test lanes.
-2. **Coverage manifest** — add a deterministic inventory test that fails on zero direct tests and reports unresolved fixture families.
-3. **PromotionDecision and promotion-gate thin slices** — **CONFIRMED bounded implementation**; preserve the distinction between shape and readiness.
-4. **Candidate-not-release rule** — prove candidate, review, merge, file move, and schema validity do not equal release.
-5. **Evidence/policy/review holds** — add missing evidence, stale policy, missing review, and unresolved obligation cases.
-6. **ReleaseManifest hardening** — only after contract/schema fields are accepted; add dependency-closure tests.
-7. **Correction and rollback** — add explicit correction, withdrawal, supersession, and rollback-readiness cases.
-8. **Public-boundary integration** — test governed API/UI/map consumers against released, held, stale, withdrawn, and superseded states.
-9. **CI integration** — add a no-network release-test job, machine-readable report, and fail-on-zero behavior.
-10. **Promotion dependency** — only after accepted governance review; consume test evidence without letting the suite approve release.
-
-Each step should be independently reviewable and reversible. Do not create empty scaffolds across all steps in one broad PR.
-
-[Back to top](#top)
-
----
+1. identify the owning contract, schema, validator, helper, and workflow;
+2. preserve positive and negative polarity and finite outcomes;
+3. verify deterministic replay and safe diagnostics;
+4. review rights, sensitivity, sovereignty, privacy, and harmful precision;
+5. run the narrow module in its declared dependency environment;
+6. update workflow and fixture links without duplicating authority;
+7. record unresolved collection, required-check, ownership, or production
+   questions as `UNKNOWN` or `NEEDS VERIFICATION`.
 
 ## Open verification register
 
-| ID | Question | Evidence needed | Current status |
-|---|---|---|---|
-| RELTEST-001 | What files actually exist under `tests/release/` beyond the README? | Mounted checkout inventory. | `CONFIRMED` for three direct modules; exhaustive history remains out of scope |
-| RELTEST-002 | Are any release tests dynamically generated or located under another cross-cutting lane? | Pytest collection report and full test inventory. | `UNKNOWN` |
-| RELTEST-003 | What release fixture payload files exist under `fixtures/release/`? | Recursive fixture tree, hashes, and consumer map. | `CONFIRMED` for selected promotion-gate matrix; broader inventory partial |
-| RELTEST-004 | Does `fixtures/contracts/v1/release/` contain schema fixtures despite the parent README gap? | Direct tree and test collection. | `NEEDS VERIFICATION` |
-| RELTEST-005 | Which release schemas are accepted versus scaffolds? | Accepted ADR/schema registry and current schema review state. | `NEEDS VERIFICATION` |
-| RELTEST-006 | Is the PromotionDecision schema paired with real valid/invalid fixtures and a validator? | Fixture files, validator implementation, tests, and CI logs. | `CONFIRMED` shape pairing; semantic readiness is separate |
-| RELTEST-007 | Are `policy/release/` and `policy/promotion/` executable policy bundles? | Rego/equivalent files, tests, bundle IDs/digests, and logs. | `NOT ESTABLISHED` |
-| RELTEST-008 | Are release validators or release helpers executable? | Source files, entry points, tests, and run evidence. | `PARTIAL`: promotion-gate validator confirmed; broader helpers mixed |
-| RELTEST-009 | Is ADR-0018 accepted, superseded, or still proposed at implementation time? | Current ADR status and decision log. | `PROPOSED` at snapshot |
-| RELTEST-010 | Which workflows run release tests, and are they required? | Workflow definitions, branch protection/rulesets, and recent runs. | `UNKNOWN` |
-| RELTEST-011 | What are current collected counts and pass rates? | Local/CI pytest collection and run artifacts at pinned commit. | `UNKNOWN` |
-| RELTEST-012 | How are test reports linked to PromotionReceipt or release review without becoming approval? | Accepted contract, schema, policy, and consumer implementation. | `NEEDS VERIFICATION` |
-| RELTEST-013 | Which domain release lanes are executable rather than README scaffolds? | Domain test inventory and collection report. | `NEEDS VERIFICATION` |
-| RELTEST-014 | How do correction and rollback results propagate to public consumers? | API/UI/map/runtime tests, release records, and logs. | `UNKNOWN` |
-| RELTEST-015 | Who owns this lane and its required reviews? | CODEOWNERS and steward registry. | `NEEDS VERIFICATION` |
-| RELTEST-016 | Should stale fixture parent references be corrected in one coordinated PR? | Fixture documentation authority/supersession review. | `CONFLICTED / NEEDS VERIFICATION` |
-
-[Back to top](#top)
-
----
-
-## Evidence ledger
-
-| Evidence | Status | Supports | Limit |
-|---|---|---|---|
-| `tests/release/README.md` prior blob | `CONFIRMED` | Existing scope, exclusions, finite release-state emphasis, and placeholder maturity. | Planning-oriented; did not reflect current adjacent repo evidence. |
-| `tests/README.md` | `CONFIRMED` | `tests/` is the canonical enforceability root; release tests are an accepted lane. | Runner/CI/pass rates remain partly verification-bound. |
-| `release/README.md` | `CONFIRMED` | Release governance root, state vocabulary, record boundaries, correction/rollback posture. | README is not release authority or enforcement proof. |
-| `contracts/release/README.md` | `CONFIRMED` | Semantic contract family and mixed maturity. | Does not prove schemas, fixtures, validators, or runtime. |
-| `schemas/contracts/v1/release/README.md` | `CONFIRMED` | Eight surfaced schema files and mixed maturity. | Family README is not schema acceptance or current validation evidence. |
-| `tests/schemas/test_common_contracts.py` | `CONFIRMED` | Release family is in the generic schema harness; fixture-gated discovery and valid/invalid behavior. | No direct release semantics, policy, review, correction, or runtime coverage. |
-| `fixtures/contracts/v1/README.md` | `CONFIRMED` | Release schema-fixture parent coverage remains unresolved. | Does not prove payload absence. |
-| `fixtures/release/README.md` | `CONFIRMED` | Synthetic release fixture parent and PromotionDecision child-lane index. | Payload inventory not verified. |
-| `fixtures/release/promotion_decision/README.md` and child READMEs | `CONFIRMED / CONFLICTED` | Proposed fixture scenario vocabulary and maintenance rules. | Contain stale parent-not-found statements and do not prove payloads/consumers. |
-| `policy/release/README.md` | `CONFIRMED` | Release policy README path exists. | Greenfield stub; no executable policy established. |
-| `policy/promotion/README.md` | `CONFIRMED` | Promotion policy README path exists. | Greenfield stub; no executable policy established. |
-| `tools/release/README.md` | `CONFIRMED` | Support-only tooling boundary and proposed test surface. | No executable helper established. |
-| `tools/validators/release/README.md` | `CONFIRMED` | Release validator routing boundary and expected invariants. | No executable validator established. |
-| `pyproject.toml` | `CONFIRMED` | Python and pytest configuration. | Does not prove collection or pass state. |
-| `Makefile` | `CONFIRMED` | Current test/schema targets and release TODO targets. | Convenience targets do not prove CI requirements or release behavior. |
-| `contracts-validate.yml` | `CONFIRMED` | Runs `make test` on push/PR. | Direct release lane excluded by current Make target. |
-| `schema-validation.yml` and `validator-suite.yml` | `CONFIRMED` | Aggregate validator execution in CI. | Not a direct release-test suite. |
-| `policy-boundary-guards.yml` | `CONFIRMED` | Selected boundary tests and path filters. | Target README path is not in the inspected PR filter. |
-| `ADR-0018-promotion-gate-sequence.md` | `CONFIRMED document / PROPOSED decision` | Proposed A–G gate vocabulary and fail-closed mapping. | Not accepted implementation evidence. |
-| `docs/doctrine/directory-rules.md` | `CONFIRMED doctrine` | `tests/` and `release/` responsibility-root separation; current path is appropriate. | Does not prove executable maturity. |
-| Bounded GitHub code search | `CONFIRMED search result` | Did not establish a direct executable under `tests/release/`. | Search is not an exhaustive recursive tree or history proof. |
-
-### No-loss assessment
-
-The v0.1 README’s strongest material is retained and expanded:
-
-- release tests remain enforceability proof, not release authority;
-- promotion remains a governed state transition, not a file move;
-- candidates, reviews, manifests, readiness checks, and changelogs do not equal approval;
-- evidence, validation, policy, review, correction, withdrawal, supersession, and rollback remain explicit;
-- default tests remain synthetic and no-network;
-- release records stay under `release/`;
-- schemas, contracts, policy, fixtures, receipts, proofs, lifecycle data, and implementation remain in their owning roots.
-
-The schematic `.test.PROPOSED` filenames and placeholder `pytest tests/release` claim were replaced with repository-grounded current commands, a clearly proposed future layout, and explicit zero-collection risk.
-
-[Back to top](#top)
-
----
-
-## Documentation correction and rollback
-
-This README is documentation, not a release record. Correct it when repository evidence changes.
-
-### Correction triggers
-
-- a direct release test appears;
-- release fixture payloads are verified;
-- release/promotion policy becomes executable;
-- release validators or tools become executable;
-- ADR-0018 changes status;
-- release schemas mature or move;
-- CI starts running or requiring release tests;
-- fixture parent-child documentation is reconciled;
-- a statement here becomes stale, contradicted, or overbroad.
-
-### Rollback path
-
-Before merge:
-
-- leave the draft pull request unmerged; or
-- restore the prior blob in a transparent follow-up commit on the same branch.
-
-After merge:
-
-- revert the documentation commit or pull request;
-- do not reset or rewrite shared history;
-- preserve the superseded v0.2 record in Git history;
-- file a correction or drift note when the rollback reflects a substantive governance conflict rather than a simple editorial error.
-
-Rolling back this README does not roll back a KFM release, workflow, policy bundle, schema, fixture, validator, receipt, proof, or public artifact because this change modifies documentation only.
-
-[Back to top](#top)
-
----
-
-## Last reviewed
-
-| Field | Value |
+| Question | Status |
 |---|---|
-| Last reviewed | 2026-08-03 |
-| Review state | Implemented bounded promotion-gate and fixture-only ReviewRecord hardening; human review pending |
-| Direct lane maturity | Three executable modules; broader release suite partial |
-| Executable release suite | Promotion-gate proof confirmed; no full release/publish proof |
-| Next smallest safe change | Authenticate one accepted actor-assignment source or resolve one rollback-card prerequisite without widening this fixture validator into authority. |
+| What is the exact pytest collected-case count for the complete lane in one dependency-complete environment? | `UNKNOWN` |
+| Is there an accepted canonical target that composes all 15 modules and their extra dependencies? | `NOT ESTABLISHED` |
+| Are all named workflows required checks for protected branches or release review? | `UNKNOWN` |
+| Do README-only changes trigger each path-filtered dedicated workflow? | `NO` for definitions whose filters omit this path; check exact workflow evidence before claiming execution |
+| Is the current no-network posture universal across every runner and imported helper? | `PARTIAL / NEEDS VERIFICATION` |
+| Do the modules cover every accepted release contract, schema, policy, correction, withdrawal, and public consumer? | `NOT ESTABLISHED` |
+| Who provides accountable independent QA, release, security, sensitivity, and separation-of-duties review? | `NEEDS VERIFICATION`; CODEOWNERS supplies routing only |
+| Have rollback, deployment, release, publication, or public-state correction been exercised operationally? | `UNKNOWN`; synthetic tests do not prove them |
 
----
+## Evidence used
 
-*Last updated: 2026-08-03 · Version: v1.1 · Authority: bounded enforceability only · [Back to top](#top)*
+This inventory was reconciled against the complete prior README, all 15 direct
+test modules, their named validators and helpers, the 13 directly relevant
+workflow definitions, the Makefile, `pyproject.toml`, CODEOWNERS, the tests-root
+README, accepted ADR-0029, and the adopted Directory Rules at the pinned
+commit.
+
+Connected Drive reliability guidance and the Notion Repository Workbench were
+consulted read-only for exact-SHA, failure-attribution, and active-work
+coordination lineage. They were not treated as implementation, adoption, or
+repository authority, and no external prose was imported.
+
+## Documentation rollback
+
+Before merge, close the draft pull request or restore the prior blob on the
+feature branch. After merge, revert the documentation commit or make a focused
+forward correction. Do not rewrite shared history.
+
+Rolling back this README changes no test, fixture, validator, workflow,
+release, deployment, promotion, publication, correction, withdrawal, or
+operational rollback state.
+
+[Back to top](#top)
