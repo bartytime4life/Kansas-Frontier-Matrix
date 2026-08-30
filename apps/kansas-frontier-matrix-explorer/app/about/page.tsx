@@ -50,7 +50,7 @@ export default function AboutPage() {
         <div className="about-capability-grid">
           <article><h3>Layers + time</h3><p>Control visibility, opacity, order, domain filters, temporal steps, and two basemap treatments while preserving the selected context.</p></article>
           <article><h3>Search + inspect</h3><p>Search layers, feature IDs, evidence states, and places. Limit results to the viewport or visible layers and fit the map to the results.</p></article>
-          <article><h3>Spatial analysis + comparison</h3><p>Lock the renderer-neutral view bounds as a stable report area, move backward or forward through camera history, or compare two layer records without flattening their differences.</p></article>
+          <article><h3>Spatial analysis + comparison</h3><p>Lock the renderer-neutral view bounds as a stable report area, compare Time A with Time B across visible records, move through camera history, or compare two layer records without flattening their differences.</p></article>
           <article><h3>Workspaces + reports</h3><p>Save a complete analysis setup on this device, restore it later, and produce printable HTML or structured JSON with filters, evidence, attribution, and redactions.</p></article>
         </div>
       </section>

@@ -83,6 +83,7 @@ import {
   type ScenarioReviewMode,
 } from "./planning-scenario";
 import { ANALYSIS_RECIPES, type AnalysisRecipe } from "./analysis-recipes";
+import { buildTemporalComparison } from "./temporal-comparison";
 
 type ViewState = { center: [number, number]; zoom: number; bearing: number; pitch: number };
 type MapBoundsState = { west: number; south: number; east: number; north: number };
@@ -119,6 +120,10 @@ type WorkspaceSnapshot = Readonly<{
     fieldOfView: number;
   };
   analysisArea?: MapBoundsState | null;
+  temporalComparison?: {
+    timeA: number;
+    timeB: number;
+  };
   report: {
     title: string;
     scope: ReportScope;
@@ -484,6 +489,8 @@ export default function Home() {
   const [inspectVisibleLayersOnly, setInspectVisibleLayersOnly] = useState(false);
   const [compareLeftId, setCompareLeftId] = useState("water-context");
   const [compareRightId, setCompareRightId] = useState("atmosphere-observations");
+  const [compareTimeA, setCompareTimeA] = useState<number>(1910);
+  const [compareTimeB, setCompareTimeB] = useState<number>(2026);
   const [coordinateLatitude, setCoordinateLatitude] = useState(String(KANSAS_VIEW.center[1]));
   const [coordinateLongitude, setCoordinateLongitude] = useState(String(KANSAS_VIEW.center[0]));
   const [coordinateError, setCoordinateError] = useState("");
@@ -572,6 +579,14 @@ export default function Home() {
 
   const activeLayers = useMemo(() => LAYER_REGISTRY.filter((layer) => visibility[layer.id]), [visibility]);
   const visibleCount = activeLayers.length;
+  const temporalComparison = useMemo(
+    () => buildTemporalComparison(activeLayers, compareTimeA, compareTimeB),
+    [activeLayers, compareTimeA, compareTimeB],
+  );
+  const temporalComparisonRows = useMemo(
+    () => temporalComparison.layers.filter((layer) => layer.timeARecordCount > 0 || layer.timeBRecordCount > 0),
+    [temporalComparison],
+  );
   const temporalNoData = useMemo(() => activeLayers.filter((layer) => layer.temporal?.mode === "exact" && !layer.temporal.years.includes(year)), [activeLayers, year]);
   const availabilityByStep = useMemo(() => Object.fromEntries(TIME_STEPS.map((step) => [step, activeLayers.filter((layer) => isLayerAvailableAtTime(layer, step)).length])), [activeLayers]);
   const sourceStateCounts = useMemo(() => ({
@@ -727,6 +742,14 @@ export default function Home() {
       recordCount: reportRecords.filter((record) => record.layer.id === layer.id).length,
     }))
     .filter((layer) => layer.recordCount > 0), [reportLayerIds, reportRecords]);
+  const reportTemporalComparison = useMemo(
+    () => buildTemporalComparison(
+      LAYER_REGISTRY.filter((layer) => reportLayerIds.includes(layer.id)),
+      compareTimeA,
+      compareTimeB,
+    ),
+    [compareTimeA, compareTimeB, reportLayerIds],
+  );
   const reportFindings = useMemo(() => {
     const supported = (reportEvidenceCounts.ANSWER ?? 0) + (reportEvidenceCounts.CORRECTED ?? 0);
     const bounded = reportRecords.length - supported;
@@ -737,8 +760,9 @@ export default function Home() {
       mostRepresented
         ? `${mostRepresented.title} contributes the largest share of this report (${mostRepresented.recordCount} record${mostRepresented.recordCount === 1 ? "" : "s"}).`
         : "No records match the current report filters; widen the map, change time, or include another layer.",
+      `${reportTemporalComparison.changedLayerCount} included layer${reportTemporalComparison.changedLayerCount === 1 ? "" : "s"} change catalog availability between Time A ${formatTimelineStep(compareTimeA)} and Time B ${formatTimelineStep(compareTimeB)}; this is not an observed-change or imagery claim.`,
     ];
-  }, [reportEvidenceCounts, reportLayerSummary, reportRecords.length, reportScope, year]);
+  }, [compareTimeA, compareTimeB, reportEvidenceCounts, reportLayerSummary, reportRecords.length, reportScope, reportTemporalComparison.changedLayerCount, year]);
   const filteredLayerIds = useMemo(() => {
     const query = debouncedLayerQuery.trim().toLowerCase();
     return new Set(LAYER_REGISTRY.filter((layer) => {
@@ -895,7 +919,10 @@ export default function Home() {
       params.set("mapui", "open");
       params.set("maptab", mapUtilityView);
     }
-    if (mapUtilityView === "compare") params.set("compare", `${compareLeft.id},${compareRight.id}`);
+    if (mapUtilityView === "compare") {
+      params.set("compare", `${compareLeft.id},${compareRight.id}`);
+      params.set("times", `${compareTimeA},${compareTimeB}`);
+    }
     if (selected) {
       params.set("f", selected.featureId);
       params.set("panel", drawerView);
@@ -904,7 +931,7 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [activeLayers, analysisArea, atmospherePreset, basemap, compareLeft.id, compareRight.id, currentWorkspace, drawerView, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, locationCameraRedacted, mapUtilityOpen, mapUtilityView, measureUnit, opacity, projection, rightOpen, scenePreset, selected, verticalExaggeration, view, year]);
+  }, [activeLayers, analysisArea, atmospherePreset, basemap, compareLeft.id, compareRight.id, compareTimeA, compareTimeB, currentWorkspace, drawerView, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, locationCameraRedacted, mapUtilityOpen, mapUtilityView, measureUnit, opacity, projection, rightOpen, scenePreset, selected, verticalExaggeration, view, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
@@ -1035,6 +1062,27 @@ export default function Home() {
       announce("Clipboard access was blocked; comparison stayed in the browser");
     }
   }, [announce, compareLeft, compareRight, visibility, year]);
+
+  const applyComparisonTime = useCallback((nextYear: number, label: "A" | "B") => {
+    yearRef.current = nextYear;
+    setYear(nextYear);
+    setPlaying(false);
+    announce(`Applied Time ${label} · ${formatTimelineStep(nextYear)} to the active map`);
+  }, [announce]);
+
+  const copyTemporalComparison = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(JSON.stringify({
+        ...temporalComparison,
+        generatedAt: new Date().toISOString(),
+        visibleLayerIds: activeLayers.map((layer) => layer.id),
+        effects: { evidence: "NONE", policy: "NONE", review: "NONE", release: "NONE", publication: "NONE" },
+      }, null, 2));
+      announce(`Time A / Time B comparison copied for ${activeLayers.length} visible layers`);
+    } catch {
+      announce("Clipboard access was blocked; temporal comparison stayed in the browser");
+    }
+  }, [activeLayers, announce, temporalComparison]);
 
   const activateDrawerView = useCallback((nextView: DrawerView, focusTab = false) => {
     setDrawerView(nextView);
@@ -1458,6 +1506,11 @@ export default function Home() {
       if (restoredCompareIds.length === 2 && restoredCompareIds.every((id) => knownLayerIds.has(id)) && restoredCompareIds[0] !== restoredCompareIds[1]) {
         setCompareLeftId(restoredCompareIds[0]);
         setCompareRightId(restoredCompareIds[1]);
+      }
+      const restoredTimes = params.get("times")?.split(",").map(Number) ?? [];
+      if (restoredTimes.length === 2 && restoredTimes.every((candidate) => TIME_STEPS.includes(candidate as (typeof TIME_STEPS)[number]))) {
+        setCompareTimeA(restoredTimes[0]);
+        setCompareTimeB(restoredTimes[1]);
       }
       if (nextMapUtilityView === "export") setExportGeneratedAt(new Date().toISOString());
       if (nextMapUtilityView === "report") setReportGeneratedAt(new Date().toISOString());
@@ -2218,6 +2271,7 @@ export default function Home() {
         fieldOfView,
       },
       analysisArea: analysisArea ? { ...analysisArea } : null,
+      temporalComparison: { timeA: compareTimeA, timeB: compareTimeB },
       report: {
         title: reportTitle,
         scope: reportScope,
@@ -2286,6 +2340,9 @@ export default function Home() {
       : null;
     analysisAreaRef.current = nextAnalysisArea;
     setAnalysisArea(nextAnalysisArea);
+    const savedComparison = snapshot.temporalComparison;
+    setCompareTimeA(TIME_STEPS.includes(savedComparison?.timeA as (typeof TIME_STEPS)[number]) ? savedComparison!.timeA : 1910);
+    setCompareTimeB(TIME_STEPS.includes(savedComparison?.timeB as (typeof TIME_STEPS)[number]) ? savedComparison!.timeB : 2026);
     setReportTitle(snapshot.report?.title || "Kansas map data report");
     setReportScope(snapshot.report?.scope === "SELECTION" || snapshot.report?.scope === "VISIBLE_LAYERS" || (snapshot.report?.scope === "ANALYSIS_AREA" && nextAnalysisArea) ? snapshot.report.scope : "VIEWPORT");
     setReportDetail(snapshot.report?.detail === "EXECUTIVE" || snapshot.report?.detail === "TECHNICAL" ? snapshot.report.detail : "STANDARD");
@@ -2397,6 +2454,8 @@ export default function Home() {
     setReportSections(defaultReportSections);
     setReportQuery("");
     setReportEvidenceFilter("ALL");
+    setCompareTimeA(1910);
+    setCompareTimeB(2026);
     announce("Explorer reset to the Kansas demonstration view");
   };
 
@@ -2667,6 +2726,7 @@ export default function Home() {
       scope: reportScope,
       filters: { query: reportQuery || null, evidenceState: reportEvidenceFilter, layerIds: reportLayerIds },
       activeTime: { value: year, label: formatTimelineStep(year) },
+      temporalComparison: reportTemporalComparison,
       mapContext: {
         center: locationCameraRedacted ? "WITHHELD_BROWSER_LOCATION" : view.center,
         zoom: view.zoom,
@@ -2739,7 +2799,7 @@ export default function Home() {
       const records = report.records ?? [];
       const findings = report.findings ?? [];
       const limitations = report.limitations ?? [];
-      content = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeReportHtml(report.title)}</title><style>body{font:15px/1.55 Inter,system-ui,sans-serif;color:#17201d;max-width:1100px;margin:0 auto;padding:48px}header{border-bottom:3px solid #b88b38;padding-bottom:22px;margin-bottom:28px}h1{font-size:36px;letter-spacing:-.04em;margin:0 0 8px}h2{margin-top:34px}small,.muted{color:#607069}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric{border:1px solid #ccd6d1;padding:15px}.metric strong{display:block;font-size:24px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid #dce3df;padding:10px;text-align:left;vertical-align:top}th{background:#f1f5f2}code{font-size:11px}li{margin:8px 0}.boundary{border-left:4px solid #b88b38;background:#f7f3ea;padding:14px 18px}@media print{body{padding:0}.boundary{break-inside:avoid}}@media(max-width:700px){body{padding:24px}.metrics{grid-template-columns:1fr 1fr}table{display:block;overflow:auto}}</style></head><body><header><small>KANSAS FRONTIER MATRIX · CUSTOM MAP REPORT</small><h1>${escapeReportHtml(report.title)}</h1><p>${escapeReportHtml(report.scope.replaceAll("_", " "))} · active time ${escapeReportHtml(report.activeTime.label)} · generated ${escapeReportHtml(generatedAt)}</p></header>${report.summary ? `<section><h2>Report summary</h2><div class="metrics"><div class="metric"><small>MATCHED RECORDS</small><strong>${report.summary.matchedRecords}</strong></div><div class="metric"><small>INCLUDED RECORDS</small><strong>${report.summary.includedRecords}</strong></div><div class="metric"><small>LAYERS</small><strong>${report.summary.includedLayers}</strong></div><div class="metric"><small>EVIDENCE STATES</small><strong>${Object.keys(report.summary.evidenceStates).length}</strong></div></div></section>` : ""}${findings.length ? `<section><h2>Findings</h2><ol>${findings.map((finding) => `<li>${escapeReportHtml(finding)}</li>`).join("")}</ol></section>` : ""}${records.length ? `<section><h2>Included records</h2><table><thead><tr><th>Record</th><th>Layer / time</th><th>Evidence</th><th>Summary</th></tr></thead><tbody>${records.map((record) => `<tr><td><strong>${escapeReportHtml(record.title)}</strong><br><code>${escapeReportHtml(record.id)}</code></td><td>${escapeReportHtml(record.layer)}<br>${escapeReportHtml(record.year)}</td><td>${escapeReportHtml(record.evidenceState)}<br><code>${escapeReportHtml(record.evidenceReference)}</code></td><td>${escapeReportHtml(record.summary)}</td></tr>`).join("")}</tbody></table></section>` : ""}${limitations.length ? `<section><h2>Limitations</h2><ul>${limitations.map((limitation) => `<li>${escapeReportHtml(limitation)}</li>`).join("")}</ul></section>` : ""}<section><h2>Attribution</h2><ul>${report.attribution.map((item) => `<li><strong>${escapeReportHtml(item.layer)}:</strong> ${escapeReportHtml(item.source)}</li>`).join("")}</ul></section><p class="boundary">This report is a browser-generated public-safe demonstration artifact. It does not release, publish, admit, or authorize KFM data.</p></body></html>`;
+      content = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeReportHtml(report.title)}</title><style>body{font:15px/1.55 Inter,system-ui,sans-serif;color:#17201d;max-width:1100px;margin:0 auto;padding:48px}header{border-bottom:3px solid #b88b38;padding-bottom:22px;margin-bottom:28px}h1{font-size:36px;letter-spacing:-.04em;margin:0 0 8px}h2{margin-top:34px}small,.muted{color:#607069}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric{border:1px solid #ccd6d1;padding:15px}.metric strong{display:block;font-size:24px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid #dce3df;padding:10px;text-align:left;vertical-align:top}th{background:#f1f5f2}code{font-size:11px}li{margin:8px 0}.boundary{border-left:4px solid #b88b38;background:#f7f3ea;padding:14px 18px}@media print{body{padding:0}.boundary{break-inside:avoid}}@media(max-width:700px){body{padding:24px}.metrics{grid-template-columns:1fr 1fr}table{display:block;overflow:auto}}</style></head><body><header><small>KANSAS FRONTIER MATRIX · CUSTOM MAP REPORT</small><h1>${escapeReportHtml(report.title)}</h1><p>${escapeReportHtml(report.scope.replaceAll("_", " "))} · active time ${escapeReportHtml(report.activeTime.label)} · generated ${escapeReportHtml(generatedAt)}</p></header>${report.summary ? `<section><h2>Report summary</h2><div class="metrics"><div class="metric"><small>MATCHED RECORDS</small><strong>${report.summary.matchedRecords}</strong></div><div class="metric"><small>INCLUDED RECORDS</small><strong>${report.summary.includedRecords}</strong></div><div class="metric"><small>LAYERS</small><strong>${report.summary.includedLayers}</strong></div><div class="metric"><small>EVIDENCE STATES</small><strong>${Object.keys(report.summary.evidenceStates).length}</strong></div></div></section>` : ""}${findings.length ? `<section><h2>Findings</h2><ol>${findings.map((finding) => `<li>${escapeReportHtml(finding)}</li>`).join("")}</ol></section>` : ""}<section><h2>Time A / Time B catalog availability</h2><div class="metrics"><div class="metric"><small>TIME A</small><strong>${escapeReportHtml(formatTimelineStep(report.temporalComparison.timeA))}</strong><span>${report.temporalComparison.timeARecordCount} records</span></div><div class="metric"><small>TIME B</small><strong>${escapeReportHtml(formatTimelineStep(report.temporalComparison.timeB))}</strong><span>${report.temporalComparison.timeBRecordCount} records</span></div><div class="metric"><small>CATALOG DELTA</small><strong>${report.temporalComparison.recordDelta > 0 ? "+" : ""}${report.temporalComparison.recordDelta}</strong><span>availability only</span></div><div class="metric"><small>CHANGED LAYERS</small><strong>${report.temporalComparison.changedLayerCount}</strong><span>entered / exited IDs</span></div></div><p class="boundary">This comparison reports time-compatible fixture records. It is not historical imagery, observed change, or evidence of causation.</p></section>${records.length ? `<section><h2>Included records</h2><table><thead><tr><th>Record</th><th>Layer / time</th><th>Evidence</th><th>Summary</th></tr></thead><tbody>${records.map((record) => `<tr><td><strong>${escapeReportHtml(record.title)}</strong><br><code>${escapeReportHtml(record.id)}</code></td><td>${escapeReportHtml(record.layer)}<br>${escapeReportHtml(record.year)}</td><td>${escapeReportHtml(record.evidenceState)}<br><code>${escapeReportHtml(record.evidenceReference)}</code></td><td>${escapeReportHtml(record.summary)}</td></tr>`).join("")}</tbody></table></section>` : ""}${limitations.length ? `<section><h2>Limitations</h2><ul>${limitations.map((limitation) => `<li>${escapeReportHtml(limitation)}</li>`).join("")}</ul></section>` : ""}<section><h2>Attribution</h2><ul>${report.attribution.map((item) => `<li><strong>${escapeReportHtml(item.layer)}:</strong> ${escapeReportHtml(item.source)}</li>`).join("")}</ul></section><p class="boundary">This report is a browser-generated public-safe demonstration artifact. It does not release, publish, admit, or authorize KFM data.</p></body></html>`;
       mime = "text/html";
     }
     const url = URL.createObjectURL(new Blob([content], { type: mime }));
@@ -3331,7 +3391,7 @@ export default function Home() {
 
                     <fieldset className="report-control-group saved-workspace-control"><legend>Saved workspaces</legend>
                       <div className="workspace-save-row"><input type="text" value={workspaceName} maxLength={50} onChange={(event) => setWorkspaceName(event.target.value)} placeholder="Optional workspace name" /><button type="button" onClick={saveCurrentWorkspace}>Save current</button></div>
-                      <p>Stores camera, time, layers, opacity, selection, and report settings only on this device.</p>
+                      <p>Stores camera, active time, Time A / Time B comparison, layers, opacity, selection, and report settings only on this device.</p>
                       <div className="saved-workspace-list">{savedWorkspaces.map((snapshot) => <article key={snapshot.id}><button type="button" onClick={() => loadSavedWorkspace(snapshot)}><strong>{snapshot.name}</strong><small>{new Date(snapshot.savedAt).toLocaleString()} · {snapshot.report?.layerIds?.length ?? 0} report layers</small></button><button type="button" onClick={() => deleteSavedWorkspace(snapshot)} aria-label={`Delete ${snapshot.name}`}>×</button></article>)}{savedWorkspaces.length === 0 && <div><strong>No saved workspaces</strong><small>Save the current analysis setup to return to it later on this device.</small></div>}</div>
                     </fieldset>
                   </div>
@@ -3341,6 +3401,7 @@ export default function Home() {
                     {(reportQuery || reportEvidenceFilter !== "ALL") && <div className="report-active-filters"><span>ACTIVE FILTERS</span>{reportQuery && <b>Search: {reportQuery}</b>}{reportEvidenceFilter !== "ALL" && <b>{reportEvidenceFilter.replaceAll("_", " ")}</b>}<button type="button" onClick={() => { setReportQuery(""); setReportEvidenceFilter("ALL"); }}>Clear</button></div>}
                     {reportSections.summary && <div className="report-metrics" aria-label="Report summary metrics"><article><span>Records</span><strong>{reportRecords.length}</strong></article><article><span>Layers</span><strong>{reportLayerSummary.length}</strong></article><article><span>States</span><strong>{Object.keys(reportEvidenceCounts).length}</strong></article><article><span>Selection</span><strong>{selected ? "1" : "0"}</strong></article></div>}
                     {reportSections.findings && <section className="report-preview-section"><span>FINDINGS</span><ol>{reportFindings.map((finding) => <li key={finding}>{finding}</li>)}</ol></section>}
+                    {reportSections.findings && <section className="report-preview-section report-temporal-comparison"><span>TIME A / TIME B</span><div><article><strong>{formatTimelineStep(compareTimeA)}</strong><small>{reportTemporalComparison.timeARecordCount} compatible records</small></article><i aria-hidden="true">→</i><article><strong>{formatTimelineStep(compareTimeB)}</strong><small>{reportTemporalComparison.timeBRecordCount} compatible records</small></article><b>{reportTemporalComparison.recordDelta > 0 ? "+" : ""}{reportTemporalComparison.recordDelta} catalog delta</b></div><p>{reportTemporalComparison.changedLayerCount} included layer{reportTemporalComparison.changedLayerCount === 1 ? "" : "s"} have entered or exited fixture IDs. This is catalog availability, not an observed-change claim.</p></section>}
                     {reportSections.records && <section className="report-preview-section"><span>RECORDS</span><div className="report-record-table" role="table" aria-label="Included report records">
                       {reportRecords.slice(0, reportDetail === "EXECUTIVE" ? 8 : reportDetail === "STANDARD" ? 30 : reportRecords.length).map(({ layer, properties }) => <article key={`${layer.id}:${properties.fid}`} role="row"><div><strong>{properties.title}</strong><small>{layer.title} · {properties.year}</small></div><span data-state={properties.evidenceState}>{properties.evidenceState}</span><p>{properties.summary}</p></article>)}
                       {reportRecords.length === 0 && <div className="report-empty"><strong>No records match</strong><p>Move or widen the map, change time, choose another scope, or include more layers.</p></div>}
@@ -3520,7 +3581,29 @@ export default function Home() {
               </section>}
 
               {mapUtilityView === "compare" && <section id="map-utility-view-compare" role="tabpanel" aria-labelledby="map-utility-tab-compare" className="map-utility-section layer-compare-section">
-                <div className="map-utility-section-heading"><span>COMPARE</span><h3>Layer truth + capability matrix</h3><p>Compare two registry layers without flattening their time, source role, release posture, or sensitivity into a single score.</p></div>
+                <div className="map-utility-section-heading"><span>COMPARE</span><h3>Time + layer investigation</h3><p>Compare two times across the visible catalog, then inspect two layers without flattening time, source role, release posture, or sensitivity.</p></div>
+                <section className="temporal-compare-lab" aria-labelledby="temporal-compare-title">
+                  <header><div><span>TIME A / TIME B</span><h4 id="temporal-compare-title">Catalog availability comparison</h4></div><strong>CONTEXT ONLY</strong></header>
+                  <div className="temporal-compare-selectors">
+                    <label><span>Time A</span><select value={compareTimeA} onChange={(event) => setCompareTimeA(Number(event.target.value))}>{TIME_STEPS.map((step) => <option key={`time-a-${step}`} value={step}>{formatTimelineStep(step)}</option>)}</select></label>
+                    <button type="button" onClick={() => { setCompareTimeA(compareTimeB); setCompareTimeB(compareTimeA); }} aria-label="Swap comparison times">⇄<span>Swap</span></button>
+                    <label><span>Time B</span><select value={compareTimeB} onChange={(event) => setCompareTimeB(Number(event.target.value))}>{TIME_STEPS.map((step) => <option key={`time-b-${step}`} value={step}>{formatTimelineStep(step)}</option>)}</select></label>
+                  </div>
+                  <div className="temporal-compare-metrics" aria-label="Temporal comparison summary">
+                    <article><span>TIME A RECORDS</span><strong>{temporalComparison.timeARecordCount}</strong><small>{temporalComparison.timeALayerCount} visible layers represented</small></article>
+                    <article><span>TIME B RECORDS</span><strong>{temporalComparison.timeBRecordCount}</strong><small>{temporalComparison.timeBLayerCount} visible layers represented</small></article>
+                    <article><span>CATALOG DELTA</span><strong>{temporalComparison.recordDelta > 0 ? "+" : ""}{temporalComparison.recordDelta}</strong><small>Record availability only</small></article>
+                    <article><span>CHANGED LAYERS</span><strong>{temporalComparison.changedLayerCount}</strong><small>Entered or exited fixture IDs</small></article>
+                  </div>
+                  <div className="temporal-compare-table" role="table" aria-label={`Visible-layer availability at ${formatTimelineStep(compareTimeA)} and ${formatTimelineStep(compareTimeB)}`}>
+                    <header role="row"><span role="columnheader">Visible layer</span><span role="columnheader">Time A</span><span role="columnheader">Time B</span><span role="columnheader">Delta</span></header>
+                    {temporalComparisonRows.map((row) => <article key={row.layerId} role="row"><div role="cell"><strong>{row.title}</strong><small>{row.domain} · {row.temporalMode}</small></div><span role="cell">{row.timeARecordCount}</span><span role="cell">{row.timeBRecordCount}</span><span role="cell" data-delta={row.timeBRecordCount - row.timeARecordCount}>{row.timeBRecordCount - row.timeARecordCount > 0 ? "+" : ""}{row.timeBRecordCount - row.timeARecordCount}<small>{row.enteredRecordIds.length} in · {row.exitedRecordIds.length} out</small></span></article>)}
+                    {temporalComparisonRows.length === 0 && <div className="map-utility-empty"><strong>No visible records at either time</strong><p>Show another layer or choose different comparison times.</p></div>}
+                  </div>
+                  <div className="temporal-compare-actions"><button type="button" onClick={() => applyComparisonTime(compareTimeA, "A")}>Apply Time A</button><button type="button" onClick={() => applyComparisonTime(compareTimeB, "B")}>Apply Time B</button><button type="button" onClick={() => void copyTemporalComparison()}>Copy comparison</button></div>
+                  <aside><strong>Not historical imagery or observed change</strong><p>The table reports fixture availability under each layer&apos;s declared temporal rule. Untimed context, entered IDs, exited IDs, and count deltas are not evidence that the world changed.</p></aside>
+                </section>
+                <div className="compare-section-divider"><span>LAYER A / LAYER B</span><p>Inspect metadata, release posture, and sensitivity for two catalog layers.</p></div>
                 <div className="layer-compare-selectors">
                   <label><span>Layer A</span><select value={compareLeft.id} onChange={(event) => { const next = event.target.value; setCompareLeftId(next); if (next === compareRight.id) setCompareRightId(compareLeft.id); }}>{LAYER_REGISTRY.map((layer) => <option key={layer.id} value={layer.id}>{layer.title}</option>)}</select></label>
                   <button type="button" onClick={() => { setCompareLeftId(compareRight.id); setCompareRightId(compareLeft.id); }} aria-label="Swap compared layers">⇄<span>Swap</span></button>

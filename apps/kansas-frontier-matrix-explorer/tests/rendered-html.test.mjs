@@ -46,6 +46,7 @@ test("renders the map-first Kansas explorer shell", async () => {
 test("centers the primary workflow on map-scoped custom reports", async () => {
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const mapInterface = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
+  const temporalComparison = await readFile(new URL("../app/temporal-comparison.ts", import.meta.url), "utf8");
   const about = await readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
@@ -57,11 +58,15 @@ test("centers the primary workflow on map-scoped custom reports", async () => {
   assert.match(source, /Visible layers/);
   assert.match(source, /Report \.html/);
   assert.match(source, /Data \.json/);
+  assert.match(temporalComparison, /kfm-temporal-catalog-comparison-v1/);
+  assert.match(source, /Catalog availability comparison/);
+  assert.match(source, /params\.set\("times"/);
   assert.match(source, /setReportLayerIds\(activeLayers\.map/);
   assert.match(source, /const \[leftOpen, setLeftOpen\] = useState\(false\)/);
   assert.match(about, /Start with a question, finish with a report/);
   assert.match(about, /EVIDENCE STATES/);
   assert.match(css, /\.report-builder-grid/);
+  assert.match(css, /\.temporal-compare-lab/);
   assert.match(css, /\.about-page/);
 });
 
@@ -88,6 +93,7 @@ test("adds reusable analysis recipes, device-local workspaces, report filters, a
   assert.match(page, /kfm-map-workspaces-v1/);
   assert.match(page, /saveCurrentWorkspace/);
   assert.match(page, /loadSavedWorkspace/);
+  assert.match(page, /temporalComparison/);
   assert.match(page, /locationCameraRedacted\?: boolean/);
   assert.match(page, /locationCameraRedacted: locationCameraRedacted \|\| locationDerivedViewRef\.current/);
   assert.match(page, /snapshot\.locationCameraRedacted !== false/);
@@ -235,6 +241,33 @@ test("adds a bounded guided story and read-only layer comparison", async () => {
   assert.match(mapInterface, /"compare"/);
   assert.match(css, /\.story-trail/);
   assert.match(css, /\.layer-compare-grid/);
+});
+
+test("builds an explicit Time A and Time B catalog-availability comparison", async () => {
+  const ts = await import("typescript");
+  const temporalSource = await readFile(new URL("../app/temporal-comparison.ts", import.meta.url), "utf8");
+  const explorerSource = await readFile(new URL("../app/explorer-data.ts", import.meta.url), "utf8");
+  const inlineTemporalSource = temporalSource.replace(
+    'import { isFeatureAvailableAtTime } from "./map-interface";',
+    'const isFeatureAvailableAtTime = (layer, featureYear, activeYear) => !layer.temporal || (layer.temporal.mode === "exact" ? featureYear === activeYear : featureYear <= activeYear);',
+  );
+  const compile = (source, fileName) => ts.transpileModule(source, {
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+    fileName,
+  }).outputText;
+  const temporal = await import(`data:text/javascript;base64,${Buffer.from(compile(inlineTemporalSource, "temporal-comparison.ts")).toString("base64")}`);
+  const explorer = await import(`data:text/javascript;base64,${Buffer.from(compile(explorerSource, "explorer-data.ts")).toString("base64")}`);
+  const layers = explorer.LAYER_REGISTRY.filter((layer) => ["historical-context", "atmosphere-observations"].includes(layer.id));
+  const comparison = temporal.buildTemporalComparison(layers, 1910, 2026);
+
+  assert.equal(comparison.format, "kfm-temporal-catalog-comparison-v1");
+  assert.equal(comparison.authority, "SITE_LOCAL_CONTEXT_ONLY");
+  assert.equal(comparison.interpretation, "CATALOG_AVAILABILITY_NOT_OBSERVED_CHANGE");
+  assert.equal(comparison.timeA, 1910);
+  assert.equal(comparison.timeB, 2026);
+  assert.equal(comparison.changedLayerCount > 0, true);
+  assert.equal(comparison.layers.length, 2);
+  assert.match(comparison.limitations.join(" "), /does not detect real-world change/);
 });
 
 test("uses a site-specific social card and request-host metadata", async () => {
