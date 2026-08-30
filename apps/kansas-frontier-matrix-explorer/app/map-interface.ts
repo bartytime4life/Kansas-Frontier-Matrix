@@ -10,7 +10,7 @@ import {
 } from "./county-starter-slice";
 import { MAPLIBRE_PLUGIN_CONNECTIONS } from "./maplibre-plugin-connections";
 
-export type MapUtilityView = "report" | "inspect" | "navigate" | "scene" | "connections" | "compare" | "display" | "measure" | "export" | "diagnostics";
+export type MapUtilityView = "report" | "inspect" | "navigate" | "scene" | "connections" | "import" | "compare" | "display" | "measure" | "export" | "diagnostics";
 export type MeasureUnit = "imperial" | "metric";
 
 const countyStarterSearchItems: readonly SearchItem[] = Object.freeze([
@@ -141,6 +141,7 @@ const pluginCapabilityGates = MAPLIBRE_PLUGIN_CONNECTIONS.map((connection) => Ob
 }));
 
 export const MAP_CAPABILITY_GATES = Object.freeze([
+  Object.freeze({ id: "import", title: "External data admission", state: "HOLD", reason: "A browser-local inspection cannot establish rights, provenance, sensitivity clearance, evidence binding, policy approval, or release state.", safeInterface: "No-upload KML / GeoJSON structure and geometry inspection only" }),
   Object.freeze({ id: "terrain", title: "Terrain + hillshade", state: "HOLD", reason: "No audited DEM, release-linked terrain manifest, rights closure, or evidence-parity 2D fallback.", safeInterface: "Synthetic extrusion concept only; real elevation carriers remain held" }),
   Object.freeze({ id: "compare", title: "Swipe compare", state: "HOLD", reason: "No aligned, independently supported, rights-cleared comparison pair is admitted.", safeInterface: "Separate A/B context requirements remain visible" }),
   Object.freeze({ id: "offline", title: "Offline / PMTiles", state: "HOLD", reason: "No admitted archive, ETag/range proof, release-scoped cache manifest, expiry, or correction path.", safeInterface: "Display-only readiness and source diagnostics" }),
