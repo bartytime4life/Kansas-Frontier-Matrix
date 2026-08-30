@@ -1,9 +1,11 @@
 {
   "artifact_hashes": {
     ".github/workflows/hydrology-wbd-huc12-ingest-candidate.yml": "sha256:0b83f0a398522baa5aa7bebc11486de1538aedc73a168fd60c070fa99d3eae22",
+    ".github/workflows/soil-watcher-spec.yml": "sha256:43e7e11623af962b1e36e58f13ee83cb6ba852270197dfb029852da07b3c6ad4",
     ".github/workflows/watcher-registry.yml": "sha256:6bd4041a2b62a2286fa0b9512a237d12fb090c4d1489c6647ffe2a9cc61c948b",
     "control_plane/watcher_registry.json": "sha256:4549e07326b1bee587c33d9b8029652fbf3d0e3f847f2866b6d59db0d223d7b0",
     "data/receipts/generated/genrec-hydrology-wbd-huc12-ingest-candidate-20260830.json": "sha256:3ab013f6341659fc90175d8d93a69d718d8aacd97a83669579c85cae38a7117f",
+    "data/receipts/generated/genrec-soil-watcher-spec-control-plane-rebind-20260830.json": "sha256:212bf884bec86263ec367f7376eb607a15ba1c6593db1e0fd74aea5ef53f227b",
     "data/receipts/generated/genrec-watcher-registry-pipeline-spec-rebind-20260830.json": "sha256:1c706bc38b5e83cd926df083e766eb28811cc59ac6342474b557ba4d3b371fbe",
     "fixtures/contracts/v1/source/watcher_registry/semantic_invalid/semantic_duplicate_watcher.json": "sha256:8ae81b7fec470ebd19a8eb0bde55db547e1e48ba50262ce91fe99aed72236ae3",
     "fixtures/contracts/v1/source/watcher_registry/valid/valid_placeholder_registry.json": "sha256:682b9e4abad25486f84898a13e9caff8424ae0c39584b1b798ea3d6e2354c30a",
@@ -44,9 +46,11 @@
   },
   "artifact_paths": [
     ".github/workflows/hydrology-wbd-huc12-ingest-candidate.yml",
+    ".github/workflows/soil-watcher-spec.yml",
     ".github/workflows/watcher-registry.yml",
     "control_plane/watcher_registry.json",
     "data/receipts/generated/genrec-hydrology-wbd-huc12-ingest-candidate-20260830.json",
+    "data/receipts/generated/genrec-soil-watcher-spec-control-plane-rebind-20260830.json",
     "data/receipts/generated/genrec-watcher-registry-pipeline-spec-rebind-20260830.json",
     "fixtures/contracts/v1/source/watcher_registry/semantic_invalid/semantic_duplicate_watcher.json",
     "fixtures/contracts/v1/source/watcher_registry/valid/valid_placeholder_registry.json",
@@ -138,14 +142,14 @@
   "links": {
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null,
-    "pr_number": null
+    "pr_number": 3956
   },
   "model_identity": {
     "model": "Codex",
     "provider": "OpenAI",
     "version": "GPT-5"
   },
-  "notes": "Current-byte successor after PR #3946 reached main while stacked PRs #3947-#3949 merged only into intermediate base branches. It restores eight zero-byte topology markers, closes watcher/WBD and validator-registry dependencies, and carries the remaining compact pipeline-spec boundaries. The Habitat README is excluded because merged PR #3953 already delivered the same reviewed change to main. Historical receipts remain unchanged. This receipt creates no source, schedule, network, execution, admission, lifecycle write, promotion, release, deployment, publication, canonical-alias, or review authority.",
+  "notes": "Current-byte successor after PR #3946 reached main while stacked PRs #3947-#3949 merged only into intermediate base branches. It restores eight zero-byte topology markers, closes watcher, soil-watcher, WBD, and validator-registry dependencies, and carries the remaining compact pipeline-spec boundaries. The Habitat README is excluded because merged PR #3953 already delivered the same reviewed change to main. Historical receipts remain unchanged. This receipt creates no source, schedule, network, execution, admission, lifecycle write, promotion, release, deployment, publication, canonical-alias, or review authority.",
   "override_record": null,
   "parameters": {
     "max_tokens": null,
@@ -166,9 +170,11 @@
   "receipt_id": "genrec-pipeline-spec-post-merge-closure-20260830",
   "truth_labels": {
     ".github/workflows/hydrology-wbd-huc12-ingest-candidate.yml": "PROPOSED",
+    ".github/workflows/soil-watcher-spec.yml": "PROPOSED",
     ".github/workflows/watcher-registry.yml": "PROPOSED",
     "control_plane/watcher_registry.json": "PROPOSED",
     "data/receipts/generated/genrec-hydrology-wbd-huc12-ingest-candidate-20260830.json": "PROPOSED",
+    "data/receipts/generated/genrec-soil-watcher-spec-control-plane-rebind-20260830.json": "PROPOSED",
     "data/receipts/generated/genrec-watcher-registry-pipeline-spec-rebind-20260830.json": "PROPOSED",
     "fixtures/contracts/v1/source/watcher_registry/semantic_invalid/semantic_duplicate_watcher.json": "PROPOSED",
     "fixtures/contracts/v1/source/watcher_registry/valid/valid_placeholder_registry.json": "PROPOSED",
@@ -226,6 +232,10 @@
     },
     {
       "gate": "WBD_HUC12_FOCUSED_TESTS",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "SOIL_WATCHER_SPEC",
       "outcome": "PASS"
     },
     {
