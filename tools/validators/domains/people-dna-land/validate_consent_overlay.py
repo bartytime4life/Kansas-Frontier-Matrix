@@ -173,7 +173,10 @@ def _consent(candidate: Mapping[str, Any], evaluation: datetime | None, findings
     status = consent.get("status")
     subject = candidate.get("subject_posture")
     material = candidate.get("material_kind")
-    if status not in {"active", "revoked", "expired", "not_required"}:
+    if (
+        not isinstance(status, str)
+        or status not in {"active", "revoked", "expired", "not_required"}
+    ):
         add_finding(findings, "CONSENT_STATUS_INVALID", "$.consent.status")
         return
     if subject == "living_person" and status != "active":
@@ -187,7 +190,8 @@ def _consent(candidate: Mapping[str, Any], evaluation: datetime | None, findings
     scope = consent.get("scope")
     if not (
         isinstance(scope, list) and bool(scope) and len(scope) <= 8
-        and all(item in SCOPES for item in scope) and len(scope) == len(set(scope))
+        and all(isinstance(item, str) and item in SCOPES for item in scope)
+        and len(scope) == len(set(scope))
     ):
         add_finding(findings, "CONSENT_SCOPE_INVALID", "$.consent.scope")
     if consent.get("audience") != "restricted_steward":
@@ -223,7 +227,8 @@ def _events(value: object, findings: set[Finding]) -> None:
             add_finding(findings, "EVENT_INVALID", base)
             continue
         find_undeclared_fields(findings, event, EVENT_FIELDS, "UNDECLARED_EVENT_FIELD", base)
-        if event.get("event_type") not in EVENT_TYPES:
+        event_type = event.get("event_type")
+        if not isinstance(event_type, str) or event_type not in EVENT_TYPES:
             add_finding(findings, "EVENT_TYPE_INVALID", f"{base}.event_type")
         refs = event.get("evidence_refs")
         if not _refs(refs):
@@ -248,7 +253,8 @@ def _events(value: object, findings: set[Finding]) -> None:
             add_finding(findings, "PLACE_BUCKET_INVALID", f"{base}.place_bucket")
         else:
             find_undeclared_fields(findings, place, PLACE_FIELDS, "UNDECLARED_PLACE_FIELD", f"{base}.place_bucket")
-            if place.get("precision") not in {"coarse", "county", "state"}:
+            precision = place.get("precision")
+            if not isinstance(precision, str) or precision not in {"coarse", "county", "state"}:
                 add_finding(findings, "PLACE_PRECISION_INVALID", f"{base}.place_bucket.precision")
             county = place.get("county_fips")
             if not isinstance(county, str) or FIPS_RE.fullmatch(county) is None:
@@ -324,7 +330,8 @@ def validate_candidate(candidate: object, *, revocation_manifest: Mapping[str, A
         or subject_posture not in {"living_person", "deceased_or_historical"}
     ):
         add_finding(findings, "SUBJECT_POSTURE_INVALID", "$.subject_posture")
-    if candidate.get("disclosure_level") not in {"restricted", "internal"}:
+    disclosure_level = candidate.get("disclosure_level")
+    if not isinstance(disclosure_level, str) or disclosure_level not in {"restricted", "internal"}:
         add_finding(findings, "DISCLOSURE_LEVEL_INVALID", "$.disclosure_level")
     evaluation = _datetime(candidate.get("evaluation_time"))
     if evaluation is None:
