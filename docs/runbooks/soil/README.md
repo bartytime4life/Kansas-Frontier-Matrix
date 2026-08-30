@@ -3,15 +3,16 @@ doc_id: kfm://doc/runbooks-soil-readme
 title: docs/runbooks/soil/ — Soil Operational Procedure Boundary
 type: readme
 subtype: boundary-compact
-version: v1.1
-prior_state: v1.0 repository-grounded boundary with four proposal-heavy child procedures
-status: draft; repository-grounded; bounded synthetic validation executable; rollback-readiness assessment repository-grounded; live source operation, proof, policy activation, rollback execution, promotion, release, deployment, and publication held
+version: v1.2
+prior_version: v1.1
+prior_state: current main grounded rollback readiness while the open Soil branch grounded the no-network child; this revision reconciles both without retaining a temporary write-capable workflow
+status: draft; repository-grounded; bounded synthetic validation executable; no-network procedure and rollback-readiness assessment repository-grounded; live source operation, proof, policy activation, rollback execution, promotion, release, deployment, and publication held
 owners:
   - "@bartytime4life — verified GitHub review route"
   - "NEEDS VERIFICATION — accountable Soil, source, scientific, evidence, rights, sensitivity, policy, correction, release, rollback, and independent-review assignments"
 created: 2026-08-28
-updated: 2026-08-29
-policy_label: repository-facing; mixed child maturity; potentially sensitive location and land context; fail-closed
+updated: 2026-08-30
+policy_label: repository-facing; mixed child maturity; synthetic fixtures; potentially sensitive location and land context; fail-closed
 current_path: docs/runbooks/soil/README.md
 owning_root: docs/
 responsibility: human procedure index and operational boundary for the Soil lane
@@ -21,13 +22,11 @@ authority_rank: subordinate to accepted doctrine and ADRs, contracts, schemas, p
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 349d0097e5f7533abe6cd8253f4bd7a30eccd003
-  target_before_update_blob: d50303c8f4edc6a9427d61135ba2048b0ba01a03
-  no_network_runbook_blob: d42e18386911dcc008a9045c38e052ce673bfda4
-  promotion_runbook_blob: ace5df133481918157faa902a9450b0f7f9cace8
-  rollback_runbook_before_update_blob: 60ff25bf877a610627ff36430227382a68228a7e
-  source_refresh_runbook_blob: f1c27e02280f9ed52e1b18c2d4b83f10e8dd4d37
-  parent_runbooks_readme_blob: 4f33dfa18cd69fe6a6b990aac71be08d59e7d13e
+  base_commit: bc40b053f913143509a6e8b2adb56e2cd6df0f5a
+  reconciliation_base_readme_blob: 405ebe61ba6c8ba1b9e39cdd3c32fec15152fc74
+  no_network_runbook_prior_blob: d42e18386911dcc008a9045c38e052ce673bfda4
+  no_network_runbook_head_blob: 66debc96fd7dc4d7be9db33f14beab498ee88e0e
+  rollback_runbook_blob: 7d46f9bc8a85a970c31cf10d5cb5380f6d4a41a2
   domain_workflow_blob: e009e00d5743d907461289c1c6571cab69ea2672
   rollback_card_contract_blob: c6d3c35c56b064e04c3a2532f4709d938d7b0c1a
   rollback_card_schema_blob: e0a9edf02dd5d6997eda60a054a5bf19636c3dd4
@@ -39,8 +38,8 @@ evidence_snapshot:
   directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   direct_markdown_files_after_change: 5
   bounded_executable_fixture_profiles: 4
-  repository_grounded_child_procedures: 1
-  proposal_or_stale_child_procedures: 3
+  repository_grounded_child_procedures: 2
+  proposal_or_stale_child_procedures: 2
 related:
   - ../README.md
   - ../../domains/soil/README.md
@@ -66,8 +65,9 @@ related:
   - ../../../release/candidates/soil/README.md
 notes:
   - "Current executable Soil coverage remains limited to three bounded Soil fixture profiles and one fixture-only SSURGO package-drift comparator named by the active domain workflow."
-  - "ROLLBACK_RUNBOOK.md is now a repository-grounded candidate-assessment and handoff procedure; it still provides no operational rollback authority."
-  - "NO_NETWORK_TEST_RUNBOOK.md, PROMOTION_RUNBOOK.md, and SOURCE_REFRESH_RUNBOOK.md remain proposal-heavy or stale and must not be treated as current live procedures."
+  - "NO_NETWORK_TEST_RUNBOOK.md is now a repository-grounded, fixture-only procedure; its guards do not establish runner-wide or non-Python egress denial."
+  - "ROLLBACK_RUNBOOK.md is a repository-grounded candidate-assessment and handoff procedure; it provides no operational rollback authority."
+  - "PROMOTION_RUNBOOK.md and SOURCE_REFRESH_RUNBOOK.md remain proposal-heavy or stale."
   - "The generic RollbackCard validator and generic/Hazards rehearsal are non-executing bounded evidence; production rollback remains held."
   - "This documentation change creates no source admission, evidence closure, policy decision, lifecycle transition, rollback, promotion, release, deployment, or publication authority."
 [/KFM_META_BLOCK_V2] -->
@@ -126,16 +126,23 @@ lifecycle.
 | Station soil-moisture validation | The workflow invokes `test_soil_moisture_qc.py` against the bounded station validator | Executable checks for the documented synthetic unit, depth, time, QC, deduplication, geometry, and no-network profile only |
 | SMAP L4 anti-collapse validation | The workflow invokes `test_smap_l4_anti_collapse.py` against the profile-local SMAP L4 validator | Executable checks for the documented synthetic grid/model profile and support-type separation only |
 | SSURGO package-drift comparison | The workflow invokes `python -m unittest tests.ingest.ssurgo_watch.test_ssurgo_watch --verbose` | Fixture-only comparator proof; no live SSURGO retrieval, currentness, rights, identity, or admission is established |
-| Rollback readiness | [`ROLLBACK_RUNBOOK.md`](./ROLLBACK_RUNBOOK.md) now uses the current generic `RollbackCard` contract/schema/validator, exact Soil test commands, repository inventory, and explicit production holds | Repository-grounded candidate assessment and accountable handoff only; no Soil release or operational rollback is established |
+| No-network procedure | [`NO_NETWORK_TEST_RUNBOOK.md`](./NO_NETWORK_TEST_RUNBOOK.md) reproduces the four commands bound by the active Soil workflow and records exact fixture polarity and hold semantics | Repository-grounded fixture-only procedure; no source retrieval, proof production, release action, or public operation is established |
+| No-network isolation | The named suites install targeted Python test-level socket, DNS, or URL-open guards and set `KFM_NO_NETWORK=1` | Bounded to the APIs and process paths explicitly tested; runner-wide, dependency-install, operating-system, container, namespace, and non-Python egress denial remain unproved |
+| Rollback readiness | [`ROLLBACK_RUNBOOK.md`](./ROLLBACK_RUNBOOK.md) uses the current generic `RollbackCard` contract/schema/validator, exact Soil test commands, repository inventory, and explicit production holds | Repository-grounded candidate assessment and accountable handoff only; no Soil release or operational rollback is established |
 | Generic rollback candidate validation | The proposed `RollbackCard` profile has a closed schema, no-network validator, three valid fixtures, six invalid fixture families, focused tests, and a read-only workflow | Candidate shape and local consistency only; no approval, target selection, execution, or public mutation |
 | Synthetic rollback rehearsal | The rollback-drill workflow runs twelve generic and Hazards tests against a marker-protected synthetic helper | Regression evidence only; it is not a Soil-specific or production drill |
 | Proof | The Soil workflow emits an explicit hold because no accepted Soil proof producer or deterministic proof command is wired | Proof remains held |
 | Release dry run | The Soil workflow emits an explicit hold because no accepted Soil release dry-run command or candidate manifest contract is wired | Promotion, release, deployment, and publication remain held |
-| Remaining child procedures | Three long-form child runbooks retain proposal-era assumptions, unverified commands, or live-operation concepts | Planning and review context only; length is not operational maturity |
+| Remaining child procedures | Two long-form child runbooks retain proposal-era assumptions, unverified commands, or live-operation concepts | Planning and review context only; length is not operational maturity |
 
 <a id="current-bounded-checks"></a>
 
 ## Current bounded checks
+
+Use the repository-grounded
+[`NO_NETWORK_TEST_RUNBOOK.md`](./NO_NETWORK_TEST_RUNBOOK.md) for preflight,
+execution, fixture-polarity interpretation, failure classification, and result
+recording. It remains bounded to the four active fixture-only suites.
 
 Run from a clean checkout at the exact SHA under review, with no live endpoints,
 real secrets, production logs, sensitive field or station details, or writes to
@@ -174,8 +181,7 @@ Use the active workflows as the current command inventory. Record the checkout
 SHA, command, result, and any skipped or held job. Do not describe a held job
 as an executed proof, release check, or rollback.
 
-These commands are repository-grounded entry points, but they were **NOT RUN**
-as part of this Markdown-only authoring step. A future result belongs to the
+`KFM_NO_NETWORK=1` is posture metadata, not a firewall. A result belongs to the
 exact SHA and environment in which it is produced.
 
 <a id="child-procedure-map"></a>
@@ -184,7 +190,7 @@ exact SHA and environment in which it is produced.
 
 | Document | Current maturity | Safe use |
 |---|---|---|
-| [`NO_NETWORK_TEST_RUNBOOK.md`](./NO_NETWORK_TEST_RUNBOOK.md) | **Proposal-heavy and stale** | Planning reference only. Its proposed make, pytest, environment, probe, and receipt surfaces are not the active command inventory. Use [Current bounded checks](#current-bounded-checks). |
+| [`NO_NETWORK_TEST_RUNBOOK.md`](./NO_NETWORK_TEST_RUNBOOK.md) | **Repository-grounded bounded procedure** | Reproduce the four active synthetic fixture suites, interpret exact positive/negative fixture polarity and SSURGO comparator outcomes, and record the limits of the test-level Python network guards. It does not establish runner-wide isolation, Soil truth, proof, release, or publication. |
 | [`PROMOTION_RUNBOOK.md`](./PROMOTION_RUNBOOK.md) | **Proposal-era readiness model; transition held** | Review lifecycle, support-profile, rights, sensitivity, evidence, and rollback questions. Do not run illustrative `kfm` or `conftest` commands as current procedures. |
 | [`ROLLBACK_RUNBOOK.md`](./ROLLBACK_RUNBOOK.md) | **Repository-grounded candidate assessment; operational rollback held** | Confirm whether an exact Soil release exists, classify the defect, assemble the current generic non-executing candidate, run bounded checks, and stop at accountable handoff. |
 | [`SOURCE_REFRESH_RUNBOOK.md`](./SOURCE_REFRESH_RUNBOOK.md) | **Proposal-era watcher and lifecycle model; live refresh held** | Review source-role and support-profile questions. Its illustrative `kfm-tools` commands are not established live entry points. |
@@ -199,7 +205,7 @@ procedure.
 
 | Need | Route | Required stop |
 |---|---|---|
-| Run current bounded offline checks | [Current bounded checks](#current-bounded-checks) and the active Soil workflow | Stop if paths, SHA, fixture inventory, expected-negative polarity, or no-network posture differs |
+| Run current bounded no-network checks | [`NO_NETWORK_TEST_RUNBOOK.md`](./NO_NETWORK_TEST_RUNBOOK.md) and the active Soil workflow | Stop if paths, SHA, fixture inventory, expected-negative polarity, or no-network posture differs |
 | Assess a proposed source refresh | [`SOURCE_REFRESH_RUNBOOK.md`](./SOURCE_REFRESH_RUNBOOK.md) as planning context plus the owning source registry | Stop before network retrieval, source activation, rights acceptance, or any lifecycle write |
 | Assess promotion readiness | [`PROMOTION_RUNBOOK.md`](./PROMOTION_RUNBOOK.md) as planning context plus owning evidence, policy, review, and release surfaces | Stop before transition execution; fixture checks do not approve promotion |
 | Assess rollback readiness | [`ROLLBACK_RUNBOOK.md`](./ROLLBACK_RUNBOOK.md) plus the current generic `RollbackCard` profile and authoritative release/correction surfaces | Stop before withdrawal, target selection, invalidation, resolver mutation, republish, deployment, or public communication |
