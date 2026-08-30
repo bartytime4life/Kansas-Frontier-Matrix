@@ -12,7 +12,7 @@
   "object_type": "WatcherRegistry",
   "registry_id": "kfm://control-plane/watcher-registry/v1",
   "schema_version": "1.0.0",
-  "spec_hash": "sha256:2acde1cd874bd6a19e7ca0bfe86bea9cbc77d688c8e36c0151983d3383d37bb4",
+  "spec_hash": "sha256:d331a9c20e832e2cbd53b8ed87f461cdb5aadd5170c9f9d6396ef50157463829",
   "status": "PROPOSED_INACTIVE",
   "watchers": [
     {
@@ -43,7 +43,7 @@
       "signature_ref": null,
       "source_descriptor_ref": null,
       "spec_path": "pipeline_specs/watchers/plants_drift.yaml",
-      "spec_sha256": "sha256:b4fc0c444ee647d101c1a830d9b974e2cfc0cfd9e0e3b4fb5e14c792bdec939a",
+      "spec_sha256": "sha256:313f53d3156ffb3893b8cb63e6c68939bc1b40af7dbf5bd27c9c2fbc6356da6f",
       "state": "PLACEHOLDER",
       "version": "0.0.0-placeholder",
       "watcher_id": "kfm.watcher.shared.plants_drift.placeholder"
@@ -76,7 +76,7 @@
       "signature_ref": null,
       "source_descriptor_ref": null,
       "spec_path": "pipeline_specs/watchers/plants_drift.yaml",
-      "spec_sha256": "sha256:b4fc0c444ee647d101c1a830d9b974e2cfc0cfd9e0e3b4fb5e14c792bdec939a",
+      "spec_sha256": "sha256:313f53d3156ffb3893b8cb63e6c68939bc1b40af7dbf5bd27c9c2fbc6356da6f",
       "state": "PLACEHOLDER",
       "version": "0.0.0-placeholder",
       "watcher_id": "kfm.watcher.shared.plants_drift.placeholder"
