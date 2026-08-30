@@ -1,5 +1,66 @@
-status: PROPOSED
-source_doc: docs/domains/hydrology/CANONICAL_PATHS.md
+schema_version: 1.0.0
+object_type: KfmPipelineSpecDeclaration
+spec_id: kfm.pipeline.hydrology.ingest-wbd-compat
+spec_version: 0.1.0
+profile_kind: COMPATIBILITY_ALIAS
+domain_id: hydrology
+stage: INGEST
+status: PROPOSED_INACTIVE
+implementation_status: NOT_IMPLEMENTED
 path: pipeline_specs/hydrology/ingest_wbd.yaml
-notes:
-  - Placeholder created from docs/domains markdown inventory.
+purpose: Preserve the legacy ingest_wbd.yaml reference as an inactive compatibility alias to pipeline_specs/hydrology/wbd_huc12_ingest.yaml
+  without creating a second writable specification.
+canonicalization_profile: kfm-canonical-json-v1
+canonical_target: pipeline_specs/hydrology/wbd_huc12_ingest.yaml
+source_docs:
+- docs/domains/hydrology/CANONICAL_PATHS.md
+bindings:
+  source_descriptor_refs: []
+  contract_refs: []
+  schema_refs: []
+  implementation_refs: []
+  fixture_refs: []
+  test_refs: []
+  workflow_refs: []
+lifecycle:
+  candidate_inputs:
+  - SOURCE_CAPTURE_CANDIDATE
+  candidate_outputs:
+  - QUARANTINE
+  - RAW
+  writes_targets: false
+execution:
+  mode: DISABLED
+  network_access: DENIED
+  source_activation: DENIED
+  lifecycle_write: DENIED
+  promotion: DENIED
+  release: DENIED
+  publication: DENIED
+required_gates:
+- CONTRACT_SCHEMA
+- CORRECTION_ROLLBACK
+- EVIDENCE_CLOSURE
+- HUMAN_REVIEW
+- RELEASE_DECISION
+- RIGHTS
+- SENSITIVITY
+- SOURCE_ADMISSION
+- SOURCE_ROLE
+- VALIDATION
+reason_codes:
+- COMPATIBILITY_ONLY
+- INACTIVE_DECLARATION
+- REVIEW_NOT_COMPLETE
+non_effects:
+- NO_EVIDENCE_CLOSURE
+- NO_LIFECYCLE_WRITE
+- NO_LIVE_SOURCE_ACCESS
+- NO_POLICY_DECISION
+- NO_PROMOTION
+- NO_PUBLICATION
+- NO_RELEASE
+- NO_SOURCE_ACTIVATION
+rollback:
+  strategy: REVERT_DECLARATION_CHANGE
+spec_hash: sha256:33a4f25c8d57c26096437fe7e6b49a789274a39f25daa65d50e1b5f7f1b7b7e2

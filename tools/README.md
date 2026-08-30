@@ -1,47 +1,26 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/tools-readme
 title: tools README
-type: README
-version: v0.5
-status: draft; directory-rules-v2-aligned; root-orchestrator-confirmed; direct-child-inventory-refreshed; validator-registry-evidence-refreshed
-owner: "@bartytime4life — verified CODEOWNERS and root-registry route; independent tooling stewardship remains NEEDS VERIFICATION"
-created: NEEDS VERIFICATION — file existed before the repo-aware v0.3 update
-updated: 2026-08-24
-policy_label: repository-facing; tools-root; canonical-root; implementation-bearing; trust-tooling; fail-closed; no-publication-by-tool; non-authoritative
+type: readme
+version: v0.6
+status: draft; directory-rules-v2-aligned; validator-registry-confirmed
+owner: "@bartytime4life — CODEOWNERS route confirmed; independent tooling stewardship NEEDS VERIFICATION"
+created: 2025-10-03
+updated: 2026-08-30
+policy_label: repository-facing; canonical-tools-root; fail-closed; non-authoritative
 owning_root: tools/
-responsibility: canonical repository-tool root for validators, generators, builders, inspectors, comparators, diagnostic probes, bounded operators, and stable repository-facing tooling entrypoints
-truth_posture: cite-or-abstain; current-behavior claims require pinned repository evidence; tool output never upgrades itself to evidence, policy, review, release, or publication authority
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  base_ref: main
-  base_commit: a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34
-  prior_blob: fca4e94e3f1f12534cb624fd4b14dea8b5025c51
-  accepted_directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
-  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  root_entrypoint_blob: c308015da780d7b72f56277b521fb0e42317651e
-  orchestrator_blob: 728cf1404839a5b95e03d70d44567863a6f9b6df
-  validator_registry_blob: af9a2f4c259bdc8cd2a106a24df44fb3e8c7277b
-  makefile_blob: 304145dd0f674dda759f9097a747c4c7f0b9269d
+responsibility: own bounded repository validators, generators, builders, inspectors, and stable tooling entrypoints
+truth_posture: CONFIRMED registry and entrypoints / PROPOSED inactive pipeline validator / NEEDS VERIFICATION independent stewardship
 related:
-  - ../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
-  - ../docs/doctrine/directory-rules.md
-  - ../control_plane/root_registry.yaml
-  - ../CONTRIBUTING.md
-  - ../.github/CODEOWNERS
-  - validators/README.md
-  - validators/validator_registry.json
-  - validate_all.py
-  - validators/validate_all.py
-  - validators/_common/run_all.py
-  - ../Makefile
-notes:
-  - "v0.5 refreshes the ROOT_FULL evidence snapshot and current validator count; it changes no executable, schema, contract, policy, fixture, test, workflow, dependency, lifecycle, release, runtime, or public behavior."
-  - "The first twelve H2 sections implement the accepted Directory Rules v2 ROOT_FULL field order."
-  - "tools/validate_all.py is now the confirmed canonical thin entrypoint; it delegates to the registry-driven tools/validators/validate_all.py implementation."
-  - "The current registry contains twenty-three validators and four selection profiles; profile success remains bounded validation evidence, not truth or release authority."
-  - "The direct-child map records nineteen directories plus README.md and validate_all.py at the pinned base."
-  - "tools/experiments/ has an executable file but no boundary README at the pinned base; its ownership and graduation posture remain NEEDS VERIFICATION."
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/doctrine/directory-rules.md
+  - control_plane/root_registry.yaml
+  - tools/validators/README.md
+  - tools/validators/validator_registry.json
+  - tools/validators/validate_pipeline_spec_declarations.py
+  - tools/validate_all.py
+  - Makefile
+notes: ["v0.6 registers the inactive pipeline declaration validator; tool output creates no activation, evidence, policy, release, or publication authority."]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -133,7 +112,7 @@ The active [`control_plane/root_registry.yaml`](../control_plane/root_registry.y
 | `tools/README.md` | **CONFIRMED existing / draft documentation** | This v0.5 update is same-path and does not change root authority. |
 | [`tools/validate_all.py`](validate_all.py) | **CONFIRMED implemented thin entrypoint** | It imports and returns the orchestrator's `main()` result. |
 | [`tools/validators/validate_all.py`](validators/validate_all.py) | **CONFIRMED implemented orchestrator** | It validates a bounded registry, selects validators, executes them no-network, and emits deterministic JSON unless timing is requested. |
-| [`validator_registry.json`](validators/validator_registry.json) | **CONFIRMED v1 registry** | Twenty-three validators are registered under `focused`, `changed-area`, `release-dry-run`, and `full` profiles. |
+| [`validator_registry.json`](validators/validator_registry.json) | **CONFIRMED v1 registry** | Twenty-five validators are registered under `focused`, `changed-area`, `release-dry-run`, and `full` profiles. |
 | [`_common/run_all.py`](validators/_common/run_all.py) | **CONFIRMED compatibility entrypoint** | It preserves the historical aggregate fixture runner while delegating to the full orchestrator profile. |
 | Root direct-child inventory | **CONFIRMED at the pinned base** | Nineteen directories, this README, and the root validator entrypoint are present. |
 | Tool-family implementation maturity | **MIXED** | Some lanes are executable and fixture-tested; others remain documentation-only, proposed, compatibility-bound, or insufficiently reviewed. |
