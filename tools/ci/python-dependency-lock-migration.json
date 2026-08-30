@@ -3242,7 +3242,7 @@
       "base_sha256": "sha256:76a941a5819d94b46c172fd3ffe32e8fc6506f32a017b30f8d8f42c773613d10",
       "current_sha256": "sha256:338bad63b01565dd71cb635baf7a33ca2a17a6d18fbf0d1092e471070e7180bb",
       "profiles": [
-        "test-dependencies"
+        "project-test"
       ],
       "superseded_receipt_sha256s": [
         "sha256:1aa53bd39672604f3495b1f688600a9981a28a88f2ab7c0f0c7556dc206cf96c"
