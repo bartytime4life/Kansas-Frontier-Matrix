@@ -48,6 +48,7 @@
       "ci-conformance-report",
       "pnpm-dependency-readiness",
       "pipeline-spec-declarations",
+      "pipeline-spec-declaration-fixtures",
       "workflow-security",
       "repository-topology"
     ]
@@ -522,9 +523,31 @@
     },
     {
       "id": "pipeline-spec-declarations",
-      "description": "Validate every inactive YAML pipeline declaration, deterministic hash, reference, alias target, and fixture polarity without creating execution authority.",
+      "description": "Validate every inactive YAML pipeline declaration, deterministic hash, reference, and alias target without creating execution authority.",
       "script": "tools/validators/validate_pipeline_spec_declarations.py",
       "args": [],
+      "path_globs": [
+        ".github/workflows/domain-hydrology.yml",
+        ".github/workflows/pipeline-spec-declarations.yml",
+        "contracts/pipeline_spec_declaration.md",
+        "data/receipts/generated/genrec-pipeline-spec-declarations-*.json",
+        "fixtures/contracts/v1/pipeline_spec_declaration/**",
+        "pipeline_specs/**/*.yaml",
+        "schemas/contracts/v1/pipeline_spec_declaration.schema.json",
+        "tests/validators/test_validate_pipeline_spec_declarations.py",
+        "tools/validators/validate_pipeline_spec_declarations.py",
+        "tools/validators/validator_registry.json"
+      ],
+      "timeout_seconds": 120,
+      "artifact_refs": []
+    },
+    {
+      "id": "pipeline-spec-declaration-fixtures",
+      "description": "Validate positive and negative inactive pipeline declaration fixtures without creating execution authority.",
+      "script": "tools/validators/validate_pipeline_spec_declarations.py",
+      "args": [
+        "--fixtures"
+      ],
       "path_globs": [
         ".github/workflows/domain-hydrology.yml",
         ".github/workflows/pipeline-spec-declarations.yml",
