@@ -64,6 +64,11 @@ test("centers the primary workflow on map-scoped custom reports", async () => {
   assert.match(source, /matchesReportRecord\(layer, feature\.properties\)/);
   assert.match(source, /reportScope === "SELECTION"\s*\n\s*\|\| isFeatureAvailableAtTime/);
   assert.match(source, /\[matchesReportRecord, reportLayerIds, reportScope, year\]/);
+  assert.match(source, /outsideActiveTime: !isFeatureAvailableAtTime/);
+  assert.match(source, /matchedRecords: reportActiveTimeRecordCount/);
+  assert.match(source, /retainedSelectionRecords: reportRetainedSelectionCount/);
+  assert.match(source, /RETAINED_OUTSIDE_ACTIVE_TIME/);
+  assert.match(source, /excluded from the active-time match count/);
   assert.match(source, /}\n    params\.set\("times",/);
   assert.match(source, /setReportLayerIds\(activeLayers\.map/);
   assert.match(source, /const \[leftOpen, setLeftOpen\] = useState\(false\)/);

@@ -725,7 +725,16 @@ export default function Home() {
       .filter((feature) => reportScope === "SELECTION"
         || isFeatureAvailableAtTime(layer, feature.properties.year, year))
       .filter((feature) => matchesReportRecord(layer, feature.properties))
-      .map((feature) => ({ layer, properties: feature.properties }))), [matchesReportRecord, reportLayerIds, reportScope, year]);
+      .map((feature) => ({
+        layer,
+        properties: feature.properties,
+        outsideActiveTime: !isFeatureAvailableAtTime(layer, feature.properties.year, year),
+      }))), [matchesReportRecord, reportLayerIds, reportScope, year]);
+  const reportActiveTimeRecordCount = useMemo(
+    () => reportRecords.filter((record) => !record.outsideActiveTime).length,
+    [reportRecords],
+  );
+  const reportRetainedSelectionCount = reportRecords.length - reportActiveTimeRecordCount;
   const reportEvidenceCounts = useMemo(() => reportRecords.reduce<Record<string, number>>((counts, record) => {
     counts[record.properties.evidenceState] = (counts[record.properties.evidenceState] ?? 0) + 1;
     return counts;
@@ -755,14 +764,14 @@ export default function Home() {
     const bounded = reportRecords.length - supported;
     const mostRepresented = [...reportLayerSummary].sort((left, right) => right.recordCount - left.recordCount)[0];
     return [
-      `${reportRecords.length} record${reportRecords.length === 1 ? "" : "s"} match the ${reportScope === "VIEWPORT" ? "current map extent" : reportScope === "ANALYSIS_AREA" ? "locked area-of-interest" : reportScope === "VISIBLE_LAYERS" ? "visible-layer" : "selected-feature"} scope at ${formatTimelineStep(year)}.`,
+      `${reportActiveTimeRecordCount} record${reportActiveTimeRecordCount === 1 ? "" : "s"} match the ${reportScope === "VIEWPORT" ? "current map extent" : reportScope === "ANALYSIS_AREA" ? "locked area-of-interest" : reportScope === "VISIBLE_LAYERS" ? "visible-layer" : "selected-feature"} scope at ${formatTimelineStep(year)}.${reportRetainedSelectionCount ? ` ${reportRetainedSelectionCount} selected record${reportRetainedSelectionCount === 1 ? " is" : "s are"} retained for inspection outside the active time and excluded from the active-time match count.` : ""}`,
       `${supported} record${supported === 1 ? "" : "s"} carry supported or corrected evidence states; ${bounded} remain generalized, missing, stale, restricted, denied, superseded, or error states.`,
       mostRepresented
         ? `${mostRepresented.title} contributes the largest share of this report (${mostRepresented.recordCount} record${mostRepresented.recordCount === 1 ? "" : "s"}).`
         : "No records match the current report filters; widen the map, change time, or include another layer.",
       `${reportTemporalComparison.changedLayerCount} included layer${reportTemporalComparison.changedLayerCount === 1 ? "" : "s"} change catalog availability between Time A ${formatTimelineStep(compareTimeA)} and Time B ${formatTimelineStep(compareTimeB)}; this is not an observed-change or imagery claim.`,
     ];
-  }, [compareTimeA, compareTimeB, reportEvidenceCounts, reportLayerSummary, reportRecords.length, reportScope, reportTemporalComparison.changedLayerCount, year]);
+  }, [compareTimeA, compareTimeB, reportActiveTimeRecordCount, reportEvidenceCounts, reportLayerSummary, reportRecords.length, reportRetainedSelectionCount, reportScope, reportTemporalComparison.changedLayerCount, year]);
   const filteredLayerIds = useMemo(() => {
     const query = debouncedLayerQuery.trim().toLowerCase();
     return new Set(LAYER_REGISTRY.filter((layer) => {
@@ -2701,12 +2710,13 @@ export default function Home() {
 
   const buildCustomReportPayload = (generatedAt: string) => {
     const recordLimit = reportDetail === "EXECUTIVE" ? 8 : reportDetail === "STANDARD" ? 30 : reportRecords.length;
-    const records = reportRecords.slice(0, recordLimit).map(({ layer, properties }) => ({
+    const records = reportRecords.slice(0, recordLimit).map(({ layer, properties, outsideActiveTime }) => ({
       id: properties.fid,
       title: properties.title,
       layer: layer.title,
       domain: layer.domain,
       year: properties.year,
+      activeTimeCompatibility: outsideActiveTime ? "RETAINED_OUTSIDE_ACTIVE_TIME" : "COMPATIBLE_WITH_ACTIVE_TIME",
       summary: properties.summary,
       evidenceState: properties.evidenceState,
       evidenceReference: properties.citation,
@@ -2745,7 +2755,8 @@ export default function Home() {
       } : null,
       selection: selected ? { id: selected.featureId, title: selected.properties.title, layer: selected.layer.title, evidenceState: selected.properties.evidenceState } : null,
       summary: reportSections.summary ? {
-        matchedRecords: reportRecords.length,
+        matchedRecords: reportActiveTimeRecordCount,
+        retainedSelectionRecords: reportRetainedSelectionCount,
         includedRecords: records.length,
         includedLayers: reportLayerSummary.length,
         evidenceStates: reportEvidenceCounts,
@@ -2779,7 +2790,7 @@ export default function Home() {
     setReportGeneratedAt(generatedAt);
     try {
       await navigator.clipboard.writeText(JSON.stringify(report, null, 2));
-      announce(`Custom report copied with ${reportRecords.length} matching records`);
+      announce(`Custom report copied with ${reportRecords.length} included records`);
     } catch {
       announce("Clipboard access was blocked; the report preview stayed in the browser");
     }
@@ -2799,7 +2810,7 @@ export default function Home() {
       const records = report.records ?? [];
       const findings = report.findings ?? [];
       const limitations = report.limitations ?? [];
-      content = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeReportHtml(report.title)}</title><style>body{font:15px/1.55 Inter,system-ui,sans-serif;color:#17201d;max-width:1100px;margin:0 auto;padding:48px}header{border-bottom:3px solid #b88b38;padding-bottom:22px;margin-bottom:28px}h1{font-size:36px;letter-spacing:-.04em;margin:0 0 8px}h2{margin-top:34px}small,.muted{color:#607069}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric{border:1px solid #ccd6d1;padding:15px}.metric strong{display:block;font-size:24px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid #dce3df;padding:10px;text-align:left;vertical-align:top}th{background:#f1f5f2}code{font-size:11px}li{margin:8px 0}.boundary{border-left:4px solid #b88b38;background:#f7f3ea;padding:14px 18px}@media print{body{padding:0}.boundary{break-inside:avoid}}@media(max-width:700px){body{padding:24px}.metrics{grid-template-columns:1fr 1fr}table{display:block;overflow:auto}}</style></head><body><header><small>KANSAS FRONTIER MATRIX · CUSTOM MAP REPORT</small><h1>${escapeReportHtml(report.title)}</h1><p>${escapeReportHtml(report.scope.replaceAll("_", " "))} · active time ${escapeReportHtml(report.activeTime.label)} · generated ${escapeReportHtml(generatedAt)}</p></header>${report.summary ? `<section><h2>Report summary</h2><div class="metrics"><div class="metric"><small>MATCHED RECORDS</small><strong>${report.summary.matchedRecords}</strong></div><div class="metric"><small>INCLUDED RECORDS</small><strong>${report.summary.includedRecords}</strong></div><div class="metric"><small>LAYERS</small><strong>${report.summary.includedLayers}</strong></div><div class="metric"><small>EVIDENCE STATES</small><strong>${Object.keys(report.summary.evidenceStates).length}</strong></div></div></section>` : ""}${findings.length ? `<section><h2>Findings</h2><ol>${findings.map((finding) => `<li>${escapeReportHtml(finding)}</li>`).join("")}</ol></section>` : ""}<section><h2>Time A / Time B catalog availability</h2><div class="metrics"><div class="metric"><small>TIME A</small><strong>${escapeReportHtml(formatTimelineStep(report.temporalComparison.timeA))}</strong><span>${report.temporalComparison.timeARecordCount} records</span></div><div class="metric"><small>TIME B</small><strong>${escapeReportHtml(formatTimelineStep(report.temporalComparison.timeB))}</strong><span>${report.temporalComparison.timeBRecordCount} records</span></div><div class="metric"><small>CATALOG DELTA</small><strong>${report.temporalComparison.recordDelta > 0 ? "+" : ""}${report.temporalComparison.recordDelta}</strong><span>availability only</span></div><div class="metric"><small>CHANGED LAYERS</small><strong>${report.temporalComparison.changedLayerCount}</strong><span>entered / exited IDs</span></div></div><p class="boundary">This comparison reports time-compatible fixture records. It is not historical imagery, observed change, or evidence of causation.</p></section>${records.length ? `<section><h2>Included records</h2><table><thead><tr><th>Record</th><th>Layer / time</th><th>Evidence</th><th>Summary</th></tr></thead><tbody>${records.map((record) => `<tr><td><strong>${escapeReportHtml(record.title)}</strong><br><code>${escapeReportHtml(record.id)}</code></td><td>${escapeReportHtml(record.layer)}<br>${escapeReportHtml(record.year)}</td><td>${escapeReportHtml(record.evidenceState)}<br><code>${escapeReportHtml(record.evidenceReference)}</code></td><td>${escapeReportHtml(record.summary)}</td></tr>`).join("")}</tbody></table></section>` : ""}${limitations.length ? `<section><h2>Limitations</h2><ul>${limitations.map((limitation) => `<li>${escapeReportHtml(limitation)}</li>`).join("")}</ul></section>` : ""}<section><h2>Attribution</h2><ul>${report.attribution.map((item) => `<li><strong>${escapeReportHtml(item.layer)}:</strong> ${escapeReportHtml(item.source)}</li>`).join("")}</ul></section><p class="boundary">This report is a browser-generated public-safe demonstration artifact. It does not release, publish, admit, or authorize KFM data.</p></body></html>`;
+      content = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeReportHtml(report.title)}</title><style>body{font:15px/1.55 Inter,system-ui,sans-serif;color:#17201d;max-width:1100px;margin:0 auto;padding:48px}header{border-bottom:3px solid #b88b38;padding-bottom:22px;margin-bottom:28px}h1{font-size:36px;letter-spacing:-.04em;margin:0 0 8px}h2{margin-top:34px}small,.muted{color:#607069}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric{border:1px solid #ccd6d1;padding:15px}.metric strong{display:block;font-size:24px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid #dce3df;padding:10px;text-align:left;vertical-align:top}th{background:#f1f5f2}code{font-size:11px}li{margin:8px 0}.boundary{border-left:4px solid #b88b38;background:#f7f3ea;padding:14px 18px}@media print{body{padding:0}.boundary{break-inside:avoid}}@media(max-width:700px){body{padding:24px}.metrics{grid-template-columns:1fr 1fr}table{display:block;overflow:auto}}</style></head><body><header><small>KANSAS FRONTIER MATRIX · CUSTOM MAP REPORT</small><h1>${escapeReportHtml(report.title)}</h1><p>${escapeReportHtml(report.scope.replaceAll("_", " "))} · active time ${escapeReportHtml(report.activeTime.label)} · generated ${escapeReportHtml(generatedAt)}</p></header>${report.summary ? `<section><h2>Report summary</h2><div class="metrics"><div class="metric"><small>ACTIVE-TIME MATCHES</small><strong>${report.summary.matchedRecords}</strong></div><div class="metric"><small>INCLUDED RECORDS</small><strong>${report.summary.includedRecords}</strong></div><div class="metric"><small>RETAINED SELECTIONS</small><strong>${report.summary.retainedSelectionRecords}</strong></div><div class="metric"><small>LAYERS</small><strong>${report.summary.includedLayers}</strong></div></div></section>` : ""}${findings.length ? `<section><h2>Findings</h2><ol>${findings.map((finding) => `<li>${escapeReportHtml(finding)}</li>`).join("")}</ol></section>` : ""}<section><h2>Time A / Time B catalog availability</h2><div class="metrics"><div class="metric"><small>TIME A</small><strong>${escapeReportHtml(formatTimelineStep(report.temporalComparison.timeA))}</strong><span>${report.temporalComparison.timeARecordCount} records</span></div><div class="metric"><small>TIME B</small><strong>${escapeReportHtml(formatTimelineStep(report.temporalComparison.timeB))}</strong><span>${report.temporalComparison.timeBRecordCount} records</span></div><div class="metric"><small>CATALOG DELTA</small><strong>${report.temporalComparison.recordDelta > 0 ? "+" : ""}${report.temporalComparison.recordDelta}</strong><span>availability only</span></div><div class="metric"><small>CHANGED LAYERS</small><strong>${report.temporalComparison.changedLayerCount}</strong><span>entered / exited IDs</span></div></div><p class="boundary">This comparison reports time-compatible fixture records. It is not historical imagery, observed change, or evidence of causation.</p></section>${records.length ? `<section><h2>Included records</h2><table><thead><tr><th>Record</th><th>Layer / time</th><th>Evidence</th><th>Summary</th></tr></thead><tbody>${records.map((record) => `<tr><td><strong>${escapeReportHtml(record.title)}</strong><br><code>${escapeReportHtml(record.id)}</code></td><td>${escapeReportHtml(record.layer)}<br>${escapeReportHtml(record.year)}${record.activeTimeCompatibility === "RETAINED_OUTSIDE_ACTIVE_TIME" ? "<br><strong>RETAINED OUTSIDE ACTIVE TIME</strong>" : ""}</td><td>${escapeReportHtml(record.evidenceState)}<br><code>${escapeReportHtml(record.evidenceReference)}</code></td><td>${escapeReportHtml(record.summary)}</td></tr>`).join("")}</tbody></table></section>` : ""}${limitations.length ? `<section><h2>Limitations</h2><ul>${limitations.map((limitation) => `<li>${escapeReportHtml(limitation)}</li>`).join("")}</ul></section>` : ""}<section><h2>Attribution</h2><ul>${report.attribution.map((item) => `<li><strong>${escapeReportHtml(item.layer)}:</strong> ${escapeReportHtml(item.source)}</li>`).join("")}</ul></section><p class="boundary">This report is a browser-generated public-safe demonstration artifact. It does not release, publish, admit, or authorize KFM data.</p></body></html>`;
       mime = "text/html";
     }
     const url = URL.createObjectURL(new Blob([content], { type: mime }));
@@ -2810,7 +2821,7 @@ export default function Home() {
     link.click();
     link.remove();
     window.setTimeout(() => URL.revokeObjectURL(url), 0);
-    announce(`${format.toUpperCase()} report downloaded with ${reportRecords.length} matching records`);
+    announce(`${format.toUpperCase()} report downloaded with ${reportRecords.length} included records`);
   };
 
   const copyExportManifest = async () => {
@@ -3397,13 +3408,13 @@ export default function Home() {
                   </div>
 
                   <article className="report-preview" aria-live="polite">
-                    <header><div><span>LIVE REPORT PREVIEW</span><h4>{reportTitle.trim() || "Kansas map data report"}</h4><p>{reportScope.replaceAll("_", " ")} · {formatTimelineStep(year)} · {reportDetail}</p></div><strong>{reportRecords.length} RECORD{reportRecords.length === 1 ? "" : "S"}</strong></header>
+                    <header><div><span>LIVE REPORT PREVIEW</span><h4>{reportTitle.trim() || "Kansas map data report"}</h4><p>{reportScope.replaceAll("_", " ")} · {formatTimelineStep(year)} · {reportDetail}</p></div><strong>{reportRecords.length} INCLUDED RECORD{reportRecords.length === 1 ? "" : "S"}</strong></header>
                     {(reportQuery || reportEvidenceFilter !== "ALL") && <div className="report-active-filters"><span>ACTIVE FILTERS</span>{reportQuery && <b>Search: {reportQuery}</b>}{reportEvidenceFilter !== "ALL" && <b>{reportEvidenceFilter.replaceAll("_", " ")}</b>}<button type="button" onClick={() => { setReportQuery(""); setReportEvidenceFilter("ALL"); }}>Clear</button></div>}
-                    {reportSections.summary && <div className="report-metrics" aria-label="Report summary metrics"><article><span>Records</span><strong>{reportRecords.length}</strong></article><article><span>Layers</span><strong>{reportLayerSummary.length}</strong></article><article><span>States</span><strong>{Object.keys(reportEvidenceCounts).length}</strong></article><article><span>Selection</span><strong>{selected ? "1" : "0"}</strong></article></div>}
+                    {reportSections.summary && <div className="report-metrics" aria-label="Report summary metrics"><article><span>Active-time matches</span><strong>{reportActiveTimeRecordCount}</strong></article><article><span>Layers</span><strong>{reportLayerSummary.length}</strong></article><article><span>States</span><strong>{Object.keys(reportEvidenceCounts).length}</strong></article><article><span>Retained selections</span><strong>{reportRetainedSelectionCount}</strong></article></div>}
                     {reportSections.findings && <section className="report-preview-section"><span>FINDINGS</span><ol>{reportFindings.map((finding) => <li key={finding}>{finding}</li>)}</ol></section>}
                     {reportSections.findings && <section className="report-preview-section report-temporal-comparison"><span>TIME A / TIME B</span><div><article><strong>{formatTimelineStep(compareTimeA)}</strong><small>{reportTemporalComparison.timeARecordCount} compatible records</small></article><i aria-hidden="true">→</i><article><strong>{formatTimelineStep(compareTimeB)}</strong><small>{reportTemporalComparison.timeBRecordCount} compatible records</small></article><b>{reportTemporalComparison.recordDelta > 0 ? "+" : ""}{reportTemporalComparison.recordDelta} catalog delta</b></div><p>{reportTemporalComparison.changedLayerCount} included layer{reportTemporalComparison.changedLayerCount === 1 ? "" : "s"} have entered or exited fixture IDs. This is catalog availability, not an observed-change claim.</p></section>}
                     {reportSections.records && <section className="report-preview-section"><span>RECORDS</span><div className="report-record-table" role="table" aria-label="Included report records">
-                      {reportRecords.slice(0, reportDetail === "EXECUTIVE" ? 8 : reportDetail === "STANDARD" ? 30 : reportRecords.length).map(({ layer, properties }) => <article key={`${layer.id}:${properties.fid}`} role="row"><div><strong>{properties.title}</strong><small>{layer.title} · {properties.year}</small></div><span data-state={properties.evidenceState}>{properties.evidenceState}</span><p>{properties.summary}</p></article>)}
+                      {reportRecords.slice(0, reportDetail === "EXECUTIVE" ? 8 : reportDetail === "STANDARD" ? 30 : reportRecords.length).map(({ layer, properties, outsideActiveTime }) => <article key={`${layer.id}:${properties.fid}`} role="row"><div><strong>{properties.title}</strong><small>{layer.title} · {properties.year}{outsideActiveTime ? ` · RETAINED OUTSIDE ${formatTimelineStep(year)}` : ""}</small></div><span data-state={properties.evidenceState}>{properties.evidenceState}</span><p>{properties.summary}</p></article>)}
                       {reportRecords.length === 0 && <div className="report-empty"><strong>No records match</strong><p>Move or widen the map, change time, choose another scope, or include more layers.</p></div>}
                     </div></section>}
                     {reportSections.evidence && reportRecords.length > 0 && <section className="report-preview-section"><span>EVIDENCE DISTRIBUTION</span><div className="report-evidence-grid">{Object.entries(reportEvidenceCounts).sort((left, right) => right[1] - left[1]).map(([state, count]) => <article key={state}><strong>{count}</strong><span>{state}</span></article>)}</div></section>}
