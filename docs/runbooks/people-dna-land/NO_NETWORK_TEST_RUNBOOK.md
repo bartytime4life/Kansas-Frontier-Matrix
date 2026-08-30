@@ -2,9 +2,9 @@
 doc_id: kfm://doc/runbook-people-dna-land-no-network-test
 title: People/DNA/Land No-Network Test Runbook
 type: runbook
-version: v1.0.1
-prior_version: v1.0.0
-prior_state: repository-grounded procedure whose consent-overlay inventory lagged the tracked suite at 16 tests
+version: v1.0.3
+prior_version: v1.0.2
+prior_state: repository-grounded procedure whose exact-revision snapshot mixed current and old-base evidence blobs
 status: DRAFT_REPOSITORY_GROUNDED; TWO_BOUNDED_SYNTHETIC_PYTHON_PROFILES_EXECUTABLE; RUNNER_WIDE_AND_NON_PYTHON_EGRESS_DENIAL_HELD; BROADER_PEOPLE_DNA_LAND_AUTHORITY_HELD
 owners:
   - "@bartytime4life — verified GitHub review route"
@@ -29,18 +29,18 @@ reason_codes:
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: bacb77cfbc04014a2c05da541f9cba8025629068
-  target_prior_blob: 5d406d6a2d04c3caafa349eecf97e72b9d37182d
-  lane_readme_prior_blob: af93ae87ce212f6d53cd37e0ef69d9e09b7b98e3
+  base_commit: 31f5ade589b9f20d87a59ce83be228e577f51cca
+  target_prior_blob: 7e364eed087db970057fc8ca86d6afc253650ba2
+  lane_readme_prior_blob: 6e1c464aa1d51d55b4683702471ec2b18e515d54
   domain_workflow_blob: bcf64c3e3b6653b9543489fc5a6031805ae3ef48
-  consent_overlay_test_blob: 4f529582d961ed2b87df20a7f158e03d52eccbc8
+  consent_overlay_test_blob: c071e54d53e06871b537b8adc20e522d05f4ef31
   revocation_assessment_test_blob: bceeef36e5c4e456e6f8a3fc192cd1c349d34fb5
-  consent_overlay_validator_blob: b2ff0e5037de0f1c22486743ab5e20926c68474d
+  consent_overlay_validator_blob: 22ae36a38ff782229f024d9a7a370f21b4a15aef
   revocation_assessment_validator_blob: 76c7805428f253a7a711c7bc68a27e9cbcce40e7
   consent_overlay_fixture_tree: 67720650ddab72b675818278cdf998418eb287bf
   revocation_assessment_fixture_tree: ee9e1cfc9873779bb9d56a8c8d17eaf5ce4a0fb2
   revocation_assessment_schema_blob: e976211d1bf536b2aae7901842474dbcb1c3a484
-  test_lane_readme_blob: e81b47ce2fd0bd9dd3f274f317d739ef67b0554d
+  test_lane_readme_blob: 8054ad137c0d74fb27f3f44920acec153344c00d
   policy_readme_blob: 7260394c77d79629895da16d8d680e8d80c56b32
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
