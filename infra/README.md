@@ -2,12 +2,12 @@
 doc_id: kfm://doc/infra-readme
 title: infra/ — Deployment, Host, Network, and Exposure Posture Root
 type: README; directory-readme; canonical-infrastructure-root; deployment-boundary-index
-version: v1.2.0
-status: draft; repository-grounded; canonical-root; documentation-heavy; hardening-checklist-confirmed; placeholder-docker-compose-payloads-confirmed; bounded-compose-static-render-build-validation-confirmed; infra-wide-validation-unestablished; deployability-unestablished; deny-by-default; non-release; non-publication
+version: v1.3.0
+status: draft; repository-grounded; canonical-root; documentation-heavy; hardening-checklist-confirmed; docker-review-image-inputs-confirmed; bounded-docker-static-build-scan-validation-confirmed; compose-placeholder-confirmed; bounded-compose-static-render-build-validation-confirmed; infra-wide-validation-unestablished; deployability-unestablished; deny-by-default; non-release; non-publication
 owner: NEEDS VERIFICATION — CODEOWNERS routes /infra/ to @bartytime4life; accountable infrastructure, security, and operations stewardship, required-review enforcement, and independent approval controls remain unverified
 created: 2026-07-03
-updated: 2026-08-08
-supersedes: v1.1.2 documentation at the same path; no deployment, host, network, exposure, application, runtime, policy, lifecycle, release, or publication behavior is superseded
+updated: 2026-08-29
+supersedes: v1.2.0 documentation at the same path; no deployment, host, network, exposure, application, runtime, policy, lifecycle, release, or publication behavior is superseded
 prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
 policy_label: repository-facing; infra; deployment; host; network; exposure; deny-by-default; least-privilege; no-public-raw-path; no-public-model-path; auditability; rollback-aware
 current_path: infra/README.md
@@ -17,8 +17,9 @@ truth_posture: >
   CONFIRMED same-path target; accepted Directory Rules v2 through ADR-0029; infra/ as the canonical
   deployment, host, network, and exposure responsibility root; nine standard infrastructure child-lane
   READMEs; infra/flora/README.md; the hardening checklist; CODEOWNERS routing; current Makefile state;
-  bounded no-network Compose static tests; the read-only infra-compose-smoke workflow; and successful
-  hosted Compose render/build evidence without starting services / PROPOSED the infrastructure maturity
+  the two payload-free Docker review images and their dependency-integrity inputs; bounded no-network
+  Docker and Compose static tests; the security and infra-compose-smoke workflows; successful exact-main
+  image build/scan and Compose render/build evidence without starting services / PROPOSED the infrastructure maturity
   vocabulary, aggregate infra validation entrypoint, lane-specific executable checks, topology convergence,
   and future release-integrated validation / CONFLICTED infra/flora/ as a domain-named direct child not
   established as a canonical pattern by accepted Directory Rules / UNKNOWN live environments, hosts,
@@ -29,23 +30,29 @@ truth_posture: >
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 49db0ceeaf05e762035f2835ff2a7a2f4cede201
-  target_prior_blob: b8189deda0de476a967fc9ff832ae97011a3252d
+  base_commit: 4e714b639861e340b0c35a5360f9ffaecdf1f53c
+  target_prior_blob: 618f2578c4a0e00caefee7371bf83d2ee0102161
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_adoption: docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md; accepted
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  makefile_blob: 4abc7f941ce25d7d14703e87e387cef6e96d1592
+  makefile_blob: 304145dd0f674dda759f9097a747c4c7f0b9269d
   hardening_checklist_blob: e1dffb88106ca22f82aff6fe8c67df0e34d2709f
-  compose_blob: 8e17439562e42a992bdd93f821c8b5b0ce69896b
+  compose_blob: 8a45891700a501f6e18a921ce8d260956441e4b3
   compose_readme_blob: 20e3993016bf7f99bdf45c4fc37508005637b91a
-  governed_api_dockerfile_blob: ea10e9a12737e4e9369b80b6ea3e9b84f2241abb
-  explorer_web_dockerfile_blob: 77e7a862d1cb01c8c818188e8b3101610fdcf415
-  infra_static_test_blob: 71fbf676f9cade9f4c97a7cb02634892a71e5953
-  infra_test_readme_blob: 5dbf6ac7125ae0a043bc511e3526b0ee94662e27
+  docker_readme_blob: 7bf079f404b8c7c99119fc566befacef28667d03
+  governed_api_dockerfile_blob: 1c6db4cbff750c660f9b0989d8018e3d373fd083
+  explorer_web_dockerfile_blob: b1d471c1ee55fed5e3e8ffc7bc42e8f66ef69874
+  explorer_web_manifest_blob: 702202d3bc21891ebdcf0e941b81c58e8031f9a5
+  explorer_web_lock_blob: 19c84d76d4f7a2987328ab962adea906da0605e7
+  governed_api_requirements_blob: 26928a7b48576a69d02fa1d6fc2e5b4d588b9444
+  compose_static_test_blob: 7627d55ec83ec15e848f637522b907c0f55f5e9d
+  docker_static_test_blob: e1349b3d2f246aa9d80e947e05f7bb934830eb7e
+  infra_test_readme_blob: 7ecd30dacc2c8191897950dc3946916a50b28e3c
   compose_workflow_blob: a9b51526bbcf9bf80295cc8fd3a9188bcca97da2
-  pinned_workflow_commit: 204b66ccbc2f27e4abc42deca442865acc0fb929
-  confirmed_workflow_run: 30725908187; conclusion success
-  inspection_method: current target and direct-child inventory; exact Compose, Dockerfile, test, workflow, Makefile, CODEOWNERS, Directory Rules, and ADR reads; hosted workflow/job inspection; no deployed environment, secret store, host, container startup, cluster, network, Terraform state, or runtime inspected
+  security_workflow_blob: 295d546085c6ac725efe59960a043f79a843ece5
+  confirmed_compose_run: 33277502881; exact main; conclusion success
+  confirmed_security_run: 33277502890; exact main; repository scan, both container scans, scorecard, and aggregate result succeeded; dependency review skipped on push
+  inspection_method: current target and direct-child inventory; exact Compose, Dockerfile, dependency-integrity, test, workflow, Makefile, CODEOWNERS, Directory Rules, and ADR reads; exact-main hosted workflow/job inspection; no deployed environment, secret store, host, container startup, cluster, network, Terraform state, or runtime inspected
 related:
   - ../docs/doctrine/directory-rules.md
   - ../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
@@ -85,8 +92,8 @@ related:
   - ../.github/workflows/codeql.yml
   - ../Makefile
 notes:
-  - "v1.2.0 refreshes the root README against current main and records the bounded Compose static, render, and image-build validation that landed after v1.1.2."
-  - "The Compose workflow does not start services; its successful run is path, render, and placeholder-image-build evidence only."
+  - "v1.3.0 reconciles the root Docker status with the payload-free review-image inputs, static tests, security workflow, and exact-main image build/scan evidence."
+  - "The Compose and security workflows do not start services; their successful runs are bounded repository, render, build, and scan evidence only."
   - "Infra-wide executable validation, environment verification, release integration, deployment, and publication remain unestablished."
   - "Static badges summarize inspected repository state only; they are not deployment, review, security, release, or publication proof."
 [/KFM_META_BLOCK_V2] -->
@@ -100,12 +107,13 @@ notes:
 [![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
 [![Authority: deployment boundary](https://img.shields.io/badge/authority-deployment%20boundary-1f6feb?style=flat-square)](#authority-level)
 [![Posture: deny by default](https://img.shields.io/badge/posture-deny%20by%20default-b42318?style=flat-square)](#trust-membrane-and-exposure-model)
+[![Docker build/scan: confirmed](https://img.shields.io/badge/docker%20build%2Fscan-confirmed-2da44e?style=flat-square)](#validation)
 [![Compose smoke: confirmed](https://img.shields.io/badge/compose%20smoke-confirmed-2da44e?style=flat-square)](#validation)
 [![Infra-wide validation: not established](https://img.shields.io/badge/infra--wide%20validation-not%20established-b42318?style=flat-square)](#validation)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-level)
 
 > [!IMPORTANT]
-> **Safe current conclusion:** `infra/` is the confirmed deployment and exposure responsibility root. Repository evidence now confirms a bounded Compose validation slice: deterministic static tests, Compose rendering, and placeholder image builds in a read-only hosted workflow that does not start services. The same evidence does **not** establish application startup, health, governed API behavior, browser behavior, a running environment, a selected production topology, an infra-wide validation gate, public exposure approval, release, deployment, or publication.
+> **Safe current conclusion:** `infra/` is the confirmed deployment and exposure responsibility root. Repository evidence confirms two bounded validation slices: Docker review-image static checks plus exact-main builds/scans, and Compose static checks plus exact-main rendering/builds. Neither workflow starts services. The evidence does **not** establish application startup, health, governed API behavior, browser behavior, a running environment, a selected production topology, an infra-wide validation gate, public exposure approval, release, deployment, or publication.
 
 > [!CAUTION]
 > Infrastructure prose, templates, tests, workflows, and checklists have bounded meanings. A passing render/build smoke test is not a firewall rule, proxy route denial, service unit, cluster policy, Terraform apply, secret scan, runtime observation, release record, deployment approval, or publication decision.
@@ -201,24 +209,25 @@ Accepted Directory Rules v2, adopted through [`ADR-0029`](../docs/adr/ADR-0029-a
 
 ### Repository-grounded status matrix
 
-| Surface | Current evidence at `main@49db0ceeaf05…` | Safe conclusion |
+| Surface | Current evidence at `main@4e714b639861…` | Safe conclusion |
 |---|---|---|
-| `infra/README.md` | **CONFIRMED v1.1.2**, blob `b8189de…` | Same-path v1.2.0 evidence refresh; no runtime or authority expansion. |
+| `infra/README.md` | **CONFIRMED v1.2.0**, blob `618f257…` | Same-path v1.3.0 evidence refresh; no runtime or authority expansion. |
 | Directory Rules | **CONFIRMED accepted** through ADR-0029; canonical source blob `fd49a0b…` | `infra/` root responsibility is established; child-lane maturity remains separate. |
 | Standard child lanes | **CONFIRMED** READMEs under `docker`, `compose`, `reverse_proxy`, `vpn`, `firewall`, `systemd`, `kubernetes`, `terraform`, and `hardening` | Guidance exists; implementation and environment adoption vary by lane. |
 | Hardening checklist | **CONFIRMED** [`infra/hardening/CHECKLIST.md`](./hardening/CHECKLIST.md) | Repeatable review questions exist; no completed review or executable aggregate validator is implied. |
-| Docker lane | **CONFIRMED** two tiny greenfield Dockerfile placeholders | Both build in the bounded Compose smoke; application commands, health, contents, scan posture, and deployability remain unestablished. |
-| Compose lane | **CONFIRMED** placeholder `docker-compose.yml` with `infra/`-bounded build contexts and loopback-only published ports | Static constraints, Compose rendering, and placeholder image builds are confirmed; service startup and runtime behavior are not. |
+| Docker lane | **CONFIRMED** two payload-free review Dockerfiles plus npm and Python dependency-integrity inputs | Static assertions and exact-main image build/scan jobs pass. No `.dockerignore`, application payload, command, entrypoint, exposed port, health check, runtime behavior, registry custody, release, or deployment is established. |
+| Compose lane | **CONFIRMED** placeholder `docker-compose.yml` with `infra/`-bounded build contexts and loopback-only published ports | Static constraints, Compose rendering, and review-image builds are confirmed; service startup and runtime behavior are not. |
 | Compose static tests | **CONFIRMED** [`tests/infra/test_compose_static.py`](../tests/infra/test_compose_static.py) | Deterministically checks context/Dockerfile resolution, loopback ports, and selected forbidden mounts/escape settings. |
-| Compose hosted workflow | **CONFIRMED** [`.github/workflows/infra-compose-smoke.yml`](../.github/workflows/infra-compose-smoke.yml), read-only, no service start | Pinned-workflow run `30725908187` succeeded for both static and render/build jobs; scope remains bounded to the checked-in placeholder. |
+| Compose hosted workflow | **CONFIRMED** [`.github/workflows/infra-compose-smoke.yml`](../.github/workflows/infra-compose-smoke.yml), read-only, no service start | Exact-main run [`33277502881`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33277502881) succeeded; scope remains bounded to the checked-in Compose placeholder and review-image builds. |
+| Security workflow | **CONFIRMED** [`.github/workflows/security.yml`](../.github/workflows/security.yml) with pinned actions and Trivy `0.73.0` | Exact-main run [`33277502890`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33277502890) passed the repository scan, both review-image build/scan jobs, Scorecard, and aggregate result; dependency review correctly skipped on a push. |
 | Firewall lane | **CONFIRMED** README plus documentation-only `deny_by_default.md` | No executable firewall-rule payload or applied enforcement is established. |
 | Reverse-proxy lane | **CONFIRMED** README plus one-line greenfield Caddy placeholder | Product adoption, config validation, route-denial proof, reload, and runtime remain unestablished. |
 | VPN, systemd, Kubernetes, Terraform | READMEs document responsibilities, exclusions, and future checks | Selected products, implementation-bearing payloads, applied state, and deployed behavior remain **NEEDS VERIFICATION**. |
 | `infra/flora/` | **CONFIRMED** README path | Placement remains **CONFLICTED / NEEDS VERIFICATION**; do not treat it as canonical precedent. |
 | `Makefile` | **CONFIRMED** no `infra-*` validation target | A bounded hosted Compose workflow exists, but no aggregate repository-native local infra entrypoint exists. |
 | Adjacent boundary tests | **CONFIRMED** app/control-plane static suites and policy-boundary workflow | Useful adjacent evidence; not firewall, proxy, cluster, state, or environment validation. |
-| CodeQL and dependency scanning | **CONFIRMED repository workflows** | Source/dependency findings have bounded scopes and are not infrastructure or deployment approval. |
-| Active secret scanning | Not established in the bounded current read | Coverage and current enforcement remain **NEEDS VERIFICATION**. |
+| CodeQL, dependency, and security scanning | **CONFIRMED repository workflows** | Source, dependency, repository, and review-image findings have bounded scopes and are not infrastructure or deployment approval. |
+| Secret scanning | **CONFIRMED** Trivy repository and review-image secret scanning in `security.yml`; repository scan excludes `.git`, `data/raw`, `data/work`, and `data/quarantine` | Workflow coverage is bounded to configured tracked paths and built images. GitHub platform secret-scanning enablement, ignored/generated/external material, and environment coverage remain **NEEDS VERIFICATION**. |
 | Deployment and exposure docs | **CONFIRMED** draft topology and exposure guidance | Doctrine/design inputs exist; actual environments and routes remain unverified. |
 | Running environments | No host, cluster, proxy, firewall, VPN, Terraform backend, route inventory, logs, or runtime inspected | Operational deployment state is **UNKNOWN**. |
 | CODEOWNERS | **CONFIRMED** `/infra/ @bartytime4life` | Review routing exists; stewardship, required approval, and separation of duties remain **NEEDS VERIFICATION**. |
@@ -365,19 +374,22 @@ If secret, credential, state, or sensitive operational material is committed her
 | Surface | Current state | What it proves—and does not prove |
 |---|---|---|
 | [`infra/hardening/CHECKLIST.md`](./hardening/CHECKLIST.md) | **CONFIRMED** review checklist | Provides review questions; does not execute checks or show a completed review. |
+| [`tests/infra/test_docker_security_overrides.py`](../tests/infra/test_docker_security_overrides.py) | **CONFIRMED** deterministic no-network test | Checks exact Explorer overlay versions and integrity metadata, the checksum-bound npm archive, replacement targets, dependency versions, and extraction API assertion. It does not build or run an image. |
 | [`tests/infra/test_compose_static.py`](../tests/infra/test_compose_static.py) | **CONFIRMED** deterministic no-network test | Verifies the two relative contexts and Dockerfiles resolve, ports are loopback-bound, and selected sensitive mounts/privileged escapes are absent. It is not runtime or environment proof. |
 | [`.github/workflows/infra-compose-smoke.yml`](../.github/workflows/infra-compose-smoke.yml) | **CONFIRMED** read-only workflow with immutable action pins | Runs static tests, `docker compose ... config --quiet`, and `docker compose ... build`; never starts services. |
-| Hosted run `30725908187` | **CONFIRMED success** at pinned workflow commit `204b66c…` | Both static and render/build jobs passed. The result is historical evidence for those bytes, not continuous environment proof. |
+| Exact-main Compose run [`33277502881`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33277502881) | **CONFIRMED success** at `4e714b6…` | Static and render/build jobs passed. The result is point-in-time evidence for those bytes, not service-start or continuous environment proof. |
+| [`.github/workflows/security.yml`](../.github/workflows/security.yml) | **CONFIRMED** pinned security workflow | Builds both review images and scans OS/library vulnerabilities and secrets with Trivy `0.73.0`; separately scans the repository for vulnerabilities, misconfiguration, and secrets. It does not start containers or establish runtime controls. |
+| Exact-main security run [`33277502890`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33277502890) | **CONFIRMED success** at `4e714b6…` | Repository scan, both container build/scan jobs, Scorecard, and aggregate result succeeded; dependency review skipped as designed on a push. The result is bounded to configured inputs, scanner database, thresholds, and ignore policy. |
 | `make boundary-guards-ci` | **CONFIRMED** command-bearing adjacent suite | Exercises selected control-plane/app/connector/pipeline boundaries; does not target infrastructure payloads or hosts. |
 | App/browser boundary tests | **CONFIRMED** source/static constraints | Prove tested source/import/path-literal boundaries only; not browser network or host enforcement. |
-| CodeQL and dependency scanning | **CONFIRMED** repository workflows | Do not validate images, clusters, Terraform state, firewall rules, running services, or deployment readiness. |
+| CodeQL and dependency scanning | **CONFIRMED** companion repository workflows | Do not validate clusters, Terraform state, firewall rules, running services, or deployment readiness. |
 | Infra-specific Make target | **NOT ESTABLISHED** | No aggregate local `make infra-*` entrypoint was found. |
 | Infra-wide workflow | **NOT ESTABLISHED** | Compose has bounded coverage; proxy, firewall, VPN, systemd, Kubernetes, Terraform, and applied environments do not share one verified gate. |
-| Active secret scanning | **NOT ESTABLISHED in bounded inspection** | Current coverage and required-check coupling remain open. |
+| GitHub platform secret scanning and environment coverage | **NOT ESTABLISHED in bounded inspection** | The Trivy workflow has confirmed bounded secret checks; platform feature enablement, ignored/generated/external material, and deployed environments remain open. |
 | Environment smoke and negative route tests | **UNKNOWN** | No host, cluster, proxy, firewall, VPN, applied environment, or live route was inspected. |
 
 > [!IMPORTANT]
-> A green general-purpose check must be interpreted according to its declared scope. The Compose smoke proves that the checked-in placeholder renders and its two placeholder images build on the runner. It does not prove application code, commands, health checks, governed API behavior, Explorer behavior, service startup, host controls, release, deployment, or publication.
+> A green general-purpose check must be interpreted according to its declared scope. The Compose smoke proves that the checked-in placeholder renders and its two review images build on the runner. The security workflow adds configured repository and review-image scan evidence. Neither proves application code, commands, health checks, governed API behavior, Explorer behavior, service startup, runtime controls, host controls, release, deployment, or publication.
 
 ### Current bounded Compose commands
 
@@ -518,11 +530,11 @@ Routine, reversible templates inside an accepted lane may use normal review when
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-08-08 |
-| Review type | Same-path repository-grounded evidence refresh after bounded Compose static/render/build validation and immutable action pinning |
-| Repository snapshot | `main@49db0ceeaf05e762035f2835ff2a7a2f4cede201` |
-| Current maturity | Documentation-heavy; hardening checklist and placeholder payloads confirmed; bounded Compose static/render/build validation confirmed; service startup, infra-wide validation, deployability, and environment state unestablished |
-| Next review trigger | First non-placeholder payload, service-start smoke, aggregate infra validator, public route, secret-store integration, applied environment, production change, or `infra/flora/` placement decision |
+| Last reviewed | 2026-08-29 |
+| Review type | Same-path repository-grounded Docker evidence reconciliation after focused static checks and exact-main review-image build/scan validation |
+| Repository snapshot | `main@4e714b639861e340b0c35a5360f9ffaecdf1f53c` |
+| Current maturity | Documentation-heavy; hardening checklist, Docker review-image inputs, and Compose placeholder confirmed; bounded Docker static/build/scan and Compose static/render/build validation confirmed; service startup, infra-wide validation, deployability, and environment state unestablished |
+| Next review trigger | Application payload, `.dockerignore`, command/entrypoint/health check, service-start smoke, aggregate infra validator, public route, secret-store integration, applied environment, production change, or `infra/flora/` placement decision |
 
 [Back to top](#top)
 
@@ -553,7 +565,7 @@ infra/
 
 | Lane | Intended responsibility | Evidence-bounded maturity |
 |---|---|---|
-| [`docker/`](./docker/) | Image construction and container boundary | README plus two greenfield Dockerfile placeholders; bounded builds pass; commands, health, content review, runtime, and deployment remain unestablished |
+| [`docker/`](./docker/) | Image construction and container boundary | README, two payload-free review Dockerfiles, and dependency-integrity inputs; bounded static checks and exact-main builds/scans pass; `.dockerignore`, application payloads, commands, health, runtime, registry, release, and deployment remain unestablished |
 | [`compose/`](./compose/) | Local/small-host orchestration | README plus placeholder Compose file; static boundary, render, and build checks pass; service start and runtime remain unestablished |
 | [`reverse_proxy/`](./reverse_proxy/) | Edge routing, TLS/header/CORS posture, route denials | README plus one-line greenfield Caddy placeholder; adoption, parse/reload, denials, and runtime unestablished |
 | [`vpn/`](./vpn/) | Private-access governance | README confirmed; live config intentionally excluded; implementation unestablished |
@@ -696,7 +708,7 @@ Current safe classification:
 
 - standard lane READMEs: `DOCUMENTED`;
 - `hardening/CHECKLIST.md`: review aid under `DOCUMENTED`, not `BOUNDARY_TESTED`;
-- Docker placeholders: concrete files with bounded successful builds, but ownership, intended environment, commands, health, contents, and operational fitness remain incomplete;
+- Docker review images: `PARSES_OR_BUILDS` for the exact checked-in inputs, with focused static checks and configured exact-main scans; not runnable-service, runtime, release, or deployment evidence;
 - Compose placeholder: `PARSES_OR_BUILDS` for the exact checked-in placeholder plus selected static boundary assertions; not service-start or full network `BOUNDARY_TESTED`;
 - applied environments and release integration: `UNKNOWN`;
 - `infra/flora/`: `DOCUMENTED` plus `CONFLICTED`.
@@ -735,7 +747,7 @@ The packet may live in the PR body, a reviewed runbook, or a dedicated lane docu
 
 ### Documentation rollback
 
-Before merge, close or abandon the review branch/PR. After merge, revert the scoped documentation commit without rewriting shared history. For byte-level recovery of the pre-v1.2 README, restore blob `b8189deda0de476a967fc9ff832ae97011a3252d`.
+Before merge, close or abandon the review branch/PR. After merge, revert the scoped documentation commit without rewriting shared history. For byte-level recovery of the pre-v1.3 README, restore blob `618f2578c4a0e00caefee7371bf83d2ee0102161`.
 
 ### Operational correction
 
@@ -764,6 +776,7 @@ Infrastructure rollback must not erase audit history or silently restore an unsa
 - [x] Same path, H1, `doc_id`, and creation date preserved.
 - [x] Accepted Directory Rules v2 and ADR-0029 adoption state reconciled.
 - [x] Current child-lane and `infra/flora/` placement posture retained.
+- [x] Current Docker review-image inputs, static tests, security workflow, and exact-main build/scan evidence reconciled without claiming runnable services.
 - [x] Bounded Compose static tests, workflow, immutable pins, and successful hosted run incorporated.
 - [x] Compose evidence kept separate from service startup, environment, deployment, release, and publication proof.
 - [x] No local aggregate infra target or infra-wide gate invented.
@@ -797,7 +810,7 @@ A lane is not operationally complete until:
 | ID | Verification question | Status |
 |---|---|---|
 | INF-OV-001 | Is operational, generated, ignored, or externally managed infrastructure omitted from the tracked repository inventory? | Tracked direct topology **CONFIRMED**; external/operational state **UNKNOWN** |
-| INF-OV-002 | Which placeholders are adopted, owned, and implementation-bearing rather than documentation or greenfield scaffolding? | Files and bounded Compose build **CONFIRMED**; ownership and operational maturity **NEEDS VERIFICATION** |
+| INF-OV-002 | Which placeholders are adopted, owned, and implementation-bearing rather than documentation or greenfield scaffolding? | Docker review-image inputs plus bounded static/build/scan and Compose static/render/build evidence **CONFIRMED**; application payloads, consumers, ownership, and operational maturity **NEEDS VERIFICATION** |
 | INF-OV-003 | What deployment classes exist: local-only, homelab, VPN-only, staging, public, production, or mixed? | **UNKNOWN** |
 | INF-OV-004 | Which orchestration paths are adopted: direct host, systemd, Compose, Kubernetes, Terraform, or another platform? | **NEEDS VERIFICATION** |
 | INF-OV-005 | What public edge/reverse-proxy stack and route inventory are active? | **UNKNOWN** |
@@ -823,7 +836,7 @@ A lane is not operationally complete until:
 <details>
 <summary><strong>No-loss and evidence ledger</strong></summary>
 
-| Baseline v1.1.2 element | Disposition in v1.2.0 |
+| Baseline v1.2.0 element | Disposition in v1.3.0 |
 |---|---|
 | Same path, `doc_id`, title, creation date | **KEEP** |
 | Deny-by-default, least privilege, auditability, rollback | **KEEP / CLARIFY** |
@@ -834,18 +847,18 @@ A lane is not operationally complete until:
 | `infra/flora/` placement conflict | **KEEP / SURFACE CONFLICT** |
 | Mermaid trust-membrane diagram | **KEEP / CLARIFY** |
 | Inputs and outputs | **KEEP** |
-| Validation matrix | **REPAIR** with current Compose tests, workflow, and passing run |
+| Validation matrix | **REPAIR** with current Docker static tests, security workflow, exact-main build/scan run, and refreshed Compose run |
 | Review matrix | **KEEP / CLARIFY** with verified CODEOWNERS route and unverified stewardship |
 | Open verification register | **KEEP / UPDATE** with aggregate-validation and service-start residue |
 | Last-reviewed block | **UPDATE** |
 | Maturity vocabulary | **KEEP / REPAIR** so bounded Compose parsing/build evidence is visible |
 | Infrastructure change packet | **KEEP** |
-| Correction and rollback | **KEEP / UPDATE** with current prior blob |
+| Correction and rollback | **KEEP / UPDATE** with the v1.2.0 prior blob |
 | Claim that bounded Compose CI equals deployment proof | **DENY** |
 | Accepted Directory Rules adoption state | **REPAIR** through ADR-0029 evidence |
-| v1.1.2 changelog gap | **REPAIR** |
+| Docker “tiny greenfield placeholder” status | **REPAIR** to payload-free review images with dependency-integrity and bounded scan evidence |
 
-**Current evidence used:** main `49db0ce…`; target blob `b8189de…`; Directory Rules blob `fd49a0b…`; accepted ADR-0029; CODEOWNERS `dd2a84a…`; Makefile `4abc7f9…`; Compose `8e17439…`; Compose README `20e3993…`; static test `71fbf67…`; test README `5dbf6ac…`; workflow `a9b5152…`; Dockerfiles `ea10e9a…` and `77e7a86…`; successful pinned-workflow run `30725908187`.
+**Current evidence used:** main `4e714b6…`; target blob `618f257…`; Directory Rules blob `fd49a0b…`; accepted ADR-0029; CODEOWNERS `dd2a84a…`; Makefile `304145d…`; Compose `8a45891…`; Compose README `20e3993…`; Docker README `7bf079f…`; Dockerfiles `1c6db4c…` and `b1d471c…`; npm manifest `702202d…` and lock `19c84d7…`; Python requirements lock `26928a7…`; Compose static test `7627d55…`; Docker static test `e1349b3…`; test README `7ecd30d…`; Compose workflow `a9b5152…`; security workflow `295d546…`; exact-main Compose run `33277502881`; exact-main security run `33277502890`.
 
 </details>
 
@@ -858,10 +871,11 @@ A lane is not operationally complete until:
 | v1.1.1 | 2026-07-29 | Corrected the tracked payload inventory, bounded Compose builds to `infra/`, and repaired Dockerfile references without establishing deployability. | Restore prior blob `c791f22f4163603bab2aa2579bff8786e1d21c37`. |
 | v1.1.2 | 2026-07-29 | Reconciled the dependency-scan description while preserving its non-infrastructure-validation boundary. | Restore the prior same-path blob recorded in Git history. |
 | v1.2.0 | 2026-08-08 | Refreshed against current main; recorded accepted Directory Rules through ADR-0029; added bounded Compose static/render/build workflow evidence; preserved infra-wide, runtime, deployment, release, and publication holds. | Before merge, close the draft PR; after merge, revert the scoped commit or restore blob `b8189deda0de476a967fc9ff832ae97011a3252d`. |
+| v1.3.0 | 2026-08-29 | Reconciled the root Docker status with payload-free review-image inputs, focused static tests, the pinned security workflow, and exact-main image build/scan evidence; refreshed the bounded Compose run while preserving runtime, release, deployment, and publication holds. | Before merge, close the draft PR; after merge, revert the scoped commit or restore blob `618f2578c4a0e00caefee7371bf83d2ee0102161`. |
 
 ## Status summary
 
-`infra/` is KFM's canonical deployment, host, network, and exposure responsibility root. Its repository surface remains documentation-heavy, but it now has one bounded executable proof lane: deterministic Compose static checks and hosted Compose render/build validation for the checked-in placeholders, without service startup.
+`infra/` is KFM's canonical deployment, host, network, and exposure responsibility root. Its repository surface remains documentation-heavy, with bounded executable evidence across two related review lanes: deterministic Docker and Compose static checks, exact-main review-image builds/scans, and exact-main Compose render/build validation, all without service startup.
 
 The evidence does not establish application/runtime behavior, public routes, host or cluster controls, secret-store integration, applied state, deployment, release integration, or publication. The safe posture is:
 
@@ -872,7 +886,9 @@ documentation-heavy
 deny-by-default
 least-privilege
 hardening checklist confirmed
-placeholder Docker/Compose payloads confirmed
+payload-free Docker review-image inputs confirmed
+Compose placeholder confirmed
+bounded Docker static/build/scan validation confirmed
 bounded Compose static/render/build validation confirmed
 service startup not established
 infra-wide validation not established
