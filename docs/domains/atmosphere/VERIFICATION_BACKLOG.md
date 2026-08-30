@@ -2,15 +2,18 @@
 doc_id: kfm://doc/domains-atmosphere-verification-backlog
 title: Atmosphere — Verification Backlog
 type: standard
-version: v1
+version: v1.1
 status: draft
 owners: <atmosphere-domain-stewards>  # PLACEHOLDER — assign before review
 created: 2026-05-16
-updated: 2026-08-02
+updated: 2026-08-30
 policy_label: public
-related: [docs/domains/atmosphere/README.md, docs/domains/atmosphere/SOURCE_REGISTRY.md, docs/domains/atmosphere/UBIQUITOUS_LANGUAGE.md, docs/registers/VERIFICATION_BACKLOG.md, docs/registers/DRIFT_REGISTER.md, docs/doctrine/directory-rules.md, contracts/domains/atmosphere/, schemas/contracts/v1/domains/atmosphere/, policy/domains/atmosphere/, data/registry/sources/atmosphere/, release/candidates/atmosphere/, ai-build-operating-contract.md]
+owning_root: docs/
+responsibility: Track checkable Atmosphere verification items without becoming implementation, evidence, policy, lifecycle, release, or publication authority
+truth_posture: "CONFIRMED current repository paths and bounded carriers where cited / OPEN source rights, compatibility closure, runtime binding, review, release, deployment, promotion, and publication"
+related: [docs/domains/atmosphere/README.md, docs/domains/atmosphere/SOURCE_REGISTRY.md, docs/domains/atmosphere/UBIQUITOUS_LANGUAGE.md, docs/registers/VERIFICATION_BACKLOG.md, docs/registers/DRIFT_REGISTER.md, docs/doctrine/directory-rules.md, contracts/domains/atmosphere/, schemas/contracts/v1/domains/atmosphere/, policy/domains/atmosphere/, data/registry/sources/atmosphere/, release/candidates/atmosphere/, docs/doctrine/ai-build-operating-contract.md]
 tags: [kfm, domain, atmosphere, air, climate, verification, backlog, governance]
-notes: [CONTRACT_VERSION pinned 3.0.0 # domain-scoped companion to docs/registers/VERIFICATION_BACKLOG.md per Directory Rules §18 # all lane file paths PROPOSED until mounted-repo verification # source rights are the dominant blocker (§5) # air-vs-atmosphere slug drift is a confirmed open ADR item (ATM-OQ-09)]
+notes: [CONTRACT_VERSION pinned 3.0.0 # domain-scoped companion to docs/registers/VERIFICATION_BACKLOG.md per Directory Rules §18 # current repository evidence governs path and implementation status # source rights remain a dominant public-promotion blocker (§5) # atmosphere is the current implementation lane and pipelines/domains/air is retained documentation-only compatibility (ATM-OQ-09)]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -26,12 +29,12 @@ notes: [CONTRACT_VERSION pinned 3.0.0 # domain-scoped companion to docs/register
 ![sensitivity](https://img.shields.io/badge/sensitivity-public-green)
 ![contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-success)
 ![source--rights](https://img.shields.io/badge/source--rights-NEEDS%20VERIFICATION-red)
-![last%20updated](https://img.shields.io/badge/last%20updated-2026--08--02-informational)
+![last%20updated](https://img.shields.io/badge/last%20updated-2026--08--30-informational)
 
 > [!NOTE]
 > Badge targets are placeholder Shields.io endpoints. Replace with live endpoints once CI, registry, and release surfaces are wired.
 
-**Status:** draft · **Owners:** TBD (atmosphere-domain-stewards) · **Updated:** 2026-08-02 · `CONTRACT_VERSION = "3.0.0"`
+**Status:** draft · **Owners:** TBD (atmosphere-domain-stewards) · **Updated:** 2026-08-30 · `CONTRACT_VERSION = "3.0.0"`
 
 ---
 
@@ -67,7 +70,7 @@ This register is the **domain-scoped checkable list** for Atmosphere / Air / Cli
 
 - Source rights, endpoint behavior, and freshness assumptions per source family.
 - Knowledge-character discipline (`OBSERVED_SENSOR` vs `PUBLIC_AQI_REPORT` vs `REGULATORY_ARCHIVE` vs `LOW_COST_SENSOR` vs `ATMOSPHERIC_MODEL_FIELD` vs `REMOTE_SENSING_MASK` vs `CLIMATE_ANOMALY_CONTEXT` vs `DERIVED_FUSION` vs `METEOROLOGICAL_CONTEXT` vs `ALERT_AND_ADVISORY_CONTEXT` vs `NETWORK_AND_SITE_CONTEXT`).
-- Pipeline, validator, governed-API, Evidence Drawer, Focus Mode, MapLibre, catalog, release, rollback, and correction surfaces — each at **PROPOSED** until mounted-repo evidence resolves it.
+- Pipeline, validator, governed-API, Evidence Drawer, Focus Mode, MapLibre, catalog, release, rollback, and correction surfaces — each classified from current repository evidence, with presence kept separate from runtime, review, release, deployment, promotion, and publication.
 - Cross-lane interactions with **Hazards**, **Hydrology**, **Agriculture**, and **Biodiversity** lanes that depend on atmosphere knowledge-character labels.
 
 Each row names **what must be true**, **what evidence would settle it**, and the **status** at last review.
@@ -102,7 +105,7 @@ Each row names **what must be true**, **what evidence would settle it**, and the
 | **CONFIRMED** | Verified this session from attached docs, repo evidence, tests, logs, or generated artifacts. | Doctrine and source-family lineage; cited from the Domains Culmination Atlas and Encyclopedia. |
 | **PROPOSED** | Design, path, placement, or recommendation not yet verified in implementation. | Most lane-internal items: validator names, route names, exact paths, fixture sets. |
 | **NEEDS VERIFICATION** | Checkable but not yet checked strongly enough to act as fact. | Anything resolvable by a single direct check (file presence, rights review, schema inspection). |
-| **UNKNOWN** | Not resolvable without more evidence. | Implementation-maturity questions that need a mounted repo. |
+| **UNKNOWN** | Not resolvable without more evidence. | Runtime, source-admission, review, release, deployment, promotion, or publication questions that current repository evidence does not settle. |
 | **DENY** | A default-deny rule; the item exists to *fail closed*, not to be implemented as a public path. | Sensitive locations, private joins, model-as-observed surfaces. |
 | **EXTERNAL** | Sourced from authoritative external research. | External standards behavior; used as reference, never as KFM truth. Must be cited and contained. |
 
@@ -137,7 +140,7 @@ flowchart LR
 ```
 
 > [!NOTE]
-> The **happy path** is `NEEDS VERIFICATION → CONFIRMED` with a cited evidence row. The **most common path in this domain right now** is `PROPOSED → PROPOSED` because the repository is not mounted and source rights have not been reviewed. Both paths are acceptable; the unacceptable path is `PROPOSED → silently treated as fact`.
+> The **happy path** is `NEEDS VERIFICATION → CONFIRMED` with a cited evidence row. Current repository bytes can settle path presence and bounded executable behavior, while source rights, live admission, runtime use, review, release, deployment, promotion, and publication remain separate checks. The unacceptable path is `PROPOSED → silently treated as fact`.
 
 [Back to top ↑](#top)
 
@@ -199,12 +202,12 @@ review, release, and public-surface behavior remain open or held.
 ## 7. Schema, contract, and validator verification
 
 > [!IMPORTANT]
-> **Path slug is unsettled for this lane (see ATM-OQ-09).** Atlas §24.13 lists the Atmosphere responsibility root as `schemas/contracts/v1/air/` and `contracts/air/` (the `air` slug, **no** `domains/` segment), while Directory Rules §12 prescribes the lane pattern `schemas/contracts/v1/domains/<domain>/` → `schemas/contracts/v1/domains/atmosphere/`. This is confirmed **slug drift** (`air` vs `atmosphere`, and presence/absence of `domains/`). The paths below follow the Directory Rules §12 lane pattern because **Directory Rules outranks Atlas crosswalks** in the authority order, but the conflict is `CONFLICTED` until an ADR resolves it. [DIRRULES §12] [ENCY §24.13]
+> **Current implementation placement is `atmosphere`; `air` is compatibility lineage (see ATM-OQ-09).** Accepted Directory Rules and current repository bytes place contracts and schemas at `contracts/domains/atmosphere/` and `schemas/contracts/v1/domains/atmosphere/`. Atlas §24.13's `air` paths remain proposal lineage, while `pipelines/domains/air/` is deliberately retained as a documentation-only compatibility guardrail. Compatibility reference closure and any retirement decision remain open; they do not block the current `atmosphere` paths. [DIRRULES §12] [ENCY §24.13]
 
 | ID | Item to verify | Evidence that would settle it | Status |
 |---|---|---|---|
-| ATM-SCH-001 | Atmosphere object families have machine schemas: `AirStation`, `AirObservation`, `PM2.5Observation`, `OzoneObservation`, `SmokeContext`, `AODRaster`, `WeatherStation`, `WeatherObservation`, `WindField`, `PrecipitationObservation`, `TemperatureObservation`, `ClimateNormal`, `ClimateAnomaly`, `ForecastContext`, `AdvisoryContext`. | Schemas present under the resolved schema root (see ATM-OQ-09); instance fixtures validate. | NEEDS VERIFICATION |
-| ATM-SCH-002 | Each object family has a paired semantic contract (definition + invariants). | `contracts/domains/atmosphere/<object>.md` files exist; cross-link to schema by `$id`. | NEEDS VERIFICATION |
+| ATM-SCH-001 | Atmosphere object families have machine schemas: `AirStation`, `AirObservation`, `PM2.5Observation`, `OzoneObservation`, `SmokeContext`, `AODRaster`, `WeatherStation`, `WeatherObservation`, `WindField`, `PrecipitationObservation`, `TemperatureObservation`, `ClimateNormal`, `ClimateAnomaly`, `ForecastContext`, `AdvisoryContext`. | Schemas are present under `schemas/contracts/v1/domains/atmosphere/`; instance validation remains a separate check. | CONFIRMED carriers / instance validation NEEDS VERIFICATION |
+| ATM-SCH-002 | Each object family has a paired semantic contract (definition + invariants). | Markdown contracts are present under `contracts/domains/atmosphere/`; schema-link and evaluator binding remain separate checks. | CONFIRMED carriers / binding NEEDS VERIFICATION |
 | ATM-SCH-003 | Identity rule fixed per object: `source_id + object_role + temporal_scope + normalized_digest` (PROPOSED deterministic basis). | Identity construction documented in contract; identity validator deterministic across runs. | PROPOSED [DOM-AIR] [ENCY] |
 | ATM-SCH-004 | Temporal fields preserved as distinct columns: `source_time`, `observed_time`, `valid_time`, `retrieval_time`, `release_time`, `correction_time`. | Schema requires the temporal field set where material; validator denies collapsed times. | NEEDS VERIFICATION [DOM-AIR] [ENCY] |
 | ATM-SCH-005 | Unit normalization rules defined per parameter (`µg/m³`, `ppb`, `mph`, `K`, `°C`, `mm`, `inches`). | Unit registry exists; converter-with-receipt is the only normalization path. | PROPOSED |
@@ -344,7 +347,7 @@ Atmosphere knowledge informs adjacent lanes. These rows track items where atmosp
 
 ## 15. Open questions register
 
-Unresolved doctrinal or design questions that cannot be settled by a single evidence row. Tracked here until resolved by **ADR**, **steward decision**, **mounted-repo inspection**, or **source-rights review**.
+Unresolved doctrinal or design questions that cannot be settled by a single evidence row. Tracked here until resolved by **ADR**, **steward decision**, **repository inspection**, or **source-rights review**.
 
 | ID | Question | Owner role | Resolution path | Status |
 |---|---|---|---|---|
@@ -356,10 +359,10 @@ Unresolved doctrinal or design questions that cannot be settled by a single evid
 | ATM-OQ-06 | MAIAC AOD threshold policy (e.g., degrade/quarantine thresholds from operational guidance). | Atmosphere steward | Policy decision; thresholds are policy not science | NEEDS VERIFICATION / EXTERNAL |
 | ATM-OQ-07 | VIIRS / FIRMS FRP threshold policy (escalate/quarantine thresholds). | Atmosphere steward | Policy decision | NEEDS VERIFICATION / EXTERNAL |
 | ATM-OQ-08 | Kansas Mesonet consent mechanics: one-time license file or per-deployment renewal? | Atmosphere steward | Direct contact `kansas-wdl@k-state.edu` | NEEDS VERIFICATION |
-| ATM-OQ-09 | **Schema/contract slug drift.** Atlas §24.13 uses `schemas/contracts/v1/air/` + `contracts/air/`; Directory Rules §12 uses `schemas/contracts/v1/domains/atmosphere/`. Both the slug (`air` vs `atmosphere`) and the `domains/` segment differ. | Directory Rules owner + schema owner | **ADR.** Directory Rules §12 governs in the authority order; Atlas row is a shorthand crosswalk. CONFLICTED until ADR lands. | CONFLICTED [DIRRULES §12] [ENCY §24.13] |
+| ATM-OQ-09 | **`air` compatibility reference closure and retirement.** Current implementation uses `contracts/domains/atmosphere/` and `schemas/contracts/v1/domains/atmosphere/`; Atlas §24.13 retains older `air` proposal lineage, and `pipelines/domains/air/` remains documentation-only compatibility. | Directory Rules owner + schema owner + pipeline owner | Inventory consumers and references; preserve single-write authority; record migration, rollback, review, and any retirement decision. | CONFIRMED current placement / OPEN compatibility closure [DIRRULES §12] [ENCY §24.13] |
 
-> [!WARNING]
-> **ATM-OQ-09 is load-bearing.** Every schema/contract path in §7 depends on its resolution. This document follows the Directory Rules §12 lane pattern (`domains/atmosphere/`) because Directory Rules outranks Atlas crosswalks, but the discrepancy is real and confirmed (the deep-research slug-drift register lists Roads, People, and Settlements with the same class of drift). Do not treat either path as canonical until the ADR is accepted; log the chosen path in `DRIFT_REGISTER.md` when it lands.
+> [!NOTE]
+> **ATM-OQ-09 does not block current Atmosphere placement.** Directory Rules and repository bytes establish `domains/atmosphere/` as the implementation lane. Keep `pipelines/domains/air/` documentation-only; do not create executable, schema, contract, policy, or publication authority there. Closure requires consumer inventory, migration and rollback evidence, review, and an explicit retirement or retention decision.
 
 [Back to top ↑](#top)
 
@@ -392,7 +395,7 @@ The open ADRs whose resolution unblocks rows in this register. ADR-S series from
 | **ADR-S-04** | Source-role enum — canonical vocabulary, evolution rule. | ATM-KC-001…002, ATM-OQ-01 |
 | **ADR-S-05** | Sensitivity tier scheme (T0–T4) — adopt as canonical. | §11 ATM-POL-* tier references |
 | **ADR-S-06** | AI surface boundary (Focus Mode vs open AI). | ATM-API-004, ATM-UI-002 |
-| **(new) ADR-AIR-PATH** | Resolve `air` vs `atmosphere` slug + `domains/` segment. | ATM-OQ-09, all §7 schema/contract rows |
+| **ADR-TBD / ATM-OQ-09** | Govern `air` compatibility reference closure and any retirement decision. | ATM-OQ-09; does not block current §7 `atmosphere` carriers |
 
 [Back to top ↑](#top)
 
@@ -400,14 +403,14 @@ The open ADRs whose resolution unblocks rows in this register. ADR-S series from
 
 ## 18. Definition of done
 
-This register is done enough to enter the repository when:
+This register remains reviewable and current when:
 
 - it is placed according to Directory Rules (`docs/domains/atmosphere/`, §18 companion-register pattern);
 - a docs steward and the Atmosphere / Air domain steward review it;
 - it is linked from `docs/domains/atmosphere/README.md` and the repo-wide `VERIFICATION_BACKLOG.md`;
-- the slug-drift question (ATM-OQ-09) is logged in `DRIFT_REGISTER.md` even if not yet resolved;
+- `air` compatibility references remain documentation-only and ATM-OQ-09 records their closure or retirement evidence;
 - it does not conflict with accepted ADRs;
-- the `GENERATED_RECEIPT.json` planned in the PR is wired into CI;
+- executable claims cite their current fixture, validator, test, workflow, receipt, or proof evidence;
 - future changes follow the operating contract's §37 lifecycle.
 
 [Back to top ↑](#top)
@@ -420,6 +423,7 @@ This register is done enough to enter the repository when:
 |---|---|---|---|
 | 2026-05-16 | Initial draft of domain-scoped verification backlog. | TBD | Seeded from Domains Culmination Atlas §11.N, §24, Encyclopedia §7, Unified Manual, and air-quality stack (C10-02). |
 | 2026-05-29 | Completed: meta block normalized to inline form; `CONTRACT_VERSION` pinned; ATM-OQ-09 sharpened to CONFLICTED with §24.13 vs §12 evidence; EXTERNAL/standards rows labeled; open-questions converted to a table; blocking-ADR index + definition-of-done added. | Claude (AI-authored; pending review) | Per `GENERATED_RECEIPT.json` plan; human review required. |
+| 2026-08-30 | Reconciled source-era repository and path claims against accepted Directory Rules and current repository bytes. | KFM Atmosphere Builder | Confirmed current `atmosphere` carriers, preserved documentation-only `air` compatibility, and kept runtime and lifecycle claims separate. |
 | YYYY-MM-DD | _next change_ | _author_ | _short note + linked PR_ |
 
 [Back to top ↑](#top)
@@ -453,7 +457,7 @@ IDs are stable across revisions; rows are not renumbered. A retired row is marke
 ## Appendix B — Source family quick reference
 
 > [!NOTE]
-> Quick-reference for the source families in §5. Authoritative rights and behavior live in each source's descriptor under `data/registry/sources/atmosphere/` (PROPOSED path).
+> Quick-reference for the source families in §5. Source-descriptor carriers live under `data/registry/sources/atmosphere/`; their presence does not establish rights review, source admission, runtime use, release, or publication.
 
 | Source family | Typical role | Typical knowledge character | Live-fetch posture | Rights status (this run) |
 |---|---|---|---|---|
@@ -477,4 +481,4 @@ IDs are stable across revisions; rows are not renumbered. A retired row is marke
 <br/>
 <sub>**Cross-lane registers (sibling, TODO):** [`../hazards/VERIFICATION_BACKLOG.md`](../hazards/VERIFICATION_BACKLOG.md) · [`../hydrology/VERIFICATION_BACKLOG.md`](../hydrology/VERIFICATION_BACKLOG.md) · [`../agriculture/VERIFICATION_BACKLOG.md`](../agriculture/VERIFICATION_BACKLOG.md)</sub>
 <br/>
-<sub>**Last updated:** 2026-05-29 · **Status:** draft · **Path status:** PROPOSED · `CONTRACT_VERSION = "3.0.0"` · [Back to top ↑](#top)</sub>
+<sub>**Last updated:** 2026-08-30 · **Status:** draft · **Path status:** repository-grounded; compatibility closure open · `CONTRACT_VERSION = "3.0.0"` · [Back to top ↑](#top)</sub>
