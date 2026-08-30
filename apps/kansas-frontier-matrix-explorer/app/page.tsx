@@ -1,12 +1,16 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import type { Feature, Geometry } from "geojson";
-import type { GeoJSONSource, Map as MapLibreMap, Popup, ScaleControl } from "maplibre-gl";
+import {
+  createNullMapRuntime,
+  type MapRuntimeCamera,
+  type MapRuntimePort,
+} from "@kfm/maplibre";
 import {
   CATEGORY_ORDER,
   findFeature,
-  findLayerByRenderer,
   LAYER_REGISTRY,
   SEARCH_INDEX,
   TIME_STEPS,
@@ -16,14 +20,10 @@ import {
   type SearchItem,
 } from "./explorer-data";
 import {
-  applyRegistryState,
-  areaSquareMiles,
   BASEMAPS,
-  buildMeasurementData,
-  distanceMiles,
-  reorderRegistryLayers,
-  updateMeasurementSource,
-  updateSelectionSource,
+  lngLatToTile,
+  screenRectToBounds,
+  type AtmospherePreset,
   type BasemapKey,
 } from "./map-runtime";
 import {
@@ -82,26 +82,12 @@ import {
   PLANNING_SCENARIO_REVIEWS,
   type ScenarioReviewMode,
 } from "./planning-scenario";
+import { ANALYSIS_RECIPES, type AnalysisRecipe } from "./analysis-recipes";
 
 type ViewState = { center: [number, number]; zoom: number; bearing: number; pitch: number };
 type MapBoundsState = { west: number; south: number; east: number; north: number };
+type MapAreaDrawBox = { left: number; top: number; width: number; height: number };
 type RuntimeState = { kind: "loading" | "ready" | "degraded" | "error"; message: string };
-type MapLibreRuntimeProbe = {
-  version: string | null;
-  workerConfigured: boolean;
-  runtimeAssetsReady: boolean;
-  webgl2: boolean | null;
-  mapConstructed: boolean;
-  canvasReady: boolean;
-  styleLoaded: boolean;
-  idle: boolean;
-  tilesLoaded: boolean;
-  controlsReady: boolean;
-  interactionsReady: boolean;
-  sourcesReady: number;
-  projection: "mercator" | "globe";
-  error: string | null;
-};
 type DrawerView = "evidence" | "metadata" | "lineage" | "focus";
 type MeasureMode = "distance" | "area" | null;
 type RepositoryView = "updates" | "functions" | "scenario" | "runtime" | "transitions" | "readiness" | "sources";
@@ -109,6 +95,41 @@ type SourceObservatoryView = "candidates" | "corpus" | "gaps";
 type GovernedRoute = "/bootstrap" | "/layers" | "/evidence" | "/focus";
 type GovernedMethod = "GET" | "POST";
 type PublicWorkspaceId = "explore" | "knowledge" | "features" | "trust";
+type ReportScope = "VIEWPORT" | "ANALYSIS_AREA" | "VISIBLE_LAYERS" | "SELECTION";
+type ReportDetail = "EXECUTIVE" | "STANDARD" | "TECHNICAL";
+type ReportSection = "summary" | "findings" | "records" | "evidence" | "limitations";
+type WorkspaceSnapshot = Readonly<{
+  id: string;
+  name: string;
+  savedAt: string;
+  view: ViewState;
+  // Optional for device-local v1 compatibility; missing legacy markers fail closed on restore.
+  locationCameraRedacted?: boolean;
+  visibility: Record<string, boolean>;
+  opacity: Record<string, number>;
+  layerOrder: string[];
+  year: number;
+  basemap: BasemapKey;
+  projection: "mercator" | "globe";
+  scene?: {
+    preset: ScenePresetId;
+    verticalExaggeration: number;
+    atmosphere: AtmospherePreset;
+    lightAzimuth: number;
+    fieldOfView: number;
+  };
+  analysisArea?: MapBoundsState | null;
+  report: {
+    title: string;
+    scope: ReportScope;
+    detail: ReportDetail;
+    layerIds: string[];
+    sections: Record<ReportSection, boolean>;
+    query: string;
+    evidenceFilter: EvidenceState | "ALL";
+  };
+  selection: { layerId: string; featureId: string } | null;
+}>;
 type MapQueryCandidate = Readonly<{
   featureId: string;
   layerId: string;
@@ -117,6 +138,7 @@ type MapQueryCandidate = Readonly<{
   evidenceState: EvidenceState;
   sourceYear: number;
 }>;
+type ScenePresetId = "overview-2d" | "globe-overview" | "water-systems" | "smoke-context" | "elevation-3d" | "tile-grid";
 
 type SelectedContext = {
   featureId: string;
@@ -128,8 +150,7 @@ type SelectedContext = {
 
 const KANSAS_VIEW: ViewState = { center: [-98.38, 38.48], zoom: 5.45, bearing: 0, pitch: 0 };
 const EXPECTED_MAPLIBRE_VERSION = "6.6.0";
-const MAPLIBRE_WORKER_URL = "/maplibre/maplibre-gl-worker.mjs";
-const MAPLIBRE_RUNTIME_ASSET_URLS = [MAPLIBRE_WORKER_URL, "/maplibre/maplibre-gl-shared.mjs"] as const;
+const MAP_RUNTIME_CONSUMER_HOLD = "DIRECT_CONSUMER_MIGRATION_HOLD";
 const SUPPORTED_CONTEXT_BOUNDS = Object.freeze({ west: -104.8, south: 34.8, east: -92, north: 42.2 });
 const defaultVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, layer.defaultVisibility]));
 const defaultOpacity = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, layer.defaultOpacity]));
@@ -137,43 +158,40 @@ const defaultOrder = LAYER_REGISTRY.map((layer) => layer.id);
 const interactiveLayerIds = LAYER_REGISTRY.flatMap((layer) => layer.renderers.filter((renderer) => renderer.interactive).map((renderer) => renderer.id));
 const layerDomains = ["ALL", ...Array.from(new Set(LAYER_REGISTRY.map((layer) => layer.domain))).sort()] as const;
 const drawerViews = ["evidence", "metadata", "lineage", "focus"] as const satisfies readonly DrawerView[];
-const mapUtilityViews = ["navigate", "inspect", "compare", "display", "measure", "export", "diagnostics"] as const satisfies readonly MapUtilityView[];
+const mapUtilityViews = ["report", "inspect", "navigate", "scene", "connections", "compare", "display", "measure", "export", "diagnostics"] as const satisfies readonly MapUtilityView[];
 const mapUtilityLabels: Record<MapUtilityView, string> = {
+  report: "Report",
   navigate: "Navigate",
   inspect: "Inspect",
+  scene: "Scene",
+  connections: "Sources",
   compare: "Compare",
   display: "Display",
   measure: "Measure",
   export: "Export",
   diagnostics: "Diagnostics",
 };
-const governedRoutes = new Set<GovernedRoute>(["/bootstrap", "/layers", "/evidence"]);
-
-const loadConfiguredMapLibre = async () => {
-  await Promise.all(MAPLIBRE_RUNTIME_ASSET_URLS.map(async (url) => {
-    const response = await fetch(url, { cache: "no-store" });
-    if (!response.ok) throw new Error(`MapLibre runtime asset unavailable (${response.status})`);
-    await response.body?.cancel();
-  }));
-  const maplibregl = await import("maplibre-gl");
-  maplibregl.setWorkerUrl(MAPLIBRE_WORKER_URL);
-  const version = maplibregl.getVersion();
-  if (version !== EXPECTED_MAPLIBRE_VERSION) throw new Error(`Expected MapLibre ${EXPECTED_MAPLIBRE_VERSION}, received ${version}`);
-  if (maplibregl.getWorkerUrl() !== MAPLIBRE_WORKER_URL) throw new Error("MapLibre worker configuration did not persist");
-  return { maplibregl, version };
-};
-const publicWorkspaces: readonly Readonly<{
-  id: PublicWorkspaceId;
-  label: string;
-  shortLabel: string;
-  summary: string;
-  capability: string;
-}>[] = Object.freeze([
-  Object.freeze({ id: "explore", label: "Explore", shortLabel: "Map", summary: "Map, time, layers, selection, and bounded Focus context.", capability: "PUBLIC · ACTIVE" }),
-  Object.freeze({ id: "knowledge", label: "Knowledge", shortLabel: "Layers", summary: "Browse the public-safe Kansas knowledge domains and catalog.", capability: "PUBLIC · ACTIVE" }),
-  Object.freeze({ id: "features", label: "Features", shortLabel: "Inventory", summary: "Inspect repository-grounded feature maturity and lifecycle gates.", capability: "PUBLIC · READ ONLY" }),
-  Object.freeze({ id: "trust", label: "Trust", shortLabel: "Evidence", summary: "Inspect evidence, limitations, denials, corrections, and transitions.", capability: "PUBLIC · READ ONLY" }),
+const REPORT_SECTIONS: readonly Readonly<{ id: ReportSection; label: string; detail: string }>[] = Object.freeze([
+  Object.freeze({ id: "summary", label: "Summary", detail: "Scope, time, record, and layer totals" }),
+  Object.freeze({ id: "findings", label: "Findings", detail: "Deterministic observations from the filtered records" }),
+  Object.freeze({ id: "records", label: "Record table", detail: "Feature-level data rows and evidence states" }),
+  Object.freeze({ id: "evidence", label: "Evidence notes", detail: "Source roles, citations, freshness, and release posture" }),
+  Object.freeze({ id: "limitations", label: "Limitations", detail: "Generalization, uncertainty, and use boundaries" }),
 ]);
+const defaultReportSections: Record<ReportSection, boolean> = {
+  summary: true,
+  findings: true,
+  records: true,
+  evidence: true,
+  limitations: true,
+};
+const escapeReportHtml = (value: unknown) => String(value)
+  .replaceAll("&", "&amp;")
+  .replaceAll("<", "&lt;")
+  .replaceAll(">", "&gt;")
+  .replaceAll('"', "&quot;")
+  .replaceAll("'", "&#039;");
+const governedRoutes = new Set<GovernedRoute>(["/bootstrap", "/layers", "/evidence"]);
 
 const GUIDED_EXAMPLES = Object.freeze([
   Object.freeze({
@@ -245,6 +263,7 @@ const KFM_STORY_TRAIL = Object.freeze([
 ] as const);
 
 const GUIDED_START_STORAGE_KEY = "kfm-guided-start-dismissed-v1";
+const WORKSPACE_STORAGE_KEY = "kfm-map-workspaces-v1";
 
 const inspectGovernedRoute = (method: GovernedMethod, path: GovernedRoute) => {
   const registered = governedRoutes.has(path);
@@ -351,38 +370,46 @@ const scaleAtView = (view: ViewState) => {
   return metersPerPixel >= 1000 ? `≈ ${(metersPerPixel / 1000).toFixed(1)} km/px` : `≈ ${Math.round(metersPerPixel)} m/px`;
 };
 
-const motionDuration = (duration: number) => window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : duration;
+const isFeatureInsideBounds = (properties: Pick<FeatureProperties, "focusLng" | "focusLat">, bounds: MapBoundsState) => (
+  properties.focusLng >= bounds.west
+  && properties.focusLng <= bounds.east
+  && properties.focusLat >= bounds.south
+  && properties.focusLat <= bounds.north
+);
 
-const measurementLabelFor = (mode: Exclude<MeasureMode, null>, coordinates: [number, number][], unit: MeasureUnit) => {
-  if (mode === "distance") {
-    if (coordinates.length < 2) return "Add another point";
-    const miles = distanceMiles(coordinates);
-    return unit === "metric" ? `${(miles * 1.609344).toFixed(1)} km approximate` : `${miles.toFixed(1)} mi approximate`;
-  }
-  if (coordinates.length < 3) return `Add ${3 - coordinates.length} more point${coordinates.length === 2 ? "" : "s"}`;
-  const squareMiles = areaSquareMiles(coordinates);
-  return unit === "metric" ? `${(squareMiles * 2.58999).toFixed(1)} km² approximate` : `${squareMiles.toFixed(1)} sq mi approximate`;
-};
+const cameraViewsEquivalent = (left: ViewState, right: ViewState) => (
+  Math.abs(left.center[0] - right.center[0]) < 0.00001
+  && Math.abs(left.center[1] - right.center[1]) < 0.00001
+  && Math.abs(left.zoom - right.zoom) < 0.01
+  && Math.abs(left.bearing - right.bearing) < 0.1
+  && Math.abs(left.pitch - right.pitch) < 0.1
+);
 
 export default function Home() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<MapLibreMap | null>(null);
-  const popupRef = useRef<Popup | null>(null);
-  const scaleControlRef = useRef<ScaleControl | null>(null);
-  const hoveredRef = useRef<{ source: string; id: string | number } | null>(null);
-  const pointerFrameRef = useRef<number | null>(null);
-  const pendingPointerRef = useRef<[number, number]>(KANSAS_VIEW.center);
+  const mapRuntimeRef = useRef<MapRuntimePort | null>(null);
   const visibilityRef = useRef(defaultVisibility);
   const opacityRef = useRef(defaultOpacity);
   const orderRef = useRef(defaultOrder);
   const yearRef = useRef<number>(2026);
   const basemapRef = useRef<BasemapKey>("midnight");
   const projectionRef = useRef<"mercator" | "globe">("mercator");
+  const verticalExaggerationRef = useRef(1);
+  const atmospherePresetRef = useRef<AtmospherePreset>("night");
+  const lightAzimuthRef = useRef(210);
+  const fieldOfViewRef = useRef(36);
+  const gestureModeRef = useRef<"cooperative" | "direct">("cooperative");
+  const sceneOrbitTimerRef = useRef<number | null>(null);
   const selectedRef = useRef<SelectedContext | null>(null);
   const measureModeRef = useRef<MeasureMode>(null);
   const measurementGeometryModeRef = useRef<MeasureMode>(null);
   const measureUnitRef = useRef<MeasureUnit>("imperial");
   const measureCoordinatesRef = useRef<[number, number][]>([]);
+  const analysisAreaRef = useRef<MapBoundsState | null>(null);
+  const areaDrawRef = useRef<{ pointerId: number; startX: number; startY: number; width: number; height: number } | null>(null);
+  const cameraHistoryRef = useRef<ViewState[]>([KANSAS_VIEW]);
+  const cameraHistoryIndexRef = useRef(0);
+  const replayingCameraHistoryRef = useRef(false);
   const returnFocusRef = useRef<HTMLElement | null>(null);
   const leftPanelRef = useRef<HTMLElement>(null);
   const rightPanelRef = useRef<HTMLElement>(null);
@@ -391,6 +418,7 @@ export default function Home() {
   const repositoryPanelRef = useRef<HTMLElement>(null);
   const workspaceDetailsRef = useRef<HTMLDetailsElement>(null);
   const mapUtilityButtonRef = useRef<HTMLButtonElement>(null);
+  const globalSearchInputRef = useRef<HTMLInputElement>(null);
   const mapUtilityPanelRef = useRef<HTMLElement>(null);
   const mapUtilityReturnRef = useRef<HTMLElement | null>(null);
   const mapUtilityTabRefs = useRef<Array<HTMLButtonElement | null>>([]);
@@ -406,29 +434,24 @@ export default function Home() {
   const [layerOrder, setLayerOrder] = useState<string[]>(defaultOrder);
   const [basemap, setBasemap] = useState<BasemapKey>("midnight");
   const [view, setView] = useState<ViewState>(KANSAS_VIEW);
+  const [scenePreset, setScenePreset] = useState<ScenePresetId>("overview-2d");
+  const [verticalExaggeration, setVerticalExaggeration] = useState(1);
+  const [atmospherePreset, setAtmospherePreset] = useState<AtmospherePreset>("night");
+  const [lightAzimuth, setLightAzimuth] = useState(210);
+  const [fieldOfView, setFieldOfView] = useState(36);
+  const [gestureMode, setGestureMode] = useState<"cooperative" | "direct">("cooperative");
+  const [sceneOrbiting, setSceneOrbiting] = useState(false);
   const [pointer, setPointer] = useState<[number, number]>(KANSAS_VIEW.center);
   const [mapViewportBounds, setMapViewportBounds] = useState<MapBoundsState>(SUPPORTED_CONTEXT_BOUNDS);
-  const [runtime, setRuntime] = useState<RuntimeState>({ kind: "loading", message: "Starting the MapLibre renderer…" });
-  const [maplibreProbe, setMaplibreProbe] = useState<MapLibreRuntimeProbe>({
-    version: null,
-    workerConfigured: false,
-    runtimeAssetsReady: false,
-    webgl2: null,
-    mapConstructed: false,
-    canvasReady: false,
-    styleLoaded: false,
-    idle: false,
-    tilesLoaded: false,
-    controlsReady: false,
-    interactionsReady: false,
-    sourcesReady: 0,
-    projection: "mercator",
-    error: null,
-  });
-  const [styleReady, setStyleReady] = useState(false);
+  const [analysisArea, setAnalysisArea] = useState<MapBoundsState | null>(null);
+  const [areaDrawMode, setAreaDrawMode] = useState(false);
+  const [areaDrawBox, setAreaDrawBox] = useState<MapAreaDrawBox | null>(null);
+  const [cameraHistoryIndex, setCameraHistoryIndex] = useState(0);
+  const [cameraHistoryLength, setCameraHistoryLength] = useState(1);
+  const [runtime, setRuntime] = useState<RuntimeState>({ kind: "loading", message: "Starting the renderer-neutral map boundary…" });
   const [locationCameraRedacted, setLocationCameraRedacted] = useState(false);
   const [selected, setSelected] = useState<SelectedContext | null>(null);
-  const [leftOpen, setLeftOpen] = useState(true);
+  const [leftOpen, setLeftOpen] = useState(false);
   const [rightOpen, setRightOpen] = useState(false);
   const [timelineOpen, setTimelineOpen] = useState(true);
   const [drawerView, setDrawerView] = useState<DrawerView>("evidence");
@@ -450,6 +473,12 @@ export default function Home() {
   const [mapUtilityView, setMapUtilityView] = useState<MapUtilityView>("navigate");
   const [mapFeatureQuery, setMapFeatureQuery] = useState("");
   const [mapFeatureLayer, setMapFeatureLayer] = useState("ALL");
+  const [connectionQuery, setConnectionQuery] = useState("");
+  const [connectionFilter, setConnectionFilter] = useState<"ALL" | "VISIBLE" | "HELD">("ALL");
+  const [sourceActivity, setSourceActivity] = useState<Record<string, "WAITING" | "UPDATING" | "SETTLED">>(
+    Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, "WAITING"])),
+  );
+  const [sourceProbeCounts, setSourceProbeCounts] = useState<Record<string, number>>({});
   const [mapQueryCandidates, setMapQueryCandidates] = useState<readonly MapQueryCandidate[]>([]);
   const [inspectViewportOnly, setInspectViewportOnly] = useState(false);
   const [inspectVisibleLayersOnly, setInspectVisibleLayersOnly] = useState(false);
@@ -482,12 +511,22 @@ export default function Home() {
   const [sourceQuery, setSourceQuery] = useState("");
   const [sourceDomain, setSourceDomain] = useState("ALL");
   const [exportGeneratedAt, setExportGeneratedAt] = useState("PREVIEW_NOT_OPENED");
+  const [reportGeneratedAt, setReportGeneratedAt] = useState("LIVE PREVIEW");
+  const [reportTitle, setReportTitle] = useState("Kansas map data report");
+  const [reportScope, setReportScope] = useState<ReportScope>("VIEWPORT");
+  const [reportDetail, setReportDetail] = useState<ReportDetail>("STANDARD");
+  const [reportLayerIds, setReportLayerIds] = useState<string[]>(() => LAYER_REGISTRY.filter((layer) => layer.defaultVisibility).map((layer) => layer.id));
+  const [reportSections, setReportSections] = useState<Record<ReportSection, boolean>>(defaultReportSections);
+  const [reportQuery, setReportQuery] = useState("");
+  const [reportEvidenceFilter, setReportEvidenceFilter] = useState<EvidenceState | "ALL">("ALL");
+  const [workspaceName, setWorkspaceName] = useState("");
+  const [savedWorkspaces, setSavedWorkspaces] = useState<WorkspaceSnapshot[]>([]);
   const [runtimeSeamState, setRuntimeSeamState] = useState<RuntimeSeamState>("IDLE");
   const [runtimeSeamReason, setRuntimeSeamReason] = useState("Awaiting deterministic replay");
   const [toast, setToast] = useState("");
   const [isCompact, setIsCompact] = useState(false);
-  const [sourceStates, setSourceStates] = useState<Record<string, "loading" | "ready" | "error">>(
-    Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, "loading"])),
+  const [sourceStates] = useState<Record<string, "held">>(
+    Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, "held"])),
   );
 
   const debouncedGlobalQuery = useDebounced(globalQuery, 140);
@@ -499,6 +538,20 @@ export default function Home() {
   useEffect(() => { yearRef.current = year; }, [year]);
   useEffect(() => { basemapRef.current = basemap; }, [basemap]);
   useEffect(() => { projectionRef.current = projection; }, [projection]);
+  useEffect(() => { verticalExaggerationRef.current = verticalExaggeration; }, [verticalExaggeration]);
+  useEffect(() => { atmospherePresetRef.current = atmospherePreset; }, [atmospherePreset]);
+  useEffect(() => { lightAzimuthRef.current = lightAzimuth; }, [lightAzimuth]);
+  useEffect(() => { fieldOfViewRef.current = fieldOfView; }, [fieldOfView]);
+  useEffect(() => { gestureModeRef.current = gestureMode; }, [gestureMode]);
+  useEffect(() => {
+    const restoreSavedWorkspaces = window.setTimeout(() => {
+      try {
+        const stored = JSON.parse(window.localStorage.getItem(WORKSPACE_STORAGE_KEY) ?? "[]");
+        if (Array.isArray(stored)) setSavedWorkspaces(stored.slice(0, 8));
+      } catch { /* Device-local workspace storage is optional. */ }
+    }, 0);
+    return () => window.clearTimeout(restoreSavedWorkspaces);
+  }, []);
 
   const dismissGuidedStart = useCallback(() => {
     setGuidedStartOpen(false);
@@ -511,13 +564,7 @@ export default function Home() {
     try { window.localStorage.removeItem(GUIDED_START_STORAGE_KEY); } catch { /* Device storage is optional. */ }
   }, []);
 
-  useEffect(() => {
-    const hasSharedFeature = new URLSearchParams(window.location.search).has("f");
-    let dismissed = false;
-    try { dismissed = window.localStorage.getItem(GUIDED_START_STORAGE_KEY) === "1"; } catch { /* Device storage is optional. */ }
-    const openGuide = window.setTimeout(() => setGuidedStartOpen(!hasSharedFeature && !dismissed), 0);
-    return () => window.clearTimeout(openGuide);
-  }, []);
+  // The map opens as a working surface. Guided material remains available from About.
   useEffect(() => { selectedRef.current = selected; }, [selected]);
   useEffect(() => { measureModeRef.current = measureMode; }, [measureMode]);
   useEffect(() => { measurementGeometryModeRef.current = measurementGeometryMode; }, [measurementGeometryMode]);
@@ -528,58 +575,81 @@ export default function Home() {
   const temporalNoData = useMemo(() => activeLayers.filter((layer) => layer.temporal?.mode === "exact" && !layer.temporal.years.includes(year)), [activeLayers, year]);
   const availabilityByStep = useMemo(() => Object.fromEntries(TIME_STEPS.map((step) => [step, activeLayers.filter((layer) => isLayerAvailableAtTime(layer, step)).length])), [activeLayers]);
   const sourceStateCounts = useMemo(() => ({
-    ready: Object.values(sourceStates).filter((state) => state === "ready").length,
-    loading: Object.values(sourceStates).filter((state) => state === "loading").length,
-    error: Object.values(sourceStates).filter((state) => state === "error").length,
+    held: Object.values(sourceStates).filter((state) => state === "held").length,
   }), [sourceStates]);
+  const sourceConnections = useMemo(() => LAYER_REGISTRY.map((layer) => {
+    const compatibleFeatures = layer.data.features.filter((feature) => isFeatureAvailableAtTime(layer, feature.properties.year, year));
+    const viewportFeatures = compatibleFeatures.filter((feature) => (
+      feature.properties.focusLng >= mapViewportBounds.west
+      && feature.properties.focusLng <= mapViewportBounds.east
+      && feature.properties.focusLat >= mapViewportBounds.south
+      && feature.properties.focusLat <= mapViewportBounds.north
+    ));
+    return {
+      layer,
+      state: sourceStates[layer.id],
+      activity: sourceActivity[layer.id] ?? "WAITING",
+      visible: Boolean(visibility[layer.id]),
+      compatibleCount: compatibleFeatures.length,
+      viewportCount: viewportFeatures.length,
+      probeCount: sourceProbeCounts[layer.id],
+    };
+  }), [mapViewportBounds, sourceActivity, sourceProbeCounts, sourceStates, visibility, year]);
+  const filteredSourceConnections = useMemo(() => {
+    const query = connectionQuery.trim().toLowerCase();
+    return sourceConnections.filter((connection) => {
+      if (connectionFilter === "VISIBLE" && !connection.visible) return false;
+      if (connectionFilter === "HELD" && connection.state !== "held") return false;
+      return !query || `${connection.layer.title} ${connection.layer.id} ${connection.layer.sourceId} ${connection.layer.domain} ${connection.layer.sourceType}`.toLowerCase().includes(query);
+    });
+  }, [connectionFilter, connectionQuery, sourceConnections]);
+  const centerTile = useMemo(() => lngLatToTile(view.center[0], view.center[1], view.zoom), [view.center, view.zoom]);
   const maplibreCapabilityChecks = useMemo(() => {
-    const state = (ready: boolean, failed = false): "READY" | "CHECKING" | "ERROR" => failed ? "ERROR" : ready ? "READY" : "CHECKING";
-    const startupFailed = Boolean(maplibreProbe.error);
     return [
       {
+        id: "package-seam",
+        label: "Package-owned candidate",
+        detail: `@kfm/maplibre owns exact ${EXPECTED_MAPLIBRE_VERSION}; this Site imports only the renderer-neutral package surface`,
+        state: "READY",
+      },
+      {
+        id: "consumer-runtime",
+        label: "Sites consumer runtime",
+        detail: `${MAP_RUNTIME_CONSUMER_HOLD} · NullMapRuntime performs no renderer, worker, WebGL, source, tile, or network work`,
+        state: "HOLD",
+      },
+      {
         id: "module-worker",
-        label: "ESM runtime + worker",
-        detail: `${maplibreProbe.version ?? "Loading version"} · same-origin worker + shared module ${maplibreProbe.runtimeAssetsReady ? "verified" : "pending"}`,
-        state: state(maplibreProbe.version === EXPECTED_MAPLIBRE_VERSION && maplibreProbe.workerConfigured && maplibreProbe.runtimeAssetsReady, startupFailed && !maplibreProbe.workerConfigured),
-      },
-      {
-        id: "webgl2",
-        label: "WebGL2 context",
-        detail: "Required by MapLibre GL JS 6; catalog metadata remains readable if unavailable",
-        state: state(maplibreProbe.webgl2 === true, maplibreProbe.webgl2 === false),
-      },
-      {
-        id: "canvas",
-        label: "Map + canvas",
-        detail: maplibreProbe.canvasReady ? "Map constructed with a non-zero render surface" : "Waiting for the render surface",
-        state: state(maplibreProbe.mapConstructed && maplibreProbe.canvasReady, startupFailed && !maplibreProbe.mapConstructed),
+        label: "Renderer module + worker",
+        detail: "NOT RUN in this Site; package-owned Vite fixture evidence does not activate this consumer",
+        state: "HOLD",
       },
       {
         id: "style",
-        label: "Style Specification v8",
-        detail: `${BASEMAPS[basemap].title} · ${maplibreProbe.styleLoaded ? "style loaded" : "style pending"}`,
-        state: state(maplibreProbe.styleLoaded, startupFailed),
+        label: "Style + projection",
+        detail: `${BASEMAPS[basemap].title} and ${projection} are view-state choices only; no renderer style is loaded`,
+        state: "HOLD",
       },
       {
         id: "sources",
-        label: "Admitted local sources",
-        detail: `${maplibreProbe.sourcesReady}/${LAYER_REGISTRY.length} GeoJSON sources · ${maplibreProbe.idle ? "idle" : "working"} · ${maplibreProbe.tilesLoaded ? "tiles settled" : "tiles pending"}`,
-        state: state(maplibreProbe.sourcesReady === LAYER_REGISTRY.length && maplibreProbe.idle && maplibreProbe.tilesLoaded, startupFailed || sourceStateCounts.error > 0),
+        label: "Site-local layer descriptors",
+        detail: `${sourceStateCounts.held}/${LAYER_REGISTRY.length} held from renderer loading; catalog and evidence metadata remain readable`,
+        state: "HOLD",
       },
       {
         id: "interaction",
-        label: "Controls + interactions",
-        detail: "Scale, pan, zoom, keyboard, hover, selection, cluster expansion, and measurement handlers",
-        state: state(maplibreProbe.controlsReady && maplibreProbe.interactionsReady, startupFailed),
+        label: "Renderer interactions",
+        detail: "Renderer-neutral camera history, north-up box queries, and report-area filtering are available; hit testing, hover, cluster expansion, popups, and screen measurement remain held",
+        state: "HOLD",
       },
       {
-        id: "projection",
-        label: "Projection + fallback",
-        detail: maplibreProbe.mapConstructed ? `${maplibreProbe.projection} active · Mercator remains the explicit 2D fallback` : "Renderer unavailable · catalog and evidence interfaces remain active",
-        state: state(maplibreProbe.mapConstructed, startupFailed),
+        id: "readiness",
+        label: "Broader browser readiness",
+        detail: "The governed twelve-probe packet remains pending; this fail-closed repair creates no readiness result",
+        state: "HOLD",
       },
     ] as const;
-  }, [basemap, maplibreProbe, sourceStateCounts.error]);
+  }, [basemap, projection, sourceStateCounts.held]);
   const mapFeatureIndex = useMemo(() => {
     const query = mapFeatureQuery.trim().toLowerCase();
     return LAYER_REGISTRY
@@ -596,6 +666,79 @@ export default function Home() {
       ))
       .filter(({ layer, feature }) => !query || `${feature.properties.title} ${feature.properties.fid} ${feature.properties.evidenceState} ${layer.title}`.toLowerCase().includes(query));
   }, [inspectViewportOnly, inspectVisibleLayersOnly, mapFeatureLayer, mapFeatureQuery, mapViewportBounds, visibility, year]);
+  const analysisAreaRecordCount = useMemo(() => analysisArea
+    ? LAYER_REGISTRY.reduce((count, layer) => count + layer.data.features.filter((feature) => (
+      isFeatureAvailableAtTime(layer, feature.properties.year, year)
+      && isFeatureInsideBounds(feature.properties, analysisArea)
+    )).length, 0)
+    : 0, [analysisArea, year]);
+  const analysisAreaOverlay = useMemo(() => {
+    if (!analysisArea) return null;
+    const longitudeSpan = mapViewportBounds.east - mapViewportBounds.west;
+    const latitudeSpan = mapViewportBounds.north - mapViewportBounds.south;
+    if (longitudeSpan <= 0 || latitudeSpan <= 0) return null;
+    const left = clamp(((analysisArea.west - mapViewportBounds.west) / longitudeSpan) * 100, 0, 100);
+    const right = clamp(((analysisArea.east - mapViewportBounds.west) / longitudeSpan) * 100, 0, 100);
+    const top = clamp(((mapViewportBounds.north - analysisArea.north) / latitudeSpan) * 100, 0, 100);
+    const bottom = clamp(((mapViewportBounds.north - analysisArea.south) / latitudeSpan) * 100, 0, 100);
+    if (right <= left || bottom <= top) return null;
+    return { left, top, width: right - left, height: bottom - top };
+  }, [analysisArea, mapViewportBounds]);
+  const reportRecords = useMemo(() => {
+    const includedLayers = new Set(reportLayerIds);
+    const query = reportQuery.trim().toLowerCase();
+    const matchesReportFilters = ({ layer, properties }: { layer: LayerRecord; properties: FeatureProperties }) => (
+      (reportEvidenceFilter === "ALL" || properties.evidenceState === reportEvidenceFilter)
+      && (!query || `${properties.title} ${properties.fid} ${properties.summary} ${properties.sourceOrganization} ${properties.sourceRole} ${properties.evidenceState} ${layer.title} ${layer.domain}`.toLowerCase().includes(query))
+    );
+    if (reportScope === "SELECTION") {
+      const selectionRecords = selected && includedLayers.has(selected.layerId)
+        ? [{ layer: selected.layer, properties: selected.properties }]
+        : [];
+      return selectionRecords.filter(matchesReportFilters);
+    }
+    return LAYER_REGISTRY
+      .filter((layer) => includedLayers.has(layer.id))
+      .filter((layer) => reportScope !== "VISIBLE_LAYERS" || visibility[layer.id])
+      .flatMap((layer) => layer.data.features
+        .filter((feature) => isFeatureAvailableAtTime(layer, feature.properties.year, year))
+        .filter((feature) => reportScope !== "VIEWPORT" || (
+          feature.properties.focusLng >= mapViewportBounds.west
+          && feature.properties.focusLng <= mapViewportBounds.east
+          && feature.properties.focusLat >= mapViewportBounds.south
+          && feature.properties.focusLat <= mapViewportBounds.north
+        ))
+        .filter((feature) => reportScope !== "ANALYSIS_AREA" || (analysisArea && isFeatureInsideBounds(feature.properties, analysisArea)))
+        .map((feature) => ({ layer, properties: feature.properties })))
+      .filter(matchesReportFilters);
+  }, [analysisArea, mapViewportBounds, reportEvidenceFilter, reportLayerIds, reportQuery, reportScope, selected, visibility, year]);
+  const reportEvidenceCounts = useMemo(() => reportRecords.reduce<Record<string, number>>((counts, record) => {
+    counts[record.properties.evidenceState] = (counts[record.properties.evidenceState] ?? 0) + 1;
+    return counts;
+  }, {}), [reportRecords]);
+  const reportLayerSummary = useMemo(() => LAYER_REGISTRY
+    .filter((layer) => reportLayerIds.includes(layer.id))
+    .map((layer) => ({
+      id: layer.id,
+      title: layer.title,
+      domain: layer.domain,
+      releaseState: layer.releaseState,
+      attribution: layer.attribution,
+      recordCount: reportRecords.filter((record) => record.layer.id === layer.id).length,
+    }))
+    .filter((layer) => layer.recordCount > 0), [reportLayerIds, reportRecords]);
+  const reportFindings = useMemo(() => {
+    const supported = (reportEvidenceCounts.ANSWER ?? 0) + (reportEvidenceCounts.CORRECTED ?? 0);
+    const bounded = reportRecords.length - supported;
+    const mostRepresented = [...reportLayerSummary].sort((left, right) => right.recordCount - left.recordCount)[0];
+    return [
+      `${reportRecords.length} record${reportRecords.length === 1 ? "" : "s"} match the ${reportScope === "VIEWPORT" ? "current map extent" : reportScope === "ANALYSIS_AREA" ? "locked area-of-interest" : reportScope === "VISIBLE_LAYERS" ? "visible-layer" : "selected-feature"} scope at ${formatTimelineStep(year)}.`,
+      `${supported} record${supported === 1 ? "" : "s"} carry supported or corrected evidence states; ${bounded} remain generalized, missing, stale, restricted, denied, superseded, or error states.`,
+      mostRepresented
+        ? `${mostRepresented.title} contributes the largest share of this report (${mostRepresented.recordCount} record${mostRepresented.recordCount === 1 ? "" : "s"}).`
+        : "No records match the current report filters; widen the map, change time, or include another layer.",
+    ];
+  }, [reportEvidenceCounts, reportLayerSummary, reportRecords.length, reportScope, year]);
   const filteredLayerIds = useMemo(() => {
     const query = debouncedLayerQuery.trim().toLowerCase();
     return new Set(LAYER_REGISTRY.filter((layer) => {
@@ -736,9 +879,18 @@ export default function Home() {
     params.set("t", String(year));
     params.set("base", basemap);
     params.set("proj", projection);
+    params.set("scene", scenePreset);
+    params.set("zscale", verticalExaggeration.toFixed(1));
+    params.set("sky", atmospherePreset);
+    params.set("light", String(Math.round(lightAzimuth)));
+    params.set("fov", fieldOfView.toFixed(1));
+    params.set("gestures", gestureMode);
     params.set("order", layerOrder.join(","));
     params.set("units", measureUnit);
     params.set("ws", currentWorkspace);
+    if (analysisArea && !redactLocationCamera) {
+      params.set("aoi", [analysisArea.west, analysisArea.south, analysisArea.east, analysisArea.north].map((value) => value.toFixed(5)).join(","));
+    }
     if (mapUtilityOpen) {
       params.set("mapui", "open");
       params.set("maptab", mapUtilityView);
@@ -752,12 +904,89 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [activeLayers, basemap, compareLeft.id, compareRight.id, currentWorkspace, drawerView, focusIntent, focusStage, layerOrder, locationCameraRedacted, mapUtilityOpen, mapUtilityView, measureUnit, opacity, projection, rightOpen, selected, view, year]);
+  }, [activeLayers, analysisArea, atmospherePreset, basemap, compareLeft.id, compareRight.id, currentWorkspace, drawerView, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, locationCameraRedacted, mapUtilityOpen, mapUtilityView, measureUnit, opacity, projection, rightOpen, scenePreset, selected, verticalExaggeration, view, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
     window.setTimeout(() => setToast(""), 3600);
   }, []);
+
+  const applyRendererNeutralView = useCallback((nextView: ViewState) => {
+    const camera: MapRuntimeCamera = {
+      longitude: nextView.center[0],
+      latitude: nextView.center[1],
+      zoom: nextView.zoom,
+      bearing: nextView.bearing,
+      pitch: nextView.pitch,
+    };
+    try {
+      mapRuntimeRef.current?.setCamera(camera);
+    } catch {
+      // The serializable view remains usable even if the null port is not ready yet.
+    }
+    setView((current) => {
+      lastKnownGoodViewRef.current = current;
+      return nextView;
+    });
+    setPointer([...nextView.center] as [number, number]);
+  }, []);
+
+  const updateRendererNeutralView = useCallback((update: Partial<Omit<ViewState, "center">> & { center?: [number, number] }) => {
+    setView((current) => {
+      const nextView: ViewState = {
+        center: update.center ?? current.center,
+        zoom: update.zoom ?? current.zoom,
+        bearing: update.bearing ?? current.bearing,
+        pitch: update.pitch ?? current.pitch,
+      };
+      const camera: MapRuntimeCamera = {
+        longitude: nextView.center[0],
+        latitude: nextView.center[1],
+        zoom: nextView.zoom,
+        bearing: nextView.bearing,
+        pitch: nextView.pitch,
+      };
+      try {
+        mapRuntimeRef.current?.setCamera(camera);
+      } catch {
+        // URL and catalog state remain deterministic while runtime setup is pending.
+      }
+      lastKnownGoodViewRef.current = current;
+      setPointer([...nextView.center] as [number, number]);
+      if (replayingCameraHistoryRef.current) {
+        replayingCameraHistoryRef.current = false;
+      } else if (!locationDerivedViewRef.current) {
+        const retained = cameraHistoryRef.current.slice(0, cameraHistoryIndexRef.current + 1);
+        const previous = retained.at(-1);
+        if (!previous || !cameraViewsEquivalent(previous, nextView)) {
+          const nextHistory = [...retained, nextView].slice(-16);
+          const nextIndex = nextHistory.length - 1;
+          cameraHistoryRef.current = nextHistory;
+          cameraHistoryIndexRef.current = nextIndex;
+          setCameraHistoryIndex(nextIndex);
+          setCameraHistoryLength(nextHistory.length);
+        }
+      }
+      return nextView;
+    });
+  }, []);
+
+  const stopSceneOrbit = useCallback((notify = true) => {
+    if (sceneOrbitTimerRef.current !== null) {
+      window.clearTimeout(sceneOrbitTimerRef.current);
+      sceneOrbitTimerRef.current = null;
+    }
+    setSceneOrbiting(false);
+    if (notify) announce("Renderer-neutral camera turn stopped at the current view");
+  }, [announce]);
+
+  const fitRendererNeutralBounds = useCallback((bounds: [number, number, number, number], maxZoom = 9) => {
+    const [west, south, east, north] = bounds;
+    const span = Math.max(east - west, north - south, 0.01);
+    const zoom = Math.min(maxZoom, Math.max(4, Math.log2(360 / span) - 1));
+    setMapViewportBounds({ west, south, east, north });
+    updateRendererNeutralView({ center: [(west + east) / 2, (south + north) / 2], zoom });
+  }, [updateRendererNeutralView]);
 
   const showComparedLayers = useCallback(() => {
     setVisibility((current) => ({ ...current, [compareLeft.id]: true, [compareRight.id]: true }));
@@ -772,9 +1001,9 @@ export default function Home() {
       Math.max(compareLeft.bounds[3], compareRight.bounds[3]),
     ];
     setVisibility((current) => ({ ...current, [compareLeft.id]: true, [compareRight.id]: true }));
-    mapRef.current?.fitBounds([[bounds[0], bounds[1]], [bounds[2], bounds[3]]], { padding: 70, maxZoom: 9, duration: motionDuration(650) });
-    announce("Fitted both comparison layers; camera and visibility changed only in this browser");
-  }, [announce, compareLeft, compareRight]);
+    fitRendererNeutralBounds(bounds);
+    announce("Framed both comparison layers in renderer-neutral camera state; visibility changed only in this browser");
+  }, [announce, compareLeft, compareRight, fitRendererNeutralBounds]);
 
   const copyLayerComparison = useCallback(async () => {
     const summarize = (layer: LayerRecord) => ({
@@ -896,12 +1125,11 @@ export default function Home() {
       return;
     }
     if (proposal.kind === "CENTER_SELECTION") {
-      mapRef.current?.easeTo({
+      updateRendererNeutralView({
         center: [selected.properties.focusLng, selected.properties.focusLat],
-        zoom: Math.max(mapRef.current.getZoom(), 7),
-        duration: motionDuration(650),
+        zoom: Math.max(mapRuntimeRef.current?.getSnapshot().camera.zoom ?? KANSAS_VIEW.zoom, 7),
       });
-      announce("Applied camera-only Focus action");
+      announce("Applied renderer-neutral camera-only Focus action");
       return;
     }
     if (proposal.kind === "OPEN_SOURCES") {
@@ -914,7 +1142,7 @@ export default function Home() {
     const targetView: DrawerView = proposal.kind === "OPEN_METADATA" ? "metadata" : proposal.kind === "OPEN_LINEAGE" ? "lineage" : "evidence";
     activateDrawerView(targetView, true);
     announce("Applied review-navigation action only");
-  }, [activateDrawerView, announce, selected]);
+  }, [activateDrawerView, announce, selected, updateRendererNeutralView]);
 
   const closeRepository = useCallback(() => {
     setRepositoryOpen(false);
@@ -925,7 +1153,6 @@ export default function Home() {
   const closeRightPanel = useCallback(() => {
     setRightOpen(false);
     setCurrentWorkspace("explore");
-    popupRef.current?.remove();
     const returnTarget = returnFocusRef.current;
     returnFocusRef.current = null;
     window.setTimeout(() => {
@@ -969,6 +1196,7 @@ export default function Home() {
     setMapUtilityOpen(true);
     setCurrentWorkspace("explore");
     if (nextView === "export") setExportGeneratedAt(new Date().toISOString());
+    if (nextView === "report") setReportGeneratedAt(new Date().toISOString());
     setToolsExpanded(false);
     setHelpOpen(false);
     if (isCompact) {
@@ -982,6 +1210,7 @@ export default function Home() {
   const activateMapUtilityView = useCallback((nextView: MapUtilityView, focusTab = false) => {
     setMapUtilityView(nextView);
     if (nextView === "export") setExportGeneratedAt(new Date().toISOString());
+    if (nextView === "report") setReportGeneratedAt(new Date().toISOString());
     if (focusTab) {
       const nextIndex = mapUtilityViews.indexOf(nextView);
       window.setTimeout(() => mapUtilityTabRefs.current[nextIndex]?.focus(), 0);
@@ -998,6 +1227,32 @@ export default function Home() {
     event.preventDefault();
     activateMapUtilityView(mapUtilityViews[nextIndex], true);
   }, [activateMapUtilityView]);
+
+  useEffect(() => {
+    const handleWorkspaceShortcut = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) return;
+      const target = event.target as HTMLElement | null;
+      const isEditing = target?.matches("input, textarea, select, [contenteditable='true']");
+      if (event.key === "/" && !isEditing) {
+        event.preventDefault();
+        globalSearchInputRef.current?.focus();
+        return;
+      }
+      if (isEditing) return;
+      if (event.key.toLowerCase() === "r") {
+        event.preventDefault();
+        openMapUtility("report");
+      }
+      if (event.key.toLowerCase() === "l") {
+        event.preventDefault();
+        dismissMapUtilityWithoutFocus();
+        setLeftOpen((current) => !current);
+        if (isCompact) { setRightOpen(false); setTimelineOpen(false); }
+      }
+    };
+    document.addEventListener("keydown", handleWorkspaceShortcut);
+    return () => document.removeEventListener("keydown", handleWorkspaceShortcut);
+  }, [dismissMapUtilityWithoutFocus, isCompact, openMapUtility]);
 
   const openLayerCatalogFromUtility = useCallback(() => {
     mapUtilityReturnRef.current = null;
@@ -1038,12 +1293,11 @@ export default function Home() {
     setVisibility((current) => ({ ...current, [layerId]: true }));
     openSelection(context, returnElement);
     const focus: [number, number] = [context.properties.focusLng, context.properties.focusLat];
-    mapRef.current?.easeTo({ center: focus, zoom: Math.max(mapRef.current.getZoom(), 7), duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 700 });
-    if (mapRef.current?.isStyleLoaded()) {
-      const mismatch = isFeatureTimeMismatch(context.layer.temporal, context.properties.year, yearRef.current);
-      updateSelectionSource(mapRef.current, mismatch ? null : context.geometry);
-    }
-  }, [openSelection]);
+    updateRendererNeutralView({
+      center: focus,
+      zoom: Math.max(mapRuntimeRef.current?.getSnapshot().camera.zoom ?? KANSAS_VIEW.zoom, 7),
+    });
+  }, [openSelection, updateRendererNeutralView]);
 
   const openGuidedExample = useCallback((example: (typeof GUIDED_EXAMPLES)[number]) => {
     yearRef.current = example.year;
@@ -1087,8 +1341,6 @@ export default function Home() {
     returnFocusRef.current = null;
     setSelected(null);
     setRightOpen(false);
-    popupRef.current?.remove();
-    if (mapRef.current?.isStyleLoaded()) updateSelectionSource(mapRef.current, null);
   }, []);
 
   const clearSelection = useCallback(() => {
@@ -1128,8 +1380,26 @@ export default function Home() {
       locationDerivedViewRef.current = restoredCameraRedaction;
       setLocationCameraRedacted(restoredCameraRedaction);
       pendingViewRef.current = restoredView;
-      setView(restoredView);
-      mapRef.current?.jumpTo(restoredView);
+      replayingCameraHistoryRef.current = true;
+      applyRendererNeutralView(restoredView);
+      cameraHistoryRef.current = [restoredView];
+      cameraHistoryIndexRef.current = 0;
+      setCameraHistoryIndex(0);
+      setCameraHistoryLength(1);
+      const analysisTokens = params.get("aoi")?.split(",").map((token) => token.trim() === "" ? Number.NaN : Number(token));
+      const restoredAnalysisArea = !restoredCameraRedaction && analysisTokens?.length === 4 && analysisTokens.every(Number.isFinite)
+        ? {
+          west: clamp(analysisTokens[0], SUPPORTED_CONTEXT_BOUNDS.west, SUPPORTED_CONTEXT_BOUNDS.east),
+          south: clamp(analysisTokens[1], SUPPORTED_CONTEXT_BOUNDS.south, SUPPORTED_CONTEXT_BOUNDS.north),
+          east: clamp(analysisTokens[2], SUPPORTED_CONTEXT_BOUNDS.west, SUPPORTED_CONTEXT_BOUNDS.east),
+          north: clamp(analysisTokens[3], SUPPORTED_CONTEXT_BOUNDS.south, SUPPORTED_CONTEXT_BOUNDS.north),
+        }
+        : null;
+      const nextAnalysisArea = restoredAnalysisArea && restoredAnalysisArea.west < restoredAnalysisArea.east && restoredAnalysisArea.south < restoredAnalysisArea.north
+        ? restoredAnalysisArea
+        : null;
+      analysisAreaRef.current = nextAnalysisArea;
+      setAnalysisArea(nextAnalysisArea);
 
       const knownLayerIds = new Set(LAYER_REGISTRY.map((layer) => layer.id));
       const visibleIds = params.get("l")?.split(",").filter((id) => knownLayerIds.has(id)) ?? [];
@@ -1157,13 +1427,32 @@ export default function Home() {
       const nextProjection = restoredProjection === "globe" ? "globe" : "mercator";
       projectionRef.current = nextProjection;
       setProjection(nextProjection);
+      const restoredScene = params.get("scene");
+      const nextScenePreset: ScenePresetId = restoredScene === "globe-overview" || restoredScene === "water-systems" || restoredScene === "smoke-context" || restoredScene === "elevation-3d" || restoredScene === "tile-grid" ? restoredScene : "overview-2d";
+      setScenePreset(nextScenePreset);
+      const nextVerticalExaggeration = clamp(parseNumber(params.get("zscale"), 1), 0, 2);
+      verticalExaggerationRef.current = nextVerticalExaggeration;
+      setVerticalExaggeration(nextVerticalExaggeration);
+      const restoredAtmosphere = params.get("sky");
+      const nextAtmosphere: AtmospherePreset = restoredAtmosphere === "dusk" || restoredAtmosphere === "clear" ? restoredAtmosphere : "night";
+      atmospherePresetRef.current = nextAtmosphere;
+      setAtmospherePreset(nextAtmosphere);
+      const nextLightAzimuth = clamp(parseNumber(params.get("light"), 210), 0, 359);
+      lightAzimuthRef.current = nextLightAzimuth;
+      setLightAzimuth(nextLightAzimuth);
+      const nextFieldOfView = clamp(parseNumber(params.get("fov"), 36), 20, 60);
+      fieldOfViewRef.current = nextFieldOfView;
+      setFieldOfView(nextFieldOfView);
+      const nextGestureMode = params.get("gestures") === "direct" ? "direct" : "cooperative";
+      gestureModeRef.current = nextGestureMode;
+      setGestureMode(nextGestureMode);
       const restoredMeasureUnit: MeasureUnit = params.get("units") === "metric" ? "metric" : "imperial";
       measureUnitRef.current = restoredMeasureUnit;
       setMeasureUnit(restoredMeasureUnit);
       const restoredWorkspace = params.get("ws");
       setCurrentWorkspace(restoredWorkspace === "knowledge" || restoredWorkspace === "features" || restoredWorkspace === "trust" ? restoredWorkspace : "explore");
       const restoredMapUtilityView = params.get("maptab");
-      const nextMapUtilityView: MapUtilityView = restoredMapUtilityView === "inspect" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "display" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "navigate";
+      const nextMapUtilityView: MapUtilityView = restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "scene" || restoredMapUtilityView === "connections" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "display" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "navigate";
       setMapUtilityView(nextMapUtilityView);
       const restoredCompareIds = params.get("compare")?.split(",") ?? [];
       if (restoredCompareIds.length === 2 && restoredCompareIds.every((id) => knownLayerIds.has(id)) && restoredCompareIds[0] !== restoredCompareIds[1]) {
@@ -1171,6 +1460,7 @@ export default function Home() {
         setCompareRightId(restoredCompareIds[1]);
       }
       if (nextMapUtilityView === "export") setExportGeneratedAt(new Date().toISOString());
+      if (nextMapUtilityView === "report") setReportGeneratedAt(new Date().toISOString());
       const restoredMapUtilityOpen = params.get("mapui") === "open";
       setMapUtilityOpen(restoredMapUtilityOpen);
       if (restoredMapUtilityOpen && compactRef.current) {
@@ -1222,7 +1512,7 @@ export default function Home() {
         setSelected(null);
         setRightOpen(false);
       }
-  }, []);
+  }, [applyRendererNeutralView]);
 
   useEffect(() => {
     const restore = window.setTimeout(restoreExplorerFromUrl, 0);
@@ -1236,315 +1526,48 @@ export default function Home() {
 
   useEffect(() => {
     let disposed = false;
-    const mapContainer = mapContainerRef.current;
-    if (!mapContainer) return;
+    const initialView = pendingViewRef.current ?? KANSAS_VIEW;
+    const runtimePort = createNullMapRuntime({
+      longitude: initialView.center[0],
+      latitude: initialView.center[1],
+      zoom: initialView.zoom,
+      bearing: initialView.bearing,
+      pitch: initialView.pitch,
+    });
+    mapRuntimeRef.current = runtimePort;
+    const unsubscribe = runtimePort.subscribeSnapshot((snapshot) => {
+      if (disposed || snapshot.state === "DISPOSED") return;
+      const nextView: ViewState = {
+        center: [snapshot.camera.longitude, snapshot.camera.latitude],
+        zoom: snapshot.camera.zoom,
+        bearing: snapshot.camera.bearing,
+        pitch: snapshot.camera.pitch,
+      };
+      setView(nextView);
+      setPointer([...nextView.center] as [number, number]);
+    });
 
-    loadConfiguredMapLibre().then(({ maplibregl, version }) => {
-      if (disposed || !mapContainerRef.current) return;
-      setMaplibreProbe((current) => ({ ...current, version, workerConfigured: true, runtimeAssetsReady: true, error: null }));
-      try {
-        const webgl2 = document.createElement("canvas").getContext("webgl2");
-        setMaplibreProbe((current) => ({ ...current, webgl2: Boolean(webgl2) }));
-        if (!webgl2) {
-          setSourceStates(Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, "error"])));
-          setMaplibreProbe((current) => ({ ...current, error: "WebGL2 is unavailable" }));
-          setRuntime({ kind: "error", message: "WebGL2 is unavailable in this browser. The Layer Catalog and trust metadata remain readable, but the interactive map cannot start." });
-          return;
-        }
-        const initialView = pendingViewRef.current ?? KANSAS_VIEW;
-        const map = new maplibregl.Map({
-          container: mapContainerRef.current,
-          style: BASEMAPS[basemapRef.current].style,
-          center: initialView.center,
-          zoom: initialView.zoom,
-          bearing: initialView.bearing,
-          pitch: initialView.pitch,
-          minZoom: 4,
-          maxZoom: 16,
-          maxBounds: [[-104.8, 34.8], [-92.0, 42.2]],
-          attributionControl: { compact: true },
-          cooperativeGestures: true,
-        });
-        mapRef.current = map;
-        setMaplibreProbe((current) => ({ ...current, mapConstructed: true }));
-        const scaleControl = new maplibregl.ScaleControl({ unit: measureUnitRef.current, maxWidth: 110 });
-        scaleControlRef.current = scaleControl;
-        map.addControl(scaleControl, "bottom-left");
-        let interactionHandlersBound = false;
-        let runtimeError: string | null = null;
-        const failedSourceIds = new Set<string>();
-
-        const refreshMaplibreProbe = () => {
-          const nextSourceStates = Object.fromEntries(LAYER_REGISTRY.map((layer) => {
-            const sourceReady = Boolean(map.getSource(layer.sourceId)) && map.isSourceLoaded(layer.sourceId);
-            return [layer.id, sourceReady ? "ready" : failedSourceIds.has(layer.sourceId) ? "error" : "loading"];
-          })) as Record<string, "loading" | "ready" | "error">;
-          const sourcesReady = Object.values(nextSourceStates).filter((state) => state === "ready").length;
-          const styleLoaded = Boolean(map.isStyleLoaded());
-          const canvasBounds = map.getCanvas().getBoundingClientRect();
-          const canvasReady = canvasBounds.width > 0 && canvasBounds.height > 0 && map.getCanvas().width > 0 && map.getCanvas().height > 0;
-          const projectionType = map.getProjection().type === "globe" ? "globe" : "mercator";
-          const interactionsReady = interactionHandlersBound
-            && map.dragPan.isEnabled()
-            && map.scrollZoom.isEnabled()
-            && map.keyboard.isEnabled()
-            && map.touchZoomRotate.isEnabled();
-          const nextProbe = {
-            styleLoaded,
-            canvasReady,
-            idle: map.loaded(),
-            tilesLoaded: map.areTilesLoaded(),
-            controlsReady: Boolean(scaleControlRef.current),
-            interactionsReady,
-            sourcesReady,
-            projection: projectionType,
-            error: runtimeError,
-          } satisfies Partial<MapLibreRuntimeProbe>;
-          setSourceStates(nextSourceStates);
-          setStyleReady(styleLoaded);
-          setMaplibreProbe((current) => ({ ...current, ...nextProbe }));
-          return nextProbe;
-        };
-
-        const syncStyle = () => {
-          hoveredRef.current = null;
-          map.getCanvas().style.cursor = "";
-          applyRegistryState(map, visibilityRef.current, opacityRef.current, yearRef.current, orderRef.current);
-          map.setProjection({ type: projectionRef.current });
-          const currentSelection = selectedRef.current;
-          if (currentSelection) {
-            const mismatch = isFeatureTimeMismatch(currentSelection.layer.temporal, currentSelection.properties.year, yearRef.current);
-            const layerVisible = visibilityRef.current[currentSelection.layerId];
-            updateSelectionSource(map, mismatch || !layerVisible ? null : currentSelection.geometry);
-          }
-          updateMeasurementSource(map, buildMeasurementData(measureCoordinatesRef.current, measurementGeometryModeRef.current));
-          refreshMaplibreProbe();
-        };
-
-        map.on("style.load", syncStyle);
-        map.once("load", () => {
-          syncStyle();
-          map.setProjection({ type: projectionRef.current });
-          setRuntime({ kind: "loading", message: `MapLibre ${version} loaded · verifying local sources and interactions…` });
-          map.resize();
-        });
-
-        map.on("mousemove", (event) => {
-          pendingPointerRef.current = [event.lngLat.lng, event.lngLat.lat];
-          if (pointerFrameRef.current === null) {
-            pointerFrameRef.current = window.requestAnimationFrame(() => {
-              setPointer(pendingPointerRef.current);
-              pointerFrameRef.current = null;
-            });
-          }
-          const availableLayers = interactiveLayerIds.filter((id) => map.getLayer(id));
-          const candidate = map.queryRenderedFeatures(event.point, { layers: availableLayers })[0];
-          if (!candidate) {
-            map.getCanvas().style.cursor = "";
-            if (hoveredRef.current) map.setFeatureState(hoveredRef.current, { hover: false });
-            hoveredRef.current = null;
-            return;
-          }
-          map.getCanvas().style.cursor = "pointer";
-          if (candidate.id !== undefined) {
-            const next = { source: candidate.source, id: candidate.id };
-            if (hoveredRef.current?.source === next.source && hoveredRef.current.id === next.id) return;
-            if (hoveredRef.current) map.setFeatureState(hoveredRef.current, { hover: false });
-            hoveredRef.current = next;
-            map.setFeatureState(hoveredRef.current, { hover: true });
-          } else if (hoveredRef.current) {
-            map.setFeatureState(hoveredRef.current, { hover: false });
-            hoveredRef.current = null;
-          }
-        });
-
-        map.on("click", (event) => {
-          if (measureModeRef.current) {
-            measureCoordinatesRef.current = [...measureCoordinatesRef.current, [event.lngLat.lng, event.lngLat.lat]];
-            const coordinates = measureCoordinatesRef.current;
-            updateMeasurementSource(map, buildMeasurementData(coordinates, measureModeRef.current));
-            setMeasurement(measurementLabelFor(measureModeRef.current, coordinates, measureUnitRef.current));
-            return;
-          }
-
-          const availableLayers = interactiveLayerIds.filter((id) => map.getLayer(id));
-          const renderedCandidates = map.queryRenderedFeatures(event.point, { layers: availableLayers });
-          const candidate = renderedCandidates[0];
-          if (!candidate) {
-            setMapQueryCandidates([]);
-            return;
-          }
-
-          if (candidate.properties?.cluster) {
-            setMapQueryCandidates([]);
-            const source = map.getSource(candidate.source) as GeoJSONSource;
-            void source.getClusterExpansionZoom(Number(candidate.properties.cluster_id)).then((zoom) => {
-              const coordinates = (candidate.geometry as GeoJSON.Point).coordinates as [number, number];
-              map.easeTo({ center: coordinates, zoom, duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 500 });
-            });
-            return;
-          }
-
-          const stableCandidates = new Map<string, MapQueryCandidate>();
-          for (const rendered of renderedCandidates) {
-            if (rendered.properties?.cluster) continue;
-            const layer = findLayerByRenderer(rendered.layer.id);
-            const featureId = String(rendered.properties?.fid ?? rendered.id ?? "");
-            const match = featureId ? findFeature(featureId) : null;
-            if (!layer || !match || match.layer.id !== layer.id) continue;
-            stableCandidates.set(`${layer.id}:${featureId}`, {
-              featureId,
-              layerId: layer.id,
-              title: match.feature.properties.title,
-              layerTitle: layer.title,
-              evidenceState: match.feature.properties.evidenceState,
-              sourceYear: match.feature.properties.year,
-            });
-          }
-          let candidateStack = [...stableCandidates.values()];
-          if (candidateStack.some((item) => item.layerId !== "kansas-extent")) candidateStack = candidateStack.filter((item) => item.layerId !== "kansas-extent");
-          if (candidateStack.length > 1) {
-            popupRef.current?.remove();
-            mapUtilityReturnRef.current = mapContainerRef.current;
-            setMapQueryCandidates(candidateStack);
-            setMapFeatureLayer("ALL");
-            setMapUtilityView("inspect");
-            setMapUtilityOpen(true);
-            setToolsExpanded(false);
-            if (compactRef.current) {
-              setLeftOpen(false);
-              setRightOpen(false);
-              setTimelineOpen(false);
-            }
-            window.setTimeout(() => mapUtilityPanelRef.current?.querySelector<HTMLElement>("button:not([disabled])")?.focus(), 0);
-            return;
-          }
-
-          const stableCandidate = candidateStack[0];
-          const layer = stableCandidate ? LAYER_REGISTRY.find((item) => item.id === stableCandidate.layerId) : undefined;
-          const featureId = stableCandidate?.featureId ?? "";
-          if (!layer || !featureId) {
-            setRuntime({ kind: "degraded", message: "A rendered candidate could not be translated into a stable Explorer feature." });
-            return;
-          }
-          const context = copyFeature(layer, featureId);
-          if (!context) {
-            setRuntime({ kind: "degraded", message: "The selected candidate has no stable application-level registry record." });
-            return;
-          }
-
-          setMapQueryCandidates([]);
-          openSelectionRef.current(context, mapContainerRef.current);
-          updateSelectionSource(map, context.geometry);
-          popupRef.current?.remove();
-          const popupNode = document.createElement("div");
-          popupNode.className = "map-popup-content";
-          const title = document.createElement("strong");
-          title.textContent = context.properties.title;
-          const state = document.createElement("span");
-          state.textContent = evidenceLabels[context.properties.evidenceState].label;
-          popupNode.append(title, state);
-          popupRef.current = new maplibregl.Popup({ closeButton: true, closeOnClick: false, maxWidth: "260px" })
-            .setLngLat(event.lngLat)
-            .setDOMContent(popupNode)
-            .addTo(map);
-        });
-        interactionHandlersBound = true;
-
-        map.on("movestart", () => {
-          const center = map.getCenter();
-          lastKnownGoodViewRef.current = { center: [center.lng, center.lat], zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch() };
-        });
-        map.on("moveend", () => {
-          const center = map.getCenter();
-          const nextView: ViewState = { center: [center.lng, center.lat], zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch() };
-          const bounds = map.getBounds();
-          setMapViewportBounds({ west: bounds.getWest(), south: bounds.getSouth(), east: bounds.getEast(), north: bounds.getNorth() });
-          setView(nextView);
-        });
-        map.on("error", (event) => {
-          const message = event.error?.message || "The map reported an unknown rendering error.";
-          const sourceId = (event as typeof event & { sourceId?: string }).sourceId;
-          const affectedLayer = sourceId ? LAYER_REGISTRY.find((layer) => layer.sourceId === sourceId) : undefined;
-          runtimeError = message;
-          if (sourceId) failedSourceIds.add(sourceId);
-          setMaplibreProbe((current) => ({ ...current, error: message }));
-          if (affectedLayer) {
-            setSourceStates((current) => ({ ...current, [affectedLayer.id]: "error" }));
-            setRuntime({ kind: "degraded", message: `${affectedLayer.title} could not load; other map layers remain available. ${message}` });
-          } else {
-            setRuntime({ kind: "error", message: `Map runtime error: ${message}` });
-          }
-        });
-        map.on("idle", () => {
-          const probe = refreshMaplibreProbe();
-          const ready = probe.styleLoaded
-            && probe.canvasReady
-            && probe.tilesLoaded
-            && probe.sourcesReady === LAYER_REGISTRY.length
-            && probe.interactionsReady
-            && !runtimeError;
-          if (!ready) {
-            setRuntime({ kind: runtimeError ? "degraded" : "loading", message: runtimeError ? `MapLibre runtime proof is incomplete: ${runtimeError}` : "MapLibre is waiting for all admitted local capabilities to settle…" });
-            return;
-          }
-          setRuntime({ kind: "ready", message: `MapLibre ${version} ready · ${LAYER_REGISTRY.length} local sources · interactions proven` });
-        });
-      } catch (error) {
-        const message = error instanceof Error ? error.message : "unknown failure";
-        setMaplibreProbe((current) => ({ ...current, error: message }));
-        setRuntime({ kind: "error", message: `MapLibre could not start: ${message}` });
-      }
-    }).catch((error: unknown) => {
-      const message = error instanceof Error ? error.message : "unknown failure";
-      setMaplibreProbe((current) => ({ ...current, error: message }));
-      setRuntime({ kind: "error", message: `MapLibre could not load: ${message}` });
+    void runtimePort.initialize().then(() => {
+      if (disposed) return;
+      setRuntime({
+        kind: "degraded",
+        message: "Renderer acquisition is held. NullMapRuntime preserves serializable camera and catalog state without MapLibre, WebGL, workers, sources, tiles, or network access.",
+      });
+    }).catch(() => {
+      if (disposed) return;
+      setRuntime({
+        kind: "error",
+        message: "The renderer-neutral fallback could not initialize; catalog and evidence metadata remain readable.",
+      });
     });
 
     return () => {
       disposed = true;
-      popupRef.current?.remove();
-      if (pointerFrameRef.current !== null) window.cancelAnimationFrame(pointerFrameRef.current);
-      mapRef.current?.remove();
-      mapRef.current = null;
+      unsubscribe();
+      runtimePort.dispose();
+      if (mapRuntimeRef.current === runtimePort) mapRuntimeRef.current = null;
     };
   }, []);
-
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map || !map.isStyleLoaded()) return;
-    applyRegistryState(map, visibility, opacity, year, layerOrder);
-  }, [visibility, opacity, year, layerOrder]);
-
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map || !map.isStyleLoaded()) return;
-    map.setStyle(BASEMAPS[basemap].style);
-    setStyleReady(false);
-    setMaplibreProbe((current) => ({ ...current, styleLoaded: false, idle: false, tilesLoaded: false, sourcesReady: 0 }));
-    setRuntime({ kind: "loading", message: `Applying ${BASEMAPS[basemap].title} style…` });
-  }, [basemap]);
-
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map?.isStyleLoaded()) return;
-    updateSelectionSource(map, selected && !selectedTimeMismatch && !selectedLayerHidden ? selected.geometry : null);
-  }, [selected, selectedLayerHidden, selectedTimeMismatch]);
-
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map?.isStyleLoaded()) return;
-    map.setProjection({ type: projection });
-    setMaplibreProbe((current) => ({ ...current, projection }));
-  }, [projection]);
-
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
-    const first = window.requestAnimationFrame(() => map.resize());
-    const second = window.setTimeout(() => map.resize(), 260);
-    return () => { window.cancelAnimationFrame(first); window.clearTimeout(second); };
-  }, [leftOpen, rightOpen, timelineOpen]);
 
   useEffect(() => {
     if (!playing) return;
@@ -1626,8 +1649,6 @@ export default function Home() {
         setMeasureMode(null);
         setMeasurementGeometryMode(null);
         setMeasurement("Measurement cancelled");
-        mapRef.current?.doubleClickZoom.enable();
-        if (mapRef.current?.isStyleLoaded()) updateMeasurementSource(mapRef.current, buildMeasurementData([], null));
       }
       else if (!isCompact && rightOpen) closeRightPanel();
     };
@@ -1644,7 +1665,7 @@ export default function Home() {
     const layer = LAYER_REGISTRY.find((candidate) => candidate.id === item.layerId);
     if (!layer) return;
     setVisibility((current) => ({ ...current, [layer.id]: true }));
-    mapRef.current?.fitBounds([[layer.bounds[0], layer.bounds[1]], [layer.bounds[2], layer.bounds[3]]], { padding: 70, maxZoom: 9, duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 650 });
+    fitRendererNeutralBounds(layer.bounds);
   };
 
   const activatePublicWorkspace = (workspaceId: PublicWorkspaceId) => {
@@ -1703,19 +1724,157 @@ export default function Home() {
     locationDerivedViewRef.current = false;
     setLocationCameraRedacted(false);
     setVisibility((current) => ({ ...current, [layer.id]: true }));
-    mapRef.current?.fitBounds([[layer.bounds[0], layer.bounds[1]], [layer.bounds[2], layer.bounds[3]]], { padding: 70, maxZoom: 9, duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 650 });
+    fitRendererNeutralBounds(layer.bounds);
   };
 
   const fitKansasView = () => {
     if (locationDerivedViewRef.current) {
       locationDerivedViewRef.current = false;
       setLocationCameraRedacted(false);
-      mapRef.current?.jumpTo(KANSAS_VIEW);
+      applyRendererNeutralView(KANSAS_VIEW);
       announce("Private location camera cleared and reset to the generalized Kansas extent");
       return;
     }
-    mapRef.current?.fitBounds([[-102.1, 36.95], [-94.55, 40.05]], { padding: 48, duration: motionDuration(600) });
-    announce("Fit the generalized Kansas demonstration extent");
+    fitRendererNeutralBounds([-102.1, 36.95, -94.55, 40.05]);
+    announce("Framed the generalized Kansas demonstration extent in renderer-neutral camera state");
+  };
+
+  const startAreaDraw = () => {
+    if (locationDerivedViewRef.current || locationCameraRedacted) {
+      announce("Clear the private location camera before drawing a shareable report area");
+      return;
+    }
+    stopSceneOrbit(false);
+    projectionRef.current = "mercator";
+    setProjection("mercator");
+    updateRendererNeutralView({ bearing: 0, pitch: 0 });
+    areaDrawRef.current = null;
+    setAreaDrawBox(null);
+    setAreaDrawMode(true);
+    setToolsExpanded(false);
+    dismissMapUtilityWithoutFocus();
+    window.setTimeout(() => document.querySelector<HTMLElement>(".map-query-surface")?.focus(), 0);
+    announce("Box query ready · drag on the north-up map to define a report area, or press Escape to cancel");
+  };
+
+  const cancelAreaDraw = (notify = true) => {
+    areaDrawRef.current = null;
+    setAreaDrawBox(null);
+    setAreaDrawMode(false);
+    if (notify) announce("Box query cancelled; the previous report area was preserved");
+  };
+
+  const mapPointFromPointer = (event: React.PointerEvent<HTMLDivElement>) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const x = clamp(event.clientX - bounds.left, 0, bounds.width);
+    const y = clamp(event.clientY - bounds.top, 0, bounds.height);
+    const longitude = mapViewportBounds.west + (x / Math.max(bounds.width, 1)) * (mapViewportBounds.east - mapViewportBounds.west);
+    const latitude = mapViewportBounds.north - (y / Math.max(bounds.height, 1)) * (mapViewportBounds.north - mapViewportBounds.south);
+    setPointer([longitude, latitude]);
+    return { x, y, width: bounds.width, height: bounds.height };
+  };
+
+  const handleMapAreaPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    const point = mapPointFromPointer(event);
+    if (!areaDrawMode || event.button !== 0) return;
+    event.preventDefault();
+    event.currentTarget.setPointerCapture(event.pointerId);
+    areaDrawRef.current = { pointerId: event.pointerId, startX: point.x, startY: point.y, width: point.width, height: point.height };
+    setAreaDrawBox({ left: point.x, top: point.y, width: 0, height: 0 });
+  };
+
+  const handleMapAreaPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const point = mapPointFromPointer(event);
+    const drawing = areaDrawRef.current;
+    if (!areaDrawMode || !drawing || drawing.pointerId !== event.pointerId) return;
+    event.preventDefault();
+    setAreaDrawBox({
+      left: Math.min(drawing.startX, point.x),
+      top: Math.min(drawing.startY, point.y),
+      width: Math.abs(point.x - drawing.startX),
+      height: Math.abs(point.y - drawing.startY),
+    });
+  };
+
+  const handleMapAreaPointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+    const point = mapPointFromPointer(event);
+    const drawing = areaDrawRef.current;
+    if (!areaDrawMode || !drawing || drawing.pointerId !== event.pointerId) return;
+    event.preventDefault();
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+    const nextArea = screenRectToBounds(
+      { startX: drawing.startX, startY: drawing.startY, endX: point.x, endY: point.y },
+      { width: drawing.width, height: drawing.height },
+      mapViewportBounds,
+    );
+    areaDrawRef.current = null;
+    setAreaDrawBox(null);
+    if (!nextArea) {
+      announce("Draw a larger report area; the previous area was preserved");
+      return;
+    }
+    analysisAreaRef.current = { ...nextArea };
+    setAnalysisArea({ ...nextArea });
+    setReportScope("ANALYSIS_AREA");
+    setReportGeneratedAt(new Date().toISOString());
+    setAreaDrawMode(false);
+    openMapUtility("report");
+    announce("Box query committed to the custom report; map pixels remain context, not evidence");
+  };
+
+  const captureAnalysisArea = () => {
+    if (locationDerivedViewRef.current) {
+      announce("Clear the private location camera before capturing a shareable analysis area");
+      return;
+    }
+    const nextArea: MapBoundsState = {
+      west: clamp(mapViewportBounds.west, SUPPORTED_CONTEXT_BOUNDS.west, SUPPORTED_CONTEXT_BOUNDS.east),
+      south: clamp(mapViewportBounds.south, SUPPORTED_CONTEXT_BOUNDS.south, SUPPORTED_CONTEXT_BOUNDS.north),
+      east: clamp(mapViewportBounds.east, SUPPORTED_CONTEXT_BOUNDS.west, SUPPORTED_CONTEXT_BOUNDS.east),
+      north: clamp(mapViewportBounds.north, SUPPORTED_CONTEXT_BOUNDS.south, SUPPORTED_CONTEXT_BOUNDS.north),
+    };
+    analysisAreaRef.current = nextArea;
+    setAnalysisArea(nextArea);
+    setReportScope("ANALYSIS_AREA");
+    setReportGeneratedAt(new Date().toISOString());
+    announce("Locked the current renderer-neutral view bounds as the report area of interest");
+  };
+
+  const clearAnalysisArea = () => {
+    analysisAreaRef.current = null;
+    setAnalysisArea(null);
+    areaDrawRef.current = null;
+    setAreaDrawBox(null);
+    setAreaDrawMode(false);
+    if (reportScope === "ANALYSIS_AREA") setReportScope("VIEWPORT");
+    announce("Cleared the locked analysis area");
+  };
+
+  const fitAnalysisArea = () => {
+    if (!analysisArea) {
+      announce("No analysis area is locked");
+      return;
+    }
+    locationDerivedViewRef.current = false;
+    setLocationCameraRedacted(false);
+    fitRendererNeutralBounds([analysisArea.west, analysisArea.south, analysisArea.east, analysisArea.north], 11);
+    announce("Fit the locked analysis area");
+  };
+
+  const travelCameraHistory = (direction: -1 | 1) => {
+    const nextIndex = cameraHistoryIndexRef.current + direction;
+    const nextView = cameraHistoryRef.current[nextIndex];
+    if (!nextView) {
+      announce(direction < 0 ? "No earlier camera view" : "No later camera view");
+      return;
+    }
+    cameraHistoryIndexRef.current = nextIndex;
+    setCameraHistoryIndex(nextIndex);
+    replayingCameraHistoryRef.current = true;
+    locationDerivedViewRef.current = false;
+    setLocationCameraRedacted(false);
+    updateRendererNeutralView({ ...nextView, center: [...nextView.center] as [number, number] });
+    announce(direction < 0 ? "Returned to the previous map view" : "Advanced to the next map view");
   };
 
   const inspectLayer = (layer: LayerRecord, returnElement: HTMLElement) => {
@@ -1736,7 +1895,6 @@ export default function Home() {
       const target = index + direction;
       if (index < 0 || target < 0 || target >= next.length) return current;
       [next[index], next[target]] = [next[target], next[index]];
-      if (mapRef.current?.isStyleLoaded()) reorderRegistryLayers(mapRef.current, next);
       return next;
     });
   };
@@ -1753,8 +1911,11 @@ export default function Home() {
     if (!match || match.layer.id !== layerId) return;
     locationDerivedViewRef.current = false;
     setLocationCameraRedacted(false);
-    mapRef.current?.easeTo({ center: [match.feature.properties.focusLng, match.feature.properties.focusLat], zoom: Math.max(mapRef.current.getZoom(), 8), duration: motionDuration(550) });
-    announce(`Centered ${match.feature.properties.title} · camera only`);
+    updateRendererNeutralView({
+      center: [match.feature.properties.focusLng, match.feature.properties.focusLat],
+      zoom: Math.max(mapRuntimeRef.current?.getSnapshot().camera.zoom ?? KANSAS_VIEW.zoom, 8),
+    });
+    announce(`Centered ${match.feature.properties.title} in renderer-neutral camera state`);
   };
 
   const goToCoordinates = (event: React.FormEvent<HTMLFormElement>) => {
@@ -1774,8 +1935,11 @@ export default function Home() {
     setCoordinateLongitude(longitude.toFixed(5));
     locationDerivedViewRef.current = false;
     setLocationCameraRedacted(false);
-    mapRef.current?.easeTo({ center: [longitude, latitude], zoom: Math.max(mapRef.current.getZoom(), 9), duration: motionDuration(600) });
-    announce(`Centered ${latitude.toFixed(4)}°, ${longitude.toFixed(4)}° · camera only`);
+    updateRendererNeutralView({
+      center: [longitude, latitude],
+      zoom: Math.max(mapRuntimeRef.current?.getSnapshot().camera.zoom ?? KANSAS_VIEW.zoom, 9),
+    });
+    announce(`Centered ${latitude.toFixed(4)}°, ${longitude.toFixed(4)}° in renderer-neutral camera state`);
   };
 
   const copyMapCenter = async () => {
@@ -1801,65 +1965,381 @@ export default function Home() {
     setLocationCameraRedacted(false);
     const points = mapFeatureIndex.map(({ feature }) => [feature.properties.focusLng, feature.properties.focusLat] as [number, number]);
     if (points.length === 1) {
-      mapRef.current?.easeTo({ center: points[0], zoom: Math.max(mapRef.current.getZoom(), 9), duration: motionDuration(550) });
+      updateRendererNeutralView({
+        center: points[0],
+        zoom: Math.max(mapRuntimeRef.current?.getSnapshot().camera.zoom ?? KANSAS_VIEW.zoom, 9),
+      });
     } else {
       const longitudes = points.map(([longitude]) => longitude);
       const latitudes = points.map(([, latitude]) => latitude);
-      mapRef.current?.fitBounds([[Math.min(...longitudes), Math.min(...latitudes)], [Math.max(...longitudes), Math.max(...latitudes)]], { padding: 64, maxZoom: 10, duration: motionDuration(650) });
+      fitRendererNeutralBounds([
+        Math.min(...longitudes),
+        Math.min(...latitudes),
+        Math.max(...longitudes),
+        Math.max(...latitudes),
+      ], 10);
     }
     announce(`Fit ${mapFeatureIndex.length} compatible indexed feature${mapFeatureIndex.length === 1 ? "" : "s"}`);
   };
 
+  const applyScenePreset = (preset: ScenePresetId) => {
+    const scene = {
+      "overview-2d": {
+        layers: ["kansas-extent", "watershed-context", "water-context", "prairie-context", "atmosphere-observations", "communities"],
+        basemap: "midnight" as BasemapKey,
+        projection: "mercator" as const,
+        camera: { ...KANSAS_VIEW },
+        scale: 1,
+        atmosphere: "night" as AtmospherePreset,
+        lightAzimuth: 210,
+        fieldOfView: 36,
+        label: "2D Kansas overview",
+      },
+      "globe-overview": {
+        layers: ["kansas-extent", "watershed-context", "water-context", "prairie-context", "atmosphere-observations", "communities"],
+        basemap: "midnight" as BasemapKey,
+        projection: "globe" as const,
+        camera: { center: [-98.38, 38.48] as [number, number], zoom: 4.8, bearing: -16, pitch: 22 },
+        scale: 1,
+        atmosphere: "clear" as AtmospherePreset,
+        lightAzimuth: 225,
+        fieldOfView: 42,
+        label: "Renderer-neutral globe overview",
+      },
+      "water-systems": {
+        layers: ["kansas-extent", "watershed-context", "water-context", "communities"],
+        basemap: "midnight" as BasemapKey,
+        projection: "mercator" as const,
+        camera: { center: [-98.25, 38.55] as [number, number], zoom: 6.05, bearing: 0, pitch: 18 },
+        scale: 1,
+        atmosphere: "clear" as AtmospherePreset,
+        lightAzimuth: 195,
+        fieldOfView: 38,
+        label: "Water systems scene",
+      },
+      "smoke-context": {
+        layers: ["kansas-extent", "watershed-context", "smoke-context", "atmosphere-observations", "communities"],
+        basemap: "midnight" as BasemapKey,
+        projection: "mercator" as const,
+        camera: { center: [-97.05, 38.65] as [number, number], zoom: 6.0, bearing: -8, pitch: 28 },
+        scale: 1,
+        atmosphere: "dusk" as AtmospherePreset,
+        lightAzimuth: 248,
+        fieldOfView: 40,
+        label: "Synthetic smoke context scene",
+      },
+      "elevation-3d": {
+        layers: ["kansas-extent", "watershed-context", "water-context", "elevation-concept", "communities"],
+        basemap: "prairie" as BasemapKey,
+        projection: "mercator" as const,
+        camera: { center: [-98.38, 38.48] as [number, number], zoom: 5.8, bearing: -18, pitch: 52 },
+        scale: 1.2,
+        atmosphere: "dusk" as AtmospherePreset,
+        lightAzimuth: 235,
+        fieldOfView: 44,
+        label: "Synthetic elevation extrusion scene",
+      },
+      "tile-grid": {
+        layers: ["kansas-extent", "tile-matrix-grid", "water-context", "communities"],
+        basemap: "midnight" as BasemapKey,
+        projection: "mercator" as const,
+        camera: { center: [-98.38, 38.48] as [number, number], zoom: 6.2, bearing: 0, pitch: 0 },
+        scale: 1,
+        atmosphere: "night" as AtmospherePreset,
+        lightAzimuth: 210,
+        fieldOfView: 36,
+        label: "Tile diagnostic grid scene",
+      },
+    }[preset];
+    stopSceneOrbit(false);
+    const nextVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, scene.layers.includes(layer.id)]));
+    visibilityRef.current = nextVisibility;
+    yearRef.current = 2026;
+    basemapRef.current = scene.basemap;
+    projectionRef.current = scene.projection;
+    verticalExaggerationRef.current = scene.scale;
+    atmospherePresetRef.current = scene.atmosphere;
+    lightAzimuthRef.current = scene.lightAzimuth;
+    fieldOfViewRef.current = scene.fieldOfView;
+    setVisibility(nextVisibility);
+    setYear(2026);
+    setPlaying(false);
+    setBasemap(scene.basemap);
+    setProjection(scene.projection);
+    setScenePreset(preset);
+    setVerticalExaggeration(scene.scale);
+    setAtmospherePreset(scene.atmosphere);
+    setLightAzimuth(scene.lightAzimuth);
+    setFieldOfView(scene.fieldOfView);
+    setMapQueryCandidates([]);
+    locationDerivedViewRef.current = false;
+    setLocationCameraRedacted(false);
+    clearSelectionState();
+    updateRendererNeutralView(scene.camera);
+    announce(`${scene.label} applied · reversible browser-only view state`);
+  };
+
+  const toggleSceneLayer = (layerId: "watershed-context" | "smoke-context" | "elevation-concept" | "tile-matrix-grid") => {
+    setVisibility((current) => {
+      const next = { ...current, [layerId]: !current[layerId] };
+      visibilityRef.current = next;
+      return next;
+    });
+  };
+
+  const orientSceneCamera = (pitch: number, bearing = view.bearing) => {
+    updateRendererNeutralView({ pitch, bearing });
+  };
+
+  const startSceneOrbit = () => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      announce("Orbit is paused because reduced motion is enabled");
+      return;
+    }
+    stopSceneOrbit(false);
+    setSceneOrbiting(true);
+    replayingCameraHistoryRef.current = true;
+    updateRendererNeutralView({ bearing: view.bearing + 90, pitch: Math.max(46, view.pitch) });
+    sceneOrbitTimerRef.current = window.setTimeout(() => {
+      sceneOrbitTimerRef.current = null;
+      setSceneOrbiting(false);
+    }, 900);
+    announce("Applied a reversible 90° renderer-neutral camera turn; MapLibre animation remains held");
+  };
+
+  const setMapGestureMode = (mode: "cooperative" | "direct") => {
+    gestureModeRef.current = mode;
+    setGestureMode(mode);
+    announce(mode === "cooperative" ? "Cooperative map gestures enabled" : "Direct map gestures enabled");
+  };
+
+  const probeSourceConnection = (layer: LayerRecord) => {
+    const uniqueFeatures = new Set(layer.data.features
+      .filter((feature) => isFeatureAvailableAtTime(layer, feature.properties.year, year))
+      .map((feature) => feature.properties.fid));
+    setSourceActivity((current) => ({ ...current, [layer.id]: "SETTLED" }));
+    setSourceProbeCounts((current) => ({ ...current, [layer.id]: uniqueFeatures.size }));
+    announce(`${layer.title} site-local fixture inspection returned ${uniqueFeatures.size} stable feature${uniqueFeatures.size === 1 ? "" : "s"}; renderer source queries remain held`);
+  };
+
+  const inspectSourceConnection = (layer: LayerRecord) => {
+    setMapFeatureQuery("");
+    setMapFeatureLayer(layer.id);
+    activateMapUtilityView("inspect");
+  };
+
   const applyViewProfile = (profile: MapViewProfile) => {
     const nextVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, profile.visibleLayerIds.includes(layer.id)]));
+    const nextScenePreset: ScenePresetId = profile.id === "smoke" ? "smoke-context" : profile.id === "elevation" ? "elevation-3d" : profile.projection === "globe" ? "globe-overview" : "overview-2d";
+    const nextAtmosphere: AtmospherePreset = profile.id === "smoke" || profile.id === "elevation" ? "dusk" : profile.projection === "globe" ? "clear" : "night";
+    const nextFieldOfView = profile.id === "elevation" ? 44 : profile.projection === "globe" ? 42 : 36;
+    stopSceneOrbit(false);
     visibilityRef.current = nextVisibility;
     yearRef.current = profile.year;
     basemapRef.current = profile.basemap;
     projectionRef.current = profile.projection;
+    atmospherePresetRef.current = nextAtmosphere;
+    fieldOfViewRef.current = nextFieldOfView;
     setVisibility(nextVisibility);
     setYear(profile.year);
     setPlaying(false);
     setBasemap(profile.basemap);
     setProjection(profile.projection);
+    setScenePreset(nextScenePreset);
+    setAtmospherePreset(nextAtmosphere);
+    setFieldOfView(nextFieldOfView);
     setMapQueryCandidates([]);
     locationDerivedViewRef.current = false;
     setLocationCameraRedacted(false);
     clearSelectionState();
-    mapRef.current?.fitBounds([[-102.1, 36.95], [-94.55, 40.05]], { padding: 54, duration: motionDuration(600) });
+    fitRendererNeutralBounds([-102.1, 36.95, -94.55, 40.05]);
     announce(`${profile.title} applied · view state only`);
+  };
+
+  const applyAnalysisRecipe = (recipe: AnalysisRecipe) => {
+    const nextVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, recipe.layerIds.includes(layer.id)]));
+    stopSceneOrbit(false);
+    visibilityRef.current = nextVisibility;
+    yearRef.current = recipe.year;
+    basemapRef.current = recipe.basemap;
+    projectionRef.current = "mercator";
+    atmospherePresetRef.current = "night";
+    lightAzimuthRef.current = 210;
+    fieldOfViewRef.current = 36;
+    setVisibility(nextVisibility);
+    setYear(recipe.year);
+    setPlaying(false);
+    setBasemap(recipe.basemap);
+    setProjection("mercator");
+    setScenePreset("overview-2d");
+    setAtmospherePreset("night");
+    setLightAzimuth(210);
+    setFieldOfView(36);
+    setReportTitle(recipe.title);
+    setReportScope(recipe.scope);
+    setReportDetail(recipe.detail);
+    setReportLayerIds([...recipe.layerIds]);
+    setReportQuery("");
+    setReportEvidenceFilter("ALL");
+    setReportGeneratedAt(new Date().toISOString());
+    setMapQueryCandidates([]);
+    locationDerivedViewRef.current = false;
+    setLocationCameraRedacted(false);
+    clearSelectionState();
+    updateRendererNeutralView({ center: [...recipe.center] as [number, number], zoom: recipe.zoom, bearing: 0, pitch: 0 });
+    announce(`${recipe.title} recipe applied · map, time, layers, and report updated`);
+  };
+
+  const persistSavedWorkspaces = (next: WorkspaceSnapshot[]) => {
+    const bounded = next.slice(0, 8);
+    setSavedWorkspaces(bounded);
+    try { window.localStorage.setItem(WORKSPACE_STORAGE_KEY, JSON.stringify(bounded)); } catch { /* Device-local workspace storage is optional. */ }
+  };
+
+  const saveCurrentWorkspace = () => {
+    const savedAt = new Date().toISOString();
+    const snapshot: WorkspaceSnapshot = {
+      id: `workspace-${Date.now()}`,
+      name: workspaceName.trim() || `Kansas workspace ${savedWorkspaces.length + 1}`,
+      savedAt,
+      view: { center: [...view.center] as [number, number], zoom: view.zoom, bearing: view.bearing, pitch: view.pitch },
+      locationCameraRedacted: locationCameraRedacted || locationDerivedViewRef.current,
+      visibility: { ...visibility },
+      opacity: { ...opacity },
+      layerOrder: [...layerOrder],
+      year,
+      basemap,
+      projection,
+      scene: {
+        preset: scenePreset,
+        verticalExaggeration,
+        atmosphere: atmospherePreset,
+        lightAzimuth,
+        fieldOfView,
+      },
+      analysisArea: analysisArea ? { ...analysisArea } : null,
+      report: {
+        title: reportTitle,
+        scope: reportScope,
+        detail: reportDetail,
+        layerIds: [...reportLayerIds],
+        sections: { ...reportSections },
+        query: reportQuery,
+        evidenceFilter: reportEvidenceFilter,
+      },
+      selection: selected ? { layerId: selected.layerId, featureId: selected.featureId } : null,
+    };
+    persistSavedWorkspaces([snapshot, ...savedWorkspaces]);
+    setWorkspaceName("");
+    announce(`${snapshot.name} saved on this device`);
+  };
+
+  const loadSavedWorkspace = (snapshot: WorkspaceSnapshot) => {
+    stopSceneOrbit(false);
+    const knownLayerIds = new Set(LAYER_REGISTRY.map((layer) => layer.id));
+    const nextVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, snapshot.visibility?.[layer.id] === true]));
+    const nextOpacity = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, clamp(Number(snapshot.opacity?.[layer.id] ?? layer.defaultOpacity), .1, 1)]));
+    const savedOrder = Array.isArray(snapshot.layerOrder) ? snapshot.layerOrder.filter((id) => knownLayerIds.has(id)) : [];
+    const nextOrder = [...savedOrder, ...defaultOrder.filter((id) => !savedOrder.includes(id))];
+    const nextYear = TIME_STEPS.includes(snapshot.year as (typeof TIME_STEPS)[number]) ? snapshot.year : 2026;
+    const nextBasemap: BasemapKey = snapshot.basemap === "prairie" ? "prairie" : "midnight";
+    const nextProjection = snapshot.projection === "globe" ? "globe" : "mercator";
+    // Legacy snapshots predate the marker, so fail closed instead of exposing a possibly location-derived camera.
+    const restoredLocationCameraRedaction = snapshot.locationCameraRedacted !== false;
+    const savedScene = snapshot.scene;
+    const nextScenePreset: ScenePresetId = savedScene?.preset === "globe-overview" || savedScene?.preset === "water-systems" || savedScene?.preset === "smoke-context" || savedScene?.preset === "elevation-3d" || savedScene?.preset === "tile-grid" ? savedScene.preset : "overview-2d";
+    const nextVerticalExaggeration = clamp(Number(savedScene?.verticalExaggeration ?? 1), 0, 2);
+    const nextAtmosphere: AtmospherePreset = savedScene?.atmosphere === "dusk" || savedScene?.atmosphere === "clear" ? savedScene.atmosphere : "night";
+    const nextLightAzimuth = clamp(Number(savedScene?.lightAzimuth ?? 210), 0, 359);
+    const nextFieldOfView = clamp(Number(savedScene?.fieldOfView ?? 36), 20, 60);
+    visibilityRef.current = nextVisibility;
+    opacityRef.current = nextOpacity;
+    orderRef.current = nextOrder;
+    yearRef.current = nextYear;
+    basemapRef.current = nextBasemap;
+    projectionRef.current = nextProjection;
+    verticalExaggerationRef.current = nextVerticalExaggeration;
+    atmospherePresetRef.current = nextAtmosphere;
+    lightAzimuthRef.current = nextLightAzimuth;
+    fieldOfViewRef.current = nextFieldOfView;
+    setVisibility(nextVisibility);
+    setOpacity(nextOpacity);
+    setLayerOrder(nextOrder);
+    setYear(nextYear);
+    setPlaying(false);
+    setBasemap(nextBasemap);
+    setProjection(nextProjection);
+    setScenePreset(nextScenePreset);
+    setVerticalExaggeration(nextVerticalExaggeration);
+    setAtmospherePreset(nextAtmosphere);
+    setLightAzimuth(nextLightAzimuth);
+    setFieldOfView(nextFieldOfView);
+    const savedAnalysisArea = snapshot.analysisArea;
+    const nextAnalysisArea = savedAnalysisArea
+      && Number.isFinite(savedAnalysisArea.west)
+      && Number.isFinite(savedAnalysisArea.south)
+      && Number.isFinite(savedAnalysisArea.east)
+      && Number.isFinite(savedAnalysisArea.north)
+      && savedAnalysisArea.west < savedAnalysisArea.east
+      && savedAnalysisArea.south < savedAnalysisArea.north
+      ? { ...savedAnalysisArea }
+      : null;
+    analysisAreaRef.current = nextAnalysisArea;
+    setAnalysisArea(nextAnalysisArea);
+    setReportTitle(snapshot.report?.title || "Kansas map data report");
+    setReportScope(snapshot.report?.scope === "SELECTION" || snapshot.report?.scope === "VISIBLE_LAYERS" || (snapshot.report?.scope === "ANALYSIS_AREA" && nextAnalysisArea) ? snapshot.report.scope : "VIEWPORT");
+    setReportDetail(snapshot.report?.detail === "EXECUTIVE" || snapshot.report?.detail === "TECHNICAL" ? snapshot.report.detail : "STANDARD");
+    const savedReportLayerIds = (snapshot.report?.layerIds ?? []).filter((id) => knownLayerIds.has(id));
+    setReportLayerIds(savedReportLayerIds.length ? savedReportLayerIds : LAYER_REGISTRY.filter((layer) => nextVisibility[layer.id]).map((layer) => layer.id));
+    setReportSections({ ...defaultReportSections, ...(snapshot.report?.sections ?? {}) });
+    setReportQuery(snapshot.report?.query ?? "");
+    const savedEvidenceFilter = snapshot.report?.evidenceFilter;
+    setReportEvidenceFilter(savedEvidenceFilter === "ALL" || (savedEvidenceFilter && savedEvidenceFilter in evidenceLabels) ? savedEvidenceFilter : "ALL");
+    setReportGeneratedAt(new Date().toISOString());
+    const savedView = snapshot.view;
+    if (savedView && Array.isArray(savedView.center) && savedView.center.length === 2) {
+      locationDerivedViewRef.current = restoredLocationCameraRedaction;
+      setLocationCameraRedacted(restoredLocationCameraRedaction);
+      updateRendererNeutralView({ center: [...savedView.center] as [number, number], zoom: savedView.zoom, bearing: savedView.bearing, pitch: savedView.pitch });
+    }
+    const restoredSelection = snapshot.selection ? copyFeature(LAYER_REGISTRY.find((layer) => layer.id === snapshot.selection?.layerId) ?? LAYER_REGISTRY[0], snapshot.selection.featureId) : null;
+    selectedRef.current = restoredSelection;
+    setSelected(restoredSelection);
+    setRightOpen(false);
+    setMapQueryCandidates([]);
+    announce(`${snapshot.name} restored from this device`);
+  };
+
+  const deleteSavedWorkspace = (snapshot: WorkspaceSnapshot) => {
+    persistSavedWorkspaces(savedWorkspaces.filter((candidate) => candidate.id !== snapshot.id));
+    announce(`${snapshot.name} removed from this device`);
   };
 
   const restoreLastKnownGoodView = () => {
     const lastView = lastKnownGoodViewRef.current;
-    mapRef.current?.jumpTo({ ...lastView, center: [...lastView.center] as [number, number] });
+    applyRendererNeutralView({ ...lastView, center: [...lastView.center] as [number, number] });
     announce("Restored the last known local camera state");
   };
 
   const reapplyRendererState = () => {
-    const map = mapRef.current;
-    if (!map?.isStyleLoaded()) {
-      announce("Style is not ready; renderer state was not changed");
+    const runtimePort = mapRuntimeRef.current;
+    if (!runtimePort) {
+      announce("Renderer-neutral runtime is unavailable; no state was changed");
       return;
     }
     try {
-      applyRegistryState(map, visibilityRef.current, opacityRef.current, yearRef.current, orderRef.current);
-      map.setProjection({ type: projectionRef.current });
-      const currentSelection = selectedRef.current;
-      const selectionAvailable = currentSelection && visibilityRef.current[currentSelection.layerId] && !isFeatureTimeMismatch(currentSelection.layer.temporal, currentSelection.properties.year, yearRef.current);
-      updateSelectionSource(map, selectionAvailable ? currentSelection.geometry : null);
-      updateMeasurementSource(map, buildMeasurementData(measureCoordinatesRef.current, measurementGeometryModeRef.current));
-      setSourceStates((current) => Object.fromEntries(LAYER_REGISTRY.map((layer) => [
-        layer.id,
-        current[layer.id] === "error" ? "error" : map.getSource(layer.sourceId) ? "ready" : "loading",
-      ])));
-      const hasKnownSourceError = Object.values(sourceStates).includes("error");
-      setRuntime(hasKnownSourceError
-        ? { kind: "degraded", message: "Renderer state reapplied; known source errors remain visible for diagnosis" }
-        : { kind: "ready", message: "MapLibre renderer state reapplied from the site registry" });
-      announce(hasKnownSourceError ? "Reapplied renderer state without clearing known source errors" : "Reapplied local style, layers, time, selection, and measurement state");
-    } catch (error) {
-      setRuntime({ kind: "degraded", message: `Registry reapply failed safely: ${error instanceof Error ? error.message : "unknown failure"}` });
-      announce("Renderer state could not be fully reapplied; diagnostics remain available");
+      const snapshot = runtimePort.getSnapshot();
+      applyRendererNeutralView({
+        center: [snapshot.camera.longitude, snapshot.camera.latitude],
+        zoom: snapshot.camera.zoom,
+        bearing: snapshot.camera.bearing,
+        pitch: snapshot.camera.pitch,
+      });
+      setRuntime({ kind: "degraded", message: "Renderer acquisition remains held; serializable NullMapRuntime camera state was reasserted without loading styles, sources, tiles, or workers." });
+      announce("Reasserted renderer-neutral camera state; renderer capabilities remain held");
+    } catch {
+      setRuntime({ kind: "error", message: "Renderer-neutral state could not be reasserted; catalog and evidence metadata remain readable." });
+      announce("Renderer-neutral state could not be reasserted; no renderer was acquired");
     }
   };
 
@@ -1870,85 +2350,74 @@ export default function Home() {
     yearRef.current = 2026;
     basemapRef.current = "midnight";
     projectionRef.current = "mercator";
+    verticalExaggerationRef.current = 1;
+    atmospherePresetRef.current = "night";
+    lightAzimuthRef.current = 210;
+    fieldOfViewRef.current = 36;
+    gestureModeRef.current = "cooperative";
     setVisibility(defaultVisibility);
     setOpacity(defaultOpacity);
     setLayerOrder(defaultOrder);
     setYear(2026);
     setBasemap("midnight");
     setProjection("mercator");
+    setScenePreset("overview-2d");
+    setVerticalExaggeration(1);
+    setAtmospherePreset("night");
+    setLightAzimuth(210);
+    setFieldOfView(36);
+    setGestureMode("cooperative");
+    stopSceneOrbit(false);
     setMeasureMode(null);
     setMeasurementGeometryMode(null);
     measureModeRef.current = null;
     measurementGeometryModeRef.current = null;
     measureCoordinatesRef.current = [];
     setMeasurement("Select a measurement tool");
-    mapRef.current?.doubleClickZoom.enable();
     locationDerivedViewRef.current = false;
     setLocationCameraRedacted(false);
-    mapRef.current?.jumpTo(KANSAS_VIEW);
-    if (mapRef.current?.isStyleLoaded()) updateMeasurementSource(mapRef.current, buildMeasurementData([], null));
+    replayingCameraHistoryRef.current = true;
+    cameraHistoryRef.current = [KANSAS_VIEW];
+    cameraHistoryIndexRef.current = 0;
+    setCameraHistoryIndex(0);
+    setCameraHistoryLength(1);
+    analysisAreaRef.current = null;
+    setAnalysisArea(null);
+    areaDrawRef.current = null;
+    setAreaDrawBox(null);
+    setAreaDrawMode(false);
+    applyRendererNeutralView(KANSAS_VIEW);
     clearSelection();
     setMapQueryCandidates([]);
-    showGuidedStart();
+    setGuidedStartOpen(false);
+    setReportTitle("Kansas map data report");
+    setReportScope("VIEWPORT");
+    setReportDetail("STANDARD");
+    setReportLayerIds(LAYER_REGISTRY.filter((layer) => layer.defaultVisibility).map((layer) => layer.id));
+    setReportSections(defaultReportSections);
+    setReportQuery("");
+    setReportEvidenceFilter("ALL");
     announce("Explorer reset to the Kansas demonstration view");
   };
 
   const toggleMeasure = (mode: Exclude<MeasureMode, null>) => {
-    if (measureMode === mode) {
-      setMeasureMode(null);
-      setMeasurementGeometryMode(null);
-      measureModeRef.current = null;
-      measurementGeometryModeRef.current = null;
-      measureCoordinatesRef.current = [];
-      setMeasurement("Measurement cancelled");
-      mapRef.current?.doubleClickZoom.enable();
-      if (mapRef.current?.isStyleLoaded()) updateMeasurementSource(mapRef.current, buildMeasurementData([], null));
-      return;
-    }
-    setMeasureMode(mode);
-    setMeasurementGeometryMode(mode);
-    measureModeRef.current = mode;
-    measurementGeometryModeRef.current = mode;
+    setMeasureMode(null);
+    setMeasurementGeometryMode(null);
+    measureModeRef.current = null;
+    measurementGeometryModeRef.current = null;
     measureCoordinatesRef.current = [];
-    setMeasurement(`Click the map to start measuring ${mode}`);
+    setMeasurement(`HOLD · ${mode} measurement requires the conforming renderer consumer migration`);
     setToolsExpanded(false);
     setMapQueryCandidates([]);
-    const map = mapRef.current;
-    if (map) {
-      map.doubleClickZoom.disable();
-      if (map.isStyleLoaded()) updateMeasurementSource(map, buildMeasurementData([], mode));
-    }
+    announce(`Screen ${mode} measurement remains held until renderer interactions cross MapRuntimePort`);
   };
 
   const undoMeasurementPoint = () => {
-    const mode = measurementGeometryModeRef.current;
-    if (!mode || measureCoordinatesRef.current.length === 0) {
-      announce("No measurement point to undo");
-      return;
-    }
-    measureCoordinatesRef.current = measureCoordinatesRef.current.slice(0, -1);
-    if (!measureModeRef.current) {
-      measureModeRef.current = mode;
-      setMeasureMode(mode);
-      mapRef.current?.doubleClickZoom.disable();
-    }
-    if (mapRef.current?.isStyleLoaded()) updateMeasurementSource(mapRef.current, buildMeasurementData(measureCoordinatesRef.current, mode));
-    setMeasurement(measureCoordinatesRef.current.length ? measurementLabelFor(mode, measureCoordinatesRef.current, measureUnitRef.current) : `Click the map to start measuring ${mode}`);
+    announce("No renderer-backed measurement points are available while the consumer migration is held");
   };
 
   const finishMeasurement = () => {
-    const mode = measurementGeometryModeRef.current;
-    if (!mode) return;
-    const minimum = mode === "distance" ? 2 : 3;
-    if (measureCoordinatesRef.current.length < minimum) {
-      announce(`Add ${minimum - measureCoordinatesRef.current.length} more point${minimum - measureCoordinatesRef.current.length === 1 ? "" : "s"} before finishing`);
-      return;
-    }
-    measureModeRef.current = null;
-    setMeasureMode(null);
-    mapRef.current?.doubleClickZoom.enable();
-    setMeasurement(`Complete · ${measurementLabelFor(mode, measureCoordinatesRef.current, measureUnitRef.current)}`);
-    announce("Screen measurement finished locally; it is not survey or evidence");
+    announce("Screen measurement remains held until renderer interactions cross MapRuntimePort");
   };
 
   const clearMeasurement = () => {
@@ -1958,20 +2427,12 @@ export default function Home() {
     setMeasureMode(null);
     setMeasurementGeometryMode(null);
     setMeasurement("Select a measurement tool");
-    mapRef.current?.doubleClickZoom.enable();
-    if (mapRef.current?.isStyleLoaded()) updateMeasurementSource(mapRef.current, buildMeasurementData([], null));
     announce("Screen measurement cleared");
   };
 
   const changeMeasureUnit = (unit: MeasureUnit) => {
     measureUnitRef.current = unit;
     setMeasureUnit(unit);
-    scaleControlRef.current?.setUnit(unit);
-    const mode = measurementGeometryModeRef.current;
-    if (mode && measureCoordinatesRef.current.length) {
-      const prefix = measureModeRef.current ? "" : "Complete · ";
-      setMeasurement(`${prefix}${measurementLabelFor(mode, measureCoordinatesRef.current, unit)}`);
-    }
   };
 
   const shareView = async () => {
@@ -1983,7 +2444,7 @@ export default function Home() {
       await navigator.clipboard.writeText(shareUrl);
       announce(locationDerivedViewRef.current
         ? "Share link copied with the location-derived camera redacted"
-        : "Share link copied with camera, layer order, opacity, time, projection, and evidence state");
+        : `Share link copied with camera, layer order, opacity, time, projection, evidence state${analysisArea ? ", and analysis area" : ""}`);
     } catch {
       announce("Share state is in the address bar and ready to copy");
     }
@@ -1997,11 +2458,14 @@ export default function Home() {
       issued_at: issuedAt.toISOString(),
       expires_at: new Date(issuedAt.getTime() + 15 * 60 * 1000).toISOString(),
       context_is_evidence: false,
-      renderer: { family: "MapLibre GL JS", site_package: "6.6.0", repository_runtime_proven: false },
+      renderer: { family: "NullMapRuntime", package_candidate: "6.6.0", consumer_state: MAP_RUNTIME_CONSUMER_HOLD, repository_runtime_proven: false },
       camera: locationDerivedViewRef.current
         ? { center: "WITHHELD_BROWSER_LOCATION", zoom: "WITHHELD", bearing: "WITHHELD", pitch: "WITHHELD", projection }
         : { center: view.center, zoom: view.zoom, bearing: view.bearing, pitch: view.pitch, projection },
-      display: { basemap, active_time: year, visible_layer_ids: activeLayers.map((layer) => layer.id) },
+      display: { basemap, active_time: year, visible_layer_ids: activeLayers.map((layer) => layer.id), scene: scenePreset, atmosphere: atmospherePreset, light_azimuth: lightAzimuth, field_of_view: fieldOfView, gesture_mode: gestureMode },
+      analysis_area: locationDerivedViewRef.current || !analysisArea
+        ? null
+        : { bounds: analysisArea, compatible_record_count: analysisAreaRecordCount, role: "SITE_LOCAL_CONTEXT_ONLY" },
       workspace: currentWorkspace,
       selection: selected ? {
         feature_id: selected.featureId,
@@ -2028,42 +2492,44 @@ export default function Home() {
       format: "kfm-map-diagnostics-v1",
       authority: "SITE_LOCAL_REDACTED_DIAGNOSTIC",
       generated_at: new Date().toISOString(),
-      site_renderer: { family: "MapLibre GL JS", package: maplibreProbe.version ?? EXPECTED_MAPLIBRE_VERSION, runtime_state: runtime.kind, message_class: runtime.kind.toUpperCase() },
+      site_renderer: { family: "NullMapRuntime", package_candidate: EXPECTED_MAPLIBRE_VERSION, consumer_state: MAP_RUNTIME_CONSUMER_HOLD, runtime_state: runtime.kind },
       runtime_proof: {
         expected_version: EXPECTED_MAPLIBRE_VERSION,
-        worker: maplibreProbe.workerConfigured ? "SAME_ORIGIN_CONFIGURED" : "NOT_CONFIRMED",
-        runtime_assets: maplibreProbe.runtimeAssetsReady ? "WORKER_AND_SHARED_VERIFIED" : "NOT_CONFIRMED",
-        webgl2: maplibreProbe.webgl2,
-        map_constructed: maplibreProbe.mapConstructed,
-        canvas_ready: maplibreProbe.canvasReady,
-        style_loaded: maplibreProbe.styleLoaded,
-        idle: maplibreProbe.idle,
-        tiles_loaded: maplibreProbe.tilesLoaded,
-        sources_ready: `${maplibreProbe.sourcesReady}/${LAYER_REGISTRY.length}`,
-        controls_ready: maplibreProbe.controlsReady,
-        interactions_ready: maplibreProbe.interactionsReady,
-        projection: maplibreProbe.projection,
-        error_class: maplibreProbe.error ? "FINITE_MAP_RUNTIME_ERROR" : null,
+        worker: "NOT_RUN",
+        runtime_assets: "NOT_RUN",
+        webgl2: "NOT_RUN",
+        map_constructed: false,
+        canvas_ready: false,
+        style_loaded: false,
+        idle: false,
+        tiles_loaded: false,
+        sources_ready: `0/${LAYER_REGISTRY.length} · HELD`,
+        controls_ready: false,
+        interactions_ready: false,
+        projection,
+        reason: MAP_RUNTIME_CONSUMER_HOLD,
       },
       repository_boundary: {
         snapshot: REPOSITORY_SNAPSHOT.commit,
         architecture: "ACCEPTED",
-        dependency: "HOLD",
-        runtime: "HOLD",
-        governed_probes: "0/12 NOT_RUN",
+        dependency: "EXACT_6.6.0",
+        runtime: "BOUNDED_PACKAGE_OWNED_ADAPTER_SLICE",
+        broader_production_activation: "HOLD",
       },
       camera: { zoom: Number(view.zoom.toFixed(2)), bearing: Math.round(view.bearing), pitch: Math.round(view.pitch), projection },
-      style: { basemap, style_loaded: mapRef.current?.isStyleLoaded() ?? false },
+      style: { basemap_descriptor: basemap, style_loaded: false, state: "HOLD" },
       registry: { sources: LAYER_REGISTRY.length, renderers: interactiveLayerIds.length, visible_layers: visibleCount, source_states: sourceStates },
+      source_connections: { activity: sourceActivity, probe_counts: sourceProbeCounts },
       active_time: year,
       workspace: currentWorkspace,
       selection: selected ? { feature_id: selected.featureId, layer_id: selected.layerId, layer_visible: !selectedLayerHidden, time_compatible: !selectedTimeMismatch } : null,
+      analysis_area: { active: Boolean(analysisArea), compatible_record_count: analysisAreaRecordCount, coordinates: "OMITTED_FROM_REDACTED_DIAGNOSTIC" },
       redaction: "No raw coordinates, source URLs, tokens, stacks, prompts, private payloads, or browser location included.",
       public_effect: "NONE",
     };
     try {
       await navigator.clipboard.writeText(JSON.stringify(diagnostics, null, 2));
-      announce("Redacted MapLibre diagnostics copied with no public effect");
+      announce("Redacted renderer-neutral diagnostics copied with no public effect");
     } catch {
       announce("Clipboard access was blocked; diagnostics stayed in the browser");
     }
@@ -2157,7 +2623,7 @@ export default function Home() {
     }
     if (record.action === "OPEN_DIAGNOSTICS") {
       openMapUtility("diagnostics");
-      announce("Opened redacted MapLibre and runtime-seam diagnostics");
+      announce("Opened redacted renderer-neutral and runtime-seam diagnostics");
       return;
     }
     if (!selected) {
@@ -2172,6 +2638,119 @@ export default function Home() {
     setCurrentWorkspace("trust");
     activateDrawerView(record.action === "OPEN_FOCUS" ? "focus" : "evidence", true);
     announce(`Opened ${record.title} for ${selected.properties.title}`);
+  };
+
+  const buildCustomReportPayload = (generatedAt: string) => {
+    const recordLimit = reportDetail === "EXECUTIVE" ? 8 : reportDetail === "STANDARD" ? 30 : reportRecords.length;
+    const records = reportRecords.slice(0, recordLimit).map(({ layer, properties }) => ({
+      id: properties.fid,
+      title: properties.title,
+      layer: layer.title,
+      domain: layer.domain,
+      year: properties.year,
+      summary: properties.summary,
+      evidenceState: properties.evidenceState,
+      evidenceReference: properties.citation,
+      sourceRole: properties.sourceRole,
+      sourceOrganization: properties.sourceOrganization,
+      freshness: properties.freshnessState,
+      reviewState: properties.reviewState,
+      releaseState: properties.releaseState,
+      uncertainty: properties.uncertainty,
+      generalization: properties.generalizationNote,
+    }));
+    return {
+      format: "kfm-custom-map-report-v1",
+      title: reportTitle.trim() || "Kansas map data report",
+      generatedAt,
+      detail: reportDetail,
+      scope: reportScope,
+      filters: { query: reportQuery || null, evidenceState: reportEvidenceFilter, layerIds: reportLayerIds },
+      activeTime: { value: year, label: formatTimelineStep(year) },
+      mapContext: {
+        center: locationCameraRedacted ? "WITHHELD_BROWSER_LOCATION" : view.center,
+        zoom: view.zoom,
+        projection,
+        basemap,
+        viewport: reportScope === "VIEWPORT" ? mapViewportBounds : null,
+        analysisArea: reportScope === "ANALYSIS_AREA" ? analysisArea : null,
+      },
+      spatialQuery: reportScope === "ANALYSIS_AREA" && analysisArea ? {
+        profile: "kfm-site-spatial-query-plan-v1",
+        relation: "FOCUS_POINT_INSIDE_BOUNDS",
+        bounds: analysisArea,
+        candidateCount: reportRecords.length,
+        authority: "CONTEXT_ONLY",
+        rendererHitsAreEvidence: false,
+      } : null,
+      selection: selected ? { id: selected.featureId, title: selected.properties.title, layer: selected.layer.title, evidenceState: selected.properties.evidenceState } : null,
+      summary: reportSections.summary ? {
+        matchedRecords: reportRecords.length,
+        includedRecords: records.length,
+        includedLayers: reportLayerSummary.length,
+        evidenceStates: reportEvidenceCounts,
+      } : null,
+      findings: reportSections.findings ? reportFindings : null,
+      layers: reportLayerSummary,
+      records: reportSections.records ? records : null,
+      evidenceNotes: reportSections.evidence ? records.map((record) => ({
+        id: record.id,
+        state: record.evidenceState,
+        reference: record.evidenceReference,
+        sourceRole: record.sourceRole,
+        sourceOrganization: record.sourceOrganization,
+        freshness: record.freshness,
+        reviewState: record.reviewState,
+        releaseState: record.releaseState,
+      })) : null,
+      limitations: reportSections.limitations ? [
+        "Current records are site-local synthetic or generalized demonstration data, not released operational KFM data.",
+        "Map display, proximity, overlap, and screen measurement are not evidence or proof of a relationship.",
+        "Protected geometry is not reconstructed; location-derived camera coordinates remain withheld.",
+        ...Array.from(new Set(records.map((record) => `${record.title}: ${record.generalization} ${record.uncertainty}`))),
+      ] : null,
+      attribution: reportLayerSummary.map((layer) => ({ layer: layer.title, source: layer.attribution })),
+    };
+  };
+
+  const copyCustomReport = async () => {
+    const generatedAt = new Date().toISOString();
+    const report = buildCustomReportPayload(generatedAt);
+    setReportGeneratedAt(generatedAt);
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(report, null, 2));
+      announce(`Custom report copied with ${reportRecords.length} matching records`);
+    } catch {
+      announce("Clipboard access was blocked; the report preview stayed in the browser");
+    }
+  };
+
+  const downloadCustomReport = (format: "html" | "json") => {
+    const generatedAt = new Date().toISOString();
+    const report = buildCustomReportPayload(generatedAt);
+    setReportGeneratedAt(generatedAt);
+    const safeName = (report.title || "kansas-map-report").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) || "kansas-map-report";
+    let content: string;
+    let mime: string;
+    if (format === "json") {
+      content = JSON.stringify(report, null, 2);
+      mime = "application/json";
+    } else {
+      const records = report.records ?? [];
+      const findings = report.findings ?? [];
+      const limitations = report.limitations ?? [];
+      content = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeReportHtml(report.title)}</title><style>body{font:15px/1.55 Inter,system-ui,sans-serif;color:#17201d;max-width:1100px;margin:0 auto;padding:48px}header{border-bottom:3px solid #b88b38;padding-bottom:22px;margin-bottom:28px}h1{font-size:36px;letter-spacing:-.04em;margin:0 0 8px}h2{margin-top:34px}small,.muted{color:#607069}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric{border:1px solid #ccd6d1;padding:15px}.metric strong{display:block;font-size:24px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid #dce3df;padding:10px;text-align:left;vertical-align:top}th{background:#f1f5f2}code{font-size:11px}li{margin:8px 0}.boundary{border-left:4px solid #b88b38;background:#f7f3ea;padding:14px 18px}@media print{body{padding:0}.boundary{break-inside:avoid}}@media(max-width:700px){body{padding:24px}.metrics{grid-template-columns:1fr 1fr}table{display:block;overflow:auto}}</style></head><body><header><small>KANSAS FRONTIER MATRIX · CUSTOM MAP REPORT</small><h1>${escapeReportHtml(report.title)}</h1><p>${escapeReportHtml(report.scope.replaceAll("_", " "))} · active time ${escapeReportHtml(report.activeTime.label)} · generated ${escapeReportHtml(generatedAt)}</p></header>${report.summary ? `<section><h2>Report summary</h2><div class="metrics"><div class="metric"><small>MATCHED RECORDS</small><strong>${report.summary.matchedRecords}</strong></div><div class="metric"><small>INCLUDED RECORDS</small><strong>${report.summary.includedRecords}</strong></div><div class="metric"><small>LAYERS</small><strong>${report.summary.includedLayers}</strong></div><div class="metric"><small>EVIDENCE STATES</small><strong>${Object.keys(report.summary.evidenceStates).length}</strong></div></div></section>` : ""}${findings.length ? `<section><h2>Findings</h2><ol>${findings.map((finding) => `<li>${escapeReportHtml(finding)}</li>`).join("")}</ol></section>` : ""}${records.length ? `<section><h2>Included records</h2><table><thead><tr><th>Record</th><th>Layer / time</th><th>Evidence</th><th>Summary</th></tr></thead><tbody>${records.map((record) => `<tr><td><strong>${escapeReportHtml(record.title)}</strong><br><code>${escapeReportHtml(record.id)}</code></td><td>${escapeReportHtml(record.layer)}<br>${escapeReportHtml(record.year)}</td><td>${escapeReportHtml(record.evidenceState)}<br><code>${escapeReportHtml(record.evidenceReference)}</code></td><td>${escapeReportHtml(record.summary)}</td></tr>`).join("")}</tbody></table></section>` : ""}${limitations.length ? `<section><h2>Limitations</h2><ul>${limitations.map((limitation) => `<li>${escapeReportHtml(limitation)}</li>`).join("")}</ul></section>` : ""}<section><h2>Attribution</h2><ul>${report.attribution.map((item) => `<li><strong>${escapeReportHtml(item.layer)}:</strong> ${escapeReportHtml(item.source)}</li>`).join("")}</ul></section><p class="boundary">This report is a browser-generated public-safe demonstration artifact. It does not release, publish, admit, or authorize KFM data.</p></body></html>`;
+      mime = "text/html";
+    }
+    const url = URL.createObjectURL(new Blob([content], { type: mime }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${safeName}.${format}`;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 0);
+    announce(`${format.toUpperCase()} report downloaded with ${reportRecords.length} matching records`);
   };
 
   const copyExportManifest = async () => {
@@ -2238,7 +2817,7 @@ export default function Home() {
         }
         locationDerivedViewRef.current = true;
         setLocationCameraRedacted(true);
-        mapRef.current?.easeTo({ center: [coords.longitude, coords.latitude], zoom: 10, duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 650 });
+        updateRendererNeutralView({ center: [coords.longitude, coords.latitude], zoom: 10 });
         announce("Map centered locally; the location-derived camera is redacted from URLs, shares, receipts, exports, and diagnostics");
       },
       () => announce("Location permission was unavailable or denied"),
@@ -2264,23 +2843,15 @@ export default function Home() {
           <span className="mark" aria-hidden="true">KFM</span>
           <span><strong>Kansas Frontier Matrix</strong><small>Spatial evidence explorer</small></span>
         </div>
-        <details ref={workspaceDetailsRef} className="workspace-switcher">
-          <summary aria-label={`Current workspace: ${publicWorkspaces.find((workspace) => workspace.id === currentWorkspace)?.label}. Open workspace switcher.`}>
-            <span>Workspace</span><strong>{publicWorkspaces.find((workspace) => workspace.id === currentWorkspace)?.shortLabel}</strong><b aria-hidden="true">⌄</b>
-          </summary>
-          <div className="workspace-menu" aria-label="Public Explorer workspaces">
-            <header><span>PUBLIC WORKSPACE REGISTRY</span><strong>Move context, not authority</strong><p>These destinations expose public-safe views only.</p></header>
-            {publicWorkspaces.map((workspace, index) => <button key={workspace.id} type="button" data-active={currentWorkspace === workspace.id} aria-current={currentWorkspace === workspace.id ? "page" : undefined} onClick={() => activatePublicWorkspace(workspace.id)}>
-              <span>{String(index + 1).padStart(2, "0")}</span><div><strong>{workspace.label}</strong><p>{workspace.summary}</p><small>{workspace.capability}</small></div>
-            </button>)}
-            <footer>Review, operations, source admission, release, and publication remain separate authorized surfaces.</footer>
-          </div>
-        </details>
+        <nav className="header-workflows" aria-label="Primary Explorer actions">
+          <button type="button" title="Layers · shortcut L" aria-pressed={leftOpen} onClick={() => { setLeftOpen((current) => !current); setCurrentWorkspace("knowledge"); if (isCompact) { dismissMapUtilityWithoutFocus(); setRightOpen(false); setTimelineOpen(false); } }}><span aria-hidden="true">▦</span>Layers</button>
+          <button className="header-report-action" type="button" title="Build report · shortcut R" aria-pressed={mapUtilityOpen && mapUtilityView === "report"} onClick={(event) => openMapUtility("report", event.currentTarget)}><span aria-hidden="true">＋</span>Build report</button>
+        </nav>
         <div className="global-search">
           <label>
             <span className="sr-only">Search current layers and demonstration features</span>
             <span aria-hidden="true">⌕</span>
-            <input value={globalQuery} onChange={(event) => setGlobalQuery(event.target.value)} type="search" placeholder="Search places, layers, feature IDs…" aria-describedby="global-search-help" />
+            <input ref={globalSearchInputRef} value={globalQuery} onChange={(event) => setGlobalQuery(event.target.value)} type="search" placeholder="Search places, layers, feature IDs…" aria-describedby="global-search-help" title="Search · shortcut /" />
           </label>
           <span id="global-search-help" className="sr-only">Search results appear as keyboard-focusable buttons.</span>
           {globalQuery && <div className="search-results" id="global-search-results" aria-label="Search results">
@@ -2294,19 +2865,16 @@ export default function Home() {
           <span className="release-indicator" data-selection-state={selected?.properties.evidenceState ?? "DEMONSTRATION"} title="Visible selection posture; not release or publication authority"><i /> {selected ? selectedEvidence?.label.toUpperCase() : "DEMONSTRATION"}</span>
         </div>
         <div className="top-actions">
-          <button ref={repositoryButtonRef} className="repository-trigger" type="button" onClick={() => { setCurrentWorkspace("features"); setRepositoryOpen(true); setHelpOpen(false); setToolsExpanded(false); }} aria-expanded={repositoryOpen} aria-controls="repository-briefing" aria-label="Open repository and function briefing" title="Repository and function briefing"><span aria-hidden="true">R</span><i aria-hidden="true">{REPOSITORY_SNAPSHOT.counts.repositoryUpdates}</i></button>
-          <button className="story-trigger" type="button" onClick={startStoryTrail} aria-expanded={storyOpen} aria-controls="kfm-story-trail" aria-label="Start guided Kansas trust story" title="Guided Kansas trust story">S</button>
           <button className="share-action" type="button" onClick={shareView} aria-label="Share current map view" title="Share current view">↗</button>
-          <button type="button" onClick={() => setHelpOpen((current) => !current)} aria-expanded={helpOpen} aria-label="Open map guide" title="Map guide">?</button>
-          <button className="panel-toggle" type="button" onClick={() => { setLeftOpen((current) => { const next = !current; setCurrentWorkspace(next ? "knowledge" : "explore"); return next; }); if (isCompact) { dismissMapUtilityWithoutFocus(); setRightOpen(false); setTimelineOpen(false); } }} aria-expanded={leftOpen} aria-label="Toggle Layer Catalog">☰</button>
+          <Link className="about-action" href="/about">About</Link>
         </div>
         {helpOpen && <aside className="map-guide" role="dialog" aria-modal="false" aria-label="Map guide">
           <button className="icon-close" type="button" onClick={() => setHelpOpen(false)} aria-label="Close map guide">×</button>
           <p className="panel-kicker">MAP GUIDE</p><h2>Explore a feature, then check what supports it.</h2>
-          <p>Every layer in this build uses site-local synthetic or generalized demonstration data—not released operational data. Choose an example or select any feature to inspect its evidence state.</p>
+          <p>Nothing in this build is a released operational dataset. Every layer uses site-local synthetic or generalized demonstration data. Choose an example or select any feature to inspect its evidence state.</p>
           <div className="map-guide-actions"><button className="map-guide-start" type="button" onClick={showGuidedStart}>Try quick examples</button><button className="map-guide-start" type="button" onClick={startStoryTrail}>Start four-step story</button></div>
           <ol><li>Search, choose an example, or enable a layer.</li><li>Select a feature.</li><li>Inspect what is supported, missing, corrected, or withheld.</li><li>Review time, lineage, and Focus Mode when you need more detail.</li></ol>
-          <p><strong>Shift + drag</strong> uses MapLibre box zoom. The Map Workbench also supports coordinate navigation, camera orientation, and viewport-scoped feature discovery. Terrain and swipe comparison remain unavailable because this build has no audited DEM or compatible comparison source.</p>
+          <p><strong>Renderer interactions are held.</strong> The Map Workbench retains renderer-neutral coordinate navigation, camera state, and catalog-scoped feature discovery. Box zoom, terrain, and swipe comparison remain unavailable pending a conforming consumer and admitted sources.</p>
         </aside>}
       </header>
 
@@ -2553,7 +3121,7 @@ export default function Home() {
             <div><p className="panel-kicker">LAYER CATALOG</p><h1>Explore Kansas</h1></div>
             <button className="icon-close" type="button" onClick={closeLeftPanel} aria-label="Close Layer Catalog">×</button>
           </div>
-          <p className="panel-intro">Browse clearly labeled synthetic and generalized demonstration layers. Nothing in this build is a released operational dataset.</p>
+          <p className="panel-intro">Choose synthetic and generalized demonstration layers for the map and your next report.</p>
           <label className="catalog-search"><span aria-hidden="true">⌕</span><span className="sr-only">Search Layer Catalog</span><input type="search" value={layerQuery} onChange={(event) => setLayerQuery(event.target.value)} placeholder="Filter layers and datasets" /></label>
 
           <section className="active-layers" aria-labelledby="active-title">
@@ -2592,12 +3160,31 @@ export default function Home() {
             {filteredLayerIds.size === 0 && <div className="catalog-empty"><strong>No layers found</strong><p>Try a domain, dataset, or geometry term.</p></div>}
           </div>
 
-          <div className="panel-footer-actions"><button type="button" onClick={resetExplorer}>Reset Explorer</button><button type="button" onClick={(event) => openMapUtility("export", event.currentTarget)}>Review public-safe export</button></div>
+          <div className="panel-footer-actions"><button type="button" onClick={resetExplorer}>Reset map</button><button type="button" onClick={(event) => { setReportLayerIds(activeLayers.map((layer) => layer.id)); openMapUtility("report", event.currentTarget); }}>Report visible layers</button></div>
         </aside>
 
-        <section className="map-stage" aria-label="Kansas MapLibre Explorer">
-          <div className="mission-band"><span data-runtime={runtime.kind}><i /> {runtime.kind === "ready" ? `MAPLIBRE ${maplibreProbe.version ?? EXPECTED_MAPLIBRE_VERSION} READY` : runtime.kind === "loading" ? "MAPLIBRE STARTING" : "EXPLORER FALLBACK"}</span><p>Synthetic and generalized data only · Select a feature to inspect what is supported, missing, corrected, or withheld.</p></div>
-          <div id="map-canvas" ref={mapContainerRef} className="map-canvas" tabIndex={0} role="application" aria-label="Interactive MapLibre map of Kansas demonstration layers. Use arrow keys to pan and plus or minus to zoom; use Map Workbench Inspect or the Layer Catalog for a keyboard feature alternative." />
+        <section className="map-stage" aria-label="Kansas renderer-neutral Explorer">
+          <div className="mission-band map-command-bar">
+            <span data-runtime={runtime.kind}><i /> RENDERER HOLD · NULL RUNTIME</span>
+            <p>Synthetic and generalized catalog data only · <b>{visibleCount}</b> layers · <b>{formatTimelineStep(year)}</b> · <b>{selected ? selected.properties.title : "No selection"}</b></p>
+            <div><button type="button" onClick={saveCurrentWorkspace}>Save view</button><button type="button" onClick={(event) => openMapUtility("report", event.currentTarget)}>Build report</button></div>
+          </div>
+          <div id="map-canvas" ref={mapContainerRef} className="map-canvas" tabIndex={areaDrawMode ? -1 : 0} role="application" aria-label="Renderer-neutral Kansas Explorer shell. Use Map Workbench Inspect or the Layer Catalog to inspect catalog and evidence metadata; renderer interactions remain held." />
+          {analysisAreaOverlay && !areaDrawMode && <div className="map-analysis-overlay" style={{ left: `${analysisAreaOverlay.left}%`, top: `${analysisAreaOverlay.top}%`, width: `${analysisAreaOverlay.width}%`, height: `${analysisAreaOverlay.height}%` }} aria-hidden="true"><span>REPORT AREA · {analysisAreaRecordCount}</span></div>}
+          {areaDrawMode && <div
+            className="map-query-surface"
+            tabIndex={0}
+            role="application"
+            aria-label="Draw a rectangular report area. Drag across the map, or press Escape to cancel."
+            onPointerDown={handleMapAreaPointerDown}
+            onPointerMove={handleMapAreaPointerMove}
+            onPointerUp={handleMapAreaPointerUp}
+            onPointerCancel={() => cancelAreaDraw(false)}
+            onKeyDown={(event) => { if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); cancelAreaDraw(); } }}
+          >
+            {areaDrawBox && <div className="map-area-draw-box" style={{ left: areaDrawBox.left, top: areaDrawBox.top, width: areaDrawBox.width, height: areaDrawBox.height }} aria-hidden="true" />}
+          </div>}
+          {areaDrawMode && <aside className="map-area-draw-hint" role="status"><div><span>SPATIAL QUERY</span><strong>Drag a report area</strong><small>North-up Mercator context · pixels are candidate scope, not evidence</small></div><button type="button" onClick={() => cancelAreaDraw()}>Cancel</button></aside>}
 
           {(runtime.kind === "loading" || runtime.kind === "error") && <div className={`runtime-overlay ${runtime.kind}`} role="status" aria-live="assertive"><span className="runtime-spinner" aria-hidden="true" /><strong>{runtime.kind === "loading" ? "Preparing spatial explorer" : "Map runtime unavailable"}</strong><p>{runtime.message}</p>{runtime.kind === "error" && <button type="button" onClick={() => window.location.reload()}>Reload map</button>}</div>}
           {runtime.kind === "degraded" && <div className="runtime-degraded-banner" role="status" aria-live="polite"><strong>Partial map degradation</strong><span>{runtime.message}</span></div>}
@@ -2640,16 +3227,19 @@ export default function Home() {
             <footer>Fixture-first 2D guidance only · no live StoryManifest playback · no evidence, policy, review, release, or publication effect.</footer>
           </aside>}
 
-          <nav className="map-tool-rail" aria-label="Map tools">
-            <button type="button" onClick={() => mapRef.current?.zoomIn({ duration: motionDuration(250) })} aria-label="Zoom in" data-tooltip="Zoom in">+</button>
-            <button type="button" onClick={() => mapRef.current?.zoomOut({ duration: motionDuration(250) })} aria-label="Zoom out" data-tooltip="Zoom out">−</button>
-            <button className="mobile-hidden-control" type="button" onClick={() => mapRef.current?.resetNorthPitch({ duration: motionDuration(450) })} aria-label="Reset compass and pitch" data-tooltip="Reset north">N</button>
+          <nav className="map-tool-rail" aria-label="Unified map controls">
+            <button type="button" onClick={() => updateRendererNeutralView({ zoom: Math.min(16, view.zoom + 1) })} aria-label="Zoom in" data-tooltip="Zoom in">+</button>
+            <button type="button" onClick={() => updateRendererNeutralView({ zoom: Math.max(4, view.zoom - 1) })} aria-label="Zoom out" data-tooltip="Zoom out">−</button>
+            <button className="mobile-hidden-control" type="button" onClick={() => updateRendererNeutralView({ bearing: 0, pitch: 0 })} aria-label="Reset compass and pitch" data-tooltip="Reset north">N</button>
             <button type="button" onClick={fitKansasView} aria-label="Reset view to Kansas" data-tooltip="Kansas extent">KS</button>
-            <button ref={mapUtilityButtonRef} type="button" onClick={(event) => mapUtilityOpen ? closeMapUtility() : openMapUtility("navigate", event.currentTarget)} aria-expanded={mapUtilityOpen} aria-controls="map-utility-panel" aria-label="Open Map Workbench" data-tooltip="Map Workbench">UI</button>
-            <button className="mobile-hidden-control" type="button" onClick={locateUser} aria-label="Use my location" data-tooltip="My location">⌾</button>
+            <button className="map-rail-divider" type="button" onClick={(event) => mapUtilityOpen && mapUtilityView === "scene" ? closeMapUtility() : openMapUtility("scene", event.currentTarget)} aria-expanded={mapUtilityOpen && mapUtilityView === "scene"} aria-controls="map-utility-panel" aria-label="Open scene and tile lab" data-tooltip="Scene + tiles">3D</button>
+            <button ref={mapUtilityButtonRef} className="map-report-tool" type="button" onClick={(event) => mapUtilityOpen && mapUtilityView === "report" ? closeMapUtility() : openMapUtility("report", event.currentTarget)} aria-expanded={mapUtilityOpen && mapUtilityView === "report"} aria-controls="map-utility-panel" aria-label="Build a custom report" data-tooltip="Build report">R</button>
             <button type="button" onClick={() => setToolsExpanded((current) => !current)} aria-expanded={toolsExpanded} aria-controls="more-map-tools" aria-label="More map tools" data-tooltip="More tools">•••</button>
             {toolsExpanded && <div className="secondary-tools" id="more-map-tools">
-              <button type="button" onClick={(event) => openMapUtility("navigate", event.currentTarget)}><span>UI</span>Map Workbench</button>
+              <button type="button" onClick={(event) => openMapUtility("navigate", event.currentTarget)}><span>⌖</span>Map controls</button>
+              <button type="button" onClick={(event) => openMapUtility("connections", event.currentTarget)}><span>⛓</span>Source connections</button>
+              <button type="button" onClick={startAreaDraw} disabled={locationCameraRedacted}><span>▣</span>{analysisArea ? "Redraw report area" : "Draw report area"}</button>
+              <button type="button" onClick={locateUser}><span>⌾</span>My location</button>
               <button type="button" onClick={toggleFullscreen} aria-label="Toggle fullscreen"><span>⛶</span>Fullscreen</button>
               <button type="button" aria-pressed={projection === "globe"} onClick={() => setProjection((current) => current === "globe" ? "mercator" : "globe")}><span>◎</span>{projection === "globe" ? "2D view" : "Globe"}</button>
               <button type="button" aria-pressed={measureMode === "distance"} onClick={() => toggleMeasure("distance")}><span>↔</span>Distance</button>
@@ -2665,6 +3255,7 @@ export default function Home() {
             id="map-utility-panel"
             className="map-utility-panel"
             data-open={mapUtilityOpen}
+            data-view={mapUtilityView}
             aria-hidden={!mapUtilityOpen}
             inert={!mapUtilityOpen}
             aria-modal={isCompact && mapUtilityOpen || undefined}
@@ -2672,7 +3263,7 @@ export default function Home() {
             aria-labelledby="map-utility-title"
           >
             <header className="map-utility-heading">
-              <div><p className="panel-kicker">MAP OPERATIONS</p><h2 id="map-utility-title">Map Workbench</h2><span>One interface for renderer controls, inspection, display, measurement, trust-aware export, and recovery.</span></div>
+              <div><p className="panel-kicker">MAP WORKBENCH</p><h2 id="map-utility-title">{mapUtilityView === "report" ? "Custom report builder" : mapUtilityView === "scene" ? "Scene + 3D lab" : mapUtilityView === "connections" ? "Source connections" : "Map tools"}</h2><span>{mapUtilityView === "report" ? "Turn the current map, time, layers, and selected data into a usable report." : mapUtilityView === "connections" ? "Inspect the held relationship between the layer registry, renderer descriptors, and site-local records." : "Inspect, navigate, explore scene intent, compare, display, measure, export, and diagnose the renderer-neutral map state."}</span></div>
               <button className="icon-close" type="button" onClick={closeMapUtility} aria-label="Close Map Workbench">×</button>
             </header>
             <nav className="map-utility-tabs" role="tablist" aria-label="Map Workbench views">
@@ -2690,8 +3281,79 @@ export default function Home() {
               >{mapUtilityLabels[utilityView]}</button>)}
             </nav>
             <div className="map-utility-scroll">
+              {mapUtilityView === "report" && <section id="map-utility-view-report" role="tabpanel" aria-labelledby="map-utility-tab-report" className="map-utility-section report-builder-section">
+                <div className="map-utility-section-heading"><span>CUSTOM REPORT</span><h3>Build from the map you are using</h3><p>Filters apply immediately. The report uses current Explorer records and keeps evidence states, source roles, attribution, uncertainty, and time visible.</p></div>
+
+                <section className="analysis-recipes" aria-labelledby="analysis-recipes-title">
+                  <header><div><span>ANALYSIS RECIPES</span><h4 id="analysis-recipes-title">Configure map + report together</h4></div><small>Reversible view state</small></header>
+                  <div>{ANALYSIS_RECIPES.map((recipe) => <button key={recipe.id} type="button" onClick={() => applyAnalysisRecipe(recipe)}><span>{recipe.eyebrow}</span><strong>{recipe.title}</strong><p>{recipe.summary}</p><small>{recipe.year} · {recipe.layerIds.length} layers · {recipe.detail.toLowerCase()}</small></button>)}</div>
+                </section>
+
+                <div className="report-builder-grid">
+                  <div className="report-controls">
+                    <label className="report-title-field"><span>Report title</span><input type="text" value={reportTitle} maxLength={90} onChange={(event) => setReportTitle(event.target.value)} /></label>
+
+                    <fieldset className="report-control-group"><legend>Record filters</legend><div className="report-filter-grid">
+                      <label><span className="sr-only">Search records included in the report</span><i aria-hidden="true">⌕</i><input type="search" value={reportQuery} onChange={(event) => setReportQuery(event.target.value)} placeholder="Record, layer, source, or domain" /></label>
+                      <label><span className="sr-only">Filter report by evidence state</span><select value={reportEvidenceFilter} onChange={(event) => setReportEvidenceFilter(event.target.value as EvidenceState | "ALL")}><option value="ALL">All evidence states</option>{(Object.keys(evidenceLabels) as EvidenceState[]).map((state) => <option key={state} value={state}>{state.replaceAll("_", " ")}</option>)}</select></label>
+                    </div></fieldset>
+
+                    <fieldset className="report-control-group"><legend>Geographic scope</legend><div className="report-scope-grid">
+                      <button type="button" aria-pressed={reportScope === "VIEWPORT"} onClick={() => setReportScope("VIEWPORT")}><strong>Map extent</strong><small>Records inside the current viewport</small></button>
+                      <button type="button" aria-pressed={reportScope === "ANALYSIS_AREA"} disabled={!analysisArea} onClick={() => setReportScope("ANALYSIS_AREA")}><strong>Locked area</strong><small>{analysisArea ? `${analysisAreaRecordCount} compatible records` : "Capture an area from Map controls"}</small></button>
+                      <button type="button" aria-pressed={reportScope === "VISIBLE_LAYERS"} onClick={() => setReportScope("VISIBLE_LAYERS")}><strong>Visible layers</strong><small>Statewide records in active layers</small></button>
+                      <button type="button" aria-pressed={reportScope === "SELECTION"} disabled={!selected} onClick={() => setReportScope("SELECTION")}><strong>Selection</strong><small>{selected?.properties.title ?? "Select a map feature first"}</small></button>
+                    </div></fieldset>
+
+                    <section className="report-map-query" data-active={Boolean(analysisArea)} aria-labelledby="report-map-query-title">
+                      <header><div><span>QUERY FROM MAP</span><strong id="report-map-query-title">Spatial report area</strong></div><b>{analysisArea ? "READY" : "NOT SET"}</b></header>
+                      <p>Draw a rectangle on the map to turn a visual extent into a bounded catalog query. Candidate records still pass time, layer, evidence-state, and text filters before entering the report.</p>
+                      {analysisArea && <dl><div><dt>West / east</dt><dd>{analysisArea.west.toFixed(4)}° / {analysisArea.east.toFixed(4)}°</dd></div><div><dt>South / north</dt><dd>{analysisArea.south.toFixed(4)}° / {analysisArea.north.toFixed(4)}°</dd></div><div><dt>Catalog candidates</dt><dd>{analysisAreaRecordCount}</dd></div><div><dt>Filtered report</dt><dd>{reportScope === "ANALYSIS_AREA" ? `${reportRecords.length} records` : "Scope available"}</dd></div></dl>}
+                      <div><button type="button" onClick={startAreaDraw} disabled={locationCameraRedacted}>{analysisArea ? "Redraw on map" : "Draw on map"}</button><button type="button" onClick={captureAnalysisArea} disabled={locationCameraRedacted}>Use viewport</button><button type="button" onClick={fitAnalysisArea} disabled={!analysisArea}>Fit area</button>{analysisArea && <button type="button" onClick={clearAnalysisArea}>Clear</button>}</div>
+                      <footer><span>FOCUS_POINT_INSIDE_BOUNDS</span><small>Context only · renderer hits are not evidence</small></footer>
+                    </section>
+
+                    <fieldset className="report-control-group"><legend>Detail level</legend><div className="report-detail-grid">
+                      {(["EXECUTIVE", "STANDARD", "TECHNICAL"] as ReportDetail[]).map((detail) => <button key={detail} type="button" aria-pressed={reportDetail === detail} onClick={() => setReportDetail(detail)}>{detail === "EXECUTIVE" ? "Brief" : detail === "STANDARD" ? "Standard" : "Full detail"}</button>)}
+                    </div></fieldset>
+
+                    <fieldset className="report-control-group"><legend>Report sections</legend><div className="report-section-list">
+                      {REPORT_SECTIONS.map((section) => <label key={section.id}><input type="checkbox" checked={reportSections[section.id]} onChange={(event) => setReportSections((current) => ({ ...current, [section.id]: event.target.checked }))} /><span><strong>{section.label}</strong><small>{section.detail}</small></span></label>)}
+                    </div></fieldset>
+
+                    <fieldset className="report-control-group"><legend>Included layers</legend>
+                      <div className="report-layer-actions"><button type="button" onClick={() => setReportLayerIds(activeLayers.map((layer) => layer.id))}>Use visible</button><button type="button" onClick={() => setReportLayerIds(LAYER_REGISTRY.map((layer) => layer.id))}>Select all</button><button type="button" onClick={() => setReportLayerIds([])}>Clear</button></div>
+                      <div className="report-layer-list">{LAYER_REGISTRY.map((layer) => {
+                        const compatibleCount = layer.data.features.filter((feature) => isFeatureAvailableAtTime(layer, feature.properties.year, year)).length;
+                        return <label key={layer.id} data-visible={visibility[layer.id]}><input type="checkbox" checked={reportLayerIds.includes(layer.id)} onChange={(event) => setReportLayerIds((current) => event.target.checked ? [...new Set([...current, layer.id])] : current.filter((id) => id !== layer.id))} /><span><strong>{layer.title}</strong><small>{layer.domain} · {compatibleCount} time-compatible · {visibility[layer.id] ? "visible" : "hidden"}</small></span></label>;
+                      })}</div>
+                    </fieldset>
+
+                    <fieldset className="report-control-group saved-workspace-control"><legend>Saved workspaces</legend>
+                      <div className="workspace-save-row"><input type="text" value={workspaceName} maxLength={50} onChange={(event) => setWorkspaceName(event.target.value)} placeholder="Optional workspace name" /><button type="button" onClick={saveCurrentWorkspace}>Save current</button></div>
+                      <p>Stores camera, time, layers, opacity, selection, and report settings only on this device.</p>
+                      <div className="saved-workspace-list">{savedWorkspaces.map((snapshot) => <article key={snapshot.id}><button type="button" onClick={() => loadSavedWorkspace(snapshot)}><strong>{snapshot.name}</strong><small>{new Date(snapshot.savedAt).toLocaleString()} · {snapshot.report?.layerIds?.length ?? 0} report layers</small></button><button type="button" onClick={() => deleteSavedWorkspace(snapshot)} aria-label={`Delete ${snapshot.name}`}>×</button></article>)}{savedWorkspaces.length === 0 && <div><strong>No saved workspaces</strong><small>Save the current analysis setup to return to it later on this device.</small></div>}</div>
+                    </fieldset>
+                  </div>
+
+                  <article className="report-preview" aria-live="polite">
+                    <header><div><span>LIVE REPORT PREVIEW</span><h4>{reportTitle.trim() || "Kansas map data report"}</h4><p>{reportScope.replaceAll("_", " ")} · {formatTimelineStep(year)} · {reportDetail}</p></div><strong>{reportRecords.length} RECORD{reportRecords.length === 1 ? "" : "S"}</strong></header>
+                    {(reportQuery || reportEvidenceFilter !== "ALL") && <div className="report-active-filters"><span>ACTIVE FILTERS</span>{reportQuery && <b>Search: {reportQuery}</b>}{reportEvidenceFilter !== "ALL" && <b>{reportEvidenceFilter.replaceAll("_", " ")}</b>}<button type="button" onClick={() => { setReportQuery(""); setReportEvidenceFilter("ALL"); }}>Clear</button></div>}
+                    {reportSections.summary && <div className="report-metrics" aria-label="Report summary metrics"><article><span>Records</span><strong>{reportRecords.length}</strong></article><article><span>Layers</span><strong>{reportLayerSummary.length}</strong></article><article><span>States</span><strong>{Object.keys(reportEvidenceCounts).length}</strong></article><article><span>Selection</span><strong>{selected ? "1" : "0"}</strong></article></div>}
+                    {reportSections.findings && <section className="report-preview-section"><span>FINDINGS</span><ol>{reportFindings.map((finding) => <li key={finding}>{finding}</li>)}</ol></section>}
+                    {reportSections.records && <section className="report-preview-section"><span>RECORDS</span><div className="report-record-table" role="table" aria-label="Included report records">
+                      {reportRecords.slice(0, reportDetail === "EXECUTIVE" ? 8 : reportDetail === "STANDARD" ? 30 : reportRecords.length).map(({ layer, properties }) => <article key={`${layer.id}:${properties.fid}`} role="row"><div><strong>{properties.title}</strong><small>{layer.title} · {properties.year}</small></div><span data-state={properties.evidenceState}>{properties.evidenceState}</span><p>{properties.summary}</p></article>)}
+                      {reportRecords.length === 0 && <div className="report-empty"><strong>No records match</strong><p>Move or widen the map, change time, choose another scope, or include more layers.</p></div>}
+                    </div></section>}
+                    {reportSections.evidence && reportRecords.length > 0 && <section className="report-preview-section"><span>EVIDENCE DISTRIBUTION</span><div className="report-evidence-grid">{Object.entries(reportEvidenceCounts).sort((left, right) => right[1] - left[1]).map(([state, count]) => <article key={state}><strong>{count}</strong><span>{state}</span></article>)}</div></section>}
+                    {reportSections.limitations && <aside className="report-boundary"><strong>Use boundary</strong><p>Site-local synthetic and generalized demonstration data only. The generated report preserves limitations and cannot release, publish, admit, or authorize KFM data.</p></aside>}
+                    <footer><span>Updated {reportGeneratedAt}</span><div><button type="button" onClick={() => void copyCustomReport()} disabled={!reportLayerIds.length}>Copy</button><button type="button" onClick={() => downloadCustomReport("json")} disabled={!reportLayerIds.length}>Data .json</button><button className="report-download-primary" type="button" onClick={() => downloadCustomReport("html")} disabled={!reportLayerIds.length}>Report .html</button></div></footer>
+                  </article>
+                </div>
+              </section>}
+
               {mapUtilityView === "navigate" && <section id="map-utility-view-navigate" role="tabpanel" aria-labelledby="map-utility-tab-navigate" className="map-utility-section">
-                <div className="map-utility-section-heading"><span>NAVIGATE</span><h3>Camera, coordinates + private location</h3><p>MapLibre camera actions change only this browser view. They never change evidence, policy, review, release, or publication state.</p></div>
+                <div className="map-utility-section-heading"><span>NAVIGATE</span><h3>Camera, coordinates + private location</h3><p>Renderer-neutral camera state changes only this browser shell. It never acquires a renderer or changes evidence, policy, review, release, or publication state.</p></div>
                 <dl className="map-camera-facts">
                   <div><dt>Center</dt><dd>{locationCameraRedacted ? "Private camera · redacted" : `${formatCoordinate(view.center[1], "N", "S")} · ${formatCoordinate(view.center[0], "E", "W")}`}</dd></div>
                   <div><dt>Zoom</dt><dd>{view.zoom.toFixed(2)}</dd></div>
@@ -2699,14 +3361,23 @@ export default function Home() {
                   <div><dt>Projection</dt><dd>{projection}</dd></div>
                 </dl>
                 <div className="map-utility-actions map-navigation-actions">
-                  <button type="button" onClick={() => mapRef.current?.zoomIn({ duration: motionDuration(250) })}>Zoom in</button>
-                  <button type="button" onClick={() => mapRef.current?.zoomOut({ duration: motionDuration(250) })}>Zoom out</button>
-                  <button type="button" onClick={() => mapRef.current?.resetNorthPitch({ duration: motionDuration(450) })}>Reset north</button>
+                  <button type="button" onClick={() => travelCameraHistory(-1)} disabled={cameraHistoryIndex === 0}>Previous view</button>
+                  <button type="button" onClick={() => travelCameraHistory(1)} disabled={cameraHistoryIndex >= cameraHistoryLength - 1}>Next view</button>
+                  <button type="button" onClick={() => updateRendererNeutralView({ zoom: Math.min(16, view.zoom + 1) })}>Zoom in</button>
+                  <button type="button" onClick={() => updateRendererNeutralView({ zoom: Math.max(4, view.zoom - 1) })}>Zoom out</button>
+                  <button type="button" onClick={() => updateRendererNeutralView({ bearing: 0, pitch: 0 })}>Reset north</button>
                   <button type="button" onClick={fitKansasView}>Fit Kansas</button>
                   <button type="button" onClick={toggleFullscreen}>Fullscreen</button>
                   <button type="button" onClick={locateUser}>Use my location</button>
                   <button type="button" onClick={() => void copyMapCenter()} disabled={locationCameraRedacted}>Copy center</button>
                 </div>
+                <section className="analysis-area-card" data-active={Boolean(analysisArea)} aria-labelledby="analysis-area-title">
+                  <header><div><span>RENDERER-NEUTRAL VIEW ANALYSIS</span><h4 id="analysis-area-title">Area of interest</h4></div><strong>{analysisArea ? "LOCKED" : "NOT SET"}</strong></header>
+                  {analysisArea
+                    ? <><dl><div><dt>West / east</dt><dd>{analysisArea.west.toFixed(4)}° / {analysisArea.east.toFixed(4)}°</dd></div><div><dt>South / north</dt><dd>{analysisArea.south.toFixed(4)}° / {analysisArea.north.toFixed(4)}°</dd></div><div><dt>Compatible records</dt><dd>{analysisAreaRecordCount}</dd></div><div><dt>Report scope</dt><dd>{reportScope === "ANALYSIS_AREA" ? "ACTIVE" : "AVAILABLE"}</dd></div></dl><div><button type="button" onClick={captureAnalysisArea}>Update from viewport</button><button type="button" onClick={fitAnalysisArea}>Fit area</button><button type="button" onClick={() => { setReportScope("ANALYSIS_AREA"); setReportGeneratedAt(new Date().toISOString()); openMapUtility("report"); }}>Build area report</button><button type="button" onClick={clearAnalysisArea}>Clear</button></div></>
+                    : <><p>Lock the current viewport as a stable rectangular analysis area. You can pan elsewhere while reports continue using the locked extent.</p><button type="button" onClick={captureAnalysisArea} disabled={locationCameraRedacted}>Lock current viewport</button></>}
+                  <footer>Site-local fixture query only · viewport geometry is context, not evidence</footer>
+                </section>
                 <form className="map-coordinate-form" onSubmit={goToCoordinates}>
                   <header><strong>Go to coordinates</strong><span>Supported Kansas context extent</span></header>
                   <div>
@@ -2717,9 +3388,10 @@ export default function Home() {
                   {coordinateError ? <p role="alert">{coordinateError}</p> : <small>Manual coordinates become ordinary shareable camera state. Browser location remains separately redacted.</small>}
                 </form>
                 <div className="map-orientation-controls">
-                  <label><span><strong>Bearing</strong><output>{Math.round(view.bearing)}°</output></span><input type="range" min="-180" max="180" step="1" value={Math.round(view.bearing)} onChange={(event) => mapRef.current?.easeTo({ bearing: Number(event.target.value), duration: 0 })} /></label>
-                  <label><span><strong>Pitch</strong><output>{Math.round(view.pitch)}°</output></span><input type="range" min="0" max="60" step="1" value={Math.round(view.pitch)} onChange={(event) => mapRef.current?.easeTo({ pitch: Number(event.target.value), duration: 0 })} /></label>
+                  <label><span><strong>Bearing</strong><output>{Math.round(view.bearing)}°</output></span><input type="range" min="-180" max="180" step="1" value={Math.round(view.bearing)} onChange={(event) => updateRendererNeutralView({ bearing: Number(event.target.value) })} /></label>
+                  <label><span><strong>Pitch</strong><output>{Math.round(view.pitch)}°</output></span><input type="range" min="0" max="60" step="1" value={Math.round(view.pitch)} onChange={(event) => updateRendererNeutralView({ pitch: Number(event.target.value) })} /></label>
                 </div>
+                <div className="map-control-group"><header><strong>Gesture mode</strong><span>One unified map control system</span></header><div className="map-segmented-control"><button type="button" aria-pressed={gestureMode === "cooperative"} onClick={() => setMapGestureMode("cooperative")}>Cooperative</button><button type="button" aria-pressed={gestureMode === "direct"} onClick={() => setMapGestureMode("direct")}>Direct</button></div><p className="map-control-note">Cooperative mode requires a modifier key for wheel zoom and two fingers for touch pan, reducing accidental page trapping. Direct mode gives the map immediate gesture control.</p></div>
                 <aside className="map-utility-boundary" data-tone="privacy"><strong>Location privacy</strong><p>Browser location is used only to move the local camera. While that camera remains location-derived, shared URLs use generalized Kansas defaults plus a redaction marker, receipts and exports use withheld markers, and diagnostics omit coordinates. Fit Kansas clears the private camera.</p></aside>
                 <aside className="map-utility-boundary"><strong>Keyboard alternative</strong><p>Use Inspect for a searchable feature list, Layer Catalog for visibility and opacity, and these controls for camera actions without relying on pointer gestures.</p></aside>
               </section>}
@@ -2733,7 +3405,7 @@ export default function Home() {
                 </article>
 
                 {mapQueryCandidates.length > 1 && <section className="map-overlap-chooser" aria-labelledby="overlap-title">
-                  <div><span>OVERLAP CHOOSER</span><h4 id="overlap-title">{mapQueryCandidates.length} features share this map point</h4><p>Choose one explicitly; the renderer will not silently prefer draw order.</p></div>
+                  <div><span>OVERLAP CHOOSER</span><h4 id="overlap-title">{mapQueryCandidates.length} catalog features share this context</h4><p>Choose one explicitly; the shell will not silently prefer descriptor order.</p></div>
                   {mapQueryCandidates.map((candidate) => <button key={`${candidate.layerId}:${candidate.featureId}`} type="button" onClick={() => selectIndexedFeature(candidate.layerId, candidate.featureId)}><span>{candidate.layerTitle} · {candidate.sourceYear}</span><strong>{candidate.title}</strong><small>{candidate.evidenceState}</small></button>)}
                 </section>}
 
@@ -2755,6 +3427,96 @@ export default function Home() {
                   </article>)}
                   {mapFeatureIndex.length === 0 && <div className="map-utility-empty"><strong>No compatible features</strong><p>Change the active time, clear a spatial filter or feature search, or choose another layer.</p></div>}
                 </div>
+              </section>}
+
+              {mapUtilityView === "scene" && <section id="map-utility-view-scene" role="tabpanel" aria-labelledby="map-utility-tab-scene" className="map-utility-section scene-lab-section">
+                <div className="map-utility-section-heading"><span>SCENE + 3D LAB</span><h3>Globe, extrusion, atmosphere + camera intent</h3><p>Compose reversible renderer-neutral scene state for globe projection, fill-extrusion descriptors, atmosphere, light, field of view, and camera turns. MapLibre execution, real terrain, and operational sources stay held.</p></div>
+
+                <section className="scene-preset-grid" aria-label="Map scene presets">
+                  {([
+                    ["overview-2d", "2D overview", "Default evidence-first camera"],
+                    ["globe-overview", "Globe overview", "Projection + atmosphere"],
+                    ["water-systems", "Water systems", "Basins + directional corridors"],
+                    ["smoke-context", "Smoke timeline", "Synthetic plume context"],
+                    ["elevation-3d", "Elevation 3D", "Relative-height extrusions"],
+                    ["tile-grid", "Tile grid", "Viewport diagnostics"],
+                  ] as const).map(([id, title, detail]) => <button key={id} type="button" aria-pressed={scenePreset === id} onClick={() => applyScenePreset(id)}><span>{id === "elevation-3d" ? "3D" : id === "globe-overview" ? "◎" : id === "tile-grid" ? "XYZ" : id === "smoke-context" ? "AIR" : id === "water-systems" ? "H₂O" : "2D"}</span><strong>{title}</strong><small>{detail}</small></button>)}
+                </section>
+
+                <div className="scene-layer-toggles" role="group" aria-label="Advanced layer visibility">
+                  {([
+                    ["watershed-context", "Watersheds"],
+                    ["smoke-context", "Smoke"],
+                    ["elevation-concept", "Elevation"],
+                    ["tile-matrix-grid", "Tile matrix"],
+                  ] as const).map(([id, label]) => <button key={id} type="button" aria-pressed={visibility[id]} onClick={() => toggleSceneLayer(id)}><i aria-hidden="true" />{label}</button>)}
+                </div>
+
+                <div className="scene-control-grid">
+                  <section className="scene-height-control" aria-labelledby="scene-height-title">
+                    <header><div><strong id="scene-height-title">Relative vertical scale</strong><small>Synthetic extrusion only</small></div><output htmlFor="scene-height">{verticalExaggeration.toFixed(1)}×</output></header>
+                    <input id="scene-height" type="range" min="0" max="2" step="0.1" value={verticalExaggeration} onChange={(event) => { const next = Number(event.target.value); verticalExaggerationRef.current = next; setVerticalExaggeration(next); }} />
+                    <div><span>Flat</span><span>1× fixture</span><span>2× concept</span></div>
+                  </section>
+                  <section className="scene-camera-controls" aria-label="3D camera orientation">
+                    <header><strong>Camera</strong><small>{Math.round(view.pitch)}° pitch · {Math.round(view.bearing)}° bearing</small></header>
+                    <div><button type="button" onClick={() => orientSceneCamera(48, -18)}>Oblique NW</button><button type="button" onClick={() => orientSceneCamera(54, 28)}>Oblique SE</button><button type="button" onClick={() => orientSceneCamera(0, view.bearing)}>Top down</button><button type="button" onClick={() => orientSceneCamera(view.pitch, 0)}>North up</button><button type="button" onClick={() => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit()} aria-pressed={sceneOrbiting}>{sceneOrbiting ? "Stop turn" : "Turn 90°"}</button><button type="button" disabled={!selected} onClick={() => selected && updateRendererNeutralView({ center: [selected.properties.focusLng, selected.properties.focusLat], zoom: Math.max(view.zoom, 8.5), pitch: 58, bearing: -24 })}>Focus selection</button></div>
+                  </section>
+                </div>
+
+                <div className="scene-environment-grid">
+                  <section className="scene-atmosphere-control" aria-labelledby="scene-atmosphere-title">
+                    <header><div><strong id="scene-atmosphere-title">Sky + atmosphere</strong><small>Inert style-environment descriptor</small></div><output>{atmospherePreset.toUpperCase()}</output></header>
+                    <div>{(["night", "dusk", "clear"] as const).map((preset) => <button key={preset} type="button" aria-pressed={atmospherePreset === preset} onClick={() => { atmospherePresetRef.current = preset; setAtmospherePreset(preset); }}>{preset}</button>)}</div>
+                  </section>
+                  <section className="scene-optics-control" aria-labelledby="scene-optics-title">
+                    <header><div><strong id="scene-optics-title">Light + optics</strong><small>Extrusion illumination and vertical FOV</small></div></header>
+                    <label><span>Light azimuth <output>{Math.round(lightAzimuth)}°</output></span><input type="range" min="0" max="359" step="1" value={lightAzimuth} onChange={(event) => { const next = Number(event.target.value); lightAzimuthRef.current = next; setLightAzimuth(next); }} /></label>
+                    <label><span>Field of view <output>{fieldOfView.toFixed(0)}°</output></span><input type="range" min="20" max="60" step="1" value={fieldOfView} onChange={(event) => { const next = Number(event.target.value); fieldOfViewRef.current = next; setFieldOfView(next); }} /></label>
+                  </section>
+                </div>
+
+                <section className="scene-time-strip" aria-labelledby="scene-time-title">
+                  <header><strong id="scene-time-title">Smoke context time</strong><small>Exact fixture years · not current conditions</small></header>
+                  <div>{([2022, 2024, 2026] as const).map((step) => <button key={step} type="button" aria-pressed={year === step} onClick={() => { yearRef.current = step; setYear(step); setPlaying(false); }}>{step}</button>)}</div>
+                </section>
+
+                <section className="scene-tile-ledger" aria-labelledby="tile-ledger-title">
+                  <header><div><span>VIEWPORT DIAGNOSTICS</span><h4 id="tile-ledger-title">Tile matrix reader</h4></div><strong>HELD</strong></header>
+                  <div className="scene-metrics">
+                    <article><span>CENTER XYZ</span><strong>{centerTile.label}</strong><small>Web Mercator address at floor zoom</small></article>
+                    <article><span>SOURCES</span><strong>{sourceStateCounts.held} HELD</strong><small>Catalog metadata readable</small></article>
+                    <article><span>RENDER MODE</span><strong>{projection.toUpperCase()}</strong><small>{Math.round(view.pitch)}° pitch · {atmospherePreset} sky</small></article>
+                    <article><span>CARRIER</span><strong>LOCAL GEOJSON</strong><small>No PMTiles, MVT, COG, or DEM fetch</small></article>
+                  </div>
+                  <p>The optional grid is a labeled GeoJSON simulation for viewport, selection, and matrix-orientation testing. It is not proof of a tile request, cache hit, archive range response, or KFM source admission.</p>
+                </section>
+
+                <aside className="map-utility-boundary" data-tone="warning"><strong>3D preserves the 2D evidence path.</strong><p>The elevation scene extrudes invented relative-height bands; it does not sample a DEM or assert elevation. Smoke is not an advisory or exposure surface. Water is not flow, storage, quality, flood, or legal-water authority. Select any visible feature to inspect the same Evidence Drawer used in 2D.</p></aside>
+              </section>}
+
+              {mapUtilityView === "connections" && <section id="map-utility-view-connections" role="tabpanel" aria-labelledby="map-utility-tab-connections" className="map-utility-section source-connections-section">
+                <div className="map-utility-section-heading"><span>SOURCE CONNECTIONS</span><h3>Registry → held renderer → records</h3><p>Inspect each site-local fixture carrier, fit its declared bounds, or route to its compatible record index while renderer acquisition remains held.</p></div>
+                <div className="source-connection-summary" aria-label="Source connection summary">
+                  <article><span>HELD</span><strong>{sourceStateCounts.held}/{LAYER_REGISTRY.length}</strong><small>Renderer sources not acquired</small></article>
+                  <article><span>VISIBLE</span><strong>{visibleCount}</strong><small>Registry visibility intent</small></article>
+                  <article><span>DESCRIPTORS</span><strong>{LAYER_REGISTRY.reduce((count, layer) => count + layer.renderers.length, 0)}</strong><small>Inert style-layer metadata</small></article>
+                  <article><span>INSPECTED</span><strong>{Object.keys(sourceProbeCounts).length}</strong><small>Site-local fixture queries</small></article>
+                </div>
+                <div className="source-connection-toolbar">
+                  <label><i aria-hidden="true">⌕</i><span className="sr-only">Search source connections</span><input type="search" value={connectionQuery} onChange={(event) => setConnectionQuery(event.target.value)} placeholder="Layer, source ID, domain, or format" /></label>
+                  <label><span className="sr-only">Filter source connections</span><select value={connectionFilter} onChange={(event) => setConnectionFilter(event.target.value as typeof connectionFilter)}><option value="ALL">All carriers</option><option value="VISIBLE">Visible intent only</option><option value="HELD">Renderer held</option></select></label>
+                </div>
+                <div className="source-connection-list">
+                  {filteredSourceConnections.map(({ layer, state, activity, visible, compatibleCount, viewportCount, probeCount }) => <article key={layer.id} className="source-connection-card" data-state={state} data-visible={visible}>
+                    <header><div><span>{layer.domain} · {layer.sourceType}</span><h4>{layer.title}</h4><code>{layer.sourceId}</code></div><strong>{state.toUpperCase()}</strong></header>
+                    <div className="source-connection-path" aria-label={`${layer.title} renderer connection`}><span>REGISTRY</span><i>→</i><span>{activity}</span><i>→</i><span>{layer.renderers.length} DESCRIPTOR{layer.renderers.length === 1 ? "" : "S"}</span><i>→</i><span>RUNTIME HELD</span></div>
+                    <dl><div><dt>Time-compatible</dt><dd>{compatibleCount}</dd></div><div><dt>In viewport</dt><dd>{viewportCount}</dd></div><div><dt>Source probe</dt><dd>{probeCount === undefined ? "NOT RUN" : `${probeCount} UNIQUE`}</dd></div><div><dt>Attribution</dt><dd>{layer.attribution}</dd></div></dl>
+                    <footer><button type="button" onClick={() => setVisibility((current) => { const next = { ...current, [layer.id]: !current[layer.id] }; visibilityRef.current = next; return next; })}>{visible ? "Hide intent" : "Show intent"}</button><button type="button" onClick={() => zoomToLayer(layer)}>Fit</button><button type="button" onClick={() => probeSourceConnection(layer)}>Inspect fixture</button><button type="button" onClick={() => inspectSourceConnection(layer)}>Records</button></footer>
+                  </article>)}
+                  {filteredSourceConnections.length === 0 && <div className="map-utility-empty"><strong>No source connections match</strong><p>Clear the search or choose another connection state.</p></div>}
+                </div>
+                <aside className="map-utility-boundary" data-tone="warning"><strong>Connection status is held renderer context, not source admission.</strong><p>These carriers expose only site-local fixtures already in the Explorer registry. A fixture inspection does not acquire MapLibre or prove rights, freshness, evidence, policy approval, release, deployment, or publication.</p></aside>
               </section>}
 
               {mapUtilityView === "compare" && <section id="map-utility-view-compare" role="tabpanel" aria-labelledby="map-utility-tab-compare" className="map-utility-section layer-compare-section">
@@ -2787,16 +3549,16 @@ export default function Home() {
               {mapUtilityView === "display" && <section id="map-utility-view-display" role="tabpanel" aria-labelledby="map-utility-tab-display" className="map-utility-section">
                 <div className="map-utility-section-heading"><span>DISPLAY</span><h3>Styles, projections + view profiles</h3><p>Style changes preserve registry layers, time, selection eligibility, measurement geometry, camera, and attribution.</p></div>
                 <div className="map-control-group"><header><strong>Basemap style</strong><span>Display context · not evidence</span></header><div className="map-choice-grid">{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <button key={key} type="button" aria-pressed={basemap === key} onClick={() => setBasemap(key)}><strong>{BASEMAPS[key].title}</strong><small>{BASEMAPS[key].note}</small></button>)}</div></div>
-                <div className="map-control-group"><header><strong>Projection</strong><span>Camera display only</span></header><div className="map-choice-grid"><button type="button" aria-pressed={projection === "mercator"} onClick={() => setProjection("mercator")}><strong>Mercator</strong><small>Stable 2D inspection</small></button><button type="button" aria-pressed={projection === "globe"} onClick={() => setProjection("globe")}><strong>Globe</strong><small>MapLibre globe display</small></button></div></div>
+                <div className="map-control-group"><header><strong>Projection</strong><span>Preference descriptor only</span></header><div className="map-choice-grid"><button type="button" aria-pressed={projection === "mercator"} onClick={() => setProjection("mercator")}><strong>Mercator</strong><small>Stored 2D preference</small></button><button type="button" aria-pressed={projection === "globe"} onClick={() => setProjection("globe")}><strong>Globe</strong><small>Stored globe preference · renderer held</small></button></div></div>
                 <div className="map-control-group"><header><strong>View profiles</strong><span>View state only · reversible</span></header><div className="map-profile-list">{MAP_VIEW_PROFILES.map((profile) => <article key={profile.id}><div><strong>{profile.title}</strong><p>{profile.summary}</p><small>{profile.year} · {profile.basemap} · {profile.visibleLayerIds.length} layers</small></div><button type="button" onClick={() => applyViewProfile(profile)}>Apply profile</button></article>)}</div></div>
                 <button className="map-catalog-launch" type="button" onClick={openLayerCatalogFromUtility}>Open full Layer Catalog for visibility, opacity, order, legends, time, and trust metadata</button>
               </section>}
 
               {mapUtilityView === "measure" && <section id="map-utility-view-measure" role="tabpanel" aria-labelledby="map-utility-tab-measure" className="map-utility-section">
                 <div className="map-utility-section-heading"><span>MEASURE</span><h3>Browser-local screen measurement</h3><p>Choose a geometry, then click the map to add points. Undo resumes a completed measurement for explicit editing.</p></div>
-                <div className="map-control-group"><header><strong>Geometry</strong><span>{measureMode ? "ADDING POINTS" : measurementGeometryMode ? "COMPLETE / PAUSED" : "IDLE"}</span></header><div className="map-choice-grid"><button type="button" aria-pressed={measurementGeometryMode === "distance"} onClick={() => toggleMeasure("distance")}><strong>Distance</strong><small>Polyline approximation</small></button><button type="button" aria-pressed={measurementGeometryMode === "area"} onClick={() => toggleMeasure("area")}><strong>Area</strong><small>Polygon approximation</small></button></div></div>
-                <div className="map-control-group"><header><strong>Units</strong><span>Also updates the MapLibre scale bar</span></header><div className="map-segmented-control"><button type="button" aria-pressed={measureUnit === "imperial"} onClick={() => changeMeasureUnit("imperial")}>Miles / sq mi</button><button type="button" aria-pressed={measureUnit === "metric"} onClick={() => changeMeasureUnit("metric")}>Kilometers / km²</button></div></div>
-                <article className="map-measure-status" aria-live="polite"><span>{measurementGeometryMode?.toUpperCase() ?? "NO MEASUREMENT"}</span><strong>{measurement}</strong><small>{measureMode ? "Click the map to add points." : measurementGeometryMode ? "Finished geometry remains on the map until cleared." : "Select distance or area to begin."}</small></article>
+                <div className="map-control-group"><header><strong>Geometry</strong><span>RENDERER HOLD</span></header><div className="map-choice-grid"><button type="button" aria-pressed={false} onClick={() => toggleMeasure("distance")}><strong>Distance</strong><small>Requires conforming renderer interaction</small></button><button type="button" aria-pressed={false} onClick={() => toggleMeasure("area")}><strong>Area</strong><small>Requires conforming renderer interaction</small></button></div></div>
+                <div className="map-control-group"><header><strong>Units</strong><span>Stored preference only</span></header><div className="map-segmented-control"><button type="button" aria-pressed={measureUnit === "imperial"} onClick={() => changeMeasureUnit("imperial")}>Miles / sq mi</button><button type="button" aria-pressed={measureUnit === "metric"} onClick={() => changeMeasureUnit("metric")}>Kilometers / km²</button></div></div>
+                <article className="map-measure-status" aria-live="polite"><span>NO MEASUREMENT</span><strong>{measurement}</strong><small>Distance and area measurement remain held until renderer interactions cross MapRuntimePort.</small></article>
                 <div className="map-utility-actions"><button type="button" onClick={undoMeasurementPoint} disabled={!measurementGeometryMode}>Undo point</button><button type="button" onClick={finishMeasurement} disabled={!measureMode}>Finish</button><button type="button" onClick={clearMeasurement} disabled={!measurementGeometryMode}>Clear</button></div>
                 <aside className="map-utility-boundary" data-tone="warning"><strong>Screen measurement — not survey, cadastral, legal, or evidence.</strong><p>Results are approximate, browser-local, and excluded from context receipts and public-safe exports.</p></aside>
               </section>}
@@ -2831,15 +3593,15 @@ export default function Home() {
                 <div className="map-utility-section-heading"><span>DIAGNOSTICS</span><h3>Site runtime + repository boundary</h3><p>Local browser health is separate from KFM dependency admission, governed readiness, release, or publication.</p></div>
                 <div className="map-runtime-summary">
                   <article data-state={runtime.kind}><span>SITE RUNTIME</span><strong>{runtime.kind.toUpperCase()}</strong><small>{runtime.message}</small></article>
-                  <article><span>STYLE</span><strong>{styleReady ? "LOADED" : "WAITING"}</strong><small>{BASEMAPS[basemap].title} · {projection}</small></article>
-                  <article><span>SOURCES</span><strong>{sourceStateCounts.ready} READY</strong><small>{sourceStateCounts.loading} loading · {sourceStateCounts.error} error</small></article>
+                  <article><span>STYLE</span><strong>HELD</strong><small>{BASEMAPS[basemap].title} descriptor · {projection}</small></article>
+                  <article><span>SOURCES</span><strong>{sourceStateCounts.held} HELD</strong><small>Catalog metadata remains readable</small></article>
                 </div>
                 <section className="map-control-group maplibre-runtime-proof" aria-labelledby="maplibre-runtime-proof-title">
-                  <header><strong id="maplibre-runtime-proof-title">MapLibre {EXPECTED_MAPLIBRE_VERSION} runtime proof</strong><span>Live browser checks</span></header>
+                  <header><strong id="maplibre-runtime-proof-title">MapLibre {EXPECTED_MAPLIBRE_VERSION} acquisition boundary</strong><span>Runtime probes held</span></header>
                   <div className="map-status-list" aria-label="MapLibre browser capability status">{maplibreCapabilityChecks.map((check) => <article className="map-status-row" key={check.id} data-state={check.state}><div><span>{check.label}</span><p>{check.detail}</p></div><strong>{check.state}</strong></article>)}</div>
                 </section>
                 <section className="runtime-seam-lab" aria-labelledby="runtime-seam-title">
-                  <header><div><span>REPOSITORY-PROVEN PORT · SITE-LOCAL REPLAY</span><h4 id="runtime-seam-title">Renderer-neutral runtime seam</h4><p>Replay initialize → validated selection binding → dispose without importing the repository package, MapLibre, or a network source.</p></div><strong data-state={runtimeSeamState}>{runtimeSeamState}</strong></header>
+                  <header><div><span>REPOSITORY-PROVEN PORT · SITE-LOCAL REPLAY</span><h4 id="runtime-seam-title">Renderer-neutral runtime seam</h4><p>Replay initialize → validated selection binding → dispose through the repository package without acquiring MapLibre or a network source.</p></div><strong data-state={runtimeSeamState}>{runtimeSeamState}</strong></header>
                   <div className="runtime-seam-state"><span>Reason / effect</span><p>{runtimeSeamReason}</p><small>Current selection: {selected ? `${selected.featureId} · ${selected.properties.evidenceState}` : "NONE"}</small></div>
                   <div className="map-utility-actions"><button type="button" onClick={initializeRuntimeSeam}>Initialize Null seam</button><button type="button" onClick={bindRuntimeSeamSelection} disabled={runtimeSeamState === "IDLE" || runtimeSeamState === "DISPOSED"}>Bind current selection</button><button type="button" onClick={disposeRuntimeSeam} disabled={runtimeSeamState === "IDLE" || runtimeSeamState === "DISPOSED"}>Dispose</button><button type="button" onClick={() => { setRuntimeSeamState("IDLE"); setRuntimeSeamReason("Awaiting deterministic replay"); }}>Reset replay</button></div>
                   <footer>VERIFIED REPOSITORY SLICE: MapRuntimePort + NullMapRuntime + governed evidence binding · CONCRETE MAPLIBRE ADAPTER: HOLD</footer>
@@ -2847,7 +3609,7 @@ export default function Home() {
                 <div className="map-status-list" aria-label="MapLibre repository status">{MAPLIBRE_REPOSITORY_STATUS.map((status) => <article className="map-status-row" key={status.id} data-state={status.state}><div><span>{status.label}</span><p>{status.detail}</p></div><strong>{status.state}</strong></article>)}</div>
                 <div className="map-utility-actions"><button type="button" onClick={reapplyRendererState}>Reapply local state</button><button type="button" onClick={restoreLastKnownGoodView}>Restore prior camera</button><button type="button" onClick={() => void copyMapDiagnostics()}>Copy redacted diagnostics</button></div>
                 <div className="map-control-group"><header><strong>Capability gates</strong><span>Honest interfaces for unavailable work</span></header><div className="map-capability-grid">{MAP_CAPABILITY_GATES.map((gate) => <article className="map-capability-card" key={gate.id}><header><strong>{gate.title}</strong><span>{gate.state}</span></header><p>{gate.reason}</p><small>{gate.safeInterface}</small></article>)}</div></div>
-                <aside className="map-utility-boundary"><strong>Renderer evidence boundary</strong><p>This Site runs MapLibre {EXPECTED_MAPLIBRE_VERSION} against site-local GeoJSON fixtures. GitHub proves an exact dependency, a bounded concrete adapter, the renderer-neutral port, and deterministic Null runtime; broader authenticated, performance, terrain, accessibility, and long-session readiness remain held.</p></aside>
+                <aside className="map-utility-boundary"><strong>Renderer evidence boundary</strong><p>This Site runs the package-owned NullMapRuntime and does not acquire MapLibre. GitHub proves the exact package dependency, bounded adapter, renderer-neutral port, and deterministic Null runtime; full consumer migration and all renderer runtime probes remain held.</p></aside>
               </section>}
             </div>
           </aside>
@@ -2857,9 +3619,9 @@ export default function Home() {
           <div className="map-mobile-actions">
             <button type="button" onClick={() => { setCurrentWorkspace("knowledge"); dismissMapUtilityWithoutFocus(); setLeftOpen(true); setRightOpen(false); setTimelineOpen(false); }}>Layers <b>{visibleCount}</b></button>
             <button type="button" onClick={() => { if (selected) { setCurrentWorkspace("trust"); dismissMapUtilityWithoutFocus(); setRightOpen(true); setLeftOpen(false); setTimelineOpen(false); } }} disabled={!selected}>Evidence</button>
-            <button type="button" onClick={() => openMapUtility("navigate")}>Map</button>
+            <button type="button" onClick={(event) => openMapUtility("report", event.currentTarget)}>Report</button>
             <button type="button" onClick={() => { setCurrentWorkspace("explore"); dismissMapUtilityWithoutFocus(); setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); }}>Time <b>{formatTimelineStep(year)}</b></button>
-            <button type="button" onClick={() => { setCurrentWorkspace("features"); setRepositoryView("functions"); setRepositoryOpen(true); }}>Functions</button>
+            <Link href="/about">About</Link>
           </div>
 
           <div className="screenreader-status sr-only" aria-live="polite">{runtime.message}. Map center {formatCoordinate(view.center[1], "N", "S")}, {formatCoordinate(view.center[0], "E", "W")}. {visibleCount} layers visible. {selected ? `Selected ${selected.properties.title}; evidence state ${selectedEvidence?.label}.` : "No feature selected."}</div>
@@ -2902,7 +3664,7 @@ export default function Home() {
                 <div className="legend-detail"><strong>Legend</strong>{selected.layer.legend.map((item) => <p key={item.label}><i className={`legend-swatch ${item.shape}`} style={{ "--swatch": item.color } as React.CSSProperties} />{item.label}</p>)}</div>
               </section>}
               {drawerView === "lineage" && <section role="tabpanel" id="drawer-panel-lineage" aria-labelledby="drawer-tab-lineage" className="drawer-section">
-                <h3>Selection-to-evidence trace</h3><ol className="lineage-list"><li><span>01</span><div><strong>MapLibre candidate</strong><small>queryRenderedFeatures identified a candidate only</small></div></li><li><span>02</span><div><strong>Stable registry context</strong><small>{selected.featureId}</small></div></li><li><span>03</span><div><strong>Evidence resolution</strong><small>{selected.properties.citation}</small></div></li><li><span>04</span><div><strong>Policy / rights</strong><small>{selected.properties.evidenceState}</small></div></li><li><span>05</span><div><strong>Public-safe view</strong><small>Drawer + bounded Focus Mode</small></div></li></ol>
+                <h3>Selection-to-evidence trace</h3><ol className="lineage-list"><li><span>01</span><div><strong>Catalog selection</strong><small>Stable registry lookup selected a fixture; renderer hit testing remains held</small></div></li><li><span>02</span><div><strong>Stable registry context</strong><small>{selected.featureId}</small></div></li><li><span>03</span><div><strong>Evidence resolution</strong><small>{selected.properties.citation}</small></div></li><li><span>04</span><div><strong>Policy / rights</strong><small>{selected.properties.evidenceState}</small></div></li><li><span>05</span><div><strong>Public-safe view</strong><small>Drawer + bounded Focus Mode</small></div></li></ol>
                 <div className="boundary-law"><span>Renderer</span><b>≠</b><span>truth store</span><b>·</b><span>pixel</span><b>≠</b><span>proof</span></div>
               </section>}
               {drawerView === "focus" && <section role="tabpanel" id="drawer-panel-focus" aria-labelledby="drawer-tab-focus" className="drawer-section focus-mode">
@@ -2972,7 +3734,7 @@ export default function Home() {
         </section>
 
         <footer className="status-bar" aria-label="Map status">
-          <span data-runtime={runtime.kind}><i />{runtime.kind.toUpperCase()}</span><span>{formatCoordinate(pointer[1], "N", "S")} · {formatCoordinate(pointer[0], "E", "W")}</span><span>{scaleAtView(view)}</span><span>Zoom {view.zoom.toFixed(2)}</span><span>Bearing {Math.round(view.bearing)}° · Pitch {Math.round(view.pitch)}°</span><span>{formatTimelineStep(year)} active time</span><span>{visibleCount} layers visible</span><span>GeoJSON fixtures · MapLibre {maplibreProbe.version ?? EXPECTED_MAPLIBRE_VERSION}</span><span>Repo main@{REPOSITORY_SNAPSHOT.shortCommit}</span>
+          <span data-runtime={runtime.kind}><i />{runtime.kind.toUpperCase()}</span><span>{formatCoordinate(pointer[1], "N", "S")} · {formatCoordinate(pointer[0], "E", "W")}</span><span>{scaleAtView(view)}</span><span>Zoom {view.zoom.toFixed(2)}</span><span>Bearing {Math.round(view.bearing)}° · Pitch {Math.round(view.pitch)}°</span><span>{formatTimelineStep(year)} active time</span><span>{visibleCount} catalog layers visible</span><span>Renderer HOLD · MapLibre candidate {EXPECTED_MAPLIBRE_VERSION}</span><span>Repo main@{REPOSITORY_SNAPSHOT.shortCommit}</span>
         </footer>
       </main>
 

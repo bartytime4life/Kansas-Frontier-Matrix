@@ -6,7 +6,7 @@ fit together.
 
 ## Current public scope
 
-- The map uses site-local synthetic or generalized GeoJSON demonstration data.
+- The renderer-neutral shell exposes site-local synthetic or generalized GeoJSON catalog metadata; renderer source and layer loading remain held.
 - Nothing in this build is a released operational KFM dataset.
 - Evidence resolution fails closed: missing, stale, restricted, denied, and
   error states never become unsupported answers.
@@ -14,8 +14,14 @@ fit together.
 - The repository and source briefing reports implementation boundaries; it does
   not release or publish data.
 
-The application runs as a single-route Vinext site with MapLibre GL JS. D1 and
-R2 are intentionally unbound in the current deployment.
+The application runs as a single-route Vinext site through the package-owned
+`NullMapRuntime`. TypeScript and Vite resolve the `@kfm/maplibre` facade to the
+accepted workspace package root, following the same renderer-neutral pattern as
+`explorer-web`; the child manifest acquires no renderer or internal package by
+an external or `file:` dependency. Styles, sources, layers, workers, hit
+testing, and screen measurement remain held pending a dependency-closed
+consumer migration. D1 and R2 are intentionally unbound in the current
+deployment.
 
 ## Prerequisites
 

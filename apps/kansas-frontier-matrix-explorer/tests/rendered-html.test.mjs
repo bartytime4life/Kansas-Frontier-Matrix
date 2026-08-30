@@ -31,9 +31,10 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /Kansas Frontier Matrix Explorer/i);
   assert.match(html, /Layer Catalog/i);
   assert.match(html, /MapLibre/i);
+  assert.match(html, /Build report/i);
   assert.match(html, /synthetic and generalized demonstration layers/i);
   assert.match(html, /Repository briefing/i);
-  assert.match(html, /main@(?:<!-- -->)?2b0ea9b/i);
+  assert.match(html, /main@(?:<!-- -->)?c321610/i);
   assert.match(html, /Scenario review/i);
   assert.match(html, /Runtime lab/i);
   assert.match(html, /Source observatory/i);
@@ -42,16 +43,177 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /county inventory is useful but snapshot-sensitive/i);
 });
 
-test("gives first-time visitors plain-language guided examples", async () => {
+test("centers the primary workflow on map-scoped custom reports", async () => {
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const mapInterface = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
+  const about = await readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(mapInterface, /"report"/);
+  assert.match(source, /kfm-custom-map-report-v1/);
+  assert.match(source, /Custom report builder/);
+  assert.match(source, /Build from the map you are using/);
+  assert.match(source, /Map extent/);
+  assert.match(source, /Visible layers/);
+  assert.match(source, /Report \.html/);
+  assert.match(source, /Data \.json/);
+  assert.match(source, /setReportLayerIds\(activeLayers\.map/);
+  assert.match(source, /const \[leftOpen, setLeftOpen\] = useState\(false\)/);
+  assert.match(about, /Start with a question, finish with a report/);
+  assert.match(about, /EVIDENCE STATES/);
+  assert.match(css, /\.report-builder-grid/);
+  assert.match(css, /\.about-page/);
+});
+
+test("adds reusable analysis recipes, device-local workspaces, report filters, and richer fixtures", async () => {
+  const ts = await import("typescript");
+  const recipeSource = await readFile(new URL("../app/analysis-recipes.ts", import.meta.url), "utf8");
+  const explorerSource = await readFile(new URL("../app/explorer-data.ts", import.meta.url), "utf8");
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  const compile = (source, fileName) => ts.transpileModule(source, {
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+    fileName,
+  }).outputText;
+  const recipes = await import(`data:text/javascript;base64,${Buffer.from(compile(recipeSource, "analysis-recipes.ts")).toString("base64")}`);
+  const explorer = await import(`data:text/javascript;base64,${Buffer.from(compile(explorerSource, "explorer-data.ts")).toString("base64")}`);
+  const layer = (id) => explorer.LAYER_REGISTRY.find((candidate) => candidate.id === id);
+
+  assert.equal(recipes.ANALYSIS_RECIPES.length, 8);
+  assert.equal(recipes.ANALYSIS_RECIPES.every((recipe) => recipe.layerIds.every((id) => Boolean(layer(id)))), true);
+  assert.equal(layer("water-context").data.features.length, 4);
+  assert.equal(layer("agriculture-context").data.features.length, 3);
+  assert.equal(layer("communities").data.features.length, 12);
+  assert.equal(layer("transport-context").data.features.length, 2);
+  assert.match(page, /kfm-map-workspaces-v1/);
+  assert.match(page, /saveCurrentWorkspace/);
+  assert.match(page, /loadSavedWorkspace/);
+  assert.match(page, /locationCameraRedacted\?: boolean/);
+  assert.match(page, /locationCameraRedacted: locationCameraRedacted \|\| locationDerivedViewRef\.current/);
+  assert.match(page, /snapshot\.locationCameraRedacted !== false/);
+  assert.match(page, /locationDerivedViewRef\.current = restoredLocationCameraRedaction/);
+  assert.match(page, /setLocationCameraRedacted\(restoredLocationCameraRedaction\)/);
+  assert.match(page, /reportEvidenceFilter/);
+  assert.match(page, /handleWorkspaceShortcut/);
+  assert.match(page, /shortcut R/);
+  assert.match(css, /\.analysis-recipes/);
+  assert.match(css, /\.saved-workspace-list/);
+  assert.match(css, /\.report-active-filters/);
+});
+
+test("adds bounded renderer-neutral smoke, water, elevation, tile, and scene navigation features", async () => {
+  const ts = await import("typescript");
+  const explorerSource = await readFile(new URL("../app/explorer-data.ts", import.meta.url), "utf8");
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const runtime = await readFile(new URL("../app/map-runtime.ts", import.meta.url), "utf8");
+  const mapInterface = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  const compiled = ts.transpileModule(explorerSource, {
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+    fileName: "explorer-data.ts",
+  }).outputText;
+  const explorer = await import(`data:text/javascript;base64,${Buffer.from(compiled).toString("base64")}`);
+  const layer = (id) => explorer.LAYER_REGISTRY.find((candidate) => candidate.id === id);
+
+  assert.equal(explorer.LAYER_REGISTRY.length, 15);
+  assert.equal(layer("watershed-context").data.features.length, 3);
+  assert.equal(layer("smoke-context").data.features.length, 3);
+  assert.equal(layer("elevation-concept").data.features.length, 6);
+  assert.equal(layer("tile-matrix-grid").data.features.length, 24);
+  assert.equal(layer("water-context").sourceOptions.lineMetrics, true);
+  assert.match(explorerSource, /"line-gradient"/);
+  assert.match(explorerSource, /type: "fill-extrusion"/);
+  assert.match(explorerSource, /not observed smoke, a forecast, an advisory/i);
+  assert.match(explorerSource, /not a fetched vector tile, PMTiles archive/i);
+  assert.match(runtime, /lngLatToTile/);
+  assert.match(runtime, /SCENE_ENVIRONMENTS/);
+  assert.doesNotMatch(runtime, /setElevationExaggeration|applySceneEnvironment|setSky|setLight|maplibre-gl|addSource|addLayer/);
+  assert.match(page, /SCENE \+ 3D LAB/);
+  assert.match(page, /Relative vertical scale/);
+  assert.match(page, /Renderer-neutral globe overview/);
+  assert.match(page, /reversible 90° renderer-neutral camera turn/);
+  assert.match(page, /No PMTiles, MVT, COG, or DEM fetch/);
+  assert.match(page, /createNullMapRuntime/);
+  assert.doesNotMatch(page, /NavigationControl|FullscreenControl|setVerticalFieldOfView|querySourceFeatures|\bmapRef\.current|from "maplibre-gl"|new maplibregl/);
+  assert.match(page, /aria-label="Unified map controls"/);
+  assert.match(page, /SOURCE CONNECTIONS/);
+  assert.match(page, /Inspect fixture/);
+  assert.match(page, /params\.set\("scene"/);
+  assert.match(page, /params\.set\("zscale"/);
+  assert.match(page, /params\.set\("sky"/);
+  assert.match(page, /params\.set\("fov"/);
+  assert.match(mapInterface, /Terrain \+ hillshade[\s\S]*HOLD/);
+  assert.match(mapInterface, /Offline \/ PMTiles[\s\S]*HOLD/);
+  assert.match(css, /\.scene-preset-grid/);
+  assert.match(css, /\.scene-tile-ledger/);
+  assert.match(css, /\.source-connection-card/);
+  assert.match(css, /\.scene-environment-grid/);
+});
+
+test("adds a renderer-neutral area-of-interest workflow and browser-local camera history", async () => {
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const runtime = await readFile(new URL("../app/map-runtime.ts", import.meta.url), "utf8");
+  const mapInterface = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.doesNotMatch(runtime, /kfm-analysis-area|addSource|addLayer/);
+  assert.match(page, /"ANALYSIS_AREA"/);
+  assert.match(page, /captureAnalysisArea/);
+  assert.match(page, /Locked the current renderer-neutral view bounds as the report area of interest/);
+  assert.match(page, /params\.set\("aoi"/);
+  assert.match(page, /cameraHistoryRef/);
+  assert.match(page, /travelCameraHistory/);
+  assert.match(page, /Previous view/);
+  assert.match(page, /compatible_record_count/);
+  assert.match(page, /startAreaDraw/);
+  assert.match(page, /kfm-site-spatial-query-plan-v1/);
+  assert.match(page, /FOCUS_POINT_INSIDE_BOUNDS/);
+  assert.match(page, /rendererHitsAreEvidence: false/);
+  assert.match(css, /\.analysis-area-card/);
+  assert.match(css, /\.map-query-surface/);
+  assert.match(css, /\.report-map-query/);
+  assert.match(mapInterface, /Terrain \+ hillshade[\s\S]*HOLD/);
+  assert.match(mapInterface, /Offline \/ PMTiles[\s\S]*HOLD/);
+});
+
+test("converts a reversible screen box into a bounded geographic query envelope", async () => {
+  const ts = await import("typescript");
+  const source = await readFile(new URL("../app/map-runtime.ts", import.meta.url), "utf8");
+  const javascript = ts.transpileModule(source, {
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+    fileName: "map-runtime.ts",
+  }).outputText;
+  const runtime = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
+
+  assert.deepEqual(runtime.screenRectToBounds(
+    { startX: 80, startY: 90, endX: 20, endY: 10 },
+    { width: 100, height: 100 },
+    { west: -100, south: 30, east: -90, north: 40 },
+  ), { west: -98, south: 31, east: -92, north: 39 });
+  assert.equal(runtime.screenRectToBounds(
+    { startX: 10, startY: 10, endX: 15, endY: 15 },
+    { width: 100, height: 100 },
+    { west: -100, south: 30, east: -90, north: 40 },
+  ), null);
+  assert.equal(runtime.screenRectToBounds(
+    { startX: 10, startY: 10, endX: 80, endY: 80 },
+    { width: 0, height: 100 },
+    { west: -100, south: 30, east: -90, north: 40 },
+  ), null);
+});
+
+test("keeps optional guided examples while moving explanatory copy to About", async () => {
+  const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const about = await readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
   assert.match(source, /GUIDED_EXAMPLES/);
   assert.match(source, /atmo-topeka-2026/);
   assert.match(source, /atmo-hays-2024/);
   assert.match(source, /planning-generalized-envelope/);
-  assert.match(source, /Nothing in this build is a released operational dataset/);
   assert.match(source, /Every current map layer is synthetic or generalized/);
+  assert.match(source, /Guided material remains available from About/);
+  assert.match(about, /site-local synthetic and generalized demonstration records/);
   assert.match(source, /kfm-guided-start-dismissed-v1/);
   assert.match(source, /openGuidedExample/);
   assert.match(css, /\.guided-start/);
@@ -105,7 +267,7 @@ test("keeps Focus Mode fail closed and share state complete", async () => {
   assert.match(source, /params\.set\("ws", currentWorkspace\)/);
   assert.match(source, /params\.get\("privacy"\) === "location-camera-redacted"/);
   assert.match(source, /window\.addEventListener\("popstate", handlePopState\)/);
-  assert.match(source, /WebGL2 is unavailable in this browser/);
+  assert.match(source, /Renderer acquisition is held/);
   assert.match(source, /clamp\(parseNumber\(params\.get\("z"\), KANSAS_VIEW\.zoom\), 4, 16\)/);
   assert.match(source, /value === null \|\| value\.trim\(\) === ""/);
   assert.match(source, /params\.has\("l"\)/);
@@ -171,7 +333,7 @@ test("resolves Focus outcomes and temporal scope with fail-closed precedence", a
 test("keeps repository updates pinned and boundary-labeled", async () => {
   const updates = await readFile(new URL("../app/repository-updates.ts", import.meta.url), "utf8");
 
-  assert.match(updates, /2b0ea9bbbc9d9a120ea94d92fb4617d96fe7d2a0/);
+  assert.match(updates, /c3216103ac049cd39f5f03883d7146046ef7bccd/);
   assert.match(updates, /exact maplibre-gl 6\.6\.0 lock closure/);
   assert.match(updates, /521 commits after the prior Site evidence pin/);
   assert.match(updates, /Planning scenarios now have a strict review projection/);
@@ -233,16 +395,18 @@ test("imports the complete repository feature catalog without maturity inflation
   assert.equal(catalog.FEATURE_CATALOG.every((feature) => feature.path && feature.summary), true);
 });
 
-test("keeps the MapLibre Workbench complete, bounded, and responsive", async () => {
+test("keeps the renderer-neutral Workbench complete, bounded, and fail closed", async () => {
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const mapInterface = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
   const exportCenter = await readFile(new URL("../app/export-center.ts", import.meta.url), "utf8");
   const explorerData = await readFile(new URL("../app/explorer-data.ts", import.meta.url), "utf8");
+  const runtime = await readFile(new URL("../app/map-runtime.ts", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
-  const prepareMapLibreAssets = await readFile(new URL("../scripts/prepare-maplibre-assets.mjs", import.meta.url), "utf8");
+  const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
   const buildScript = await readFile(new URL("../scripts/build-verified.sh", import.meta.url), "utf8");
   const installScript = await readFile(new URL("../scripts/install-ci.sh", import.meta.url), "utf8");
   const tsconfig = await readFile(new URL("../tsconfig.json", import.meta.url), "utf8");
+  const viteConfig = await readFile(new URL("../vite.config.ts", import.meta.url), "utf8");
 
   assert.match(source, /id="map-utility-panel"/);
   for (const view of ["Navigate", "Inspect", "Compare", "Display", "Measure", "Export", "Diagnostics"]) assert.match(source, new RegExp(`${view}`));
@@ -260,22 +424,25 @@ test("keeps the MapLibre Workbench complete, bounded, and responsive", async () 
   assert.match(source, /copyMapCenter/);
   assert.match(source, /fitIndexedFeatures/);
   assert.match(source, /SUPPORTED_CONTEXT_BOUNDS/);
-  assert.match(source, /site_package: "6\.6\.0"/);
-  assert.match(source, /setWorkerUrl\(MAPLIBRE_WORKER_URL\)/);
-  assert.match(source, /getWorkerUrl\(\) !== MAPLIBRE_WORKER_URL/);
-  assert.match(source, /getVersion\(\)/);
-  assert.match(source, /MAPLIBRE_RUNTIME_ASSET_URLS/);
-  assert.match(source, /if \(!response\.ok\) throw new Error/);
-  assert.match(source, /map\.on\("idle"/);
-  assert.match(source, /map\.areTilesLoaded\(\)/);
-  assert.match(source, /map\.isSourceLoaded\(layer\.sourceId\)/);
-  assert.match(source, /MapLibre \{EXPECTED_MAPLIBRE_VERSION\} runtime proof/);
-  assert.match(source, /SAME_ORIGIN_CONFIGURED/);
-  assert.match(prepareMapLibreAssets, /maplibre-gl-worker\.mjs/);
-  assert.match(prepareMapLibreAssets, /maplibre-gl-shared\.mjs/);
+  assert.match(source, /createNullMapRuntime/);
+  assert.match(source, /DIRECT_CONSUMER_MIGRATION_HOLD/);
+  assert.match(source, /Renderer HOLD · MapLibre candidate/);
+  assert.match(source, /runtime_assets: "NOT_RUN"/);
+  assert.match(source, /map_constructed: false/);
+  assert.match(source, /MapLibre \{EXPECTED_MAPLIBRE_VERSION\} acquisition boundary/);
+  assert.doesNotMatch(source, /from "maplibre-gl"|import\("maplibre-gl"\)|new maplibregl/);
+  assert.doesNotMatch(explorerData, /from "maplibre-gl"/);
+  assert.doesNotMatch(css, /maplibre-gl\/dist|\.maplibregl-/);
+  assert.equal(Object.hasOwn(packageJson.dependencies, "@kfm/maplibre"), false);
+  assert.equal(Object.hasOwn(packageJson.dependencies, "maplibre-gl"), false);
+  assert.match(runtime, /Renderer-neutral high-contrast preference descriptor/);
+  assert.doesNotMatch(runtime, /maplibre-gl|addSource|addLayer|setFilter/);
   assert.match(buildScript, /exec bash "\$\{script_dir\}\/sites-env\.sh"/);
   assert.match(installScript, /exec bash "\$\{script_dir\}\/sites-env\.sh"/);
   assert.match(tsconfig, /"target": "ES2022"/);
+  assert.match(tsconfig, /"@kfm\/maplibre": \["\.\.\/\.\.\/packages\/maplibre\/src\/index\.ts"\]/);
+  assert.match(viteConfig, /find: "@kfm\/maplibre"/);
+  assert.match(viteConfig, /packages\/maplibre\/src\/index\.ts/);
   assert.match(source, /FULL TEMPORAL CAPACITY · 4\.54 GA BP TO 2026/);
   assert.match(source, /Deep-time and intermediate ticks are capacity markers, not claims/);
   assert.match(source, /TIMELINE_JUMPS/);
@@ -283,13 +450,15 @@ test("keeps the MapLibre Workbench complete, bounded, and responsive", async () 
   assert.match(explorerData, /-541_000_000/);
   assert.match(explorerData, /-11_700/);
   assert.match(source, /mapQueryCandidates/);
-  assert.match(source, /selected && !selectedTimeMismatch && !selectedLayerHidden/);
+  assert.match(source, /time_compatible: !selectedTimeMismatch/);
+  assert.match(source, /renderer hit testing remains held/);
   assert.match(source, /ACTIVE LAYERS AVAILABLE/);
   assert.match(mapInterface, /Renderer architecture[\s\S]*ACCEPTED/);
   assert.match(mapInterface, /MapRuntimePort \+ Null runtime[\s\S]*VERIFIED SLICE/);
   assert.match(mapInterface, /Dependency admission[\s\S]*EXACT 6\.6\.0/);
   assert.match(mapInterface, /Concrete MapLibre adapter[\s\S]*VERIFIED SLICE/);
-  assert.match(mapInterface, /Browser readiness[\s\S]*BOUNDED FIXTURE/);
+  assert.match(mapInterface, /Sites renderer consumer[\s\S]*NULL RUNTIME \/ HOLD/);
+  assert.match(mapInterface, /Browser readiness[\s\S]*HOLD/);
   assert.match(explorerData, /"fill-outline-color": \["case", \["boolean", \["feature-state", "hover"\]/);
   assert.match(css, /\.map-utility-panel\[data-open="true"\]/);
   assert.match(css, /\.mobile-hidden-control/);
@@ -326,7 +495,7 @@ test("resolves exact, through-time, and untimed Map Workbench availability", asy
   assert.equal(mapInterface.inspectableFeatureId(layer, 2026), "vintage-1910");
 });
 
-test("keeps source discovery separate from admission and map ranges explicit", async () => {
+test("keeps source discovery separate from admission and renderer descriptors inert", async () => {
   const sources = await readFile(new URL("../app/source-intelligence.ts", import.meta.url), "utf8");
   const runtime = await readFile(new URL("../app/map-runtime.ts", import.meta.url), "utf8");
 
@@ -335,8 +504,9 @@ test("keeps source discovery separate from admission and map ranges explicit", a
   assert.match(sources, /sourceCount: 12/);
   assert.match(sources, /DEFER DEPENDENCY/);
   assert.match(sources, /National Flood Hazard Layer/);
-  assert.match(runtime, /attribution: record\.attribution/);
-  assert.match(runtime, /setLayerZoomRange\(renderer\.id, record\.minZoom, record\.maxZoom\)/);
+  assert.match(runtime, /BasemapDescriptor/);
+  assert.match(runtime, /Renderer-neutral high-contrast preference descriptor/);
+  assert.doesNotMatch(runtime, /addSource|addLayer|setLayerZoomRange/);
 });
 
 test("reviews and redacts public-safe exports before download", async () => {
@@ -483,6 +653,6 @@ test("keeps the complete function inventory three-axis and runtime seam fail clo
   assert.match(page, /Function and interface navigator/);
   assert.match(page, /record\.action === "OPEN_TIMELINE"/);
   assert.match(page, /All 38 repository feature families/);
-  assert.match(page, /aria-current={currentWorkspace === workspace\.id \? "page" : undefined}/);
-  assert.match(page, /setRepositoryView\("functions"\); setRepositoryOpen\(true\); }}>Functions<\/button>/);
+  assert.match(page, /<Link className="about-action" href="\/about">About<\/Link>/);
+  assert.match(page, /id="repository-tab-functions"[\s\S]*setRepositoryView\("functions"\)[\s\S]*<span>Functions<\/span>/);
 });

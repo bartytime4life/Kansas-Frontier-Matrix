@@ -1,198 +1,103 @@
-import type { Feature, FeatureCollection, Geometry, Position } from "geojson";
-import type {
-  FilterSpecification,
-  GeoJSONSource,
-  LayerSpecification,
-  Map as MapLibreMap,
-  StyleSpecification,
-} from "maplibre-gl";
-import { LAYER_REGISTRY } from "./explorer-data";
-
 export type BasemapKey = "midnight" | "prairie";
+export type AtmospherePreset = "night" | "dusk" | "clear";
 
-export const BASEMAPS: Record<BasemapKey, { title: string; note: string; style: StyleSpecification }> = {
-  midnight: {
+export type BasemapDescriptor = Readonly<{
+  title: string;
+  note: string;
+}>;
+
+export const BASEMAPS: Readonly<Record<BasemapKey, BasemapDescriptor>> = Object.freeze({
+  midnight: Object.freeze({
     title: "Midnight navy",
-    note: "High-contrast local style",
-    style: {
-      version: 8,
-      name: "KFM Midnight",
-      sources: {},
-      layers: [{ id: "kfm-background", type: "background", paint: { "background-color": "#07171a" } }],
-    },
-  },
-  prairie: {
+    note: "Renderer-neutral high-contrast preference descriptor",
+  }),
+  prairie: Object.freeze({
     title: "Prairie dusk",
-    note: "Low-glare earthen local style",
-    style: {
-      version: 8,
-      name: "KFM Prairie Dusk",
-      sources: {},
-      layers: [{ id: "kfm-background", type: "background", paint: { "background-color": "#17231f" } }],
-    },
-  },
-};
+    note: "Renderer-neutral low-glare preference descriptor",
+  }),
+});
 
-const emptyCollection = (): FeatureCollection => ({ type: "FeatureCollection", features: [] });
+export const SCENE_ENVIRONMENTS = Object.freeze({
+  night: Object.freeze({
+    "sky-color": "#07171a",
+    "horizon-color": "#173438",
+    "fog-color": "#0d2427",
+    "fog-ground-blend": 0.35,
+    "horizon-fog-blend": 0.7,
+    "sky-horizon-blend": 0.82,
+    "atmosphere-blend": 0.68,
+  }),
+  dusk: Object.freeze({
+    "sky-color": "#263744",
+    "horizon-color": "#d49c78",
+    "fog-color": "#5f6867",
+    "fog-ground-blend": 0.28,
+    "horizon-fog-blend": 0.62,
+    "sky-horizon-blend": 0.9,
+    "atmosphere-blend": 0.82,
+  }),
+  clear: Object.freeze({
+    "sky-color": "#6d9dac",
+    "horizon-color": "#d4e5df",
+    "fog-color": "#afc9c3",
+    "fog-ground-blend": 0.22,
+    "horizon-fog-blend": 0.48,
+    "sky-horizon-blend": 0.78,
+    "atmosphere-blend": 0.88,
+  }),
+}) satisfies Readonly<Record<AtmospherePreset, Readonly<Record<string, string | number>>>>;
 
-const SYSTEM_LAYER_IDS = [
-  "kfm-measure-fill",
-  "kfm-measure-line",
-  "kfm-measure-points",
-  "kfm-selection-fill",
-  "kfm-selection-line",
-  "kfm-selection-point",
-];
-
-const addSystemLayers = (map: MapLibreMap) => {
-  if (!map.getSource("kfm-selection")) {
-    map.addSource("kfm-selection", { type: "geojson", data: emptyCollection() });
-  }
-  if (!map.getLayer("kfm-selection-fill")) {
-    map.addLayer({ id: "kfm-selection-fill", type: "fill", source: "kfm-selection", filter: ["==", ["geometry-type"], "Polygon"], paint: { "fill-color": "#f4dfae", "fill-opacity": 0.18, "fill-outline-color": "#fff4ce" } });
-  }
-  if (!map.getLayer("kfm-selection-line")) {
-    map.addLayer({ id: "kfm-selection-line", type: "line", source: "kfm-selection", filter: ["==", ["geometry-type"], "LineString"], paint: { "line-color": "#fff4ce", "line-width": 6, "line-opacity": 0.95 } });
-  }
-  if (!map.getLayer("kfm-selection-point")) {
-    map.addLayer({ id: "kfm-selection-point", type: "circle", source: "kfm-selection", filter: ["==", ["geometry-type"], "Point"], paint: { "circle-color": "#fff4ce", "circle-radius": 11, "circle-opacity": 0.95, "circle-stroke-color": "#061416", "circle-stroke-width": 4 } });
-  }
-
-  if (!map.getSource("kfm-measure")) {
-    map.addSource("kfm-measure", { type: "geojson", data: emptyCollection() });
-  }
-  if (!map.getLayer("kfm-measure-fill")) {
-    map.addLayer({ id: "kfm-measure-fill", type: "fill", source: "kfm-measure", filter: ["==", ["geometry-type"], "Polygon"], paint: { "fill-color": "#73c7d2", "fill-opacity": 0.16 } });
-  }
-  if (!map.getLayer("kfm-measure-line")) {
-    map.addLayer({ id: "kfm-measure-line", type: "line", source: "kfm-measure", filter: ["in", ["geometry-type"], ["literal", ["LineString", "Polygon"]]], paint: { "line-color": "#8ee4ef", "line-width": 3, "line-dasharray": [2, 1] } });
-  }
-  if (!map.getLayer("kfm-measure-points")) {
-    map.addLayer({ id: "kfm-measure-points", type: "circle", source: "kfm-measure", filter: ["==", ["geometry-type"], "Point"], paint: { "circle-color": "#f4dfae", "circle-radius": 5, "circle-stroke-color": "#07171a", "circle-stroke-width": 2 } });
-  }
-};
-
-const temporalFilter = (year: number, mode: "exact" | "through"): FilterSpecification =>
-  mode === "exact"
-    ? (["==", ["get", "year"], year] as FilterSpecification)
-    : (["<=", ["get", "year"], year] as FilterSpecification);
-
-const mergeFilters = (base?: FilterSpecification, temporal?: FilterSpecification): FilterSpecification | undefined => {
-  if (base && temporal) return ["all", base, temporal] as FilterSpecification;
-  return base ?? temporal;
-};
-
-export const applyRegistryState = (
-  map: MapLibreMap,
-  visibility: Record<string, boolean>,
-  opacity: Record<string, number>,
-  year: number,
-  order: string[],
-) => {
-  for (const record of LAYER_REGISTRY) {
-    if (!map.getSource(record.sourceId)) {
-      map.addSource(record.sourceId, {
-        type: "geojson",
-        data: record.data,
-        promoteId: "fid",
-        ...(record.sourceOptions ?? {}),
-        attribution: record.attribution,
-      });
-    }
-
-    for (const renderer of record.renderers) {
-      if (!map.getLayer(renderer.id)) map.addLayer(renderer.spec as LayerSpecification);
-      map.setLayerZoomRange(renderer.id, record.minZoom, record.maxZoom);
-
-      map.setLayoutProperty(renderer.id, "visibility", visibility[record.id] ? "visible" : "none");
-      const filter = mergeFilters(
-        renderer.baseFilter,
-        record.temporal ? temporalFilter(year, record.temporal.mode) : undefined,
-      );
-      if (filter) map.setFilter(renderer.id, filter);
-
-      for (const property of renderer.opacityProperties ?? []) {
-        map.setPaintProperty(renderer.id, property, opacity[record.id] ?? record.defaultOpacity);
-      }
-    }
-  }
-
-  addSystemLayers(map);
-  reorderRegistryLayers(map, order);
-};
-
-export const reorderRegistryLayers = (map: MapLibreMap, order: string[]) => {
-  for (const layerId of order) {
-    const record = LAYER_REGISTRY.find((candidate) => candidate.id === layerId);
-    for (const renderer of record?.renderers ?? []) {
-      if (map.getLayer(renderer.id)) map.moveLayer(renderer.id);
-    }
-  }
-  for (const id of SYSTEM_LAYER_IDS) if (map.getLayer(id)) map.moveLayer(id);
-};
-
-export const updateSelectionSource = (map: MapLibreMap, selection?: Feature<Geometry> | null) => {
-  const source = map.getSource("kfm-selection") as GeoJSONSource | undefined;
-  source?.setData({ type: "FeatureCollection", features: selection ? [selection] : [] });
-};
-
-export const buildMeasurementData = (coordinates: [number, number][], mode: "distance" | "area" | null): FeatureCollection => {
-  if (!mode || coordinates.length === 0) return emptyCollection();
-  const features: Feature[] = coordinates.map((coordinate, index) => ({
-    type: "Feature",
-    id: `measure-${index}`,
-    properties: {},
-    geometry: { type: "Point", coordinates: coordinate },
-  }));
-  if (mode === "distance" && coordinates.length > 1) {
-    features.unshift({ type: "Feature", properties: {}, geometry: { type: "LineString", coordinates } });
-  }
-  if (mode === "area" && coordinates.length > 2) {
-    features.unshift({ type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [[...coordinates, coordinates[0]]] } });
-  }
-  return { type: "FeatureCollection", features };
-};
-
-export const updateMeasurementSource = (map: MapLibreMap, data: FeatureCollection) => {
-  const source = map.getSource("kfm-measure") as GeoJSONSource | undefined;
-  source?.setData(data);
-};
+export type TileCoordinate = Readonly<{ z: number; x: number; y: number; label: string }>;
+export type GeographicBounds = Readonly<{ west: number; south: number; east: number; north: number }>;
+export type ScreenRect = Readonly<{ startX: number; startY: number; endX: number; endY: number }>;
+export type ScreenViewport = Readonly<{ width: number; height: number }>;
 
 const radians = (degrees: number) => degrees * (Math.PI / 180);
 
-export const distanceMiles = (coordinates: [number, number][]) => {
-  let miles = 0;
-  for (let index = 1; index < coordinates.length; index += 1) {
-    const [lng1, lat1] = coordinates[index - 1];
-    const [lng2, lat2] = coordinates[index];
-    const dLat = radians(lat2 - lat1);
-    const dLng = radians(lng2 - lng1);
-    const a = Math.sin(dLat / 2) ** 2 + Math.cos(radians(lat1)) * Math.cos(radians(lat2)) * Math.sin(dLng / 2) ** 2;
-    miles += 3958.8 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  }
-  return miles;
+export const lngLatToTile = (longitude: number, latitude: number, zoom: number): TileCoordinate => {
+  const z = Math.max(0, Math.min(22, Math.floor(Number.isFinite(zoom) ? zoom : 0)));
+  const lng = Math.max(-180, Math.min(180, Number.isFinite(longitude) ? longitude : 0));
+  const lat = Math.max(-85.051129, Math.min(85.051129, Number.isFinite(latitude) ? latitude : 0));
+  const tileCount = 2 ** z;
+  const x = Math.max(0, Math.min(tileCount - 1, Math.floor(((lng + 180) / 360) * tileCount)));
+  const latitudeRadians = radians(lat);
+  const y = Math.max(0, Math.min(tileCount - 1, Math.floor(
+    ((1 - Math.log(Math.tan(latitudeRadians) + (1 / Math.cos(latitudeRadians))) / Math.PI) / 2) * tileCount,
+  )));
+  return Object.freeze({ z, x, y, label: `${z}/${x}/${y}` });
 };
 
-export const areaSquareMiles = (coordinates: [number, number][]) => {
-  if (coordinates.length < 3) return 0;
-  const meanLat = coordinates.reduce((sum, coordinate) => sum + coordinate[1], 0) / coordinates.length;
-  const points = coordinates.map(([lng, lat]) => [radians(lng) * Math.cos(radians(meanLat)) * 3958.8, radians(lat) * 3958.8]);
-  let area = 0;
-  for (let index = 0; index < points.length; index += 1) {
-    const next = points[(index + 1) % points.length];
-    area += points[index][0] * next[1] - next[0] * points[index][1];
-  }
-  return Math.abs(area) / 2;
-};
+/**
+ * Convert a north-up, unpitched screen rectangle into a renderer-neutral
+ * geographic query envelope. The result is context for a governed catalog
+ * query; it is not geometry evidence and does not expose a MapLibre object.
+ */
+export const screenRectToBounds = (
+  rect: ScreenRect,
+  viewport: ScreenViewport,
+  visibleBounds: GeographicBounds,
+  minimumPixels = 12,
+): GeographicBounds | null => {
+  if (![rect.startX, rect.startY, rect.endX, rect.endY, viewport.width, viewport.height, visibleBounds.west, visibleBounds.south, visibleBounds.east, visibleBounds.north, minimumPixels].every(Number.isFinite)) return null;
+  if (viewport.width <= 0 || viewport.height <= 0 || visibleBounds.west >= visibleBounds.east || visibleBounds.south >= visibleBounds.north || minimumPixels < 0) return null;
 
-export const geometryFromRendered = (geometry: Geometry): Feature<Geometry> => ({
-  type: "Feature",
-  properties: {},
-  geometry: JSON.parse(JSON.stringify(geometry)) as Geometry,
-});
+  const clampPixel = (value: number, maximum: number) => Math.max(0, Math.min(maximum, value));
+  const startX = clampPixel(rect.startX, viewport.width);
+  const endX = clampPixel(rect.endX, viewport.width);
+  const startY = clampPixel(rect.startY, viewport.height);
+  const endY = clampPixel(rect.endY, viewport.height);
+  const left = Math.min(startX, endX);
+  const right = Math.max(startX, endX);
+  const top = Math.min(startY, endY);
+  const bottom = Math.max(startY, endY);
+  if (right - left < minimumPixels || bottom - top < minimumPixels) return null;
 
-export const boundsForCoordinates = (positions: Position[]): [number, number, number, number] => {
-  const lngs = positions.map((position) => position[0]);
-  const lats = positions.map((position) => position[1]);
-  return [Math.min(...lngs), Math.min(...lats), Math.max(...lngs), Math.max(...lats)];
+  const longitudeSpan = visibleBounds.east - visibleBounds.west;
+  const latitudeSpan = visibleBounds.north - visibleBounds.south;
+  return Object.freeze({
+    west: visibleBounds.west + (left / viewport.width) * longitudeSpan,
+    south: visibleBounds.north - (bottom / viewport.height) * latitudeSpan,
+    east: visibleBounds.west + (right / viewport.width) * longitudeSpan,
+    north: visibleBounds.north - (top / viewport.height) * latitudeSpan,
+  });
 };
