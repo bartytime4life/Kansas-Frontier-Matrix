@@ -2,8 +2,8 @@
 doc_id: kfm://doc/tests-domains-hazards-focus-readme
 title: Hazards Focus Mode Test README
 type: test-index-readme
-version: v0.1
-status: draft; placeholder-expanded; focus-parent-test-lane; PROPOSED / NEEDS VERIFICATION before promotion
+version: v0.2
+status: draft; documentation-only Hazards Focus lane; adjacent general Focus mock proof is not Hazards-specific proof
 owners:
   - OWNER_TBD — Hazards domain steward
   - OWNER_TBD — Focus Mode steward
@@ -13,9 +13,12 @@ owners:
   - OWNER_TBD — Validation steward
   - OWNER_TBD — Release steward
   - OWNER_TBD — QA steward
-created: NEEDS VERIFICATION — blank placeholder existed before v0.1 expansion
-updated: 2026-07-05
+created: 2026-07-05
+updated: 2026-08-30
 policy_label: public-doc; tests; hazards; focus-mode; parent-index; no-network; finite-outcomes; evidence-bound; policy-filtered; release-gated; rollback-aware
+owning_root: tests/
+responsibility: Document the Hazards Focus test lane and its verified non-executable state without creating prompt, response, policy, runtime, release, or publication authority.
+truth_posture: "CONFIRMED documentation-only Hazards Focus lane; CONFIRMED separate PROPOSED bounded-executable general Focus mock and finite-envelope proof; NEEDS VERIFICATION Hazards-specific fixtures, validator, executable tests, stewardship, runtime coupling, and promotion enforcement"
 tags: [kfm, tests, hazards, focus, focus-mode, governed-ai, finite-outcomes, EvidenceBundle, PolicyDecision, RuntimeResponseEnvelope, ReleaseManifest, CorrectionNotice, RollbackCard, ABSTAIN, DENY, ERROR]
 related:
   - ../../../README.md
@@ -32,13 +35,18 @@ related:
   - ../../../../schemas/contracts/v1/runtime/
   - ../../../../schemas/contracts/v1/domains/hazards/
   - ../../../../fixtures/domains/hazards/focus/
+  - ../../../runtime_proof/test_mock_adapter_finite_outcomes.py
+  - ../../../runtime_proof/test_envelope_finite_outcomes.py
   - ../../../../policy/domains/hazards/
   - ../../../../release/manifests/hazards/
+  - ../../../../.github/workflows/focus-mock-test.yml
 notes:
   - "This file replaces a blank placeholder at tests/domains/hazards/focus/README.md."
   - "This is a parent test index only. It does not define Hazards doctrine, Focus Mode behavior, governed AI policy, schemas, fixtures, lifecycle records, EvidenceBundles, policy rules, release decisions, public API material, public map material, public tiles, or published artifacts."
   - "The tested parent invariant is that Hazards Focus Mode tests verify finite governed outcomes for hazards prompts: evidence posture, policy posture, context labels, release relationship, correction, and rollback remain visible, and generated text never becomes KFM authority."
   - "Default posture is deterministic and no-network. Live source checks, real source exports, live feeds, lifecycle data, and public tiles do not belong in default Focus tests."
+  - "Current Hazards Focus inventory is documentation-only: the parent contains only this README and a documentation-only emergency-alert-denial child; its paired fixture directory contains only README and .gitkeep, and the similarly named parent test module is a one-line placeholder."
+  - "A separate general Focus profile has deterministic mock-adapter and finite-envelope tests plus dedicated CI; it remains PROPOSED and does not prove Hazards-specific Focus behavior."
   - "Rollback target for this replacement is previous blank blob SHA 8b137891791fe96927ad78e64b0aad7bded08bdc."
 [/KFM_META_BLOCK_V2] -->
 
@@ -58,12 +66,12 @@ notes:
 </p>
 
 **Path:** `tests/domains/hazards/focus/README.md`  
-**Status:** draft / placeholder-expanded / parent index / PROPOSED until executable tests are verified  
+**Status:** draft / DOCUMENTATION_ONLY / NOT_VALIDATION
 **Owning root:** `tests/`  
 **Domain segment:** `hazards`  
 **Test lane:** `focus`  
 **Default execution posture:** deterministic, synthetic, no-network, public-safe fixtures only  
-**Truth posture:** CONFIRMED target was a blank placeholder before this expansion · CONFIRMED `tests/` is the canonical root for enforceability proof · CONFIRMED the `emergency_alert_denial/` child lane is documented · CONFIRMED Hazards doctrine says KFM must remain planning/context posture and not become the authority for current protective-action decisions · NEEDS VERIFICATION for executable test modules, fixture payload inventory, prompt/response schema enforcement, validator behavior, policy runtime, Focus Mode route behavior, CI coverage, and pass rates.
+**Truth posture:** CONFIRMED target was a blank placeholder before its v0.1 expansion · CONFIRMED this parent and its emergency-alert-denial child contain no executable tests, the paired fixture lane contains no payloads, and `test_emergency_alert_denial.py` remains a one-line placeholder · CONFIRMED a separate general Focus mock profile executes deterministic adapter and finite-envelope tests in dedicated CI · CONFIRMED that profile remains PROPOSED and does not establish Hazards-specific behavior · NEEDS VERIFICATION for Hazards-specific executable tests, fixture payloads, validator behavior, policy runtime, Focus Mode route behavior, CI binding, and promotion enforcement.
 
 ---
 
@@ -116,7 +124,7 @@ Core checks:
 
 | Lane | Responsibility | Status |
 |---|---|---|
-| [`emergency_alert_denial/`](emergency_alert_denial/README.md) | Boundary-crossing prompt denial/referral behavior. | Documented; executable tests NEEDS VERIFICATION. |
+| [`emergency_alert_denial/`](emergency_alert_denial/README.md) | Boundary-crossing prompt denial/referral behavior. | DOCUMENTATION_ONLY / NOT_VALIDATION. |
 | `context_answer/` | Planning/context answers with evidence support. | PROPOSED. |
 | `missing_evidence_abstain/` | Abstention when evidence is unavailable or unresolved. | PROPOSED. |
 | `stale_context_abstain/` | Stale or expired context handling. | PROPOSED. |
@@ -170,7 +178,7 @@ Known child lane:
 pytest tests/domains/hazards/focus/emergency_alert_denial
 ```
 
-Status of both commands above: **PROPOSED / NEEDS VERIFICATION**. They assume `pytest` is the accepted test runner and that executable test modules exist. This README does not claim either command currently passes.
+Status of both commands above: **DOCUMENTATION_ONLY / NOT_VALIDATION**. The parent and child collect zero tests and exit `5`; neither command proves Focus behavior.
 
 ---
 
@@ -181,6 +189,8 @@ Status of both commands above: **PROPOSED / NEEDS VERIFICATION**. They assume `p
 | Previous target file | CONFIRMED | `tests/domains/hazards/focus/README.md` existed as a blank placeholder before this replacement. | Did not define the parent lane. |
 | `tests/README.md` | CONFIRMED | `tests/` is enforceability proof and failure should block promotion where trust-spine checks fail. | Does not prove this lane's modules or pass rate. |
 | `tests/domains/hazards/focus/emergency_alert_denial/README.md` | CONFIRMED child README | Documents the boundary-denial child lane and its no-network finite-outcome posture. | Does not prove executable tests or pass rate. |
+| Hazards Focus inventory | CONFIRMED | The parent and child contain documentation only; the paired fixture lane has no payloads, and `tests/domains/hazards/test_emergency_alert_denial.py` is a one-line placeholder. | Establishes non-validation status, not future ownership or behavior. |
+| General Focus mock profile | CONFIRMED bounded executable / PROPOSED profile | The dedicated workflow executes deterministic mock-adapter and finite-envelope tests and verifies the intentionally documentation-only general Focus fixture lane. | It is not Hazards-specific Focus proof and does not establish a live route, provider, evidence closure, policy execution, release, or publication. |
 | `docs/domains/hazards/LIFE_SAFETY_BOUNDARY.md` | CONFIRMED doctrine | Hazards Focus behavior must stay inside the life-safety boundary and refer boundary-crossing use to official sources. | Enforcement mechanics remain PROPOSED until routes, validators, policies, fixtures, and tests are verified. |
 | `docs/domains/hazards/MAP_UI_CONTRACTS.md` | CONFIRMED doctrine | Hazards map/UI surfaces must preserve planning/context posture and finite outcomes. | Concrete Focus Mode route behavior and pass rates remain NEEDS VERIFICATION. |
 
