@@ -267,13 +267,17 @@ export class MapLibreAdapter implements MapRuntimePort {
     this.clearRenderer();
     this.state = "ERROR";
     this.reason = MAP_RUNTIME_TRUST_STATE_REASONS.ERROR;
-    this.notifySnapshot();
     rejection?.(
       new MapRuntimePortError(
         "MAP_RUNTIME_INITIALIZATION_FAILED",
         "Map runtime initialization failed.",
       ),
     );
+    try {
+      this.notifySnapshot();
+    } catch {
+      // Snapshot listeners cannot prevent terminal initialization settlement.
+    }
   }
 
   private failRuntime(): void {
