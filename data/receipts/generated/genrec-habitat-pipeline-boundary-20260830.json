@@ -1,0 +1,105 @@
+{
+  "artifact_hashes": {
+    "pipeline_specs/habitat/README.md": "sha256:684a4a577c26ce90d0d0a978bfcb6c24eb258fc1b1287f211508a467bdc51a41"
+  },
+  "artifact_paths": [
+    "pipeline_specs/habitat/README.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "id": "ADR-0029",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/doctrine/directory-rules.md",
+      "id": "Directory-Rules-v2",
+      "validated": true
+    },
+    {
+      "evidence_ref": "https://drive.google.com/file/d/11cSH2BZJO2fofzQv-4zBYNTLCVwjGNCO/view",
+      "id": "Drive-Pipeline-Manual-v0.3",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-30T18:41:14Z",
+  "emitter": "openai-codex",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf"
+    ],
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@c50f28749ff34a3c8349cabea5d58f1da5b805f1",
+      "github:bartytime4life/Kansas-Frontier-Matrix@43af9346c883aa57d82fa18404ccfa71792aef69",
+      "https://drive.google.com/file/d/11cSH2BZJO2fofzQv-4zBYNTLCVwjGNCO/view"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "Codex",
+    "provider": "OpenAI",
+    "version": "GPT-5"
+  },
+  "notes": "Binds the Habitat pipeline boundary convergence document. The declarations remain proposed-inactive and all execution, source activation, lifecycle-write, promotion, release, and publication capabilities remain denied.",
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google Drive",
+      "Notion",
+      "deterministic document checks"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:3caff5355b08468f66b319af9c29bdb904b11083a1140937f564dc3f96cffa1b",
+  "receipt_id": "kfm:genrec:pipeline-specs-habitat:684a4a577c26ce90d0d0a97",
+  "truth_labels": {
+    "pipeline_specs/habitat/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "DECLARATION_INVENTORY",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "DOCUMENT_METADATA",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "MARKDOWN_LOCAL_LINKS",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "MARKDOWN_STRUCTURE",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "HOSTED_CHECKS",
+      "outcome": "SKIPPED",
+      "reason": "Draft pull request not yet open when this receipt was emitted."
+    },
+    {
+      "gate": "HUMAN_REVIEW",
+      "outcome": "SKIPPED",
+      "reason": "Draft pull request; review is pending."
+    }
+  ]
+}
