@@ -147,9 +147,15 @@ class PipelineSpecDeclarationValidatorTests(unittest.TestCase):
         )
         entries = {item["id"]: item for item in registry["validators"]}
         entry = entries["pipeline-spec-declarations"]
+        fixture_entry = entries["pipeline-spec-declaration-fixtures"]
         self.assertIn("pipeline-spec-declarations", registry["profiles"]["full"])
+        self.assertIn(
+            "pipeline-spec-declaration-fixtures", registry["profiles"]["full"]
+        )
         self.assertEqual([], entry["args"])
+        self.assertEqual(["--fixtures"], fixture_entry["args"])
         self.assertIn("pipeline_specs/**/*.yaml", entry["path_globs"])
+        self.assertEqual(entry["path_globs"], fixture_entry["path_globs"])
 
     def test_cli_repository_and_fixture_profiles_pass(self) -> None:
         for extra in ((), ("--fixtures",)):
