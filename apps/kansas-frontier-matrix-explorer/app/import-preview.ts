@@ -133,12 +133,24 @@ const normalizeGeoJson = (raw: unknown) => {
   return { features, invalidFeatureCount, unsupportedElementCount: 0, attribution: attribution || null };
 };
 
-const parseKmlCoordinates = (value: string): Position[] => value
-  .trim()
-  .split(/\s+/)
-  .map((token) => token.split(",").map(Number))
-  .filter((position) => position.length >= 2 && Number.isFinite(position[0]) && Number.isFinite(position[1]))
-  .map((position) => position.slice(0, 3));
+const parseKmlCoordinates = (value: string): Position[] | null => {
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  const positions = trimmed.split(/\s+/).map((token) => {
+    const parts = token.split(",");
+    if (parts.length < 2 || parts.length > 3 || parts.some((part) => !part.trim())) return null;
+    const position = parts.map(Number);
+    return positionIsValid(position) ? position.slice(0, 3) : null;
+  });
+  return positions.some((position) => position === null) ? null : positions as Position[];
+};
+
+const kmlMarkupForInspection = (text: string) => text
+  .replace(/<!--[\s\S]*?-->/g, "")
+  .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, (_, value: string) => value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;"));
 
 const decodeXmlText = (value: string) => value
   .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, "$1")
@@ -162,21 +174,24 @@ const firstTagText = (text: string, name: string) => decodeXmlText(tagFragments(
 
 const geometryFromKmlFragment = (kind: "Point" | "LineString" | "Polygon", fragment: string): Geometry | null => {
   if (kind === "Point") {
-    const coordinate = parseKmlCoordinates(firstTagText(fragment, "coordinates"))[0];
-    return coordinate ? { type: "Point", coordinates: coordinate } : null;
+    const coordinates = parseKmlCoordinates(firstTagText(fragment, "coordinates"));
+    return coordinates?.length === 1 ? { type: "Point", coordinates: coordinates[0] } : null;
   }
   if (kind === "LineString") {
     const coordinates = parseKmlCoordinates(firstTagText(fragment, "coordinates"));
-    return coordinates.length >= 2 ? { type: "LineString", coordinates } : null;
+    return coordinates && coordinates.length >= 2 ? { type: "LineString", coordinates } : null;
   }
   if (kind === "Polygon") {
     const outer = tagFragments(fragment, "outerBoundaryIs")[0] ?? "";
     const outerRing = parseKmlCoordinates(firstTagText(outer, "coordinates"));
-    if (outerRing.length < 3) return null;
+    if (!outerRing || outerRing.length < 3) return null;
     const closedOuter = outerRing[0][0] === outerRing.at(-1)?.[0] && outerRing[0][1] === outerRing.at(-1)?.[1] ? outerRing : [...outerRing, outerRing[0]];
-    const innerRings = tagFragments(fragment, "innerBoundaryIs").map((boundary) => parseKmlCoordinates(firstTagText(boundary, "coordinates"))).filter((ring) => ring.length >= 3).map((ring) => (
-      ring[0][0] === ring.at(-1)?.[0] && ring[0][1] === ring.at(-1)?.[1] ? ring : [...ring, ring[0]]
-    ));
+    const innerRings: Position[][] = [];
+    for (const boundary of tagFragments(fragment, "innerBoundaryIs")) {
+      const ring = parseKmlCoordinates(firstTagText(boundary, "coordinates"));
+      if (!ring || ring.length < 3) return null;
+      innerRings.push(ring[0][0] === ring.at(-1)?.[0] && ring[0][1] === ring.at(-1)?.[1] ? ring : [...ring, ring[0]]);
+    }
     return { type: "Polygon", coordinates: [closedOuter, ...innerRings] };
   }
   return null;
@@ -199,8 +214,9 @@ const extendedDataForPlacemark = (placemark: string): Record<string, string> => 
 
 const normalizeKml = (text: string) => {
   if (/<!DOCTYPE|<!ENTITY/i.test(text)) throw new Error("KML document types and entity declarations are not supported.");
-  const placemarks = tagFragments(text, "Placemark");
-  if (!/<(?:(?:[\w.-]+):)?kml\b/i.test(text) || !placemarks.length) throw new Error("The KML document has no well-formed Placemark elements.");
+  const markup = kmlMarkupForInspection(text);
+  const placemarks = tagFragments(markup, "Placemark");
+  if (!/<(?:(?:[\w.-]+):)?kml\b/i.test(markup) || !placemarks.length) throw new Error("The KML document has no well-formed Placemark elements.");
   let invalidFeatureCount = 0;
   const features: Feature[] = [];
   placemarks.forEach((placemark, index) => {
@@ -228,9 +244,9 @@ const normalizeKml = (text: string) => {
     });
   });
   const unsupportedElementCount = ["NetworkLink", "GroundOverlay", "PhotoOverlay", "Model", "Track", "MultiTrack"]
-    .reduce((count, name) => count + tagFragments(text, name).length, 0);
-  const author = tagFragments(text, "author")[0] ?? "";
-  const extendedAttribution = Object.entries(extendedDataForPlacemark(text)).find(([key]) => key.toLowerCase() === "attribution")?.[1] ?? "";
+    .reduce((count, name) => count + tagFragments(markup, name).length, 0);
+  const author = tagFragments(markup, "author")[0] ?? "";
+  const extendedAttribution = Object.entries(extendedDataForPlacemark(markup)).find(([key]) => key.toLowerCase() === "attribution")?.[1] ?? "";
   const attribution = firstTagText(author, "name") || extendedAttribution;
   return { features, invalidFeatureCount, unsupportedElementCount, attribution: attribution || null };
 };
