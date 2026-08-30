@@ -2816,6 +2816,7 @@ export default function Home() {
       uncertainty: properties.uncertainty,
       generalization: properties.generalizationNote,
     }));
+    const redactReportCamera = locationCameraRedacted || locationDerivedViewRef.current;
     return {
       format: "kfm-custom-map-report-v1",
       title: reportTitle.trim() || "Kansas map data report",
@@ -2826,14 +2827,14 @@ export default function Home() {
       activeTime: { value: year, label: formatTimelineStep(year) },
       temporalComparison: reportTemporalComparison,
       mapContext: {
-        center: locationCameraRedacted ? "WITHHELD_BROWSER_LOCATION" : view.center,
-        zoom: view.zoom,
+        center: redactReportCamera ? "WITHHELD_BROWSER_LOCATION" : view.center,
+        zoom: redactReportCamera ? "WITHHELD_BROWSER_LOCATION" : view.zoom,
         projection,
         basemap,
-        viewport: reportScope === "VIEWPORT" ? mapViewportBounds : null,
-        analysisArea: reportScope === "ANALYSIS_AREA" ? analysisArea : null,
+        viewport: !redactReportCamera && reportScope === "VIEWPORT" ? mapViewportBounds : null,
+        analysisArea: !redactReportCamera && reportScope === "ANALYSIS_AREA" ? analysisArea : null,
       },
-      spatialQuery: reportScope === "ANALYSIS_AREA" && analysisArea ? {
+      spatialQuery: !redactReportCamera && reportScope === "ANALYSIS_AREA" && analysisArea ? {
         profile: "kfm-site-spatial-query-plan-v1",
         relation: "FOCUS_POINT_INSIDE_BOUNDS",
         bounds: analysisArea,
