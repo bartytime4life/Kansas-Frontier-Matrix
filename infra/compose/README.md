@@ -3,7 +3,7 @@
 `infra/compose/` contains the checked-in Docker Compose review-stack placeholder
 and the documentation that defines its bounded meaning.
 
-**Status:** `CONFIRMED REPOSITORY INPUT / REVIEW IMAGES ONLY / NO SERVICE START`
+**Status:** `CONFIRMED REPOSITORY INPUT / REVIEW IMAGES ONLY / NO APPLICATION SERVICE START VERIFIED`
 
 This README is the same-path lane contract for Compose material. It is not a
 generated document, deployment record, environment inventory, release approval,
@@ -17,15 +17,21 @@ or publication authority.
 | [`README.md`](README.md) | Documents this lane's scope, validation, limitations, and rollback. |
 
 No override files, profiles, explicit networks, volumes, secrets, environment
-files, health checks, service commands, restart policies, or deployment targets
-are tracked in this directory.
+files, health checks, application-specific service commands, restart policies,
+or deployment targets are tracked in this directory.
 
 ## Current services
 
 | Service key | Build input | Published port | Safe conclusion |
 |---|---|---|---|
-| `governed-api` | `infra/docker/Dockerfile.governed-api` | `127.0.0.1:8080:8080` | Builds a non-root Python review image with no application payload or startup command. |
-| `explorer-web` | `infra/docker/Dockerfile.explorer-web` | `127.0.0.1:5173:5173` | Builds a non-root Node review image with no application payload or startup command. |
+| `governed-api` | `infra/docker/Dockerfile.governed-api` | `127.0.0.1:8080:8080` | Builds a non-root Python review image with no application payload or application-specific startup command. |
+| `explorer-web` | `infra/docker/Dockerfile.explorer-web` | `127.0.0.1:5173:5173` | Builds a non-root Node review image with no application payload or application-specific startup command. |
+
+Neither Dockerfile overrides the base image `CMD`, and Compose supplies no
+`command`. An out-of-scope `docker compose up` attempt would therefore retain
+the pinned base image's inherited command; that process may start and then exit
+without providing an application service. This is not application-startup,
+listener, health, reachability, or governed-runtime evidence.
 
 The service keys resemble application families, but the images do not contain
 [`apps/governed-api/`](../../apps/governed-api/) or
@@ -111,7 +117,7 @@ networks, or toolchains will remain available.
 |---|---|---|
 | Static test passes | Checked-in paths, selected deny tokens, loopback port strings, and non-root Dockerfile users match the test. | Complete security, runtime behavior, or deployed enforcement. |
 | `docker compose ... config --quiet` passes | The installed Compose implementation accepts the checked-in file. | Image availability, container startup, health, or application behavior. |
-| `docker compose ... build` passes | Both review-image definitions build in that runner context. | Application payloads, service commands, listening ports, safe data access, or deployment readiness. |
+| `docker compose ... build` passes | Both review-image definitions build in that runner context. | Application payloads, application-specific commands, listening ports, safe data access, or deployment readiness. |
 | Hosted workflow passes | The bounded checks completed for the tested revision. | Human review, release, deployment, promotion, publication, or source activation. |
 
 Do not report the stack as running, deployable, public, production-like, or
@@ -141,7 +147,8 @@ Before this placeholder becomes an operational stack, a reviewed change must
 identify and verify at least:
 
 1. intended environment and accountable operational stewardship;
-2. real application payloads, commands, entrypoints, and supported versions;
+2. real application payloads, application-specific commands, entrypoints, and
+   supported versions;
 3. service identities and least-privilege filesystem access;
 4. explicit network, ingress, egress, port, and public/private route posture;
 5. volumes and lifecycle phases, including denial of public access to
