@@ -19,6 +19,12 @@ CI_BOOTSTRAP_TRIGGER_PATHS = {
     "tools/ci/python-test.lock",
     "pyproject.toml",
 }
+GENERATED_RECEIPT_VALIDATION_TRIGGER_PATHS = {
+    "tools/validators/validate_generated_receipt.py",
+    "tools/validators/_common/local_resolver.py",
+    "schemas/contracts/v1/**",
+    "tools/ci/python-dependency-lock-migration.json",
+}
 ADJACENT_OBSERVATION_TRIGGER_PATHS = {
     "contracts/evidence/population_observation.md",
     "schemas/contracts/v1/evidence/population_observation.schema.json",
@@ -34,7 +40,7 @@ ADJACENT_OBSERVATION_TRIGGER_PATHS = {
 SELF_PATH = "tests/validators/evidence/test_agriculture_observation_workflow_binding.py"
 RECEIPT_PATH = (
     "data/receipts/generated/"
-    "genrec-agriculture-observation-adjacent-observation-trigger-closure-20260828.json"
+    "genrec-agriculture-observation-generated-receipt-trigger-closure-20260830.json"
 )
 
 
@@ -62,6 +68,23 @@ class AgricultureObservationWorkflowBindingTests(unittest.TestCase):
                 self.assertTrue(
                     CI_BOOTSTRAP_TRIGGER_PATHS.issubset(paths),
                     f"{event} paths must include the complete project-test CI bootstrap seam",
+                )
+                self.assertIn(SELF_PATH, paths)
+                self.assertIn(RECEIPT_PATH, paths)
+
+    def test_generated_receipt_validation_dependency_changes_trigger_agriculture_observation(self) -> None:
+        workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
+        triggers = workflow["on"]
+
+        for event in ("pull_request", "push"):
+            with self.subTest(event=event):
+                paths = set(triggers[event]["paths"])
+                self.assertTrue(
+                    GENERATED_RECEIPT_VALIDATION_TRIGGER_PATHS.issubset(paths),
+                    (
+                        f"{event} paths must include the generated receipt validator, "
+                        "resolver-wide schema registry, and migration-ledger dependency seam"
+                    ),
                 )
                 self.assertIn(SELF_PATH, paths)
                 self.assertIn(RECEIPT_PATH, paths)
