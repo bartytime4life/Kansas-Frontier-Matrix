@@ -2593,7 +2593,7 @@
         "project-test"
       ],
       "superseded_receipt_sha256s": [
-        "sha256:7143365218f3a799f1c6bd6c72ae00a768cc20d83e8a6524d4ab0151fcaf896c"
+        "sha256:7143365264d4c76a434b002f37a8a0c67e748627c5463ad741df1faeea996af1"
       ]
     },
     {
@@ -2658,7 +2658,7 @@
         "project-test"
       ],
       "superseded_receipt_sha256s": [
-        "sha256:92dd9059ef6b40e3b2cebe6168acc214756816655505882fa96279fa8a61fc11"
+        "sha256:92dd9059654b1f57a494a5f17cf5889910c5c39a4dab3eb06787eae2aba4c600"
       ]
     },
     {
