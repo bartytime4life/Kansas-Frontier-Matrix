@@ -75,6 +75,7 @@ jobs:
       - name: Validate generated authoring receipt
         run: |
           set -euo pipefail
+          sha256sum .github/workflows/stable-diff-review-summary.yml
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-stable-diff-review-summary-20260808.json \
             --repo-root .
