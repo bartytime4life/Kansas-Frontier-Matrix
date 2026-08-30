@@ -2,18 +2,18 @@
 doc_id: kfm://doc/tests-maplibre-readme
 title: tests/maplibre/ — MapLibre Boundary and Readiness Tests
 type: readme; directory-readme; test-lane-index
-version: v0.3
+version: v0.4
 status: draft; repository-grounded; executable-no-network-coverage; runtime-performance-hold
 policy_label: public-doc; renderer-boundary; non-authoritative
 owners: OWNER_TBD
 created: 2026-07-06
 updated: 2026-08-30
 current_path: tests/maplibre/README.md
-truth_posture: CONFIRMED five direct Python test modules, 74 source-defined tests, a package-owned exact MapLibre GL JS 6.6.0 dependency, accepted renderer-boundary ADRs, deterministic no-network workflow coverage, and retired legacy CDN harness / HOLD browser performance, visual-diff, proof, release, deployment, and publication claims / UNKNOWN required-check status, production parity, complete consumer migration, accountable stewardship, and operational rollback
+truth_posture: CONFIRMED six direct Python test modules, 83 source-defined tests, a package-owned exact MapLibre GL JS 6.6.0 dependency, accepted renderer-boundary ADRs, deterministic no-network workflow coverage, and retired legacy CDN harness / HOLD browser performance, visual-diff, proof, release, deployment, and publication claims / UNKNOWN required-check status, production parity, complete consumer migration, accountable stewardship, and operational rollback
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: e282b375a9f3881afdc30172c68f191cccde4220
+  base_commit: e65f9b1cdccbc9c81a911bc1a6d0a10a094bf73f
 related:
   - ../README.md
   - ../../packages/maplibre/README.md
@@ -21,6 +21,7 @@ related:
   - "../../docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
   - ../../.github/workflows/maplibre-perf-governance.yml
   - ../../.github/workflows/maplibre-acquisition-inventory.yml
+  - ../../.github/workflows/maplibre-source-metadata.yml
   - ../../.github/workflows/briefing-implementation-campaign.yml
 tags: [kfm, tests, maplibre, renderer-boundary, readiness, no-network, hold]
 notes:
@@ -64,12 +65,13 @@ conformance, runtime readiness, release, deployment, promotion, or publication.
 
 ## Implemented inventory
 
-The five test modules define 74 test functions or `unittest` methods in source.
+The six test modules define 83 test functions or `unittest` methods in source.
 The count describes the checked-in source, not a hosted collection receipt.
 
 | Module | Source-defined tests | What it checks | Hosted binding |
 | --- | ---: | --- | --- |
 | [`test_assess_acquisition_inventory.py`](test_assess_acquisition_inventory.py) | 49 | Renderer imports, re-exports, globals, CDN assets, package homes, manifest errors, input budgets, symlink/path confinement, mutation races, and summary redaction | [`maplibre-acquisition-inventory.yml`](../../.github/workflows/maplibre-acquisition-inventory.yml) runs the full module and current-repository scan |
+| [`test_source_metadata.py`](test_source_metadata.py) | 9 | Local source epoch/license/digest projection, optional proof/manifest reference syntax, local manifest-digest equality, finite outcomes, and exact reason codes | [`maplibre-source-metadata.yml`](../../.github/workflows/maplibre-source-metadata.yml) runs the focused module, exact synthetic fixture outcomes, and authored syntax checks |
 | [`test_validate_v6_readiness.py`](test_validate_v6_readiness.py) | 16 | Exact-version ownership, duplicate/floating dependencies, import boundaries, probe posture, upstream tag identity, and declared-versus-computed outcomes | [`briefing-implementation-campaign.yml`](../../.github/workflows/briefing-implementation-campaign.yml) runs the module, fixture polarity, and current-repository scan |
 | [`test_legacy_perf_harness_retirement.py`](test_legacy_perf_harness_retirement.py) | 3 | Finite retirement outcome, absence of renderer/network acquisition, and confinement of current acquisition to the package seam | [`maplibre-perf-governance.yml`](../../.github/workflows/maplibre-perf-governance.yml) invokes all three functions directly |
 | [`test_package_exports.py`](test_package_exports.py) | 3 | Public export targets, renderer-neutral root facade, and Node resolution of root and adapter subpaths | [`maplibre-perf-governance.yml`](../../.github/workflows/maplibre-perf-governance.yml) invokes all three functions directly |
@@ -87,6 +89,7 @@ one readiness signal.
 | Surface | Current expected outcome | Meaning |
 | --- | --- | --- |
 | Acquisition inventory | `PASS`, `HOLD`, or `FAIL` according to discovered acquisition | The scanner classifies repository structure; a clean scan does not prove runtime behavior |
+| Source-metadata projection | `ALLOW`, `ABSTAIN`, `DENY`, or `ERROR` with stable reason codes | Local metadata and digest bindings are classified without retrieving or admitting remote source bytes |
 | MapLibre 6.6 readiness | `HOLD` with `RUNTIME_PROBES_PENDING` | Exact dependency and structural prerequisites exist, but the required runtime probe matrix is incomplete |
 | Legacy performance harness | exit code `3` and `WORKFLOW_HOLD` | The former CDN/global harness is retired and cannot acquire a renderer or network resource |
 | Performance governance workflow | `WORKFLOW_HOLD` after static checks pass | Browser, performance, visual, attestation, proof, and release stages were deliberately not run |
@@ -104,13 +107,27 @@ Run commands from the repository root.
 ```bash
 python -m unittest tests.maplibre.test_assess_acquisition_inventory --verbose
 python tools/validators/maplibre/assess_acquisition_inventory.py \
-  --scan-root . \
+  --repo-root . \
   --summary
 ```
 
 The second command reports the current repository inventory. Treat a non-passing
 outcome as a boundary finding to investigate, not as permission to relocate or
 admit a renderer dependency.
+
+### Source-metadata projection
+
+```bash
+python -m unittest discover \
+  --start-directory tests/maplibre \
+  --pattern 'test_source_metadata.py' \
+  --verbose
+python tools/validators/maplibre/validate_source_metadata.py --fixtures
+```
+
+These checks use only local synthetic fixtures. They do not retrieve source,
+tile, manifest, proof, or URL bytes and do not establish source authority,
+rights clearance, review, release, deployment, or publication.
 
 ### Version-readiness classifier
 
@@ -144,11 +161,12 @@ hold surfaces, not complete performance validation commands.
 
 | Workflow | Trigger coverage relevant to this lane | Executed evidence | Important limit |
 | --- | --- | --- | --- |
-| [`maplibre-acquisition-inventory.yml`](../../.github/workflows/maplibre-acquisition-inventory.yml) | `tests/maplibre/**`, package/app acquisition surfaces, manifests, lockfiles, ADRs, and validator | All 49 acquisition tests plus current-repository summary scan | Structural inventory only; no browser or runtime proof |
+| [`maplibre-acquisition-inventory.yml`](../../.github/workflows/maplibre-acquisition-inventory.yml) | `tests/maplibre/**`; bounded app, package, runtime, script, example, and public surfaces; root `package.json`; acquisition/performance workflows; ADR-0006/0007; and validator | All 49 acquisition tests plus current-repository summary scan | Structural inventory only; no browser or runtime proof |
+| [`maplibre-source-metadata.yml`](../../.github/workflows/maplibre-source-metadata.yml) | Source-metadata workflow, validator, focused test module, synthetic fixtures, and generated receipt pattern | Nine focused tests, exact fixture outcomes and reason codes, and Python/JSON syntax checks | Local projection only; no remote retrieval, source admission, rights decision, or EvidenceBundle closure |
 | [`briefing-implementation-campaign.yml`](../../.github/workflows/briefing-implementation-campaign.yml) | Readiness validator, its test module, fixture pack, and retained receipts | All 16 readiness tests, fixture polarity, current 6.6.0 `HOLD`, and historical receipt replay | Shared campaign; does not run the other MapLibre modules |
 | [`maplibre-perf-governance.yml`](../../.github/workflows/maplibre-perf-governance.yml) | This whole directory plus package, app, config, schema, script, validator, fixture, and workflow surfaces | Syntax checks, nine deterministic tests, exact lock/dependency checks, held-assumption inspection, and step summary | Installs no dependencies or browser; uploads no artifact; ends in explicit runtime/performance hold |
 
-All three workflows use read-only repository permissions. Their conclusions and
+All four workflows use read-only repository permissions. Their conclusions and
 logs are CI evidence only. They are not policy decisions, receipts, attestations,
 release manifests, deployment records, or publication records.
 
@@ -245,7 +263,7 @@ deployment, and publication.
 ## Evidence basis
 
 Material claims in this README were reconciled against current repository files,
-including the five direct test modules, two MapLibre validators, three workflows,
+including the six direct test modules, three MapLibre validators, four workflows,
 the readiness fixtures, the package manifest and lock state, the retired harness,
 accepted ADR-0006 and ADR-0007, and the package README. Historical Drive and
 Notion material was used only as read-only lineage and candidate context; it was
