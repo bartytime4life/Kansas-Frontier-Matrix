@@ -1,0 +1,154 @@
+{
+  "receipt_id": "genrec-evidence-correction-runbook-v2-426159cd8675",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/EVIDENCE_CORRECTION.md"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/EVIDENCE_CORRECTION.md": "sha256:426159cd8675f8b433a08c3a646f9f8c762cc7d11e29e614a5bf3ece9ee46dda"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-30 session"
+  },
+  "prompt_or_contract": "sha256:2f3a8fdcd6a18b0ca97bfea52b56b33d11e75b331b2a25cf445e6614fac73617",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "Notion connector",
+      "deterministic local Markdown and JSON validation",
+      "remote repository read-back"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:2f3a8fdcd6a18b0ca97bfea52b56b33d11e75b331b2a25cf445e6614fac73617"
+    ],
+    "attached_docs": [
+      "Current user request — KFM Markdown Update & Modernization Agent v1.0",
+      "Google Drive — Kansas Frontier Matrix Definitive Greenfield and Commissioning Plan v2.0 (planning lineage)",
+      "Notion — KFM Evidence, Documentation & Ideas Atlas — 2026-08-24 (coordination context)"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/8adad6a887fbda0d3ca499aff94d144352d49916",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8adad6a887fbda0d3ca499aff94d144352d49916/docs/runbooks/EVIDENCE_CORRECTION.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8adad6a887fbda0d3ca499aff94d144352d49916/docs/runbooks/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8adad6a887fbda0d3ca499aff94d144352d49916/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8adad6a887fbda0d3ca499aff94d144352d49916/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8adad6a887fbda0d3ca499aff94d144352d49916/control_plane/object_family_register.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8adad6a887fbda0d3ca499aff94d144352d49916/contracts/correction/correction_notice.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8adad6a887fbda0d3ca499aff94d144352d49916/schemas/contracts/v1/correction/correction_notice.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8adad6a887fbda0d3ca499aff94d144352d49916/tools/validators/correction/validate_correction_notice.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8adad6a887fbda0d3ca499aff94d144352d49916/tests/validators/test_validate_correction_notice.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8adad6a887fbda0d3ca499aff94d144352d49916/docs/governance/REVIEW_DUTIES.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8adad6a887fbda0d3ca499aff94d144352d49916/release/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8adad6a887fbda0d3ca499aff94d144352d49916/release/correction_notices/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8adad6a887fbda0d3ca499aff94d144352d49916/release/withdrawal_notices/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8adad6a887fbda0d3ca499aff94d144352d49916/release/rollback_cards/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8adad6a887fbda0d3ca499aff94d144352d49916/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/EVIDENCE_CORRECTION.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-base-authority-and-placement-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned main 8adad6a887fbda0d3ca499aff94d144352d49916, inspected the full target and parent runbook index, and confirmed accepted ADR-0029 preserves docs/runbooks as the human procedure responsibility home."
+    },
+    {
+      "gate": "overlap-and-concurrency",
+      "outcome": "PASS",
+      "reason": "No open pull request touching docs/runbooks/EVIDENCE_CORRECTION.md and no pre-existing task branch were returned before branch creation; main was re-read immediately before mutation."
+    },
+    {
+      "gate": "current-correction-object-family-reconciliation",
+      "outcome": "PASS",
+      "reason": "The rewrite records the current CONFLICTED four-schema CorrectionNotice posture, paired permissive schema, bounded no-network validator and tests, absent dedicated workflow and policy binding, and unknown operational emitter/consumer state without selecting authority by prose."
+    },
+    {
+      "gate": "release-withdrawal-rollback-boundary",
+      "outcome": "PASS",
+      "reason": "The document distinguishes candidate preparation, communication notices, governed release decisions, withdrawal, rollback review, derivative invalidation, public read-back, and publication; no later transition is claimed or executed."
+    },
+    {
+      "gate": "security-rights-and-sensitive-intake",
+      "outcome": "PASS",
+      "reason": "The runbook routes active exposure and restricted details through SECURITY.md and incident response, forbids public disclosure of sensitive payloads, and requires public-safe transformation before delivery."
+    },
+    {
+      "gate": "markdown-structure-and-link-review",
+      "outcome": "PASS",
+      "reason": "Verified one H1, parseable metadata block, logical headings, balanced code fences, tables, alerts, final newline, no trailing whitespace, and repository-relative targets against the pinned repository snapshot."
+    },
+    {
+      "gate": "artifact-hash-and-receipt-shape",
+      "outcome": "PASS",
+      "reason": "Recomputed SHA-256 426159cd8675f8b433a08c3a646f9f8c762cc7d11e29e614a5bf3ece9ee46dda for the final Markdown and validated this receipt as JSON with artifact-map and generated-receipt schema parity."
+    },
+    {
+      "gate": "repository-native-checkout-validation",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout was available; git diff --check, repository-native validators, and local pytest were not run. Remote exact-head read-back and hosted checks remain separate evidence."
+    },
+    {
+      "gate": "operational-correction-withdrawal-rollback",
+      "outcome": "SKIPPED",
+      "reason": "This documentation-only change does not execute or prove any correction, withdrawal, rollback, cache purge, release, deployment, promotion, publication, or public API behavior."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8adad6a887fbda0d3ca499aff94d144352d49916/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "current-correction-object-family-register",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8adad6a887fbda0d3ca499aff94d144352d49916/control_plane/object_family_register.yaml"
+    },
+    {
+      "id": "correction-notice-semantic-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8adad6a887fbda0d3ca499aff94d144352d49916/contracts/correction/correction_notice.md"
+    },
+    {
+      "id": "paired-correction-notice-validator",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8adad6a887fbda0d3ca499aff94d144352d49916/tools/validators/correction/validate_correction_notice.py"
+    },
+    {
+      "id": "release-responsibility-root",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8adad6a887fbda0d3ca499aff94d144352d49916/release/README.md"
+    },
+    {
+      "id": "generated-receipt-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8adad6a887fbda0d3ca499aff94d144352d49916/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-30T06:22:03.777Z",
+  "emitter": "openai/gpt-5.6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored repository-grounded modernization of docs/runbooks/EVIDENCE_CORRECTION.md. It creates no correction decision, canonical schema selection, policy binding, reviewer authority, source admission, release, withdrawal, rollback, deployment, promotion, publication, or public-use authority."
+}
