@@ -127,7 +127,7 @@ class InstallPythonCiTests(unittest.TestCase):
         self.assertGreaterEqual(sum(counts.values()), 388)
         self.assertEqual(1, counts["audit-tool"])
         self.assertEqual(1, counts["all-local-test"])
-        self.assertEqual(1, counts["geoparquet-pyarrow-25"])
+        self.assertEqual(2, counts["geoparquet-pyarrow-25"])
 
 
 if __name__ == "__main__":
