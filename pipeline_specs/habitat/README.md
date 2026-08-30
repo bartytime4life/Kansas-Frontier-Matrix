@@ -123,7 +123,7 @@ python -m unittest discover \
 python tools/validators/domains/habitat/validate_land_cover_materiality.py --fixtures
 ```
 
-Declaration validation must reject duplicate keys, aliases, unknown fields, invalid hashes or paths, active status, permissive execution, and missing fixture-first bindings. The dedicated land-cover materiality family must also preserve framework, vintage, scale, topology, materiality, fixture polarity, and public-safety boundaries.
+Declaration validation must reject duplicate keys, aliases, unknown fields, invalid hashes or paths, active status, permissive execution, and missing fixture-first bindings. The dedicated land-cover materiality family rejects schema-invalid or tampered profiles; non-inactive or permissive governance posture; invalid analysis-unit, digest, metric, evidence, or timing inputs; non-deterministic threshold or fixture outcomes; and expected-invalid fixture codes that drift.
 
 ## Related authority families
 
