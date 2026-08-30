@@ -57,7 +57,9 @@ jobs:
       - name: Run focused deterministic tests
         run: |
           set -euo pipefail
-          python -m unittest tests.diff.test_stable_diff tests.diff.test_render_stable_diff_summary -v
+          python -m pytest -q \
+            tests/diff/test_stable_diff.py \
+            tests/diff/test_render_stable_diff_summary.py
       - name: Exercise stable-diff to reviewer-summary handoff
         run: |
           set -euo pipefail
@@ -73,8 +75,9 @@ jobs:
       - name: Validate generated authoring receipt
         run: |
           set -euo pipefail
+          sha256sum .github/workflows/stable-diff-review-summary.yml
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-stable-diff-review-summary-20260808.json \
+            data/receipts/generated/genrec-stable-diff-review-summary-20260830.json \
             --repo-root .
       - name: Record trust boundary
         if: always()
