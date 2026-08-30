@@ -145,12 +145,39 @@ const parseKmlCoordinates = (value: string): Position[] | null => {
   return positions.some((position) => position === null) ? null : positions as Position[];
 };
 
-const kmlMarkupForInspection = (text: string) => text
-  .replace(/<!--[\s\S]*?-->/g, "")
-  .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, (_, value: string) => value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;"));
+const escapeXmlText = (value: string) => {
+  let escaped = "";
+  for (const character of value) {
+    if (character === "&") escaped += "&amp;";
+    else if (character === "<") escaped += "&lt;";
+    else if (character === ">") escaped += "&gt;";
+    else escaped += character;
+  }
+  return escaped;
+};
+
+const kmlMarkupForInspection = (text: string): string | null => {
+  let markup = "";
+  let cursor = 0;
+  while (cursor < text.length) {
+    if (text.startsWith("<!--", cursor)) {
+      const commentEnd = text.indexOf("-->", cursor + 4);
+      if (commentEnd < 0) return null;
+      cursor = commentEnd + 3;
+      continue;
+    }
+    if (text.startsWith("<![CDATA[", cursor)) {
+      const cdataEnd = text.indexOf("]]>", cursor + 9);
+      if (cdataEnd < 0) return null;
+      markup += escapeXmlText(text.slice(cursor + 9, cdataEnd));
+      cursor = cdataEnd + 3;
+      continue;
+    }
+    markup += text[cursor];
+    cursor += 1;
+  }
+  return markup;
+};
 
 const decodeXmlText = (value: string) => value
   .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, "$1")
@@ -215,6 +242,7 @@ const extendedDataForPlacemark = (placemark: string): Record<string, string> => 
 const normalizeKml = (text: string) => {
   if (/<!DOCTYPE|<!ENTITY/i.test(text)) throw new Error("KML document types and entity declarations are not supported.");
   const markup = kmlMarkupForInspection(text);
+  if (markup === null) throw new Error("KML comments and CDATA sections must be well formed.");
   const placemarks = tagFragments(markup, "Placemark");
   if (!/<(?:(?:[\w.-]+):)?kml\b/i.test(markup) || !placemarks.length) throw new Error("The KML document has no well-formed Placemark elements.");
   let invalidFeatureCount = 0;
