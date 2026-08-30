@@ -109,7 +109,12 @@ export class MapLibreAdapter implements MapRuntimePort {
     this.camera = freezeMapRuntimeCamera(initialCamera);
     this.state = "INITIALIZING";
     this.reason = null;
-    this.notifySnapshot();
+    try {
+      this.notifySnapshot();
+    } catch {
+      if (this.state !== "DISPOSED") this.failInitialization();
+      return initialization;
+    }
     if (this.state === "DISPOSED") return initialization;
 
     if (!supportsWebGL2()) {
