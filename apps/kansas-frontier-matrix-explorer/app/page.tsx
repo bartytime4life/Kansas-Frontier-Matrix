@@ -1943,15 +1943,15 @@ export default function Home() {
       return;
     }
     const [west, south, east, north] = preview.bounds;
-    locationDerivedViewRef.current = false;
-    setLocationCameraRedacted(false);
+    locationDerivedViewRef.current = true;
+    setLocationCameraRedacted(true);
     fitRendererNeutralBounds([
       clamp(west, SUPPORTED_CONTEXT_BOUNDS.west, SUPPORTED_CONTEXT_BOUNDS.east),
       clamp(south, SUPPORTED_CONTEXT_BOUNDS.south, SUPPORTED_CONTEXT_BOUNDS.north),
       clamp(east, SUPPORTED_CONTEXT_BOUNDS.west, SUPPORTED_CONTEXT_BOUNDS.east),
       clamp(north, SUPPORTED_CONTEXT_BOUNDS.south, SUPPORTED_CONTEXT_BOUNDS.north),
     ], 12);
-    announce("Fit the browser-local import inspection bounds without acquiring a renderer");
+    announce("Fit the browser-local import inspection bounds; the derived camera remains private and redacted");
   };
 
   const inspectImportFile = async (file?: File | null) => {
@@ -2003,7 +2003,7 @@ export default function Home() {
     if (!importPreview) return;
     try {
       await navigator.clipboard.writeText(JSON.stringify(importPreviewAudit(importPreview), null, 2));
-      announce("Copied the no-effect import inspection record");
+      announce("Copied the redacted import inspection record");
     } catch {
       announce("Clipboard access was blocked; no import inspection record left the browser");
     }
@@ -2346,12 +2346,15 @@ export default function Home() {
 
   const saveCurrentWorkspace = () => {
     const savedAt = new Date().toISOString();
+    const redactWorkspaceCamera = locationCameraRedacted || locationDerivedViewRef.current;
     const snapshot: WorkspaceSnapshot = {
       id: `workspace-${Date.now()}`,
       name: workspaceName.trim() || `Kansas workspace ${savedWorkspaces.length + 1}`,
       savedAt,
-      view: { center: [...view.center] as [number, number], zoom: view.zoom, bearing: view.bearing, pitch: view.pitch },
-      locationCameraRedacted: locationCameraRedacted || locationDerivedViewRef.current,
+      view: redactWorkspaceCamera
+        ? { center: [...KANSAS_VIEW.center] as [number, number], zoom: KANSAS_VIEW.zoom, bearing: KANSAS_VIEW.bearing, pitch: KANSAS_VIEW.pitch }
+        : { center: [...view.center] as [number, number], zoom: view.zoom, bearing: view.bearing, pitch: view.pitch },
+      locationCameraRedacted: redactWorkspaceCamera,
       visibility: { ...visibility },
       opacity: { ...opacity },
       layerOrder: [...layerOrder],
@@ -2813,6 +2816,7 @@ export default function Home() {
       uncertainty: properties.uncertainty,
       generalization: properties.generalizationNote,
     }));
+    const redactReportCamera = locationCameraRedacted || locationDerivedViewRef.current;
     return {
       format: "kfm-custom-map-report-v1",
       title: reportTitle.trim() || "Kansas map data report",
@@ -2823,14 +2827,14 @@ export default function Home() {
       activeTime: { value: year, label: formatTimelineStep(year) },
       temporalComparison: reportTemporalComparison,
       mapContext: {
-        center: locationCameraRedacted ? "WITHHELD_BROWSER_LOCATION" : view.center,
-        zoom: view.zoom,
+        center: redactReportCamera ? "WITHHELD_BROWSER_LOCATION" : view.center,
+        zoom: redactReportCamera ? "WITHHELD_BROWSER_LOCATION" : view.zoom,
         projection,
         basemap,
-        viewport: reportScope === "VIEWPORT" ? mapViewportBounds : null,
-        analysisArea: reportScope === "ANALYSIS_AREA" ? analysisArea : null,
+        viewport: !redactReportCamera && reportScope === "VIEWPORT" ? mapViewportBounds : null,
+        analysisArea: !redactReportCamera && reportScope === "ANALYSIS_AREA" ? analysisArea : null,
       },
-      spatialQuery: reportScope === "ANALYSIS_AREA" && analysisArea ? {
+      spatialQuery: !redactReportCamera && reportScope === "ANALYSIS_AREA" && analysisArea ? {
         profile: "kfm-site-spatial-query-plan-v1",
         relation: "FOCUS_POINT_INSIDE_BOUNDS",
         bounds: analysisArea,
@@ -3698,17 +3702,17 @@ export default function Home() {
                     <article data-state={importPreview.renderAllowed ? "PASS" : "BLOCK"}><span>BOUNDS CONTEXT</span><strong>{importPreview.renderAllowed ? "AVAILABLE" : "BLOCKED"}</strong><small>{importPreview.coverage.replaceAll("_", " ").toLowerCase()}</small></article>
                   </div>
                   <article className="import-file-card"><header><div><span>INSPECTED FILE</span><h4>{importPreview.fileName}</h4></div><strong>{importPreview.authority}</strong></header><dl>
-                    <div><dt>Bounds</dt><dd>{importPreview.bounds ? importPreview.bounds.map((value) => value.toFixed(4)).join(" · ") : "NO GEOMETRY"}</dd></div>
+                    <div><dt>Bounds</dt><dd>{importPreview.bounds ? "WITHHELD · browser-local geometry" : "NO GEOMETRY"}</dd></div>
                     <div><dt>Attribution</dt><dd>{importPreview.attribution ?? "NOT FOUND"}</dd></div>
                     <div><dt>Temporal fields</dt><dd>{importPreview.temporalFields.join(", ") || "NONE DETECTED"}</dd></div>
                     <div><dt>Potential sensitivity keys</dt><dd>{importPreview.sensitivitySignals.join(", ") || "NONE DETECTED"}</dd></div>
                   </dl></article>
-                  {importPreview.renderAllowed && <div className="import-preview-notice" role="status"><strong>Bounds inspection available</strong><p>No geometry overlay is rendered. The file remains in browser memory, and only its structure, audit fields, and bounded camera context are available while renderer acquisition is held.</p></div>}
+                  {importPreview.renderAllowed && <div className="import-preview-notice" role="status"><strong>Bounds inspection available</strong><p>No geometry overlay is rendered. Exact bounds remain in browser memory; fitted camera state is privacy-marked and redacted from shares, saved workspace coordinates, receipts, reports, exports, and diagnostics.</p></div>}
                   <div className="import-geometry-grid">{Object.entries(importPreview.geometryCounts).map(([geometry, count]) => <article key={geometry}><span>{geometry}</span><strong>{count}</strong></article>)}</div>
                   <div className="import-check-list" aria-label="Import inspection checks">{importPreview.checks.map((check) => <article key={check.id} data-state={check.state}><span>{check.label}</span><p>{check.detail}</p><strong>{check.state}</strong></article>)}</div>
                   <div className="map-utility-actions import-preview-actions"><button type="button" disabled={!importPreview.renderAllowed} onClick={() => fitImportPreview()}>Fit bounds</button><button type="button" onClick={() => void copyImportPreviewAudit()}>Copy inspection</button><button type="button" onClick={clearImportPreview}>Clear</button></div>
                 </>}
-                <aside className="map-utility-boundary" data-tone="warning"><strong>Temporary Places, KFM-style: inspectable but unadmitted.</strong><p>The file never enters the Layer Catalog, Evidence Drawer, saved workspaces, reports, exports, registry, repository, or renderer. URL references, KML network links, overlays, models, tracks, and external resources are counted or warned about and never fetched.</p></aside>
+                <aside className="map-utility-boundary" data-tone="warning"><strong>Temporary Places, KFM-style: inspectable but unadmitted.</strong><p>Exact file geometry and bounds never enter the Layer Catalog, Evidence Drawer, saved workspaces, reports, exports, registry, repository, or renderer. A fitted camera is privacy-marked and generalized at those boundaries. URL references, KML network links, overlays, models, tracks, and external resources are counted or warned about and never fetched.</p></aside>
               </section>}
 
               {mapUtilityView === "compare" && <section id="map-utility-view-compare" role="tabpanel" aria-labelledby="map-utility-tab-compare" className="map-utility-section layer-compare-section">

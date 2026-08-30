@@ -349,7 +349,7 @@ export const importPreviewAudit = (preview: LocalImportPreview) => Object.freeze
   featureCount: preview.featureCount,
   invalidFeatureCount: preview.invalidFeatureCount,
   geometryCounts: preview.geometryCounts,
-  bounds: preview.bounds,
+  bounds: preview.bounds ? "WITHHELD_LOCAL_GEOMETRY" : null,
   coverage: preview.coverage,
   attribution: preview.attribution,
   temporalFields: preview.temporalFields,
@@ -357,5 +357,5 @@ export const importPreviewAudit = (preview: LocalImportPreview) => Object.freeze
   externalReferenceCount: preview.externalReferenceCount,
   unsupportedElementCount: preview.unsupportedElementCount,
   checks: preview.checks,
-  effects: "NO_UPLOAD_NO_SAVE_NO_SOURCE_ADMISSION_NO_REPORT_DATA_NO_PUBLICATION",
+  effects: "NO_UPLOAD_NO_EXACT_BOUNDS_NO_SOURCE_ADMISSION_NO_REPORT_DATA_NO_PUBLICATION",
 });
