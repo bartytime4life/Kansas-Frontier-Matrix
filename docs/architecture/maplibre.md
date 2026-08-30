@@ -130,7 +130,7 @@ KFM's accepted architecture treats MapLibre as a **browser-side rendering and in
 `CONFIRMED` from the pinned repository snapshot:
 
 - [`packages/maplibre/package.json`](../../packages/maplibre/package.json) defines the private `@kfm/maplibre` package at version `0.0.0` and pins exact `maplibre-gl@6.6.0`.
-- [`packages/maplibre/src/index.ts`](../../packages/maplibre/src/index.ts) exports the renderer-neutral `MapRuntimePort`, deterministic `NullMapRuntime`, and package-owned adapter surface.
+- [`packages/maplibre/src/index.ts`](../../packages/maplibre/src/index.ts) exports only the renderer-neutral `MapRuntimePort` and deterministic `NullMapRuntime`; [`packages/maplibre/package.json`](../../packages/maplibre/package.json) exposes the effectful adapters separately as `@kfm/maplibre/adapter` and `@kfm/maplibre/vite-adapter`.
 - [`maplibre-adapter.ts`](../../packages/maplibre/src/maplibre-adapter.ts) implements the initial lifecycle/camera slice with an inline empty style, finite errors, and teardown.
 - [`maplibre-vite-adapter.ts`](../../packages/maplibre/src/maplibre-vite-adapter.ts) owns the Vite worker URL setup required by the detected bundler.
 - [`apps/explorer-web/package.json`](../../apps/explorer-web/package.json) does not declare `maplibre-gl`, and the normal site composition still constructs `NullMapRuntime`.
