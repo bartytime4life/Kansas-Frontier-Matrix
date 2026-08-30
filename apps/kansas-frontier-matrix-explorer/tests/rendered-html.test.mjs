@@ -69,6 +69,11 @@ test("centers the primary workflow on map-scoped custom reports", async () => {
   assert.match(source, /retainedSelectionRecords: reportRetainedSelectionCount/);
   assert.match(source, /RETAINED_OUTSIDE_ACTIVE_TIME/);
   assert.match(source, /excluded from the active-time match count/);
+  assert.match(source, /const reportIncludedRecordCount = Math\.min\(reportRecords\.length, reportRecordLimit\)/);
+  assert.match(source, /reportRecords\.slice\(0, reportRecordLimit\)/);
+  assert.match(source, /report copied with \$\{reportIncludedRecordCount\} included records/);
+  assert.match(source, /report downloaded with \$\{reportIncludedRecordCount\} included records/);
+  assert.doesNotMatch(source, /reportRecords\.length} included records/);
   assert.match(source, /}\n    params\.set\("times",/);
   assert.match(source, /setReportLayerIds\(activeLayers\.map/);
   assert.match(source, /const \[leftOpen, setLeftOpen\] = useState\(false\)/);

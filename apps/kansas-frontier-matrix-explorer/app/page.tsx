@@ -735,6 +735,8 @@ export default function Home() {
     [reportRecords],
   );
   const reportRetainedSelectionCount = reportRecords.length - reportActiveTimeRecordCount;
+  const reportRecordLimit = reportDetail === "EXECUTIVE" ? 8 : reportDetail === "STANDARD" ? 30 : reportRecords.length;
+  const reportIncludedRecordCount = Math.min(reportRecords.length, reportRecordLimit);
   const reportEvidenceCounts = useMemo(() => reportRecords.reduce<Record<string, number>>((counts, record) => {
     counts[record.properties.evidenceState] = (counts[record.properties.evidenceState] ?? 0) + 1;
     return counts;
@@ -2709,8 +2711,7 @@ export default function Home() {
   };
 
   const buildCustomReportPayload = (generatedAt: string) => {
-    const recordLimit = reportDetail === "EXECUTIVE" ? 8 : reportDetail === "STANDARD" ? 30 : reportRecords.length;
-    const records = reportRecords.slice(0, recordLimit).map(({ layer, properties, outsideActiveTime }) => ({
+    const records = reportRecords.slice(0, reportRecordLimit).map(({ layer, properties, outsideActiveTime }) => ({
       id: properties.fid,
       title: properties.title,
       layer: layer.title,
@@ -2790,7 +2791,7 @@ export default function Home() {
     setReportGeneratedAt(generatedAt);
     try {
       await navigator.clipboard.writeText(JSON.stringify(report, null, 2));
-      announce(`Custom report copied with ${reportRecords.length} included records`);
+      announce(`Custom report copied with ${reportIncludedRecordCount} included records`);
     } catch {
       announce("Clipboard access was blocked; the report preview stayed in the browser");
     }
@@ -2821,7 +2822,7 @@ export default function Home() {
     link.click();
     link.remove();
     window.setTimeout(() => URL.revokeObjectURL(url), 0);
-    announce(`${format.toUpperCase()} report downloaded with ${reportRecords.length} included records`);
+    announce(`${format.toUpperCase()} report downloaded with ${reportIncludedRecordCount} included records`);
   };
 
   const copyExportManifest = async () => {
@@ -3408,13 +3409,13 @@ export default function Home() {
                   </div>
 
                   <article className="report-preview" aria-live="polite">
-                    <header><div><span>LIVE REPORT PREVIEW</span><h4>{reportTitle.trim() || "Kansas map data report"}</h4><p>{reportScope.replaceAll("_", " ")} · {formatTimelineStep(year)} · {reportDetail}</p></div><strong>{reportRecords.length} INCLUDED RECORD{reportRecords.length === 1 ? "" : "S"}</strong></header>
+                    <header><div><span>LIVE REPORT PREVIEW</span><h4>{reportTitle.trim() || "Kansas map data report"}</h4><p>{reportScope.replaceAll("_", " ")} · {formatTimelineStep(year)} · {reportDetail}</p></div><strong>{reportIncludedRecordCount} INCLUDED RECORD{reportIncludedRecordCount === 1 ? "" : "S"}</strong></header>
                     {(reportQuery || reportEvidenceFilter !== "ALL") && <div className="report-active-filters"><span>ACTIVE FILTERS</span>{reportQuery && <b>Search: {reportQuery}</b>}{reportEvidenceFilter !== "ALL" && <b>{reportEvidenceFilter.replaceAll("_", " ")}</b>}<button type="button" onClick={() => { setReportQuery(""); setReportEvidenceFilter("ALL"); }}>Clear</button></div>}
                     {reportSections.summary && <div className="report-metrics" aria-label="Report summary metrics"><article><span>Active-time matches</span><strong>{reportActiveTimeRecordCount}</strong></article><article><span>Layers</span><strong>{reportLayerSummary.length}</strong></article><article><span>States</span><strong>{Object.keys(reportEvidenceCounts).length}</strong></article><article><span>Retained selections</span><strong>{reportRetainedSelectionCount}</strong></article></div>}
                     {reportSections.findings && <section className="report-preview-section"><span>FINDINGS</span><ol>{reportFindings.map((finding) => <li key={finding}>{finding}</li>)}</ol></section>}
                     {reportSections.findings && <section className="report-preview-section report-temporal-comparison"><span>TIME A / TIME B</span><div><article><strong>{formatTimelineStep(compareTimeA)}</strong><small>{reportTemporalComparison.timeARecordCount} compatible records</small></article><i aria-hidden="true">→</i><article><strong>{formatTimelineStep(compareTimeB)}</strong><small>{reportTemporalComparison.timeBRecordCount} compatible records</small></article><b>{reportTemporalComparison.recordDelta > 0 ? "+" : ""}{reportTemporalComparison.recordDelta} catalog delta</b></div><p>{reportTemporalComparison.changedLayerCount} included layer{reportTemporalComparison.changedLayerCount === 1 ? "" : "s"} have entered or exited fixture IDs. This is catalog availability, not an observed-change claim.</p></section>}
                     {reportSections.records && <section className="report-preview-section"><span>RECORDS</span><div className="report-record-table" role="table" aria-label="Included report records">
-                      {reportRecords.slice(0, reportDetail === "EXECUTIVE" ? 8 : reportDetail === "STANDARD" ? 30 : reportRecords.length).map(({ layer, properties, outsideActiveTime }) => <article key={`${layer.id}:${properties.fid}`} role="row"><div><strong>{properties.title}</strong><small>{layer.title} · {properties.year}{outsideActiveTime ? ` · RETAINED OUTSIDE ${formatTimelineStep(year)}` : ""}</small></div><span data-state={properties.evidenceState}>{properties.evidenceState}</span><p>{properties.summary}</p></article>)}
+                      {reportRecords.slice(0, reportRecordLimit).map(({ layer, properties, outsideActiveTime }) => <article key={`${layer.id}:${properties.fid}`} role="row"><div><strong>{properties.title}</strong><small>{layer.title} · {properties.year}{outsideActiveTime ? ` · RETAINED OUTSIDE ${formatTimelineStep(year)}` : ""}</small></div><span data-state={properties.evidenceState}>{properties.evidenceState}</span><p>{properties.summary}</p></article>)}
                       {reportRecords.length === 0 && <div className="report-empty"><strong>No records match</strong><p>Move or widen the map, change time, choose another scope, or include more layers.</p></div>}
                     </div></section>}
                     {reportSections.evidence && reportRecords.length > 0 && <section className="report-preview-section"><span>EVIDENCE DISTRIBUTION</span><div className="report-evidence-grid">{Object.entries(reportEvidenceCounts).sort((left, right) => right[1] - left[1]).map(([state, count]) => <article key={state}><strong>{count}</strong><span>{state}</span></article>)}</div></section>}
