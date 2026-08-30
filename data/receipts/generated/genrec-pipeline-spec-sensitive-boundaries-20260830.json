@@ -1,0 +1,128 @@
+{
+  "artifact_hashes": {
+    "pipeline_specs/archaeology/README.md": "sha256:6a19083aae5435259903739c7bcbcbeab955ec54dc2601943287a44c7764b295",
+    "pipeline_specs/people-dna-land/README.md": "sha256:8a8bc2dfa6337c88b50b0c9139579c0eec1f7893cf643e857d26cf9d45b6b041",
+    "pipeline_specs/people-dna-land/land-ownership/README.md": "sha256:0d0a555ab87f96109c0036f5339bdfef68a0b2fa74e3f057f5cdbd2aeab47659",
+    "pipeline_specs/people/README.md": "sha256:c7460cf647b875e391a84faf14309557d85b46bb95cbcf3fb4c4922258508e36"
+  },
+  "artifact_paths": [
+    "pipeline_specs/archaeology/README.md",
+    "pipeline_specs/people-dna-land/README.md",
+    "pipeline_specs/people-dna-land/land-ownership/README.md",
+    "pipeline_specs/people/README.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "id": "ADR-0029",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/doctrine/directory-rules.md",
+      "id": "Directory-Rules-v2",
+      "validated": true
+    },
+    {
+      "evidence_ref": "https://drive.google.com/file/d/11cSH2BZJO2fofzQv-4zBYNTLCVwjGNCO/view",
+      "id": "Drive-Pipeline-Manual-v0.3",
+      "validated": true
+    },
+    {
+      "evidence_ref": "notion:3c9a9202-1bf6-8195-b8b1-f3a8d694b447",
+      "id": "Notion-KFM-Repository-Workbench",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-30T18:16:04Z",
+  "emitter": "openai-codex",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf"
+    ],
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@fc39181a6727c67bcf66bc75d6f25316ce445dd5",
+      "https://drive.google.com/file/d/11cSH2BZJO2fofzQv-4zBYNTLCVwjGNCO/view",
+      "notion:3c9a9202-1bf6-8195-b8b1-f3a8d694b447",
+      "notion:3c5a9202-1bf6-811b-a9c2-d923215f11b7"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "Codex",
+    "provider": "OpenAI",
+    "version": "GPT-5"
+  },
+  "notes": "Binds compact sensitive human, archaeology, identity, and land boundary contracts.",
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google Drive",
+      "Notion",
+      "local validators"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:3caff5355b08468f66b319af9c29bdb904b11083a1140937f564dc3f96cffa1b",
+  "receipt_id": "kfm:genrec:pipeline-specs:b94e547ad2bda86012c2fef8",
+  "truth_labels": {
+    "pipeline_specs/archaeology/README.md": "PROPOSED",
+    "pipeline_specs/people-dna-land/README.md": "PROPOSED",
+    "pipeline_specs/people-dna-land/land-ownership/README.md": "PROPOSED",
+    "pipeline_specs/people/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "DECLARATION_VALIDATOR",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "FIXTURE_POLARITY",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "FOCUSED_TESTS",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "DOCUMENT_METADATA",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "MARKDOWN_LOCAL_LINKS",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "GIT_DIFF_CHECK",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "REPOSITORY_TOPOLOGY_LOCAL",
+      "outcome": "SKIPPED",
+      "reason": "Blobless sparse checkout cannot inspect every indexed blob without an on-demand fetch; dedicated CI uses a full checkout."
+    },
+    {
+      "gate": "HUMAN_REVIEW",
+      "outcome": "SKIPPED",
+      "reason": "Draft PR; review is pending."
+    }
+  ]
+}
