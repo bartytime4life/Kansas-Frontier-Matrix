@@ -7,6 +7,7 @@ from typing import Any, Mapping
 
 FIXTURE_EXECUTION_ARGUMENTS = frozenset({"--fixtures", "--cases"})
 NON_FIXTURE_ARGUMENTS: dict[str, tuple[str, ...]] = {
+    "pipeline-spec-declarations": (),
     "pnpm-dependency-readiness": (
         "validate-repository",
         "--repository-root",

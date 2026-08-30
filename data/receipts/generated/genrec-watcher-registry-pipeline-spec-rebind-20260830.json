@@ -1,0 +1,106 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/watcher-registry.yml": "sha256:6bd4041a2b62a2286fa0b9512a237d12fb090c4d1489c6647ffe2a9cc61c948b",
+    "control_plane/watcher_registry.json": "sha256:4549e07326b1bee587c33d9b8029652fbf3d0e3f847f2866b6d59db0d223d7b0",
+    "fixtures/contracts/v1/source/watcher_registry/semantic_invalid/semantic_duplicate_watcher.json": "sha256:8ae81b7fec470ebd19a8eb0bde55db547e1e48ba50262ce91fe99aed72236ae3",
+    "fixtures/contracts/v1/source/watcher_registry/valid/valid_placeholder_registry.json": "sha256:682b9e4abad25486f84898a13e9caff8424ae0c39584b1b798ea3d6e2354c30a",
+    "pipeline_specs/watchers/plants_drift.yaml": "sha256:313f53d3156ffb3893b8cb63e6c68939bc1b40af7dbf5bd27c9c2fbc6356da6f"
+  },
+  "artifact_paths": [
+    ".github/workflows/watcher-registry.yml",
+    "control_plane/watcher_registry.json",
+    "fixtures/contracts/v1/source/watcher_registry/semantic_invalid/semantic_duplicate_watcher.json",
+    "fixtures/contracts/v1/source/watcher_registry/valid/valid_placeholder_registry.json",
+    "pipeline_specs/watchers/plants_drift.yaml"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "repo:workflow-run/33328128910",
+      "id": "hosted-watcher-registry-byte-drift",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "id": "ADR-0029",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-30T18:40:00Z",
+  "emitter": "openai-codex",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf"
+    ],
+    "evidence_refs": [
+      "repo:data/receipts/generated/genrec-watcher-registry-soil-extension-20260808.json@fc39181a6727c67bcf66bc75d6f25316ce445dd5",
+      "repo:workflow-run/33328128910",
+      "github:bartytime4life/Kansas-Frontier-Matrix@fc39181a6727c67bcf66bc75d6f25316ce445dd5"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": 3946
+  },
+  "model_identity": {
+    "model": "Codex",
+    "provider": "OpenAI",
+    "version": "GPT-5"
+  },
+  "notes": "Current-byte successor for the watcher registry after the shared plants-drift declaration migrated to the closed inactive pipeline-spec contract. Historical watcher receipts remain unchanged. This receipt and its validation create no source, schedule, network, execution, admission, write, promotion, release, publication, or notification authority.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google Drive",
+      "Notion",
+      "local validators"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:3caff5355b08468f66b319af9c29bdb904b11083a1140937f564dc3f96cffa1b",
+  "receipt_id": "genrec-watcher-registry-pipeline-spec-rebind-20260830",
+  "truth_labels": {
+    ".github/workflows/watcher-registry.yml": "PROPOSED",
+    "control_plane/watcher_registry.json": "PROPOSED",
+    "fixtures/contracts/v1/source/watcher_registry/semantic_invalid/semantic_duplicate_watcher.json": "PROPOSED",
+    "fixtures/contracts/v1/source/watcher_registry/valid/valid_placeholder_registry.json": "PROPOSED",
+    "pipeline_specs/watchers/plants_drift.yaml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "WATCHER_REGISTRY_VALIDATION",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "FIXTURE_POLARITY",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "GENERATED_RECEIPT_INTEGRITY",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "HOSTED_EXACT_HEAD_CI",
+      "outcome": "SKIPPED",
+      "reason": "A new exact-head run begins after the corrected branch is published."
+    },
+    {
+      "gate": "HUMAN_REVIEW",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ]
+}

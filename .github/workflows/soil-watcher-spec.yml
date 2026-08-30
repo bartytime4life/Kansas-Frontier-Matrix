@@ -78,10 +78,10 @@ jobs:
         run: |
           set -euo pipefail
           python tools/validators/validate_watcher_registry.py control_plane/watcher_registry.json
-      - name: Validate generated authoring receipt
+      - name: Validate current control-plane rebind receipt
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-soil-watcher-spec-20260808.json --repo-root .
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-soil-watcher-spec-control-plane-rebind-20260830.json --repo-root .
       - name: Record trust boundary
         if: always()
         run: |

@@ -1,0 +1,280 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/hydrology-wbd-huc12-ingest-candidate.yml": "sha256:0b83f0a398522baa5aa7bebc11486de1538aedc73a168fd60c070fa99d3eae22",
+    ".github/workflows/soil-watcher-spec.yml": "sha256:43e7e11623af962b1e36e58f13ee83cb6ba852270197dfb029852da07b3c6ad4",
+    ".github/workflows/watcher-registry.yml": "sha256:6bd4041a2b62a2286fa0b9512a237d12fb090c4d1489c6647ffe2a9cc61c948b",
+    "control_plane/watcher_registry.json": "sha256:4549e07326b1bee587c33d9b8029652fbf3d0e3f847f2866b6d59db0d223d7b0",
+    "data/receipts/generated/genrec-hydrology-wbd-huc12-ingest-candidate-20260830.json": "sha256:3ab013f6341659fc90175d8d93a69d718d8aacd97a83669579c85cae38a7117f",
+    "data/receipts/generated/genrec-soil-watcher-spec-control-plane-rebind-20260830.json": "sha256:212bf884bec86263ec367f7376eb607a15ba1c6593db1e0fd74aea5ef53f227b",
+    "data/receipts/generated/genrec-watcher-registry-pipeline-spec-rebind-20260830.json": "sha256:1c706bc38b5e83cd926df083e766eb28811cc59ac6342474b557ba4d3b371fbe",
+    "fixtures/contracts/v1/source/watcher_registry/semantic_invalid/semantic_duplicate_watcher.json": "sha256:8ae81b7fec470ebd19a8eb0bde55db547e1e48ba50262ce91fe99aed72236ae3",
+    "fixtures/contracts/v1/source/watcher_registry/valid/valid_placeholder_registry.json": "sha256:682b9e4abad25486f84898a13e9caff8424ae0c39584b1b798ea3d6e2354c30a",
+    "pipeline_specs/agriculture/README.md": "sha256:4f61815b5532001748349698c362313c9b118de285e914517a139708b2382b02",
+    "pipeline_specs/air/.gitkeep": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pipeline_specs/air/README.md": "sha256:87271b948d5b951fbd4a08af49029f630fa6720e3cb87cdb7114a010d732cc45",
+    "pipeline_specs/archaeology/README.md": "sha256:db36729cfb7fadbab2e3aacf7e9a7d59d2b777223e458f07ed0fabb1a59068e7",
+    "pipeline_specs/atmosphere/README.md": "sha256:8f14c22d80b9fe09f6ee3bdabe9af44ce5efc6b189da5de9ccc285e3d8f51b9d",
+    "pipeline_specs/fauna/README.md": "sha256:6905d70764cf16c4943a7a260b4f027e4e599d37878940f546cdfe4fa1dd6e5b",
+    "pipeline_specs/fauna/watchers/.gitkeep": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pipeline_specs/fauna/watchers/README.md": "sha256:dd99e0331d505ff445fa996ed47ac5fa8cb2340a3ebb90dbad68756eb22ddad4",
+    "pipeline_specs/flora/README.md": "sha256:aa116a22f40db3cbc449eed4bc9d8fd49e3acf2b34adcf68da43c15561a50075",
+    "pipeline_specs/flora/watchers/.gitkeep": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pipeline_specs/flora/watchers/README.md": "sha256:96531a4ab11dba91f6c91bf4ba6af7ab49ae5d123226c78dca626c1179ffd34f",
+    "pipeline_specs/geology/README.md": "sha256:e55290df69d0fabe614e3a34819037997bd57e1c1d83ac5eb44b1e0a7bae79ae",
+    "pipeline_specs/habitat/ecoregions/.gitkeep": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pipeline_specs/habitat/ecoregions/README.md": "sha256:c6022c1440b082482c0bf94e173447b452b1cdfc18c35a58b044a642b16975a0",
+    "pipeline_specs/habitat/land_cover/.gitkeep": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pipeline_specs/habitat/land_cover/README.md": "sha256:19fed2754b3507f77248c0584001d30b039ffd28ed73368c90d7942926f6afcc",
+    "pipeline_specs/hazards/README.md": "sha256:9f3dbf691703b8dbd8a82a14352dfbd2254606ef99088e42f80326d2da525738",
+    "pipeline_specs/hydrology/README.md": "sha256:14295054fd02f1c7045f9c97879338f890df48a1a1d67b02229650293f16729c",
+    "pipeline_specs/people-dna-land/land-ownership/.gitkeep": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pipeline_specs/people-dna-land/land-ownership/README.md": "sha256:b157a778faac159097cecdb04ea7e282aa585c8332661c48bb4e75cf308a9bd1",
+    "pipeline_specs/people-dna-land/README.md": "sha256:8dc86441faf1e60960045871ba521b48a77e14f16c0c791753997fdac722fdf4",
+    "pipeline_specs/people/.gitkeep": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pipeline_specs/people/README.md": "sha256:74087c2ec37402c935703bf814de23b5001a63fe25f96c82ddaf72b73f011291",
+    "pipeline_specs/README.md": "sha256:fbb66825d31d3ba3bf485066150f58c2cb4661e44dbb9e7bba9d18fa3a1d9625",
+    "pipeline_specs/roads-rail-trade/README.md": "sha256:d21f9b19d4f6835f9821e5843cebc57a77beaf0965fd00b3d94533bf268dde3b",
+    "pipeline_specs/settlement/.gitkeep": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pipeline_specs/settlement/README.md": "sha256:736c69e8ff663b5f59b066385e728502b25aaf70dac672367154b2e74d5ad572",
+    "pipeline_specs/settlements-infrastructure/README.md": "sha256:dd3520d66973a0aec778f9e47d97503de47f21ba60a4394c3516d4ea2bee1508",
+    "pipeline_specs/soil/README.md": "sha256:61dd4d4b4d6ce7788e59a494d2a18beb46d2d238757e208e3a9d1a80ff722b70",
+    "pipeline_specs/watchers/README.md": "sha256:f3e0b6c15d119d55c465da0dcef6799a2dad3c02c375ea812f7356aae93079e7",
+    "tests/validators/test_validate_fixture_root_contract.py": "sha256:d4a7fe99259e62090a314b88a10ba376ceb15277dff7f030e12c1c6677b5c75c",
+    "tests/validators/test_validate_pipeline_spec_declarations.py": "sha256:538cc6f76fc261f482f7b0510281e1858a5eb6d4472fab4395c29efa5586f18f",
+    "tools/validators/_fixture_root_contract_checks.py": "sha256:dea58dc8214432e1bbd1b8090aa5c625cd301838fd2cc74c9eb1b110e7cc680e",
+    "tools/validators/validator_registry.json": "sha256:64f3a5d227396758247a80de1500f2f027cb1a0158a0e6748173fd7629fc7b97"
+  },
+  "artifact_paths": [
+    ".github/workflows/hydrology-wbd-huc12-ingest-candidate.yml",
+    ".github/workflows/soil-watcher-spec.yml",
+    ".github/workflows/watcher-registry.yml",
+    "control_plane/watcher_registry.json",
+    "data/receipts/generated/genrec-hydrology-wbd-huc12-ingest-candidate-20260830.json",
+    "data/receipts/generated/genrec-soil-watcher-spec-control-plane-rebind-20260830.json",
+    "data/receipts/generated/genrec-watcher-registry-pipeline-spec-rebind-20260830.json",
+    "fixtures/contracts/v1/source/watcher_registry/semantic_invalid/semantic_duplicate_watcher.json",
+    "fixtures/contracts/v1/source/watcher_registry/valid/valid_placeholder_registry.json",
+    "pipeline_specs/agriculture/README.md",
+    "pipeline_specs/air/.gitkeep",
+    "pipeline_specs/air/README.md",
+    "pipeline_specs/archaeology/README.md",
+    "pipeline_specs/atmosphere/README.md",
+    "pipeline_specs/fauna/README.md",
+    "pipeline_specs/fauna/watchers/.gitkeep",
+    "pipeline_specs/fauna/watchers/README.md",
+    "pipeline_specs/flora/README.md",
+    "pipeline_specs/flora/watchers/.gitkeep",
+    "pipeline_specs/flora/watchers/README.md",
+    "pipeline_specs/geology/README.md",
+    "pipeline_specs/habitat/ecoregions/.gitkeep",
+    "pipeline_specs/habitat/ecoregions/README.md",
+    "pipeline_specs/habitat/land_cover/.gitkeep",
+    "pipeline_specs/habitat/land_cover/README.md",
+    "pipeline_specs/hazards/README.md",
+    "pipeline_specs/hydrology/README.md",
+    "pipeline_specs/people-dna-land/land-ownership/.gitkeep",
+    "pipeline_specs/people-dna-land/land-ownership/README.md",
+    "pipeline_specs/people-dna-land/README.md",
+    "pipeline_specs/people/.gitkeep",
+    "pipeline_specs/people/README.md",
+    "pipeline_specs/README.md",
+    "pipeline_specs/roads-rail-trade/README.md",
+    "pipeline_specs/settlement/.gitkeep",
+    "pipeline_specs/settlement/README.md",
+    "pipeline_specs/settlements-infrastructure/README.md",
+    "pipeline_specs/soil/README.md",
+    "pipeline_specs/watchers/README.md",
+    "tests/validators/test_validate_fixture_root_contract.py",
+    "tests/validators/test_validate_pipeline_spec_declarations.py",
+    "tools/validators/_fixture_root_contract_checks.py",
+    "tools/validators/validator_registry.json"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "id": "ADR-0029",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/doctrine/directory-rules.md",
+      "id": "Directory-Rules-v2",
+      "validated": true
+    },
+    {
+      "evidence_ref": "https://drive.google.com/file/d/11cSH2BZJO2fofzQv-4zBYNTLCVwjGNCO/view",
+      "id": "Drive-Pipeline-Manual-v0.3",
+      "validated": true
+    },
+    {
+      "evidence_ref": "notion:3c9a9202-1bf6-8195-b8b1-f3a8d694b447",
+      "id": "Notion-KFM-Repository-Workbench",
+      "validated": true
+    },
+    {
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix/pull/3953",
+      "id": "Habitat-Successor-PR-3953",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-30T18:53:38Z",
+  "emitter": "openai-codex",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf"
+    ],
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@a98eb4b20c0c003087a9953df5ea0d609cbe0d28",
+      "github:bartytime4life/Kansas-Frontier-Matrix/pull/3946",
+      "github:bartytime4life/Kansas-Frontier-Matrix/pull/3947",
+      "github:bartytime4life/Kansas-Frontier-Matrix/pull/3948",
+      "github:bartytime4life/Kansas-Frontier-Matrix/pull/3949",
+      "github:bartytime4life/Kansas-Frontier-Matrix/pull/3953",
+      "https://drive.google.com/file/d/11cSH2BZJO2fofzQv-4zBYNTLCVwjGNCO/view",
+      "notion:3c9a9202-1bf6-8195-b8b1-f3a8d694b447"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": 3956
+  },
+  "model_identity": {
+    "model": "Codex",
+    "provider": "OpenAI",
+    "version": "GPT-5"
+  },
+  "notes": "Current-byte successor after PR #3946 reached main while stacked PRs #3947-#3949 merged only into intermediate base branches. It restores eight zero-byte topology markers, closes watcher, soil-watcher, WBD, and validator-registry dependencies, and carries the remaining compact pipeline-spec boundaries. The Habitat README is excluded because merged PR #3953 already delivered the same reviewed change to main. Historical receipts remain unchanged. This receipt creates no source, schedule, network, execution, admission, lifecycle write, promotion, release, deployment, publication, canonical-alias, or review authority.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google Drive",
+      "Notion",
+      "local validators"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:3caff5355b08468f66b319af9c29bdb904b11083a1140937f564dc3f96cffa1b",
+  "receipt_id": "genrec-pipeline-spec-post-merge-closure-20260830",
+  "truth_labels": {
+    ".github/workflows/hydrology-wbd-huc12-ingest-candidate.yml": "PROPOSED",
+    ".github/workflows/soil-watcher-spec.yml": "PROPOSED",
+    ".github/workflows/watcher-registry.yml": "PROPOSED",
+    "control_plane/watcher_registry.json": "PROPOSED",
+    "data/receipts/generated/genrec-hydrology-wbd-huc12-ingest-candidate-20260830.json": "PROPOSED",
+    "data/receipts/generated/genrec-soil-watcher-spec-control-plane-rebind-20260830.json": "PROPOSED",
+    "data/receipts/generated/genrec-watcher-registry-pipeline-spec-rebind-20260830.json": "PROPOSED",
+    "fixtures/contracts/v1/source/watcher_registry/semantic_invalid/semantic_duplicate_watcher.json": "PROPOSED",
+    "fixtures/contracts/v1/source/watcher_registry/valid/valid_placeholder_registry.json": "PROPOSED",
+    "pipeline_specs/agriculture/README.md": "PROPOSED",
+    "pipeline_specs/air/.gitkeep": "PROPOSED",
+    "pipeline_specs/air/README.md": "PROPOSED",
+    "pipeline_specs/archaeology/README.md": "PROPOSED",
+    "pipeline_specs/atmosphere/README.md": "PROPOSED",
+    "pipeline_specs/fauna/README.md": "PROPOSED",
+    "pipeline_specs/fauna/watchers/.gitkeep": "PROPOSED",
+    "pipeline_specs/fauna/watchers/README.md": "PROPOSED",
+    "pipeline_specs/flora/README.md": "PROPOSED",
+    "pipeline_specs/flora/watchers/.gitkeep": "PROPOSED",
+    "pipeline_specs/flora/watchers/README.md": "PROPOSED",
+    "pipeline_specs/geology/README.md": "PROPOSED",
+    "pipeline_specs/habitat/ecoregions/.gitkeep": "PROPOSED",
+    "pipeline_specs/habitat/ecoregions/README.md": "PROPOSED",
+    "pipeline_specs/habitat/land_cover/.gitkeep": "PROPOSED",
+    "pipeline_specs/habitat/land_cover/README.md": "PROPOSED",
+    "pipeline_specs/hazards/README.md": "PROPOSED",
+    "pipeline_specs/hydrology/README.md": "PROPOSED",
+    "pipeline_specs/people-dna-land/land-ownership/.gitkeep": "PROPOSED",
+    "pipeline_specs/people-dna-land/land-ownership/README.md": "PROPOSED",
+    "pipeline_specs/people-dna-land/README.md": "PROPOSED",
+    "pipeline_specs/people/.gitkeep": "PROPOSED",
+    "pipeline_specs/people/README.md": "PROPOSED",
+    "pipeline_specs/README.md": "PROPOSED",
+    "pipeline_specs/roads-rail-trade/README.md": "PROPOSED",
+    "pipeline_specs/settlement/.gitkeep": "PROPOSED",
+    "pipeline_specs/settlement/README.md": "PROPOSED",
+    "pipeline_specs/settlements-infrastructure/README.md": "PROPOSED",
+    "pipeline_specs/soil/README.md": "PROPOSED",
+    "pipeline_specs/watchers/README.md": "PROPOSED",
+    "tests/validators/test_validate_fixture_root_contract.py": "PROPOSED",
+    "tests/validators/test_validate_pipeline_spec_declarations.py": "PROPOSED",
+    "tools/validators/_fixture_root_contract_checks.py": "PROPOSED",
+    "tools/validators/validator_registry.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "DECLARATION_REPOSITORY_VALIDATOR",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "DECLARATION_FIXTURE_POLARITY",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "CHANGED_AREA_DUAL_PROFILE",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "WATCHER_REGISTRY_VALIDATION",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "WBD_HUC12_FOCUSED_TESTS",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "SOIL_WATCHER_SPEC",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "VALIDATOR_REGISTRY",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "FIXTURE_ROOT_CONTRACT",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "WORKFLOW_SECURITY",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "REPOSITORY_TOPOLOGY",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "DOCUMENT_METADATA",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "MARKDOWN_LOCAL_LINKS",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "GENERATED_RECEIPT_INTEGRITY",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "HOSTED_EXACT_HEAD_CI",
+      "outcome": "SKIPPED",
+      "reason": "A new exact-head run begins after the corrective branch is published."
+    },
+    {
+      "gate": "HUMAN_REVIEW",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ]
+}

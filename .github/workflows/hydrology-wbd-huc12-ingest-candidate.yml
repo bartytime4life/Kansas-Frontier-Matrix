@@ -69,7 +69,7 @@ jobs:
           grep -F 'network_access: DENIED' pipeline_specs/hydrology/wbd_huc12_ingest.yaml
           grep -F 'writes_targets: false' pipeline_specs/hydrology/wbd_huc12_ingest.yaml
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-hydrology-wbd-huc12-ingest-candidate-20260807.json \
+            data/receipts/generated/genrec-hydrology-wbd-huc12-ingest-candidate-20260830.json \
             --repo-root .
       - name: Record trust boundary
         if: always()

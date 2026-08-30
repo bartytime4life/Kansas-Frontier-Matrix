@@ -119,7 +119,7 @@ life-safety authority. A pipeline declaration must not imply otherwise.
 | `KfmPipelineSpecDeclaration` YAML | 110 | 65 stage boundaries, 39 candidates, 6 compatibility aliases; all inactive |
 | Schema-backed JSON profiles | 9 | `PROPOSED_INACTIVE`; governed by their established domain or watcher bundles |
 | Boundary READMEs | 23 | One root boundary and 22 lane or sub-lane boundaries; each local contract owns its profile |
-| `.gitkeep` markers | 0 | Removed where a boundary README already materializes the lane |
+| `.gitkeep` markers | 8 | Retained as topology-compatible zero-byte markers; they create no declaration or execution authority |
 
 Exactly one YAML candidate, Hydrology WBD HUC12, is
 `IMPLEMENTED_FIXTURE_FIRST`. It remains `FIXTURE_ONLY`, no-network, non-writing, and
