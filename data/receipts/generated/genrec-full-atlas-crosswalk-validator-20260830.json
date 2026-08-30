@@ -1,0 +1,139 @@
+{
+  "receipt_id": "genrec-full-atlas-crosswalk-validator-20260830",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/cross-lane-join-assessment.yml",
+    "contracts/joins/cross_lane_join_assessment.md",
+    "docs/intake/exploratory/full-atlas-crosswalk-validator-source-map.md",
+    "fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json",
+    "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json",
+    "tests/joins/README.md",
+    "tests/joins/test_join_candidates.py",
+    "tools/joins/join_candidates.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/cross-lane-join-assessment.yml": "sha256:eb1ceacafbad82d03c2f5cdd5f217de4a38a4c4dfd118cc2bfe7a42cfcc9177b",
+    "contracts/joins/cross_lane_join_assessment.md": "sha256:5c80e5de8c29b49463b3bda9fa425d91fb09db9f517dfb8b83a3982997774ede",
+    "docs/intake/exploratory/full-atlas-crosswalk-validator-source-map.md": "sha256:34299c5ba17f3d451d09e2d9a2f69514711a0c8ed1303f88233c56b6ded45962",
+    "fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json": "sha256:95c4c2b1e0fb6ab1046987343c0baaa97996e9d99857657cc6a0c3a98b8eace0",
+    "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json": "sha256:91c9ba1ccab86a53e18bc1de5756e13a53dc617791efac80b180682ae5e11ec1",
+    "tests/joins/README.md": "sha256:cd04395d23556c5c648343ef935ec33242c30e886043cfe28e439da02f3644d5",
+    "tests/joins/test_join_candidates.py": "sha256:e1c8906de125f0c43a396075fadf2a8176de65ad7aa16b74cded4120e7af6a7a",
+    "tools/joins/join_candidates.py": "sha256:5f81824320c3599fce6c011ae37ea7b9ffcc1223520d19c1b0d5d16e8ff13562"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-30"
+  },
+  "prompt_or_contract": "sha256:0659f1a0332bac17b4d8db2021e37bd1a4fd987ea95ae5de83c39a1b27811174",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector repository inspection and mutation",
+      "Google Drive connector read-only lineage inspection",
+      "Notion connector read-only coordination inspection",
+      "deterministic local hash replay"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fc39181a6727c67bcf66bc75d6f25316ce445dd5/.github/workflows/cross-lane-join-assessment.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fc39181a6727c67bcf66bc75d6f25316ce445dd5/tests/joins/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fc39181a6727c67bcf66bc75d6f25316ce445dd5/tools/validators/validate_generated_receipt.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/3943",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/2768",
+      "drive://1YvBKnMOZJ9tb-l2NJpVIr28e4l2H-Ej4FFZNqLOuMOQ",
+      "drive://1JhlatU-DMO1d6oh82HiLzZQDXgI6gA6kLtqs7Y1-jr8"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/cross-lane-join-assessment.yml": "PROPOSED",
+    "contracts/joins/cross_lane_join_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/full-atlas-crosswalk-validator-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json": "PROPOSED",
+    "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json": "PROPOSED",
+    "tests/joins/README.md": "PROPOSED",
+    "tests/joins/test_join_candidates.py": "PROPOSED",
+    "tools/joins/join_candidates.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "active-work-and-overlap-reconciliation",
+      "outcome": "PASS",
+      "reason": "Fresh repository-wide pull-request search returned no open pull requests before this bounded correction was commissioned."
+    },
+    {
+      "gate": "current-main-regression-reproduction",
+      "outcome": "PASS",
+      "reason": "PR #3943 exact-head cross-lane-join-assessment failed after the fixture matrix and focused tests at generated-receipt validation with the README artifact digest stale."
+    },
+    {
+      "gate": "focused-pytest-and-fixture-matrix",
+      "outcome": "PASS",
+      "reason": "PR #3943 exact-head hosted execution passed the synthetic fixture matrix and focused join-candidate tests before the receipt-validation failure."
+    },
+    {
+      "gate": "artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "All eight successor artifact SHA-256 values were recomputed from exact main, with the final workflow bytes bound to the successor receipt filename."
+    },
+    {
+      "gate": "generated-receipt-schema-and-integrity",
+      "outcome": "PASS",
+      "reason": "The successor receipt parses as finite JSON, has artifact/hash/truth-label key parity, and is prepared for repository-native validator replay on the feature branch."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI begins after the draft pull request is opened; pending or skipped results are not represented as passing."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Accountable human review remains pending; this automation does not request, submit, or approve review."
+    }
+  ],
+  "policy_decisions": [
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@eed7627f0bac70c4f11303ce6790320f46f7b080"
+  ],
+  "citations": [
+    {
+      "id": "repository:cross-lane-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fc39181a6727c67bcf66bc75d6f25316ce445dd5/.github/workflows/cross-lane-join-assessment.yml"
+    },
+    {
+      "id": "repository:join-test-lane",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fc39181a6727c67bcf66bc75d6f25316ce445dd5/tests/joins/README.md"
+    },
+    {
+      "id": "repository:generated-receipt-validator",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fc39181a6727c67bcf66bc75d6f25316ce445dd5/tools/validators/validate_generated_receipt.py"
+    },
+    {
+      "id": "repository:merged-regression-review",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/3943#discussion_r3890111628"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-30T18:09:17.956Z",
+  "emitter": "OpenAI ChatGPT automation runtime",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Successor provenance receipt repairing the artifact-digest regression introduced when merged PR #3943 changed tests/joins/README.md. The historical 20260809 receipt remains immutable; the workflow advances to this successor. This receipt creates no source, evidence, policy, review, proof, promotion, release, publication, or public-use authority."
+}
