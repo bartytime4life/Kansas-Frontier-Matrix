@@ -1471,11 +1471,13 @@
     {
       "path": ".github/workflows/hydrology-wbd-huc12-ingest-candidate.yml",
       "base_sha256": "sha256:a146633452db081125ac23c8dcb4262f270abfa15f7faad35cf2f6f9116baa68",
-      "current_sha256": "sha256:08c759a43b6fd0d720eb7d1a7c2e7b71b53eb23d3704655603755bcc0170f6b9",
+      "current_sha256": "sha256:0b83f0a398522baa5aa7bebc11486de1538aedc73a168fd60c070fa99d3eae22",
       "profiles": [
         "project-test"
       ],
-      "superseded_receipt_sha256s": []
+      "superseded_receipt_sha256s": [
+        "sha256:08c759a43b6fd0d720eb7d1a7c2e7b71b53eb23d3704655603755bcc0170f6b9"
+      ]
     },
     {
       "path": ".github/workflows/hydrology-wbd-huc12-material-change.yml",
@@ -2828,11 +2830,13 @@
     {
       "path": ".github/workflows/soil-watcher-spec.yml",
       "base_sha256": "sha256:dbcea3be768b788bfdc2164a671075b486cc14e1b36382c5be557d028c019d77",
-      "current_sha256": "sha256:e9cb3949cff656405a8543971eb9bf3f666005ca8116d38032f30da8e25e5b3e",
+      "current_sha256": "sha256:43e7e11623af962b1e36e58f13ee83cb6ba852270197dfb029852da07b3c6ad4",
       "profiles": [
         "project-test"
       ],
-      "superseded_receipt_sha256s": []
+      "superseded_receipt_sha256s": [
+        "sha256:e9cb3949cff656405a8543971eb9bf3f666005ca8116d38032f30da8e25e5b3e"
+      ]
     },
     {
       "path": ".github/workflows/source-activation-decision-validate.yml",
@@ -3507,11 +3511,13 @@
     {
       "path": ".github/workflows/watcher-registry.yml",
       "base_sha256": "sha256:b5fb4db3c8a6e641b20b4ea438007f676ab0e7e377393bad32094676215b3baf",
-      "current_sha256": "sha256:1731d9c1524c97d8392fa6c21dc5a637dfb15fb1aa76b1805c37c181e9d0b487",
+      "current_sha256": "sha256:6bd4041a2b62a2286fa0b9512a237d12fb090c4d1489c6647ffe2a9cc61c948b",
       "profiles": [
         "project-test"
       ],
-      "superseded_receipt_sha256s": []
+      "superseded_receipt_sha256s": [
+        "sha256:1731d9c1524c97d8392fa6c21dc5a637dfb15fb1aa76b1805c37c181e9d0b487"
+      ]
     },
     {
       "path": ".github/workflows/web-acquisition-conduct-assessment.yml",
