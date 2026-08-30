@@ -2,8 +2,8 @@
 doc_id: kfm://doc/tests-domains-hazards-drawer-readme
 title: Hazards Evidence Drawer Test README
 type: test-readme
-version: v0.1
-status: draft; placeholder-expanded; drawer-test-lane; PROPOSED / NEEDS VERIFICATION before promotion
+version: v0.2
+status: draft; documentation-only Hazards drawer lane; adjacent general UI projection proof is not Hazards-specific proof
 owners:
   - OWNER_TBD — Hazards domain steward
   - OWNER_TBD — UI steward
@@ -12,9 +12,12 @@ owners:
   - OWNER_TBD — Validation steward
   - OWNER_TBD — Release steward
   - OWNER_TBD — QA steward
-created: NEEDS VERIFICATION — blank placeholder existed before v0.1 expansion
-updated: 2026-07-05
+created: 2026-07-05
+updated: 2026-08-30
 policy_label: public-doc; tests; hazards; evidence-drawer; no-network; planning-context; evidence-bound; policy-filtered; release-gated; finite-outcomes; rollback-aware
+owning_root: tests/
+responsibility: Document the Hazards drawer test lane and its verified non-executable state without creating contract, schema, policy, release, runtime, or publication authority.
+truth_posture: "CONFIRMED documentation-only Hazards lane; CONFIRMED separate PROPOSED bounded-executable general UI EvidenceDrawerPayload profile; NEEDS VERIFICATION Hazards-specific fixtures, validator, executable tests, stewardship, runtime coupling, and promotion enforcement"
 tags: [kfm, tests, hazards, drawer, evidence-drawer, EvidenceDrawerPayload, EvidenceBundle, EvidenceRef, PolicyDecision, RuntimeResponseEnvelope, ReleaseManifest, CorrectionNotice, RollbackCard, trust-membrane, ABSTAIN, DENY, ERROR]
 related:
   - ../../../README.md
@@ -31,13 +34,19 @@ related:
   - ../../../../schemas/contracts/v1/ui/evidence_drawer_payload.schema.json
   - ../../../../schemas/contracts/v1/domains/hazards/
   - ../../../../fixtures/domains/hazards/drawer/
+  - ../../../../fixtures/ui/evidence_drawer_payload/
+  - ../../../../tools/validators/ui/validate_evidence_drawer_payload.py
+  - ../../../validators/test_validate_evidence_drawer_payload.py
   - ../../../../policy/domains/hazards/
   - ../../../../release/manifests/hazards/
+  - ../../../../.github/workflows/evidence-drawer-payload.yml
 notes:
   - "This file replaces a blank placeholder at tests/domains/hazards/drawer/README.md."
   - "This is a test-lane README only. It does not define Hazards doctrine, UI architecture, EvidenceDrawerPayload contracts, schemas, fixtures, lifecycle records, EvidenceBundles, policy rules, release decisions, public API material, public map material, public tiles, or published artifacts."
   - "The tested invariant is that Hazards drawer tests verify trust-visible EvidenceDrawerPayload behavior for released or fixture-scoped hazards claims: planning-context labels, finite outcomes, evidence refs, policy state, freshness state, release relationship, correction, and rollback remain visible without turning the drawer into source truth, policy authority, release authority, public-layer truth, or AI/UI truth."
   - "Default posture is deterministic and no-network. Live source checks, real source exports, lifecycle data, and public tiles do not belong in this lane."
+  - "Current Hazards inventory is documentation-only: this test directory and its paired fixture directory each contain only a README and .gitkeep; the documented pytest command collects zero tests and exits 5."
+  - "A separate general UI EvidenceDrawerPayload profile has a closed schema, synthetic fixtures, a deterministic validator, tests, and CI; it remains PROPOSED and does not prove Hazards-specific drawer behavior."
   - "Rollback target for this replacement is previous blank blob SHA 8b137891791fe96927ad78e64b0aad7bded08bdc."
 [/KFM_META_BLOCK_V2] -->
 
@@ -57,12 +66,12 @@ notes:
 </p>
 
 **Path:** `tests/domains/hazards/drawer/README.md`  
-**Status:** draft / placeholder-expanded / PROPOSED until executable tests are verified  
+**Status:** draft / DOCUMENTATION_ONLY / NOT_VALIDATION
 **Owning root:** `tests/`  
 **Domain segment:** `hazards`  
 **Test lane:** `drawer`  
 **Default execution posture:** deterministic, synthetic, no-network, public-safe fixtures only  
-**Truth posture:** CONFIRMED target was a blank placeholder before this expansion · CONFIRMED `tests/` is the canonical root for enforceability proof · CONFIRMED Hazards map/UI contracts require Hazards surfaces to be planning, historical, regulatory, or resilience context and never life-safety instructions · CONFIRMED Evidence Drawer doctrine says the drawer consumes evidence context and does not create truth · CONFIRMED `EvidenceDrawerPayload` is a UI projection and not evidence, policy, release, proof, or AI authority · NEEDS VERIFICATION for executable test modules, fixture payload inventory, schema enforcement, validator behavior, policy runtime, release integration, UI route behavior, CI coverage, and pass rates.
+**Truth posture:** CONFIRMED target was a blank placeholder before its v0.1 expansion · CONFIRMED this lane currently contains no executable tests and its paired fixture lane contains no payloads · CONFIRMED a separate general UI `EvidenceDrawerPayload` profile has a closed schema, synthetic fixtures, deterministic validation, tests, and CI · CONFIRMED that profile remains PROPOSED and does not establish Hazards-specific behavior · NEEDS VERIFICATION for Hazards-specific executable tests, fixture payloads, validator behavior, policy runtime, release integration, UI route behavior, CI coverage, and promotion enforcement.
 
 ---
 
@@ -178,7 +187,7 @@ tests/domains/hazards/drawer/
 pytest tests/domains/hazards/drawer
 ```
 
-Status of the command above: **PROPOSED / NEEDS VERIFICATION**. It assumes `pytest` is the accepted test runner and that executable test modules exist. This README does not claim the command currently passes.
+Status of the command above: **DOCUMENTATION_ONLY / NOT_VALIDATION**. The directory contains only `.gitkeep` and this README; pytest collects zero tests and exits `5`.
 
 ---
 
@@ -188,10 +197,11 @@ Status of the command above: **PROPOSED / NEEDS VERIFICATION**. It assumes `pyte
 |---|---|---|---|
 | Previous target file | CONFIRMED | `tests/domains/hazards/drawer/README.md` existed as a blank placeholder before this replacement. | Did not define the lane. |
 | `tests/README.md` | CONFIRMED | `tests/` is enforceability proof and failure should block promotion where trust-spine checks fail. | Does not prove this lane's modules or pass rate. |
-| `tests/domains/hazards/README.md` | CONFIRMED | Hazards test parent exists as a greenfield stub. | Parent lane still needs expansion. |
+| `tests/domains/hazards/README.md` | CONFIRMED | The parent distinguishes passing executable Hazards tests from documentation-only child lanes. | Does not prove this lane's future behavior or ownership. |
+| Hazards lane inventory | CONFIRMED | This directory contains only `.gitkeep` and this README; the paired fixture directory also contains only `.gitkeep` and its README. | Establishes documentation-only status, not future ownership or behavior. |
 | `docs/domains/hazards/MAP_UI_CONTRACTS.md` | CONFIRMED doctrine | Hazards UI surfaces are context material and must use governed API, EvidenceBundle, Evidence Drawer, Focus Mode, and finite deny/abstain/error states where needed. | Concrete routes, validators, fixtures, and pass rates remain NEEDS VERIFICATION. |
 | `docs/architecture/ui/EVIDENCE_DRAWER.md` | CONFIRMED doctrine / PROPOSED implementation | Evidence Drawer is a trust panel that resolves clicked claims to evidence and does not create truth. | Implementation maturity and schema fields remain NEEDS VERIFICATION. |
-| `contracts/ui/evidence_drawer_payload.md` | CONFIRMED semantic contract / PROPOSED schema enforcement | EvidenceDrawerPayload is a UI projection and not EvidenceBundle, policy, release, proof, or AI authority. | Paired schema is a permissive stub; final home and validators remain NEEDS VERIFICATION. |
+| General UI `EvidenceDrawerPayload` profile | CONFIRMED bounded executable / PROPOSED profile | The UI contract, closed schema, 11 valid and nine invalid synthetic fixtures, deterministic validator, ten focused tests, and dedicated workflow provide separate projection-shape proof. | It is not Hazards-specific test or fixture proof; final object-family home, upstream evidence/policy authenticity, runtime coupling, release enforcement, deployment, and publication remain unverified. |
 
 ---
 
