@@ -75,7 +75,7 @@ Classify failures before changing the PR:
 | `INTRODUCED` | Comparable base passes and exact PR head fails | Fix before the affected transition |
 | `INHERITED` | Same material failure exists on comparable base and head | Keep visible; do not misattribute to the PR |
 | `RESOLVED` | Base fails and head passes | Record as repair evidence |
-| `BASE_DRIFT / INTEGRATION` | Original branch passed but the actual base or merge result now fails | Reconcile against the pull request's current target/base ref and SHA |
+| `BASE_DRIFT / INTEGRATION` | The exact head and current base do not reproduce the failure independently, but the updated merge/rebase result fails | Reconcile against the pull request's current target/base ref and SHA, then test the integration result separately |
 | `ENVIRONMENTAL / FLAKY` | Evidence supports runner/service/capacity failure or nondeterminism | Record separately; retry only when useful |
 | `PENDING` | Hosted execution has not settled | Do not claim success or failure yet |
 | `NOT_RUN` | Check was not run | State why |
