@@ -97,11 +97,6 @@ export class MapLibreAdapter implements MapRuntimePort {
     if (this.state === "READY") return Promise.resolve(this.getSnapshot());
     if (this.initialization !== null) return this.initialization;
 
-    this.camera = freezeMapRuntimeCamera(initialCamera);
-    this.state = "INITIALIZING";
-    this.reason = null;
-    this.notifySnapshot();
-
     let resolveInitialization!: (snapshot: MapRuntimeSnapshot) => void;
     let rejectInitialization!: (error: MapRuntimePortError) => void;
     const initialization = new Promise<MapRuntimeSnapshot>((resolve, reject) => {
@@ -110,6 +105,12 @@ export class MapLibreAdapter implements MapRuntimePort {
     });
     this.initialization = initialization;
     this.rejectInitialization = rejectInitialization;
+
+    this.camera = freezeMapRuntimeCamera(initialCamera);
+    this.state = "INITIALIZING";
+    this.reason = null;
+    this.notifySnapshot();
+    if (this.state === "DISPOSED") return initialization;
 
     if (!supportsWebGL2()) {
       this.failInitialization();
