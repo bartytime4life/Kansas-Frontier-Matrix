@@ -79,6 +79,7 @@ def _root_registry() -> dict[str, object]:
 
 
 NON_FIXTURE_ARGUMENTS = {
+    "pipeline-spec-declarations": [],
     "pnpm-dependency-readiness": [
         "validate-repository",
         "--repository-root",
@@ -151,7 +152,7 @@ class FixtureRootContractTests(unittest.TestCase):
         self.assertTrue(result.ok, result.findings)
         self.assertEqual(result.outcome, "PASS")
         self.assertEqual(result.direct_child_directories, 2)
-        self.assertEqual(result.aggregate_validators, 12)
+        self.assertEqual(result.aggregate_validators, 13)
 
     def test_root_full_heading_order_fails_closed(self) -> None:
         path = self.root / "fixtures/README.md"
