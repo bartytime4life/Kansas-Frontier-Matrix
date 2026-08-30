@@ -254,7 +254,10 @@ test("adds a no-upload KML and GeoJSON inspection preview without admission or r
   assert.equal(preview.coverage, "WITHIN_KANSAS_CONTEXT");
   assert.equal(preview.renderAllowed, true);
   assert.deepEqual(preview.temporalFields, ["observed_time"]);
-  assert.equal(imports.importPreviewAudit(preview).effects, "NO_UPLOAD_NO_SAVE_NO_SOURCE_ADMISSION_NO_REPORT_DATA_NO_PUBLICATION");
+  const previewAudit = imports.importPreviewAudit(preview);
+  assert.equal(previewAudit.bounds, "WITHHELD_LOCAL_GEOMETRY");
+  assert.doesNotMatch(JSON.stringify(previewAudit), /-98\.4|38\.5/);
+  assert.equal(previewAudit.effects, "NO_UPLOAD_NO_EXACT_BOUNDS_NO_SOURCE_ADMISSION_NO_REPORT_DATA_NO_PUBLICATION");
 
   const invalidPreview = imports.buildLocalImportPreview({
     fileName: "invalid-structures.geojson",
@@ -307,6 +310,10 @@ test("adds a no-upload KML and GeoJSON inspection preview without admission or r
   assert.match(page, /importInspectionGenerationRef/);
   assert.match(page, /inspectionGeneration !== importInspectionGenerationRef\.current/);
   assert.match(page, /No geometry overlay is rendered/);
+  assert.match(page, /locationDerivedViewRef\.current = true;\s*setLocationCameraRedacted\(true\);\s*fitRendererNeutralBounds/);
+  assert.match(page, /const redactWorkspaceCamera = locationCameraRedacted \|\| locationDerivedViewRef\.current/);
+  assert.match(page, /view: redactWorkspaceCamera\s*\?/);
+  assert.match(page, /WITHHELD · browser-local geometry/);
   assert.doesNotMatch(page, /Show preview|Hide preview|importPreviewVisible/);
   assert.doesNotMatch(page, /updateImportPreviewSource|from "maplibre-gl"|new maplibregl/);
   assert.match(mapInterface, /External data admission[\s\S]*HOLD/);
