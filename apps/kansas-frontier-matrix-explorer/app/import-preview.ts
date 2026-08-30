@@ -163,6 +163,7 @@ const kmlMarkupForInspection = (text: string): string | null => {
     if (text.startsWith("<!--", cursor)) {
       const commentEnd = text.indexOf("-->", cursor + 4);
       if (commentEnd < 0) return null;
+      markup += " ";
       cursor = commentEnd + 3;
       continue;
     }
