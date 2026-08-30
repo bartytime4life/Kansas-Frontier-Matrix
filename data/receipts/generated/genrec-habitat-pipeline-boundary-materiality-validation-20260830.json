@@ -1,0 +1,107 @@
+{
+  "artifact_hashes": {
+    "pipeline_specs/habitat/README.md": "sha256:a5b23c7b6a044939462107a02c028ba1a9679b7efc9dcb4ec5b778ce7a9b3b9b"
+  },
+  "artifact_paths": [
+    "pipeline_specs/habitat/README.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "id": "ADR-0029",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/doctrine/directory-rules.md",
+      "id": "Directory-Rules-v2",
+      "validated": true
+    },
+    {
+      "evidence_ref": "https://drive.google.com/file/d/11cSH2BZJO2fofzQv-4zBYNTLCVwjGNCO/view",
+      "id": "Drive-Pipeline-Manual-v0.3",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-30T20:44:06.103Z",
+  "emitter": "openai-codex",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf"
+    ],
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@e282b375a9f3881afdc30172c68f191cccde4220",
+      "github:bartytime4life/Kansas-Frontier-Matrix@a98eb4b20c0c003087a9953df5ea0d609cbe0d28",
+      "github:bartytime4life/Kansas-Frontier-Matrix@67dc717da868a1c9d2302fbe77ab588da185b2e9",
+      "https://drive.google.com/file/d/11cSH2BZJO2fofzQv-4zBYNTLCVwjGNCO/view"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "Codex",
+    "provider": "OpenAI",
+    "version": "GPT-5"
+  },
+  "notes": "Binds the Habitat root pipeline boundary document to the repository's existing declaration and land-cover materiality validation families. The declarations remain proposed-inactive; no source activation, sensitive-data access, lifecycle transition, promotion, release, deployment, or publication capability is changed.",
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google Drive",
+      "Notion",
+      "deterministic document checks"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:3caff5355b08468f66b319af9c29bdb904b11083a1140937f564dc3f96cffa1b",
+  "receipt_id": "kfm:genrec:pipeline-specs-habitat:a5b23c7b6a044939462107a0",
+  "truth_labels": {
+    "pipeline_specs/habitat/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "DOCUMENT_METADATA",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "MARKDOWN_STRUCTURE",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "COMMAND_WORKFLOW_PARITY",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "MATERIALITY_FIXTURE_VALIDATION",
+      "outcome": "SKIPPED",
+      "reason": "Commands are documented from the existing dedicated workflow but were not executed before this receipt was emitted."
+    },
+    {
+      "gate": "HOSTED_CHECKS",
+      "outcome": "SKIPPED",
+      "reason": "Draft pull request not yet open when this receipt was emitted."
+    },
+    {
+      "gate": "HUMAN_REVIEW",
+      "outcome": "SKIPPED",
+      "reason": "Draft pull request; review is pending."
+    }
+  ]
+}
