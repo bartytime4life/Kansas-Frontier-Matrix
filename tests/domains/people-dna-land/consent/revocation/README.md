@@ -2,7 +2,7 @@
 doc_id: kfm://doc/tests-domains-people-dna-land-consent-revocation-readme
 title: People DNA Land Consent Revocation Tests README
 type: test-lane-readme
-version: v0.2
+version: v0.3
 status: executable-bounded-fixture-profiles; non-authoritative; broader-runtime-and-release-held
 owners:
   - OWNER_TBD - People DNA Land domain steward
@@ -13,7 +13,7 @@ owners:
   - OWNER_TBD - Release steward
   - OWNER_TBD - QA steward
 created: 2026-07-05
-updated: 2026-08-28
+updated: 2026-08-30
 policy_label: public-doc; tests; people-dna-land; consent; revocation; living-person-sensitive; dna-sensitive; no-network; evidence-bound; policy-gated; release-gated; correction-aware; withdrawal-aware; rollback-aware
 owning_root: tests/
 responsibility: bounded deterministic proof for synthetic consent-overlay safety and declared consent-revocation propagation behavior
@@ -209,7 +209,7 @@ The `domain-people-dna-land` workflow also requires the known-invalid consent-ov
 | Evidence | Status | Supports | Limits |
 |---|---|---|---|
 | Accepted Directory Rules and ADR-0029 | CONFIRMED repository authority | `tests/` owns enforceability proof and `people-dna-land` is the domain segment. | Placement authority does not activate policy, sources, lifecycle movement, release, or publication. |
-| `test_consent_overlay_safety.py`, fixture family, schemas, and validator | CONFIRMED executable bounded profile | Sixteen deterministic tests cover inventory, hashes, consent posture, forbidden fields, precision limits, stable non-echoing findings, size bounds, and no-network behavior. | Synthetic fixture validation only; no real consent, identity, kinship, genomic, cleanup, or release operation. |
+| `test_consent_overlay_safety.py`, fixture family, schemas, and validator | CONFIRMED executable bounded profile | Seventeen deterministic tests cover inventory, hashes, consent posture, forbidden fields, non-scalar enum rejection, precision limits, stable non-echoing findings, size bounds, and no-network behavior. | Synthetic fixture validation only; no real consent, identity, kinship, genomic, cleanup, or release operation. |
 | `test_consent_revocation_propagation_assessment.py`, 17-case fixture manifest, schema, and validator | CONFIRMED executable bounded profile | Nine deterministic tests cover finite consent states, a closed seven-surface dependency declaration, receipt-reference requirements, exact negative codes, stable hashing, and no-network replay. | The schema is `PROPOSED_INACTIVE`, authority is `NONE`, and the profile does not execute cleanup. |
 | `domain-people-dna-land.yml` and `consent-revocation-propagation.yml` | CONFIRMED hosted workflow bindings | Run the repository-owned commands over tracked synthetic inputs; the domain workflow also proves known-invalid overlay rejection. | A green workflow does not prove human review, runtime enforcement, evidence closure, operational revocation, rollback, release, deployment, or publication. |
 
