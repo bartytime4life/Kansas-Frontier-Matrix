@@ -112,6 +112,33 @@ def _load_expected_findings(sidecar: Path) -> tuple[Finding, ...]:
     return tuple(findings)
 
 
+def _set_nested(
+    candidate: dict[str, object],
+    path: tuple[str | int, ...],
+    value: object,
+) -> None:
+    current: object = candidate
+    for segment in path[:-1]:
+        if isinstance(segment, int):
+            if not isinstance(current, list):
+                raise AssertionError(f"expected list before index {segment}: {path}")
+            current = current[segment]
+        else:
+            if not isinstance(current, dict):
+                raise AssertionError(f"expected object before key {segment}: {path}")
+            current = current[segment]
+
+    final = path[-1]
+    if isinstance(final, int):
+        if not isinstance(current, list):
+            raise AssertionError(f"expected list before index {final}: {path}")
+        current[final] = value
+    else:
+        if not isinstance(current, dict):
+            raise AssertionError(f"expected object before key {final}: {path}")
+        current[final] = value
+
+
 class ConsentOverlayFixtureTests(unittest.TestCase):
     def setUp(self) -> None:
         denied = RuntimeError(
@@ -232,6 +259,51 @@ class ConsentOverlayFixtureTests(unittest.TestCase):
                     ),
                     [Finding("SUBJECT_POSTURE_INVALID", "$.subject_posture")],
                 )
+
+    def test_enum_fields_reject_non_scalar_values_without_crashing(self) -> None:
+        cases = (
+            (
+                "consent.status",
+                ("consent", "status"),
+                Finding("CONSENT_STATUS_INVALID", "$.consent.status"),
+            ),
+            (
+                "consent.scope[0]",
+                ("consent", "scope", 0),
+                Finding("CONSENT_SCOPE_INVALID", "$.consent.scope"),
+            ),
+            (
+                "events[0].event_type",
+                ("events", 0, "event_type"),
+                Finding("EVENT_TYPE_INVALID", "$.events[0].event_type"),
+            ),
+            (
+                "events[0].place_bucket.precision",
+                ("events", 0, "place_bucket", "precision"),
+                Finding(
+                    "PLACE_PRECISION_INVALID",
+                    "$.events[0].place_bucket.precision",
+                ),
+            ),
+            (
+                "disclosure_level",
+                ("disclosure_level",),
+                Finding("DISCLOSURE_LEVEL_INVALID", "$.disclosure_level"),
+            ),
+        )
+        for field, path, expected in cases:
+            for invalid in (["not-a-scalar"], {"value": "not-a-scalar"}):
+                candidate = _load_json(_valid_fixture())
+                _set_nested(candidate, path, invalid)
+                candidate["spec_hash"] = VALIDATOR.overlay_spec_hash(candidate)
+                with self.subTest(field=field, invalid_type=type(invalid).__name__):
+                    self.assertEqual(
+                        VALIDATOR.validate_candidate(
+                            candidate,
+                            revocation_manifest=self.manifest,
+                        ),
+                        [expected],
+                    )
 
     def test_manifest_hash_and_shape_are_deterministic(self) -> None:
         manifest = _load_json(MANIFEST_PATH)
