@@ -179,6 +179,7 @@ jobs:
               if marker in text:
                   raise SystemExit(f'forbidden stale/conflict marker remains: {marker}')
 
+          text = '\n'.join(line.rstrip() for line in text.splitlines()) + '\n'
           path.write_text(text, encoding='utf-8')
           PY
 
