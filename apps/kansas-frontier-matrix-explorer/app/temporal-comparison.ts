@@ -40,10 +40,15 @@ export const buildTemporalComparison = (
   layers: readonly LayerRecord[],
   timeA: number,
   timeB: number,
+  recordFilter: (layer: LayerRecord, feature: LayerRecord["data"]["features"][number]) => boolean = () => true,
 ): TemporalComparison => {
   const rows = layers.map<TemporalComparisonLayer>((layer) => {
-    const atA = layer.data.features.filter((feature) => isFeatureAvailableAtTime(layer, feature.properties.year, timeA));
-    const atB = layer.data.features.filter((feature) => isFeatureAvailableAtTime(layer, feature.properties.year, timeB));
+    const atA = layer.data.features.filter((feature) => (
+      isFeatureAvailableAtTime(layer, feature.properties.year, timeA) && recordFilter(layer, feature)
+    ));
+    const atB = layer.data.features.filter((feature) => (
+      isFeatureAvailableAtTime(layer, feature.properties.year, timeB) && recordFilter(layer, feature)
+    ));
     const idsA = new Set(atA.map((feature) => feature.properties.fid));
     const idsB = new Set(atB.map((feature) => feature.properties.fid));
 
