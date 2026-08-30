@@ -3,11 +3,11 @@ doc_id: kfm://doc/docs-domains-people-dna-land-readme
 title: People, Genealogy, DNA, and Land Ownership — Domain Landing Doc
 type: standard
 subtype: domain-readme
-version: v1.2.0
+version: v1.2.1
 status: draft; repository-grounded landing boundary; mixed implementation maturity; sensitive-domain holds preserved; non-release; non-publication
 owners: Docs steward; Domain steward (People/DNA/Land); Sensitivity reviewer; Rights-holder representative; Release authority
 created: 2026-05-19
-updated: 2026-08-29
+updated: 2026-08-30
 policy_label: public-doctrine
 contract_version: "3.0.0"
 owning_root: docs/
@@ -29,7 +29,7 @@ notes:
   - CONTRACT_VERSION pinned to 3.0.0 per ai-build-operating-contract.md.
   - Domain landing doc for the most sensitivity-loaded lane in KFM.
   - Current GitHub repository evidence is implementation authority; proposal-era path and maturity statements in retained design sections are lineage when current repository evidence differs.
-  - The current runbook lane contains eight repository-grounded procedures or HOLD boundaries, three explicit scaffolds, and two bounded executable synthetic consent profiles.
+  - The current runbook lane contains eleven repository-grounded procedures, reviews, tabletop guides, or HOLD boundaries, zero explicit scaffolds, and two bounded executable synthetic consent profiles.
   - Default sensitivity posture for living-person, DNA, and private person-parcel joins is deny-by-default (T4).
   - "OPEN CONFLICT (new in v1.1): Atlas Ch. 24.13 crosswalk uses the short segment 'people' for schemas/contracts/policy-sensitivity/policy-consent roots; Directory Rules §6.1/§12 examples use 'people-dna-land' for docs/ and domains/ segments. Tracked as OQ-PDL-SEG-01; see §2.1 and §22."
 [/KFM_META_BLOCK_V2] -->
@@ -46,13 +46,13 @@ notes:
 ![Doctrine: Atlas v1.1 Ch. 16](https://img.shields.io/badge/doctrine-Atlas%20v1.1%20Ch.%2016-purple)
 ![Segment: repository-present](https://img.shields.io/badge/segment-repository--present-informational)
 ![CONTRACT_VERSION: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
-![Last updated: 2026-08-29](https://img.shields.io/badge/last%20updated-2026--08--29-lightgrey)
+![Last updated: 2026-08-30](https://img.shields.io/badge/last%20updated-2026--08--30-lightgrey)
 
 | Field          | Value                                                                                                                       |
 | -------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | **Status**     | `draft` — repository-grounded landing boundary; current implementation maturity is file-specific and operational use remains held |
 | **Owners**     | Docs steward · Domain steward (People/DNA/Land) · Sensitivity reviewer · Rights-holder representative · Release authority   |
-| **Updated**    | 2026-08-29                                                                                                                  |
+| **Updated**    | 2026-08-30                                                                                                                  |
 | **Authority**  | Explanatory domain landing page under `docs/`; subordinate to accepted governance, contracts, schemas, policy, evidence, review, lifecycle, and release authority |
 | **Explains**   | Atlas and blueprint lineage reconciled against current repository paths; implementation, policy runtime, source admission, proof, release, deployment, and publication remain file-specific |
 
@@ -146,7 +146,7 @@ This README **explains**. Current repository paths under `contracts/domains/peop
 | Consent-policy compatibility lane | `policy/consent/people/` | Repository-present README guardrail; placement remains conflicted and production activation is held |
 | Source registry topology | `data/registry/sources/people-dna-land/`, `data/registry/sources/people/`, `data/registry/people-dna-land/`, and `data/registry/people-dna-land/sources/` | Repository-present compatibility topology; relationship remains **NEEDS VERIFICATION** |
 | Synthetic proof | `fixtures/domains/people-dna-land/`, `tests/domains/people-dna-land/`, and `tools/validators/domains/people-dna-land/` | Two bounded consent profiles are executable; broader proof is held |
-| Human procedures | `docs/runbooks/people-dna-land/` | Eight repository-grounded children, three explicit scaffolds |
+| Human procedures | `docs/runbooks/people-dna-land/` | Eleven repository-grounded children, zero explicit scaffolds |
 
 Preserve these implementation and compatibility paths. Keep one authoritative source
 descriptor record and use pointers, redirects, or migration notes for compatibility;
@@ -166,7 +166,7 @@ correction, and rollback; documentation alone cannot make that decision.
 | Accepted placement authority | **CONFIRMED** — ADR-0029 accepts the current Directory Rules bytes |
 | Contracts, schemas, policy, fixtures, tests, and validators | **CONFIRMED repository-present / mixed maturity**; presence is not activation or completeness |
 | Consent-overlay and revocation-propagation profiles | **TWO BOUNDED SYNTHETIC PROFILES EXECUTABLE**; deterministic and no-network |
-| Runbook lane | **Eight repository-grounded children, three explicit scaffolds** |
+| Runbook lane | **Eleven repository-grounded children, zero explicit scaffolds** |
 | Source refresh, promotion, and rollback | **Repository-grounded HOLD boundaries**; no operational execution |
 | Active policy runtime, real consent or revocation, cleanup, proof, release, deployment, and publication | **HOLD / NEEDS VERIFICATION** |
 | Source-family rights, currentness, sovereignty, custody, and accountable ownership | **NEEDS VERIFICATION per source and use** |
