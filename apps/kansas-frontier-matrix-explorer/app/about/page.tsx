@@ -50,7 +50,7 @@ export default function AboutPage() {
         <div className="about-capability-grid">
           <article><h3>Layers + time</h3><p>Control visibility, opacity, order, domain filters, temporal steps, and two basemap treatments while preserving the selected context.</p></article>
           <article><h3>Search + inspect</h3><p>Search layers, feature IDs, evidence states, and places. Limit results to the viewport or visible layers and fit the map to the results.</p></article>
-          <article><h3>Spatial analysis + comparison</h3><p>Lock the renderer-neutral view bounds as a stable report area, compare Time A with Time B across visible records, move through camera history, or compare two layer records without flattening their differences.</p></article>
+          <article><h3>Spatial analysis + comparison</h3><p>Draw or lock renderer-neutral view bounds as a stable report area, compare time and layer records, move through camera history, or inspect a small local KML or GeoJSON file without uploading it.</p></article>
           <article><h3>Workspaces + reports</h3><p>Save a complete analysis setup on this device, restore it later, and produce printable HTML or structured JSON with filters, evidence, attribution, and redactions.</p></article>
         </div>
       </section>
@@ -63,8 +63,8 @@ export default function AboutPage() {
       <section className="about-section">
         <div className="about-section-heading"><span>TRUST BOUNDARY</span><h2>Useful spatial work without turning the renderer into an authority.</h2></div>
         <div className="about-boundary">
-          <article><h3>What the Explorer can do</h3><ul><li>Display site-local demonstration fixtures through the renderer-neutral catalog and evidence surface.</li><li>Filter and summarize visible, selected, or viewport-scoped records.</li><li>Carry citations, attribution, uncertainty, corrections, and limitations into reports.</li><li>Withhold a browser-location-derived camera from shares, receipts, exports, and diagnostics.</li></ul></article>
-          <article><h3>What it does not claim</h3><ul><li>A map pixel, overlap, or proximity is not evidence.</li><li>A generated report cannot release, publish, admit, approve, or authorize data.</li><li>Screen measurements are not survey, cadastral, engineering, legal, or navigational results.</li><li>Protected geometry and unsupported claims are not reconstructed or inferred.</li></ul></article>
+          <article><h3>What the Explorer can do</h3><ul><li>Display site-local demonstration fixtures through the renderer-neutral catalog and evidence surface.</li><li>Filter and summarize visible, selected, or viewport-scoped records.</li><li>Inspect supported local KML or GeoJSON geometry without upload or external fetch.</li><li>Carry citations, attribution, uncertainty, corrections, and limitations into reports.</li><li>Withhold a browser-location-derived camera from shares, receipts, exports, and diagnostics.</li></ul></article>
+          <article><h3>What it does not claim</h3><ul><li>A map pixel, overlap, or proximity is not evidence.</li><li>A generated report or local-file preview cannot release, publish, admit, approve, or authorize data.</li><li>Screen measurements are not survey, cadastral, engineering, legal, or navigational results.</li><li>Protected geometry and unsupported claims are not reconstructed or inferred.</li></ul></article>
         </div>
       </section>
 

@@ -222,6 +222,50 @@ test("converts a reversible screen box into a bounded geographic query envelope"
   ), null);
 });
 
+test("adds a no-upload KML and GeoJSON inspection preview without admission or renderer effects", async () => {
+  const ts = await import("typescript");
+  const importSource = await readFile(new URL("../app/import-preview.ts", import.meta.url), "utf8");
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const mapInterface = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  const javascript = ts.transpileModule(importSource, {
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+    fileName: "import-preview.ts",
+  }).outputText;
+  const imports = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
+  const preview = imports.buildLocalImportPreview({
+    fileName: "test.geojson",
+    fileSizeBytes: 480,
+    inspectedAt: "2026-08-30T18:30:00.000Z",
+    supportedBounds: { west: -104.8, south: 34.8, east: -92, north: 42.2 },
+    text: JSON.stringify({
+      type: "FeatureCollection",
+      attribution: "Synthetic test fixture",
+      features: [{
+        type: "Feature",
+        id: "preview-1",
+        properties: { name: "Preview point", observed_time: "2026-08-30" },
+        geometry: { type: "Point", coordinates: [-98.4, 38.5] },
+      }],
+    }),
+  });
+
+  assert.equal(preview.featureCount, 1);
+  assert.equal(preview.coverage, "WITHIN_KANSAS_CONTEXT");
+  assert.equal(preview.renderAllowed, true);
+  assert.deepEqual(preview.temporalFields, ["observed_time"]);
+  assert.equal(imports.importPreviewAudit(preview).effects, "NO_UPLOAD_NO_SAVE_NO_SOURCE_ADMISSION_NO_REPORT_DATA_NO_PUBLICATION");
+  assert.match(importSource, /KML/);
+  assert.match(importSource, /NetworkLink/);
+  assert.match(page, /LOCAL IMPORT PREVIEW/);
+  assert.match(page, /Temporary Places, KFM-style/);
+  assert.match(page, /accept="\.kml,\.geojson,\.json/);
+  assert.doesNotMatch(page, /updateImportPreviewSource|from "maplibre-gl"|new maplibregl/);
+  assert.match(mapInterface, /External data admission[\s\S]*HOLD/);
+  assert.match(css, /\.import-dropzone/);
+  assert.match(css, /\.import-check-list/);
+});
+
 test("keeps optional guided examples while moving explanatory copy to About", async () => {
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const about = await readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8");
@@ -463,7 +507,7 @@ test("keeps the renderer-neutral Workbench complete, bounded, and fail closed", 
   const viteConfig = await readFile(new URL("../vite.config.ts", import.meta.url), "utf8");
 
   assert.match(source, /id="map-utility-panel"/);
-  for (const view of ["Navigate", "Inspect", "Compare", "Display", "Measure", "Export", "Diagnostics"]) assert.match(source, new RegExp(`${view}`));
+  for (const view of ["Navigate", "Inspect", "Import", "Compare", "Display", "Measure", "Export", "Diagnostics"]) assert.match(source, new RegExp(`${view}`));
   assert.match(source, /kfm-map-context-receipt-v1/);
   assert.match(source, /kfm-map-diagnostics-v1/);
   assert.match(exportCenter, /kfm-public-safe-map-export-v2/);
