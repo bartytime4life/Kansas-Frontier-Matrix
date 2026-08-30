@@ -140,7 +140,7 @@ The Habitat lane admits sources only via a `SourceDescriptor` carrying source ro
 |---|---|---|---|---|
 | **USFWS ECOS / Critical Habitat services** | **regulatory** (designated critical-habitat unit) | rights & current terms NEEDS VERIFICATION; sensitive joins fail closed | source-vintage / cadence specific | PROPOSED |
 | **NLCD land cover** | **observed** (remote-sensed) → may feed **modeled** classification | rights & current terms NEEDS VERIFICATION | source-vintage / cadence specific | PROPOSED |
-| **NWI wetlands** | **candidate** (wetland inventory; source role awaits an admitted descriptor) | rights & current terms NEEDS VERIFICATION | source-vintage / cadence specific | PROPOSED / NEEDS VERIFICATION |
+| **NWI wetlands** | **NEEDS VERIFICATION** — no `source_role` is assigned until an admitted `SourceDescriptor` fixes it | rights & current terms NEEDS VERIFICATION | source-vintage / cadence specific | PROPOSED_INACTIVE / NEEDS VERIFICATION |
 | **GAP / LANDFIRE ecological systems** | **modeled** (classification) | rights & current terms NEEDS VERIFICATION | source-vintage / cadence specific | PROPOSED |
 | **NatureServe & controlled biodiversity** | **aggregate** (summary) / authority context | rights & current terms NEEDS VERIFICATION; **steward-controlled** | source-vintage / cadence specific | PROPOSED |
 | **KDWP state ecological / habitat context** | **regulatory** / **aggregate** as the descriptor sets | rights & current terms NEEDS VERIFICATION | source-vintage / cadence specific | PROPOSED |
@@ -435,7 +435,7 @@ The following items remain **NEEDS VERIFICATION** until resolved against mounted
 
 | Change | Type (per contract §37) | Reason |
 |---|---|---|
-| Removed the unsupported regulatory role from NWI wetlands and retained NWI as a candidate until an admitted `SourceDescriptor` fixes its role. | reconciliation | Current repository evidence contains only inactive `pipeline_specs/habitat/nwi_wetlands.yaml`, no admitted Habitat source descriptor, and the `SOURCE_ADMISSION_UNVERIFIED` hold. Inventory classification is not a regulatory designation. |
+| Removed the unsupported regulatory role from NWI wetlands and left NWI's `source_role` unresolved until an admitted `SourceDescriptor` fixes it. | reconciliation | Current repository evidence contains only inactive `pipeline_specs/habitat/nwi_wetlands.yaml`, no admitted Habitat source descriptor, and the `SOURCE_ADMISSION_UNVERIFIED` hold. Pipeline-candidate maturity does not assign the semantic `candidate` source role, and inventory classification is not a regulatory designation. |
 | Narrowed the lane diagram and Appendix A examples so only USFWS designated critical habitat is presented as the regulatory Habitat example. | reconciliation | Prevents source-role and designation collapse without assigning unverified rights, sensitivity, or publication posture. |
 | Bumped version v1.3 → v1.4; `updated` and `Last reviewed` → 2026-08-30. | housekeeping | MINOR truth-boundary correction; no source admission, lifecycle, policy, release, or publication change. |
 
@@ -537,7 +537,7 @@ KFM treats source role as a first-class identity attribute (Atlas §24.1, CONFIR
 | **modeled** | GAP/LANDFIRE ecological-system classification; suitability raster; corridor least-cost surface | Never serve a modeled suitability surface as a regulatory critical habitat. |
 | **aggregate** | NatureServe summary; county-level habitat totals | Never treat as per-place evidence; carry an aggregation receipt. |
 | **administrative** | PAD-US stewardship boundary | Never collapse with observation or regulation. |
-| **candidate** | Quarantined connector output; inactive NWI wetland inventory source candidate; unmerged habitat-model candidate | May be cited as candidate in WORK / QUARANTINE; no PUBLISHED edge until its source role is admitted and the artifact is promoted. |
+| **candidate** | An admitted source or object whose descriptor explicitly sets `candidate`; unmerged habitat-model candidate | Never infer this role from an inactive pipeline or quarantine location; no PUBLISHED edge until governed promotion. |
 | **synthetic** | Reconstructed scene; AI-drafted habitat summary | Carries a Reality Boundary Note + Representation Receipt; never presented as observed reality. |
 
 The lifecycle and the governed API both fail closed when these roles are conflated. **(CONFIRMED — Atlas §24.1.1–§24.1.2.)**
