@@ -58,6 +58,8 @@ jobs:
         run: |
           set -euo pipefail
 
+          python tools/validators/validate_pipeline_spec_declarations.py
+
           required_paths=(
             "docs/domains/hydrology/README.md"
             "docs/domains/hydrology/BOUNDARY.md"
@@ -173,23 +175,47 @@ jobs:
               if not isinstance(payload, (dict, list)):
                   raise SystemExit(f"Hydrology valid fixture must be a JSON object or array: {path}")
 
-          placeholder_yaml_paths = (
+          placeholder_source_yaml_paths = (
               Path("data/registry/sources/hydrology/usgs_nwis.yaml"),
               Path("data/registry/sources/hydrology/wbd.source.yaml"),
-              Path("pipeline_specs/hydrology/ingest_wbd.yaml"),
-              Path("pipeline_specs/hydrology/wbd_huc12_ingest.yaml"),
           )
-          for path in placeholder_yaml_paths:
+          for path in placeholder_source_yaml_paths:
               text = path.read_text(encoding="utf-8")
               if "status: PROPOSED" not in text or "Placeholder" not in text:
                   raise SystemExit(
-                      f"Hydrology source/spec posture changed at {path}. "
-                      "Replace this readiness hold with accepted descriptor/spec validation."
+                      f"Hydrology source posture changed at {path}. "
+                      "Replace this readiness hold with accepted descriptor validation."
                   )
               declared_path = f"path: {path}"
               quoted_declared_path = f'path: "{path}"'
               if declared_path not in text and quoted_declared_path not in text:
                   raise SystemExit(f"Hydrology placeholder path declaration does not match file location: {path}")
+
+          inactive_pipeline_spec_paths = (
+              Path("pipeline_specs/hydrology/ingest_wbd.yaml"),
+              Path("pipeline_specs/hydrology/wbd_huc12_ingest.yaml"),
+          )
+          for path in inactive_pipeline_spec_paths:
+              text = path.read_text(encoding="utf-8")
+              required_posture = (
+                  "object_type: KfmPipelineSpecDeclaration",
+                  "status: PROPOSED_INACTIVE",
+                  "network_access: DENIED",
+                  "lifecycle_write: DENIED",
+                  "writes_targets: false",
+              )
+              missing = [token for token in required_posture if token not in text]
+              if missing:
+                  raise SystemExit(
+                      f"Hydrology pipeline declaration posture changed at {path}: "
+                      f"missing {missing}."
+                  )
+              declared_path = f"path: {path}"
+              quoted_declared_path = f'path: "{path}"'
+              if declared_path not in text and quoted_declared_path not in text:
+                  raise SystemExit(
+                      f"Hydrology pipeline declaration path does not match file location: {path}"
+                  )
 
           domain_validator_root = Path("tools/validators/domains/hydrology")
           expected_placeholder_validators = {

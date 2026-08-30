@@ -47,6 +47,7 @@
       "trust-spine-fixture-slice",
       "ci-conformance-report",
       "pnpm-dependency-readiness",
+      "pipeline-spec-declarations",
       "workflow-security",
       "repository-topology"
     ]
@@ -515,6 +516,26 @@
         "packages/*/package.json",
         "tests/validators/test_pnpm_audit_readiness.py",
         "tools/validators/dependencies/**"
+      ],
+      "timeout_seconds": 120,
+      "artifact_refs": []
+    },
+    {
+      "id": "pipeline-spec-declarations",
+      "description": "Validate every inactive YAML pipeline declaration, deterministic hash, reference, alias target, and fixture polarity without creating execution authority.",
+      "script": "tools/validators/validate_pipeline_spec_declarations.py",
+      "args": [],
+      "path_globs": [
+        ".github/workflows/domain-hydrology.yml",
+        ".github/workflows/pipeline-spec-declarations.yml",
+        "contracts/pipeline_spec_declaration.md",
+        "data/receipts/generated/genrec-pipeline-spec-declarations-*.json",
+        "fixtures/contracts/v1/pipeline_spec_declaration/**",
+        "pipeline_specs/**/*.yaml",
+        "schemas/contracts/v1/pipeline_spec_declaration.schema.json",
+        "tests/validators/test_validate_pipeline_spec_declarations.py",
+        "tools/validators/validate_pipeline_spec_declarations.py",
+        "tools/validators/validator_registry.json"
       ],
       "timeout_seconds": 120,
       "artifact_refs": []
