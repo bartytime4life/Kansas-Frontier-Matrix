@@ -117,7 +117,7 @@ jobs:
           set -euo pipefail
           sha256sum .github/workflows/stable-diff-review-handoff.yml
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-stable-diff-review-handoff-20260808.json \
+            data/receipts/generated/genrec-stable-diff-review-handoff-20260830.json \
             --repo-root .
       - name: Record trust boundary
         if: always()
