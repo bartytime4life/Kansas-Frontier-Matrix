@@ -12,7 +12,9 @@ This guide is subordinate to accepted ADRs, adopted Directory Rules, the exact-c
 
 Before editing:
 
-1. Resolve the current `main` SHA and record it.
+1. Resolve the pull request's actual target/base ref and SHA and record both. Use
+   `main` only when it is the real target; stacked and maintenance pull requests
+   must compare against their declared base.
 2. Read the target file or implementation at that exact ref.
 3. Search open PRs and recent merges for path or behavior overlap.
 4. Read the accepted ADRs, Directory Rules, adjacent README/runbook guidance, and CODEOWNERS that apply to the target.
@@ -73,7 +75,7 @@ Classify failures before changing the PR:
 | `INTRODUCED` | Comparable base passes and exact PR head fails | Fix before the affected transition |
 | `INHERITED` | Same material failure exists on comparable base and head | Keep visible; do not misattribute to the PR |
 | `RESOLVED` | Base fails and head passes | Record as repair evidence |
-| `BASE_DRIFT / INTEGRATION` | Original branch passed but changed main/merge result now fails | Reconcile against current main |
+| `BASE_DRIFT / INTEGRATION` | The exact head and current base do not reproduce the failure independently, but the updated merge/rebase result fails | Reconcile against the pull request's current target/base ref and SHA, then test the integration result separately |
 | `ENVIRONMENTAL / FLAKY` | Evidence supports runner/service/capacity failure or nondeterminism | Record separately; retry only when useful |
 | `PENDING` | Hosted execution has not settled | Do not claim success or failure yet |
 | `NOT_RUN` | Check was not run | State why |
@@ -121,7 +123,7 @@ Green checks, mergeability, CODEOWNERS, automated review, and generated receipts
 
 Re-run a bounded overlap and drift check immediately before the final remote mutation:
 
-- Has `main` moved?
+- Has the pull request's actual target/base ref moved?
 - Did an overlapping PR merge, close, or change head?
 - Did an accepted ADR, Directory Rule, contract, schema, policy, workflow, or dependency change?
 - Does the PR body still describe the exact head?
@@ -132,7 +134,7 @@ If drift is material, reconcile and revalidate. If drift is path-disjoint and do
 
 ## 9. Fast preflight checklist
 
-- [ ] Current `main` SHA recorded.
+- [ ] Actual target/base ref and SHA recorded.
 - [ ] Open-PR/recent-merge overlap checked.
 - [ ] Target responsibility root and Directory Rules basis verified.
 - [ ] One observable outcome and explicit non-goals defined.

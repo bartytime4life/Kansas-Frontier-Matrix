@@ -108,5 +108,5 @@ still collect them; do not infer that relationship from a workflow name alone.
 - [`tools/ci/README.md`](../../tools/ci/README.md) documents the CI helper lane.
 - [`tools/docs/wiki/README.md`](../../tools/docs/wiki/README.md) documents the
   dry-run-first native-wiki transport boundary.
-- [`docs/runbooks/PR_RELIABILITY_GUIDE.md`](../../docs/runbooks/PR_RELIABILITY_GUIDE.md)
+- [`docs/runbooks/pr-reliability-guide.md`](../../docs/runbooks/pr-reliability-guide.md)
   defines exact-SHA validation and failure-attribution guidance.
