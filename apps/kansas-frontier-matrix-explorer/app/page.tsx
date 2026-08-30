@@ -699,34 +699,32 @@ export default function Home() {
     if (right <= left || bottom <= top) return null;
     return { left, top, width: right - left, height: bottom - top };
   }, [analysisArea, mapViewportBounds]);
-  const reportRecords = useMemo(() => {
-    const includedLayers = new Set(reportLayerIds);
+  const matchesReportRecord = useCallback((layer: LayerRecord, properties: FeatureProperties) => {
+    if (!reportLayerIds.includes(layer.id)) return false;
+    if (reportEvidenceFilter !== "ALL" && properties.evidenceState !== reportEvidenceFilter) return false;
     const query = reportQuery.trim().toLowerCase();
-    const matchesReportFilters = ({ layer, properties }: { layer: LayerRecord; properties: FeatureProperties }) => (
-      (reportEvidenceFilter === "ALL" || properties.evidenceState === reportEvidenceFilter)
-      && (!query || `${properties.title} ${properties.fid} ${properties.summary} ${properties.sourceOrganization} ${properties.sourceRole} ${properties.evidenceState} ${layer.title} ${layer.domain}`.toLowerCase().includes(query))
-    );
+    if (query && !`${properties.title} ${properties.fid} ${properties.summary} ${properties.sourceOrganization} ${properties.sourceRole} ${properties.evidenceState} ${layer.title} ${layer.domain}`.toLowerCase().includes(query)) return false;
     if (reportScope === "SELECTION") {
-      const selectionRecords = selected && includedLayers.has(selected.layerId)
-        ? [{ layer: selected.layer, properties: selected.properties }]
-        : [];
-      return selectionRecords.filter(matchesReportFilters);
+      return Boolean(selected && selected.layerId === layer.id && selected.featureId === properties.fid);
     }
-    return LAYER_REGISTRY
-      .filter((layer) => includedLayers.has(layer.id))
-      .filter((layer) => reportScope !== "VISIBLE_LAYERS" || visibility[layer.id])
-      .flatMap((layer) => layer.data.features
-        .filter((feature) => isFeatureAvailableAtTime(layer, feature.properties.year, year))
-        .filter((feature) => reportScope !== "VIEWPORT" || (
-          feature.properties.focusLng >= mapViewportBounds.west
-          && feature.properties.focusLng <= mapViewportBounds.east
-          && feature.properties.focusLat >= mapViewportBounds.south
-          && feature.properties.focusLat <= mapViewportBounds.north
-        ))
-        .filter((feature) => reportScope !== "ANALYSIS_AREA" || (analysisArea && isFeatureInsideBounds(feature.properties, analysisArea)))
-        .map((feature) => ({ layer, properties: feature.properties })))
-      .filter(matchesReportFilters);
-  }, [analysisArea, mapViewportBounds, reportEvidenceFilter, reportLayerIds, reportQuery, reportScope, selected, visibility, year]);
+    if (reportScope === "VISIBLE_LAYERS" && !visibility[layer.id]) return false;
+    if (reportScope === "VIEWPORT") {
+      return properties.focusLng >= mapViewportBounds.west
+        && properties.focusLng <= mapViewportBounds.east
+        && properties.focusLat >= mapViewportBounds.south
+        && properties.focusLat <= mapViewportBounds.north;
+    }
+    if (reportScope === "ANALYSIS_AREA") {
+      return Boolean(analysisArea && isFeatureInsideBounds(properties, analysisArea));
+    }
+    return true;
+  }, [analysisArea, mapViewportBounds, reportEvidenceFilter, reportLayerIds, reportQuery, reportScope, selected, visibility]);
+  const reportRecords = useMemo(() => LAYER_REGISTRY
+    .filter((layer) => reportLayerIds.includes(layer.id))
+    .flatMap((layer) => layer.data.features
+      .filter((feature) => isFeatureAvailableAtTime(layer, feature.properties.year, year))
+      .filter((feature) => matchesReportRecord(layer, feature.properties))
+      .map((feature) => ({ layer, properties: feature.properties }))), [matchesReportRecord, reportLayerIds, year]);
   const reportEvidenceCounts = useMemo(() => reportRecords.reduce<Record<string, number>>((counts, record) => {
     counts[record.properties.evidenceState] = (counts[record.properties.evidenceState] ?? 0) + 1;
     return counts;
@@ -747,8 +745,9 @@ export default function Home() {
       LAYER_REGISTRY.filter((layer) => reportLayerIds.includes(layer.id)),
       compareTimeA,
       compareTimeB,
+      (layer, feature) => matchesReportRecord(layer, feature.properties),
     ),
-    [compareTimeA, compareTimeB, reportLayerIds],
+    [compareTimeA, compareTimeB, matchesReportRecord, reportLayerIds],
   );
   const reportFindings = useMemo(() => {
     const supported = (reportEvidenceCounts.ANSWER ?? 0) + (reportEvidenceCounts.CORRECTED ?? 0);
@@ -921,8 +920,8 @@ export default function Home() {
     }
     if (mapUtilityView === "compare") {
       params.set("compare", `${compareLeft.id},${compareRight.id}`);
-      params.set("times", `${compareTimeA},${compareTimeB}`);
     }
+    params.set("times", `${compareTimeA},${compareTimeB}`);
     if (selected) {
       params.set("f", selected.featureId);
       params.set("panel", drawerView);

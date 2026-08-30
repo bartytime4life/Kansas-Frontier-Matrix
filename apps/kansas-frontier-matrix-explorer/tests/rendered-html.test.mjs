@@ -60,7 +60,9 @@ test("centers the primary workflow on map-scoped custom reports", async () => {
   assert.match(source, /Data \.json/);
   assert.match(temporalComparison, /kfm-temporal-catalog-comparison-v1/);
   assert.match(source, /Catalog availability comparison/);
-  assert.match(source, /params\.set\("times"/);
+  assert.match(source, /const matchesReportRecord = useCallback/);
+  assert.match(source, /matchesReportRecord\(layer, feature\.properties\)/);
+  assert.match(source, /}\n    params\.set\("times",/);
   assert.match(source, /setReportLayerIds\(activeLayers\.map/);
   assert.match(source, /const \[leftOpen, setLeftOpen\] = useState\(false\)/);
   assert.match(about, /Start with a question, finish with a report/);
@@ -268,6 +270,11 @@ test("builds an explicit Time A and Time B catalog-availability comparison", asy
   assert.equal(comparison.changedLayerCount > 0, true);
   assert.equal(comparison.layers.length, 2);
   assert.match(comparison.limitations.join(" "), /does not detect real-world change/);
+
+  const deniedComparison = temporal.buildTemporalComparison(layers, 1910, 2026, () => false);
+  assert.equal(deniedComparison.timeARecordCount, 0);
+  assert.equal(deniedComparison.timeBRecordCount, 0);
+  assert.equal(deniedComparison.changedLayerCount, 0);
 });
 
 test("uses a site-specific social card and request-host metadata", async () => {
