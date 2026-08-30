@@ -312,10 +312,8 @@ describe("package-owned MapLibreAdapter", () => {
 
   it("fails finitely when an initializing snapshot listener throws", async () => {
     const runtime = createMapLibreAdapter({ containerId: "kfm-map-root" });
-    let throwOnce = true;
-    runtime.subscribeSnapshot((snapshot) => {
-      if (snapshot.state === "INITIALIZING" && throwOnce) {
-        throwOnce = false;
+    const unsubscribe = runtime.subscribeSnapshot((snapshot) => {
+      if (snapshot.state === "INITIALIZING" || snapshot.state === "ERROR") {
         throw new Error("synthetic listener failure");
       }
     });
@@ -329,6 +327,7 @@ describe("package-owned MapLibreAdapter", () => {
       reason: "MAP_RUNTIME_ERROR",
     });
 
+    unsubscribe();
     const retry = runtime.initialize();
     renderer.instances[0].emit("load");
     await expect(retry).resolves.toMatchObject({ state: "READY", reason: null });
