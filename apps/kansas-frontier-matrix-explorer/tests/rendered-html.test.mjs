@@ -52,6 +52,11 @@ test("centers the primary workflow on map-scoped custom reports", async () => {
 
   assert.match(mapInterface, /"report"/);
   assert.match(source, /kfm-custom-map-report-v1/);
+  assert.match(source, /const redactReportCamera = locationCameraRedacted \|\| locationDerivedViewRef\.current/);
+  assert.match(source, /zoom: redactReportCamera \? "WITHHELD_BROWSER_LOCATION" : view\.zoom/);
+  assert.match(source, /viewport: !redactReportCamera && reportScope === "VIEWPORT" \? mapViewportBounds : null/);
+  assert.match(source, /analysisArea: !redactReportCamera && reportScope === "ANALYSIS_AREA" \? analysisArea : null/);
+  assert.match(source, /spatialQuery: !redactReportCamera && reportScope === "ANALYSIS_AREA" && analysisArea/);
   assert.match(source, /Custom report builder/);
   assert.match(source, /Build from the map you are using/);
   assert.match(source, /Map extent/);
