@@ -264,6 +264,7 @@ docs/runbooks/
 |---|---|---|
 | [`AUTOMATION_DRAFT_PR_OPENER.md`](./AUTOMATION_DRAFT_PR_OPENER.md) | Bounded automation procedure | Tracked; exact current workflow behavior must be checked separately |
 | [`FIRST_GOVERNED_PR_RUNBOOK.md`](./FIRST_GOVERNED_PR_RUNBOOK.md) | First governed contribution path | Tracked long-form guidance; no merge authority |
+| [`pr-reliability-guide.md`](./pr-reliability-guide.md) | Pull-request preparation and failure-attribution preflight | Proposed contributor guidance; actual base, exact-head evidence, review, and readiness remain external |
 | [`STABLE_DIFF_REVIEW_HANDOFF.md`](./STABLE_DIFF_REVIEW_HANDOFF.md) | Stable-diff review handoff | Tracked procedure; review state remains external |
 | [`VALIDATOR_ORCHESTRATOR.md`](./VALIDATOR_ORCHESTRATOR.md) | Validator orchestration guidance | Tracked guidance; executable path and exit semantics require current verification |
 | [`automation-draft-pr-opener-validation-checklist.md`](./automation-draft-pr-opener-validation-checklist.md) | Narrow validation checklist | Tracked checklist; not equivalent to end-to-end automation proof |
