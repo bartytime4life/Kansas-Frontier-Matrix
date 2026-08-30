@@ -532,7 +532,7 @@
     {
       "path": ".github/workflows/connector-gate.yml",
       "base_sha256": "sha256:24fd039e9b4fa400cf271e0b603e0a3751c197fa16582745ce3e3468fa6506fb",
-      "current_sha256": "sha256:0505bf3be36e62123ad0d14b4dc60f5718b269195e3121b1464f0faf71e9ea0b",
+      "current_sha256": "sha256:0505bf3b09e23fa2292981c6991184c479eaa1be87f2615dd3258b44f65119bd",
       "profiles": [
         "connectors-core",
         "project-test"
@@ -2281,7 +2281,7 @@
     {
       "path": ".github/workflows/promotion-verification-execution.yml",
       "base_sha256": "sha256:4f5ef4439b9bb2ff6c4218f84cf8d8828ea3f27ed18750bf901995e94e52222b",
-      "current_sha256": "sha256:af39f8bc08ae800e020a7ca5b92ff2324757941082056b484401ff05ba7b0fab",
+      "current_sha256": "sha256:af39f8bc6c9aca18264eb4b7dd690680d93733bbea062db4d2263d30bfd7d0bd",
       "profiles": [
         "project-test"
       ],
@@ -2588,7 +2588,7 @@
     {
       "path": ".github/workflows/rollback-drill.yml",
       "base_sha256": "sha256:b8895e25ab4e2d3cd3eab55fbb22f01a7bf87d1de3fa5e469cd0d60372b720d4",
-      "current_sha256": "sha256:a1f86b03963f7c7edda59a7a950a750de6d6561ad19605905fb9d7e1078b4b55",
+      "current_sha256": "sha256:a1f86b033aba4872173d780efa6e663057bf5e191df245908fcae3e14177f790",
       "profiles": [
         "project-test"
       ],
@@ -2653,7 +2653,7 @@
     {
       "path": ".github/workflows/schema-validation.yml",
       "base_sha256": "sha256:6badd3af48a9c6c1a995bfa44abc227a1524e1bc4720fb272ca4ae961afae86c",
-      "current_sha256": "sha256:5c342d2ed1029851314c511621903cb4710b8952fdc0f9b9182168517243b0ae",
+      "current_sha256": "sha256:5c342d2e3ea5fce91a4fc4f703ffc27794d48d0eb7d3357dcb32abe28ed22c38",
       "profiles": [
         "project-test"
       ],
