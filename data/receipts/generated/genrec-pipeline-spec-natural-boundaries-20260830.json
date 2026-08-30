@@ -1,0 +1,155 @@
+{
+  "artifact_hashes": {
+    "pipeline_specs/agriculture/README.md": "sha256:f723d31290e9d260d4ca26f50be42909819cdfe8d1eaaa6551eba2ec9ec39844",
+    "pipeline_specs/atmosphere/README.md": "sha256:e337df330eb2a04dff087b6d42a08d3990a08facac1be41fcb92e96532e7b6a2",
+    "pipeline_specs/fauna/README.md": "sha256:6905d70764cf16c4943a7a260b4f027e4e599d37878940f546cdfe4fa1dd6e5b",
+    "pipeline_specs/fauna/watchers/README.md": "sha256:5b1473756755e688aba23ed77a02d927172193d726f0cd9229a2da2ea5aba895",
+    "pipeline_specs/flora/README.md": "sha256:aa116a22f40db3cbc449eed4bc9d8fd49e3acf2b34adcf68da43c15561a50075",
+    "pipeline_specs/flora/watchers/README.md": "sha256:e4fcce1051cfc7540be2ca2553f3df9b0b6328b340024b0a794aeb2260fb847b",
+    "pipeline_specs/geology/README.md": "sha256:84d40681b4279a29a298b36cda71ddbc6ae1ba3992240e452811e54d12968f3f",
+    "pipeline_specs/habitat/README.md": "sha256:684a4a577c26ce90d0d0a978bfcb6c24eb258fc1b1287f211508a467bdc51a41",
+    "pipeline_specs/habitat/ecoregions/README.md": "sha256:2f8698149e35d87c5f49d5783b511a83e2e365b4765a1b19d4fa766e987cd6a2",
+    "pipeline_specs/habitat/land_cover/README.md": "sha256:44c928affb5bd542211deefe335e89c9ca07f620acbeb3b91f6c257154cd86d4",
+    "pipeline_specs/hazards/README.md": "sha256:9f3dbf691703b8dbd8a82a14352dfbd2254606ef99088e42f80326d2da525738",
+    "pipeline_specs/hydrology/README.md": "sha256:14295054fd02f1c7045f9c97879338f890df48a1a1d67b02229650293f16729c",
+    "pipeline_specs/soil/README.md": "sha256:61dd4d4b4d6ce7788e59a494d2a18beb46d2d238757e208e3a9d1a80ff722b70"
+  },
+  "artifact_paths": [
+    "pipeline_specs/agriculture/README.md",
+    "pipeline_specs/atmosphere/README.md",
+    "pipeline_specs/fauna/README.md",
+    "pipeline_specs/fauna/watchers/README.md",
+    "pipeline_specs/flora/README.md",
+    "pipeline_specs/flora/watchers/README.md",
+    "pipeline_specs/geology/README.md",
+    "pipeline_specs/habitat/README.md",
+    "pipeline_specs/habitat/ecoregions/README.md",
+    "pipeline_specs/habitat/land_cover/README.md",
+    "pipeline_specs/hazards/README.md",
+    "pipeline_specs/hydrology/README.md",
+    "pipeline_specs/soil/README.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "id": "ADR-0029",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/doctrine/directory-rules.md",
+      "id": "Directory-Rules-v2",
+      "validated": true
+    },
+    {
+      "evidence_ref": "https://drive.google.com/file/d/11cSH2BZJO2fofzQv-4zBYNTLCVwjGNCO/view",
+      "id": "Drive-Pipeline-Manual-v0.3",
+      "validated": true
+    },
+    {
+      "evidence_ref": "notion:3c9a9202-1bf6-8195-b8b1-f3a8d694b447",
+      "id": "Notion-KFM-Repository-Workbench",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-30T18:15:52Z",
+  "emitter": "openai-codex",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf"
+    ],
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@fc39181a6727c67bcf66bc75d6f25316ce445dd5",
+      "https://drive.google.com/file/d/11cSH2BZJO2fofzQv-4zBYNTLCVwjGNCO/view",
+      "notion:3c9a9202-1bf6-8195-b8b1-f3a8d694b447",
+      "notion:3c5a9202-1bf6-811b-a9c2-d923215f11b7"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "Codex",
+    "provider": "OpenAI",
+    "version": "GPT-5"
+  },
+  "notes": "Binds compact environmental and natural-resource boundary contracts.",
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google Drive",
+      "Notion",
+      "local validators"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:3caff5355b08468f66b319af9c29bdb904b11083a1140937f564dc3f96cffa1b",
+  "receipt_id": "kfm:genrec:pipeline-specs:03401620ad566ef736b745d8",
+  "truth_labels": {
+    "pipeline_specs/agriculture/README.md": "PROPOSED",
+    "pipeline_specs/atmosphere/README.md": "PROPOSED",
+    "pipeline_specs/fauna/README.md": "PROPOSED",
+    "pipeline_specs/fauna/watchers/README.md": "PROPOSED",
+    "pipeline_specs/flora/README.md": "PROPOSED",
+    "pipeline_specs/flora/watchers/README.md": "PROPOSED",
+    "pipeline_specs/geology/README.md": "PROPOSED",
+    "pipeline_specs/habitat/README.md": "PROPOSED",
+    "pipeline_specs/habitat/ecoregions/README.md": "PROPOSED",
+    "pipeline_specs/habitat/land_cover/README.md": "PROPOSED",
+    "pipeline_specs/hazards/README.md": "PROPOSED",
+    "pipeline_specs/hydrology/README.md": "PROPOSED",
+    "pipeline_specs/soil/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "DECLARATION_VALIDATOR",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "FIXTURE_POLARITY",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "FOCUSED_TESTS",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "DOCUMENT_METADATA",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "MARKDOWN_LOCAL_LINKS",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "GIT_DIFF_CHECK",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "REPOSITORY_TOPOLOGY_LOCAL",
+      "outcome": "SKIPPED",
+      "reason": "Blobless sparse checkout cannot inspect every indexed blob without an on-demand fetch; dedicated CI uses a full checkout."
+    },
+    {
+      "gate": "HUMAN_REVIEW",
+      "outcome": "SKIPPED",
+      "reason": "Draft PR; review is pending."
+    }
+  ]
+}
