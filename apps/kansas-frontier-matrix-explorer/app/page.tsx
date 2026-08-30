@@ -722,9 +722,10 @@ export default function Home() {
   const reportRecords = useMemo(() => LAYER_REGISTRY
     .filter((layer) => reportLayerIds.includes(layer.id))
     .flatMap((layer) => layer.data.features
-      .filter((feature) => isFeatureAvailableAtTime(layer, feature.properties.year, year))
+      .filter((feature) => reportScope === "SELECTION"
+        || isFeatureAvailableAtTime(layer, feature.properties.year, year))
       .filter((feature) => matchesReportRecord(layer, feature.properties))
-      .map((feature) => ({ layer, properties: feature.properties }))), [matchesReportRecord, reportLayerIds, year]);
+      .map((feature) => ({ layer, properties: feature.properties }))), [matchesReportRecord, reportLayerIds, reportScope, year]);
   const reportEvidenceCounts = useMemo(() => reportRecords.reduce<Record<string, number>>((counts, record) => {
     counts[record.properties.evidenceState] = (counts[record.properties.evidenceState] ?? 0) + 1;
     return counts;
