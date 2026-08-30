@@ -109,7 +109,12 @@ export class MapLibreAdapter implements MapRuntimePort {
     this.camera = freezeMapRuntimeCamera(initialCamera);
     this.state = "INITIALIZING";
     this.reason = null;
-    this.notifySnapshot();
+    try {
+      this.notifySnapshot();
+    } catch {
+      if (this.state !== "DISPOSED") this.failInitialization();
+      return initialization;
+    }
     if (this.state === "DISPOSED") return initialization;
 
     if (!supportsWebGL2()) {
@@ -262,13 +267,17 @@ export class MapLibreAdapter implements MapRuntimePort {
     this.clearRenderer();
     this.state = "ERROR";
     this.reason = MAP_RUNTIME_TRUST_STATE_REASONS.ERROR;
-    this.notifySnapshot();
     rejection?.(
       new MapRuntimePortError(
         "MAP_RUNTIME_INITIALIZATION_FAILED",
         "Map runtime initialization failed.",
       ),
     );
+    try {
+      this.notifySnapshot();
+    } catch {
+      // Snapshot listeners cannot prevent terminal initialization settlement.
+    }
   }
 
   private failRuntime(): void {
