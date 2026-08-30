@@ -88,6 +88,11 @@ test("adds reusable analysis recipes, device-local workspaces, report filters, a
   assert.match(page, /kfm-map-workspaces-v1/);
   assert.match(page, /saveCurrentWorkspace/);
   assert.match(page, /loadSavedWorkspace/);
+  assert.match(page, /locationCameraRedacted\?: boolean/);
+  assert.match(page, /locationCameraRedacted: locationCameraRedacted \|\| locationDerivedViewRef\.current/);
+  assert.match(page, /snapshot\.locationCameraRedacted !== false/);
+  assert.match(page, /locationDerivedViewRef\.current = restoredLocationCameraRedaction/);
+  assert.match(page, /setLocationCameraRedacted\(restoredLocationCameraRedaction\)/);
   assert.match(page, /reportEvidenceFilter/);
   assert.match(page, /handleWorkspaceShortcut/);
   assert.match(page, /shortcut R/);
@@ -160,9 +165,41 @@ test("adds a renderer-neutral area-of-interest workflow and browser-local camera
   assert.match(page, /travelCameraHistory/);
   assert.match(page, /Previous view/);
   assert.match(page, /compatible_record_count/);
+  assert.match(page, /startAreaDraw/);
+  assert.match(page, /kfm-site-spatial-query-plan-v1/);
+  assert.match(page, /FOCUS_POINT_INSIDE_BOUNDS/);
+  assert.match(page, /rendererHitsAreEvidence: false/);
   assert.match(css, /\.analysis-area-card/);
+  assert.match(css, /\.map-query-surface/);
+  assert.match(css, /\.report-map-query/);
   assert.match(mapInterface, /Terrain \+ hillshade[\s\S]*HOLD/);
   assert.match(mapInterface, /Offline \/ PMTiles[\s\S]*HOLD/);
+});
+
+test("converts a reversible screen box into a bounded geographic query envelope", async () => {
+  const ts = await import("typescript");
+  const source = await readFile(new URL("../app/map-runtime.ts", import.meta.url), "utf8");
+  const javascript = ts.transpileModule(source, {
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+    fileName: "map-runtime.ts",
+  }).outputText;
+  const runtime = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
+
+  assert.deepEqual(runtime.screenRectToBounds(
+    { startX: 80, startY: 90, endX: 20, endY: 10 },
+    { width: 100, height: 100 },
+    { west: -100, south: 30, east: -90, north: 40 },
+  ), { west: -98, south: 31, east: -92, north: 39 });
+  assert.equal(runtime.screenRectToBounds(
+    { startX: 10, startY: 10, endX: 15, endY: 15 },
+    { width: 100, height: 100 },
+    { west: -100, south: 30, east: -90, north: 40 },
+  ), null);
+  assert.equal(runtime.screenRectToBounds(
+    { startX: 10, startY: 10, endX: 80, endY: 80 },
+    { width: 0, height: 100 },
+    { west: -100, south: 30, east: -90, north: 40 },
+  ), null);
 });
 
 test("keeps optional guided examples while moving explanatory copy to About", async () => {

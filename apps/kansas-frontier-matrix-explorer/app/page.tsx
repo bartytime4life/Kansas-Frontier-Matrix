@@ -22,6 +22,7 @@ import {
 import {
   BASEMAPS,
   lngLatToTile,
+  screenRectToBounds,
   type AtmospherePreset,
   type BasemapKey,
 } from "./map-runtime";
@@ -85,6 +86,7 @@ import { ANALYSIS_RECIPES, type AnalysisRecipe } from "./analysis-recipes";
 
 type ViewState = { center: [number, number]; zoom: number; bearing: number; pitch: number };
 type MapBoundsState = { west: number; south: number; east: number; north: number };
+type MapAreaDrawBox = { left: number; top: number; width: number; height: number };
 type RuntimeState = { kind: "loading" | "ready" | "degraded" | "error"; message: string };
 type DrawerView = "evidence" | "metadata" | "lineage" | "focus";
 type MeasureMode = "distance" | "area" | null;
@@ -101,6 +103,8 @@ type WorkspaceSnapshot = Readonly<{
   name: string;
   savedAt: string;
   view: ViewState;
+  // Optional for device-local v1 compatibility; missing legacy markers fail closed on restore.
+  locationCameraRedacted?: boolean;
   visibility: Record<string, boolean>;
   opacity: Record<string, number>;
   layerOrder: string[];
@@ -188,19 +192,6 @@ const escapeReportHtml = (value: unknown) => String(value)
   .replaceAll('"', "&quot;")
   .replaceAll("'", "&#039;");
 const governedRoutes = new Set<GovernedRoute>(["/bootstrap", "/layers", "/evidence"]);
-
-const publicWorkspaces: readonly Readonly<{
-  id: PublicWorkspaceId;
-  label: string;
-  shortLabel: string;
-  summary: string;
-  capability: string;
-}>[] = Object.freeze([
-  Object.freeze({ id: "explore", label: "Explore", shortLabel: "Map", summary: "Map, time, layers, selection, and bounded Focus context.", capability: "PUBLIC · ACTIVE" }),
-  Object.freeze({ id: "knowledge", label: "Knowledge", shortLabel: "Layers", summary: "Browse the public-safe Kansas knowledge domains and catalog.", capability: "PUBLIC · ACTIVE" }),
-  Object.freeze({ id: "features", label: "Features", shortLabel: "Inventory", summary: "Inspect repository-grounded feature maturity and lifecycle gates.", capability: "PUBLIC · READ ONLY" }),
-  Object.freeze({ id: "trust", label: "Trust", shortLabel: "Evidence", summary: "Inspect evidence, limitations, denials, corrections, and transitions.", capability: "PUBLIC · READ ONLY" }),
-]);
 
 const GUIDED_EXAMPLES = Object.freeze([
   Object.freeze({
@@ -415,6 +406,7 @@ export default function Home() {
   const measureUnitRef = useRef<MeasureUnit>("imperial");
   const measureCoordinatesRef = useRef<[number, number][]>([]);
   const analysisAreaRef = useRef<MapBoundsState | null>(null);
+  const areaDrawRef = useRef<{ pointerId: number; startX: number; startY: number; width: number; height: number } | null>(null);
   const cameraHistoryRef = useRef<ViewState[]>([KANSAS_VIEW]);
   const cameraHistoryIndexRef = useRef(0);
   const replayingCameraHistoryRef = useRef(false);
@@ -452,6 +444,8 @@ export default function Home() {
   const [pointer, setPointer] = useState<[number, number]>(KANSAS_VIEW.center);
   const [mapViewportBounds, setMapViewportBounds] = useState<MapBoundsState>(SUPPORTED_CONTEXT_BOUNDS);
   const [analysisArea, setAnalysisArea] = useState<MapBoundsState | null>(null);
+  const [areaDrawMode, setAreaDrawMode] = useState(false);
+  const [areaDrawBox, setAreaDrawBox] = useState<MapAreaDrawBox | null>(null);
   const [cameraHistoryIndex, setCameraHistoryIndex] = useState(0);
   const [cameraHistoryLength, setCameraHistoryLength] = useState(1);
   const [runtime, setRuntime] = useState<RuntimeState>({ kind: "loading", message: "Starting the renderer-neutral map boundary…" });
@@ -645,7 +639,7 @@ export default function Home() {
       {
         id: "interaction",
         label: "Renderer interactions",
-        detail: "Renderer-neutral camera history and report-area filtering are available; hit testing, hover, cluster expansion, popups, and screen measurement remain held",
+        detail: "Renderer-neutral camera history, north-up box queries, and report-area filtering are available; hit testing, hover, cluster expansion, popups, and screen measurement remain held",
         state: "HOLD",
       },
       {
@@ -678,6 +672,18 @@ export default function Home() {
       && isFeatureInsideBounds(feature.properties, analysisArea)
     )).length, 0)
     : 0, [analysisArea, year]);
+  const analysisAreaOverlay = useMemo(() => {
+    if (!analysisArea) return null;
+    const longitudeSpan = mapViewportBounds.east - mapViewportBounds.west;
+    const latitudeSpan = mapViewportBounds.north - mapViewportBounds.south;
+    if (longitudeSpan <= 0 || latitudeSpan <= 0) return null;
+    const left = clamp(((analysisArea.west - mapViewportBounds.west) / longitudeSpan) * 100, 0, 100);
+    const right = clamp(((analysisArea.east - mapViewportBounds.west) / longitudeSpan) * 100, 0, 100);
+    const top = clamp(((mapViewportBounds.north - analysisArea.north) / latitudeSpan) * 100, 0, 100);
+    const bottom = clamp(((mapViewportBounds.north - analysisArea.south) / latitudeSpan) * 100, 0, 100);
+    if (right <= left || bottom <= top) return null;
+    return { left, top, width: right - left, height: bottom - top };
+  }, [analysisArea, mapViewportBounds]);
   const reportRecords = useMemo(() => {
     const includedLayers = new Set(reportLayerIds);
     const query = reportQuery.trim().toLowerCase();
@@ -1733,6 +1739,89 @@ export default function Home() {
     announce("Framed the generalized Kansas demonstration extent in renderer-neutral camera state");
   };
 
+  const startAreaDraw = () => {
+    if (locationDerivedViewRef.current || locationCameraRedacted) {
+      announce("Clear the private location camera before drawing a shareable report area");
+      return;
+    }
+    stopSceneOrbit(false);
+    projectionRef.current = "mercator";
+    setProjection("mercator");
+    updateRendererNeutralView({ bearing: 0, pitch: 0 });
+    areaDrawRef.current = null;
+    setAreaDrawBox(null);
+    setAreaDrawMode(true);
+    setToolsExpanded(false);
+    dismissMapUtilityWithoutFocus();
+    window.setTimeout(() => document.querySelector<HTMLElement>(".map-query-surface")?.focus(), 0);
+    announce("Box query ready · drag on the north-up map to define a report area, or press Escape to cancel");
+  };
+
+  const cancelAreaDraw = (notify = true) => {
+    areaDrawRef.current = null;
+    setAreaDrawBox(null);
+    setAreaDrawMode(false);
+    if (notify) announce("Box query cancelled; the previous report area was preserved");
+  };
+
+  const mapPointFromPointer = (event: React.PointerEvent<HTMLDivElement>) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const x = clamp(event.clientX - bounds.left, 0, bounds.width);
+    const y = clamp(event.clientY - bounds.top, 0, bounds.height);
+    const longitude = mapViewportBounds.west + (x / Math.max(bounds.width, 1)) * (mapViewportBounds.east - mapViewportBounds.west);
+    const latitude = mapViewportBounds.north - (y / Math.max(bounds.height, 1)) * (mapViewportBounds.north - mapViewportBounds.south);
+    setPointer([longitude, latitude]);
+    return { x, y, width: bounds.width, height: bounds.height };
+  };
+
+  const handleMapAreaPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    const point = mapPointFromPointer(event);
+    if (!areaDrawMode || event.button !== 0) return;
+    event.preventDefault();
+    event.currentTarget.setPointerCapture(event.pointerId);
+    areaDrawRef.current = { pointerId: event.pointerId, startX: point.x, startY: point.y, width: point.width, height: point.height };
+    setAreaDrawBox({ left: point.x, top: point.y, width: 0, height: 0 });
+  };
+
+  const handleMapAreaPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const point = mapPointFromPointer(event);
+    const drawing = areaDrawRef.current;
+    if (!areaDrawMode || !drawing || drawing.pointerId !== event.pointerId) return;
+    event.preventDefault();
+    setAreaDrawBox({
+      left: Math.min(drawing.startX, point.x),
+      top: Math.min(drawing.startY, point.y),
+      width: Math.abs(point.x - drawing.startX),
+      height: Math.abs(point.y - drawing.startY),
+    });
+  };
+
+  const handleMapAreaPointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+    const point = mapPointFromPointer(event);
+    const drawing = areaDrawRef.current;
+    if (!areaDrawMode || !drawing || drawing.pointerId !== event.pointerId) return;
+    event.preventDefault();
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+    const nextArea = screenRectToBounds(
+      { startX: drawing.startX, startY: drawing.startY, endX: point.x, endY: point.y },
+      { width: drawing.width, height: drawing.height },
+      mapViewportBounds,
+    );
+    areaDrawRef.current = null;
+    setAreaDrawBox(null);
+    if (!nextArea) {
+      announce("Draw a larger report area; the previous area was preserved");
+      return;
+    }
+    analysisAreaRef.current = { ...nextArea };
+    setAnalysisArea({ ...nextArea });
+    setReportScope("ANALYSIS_AREA");
+    setReportGeneratedAt(new Date().toISOString());
+    setAreaDrawMode(false);
+    openMapUtility("report");
+    announce("Box query committed to the custom report; map pixels remain context, not evidence");
+  };
+
   const captureAnalysisArea = () => {
     if (locationDerivedViewRef.current) {
       announce("Clear the private location camera before capturing a shareable analysis area");
@@ -1754,6 +1843,9 @@ export default function Home() {
   const clearAnalysisArea = () => {
     analysisAreaRef.current = null;
     setAnalysisArea(null);
+    areaDrawRef.current = null;
+    setAreaDrawBox(null);
+    setAreaDrawMode(false);
     if (reportScope === "ANALYSIS_AREA") setReportScope("VIEWPORT");
     announce("Cleared the locked analysis area");
   };
@@ -2111,6 +2203,7 @@ export default function Home() {
       name: workspaceName.trim() || `Kansas workspace ${savedWorkspaces.length + 1}`,
       savedAt,
       view: { center: [...view.center] as [number, number], zoom: view.zoom, bearing: view.bearing, pitch: view.pitch },
+      locationCameraRedacted: locationCameraRedacted || locationDerivedViewRef.current,
       visibility: { ...visibility },
       opacity: { ...opacity },
       layerOrder: [...layerOrder],
@@ -2151,6 +2244,8 @@ export default function Home() {
     const nextYear = TIME_STEPS.includes(snapshot.year as (typeof TIME_STEPS)[number]) ? snapshot.year : 2026;
     const nextBasemap: BasemapKey = snapshot.basemap === "prairie" ? "prairie" : "midnight";
     const nextProjection = snapshot.projection === "globe" ? "globe" : "mercator";
+    // Legacy snapshots predate the marker, so fail closed instead of exposing a possibly location-derived camera.
+    const restoredLocationCameraRedaction = snapshot.locationCameraRedacted !== false;
     const savedScene = snapshot.scene;
     const nextScenePreset: ScenePresetId = savedScene?.preset === "globe-overview" || savedScene?.preset === "water-systems" || savedScene?.preset === "smoke-context" || savedScene?.preset === "elevation-3d" || savedScene?.preset === "tile-grid" ? savedScene.preset : "overview-2d";
     const nextVerticalExaggeration = clamp(Number(savedScene?.verticalExaggeration ?? 1), 0, 2);
@@ -2203,8 +2298,8 @@ export default function Home() {
     setReportGeneratedAt(new Date().toISOString());
     const savedView = snapshot.view;
     if (savedView && Array.isArray(savedView.center) && savedView.center.length === 2) {
-      locationDerivedViewRef.current = false;
-      setLocationCameraRedacted(false);
+      locationDerivedViewRef.current = restoredLocationCameraRedaction;
+      setLocationCameraRedacted(restoredLocationCameraRedaction);
       updateRendererNeutralView({ center: [...savedView.center] as [number, number], zoom: savedView.zoom, bearing: savedView.bearing, pitch: savedView.pitch });
     }
     const restoredSelection = snapshot.selection ? copyFeature(LAYER_REGISTRY.find((layer) => layer.id === snapshot.selection?.layerId) ?? LAYER_REGISTRY[0], snapshot.selection.featureId) : null;
@@ -2288,6 +2383,9 @@ export default function Home() {
     setCameraHistoryLength(1);
     analysisAreaRef.current = null;
     setAnalysisArea(null);
+    areaDrawRef.current = null;
+    setAreaDrawBox(null);
+    setAreaDrawMode(false);
     applyRendererNeutralView(KANSAS_VIEW);
     clearSelection();
     setMapQueryCandidates([]);
@@ -2577,6 +2675,14 @@ export default function Home() {
         viewport: reportScope === "VIEWPORT" ? mapViewportBounds : null,
         analysisArea: reportScope === "ANALYSIS_AREA" ? analysisArea : null,
       },
+      spatialQuery: reportScope === "ANALYSIS_AREA" && analysisArea ? {
+        profile: "kfm-site-spatial-query-plan-v1",
+        relation: "FOCUS_POINT_INSIDE_BOUNDS",
+        bounds: analysisArea,
+        candidateCount: reportRecords.length,
+        authority: "CONTEXT_ONLY",
+        rendererHitsAreEvidence: false,
+      } : null,
       selection: selected ? { id: selected.featureId, title: selected.properties.title, layer: selected.layer.title, evidenceState: selected.properties.evidenceState } : null,
       summary: reportSections.summary ? {
         matchedRecords: reportRecords.length,
@@ -3063,7 +3169,22 @@ export default function Home() {
             <p>Synthetic and generalized catalog data only · <b>{visibleCount}</b> layers · <b>{formatTimelineStep(year)}</b> · <b>{selected ? selected.properties.title : "No selection"}</b></p>
             <div><button type="button" onClick={saveCurrentWorkspace}>Save view</button><button type="button" onClick={(event) => openMapUtility("report", event.currentTarget)}>Build report</button></div>
           </div>
-          <div id="map-canvas" ref={mapContainerRef} className="map-canvas" tabIndex={0} role="application" aria-label="Renderer-neutral Kansas Explorer shell. Use Map Workbench Inspect or the Layer Catalog to inspect catalog and evidence metadata; renderer interactions remain held." />
+          <div id="map-canvas" ref={mapContainerRef} className="map-canvas" tabIndex={areaDrawMode ? -1 : 0} role="application" aria-label="Renderer-neutral Kansas Explorer shell. Use Map Workbench Inspect or the Layer Catalog to inspect catalog and evidence metadata; renderer interactions remain held." />
+          {analysisAreaOverlay && !areaDrawMode && <div className="map-analysis-overlay" style={{ left: `${analysisAreaOverlay.left}%`, top: `${analysisAreaOverlay.top}%`, width: `${analysisAreaOverlay.width}%`, height: `${analysisAreaOverlay.height}%` }} aria-hidden="true"><span>REPORT AREA · {analysisAreaRecordCount}</span></div>}
+          {areaDrawMode && <div
+            className="map-query-surface"
+            tabIndex={0}
+            role="application"
+            aria-label="Draw a rectangular report area. Drag across the map, or press Escape to cancel."
+            onPointerDown={handleMapAreaPointerDown}
+            onPointerMove={handleMapAreaPointerMove}
+            onPointerUp={handleMapAreaPointerUp}
+            onPointerCancel={() => cancelAreaDraw(false)}
+            onKeyDown={(event) => { if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); cancelAreaDraw(); } }}
+          >
+            {areaDrawBox && <div className="map-area-draw-box" style={{ left: areaDrawBox.left, top: areaDrawBox.top, width: areaDrawBox.width, height: areaDrawBox.height }} aria-hidden="true" />}
+          </div>}
+          {areaDrawMode && <aside className="map-area-draw-hint" role="status"><div><span>SPATIAL QUERY</span><strong>Drag a report area</strong><small>North-up Mercator context · pixels are candidate scope, not evidence</small></div><button type="button" onClick={() => cancelAreaDraw()}>Cancel</button></aside>}
 
           {(runtime.kind === "loading" || runtime.kind === "error") && <div className={`runtime-overlay ${runtime.kind}`} role="status" aria-live="assertive"><span className="runtime-spinner" aria-hidden="true" /><strong>{runtime.kind === "loading" ? "Preparing spatial explorer" : "Map runtime unavailable"}</strong><p>{runtime.message}</p>{runtime.kind === "error" && <button type="button" onClick={() => window.location.reload()}>Reload map</button>}</div>}
           {runtime.kind === "degraded" && <div className="runtime-degraded-banner" role="status" aria-live="polite"><strong>Partial map degradation</strong><span>{runtime.message}</span></div>}
@@ -3117,7 +3238,7 @@ export default function Home() {
             {toolsExpanded && <div className="secondary-tools" id="more-map-tools">
               <button type="button" onClick={(event) => openMapUtility("navigate", event.currentTarget)}><span>⌖</span>Map controls</button>
               <button type="button" onClick={(event) => openMapUtility("connections", event.currentTarget)}><span>⛓</span>Source connections</button>
-              <button type="button" onClick={captureAnalysisArea} disabled={locationCameraRedacted}><span>▣</span>{analysisArea ? "Update report area" : "Lock report area"}</button>
+              <button type="button" onClick={startAreaDraw} disabled={locationCameraRedacted}><span>▣</span>{analysisArea ? "Redraw report area" : "Draw report area"}</button>
               <button type="button" onClick={locateUser}><span>⌾</span>My location</button>
               <button type="button" onClick={toggleFullscreen} aria-label="Toggle fullscreen"><span>⛶</span>Fullscreen</button>
               <button type="button" aria-pressed={projection === "globe"} onClick={() => setProjection((current) => current === "globe" ? "mercator" : "globe")}><span>◎</span>{projection === "globe" ? "2D view" : "Globe"}</button>
@@ -3183,6 +3304,14 @@ export default function Home() {
                       <button type="button" aria-pressed={reportScope === "VISIBLE_LAYERS"} onClick={() => setReportScope("VISIBLE_LAYERS")}><strong>Visible layers</strong><small>Statewide records in active layers</small></button>
                       <button type="button" aria-pressed={reportScope === "SELECTION"} disabled={!selected} onClick={() => setReportScope("SELECTION")}><strong>Selection</strong><small>{selected?.properties.title ?? "Select a map feature first"}</small></button>
                     </div></fieldset>
+
+                    <section className="report-map-query" data-active={Boolean(analysisArea)} aria-labelledby="report-map-query-title">
+                      <header><div><span>QUERY FROM MAP</span><strong id="report-map-query-title">Spatial report area</strong></div><b>{analysisArea ? "READY" : "NOT SET"}</b></header>
+                      <p>Draw a rectangle on the map to turn a visual extent into a bounded catalog query. Candidate records still pass time, layer, evidence-state, and text filters before entering the report.</p>
+                      {analysisArea && <dl><div><dt>West / east</dt><dd>{analysisArea.west.toFixed(4)}° / {analysisArea.east.toFixed(4)}°</dd></div><div><dt>South / north</dt><dd>{analysisArea.south.toFixed(4)}° / {analysisArea.north.toFixed(4)}°</dd></div><div><dt>Catalog candidates</dt><dd>{analysisAreaRecordCount}</dd></div><div><dt>Filtered report</dt><dd>{reportScope === "ANALYSIS_AREA" ? `${reportRecords.length} records` : "Scope available"}</dd></div></dl>}
+                      <div><button type="button" onClick={startAreaDraw} disabled={locationCameraRedacted}>{analysisArea ? "Redraw on map" : "Draw on map"}</button><button type="button" onClick={captureAnalysisArea} disabled={locationCameraRedacted}>Use viewport</button><button type="button" onClick={fitAnalysisArea} disabled={!analysisArea}>Fit area</button>{analysisArea && <button type="button" onClick={clearAnalysisArea}>Clear</button>}</div>
+                      <footer><span>FOCUS_POINT_INSIDE_BOUNDS</span><small>Context only · renderer hits are not evidence</small></footer>
+                    </section>
 
                     <fieldset className="report-control-group"><legend>Detail level</legend><div className="report-detail-grid">
                       {(["EXECUTIVE", "STANDARD", "TECHNICAL"] as ReportDetail[]).map((detail) => <button key={detail} type="button" aria-pressed={reportDetail === detail} onClick={() => setReportDetail(detail)}>{detail === "EXECUTIVE" ? "Brief" : detail === "STANDARD" ? "Standard" : "Full detail"}</button>)}
@@ -3353,7 +3482,7 @@ export default function Home() {
                 </section>
 
                 <section className="scene-tile-ledger" aria-labelledby="tile-ledger-title">
-                  <header><div><span>VIEWPORT DIAGNOSTICS</span><h4 id="tile-ledger-title">Tile matrix reader</h4></div><strong>{maplibreProbe.tilesLoaded ? "SETTLED" : "WORKING"}</strong></header>
+                  <header><div><span>VIEWPORT DIAGNOSTICS</span><h4 id="tile-ledger-title">Tile matrix reader</h4></div><strong>HELD</strong></header>
                   <div className="scene-metrics">
                     <article><span>CENTER XYZ</span><strong>{centerTile.label}</strong><small>Web Mercator address at floor zoom</small></article>
                     <article><span>SOURCES</span><strong>{sourceStateCounts.held} HELD</strong><small>Catalog metadata readable</small></article>

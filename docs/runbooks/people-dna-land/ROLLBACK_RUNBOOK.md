@@ -2,15 +2,15 @@
 doc_id: kfm://doc/runbook-people-dna-land-rollback
 title: People · DNA · Land — Rollback Runbook
 type: standard
-version: v1.1.5
-prior_version: v1.1.4
-prior_state: repository-grounded rollback HOLD boundary whose next-review inventory still described source refresh as proposal-era and counted five scaffolds
+version: v1.1.6
+prior_version: v1.1.5
+prior_state: repository-grounded rollback HOLD boundary whose notes and next-review inventory lagged the merged rollback-drill and validation procedures and still counted vendor watch as a scaffold
 status: draft; repository-grounded hold boundary; proposal lineage retained in Git history; operational rollback unavailable; non-release; non-publication
 owners:
   - "@bartytime4life — verified GitHub review route"
   - "NEEDS VERIFICATION — accountable People/DNA/Land, privacy, consent, Indigenous/Tribal, legal, policy, evidence, release, operations, security, and independent-review assignments"
 created: 2026-05-12
-updated: 2026-08-28
+updated: 2026-08-29
 policy_label: repository-facing; sensitive-domain; fail-closed; rollback-held; non-release; non-publication
 current_path: docs/runbooks/people-dna-land/ROLLBACK_RUNBOOK.md
 owning_root: docs/
@@ -23,9 +23,13 @@ evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
   base_commit: cf3c5b76dafa74dee79e5249849e4174c2107638
+  current_reconciliation_commit: 4e714b639861e340b0c35a5360f9ffaecdf1f53c
   prior_blob: c370837c701f1e2a92e660e8223702ccee462b94
-  lane_readme_blob: 2418f3c5643bf8d119e3e97b38293f29721e7f92
+  lane_readme_prior_blob: 1ba3f28deaaea1fc9811ee1eb58e59558c2ecd84
   promotion_runbook_blob: 6df0ed9fa7bd3800276f72889eeefe07c7706934
+  rollback_drill_blob: 9088cbff694297613882bfae86b259f93023ff03
+  validation_runbook_blob: c1987d5f3b4a0419fa9aa970a71d7cef9d1c341e
+  vendor_watch_prior_blob: 84d77e7e9a9d4afb2ee367ff11841a837bdf1a8c
   domain_workflow_blob: bcf64c3e3b6653b9543489fc5a6031805ae3ef48
   tests_readme_blob: 5f1672f24a2992d83829d280cfd2f05b9b6848f6
   policy_readme_blob: 7260394c77d79629895da16d8d680e8d80c56b32
@@ -38,6 +42,9 @@ related:
   - docs/runbooks/people-dna-land/README.md
   - docs/runbooks/people-dna-land/PROMOTION_RUNBOOK.md
   - docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md
+  - docs/runbooks/people-dna-land/ROLLBACK_DRILL.md
+  - docs/runbooks/people-dna-land/VALIDATION_RUNBOOK.md
+  - docs/runbooks/people-dna-land/VENDOR_WATCH_SOP.md
   - docs/doctrine/directory-rules.md
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - tests/domains/people-dna-land/README.md
@@ -52,7 +59,7 @@ notes:
   - "The prior 2026-05-12 body is retired from operational use because current repository evidence does not establish its kill switch, release target, derivative invalidator, signer route, timing targets, or end-to-end rollback runtime."
   - "This file does not execute rollback, revoke consent, delete data, invalidate derivatives or caches, restore a release, or authorize any public-path change."
   - "The lane remains held for operational rollback maturity; this repository-grounded hold boundary narrows unsafe claims without upgrading operational status."
-  - "Promotion and source refresh are separate repository-grounded HOLD boundaries; three other children remain explicit scaffolds."
+  - "Promotion and source refresh are separate repository-grounded HOLD boundaries; the rollback drill and validation runbook are repository-grounded documentation; vendor watch is manual repository-visible review; no direct child remains an explicit scaffold."
 [/KFM_META_BLOCK_V2] -->
 
 # People · DNA · Land — Rollback Runbook
@@ -152,6 +159,6 @@ Before merge, close the draft and delete only its task branch. After a separatel
 ## Next dependency-aware review points
 
 1. Preserve promotion and source refresh as separate repository-grounded `HOLD` boundaries; establish any future operational implementation only in its owning authority surfaces.
-2. Inventory the three remaining explicit lane scaffolds file by file before filling, superseding, retaining, or retiring them.
+2. Preserve the rollback drill and validation runbook as repository-grounded documentation and vendor-signal review as a manual repository-visible procedure; no direct child remains a scaffold, but none of these documents creates rollback, monitoring, or response authority.
 3. Review any future generic release or rollback work for a real People/DNA/Land consumer before claiming domain readiness.
 4. Preserve the current sensitive-domain holds until accountable privacy, consent, Indigenous/Tribal, legal, policy, evidence, release, operations, security, and independent review exist.

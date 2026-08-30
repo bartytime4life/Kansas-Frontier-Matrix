@@ -48,6 +48,9 @@ export const SCENE_ENVIRONMENTS = Object.freeze({
 }) satisfies Readonly<Record<AtmospherePreset, Readonly<Record<string, string | number>>>>;
 
 export type TileCoordinate = Readonly<{ z: number; x: number; y: number; label: string }>;
+export type GeographicBounds = Readonly<{ west: number; south: number; east: number; north: number }>;
+export type ScreenRect = Readonly<{ startX: number; startY: number; endX: number; endY: number }>;
+export type ScreenViewport = Readonly<{ width: number; height: number }>;
 
 const radians = (degrees: number) => degrees * (Math.PI / 180);
 
@@ -62,4 +65,39 @@ export const lngLatToTile = (longitude: number, latitude: number, zoom: number):
     ((1 - Math.log(Math.tan(latitudeRadians) + (1 / Math.cos(latitudeRadians))) / Math.PI) / 2) * tileCount,
   )));
   return Object.freeze({ z, x, y, label: `${z}/${x}/${y}` });
+};
+
+/**
+ * Convert a north-up, unpitched screen rectangle into a renderer-neutral
+ * geographic query envelope. The result is context for a governed catalog
+ * query; it is not geometry evidence and does not expose a MapLibre object.
+ */
+export const screenRectToBounds = (
+  rect: ScreenRect,
+  viewport: ScreenViewport,
+  visibleBounds: GeographicBounds,
+  minimumPixels = 12,
+): GeographicBounds | null => {
+  if (![rect.startX, rect.startY, rect.endX, rect.endY, viewport.width, viewport.height, visibleBounds.west, visibleBounds.south, visibleBounds.east, visibleBounds.north, minimumPixels].every(Number.isFinite)) return null;
+  if (viewport.width <= 0 || viewport.height <= 0 || visibleBounds.west >= visibleBounds.east || visibleBounds.south >= visibleBounds.north || minimumPixels < 0) return null;
+
+  const clampPixel = (value: number, maximum: number) => Math.max(0, Math.min(maximum, value));
+  const startX = clampPixel(rect.startX, viewport.width);
+  const endX = clampPixel(rect.endX, viewport.width);
+  const startY = clampPixel(rect.startY, viewport.height);
+  const endY = clampPixel(rect.endY, viewport.height);
+  const left = Math.min(startX, endX);
+  const right = Math.max(startX, endX);
+  const top = Math.min(startY, endY);
+  const bottom = Math.max(startY, endY);
+  if (right - left < minimumPixels || bottom - top < minimumPixels) return null;
+
+  const longitudeSpan = visibleBounds.east - visibleBounds.west;
+  const latitudeSpan = visibleBounds.north - visibleBounds.south;
+  return Object.freeze({
+    west: visibleBounds.west + (left / viewport.width) * longitudeSpan,
+    south: visibleBounds.north - (bottom / viewport.height) * latitudeSpan,
+    east: visibleBounds.west + (right / viewport.width) * longitudeSpan,
+    north: visibleBounds.north - (top / viewport.height) * latitudeSpan,
+  });
 };
