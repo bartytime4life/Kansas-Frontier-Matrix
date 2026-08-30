@@ -1,0 +1,193 @@
+name: Temporary reconcile PR 3892
+
+on:
+  push:
+    branches:
+      - automation/site-mirror-v31
+    paths:
+      - .github/workflows/reconcile-pr-3892.yml
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    if: github.repository == 'bartytime4life/Kansas-Frontier-Matrix'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out the PR branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          ref: automation/site-mirror-v31
+          persist-credentials: true
+
+      - name: Reconcile current main, preserve privacy repair, and fix Scene status
+        shell: bash
+        run: |
+          set -euo pipefail
+          branch='automation/site-mirror-v31'
+          workflow='.github/workflows/reconcile-pr-3892.yml'
+          page='apps/kansas-frontier-matrix-explorer/app/page.tsx'
+          test_file='apps/kansas-frontier-matrix-explorer/tests/rendered-html.test.mjs'
+
+          git config user.name 'kfm-reconciliation-bot'
+          git config user.email '203533328+bartytime4life@users.noreply.github.com'
+          git fetch origin main
+
+          merge_status=0
+          git merge --no-commit --no-ff origin/main || merge_status=$?
+          if (( merge_status != 0 )); then
+            mapfile -t conflicts < <(git diff --name-only --diff-filter=U)
+            for conflict in "${conflicts[@]}"; do
+              case "$conflict" in
+                "$page"|"$test_file")
+                  git checkout --ours -- "$conflict"
+                  git add "$conflict"
+                  ;;
+                *)
+                  printf 'Unexpected merge conflict: %s\n' "$conflict" >&2
+                  exit 1
+                  ;;
+              esac
+            done
+          fi
+
+          if [[ -n "$(git diff --name-only --diff-filter=U)" ]]; then
+            git diff --name-only --diff-filter=U >&2
+            exit 1
+          fi
+
+          python <<'PY'
+          from pathlib import Path
+
+          page_path = Path('apps/kansas-frontier-matrix-explorer/app/page.tsx')
+          test_path = Path('apps/kansas-frontier-matrix-explorer/tests/rendered-html.test.mjs')
+          page = page_path.read_text(encoding='utf-8')
+          tests = test_path.read_text(encoding='utf-8')
+
+          def ensure_replace(text, old, new, marker, label):
+              if marker in text:
+                  return text
+              if old not in text:
+                  raise SystemExit(f'{label} anchor not found')
+              return text.replace(old, new, 1)
+
+          page = ensure_replace(
+              page,
+              '  view: ViewState;\n  visibility: Record<string, boolean>;\n',
+              '  view: ViewState;\n'
+              '  // Optional for device-local v1 compatibility; missing legacy markers fail closed on restore.\n'
+              '  locationCameraRedacted?: boolean;\n'
+              '  visibility: Record<string, boolean>;\n',
+              'locationCameraRedacted?: boolean;',
+              'workspace privacy field',
+          )
+
+          page = ensure_replace(
+              page,
+              '      savedAt,\n'
+              '      view: { center: [...view.center] as [number, number], zoom: view.zoom, bearing: view.bearing, pitch: view.pitch },\n'
+              '      visibility: { ...visibility },\n',
+              '      savedAt,\n'
+              '      view: { center: [...view.center] as [number, number], zoom: view.zoom, bearing: view.bearing, pitch: view.pitch },\n'
+              '      locationCameraRedacted: locationCameraRedacted || locationDerivedViewRef.current,\n'
+              '      visibility: { ...visibility },\n',
+              'locationCameraRedacted: locationCameraRedacted || locationDerivedViewRef.current,',
+              'workspace privacy save propagation',
+          )
+
+          page = ensure_replace(
+              page,
+              '    const nextProjection = snapshot.projection === "globe" ? "globe" : "mercator";\n'
+              '    visibilityRef.current = nextVisibility;\n',
+              '    const nextProjection = snapshot.projection === "globe" ? "globe" : "mercator";\n'
+              '    // Legacy snapshots predate the marker, so fail closed instead of exposing a possibly location-derived camera.\n'
+              '    const restoredLocationCameraRedaction = snapshot.locationCameraRedacted !== false;\n'
+              '    visibilityRef.current = nextVisibility;\n',
+              'const restoredLocationCameraRedaction = snapshot.locationCameraRedacted !== false;',
+              'workspace privacy legacy restoration',
+          )
+
+          page = ensure_replace(
+              page,
+              '      locationDerivedViewRef.current = false;\n'
+              '      setLocationCameraRedacted(false);\n'
+              '      updateRendererNeutralView({ center: [...savedView.center] as [number, number], zoom: savedView.zoom, bearing: savedView.bearing, pitch: savedView.pitch });\n',
+              '      locationDerivedViewRef.current = restoredLocationCameraRedaction;\n'
+              '      setLocationCameraRedacted(restoredLocationCameraRedaction);\n'
+              '      updateRendererNeutralView({ center: [...savedView.center] as [number, number], zoom: savedView.zoom, bearing: savedView.bearing, pitch: savedView.pitch });\n',
+              'locationDerivedViewRef.current = restoredLocationCameraRedaction;',
+              'workspace privacy state restoration',
+          )
+
+          undefined_probe = '{maplibreProbe.tilesLoaded ? "SETTLED" : "WORKING"}'
+          runtime_status = '{runtime.kind === "loading" ? "STARTING" : runtime.kind === "error" ? "ERROR" : "NO FETCH"}'
+          if undefined_probe not in page:
+              if 'maplibreProbe.tilesLoaded' in page:
+                  raise SystemExit('undefined maplibreProbe remains in an unexpected form')
+              if runtime_status not in page:
+                  raise SystemExit('Scene tile-ledger status anchor not found')
+          else:
+              page = page.replace(undefined_probe, runtime_status, 1)
+
+          privacy_test_anchor = (
+              '  assert.match(page, /loadSavedWorkspace/);\n'
+              '  assert.match(page, /reportEvidenceFilter/);\n'
+          )
+          privacy_tests = (
+              '  assert.match(page, /loadSavedWorkspace/);\n'
+              '  assert.match(page, /locationCameraRedacted\\?: boolean/);\n'
+              '  assert.match(page, /locationCameraRedacted: locationCameraRedacted \\|\\| locationDerivedViewRef\\.current/);\n'
+              '  assert.match(page, /snapshot\\.locationCameraRedacted !== false/);\n'
+              '  assert.match(page, /locationDerivedViewRef\\.current = restoredLocationCameraRedaction/);\n'
+              '  assert.match(page, /setLocationCameraRedacted\\(restoredLocationCameraRedaction\\)/);\n'
+              '  assert.match(page, /reportEvidenceFilter/);\n'
+          )
+          if 'snapshot\\.locationCameraRedacted !== false' not in tests:
+              if privacy_test_anchor not in tests:
+                  raise SystemExit('privacy-test insertion anchor not found')
+              tests = tests.replace(privacy_test_anchor, privacy_tests, 1)
+
+          scene_test_anchor = (
+              '  assert.match(page, /No PMTiles, MVT, COG, or DEM fetch/);\n'
+              '  assert.match(page, /createNullMapRuntime/);\n'
+          )
+          scene_tests = (
+              '  assert.match(page, /No PMTiles, MVT, COG, or DEM fetch/);\n'
+              '  assert.match(page, /runtime\\.kind === "loading" \\? "STARTING"/);\n'
+              '  assert.match(page, /NO FETCH/);\n'
+              '  assert.doesNotMatch(page, /maplibreProbe\\.tilesLoaded/);\n'
+              '  assert.match(page, /createNullMapRuntime/);\n'
+          )
+          if 'maplibreProbe\\.tilesLoaded' not in tests:
+              if scene_test_anchor not in tests:
+                  raise SystemExit('Scene-test insertion anchor not found')
+              tests = tests.replace(scene_test_anchor, scene_tests, 1)
+
+          required_page = [
+              'locationCameraRedacted?: boolean;',
+              'locationCameraRedacted: locationCameraRedacted || locationDerivedViewRef.current,',
+              'snapshot.locationCameraRedacted !== false',
+              'locationDerivedViewRef.current = restoredLocationCameraRedaction;',
+              'setLocationCameraRedacted(restoredLocationCameraRedaction);',
+              runtime_status,
+          ]
+          for marker in required_page:
+              if marker not in page:
+                  raise SystemExit(f'missing Explorer reconciliation marker: {marker}')
+          if 'maplibreProbe.tilesLoaded' in page:
+              raise SystemExit('undefined maplibreProbe reference remains')
+          if any(marker in page or marker in tests for marker in ('<<<<<<<', '=======', '>>>>>>>')):
+              raise SystemExit('merge conflict marker remains')
+
+          page_path.write_text(page, encoding='utf-8')
+          test_path.write_text(tests, encoding='utf-8')
+          PY
+
+          git grep -n 'maplibreProbe\.tilesLoaded' -- "$page" "$test_file" && exit 1 || true
+          rm "$workflow"
+          git add -A
+          git diff --cached --check
+          git commit -m 'fix(explorer): reconcile Site v31 with privacy-safe current main'
+          git push origin "HEAD:$branch"

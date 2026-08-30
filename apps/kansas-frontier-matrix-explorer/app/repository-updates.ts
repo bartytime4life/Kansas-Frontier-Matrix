@@ -28,9 +28,9 @@ export type RepositoryUpdate = Readonly<{
 export const REPOSITORY_SNAPSHOT = Object.freeze({
   repository: "bartytime4life/Kansas-Frontier-Matrix",
   ref: "main",
-  commit: "2b0ea9bbbc9d9a120ea94d92fb4617d96fe7d2a0",
-  shortCommit: "2b0ea9b",
-  inspectedAt: "2026-08-29T06:11:19Z",
+  commit: "c3216103ac049cd39f5f03883d7146046ef7bccd",
+  shortCommit: "c321610",
+  inspectedAt: "2026-08-29T21:19:30Z",
   counts: Object.freeze({
     knowledgeDomains: 13,
     explorerFeatureFamilies: 38,
