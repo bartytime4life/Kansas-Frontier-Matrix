@@ -2,8 +2,8 @@
 doc_id: kfm://doc/tests-domains-hazards-focus-emergency-alert-denial-readme
 title: Hazards Focus Boundary-Denial Test README
 type: test-readme
-version: v0.1
-status: draft; placeholder-expanded; focus-denial-test-lane; PROPOSED / NEEDS VERIFICATION before promotion
+version: v0.2
+status: draft; documentation-only Hazards Focus emergency-denial lane; adjacent general Focus mock proof is not Hazards-specific proof
 owners:
   - OWNER_TBD — Hazards domain steward
   - OWNER_TBD — Focus Mode steward
@@ -13,31 +13,40 @@ owners:
   - OWNER_TBD — Validation steward
   - OWNER_TBD — Release steward
   - OWNER_TBD — QA steward
-created: NEEDS VERIFICATION — blank placeholder existed before v0.1 expansion
-updated: 2026-07-05
+created: 2026-07-05
+updated: 2026-08-30
 policy_label: public-doc; tests; hazards; focus-mode; boundary-denial; no-network; deny-by-default; official-source-referral; finite-outcomes; release-gated
+owning_root: tests/
+responsibility: Document the Hazards Focus emergency-denial test lane and its verified non-executable state without creating prompt, response, policy, runtime, release, or publication authority.
+truth_posture: "CONFIRMED documentation-only Hazards emergency-denial lane; CONFIRMED no paired child fixture directory or payloads; CONFIRMED separate PROPOSED bounded-executable general Focus mock and finite-envelope proof; NEEDS VERIFICATION Hazards-specific fixtures, validator, executable tests, stewardship, runtime coupling, and promotion enforcement"
 tags: [kfm, tests, hazards, focus, emergency_alert_denial, life-safety-boundary, FocusModeResponse, RuntimeResponseEnvelope, PolicyDecision, EvidenceBundle, ReleaseManifest, CorrectionNotice, RollbackCard, ABSTAIN, DENY, ERROR]
 related:
   - ../../../../README.md
+  - ../README.md
   - ../../README.md
   - ../../../README.md
-  - ../../../../../../docs/domains/hazards/LIFE_SAFETY_BOUNDARY.md
-  - ../../../../../../docs/domains/hazards/MAP_UI_CONTRACTS.md
-  - ../../../../../../contracts/runtime/runtime_response_envelope.md
-  - ../../../../../../contracts/policy/policy_decision.md
-  - ../../../../../../contracts/evidence/evidence_bundle.md
-  - ../../../../../../contracts/release/release_manifest.md
-  - ../../../../../../schemas/contracts/v1/ai/
-  - ../../../../../../schemas/contracts/v1/runtime/
-  - ../../../../../../schemas/contracts/v1/domains/hazards/
-  - ../../../../../../fixtures/domains/hazards/focus/emergency_alert_denial/
-  - ../../../../../../policy/domains/hazards/
-  - ../../../../../../release/manifests/hazards/
+  - ../../../../../docs/domains/hazards/LIFE_SAFETY_BOUNDARY.md
+  - ../../../../../docs/domains/hazards/MAP_UI_CONTRACTS.md
+  - ../../../../../contracts/runtime/runtime_response_envelope.md
+  - ../../../../../contracts/policy/policy_decision.md
+  - ../../../../../contracts/evidence/evidence_bundle.md
+  - ../../../../../contracts/release/release_manifest.md
+  - ../../../../../schemas/contracts/v1/ai/
+  - ../../../../../schemas/contracts/v1/runtime/
+  - ../../../../../schemas/contracts/v1/domains/hazards/
+  - ../../../../../fixtures/domains/hazards/focus/
+  - ../../../../runtime_proof/test_mock_adapter_finite_outcomes.py
+  - ../../../../runtime_proof/test_envelope_finite_outcomes.py
+  - ../../../../../policy/domains/hazards/
+  - ../../../../../release/manifests/README.md
+  - ../../../../../.github/workflows/focus-mock-test.yml
 notes:
   - "This file replaces a blank placeholder at tests/domains/hazards/focus/emergency_alert_denial/README.md."
   - "This is a test-lane README only. It does not define Hazards doctrine, Focus Mode behavior, governed AI policy, schemas, fixtures, lifecycle records, EvidenceBundles, policy rules, release decisions, public API material, public map material, public tiles, or published artifacts."
   - "The tested invariant is that Hazards Focus Mode must return a finite DENY/referral posture when a prompt asks KFM to cross the Hazards life-safety boundary. It must not answer as KFM authority, imply live validation, or turn planning context into operational guidance."
   - "Default posture is deterministic and no-network. Live source checks, real source exports, live feeds, lifecycle data, and public tiles do not belong in this lane."
+  - "Current lane inventory is documentation-only: this directory contains README and .gitkeep; its referenced child fixture directory does not exist, the parent Focus fixture directory contains only README and .gitkeep, and tests/domains/hazards/test_emergency_alert_denial.py is a one-line placeholder."
+  - "A separate general Focus profile has deterministic mock-adapter and finite-envelope tests plus dedicated CI; it remains PROPOSED and does not prove Hazards-specific emergency-denial behavior."
   - "Rollback target for this replacement is previous blank blob SHA 8b137891791fe96927ad78e64b0aad7bded08bdc."
 [/KFM_META_BLOCK_V2] -->
 
@@ -57,12 +66,12 @@ notes:
 </p>
 
 **Path:** `tests/domains/hazards/focus/emergency_alert_denial/README.md`  
-**Status:** draft / placeholder-expanded / PROPOSED until executable tests are verified  
+**Status:** draft / DOCUMENTATION_ONLY / NOT_VALIDATION
 **Owning root:** `tests/`  
 **Domain segment:** `hazards`  
 **Test lane:** `focus/emergency_alert_denial`  
 **Default execution posture:** deterministic, synthetic, no-network, public-safe fixtures only  
-**Truth posture:** CONFIRMED target was a blank placeholder before this expansion · CONFIRMED `tests/` is the canonical root for enforceability proof · CONFIRMED Hazards doctrine says KFM is not the authority for current protective-action decisions · CONFIRMED Hazards map/UI contracts require planning/context labels and official-source referral posture · NEEDS VERIFICATION for executable test modules, fixture payload inventory, prompt/response schema enforcement, validator behavior, policy runtime, Focus Mode route behavior, CI coverage, and pass rates.
+**Truth posture:** CONFIRMED target was a blank placeholder before its v0.1 expansion · CONFIRMED this child contains no executable tests, its referenced child fixture directory does not exist, the parent fixture lane has no payloads, and `test_emergency_alert_denial.py` remains a one-line placeholder · CONFIRMED a separate general Focus mock profile executes deterministic adapter and finite-envelope tests in dedicated CI · CONFIRMED that profile remains PROPOSED and does not establish Hazards-specific emergency-denial behavior · NEEDS VERIFICATION for Hazards-specific executable tests, fixture payloads, validator behavior, policy runtime, Focus Mode route behavior, CI binding, and promotion enforcement.
 
 ---
 
@@ -87,8 +96,8 @@ A passing test here should **not** mean that KFM has checked live conditions, va
 | Hazards map/UI doctrine | `docs/domains/hazards/MAP_UI_CONTRACTS.md` | Context-label and UI trust posture under test. |
 | Runtime finite outcomes | `contracts/runtime/runtime_response_envelope.md` | Expected envelope behavior where accepted. |
 | Policy homes | `policy/domains/hazards/` | Referenced by tests, not bypassed here. |
-| Synthetic fixtures | `fixtures/domains/hazards/focus/emergency_alert_denial/` | Preferred toy prompts and expected outcomes if populated. |
-| Release decisions | `release/` and `release/manifests/hazards/` | Publication, correction, and rollback authority; tests cannot replace it. |
+| Synthetic fixtures | `fixtures/domains/hazards/focus/` | Parent documentation-only fixture lane; no child directory or payload is currently present. |
+| Release decisions | `release/` and `release/manifests/` | Publication, correction, and rollback authority; tests cannot replace it. |
 
 ---
 
@@ -176,7 +185,7 @@ tests/domains/hazards/focus/emergency_alert_denial/
 pytest tests/domains/hazards/focus/emergency_alert_denial
 ```
 
-Status of the command above: **PROPOSED / NEEDS VERIFICATION**. It assumes `pytest` is the accepted test runner and that executable test modules exist. This README does not claim the command currently passes.
+Status of the command above: **DOCUMENTATION_ONLY / NOT_VALIDATION**. The directory collects zero tests and exits `5`; this command does not prove emergency-denial behavior.
 
 ---
 
@@ -186,9 +195,10 @@ Status of the command above: **PROPOSED / NEEDS VERIFICATION**. It assumes `pyte
 |---|---|---|---|
 | Previous target file | CONFIRMED | `tests/domains/hazards/focus/emergency_alert_denial/README.md` existed as a blank placeholder before this replacement. | Did not define the lane. |
 | `tests/README.md` | CONFIRMED | `tests/` is enforceability proof and failure should block promotion where trust-spine checks fail. | Does not prove this lane's modules or pass rate. |
+| Emergency-denial inventory | CONFIRMED | The child contains only README and `.gitkeep`; no paired child fixture directory exists, the parent fixture lane has no payloads, and `tests/domains/hazards/test_emergency_alert_denial.py` is a one-line placeholder. | Establishes non-validation status, not future ownership or behavior. |
+| General Focus mock profile | CONFIRMED bounded executable / PROPOSED profile | The dedicated workflow executes deterministic mock-adapter and finite-envelope tests. | It is not Hazards-specific emergency-denial proof and does not establish a live route, provider, evidence closure, policy execution, release, or publication. |
 | `docs/domains/hazards/LIFE_SAFETY_BOUNDARY.md` | CONFIRMED doctrine | KFM is not the authority for current protective-action decisions and should refer boundary-crossing use to official sources. | Enforcement mechanics remain PROPOSED until routes, flags, validators, policy bundles, fixtures, and tests are verified. |
 | `docs/domains/hazards/MAP_UI_CONTRACTS.md` | CONFIRMED doctrine | Hazards map/UI surfaces must carry planning/context posture and finite outcomes. | Concrete Focus Mode route behavior and pass rates remain NEEDS VERIFICATION. |
-| Repo search | CONFIRMED | Found boundary and Hazards map/UI contract docs for this lane. | Search is not proof of executable tests or fixtures. |
 
 ---
 
