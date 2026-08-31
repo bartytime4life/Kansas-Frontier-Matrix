@@ -174,7 +174,7 @@ Start from tracked files rather than a copied inventory:
 
 ```bash
 git ls-files '.github/workflows/*.yml' | sort
-rg -n '^(name|on|permissions):' .github/workflows
+rg -n '^(name|on|"on"|permissions):' .github/workflows
 rg -n 'pull_request_target|workflow_run|id-token: write|contents: write|packages: write|secrets: inherit|self-hosted' .github/workflows
 ```
 
