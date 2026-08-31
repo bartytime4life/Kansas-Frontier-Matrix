@@ -670,7 +670,20 @@ test("keeps the renderer-neutral Workbench complete, bounded, and fail closed", 
 test("resolves exact, through-time, and untimed Map Workbench availability", async () => {
   const ts = await import("typescript");
   const source = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
-  const javascript = ts.transpileModule(source, {
+  const dependencyFreeSource = source
+    .replace(
+      /import \{[\s\S]*?\} from "\.\/explorer-data";/,
+      'const LAYER_REGISTRY = []; const SEARCH_INDEX = [];',
+    )
+    .replace(
+      /import \{[\s\S]*?\} from "\.\/county-starter-slice";/,
+      'const COUNTY_STARTER_LAYER_ID = "county-starter-points"; const COUNTY_STARTER_LAYER = { id: COUNTY_STARTER_LAYER_ID, title: "County starters", category: "Boundaries & places", datasetName: "Synthetic test stub", data: { features: [] } };',
+    )
+    .replace(
+      'import { MAPLIBRE_PLUGIN_CONNECTIONS } from "./maplibre-plugin-connections";',
+      'const MAPLIBRE_PLUGIN_CONNECTIONS = [];',
+    );
+  const javascript = ts.transpileModule(dependencyFreeSource, {
     compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
     fileName: "map-interface.ts",
   }).outputText;
