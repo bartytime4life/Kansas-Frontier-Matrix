@@ -1,9 +1,20 @@
-from governed_api.provider import EvidenceResolution, SliceProvider
+from governed_api.provider import (
+    EVIDENCE_REF,
+    FEATURE_ID,
+    LAYER_ID,
+    EvidenceResolution,
+    SliceProvider,
+)
 from governed_api.request import InvalidRequest, parse_exact_identifier_query
 from governed_api.routes import RouteResponse
 
 PATH = "/evidence"
 PROFILE = "kfm.explorer.evidence-drawer.public-safe.v1"
+PINNED_FIXTURE_CITATION = (
+    "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/"
+    "d1f7ed51cf4d9c9c2fdf94cdc81644744ae464ce/fixtures/ui/"
+    "evidence_drawer_payload/valid/answer-corrected.json"
+)
 
 _EMPTY_HISTORY = {"negative_outcomes": [], "corrections": []}
 
@@ -41,7 +52,7 @@ def _answer_payload() -> dict:
         "citations": [
             {
                 "label": "Synthetic fixture evidence",
-                "href": "https://example.invalid/kfm/evidence/flow-001",
+                "href": PINNED_FIXTURE_CITATION,
             }
         ],
         "limitations": [
@@ -166,6 +177,15 @@ def evidence(query_string: object, provider: SliceProvider) -> RouteResponse:
         )
 
     if resolution is EvidenceResolution.ANSWER:
+        if query != {
+            "layer_id": LAYER_ID,
+            "feature_id": FEATURE_ID,
+            "evidence_ref": EVIDENCE_REF,
+        }:
+            return RouteResponse(
+                "400 Bad Request",
+                _error_payload("kfm:ui:evidence-drawer:error-scope-001"),
+            )
         return RouteResponse("200 OK", _answer_payload())
     if resolution is EvidenceResolution.ABSTAIN:
         return RouteResponse("200 OK", _abstain_payload())

@@ -39,7 +39,7 @@ notes:
 
 `apps/governed-api/`
 
-**Executable trust membrane for KFM clients: finite `RuntimeResponseEnvelope` outcomes, governed evidence resolution, policy decisions, release/correction/rollback references, and citation-aware public-safe payloads.**
+**Executable trust membrane for KFM clients: finite governed outcomes, a schema-backed `/bootstrap` scaffold, bounded slice-local layer projection, and the existing citation-aware Explorer evidence projection.**
 
 ![status](https://img.shields.io/badge/status-draft-blue)
 ![owner](https://img.shields.io/badge/owner-OWNER__TBD-lightgrey)
@@ -122,7 +122,7 @@ It may eventually contain route handlers, DTOs, middleware, adapters, response v
 - correction notice, rollback card, release manifest, and stale/freshness lookups;
 - role-gated submit paths where policy and audit allow.
 
-This README does not prove any specific endpoint, route implementation, DTO, schema, middleware, package script, test, deployment, log, dashboard, or CI pass state exists.
+Outside the bounded branch-local slice recorded above, this README does not prove any specific endpoint, route implementation, DTO, schema, middleware, package script, deployment, log, dashboard, or CI pass state exists.
 
 [Back to top](#top)
 
@@ -216,13 +216,13 @@ A route should not return `ANSWER` when any of these are unresolved:
 
 ## 7. Route family map
 
-Exact route files and implementation status remain `NEEDS VERIFICATION`. Candidate route families should be introduced only with schemas, fixtures, policy tests, and audit-safe negative cases.
+The bounded `/bootstrap`, `/layers`, and `/evidence` route bytes are confirmed on this branch. Remaining candidate route families should be introduced only with schemas, fixtures, policy tests, and audit-safe negative cases.
 
-| Candidate route family | Purpose | Required safeguard | Status |
+| Route family | Purpose | Required safeguard | Status |
 |---|---|---|---|
-| `runtime/bootstrap` | Shell config, route availability, feature flags, policy posture | No client authority; finite envelope | PROPOSED |
-| `layers` | Layer catalog, descriptors, legends, release manifest summaries | Released/bounded-safe only | PROPOSED |
-| `evidence` | EvidenceRef resolution and EvidenceDrawerPayload projection | EvidenceBundle support and policy | PROPOSED |
+| `bootstrap` | Current unchanged capability scaffold | No client authority; schema-backed finite envelope | CONFIRMED branch-local `ABSTAIN / NOT_IMPLEMENTED` scaffold |
+| `layers` | One synthetic Point and renderer-neutral selection sidecar | Exact-one, public-safe, slice-local projection only | CONFIRMED branch-local bounded slice; not a canonical layer schema or release |
+| `evidence` | Resolve the bounded synthetic EvidenceRef to the Explorer projection | Exact request scope, finite outcomes, no provider-detail leakage | CONFIRMED branch-local bounded slice; not EvidenceBundle, policy, review, or release authority |
 | `focus` | Governed AI/Focus answer path | Server-side adapter, cite-or-abstain | PROPOSED |
 | `story` | Story manifest/node/evidence-gate projection | 2D-first, evidence continuity | PROPOSED |
 | `compare` | Compare releases, times, layers, or versions | Provenance and finite states | PROPOSED |

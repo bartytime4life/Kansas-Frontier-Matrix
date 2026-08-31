@@ -3,8 +3,12 @@ import re
 
 from governed_api.provider import (
     EVIDENCE_REF,
+    FEATURE_COORDINATES,
     FEATURE_ID,
+    FEATURE_TITLE,
     LAYER_ID,
+    LAYER_DESCRIPTION,
+    LAYER_TITLE,
     MAP_FEATURE_SELECTION_PROFILE,
     SELECTION_ID,
     SOURCE_ID,
@@ -49,7 +53,7 @@ def _project_feature(feature: object) -> tuple[dict, dict]:
         feature.selection_id
     ):
         raise ValueError("invalid-provider-result")
-    if not _bounded_text(feature.title, 160):
+    if feature.title != FEATURE_TITLE or not _bounded_text(feature.title, 160):
         raise ValueError("invalid-provider-result")
     if not isinstance(feature.coordinates, tuple) or len(feature.coordinates) != 2:
         raise ValueError("invalid-provider-result")
@@ -57,6 +61,8 @@ def _project_feature(feature: object) -> tuple[dict, dict]:
     if not _valid_coordinate(longitude, minimum=-180, maximum=180):
         raise ValueError("invalid-provider-result")
     if not _valid_coordinate(latitude, minimum=-90, maximum=90):
+        raise ValueError("invalid-provider-result")
+    if feature.coordinates != FEATURE_COORDINATES:
         raise ValueError("invalid-provider-result")
     if feature.evidence_refs != (EVIDENCE_REF,):
         raise ValueError("invalid-provider-result")
@@ -92,6 +98,8 @@ def _project_layers(records: object) -> list[dict]:
     if layer.layer_id != LAYER_ID or not _SAFE_IDENTIFIER.fullmatch(layer.layer_id):
         raise ValueError("invalid-provider-result")
     if layer.kind != "circle":
+        raise ValueError("invalid-provider-result")
+    if layer.title != LAYER_TITLE or layer.description != LAYER_DESCRIPTION:
         raise ValueError("invalid-provider-result")
     if not _bounded_text(layer.title, 160) or not _bounded_text(layer.description, 500):
         raise ValueError("invalid-provider-result")

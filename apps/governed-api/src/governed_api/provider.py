@@ -9,6 +9,13 @@ FEATURE_ID = "feature:flow-001"
 SELECTION_ID = "selection:flow-001"
 EVIDENCE_REF = "kfm:evidence:synthetic:flow-001"
 MAP_FEATURE_SELECTION_PROFILE = "kfm.explorer.map-feature-selection.v1"
+LAYER_TITLE = "Synthetic streamflow demonstration"
+LAYER_DESCRIPTION = (
+    "One generalized, fixture-only Kansas streamflow feature for the "
+    "bounded governed map slice."
+)
+FEATURE_TITLE = "Synthetic streamflow observation"
+FEATURE_COORDINATES = (-98.5, 38.5)
 
 RESTRICTED_LAYER_ID = "layer:synthetic-restricted"
 RESTRICTED_FEATURE_ID = "feature:restricted"
@@ -62,17 +69,14 @@ _PUBLIC_LAYERS = (
         source_id=SOURCE_ID,
         layer_id=LAYER_ID,
         kind="circle",
-        title="Synthetic streamflow demonstration",
-        description=(
-            "One generalized, fixture-only Kansas streamflow feature for the "
-            "bounded governed map slice."
-        ),
+        title=LAYER_TITLE,
+        description=LAYER_DESCRIPTION,
         features=(
             PublicFeature(
                 feature_id=FEATURE_ID,
                 selection_id=SELECTION_ID,
-                title="Synthetic streamflow observation",
-                coordinates=(-98.5, 38.5),
+                title=FEATURE_TITLE,
+                coordinates=FEATURE_COORDINATES,
                 evidence_refs=(EVIDENCE_REF,),
             ),
         ),
@@ -114,6 +118,8 @@ class DeterministicSliceProvider:
         requested_identifiers = {layer_id, feature_id, evidence_ref}
         if known_identifiers.intersection(requested_identifiers):
             if layer_id == LAYER_ID and feature_id == FEATURE_ID:
+                if evidence_ref == RESTRICTED_EVIDENCE_REF:
+                    return EvidenceResolution.ERROR
                 return EvidenceResolution.ABSTAIN
             return EvidenceResolution.ERROR
 
