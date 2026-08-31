@@ -750,7 +750,7 @@ The [`domain-people-dna-land` workflow](../../../.github/workflows/domain-people
 
 | Job/profile | Confirmed behavior | Authority boundary |
 | --- | --- | --- |
-| `validate-people-dna-land` — consent-safe genealogy overlay | Runs a substantive validator plus 16 no-network tests against 2 valid synthetic candidates, 13 known-invalid candidate/sidecar pairs, and a synthetic revocation manifest | Proves only the fixture profile, deterministic hash/loader behavior, declared denial families, and expected polarity. |
+| `validate-people-dna-land` — consent-safe genealogy overlay | Runs a substantive validator plus 17 no-network tests against 2 valid synthetic candidates, 13 known-invalid candidate/sidecar pairs, and a synthetic revocation manifest | Proves only the fixture profile, deterministic hash/loader behavior, declared denial families, and expected polarity. |
 | `validate-people-dna-land` — consent-revocation propagation assessment | Runs a substantive validator plus 9 no-network tests against a 17-case manifest: 6 `PASS`, 8 `DENY`, and 3 `ERROR` expectations | Assesses declared consent state and seven-surface dependency posture; performs no revocation or cleanup. |
 | `build-proof-people-dna-land` | Verifies the documented proof lane remains a hold and that no unexpected proof artifact or command surfaced | Emits no proof and grants no authority. |
 | `publish-dry-run-people-dna-land` | Verifies the candidate/release boundary remains a hold and that no unexpected candidate artifact or command surfaced | Performs no release, promotion, deployment, or publication. |
