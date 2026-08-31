@@ -37,7 +37,6 @@ related:
   - ../../docs/doctrine/ai-build-operating-contract.md
   - ../../docs/adr/README.md
   - ../../tools/validators/README.md
-  - ../../tools/validators/governance/README.md
   - ../../tests/README.md
   - ../../fixtures/README.md
   - ../../policy/README.md
@@ -383,7 +382,6 @@ The author must not treat a self-generated check, badge, receipt, or pull reques
 |---|---|
 | [`.github/`](../README.md) | Parent GitHub governance and collaboration surface. |
 | [`tools/`](../../tools/README.md) | Repository-wide validators, builders, and checkers invoked by workflows. |
-| [`tools/validators/governance/`](../../tools/validators/governance/README.md) | Workflow-security ratchet scope, limitations, and direct command. |
 | [`tests/`](../../tests/README.md) and [`fixtures/`](../../fixtures/README.md) | Deterministic positive, negative, and regression evidence. |
 | [`contracts/`](../../contracts/README.md) and [`schemas/`](../../schemas/README.md) | Semantic meaning and machine-checkable shape. |
 | [`policy/`](../../policy/README.md) | Allow, deny, restrict, hold, and abstain decisions. |
@@ -427,6 +425,7 @@ Before merge, close or revert the unmerged workflow change without weakening unr
 - **NEEDS VERIFICATION** — commands that remain placeholders, readiness holds, or partial validation despite authoritative-sounding names.
 - **NEEDS VERIFICATION** — complete policy-bundle, schema, fixture, and runtime parity.
 - **NEEDS VERIFICATION** — whether workflow-generated artifacts contain sensitive data or outlive their review purpose.
+- **NEEDS VERIFICATION** — the governance-validator README still describes its receipt-bound 424-workflow snapshot as current; correct it only with a provenance-safe receipt update or supersession.
 - **CONFIRMED at the pinned ref / exact-current result NEEDS VERIFICATION** — the repository-owned, no-network workflow-security ratchet and its empty implementation-waiver baseline exist; no current pass is claimed here.
 - **PROPOSED consolidation** — prefer reusable validators and bounded workflows where multiple files share the same trigger, permissions, and acceptance boundary.
 
