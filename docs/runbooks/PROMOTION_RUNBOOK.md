@@ -1,560 +1,478 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runbook/promotion
-title: KFM Promotion Runbook — Governed Transitions RAW → PUBLISHED
-type: standard
-version: v1
-status: draft
-owners: [TODO docs-steward, TODO release-authority]
+title: KFM Promotion Runbook
+type: runbook
+version: v2.0
+status: draft; repository-grounded; BOUNDED_READINESS_GUIDANCE; OPERATIONAL_PROMOTION_HELD; NON_RELEASE; NON_DEPLOYMENT; NON_PUBLICATION
 created: 2026-05-12
-updated: 2026-05-12
-policy_label: public
-related:
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/trust-membrane.md
-  - docs/architecture/governed-api/README.md
-  - docs/runbooks/ROLLBACK_DRILL.md
-  - policy/promotion/
-  - policy/release/
-  - schemas/contracts/v1/
-tags: [kfm, runbook, promotion, lifecycle, governance, release, rollback]
+updated: 2026-08-31
+current_path: docs/runbooks/PROMOTION_RUNBOOK.md
+owning_root: docs/
+placement_basis: ADR-0029 and docs/doctrine/directory-rules.md; same-path runbook update
+truth_posture: cite-or-abstain
+authority_class: explanatory operational documentation
+authority_rank: subordinate to accepted doctrine and ADRs, contracts, schemas, evidence, policy, authenticated review, release records, signatures, receipts, proofs, and current runtime evidence
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 246573b531ecfa4b221c08f25a28e6ae762cfd9f
+  target_before_update_blob: ea01ae337019c9d4f595f5cbb592a01d9ac05f3e
+  open_pull_requests_touching_target: 0
+inspection_boundary: >-
+  Current-session GitHub reads covered the target, accepted Directory Rules,
+  lifecycle and trust doctrine, release root, proposed ADR-0018,
+  PromotionDecision and PromotionReceipt contracts, bounded promotion-gate
+  validator and workflow, promotion policy boundary, correction and rollback
+  runbooks, and generated-receipt requirements. Google Drive was consulted as
+  read-only planning lineage. No live resolver, authenticated reviewer registry,
+  active promotion-policy evaluator, signer trust root, transition executor,
+  deployment, public release, or rollback execution was exercised.
 notes:
-  - Operating procedure for promotion as a governed state transition.
-  - Promotion is never a file move; bytes alone do not earn a phase.
-  - All paths PROPOSED until verified against mounted-repo evidence.
+  - "The current A-G profile is executable and fixture-first; ADR-0018 and its final-readiness vocabulary remain proposed."
+  - "PASS means APPROVE_READY for review only, not APPROVE, transition, release, deployment, publication, or public-use permission."
+  - "No promotion, release, deployment, publication, source activation, policy activation, review approval, signature, or repository-setting change is performed by this document."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # KFM Promotion Runbook
 
-> Operating procedure for moving objects through KFM's governed lifecycle — **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED** — without bypassing evidence, policy, review, or rollback.
-
-<p align="center">
-  <b>Evidence-first • Policy-aware • Fail-closed • Reversible</b>
-</p>
-
----
-
-## Badges
-
-![Status](https://img.shields.io/badge/status-draft-orange)
-![Doctrine](https://img.shields.io/badge/doctrine-CONFIRMED-success)
-![Implementation](https://img.shields.io/badge/implementation-PROPOSED-yellow)
-![Lifecycle](https://img.shields.io/badge/lifecycle-governed-informational)
-![Posture](https://img.shields.io/badge/posture-fail--closed-critical)
-![Truth](https://img.shields.io/badge/truth-cite--or--abstain-blueviolet)
-![Updated](https://img.shields.io/badge/updated-TODO-lightgrey)
-
-| Field | Value |
-|---|---|
-| **Status** | Draft (PROPOSED implementation; CONFIRMED doctrine) |
-| **Owners** | `TODO` docs steward · `TODO` release authority |
-| **Last updated** | `TODO` |
-| **Authority** | Lifecycle Law, Directory Rules §6.1, §6.5, §9 |
-| **Applies to** | All KFM domain lanes; all PUBLISHED-bound artifacts |
-| **Companion runbooks** | `docs/runbooks/ROLLBACK_DRILL.md`, `docs/runbooks/CORRECTION.md` (both `TODO`) |
-
----
-
-## Quick Jump
-
-- [1. Scope](#1-scope)
-- [2. Doctrine recap](#2-doctrine-recap)
-- [3. When to use this runbook](#3-when-to-use-this-runbook)
-- [4. Prerequisites](#4-prerequisites)
-- [5. Promotion flow at a glance](#5-promotion-flow-at-a-glance)
-- [6. Gate-by-gate procedure](#6-gate-by-gate-procedure)
-- [7. Promotion dry-run](#7-promotion-dry-run)
-- [8. Rollback drill](#8-rollback-drill)
-- [9. Correction path](#9-correction-path)
-- [10. Roles and separation of duties](#10-roles-and-separation-of-duties)
-- [11. Decision outcomes](#11-decision-outcomes)
-- [12. Failure codes and fail-closed reference](#12-failure-codes-and-fail-closed-reference)
-- [13. Anti-patterns](#13-anti-patterns)
-- [14. Receipt and artifact reference](#14-receipt-and-artifact-reference)
-- [15. Related docs](#15-related-docs)
-- [16. Open questions](#16-open-questions)
-
----
-
-## 1. Scope
-
-This runbook is the **operating procedure** for KFM promotion. It tells a steward, reviewer, or release authority *what to do, in what order, with which receipts, and what to do when something fails closed.*
-
-It is **not** the doctrine itself. Doctrine lives in:
-
-- `docs/doctrine/lifecycle-law.md` — the invariant and what it means.
-- `docs/doctrine/directory-rules.md` — where things live and why a path move is not a promotion.
-- `docs/doctrine/trust-membrane.md` — why public clients never read RAW/WORK/QUARANTINE.
-
-This runbook **operationalizes** those documents. Where the two disagree, **doctrine wins**, and the discrepancy is filed in `docs/registers/DRIFT_REGISTER.md`.
+Use this runbook to assess whether a `CATALOG` or `TRIPLET` candidate is ready
+for separately governed review on a possible transition toward `PUBLISHED`.
+The procedure exercises the repository's bounded, no-network readiness checks
+and prepares an accountable handoff. It stops before any lifecycle transition,
+release, deployment, publication, alias change, cache invalidation, or public
+write.
 
 > [!IMPORTANT]
-> **Promotion is a governed state transition, not a file move.** A path-level move that bypasses validators, policy gates, evidence-bundle creation, catalog closure, or release-decision recording is a violation of the lifecycle invariant — regardless of which directory the bytes end up in. — *Directory Rules §9.1; Lifecycle Law (CONFIRMED doctrine).*
-
----
-
-## 2. Doctrine recap
-
-KFM's lifecycle invariant — preserved verbatim:
-
-> **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED**
-
-Five governed transitions, five sets of admissible artifacts, five fail-closed outcomes. No phase is earned by being in the right directory; each is earned by producing the receipts and decisions that the next phase's gate requires.
-
-The cite-or-abstain rule is in force throughout: every consequential claim resolves `EvidenceRef → EvidenceBundle`. When evidence cannot be resolved, the system **abstains**; it does not invent support.
-
-| Pillar | Behavior |
-|---|---|
-| **Evidence first** | `EvidenceBundle` outranks generated language, tiles, maps, graphs, AI text. |
-| **Trust membrane** | Public clients read only through `apps/governed-api/`. RAW/WORK/QUARANTINE are never public. |
-| **Cite-or-abstain** | If support cannot be resolved, return `ABSTAIN`, never invent. |
-| **Fail-closed** | Unknown rights, unresolved sensitivity, missing review state → `DENY` / `HOLD`. |
-| **Reversibility** | Every PUBLISHED claim carries a correction path and rollback target. |
-| **Separation of duties** | Where materiality applies, the release authority is not the author. |
-
----
-
-## 3. When to use this runbook
-
-Run this procedure when any of the following is happening:
-
-- A domain steward wants to advance a candidate object from one lifecycle phase to the next.
-- A release authority is preparing a `ReleaseManifest` for one or more layers, catalog records, or domain claims.
-- A correction reviewer is staging a `CorrectionNotice` against a PUBLISHED claim.
-- A reviewer is exercising a **rollback drill** (PR-10–class exercise, PROPOSED) against a dry-run release.
-- CI is gating a merge that touches `data/`, `release/`, `policy/promotion/`, or `policy/release/`.
-
-> [!TIP]
-> If you are tempted to "just move the files," stop. Use [§7 — Promotion dry-run](#7-promotion-dry-run) first. Dry-run is cheap; bypassing the gate is not reversible without a correction and rollback.
-
----
-
-## 4. Prerequisites
-
-Before running any gate, confirm the following supports are present **for the object you are promoting**. Missing supports are not blockers to running this runbook — they are blockers to passing the gate. The point of the runbook is to surface them before they cause a fail-closed denial in CI or at release time.
-
-| Prerequisite | Where it lives (PROPOSED) | Why |
-|---|---|---|
-| `SourceDescriptor` for every contributing source | `data/registry/source_descriptors/` | Source role, rights, sensitivity, cadence must be known. |
-| Rights status resolved | `control_plane/source_authority_register.yaml` | `RIGHTS_UNKNOWN` is a hard `DENY`. |
-| Sensitivity tag set | `control_plane/source_authority_register.yaml`, `policy/sensitivity/` | Sensitive lanes default to `DENY`. |
-| Schema target identified | `schemas/contracts/v1/<domain>/` | Validators need a target. |
-| Policy bundle compiled | `policy/promotion/`, `policy/release/` | The Rego/OPA gates evaluate this bundle. |
-| Identity strategy chosen | `contracts/` per object family | Deterministic identity preferred where practical. |
-
-> [!NOTE]
-> **CONFIRMED doctrine / PROPOSED implementation:** the exact filenames and paths above follow Directory Rules and the Domains Atlas. They are PROPOSED until verified against current mounted-repo evidence.
-
-[⬆ Back to top](#top)
-
----
-
-## 5. Promotion flow at a glance
-
-```mermaid
-flowchart LR
-    A["— (not admitted)"]:::ext
-    R["RAW"]:::raw
-    W["WORK"]:::work
-    Q["QUARANTINE"]:::quar
-    P["PROCESSED"]:::proc
-    C["CATALOG / TRIPLET"]:::cat
-    PUB["PUBLISHED"]:::pub
-
-    A -- "Admission: SourceDescriptor + payload hash" --> R
-    R -- "Normalization: TransformReceipt + ValidationReport" --> W
-    R -- "FAIL → QUARANTINE (reason recorded)" --> Q
-    W -- "Validation: ValidationReport pass<br/>RedactionReceipt if sensitive" --> P
-    Q -. "remediation + steward review" .-> W
-    P -- "Catalog closure: EvidenceBundle resolved<br/>catalog matrix + digest closure" --> C
-    C -- "Release: ReleaseManifest + rollback target<br/>+ ReviewRecord (if required)" --> PUB
-    PUB -. "CorrectionNotice / RollbackCard" .-> PUB
-
-    classDef ext fill:#eee,stroke:#666,color:#333
-    classDef raw fill:#fff3e0,stroke:#e65100,color:#000
-    classDef work fill:#e3f2fd,stroke:#0d47a1,color:#000
-    classDef quar fill:#ffebee,stroke:#b71c1c,color:#000
-    classDef proc fill:#e8f5e9,stroke:#1b5e20,color:#000
-    classDef cat fill:#f3e5f5,stroke:#4a148c,color:#000
-    classDef pub fill:#e0f7fa,stroke:#006064,color:#000
-```
-
-The diagram shows the five governed transitions and the receipt requirement for each. The dashed line from PUBLISHED back to itself is *not* a no-op — it is the post-publication correction loop, governed by `CorrectionNotice` and `RollbackCard` (see [§9](#9-correction-path)).
-
----
-
-## 6. Gate-by-gate procedure
-
-Each gate has the same shape: **pre-condition → required artifacts → run → outcome.** A gate that cannot prove its required artifacts emits a `FAIL` / `DENY` and the object stays in its prior phase. No silent advancement.
-
-### 6.1 Gate A — Admission ( — → RAW )
-
-**Pre-condition.** Source identity and rights are minimally established at discovery; source-role intent is set.
-
-**Required artifacts (PROPOSED minimum).**
-
-- `SourceDescriptor` — role (`observed | modeled | aggregate | regulatory | administrative`), authority, rights, sensitivity, cadence.
-- Payload hash or stable reference (`spec_hash` over canonical bytes).
-
-**Procedure.**
-
-1. Resolve the source against `control_plane/source_authority_register.yaml`. If unknown → `HOLD` for steward review.
-2. Emit `SourceDescriptor` under `data/raw/<domain>/<source_id>/<run_id>/`.
-3. Capture the immutable payload (or pointer + content hash) in the same `run_id` directory.
-4. Append an ingest receipt under `data/receipts/ingest/`.
-
-**Fail-closed outcomes.** Unknown rights → not admitted. Source-role collapse risk → not admitted. Logged as candidate awaiting steward.
-
-### 6.2 Gate B — Normalization ( RAW → WORK / QUARANTINE )
-
-**Pre-condition.** Schema, geometry, time, identity, evidence, rights, and policy rules are runnable for this lane.
-
-**Required artifacts (PROPOSED minimum).**
-
-- `TransformReceipt` — what normalization ran, on what bytes, with what tool versions.
-- `ValidationReport` (working set) — validator outcome from `{ANSWER, ABSTAIN, DENY, ERROR}`.
-- `PolicyDecision` — initial admissibility check.
-- For sensitive lanes: a tentative `RedactionReceipt` if any redaction occurred during normalization.
-
-**Procedure.**
-
-1. Run the normalization pipeline. Output lands in `data/work/<domain>/<run_id>/`.
-2. On any validator failure, route the object to `data/quarantine/<domain>/<reason>/<run_id>/` with a `quarantine_reason` field. **Do not silently promote.**
-3. Emit `TransformReceipt` and the working-set `ValidationReport` under `data/receipts/validation/`.
+> **This runbook is not promotion authority.** It cannot authenticate evidence
+> or reviewers, evaluate the inactive promotion-policy stubs, issue a
+> `PromotionDecision`, apply a transition, sign a release, publish an artifact,
+> or authorize public use.
 
 > [!CAUTION]
-> Source role is **fixed at admission**. Normalization MUST NOT upcast a modeled source to observed, an aggregate to per-place, or an administrative reference to a regulatory authority. Source-role collapse is a fail-closed condition (`ROLE_COLLAPSE`, `ROLE_DOWNCAST_FORBIDDEN`). — *Domains Atlas §24.6, §24.9.*
+> Promotion is a governed state transition, not a file move, passing workflow,
+> pull-request merge, deployment, or layer toggle.
 
-### 6.3 Gate C — Validation ( WORK → PROCESSED )
+**Navigation:** [authority](#purpose-and-authority) ·
+[current capability](#current-repository-capability) ·
+[preflight](#preflight) · [procedure](#procedure) ·
+[A-G profile](#current-bounded-a-g-profile) ·
+[outcomes](#finite-outcomes) · [handoff](#review-handoff) ·
+[rollback](#correction-and-rollback) · [validation](#document-validation)
 
-**Pre-condition.** Validators are deterministic and tied to fixtures; required receipts present.
+## Purpose and authority
 
-**Required artifacts.**
+This runbook helps an operator:
 
-- `ValidationReport` with `outcome == "ANSWER"` (pass).
-- `RedactionReceipt` if sensitivity applies.
-- `AggregationReceipt` if the object is a derived aggregate.
+1. freeze the exact candidate and authority context;
+2. run the current fixture and candidate-packet checks;
+3. preserve `PASS`, `ABSTAIN`, `DENY`, or `ERROR` without reinterpretation;
+4. inspect evidence, rights, sensitivity, review, and reversal obligations; and
+5. prepare a public-safe review handoff that explicitly records no public
+   effect.
 
-**Procedure.**
+It does **not** grant authority to review, approve, promote, release, deploy, or
+publish. In a conflict, use this order:
 
-1. Run the full validator suite for the domain (`tests/validators/<domain>/` — PROPOSED).
-2. Confirm fixtures-vs-validator parity (the validator must also fail closed against negative fixtures).
-3. Promote the normalized object to `data/processed/<domain>/<dataset_id>/<version>/`.
-4. Cross-link receipts via `EvidenceRef`.
+1. platform, security, and repository-enforced controls;
+2. accepted KFM doctrine and ADRs;
+3. current contracts, schemas, policy, validators, tests, and release records;
+4. this runbook;
+5. planning documents and historical examples.
 
-**Fail-closed outcomes.** Any validator returning `DENY` / `ERROR` / `FAIL` → stay in WORK. Structured `FAIL` outcome recorded.
-
-### 6.4 Gate D — Catalog closure ( PROCESSED → CATALOG / TRIPLET )
-
-**Pre-condition.** `EvidenceRef` values resolve; catalog matrix and digests close.
-
-**Required artifacts.**
-
-- `CatalogMatrix` entry (STAC + DCAT + PROV projection, PROPOSED v1 profile).
-- `EvidenceBundle` — content-addressed JSON-LD package binding claim, receipts, and authority crosswalks.
-- Graph / triplet projection (if applicable to the lane).
-
-**Procedure.**
-
-1. Resolve every `EvidenceRef` for the candidate against `data/proofs/evidence_bundle/`. Any unresolved reference → `ABSTAIN` and `HOLD` at PROCESSED.
-2. Emit the catalog record under `data/catalog/<stac|dcat|prov|domain>/`.
-3. Emit the `EvidenceBundle` under `data/proofs/evidence_bundle/<bundle_id>/` with a `spec_hash` computed via JCS + SHA-256 (PROPOSED canonicalization).
-4. If a triplet/graph projection applies, emit under `data/triplets/` — **never** as canonical truth, always as derived projection.
-
-> [!WARNING]
-> `EvidenceBundle` is **content-addressed**. Republishing the same logical bundle under a different hash silently invalidates every receipt that points at it. If the bundle must change, emit a new bundle with a new hash and supersede the old one through a `CorrectionNotice`.
-
-### 6.5 Gate E — Release ( CATALOG / TRIPLET → PUBLISHED )
-
-**Pre-condition.** Review state where required; release authority distinct from the original author when materiality applies.
-
-**Required artifacts.**
-
-- `ReleaseManifest` — release contents, version, digests, evidence refs, **rollback target**.
-- `ReviewRecord` (when required by the domain's sensitivity / materiality posture).
-- A signed attestation (DSSE / cosign — PROPOSED) binding the manifest to its inputs.
-- Confirmed correction path.
-
-**Procedure.**
-
-1. Stage the release candidate under `release/candidates/<domain>/`.
-2. Run `policy/release/*` against the candidate envelope. On `DENY` for any reason listed in [§12](#12-failure-codes-and-fail-closed-reference), stop here.
-3. Run the required review:
-   - **Routine, non-sensitive lane:** domain steward review.
-   - **Sensitive lane:** domain steward + sensitivity reviewer + release authority + rights-holder representative (where applicable). The author **MUST NOT** also be the release authority. — *Atlas §24.7.2 (PROPOSED).*
-4. Emit `ReleaseManifest` under `release/manifests/<release_id>/`.
-5. Sign the manifest (DSSE / cosign — PROPOSED).
-6. Activate the release: publish artifacts to `data/published/<api_payloads|layers|pmtiles|geoparquet|reports|stories>/` and update the layer registry / catalog pointers.
-7. Confirm the public surface via the governed API smoke check (`apps/governed-api/` — PROPOSED).
-
-**Fail-closed outcomes.** Missing manifest → `RELEASE_MANIFEST_INVALID`. Missing rollback target → `ROLLBACK_TARGET_MISSING`. Review insufficient → `REVIEW_INSUFFICIENT`. Any of these → `HOLD` at CATALOG, no public surface change.
-
-[⬆ Back to top](#top)
-
----
-
-## 7. Promotion dry-run
-
-The dry-run is the **PR-09 pattern** from the Encyclopedia roadmap (PROPOSED): validate a release candidate end-to-end without publishing it to a public surface. It is the safe way to discover that something is missing.
+[ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+confirms `docs/runbooks/` as the correct responsibility root. The lifecycle
+remains:
 
 ```text
-# Conceptual command shape — PROPOSED; verify against tools/ before running.
-kfm release dry-run \
-  --candidate release/candidates/<domain>/<candidate_id>/ \
-  --policy policy/release/ \
-  --no-public-write
+RAW -> WORK or QUARANTINE -> PROCESSED -> CATALOG or TRIPLET -> PUBLISHED
 ```
 
-The dry-run MUST:
+Public clients use governed interfaces and released public-safe artifacts.
+Maps, tiles, graphs, indexes, summaries, tests, documentation, and AI output
+remain downstream carriers rather than truth or release authority.
 
-1. Run every gate in [§6](#6-gate-by-gate-procedure) against the candidate.
-2. Build the `ReleaseManifest` but **not** activate any public surface.
-3. Emit a `PromotionReceipt` (PROPOSED object) recording gate IDs, inputs, proofs, release target, and rollback target.
-4. Confirm that `no-public-write` is enforced — the dry-run's own test suite includes a negative case that fails CI if a public write occurred.
+## Current repository capability
 
-> [!TIP]
-> Treat dry-run failures as **structural information**, not noise. A repeated dry-run failure for the same reason is a signal that a doctrine document, a fixture, or a validator is wrong — not that the gate is too strict.
+The repository currently supports a bounded readiness assessment, not an
+operational promotion system.
 
----
-
-## 8. Rollback drill
-
-The rollback drill (PR-10 pattern, PROPOSED) is how KFM proves that a release is reversible *before* it has to be reversed in anger. Run a drill at least once per release, ideally during dry-run.
-
-**Required artifacts (drill).**
-
-- A target `ReleaseManifest` to roll back from.
-- A prior `ReleaseManifest` (the `rollback_target`) to roll back to.
-- A `RollbackCard` recording the decision, the reason, the invalidated derivatives, and the review reference.
-
-**Procedure (drill — non-public).**
-
-1. Pick a recent dry-run release.
-2. Author a `RollbackCard` under `release/rollback_cards/<rollback_id>/` referencing the dry-run's `release_id` and the prior `release_id`.
-3. Run the rollback tool (PROPOSED `tools/release/rollback`) against the manifest pair.
-4. Confirm:
-   - Public-surface payloads return to the prior release's digests.
-   - Catalog records point at the prior `EvidenceBundle` versions.
-   - Any derivative layers, tiles, or graph projections are invalidated and rebuilt or withdrawn.
-5. Emit a drill receipt under `data/receipts/release/` and link it from the `RollbackCard`.
-
-> [!IMPORTANT]
-> **A release is not safe until a rollback drill has succeeded against it.** Directory Rules §6.5 places rollback policy in `policy/release/` and rollback decisions in `release/rollback_cards/`. The Encyclopedia identifies "Release without `ReleaseManifest` or rollback target" as an anti-pattern that breaks the trust membrane. — *Atlas §24.9.2.*
-
-See `docs/runbooks/ROLLBACK_DRILL.md` (`TODO`) for the full drill checklist and rehearsal cadence.
-
----
-
-## 9. Correction path
-
-A correction is the **only** way to amend a PUBLISHED claim. Edits in place are forbidden — the durable public unit is the inspectable claim, and silent edits break every receipt that points at the prior version.
-
-| Trigger | Required artifacts | Outcome |
+| Surface | Current evidence | Boundary |
 |---|---|---|
-| Detected error in PUBLISHED claim | `CorrectionNotice` + `ReviewRecord` | New release supersedes prior; prior remains inspectable |
-| New evidence invalidates a claim | `CorrectionNotice` + `ReviewRecord` + revised `EvidenceBundle` | Same as above; supersession entry recorded |
-| Failed release detected post-publish | `RollbackCard` + `ReviewRecord` | Rollback to prior `rollback_target` |
-| Rights / sensitivity escalation | `RedactionReceipt` + `ReviewRecord` (Steward + rights-holder where applicable) | Demote to a more restricted tier; prior release withdrawn |
+| `make publish-check` | Exercises the promotion fixture matrix and focused tests | Does not apply a transition |
+| `tools/validators/validate_promotion_gate.py` | Deterministic, no-network, read-only packet validator | Checks declared shape and agreement; does not resolve or authenticate references |
+| `.github/workflows/promotion-gate.yml` | Runs bounded validator/test coverage | A green workflow is not approval or publication |
+| `PromotionDecision` contract/schema/validator | Proposed finite `APPROVE`, `DENY`, `ABSTAIN` shape | Shape validity is not an accountable decision |
+| `PromotionReceipt` contract/schema/validator | Proposed fixture-first A-G receipt shape | A receipt records an assessment; it does not prove transition |
+| `policy/promotion/` | Proposed, inactive Rego stubs | No active promotion-policy evaluation is established |
+| `release/` | Canonical decision-plane homes and bounded fixtures | Operational promotion, signer custody, release, publication, and rollback execution remain unproved |
+| ADR-0018 | Proposed final-readiness vocabulary and conflict analysis | Not accepted architecture |
 
-A `CorrectionNotice` MUST enumerate the derivatives it invalidates (tiles, layers, graph edges, AI summaries, story exports). Re-publishing a corrected claim without invalidating derivatives is a fail-closed anti-pattern. — *Atlas §24.9.2.*
+Do not promote a proposal to current behavior merely because a path, fixture,
+contract, workflow, or document exists.
 
----
+## State and object separation
 
-## 10. Roles and separation of duties
+Keep these states and objects distinct:
 
-CONFIRMED doctrine (operating-law invariant 9): KFM separates policy-significant release duties when maturity justifies it. — *Domains Atlas §24.7.*
-
-| Role | What they own |
+| Item | Meaning |
 |---|---|
-| **Source steward** | Admission, rights confirmation, sensitivity tag for a source family. |
-| **Domain steward** | Object-family meaning, contracts, validators for a domain. |
-| **Sensitivity reviewer** | Redaction, generalization, withholding, tier decisions. |
-| **Rights-holder representative** | Sovereignty / consent decisions for archaeology, people-DNA-land, fauna/flora geoprivacy. |
-| **Release authority** | Issues `ReleaseManifest`s and authorizes PUBLISHED transitions. |
-| **Correction reviewer** | Reviews `CorrectionNotice` / `RollbackCard` before amendment. |
-| **AI surface steward** | Reviews Focus Mode templates and AI policy bindings. |
-| **Docs steward** | Governance docs, ADR index, drift register, Atlas integrity. |
+| Candidate lifecycle state | Where the subject is now: usually `CATALOG` or `TRIPLET` |
+| Readiness result | Validator result: `PASS`, `ABSTAIN`, `DENY`, or `ERROR` |
+| Review work state | Human coordination state such as `HOLD` or `REVIEW_REQUIRED` |
+| `PromotionDecision` | Separately accountable `APPROVE`, `DENY`, or `ABSTAIN` record |
+| Transition application | Auditable change of governed lifecycle/release state |
+| Release | Bound artifact/manifest/signature state |
+| Deployment | Operational placement of released bytes or services |
+| Publication | Governed public exposure |
+| `PromotionReceipt` | Record of an assessment; not proof that any later state occurred |
+| Proof or attestation | Support for a bounded claim; not the decision itself |
 
-**Separation-of-duties matrix (PROPOSED, from Atlas §24.7.2):**
+Never translate readiness `PASS` directly into decision `APPROVE`.
 
-| Action | Author may also approve? | Required separation |
+## When to use this runbook
+
+Use it only when the candidate, revision, lifecycle boundary, validation
+profile, and safe handling route are known.
+
+Do not use it to:
+
+- promote directly from `RAW`, `WORK`, `QUARANTINE`, or unvalidated
+  `PROCESSED`;
+- bypass evidence, rights, sensitivity, review, correction, or rollback;
+- publish because CI is green;
+- infer policy evaluation from a fixture field or inactive Rego stub;
+- copy restricted payloads into public branches, issues, logs, or receipts;
+- self-approve AI-authored, policy-significant, or release-significant work; or
+- write directly to `data/published/`, a live alias, CDN, tile endpoint, search
+  index, graph projection, or public API.
+
+## Roles and separation of duties
+
+Assignments must be verified for the exact candidate. A CODEOWNER or GitHub
+review route proves routing only.
+
+| Role | Responsibility | Must remain separate from |
 |---|---|---|
-| Source admission | Routine: yes; sovereign / unresolved rights: no | Source steward + rights-holder rep (if applicable) |
-| Normalization receipts | Routine: yes; sensitivity-relevant: no | Domain steward; sensitivity reviewer if applicable |
-| Validator authorship and run | Yes (deterministic) | Domain steward; periodic audit by docs steward |
-| Promotion to PROCESSED / CATALOG | Non-sensitive: yes; sensitive: no | Domain steward + sensitivity reviewer (sensitive) |
-| **Release to PUBLISHED** | **No when materiality applies** | **Author ≠ release authority; rights-holder rep where applicable** |
-| Sensitive-lane release | **No** | Author + sensitivity reviewer + release authority + rights-holder rep |
-| Correction / rollback | No when steward-significant | Author / detector + correction reviewer + release authority |
+| Candidate author or pipeline operator | Assemble and pin the candidate packet | Final review where separation is required |
+| Evidence/source steward | Verify source role, evidence closure, rights, and limits | Generated-language authority |
+| Policy/sensitivity steward | Evaluate the accepted policy profile and obligations | Candidate self-attestation |
+| Independent reviewer | Check subject binding, scope, obligations, and rollback | Authorship when independent review is required |
+| Release/signing operator | Apply a separately authorized transition and release process | This readiness runbook |
+| Correction/rollback steward | Verify prior safe target and correction path | Silent history rewrite |
 
-> [!NOTE]
-> Maturity note (CONFIRMED doctrine): early-stage doctrine work MAY be authored and approved by the same actor when materiality is low. As public trust surface expands, separation MUST be enforced through tooling, not custom. — *Directory Rules §2; Atlas §24.7.2.*
+Unverified ownership, authority interval, qualification, or required
+separation is a `HOLD`, not permission to continue.
 
-[⬆ Back to top](#top)
+## Preflight
 
----
+### 1. Freeze the candidate
 
-## 11. Decision outcomes
+Record:
 
-Every governed API surface, validator, policy gate, and Focus Mode answer returns one of a finite set of outcomes. The promotion flow uses the same vocabulary, so a CI failure speaks the same language as a runtime answer.
+- repository and exact commit or immutable snapshot;
+- candidate ID, run ID, producer, domain, and current state;
+- requested target state;
+- contract, schema, validator, and policy profile versions;
+- `spec_hash`, artifact digests, and manifest identity;
+- active pull requests, migrations, corrections, or release work touching the
+  same subject;
+- accepted ADRs and Directory Rules; and
+- previous public-safe state and rollback target.
 
-| Outcome | When | Promotion effect |
+A result is stale after any bound input, schema, policy, evidence, review,
+rights, sensitivity, artifact, manifest, or rollback reference changes.
+
+### 2. Confirm safe handling
+
+Use public-safe identifiers and references. Never place credentials, signing
+material, exploit details, exact sensitive locations, protected cultural
+information, living-person records, DNA/genomic material, private-land detail,
+or infrastructure vulnerability information in a public packet.
+
+Follow [`SECURITY.md`](../../SECURITY.md) and the
+[Incident Response Runbook](./INCIDENT_RESPONSE.md) for active exposure.
+
+### 3. Assemble the declared packet
+
+The bounded validator expects explicit declarations for:
+
+- identity and lifecycle boundary;
+- candidate, manifest, run-receipt, and artifact digest binding;
+- geometry, CRS, bounds, and deterministic processing;
+- real UTC temporal interval and evaluation instant;
+- policy profile, labels, result, and reference;
+- evidence, proof, attestation, receipt, and catalog support;
+- review actor, authority, scope, time, obligations, and separation;
+- rollback target and correction lineage; and
+- an AI receipt when model mediation materially affected the candidate.
+
+The validator checks declarations and internal agreement. It does not
+dereference URIs, authenticate actors, execute Rego, verify signatures, prove
+rights, resolve an `EvidenceBundle`, or inspect public surfaces.
+
+## Procedure
+
+### 1. Reproduce the bounded fixture proof
+
+From a checkout at the exact candidate revision:
+
+```bash
+make publish-check
+```
+
+Record the command, commit, exit status, and complete output. This exercises
+repository fixtures and focused tests; it does not evaluate an arbitrary
+candidate packet. Do not call the check passing when it was not run, was
+inherited from another commit, or did not reach the named assertions.
+
+### 2. Evaluate the explicit packet
+
+```bash
+python tools/validators/validate_promotion_gate.py path/to/candidate-packet.json
+```
+
+The path is illustrative. Use the actual pinned public-safe packet or an
+approved secure working path. The command emits one deterministic JSON line per
+input and writes no decision, receipt, proof, manifest, release record, or
+public artifact.
+
+### 3. Preserve the exact result
+
+```text
+ERROR > DENY > ABSTAIN > PASS
+```
+
+- `PASS` means `APPROVE_READY` for separate accountable review.
+- `ABSTAIN` means support is unresolved or insufficient.
+- `DENY` means a mandatory, unsafe, or contradictory condition blocks
+  readiness.
+- `ERROR` means the packet or supplied evaluation context could not be
+  processed safely.
+
+Every non-`PASS` result is `BLOCKED`; preserve the prior state.
+
+### 4. Run release-family shape checks when relevant
+
+```bash
+python tools/validators/release/validate_promotion_decision.py --fixtures
+python tools/validators/release/validate_promotion_receipt.py --fixtures
+```
+
+These commands validate proposed shapes and bounded consistency. They do not
+create an accountable decision or prove a transition.
+
+### 5. Resolve material support
+
+Before a later accountable decision, verify that references exist, are
+authentic and current, bind the same subject and artifact set, and are
+admissible for the intended audience. At minimum check:
+
+- source identity, role, rights, terms, and sensitivity;
+- `EvidenceRef` to `EvidenceBundle` resolution;
+- validator and policy profile identity;
+- artifact and manifest digest equality;
+- spatial and temporal scope;
+- review authority, separation, validity interval, and obligations;
+- correction, withdrawal, and rollback support; and
+- public-safe transformation and representation receipts when material.
+
+A syntactically valid reference is not closure.
+
+### 6. Prepare the handoff and stop
+
+Record:
+
+- candidate ID, exact revision, `spec_hash`, and artifact digests;
+- declared `CATALOG` or `TRIPLET` to `PUBLISHED` boundary;
+- exact commands and profile;
+- complete finite results and public-safe diagnostics;
+- evidence, policy, review, attestation, manifest, correction, and rollback
+  references;
+- unresolved obligations, conflicts, stale support, and unavailable checks;
+- overlap and dependency order;
+- previous public state and proposed rollback target; and
+- an explicit statement that no transition, release, deployment, publication,
+  alias mutation, cache invalidation, or public write occurred.
+
+Stop here. A later transition needs separate authority, accepted active policy,
+authenticated subject-bound review, accountable decision, evidence and
+integrity closure, authoritative manifest/signature handling, and executable
+correction/rollback support.
+
+## Current bounded A-G profile
+
+The executable validator uses these names. Proposed
+[ADR-0018](../adr/ADR-0018-promotion-gate-sequence.md) selects the same names
+for a narrow final-readiness profile, but it remains proposed and records
+conflicts with broader lifecycle-wide A-G vocabularies.
+
+| Gate | Name | Declared check | Fail-closed posture |
+|:---:|---|---|---|
+| A | `identity_and_closure` | Candidate/profile identity, author, `spec_hash`, lifecycle boundary, manifest identity | `DENY` on missing or contradictory identity |
+| B | `asset_integrity` | Candidate, manifest, receipt, and non-empty unique digest-set agreement | `DENY` on mismatch or malformed digest |
+| C | `geometry_and_crs` | Declared validity, determinism, `EPSG:4326`, ordered finite bounds | `DENY` on invalid or nondeterministic geometry |
+| D | `temporal_semantics` | Real UTC-second instants, ordered interval, evaluation time | `DENY` on malformed or inverted time |
+| E | `rights_and_sensitivity` | Known policy context, labels, public-safe discipline, supplied finite evaluation | `DENY` on rejection; `ERROR` on evaluator failure |
+| F | `proof_and_catalog_support` | Evidence, attestation, run receipt, STAC/DCAT/PROV support, conditional AI receipt | `ABSTAIN` for unresolved evidence; `DENY` for mandatory integrity/catalog gaps |
+| G | `review_and_rollback` | Review identity/authority/time/scope/binding plus rollback/correction linkage | `ABSTAIN` or `DENY` on missing, stale, unsafe, self-reviewed, or contradictory context |
+
+A validator may evaluate all seven gates for complete diagnostics. Any
+non-`PASS` result still blocks readiness.
+
+## Finite outcomes
+
+| Result | Meaning | Operator action |
 |---|---|---|
-| **ANSWER** | Evidence sufficient, policy permits, release state allows, review recorded. | Gate passes. |
-| **ABSTAIN** | Evidence insufficient or unresolvable; AI surface cannot cite; stale with no released alternative. | Gate holds; object stays in prior phase. |
-| **DENY** | Policy, rights, sensitivity, or release state forbids. | Gate fails closed; object stays or is quarantined. |
-| **ERROR** | Governed API / validator cannot evaluate (schema, contract, infrastructure). | Gate fails closed with diagnostic; no silent fall-through. |
-| **HOLD** | Pending steward / rights-holder / policy review. | Surface stays in prior state; no silent replacement. |
-| **PASS** | Validator-class: input acceptable. | Internal; permits next-gate evaluation. |
-| **FAIL** | Validator-class: input unacceptable. | Promotion blocked; quarantine where appropriate. |
+| `PASS` | Declared packet satisfied the bounded profile | Record `APPROVE_READY`; hand off |
+| `ABSTAIN` | Required support is unresolved or insufficient | Preserve state; obtain support or narrow scope |
+| `DENY` | Mandatory, unsafe, or contradictory condition exists | Preserve state; correct the source condition |
+| `ERROR` | Input or supplied context could not be evaluated safely | Diagnose and rerun from the same pinned state |
 
-`PromotionDecision` and `RuntimeResponseEnvelope` are the two contract objects that carry these outcomes across the trust membrane. — *Master MapLibre §11; Atlas §24.3.*
+The proposed `PromotionDecision` vocabulary is separate:
 
----
-
-## 12. Failure codes and fail-closed reference
-
-Codes are drawn from the Master Failure / Outcome Code Reference (Atlas §24.6, PROPOSED). They are the canonical reason vocabulary; do not invent new ones inline.
-
-<details>
-<summary><b>Click to expand the full fail-closed code table</b></summary>
-
-| Code | Phase | Resolution |
+| Decision | Meaning | Boundary |
 |---|---|---|
-| `RIGHTS_UNKNOWN` | Admission / Validation / Catalog / Release | Steward review; rights resolution; tier reassignment. |
-| `SENSITIVITY_UNRESOLVED` | Admission / Validation / Catalog / Release | Steward review; rights resolution; tier reassignment. |
-| `ROLE_COLLAPSE` | Validation / Catalog / Release | Restore source role; refuse upcast. |
-| `ROLE_DOWNCAST_FORBIDDEN` | Validation / Catalog / Release | Restore source role; refuse upcast. |
-| `REVIEW_NEEDED` | Catalog / Release | Run required review; supply `ReviewRecord`. |
-| `REVIEW_INSUFFICIENT` | Catalog / Release | Run required review; supply `ReviewRecord`. |
-| `REVIEW_REJECTED` | Catalog / Release | Address review reasons; resubmit. |
-| `RELEASE_MANIFEST_INVALID` | Release | Repair manifest; resubmit. |
-| `ROLLBACK_TARGET_MISSING` | Release | Supply rollback target; resubmit. |
-| `CORRECTION_DERIVATIVES_UNRESOLVED` | Correction | Resolve derivatives; supersession entry. |
-| `CORRECTION_PRIOR_RELEASE_MISSING` | Correction | Locate prior release; restore lineage. |
+| `APPROVE` | Accountable decision permits later release processing | Not publication by itself |
+| `DENY` | Transition is forbidden | Preserve prior state |
+| `ABSTAIN` | Decision maker lacks sufficient trustworthy context | Preserve state and route for resolution |
 
-</details>
+## Rights, sensitivity, and harmful precision
 
-A gate that produces any of these codes **MUST** record them in the receipt trail. Silent fall-through is forbidden.
+Unknown or disputed rights, consent, sovereignty, privacy, sensitivity, or
+precision fail closed. This is especially important for archaeology, rare
+species, protected cultural information, infrastructure, private land,
+living-person records, and DNA/genomic material.
 
----
+Before any later public transition, verify that source terms permit the
+intended audience; source roles remain distinct; sensitive geometry was
+transformed before delivery rather than hidden by style; any redaction,
+generalization, withholding, delay, or staged access has a reason and transform
+receipt; required subject/community review occurred; and every affected
+derivative can be corrected, withdrawn, invalidated, or rolled back.
 
-## 13. Anti-patterns
+Use `ABSTAIN`, `DENY`, or human `HOLD` when required facts are unknown. Never
+convert uncertainty into public precision.
 
-The Encyclopedia and the Atlas name these explicitly. They appear here so a reviewer can call them out at PR time, not after publication.
+## Review handoff
 
-> [!CAUTION]
-> **Trust-membrane anti-patterns** (Atlas §24.9.2):
-> - Public client reads RAW / WORK / QUARANTINE.
-> - Map shell consumes canonical / internal store directly.
-> - AI returns uncited language.
-> - AI answers from RAW / WORK rather than `EvidenceBundle`.
-> - Sensitive content released without redaction.
-> - Aggregate cited as per-place observation.
-> - Synthetic surface presented without `RealityBoundaryNote`.
-> - KFM used as alert / instruction authority.
-> - **Release without `ReleaseManifest` or rollback target.**
-> - AI generation routed through an admin shortcut.
+A reviewer must be able to answer:
 
-> [!CAUTION]
-> **Governance-process anti-patterns** (Atlas §24.9.3):
-> - Documenting a change instead of validating it.
-> - Approving one's own release on a sensitive lane.
-> - Treating an Atlas summary or matrix as evidence.
-> - Silent migrations between schema or policy homes.
-> - Promotion that "upgrades" a source role (e.g., modeled → observed).
-> - Re-publishing a corrected claim without invalidating derivatives.
+1. What exact candidate and lifecycle boundary were assessed?
+2. Which evidence and policy context support it?
+3. Which commands ran against which commit, and what did they prove?
+4. Which reviewer identities and assignments are authenticated?
+5. Which obligations or conflicts remain?
+6. What prior public state is preserved?
+7. Which correction and rollback paths apply?
+8. Did any public or operational state change? Under this runbook, **no**.
 
----
+Use the [Review Duties guide](../governance/REVIEW_DUTIES.md). A fixture actor,
+CODEOWNER, workflow, pull request, or generated receipt does not prove approval.
 
-## 14. Receipt and artifact reference
+## Correction and rollback
 
-<details>
-<summary><b>Receipt × lifecycle-phase matrix (Atlas §24.2.2; CONFIRMED doctrine)</b></summary>
+Readiness is incomplete without a correction path and rollback target, but this
+runbook executes neither.
 
-A `•` means the receipt is normally emitted, amended, or referenced at that phase. Receipts created earlier remain referenced (not duplicated) at later phases via `EvidenceRef`.
+- Use the [Evidence Correction Runbook](./EVIDENCE_CORRECTION.md) for
+  public-safe defect intake, classification, candidate preparation, bounded
+  validation, and review handoff.
+- Use the [Rollback Runbook](./ROLLBACK_RUNBOOK.md) as companion guidance while
+  preserving its documented execution holds.
+- Treat [Release Dry-Run](./RELEASE_DRY_RUN.md) as a draft rehearsal guide; its
+  conceptual release command is not established as a transition executor.
 
-| Receipt | RAW | WORK / QUAR. | PROCESSED | CATALOG / TRIPLET | PUBLISHED |
-|---|:-:|:-:|:-:|:-:|:-:|
-| `SourceDescriptor` | • | • | • | • | • |
-| `TransformReceipt` |  | • | • | • |  |
-| `RedactionReceipt` |  | • | • | • | • |
-| `AggregationReceipt` |  | • | • | • | • |
-| `ModelRunReceipt` |  | • | • | • | • |
-| `RepresentationReceipt` |  |  | • | • | • |
-| `AIReceipt` |  |  | • | • | • (Focus Mode only) |
-| `ReviewRecord` |  | • | • | • | • |
-| `PolicyDecision` | • | • | • | • | • |
-| `ValidationReport` |  | • | • | • |  |
-| `ReleaseManifest` |  |  |  |  | • |
-| `CorrectionNotice` |  |  |  |  | • |
-| `RollbackCard` |  |  |  |  | • |
-| `RealityBoundaryNote` |  |  | • | • | • |
-| `MatrixCellReceipt` |  |  | • | • | • |
-| `StorySnapshot` |  |  |  |  | • |
+Correction, withdrawal, and rollback preserve prior records and emit a new
+governed decision or notice rather than silently rewriting history. Any
+authorized invalidation plan must include downstream caches, tiles, search
+indexes, graph projections, stories, exports, and AI-derived surfaces.
 
-</details>
+## Troubleshooting
 
-<details>
-<summary><b>Where each artifact lives (PROPOSED, per Directory Rules)</b></summary>
+| Observation | Safe interpretation | Next action |
+|---|---|---|
+| `make publish-check` was not run or did not reach named tests | No current fixture proof | Fix or report the exact unavailable check |
+| Packet returns `ABSTAIN` | Support is insufficient | Resolve support or narrow scope |
+| Packet returns `DENY` | Mandatory or unsafe condition blocks readiness | Preserve state and correct the condition |
+| Packet returns `ERROR` | Tool, input, or supplied context failed safely | Diagnose and rerun at the pinned scope |
+| `PASS` conflicts with evidence, rights, or review | Validator is not final authority | Record the conflict and hold |
+| Referenced object cannot be resolved/authenticated | Presence is not closure | Keep blocked |
+| Result is inferred from inactive Rego stubs | No active promotion policy ran | Keep blocked |
+| Reviewer equals author where separation is required | Review is not closed | Assign an independent reviewer |
+| Step proposes public-store or live-alias write | Authority ceiling crossed | Stop and route to a separate operation |
+| Sensitive detail appears in public coordination | Handling is unsafe | Contain privately; retain only safe identifiers |
 
-| Artifact | Proposed home |
-|---|---|
-| `SourceDescriptor` | `data/registry/source_descriptors/` |
-| `TransformReceipt`, `ValidationReport` | `data/receipts/validation/`, `data/receipts/pipeline/` |
-| `EvidenceBundle` | `data/proofs/evidence_bundle/<bundle_id>/` |
-| `CatalogMatrix` / catalog records | `data/catalog/<stac\|dcat\|prov\|domain>/` |
-| `ReleaseManifest` | `release/manifests/<release_id>/` |
-| `RollbackCard` | `release/rollback_cards/<rollback_id>/` |
-| `CorrectionNotice` | `release/correction_notices/<notice_id>/` |
-| `PromotionReceipt`, gate decision logs | `data/receipts/release/` (PROPOSED) |
-| `ReviewRecord` | `release/review_records/` (PROPOSED) |
+## Completion checklist
 
-All paths PROPOSED until verified against mounted-repo evidence. NEEDS VERIFICATION: whether `data/manifests/` exists as a separate home, or whether all manifests live under `release/manifests/`. — *Directory Rules §18.*
+- [ ] Candidate and exact revision are pinned.
+- [ ] Boundary is `CATALOG` or `TRIPLET` toward `PUBLISHED`.
+- [ ] Public-safe handling and overlap are checked.
+- [ ] Fixture checks and explicit packet validation ran or are reported
+      unavailable.
+- [ ] Finite results and diagnostics are preserved.
+- [ ] Material support is resolved or explicitly blocked.
+- [ ] Rights, sensitivity, review, correction, and rollback remain visible.
+- [ ] Handoff records prior state and no-public-write boundary.
+- [ ] No transition, release, deployment, publication, alias mutation, cache
+      invalidation, or public serving occurred or was implied.
 
-</details>
+## Document validation
 
-[⬆ Back to top](#top)
+For changes to this Markdown:
 
----
+```bash
+git diff --check
+```
 
-## 15. Related docs
+Also verify one H1; balanced code fences and metadata delimiters; logical
+heading order; working relative links and anchors; current commands, paths,
+contracts, schemas, policy, workflow, and status claims; no invented owner or
+maturity; no unrelated churn; final newline; and the required generated
+provenance receipt for AI-authored work.
 
-- [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — the invariant and what counts as a violation.
-- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — where things live; why a path move is not a promotion.
-- [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — the public-surface boundary the runbook protects.
-- [`docs/architecture/governed-api/README.md`](../architecture/governed-api/README.md) — the trust-membrane interface.
-- [`docs/runbooks/ROLLBACK_DRILL.md`](./ROLLBACK_DRILL.md) — `TODO` — drill cadence and full checklist.
-- [`docs/runbooks/CORRECTION.md`](./CORRECTION.md) — `TODO` — post-publication correction procedure.
-- [`docs/adr/`](../adr/) — accepted ADRs that may amend this runbook.
-- [`policy/promotion/`](../../policy/promotion/) — promotion-gate policy.
-- [`policy/release/`](../../policy/release/) — release-gate policy.
-- [`control_plane/release_state_register.yaml`](../../control_plane/release_state_register.yaml) — the machine-readable release-state index.
+Run repository Markdown/link checks when available. Report unavailable,
+inherited, or pending checks separately.
 
----
+## Open verification
 
-## 16. Open questions
+The documentation change does not:
 
-These are the verification items that block parts of this runbook from being upgraded from PROPOSED to CONFIRMED implementation. They are not blockers to running the procedure as documented — they are blockers to claiming the procedure is wired up.
+1. accept ADR-0018 or settle every A-G compatibility vocabulary;
+2. activate a fail-closed promotion-policy bundle and evaluator;
+3. establish authenticated stewards, reviewer qualification, or separation;
+4. implement a canonical candidate/evidence resolver;
+5. establish signature, transparency, or trust-root verification;
+6. implement a transition operator;
+7. prove release-manifest assembly or governed public read-back; or
+8. exercise correction, withdrawal, cache invalidation, and rollback end to
+   end.
 
-- **NEEDS VERIFICATION** — Does `apps/governed-api/` exist in the current repo, and what is its release-state surface?
-- **NEEDS VERIFICATION** — Is the policy engine OPA / Conftest, or something else? — *Build Manual §3, Reconciliation Note.*
-- **NEEDS VERIFICATION** — Does `release/manifests/` exist as a canonical home, or is `data/manifests/` also present? — *Directory Rules §18.*
-- **NEEDS VERIFICATION** — Is `JCS + SHA-256` or `URDNA2015` the canonicalization for `EvidenceBundle` hashes? — *Components Pass 10 §11.2.*
-- **UNKNOWN** — Are dry-run and rollback drill tools (PR-09 / PR-10 pattern) implemented or only proposed?
-- **UNKNOWN** — Is the `PromotionReceipt` schema present under `schemas/contracts/v1/`, or is it still PROPOSED?
-- **OPEN** — Is `policy/release/` the canonical home, or is release policy split across `policy/promotion/` and `policy/release/`? An ADR may be needed.
+## Maintenance and rollback
 
-Entries here are migrated to `docs/registers/VERIFICATION_BACKLOG.md` (PROPOSED) when accepted as the canonical backlog.
+Update this runbook whenever current repository behavior changes. Preserve
+`kfm://doc/runbook/promotion` and repair known inbound links when headings or
+scope change.
 
----
+Before merge, abandon the draft by closing it and deleting only its task branch.
+After merge, revert the focused documentation commit through review. Reverting
+this document must not change candidate, release, deployment, publication,
+policy, review, or public state.
 
-<hr/>
+## Related references
 
-**Last updated:** `TODO`  ·  **Doc id:** `kfm://doc/runbook/promotion`  ·  **Status:** draft (PROPOSED implementation; CONFIRMED doctrine)
+- [Runbooks index](./README.md)
+- [Lifecycle Law](../doctrine/lifecycle-law.md)
+- [Trust Membrane](../doctrine/trust-membrane.md)
+- [Directory Rules](../doctrine/directory-rules.md)
+- [Publication promotion-gate architecture](../architecture/publication/promotion-gates.md)
+- [Proposed ADR-0018](../adr/ADR-0018-promotion-gate-sequence.md)
+- [Release governance root](../../release/README.md)
+- [`PromotionDecision` contract](../../contracts/release/promotion_decision.md)
+- [`PromotionReceipt` contract](../../contracts/release/promotion_receipt.md)
+- [Promotion policy boundary](../../policy/promotion/README.md)
+- [Bounded promotion-gate validator](../../tools/validators/promotion_gate/README.md)
+- [Promotion-gate workflow](../../.github/workflows/promotion-gate.yml)
 
-**See also:** [Lifecycle Law](../doctrine/lifecycle-law.md) · [Directory Rules](../doctrine/directory-rules.md) · [Trust Membrane](../doctrine/trust-membrane.md) · [Rollback Drill](./ROLLBACK_DRILL.md)
-
-[⬆ Back to top](#top)
+[Back to top](#top)

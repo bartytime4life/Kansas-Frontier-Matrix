@@ -1,0 +1,160 @@
+{
+  "receipt_id": "genrec-promotion-runbook-20260831",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/PROMOTION_RUNBOOK.md"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/PROMOTION_RUNBOOK.md": "sha256:c159eeb95de10dac2ba5c07b0355388f0da30548db989f88cc603470b41d77a9"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-31"
+  },
+  "prompt_or_contract": "sha256:993d92dc099273676ce1c017ef676abc03e7ff8ea6e4e6a4c41ff4fb291c4f82",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector repository inspection and mutation",
+      "Notion connector coordination",
+      "Google Drive connector read-only source inspection",
+      "Local deterministic Markdown and JSON validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf",
+      "KFM_Greenfield_Commissioning_Plan_v2_FULL(1).pdf",
+      "KFM Contributor Reliability System_ Documentation, PR Quality, and CI Hardening.pdf"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/246573b531ecfa4b221c08f25a28e6ae762cfd9f/docs/runbooks/PROMOTION_RUNBOOK.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/246573b531ecfa4b221c08f25a28e6ae762cfd9f/docs/runbooks/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/246573b531ecfa4b221c08f25a28e6ae762cfd9f/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/246573b531ecfa4b221c08f25a28e6ae762cfd9f/docs/doctrine/lifecycle-law.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/246573b531ecfa4b221c08f25a28e6ae762cfd9f/docs/doctrine/trust-membrane.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/246573b531ecfa4b221c08f25a28e6ae762cfd9f/docs/adr/ADR-0018-promotion-gate-sequence.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/246573b531ecfa4b221c08f25a28e6ae762cfd9f/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/246573b531ecfa4b221c08f25a28e6ae762cfd9f/release/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/246573b531ecfa4b221c08f25a28e6ae762cfd9f/contracts/release/promotion_decision.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/246573b531ecfa4b221c08f25a28e6ae762cfd9f/contracts/release/promotion_receipt.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/246573b531ecfa4b221c08f25a28e6ae762cfd9f/policy/promotion/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/246573b531ecfa4b221c08f25a28e6ae762cfd9f/tools/validators/promotion_gate/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/246573b531ecfa4b221c08f25a28e6ae762cfd9f/.github/workflows/promotion-gate.yml",
+      "drive://161zjrR23nrv2b9ejne7iRDasVNnvCFwc"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/PROMOTION_RUNBOOK.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Same-path update remains under the accepted docs/runbooks responsibility root; no move, new authority home, or lifecycle-root change is introduced."
+    },
+    {
+      "gate": "exact-base-and-target-freeze",
+      "outcome": "PASS",
+      "reason": "Current default branch and target bytes were re-read at main@246573b531ecfa4b221c08f25a28e6ae762cfd9f; prior target blob ea01ae337019c9d4f595f5cbb592a01d9ac05f3e was unchanged before branch creation."
+    },
+    {
+      "gate": "open-overlap-reconciliation",
+      "outcome": "PASS",
+      "reason": "No open pull request or exact task branch was found for docs/runbooks/PROMOTION_RUNBOOK.md at preflight."
+    },
+    {
+      "gate": "repository-grounding",
+      "outcome": "PASS",
+      "reason": "Commands, paths, object families, status boundaries, and finite outcomes were reconciled against current repository files; Drive material remained read-only planning lineage."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Local deterministic checks confirmed one H1, ordered headings, balanced code fences and metadata delimiters, no trailing whitespace, no unresolved TODO marker, and a final newline."
+    },
+    {
+      "gate": "affected-relative-links",
+      "outcome": "PASS",
+      "reason": "All repository-relative targets introduced or retained by this rewrite were checked against current GitHub paths; local anchor checks resolved the quick-navigation fragments."
+    },
+    {
+      "gate": "artifact-sha256",
+      "outcome": "PASS",
+      "reason": "Final proposed runbook bytes produced SHA-256 c159eeb95de10dac2ba5c07b0355388f0da30548db989f88cc603470b41d77a9 before commit."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "Receipt fields, key equality, enum values, patterns, and pending-review posture were validated against generated_receipt.schema.json contract version 3.0.0."
+    },
+    {
+      "gate": "local-repository-native-checks",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout was available in this connector run, so git diff --check, repository-native Markdown tooling, make publish-check, and the generated-receipt validator were not executed locally."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks can start only after the immutable branch head and draft pull request exist; their exact-head state is reported in the handoff."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request; this automation does not request, submit, or approve reviews."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "repository:target-before-update",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/246573b531ecfa4b221c08f25a28e6ae762cfd9f/docs/runbooks/PROMOTION_RUNBOOK.md"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/246573b531ecfa4b221c08f25a28e6ae762cfd9f/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repository:release-root",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/246573b531ecfa4b221c08f25a28e6ae762cfd9f/release/README.md"
+    },
+    {
+      "id": "repository:bounded-promotion-validator",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/246573b531ecfa4b221c08f25a28e6ae762cfd9f/tools/validators/promotion_gate/README.md"
+    },
+    {
+      "id": "repository:proposed-promotion-gate-adr",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/246573b531ecfa4b221c08f25a28e6ae762cfd9f/docs/adr/ADR-0018-promotion-gate-sequence.md"
+    },
+    {
+      "id": "drive:greenfield-commissioning-plan-v2",
+      "validated": true,
+      "evidence_ref": "drive://161zjrR23nrv2b9ejne7iRDasVNnvCFwc"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-31T19:06:53Z",
+  "emitter": "OpenAI ChatGPT automation runtime",
+  "links": {
+    "pr_number": 4016,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Generated-receipt provenance for the repository-grounded rewrite of docs/runbooks/PROMOTION_RUNBOOK.md. The document narrows the procedure to bounded CATALOG/TRIPLET promotion-readiness assessment and accountable review handoff. It creates no evidence, policy, authenticated review, PromotionDecision, lifecycle transition, release, deployment, publication, source activation, signature, or public-use authority."
+}
