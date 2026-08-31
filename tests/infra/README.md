@@ -1,6 +1,43 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/tests-infra-readme
+title: tests/infra/ — Infrastructure Static-Test Boundary
+type: README
+version: v0.2
+status: draft; repository-grounded; two-module-inventory; partial-workflow-binding; static-only; no-network-by-implementation; non-authoritative
+owners: OWNER_TBD — Infrastructure steward · QA steward · Security reviewer · CI steward · Release steward
+created: 2026-07-29
+updated: 2026-08-31
+policy_label: repository-facing; tests; infrastructure; docker; compose; static; local-files-only; non-publisher
+owning_root: tests/
+responsibility: executable static checks for bounded Docker and Compose review inputs without becoming infrastructure, security, runtime, deployment, release, or publication authority
+truth_posture: CONFIRMED two direct test modules, seven source-defined unittest methods, one partial direct workflow binding, one related security workflow, and no dedicated Make target at the pinned snapshot / UNKNOWN complete infrastructure coverage, full-lane hosted collection, required-check status, runtime parity, accountable stewardship, correction propagation, and operational rollback
+evidence_repository: bartytime4life/Kansas-Frontier-Matrix
+evidence_base_ref: main
+evidence_base_commit: 5d835798e09a4dd14735779cb44206a8a3e8b2d3
+evidence_prior_blob: cf59e18a27f90d8bdb015bd92fc6a45614c9ab83
+direct_test_module_count: 2
+source_defined_test_count: 7
+direct_workflow_binding_count: 1
+related:
+  - ../README.md
+  - ../../docs/doctrine/directory-rules.md
+  - ../../infra/README.md
+  - ../../infra/compose/README.md
+  - ../../infra/docker/README.md
+  - ./test_compose_static.py
+  - ./test_docker_security_overrides.py
+  - ../../.github/workflows/infra-compose-smoke.yml
+  - ../../.github/workflows/security.yml
+notes:
+  - "Counts describe source-defined unittest methods at the pinned Git tree, not collected-case totals, coverage, runtime behavior, or deployment evidence."
+  - "KFM_NO_NETWORK records intent; neither module installs a process-wide network guard. Their current no-network property follows from inspected local-file-only implementation."
+  - "Passing tests or workflows do not authorize review, release, deployment, promotion, publication, or public exposure."
+[/KFM_META_BLOCK_V2] -->
+
 # Infrastructure static-test boundary
 
-`tests/infra/` contains repository-local, no-network assertions for the bounded
+`tests/infra/` contains two modules and seven repository-local, no-network
+assertions for the bounded
 Docker and Compose review inputs under `infra/`. It is a test lane, not an
 infrastructure definition, deployment runbook, security policy, or release
 authority.
@@ -9,11 +46,12 @@ Status: `CONFIRMED STATIC TESTS / NO RUNTIME OR DEPLOYMENT PROOF`.
 
 ## Current inventory
 
-| Path | Reads | Bounded assertion |
-|---|---|---|
-| `test_compose_static.py` | `infra/compose/docker-compose.yml` and its referenced Dockerfiles | The two exact build contexts and Dockerfiles resolve; each Dockerfile declares `FROM`, `WORKDIR`, and a final non-root `USER`; both published ports are loopback-bound; the Compose text omits the enumerated privileged, host-network, Docker-socket, sensitive-data, release, and secret markers |
-| `test_docker_security_overrides.py` | Explorer review-image Dockerfile, manifest, and lockfile under `infra/docker/` | The three exact runtime overrides are pinned; the lock binds `tar` `7.5.22` and integrity metadata; its five checked runtime dependencies have `sha512` integrity values; the Dockerfile contains the expected npm checksum, replacement paths, exact dependency versions, and fail-closed extraction-API assertion |
-| `README.md` | Repository and workflow evidence | Human-maintained routing, execution, interpretation, and maintenance boundary |
+| Path | Tests | Reads | Bounded assertion |
+|---|---:|---|---|
+| [`test_compose_static.py`](test_compose_static.py) | 3 | `infra/compose/docker-compose.yml` and its referenced Dockerfiles | The two exact build contexts and Dockerfiles resolve; each Dockerfile declares `FROM`, `WORKDIR`, and a final non-root `USER`; both published ports are loopback-bound; the Compose text omits the enumerated privileged, host-network, Docker-socket, sensitive-data, release, and secret markers |
+| [`test_docker_security_overrides.py`](test_docker_security_overrides.py) | 4 | Explorer review-image Dockerfile, manifest, and lockfile under `infra/docker/` | The three exact runtime overrides are pinned; the lock binds `tar` `7.5.22` and integrity metadata; its five checked runtime dependencies have `sha512` integrity values; the Dockerfile contains the expected npm checksum, replacement paths, exact dependency versions, and fail-closed extraction-API assertion |
+| `README.md` | — | Repository and workflow evidence | Human-maintained routing, execution, interpretation, and maintenance boundary |
+| **Total** | **7** | — | Source-defined `unittest` methods; not a coverage percentage or runtime claim |
 
 These checks inspect committed text and JSON. They do not invoke Docker, start a
 service, open a socket, contact a registry, query a vulnerability database, or
