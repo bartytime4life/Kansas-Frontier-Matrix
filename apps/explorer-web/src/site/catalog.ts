@@ -66,7 +66,7 @@ const rows: readonly FeatureRow[] = [
   ["pmtiles-diagnostics", "PMTiles range diagnostics", "Map and layers", "FIXTURE_FIRST", "Archive, range, index, and render verification for governed artifacts.", "pmtiles_range_diagnostics", "pmtiles tiles range"],
   ["stac-inspector", "STAC conformance inspector", "Map and layers", "FIXTURE_FIRST", "Read-only release-facing STAC metadata inspection.", "stac_conformance_inspector", "stac catalog metadata"],
   ["view-registry", "View registry inspector", "Map and layers", "FIXTURE_FIRST", "Read-only inspection of governed view projections.", "view_registry_inspector", "view registry projection"],
-  ["maplibre-runtime", "MapLibre browser runtime", "Map and layers", "HOLD", "The package-owned adapter is present; Explorer activation and authenticated browser proof remain open.", "packages/maplibre", "maplibre renderer adapter hold"],
+  ["maplibre-runtime", "MapLibre browser runtime", "Map and layers", "HOLD", "The bounded inline synthetic slice is active with browser proof; broader renderer readiness and source admission remain held.", "packages/maplibre", "maplibre renderer adapter hold"],
   ["evidence-drawer", "Evidence Drawer", "Evidence and trust", "VERIFIED_SLICE", "Keyboard-operable evidence, citation, limitation, and correction inspection.", "evidence_drawer", "evidence citations correction"],
   ["evidence-tooltip", "Evidence tooltip", "Evidence and trust", "FIXTURE_FIRST", "Compact finite evidence support summary.", "evidence_tooltip", "evidence tooltip support"],
   ["citation-pill", "Citation pill", "Evidence and trust", "FIXTURE_FIRST", "Compact citation status and resolution affordance.", "citation_pill", "citation source support"],

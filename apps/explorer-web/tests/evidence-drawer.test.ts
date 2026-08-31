@@ -50,6 +50,52 @@ describe("Explorer Evidence Drawer governed projection", () => {
     expect(result.trustLabels).toContain("Freshness: STALE");
   });
 
+  it.each([
+    "POLICY_DENIED",
+    "RIGHTS_UNRESOLVED",
+    "SENSITIVE_DETAIL_RESTRICTED",
+  ] as const)(
+    "rejects the DENY-only %s reason on ABSTAIN without leaking evidence refs",
+    (reasonCode) => {
+      const forbiddenEvidenceRef =
+        "kfm:evidence:private:abstain-reason-mismatch-canary";
+      const mismatched = {
+        ...abstainFixture,
+        reason_code: reasonCode,
+        evidence_refs: [forbiddenEvidenceRef],
+      };
+
+      const result = resolveEvidenceDrawer(mismatched);
+      expect(result).toMatchObject({
+        outcome: "ERROR",
+        code: "INVALID_PAYLOAD",
+        evidenceRefs: [],
+      });
+      expect(JSON.stringify(result)).not.toContain(forbiddenEvidenceRef);
+    },
+  );
+
+  it.each([
+    "MISSING_EVIDENCE",
+    "STALE_EVIDENCE",
+    "CITATION_UNRESOLVED",
+    "HELD_EVIDENCE",
+    "SUPERSEDED_EVIDENCE",
+    "WITHDRAWN_EVIDENCE",
+    "REVOKED_EVIDENCE",
+  ] as const)("rejects the ABSTAIN-only %s reason on DENY", (reasonCode) => {
+    const result = resolveEvidenceDrawer({
+      ...denyFixture,
+      reason_code: reasonCode,
+    });
+
+    expect(result).toMatchObject({
+      outcome: "ERROR",
+      code: "INVALID_PAYLOAD",
+      evidenceRefs: [],
+    });
+  });
+
   it("shows superseded evidence as history without current claim support", () => {
     const result = resolveEvidenceDrawer(supersededFixture);
     expect(result).toMatchObject({
@@ -142,13 +188,15 @@ describe("Explorer Evidence Drawer governed projection", () => {
     });
   });
 
-  it("keeps browser feature code free of network and lifecycle-store reads", () => {
-    const combinedSource = `${governedClientSource}\n${evidenceDrawerSource}`;
-
-    expect(combinedSource).not.toMatch(/\bfetch\s*\(/);
-    expect(combinedSource).not.toMatch(
+  it("keeps the Drawer transport-free and limits its adapter to public governed endpoints", () => {
+    expect(evidenceDrawerSource).not.toMatch(/\bfetch\s*\(/);
+    expect(governedClientSource).toContain('new URL("/layers"');
+    expect(governedClientSource).toContain('new URL("/evidence"');
+    expect(`${governedClientSource}\n${evidenceDrawerSource}`).not.toMatch(
       /data\/(?:raw|work|quarantine|processed|catalog|triplets|published)/i,
     );
-    expect(combinedSource).not.toMatch(/(?:ollama|model[-_ ]?runtime)/i);
+    expect(`${governedClientSource}\n${evidenceDrawerSource}`).not.toMatch(
+      /(?:ollama|model[-_ ]?runtime)/i,
+    );
   });
 });

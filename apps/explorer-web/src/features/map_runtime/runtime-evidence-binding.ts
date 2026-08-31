@@ -30,7 +30,7 @@ export type MapRuntimeEvidenceResolution = Readonly<{
 export type MapRuntimeEvidenceInvalidation = Readonly<{
   kind: "RUNTIME_INVALIDATED";
   selectionId: string;
-  runtimeState: MapRuntimeTrustState | "DISPOSED";
+  runtimeState: MapRuntimeTrustState | "READY" | "DISPOSED";
   runtimeReason: MapRuntimeReasonCode | null;
 }>;
 
@@ -160,6 +160,91 @@ export async function resolveMapRuntimeSelectionEvidence(
 }
 
 /**
+ * Resolve a selection already admitted by the strict governed `/layers`
+ * projection. Unlike the legacy fixture bridge, this path does not invent or
+ * reconstruct a lifecycle manifest in the browser.
+ */
+export async function resolveGovernedMapRuntimeSelectionEvidence(
+  selectionInput: unknown,
+  resolver: GovernedMapEvidenceResolver,
+): Promise<MapRuntimeEvidenceResolution> {
+  return Object.freeze({
+    layerAdmission: null,
+    evidence: await resolveMapFeatureEvidence(
+      isMapFeatureSelection(selectionInput)
+        ? externalSelection(selectionInput)
+        : selectionInput,
+      resolver,
+    ),
+  });
+}
+
+type RuntimeSelectionResolver = (
+  selection: MapFeatureSelection,
+) => Promise<MapRuntimeEvidenceResolution>;
+
+function bindRuntimeEvidenceCore(
+  runtime: MapRuntimePort,
+  resolveSelection: RuntimeSelectionResolver,
+  consume: MapRuntimeEvidenceConsumer,
+): MapRuntimeEvidenceBinding {
+  if (typeof consume !== "function") {
+    throw new TypeError("Map runtime evidence consumer must be a function.");
+  }
+
+  let active = true;
+  let requestVersion = 0;
+  let latestSelectionId: string | null = null;
+
+  const unsubscribeSnapshot = runtime.subscribeSnapshot((snapshot) => {
+    const selectionWasInvalidated =
+      snapshot.state === "READY" &&
+      snapshot.reason === "MAP_RUNTIME_SELECTION_INVALIDATED";
+    if (snapshot.state === "READY" && !selectionWasInvalidated) return;
+
+    requestVersion += 1;
+    const invalidatesVisibleEvidence =
+      selectionWasInvalidated ||
+      isMapRuntimeTrustState(snapshot.state) ||
+      snapshot.state === "DISPOSED";
+    if (!active || !invalidatesVisibleEvidence || latestSelectionId === null) {
+      return;
+    }
+
+    const selectionId = latestSelectionId;
+    latestSelectionId = null;
+    consume(
+      Object.freeze({
+        kind: "RUNTIME_INVALIDATED",
+        selectionId,
+        runtimeState: snapshot.state,
+        runtimeReason: snapshot.reason,
+      }),
+    );
+  });
+
+  const unsubscribeSelection = runtime.subscribeSelection((selection) => {
+    const currentRequest = ++requestVersion;
+    latestSelectionId = selection.selectionId;
+    void resolveSelection(selection).then((resolution) => {
+      if (!active || currentRequest !== requestVersion) return;
+      consume(Object.freeze({ kind: "EVIDENCE_RESOLVED", resolution }));
+    });
+  });
+
+  return Object.freeze({
+    destroy(): void {
+      if (!active) return;
+      active = false;
+      requestVersion += 1;
+      latestSelectionId = null;
+      unsubscribeSelection();
+      unsubscribeSnapshot();
+    },
+  });
+}
+
+/**
  * Bind renderer-neutral runtime selection events to the governed evidence
  * bridge. Newer selections supersede unresolved older requests. A transition
  * away from READY invalidates unresolved evidence so stale, denied, withdrawn,
@@ -185,65 +270,34 @@ export function bindMapRuntimeEvidence(
   if (typeof layerManifestForSelection !== "function") {
     throw new TypeError("Runtime layer manifest projection must be a function.");
   }
-  if (typeof consume !== "function") {
-    throw new TypeError("Map runtime evidence consumer must be a function.");
-  }
-
-  let active = true;
-  let requestVersion = 0;
-  let latestSelectionId: string | null = null;
-
-  const unsubscribeSnapshot = runtime.subscribeSnapshot((snapshot) => {
-    if (snapshot.state === "READY") return;
-
-    requestVersion += 1;
-    const invalidatesVisibleEvidence =
-      isMapRuntimeTrustState(snapshot.state) || snapshot.state === "DISPOSED";
-    if (!active || !invalidatesVisibleEvidence || latestSelectionId === null) {
-      return;
-    }
-
-    const selectionId = latestSelectionId;
-    latestSelectionId = null;
-    consume(
-      Object.freeze({
-        kind: "RUNTIME_INVALIDATED",
-        selectionId,
-        runtimeState: snapshot.state,
-        runtimeReason: snapshot.reason,
-      }),
-    );
-  });
-
-  const unsubscribeSelection = runtime.subscribeSelection((selection) => {
-    const currentRequest = ++requestVersion;
-    latestSelectionId = selection.selectionId;
-    let layerManifestInput: unknown;
-    try {
-      layerManifestInput = layerManifestForSelection(selection);
-    } catch {
-      layerManifestInput = undefined;
-    }
-    void resolveMapRuntimeSelectionEvidence(
-      selection,
-      layerManifestInput,
-      resolver,
-    ).then(
-      (resolution) => {
-        if (!active || currentRequest !== requestVersion) return;
-        consume(Object.freeze({ kind: "EVIDENCE_RESOLVED", resolution }));
-      },
-    );
-  });
-
-  return Object.freeze({
-    destroy(): void {
-      if (!active) return;
-      active = false;
-      requestVersion += 1;
-      latestSelectionId = null;
-      unsubscribeSelection();
-      unsubscribeSnapshot();
+  return bindRuntimeEvidenceCore(
+    runtime,
+    (selection) => {
+      let layerManifestInput: unknown;
+      try {
+        layerManifestInput = layerManifestForSelection(selection);
+      } catch {
+        layerManifestInput = undefined;
+      }
+      return resolveMapRuntimeSelectionEvidence(
+        selection,
+        layerManifestInput,
+        resolver,
+      );
     },
-  });
+    consume,
+  );
+}
+
+/** Bind an admitted governed layer selection directly to `/evidence`. */
+export function bindGovernedMapRuntimeEvidence(
+  runtime: MapRuntimePort,
+  resolver: GovernedMapEvidenceResolver,
+  consume: MapRuntimeEvidenceConsumer,
+): MapRuntimeEvidenceBinding {
+  return bindRuntimeEvidenceCore(
+    runtime,
+    (selection) => resolveGovernedMapRuntimeSelectionEvidence(selection, resolver),
+    consume,
+  );
 }

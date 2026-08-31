@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  MAP_FEATURE_SELECTION_PROFILE,
+  MAP_RUNTIME_INLINE_GEOJSON_LAYER_PROFILE,
   MAP_RUNTIME_TRUST_STATES,
   MAP_RUNTIME_TRUST_STATE_REASONS,
   createNullMapRuntime,
@@ -95,6 +97,46 @@ describe("MapRuntimePort trust-status presenter", () => {
       reason: "MAP_RUNTIME_DISPOSED",
       canResolveSelection: false,
       role: "status",
+    });
+  });
+
+  it("reports READY selection invalidation without blocking a new governed selection", async () => {
+    const runtime = createNullMapRuntime();
+    await runtime.initialize();
+    runtime.bindInlineGeoJsonLayer({
+      profile: MAP_RUNTIME_INLINE_GEOJSON_LAYER_PROFILE,
+      sourceId: "source:synthetic-streamflow",
+      layerId: "layer:synthetic-streamflow",
+      kind: "circle",
+      data: {
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            id: "feature:flow-001",
+            geometry: { type: "Point", coordinates: [-98.5, 38.5] },
+            properties: null,
+          },
+        ],
+      },
+      selection: {
+        profile: MAP_FEATURE_SELECTION_PROFILE,
+        selectionId: "selection:flow-001",
+        layerId: "layer:synthetic-streamflow",
+        featureId: "feature:flow-001",
+        evidenceRefs: ["kfm:evidence:synthetic:flow-001"],
+      },
+    });
+    runtime.selectFeature("layer:synthetic-streamflow", "feature:flow-001");
+    runtime.removeSource("source:synthetic-streamflow");
+
+    expect(resolveMapRuntimeTrustStatus(runtime.getSnapshot())).toMatchObject({
+      valid: true,
+      state: "READY",
+      reason: "MAP_RUNTIME_SELECTION_INVALIDATED",
+      title: "Map selection cleared",
+      tone: "caution",
+      canResolveSelection: true,
     });
   });
 

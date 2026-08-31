@@ -2,15 +2,15 @@
 doc_id: kfm://app/explorer-web/src/adapters/readme
 title: Explorer Web Adapters README
 type: app-readme
-version: v0.4
+version: v0.5
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Docs steward
 created: 2026-06-16
-updated: 2026-08-28
+updated: 2026-08-31
 policy_label: public
 owning_root: apps/
 responsibility: define Explorer Web app-local adapter boundaries and record verified bounded adapter implementations
-truth_posture: CONFIRMED bounded repository adapters and tests / PROPOSED broader integration families / UNKNOWN live transport and deployment behavior
+truth_posture: CONFIRMED bounded repository adapters, exact-one governed map transport, and tests / PROPOSED broader integration families / UNKNOWN production transport and deployment behavior
 related:
   - ../README.md
   - ../../README.md
@@ -33,10 +33,10 @@ related:
   - ../../../../tools/watchers/README.md
 tags: [kfm, apps, explorer-web, adapters, map-adapter, governed-client, renderer-boundary, maplibre, cesium, trust-membrane, no-direct-data-root]
 notes:
-  - "v0.2 updates the uploaded Explorer Web adapters README into a current repo-aware adapter-boundary contract."
-  - "GovernedClient.ts now implements one closed, fixture-only Evidence Drawer projection parser with bounded fields, HTTPS citation checks, finite-outcome invariants, and no network behavior."
+  - "v0.5 records the strict exact-one layer/evidence parsers and byte- and deadline-bounded, abortable same-origin transport while preserving broader production integration as unverified."
+  - "GovernedClient.ts implements strict Evidence Drawer and exact-one /layers projection parsers plus a byte- and deadline-bounded, same-origin, abortable /layers and /evidence browser transport."
   - "planning-scenario-projection.ts implements one closed, synthetic fixture-only planning-scenario display parser with reference closure, finite negative outcomes, and false authority flags."
-  - "Live governed API transport, canonical schema binding, renderer wrappers, other adapters, runtime wiring, and deployment behavior remain NEEDS VERIFICATION."
+  - "The bounded synthetic governed-map transport is wired; broader production transport, canonical schema binding, other adapters, and deployment behavior remain NEEDS VERIFICATION."
   - "Adapters may translate between Explorer Web UI code and governed API envelopes, renderer ports, evidence payloads, layer manifests, export requests, and diagnostics; they must not become source truth, policy authority, release authority, lifecycle storage, schema/contract authority, direct model surface, or renderer authority."
   - "Claim-bearing UI state must come from governed API envelopes, released or bounded-safe layer artifacts, EvidenceBundle-derived payloads, and finite states; adapters must not directly read RAW/WORK/QUARANTINE/PROCESSED/CATALOG/TRIPLET/PUBLISHED data roots or canonical/internal stores."
 [/KFM_META_BLOCK_V2] -->
@@ -65,11 +65,11 @@ notes:
 ---
 
 > [!IMPORTANT]
-> **Status:** draft / bounded fixture adapter executable / broader implementation `NEEDS VERIFICATION`
+> **Status:** draft / bounded synthetic transport and fixture adapters executable / broader implementation `NEEDS VERIFICATION`
 > **Owners:** `OWNER_TBD` — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Docs steward  
 > **Path:** `apps/explorer-web/src/adapters/README.md`  
 > **Responsibility root:** `apps/` — deployable application surfaces  
-> **Truth posture:** CONFIRMED README path, `GovernedClient.ts` fixture-only Evidence Drawer parser, synthetic fixtures, app-local tests, and no-network/no-lifecycle-store structural guard / PROPOSED broader adapter-boundary contract / UNKNOWN live client transport, canonical schema binding, renderer wrappers, runtime wiring, and deployment behavior
+> **Truth posture:** CONFIRMED README path, strict `GovernedClient.ts` parsers, bounded same-origin synthetic map transport, app-local tests, and no-lifecycle-store structural guard / PROPOSED broader adapter-boundary contract / UNKNOWN production transport, canonical schema binding, broader runtime wiring, and deployment behavior
 
 > [!CAUTION]
 > Adapter code must not bypass the trust membrane. It may translate governed API envelopes, renderer ports, evidence payloads, layer manifests, and export requests into UI-friendly shapes, but it must not directly read lifecycle data roots, canonical/internal stores, raw renderer internals as truth, direct model output, or local source files as user-facing claims.
@@ -99,9 +99,9 @@ notes:
 
 ## 1. Purpose
 
-`apps/explorer-web/src/adapters/` is the proposed source boundary for Explorer Web adapter code.
+`apps/explorer-web/src/adapters/` is the app-local source boundary for Explorer Web adapter code.
 
-Adapters should isolate integration details so route and component code can remain governed, testable, and renderer-agnostic. This directory may eventually contain adapter modules that translate:
+Adapters isolate integration details so route and component code can remain governed, testable, and renderer-agnostic. This directory contains bounded implementations and may later add modules that translate:
 
 - governed API response envelopes into route/view models;
 - EvidenceBundle-derived payloads into Evidence Drawer state;
@@ -111,7 +111,7 @@ Adapters should isolate integration details so route and component code can rema
 - export requests into governed export payloads;
 - diagnostics and telemetry into safe, non-secret UI diagnostics.
 
-Bounded Evidence Drawer and planning-scenario fixture parsers are implemented. Other adapters and live transport remain unproved.
+Bounded Evidence Drawer, exact-one layer, and planning-scenario parsers are implemented. The exact-one map slice also uses a byte- and absolute-deadline-bounded, abortable same-origin `/layers` and `/evidence` transport; other adapter families and broader production transport remain unproved.
 
 [Back to top](#top)
 
@@ -121,15 +121,15 @@ Bounded Evidence Drawer and planning-scenario fixture parsers are implemented. O
 
 | Surface | Status | What it proves | What it does **not** prove |
 |---|---|---|---|
-| `apps/explorer-web/src/adapters/README.md` | **CONFIRMED README** | This README exists and has been updated to v0.4. | Live transport, renderer wrappers, broader runtime wiring, or deployment behavior. |
+| `apps/explorer-web/src/adapters/README.md` | **CONFIRMED README** | This README exists and has been updated to v0.5. | Broader production transport, general renderer/source wiring, or deployment behavior. |
 | `apps/explorer-web/src/README.md` | **CONFIRMED parent source README** | Parent source tree defines Explorer Web source as map-first implementation boundary and denies direct lifecycle/canonical/model reads. | That routes, adapters, renderer wiring, or tests are implemented. |
 | `apps/explorer-web/README.md` | **CONFIRMED parent app README** | Parent app lane defines Explorer Web as map-first public/semi-public shell that must read through governed API and avoid direct lifecycle/canonical/internal store reads. | That app routes, clients, adapters, tests, or deployment exist. |
-| `apps/explorer-web/src/adapters/GovernedClient.ts` | **CONFIRMED bounded executable** | Validates one closed, fixture-only public-safe Evidence Drawer projection and enforces finite outcome combinations without network access. | Live governed API transport, canonical schema acceptance, policy execution, citation validation, or production readiness. |
+| `apps/explorer-web/src/adapters/GovernedClient.ts` | **CONFIRMED bounded executable** | Strictly validates the public-safe Evidence Drawer and exact-one layer projections; owns only byte- and absolute-deadline-bounded same-origin `GET /layers` and `GET /evidence` with per-request and teardown abort. | Broader API transport, canonical schema acceptance, policy execution, citation validation, or production readiness. |
 | `apps/explorer-web/tests/evidence-drawer.test.ts` | **CONFIRMED bounded tests** | Covers accepted and rejected projections, negative-state no-leak behavior, size limits, and direct-store/network source guards. | Browser E2E behavior or complete accessibility. |
 | `apps/explorer-web/src/adapters/planning-scenario-projection.ts` | **CONFIRMED bounded executable** | Validates one closed, synthetic fixture-only scenario projection, evidence-reference closure, false authority flags, and finite outcomes without network access. | Scenario computation, policy or evidence resolution, live transport, recommendation authority, or production readiness. |
 | `apps/explorer-web/tests/planning-scenario-review.test.ts` | **CONFIRMED bounded tests** | Covers manifest-to-UI convergence, available and finite negative outcomes, malformed no-leak behavior, and transport/lifecycle/model/action source guards. | A live governed API integration, production route, recommendation behavior, or complete accessibility. |
 | Uploaded adapter Markdown | **CONFIRMED source text for this update** | Provided the base adapter-boundary contract updated here. | Does not prove live implementation. |
-| Other adapter files and live transport | **NEEDS VERIFICATION** | Checkable by repo scan, import-boundary tests, fixtures, package scripts, and runtime evidence. | Not claimed by this README. |
+| Other adapter families and production transport | **NEEDS VERIFICATION** | Checkable by repo scan, import-boundary tests, fixtures, package scripts, and runtime evidence. | Not claimed by this README. |
 
 [Back to top](#top)
 
@@ -245,13 +245,13 @@ An adapter should not emit claim-bearing UI state when any of these are missing 
 
 ## 8. Adapter family map
 
-Exact adapter modules remain `NEEDS VERIFICATION`. Candidate families should be introduced only with tests and import-boundary checks.
+The governed client, Evidence Drawer projection, and exact-one layer projection are implemented as bounded slices. Other families remain candidates and should be introduced only with tests and import-boundary checks.
 
 | Candidate adapter | Responsibility | Status |
 |---|---|---|
-| `governedClientAdapter` | Normalize governed API calls and response validators. | PROPOSED |
-| `evidenceDrawerAdapter` | Convert evidence payloads into drawer view state. | PROPOSED |
-| `layerManifestAdapter` | Convert layer manifests into layer catalog/map state. | PROPOSED |
+| `governedClientAdapter` | Normalize governed API calls and response validators. | IMPLEMENTED / BOUNDED in `GovernedClient.ts` |
+| `evidenceDrawerAdapter` | Convert evidence payloads into drawer view state. | IMPLEMENTED / BOUNDED projection |
+| `layerManifestAdapter` | Convert layer manifests into layer catalog/map state. | IMPLEMENTED / EXACT-ONE projection only |
 | `mapRuntimeAdapter` | Convert UI map interactions into governed map/runtime events. | PROPOSED |
 | `maplibreAdapter` | Keep MapLibre-specific calls behind app-facing port. | PROPOSED |
 | `cesiumAdapter` | Conditional gated 3D bridge. | PROPOSED |
@@ -328,7 +328,7 @@ Every long-lived adapter should document or encode:
 
 ## 12. Inspection path
 
-Adapter implementation files, import boundaries, tests, fixtures, client validators, renderer wrappers, and package scripts remain `NEEDS VERIFICATION`.
+The bounded client implementation, parsers, import boundaries, fixtures, and focused tests are directly inspectable. Other adapter families, general renderer/source wiring, package-wide enforcement, and production transport remain `NEEDS VERIFICATION`.
 
 ```bash
 find apps/explorer-web/src/adapters -maxdepth 5 -type f | sort
@@ -378,7 +378,8 @@ For adapter changes:
 
 - [ ] Owners are confirmed and `OWNER_TBD` is replaced.
 - [ ] Adapter file inventory is documented.
-- [ ] Governed API adapter and validators are implemented and tested.
+- [x] The bounded `/layers` and `/evidence` adapter and strict validators are implemented and tested.
+- [ ] General Governed API adapter families and production transport are implemented and tested.
 - [ ] Renderer imports are confined to accepted adapter/wrapper modules.
 - [ ] Evidence, citation, release, rights, sensitivity, and redaction fields survive adaptation.
 - [ ] Direct lifecycle-data import/read checks are covered.
@@ -394,10 +395,10 @@ For adapter changes:
 
 | Item | Why it matters |
 |---|---|
-| Confirm adapter implementation files beyond README | Prevents overclaiming adapter maturity. |
-| Confirm governed API client adapter shape | Required for trust membrane enforcement. |
-| Confirm renderer adapter modules and imports | Required for MapLibre/Cesium boundary discipline. |
-| Confirm fixtures and tests | Required before implementation claims. |
+| Confirm adapter families beyond the bounded implemented slices | Prevents overclaiming adapter maturity. |
+| Confirm general governed API client shapes | Required before expanding beyond the strict `/layers` and `/evidence` slice. |
+| Confirm broader renderer adapter modules and imports | Required for general MapLibre/Cesium boundary discipline. |
+| Confirm broader fixtures and tests | Required before additional implementation claims. |
 | Confirm export adapter behavior | Required before public download claims. |
 | Confirm diagnostics redaction | Prevents secret or restricted-internal leakage. |
 | Confirm package scripts beyond TODO | Required before build/test claims. |
@@ -408,13 +409,13 @@ For adapter changes:
 <details>
 <summary>Appendix A — no-loss preservation note</summary>
 
-The uploaded README added a bounded adapter-directory contract without claiming governed API adapters, renderer adapters, evidence adapters, layer adapters, export adapters, diagnostics adapters, tests, fixtures, imports, package scripts, or runtime wiring are implemented. This v0.2 update preserves that structure while adding current repo evidence, parent Explorer Web source/app linkage, stronger direct-data-root denial language, safe-output posture, local-parity expectations, and expanded verification items.
+Earlier versions established the bounded adapter-directory contract before live browser transport existed. This v0.5 update records only the implemented exact-one layer/evidence transport and existing fixture adapters while preserving broader renderer, export, diagnostics, and production-integration work as unverified.
 
 </details>
 
 ## Status summary
 
-`apps/explorer-web/src/adapters/` should contain app-local adapters only after adapter files, import boundaries, fixtures, and tests are verified.
+`apps/explorer-web/src/adapters/` contains verified app-local bounded adapters and should accept additional adapter families only with matching import-boundary, fixture, and test evidence.
 
 It must preserve the trust membrane and renderer boundary: adapters translate governed API envelopes, evidence payloads, layer manifests, renderer ports, and export/diagnostic requests without becoming source truth, release authority, policy authority, lifecycle store, schema/contract home, model-output surface, direct data-root client, or renderer authority.
 

@@ -1,18 +1,10 @@
-import {
-  createNullMapRuntime,
-  type MapRuntimeTrustState,
-} from "@kfm/maplibre";
 import { resolveBaselineShell } from "../features/shell";
 import {
-  MAP_FEATURE_SELECTION_PROFILE,
-  mountMapFeatureEvidenceFixture,
-  mountMapRuntimeTrustStatus,
-  type MapEvidenceFixtureCase,
-  type MapEvidenceFixtureController,
-  type MapRuntimeTrustStatusController,
-} from "../features/map_runtime";
+  mountGovernedMapWorkspace,
+  type GovernedMapWorkspaceController,
+  type GovernedMapWorkspaceDependencies,
+} from "./mount-governed-map-workspace";
 import {
-  CURRENT_MAPLIBRE_READINESS,
   FEATURE_CATALOG,
   KNOWLEDGE_DOMAINS,
   KNOWLEDGE_PRINCIPLES,
@@ -26,81 +18,11 @@ import {
   type KnowledgeDomain,
 } from "./catalog";
 
-export type ExplorerSiteController = Readonly<{ destroy: () => void }>;
-
-const supportedProjection = Object.freeze({
-  profile: "kfm.explorer.evidence-drawer.public-safe.v1",
-  id: "kfm:ui:evidence-drawer:answer-001",
-  outcome: "ANSWER",
-  reason_code: "SUPPORTED",
-  title: "Synthetic streamflow observation",
-  summary: "A synthetic, generalized flow observation is supported by the cited fixture evidence.",
-  evidence_refs: Object.freeze(["kfm:evidence:synthetic:flow-001"]),
-  citations: Object.freeze([
-    Object.freeze({
-      label: "Synthetic fixture evidence",
-      href: `https://github.com/${REPOSITORY_SNAPSHOT.repository}/blob/${REPOSITORY_SNAPSHOT.commit}/fixtures/ui/evidence_drawer_payload/valid/answer-corrected.json`,
-    }),
-  ]),
-  limitations: Object.freeze(["Fixture-only demonstration; not a live observation or life-safety instruction."]),
-  trust_state: Object.freeze({
-    source_role: "official",
-    policy: "ALLOW",
-    review: "REVIEWED",
-    release: "RELEASED",
-    freshness: "CURRENT",
-    correction: "CORRECTED",
-  }),
-  history: Object.freeze({
-    negative_outcomes: Object.freeze([
-      Object.freeze({
-        evidence_ref: "kfm:evidence:synthetic:flow-000",
-        state: "SUPERSEDED",
-        reason_code: "SUPERSEDED_EVIDENCE",
-        recorded_at: "2026-08-01T00:00:00Z",
-        visible_in_runtime: true,
-        resolvable_as_current: false,
-      }),
-    ]),
-    corrections: Object.freeze([
-      Object.freeze({
-        prior_evidence_ref: "kfm:evidence:synthetic:flow-000",
-        active_evidence_ref: "kfm:evidence:synthetic:flow-001",
-        status: "ACTIVE_CORRECTION",
-        recorded_at: "2026-08-01T00:00:00Z",
-      }),
-    ]),
-  }),
-});
-
-const restrictedProjection = Object.freeze({
-  profile: "kfm.explorer.evidence-drawer.public-safe.v1",
-  id: "kfm:ui:evidence-drawer:deny-sensitive-001",
-  outcome: "DENY",
-  reason_code: "SENSITIVE_DETAIL_RESTRICTED",
-  title: "Restricted map detail",
-  summary: "The requested detail is restricted by policy.",
-  evidence_refs: Object.freeze([]),
-  citations: Object.freeze([]),
-  limitations: Object.freeze(["Protected spatial detail is not exposed."]),
-  trust_state: Object.freeze({
-    source_role: "context",
-    policy: "DENY",
-    review: "PENDING",
-    release: "UNRELEASED",
-    freshness: "UNKNOWN",
-    correction: "NONE",
-  }),
-  history: Object.freeze({ negative_outcomes: Object.freeze([]), corrections: Object.freeze([]) }),
-});
-
-const mapCases: readonly MapEvidenceFixtureCase[] = Object.freeze([
-  { caseId: "supported", label: "Supported synthetic streamflow", selection: { profile: MAP_FEATURE_SELECTION_PROFILE, selection_id: "selection:flow-001", layer_id: "layer:synthetic-streamflow", feature_id: "feature:flow-001", evidence_refs: ["kfm:evidence:synthetic:flow-001"] } },
-  { caseId: "missing", label: "Feature without governed evidence", selection: { profile: MAP_FEATURE_SELECTION_PROFILE, selection_id: "selection:missing", layer_id: "layer:synthetic-streamflow", feature_id: "feature:missing", evidence_refs: [] } },
-  { caseId: "restricted", label: "Policy-restricted feature", selection: { profile: MAP_FEATURE_SELECTION_PROFILE, selection_id: "selection:restricted", layer_id: "layer:synthetic-restricted", feature_id: "feature:restricted", evidence_refs: ["kfm:evidence:synthetic:restricted"] } },
-  { caseId: "mismatch", label: "Mismatched evidence scope", selection: { profile: MAP_FEATURE_SELECTION_PROFILE, selection_id: "selection:mismatch", layer_id: "layer:synthetic-streamflow", feature_id: "feature:mismatch", evidence_refs: ["kfm:evidence:synthetic:other"] } },
-  { caseId: "error", label: "Governed resolver error", selection: { profile: MAP_FEATURE_SELECTION_PROFILE, selection_id: "selection:error", layer_id: "layer:synthetic-streamflow", feature_id: "feature:error", evidence_refs: ["kfm:evidence:synthetic:flow-001"] } },
-]);
+export type ExplorerSiteDependencies = GovernedMapWorkspaceDependencies;
+export type ExplorerSiteController = Readonly<{
+  ready: Promise<void>;
+  destroy: () => void;
+}>;
 
 function el<K extends keyof HTMLElementTagNameMap>(document: Document, tag: K, className?: string): HTMLElementTagNameMap[K] {
   const node = document.createElement(tag);
@@ -139,25 +61,6 @@ function option(document: Document, select: HTMLSelectElement, value: string, la
   select.append(node);
 }
 
-function mapArtwork(document: Document): HTMLElement {
-  const figure = el(document, "figure", "map-artwork");
-  figure.setAttribute("aria-label", "Illustrative Kansas map stage; decorative geometry is not factual map data.");
-  figure.innerHTML = `
-    <svg viewBox="0 0 760 410" role="img" aria-labelledby="map-art-title map-art-desc">
-      <title id="map-art-title">Illustrative Kansas evidence map</title>
-      <desc id="map-art-desc">A decorative Kansas outline with survey grid, river paths, and evidence markers.</desc>
-      <defs><pattern id="grid" width="34" height="34" patternUnits="userSpaceOnUse"><path d="M34 0H0V34" fill="none" stroke="currentColor" opacity=".13"/></pattern></defs>
-      <path class="map-shape" d="M96 75 650 80 666 304 115 327 88 154Z"/>
-      <path class="map-grid" d="M96 75 650 80 666 304 115 327 88 154Z"/>
-      <path class="river" d="M112 216C210 170 250 250 355 205S530 146 646 229"/>
-      <path class="river river--minor" d="M220 92c56 42 40 90 94 120s91 57 126 106"/>
-      <g class="marker"><circle cx="355" cy="205" r="20"/><circle cx="355" cy="205" r="6"/></g>
-      <g class="marker marker--secondary"><circle cx="526" cy="171" r="14"/><circle cx="526" cy="171" r="5"/></g>
-      <text x="120" y="120">SYNTHETIC MAP STAGE</text><text x="120" y="145">Rendered features scope requests — not claims</text>
-    </svg>`;
-  return figure;
-}
-
 function domainDetail(document: Document, domain: KnowledgeDomain): HTMLElement {
   const article = el(document, "article", "domain-detail card");
   article.id = `domain-${domain.id}`;
@@ -185,13 +88,14 @@ function featureCard(document: Document, entry: FeatureEntry): HTMLElement {
   return article;
 }
 
-export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
+export function mountExplorerSite(
+  root: HTMLElement,
+  dependencies: ExplorerSiteDependencies,
+): ExplorerSiteController {
   const document = root.ownerDocument;
   const baseline = resolveBaselineShell();
   const cleanup: Array<() => void> = [];
-  const mapRuntime = createNullMapRuntime();
-  let mapFixture: MapEvidenceFixtureController | null = null;
-  let mapRuntimeStatus: MapRuntimeTrustStatusController | null = null;
+  let governedMap: GovernedMapWorkspaceController | null = null;
   root.className = "kfm-explorer-root";
   document.documentElement.dataset.kfmExplorer = "true";
 
@@ -205,7 +109,7 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
   nav.setAttribute("aria-label", "Explorer sections");
   [["Map", "#map"], ["Knowledge", "#knowledge"], ["Features", "#features"], ["Trust", "#trust"]].forEach(([label, href]) => nav.append(link(document, label, href)));
   const headerState = el(document, "div", "header-state");
-  headerState.append(chip(document, "Shell", baseline.outcome, "caution"), chip(document, "Renderer", "HOLD", "critical"));
+  headerState.append(chip(document, "Shell", baseline.outcome, "caution"), chip(document, "Broader renderer", "HOLD", "critical"));
   headerInner.append(brand, nav, headerState);
   header.append(headerInner);
 
@@ -225,74 +129,24 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
   heroCopy.lastElementChild?.append(link(document, "Open map workspace", "#map", "button button--primary"), link(document, "Browse all features", "#features", "button button--secondary"));
   const posture = el(document, "aside", "posture card");
   posture.setAttribute("aria-label", "Current Explorer posture");
-  posture.append(text(document, "p", "Current composed posture", "eyebrow"), text(document, "p", `${baseline.outcome} / ${baseline.code}`, "posture__outcome"), text(document, "p", baseline.message), text(document, "p", "Repository-grounded synthetic proof. No live KFM data, source activation, model runtime, renderer admission, release, or publication.", "guardrail"));
+  posture.append(text(document, "p", "Current composed posture", "eyebrow"), text(document, "p", `${baseline.outcome} / ${baseline.code}`, "posture__outcome"), text(document, "p", baseline.message), text(document, "p", "One bounded synthetic map/evidence integration is active. No live KFM source activation, model runtime, broader renderer readiness, release, deployment, or publication.", "guardrail"));
   hero.append(heroCopy, posture);
   main.append(hero);
 
   const mapSection = el(document, "section", "section-shell");
   mapSection.id = "map";
-  mapSection.append(heading(document, "Map workspace", "A governed map starts with the evidence boundary", "The stage is renderer-neutral. Its controls exercise the existing strict selection-to-Evidence-Drawer bridge without importing MapLibre."));
-  const mapGrid = el(document, "div", "map-grid");
-  const mapCard = el(document, "div", "map-card card");
-  const mapToolbar = el(document, "div", "map-toolbar");
-  mapToolbar.append(chip(document, "Interaction", "Synthetic"), chip(document, "Evidence bridge", "Active", "positive"), chip(document, "MapLibre", "HOLD", "critical"));
-  mapCard.append(mapToolbar, mapArtwork(document));
-  const runtime = el(document, "aside", "runtime-card card");
-  const runtimeStatusHost = el(document, "div", "runtime-status-host");
-  runtimeStatusHost.dataset.component = "explorer-map-runtime-status-host";
-  const runtimeControls = el(document, "div", "runtime-controls");
-  runtimeControls.setAttribute("aria-label", "Synthetic map runtime controls");
-  const runtimeActions: readonly Readonly<{
-    label: string;
-    state: MapRuntimeTrustState | null;
-  }>[] = Object.freeze([
-    Object.freeze({ label: "Initialize or recover synthetic runtime", state: null }),
-    Object.freeze({ label: "Mark synthetic runtime stale", state: "STALE" }),
-    Object.freeze({ label: "Withdraw synthetic runtime", state: "WITHDRAWN" }),
-    Object.freeze({ label: "Mark synthetic runtime error", state: "ERROR" }),
-  ]);
-  runtimeActions.forEach((action) => {
-    const button = el(document, "button");
-    button.type = "button";
-    button.textContent = action.label;
-    const handleRuntimeAction = (): void => {
-      if (action.state === null) {
-        void mapRuntime.initialize();
-        return;
-      }
-      mapRuntime.emitTrustState(action.state);
-    };
-    button.addEventListener("click", handleRuntimeAction);
-    cleanup.push(() => button.removeEventListener("click", handleRuntimeAction));
-    runtimeControls.append(button);
-  });
-  runtime.append(
-    text(document, "p", "Renderer gate", "eyebrow"),
-    text(document, "h3", "MapLibre integration remains governed"),
-    text(document, "p", "The package-owned adapter is present, but Explorer activation, dependency review, and authenticated browser probes remain separate gates."),
-    chip(document, "Candidate", CURRENT_MAPLIBRE_READINESS.readinessCandidate),
-    chip(document, "Package", "Present"),
-    chip(document, "Browser evidence", "Pending", "critical"),
-    text(document, "p", "This workspace still exercises the dependency-free NullMapRuntime and finite renderer-neutral status contract. READY does not establish MapLibre readiness, release, deployment, or publication authority.", "guardrail"),
-    runtimeStatusHost,
-    runtimeControls,
-    link(document, "Open governance issue #2957", `https://github.com/${REPOSITORY_SNAPSHOT.repository}/issues/${CURRENT_MAPLIBRE_READINESS.governanceIssue}`, "text-link"),
+  mapSection.append(
+    heading(
+      document,
+      "Map workspace",
+      "A real map with an evidence-preserving fallback",
+      "The canonical synthetic layer arrives through the governed API, binds through the package-owned MapLibre adapter, and reuses one selection identity for pointer and keyboard interaction.",
+    ),
   );
-  mapGrid.append(mapCard, runtime);
-  mapSection.append(mapGrid);
-  const lab = el(document, "div", "selection-lab card");
-  lab.append(text(document, "p", "Deterministic interaction lab", "eyebrow"), text(document, "h3", "Map click → governed evidence outcome"), text(document, "p", "Exercise supported, missing, restricted, mismatched, and resolver-error paths. Rendered properties never become evidence."));
-  const fixtureHost = el(document, "div", "selection-lab__fixture");
-  lab.append(fixtureHost);
-  mapSection.append(lab);
+  const governedMapHost = el(document, "div", "governed-map-host");
+  mapSection.append(governedMapHost);
+  governedMap = mountGovernedMapWorkspace(governedMapHost, dependencies);
   main.append(mapSection);
-  mapFixture = mountMapFeatureEvidenceFixture(fixtureHost, mapCases, async (selection) => {
-    await Promise.resolve();
-    if (selection.selectionId === "selection:restricted") return restrictedProjection;
-    if (selection.selectionId === "selection:error") throw new Error("Synthetic governed resolver failure");
-    return supportedProjection;
-  });
-  mapRuntimeStatus = mountMapRuntimeTrustStatus(runtimeStatusHost, mapRuntime);
 
   const knowledge = el(document, "section", "section-shell");
   knowledge.id = "knowledge";
@@ -379,15 +233,14 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
   const footer = el(document, "footer", "site-footer");
   footer.append(text(document, "p", "Kansas Frontier Matrix · governed synthetic Explorer composition"), text(document, "p", "Not for emergency, legal-title, regulatory, or life-safety decisions."));
   root.replaceChildren(skip, header, main, footer);
+  const ready = governedMap.start();
 
   return Object.freeze({
+    ready,
     destroy: () => {
       cleanup.forEach((fn) => fn());
-      mapRuntimeStatus?.destroy();
-      mapRuntimeStatus = null;
-      mapRuntime.dispose();
-      mapFixture?.destroy();
-      mapFixture = null;
+      governedMap?.destroy();
+      governedMap = null;
       root.replaceChildren();
       root.className = "";
       delete document.documentElement.dataset.kfmExplorer;
