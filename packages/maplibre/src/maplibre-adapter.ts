@@ -19,6 +19,8 @@ import {
 import { DEFAULT_MAP_RUNTIME_CAMERA } from "./null-map-runtime";
 
 const CONTAINER_ID = /^[A-Za-z][A-Za-z0-9._:-]{0,127}$/;
+export const DEFAULT_MAPLIBRE_INITIALIZATION_DEADLINE_MS = 10_000;
+const MAX_MAPLIBRE_INITIALIZATION_DEADLINE_MS = 60_000;
 
 function createEmptyStyle() {
   return { version: 8 as const, sources: {}, layers: [] };
@@ -41,6 +43,8 @@ export type MapLibreAdapterOptions = Readonly<{
   containerId: string;
   /** Whether MapLibre should attach its normal pointer and keyboard handlers. */
   interactive?: boolean;
+  /** Bounded wait for MapLibre's load/error initialization signals. */
+  initializationDeadlineMs?: number;
 }>;
 
 function camerasEqual(left: MapRuntimeCamera, right: MapRuntimeCamera): boolean {
@@ -67,6 +71,7 @@ export class MapLibreAdapter implements MapRuntimePort {
 
   private readonly containerId: string;
   private readonly interactive: boolean;
+  private readonly initializationDeadlineMs: number;
   private state: MapRuntimeState = "IDLE";
   private camera: MapRuntimeCamera = DEFAULT_MAP_RUNTIME_CAMERA;
   private selection: MapFeatureSelection | null = null;
@@ -75,6 +80,7 @@ export class MapLibreAdapter implements MapRuntimePort {
   private initialization: Promise<MapRuntimeSnapshot> | null = null;
   private rejectInitialization: ((error: MapRuntimePortError) => void) | null =
     null;
+  private initializationDeadline: ReturnType<typeof setTimeout> | null = null;
   private readonly rendererUnsubscribers = new Set<() => void>();
   private readonly selectionListeners = new Set<MapRuntimeSelectionListener>();
   private readonly snapshotListeners = new Set<MapRuntimeSnapshotListener>();
@@ -88,6 +94,20 @@ export class MapLibreAdapter implements MapRuntimePort {
     }
     this.containerId = options.containerId;
     this.interactive = options.interactive ?? true;
+    const initializationDeadlineMs =
+      options.initializationDeadlineMs ??
+      DEFAULT_MAPLIBRE_INITIALIZATION_DEADLINE_MS;
+    if (
+      !Number.isSafeInteger(initializationDeadlineMs) ||
+      initializationDeadlineMs < 1 ||
+      initializationDeadlineMs > MAX_MAPLIBRE_INITIALIZATION_DEADLINE_MS
+    ) {
+      throw new MapRuntimePortError(
+        "MAP_RUNTIME_INITIALIZATION_FAILED",
+        "Map runtime initialization deadline is invalid.",
+      );
+    }
+    this.initializationDeadlineMs = initializationDeadlineMs;
   }
 
   initialize(
@@ -136,18 +156,33 @@ export class MapLibreAdapter implements MapRuntimePort {
         maplibreLogo: false,
       });
       this.map = map;
+      this.initializationDeadline = setTimeout(() => {
+        if (
+          this.state === "INITIALIZING" &&
+          this.initialization === initialization &&
+          this.map === map
+        ) {
+          this.failInitialization();
+        }
+      }, this.initializationDeadlineMs);
 
       const loadSubscription = map.on("load", () => {
         loadSubscription.unsubscribe();
         this.rendererUnsubscribers.delete(loadSubscription.unsubscribe);
         if (this.state === "DISPOSED") return;
-        this.camera = this.readRendererCamera(map);
-        this.state = "READY";
-        this.reason = null;
-        const snapshot = this.notifySnapshot();
-        this.initialization = null;
-        this.rejectInitialization = null;
-        resolveInitialization(snapshot);
+        try {
+          this.camera = this.readRendererCamera(map);
+          this.state = "READY";
+          this.reason = null;
+          this.clearInitializationDeadline();
+          const snapshot = this.notifySnapshot();
+          if (this.state === "DISPOSED") return;
+          this.initialization = null;
+          this.rejectInitialization = null;
+          resolveInitialization(snapshot);
+        } catch {
+          if (this.state !== "DISPOSED") this.failInitialization();
+        }
       });
       this.rendererUnsubscribers.add(loadSubscription.unsubscribe);
 
@@ -228,6 +263,7 @@ export class MapLibreAdapter implements MapRuntimePort {
 
   dispose(): void {
     if (this.state === "DISPOSED") return;
+    this.clearInitializationDeadline();
     const rejection = this.rejectInitialization;
     this.rejectInitialization = null;
     this.initialization = null;
@@ -261,6 +297,7 @@ export class MapLibreAdapter implements MapRuntimePort {
   }
 
   private failInitialization(): void {
+    this.clearInitializationDeadline();
     const rejection = this.rejectInitialization;
     this.rejectInitialization = null;
     this.initialization = null;
@@ -285,6 +322,12 @@ export class MapLibreAdapter implements MapRuntimePort {
     this.state = "ERROR";
     this.reason = MAP_RUNTIME_TRUST_STATE_REASONS.ERROR;
     this.notifySnapshot();
+  }
+
+  private clearInitializationDeadline(): void {
+    if (this.initializationDeadline === null) return;
+    clearTimeout(this.initializationDeadline);
+    this.initializationDeadline = null;
   }
 
   private clearRenderer(): void {
