@@ -1,64 +1,44 @@
-# `tests/e2e/` — Governed End-to-End Enforceability Root
-
-> Parent boundary for proving that complete KFM request paths preserve evidence, policy, release, correction, rollback, and public-client controls without bypassing the trust membrane or treating a green test as truth or publication.
-
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/tests-e2e-readme
-title: tests/e2e/README.md — Governed End-to-End Enforceability Root
-type: readme; directory-readme; e2e-test-parent
-version: v0.3
-status: draft; repository-grounded; bounded-placeholder-inventory-confirmed; agriculture-child-confirmed; readiness-validator-confirmed; no-executable-composed-suite-established
-owners: OWNER_TBD — QA steward · E2E steward · Governed API steward · Evidence steward · Policy steward · Release steward · Map/UI steward · Security reviewer · Domain stewards · Docs steward
-created: NEEDS VERIFICATION
-updated: 2026-07-31
-supersedes: v0.2
-policy_label: public-doctrine; tests; e2e; governed-composition; no-network-default; synthetic-only; no-publication
-current_path: tests/e2e/README.md
-truth_posture: CONFIRMED target README, tests root, exact five-file direct inventory, README-only Agriculture child, assert-true Hydrology placeholder, bounded standard-library readiness validator and focused tests, e2e-smoke explicit hold, separate Explorer Web build/test baseline, and Makefile test target limited to tests/schemas plus tests/contracts / PROPOSED child admission, deterministic composed harness, no-network enforcement, zero-collection failure, side-effect guards, correction and rollback cases, executable composed E2E, and promotion blocking / UNKNOWN dynamic collection, public-surface adapters, pass rates, runtime, flakes, and release-gate dependency / NEEDS VERIFICATION owners, runner, fixture split, outcome vocabularies, artifact retention, and CI ownership
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  visibility: public
-  base_ref: main
-  base_commit: f4b6aea4bd7351339a32e2cd5c3b10edbe068968
-  target_prior_blob: 29aab97c8b204883ffaaabaf24467e73257d1c4e
-  related_repository_blobs:
-    directory_rules: fd49a0b83e55cef52c1124281f093e263526898d
-    tests_root_readme: 55ac53c6c08f9a2b77149645d0a22de3ea680732
-    agriculture_child_readme: a9500ca93564adddab29dfc7e1edceac4d36dc57
-    e2e_smoke_workflow: ba3ccf9b8ceeaa22bfd11845a850378ec3d48833
-    makefile: 898004b6bb7873543a431c3869a1b357e56d9eca
-  direct_lane_files_confirmed:
-    - tests/e2e/README.md
-    - tests/e2e/__init__.py
-    - tests/e2e/agriculture/README.md
-    - tests/e2e/agriculture/.gitkeep
-    - tests/e2e/test_hydrology_proof_slice.py
-  checked_absent_paths:
-    - tests/e2e/conftest.py
-    - tests/e2e/test_smoke.py
-    - tests/e2e/pytest.ini
+title: tests/e2e/ — Governed End-to-End Enforceability Root
+type: README
+version: v0.4
+status: draft; repository-grounded; bounded-placeholder-inventory-confirmed; readiness-hold-workflow-confirmed; no-executable-composed-suite-established; non-authoritative
+owner: "@bartytime4life — CONFIRMED CODEOWNERS review route; QA, E2E, API, evidence, policy, release, UI, security, domain, CI, and documentation stewardship remain NEEDS VERIFICATION"
+created: 2025-12-13
+updated: 2026-08-31
+supersedes: v0.3 documentation at the same path; no test, validator, workflow, review, release, deployment, promotion, or publication state is superseded
+policy_label: repository-facing; tests; e2e; governed-composition; synthetic; no-network-readiness; fail-closed; non-publisher
+owning_root: tests/
+responsibility: document the bounded end-to-end test inventory, composition requirements, readiness hold, and authority limits without becoming application, contract, schema, policy, evidence, lifecycle, release, or publication authority
+truth_posture: CONFIRMED exact five-file lane inventory, one non-substantive assert-true placeholder, README-only Agriculture child, 14 focused readiness-validator tests, all-PR e2e-smoke readiness workflow, explicit composed-suite hold, and Makefile exclusion at the pinned snapshot / PROPOSED deterministic composed harness and substantive E2E suite / UNKNOWN dynamic collection, required-check status, production parity, pass rates, accountable stewardship, correction propagation, and operational rollback
+evidence_repository: bartytime4life/Kansas-Frontier-Matrix
+evidence_base_ref: main
+evidence_base_commit: 5d835798e09a4dd14735779cb44206a8a3e8b2d3
+evidence_prior_blob: e4b1ab7fa5a55813c5557b3c706abbaacda337d7
+direct_lane_file_count: 5
+direct_test_module_count: 1
+source_defined_test_count: 1
+readiness_validator_test_count: 14
 related:
   - ../README.md
   - agriculture/README.md
-  - ../../fixtures/
-  - ../../contracts/
-  - ../../schemas/
-  - ../../policy/
-  - ../../release/
-  - ../../runtime/
-  - ../../apps/
-  - ../../.github/workflows/e2e-smoke.yml
-  - ../../.github/workflows/ui-build.yml
+  - ../../docs/doctrine/directory-rules.md
   - ../../tools/validators/e2e_readiness.py
   - ../validators/test_e2e_readiness.py
+  - ../../.github/workflows/e2e-smoke.yml
+  - ../../.github/workflows/ui-build.yml
   - ../../Makefile
 notes:
-  - "v0.3 reconciles the exact five-file direct inventory and the implemented Explorer Web build/test baseline while preserving the composed E2E hold."
-  - "The e2e-smoke workflow runs a bounded static readiness validator; it does not execute a browser/API journey or establish E2E coverage."
+  - "The direct test is an exact assert-true placeholder and is not substantive E2E coverage."
+  - "The e2e-smoke workflow validates a bounded no-network readiness contract and emits an explicit hold; it does not execute a browser/API journey."
   - "The Makefile test target excludes tests/e2e."
-  - "Runtime outcomes are assertions, not pytest statuses."
-  - "The Hydrology module remains an exact assert-true placeholder and is not coverage."
+  - "Passing readiness checks do not establish source truth, evidence closure, policy approval, review, release, deployment, promotion, publication, or operational rollback."
 [/KFM_META_BLOCK_V2] -->
+
+# `tests/e2e/` — Governed End-to-End Enforceability Root
+
+> Parent boundary for proving that complete KFM request paths preserve evidence, policy, release, correction, rollback, and public-client controls without bypassing the trust membrane or treating a green test as truth or publication.
 
 <a id="top"></a>
 
@@ -77,8 +57,8 @@ notes:
 ## Status and evidence boundary
 
 > [!IMPORTANT]
-> **Evidence:** `main@f4b6aea4bd7351339a32e2cd5c3b10edbe068968`
-> **Prior blob:** `29aab97c8b204883ffaaabaf24467e73257d1c4e`
+> **Evidence:** `main@5d835798e09a4dd14735779cb44206a8a3e8b2d3`
+> **Prior blob:** `e4b1ab7fa5a55813c5557b3c706abbaacda337d7`
 > **Confirmed files:** exact five-file direct inventory shown below
 > **Absent at checked paths:** `conftest.py`, `test_smoke.py`, `pytest.ini`
 > **Workflow:** `e2e-smoke` statically validates readiness and emits an explicit hold
@@ -416,13 +396,13 @@ The parent is not operationally complete until owners, child naming, harness, ex
 
 | Evidence | Status | Supports | Does not prove |
 |---|---:|---|---|
-| prior blob `efbd7c61…` | `CONFIRMED` | Existing parent boundary. | Executable coverage. |
-| Directory Rules `2affb080…` | `CONFIRMED DOCTRINE` | Tests root, authority separation, reversibility. | Current behavior. |
-| tests root `5614de99…` | `CONFIRMED ROOT CONTRACT` | Tests are enforceability proof. | E2E runner. |
+| prior blob `e4b1ab7f…` | `CONFIRMED` | Existing parent boundary. | Executable coverage. |
+| Directory Rules `fd49a0b8…` | `CONFIRMED DOCTRINE` | Tests root, authority separation, reversibility. | Current behavior. |
+| tests root `5e497ae0…` | `CONFIRMED ROOT CONTRACT` | Tests are enforceability proof. | E2E runner. |
 | Agriculture child `a9500ca9…` | `CONFIRMED DOCUMENTATION` | README-only maturity and E2E requirements. | Executable Agriculture E2E. |
-| workflow `ba3ccf9b…` | `CONFIRMED STALE READINESS GATE` | Workflow defines the current hold and prior exact-TODO Explorer assumption. | Test execution or current branch behavior after this revision. |
-| `tools/validators/e2e_readiness.py` and focused tests | `CONFIRMED IN THIS SLICE` | Static no-network inspection, exact bounded inventory, deterministic polarity, and explicit hold output. | Browser/API execution, E2E coverage, release, or publication. |
-| Makefile `898004b6…` | `CONFIRMED` | Current test target excludes E2E. | E2E collection. |
+| workflow `fa0292c3…` | `CONFIRMED READINESS HOLD` | Workflow invokes the readiness validator on every pull request and records the composed-suite hold. | Browser/API execution or E2E coverage. |
+| readiness validator `12567392…` and 14-test suite `9ac0e266…` | `CONFIRMED` | Static no-network inspection, exact bounded inventory, deterministic polarity, and explicit hold output. | Browser/API execution, E2E coverage, release, or publication. |
+| Makefile `304145dd…` | `CONFIRMED` | Current test target excludes E2E. | E2E collection. |
 | complete tracked-tree and bounded path checks | `CONFIRMED BOUNDED RESULT` | Exact five-file direct inventory and absent checked harness paths. | Dynamic collection or external execution. |
 
 Current test code, collection output, workflow commands, logs, and generated reports outrank README plans for implementation claims.
