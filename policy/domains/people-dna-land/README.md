@@ -6,7 +6,7 @@ version: v0.2
 status: draft; repository-grounded; mixed-maturity; T4-baseline-projection; direct-proposed-rego-scaffolds; two-synthetic-fixture-profiles; evaluator-unbound; fail-closed-public-edge; non-release; non-publication
 owners: "@bartytime4life — verified CODEOWNERS review route; People, genealogy, DNA/genomic, consent, privacy, land/title, source, rights, sensitivity, evidence, policy, contract/schema, validation, runtime, release, security, and documentation stewardship assignments NEEDS VERIFICATION"
 created: 2026-05-08
-updated: 2026-08-13
+updated: 2026-08-31
 supersedes: unversioned greenfield scaffold
 policy_label: restricted-review; policy; people-dna-land; living-person; genealogy; dna-genomic; consent-revocation; land-title-sensitive; person-parcel-join; T4-baseline; source-role-aware; rights-aware; sensitivity-aware; evidence-bound; cite-or-abstain; reconstruction-resistant; release-gated; correction-aware; rollback-aware; no-public-authority
 current_path: policy/domains/people-dna-land/README.md
@@ -21,10 +21,10 @@ responsibility: >-
 truth_posture: >-
   CONFIRMED direct lane inventory of this README, seven proposed Rego scaffolds, six empty
   compatibility or sublane directories, and one non-empty consent subdirectory; CONFIRMED two
-  bounded synthetic consent fixture profiles with 25 deterministic no-network tests, two
+  bounded synthetic consent fixture profiles with 26 deterministic no-network tests, two
   substantive validators, and a domain workflow whose proof and release jobs remain explicit
-  holds; CONFIRMED a parent-level policy/domains/people/ legacy sibling whose README is one
-  blank byte and whose identity is absent from the machine register; PROPOSED People-DNA-Land
+  holds; CONFIRMED the parent-level policy/domains/people/ legacy sibling is marker-only,
+  has no README, and remains absent from the machine register; PROPOSED People-DNA-Land
   T4 baseline machine projection, policy composition, decision normalization, package
   convergence, and activation requirements; CONFLICTED five deny-named
   or deny-shaped Rego stubs that default deny to false versus two allow-shaped stubs that
@@ -42,25 +42,27 @@ evidence_snapshot:
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: 299c8a81325689c68a38304ce7b14921342dcdd0
-  prior_blob: 571a4a6d5c8ba7cf6c1fa9fcdd63da88bc05eb2a
-  policy_root_blob: 6c5021f9d92778581a4e9331a9dd6ddb7efc5e35
-  policy_domains_parent_blob: ed9be975c9da2c7d77d94fab621db39f23953813
+  base_commit: d1f7ed51cf4d9c9c2fdf94cdc81644744ae464ce
+  prior_blob: 7260394c77d79629895da16d8d680e8d80c56b32
+  policy_root_blob: 105f4f5f10004e85e66ca34cc79b0d45e86c1a35
+  policy_domains_parent_blob: 95f5b0a72f854fc476f9ea400c96399e2ab9cc8f
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  adr_0029_blob: b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62
+  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
   domain_lane_register_blob: 1bfc6f91cfa713a5e3d51ece011b63b46310734f
-  people_legacy_readme_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
-  people_dna_land_docs_readme_blob: 19a3ea59bab2d5e04c73f402a35048c1a55ab071
+  people_legacy_readme_state: absent_at_base_commit
+  people_dna_land_docs_readme_blob: 2f8964668b1f7be383dccf0b5a562c58e6bf4940
   people_dna_land_contract_readme_blob: d99e7fc318f34fbeb90a1ee31658f5121b8ffd38
   people_dna_land_schema_readme_blob: fbe5557ff4e19d1b70a97d284ab1743dd3d08f29
   consent_policy_readme_blob: fa7ea7c95a473a7fd498053536ca0b72b17461f6
   sensitivity_person_parcel_blob: f641d963394971fe8ba36e601c113fcfb2a380b1
   fixture_readme_blob: 8eb10804c587c62edf1eb9750c2c82b5cf237f2a
-  test_readme_blob: ecdaac8e2509d07e39279e23e99273a15716d053
+  test_readme_blob: 77bb1bfd3d3e576bc975c91bbe46dd3e6d8fee52
+  consent_overlay_test_blob: 2657b465b73cc6c9ca550a4d8329f00c0ae9895c
+  revocation_assessment_test_blob: bceeef36e5c4e456e6f8a3fc192cd1c349d34fb5
   validator_readme_blob: 7a78d278aa03d843107d4d66a954c7a670d2ac19
   workflow_blob: bcf64c3e3b6653b9543489fc5a6031805ae3ef48
-  consent_overlay_validator_blob: b2ff0e5037de0f1c22486743ab5e20926c68474d
+  consent_overlay_validator_blob: 19d7b7bdea182b4b4f6c06d150ee15e057c37e2b
   revocation_assessment_validator_blob: 76c7805428f253a7a711c7bc68a27e9cbcce40e7
   abstain_on_ambiguous_blob: 04be32ebc939fa0d0a3ee7a3f4b611bee702b582
   consent_validator_rego_blob: 820daa2199be24f0f651404367d89576f96a825f
@@ -93,7 +95,7 @@ related:
   - ../../../docs/doctrine/directory-rules.md
 notes:
   - "Accepted ADR-0029 adopts the exact Directory Rules v2 bytes despite the adopted document's preserved proposal-era header. The ADR controls decision status."
-  - "people-dna-land is the registered domain segment; people_dna_land is its projected code alias. The parent-level people sibling now contains a one-blank-byte README but is not a registered compatibility alias."
+  - "people-dna-land is the registered domain segment; people_dna_land is its projected code alias. The parent-level people sibling is marker-only, has no README, and is not a registered compatibility alias."
   - "The proposed domain-lane projection records a T4 baseline; that projection cannot authorize access, disclosure, downgrade, release, or publication."
   - "No real living-person data, DNA/genomic material, consent credential, person-parcel join, or title assertion belongs in this public README."
   - "No source, policy bundle, evaluator, proof, release, deployment, or publication is activated by this README."
@@ -126,7 +128,7 @@ notes:
 <!-- callout boundary -->
 
 > [!NOTE]
-> Two bounded synthetic profiles are executable: a consent-safe genealogy-overlay fixture profile and an inactive consent-revocation propagation assessment. Their 25 no-network tests establish only the declared synthetic shapes and failure polarities. They do not validate real people, real consent, legal sufficiency, kinship, DNA findings, land title, cleanup execution, policy activation, release, or publication.
+> Two bounded synthetic profiles are executable: a consent-safe genealogy-overlay fixture profile and an inactive consent-revocation propagation assessment. Their 26 no-network tests establish only the declared synthetic shapes and failure polarities. They do not validate real people, real consent, legal sufficiency, kinship, DNA findings, land title, cleanup execution, policy activation, release, or publication.
 
 **Quick links:** [Purpose](#purpose) · [Authority](#authority-and-current-status) · [Ownership](#ownership-and-non-ownership) · [Safety](#people-dna-land-safety-invariants) · [Inventory](#direct-lane-inventory) · [Scope](#what-belongs-here) · [Inputs](#required-policy-input) · [Decisions](#decision-and-obligation-contract) · [Surfaces](#public-surface-contract) · [Lifecycle](#lifecycle-and-temporal-behavior) · [Naming](#identity-naming-and-versioning) · [Validation](#validation-and-failure-semantics) · [Review](#review-burden) · [Activation](#activation-and-definition-of-done) · [Correction](#correction-revocation-and-invalidation) · [Rollback](#rollback-and-recovery) · [Map](#related-responsibility-roots) · [ADRs](#governing-decisions-and-doctrine) · [Backlog](#open-verification-register) · [Evidence](#last-reviewed-evidence) · [History](#revision-history)
 
@@ -190,9 +192,9 @@ The Directory Rules document retains proposal-era control text because ADR-0029 
 | Does the directory exist? | **CONFIRMED.** It contains this README, six root Rego files, one non-empty `consent/` subdirectory, and six empty subdirectories. |
 | Is this the canonical domain-policy segment? | **CONFIRMED placement.** `policy/` owns admissibility; `people-dna-land` is the registered domain segment. |
 | Is the lane registered? | **CONFIRMED presence / PROPOSED projection.** The machine register records `lane_id: people-dna-land`, `code_alias: people_dna_land`, and a T4 baseline but declares itself `machine_projection_only`. |
-| Is `policy/domains/people/` an accepted alias? | **NO evidence.** It now contains a one-blank-byte README, remains absent from the machine register, and has no accepted mapping. The unchanged parent inventory predates that blank file and still describes the directory as having no README. |
+| Is `policy/domains/people/` an accepted alias? | **NO evidence.** It is marker-only, has no README, remains absent from the machine register, and has no accepted mapping. The current parent inventory records the same residual-marker posture. |
 | Are operative direct rules present? | **NO.** Seven Rego files are proposed scaffolds containing defaults only; five default `deny` to false and two default `allow` to false. |
-| Are any People–DNA–Land profiles executable? | **YES, bounded.** Two synthetic consent fixture profiles have substantive validators and 25 deterministic tests. They do not execute the direct Rego files. |
+| Are any People–DNA–Land profiles executable? | **YES, bounded.** Two synthetic consent fixture profiles have substantive validators and 26 deterministic tests. They do not execute the direct Rego files. |
 | Is the direct Rego set normalized? | **NO.** Result names, truth polarity, package namespaces, entrypoints, and responsibility split conflict. |
 | Is an accepted bundle or evaluator bound? | **UNKNOWN / not observed.** No accepted bundle manifest, selector, native Rego harness, runtime consumer, or decision-receipt binding was established by the reviewed evidence. |
 | Is proof production active? | **NO.** The domain workflow intentionally holds because no accepted proof producer or deterministic proof command exists. |
@@ -424,7 +426,7 @@ The physical inventory below is confirmed at the pinned base. Status follows fil
 3. **Package conflict.** Five root stubs use short `kfm.*` packages; two scaffolds use `kfm.generated.policy.domains.people_dna_land.*`.
 4. **Responsibility overlap.** Domain-local consent and living-person files overlap shared consent and sensitivity lanes without an accepted precedence or bundle contract.
 5. **Sublane naming conflict.** Hyphenated, underscored, singular, and plural variants coexist (`land-ownership`, `land_rights`, `living_persons`, `people`) with no accepted migration record.
-6. **Alias and inventory conflict.** The registered lane is `people-dna-land` with code alias `people_dna_land`; the parent-level `people/` sibling is unregistered and cannot be silently mapped here. Its one-blank-byte README was added after the unchanged parent inventory was written, so physical presence and documented inventory now drift.
+6. **Alias remains unresolved.** The registered lane is `people-dna-land` with code alias `people_dna_land`; the parent-level marker-only `people/` sibling is unregistered and cannot be silently mapped here. Its README is absent, matching the current parent inventory, but the residual markers still require governed classification or retirement.
 7. **Documentation-byte conflict.** [`SCOPE_AND_BOUNDARY.md`](../../../docs/domains/people-dna-land/SCOPE_AND_BOUNDARY.md) and `SENSITIVITY.md` share the same Git blob at the pinned base. This README does not treat duplicated bytes as two independently verified authorities.
 8. **Consent documentation drift.** The shared consent README predates the two current synthetic validator profiles and still says no domain fixtures or tests surfaced. Its activation warning remains valid; its inventory needs separate reconciliation.
 
@@ -708,7 +710,7 @@ Do not compare or substitute these without an explicit contract.
 | Documentation path | `docs/domains/people-dna-land/` |
 | Direct policy path | `policy/domains/people-dna-land/` |
 | Sensitivity baseline | T4 — proposed machine projection; not disclosure authority |
-| Parent-level `policy/domains/people/` | Unregistered sparse legacy scaffold with a one-blank-byte README; no inferred alias |
+| Parent-level `policy/domains/people/` | Unregistered marker-only legacy scaffold with no README; no inferred alias |
 
 ### Naming rules
 
@@ -1117,7 +1119,7 @@ When these sources disagree:
 | PDL-POL-001 | What is the accepted package and entrypoint surface? | ADR or reviewed bundle/evaluator contract | Evaluator unbound; no runtime claim. |
 | PDL-POL-002 | Should defaults expose `allow`, `deny`, or a structured decision? | Accepted composition contract and negative tests | Do not combine or invert current stubs. |
 | PDL-POL-003 | Which direct subdirectories are canonical, aliases, migrations, or obsolete? | Naming/placement decision and migration plan | Treat all as non-authoritative placeholders. |
-| PDL-POL-004 | Is parent-level `policy/domains/people/` a compatibility lane, and how should its blank README be classified? | Register/ADR update, parent-inventory reconciliation, and path migration evidence | Blank physical presence grants no authority; no inferred alias. |
+| PDL-POL-004 | Is parent-level `policy/domains/people/` a compatibility lane, and how should its residual markers be classified? | Register/ADR update, parent-inventory reconciliation, and path migration evidence | Marker presence grants no authority; no inferred alias. |
 | PDL-POL-005 | How do domain, consent, sensitivity, rights, and evidence policies compose? | Accepted precedence/composition contract | Most restrictive result; unresolved means hold/deny. |
 | PDL-POL-006 | What is the accepted normalized input and outward decision contract? | Versioned contracts, schemas, fixtures, tests | Current vocabulary is proposed only. |
 | PDL-POL-007 | Is any direct Rego file in a bundle or production evaluator? | Bundle manifest, digest, selector, runtime binding, receipts | Inactive. |
@@ -1146,11 +1148,11 @@ Closing an item requires repository-backed evidence and appropriate review. Edit
 | Field | Value |
 | --- | --- |
 | Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Pinned base | `main@299c8a81325689c68a38304ce7b14921342dcdd0` |
-| Review date | 2026-08-13 |
-| Target prior blob | `571a4a6d5c8ba7cf6c1fa9fcdd63da88bc05eb2a` |
+| Pinned base | `main@d1f7ed51cf4d9c9c2fdf94cdc81644744ae464ce` |
+| Review date | 2026-08-31 |
+| Target prior blob | `7260394c77d79629895da16d8d680e8d80c56b32` |
 | Direct inventory | 1 README, 7 proposed Rego scaffolds, 6 empty subdirectories, 1 non-empty consent subdirectory |
-| Executable bounded evidence | 2 substantive synthetic validators; 25 deterministic no-network tests; 2 fixture profiles |
+| Executable bounded evidence | 2 substantive synthetic validators; 26 deterministic no-network tests; 2 fixture profiles |
 | Workflow posture | Validation profiles executable; proof and release dry-run held |
 | Runtime posture | No accepted direct Rego bundle/evaluator/consumer established |
 | Public posture | Deny by default; governed released derivative only |
@@ -1160,21 +1162,23 @@ Closing an item requires repository-backed evidence and appropriate review. Edit
 
 | Evidence | Blob at pinned base | What it proves |
 | --- | --- | --- |
-| Accepted ADR-0029 | `b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62` | Adoption decision and governance boundary |
+| Accepted ADR-0029 | `a4de0d7a96b78da59cfc499d1025e1508afd8dd9` | Adoption decision and governance boundary |
 | Directory Rules | `fd49a0b83e55cef52c1124281f093e263526898d` | Adopted placement doctrine bytes |
-| Policy root | `6c5021f9d92778581a4e9331a9dd6ddb7efc5e35` | Root admissibility boundary |
-| Domain-policy parent | `ed9be975c9da2c7d77d94fab621db39f23953813` | Direct-child map, alias posture, composition and activation rules |
+| Policy root | `105f4f5f10004e85e66ca34cc79b0d45e86c1a35` | Root admissibility boundary |
+| Domain-policy parent | `95f5b0a72f854fc476f9ea400c96399e2ab9cc8f` | Direct-child map, alias posture, composition and activation rules |
 | Domain lane register | `1bfc6f91cfa713a5e3d51ece011b63b46310734f` | Proposed lane ID, code alias, docs path, and T4 baseline projection |
-| Legacy `policy/domains/people/README.md` | `8b137891791fe96927ad78e64b0aad7bded08bdc` | One blank byte only; physical presence without registered alias or policy authority |
+| Legacy `policy/domains/people/README.md` | **Absent** at pinned base | Residual nested markers provide no registered alias or policy authority |
 | CODEOWNERS | `dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61` | GitHub review route only |
-| Domain docs README | `19a3ea59bab2d5e04c73f402a35048c1a55ab071` | Draft human domain landing surface |
+| Domain docs README | `2f8964668b1f7be383dccf0b5a562c58e6bf4940` | Draft human domain landing surface |
 | Contracts README | `d99e7fc318f34fbeb90a1ee31658f5121b8ffd38` | Draft semantic-contract boundary and sensitivity warnings |
 | Schemas README | `fbe5557ff4e19d1b70a97d284ab1743dd3d08f29` | Draft schema index and naming drift |
 | Shared consent README | `fa7ea7c95a473a7fd498053536ca0b72b17461f6` | Consent boundary and valid activation warning; stale implementation inventory |
 | Direct Rego set | `04be32e…`, `820daa2…`, `17bb640…`, `d174e58…`, `ba3a55d…`, `3260751…`, `bb4400e…` | Proposed defaults, package conflicts, and absence of operative rules |
 | Fixtures README | `8eb10804c587c62edf1eb9750c2c82b5cf237f2a` | Synthetic-only fixture boundary |
-| Tests README | `ecdaac8e2509d07e39279e23e99273a15716d053` | Bounded executable profile claim |
-| Consent-overlay validator | `b2ff0e5037de0f1c22486743ab5e20926c68474d` | Substantive deterministic fixture validator |
+| Tests README | `77bb1bfd3d3e576bc975c91bbe46dd3e6d8fee52` | Bounded executable profile claim |
+| Consent-overlay test | `2657b465b73cc6c9ca550a4d8329f00c0ae9895c` | 17 deterministic no-network test methods |
+| Revocation-assessment test | `bceeef36e5c4e456e6f8a3fc192cd1c349d34fb5` | 9 deterministic no-network test methods |
+| Consent-overlay validator | `19d7b7bdea182b4b4f6c06d150ee15e057c37e2b` | Substantive deterministic fixture validator |
 | Revocation-assessment validator | `76c7805428f253a7a711c7bc68a27e9cbcce40e7` | Substantive seven-surface assessment validator |
 | Domain workflow | `bcf64c3e3b6653b9543489fc5a6031805ae3ef48` | Two executable profiles plus explicit proof/release holds |
 | Proof README | `05359bb623e69dccbda1ee22f8ba0d8345d9d412` | Documented proof boundary, not emitted proof |
@@ -1192,6 +1196,7 @@ Evidence is scoped to the pinned commit. Later repository state must be re-read 
 | --- | --- | --- | --- |
 | Unversioned scaffold | 2026-05-08 | Added a 31-line greenfield placeholder that overclaimed all policy-bearing materials as local and provided no sensitive-domain boundary. | Restore through prior Git history if needed. |
 | v0.2 | 2026-08-13 | Reconciles accepted directory governance, canonical lane identity, T4 baseline projection, seven direct Rego scaffolds and their default/package conflicts, empty sublanes, two deterministic consent fixture profiles, policy composition, minimized inputs, decisions/obligations, public surfaces, lifecycle/time, review burden, activation gates, correction/revocation, rollback, evidence, and open verification without changing executable behavior. | Revert this README-only commit to blob `571a4a6d5c8ba7cf6c1fa9fcdd63da88bc05eb2a`. |
+| v0.2 evidence refresh | 2026-08-31 | Re-pins current repository evidence, corrects the two-profile total from 25 to 26 tests, and records the residual `policy/domains/people/` sibling as marker-only with no README. Rego source, policy semantics, activation, runtime, release, and publication remain unchanged. | Revert this README-only commit to blob `7260394c77d79629895da16d8d680e8d80c56b32`. |
 
 ---
 
