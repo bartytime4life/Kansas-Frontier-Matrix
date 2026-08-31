@@ -2,11 +2,11 @@
 doc_id: kfm://doc/github-workflows-readme
 title: .github/workflows README
 type: README
-version: v0.16
-status: draft; repository-grounded workflow governance reference; current filename count; static guardrail audit implemented; hosted behavior bounded
+version: v0.17
+status: draft; repository-grounded workflow governance reference; exact filename inventory; static and hosted behavior bounded
 owners: ["@bartytime4life"]
 created: 2026-07-08
-updated: 2026-08-12
+updated: 2026-08-31
 policy_label: public; github-actions; workflow-governance; fail-closed; non-publisher
 owning_root: .github/
 responsibility: GitHub Actions orchestration, trigger and permission boundaries, check-name stability, CI maturity disclosure, and workflow inventory accountability
@@ -14,12 +14,13 @@ truth_posture: cite-or-abstain; a workflow file, green job, commit, or pull requ
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   read_ref: main
-  read_commit: bff35f5ddf00ef623eacf96be13a743e134f482f
-  workflows_tree: 5be7475b21c9e05595141704e974545f6806a5a4
-  readme_prior_blob: 6d83ab369cbb474be874130dc3cadc645c77323e
-  current_workflow_files: 425
+  read_commit: 1b654851dc58e2ea3104bf90072604148f91a84c
+  workflows_tree: a2f098500f1e35d05351222d9171ecead497c161
+  readme_prior_blob: 0b19d140a568114f4cef66cf7dac04df2d4e9585
+  current_workflow_files: 482
   workflow_security_rules: 20
-  workflow_security_findings_after_hardening: 0
+  workflow_security_baseline_entries: 0
+  workflow_security_result_at_read_commit: NOT RUN
   current_workflow_extension: .yml
   current_workflow_readme_files: 1
   prior_detailed_inventory: 44 workflow files at v0.14; retained in Git history; superseded as current inventory
@@ -30,6 +31,7 @@ related:
   - ../../CONTRIBUTING.md
   - ../../SECURITY.md
   - ../../Makefile
+  - ../../docs/runbooks/pr-reliability-guide.md
   - ../../docs/doctrine/directory-rules.md
   - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../docs/doctrine/ai-build-operating-contract.md
@@ -42,7 +44,7 @@ related:
   - ../../contracts/README.md
   - ../../release/README.md
 notes:
-  - "The 425-file count is exact for the pinned Git tree. This edition adds a deterministic twenty-rule static ratchet but does not claim current hosted results, ruleset coupling, runtime safety, or complete behavioral maturity."
+  - "The 482-file count is exact for the pinned Git tree. The twenty-rule static ratchet and empty implementation-waiver baseline exist at that ref, but the ratchet was not executed for this documentation refresh."
   - "The v0.14 detailed forty-four-workflow classification and action inventory remain historical process evidence in Git history, not current-tree evidence."
   - "Workflow filenames and green checks are orchestration evidence only; they do not create policy, review, release, lifecycle, or publication authority."
 [/KFM_META_BLOCK_V2] -->
@@ -51,23 +53,30 @@ notes:
 
 # `.github/workflows/`
 
-[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status-and-evidence-boundary)
-[![Current inventory: 425 workflows](https://img.shields.io/badge/current%20inventory-425%20workflows-1f6feb?style=flat-square)](#current-inventory-boundary)
-[![Static ratchet: 20 rules](https://img.shields.io/badge/static%20ratchet-20%20rules-1f883d?style=flat-square)](#current-inventory-boundary)
-[![Publisher: no](https://img.shields.io/badge/publisher-no-b91c1c?style=flat-square)](#authority-level)
-[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite--or--abstain-8250df?style=flat-square)](../../docs/doctrine/ai-build-operating-contract.md)
-
 > GitHub Actions orchestration for repository-owned checks, bounded automation, and explicit readiness outcomes. Workflow YAML may invoke tools and report results; it does not become policy, evidence, review, release, lifecycle-transition, or publication authority.
 
 > [!IMPORTANT]
 > A green workflow, governed hold, skip, static-readiness pass, and substantive validator pass are different outcomes. Names and summaries must not imply more maturity than the executed steps establish.
 
+## At a glance
+
+| Item | Current repository-grounded statement |
+|---|---|
+| Responsibility | GitHub Actions orchestration under the `.github/` platform-integration root. |
+| Inventory | 482 tracked `.yml` workflows and this README at the pinned tree. |
+| Static guardrail profile | 20 repository-owned rules with an empty implementation-waiver baseline. |
+| Exact-current static result | `NOT RUN` for the pinned read commit; do not inherit the older 425-workflow result. |
+| Hosted and ruleset state | `NEEDS VERIFICATION`; inspect GitHub object state at the exact ref. |
+| Publication authority | None. Workflows and their outputs remain carriers or review signals unless a separate governed transition says otherwise. |
+
 ## Navigation
 
+- [At a glance](#at-a-glance)
 - [Purpose](#purpose)
 - [Authority level](#authority-level)
 - [Status and evidence boundary](#status-and-evidence-boundary)
 - [Current inventory boundary](#current-inventory-boundary)
+- [Find and assess a workflow](#find-and-assess-a-workflow)
 - [Workflow families](#workflow-families)
 - [Historical inventory boundary](#historical-inventory-boundary)
 - [What belongs here](#what-belongs-here)
@@ -77,6 +86,7 @@ notes:
 - [Trigger, permission, and threat preflight](#trigger-permission-and-threat-preflight)
 - [Validation](#validation)
 - [Workflow authoring contract](#workflow-authoring-contract)
+- [Change and review sequence](#change-and-review-sequence)
 - [Review burden](#review-burden)
 - [Related folders](#related-folders)
 - [ADRs](#adrs)
@@ -111,16 +121,18 @@ The workflow layer is a **non-publisher**. Watchers, drift detectors, documentat
 
 ## Status and evidence boundary
 
-This edition was prepared against `main@bff35f5ddf00ef623eacf96be13a743e134f482f` and workflow tree `5be7475b21c9e05595141704e974545f6806a5a4`.
+This edition was prepared against `main@1b654851dc58e2ea3104bf90072604148f91a84c` and workflow tree `a2f098500f1e35d05351222d9171ecead497c161` on 2026-08-31.
 
 **CONFIRMED for that snapshot:**
 
-- the workflow subtree contains one README and **425 tracked `.yml` workflow files**;
+- the workflow subtree contains one README and **482 tracked `.yml` workflow files**;
+- the subtree contains no `.yaml` workflows, non-Markdown companion files, or nested directories;
 - the old v0.14 README blob remains in Git history;
 - the current tree includes rapidly expanded domain, source, evidence, policy, review, artifact, map, runtime, and governance lanes;
-- the proposed branch keeps the workflow-file count stable while adding bounded static enforcement; it changes no GitHub repository setting.
+- the 20-rule workflow-security scanner, empty implementation-waiver baseline, Make targets, and `security.yml` and `validator-suite.yml` bindings exist at the pinned ref;
+- this documentation change does not modify workflow YAML or a GitHub repository setting.
 
-**NEEDS VERIFICATION beyond the bounded static scan of the complete 425-file tree:**
+**NEEDS VERIFICATION for the pinned 482-workflow tree:**
 
 - every trigger and path filter;
 - every permission and write scope;
@@ -131,22 +143,51 @@ This edition was prepared against `main@bff35f5ddf00ef623eacf96be13a743e134f482f
 - current hosted conclusions, required-check coupling, and failure causes;
 - whether each command is substantive, partial, held, skipped, or placeholder behavior.
 
+The exact-current workflow-security scan was not run while preparing this README. The scanner's empty baseline is not a substitute for executing it against the exact head.
+
 A filename proves only that bytes exist. It does not establish that the lane is safe, required, current, complete, or production-ready.
 
 ## Current inventory boundary
 
 | Inventory fact | Current value | Interpretation |
 |---|---:|---|
-| Workflow files | **425** | Exact count of tracked `.yml` files in the pinned tree. |
+| Workflow files | **482** | Exact count of tracked `.yml` files in the pinned tree. |
 | Workflow README files | **1** | This file. |
 | Alternative `.yaml` workflow files | **0 observed** | The pinned workflow tree contains `.yml` files and this README. |
+| Growth since the v0.16 snapshot | **57** | New workflow files since the prior 425-file inventory; growth is maintenance pressure, not maturity. |
 | Prior documented workflow set | **44** | Historical v0.14 classification; no longer a complete current inventory. |
-| Net growth since prior detailed snapshot | **381** | Maintenance and audit pressure, not maturity. |
-| Deterministic static guardrails | **20** | Local source checks with exact inherited-drift ratcheting; not hosted or runtime proof. |
-| Proposed-head static result | **PASS: 425 workflows, 0 findings, 0 waivers** | Reproducible local source result; hosted execution and required-check state remain unverified. |
+| Net growth since prior detailed snapshot | **438** | Inventory delta only; it does not establish coverage or readiness. |
+| Deterministic static guardrails | **20** | Repository-owned local source rules; not hosted or runtime proof. |
+| Implementation-waiver baseline entries | **0** | Exact count in `workflow_security_baseline.json`; not a current scan result. |
+| Exact-current static result | **`NOT RUN`** | Run `make workflow-security` at the exact head before reporting a result. |
 | Complete current behavioral audit | **Not performed** | Hosted conclusions, rulesets, runtime behavior, and semantic maturity remain `NEEDS VERIFICATION`. |
 
-The count should be regenerated from the Git tree whenever workflows change. A future repository-owned inventory validator is preferred over manual arithmetic.
+Regenerate the count from the Git index whenever workflows change:
+
+```bash
+git ls-files '.github/workflows/*.yml' | wc -l
+```
+
+## Find and assess a workflow
+
+Start from tracked files rather than a copied inventory:
+
+```bash
+git ls-files '.github/workflows/*.yml' | sort
+rg -n '^(name|on|permissions):' .github/workflows
+rg -n 'pull_request_target|workflow_run|id-token: write|contents: write|packages: write|secrets: inherit|self-hosted' .github/workflows
+```
+
+Then answer the exact question with the correct authority surface:
+
+| Question | Evidence to inspect | Do not infer |
+|---|---|---|
+| Does a workflow file exist? | Git tree at the exact ref | That it runs, passes, or is required. |
+| What activates it? | Its `on` block and path filters | Hosted event reachability from its filename. |
+| What can it access? | Workflow/job `permissions`, secrets, OIDC, runner, cache, artifact, and network configuration | Least privilege from a read-only job alone. |
+| What does it actually prove? | Invoked command, tests and fixtures, negative cases, logs, and exact-head conclusion | Substantive validation from a green name or skipped scaffold. |
+| Is its check required? | Live repository ruleset and branch-protection state | Ruleset coupling from YAML or this README. |
+| Can it publish or change lifecycle state? | Accepted policy and release authority plus an authenticated transition record | Authority from an artifact, receipt, workflow success, merge, or badge. |
 
 ## Workflow families
 
@@ -166,15 +207,15 @@ Review the exact workflow before relying on any example above. Similar names do 
 
 ## Historical inventory boundary
 
-Version v0.14 documented a detailed **44-workflow** classification, selected command semantics, and an external-action inventory. That material was useful for its pinned snapshots, but the current tree is more than nine times larger.
+Version v0.14 documented a detailed **44-workflow** classification, selected command semantics, and an external-action inventory. That material was useful for its pinned snapshots, but the current tree is more than ten times larger.
 
 This edition therefore:
 
 - preserves v0.15 in Git history at prior blob `6d83ab369cbb474be874130dc3cadc645c77323e`;
 - supersedes its 44-file count and “complete workflow inventory” label as current evidence;
-- does not copy stale per-workflow conclusions onto 380 additional files;
+- does not copy stale per-workflow conclusions onto 438 additional files;
 - retains the underlying authoring, threat-model, validation, non-publisher, and rollback rules;
-- enforces a bounded 425-workflow static ratchet while keeping hosted behavior an explicit verification item.
+- retains the bounded 20-rule static ratchet while keeping its exact-current result and hosted behavior explicit verification items.
 
 Historical evidence remains citable at its pinned commit. It must not be silently presented as current-main behavior.
 
@@ -250,11 +291,14 @@ A `pull_request_target`, self-hosted runner, write token, secret/OIDC path, depl
 ### Workflow source checks
 
 ```bash
-actionlint .github/workflows/*.yml
+make validator-registry-check
+make workflow-security
 git diff --check
 ```
 
-Use a YAML 1.2-aware parser when `actionlint` is unavailable; YAML 1.1 parsers can misinterpret the GitHub Actions `on` key.
+For a workflow change, `make repository-guardrails` runs the registry, workflow-security, and repository-topology guardrails together. Attribute each outcome separately; a topology baseline or inherited finding is not a workflow-security result.
+
+`actionlint` may be used when it is installed, but it is not a repository-pinned dependency at the pinned ref. Use a YAML 1.2-aware parser for any supplemental YAML parsing because YAML 1.1 parsers can misinterpret the GitHub Actions `on` key.
 
 ### Repository behavior checks
 
@@ -277,6 +321,8 @@ Inspect each target before relying on it. A Make target that only echoes a hold,
 - record outcomes as `PASS`, `FAIL`, `PARTIAL`, `PENDING`, `NOT RUN`, `NOT APPLICABLE`, or `UNKNOWN`;
 - do not claim current action-pin, permission, or threat posture without scanning every workflow at the exact head.
 
+For Markdown changes, run the bounded local link-check tests and changed-file checker described by [`link-check.yml`](link-check.yml). The repository does not define a general Markdown-lint profile at the pinned ref, so do not report one as run.
+
 ### Required negative checks
 
 Where relevant, include deterministic tests for malformed input, missing evidence, policy denial, sensitive-location leakage, direct public reads from internal stores, watcher publication attempts, stale or corrected state, invalid receipt/proof/release linkage, unsafe caches, and secret-bearing logs.
@@ -297,6 +343,20 @@ Where relevant, include deterministic tests for malformed input, missing evidenc
 12. Preserve correction and supersession visibility; do not silently remove a relied-upon gate.
 13. Avoid one-workflow-per-idea growth when an existing bounded workflow or reusable lane can own the same responsibility safely.
 14. Reconcile overlap by behavior and authority, not by filename similarity alone.
+
+## Change and review sequence
+
+1. Record the default branch and exact base SHA.
+2. Search open pull requests and coordination notes for path or authority overlap.
+3. Read this README, the target workflow, its invoked implementation, relevant tests and fixtures, [`CODEOWNERS`](../CODEOWNERS), and the [PR reliability guide](../../docs/runbooks/pr-reliability-guide.md).
+4. Define the observable outcome, non-goals, trigger and permission changes, negative cases, validation, rollback, and any required-check name impact.
+5. Make one dependency-closed change; keep reusable logic in its owning root.
+6. Run changed-area checks and the workflow-security ratchet at the exact head.
+7. Open or update a focused draft pull request and report exact base/head evidence.
+8. Classify failures as introduced, inherited, resolved, integration/base drift, environmental/flaky, pending, not run, not applicable, or unknown using comparable evidence.
+9. Recheck hosted state, review state, changed paths, and ruleset coupling before changing readiness claims.
+
+Branch work and a draft pull request do not authorize approval, merge, release, deployment, promotion, publication, source activation, or repository-setting changes.
 
 ## Review burden
 
@@ -357,20 +417,23 @@ Before merge, close or revert the unmerged workflow change without weakening unr
 
 ## Open verification items
 
-- **NEEDS VERIFICATION** — behavioral review of commands, trigger reachability, secrets/OIDC, network, caches, artifacts, and write effects beyond the twenty static rules for all 425 files.
+- **NEEDS VERIFICATION** — behavioral review of commands, trigger reachability, secrets/OIDC, network, caches, artifacts, and write effects for all 482 files.
+- **NEEDS VERIFICATION** — exact-current execution of the twenty-rule static ratchet for all 482 workflow files.
 - **NEEDS VERIFICATION** — current rulesets and exact required-check coupling.
 - **NEEDS VERIFICATION** — recent hosted outcomes, failure causes, logs, rerun state, and artifact retention.
 - **NEEDS VERIFICATION** — duplicate, overlapping, obsolete, or misleading workflow/check identities created during rapid growth.
 - **NEEDS VERIFICATION** — commands that remain placeholders, readiness holds, or partial validation despite authoritative-sounding names.
 - **NEEDS VERIFICATION** — complete policy-bundle, schema, fixture, and runtime parity.
 - **NEEDS VERIFICATION** — whether workflow-generated artifacts contain sensitive data or outlive their review purpose.
-- **CONFIRMED in this branch / hosted result NEEDS VERIFICATION** — a repository-owned, no-network workflow-security ratchet now emits reviewable findings without becoming policy or release authority.
+- **NEEDS VERIFICATION** — the governance-validator README still describes its receipt-bound 424-workflow snapshot as current; correct it only with a provenance-safe receipt update or supersession.
+- **CONFIRMED at the pinned ref / exact-current result NEEDS VERIFICATION** — the repository-owned, no-network workflow-security ratchet and its empty implementation-waiver baseline exist; no current pass is claimed here.
 - **PROPOSED consolidation** — prefer reusable validators and bounded workflows where multiple files share the same trigger, permissions, and acceptance boundary.
 
 ## Changelog
 
 | Date | Version | Change |
 |---|---|---|
+| 2026-08-31 | v0.17 | Re-pinned the subtree to `main@1b654851…`; recorded 482 `.yml` workflows and 57-file growth since v0.16; separated the empty waiver baseline from an unrun exact-current scan; added practical discovery, evidence-routing, repository-supported validation, and review guidance; and removed the badge wall. |
 | 2026-08-12 | v0.16 | Re-pinned the subtree to `main@bff35f5…`; recorded the exact 425-workflow count; added a deterministic twenty-rule workflow-security ratchet with inherited-drift accounting; and kept hosted conclusions, ruleset state, and runtime maturity explicitly unverified. |
 | 2026-08-08 | v0.15 | Re-pinned the subtree to `main@d4586ec…`; recorded the exact 191-workflow count; superseded the 44-file classification as current inventory while preserving it in Git history; separated filename facts from unverified per-workflow behavior; and retained the non-publisher, threat-preflight, validation, review, and rollback contracts. |
 | 2026-08-03 | v0.14 | Reconciled promotion workflow documentation with a bounded fixture-only ReviewRecord candidate inside the prior 44-workflow snapshot. |
