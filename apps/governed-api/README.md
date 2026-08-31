@@ -2,11 +2,11 @@
 doc_id: kfm://app/governed-api/readme
 title: Governed API App README
 type: app-readme
-version: v0.2
+version: v0.3
 status: draft
 owners: OWNER_TBD — Apps steward · API steward · Policy steward · Evidence steward · Release steward · Runtime steward · Docs steward
 created: 2026-06-16
-updated: 2026-06-16
+updated: 2026-08-31
 policy_label: public
 related:
   - ../README.md
@@ -28,6 +28,7 @@ notes:
   - "Expands the short governed-api README into a governed app boundary contract."
   - "Documents the intended trust-membrane role while keeping runtime maturity bounded to current-session evidence."
   - "The api-test workflow file exists and names governed-api smoke/envelope-shape commands; no workflow run status was verified in this session."
+  - "v0.3 records the branch-local bounded synthetic map slice without claiming a canonical repository-wide layer schema, deployment, release, or publication authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -47,7 +48,7 @@ notes:
 ![outcomes](https://img.shields.io/badge/outcomes-ANSWER%20%7C%20ABSTAIN%20%7C%20DENY%20%7C%20ERROR-2ea44f)
 ![truth](https://img.shields.io/badge/truth-NEEDS__VERIFICATION-yellow)
 
-[Purpose](#1-purpose) · [Repo fit](#2-repo-fit) · [Boundary](#3-authority-boundary) · [Inputs](#5-inputs) · [Exclusions](#6-exclusions) · [Route families](#7-route-family-map) · [Definition of done](#14-definition-of-done)
+[Current slice](#0-bounded-executable-slice) · [Purpose](#1-purpose) · [Repo fit](#2-repo-fit) · [Boundary](#3-authority-boundary) · [Inputs](#5-inputs) · [Exclusions](#6-exclusions) · [Route families](#7-route-family-map) · [Definition of done](#14-definition-of-done)
 
 </div>
 
@@ -58,7 +59,7 @@ notes:
 > **Owners:** `OWNER_TBD` — Apps steward · API steward · Policy steward · Evidence steward · Release steward · Runtime steward · Docs steward  
 > **Path:** `apps/governed-api/README.md`  
 > **Responsibility root:** `apps/` — deployable application surfaces  
-> **Truth posture:** CONFIRMED README path / CONFIRMED apps-root role / CONFIRMED ADR-0004 doctrine / CONFIRMED api-test workflow file presence / UNKNOWN route handlers, DTOs, middleware, authorization, runtime behavior, deployment state, logs, dashboards, and CI pass state
+> **Truth posture:** CONFIRMED README path, apps-root role, WSGI route bytes, deterministic injected slice provider, bounded request parsing, and app-local tests on this branch / PROPOSED ADR-0004 trust-membrane design lineage / CONFLICTED repository-wide layer-schema authority / UNKNOWN hosted exact-head results, deployment state, logs, and dashboards
 
 > [!CAUTION]
 > `apps/governed-api/` is the normal public trust path, not a shortcut around governance. It should return governed envelopes and safe projections only. Ordinary clients must not receive direct lifecycle paths, unpublished candidates, internal record paths, adapter internals, stack traces, or filesystem references.
@@ -67,6 +68,7 @@ notes:
 
 ## Quick jump
 
+- [0. Bounded executable slice](#0-bounded-executable-slice)
 - [1. Purpose](#1-purpose)
 - [2. Repo fit](#2-repo-fit)
 - [3. Authority boundary](#3-authority-boundary)
@@ -82,6 +84,22 @@ notes:
 - [13. Safe change pattern](#13-safe-change-pattern)
 - [14. Definition of done](#14-definition-of-done)
 - [15. Open verification items](#15-open-verification-items)
+
+---
+
+## 0. Bounded executable slice
+
+This branch implements one deliberately narrow, deterministic, no-network path:
+
+- `GET /layers` returns exactly one public-safe synthetic Point feature using the slice-local profile `kfm.governed-api.synthetic-layer-slice.v1`;
+- `GET /evidence` accepts exactly one bounded `layer_id`, `feature_id`, and `evidence_ref` tuple and returns the existing Explorer public-safe Evidence Drawer projection;
+- supported, unresolved, restricted, malformed, incompatible, and provider-failure cases resolve finitely as `ANSWER`, `ABSTAIN`, `DENY`, or safe `ERROR` without exposing provider details;
+- the injected default provider reads no lifecycle root, internal store, network service, model runtime, or filesystem artifact;
+- `/bootstrap` remains the unchanged schema-backed `ABSTAIN / NOT_IMPLEMENTED` scaffold.
+
+The layer response is explicitly slice-local because repository-wide layer-schema authority remains conflicted. These branch-local bytes and tests do not prove review, integration, deployment, source admission, release, promotion, or publication.
+
+[Back to top](#top)
 
 ---
 

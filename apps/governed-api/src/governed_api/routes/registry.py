@@ -5,3 +5,8 @@ ROUTES = {
     layers.PATH: layers.layers,
     evidence.PATH: evidence.evidence,
 }
+
+REQUEST_AWARE_ROUTES = {
+    layers.PATH: layers.layers,
+    evidence.PATH: evidence.evidence,
+}
