@@ -159,24 +159,37 @@ const escapeXmlText = (value: string) => {
 const kmlMarkupForInspection = (text: string): string | null => {
   let markup = "";
   let cursor = 0;
+  let insideTag = false;
+  let quote: "'" | '"' | null = null;
   while (cursor < text.length) {
     if (text.startsWith("<!--", cursor)) {
+      if (insideTag) return null;
       const commentEnd = text.indexOf("-->", cursor + 4);
       if (commentEnd < 0) return null;
+      markup += " ";
       cursor = commentEnd + 3;
       continue;
     }
     if (text.startsWith("<![CDATA[", cursor)) {
+      if (insideTag) return null;
       const cdataEnd = text.indexOf("]]>", cursor + 9);
       if (cdataEnd < 0) return null;
       markup += escapeXmlText(text.slice(cursor + 9, cdataEnd));
       cursor = cdataEnd + 3;
       continue;
     }
-    markup += text[cursor];
+    const character = text[cursor];
+    if (!insideTag && character === "<") insideTag = true;
+    else if (insideTag) {
+      if (quote !== null) {
+        if (character === quote) quote = null;
+      } else if (character === "'" || character === '"') quote = character;
+      else if (character === ">") insideTag = false;
+    }
+    markup += character;
     cursor += 1;
   }
-  return markup;
+  return insideTag || quote !== null ? null : markup;
 };
 
 const decodeXmlText = (value: string) => value
@@ -242,7 +255,7 @@ const extendedDataForPlacemark = (placemark: string): Record<string, string> => 
 const normalizeKml = (text: string) => {
   if (/<!DOCTYPE|<!ENTITY/i.test(text)) throw new Error("KML document types and entity declarations are not supported.");
   const markup = kmlMarkupForInspection(text);
-  if (markup === null) throw new Error("KML comments and CDATA sections must be well formed.");
+  if (markup === null) throw new Error("KML comments and CDATA sections must be well formed and outside tag markup.");
   const placemarks = tagFragments(markup, "Placemark");
   if (!/<(?:(?:[\w.-]+):)?kml\b/i.test(markup) || !placemarks.length) throw new Error("The KML document has no well-formed Placemark elements.");
   let invalidFeatureCount = 0;
