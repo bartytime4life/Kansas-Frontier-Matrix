@@ -392,6 +392,29 @@ class ConsentOverlayFixtureTests(unittest.TestCase):
                 )
                 self.assertNotIn("SENSITIVE_SENTINEL", rendered)
 
+        candidate = _load_json(_valid_fixture())
+        candidate["PRIVATE_PERSON_NAME_SENTINEL"] = {
+            "PRIVATE_ADDRESS_SENTINEL": "SENSITIVE_VALUE_SENTINEL",
+        }
+        candidate["spec_hash"] = VALIDATOR.overlay_spec_hash(candidate)
+        findings = VALIDATOR.validate_candidate(
+            candidate,
+            revocation_manifest=self.manifest,
+        )
+        self.assertEqual(
+            findings,
+            [Finding("UNDECLARED_TOP_LEVEL_FIELD", "$.*")],
+        )
+        rendered = "\n".join(
+            f"{finding.code}\t{finding.path}" for finding in findings
+        )
+        for sentinel in (
+            "PRIVATE_PERSON_NAME_SENTINEL",
+            "PRIVATE_ADDRESS_SENTINEL",
+            "SENSITIVE_VALUE_SENTINEL",
+        ):
+            self.assertNotIn(sentinel, rendered)
+
     def test_parser_rejects_duplicate_nonfinite_and_nonobject_json(self) -> None:
         cases = (
             b'{"fixture_id":"first","fixture_id":"second"}',

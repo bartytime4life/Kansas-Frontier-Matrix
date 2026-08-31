@@ -23,7 +23,6 @@ if str(REPO_ROOT) not in sys.path:
 from tools.validators._common.public_safe_fixture import (  # noqa: E402
     Finding,
     add_finding,
-    find_undeclared_fields,
     is_nonempty_string,
     serialize_result,
     validate_fixture_file,
@@ -93,6 +92,40 @@ IDENTIFYING_KEYS = frozenset({
     "birth_date", "death_date", "email", "full_name", "name", "parcel_id",
     "person_id", "person_name", "phone", "ssn",
 })
+SAFE_PATH_KEYS = frozenset().union(
+    TOP_FIELDS,
+    CONSENT_FIELDS,
+    EVENT_FIELDS,
+    TIME_FIELDS,
+    PLACE_FIELDS,
+    GOV_FIELDS,
+    MANIFEST_FIELDS,
+    RAW_KEYS,
+    LOCATION_KEYS,
+    KIT_KEYS,
+    IDENTIFYING_KEYS,
+)
+
+
+def _finding_path(parent_path: str, key: object) -> str:
+    if isinstance(key, str) and key in SAFE_PATH_KEYS:
+        return f"{parent_path}.{key}"
+    return f"{parent_path}.*"
+
+
+def _find_undeclared_fields(
+    findings: set[Finding],
+    candidate: dict[object, object],
+    allowed_fields: frozenset[str],
+    code: str,
+    parent_path: str,
+) -> None:
+    for key in sorted(
+        candidate,
+        key=lambda value: (type(value).__name__, repr(value)),
+    ):
+        if key not in allowed_fields:
+            add_finding(findings, code, _finding_path(parent_path, key))
 
 
 def _canonical_json(value: object) -> bytes:
@@ -161,7 +194,7 @@ def _refs(value: object, maximum: int = 32) -> bool:
 def _scan(value: object, path: str, findings: set[Finding]) -> None:
     if isinstance(value, dict):
         for key in sorted(value, key=lambda item: (type(item).__name__, repr(item))):
-            child = f"{path}.{key}"
+            child = _finding_path(path, key)
             if isinstance(key, str):
                 normalized = key.casefold()
                 if normalized in RAW_KEYS:
@@ -183,7 +216,7 @@ def _consent(candidate: Mapping[str, Any], evaluation: datetime | None, findings
     if not isinstance(consent, dict):
         add_finding(findings, "CONSENT_INVALID", "$.consent")
         return
-    find_undeclared_fields(findings, consent, CONSENT_FIELDS, "UNDECLARED_CONSENT_FIELD", "$.consent")
+    _find_undeclared_fields(findings, consent, CONSENT_FIELDS, "UNDECLARED_CONSENT_FIELD", "$.consent")
     status = consent.get("status")
     subject = candidate.get("subject_posture")
     material = candidate.get("material_kind")
@@ -240,7 +273,7 @@ def _events(value: object, findings: set[Finding]) -> None:
         if not isinstance(event, dict):
             add_finding(findings, "EVENT_INVALID", base)
             continue
-        find_undeclared_fields(findings, event, EVENT_FIELDS, "UNDECLARED_EVENT_FIELD", base)
+        _find_undeclared_fields(findings, event, EVENT_FIELDS, "UNDECLARED_EVENT_FIELD", base)
         event_type = event.get("event_type")
         if not isinstance(event_type, str) or event_type not in EVENT_TYPES:
             add_finding(findings, "EVENT_TYPE_INVALID", f"{base}.event_type")
@@ -256,7 +289,7 @@ def _events(value: object, findings: set[Finding]) -> None:
         if not isinstance(time_bucket, dict):
             add_finding(findings, "TIME_BUCKET_INVALID", f"{base}.time_bucket")
         else:
-            find_undeclared_fields(findings, time_bucket, TIME_FIELDS, "UNDECLARED_TIME_FIELD", f"{base}.time_bucket")
+            _find_undeclared_fields(findings, time_bucket, TIME_FIELDS, "UNDECLARED_TIME_FIELD", f"{base}.time_bucket")
             start, end = _date(time_bucket.get("start")), _date(time_bucket.get("end"))
             if start is None or end is None or start > end:
                 add_finding(findings, "TIME_BUCKET_INVALID", f"{base}.time_bucket")
@@ -266,7 +299,7 @@ def _events(value: object, findings: set[Finding]) -> None:
         if not isinstance(place, dict):
             add_finding(findings, "PLACE_BUCKET_INVALID", f"{base}.place_bucket")
         else:
-            find_undeclared_fields(findings, place, PLACE_FIELDS, "UNDECLARED_PLACE_FIELD", f"{base}.place_bucket")
+            _find_undeclared_fields(findings, place, PLACE_FIELDS, "UNDECLARED_PLACE_FIELD", f"{base}.place_bucket")
             precision = place.get("precision")
             if not isinstance(precision, str) or precision not in {"coarse", "county", "state"}:
                 add_finding(findings, "PLACE_PRECISION_INVALID", f"{base}.place_bucket.precision")
@@ -281,7 +314,7 @@ def validate_revocation_manifest(candidate: object) -> list[Finding]:
     findings: set[Finding] = set()
     if not isinstance(candidate, dict):
         return [Finding("REVOCATION_MANIFEST_NOT_OBJECT", "$")]
-    find_undeclared_fields(findings, candidate, MANIFEST_FIELDS, "UNDECLARED_MANIFEST_FIELD", "$")
+    _find_undeclared_fields(findings, candidate, MANIFEST_FIELDS, "UNDECLARED_MANIFEST_FIELD", "$")
     if candidate.get("profile_id") != REVOCATION_PROFILE_ID:
         add_finding(findings, "MANIFEST_PROFILE_ID_INVALID", "$.profile_id")
     if not _fixture(candidate.get("manifest_id")):
@@ -325,7 +358,7 @@ def validate_candidate(candidate: object, *, revocation_manifest: Mapping[str, A
     findings: set[Finding] = set()
     if not isinstance(candidate, dict):
         return [Finding("CANDIDATE_NOT_OBJECT", "$")]
-    find_undeclared_fields(findings, candidate, TOP_FIELDS, "UNDECLARED_TOP_LEVEL_FIELD", "$")
+    _find_undeclared_fields(findings, candidate, TOP_FIELDS, "UNDECLARED_TOP_LEVEL_FIELD", "$")
     if not _fixture(candidate.get("fixture_id")):
         add_finding(findings, "FIXTURE_ID_INVALID", "$.fixture_id")
     if candidate.get("profile_id") != PROFILE_ID:
@@ -381,7 +414,7 @@ def validate_candidate(candidate: object, *, revocation_manifest: Mapping[str, A
     if not isinstance(governance, dict):
         add_finding(findings, "GOVERNANCE_INVALID", "$.governance")
     else:
-        find_undeclared_fields(findings, governance, GOV_FIELDS, "UNDECLARED_GOVERNANCE_FIELD", "$.governance")
+        _find_undeclared_fields(findings, governance, GOV_FIELDS, "UNDECLARED_GOVERNANCE_FIELD", "$.governance")
         for field, expected in EXPECTED_GOV.items():
             if governance.get(field) != expected:
                 add_finding(findings, "GOVERNANCE_STATE_INVALID", f"$.governance.{field}")
