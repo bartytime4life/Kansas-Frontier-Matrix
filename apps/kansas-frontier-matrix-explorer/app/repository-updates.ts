@@ -28,15 +28,15 @@ export type RepositoryUpdate = Readonly<{
 export const REPOSITORY_SNAPSHOT = Object.freeze({
   repository: "bartytime4life/Kansas-Frontier-Matrix",
   ref: "main",
-  commit: "1ea6593ede80d5ce10f561c7eec72135d6ccf806",
-  shortCommit: "1ea6593",
-  inspectedAt: "2026-08-30T11:07:34Z",
+  commit: "5d835798e09a4dd14735779cb44206a8a3e8b2d3",
+  shortCommit: "5d83579",
+  inspectedAt: "2026-08-31T11:07:55Z",
   counts: Object.freeze({
     knowledgeDomains: 13,
     explorerFeatureFamilies: 38,
     mapFunctions: 20,
     countyPlanningLanes: 105,
-    repositoryUpdates: 16,
+    repositoryUpdates: 17,
     transitionBoundaries: 4,
     readinessGates: 7,
   }),
@@ -45,6 +45,20 @@ export const REPOSITORY_SNAPSHOT = Object.freeze({
 const repoAtSnapshot = `https://github.com/${REPOSITORY_SNAPSHOT.repository}/blob/${REPOSITORY_SNAPSHOT.commit}`;
 
 export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
+  Object.freeze({
+    id: "local-import-review-hardening",
+    area: "Explorer security and privacy",
+    title: "Local geodata inspection now fails closed on malformed or stale input",
+    state: "CORRECTED",
+    maturity: "IMPLEMENTED",
+    date: "31 Aug 2026",
+    summary:
+      "Current main integrates the review-hardened local KML and GeoJSON inspector: geometry-type-specific validation, coordinate-range checks, bounded recursion, iterative large-file bounds, inert KML fragment parsing, and inspection-generation tokens that discard stale asynchronous reads.",
+    boundary:
+      "Files remain browser-local and unadmitted. Exact imported bounds are withheld from copied audits and location-derived camera state is redacted from URLs and saved workspaces. A successful preview is not source admission, evidence, policy approval, release, deployment, or publication.",
+    sourceLabel: "Review-hardened local geodata inspector",
+    sourceUrl: `${repoAtSnapshot}/apps/kansas-frontier-matrix-explorer/app/import-preview.ts`,
+  }),
   Object.freeze({
     id: "county-starter-slice",
     area: "MapLibre and search",
