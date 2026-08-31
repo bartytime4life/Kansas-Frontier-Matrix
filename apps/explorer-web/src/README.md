@@ -2,11 +2,11 @@
 doc_id: kfm://app/explorer-web/src/readme
 title: Explorer Web Source Tree README
 type: app-readme
-version: v0.3
+version: v0.4
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Docs steward
 created: 2026-06-16
-updated: 2026-08-25
+updated: 2026-08-31
 policy_label: public
 related:
   - ../README.md
@@ -25,9 +25,9 @@ related:
   - ../../../data/README.md
 tags: [kfm, apps, explorer-web, src, map-first, public-ui, governed-api, evidence-drawer, focus-mode, renderer-boundary]
 notes:
-  - "v0.3 reconciles this source-tree README with the current repository-grounded site composition, adapters, feature modules, viewer templates, tests, and parent app README."
-  - "Repository evidence confirms bounded local and fixture-first implementation slices; it does not establish a production route tree, live Governed API transport, an admitted renderer, deployment, release, or publication."
-  - "MapLibreAdapter.ts remains a boundary note rather than a functional renderer adapter; renderer admission remains HOLD."
+  - "v0.4 records the exact-one same-origin governed map/evidence transport, package-owned inline MapLibre runtime, identity-preserving selection, and Null fallback while preserving broader readiness and production holds."
+  - "Repository evidence confirms bounded local and fixture-first implementation slices plus one same-origin governed map/evidence integration; it does not establish a production route tree, broader source admission, deployment, release, or publication."
+  - "The package-owned MapLibre adapter renders the exact-one synthetic slice with Null fallback; broader MapLibre readiness remains HOLD."
   - "src/ is the app implementation source-layout boundary only; it must not become a public API, lifecycle data store, policy root, release authority, schema/contract home, model-runtime surface, or shared package root."
 [/KFM_META_BLOCK_V2] -->
 
@@ -58,7 +58,7 @@ notes:
 > **Owners:** `OWNER_TBD` — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Docs steward  
 > **Path:** `apps/explorer-web/src/README.md`  
 > **Responsibility root:** `apps/` — deployable application surfaces  
-> **Truth posture:** CONFIRMED repository-grounded local composition, app-local adapters and feature slices, deterministic fixtures, and positive/negative tests / HOLD functional renderer and live trust-bearing transport / UNKNOWN deployment and public operation
+> **Truth posture:** CONFIRMED repository-grounded local composition, app-local adapters and feature slices, exact-one governed map/evidence transport, package-owned renderer and Null fallback, deterministic fixtures, and positive/negative tests / HOLD broader renderer readiness and general trust-bearing transport / UNKNOWN deployment and public operation
 
 > [!CAUTION]
 > Code under `apps/explorer-web/src/` must not directly read lifecycle data roots, canonical/internal stores, direct model runtime outputs, or local source files as user-facing truth. Claim-bearing UI should render only governed API envelopes, released or bounded-safe layer artifacts, EvidenceBundle-derived payloads, and finite states.
@@ -91,7 +91,7 @@ notes:
 
 It currently holds the default local entrypoint, repository-grounded site composition, boundary adapters, fixture-first feature modules, and bounded viewer templates for the map-first shell.
 
-This README defines the source-tree boundary. The current implementation proves bounded local and synthetic interaction slices; it does not prove a production route tree, live Governed API transport, an admitted renderer, deployment wiring, release, publication, or public operation.
+This README defines the source-tree boundary. The current implementation proves bounded local and synthetic interaction slices, including one same-origin `/layers` and `/evidence` integration through the package-owned inline MapLibre adapter with Null fallback. It does not prove a production route tree, general Governed API transport, arbitrary renderer/source admission, deployment wiring, release, publication, or public operation.
 
 [Back to top](#top)
 
@@ -179,13 +179,13 @@ A route, component, adapter, export flow, or map interaction should not render c
 
 | Current area | Verified repository responsibility | Maturity limit |
 |---|---|---|
-| `main.ts` | Mounts the repository-grounded Explorer site, public workspace navigation, shared trust surface, and bounded synthetic Focus workspace. | Local deterministic composition; not a production router, transport, deployment, release, or publication path. |
+| `main.ts` | Mounts the Explorer site, bounded same-origin governed map transport, package-owned Vite adapter, public workspace navigation, shared trust surface, and synthetic Focus workspace. | Bounded local composition; not a production router, arbitrary source loader, deployment, release, or publication path. |
 | `site/` | Implements Map, Knowledge, Features, and Trust regions, anchor navigation, conservative catalogs, URL context, trust-state primitives, and synthetic workspace composition. | Synthetic/local inputs do not establish live data, authentication, evidence authority, or public operation. |
-| `adapters/` | Contains defensive projections and a bounded `GovernedClient` interface for app-local consumers. | Projection code is not a live Governed API transport. `MapLibreAdapter.ts` remains non-functional boundary documentation. |
+| `adapters/` | Contains defensive projections and the byte-bounded, abortable same-origin `/layers` and `/evidence` transport for the exact-one synthetic slice. | This narrow transport is not a general production API client, policy engine, or source loader. |
 | `features/` | Contains bounded modules for shell, evidence, Focus, map runtime, story, compare, export, settings, diagnostics, read-only review, trust, time, and additional fixture-first projections. | A module and its tests prove only that slice; most modules are not composed as production routes or backed by live services. |
 | `viewer_templates/` | Contains deterministic JSON style templates for default, compare, review, and story views. | Templates are not released layer manifests, admitted renderer configuration, or publication authority. |
 
-No `routes/`, live transport, or functional renderer-adapter tree is present. Those remain future work subject to accepted contracts, dependency admission, tests, and the app boundary.
+No production router or arbitrary renderer/source adapter tree is present. The bounded synthetic transport and package-owned inline renderer are intentionally narrower; broader work remains subject to accepted contracts, admission, tests, and the app boundary.
 
 ## 8. Diagram
 
@@ -232,7 +232,7 @@ Every long-lived route, panel, adapter, or component group should document or en
 
 ## 11. Inspection path
 
-The repository inventory is directly inspectable; live integration and deployment remain `NEEDS VERIFICATION`.
+The repository inventory and bounded synthetic integration are directly inspectable; broader production integration and deployment remain `NEEDS VERIFICATION`.
 
 ```bash
 find apps/explorer-web/src -maxdepth 6 -type f | sort
@@ -276,8 +276,9 @@ For source changes under `apps/explorer-web/src/`:
 - [x] A policy test constrains renderer imports and direct internal-store path literals.
 - [x] Keyboard and browser checks cover bounded implemented surfaces.
 - [ ] A production route inventory and router are implemented and tested.
-- [ ] Live Governed API transport and runtime response validation are implemented and tested.
-- [ ] A functional renderer adapter and dependency are admitted and tested.
+- [x] Bounded same-origin `/layers` and `/evidence` transport and strict runtime response validation are implemented and tested.
+- [x] The package-owned renderer dependency and functional inline Point/circle adapter slice are admitted and tested.
+- [ ] Broader production transport and general renderer/source/layer/style admission are verified.
 - [ ] Deployment, authentication, CSP, operations, release, and public availability are verified from current evidence.
 
 ## 15. Open verification items
@@ -285,8 +286,8 @@ For source changes under `apps/explorer-web/src/`:
 | Item | Why it matters |
 |---|---|
 | Commission a production route inventory and router | Required before describing the local composition as a production application |
-| Implement and validate live Governed API transport | Required for trust-bearing integration beyond deterministic fixtures |
-| Admit and implement a renderer adapter | `MapLibreAdapter.ts` is not functional; dependency and protocol decisions remain held |
+| Extend beyond the bounded Governed API transport | Required before claiming general authenticated or production trust-bearing integration |
+| Verify broader renderer readiness and admission | The inline Point/circle slice is functional; arbitrary sources, layers, styles, protocols, and operational readiness remain held |
 | Graduate bounded export behavior | App-local behavior is not proof of a public download or released artifact path |
 | Verify deployment, authentication, CSP, and operations | Required before any public-availability claim |
 | Confirm legacy shell roots | Required to prevent parallel shell drift |
@@ -296,13 +297,13 @@ For source changes under `apps/explorer-web/src/`:
 
 The target file began as an empty placeholder. Earlier README versions correctly established the `src/` boundary but later became stale as `site/`, `adapters/`, `features/`, `viewer_templates/`, and their tests were added.
 
-This version records those bounded repository facts without promoting them into claims about a production router, live transport, admitted renderer, deployment, release, publication, or public operation.
+This version records those bounded repository facts without promoting the exact-one transport and renderer slice into claims about a production router, general transport, arbitrary renderer/source admission, deployment, release, publication, or public operation.
 
 </details>
 
 ## Status summary
 
-`apps/explorer-web/src/` holds a buildable, repository-grounded local composition and multiple fail-closed, fixture-first feature slices. It must not be described as a production map application until the route, live transport, renderer, deployment, release, and public-operation gates are verified.
+`apps/explorer-web/src/` holds a buildable, repository-grounded local composition and multiple fail-closed, fixture-first feature slices, including one exact-one governed MapLibre/evidence path. It must not be described as a production map application until the broader route, transport, renderer-admission, deployment, release, and public-operation gates are verified.
 
 It must stay downstream of governed APIs, policy decisions, EvidenceBundle closure, release state, correction/rollback controls, and renderer adapter boundaries without becoming source truth, release authority, policy authority, lifecycle store, schema/contract home, model-output surface, or parallel shell authority.
 

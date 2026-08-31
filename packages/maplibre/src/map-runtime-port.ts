@@ -9,6 +9,8 @@
 export const MAP_RUNTIME_PORT_PROFILE = "kfm.map-runtime-port.v1" as const;
 export const MAP_FEATURE_SELECTION_PROFILE =
   "kfm.explorer.map-feature-selection.v1" as const;
+export const MAP_RUNTIME_INLINE_GEOJSON_LAYER_PROFILE =
+  "kfm.map-runtime.inline-geojson-layer.v1" as const;
 
 export const MAP_RUNTIME_STATES = [
   "IDLE",
@@ -77,6 +79,34 @@ export type MapFeatureSelection = Readonly<{
   evidenceRefs: readonly string[];
 }>;
 
+/**
+ * The only inline geometry admitted by the first governed map slice.
+ *
+ * `properties` is deliberately null. Evidence-bearing selection metadata stays
+ * beside the renderer payload so a rendered property can never become evidence.
+ */
+export type MapRuntimeInlineGeoJsonPointFeature = Readonly<{
+  type: "Feature";
+  id: string;
+  geometry: Readonly<{
+    type: "Point";
+    coordinates: readonly [number, number];
+  }>;
+  properties: null;
+}>;
+
+export type MapRuntimeInlineGeoJsonLayer = Readonly<{
+  profile: typeof MAP_RUNTIME_INLINE_GEOJSON_LAYER_PROFILE;
+  sourceId: string;
+  layerId: string;
+  kind: "circle";
+  data: Readonly<{
+    type: "FeatureCollection";
+    features: readonly [MapRuntimeInlineGeoJsonPointFeature];
+  }>;
+  selection: MapFeatureSelection;
+}>;
+
 export type MapRuntimeReasonCode =
   | MapRuntimeTrustStateReasonCode
   | "MAP_RUNTIME_DISPOSED"
@@ -84,7 +114,16 @@ export type MapRuntimeReasonCode =
   | "MAP_RUNTIME_CONTAINER_INVALID"
   | "MAP_RUNTIME_INITIALIZATION_FAILED"
   | "MAP_RUNTIME_CAMERA_INVALID"
+  | "MAP_RUNTIME_CAMERA_UPDATE_FAILED"
   | "MAP_RUNTIME_SELECTION_INVALID"
+  | "MAP_RUNTIME_SELECTION_INVALIDATED"
+  | "MAP_RUNTIME_LAYER_INVALID"
+  | "MAP_RUNTIME_LAYER_BIND_FAILED"
+  | "MAP_RUNTIME_LAYER_NOT_FOUND"
+  | "MAP_RUNTIME_LAYER_REMOVAL_FAILED"
+  | "MAP_RUNTIME_SOURCE_NOT_FOUND"
+  | "MAP_RUNTIME_SOURCE_REMOVAL_FAILED"
+  | "MAP_RUNTIME_FEATURE_NOT_FOUND"
   | "MAP_RUNTIME_STATE_INVALID"
   | "MAP_RUNTIME_LISTENER_INVALID";
 
@@ -121,6 +160,22 @@ export interface MapRuntimePort {
   dispose(): void;
 }
 
+/**
+ * Bounded renderer-neutral capability for one deterministic inline GeoJSON
+ * point and one package-owned circle representation.
+ *
+ * This subordinate port does not admit a source, decide public safety, or grant
+ * release/publication authority. Callers must supply an already governed input.
+ */
+export interface InlineGeoJsonMapRuntimePort extends MapRuntimePort {
+  bindInlineGeoJsonLayer(
+    layer: MapRuntimeInlineGeoJsonLayer,
+  ): MapRuntimeSnapshot;
+  removeLayer(layerId: string): MapRuntimeSnapshot;
+  removeSource(sourceId: string): MapRuntimeSnapshot;
+  selectFeature(layerId: string, featureId: string): MapRuntimeSnapshot;
+}
+
 const CAMERA_FIELDS = new Set([
   "longitude",
   "latitude",
@@ -135,7 +190,33 @@ const SELECTION_FIELDS = new Set([
   "featureId",
   "evidenceRefs",
 ]);
+const INLINE_LAYER_FIELDS = new Set([
+  "profile",
+  "sourceId",
+  "layerId",
+  "kind",
+  "data",
+  "selection",
+]);
+const FEATURE_COLLECTION_FIELDS = new Set(["type", "features"]);
+const FEATURE_FIELDS = new Set(["type", "id", "geometry", "properties"]);
+const POINT_GEOMETRY_FIELDS = new Set(["type", "coordinates"]);
 const SAFE_ID = /^[A-Za-z0-9][A-Za-z0-9:._/-]{0,159}$/;
+const PROTOTYPE_COLLISION_IDS = new Set([
+  "__defineGetter__",
+  "__defineSetter__",
+  "__lookupGetter__",
+  "__lookupSetter__",
+  "__proto__",
+  "constructor",
+  "hasOwnProperty",
+  "isPrototypeOf",
+  "propertyIsEnumerable",
+  "prototype",
+  "toLocaleString",
+  "toString",
+  "valueOf",
+]);
 const MAX_EVIDENCE_REFS = 16;
 const MAX_MERCATOR_LATITUDE = 85.051129;
 
@@ -156,7 +237,26 @@ function isFiniteNumber(value: unknown): value is number {
 }
 
 function isSafeId(value: unknown): value is string {
-  return typeof value === "string" && SAFE_ID.test(value);
+  return (
+    typeof value === "string" &&
+    SAFE_ID.test(value) &&
+    !PROTOTYPE_COLLISION_IDS.has(value)
+  );
+}
+
+function isMapRuntimePointCoordinates(
+  value: unknown,
+): value is readonly [number, number] {
+  if (!Array.isArray(value) || value.length !== 2) return false;
+  const [longitude, latitude] = value;
+  return (
+    isFiniteNumber(longitude) &&
+    longitude >= -180 &&
+    longitude <= 180 &&
+    isFiniteNumber(latitude) &&
+    latitude >= -MAX_MERCATOR_LATITUDE &&
+    latitude <= MAX_MERCATOR_LATITUDE
+  );
 }
 
 export function isMapRuntimeCamera(value: unknown): value is MapRuntimeCamera {
@@ -191,6 +291,46 @@ export function isMapFeatureSelection(
   }
   if (!value.evidenceRefs.every(isSafeId)) return false;
   return new Set(value.evidenceRefs).size === value.evidenceRefs.length;
+}
+
+export function isMapRuntimeInlineGeoJsonLayer(
+  value: unknown,
+): value is MapRuntimeInlineGeoJsonLayer {
+  if (!isRecord(value) || !hasExactFields(value, INLINE_LAYER_FIELDS)) {
+    return false;
+  }
+  if (value.profile !== MAP_RUNTIME_INLINE_GEOJSON_LAYER_PROFILE) return false;
+  if (!isSafeId(value.sourceId) || !isSafeId(value.layerId)) return false;
+  if (value.kind !== "circle") return false;
+  if (
+    !isRecord(value.data) ||
+    !hasExactFields(value.data, FEATURE_COLLECTION_FIELDS) ||
+    value.data.type !== "FeatureCollection" ||
+    !Array.isArray(value.data.features) ||
+    value.data.features.length !== 1
+  ) {
+    return false;
+  }
+
+  const feature = value.data.features[0];
+  if (
+    !isRecord(feature) ||
+    !hasExactFields(feature, FEATURE_FIELDS) ||
+    feature.type !== "Feature" ||
+    !isSafeId(feature.id) ||
+    feature.properties !== null ||
+    !isRecord(feature.geometry) ||
+    !hasExactFields(feature.geometry, POINT_GEOMETRY_FIELDS) ||
+    feature.geometry.type !== "Point" ||
+    !isMapRuntimePointCoordinates(feature.geometry.coordinates)
+  ) {
+    return false;
+  }
+  if (!isMapFeatureSelection(value.selection)) return false;
+  return (
+    value.selection.layerId === value.layerId &&
+    value.selection.featureId === feature.id
+  );
 }
 
 export function isMapRuntimeTrustState(
@@ -238,6 +378,42 @@ export function freezeMapFeatureSelection(
   return Object.freeze({
     ...selection,
     evidenceRefs: Object.freeze([...selection.evidenceRefs]),
+  });
+}
+
+export function freezeMapRuntimeInlineGeoJsonLayer(
+  layer: MapRuntimeInlineGeoJsonLayer,
+): MapRuntimeInlineGeoJsonLayer {
+  if (!isMapRuntimeInlineGeoJsonLayer(layer)) {
+    throw new MapRuntimePortError(
+      "MAP_RUNTIME_LAYER_INVALID",
+      "Inline GeoJSON map layer is invalid.",
+    );
+  }
+  const feature = layer.data.features[0];
+  return Object.freeze({
+    profile: MAP_RUNTIME_INLINE_GEOJSON_LAYER_PROFILE,
+    sourceId: layer.sourceId,
+    layerId: layer.layerId,
+    kind: "circle" as const,
+    data: Object.freeze({
+      type: "FeatureCollection" as const,
+      features: Object.freeze([
+        Object.freeze({
+          type: "Feature" as const,
+          id: feature.id,
+          geometry: Object.freeze({
+            type: "Point" as const,
+            coordinates: Object.freeze([
+              feature.geometry.coordinates[0],
+              feature.geometry.coordinates[1],
+            ]) as readonly [number, number],
+          }),
+          properties: null,
+        }),
+      ]) as readonly [MapRuntimeInlineGeoJsonPointFeature],
+    }),
+    selection: freezeMapFeatureSelection(layer.selection),
   });
 }
 

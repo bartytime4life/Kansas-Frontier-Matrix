@@ -2,22 +2,29 @@
 .chip--positive { border-color: rgb(139 215 165 / 40%); color: var(--positive); }
 .chip--caution { border-color: rgb(242 203 115 / 42%); color: var(--caution); }
 .chip--critical { border-color: rgb(255 155 140 / 42%); color: var(--critical); }
-.map-grid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(17rem, .7fr); gap: 1.1rem; }
-.map-card { overflow: hidden; }
+.governed-map-workspace { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(19rem, .72fr); gap: 1.1rem; }
+.governed-map-column { min-width: 0; overflow: hidden; }
 .map-toolbar { display: flex; flex-wrap: wrap; gap: .3rem; border-bottom: 1px solid var(--line); padding: .75rem 1rem; }
-.map-artwork { margin: 0; min-height: 24rem; background: linear-gradient(160deg, #10292c, #071517 74%); }
-.map-artwork svg { display: block; width: 100%; height: auto; color: var(--prairie-soft); }
-.map-artwork .map-shape { fill: rgb(133 188 161 / 15%); stroke: rgb(243 221 170 / 62%); stroke-width: 2; }
-.map-artwork .map-grid { fill: url(#grid); }
-.map-artwork .river { fill: none; stroke: var(--river); stroke-width: 5; stroke-linecap: round; opacity: .88; }
-.map-artwork .river--minor { stroke-width: 2.5; opacity: .5; }
-.map-artwork .marker circle:first-child { fill: rgb(115 199 210 / 13%); stroke: var(--river); stroke-width: 2; }
-.map-artwork .marker circle:last-child { fill: var(--river); }
-.map-artwork .marker--secondary circle:first-child { stroke: var(--prairie); }
-.map-artwork .marker--secondary circle:last-child { fill: var(--prairie); }
-.map-artwork text { fill: var(--muted); font-size: 12px; letter-spacing: .12em; }
-.selection-lab { margin-top: 1.1rem; }
-.selection-lab__fixture { margin-top: 1rem; }
+.governed-map-canvas { position: relative; width: 100%; height: clamp(22rem, 54vw, 34rem); background: linear-gradient(160deg, #10292c, #071517 74%); }
+.renderer-notice { min-height: 3rem; margin: 0; border-top: 1px solid var(--line); padding: .8rem 1rem; color: var(--muted); }
+.renderer-notice[data-renderer="NULL_FALLBACK"] { color: var(--caution); }
+.renderer-notice[data-renderer="ERROR"] { color: var(--critical); }
+.runtime-card { padding: 1rem; }
+.runtime-card h4 { margin: 1rem 0 .55rem; color: var(--prairie-soft); font-size: .82rem; letter-spacing: .06em; text-transform: uppercase; }
+.governed-layer-status,
+.governed-evidence-status { border: 1px solid var(--line); border-radius: .72rem; padding: .65rem .75rem; font-weight: 800; overflow-wrap: anywhere; }
+.governed-layer-status[data-outcome="ERROR"],
+.governed-evidence-status[data-outcome="DENY"],
+.governed-evidence-status[data-outcome="ERROR"] { border-color: rgb(255 155 140 / 48%); color: var(--critical); }
+.governed-layer-status[data-outcome="ANSWER"],
+.governed-evidence-status[data-outcome="ANSWER"] { border-color: rgb(139 215 165 / 45%); color: var(--positive); }
+.governed-evidence-status[data-outcome="PENDING"] { color: var(--caution); }
+.accessible-feature-list { display: grid; gap: .7rem; margin: 0; padding: 0; list-style: none; }
+.accessible-feature-list li { border-left: 3px solid var(--river); padding-left: .75rem; }
+.accessible-feature-list p { margin: .55rem 0 0; color: var(--muted); }
+.accessible-feature-list button { width: 100%; min-height: 2.75rem; border: 1px solid var(--line-strong); border-radius: .72rem; background: var(--surface-2); color: var(--ink); padding: .55rem .72rem; cursor: pointer; text-align: left; }
+.accessible-feature-list button:hover { border-color: var(--river); }
+.accessible-feature-list button:disabled { cursor: progress; opacity: .55; }
 .runtime-status-host { margin-top: 1rem; }
 [data-component="map-runtime-trust-status"] { border: 1px solid var(--line-strong); border-radius: .9rem; background: rgb(0 0 0 / 12%); padding: .9rem; }
 [data-component="map-runtime-trust-status"][data-tone="positive"] { border-color: rgb(139 215 165 / 45%); }
@@ -29,9 +36,6 @@
 [data-component="map-runtime-trust-status"] dl div { display: grid; grid-template-columns: minmax(7rem, .85fr) 1fr; gap: .55rem; }
 [data-component="map-runtime-trust-status"] dt { color: var(--muted); }
 [data-component="map-runtime-trust-status"] dd { margin: 0; color: var(--ink); font-weight: 820; overflow-wrap: anywhere; }
-.runtime-controls { display: grid; gap: .45rem; margin-top: .75rem; }
-.runtime-controls button { min-height: 2.55rem; border: 1px solid var(--line-strong); border-radius: .72rem; background: var(--surface-2); color: var(--ink); padding: .5rem .65rem; cursor: pointer; text-align: left; }
-.runtime-controls button:hover { border-color: var(--river); }
 [data-component="map-feature-evidence-fixture"] > div:first-of-type { display: flex; flex-wrap: wrap; gap: .5rem; margin-block: .8rem; }
 [data-component="map-feature-evidence-fixture"] button,
 [data-component="evidence-drawer"] button,
