@@ -1,34 +1,24 @@
-# Contract test lane
-
-> Repository-owned tests for bounded contract, schema, fixture, projection, and
-> wiring invariants. This lane proves the assertions implemented by its test
-> modules; it does not define contract meaning or grant policy, review, release,
-> or publication authority.
-
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/tests-contracts-readme
 title: tests/contracts/README.md — Contract Test Lane
-type: readme; directory-readme; contract-test-boundary; executable-test-index
+type: README
 version: v0.3
 status: draft; repository-grounded; direct-executable-suite
 owners: OWNER_TBD — QA steward · Contracts steward · Schema steward · Policy steward · Evidence steward · Runtime steward · Release steward · Security steward · Domain stewards · Docs steward
-created: NEEDS VERIFICATION — README existed before v0.1 expansion
-updated: 2026-08-30
+created: 2026-01-06
+updated: 2026-08-31
 supersedes: v0.2
 policy_label: public-doctrine; tests; contracts; bounded-enforceability; fail-closed; no-contract-authority; no-schema-authority; no-policy-authority; no-release-authority
+owning_root: tests/
+responsibility: bounded inventory, execution, and interpretation guidance for repository-owned contract tests without authoring contract meaning or granting policy, review, lifecycle, release, deployment, promotion, or publication authority
 current_path: tests/contracts/README.md
 truth_posture: CONFIRMED four direct executable modules, fifteen test functions or methods, manifest-driven validation for three fixture families, Makefile collection of tests/schemas and tests/contracts, and direct contracts-validate workflow binding / UNKNOWN complete semantic coverage for every contract document, promotion-gate dependency, and accepted accountable owners
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  visibility: public
-  base_ref: main
-  base_commit: 1ea6593ede80d5ce10f561c7eec72135d6ccf806
-  target_prior_blob: f58e0222de1c8228daff6d4dc6243ed713927607
-  direct_test_modules:
-    - tests/contracts/test_contract_fixture_manifest.py
-    - tests/contracts/test_evidence_bundle_projection_aggregate.py
-    - tests/contracts/test_identity_token_wiring.py
-    - tests/contracts/test_runtime_response_contract_alignment.py
+evidence_repository: bartytime4life/Kansas-Frontier-Matrix
+evidence_visibility: public
+evidence_base_ref: main
+evidence_base_commit: d1f7ed51cf4d9c9c2fdf94cdc81644744ae464ce
+evidence_target_prior_blob: 41027c98f62cadb894f7fdd50da67a72fe27c245
+direct_test_module_count: 4
 related:
   - ../README.md
   - ./manifests/README.md
@@ -46,6 +36,13 @@ notes:
   - "Direct tests cover four bounded invariant groups; they are not complete semantic validation of every contract."
   - "Passing tests do not create contract, schema, policy, evidence, review, lifecycle, release, deployment, promotion, or publication authority."
 [/KFM_META_BLOCK_V2] -->
+
+# Contract test lane
+
+> Repository-owned tests for bounded contract, schema, fixture, projection, and
+> wiring invariants. This lane proves the assertions implemented by its test
+> modules; it does not define contract meaning or grant policy, review, release,
+> or publication authority.
 
 <a id="top"></a>
 
