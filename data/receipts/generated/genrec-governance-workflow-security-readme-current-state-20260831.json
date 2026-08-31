@@ -1,7 +1,7 @@
 {
   "artifact_hashes": {
-    ".github/workflows/implementation-change-context.yml": "sha256:3c7c54ed07e8ca75293a7526f0e3940d6aee47a933a534aa54f13b98e70e6fe6",
-    "tools/validators/governance/README.md": "sha256:a79f2a0b9f1754ccab093a69b00038c8e00d74cd18981d55f46c0db15901512d"
+    ".github/workflows/implementation-change-context.yml": "sha256:c54545bdc08ab490573ce43e62c4f32f0aff25ba0692a3160f69e031d10b35f2",
+    "tools/validators/governance/README.md": "sha256:082ea53e48e02f95c225c1811031df04ab995d555ced1e8089bd8f2ad9bbf408"
   },
   "artifact_paths": [
     ".github/workflows/implementation-change-context.yml",
