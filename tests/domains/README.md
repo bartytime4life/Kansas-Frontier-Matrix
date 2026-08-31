@@ -10,7 +10,7 @@ updated: 2026-08-31
 policy_label: public-doc; tests; domains; enforceability; mixed-maturity; sensitivity-aware; non-publisher
 owning_root: tests/
 responsibility: current navigation, execution guidance, and bounded maturity disclosure for domain-specific test packages without granting domain, source, evidence, policy, review, release, deployment, promotion, or publication authority
-truth_posture: CONFIRMED 18 direct child directories, 14 test-bearing child directories, 148 direct-or-nested test modules, 151 child README files, and nine workflow files with explicit tests/domains references at the pinned snapshot / UNKNOWN complete semantic coverage, broad-suite collection result, required-check status, production parity, and accountable stewardship
+truth_posture: CONFIRMED 18 direct child directories, 14 test-bearing child directories, 148 direct-or-nested test modules, 151 child README files, 31 workflow files with literal tests/domains references, and nine representative inspected workflow bindings at the pinned snapshot / UNKNOWN complete semantic coverage, broad-suite collection result, required-check status, production parity, and accountable stewardship
 evidence_repository: bartytime4life/Kansas-Frontier-Matrix
 evidence_base_ref: main
 evidence_base_commit: 5d835798e09a4dd14735779cb44206a8a3e8b2d3
@@ -19,7 +19,8 @@ child_directory_count: 18
 test_bearing_child_directory_count: 14
 test_module_count: 148
 child_readme_count: 151
-explicit_workflow_reference_count: 9
+literal_workflow_reference_count: 31
+documented_representative_workflow_count: 9
 related:
   - ../README.md
   - ../../docs/doctrine/directory-rules.md
@@ -161,10 +162,17 @@ requires its own explicit boundary and authorization.
 
 ## Confirmed workflow bindings
 
-Repository code search identified nine workflow files with explicit
-`tests/domains/` references at the pinned snapshot. This table records only the
-literal bindings inspected; it is not a complete required-check or coverage
-map.
+Repository-wide code search identified 31 workflow files with literal
+`tests/domains/` references at the pinned snapshot. The table below documents
+nine representative bindings whose relevant test commands and safe conclusions
+were inspected. It is intentionally non-exhaustive and is not a complete
+required-check or coverage map.
+
+Reproduce the literal-reference inventory without executing workflows:
+
+```bash
+git grep -l 'tests/domains/' -- '.github/workflows/*.yml' | sort
+```
 
 | Workflow | Explicit domain-test scope | Safe conclusion |
 |---|---|---|
@@ -240,8 +248,10 @@ git ls-files 'tests/domains/**/test_*.py' | wc -l
 - The repository has no broad Make target for this parent lane at the pinned
   snapshot.
 - A complete collected-case count and broad-suite result are not established.
-- Only nine workflow files were confirmed with literal `tests/domains/`
-  references; complete hosted coverage and required-check coupling are unknown.
+- Repository-wide search finds 31 workflow files with literal `tests/domains/`
+  references; the table documents nine representative inspected bindings. The
+  remaining 22 literal matches are not classified here, and complete hosted
+  coverage and required-check coupling remain unknown.
 - `air/`, `people/`, `roads/`, and `settlement/` contain no `test_*.py` modules
   at the pinned snapshot and remain compatibility or unresolved-placement
   documentation.
