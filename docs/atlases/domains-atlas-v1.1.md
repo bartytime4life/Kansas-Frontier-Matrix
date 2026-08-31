@@ -1,15 +1,18 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION
+doc_id: kfm://doc/docs-atlases-domains-atlas-v1-1
 title: KFM Domains Culmination Atlas v1.1 — Source-A Carrier
 type: standard
 version: v0.1
 status: draft
 owners: OWNER_TBD
 created: 2026-05-25
-updated: 2026-05-25
+updated: 2026-08-31
 policy_label: public
+owning_root: docs/
+responsibility: "Navigate Source A atlas lineage as a standalone human carrier without creating current implementation, evidence, policy, release, or publication authority."
+truth_posture: "CONFIRMED file presence / source-derived and incomplete upstream wording / PROPOSED source-edition doctrine claims / UNKNOWN current behavior unless exact repository or governed evidence is cited"
 related:
-  - docs/atlases/Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md
+  - docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md
   - docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md
   - docs/atlases/domains-v1.1.md
   - docs/atlases/domains-v1.1-ch14.md
@@ -22,7 +25,7 @@ notes:
   - Carrier for Source A only (Kansas Frontier Matrix Domains Culmination Atlas v1.1) — distinguished from the consolidated artifact (Source A + Source B + wrapper + v1.3 overlay).
   - Treats Atlas v1.1 as a standalone citable artifact, per its own cover supersession block (v1.0 remains standalone-citable; same principle extends to v1.1).
   - This file brings the atlas-family carrier count under docs/atlases/ to four naming variants; surfaced in §11 as a CONFLICTED naming-convention item, ADR-pending.
-  - Owners, doc_id, related-path verification all remain placeholders.
+  - Owner remains a placeholder; the path-derived doc_id follows adjacent atlas metadata convention, while machine-registry adoption remains review-only.
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Domains Culmination Atlas v1.1 — Source-A Carrier
@@ -73,7 +76,9 @@ This file is the **navigation carrier for Source A standalone** — distinguishe
 
 1. **Atlas v1.1 (Source A) wins on wording.** Where this carrier paraphrases, the atlas is authoritative.
 2. **Chapter 24 registers do not override v1.0 domain chapters.** Per Atlas v1.1 conflict rule (§3 of this carrier reproduces it).
-3. **Carriers do not override carriers' sources.** The full-text Markdown conversion is closer to Source A's wording than this navigation carrier; the source PDF is closer still.
+3. **Carriers do not override carriers' sources.** The incomplete source-derived
+   Markdown is closer to Source A's wording than this navigation carrier; the
+   source PDF remains the wording check.
 
 ---
 
@@ -349,14 +354,16 @@ This property has two operational consequences:
 ## 12. Naming-convention reconciliation (`CONFLICTED`)
 
 > [!WARNING]
-> **`CONFLICTED`** — this file is the **fifth** atlas-family path under `docs/atlases/`, and the **fourth** Markdown carrier file in the family. Reconciliation is `NEEDS VERIFICATION` and **blocks coherent next steps** for the atlas-carrier hierarchy. Resolution belongs in the atlas-Markdown naming ADR (proposed in `kfm-domains-v1.1-pass23-32-consolidated-atlas.md` §11).
+> **`CONFLICTED`** — this catalog lists **six** atlas-family names repository-wide:
+> five under `docs/atlases/` and one current source-derived carrier at the
+> `docs/` root. Naming and migration remain unresolved.
 
-### 12.1 Atlas-family paths under `docs/atlases/` (current state)
+### 12.1 Catalogued atlas-family paths (one outside `docs/atlases/`)
 
 | Path | Scope | Authored in / present where |
 |---|---|---|
 | `docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf` | Source A as PDF. | `PROPOSED file home` (Atlas v1.1 front matter); mounted-repo presence `NEEDS VERIFICATION`. |
-| `docs/atlases/Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` | Full-text Markdown conversion of the consolidated artifact. | `CONFIRMED file presence` in `/mnt/project/`. |
+| `docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md` | Incomplete source-derived Markdown carrier for the consolidated artifact. | `CONFIRMED file presence`; retained conversion through roughly page 286 plus a synthesized continuity tail. |
 | `docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md` | Top-level navigation carrier for the consolidated artifact. | Session-authored; `PROPOSED file`. |
 | `docs/atlases/domains-v1.1.md` | Domain-focused carrier (16 domain chapters of Source A). | Session-authored; `PROPOSED file`. |
 | `docs/atlases/domains-v1.1-ch14.md` | Per-chapter dossier carrier (Atlas Ch. 14). | Session-authored; `PROPOSED file`. |
@@ -366,7 +373,7 @@ This property has two operational consequences:
 
 | Pattern | Examples | Authors |
 |---|---|---|
-| **Title-as-filename (PDF→Markdown conversion)** | `Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` | Conversion artifact. |
+| **Title-as-filename (PDF→Markdown conversion)** | `Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md` | Conversion artifact. |
 | **Underscored UpperCase (Atlas-proposed PDF home)** | `KFM_Domains_Culmination_Atlas_v1_1.pdf` | Atlas v1.1 front matter. |
 | **Kebab-lowercase, `kfm-…` prefix** | `kfm-domains-v1.1-pass23-32-consolidated-atlas.md` | Session-authored top-level carrier. |
 | **Kebab-lowercase, `domains-…` family** | `domains-v1.1.md`, `domains-v1.1-ch14.md`, **`domains-atlas-v1.1.md`** *(this file)* | Session-authored. |
@@ -414,7 +421,7 @@ Further per-domain carriers (`domains-v1.1-ch3.md` … `ch18.md` minus ch14) and
 | Atlas v1.1 Ch. 24 §§24.1–24.14 | §8. | `CONFIRMED doctrine` |
 | Atlas v1.1 Appendix G | §9. | `CONFIRMED doctrine` |
 | Consolidation wrapper pp. 1–6 (generated front matter of the consolidated artifact) | §2 (Source A metadata); §11 (distinction from consolidated). | `CONFIRMED` |
-| `docs/atlases/Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` | Full-text Markdown of the consolidated artifact; authoritative on wording. | `CONFIRMED file presence` |
+| `docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md` | Full-text source-derived carrier; closest retained conversion wording, not repository implementation authority. | `CONFIRMED file presence`; source fidelity remains bounded |
 | `docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md` | Top-level navigation carrier for the consolidated artifact. | `PROPOSED file` |
 | `docs/atlases/domains-v1.1.md` | Domain-focused carrier (16 domain chapters). | `PROPOSED file` |
 | `docs/atlases/domains-v1.1-ch14.md` | Per-chapter dossier carrier (Atlas Ch. 14). | `PROPOSED file` |
@@ -450,7 +457,7 @@ Further per-domain carriers (`domains-v1.1-ch3.md` … `ch18.md` minus ch14) and
 - [ ] **Naming reconciliation (§12)**: open the atlas-Markdown naming ADR; pick direction A, B, C, or D; apply consistently; rename or alias as needed; record migration in `docs/registers/DRIFT_REGISTER.md`.
 - [ ] **Atlas-carrier hierarchy ADR**: confirm whether this carrier's Source-A-only scope is justified as a distinct file, or whether it should be merged into the top-level carrier as a "Source A perspective" section.
 - [ ] Confirm `OWNER_TBD` — docs steward.
-- [ ] Confirm `doc_id` allocation convention; do not invent UUIDs.
+- [ ] Review the path-derived `doc_id` through the emitted registry delta; do not replace it with an invented UUID.
 - [ ] Confirm sibling carriers exist or are in active authoring: top-level, domain-focused, per-chapter, three Ch. 24 sub-carriers.
 - [ ] Confirm `docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf` exists as the PROPOSED PDF home or is tracked.
 - [ ] Confirm §2 Source A metadata (title, author, date, page count, SHA-256 prefix) matches the source PDF.
@@ -476,7 +483,7 @@ Further per-domain carriers (`domains-v1.1-ch3.md` … `ch18.md` minus ch14) and
 | Atlas-Markdown naming ADR resolves §12 | Apply chosen direction; rename file if needed; preserve old name as compatibility alias for 30 days per `directory-rules.md` §8.3; record migration. |
 | Atlas-carrier hierarchy ADR resolves §11 | If this carrier is judged redundant, merge into top-level carrier as a "Source A perspective" section and mark file `SUPERSEDED`; preserve content as lineage. |
 | Source A PDF moved or renamed | Update §2 PROPOSED PDF home; update related: list in meta block. |
-| Full-text Markdown conversion is renamed | Update §13 cross-references; preserve lineage notes. |
+| Source-derived Markdown carrier is renamed | Update §13 cross-references; preserve lineage notes and rollback. |
 | Reversibility property is found to be violated (a v1.0 row was altered) | **High-severity drift** — file a correction notice immediately; the property is doctrinal. |
 | This carrier is found to drift from Atlas v1.1 wording | Restore Atlas wording verbatim; the atlas wins; record the drift. |
 | This carrier is found to overclaim implementation | Demote to `PROPOSED` / `UNKNOWN`; never resolve drift by lowering the truth label. |
@@ -499,7 +506,7 @@ Further per-domain carriers (`domains-v1.1-ch3.md` … `ch18.md` minus ch14) and
 | **Atlas v1.1 Ch. 24 (§§24.1–24.14) preamble** | `CONFIRMED doctrine` | §8 preamble quotes (Chapter 24 authority rule). | — |
 | **Atlas v1.1 Appendix G** | `CONFIRMED doctrine` | §9 table. | — |
 | **Consolidation wrapper pp. 1–6 (generated front matter)** | `CONFIRMED extraction from source PDF` | §2 Source A metadata (title, author, date, PDF format, SHA-256 prefix); §11 page-count comparison. | Generated wrapper, not Source A doctrine; describes Source A externally. |
-| **Existing full-text Markdown carrier** (`Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md`) | `CONFIRMED file presence` | §13 cross-reference; routes readers to authoritative wording. | This carrier defers to the Markdown wherever it paraphrases. |
+| **Existing full-text Markdown carrier** (`Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md`) | `CONFIRMED file presence` | §13 cross-reference; routes readers to retained conversion wording. | The conversion is incomplete; verify consequential wording against the source PDF and current behavior against repository authority. |
 | Companion carriers (`kfm-domains-v1.1-pass23-32-consolidated-atlas.md`, `domains-v1.1.md`, `domains-v1.1-ch14.md`, `receipt-catalog.md`, `pipeline-gate-reference.md`, `maplibre-master.md`) | `PROPOSED file` (session-authored) | §7, §8 carrier-coverage rows; §11 distinction table; §13 cross-references. | Not yet mounted; carrier status. |
 | `directory-rules.md` v1.2 §6.1, §2.4, §2.5, §7.4, §8.3 | `CONFIRMED at commit b6a279…` | Lane choice; ADR rule; conflict-filing rule; schema-home convention; compatibility-alias window. | — |
 

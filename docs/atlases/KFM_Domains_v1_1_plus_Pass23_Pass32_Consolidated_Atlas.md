@@ -1,15 +1,18 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION
+doc_id: kfm://doc/docs-atlases-kfm-domains-v1-1-pass23-pass32-consolidated-pointer
 title: KFM Domains v1.1 + Pass 23/32 Consolidated Atlas — Carrier (Underscored Variant)
 type: standard
 version: v0.1
 status: draft
 owners: OWNER_TBD
 created: 2026-05-25
-updated: 2026-05-25
+updated: 2026-08-31
 policy_label: public
+owning_root: docs/
+responsibility: "Provide a minimal underscored pointer for the consolidated-atlas family and route readers without selecting a canonical carrier or promoting source claims."
+truth_posture: "CONFIRMED file presence and current routing / source-derived atlas lineage / carrier identity, naming, migration, ownership, and document identity remain open decisions or UNKNOWN"
 related:
-  - docs/atlases/Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md
+  - docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md
   - docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md
   - docs/atlases/domains-atlas-v1.1.md
   - docs/atlases/domains-v1.1.md
@@ -23,7 +26,7 @@ notes:
   - Resolves three dangling related: references in receipt-catalog.md, pipeline-gate-reference.md, and maplibre-master.md meta blocks — those files all reference this exact path.
   - Same scope as kfm-domains-v1.1-pass23-32-consolidated-atlas.md (consolidated artifact carrier); the two files are CONFLICTED at the naming-convention layer pending the atlas-Markdown naming ADR.
   - This is the SEVENTH atlas-family file under docs/atlases/; the proliferation is operationally costly and surfaced in §3.
-  - Owners, doc_id, related-path verification all remain placeholders.
+  - Owner remains a placeholder; the path-derived doc_id follows adjacent atlas metadata convention, while machine-registry adoption remains review-only.
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Domains v1.1 + Pass 23/32 Consolidated Atlas — Carrier *(underscored-UpperCase variant)*
@@ -51,7 +54,11 @@ notes:
 > **Truth posture:** *Atlas v1.1 + Pass 23/32 source PDFs are doctrine.* This file is a carrier. EvidenceBundle and the per-domain dossiers remain authoritative. **This carrier defers to its kebab-lowercase twin (`kfm-domains-v1.1-pass23-32-consolidated-atlas.md`) on wording and structure** until the ADR picks a canonical name.
 
 > [!NOTE]
-> **Evidence boundary.** This file exists for path-reference reasons (§2). Its content is **intentionally minimal** and routes readers to the canonical carriers, the full-text Markdown conversion, and the source PDFs. Repo implementation depth, owner allocation, and downstream link validity remain `UNKNOWN`.
+> **Evidence boundary.** This file exists for path-reference reasons (§2). Its
+> content is intentionally minimal and routes readers to source-derived carriers
+> and named source PDFs. The linked Markdown is incomplete; repository
+> implementation, release, deployment, and publication require separate current
+> evidence.
 
 ---
 
@@ -59,12 +66,19 @@ notes:
 
 This file has a narrow operational purpose: **resolve three dangling `related:` references** in earlier session-authored carriers, which all point at this exact filename, while making the underlying naming-convention drift visible enough that the ADR resolution becomes unavoidable.
 
-It does **not** re-render the consolidated atlas. The atlas's full text lives in the existing project file (`/mnt/project/Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md`, ~1,279 pages of converted PDF). The atlas's chapter-level navigation lives in `kfm-domains-v1.1-pass23-32-consolidated-atlas.md` (kebab-lowercase top-level carrier). This file routes readers to both.
+It does **not** re-render the consolidated atlas. The existing source-derived
+carrier, `docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated
+Atlas.md`, comes from a 1,279-page PDF but retains conversion only through roughly
+page 286, followed by a synthesized continuity tail. The chapter-level navigation
+lives in `kfm-domains-v1.1-pass23-32-consolidated-atlas.md`. This file routes
+readers to both.
 
 Three non-collapse rules apply:
 
 1. **Atlas v1.1 + Pass 23/32 source PDFs win on doctrine.** This file is a carrier.
-2. **The full-text Markdown wins on wording.** Where this file or its kebab-lowercase twin paraphrases, the conversion is closer; the source PDFs are closer still.
+2. **Check source wording at the source.** The incomplete Markdown conversion is
+   closer than this pointer, but consequential wording must be verified against
+   the source PDFs.
 3. **This file does not establish a parallel naming authority.** Both this file and `kfm-domains-v1.1-pass23-32-consolidated-atlas.md` exist while the ADR pends; afterward, one is canonical and the other is `SUPERSEDED` (lineage preserved per `directory-rules.md` §17).
 
 ---
@@ -90,25 +104,27 @@ Three non-collapse rules apply:
 ## 3. The seventh variant (`CONFLICTED`)
 
 > [!WARNING]
-> **`CONFLICTED`** — this file brings the atlas-family file count under `docs/atlases/` to **seven distinct names**. The naming-convention proliferation is now severe enough that **the atlas-Markdown naming ADR is a blocking item** for any further atlas-family authoring. Resolution belongs in the proposed ADR named in `kfm-domains-v1.1-pass23-32-consolidated-atlas.md` §11.
+> **`CONFLICTED`** — this catalog lists **seven** atlas-family names repository-wide:
+> six under `docs/atlases/` and one current source-derived carrier at the
+> `docs/` root. Naming and migration remain unresolved.
 
-### 3.1 All atlas-family paths under `docs/atlases/` (current state)
+### 3.1 Catalogued atlas-family paths (one outside `docs/atlases/`)
 
 | # | Path | Naming pattern | Scope | Authored where |
 |---|---|---|---|---|
-| 1 | `docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf` | underscored UpperCase + `KFM_` abbrev, `.pdf` | Atlas v1.1 (Source A) as PDF | `PROPOSED file home` (Atlas v1.1 front matter) |
-| 2 | `docs/atlases/Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` | full-title with `_-_` and `___` separators, `.md` | Full-text Markdown of the consolidated artifact | `CONFIRMED file presence` in `/mnt/project/` |
-| 3 | `docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md` | kebab-lowercase + `kfm-` prefix | Consolidated atlas navigation carrier | Session-authored; `PROPOSED file` |
-| 4 | `docs/atlases/domains-v1.1.md` | kebab-lowercase, no atlas/kfm prefix | Domain-focused carrier (16 chapters) | Session-authored; `PROPOSED file` |
-| 5 | `docs/atlases/domains-v1.1-ch14.md` | kebab-lowercase + chapter suffix | Per-chapter dossier (Ch. 14) | Session-authored; `PROPOSED file` |
-| 6 | `docs/atlases/domains-atlas-v1.1.md` | kebab-lowercase + `domains-atlas` noun phrase | Source A only (standalone-citable carrier) | Session-authored; `PROPOSED file` |
-| **7** | **`docs/atlases/KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md`** *(this file)* | **underscored UpperCase + `KFM_` abbrev + `_plus_` joiner, `.md`** | Consolidated atlas navigation carrier *(twins #3)* | Session-authored; `PROPOSED file` |
+| 1 | `docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf` | underscored UpperCase + `KFM_` abbrev, `.pdf` | Proposed Atlas v1.1 PDF home | Current path is a directory collision, not a PDF file; migration remains unresolved |
+| 2 | `docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md` | title-style name with spaces, punctuation, and a numeric underscore | Incomplete source-derived Markdown carrier | `CONFIRMED file presence`; retained conversion through roughly page 286 plus a synthesized continuity tail |
+| 3 | `docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md` | kebab-lowercase + `kfm-` prefix | Consolidated atlas navigation carrier | `CONFIRMED file presence`; draft source-derived navigation |
+| 4 | `docs/atlases/domains-v1.1.md` | kebab-lowercase, no atlas/kfm prefix | Domain-focused carrier (16 chapters) | `CONFIRMED file presence`; internal status governs content |
+| 5 | `docs/atlases/domains-v1.1-ch14.md` | kebab-lowercase + chapter suffix | Per-chapter dossier (Ch. 14) | `CONFIRMED file presence`; internal status governs content |
+| 6 | `docs/atlases/domains-atlas-v1.1.md` | kebab-lowercase + `domains-atlas` noun phrase | Source A only (standalone-citable carrier) | `CONFIRMED file presence`; internal status governs content |
+| **7** | **`docs/atlases/KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md`** *(this file)* | **underscored UpperCase + `KFM_` abbrev + `_plus_` joiner, `.md`** | Consolidated atlas navigation carrier *(twins #3)* | `CONFIRMED file presence`; draft pointer |
 
 ### 3.2 The naming-variant cardinality problem
 
 Across the seven paths, there are now **at least four genuinely distinct naming patterns** (pattern frequency in parens):
 
-- Full-title with `_-_` / `___` separators (1 path: existing project Markdown).
+- Title-style spaces, punctuation, and numeric underscore (1 current root path).
 - Underscored UpperCase + `KFM_` abbreviation (2 paths: the Atlas-proposed PDF home; this file).
 - Kebab-lowercase + `kfm-` prefix (1 path: top-level navigation carrier).
 - Kebab-lowercase + `domains-` family (3 paths: domain-focused, per-chapter, Source-A carriers).
@@ -131,22 +147,25 @@ The cost is real anyway: a seventh atlas-family file under one directory is oper
 |---|---|---|
 | **Scope** | Consolidated atlas navigation. | Consolidated atlas navigation. |
 | **Naming pattern** | Underscored UpperCase + `KFM_` + `_plus_`. | Kebab-lowercase + `kfm-` prefix. |
-| **Content depth** | Intentionally minimal; routes to canonical carriers. | Full 17-section navigation (chapter index, Pass 23/32 totals, v1.3 overlay, ADR backlog, etc.). |
+| **Content depth** | Intentionally minimal; routes to current entry points. | Full 17-section navigation (chapter index, Pass 23/32 totals, v1.3 source overlay, ADR backlog, etc.). |
 | **Authored to resolve** | Dangling `related:` references in three sibling carriers (§2). | Reader-facing navigation entry point. |
 | **Long-term status** | One of these two is `SUPERSEDED` once the ADR resolves. | One of these two is `SUPERSEDED` once the ADR resolves. |
-| **Wording authority** | Defers to twin and full-text Markdown. | Defers to full-text Markdown. |
+| **Wording check** | Defers to named source evidence. | The incomplete Markdown helps locate retained wording; consequential wording requires source-PDF verification. |
 
 > **Where to read more.** For the chapter index, Pass 23/32 totals, v1.3 overlay coverage, Chapter 24 section list, ADR backlog, and naming-reconciliation discussion, use **`docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md`** directly. This file does **not** duplicate that content.
 
 ---
 
-## 5. Routing to canonical carriers
+<a id="5-routing-to-canonical-carriers"></a>
 
-> Use this table to find the right entry point for any consolidated-atlas concern. Each row points at the carrier that owns that concern; this file does not.
+## 5. Routing to current entry points
 
-| Concern | Canonical carrier | Path |
+> Use this table to find the current entry point for a consolidated-atlas concern.
+> File presence and routing do not make a carrier canonical or authoritative.
+
+| Concern | Entry point | Path |
 |---|---|---|
-| Full-text Markdown of the consolidated atlas | Full-text conversion | `docs/atlases/Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` |
+| Retained source wording and conversion lineage | Incomplete source-derived carrier | `docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md` |
 | Top-level navigation across Source A + Source B + wrapper + v1.3 overlay | Top-level carrier | `docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md` |
 | Source A standalone (Atlas v1.1 as citable artifact) | Source-A carrier | `docs/atlases/domains-atlas-v1.1.md` |
 | 16 domain chapters at single granularity | Domain-focused carrier | `docs/atlases/domains-v1.1.md` |
@@ -154,7 +173,7 @@ The cost is real anyway: a seventh atlas-family file under one directory is oper
 | Master Receipt Catalog (§24.2) | Receipt-catalog carrier | `docs/atlases/receipt-catalog.md` |
 | Master Pipeline Gate Reference (§24.6) | Pipeline-gate carrier | `docs/atlases/pipeline-gate-reference.md` |
 | Master MapLibre Components/Functions/Features + v1.3 renderer overlay | MapLibre master carrier | `docs/atlases/maplibre-master.md` |
-| Atlas v1.1 PROPOSED PDF home | Source A as PDF | `docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf` *(mounted-repo presence `NEEDS VERIFICATION`)* |
+| Atlas v1.1 proposed PDF home | Collision record only | `docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf/` is currently a directory, not the source PDF |
 
 ---
 
@@ -194,7 +213,7 @@ The cost is real anyway: a seventh atlas-family file under one directory is oper
 
 | Reference | Role | Status |
 |---|---|---|
-| `docs/atlases/Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` | **Full-text Markdown carrier. Authoritative on wording.** | `CONFIRMED file presence` |
+| `docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md` | Full-text source-derived carrier; closest retained conversion wording, not repository implementation authority. | `CONFIRMED file presence`; source fidelity remains bounded |
 | `docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md` | **Doctrinal twin (kebab-lowercase).** Authoritative on structure where this file paraphrases. | `PROPOSED file` |
 | `docs/atlases/domains-atlas-v1.1.md` | Source-A-only carrier (sibling). | `PROPOSED file` |
 | `docs/atlases/domains-v1.1.md` | Domain-focused carrier (sibling). | `PROPOSED file` |
@@ -215,8 +234,9 @@ The cost is real anyway: a seventh atlas-family file under one directory is oper
 - [ ] After ADR: update `related:` fields in `receipt-catalog.md`, `pipeline-gate-reference.md`, `maplibre-master.md` to point at the canonical name.
 - [ ] After ADR: update `related:` field cross-pointers in `domains-v1.1.md`, `domains-v1.1-ch14.md`, `domains-atlas-v1.1.md` as needed.
 - [ ] Confirm `OWNER_TBD` — docs steward.
-- [ ] Confirm `doc_id` allocation convention.
-- [ ] Confirm the target path `docs/atlases/KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md` does not already exist; resolve `docs/atlas/` mirror collisions.
+- [ ] Review the path-derived `doc_id` through the emitted registry delta; do not replace it with an invented UUID.
+- [x] Confirm this pointer exists at its current path; `docs/atlas/` convergence
+  remains unresolved.
 - [ ] Confirm §6 at-a-glance metadata matches the full-text Markdown carrier and the source PDFs.
 - [ ] Confirm §5 routing table covers every concern the three referring sibling carriers might lead a reader to look for.
 - [ ] **Audit**: confirm whether this file's *only* operational job is dangling-reference resolution. If the ADR resolution path proceeds, the file's job ends.
@@ -231,10 +251,10 @@ The cost is real anyway: a seventh atlas-family file under one directory is oper
 | **Atlas-Markdown naming ADR selects underscored UpperCase** | Mark `kfm-domains-v1.1-pass23-32-consolidated-atlas.md` `SUPERSEDED`; merge its content into this file; update sibling carriers' `related:` fields to this file; rename `domains-v1.1.md`, `domains-v1.1-ch14.md`, `domains-atlas-v1.1.md` per the chosen convention. |
 | **Atlas-Markdown naming ADR selects a third pattern** | Mark **both** twins `SUPERSEDED`; author one carrier under the chosen pattern; migrate all referrers. |
 | **Atlas v1.2 is issued** | Affects both twins identically; preserve v1.1 lineage in whichever twin survives the ADR. |
-| **ADR-OPEN-DR-10 (renderer decision) accepted** | v1.3 overlay row in §6 demotes to `CONFIRMED`; same as for the twin. |
+| **ADR-0007 is superseded or amended** | Reconcile the older v1.3 overlay with the accepted successor while preserving source lineage and separate runtime/release evidence. |
 | **`related:` field convention changes (e.g., to UUIDs or doc-ids)** | This file's path-resolution job becomes unnecessary; mark `SUPERSEDED`. |
 | **The three sibling carriers' `related:` fields are updated to point elsewhere** | This file's path-resolution job becomes unnecessary; mark `SUPERSEDED`. |
-| **This carrier is found to drift from the full-text Markdown or its kebab-lowercase twin** | Restore wording from the appropriate authority; the full-text wins, the twin wins where structurally relevant. |
+| **This carrier is found to drift from its sources or sibling navigation** | Reconcile against the source PDFs for wording and current repository evidence for implementation; preserve prior carrier state for rollback. |
 | **This carrier is found to overclaim implementation** | Demote to `PROPOSED` / `UNKNOWN`; never resolve drift by lowering the truth label. |
 
 **Rollback target:** `ROLLBACK_TARGET_TBD` (PROPOSED: prior commit ref of this file as recorded in `release/manifests/`).
@@ -247,16 +267,16 @@ The cost is real anyway: a seventh atlas-family file under one directory is oper
 
 | Source | Status | Supports | Limits |
 |---|---|---|---|
-| `docs/atlases/Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` (full-text Markdown carrier, existing in `/mnt/project/`) | `CONFIRMED file presence` | §5 routing row; §6 at-a-glance metadata. | Authoritative on wording; this file defers. |
-| `docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md` (doctrinal twin) | `PROPOSED file` (session-authored) | §4 twin-relationship table; §5 routing row; §6 at-a-glance metadata source. | Twin has the depth; this file is intentionally minimal. |
-| `docs/atlases/receipt-catalog.md` meta-block `related:` field | `PROPOSED file` (session-authored) | §2 dangling-reference resolution row. | Reference points to this filename verbatim. |
-| `docs/atlases/pipeline-gate-reference.md` meta-block `related:` field | `PROPOSED file` (session-authored) | §2 dangling-reference resolution row. | Same. |
-| `docs/atlases/maplibre-master.md` meta-block `related:` field | `PROPOSED file` (session-authored) | §2 dangling-reference resolution row. | Same. |
-| `docs/atlases/domains-atlas-v1.1.md` §12 (Naming-convention reconciliation, escalated) | `PROPOSED file` (session-authored) | §3 seven-variant catalog; identifies four resolution directions. | Doctrinal-twin file has the more developed naming discussion. |
+| `docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md` (full-text source-derived carrier) | `CONFIRMED file presence` | §5 routing row; §6 at-a-glance metadata. | Closest repository carrier for converted source wording; not implementation authority. |
+| `docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md` (navigation twin) | `CONFIRMED file presence` | §4 twin-relationship table; §5 routing row; §6 at-a-glance metadata source. | Twin has the depth; its source claims remain bounded. |
+| `docs/atlases/receipt-catalog.md` meta-block `related:` field | `CONFIRMED file presence` | §2 prior dangling-reference row. | Related path now resolves to the actual root carrier. |
+| `docs/atlases/pipeline-gate-reference.md` meta-block `related:` field | `CONFIRMED file presence` | §2 prior dangling-reference row. | Related path now resolves to the actual root carrier. |
+| `docs/atlases/maplibre-master.md` meta-block `related:` field | `CONFIRMED file presence` | §2 prior dangling-reference row. | Related path now resolves to the actual root carrier. |
+| `docs/atlases/domains-atlas-v1.1.md` §12 (naming reconciliation) | `CONFIRMED file presence`; internal proposal status retained | §3 seven-name catalog; identifies resolution directions. | Naming decision remains unresolved. |
 | Atlas v1.1 front matter (cover supersession block; "What is new in v1.1"; conflict rule; non-collapse rule) | `CONFIRMED doctrine` | §6 conflict rule, non-collapse rule, reversibility rows. | Wording is reproduced in the doctrinal twin at greater length. |
 | Pass 32 totals from full-text Markdown §7 ("Change Summary for Pass 32") | `CONFIRMED doctrine` | §6 Pass 32 card-totals row. | — |
-| `directory-rules.md` v1.2 §6.1 (atlas lane), §17 (rule-reversal supersession discipline), §8.3 (compatibility alias window) | `CONFIRMED at commit b6a279…` | §10 supersession actions. | — |
-| `kfm_unified_doctrine_synthesis.md` | `CONFIRMED corpus presence` | Synthesis source for doctrine consistency. | — |
+| Directory Rules v2 and accepted ADR-0029 | Current placement governance | §10 migration and supersession boundary. | Names `docs/atlases/` as the proposed canonical collection; does not decide this pointer's disposition. |
+| `kfm_unified_doctrine_synthesis.md` | Source-lineage filename | Historical doctrine-consistency context. | Not present under this filename in the current repository; not current authority. |
 
 > **Memory is not evidence.** Every consequential claim in this file is traceable to one of the sources above, an Atlas table reproduced via the doctrinal twin, or an explicit `PROPOSED` / `NEEDS VERIFICATION` / `CONFLICTED` placeholder. The atlas-Markdown naming ADR is the resolution path for the `CONFLICTED` items.
 

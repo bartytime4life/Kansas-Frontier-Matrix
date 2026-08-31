@@ -1,27 +1,30 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION
+doc_id: kfm://doc/docs-atlases-kfm-domains-v1-1-pass23-32-consolidated-atlas
 title: KFM Domains v1.1 + Pass 23/32 Consolidated Atlas — Navigation Carrier
 type: standard
-version: v0.1
-status: draft
+version: v0.2
+status: draft; repository-present; source-derived; naming-conflicted; non-release; non-publication
 owners: OWNER_TBD
 created: 2026-05-25
-updated: 2026-05-25
+updated: 2026-08-31
 policy_label: public
+owning_root: docs/
+responsibility: "Provide a concise, source-bounded navigation entry point for the Domains v1.1 and Pass 23/32 atlas family without becoming implementation or release authority."
+truth_posture: "CONFIRMED file presence and current routing / source-derived atlas lineage / naming and migration remain open decisions / current implementation, runtime, release, deployment, and publication require separate evidence"
 related:
-  - docs/atlases/Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md
+  - docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md
   - docs/atlases/receipt-catalog.md
   - docs/atlases/pipeline-gate-reference.md
   - docs/atlases/maplibre-master.md
   - docs/doctrine/directory-rules.md
-  - docs/architecture/maplibre-3d.md
+  - docs/architecture/maplibre.md
   - docs/registers/DRIFT_REGISTER.md
 tags: [kfm, atlas, v1.1, pass23, pass32, doctrine, carrier, navigation]
 notes:
-  - Top-level navigation carrier into the consolidated atlas; the full-text conversion lives at a sibling Markdown file under docs/atlases/.
+  - Top-level navigation carrier into the consolidated atlas; the full-text source-derived carrier currently lives at docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md.
   - Filename uses kebab-lowercase consistent with sibling carriers (receipt-catalog.md, pipeline-gate-reference.md, maplibre-master.md); naming-convention reconciliation with the existing full-text Markdown is a CONFLICTED item surfaced in §11.
   - Three referenced names exist for this content area; reconciliation is NEEDS VERIFICATION.
-  - Owners, doc_id, related-path verification all remain placeholders.
+  - Owner remains a placeholder; the path-derived doc_id follows adjacent atlas metadata convention, machine-registry adoption remains review-only, and related-path existence was checked against main@5d835798e09a4dd14735779cb44206a8a3e8b2d3.
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Domains v1.1 + Pass 23/32 Consolidated Atlas — Navigation Carrier
@@ -42,16 +45,25 @@ notes:
 
 **Quick jump:** [Purpose](#1-purpose-and-role) · [What this atlas is](#2-what-this-atlas-is) · [Assembly](#3-how-v10--v11--pass-2332-fit-together) · [v1.0 chapters](#4-v10-chapters-1-23) · [v1.1 Chapter 24](#5-v11-chapter-24--extended-master-atlases) · [Appendix G](#6-appendix-g--v10--v11-lineage) · [Pass 23/32](#7-pass-2332-addenda) · [v1.3 overlay](#8-v13-renderer-decision-overlay) · [Companion carriers](#9-companion-sub-carriers) · [Conflict rule](#10-the-atlas-conflict-rule) · [Naming](#11-naming-convention-reconciliation-conflicted) · [ADRs](#13-adr-backlog) · [Verification](#14-verification-checklist)
 
+> [!CAUTION]
+> **Repository reconciliation (2026-08-31).** This navigation carrier and the
+> linked full-text carrier are present in
+> `main@5d835798e09a4dd14735779cb44206a8a3e8b2d3`. Statements below about atlas
+> doctrine, PDF fidelity, card completeness, manifests, implementation, or
+> adoption retain their source-edition boundary unless exact current repository
+> evidence is cited. The linked full-text carrier is incomplete and is not
+> repository implementation authority.
+
 > [!IMPORTANT]
-> **Status:** `PROPOSED file` / `CONFIRMED doctrine` (Atlas v1.1 + Pass 23/32) / `PROPOSED v1.3 renderer overlay` / `UNKNOWN repo implementation depth`
+> **Status:** `CONFIRMED file presence` / source-derived navigation / `PROPOSED v1.3 renderer overlay` / implementation maturity verified per exact repository surface
 > **Owner:** `OWNER_TBD`
-> **Proposed path:** `docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md`
-> **Lane choice:** `docs/atlases/` over `docs/atlas/` — **CONFIRMED at doctrine level** per `directory-rules.md` v1.2 §6.1 and Atlas v1.1 Appendix G.
+> **Current path:** `docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md`
+> **Lane choice:** `docs/atlases/` is adopted by accepted ADR-0029 and Directory Rules v2.
 > **Filename:** **`CONFLICTED`** — three referenced names exist for this content area (§11). The kebab-lowercase chosen here matches the three sibling carriers.
-> **Truth posture:** *Atlas v1.1 + the Pass 23/32 source PDFs are doctrine.* This file is a carrier. Atlas v1.1 front matter is explicit: *"Registers and master atlases are navigational aids. EvidenceBundle and the governing dossiers remain authoritative."*
+> **Truth posture:** Atlas v1.1 and the Pass 23/32 PDFs are source lineage for this carrier, not current implementation or release authority. The source front matter's non-collapse rule still applies: *"Registers and master atlases are navigational aids. EvidenceBundle and the governing dossiers remain authoritative."*
 
 > [!NOTE]
-> **Evidence boundary.** The structure described here — 23 retained v1.0 chapters, 14 Chapter 24 sections, Appendix G lineage, Pass 23/32 cards register, Pass 32 totals (1,607 cards; 60 new) — is `CONFIRMED doctrine` from the Atlas v1.1 front matter and the consolidated-atlas Markdown conversion. **The full per-chapter and per-card text is NOT re-rendered here**; it lives in the sibling Markdown conversion. **Repo implementation depth, file presence at the proposed path, owner allocation, doc-id allocation, and downstream link validity remain `UNKNOWN`** — no mounted repo was inspected.
+> **Evidence boundary.** The structure described here — 23 retained v1.0 chapters, 14 Chapter 24 sections, Appendix G lineage, Pass 23/32 cards register, and Pass 32 totals (1,607 cards; 60 new) — is carried from the Atlas v1.1 front matter and consolidated conversion. **The full per-chapter and per-card text is not re-rendered here**, and the linked conversion is itself truncated. Current file presence and directly changed links were checked; owner allocation, registry adoption, source fidelity, sidecars, and implementation claims remain separately governed or need verification.
 
 ---
 
@@ -75,7 +87,7 @@ This file is the **navigation entry point** into all of that. It exists because:
 **This file is not authority** — at any level:
 
 1. **Atlas registers are navigational aids.** Per Atlas v1.1 front matter: *"Nothing in v1.1 — not Chapter 24, not the lineage appendix, not this front matter — lets summaries, tables, registers, or master atlases substitute for evidence, policy, review state, source authority, or release state."* That rule applies equally to this Markdown carrier.
-2. **The full-text Markdown carrier wins on wording.** Where this navigation file paraphrases the atlas, the full-text Markdown (and behind it, the source PDFs) is authoritative.
+2. **Check source wording at the source.** The linked Markdown is the closest retained repository conversion but is incomplete. Where wording matters, verify it against the underlying source PDF; where current behavior matters, use current repository authority.
 
 ---
 
@@ -147,9 +159,14 @@ flowchart TB
     class OVL ovl
 ```
 
-> **Reading principle:** v1.0 is the doctrinal core. v1.1 extends without overwriting. Pass 23/32 carries downstream cards without authority. v1.3 overlay is `PROPOSED` and conditional on ADR-OPEN-DR-10 acceptance (see `maplibre-master.md` §10).
+> **Source-lineage reading principle:** v1.0 is the carried doctrinal core; v1.1
+> claims extension without overwrite; Pass 23/32 carries downstream cards without
+> authority. The v1.3 overlay was `PROPOSED` in the source edition. Current
+> renderer-family architecture is governed by accepted ADR-0007.
 
 ---
+
+<a id="4-v10-chapters-1-23"></a>
 
 ## 4. v1.0 chapters (1–23)
 
@@ -287,16 +304,25 @@ The Pass 23/32 atlas organizes cards into 13 categories. Each card carries `stab
 - County-first environmental recency and NDVI gates.
 - Consent / time-boxed reveal controls for sensitive overlays.
 
-### 7.5 Canonical machine surface
+### 7.5 Source-named machine surface
 
-> Per Pass 32 atlas: the canonical machine surface is **`manifest-pass-32.jsonl`**. The Pass 23 baseline carrier is **`manifest-pass-23.jsonl`**. Source-PDF page anchors remain valid; full per-card bodies live in the source PDFs.
+> Per the Pass 32 source edition, its machine surface is
+> **`manifest-pass-32.jsonl`** and the Pass 23 baseline is
+> **`manifest-pass-23.jsonl`**. Neither exact filename is present in the current
+> repository snapshot. Verify per-card bodies against the source PDFs until a
+> governed repository sidecar and integrity evidence are established.
 
 ---
 
 ## 8. v1.3 Renderer Decision Overlay
 
-> **Doctrinal anchor:** Renderer Decision Overlay table in the full-text Markdown carrier; `directory-rules.md` v1.3 §0, §11, §13.5, §18.e; `docs/architecture/maplibre-3d.md` §0.4, Appendix B.
-> **Status:** `PROPOSED doctrine target` pending ADR-OPEN-DR-10 acceptance. The **freeze rule** on new `cesium*` artifacts is **in effect immediately**.
+> **Lineage anchor:** Renderer Decision Overlay table in the source-derived
+> carrier. For current repository architecture, use
+> `docs/architecture/maplibre.md` and accepted ADR-0007.
+> **Status:** The overlay below records an older `PROPOSED` source position.
+> ADR-0007 now governs its accepted renderer-family scope; this carrier does not
+> infer a dependency freeze, runtime readiness, release, deployment, or
+> publication from that decision.
 
 The v1.3 overlay applies row-by-row to renderer-related rows of the Pass 23/32 atlas. Key dispositions:
 
@@ -309,20 +335,24 @@ The v1.3 overlay applies row-by-row to renderer-related rows of the Pass 23/32 a
 | Runtime package home | Not pinned. | **`PROPOSED`** at `packages/maplibre-runtime/` (sole adapter). |
 | Policy home | Not pinned. | **`PROPOSED`** at `policy/maplibre/`. |
 
-> Full v1.3 overlay coverage and the three open items (`OPEN-DR-10`, `OPEN-DR-11`, `OPEN-DR-12`) live in **`docs/atlases/maplibre-master.md`** §3 and §10.
+> Full v1.3 source-overlay coverage and its three historical open items live in
+> `docs/atlases/maplibre-master.md` §3 and §10. Use
+> `docs/architecture/maplibre.md` and accepted ADR-0007 for current repository
+> architecture.
 
 ---
 
 ## 9. Companion sub-carriers
 
-This file is the top-level entry point. Chapter-level navigation lives in companion carriers (when authored) and in the full-text Markdown carrier.
+This file is the top-level entry point. Chapter-level navigation lives in the
+present companion carriers and in the incomplete full-text source-derived carrier.
 
 | Carrier | Anchors into | Status |
 |---|---|---|
-| **`docs/atlases/Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md`** | **The full-text Markdown conversion** of the consolidated atlas (Source A + Source B + wrapper + Conversion Continuity + Renderer Decision Overlay). Authoritative on wording where this carrier paraphrases. | `CONFIRMED existence` in `/mnt/project/` |
-| **`docs/atlases/receipt-catalog.md`** | Atlas v1.1 §24.2 (Master Receipt Catalog) — 16 receipt classes + lifecycle-phase mapping + schema home (`schemas/contracts/v1/receipts/`). | `PROPOSED file` (authored this session) |
-| **`docs/atlases/pipeline-gate-reference.md`** | Atlas v1.1 §24.6 (Master Pipeline Gate Reference) — 7 lifecycle gates + Promotion Gates A–G + closure rules + reason codes. | `PROPOSED file` (authored this session) |
-| **`docs/atlases/maplibre-master.md`** | Master MapLibre Components-Functions-Features v2.1 (26-category atlas) + v1.3 Renderer Decision Overlay + open items. | `PROPOSED file` (authored this session) |
+| **[Full-text source-derived carrier](<../Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md>)** | Consolidated wrapper, Source A, Source B, and a synthesized Conversion Continuity tail. Closest repository carrier for converted source wording; not implementation authority. | `CONFIRMED` at the current `docs/` root path; conversion completeness remains bounded |
+| **`docs/atlases/receipt-catalog.md`** | Atlas v1.1 §24.2 (Master Receipt Catalog) — 16 receipt classes + lifecycle-phase mapping + schema home (`schemas/contracts/v1/receipts/`). | `CONFIRMED file presence`; content retains its declared proposal/source status |
+| **`docs/atlases/pipeline-gate-reference.md`** | Atlas v1.1 §24.6 (Master Pipeline Gate Reference) — 7 lifecycle gates + Promotion Gates A–G + closure rules + reason codes. | `CONFIRMED file presence`; content retains its declared proposal/source status |
+| **`docs/atlases/maplibre-master.md`** | Master MapLibre Components-Functions-Features v2.1 (26-category atlas) + v1.3 Renderer Decision Overlay + open items. | `CONFIRMED file presence`; current architecture must be checked separately |
 
 ### 9.1 Candidate future companion carriers
 
@@ -363,15 +393,19 @@ When a Chapter 24 register and a v1.0 section appear to disagree:
 |---|---|---|---|
 | Atlas v1.1 front matter *(p. 1)* | `docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf` | underscored UpperCase, `.pdf` | `PROPOSED file home` for the **PDF** |
 | Companion carriers authored this session *(receipt-catalog.md, pipeline-gate-reference.md, maplibre-master.md)* | `docs/atlases/KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md` | underscored UpperCase with `plus`, `.md` | `PROPOSED file` (this session) |
-| Existing project Markdown *(in `/mnt/project/`)* | `Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` | full title + underscores + hyphens (PDF-name conversion artifact), `.md` | `CONFIRMED file presence` |
-| **This file** *(user-specified)* | `docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md` | kebab-lowercase, `.md` | `PROPOSED file` (this session) |
+| Existing repository Markdown | `docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md` | title-style name with spaces, punctuation, and a numeric underscore | `CONFIRMED file presence`; current path is outside the proposed canonical collection |
+| **This file** | `docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md` | kebab-lowercase, `.md` | `CONFIRMED file presence`; draft source-derived navigation |
 
 ### 11.1 Why this drift exists
 
 - Atlas v1.1 front matter names the **PDF** home, not a Markdown home — so the `.md` carriers are an unbudgeted file family.
-- The PDF→Markdown conversion preserved the source PDF's title-as-filename, producing the underscored-and-hyphenated full-title form.
+- The current repository carrier uses a title-style filename with spaces,
+  punctuation, and the `23_32` numeric separator; its filename provenance is
+  not established by the differently named source PDF.
 - The companion sub-carriers (`receipt-catalog.md`, `pipeline-gate-reference.md`, `maplibre-master.md`) use kebab-lowercase. The user's path for this file uses the same kebab-lowercase pattern.
-- `directory-rules.md` v1.2 §6.1 confirms **`docs/atlases/`** as the canonical lane (over `docs/atlas/`), but does not specify filename casing inside it.
+- Directory Rules v2, adopted by ADR-0029, name `docs/atlases/` as the
+  **proposed canonical collection**; they do not decide the carrier filename or
+  complete migration from `docs/atlas/` or the `docs/` root.
 
 ### 11.2 Resolution directions (`PROPOSED`)
 
@@ -389,18 +423,18 @@ When a Chapter 24 register and a v1.0 section appear to disagree:
 
 | Reference | Role | Status |
 |---|---|---|
-| **`docs/atlases/Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md`** | **Full-text Markdown conversion of the consolidated atlas.** Authoritative on wording. | `CONFIRMED file presence` |
+| **[Full-text source-derived carrier](<../Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md>)** | Closest repository carrier for converted source wording; its repository-status claims remain bounded by its reader contract. | `CONFIRMED file presence` |
 | Atlas v1.1 source PDF | `KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf` (per consolidation wrapper). | `CONFIRMED` |
-| `docs/atlases/receipt-catalog.md` | Chapter 24.2 carrier. | `PROPOSED file` |
-| `docs/atlases/pipeline-gate-reference.md` | Chapter 24.6 carrier. | `PROPOSED file` |
-| `docs/atlases/maplibre-master.md` | Master MapLibre v2.1 + v1.3 overlay carrier. | `PROPOSED file` |
-| `docs/doctrine/directory-rules.md` v1.2/v1.3 | Canonical placement; atlas home (`docs/atlases/`); v1.3 renderer-decision refresh. | `CONFIRMED at commit b6a279…` |
-| `docs/architecture/maplibre-3d.md` | Sole-renderer doctrine; renderer-decision ADR (Appendix B). | `CONFIRMED doctrine target / PROPOSED ADR` |
+| `docs/atlases/receipt-catalog.md` | Chapter 24.2 carrier. | `CONFIRMED file presence`; internal status governs content |
+| `docs/atlases/pipeline-gate-reference.md` | Chapter 24.6 carrier. | `CONFIRMED file presence`; internal status governs content |
+| `docs/atlases/maplibre-master.md` | Master MapLibre v2.1 + v1.3 overlay carrier. | `CONFIRMED file presence`; current architecture is separate |
+| `docs/doctrine/directory-rules.md` v2 and accepted ADR-0029 | Adopted placement rules naming `docs/atlases/` as the proposed canonical collection. | Current governance authority for placement; carrier identity remains unresolved |
+| `docs/architecture/maplibre.md` and accepted ADR-0007 | Current repository MapLibre architecture entry point and renderer-family decision. | Architecture scope only; runtime, release, deployment, and publication remain separately governed |
 | `docs/registers/DRIFT_REGISTER.md` | Where Chapter 24 ↔ v1.0 conflicts and this file's naming-convention drift are recorded. | `PROPOSED register` |
-| Pass 23 baseline carrier | `KFM_Pass_23_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf` + `manifest-pass-23.jsonl`. | `CONFIRMED` |
-| Pass 32 carrier | `KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf` + `manifest-pass-32.jsonl`. | `CONFIRMED` |
-| `KFM_Encyclopedia.md` | Domain inventory and capability spine; sub-chapters mirror Ch. 4–18 domains. | `CONFIRMED corpus presence` |
-| `kfm_unified_doctrine_synthesis.md` | Cross-document doctrine synthesis (authority ladder, lifecycle law, gates A–G, receipt taxonomy, finite envelope). | `CONFIRMED corpus presence` |
+| Pass 23 baseline carrier | Source edition names `KFM_Pass_23_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf` + `manifest-pass-23.jsonl`. | Source-edition assertion; exact manifest filename absent from current repository snapshot |
+| Pass 32 carrier | Source edition names `KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf` + `manifest-pass-32.jsonl`. | Source-edition assertion; exact manifest filename absent from current repository snapshot |
+| `KFM_Encyclopedia.md` | Source-lineage domain inventory filename. | Not present under this filename in the current repository; use current repository doctrine only for current claims |
+| `kfm_unified_doctrine_synthesis.md` | Source-lineage doctrine-synthesis filename. | Not present under this filename in the current repository; not current authority |
 
 ---
 
@@ -416,7 +450,7 @@ When a Chapter 24 register and a v1.0 section appear to disagree:
 | **S-04** | Source-role enum — canonical vocabulary, evolution rule. | §5 §24.1. |
 | **S-05** | Sensitivity tier scheme T0–T4. | §5 §24.5. |
 | **S-06** | AI surface boundary. | §4.3 Ch. 19. |
-| **S-07** | 3D admission policy. | §8 (operationalized v1.3 in `packages/maplibre-runtime/src/admission.ts` + `policy/maplibre/3d-admission.rego`). |
+| **S-07** | 3D admission policy. | §8 source-era proposal. The formerly named `packages/maplibre-runtime/src/admission.ts` and `policy/maplibre/3d-admission.rego` paths are absent from the current snapshot; use current MapLibre architecture and exact repository evidence instead. |
 | **S-08** | Frontier Matrix cell semantics. | §4.2 Ch. 17. |
 | **S-09** | Reviewer separation-of-duties threshold. | §5 §24.7. |
 | **S-10** | Stale-state propagation. | §5 §24.8. |
@@ -426,7 +460,7 @@ When a Chapter 24 register and a v1.0 section appear to disagree:
 | **S-14** | Cross-lane join policy. | §5 §24.4. |
 | **S-15** | Doctrine artifact lifecycle. | §11 (this file's lifecycle as a carrier). |
 | **(new, proposed)** | Atlas-Markdown naming convention under `docs/atlases/`. | §11. |
-| **(new, proposed; per `maplibre-3d.md`)** | `MapLibre as Sole Browser-Side Renderer; Retire Cesium Dependency` (number pending; `OPEN-DR-10`). | §8. |
+| `ADR-0007` | Accepted normal browser-renderer family; §8's older proposed overlay needs reconciliation without inferring runtime, release, deployment, or publication. | §8. |
 
 > Filing direction: S-01 through S-15 exist in the atlas backlog and are open. New proposals here are deliberately unnumbered.
 
@@ -434,12 +468,18 @@ When a Chapter 24 register and a v1.0 section appear to disagree:
 
 ## 14. Verification checklist
 
-- [ ] Confirm the target path `docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md` does not already exist; resolve `docs/atlas/` mirror collisions.
+- [x] Confirm this navigation carrier exists at its current path; `docs/atlas/`
+  convergence remains unresolved.
 - [ ] **Naming reconciliation (§11)**: open an ADR; pick a canonical filename convention; rename or alias as needed; record drift in `docs/registers/DRIFT_REGISTER.md`.
-- [ ] Confirm sibling carriers exist or are in active authoring: `receipt-catalog.md`, `pipeline-gate-reference.md`, `maplibre-master.md`.
-- [ ] Confirm the full-text Markdown carrier (`Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md`) is the same content as the source PDFs `KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf` / `KFM_Domains_Culmination_Atlas_v1_1.pdf`.
+- [x] Confirm sibling carriers exist: `receipt-catalog.md`,
+  `pipeline-gate-reference.md`, and `maplibre-master.md`; their content status is
+  governed inside each file.
+- [ ] Verify the full-text carrier's retained source ranges and fidelity against
+  the named PDFs, and record missing coverage. It is already known not to be the
+  same content because conversion stops near page 286 and a synthesized
+  continuity tail follows.
 - [ ] Confirm `OWNER_TBD` — docs steward (likely the same steward across all four `docs/atlases/` carriers).
-- [ ] Confirm `doc_id` allocation convention; do not invent UUIDs.
+- [ ] Review the path-derived `doc_id` through the emitted registry delta; do not replace it with an invented UUID.
 - [ ] Confirm Pass 32 totals (`added=60; expanded=290; unchanged=1,239; superseded=0; quarantined=18; withdrawn_on_evidence=0; total=1,607`) against `manifest-pass-32.jsonl`.
 - [ ] Confirm 13-category enum (ANA, CAT, DAT, DOC, EVD, MAP, MDP, MOD, PIP, POL, REL, SEC, UIX) matches the live manifest schema.
 - [ ] Confirm carry-forward-state enum (`UNCHANGED`, `EXPANDED`, `SUPERSEDED`, `QUARANTINED`, `WITHDRAWN_ON_EVIDENCE`, `NEW`) against schema.
@@ -456,12 +496,11 @@ When a Chapter 24 register and a v1.0 section appear to disagree:
 |---|---|
 | Atlas v1.2 (or successor) is issued | Update §2 edition statement; preserve v1.1 in §6 lineage; add a v1.1 → v1.2 row to Appendix G's analog; bump file `version`. |
 | Chapter 24 amended (sections added / renamed / removed) | Update §5 in lock-step; preserve historical numbering in lineage; update companion-carrier references. |
-| ADR resolves naming-convention drift (§11) | Apply chosen convention; rename file if needed; preserve old name as compatibility alias for 30 days per `directory-rules.md` §8.3; record migration. |
-| ADR-OPEN-DR-10 accepted | Demote v1.3 overlay language in §8 from `PROPOSED` to `CONFIRMED`; update Atlas v1.1 Renderer Decision Overlay sections (this file + `maplibre-master.md`). |
-| ADR-OPEN-DR-10 rejected or amended | Restore pre-v1.3 disposition; preserve `KFM-P2-FEAT-0012` lineage; remove `cesium*` freeze rule. |
+| A naming/migration decision is accepted (§11) | Apply the selected convention through reviewed migration, inbound-link repair, compatibility treatment, validation, and rollback; do not rename from this carrier alone. |
+| ADR-0007 is superseded or amended | Reconcile §8 with the accepted successor while preserving the older overlay as source lineage and keeping runtime/release claims separately evidenced. |
 | Pass 33 (or successor) published | Add §7 row for the new pass; preserve Pass 23 and Pass 32 totals as lineage; cite the new manifest. |
 | Full-text Markdown carrier is renamed | Update §9 and §12 references; preserve lineage notes; cross-check `DRIFT_REGISTER.md`. |
-| This carrier is found to drift from full-text Markdown or source PDFs | Restore atlas wording verbatim; the full text wins; record the drift; never resolve by lowering the truth label. |
+| This carrier is found to drift from the source PDFs | Reconcile against the source, record the drift, and preserve the prior carrier for rollback; do not treat the incomplete Markdown conversion as independent authority. |
 | This carrier is found to overclaim implementation | Demote to `PROPOSED` / `UNKNOWN`; never resolve drift by lowering the truth label. |
 
 **Rollback target:** `ROLLBACK_TARGET_TBD` (PROPOSED: prior commit ref of this file as recorded in `release/manifests/`).
@@ -472,15 +511,14 @@ When a Chapter 24 register and a v1.0 section appear to disagree:
 
 | Source | Status | Supports | Limits |
 |---|---|---|---|
-| *Kansas Frontier Matrix Domains Culmination Atlas, v1.1* (front matter; cover supersession block; "What is new in v1.1"; Integrated Contents) | `CONFIRMED doctrine` | §2 edition statement; §3 assembly; §4 v1.0 chapter list; §5 Chapter 24 index; §6 Appendix G; §10 conflict rule. | This carrier paraphrases the atlas; full text wins where this paraphrases. |
+| *Kansas Frontier Matrix Domains Culmination Atlas, v1.1* (front matter; cover supersession block; "What is new in v1.1"; Integrated Contents) | Source-edition doctrine claim | §2 edition statement; §3 assembly; §4 v1.0 chapter list; §5 Chapter 24 index; §6 Appendix G; §10 conflict rule. | This carrier paraphrases the atlas; verify consequential wording against the source PDF. |
 | Atlas v1.1 Chapter 24 (sections §24.1 – §24.14) | `CONFIRMED doctrine` | §5 row content; §13 ADR-S backlog. | Chapter 24 itself is navigational per Atlas v1.1 authority rule; this carrier is one level further out. |
-| *KFM Pass 23 + Pass 32 Consolidated Deduplicated Atlas* (Source B + consolidation wrapper) | `CONFIRMED doctrine` | §7 Pass 32 totals (1,607 / 60 / 290 / 18); §7.2 13-category enum; §7.3 carry-forward enum; §7.4 named highlights; §7.5 canonical machine surface. | Per-card bodies live in source PDFs / manifest sidecars, not in this carrier. |
-| Existing full-text Markdown conversion in `/mnt/project/` (`Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md`) | `CONFIRMED file presence` | §3 Conversion Continuity skeleton; §8 Renderer Decision Overlay; §9 companion-carrier index. | Authoritative on wording; this navigation carrier defers to it. |
-| Companion sub-carriers (`receipt-catalog.md`, `pipeline-gate-reference.md`, `maplibre-master.md`) | `PROPOSED file` (authored this session) | §5 ✓ rows; §9 companion list; §12 cross-references. | Not yet mounted; carrier status. |
-| `directory-rules.md` v1.2 §6.1 | `CONFIRMED at commit b6a279…` | Lane choice `docs/atlases/` over `docs/atlas/`. | Path-level claims for new files remain `PROPOSED`. |
-| `directory-rules.md` v1.3 §0, §11, §13.5, §18.e | `CONFIRMED at v1.3 authoring` | §8 v1.3 overlay; §15 rollback rows for OPEN-DR-10. | v1.3 doctrine target is `PROPOSED` until ADR accepted. |
-| `docs/architecture/maplibre-3d.md` Appendix B | `CONFIRMED doctrine target / PROPOSED ADR` | §8 v1.3 overlay table; §13 unnumbered ADR row. | ADR number `NEEDS VERIFICATION`. |
-| `KFM_Encyclopedia.md` §7 (domain expansion) | `CONFIRMED corpus presence` | §4.2 per-domain dossier tags and responsibility roots. | Encyclopedia is doctrine corpus; not schema authority. |
+| *KFM Pass 23 + Pass 32 Consolidated Deduplicated Atlas* (Source B + consolidation wrapper) | Source-edition doctrine claim | §7 Pass 32 totals (1,607 / 60 / 290 / 18); §7.2 13-category enum; §7.3 carry-forward enum; §7.4 named highlights; §7.5 source-named machine surface. | Per-card bodies require source-PDF verification; the exact manifest sidecar filenames are absent from the current repository snapshot. |
+| [Existing full-text source-derived carrier](<../Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md>) | `CONFIRMED file presence` | Source conversion, Conversion Continuity skeleton, and source-index material. | Closest repository carrier for source wording; current implementation must be verified separately. |
+| Companion sub-carriers (`receipt-catalog.md`, `pipeline-gate-reference.md`, `maplibre-master.md`) | `CONFIRMED file presence` | §5 rows; §9 companion list; §12 cross-references. | Presence does not promote their internal proposal/source claims or establish implementation. |
+| Directory Rules v2 and accepted ADR-0029 | Current placement governance | §11 naming and placement boundary. | Names `docs/atlases/` as the proposed canonical collection; does not decide carrier identity or migration. |
+| `docs/architecture/maplibre.md` and accepted ADR-0007 | Current repository architecture evidence | §8 current reconciliation. | Architecture acceptance does not prove runtime, release, deployment, or publication. |
+| `KFM_Encyclopedia.md` §7 (domain expansion) | Source-lineage reference | §4.2 per-domain dossier tags and responsibility roots. | Filename absent from current repository; not current schema or implementation authority. |
 
 > **Memory is not evidence.** Every consequential claim in this file is traceable to one of the sources above, an atlas table reproduced or referenced verbatim, or an explicit `PROPOSED` / `NEEDS VERIFICATION` / `CONFLICTED` placeholder.
 

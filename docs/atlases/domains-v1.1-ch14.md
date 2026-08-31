@@ -1,17 +1,20 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION
+doc_id: kfm://doc/docs-atlases-domains-v1-1-ch14
 title: KFM Domains v1.1 — Ch. 14 Settlements / Infrastructure
 type: standard
 version: v0.1
 status: draft
 owners: OWNER_TBD
 created: 2026-05-25
-updated: 2026-05-25
+updated: 2026-08-31
 policy_label: public
+owning_root: docs/
+responsibility: "Provide a source-derived Chapter 14 navigation carrier for Settlements and Infrastructure while deferring current semantics, policy, and implementation to their owning repository surfaces."
+truth_posture: "CONFIRMED file presence / source-derived chapter lineage / PROPOSED source-edition claims / UNKNOWN current implementation unless exact repository evidence is cited"
 related:
   - docs/atlases/domains-v1.1.md
   - docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md
-  - docs/atlases/Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md
+  - docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md
   - docs/atlases/receipt-catalog.md
   - docs/atlases/pipeline-gate-reference.md
   - docs/doctrine/directory-rules.md
@@ -20,7 +23,7 @@ notes:
   - Per-domain carrier for Atlas v1.0 Ch. 14 (Settlements / Infrastructure); the first per-chapter dossier carrier in the series.
   - Filename uses a new chapter-number-based pattern (domains-v1.1-ch14.md); the prior carrier domains-v1.1.md §12.1 proposed a kebab-domain-name pattern (settlements-infrastructure.md). The convention fork is surfaced in §16.
   - A-N template reproduced verbatim from the atlas; per-object sensitivity and §24.4.12 cross-lane edges supplied from Atlas Ch. 24.
-  - Owners, doc_id, schema/policy home presence remain placeholders.
+  - Owner and current schema/policy claim checks remain open; the path-derived doc_id follows adjacent atlas metadata convention, while machine-registry adoption remains review-only.
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Domains v1.1 — Ch. 14 Settlements / Infrastructure
@@ -454,7 +457,7 @@ The §24.4.12 edge *"Critical-infrastructure exposure context with default deny 
 |---|---|---|
 | `docs/atlases/domains-v1.1.md` | All 16 domain chapters at single granularity. | **Parent carrier.** |
 | `docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md` | Top-level navigation across v1.0 + v1.1 + Pass 23/32 + v1.3 overlay. | Grandparent carrier. |
-| `docs/atlases/Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` | Full-text Markdown conversion. | **Authoritative on wording.** |
+| `docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md` | Full-text source-derived conversion. | Closest retained source wording; incomplete and not repository implementation authority. |
 | `docs/atlases/receipt-catalog.md` | Atlas §24.2 (Receipt classes consumed by Settlements operations). | Cross-domain reference. |
 | `docs/atlases/pipeline-gate-reference.md` | Atlas §24.6 (Gates that govern Settlements release). | Cross-domain reference. |
 | `docs/atlases/maplibre-master.md` | MapLibre renderer surface (Settlements consumes for `LayerManifest`, `StyleManifest`). | Cross-domain reference. |
@@ -505,7 +508,7 @@ If the per-chapter naming pattern is adopted (§16), the sibling carriers would 
 - [ ] Confirm the target path `docs/atlases/domains-v1.1-ch14.md` does not already exist; resolve `docs/atlas/` mirror collisions.
 - [ ] **Naming reconciliation (§16)**: open the atlas-Markdown naming ADR; pick chapter-number-based, kebab-domain-name, or hybrid; apply consistently across all 16 per-domain carriers.
 - [ ] Confirm `OWNER_TBD` — docs steward + `[DOM-SETTLE]` dossier owner.
-- [ ] Confirm `doc_id` allocation convention; do not invent UUIDs.
+- [ ] Review the path-derived `doc_id` through the emitted registry delta; do not replace it with an invented UUID.
 - [ ] Confirm every A–N block in this carrier matches Atlas v1.0 §14 verbatim or near-verbatim; flag any wording drift.
 - [ ] Confirm §F cross-lane edge list matches Atlas §14.F and §24.4.12 together.
 - [ ] Confirm §I.1 per-object sensitivity defaults match Atlas §24.14 row-by-row.
