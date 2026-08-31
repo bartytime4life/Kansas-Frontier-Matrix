@@ -34,7 +34,7 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /Build report/i);
   assert.match(html, /synthetic and generalized demonstration layers/i);
   assert.match(html, /Repository briefing/i);
-  assert.match(html, /main@(?:<!-- -->)?1ea6593/i);
+  assert.match(html, /main@(?:<!-- -->)?5d83579/i);
   assert.match(html, /Scenario review/i);
   assert.match(html, /Runtime lab/i);
   assert.match(html, /Source observatory/i);
@@ -114,7 +114,7 @@ test("adds reusable analysis recipes, device-local workspaces, report filters, a
   assert.match(page, /loadSavedWorkspace/);
   assert.match(page, /temporalComparison/);
   assert.match(page, /locationCameraRedacted\?: boolean/);
-  assert.match(page, /locationCameraRedacted: locationCameraRedacted \|\| locationDerivedViewRef\.current/);
+  assert.match(page, /const redactWorkspaceCamera = locationCameraRedacted \|\| locationDerivedViewRef\.current/);
   assert.match(page, /snapshot\.locationCameraRedacted !== false/);
   assert.match(page, /locationDerivedViewRef\.current = restoredLocationCameraRedaction/);
   assert.match(page, /setLocationCameraRedacted\(restoredLocationCameraRedaction\)/);
@@ -532,7 +532,8 @@ test("resolves Focus outcomes and temporal scope with fail-closed precedence", a
 test("keeps repository updates pinned and boundary-labeled", async () => {
   const updates = await readFile(new URL("../app/repository-updates.ts", import.meta.url), "utf8");
 
-  assert.match(updates, /1ea6593ede80d5ce10f561c7eec72135d6ccf806/);
+  assert.match(updates, /5d835798e09a4dd14735779cb44206a8a3e8b2d3/);
+  assert.match(updates, /Local geodata inspection now fails closed on malformed or stale input/);
   assert.match(updates, /All 105 Kansas counties now have public locator starters/);
   assert.match(updates, /Time A \/ Time B comparison preserves report scope/);
   assert.match(updates, /exact maplibre-gl 6\.6\.0 lock closure/);
