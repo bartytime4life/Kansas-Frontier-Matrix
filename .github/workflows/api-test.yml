@@ -3,7 +3,7 @@
 #
 # Responsibility:
 # - Execute the repository-owned Governed API smoke suite and the focused
-#   RuntimeResponseEnvelope / ABSTAIN route contract check.
+#   unchanged-bootstrap RuntimeResponseEnvelope / ABSTAIN contract check.
 # Authority:
 # - This workflow is orchestration and test evidence only. A green result does
 #   not authorize release, publication, source admission, policy override, or
@@ -102,7 +102,7 @@ jobs:
       - name: Install repository test dependencies
         run: python tools/ci/install_python_ci.py project-test
 
-      - name: Run focused ABSTAIN envelope contract test
+      - name: Run focused bootstrap ABSTAIN envelope contract test
         run: >-
           python -m pytest
           apps/governed-api/tests/test_abstain_routes.py
@@ -119,6 +119,7 @@ jobs:
             echo "## Governed API envelope-shape check"
             echo
             echo '- Test: `apps/governed-api/tests/test_abstain_routes.py`'
-            echo '- Expected bounded behavior: scaffolded routes return schema-valid `ABSTAIN` envelopes'
+            echo '- Expected bounded behavior: unchanged `/bootstrap` returns a schema-valid `ABSTAIN` envelope'
+            echo '- The smoke-suite job separately exercises the bounded `/layers` and `/evidence` projections'
             echo "- This check does not prove complete route, policy, evidence, security, or release coverage"
           } >> "${GITHUB_STEP_SUMMARY}"
