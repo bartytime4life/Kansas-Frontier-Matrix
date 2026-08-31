@@ -11,8 +11,10 @@ The composition:
 - exposes the thirteen domain families already represented under `src/features/domains/`;
 - presents KFM's evidence, finite-outcome, time, correction, accessibility, and trust-membrane principles;
 - mounts the existing renderer-neutral `map_runtime` selection-to-Evidence-Drawer bridge with deterministic synthetic cases;
-- mounts the existing finite `MapRuntimePort` trust-status presenter in the normal map workspace through the dependency-free `NullMapRuntime`;
-- records the current MapLibre package, candidate, and HOLD posture without activating `maplibre-gl` in Explorer;
+- mounts the exact-one governed `/layers` projection through the package-owned Vite MapLibre adapter and finite runtime-status presenter;
+- provides a keyboard-operable feature list that reuses the renderer selection identity and resolves `/evidence` into the existing Evidence Drawer;
+- falls back once to the dependency-free `NullMapRuntime` on initialization or post-initialization renderer failure while retaining the accessible evidence path;
+- records the bounded slice as active while preserving broader MapLibre readiness at `HOLD`;
 - projects its existing public anchors through a code-owned workspace registry; and
 - composes existing finite-state features into one text-first public trust surface.
 
@@ -63,7 +65,7 @@ The website feature catalog is refreshed against:
 - MapLibre package home: `packages/maplibre/`
 - exact MapLibre package version present: `6.6.0`
 - package-owned `MapLibreAdapter`: present
-- Explorer browser runtime activated: no
+- Explorer browser runtime activation: bounded exact-one synthetic slice only
 - authenticated browser evidence complete: no
 - readiness state: `HOLD`
 
@@ -87,15 +89,15 @@ This composition does not:
 - import `maplibre-gl` or create a second renderer acquisition seam; or
 - claim that fixture-first feature slices are live production routes.
 
-The concrete package-owned adapter is present, but Explorer activation and browser-readiness evidence remain separate governed changes after their own gates close.
+The concrete package-owned adapter is activated for the bounded exact-one synthetic Explorer slice. Broader renderer/source admission, authenticated browser readiness, production operation, release, deployment, and publication remain separate governed changes on `HOLD` or `UNKNOWN` as applicable.
 
 ## Renderer-neutral runtime status
 
-The map workspace now exposes the existing finite runtime-state presenter at its normal point of use. The synthetic controls exercise `IDLE`, `READY`, `STALE`, `WITHDRAWN`, and `ERROR` through `NullMapRuntime`; every non-`READY` state blocks candidate-selection eligibility, and critical states remain text-first assertive alerts.
+The map workspace now exposes the finite runtime-state presenter at its normal point of use. The canonical synthetic layer is parsed strictly, bound through `InlineGeoJsonMapRuntimePort`, and selected through either package-owned pointer hit testing or the accessible list. Both paths publish the same layer, feature, selection, and evidence identities.
 
-This is consumer-migration and accessibility proof for the KFM-owned port only. It performs no network, DOM renderer, WebGL, worker, tile, source, evidence, policy, release, deployment, or publication work. The package and initial `MapLibreAdapter` are present, but this Explorer composition still uses `NullMapRuntime`; activation and issue #2906 browser readiness remain on HOLD.
+The app-owned transport is restricted to same-origin `GET /layers` and `GET /evidence`, byte-bounds JSON before strict parsing, applies one absolute per-request deadline across headers and body streaming, uses `no-store`, and aborts timed-out work or all active work on teardown. Evidence returned outside the selected reference subset fails closed. Runtime selection invalidation and newer-request versioning prevent late or withdrawn evidence from remaining visible. This bounded synthetic slice does not establish arbitrary source loading, external styles, tiles, broader renderer readiness, release, deployment, or publication authority; those remain on `HOLD` or `UNKNOWN` as applicable.
 
-Implementation baseline: `main@8c943018a0cd59b06b5a623e15b9a9068a3513f4`.
+Implementation basis: branch-local draft slice; exact base and head SHAs belong in the draft PR evidence. This statement is not a `main`, release, deployment, or publication claim.
 
 ## Validation
 
@@ -107,7 +109,7 @@ pnpm run test:unit
 pnpm run test:browser
 ```
 
-The catalog tests check identifier/path uniqueness, the thirteen-domain inventory, sensitive-domain safeguards, filtering, exact refreshed snapshot/link binding, and preservation of the MapLibre HOLD. Workspace tests cover registry/context/URL behavior. The Explorer runtime-status browser test covers normal-shell mounting, text-first state and reason fields, selection blocking, assertive critical states, recovery, and preservation of the renderer HOLD. Trust-surface and Evidence Drawer tests cover the consistent public grammar, finite negative states, malformed metadata, no-network boundaries, unique DOM identity, accessible trigger relationships, error-state suppression, and browser presentation.
+The catalog tests check identifier/path uniqueness, the thirteen-domain inventory, sensitive-domain safeguards, filtering, exact refreshed snapshot/link binding, and preservation of the broader MapLibre HOLD. Governed map tests cover strict layer parsing, bounded same-origin transport, byte-limit cancellation, unresolved-header and stalled-body deadlines, transport abort, pointer/keyboard identity reuse, full Evidence Drawer content, subset rejection, stale-response suppression, initialization and post-initialization fallback, semantic negative states, and repeated mount/teardown cleanup. Trust-surface and Evidence Drawer tests continue to cover the consistent public grammar, finite negative states, unique DOM identity, focus, no-leak rendering, and browser presentation.
 
 ## Rollback
 

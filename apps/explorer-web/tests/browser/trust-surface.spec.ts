@@ -97,7 +97,7 @@ test("keeps every composed Evidence Drawer DOM identity unique and correctly lin
   await page.goto("/");
 
   await page
-    .getByRole("button", { name: "Supported synthetic streamflow", exact: true })
+    .getByRole("button", { name: "Run bounded governed Focus request", exact: true })
     .click();
   await page.waitForFunction(
     () =>

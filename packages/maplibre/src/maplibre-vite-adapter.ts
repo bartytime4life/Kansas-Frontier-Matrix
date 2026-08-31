@@ -1,11 +1,13 @@
+import "maplibre-gl/dist/maplibre-gl.css";
+
 import workerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import { setWorkerUrl } from "maplibre-gl";
 
 import {
   createMapLibreAdapter,
-  type MapLibreAdapter,
   type MapLibreAdapterOptions,
 } from "./maplibre-adapter";
+import type { InlineGeoJsonMapRuntimePort } from "./map-runtime-port";
 
 let workerConfigured = false;
 
@@ -25,7 +27,7 @@ function configureMapLibreViteWorker(): void {
 /** Create the admitted adapter with MapLibre's Vite worker configured first. */
 export function createViteMapLibreAdapter(
   options: MapLibreAdapterOptions,
-): MapLibreAdapter {
+): InlineGeoJsonMapRuntimePort {
   configureMapLibreViteWorker();
   return createMapLibreAdapter(options);
 }

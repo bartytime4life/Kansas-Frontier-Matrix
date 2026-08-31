@@ -121,6 +121,12 @@ const STATUS_COPY: Readonly<Record<MapRuntimeState, StatusCopy>> = Object.freeze
     tone: "neutral",
   }),
 });
+const SELECTION_INVALIDATED_COPY: StatusCopy = Object.freeze({
+  title: "Map selection cleared",
+  message:
+    "The prior candidate selection was invalidated. The runtime remains ready for a newly governed selection.",
+  tone: "caution",
+});
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -152,6 +158,12 @@ function isSnapshot(value: unknown): value is MapRuntimeSnapshot {
   if (value.selection !== null && !isMapFeatureSelection(value.selection)) return false;
 
   const state = value.state as MapRuntimeState;
+  if (
+    state === "READY" &&
+    value.reason === "MAP_RUNTIME_SELECTION_INVALIDATED"
+  ) {
+    return value.selection === null;
+  }
   if (value.reason !== expectedReason(state)) return false;
   return state === "READY" || value.selection === null;
 }
@@ -185,7 +197,10 @@ export function resolveMapRuntimeTrustStatus(
 ): MapRuntimeTrustStatus {
   if (!isSnapshot(input)) return invalidStatus();
 
-  const copy = STATUS_COPY[input.state];
+  const copy =
+    input.reason === "MAP_RUNTIME_SELECTION_INVALIDATED"
+      ? SELECTION_INVALIDATED_COPY
+      : STATUS_COPY[input.state];
   const critical = CRITICAL_STATES.has(input.state);
   return Object.freeze({
     profile: MAP_RUNTIME_TRUST_STATUS_PROFILE,

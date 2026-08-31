@@ -4,21 +4,47 @@ import answerFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/an
 import layerAdmissionFixture from "../../../fixtures/runtime/layer_manifest_admission/cases.json";
 import {
   MAP_FEATURE_SELECTION_PROFILE,
+  MAP_RUNTIME_INLINE_GEOJSON_LAYER_PROFILE,
   createNullMapRuntime,
   type MapFeatureSelection,
+  type MapRuntimeInlineGeoJsonLayer,
 } from "@kfm/maplibre";
 import bindingSource from "../src/features/map_runtime/runtime-evidence-binding.ts?raw";
 import {
+  bindGovernedMapRuntimeEvidence,
   bindMapRuntimeEvidence,
+  resolveGovernedMapRuntimeSelectionEvidence,
   resolveMapRuntimeSelectionEvidence,
 } from "../src/features/map_runtime/runtime-evidence-binding";
 
 const selection: MapFeatureSelection = Object.freeze({
   profile: MAP_FEATURE_SELECTION_PROFILE,
-  selectionId: "selection:synthetic:flow-001",
-  layerId: "layer:released:synthetic-streamflow",
-  featureId: "feature:synthetic:flow-001",
+  selectionId: "selection:flow-001",
+  layerId: "layer:synthetic-streamflow",
+  featureId: "feature:flow-001",
   evidenceRefs: Object.freeze(["kfm:evidence:synthetic:flow-001"]),
+});
+
+const runtimeLayer: MapRuntimeInlineGeoJsonLayer = Object.freeze({
+  profile: MAP_RUNTIME_INLINE_GEOJSON_LAYER_PROFILE,
+  sourceId: "source:synthetic-streamflow",
+  layerId: selection.layerId,
+  kind: "circle",
+  data: Object.freeze({
+    type: "FeatureCollection",
+    features: Object.freeze([
+      Object.freeze({
+        type: "Feature",
+        id: selection.featureId,
+        geometry: Object.freeze({
+          type: "Point",
+          coordinates: Object.freeze([-98.5, 38.5]) as readonly [number, number],
+        }),
+        properties: null,
+      }),
+    ]) as MapRuntimeInlineGeoJsonLayer["data"]["features"],
+  }),
+  selection,
 });
 
 function admittedLayerManifest(): typeof layerAdmissionFixture.base {
@@ -34,6 +60,24 @@ async function settle(): Promise<void> {
 }
 
 describe("MapRuntimePort to governed Evidence Drawer binding", () => {
+  it("uses the governed layer path without fabricating a browser manifest", async () => {
+    const resolver = vi.fn(async () => answerFixture);
+    const result = await resolveGovernedMapRuntimeSelectionEvidence(
+      selection,
+      resolver,
+    );
+
+    expect(resolver).toHaveBeenCalledWith(selection);
+    expect(result).toMatchObject({
+      layerAdmission: null,
+      evidence: {
+        selection,
+        code: "SUPPORTED",
+        drawer: { outcome: "ANSWER" },
+      },
+    });
+  });
+
   it("translates an internal runtime selection through the existing strict bridge", async () => {
     const resolver = vi.fn(async () => answerFixture);
     const result = await resolveMapRuntimeSelectionEvidence(
@@ -316,6 +360,37 @@ describe("MapRuntimePort to governed Evidence Drawer binding", () => {
       selectionId: selection.selectionId,
       runtimeState: "DISPOSED",
       runtimeReason: "MAP_RUNTIME_DISPOSED",
+    });
+
+    binding.destroy();
+  });
+
+  it("invalidates governed evidence when source removal clears READY selection", async () => {
+    const runtime = createNullMapRuntime();
+    await runtime.initialize();
+    runtime.bindInlineGeoJsonLayer(runtimeLayer);
+    const consume = vi.fn();
+    const binding = bindGovernedMapRuntimeEvidence(
+      runtime,
+      async () => answerFixture,
+      consume,
+    );
+
+    runtime.selectFeature(selection.layerId, selection.featureId);
+    await vi.waitFor(() => expect(consume).toHaveBeenCalledTimes(1));
+    runtime.removeSource(runtimeLayer.sourceId);
+
+    expect(consume).toHaveBeenCalledTimes(2);
+    expect(consume.mock.calls[1]?.[0]).toEqual({
+      kind: "RUNTIME_INVALIDATED",
+      selectionId: selection.selectionId,
+      runtimeState: "READY",
+      runtimeReason: "MAP_RUNTIME_SELECTION_INVALIDATED",
+    });
+    expect(runtime.getSnapshot()).toMatchObject({
+      state: "READY",
+      reason: "MAP_RUNTIME_SELECTION_INVALIDATED",
+      selection: null,
     });
 
     binding.destroy();

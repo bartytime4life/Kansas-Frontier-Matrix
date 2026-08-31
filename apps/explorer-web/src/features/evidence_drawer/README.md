@@ -32,7 +32,7 @@ notes:
   - "Evidence Drawer UI features may render governed evidence projections, but they must not become canonical evidence, source registry, citation authority, policy engine, release authority, correction authority, renderer truth, or direct model-output truth."
   - "A bounded fixture-only projection parser, finite view-state resolver, keyboard-operable app-shell rendering path, synthetic outcome fixtures, and app-local unit/browser tests are now executable."
   - "Keyboard open/close, focus entry/return, labeled landmarks, and denied/error DOM no-leak behavior are covered by deterministic Playwright fixtures."
-  - "Canonical EvidenceDrawerPayload schema binding, live governed API transport, map-click routing, focus trapping, reduced-motion and non-map alternatives, telemetry, Focus Mode/correction handoffs, and production accessibility remain NEEDS VERIFICATION."
+  - "The canonical synthetic map slice now routes pointer and accessible-list selections through same-origin /evidence transport; canonical EvidenceDrawerPayload schema binding, broader production transport, focus trapping, telemetry, and full production accessibility remain NEEDS VERIFICATION."
   - "v0.3 implements the first fail-closed view-state slice without ratifying the unresolved UI/evidence schema-home split."
   - "v0.4 adds the bounded browser-accessibility slice without expanding projection or policy authority."
 [/KFM_META_BLOCK_V2] -->
@@ -266,7 +266,7 @@ The complete slice remains `PROPOSED`; the verified non-network subset is record
 
 The repository now implements the first non-network subset of this slice:
 
-- `src/adapters/GovernedClient.ts` validates a closed, fixture-only public-safe projection profile and performs no fetch or lifecycle-store read;
+- `src/adapters/GovernedClient.ts` validates the closed public-safe projection and owns only bounded same-origin `/layers` and `/evidence` transport; it performs no lifecycle-store read;
 - `src/features/evidence_drawer/index.tsx` maps valid projections to explicit finite view states and replaces malformed input with a fixed `ERROR` state;
 - the same app-local module mounts a native trigger and labeled complementary landmark, moves focus to the close control, handles Escape, and restores focus to the opener;
 - denied and error projections never reflect supplied title, summary, evidence, citation, or diagnostic text;
