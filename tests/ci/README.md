@@ -1,12 +1,16 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/tests-ci-readme
 title: CI Helper and Workflow Contract Tests
-type: test-readme; directory-readme
+type: README
+version: NEEDS VERIFICATION
 status: implemented; repository-test-evidence; workflow-binding-partial
+owners: OWNER_TBD
+created: 2026-04-13
+updated: 2026-08-31
 policy_label: public-doc; tests; ci; no-network
 owning_root: tests/
 responsibility: Document the focused repository tests under tests/ci/ without treating passing tests as workflow, policy, release, deployment, or publication authority.
-truth_posture: exact-repository-evidence-or-abstain
+truth_posture: CONFIRMED four repository-local test modules and bounded source assertions; UNKNOWN complete hosted collection and required-check status; passing tests do not establish review, release, deployment, publication, or source authority
 related:
   - ../README.md
   - ../../tools/ci/README.md
