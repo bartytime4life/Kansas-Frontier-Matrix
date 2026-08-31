@@ -331,17 +331,21 @@ test("adds a no-upload KML and GeoJSON inspection preview without admission or r
   assert.equal(malformedCoordinatePreview.bounds, null);
   assert.equal(malformedCoordinatePreview.renderAllowed, false);
 
-  const commentSplicedTagPreview = imports.buildLocalImportPreview({
+  assert.throws(() => imports.buildLocalImportPreview({
     fileName: "comment-spliced-tag.kml",
     fileSizeBytes: 420,
     inspectedAt: "2026-08-30T23:54:00.000Z",
     supportedBounds: { west: -104.8, south: 34.8, east: -92, north: 42.2 },
     text: `<?xml version="1.0"?><kml><Document><Placemark><name>Broken point</name><Poi<!-- synthetic separator -->nt><coordinates>-98.4,38.5</coordinates></Point></Placemark></Document></kml>`,
-  });
-  assert.equal(commentSplicedTagPreview.featureCount, 0);
-  assert.equal(commentSplicedTagPreview.invalidFeatureCount, 1);
-  assert.equal(commentSplicedTagPreview.bounds, null);
-  assert.equal(commentSplicedTagPreview.renderAllowed, false);
+  }), /outside tag markup/);
+
+  assert.throws(() => imports.buildLocalImportPreview({
+    fileName: "comment-whitespace-boundary.kml",
+    fileSizeBytes: 460,
+    inspectedAt: "2026-08-31T00:54:00.000Z",
+    supportedBounds: { west: -104.8, south: 34.8, east: -92, north: 42.2 },
+    text: `<?xml version="1.0"?><kml><Document><Placemark><name>Broken point</name><Point<!-- synthetic separator --> ><coordinates>-98.4,38.5</coordinates></Point<!-- synthetic separator --> ></Placemark></Document></kml>`,
+  }), /outside tag markup/);
 
   assert.match(importSource, /kmlMarkupForInspection/);
   assert.match(importSource, /positions\.some\(\(position\) => position === null\)/);
