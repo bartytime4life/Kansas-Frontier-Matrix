@@ -1,54 +1,204 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/automation-draft-pr-opener
+title: Automation Draft PR Opener
+type: runbook
+version: v1.0
+status: draft; repository-grounded; PROPOSED_INACTIVE; trusted-base; draft-only; non-publisher
+owners:
+  - "@bartytime4life — verified GitHub review route"
+  - "NEEDS VERIFICATION — accountable automation and security reviewer"
+created: 2026-08-09
+updated: 2026-08-31
+policy_label: repository-facing; automation; trusted-base; draft-pr; non-publisher
+owning_root: docs/
+responsibility: explain the bounded automation draft-PR opener without granting branch-write, merge, release, deployment, promotion, publication, or repository-administration authority
+truth_posture: CONFIRMED current-repository bytes / PROPOSED_INACTIVE operational adoption / UNKNOWN live dispatch evidence / cite-or-abstain
+canonical_relationship: same-path modernization of the tracked runbook; no sibling authority created
+evidence_base_commit: d1f7ed51cf4d9c9c2fdf94cdc81644744ae464ce
+evidence_target_prior_blob: 71a3ed403046feb8245ece8a943fe60d9b1013b6
+related:
+  - README.md
+  - automation-draft-pr-opener-validation-checklist.md
+  - ../../contracts/governance/automation_pr_proposal.md
+  - ../../schemas/contracts/v1/governance/automation_pr_proposal.schema.json
+  - ../../tools/validators/governance/validate_automation_pr_proposal.py
+  - ../../tools/validators/governance/validate_automation_pr_live_binding.py
+  - ../../tests/validators/test_validate_automation_pr_live_binding.py
+  - ../../.github/workflows/automation-draft-pr-opener.yml
+  - ../../.github/workflows/automation-draft-pr-opener-test.yml
+  - ../doctrine/directory-rules.md
+  - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+notes:
+  - "The prior tracked runbook was unversioned."
+  - "Tracked implementation exists on current main, but no live repository-dispatch run was verified for this revision."
+  - "GitHub object state and exact refs outrank proposal text, PR prose, receipts, and this runbook for current operational state."
+[/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
+
 # Automation Draft PR Opener
 
-**Status:** PROPOSED_INACTIVE · trusted-base · draft-only · non-publisher
+> **Purpose:** open one draft pull request from an already-existing, tightly constrained `automation/` branch after deterministic proposal, ref, diff, mode, and digest checks. The opener cannot create or modify the branch or repository contents.
 
-This runbook describes the bounded `automation-draft-pr-opener` workflow. The workflow is intentionally narrower than a repository writer: it cannot create or modify branches or repository contents. It can only inspect an already-existing `automation/` branch and, when every declared guard passes, open one draft pull request against `main`.
+> [!IMPORTANT]
+> **Current status is `PROPOSED_INACTIVE`.** The workflow, contract, schema, validators, fixtures, tests, checklist, and this runbook are tracked on current `main`, but tracked bytes do not prove operational adoption. This revision did not verify a live dispatch or live PR-creation run.
 
-## Purpose
+> [!WARNING]
+> A valid proposal, declared policy `PASS`, receipt reference, green workflow, or draft PR is not evidence authority, policy approval, human review, merge authority, release, deployment, promotion, publication, or public-use authority.
 
-The opener closes the next Pass 12 prerequisite after `AutomationPrProposal`: convert a validated proposal plus an already-existing candidate branch into reviewable GitHub state without granting merge, release, deployment, promotion, publication, or repository-content write authority.
+> [!CAUTION]
+> Do not place secrets, credentials, private review material, restricted payloads, sensitive locations, living-person data, DNA/genomic material, or hidden reasoning in a dispatch payload.
 
-The workflow is triggered only by the `automation-pr-proposal-v1` `repository_dispatch` event. `repository_dispatch` uses the workflow definition from the repository default branch, so candidate branch workflow bytes are not the execution authority. Candidate refs and blobs are fetched as data and are never executed.
+## At a glance
 
-## Required proposal
+| Concern | Bounded behavior |
+|---|---|
+| Trigger | `repository_dispatch` type `automation-pr-proposal-v1` only |
+| Trusted execution | Default-branch workflow and validators |
+| Candidate | One existing `automation/` branch, fetched as Git data and never executed |
+| Scope | One to eight added or modified `100644` blobs below `data/work/automation/` |
+| Mutation | Open at most one **draft** PR for `head -> main` |
+| Permissions | `contents: read`; `pull-requests: write` in the privileged job only |
+| Ceiling | Draft review surface; never ready, approved, merged, released, deployed, promoted, or published |
 
-The dispatch `client_payload` must be exactly one `kfm.automation.pr-proposal.v1` object. The existing proposal validator must return:
+## Status and evidence boundary
 
-```text
-outcome = PASS
-write_eligible = true
+This edition is grounded in `main@d1f7ed51cf4d9c9c2fdf94cdc81644744ae464ce`.
+
+| Surface | CONFIRMED current state | Limit |
+|---|---|---|
+| [Privileged workflow](../../.github/workflows/automation-draft-pr-opener.yml) | Dispatch, structural validation, live binding, ref recheck, draft creation, and fail-safe close are tracked | Presence does not prove activation, hosted success, or required-check coupling |
+| [Read-only test workflow](../../.github/workflows/automation-draft-pr-opener-test.yml) | Path-binds this runbook and the implementation packet | Static and synthetic checks do not exercise live PR creation |
+| [`AutomationPrProposal`](../../contracts/governance/automation_pr_proposal.md) | Remains `PROPOSED_INACTIVE` and fixture-first | Does not grant write authority or authenticate evidence, receipts, policy, or review |
+| Schema and validators | Enforce bounded fields, paths, modes, SHAs, digests, and terminal flags | Structural `PASS` is not policy or human approval |
+| Live dispatch/creation | `UNKNOWN` for this revision | Requires exact workflow-run and PR-object evidence from an authorized operation |
+
+GitHub object state is authoritative for whether a PR exists, is draft, and has the expected base/head SHAs. Proposal text and PR-body prose are explanatory inputs only.
+
+<a id="mutation-boundary"></a>
+
+## Authority and non-effects
+
+| Responsibility | Owning surface | Opener role |
+|---|---|---|
+| Proposal meaning | [Contract](../../contracts/governance/automation_pr_proposal.md) | Consume one exact v1 proposal |
+| Machine shape | [Schema](../../schemas/contracts/v1/governance/automation_pr_proposal.schema.json) | Require the bounded field profile |
+| Structural validation | [`validate_automation_pr_proposal.py`](../../tools/validators/governance/validate_automation_pr_proposal.py) | Require `outcome = PASS` and `write_eligible = true` |
+| Ref/diff/blob binding | [`validate_automation_pr_live_binding.py`](../../tools/validators/governance/validate_automation_pr_live_binding.py) | Compare fetched refs and exact candidate bytes with the proposal |
+| Proof | [Focused tests](../../tests/validators/test_validate_automation_pr_live_binding.py) and read-only workflow | Exercise positive and negative cases without live mutation |
+| Policy, receipt, evidence, review | Their governed owners | Consume declarations/references; never authenticate them |
+| Candidate branch/bytes | Separate authorized process | Never create, edit, push, rebase, delete, or force-update them |
+
+<a id="what-the-opener-does-not-do"></a>
+
+The opener does **not** execute candidate code; write repository contents; evaluate policy; resolve evidence; authenticate receipts; approve, ready, merge, or auto-merge; change lifecycle state; or release, deploy, promote, publish, activate sources, or authorize public use.
+
+<a id="live-binding-gate"></a>
+
+## Execution flow
+
+```mermaid
+flowchart TD
+    A[Existing automation branch] --> B[repository_dispatch proposal]
+    B --> C{Structural PASS and write-eligible?}
+    C -- No --> X[Stop: HOLD or ERROR]
+    C -- Yes --> D[Fetch main and head as Git data]
+    D --> E{Exact live binding passes?}
+    E -- No --> X
+    E -- Yes --> F[Re-read remote base and head]
+    F --> G{Refs unchanged?}
+    G -- No --> X
+    G -- Yes --> H{Open PR already exists?}
+    H -- Yes --> I[No new mutation; inspect PR separately]
+    H -- No --> J[Create draft PR]
+    J --> K{Exact base/head and draft=true?}
+    K -- Yes --> L[Draft review surface]
+    K -- No --> M[Close only the newly created PR]
 ```
 
-The proposal therefore binds:
+The v1 profile is bound to `main`. Candidate refs are fetched as data and never executed.
 
-- `main` and its exact 40-character base SHA;
-- one existing `automation/` head branch;
-- one to eight candidate paths confined to `data/work/automation/`;
-- exact SHA-256 digests for every candidate blob;
-- a receipt reference;
-- `policy_outcome = PASS`;
-- `draft = true`; and
-- merge, release, deploy, promote, and publish authority all set to `false`.
+<a id="required-proposal"></a>
 
-## Live binding gate
+## Required inputs
 
-Before any pull-request mutation, `validate_automation_pr_live_binding.py` verifies the locally fetched refs and bytes.
+A separate authorized process must already have pushed a branch that:
 
-It requires:
+- begins with `automation/` and matches the v1 branch-name profile;
+- is based on the exact current `main` SHA declared in `base_sha`;
+- changes one to eight unique paths, all `A` or `M` and all below `data/work/automation/`;
+- stores every candidate as a non-executable `100644` blob; and
+- binds every committed blob to a `sha256:<64 lowercase hexadecimal>` value.
 
-1. the current fetched `main` commit to equal the proposal `base_sha`;
-2. the proposed head to remain based on that exact current base;
-3. the complete live diff to equal the proposal `changed_paths` set;
-4. every live change to be an add or modify operation;
-5. every live path to remain below `data/work/automation/`;
-6. every candidate to be a normal non-executable `100644` Git blob; and
-7. every live blob SHA-256 digest to equal the proposal artifact binding.
+`client_payload` must be exactly one `kfm.automation.pr-proposal.v1` object. Use the [schema](../../schemas/contracts/v1/governance/automation_pr_proposal.schema.json) and [valid shape fixture](../../fixtures/contracts/v1/governance/automation_pr_proposal/valid/valid_pass.json). It must declare exact base/head identity, one artifact digest per changed path, a non-empty receipt reference, policy outcome/reasons, `draft = true`, and all merge/release/deploy/promote/publish flags `false`.
 
-Any base drift, head drift, undeclared path, deletion, rename/type-change effect, path escape, unreadable blob, unsafe mode, or digest mismatch denies the write.
+A receipt reference is lineage, not proof. The opener also does not authenticate a declared policy `PASS`.
 
-## Mutation boundary
+## Operator procedure
 
-The privileged job has exactly:
+### 1. Freeze exact state
+
+Record current `main`, candidate head SHA, complete path set, blob modes/digests, open PRs for the head/base pair, and the authority that produced policy and receipt references. If either ref moves, regenerate the proposal rather than editing stale SHAs or digests in isolation.
+
+### 2. Validate the proposal
+
+```bash
+python3 tools/validators/governance/validate_automation_pr_proposal.py \
+  /path/to/automation-pr-proposal.json
+```
+
+Required result is semantically:
+
+```json
+{"outcome":"PASS","reason_codes":[],"write_eligible":true}
+```
+
+`HOLD` and `ERROR` do not proceed. The live validator later hashes committed head blobs, not uncommitted working-tree files.
+
+### 3. Optionally reproduce live binding
+
+```bash
+git fetch --no-tags --depth=256 origin \
+  +refs/heads/main:refs/remotes/origin/main \
+  +refs/heads/<automation-branch>:refs/remotes/origin/<automation-branch>
+
+python3 tools/validators/governance/validate_automation_pr_live_binding.py \
+  /path/to/automation-pr-proposal.json \
+  --repo-root . \
+  --base-ref refs/remotes/origin/main \
+  --head-ref refs/remotes/origin/<automation-branch>
+```
+
+Local `PASS` is preflight only. The privileged workflow repeats validation and re-reads remote refs immediately before mutation.
+
+### 4. Dispatch through an authorized actor
+
+Wrap the exact proposal as `{"event_type":"automation-pr-proposal-v1","client_payload":<proposal>}` and send it to `repos/bartytime4life/Kansas-Frontier-Matrix/dispatches`, for example with `gh api --method POST ... --input <request.json>`.
+
+Authentication and repository permission are prerequisites; this runbook grants neither. An accepted event does not prove the workflow passed or a PR was created.
+
+### 5. Verify run and PR state
+
+Record the workflow run ID/SHA, actor, structural/live-binding results, ref recheck, and PR outcome. For a newly created PR, GitHub object state must show exact validated base/head SHAs and `draft = true`, with no later transition.
+
+`AUTOMATION_DRAFT_PR_ALREADY_OPEN` creates nothing and does **not** prove the existing PR's SHAs or draft state. Inspect that PR separately.
+
+## Finite outcomes and recovery
+
+| Result | Recovery |
+|---|---|
+| New draft verified | Hand off exact run/base/head evidence for independent review |
+| `AUTOMATION_DRAFT_PR_ALREADY_OPEN` | Inspect existing PR object state separately |
+| Structural `HOLD`/`ERROR` | Resolve owning policy or rebuild from current schema/exact bytes |
+| Base/ancestry mismatch | Reconcile candidate with current `main`; regenerate proposal/digests |
+| Path/type/mode/digest mismatch | Correct or replace candidate through its owner; do not weaken checks |
+| `AUTOMATION_BASE_MOVED_BEFORE_PR_CREATE` | Reconcile with new `main`; issue a new proposal |
+| `AUTOMATION_HEAD_MOVED_BEFORE_PR_CREATE` | Inspect mutation; issue a proposal from exact new head |
+| `AUTOMATION_PR_POSTCREATE_BINDING_FAILED` | Confirm only the new PR was closed; investigate and re-propose |
+
+Never recover by broadening token permissions, executing candidate code, force-pushing shared history, changing `main`, weakening validators, or treating declarations as self-authenticating.
+
+## Security and race boundary
 
 ```yaml
 permissions:
@@ -56,58 +206,55 @@ permissions:
   pull-requests: write
 ```
 
-It does not have `contents: write`, Actions write, issue write, deployment write, package write, OIDC, secret, or administrative authority.
+The dispatch payload and candidate refs/blobs are untrusted input. The candidate is inspected, never checked out or executed. Policy/receipt fields are declarations, and PR body/workflow summaries are review context, not evidence or approval.
 
-After the deterministic local binding passes, the workflow re-reads the remote `main` and head branch SHAs through the GitHub API immediately before mutation. If either moved, it fails closed.
-
-The workflow then:
-
-- checks whether an open pull request already exists for the declared head/base pair;
-- opens at most one **draft** pull request when none exists;
-- re-reads the created pull request;
-- requires the PR head SHA, base SHA, and `draft=true` state to match the validated values; and
-- closes the newly created pull request fail-safe if that post-create binding does not match.
-
-The GitHub pull-request API does not provide an atomic expected-head-SHA precondition for creation, so the pre-create ref recheck plus post-create verification bounds, but does not mathematically eliminate, the final network race window. The fail-safe close is the rollback for detected drift.
-
-## What the opener does not do
-
-The opener does not:
-
-- create an `automation/` branch;
-- write or modify candidate bytes;
-- run candidate code;
-- resolve evidence or authenticate a receipt;
-- evaluate policy beyond consuming the already-declared proposal outcome;
-- approve review;
-- mark a pull request ready;
-- merge or enable auto-merge;
-- create a release or deployment;
-- promote lifecycle state;
-- publish or expose candidate data; or
-- change repository settings, branch protection, rulesets, secrets, environments, or permissions.
-
-A successful run proves only that the declared branch/diff/blob state matched the proposal at the bounded checks and that a draft review surface was created or already existed.
+GitHub PR creation has no atomic expected-head-SHA precondition. The workflow bounds the final race by validating fetched refs, re-reading remote refs immediately before creation, creating draft-only, re-reading the new PR, and closing only that newly created PR on a base/head/draft mismatch. This reduces but does not eliminate the race; the candidate branch remains untouched.
 
 ## Validation
 
-The separate `automation-draft-pr-opener-test` workflow is deliberately read-only. It runs deterministic temporary-Git-repository tests for live binding and statically checks that the privileged workflow retains its repository-dispatch-only trigger and narrow permission set.
+Use the companion [validation checklist](automation-draft-pr-opener-validation-checklist.md). Focused no-network checks are:
 
-The privileged workflow itself cannot be meaningfully exercised by a pull-request run because doing so would collapse trusted-base and untrusted-branch execution. Live PR creation remains a post-merge, explicit repository-dispatch operation.
+```bash
+ruby -e 'require "yaml"; ARGV.each { |path| YAML.parse_file(path) }' \
+  .github/workflows/automation-draft-pr-opener.yml \
+  .github/workflows/automation-draft-pr-opener-test.yml
+
+python -m py_compile \
+  tools/validators/governance/validate_automation_pr_proposal.py \
+  tools/validators/governance/validate_automation_pr_live_binding.py \
+  tests/validators/test_validate_automation_pr_live_binding.py
+
+python -m unittest -q tests.validators.test_validate_automation_pr_live_binding
+```
+
+The read-only workflow also checks trigger/permission limits, both validators, draft-only creation, pre-create ref failures, post-create fail-safe close, and absence of content write, merge, release, deployment, package, OIDC, issue, Actions-write, or Git-push markers.
+
+For this Markdown, review the complete diff, one H1, heading order, compatibility anchors, tables, alerts, Mermaid, code fences, relative links, metadata block, final newline, and `git diff --check`. Report exact-head hosted checks as passing, failing, pending, skipped, inherited, unavailable, or not run.
+
+A green focused workflow proves bounded tests and static guardrails at its exact SHA. It does not prove live dispatch, policy legitimacy, human review, required-check coupling, merge safety, release, deployment, promotion, publication, or operational maturity.
 
 ## Directory Rules basis
 
-- proposal meaning remains under `contracts/governance/`;
-- machine shape remains under `schemas/contracts/v1/governance/`;
-- reusable validation remains under `tools/validators/governance/`;
-- deterministic proof remains under `tests/validators/`;
-- GitHub orchestration remains under `.github/workflows/`; and
-- this operator guidance remains under `docs/runbooks/`.
+Accepted [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts the canonical [Directory Rules](../doctrine/directory-rules.md). This same-path edit keeps operator guidance in `docs/runbooks/`, proposal meaning in `contracts/`, machine shape in `schemas/`, examples in `fixtures/`, reusable validation in `tools/`, proof in `tests/`, orchestration in `.github/`, and candidate bytes in `data/work/automation/`.
 
-No new responsibility root or parallel policy, contract, schema, receipt, proof, release, or publication home is created.
+No new root, alias, generated/canonical pair, or parallel contract, schema, policy, registry, receipt, proof, release, lifecycle, or publication home is created.
+
+## Open verification
+
+| Item | State | First blocked transition |
+|---|---|---|
+| Accountable automation/security reviewer beyond the verified repository route | `NEEDS VERIFICATION` | Operational adoption |
+| Live dispatch and PR creation for current workflow bytes | `UNKNOWN` | Claiming demonstrated behavior |
+| Required-check/ruleset coupling | `NEEDS VERIFICATION` | Treating tests as an enforced merge gate |
+| Policy/receipt producer and authentication path | `NEEDS VERIFICATION` | Treating proposal `PASS` as governed closure |
+| External dispatch clients | `UNKNOWN` | Breaking profile/invocation changes |
 
 ## Rollback
 
-Before merge, close the implementation pull request and abandon its feature branch. After an authorized merge, revert the opener workflow, test workflow, live-binding validator/tests, contract reference, and this runbook through a reviewed pull request.
+Before merge, close the documentation draft PR and abandon its feature branch. After an authorized merge, revert the single runbook commit or apply a reviewed same-path correction.
 
-If a live opener run detects post-create drift, the workflow closes only the draft PR it just created. It does not delete or rewrite the candidate branch. Any candidate-branch cleanup remains a separate authorized action.
+For implementation rollback, revert the opener/test workflows, validator/tests, contract reference, and runbook through a reviewed PR. Never delete, rewrite, or force-update the candidate branch as opener rollback; candidate cleanup is separate authority.
+
+This runbook has no source-admission, lifecycle, release, deployment, promotion, publication, or settings effect.
+
+[Back to top](#top)
