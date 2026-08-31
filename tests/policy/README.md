@@ -1,25 +1,23 @@
-# `tests/policy/` — Policy and Doctrine Boundary Tests
-
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/tests-policy-readme
 title: tests/policy/README.md — Policy and Doctrine Boundary Tests
-type: README; directory-readme; policy-test-lane
-version: v0.5
+type: README
+version: v0.6
 status: draft; repository-grounded; authored; non-authoritative
 owner: "@bartytime4life — CONFIRMED CODEOWNERS review route; independent policy, QA, doctrine, and release stewardship remain NEEDS VERIFICATION"
 created: 2026-07-06
-updated: 2026-08-30
-supersedes: v0.4 documentation at the same path; no test, script, policy, workflow, receipt, review, release, or publication state is superseded
+updated: 2026-08-31
+supersedes: v0.5 documentation at the same path; no test, script, policy, workflow, receipt, review, release, or publication state is superseded
 policy_label: public; tests; policy-boundary; doctrine-preflight; no-network-default; fail-closed
-current_path: tests/policy/README.md
-truth_posture: current GitHub implementation evidence outranks this documentation; passing tests support only their named assertions and checked revision
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  base_ref: main
-  base_commit: 1ea6593ede80d5ce10f561c7eec72135d6ccf806
-  target_prior_blob: d39a16c668824048c19738bbcdd3068d08f2f557
-  direct_test_modules: 18
-  source_defined_tests: 61
+owning_root: tests/
+responsibility: document executable policy and doctrine boundary tests, their implementation and workflow bindings, failure interpretation, maintenance obligations, and authority limits
+truth_posture: CONFIRMED eighteen direct test modules and sixty-one source-defined tests at the pinned main snapshot / UNKNOWN complete collection, coverage, required-check status, production enforcement, independent stewardship, correction propagation, and operational rollback
+evidence_repository: bartytime4life/Kansas-Frontier-Matrix
+evidence_base_ref: main
+evidence_base_commit: 5d835798e09a4dd14735779cb44206a8a3e8b2d3
+evidence_target_prior_blob: 2eec647f0698e6dea0277dbf06d1ba94597b8265
+direct_test_modules: 18
+source_defined_tests: 61
 related:
   - ../README.md
   - ../../policy/README.md
@@ -32,10 +30,12 @@ related:
   - ../../.github/workflows/promotion-gate.yml
   - ../../Makefile
 notes:
-  - "This same-path rewrite reconciles the current direct module inventory, commands, and hosted workflow bindings."
-  - "The file is authored Markdown, not a generated or mirrored artifact."
+  - "v0.6 conforms the metadata envelope and re-pins unchanged policy-test and workflow evidence to current main."
+  - "This file remains authored Markdown at its canonical same-path location; it is not generated or mirrored."
   - "Source-defined counts are static source inventory, not a pytest collection report or current pass result."
 [/KFM_META_BLOCK_V2] -->
+
+# `tests/policy/` — Policy and Doctrine Boundary Tests
 
 <a id="top"></a>
 
@@ -55,7 +55,7 @@ publication, correction, or rollback.
 
 ## Status
 
-At `main@1ea6593ede80d5ce10f561c7eec72135d6ccf806`, the lane contains
+At `main@5d835798e09a4dd14735779cb44206a8a3e8b2d3`, the lane contains
 [`boundary_constants.py`](boundary_constants.py) and 18 direct `test_*.py`
 modules with 61 source-defined test functions.
 
