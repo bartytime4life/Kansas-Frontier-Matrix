@@ -10,20 +10,20 @@ publication.
 doc_id: kfm://doc/tests-experiments-readme
 title: tests/experiments/README.md — Temporal Storage Experiment Test Lane
 type: readme; directory-readme; experiment-test-index; evidence-boundary
-version: v0.1
-status: draft; repository-grounded; one-executable-test-module-confirmed; 8-source-defined-tests; no-direct-workflow-binding
+version: v0.2
+status: draft; repository-grounded; one-executable-test-module-confirmed; 8-source-defined-tests; one-direct-workflow-binding-confirmed; readme-path-filter-gap
 owners: "@bartytime4life — CONFIRMED CODEOWNERS review route; accountable experiment-test stewardship UNKNOWN"
 created: 2026-08-30
-updated: 2026-08-30
+updated: 2026-08-31
 policy_label: repository-facing; tests; experiments; synthetic; no-network; non-publisher
 current_path: tests/experiments/README.md
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 8751cf71b752b77e267783816476a19479cf3629
+  base_commit: 99587f9d9b58246140454381eadc837546fde75a
   source_defined_test_count: 8
   executable_test_modules: 1
-  direct_workflow_bindings: 0
+  direct_workflow_bindings: 1
 related:
   - ../README.md
   - ./test_temporal_slice_store.py
@@ -32,12 +32,13 @@ related:
   - ../../schemas/contracts/v1/data/temporal_slice.schema.json
   - ../validators/test_validate_temporal_slice.py
   - ../../.github/workflows/temporal-slice.yml
+  - ../../.github/workflows/briefing-implementation-campaign.yml
   - ../../docs/doctrine/directory-rules.md
   - ../../.github/CODEOWNERS
 notes:
   - "Counts describe source-defined test methods at the pinned base commit, not a collected-case or hosted-run receipt."
   - "The experiment uses a reduced SQL row model and is not asserted to implement the proposed TemporalSlice contract or schema."
-  - "No Make target or GitHub Actions workflow directly collects this module at the pinned base commit."
+  - "The briefing-implementation-campaign workflow directly collects this module and its self-test, but its path filters do not include this README."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -129,10 +130,14 @@ The similarly named contract family is a separate proposed surface:
 | [`contracts/data/temporal_slice.md`](../../contracts/data/temporal_slice.md) and its [schema](../../schemas/contracts/v1/data/temporal_slice.schema.json) | Proposed metadata meaning and machine shape for derived temporal views | The SQL experiment borrows identifiers and change concepts, but this lane does not prove schema compatibility |
 | [`tests/validators/test_validate_temporal_slice.py`](../validators/test_validate_temporal_slice.py) | Contract fixture, identity, time, reference, and lineage validation | Separate test module; it does not import or exercise `TemporalSliceStore` |
 | [`temporal-slice.yml`](../../.github/workflows/temporal-slice.yml) | Runs the contract validator tests, fixture polarity, and generated-receipt integrity | Does not include `tests/experiments/`, `tools/experiments/`, or this README in its path filters or commands |
+| [`briefing-implementation-campaign.yml`](../../.github/workflows/briefing-implementation-campaign.yml) | Directly collects all eight experiment tests and runs the implementation self-test | Triggers for the experiment test and implementation paths, but not for this README; a README-only change leaves the lane `NOT_RUN` |
 
-No current Make target names this experiment test, and no current GitHub
-Actions workflow directly collects it. Therefore a passing unrelated
-`temporal-slice` workflow must not be reported as a result for this lane.
+No current Make target names this experiment test. The shared
+`briefing-implementation-campaign` workflow directly runs the eight-test module
+and the implementation self-test when its experiment code or test path filters
+match. Its filters do not include this README, so documentation-only changes do
+not produce fresh hosted evidence for the lane. The separate `temporal-slice`
+workflow does not collect the experiment and must not be reported as its result.
 
 ## Evidence and authority boundary
 
@@ -163,6 +168,7 @@ artifacts rather than this internal experiment.
 | Overlap returns one record | Supersession filter and ambiguity branch | Selection was authorized by policy |
 | Change ordering differs | SQL `ORDER BY`, null handling, and fixture values | A material-change assessment is wrong |
 | Invalid record reaches SQLite | Pre-insert validation and transaction boundary | Every persisted record is unsafe |
+| `briefing-implementation-campaign` is absent on a README-only change | Confirm its path filters exclude this README, then use the last exact code/test-triggered run only as historical evidence | The experiment lane failed or that a fresh hosted run occurred |
 | `temporal-slice` workflow passes | Inspect its commands and path filters | This experiment lane ran or passed |
 
 Record the exact revision and command when reporting a failure. Keep test
@@ -192,8 +198,9 @@ not establish independent stewardship or prove that review occurred.
 ## Known gaps
 
 - No Make target aggregates or names this lane.
-- No GitHub Actions workflow directly collects the module or triggers for this
-  README.
+- The shared briefing workflow collects the module and self-test, but its path
+  filters do not include this README; documentation-only changes leave that
+  focused execution `NOT_RUN`.
 - Required-check status and accountable experiment stewardship are unknown.
 - The static count is not a dependency-complete collection or execution
   receipt.
