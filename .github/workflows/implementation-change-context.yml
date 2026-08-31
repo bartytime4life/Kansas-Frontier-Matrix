@@ -14,6 +14,7 @@ name: implementation-change-context
       - "tests/validators/governance/test_implementation_change_context.py"
       - "docs/intake/exploratory/fluencyloop-change-context-source-map.md"
       - "data/receipts/generated/genrec-implementation-change-context-20260806.json"
+      - "data/receipts/generated/genrec-governance-workflow-security-readme-current-state-20260831.json"
   push:
     branches: [main]
     paths:
@@ -28,6 +29,7 @@ name: implementation-change-context
       - "tests/validators/governance/test_implementation_change_context.py"
       - "docs/intake/exploratory/fluencyloop-change-context-source-map.md"
       - "data/receipts/generated/genrec-implementation-change-context-20260806.json"
+      - "data/receipts/generated/genrec-governance-workflow-security-readme-current-state-20260831.json"
   workflow_dispatch:
 
 permissions:
@@ -80,10 +82,15 @@ jobs:
           --cases
 
       - name: Verify generated authoring receipt integrity
-        run: >-
-          python tools/validators/validate_generated_receipt.py
-          data/receipts/generated/genrec-implementation-change-context-20260806.json
-          --repo-root .
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-implementation-change-context-20260806.json \
+            --repo-root . \
+            --artifact-git-ref 8b3b45fddc9c2bd9f49c26822cd6554d04eb5c66
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-governance-workflow-security-readme-current-state-20260831.json \
+            --repo-root .
 
       - name: Record trust boundary
         if: always()
