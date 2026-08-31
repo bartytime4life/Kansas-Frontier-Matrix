@@ -10,10 +10,11 @@ required_review_roles:
   - Applicable domain steward
   - Applicable source steward
 created: 2026-08-02
-updated: 2026-08-30
+updated: 2026-08-31
 policy_label: repository-facing; synthetic-fixtures; no-network; no-publication
 owning_root: tests/
 responsibility: Test ingest-adjacent watcher and preflight helpers without performing source access, lifecycle mutation, promotion, release, or publication.
+truth_posture: cite-or-abstain; a passing watcher or preflight test supports only its named assertion, synthetic fixture, and checked revision and does not establish source truth, admission, rights, review, lifecycle mutation, promotion, release, or publication
 related:
   - ../../tools/ingest/README.md
   - ./aqs_watch/test_aqs_site_delta.py
