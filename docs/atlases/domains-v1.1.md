@@ -1,27 +1,30 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION
+doc_id: kfm://doc/docs-atlases-domains-v1-1
 title: KFM Domains v1.1 — Domain-Focused Atlas Carrier
 type: standard
 version: v0.1
 status: draft
 owners: OWNER_TBD
 created: 2026-05-25
-updated: 2026-05-25
+updated: 2026-08-31
 policy_label: public
+owning_root: docs/
+responsibility: "Provide source-derived navigation across the atlas domain chapters without redefining domain contracts, schemas, policy, implementation, release, or publication state."
+truth_posture: "CONFIRMED file presence / source-derived domain lineage / PROPOSED source-edition claims / UNKNOWN current implementation unless exact repository evidence is cited"
 related:
   - docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md
   - docs/atlases/receipt-catalog.md
   - docs/atlases/pipeline-gate-reference.md
   - docs/atlases/maplibre-master.md
-  - docs/atlases/Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md
+  - docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md
   - docs/doctrine/directory-rules.md
-  - KFM_Encyclopedia.md
+  - docs/doctrine/encyclopedia.md
 tags: [kfm, atlas, domains, v1.1, doctrine, carrier, ddd]
 notes:
   - Domain-focused carrier into the 16 domain chapters (Ch. 3-18) of the Atlas v1.1.
   - Narrower scope than the top-level consolidated-atlas carrier; broader scope than chapter-specific sub-carriers.
   - Per-domain object family spines reproduced verbatim from Atlas §2.2; cross-lane edges summarized from §24.4.
-  - Owners, doc_id, responsibility-root verification remain placeholders.
+  - Owner remains a placeholder; the path-derived doc_id and docs/ owning root follow adjacent atlas metadata convention, while machine-registry adoption remains review-only.
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Domains v1.1 — Domain-Focused Atlas Carrier
@@ -59,7 +62,11 @@ KFM organizes evidence into **bounded domain contexts**. Each domain is a respon
 
 This file is the **domain-focused entry point** into those 16 chapters. It exists because:
 
-- The top-level consolidated-atlas carrier (`kfm-domains-v1.1-pass23-32-consolidated-atlas.md`) spans ~1,279 PDF pages and covers Pass 23/32 cards, Ch. 24 registers, and v1.3 overlay alongside the domains. Maintainers working **on a domain** need a narrower entry that surfaces the per-domain template and spine without the cross-cutting registers.
+- The top-level navigation carrier covers source claims spanning a 1,279-page PDF
+  family, including Pass 23/32 cards, Chapter 24 registers, and a proposed v1.3
+  overlay. Its linked Markdown conversion is incomplete. Maintainers working **on
+  a domain** need a narrower entry that surfaces the per-domain template and spine
+  without the cross-cutting registers.
 - The Atlas's own §24 registers (Source-Role Anti-Collapse §24.1, Cross-Lane Relation Atlas §24.4, Sensitivity Tier Reference §24.5, Pipeline Gate Reference §24.6, Crosswalk §24.13, Object Family × Domain Matrix §24.14) all consolidate **per-domain content** from chs. 3–18. This carrier names those consolidations from the domain side.
 - DDD discipline matters: every entry here ties back to a bounded context with explicit non-ownership statements (per Atlas §B blocks).
 
@@ -205,6 +212,8 @@ Every domain admits sources under one of seven **source roles**. Roles are first
 **Anti-collapse rule** (`CONFIRMED doctrine`): roles must not be silently upgraded by promotion (e.g., `modeled → observed` is forbidden). Atlas §24.1 enforces this with `SourceDescriptor` field requirements; see `directory-rules.md` ADR-S-04 (Source-role vocabulary v1).
 
 ---
+
+<a id="7-cross-lane-relations-241624-summary"></a>
 
 ## 7. Cross-lane relations (§24.4 summary)
 
@@ -450,7 +459,7 @@ The 16 chapters covered by this carrier are responsibility lanes. The following 
 | Carrier | Scope | Status |
 |---|---|---|
 | `docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md` | Top-level navigation across v1.0 + v1.1 + Pass 23/32 + v1.3 overlay. | `PROPOSED file` (sibling) |
-| `docs/atlases/Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` | Full-text Markdown conversion of the consolidated atlas. | `CONFIRMED file presence` |
+| `docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md` | Incomplete source-derived Markdown carrier for the consolidated atlas. | `CONFIRMED file presence`; source fidelity remains bounded |
 | `docs/atlases/receipt-catalog.md` | Chapter 24.2 carrier (16 receipt classes; lifecycle-phase attachment). | `PROPOSED file` |
 | `docs/atlases/pipeline-gate-reference.md` | Chapter 24.6 carrier (7 lifecycle gates; Promotion Gates A–G; closure rules; reason codes). | `PROPOSED file` |
 | `docs/atlases/maplibre-master.md` | Master MapLibre v2.1 + v1.3 renderer overlay (touches Spatial Foundation + Planetary/3D domains). | `PROPOSED file` |
@@ -523,7 +532,7 @@ Each of the 16 domains could justify a dedicated carrier when its reader traffic
 
 - [ ] Confirm the target path `docs/atlases/domains-v1.1.md` does not already exist; resolve `docs/atlas/` mirror collisions.
 - [ ] Confirm `OWNER_TBD` — docs steward + a domain-layer architect.
-- [ ] Confirm `doc_id` allocation convention; do not invent UUIDs.
+- [ ] Review the path-derived `doc_id` through the emitted registry delta; do not replace it with an invented UUID.
 - [ ] Confirm filename convention against the proposed atlas-Markdown naming ADR (see top-level carrier §11).
 - [ ] Confirm sibling carriers exist or are in active authoring: `kfm-domains-v1.1-pass23-32-consolidated-atlas.md`, `receipt-catalog.md`, `pipeline-gate-reference.md`, `maplibre-master.md`.
 - [ ] Confirm every per-domain row in §3 matches Atlas v1.1 §2.1 (Domain-to-dossier map).

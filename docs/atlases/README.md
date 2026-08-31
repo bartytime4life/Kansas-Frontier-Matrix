@@ -2,41 +2,42 @@
 doc_id: kfm://doc/docs-atlases-readme
 title: docs/atlases/ — Curated Atlas Documentation Lane
 type: directory-readme
-version: v0.2
-status: draft; repository-grounded; canonical-lane; mixed-lineage; naming-conflicted; non-release; non-publication
+version: v0.3
+status: draft; repository-grounded; adopted-placement-target; proposed-canonical-collection; mixed-lineage; root-carrier-linked; naming-conflicted; non-release; non-publication
 owners:
   - "@bartytime4life"
 owner_status: "@bartytime4life is the confirmed CODEOWNERS review route; an independent docs steward, atlas editor, domain-review roster, and final artifact custodian remain NEEDS VERIFICATION"
 created: 2026-07-16
-updated: 2026-08-14
+updated: 2026-08-31
 policy_label: repository-public
 current_path: docs/atlases/README.md
 owning_root: docs/
-responsibility: "Define and index the canonical human-readable atlas lane, preserve edition and source lineage, expose naming and compatibility drift, and prevent atlas carriers from becoming evidence, policy, machine-contract, release, or publication authority."
+responsibility: "Define and index the atlas collection placement target named by the adopted Directory Rules, preserve edition and source lineage, expose naming and compatibility drift, and prevent atlas carriers from becoming evidence, policy, machine-contract, release, or publication authority."
 truth_posture: "CONFIRMED current repository tree, adopted Directory Rules placement, review routing, and documentation QA surfaces / CONFLICTED carrier naming, legacy-lane convergence, child inventory, and PDF-path collision / PROPOSED future canonical carrier and artifact-rendering decisions / UNKNOWN external consumers and deployed documentation behavior"
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 710173d51a3a6bf288997df6f3eb4bf7f4da1ef6
-  reviewed_at: 2026-08-14
-  target_prior_blob: 71a2bc4e2b150a324ac05389dbe89f9ac8f1cba5
-  atlases_tree: 980d41fa84c6f4896f5896cb6e7930cf908ba0c0
-  legacy_atlas_tree: 7aa0c91b04c6e36ce5b66df8e1446de363bb71e0
+  base_commit: 5d835798e09a4dd14735779cb44206a8a3e8b2d3
+  reviewed_at: 2026-08-31
+  target_prior_blob: 5dd756497b9eb20b4ffa55cd2cfadcd77ee2f3b4
+  atlases_tree: 4cb1fc3690535c86a31f1e763a47e6029fc9f184
+  legacy_atlas_tree: 04256dc68be7ce8bdb57664a996050256891b383
   docs_root_blob: 1f8bac189dac1d01c1185e8b4fb8e25efd11d09f
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
   docs_build_workflow_blob: 7816e07d66774d2e2b3b80b66d5d3349a1393861
   link_check_workflow_blob: 7b6c675d879a36d685b19b18fde401fca1bdd00e
-  meta_block_workflow_blob: c2054a053ba3050cf41b731d85a7a0996e9231f6
+  meta_block_workflow_blob: 732879cd8a5aca71ef3c570a0c34c4c389f20e8a
   document_graph_workflow_blob: 636749f75621bf773ac558286789dadb41c47c35
-  stale_scan_workflow_blob: 4717668d30f98d9be2e6d2ebf57862e820cd41aa
+  stale_scan_workflow_blob: 5a94d7c353c4c18c0bcb9a0df45c81a3916f747a
 inventory_snapshot:
   direct_markdown_files_including_readme: 13
   direct_child_directories: 3
   direct_pdf_files: 0
 related:
   - docs/README.md
+  - "docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md"
   - docs/doctrine/directory-rules.md
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - docs/atlas/README.md
@@ -64,7 +65,8 @@ tags:
   - cite-or-abstain
 notes:
   - "v0.2 is a same-path documentation-only reconciliation. It does not select a canonical atlas carrier, migrate the singular legacy lane, resolve the PDF-path collision, render an atlas, or authorize release or publication."
-  - "Accepted ADR-0029 adopts the exact Directory Rules v2 bytes and makes docs/atlases/ the canonical human atlas lane; individual files remain governed by their own status, source, edition, and review evidence."
+  - "v0.3 adds a resolving reader route to the existing full-text source-derived carrier at the docs/ root while keeping its move, rename, and canonical-carrier status unresolved."
+  - "Accepted ADR-0029 adopts the exact Directory Rules v2 bytes, which name docs/atlases/ as the proposed canonical collection; individual files and any migration remain governed by their own status, source, edition, review, and decision evidence."
   - "The current direct tree contains twelve atlas/reference Markdown files plus this README, three child directories, and no direct PDF file."
   - "The PDF-suffixed entry is a directory, not a PDF artifact, and therefore blocks the identically named proposed PDF file path until a separate reviewed migration resolves it."
 [/KFM_META_BLOCK_V2] -->
@@ -75,16 +77,16 @@ notes:
 
 > Human-readable home for versioned KFM atlases, atlas navigation carriers, source-preserving synthesis, and bounded atlas-derived reference material.
 
-[![lane](https://img.shields.io/badge/lane-canonical%20docs%2Fatlases-1f6feb)](#purpose-and-authority)
+[![placement](https://img.shields.io/badge/placement-adopted%20target-1f6feb)](#purpose-and-authority)
 [![content](https://img.shields.io/badge/content-mixed%20lineage-d4a72c)](#current-repository-state)
 [![naming](https://img.shields.io/badge/naming-CONFLICTED-b42318)](#naming-compatibility-and-path-drift)
 [![publication](https://img.shields.io/badge/publication-none-6e7781)](#authority-and-publication-boundary)
 
 > [!IMPORTANT]
-> **The lane is canonical; its contents are not automatically canonical.** Accepted
+> **The placement rule is adopted; the collection remains proposed canonical.** Accepted
 > [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
-> adopts the exact Directory Rules v2 bytes and places curated atlas collections
-> under `docs/atlases/`. Each atlas carrier, pointer, extract, register, or
+> adopts the exact Directory Rules v2 bytes, which name `docs/atlases/` as the
+> proposed canonical collection. Each atlas carrier, pointer, extract, register, or
 > integration packet still keeps its own status, source, edition, review,
 > supersession, and correction boundary.
 
@@ -96,11 +98,12 @@ notes:
 > governed published state.
 
 > [!CAUTION]
-> **Two structural conflicts remain open.** Multiple Markdown carriers cover
+> **Three structural conflicts remain open.** Multiple Markdown carriers cover
 > overlapping atlas scope under incompatible naming conventions, and
 > `KFM_Domains_Culmination_Atlas_v1_1.pdf/` is a directory that blocks an
-> identically named PDF file. This README records those facts; it does not resolve
-> them.
+> identically named PDF file. The current full-text source-derived carrier also
+> remains at the `docs/` root rather than this proposed collection. This README
+> records those facts; it does not resolve them.
 
 **Quick navigation:** [Purpose](#purpose-and-authority) · [Status](#current-repository-state) · [Inventory](#current-inventory) · [Content contract](#atlas-content-contract) · [Boundaries](#authority-and-publication-boundary) · [Drift](#naming-compatibility-and-path-drift) · [Maintenance](#maintenance-and-change-discipline) · [Validation](#validation) · [Review](#ownership-and-review) · [Rollback](#correction-supersession-and-rollback) · [Open work](#open-verification-register)
 
@@ -108,7 +111,8 @@ notes:
 
 ## Purpose and authority
 
-`docs/atlases/` owns the **human-readable atlas documentation responsibility**:
+`docs/atlases/` is the adopted **placement target for the proposed canonical
+human-readable atlas collection**:
 
 - preserve versioned atlas editions and source lineage;
 - give readers a stable navigation surface across large or split atlas bodies;
@@ -124,9 +128,9 @@ admissibility, lifecycle instances, release decisions, or public serving.
 ### Directory Rules basis
 
 Accepted Directory Rules v2 classify `docs/` as the human-readable governance and
-explanation root and list `atlases/` as the curated atlas collection lane. This file
-already exists at the selected path, so v0.2 preserves the path and updates the
-lane contract in place.
+explanation root and name `atlases/` as the proposed canonical collection. This
+file already exists at the selected path, so v0.3 preserves the path and updates
+the placement contract in place without deciding migration or carrier identity.
 
 | Responsibility | Owning surface | Role of `docs/atlases/` |
 |---|---|---|
@@ -148,12 +152,13 @@ lane contract in place.
 
 | Field | Confirmed state at the evidence snapshot |
 |---|---|
-| Canonical lane | `docs/atlases/` under accepted Directory Rules v2 |
+| Atlas collection placement | `docs/atlases/` is named by adopted Directory Rules v2 as the proposed canonical collection |
 | Direct tree | Twelve content/reference Markdown files, this README, and three child directories |
 | Direct PDF artifacts | None |
 | Atlas carrier posture | Mixed: substantive carriers, navigation carriers, pointer-only files, working extracts, and downstream integration packets |
 | Naming posture | `CONFLICTED` — several carriers cover overlapping scope under different filename grammars |
 | Legacy singular lane | `docs/atlas/` remains present with four direct Markdown files; convergence is incomplete |
+| Linked full-text carrier | `docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md`; current path confirmed, canonical filename and migration unresolved |
 | PDF-path posture | `KFM_Domains_Culmination_Atlas_v1_1.pdf/` is a directory, not a PDF file |
 | Accepted carrier-name decision | None verified |
 | Documentation QA | Executable metadata, local-link, document-graph, and freshness workflows are present |
@@ -172,6 +177,9 @@ lane contract in place.
   that intentionally records a generator and preview `HOLD`.
 - The carrier-name, legacy-lane, chapter-inventory, and PDF-path conflicts remain
   unresolved.
+- The existing full-text source-derived carrier is now reachable from this lane;
+  linking it does not promote its source claims or select its current path as the
+  final canonical home.
 
 [Back to top](#top)
 
@@ -181,6 +189,17 @@ lane contract in place.
 
 The inventory below is descriptive. It does not promote a file, reconcile duplicate
 scope, or override the status declared inside a child artifact.
+
+### Linked full-text carrier outside this lane
+
+| Entry | Current role | Authority boundary |
+|---|---|---|
+| [Full-text source-derived carrier](<../Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md>) | Existing composite Domains v1.1 and Pass 23/32 carrier at its confirmed current path | Source and design lineage only; current implementation, sidecar presence, canonical filename, move, release, and publication remain separately governed |
+
+> [!NOTE]
+> The link repairs reader reachability without moving or aliasing the file. A
+> canonical-lane migration still requires an accepted naming/path decision,
+> inbound-link repair, compatibility treatment, validation, and rollback.
 
 ### Lane contract
 
@@ -494,7 +513,10 @@ publication authority.
 ### Required review checks for this lane
 
 - Metadata parses and preserves the stable `doc_id`.
-- Exactly one H1 is present.
+- Exactly one H1 is present. The linked root full-text carrier is a bounded known
+  exception with six H1s total: one outer wrapper plus five retained
+  embedded/source-module boundaries. Normalization is held until
+  source/regeneration and anchor-migration evidence are resolved.
 - Fences, tables, details blocks, and alerts are balanced.
 - Every changed local link and fragment resolves with correct case.
 - Source, edition, and supersession claims are supported.
@@ -566,7 +588,7 @@ A successor atlas does not erase its predecessor. Record:
 ### Rollback
 
 For this README, rollback is restoration of prior blob
-`71a2bc4e2b150a324ac05389dbe89f9ac8f1cba5` through a reviewed revert or
+`5dd756497b9eb20b4ffa55cd2cfadcd77ee2f3b4` through a reviewed revert or
 forward-fix. No atlas content, source, policy, data, runtime, release, or published
 artifact is mutated by this lane-contract update.
 
@@ -602,6 +624,7 @@ changes.
 ## Related documentation
 
 - [Documentation root contract](../README.md)
+- [Full-text source-derived carrier](<../Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md>)
 - [Accepted Directory Rules adoption decision](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
 - [Adopted Directory Rules bytes](../doctrine/directory-rules.md)
 - [Legacy singular atlas lane](../atlas/README.md)
@@ -629,7 +652,7 @@ Re-review this lane contract when:
   atlas content;
 - an atlas-derived reference becomes machine-enforced elsewhere.
 
-**Last evidence review:** 2026-08-14 against
-`main@710173d51a3a6bf288997df6f3eb4bf7f4da1ef6`.
+**Last evidence review:** 2026-08-31 against
+`main@5d835798e09a4dd14735779cb44206a8a3e8b2d3`.
 
 [Back to top](#top)
