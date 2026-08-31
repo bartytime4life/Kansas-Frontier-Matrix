@@ -1,31 +1,25 @@
-# `tests/docs/` — Contract Navigation Test Lane
-
-`tests/docs/` contains executable checks for one bounded section of the
-draft Contract Object Map. The lane verifies navigation, local path, and
-governed-API stub parity; it does not make the map authoritative or prove
-ontology completeness, lifecycle behavior, policy, release, deployment, or
-publication.
-
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/tests-docs-readme
 title: tests/docs/README.md — Contract Navigation Test Lane
-type: readme; directory-readme; documentation-test-index; evidence-boundary
+type: README
 version: v0.1
 status: draft; repository-grounded; one-executable-test-module-confirmed; 9-source-defined-tests; direct-workflow-confirmed; readme-trigger-absent
 owners: "@bartytime4life — CONFIRMED CODEOWNERS review route; accountable documentation-test stewardship UNKNOWN"
 created: 2026-08-31
 updated: 2026-08-31
 policy_label: repository-facing; tests; documentation; object-map; no-network; non-publisher
+owning_root: tests/
+responsibility: executable contract-navigation test inventory and bounded lifecycle-overlay and governed-API stub-parity guidance without deciding contract, evidence, policy, review, release, deployment, publication, or source authority
+truth_posture: CONFIRMED repository-grounded inventory at the pinned base / PROPOSED maintenance and stewardship claims / NEEDS VERIFICATION current collection, required-check status, production parity, and accountable review
 current_path: tests/docs/README.md
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  base_ref: main
-  base_commit: f3db18a7f519116b06fb7dbceb61d1422dd82e4e
-  source_defined_test_count: 9
-  executable_test_modules: 1
-  required_resource_tokens: 17
-  registered_stub_routes: 3
-  workflow_source_defined_test_count: 15
+evidence_repository: bartytime4life/Kansas-Frontier-Matrix
+evidence_base_ref: main
+evidence_base_commit: f3db18a7f519116b06fb7dbceb61d1422dd82e4e
+source_defined_test_count: 9
+executable_test_modules: 1
+required_resource_tokens: 17
+registered_stub_routes: 3
+workflow_source_defined_test_count: 15
 related:
   - ../README.md
   - ./test_contract_object_map_lifecycle.py
@@ -43,6 +37,14 @@ notes:
   - "The dedicated workflow collects 9 tests in this lane and 6 adjacent governed-API tests."
   - "The workflow path filters exclude tests/docs/README.md at the pinned base commit."
 [/KFM_META_BLOCK_V2] -->
+
+# `tests/docs/` — Contract Navigation Test Lane
+
+`tests/docs/` contains executable checks for one bounded section of the
+draft Contract Object Map. The lane verifies navigation, local path, and
+governed-API stub parity; it does not make the map authoritative or prove
+ontology completeness, lifecycle behavior, policy, release, deployment, or
+publication.
 
 <a id="top"></a>
 
