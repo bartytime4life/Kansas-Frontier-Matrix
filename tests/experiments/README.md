@@ -1,29 +1,23 @@
-# `tests/experiments/` — Temporal Storage Experiment Test Lane
-
-`tests/experiments/` contains executable evidence for one deterministic,
-in-memory temporal-slice storage experiment. The lane tests a bounded SQL
-index and selection model; it does not establish a production repository,
-contract conformance, source truth, policy approval, promotion, release, or
-publication.
-
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/tests-experiments-readme
 title: tests/experiments/README.md — Temporal Storage Experiment Test Lane
-type: readme; directory-readme; experiment-test-index; evidence-boundary
-version: v0.2
+type: README
+version: v0.3
 status: draft; repository-grounded; one-executable-test-module-confirmed; 8-source-defined-tests; one-direct-workflow-binding-confirmed; readme-path-filter-gap
 owners: "@bartytime4life — CONFIRMED CODEOWNERS review route; accountable experiment-test stewardship UNKNOWN"
 created: 2026-08-30
 updated: 2026-08-31
 policy_label: repository-facing; tests; experiments; synthetic; no-network; non-publisher
+owning_root: tests/
+responsibility: executable temporal-storage experiment test inventory and bounded no-network interpretation guidance without deciding contract, schema, source, evidence, policy, lifecycle, review, release, deployment, publication, or production-storage authority
+truth_posture: CONFIRMED repository-grounded inventory and direct briefing-workflow binding at the pinned base / PROPOSED maintenance and stewardship claims / NEEDS VERIFICATION current execution, contract-schema compatibility, production consumers, required-check status, and accountable review
 current_path: tests/experiments/README.md
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  base_ref: main
-  base_commit: 99587f9d9b58246140454381eadc837546fde75a
-  source_defined_test_count: 8
-  executable_test_modules: 1
-  direct_workflow_bindings: 1
+evidence_repository: bartytime4life/Kansas-Frontier-Matrix
+evidence_base_ref: main
+evidence_base_commit: 8aab826f80e798301ae86430b6334644e1ca62bd
+source_defined_test_count: 8
+executable_test_modules: 1
+direct_workflow_bindings: 1
 related:
   - ../README.md
   - ./test_temporal_slice_store.py
@@ -40,6 +34,14 @@ notes:
   - "The experiment uses a reduced SQL row model and is not asserted to implement the proposed TemporalSlice contract or schema."
   - "The briefing-implementation-campaign workflow directly collects this module and its self-test, but its path filters do not include this README."
 [/KFM_META_BLOCK_V2] -->
+
+# `tests/experiments/` — Temporal Storage Experiment Test Lane
+
+`tests/experiments/` contains executable evidence for one deterministic,
+in-memory temporal-slice storage experiment. The lane tests a bounded SQL
+index and selection model; it does not establish a production repository,
+contract conformance, source truth, policy approval, promotion, release, or
+publication.
 
 <a id="top"></a>
 
