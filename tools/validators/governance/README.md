@@ -21,9 +21,14 @@ other partially interpretable structures as `KFM-WF-001` instead of reporting
 a false pass. Inline comments, quoted runner values, and dot or bracket
 expression properties are normalized before security checks.
 
-The current 424-workflow tree passes all twenty rules with an empty waiver
-baseline. The tool reads local bytes only; a pass is static source evidence, not
-a hosted result, ruleset guarantee, vulnerability-absence claim, approval,
+At the ratchet's pinned `main@c2594045856765c8b155020d9cd2e95b5db873f2`
+snapshot, 424 tracked workflows passed all twenty rules with an empty
+implementation-waiver baseline. That result is historical evidence, not a
+current-tree claim. The [workflow inventory](../../../.github/workflows/README.md)
+records its own later 482-workflow snapshot and explicit verification boundary;
+run `make workflow-security` at the exact head before reporting a current
+result. The tool reads local bytes only; a pass is static source evidence, not a
+hosted result, ruleset guarantee, vulnerability-absence claim, approval,
 release, deployment, or publication authority.
 
 ## BriefingSignal executables
