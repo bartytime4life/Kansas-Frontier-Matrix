@@ -1,17 +1,16 @@
-# `tests/api/` — Governed API Test Lane
-
-Governed API envelope, route, trust-boundary, and negative-behavior test boundary for KFM. The current executable companion proves five bounded route, method, manifest, internal-store-literal, and forbidden-import assertions; this lane does not claim complete policy, release, lifecycle, privacy, correction, rollback, or production enforcement.
-
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/tests-api-readme
 title: tests/api/README.md — Governed API Test Lane
-type: readme; directory-readme; api-test-guardrail; trust-spine-test-index
+type: README
 version: v0.2
 status: draft; repository-grounded; child-deny-lane-contract-only; app-owned-boundary-suite-confirmed; executable-workflow-confirmed; broader-coverage-NEEDS-VERIFICATION
 owners: OWNER_TBD — QA steward · API steward · Runtime steward · Policy steward · Evidence steward · Security steward · Docs steward
-created: NEEDS VERIFICATION — greenfield stub existed before v0.1 expansion
-updated: 2026-08-01
+created: 2026-05-08
+updated: 2026-08-31
 policy_label: public; tests; api; governed-api; finite-outcomes; no-api-authority
+owning_root: tests/
+responsibility: governed API route, finite-envelope, trust-boundary, and negative-behavior test inventory and maintenance guidance without deciding API implementation, evidence sufficiency, policy, release, deployment, publication, or source authority
+truth_posture: CONFIRMED app-owned five-test boundary suite, local Make target, and three-job workflow definition; CONFIRMED no direct executable module remains under tests/api at this revision; NEEDS VERIFICATION broader coverage, required-check status, production behavior, and accountable stewardship
 tags: [kfm, tests, api, governed-api, runtime-envelope, answer, abstain, deny, error, policy, evidence, release]
 related:
   - ../README.md
@@ -37,6 +36,10 @@ notes:
   - "tests/api/deny/ is confirmed as the deny/fail-closed contract and routing child lane; it is not a second executable owner for the app boundary assertions."
   - "This README does not prove complete API route implementation, fixtures, required-check status, schemas, policy bundles, runtime envelope enforcement, release safety, or public-client behavior."
 [/KFM_META_BLOCK_V2] -->
+
+# `tests/api/` — Governed API Test Lane
+
+Governed API envelope, route, trust-boundary, and negative-behavior test boundary for KFM. The current executable companion proves five bounded route, method, manifest, internal-store-literal, and forbidden-import assertions; this lane does not claim complete policy, release, lifecycle, privacy, correction, rollback, or production enforcement.
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
