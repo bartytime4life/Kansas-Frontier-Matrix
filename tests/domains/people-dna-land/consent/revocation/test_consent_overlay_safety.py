@@ -428,6 +428,30 @@ class ConsentOverlayFixtureTests(unittest.TestCase):
             self.assertIn(Finding("SPEC_HASH_MISMATCH", "$.spec_hash"), findings)
             self.assertTrue(all(finding.path.isascii() for finding in findings))
 
+            boundary_path = Path(directory) / "overflowing-datetime.json"
+            boundary_path.write_text(
+                json.dumps(
+                    {
+                        "evaluation_time": "0001-01-01T00:00:00+23:59",
+                        "spec_hash": "sha256:" + ("0" * 64),
+                    }
+                ),
+                encoding="utf-8",
+            )
+            findings = VALIDATOR.validate_file(
+                boundary_path,
+                revocation_manifest=self.manifest,
+            )
+            self.assertIn(
+                Finding("EVALUATION_TIME_INVALID", "$.evaluation_time"),
+                findings,
+            )
+            self.assertIn(Finding("SPEC_HASH_MISMATCH", "$.spec_hash"), findings)
+            rendered = "\n".join(
+                f"{finding.code}\t{finding.path}" for finding in findings
+            )
+            self.assertNotIn("0001-01-01T00:00:00+23:59", rendered)
+
     def test_file_size_is_bounded(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "large.json"

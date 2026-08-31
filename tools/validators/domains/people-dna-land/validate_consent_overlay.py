@@ -136,9 +136,9 @@ def _datetime(value: object) -> datetime | None:
         return None
     try:
         parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
-    except ValueError:
+        return parsed.astimezone(timezone.utc) if parsed.tzinfo else None
+    except (OverflowError, ValueError):
         return None
-    return parsed.astimezone(timezone.utc) if parsed.tzinfo else None
 
 
 def _date(value: object) -> date | None:
