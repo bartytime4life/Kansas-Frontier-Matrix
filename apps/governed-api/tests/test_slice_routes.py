@@ -11,6 +11,7 @@ from governed_api.provider import (
     DeterministicSliceProvider,
     EvidenceResolution,
 )
+from governed_api.routes.registry import ROUTES
 from tools.validators.ui.validate_evidence_drawer_payload import validate_payload
 
 
@@ -43,6 +44,14 @@ PINNED_FIXTURE_CITATION = (
     "d1f7ed51cf4d9c9c2fdf94cdc81644744ae464ce/fixtures/ui/"
     "evidence_drawer_payload/valid/answer-corrected.json"
 )
+
+
+def test_lifecycle_overlay_registry_remains_zero_argument_and_abstaining() -> None:
+    assert set(ROUTES) == {"/bootstrap", "/layers", "/evidence"}
+    for handler in ROUTES.values():
+        payload = handler()
+        assert payload["outcome"] == "ABSTAIN"
+        assert payload["reason_code"] == "NOT_IMPLEMENTED"
 
 
 def _call_app(application, path: str, *, query: str = "", method: str = "GET"):
