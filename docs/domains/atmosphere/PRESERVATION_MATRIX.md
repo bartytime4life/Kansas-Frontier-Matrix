@@ -721,7 +721,7 @@ This document is done enough to enter the repository when:
 3. Source-role anti-collapse validator denies the publication-equivalent answer; Focus Mode returns `ABSTAIN` with reason `MODEL_AS_OBSERVED_FORBIDDEN`.
 4. UI may render the model field clearly labeled, but the answer to "was it observed" remains ABSTAIN. The Evidence Drawer offers a path to nearest VIIRS detections (`REMOTE_SENSING_MASK`, also modeled) and nearest AQS PM2.5 samples (`OBSERVED_SENSOR`) — but neither becomes a stand-in for direct observed smoke.
 
-*All three examples are illustrative; no claim is made that the current repository evidence currently implements them end-to-end.*
+*All three examples are illustrative; no claim is made that the current repository implements them end-to-end.*
 
 </details>
 
