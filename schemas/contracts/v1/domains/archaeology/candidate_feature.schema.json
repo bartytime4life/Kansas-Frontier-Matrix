@@ -100,7 +100,7 @@
       "type": "string",
       "minLength": 1,
       "maxLength": 1000,
-      "pattern": "\\S"
+      "pattern": "[^\\u0000-\\u0020\\u007F-\\u00A0\\u1680\\u180E\\u2000-\\u200F\\u2028-\\u202F\\u205F-\\u206F\\u3000\\uFEFF]"
     },
     "review_state": {
       "type": "string",

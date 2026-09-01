@@ -12,6 +12,7 @@ from pathlib import Path
 from tools.validators.archaeology.validate_candidate_feature import (
     CANDIDATE_ID_PATTERN,
     CANDIDATE_TYPES,
+    CONFIDENCE_CONTENT_PATTERN,
     CONFIDENCE_STATEMENT_MAX_LENGTH,
     FORBIDDEN_INLINE_LOCATION_FIELDS,
     FORBIDDEN_SITE_CLAIM_FIELDS,
@@ -90,6 +91,8 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         for malformed in (
             {"synthetic": "not-a-statement"},
             " \t\n",
+            "\u0085",
+            "\ufeff",
             "x" * (CONFIDENCE_STATEMENT_MAX_LENGTH + 1),
         ):
             with self.subTest(value_type=type(malformed).__name__):
@@ -215,7 +218,10 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         )
         self.assertEqual(properties["spec_hash"]["pattern"], SPEC_HASH_PATTERN.pattern)
         self.assertEqual(properties["confidence_statement"]["minLength"], 1)
-        self.assertEqual(properties["confidence_statement"]["pattern"], r"\S")
+        self.assertEqual(
+            properties["confidence_statement"]["pattern"],
+            CONFIDENCE_CONTENT_PATTERN.pattern,
+        )
         self.assertEqual(
             properties["confidence_statement"]["maxLength"],
             CONFIDENCE_STATEMENT_MAX_LENGTH,

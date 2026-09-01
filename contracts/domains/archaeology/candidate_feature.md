@@ -208,7 +208,7 @@ The current schema does not require these fields. They are `PROPOSED` semantic r
 | `candidate_geometry_ref` | Internal geometry/support-scope reference, with public-safe generalization required before public exposure. |
 | `spatial_precision_class` | Precision bucket or generalization class; exact coordinate handling must be policy-gated. |
 | `temporal_scope` | Valid/observed/source/retrieval/review time context where material. |
-| `confidence_statement` | Bounded, non-blank confidence or uncertainty note; must not be treated as confirmation. |
+| `confidence_statement` | Bounded confidence or uncertainty note containing at least one content code point outside the schema's explicit Unicode space/control set; must not be treated as confirmation. |
 | `review_state` | Intake, needs review, under review, rejected, retained, promoted, superseded, or quarantined candidate state. |
 | `review_refs` | StewardReview, CulturalReview, or other review record references. |
 | `policy_state` | Policy posture or policy-decision reference. |

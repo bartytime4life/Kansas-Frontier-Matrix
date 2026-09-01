@@ -115,6 +115,10 @@ CANDIDATE_ID_PATTERN = re.compile(r"^arc-candidate-[a-z0-9][a-z0-9-]*$")
 KFM_REFERENCE_PATTERN = re.compile(r"^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$")
 SPEC_HASH_PATTERN = re.compile(r"^sha256:[a-f0-9]{64}$")
 CONFIDENCE_STATEMENT_MAX_LENGTH = 1000
+CONFIDENCE_CONTENT_PATTERN = re.compile(
+    r"[^\u0000-\u0020\u007F-\u00A0\u1680\u180E\u2000-\u200F"
+    r"\u2028-\u202F\u205F-\u206F\u3000\uFEFF]"
+)
 
 
 def _is_bounded_string(value: Any, allowed: frozenset[str]) -> bool:
@@ -267,7 +271,7 @@ def validate_candidate_feature(payload: Any) -> list[str]:
         and (
             not isinstance(confidence_statement, str)
             or not 1 <= len(confidence_statement) <= CONFIDENCE_STATEMENT_MAX_LENGTH
-            or not confidence_statement.strip()
+            or CONFIDENCE_CONTENT_PATTERN.search(confidence_statement) is None
         )
     ):
         errors.append("confidence_statement must contain 1 to 1000 characters")
