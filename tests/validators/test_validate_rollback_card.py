@@ -177,6 +177,46 @@ class RollbackCardValidatorTests(unittest.TestCase):
                 self.assertEqual(canonical.stdout, compatibility.stdout)
                 self.assertEqual(canonical.stderr, compatibility.stderr)
 
+    def test_compatibility_entrypoint_preserves_fail_closed_batch_mode(self) -> None:
+        candidates = (
+            "fixtures/release/rollback_card/valid/valid_hold.json",
+            (
+                "fixtures/release/rollback_card/invalid/"
+                "invalid_time_order.json"
+            ),
+        )
+        canonical = subprocess.run(
+            [
+                sys.executable,
+                "tools/validators/release/validate_rollback_card.py",
+                *candidates,
+            ],
+            cwd=REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        compatibility = subprocess.run(
+            [
+                sys.executable,
+                "tools/validators/validate_rollback_card.py",
+                *candidates,
+            ],
+            cwd=REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+        self.assertEqual(1, canonical.returncode)
+        records = [json.loads(line) for line in canonical.stdout.splitlines()]
+        self.assertEqual(2, len(records))
+        self.assertEqual(sorted(candidates), [record["file"] for record in records])
+        self.assertEqual(["FAIL", "PASS"], [record["outcome"] for record in records])
+        self.assertEqual(canonical.returncode, compatibility.returncode)
+        self.assertEqual(canonical.stdout, compatibility.stdout)
+        self.assertEqual(canonical.stderr, compatibility.stderr)
+
     def test_operator_guidance_describes_compatibility_delegate(self) -> None:
         stale_claims_by_path = {
             "docs/runbooks/atmosphere/RELEASE_ROLLBACK_RUNBOOK.md": (
