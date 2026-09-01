@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-validators-domains-hazards-readme
 title: tools/validators/domains/hazards/ — Hazards Validator Index
 type: readme
-version: v0.6
+version: v0.7
 status: draft; repository-grounded; mixed-maturity; non-semantic; non-policy; non-release; non-publication
 owner: NEEDS VERIFICATION — CODEOWNERS routes /tools/validators/ to @bartytime4life; no independently verified Hazards validation steward or required-review control was established
 created: 2026-07-07
-updated: 2026-08-28
+updated: 2026-09-01
 policy_label: repository-facing; validators; hazards; deterministic; no-network; cite-or-abstain; not-for-life-safety; release-gated
 current_path: tools/validators/domains/hazards/README.md
 owning_root: tools/
@@ -14,7 +14,7 @@ responsibility: index current Hazards validator implementations and placeholders
 truth_posture: cite-or-abstain; executable claims require current code plus paired deterministic proof; file presence or a green held workflow never establishes source admission, evidence closure, current hazard conditions, life-safety authority, release, or publication
 evidence_repository: bartytime4life/Kansas-Frontier-Matrix
 evidence_base_ref: main
-evidence_base_commit: 332a371f0be1aae68690853fba368a6289d2dab4
+evidence_base_commit: f4802ac39b0ad48296bc6c3fd80bffe7291dfc46
 codeowners_route: /tools/validators/ @bartytime4life
 directory_rules_adoption_adr: docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
 related:
@@ -35,7 +35,8 @@ notes:
   - "v0.6 corrects the hosted-workflow inventory: drinking-water advisory and NFHL/NLD/NID already have dedicated hosted workflows on the pinned base, while domain-hazards remains the bounded smoke and USDM materiality lane."
   - "v0.5 incorrectly classified the drinking-water advisory and NFHL/NLD/NID test families as not run in hosted workflows; that statement is superseded by current workflow evidence."
   - "v0.4 retires the unused domain-local generic-schema placeholder after confirming that no Hazards schema or consumer names it and repository-wide schema validation is already established."
-  - "Three scripts have substantive implementations and paired deterministic tests; two scripts remain explicit NotImplementedError placeholders and are not validation evidence."
+  - "Four scripts have substantive implementations and paired deterministic tests; two scripts remain explicit NotImplementedError placeholders and are not validation evidence."
+  - "v0.7 adds deterministic, no-network temporal ordering and freshness-budget validation for the existing inactive KDHE HAB advisory snapshot profile; it does not activate the source or authorize alerts, release, deployment, or publication."
   - "The EvidenceBundle convergence test enforces the single declared validator path and shared-fixture polarity."
   - "The domain-hazards workflow executes the bounded smoke and USDM materiality lane; dedicated profile workflows execute the drinking-water advisory and NFHL/NLD/NID suites; proof and release jobs remain explicit holds."
   - "This correction changes documentation only; it changes no validator implementation, schema, contract, fixture, test, workflow, policy, source, evidence, lifecycle object, release, deployment, or public surface."
@@ -44,8 +45,8 @@ notes:
 # `tools/validators/domains/hazards/` — Hazards Validator Index
 
 [![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
-[![Inventory: 5 scripts](https://img.shields.io/badge/inventory-5%20scripts-2da44e?style=flat-square)](#current-validator-inventory)
-[![Executable: 3](https://img.shields.io/badge/executable-3-1f6feb?style=flat-square)](#substantive-implementations)
+[![Inventory: 6 scripts](https://img.shields.io/badge/inventory-6%20scripts-2da44e?style=flat-square)](#current-validator-inventory)
+[![Executable: 4](https://img.shields.io/badge/executable-4-1f6feb?style=flat-square)](#substantive-implementations)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-boundary)
 
 > [!IMPORTANT]
@@ -55,7 +56,7 @@ notes:
 
 This directory is the Hazards validation implementation lane under the `tools/` responsibility root. It owns repository validator code and this local inventory. Hazards meaning remains under [`contracts/`](../../../../contracts/domains/hazards/README.md); machine shape remains under [`schemas/`](../../../../schemas/contracts/v1/domains/hazards/README.md); fixtures and tests remain under their own roots.
 
-The index reports the exact tree at `main@332a371f0be1aae68690853fba368a6289d2dab4`. It distinguishes substantive implementations from tracked placeholders and distinguishes the aggregate Hazards workflow from dedicated profile workflows so hosted evidence is not understated or overstated.
+The index reports the exact tree at `main@f4802ac39b0ad48296bc6c3fd80bffe7291dfc46`. It distinguishes substantive implementations from tracked placeholders and distinguishes the aggregate Hazards workflow from dedicated profile workflows so hosted evidence is not understated or overstated.
 
 ## Status
 
@@ -63,8 +64,8 @@ The index reports the exact tree at `main@332a371f0be1aae68690853fba368a6289d2da
 |---|---|
 | Owning responsibility root | `tools/` — repository tooling and validators |
 | Local scope | Hazards validator implementations and inventory |
-| Python scripts | 5 |
-| Substantive implementations | 3 |
+| Python scripts | 6 |
+| Substantive implementations | 4 |
 | Explicit `NotImplementedError` placeholders | 2 |
 | Child directories | None |
 | CODEOWNERS route | `/tools/validators/ @bartytime4life` |
@@ -90,6 +91,7 @@ The Hazards boundary remains fail-closed:
 | Validator | Confirmed bounded behavior | Paired executable evidence | Workflow posture |
 |---|---|---|---|
 | [`validate_drinking_water_advisory.py`](./validate_drinking_water_advisory.py) | Closed proposed advisory profile with deterministic structural and semantic findings | [`test_drinking_water_advisory.py`](../../../../tests/domains/hazards/test_drinking_water_advisory.py) and the [`drinking_water_advisory/`](../../../../fixtures/domains/hazards/drinking_water_advisory/README.md) fixture family | Hosted by dedicated [`drinking-water-advisory.yml`](../../../../.github/workflows/drinking-water-advisory.yml), which runs the focused unit suite and exact fixture replay; exact-head hosted result is required before claiming PASS |
+| [`validate_kdhe_hab_temporal.py`](./validate_kdhe_hab_temporal.py) | Deterministic cross-field observation ordering, source-time ordering, active-state currentness, and retrieval-relative freshness-budget enforcement for the inactive KDHE HAB advisory snapshot profile | [`test_validate_kdhe_hab_temporal.py`](../../../../tests/validators/domains/hazards/test_validate_kdhe_hab_temporal.py) and the existing [`kdhe_hab_advisory_snapshot/`](../../../../fixtures/domains/hazards/kdhe_hab_advisory_snapshot/) valid/invalid families | Not separately hosted at this boundary; local focused proof and exact fixture replay are required, and hosted checks must not be described as profile execution unless a workflow actually invokes it |
 | [`validate_nfhl_nld_nid_source_role_profile.py`](./validate_nfhl_nld_nid_source_role_profile.py) | Fail-closed NFHL/NLD/NID source-role separation profile | [`test_validate_nfhl_nld_nid_source_role_profile.py`](../../../../tests/validators/domains/hazards/test_validate_nfhl_nld_nid_source_role_profile.py) | Hosted by dedicated [`nfhl-nld-nid-source-role-profile.yml`](../../../../.github/workflows/nfhl-nld-nid-source-role-profile.yml), which runs the focused deterministic no-network suite and exact fixture replay; exact-head hosted result is required before claiming PASS |
 | [`validate_usdm_materiality.py`](./validate_usdm_materiality.py) | Deterministic, no-network USDM material-change evaluation over committed synthetic cases | [`test_validate_usdm_materiality.py`](../../../../tests/domains/hazards/test_validate_usdm_materiality.py) and [`usdm_materiality/cases.json`](../../../../fixtures/domains/hazards/usdm_materiality/cases.json) | Executed by `make hazards-validate`, which is invoked by [`domain-hazards.yml`](../../../../.github/workflows/domain-hazards.yml) |
 
@@ -111,7 +113,7 @@ Placeholder presence is **CONFIRMED**. Behavior, fixture polarity, registry wiri
 The direct Hazards test surface is mixed maturity:
 
 - [`tests/domains/hazards/`](../../../../tests/domains/hazards/README.md) contains the bounded smoke, drinking-water advisory, USDM materiality, and synthetic rollback suites plus additional small boundary tests and child lanes.
-- `tests/validators/domains/hazards/` contains the NFHL/NLD/NID source-role test and an EvidenceBundle schema-convergence test. It has no README at the pinned tree.
+- `tests/validators/domains/hazards/` contains the NFHL/NLD/NID source-role test, the KDHE HAB temporal-validator test, and an EvidenceBundle schema-convergence test. It has no README at the pinned tree.
 - [`fixtures/domains/hazards/`](../../../../fixtures/domains/hazards/README.md) contains committed drought, advisory, USDM, rollback, and supporting fixture families. A folder name is not proof that every contained object family has complete valid/invalid/golden coverage.
 
 The EvidenceBundle convergence test checks schema relationships directly, enforces the schema-declared repository-root projection validator, and confirms shared-fixture polarity. No domain-local EvidenceBundle validator alias remains.
@@ -174,6 +176,8 @@ make hazards-validate
 python -m unittest -v tests.domains.hazards.test_drinking_water_advisory
 python -m unittest -v tests.validators.domains.hazards.test_validate_nfhl_nld_nid_source_role_profile
 python -m unittest -v tests.validators.domains.hazards.test_evidence_bundle_schema_convergence
+python -m unittest -v tests.validators.domains.hazards.test_validate_kdhe_hab_temporal
+python tools/validators/domains/hazards/validate_kdhe_hab_temporal.py --fixtures
 ```
 
 Run only commands whose dependencies are present. Passing these commands remains head-specific evidence for the named surface; it does not activate live sources or advance evidence, policy, lifecycle, release, deployment, or publication state.
@@ -198,7 +202,7 @@ This README is repository-facing documentation. Rollback is a reviewed revert of
 
 | Field | Value |
 |---|---|
-| Evidence date | 2026-08-28 |
-| Pinned repository commit | `332a371f0be1aae68690853fba368a6289d2dab4` |
-| Review result | Five scripts confirmed: three substantive implementations and two explicit `NotImplementedError` placeholders; dedicated hosted workflows already exercise the drinking-water advisory and NFHL/NLD/NID profiles, while `domain-hazards` remains the bounded smoke and USDM materiality lane |
+| Evidence date | 2026-09-01 |
+| Pinned repository commit | `f4802ac39b0ad48296bc6c3fd80bffe7291dfc46` |
+| Review result | Six scripts confirmed: four substantive implementations and two explicit `NotImplementedError` placeholders; the KDHE HAB temporal profile has focused deterministic local proof but no dedicated hosted workflow at this boundary |
 | Next trigger | Validator add/remove/rename, placeholder implementation, fixture/test/workflow change, validator-registry change, source-admission change, or consumer adoption |
