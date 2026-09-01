@@ -41,6 +41,19 @@ class InstallKfmCliTests(unittest.TestCase):
             with self.assertRaises(module.CliInstallConfigurationError):
                 module.validate_lockfile(path)
 
+    def test_lock_validation_rejects_network_source_override(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "unsafe.lock"
+            path.write_text(
+                "--extra-index-url https://packages.example.invalid/simple\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                module.CliInstallConfigurationError,
+                "CLI_LOCKFILE_SOURCE_UNSAFE",
+            ):
+                module.validate_lockfile(path)
+
     def test_install_executes_argument_vectors_without_a_shell(self) -> None:
         with mock.patch.object(module.subprocess, "run") as run:
             module.install()
