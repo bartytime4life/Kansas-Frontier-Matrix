@@ -68,6 +68,7 @@ Each rule reports a non-negative failure count. Endpoint source roles remain sep
 - `SPATIAL_TEMPORAL` compares synthetic spatial-cell refs and timezone-aware intervals with a declared tolerance. It is not a geometry engine and proves no real-world spatial relationship.
 - Missing EvidenceRefs abstain. Modeled, aggregate, or candidate role conflicts abstain. Restricted generalized context abstains for sensitivity review. Restricted exact geometry and living-person joins deny.
 - `candidate_id` is RFC 8785/SHA-256 over request and endpoints. `spec_hash` binds the complete assessment excluding `assessment_id` and `spec_hash`.
+- `--derive` validates the fully sealed assessment before stdout. A malformed or schema-invalid input returns a bounded `FAIL` result and never emits a schema-invalid assessment as successful output.
 
 ## Non-publisher effects
 
