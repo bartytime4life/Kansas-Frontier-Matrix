@@ -91,9 +91,24 @@ def _float(value: str) -> float:
     return parsed
 
 
+def _has_repository_symlink_component(path: Path) -> bool:
+    """Return whether a lexically repository-local path traverses a symlink."""
+    try:
+        root = ROOT.resolve()
+        relative = path.absolute().relative_to(root)
+        current = root
+        for part in relative.parts:
+            current /= part
+            if current.is_symlink():
+                return True
+    except (OSError, RuntimeError, ValueError):
+        return False
+    return False
+
+
 def _read(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
     try:
-        if path.is_symlink():
+        if _has_repository_symlink_component(path):
             return None, [Finding("KDHE_HAB_INPUT_SYMLINK_DENIED", "/")]
         try:
             resolved = path.resolve(strict=False)

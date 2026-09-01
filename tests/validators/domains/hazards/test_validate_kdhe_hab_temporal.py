@@ -303,6 +303,25 @@ class KdheHabTemporalValidatorTests(unittest.TestCase):
             {("KDHE_HAB_INPUT_SYMLINK_DENIED", "/")},
         )
 
+    def test_repository_local_ancestor_symlink_is_denied(self) -> None:
+        with tempfile.TemporaryDirectory(dir=ROOT) as temporary_directory:
+            root = Path(temporary_directory)
+            target = root / "target"
+            target.mkdir()
+            (target / "candidate.json").write_text(
+                json.dumps(self._candidate()),
+                encoding="utf-8",
+            )
+            alias = root / "alias"
+            alias.symlink_to(target, target_is_directory=True)
+            result = validate_file(alias / "candidate.json")
+
+        self.assertEqual(result.outcome, "ERROR")
+        self.assertEqual(
+            {(finding.code, finding.path) for finding in result.findings},
+            {("KDHE_HAB_INPUT_SYMLINK_DENIED", "/")},
+        )
+
     def test_schema_invalid_types_return_finite_deny_results(self) -> None:
         invalid_state = self._candidate()
         invalid_state["normalized_state"] = ["WATCH"]
