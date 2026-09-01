@@ -45,7 +45,7 @@ ALLOWED_TOP_LEVEL_FIELDS = frozenset(
 ALLOWED_SPATIAL_FIELDS = frozenset({"kind", "county_fips"})
 ALLOWED_TEMPORAL_FIELDS = frozenset({"observed_at", "retrieved_at"})
 ALLOWED_MEASUREMENT_FIELDS = frozenset(
-    {"parameter_code", "value", "unit", "qualifier", "no_data"}
+    {"parameter_code", "value", "unit", "qualifier", "provisional_status", "no_data"}
 )
 ALLOWED_GOVERNANCE_FIELDS = frozenset(
     {
@@ -222,6 +222,12 @@ def validate_candidate(candidate: object) -> list[Finding]:
             add_finding(findings, "MEASUREMENT_UNIT_INVALID", "$.measurement.unit")
         if measurement.get("qualifier") != "synthetic":
             add_finding(findings, "QUALIFIER_INVALID", "$.measurement.qualifier")
+        if not is_nonempty_string(measurement.get("provisional_status")):
+            add_finding(
+                findings,
+                "PROVISIONAL_STATUS_MISSING",
+                "$.measurement.provisional_status",
+            )
         if measurement.get("no_data") is not False:
             add_finding(findings, "NO_DATA_STATE_INVALID", "$.measurement.no_data")
 
