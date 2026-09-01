@@ -1,4 +1,5 @@
 import answerFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/answer-corrected.json";
+import staleFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/abstain-stale.json";
 import supersededFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/abstain-superseded.json";
 import denyFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/deny-sensitive.json";
 import {
@@ -42,6 +43,28 @@ const cases: readonly MapEvidenceFixtureCase[] = Object.freeze([
       layer_id: "layer:synthetic-restricted",
       feature_id: "feature:restricted",
       evidence_refs: ["kfm:evidence:synthetic:restricted"],
+    },
+  },
+  {
+    caseId: "stale",
+    label: "Select stale map evidence",
+    selection: {
+      profile: MAP_FEATURE_SELECTION_PROFILE,
+      selection_id: "selection:stale",
+      layer_id: "layer:synthetic-streamflow",
+      feature_id: "feature:stale",
+      evidence_refs: ["kfm:evidence:synthetic:stale-001"],
+    },
+  },
+  {
+    caseId: "stale-mismatch",
+    label: "Select feature with mismatched stale evidence",
+    selection: {
+      profile: MAP_FEATURE_SELECTION_PROFILE,
+      selection_id: "selection:stale-mismatch",
+      layer_id: "layer:synthetic-streamflow",
+      feature_id: "feature:stale-mismatch",
+      evidence_refs: ["kfm:evidence:synthetic:other"],
     },
   },
   {
@@ -98,6 +121,9 @@ mountMapFeatureEvidenceFixture(root, cases, async (selection) => {
   switch (selection.selectionId) {
     case "selection:restricted":
       return denyFixture;
+    case "selection:stale":
+    case "selection:stale-mismatch":
+      return staleFixture;
     case "selection:superseded":
     case "selection:history-mismatch":
       return supersededFixture;
