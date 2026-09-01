@@ -104,7 +104,10 @@ def validate_local_package(path: Path = LOCAL_PACKAGE) -> None:
         path.resolve().relative_to(REPO_ROOT)
     except (OSError, ValueError) as exc:
         raise CliInstallConfigurationError("CLI_LOCAL_PACKAGE_OUTSIDE_REPOSITORY") from exc
-    if not (path / "pyproject.toml").is_file():
+    metadata = path / "pyproject.toml"
+    if metadata.is_symlink():
+        raise CliInstallConfigurationError("CLI_LOCAL_PACKAGE_METADATA_UNSAFE")
+    if not metadata.is_file():
         raise CliInstallConfigurationError("CLI_LOCAL_PACKAGE_METADATA_MISSING")
 
 
