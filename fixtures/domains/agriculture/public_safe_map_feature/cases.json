@@ -216,6 +216,38 @@
       ]
     },
     {
+      "case_id": "irrigation_claims_hydrology_observation",
+      "mutations": [
+        {
+          "path": "/object_family",
+          "value": "IrrigationLink"
+        },
+        {
+          "path": "/semantic_role",
+          "value": "IRRIGATION_CONTEXT"
+        },
+        {
+          "path": "/indicator/unit",
+          "value": "CONTEXT_ONLY"
+        },
+        {
+          "path": "/indicator/value_role",
+          "value": "CONTEXT_ONLY"
+        },
+        {
+          "path": "/authority/hydrology_observation",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "AG_MAP_SCHEMA_INVALID",
+          "path": "/authority/hydrology_observation"
+        }
+      ]
+    },
+    {
       "case_id": "crop_year_label_outside_interval",
       "mutations": [
         {
