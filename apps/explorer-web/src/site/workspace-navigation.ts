@@ -82,6 +82,35 @@ export function resolveSinglePublicKnowledgeDomainId(url: URL): string | null {
 }
 
 /**
+ * Recognize the one existing deterministic map fixture that is safe to restore
+ * from shareable public URL state.
+ *
+ * The public URL parser already rejects selections carrying evidence refs. This
+ * resolver adds an exact identity allowlist so a caller cannot strip evidence
+ * refs from a supported/restricted fixture and cause Explorer to resolve richer
+ * evidence than the URL is allowed to carry. The only admitted case is the
+ * existing evidence-free synthetic selection, whose governed bridge resolves to
+ * ABSTAIN / MISSING_EVIDENCE without invoking transport or source access.
+ */
+export function resolvePublicEvidenceFreeMapCaseId(url: URL): "missing" | null {
+  const context = parsePublicWorkspaceContextUrl(url);
+  const selection = context?.selection;
+  if (
+    context?.workspaceId !== "explore" ||
+    selection === null ||
+    selection.evidenceRefs.length !== 0
+  ) {
+    return null;
+  }
+
+  return selection.selectionId === "selection:missing" &&
+    selection.layerId === "layer:synthetic-streamflow" &&
+    selection.featureId === "feature:missing"
+    ? "missing"
+    : null;
+}
+
+/**
  * Project the public workspace registry into the existing anchor navigation.
  * This replaces display links only; it creates no routes or privileged actions.
  */
