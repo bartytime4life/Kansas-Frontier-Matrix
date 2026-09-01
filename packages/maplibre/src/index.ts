@@ -4,4 +4,5 @@ export * from "./map-runtime-navigation-history";
 export * from "./map-runtime-resize-coordinator";
 export * from "./map-runtime-camera-coordinator";
 export * from "./map-runtime-temporal-playback";
+export * from "./map-runtime-bounds-fit";
 export * from "./null-map-runtime";
