@@ -10,6 +10,7 @@ import {
 } from "../src/site/workspace-context";
 import {
   resolvePublicWorkspaceNavigationState,
+  resolveSinglePublicKnowledgeDomainId,
   sanitizePublicWorkspaceNavigationUrl,
 } from "../src/site/workspace-navigation";
 
@@ -59,6 +60,41 @@ describe("Explorer public workspace navigation integration", () => {
       workspaceId: "trust",
       contextState: "ANCHOR_ONLY",
     });
+  });
+
+  it("selects exactly one catalog-bounded public Knowledge domain", () => {
+    const archaeologyContext = {
+      ...knowledgeContext,
+      domainIds: ["archaeology"],
+    };
+    const peopleDnaLandContext = {
+      ...knowledgeContext,
+      domainIds: ["people_dna_land"],
+    };
+
+    expect(
+      resolveSinglePublicKnowledgeDomainId(
+        contextUrl(archaeologyContext, "#knowledge"),
+      ),
+    ).toBe("archaeology");
+    expect(
+      resolveSinglePublicKnowledgeDomainId(
+        contextUrl(peopleDnaLandContext, "#knowledge"),
+      ),
+    ).toBe("people_dna_land");
+  });
+
+  it("does not guess a primary domain when a public context names several", () => {
+    const multiDomainContext = {
+      ...knowledgeContext,
+      domainIds: ["archaeology", "people_dna_land"],
+    };
+
+    expect(
+      resolveSinglePublicKnowledgeDomainId(
+        contextUrl(multiDomainContext, "#knowledge"),
+      ),
+    ).toBeNull();
   });
 
   it("scrubs a rejected context while preserving unrelated public URL state", () => {
@@ -113,6 +149,7 @@ describe("Explorer public workspace navigation integration", () => {
       workspaceId: "explore",
       contextState: "ANCHOR_ONLY",
     });
+    expect(resolveSinglePublicKnowledgeDomainId(url)).toBeNull();
 
     const sanitized = sanitizePublicWorkspaceNavigationUrl(url);
     expect(sanitized.searchParams.has(PUBLIC_WORKSPACE_CONTEXT_QUERY_PARAM)).toBe(
@@ -125,16 +162,24 @@ describe("Explorer public workspace navigation integration", () => {
     );
   });
 
-  it("keeps URL synchronization bounded to navigation state", () => {
+  it("keeps URL synchronization bounded to navigation and public domain state", () => {
     expect(navigationSource).toContain('link.setAttribute("aria-current", "page")');
     expect(navigationSource).toContain('link.removeAttribute("aria-current")');
     expect(navigationSource).toContain(
       "safeUrl.searchParams.delete(PUBLIC_WORKSPACE_CONTEXT_QUERY_PARAM)",
     );
+    expect(navigationSource).toContain(
+      "resolveSinglePublicKnowledgeDomainId",
+    );
     expect(navigationSource).not.toContain("evidenceRefs.some");
     expect(mainSource).toContain("sanitizePublicWorkspaceNavigationUrl");
     expect(mainSource).toContain("window.history.replaceState");
     expect(mainSource).toContain("syncPublicWorkspaceNavigation");
+    expect(mainSource).toContain("resolveSinglePublicKnowledgeDomainId");
+    expect(mainSource).toContain(
+      'querySelectorAll<HTMLButtonElement>("button[data-domain-id]")',
+    );
+    expect(mainSource).toContain("domainButton.click()");
     expect(mainSource).toContain('window.addEventListener("hashchange"');
     expect(mainSource).toContain('window.addEventListener("popstate"');
     expect(navigationCss).toContain('.site-nav a[aria-current="page"]');
