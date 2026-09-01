@@ -1,3 +1,4 @@
+import withdrawnFixture from "../../../../fixtures/ui/focus_composed_claim_projection/valid/abstain-withdrawn.json";
 import answerFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/answer-corrected.json";
 import staleFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/abstain-stale.json";
 import supersededFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/abstain-superseded.json";
@@ -68,6 +69,30 @@ const cases: readonly MapEvidenceFixtureCase[] = Object.freeze([
     },
   },
   {
+    caseId: "withdrawn",
+    label: "Select withdrawn evidence history",
+    selection: {
+      profile: MAP_FEATURE_SELECTION_PROFILE,
+      selection_id: "selection:withdrawn",
+      layer_id: "layer:synthetic-streamflow",
+      feature_id: "feature:withdrawn",
+      evidence_refs: [
+        "kfm:evidence:synthetic:withdrawn-soil-summary-001",
+      ],
+    },
+  },
+  {
+    caseId: "withdrawn-mismatch",
+    label: "Select feature with mismatched withdrawn evidence",
+    selection: {
+      profile: MAP_FEATURE_SELECTION_PROFILE,
+      selection_id: "selection:withdrawn-mismatch",
+      layer_id: "layer:synthetic-streamflow",
+      feature_id: "feature:withdrawn-mismatch",
+      evidence_refs: ["kfm:evidence:synthetic:other"],
+    },
+  },
+  {
     caseId: "superseded",
     label: "Select superseded evidence history",
     selection: {
@@ -124,6 +149,9 @@ mountMapFeatureEvidenceFixture(root, cases, async (selection) => {
     case "selection:stale":
     case "selection:stale-mismatch":
       return staleFixture;
+    case "selection:withdrawn":
+    case "selection:withdrawn-mismatch":
+      return withdrawnFixture.evidence_drawer;
     case "selection:superseded":
     case "selection:history-mismatch":
       return supersededFixture;
