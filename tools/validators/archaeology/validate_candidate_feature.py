@@ -114,6 +114,7 @@ EVIDENCE_BOUND_LIFECYCLE_STATES = frozenset({"PROCESSED", "CATALOG"})
 CANDIDATE_ID_PATTERN = re.compile(r"^arc-candidate-[a-z0-9][a-z0-9-]*$")
 KFM_REFERENCE_PATTERN = re.compile(r"^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$")
 SPEC_HASH_PATTERN = re.compile(r"^sha256:[a-f0-9]{64}$")
+CONFIDENCE_STATEMENT_MAX_LENGTH = 1000
 
 
 def _is_bounded_string(value: Any, allowed: frozenset[str]) -> bool:
@@ -258,6 +259,15 @@ def validate_candidate_feature(payload: Any) -> list[str]:
         )
     ):
         errors.append("spec_hash must match ^sha256:[a-f0-9]{64}$")
+    confidence_statement = payload.get("confidence_statement")
+    if (
+        confidence_statement is not None
+        and (
+            not isinstance(confidence_statement, str)
+            or not 1 <= len(confidence_statement) <= CONFIDENCE_STATEMENT_MAX_LENGTH
+        )
+    ):
+        errors.append("confidence_statement must contain 1 to 1000 characters")
 
     return errors
 
@@ -282,6 +292,7 @@ def validate_fixture_suite() -> int:
         FIXTURE_ROOT / "empty_evidence_refs_deny.json": "evidence_refs must contain",
         FIXTURE_ROOT / "non_string_vocabulary_deny.json": "candidate_type is not in",
         FIXTURE_ROOT / "malformed_spec_hash_deny.json": "spec_hash must match",
+        FIXTURE_ROOT / "malformed_confidence_statement_deny.json": "confidence_statement must contain",
     }
     valid_errors = validate_candidate_feature(_load(valid_path))
     if valid_errors:

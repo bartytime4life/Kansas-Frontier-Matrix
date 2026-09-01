@@ -12,6 +12,7 @@ from pathlib import Path
 from tools.validators.archaeology.validate_candidate_feature import (
     CANDIDATE_ID_PATTERN,
     CANDIDATE_TYPES,
+    CONFIDENCE_STATEMENT_MAX_LENGTH,
     FORBIDDEN_INLINE_LOCATION_FIELDS,
     FORBIDDEN_SITE_CLAIM_FIELDS,
     SPEC_HASH_PATTERN,
@@ -79,6 +80,20 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         self.assertIn(expected_error, validate_candidate_feature(payload))
         payload["spec_hash"] = {"synthetic": "not-a-digest"}
         self.assertIn(expected_error, validate_candidate_feature(payload))
+
+    def test_malformed_confidence_statement_fails_closed(self) -> None:
+        payload = _load(
+            FIXTURE_ROOT / "malformed_confidence_statement_deny.json"
+        )
+        expected_error = "confidence_statement must contain 1 to 1000 characters"
+        self.assertIn(expected_error, validate_candidate_feature(payload))
+        for malformed in (
+            {"synthetic": "not-a-statement"},
+            "x" * (CONFIDENCE_STATEMENT_MAX_LENGTH + 1),
+        ):
+            with self.subTest(value_type=type(malformed).__name__):
+                payload["confidence_statement"] = malformed
+                self.assertIn(expected_error, validate_candidate_feature(payload))
 
     def test_unsupported_spatial_precision_fails_closed(self) -> None:
         payload = _load(FIXTURE_ROOT / "unsupported_spatial_precision_deny.json")
@@ -175,6 +190,11 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
             CANDIDATE_ID_PATTERN.pattern,
         )
         self.assertEqual(properties["spec_hash"]["pattern"], SPEC_HASH_PATTERN.pattern)
+        self.assertEqual(properties["confidence_statement"]["minLength"], 1)
+        self.assertEqual(
+            properties["confidence_statement"]["maxLength"],
+            CONFIDENCE_STATEMENT_MAX_LENGTH,
+        )
         self.assertFalse(schema["additionalProperties"])
         self.assertTrue(FORBIDDEN_INLINE_LOCATION_FIELDS.isdisjoint(properties))
         self.assertTrue(FORBIDDEN_SITE_CLAIM_FIELDS.isdisjoint(properties))

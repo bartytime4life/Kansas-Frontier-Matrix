@@ -16,6 +16,8 @@ burial, sacred-place, collection-security, or culturally restricted data.
   membership or evidence-binding checks.
 - `malformed_spec_hash_deny.json` proves that optional evidence-binding digests
   use the same lowercase SHA-256 grammar in the schema and executable validator.
+- `malformed_confidence_statement_deny.json` proves that optional confidence
+  prose remains a bounded string instead of accepting empty or structured values.
 - `unsupported_spatial_precision_deny.json` proves that unsupported precision
   labels such as `EXACT` fail closed instead of implying an unsafe location posture.
 - `unclassified_geometry_reference_deny.json` proves that even an opaque internal
@@ -48,6 +50,6 @@ precision binding; bounded candidate discriminator; inline location denial;
 opaque-reference boundary; conditional EvidenceRef binding; and supersession
 correction binding; malformed-reference finite denial; and nonempty governed
 reference bindings; malformed-vocabulary finite denial; and schema-aligned
-`spec_hash` validation. It does not confirm a site, authorize publication, or
-establish full EvidenceBundle closure, policy, cultural review, or public-safe
-transformation.
+`spec_hash` and confidence-statement validation. It does not confirm a site,
+authorize publication, or establish full EvidenceBundle closure, policy,
+cultural review, or public-safe transformation.
