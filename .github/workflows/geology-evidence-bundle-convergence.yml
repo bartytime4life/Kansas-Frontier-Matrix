@@ -7,9 +7,8 @@ on:
       - 'schemas/contracts/v1/domains/geology/evidence_bundle.schema.json'
       - 'fixtures/contracts/v1/evidence/evidence_bundle/**'
       - 'tools/validators/validate_geology_evidence_bundle_projection.py'
-      - 'tools/validators/domains/geology/validate_evidence_bundle.py'
+      - 'tools/validators/domains/geology/validate_schema.py'
       - 'tests/validators/domains/geology/test_evidence_bundle_schema_convergence.py'
-      - 'tests/validators/domains/geology/test_domain_evidence_bundle_validator_entrypoint.py'
       - '.github/workflows/geology-evidence-bundle-convergence.yml'
   workflow_dispatch:
 
@@ -38,15 +37,13 @@ jobs:
         run: >-
           python -m py_compile
           tools/validators/validate_geology_evidence_bundle_projection.py
-          tools/validators/domains/geology/validate_evidence_bundle.py
+          tools/validators/domains/geology/validate_schema.py
           tests/validators/domains/geology/test_evidence_bundle_schema_convergence.py
-          tests/validators/domains/geology/test_domain_evidence_bundle_validator_entrypoint.py
       - name: Run deterministic convergence tests
         run: >-
           python -m unittest -q
           tests.validators.domains.geology.test_evidence_bundle_schema_convergence
-          tests.validators.domains.geology.test_domain_evidence_bundle_validator_entrypoint
       - name: Validate shared fixtures through the Geology projection
         run: |
           python tools/validators/validate_geology_evidence_bundle_projection.py --fixtures
-          python tools/validators/domains/geology/validate_evidence_bundle.py --fixtures
+          python tools/validators/domains/geology/validate_schema.py --fixtures
