@@ -86,6 +86,56 @@ describe("Explorer public workspace navigation integration", () => {
     ).toBe("people_dna_land");
   });
 
+  it("does not partially apply a Knowledge domain while other public context is unconsumed", () => {
+    const archaeologyContext = {
+      ...knowledgeContext,
+      domainIds: ["archaeology"],
+    };
+    const variants = [
+      { ...archaeologyContext, placeIds: ["place:synthetic"] },
+      {
+        ...archaeologyContext,
+        camera: {
+          longitude: -98,
+          latitude: 38.5,
+          zoom: 5,
+          bearing: 0,
+          pitch: 0,
+        },
+      },
+      {
+        ...archaeologyContext,
+        layerIds: ["layer:synthetic-streamflow"],
+        selection: {
+          profile: MAP_FEATURE_SELECTION_PROFILE,
+          selectionId: "selection:missing",
+          layerId: "layer:synthetic-streamflow",
+          featureId: "feature:missing",
+          evidenceRefs: [],
+        },
+      },
+      {
+        ...archaeologyContext,
+        time: { ...knowledgeContext.time, validAt: "2026-09-01" },
+      },
+      {
+        ...archaeologyContext,
+        compare: {
+          mode: "SIDE_BY_SIDE",
+          leftContextId: "context:left",
+          rightContextId: "context:right",
+        },
+      },
+      { ...archaeologyContext, storyNodeId: "story:synthetic" },
+    ];
+
+    for (const context of variants) {
+      expect(
+        resolveSinglePublicKnowledgeDomainId(contextUrl(context, "#knowledge")),
+      ).toBeNull();
+    }
+  });
+
   it("does not guess a primary domain when a public context names several", () => {
     const multiDomainContext = {
       ...knowledgeContext,
