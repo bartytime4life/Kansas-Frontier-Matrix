@@ -64,6 +64,11 @@ def test_no_input_fails_closed():
     assert module.main([]) == 2
 
 
+def test_fixture_mode_cannot_silently_skip_an_explicit_candidate():
+    module = _load_module()
+    assert module.main(["--fixtures", str(VALID_FIXTURE)]) == 2
+
+
 def test_schema_declares_the_executable_fixture_and_validator_bindings():
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
     bindings = schema["x-kfm"]
