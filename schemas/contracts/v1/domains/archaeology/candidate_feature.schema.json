@@ -64,7 +64,7 @@
       "uniqueItems": true,
       "items": {
         "type": "string",
-        "pattern": "^kfm://"
+        "pattern": "^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
       }
     },
     "evidence_refs": {
@@ -72,7 +72,7 @@
       "uniqueItems": true,
       "items": {
         "type": "string",
-        "pattern": "^kfm://"
+        "pattern": "^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
       }
     },
     "observation_refs": {
@@ -80,12 +80,12 @@
       "uniqueItems": true,
       "items": {
         "type": "string",
-        "pattern": "^kfm://"
+        "pattern": "^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
       }
     },
     "candidate_geometry_ref": {
       "type": "string",
-      "pattern": "^kfm://"
+      "pattern": "^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
     },
     "spatial_precision_class": {
       "type": "string",
@@ -134,7 +134,7 @@
       "uniqueItems": true,
       "items": {
         "type": "string",
-        "pattern": "^kfm://"
+        "pattern": "^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
       }
     },
     "spec_hash": {

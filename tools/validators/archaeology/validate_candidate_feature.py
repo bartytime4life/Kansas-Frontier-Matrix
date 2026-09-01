@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -93,6 +94,13 @@ SENSITIVITY_CLASSES = frozenset(
     {"RESTRICTED", "WITHHELD", "PUBLIC_SAFE_GENERALIZED"}
 )
 LIFECYCLE_STATES = frozenset({"WORK", "QUARANTINE", "PROCESSED", "CATALOG"})
+KFM_REFERENCE_PATTERN = re.compile(r"^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$")
+
+
+def _is_opaque_kfm_ref(value: Any) -> bool:
+    """Return whether a value is an opaque governed reference, not a locator."""
+
+    return isinstance(value, str) and KFM_REFERENCE_PATTERN.fullmatch(value) is not None
 
 
 def _validate_refs(value: Any, field: str, *, required: bool = False) -> list[str]:
@@ -104,8 +112,11 @@ def _validate_refs(value: Any, field: str, *, required: bool = False) -> list[st
     if len(value) != len(set(value)):
         errors.append(f"{field} must not contain duplicate references")
     for ref in value:
-        if not isinstance(ref, str) or not ref.startswith("kfm://"):
-            errors.append(f"{field} entries must be kfm:// references")
+        if not _is_opaque_kfm_ref(ref):
+            errors.append(
+                f"{field} entries must be opaque kfm:// references without query, "
+                "fragment, or encoded locator material"
+            )
     return errors
 
 
@@ -155,10 +166,11 @@ def validate_candidate_feature(payload: Any) -> list[str]:
         if field in payload:
             errors.extend(_validate_refs(payload[field], field))
     geometry_ref = payload.get("candidate_geometry_ref")
-    if geometry_ref is not None and (
-        not isinstance(geometry_ref, str) or not geometry_ref.startswith("kfm://")
-    ):
-        errors.append("candidate_geometry_ref must be a governed kfm:// reference")
+    if geometry_ref is not None and not _is_opaque_kfm_ref(geometry_ref):
+        errors.append(
+            "candidate_geometry_ref must be an opaque governed kfm:// reference "
+            "without query, fragment, or encoded locator material"
+        )
 
     return errors
 
@@ -170,17 +182,24 @@ def _load(path: Path) -> Any:
 
 def validate_fixture_suite() -> int:
     valid_path = FIXTURE_ROOT / "valid.json"
-    deny_path = FIXTURE_ROOT / "sensitive_geometry_deny.json"
+    deny_paths = {
+        FIXTURE_ROOT / "sensitive_geometry_deny.json": "inline location fields are denied",
+        FIXTURE_ROOT / "location_bearing_reference_deny.json": "opaque kfm:// references",
+    }
     valid_errors = validate_candidate_feature(_load(valid_path))
-    deny_errors = validate_candidate_feature(_load(deny_path))
     if valid_errors:
         print(f"FAIL {valid_path}: {'; '.join(valid_errors)}")
         return 1
-    if not deny_errors:
-        print(f"FAIL {deny_path}: expected fail-closed denial")
-        return 1
     print(f"PASS {valid_path}")
-    print(f"EXPECTED_FAIL {deny_path}: {'; '.join(deny_errors)}")
+    for deny_path, expected_error in deny_paths.items():
+        deny_errors = validate_candidate_feature(_load(deny_path))
+        if not any(expected_error in error for error in deny_errors):
+            print(
+                f"FAIL {deny_path}: expected {expected_error!r}; "
+                f"received {'; '.join(deny_errors) or 'no errors'}"
+            )
+            return 1
+        print(f"EXPECTED_FAIL {deny_path}: {'; '.join(deny_errors)}")
     return 0
 
 

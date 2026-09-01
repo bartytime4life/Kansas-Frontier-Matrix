@@ -1,691 +1,603 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runbooks/first-ingest
-title: First Ingest — Contributor Runbook
-type: standard
-version: v1
-status: draft
-owners: <docs steward + ingest lane owner — NEEDS VERIFICATION>
+title: First Ingest — Contributor Rehearsal and Readiness Runbook
+type: runbook
+version: v2.0
+status: draft; repository-grounded; FIXTURE_REHEARSAL_READY; LIVE_FIRST_INGEST_HELD; NON_PUBLISHING
+owners:
+  - docs steward — NEEDS VERIFICATION
+  - ingest lane owner — NEEDS VERIFICATION
 created: 2026-05-12
-updated: 2026-05-12
-policy_label: public
+updated: 2026-09-01
+owning_root: docs/
+policy_label: repository-facing; contributor-runbook; fixture-first; non-publishing
+responsibility: repository-grounded contributor rehearsal and live-ingest readiness guidance without source activation, lifecycle mutation, promotion, release, deployment, or publication authority
+truth_posture: CONFIRMED bounded no-network rehearsal surfaces / PROPOSED future governed live ingest / NEEDS VERIFICATION source admission, owners, shared execution path, hosted checks, and any live activation
 related:
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
-  - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
-  - docs/standards/RUN_RECEIPT.md
   - docs/runbooks/README.md
-  - connectors/README.md
+  - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
+  - contracts/source/source_ingestion_plan.md
+  - contracts/source/ingest_receipt.md
   - pipelines/ingest/README.md
-  - tools/validators/connector_gate/README.md
-  - tools/validators/promotion_gate/README.md
-  - schemas/contracts/v1/source/source-descriptor.json
-  - schemas/contracts/v1/receipts/run-receipt.json
-  - policy/ingest/admission.rego
-tags: [kfm, runbook, ingest, raw, work, processed, evidence, receipts, fail-closed]
+  - tools/ingest/csv_geojson_preflight/README.md
+  - pipelines/domains/hydrology/ingest_wbd_huc/README.md
 notes:
-  - First-time end-to-end ingest dry-run for a single source, one run, one domain.
-  - Strictly non-publishing — terminates at PROCESSED (with optional CATALOG dry-run).
-  - All concrete paths below the "Repo references" table are PROPOSED until verified against mounted repo evidence.
+  - "Evidence snapshot: bartytime4life/Kansas-Frontier-Matrix main at ed5b8cd5ebdab187684f216b296c5dde379b6ea9; previous target blob 92848fe3d575545262ecff0d0d72b4967942262c; the repository had zero open pull requests at final pre-branch inspection."
+  - "Inspection covered the target, adopted directory and lifecycle doctrine, trust boundaries, source guidance, contracts, schemas, fixture-first producers, validators, tests, workflows, receipt guidance, and placeholder shared ingest and CLI entrypoints."
+  - "Notion was coordination context and Google Drive was read-only design lineage; neither overrides current repository evidence."
+  - "The repository supports bounded no-network ingest rehearsals; it does not expose one verified generic live first-ingest command."
+  - "pipelines/ingest/main.py and apps/cli/src/kfm_cli/commands/ingest.py remain placeholders, so earlier kfm-connector, kfm-pipeline, and kfm-validate examples were removed."
+  - "SourceDescriptor contract/schema paths remain a documented convergence boundary; this runbook validates existing fixture families without declaring a new canonical path."
+  - "A rehearsal candidate, validator PASS, receipt, or green workflow does not activate a source, mutate lifecycle state, establish evidence closure, or authorize release or publication."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# First Ingest — Contributor Runbook
+# First Ingest — Contributor Rehearsal and Readiness Runbook
 
-> Stand up your first source-to-`PROCESSED` ingest slice on KFM **without publishing**, **without bypassing gates**, and with every step leaving an inspectable receipt.
+Use this runbook to rehearse KFM's source-intake boundaries with deterministic,
+public-safe fixtures and to assemble the evidence needed for a future governed
+ingest. The verified procedure stops before live source access, source
+activation, registry mutation, lifecycle writes, promotion, release,
+deployment, or publication.
 
-<p align="center">
-  <em>Evidence first · Watcher-as-non-publisher · Fail-closed · Reversible</em>
-</p>
+> [!IMPORTANT]
+> **The current generic first-ingest path is a rehearsal, not a live ingest.**
+> The shared `pipelines/ingest/` lane documents a boundary but does not establish
+> a shared executable system, and the operator CLI ingest module is a
+> placeholder. Use only the repository commands verified below.
 
-![Status](https://img.shields.io/badge/status-draft-orange)
-![Lifecycle](https://img.shields.io/badge/lifecycle-RAW→WORK→PROCESSED-blue)
-![Posture](https://img.shields.io/badge/posture-fail--closed-critical)
-![Publication](https://img.shields.io/badge/publication-NOT--PERMITTED-lightgrey)
-![Hash](https://img.shields.io/badge/spec__hash-jcs%3Asha256-success)
-![Receipts](https://img.shields.io/badge/receipts-required-purple)
-![Policy](https://img.shields.io/badge/policy-deny--by--default-important)
+> [!CAUTION]
+> A fixture, plan candidate, normalized candidate, `RAW_CANDIDATE`, receipt,
+> schema-valid record, test result, map, summary, or generated explanation is
+> not source truth, an `EvidenceBundle`, a lifecycle transition, or public-use
+> permission.
 
-<sub>**Status:** draft · **Owners:** docs steward + ingest lane owner *(NEEDS VERIFICATION)* · **Last updated:** 2026-05-12</sub>
+**Navigation:** [audience](#who-this-is-for) · [scope](#what-this-runbook-does-not-do) ·
+[current capability](#current-repository-capability) · [prerequisites](#prerequisites) ·
+[flow](#the-first-ingest-flow-at-a-glance) · [procedure](#step-0--choose-a-low-risk-first-source) ·
+[completion](#definition-of-done) · [rollback](#rollback-and-cleanup) ·
+[troubleshooting](#troubleshooting) · [references](#repo-references) ·
+[readiness](#a1--live-ingest-readiness-gate)
 
----
-
-## Quick jump
-
-- [Who this is for](#who-this-is-for)
-- [What this runbook does not do](#what-this-runbook-does-not-do)
-- [Doctrinal posture](#doctrinal-posture)
-- [Prerequisites](#prerequisites)
-- [The first-ingest flow at a glance](#the-first-ingest-flow-at-a-glance)
-- [Step 0 — Choose a low-risk first source](#step-0--choose-a-low-risk-first-source)
-- [Step 1 — Author a SourceDescriptor](#step-1--author-a-sourcedescriptor)
-- [Step 2 — Register the source and run the connector (RAW)](#step-2--register-the-source-and-run-the-connector-raw)
-- [Step 3 — Normalize into WORK](#step-3--normalize-into-work)
-- [Step 4 — Validate (WORK → PROCESSED)](#step-4--validate-work--processed)
-- [Step 5 — Catalog closure dry-run (no PUBLISHED edge)](#step-5--catalog-closure-dry-run-no-published-edge)
-- [Step 6 — Inspect your receipts](#step-6--inspect-your-receipts)
-- [Definition of Done](#definition-of-done)
-- [Rollback and cleanup](#rollback-and-cleanup)
-- [Troubleshooting](#troubleshooting)
-- [Repo references](#repo-references)
-- [Related docs](#related-docs)
-- [Appendices](#appendices)
-
----
+<a id="who-this-is-for"></a>
 
 ## Who this is for
 
-A first-time KFM contributor — connector author, domain editor, or steward apprentice — who needs to take a single, low-risk external source through one full governed loop on a developer machine and end with **receipts they can inspect**, not bytes they have shipped.
+This runbook is for a contributor who needs to learn and verify the intake
+contract before proposing a live connector or domain ingest change. It provides
+two safe rehearsal tracks:
 
-The point of this runbook is **not** to teach you how to publish. It is to teach you how publishing *is denied to you by default* and how to produce the evidence that a release manager would later use, if and only if every gate clears.
+1. a generic synthetic CSV-to-GeoJSON normalization preflight; and
+2. a Hydrology WBD HUC12 fixture-first ingest-candidate producer.
 
-> [!IMPORTANT]
-> This runbook stops at `PROCESSED`. The transitions `PROCESSED → CATALOG/TRIPLET` and `CATALOG/TRIPLET → PUBLISHED` are governed by separate runbooks, separate reviewers, and separate release authority. A first-ingest contributor MUST NOT promote past `PROCESSED` on their own.
+Choose one track for a first pass. Both are no-network, create review candidates
+only, and deny lifecycle and publication effects.
 
----
+For a real source, stop after the readiness assessment and hand off to the
+source, domain, rights, sensitivity, validation, and lifecycle owners. A
+contributor does not activate a source or select a RAW writer merely by
+completing this document.
+
+<a id="what-this-runbook-does-not-do"></a>
 
 ## What this runbook does not do
 
-- It does **not** publish anything to a public surface.
-- It does **not** mutate `data/catalog/`, `data/triplets/`, `data/published/`, or `release/`.
-- It does **not** authorize a connector to write outside `data/raw/<domain>/<source_id>/<run_id>/` or `data/quarantine/...`.
-- It does **not** waive any policy gate, validation gate, sensitivity check, or rights check.
-- It does **not** replace `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` for source-shape authority.
-- It does **not** establish a parallel home for receipts, proofs, manifests, or release artifacts.
+This runbook does not:
 
-If any step below appears to bend an invariant, the step is wrong — not the invariant. Open a `docs/registers/DRIFT_REGISTER.md` entry instead of working around it.
+- run a live connector or fetch an external endpoint;
+- create, approve, activate, supersede, or retire a `SourceDescriptor`;
+- resolve the current SourceDescriptor schema-path convergence boundary;
+- authorize a connector or shared pipeline to write RAW or QUARANTINE;
+- write to `data/raw/`, `data/work/`, `data/quarantine/`,
+  `data/processed/`, `data/catalog/`, `data/triplets/`, or
+  `data/published/`;
+- create an authoritative receipt, proof, policy decision, review record,
+  release manifest, correction notice, or rollback card;
+- promote anything to `PROCESSED`, `CATALOG`, `TRIPLET`, or `PUBLISHED`;
+- expose internal or restricted material to an API, map, search index, report,
+  export, or AI context; or
+- establish that live source terms, endpoints, credentials, rate limits,
+  payload shapes, or operational ownership are current.
 
----
+Do not use the old illustrative commands `kfm-connector run`,
+`kfm-pipeline normalize`, `kfm-pipeline catalog-close`, or
+`kfm-validate promotion-gate`. No verified generic implementation for those
+surfaces exists in the inspected repository state.
+
+<a id="doctrinal-posture"></a>
 
 ## Doctrinal posture
 
-KFM's lifecycle invariant (CONFIRMED doctrine, per `docs/doctrine/lifecycle-law.md` and `docs/doctrine/directory-rules.md`):
+The lifecycle remains:
 
-> **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED**
->
-> Promotion is a **governed state transition, not a file move.**
+```text
+RAW -> WORK or QUARANTINE -> PROCESSED -> CATALOG or TRIPLET -> PUBLISHED
+```
 
-Three rules dominate every step you will perform:
+Promotion is a governed state transition, not a file move, successful command,
+passing workflow, pull-request merge, deployment, or public-layer toggle.
 
-1. **Watcher-as-non-publisher.** Connectors, watchers, and pipeline workers emit candidate records and receipts. They never publish. They never rewrite catalog truth.
-2. **Cite-or-abstain.** Anything you cannot resolve to an `EvidenceBundle` via an `EvidenceRef` is not safely citable. First ingest produces the *raw materials* for evidence, not finished evidence.
-3. **Deny-by-default for sensitive classes.** If your source touches any class in the [Sensitive class register](#a1--sensitive-class-quick-reference), this runbook is not the right entry point. Use the sensitive-lane intake runbook instead.
+Four boundaries govern every first-ingest proposal:
 
-> [!CAUTION]
-> A `data/raw/...` write is not a "preview" of publication. It is admitted source material under source identity, with no public surface and no AI context exposure. Treat it accordingly.
+1. **Source metadata is not truth.** A `SourceDescriptor` constrains how KFM may
+   treat material; it does not prove the source's claims.
+2. **Receipts are process memory.** `IngestReceipt` records capture facts; it is
+   not `RunReceipt`, `EvidenceBundle`, `PolicyDecision`, or `ReleaseManifest`.
+3. **Unknown rights or sensitivity fail closed.** A digest or successful parser
+   cannot clear terms, consent, sovereignty, privacy, sensitivity, or harmful
+   precision.
+4. **Public clients remain behind the trust membrane.** They consume governed
+   interfaces or released public-safe artifacts, never RAW, WORK, QUARANTINE,
+   internal receipts, or unreleased candidates.
 
----
+The accepted [Directory Rules](../doctrine/directory-rules.md), through
+[ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md), place
+source-specific acquisition under `connectors/`, executable transformation
+under `pipelines/`, machine shapes under `schemas/`, test inputs under
+`fixtures/`, validation under `tools/validators/`, lifecycle instances under
+`data/`, and release decisions under `release/`.
+
+## Current repository capability
+
+| Surface | Current evidence | Boundary |
+|---|---|---|
+| `pipelines/ingest/README.md` | Repository-grounded shared ingest boundary | No shared executable ingest system established |
+| `pipelines/ingest/main.py` | Placeholder only | Not runnable ingest orchestration |
+| `apps/cli/src/kfm_cli/commands/ingest.py` | Placeholder only | No verified generic `kfm ingest` command |
+| `SourceDescriptor` contract, schemas, fixtures, validators | Proposed, fixture-validated family with multiple compatibility paths | Shape checks do not activate or admit a source |
+| `SourceIngestionPlanCandidate` | Proposed fixture-only contract, schema, validator, and tests | Selects and checks a no-authority plan; performs no network or lifecycle write |
+| CSV-to-GeoJSON preflight | Deterministic fixture-only helper and tests | Produces a review candidate from synthetic points only |
+| WBD HUC12 ingest candidate | Implemented fixture-first producer, schemas, fixtures, tests, and inactive spec | Produces `RAW_CANDIDATE` or `NO_CHANGE_RECEIPT`; writes no lifecycle state |
+| `IngestReceipt` validator | Deterministic no-network schema, time, digest, source-head, artifact, and byte-count checks | Does not prove a connector emitted or persisted a governed receipt |
+| `data/receipts/ingest/` | Confirmed receipt-family lane | Exact universal per-domain persistence layout remains unresolved |
+
+Use the narrowest truthful label. `IMPLEMENTED_FIXTURE_FIRST` is not
+`LIVE`, `ACTIVE`, `PROCESSED`, `RELEASED`, or `PUBLISHED`.
+
+<a id="prerequisites"></a>
 
 ## Prerequisites
 
-| Prerequisite | Where it lives *(PROPOSED until verified)* | Why you need it |
-|---|---|---|
-| Git clone of the KFM repo with write access to a feature branch | Local workstation | All artifacts of a first ingest land on a branch, never on `main`. |
-| Python 3.11+ and Node toolchain matching the repo `.tool-versions` / `engines` | Local workstation | Validators and connector scaffolds rely on the pinned toolchain. *(NEEDS VERIFICATION: actual pinned versions.)* |
-| `jq`, `uuidgen`, a JCS implementation (RFC 8785) for canonical JSON | Local workstation | `spec_hash` is **only** valid when JCS-canonicalized before SHA-256. |
-| A SourceDescriptor schema reference | `schemas/contracts/v1/source/source-descriptor.json` *(PROPOSED per Directory Rules §7.4 and ADR-0001)* | The descriptor is the admission contract. |
-| RunReceipt schema reference | `schemas/contracts/v1/receipts/run-receipt.json` *(PROPOSED)* | Every step you perform emits a RunReceipt. |
-| Validator binaries / scripts | `tools/validators/connector_gate/`, `tools/validators/source_descriptor/`, `tools/validators/promotion_gate/` *(PROPOSED)* | Validators decide whether your run advances or quarantines. |
-| Policy bundle for ingest admission | `policy/ingest/admission.rego` *(PROPOSED)* | Deny-by-default rules for license, rights, sensitivity. |
-| Read access to `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` | Repo docs | Authoritative field-level shape for SourceDescriptor. |
+### Repository and environment
 
-> [!NOTE]
-> All concrete paths in the "Where it lives" column are **PROPOSED** until inspected against mounted repository evidence. If your repo state differs, file a `DRIFT_REGISTER` entry and use the actual paths — do not force the doc's paths.
+- Work from an exact KFM commit on a feature branch or disposable local
+  checkout. Do not write directly to `main`.
+- Use Python 3.11 or later, matching the root `pyproject.toml` requirement.
+- Install the repository and focused test dependencies in an isolated
+  environment:
 
----
+```bash
+python -m pip install -e ".[test]"
+```
+
+- Run all commands from the repository root.
+- Keep outputs in a newly created temporary directory. Do not point rehearsal
+  tools at lifecycle, receipt, proof, registry, or release directories.
+
+```bash
+KFM_FIRST_INGEST_TMP="$(mktemp -d)"
+test -d "$KFM_FIRST_INGEST_TMP"
+```
+
+### Source and handling preflight
+
+For the fixture rehearsal, use only the tracked synthetic fixtures. For a
+future live proposal, record the proposed source family, product, domain,
+source role, source owner/steward, access method, rights, citation duties,
+sensitivity, geographic precision, temporal scope, source-head strategy,
+resource limits, correction path, and rollback owner.
+
+Stop before any live access when one of those facts is unknown or when the
+source contains living-person or DNA data, archaeology or culturally sensitive
+material, rare-species locations, private-land details, protected
+infrastructure, credentialed content, or other harmful precision.
+
+<a id="the-first-ingest-flow-at-a-glance"></a>
 
 ## The first-ingest flow at a glance
 
 ```mermaid
-flowchart LR
-    A[Step 0<br/>Pick a low-risk source] --> B[Step 1<br/>Author SourceDescriptor]
-    B --> C[Step 2<br/>Connector run<br/>writes data/raw/...]
-    C -->|RawCaptureReceipt| R1[(receipts/ingest)]
-    C --> D[Step 3<br/>Normalize<br/>writes data/work/...]
-    D -->|TransformReceipt| R2[(receipts/pipeline)]
-    D --> E[Step 4<br/>Validate]
-    E -->|ValidationReport| R3[(proofs/validation_report)]
-    E -->|pass| F[data/processed/...]
-    E -->|fail| Q[data/quarantine/...<br/>QuarantineRecord]
-    F --> G[Step 5<br/>Catalog closure dry-run]
-    G -->|PolicyDecision + RunReceipt| R4[(receipts/pipeline)]
-    G --> X[STOP HERE<br/>no PUBLISHED edge]
-    classDef stop fill:#ffe6e6,stroke:#cc0000,color:#660000
-    class X stop
+flowchart TD
+    A["Freeze repository and synthetic scope"] --> B["Validate descriptor fixtures"]
+    B --> C["Validate ingestion-plan fixtures"]
+    C --> D{"Choose one rehearsal"}
+    D --> E["CSV-to-GeoJSON candidate"]
+    D --> F["WBD HUC12 candidate"]
+    E --> G["Validate receipt fixtures and focused tests"]
+    F --> G
+    G --> H{"Live readiness closed?"}
+    H -- No --> I["STOP: rehearsal handoff"]
+    H -- Yes --> J["Separate governed live-ingest change"]
 ```
 
-Five things to notice in the diagram:
+This diagram is a contributor workflow, not a lifecycle-transition engine. The
+current runbook normally ends at `STOP: rehearsal handoff`.
 
-- Every transition emits a **receipt** or **proof object** to `data/receipts/` or `data/proofs/`.
-- A failed validation goes to `data/quarantine/`, not back to RAW. Quarantine is **not** a publishable staging area.
-- Catalog closure is a *dry run* in this runbook — it produces a `PolicyDecision` and a `RunReceipt` but does not transition to `PUBLISHED`.
-- The diagram is **PROPOSED** in its concrete file paths; the *shape* of the flow is CONFIRMED doctrine.
-- The renderer (MapLibre, Cesium, Focus Mode) is intentionally absent — first ingest never touches a public surface.
-
----
+<a id="step-0--choose-a-low-risk-first-source"></a>
 
 ## Step 0 — Choose a low-risk first source
 
-A safe first source has **all** of these properties. If any is missing, pick a different source.
+For the verified path, choose one of the tracked synthetic fixture families.
+Do not substitute a real URL, downloaded payload, private file, or actual
+coordinate set.
 
-| Property | Why it matters |
-|---|---|
-| Public-domain or permissive open license with a clear SPDX identifier (e.g., `CC0-1.0`, `CC-BY-4.0`, `PDDL-1.0`) | Unknown rights fail closed at the policy gate; you will not get past Step 4. |
-| Stable HTTP endpoint with `ETag` and `Last-Modified` headers | Required for deterministic source-head capture and conditional re-fetch. |
-| Small payload (target ≤ tens of megabytes, single file or tiny manifest) | First ingests should be fast and reviewable; large payloads obscure failures. |
-| No `living-person`, `DNA/genomic`, `rare-species exact location`, `archaeology`, `sacred place`, `critical infrastructure precise geometry`, or `private landowner` content | Every one of these is **deny-by-default**. See [Appendix A.1](#a1--sensitive-class-quick-reference). |
-| Source role is one of: `observed`, `regulatory`, `aggregate`, `administrative` — **not** `modeled`, `candidate`, or `synthetic` for a first run | These three carry additional descriptor burden (model run ref, candidate disposition, reality boundary note). |
-| Domain you already have read access to in `docs/domains/<domain>/` | The descriptor will live under that domain. |
+| Track | Input | Output | Verified non-effects |
+|---|---|---|---|
+| Generic CSV preflight | `fixtures/ingest/csv_geojson_preflight/` | Deterministic normalization candidate in temporary storage | No network, activation, lifecycle write, policy decision, release, or publication |
+| Hydrology WBD HUC12 | `fixtures/domains/hydrology/wbd_huc12_ingest/` | `RAW_CANDIDATE` or `NO_CHANGE_RECEIPT` candidate | Fixture-only, inactive, no network, no lifecycle write, no promotion, no release, no publication |
 
-Good first-source examples (illustrative, **NEEDS VERIFICATION** that each is currently approved in your repo's source registry):
+Before proposing a real source, review the [Source Admission Process](../sources/ADMISSION_PROCESS.md)
+and the applicable domain/source documentation. Those documents provide
+governance and routing context; live source terms and behavior still require
+current authoritative verification.
 
-- a single USGS public elevation tile metadata record
-- a single FEMA flood-hazard polygon excerpt for one Kansas county
-- a single NOAA daily-summary CSV for one station, one month
-- a single NLCD land-cover excerpt for one HUC-12
+<a id="step-1--author-a-sourcedescriptor"></a>
 
-> [!TIP]
-> If you are unsure, ask in the docs-steward channel and link a candidate URL. A first ingest is not the place to negotiate ambiguous rights.
+## Step 1 — Validate the SourceDescriptor boundary
 
-[Back to top](#top)
+The verified first action is to validate the existing fixture family:
 
----
+```bash
+python tools/validators/validate_source_descriptor.py --fixtures
+```
 
-## Step 1 — Author a SourceDescriptor
+To check a public-safe candidate file without activating or registering it:
 
-The `SourceDescriptor` is the admission contract. It carries source identity, rights, source role, sensitivity, cadence, and retrieval plan. **It is the only artifact that authorizes a connector run.**
+```bash
+python tools/validators/validate_source_descriptor.py \
+  path/to/source_descriptor_candidate.json
+```
 
-### 1.1 Draft the descriptor
+Interpretation:
 
-Create a file (illustrative path; verify against your repo's chosen home):
+- `OK` or exit `0` means the selected candidate satisfies the current singular
+  schema entrypoint's bounded shape checks.
+- It does not resolve the documented singular/plural schema-path convergence
+  boundary.
+- It does not verify live rights, sensitivity, source role, access, endpoint,
+  review, registry, connector, release, or publication state.
+- Do not copy a fixture into `data/registry/` or change `review_state`,
+  `release_state`, or connector activation fields to make a live proposal look
+  ready.
+
+Use the current `sha256:<64 lowercase hexadecimal>` grammar where the governing
+schema requires it. The proposed `jcs:sha256:` migration is not the active
+generic wire grammar.
+
+<a id="step-2--register-the-source-and-run-the-connector-raw"></a>
+
+## Step 2 — Validate a fixture-only ingestion plan
+
+The current planning family supports three proposed modes without executing
+them: `HTTP_CONDITIONAL`, `EVENT_CDC`, and `SCHEDULED_ETL`.
+
+```bash
+python tools/validators/validate_source_ingestion_plan.py --fixtures
+```
+
+Optional candidate check:
+
+```bash
+python tools/validators/validate_source_ingestion_plan.py \
+  path/to/source_ingestion_plan_candidate.json
+```
+
+Every valid v1 plan candidate fixes these non-authority fields:
 
 ```text
-data/registry/source_descriptors/<domain>/<source_id>.json    # PROPOSED
+fixture_only = true
+source_activation_allowed = false
+network_execution_authorized = false
+authority_created = false
+promotion_authorized = false
+release_state = HOLD
+public_use_allowed = false
 ```
 
-Minimum fields (drawn from KFM doctrine; **NEEDS VERIFICATION** against the live schema):
+Do not treat the selected mode or schedule as activation. A future live change
+must identify one source authority, producer, admission decision owner, RAW-or-
+QUARANTINE writer, receipt emitter, correction owner, and rollback owner.
 
-```json
-{
-  "object_type": "SourceDescriptor",
-  "schema_version": "v1",
-  "source_id": "<stable id, e.g., usgs-3dep-tile-XXXX>",
-  "source_role": "observed",
-  "role_authority": "<issuing body>",
-  "domain": "<hydrology|soil|hazards|...>",
-  "rights": {
-    "spdx_id": "CC0-1.0",
-    "license_text_ref": "<uri to license>",
-    "redistribution_allowed": true,
-    "attribution_required": false
-  },
-  "sensitivity": "public",
-  "retrieval": {
-    "url": "<https endpoint>",
-    "method": "GET",
-    "expects_etag": true,
-    "expects_last_modified": true,
-    "cadence": "manual-first-ingest"
-  },
-  "fingerprint": {
-    "expected_content_types": ["application/json"],
-    "expected_max_bytes": 10485760
-  },
-  "stewardship": {
-    "owner": "<your handle or team>",
-    "intake_reason": "first-ingest dry-run"
-  }
-}
-```
+<a id="step-3--normalize-into-work"></a>
 
-### 1.2 Compute the descriptor's `spec_hash`
+## Step 3 — Produce one deterministic review candidate
 
-`spec_hash` is **only** valid when computed via RFC 8785 JCS canonicalization followed by SHA-256, and recorded as `jcs:sha256:<hex>` (CONFIRMED doctrine; see `docs/standards/CANONICALIZATION.md` — **PROPOSED** path).
+Choose exactly one track.
+
+### Track A — CSV-to-GeoJSON preflight
 
 ```bash
-# illustrative; replace with the repo's pinned tool when available
-python3 - <<'PY'
-import json, hashlib
-try:
-    import rfc8785 as jcs
-except ImportError:
-    import jcs  # alternative library
-with open("data/registry/source_descriptors/<domain>/<source_id>.json", "rb") as f:
-    canonical = jcs.canonicalize(json.load(f))
-print("jcs:sha256:" + hashlib.sha256(canonical).hexdigest())
-PY
+PYTHONPATH=packages/hashing/src \
+  python tools/ingest/csv_geojson_preflight/preflight.py \
+  --profile fixtures/ingest/csv_geojson_preflight/profile.json \
+  --csv fixtures/ingest/csv_geojson_preflight/valid.csv \
+  --output "$KFM_FIRST_INGEST_TMP/csv-geojson-candidate.json"
 ```
 
-> [!WARNING]
-> Do **not** hash the developer-formatted JSON. A trailing newline or a re-sorted key changes the hash and breaks every downstream gate. Always canonicalize first.
+Expected behavior:
 
-### 1.3 Validate the descriptor
+- success exits `0` and emits a deterministic `NORMALIZED_CANDIDATE`;
+- a bounded input defect exits `2`, emits a value-minimized
+  `QUARANTINE_CANDIDATE`, and creates no partial output;
+- an unexpected operational failure exits `1` with `ERROR`;
+- an existing output is never overwritten; and
+- the candidate's governance block denies authority, evidence, lifecycle,
+  policy, activation, release, and publication effects.
+
+The tracked coordinates are synthetic. This helper does not establish that
+real coordinates are public-safe.
+
+### Track B — Hydrology WBD HUC12 candidate
 
 ```bash
-# PROPOSED command; verify against tools/validators/source_descriptor/README.md
-kfm-validate source-descriptor \
-  data/registry/source_descriptors/<domain>/<source_id>.json
+python \
+  pipelines/domains/hydrology/ingest_wbd_huc/produce_wbd_huc12_candidate.py \
+  fixtures/domains/hydrology/wbd_huc12_ingest/valid/no_change.json \
+  --output "$KFM_FIRST_INGEST_TMP/wbd-huc12-candidate.json"
 ```
 
-The validator MUST fail closed if any of: `source_role`, `rights.spdx_id`, `sensitivity`, `retrieval.url`, or `source_id` is missing or `unknown`. If it does not, you are looking at a drift candidate — file a `DRIFT_REGISTER` entry.
+The producer returns a deterministic candidate. Depending on the fixture, its
+disposition is `NO_CHANGE_RECEIPT` or `RAW_CANDIDATE`. Neither disposition
+writes to a lifecycle lane. The bound pipeline declaration remains
+`PROPOSED_INACTIVE` and `IMPLEMENTED_FIXTURE_FIRST`.
 
-[Back to top](#top)
+Do not replace the fixture with a live response. The producer performs no
+source activation, network fetch, lifecycle write, policy decision, evidence
+closure, promotion, release, or publication.
 
----
+<a id="step-4--validate-work--processed"></a>
 
-## Step 2 — Register the source and run the connector (RAW)
+## Step 4 — Validate IngestReceipt behavior
 
-### 2.1 Where the connector lives
-
-Connectors are source-specific fetch-and-admission code. They live under `connectors/<provider>/` (e.g., `connectors/usgs/`, `connectors/fema/`, `connectors/noaa/`, `connectors/nrcs/`, `connectors/kansas/` — per `directory-rules.md` §7.3, CONFIRMED). Connector output **MUST** land in:
-
-```text
-data/raw/<domain>/<source_id>/<run_id>/
-```
-
-Connectors **MUST NOT** write under `data/processed/`, `data/catalog/`, or `data/published/`.
-
-### 2.2 Run the connector
+Run the deterministic fixture polarity check:
 
 ```bash
-# PROPOSED command surface; verify against connectors/<provider>/README.md
-RUN_ID="$(uuidgen)"
-kfm-connector run \
-  --descriptor data/registry/source_descriptors/<domain>/<source_id>.json \
-  --domain <domain> \
-  --run-id "$RUN_ID" \
-  --no-publish      # belt and suspenders; the connector cannot publish anyway
+python tools/validators/validate_ingest_receipt.py --fixtures
 ```
 
-### 2.3 What the connector emits
-
-A successful connector run produces, at minimum, a **`RawCaptureReceipt`** (CONFIRMED object family). Expected location (PROPOSED):
-
-```text
-data/receipts/ingest/<domain>/<source_id>/<run_id>/raw_capture_receipt.json
-```
-
-Required content (illustrative; **NEEDS VERIFICATION** against the live schema):
-
-| Field | Purpose |
-|---|---|
-| `object_type: "RawCaptureReceipt"` | Family discrimination. |
-| `schema_version` | Version of the receipt schema. |
-| `source_descriptor_ref` (`EvidenceRef` → SourceDescriptor) | Pins admission contract. |
-| `run_id` | Stable identity for this fetch. |
-| `source_head` (`etag`, `last_modified`, `content_length`) | Captures exact source state. |
-| `artifacts[]` with `{path, sha256, bytes}` | Per-file integrity, deterministic. |
-| `spec_hash: "jcs:sha256:..."` | Receipt's own canonical identity. |
-| `actor`, `runner_id`, `timestamp` | Audit reconstruction. |
-| `evidence_refs[]` | Reverse-lookup hooks. |
-
-> [!NOTE]
-> If `source_head` is missing `etag` or `last_modified`, the receipt is still emitted but the connector marks the run **degraded**. Step 4 will refuse to promote a degraded raw to `PROCESSED` without a steward override.
-
-### 2.4 What you should now see
-
-```text
-data/
-├── raw/<domain>/<source_id>/<run_id>/
-│     └── <files fetched, byte-for-byte from source>
-└── receipts/ingest/<domain>/<source_id>/<run_id>/
-      └── raw_capture_receipt.json
-```
-
-Confirm both exist. The `raw/...` contents are **not** for public viewing, AI context, or rendering. They are admitted source material under source identity.
-
-[Back to top](#top)
-
----
-
-## Step 3 — Normalize into WORK
-
-Normalization transforms the raw source into a candidate domain record (or a candidate set). It lives under `pipelines/ingest/` and `pipelines/normalize/` per `directory-rules.md` §7.4 (CONFIRMED).
-
-### 3.1 Run the normalizer
+For a separately prepared public-safe local candidate, the validator can bind
+the receipt to a SourceDescriptor source head and exact local artifact bytes:
 
 ```bash
-# PROPOSED command surface
-kfm-pipeline normalize \
-  --raw-run data/raw/<domain>/<source_id>/<run_id> \
-  --domain <domain> \
-  --run-id "$RUN_ID"
+python tools/validators/validate_ingest_receipt.py \
+  path/to/ingest_receipt_candidate.json \
+  --source-descriptor path/to/source_descriptor_candidate.json \
+  --source-head-key source_head \
+  --artifact source_head=path/to/source-head-carrier \
+  --artifact document=path/to/captured-document \
+  --require-success
 ```
 
-### 3.2 What normalization emits
+Use that form only with approved local, public-safe or synthetic material. The
+validator rejects unsafe file forms, duplicate JSON keys, non-finite numbers,
+invalid schema shape, reversed time, all-zero digest placeholders, source-ID or
+source-head mismatch, artifact digest mismatch, byte-count mismatch, and
+non-`SUCCESS` outcomes when `--require-success` is selected.
 
-Two artifacts (CONFIRMED object families):
+`SUCCESS`, `PARTIAL`, and `FAIL` are ingest-record outcomes. They are not
+policy decisions or lifecycle states. A valid `PARTIAL` or `FAIL` receipt must
+remain visible; do not rewrite it as success.
 
-| Artifact | Where | Purpose |
-|---|---|---|
-| Normalized candidate records | `data/work/<domain>/<run_id>/` *(PROPOSED)* | Candidate assertions, not canonical truth. |
-| **`TransformReceipt`** | `data/receipts/pipeline/<domain>/<run_id>/transform_receipt.json` *(PROPOSED)* | Records transform identity, inputs, parameters, loss notes. |
+<a id="step-5--catalog-closure-dry-run-no-published-edge"></a>
 
-> [!IMPORTANT]
-> A `TransformReceipt` MUST record what the transform changed, including any field loss or interpretation. "Lossless rename" is still recorded. The receipt is the only place the transform is honestly described.
+## Step 5 — Run focused no-network tests
 
-### 3.3 What you must NOT do
+Run the tests for the chosen rehearsal and the shared source/receipt validators.
 
-- Do **not** copy `work/` files to `processed/` by hand.
-- Do **not** edit the normalized record after the receipt is written; if you change something, re-run normalization with a new `run_id`.
-- Do **not** treat the normalized record as cite-able — it has no `EvidenceBundle` yet.
-
-[Back to top](#top)
-
----
-
-## Step 4 — Validate (WORK → PROCESSED)
-
-Validation is the first transition that touches a **policy gate** and produces a **decision**. This is where most first ingests legitimately fail, and that is fine — quarantine is a normal outcome.
-
-### 4.1 Run the validator stack
+### Track A test set
 
 ```bash
-# PROPOSED command surface; verify against tools/validators/promotion_gate/README.md
-kfm-validate promotion-gate \
-  --work-run data/work/<domain>/<run_id> \
-  --descriptor data/registry/source_descriptors/<domain>/<source_id>.json \
-  --domain <domain> \
-  --run-id "$RUN_ID"
+PYTHONPATH=packages/hashing/src \
+  python -m pytest \
+  tests/ingest/csv_geojson_preflight \
+  tests/validators/test_validate_source_ingestion_plan.py \
+  tests/validators/test_validate_ingest_receipt.py \
+  -q --strict-config --strict-markers
 ```
 
-### 4.2 What runs under the hood
-
-| Check | What it verifies | Failure outcome |
-|---|---|---|
-| Schema validation | Records match the domain contract in `schemas/contracts/v1/domains/<domain>/` *(PROPOSED)* | `QUARANTINE` with `schema_drift` reason |
-| Geometry validation | Geometries are well-formed; CRS recorded; not silently reprojected | `QUARANTINE` with `geometry_defect` reason |
-| Temporal validation | `observed`, `valid`, `source`, `retrieval` times distinct where material | `QUARANTINE` with `temporal_scope_missing` reason |
-| Rights validation | `spdx_id` known; redistribution flags consistent; `unknown` rights fail closed | `DENY` from policy gate |
-| Sensitivity validation | No precision-creep above the descriptor's declared sensitivity tier | `DENY` or `RESTRICT` |
-| Evidence closure | EvidenceRefs introduced by the transform resolve to candidate evidence | `ABSTAIN` until resolved |
-| `spec_hash` parity | Recomputed `spec_hash` matches the descriptor's recorded hash | `DENY` (`spec_hash_mismatch`) |
-
-### 4.3 What validation emits
-
-| Artifact | Where | Purpose |
-|---|---|---|
-| **`ValidationReport`** | `data/proofs/validation_report/<domain>/<run_id>/validation_report.json` *(PROPOSED)* | Pass/fail per check, deterministic inputs, validator id. |
-| **`PolicyDecision`** | `data/receipts/pipeline/<domain>/<run_id>/policy_decision.json` *(PROPOSED)* | Finite outcome: `ALLOW`, `RESTRICT`, `DENY`, `ABSTAIN`, or `ERROR`. |
-| **`RunReceipt`** | `data/receipts/pipeline/<domain>/<run_id>/run_receipt.json` *(PROPOSED)* | Process memory binding all the above. |
-
-### 4.4 Reading the outcome
-
-| Outcome | Where the run lands | What you do next |
-|---|---|---|
-| `ALLOW` + all validations pass | `data/processed/<domain>/<dataset_id>/<version>/` | Continue to Step 5. |
-| Any validation fail | `data/quarantine/<domain>/<reason>/<run_id>/` + `QuarantineRecord` | Read the report, fix the source/descriptor/transform, re-run from Step 1 or Step 3 with a **new** `run_id`. |
-| `RESTRICT` | Stays in `work/` with restriction notes | Engage a steward; not a first-ingest path. |
-| `DENY` | Run terminates; `QuarantineRecord` written | Read the report; if rights or sensitivity, pick a different source. |
-| `ABSTAIN` | Stays in `work/`; evidence resolution pending | Provide missing evidence or pick a different source. |
-| `ERROR` | Run terminates; no canonical promotion | File a bug. Do not retry until the underlying error is diagnosed. |
-
-> [!CAUTION]
-> Do **not** treat `QUARANTINE` as a temporary parking lot to be "fixed by promoting later." Quarantine is a governed terminal state for this `run_id`. A fix means a new descriptor or a new run, not an in-place mutation.
-
-[Back to top](#top)
-
----
-
-## Step 5 — Catalog closure dry-run (no PUBLISHED edge)
-
-This step is a **dry run** in this runbook. It produces the artifacts a catalog closure would need, runs the policy gate in dry-run mode, and **stops short of writing to `data/catalog/` or `data/triplets/`** unless your reviewer explicitly approves.
-
-### 5.1 Run the dry-run
+### Track B test set
 
 ```bash
-# PROPOSED command surface; verify against pipelines/catalog/README.md
-kfm-pipeline catalog-close \
-  --processed-run data/processed/<domain>/<dataset_id>/<version> \
-  --domain <domain> \
-  --run-id "$RUN_ID" \
-  --dry-run
+python -m pytest \
+  tests/pipelines/domains/hydrology/test_wbd_huc12_ingest_candidate.py \
+  tests/validators/domains/hydrology/wbd_huc12_material_change/test_validate_wbd_huc12_material_change.py \
+  tests/validators/test_validate_source_ingestion_plan.py \
+  tests/validators/test_validate_ingest_receipt.py \
+  -q --strict-config --strict-markers
 ```
 
-### 5.2 What the dry-run produces
+Record the exact commit, command, exit status, and output. A passing result
+proves only the assertions reached by those tests at that revision. It does not
+prove a live source, connector, scheduler, RAW writer, receipt persistence,
+policy evaluator, release process, deployment, or public surface.
 
-| Artifact | Where | Purpose |
-|---|---|---|
-| Candidate `CatalogRecord` | scratch path, **not** `data/catalog/` | Discovery metadata draft. |
-| Candidate `EvidenceBundle` | scratch path, **not** `data/proofs/evidence_bundle/` | Source list, excerpts, provenance, policy posture. |
-| `PolicyDecision` (dry-run) | `data/receipts/pipeline/<domain>/<run_id>/policy_decision.catalog.json` *(PROPOSED)* | Finite outcome at catalog gate. |
-| `RunReceipt` (catalog dry-run) | `data/receipts/pipeline/<domain>/<run_id>/run_receipt.catalog.json` *(PROPOSED)* | Audit memory. |
+<a id="step-6--inspect-your-receipts"></a>
 
-### 5.3 What the dry-run does NOT do
+## Step 6 — Inspect the candidate and prepare the handoff
 
-- Does not write a `ReleaseManifest` (those live in `release/manifests/` and require release authority).
-- Does not touch `data/published/`.
-- Does not sign anything for release (DSSE / cosign signing of release artifacts is the release manager's job).
-- Does not create an `EvidenceRef` that resolves on the public surface.
+Read the candidate from the temporary directory and confirm:
 
-> [!IMPORTANT]
-> A `data/published/` write or a `release/manifests/` write at this stage is a governance violation regardless of how clean the upstream looked. Stop and engage a steward.
+- the output is deterministic when the same fixture is rerun in a new empty
+  temporary path;
+- `spec_hash` and content digests use the grammar required by their owning
+  schemas;
+- source role, fixture-only state, and non-authority flags remain visible;
+- no output was written under `data/`, `release/`, or a public application;
+- no real source values, credentials, private URLs, exact sensitive locations,
+  or restricted payloads appear in logs or artifacts;
+- failures preserve finite reason codes and create no partial candidate; and
+- the handoff says explicitly that no source was activated and no lifecycle or
+  public state changed.
 
-[Back to top](#top)
+For a future live proposal, add the unresolved items from
+[Appendix A.1](#a1--live-ingest-readiness-gate). Do not manufacture a receipt
+for a run that did not occur or copy the rehearsal candidate into RAW.
 
----
-
-## Step 6 — Inspect your receipts
-
-A first ingest is "done" only when **you can read your own work back as evidence**. This is the part most contributors skip and it is the most important part.
-
-For each of the receipts below, confirm:
-
-- The file exists at the expected path.
-- The `object_type` and `schema_version` are correct.
-- The `spec_hash` is `jcs:sha256:<hex>` and recomputes to the same value.
-- The receipt links **back** to the descriptor via an `EvidenceRef`, and **forward** to the run it describes.
-- The `actor`, `runner_id`, and `timestamp` are populated.
-
-| Receipt | Question it must answer |
-|---|---|
-| `RawCaptureReceipt` | What was fetched, from where, with which ETag, in what shape? |
-| `TransformReceipt` | What did the transform change, and what did it lose? |
-| `ValidationReport` | Which checks ran, which passed, which failed, and on which deterministic inputs? |
-| `PolicyDecision` (work→processed) | What finite outcome did the promotion gate return, and why? |
-| `RunReceipt` (work→processed) | Who ran this, with what tools, against what inputs, and when? |
-| `PolicyDecision` (catalog dry-run) | Would catalog closure have passed? On what conditions? |
-| `RunReceipt` (catalog dry-run) | Same audit trail at the catalog gate. |
-
-> [!TIP]
-> If a receipt is missing, do **not** synthesize it. A missing receipt is the system telling you a step did not run cleanly. Re-run the affected step with a new `run_id`.
-
-<details>
-<summary><strong>Optional: minimal jq inspection one-liner</strong></summary>
-
-```bash
-# Walk every receipt under this run and print object_type + spec_hash
-find "data/receipts" "data/proofs" -path "*/${RUN_ID}/*" -name "*.json" -print \
-  | while read -r f; do
-      printf "%s\t" "$f"
-      jq -r '[.object_type, .spec_hash] | @tsv' "$f"
-    done
-```
-
-</details>
-
-[Back to top](#top)
-
----
+<a id="definition-of-done"></a>
 
 ## Definition of Done
 
-A first ingest is **done** when **all** of the following are true:
+### Fixture rehearsal
 
-- [ ] A `SourceDescriptor` exists, validates, and has a recomputable `jcs:sha256` hash.
-- [ ] A connector run produced exactly the expected files under `data/raw/<domain>/<source_id>/<run_id>/`.
-- [ ] A `RawCaptureReceipt` exists, links to the descriptor, and records `etag` + `last_modified`.
-- [ ] A `TransformReceipt` exists and honestly describes the normalization.
-- [ ] A `ValidationReport` exists with every check accounted for.
-- [ ] A `PolicyDecision` exists for the WORK → PROCESSED transition.
-- [ ] If the outcome was `ALLOW`, the run landed under `data/processed/<domain>/<dataset_id>/<version>/`; if not, it landed under `data/quarantine/<domain>/<reason>/<run_id>/` with a `QuarantineRecord`.
-- [ ] A catalog closure dry-run produced a `PolicyDecision.catalog.json` **without** writing to `data/catalog/`, `data/triplets/`, `data/published/`, or `release/`.
-- [ ] No file outside the paths above was created, moved, or deleted by your run.
-- [ ] You can read your receipts back and explain to a reviewer what happened.
+- [ ] Exact repository commit and chosen track are recorded.
+- [ ] SourceDescriptor fixtures pass the current validator entrypoint.
+- [ ] Source-ingestion-plan fixture polarity passes.
+- [ ] One candidate is created only in a new temporary directory.
+- [ ] The candidate's fixture-only and non-authority fields are preserved.
+- [ ] IngestReceipt fixture polarity passes.
+- [ ] The selected focused tests pass, or each unavailable/inherited failure is
+      reported without being called passing.
+- [ ] No external endpoint, credential, private payload, or sensitive real
+      coordinate is used.
+- [ ] No registry, lifecycle, receipt, proof, release, or public store is
+      mutated.
+- [ ] The handoff records remaining live-readiness blockers and explicit
+      non-effects.
 
-> [!NOTE]
-> Publishing — i.e., a `CATALOG/TRIPLET → PUBLISHED` transition — is **not** a Definition of Done condition for this runbook. It is intentionally out of scope.
+### Live ingest
 
----
+A live first ingest is **not done under this runbook**. It requires a separate,
+dependency-closed implementation and accountable decision after every
+readiness item in Appendix A.1 is resolved for the exact source and domain.
+
+<a id="rollback-and-cleanup"></a>
 
 ## Rollback and cleanup
 
-A first-ingest run is **reversible by construction** because nothing past `PROCESSED` ever happened. Cleanup is:
+The rehearsal creates only disposable local candidates. Review them, retain
+the validation record required for the pull request or work item, and then
+remove the exact temporary directory using your normal recoverable cleanup
+process.
 
-1. **Receipts** — never delete. They are append-only evidence. If the run was a mistake, you correct it forward with a new `run_id` and a `CorrectionNotice` (steward-authored), not by erasing the past.
-2. **`data/raw/.../<run_id>/`** — may be safely deleted on a developer workstation. The `RawCaptureReceipt` still records what was fetched and can be re-fetched against the same `source_head` if needed.
-3. **`data/work/.../<run_id>/`** — may be safely deleted. The `TransformReceipt` records what would be re-derivable.
-4. **`data/processed/.../`** — do **not** delete on a shared environment. On a workstation, prefer a fresh branch over deletion. On any shared environment, request a steward-authored `RollbackCard`.
-5. **`data/quarantine/.../<run_id>/`** — leave it. Quarantine is governance evidence, not garbage.
+Do not delete or rewrite a tracked or governed receipt, RAW capture,
+quarantine record, processed object, correction record, or release record using
+this section. If a real governed run exists, follow its owning correction and
+rollback procedures. A new run or correction supersedes history; it does not
+erase it.
 
-> [!WARNING]
-> A workstation cleanup is **not** a system rollback. System-level rollback uses `RollbackCard`s in `release/rollback_cards/` and is the release manager's responsibility — never a contributor's.
+Reverting this documentation changes guidance only. It does not roll back a
+source, lifecycle transition, release, deployment, or publication.
 
----
+<a id="troubleshooting"></a>
 
 ## Troubleshooting
 
-<details>
-<summary><strong>Connector says <code>missing etag</code> / <code>missing last_modified</code></strong></summary>
+| Observation | Safe interpretation | Next action |
+|---|---|---|
+| `ModuleNotFoundError` for a root dependency | Environment is incomplete | Install the root test dependencies in an isolated environment; do not weaken the validator |
+| SourceDescriptor fixture or candidate fails | Shape or compatibility requirement is unmet | Read the first deterministic error and correct the candidate; do not activate or register it |
+| Ingestion-plan validator returns findings | Mode, replay, identity, or fixed governance posture is inconsistent | Correct the candidate or preserve `HOLD` |
+| CSV preflight exits `2` | Candidate was quarantined safely or output already exists | Read the reason code; use a new output path only after fixing the input condition |
+| WBD producer returns `OUTPUT_PATH_UNSAFE` | Output exists or its parent is invalid | Preserve the existing file and use a new empty temporary path |
+| IngestReceipt fixture check fails | Receipt schema or fixture polarity regressed | Stop; diagnose contract/schema/validator/fixture agreement |
+| Receipt returns `OUTCOME_NOT_SUCCESS` | Valid record did not meet the selected operational gate | Preserve `PARTIAL` or `FAIL`; do not reinterpret it |
+| Artifact digest or byte count mismatches | Receipt does not bind the supplied bytes | Stop; correct inputs or create a new honest receipt for a real rerun |
+| A documented path has multiple source/schema variants | Convergence is unresolved | Use the verified entrypoint for rehearsal and open bounded migration work separately |
+| A live source is requested | Rehearsal authority ceiling reached | Complete Appendix A.1 and prepare a separate governed change |
+| A public map or API output is requested | Publication boundary reached | Route through evidence, policy, review, release, correction, and rollback controls |
 
-The source did not expose validators. You have three options, in order of preference:
-1. Pick a different first source.
-2. Add a manifest checksum step (`sha256sum -c`) per `C3-02` doctrine and record it in `source_head.content_hash`. **NEEDS VERIFICATION** that your connector supports this.
-3. Engage a steward to attach a stewarded-fingerprint exception. Do **not** disable the check.
-</details>
-
-<details>
-<summary><strong>Validator reports <code>spec_hash_mismatch</code></strong></summary>
-
-You almost certainly canonicalized differently between descriptor authoring and run time. Re-derive the descriptor's hash with the **same** JCS implementation that the validator uses (see `docs/standards/CANONICALIZATION.md` — **PROPOSED**), recommit, and re-run.
-</details>
-
-<details>
-<summary><strong>Policy gate returns <code>DENY (unknown rights)</code></strong></summary>
-
-The descriptor's `rights.spdx_id` was missing, ambiguous, or not in the approved SPDX list. Fix the descriptor, recompute its hash, and re-run from Step 1. Do **not** patch the policy.
-</details>
-
-<details>
-<summary><strong>Policy gate returns <code>DENY (sensitivity)</code></strong></summary>
-
-Your source touched a sensitive class. Stop. Read [Appendix A.1](#a1--sensitive-class-quick-reference). This is not a first-ingest source.
-</details>
-
-<details>
-<summary><strong>Run lands in quarantine with <code>schema_drift</code></strong></summary>
-
-Either the source shape changed upstream (file a `DRIFT_REGISTER` entry; the connector or domain schema needs an update via the proper change path), or the descriptor's `fingerprint.expected_content_types` was wrong. Fix the descriptor; do not edit the domain schema as a first-ingest contributor.
-</details>
-
-<details>
-<summary><strong>I want to publish my first ingest</strong></summary>
-
-You don't. Publication is a governed state transition that requires: a `ReleaseManifest`, a `ReviewRecord` (where required), a rollback target, a correction path, separation of duties from the original author, and (for materiality) a release authority. None of those are first-ingest contributor responsibilities. Hand off cleanly via the receipts you produced.
-</details>
-
-[Back to top](#top)
-
----
+<a id="repo-references"></a>
 
 ## Repo references
 
-All paths in this table are **PROPOSED** per `directory-rules.md` and the project's doctrine documents. Each row is a place a first-ingest contributor will look but **NEEDS VERIFICATION** against actual mounted-repo state.
-
-| Reference | Proposed path | Source basis |
+| Concern | Current repository reference | Status relevant to this runbook |
 |---|---|---|
-| Directory Rules | `docs/doctrine/directory-rules.md` | CONFIRMED — supplied artifact |
-| SourceDescriptor schema | `schemas/contracts/v1/source/source-descriptor.json` | PROPOSED — Directory Rules §7.4, ADR-0001 |
-| RunReceipt schema | `schemas/contracts/v1/receipts/run-receipt.json` | PROPOSED — `C1-01` receipt doctrine |
-| Canonicalization standard | `docs/standards/CANONICALIZATION.md` | PROPOSED — `C1-02` JCS doctrine |
-| Source descriptor standard | `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` | PROPOSED — Whole-UI/Governed-AI expansion plan |
-| Connector home | `connectors/<provider>/` | CONFIRMED — Directory Rules §7.3 |
-| Ingest pipelines | `pipelines/ingest/`, `pipelines/normalize/`, `pipelines/validate/`, `pipelines/catalog/` | CONFIRMED — Directory Rules §7.4 |
-| Validator binaries | `tools/validators/connector_gate/`, `tools/validators/promotion_gate/`, `tools/validators/source_descriptor/`, `tools/validators/evidence_bundle/` | CONFIRMED — Directory Rules §7.5 |
-| Ingest admission policy | `policy/ingest/admission.rego` | PROPOSED — Directory Rules §6 (policy as canonical home) |
-| Drift register | `docs/registers/DRIFT_REGISTER.md` | CONFIRMED — Directory Rules §2.5, §6.1 |
-| Verification backlog | `docs/registers/VERIFICATION_BACKLOG.md` | CONFIRMED — Directory Rules §6.1 |
+| Placement | [Directory Rules](../doctrine/directory-rules.md) and [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Accepted placement basis; does not activate ingest |
+| Lifecycle | [Lifecycle Law](../doctrine/lifecycle-law.md) | Governing lifecycle boundary |
+| Public boundary | [Trust Membrane](../doctrine/trust-membrane.md) | Public clients do not read internal lifecycle stores |
+| Source admission | [Admission Process](../sources/ADMISSION_PROCESS.md) | Governance guidance with documented open implementation questions |
+| SourceDescriptor meaning | [`contracts/source/source_descriptor.md`](../../contracts/source/source_descriptor.md) | Draft/proposed semantic contract |
+| SourceDescriptor shape | [`schemas/contracts/v1/source/source_descriptor.schema.json`](../../schemas/contracts/v1/source/source_descriptor.schema.json) | Current singular validator entrypoint; convergence boundary remains documented |
+| SourceDescriptor validator | [`tools/validators/validate_source_descriptor.py`](../../tools/validators/validate_source_descriptor.py) | Executable local schema check |
+| Ingestion-plan meaning | [`contracts/source/source_ingestion_plan.md`](../../contracts/source/source_ingestion_plan.md) | Proposed fixture-only plan candidate |
+| Ingestion-plan validator | [`tools/validators/validate_source_ingestion_plan.py`](../../tools/validators/validate_source_ingestion_plan.py) | Executable no-network fixture/candidate check |
+| CSV preflight | [`tools/ingest/csv_geojson_preflight/README.md`](../../tools/ingest/csv_geojson_preflight/README.md) | Fixture-only deterministic review candidate |
+| WBD HUC12 declaration | [`pipeline_specs/hydrology/wbd_huc12_ingest.yaml`](../../pipeline_specs/hydrology/wbd_huc12_ingest.yaml) | `PROPOSED_INACTIVE`; fixture-first implementation |
+| IngestReceipt meaning | [`contracts/source/ingest_receipt.md`](../../contracts/source/ingest_receipt.md) | Proposed source-ingest process-memory contract |
+| IngestReceipt validator | [`tools/validators/validate_ingest_receipt.py`](../../tools/validators/validate_ingest_receipt.py) | Executable no-network bounded validator |
+| Receipt storage boundary | [`data/receipts/ingest/README.md`](../../data/receipts/ingest/README.md) | Confirmed family lane; exact universal layout unresolved |
+| Shared ingest lane | [`pipelines/ingest/README.md`](../../pipelines/ingest/README.md) | Documentation boundary; no shared executable system established |
 
----
+<a id="related-docs"></a>
 
 ## Related docs
 
-- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — placement authority.
-- [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — RAW → … → PUBLISHED invariant.
-- [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — why public clients never see `data/raw|work|quarantine`.
-- [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../sources/SOURCE_DESCRIPTOR_STANDARD.md) — *(PROPOSED)* descriptor field shape.
-- [`docs/standards/RUN_RECEIPT.md`](../standards/RUN_RECEIPT.md) — *(PROPOSED)* receipt shape and required invariants.
-- [`docs/standards/CANONICALIZATION.md`](../standards/CANONICALIZATION.md) — *(PROPOSED)* JCS vs URDNA2015 decision matrix.
-- [`docs/runbooks/README.md`](./README.md) — *(PROPOSED)* runbooks index.
-- [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) — file drift here rather than working around it.
-- `connectors/README.md`, `pipelines/ingest/README.md`, `tools/validators/promotion_gate/README.md` — companion READMEs (*PROPOSED* until verified).
+- [Runbooks index](./README.md)
+- [Quarantine Handling](./QUARANTINE_HANDLING.md)
+- [Promotion Runbook](./PROMOTION_RUNBOOK.md)
+- [Source Descriptor Standard](../sources/SOURCE_DESCRIPTOR_STANDARD.md)
+- [Canonicalization Guidance](../standards/CANONICALIZATION.md)
+- [RunReceipt Standard](../standards/RUN_RECEIPT.md)
+- [Connectors root](../../connectors/README.md)
+- [Pipelines root](../../pipelines/README.md)
+- [Source-intake examples](../../examples/source_intake/README.md)
 
----
+<a id="appendices"></a>
 
 ## Appendices
 
-### A.1 — Sensitive class quick reference
+<a id="a1--live-ingest-readiness-gate"></a>
 
-If your candidate source touches **any** of the classes below, this is not a first-ingest source. Use the sensitive-lane intake path and engage a steward.
+### A.1 — Live ingest readiness gate
 
-| Class | Default outcome | Source basis |
+Every row must be closed for the exact source, product, domain, revision, and
+intended use before a separate live-ingest change is eligible.
+
+| Gate | Required evidence | Fail-closed result |
 |---|---|---|
-| Living persons (personal data, residences, identity assertions) | DENY public exact | CONFIRMED — sensitivity register |
-| DNA / genomic / living-person relatives | DENY by default | CONFIRMED |
-| Rare-species exact taxa locations (nest, den, roost, spawning) | DENY public exact location | CONFIRMED |
-| Archaeology (site coordinates, burial, sacred/culturally sensitive) | DENY public exact location | CONFIRMED |
-| Sacred / culturally sensitive places (oral history, cultural routes) | DENY until steward review | CONFIRMED |
-| Critical infrastructure (exact facilities, dependencies, condition) | RESTRICT / DENY public precision | CONFIRMED |
-| Private landowner-sensitive data (field boundaries, owner identity) | DENY exact / public if private | CONFIRMED |
-| Exact sensitive locations (any point that increases harm risk) | DENY by default | CONFIRMED |
-| Emergency-warning misuse (life-safety substitution) | DENY life-safety replacement | CONFIRMED |
-| Source-rights-limited (licensed, restricted, no-redistribution, uncertain terms) | DENY public release until resolved | CONFIRMED |
+| Source identity | One reviewed SourceDescriptor identity and resolved schema/registry path | `HOLD` or `DENY` |
+| Source activation | Accountable, current, scope-bound activation decision | `DENY` |
+| Source role | Explicit role and prohibited-role checks | `QUARANTINE` or `DENY` |
+| Rights and citation | Current terms, attribution, redistribution, retention, and intended-use review | `DENY` |
+| Sensitivity and sovereignty | Reviewed classification, precision, access, consent/community duties, and safe transform | `HOLD`, `QUARANTINE`, or `DENY` |
+| Access and security | Approved host or local input, secret reference, redirect/auth/rate-limit controls, and no credential logging | `DENY` or `ERROR` |
+| Resource bounds | Byte, record, page, time, retry, memory, cancellation, and completeness limits | `HOLD` |
+| Source-head strategy | ETag, Last-Modified, revision, manifest, or content-digest plan with no-op semantics | `HOLD` |
+| Producer and writer | One connector/producer, admission owner, RAW-or-QUARANTINE writer, and idempotent handoff | `HOLD` |
+| Contracts and schemas | Accepted or explicitly reviewed candidate shapes for source, receipt, handoff, and domain output | `HOLD` |
+| Validation | Positive and negative no-network fixtures, source-role checks, integrity checks, and exact changed-area tests | `HOLD` |
+| Receipt persistence | Governed IngestReceipt/RunReceipt emission, immutable storage route, correction, and replay binding | `HOLD` |
+| Lifecycle transition | Authorized writer and state-transition record; no file-move shortcut | `DENY` |
+| Evidence and policy | Resolvable support and active policy/review results for the intended downstream use | `ABSTAIN` or `DENY` |
+| Correction and rollback | Prior safe state, affected-derivative inventory, correction path, and accountable rollback owner | `HOLD` |
+| Public boundary | Separate release manifest, review, integrity, safe transformation, deployment, and publication authority | `DENY` |
 
-### A.2 — Lifecycle phase quick reference
+No single green check closes this table.
 
-| Phase | Allowed | MUST NOT |
+<a id="a2--sensitive-class-quick-reference"></a>
+
+### A.2 — Sensitive class quick reference
+
+| Class | Default first-ingest posture |
+|---|---|
+| Living-person or DNA/genomic material | Deny ordinary public/exact use; specialist and policy review required |
+| Archaeology, burial, sacred, or culturally sensitive material | Deny public exact location; sovereignty/steward review required |
+| Rare-species or protected ecological locations | Deny public exact precision; governed generalization may be considered separately |
+| Critical infrastructure or harmful dependency detail | Restrict or deny public precision |
+| Private-land or owner-linked detail | Deny unsupported public exact joins |
+| Rights-limited, credentialed, closed, or uncertain material | Deny release until rights and access are resolved |
+| Emergency or life-safety use | Deny replacement of the verified issuing authority |
+
+Path placement, redaction by omission, map styling, or generated prose does not
+clear these classes.
+
+<a id="a3--finite-outcome-vocabulary"></a>
+
+### A.3 — Keep outcome vocabularies separate
+
+| Surface | Current vocabulary | Meaning |
 |---|---|---|
-| `raw/` | Source-edge captures, immutable, with retrieval metadata and checksums | Public clients, AI context, UI layers, normalized records |
-| `work/` | Normalized intermediates, candidate assertions | Public API/UI, release aliases |
-| `quarantine/` | Failed validation, unresolved rights/sensitivity, schema drift, over-precise geometry | Promotion candidates without remediation |
-| `processed/` | Validated canonical records | Assumption of public/release status |
-| `catalog/` *(out of scope here)* | STAC/DCAT/PROV records, domain catalog | Uncited claims, unclosed identifiers |
-| `triplets/` *(out of scope here)* | Relationship projections and graph-compatible triples | Canonical replacement semantics |
-| `published/` *(out of scope here)* | Released public-safe artifacts | Raw, work, quarantine, exact restricted geometry |
-| `receipts/` | Process memory: run, validation, AI, ingest, release | Proof of release by themselves |
-| `proofs/` | EvidenceBundle, ProofPack, integrity bundle | Process-only receipts without release context |
+| IngestReceipt | `SUCCESS`, `PARTIAL`, `FAIL` | Capture/run result only |
+| CSV preflight | `NORMALIZED_CANDIDATE`, `QUARANTINE_CANDIDATE`, `ERROR` | Fixture preflight result only |
+| WBD HUC12 candidate | `RAW_CANDIDATE`, `NO_CHANGE_RECEIPT` plus reason codes | Candidate disposition only; no write |
+| Source-ingestion plan | Validator success or findings; governance `HOLD` | Fixture planning consistency only |
+| Runtime answer envelope | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | Public/runtime response behavior, not ingest |
+| Lifecycle | `RAW`, `WORK`, `QUARANTINE`, `PROCESSED`, `CATALOG`, `TRIPLET`, `PUBLISHED` | Governed state, not a tool exit code |
 
-### A.3 — Finite outcome vocabulary
+Do not convert one vocabulary into another by analogy.
 
-KFM governed flows return a finite outcome from this set (CONFIRMED doctrine):
-
-| Outcome | Meaning at the promotion gate |
-|---|---|
-| `ALLOW` (or `ANSWER`) | All gates clear; transition permitted. |
-| `RESTRICT` | Conditionally permitted with obligations (e.g., redaction, generalization, staged access). |
-| `DENY` | Failed; transition refused; QuarantineRecord written. |
-| `ABSTAIN` | Insufficient evidence or unresolved policy state; no transition. |
-| `ERROR` | Tooling or runtime failure; no transition; bug to file. |
-
-### A.4 — Glossary (placement-relevant subset)
-
-| Term | Short meaning relevant to first ingest |
-|---|---|
-| **SourceDescriptor** | The admission contract for a source. Lives in `data/registry/source_descriptors/`. |
-| **RawCaptureReceipt** | The fetch receipt for a connector run. Lives in `data/receipts/ingest/`. |
-| **TransformReceipt** | The normalization receipt. Lives in `data/receipts/pipeline/`. |
-| **ValidationReport** | The pass/fail record for validators. Lives in `data/proofs/validation_report/`. |
-| **PolicyDecision** | The finite-outcome verdict from a policy gate. Lives in `data/receipts/pipeline/`. |
-| **RunReceipt** | Process memory for a run; binds inputs, tools, and outputs. Lives in `data/receipts/pipeline/`. |
-| **EvidenceBundle** | Resolved support package for a claim. Lives in `data/proofs/evidence_bundle/`. Not produced in a first ingest. |
-| **EvidenceRef** | A reference that MUST resolve to an `EvidenceBundle` before publication. |
-| **spec_hash** | `jcs:sha256:<hex>` — RFC 8785 JCS canonicalization + SHA-256. |
-| **Watcher-as-non-publisher** | Connectors and workers emit candidates and receipts; they do not publish. |
-| **Promotion** | A governed state transition between lifecycle phases. Not a file move. |
-
----
-
-<sub><strong>Related docs:</strong> <a href="../doctrine/directory-rules.md">Directory Rules</a> · <a href="../doctrine/lifecycle-law.md">Lifecycle Law</a> · <a href="../doctrine/trust-membrane.md">Trust Membrane</a> · <a href="../sources/SOURCE_DESCRIPTOR_STANDARD.md">Source Descriptor Standard</a> · <a href="../standards/RUN_RECEIPT.md">RunReceipt Standard</a> · <a href="../registers/DRIFT_REGISTER.md">Drift Register</a></sub>
-
-<sub><strong>Last updated:</strong> 2026-05-12 · <strong>Status:</strong> draft · <a href="#top">Back to top</a></sub>
+[Back to top](#top)

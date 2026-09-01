@@ -43,6 +43,12 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         self.assertTrue(errors)
         self.assertTrue(any("inline location fields are denied" in error for error in errors))
 
+    def test_location_bearing_reference_fails_closed(self) -> None:
+        payload = _load(FIXTURE_ROOT / "location_bearing_reference_deny.json")
+        errors = validate_candidate_feature(payload)
+        self.assertTrue(errors)
+        self.assertTrue(any("opaque kfm:// references" in error for error in errors))
+
     def test_candidate_cannot_claim_confirmed_truth(self) -> None:
         payload = copy.deepcopy(self.valid)
         payload["truth_state"] = "CONFIRMED"
@@ -63,6 +69,9 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         self.assertFalse(schema["additionalProperties"])
         self.assertTrue(FORBIDDEN_INLINE_LOCATION_FIELDS.isdisjoint(properties))
         self.assertTrue(FORBIDDEN_SITE_CLAIM_FIELDS.isdisjoint(properties))
+        expected_ref_pattern = "^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
+        self.assertEqual(properties["source_refs"]["items"]["pattern"], expected_ref_pattern)
+        self.assertEqual(properties["candidate_geometry_ref"]["pattern"], expected_ref_pattern)
 
     def test_fixture_cli_is_deterministic_and_local(self) -> None:
         result = subprocess.run(

@@ -116,6 +116,7 @@ jobs:
           make repository-topology
 
       - name: Require a non-vacuous aggregate validator inventory
+        if: ${{ !cancelled() }}
         shell: bash
         run: |
           set -euo pipefail
@@ -161,6 +162,7 @@ jobs:
           PY
 
       - name: Test shared JSON Schema runner fixture semantics
+        if: ${{ !cancelled() }}
         shell: bash
         run: |
           set -euo pipefail
@@ -170,6 +172,7 @@ jobs:
             --verbose
 
       - name: Test generated-receipt shape and artifact integrity
+        if: ${{ !cancelled() }}
         shell: bash
         run: |
           set -euo pipefail
@@ -180,6 +183,7 @@ jobs:
           python tools/validators/validate_generated_receipt.py --fixtures
 
       - name: Test material-change assessment profile
+        if: ${{ !cancelled() }}
         shell: bash
         run: |
           set -euo pipefail
@@ -190,6 +194,7 @@ jobs:
           python tools/validators/validate_material_change_assessment.py --fixtures
 
       - name: Run repository aggregate validators
+        if: ${{ !cancelled() }}
         shell: bash
         run: |
           set -euo pipefail
@@ -208,6 +213,7 @@ jobs:
             echo "- Material-change commands: focused no-network unittest suite plus \`python tools/validators/validate_material_change_assessment.py --fixtures\`."
             echo "- Aggregate command: \`make schemas\`."
             echo "- Repository guardrails run as three separately attributable fail-closed steps: \`make validator-registry-check\`, \`make workflow-security\`, then \`make repository-topology\`."
+            echo "- Independent validation stages use \`!cancelled()\` so one inherited guardrail failure does not erase execution truth for later trust-bearing checks; each failure still contributes to the final job conclusion."
             echo "- Inherited violations are exact reviewed baselines: new drift and stale baseline entries fail; a pass does not resolve the inherited backlog."
             echo "- Shared JSON Schema runner fixture mode requires sorted, nonempty valid and invalid lanes; expected schema rejection is distinct from harness or polarity failure."
             echo "- The aggregate runner inventory must be non-empty, unique, fixture-mode wired, and resolve to repository validator scripts."
