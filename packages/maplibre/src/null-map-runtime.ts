@@ -115,7 +115,7 @@ export class NullMapRuntime implements MapRuntimePort {
     const frozen = freezeMapFeatureSelection(selection);
     this.selection = frozen;
     const snapshot = this.notifySnapshot();
-    for (const listener of [...this.selectionListeners]) listener(frozen);
+    this.notifySelection(frozen);
     return snapshot;
   }
 
@@ -140,8 +140,28 @@ export class NullMapRuntime implements MapRuntimePort {
 
   private notifySnapshot(): MapRuntimeSnapshot {
     const snapshot = this.getSnapshot();
-    for (const listener of [...this.snapshotListeners]) listener(snapshot);
+    for (const listener of [...this.snapshotListeners]) {
+      try {
+        listener(snapshot);
+      } catch {
+        // Snapshot listeners are observational consumers. A consumer failure
+        // must not change the deterministic fallback lifecycle, block later
+        // listeners, or leak through the MapRuntimePort operation that emitted it.
+      }
+    }
     return snapshot;
+  }
+
+  private notifySelection(selection: MapFeatureSelection): void {
+    for (const listener of [...this.selectionListeners]) {
+      try {
+        listener(selection);
+      } catch {
+        // Selection listeners are observational consumers. A consumer failure
+        // must not roll back the accepted selection, block later listeners, or
+        // escape through this dependency-free runtime's control-plane hook.
+      }
+    }
   }
 
   private assertNotDisposed(): void {
