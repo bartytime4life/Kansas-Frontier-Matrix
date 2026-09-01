@@ -96,6 +96,55 @@ test("stale evidence outside the clicked selection fails closed without leaking"
   await expect(drawer.getByRole("link")).toHaveCount(0);
 });
 
+test("withdrawn evidence remains visible only as non-current history", async ({
+  page,
+}) => {
+  await page.goto(fixture);
+  await page
+    .getByRole("button", { name: "Select withdrawn evidence history" })
+    .click();
+
+  await expect(page.getByRole("status")).toHaveText(
+    "ABSTAIN / WITHDRAWN_EVIDENCE",
+  );
+  const drawer = page.locator('aside[data-component="evidence-drawer"]');
+  await expect(drawer).toContainText(
+    "The available evidence was withdrawn and is not current claim support.",
+  );
+  await expect(drawer).toContainText("Release: WITHDRAWN");
+  await expect(drawer).toContainText(
+    "kfm:evidence:synthetic:withdrawn-soil-summary-001",
+  );
+  await expect(drawer).not.toContainText(
+    "WITHDRAWN_PRIVATE_DIAGNOSTIC_CANARY_483e12",
+  );
+  await expect(drawer.getByRole("link")).toHaveCount(0);
+});
+
+test("withdrawn evidence outside the clicked selection fails closed without leaking", async ({
+  page,
+}) => {
+  await page.goto(fixture);
+  await page
+    .getByRole("button", {
+      name: "Select feature with mismatched withdrawn evidence",
+    })
+    .click();
+
+  await expect(page.getByRole("status")).toHaveText(
+    "ERROR / DRAWER_EVIDENCE_OUTSIDE_SELECTION",
+  );
+  const drawer = page.locator('aside[data-component="evidence-drawer"]');
+  await expect(drawer).toContainText("ERROR / UPSTREAM_ERROR");
+  await expect(drawer).not.toContainText(
+    "kfm:evidence:synthetic:withdrawn-soil-summary-001",
+  );
+  await expect(drawer).not.toContainText(
+    "WITHDRAWN_PRIVATE_DIAGNOSTIC_CANARY_483e12",
+  );
+  await expect(drawer.getByRole("link")).toHaveCount(0);
+});
+
 test("superseded evidence remains visible only as audit history", async ({ page }) => {
   await page.goto(fixture);
   await page
