@@ -24,8 +24,7 @@ LOCAL_SPEC = "./packages/kfm-cli"
 LOCK_LIMIT_BYTES = 262_144
 HASH_LINE = re.compile(r"^\s+--hash=sha256:[0-9a-f]{64}(?: \\)?$")
 REQUIREMENT_LINE = re.compile(
-    r"^[A-Za-z0-9][A-Za-z0-9._-]*==[A-Za-z0-9][A-Za-z0-9.!+_-]* \\$"
-)
+    r"^[A-Za-z0-9][A-Za-z0-9._-]*==[A-Za-z0-9][A-Za-z0-9.!+_-]* \\$")
 FORBIDDEN_LOCK_TEXT = (
     "--extra-index-url",
     "--index-url",
@@ -36,12 +35,6 @@ FORBIDDEN_LOCK_TEXT = (
     "git+",
     "http://",
     "https://",
-)
-PIP_SOURCE_ENV_KEYS = (
-    "PIP_EXTRA_INDEX_URL",
-    "PIP_FIND_LINKS",
-    "PIP_INDEX_URL",
-    "PIP_TRUSTED_HOST",
 )
 
 
@@ -176,8 +169,9 @@ def install() -> None:
     """Install the committed CLI dependency overlay and local package."""
 
     environment = os.environ.copy()
-    for key in PIP_SOURCE_ENV_KEYS:
-        environment.pop(key, None)
+    for key in tuple(environment):
+        if key.startswith("PIP_"):
+            environment.pop(key, None)
     environment["PIP_CONFIG_FILE"] = os.devnull
     environment["PIP_DISABLE_PIP_VERSION_CHECK"] = "1"
     environment["PIP_NO_INPUT"] = "1"
