@@ -1,4 +1,4 @@
-"""Guard generic cross-lane workflow dependency propagation.
+"""Guard generic cross-lane workflow and test-lane propagation.
 
 The checks use only repository text and synthetic mutations. They do not run a
 workflow, access a network, or grant review, release, or publication authority.
@@ -13,6 +13,7 @@ import pytest
 
 
 ROOT = Path(__file__).resolve().parents[2]
+README = ROOT / "tests/joins/README.md"
 WORKFLOWS = (
     ROOT / ".github/workflows/cross-lane-join-assessment.yml",
     ROOT / ".github/workflows/soil-hydrology-public-safe-context.yml",
@@ -27,6 +28,7 @@ REQUIRED_TRIGGER_PATHS = (
 _TRIGGER_RE = re.compile(
     r"(?m)^  (pull_request|push|workflow_dispatch):(?:\n|$)"
 )
+_DOCUMENTED_GUARD_RE = re.compile(r"`(test_cross_lane_[a-z0-9_]+\.py)`")
 
 
 def _trigger_sections(source: str) -> dict[str, str]:
@@ -63,6 +65,12 @@ def _propagation_findings(source: str) -> list[str]:
     return findings
 
 
+def _missing_documented_guards(source: str) -> list[str]:
+    actual = {path.name for path in README.parent.glob("test_cross_lane_*.py")}
+    documented = set(_DOCUMENTED_GUARD_RE.findall(source))
+    return sorted(actual - documented)
+
+
 def _drop_trigger_line(source: str, trigger: str, line: str) -> str:
     section = _trigger_sections(source)[trigger]
     assert line in section
@@ -73,6 +81,18 @@ def _drop_trigger_line(source: str, trigger: str, line: str) -> str:
 @pytest.mark.parametrize("workflow", WORKFLOWS, ids=lambda path: path.stem)
 def test_cross_lane_workflows_propagate_all_dependencies(workflow: Path) -> None:
     assert _propagation_findings(workflow.read_text(encoding="utf-8")) == []
+
+
+def test_readme_documents_every_cross_lane_guard() -> None:
+    assert _missing_documented_guards(README.read_text(encoding="utf-8")) == []
+
+
+def test_synthetic_missing_readme_guard_is_detected() -> None:
+    source = README.read_text(encoding="utf-8")
+    guard = "test_cross_lane_domain_alias_guard.py"
+    assert f"`{guard}`" in source
+    mutated = source.replace(f"`{guard}`", "`omitted_guard.py`", 1)
+    assert guard in _missing_documented_guards(mutated)
 
 
 @pytest.mark.parametrize(
