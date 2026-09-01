@@ -250,6 +250,26 @@ def _retrieval_not_before_event_time(
     return retrieved >= event
 
 
+def _retrieval_not_before_event_date(
+    observation: Mapping[str, Any],
+    provenance: Mapping[str, Any],
+) -> bool:
+    """Keep source retrieval on or after the declared event date."""
+
+    event_date = observation.get("event_date")
+    retrieved_at = provenance.get("retrieved_at")
+    if not isinstance(event_date, str) or not isinstance(retrieved_at, str):
+        return False
+    try:
+        event_day = datetime.fromisoformat(event_date).date()
+        retrieved_day = datetime.fromisoformat(
+            retrieved_at.replace("Z", "+00:00")
+        ).date()
+    except ValueError:
+        return False
+    return retrieved_day >= event_day
+
+
 def _role_matches_basis(role: object, basis: object) -> bool:
     if role == "observed":
         return basis in DIRECT_BASIS
@@ -436,6 +456,17 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
             "/provenance/retrieved_at",
         )
 
+    retrieval_date_consistent = _retrieval_not_before_event_date(
+        observation,
+        provenance,
+    )
+    if not retrieval_date_consistent:
+        _add(
+            findings,
+            "prov.retrieval_precedes_event_date",
+            "/provenance/retrieved_at",
+        )
+
     validation_chronology_consistent = _validation_not_before_retrieval(
         provenance,
         validation,
@@ -530,6 +561,7 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
         and role_matches
         and temporal_consistent
         and retrieval_chronology_consistent
+        and retrieval_date_consistent
         and validation_chronology_consistent
     )
     if result == "pass":

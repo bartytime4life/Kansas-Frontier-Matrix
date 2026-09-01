@@ -36,6 +36,7 @@ These fixtures are synthetic, no-network, and unsuitable as biological or geogra
 | `semantic_invalid/observed_without_raw_artifact.json` | Rejects missing source-bound raw-artifact support for an observed record. |
 | `semantic_invalid/public_safe_generalization_method_missing.json` | Rejects generalized public geometry without an explicit transformation method. |
 | `semantic_invalid/public_safe_type_precision_mismatch.json` | Rejects a public-safe geometry whose carrier type contradicts its precision class. |
+| `semantic_invalid/retrieval_precedes_event_date.json` | Rejects source retrieval before a date-only occurrence event. |
 | `semantic_invalid/retrieval_precedes_event_time.json` | Rejects source retrieval that predates the observed event timestamp. |
 | `semantic_invalid/rights_unresolved_pass.json` | Rejects a claimed pass with unresolved rights. |
 | `semantic_invalid/sensitive_exact_without_generalization.json` | Rejects exact public precision when generalization and review are required. |

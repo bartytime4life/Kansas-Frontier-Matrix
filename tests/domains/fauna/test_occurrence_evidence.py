@@ -184,6 +184,26 @@ class OccurrenceEvidenceTests(unittest.TestCase):
             result.findings,
         )
 
+    def test_source_retrieval_cannot_precede_event_date(self) -> None:
+        candidate = _load("semantic_invalid/retrieval_precedes_event_date.json")
+
+        result = validator.validate_candidate(candidate)
+
+        self.assertIn(
+            validator.Finding(
+                "prov.retrieval_precedes_event_date",
+                "/provenance/retrieved_at",
+            ),
+            result.findings,
+        )
+        self.assertIn(
+            validator.Finding(
+                "schema.pass_gate_failed",
+                "/validation/validator_result",
+            ),
+            result.findings,
+        )
+
     def test_public_safe_geometry_type_must_match_precision(self) -> None:
         candidate = _load(
             "semantic_invalid/public_safe_type_precision_mismatch.json"
