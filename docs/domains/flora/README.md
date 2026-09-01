@@ -1,12 +1,12 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/docs-domains-flora-readme
-title: Kansas Frontier Matrix — Flora Domain
+title: Kansas Frontier Matrix — Flora Domain Lane
 type: standard
-version: v2
-status: draft
-owners: TODO (flora domain steward + governance steward)
+version: v2.1
+status: draft; repository-grounded; mixed implementation maturity
+owners: ["@bartytime4life — CODEOWNERS review route", "NEEDS VERIFICATION — flora domain steward; governance steward"]
 created: 2026-05-16
-updated: 2026-06-03
+updated: 2026-09-01
 policy_label: public
 related:
   - docs/doctrine/ai-build-operating-contract.md
@@ -17,32 +17,40 @@ related:
   - docs/domains/flora/PUBLICATION_AND_ROLLBACK.md
   - docs/domains/habitat/README.md
   - docs/domains/fauna/README.md
-tags: [kfm, domain, flora, biodiversity, governance]
+  - .github/workflows/domain-flora.yml
+  - contracts/domains/flora/
+  - schemas/contracts/v1/domains/flora/
+  - policy/domains/flora/
+  - tests/domains/flora/
+  - fixtures/domains/flora/
+  - data/registry/flora/sources/
+  - release/candidates/flora/
+tags: [kfm, domain, flora, biodiversity, governance, repository-grounded]
 notes:
-  - "Doctrine-adjacent; pins CONTRACT_VERSION = 3.0.0 in notes per the operating contract."
-  - "All implementation, schema, route, and registry claims are PROPOSED until verified against a mounted repo."
+  - "Repository-grounded Flora evidence is present in current main: domain docs, contracts, schema lane, policy lane, synthetic fixtures, workflow stubs, registry and lifecycle projections, and bounded no-network validation surfaces."
+  - "The lane remains mixed-maturity: concrete source admission, production retrieval, review state, release, promotion, and publication remain separate from the doc-only or synthetic validation surfaces."
   - "Sensitivity posture is fail-closed for exact rare-plant geometry by default."
-  - "v2: corrected source-rights claims, upgraded source-role enum to CONFIRMED classes, grounded the flora watcher in KFM-P2-PROG-0002, reconciled the references appendix to the actual corpus."
+  - "This README records current repository evidence without claiming live source activation or public publication authority."
 [/KFM_META_BLOCK_V2] -->
 
-# 🌿 Kansas Frontier Matrix — Flora Domain
+# 🌿 Kansas Frontier Matrix — Flora Domain Lane
 
 > Govern plant taxonomic identity, occurrences, specimens, vegetation communities, rare/protected/culturally sensitive flora controls, public-safe surfaces, evidence-backed maps, correction, and rollback for Kansas plant life.
 
 <a id="top"></a>
 
 [![Domain](https://img.shields.io/badge/domain-flora-2e7d32)](#1-scope)
-[![Status](https://img.shields.io/badge/status-draft-orange)](#top)
+[![Status](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b)](#top)
 [![Lifecycle](https://img.shields.io/badge/lifecycle-RAW%20%E2%86%92%20PUBLISHED-1565c0)](#7-pipeline-shape-raw--published)
 [![Sensitivity](https://img.shields.io/badge/sensitivity-deny--by--default-b71c1c)](#9-sensitivity-rights--publication-posture)
 [![Governance](https://img.shields.io/badge/governance-evidence--first-455a64)](#11-governed-ai-behavior)
 [![Contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)](../../doctrine/ai-build-operating-contract.md)
-[![Build](https://img.shields.io/badge/build-TODO-lightgrey)](#13-verification-backlog--open-questions)
+[![Build](https://img.shields.io/badge/build-bounded%20synthetic%20active-brightgreen)](#13-verification-backlog--open-questions)
 
-**Status:** `draft` · **Owners:** _TODO — flora domain steward; governance steward_ · **Last updated:** 2026-06-03 · **Contract:** `CONTRACT_VERSION = "3.0.0"`
+**Status:** `draft` · **Repository posture:** `repository-grounded; mixed implementation maturity` · **Owners:** `@bartytime4life` via CODEOWNERS review route; flora steward and governance steward remain `NEEDS VERIFICATION` · **Last updated:** 2026-09-01 · **Contract:** `CONTRACT_VERSION = "3.0.0"`
 
 > [!IMPORTANT]
-> All paths, schemas, registries, validators, routes, and CI/workflow references in this document are **PROPOSED** until verified against a mounted KFM repository. This README states doctrine confidently where supported by attached project sources; it does **not** assert current implementation maturity. See [§13 Verification Backlog](#13-verification-backlog--open-questions).
+> This README reflects the current repository evidence for the Flora lane: domain docs, contracts, schemas, policy, synthetic fixtures, workflow declarations, and validation scaffolds are present, but source activation, live production retrieval, review completion, release, deployment, promotion, and publication remain separate states. The lane is bounded and evidence-first, not a live botanical authority. See [§13 Verification Backlog](#13-verification-backlog--open-questions).
 
 ---
 
@@ -160,9 +168,9 @@ Content that **does not** belong under Flora, with redirects. *(CONFIRMED non-ow
 
 ---
 
-## 5. Directory Tree (PROPOSED)
+## 5. Directory Tree (repository-grounded projection)
 
-The following tree is derived from Directory Rules §12 and the domain-lane pattern, with lifecycle paths cross-checked against the `kansas_flora_watch` blueprint (`KFM-P2-PROG-0002`). Paths are **PROPOSED** / **NEEDS VERIFICATION** against a mounted repo; nothing here implies current implementation.
+The following tree records the Flow and placement pattern for the Flora lane as it currently appears in the repository and in the current evidence set. It is a bounded candidate projection for the domain, not a stand-in for live source activation or a public release surface. Some subpaths remain `PROPOSED` or `NEEDS VERIFICATION`, but the README no longer frames the whole lane as a future-only, no-mounted-repository design.
 
 ```text
 # docs/ — human-facing
@@ -245,7 +253,7 @@ release/candidates/flora/                   # PROPOSED
 
 ## 6. Domain Diagram
 
-The diagram shows the Flora lane's relationship to the trust spine, the lifecycle phases, and adjacent domains. It is **conceptual**; runtime paths, routes, and module names are `PROPOSED`.
+The diagram shows the Flora lane's relationship to the trust spine, the lifecycle phases, and adjacent domains in repository terms. It is a bounded conceptual summary; runtime paths, routes, and module names remain `NEEDS VERIFICATION` unless directly validated in code or workflow evidence.
 
 ```mermaid
 flowchart LR
@@ -650,7 +658,7 @@ Before this README is promoted from `draft` to `published`:
 - [`docs/domains/habitat/README.md`](../habitat/README.md) — Habitat lane (adjacent domain) *(PROPOSED link target)*
 - [`docs/domains/fauna/README.md`](../fauna/README.md) — Fauna lane (adjacent domain) *(PROPOSED link target)*
 - [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — trust membrane, public path *(PROPOSED link target)*
-- TODO — `docs/runbooks/flora/SOURCE_REFRESH_RUNBOOK.md` (PROPOSED future companion)
+- `docs/runbooks/flora/SOURCE_REFRESH_RUNBOOK.md` — repository evidence companion; still subject to current rights, review, and release checks before any operational use
 
 [↑ Back to top](#top)
 
@@ -726,6 +734,6 @@ This README is grounded in the following project-knowledge sources:
 
 **Related:** [Operating Contract](../../doctrine/ai-build-operating-contract.md) · [Directory Rules](../../doctrine/directory-rules.md) · [Publication & Rollback](./PUBLICATION_AND_ROLLBACK.md) · [Habitat lane](../habitat/README.md) · [Fauna lane](../fauna/README.md)
 
-**Last updated:** 2026-06-03 · **Status:** draft · **Owners:** TODO · `CONTRACT_VERSION = "3.0.0"`
+**Last updated:** 2026-09-01 · **Status:** draft · **Repository posture:** repository-grounded; mixed implementation maturity · **Owners:** `@bartytime4life` via CODEOWNERS review route; steward review remains `NEEDS VERIFICATION` · `CONTRACT_VERSION = "3.0.0"`
 
 [↑ Back to top](#top)
