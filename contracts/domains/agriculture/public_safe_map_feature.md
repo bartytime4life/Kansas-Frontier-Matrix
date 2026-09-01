@@ -1,0 +1,147 @@
+# Agriculture Public-Safe Map Feature Candidate
+
+Status: **PROPOSED_INACTIVE** / synthetic-fixture-only domain interface.
+
+This contract defines `AgricultureMapFeatureCandidate`, an Agriculture-owned,
+non-released carrier shape for later Catalog/Discovery and Explorer integration.
+It is intentionally **not** an Explorer layer, renderer source, publication
+record, source-admission path, or release authorization.
+
+## Purpose
+
+The carrier preserves the Agriculture semantics a downstream map consumer needs
+without exposing farm/operator truth or taking authority from adjacent domains:
+
+- Agriculture object family and semantic role remain explicit.
+- Spatial support is generalized to county, region, or generalized grid support;
+  exact field geometry, parcel/owner joins, private addresses, well/right IDs,
+  operator identity, proprietary yield/input detail, and transform parameters
+  are forbidden.
+- Crop/calendar/reporting/valid-period semantics remain explicit.
+- Observed, modeled/derived, and context-only values cannot collapse into one
+  another.
+- Soil, Hydrology, Habitat, Geology, Atmosphere, and Hazards authority is never
+  created by this carrier.
+- Evidence references remain explicit and sorted.
+- A shape can be public-safe in precision while still being unreleased:
+  policy, review, release, public-use, and publication effects remain false.
+
+## Responsibility roots
+
+- Semantic contract: `contracts/domains/agriculture/public_safe_map_feature.md`
+- Machine shape: `schemas/contracts/v1/domains/agriculture/public_safe_map_feature.schema.json`
+- Deterministic validator: `tools/validators/domains/agriculture/validate_public_safe_map_feature.py`
+- Synthetic fixtures: `fixtures/domains/agriculture/public_safe_map_feature/cases.json`
+- Regression proof: `tests/domains/agriculture/test_public_safe_map_feature.py`
+
+These homes follow KFM's responsibility-root model: Agriculture is a segment
+inside contract, schema, validator, fixture, and test roots rather than a new
+repository root.
+
+## Supported Agriculture families
+
+The first bounded profile admits only map-relevant Agriculture families whose
+meaning can be expressed without exact farm/operator geometry:
+
+- `CropObservation`
+- `CropRotation`
+- `YieldObservation`
+- `IrrigationLink`
+- `ConservationPractice`
+- `SoilCropSuitability`
+- `AgriculturalEconomyObservation`
+- `SupplyChainNode`
+- `DroughtStressIndicator`
+- `PestStressIndicator`
+
+`FieldCandidate` is deliberately excluded from this first public-safe carrier
+because field-candidate geometry can be reverse-engineerable. `AggregationReceipt`
+remains a receipt, not a map feature.
+
+## Semantic roles
+
+- `OBSERVED_AGGREGATE` — released-source meaning is observational aggregate, not
+  a modeled result.
+- `DERIVED_CONTEXT` — derived Agriculture context such as rotation context.
+- `IRRIGATION_CONTEXT` — Agriculture irrigation-use context only; never a
+  Hydrology observation or water-right statement.
+- `PRACTICE_CONTEXT` — generalized practice context only; never stewardship,
+  participation, or legal-status authority.
+- `MODELED_SUITABILITY` — Agriculture-owned suitability derivative consuming
+  governed Soil evidence without redefining Soil truth.
+- `ECONOMIC_AGGREGATE` — generalized Agriculture economic observation.
+- `INFRASTRUCTURE_CONTEXT` — generalized infrastructure context; no precise
+  private facility location.
+- `DERIVED_INDICATOR` — derived stress/production context; never Hazards or
+  Atmosphere emergency/forecast authority.
+
+## Spatial support
+
+`support.kind` is limited to `COUNTY`, `REGION`, or `GENERALIZED_GRID`.
+`support.generalized` is always `true` and `precision_class` is always
+`AGGREGATE_PUBLIC_SAFE` or `GENERALIZED_PUBLIC_SAFE`.
+
+The carrier must never contain exact/reconstructable:
+
+- field boundaries or coordinates;
+- parcel IDs or parcel-owner joins;
+- operator/farm identities or private addresses;
+- well IDs, permits, or water-right identifiers;
+- precise sensitive infrastructure;
+- proprietary yield/input/application detail;
+- transform parameters capable of reconstructing protected detail.
+
+## Temporal semantics
+
+`temporal.kind` is one of `CROP_YEAR`, `CALENDAR_YEAR`, `REPORTING_PERIOD`, or
+`VALID_INTERVAL`. `year`, `start`, `end`, and `source_vintage` remain distinct.
+`CALENDAR_YEAR` must be January 1 through December 31. A `CROP_YEAR` may
+cross calendar boundaries; its explicit interval is authoritative and its year
+label must fall within that interval. Reporting/valid intervals likewise keep
+their declared year label inside the interval. All intervals require
+`start <= end`, and `source_vintage` cannot precede the interval end.
+
+## Role separation
+
+`indicator.value_role` must agree with `semantic_role`:
+
+- observed/economic aggregates -> `OBSERVED`;
+- derived/model roles -> `MODELED_OR_DERIVED`;
+- irrigation/practice/infrastructure context -> `CONTEXT_ONLY`.
+
+A map carrier cannot upgrade modeled context to observed truth.
+
+## Authority and release effects
+
+All adjacent-domain authority flags are fixed false:
+
+- `hydrology_observation`
+- `water_right`
+- `habitat_occurrence`
+- `geology_truth`
+- `atmosphere_forecast`
+- `hazard_alert`
+
+The synthetic v1 profile is intentionally unreleased. `policy_evaluated`,
+`review_approved`, `release_authorized`, `public_use_allowed`, and `published`
+must all remain false. This preserves `RAW -> WORK/QUARANTINE -> PROCESSED ->
+CATALOG/TRIPLET -> PUBLISHED`; the carrier does not skip lifecycle gates.
+
+## Deterministic identity
+
+The validator removes `id` and `spec_hash`, serializes the remaining candidate
+with sorted JSON keys and compact separators, and computes SHA-256.
+
+- `spec_hash = "sha256:" + digest`
+- `id = "ag-map-feature:" + digest[:24]`
+
+Changing semantic role, temporal scope, spatial support, evidence binding,
+sensitivity declaration, or non-effects therefore changes identity.
+
+## Validation outcomes
+
+- `PASS` — the synthetic candidate satisfies schema and semantic invariants.
+- `DENY` — trust, structure, authority, precision, role, temporal, or identity constraints fail.
+
+No successful validation implies source admission, evidence resolution, policy
+approval, release, publication, or truth beyond the candidate fixture.
