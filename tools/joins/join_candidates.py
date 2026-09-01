@@ -148,6 +148,13 @@ def derive_decision(candidate: Mapping[str, Any]) -> dict[str, Any]:
         if predicate == "EXACT_KEY"
         else _spatial_temporal_match(left, right, request.get("temporal_tolerance_seconds"))
     )
+    same_domain = (
+        isinstance(left.get("domain"), str)
+        and isinstance(right.get("domain"), str)
+        and left.get("domain") == right.get("domain")
+    )
+    if same_domain:
+        matched = False
     inherited = _strictest_sensitivity(left, right)
     missing_evidence = sum(endpoint.get("evidence_ref") is None for endpoint in (left, right))
     living_count = sum(endpoint.get("living_person") is True for endpoint in (left, right))
@@ -176,6 +183,8 @@ def derive_decision(candidate: Mapping[str, Any]) -> dict[str, Any]:
         outcome, status, reason, obligation = "DENY", "LIVING_PERSON_JOIN_DENIED", "LIVING_PERSON_JOIN_DENIED", "REQUIRE_CONSENT_AND_POLICY_REVIEW"
     elif exact_sensitive_count or inherited == "PROHIBITED":
         outcome, status, reason, obligation = "DENY", "GEOMETRY_PRECISION_BLOCKED", "GEOMETRY_PRECISION_BLOCKED", "GENERALIZE_OR_WITHHOLD_GEOMETRY"
+    elif same_domain:
+        outcome, status, reason, obligation = "ABSTAIN", "NO_JOIN_CANDIDATE", "CROSS_DOMAIN_PAIR_REQUIRED", "ROUTE_TO_DOMAIN_LOCAL_VALIDATOR"
     elif missing_evidence:
         outcome, status, reason, obligation = "ABSTAIN", "EVIDENCE_REF_MISSING", "EVIDENCE_REF_MISSING", "RESOLVE_EVIDENCE_REFS"
     elif not matched:
