@@ -107,6 +107,20 @@ class AtmosphereEvidenceBundleSchemaConvergenceTests(unittest.TestCase):
             result.stderr,
         )
 
+    def test_declared_projection_validator_requires_an_input_mode(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            result = subprocess.run(
+                [sys.executable, str(PROJECTION_VALIDATOR)],
+                cwd=directory,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        self.assertEqual(result.stdout, "")
+        self.assertIn("No files provided", result.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()
