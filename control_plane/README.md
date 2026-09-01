@@ -156,7 +156,7 @@ Authority is referential here. When a reference does not resolve, is stale, or c
 | Required register population | `CONFIRMED BOUNDED` | Three required registers are nonempty; six remain empty. |
 | Dedicated projection profiles | `CONFIRMED` | Root, path-alias, domain-lane, cross-domain-seam, object-family, and trust-spine baseline projections have dedicated validation surfaces. |
 | Supplemental matrices and watcher registry | `CONFIRMED / BOUNDED` | Present, mostly `PROPOSED_INACTIVE`, documented-only, or unresolved; no activation or release is implied. |
-| Repository-control projection | `STALE / PROJECTION ONLY` | `repository_control_state.yaml` records an older observation and cannot authorize or prohibit this current scoped change. |
+| Repository-control projection | `STALE / PROJECTION ONLY` | `repository_control_state.yaml` records the current observation and cannot authorize or prohibit this current scoped change. |
 | Review routing | `CONFIRMED ROUTING` | CODEOWNERS routes `/control_plane/` to `@bartytime4life`; independent enforcement remains `NEEDS VERIFICATION`. |
 | Direct public use | `DENY` | Raw registers are not normal public truth surfaces. |
 
