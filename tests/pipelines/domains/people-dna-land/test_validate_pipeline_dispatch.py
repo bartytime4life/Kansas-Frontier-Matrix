@@ -44,6 +44,30 @@ def test_dispatches_to_existing_domain_validator(monkeypatch):
     ]
 
 
+def test_dispatches_catalog_matrix_fixture_replay(monkeypatch):
+    module = _load_module()
+    calls = []
+
+    def fake_run(command, *, cwd, check):
+        calls.append((command, cwd, check))
+        return SimpleNamespace(returncode=0)
+
+    monkeypatch.setattr(module.subprocess, "run", fake_run)
+
+    assert module.main(["catalog-matrix", "--fixtures"]) == 0
+    assert calls == [
+        (
+            [
+                sys.executable,
+                str(module.VALIDATORS["catalog-matrix"]),
+                "--fixtures",
+            ],
+            module.REPO_ROOT,
+            False,
+        )
+    ]
+
+
 def test_dispatches_consent_overlay_with_required_manifest(monkeypatch):
     module = _load_module()
     calls = []
