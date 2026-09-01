@@ -583,7 +583,7 @@ These findings are current documentation work, not permission for an unreviewed 
 7. **PARTIAL — incident surfaces.** The proposed handoff decision packet defines a public-guidance versus restricted-runbook split, but accountable owners and independent acceptance remain unverified.
 8. **NEEDS VERIFICATION — child metadata.** Reconcile placeholder IDs, owners, dates, paths, versions, review claims, and no-mounted-repository language in seven older child documents.
 9. **NEEDS VERIFICATION — deny coverage.** Crosswalk threats and security requirements to implemented policy, validator, fixture, test, workflow, telemetry, and release checks; keep uncovered cases explicit.
-10. **NEEDS VERIFICATION — drills and evidence.** Determine which incident, secret-leak, key-rotation, rollback, withdrawal, and correction drills have approved, exact-version records.
+10. **PARTIAL — drills and evidence.** Determine which incident, secret-leak, key-rotation, rollback, withdrawal, and correction drills have approved, exact-version records; the M34 synthetic rehearsal slice now records one no-sensitive-data inventory and overlap map, but live readiness remains unverified.
 
 ### P2 — maturity and maintainability
 

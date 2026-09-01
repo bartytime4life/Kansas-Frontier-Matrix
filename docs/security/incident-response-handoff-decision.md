@@ -2,7 +2,7 @@
 doc_id: kfm://doc/security/incident-response-handoff-decision
 title: Incident-response guidance and restricted-runbook handoff decision
 type: governance-decision-packet
-version: v1.0
+version: v1.1
 status: proposed
 effective_decision_status: proposed
 owners:
@@ -10,7 +10,7 @@ owners:
   - "OWNER_TBD — accountable public security guidance owner"
   - "OWNER_TBD — accountable restricted incident-operations owner"
 created: 2026-08-15
-updated: 2026-08-15
+updated: 2026-09-01
 policy_label: public-safe governance
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -37,6 +37,7 @@ notes:
   - "This packet proposes ACCEPT_SPLIT. Filing, merging, linking, or validating it does not accept that disposition."
   - "No private endpoint, roster, credential, exact sensitive coordinate, exploit detail, evidence payload, or tactical procedure is included."
   - "Both existing incident-response paths remain unchanged until accountable owners and review accept the decision."
+  - "M34 records current repository surfaces and one synthetic no-sensitive-data rehearsal slice; it does not claim live readiness."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -281,6 +282,68 @@ A future path migration must include:
 Rollback must restore the prior two-path split without copying restricted
 content into public history.
 
+## M34 evidence and first slice
+
+This section records the milestone-specific inventory and overlap map at
+execution start. It does not accept the decision packet or claim operational
+readiness.
+
+### Surface inventory
+
+| Surface | Outcome | Notes |
+| --- | --- | --- |
+| [`docs/security/INCIDENT_RESPONSE.md`](./INCIDENT_RESPONSE.md) | `IMPLEMENTED` | Public security guidance exists; it remains documentation, not operational authority. |
+| [`docs/runbooks/INCIDENT_RESPONSE.md`](../runbooks/INCIDENT_RESPONSE.md) | `IMPLEMENTED` | Restricted operational-lane documentation exists; named responders, live intake, and live observability remain unverified. |
+| [`docs/runbooks/rollback-rehearsal.md`](../runbooks/rollback-rehearsal.md) | `IMPLEMENTED` | Synthetic-only rollback / withdrawal / correction rehearsal exists. |
+| [`tools/release/rollback_apply.py`](../../tools/release/rollback_apply.py) | `IMPLEMENTED` | Marker-protected synthetic helper; no live release mutation. |
+| [`tests/release/test_synthetic_rollback_rehearsal.py`](../../tests/release/test_synthetic_rollback_rehearsal.py) | `IMPLEMENTED` | Deterministic coverage for the synthetic helper and its report contract. |
+| [`docs/security/incident-response-handoff-decision.md`](./incident-response-handoff-decision.md) | `PARTIAL` | Proposed split and handoff contract; acceptance remains unverified. |
+| `#2900` | `SUPERSEDED` | Closed lineage only; it does not prove operational recovery. |
+| Private intake, named responders, live observability, and real incident handling | `ABSENT` | Not established by the tracked repository surfaces. |
+
+### Overlap map
+
+- `#2900` closed the earlier public/restricted split lineage, but not the
+  operational handoff.
+- `#3380` tracks the related incident-response guidance ↔ restricted-runbook
+  handoff milestone.
+- `#3398` is the current evidence checkpoint for observability and recovery
+  rehearsal.
+- `#4069` is the open implementation branch for this slice.
+
+### First bounded slice
+
+Synthetic, no-sensitive-data rehearsal only:
+
+1. Prepare a marker-protected synthetic workspace.
+2. Run `python -m unittest -q tests.release.test_synthetic_rollback_rehearsal`.
+3. Use `tools/release/rollback_apply.py` in `PLAN` mode to verify aliases,
+   digests, invalidation set, preservation, and governance fields.
+4. If `APPLY` is exercised, keep the workspace synthetic, preserve history, and
+   verify the report never creates authority or publication.
+5. Treat rollback and forward-fix as new synthetic reports or scenarios; do not
+   mutate prior evidence in place.
+
+### Validation and rollback contract
+
+- deterministic, no-network, synthetic-only execution;
+- no secrets, private endpoints, live incident data, or release/publication
+  authority;
+- report evidence is bounded to `before`, `after`, `correction`,
+  `invalidations`, `preservation`, and `governance`;
+- validation is the targeted unittest above plus focused Markdown, link, stale
+  reference, generated-receipt, and secret scans; and
+- rollback is mechanical by restoring the prior blob or reverting the focused
+  doc change if the slice must be withdrawn.
+
+### Unresolved items
+
+- private intake route;
+- named incident commander or responders;
+- live observability / telemetry evidence;
+- production containment or recovery authority; and
+- acceptance of `ACCEPT_SPLIT`.
+
 ## Validation
 
 The implementation PR should run:
@@ -313,6 +376,7 @@ This proposal does not:
 
 | Version | Date | Change |
 | --- | --- | --- |
+| `v1.1` | 2026-09-01 | Added the M34 evidence inventory, overlap map, first synthetic rehearsal slice, and validation / rollback contract. |
 | `v1.0` | 2026-08-15 | Initial evidence-backed `ACCEPT_SPLIT` proposal and finite handoff contract. |
 
 [Back to top](#top)
