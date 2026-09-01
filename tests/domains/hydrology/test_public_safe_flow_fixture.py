@@ -73,6 +73,26 @@ class HydrologyFlowFixtureTests(unittest.TestCase):
         self.assertEqual(expected, sorted(expected))
         self.assertEqual(validate_file(INVALID_FIXTURE), expected)
 
+    def test_source_role_must_remain_observed(self) -> None:
+        candidate = _load_candidate()
+        self.assertEqual(candidate["source_role"], "observed")
+        self.assertEqual(validate_candidate(candidate), [])
+
+        for role in ("modeled", "forecast", "regulatory", "aggregate", "synthetic", None):
+            candidate = _load_candidate()
+            candidate["source_role"] = role
+            self.assertIn(
+                Finding("SOURCE_ROLE_INVALID", "$.source_role"),
+                validate_candidate(candidate),
+            )
+
+        candidate = _load_candidate()
+        candidate.pop("source_role")
+        self.assertIn(
+            Finding("SOURCE_ROLE_INVALID", "$.source_role"),
+            validate_candidate(candidate),
+        )
+
     def test_measurement_boundaries_and_boolean_separation(self) -> None:
         for value in (0, 1_000_000_000):
             candidate = _load_candidate()
