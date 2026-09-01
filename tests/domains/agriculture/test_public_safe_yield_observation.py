@@ -50,6 +50,7 @@ def test_yield_observation_rejects_modeled_role_collapse():
     collapsed = copy.deepcopy(candidate)
     collapsed["semantic_role"] = "DERIVED_INDICATOR"
     collapsed["indicator"]["value_role"] = "MODELED_OR_DERIVED"
+    collapsed["spec_hash"], collapsed["id"] = module.canonical_identity(collapsed)
 
     result = module.validate_payload(collapsed)
 
