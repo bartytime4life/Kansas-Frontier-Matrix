@@ -15,6 +15,7 @@ truth_posture: cite-or-abstain; executable claims require current code plus pair
 evidence_repository: bartytime4life/Kansas-Frontier-Matrix
 evidence_base_ref: main
 evidence_base_commit: f4802ac39b0ad48296bc6c3fd80bffe7291dfc46
+evidence_base_role: pre-change evidence base; the inventory below includes this proposed branch change and is exact only at the PR head reported by GitHub
 codeowners_route: /tools/validators/ @bartytime4life
 directory_rules_adoption_adr: docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
 related:
@@ -56,7 +57,7 @@ notes:
 
 This directory is the Hazards validation implementation lane under the `tools/` responsibility root. It owns repository validator code and this local inventory. Hazards meaning remains under [`contracts/`](../../../../contracts/domains/hazards/README.md); machine shape remains under [`schemas/`](../../../../schemas/contracts/v1/domains/hazards/README.md); fixtures and tests remain under their own roots.
 
-The index reports the exact tree at `main@f4802ac39b0ad48296bc6c3fd80bffe7291dfc46`. It distinguishes substantive implementations from tracked placeholders and distinguishes the aggregate Hazards workflow from dedicated profile workflows so hosted evidence is not understated or overstated.
+The pre-change evidence base is `main@f4802ac39b0ad48296bc6c3fd80bffe7291dfc46`. The inventory below additionally includes the KDHE HAB temporal validator proposed on this branch and is exact only at the pull-request head reported by GitHub. It distinguishes substantive implementations from tracked placeholders and distinguishes the aggregate Hazards workflow from dedicated profile workflows so hosted evidence is not understated or overstated.
 
 ## Status
 
@@ -203,6 +204,6 @@ This README is repository-facing documentation. Rollback is a reviewed revert of
 | Field | Value |
 |---|---|
 | Evidence date | 2026-09-01 |
-| Pinned repository commit | `f4802ac39b0ad48296bc6c3fd80bffe7291dfc46` |
+| Pre-change repository commit | `f4802ac39b0ad48296bc6c3fd80bffe7291dfc46` |
 | Review result | Six scripts confirmed: four substantive implementations and two explicit `NotImplementedError` placeholders; the KDHE HAB temporal profile has focused deterministic local proof but no dedicated hosted workflow at this boundary |
 | Next trigger | Validator add/remove/rename, placeholder implementation, fixture/test/workflow change, validator-registry change, source-admission change, or consumer adoption |
