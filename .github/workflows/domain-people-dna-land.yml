@@ -100,6 +100,8 @@ jobs:
           done
 
           python - <<'PY'
+          import importlib.util
+          import sys
           from pathlib import Path
 
           from tools.validators.ci_readiness import (
@@ -229,17 +231,74 @@ jobs:
                   f"the accepted synthetic profiles: {surfaced_payloads}."
               )
 
-          shared_fixture_roots = {
-              Path("fixtures/contracts/v1/evidence/evidence_bundle"),
-              Path("fixtures/contracts/v1/source/source_descriptor"),
+          shared_fixture_bindings = {
+              Path("fixtures/contracts/v1/evidence/evidence_bundle"): (
+                  Path(
+                      "tools/validators/domains/people-dna-land/"
+                      "validate_evidence_bundle.py"
+                  ),
+                  "FIXTURES",
+              ),
+              Path("fixtures/contracts/v1/source/source_descriptor"): (
+                  Path("tools/validators/sources/validate_source_descriptor.py"),
+                  "FIXTURES_DIR",
+              ),
               Path(
                   "fixtures/contracts/v1/domains/people-dna-land/"
                   "historical_person_place_event_resolution"
+              ): (
+                  Path(
+                      "tools/validators/"
+                      "validate_historical_person_place_event_resolution.py"
+                  ),
+                  "FIXTURE_ROOT",
               ),
-              Path("fixtures/data/catalog_matrix/closure"),
-              Path("fixtures/correction/correction_notice"),
+              Path("fixtures/data/catalog_matrix/closure"): (
+                  Path("tools/validators/validate_catalog_matrix_closure.py"),
+                  "FIXTURES",
+              ),
+              Path("fixtures/correction/correction_notice"): (
+                  Path(
+                      "tools/validators/correction/validate_correction_notice.py"
+                  ),
+                  "FIXTURES_ROOT",
+              ),
           }
-          for root in sorted(shared_fixture_roots):
+          for root, (validator_path, constant_name) in sorted(
+              shared_fixture_bindings.items()
+          ):
+              if validator_path.is_symlink() or not validator_path.is_file():
+                  raise SystemExit(
+                      "Declared shared fixture validator is unavailable or "
+                      f"unsafe: {validator_path}."
+                  )
+              module_name = (
+                  "_kfm_people_dna_land_fixture_binding_"
+                  + validator_path.stem
+              )
+              spec = importlib.util.spec_from_file_location(
+                  module_name, validator_path
+              )
+              if spec is None or spec.loader is None:
+                  raise SystemExit(
+                      f"Cannot load shared fixture validator: {validator_path}."
+                  )
+              module = importlib.util.module_from_spec(spec)
+              sys.modules[module_name] = module
+              try:
+                  spec.loader.exec_module(module)
+              finally:
+                  sys.modules.pop(module_name, None)
+              declared_root = getattr(module, constant_name, None)
+              if (
+                  not isinstance(declared_root, Path)
+                  or declared_root.resolve() != root.resolve()
+              ):
+                  raise SystemExit(
+                      "Shared fixture binding drifted: "
+                      f"validator={validator_path} constant={constant_name} "
+                      f"declared={declared_root!r} expected={root}."
+                  )
               if root.is_symlink() or not root.is_dir():
                   raise SystemExit(
                       "Declared shared synthetic fixture root is unavailable or "
@@ -264,7 +323,7 @@ jobs:
 
           print(
               "People/DNA/Land executable, placeholder, marker, domain-fixture, "
-              "and shared-fixture inventories are explicit."
+              "shared-fixture, and validator-binding inventories are explicit."
           )
           PY
 
