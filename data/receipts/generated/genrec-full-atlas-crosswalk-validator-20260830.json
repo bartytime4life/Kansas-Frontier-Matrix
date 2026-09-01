@@ -30,14 +30,14 @@
     "docs/intake/exploratory/full-atlas-crosswalk-validator-source-map.md": "sha256:34299c5ba17f3d451d09e2d9a2f69514711a0c8ed1303f88233c56b6ded45962",
     "fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json": "sha256:7372e0d9900bc3f1d17861b3bdf0afa2570fe8436edcbd972c485257605c7b94",
     "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json": "sha256:1ad7520fc7c07514d7887e73db8ebb9ebde4df1f3f26a4f6013f5fba239e1bb7",
-    "tests/joins/README.md": "sha256:cd04395d23556c5c648343ef935ec33242c30e886043cfe28e439da02f3644d5",
+    "tests/joins/README.md": "sha256:fb3319fc9de535f6e0c01afc5965fb485d7f79781de4c63bebc14557ff92e778",
     "tests/joins/test_cross_lane_domain_alias_dependency_guard.py": "sha256:2616c87aaef05a55d2fc45f57ddbb973d7728514b0b6df2e3a5eb9f465309a2f",
     "tests/joins/test_cross_lane_domain_alias_guard.py": "sha256:4844ca9c56b7e47f758699f3c86b46bbacc9bee7f4803264fad7760203b196e7",
     "tests/joins/test_cross_lane_scope_precedence.py": "sha256:7f5da617cb65996c876093f43b1201bc27add2508a3846fbedd8bca956acf1ce",
     "tests/joins/test_cross_lane_source_role_schema_guard.py": "sha256:9c6bd884f0c51fd7f22d517c7b4ac5a2d866edef80b36a6cf5f1ca7a8f1ebac5",
     "tests/joins/test_cross_lane_synthetic_role_guard.py": "sha256:f63cf5320fe45d5848bc03f747a2eaf073c66932eb584349ab0e6d9d96c4e7ef",
     "tests/joins/test_cross_lane_temporal_boundary_guard.py": "sha256:8a3f943cb7127682dae40c9ee9f6086aefc13efc686614e7bba8ff81b6497e6e",
-    "tests/joins/test_cross_lane_workflow_propagation.py": "sha256:d8d733597848e67e8a7869f5778ae4ab37f8e6c9606c752d6d4874c4755248b3",
+    "tests/joins/test_cross_lane_workflow_propagation.py": "sha256:de9a433828181d5fb85634588a0d455714b9c0f71e0a8f9174af75f5b17ddc53",
     "tests/joins/test_join_candidates.py": "sha256:8f1203d844342fcd011a505e64d857f06b4e9f49d5c9649f92d90928063fd06c",
     "tools/joins/join_candidates.py": "sha256:691ee9376a2fb4164cf63124bf88e76c2915cf667f10fb794e8229ad77d83bba"
   },
@@ -109,17 +109,17 @@
     {
       "gate": "artifact-hash-replay",
       "outcome": "PASS",
-      "reason": "All 18 declared artifact SHA-256 values were replayed from exact branch head 07e3ba0e, including the four workflows and seven boundary-specific guard modules."
+      "reason": "All 18 declared artifact SHA-256 values were replayed from exact branch head f2e34976, including the self-checking nine-module join-lane inventory."
     },
     {
       "gate": "generated-receipt-schema-and-integrity",
       "outcome": "PASS",
-      "reason": "The successor receipt parses as finite JSON and has exact 18-artifact path/hash/truth-label key parity."
+      "reason": "The successor receipt parses as finite JSON and retains exact 18-artifact path/hash/truth-label key parity."
     },
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "The task pull request remains externally closed on an older head; hosted exact-head CI is unavailable and is not represented as passing."
+      "reason": "Hosted validation is pending creation of the replacement draft pull request and is not represented as passing."
     },
     {
       "gate": "human-review",
@@ -165,5 +165,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Successor provenance receipt for the cross-lane join assessment review unit. PR #4055 exposed stale digests and hosted-CI propagation gaps. This successor binds all seven dedicated synthetic regression files and the generic plus three pair-specific workflows. Both Soil pair workflows now replay on main and react to generic fixture, alias-register, and join-test changes. The historical 20260809 receipt remains immutable. This receipt creates no source, evidence, policy, review, proof, promotion, release, publication, or public-use authority."
+  "notes": "Successor provenance receipt for the cross-lane join assessment review unit. PR #4055 exposed stale digests and hosted-CI propagation gaps. This successor binds all seven dedicated synthetic regression files, the self-checking nine-module join-test inventory, and the generic plus three pair-specific workflows. Both Soil pair workflows replay on main and react to generic fixture, alias-register, and join-test changes. The historical 20260809 receipt remains immutable. This receipt creates no source, evidence, policy, review, proof, promotion, release, publication, or public-use authority."
 }
