@@ -17,7 +17,7 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any, Iterable
 
-PROFILE = "kfm.object-family-discovery-index.v1"
+PROFILE = "kfm.object-family-discovery-index.v2"
 SOURCE_REGISTRY = "object_family_register"
 SOURCE_AUTHORITY = "navigational_index_only"
 OUTPUT_AUTHORITY = "derived_discovery_only"
@@ -28,6 +28,13 @@ RELATION_FIELDS = (
     "correction_family_ids",
     "rollback_family_ids",
 )
+RELATION_KIND_BY_FIELD = {
+    "dependency_family_ids": "dependency",
+    "evidence_family_ids": "evidence",
+    "release_family_ids": "release",
+    "correction_family_ids": "correction",
+    "rollback_family_ids": "rollback",
+}
 PASSTHROUGH_FIELDS = (
     "family_id",
     "display_name",
@@ -157,7 +164,8 @@ def build_discovery_index(
         raise DiscoveryIndexError("family_id values must be unique")
 
     known_ids = set(ids)
-    dependency_edges: list[dict[str, str]] = []
+    relation_edges: list[dict[str, str]] = []
+    incoming_relations: dict[tuple[str, str], set[str]] = defaultdict(set)
     for item in normalized:
         family_id = item["family_id"]
         for field in RELATION_FIELDS:
@@ -166,15 +174,48 @@ def build_discovery_index(
                     raise DiscoveryIndexError(
                         f"unknown family in {field}: {family_id} -> {related_id}"
                     )
-                if field == "dependency_family_ids":
-                    dependency_edges.append(
-                        {"from_family_id": family_id, "to_family_id": related_id}
-                    )
+                relation = RELATION_KIND_BY_FIELD[field]
+                relation_edges.append(
+                    {
+                        "relation": relation,
+                        "from_family_id": family_id,
+                        "to_family_id": related_id,
+                    }
+                )
+                incoming_relations[(relation, related_id)].add(family_id)
 
     families = sorted(normalized, key=lambda item: item["family_id"])
-    dependency_edges.sort(
-        key=lambda edge: (edge["from_family_id"], edge["to_family_id"])
+    relation_edges.sort(
+        key=lambda edge: (
+            edge["relation"],
+            edge["from_family_id"],
+            edge["to_family_id"],
+        )
     )
+    dependency_edges = [
+        {
+            "from_family_id": edge["from_family_id"],
+            "to_family_id": edge["to_family_id"],
+        }
+        for edge in relation_edges
+        if edge["relation"] == "dependency"
+    ]
+    relation_index = [
+        {
+            "relation": relation,
+            "to_family_id": to_family_id,
+            "from_family_ids": sorted(from_family_ids),
+        }
+        for (relation, to_family_id), from_family_ids in sorted(
+            incoming_relations.items()
+        )
+    ]
+    relation_counts = {
+        relation: sum(
+            1 for edge in relation_edges if edge["relation"] == relation
+        )
+        for relation in sorted(RELATION_KIND_BY_FIELD.values())
+    }
 
     return {
         "profile": PROFILE,
@@ -198,6 +239,9 @@ def build_discovery_index(
             families, "consumer_classes", "consumer_class"
         ),
         "dependency_edges": dependency_edges,
+        "relation_edges": relation_edges,
+        "relation_index": relation_index,
+        "relation_counts": relation_counts,
     }
 
 

@@ -89,6 +89,58 @@ class ObjectFamilyDiscoveryIndexTests(unittest.TestCase):
             [{"from_family_id": "beta", "to_family_id": "alpha"}],
             index["dependency_edges"],
         )
+        self.assertEqual(
+            [
+                {
+                    "relation": "dependency",
+                    "from_family_id": "beta",
+                    "to_family_id": "alpha",
+                }
+            ],
+            index["relation_edges"],
+        )
+        self.assertEqual(
+            [
+                {
+                    "relation": "dependency",
+                    "to_family_id": "alpha",
+                    "from_family_ids": ["beta"],
+                }
+            ],
+            index["relation_index"],
+        )
+
+    def test_projects_all_governed_relation_types_with_reverse_lookup(self) -> None:
+        register = _register()
+        for field in (
+            "evidence_family_ids",
+            "release_family_ids",
+            "correction_family_ids",
+            "rollback_family_ids",
+        ):
+            register["entries"][0][field] = ["alpha"]
+
+        index = build_discovery_index(register, source_path="registry.json")
+
+        self.assertEqual(
+            ["correction", "dependency", "evidence", "release", "rollback"],
+            sorted({edge["relation"] for edge in index["relation_edges"]}),
+        )
+        self.assertEqual(
+            {
+                "correction": 1,
+                "dependency": 1,
+                "evidence": 1,
+                "release": 1,
+                "rollback": 1,
+            },
+            index["relation_counts"],
+        )
+        self.assertEqual(5, len(index["relation_index"]))
+        self.assertEqual(
+            [{"from_family_id": "beta", "to_family_id": "alpha"}],
+            index["dependency_edges"],
+        )
 
     def test_render_is_deterministic(self) -> None:
         register = _register()
