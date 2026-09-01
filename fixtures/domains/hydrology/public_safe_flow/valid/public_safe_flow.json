@@ -1,6 +1,7 @@
 {
   "record_id": "fixture:hydrology:flow:99999:20260802T120000Z",
   "object_family": "FlowObservation",
+  "source_role": "observed",
   "source_descriptor_ref": "fixture://sources/hydrology/synthetic-gauge",
   "evidence_refs": [
     "fixture://evidence/hydrology/flow/99999/20260802T120000Z"
