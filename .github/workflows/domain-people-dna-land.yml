@@ -1,7 +1,7 @@
 # KFM People/DNA/Land domain CI readiness workflow.
-# Status: two bounded synthetic consent fixture profiles are executable;
-# broader validation, policy-runtime, proof, revocation execution, cleanup, and
-# release producers remain held.
+# Status: bounded synthetic consent profiles and domain validator/dispatcher
+# seams are executable; policy-runtime, proof, revocation execution, cleanup,
+# and release producers remain held.
 #
 # Authority boundary:
 # - This workflow opens only repository-owned synthetic fixture payloads under
@@ -120,6 +120,27 @@ jobs:
                   "tools/validators/domains/people-dna-land/"
                   "validate_consent_revocation_propagation_assessment.py"
               ),
+              Path(
+                  "tools/validators/domains/people-dna-land/"
+                  "validate_catalog_matrix.py"
+              ),
+              Path(
+                  "tools/validators/domains/people-dna-land/"
+                  "validate_domain_layer_descriptor.py"
+              ),
+              Path(
+                  "tools/validators/domains/people-dna-land/"
+                  "validate_evidence_bundle.py"
+              ),
+              Path(
+                  "tools/validators/domains/people-dna-land/"
+                  "validate_schema.py"
+              ),
+              Path(
+                  "tools/validators/domains/people-dna-land/"
+                  "validate_source_descriptor.py"
+              ),
+              Path("tools/validators/genealogy/screen_living_persons.py"),
           }
 
           for path in sorted(Path("tests/domains/people-dna-land").rglob("*.py")):
@@ -157,6 +178,7 @@ jobs:
           accepted_fixture_roots = {
               fixture_root / "consent_overlay",
               fixture_root / "consent_revocation_propagation",
+              fixture_root / "domain_layer_descriptor",
           }
           expected_markers = {
               fixture_root / "golden/PLACEHOLDER.md":
@@ -219,6 +241,33 @@ jobs:
 
           echo "WORKFLOW_CHECK_EXECUTED: people-dna-land-validation-boundary-inventory"
           echo "WORKFLOW_HOLD: broader People/DNA/Land validation and consent enforcement are not established"
+
+      - name: Run bounded domain validator and dispatcher seams
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONHASHSEED: "0"
+        run: |
+          set -euo pipefail
+
+          python -m pytest -q \
+            tests/validators/domains/people-dna-land/test_domain_schema_validator.py \
+            tests/validators/domains/people-dna-land/test_domain_evidence_bundle_validator_entrypoint.py \
+            tests/validators/domains/people-dna-land/test_domain_source_descriptor_validator_entrypoint.py \
+            tests/validators/domains/people-dna-land/test_domain_catalog_matrix_validator_entrypoint.py \
+            tests/validators/domains/people-dna-land/test_domain_layer_descriptor_validator_entrypoint.py \
+            tests/validators/test_screen_living_persons.py \
+            tests/pipelines/domains/people-dna-land/test_validate_pipeline_dispatch.py \
+            tests/pipelines/domains/people-dna-land/test_domain_layer_descriptor_dispatch.py \
+            tests/pipelines/domains/people-dna-land/test_rollback_assessment_pipeline.py \
+            tests/pipelines/domains/people-dna-land/test_correction_notice_dispatch.py
+
+          python pipelines/domains/people-dna-land/validate.py correction-notice --fixtures
+          python pipelines/domains/people-dna-land/validate.py domain-layer-descriptor --fixtures
+          python pipelines/domains/people-dna-land/rollback.py --fixtures
+
+          echo "WORKFLOW_CHECK_EXECUTED: people-dna-land-domain-validator-dispatch"
 
       - name: Run bounded consent-safe genealogy-overlay validation
         shell: bash
