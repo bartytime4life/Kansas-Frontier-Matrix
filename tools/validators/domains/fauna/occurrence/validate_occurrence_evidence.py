@@ -14,6 +14,7 @@ import argparse
 import json
 import sys
 from dataclasses import dataclass
+from datetime import datetime
 from itertools import islice
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
@@ -195,6 +196,22 @@ def _taxonomy_normalized(taxon: Mapping[str, Any]) -> bool:
     )
 
 
+def _event_time_matches_event_date(observation: Mapping[str, Any]) -> bool:
+    """Keep the optional event timestamp within its declared event date."""
+
+    event_time = observation.get("event_time")
+    if event_time is None:
+        return True
+    event_date = observation.get("event_date")
+    if not isinstance(event_time, str) or not isinstance(event_date, str):
+        return False
+    try:
+        timestamp = datetime.fromisoformat(event_time.replace("Z", "+00:00"))
+    except ValueError:
+        return False
+    return timestamp.date().isoformat() == event_date
+
+
 def _role_matches_basis(role: object, basis: object) -> bool:
     if role == "observed":
         return basis in DIRECT_BASIS
@@ -312,6 +329,10 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
     if not role_matches:
         _add(findings, "obs.source_role_mismatch", "/observation/basis_of_record")
 
+    temporal_consistent = _event_time_matches_event_date(observation)
+    if not temporal_consistent:
+        _add(findings, "obs.event_time_date_mismatch", "/observation/event_time")
+
     rights_resolved = _rights_resolved(rights)
     if not rights_resolved:
         _add(findings, "rights.unresolved", "/rights")
@@ -390,7 +411,7 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
                 )
 
     result = validation.get("validator_result")
-    all_gates = all(actual_checks.values()) and role_matches
+    all_gates = all(actual_checks.values()) and role_matches and temporal_consistent
     if result == "pass":
         if review_pending or not all_gates or declared_reasons:
             _add(

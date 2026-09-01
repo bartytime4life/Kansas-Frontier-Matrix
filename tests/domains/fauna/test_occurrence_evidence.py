@@ -131,6 +131,27 @@ class OccurrenceEvidenceTests(unittest.TestCase):
             result.findings,
         )
 
+    def test_event_time_cannot_contradict_event_date(self) -> None:
+        candidate = _load("valid/valid_observed_open.json")
+        candidate["observation"]["event_time"] = "2026-01-16T00:00:00Z"
+
+        result = validator.validate_candidate(candidate)
+
+        self.assertIn(
+            validator.Finding(
+                "obs.event_time_date_mismatch",
+                "/observation/event_time",
+            ),
+            result.findings,
+        )
+        self.assertIn(
+            validator.Finding(
+                "schema.pass_gate_failed",
+                "/validation/validator_result",
+            ),
+            result.findings,
+        )
+
     def test_closed_schema_rejects_undeclared_fields(self) -> None:
         candidate = _load("valid/valid_observed_open.json")
         candidate["runtime_hint"] = "not part of the occurrence evidence contract"
