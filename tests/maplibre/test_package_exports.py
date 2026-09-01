@@ -13,6 +13,7 @@ EXPECTED_EXPORTS = {
 EXPECTED_ROOT_EXPORTS = {
     'export * from "./map-runtime-port";',
     'export * from "./null-map-runtime";',
+    'export * from "./map-runtime-terrain-fallback";',
 }
 
 
