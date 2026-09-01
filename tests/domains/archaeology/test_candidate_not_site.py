@@ -96,6 +96,19 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
                 payload["confidence_statement"] = malformed
                 self.assertIn(expected_error, validate_candidate_feature(payload))
 
+    def test_null_confidence_statement_fails_closed(self) -> None:
+        payload = copy.deepcopy(self.valid)
+        payload["confidence_statement"] = None
+        self.assertIn(
+            "confidence_statement must contain 1 to 1000 characters",
+            validate_candidate_feature(payload),
+        )
+
+    def test_omitted_confidence_statement_remains_optional(self) -> None:
+        payload = copy.deepcopy(self.valid)
+        payload.pop("confidence_statement", None)
+        self.assertEqual(validate_candidate_feature(payload), [])
+
     def test_unsupported_spatial_precision_fails_closed(self) -> None:
         payload = _load(FIXTURE_ROOT / "unsupported_spatial_precision_deny.json")
         errors = validate_candidate_feature(payload)

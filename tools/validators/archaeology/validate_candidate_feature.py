@@ -263,7 +263,7 @@ def validate_candidate_feature(payload: Any) -> list[str]:
         errors.append("spec_hash must match ^sha256:[a-f0-9]{64}$")
     confidence_statement = payload.get("confidence_statement")
     if (
-        confidence_statement is not None
+        "confidence_statement" in payload
         and (
             not isinstance(confidence_statement, str)
             or not 1 <= len(confidence_statement) <= CONFIDENCE_STATEMENT_MAX_LENGTH
