@@ -38,7 +38,6 @@ FORBIDDEN_LOCK_TEXT = (
     "https://",
 )
 PIP_SOURCE_ENV_KEYS = (
-    "PIP_CONFIG_FILE",
     "PIP_EXTRA_INDEX_URL",
     "PIP_FIND_LINKS",
     "PIP_INDEX_URL",
@@ -179,6 +178,7 @@ def install() -> None:
     environment = os.environ.copy()
     for key in PIP_SOURCE_ENV_KEYS:
         environment.pop(key, None)
+    environment["PIP_CONFIG_FILE"] = os.devnull
     environment["PIP_DISABLE_PIP_VERSION_CHECK"] = "1"
     environment["PIP_NO_INPUT"] = "1"
     for command in build_commands():
