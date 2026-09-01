@@ -186,6 +186,7 @@ class KdheHabTemporalValidatorTests(unittest.TestCase):
                 1,
             )
         payload = json.loads(stream.getvalue())
+        self.assertEqual(payload["target"], self.path.relative_to(ROOT).as_posix())
         self.assertEqual(
             payload["evaluation"],
             {
@@ -269,19 +270,26 @@ class KdheHabTemporalValidatorTests(unittest.TestCase):
         self.assertEqual(validate_file(self.path).outcome, "ERROR")
 
     def test_file_loader_rejects_paths_outside_repository(self) -> None:
-        with tempfile.TemporaryDirectory() as outside_directory:
+        marker = "synthetic-sensitive-external-path-must-not-echo"
+        stream = io.StringIO()
+        with tempfile.TemporaryDirectory(prefix=marker) as outside_directory:
             outside_path = Path(outside_directory) / "candidate.json"
             outside_path.write_text(
                 json.dumps(self._candidate()) + "\n",
                 encoding="utf-8",
             )
             result = validate_file(outside_path)
+            with contextlib.redirect_stdout(stream):
+                self.assertEqual(validate_main([str(outside_path)]), 2)
 
         self.assertEqual(result.outcome, "ERROR")
         self.assertEqual(
             {(finding.code, finding.path) for finding in result.findings},
             {("KDHE_HAB_INPUT_OUTSIDE_REPOSITORY", "/")},
         )
+        payload = json.loads(stream.getvalue())
+        self.assertEqual(payload["target"], "<outside-repository>")
+        self.assertNotIn(marker, stream.getvalue())
 
     def test_schema_invalid_types_return_finite_deny_results(self) -> None:
         invalid_state = self._candidate()

@@ -265,6 +265,14 @@ def _canonical_time(value: datetime) -> str:
     return value.astimezone(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
+def _public_target(target: str) -> str:
+    try:
+        resolved = Path(target).resolve(strict=False)
+        return resolved.relative_to(ROOT.resolve()).as_posix()
+    except (OSError, RuntimeError, ValueError):
+        return "<outside-repository>"
+
+
 def _payload(
     result: ValidationResult,
     target: str,
@@ -273,7 +281,7 @@ def _payload(
 ) -> dict[str, Any]:
     return {
         "profile": "kfm.kdhe-hab-temporal.v1",
-        "target": target,
+        "target": _public_target(target),
         "outcome": result.outcome,
         "evaluation": {
             "basis": "explicit_as_of" if as_of is not None else "retrieval_relative",

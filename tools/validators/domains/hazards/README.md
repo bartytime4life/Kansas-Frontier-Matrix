@@ -2,7 +2,7 @@
 doc_id: kfm://doc/tools-validators-domains-hazards-readme
 title: tools/validators/domains/hazards/ — Hazards Validator Index
 type: readme
-version: v0.16
+version: v0.17
 status: draft; repository-grounded; mixed-maturity; non-semantic; non-policy; non-release; non-publication
 owner: NEEDS VERIFICATION — CODEOWNERS routes /tools/validators/ to @bartytime4life; no independently verified Hazards validation steward or required-review control was established
 created: 2026-07-07
@@ -33,6 +33,7 @@ related:
   - ../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../../../docs/doctrine/directory-rules.md
 notes:
+  - "v0.17 reports repository-relative targets and redacts external host paths, preventing local usernames or mount structure from leaking through the result envelope."
   - "v0.16 enforces the declared repository-local file boundary before reading a snapshot, preventing arbitrary external paths from becoming validator inputs."
   - "v0.15 binds first-after-last and last-after-retrieval ordering findings to the exact timestamp field that violates its boundary."
   - "v0.14 prevents timestamps with unknown local offsets from participating in derived ordering, freshness, or expiration findings after they are denied."
@@ -170,7 +171,7 @@ The `domain-hazards` proof and release-dry-run jobs intentionally emit explicit 
 
 Individual validators own their finite result grammar. This index does not normalize materially different findings into a shared approval state.
 
-KDHE HAB file validation admits only paths that resolve within the repository root and returns a finite error before reading an external path. Its output identifies whether validation was retrieval-relative or used an explicit caller-supplied evaluation instant. Snapshot timestamps and the CLI evaluation instant must carry a known offset; RFC3339's unknown-local-offset marker (`-00:00`) is denied rather than collapsed to UTC or used for derived ordering, freshness, or expiration findings. Observation-order findings bind first-after-last to `/first_observed_at` and last-after-retrieval to `/last_observed_at`, preserving an actionable field path without assigning causal authority. The CLI otherwise accepts only timezone-aware RFC3339 whole-second instants with a valid offset, and the programmatic interface rejects evaluation instants whose normalized UTC value has subsecond precision. Accepted instants are normalized to UTC in the result, while retrieval-relative output uses a null evaluation time. An instant before retrieval yields the pre-retrieval finding and does not also assert explicit-time expiration for a carrier that did not yet exist. This canonical binding supports deterministic replay but does not create a runtime DecisionEnvelope, EvidenceBundle, approval, alert, or current-condition claim.
+KDHE HAB file validation admits only paths that resolve within the repository root and returns a finite error before reading an external path. Result envelopes report admitted inputs as repository-relative paths and replace external or unresolvable host paths with `<outside-repository>`, so local usernames and mount structure are not exposed. Output identifies whether validation was retrieval-relative or used an explicit caller-supplied evaluation instant. Snapshot timestamps and the CLI evaluation instant must carry a known offset; RFC3339's unknown-local-offset marker (`-00:00`) is denied rather than collapsed to UTC or used for derived ordering, freshness, or expiration findings. Observation-order findings bind first-after-last to `/first_observed_at` and last-after-retrieval to `/last_observed_at`, preserving an actionable field path without assigning causal authority. The CLI otherwise accepts only timezone-aware RFC3339 whole-second instants with a valid offset, and the programmatic interface rejects evaluation instants whose normalized UTC value has subsecond precision. Accepted instants are normalized to UTC in the result, while retrieval-relative output uses a null evaluation time. An instant before retrieval yields the pre-retrieval finding and does not also assert explicit-time expiration for a carrier that did not yet exist. This canonical binding supports deterministic replay but does not create a runtime DecisionEnvelope, EvidenceBundle, approval, alert, or current-condition claim.
 
 ## Inputs and outputs
 
