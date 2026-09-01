@@ -74,6 +74,14 @@ class HabitatEvidenceBundleEntrypointTests(unittest.TestCase):
         self.assertIn(f"OK {VALID_FIXTURE}", result.stdout)
         self.assertIn(f"FAIL {INVALID_FIXTURE}", result.stdout)
 
+    def test_missing_explicit_file_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            missing = Path(directory) / "missing-evidence-bundle.json"
+            result = self._run(str(missing))
+
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn(f"FAIL {missing}", result.stdout)
+
     def test_duplicate_keys_and_nonfinite_numbers_fail_before_schema_validation(self) -> None:
         malformed_instances = {
             "duplicate-key.json": '{"bundle_id":"first","bundle_id":"second"}',
