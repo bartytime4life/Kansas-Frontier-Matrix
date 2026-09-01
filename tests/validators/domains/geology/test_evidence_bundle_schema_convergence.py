@@ -98,6 +98,22 @@ class GeologyEvidenceBundleSchemaConvergenceTests(unittest.TestCase):
         self.assertIn("Additional properties are not allowed", result.stdout)
         self.assertIn("exact_subsurface_location", result.stdout)
 
+    def test_duplicate_claim_scope_cannot_hide_exact_subsurface_scope(self) -> None:
+        payload = self.load(SHARED_FIXTURES / "valid/valid_1.json")
+        serialized = json.dumps(payload)
+        duplicate = (
+            '{"claim_scope":"synthetic exact subsurface coordinates",'
+            + serialized[1:]
+        )
+
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = Path(directory) / "duplicate_claim_scope.json"
+            fixture.write_text(duplicate, encoding="utf-8")
+            result = self.run_domain_validator(str(fixture))
+
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("duplicate JSON object key", result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()
