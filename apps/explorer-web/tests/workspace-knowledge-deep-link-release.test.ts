@@ -95,6 +95,7 @@ describe("public Knowledge-domain deep-link release", () => {
         contextUrl(["archaeology"]),
         "archaeology",
         "archaeology",
+        true,
       ),
     ).toEqual({
       activeDeepLinkDomainId: "archaeology",
@@ -109,6 +110,7 @@ describe("public Knowledge-domain deep-link release", () => {
       original,
       "archaeology",
       "people_dna_land",
+      true,
     );
 
     expect(transition.reason).toBe("RELEASED");
@@ -131,6 +133,7 @@ describe("public Knowledge-domain deep-link release", () => {
         contextUrl(["people_dna_land"]),
         "archaeology",
         "hydrology",
+        false,
       ),
     ).toEqual({
       activeDeepLinkDomainId: null,
@@ -145,9 +148,25 @@ describe("public Knowledge-domain deep-link release", () => {
         contextUrl(["archaeology"]),
         null,
         "people_dna_land",
+        true,
       ),
     ).toEqual({
       activeDeepLinkDomainId: null,
+      replacementUrl: null,
+      reason: "UNCHANGED",
+    });
+  });
+
+  it("retains URL ownership when a different manual control does not apply", () => {
+    expect(
+      resolvePublicKnowledgeDomainManualSelectionTransition(
+        contextUrl(["archaeology"]),
+        "archaeology",
+        "people_dna_land",
+        false,
+      ),
+    ).toEqual({
+      activeDeepLinkDomainId: "archaeology",
       replacementUrl: null,
       reason: "UNCHANGED",
     });
@@ -158,6 +177,9 @@ describe("public Knowledge-domain deep-link release", () => {
       "resolvePublicKnowledgeDomainUrlConsumerCommit",
     );
     expect(mainSource).toContain("!domainButton.disabled");
+    expect(mainSource).toContain(
+      '!button.disabled && button.getAttribute("aria-pressed") === "true"',
+    );
     expect(mainSource).toContain("domainButton.click()");
     const clickIndex = mainSource.indexOf("domainButton.click()");
     expect(

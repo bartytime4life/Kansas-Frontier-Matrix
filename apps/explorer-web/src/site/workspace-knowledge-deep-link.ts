@@ -46,6 +46,7 @@ export function resolvePublicKnowledgeDomainManualSelectionTransition(
   url: URL,
   activeDeepLinkDomainId: string | null,
   selectedDomainId: string,
+  selectionApplied: boolean,
 ): PublicKnowledgeDomainDeepLinkRelease {
   if (activeDeepLinkDomainId === null) {
     return Object.freeze({
@@ -60,6 +61,14 @@ export function resolvePublicKnowledgeDomainManualSelectionTransition(
       activeDeepLinkDomainId: null,
       replacementUrl: null,
       reason: "STALE_OWNER",
+    });
+  }
+
+  if (!selectionApplied) {
+    return Object.freeze({
+      activeDeepLinkDomainId,
+      replacementUrl: null,
+      reason: "UNCHANGED",
     });
   }
 

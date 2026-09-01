@@ -86,6 +86,7 @@ const releaseDeepLinkKnowledgeOwnershipOnManualSelection = (
     currentUrl,
     activeDeepLinkKnowledgeDomainId,
     domainId,
+    !button.disabled && button.getAttribute("aria-pressed") === "true",
   );
   activeDeepLinkKnowledgeDomainId = transition.activeDeepLinkDomainId;
   if (
