@@ -13,6 +13,7 @@ import os
 import re
 import subprocess
 import sys
+import time
 from pathlib import Path
 from typing import Sequence
 
@@ -125,7 +126,11 @@ def install() -> None:
     environment = os.environ.copy()
     environment["PIP_DISABLE_PIP_VERSION_CHECK"] = "1"
     environment["PIP_NO_INPUT"] = "1"
+    deadline = time.monotonic() + INSTALL_TIMEOUT_SECONDS
     for command in build_commands():
+        remaining_seconds = deadline - time.monotonic()
+        if remaining_seconds <= 0:
+            raise CliInstallConfigurationError("CLI_INSTALL_TIMEOUT")
         try:
             subprocess.run(
                 command,
@@ -133,7 +138,7 @@ def install() -> None:
                 cwd=REPO_ROOT,
                 env=environment,
                 shell=False,
-                timeout=INSTALL_TIMEOUT_SECONDS,
+                timeout=remaining_seconds,
             )
         except subprocess.TimeoutExpired as exc:
             raise CliInstallConfigurationError("CLI_INSTALL_TIMEOUT") from exc
