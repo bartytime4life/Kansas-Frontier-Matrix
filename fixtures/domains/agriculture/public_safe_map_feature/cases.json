@@ -79,6 +79,22 @@
       "expected_findings": []
     },
     {
+      "case_id": "county_precision_class_mismatch",
+      "mutations": [
+        {
+          "path": "/support/precision_class",
+          "value": "GENERALIZED_PUBLIC_SAFE"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "AG_MAP_SCHEMA_INVALID",
+          "path": "/support/precision_class"
+        }
+      ]
+    },
+    {
       "case_id": "valid_generalized_grid_crop_rotation",
       "mutations": [
         {

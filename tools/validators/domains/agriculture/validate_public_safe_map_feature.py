@@ -51,6 +51,11 @@ SUPPORT_KEY_PATTERNS = {
     "REGION": re.compile(r"^KS-AG-[A-Z0-9]+(?:-[A-Z0-9]+)*-REGION-[0-9]{2}$"),
     "GENERALIZED_GRID": re.compile(r"^KS-GRID-[1-9][0-9]*KM-[0-9]{3}-[0-9]{3}$"),
 }
+SUPPORT_PRECISION = {
+    "COUNTY": "AGGREGATE_PUBLIC_SAFE",
+    "REGION": "GENERALIZED_PUBLIC_SAFE",
+    "GENERALIZED_GRID": "GENERALIZED_PUBLIC_SAFE",
+}
 ROLE_SUPPORT = {
     "OBSERVED_AGGREGATE": {"COUNTY", "REGION"},
     "ECONOMIC_AGGREGATE": {"COUNTY", "REGION"},
@@ -178,6 +183,11 @@ def _semantic_findings(value: Mapping[str, Any]) -> tuple[Finding, ...]:
         findings.add(Finding("AG_MAP_SUPPORT_ROLE_COLLAPSE", "/support/kind"))
     if not SUPPORT_KEY_PATTERNS[support["kind"]].fullmatch(support["key"]):
         findings.add(Finding("AG_MAP_SUPPORT_KEY_KIND_MISMATCH", "/support/key"))
+    if support["precision_class"] != SUPPORT_PRECISION[support["kind"]]:
+        findings.add(Finding(
+            "AG_MAP_SUPPORT_PRECISION_MISMATCH",
+            "/support/precision_class",
+        ))
     if role in FAMILY_ROLES[family] and indicator["key"] not in FAMILY_INDICATOR_KEYS[family]:
         findings.add(Finding("AG_MAP_INDICATOR_KEY_FAMILY_MISMATCH", "/indicator/key"))
     if indicator["value_role"] != ROLE_VALUE[role]:

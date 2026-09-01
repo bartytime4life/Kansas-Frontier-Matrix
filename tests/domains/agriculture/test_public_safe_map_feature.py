@@ -138,6 +138,7 @@ def test_support_key_namespace_matches_declared_kind():
     region = copy.deepcopy(county)
     region["support"]["kind"] = "REGION"
     region["support"]["key"] = "KS-AG-CROP-REGION-01"
+    region["support"]["precision_class"] = "GENERALIZED_PUBLIC_SAFE"
     region["spec_hash"], region["id"] = module.canonical_identity(region)
 
     assert module.validate_payload(county).outcome == "PASS"
@@ -189,6 +190,25 @@ def test_schema_binds_support_key_to_declared_kind():
     assert [(finding.code, finding.path) for finding in module._schema_findings(candidate)] == [
         ("AG_MAP_SCHEMA_INVALID", "/support/key")
     ]
+
+
+def test_schema_and_semantics_bind_precision_class_to_support_kind():
+    module = _module()
+    manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    candidate = module.materialize_case(
+        manifest, _case(manifest, "valid_county_crop_observation")
+    )
+
+    candidate["support"]["precision_class"] = "GENERALIZED_PUBLIC_SAFE"
+    candidate["spec_hash"], candidate["id"] = module.canonical_identity(candidate)
+
+    assert [(finding.code, finding.path) for finding in module._schema_findings(candidate)] == [
+        ("AG_MAP_SCHEMA_INVALID", "/support/precision_class")
+    ]
+    assert (
+        "AG_MAP_SUPPORT_PRECISION_MISMATCH",
+        "/support/precision_class",
+    ) in {(finding.code, finding.path) for finding in module._semantic_findings(candidate)}
 
 
 def test_schema_binds_indicator_key_to_object_family():

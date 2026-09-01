@@ -91,6 +91,11 @@ restricted to these public-safe namespaces:
 - `REGION` -> `KS-AG-<NAME>-REGION-NN` Agriculture-owned generalized region;
 - `GENERALIZED_GRID` -> `KS-GRID-<SIZE>KM-NNN-NNN` generalized grid cell.
 
+Precision class is likewise kind-bound: county support requires
+`AGGREGATE_PUBLIC_SAFE`, while region and generalized-grid support require
+`GENERALIZED_PUBLIC_SAFE`. A candidate cannot select the broader-sounding label
+independently of its declared support kind.
+
 A coordinate literal, field/farm identifier, private label, or key from another
 support namespace is invalid even when its characters satisfy the generic key
 shape.
