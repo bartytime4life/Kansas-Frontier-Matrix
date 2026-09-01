@@ -17,13 +17,14 @@
     "tests/joins/test_cross_lane_source_role_schema_guard.py",
     "tests/joins/test_cross_lane_synthetic_role_guard.py",
     "tests/joins/test_cross_lane_temporal_boundary_guard.py",
+    "tests/joins/test_cross_lane_workflow_propagation.py",
     "tests/joins/test_join_candidates.py",
     "tools/joins/join_candidates.py"
   ],
   "artifact_hashes": {
     ".github/workflows/cross-lane-join-assessment.yml": "sha256:3d8eaaaac9831c4d018c819bdd8111f994d466373bce3f9803d08c8b46013a61",
-    ".github/workflows/soil-hydrology-public-safe-context.yml": "sha256:734803caa21e1b8878ab58f30c8e79f5bba2a883be1c64bdd75377ad05c1b037",
-    ".github/workflows/soil-agriculture-public-safe-context.yml": "sha256:3c1eed98609f5653cbd047c0c2cc49ebc0660d86375df5b2678b9ddd02928175",
+    ".github/workflows/soil-hydrology-public-safe-context.yml": "sha256:2cdd0edeeb074c006b2c620a8d5801f2da41ef1049a22bd3a54e5e122634e900",
+    ".github/workflows/soil-agriculture-public-safe-context.yml": "sha256:a6ece9dcb04cb0c550c8ef6041be3f0a0f3589e7d9d5a2dbb25d632c49b5de3f",
     ".github/workflows/fauna-habitat-public-safe-assignment.yml": "sha256:ae04722885e1d94418e2c6ab0d6a9174cb51b88fce4b17d1dd259a55176505f3",
     "contracts/joins/cross_lane_join_assessment.md": "sha256:3b54788bb7fe5404bfc9553868c7ca39efe4f9165ebb6045f36924b6ee2e7ce1",
     "docs/intake/exploratory/full-atlas-crosswalk-validator-source-map.md": "sha256:34299c5ba17f3d451d09e2d9a2f69514711a0c8ed1303f88233c56b6ded45962",
@@ -36,6 +37,7 @@
     "tests/joins/test_cross_lane_source_role_schema_guard.py": "sha256:9c6bd884f0c51fd7f22d517c7b4ac5a2d866edef80b36a6cf5f1ca7a8f1ebac5",
     "tests/joins/test_cross_lane_synthetic_role_guard.py": "sha256:f63cf5320fe45d5848bc03f747a2eaf073c66932eb584349ab0e6d9d96c4e7ef",
     "tests/joins/test_cross_lane_temporal_boundary_guard.py": "sha256:8a3f943cb7127682dae40c9ee9f6086aefc13efc686614e7bba8ff81b6497e6e",
+    "tests/joins/test_cross_lane_workflow_propagation.py": "sha256:a731a81e33ee8b547447dc4b7c2398ae01e989829ea4ceb47b3c6f0d05f34136",
     "tests/joins/test_join_candidates.py": "sha256:8f1203d844342fcd011a505e64d857f06b4e9f49d5c9649f92d90928063fd06c",
     "tools/joins/join_candidates.py": "sha256:691ee9376a2fb4164cf63124bf88e76c2915cf667f10fb794e8229ad77d83bba"
   },
@@ -84,6 +86,7 @@
     "tests/joins/test_cross_lane_source_role_schema_guard.py": "PROPOSED",
     "tests/joins/test_cross_lane_synthetic_role_guard.py": "PROPOSED",
     "tests/joins/test_cross_lane_temporal_boundary_guard.py": "PROPOSED",
+    "tests/joins/test_cross_lane_workflow_propagation.py": "PROPOSED",
     "tests/joins/test_join_candidates.py": "PROPOSED",
     "tools/joins/join_candidates.py": "PROPOSED"
   },
@@ -106,17 +109,17 @@
     {
       "gate": "artifact-hash-replay",
       "outcome": "PASS",
-      "reason": "All 17 declared artifact SHA-256 values were replayed from the exact task branch, including the generic and three pair-specific workflows."
+      "reason": "All 18 declared artifact SHA-256 values were replayed from exact branch head 07e3ba0e, including the four workflows and seven boundary-specific guard modules."
     },
     {
       "gate": "generated-receipt-schema-and-integrity",
       "outcome": "PASS",
-      "reason": "The successor receipt parses as finite JSON and has exact 17-artifact path/hash/truth-label key parity."
+      "reason": "The successor receipt parses as finite JSON and has exact 18-artifact path/hash/truth-label key parity."
     },
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Hosted CI begins after the draft pull request is opened; pending or skipped results are not represented as passing."
+      "reason": "The task pull request remains externally closed on an older head; hosted exact-head CI is unavailable and is not represented as passing."
     },
     {
       "gate": "human-review",
@@ -162,5 +165,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Successor provenance receipt for the cross-lane join assessment review unit. PR #4055 exposed stale receipt digests and two hosted-CI propagation gaps. This successor binds all six dedicated synthetic regression files plus the generic and three pair-specific workflows that now execute those guards and react to domain-alias register changes. The historical 20260809 receipt remains immutable. This receipt creates no source, evidence, policy, review, proof, promotion, release, publication, or public-use authority."
+  "notes": "Successor provenance receipt for the cross-lane join assessment review unit. PR #4055 exposed stale digests and hosted-CI propagation gaps. This successor binds all seven dedicated synthetic regression files and the generic plus three pair-specific workflows. Both Soil pair workflows now replay on main and react to generic fixture, alias-register, and join-test changes. The historical 20260809 receipt remains immutable. This receipt creates no source, evidence, policy, review, proof, promotion, release, publication, or public-use authority."
 }
