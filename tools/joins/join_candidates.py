@@ -177,10 +177,10 @@ def derive_decision(candidate: Mapping[str, Any]) -> dict[str, Any]:
         "SOURCE_ROLES_COMPATIBLE": int(source_conflict),
     }
 
-    if dependency_error:
-        outcome, status, reason, obligation = "ERROR", "VALIDATOR_SYSTEM_ERROR", "VALIDATOR_DEPENDENCY_ERROR", "REPAIR_VALIDATOR_DEPENDENCY"
-    elif same_domain:
+    if same_domain:
         outcome, status, reason, obligation = "ABSTAIN", "NO_JOIN_CANDIDATE", "CROSS_DOMAIN_PAIR_REQUIRED", "ROUTE_TO_DOMAIN_LOCAL_VALIDATOR"
+    elif dependency_error:
+        outcome, status, reason, obligation = "ERROR", "VALIDATOR_SYSTEM_ERROR", "VALIDATOR_DEPENDENCY_ERROR", "REPAIR_VALIDATOR_DEPENDENCY"
     elif living_count:
         outcome, status, reason, obligation = "DENY", "LIVING_PERSON_JOIN_DENIED", "LIVING_PERSON_JOIN_DENIED", "REQUIRE_CONSENT_AND_POLICY_REVIEW"
     elif exact_sensitive_count or inherited == "PROHIBITED":
