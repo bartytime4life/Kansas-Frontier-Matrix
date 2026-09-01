@@ -14,6 +14,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
 README = ROOT / "tests/joins/README.md"
+CONTRACT_README = ROOT / "contracts/joins/README.md"
 WORKFLOWS = (
     ROOT / ".github/workflows/cross-lane-join-assessment.yml",
     ROOT / ".github/workflows/soil-hydrology-public-safe-context.yml",
@@ -29,6 +30,12 @@ _TRIGGER_RE = re.compile(
     r"(?m)^  (pull_request|push|workflow_dispatch):(?:\n|$)"
 )
 _DOCUMENTED_GUARD_RE = re.compile(r"`(test_cross_lane_[a-z0-9_]+\.py)`")
+REQUIRED_JOIN_CONTRACT_LINKS = (
+    "./cross_lane_join_assessment.md",
+    "../cross_domain/fauna_habitat/public_safe_assignment_profile.md",
+    "../cross_domain/soil_agriculture/public_safe_context_profile.md",
+    "../cross_domain/soil_hydrology/public_safe_context_profile.md",
+)
 
 
 def _trigger_sections(source: str) -> dict[str, str]:
@@ -71,6 +78,12 @@ def _missing_documented_guards(source: str) -> list[str]:
     return sorted(actual - documented)
 
 
+def _missing_join_contract_links(source: str) -> list[str]:
+    return sorted(
+        link for link in REQUIRED_JOIN_CONTRACT_LINKS if f"]({link})" not in source
+    )
+
+
 def _drop_trigger_line(source: str, trigger: str, line: str) -> str:
     section = _trigger_sections(source)[trigger]
     assert line in section
@@ -85,6 +98,20 @@ def test_cross_lane_workflows_propagate_all_dependencies(workflow: Path) -> None
 
 def test_readme_documents_every_cross_lane_guard() -> None:
     assert _missing_documented_guards(README.read_text(encoding="utf-8")) == []
+
+
+def test_join_contract_readme_routes_current_generic_and_pair_profiles() -> None:
+    assert _missing_join_contract_links(
+        CONTRACT_README.read_text(encoding="utf-8")
+    ) == []
+
+
+def test_synthetic_missing_join_contract_link_is_detected() -> None:
+    source = CONTRACT_README.read_text(encoding="utf-8")
+    link = "../cross_domain/soil_hydrology/public_safe_context_profile.md"
+    assert f"]({link})" in source
+    mutated = source.replace(f"]({link})", "](omitted-profile.md)", 1)
+    assert link in _missing_join_contract_links(mutated)
 
 
 def test_synthetic_missing_readme_guard_is_detected() -> None:
