@@ -121,6 +121,26 @@ class AtmosphereEvidenceBundleSchemaConvergenceTests(unittest.TestCase):
             result.stderr,
         )
 
+    def test_declared_projection_validator_rejects_abbreviated_fixture_flag(self) -> None:
+        invalid_fixture = SHARED_FIXTURES / "invalid/invalid_1.json"
+
+        with tempfile.TemporaryDirectory() as directory:
+            result = subprocess.run(
+                [
+                    str(PROJECTION_VALIDATOR),
+                    "--fixture",
+                    str(invalid_fixture),
+                ],
+                cwd=directory,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        self.assertEqual(result.stdout, "")
+        self.assertIn("Unrecognized option: --fixture", result.stderr)
+
     def test_declared_projection_validator_requires_an_input_mode(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             result = subprocess.run(
