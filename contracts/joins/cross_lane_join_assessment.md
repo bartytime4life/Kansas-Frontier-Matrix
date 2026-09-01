@@ -23,6 +23,7 @@ notes:
   - "ALLOW means only that the helper may emit a reviewable join candidate. It never means truth, policy permission, release, or publication."
   - "The exact-key lane uses parameterized in-memory SQLite over synthetic fixture values and performs no database or lifecycle write."
   - "Same-domain endpoints are outside this cross-lane profile and abstain with CROSS_DOMAIN_PAIR_REQUIRED; callers must route them to a domain-local validator."
+  - "A SYNTHETIC endpoint may pair with another SYNTHETIC endpoint for fixture proof, but mixing SYNTHETIC with a non-synthetic source role requires explicit source-role review."
 [/KFM_META_BLOCK_V2] -->
 
 # CrossLaneJoinAssessment
@@ -59,6 +60,8 @@ The decision carries a stable six-rule vector:
 
 Each rule reports a non-negative failure count. Endpoint source roles remain separately visible, output role is always `CANDIDATE_RELATION`, and inherited sensitivity is the strictest endpoint posture.
 
+`SOURCE_ROLES_COMPATIBLE` fails when a cross-lane pair would blur a risk-bearing role boundary. In addition to modeled, aggregate, or candidate mismatches, a `SYNTHETIC` endpoint paired with any non-synthetic role fails closed to source-role review. Fixture-only material may prove deterministic behavior, but it must not silently compose with observed, regulatory, administrative, modeled, aggregate, or candidate material as though the two roles carried equivalent authority.
+
 `JOIN_PREDICATE_MATCHED` is the effective cross-lane candidate predicate. It fails when the declared exact-key or spatial-temporal predicate does not match **or when both endpoints declare the same domain**, because a same-domain comparison is not a cross-lane candidate. Same-domain inputs return `ABSTAIN` / `NO_JOIN_CANDIDATE` with reason `CROSS_DOMAIN_PAIR_REQUIRED` and obligation `ROUTE_TO_DOMAIN_LOCAL_VALIDATOR`; the helper does not relabel domain-local work as a cross-domain relation.
 
 ## Join mechanics
@@ -66,7 +69,7 @@ Each rule reports a non-negative failure count. Endpoint source roles remain sep
 - Both endpoints must declare distinct `domain` values. Same-domain requests are routed away from this profile and never emit `JOIN_CANDIDATE`.
 - `EXACT_KEY` uses a parameterized one-row-per-side SQLite join in an in-memory database. Keys are values, never SQL fragments.
 - `SPATIAL_TEMPORAL` compares synthetic spatial-cell refs and timezone-aware intervals with a declared tolerance. It is not a geometry engine and proves no real-world spatial relationship.
-- Missing EvidenceRefs abstain. Modeled, aggregate, or candidate role conflicts abstain. Restricted generalized context abstains for sensitivity review. Restricted exact geometry and living-person joins deny.
+- Missing EvidenceRefs abstain. Modeled, aggregate, candidate, or mixed synthetic/non-synthetic role conflicts abstain. Restricted generalized context abstains for sensitivity review. Restricted exact geometry and living-person joins deny.
 - `candidate_id` is RFC 8785/SHA-256 over request and endpoints. `spec_hash` binds the complete assessment excluding `assessment_id` and `spec_hash`.
 - `--derive` validates the fully sealed assessment before stdout. A malformed or schema-invalid input returns a bounded `FAIL` result and never emits a schema-invalid assessment as successful output.
 
