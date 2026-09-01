@@ -158,3 +158,29 @@ Revert this one documentation commit or restore prior blob `fe8aab2f7d3a22c0112a
 The existing documentation checks remain the changed-area validation surface. Hosted checks must classify any failure as introduced or inherited against `main@97f5f965d1a684eedd3f0c61be8af774ee7790a0`.
 
 Rollback is one documentation commit: remove this bounded refresh section and restore the prior `docs/registers/VERIFICATION_BACKLOG.md` blob. No source, contract, schema, policy, fixture, validator, runtime, release, deployment, publication, or repository setting changes with this ledger update.
+
+## Transportation geometry coordination refresh — issue #3385 — 2026-09-01
+
+**Status:** current-main pinned at `main@db23a8bfa9fa126e87009a41240576619ccaac02`; execution state remains `NOT_RUN`.  
+**Overlap map:** issue #2898 is the prerequisite source-admission assessment, and PR #4076 is the open implementation branch that fixes #3385.  
+**Placement authority:** ADR-0029 plus `docs/doctrine/directory-rules.md`; this update stays inside `docs/registers/` and does not create a new authority family.
+
+### Surface inventory and classification
+
+| Surface | Status | Evidence / note |
+|---|---|---|
+| `docs/domains/roads-rail-trade/README.md` | `IMPLEMENTED` | Adjacent README contract exists and already records the `transport/` crosswalk and public-safe-geometry doctrine. |
+| `docs/domains/settlements-infrastructure/README.md` | `PARTIAL` | Domain README exists, but its implementation homes remain PROPOSED / NEEDS VERIFICATION. |
+| `docs/architecture/settlements-infrastructure/README.md` | `PARTIAL` | Bounded integration overview exists; live source, release, and publication remain held. |
+| `docs/doctrine/map-first.md` | `IMPLEMENTED` | Public-safe geometry and 3D/plugin admission doctrine are already documented. |
+| `policy/domains/roads-rail-trade/public_generalization_required.rego` | `ABSENT` | File is still a PROPOSED scaffold placeholder with `default allow := false`. |
+| `policy/domains/settlements-infrastructure/infrastructure_interior_redaction.rego` | `ABSENT` | File is still a greenfield stub with no real rules. |
+| `tests/domains/roads-rail-trade/test_public_generalization_receipt.py` | `ABSENT` | Placeholder generated from docs inventory; no executable assertions. |
+| `tests/domains/settlements-infrastructure/test_restricted_geometry_no_leak.py` | `ABSENT` | Placeholder generated from docs inventory; no executable assertions. |
+
+### First slice, validation, and rollback
+
+- First slice selected: this repository-grounded inventory only; no geometry, LiDAR, connector, schedule, ingest, or publication work is opened here.
+- Deterministic checks for the docs slice: docs-link, metadata, stale-doc, and graph validators on this file.
+- Hosted-check expectation: inherited failures must stay distinguishable from introduced failures; `SKIPPED` and `NOT_RUN` are not passes.
+- Rollback: remove this section and restore the prior blob; no runtime, release, or publication state changes are introduced.
