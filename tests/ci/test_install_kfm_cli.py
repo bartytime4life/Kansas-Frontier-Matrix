@@ -27,6 +27,8 @@ class InstallKfmCliTests(unittest.TestCase):
     def test_commands_use_hash_lock_and_fixed_local_package(self) -> None:
         dependency, local = module.build_commands(executable="python")
         self.assertEqual("python", dependency[0])
+        self.assertEqual("-P", dependency[1])
+        self.assertEqual("-P", local[1])
         self.assertIn("--require-hashes", dependency)
         self.assertEqual(str(module.LOCKFILE), dependency[-1])
         self.assertIn("--no-deps", local)
@@ -41,6 +43,104 @@ class InstallKfmCliTests(unittest.TestCase):
             with self.assertRaises(module.CliInstallConfigurationError):
                 module.validate_lockfile(path)
 
+    def test_lock_validation_rejects_network_source_override(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "unsafe.lock"
+            path.write_text(
+                "--extra-index-url https://packages.example.invalid/simple\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                module.CliInstallConfigurationError,
+                "CLI_LOCKFILE_SOURCE_UNSAFE",
+            ):
+                module.validate_lockfile(path)
+
+    def test_lock_validation_binds_hashes_to_each_requirement(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "unsafe.lock"
+            path.write_text(
+                "typer==0.27.2 \\\n"
+                f"    --hash=sha256:{'a' * 64} \\\n"
+                f"    --hash=sha256:{'b' * 64}\n"
+                "rich==15.0.0 \\\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                module.CliInstallConfigurationError,
+                "CLI_LOCKFILE_HASH_COVERAGE_INVALID",
+            ):
+                module.validate_lockfile(path)
+
+    def test_lock_validation_rejects_non_hash_continuation(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "unsafe.lock"
+            path.write_text(
+                "typer==0.27.2 \\\n"
+                "    --config-settings=builddir=outside \\\n"
+                f"    --hash=sha256:{'a' * 64}\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                module.CliInstallConfigurationError,
+                "CLI_LOCKFILE_CONTINUATION_UNSAFE",
+            ):
+                module.validate_lockfile(path)
+
+    def test_lock_validation_rejects_environment_marker(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "unsafe.lock"
+            path.write_text(
+                "typer==0.27.2; python_version >= '3.11' \\\n"
+                f"    --hash=sha256:{'a' * 64}\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                module.CliInstallConfigurationError,
+                "CLI_LOCKFILE_REQUIREMENT_UNSAFE",
+            ):
+                module.validate_lockfile(path)
+
+    def test_lock_validation_rejects_duplicate_normalized_requirement(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "unsafe.lock"
+            path.write_text(
+                "typer==0.27.2 \\\n"
+                f"    --hash=sha256:{'a' * 64}\n"
+                "Typer==0.27.2 \\\n"
+                f"    --hash=sha256:{'b' * 64}\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                module.CliInstallConfigurationError,
+                "CLI_LOCKFILE_REQUIREMENT_DUPLICATE",
+            ):
+                module.validate_lockfile(path)
+
+    def test_local_package_validation_rejects_outside_repository(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp)
+            with self.assertRaisesRegex(
+                module.CliInstallConfigurationError,
+                "CLI_LOCAL_PACKAGE_OUTSIDE_REPOSITORY",
+            ):
+                module.validate_local_package(path)
+
+    def test_local_package_validation_rejects_symlinked_metadata(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "repo"
+            package = root / "packages/kfm-cli"
+            package.mkdir(parents=True)
+            outside = Path(temp) / "outside-pyproject.toml"
+            outside.write_text("[build-system]\n", encoding="utf-8")
+            (package / "pyproject.toml").symlink_to(outside)
+            with mock.patch.object(module, "REPO_ROOT", root):
+                with self.assertRaisesRegex(
+                    module.CliInstallConfigurationError,
+                    "CLI_LOCAL_PACKAGE_METADATA_UNSAFE",
+                ):
+                    module.validate_local_package(package)
+
     def test_install_executes_argument_vectors_without_a_shell(self) -> None:
         with mock.patch.object(module.subprocess, "run") as run:
             module.install()
@@ -50,6 +150,70 @@ class InstallKfmCliTests(unittest.TestCase):
             self.assertIs(call.kwargs["shell"], False)
             self.assertIs(call.kwargs["check"], True)
             self.assertEqual(REPO_ROOT, call.kwargs["cwd"])
+            self.assertEqual(module.INSTALL_TIMEOUT_SECONDS, call.kwargs["timeout"])
+
+    def test_install_fails_closed_when_command_times_out(self) -> None:
+        with mock.patch.object(
+            module.subprocess,
+            "run",
+            side_effect=module.subprocess.TimeoutExpired(
+                cmd=("python", "-m", "pip"),
+                timeout=module.INSTALL_TIMEOUT_SECONDS,
+            ),
+        ) as run:
+            with self.assertRaisesRegex(
+                module.CliInstallConfigurationError,
+                "CLI_INSTALL_TIMEOUT",
+            ):
+                module.install()
+        self.assertEqual(1, run.call_count)
+
+    def test_install_isolates_pip_environment_controls(self) -> None:
+        pip_overrides = {
+            "PIP_CONFIG_FILE": "/tmp/pip.conf",
+            "PIP_CONSTRAINT": "/tmp/ambient-constraints.txt",
+            "PIP_EXTRA_INDEX_URL": "https://packages.example.invalid/extra",
+            "PIP_FIND_LINKS": "https://packages.example.invalid/wheels",
+            "PIP_INDEX_URL": "https://packages.example.invalid/simple",
+            "PIP_REQUIREMENT": "/tmp/ambient-requirements.txt",
+            "PIP_TARGET": "/tmp/ambient-target",
+            "PIP_TRUSTED_HOST": "packages.example.invalid",
+        }
+        with mock.patch.dict(
+            module.os.environ,
+            {**pip_overrides, "KFM_TEST_SENTINEL": "preserved"},
+            clear=False,
+        ):
+            with mock.patch.object(module.subprocess, "run") as run:
+                module.install()
+
+        self.assertEqual(2, run.call_count)
+        for call in run.call_args_list:
+            environment = call.kwargs["env"]
+            self.assertEqual(module.os.devnull, environment["PIP_CONFIG_FILE"])
+            for key in pip_overrides.keys() - {"PIP_CONFIG_FILE"}:
+                self.assertNotIn(key, environment)
+            self.assertEqual("preserved", environment["KFM_TEST_SENTINEL"])
+            self.assertEqual("1", environment["PIP_DISABLE_PIP_VERSION_CHECK"])
+            self.assertEqual("1", environment["PIP_NO_INPUT"])
+
+    def test_install_isolates_python_import_environment_controls(self) -> None:
+        python_overrides = {
+            "PYTHONHOME": "/tmp/ambient-python-home",
+            "PYTHONPATH": "/tmp/ambient-python-path",
+            "PYTHONUSERBASE": "/tmp/ambient-python-userbase",
+            "PYTHONNOUSERSITE": "0",
+        }
+        with mock.patch.dict(module.os.environ, python_overrides, clear=False):
+            with mock.patch.object(module.subprocess, "run") as run:
+                module.install()
+
+        self.assertEqual(2, run.call_count)
+        for call in run.call_args_list:
+            environment = call.kwargs["env"]
+            for key in module.PYTHON_IMPORT_ENVIRONMENT_CONTROLS:
+                self.assertNotIn(key, environment)
+            self.assertEqual("1", environment["PYTHONNOUSERSITE"])
 
     def test_main_rejects_arguments(self) -> None:
         with self.assertRaises(module.CliInstallConfigurationError):
