@@ -33,6 +33,23 @@ export type MapRuntimeTerrainState = Readonly<{
   reason: MapRuntimeTerrainFallbackReason | null;
 }>;
 
+export const MAP_RUNTIME_TERRAIN_TRANSITION_PROFILE =
+  "kfm.map-runtime-terrain-transition.v1" as const;
+
+export const MAP_RUNTIME_TERRAIN_EFFECTS = [
+  "NONE",
+  "ENABLE_TERRAIN",
+  "DISABLE_TERRAIN",
+] as const;
+export type MapRuntimeTerrainEffect =
+  (typeof MAP_RUNTIME_TERRAIN_EFFECTS)[number];
+
+export type MapRuntimeTerrainTransitionPlan = Readonly<{
+  profile: typeof MAP_RUNTIME_TERRAIN_TRANSITION_PROFILE;
+  effect: MapRuntimeTerrainEffect;
+  target: MapRuntimeTerrainState;
+}>;
+
 const REQUEST_FIELDS = new Set([
   "profile",
   "mode",
@@ -40,6 +57,7 @@ const REQUEST_FIELDS = new Set([
   "fallback",
 ]);
 const CAPABILITY_FIELDS = new Set(["terrainSupported", "demSourceReady"]);
+const STATE_FIELDS = new Set(["profile", "mode", "exaggeration", "reason"]);
 const MIN_TERRAIN_EXAGGERATION = 0.1;
 const MAX_TERRAIN_EXAGGERATION = 5;
 
@@ -61,6 +79,43 @@ function hasExactFields(
 
 function isFiniteNumber(value: unknown): value is number {
   return typeof value === "number" && Number.isFinite(value);
+}
+
+function isFallbackReason(
+  value: unknown,
+): value is MapRuntimeTerrainFallbackReason {
+  return (
+    value === "TERRAIN_UNSUPPORTED" || value === "TERRAIN_SOURCE_UNAVAILABLE"
+  );
+}
+
+function validateTerrainState(state: unknown): asserts state is MapRuntimeTerrainState {
+  if (!isRecord(state) || !hasExactFields(state, STATE_FIELDS)) {
+    invalid("Current map runtime terrain state is invalid.");
+  }
+  if (
+    state.profile !== MAP_RUNTIME_TERRAIN_FALLBACK_PROFILE ||
+    !isFiniteNumber(state.exaggeration)
+  ) {
+    invalid("Current map runtime terrain state is invalid.");
+  }
+  if (state.mode === "FLAT") {
+    if (
+      state.exaggeration !== 0 ||
+      (state.reason !== null && !isFallbackReason(state.reason))
+    ) {
+      invalid("Current flat map runtime terrain state is invalid.");
+    }
+    return;
+  }
+  if (
+    state.mode !== "TERRAIN" ||
+    state.reason !== null ||
+    state.exaggeration < MIN_TERRAIN_EXAGGERATION ||
+    state.exaggeration > MAX_TERRAIN_EXAGGERATION
+  ) {
+    invalid("Current terrain map runtime state is invalid.");
+  }
 }
 
 function flatState(
@@ -133,5 +188,35 @@ export function resolveMapRuntimeTerrainState(
     mode: "TERRAIN",
     exaggeration: request.exaggeration,
     reason: null,
+  });
+}
+
+/**
+ * Plans the renderer effect needed to move from a known governed terrain
+ * state to the freshly resolved target. The plan is data only: applying the
+ * effect remains the responsibility of an authorized renderer adapter.
+ */
+export function planMapRuntimeTerrainTransition(
+  current: MapRuntimeTerrainState | null,
+  request: MapRuntimeTerrainRequest,
+  capabilities: MapRuntimeTerrainCapabilities,
+): MapRuntimeTerrainTransitionPlan {
+  if (current !== null) {
+    validateTerrainState(current);
+  }
+
+  const target = resolveMapRuntimeTerrainState(request, capabilities);
+  let effect: MapRuntimeTerrainEffect = "NONE";
+
+  if (target.mode === "TERRAIN" && current?.mode !== "TERRAIN") {
+    effect = "ENABLE_TERRAIN";
+  } else if (target.mode === "FLAT" && current?.mode === "TERRAIN") {
+    effect = "DISABLE_TERRAIN";
+  }
+
+  return Object.freeze({
+    profile: MAP_RUNTIME_TERRAIN_TRANSITION_PROFILE,
+    effect,
+    target,
   });
 }

@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import {
   MAP_RUNTIME_TERRAIN_FALLBACK_PROFILE,
+  MAP_RUNTIME_TERRAIN_TRANSITION_PROFILE,
+  planMapRuntimeTerrainTransition,
   resolveMapRuntimeTerrainState,
 } from "../src/map-runtime-terrain-fallback";
 
@@ -105,6 +107,123 @@ describe("renderer-neutral terrain fallback", () => {
   ])("rejects malformed supplied capabilities", (capabilities) => {
     expect(() =>
       resolveMapRuntimeTerrainState(terrainRequest, capabilities as never),
+    ).toThrow(expect.objectContaining({ code: "MAP_RUNTIME_STATE_INVALID" }));
+  });
+});
+
+describe("renderer-neutral terrain transition planning", () => {
+  it("enables terrain from the safe initial flat assumption", () => {
+    const plan = planMapRuntimeTerrainTransition(null, terrainRequest, {
+      terrainSupported: true,
+      demSourceReady: true,
+    });
+
+    expect(plan).toEqual({
+      profile: MAP_RUNTIME_TERRAIN_TRANSITION_PROFILE,
+      effect: "ENABLE_TERRAIN",
+      target: {
+        profile: MAP_RUNTIME_TERRAIN_FALLBACK_PROFILE,
+        mode: "TERRAIN",
+        exaggeration: 1.5,
+        reason: null,
+      },
+    });
+    expect(Object.isFrozen(plan)).toBe(true);
+    expect(Object.isFrozen(plan.target)).toBe(true);
+  });
+
+  it("disables active terrain when capability support is lost", () => {
+    const current = resolveMapRuntimeTerrainState(terrainRequest, {
+      terrainSupported: true,
+      demSourceReady: true,
+    });
+
+    expect(
+      planMapRuntimeTerrainTransition(current, terrainRequest, {
+        terrainSupported: false,
+        demSourceReady: true,
+      }),
+    ).toEqual({
+      profile: MAP_RUNTIME_TERRAIN_TRANSITION_PROFILE,
+      effect: "DISABLE_TERRAIN",
+      target: {
+        profile: MAP_RUNTIME_TERRAIN_FALLBACK_PROFILE,
+        mode: "FLAT",
+        exaggeration: 0,
+        reason: "TERRAIN_UNSUPPORTED",
+      },
+    });
+  });
+
+  it("avoids renderer churn while still refreshing flat fallback metadata", () => {
+    const current = resolveMapRuntimeTerrainState(terrainRequest, {
+      terrainSupported: false,
+      demSourceReady: true,
+    });
+
+    expect(
+      planMapRuntimeTerrainTransition(current, terrainRequest, {
+        terrainSupported: true,
+        demSourceReady: false,
+      }),
+    ).toEqual({
+      profile: MAP_RUNTIME_TERRAIN_TRANSITION_PROFILE,
+      effect: "NONE",
+      target: {
+        profile: MAP_RUNTIME_TERRAIN_FALLBACK_PROFILE,
+        mode: "FLAT",
+        exaggeration: 0,
+        reason: "TERRAIN_SOURCE_UNAVAILABLE",
+      },
+    });
+  });
+
+  it("is idempotent for an already-applied terrain state", () => {
+    const current = resolveMapRuntimeTerrainState(terrainRequest, {
+      terrainSupported: true,
+      demSourceReady: true,
+    });
+
+    expect(
+      planMapRuntimeTerrainTransition(current, terrainRequest, {
+        terrainSupported: true,
+        demSourceReady: true,
+      }).effect,
+    ).toBe("NONE");
+  });
+
+  it.each([
+    {
+      profile: MAP_RUNTIME_TERRAIN_FALLBACK_PROFILE,
+      mode: "FLAT",
+      exaggeration: 0,
+      reason: null,
+      extra: true,
+    },
+    {
+      profile: MAP_RUNTIME_TERRAIN_FALLBACK_PROFILE,
+      mode: "FLAT",
+      exaggeration: 1,
+      reason: null,
+    },
+    {
+      profile: MAP_RUNTIME_TERRAIN_FALLBACK_PROFILE,
+      mode: "TERRAIN",
+      exaggeration: 1,
+      reason: "TERRAIN_UNSUPPORTED",
+    },
+    {
+      profile: "wrong",
+      mode: "FLAT",
+      exaggeration: 0,
+      reason: null,
+    },
+  ])("rejects malformed current terrain state", (current) => {
+    expect(() =>
+      planMapRuntimeTerrainTransition(current as never, terrainRequest, {
+        terrainSupported: true,
+        demSourceReady: true,
+      }),
     ).toThrow(expect.objectContaining({ code: "MAP_RUNTIME_STATE_INVALID" }));
   });
 });
