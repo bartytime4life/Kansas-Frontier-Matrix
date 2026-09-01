@@ -1,4 +1,5 @@
 import answerFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/answer-corrected.json";
+import supersededFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/abstain-superseded.json";
 import denyFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/deny-sensitive.json";
 import {
   MAP_FEATURE_SELECTION_PROFILE,
@@ -44,6 +45,28 @@ const cases: readonly MapEvidenceFixtureCase[] = Object.freeze([
     },
   },
   {
+    caseId: "superseded",
+    label: "Select superseded evidence history",
+    selection: {
+      profile: MAP_FEATURE_SELECTION_PROFILE,
+      selection_id: "selection:superseded",
+      layer_id: "layer:synthetic-streamflow",
+      feature_id: "feature:superseded",
+      evidence_refs: ["kfm:evidence:synthetic:superseded-001"],
+    },
+  },
+  {
+    caseId: "history-mismatch",
+    label: "Select feature with mismatched evidence history",
+    selection: {
+      profile: MAP_FEATURE_SELECTION_PROFILE,
+      selection_id: "selection:history-mismatch",
+      layer_id: "layer:synthetic-streamflow",
+      feature_id: "feature:history-mismatch",
+      evidence_refs: ["kfm:evidence:synthetic:flow-001"],
+    },
+  },
+  {
     caseId: "mismatch",
     label: "Select feature with mismatched evidence",
     selection: {
@@ -75,6 +98,9 @@ mountMapFeatureEvidenceFixture(root, cases, async (selection) => {
   switch (selection.selectionId) {
     case "selection:restricted":
       return denyFixture;
+    case "selection:superseded":
+    case "selection:history-mismatch":
+      return supersededFixture;
     case "selection:resolver-error":
       throw new Error("PRIVATE_BROWSER_RESOLVER_CANARY_0b10d7");
     default:
