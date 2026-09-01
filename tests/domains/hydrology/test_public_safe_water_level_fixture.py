@@ -177,6 +177,20 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
             validate_candidate(candidate),
         )
 
+    def test_evidence_references_use_canonical_order(self) -> None:
+        candidate = _load_candidate()
+        first = "fixture://evidence/hydrology/water-level/99999/receipt-1"
+        second = "fixture://evidence/hydrology/water-level/99999/receipt-2"
+
+        candidate["evidence_refs"] = [first, second]
+        self.assertEqual(validate_candidate(candidate), [])
+
+        candidate["evidence_refs"] = [second, first]
+        self.assertIn(
+            Finding("EVIDENCE_REFS_NOT_CANONICAL_ORDER", "$.evidence_refs"),
+            validate_candidate(candidate),
+        )
+
     def test_observation_family_role_parameter_and_unit_are_closed(self) -> None:
         cases = (
             ("object_family", "FlowObservation", Finding("OBJECT_FAMILY_INVALID", "$.object_family")),

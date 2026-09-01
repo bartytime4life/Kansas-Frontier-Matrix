@@ -203,6 +203,12 @@ def validate_candidate(candidate: object) -> list[Finding]:
             add_finding(findings, "EVIDENCE_REF_IDENTIFIER_INVALID", "$.evidence_refs")
         if len(evidence_refs) != len(set(evidence_refs)):
             add_finding(findings, "EVIDENCE_REFS_DUPLICATE", "$.evidence_refs")
+        if evidence_refs != sorted(evidence_refs):
+            add_finding(
+                findings,
+                "EVIDENCE_REFS_NOT_CANONICAL_ORDER",
+                "$.evidence_refs",
+            )
 
     spatial = candidate.get("spatial_support")
     if not isinstance(spatial, dict):
