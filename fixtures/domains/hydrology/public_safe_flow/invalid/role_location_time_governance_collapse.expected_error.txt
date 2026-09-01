@@ -1,4 +1,5 @@
 AGGREGATION_WINDOW_INVALID	$.temporal_scope.aggregation_window
+CAVEAT_REF_NOT_FIXTURE	$.measurement.caveat_refs
 COUNTY_FIPS_INVALID	$.spatial_support.county_fips
 EVIDENCE_REF_MISSING	$.evidence_refs
 GAUGE_SITE_REF_MISSING	$.gauge_site_ref
