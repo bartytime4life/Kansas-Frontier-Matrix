@@ -121,6 +121,30 @@ class AtmosphereEvidenceBundleSchemaConvergenceTests(unittest.TestCase):
         self.assertEqual(result.stdout, "")
         self.assertIn("No files provided", result.stderr)
 
+    def test_declared_projection_validator_preserves_explicit_file_polarity(self) -> None:
+        cases = (
+            (SHARED_FIXTURES / "valid/valid_1.json", 0, "OK"),
+            (SHARED_FIXTURES / "invalid/invalid_1.json", 1, "FAIL"),
+        )
+
+        for path, expected_status, expected_label in cases:
+            with self.subTest(path=path):
+                with tempfile.TemporaryDirectory() as directory:
+                    result = subprocess.run(
+                        [sys.executable, str(PROJECTION_VALIDATOR), str(path)],
+                        cwd=directory,
+                        check=False,
+                        capture_output=True,
+                        text=True,
+                    )
+
+                self.assertEqual(
+                    result.returncode,
+                    expected_status,
+                    result.stdout + result.stderr,
+                )
+                self.assertIn(f"{expected_label} {path}", result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()
