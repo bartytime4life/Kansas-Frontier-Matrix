@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-validators-domains-people-dna-land-readme
 title: tools/validators/domains/people-dna-land README
 type: README
-version: v0.1
+version: v0.2
 status: draft
 owner: TODO-tooling-qa-owner-plus-people-dna-land-steward-plus-consent-steward-plus-sensitivity-reviewer-plus-rights-holder-representative-plus-policy-steward-plus-release-steward
 created: 2026-07-07
-updated: 2026-07-07
+updated: 2026-09-01
 policy_label: repository-facing; per-domain-validator-index; people-dna-land; living-person; DNA; consent; revocation; land-ownership; fail-closed; non-authoritative
 owning_root: tools/
 responsibility: proposed per-domain People/DNA/Land validator index for person assertions, genealogy relationships, restricted DNA evidence, consent grants, revocations, land instruments, ownership intervals, assessor/tax records, parcels, title/geometry anti-collapse, source-role separation, T4 deny-by-default posture, evidence, policy, release, correction, rollback, and public-surface denial checks while deferring domain meaning, consent decisions, policy decisions, proof records, and release authority to their owning roots
@@ -36,7 +36,7 @@ related:
   - ../../../../data/receipts/
   - ../../../../release/
 notes:
-  - "This README replaces a greenfield stub. It does not confirm executable files."
+  - "This index records the bounded executable validators present at the reviewed branch checkpoint; presence is not policy activation, semantic completeness, source admission, or release authority."
   - "No broad tools/validators/people-dna-land/README.md was found during this task, so this path currently serves as the inspected per-domain People/DNA/Land validator index."
   - "This is KFM's strictest sensitivity lane. Living-person fields, raw DNA, private person-parcel joins, and DNA-derived hypotheses are deny-by-default unless scoped consent, review, policy, evidence, release, correction, rollback, and public-safe transform support authorize a derivative."
   - "Consent is revocable. Revocation must propagate to downstream cleanup, tombstone/embargo behavior, cache invalidation, graph/search/vector/AI withdrawal where applicable, correction records, and rollback targets."
@@ -82,8 +82,38 @@ The answer should be a navigable validator index and deterministic validation ou
 | People/DNA/Land domain doctrine | **CONFIRMED in repo evidence / draft** | `docs/domains/people-dna-land/README.md` defines the lane as assertion-first person evidence, genealogy, restricted DNA evidence, land instruments, ownership intervals, consent, policy, review, correction, graph projection, EvidenceBundle views, and rollback. |
 | Boundary and sensitivity doctrine | **CONFIRMED in repo evidence / draft** | `docs/domains/people-dna-land/SCOPE_AND_BOUNDARY.md` and `SENSITIVITY.md` define this as a T4/deny-by-default sensitive bounded context with consent, revocation, DNA, living-person, and private land controls. |
 | Segment naming | **CONFLICTED / NEEDS ADR** | Domain docs record the open `people` vs `people-dna-land` segment conflict for some schema/contract/policy roots. This README follows the requested path and Directory Rules-style `people-dna-land` segment while marking implementation homes as needs verification. |
-| Child README lanes | **NONE CONFIRMED IN THIS TASK** | No child People/DNA/Land validator README was verified while writing this index. |
-| Executables, schemas, fixtures, policy bundles, consent bundles, and CI wiring | **NEEDS VERIFICATION** | No script names, test paths, schema maturity, policy bundles, consent registry behavior, receipts, runtime behavior, or CI behavior are claimed as implemented here. |
+| Child README lanes | **NONE** | This directory currently keeps its executable validators flat; distinct subdirectories remain proposal-only. |
+| Executable validator set | **CONFIRMED / BOUNDED** | Seven local Python entrypoints are present. They perform structural, fixture-scoped, or delegated fail-closed checks; none grants semantic, consent, source-admission, policy, release, or publication authority. |
+| Pipeline and CI binding | **CONFIRMED / BOUNDED** | The People/DNA/Land dispatcher and workflow invoke the reviewed validator/test set with deterministic no-network settings. Proof production and release remain explicit holds. |
+
+[Back to top](#top)
+
+---
+
+## Executable checkpoint
+
+The reviewed branch contains these local validator entrypoints:
+
+| Entrypoint | Bounded role |
+|---|---|
+| `validate_schema.py` | Strict JSON and Draft 2020-12 structural preflight for the canonical domain schema inventory. |
+| `validate_evidence_bundle.py` | Fail-closed adapter to the shared People/DNA/Land EvidenceBundle projection validator. |
+| `validate_source_descriptor.py` | Fail-closed adapter to the shared SourceDescriptor validator; it does not admit or activate a source. |
+| `validate_catalog_matrix.py` | Fail-closed adapter to shared CatalogMatrix closure checks; catalog authority remains external. |
+| `validate_domain_layer_descriptor.py` | Structural schema and synthetic fixture-polarity check for the proposed downstream layer carrier. |
+| `validate_consent_overlay.py` | Synthetic, fixture-only consent-overlay safety validation with explicit living-person and raw-genomic denial. |
+| `validate_consent_revocation_propagation_assessment.py` | Synthetic assessment of declared revocation propagation; it does not execute cleanup or rollback. |
+
+The stable dispatcher at `pipelines/domains/people-dna-land/validate.py` also routes
+the governed living-person screen, historical-resolution validator, and shared
+CorrectionNotice validator. The assessment-only rollback seam is
+`pipelines/domains/people-dna-land/rollback.py`.
+
+These executable seams validate caller-provided schemas or deterministic
+synthetic fixtures without network access. They do not resolve identity,
+kinship, consent legal sufficiency, residence, migration, ownership, title,
+rights, public safety, policy approval, release, correction execution,
+withdrawal execution, or publication.
 
 [Back to top](#top)
 
@@ -236,37 +266,31 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 
 ## Validation
 
-Suggested future test surface:
+The bounded executable checkpoint is covered by focused tests under
+`tests/validators/domains/people-dna-land/`,
+`tests/validators/test_screen_living_persons.py`, and
+`tests/pipelines/domains/people-dna-land/`. The domain workflow invokes those
+tests plus deterministic consent-overlay and consent-revocation fixture replay.
 
-```text
-tests/validators/domains/people-dna-land/
-├── README.md
-├── test_people_dna_land_domain_validator_parent.py
-└── fixtures/
-    ├── valid_public_safe_genealogy_derivative/
-    ├── missing_evidence_ref/
-    ├── consent_missing_or_expired/
-    ├── revocation_active/
-    ├── living_person_denied/
-    ├── dna_publication_denied/
-    ├── title_parcel_authority_collapse/
-    ├── person_parcel_join_denied/
-    ├── revocation_cascade_gap/
-    └── ignored_with_reason/
-```
-
-Suggested future command pattern:
+A focused local command is:
 
 ```bash
-pytest -q tests/validators/domains/people-dna-land
+KFM_NO_NETWORK=1 python -m pytest -q \
+  tests/validators/domains/people-dna-land \
+  tests/validators/test_screen_living_persons.py \
+  tests/pipelines/domains/people-dna-land
 ```
+
+The stable dispatcher can replay specific governed lanes, for example:
 
 ```bash
-python tools/validators/domains/people-dna-land/run_people_dna_land_domain_validators.py --repo-root . --format json
+KFM_NO_NETWORK=1 python pipelines/domains/people-dna-land/validate.py domain-layer-descriptor --fixtures
+KFM_NO_NETWORK=1 python pipelines/domains/people-dna-land/validate.py correction-notice --fixtures
+KFM_NO_NETWORK=1 python pipelines/domains/people-dna-land/rollback.py --fixtures
 ```
 
-> [!NOTE]
-> This is a proposed interface, not proof that `run_people_dna_land_domain_validators.py` or the test path exists.
+These commands are validation and assessment only. They do not activate policy,
+mutate lifecycle data, perform correction or withdrawal, release, or publish.
 
 [Back to top](#top)
 
@@ -295,6 +319,6 @@ python tools/validators/domains/people-dna-land/run_people_dna_land_domain_valid
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-07 |
-| Review state | Draft README replacement for greenfield stub and current parent index for People/DNA/Land validators. |
-| Next smallest safe change | Verify child validator scripts, accepted profiles, schemas, source descriptors, consent/policy bundles, fixtures, report destinations, receipts, revocation-cascade behavior, release linkage, cross-domain join behavior, and CI/runtime wiring before promoting this lane beyond draft. |
+| Last reviewed | 2026-09-01 |
+| Review state | Bounded executable validator index; synthetic/no-network checks confirmed, broader authority held. |
+| Next smallest safe change | Add or expand only dependency-ready fail-closed validators with synthetic fixture polarity and explicit non-authority boundaries; keep unresolved semantic, policy, consent, release, correction-execution, and publication work held. |
