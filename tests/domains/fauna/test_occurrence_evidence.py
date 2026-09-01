@@ -209,6 +209,35 @@ class OccurrenceEvidenceTests(unittest.TestCase):
             result.findings,
         )
 
+    def test_exact_public_geometry_requires_explicit_safety_declaration(self) -> None:
+        candidate = _load(
+            "semantic_invalid/exact_public_safety_declaration_missing.json"
+        )
+
+        result = validator.validate_candidate(candidate)
+
+        self.assertIn(
+            validator.Finding(
+                "sens.exact_location_public_safe_required",
+                "/sensitivity/exact_location_public_safe",
+            ),
+            result.findings,
+        )
+        self.assertIn(
+            validator.Finding(
+                "schema.validation_check_mismatch",
+                "/validation/checks/geometry_public_safe",
+            ),
+            result.findings,
+        )
+        self.assertIn(
+            validator.Finding(
+                "schema.pass_gate_failed",
+                "/validation/validator_result",
+            ),
+            result.findings,
+        )
+
     def test_generalized_public_geometry_requires_method(self) -> None:
         candidate = _load(
             "semantic_invalid/public_safe_generalization_method_missing.json"

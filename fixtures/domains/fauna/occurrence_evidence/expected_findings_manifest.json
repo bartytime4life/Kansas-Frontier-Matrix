@@ -36,6 +36,24 @@
     {
       "expected_findings": [
         {
+          "code": "schema.pass_gate_failed",
+          "path": "/validation/validator_result"
+        },
+        {
+          "code": "schema.validation_check_mismatch",
+          "path": "/validation/checks/geometry_public_safe"
+        },
+        {
+          "code": "sens.exact_location_public_safe_required",
+          "path": "/sensitivity/exact_location_public_safe"
+        }
+      ],
+      "expected_outcome": "ERROR",
+      "path": "semantic_invalid/exact_public_safety_declaration_missing.json"
+    },
+    {
+      "expected_findings": [
+        {
           "code": "obs.source_role_mismatch",
           "path": "/observation/basis_of_record"
         },
@@ -132,6 +150,10 @@
         {
           "code": "schema.validation_check_mismatch",
           "path": "/validation/checks/geometry_public_safe"
+        },
+        {
+          "code": "sens.exact_location_public_safe_required",
+          "path": "/sensitivity/exact_location_public_safe"
         },
         {
           "code": "sens.review_reason_required",

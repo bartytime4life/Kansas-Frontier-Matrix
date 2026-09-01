@@ -256,6 +256,12 @@ def _geometry_findings(
                 "/geometry/public_safe_geometry/precision_class",
             )
         generalization_method = public_safe.get("generalization_method")
+        if public_precision == "exact" and not exact_safe:
+            _add(
+                findings,
+                "sens.exact_location_public_safe_required",
+                "/sensitivity/exact_location_public_safe",
+            )
         if public_precision != "exact" and (
             not isinstance(generalization_method, str)
             or not generalization_method.strip()
