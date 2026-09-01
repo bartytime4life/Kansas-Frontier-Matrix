@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schemas.kfm.local/contracts/v1/domains/agriculture/public_safe_map_feature.schema.json",
   "title": "Agriculture Public-Safe Map Feature Candidate",
-  "description": "Synthetic no-network Agriculture-owned map carrier candidate with generalized support, explicit temporal/semantic roles, evidence links, and no release authority.",
+  "description": "Synthetic no-network Agriculture-owned map carrier candidate with generalized support, explicit temporal/freshness/semantic roles, evidence links, and no release authority.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -17,6 +17,7 @@
     "semantic_role",
     "support",
     "temporal",
+    "freshness",
     "indicator",
     "uncertainty",
     "evidence_refs",
@@ -27,13 +28,29 @@
     "limitations"
   ],
   "properties": {
-    "profile": {"const": "kfm.domains.agriculture.public-safe-map-feature.v1"},
-    "status": {"const": "PROPOSED_INACTIVE"},
-    "object_type": {"const": "AgricultureMapFeatureCandidate"},
-    "version": {"const": "1.0.0"},
-    "id": {"type": "string", "pattern": "^ag-map-feature:[0-9a-f]{24}$"},
-    "spec_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
-    "domain": {"const": "agriculture"},
+    "profile": {
+      "const": "kfm.domains.agriculture.public-safe-map-feature.v1"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "object_type": {
+      "const": "AgricultureMapFeatureCandidate"
+    },
+    "version": {
+      "const": "1.0.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^ag-map-feature:[0-9a-f]{24}$"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "domain": {
+      "const": "agriculture"
+    },
     "object_family": {
       "enum": [
         "CropObservation",
@@ -63,48 +80,154 @@
     "support": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["kind", "key", "generalized", "precision_class"],
+      "required": [
+        "kind",
+        "key",
+        "generalized",
+        "precision_class"
+      ],
       "properties": {
-        "kind": {"enum": ["COUNTY", "REGION", "GENERALIZED_GRID"]},
+        "kind": {
+          "enum": [
+            "COUNTY",
+            "REGION",
+            "GENERALIZED_GRID"
+          ]
+        },
         "key": {
           "type": "string",
           "minLength": 1,
           "maxLength": 96,
           "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
         },
-        "generalized": {"const": true},
-        "precision_class": {"enum": ["AGGREGATE_PUBLIC_SAFE", "GENERALIZED_PUBLIC_SAFE"]}
+        "generalized": {
+          "const": true
+        },
+        "precision_class": {
+          "enum": [
+            "AGGREGATE_PUBLIC_SAFE",
+            "GENERALIZED_PUBLIC_SAFE"
+          ]
+        }
       }
     },
     "temporal": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["kind", "year", "start", "end", "source_vintage"],
+      "required": [
+        "kind",
+        "year",
+        "start",
+        "end",
+        "source_vintage"
+      ],
       "properties": {
-        "kind": {"enum": ["CROP_YEAR", "CALENDAR_YEAR", "REPORTING_PERIOD", "VALID_INTERVAL"]},
-        "year": {"type": "integer", "minimum": 1800, "maximum": 2200},
-        "start": {"type": "string", "format": "date"},
-        "end": {"type": "string", "format": "date"},
-        "source_vintage": {"type": "string", "format": "date"}
+        "kind": {
+          "enum": [
+            "CROP_YEAR",
+            "CALENDAR_YEAR",
+            "REPORTING_PERIOD",
+            "VALID_INTERVAL"
+          ]
+        },
+        "year": {
+          "type": "integer",
+          "minimum": 1800,
+          "maximum": 2200
+        },
+        "start": {
+          "type": "string",
+          "format": "date"
+        },
+        "end": {
+          "type": "string",
+          "format": "date"
+        },
+        "source_vintage": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "freshness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evaluated_at",
+        "max_age_days",
+        "state"
+      ],
+      "properties": {
+        "evaluated_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "max_age_days": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3660
+        },
+        "state": {
+          "enum": [
+            "CURRENT",
+            "STALE"
+          ]
+        }
       }
     },
     "indicator": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["key", "label", "unit", "value_role", "value"],
+      "required": [
+        "key",
+        "label",
+        "unit",
+        "value_role",
+        "value"
+      ],
       "properties": {
-        "key": {"type": "string", "pattern": "^[a-z][a-z0-9_]{2,63}$"},
-        "label": {"type": "string", "minLength": 1, "maxLength": 128},
+        "key": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{2,63}$"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
         "unit": {
           "type": "string",
-          "enum": ["CLASS", "COUNT", "ACRES", "PERCENT", "INDEX", "USD", "SOURCE_DEFINED", "CONTEXT_ONLY"]
+          "enum": [
+            "CLASS",
+            "COUNT",
+            "ACRES",
+            "PERCENT",
+            "INDEX",
+            "USD",
+            "SOURCE_DEFINED",
+            "CONTEXT_ONLY"
+          ]
         },
-        "value_role": {"enum": ["OBSERVED", "MODELED_OR_DERIVED", "CONTEXT_ONLY"]},
+        "value_role": {
+          "enum": [
+            "OBSERVED",
+            "MODELED_OR_DERIVED",
+            "CONTEXT_ONLY"
+          ]
+        },
         "value": {
           "oneOf": [
-            {"type": "number"},
-            {"type": "string", "minLength": 1, "maxLength": 96},
-            {"type": "null"}
+            {
+              "type": "number"
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 96
+            },
+            {
+              "type": "null"
+            }
           ]
         }
       }
@@ -112,10 +235,23 @@
     "uncertainty": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["state", "label"],
+      "required": [
+        "state",
+        "label"
+      ],
       "properties": {
-        "state": {"enum": ["NOT_QUANTIFIED", "BOUNDED", "SOURCE_DECLARED"]},
-        "label": {"type": "string", "minLength": 1, "maxLength": 192}
+        "state": {
+          "enum": [
+            "NOT_QUANTIFIED",
+            "BOUNDED",
+            "SOURCE_DECLARED"
+          ]
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 192
+        }
       }
     },
     "evidence_refs": {
@@ -123,9 +259,15 @@
       "minItems": 1,
       "maxItems": 16,
       "uniqueItems": true,
-      "items": {"type": "string", "minLength": 1, "maxLength": 256}
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 256
+      }
     },
-    "rights_state": {"const": "SYNTHETIC_ONLY"},
+    "rights_state": {
+      "const": "SYNTHETIC_ONLY"
+    },
     "sensitivity": {
       "type": "object",
       "additionalProperties": false,
@@ -139,13 +281,27 @@
         "transform_parameters"
       ],
       "properties": {
-        "exact_field_geometry": {"const": false},
-        "operator_identity": {"const": false},
-        "parcel_owner_join": {"const": false},
-        "private_address": {"const": false},
-        "sensitive_infrastructure": {"const": false},
-        "proprietary_value": {"const": false},
-        "transform_parameters": {"const": false}
+        "exact_field_geometry": {
+          "const": false
+        },
+        "operator_identity": {
+          "const": false
+        },
+        "parcel_owner_join": {
+          "const": false
+        },
+        "private_address": {
+          "const": false
+        },
+        "sensitive_infrastructure": {
+          "const": false
+        },
+        "proprietary_value": {
+          "const": false
+        },
+        "transform_parameters": {
+          "const": false
+        }
       }
     },
     "authority": {
@@ -160,12 +316,24 @@
         "hazard_alert"
       ],
       "properties": {
-        "hydrology_observation": {"const": false},
-        "water_right": {"const": false},
-        "habitat_occurrence": {"const": false},
-        "geology_truth": {"const": false},
-        "atmosphere_forecast": {"const": false},
-        "hazard_alert": {"const": false}
+        "hydrology_observation": {
+          "const": false
+        },
+        "water_right": {
+          "const": false
+        },
+        "habitat_occurrence": {
+          "const": false
+        },
+        "geology_truth": {
+          "const": false
+        },
+        "atmosphere_forecast": {
+          "const": false
+        },
+        "hazard_alert": {
+          "const": false
+        }
       }
     },
     "release": {
@@ -180,12 +348,24 @@
         "published"
       ],
       "properties": {
-        "state": {"const": "UNRELEASED_CANDIDATE"},
-        "policy_evaluated": {"const": false},
-        "review_approved": {"const": false},
-        "release_authorized": {"const": false},
-        "public_use_allowed": {"const": false},
-        "published": {"const": false}
+        "state": {
+          "const": "UNRELEASED_CANDIDATE"
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "review_approved": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "published": {
+          "const": false
+        }
       }
     },
     "limitations": {
@@ -193,7 +373,11 @@
       "minItems": 2,
       "maxItems": 16,
       "uniqueItems": true,
-      "items": {"type": "string", "minLength": 1, "maxLength": 240}
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 240
+      }
     }
   },
   "x-kfm": {

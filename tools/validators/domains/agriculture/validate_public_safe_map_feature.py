@@ -151,6 +151,7 @@ def _semantic_findings(value: Mapping[str, Any]) -> tuple[Finding, ...]:
     role = value["semantic_role"]
     support = value["support"]
     temporal = value["temporal"]
+    freshness = value["freshness"]
     indicator = value["indicator"]
 
     if role not in FAMILY_ROLES[family]:
@@ -175,6 +176,18 @@ def _semantic_findings(value: Mapping[str, Any]) -> tuple[Finding, ...]:
         findings.add(Finding("AG_MAP_YEAR_OUTSIDE_INTERVAL", "/temporal/year"))
     if vintage < end:
         findings.add(Finding("AG_MAP_SOURCE_VINTAGE_PRECEDES_PERIOD", "/temporal/source_vintage"))
+
+    evaluated_at = date.fromisoformat(freshness["evaluated_at"])
+    if evaluated_at < vintage:
+        findings.add(Finding(
+            "AG_MAP_FRESHNESS_EVALUATION_PRECEDES_VINTAGE",
+            "/freshness/evaluated_at",
+        ))
+    else:
+        age_days = (evaluated_at - vintage).days
+        expected_state = "CURRENT" if age_days <= freshness["max_age_days"] else "STALE"
+        if freshness["state"] != expected_state:
+            findings.add(Finding("AG_MAP_FRESHNESS_STATE_MISMATCH", "/freshness/state"))
 
     evidence_refs = value["evidence_refs"]
     if evidence_refs != sorted(set(evidence_refs)):

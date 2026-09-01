@@ -18,6 +18,9 @@ without exposing farm/operator truth or taking authority from adjacent domains:
   operator identity, proprietary yield/input detail, and transform parameters
   are forbidden.
 - Crop/calendar/reporting/valid-period semantics remain explicit.
+- Freshness is explicit and deterministic: downstream consumers can distinguish
+  current from stale candidates without treating source vintage as a claim of
+  present-day currency.
 - Observed, modeled/derived, and context-only values cannot collapse into one
   another.
 - Soil, Hydrology, Habitat, Geology, Atmosphere, and Hazards authority is never
@@ -101,6 +104,23 @@ label must fall within that interval. Reporting/valid intervals likewise keep
 their declared year label inside the interval. All intervals require
 `start <= end`, and `source_vintage` cannot precede the interval end.
 
+## Freshness semantics
+
+`freshness` separates source vintage from downstream currency. It contains:
+
+- `evaluated_at` — the deterministic date at which currency is assessed;
+- `max_age_days` — the Agriculture-specific maximum age accepted as current;
+- `state` — exactly `CURRENT` or `STALE`.
+
+`evaluated_at` cannot precede `temporal.source_vintage`. The validator computes
+`evaluated_at - source_vintage` in whole days. `state` must be `CURRENT` when
+that age is less than or equal to `max_age_days`, otherwise it must be `STALE`.
+
+This is presentation truth only. A `CURRENT` candidate is not automatically
+released, authoritative, or approved; a `STALE` candidate remains explicitly
+stale for downstream Catalog/Explorer presentation rather than being silently
+treated as current.
+
 ## Role separation
 
 `indicator.value_role` must agree with `semantic_role`:
@@ -135,13 +155,14 @@ with sorted JSON keys and compact separators, and computes SHA-256.
 - `spec_hash = "sha256:" + digest`
 - `id = "ag-map-feature:" + digest[:24]`
 
-Changing semantic role, temporal scope, spatial support, evidence binding,
-sensitivity declaration, or non-effects therefore changes identity.
+Changing semantic role, temporal scope, freshness evaluation, spatial support,
+evidence binding, sensitivity declaration, or non-effects therefore changes
+identity.
 
 ## Validation outcomes
 
 - `PASS` — the synthetic candidate satisfies schema and semantic invariants.
-- `DENY` — trust, structure, authority, precision, role, temporal, or identity constraints fail.
+- `DENY` — trust, structure, authority, precision, role, temporal, freshness, or identity constraints fail.
 
 No successful validation implies source admission, evidence resolution, policy
 approval, release, publication, or truth beyond the candidate fixture.

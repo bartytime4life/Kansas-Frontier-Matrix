@@ -43,6 +43,7 @@ def test_valid_candidate_exposes_generalized_support_only():
     candidate = module.materialize_case(manifest, manifest["cases"][0])
     assert module.validate_payload(candidate).outcome == "PASS"
     assert candidate["support"]["generalized"] is True
+    assert candidate["freshness"]["state"] == "CURRENT"
     assert candidate["release"]["public_use_allowed"] is False
     assert candidate["authority"] == module.FALSE_AUTHORITY
 
@@ -67,12 +68,33 @@ def test_harmful_precision_fails_before_shape_acceptance():
     assert {f.code for f in result.findings} == {"AG_MAP_HARMFUL_PRECISION_DENIED"}
 
 
-def test_identity_changes_when_temporal_or_support_semantics_change():
+def test_freshness_state_is_derived_from_vintage_and_evaluation_date():
+    module = _module()
+    manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    mismatch = module.materialize_case(manifest, manifest["cases"][7])
+    stale = module.materialize_case(manifest, manifest["cases"][8])
+
+    mismatch_result = module.validate_payload(mismatch)
+    stale_result = module.validate_payload(stale)
+
+    assert mismatch_result.outcome == "DENY"
+    assert [(f.code, f.path) for f in mismatch_result.findings] == [
+        ("AG_MAP_FRESHNESS_STATE_MISMATCH", "/freshness/state")
+    ]
+    assert stale_result.outcome == "PASS"
+    assert stale["freshness"]["state"] == "STALE"
+
+
+def test_identity_changes_when_temporal_freshness_or_support_semantics_change():
     module = _module()
     manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
     candidate = module.materialize_case(manifest, manifest["cases"][0])
     first = module.canonical_identity(candidate)
-    changed = json.loads(json.dumps(candidate))
-    changed["temporal"]["year"] = 2024
-    second = module.canonical_identity(changed)
-    assert first != second
+
+    temporal_change = json.loads(json.dumps(candidate))
+    temporal_change["temporal"]["year"] = 2024
+    assert module.canonical_identity(temporal_change) != first
+
+    freshness_change = json.loads(json.dumps(candidate))
+    freshness_change["freshness"]["evaluated_at"] = "2025-10-02"
+    assert module.canonical_identity(freshness_change) != first
