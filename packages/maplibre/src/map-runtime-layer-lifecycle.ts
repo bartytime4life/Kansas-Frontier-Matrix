@@ -69,6 +69,13 @@ function isSafeId(value: unknown): value is string {
   return typeof value === "string" && SAFE_ID.test(value);
 }
 
+function isDenseArray(value: readonly unknown[]): boolean {
+  for (let index = 0; index < value.length; index += 1) {
+    if (!(index in value)) return false;
+  }
+  return true;
+}
+
 function isVisibility(value: unknown): value is MapRuntimeLayerVisibility {
   return (
     typeof value === "string" &&
@@ -91,7 +98,11 @@ function freezeState(
   if (state.profile !== MAP_RUNTIME_LAYER_LIFECYCLE_PROFILE) {
     invalid("Map runtime layer lifecycle profile is invalid.");
   }
-  if (!Array.isArray(state.sources) || state.sources.length > MAX_SOURCES) {
+  if (
+    !Array.isArray(state.sources) ||
+    !isDenseArray(state.sources) ||
+    state.sources.length > MAX_SOURCES
+  ) {
     invalid("Map runtime layer lifecycle sources are invalid.");
   }
   if (!state.sources.every(isSafeId)) {
@@ -101,7 +112,11 @@ function freezeState(
   if (sourceSet.size !== state.sources.length) {
     invalid("Map runtime layer lifecycle source IDs must be unique.");
   }
-  if (!Array.isArray(state.layers) || state.layers.length > MAX_LAYERS) {
+  if (
+    !Array.isArray(state.layers) ||
+    !isDenseArray(state.layers) ||
+    state.layers.length > MAX_LAYERS
+  ) {
     invalid("Map runtime layer lifecycle layers are invalid.");
   }
 
@@ -178,6 +193,7 @@ export function applyMapRuntimeLayerLifecyclePlan(
   const current = freezeState(state);
   if (
     !Array.isArray(operations) ||
+    !isDenseArray(operations) ||
     operations.length === 0 ||
     operations.length > MAX_OPERATIONS
   ) {

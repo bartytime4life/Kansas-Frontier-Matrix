@@ -154,6 +154,34 @@ describe("renderer-neutral source/layer lifecycle planning", () => {
     ).toThrow(expect.objectContaining({ code: "MAP_RUNTIME_STATE_INVALID" }));
   });
 
+  it.each([
+    {
+      profile: MAP_RUNTIME_LAYER_LIFECYCLE_PROFILE,
+      sources: new Array(1),
+      layers: [],
+    },
+    {
+      profile: MAP_RUNTIME_LAYER_LIFECYCLE_PROFILE,
+      sources: ["source:synthetic"],
+      layers: new Array(1),
+    },
+  ])("rejects sparse lifecycle state arrays", (state) => {
+    expect(() =>
+      applyMapRuntimeLayerLifecyclePlan(state as never, [
+        { op: "ATTACH_SOURCE", sourceId: "source:next" },
+      ]),
+    ).toThrow(expect.objectContaining({ code: "MAP_RUNTIME_STATE_INVALID" }));
+  });
+
+  it("rejects sparse operation arrays", () => {
+    expect(() =>
+      applyMapRuntimeLayerLifecyclePlan(
+        createEmptyMapRuntimeLayerLifecycleState(),
+        new Array(1) as never,
+      ),
+    ).toThrow(expect.objectContaining({ code: "MAP_RUNTIME_STATE_INVALID" }));
+  });
+
   it("does not mutate the prior state when a later operation fails", () => {
     const prior = applyMapRuntimeLayerLifecyclePlan(
       createEmptyMapRuntimeLayerLifecycleState(),
