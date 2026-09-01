@@ -9,6 +9,7 @@ import { mountSyntheticFocusWorkspace } from "./site/mount-synthetic-focus-works
 import { mountPublicTrustSurface } from "./site/trust-surface";
 import {
   mountPublicWorkspaceNavigation,
+  resolveSinglePublicKnowledgeDomainId,
   sanitizePublicWorkspaceNavigationUrl,
   syncPublicWorkspaceNavigation,
 } from "./site/workspace-navigation";
@@ -36,6 +37,21 @@ const syncWorkspaceNavigation = (): void => {
     window.history.replaceState(window.history.state, "", safeUrl.toString());
   }
   syncPublicWorkspaceNavigation(navigation, safeUrl);
+
+  const domainId = resolveSinglePublicKnowledgeDomainId(safeUrl);
+  if (domainId !== null) {
+    const domainButton = Array.from(
+      root.querySelectorAll<HTMLButtonElement>("button[data-domain-id]"),
+    ).find((button) => button.dataset.domainId === domainId);
+    if (domainButton?.getAttribute("aria-pressed") !== "true") {
+      const priorFocus =
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null;
+      domainButton.click();
+      if (priorFocus?.isConnected) priorFocus.focus();
+    }
+  }
 };
 syncWorkspaceNavigation();
 window.addEventListener("hashchange", syncWorkspaceNavigation);
