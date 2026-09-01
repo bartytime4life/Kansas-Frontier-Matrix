@@ -7,7 +7,9 @@ on:
       - 'schemas/contracts/v1/domains/habitat/evidence_bundle.schema.json'
       - 'fixtures/contracts/v1/evidence/evidence_bundle/**'
       - 'tools/validators/validate_habitat_evidence_bundle_projection.py'
+      - 'tools/validators/domains/habitat/validate_evidence_bundle.py'
       - 'tests/validators/domains/habitat/test_evidence_bundle_schema_convergence.py'
+      - 'tests/validators/domains/habitat/test_domain_evidence_bundle_validator_entrypoint.py'
       - '.github/workflows/habitat-evidence-bundle-convergence.yml'
   workflow_dispatch:
 
@@ -32,14 +34,19 @@ jobs:
           python-version: '3.11'
       - name: Install repository validation dependencies
         run: python tools/ci/install_python_ci.py project-test
-      - name: Compile focused validator and tests
+      - name: Compile focused validators and tests
         run: >-
           python -m py_compile
           tools/validators/validate_habitat_evidence_bundle_projection.py
+          tools/validators/domains/habitat/validate_evidence_bundle.py
           tests/validators/domains/habitat/test_evidence_bundle_schema_convergence.py
-      - name: Run deterministic convergence tests
+          tests/validators/domains/habitat/test_domain_evidence_bundle_validator_entrypoint.py
+      - name: Run deterministic convergence and entrypoint tests
         run: >-
           python -m unittest -q
           tests.validators.domains.habitat.test_evidence_bundle_schema_convergence
+          tests.validators.domains.habitat.test_domain_evidence_bundle_validator_entrypoint
       - name: Validate shared fixtures through the Habitat projection
         run: python tools/validators/validate_habitat_evidence_bundle_projection.py --fixtures
+      - name: Validate shared fixtures through the Habitat domain entrypoint
+        run: python tools/validators/domains/habitat/validate_evidence_bundle.py --fixtures
