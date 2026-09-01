@@ -123,6 +123,51 @@ class RollbackCardValidatorTests(unittest.TestCase):
         self.assertEqual(canonical.stdout, compatibility.stdout)
         self.assertEqual(canonical.stderr, compatibility.stderr)
 
+    def test_compatibility_entrypoint_matches_canonical_file_modes(self) -> None:
+        scenarios = (
+            (
+                "valid-candidate",
+                "fixtures/release/rollback_card/valid/valid_hold.json",
+                0,
+                '"outcome":"PASS"',
+            ),
+            (
+                "missing-candidate",
+                "does-not-exist-rollback-card.json",
+                1,
+                '"code":"FILE_NOT_FOUND"',
+            ),
+        )
+        for name, candidate, expected_returncode, expected_marker in scenarios:
+            with self.subTest(name=name):
+                canonical = subprocess.run(
+                    [
+                        sys.executable,
+                        "tools/validators/release/validate_rollback_card.py",
+                        candidate,
+                    ],
+                    cwd=REPO_ROOT,
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                compatibility = subprocess.run(
+                    [
+                        sys.executable,
+                        "tools/validators/validate_rollback_card.py",
+                        candidate,
+                    ],
+                    cwd=REPO_ROOT,
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                self.assertEqual(expected_returncode, canonical.returncode)
+                self.assertIn(expected_marker, canonical.stdout)
+                self.assertEqual(canonical.returncode, compatibility.returncode)
+                self.assertEqual(canonical.stdout, compatibility.stdout)
+                self.assertEqual(canonical.stderr, compatibility.stderr)
+
     def test_operator_guidance_describes_compatibility_delegate(self) -> None:
         stale_claims_by_path = {
             "docs/runbooks/atmosphere/RELEASE_ROLLBACK_RUNBOOK.md": (
