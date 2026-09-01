@@ -27,6 +27,8 @@ class InstallKfmCliTests(unittest.TestCase):
     def test_commands_use_hash_lock_and_fixed_local_package(self) -> None:
         dependency, local = module.build_commands(executable="python")
         self.assertEqual("python", dependency[0])
+        self.assertEqual("-P", dependency[1])
+        self.assertEqual("-P", local[1])
         self.assertIn("--require-hashes", dependency)
         self.assertEqual(str(module.LOCKFILE), dependency[-1])
         self.assertIn("--no-deps", local)
@@ -177,6 +179,24 @@ class InstallKfmCliTests(unittest.TestCase):
             self.assertEqual("preserved", environment["KFM_TEST_SENTINEL"])
             self.assertEqual("1", environment["PIP_DISABLE_PIP_VERSION_CHECK"])
             self.assertEqual("1", environment["PIP_NO_INPUT"])
+
+    def test_install_isolates_python_import_environment_controls(self) -> None:
+        python_overrides = {
+            "PYTHONHOME": "/tmp/ambient-python-home",
+            "PYTHONPATH": "/tmp/ambient-python-path",
+            "PYTHONUSERBASE": "/tmp/ambient-python-userbase",
+            "PYTHONNOUSERSITE": "0",
+        }
+        with mock.patch.dict(module.os.environ, python_overrides, clear=False):
+            with mock.patch.object(module.subprocess, "run") as run:
+                module.install()
+
+        self.assertEqual(2, run.call_count)
+        for call in run.call_args_list:
+            environment = call.kwargs["env"]
+            for key in module.PYTHON_IMPORT_ENVIRONMENT_CONTROLS:
+                self.assertNotIn(key, environment)
+            self.assertEqual("1", environment["PYTHONNOUSERSITE"])
 
     def test_main_rejects_arguments(self) -> None:
         with self.assertRaises(module.CliInstallConfigurationError):
