@@ -14,7 +14,10 @@ const matchingSelection = Object.freeze({
   selection_id: "selection:flow-001",
   layer_id: "layer:synthetic-streamflow",
   feature_id: "feature:flow-001",
-  evidence_refs: ["kfm:evidence:synthetic:flow-001"],
+  evidence_refs: [
+    "kfm:evidence:synthetic:flow-001",
+    "kfm:evidence:synthetic:flow-000",
+  ],
 });
 
 describe("Explorer map feature to Evidence Drawer bridge", () => {
@@ -31,7 +34,10 @@ describe("Explorer map feature to Evidence Drawer bridge", () => {
       selectionId: "selection:flow-001",
       layerId: "layer:synthetic-streamflow",
       featureId: "feature:flow-001",
-      evidenceRefs: ["kfm:evidence:synthetic:flow-001"],
+      evidenceRefs: [
+        "kfm:evidence:synthetic:flow-001",
+        "kfm:evidence:synthetic:flow-000",
+      ],
     });
   });
 
@@ -103,6 +109,30 @@ describe("Explorer map feature to Evidence Drawer bridge", () => {
     });
     expect(JSON.stringify(result.drawer)).not.toContain(
       "SENSITIVE_DENIAL_CANARY_4d7ec2",
+    );
+  });
+
+  it("fails closed when correction history widens beyond the clicked selection", async () => {
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: ["kfm:evidence:synthetic:flow-001"],
+      },
+      async () => answerFixture,
+    );
+
+    expect(result).toMatchObject({
+      code: "DRAWER_EVIDENCE_OUTSIDE_SELECTION",
+      drawer: {
+        outcome: "ERROR",
+        code: "UPSTREAM_ERROR",
+        evidenceRefs: [],
+        citations: [],
+        historyLabels: [],
+      },
+    });
+    expect(JSON.stringify(result.drawer)).not.toContain(
+      "kfm:evidence:synthetic:flow-000",
     );
   });
 
