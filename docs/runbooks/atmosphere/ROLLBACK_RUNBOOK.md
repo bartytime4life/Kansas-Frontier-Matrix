@@ -99,7 +99,7 @@ tags: [kfm, runbook, atmosphere, air, rollback, withdrawal, correction, rollback
 notes:
   - "Same-path modernization under accepted ADR-0029; no root, lane, contract, schema, policy, fixture, validator, test, workflow, receipt, proof, release object, alias, or public state is created or moved."
   - "The generic release RollbackCard 1.0.0 profile is the current bounded validator target. The Atmosphere-domain rollback-card schema remains a permissive greenfield stub and is not an equivalent authority surface."
-  - "Operational rollback remains HOLD: the production pipeline and generic validator entrypoint are placeholders, the published-alias decision remains proposed, and the available apply helper is synthetic-workspace-only."
+  - "Operational rollback remains HOLD: the production pipeline is a placeholder, the generic validator entrypoint delegates only to the bounded canonical validator, the published-alias decision remains proposed, and the available apply helper is synthetic-workspace-only."
   - "This runbook is an instruction and review-handoff surface. It is not a RollbackCard, ReviewRecord, PolicyDecision, CorrectionNotice, release approval, rollback receipt, or execution record."
 [/KFM_META_BLOCK_V2] -->
 
@@ -221,7 +221,7 @@ The update is a same-path `PLACE` under the `docs/` responsibility root. It crea
 | Release fixtures | Three valid candidates and six invalid candidates with expected findings | Fixture polarity is testable |
 | Atmosphere-domain rollback schema | Permissive id-only greenfield stub; `additionalProperties: true` | **CONFLICTED / HOLD**; do not treat as equivalent to the generic release profile |
 | Atmosphere domain contract / fixtures / validator | Declared by the stub but absent at the snapshot | Domain-specific rollback validation is not established |
-| Generic validator entry point | `tools/validators/validate_rollback_card.py` raises `NotImplementedError` | Do not use this entry point |
+| Generic validator entry point | `tools/validators/validate_rollback_card.py` delegates to the canonical release validator | Bounded compatibility validation only; no execution authority |
 | Production rollback pipeline | `pipelines/rollback/main.py` is a one-line placeholder | No production rollback engine is established |
 | Synthetic helper | Marker-protected, no-network, deterministic; PLAN by default; APPLY only inside a marked synthetic root | Safe for rehearsal only |
 | Synthetic tests | Eight non-vacuous tests cover plan/no-write, rollback, withdrawal, marker, synthetic flag, invalidations, target, and digest failures | Rehearsal behavior has bounded deterministic proof |
@@ -420,7 +420,7 @@ python -m unittest -q \
   tests.release.test_synthetic_rollback_rehearsal
 ```
 
-Do **not** use `python tools/validators/validate_rollback_card.py`; that compatibility-looking entry point is still a `NotImplementedError` placeholder.
+`python tools/validators/validate_rollback_card.py` is the historical compatibility entry point and delegates to the canonical release validator. A PASS has the same bounded meaning as the canonical CLI and does not authorize rollback execution.
 
 ### Step 6 — Prepare a disposable synthetic workspace
 
@@ -826,7 +826,7 @@ State explicitly:
 Do not:
 
 - use the Atmosphere id-only schema stub as though it were the current closed release profile;
-- run `tools/validators/validate_rollback_card.py` and hide its `NotImplementedError`;
+- treat a compatibility-validator PASS as rollback approval, execution authority, or production readiness;
 - invoke or replace the production pipeline placeholder with unreviewed logic;
 - weaken the synthetic marker, `synthetic: true`, path, symlink, digest, or invalidation guards;
 - point the synthetic helper at repository, release, cache, object-storage, database, or deployment paths;
@@ -851,7 +851,7 @@ Do not:
 | Item | Current bounded status | Required before operational reliance |
 |---|---|---|
 | Production rollback pipeline | One-line placeholder | Accepted operator contract, implementation, negative tests, receipts, and review |
-| Generic compatibility validator | `NotImplementedError` placeholder | Deliberate migration or retirement; do not route around it silently |
+| Generic compatibility validator | **CONFIRMED delegation** | Preserve canonical/compatibility parity; validation remains non-executing |
 | Generic release candidate profile | Closed, fixture-first, proposed | Accepted operational profile and reference-resolution layer |
 | Atmosphere-domain schema | Permissive id-only stub | Contract/schema decision, closed shape, fixtures, validator, compatibility plan |
 | Atmosphere domain contract/fixtures/validator | Absent at declared paths | Add only through a dependency-closed reviewed slice |

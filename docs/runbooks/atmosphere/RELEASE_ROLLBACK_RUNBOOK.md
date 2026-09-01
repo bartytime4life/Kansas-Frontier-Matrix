@@ -739,7 +739,7 @@ python -m unittest -q \
   tests.release.test_synthetic_rollback_rehearsal
 ```
 
-Do not use `python tools/validators/validate_rollback_card.py`; the compatibility-looking entry point remains a placeholder in the current bounded evidence.
+The historical `python tools/validators/validate_rollback_card.py` entry point delegates to the release-scoped canonical validator. It may be used with the same bounded fixture or candidate arguments; a PASS proves shape and local consistency only and grants no rollback authority.
 
 ### 10.4 Candidate-specific RollbackCard validation
 

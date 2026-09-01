@@ -104,7 +104,7 @@ notes:
   - "v1.3 is a same-path repository-grounded semantic refresh. It preserves source metadata `draft` and effective decision status `proposed`; it does not accept ADR-0015, create or mutate an alias, execute rollback, change release state, invalidate caches, deploy, or publish anything."
   - "The canonical ADR index uniquely assigns ADR-0015 to this exact path."
   - "Accepted ADR-0029 and Directory Rules v2 now place RollbackCard decisions and targets under release/rollback_cards/ and executed rollback/cache-invalidation receipts under data/receipts/rollback/; generic data/rollback/ is deprecated pending classified migration."
-  - "No current/current.json/*.current.json alias exists under data/published at the pinned snapshot; the live alias auditor, rollback pipeline, generic validator entrypoint, and rollback apply helper remain placeholders, and the rollback workflow records explicit holds."
+  - "No current/current.json/*.current.json alias exists under data/published at the pinned snapshot; the live alias auditor and rollback pipeline remain placeholders, the generic validator entrypoint is a bounded compatibility delegate, the rollback apply helper remains synthetic-only, and the rollback workflow records explicit holds."
   - "The proposed shared RollbackCard schema is now closed and paired with a bounded no-network validator, three valid fixtures, six invalid fixture families, focused tests, and CI; it proves candidate shape and local consistency only. The semantic contract still describes the superseded thin schema and therefore carries documentation drift."
   - "ReleaseAliasVerification now provides a deterministic fixture-only preflight with 17 cases across INITIAL_BIND, ADVANCE, CORRECTION, and ROLLBACK. Its schema declares PROPOSED_INACTIVE and authority NONE; it does not inspect or mutate a live alias."
   - "The current release/rollback_cards README still classifies cards as review aids even though accepted Directory Rules assign the lane rollback decisions and targets. This ADR surfaces that documentation drift and keeps candidate validation, accountable decision/review, execution, and receipt roles separate."
@@ -244,7 +244,7 @@ Current repository prose and implementation have not fully converged on that law
 - `release/rollback/README.md` and `release/correction/rollback/README.md` remain draft generic review lanes requiring classification and migration;
 - `data/rollback/README.md` still calls that deprecated lane canonical and assigns it receipt-like responsibilities;
 - the canonical `data/receipts/rollback/` execution-receipt lane is not materialized;
-- the live alias auditor, generic RollbackCard entrypoint, rollback pipeline, and rollback apply helper remain placeholders.
+- the live alias auditor and rollback pipeline remain placeholders; the generic RollbackCard entrypoint is a bounded compatibility delegate, and the rollback apply helper remains synthetic-only.
 
 These conflicts are documentation and migration drift, not competing placement authority. This ADR preserves the **conceptual role split** among candidate shape, accountable decision/review, execution, and receipt while deferring concrete migration and operational activation to dependency-closed implementation work.
 
@@ -547,7 +547,7 @@ A previous release may be served only when it is the currently accepted target. 
 | RollbackCard schema | **CONFIRMED closed proposed candidate profile** | Requires 18 top-level fields, denies additional properties, and fixes governance effects to false/null |
 | RollbackCard validator and fixtures | **CONFIRMED implemented, bounded** | No-network validator; three valid and six invalid fixture families; exact finding polarity; fail-closed JSON handling |
 | RollbackCard tests and workflow | **CONFIRMED focused** | Schema, metadata, fixture, CLI, duplicate-key, non-finite, and missing-file tests; read-only CI binding |
-| Generic RollbackCard entrypoint | **CONFIRMED placeholder** | Top-level validator still raises `NotImplementedError`; it is distinct from the implemented release-scoped validator |
+| Generic RollbackCard entrypoint | **CONFIRMED compatibility delegate** | Top-level validator delegates to the implemented release-scoped canonical validator with parity coverage |
 | Root rollback-card JSONs | **CONFIRMED nonconforming placeholders** | Two proposed files omit schema-required `id` and contain inventory-placeholder notes |
 | `release/rollback_cards/` | **CONFIRMED documentation drift** | Accepted doctrine assigns decisions/targets; README still calls cards compact review aids |
 | `release/rollback/` and `release/correction/rollback/` | **CONFIRMED draft migration lanes** | Existing review guidance requires classification; neither is canonical execution-receipt authority |
@@ -931,7 +931,7 @@ Do not force-push, delete prior releases, rewrite accepted records, or erase tra
 - [x] No rollback execution receipt exists and the canonical receipt lane is not materialized at the workflow snapshot.
 - [x] Shared RollbackCard schema confirmed closed, proposed, and explicitly non-executing.
 - [x] Release-scoped RollbackCard validator, three valid fixtures, six invalid fixture families, focused tests, and workflow confirmed implemented.
-- [x] Generic RollbackCard entrypoint, rollback pipeline/apply helper, and published-alias auditor confirmed placeholders.
+- [x] Generic RollbackCard entrypoint confirmed as a bounded compatibility delegate; rollback pipeline, synthetic-only apply helper, and published-alias auditor remain non-production surfaces.
 - [x] ReleaseAliasVerification contract, schema, 17-case fixture profile, validator, tests, workflow, and authority-`NONE` boundary confirmed.
 - [x] RollbackCard prose contract and rollback-lane README drift surfaced rather than normalized.
 - [x] Root rollback-card records confirmed placeholders.

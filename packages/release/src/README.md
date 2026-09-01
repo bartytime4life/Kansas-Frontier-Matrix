@@ -182,7 +182,7 @@ This README therefore records the **CONFIRMED placeholder state**, defines **PRO
 | Package-local tests | **NOT ESTABLISHED by bounded search** | No source behavior is proved. |
 | `ReleaseManifest` | **DRAFT / PROPOSED / thin schema** | Rich semantics exist; machine closure is not enforced. |
 | `PromotionDecision` | **DRAFT / PROPOSED / concrete schema** | Shape validator and fixture test exist; authorization is not proved. |
-| `RollbackCard` | **DRAFT / PROPOSED / thin schema** | Schema-declared validator is absent; another validator is placeholder-only. |
+| `RollbackCard` | **DRAFT / PROPOSED / bounded fixture profile** | Canonical validator exists; the historical top-level entrypoint delegates to it. |
 | `CorrectionNotice` | **DRAFT / thin schema / placement conflicted** | Validator and canonical family remain unresolved. |
 | Signing standard | **DRAFT** | Production key custody, trust roots, and verification binding are unproved. |
 | Promotion-gate ADR | **PROPOSED** | Competing draft A–G vocabularies remain unresolved. |
@@ -442,9 +442,9 @@ A future helper may assemble or validate explicit candidate inputs. The decision
 
 ### `RollbackCard`
 
-The semantic contract is rich, while the paired schema is thin. The schema-declared validator path is absent, and a different validator is a `NotImplementedError` placeholder.
+The semantic contract and proposed fixture profile are paired with a canonical validator. The historical top-level entrypoint delegates to that validator and must remain behaviorally compatible.
 
-Source code must not claim rollback validation or execute:
+Source code may claim only bounded candidate shape and local-consistency validation. It must not execute:
 
 - alias/current-pointer mutation;
 - cache, tile, graph, vector, search, API, map, or AI-cache invalidation;
