@@ -277,6 +277,17 @@ def _geometry_findings(
                 "geom.generalization_method_required",
                 "/geometry/public_safe_geometry/generalization_method",
             )
+        if (
+            generalization
+            and public_precision == "generalized_point"
+            and public_safe.get("coordinates")
+            == [geometry.get("longitude"), geometry.get("latitude")]
+        ):
+            _add(
+                findings,
+                "geom.generalized_public_coordinates_unchanged",
+                "/geometry/public_safe_geometry/coordinates",
+            )
         if generalization and public_precision == "exact":
             _add(
                 findings,

@@ -296,6 +296,35 @@ class OccurrenceEvidenceTests(unittest.TestCase):
             result.findings,
         )
 
+    def test_required_generalized_point_cannot_reuse_internal_coordinates(self) -> None:
+        candidate = _load(
+            "semantic_invalid/generalized_public_coordinates_unchanged.json"
+        )
+
+        result = validator.validate_candidate(candidate)
+
+        self.assertIn(
+            validator.Finding(
+                "geom.generalized_public_coordinates_unchanged",
+                "/geometry/public_safe_geometry/coordinates",
+            ),
+            result.findings,
+        )
+        self.assertIn(
+            validator.Finding(
+                "schema.validation_check_mismatch",
+                "/validation/checks/geometry_public_safe",
+            ),
+            result.findings,
+        )
+        self.assertIn(
+            validator.Finding(
+                "schema.pass_gate_failed",
+                "/validation/validator_result",
+            ),
+            result.findings,
+        )
+
     def test_closed_schema_rejects_undeclared_fields(self) -> None:
         candidate = _load("valid/valid_observed_open.json")
         candidate["runtime_hint"] = "not part of the occurrence evidence contract"

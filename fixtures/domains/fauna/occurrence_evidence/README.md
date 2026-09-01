@@ -31,6 +31,7 @@ These fixtures are synthetic, no-network, and unsuitable as biological or geogra
 | `semantic_invalid/exact_public_coordinates_mismatch.json` | Rejects exact public coordinates that contradict the internal exact geometry. |
 | `semantic_invalid/exact_public_internal_precision_mismatch.json` | Rejects exact public precision when the internal occurrence precision is generalized. |
 | `semantic_invalid/exact_public_safety_declaration_missing.json` | Rejects exact public geometry without an explicit exact-location safety declaration. |
+| `semantic_invalid/generalized_public_coordinates_unchanged.json` | Rejects a required generalized-point transform that reuses the internal coordinates. |
 | `semantic_invalid/modeled_as_observed.json` | Rejects model-as-observation role collapse. |
 | `semantic_invalid/observed_without_raw_artifact.json` | Rejects missing source-bound raw-artifact support for an observed record. |
 | `semantic_invalid/public_safe_generalization_method_missing.json` | Rejects generalized public geometry without an explicit transformation method. |

@@ -72,6 +72,24 @@
     {
       "expected_findings": [
         {
+          "code": "geom.generalized_public_coordinates_unchanged",
+          "path": "/geometry/public_safe_geometry/coordinates"
+        },
+        {
+          "code": "schema.pass_gate_failed",
+          "path": "/validation/validator_result"
+        },
+        {
+          "code": "schema.validation_check_mismatch",
+          "path": "/validation/checks/geometry_public_safe"
+        }
+      ],
+      "expected_outcome": "ERROR",
+      "path": "semantic_invalid/generalized_public_coordinates_unchanged.json"
+    },
+    {
+      "expected_findings": [
+        {
           "code": "obs.source_role_mismatch",
           "path": "/observation/basis_of_record"
         },
