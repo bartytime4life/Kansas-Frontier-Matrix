@@ -111,9 +111,24 @@ class ObjectFamilyDiscoveryIndexTests(unittest.TestCase):
         register = _register()
         register["entries"][0]["dependency_family_ids"] = ["missing"]
         with self.assertRaisesRegex(
-            DiscoveryIndexError, "unknown dependency family"
+            DiscoveryIndexError, "unknown family in dependency_family_ids"
         ):
             build_discovery_index(register, source_path="registry.json")
+
+    def test_all_relation_fields_fail_closed_on_unknown_family(self) -> None:
+        for field in (
+            "evidence_family_ids",
+            "release_family_ids",
+            "correction_family_ids",
+            "rollback_family_ids",
+        ):
+            with self.subTest(field=field):
+                register = _register()
+                register["entries"][0][field] = ["missing"]
+                with self.assertRaisesRegex(
+                    DiscoveryIndexError, f"unknown family in {field}"
+                ):
+                    build_discovery_index(register, source_path="registry.json")
 
     def test_duplicate_family_id_fails_closed(self) -> None:
         register = _register()

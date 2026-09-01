@@ -160,14 +160,16 @@ def build_discovery_index(
     dependency_edges: list[dict[str, str]] = []
     for item in normalized:
         family_id = item["family_id"]
-        for dependency_id in item["dependency_family_ids"]:
-            if dependency_id not in known_ids:
-                raise DiscoveryIndexError(
-                    f"unknown dependency family: {family_id} -> {dependency_id}"
-                )
-            dependency_edges.append(
-                {"from_family_id": family_id, "to_family_id": dependency_id}
-            )
+        for field in RELATION_FIELDS:
+            for related_id in item[field]:
+                if related_id not in known_ids:
+                    raise DiscoveryIndexError(
+                        f"unknown family in {field}: {family_id} -> {related_id}"
+                    )
+                if field == "dependency_family_ids":
+                    dependency_edges.append(
+                        {"from_family_id": family_id, "to_family_id": related_id}
+                    )
 
     families = sorted(normalized, key=lambda item: item["family_id"])
     dependency_edges.sort(

@@ -82,29 +82,43 @@ class SourceRegistryPairedDiscoveryIndexTests(unittest.TestCase):
         self.assertEqual("PASS", report["outcome"])
         self.assertFalse(report["authority_created"])
 
-    def test_unindexed_canonical_lane_fails_closed(self) -> None:
+    def test_standalone_canonical_lane_is_not_forced_into_paired_index(self) -> None:
         tempdir, repo = self._fixture(
             (("agriculture", "agriculture"),),
             ("agriculture", "atmosphere"),
             ("agriculture",),
+        )
+        self.addCleanup(tempdir.cleanup)
+        report = validate_source_registry_paired_discovery_index(repo)
+        self.assertEqual("PASS", report["outcome"])
+        self.assertEqual([], report["missing_canonical_index"])
+        self.assertEqual(["atmosphere"], report["unpaired_canonical_domains"])
+
+    def test_standalone_parallel_lane_is_not_forced_into_paired_index(self) -> None:
+        tempdir, repo = self._fixture(
+            (("agriculture", "agriculture"),),
+            ("agriculture",),
+            ("agriculture", "atmosphere"),
+        )
+        self.addCleanup(tempdir.cleanup)
+        report = validate_source_registry_paired_discovery_index(repo)
+        self.assertEqual("PASS", report["outcome"])
+        self.assertEqual([], report["missing_parallel_index"])
+        self.assertEqual(["atmosphere"], report["unpaired_parallel_domains"])
+
+    def test_unindexed_paired_lane_fails_closed(self) -> None:
+        tempdir, repo = self._fixture(
+            (("agriculture", "agriculture"),),
+            ("agriculture", "atmosphere"),
+            ("agriculture", "atmosphere"),
         )
         self.addCleanup(tempdir.cleanup)
         report = validate_source_registry_paired_discovery_index(repo)
         self.assertEqual("FAIL", report["outcome"])
         self.assertEqual(["atmosphere"], report["missing_canonical_index"])
-        self.assertEqual(["atmosphere"], report["unpaired_canonical_domains"])
-
-    def test_unindexed_parallel_lane_fails_closed(self) -> None:
-        tempdir, repo = self._fixture(
-            (("agriculture", "agriculture"),),
-            ("agriculture",),
-            ("agriculture", "atmosphere"),
-        )
-        self.addCleanup(tempdir.cleanup)
-        report = validate_source_registry_paired_discovery_index(repo)
-        self.assertEqual("FAIL", report["outcome"])
         self.assertEqual(["atmosphere"], report["missing_parallel_index"])
-        self.assertEqual(["atmosphere"], report["unpaired_parallel_domains"])
+        self.assertEqual([], report["unpaired_canonical_domains"])
+        self.assertEqual([], report["unpaired_parallel_domains"])
 
     def test_stale_index_row_fails_closed(self) -> None:
         tempdir, repo = self._fixture(

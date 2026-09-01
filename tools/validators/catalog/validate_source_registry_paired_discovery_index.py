@@ -105,10 +105,11 @@ def validate_source_registry_paired_discovery_index(
     parallel_index_set = set(parallel_index)
     canonical_actual_set = set(canonical_actual)
     parallel_actual_set = set(parallel_actual)
+    paired_actual_set = canonical_actual_set.intersection(parallel_actual_set)
 
-    missing_canonical_index = sorted(canonical_actual_set - canonical_index_set)
+    missing_canonical_index = sorted(paired_actual_set - canonical_index_set)
     stale_canonical_index = sorted(canonical_index_set - canonical_actual_set)
-    missing_parallel_index = sorted(parallel_actual_set - parallel_index_set)
+    missing_parallel_index = sorted(paired_actual_set - parallel_index_set)
     stale_parallel_index = sorted(parallel_index_set - parallel_actual_set)
     unpaired_canonical_domains = sorted(canonical_actual_set - parallel_actual_set)
     unpaired_parallel_domains = sorted(parallel_actual_set - canonical_actual_set)
@@ -121,8 +122,6 @@ def validate_source_registry_paired_discovery_index(
         or stale_canonical_index
         or missing_parallel_index
         or stale_parallel_index
-        or unpaired_canonical_domains
-        or unpaired_parallel_domains
     )
 
     return {
@@ -134,6 +133,7 @@ def validate_source_registry_paired_discovery_index(
         "indexed_domains": canonical_index,
         "canonical_domains": canonical_actual,
         "parallel_domains": parallel_actual,
+        "paired_domains": sorted(paired_actual_set),
         "duplicate_index_domains": duplicate_index_domains,
         "row_domain_mismatches": row_domain_mismatches,
         "link_mismatches": link_mismatches,
