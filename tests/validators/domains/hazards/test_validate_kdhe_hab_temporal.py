@@ -142,9 +142,18 @@ class KdheHabTemporalValidatorTests(unittest.TestCase):
         )
 
         with contextlib.redirect_stderr(io.StringIO()):
-            with self.assertRaises(SystemExit) as invalid_time:
-                validate_main(["--as-of", "not-a-time", str(self.path)])
-            self.assertEqual(invalid_time.exception.code, 2)
+            invalid_times = (
+                "not-a-time",
+                "2026-07-25T15:00:01.500Z",
+                "2026-W30-6T15:00:01Z",
+                "2026-07-25T15:00:01+0100",
+                "2026-07-25 15:00:01Z",
+            )
+            for value in invalid_times:
+                with self.subTest(value=value):
+                    with self.assertRaises(SystemExit) as invalid_time:
+                        validate_main(["--as-of", value, str(self.path)])
+                    self.assertEqual(invalid_time.exception.code, 2)
             with self.assertRaises(SystemExit) as fixture_combination:
                 validate_main(["--fixtures", "--as-of", "2026-07-25T15:00:01Z"])
             self.assertEqual(fixture_combination.exception.code, 2)

@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import re
 import sys
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
@@ -25,6 +26,9 @@ FIXTURES = ROOT / "fixtures/domains/hazards/kdhe_hab_advisory_snapshot"
 MAX_FILE_BYTES = 1_048_576
 MAX_SCHEMA_FINDINGS = 100
 ACTIVE_STATES = {"WATCH", "WARNING", "HAZARD"}
+RFC3339_SECOND = re.compile(
+    r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})$"
+)
 ERROR_CODES = {
     "KDHE_HAB_FILE_NOT_FOUND",
     "KDHE_HAB_FILE_READ_ERROR",
@@ -145,6 +149,13 @@ def _time(value: Any) -> datetime | None:
     return parsed if parsed.tzinfo is not None else None
 
 
+def _evaluation_time(value: Any) -> datetime | None:
+    """Parse the governed CLI evaluation instant at RFC3339 whole-second precision."""
+    if not isinstance(value, str) or RFC3339_SECOND.fullmatch(value) is None:
+        return None
+    return _time(value)
+
+
 def _semantic_findings(
     candidate: Mapping[str, Any],
     *,
@@ -226,7 +237,7 @@ def validate_file(path: Path, *, as_of: datetime | None = None) -> ValidationRes
 
 
 def _canonical_time(value: datetime) -> str:
-    return value.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+    return value.astimezone(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
 def _payload(
@@ -286,8 +297,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--fixtures", action="store_true", help="Replay committed valid and invalid fixtures.")
     parser.add_argument(
         "--as-of",
-        metavar="RFC3339",
-        help="Evaluate current-snapshot expiry at an explicit timezone-aware instant.",
+        metavar="RFC3339_SECOND",
+        help="Evaluate current-snapshot expiry at an explicit timezone-aware whole-second instant.",
     )
     args = parser.parse_args(argv)
     if args.fixtures:
@@ -298,9 +309,9 @@ def main(argv: list[str] | None = None) -> int:
         return 0 if ok else 1
     if not args.files:
         parser.error("provide --fixtures or at least one JSON file")
-    as_of = _time(args.as_of) if args.as_of is not None else None
+    as_of = _evaluation_time(args.as_of) if args.as_of is not None else None
     if args.as_of is not None and as_of is None:
-        parser.error("--as-of must be a timezone-aware RFC3339 date-time")
+        parser.error("--as-of must be a timezone-aware RFC3339 whole-second date-time")
     exit_code = 0
     for raw_path in args.files:
         result = validate_file(Path(raw_path), as_of=as_of)

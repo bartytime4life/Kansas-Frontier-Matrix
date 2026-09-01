@@ -2,7 +2,7 @@
 doc_id: kfm://doc/tools-validators-domains-hazards-readme
 title: tools/validators/domains/hazards/ — Hazards Validator Index
 type: readme
-version: v0.9
+version: v0.10
 status: draft; repository-grounded; mixed-maturity; non-semantic; non-policy; non-release; non-publication
 owner: NEEDS VERIFICATION — CODEOWNERS routes /tools/validators/ to @bartytime4life; no independently verified Hazards validation steward or required-review control was established
 created: 2026-07-07
@@ -33,6 +33,7 @@ related:
   - ../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../../../docs/doctrine/directory-rules.md
 notes:
+  - "v0.10 makes the explicit evaluation interface canonical and replay-safe by accepting only timezone-aware RFC3339 whole-second instants before normalizing them to UTC in the result envelope."
   - "v0.9 binds each file-validation result to retrieval-relative or explicit-as-of evaluation and emits a canonical UTC evaluation time when supplied, so downstream consumers can distinguish the meaning of PASS without inspecting source values."
   - "v0.8 adds an optional caller-supplied evaluation instant so current snapshots can be deterministically denied after expiry without consulting a clock or network."
   - "v0.7 adds deterministic, no-network temporal ordering and freshness-budget validation for the existing inactive KDHE HAB advisory snapshot profile; it does not activate the source or authorize alerts, release, deployment, or publication."
@@ -94,7 +95,7 @@ The Hazards boundary remains fail-closed:
 | Validator | Confirmed bounded behavior | Paired executable evidence | Workflow posture |
 |---|---|---|---|
 | [`validate_drinking_water_advisory.py`](./validate_drinking_water_advisory.py) | Closed proposed advisory profile with deterministic structural and semantic findings | [`test_drinking_water_advisory.py`](../../../../tests/domains/hazards/test_drinking_water_advisory.py) and the [`drinking_water_advisory/`](../../../../fixtures/domains/hazards/drinking_water_advisory/README.md) fixture family | Hosted by dedicated [`drinking-water-advisory.yml`](../../../../.github/workflows/drinking-water-advisory.yml), which runs the focused unit suite and exact fixture replay; exact-head hosted result is required before claiming PASS |
-| [`validate_kdhe_hab_temporal.py`](./validate_kdhe_hab_temporal.py) | Deterministic cross-field observation ordering, source-time ordering, active-state currentness, retrieval-relative freshness enforcement, optional explicit-time expiry evaluation, and evaluation-basis binding for the inactive KDHE HAB advisory snapshot profile | [`test_validate_kdhe_hab_temporal.py`](../../../../tests/validators/domains/hazards/test_validate_kdhe_hab_temporal.py) and the existing [`kdhe_hab_advisory_snapshot/`](../../../../fixtures/domains/hazards/kdhe_hab_advisory_snapshot/) valid/invalid families | Not separately hosted at this boundary; local focused proof and exact fixture replay are required, and hosted checks must not be described as profile execution unless a workflow actually invokes it |
+| [`validate_kdhe_hab_temporal.py`](./validate_kdhe_hab_temporal.py) | Deterministic cross-field observation ordering, source-time ordering, active-state currentness, retrieval-relative freshness enforcement, canonical RFC3339-second explicit-time expiry evaluation, and evaluation-basis binding for the inactive KDHE HAB advisory snapshot profile | [`test_validate_kdhe_hab_temporal.py`](../../../../tests/validators/domains/hazards/test_validate_kdhe_hab_temporal.py) and the existing [`kdhe_hab_advisory_snapshot/`](../../../../fixtures/domains/hazards/kdhe_hab_advisory_snapshot/) valid/invalid families | Not separately hosted at this boundary; local focused proof and exact fixture replay are required, and hosted checks must not be described as profile execution unless a workflow actually invokes it |
 | [`validate_nfhl_nld_nid_source_role_profile.py`](./validate_nfhl_nld_nid_source_role_profile.py) | Fail-closed NFHL/NLD/NID source-role separation profile | [`test_validate_nfhl_nld_nid_source_role_profile.py`](../../../../tests/validators/domains/hazards/test_validate_nfhl_nld_nid_source_role_profile.py) | Hosted by dedicated [`nfhl-nld-nid-source-role-profile.yml`](../../../../.github/workflows/nfhl-nld-nid-source-role-profile.yml), which runs the focused deterministic no-network suite and exact fixture replay; exact-head hosted result is required before claiming PASS |
 | [`validate_usdm_materiality.py`](./validate_usdm_materiality.py) | Deterministic, no-network USDM material-change evaluation over committed synthetic cases | [`test_validate_usdm_materiality.py`](../../../../tests/domains/hazards/test_validate_usdm_materiality.py) and [`usdm_materiality/cases.json`](../../../../fixtures/domains/hazards/usdm_materiality/cases.json) | Executed by `make hazards-validate`, which is invoked by [`domain-hazards.yml`](../../../../.github/workflows/domain-hazards.yml) |
 
@@ -163,7 +164,7 @@ The `domain-hazards` proof and release-dry-run jobs intentionally emit explicit 
 
 Individual validators own their finite result grammar. This index does not normalize materially different findings into a shared approval state.
 
-KDHE HAB file-validation output identifies whether validation was retrieval-relative or used an explicit caller-supplied evaluation instant. Explicit instants are normalized to UTC in the result; retrieval-relative output uses a null evaluation time. This binding supports deterministic replay but does not create a runtime DecisionEnvelope, EvidenceBundle, approval, alert, or current-condition claim.
+KDHE HAB file-validation output identifies whether validation was retrieval-relative or used an explicit caller-supplied evaluation instant. The CLI accepts only timezone-aware RFC3339 whole-second instants; accepted instants are normalized to UTC in the result, while retrieval-relative output uses a null evaluation time. This canonical binding supports deterministic replay but does not create a runtime DecisionEnvelope, EvidenceBundle, approval, alert, or current-condition claim.
 
 ## Inputs and outputs
 
