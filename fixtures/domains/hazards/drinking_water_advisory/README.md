@@ -13,6 +13,8 @@ string that merely ends in `-00:00` cannot satisfy rescission requirements.
 Semantic ordering accepts the same RFC 3339 date-time grammar and aware-offset
 suffix as the schema, including lowercase `t`, and does not derive ordering
 claims from schema-invalid timestamp syntax.
+Ordering denials bind to the corrective timestamp field so downstream
+consumers do not need to infer which value violated the governed sequence.
 
 `PASS` proves local profile coherence only. It does not establish a current
 advisory, safe drinking water, source admission, evidence closure, policy or

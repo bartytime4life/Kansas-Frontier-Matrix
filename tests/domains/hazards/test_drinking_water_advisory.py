@@ -166,10 +166,32 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
         self.assertEqual(
             {(finding.code, finding.path) for finding in result.findings},
             {
-                ("TEMPORAL_ORDER_INVALID", "/advisory"),
+                ("TEMPORAL_ORDER_INVALID", "/advisory/issued_at"),
                 ("TIMESTAMP_UNKNOWN_OFFSET", "/advisory/expires_at"),
             },
         )
+
+    def test_temporal_order_findings_bind_to_corrective_fields(self) -> None:
+        scenarios = (
+            ("valid_issued", "issued_at", "2026-08-10T13:30:00Z", "/advisory/issued_at"),
+            ("valid_issued", "effective_at", "2026-08-10T15:00:00Z", "/advisory/effective_at"),
+            ("valid_issued", "expires_at", "2026-08-10T12:30:00Z", "/advisory/expires_at"),
+            ("valid_authoritative_rescission", "rescinded_at", "2026-08-10T12:30:00Z", "/advisory/rescinded_at"),
+            ("valid_authoritative_rescission", "rescinded_at", "2026-08-12T12:00:00Z", "/advisory/rescinded_at"),
+        )
+        for base_name, field, value, expected_path in scenarios:
+            with self.subTest(field=field, value=value):
+                candidate = copy.deepcopy(self.valid[base_name])
+                candidate["advisory"][field] = value
+                candidate = validator.assign_identity(candidate)
+
+                result = validator.validate_payload(candidate)
+
+                self.assertEqual(result.outcome, "DENY")
+                self.assertEqual(
+                    {(finding.code, finding.path) for finding in result.findings},
+                    {("TEMPORAL_ORDER_INVALID", expected_path)},
+                )
 
     def test_semantic_time_admission_matches_schema_format(self) -> None:
         lowercase = copy.deepcopy(self.valid["valid_authoritative_rescission"])

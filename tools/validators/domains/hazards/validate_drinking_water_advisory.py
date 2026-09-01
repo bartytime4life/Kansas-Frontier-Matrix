@@ -416,17 +416,18 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
     expires = _time(advisory.get("expires_at"))
     rescinded = _time(advisory.get("rescinded_at"))
     checked = _time(source.get("checked_at"))
-    temporal_order_invalid = any(
-        (
-            issued is not None and effective is not None and issued > effective,
-            effective is not None and checked is not None and effective > checked,
-            expires is not None and effective is not None and expires < effective,
-            rescinded is not None and effective is not None and rescinded < effective,
-            rescinded is not None and checked is not None and rescinded > checked,
-        )
+    temporal_order_checks = (
+        (issued is not None and effective is not None and issued > effective, "/advisory/issued_at"),
+        (effective is not None and checked is not None and effective > checked, "/advisory/effective_at"),
+        (expires is not None and effective is not None and expires < effective, "/advisory/expires_at"),
+        (rescinded is not None and effective is not None and rescinded < effective, "/advisory/rescinded_at"),
+        (rescinded is not None and checked is not None and rescinded > checked, "/advisory/rescinded_at"),
     )
-    if temporal_order_invalid:
-        findings.append(Finding("TEMPORAL_ORDER_INVALID", "/advisory"))
+    findings.extend(
+        Finding("TEMPORAL_ORDER_INVALID", path)
+        for invalid, path in temporal_order_checks
+        if invalid
+    )
 
     if not _canonical_strings(controls.get("evidence_refs")):
         findings.append(Finding("NONCANONICAL_EVIDENCE_REFS", "/controls/evidence_refs"))
