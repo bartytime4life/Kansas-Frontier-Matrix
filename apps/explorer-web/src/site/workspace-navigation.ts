@@ -68,13 +68,27 @@ export function sanitizePublicWorkspaceNavigationUrl(url: URL): URL {
  * Return one explicit public Knowledge-domain selection from a validated deep
  * link. Multi-domain context is intentionally not collapsed into an arbitrary
  * primary domain, and non-Knowledge or rejected context produces no selection.
- * The returned value is only the catalog-bounded public domain identifier.
+ *
+ * The current Knowledge panel consumes only one catalog-bounded domain ID. A
+ * richer public context must therefore wait for its own governed consumer seam
+ * rather than being partially applied while place, layer, camera, selection,
+ * temporal, comparison, or story state is silently ignored.
  */
 export function resolveSinglePublicKnowledgeDomainId(url: URL): string | null {
   const context = parsePublicWorkspaceContextUrl(url);
   if (
     context?.workspaceId !== "knowledge" ||
-    context.domainIds.length !== 1
+    context.domainIds.length !== 1 ||
+    context.placeIds.length !== 0 ||
+    context.layerIds.length !== 0 ||
+    context.camera !== null ||
+    context.selection !== null ||
+    context.time.validAt !== null ||
+    context.time.observedAt !== null ||
+    context.time.asOf !== null ||
+    context.time.releaseId !== null ||
+    context.compare.mode !== "NONE" ||
+    context.storyNodeId !== null
   ) {
     return null;
   }
