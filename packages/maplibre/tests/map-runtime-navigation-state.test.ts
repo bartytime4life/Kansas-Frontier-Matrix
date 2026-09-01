@@ -17,6 +17,16 @@ const KANSAS_CAMERA = Object.freeze({
   pitch: 0,
 });
 
+function capturePortError(callback: () => unknown): MapRuntimePortError {
+  try {
+    callback();
+  } catch (error) {
+    if (error instanceof MapRuntimePortError) return error;
+    throw error;
+  }
+  throw new Error("Expected MapRuntimePortError.");
+}
+
 describe("map runtime navigation state", () => {
   it("exposes one stable renderer-neutral profile", () => {
     expect(MAP_RUNTIME_CAMERA_STATE_PROFILE).toBe(
@@ -59,26 +69,22 @@ describe("map runtime navigation state", () => {
     `v1:${"1".repeat(MAX_MAP_RUNTIME_CAMERA_STATE_LENGTH)}`,
   ])("fails closed for non-canonical or invalid state %#", (value) => {
     expect(isMapRuntimeCameraState(value)).toBe(false);
-    expect(() => decodeMapRuntimeCameraState(value)).toThrowError(
-      expect.objectContaining<MapRuntimePortError>({
-        code: "MAP_RUNTIME_STATE_INVALID",
-      }),
+    expect(capturePortError(() => decodeMapRuntimeCameraState(value)).code).toBe(
+      "MAP_RUNTIME_STATE_INVALID",
     );
   });
 
   it("preserves direct camera validation for encode callers", () => {
-    expect(() =>
-      encodeMapRuntimeCameraState({
-        longitude: 181,
-        latitude: 38,
-        zoom: 5,
-        bearing: 0,
-        pitch: 0,
-      }),
-    ).toThrowError(
-      expect.objectContaining<MapRuntimePortError>({
-        code: "MAP_RUNTIME_CAMERA_INVALID",
-      }),
-    );
+    expect(
+      capturePortError(() =>
+        encodeMapRuntimeCameraState({
+          longitude: 181,
+          latitude: 38,
+          zoom: 5,
+          bearing: 0,
+          pitch: 0,
+        }),
+      ).code,
+    ).toBe("MAP_RUNTIME_CAMERA_INVALID");
   });
 });
