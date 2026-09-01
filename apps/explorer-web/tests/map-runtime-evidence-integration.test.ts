@@ -17,7 +17,10 @@ const runtimeSelection = Object.freeze({
   selectionId: "selection:flow-001",
   layerId: "layer:synthetic-streamflow",
   featureId: "feature:flow-001",
-  evidenceRefs: Object.freeze(["kfm:evidence:synthetic:flow-001"]),
+  evidenceRefs: Object.freeze([
+    "kfm:evidence:synthetic:flow-001",
+    "kfm:evidence:synthetic:flow-000",
+  ]),
 });
 
 describe("MapRuntimePort to Explorer evidence integration", () => {
@@ -27,7 +30,10 @@ describe("MapRuntimePort to Explorer evidence integration", () => {
       selection_id: "selection:flow-001",
       layer_id: "layer:synthetic-streamflow",
       feature_id: "feature:flow-001",
-      evidence_refs: ["kfm:evidence:synthetic:flow-001"],
+      evidence_refs: [
+        "kfm:evidence:synthetic:flow-001",
+        "kfm:evidence:synthetic:flow-000",
+      ],
     });
   });
 
