@@ -163,6 +163,19 @@ class OccurrenceEvidenceTests(unittest.TestCase):
             ),
             result.findings,
         )
+
+    def test_source_retrieval_cannot_precede_event_time(self) -> None:
+        candidate = _load("semantic_invalid/retrieval_precedes_event_time.json")
+
+        result = validator.validate_candidate(candidate)
+
+        self.assertIn(
+            validator.Finding(
+                "prov.retrieval_precedes_event_time",
+                "/provenance/retrieved_at",
+            ),
+            result.findings,
+        )
         self.assertIn(
             validator.Finding(
                 "schema.pass_gate_failed",

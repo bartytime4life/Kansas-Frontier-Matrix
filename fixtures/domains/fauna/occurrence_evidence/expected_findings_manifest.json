@@ -158,6 +158,20 @@
     {
       "expected_findings": [
         {
+          "code": "prov.retrieval_precedes_event_time",
+          "path": "/provenance/retrieved_at"
+        },
+        {
+          "code": "schema.pass_gate_failed",
+          "path": "/validation/validator_result"
+        }
+      ],
+      "expected_outcome": "ERROR",
+      "path": "semantic_invalid/retrieval_precedes_event_time.json"
+    },
+    {
+      "expected_findings": [
+        {
           "code": "rights.unresolved",
           "path": "/rights"
         },
