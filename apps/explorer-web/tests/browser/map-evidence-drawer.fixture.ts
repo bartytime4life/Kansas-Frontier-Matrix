@@ -1,5 +1,6 @@
 import withdrawnFixture from "../../../../fixtures/ui/focus_composed_claim_projection/valid/abstain-withdrawn.json";
 import answerFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/answer-corrected.json";
+import heldFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/abstain-source-drift-review.json";
 import revokedFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/abstain-revoked.json";
 import staleFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/abstain-stale.json";
 import supersededFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/abstain-superseded.json";
@@ -45,6 +46,28 @@ const cases: readonly MapEvidenceFixtureCase[] = Object.freeze([
       layer_id: "layer:synthetic-restricted",
       feature_id: "feature:restricted",
       evidence_refs: ["kfm:evidence:synthetic:restricted"],
+    },
+  },
+  {
+    caseId: "held",
+    label: "Select held evidence history",
+    selection: {
+      profile: MAP_FEATURE_SELECTION_PROFILE,
+      selection_id: "selection:held",
+      layer_id: "layer:synthetic-streamflow",
+      feature_id: "feature:held",
+      evidence_refs: ["kfm:evidence:synthetic:source-drift-held-001"],
+    },
+  },
+  {
+    caseId: "held-mismatch",
+    label: "Select feature with mismatched held evidence",
+    selection: {
+      profile: MAP_FEATURE_SELECTION_PROFILE,
+      selection_id: "selection:held-mismatch",
+      layer_id: "layer:synthetic-streamflow",
+      feature_id: "feature:held-mismatch",
+      evidence_refs: ["kfm:evidence:synthetic:other"],
     },
   },
   {
@@ -169,6 +192,9 @@ mountMapFeatureEvidenceFixture(root, cases, async (selection) => {
   switch (selection.selectionId) {
     case "selection:restricted":
       return denyFixture;
+    case "selection:held":
+    case "selection:held-mismatch":
+      return heldFixture;
     case "selection:stale":
     case "selection:stale-mismatch":
       return staleFixture;
