@@ -1,0 +1,37 @@
+{
+  "record_type": "fauna_public_safe_range_candidate",
+  "range_id": "fixture:fauna:range:invalid-exact-occurrence",
+  "fixture_only": true,
+  "reality_boundary": "synthetic-test-fixture",
+  "network_access": "forbidden",
+  "taxon_ref": "fixture:taxon:fauna:synthetic-alpha",
+  "source_descriptor_ref": "fixture:source:fauna:synthetic-alpha",
+  "source_role": "synthetic",
+  "range_class": "synthetic",
+  "claim_scope": "range-support-only",
+  "occurrence_truth": true,
+  "absence_truth": false,
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [0.0, 0.0],
+        [0.0, 1.0],
+        [1.0, 1.0],
+        [0.0, 0.0]
+      ]
+    ],
+    "precision_class": "exact",
+    "derivation_method": null
+  },
+  "sensitivity_state": "sensitive-unresolved",
+  "evidence_refs": [
+    "fixture:evidence:fauna:synthetic-range-invalid"
+  ],
+  "governance": {
+    "policy_state": "not-evaluated-fixture",
+    "review_state": "fixture-only",
+    "release_state": "not-released",
+    "promotion_state": "not-eligible"
+  }
+}

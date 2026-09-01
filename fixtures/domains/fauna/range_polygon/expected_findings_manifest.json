@@ -1,0 +1,38 @@
+{
+  "cases": [
+    {
+      "path": "invalid/exact_occurrence_claim.json",
+      "expected_findings": [
+        {
+          "code": "claim.occurrence_truth_forbidden",
+          "path": "/occurrence_truth"
+        },
+        {
+          "code": "geom.derivation_method_required",
+          "path": "/geometry/derivation_method"
+        },
+        {
+          "code": "geom.public_safe_precision_required",
+          "path": "/geometry/precision_class"
+        },
+        {
+          "code": "sens.public_safe_required",
+          "path": "/sensitivity_state"
+        }
+      ]
+    },
+    {
+      "path": "invalid/open_ring.json",
+      "expected_findings": [
+        {
+          "code": "geom.ring_not_closed",
+          "path": "/geometry/coordinates/0"
+        }
+      ]
+    },
+    {
+      "path": "valid/public_safe_synthetic_range.json",
+      "expected_findings": []
+    }
+  ]
+}
