@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  MAP_RUNTIME_TERRAIN_COORDINATOR_PROFILE,
   MAP_RUNTIME_TERRAIN_FALLBACK_PROFILE,
   MAP_RUNTIME_TERRAIN_TRANSITION_PROFILE,
+  createMapRuntimeTerrainTransitionCoordinator,
   planMapRuntimeTerrainTransition,
   resolveMapRuntimeTerrainState,
 } from "../src/map-runtime-terrain-fallback";
@@ -249,5 +251,69 @@ describe("renderer-neutral terrain transition planning", () => {
         demSourceReady: true,
       }),
     ).toThrow(expect.objectContaining({ code: "MAP_RUNTIME_STATE_INVALID" }));
+  });
+});
+
+describe("renderer-neutral terrain transition coordination", () => {
+  it("advances state only after the exact pending ticket is committed", () => {
+    const coordinator = createMapRuntimeTerrainTransitionCoordinator();
+    const ticket = coordinator.plan(terrainRequest, {
+      terrainSupported: true,
+      demSourceReady: true,
+    });
+
+    expect(ticket).toEqual({
+      profile: MAP_RUNTIME_TERRAIN_COORDINATOR_PROFILE,
+      revision: 1,
+      plan: {
+        profile: MAP_RUNTIME_TERRAIN_TRANSITION_PROFILE,
+        effect: "ENABLE_TERRAIN",
+        target: {
+          profile: MAP_RUNTIME_TERRAIN_FALLBACK_PROFILE,
+          mode: "TERRAIN",
+          exaggeration: 1.5,
+          reason: null,
+        },
+      },
+    });
+    expect(coordinator.getState()).toBeNull();
+    expect(coordinator.commit(ticket)).toEqual(ticket.plan.target);
+    expect(coordinator.getState()).toEqual(ticket.plan.target);
+    expect(Object.isFrozen(ticket)).toBe(true);
+  });
+
+  it("keeps current state when renderer application is rejected", () => {
+    const initial = resolveMapRuntimeTerrainState(terrainRequest, {
+      terrainSupported: true,
+      demSourceReady: true,
+    });
+    const coordinator = createMapRuntimeTerrainTransitionCoordinator(initial);
+    const ticket = coordinator.plan(terrainRequest, {
+      terrainSupported: false,
+      demSourceReady: true,
+    });
+
+    expect(ticket.plan.effect).toBe("DISABLE_TERRAIN");
+    expect(coordinator.reject(ticket)).toEqual(initial);
+    expect(coordinator.getState()).toEqual(initial);
+  });
+
+  it("rejects stale tickets after a newer capability sample supersedes them", () => {
+    const coordinator = createMapRuntimeTerrainTransitionCoordinator();
+    const first = coordinator.plan(terrainRequest, {
+      terrainSupported: true,
+      demSourceReady: false,
+    });
+    const latest = coordinator.plan(terrainRequest, {
+      terrainSupported: true,
+      demSourceReady: true,
+    });
+
+    expect(first.revision).toBe(1);
+    expect(latest.revision).toBe(2);
+    expect(() => coordinator.commit(first)).toThrow(
+      expect.objectContaining({ code: "MAP_RUNTIME_STATE_INVALID" }),
+    );
+    expect(coordinator.commit(latest).mode).toBe("TERRAIN");
   });
 });
