@@ -15,6 +15,7 @@ OBJECT_FAMILY_INVALID	$.object_family
 OBSERVED_TIME_INVALID	$.temporal_scope.observed_at
 PARAMETER_CODE_INVALID	$.measurement.parameter_code
 PRECISE_LOCATION_FIELD_FORBIDDEN	$.spatial_support.longitude
+PROVISIONAL_STATUS_MISSING	$.measurement.provisional_status
 QUALIFIER_INVALID	$.measurement.qualifier
 SOURCE_DESCRIPTOR_REF_MISSING	$.source_descriptor_ref
 SOURCE_ROLE_INVALID	$.source_role
