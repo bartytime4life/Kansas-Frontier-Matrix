@@ -309,7 +309,10 @@ test("evidence history outside the clicked selection fails closed without leakin
 test("evidence outside the clicked selection fails closed", async ({ page }) => {
   await page.goto(fixture);
   await page
-    .getByRole("button", { name: "Select feature with mismatched evidence" })
+    .getByRole("button", {
+      name: "Select feature with mismatched evidence",
+      exact: true,
+    })
     .click();
 
   await expect(page.getByRole("status")).toHaveText(
