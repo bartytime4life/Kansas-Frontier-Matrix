@@ -6,7 +6,7 @@ version: v0.1.0
 status: proposed; fixture-first; dry-run; local-only; non-authoritative
 owners: OWNER_TBD — join steward; participating domain stewards; evidence steward; sensitivity steward; validation steward
 created: 2026-08-09
-updated: 2026-08-09
+updated: 2026-09-01
 policy_label: repository-facing; cross-domain-join; sql-first; non-publisher; fail-closed
 owning_root: contracts/
 responsibility: Define a deterministic dry-run assessment for exact-key and synthetic spatial-temporal join candidates while preserving endpoint roles, evidence, sensitivity, and non-publisher effects.
@@ -22,6 +22,7 @@ related:
 notes:
   - "ALLOW means only that the helper may emit a reviewable join candidate. It never means truth, policy permission, release, or publication."
   - "The exact-key lane uses parameterized in-memory SQLite over synthetic fixture values and performs no database or lifecycle write."
+  - "Same-domain endpoints are outside this cross-lane profile and abstain with CROSS_DOMAIN_PAIR_REQUIRED; callers must route them to a domain-local validator."
 [/KFM_META_BLOCK_V2] -->
 
 # CrossLaneJoinAssessment
@@ -38,8 +39,8 @@ This profile joins those two sources without establishing a crosswalk registry o
 
 | Outcome | Report status | Meaning |
 |---|---|---|
-| `ALLOW` | `JOIN_CANDIDATE` | The declared predicate matched and generic evidence, role, sensitivity, living-person, and dependency checks produced no failure. A pair-specific validator and later governance gates remain mandatory. |
-| `ABSTAIN` | `NO_JOIN_CANDIDATE`, `EVIDENCE_REF_MISSING`, `SOURCE_ROLE_REVIEW_REQUIRED`, or `SENSITIVITY_REVIEW_REQUIRED` | The helper cannot safely emit an unrestricted candidate under the declared inputs. |
+| `ALLOW` | `JOIN_CANDIDATE` | The declared predicate matched across two distinct domain lanes and generic evidence, role, sensitivity, living-person, and dependency checks produced no failure. A pair-specific validator and later governance gates remain mandatory. |
+| `ABSTAIN` | `NO_JOIN_CANDIDATE`, `EVIDENCE_REF_MISSING`, `SOURCE_ROLE_REVIEW_REQUIRED`, or `SENSITIVITY_REVIEW_REQUIRED` | The helper cannot safely emit an unrestricted cross-lane candidate under the declared inputs. Same-domain requests are `NO_JOIN_CANDIDATE` with `CROSS_DOMAIN_PAIR_REQUIRED`. |
 | `DENY` | `LIVING_PERSON_JOIN_DENIED` or `GEOMETRY_PRECISION_BLOCKED` | A bounded privacy or sensitivity rule forbids candidate emission in this fixture profile. |
 | `ERROR` | `VALIDATOR_SYSTEM_ERROR` | A declared dependency is unavailable; no candidate assertion is made. |
 
@@ -58,8 +59,11 @@ The decision carries a stable six-rule vector:
 
 Each rule reports a non-negative failure count. Endpoint source roles remain separately visible, output role is always `CANDIDATE_RELATION`, and inherited sensitivity is the strictest endpoint posture.
 
+`JOIN_PREDICATE_MATCHED` is the effective cross-lane candidate predicate. It fails when the declared exact-key or spatial-temporal predicate does not match **or when both endpoints declare the same domain**, because a same-domain comparison is not a cross-lane candidate. Same-domain inputs return `ABSTAIN` / `NO_JOIN_CANDIDATE` with reason `CROSS_DOMAIN_PAIR_REQUIRED` and obligation `ROUTE_TO_DOMAIN_LOCAL_VALIDATOR`; the helper does not relabel domain-local work as a cross-domain relation.
+
 ## Join mechanics
 
+- Both endpoints must declare distinct `domain` values. Same-domain requests are routed away from this profile and never emit `JOIN_CANDIDATE`.
 - `EXACT_KEY` uses a parameterized one-row-per-side SQLite join in an in-memory database. Keys are values, never SQL fragments.
 - `SPATIAL_TEMPORAL` compares synthetic spatial-cell refs and timezone-aware intervals with a declared tolerance. It is not a geometry engine and proves no real-world spatial relationship.
 - Missing EvidenceRefs abstain. Modeled, aggregate, or candidate role conflicts abstain. Restricted generalized context abstains for sensitivity review. Restricted exact geometry and living-person joins deny.
