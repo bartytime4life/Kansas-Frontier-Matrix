@@ -5,4 +5,5 @@ export * from "./map-runtime-resize-coordinator";
 export * from "./map-runtime-camera-coordinator";
 export * from "./map-runtime-temporal-playback";
 export * from "./map-runtime-bounds-fit";
+export * from "./map-runtime-camera-interaction";
 export * from "./null-map-runtime";
