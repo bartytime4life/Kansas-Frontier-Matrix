@@ -57,6 +57,37 @@ class AtmosphereEvidenceBundleEntrypointTests(unittest.TestCase):
         self.assertEqual(result.stdout, "")
         self.assertIn("Unrecognized option: --fixture", result.stderr)
 
+    def test_help_preserves_standard_argparse_behavior(self) -> None:
+        for option in ("-h", "--help"):
+            with self.subTest(option=option):
+                result = self._run(option)
+
+                self.assertEqual(
+                    result.returncode,
+                    0,
+                    result.stdout + result.stderr,
+                )
+                self.assertIn("usage:", result.stdout)
+                self.assertIn("--fixtures", result.stdout)
+
+    def test_end_of_options_allows_a_dash_prefixed_file(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "-evidence-bundle.json"
+            path.write_text(
+                VALID_FIXTURE.read_text(encoding="utf-8"),
+                encoding="utf-8",
+            )
+            result = subprocess.run(
+                [sys.executable, str(VALIDATOR), "--", path.name],
+                cwd=directory,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn(f"OK {path.name}", result.stdout)
+
     def test_explicit_valid_file_passes_from_unrelated_working_directory(self) -> None:
         result = self._run(str(VALID_FIXTURE))
 
