@@ -179,7 +179,8 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
 
 def validate_document(candidate: Mapping[str, Any]) -> ValidationResult:
     findings = _schema_findings(candidate)
-    findings.extend(_semantic_findings(candidate))
+    if not findings:
+        findings.extend(_semantic_findings(candidate))
     ordered = tuple(sorted(set(findings)))
     if not ordered:
         return ValidationResult("PASS", ordered)
