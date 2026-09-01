@@ -34,6 +34,7 @@ VALIDATORS = {
     / "tools/validators/domains/people-dna-land/validate_consent_revocation_propagation_assessment.py",
     "historical-resolution": REPO_ROOT
     / "tools/validators/validate_historical_person_place_event_resolution.py",
+    "correction-notice": REPO_ROOT / "tools/validators/validate_correction_notice.py",
 }
 
 
