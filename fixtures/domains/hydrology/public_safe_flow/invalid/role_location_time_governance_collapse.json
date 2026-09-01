@@ -19,6 +19,7 @@
     "value": -1,
     "unit": "cfs forecast",
     "qualifier": "modeled",
+    "provisional_status": "",
     "no_data": 0
   },
   "governance": {
