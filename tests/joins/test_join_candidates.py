@@ -102,6 +102,35 @@ def test_same_domain_routing_precedes_cross_lane_privacy_and_sensitivity_disposi
     assert sensitivity_rules["SENSITIVITY_SAFE"] == 1
 
 
+def test_unresolved_domain_aliases_abstain_without_normalization() -> None:
+    aliases = MODULE._unresolved_domain_aliases()
+    assert aliases == {
+        "air": "atmosphere",
+        "settlement": "settlements-infrastructure",
+        "transport": "roads-rail-trade",
+    }
+
+    base = MODULE.fixture_cases()[0][0]
+    for alias, target in aliases.items():
+        candidate = copy.deepcopy(base)
+        candidate["endpoints"]["left"]["domain"] = alias
+        candidate["endpoints"]["right"]["domain"] = target
+        candidate = MODULE.seal(MODULE.derive_outputs(candidate))
+        assert MODULE.validate_document(candidate).coherent
+
+        decision = candidate["decision"]
+        assert decision["validator_outcome"] == "ABSTAIN"
+        assert decision["status"] == "NO_JOIN_CANDIDATE"
+        assert decision["matched"] is False
+        assert decision["reason_codes"] == ["DOMAIN_ALIAS_REVIEW_REQUIRED"]
+        assert "ROUTE_TO_DOMAIN_ALIAS_REVIEW" in decision["obligations"]
+        assert candidate["endpoints"]["left"]["domain"] == alias
+        assert candidate["endpoints"]["right"]["domain"] == target
+        assert not any(decision["effects"].values())
+        results = {item["rule_code"]: item["failure_count"] for item in decision["rule_results"]}
+        assert results["JOIN_PREDICATE_MATCHED"] == 1
+
+
 def test_rule_counts_roles_and_sensitivity_are_inspectable() -> None:
     candidate = MODULE.fixture_cases()[6][0]
     results = {item["rule_code"]: item["failure_count"] for item in candidate["decision"]["rule_results"]}
