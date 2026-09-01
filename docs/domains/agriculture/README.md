@@ -271,6 +271,7 @@ Before making broader Agriculture readiness claims, verify only the currently re
 - completeness of contract → schema → fixture → validator → test bindings for a chosen object family;
 - negative coverage for source-role anti-collapse and public-safe aggregation;
 - EvidenceBundle projection and current consumers;
+- hourly builder recurrence state and resume-gate proof obligations (see [`KFM_HOURLY_AGRICULTURE_DOMAIN_BUILDER_V1_0.md`](./KFM_HOURLY_AGRICULTURE_DOMAIN_BUILDER_V1_0.md));
 - Soil-Agriculture and Agriculture-Atmosphere/Hydrology compatibility boundaries;
 - correction, supersession, rollback, and release-manifest closure;
 - source-by-source rights, redistribution, quota, automation, and privacy terms;
