@@ -194,6 +194,26 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
             {("SCHEMA_INVALID", "/advisory/issued_at")},
         )
 
+    def test_malformed_unknown_offset_suffix_cannot_support_rescission(self) -> None:
+        candidate = copy.deepcopy(self.valid["valid_authoritative_rescission"])
+        candidate["advisory"]["rescinded_at"] = "nonsense-00:00"
+        candidate = validator.assign_identity(candidate)
+
+        result = validator.validate_payload(candidate)
+
+        self.assertEqual(result.outcome, "DENY")
+        self.assertEqual(
+            {(finding.code, finding.path) for finding in result.findings},
+            {
+                ("RESCISSION_REQUIRED", "/advisory"),
+                ("SCHEMA_INVALID", "/advisory/rescinded_at"),
+            },
+        )
+        self.assertNotIn(
+            "TIMESTAMP_UNKNOWN_OFFSET",
+            {finding.code for finding in result.findings},
+        )
+
     def test_service_area_is_not_administrative_context(self) -> None:
         for name in (
             "valid_issued",

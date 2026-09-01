@@ -240,16 +240,22 @@ def _present_ref(value: Any) -> bool:
     return isinstance(value, str) and bool(value)
 
 
+def _aware_datetime(value: Any) -> bool:
+    return (
+        isinstance(value, str)
+        and AWARE_DATETIME_OFFSET.search(value) is not None
+        and DATE_TIME_FORMAT_CHECKER.conforms(value, "date-time")
+    )
+
+
 def _unknown_offset(value: Any) -> bool:
-    return isinstance(value, str) and value.endswith("-00:00")
+    return _aware_datetime(value) and value.endswith("-00:00")
 
 
 def _time(value: Any) -> datetime | None:
     if (
-        not isinstance(value, str)
+        not _aware_datetime(value)
         or _unknown_offset(value)
-        or AWARE_DATETIME_OFFSET.search(value) is None
-        or not DATE_TIME_FORMAT_CHECKER.conforms(value, "date-time")
     ):
         return None
     normalized = value[:-1] + "+00:00" if value.endswith("Z") else value
