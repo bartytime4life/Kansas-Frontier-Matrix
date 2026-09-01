@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-validators-domains-habitat-readme
 title: tools/validators/domains/habitat README
 type: README
-version: v0.3
+version: v0.4
 status: draft
 owner: TODO-tooling-qa-owner-plus-habitat-steward-plus-ecology-steward-plus-geoprivacy-reviewer-plus-policy-steward-plus-evidence-steward
 created: 2026-07-07
-updated: 2026-08-28
+updated: 2026-09-01
 policy_label: repository-facing; per-domain-validator-index; habitat; ecology; suitability; connectivity; geoprivacy; fail-closed; non-authoritative
 owning_root: tools/
 responsibility: per-domain Habitat validator index for habitat patches, classes, suitability, connectivity, corridors, restoration opportunity, stewardship zones, land-cover/ecoregion inputs, source-role separation, sensitive joins, geoprivacy, evidence, policy, release, correction, rollback, and public-surface denial checks while deferring Habitat meaning, policy decisions, proof records, and release authority to their owning roots
@@ -34,7 +34,7 @@ related:
   - ../../../../data/receipts/
   - ../../../../release/
 notes:
-  - "v0.3 closes the post-workflow inventory gap by recording the dedicated critical-habitat source-role workflow without changing validator behavior or maturity."
+  - "v0.4 records the bounded Habitat EvidenceBundle domain entrypoint, its deterministic tests, and focused workflow coverage without granting evidence, release, or publication authority."\n  - "v0.3 closed the post-workflow inventory gap by recording the dedicated critical-habitat source-role workflow without changing validator behavior or maturity."
   - "No broad tools/validators/habitat/README.md was found during this task, so this path currently serves as the inspected per-domain Habitat validator index."
   - "Habitat owns landscape, patches, suitability, connectivity, restoration opportunity, and stewardship-zone products. It does not own Fauna occurrence truth, Flora taxon/specimen truth, Hydrology water truth, Soil substrate truth, or regulatory hazard truth."
   - "Habitat sensitivity is often join-induced. Outputs that reveal sensitive Fauna, Flora, archaeology, stewardship, private-land, infrastructure, or other restricted context must fail closed unless public-safe geoprivacy, review, policy, evidence, release, correction, and rollback support exists."
@@ -80,9 +80,9 @@ The answer should be a navigable validator index and deterministic validation ou
 | Habitat domain doctrine | **CONFIRMED in repo evidence / draft** | `docs/domains/habitat/README.md` defines Habitat as landscape/suitability/connectivity lane, not species-record ownership, with source-role anti-collapse and lifecycle boundaries. |
 | Over-precise geometry quarantine | **CONFIRMED in repo evidence / draft** | `data/quarantine/habitat/over_precise_geometry/README.md` defines fail-closed hold posture for Habitat geometry that is too precise for sensitivity, source-role, evidence, review, release, or public-surface posture. |
 | Subdirectories | **NONE** | Current validator implementations are direct children of this directory. |
-| Substantive executables | **FOUR CONFIRMED** | Cover-class crosswalk, land-cover materiality, model-run receipt, and critical-habitat source-role validators are implemented with focused tests. |
-| Placeholder executables | **SIX CONFIRMED** | Catalog matrix, EvidenceBundle, HabitatPatch, schema, source descriptor, and suitability-model files remain inert placeholders and must not be cited as enforcement. |
-| Focused CI | **CONFIRMED / bounded** | Four focused workflows cover crosswalk, materiality, model-run receipt, and critical-habitat source-role validation; `domain-habitat` also runs the materiality slice and explicit proof/release holds. |
+| Substantive executables | **FIVE CONFIRMED** | Cover-class crosswalk, EvidenceBundle projection, land-cover materiality, model-run receipt, and critical-habitat source-role validators are implemented with focused tests. |
+| Placeholder executables | **FIVE CONFIRMED** | Catalog matrix, HabitatPatch, schema, source descriptor, and suitability-model files remain inert placeholders and must not be cited as enforcement. |
+| Focused CI | **CONFIRMED / bounded** | Five focused workflows cover crosswalk, EvidenceBundle convergence, materiality, model-run receipt, and critical-habitat source-role validation; `domain-habitat` also runs the materiality slice and explicit proof/release holds. |
 
 [Back to top](#top)
 
@@ -90,18 +90,18 @@ The answer should be a navigable validator index and deterministic validation ou
 
 ## Executable inventory
 
-Current main establishes four substantive direct-child validators:
+The reviewed task branch establishes five substantive direct-child validators:
 
 | Validator | Bounded responsibility | Test / fixture evidence | Focused workflow |
 |---|---|---|---|
-| `validate_cover_class_crosswalk_profile.py` | Fixture-only ontology version, directionality, coverage, and lossiness checks. | `tests/domains/habitat/land_cover/crosswalk/test_cover_class_crosswalk_profile.py`; `fixtures/domains/habitat/land_cover/crosswalk/profile_cases.json` | `cover-class-crosswalk-profile.yml` |
+| `validate_cover_class_crosswalk_profile.py` | Fixture-only ontology version, directionality, coverage, and lossiness checks. | `tests/domains/habitat/land_cover/crosswalk/test_cover_class_crosswalk_profile.py`; `fixtures/domains/habitat/land_cover/crosswalk/profile_cases.json` | `cover-class-crosswalk-profile.yml` |\n| `validate_evidence_bundle.py` | Bounded domain-side projection entrypoint delegating structural validation to the shared JSON Schema runner. | `tests/validators/domains/habitat/test_domain_evidence_bundle_validator_entrypoint.py`; shared `fixtures/contracts/v1/evidence/evidence_bundle/` profile | `habitat-evidence-bundle-convergence.yml` |
 | `validate_land_cover_materiality.py` | Deterministic material-change classification for the inactive land-cover profile. | `tests/validators/domains/habitat/test_land_cover_materiality.py`; `fixtures/domains/habitat/land_cover/materiality/` | `habitat-land-cover-materiality.yml`; also exercised by `domain-habitat.yml` |
 | `validate_model_run_receipt.py` | Fixture-only model-run receipt shape, identity, temporal, digest, uncertainty, and authority-boundary checks. | `tests/validators/domains/habitat/test_validate_model_run_receipt.py`; `fixtures/contracts/v1/domains/habitat/model_run_receipt/` | `habitat-model-run-receipt.yml` |
 | `validate_critical_habitat_source_role.py` | Synthetic source-role anti-collapse for regulatory critical habitat and modeled habitat, including species-presence denial. | `tests/domains/habitat/test_critical_habitat_source_role.py` | `habitat-critical-habitat-source-role.yml` |
 
-The following direct-child files remain placeholders: `validate_catalog_matrix.py`, `validate_evidence_bundle.py`, `validate_habitat_patch.py`, `validate_schema.py`, `validate_source_descriptor.py`, and `validate_suitability_model.py`. Their existence proves no validation behavior.
+The following direct-child files remain placeholders: `validate_catalog_matrix.py`, `validate_habitat_patch.py`, `validate_schema.py`, `validate_source_descriptor.py`, and `validate_suitability_model.py`. Their existence proves no validation behavior.
 
-Habitat EvidenceBundle projection validation is implemented at the schema-declared top-level entry point `tools/validators/validate_habitat_evidence_bundle_projection.py`, with focused workflow `habitat-evidence-bundle-convergence.yml`. The inert same-named domain placeholder does not replace or mirror that authority.
+Habitat EvidenceBundle projection validation remains declared at the top-level entry point `tools/validators/validate_habitat_evidence_bundle_projection.py`. The domain-side `validate_evidence_bundle.py` is a bounded delegate to the same adopted projection schema, shared JSON Schema runner, and synthetic fixture family; it adds no independent evidence semantics or authority. Focused workflow `habitat-evidence-bundle-convergence.yml` exercises both paths.
 
 No child directory is established below this index. Add one only when a distinct validator specialty has accepted contracts, schemas, policy posture, fixtures, receipts, and report semantics; do not create a parallel authority home for an already-established direct-child or schema-declared entry point.
 
@@ -129,7 +129,7 @@ No child directory is established below this index. Add one only when a distinct
 Safe interpretation:
 
 - **CONFIRMED:** this README exists.
-- **CONFIRMED:** the four substantive direct-child validators, their cited focused tests/fixtures, and the cited workflow files exist on the reviewed repository state.
+- **CONFIRMED:** the five substantive direct-child validators, their cited focused tests/fixtures, and the cited workflow files exist on the reviewed task branch.
 - **BOUNDED:** passing fixtures prove only the declared validator behavior; they do not establish source truth, rights, sensitivity clearance, evidence closure, policy approval, human review, lifecycle promotion, release, deployment, or publication.
 - **NEEDS VERIFICATION:** placeholder behavior, policy bundle execution, live source descriptors, production report destinations, operational receipts, runtime behavior, and any uncited CI coupling.
 - **DENY:** using this folder as habitat doctrine, species-record authority, regulatory-designation authority, contract home, schema home, policy home, source registry, evidence store, lifecycle data store, receipt store, release record store, public map product surface, or domain-meaning authority.
@@ -235,7 +235,7 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 Repository-confirmed focused commands:
 
 ```bash
-python -m pytest -q tests/validators/domains/habitat/test_land_cover_materiality.py
+python -m unittest -q \\\n  tests.validators.domains.habitat.test_evidence_bundle_schema_convergence \\\n  tests.validators.domains.habitat.test_domain_evidence_bundle_validator_entrypoint\npython tools/validators/domains/habitat/validate_evidence_bundle.py --fixtures\n\npython -m pytest -q tests/validators/domains/habitat/test_land_cover_materiality.py
 python tools/validators/domains/habitat/validate_land_cover_materiality.py --fixtures
 ```
 
