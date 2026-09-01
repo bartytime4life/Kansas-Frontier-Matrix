@@ -46,7 +46,6 @@ RULE_ORDER = (
     "SOURCE_ROLES_COMPATIBLE",
 )
 SENSITIVITY_RANK = {"PUBLIC_SAFE": 0, "INTERNAL": 1, "RESTRICTED": 2, "PROHIBITED": 3}
-RISK_ROLES = {"MODELED", "AGGREGATE", "CANDIDATE", "SYNTHETIC"}
 
 
 @dataclass(frozen=True, order=True)
@@ -154,8 +153,13 @@ def _strictest_sensitivity(left: Mapping[str, Any], right: Mapping[str, Any]) ->
 
 
 def _source_role_conflict(left: Mapping[str, Any], right: Mapping[str, Any]) -> bool:
-    roles = {left.get("source_role"), right.get("source_role")}
-    return len(roles) > 1 and bool(roles & RISK_ROLES)
+    """Require pair/domain authority for every unequal role vector.
+
+    KFM has no accepted repository-wide crosswalk that can declare two distinct
+    source-role classes compatible at this generic seam. Preserve equal roles
+    for candidate proof and route every unequal pair to source-role review.
+    """
+    return left.get("source_role") != right.get("source_role")
 
 
 def derive_decision(candidate: Mapping[str, Any]) -> dict[str, Any]:
