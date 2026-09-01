@@ -145,6 +145,53 @@ test("withdrawn evidence outside the clicked selection fails closed without leak
   await expect(drawer.getByRole("link")).toHaveCount(0);
 });
 
+test("revoked evidence remains visible only as non-current history", async ({
+  page,
+}) => {
+  await page.goto(fixture);
+  await page
+    .getByRole("button", { name: "Select revoked evidence history" })
+    .click();
+
+  await expect(page.getByRole("status")).toHaveText(
+    "ABSTAIN / REVOKED_EVIDENCE",
+  );
+  const drawer = page.locator('aside[data-component="evidence-drawer"]');
+  await expect(drawer).toContainText(
+    "The available evidence was revoked and is not current claim support.",
+  );
+  await expect(drawer).toContainText("Revoked evidence");
+  await expect(drawer).toContainText("kfm:evidence:synthetic:revoked-001");
+  await expect(drawer).not.toContainText(
+    "REVOKED_SUMMARY_MUST_NOT_RENDER_AS_CURRENT",
+  );
+  await expect(drawer.getByRole("link")).toHaveCount(0);
+});
+
+test("revoked evidence outside the clicked selection fails closed without leaking", async ({
+  page,
+}) => {
+  await page.goto(fixture);
+  await page
+    .getByRole("button", {
+      name: "Select feature with mismatched revoked evidence",
+    })
+    .click();
+
+  await expect(page.getByRole("status")).toHaveText(
+    "ERROR / DRAWER_EVIDENCE_OUTSIDE_SELECTION",
+  );
+  const drawer = page.locator('aside[data-component="evidence-drawer"]');
+  await expect(drawer).toContainText("ERROR / UPSTREAM_ERROR");
+  await expect(drawer).not.toContainText(
+    "kfm:evidence:synthetic:revoked-001",
+  );
+  await expect(drawer).not.toContainText(
+    "REVOKED_SUMMARY_MUST_NOT_RENDER_AS_CURRENT",
+  );
+  await expect(drawer.getByRole("link")).toHaveCount(0);
+});
+
 test("superseded evidence remains visible only as audit history", async ({ page }) => {
   await page.goto(fixture);
   await page
