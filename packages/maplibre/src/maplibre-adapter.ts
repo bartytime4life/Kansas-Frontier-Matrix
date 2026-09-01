@@ -227,12 +227,27 @@ export class MapLibreAdapter implements MapRuntimePort {
   setCamera(camera: MapRuntimeCamera): MapRuntimeSnapshot {
     this.assertReady();
     const frozen = freezeMapRuntimeCamera(camera);
-    this.map!.jumpTo({
-      center: [frozen.longitude, frozen.latitude],
-      zoom: frozen.zoom,
-      bearing: frozen.bearing,
-      pitch: frozen.pitch,
-    });
+    const map = this.map!;
+    try {
+      map.jumpTo({
+        center: [frozen.longitude, frozen.latitude],
+        zoom: frozen.zoom,
+        bearing: frozen.bearing,
+        pitch: frozen.pitch,
+      });
+    } catch {
+      this.failRuntime();
+      throw new MapRuntimePortError(
+        "MAP_RUNTIME_NAVIGATION_FAILED",
+        "Map runtime navigation failed.",
+      );
+    }
+    if (this.state !== "READY" || this.map !== map) {
+      throw new MapRuntimePortError(
+        "MAP_RUNTIME_NAVIGATION_FAILED",
+        "Map runtime navigation failed.",
+      );
+    }
     this.camera = frozen;
     return this.notifySnapshot();
   }
@@ -318,10 +333,17 @@ export class MapLibreAdapter implements MapRuntimePort {
   }
 
   private failRuntime(): void {
+    if (this.state === "DISPOSED") return;
+    this.clearInitializationDeadline();
+    this.clearRenderer();
     this.selection = null;
     this.state = "ERROR";
     this.reason = MAP_RUNTIME_TRUST_STATE_REASONS.ERROR;
-    this.notifySnapshot();
+    try {
+      this.notifySnapshot();
+    } catch {
+      // Snapshot listeners cannot leak renderer failures or prevent teardown.
+    }
   }
 
   private clearInitializationDeadline(): void {
