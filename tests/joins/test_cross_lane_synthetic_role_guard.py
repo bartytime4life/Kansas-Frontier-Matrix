@@ -50,26 +50,40 @@ def _rules(decision: dict[str, object]) -> dict[str, int]:
     }
 
 
-def test_synthetic_pair_remains_a_fixture_only_join_candidate() -> None:
-    decision = MODULE.derive_decision(_candidate("SYNTHETIC", "SYNTHETIC"))
+def _assert_role_review(left_role: str, right_role: str) -> None:
+    decision = MODULE.derive_decision(_candidate(left_role, right_role))
 
-    assert decision["validator_outcome"] == "ALLOW"
-    assert decision["status"] == "JOIN_CANDIDATE"
-    assert decision["reason_codes"] == ["JOIN_PREDICATE_SATISFIED"]
-    assert _rules(decision)["SOURCE_ROLES_COMPATIBLE"] == 0
+    assert decision["validator_outcome"] == "ABSTAIN"
+    assert decision["status"] == "SOURCE_ROLE_REVIEW_REQUIRED"
+    assert decision["reason_codes"] == ["SOURCE_ROLE_CONFLICT"]
+    assert "RESOLVE_SOURCE_ROLE_COMPATIBILITY" in decision["obligations"]
+    assert decision["source_roles"] == {
+        "left": left_role,
+        "right": right_role,
+        "output_role": "CANDIDATE_RELATION",
+    }
+    assert _rules(decision)["SOURCE_ROLES_COMPATIBLE"] == 1
+
+
+def test_equal_roles_remain_fixture_only_join_candidates() -> None:
+    for role in ("SYNTHETIC", "OBSERVED", "REGULATORY", "ADMINISTRATIVE"):
+        decision = MODULE.derive_decision(_candidate(role, role))
+
+        assert decision["validator_outcome"] == "ALLOW"
+        assert decision["status"] == "JOIN_CANDIDATE"
+        assert decision["reason_codes"] == ["JOIN_PREDICATE_SATISFIED"]
+        assert _rules(decision)["SOURCE_ROLES_COMPATIBLE"] == 0
 
 
 def test_mixed_synthetic_and_non_synthetic_roles_abstain_without_role_laundering() -> None:
     for left_role, right_role in (("SYNTHETIC", "OBSERVED"), ("REGULATORY", "SYNTHETIC")):
-        decision = MODULE.derive_decision(_candidate(left_role, right_role))
+        _assert_role_review(left_role, right_role)
 
-        assert decision["validator_outcome"] == "ABSTAIN"
-        assert decision["status"] == "SOURCE_ROLE_REVIEW_REQUIRED"
-        assert decision["reason_codes"] == ["SOURCE_ROLE_CONFLICT"]
-        assert "RESOLVE_SOURCE_ROLE_COMPATIBILITY" in decision["obligations"]
-        assert decision["source_roles"] == {
-            "left": left_role,
-            "right": right_role,
-            "output_role": "CANDIDATE_RELATION",
-        }
-        assert _rules(decision)["SOURCE_ROLES_COMPATIBLE"] == 1
+
+def test_distinct_non_synthetic_roles_require_pair_owned_compatibility_review() -> None:
+    for left_role, right_role in (
+        ("OBSERVED", "REGULATORY"),
+        ("REGULATORY", "ADMINISTRATIVE"),
+        ("ADMINISTRATIVE", "OBSERVED"),
+    ):
+        _assert_role_review(left_role, right_role)
