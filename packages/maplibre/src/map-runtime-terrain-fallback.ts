@@ -60,6 +60,10 @@ export type MapRuntimeTerrainTransitionTicket = Readonly<{
   plan: MapRuntimeTerrainTransitionPlan;
 }>;
 
+export type MapRuntimeTerrainTransitionExecutor = (
+  plan: MapRuntimeTerrainTransitionPlan,
+) => void | Promise<void>;
+
 export type MapRuntimeTerrainTransitionCoordinator = Readonly<{
   getState(): MapRuntimeTerrainState | null;
   plan(
@@ -68,6 +72,10 @@ export type MapRuntimeTerrainTransitionCoordinator = Readonly<{
   ): MapRuntimeTerrainTransitionTicket;
   commit(ticket: MapRuntimeTerrainTransitionTicket): MapRuntimeTerrainState;
   reject(ticket: MapRuntimeTerrainTransitionTicket): MapRuntimeTerrainState | null;
+  execute(
+    ticket: MapRuntimeTerrainTransitionTicket,
+    executor: MapRuntimeTerrainTransitionExecutor,
+  ): Promise<MapRuntimeTerrainState>;
 }>;
 
 const REQUEST_FIELDS = new Set([
@@ -306,6 +314,32 @@ export function createMapRuntimeTerrainTransitionCoordinator(
       ticket: MapRuntimeTerrainTransitionTicket,
     ): MapRuntimeTerrainState | null {
       requirePending(ticket);
+      pending = null;
+      return current;
+    },
+
+    async execute(
+      ticket: MapRuntimeTerrainTransitionTicket,
+      executor: MapRuntimeTerrainTransitionExecutor,
+    ): Promise<MapRuntimeTerrainState> {
+      const accepted = requirePending(ticket);
+      if (typeof executor !== "function") {
+        invalid("Map runtime terrain transition executor is invalid.");
+      }
+      try {
+        await executor(accepted.plan);
+      } catch {
+        if (pending !== accepted) {
+          invalid("Map runtime terrain transition ticket is stale or invalid.");
+        }
+        pending = null;
+        throw new MapRuntimePortError(
+          "MAP_RUNTIME_TERRAIN_TRANSITION_FAILED",
+          "Map runtime terrain transition execution failed.",
+        );
+      }
+      const completed = requirePending(accepted);
+      current = completed.plan.target;
       pending = null;
       return current;
     },
