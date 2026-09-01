@@ -53,6 +53,7 @@ ALLOWED_MEASUREMENT_FIELDS = frozenset(
         "value",
         "unit",
         "unit_transform_ref",
+        "method_ref",
         "qualifier",
         "provisional_status",
         "no_data",
@@ -89,6 +90,7 @@ FORBIDDEN_LOCATION_ALIASES = frozenset(
 FIXTURE_SOURCE_PREFIX = "fixture://sources/hydrology/"
 FIXTURE_EVIDENCE_PREFIX = "fixture://evidence/hydrology/"
 FIXTURE_GAUGE_PREFIX = "fixture://hydrology/gauge/generalized/"
+FIXTURE_METHOD_PREFIX = "fixture://hydrology/method/"
 EXPECTED_GOVERNANCE = {
     "rights_state": "fixture_only",
     "sensitivity_state": "public_safe_fixture",
@@ -255,6 +257,11 @@ def validate_candidate(candidate: object) -> list[Finding]:
                 "UNIT_TRANSFORM_REF_UNSUPPORTED",
                 "$.measurement.unit_transform_ref",
             )
+        method_ref = measurement.get("method_ref")
+        if not is_nonempty_string(method_ref):
+            add_finding(findings, "METHOD_REF_MISSING", "$.measurement.method_ref")
+        elif not method_ref.startswith(FIXTURE_METHOD_PREFIX):
+            add_finding(findings, "METHOD_REF_NOT_FIXTURE", "$.measurement.method_ref")
         if measurement.get("qualifier") != "synthetic":
             add_finding(findings, "QUALIFIER_INVALID", "$.measurement.qualifier")
         provisional_status = measurement.get("provisional_status")
