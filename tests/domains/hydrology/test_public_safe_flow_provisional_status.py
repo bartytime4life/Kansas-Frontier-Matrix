@@ -14,6 +14,7 @@ if str(REPO_ROOT) not in __import__("sys").path:
     __import__("sys").path.insert(0, str(REPO_ROOT))
 
 from tools.validators.domains.hydrology.validate_public_safe_flow_fixture import (  # noqa: E402
+    ALLOWED_PROVISIONAL_STATUSES,
     Finding,
     validate_candidate,
 )
@@ -61,6 +62,21 @@ class HydrologyPublicSafeProvisionalStatusTests(unittest.TestCase):
             findings,
         )
         self.assertNotIn(Finding("QUALIFIER_INVALID", "$.measurement.qualifier"), findings)
+
+    def test_provisional_status_uses_bounded_fixture_vocabulary(self) -> None:
+        for status in ALLOWED_PROVISIONAL_STATUSES:
+            candidate = copy.deepcopy(_candidate())
+            candidate["measurement"]["provisional_status"] = status  # type: ignore[index]
+            self.assertEqual(validate_candidate(candidate), [], status)
+
+        expected = Finding(
+            "PROVISIONAL_STATUS_INVALID",
+            "$.measurement.provisional_status",
+        )
+        for status in ("unknown", "approved/final", "PROVISIONAL", "ice-affected"):
+            candidate = copy.deepcopy(_candidate())
+            candidate["measurement"]["provisional_status"] = status  # type: ignore[index]
+            self.assertIn(expected, validate_candidate(candidate), status)
 
 
 if __name__ == "__main__":
