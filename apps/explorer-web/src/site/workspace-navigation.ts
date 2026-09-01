@@ -88,15 +88,18 @@ export function resolveSinglePublicKnowledgeDomainId(url: URL): string | null {
  * The public URL parser already rejects selections carrying evidence refs. This
  * resolver adds an exact identity allowlist so a caller cannot strip evidence
  * refs from a supported/restricted fixture and cause Explorer to resolve richer
- * evidence than the URL is allowed to carry. The only admitted case is the
- * existing evidence-free synthetic selection, whose governed bridge resolves to
- * ABSTAIN / MISSING_EVIDENCE without invoking transport or source access.
+ * evidence than the URL is allowed to carry. The admitted fixture is also
+ * domain-neutral: domain-scoped links must use a governed domain integration
+ * seam rather than piggybacking on this synthetic Evidence Drawer exercise.
+ * This is especially important for People/DNA/Land and Archaeology, where
+ * domain-scoped spatial/evidence behavior must remain fail closed.
  */
 export function resolvePublicEvidenceFreeMapCaseId(url: URL): "missing" | null {
   const context = parsePublicWorkspaceContextUrl(url);
   const selection = context?.selection;
   if (
     context?.workspaceId !== "explore" ||
+    context.domainIds.length !== 0 ||
     selection === null ||
     selection.evidenceRefs.length !== 0
   ) {
