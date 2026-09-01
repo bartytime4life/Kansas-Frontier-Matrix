@@ -20,6 +20,7 @@
     "value": 125.0,
     "unit": "ft3/s",
     "qualifier": "synthetic",
+    "provisional_status": "provisional",
     "no_data": false
   },
   "governance": {
