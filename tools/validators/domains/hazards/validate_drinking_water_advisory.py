@@ -11,6 +11,7 @@ import argparse
 import copy
 import json
 import math
+import re
 import sys
 from dataclasses import dataclass
 from datetime import datetime
@@ -40,6 +41,8 @@ CASES = ROOT / "fixtures/domains/hazards/drinking_water_advisory/cases.json"
 COMMON_CONTRACT = ROOT / "contracts/common/advisory_event_envelope.md"
 MAX_FILE_BYTES = 1_048_576
 MAX_SCHEMA_FINDINGS = 100
+DATE_TIME_FORMAT_CHECKER = FormatChecker()
+AWARE_DATETIME_OFFSET = re.compile(r"(?:Z|[+-][0-9]{2}:[0-9]{2})$")
 SCOPE = "drinking-water-advisory-fixture-only-v1"
 CONFIRMED_STATUSES = {
     "ISSUED",
@@ -242,10 +245,16 @@ def _unknown_offset(value: Any) -> bool:
 
 
 def _time(value: Any) -> datetime | None:
-    if not isinstance(value, str) or _unknown_offset(value):
+    if (
+        not isinstance(value, str)
+        or _unknown_offset(value)
+        or AWARE_DATETIME_OFFSET.search(value) is None
+        or not DATE_TIME_FORMAT_CHECKER.conforms(value, "date-time")
+    ):
         return None
+    normalized = value[:-1] + "+00:00" if value.endswith("Z") else value
     try:
-        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        parsed = datetime.fromisoformat(normalized)
     except ValueError:
         return None
     return parsed if parsed.tzinfo is not None else None
@@ -403,9 +412,6 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
     checked = _time(source.get("checked_at"))
     temporal_order_invalid = any(
         (
-            issued is None and "/advisory/issued_at" not in unknown_offset_paths,
-            effective is None and "/advisory/effective_at" not in unknown_offset_paths,
-            checked is None and "/source_surface/checked_at" not in unknown_offset_paths,
             issued is not None and effective is not None and issued > effective,
             effective is not None and checked is not None and effective > checked,
             expires is not None and effective is not None and expires < effective,

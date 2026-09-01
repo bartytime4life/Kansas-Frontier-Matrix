@@ -8,6 +8,9 @@ credential, source locator, restricted payload, or public guidance.
 The semantic validator also rejects RFC 3339 `-00:00` unknown-offset markers
 for source-check, issue, effective, expiry, and rescission timestamps. Such
 values are never treated as exact UTC evidence for derived temporal findings.
+Semantic ordering accepts the same RFC 3339 date-time grammar and aware-offset
+suffix as the schema, including lowercase `t`, and does not derive ordering
+claims from schema-invalid timestamp syntax.
 
 `PASS` proves local profile coherence only. It does not establish a current
 advisory, safe drinking water, source admission, evidence closure, policy or

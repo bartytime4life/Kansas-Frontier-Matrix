@@ -171,6 +171,29 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
             },
         )
 
+    def test_semantic_time_admission_matches_schema_format(self) -> None:
+        lowercase = copy.deepcopy(self.valid["valid_authoritative_rescission"])
+        for section, field in (
+            ("source_surface", "checked_at"),
+            ("advisory", "issued_at"),
+            ("advisory", "effective_at"),
+            ("advisory", "expires_at"),
+            ("advisory", "rescinded_at"),
+        ):
+            lowercase[section][field] = lowercase[section][field].replace("T", "t")
+        lowercase = validator.assign_identity(lowercase)
+        self.assertTrue(validator.validate_payload(lowercase).ok)
+
+        malformed = copy.deepcopy(self.valid["valid_authoritative_rescission"])
+        malformed["advisory"]["issued_at"] = "2026-08-10 13:30:00+00:00"
+        malformed = validator.assign_identity(malformed)
+        result = validator.validate_payload(malformed)
+        self.assertEqual(result.outcome, "DENY")
+        self.assertEqual(
+            {(finding.code, finding.path) for finding in result.findings},
+            {("SCHEMA_INVALID", "/advisory/issued_at")},
+        )
+
     def test_service_area_is_not_administrative_context(self) -> None:
         for name in (
             "valid_issued",
