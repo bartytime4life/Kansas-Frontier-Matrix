@@ -17,15 +17,17 @@ related:
   - ../../tools/joins/join_candidates.py
   - ../../fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json
   - ../../tests/joins/test_join_candidates.py
+  - ../../tests/joins/test_cross_lane_synthetic_role_guard.py
   - ../../tests/joins/test_cross_lane_temporal_boundary_guard.py
   - ../../tests/joins/README.md
+  - ../../docs/architecture/cross-domain/source-role-anti-collapse.md
   - ../../docs/intake/exploratory/full-atlas-crosswalk-validator-source-map.md
   - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
 notes:
   - "ALLOW means only that the helper may emit a reviewable join candidate. It never means truth, policy permission, release, or publication."
   - "The exact-key lane uses parameterized in-memory SQLite over synthetic fixture values and performs no database or lifecycle write."
   - "Same-domain endpoints are outside this cross-lane profile and abstain with CROSS_DOMAIN_PAIR_REQUIRED; callers must route them to a domain-local validator."
-  - "A SYNTHETIC endpoint may pair with another SYNTHETIC endpoint for fixture proof, but mixing SYNTHETIC with a non-synthetic source role requires explicit source-role review."
+  - "The generic seam does not own a repository-wide source-role crosswalk. Equal roles may continue to candidate proof, but any unequal role vector abstains for pair/domain-owned compatibility review."
   - "Zero-tolerance SPATIAL_TEMPORAL intervals that only touch at one boundary abstain; this profile does not invent repository-wide interval-boundary inclusivity."
 [/KFM_META_BLOCK_V2] -->
 
@@ -44,7 +46,7 @@ This profile joins those two sources without establishing a crosswalk registry o
 | Outcome | Report status | Meaning |
 |---|---|---|
 | `ALLOW` | `JOIN_CANDIDATE` | The declared predicate matched across two distinct domain lanes and generic evidence, role, sensitivity, living-person, and dependency checks produced no failure. A pair-specific validator and later governance gates remain mandatory. |
-| `ABSTAIN` | `NO_JOIN_CANDIDATE`, `EVIDENCE_REF_MISSING`, `SOURCE_ROLE_REVIEW_REQUIRED`, or `SENSITIVITY_REVIEW_REQUIRED` | The helper cannot safely emit an unrestricted cross-lane candidate under the declared inputs. Same-domain requests are `NO_JOIN_CANDIDATE` with `CROSS_DOMAIN_PAIR_REQUIRED`; zero-tolerance temporal boundary-touch requests are `NO_JOIN_CANDIDATE` with `TEMPORAL_BOUNDARY_AMBIGUOUS`. |
+| `ABSTAIN` | `NO_JOIN_CANDIDATE`, `EVIDENCE_REF_MISSING`, `SOURCE_ROLE_REVIEW_REQUIRED`, or `SENSITIVITY_REVIEW_REQUIRED` | The helper cannot safely emit an unrestricted cross-lane candidate under the declared inputs. Same-domain requests are `NO_JOIN_CANDIDATE` with `CROSS_DOMAIN_PAIR_REQUIRED`; zero-tolerance temporal boundary-touch requests are `NO_JOIN_CANDIDATE` with `TEMPORAL_BOUNDARY_AMBIGUOUS`; any unequal source-role vector is `SOURCE_ROLE_REVIEW_REQUIRED` until pair/domain authority resolves compatibility. |
 | `DENY` | `LIVING_PERSON_JOIN_DENIED` or `GEOMETRY_PRECISION_BLOCKED` | A bounded privacy or sensitivity rule forbids candidate emission in this fixture profile. |
 | `ERROR` | `VALIDATOR_SYSTEM_ERROR` | A declared dependency is unavailable; no candidate assertion is made. |
 
@@ -63,7 +65,7 @@ The decision carries a stable six-rule vector:
 
 Each rule reports a non-negative failure count. Endpoint source roles remain separately visible, output role is always `CANDIDATE_RELATION`, and inherited sensitivity is the strictest endpoint posture.
 
-`SOURCE_ROLES_COMPATIBLE` fails when a cross-lane pair would blur a risk-bearing role boundary. In addition to modeled, aggregate, or candidate mismatches, a `SYNTHETIC` endpoint paired with any non-synthetic role fails closed to source-role review. Fixture-only material may prove deterministic behavior, but it must not silently compose with observed, regulatory, administrative, modeled, aggregate, or candidate material as though the two roles carried equivalent authority.
+`SOURCE_ROLES_COMPATIBLE` is intentionally conservative at this generic responsibility root. Current cross-domain architecture records that KFM has no accepted repository-wide crosswalk that can declare two distinct source-role classes equivalent or compatible for a relationship. Therefore equal role values may continue to fixture-only candidate proof, while **every unequal role vector** fails closed to `SOURCE_ROLE_REVIEW_REQUIRED` with `SOURCE_ROLE_CONFLICT` and `RESOLVE_SOURCE_ROLE_COMPATIBILITY`. That includes observed/regulatory/administrative mismatches as well as modeled, aggregate, candidate, and mixed synthetic/non-synthetic pairs. The pair-specific or participating-domain validator may later establish a legitimate compatibility rule without letting this generic helper invent one.
 
 `JOIN_PREDICATE_MATCHED` is the effective cross-lane candidate predicate. It fails when the declared exact-key or spatial-temporal predicate does not match **or when both endpoints declare the same domain**, because a same-domain comparison is not a cross-lane candidate. Same-domain inputs return `ABSTAIN` / `NO_JOIN_CANDIDATE` with reason `CROSS_DOMAIN_PAIR_REQUIRED` and obligation `ROUTE_TO_DOMAIN_LOCAL_VALIDATOR`; the helper does not relabel domain-local work as a cross-domain relation.
 
@@ -75,7 +77,7 @@ For `SPATIAL_TEMPORAL`, zero-tolerance intervals that only touch at `left.valid_
 - `EXACT_KEY` uses a parameterized one-row-per-side SQLite join in an in-memory database. Keys are values, never SQL fragments.
 - `SPATIAL_TEMPORAL` compares synthetic spatial-cell refs and timezone-aware intervals with a declared tolerance. It is not a geometry engine and proves no real-world spatial relationship.
 - A zero-tolerance spatial-temporal boundary touch abstains instead of inventing inclusive-end semantics. Pair-specific temporal policy must resolve the boundary; positive tolerance is explicit and remains bounded to candidate comparison.
-- Missing EvidenceRefs abstain. Modeled, aggregate, candidate, or mixed synthetic/non-synthetic role conflicts abstain. Restricted generalized context abstains for sensitivity review. Restricted exact geometry and living-person joins deny.
+- Missing EvidenceRefs abstain. Any unequal source-role pair abstains for pair/domain-owned compatibility review because the generic seam owns no accepted global crosswalk. Restricted generalized context abstains for sensitivity review. Restricted exact geometry and living-person joins deny.
 - `candidate_id` is RFC 8785/SHA-256 over request and endpoints. `spec_hash` binds the complete assessment excluding `assessment_id` and `spec_hash`.
 - `--derive` validates the fully sealed assessment before stdout. A malformed or schema-invalid input returns a bounded `FAIL` result and never emits a schema-invalid assessment as successful output.
 
@@ -85,7 +87,7 @@ The decision's effects are schema-fixed to false for lifecycle writes, evidence 
 
 ## Directory Rules basis
 
-Generic relationship meaning belongs in `contracts/joins/`; shape in `schemas/contracts/v1/joins/`; the dry-run helper in `tools/joins/`; synthetic cases in `fixtures/contracts/v1/joins/`; tests in `tests/joins/`; authoring provenance in `data/receipts/generated/`. Pair-specific meaning, policy, evidence, receipts, lifecycle data, and release remain in their owning roots.
+Generic relationship meaning belongs in `contracts/joins/`; shape in `schemas/contracts/v1/joins/`; the dry-run helper in `tools/joins/`; synthetic cases in `fixtures/contracts/v1/joins/`; tests in `tests/joins/`; authoring provenance in `data/receipts/generated/`. Pair-specific meaning, source-role compatibility, policy, evidence, receipts, lifecycle data, and release remain in their owning roots.
 
 ## Non-effects and rollback
 
