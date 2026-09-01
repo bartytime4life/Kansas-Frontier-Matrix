@@ -8,6 +8,7 @@ import socket
 import tempfile
 import unittest
 import urllib.request
+from datetime import datetime
 from pathlib import Path
 from unittest import mock
 
@@ -79,6 +80,63 @@ class KdheHabTemporalValidatorTests(unittest.TestCase):
             "KDHE_HAB_FRESHNESS_BUDGET_EXCEEDED",
             {finding.code for finding in result.findings},
         )
+
+    def test_explicit_evaluation_time_enforces_expiration_boundary(self) -> None:
+        candidate = self._candidate()
+        exact_boundary = datetime.fromisoformat("2026-07-25T15:00:00+00:00")
+        expired = datetime.fromisoformat("2026-07-25T15:00:01+00:00")
+
+        self.assertEqual(
+            validate_document(candidate, as_of=exact_boundary).outcome,
+            "PASS",
+        )
+        result = validate_document(candidate, as_of=expired)
+        self.assertEqual(result.outcome, "DENY")
+        self.assertIn(
+            "KDHE_HAB_EXPIRED_AT_EVALUATION_TIME",
+            {finding.code for finding in result.findings},
+        )
+
+    def test_evaluation_time_cannot_precede_retrieval(self) -> None:
+        candidate = self._candidate()
+        result = validate_document(
+            candidate,
+            as_of=datetime.fromisoformat("2026-07-24T15:59:59+00:00"),
+        )
+        self.assertEqual(result.outcome, "DENY")
+        self.assertIn(
+            "KDHE_HAB_EVALUATION_TIME_BEFORE_RETRIEVAL",
+            {finding.code for finding in result.findings},
+        )
+
+    def test_naive_evaluation_time_returns_finite_error(self) -> None:
+        result = validate_document(
+            self._candidate(),
+            as_of=datetime.fromisoformat("2026-07-25T15:00:00"),
+        )
+        self.assertEqual(result.outcome, "ERROR")
+        self.assertEqual(
+            {finding.code for finding in result.findings},
+            {"KDHE_HAB_EVALUATION_TIME_INVALID"},
+        )
+
+    def test_cli_as_of_is_deterministic_and_rejects_invalid_combinations(self) -> None:
+        self.path.write_text(json.dumps(self._candidate()) + "\n", encoding="utf-8")
+        stream = io.StringIO()
+        with contextlib.redirect_stdout(stream):
+            self.assertEqual(
+                validate_main(["--as-of", "2026-07-25T15:00:01Z", str(self.path)]),
+                1,
+            )
+        self.assertIn("KDHE_HAB_EXPIRED_AT_EVALUATION_TIME", stream.getvalue())
+
+        with contextlib.redirect_stderr(io.StringIO()):
+            with self.assertRaises(SystemExit) as invalid_time:
+                validate_main(["--as-of", "not-a-time", str(self.path)])
+            self.assertEqual(invalid_time.exception.code, 2)
+            with self.assertRaises(SystemExit) as fixture_combination:
+                validate_main(["--fixtures", "--as-of", "2026-07-25T15:00:01Z"])
+            self.assertEqual(fixture_combination.exception.code, 2)
 
     def test_active_state_must_be_current(self) -> None:
         candidate = self._candidate()

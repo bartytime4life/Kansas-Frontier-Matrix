@@ -2,7 +2,7 @@
 doc_id: kfm://doc/tools-validators-domains-hazards-readme
 title: tools/validators/domains/hazards/ — Hazards Validator Index
 type: readme
-version: v0.7
+version: v0.8
 status: draft; repository-grounded; mixed-maturity; non-semantic; non-policy; non-release; non-publication
 owner: NEEDS VERIFICATION — CODEOWNERS routes /tools/validators/ to @bartytime4life; no independently verified Hazards validation steward or required-review control was established
 created: 2026-07-07
@@ -15,7 +15,7 @@ truth_posture: cite-or-abstain; executable claims require current code plus pair
 evidence_repository: bartytime4life/Kansas-Frontier-Matrix
 evidence_base_ref: main
 evidence_base_commit: f4802ac39b0ad48296bc6c3fd80bffe7291dfc46
-evidence_base_role: pre-change evidence base; the inventory below includes this proposed branch change and is exact only at the PR head reported by GitHub
+evidence_base_role: pre-change evidence base; the inventory below includes this proposed branch change and is exact only at the branch head reported by GitHub
 codeowners_route: /tools/validators/ @bartytime4life
 directory_rules_adoption_adr: docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
 related:
@@ -37,6 +37,7 @@ notes:
   - "v0.5 incorrectly classified the drinking-water advisory and NFHL/NLD/NID test families as not run in hosted workflows; that statement is superseded by current workflow evidence."
   - "v0.4 retires the unused domain-local generic-schema placeholder after confirming that no Hazards schema or consumer names it and repository-wide schema validation is already established."
   - "Four scripts have substantive implementations and paired deterministic tests; two scripts remain explicit NotImplementedError placeholders and are not validation evidence."
+  - "v0.8 adds an optional caller-supplied evaluation instant so current snapshots can be deterministically denied after expiry without consulting a clock or network."
   - "v0.7 adds deterministic, no-network temporal ordering and freshness-budget validation for the existing inactive KDHE HAB advisory snapshot profile; it does not activate the source or authorize alerts, release, deployment, or publication."
   - "The EvidenceBundle convergence test enforces the single declared validator path and shared-fixture polarity."
   - "The domain-hazards workflow executes the bounded smoke and USDM materiality lane; dedicated profile workflows execute the drinking-water advisory and NFHL/NLD/NID suites; proof and release jobs remain explicit holds."
@@ -57,7 +58,7 @@ notes:
 
 This directory is the Hazards validation implementation lane under the `tools/` responsibility root. It owns repository validator code and this local inventory. Hazards meaning remains under [`contracts/`](../../../../contracts/domains/hazards/README.md); machine shape remains under [`schemas/`](../../../../schemas/contracts/v1/domains/hazards/README.md); fixtures and tests remain under their own roots.
 
-The pre-change evidence base is `main@f4802ac39b0ad48296bc6c3fd80bffe7291dfc46`. The inventory below additionally includes the KDHE HAB temporal validator proposed on this branch and is exact only at the pull-request head reported by GitHub. It distinguishes substantive implementations from tracked placeholders and distinguishes the aggregate Hazards workflow from dedicated profile workflows so hosted evidence is not understated or overstated.
+The pre-change evidence base is `main@f4802ac39b0ad48296bc6c3fd80bffe7291dfc46`. The inventory below additionally includes the KDHE HAB temporal validator proposed on this branch and is exact only at the branch head reported by GitHub. It distinguishes substantive implementations from tracked placeholders and distinguishes the aggregate Hazards workflow from dedicated profile workflows so hosted evidence is not understated or overstated.
 
 ## Status
 
@@ -92,7 +93,7 @@ The Hazards boundary remains fail-closed:
 | Validator | Confirmed bounded behavior | Paired executable evidence | Workflow posture |
 |---|---|---|---|
 | [`validate_drinking_water_advisory.py`](./validate_drinking_water_advisory.py) | Closed proposed advisory profile with deterministic structural and semantic findings | [`test_drinking_water_advisory.py`](../../../../tests/domains/hazards/test_drinking_water_advisory.py) and the [`drinking_water_advisory/`](../../../../fixtures/domains/hazards/drinking_water_advisory/README.md) fixture family | Hosted by dedicated [`drinking-water-advisory.yml`](../../../../.github/workflows/drinking-water-advisory.yml), which runs the focused unit suite and exact fixture replay; exact-head hosted result is required before claiming PASS |
-| [`validate_kdhe_hab_temporal.py`](./validate_kdhe_hab_temporal.py) | Deterministic cross-field observation ordering, source-time ordering, active-state currentness, and retrieval-relative freshness-budget enforcement for the inactive KDHE HAB advisory snapshot profile | [`test_validate_kdhe_hab_temporal.py`](../../../../tests/validators/domains/hazards/test_validate_kdhe_hab_temporal.py) and the existing [`kdhe_hab_advisory_snapshot/`](../../../../fixtures/domains/hazards/kdhe_hab_advisory_snapshot/) valid/invalid families | Not separately hosted at this boundary; local focused proof and exact fixture replay are required, and hosted checks must not be described as profile execution unless a workflow actually invokes it |
+| [`validate_kdhe_hab_temporal.py`](./validate_kdhe_hab_temporal.py) | Deterministic cross-field observation ordering, source-time ordering, active-state currentness, retrieval-relative freshness enforcement, and optional explicit-time expiry evaluation for the inactive KDHE HAB advisory snapshot profile | [`test_validate_kdhe_hab_temporal.py`](../../../../tests/validators/domains/hazards/test_validate_kdhe_hab_temporal.py) and the existing [`kdhe_hab_advisory_snapshot/`](../../../../fixtures/domains/hazards/kdhe_hab_advisory_snapshot/) valid/invalid families | Not separately hosted at this boundary; local focused proof and exact fixture replay are required, and hosted checks must not be described as profile execution unless a workflow actually invokes it |
 | [`validate_nfhl_nld_nid_source_role_profile.py`](./validate_nfhl_nld_nid_source_role_profile.py) | Fail-closed NFHL/NLD/NID source-role separation profile | [`test_validate_nfhl_nld_nid_source_role_profile.py`](../../../../tests/validators/domains/hazards/test_validate_nfhl_nld_nid_source_role_profile.py) | Hosted by dedicated [`nfhl-nld-nid-source-role-profile.yml`](../../../../.github/workflows/nfhl-nld-nid-source-role-profile.yml), which runs the focused deterministic no-network suite and exact fixture replay; exact-head hosted result is required before claiming PASS |
 | [`validate_usdm_materiality.py`](./validate_usdm_materiality.py) | Deterministic, no-network USDM material-change evaluation over committed synthetic cases | [`test_validate_usdm_materiality.py`](../../../../tests/domains/hazards/test_validate_usdm_materiality.py) and [`usdm_materiality/cases.json`](../../../../fixtures/domains/hazards/usdm_materiality/cases.json) | Executed by `make hazards-validate`, which is invoked by [`domain-hazards.yml`](../../../../.github/workflows/domain-hazards.yml) |
 
@@ -179,6 +180,7 @@ python -m unittest -v tests.validators.domains.hazards.test_validate_nfhl_nld_ni
 python -m unittest -v tests.validators.domains.hazards.test_evidence_bundle_schema_convergence
 python -m unittest -v tests.validators.domains.hazards.test_validate_kdhe_hab_temporal
 python tools/validators/domains/hazards/validate_kdhe_hab_temporal.py --fixtures
+python tools/validators/domains/hazards/validate_kdhe_hab_temporal.py --as-of 2026-07-25T15:00:01Z path/to/repository-local-snapshot.json
 ```
 
 Run only commands whose dependencies are present. Passing these commands remains head-specific evidence for the named surface; it does not activate live sources or advance evidence, policy, lifecycle, release, deployment, or publication state.

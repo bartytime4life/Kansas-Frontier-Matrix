@@ -35,6 +35,7 @@ ERROR_CODES = {
     "KDHE_HAB_JSON_NONFINITE_NUMBER",
     "KDHE_HAB_ROOT_NOT_OBJECT",
     "KDHE_HAB_SCHEMA_UNAVAILABLE",
+    "KDHE_HAB_EVALUATION_TIME_INVALID",
 }
 
 
@@ -144,7 +145,11 @@ def _time(value: Any) -> datetime | None:
     return parsed if parsed.tzinfo is not None else None
 
 
-def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
+def _semantic_findings(
+    candidate: Mapping[str, Any],
+    *,
+    as_of: datetime | None = None,
+) -> list[Finding]:
     findings: list[Finding] = []
     first = _time(candidate.get("first_observed_at"))
     last = _time(candidate.get("last_observed_at"))
@@ -174,13 +179,37 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
         and retrieved - source_updated > timedelta(hours=budget)
     ):
         findings.append(Finding("KDHE_HAB_FRESHNESS_BUDGET_EXCEEDED", "/freshness_status"))
+    if as_of is not None and retrieved is not None and as_of < retrieved:
+        findings.append(Finding("KDHE_HAB_EVALUATION_TIME_BEFORE_RETRIEVAL", "/retrieved_at"))
+    if (
+        as_of is not None
+        and freshness == "current"
+        and source_updated is not None
+        and isinstance(budget, int)
+        and not isinstance(budget, bool)
+        and as_of - source_updated > timedelta(hours=budget)
+    ):
+        findings.append(Finding("KDHE_HAB_EXPIRED_AT_EVALUATION_TIME", "/freshness_status"))
     return findings
 
 
-def validate_document(candidate: Mapping[str, Any]) -> ValidationResult:
+def validate_document(
+    candidate: Mapping[str, Any],
+    *,
+    as_of: datetime | None = None,
+) -> ValidationResult:
+    if as_of is not None and (
+        not isinstance(as_of, datetime)
+        or as_of.tzinfo is None
+        or as_of.utcoffset() is None
+    ):
+        return ValidationResult(
+            "ERROR",
+            (Finding("KDHE_HAB_EVALUATION_TIME_INVALID", "/"),),
+        )
     findings = _schema_findings(candidate)
     if not findings:
-        findings.extend(_semantic_findings(candidate))
+        findings.extend(_semantic_findings(candidate, as_of=as_of))
     ordered = tuple(sorted(set(findings)))
     if not ordered:
         return ValidationResult("PASS", ordered)
@@ -188,12 +217,12 @@ def validate_document(candidate: Mapping[str, Any]) -> ValidationResult:
     return ValidationResult(outcome, ordered)
 
 
-def validate_file(path: Path) -> ValidationResult:
+def validate_file(path: Path, *, as_of: datetime | None = None) -> ValidationResult:
     candidate, findings = _read(path)
     if candidate is None:
         ordered = tuple(sorted(set(findings)))
         return ValidationResult("ERROR", ordered)
-    return validate_document(candidate)
+    return validate_document(candidate, as_of=as_of)
 
 
 def _payload(result: ValidationResult, target: str) -> dict[str, Any]:
@@ -242,16 +271,26 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Validate KDHE HAB snapshot temporal semantics.")
     parser.add_argument("files", nargs="*", help="Repository-local JSON snapshots to validate.")
     parser.add_argument("--fixtures", action="store_true", help="Replay committed valid and invalid fixtures.")
+    parser.add_argument(
+        "--as-of",
+        metavar="RFC3339",
+        help="Evaluate current-snapshot expiry at an explicit timezone-aware instant.",
+    )
     args = parser.parse_args(argv)
     if args.fixtures:
+        if args.as_of is not None:
+            parser.error("--as-of cannot be combined with --fixtures")
         ok, payload = run_fixture_suite()
         print(json.dumps(payload, sort_keys=True, separators=(",", ":")))
         return 0 if ok else 1
     if not args.files:
         parser.error("provide --fixtures or at least one JSON file")
+    as_of = _time(args.as_of) if args.as_of is not None else None
+    if args.as_of is not None and as_of is None:
+        parser.error("--as-of must be a timezone-aware RFC3339 date-time")
     exit_code = 0
     for raw_path in args.files:
-        result = validate_file(Path(raw_path))
+        result = validate_file(Path(raw_path), as_of=as_of)
         print(json.dumps(_payload(result, raw_path), sort_keys=True, separators=(",", ":")))
         if result.outcome == "DENY":
             exit_code = max(exit_code, 1)
