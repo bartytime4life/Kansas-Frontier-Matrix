@@ -255,6 +255,16 @@ def _geometry_findings(
                 "geom.public_safe_type_precision_mismatch",
                 "/geometry/public_safe_geometry/precision_class",
             )
+        generalization_method = public_safe.get("generalization_method")
+        if public_precision != "exact" and (
+            not isinstance(generalization_method, str)
+            or not generalization_method.strip()
+        ):
+            _add(
+                findings,
+                "geom.generalization_method_required",
+                "/geometry/public_safe_geometry/generalization_method",
+            )
         if generalization and public_precision == "exact":
             _add(
                 findings,

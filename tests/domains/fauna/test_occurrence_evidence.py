@@ -180,6 +180,35 @@ class OccurrenceEvidenceTests(unittest.TestCase):
             result.findings,
         )
 
+    def test_generalized_public_geometry_requires_method(self) -> None:
+        candidate = _load(
+            "semantic_invalid/public_safe_generalization_method_missing.json"
+        )
+
+        result = validator.validate_candidate(candidate)
+
+        self.assertIn(
+            validator.Finding(
+                "geom.generalization_method_required",
+                "/geometry/public_safe_geometry/generalization_method",
+            ),
+            result.findings,
+        )
+        self.assertIn(
+            validator.Finding(
+                "schema.validation_check_mismatch",
+                "/validation/checks/geometry_public_safe",
+            ),
+            result.findings,
+        )
+        self.assertIn(
+            validator.Finding(
+                "schema.pass_gate_failed",
+                "/validation/validator_result",
+            ),
+            result.findings,
+        )
+
     def test_closed_schema_rejects_undeclared_fields(self) -> None:
         candidate = _load("valid/valid_observed_open.json")
         candidate["runtime_hint"] = "not part of the occurrence evidence contract"

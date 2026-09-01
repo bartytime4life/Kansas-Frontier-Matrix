@@ -50,6 +50,24 @@
     {
       "expected_findings": [
         {
+          "code": "geom.generalization_method_required",
+          "path": "/geometry/public_safe_geometry/generalization_method"
+        },
+        {
+          "code": "schema.pass_gate_failed",
+          "path": "/validation/validator_result"
+        },
+        {
+          "code": "schema.validation_check_mismatch",
+          "path": "/validation/checks/geometry_public_safe"
+        }
+      ],
+      "expected_outcome": "ERROR",
+      "path": "semantic_invalid/public_safe_generalization_method_missing.json"
+    },
+    {
+      "expected_findings": [
+        {
           "code": "geom.public_safe_type_precision_mismatch",
           "path": "/geometry/public_safe_geometry/precision_class"
         },
