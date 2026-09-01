@@ -26,6 +26,12 @@ FIXTURES = ROOT / "fixtures/domains/hazards/kdhe_hab_advisory_snapshot"
 MAX_FILE_BYTES = 1_048_576
 MAX_SCHEMA_FINDINGS = 100
 ACTIVE_STATES = {"WATCH", "WARNING", "HAZARD"}
+TEMPORAL_FIELDS = (
+    "source_updated_at",
+    "retrieved_at",
+    "first_observed_at",
+    "last_observed_at",
+)
 RFC3339_SECOND = re.compile(
     r"^\d{4}-\d{2}-\d{2}T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d"
     r"(?:Z|[+-](?:[01]\d|2[0-3]):[0-5]\d)$"
@@ -167,6 +173,10 @@ def _semantic_findings(
     as_of: datetime | None = None,
 ) -> list[Finding]:
     findings: list[Finding] = []
+    for field in TEMPORAL_FIELDS:
+        value = candidate.get(field)
+        if isinstance(value, str) and value.endswith("-00:00"):
+            findings.append(Finding("KDHE_HAB_TIMESTAMP_UNKNOWN_OFFSET", f"/{field}"))
     first = _time(candidate.get("first_observed_at"))
     last = _time(candidate.get("last_observed_at"))
     retrieved = _time(candidate.get("retrieved_at"))
