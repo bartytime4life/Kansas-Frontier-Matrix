@@ -1,11 +1,14 @@
 import { describe, expect, it, vi } from "vitest";
 
 import layerAdmissionFixture from "../../../fixtures/runtime/layer_manifest_admission/cases.json";
+import correctedEvidenceFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/answer-corrected.json";
 import {
   MAP_FEATURE_SELECTION_PROFILE,
   type MapFeatureSelection,
 } from "@kfm/maplibre";
+import { resolveMapFeatureEvidence } from "../src/features/map_runtime";
 import { resolveMapRuntimeSelectionEvidence } from "../src/features/map_runtime/runtime-evidence-binding";
+import { SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS } from "../src/site/mount-explorer-site";
 import {
   PUBLIC_WORKSPACE_CONTEXT_PROFILE,
   PUBLIC_WORKSPACE_CONTEXT_QUERY_PARAM,
@@ -68,6 +71,30 @@ function parsedUrlSelection(): MapFeatureSelection {
 }
 
 describe("public workspace context to governed runtime evidence integration", () => {
+  it("keeps the shipped correction history inside the supported selection scope", async () => {
+    expect(SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS).toEqual([
+      "kfm:evidence:synthetic:flow-000",
+      "kfm:evidence:synthetic:flow-001",
+    ]);
+
+    const result = await resolveMapFeatureEvidence(
+      Object.freeze({
+        profile: MAP_FEATURE_SELECTION_PROFILE,
+        selection_id: "selection:flow-001",
+        layer_id: "layer:synthetic-streamflow",
+        feature_id: "feature:flow-001",
+        evidence_refs: SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS,
+      }),
+      async () => correctedEvidenceFixture,
+    );
+
+    expect(result.code).toBe("SUPPORTED");
+    expect(result.drawer).toMatchObject({
+      outcome: "ANSWER",
+      code: "SUPPORTED",
+    });
+  });
+
   it("keeps a URL-derived selection inside LayerManifest admission and abstains without evidence", async () => {
     const resolver = vi.fn(async () => {
       throw new Error("Evidence transport must not run for evidence-free URL context.");
