@@ -260,3 +260,33 @@ This packet does not close issue `#2874`, accept a proposed ADR, alter the
 canonical verification backlog, populate the machine backlog, authenticate
 evidence, approve policy, authorize a reviewer, or make any source-derived idea
 public truth.
+
+## 9. Source rights, health, watchers, and change detection slice — issue #3384 — 2026-09-01
+
+**Status:** PROPOSED evidence ledger; first bounded slice; issue `#3384` remains open.  
+**Exact repository snapshot:** `main@db23a8bfa9fa126e87009a41240576619ccaac02`.  
+**Execution branch:** `copilot/m20-source-rights-health-watchers-change-detection@7db600050e064f6213c116290b21a2c0ee83a635`.  
+**Overlap map:** issue `#2874` remains the coordinating source-corpus baseline; draft PR `#4077` is the current execution branch for this slice and fixes `#3384`.  
+**Selected source family:** Flora — `data/registry/sources/flora/` and `data/registry/rights/flora/` anchor the no-network rights/currentness profile.  
+**Inspection boundary:** repository docs, contracts, schemas, validators, fixtures, tests, and watcher/control-plane projections only. No live source, network, deployment, or publication behavior was exercised.
+
+### Classification ledger
+
+| Surface | Status | Notes |
+|---|---|---|
+| `contracts/source/source_rights_currentness_assessment.md` | `IMPLEMENTED` | Fixture-only rights/currentness meaning exists and remains non-authoritative. |
+| `tools/validators/source/validate_source_rights_currentness_assessment.py` | `IMPLEMENTED` | Offline, finite-outcome validator with no live source or network requirement. |
+| `fixtures/contracts/v1/source/source_rights_currentness_assessment/cases.json` | `IMPLEMENTED` | Synthetic Flora-anchored profile with exact-case polarity and no-network governance flags. |
+| `tests/source/test_source_rights_currentness_assessment.py` | `IMPLEMENTED` | Direct no-network regression slice for the Flora-anchored rights/currentness assessment. |
+| `tools/validators/source/validate_source_health_assessment.py` + `tests/source/test_source_health_assessment.py` | `IMPLEMENTED` | Adjacent health slice already exists and remains offline/non-activating. |
+| `tools/validators/source/validate_source_availability_watchlist.py` + `tests/validators/test_validate_source_availability_watchlist.py` | `IMPLEMENTED` | Adjacent change-detection validator exists; it remains fixture-only and non-publisher. |
+| `contracts/source/watcher_registry.md` + `control_plane/watcher_registry.json` + `tests/validators/test_validate_watcher_registry.py` | `PARTIAL` | Watchers remain `PROPOSED_INACTIVE` and can emit only candidate/receipt signals, not activation. |
+| `data/registry/sources/README.md` + `data/registry/sources/flora/README.md` + `data/registry/rights/README.md` + `data/registry/rights/flora/README.md` | `PARTIAL` | Flora is the chosen source family, but registry topology and live writer/consumer closure remain unresolved. |
+| `tests/source/README.md` | `IMPLEMENTED` | Direct inventory updated to include the rights/currentness slice and its no-network command. |
+
+### Validation, correction, and rollback
+
+- Focused validation: `KFM_NO_NETWORK=1 python -m pytest -q tests/source/test_source_rights_currentness_assessment.py`
+- Hosted checks: reuse the existing docs and source validator suites; do not treat watcher registry presence as live activation.
+- Correction handling: if Flora source terms or descriptor anchors change, update the fixture profile and the direct test together.
+- Rollback: revert this ledger section plus the Flora-anchored fixture, test, and source inventory update as one bounded documentation/test commit.

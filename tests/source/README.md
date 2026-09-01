@@ -6,7 +6,7 @@ version: v0.3
 status: draft; repository-grounded; executable-partial; workflow-binding-unverified; no-network; fail-closed; non-authoritative
 owner: "@bartytime4life — CONFIRMED CODEOWNERS review route; source, rights, sensitivity, privacy, QA, security, and release stewardship remain NEEDS VERIFICATION"
 created: 2026-07-07
-updated: 2026-08-30
+updated: 2026-09-01
 supersedes: v0.2 documentation at the same path
 policy_label: repository-facing; tests; source; source-role; source-health; retrieval-intent; fixture-only; no-network; fail-closed; non-publisher
 current_path: tests/source/README.md
@@ -15,10 +15,10 @@ responsibility: executable conformance checks for selected source schemas, asses
 truth_posture: a passing test supports only its named assertion and checked revision; it does not admit or activate a source, prove source truth, resolve rights or sensitivity, close evidence, approve policy, or authorize release or publication
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  base_ref: main
-  base_commit: 1ea6593ede80d5ce10f561c7eec72135d6ccf806
-  direct_modules: 9
-  source_defined_tests: 60
+  base_ref: copilot/m20-source-rights-health-watchers-change-detection
+  base_commit: 7db600050e064f6213c116290b21a2c0ee83a635
+  direct_modules: 10
+  source_defined_tests: 70
   directly_workflow_bound_modules: 0
 related:
   - ../README.md
@@ -31,8 +31,8 @@ related:
   - ../../data/registry/sources/README.md
   - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
 notes:
-  - "v0.3 replaces the obsolete README-only direct-lane claim with the current nine-module executable inventory."
-  - "The module and test counts describe source at the pinned commit, not a recorded run or permanent coverage promise."
+  - "v0.3 replaces the obsolete README-only direct-lane claim with the current ten-module executable inventory."
+  - "The module and test counts describe the current branch head after the Flora rights/currentness slice, not a recorded run or permanent coverage promise."
   - "Repository code search did not establish a workflow command or Make target that directly collects tests/source."
   - "This README is authored at its canonical test-lane path; it is not generated or mirrored."
 [/KFM_META_BLOCK_V2] -->
@@ -78,7 +78,7 @@ precedent-backed children of that root.
 
 ## Confirmed direct inventory
 
-At `main@1ea6593ede80d5ce10f561c7eec72135d6ccf806`,
+At `copilot/m20-source-rights-health-watchers-change-detection@7db600050e064f6213c116290b21a2c0ee83a635`, 
 the directory contains the following executable modules:
 
 | Module | Tests | Direct subject and bounded assertion |
@@ -90,10 +90,11 @@ the directory contains the following executable modules:
 | [`test_render_source_intake_steward_summary.py`](test_render_source_intake_steward_summary.py) | 10 | [Source-intake steward-summary renderer](../../tools/ci/render_source_intake_steward_summary.py): deterministic review projection, no-change handling, quarantine redaction, rollback holds, Markdown escaping, value-free errors, no-network enforcement, CLI exit behavior, and symlink denial. |
 | [`test_retrieval_intent_query_snapshot_assessment.py`](test_retrieval_intent_query_snapshot_assessment.py) | 15 | [Retrieval intent/query snapshot validator](../../tools/validators/source/validate_retrieval_intent_query_snapshot_assessment.py): four-way fixture polarity, deterministic identity and query hash, zero-authority review result, abstention and no-claim behavior, query-drift denial, secret exclusion, no-network replay, unsafe-input rejection, CLI behavior, and value-safe diagnostics. |
 | [`test_source_health_assessment.py`](test_source_health_assessment.py) | 13 | [Offline source-health validator](../../tools/validators/source/validate_source_health_assessment.py): exact valid and invalid outcomes, compatibility denial codes, bounded input handling, non-echoing findings, no-network validation, and credential-free deterministic CLI output. |
+| [`test_source_rights_currentness_assessment.py`](test_source_rights_currentness_assessment.py) | 10 | [Offline source-rights/currentness validator](../../tools/validators/source/validate_source_rights_currentness_assessment.py): Flora-anchored no-network review cadence, exact case polarity, deterministic identity, finite denial codes, value-safe output, and credential-free deterministic CLI output. |
 | [`test_source_probe_envelope.py`](test_source_probe_envelope.py) | 4 | [Source-probe envelope validator](../../tools/validators/source_probe/validate_source_probe_envelope.py): valid profile replay, exact negative codes, activation hold preservation, and `spec_hash` mismatch denial. |
 | [`test_source_role_transition_assessment.py`](test_source_role_transition_assessment.py) | 4 | [Source-role transition validator](../../tools/validators/source_role/validate_source_role_transition_assessment.py): schema validity, fixture polarity, modeled-as-observed denial, and candidate-promotion hold behavior. |
 
-This inventory is complete only for direct files at the pinned revision. Source
+This inventory is complete only for direct files at the current branch head. Source
 tests also exist under schema, policy, validator, connector, pipeline, domain,
 and application-owned paths. Those adjacent suites are not silently claimed by
 this lane.
@@ -128,6 +129,8 @@ Run a single module during focused diagnosis:
 ```bash
 KFM_NO_NETWORK=1 python -m pytest -q \
   tests/source/test_source_health_assessment.py
+KFM_NO_NETWORK=1 python -m pytest -q \
+  tests/source/test_source_rights_currentness_assessment.py
 ```
 
 Command presence is not pass evidence. Record the exact revision, command,

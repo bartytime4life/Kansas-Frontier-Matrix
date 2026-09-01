@@ -8,10 +8,10 @@
       "assessed_at": "2026-08-09T00:00:00Z",
       "review_due_at": "2026-11-09T00:00:00Z",
       "assessment_state": "COMPLETE",
-      "source_id": "synthetic.ks.source",
-      "source_descriptor_ref": "kfm://source/synthetic.ks.source",
+      "source_id": "flora.example-occurrence-dataset",
+      "source_descriptor_ref": "kfm://source/flora.example-occurrence-dataset",
       "descriptor_spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
-      "official_source_locator": "https://official.example.invalid/source/terms",
+      "official_source_locator": "https://official.example.invalid/source/flora/example-occurrence-dataset/terms",
       "evidence_refs": [
         "kfm:evidence:synthetic-source-review"
       ],
