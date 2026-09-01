@@ -141,6 +141,24 @@ def test_duplicate_keys_and_symlinks_are_denied_without_echoing_values(tmp_path:
     assert {finding.code for finding in MODULE.validate_file(link).findings} == {"INPUT_JSON_INVALID"}
 
 
+def test_derive_cli_emits_only_valid_assessments(tmp_path: Path, capsys) -> None:
+    valid_path = tmp_path / "valid.json"
+    valid_path.write_text(json.dumps(MODULE.fixture_cases()[0][0]))
+    assert MODULE.run(["--derive", str(valid_path)]) == 0
+    emitted = json.loads(capsys.readouterr().out)
+    assert MODULE.validate_document(emitted).coherent
+
+    invalid_path = tmp_path / "invalid.json"
+    invalid_path.write_text(json.dumps({"request": {}, "endpoints": {}}))
+    assert MODULE.run(["--derive", str(invalid_path)]) == 1
+    failure = json.loads(capsys.readouterr().out)
+    assert failure["status"] == "FAIL"
+    assert failure["reason"] == "DERIVED_ASSESSMENT_INVALID"
+    assert "assessment_id" not in failure
+    assert "decision" not in failure
+    assert {item["code"] for item in failure["findings"]} == {"SCHEMA_INVALID"}
+
+
 def test_helper_has_no_network_client_or_file_write_path() -> None:
     source = MODULE_PATH.read_text(encoding="utf-8")
     forbidden = (
