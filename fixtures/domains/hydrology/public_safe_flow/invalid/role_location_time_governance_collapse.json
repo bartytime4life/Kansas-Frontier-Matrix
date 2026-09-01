@@ -19,6 +19,7 @@
     "parameter_code": "forecast",
     "value": -1,
     "unit": "cfs forecast",
+    "unit_transform_ref": "fixture://transforms/hydrology/unverified-normalization",
     "qualifier": "modeled",
     "provisional_status": "",
     "no_data": 0
