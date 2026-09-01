@@ -1,0 +1,18 @@
+{
+  "id": "synthetic:pdl-layer:historical-population-aggregate",
+  "version": "0.1",
+  "domain": "people-dna-land",
+  "layer_family": "historical-person-aggregate",
+  "sensitivity_tier": "T0",
+  "geometry_posture": "aggregate",
+  "time_controls": {
+    "kind": "year-range",
+    "start": 1880,
+    "end": 1890
+  },
+  "limitations": [
+    "synthetic fixture only",
+    "aggregate historical context only",
+    "not identity, residence, kinship, title, consent, release, or publication authority"
+  ]
+}
