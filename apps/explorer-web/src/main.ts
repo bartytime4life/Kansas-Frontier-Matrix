@@ -9,6 +9,7 @@ import { mountSyntheticFocusWorkspace } from "./site/mount-synthetic-focus-works
 import { mountPublicTrustSurface } from "./site/trust-surface";
 import {
   mountPublicWorkspaceNavigation,
+  resolvePublicEvidenceFreeMapCaseId,
   resolveSinglePublicKnowledgeDomainId,
   sanitizePublicWorkspaceNavigationUrl,
   syncPublicWorkspaceNavigation,
@@ -30,6 +31,7 @@ if (navigation === null || trustSection === null) {
 }
 
 mountPublicWorkspaceNavigation(navigation);
+let activeDeepLinkMapCaseId: string | null = null;
 const syncWorkspaceNavigation = (): void => {
   const currentUrl = new URL(window.location.href);
   const safeUrl = sanitizePublicWorkspaceNavigationUrl(currentUrl);
@@ -37,6 +39,24 @@ const syncWorkspaceNavigation = (): void => {
     window.history.replaceState(window.history.state, "", safeUrl.toString());
   }
   syncPublicWorkspaceNavigation(navigation, safeUrl);
+
+  const mapCaseId = resolvePublicEvidenceFreeMapCaseId(safeUrl);
+  if (mapCaseId === null) {
+    activeDeepLinkMapCaseId = null;
+  } else if (mapCaseId !== activeDeepLinkMapCaseId) {
+    const mapCaseButton = root.querySelector<HTMLButtonElement>(
+      `button[data-map-evidence-case="${mapCaseId}"]`,
+    );
+    if (mapCaseButton !== null) {
+      const priorFocus =
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null;
+      activeDeepLinkMapCaseId = mapCaseId;
+      mapCaseButton.click();
+      if (priorFocus?.isConnected) priorFocus.focus();
+    }
+  }
 
   const domainId = resolveSinglePublicKnowledgeDomainId(safeUrl);
   if (domainId !== null) {
