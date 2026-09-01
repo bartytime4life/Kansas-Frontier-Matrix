@@ -297,6 +297,15 @@ def _geometry_findings(
                 "geom.exact_public_geometry_required",
                 "/geometry/public_safe_geometry",
             )
+        elif public_safe.get("coordinates") != [
+            geometry.get("longitude"),
+            geometry.get("latitude"),
+        ]:
+            _add(
+                findings,
+                "geom.exact_public_coordinates_mismatch",
+                "/geometry/public_safe_geometry/coordinates",
+            )
 
     if sensitivity.get("sensitive_species_flag") is True and sensitivity.get(
         "review_required"
