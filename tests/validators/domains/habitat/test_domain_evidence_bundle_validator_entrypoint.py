@@ -67,6 +67,13 @@ class HabitatEvidenceBundleEntrypointTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
         self.assertIn(f"FAIL {INVALID_FIXTURE}", result.stdout)
 
+    def test_mixed_explicit_files_fail_if_any_carrier_is_invalid(self) -> None:
+        result = self._run(str(VALID_FIXTURE), str(INVALID_FIXTURE))
+
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn(f"OK {VALID_FIXTURE}", result.stdout)
+        self.assertIn(f"FAIL {INVALID_FIXTURE}", result.stdout)
+
     def test_duplicate_keys_and_nonfinite_numbers_fail_before_schema_validation(self) -> None:
         malformed_instances = {
             "duplicate-key.json": '{"bundle_id":"first","bundle_id":"second"}',
