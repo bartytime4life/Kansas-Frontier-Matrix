@@ -137,6 +137,39 @@ class HydrologyFlowFixtureTests(unittest.TestCase):
             validate_candidate(candidate),
         )
 
+    def test_source_and_retrieval_chronology_is_monotonic(self) -> None:
+        candidate = _load_candidate()
+        self.assertEqual(validate_candidate(candidate), [])
+
+        same_instant = copy.deepcopy(candidate)
+        same_instant["temporal_scope"]["source_time"] = (  # type: ignore[index]
+            same_instant["temporal_scope"]["observed_at"]  # type: ignore[index]
+        )
+        same_instant["temporal_scope"]["retrieved_at"] = (  # type: ignore[index]
+            same_instant["temporal_scope"]["source_time"]  # type: ignore[index]
+        )
+        self.assertEqual(validate_candidate(same_instant), [])
+
+        source_before_observed = copy.deepcopy(candidate)
+        source_before_observed["temporal_scope"]["source_time"] = (  # type: ignore[index]
+            "2026-08-02T11:59:59Z"
+        )
+        self.assertIn(
+            Finding("SOURCE_TIME_BEFORE_OBSERVED", "$.temporal_scope"),
+            validate_candidate(source_before_observed),
+        )
+
+        retrieval_before_source = copy.deepcopy(candidate)
+        retrieval_before_source["temporal_scope"]["retrieved_at"] = (  # type: ignore[index]
+            "2026-08-02T12:00:30Z"
+        )
+        findings = validate_candidate(retrieval_before_source)
+        self.assertIn(
+            Finding("RETRIEVAL_TIME_BEFORE_SOURCE", "$.temporal_scope"),
+            findings,
+        )
+        self.assertNotIn(Finding("TEMPORAL_ORDER_INVALID", "$.temporal_scope"), findings)
+
     def test_aggregation_window_must_be_instant(self) -> None:
         candidate = _load_candidate()
         self.assertEqual(candidate["temporal_scope"]["aggregation_window"], "instant")  # type: ignore[index]
