@@ -79,6 +79,65 @@
       "expected_findings": []
     },
     {
+      "case_id": "valid_generalized_grid_crop_rotation",
+      "mutations": [
+        {
+          "path": "/object_family",
+          "value": "CropRotation"
+        },
+        {
+          "path": "/semantic_role",
+          "value": "DERIVED_CONTEXT"
+        },
+        {
+          "path": "/support/kind",
+          "value": "GENERALIZED_GRID"
+        },
+        {
+          "path": "/support/key",
+          "value": "KS-GRID-20KM-038-024"
+        },
+        {
+          "path": "/support/precision_class",
+          "value": "GENERALIZED_PUBLIC_SAFE"
+        },
+        {
+          "path": "/indicator/key",
+          "value": "crop_rotation_class"
+        },
+        {
+          "path": "/indicator/label",
+          "value": "Synthetic generalized crop rotation context"
+        },
+        {
+          "path": "/indicator/value_role",
+          "value": "MODELED_OR_DERIVED"
+        },
+        {
+          "path": "/indicator/value",
+          "value": "GRAIN_TO_OILSEED"
+        }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "crop_rotation_as_observed_role_denied",
+      "mutations": [
+        {
+          "path": "/object_family",
+          "value": "CropRotation"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "AG_MAP_FAMILY_ROLE_COLLAPSE",
+          "path": "/semantic_role"
+        }
+      ]
+    },
+    {
       "case_id": "harmful_precision_geometry",
       "mutations": [
         {
