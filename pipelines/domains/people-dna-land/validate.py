@@ -28,6 +28,8 @@ VALIDATORS = {
     "living-person": REPO_ROOT / "tools/validators/genealogy/screen_living_persons.py",
     "consent-overlay": REPO_ROOT
     / "tools/validators/domains/people-dna-land/validate_consent_overlay.py",
+    "consent-revocation": REPO_ROOT
+    / "tools/validators/domains/people-dna-land/validate_consent_revocation_propagation_assessment.py",
 }
 
 
