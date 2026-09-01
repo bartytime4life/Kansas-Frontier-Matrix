@@ -31,6 +31,7 @@ ALLOWED_TOP_LEVEL_FIELDS = frozenset(
     {
         "record_id",
         "object_family",
+        "source_role",
         "source_descriptor_ref",
         "evidence_refs",
         "gauge_site_ref",
@@ -112,6 +113,8 @@ def validate_candidate(candidate: object) -> list[Finding]:
         add_finding(findings, "RECORD_ID_MISSING", "$.record_id")
     if candidate.get("object_family") != "FlowObservation":
         add_finding(findings, "OBJECT_FAMILY_INVALID", "$.object_family")
+    if candidate.get("source_role") != "observed":
+        add_finding(findings, "SOURCE_ROLE_INVALID", "$.source_role")
     if not is_nonempty_string(candidate.get("source_descriptor_ref")):
         add_finding(findings, "SOURCE_DESCRIPTOR_REF_MISSING", "$.source_descriptor_ref")
     if not is_nonempty_string(candidate.get("gauge_site_ref")):
