@@ -42,6 +42,56 @@ describe("Explorer map feature to Evidence Drawer bridge", () => {
     });
   });
 
+  it("keeps feature identity and EvidenceRef scope immutable inside the resolver", async () => {
+    const observed: string[] = [];
+    const result = await resolveMapFeatureEvidence(
+      matchingSelection,
+      async (selection) => {
+        expect(Object.isFrozen(selection)).toBe(true);
+        expect(Object.isFrozen(selection.evidenceRefs)).toBe(true);
+
+        const mutableSelection = selection as unknown as Record<string, unknown>;
+        const mutableEvidenceRefs = selection.evidenceRefs as unknown as string[];
+        expect(
+          Reflect.set(mutableSelection, "featureId", "feature:mutated"),
+        ).toBe(false);
+        expect(
+          Reflect.set(
+            mutableEvidenceRefs,
+            "0",
+            "kfm:evidence:synthetic:mutated",
+          ),
+        ).toBe(false);
+
+        observed.push(
+          selection.selectionId,
+          selection.layerId,
+          selection.featureId,
+          ...selection.evidenceRefs,
+        );
+        return answerFixture;
+      },
+    );
+
+    expect(observed).toEqual([
+      "selection:flow-001",
+      "layer:synthetic-streamflow",
+      "feature:flow-001",
+      "kfm:evidence:synthetic:flow-001",
+      "kfm:evidence:synthetic:flow-000",
+    ]);
+    expect(result).toMatchObject({
+      code: "SUPPORTED",
+      selection: {
+        featureId: "feature:flow-001",
+        evidenceRefs: [
+          "kfm:evidence:synthetic:flow-001",
+          "kfm:evidence:synthetic:flow-000",
+        ],
+      },
+    });
+  });
+
   it("rejects unknown fields, duplicate refs, and unsafe identifiers", () => {
     expect(
       parseMapFeatureSelection({ ...matchingSelection, raw_feature: "not allowed" }),
