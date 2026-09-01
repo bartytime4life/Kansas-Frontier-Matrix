@@ -109,6 +109,19 @@ class KdheHabTemporalValidatorTests(unittest.TestCase):
             {finding.code for finding in result.findings},
         )
 
+    def test_pre_retrieval_evaluation_does_not_claim_expiration(self) -> None:
+        candidate = self._candidate()
+        candidate["last_observed_at"] = "2026-07-26T15:00:00Z"
+        candidate["retrieved_at"] = "2026-07-26T15:00:00Z"
+        result = validate_document(
+            candidate,
+            as_of=datetime.fromisoformat("2026-07-25T15:00:01+00:00"),
+        )
+        codes = {finding.code for finding in result.findings}
+        self.assertEqual(result.outcome, "DENY")
+        self.assertIn("KDHE_HAB_EVALUATION_TIME_BEFORE_RETRIEVAL", codes)
+        self.assertNotIn("KDHE_HAB_EXPIRED_AT_EVALUATION_TIME", codes)
+
     def test_naive_evaluation_time_returns_finite_error(self) -> None:
         result = validate_document(
             self._candidate(),

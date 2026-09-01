@@ -199,6 +199,8 @@ def _semantic_findings(
         findings.append(Finding("KDHE_HAB_EVALUATION_TIME_BEFORE_RETRIEVAL", "/retrieved_at"))
     if (
         as_of is not None
+        and retrieved is not None
+        and as_of >= retrieved
         and freshness == "current"
         and source_updated is not None
         and isinstance(budget, int)
