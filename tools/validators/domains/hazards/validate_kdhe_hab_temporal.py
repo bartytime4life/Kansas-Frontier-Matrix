@@ -12,7 +12,7 @@ import json
 import math
 import sys
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from itertools import islice
 from pathlib import Path
 from typing import Any, Iterable, Mapping
@@ -225,11 +225,24 @@ def validate_file(path: Path, *, as_of: datetime | None = None) -> ValidationRes
     return validate_document(candidate, as_of=as_of)
 
 
-def _payload(result: ValidationResult, target: str) -> dict[str, Any]:
+def _canonical_time(value: datetime) -> str:
+    return value.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def _payload(
+    result: ValidationResult,
+    target: str,
+    *,
+    as_of: datetime | None = None,
+) -> dict[str, Any]:
     return {
         "profile": "kfm.kdhe-hab-temporal.v1",
         "target": target,
         "outcome": result.outcome,
+        "evaluation": {
+            "basis": "explicit_as_of" if as_of is not None else "retrieval_relative",
+            "evaluated_at": _canonical_time(as_of) if as_of is not None else None,
+        },
         "findings": [
             {"code": finding.code, "path": finding.path}
             for finding in result.findings
@@ -291,7 +304,13 @@ def main(argv: list[str] | None = None) -> int:
     exit_code = 0
     for raw_path in args.files:
         result = validate_file(Path(raw_path), as_of=as_of)
-        print(json.dumps(_payload(result, raw_path), sort_keys=True, separators=(",", ":")))
+        print(
+            json.dumps(
+                _payload(result, raw_path, as_of=as_of),
+                sort_keys=True,
+                separators=(",", ":"),
+            )
+        )
         if result.outcome == "DENY":
             exit_code = max(exit_code, 1)
         elif result.outcome == "ERROR":

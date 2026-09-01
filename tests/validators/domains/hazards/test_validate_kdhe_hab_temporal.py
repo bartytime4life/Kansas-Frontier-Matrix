@@ -125,10 +125,21 @@ class KdheHabTemporalValidatorTests(unittest.TestCase):
         stream = io.StringIO()
         with contextlib.redirect_stdout(stream):
             self.assertEqual(
-                validate_main(["--as-of", "2026-07-25T15:00:01Z", str(self.path)]),
+                validate_main(["--as-of", "2026-07-25T16:00:01+01:00", str(self.path)]),
                 1,
             )
-        self.assertIn("KDHE_HAB_EXPIRED_AT_EVALUATION_TIME", stream.getvalue())
+        payload = json.loads(stream.getvalue())
+        self.assertEqual(
+            payload["evaluation"],
+            {
+                "basis": "explicit_as_of",
+                "evaluated_at": "2026-07-25T15:00:01Z",
+            },
+        )
+        self.assertIn(
+            "KDHE_HAB_EXPIRED_AT_EVALUATION_TIME",
+            {finding["code"] for finding in payload["findings"]},
+        )
 
         with contextlib.redirect_stderr(io.StringIO()):
             with self.assertRaises(SystemExit) as invalid_time:
@@ -171,8 +182,16 @@ class KdheHabTemporalValidatorTests(unittest.TestCase):
         stream = io.StringIO()
         with contextlib.redirect_stdout(stream):
             self.assertEqual(validate_main([str(self.path)]), 1)
+        payload = json.loads(stream.getvalue())
         self.assertNotIn(marker, stream.getvalue())
-        self.assertIn("KDHE_HAB_FRESHNESS_BUDGET_EXCEEDED", stream.getvalue())
+        self.assertEqual(
+            payload["evaluation"],
+            {"basis": "retrieval_relative", "evaluated_at": None},
+        )
+        self.assertIn(
+            "KDHE_HAB_FRESHNESS_BUDGET_EXCEEDED",
+            {finding["code"] for finding in payload["findings"]},
+        )
 
     def test_bounded_loader_returns_error_for_duplicate_and_malformed_json(self) -> None:
         self.path.write_text('{"source_id":"a","source_id":"b"}\n', encoding="utf-8")
