@@ -11,6 +11,9 @@ burial, sacred-place, collection-security, or culturally restricted data.
 - `location_bearing_reference_deny.json` proves that a nominal `kfm://`
   reference cannot smuggle query, fragment, or encoded locator material through
   a governed-reference field.
+- `unbound_catalog_candidate_deny.json` proves that a candidate cannot claim
+  under-review/retained posture or processed/catalog lifecycle without at least
+  one governed EvidenceRef.
 
 Run the deterministic, standard-library-only proof with:
 
@@ -20,6 +23,6 @@ python -m unittest tests.domains.archaeology.test_candidate_not_site
 ```
 
 Passing these checks proves only the bounded candidate discriminator, inline
-location denial, and opaque-reference boundary. It does not confirm a site,
-authorize publication, or establish policy, cultural review, EvidenceBundle
-closure, or public-safe transformation.
+location denial, opaque-reference boundary, and conditional EvidenceRef binding.
+It does not confirm a site, authorize publication, or establish full
+EvidenceBundle closure, policy, cultural review, or public-safe transformation.

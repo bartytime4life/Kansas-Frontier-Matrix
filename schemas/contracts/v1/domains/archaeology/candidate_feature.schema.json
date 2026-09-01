@@ -69,6 +69,7 @@
     },
     "evidence_refs": {
       "type": "array",
+      "minItems": 1,
       "uniqueItems": true,
       "items": {
         "type": "string",
@@ -142,5 +143,44 @@
       "pattern": "^sha256:[a-f0-9]{64}$"
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "anyOf": [
+          {
+            "properties": {
+              "review_state": {
+                "enum": [
+                  "UNDER_REVIEW",
+                  "RETAINED"
+                ]
+              }
+            },
+            "required": [
+              "review_state"
+            ]
+          },
+          {
+            "properties": {
+              "lifecycle_state": {
+                "enum": [
+                  "PROCESSED",
+                  "CATALOG"
+                ]
+              }
+            },
+            "required": [
+              "lifecycle_state"
+            ]
+          }
+        ]
+      },
+      "then": {
+        "required": [
+          "evidence_refs"
+        ]
+      }
+    }
+  ]
 }

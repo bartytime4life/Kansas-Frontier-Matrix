@@ -90,10 +90,12 @@ REVIEW_STATES = frozenset(
         "SUPERSEDED",
     }
 )
+EVIDENCE_BOUND_REVIEW_STATES = frozenset({"UNDER_REVIEW", "RETAINED"})
 SENSITIVITY_CLASSES = frozenset(
     {"RESTRICTED", "WITHHELD", "PUBLIC_SAFE_GENERALIZED"}
 )
 LIFECYCLE_STATES = frozenset({"WORK", "QUARANTINE", "PROCESSED", "CATALOG"})
+EVIDENCE_BOUND_LIFECYCLE_STATES = frozenset({"PROCESSED", "CATALOG"})
 KFM_REFERENCE_PATTERN = re.compile(r"^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$")
 
 
@@ -162,6 +164,17 @@ def validate_candidate_feature(payload: Any) -> list[str]:
 
     if "source_refs" in payload:
         errors.extend(_validate_refs(payload["source_refs"], "source_refs", required=True))
+    evidence_binding_required = (
+        payload.get("review_state") in EVIDENCE_BOUND_REVIEW_STATES
+        or payload.get("lifecycle_state") in EVIDENCE_BOUND_LIFECYCLE_STATES
+    )
+    evidence_refs = payload.get("evidence_refs")
+    if evidence_binding_required and (
+        not isinstance(evidence_refs, list) or not evidence_refs
+    ):
+        errors.append(
+            "evidence_refs are required before review or processed/catalog lifecycle"
+        )
     for field in ("evidence_refs", "observation_refs", "correction_refs"):
         if field in payload:
             errors.extend(_validate_refs(payload[field], field))
@@ -185,6 +198,7 @@ def validate_fixture_suite() -> int:
     deny_paths = {
         FIXTURE_ROOT / "sensitive_geometry_deny.json": "inline location fields are denied",
         FIXTURE_ROOT / "location_bearing_reference_deny.json": "opaque kfm:// references",
+        FIXTURE_ROOT / "unbound_catalog_candidate_deny.json": "evidence_refs are required",
     }
     valid_errors = validate_candidate_feature(_load(valid_path))
     if valid_errors:

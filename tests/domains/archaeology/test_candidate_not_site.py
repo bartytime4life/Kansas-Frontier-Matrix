@@ -49,6 +49,19 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         self.assertTrue(errors)
         self.assertTrue(any("opaque kfm:// references" in error for error in errors))
 
+    def test_catalog_candidate_requires_evidence_binding(self) -> None:
+        payload = _load(FIXTURE_ROOT / "unbound_catalog_candidate_deny.json")
+        errors = validate_candidate_feature(payload)
+        self.assertIn(
+            "evidence_refs are required before review or processed/catalog lifecycle",
+            errors,
+        )
+
+    def test_work_candidate_can_await_evidence_binding(self) -> None:
+        payload = copy.deepcopy(self.valid)
+        payload.pop("evidence_refs")
+        self.assertEqual(validate_candidate_feature(payload), [])
+
     def test_candidate_cannot_claim_confirmed_truth(self) -> None:
         payload = copy.deepcopy(self.valid)
         payload["truth_state"] = "CONFIRMED"
@@ -72,6 +85,9 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         expected_ref_pattern = "^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
         self.assertEqual(properties["source_refs"]["items"]["pattern"], expected_ref_pattern)
         self.assertEqual(properties["candidate_geometry_ref"]["pattern"], expected_ref_pattern)
+        self.assertEqual(properties["evidence_refs"]["minItems"], 1)
+        conditional = schema["allOf"][0]
+        self.assertEqual(conditional["then"]["required"], ["evidence_refs"])
 
     def test_fixture_cli_is_deterministic_and_local(self) -> None:
         result = subprocess.run(
