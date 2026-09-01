@@ -44,7 +44,7 @@ ALLOWED_TOP_LEVEL_FIELDS = frozenset(
     }
 )
 ALLOWED_SPATIAL_FIELDS = frozenset({"kind", "county_fips"})
-ALLOWED_TEMPORAL_FIELDS = frozenset({"observed_at", "retrieved_at"})
+ALLOWED_TEMPORAL_FIELDS = frozenset({"aggregation_window", "observed_at", "retrieved_at"})
 ALLOWED_MEASUREMENT_FIELDS = frozenset(
     {"parameter_code", "value", "unit", "qualifier", "provisional_status", "no_data"}
 )
@@ -197,6 +197,12 @@ def validate_candidate(candidate: object) -> list[Finding]:
             "UNDECLARED_TEMPORAL_FIELD",
             "$.temporal_scope",
         )
+        if temporal.get("aggregation_window") != "instant":
+            add_finding(
+                findings,
+                "AGGREGATION_WINDOW_INVALID",
+                "$.temporal_scope.aggregation_window",
+            )
         observed = _parse_utc(temporal.get("observed_at"))
         retrieved = _parse_utc(temporal.get("retrieved_at"))
         if observed is None:

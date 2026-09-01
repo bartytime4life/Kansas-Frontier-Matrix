@@ -12,6 +12,7 @@
     "county_fips": "99999"
   },
   "temporal_scope": {
+    "aggregation_window": "instant",
     "observed_at": "2026-08-02T12:00:00Z",
     "retrieved_at": "2026-08-02T12:05:00Z"
   },

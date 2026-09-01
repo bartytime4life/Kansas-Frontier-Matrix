@@ -11,6 +11,7 @@
     "longitude": "synthetic-forbidden-location"
   },
   "temporal_scope": {
+    "aggregation_window": "forecast",
     "observed_at": "not-a-time",
     "retrieved_at": "2026-08-02T11:00:00Z"
   },
