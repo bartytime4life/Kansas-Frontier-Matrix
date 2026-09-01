@@ -102,6 +102,7 @@ class HabitatEvidenceBundleEntrypointTests(unittest.TestCase):
             ("--fixtures", str(INVALID_FIXTURE)),
             (str(VALID_FIXTURE),),
             (str(INVALID_FIXTURE),),
+            (str(VALID_FIXTURE), str(INVALID_FIXTURE)),
         ]
 
         for arguments in cases:
