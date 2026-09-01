@@ -1,0 +1,191 @@
+{
+  "status": "PROPOSED",
+  "schema_version": "kfm.qa.m17-supply-chain-evidence.v1",
+  "generated_at": "2026-09-01T18:43:51Z",
+  "repository": {
+    "full_name": "bartytime4life/Kansas-Frontier-Matrix"
+  },
+  "execution_start_snapshot": {
+    "current_main": {
+      "sha": "db23a8bfa9fa126e87009a41240576619ccaac02",
+      "branch": "main",
+      "workflow_runs": [
+        {
+          "workflow": "dependency-scan",
+          "run_id": 33543430134,
+          "conclusion": "success"
+        },
+        {
+          "workflow": "codeql",
+          "run_id": 33543430164,
+          "conclusion": "success"
+        },
+        {
+          "workflow": "security",
+          "run_id": 33543430108,
+          "conclusion": "success"
+        },
+        {
+          "workflow": "scorecard",
+          "run_id": 33543430062,
+          "conclusion": "success"
+        }
+      ]
+    },
+    "overlap": {
+      "open_issues": [],
+      "open_pull_requests": [
+        {
+          "number": 4079,
+          "title": "[WIP] Implement dependency and supply-chain assurance measures",
+          "state": "open",
+          "draft": true
+        }
+      ]
+    }
+  },
+  "inventory": {
+    "aliases": [
+      "dependency-scan",
+      "codeql",
+      "security",
+      "scorecard"
+    ],
+    "material_outcomes": [
+      {
+        "path": ".github/workflows/dependency-scan.yml",
+        "classification": "IMPLEMENTED",
+        "reason": "Current main executes the dependency-audit companion workflow and records hosted evidence."
+      },
+      {
+        "path": ".github/workflows/codeql.yml",
+        "classification": "IMPLEMENTED",
+        "reason": "Current main executes the CodeQL companion workflow and records hosted evidence."
+      },
+      {
+        "path": ".github/workflows/security.yml",
+        "classification": "PARTIAL",
+        "reason": "Covers repository scan, container scan, dependency review, and Scorecard, but not SBOM or signature generation."
+      },
+      {
+        "path": ".github/workflows/scorecard.yml",
+        "classification": "IMPLEMENTED",
+        "reason": "Current main records the supply-chain posture signal used by the security workflow."
+      },
+      {
+        "path": "package.json",
+        "classification": "IMPLEMENTED",
+        "reason": "Root package-manager declaration is pinned and participates in the audit boundary."
+      },
+      {
+        "path": "pnpm-lock.yaml",
+        "classification": "IMPLEMENTED",
+        "reason": "Root pnpm lockfile is the coordination graph that the readiness validator checks."
+      },
+      {
+        "path": "apps/kansas-frontier-matrix-explorer/package.json",
+        "classification": "IMPLEMENTED",
+        "reason": "Explorer package manifest participates in the Node dependency carrier surface."
+      },
+      {
+        "path": "apps/kansas-frontier-matrix-explorer/package-lock.json",
+        "classification": "PARTIAL",
+        "reason": "Installed graph exists for a single workspace rather than the full repository dependency surface."
+      },
+      {
+        "path": "tools/ci/python-audit.lock",
+        "classification": "IMPLEMENTED",
+        "reason": "Pinned Python audit environment exists for the dependency scan lane."
+      },
+      {
+        "path": "tools/ci/python-test.lock",
+        "classification": "IMPLEMENTED",
+        "reason": "Pinned Python CI dependency set is the audited input for the pip-audit lane."
+      },
+      {
+        "path": "tools/validators/dependencies/pnpm_audit_readiness.py",
+        "classification": "IMPLEMENTED",
+        "reason": "No-network validator enforces the dependency audit preflight and audit classification rules."
+      },
+      {
+        "path": "tests/validators/test_pnpm_audit_readiness.py",
+        "classification": "IMPLEMENTED",
+        "reason": "Focused tests cover the readiness validator, workflow wiring, and failure classification."
+      },
+      {
+        "path": "infra/docker/Dockerfile.explorer-web",
+        "classification": "PARTIAL",
+        "reason": "Container-scan surface exists, but the image is still a review lane rather than a release artifact."
+      },
+      {
+        "path": "infra/docker/Dockerfile.governed-api",
+        "classification": "PARTIAL",
+        "reason": "Container-scan surface exists, but the image is still a review lane rather than a release artifact."
+      }
+    ]
+  },
+  "historical_lineage": {
+    "previous_dependency_scan_failure": {
+      "run_id": 33541535935,
+      "sha": "cb6c4d8571b6ce0e5617e83a70c3129a61aac1b2",
+      "classification": "SUPERSEDED",
+      "reason": "The earlier browserslist advisory regression on the old main head is replaced by the current success snapshot on db23a8bfa9fa126e87009a41240576619ccaac02."
+    }
+  },
+  "first_slice": {
+    "artifact_class": "dependency-scan",
+    "boundary": {
+      "workflow": ".github/workflows/dependency-scan.yml",
+      "validator": "tools/validators/dependencies/pnpm_audit_readiness.py",
+      "tests": [
+        "tests/validators/test_pnpm_audit_readiness.py"
+      ]
+    },
+    "validation_contract": {
+      "current_main_result": "PASS",
+      "failure_mode": "FAIL_CLOSED",
+      "skip_mode": "SKIPPED and NOT_RUN remain explicit and do not count as pass"
+    },
+    "dependency_contract": {
+      "inputs": [
+        "package.json",
+        "pnpm-lock.yaml",
+        "apps/kansas-frontier-matrix-explorer/package.json",
+        "apps/kansas-frontier-matrix-explorer/package-lock.json",
+        "tools/ci/python-test.lock"
+      ],
+      "hosted_checks": [
+        "dependency-scan",
+        "codeql",
+        "security",
+        "scorecard"
+      ]
+    },
+    "rollback_contract": {
+      "forward_fix": "Refresh the dependency carrier, rerun the validator, then rerun hosted scans.",
+      "rollback": "Revert the evidence slice and preserve the prior dependency state until a new green scan is available."
+    },
+    "explicitly_unexecuted": [
+      {
+        "item": "SBOM generation",
+        "status": "NOT_RUN"
+      },
+      {
+        "item": "attestation generation and verification",
+        "status": "NOT_RUN"
+      },
+      {
+        "item": "signatures and Rekor-style inclusion",
+        "status": "NOT_RUN"
+      },
+      {
+        "item": "license review",
+        "status": "NOT_INSPECTED"
+      },
+      {
+        "item": "full container-image review beyond the declared scan lane",
+        "status": "NOT_RUN"
+      }
+    ]
+  }
+}
