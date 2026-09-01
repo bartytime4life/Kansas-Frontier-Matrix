@@ -72,6 +72,9 @@ FORBIDDEN_LOCATION_ALIASES = frozenset(
         "northing",
     }
 )
+FIXTURE_SOURCE_PREFIX = "fixture://sources/hydrology/"
+FIXTURE_EVIDENCE_PREFIX = "fixture://evidence/hydrology/"
+FIXTURE_GAUGE_PREFIX = "fixture://hydrology/gauge/generalized/"
 EXPECTED_GOVERNANCE = {
     "rights_state": "fixture_only",
     "sensitivity_state": "public_safe_fixture",
@@ -115,10 +118,26 @@ def validate_candidate(candidate: object) -> list[Finding]:
         add_finding(findings, "OBJECT_FAMILY_INVALID", "$.object_family")
     if candidate.get("source_role") != "observed":
         add_finding(findings, "SOURCE_ROLE_INVALID", "$.source_role")
-    if not is_nonempty_string(candidate.get("source_descriptor_ref")):
+
+    source_descriptor_ref = candidate.get("source_descriptor_ref")
+    if not is_nonempty_string(source_descriptor_ref):
         add_finding(findings, "SOURCE_DESCRIPTOR_REF_MISSING", "$.source_descriptor_ref")
-    if not is_nonempty_string(candidate.get("gauge_site_ref")):
+    elif not source_descriptor_ref.startswith(FIXTURE_SOURCE_PREFIX):
+        add_finding(
+            findings,
+            "SOURCE_DESCRIPTOR_REF_NOT_FIXTURE",
+            "$.source_descriptor_ref",
+        )
+
+    gauge_site_ref = candidate.get("gauge_site_ref")
+    if not is_nonempty_string(gauge_site_ref):
         add_finding(findings, "GAUGE_SITE_REF_MISSING", "$.gauge_site_ref")
+    elif not gauge_site_ref.startswith(FIXTURE_GAUGE_PREFIX):
+        add_finding(
+            findings,
+            "GAUGE_SITE_REF_NOT_GENERALIZED_FIXTURE",
+            "$.gauge_site_ref",
+        )
 
     evidence_refs = candidate.get("evidence_refs")
     if (
@@ -127,6 +146,8 @@ def validate_candidate(candidate: object) -> list[Finding]:
         or any(not is_nonempty_string(value) for value in evidence_refs)
     ):
         add_finding(findings, "EVIDENCE_REF_MISSING", "$.evidence_refs")
+    elif any(not value.startswith(FIXTURE_EVIDENCE_PREFIX) for value in evidence_refs):
+        add_finding(findings, "EVIDENCE_REF_NOT_FIXTURE", "$.evidence_refs")
 
     spatial = candidate.get("spatial_support")
     if not isinstance(spatial, dict):
