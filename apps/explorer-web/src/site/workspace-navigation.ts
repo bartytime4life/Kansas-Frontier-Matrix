@@ -1,7 +1,45 @@
-import { PUBLIC_WORKSPACES } from "./workspace-registry";
+import { parsePublicWorkspaceContextUrl } from "./workspace-context";
+import {
+  PUBLIC_WORKSPACES,
+  findPublicWorkspaceByHash,
+  type PublicWorkspaceId,
+} from "./workspace-registry";
 
 export const PUBLIC_WORKSPACE_NAVIGATION_PROFILE =
   "kfm.explorer.public-workspace-navigation.v1" as const;
+
+export type PublicWorkspaceNavigationContextState =
+  | "PUBLIC_CONTEXT_MATCHED"
+  | "ANCHOR_ONLY"
+  | "UNRESOLVED";
+
+export type PublicWorkspaceNavigationState = Readonly<{
+  workspaceId: PublicWorkspaceId | null;
+  contextState: PublicWorkspaceNavigationContextState;
+}>;
+
+/**
+ * Resolve one browser URL against the existing public workspace registry and
+ * public-safe context parser. A valid context must already match its section
+ * anchor; rejected or absent context can only fall back to ordinary public
+ * anchor navigation.
+ */
+export function resolvePublicWorkspaceNavigationState(
+  url: URL,
+): PublicWorkspaceNavigationState {
+  const context = parsePublicWorkspaceContextUrl(url);
+  const anchorWorkspace = findPublicWorkspaceByHash(url.hash);
+
+  return Object.freeze({
+    workspaceId: context?.workspaceId ?? anchorWorkspace?.id ?? null,
+    contextState:
+      context !== null
+        ? "PUBLIC_CONTEXT_MATCHED"
+        : anchorWorkspace !== null
+          ? "ANCHOR_ONLY"
+          : "UNRESOLVED",
+  });
+}
 
 /**
  * Project the public workspace registry into the existing anchor navigation.
@@ -22,4 +60,30 @@ export function mountPublicWorkspaceNavigation(nav: HTMLElement): void {
   nav.setAttribute("aria-label", "Explorer workspaces");
   nav.dataset.workspaceNavigationProfile = PUBLIC_WORKSPACE_NAVIGATION_PROFILE;
   nav.replaceChildren(fragment);
+}
+
+/**
+ * Synchronize the visible workspace navigation with one public browser URL.
+ * Only the registered workspace ID is projected into DOM state; no layer,
+ * selection, evidence, camera, place, time, compare, or story payload is copied.
+ */
+export function syncPublicWorkspaceNavigation(
+  nav: HTMLElement,
+  url: URL,
+): PublicWorkspaceNavigationState {
+  const state = resolvePublicWorkspaceNavigationState(url);
+
+  nav.querySelectorAll<HTMLAnchorElement>("a[data-workspace-id]").forEach((link) => {
+    const isCurrent =
+      state.workspaceId !== null &&
+      link.dataset.workspaceId === state.workspaceId;
+    if (isCurrent) {
+      link.setAttribute("aria-current", "page");
+    } else {
+      link.removeAttribute("aria-current");
+    }
+  });
+
+  nav.dataset.workspaceContextState = state.contextState;
+  return state;
 }
