@@ -22,3 +22,4 @@ SOURCE_DESCRIPTOR_REF_MISSING	$.source_descriptor_ref
 SOURCE_ROLE_INVALID	$.source_role
 SPATIAL_SUPPORT_NOT_PUBLIC_SAFE	$.spatial_support.kind
 UNDECLARED_SPATIAL_SUPPORT_FIELD	$.spatial_support.longitude
+UNIT_TRANSFORM_REF_UNSUPPORTED	$.measurement.unit_transform_ref
