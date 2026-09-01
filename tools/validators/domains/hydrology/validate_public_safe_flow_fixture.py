@@ -224,6 +224,18 @@ def validate_candidate(candidate: object) -> list[Finding]:
             add_finding(findings, "SOURCE_TIME_INVALID", "$.temporal_scope.source_time")
         if retrieved is None:
             add_finding(findings, "RETRIEVAL_TIME_INVALID", "$.temporal_scope.retrieved_at")
+        if observed is not None and source_time is not None and source_time < observed:
+            add_finding(
+                findings,
+                "SOURCE_TIME_BEFORE_OBSERVED",
+                "$.temporal_scope",
+            )
+        if source_time is not None and retrieved is not None and retrieved < source_time:
+            add_finding(
+                findings,
+                "RETRIEVAL_TIME_BEFORE_SOURCE",
+                "$.temporal_scope",
+            )
         if observed is not None and retrieved is not None and retrieved < observed:
             add_finding(findings, "TEMPORAL_ORDER_INVALID", "$.temporal_scope")
 
