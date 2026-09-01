@@ -3,6 +3,9 @@
   "contract_version": "3.0.0",
   "artifact_paths": [
     ".github/workflows/cross-lane-join-assessment.yml",
+    ".github/workflows/soil-hydrology-public-safe-context.yml",
+    ".github/workflows/soil-agriculture-public-safe-context.yml",
+    ".github/workflows/fauna-habitat-public-safe-assignment.yml",
     "contracts/joins/cross_lane_join_assessment.md",
     "docs/intake/exploratory/full-atlas-crosswalk-validator-source-map.md",
     "fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json",
@@ -18,7 +21,10 @@
     "tools/joins/join_candidates.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/cross-lane-join-assessment.yml": "sha256:eb1ceacafbad82d03c2f5cdd5f217de4a38a4c4dfd118cc2bfe7a42cfcc9177b",
+    ".github/workflows/cross-lane-join-assessment.yml": "sha256:3d8eaaaac9831c4d018c819bdd8111f994d466373bce3f9803d08c8b46013a61",
+    ".github/workflows/soil-hydrology-public-safe-context.yml": "sha256:734803caa21e1b8878ab58f30c8e79f5bba2a883be1c64bdd75377ad05c1b037",
+    ".github/workflows/soil-agriculture-public-safe-context.yml": "sha256:3c1eed98609f5653cbd047c0c2cc49ebc0660d86375df5b2678b9ddd02928175",
+    ".github/workflows/fauna-habitat-public-safe-assignment.yml": "sha256:ae04722885e1d94418e2c6ab0d6a9174cb51b88fce4b17d1dd259a55176505f3",
     "contracts/joins/cross_lane_join_assessment.md": "sha256:3b54788bb7fe5404bfc9553868c7ca39efe4f9165ebb6045f36924b6ee2e7ce1",
     "docs/intake/exploratory/full-atlas-crosswalk-validator-source-map.md": "sha256:34299c5ba17f3d451d09e2d9a2f69514711a0c8ed1303f88233c56b6ded45962",
     "fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json": "sha256:7372e0d9900bc3f1d17861b3bdf0afa2570fe8436edcbd972c485257605c7b94",
@@ -64,6 +70,9 @@
   },
   "truth_labels": {
     ".github/workflows/cross-lane-join-assessment.yml": "PROPOSED",
+    ".github/workflows/soil-hydrology-public-safe-context.yml": "PROPOSED",
+    ".github/workflows/soil-agriculture-public-safe-context.yml": "PROPOSED",
+    ".github/workflows/fauna-habitat-public-safe-assignment.yml": "PROPOSED",
     "contracts/joins/cross_lane_join_assessment.md": "PROPOSED",
     "docs/intake/exploratory/full-atlas-crosswalk-validator-source-map.md": "PROPOSED",
     "fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json": "PROPOSED",
@@ -97,12 +106,12 @@
     {
       "gate": "artifact-hash-replay",
       "outcome": "PASS",
-      "reason": "All eight successor artifact SHA-256 values were recomputed from exact main, with the final workflow bytes bound to the successor receipt filename."
+      "reason": "All 17 declared artifact SHA-256 values were replayed from the exact task branch, including the generic and three pair-specific workflows."
     },
     {
       "gate": "generated-receipt-schema-and-integrity",
       "outcome": "PASS",
-      "reason": "The successor receipt parses as finite JSON, has artifact/hash/truth-label key parity, and is prepared for repository-native validator replay on the feature branch."
+      "reason": "The successor receipt parses as finite JSON and has exact 17-artifact path/hash/truth-label key parity."
     },
     {
       "gate": "hosted-exact-head-ci",
@@ -153,5 +162,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Successor provenance receipt for the cross-lane join assessment review unit. PR #4055 refreshes all declared artifact digests and binds six dedicated synthetic regression files in addition to the original focused suite. The historical 20260809 receipt remains immutable. This receipt creates no source, evidence, policy, review, proof, promotion, release, publication, or public-use authority."
+  "notes": "Successor provenance receipt for the cross-lane join assessment review unit. PR #4055 exposed stale receipt digests and two hosted-CI propagation gaps. This successor binds all six dedicated synthetic regression files plus the generic and three pair-specific workflows that now execute those guards and react to domain-alias register changes. The historical 20260809 receipt remains immutable. This receipt creates no source, evidence, policy, review, proof, promotion, release, publication, or public-use authority."
 }
