@@ -1,3 +1,4 @@
 export * from "./map-runtime-port";
 export * from "./map-runtime-navigation-state";
+export * from "./map-runtime-resize-coordinator";
 export * from "./null-map-runtime";
