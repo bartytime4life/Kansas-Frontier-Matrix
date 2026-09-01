@@ -149,7 +149,7 @@ describe("map runtime navigation history", () => {
 
   it.each([1, 129, 2.5, Number.NaN])(
     "fails closed for invalid capacity %#",
-    (capacity) => {
+    (capacity: number) => {
       const runtime = createNullMapRuntime(CAMERA_A);
       expect(
         capturePortError(() =>
