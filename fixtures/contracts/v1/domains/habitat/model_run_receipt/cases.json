@@ -145,6 +145,17 @@
       "expected_findings": []
     },
     {
+      "case_id": "known-zero-offset-pass",
+      "base": "completed",
+      "mutations": [
+        { "path": "/started_at", "value": "2026-08-10T12:00:00+00:00" },
+        { "path": "/completed_at", "value": "2026-08-10T12:05:00+00:00" },
+        { "path": "/recorded_at", "value": "2026-08-10T12:06:00+00:00" }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
       "case_id": "spec-hash-mismatch",
       "base": "completed",
       "mutations": [],
