@@ -24,7 +24,7 @@ LOCAL_SPEC = "./packages/kfm-cli"
 LOCK_LIMIT_BYTES = 262_144
 HASH_LINE = re.compile(r"^\s+--hash=sha256:[0-9a-f]{64}(?: \\)?$")
 REQUIREMENT_LINE = re.compile(
-    r"^[A-Za-z0-9][A-Za-z0-9._-]*==[A-Za-z0-9][A-Za-z0-9.!+_-]* \\$"
+    r"^[A-Za-z0-9][A-Za-z0-9._-]*==[A-Za-z0-9][A-Za-z0-9.!+_-]* \\$$"
 )
 FORBIDDEN_LOCK_TEXT = (
     "--extra-index-url",
@@ -36,6 +36,11 @@ FORBIDDEN_LOCK_TEXT = (
     "git+",
     "http://",
     "https://",
+)
+PYTHON_IMPORT_ENVIRONMENT_CONTROLS = (
+    "PYTHONHOME",
+    "PYTHONPATH",
+    "PYTHONUSERBASE",
 )
 
 
@@ -142,6 +147,7 @@ def build_commands(executable: str | None = None) -> tuple[tuple[str, ...], ...]
     return (
         (
             python,
+            "-P",
             "-m",
             "pip",
             "install",
@@ -153,6 +159,7 @@ def build_commands(executable: str | None = None) -> tuple[tuple[str, ...], ...]
         ),
         (
             python,
+            "-P",
             "-m",
             "pip",
             "install",
@@ -173,9 +180,12 @@ def install() -> None:
     for key in tuple(environment):
         if key.startswith("PIP_"):
             environment.pop(key, None)
+    for key in PYTHON_IMPORT_ENVIRONMENT_CONTROLS:
+        environment.pop(key, None)
     environment["PIP_CONFIG_FILE"] = os.devnull
     environment["PIP_DISABLE_PIP_VERSION_CHECK"] = "1"
     environment["PIP_NO_INPUT"] = "1"
+    environment["PYTHONNOUSERSITE"] = "1"
     for command in build_commands():
         subprocess.run(
             command,
