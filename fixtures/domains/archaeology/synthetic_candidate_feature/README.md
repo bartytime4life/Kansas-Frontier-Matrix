@@ -14,6 +14,8 @@ burial, sacred-place, collection-security, or culturally restricted data.
 - `unbound_catalog_candidate_deny.json` proves that a candidate cannot claim
   under-review/retained posture or processed/catalog lifecycle without at least
   one governed EvidenceRef.
+- `superseded_without_correction_deny.json` proves that a superseded candidate
+  cannot lose its governed correction or withdrawal lineage.
 
 Run the deterministic, standard-library-only proof with:
 
@@ -23,6 +25,7 @@ python -m unittest tests.domains.archaeology.test_candidate_not_site
 ```
 
 Passing these checks proves only the bounded candidate discriminator, inline
-location denial, opaque-reference boundary, and conditional EvidenceRef binding.
-It does not confirm a site, authorize publication, or establish full
+location denial, opaque-reference boundary, conditional EvidenceRef binding,
+and supersession correction binding. It does not confirm a site, authorize
+publication, or establish full
 EvidenceBundle closure, policy, cultural review, or public-safe transformation.

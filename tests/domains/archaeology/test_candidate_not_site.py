@@ -62,6 +62,22 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         payload.pop("evidence_refs")
         self.assertEqual(validate_candidate_feature(payload), [])
 
+    def test_superseded_candidate_requires_correction_binding(self) -> None:
+        payload = _load(
+            FIXTURE_ROOT / "superseded_without_correction_deny.json"
+        )
+        errors = validate_candidate_feature(payload)
+        self.assertIn(
+            "correction_refs are required for superseded candidates",
+            errors,
+        )
+
+    def test_rejected_candidate_does_not_claim_supersession(self) -> None:
+        payload = copy.deepcopy(self.valid)
+        payload["review_state"] = "REJECTED"
+        payload.pop("correction_refs", None)
+        self.assertEqual(validate_candidate_feature(payload), [])
+
     def test_candidate_cannot_claim_confirmed_truth(self) -> None:
         payload = copy.deepcopy(self.valid)
         payload["truth_state"] = "CONFIRMED"
@@ -86,8 +102,14 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         self.assertEqual(properties["source_refs"]["items"]["pattern"], expected_ref_pattern)
         self.assertEqual(properties["candidate_geometry_ref"]["pattern"], expected_ref_pattern)
         self.assertEqual(properties["evidence_refs"]["minItems"], 1)
-        conditional = schema["allOf"][0]
-        self.assertEqual(conditional["then"]["required"], ["evidence_refs"])
+        evidence_conditional = schema["allOf"][0]
+        self.assertEqual(evidence_conditional["then"]["required"], ["evidence_refs"])
+        correction_conditional = schema["allOf"][1]
+        self.assertEqual(
+            correction_conditional["then"]["required"],
+            ["correction_refs"],
+        )
+        self.assertEqual(properties["correction_refs"]["minItems"], 1)
 
     def test_fixture_cli_is_deterministic_and_local(self) -> None:
         result = subprocess.run(

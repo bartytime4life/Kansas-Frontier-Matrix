@@ -175,6 +175,11 @@ def validate_candidate_feature(payload: Any) -> list[str]:
         errors.append(
             "evidence_refs are required before review or processed/catalog lifecycle"
         )
+    correction_refs = payload.get("correction_refs")
+    if payload.get("review_state") == "SUPERSEDED" and (
+        not isinstance(correction_refs, list) or not correction_refs
+    ):
+        errors.append("correction_refs are required for superseded candidates")
     for field in ("evidence_refs", "observation_refs", "correction_refs"):
         if field in payload:
             errors.extend(_validate_refs(payload[field], field))
@@ -199,6 +204,7 @@ def validate_fixture_suite() -> int:
         FIXTURE_ROOT / "sensitive_geometry_deny.json": "inline location fields are denied",
         FIXTURE_ROOT / "location_bearing_reference_deny.json": "opaque kfm:// references",
         FIXTURE_ROOT / "unbound_catalog_candidate_deny.json": "evidence_refs are required",
+        FIXTURE_ROOT / "superseded_without_correction_deny.json": "correction_refs are required",
     }
     valid_errors = validate_candidate_feature(_load(valid_path))
     if valid_errors:
