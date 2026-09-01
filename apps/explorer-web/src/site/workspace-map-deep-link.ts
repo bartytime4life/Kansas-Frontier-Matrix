@@ -17,6 +17,27 @@ export type PublicMapCaseUrlTransition = Readonly<{
 }>;
 
 /**
+ * Choose a stable keyboard target after the URL-owned map fixture is reset.
+ * Focus outside the fixture is never moved. Within the fixture, preserve the
+ * focused case when it still exists; focus from a removed drawer falls back to
+ * the first public synthetic control instead of disappearing with the old DOM.
+ */
+export function resolvePublicMapEvidenceResetFocusCaseId(
+  focusWasInsideFixture: boolean,
+  focusedCaseId: string | null,
+  availableCaseIds: readonly string[],
+): string | null {
+  if (!focusWasInsideFixture) return null;
+  if (
+    focusedCaseId !== null &&
+    availableCaseIds.includes(focusedCaseId)
+  ) {
+    return focusedCaseId;
+  }
+  return availableCaseIds[0] ?? null;
+}
+
+/**
  * Reconcile the synthetic map fixture that is still owned by public URL state.
  *
  * Departing from an active deep link asks the site controller to reset the

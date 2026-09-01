@@ -26,6 +26,7 @@ import {
   type FeatureMaturity,
   type KnowledgeDomain,
 } from "./catalog";
+import { resolvePublicMapEvidenceResetFocusCaseId } from "./workspace-map-deep-link";
 
 export type ExplorerSiteController = Readonly<{
   resetMapEvidenceSelection: () => void;
@@ -394,8 +395,29 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
   return Object.freeze({
     resetMapEvidenceSelection: () => {
       if (mapFixture === null) return;
+      const activeElement = document.activeElement;
+      const focusWasInsideFixture =
+        activeElement !== null && fixtureHost.contains(activeElement);
+      const focusedCaseId =
+        activeElement
+          ?.closest<HTMLButtonElement>("button[data-map-evidence-case]")
+          ?.dataset.mapEvidenceCase ?? null;
+      const focusCaseId = resolvePublicMapEvidenceResetFocusCaseId(
+        focusWasInsideFixture,
+        focusedCaseId,
+        mapCases.map((fixtureCase) => fixtureCase.caseId),
+      );
       mapFixture.destroy();
       mapFixture = mountMapFixture();
+      if (focusCaseId !== null) {
+        Array.from(
+          fixtureHost.querySelectorAll<HTMLButtonElement>(
+            "button[data-map-evidence-case]",
+          ),
+        )
+          .find((button) => button.dataset.mapEvidenceCase === focusCaseId)
+          ?.focus();
+      }
     },
     destroy: () => {
       cleanup.forEach((fn) => fn());
