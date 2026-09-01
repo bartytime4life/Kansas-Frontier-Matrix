@@ -70,6 +70,23 @@ class PathAliasDiscoveryIndexTests(unittest.TestCase):
             [item["alias_id"] for item in index["aliases"]],
         )
         self.assertEqual(
+            [
+                {
+                    "old_path": "legacy/alpha.md",
+                    "canonical_target": "canonical/alias.alpha.md",
+                    "alias_id": "alias.alpha",
+                    "canonical_id": "kfm://canonical/alias.alpha",
+                },
+                {
+                    "old_path": "legacy/beta.md",
+                    "canonical_target": "canonical/alias.beta.md",
+                    "alias_id": "alias.beta",
+                    "canonical_id": "kfm://canonical/alias.beta",
+                },
+            ],
+            index["path_index"],
+        )
+        self.assertEqual(
             [{"consumer_id": "consumer.shared", "alias_ids": ["alias.alpha", "alias.beta"]}],
             index["consumer_index"],
         )
@@ -129,6 +146,12 @@ class PathAliasDiscoveryIndexTests(unittest.TestCase):
         register = _register()
         register["aliases"][0]["canonical_target"] = register["aliases"][0]["old_path"]
         with self.assertRaisesRegex(DiscoveryIndexError, "own canonical target"):
+            build_discovery_index(register, source_path="register.json")
+
+    def test_alias_chains_fail_closed(self) -> None:
+        register = _register()
+        register["aliases"][0]["canonical_target"] = register["aliases"][1]["old_path"]
+        with self.assertRaisesRegex(DiscoveryIndexError, "another registered alias"):
             build_discovery_index(register, source_path="register.json")
 
     def test_cli_is_deterministic_and_omits_sensitive_or_decisional_fields(self) -> None:

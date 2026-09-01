@@ -167,6 +167,7 @@ def build_discovery_index(
     aliases: list[dict[str, Any]] = []
     alias_ids: list[str] = []
     old_paths: list[str] = []
+    canonical_targets: list[str] = []
     canonical_ids: list[str] = []
     identity_aliases: list[str] = []
     identity_index: dict[str, set[str]] = defaultdict(set)
@@ -198,6 +199,7 @@ def build_discovery_index(
         aliases.append(item)
         alias_ids.append(alias_id)
         old_paths.append(item["old_path"])
+        canonical_targets.append(item["canonical_target"])
         canonical_ids.append(canonical_id)
         identity_aliases.extend(mapped_aliases)
         identity_index[canonical_id].add(alias_id)
@@ -212,6 +214,10 @@ def build_discovery_index(
         raise DiscoveryIndexError("alias_id values must be unique")
     if len(old_paths) != len(set(old_paths)):
         raise DiscoveryIndexError("old_path values must be unique")
+    if set(old_paths).intersection(canonical_targets):
+        raise DiscoveryIndexError(
+            "canonical targets must not resolve through another registered alias"
+        )
     if len(canonical_ids) != len(set(canonical_ids)):
         raise DiscoveryIndexError("canonical identity values must be unique")
     if len(identity_aliases) != len(set(identity_aliases)):
@@ -235,6 +241,15 @@ def build_discovery_index(
         },
         "alias_count": len(aliases),
         "aliases": aliases,
+        "path_index": [
+            {
+                "old_path": item["old_path"],
+                "canonical_target": item["canonical_target"],
+                "alias_id": item["alias_id"],
+                "canonical_id": item["identity"]["canonical_id"],
+            }
+            for item in sorted(aliases, key=lambda value: value["old_path"])
+        ],
         "identity_index": _reverse_index(identity_index, key_name="identity"),
         "consumer_index": _reverse_index(consumer_index, key_name="consumer_id"),
         "facets": {
