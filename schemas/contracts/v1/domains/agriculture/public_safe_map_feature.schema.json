@@ -109,7 +109,60 @@
             "GENERALIZED_PUBLIC_SAFE"
           ]
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "COUNTY"
+              }
+            },
+            "required": ["kind"]
+          },
+          "then": {
+            "properties": {
+              "key": {
+                "pattern": "^US-KS-20[0-9]{3}$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "REGION"
+              }
+            },
+            "required": ["kind"]
+          },
+          "then": {
+            "properties": {
+              "key": {
+                "pattern": "^KS-AG-[A-Z0-9]+(?:-[A-Z0-9]+)*-REGION-[0-9]{2}$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "GENERALIZED_GRID"
+              }
+            },
+            "required": ["kind"]
+          },
+          "then": {
+            "properties": {
+              "key": {
+                "pattern": "^KS-GRID-[1-9][0-9]*KM-[0-9]{3}-[0-9]{3}$"
+              }
+            }
+          }
+        }
+      ]
     },
     "temporal": {
       "type": "object",
@@ -380,6 +433,98 @@
       }
     }
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"object_family": {"const": "CropObservation"}},
+        "required": ["object_family"]
+      },
+      "then": {
+        "properties": {"indicator": {"properties": {"key": {"const": "cropland_class"}}}}
+      }
+    },
+    {
+      "if": {
+        "properties": {"object_family": {"const": "CropRotation"}},
+        "required": ["object_family"]
+      },
+      "then": {
+        "properties": {"indicator": {"properties": {"key": {"const": "crop_rotation_class"}}}}
+      }
+    },
+    {
+      "if": {
+        "properties": {"object_family": {"const": "YieldObservation"}},
+        "required": ["object_family"]
+      },
+      "then": {
+        "properties": {"indicator": {"properties": {"key": {"const": "yield_rate"}}}}
+      }
+    },
+    {
+      "if": {
+        "properties": {"object_family": {"const": "IrrigationLink"}},
+        "required": ["object_family"]
+      },
+      "then": {
+        "properties": {"indicator": {"properties": {"key": {"const": "irrigation_context_class"}}}}
+      }
+    },
+    {
+      "if": {
+        "properties": {"object_family": {"const": "ConservationPractice"}},
+        "required": ["object_family"]
+      },
+      "then": {
+        "properties": {"indicator": {"properties": {"key": {"const": "conservation_practice_context_class"}}}}
+      }
+    },
+    {
+      "if": {
+        "properties": {"object_family": {"const": "SoilCropSuitability"}},
+        "required": ["object_family"]
+      },
+      "then": {
+        "properties": {"indicator": {"properties": {"key": {"const": "soil_crop_suitability_index"}}}}
+      }
+    },
+    {
+      "if": {
+        "properties": {"object_family": {"const": "AgriculturalEconomyObservation"}},
+        "required": ["object_family"]
+      },
+      "then": {
+        "properties": {"indicator": {"properties": {"key": {"const": "agricultural_receipts"}}}}
+      }
+    },
+    {
+      "if": {
+        "properties": {"object_family": {"const": "SupplyChainNode"}},
+        "required": ["object_family"]
+      },
+      "then": {
+        "properties": {"indicator": {"properties": {"key": {"const": "supply_chain_context_class"}}}}
+      }
+    },
+    {
+      "if": {
+        "properties": {"object_family": {"const": "DroughtStressIndicator"}},
+        "required": ["object_family"]
+      },
+      "then": {
+        "properties": {"indicator": {"properties": {"key": {"const": "drought_stress_index"}}}}
+      }
+    },
+    {
+      "if": {
+        "properties": {"object_family": {"const": "PestStressIndicator"}},
+        "required": ["object_family"]
+      },
+      "then": {
+        "properties": {"indicator": {"properties": {"key": {"const": "pest_stress_index"}}}}
+      }
+    }
+  ],
   "x-kfm": {
     "status": "PROPOSED_INACTIVE",
     "contract_doc": "contracts/domains/agriculture/public_safe_map_feature.md",

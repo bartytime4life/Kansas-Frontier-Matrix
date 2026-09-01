@@ -127,6 +127,10 @@
         {
           "path": "/object_family",
           "value": "CropRotation"
+        },
+        {
+          "path": "/indicator/key",
+          "value": "crop_rotation_class"
         }
       ],
       "expected_outcome": "DENY",
@@ -173,6 +177,10 @@
         {
           "path": "/semantic_role",
           "value": "OBSERVED_AGGREGATE"
+        },
+        {
+          "path": "/indicator/key",
+          "value": "soil_crop_suitability_index"
         }
       ],
       "expected_outcome": "DENY",
@@ -193,6 +201,10 @@
         {
           "path": "/semantic_role",
           "value": "IRRIGATION_CONTEXT"
+        },
+        {
+          "path": "/indicator/key",
+          "value": "irrigation_context_class"
         },
         {
           "path": "/indicator/unit",
@@ -225,6 +237,10 @@
         {
           "path": "/semantic_role",
           "value": "IRRIGATION_CONTEXT"
+        },
+        {
+          "path": "/indicator/key",
+          "value": "irrigation_context_class"
         },
         {
           "path": "/indicator/unit",

@@ -84,6 +84,17 @@ remains a receipt, not a map feature.
 `support.generalized` is always `true` and `precision_class` is always
 `AGGREGATE_PUBLIC_SAFE` or `GENERALIZED_PUBLIC_SAFE`.
 
+The declared support kind and support key are inseparable. Canonical keys are
+restricted to these public-safe namespaces:
+
+- `COUNTY` -> `US-KS-20NNN` Kansas county FIPS form;
+- `REGION` -> `KS-AG-<NAME>-REGION-NN` Agriculture-owned generalized region;
+- `GENERALIZED_GRID` -> `KS-GRID-<SIZE>KM-NNN-NNN` generalized grid cell.
+
+A coordinate literal, field/farm identifier, private label, or key from another
+support namespace is invalid even when its characters satisfy the generic key
+shape.
+
 The carrier must never contain exact/reconstructable:
 
 - field boundaries or coordinates;
@@ -130,6 +141,24 @@ treated as current.
 - irrigation/practice/infrastructure context -> `CONTEXT_ONLY`.
 
 A map carrier cannot upgrade modeled context to observed truth.
+
+Each supported object family also has one admitted indicator key:
+
+| Object family | Indicator key |
+|---|---|
+| `CropObservation` | `cropland_class` |
+| `CropRotation` | `crop_rotation_class` |
+| `YieldObservation` | `yield_rate` |
+| `IrrigationLink` | `irrigation_context_class` |
+| `ConservationPractice` | `conservation_practice_context_class` |
+| `SoilCropSuitability` | `soil_crop_suitability_index` |
+| `AgriculturalEconomyObservation` | `agricultural_receipts` |
+| `SupplyChainNode` | `supply_chain_context_class` |
+| `DroughtStressIndicator` | `drought_stress_index` |
+| `PestStressIndicator` | `pest_stress_index` |
+
+Indicator keys cannot carry operator, address, proprietary-value, or another
+family's semantics through an otherwise valid candidate.
 
 ## Authority and release effects
 
