@@ -65,6 +65,23 @@ export function sanitizePublicWorkspaceNavigationUrl(url: URL): URL {
 }
 
 /**
+ * Return one explicit public Knowledge-domain selection from a validated deep
+ * link. Multi-domain context is intentionally not collapsed into an arbitrary
+ * primary domain, and non-Knowledge or rejected context produces no selection.
+ * The returned value is only the catalog-bounded public domain identifier.
+ */
+export function resolveSinglePublicKnowledgeDomainId(url: URL): string | null {
+  const context = parsePublicWorkspaceContextUrl(url);
+  if (
+    context?.workspaceId !== "knowledge" ||
+    context.domainIds.length !== 1
+  ) {
+    return null;
+  }
+  return context.domainIds[0] ?? null;
+}
+
+/**
  * Project the public workspace registry into the existing anchor navigation.
  * This replaces display links only; it creates no routes or privileged actions.
  */
