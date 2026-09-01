@@ -132,8 +132,7 @@ class OccurrenceEvidenceTests(unittest.TestCase):
         )
 
     def test_event_time_cannot_contradict_event_date(self) -> None:
-        candidate = _load("valid/valid_observed_open.json")
-        candidate["observation"]["event_time"] = "2026-01-16T00:00:00Z"
+        candidate = _load("semantic_invalid/event_time_date_mismatch.json")
 
         result = validator.validate_candidate(candidate)
 

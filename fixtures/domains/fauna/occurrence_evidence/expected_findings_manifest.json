@@ -4,6 +4,20 @@
     {
       "expected_findings": [
         {
+          "code": "obs.event_time_date_mismatch",
+          "path": "/observation/event_time"
+        },
+        {
+          "code": "schema.pass_gate_failed",
+          "path": "/validation/validator_result"
+        }
+      ],
+      "expected_outcome": "ERROR",
+      "path": "semantic_invalid/event_time_date_mismatch.json"
+    },
+    {
+      "expected_findings": [
+        {
           "code": "obs.source_role_mismatch",
           "path": "/observation/basis_of_record"
         },

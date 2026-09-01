@@ -6,7 +6,7 @@ version: v0.1.0
 status: synthetic; no-network; public-safe; non-release
 owners: OWNER_TBD — Fauna steward · Fixture steward · Sensitivity reviewer · Validation steward
 created: 2026-08-08
-updated: 2026-08-08
+updated: 2026-09-01
 policy_label: public-safe-synthetic; fauna; occurrence-evidence; no-live-source; no-publication-authority
 related:
   - ../../../../contracts/domains/fauna/occurrence_evidence.md
@@ -27,6 +27,7 @@ These fixtures are synthetic, no-network, and unsuitable as biological or geogra
 | `valid/valid_observed_open.json` | Structurally and semantically valid direct observation; fixture-only `pass`. |
 | `valid/valid_modeled_context.json` | Valid `modeled` record that remains distinct from an observation. |
 | `valid/valid_sensitive_withheld_quarantine.json` | Valid sensitive record with withheld public geometry and `quarantine`, proving valid does not mean publishable. |
+| `semantic_invalid/event_time_date_mismatch.json` | Rejects an event timestamp whose calendar date contradicts the declared event date. |
 | `semantic_invalid/modeled_as_observed.json` | Rejects model-as-observation role collapse. |
 | `semantic_invalid/observed_without_raw_artifact.json` | Rejects missing source-bound raw-artifact support for an observed record. |
 | `semantic_invalid/rights_unresolved_pass.json` | Rejects a claimed pass with unresolved rights. |
