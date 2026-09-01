@@ -54,6 +54,15 @@ class InstallKfmCliTests(unittest.TestCase):
             ):
                 module.validate_lockfile(path)
 
+    def test_local_package_validation_rejects_outside_repository(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp)
+            with self.assertRaisesRegex(
+                module.CliInstallConfigurationError,
+                "CLI_LOCAL_PACKAGE_OUTSIDE_REPOSITORY",
+            ):
+                module.validate_local_package(path)
+
     def test_install_executes_argument_vectors_without_a_shell(self) -> None:
         with mock.patch.object(module.subprocess, "run") as run:
             module.install()
