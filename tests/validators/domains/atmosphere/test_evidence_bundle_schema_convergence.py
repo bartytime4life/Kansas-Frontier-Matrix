@@ -8,6 +8,10 @@ import unittest
 from pathlib import Path
 
 from tools.validators._common.jsonschema_runner import load_validator
+from tools.validators.domains.atmosphere.validate_evidence_bundle import (
+    FIXTURES_DIR,
+    SCHEMA_PATH,
+)
 
 ROOT = Path(__file__).resolve().parents[4]
 DOMAIN_SCHEMA = ROOT / "schemas/contracts/v1/domains/atmosphere/evidence_bundle.schema.json"
@@ -30,6 +34,20 @@ class AtmosphereEvidenceBundleSchemaConvergenceTests(unittest.TestCase):
         self.assertNotIn("properties", schema)
         self.assertNotIn("required", schema)
         self.assertNotIn("additionalProperties", schema)
+
+    def test_projection_metadata_matches_domain_adapter_paths(self) -> None:
+        schema = self.load(DOMAIN_SCHEMA)
+
+        self.assertEqual(SCHEMA_PATH, DOMAIN_SCHEMA)
+        self.assertEqual(FIXTURES_DIR, SHARED_FIXTURES)
+        self.assertEqual(
+            schema["x-kfm"]["canonical_shape"],
+            SHARED_SCHEMA.relative_to(ROOT).as_posix(),
+        )
+        self.assertEqual(
+            schema["x-kfm"]["fixtures_root"],
+            f"{SHARED_FIXTURES.relative_to(ROOT).as_posix()}/",
+        )
 
     def test_shared_contract_keeps_closed_claim_scope_shape(self) -> None:
         schema = self.load(SHARED_SCHEMA)
