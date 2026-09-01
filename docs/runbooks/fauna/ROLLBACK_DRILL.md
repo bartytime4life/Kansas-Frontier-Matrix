@@ -1256,7 +1256,8 @@ At the pinned definition it:
 
 - installs declared repository test dependencies;
 - confirms the production rollback pipeline remains a placeholder;
-- confirms the generic legacy validator entry point remains a placeholder;
+- confirms the generic legacy validator entry point delegates to the canonical
+  release validator with byte-identical fixture output;
 - validates the stronger release-scoped `RollbackCard` fixture profile;
 - runs the non-vacuous shared synthetic rehearsal tests;
 - confirms direct domain drill material remains guidance-only where expected;

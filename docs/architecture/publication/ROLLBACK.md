@@ -776,7 +776,7 @@ A badge, chart, or dashboard cannot substitute for the underlying records and ch
 - [ ] Converge or explicitly version shared and domain-local rollback-card schemas.
 - [ ] Align `release/rollback_cards/README.md` and retire/deprecate conflicting lane guidance through a reviewed migration.
 - [ ] Classify every object under generic `data/rollback/`; materialize `data/receipts/rollback/` with contract, schema, fixtures, validator, tests, and retention.
-- [ ] Replace the production pipeline and generic validator placeholders through one dependency-closed implementation.
+- [ ] Implement the production pipeline and an accepted operational RollbackCard profile while preserving the generic compatibility delegate.
 - [ ] Adopt a fail-closed policy bundle, evaluator, decision envelope, replay identity, and reason mapping.
 - [ ] Accept actor/authority/subject binding and separation-of-duties enforcement.
 - [ ] Define immutable alias/profile, compare-and-swap semantics, concurrency, signature, and stale-prior-state behavior.

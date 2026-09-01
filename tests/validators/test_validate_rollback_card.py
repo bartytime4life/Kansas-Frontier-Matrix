@@ -20,9 +20,9 @@ from tools.validators.release.validate_rollback_card import (
 
 STALE_COMPATIBILITY_GUIDANCE_PATTERNS = (
     r"(?i)(?:generic|compatibility)[^\n;|]*"
-    r"(?:validator|entry\s*point)[^\n;|]*\bplaceholder\b",
+    r"(?:validator|entry\s*point)[^\n;|]*\bplaceholders?\b",
     r"(?i)(?=[^\n]*validate_rollback_card\.py)"
-    r"(?=[^\n]*(?:\bplaceholder\b|do not use))[^\n]*",
+    r"(?=[^\n]*(?:\bplaceholders?\b|do not use))[^\n]*",
 )
 
 
@@ -196,8 +196,12 @@ class RollbackCardValidatorTests(unittest.TestCase):
                 "`tools/validators/validate_rollback_card.py` raises "
                 "`NotImplementedError`",
             ),
+            "docs/runbooks/fauna/ROLLBACK_DRILL.md": (
+                "generic legacy validator entry point remains a placeholder",
+            ),
             "docs/architecture/publication/ROLLBACK.md": (
                 "| Generic validator entrypoint | **CONFIRMED placeholder** |",
+                "production pipeline and generic validator placeholders",
             ),
             "docs/architecture/release-discipline.md": (),
             "docs/adr/ADR-0015-data-published-_domain_-current-alias-is-governed-by-rollback_card.md": (
@@ -235,10 +239,26 @@ class RollbackCardValidatorTests(unittest.TestCase):
                 for stale_pattern in STALE_COMPATIBILITY_GUIDANCE_PATTERNS:
                     self.assertNotRegex(guidance, stale_pattern)
 
+    def test_all_rollback_guidance_rejects_stale_compatibility_claims(
+        self,
+    ) -> None:
+        rollback_guidance_paths = sorted(
+            path
+            for path in (REPO_ROOT / "docs").rglob("*.md")
+            if "rollback" in path.as_posix().casefold()
+        )
+        self.assertGreaterEqual(len(rollback_guidance_paths), 10)
+        for path in rollback_guidance_paths:
+            with self.subTest(path=path.relative_to(REPO_ROOT).as_posix()):
+                guidance = path.read_text(encoding="utf-8")
+                for stale_pattern in STALE_COMPATIBILITY_GUIDANCE_PATTERNS:
+                    self.assertNotRegex(guidance, stale_pattern)
+
     def test_stale_operator_guidance_patterns_are_non_vacuous(self) -> None:
         stale_variants = (
             "- the generic compatibility validator remains a placeholder;",
             "- the compatibility entry point is still just a placeholder.",
+            "- replace the production pipeline and generic validator placeholders.",
             "| Generic validator shortcut | "
             "`python tools/validators/validate_rollback_card.py` | "
             "Do not use |",
