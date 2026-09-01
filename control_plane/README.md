@@ -19,7 +19,7 @@ evidence_snapshot:
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: 6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e
+  base_commit: 488204fbec1add5c20efb443d4d2ffe493673f75
   prior_blob: a7bbfddc0f257194c42b75046da6eccf976980e0
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_sha256: sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e
@@ -437,7 +437,7 @@ Child READMEs own deeper detail. Do not duplicate deep trees here.
 | Field | Value |
 |---|---|
 | Evidence inspection date | 2026-08-22 |
-| Repository snapshot | `main@6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e` |
+| Repository snapshot | `main@488204fbec1add5c20efb443d4d2ffe493673f75` |
 | Prior README blob | `a7bbfddc0f257194c42b75046da6eccf976980e0` |
 | Direct children inspected | 28: 26 files, two directories, including the proposed M01 packet |
 | Required registers | 9: three nonempty, six empty |
@@ -728,7 +728,7 @@ Revert the M01 program-baseline instance, contract, schema, fixture cases, valid
 
 ### v0.6 — 2026-08-22
 
-- repinned the bounded control-plane inventory to `main@6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e`;
+- repinned the bounded control-plane inventory to `main@488204fbec1add5c20efb443d4d2ffe493673f75`;
 - indexed the proposed M01 program-baseline contract, schema, instance, fixture cases, validator, tests, workflow, and generated receipt;
 - recorded the exact three accepted ADRs, unchanged Directory Rules digest, current issue overlap, empty open-PR queue, and non-authoritative Drive lineage;
 - preserved nine inherited topology findings, nine object-family workflow-watch failures, and absent exact-main hosted runs as `FAIL`, `FAIL`, and `NOT_RUN` respectively;

@@ -11,7 +11,7 @@ responsibility_root: contracts/
 owning_root: contracts/
 responsibility: define a pinned and reversible M01 repository program-baseline projection without creating authority accepting decisions mutating issue state waiving failures activating sources changing lifecycle state or authorizing release deployment promotion or publication
 policy_label: internal-governance; cite-or-abstain; no-self-authority; no-network-validation
-truth_posture: CONFIRMED main@6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e accepted ADR inventory Directory Rules digest CODEOWNERS route root and alias projections current open-review queue tracker state local focused results and absent exact-main hosted runs / PROPOSED this contract schema instance validator fixtures workflow and receipt / UNKNOWN independent review branch-protection enforcement deployed consumers and production behavior
+truth_posture: CONFIRMED main@488204fbec1add5c20efb443d4d2ffe493673f75 accepted ADR inventory Directory Rules digest CODEOWNERS route root and alias projections current open-review queue tracker state local focused results and absent exact-main hosted runs / PROPOSED this contract schema instance validator fixtures workflow and receipt / UNKNOWN independent review branch-protection enforcement deployed consumers and production behavior
 related:
   - ../../control_plane/program_baseline.json
   - ../../schemas/contracts/v1/governance/program_baseline.schema.json
@@ -37,7 +37,7 @@ notes:
 
 `ProgramBaseline` is the pinned, machine-readable coordination checkpoint for **M01 — Authority, Directory Rules & Program Baseline**. It records the repository state inspected before implementation and makes later drift, correction, and review decisions reproducible.
 
-The canonical instance is [`control_plane/program_baseline.json`](../../control_plane/program_baseline.json). It is a governance projection, not governance authority. Its base is the exact pre-change commit `main@6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e`.
+The canonical instance is [`control_plane/program_baseline.json`](../../control_plane/program_baseline.json). It is a governance projection, not governance authority. Its base is the exact pre-change commit `main@488204fbec1add5c20efb443d4d2ffe493673f75`.
 
 ## Evidence and authority order
 
@@ -126,7 +126,7 @@ The packet records the connected **AI Build Operating Contract**, **Connected-Do
 
 The baseline becomes stale when the main branch advances, accepted ADR status or authority digests change, issue state/body changes, the open-PR queue changes, or a recorded validator/workflow outcome changes.
 
-Before merge, rollback is closing the draft PR or deleting the review branch. After an authorized merge, use a same-path forward correction or a reviewed Git revert to `6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e`. Correct GitHub tracker claims with an append-only corrective comment; do not rewrite or erase historical evidence. Generated receipts remain append-only process memory.
+Before merge, rollback is closing the draft PR or deleting the review branch. After an authorized merge, use a same-path forward correction or a reviewed Git revert to `488204fbec1add5c20efb443d4d2ffe493673f75`. Correct GitHub tracker claims with an append-only corrective comment; do not rewrite or erase historical evidence. Generated receipts remain append-only process memory.
 
 ## Non-effects
 

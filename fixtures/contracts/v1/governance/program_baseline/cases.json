@@ -2,7 +2,7 @@
   "base": {
     "schema_version": "1.0.0",
     "profile": "kfm.program-baseline.m01.v1",
-    "baseline_id": "kfm-program-baseline-main-6aa1ce50dfc4",
+    "baseline_id": "kfm-program-baseline-main-488204fbec1a",
     "repository": "bartytime4life/Kansas-Frontier-Matrix",
     "projection_status": "PROPOSED",
     "implementation_status": "PARTIAL",
@@ -10,7 +10,7 @@
     "observed_at": "2026-08-22T23:45:05Z",
     "base": {
       "branch": "main",
-      "sha": "6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e",
+      "sha": "488204fbec1add5c20efb443d4d2ffe493673f75",
       "milestone_number": 2,
       "milestone_issue_number": 3365,
       "milestone_title": "M01 - Authority, Directory Rules & Program Baseline",
@@ -161,7 +161,7 @@
     ],
     "correction": {
       "method": "same_path_forward_fix_or_reviewed_git_revert",
-      "rollback_target": "git:6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e",
+      "rollback_target": "git:488204fbec1add5c20efb443d4d2ffe493673f75",
       "external_correction": "append_corrective_issue_comment",
       "stale_triggers": [
         "accepted_adr_status_changes",
