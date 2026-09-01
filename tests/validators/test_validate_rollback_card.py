@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -14,6 +15,14 @@ from tools.validators.release.validate_rollback_card import (
     REPO_ROOT,
     SCHEMA_PATH,
     validate_rollback_card,
+)
+
+
+STALE_COMPATIBILITY_GUIDANCE_PATTERNS = (
+    r"(?i)(?:generic|compatibility)[^\n;|]*"
+    r"(?:validator|entry\s*point)[^\n;|]*\bplaceholder\b",
+    r"(?i)(?=[^\n]*validate_rollback_card\.py)"
+    r"(?=[^\n]*(?:\bplaceholder\b|do not use))[^\n]*",
 )
 
 
@@ -136,6 +145,7 @@ class RollbackCardValidatorTests(unittest.TestCase):
             "docs/architecture/publication/ROLLBACK.md": (
                 "| Generic validator entrypoint | **CONFIRMED placeholder** |",
             ),
+            "docs/architecture/release-discipline.md": (),
             "docs/adr/ADR-0015-data-published-_domain_-current-alias-is-governed-by-rollback_card.md": (
                 "| Generic RollbackCard entrypoint | **CONFIRMED placeholder** |",
             ),
@@ -167,6 +177,32 @@ class RollbackCardValidatorTests(unittest.TestCase):
                 self.assertIn("canonical", normalized)
                 for stale_claim in stale_claims:
                     self.assertNotIn(stale_claim, guidance)
+                for stale_pattern in STALE_COMPATIBILITY_GUIDANCE_PATTERNS:
+                    self.assertNotRegex(guidance, stale_pattern)
+
+    def test_stale_operator_guidance_patterns_are_non_vacuous(self) -> None:
+        stale_variants = (
+            "- the generic compatibility validator remains a placeholder;",
+            "- the compatibility entry point is still just a placeholder.",
+            "| Generic validator shortcut | "
+            "`python tools/validators/validate_rollback_card.py` | "
+            "Do not use |",
+        )
+        for stale_variant in stale_variants:
+            with self.subTest(stale_variant=stale_variant):
+                self.assertTrue(
+                    any(
+                        re.search(pattern, stale_variant)
+                        for pattern in STALE_COMPATIBILITY_GUIDANCE_PATTERNS
+                    )
+                )
+        production_hold = "the production rollback pipeline remains a placeholder"
+        self.assertFalse(
+            any(
+                re.search(pattern, production_hold)
+                for pattern in STALE_COMPATIBILITY_GUIDANCE_PATTERNS
+            )
+        )
 
     def test_duplicate_keys_fail_closed_without_echo(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

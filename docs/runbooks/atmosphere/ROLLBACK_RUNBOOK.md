@@ -588,7 +588,7 @@ The tracked test profile includes non-vacuous cases for:
 `.github/workflows/rollback-drill.yml` is a read-only readiness workflow. It intentionally confirms that:
 
 - the production rollback pipeline remains a placeholder;
-- the generic compatibility validator remains a placeholder;
+- the generic compatibility validator delegates to the schema-declared canonical validator and must preserve fixture-output parity;
 - the release candidate profile and fixtures pass their bounded validation;
 - the synthetic helper retains its marker and no-authority guards;
 - the rehearsal tests are non-vacuous;
@@ -1030,7 +1030,7 @@ The fixture is synthetic and remains non-authoritative.
 | Run rehearsal tests | `python -m unittest -q tests.release.test_synthetic_rollback_rehearsal` | Implemented; temporary roots only |
 | Plan synthetic scenario | `python tools/release/rollback_apply.py --workspace <root> --scenario <file> --report <file>` | Marker-protected synthetic root only |
 | Apply synthetic scenario | Same command plus `--apply` | Disposable marked root only; no real public state |
-| Generic validator shortcut | `python tools/validators/validate_rollback_card.py` | **Do not use** — placeholder |
+| Compatibility validator | `python tools/validators/validate_rollback_card.py --fixtures` | Implemented delegate to the canonical validator; validation only, no rollback authority |
 | Production pipeline | `pipelines/rollback/main.py` | **Do not use** — placeholder |
 | Candidate semantic contract | `contracts/release/rollback_card.md` | Draft, proposed, schema-paired |
 | Candidate schema | `schemas/contracts/v1/release/rollback_card.schema.json` | Closed fixture-first 1.0.0 profile |
