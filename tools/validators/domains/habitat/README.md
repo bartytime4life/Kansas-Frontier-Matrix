@@ -34,7 +34,8 @@ related:
   - ../../../../data/receipts/
   - ../../../../release/
 notes:
-  - "v0.4 records the bounded Habitat EvidenceBundle domain entrypoint, its deterministic tests, and focused workflow coverage without granting evidence, release, or publication authority."\n  - "v0.3 closed the post-workflow inventory gap by recording the dedicated critical-habitat source-role workflow without changing validator behavior or maturity."
+  - "v0.4 records the bounded Habitat EvidenceBundle domain entrypoint, its deterministic tests, and focused workflow coverage without granting evidence, release, or publication authority."
+  - "v0.3 closed the post-workflow inventory gap by recording the dedicated critical-habitat source-role workflow without changing validator behavior or maturity."
   - "No broad tools/validators/habitat/README.md was found during this task, so this path currently serves as the inspected per-domain Habitat validator index."
   - "Habitat owns landscape, patches, suitability, connectivity, restoration opportunity, and stewardship-zone products. It does not own Fauna occurrence truth, Flora taxon/specimen truth, Hydrology water truth, Soil substrate truth, or regulatory hazard truth."
   - "Habitat sensitivity is often join-induced. Outputs that reveal sensitive Fauna, Flora, archaeology, stewardship, private-land, infrastructure, or other restricted context must fail closed unless public-safe geoprivacy, review, policy, evidence, release, correction, and rollback support exists."
@@ -94,7 +95,8 @@ The reviewed task branch establishes five substantive direct-child validators:
 
 | Validator | Bounded responsibility | Test / fixture evidence | Focused workflow |
 |---|---|---|---|
-| `validate_cover_class_crosswalk_profile.py` | Fixture-only ontology version, directionality, coverage, and lossiness checks. | `tests/domains/habitat/land_cover/crosswalk/test_cover_class_crosswalk_profile.py`; `fixtures/domains/habitat/land_cover/crosswalk/profile_cases.json` | `cover-class-crosswalk-profile.yml` |\n| `validate_evidence_bundle.py` | Bounded domain-side projection entrypoint delegating structural validation to the shared JSON Schema runner. | `tests/validators/domains/habitat/test_domain_evidence_bundle_validator_entrypoint.py`; shared `fixtures/contracts/v1/evidence/evidence_bundle/` profile | `habitat-evidence-bundle-convergence.yml` |
+| `validate_cover_class_crosswalk_profile.py` | Fixture-only ontology version, directionality, coverage, and lossiness checks. | `tests/domains/habitat/land_cover/crosswalk/test_cover_class_crosswalk_profile.py`; `fixtures/domains/habitat/land_cover/crosswalk/profile_cases.json` | `cover-class-crosswalk-profile.yml` |
+| `validate_evidence_bundle.py` | Bounded domain-side projection entrypoint delegating structural validation to the shared JSON Schema runner. | `tests/validators/domains/habitat/test_domain_evidence_bundle_validator_entrypoint.py`; shared `fixtures/contracts/v1/evidence/evidence_bundle/` profile | `habitat-evidence-bundle-convergence.yml` |
 | `validate_land_cover_materiality.py` | Deterministic material-change classification for the inactive land-cover profile. | `tests/validators/domains/habitat/test_land_cover_materiality.py`; `fixtures/domains/habitat/land_cover/materiality/` | `habitat-land-cover-materiality.yml`; also exercised by `domain-habitat.yml` |
 | `validate_model_run_receipt.py` | Fixture-only model-run receipt shape, identity, temporal, digest, uncertainty, and authority-boundary checks. | `tests/validators/domains/habitat/test_validate_model_run_receipt.py`; `fixtures/contracts/v1/domains/habitat/model_run_receipt/` | `habitat-model-run-receipt.yml` |
 | `validate_critical_habitat_source_role.py` | Synthetic source-role anti-collapse for regulatory critical habitat and modeled habitat, including species-presence denial. | `tests/domains/habitat/test_critical_habitat_source_role.py` | `habitat-critical-habitat-source-role.yml` |
@@ -235,7 +237,12 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 Repository-confirmed focused commands:
 
 ```bash
-python -m unittest -q \\\n  tests.validators.domains.habitat.test_evidence_bundle_schema_convergence \\\n  tests.validators.domains.habitat.test_domain_evidence_bundle_validator_entrypoint\npython tools/validators/domains/habitat/validate_evidence_bundle.py --fixtures\n\npython -m pytest -q tests/validators/domains/habitat/test_land_cover_materiality.py
+python -m unittest -q \
+  tests.validators.domains.habitat.test_evidence_bundle_schema_convergence \
+  tests.validators.domains.habitat.test_domain_evidence_bundle_validator_entrypoint
+python tools/validators/domains/habitat/validate_evidence_bundle.py --fixtures
+
+python -m pytest -q tests/validators/domains/habitat/test_land_cover_materiality.py
 python tools/validators/domains/habitat/validate_land_cover_materiality.py --fixtures
 ```
 
