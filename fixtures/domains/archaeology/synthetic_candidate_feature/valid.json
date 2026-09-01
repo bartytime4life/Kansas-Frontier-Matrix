@@ -1,8 +1,18 @@
 {
-  "status": "PROPOSED",
-  "source_doc": "docs/domains/archaeology/MISSING_OR_PLANNED_FILES.md",
-  "path": "fixtures/domains/archaeology/synthetic_candidate_feature/valid.json",
-  "notes": [
-    "Placeholder created from docs/domains markdown inventory."
-  ]
+  "candidate_feature_id": "arc-candidate-synthetic-001",
+  "object_type": "CandidateFeature",
+  "truth_state": "CANDIDATE",
+  "candidate_type": "ANOMALY",
+  "origin_method": "REMOTE_SENSING",
+  "source_refs": [
+    "kfm://source/synthetic/archaeology-candidate-001"
+  ],
+  "evidence_refs": [
+    "kfm://evidence/synthetic/archaeology-candidate-001"
+  ],
+  "review_state": "NEEDS_REVIEW",
+  "sensitivity_class": "WITHHELD",
+  "spatial_precision_class": "WITHHELD",
+  "lifecycle_state": "WORK",
+  "confidence_statement": "Synthetic candidate for deterministic validation only."
 }

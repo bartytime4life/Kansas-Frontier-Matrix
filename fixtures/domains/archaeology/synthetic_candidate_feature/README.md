@@ -1,18 +1,21 @@
-# README
+# Synthetic CandidateFeature fixtures
 
-`fixtures/domains/archaeology/synthetic_candidate_feature/`
+These fixtures exercise the bounded `CandidateFeature` safety projection. They
+contain only synthetic identifiers and no production, protected, private-land,
+burial, sacred-place, collection-security, or culturally restricted data.
 
-Status: draft.
+- `valid.json` remains explicitly `CANDIDATE`, uses governed references, keeps
+  spatial precision withheld, and contains no inline geometry.
+- `sensitive_geometry_deny.json` uses synthetic zero coordinates solely to prove
+  that any inline coordinate field is rejected before downstream use.
 
-Fixture examples only. Not authoritative records.
+Run the deterministic, standard-library-only proof with:
 
-Related:
+```bash
+python tools/validators/archaeology/validate_candidate_feature.py --fixtures
+python -m unittest tests.domains.archaeology.test_candidate_not_site
+```
 
-- `../golden/README.md`
-- `../invalid/README.md`
-- `../site/README.md`
-
-Verification:
-
-- Payload inventory: NEEDS VERIFICATION.
-- Tests and validators: NOT RUN.
+Passing these checks proves only the bounded candidate discriminator and inline
+location denial. It does not confirm a site, authorize publication, or establish
+policy, cultural review, EvidenceBundle closure, or public-safe transformation.
