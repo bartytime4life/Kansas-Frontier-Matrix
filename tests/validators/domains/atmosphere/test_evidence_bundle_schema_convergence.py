@@ -37,9 +37,11 @@ class AtmosphereEvidenceBundleSchemaConvergenceTests(unittest.TestCase):
 
     def test_projection_metadata_matches_domain_adapter_paths(self) -> None:
         schema = self.load(DOMAIN_SCHEMA)
+        resolved_ref = (DOMAIN_SCHEMA.parent / schema["$ref"]).resolve()
 
         self.assertEqual(SCHEMA_PATH, DOMAIN_SCHEMA)
         self.assertEqual(FIXTURES_DIR, SHARED_FIXTURES)
+        self.assertEqual(resolved_ref, SHARED_SCHEMA.resolve())
         self.assertEqual(
             schema["x-kfm"]["canonical_shape"],
             SHARED_SCHEMA.relative_to(ROOT).as_posix(),
