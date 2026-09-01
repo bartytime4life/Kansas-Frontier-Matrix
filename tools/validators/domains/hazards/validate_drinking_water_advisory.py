@@ -237,8 +237,12 @@ def _present_ref(value: Any) -> bool:
     return isinstance(value, str) and bool(value)
 
 
+def _unknown_offset(value: Any) -> bool:
+    return isinstance(value, str) and value.endswith("-00:00")
+
+
 def _time(value: Any) -> datetime | None:
-    if not isinstance(value, str):
+    if not isinstance(value, str) or _unknown_offset(value):
         return None
     try:
         parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
@@ -355,7 +359,10 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
             and _present_ref(authority.get("rescission_authority_ref"))
             and authority.get("rescission_authority_status") == "CONFIRMED"
             and _present_ref(controls.get("prior_advisory_ref"))
-            and _time(advisory.get("rescinded_at")) is not None
+            and (
+                _time(advisory.get("rescinded_at")) is not None
+                or _unknown_offset(advisory.get("rescinded_at"))
+            )
             and clears
         )
         if not required_rescission:
@@ -372,12 +379,29 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
     ) not in {"ISSUED", "ACTIVE_CONFIRMED", "UPDATED"}:
         findings.append(Finding("LAST_CONFIRMED_STATUS_REQUIRED", "/advisory/last_confirmed_status"))
 
+    timestamp_fields = (
+        ("/source_surface/checked_at", source.get("checked_at")),
+        ("/advisory/issued_at", advisory.get("issued_at")),
+        ("/advisory/effective_at", advisory.get("effective_at")),
+        ("/advisory/expires_at", advisory.get("expires_at")),
+        ("/advisory/rescinded_at", advisory.get("rescinded_at")),
+    )
+    unknown_offset_paths = {
+        path
+        for path, value in timestamp_fields
+        if _unknown_offset(value)
+    }
+    findings.extend(
+        Finding("TIMESTAMP_UNKNOWN_OFFSET", path)
+        for path in sorted(unknown_offset_paths)
+    )
+
     issued = _time(advisory.get("issued_at"))
     effective = _time(advisory.get("effective_at"))
     expires = _time(advisory.get("expires_at"))
     rescinded = _time(advisory.get("rescinded_at"))
     checked = _time(source.get("checked_at"))
-    if (
+    if not unknown_offset_paths and (
         issued is None
         or effective is None
         or checked is None

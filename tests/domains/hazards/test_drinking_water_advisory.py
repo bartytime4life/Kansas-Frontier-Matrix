@@ -126,6 +126,34 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
                 {finding.code for finding in result.findings},
             )
 
+    def test_unknown_offsets_are_not_used_as_exact_temporal_evidence(self) -> None:
+        base = self.valid["valid_authoritative_rescission"]
+        timestamp_fields = (
+            ("source_surface", "checked_at"),
+            ("advisory", "issued_at"),
+            ("advisory", "effective_at"),
+            ("advisory", "expires_at"),
+            ("advisory", "rescinded_at"),
+        )
+        for section, field in timestamp_fields:
+            candidate = copy.deepcopy(base)
+            value = candidate[section][field]
+            self.assertIsInstance(value, str)
+            candidate[section][field] = value.removesuffix("Z") + "-00:00"
+            candidate = validator.assign_identity(candidate)
+
+            result = validator.validate_payload(candidate)
+
+            self.assertEqual(result.outcome, "DENY", (section, field, result.findings))
+            self.assertEqual(
+                {(finding.code, finding.path) for finding in result.findings},
+                {("TIMESTAMP_UNKNOWN_OFFSET", f"/{section}/{field}")},
+            )
+            self.assertNotIn(
+                "TEMPORAL_ORDER_INVALID",
+                {finding.code for finding in result.findings},
+            )
+
     def test_service_area_is_not_administrative_context(self) -> None:
         for name in (
             "valid_issued",
