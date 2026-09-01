@@ -46,6 +46,12 @@ class WesternKansasObservationAssessmentTests(unittest.TestCase):
         self.assertEqual(usdm.outcome, "ABSTAIN")
         self.assertEqual(flow.outcome, "ABSTAIN")
 
+    def test_crop_loss_shortcuts_abstain(self) -> None:
+        soil = assess(copy.deepcopy(self.cases["deny_soil_moisture_crop_loss_inference"]))
+        eddi = assess(copy.deepcopy(self.cases["deny_eddi_crop_loss_inference"]))
+        self.assertEqual(soil.outcome, "ABSTAIN")
+        self.assertEqual(eddi.outcome, "ABSTAIN")
+
     def test_support_erasure_is_error(self) -> None:
         result = assess(copy.deepcopy(self.cases["deny_resampling_support_erasure"]))
         self.assertEqual(result.outcome, "ERROR")
@@ -61,6 +67,11 @@ class WesternKansasObservationAssessmentTests(unittest.TestCase):
         result = assess(copy.deepcopy(self.cases["deny_governance_claim"]))
         self.assertEqual(result.outcome, "ERROR")
         self.assertIn("GOVERNANCE_BOUNDARY_VIOLATION", result.reason_codes)
+
+    def test_cross_source_join_requires_multi_tuple_evidence(self) -> None:
+        result = assess(copy.deepcopy(self.cases["deny_join_tuple_evidence_cardinality"]))
+        self.assertEqual(result.outcome, "ERROR")
+        self.assertIn("JOIN_EVIDENCE_CARDINALITY_REQUIRED", result.reason_codes)
 
 
 if __name__ == "__main__":

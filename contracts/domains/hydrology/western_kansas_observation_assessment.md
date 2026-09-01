@@ -29,15 +29,15 @@ declared-outcome-mismatched packets return `ERROR`.
 
 The profile keeps these source roles separate:
 
-| Source family | Direct claim scope |
-| --- | --- |
-| `USDM` | Drought classification at the source polygon/version |
-| `USGS_STREAMFLOW` | Streamflow condition at the station and observation time |
-| `KGS_GROUNDWATER` | Groundwater condition at the admitted well/aquifer support |
-| `PRECIP_EDDI` | Precipitation or evaporative-demand condition at the source grid/support |
-| `SOIL_MOISTURE` | Soil-moisture condition at the source grid/support |
-| `AGRICULTURE_CONTEXT` | Crop/rangeland context only |
-| `WATER_MANAGEMENT_BOUNDARY` | Join/reference boundary context only |
+| Source family | Direct claim scope | Authority/cadence | Spatial support and resolution | Revision/correction posture | Rights posture |
+| --- | --- | --- | --- | --- | --- |
+| `USDM` | Drought classification at the source polygon/version | Official weekly category release | Polygon support with source-native scale preserved | Weekly versions and any corrections remain explicit lineage | Public discovery does not equal KFM source admission |
+| `USGS_STREAMFLOW` | Streamflow condition at the station and observation time | Official station observations and daily comparisons | Station support with source-native unit/statistic | Provisional/final and correction/supersession status remain explicit | Rights/admission unresolved until separately approved |
+| `KGS_GROUNDWATER` | Groundwater condition at the admitted well/aquifer support | KGS well/aquifer observation cadence | Point/well/aquifer support with source-native scale | Correction/supersession references required when present | Rights and water-right boundaries remain source-specific |
+| `PRECIP_EDDI` | Precipitation or evaporative-demand condition at the source grid/support | Product-specific cadence for precip/EDDI products | Grid support with source-native resolution preserved | Product revision identity and corrections remain explicit | Admission and rights are independent of other families |
+| `SOIL_MOISTURE` | Soil-moisture condition at the source grid/support | Product-specific soil-moisture cadence | Grid support with source-native resolution preserved | Product revision identity and corrections remain explicit | Admission and rights are independent of other families |
+| `AGRICULTURE_CONTEXT` | Crop/rangeland context only | Context publication cadence only | Source-native context support; no loss inference | Corrections remain explicit and independent | Context does not inherit hydrology claim authority |
+| `WATER_MANAGEMENT_BOUNDARY` | Join/reference boundary context only | Boundary publication cadence only | Management-area or boundary support only | Boundary updates are lineage-tracked reference changes | Boundaries are join context, not condition/cause authority |
 
 No family inherits another family's authority, cadence, method, support, or
 uncertainty.
@@ -66,6 +66,7 @@ Every source object carries distinct fields for:
 - `publication_time`;
 - `retrieval_time`;
 - `revision_status`; and
+- `observation_id`, `method`, `unit`, `statistic`, `threshold`, and `uncertainty`;
 - correction or supersession links where applicable.
 
 The validator requires:
@@ -77,8 +78,10 @@ computed from `observation_end`, `analysis_time`, and `max_age_days`.
 
 ## Spatial and join rules
 
-Every source records support kind, support identifier, CRS, method, unit, and
-resolution where meaningful. A claim records its requested support separately.
+Every source records support kind (`STATION`, `POINT`, `POLYGON`, `GRID_CELL`,
+`BASIN`, `COUNTY`, `MANAGEMENT_AREA`, or `OTHER`), support identifier, CRS,
+method, unit, statistic, threshold, uncertainty, and resolution where
+meaningful. A claim records its requested support separately.
 
 The profile denies:
 
@@ -87,7 +90,7 @@ The profile denies:
 - management boundaries treated as condition or cause;
 - direct claims from a source family outside its admitted role; and
 - cross-source derivation without a transformation reference and complete
-  tuple-level evidence.
+  tuple-level evidence from at least two joined source observations.
 
 ## Prohibited inference shortcuts
 
@@ -96,6 +99,7 @@ The exact synthetic matrix proves fail-closed handling for:
 - USDM to groundwater condition;
 - streamflow to groundwater condition;
 - soil moisture or contextual evidence to agricultural loss;
+- evaporative-demand indicators to agricultural loss;
 - management boundary to condition;
 - county intersection to county-wide uniformity;
 - recent publication with stale observation time;

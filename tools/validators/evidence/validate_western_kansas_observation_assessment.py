@@ -39,6 +39,8 @@ ERROR_CODES = frozenset(
         "MATERIAL_CHANGE_DECLARATION_MISMATCH",
         "GOVERNANCE_BOUNDARY_VIOLATION",
         "TUPLE_EVIDENCE_INCOMPLETE",
+        "JOIN_EVIDENCE_CARDINALITY_REQUIRED",
+        "OBSERVATION_ID_DUPLICATE",
         "DERIVATION_REFERENCE_REQUIRED",
         "DECLARED_OUTCOME_MISMATCH",
     }
@@ -118,8 +120,14 @@ def _source_semantic_reasons(candidate: Mapping[str, Any]) -> list[str]:
     claim = candidate["claim"]
     evidence_refs = set(claim["tuple_evidence_refs"])
     source_refs: set[str] = set()
+    observation_ids: set[str] = set()
 
     for source in candidate["sources"]:
+        observation_id = source["observation_id"]
+        if observation_id in observation_ids:
+            reasons.append("OBSERVATION_ID_DUPLICATE")
+        observation_ids.add(observation_id)
+
         observed_start = _instant(source["observation_start"])
         observed_end = _instant(source["observation_end"])
         publication = _instant(source["publication_time"])
@@ -183,6 +191,8 @@ def _claim_reasons(candidate: Mapping[str, Any]) -> list[str]:
     if kind == "CROSS_SOURCE_STRESS":
         if claim.get("transformation_ref") is None:
             reasons.append("DERIVATION_REFERENCE_REQUIRED")
+        if len(candidate["sources"]) < 2 or len(claim["tuple_evidence_refs"]) < 2:
+            reasons.append("JOIN_EVIDENCE_CARDINALITY_REQUIRED")
     else:
         supported = DIRECT_SUPPORT.get(kind, set())
         if not families or not families.issubset(supported):

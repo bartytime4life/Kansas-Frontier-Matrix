@@ -11,11 +11,11 @@
   ],
   "artifact_hashes": {
     ".github/workflows/western-kansas-observation-assessment.yml": "sha256:a48b6c29cf740324232c14758506dc64da1e3549e57e0f98741f52f2b5f2d317",
-    "contracts/domains/hydrology/western_kansas_observation_assessment.md": "sha256:f0d930f54bc3ea74581ccad833fe0225908dee8bcc0dae9737530b00125bf7a5",
-    "schemas/contracts/v1/domains/hydrology/western_kansas_observation_assessment.schema.json": "sha256:b30da2962637780acd4d2b786944f706194f6fe68fc1dd5fcd0624b49a5bb951",
-    "fixtures/domains/hydrology/western_kansas_observation_assessment/cases.json": "sha256:7fc4c7687b77cdf13046d5c11bb36da87d6da35a914d1acfb795461792fbc8eb",
-    "tools/validators/evidence/validate_western_kansas_observation_assessment.py": "sha256:6f7d9bf8d2ef8a8dc401f5dcb5f13524d8955659d05e92380063424c5bd4d0a6",
-    "tests/validators/test_western_kansas_observation_assessment.py": "sha256:d97742f721d7aa764794a872ce5db40602735ef71fd4ee583521dd718c78f17d"
+    "contracts/domains/hydrology/western_kansas_observation_assessment.md": "sha256:59e458a2bd0d7ba276b657f5e3946f576af9c2683360c127bdcff47a0132d1fc",
+    "schemas/contracts/v1/domains/hydrology/western_kansas_observation_assessment.schema.json": "sha256:bc8e26c0096763cad6e1011d92d9ae102dfa56d1f949f5e07392fbc2c9b182a8",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/cases.json": "sha256:cbf41053c3f8eae23452996c815c8d1525195ba093c89b2b11bc28e2f9af3809",
+    "tools/validators/evidence/validate_western_kansas_observation_assessment.py": "sha256:e057cc8377ae3b4b2891727f5bdae002949daec998e921a1554e78b600359b9d",
+    "tests/validators/test_western_kansas_observation_assessment.py": "sha256:e3a1bfe26e5d77fba449995551e80fa469bf94dc995a057f92f38fe076f833e8"
   },
   "model_identity": {
     "provider": "OpenAI",

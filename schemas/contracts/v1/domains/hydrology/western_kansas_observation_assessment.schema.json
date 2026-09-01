@@ -63,6 +63,7 @@
         "source_family",
         "source_id",
         "source_version_ref",
+        "observation_id",
         "observation_status",
         "observation_start",
         "observation_end",
@@ -77,6 +78,9 @@
         "resolution_m",
         "method",
         "unit",
+        "statistic",
+        "threshold",
+        "uncertainty",
         "evidence_ref",
         "payload_digest",
         "correction_ref",
@@ -99,6 +103,10 @@
           "minLength": 1
         },
         "source_version_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observation_id": {
           "type": "string",
           "minLength": 1
         },
@@ -155,7 +163,8 @@
             "GRID_CELL",
             "BASIN",
             "COUNTY",
-            "MANAGEMENT_AREA"
+            "MANAGEMENT_AREA",
+            "OTHER"
           ]
         },
         "support_id": {
@@ -178,6 +187,25 @@
           "minLength": 1
         },
         "unit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "statistic": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "threshold": {
+          "type": [
+            "number",
+            "string",
+            "null"
+          ]
+        },
+        "uncertainty": {
           "type": [
             "string",
             "null"
@@ -242,7 +270,8 @@
             "GRID_CELL",
             "BASIN",
             "COUNTY",
-            "MANAGEMENT_AREA"
+            "MANAGEMENT_AREA",
+            "OTHER"
           ]
         },
         "support_id": {
