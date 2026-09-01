@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import importlib.util
 import json
 import os
@@ -74,6 +75,31 @@ def test_same_domain_pair_is_not_emitted_as_cross_lane_candidate() -> None:
     assert "ROUTE_TO_DOMAIN_LOCAL_VALIDATOR" in decision["obligations"]
     results = {item["rule_code"]: item["failure_count"] for item in decision["rule_results"]}
     assert results["JOIN_PREDICATE_MATCHED"] == 1
+
+
+def test_same_domain_routing_precedes_cross_lane_privacy_and_sensitivity_dispositions() -> None:
+    same_domain = MODULE.fixture_cases()[19][0]
+
+    living_person = copy.deepcopy(same_domain)
+    living_person["endpoints"]["left"]["living_person"] = True
+    living_decision = MODULE.derive_decision(living_person)
+    assert living_decision["validator_outcome"] == "ABSTAIN"
+    assert living_decision["status"] == "NO_JOIN_CANDIDATE"
+    assert living_decision["reason_codes"] == ["CROSS_DOMAIN_PAIR_REQUIRED"]
+    assert "ROUTE_TO_DOMAIN_LOCAL_VALIDATOR" in living_decision["obligations"]
+    living_rules = {item["rule_code"]: item["failure_count"] for item in living_decision["rule_results"]}
+    assert living_rules["LIVING_PERSON_SAFE"] == 1
+
+    restricted_exact = copy.deepcopy(same_domain)
+    restricted_exact["endpoints"]["left"]["sensitivity"] = "RESTRICTED"
+    restricted_exact["endpoints"]["left"]["geometry_precision"] = "EXACT"
+    sensitivity_decision = MODULE.derive_decision(restricted_exact)
+    assert sensitivity_decision["validator_outcome"] == "ABSTAIN"
+    assert sensitivity_decision["status"] == "NO_JOIN_CANDIDATE"
+    assert sensitivity_decision["reason_codes"] == ["CROSS_DOMAIN_PAIR_REQUIRED"]
+    assert "ROUTE_TO_DOMAIN_LOCAL_VALIDATOR" in sensitivity_decision["obligations"]
+    sensitivity_rules = {item["rule_code"]: item["failure_count"] for item in sensitivity_decision["rule_results"]}
+    assert sensitivity_rules["SENSITIVITY_SAFE"] == 1
 
 
 def test_rule_counts_roles_and_sensitivity_are_inspectable() -> None:
