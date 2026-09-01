@@ -22,7 +22,11 @@ LOCKFILE = REPO_ROOT / "tools/ci/python-cli.lock"
 LOCAL_PACKAGE = REPO_ROOT / "packages/kfm-cli"
 LOCAL_SPEC = "./packages/kfm-cli"
 LOCK_LIMIT_BYTES = 262_144
+INSTALL_TIMEOUT_SECONDS = 600
 HASH_LINE = re.compile(r"^\s+--hash=sha256:[0-9a-f]{64}(?: \\)?$")
+REQUIREMENT_LINE = re.compile(
+    r"^[A-Za-z0-9][A-Za-z0-9._-]*==[A-Za-z0-9][A-Za-z0-9.!+_-]* \\$"
+)
 FORBIDDEN_LOCK_TEXT = (
     "--extra-index-url",
     "--index-url",
@@ -33,6 +37,11 @@ FORBIDDEN_LOCK_TEXT = (
     "git+",
     "http://",
     "https://",
+)
+PYTHON_IMPORT_ENVIRONMENT_CONTROLS = (
+    "PYTHONHOME",
+    "PYTHONPATH",
+    "PYTHONUSERBASE",
 )
 
 
@@ -57,19 +66,61 @@ def validate_lockfile(path: Path = LOCKFILE) -> None:
     if any(token in lowered for token in FORBIDDEN_LOCK_TEXT):
         raise CliInstallConfigurationError("CLI_LOCKFILE_SOURCE_UNSAFE")
 
+    lines = text.splitlines()
     requirements = [
         line
-        for line in text.splitlines()
+        for line in lines
         if line and not line[0].isspace() and not line.startswith("#")
     ]
-    hashes = [line for line in text.splitlines() if "--hash=" in line]
-    if not requirements or len(hashes) < len(requirements):
+    hashes = [line for line in lines if "--hash=" in line]
+    if not requirements:
         raise CliInstallConfigurationError("CLI_LOCKFILE_HASH_COVERAGE_INVALID")
+    seen_requirement_names: set[str] = set()
     for requirement in requirements:
         if "==" not in requirement or not requirement.rstrip().endswith("\\"):
             raise CliInstallConfigurationError("CLI_LOCKFILE_REQUIREMENT_UNPINNED")
+        if not REQUIREMENT_LINE.fullmatch(requirement):
+            raise CliInstallConfigurationError("CLI_LOCKFILE_REQUIREMENT_UNSAFE")
+        name = requirement.split("==", 1)[0]
+        normalized_name = re.sub(r"[-_.]+", "-", name).lower()
+        if normalized_name in seen_requirement_names:
+            raise CliInstallConfigurationError("CLI_LOCKFILE_REQUIREMENT_DUPLICATE")
+        seen_requirement_names.add(normalized_name)
     if any(not HASH_LINE.fullmatch(line) for line in hashes):
         raise CliInstallConfigurationError("CLI_LOCKFILE_HASH_INVALID")
+
+    continuations = [
+        line
+        for line in lines
+        if line
+        and line[0].isspace()
+        and line.strip()
+        and not line.lstrip().startswith("#")
+    ]
+    if any(not HASH_LINE.fullmatch(line) for line in continuations):
+        raise CliInstallConfigurationError("CLI_LOCKFILE_CONTINUATION_UNSAFE")
+
+    in_requirement = False
+    current_has_hash = False
+    for line in lines:
+        if not line or line.startswith("#"):
+            continue
+        if not line[0].isspace():
+            if in_requirement and not current_has_hash:
+                raise CliInstallConfigurationError(
+                    "CLI_LOCKFILE_HASH_COVERAGE_INVALID"
+                )
+            in_requirement = True
+            current_has_hash = False
+            continue
+        if "--hash=" in line:
+            if not in_requirement:
+                raise CliInstallConfigurationError(
+                    "CLI_LOCKFILE_HASH_COVERAGE_INVALID"
+                )
+            current_has_hash = True
+    if in_requirement and not current_has_hash:
+        raise CliInstallConfigurationError("CLI_LOCKFILE_HASH_COVERAGE_INVALID")
 
 
 def validate_local_package(path: Path = LOCAL_PACKAGE) -> None:
@@ -81,7 +132,10 @@ def validate_local_package(path: Path = LOCAL_PACKAGE) -> None:
         path.resolve().relative_to(REPO_ROOT)
     except (OSError, ValueError) as exc:
         raise CliInstallConfigurationError("CLI_LOCAL_PACKAGE_OUTSIDE_REPOSITORY") from exc
-    if not (path / "pyproject.toml").is_file():
+    metadata = path / "pyproject.toml"
+    if metadata.is_symlink():
+        raise CliInstallConfigurationError("CLI_LOCAL_PACKAGE_METADATA_UNSAFE")
+    if not metadata.is_file():
         raise CliInstallConfigurationError("CLI_LOCAL_PACKAGE_METADATA_MISSING")
 
 
@@ -94,6 +148,7 @@ def build_commands(executable: str | None = None) -> tuple[tuple[str, ...], ...]
     return (
         (
             python,
+            "-P",
             "-m",
             "pip",
             "install",
@@ -105,6 +160,7 @@ def build_commands(executable: str | None = None) -> tuple[tuple[str, ...], ...]
         ),
         (
             python,
+            "-P",
             "-m",
             "pip",
             "install",
@@ -122,16 +178,27 @@ def install() -> None:
     """Install the committed CLI dependency overlay and local package."""
 
     environment = os.environ.copy()
+    for key in tuple(environment):
+        if key.startswith("PIP_"):
+            environment.pop(key, None)
+    for key in PYTHON_IMPORT_ENVIRONMENT_CONTROLS:
+        environment.pop(key, None)
+    environment["PIP_CONFIG_FILE"] = os.devnull
     environment["PIP_DISABLE_PIP_VERSION_CHECK"] = "1"
     environment["PIP_NO_INPUT"] = "1"
+    environment["PYTHONNOUSERSITE"] = "1"
     for command in build_commands():
-        subprocess.run(
-            command,
-            check=True,
-            cwd=REPO_ROOT,
-            env=environment,
-            shell=False,
-        )
+        try:
+            subprocess.run(
+                command,
+                check=True,
+                cwd=REPO_ROOT,
+                env=environment,
+                shell=False,
+                timeout=INSTALL_TIMEOUT_SECONDS,
+            )
+        except subprocess.TimeoutExpired as exc:
+            raise CliInstallConfigurationError("CLI_INSTALL_TIMEOUT") from exc
 
 
 def main(argv: Sequence[str] | None = None) -> int:
