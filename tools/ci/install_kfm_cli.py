@@ -57,19 +57,42 @@ def validate_lockfile(path: Path = LOCKFILE) -> None:
     if any(token in lowered for token in FORBIDDEN_LOCK_TEXT):
         raise CliInstallConfigurationError("CLI_LOCKFILE_SOURCE_UNSAFE")
 
+    lines = text.splitlines()
     requirements = [
         line
-        for line in text.splitlines()
+        for line in lines
         if line and not line[0].isspace() and not line.startswith("#")
     ]
-    hashes = [line for line in text.splitlines() if "--hash=" in line]
-    if not requirements or len(hashes) < len(requirements):
+    hashes = [line for line in lines if "--hash=" in line]
+    if not requirements:
         raise CliInstallConfigurationError("CLI_LOCKFILE_HASH_COVERAGE_INVALID")
     for requirement in requirements:
         if "==" not in requirement or not requirement.rstrip().endswith("\\"):
             raise CliInstallConfigurationError("CLI_LOCKFILE_REQUIREMENT_UNPINNED")
     if any(not HASH_LINE.fullmatch(line) for line in hashes):
         raise CliInstallConfigurationError("CLI_LOCKFILE_HASH_INVALID")
+
+    in_requirement = False
+    current_has_hash = False
+    for line in lines:
+        if not line or line.startswith("#"):
+            continue
+        if not line[0].isspace():
+            if in_requirement and not current_has_hash:
+                raise CliInstallConfigurationError(
+                    "CLI_LOCKFILE_HASH_COVERAGE_INVALID"
+                )
+            in_requirement = True
+            current_has_hash = False
+            continue
+        if "--hash=" in line:
+            if not in_requirement:
+                raise CliInstallConfigurationError(
+                    "CLI_LOCKFILE_HASH_COVERAGE_INVALID"
+                )
+            current_has_hash = True
+    if in_requirement and not current_has_hash:
+        raise CliInstallConfigurationError("CLI_LOCKFILE_HASH_COVERAGE_INVALID")
 
 
 def validate_local_package(path: Path = LOCAL_PACKAGE) -> None:
