@@ -57,6 +57,54 @@ test("a policy-restricted feature shows fixed denial copy without sensitive leak
   await expect(drawer.getByRole("link")).toHaveCount(0);
 });
 
+test("held evidence remains visible only as non-current history", async ({
+  page,
+}) => {
+  await page.goto(fixture);
+  await page
+    .getByRole("button", { name: "Select held evidence history" })
+    .click();
+
+  await expect(page.getByRole("status")).toHaveText(
+    "ABSTAIN / HELD_EVIDENCE",
+  );
+  const drawer = page.locator('aside[data-component="evidence-drawer"]');
+  await expect(drawer).toContainText(
+    "Evidence is held for review and is not current claim support.",
+  );
+  await expect(drawer).toContainText("Review: PENDING");
+  await expect(drawer).toContainText("Release: UNRELEASED");
+  await expect(drawer).toContainText(
+    "kfm:evidence:synthetic:source-drift-held-001",
+  );
+  await expect(drawer).not.toContainText(
+    "A synthetic source-change candidate is held for steward review.",
+  );
+  await expect(drawer.getByRole("link")).toHaveCount(0);
+});
+
+test("held evidence outside the clicked selection fails closed without leaking", async ({
+  page,
+}) => {
+  await page.goto(fixture);
+  await page
+    .getByRole("button", { name: "Select feature with mismatched held evidence" })
+    .click();
+
+  await expect(page.getByRole("status")).toHaveText(
+    "ERROR / DRAWER_EVIDENCE_OUTSIDE_SELECTION",
+  );
+  const drawer = page.locator('aside[data-component="evidence-drawer"]');
+  await expect(drawer).toContainText("ERROR / UPSTREAM_ERROR");
+  await expect(drawer).not.toContainText(
+    "kfm:evidence:synthetic:source-drift-held-001",
+  );
+  await expect(drawer).not.toContainText(
+    "A synthetic source-change candidate is held for steward review.",
+  );
+  await expect(drawer.getByRole("link")).toHaveCount(0);
+});
+
 test("stale evidence visibly abstains with temporal trust state", async ({ page }) => {
   await page.goto(fixture);
   await page
