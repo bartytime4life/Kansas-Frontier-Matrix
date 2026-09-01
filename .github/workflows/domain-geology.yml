@@ -69,10 +69,12 @@ jobs:
             "tests/domains/geology/test_no_network_proof.py"
             "tests/domains/geology/test_public_safe_geometry.py"
             "tests/validators/domains/geology/test_schema_contract_doc_links.py"
+            "tests/validators/domains/geology/test_domain_evidence_bundle_validator_entrypoint.py"
             "tools/ci/kfm_no_network/sitecustomize.py"
             "tools/validators/domains/geology/README.md"
             "tools/validators/domains/geology/validate_resource_class_distinction.py"
             "tools/validators/domains/geology/validate_aem_campaign.py"
+            "tools/validators/domains/geology/validate_evidence_bundle.py"
             "tools/validators/geology/public_safe_geometry/validate_public_safe_geometry.py"
             "tools/validators/geology/README.md"
             "tools/validators/geology/resource_class/README.md"
@@ -133,6 +135,10 @@ jobs:
               Path(
                   "tools/validators/domains/geology/"
                   "validate_production_material_change.py"
+              ),
+              Path(
+                  "tools/validators/domains/geology/"
+                  "validate_evidence_bundle.py"
               ),
               Path(
                   "tools/validators/geology/public_safe_geometry/"
