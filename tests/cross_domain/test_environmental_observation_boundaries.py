@@ -69,10 +69,19 @@ class EnvironmentalObservationBoundaryTests(unittest.TestCase):
             soil_payload["spatial_support"],
             hydrology_payload["spatial_support"],
         )
+        for shared_time_field in ("observed_at", "retrieved_at"):
+            with self.subTest(shared_time_field=shared_time_field):
+                self.assertEqual(
+                    atmosphere_payload["temporal_scope"][shared_time_field],
+                    hydrology_payload["temporal_scope"][shared_time_field],
+                )
         self.assertEqual(
-            atmosphere_payload["temporal_scope"],
-            hydrology_payload["temporal_scope"],
+            hydrology_payload["temporal_scope"]["aggregation_window"],
+            "instant",
         )
+        self.assertNotIn("aggregation_window", atmosphere_payload["temporal_scope"])
+        self.assertIn("source_time", hydrology_payload["temporal_scope"])
+        self.assertNotIn("source_time", atmosphere_payload["temporal_scope"])
         self.assertNotEqual(
             atmosphere_payload["object_family"],
             hydrology_payload["object_family"],

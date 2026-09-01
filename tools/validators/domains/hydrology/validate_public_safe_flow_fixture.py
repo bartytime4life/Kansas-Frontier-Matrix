@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from pathlib import Path
+import re
 import sys
 from typing import Sequence
 
@@ -31,6 +32,7 @@ ALLOWED_TOP_LEVEL_FIELDS = frozenset(
     {
         "record_id",
         "object_family",
+        "source_role",
         "source_descriptor_ref",
         "evidence_refs",
         "gauge_site_ref",
@@ -42,9 +44,24 @@ ALLOWED_TOP_LEVEL_FIELDS = frozenset(
     }
 )
 ALLOWED_SPATIAL_FIELDS = frozenset({"kind", "county_fips"})
-ALLOWED_TEMPORAL_FIELDS = frozenset({"observed_at", "retrieved_at"})
+ALLOWED_TEMPORAL_FIELDS = frozenset(
+    {"aggregation_window", "observed_at", "source_time", "retrieved_at"}
+)
 ALLOWED_MEASUREMENT_FIELDS = frozenset(
-    {"parameter_code", "value", "unit", "qualifier", "no_data"}
+    {
+        "parameter_code",
+        "value",
+        "unit",
+        "unit_transform_ref",
+        "method_ref",
+        "caveat_refs",
+        "qualifier",
+        "provisional_status",
+        "no_data",
+    }
+)
+ALLOWED_PROVISIONAL_STATUSES = frozenset(
+    {"provisional", "final", "corrected", "estimated", "ice_affected"}
 )
 ALLOWED_GOVERNANCE_FIELDS = frozenset(
     {
@@ -71,6 +88,11 @@ FORBIDDEN_LOCATION_ALIASES = frozenset(
         "northing",
     }
 )
+FIXTURE_SOURCE_PREFIX = "fixture://sources/hydrology/"
+FIXTURE_EVIDENCE_PREFIX = "fixture://evidence/hydrology/"
+FIXTURE_GAUGE_PREFIX = "fixture://hydrology/gauge/generalized/"
+FIXTURE_METHOD_PREFIX = "fixture://hydrology/method/"
+FIXTURE_CAVEAT_PREFIX = "fixture://hydrology/caveat/"
 EXPECTED_GOVERNANCE = {
     "rights_state": "fixture_only",
     "sensitivity_state": "public_safe_fixture",
@@ -82,16 +104,16 @@ EXPECTED_GOVERNANCE = {
 REQUIRED_LIMITATIONS = frozenset(
     {"not_a_flood_warning", "not_life_safety_guidance", "synthetic_fixture_only"}
 )
+_CANONICAL_UTC = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
 
 
 def _parse_utc(value: object) -> datetime | None:
-    if not isinstance(value, str) or not value.endswith("Z"):
+    if not isinstance(value, str) or _CANONICAL_UTC.fullmatch(value) is None:
         return None
     try:
-        parsed = datetime.fromisoformat(value[:-1] + "+00:00")
+        return datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ")
     except ValueError:
         return None
-    return parsed if parsed.utcoffset() is not None else None
 
 
 def validate_candidate(candidate: object) -> list[Finding]:
@@ -112,10 +134,28 @@ def validate_candidate(candidate: object) -> list[Finding]:
         add_finding(findings, "RECORD_ID_MISSING", "$.record_id")
     if candidate.get("object_family") != "FlowObservation":
         add_finding(findings, "OBJECT_FAMILY_INVALID", "$.object_family")
-    if not is_nonempty_string(candidate.get("source_descriptor_ref")):
+    if candidate.get("source_role") != "observed":
+        add_finding(findings, "SOURCE_ROLE_INVALID", "$.source_role")
+
+    source_descriptor_ref = candidate.get("source_descriptor_ref")
+    if not is_nonempty_string(source_descriptor_ref):
         add_finding(findings, "SOURCE_DESCRIPTOR_REF_MISSING", "$.source_descriptor_ref")
-    if not is_nonempty_string(candidate.get("gauge_site_ref")):
+    elif not source_descriptor_ref.startswith(FIXTURE_SOURCE_PREFIX):
+        add_finding(
+            findings,
+            "SOURCE_DESCRIPTOR_REF_NOT_FIXTURE",
+            "$.source_descriptor_ref",
+        )
+
+    gauge_site_ref = candidate.get("gauge_site_ref")
+    if not is_nonempty_string(gauge_site_ref):
         add_finding(findings, "GAUGE_SITE_REF_MISSING", "$.gauge_site_ref")
+    elif not gauge_site_ref.startswith(FIXTURE_GAUGE_PREFIX):
+        add_finding(
+            findings,
+            "GAUGE_SITE_REF_NOT_GENERALIZED_FIXTURE",
+            "$.gauge_site_ref",
+        )
 
     evidence_refs = candidate.get("evidence_refs")
     if (
@@ -124,6 +164,8 @@ def validate_candidate(candidate: object) -> list[Finding]:
         or any(not is_nonempty_string(value) for value in evidence_refs)
     ):
         add_finding(findings, "EVIDENCE_REF_MISSING", "$.evidence_refs")
+    elif any(not value.startswith(FIXTURE_EVIDENCE_PREFIX) for value in evidence_refs):
+        add_finding(findings, "EVIDENCE_REF_NOT_FIXTURE", "$.evidence_refs")
 
     spatial = candidate.get("spatial_support")
     if not isinstance(spatial, dict):
@@ -169,12 +211,33 @@ def validate_candidate(candidate: object) -> list[Finding]:
             "UNDECLARED_TEMPORAL_FIELD",
             "$.temporal_scope",
         )
+        if temporal.get("aggregation_window") != "instant":
+            add_finding(
+                findings,
+                "AGGREGATION_WINDOW_INVALID",
+                "$.temporal_scope.aggregation_window",
+            )
         observed = _parse_utc(temporal.get("observed_at"))
+        source_time = _parse_utc(temporal.get("source_time"))
         retrieved = _parse_utc(temporal.get("retrieved_at"))
         if observed is None:
             add_finding(findings, "OBSERVED_TIME_INVALID", "$.temporal_scope.observed_at")
+        if source_time is None:
+            add_finding(findings, "SOURCE_TIME_INVALID", "$.temporal_scope.source_time")
         if retrieved is None:
             add_finding(findings, "RETRIEVAL_TIME_INVALID", "$.temporal_scope.retrieved_at")
+        if observed is not None and source_time is not None and source_time < observed:
+            add_finding(
+                findings,
+                "SOURCE_TIME_BEFORE_OBSERVED",
+                "$.temporal_scope",
+            )
+        if source_time is not None and retrieved is not None and retrieved < source_time:
+            add_finding(
+                findings,
+                "RETRIEVAL_TIME_BEFORE_SOURCE",
+                "$.temporal_scope",
+            )
         if observed is not None and retrieved is not None and retrieved < observed:
             add_finding(findings, "TEMPORAL_ORDER_INVALID", "$.temporal_scope")
 
@@ -196,8 +259,54 @@ def validate_candidate(candidate: object) -> list[Finding]:
             add_finding(findings, "MEASUREMENT_VALUE_OUT_OF_RANGE", "$.measurement.value")
         if measurement.get("unit") != "ft3/s":
             add_finding(findings, "MEASUREMENT_UNIT_INVALID", "$.measurement.unit")
+        if "unit_transform_ref" not in measurement:
+            add_finding(
+                findings,
+                "UNIT_TRANSFORM_REF_MISSING",
+                "$.measurement.unit_transform_ref",
+            )
+        elif measurement.get("unit_transform_ref") is not None:
+            add_finding(
+                findings,
+                "UNIT_TRANSFORM_REF_UNSUPPORTED",
+                "$.measurement.unit_transform_ref",
+            )
+        method_ref = measurement.get("method_ref")
+        if not is_nonempty_string(method_ref):
+            add_finding(findings, "METHOD_REF_MISSING", "$.measurement.method_ref")
+        elif not method_ref.startswith(FIXTURE_METHOD_PREFIX):
+            add_finding(findings, "METHOD_REF_NOT_FIXTURE", "$.measurement.method_ref")
+        if "caveat_refs" not in measurement:
+            add_finding(findings, "CAVEAT_REFS_MISSING", "$.measurement.caveat_refs")
+        else:
+            caveat_refs = measurement.get("caveat_refs")
+            if not isinstance(caveat_refs, list) or any(
+                not is_nonempty_string(value) for value in caveat_refs
+            ):
+                add_finding(findings, "CAVEAT_REFS_INVALID", "$.measurement.caveat_refs")
+            elif any(
+                not value.startswith(FIXTURE_CAVEAT_PREFIX) for value in caveat_refs
+            ):
+                add_finding(
+                    findings,
+                    "CAVEAT_REF_NOT_FIXTURE",
+                    "$.measurement.caveat_refs",
+                )
         if measurement.get("qualifier") != "synthetic":
             add_finding(findings, "QUALIFIER_INVALID", "$.measurement.qualifier")
+        provisional_status = measurement.get("provisional_status")
+        if not is_nonempty_string(provisional_status):
+            add_finding(
+                findings,
+                "PROVISIONAL_STATUS_MISSING",
+                "$.measurement.provisional_status",
+            )
+        elif provisional_status not in ALLOWED_PROVISIONAL_STATUSES:
+            add_finding(
+                findings,
+                "PROVISIONAL_STATUS_INVALID",
+                "$.measurement.provisional_status",
+            )
         if measurement.get("no_data") is not False:
             add_finding(findings, "NO_DATA_STATE_INVALID", "$.measurement.no_data")
 
