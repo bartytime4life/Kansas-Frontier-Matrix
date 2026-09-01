@@ -201,8 +201,58 @@ jobs:
             exit 1
           fi
 
+          connector="$(gh pr view "$number" --repo "$GITHUB_REPOSITORY" --json number,isDraft,state,headRefOid,baseRefOid)"
+          connector_head="$(printf '%s' "$connector" | jq -r '.headRefOid')"
+          connector_base="$(printf '%s' "$connector" | jq -r '.baseRefOid')"
+          connector_draft="$(printf '%s' "$connector" | jq -r '.isDraft')"
+          connector_state="$(printf '%s' "$connector" | jq -r '.state')"
+          if test "$connector_head" != "$EXPECTED_HEAD_SHA" || \
+             test "$connector_base" != "$EXPECTED_BASE_SHA" || \
+             test "$connector_draft" != "true" || \
+             test "$connector_state" != "OPEN"; then
+            gh api --method PATCH "repos/${GITHUB_REPOSITORY}/pulls/${number}" -f state=closed >/dev/null
+            echo "::error::AUTOMATION_PR_CONNECTOR_READBACK_FAILED; draft PR was closed fail-safe"
+            exit 1
+          fi
+
           echo "created=true" >> "$GITHUB_OUTPUT"
           echo "pr_number=$number" >> "$GITHUB_OUTPUT"
+
+      - name: Add comment-only status update then re-verify draft timeline
+        if: ${{ steps.create.outputs.created == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ steps.create.outputs.pr_number }}
+          EXPECTED_BASE_SHA: ${{ steps.binding.outputs.base_sha }}
+          EXPECTED_HEAD_SHA: ${{ steps.binding.outputs.head_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh pr comment "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --body \
+            "Bounded opener verification checkpoint: immutable draft create succeeded; performing second draft/readiness guard verification."
+
+          live="$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}")"
+          actual_head="$(printf '%s' "$live" | jq -r '.head.sha')"
+          actual_base="$(printf '%s' "$live" | jq -r '.base.sha')"
+          actual_draft="$(printf '%s' "$live" | jq -r '.draft')"
+          actual_state="$(printf '%s' "$live" | jq -r '.state')"
+          actual_merged="$(printf '%s' "$live" | jq -r '.merged')"
+          if test "$actual_head" != "$EXPECTED_HEAD_SHA" || \
+             test "$actual_base" != "$EXPECTED_BASE_SHA" || \
+             test "$actual_draft" != "true" || \
+             test "$actual_state" != "open" || \
+             test "$actual_merged" != "false"; then
+            gh api --method PATCH "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" -f state=closed >/dev/null
+            echo "::error::AUTOMATION_PR_SECOND_READBACK_FAILED; draft PR was closed fail-safe"
+            exit 1
+          fi
+
+          ready_events="$(gh api "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/events" --paginate --jq '[.[] | select(.event == "ready_for_review")] | length')"
+          if test "$ready_events" != "0"; then
+            gh api --method PATCH "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" -f state=closed >/dev/null
+            echo "::error::AUTOMATION_PR_READY_EVENT_DETECTED; draft PR was closed fail-safe and specialization must pause"
+            exit 1
+          fi
 
       - name: Record bounded writer result
         if: always()

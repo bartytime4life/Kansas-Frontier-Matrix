@@ -11,8 +11,10 @@ Use this checklist when reviewing the proposed `automation-draft-pr-opener` work
 - [ ] Candidate Git objects are ordinary `100644` blobs and every blob hash matches the declared SHA-256 value.
 - [ ] Remote base/head SHAs are re-read immediately before pull-request creation.
 - [ ] At most one open PR may exist for the head/base pair.
-- [ ] Creation always uses draft state.
-- [ ] The created PR is re-read and must match the expected head SHA, base SHA, and `draft=true` state.
+- [ ] Creation always uses one immutable `draft=true` call with final title/body/base/head.
+- [ ] No post-create readiness-capable action occurs (`ready_for_review`, reviewer request, approval, auto-merge, or merge).
+- [ ] The created PR is re-read through both connector and raw REST and must match expected head SHA, base SHA, open/unmerged state, and `draft=true`.
+- [ ] After the first comment-only update (or next serialized observation), a second readback and timeline check confirms no `ready_for_review` event.
 - [ ] A post-create binding mismatch closes only the newly created draft PR fail-safe.
 - [ ] No branch/content write, merge, auto-merge, review approval, release, deployment, promotion, publication, repository-setting, secret, package, or OIDC capability is present.
 - [ ] The read-only conformance workflow passes on the exact proposed head.

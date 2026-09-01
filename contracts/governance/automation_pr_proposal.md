@@ -59,7 +59,11 @@ permissions:
 
 It may open at most one draft pull request for an already-existing declared head/base pair after structural validation, live binding, and immediate remote-ref rechecks. It does not have repository-content write permission and therefore cannot create the candidate branch or candidate bytes.
 
-Because pull-request creation does not accept an atomic expected-head-SHA precondition, the opener rechecks remote refs immediately before creation and verifies the created PR's base SHA, head SHA, and draft state immediately afterward. A detected post-create mismatch closes only the newly created draft PR fail-safe.
+Creation is immutable: final title/body/base/head must be supplied in one `draft=true` create call, with no post-create metadata fallback.
+
+Because pull-request creation does not accept an atomic expected-head-SHA precondition, the opener rechecks remote refs immediately before creation and verifies the created PR's base SHA, head SHA, open/unmerged state, and draft state immediately afterward through both connector and raw REST readback.
+
+After the first comment-only update (or next serialized observation), the opener re-reads the PR and timeline. Any non-draft readback or `ready_for_review` event closes only the newly created PR fail-safe and pauses further specialization advancement until corrected.
 
 ## Non-effects
 

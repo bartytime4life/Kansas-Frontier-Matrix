@@ -58,7 +58,7 @@ notes:
 | Trusted execution | Default-branch workflow and validators |
 | Candidate | One existing `automation/` branch, fetched as Git data and never executed |
 | Scope | One to eight added or modified `100644` blobs below `data/work/automation/` |
-| Mutation | Open at most one **draft** PR for `head -> main` |
+| Mutation | Open at most one **draft** PR for `head -> main` with immutable create inputs |
 | Permissions | `contents: read`; `pull-requests: write` in the privileged job only |
 | Ceiling | Draft review surface; never ready, approved, merged, released, deployed, promoted, or published |
 
@@ -92,7 +92,7 @@ GitHub object state is authoritative for whether a PR exists, is draft, and has 
 
 <a id="what-the-opener-does-not-do"></a>
 
-The opener does **not** execute candidate code; write repository contents; evaluate policy; resolve evidence; authenticate receipts; approve, ready, merge, or auto-merge; change lifecycle state; or release, deploy, promote, publish, activate sources, or authorize public use.
+The opener does **not** execute candidate code; write repository contents; evaluate policy; resolve evidence; authenticate receipts; approve, request reviewers, ready, merge, or auto-merge; change lifecycle state; or release, deploy, promote, publish, activate sources, or authorize public use.
 
 <a id="live-binding-gate"></a>
 
@@ -184,6 +184,10 @@ Record `BLOCKED_ENVELOPE_INCOMPATIBLE` and route any successor design through ac
 
 Record the workflow run ID/SHA, actor, structural/live-binding results, ref recheck, and PR outcome. For a newly created PR, GitHub object state must show exact validated base/head SHAs and `draft = true`, with no later transition.
 
+Creation is immutable: title/body/base/head are finalized before one `draft=true` create call. Do not perform post-create metadata updates in fallback mode.
+
+Immediately verify the new PR through both connector readback and raw REST. After the first comment-only update (or next serialized observation), re-read the PR and inspect timeline events; any non-draft readback or `ready_for_review` event requires immediate closure without merge and specialization pause.
+
 `AUTOMATION_DRAFT_PR_ALREADY_OPEN` creates nothing and does **not** prove the existing PR's SHAs or draft state. Inspect that PR separately.
 
 ## Finite outcomes and recovery
@@ -199,6 +203,9 @@ Record the workflow run ID/SHA, actor, structural/live-binding results, ref rech
 | `AUTOMATION_BASE_MOVED_BEFORE_PR_CREATE` | Reconcile with new `main`; issue a new proposal |
 | `AUTOMATION_HEAD_MOVED_BEFORE_PR_CREATE` | Inspect mutation; issue a proposal from exact new head |
 | `AUTOMATION_PR_POSTCREATE_BINDING_FAILED` | Confirm only the new PR was closed; investigate and re-propose |
+| `AUTOMATION_PR_CONNECTOR_READBACK_FAILED` | Connector postcondition mismatched expected draft/base/head/open state; keep specialization paused until corrected |
+| `AUTOMATION_PR_SECOND_READBACK_FAILED` | Second readback after comment-only update mismatched draft/base/head/open state; keep specialization paused until corrected |
+| `AUTOMATION_PR_READY_EVENT_DETECTED` | `ready_for_review` surfaced in timeline; close without merge and keep specialization paused until corrected |
 
 Never recover by broadening token permissions, executing candidate code, force-pushing shared history, changing `main`, weakening validators, or treating declarations as self-authenticating.
 
@@ -231,7 +238,7 @@ python -m py_compile \
 python -m unittest -q tests.validators.test_validate_automation_pr_live_binding
 ```
 
-The read-only workflow also checks trigger/permission limits, both validators, draft-only creation, pre-create ref failures, post-create fail-safe close, and absence of content write, merge, release, deployment, package, OIDC, issue, Actions-write, or Git-push markers.
+The read-only workflow also checks trigger/permission limits, both validators, immutable draft-only creation, connector+REST postcondition markers, second readback/timeline fail-safe markers, and absence of content write, ready/reviewer/merge actions, release, deployment, package, OIDC, issue, Actions-write, or Git-push markers.
 
 For this Markdown, review the complete diff, one H1, heading order, compatibility anchors, tables, alerts, Mermaid, code fences, relative links, metadata block, final newline, and `git diff --check`. Report exact-head hosted checks as passing, failing, pending, skipped, inherited, unavailable, or not run.
 
