@@ -137,6 +137,15 @@ class RollbackCardValidatorTests(unittest.TestCase):
                 1,
                 '"code":"FILE_NOT_FOUND"',
             ),
+            (
+                "invalid-candidate",
+                (
+                    "fixtures/release/rollback_card/invalid/"
+                    "invalid_time_order.json"
+                ),
+                1,
+                '"code":"EFFECTIVE_BEFORE_DECISION"',
+            ),
         )
         for name, candidate, expected_returncode, expected_marker in scenarios:
             with self.subTest(name=name):
