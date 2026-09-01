@@ -229,6 +229,7 @@ class RollbackCardValidatorTests(unittest.TestCase):
                 normalized = guidance.casefold()
                 self.assertIn("delegat", normalized)
                 self.assertIn("canonical", normalized)
+                self.assertNotIn(r"\n\n##", guidance)
                 for stale_claim in stale_claims:
                     self.assertNotIn(stale_claim, guidance)
                 for stale_pattern in STALE_COMPATIBILITY_GUIDANCE_PATTERNS:
