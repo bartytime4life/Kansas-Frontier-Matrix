@@ -14,6 +14,7 @@ from tools.validators.archaeology.validate_candidate_feature import (
     CANDIDATE_TYPES,
     FORBIDDEN_INLINE_LOCATION_FIELDS,
     FORBIDDEN_SITE_CLAIM_FIELDS,
+    SPEC_HASH_PATTERN,
     SPATIAL_PRECISION_CLASSES,
     validate_candidate_feature,
 )
@@ -71,6 +72,13 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
                 payload = copy.deepcopy(self.valid)
                 payload[field] = ["malformed", "synthetic"]
                 self.assertIn(expected_error, validate_candidate_feature(payload))
+
+    def test_malformed_spec_hash_fails_closed(self) -> None:
+        payload = _load(FIXTURE_ROOT / "malformed_spec_hash_deny.json")
+        expected_error = "spec_hash must match ^sha256:[a-f0-9]{64}$"
+        self.assertIn(expected_error, validate_candidate_feature(payload))
+        payload["spec_hash"] = {"synthetic": "not-a-digest"}
+        self.assertIn(expected_error, validate_candidate_feature(payload))
 
     def test_unsupported_spatial_precision_fails_closed(self) -> None:
         payload = _load(FIXTURE_ROOT / "unsupported_spatial_precision_deny.json")
@@ -166,6 +174,7 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
             properties["candidate_feature_id"]["pattern"],
             CANDIDATE_ID_PATTERN.pattern,
         )
+        self.assertEqual(properties["spec_hash"]["pattern"], SPEC_HASH_PATTERN.pattern)
         self.assertFalse(schema["additionalProperties"])
         self.assertTrue(FORBIDDEN_INLINE_LOCATION_FIELDS.isdisjoint(properties))
         self.assertTrue(FORBIDDEN_SITE_CLAIM_FIELDS.isdisjoint(properties))

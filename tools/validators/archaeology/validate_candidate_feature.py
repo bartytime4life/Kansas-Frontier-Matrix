@@ -113,6 +113,7 @@ LIFECYCLE_STATES = frozenset({"WORK", "QUARANTINE", "PROCESSED", "CATALOG"})
 EVIDENCE_BOUND_LIFECYCLE_STATES = frozenset({"PROCESSED", "CATALOG"})
 CANDIDATE_ID_PATTERN = re.compile(r"^arc-candidate-[a-z0-9][a-z0-9-]*$")
 KFM_REFERENCE_PATTERN = re.compile(r"^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$")
+SPEC_HASH_PATTERN = re.compile(r"^sha256:[a-f0-9]{64}$")
 
 
 def _is_bounded_string(value: Any, allowed: frozenset[str]) -> bool:
@@ -248,6 +249,15 @@ def validate_candidate_feature(payload: Any) -> list[str]:
         errors.append(
             "spatial_precision_class is required with candidate_geometry_ref"
         )
+    spec_hash = payload.get("spec_hash")
+    if (
+        spec_hash is not None
+        and (
+            not isinstance(spec_hash, str)
+            or SPEC_HASH_PATTERN.fullmatch(spec_hash) is None
+        )
+    ):
+        errors.append("spec_hash must match ^sha256:[a-f0-9]{64}$")
 
     return errors
 
@@ -271,6 +281,7 @@ def validate_fixture_suite() -> int:
         FIXTURE_ROOT / "non_string_reference_deny.json": "opaque kfm:// references",
         FIXTURE_ROOT / "empty_evidence_refs_deny.json": "evidence_refs must contain",
         FIXTURE_ROOT / "non_string_vocabulary_deny.json": "candidate_type is not in",
+        FIXTURE_ROOT / "malformed_spec_hash_deny.json": "spec_hash must match",
     }
     valid_errors = validate_candidate_feature(_load(valid_path))
     if valid_errors:
