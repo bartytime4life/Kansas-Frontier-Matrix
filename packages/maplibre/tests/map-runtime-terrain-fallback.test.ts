@@ -192,6 +192,30 @@ describe("renderer-neutral terrain transition planning", () => {
     ).toBe("NONE");
   });
 
+  it("updates active terrain when the governed exaggeration changes", () => {
+    const current = resolveMapRuntimeTerrainState(terrainRequest, {
+      terrainSupported: true,
+      demSourceReady: true,
+    });
+
+    expect(
+      planMapRuntimeTerrainTransition(
+        current,
+        { ...terrainRequest, exaggeration: 2 },
+        { terrainSupported: true, demSourceReady: true },
+      ),
+    ).toEqual({
+      profile: MAP_RUNTIME_TERRAIN_TRANSITION_PROFILE,
+      effect: "UPDATE_TERRAIN",
+      target: {
+        profile: MAP_RUNTIME_TERRAIN_FALLBACK_PROFILE,
+        mode: "TERRAIN",
+        exaggeration: 2,
+        reason: null,
+      },
+    });
+  });
+
   it.each([
     {
       profile: MAP_RUNTIME_TERRAIN_FALLBACK_PROFILE,
