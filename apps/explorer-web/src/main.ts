@@ -10,7 +10,7 @@ import { mountPublicTrustSurface } from "./site/trust-surface";
 import {
   mountPublicWorkspaceNavigation,
   resolvePublicEvidenceFreeMapCaseId,
-  resolveSinglePublicKnowledgeDomainId,
+  resolvePublicKnowledgeDomainSelectionTransition,
   sanitizePublicWorkspaceNavigationUrl,
   syncPublicWorkspaceNavigation,
 } from "./site/workspace-navigation";
@@ -32,6 +32,7 @@ if (navigation === null || trustSection === null) {
 
 mountPublicWorkspaceNavigation(navigation);
 let activeDeepLinkMapCaseId: string | null = null;
+let activeDeepLinkKnowledgeDomainId: string | null = null;
 const syncWorkspaceNavigation = (): void => {
   const currentUrl = new URL(window.location.href);
   const safeUrl = sanitizePublicWorkspaceNavigationUrl(currentUrl);
@@ -58,12 +59,25 @@ const syncWorkspaceNavigation = (): void => {
     }
   }
 
-  const domainId = resolveSinglePublicKnowledgeDomainId(safeUrl);
-  if (domainId !== null) {
+  const currentDomainId =
+    root.querySelector<HTMLButtonElement>(
+      'button[data-domain-id][aria-pressed="true"]',
+    )?.dataset.domainId ?? null;
+  const domainTransition = resolvePublicKnowledgeDomainSelectionTransition(
+    safeUrl,
+    activeDeepLinkKnowledgeDomainId,
+    currentDomainId,
+  );
+  activeDeepLinkKnowledgeDomainId = domainTransition.activeDeepLinkDomainId;
+  const domainIdToSelect = domainTransition.domainIdToSelect;
+  if (domainIdToSelect !== null) {
     const domainButton = Array.from(
       root.querySelectorAll<HTMLButtonElement>("button[data-domain-id]"),
-    ).find((button) => button.dataset.domainId === domainId);
-    if (domainButton?.getAttribute("aria-pressed") !== "true") {
+    ).find((button) => button.dataset.domainId === domainIdToSelect);
+    if (
+      domainButton !== undefined &&
+      domainButton.getAttribute("aria-pressed") !== "true"
+    ) {
       const priorFocus =
         document.activeElement instanceof HTMLElement
           ? document.activeElement

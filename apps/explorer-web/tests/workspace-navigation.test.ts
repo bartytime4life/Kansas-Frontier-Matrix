@@ -10,6 +10,7 @@ import {
 } from "../src/site/workspace-context";
 import {
   resolvePublicEvidenceFreeMapCaseId,
+  resolvePublicKnowledgeDomainSelectionTransition,
   resolvePublicWorkspaceNavigationState,
   resolveSinglePublicKnowledgeDomainId,
   sanitizePublicWorkspaceNavigationUrl,
@@ -96,6 +97,83 @@ describe("Explorer public workspace navigation integration", () => {
         contextUrl(multiDomainContext, "#knowledge"),
       ),
     ).toBeNull();
+  });
+
+  it("clears only the Knowledge-domain selection still owned by a deep link", () => {
+    const archaeologyUrl = contextUrl(
+      { ...knowledgeContext, domainIds: ["archaeology"] },
+      "#knowledge",
+    );
+    const neutralUrl = contextUrl(
+      { ...knowledgeContext, domainIds: [] },
+      "#knowledge",
+    );
+
+    expect(
+      resolvePublicKnowledgeDomainSelectionTransition(
+        archaeologyUrl,
+        null,
+        "hydrology",
+      ),
+    ).toEqual({
+      activeDeepLinkDomainId: "archaeology",
+      domainIdToSelect: "archaeology",
+    });
+    expect(
+      resolvePublicKnowledgeDomainSelectionTransition(
+        archaeologyUrl,
+        "archaeology",
+        "archaeology",
+      ),
+    ).toEqual({
+      activeDeepLinkDomainId: "archaeology",
+      domainIdToSelect: null,
+    });
+    expect(
+      resolvePublicKnowledgeDomainSelectionTransition(
+        neutralUrl,
+        "archaeology",
+        "archaeology",
+      ),
+    ).toEqual({
+      activeDeepLinkDomainId: null,
+      domainIdToSelect: "hydrology",
+    });
+  });
+
+  it("preserves a manual Knowledge-domain choice after deep-link ownership ends", () => {
+    const neutralUrl = contextUrl(
+      { ...knowledgeContext, domainIds: [] },
+      "#knowledge",
+    );
+    const multiDomainUrl = contextUrl(
+      {
+        ...knowledgeContext,
+        domainIds: ["archaeology", "people_dna_land"],
+      },
+      "#knowledge",
+    );
+
+    expect(
+      resolvePublicKnowledgeDomainSelectionTransition(
+        neutralUrl,
+        "archaeology",
+        "people_dna_land",
+      ),
+    ).toEqual({
+      activeDeepLinkDomainId: null,
+      domainIdToSelect: null,
+    });
+    expect(
+      resolvePublicKnowledgeDomainSelectionTransition(
+        multiDomainUrl,
+        "archaeology",
+        "people_dna_land",
+      ),
+    ).toEqual({
+      activeDeepLinkDomainId: null,
+      domainIdToSelect: null,
+    });
   });
 
   it("restores only the existing domain-neutral evidence-free synthetic map abstention case", () => {
@@ -226,6 +304,9 @@ describe("Explorer public workspace navigation integration", () => {
     expect(navigationSource).toContain(
       "resolveSinglePublicKnowledgeDomainId",
     );
+    expect(navigationSource).toContain(
+      "resolvePublicKnowledgeDomainSelectionTransition",
+    );
     expect(navigationSource).toContain("resolvePublicEvidenceFreeMapCaseId");
     expect(navigationSource).toContain("context.domainIds.length !== 0");
     expect(navigationSource).toContain('selection.selectionId === "selection:missing"');
@@ -237,7 +318,13 @@ describe("Explorer public workspace navigation integration", () => {
     expect(mainSource).toContain("resolvePublicEvidenceFreeMapCaseId");
     expect(mainSource).toContain("data-map-evidence-case");
     expect(mainSource).toContain("mapCaseButton.click()");
-    expect(mainSource).toContain("resolveSinglePublicKnowledgeDomainId");
+    expect(mainSource).toContain(
+      "resolvePublicKnowledgeDomainSelectionTransition",
+    );
+    expect(mainSource).toContain("activeDeepLinkKnowledgeDomainId");
+    expect(mainSource).toContain(
+      'button[data-domain-id][aria-pressed="true"]',
+    );
     expect(mainSource).toContain(
       'querySelectorAll<HTMLButtonElement>("button[data-domain-id]")',
     );

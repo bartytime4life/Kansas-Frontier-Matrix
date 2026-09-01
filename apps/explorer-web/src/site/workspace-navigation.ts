@@ -81,6 +81,44 @@ export function resolveSinglePublicKnowledgeDomainId(url: URL): string | null {
   return context.domainIds[0] ?? null;
 }
 
+export type PublicKnowledgeDomainSelectionTransition = Readonly<{
+  activeDeepLinkDomainId: string | null;
+  domainIdToSelect: string | null;
+}>;
+
+/**
+ * Reconcile only the Knowledge-domain selection that is still owned by one
+ * validated public deep link. When that deep link stops naming exactly one
+ * domain, restore Explorer's existing Hydrology default only if the UI still
+ * shows the domain previously selected by the deep link. A later manual user
+ * choice therefore survives history or hash changes instead of being
+ * overwritten by URL cleanup.
+ */
+export function resolvePublicKnowledgeDomainSelectionTransition(
+  url: URL,
+  activeDeepLinkDomainId: string | null,
+  currentDomainId: string | null,
+): PublicKnowledgeDomainSelectionTransition {
+  const requestedDomainId = resolveSinglePublicKnowledgeDomainId(url);
+  if (requestedDomainId !== null) {
+    return Object.freeze({
+      activeDeepLinkDomainId: requestedDomainId,
+      domainIdToSelect:
+        currentDomainId === requestedDomainId ? null : requestedDomainId,
+    });
+  }
+
+  return Object.freeze({
+    activeDeepLinkDomainId: null,
+    domainIdToSelect:
+      activeDeepLinkDomainId !== null &&
+      currentDomainId === activeDeepLinkDomainId &&
+      currentDomainId !== "hydrology"
+        ? "hydrology"
+        : null,
+  });
+}
+
 /**
  * Recognize the one existing deterministic map fixture that is safe to restore
  * from shareable public URL state.
