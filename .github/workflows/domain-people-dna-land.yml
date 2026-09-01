@@ -315,29 +315,38 @@ jobs:
           cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
           ### People/DNA/Land validation status
 
+          `WORKFLOW_CHECK_EXECUTED: people-dna-land-domain-validator-dispatch`
+
           `WORKFLOW_CHECK_EXECUTED: people-dna-land-consent-overlay-fixture`
 
           `WORKFLOW_CHECK_EXECUTED: people-dna-land-consent-revocation-propagation-assessment`
 
           `WORKFLOW_HOLD: broader People/DNA/Land semantics, policy runtime, evidence closure, proof, and release remain unestablished`
 
-          When green, this job has executed two frozen, synthetic, no-network
-          fixture profiles: a consent-safe genealogy-overlay candidate and a
-          consent-revocation propagation assessment. They check active consent
-          for living-person and DNA-derived summaries,
-          expiry and revocation precedence, manifest-root and membership checks,
-          deterministic hashes, fixture EvidenceRefs, coarse synthetic place and
-          time buckets, high-confidence evidence support, identifying-field and
-          raw-genomic denial, public-release denial, seven-surface dependency
-          coverage, declared propagation receipts, bounded JSON parsing,
-          deterministic diagnostics, and explicit network denial.
+          When green, this job has executed the bounded domain validator and
+          dispatcher suite plus two frozen, synthetic, no-network consent
+          profiles. The domain suite checks schema inventory, EvidenceBundle and
+          SourceDescriptor delegation, CatalogMatrix closure,
+          DomainLayerDescriptor fixture polarity, living-person denial,
+          CorrectionNotice dispatch, and rollback-assessment dispatch. These
+          checks are structural or fixture-scoped and do not establish semantic
+          completeness, source admission, correction execution, or release.
 
-          The profile is not a production overlay contract or consent system. It
-          does not validate real people, identity, kinship, DNA, consent legal
-          sufficiency, source rights, EvidenceBundles, policy approval, public-safe
-          transforms, release readiness, withdrawal execution, cache invalidation,
-          or publication. Other People/DNA/Land test and validator modules remain
-          explicit placeholders or documentation-only lanes.
+          The consent profiles check active consent for living-person and
+          DNA-derived summaries, expiry and revocation precedence, manifest-root
+          and membership checks, deterministic hashes, fixture EvidenceRefs,
+          coarse synthetic place and time buckets, high-confidence evidence
+          support, identifying-field and raw-genomic denial, public-release
+          denial, seven-surface dependency coverage, declared propagation
+          receipts, bounded JSON parsing, deterministic diagnostics, and explicit
+          network denial.
+
+          This profile set is not a production identity, genealogy, genomic,
+          consent, correction, withdrawal, or publication system. It does not
+          validate real people, kinship, DNA, consent legal sufficiency, source
+          rights, EvidenceBundle closure, policy approval, public-safe transforms,
+          release readiness, rollback execution, cache invalidation, or
+          publication. Unnamed People/DNA/Land surfaces remain held.
           EOF
 
   build-proof-people-dna-land:
