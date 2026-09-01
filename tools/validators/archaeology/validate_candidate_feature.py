@@ -106,6 +106,9 @@ EVIDENCE_BOUND_REVIEW_STATES = frozenset({"UNDER_REVIEW", "RETAINED"})
 SENSITIVITY_CLASSES = frozenset(
     {"RESTRICTED", "WITHHELD", "PUBLIC_SAFE_GENERALIZED"}
 )
+SPATIAL_PRECISION_CLASSES = frozenset(
+    {"WITHHELD", "GENERALIZED", "PUBLIC_SAFE_GENERALIZED"}
+)
 LIFECYCLE_STATES = frozenset({"WORK", "QUARANTINE", "PROCESSED", "CATALOG"})
 EVIDENCE_BOUND_LIFECYCLE_STATES = frozenset({"PROCESSED", "CATALOG"})
 CANDIDATE_ID_PATTERN = re.compile(r"^arc-candidate-[a-z0-9][a-z0-9-]*$")
@@ -181,6 +184,12 @@ def validate_candidate_feature(payload: Any) -> list[str]:
         errors.append("review_state cannot imply confirmation or publication")
     if payload.get("sensitivity_class") not in SENSITIVITY_CLASSES:
         errors.append("sensitivity_class is not in the bounded vocabulary")
+    spatial_precision_class = payload.get("spatial_precision_class")
+    if (
+        spatial_precision_class is not None
+        and spatial_precision_class not in SPATIAL_PRECISION_CLASSES
+    ):
+        errors.append("spatial_precision_class is not in the bounded vocabulary")
     if payload.get("lifecycle_state") not in LIFECYCLE_STATES:
         errors.append("lifecycle_state cannot be PUBLISHED for CandidateFeature")
 
@@ -229,6 +238,7 @@ def validate_fixture_suite() -> int:
         FIXTURE_ROOT / "superseded_without_correction_deny.json": "correction_refs are required",
         FIXTURE_ROOT / "malformed_candidate_id_deny.json": "candidate_feature_id must match",
         FIXTURE_ROOT / "unsupported_candidate_type_deny.json": "candidate_type is not in",
+        FIXTURE_ROOT / "unsupported_spatial_precision_deny.json": "spatial_precision_class is not in",
     }
     valid_errors = validate_candidate_feature(_load(valid_path))
     if valid_errors:
