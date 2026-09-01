@@ -366,7 +366,15 @@ export class MapLibreAdapter implements MapRuntimePort {
 
   private notifySnapshot(): MapRuntimeSnapshot {
     const snapshot = this.getSnapshot();
-    for (const listener of [...this.snapshotListeners]) listener(snapshot);
+    for (const listener of [...this.snapshotListeners]) {
+      try {
+        listener(snapshot);
+      } catch {
+        // Snapshot listeners are observational consumers. A consumer failure
+        // must not change renderer lifecycle, block later listeners, or leak
+        // through the MapRuntimePort call that produced this snapshot.
+      }
+    }
     return snapshot;
   }
 
