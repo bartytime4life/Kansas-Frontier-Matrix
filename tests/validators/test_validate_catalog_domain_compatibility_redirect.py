@@ -168,6 +168,15 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
             report = validate_catalog_domain_compatibility_redirect(compat, canonical)
             self.assertEqual("FAIL", report["outcome"])
             self.assertEqual(["agriculture/"], report["invalid_child_redirects"])
+            self.assertEqual(
+                [
+                    {
+                        "lane": "agriculture/",
+                        "reason_codes": ["CANONICAL_TARGET_MISSING"],
+                    }
+                ],
+                report["invalid_child_redirect_details"],
+            )
 
     def test_conflicted_child_redirect_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -188,6 +197,46 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
             report = validate_catalog_domain_compatibility_redirect(compat, canonical)
             self.assertEqual("FAIL", report["outcome"])
             self.assertEqual(["agriculture/"], report["invalid_child_redirects"])
+            self.assertEqual(
+                [
+                    {
+                        "lane": "agriculture/",
+                        "reason_codes": ["MERGE_CONFLICT_MARKER"],
+                    }
+                ],
+                report["invalid_child_redirect_details"],
+            )
+
+    def test_child_redirect_reason_codes_are_stable_and_composable(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            compat, canonical = _write_layout(
+                Path(tmp),
+                actual=["agriculture"],
+                indexed=["agriculture"],
+                readme_overrides={
+                    "agriculture": (
+                        "<<<<<<< HEAD\n"
+                        "Canonical catalog: data/catalog/domain/fauna/\n"
+                        "=======\n"
+                        "Canonical catalog: data/catalog/domain/flora/\n"
+                        ">>>>>>> origin/main\n"
+                    )
+                },
+            )
+            report = validate_catalog_domain_compatibility_redirect(compat, canonical)
+            self.assertEqual("FAIL", report["outcome"])
+            self.assertEqual(
+                [
+                    {
+                        "lane": "agriculture/",
+                        "reason_codes": [
+                            "MERGE_CONFLICT_MARKER",
+                            "CANONICAL_TARGET_MISSING",
+                        ],
+                    }
+                ],
+                report["invalid_child_redirect_details"],
+            )
 
     def test_cli_json_is_deterministic(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -213,7 +262,7 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
             self.assertEqual(outputs[0], outputs[1])
             report = json.loads(outputs[0])
             self.assertEqual(
-                "kfm.catalog-domain-compatibility-redirect.v2",
+                "kfm.catalog-domain-compatibility-redirect.v3",
                 report["profile"],
             )
 

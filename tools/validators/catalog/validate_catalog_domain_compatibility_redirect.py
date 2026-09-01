@@ -7,7 +7,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-PROFILE = "kfm.catalog-domain-compatibility-redirect.v2"
+PROFILE = "kfm.catalog-domain-compatibility-redirect.v3"
 SECTION_HEADER = "## Current bounded inventory"
 ROW_RE = re.compile(
     r"^-\s+\[`([^`]+/)`\]\(\./([^/]+)/README\.md\)\s*$"
@@ -54,11 +54,14 @@ def _direct_children(root: Path) -> list[str]:
     )
 
 
-def _child_readme_routes_to_canonical(readme_path: Path, lane: str) -> bool:
+def _child_redirect_reason_codes(readme_path: Path, lane: str) -> list[str]:
     text = readme_path.read_text(encoding="utf-8")
+    reasons: list[str] = []
     if any(marker in text for marker in ("<<<<<<<", "=======", ">>>>>>>")):
-        return False
-    return f"data/catalog/domain/{lane}/" in text
+        reasons.append("MERGE_CONFLICT_MARKER")
+    if f"data/catalog/domain/{lane}/" not in text:
+        reasons.append("CANONICAL_TARGET_MISSING")
+    return reasons
 
 
 def validate_catalog_domain_compatibility_redirect(
@@ -82,6 +85,7 @@ def validate_catalog_domain_compatibility_redirect(
 
     missing_child_readmes: list[str] = []
     invalid_child_redirects: list[str] = []
+    invalid_child_redirect_details: list[dict[str, Any]] = []
     missing_canonical_targets: list[str] = []
     for lane in sorted(actual_set | indexed_unique):
         child = compatibility_root / lane.rstrip("/")
@@ -90,10 +94,15 @@ def validate_catalog_domain_compatibility_redirect(
         if child.is_dir():
             if not child_readme.is_file():
                 missing_child_readmes.append(lane)
-            elif not _child_readme_routes_to_canonical(
-                child_readme, lane.rstrip("/")
-            ):
-                invalid_child_redirects.append(lane)
+            else:
+                reason_codes = _child_redirect_reason_codes(
+                    child_readme, lane.rstrip("/")
+                )
+                if reason_codes:
+                    invalid_child_redirects.append(lane)
+                    invalid_child_redirect_details.append(
+                        {"lane": lane, "reason_codes": reason_codes}
+                    )
         if lane in indexed_unique and not target.is_dir():
             missing_canonical_targets.append(lane)
 
@@ -125,6 +134,7 @@ def validate_catalog_domain_compatibility_redirect(
         "stale_index_entries": stale_index_entries,
         "missing_child_readmes": missing_child_readmes,
         "invalid_child_redirects": invalid_child_redirects,
+        "invalid_child_redirect_details": invalid_child_redirect_details,
         "missing_canonical_targets": missing_canonical_targets,
         "canonical_only_children_allowed": True,
     }
