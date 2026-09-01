@@ -1,6 +1,7 @@
 {
   "record_id": "fixture:hydrology:invalid",
   "object_family": "NFHLZone",
+  "source_role": "modeled",
   "source_descriptor_ref": "",
   "evidence_refs": [],
   "gauge_site_ref": "",
