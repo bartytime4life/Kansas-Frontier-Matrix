@@ -175,6 +175,14 @@ def _geometry_findings(value: object) -> list[Finding]:
         and len(set(normalized_positions)) < 2
     ):
         _add(findings, "geom.route_degenerate", "/geometry/coordinates")
+    elif len(normalized_positions) == len(coordinates):
+        for index in range(1, len(normalized_positions)):
+            if normalized_positions[index] == normalized_positions[index - 1]:
+                _add(
+                    findings,
+                    "geom.consecutive_position_duplicate",
+                    f"/geometry/coordinates/{index}",
+                )
     return findings
 
 

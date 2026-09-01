@@ -1,6 +1,15 @@
 {
   "cases": [
     {
+      "path": "invalid/consecutive_duplicate_position.json",
+      "expected_findings": [
+        {
+          "code": "geom.consecutive_position_duplicate",
+          "path": "/geometry/coordinates/2"
+        }
+      ]
+    },
+    {
       "path": "invalid/degenerate_route.json",
       "expected_findings": [
         {

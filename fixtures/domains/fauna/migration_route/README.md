@@ -6,6 +6,8 @@ aggregation-site, private-land, protected, or production data.
 
 - `valid/public_safe_synthetic_route.json` is generalized, fixture-only,
   unreleased, and ineligible for promotion.
+- `invalid/consecutive_duplicate_position.json` proves a zero-length segment
+  cannot remain inside an otherwise non-degenerate corridor.
 - `invalid/degenerate_route.json` proves repeated coordinates cannot claim a
   migration corridor without representing any movement.
 - `invalid/exact_track_claim.json` proves exact precision and telemetry or

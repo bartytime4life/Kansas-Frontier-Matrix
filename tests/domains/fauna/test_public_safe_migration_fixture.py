@@ -22,6 +22,9 @@ from tools.validators.domains.fauna.movement.validate_public_safe_migration_fixt
 
 
 VALID = FIXTURE_ROOT / "valid" / "public_safe_synthetic_route.json"
+CONSECUTIVE_DUPLICATE = (
+    FIXTURE_ROOT / "invalid" / "consecutive_duplicate_position.json"
+)
 DEGENERATE = FIXTURE_ROOT / "invalid" / "degenerate_route.json"
 EXACT = FIXTURE_ROOT / "invalid" / "exact_track_claim.json"
 INSUFFICIENT = FIXTURE_ROOT / "invalid" / "insufficient_positions.json"
@@ -53,6 +56,17 @@ class PublicSafeMigrationFixtureTests(unittest.TestCase):
             validate_file(DEGENERATE).findings,
             (
                 Finding("geom.route_degenerate", "/geometry/coordinates"),
+            ),
+        )
+
+    def test_consecutive_duplicate_position_fails_closed(self):
+        self.assertEqual(
+            validate_file(CONSECUTIVE_DUPLICATE).findings,
+            (
+                Finding(
+                    "geom.consecutive_position_duplicate",
+                    "/geometry/coordinates/2",
+                ),
             ),
         )
 
