@@ -300,6 +300,7 @@ def validate_fixture_suite() -> int:
         FIXTURE_ROOT / "non_string_vocabulary_deny.json": "candidate_type is not in",
         FIXTURE_ROOT / "malformed_spec_hash_deny.json": "spec_hash must match",
         FIXTURE_ROOT / "malformed_confidence_statement_deny.json": "confidence_statement must contain",
+        FIXTURE_ROOT / "unicode_invisible_confidence_deny.json": "confidence_statement must contain",
     }
     valid_errors = validate_candidate_feature(_load(valid_path))
     if valid_errors:

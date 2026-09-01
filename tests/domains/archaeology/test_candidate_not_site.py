@@ -107,6 +107,14 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
             validate_candidate_feature(payload),
         )
 
+    def test_unicode_invisible_confidence_fixture_fails_closed(self) -> None:
+        payload = _load(FIXTURE_ROOT / "unicode_invisible_confidence_deny.json")
+        self.assertEqual(payload["confidence_statement"], "\ufeff")
+        self.assertIn(
+            "confidence_statement must contain 1 to 1000 characters",
+            validate_candidate_feature(payload),
+        )
+
     def test_omitted_confidence_statement_remains_optional(self) -> None:
         payload = copy.deepcopy(self.valid)
         payload.pop("confidence_statement", None)

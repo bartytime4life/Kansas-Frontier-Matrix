@@ -18,6 +18,8 @@ burial, sacred-place, collection-security, or culturally restricted data.
   use the same lowercase SHA-256 grammar in the schema and executable validator.
 - `malformed_confidence_statement_deny.json` proves that optional confidence
   prose remains a bounded string instead of accepting empty or structured values.
+- `unicode_invisible_confidence_deny.json` proves that a confidence statement
+  containing only a Unicode byte-order mark cannot masquerade as reviewable text.
 - `unsupported_spatial_precision_deny.json` proves that unsupported precision
   labels such as `EXACT` fail closed instead of implying an unsafe location posture.
 - `unclassified_geometry_reference_deny.json` proves that even an opaque internal
@@ -50,6 +52,7 @@ precision binding; bounded candidate discriminator; inline location denial;
 opaque-reference boundary; conditional EvidenceRef binding; and supersession
 correction binding; malformed-reference finite denial; and nonempty governed
 reference bindings; malformed-vocabulary finite denial; and schema-aligned
-`spec_hash` and confidence-statement validation. It does not confirm a site,
+`spec_hash` and deterministic Unicode-safe confidence-statement validation. It
+does not confirm a site,
 authorize publication, or establish full EvidenceBundle closure, policy,
 cultural review, or public-safe transformation.
