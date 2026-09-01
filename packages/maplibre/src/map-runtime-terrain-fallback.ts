@@ -39,6 +39,7 @@ export const MAP_RUNTIME_TERRAIN_TRANSITION_PROFILE =
 export const MAP_RUNTIME_TERRAIN_EFFECTS = [
   "NONE",
   "ENABLE_TERRAIN",
+  "UPDATE_TERRAIN",
   "DISABLE_TERRAIN",
 ] as const;
 export type MapRuntimeTerrainEffect =
@@ -210,6 +211,12 @@ export function planMapRuntimeTerrainTransition(
 
   if (target.mode === "TERRAIN" && current?.mode !== "TERRAIN") {
     effect = "ENABLE_TERRAIN";
+  } else if (
+    target.mode === "TERRAIN" &&
+    current?.mode === "TERRAIN" &&
+    target.exaggeration !== current.exaggeration
+  ) {
+    effect = "UPDATE_TERRAIN";
   } else if (target.mode === "FLAT" && current?.mode === "TERRAIN") {
     effect = "DISABLE_TERRAIN";
   }
