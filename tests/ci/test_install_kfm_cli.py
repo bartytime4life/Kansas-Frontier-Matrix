@@ -53,6 +53,7 @@ class InstallKfmCliTests(unittest.TestCase):
             self.assertIs(call.kwargs["shell"], False)
             self.assertIs(call.kwargs["check"], True)
             self.assertEqual(REPO_ROOT, call.kwargs["cwd"])
+            self.assertIs(module.subprocess.DEVNULL, call.kwargs["stdin"])
         self.assertEqual(
             [300.0, 250.0],
             [call.kwargs["timeout"] for call in run.call_args_list],
