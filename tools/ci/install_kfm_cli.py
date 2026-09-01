@@ -144,6 +144,8 @@ def install() -> None:
             raise CliInstallConfigurationError("CLI_INSTALL_TIMEOUT") from exc
         except subprocess.CalledProcessError as exc:
             raise CliInstallConfigurationError("CLI_INSTALL_COMMAND_FAILED") from exc
+        except OSError as exc:
+            raise CliInstallConfigurationError("CLI_INSTALL_EXECUTION_FAILED") from exc
 
 
 def main(argv: Sequence[str] | None = None) -> int:
