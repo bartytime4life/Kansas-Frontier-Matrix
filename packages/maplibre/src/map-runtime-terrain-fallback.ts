@@ -51,6 +51,25 @@ export type MapRuntimeTerrainTransitionPlan = Readonly<{
   target: MapRuntimeTerrainState;
 }>;
 
+export const MAP_RUNTIME_TERRAIN_COORDINATOR_PROFILE =
+  "kfm.map-runtime-terrain-coordinator.v1" as const;
+
+export type MapRuntimeTerrainTransitionTicket = Readonly<{
+  profile: typeof MAP_RUNTIME_TERRAIN_COORDINATOR_PROFILE;
+  revision: number;
+  plan: MapRuntimeTerrainTransitionPlan;
+}>;
+
+export type MapRuntimeTerrainTransitionCoordinator = Readonly<{
+  getState(): MapRuntimeTerrainState | null;
+  plan(
+    request: MapRuntimeTerrainRequest,
+    capabilities: MapRuntimeTerrainCapabilities,
+  ): MapRuntimeTerrainTransitionTicket;
+  commit(ticket: MapRuntimeTerrainTransitionTicket): MapRuntimeTerrainState;
+  reject(ticket: MapRuntimeTerrainTransitionTicket): MapRuntimeTerrainState | null;
+}>;
+
 const REQUEST_FIELDS = new Set([
   "profile",
   "mode",
@@ -225,5 +244,70 @@ export function planMapRuntimeTerrainTransition(
     profile: MAP_RUNTIME_TERRAIN_TRANSITION_PROFILE,
     effect,
     target,
+  });
+}
+
+/**
+ * Coordinates asynchronous renderer application without treating a plan as
+ * applied state. A newer plan supersedes the previous pending ticket, and only
+ * committing that exact ticket advances the coordinator's current state.
+ */
+export function createMapRuntimeTerrainTransitionCoordinator(
+  initial: MapRuntimeTerrainState | null = null,
+): MapRuntimeTerrainTransitionCoordinator {
+  if (initial !== null) {
+    validateTerrainState(initial);
+  }
+
+  let current =
+    initial === null ? null : (Object.freeze({ ...initial }) as MapRuntimeTerrainState);
+  let pending: MapRuntimeTerrainTransitionTicket | null = null;
+  let nextRevision = 1;
+
+  function requirePending(
+    ticket: MapRuntimeTerrainTransitionTicket,
+  ): MapRuntimeTerrainTransitionTicket {
+    if (ticket !== pending) {
+      invalid("Map runtime terrain transition ticket is stale or invalid.");
+    }
+    return ticket;
+  }
+
+  return Object.freeze({
+    getState(): MapRuntimeTerrainState | null {
+      return current;
+    },
+
+    plan(
+      request: MapRuntimeTerrainRequest,
+      capabilities: MapRuntimeTerrainCapabilities,
+    ): MapRuntimeTerrainTransitionTicket {
+      if (!Number.isSafeInteger(nextRevision)) {
+        invalid("Map runtime terrain transition revision is exhausted.");
+      }
+      const ticket = Object.freeze({
+        profile: MAP_RUNTIME_TERRAIN_COORDINATOR_PROFILE,
+        revision: nextRevision,
+        plan: planMapRuntimeTerrainTransition(current, request, capabilities),
+      });
+      nextRevision += 1;
+      pending = ticket;
+      return ticket;
+    },
+
+    commit(ticket: MapRuntimeTerrainTransitionTicket): MapRuntimeTerrainState {
+      const accepted = requirePending(ticket);
+      current = accepted.plan.target;
+      pending = null;
+      return current;
+    },
+
+    reject(
+      ticket: MapRuntimeTerrainTransitionTicket,
+    ): MapRuntimeTerrainState | null {
+      requirePending(ticket);
+      pending = null;
+      return current;
+    },
   });
 }
