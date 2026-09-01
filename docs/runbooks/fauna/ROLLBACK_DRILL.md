@@ -1,7 +1,8 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runbooks/fauna/rollback-drill
 title: Fauna — Rollback Drill
-type: runbook; rehearsal-procedure; domain-lane; sensitive-domain; non-authoritative
+type: standard
+profile: rehearsal-procedure; domain-lane; sensitive-domain; non-authoritative
 version: v0.1
 prior_version: unversioned planned-file scaffold
 status: draft; repository-grounded; shared-synthetic-rehearsal-executable; fauna-integrated-and-operational-rollback-held; non-publisher
