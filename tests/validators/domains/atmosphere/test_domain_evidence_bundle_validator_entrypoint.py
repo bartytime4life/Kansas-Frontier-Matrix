@@ -52,6 +52,27 @@ class AtmosphereEvidenceBundleEntrypointTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
         self.assertIn(f"FAIL {INVALID_FIXTURE}", result.stdout)
 
+    def test_duplicate_keys_and_nonfinite_numbers_fail_before_schema_validation(self) -> None:
+        malformed_instances = {
+            "duplicate-key.json": '{"bundle_id":"first","bundle_id":"second"}',
+            "nonfinite-number.json": '{"bundle_id":NaN}',
+        }
+
+        with tempfile.TemporaryDirectory() as directory:
+            fixture_root = Path(directory)
+            for name, content in malformed_instances.items():
+                with self.subTest(name=name):
+                    path = fixture_root / name
+                    path.write_text(content, encoding="utf-8")
+                    result = self._run(str(path))
+
+                    self.assertEqual(
+                        result.returncode,
+                        1,
+                        result.stdout + result.stderr,
+                    )
+                    self.assertIn(f"FAIL {path}", result.stdout)
+
     def test_missing_arguments_is_usage_error(self) -> None:
         result = self._run()
 
