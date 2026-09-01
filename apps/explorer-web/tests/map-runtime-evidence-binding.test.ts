@@ -18,7 +18,10 @@ const selection: MapFeatureSelection = Object.freeze({
   selectionId: "selection:synthetic:flow-001",
   layerId: "layer:released:synthetic-streamflow",
   featureId: "feature:synthetic:flow-001",
-  evidenceRefs: Object.freeze(["kfm:evidence:synthetic:flow-001"]),
+  evidenceRefs: Object.freeze([
+    "kfm:evidence:synthetic:flow-001",
+    "kfm:evidence:synthetic:flow-000",
+  ]),
 });
 
 function admittedLayerManifest(): typeof layerAdmissionFixture.base {
