@@ -82,6 +82,38 @@ class RollbackCardValidatorTests(unittest.TestCase):
         self.assertIn('"outcome":"PASS"', result.stdout)
         self.assertNotIn("kfm://release/example/v2", result.stdout)
 
+    def test_compatibility_entrypoint_delegates_to_canonical_profile(self) -> None:
+        canonical = subprocess.run(
+            [
+                sys.executable,
+                "tools/validators/release/validate_rollback_card.py",
+                "--fixtures",
+            ],
+            cwd=REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        compatibility = subprocess.run(
+            [
+                sys.executable,
+                "tools/validators/validate_rollback_card.py",
+                "--fixtures",
+            ],
+            cwd=REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(0, canonical.returncode, canonical.stdout + canonical.stderr)
+        self.assertEqual(
+            canonical.returncode,
+            compatibility.returncode,
+            compatibility.stdout + compatibility.stderr,
+        )
+        self.assertEqual(canonical.stdout, compatibility.stdout)
+        self.assertEqual(canonical.stderr, compatibility.stderr)
+
     def test_duplicate_keys_fail_closed_without_echo(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "duplicate.json"
