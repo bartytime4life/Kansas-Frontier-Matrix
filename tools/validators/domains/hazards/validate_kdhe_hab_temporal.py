@@ -27,7 +27,8 @@ MAX_FILE_BYTES = 1_048_576
 MAX_SCHEMA_FINDINGS = 100
 ACTIVE_STATES = {"WATCH", "WARNING", "HAZARD"}
 RFC3339_SECOND = re.compile(
-    r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})$"
+    r"^\d{4}-\d{2}-\d{2}T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d"
+    r"(?:Z|[+-](?:[01]\d|2[0-3]):[0-5]\d)$"
 )
 ERROR_CODES = {
     "KDHE_HAB_FILE_NOT_FOUND",
@@ -151,7 +152,11 @@ def _time(value: Any) -> datetime | None:
 
 def _evaluation_time(value: Any) -> datetime | None:
     """Parse the governed CLI evaluation instant at RFC3339 whole-second precision."""
-    if not isinstance(value, str) or RFC3339_SECOND.fullmatch(value) is None:
+    if (
+        not isinstance(value, str)
+        or RFC3339_SECOND.fullmatch(value) is None
+        or value.endswith("-00:00")
+    ):
         return None
     return _time(value)
 

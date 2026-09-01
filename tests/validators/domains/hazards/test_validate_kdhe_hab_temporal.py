@@ -148,6 +148,9 @@ class KdheHabTemporalValidatorTests(unittest.TestCase):
                 "2026-W30-6T15:00:01Z",
                 "2026-07-25T15:00:01+0100",
                 "2026-07-25 15:00:01Z",
+                "2026-07-25T15:00:01-00:00",
+                "2026-07-25T15:00:01+00:60",
+                "2026-07-25T15:00:01+24:00",
             )
             for value in invalid_times:
                 with self.subTest(value=value):

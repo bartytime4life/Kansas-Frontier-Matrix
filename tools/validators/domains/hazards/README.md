@@ -33,7 +33,7 @@ related:
   - ../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../../../docs/doctrine/directory-rules.md
 notes:
-  - "v0.10 makes the explicit evaluation interface canonical and replay-safe by accepting only timezone-aware RFC3339 whole-second instants before normalizing them to UTC in the result envelope."
+  - "v0.10 makes the explicit evaluation interface canonical and replay-safe by accepting only timezone-aware RFC3339 whole-second instants with a known, valid offset before normalizing them to UTC in the result envelope."
   - "v0.9 binds each file-validation result to retrieval-relative or explicit-as-of evaluation and emits a canonical UTC evaluation time when supplied, so downstream consumers can distinguish the meaning of PASS without inspecting source values."
   - "v0.8 adds an optional caller-supplied evaluation instant so current snapshots can be deterministically denied after expiry without consulting a clock or network."
   - "v0.7 adds deterministic, no-network temporal ordering and freshness-budget validation for the existing inactive KDHE HAB advisory snapshot profile; it does not activate the source or authorize alerts, release, deployment, or publication."
@@ -164,7 +164,7 @@ The `domain-hazards` proof and release-dry-run jobs intentionally emit explicit 
 
 Individual validators own their finite result grammar. This index does not normalize materially different findings into a shared approval state.
 
-KDHE HAB file-validation output identifies whether validation was retrieval-relative or used an explicit caller-supplied evaluation instant. The CLI accepts only timezone-aware RFC3339 whole-second instants; accepted instants are normalized to UTC in the result, while retrieval-relative output uses a null evaluation time. This canonical binding supports deterministic replay but does not create a runtime DecisionEnvelope, EvidenceBundle, approval, alert, or current-condition claim.
+KDHE HAB file-validation output identifies whether validation was retrieval-relative or used an explicit caller-supplied evaluation instant. The CLI accepts only timezone-aware RFC3339 whole-second instants with a known, valid offset; it rejects RFC3339's unknown-local-offset marker (`-00:00`) rather than collapsing it to UTC. Accepted instants are normalized to UTC in the result, while retrieval-relative output uses a null evaluation time. This canonical binding supports deterministic replay but does not create a runtime DecisionEnvelope, EvidenceBundle, approval, alert, or current-condition claim.
 
 ## Inputs and outputs
 
