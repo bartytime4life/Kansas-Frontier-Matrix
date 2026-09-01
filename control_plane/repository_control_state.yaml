@@ -2,7 +2,7 @@
   "schema_version": "2.0.0",
   "state_id": "kfm-repository-control-main",
   "repository": "bartytime4life/Kansas-Frontier-Matrix",
-  "projection_status": "CONFIRMED",
+  "projection_status": "SUPERSEDED",
   "base": {
     "default_branch": "main",
     "current_main_sha": "c0a6449c377e839e5b03c67f726829dc625a8c3a",
@@ -17,7 +17,7 @@
     "allowed_paths": [],
     "allowed_operations": [],
     "expires_at": null,
-    "terminal_condition": "pr_1829_terminal_divergence_recorded; ruleset_15484585_recovered_for_main; no_active_repository_claim; new_external_authorization_required"
+    "terminal_condition": "superseded_by_issue_4024_branch_first_delivery_incident; historical_hold_retained; no_ready_or_merge_authority"
   },
   "authorization": {
     "authorizing_actor": null,
@@ -34,7 +34,8 @@
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5121728435",
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1820#issuecomment-5121753575",
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5121858163",
-      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1820#issuecomment-5121864305"
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1820#issuecomment-5121864305",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024"
     ],
     "issued_at": null
   },
@@ -79,5 +80,5 @@
       "state_digest"
     ]
   },
-  "state_digest": "2ea8e4bcce48c7d82a6768233380f29b5c5df426eaf2cefe7c1c38ebeaef55f2"
+  "state_digest": "625516727401bb0ea8d4d6562d7604a2f76b05116283d936b9c23e9984a7f5ff"
 }
