@@ -193,6 +193,37 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
                     {("TEMPORAL_ORDER_INVALID", expected_path)},
                 )
 
+    def test_unknown_intermediate_preserves_independent_time_bounds(self) -> None:
+        scenarios = (
+            ("valid_issued", "issued_at", "2026-08-10T15:00:00Z", "/advisory/issued_at"),
+            ("valid_issued", "expires_at", "2026-08-10T11:00:00Z", "/advisory/expires_at"),
+            (
+                "valid_authoritative_rescission",
+                "rescinded_at",
+                "2026-08-10T11:00:00Z",
+                "/advisory/rescinded_at",
+            ),
+        )
+        for base_name, field, value, expected_path in scenarios:
+            with self.subTest(field=field):
+                candidate = copy.deepcopy(self.valid[base_name])
+                candidate["advisory"]["effective_at"] = (
+                    "2026-08-10T13:00:00-00:00"
+                )
+                candidate["advisory"][field] = value
+                candidate = validator.assign_identity(candidate)
+
+                result = validator.validate_payload(candidate)
+
+                self.assertEqual(result.outcome, "DENY")
+                self.assertEqual(
+                    {(finding.code, finding.path) for finding in result.findings},
+                    {
+                        ("TEMPORAL_ORDER_INVALID", expected_path),
+                        ("TIMESTAMP_UNKNOWN_OFFSET", "/advisory/effective_at"),
+                    },
+                )
+
     def test_semantic_time_admission_matches_schema_format(self) -> None:
         lowercase = copy.deepcopy(self.valid["valid_authoritative_rescission"])
         for section, field in (

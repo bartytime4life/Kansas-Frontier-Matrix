@@ -15,6 +15,9 @@ suffix as the schema, including lowercase `t`, and does not derive ordering
 claims from schema-invalid timestamp syntax.
 Ordering denials bind to the corrective timestamp field so downstream
 consumers do not need to infer which value violated the governed sequence.
+An unknown intermediate timestamp suppresses only comparisons that require
+it; independently knowable issue, check, expiry, and rescission bounds remain
+enforced.
 
 `PASS` proves local profile coherence only. It does not establish a current
 advisory, safe drinking water, source admission, evidence closure, policy or

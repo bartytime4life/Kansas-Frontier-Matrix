@@ -418,8 +418,11 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
     checked = _time(source.get("checked_at"))
     temporal_order_checks = (
         (issued is not None and effective is not None and issued > effective, "/advisory/issued_at"),
+        (issued is not None and checked is not None and issued > checked, "/advisory/issued_at"),
         (effective is not None and checked is not None and effective > checked, "/advisory/effective_at"),
+        (expires is not None and issued is not None and expires < issued, "/advisory/expires_at"),
         (expires is not None and effective is not None and expires < effective, "/advisory/expires_at"),
+        (rescinded is not None and issued is not None and rescinded < issued, "/advisory/rescinded_at"),
         (rescinded is not None and effective is not None and rescinded < effective, "/advisory/rescinded_at"),
         (rescinded is not None and checked is not None and rescinded > checked, "/advisory/rescinded_at"),
     )
