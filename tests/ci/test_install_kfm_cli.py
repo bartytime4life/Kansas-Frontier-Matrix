@@ -70,6 +70,21 @@ class InstallKfmCliTests(unittest.TestCase):
             ):
                 module.validate_lockfile(path)
 
+    def test_lock_validation_rejects_non_hash_continuation(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "unsafe.lock"
+            path.write_text(
+                "typer==0.27.2 \\\n"
+                "    --config-settings=builddir=outside \\\n"
+                f"    --hash=sha256:{'a' * 64}\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                module.CliInstallConfigurationError,
+                "CLI_LOCKFILE_CONTINUATION_UNSAFE",
+            ):
+                module.validate_lockfile(path)
+
     def test_local_package_validation_rejects_outside_repository(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             path = Path(temp)

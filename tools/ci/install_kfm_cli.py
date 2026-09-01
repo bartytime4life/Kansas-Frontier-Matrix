@@ -72,6 +72,17 @@ def validate_lockfile(path: Path = LOCKFILE) -> None:
     if any(not HASH_LINE.fullmatch(line) for line in hashes):
         raise CliInstallConfigurationError("CLI_LOCKFILE_HASH_INVALID")
 
+    continuations = [
+        line
+        for line in lines
+        if line
+        and line[0].isspace()
+        and line.strip()
+        and not line.lstrip().startswith("#")
+    ]
+    if any(not HASH_LINE.fullmatch(line) for line in continuations):
+        raise CliInstallConfigurationError("CLI_LOCKFILE_CONTINUATION_UNSAFE")
+
     in_requirement = False
     current_has_hash = False
     for line in lines:
