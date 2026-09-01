@@ -45,6 +45,16 @@ class HabitatEvidenceBundleEntrypointTests(unittest.TestCase):
         self.assertIn("OK ", result.stdout)
         self.assertIn("EXPECTED_FAIL ", result.stdout)
 
+    def test_fixture_profile_cannot_ignore_an_explicit_file(self) -> None:
+        result = self._run("--fixtures", str(INVALID_FIXTURE))
+
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        self.assertEqual(result.stdout, "")
+        self.assertIn(
+            "Cannot combine --fixtures with explicit files",
+            result.stderr,
+        )
+
     def test_explicit_valid_file_passes_from_unrelated_working_directory(self) -> None:
         result = self._run(str(VALID_FIXTURE))
 
@@ -82,6 +92,7 @@ class HabitatEvidenceBundleEntrypointTests(unittest.TestCase):
         cases = [
             (),
             ("--fixtures",),
+            ("--fixtures", str(INVALID_FIXTURE)),
             (str(VALID_FIXTURE),),
             (str(INVALID_FIXTURE),),
         ]
