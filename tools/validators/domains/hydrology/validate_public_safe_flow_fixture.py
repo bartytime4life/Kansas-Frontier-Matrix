@@ -44,7 +44,9 @@ ALLOWED_TOP_LEVEL_FIELDS = frozenset(
     }
 )
 ALLOWED_SPATIAL_FIELDS = frozenset({"kind", "county_fips"})
-ALLOWED_TEMPORAL_FIELDS = frozenset({"aggregation_window", "observed_at", "retrieved_at"})
+ALLOWED_TEMPORAL_FIELDS = frozenset(
+    {"aggregation_window", "observed_at", "source_time", "retrieved_at"}
+)
 ALLOWED_MEASUREMENT_FIELDS = frozenset(
     {
         "parameter_code",
@@ -212,13 +214,24 @@ def validate_candidate(candidate: object) -> list[Finding]:
                 "$.temporal_scope.aggregation_window",
             )
         observed = _parse_utc(temporal.get("observed_at"))
+        source_time = _parse_utc(temporal.get("source_time"))
         retrieved = _parse_utc(temporal.get("retrieved_at"))
         if observed is None:
             add_finding(findings, "OBSERVED_TIME_INVALID", "$.temporal_scope.observed_at")
+        if source_time is None:
+            add_finding(findings, "SOURCE_TIME_INVALID", "$.temporal_scope.source_time")
         if retrieved is None:
             add_finding(findings, "RETRIEVAL_TIME_INVALID", "$.temporal_scope.retrieved_at")
         if observed is not None and retrieved is not None and retrieved < observed:
             add_finding(findings, "TEMPORAL_ORDER_INVALID", "$.temporal_scope")
+        if (
+            source_time is not None
+            and (
+                (observed is not None and source_time < observed)
+                or (retrieved is not None and source_time > retrieved)
+            )
+        ):
+            add_finding(findings, "TEMPORAL_SOURCE_ORDER_INVALID", "$.temporal_scope")
 
     measurement = candidate.get("measurement")
     if not isinstance(measurement, dict):
