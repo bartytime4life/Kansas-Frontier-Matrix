@@ -53,6 +53,25 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         errors = validate_candidate_feature(payload)
         self.assertIn("candidate_type is not in the bounded vocabulary", errors)
 
+    def test_non_string_vocabularies_fail_closed_without_exception(self) -> None:
+        fixture = _load(FIXTURE_ROOT / "non_string_vocabulary_deny.json")
+        self.assertIn(
+            "candidate_type is not in the bounded vocabulary",
+            validate_candidate_feature(fixture),
+        )
+        cases = {
+            "origin_method": "origin_method is not in the bounded vocabulary",
+            "review_state": "review_state cannot imply confirmation or publication",
+            "sensitivity_class": "sensitivity_class is not in the bounded vocabulary",
+            "spatial_precision_class": "spatial_precision_class is not in the bounded vocabulary",
+            "lifecycle_state": "lifecycle_state cannot be PUBLISHED for CandidateFeature",
+        }
+        for field, expected_error in cases.items():
+            with self.subTest(field=field):
+                payload = copy.deepcopy(self.valid)
+                payload[field] = ["malformed", "synthetic"]
+                self.assertIn(expected_error, validate_candidate_feature(payload))
+
     def test_unsupported_spatial_precision_fails_closed(self) -> None:
         payload = _load(FIXTURE_ROOT / "unsupported_spatial_precision_deny.json")
         errors = validate_candidate_feature(payload)

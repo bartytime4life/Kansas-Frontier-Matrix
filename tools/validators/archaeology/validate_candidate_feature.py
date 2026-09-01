@@ -115,6 +115,12 @@ CANDIDATE_ID_PATTERN = re.compile(r"^arc-candidate-[a-z0-9][a-z0-9-]*$")
 KFM_REFERENCE_PATTERN = re.compile(r"^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$")
 
 
+def _is_bounded_string(value: Any, allowed: frozenset[str]) -> bool:
+    """Return whether a value is a string in a bounded vocabulary."""
+
+    return isinstance(value, str) and value in allowed
+
+
 def _is_opaque_kfm_ref(value: Any) -> bool:
     """Return whether a value is an opaque governed reference, not a locator."""
 
@@ -177,28 +183,38 @@ def validate_candidate_feature(payload: Any) -> list[str]:
     if payload.get("truth_state") != "CANDIDATE":
         errors.append("truth_state must remain CANDIDATE")
     candidate_type = payload.get("candidate_type")
-    if candidate_type is not None and candidate_type not in CANDIDATE_TYPES:
+    if candidate_type is not None and not _is_bounded_string(
+        candidate_type, CANDIDATE_TYPES
+    ):
         errors.append("candidate_type is not in the bounded vocabulary")
-    if payload.get("origin_method") not in ORIGIN_METHODS:
+    if not _is_bounded_string(payload.get("origin_method"), ORIGIN_METHODS):
         errors.append("origin_method is not in the bounded vocabulary")
-    if payload.get("review_state") not in REVIEW_STATES:
+    if not _is_bounded_string(payload.get("review_state"), REVIEW_STATES):
         errors.append("review_state cannot imply confirmation or publication")
-    if payload.get("sensitivity_class") not in SENSITIVITY_CLASSES:
+    if not _is_bounded_string(
+        payload.get("sensitivity_class"), SENSITIVITY_CLASSES
+    ):
         errors.append("sensitivity_class is not in the bounded vocabulary")
     spatial_precision_class = payload.get("spatial_precision_class")
     if (
         spatial_precision_class is not None
-        and spatial_precision_class not in SPATIAL_PRECISION_CLASSES
+        and not _is_bounded_string(
+            spatial_precision_class, SPATIAL_PRECISION_CLASSES
+        )
     ):
         errors.append("spatial_precision_class is not in the bounded vocabulary")
-    if payload.get("lifecycle_state") not in LIFECYCLE_STATES:
+    if not _is_bounded_string(payload.get("lifecycle_state"), LIFECYCLE_STATES):
         errors.append("lifecycle_state cannot be PUBLISHED for CandidateFeature")
 
     if "source_refs" in payload:
         errors.extend(_validate_refs(payload["source_refs"], "source_refs", required=True))
     evidence_binding_required = (
-        payload.get("review_state") in EVIDENCE_BOUND_REVIEW_STATES
-        or payload.get("lifecycle_state") in EVIDENCE_BOUND_LIFECYCLE_STATES
+        _is_bounded_string(
+            payload.get("review_state"), EVIDENCE_BOUND_REVIEW_STATES
+        )
+        or _is_bounded_string(
+            payload.get("lifecycle_state"), EVIDENCE_BOUND_LIFECYCLE_STATES
+        )
     )
     evidence_refs = payload.get("evidence_refs")
     if evidence_binding_required and (
@@ -254,6 +270,7 @@ def validate_fixture_suite() -> int:
         FIXTURE_ROOT / "unclassified_geometry_reference_deny.json": "spatial_precision_class is required",
         FIXTURE_ROOT / "non_string_reference_deny.json": "opaque kfm:// references",
         FIXTURE_ROOT / "empty_evidence_refs_deny.json": "evidence_refs must contain",
+        FIXTURE_ROOT / "non_string_vocabulary_deny.json": "candidate_type is not in",
     }
     valid_errors = validate_candidate_feature(_load(valid_path))
     if valid_errors:

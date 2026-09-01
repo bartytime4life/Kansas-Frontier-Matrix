@@ -11,6 +11,9 @@ burial, sacred-place, collection-security, or culturally restricted data.
 - `unsupported_candidate_type_deny.json` proves that the validator rejects
   confirmed-site-like or otherwise unsupported candidate-type labels rather than
   allowing them to weaken the candidate boundary.
+- `non_string_vocabulary_deny.json` proves that malformed structured vocabulary
+  values return a finite denial rather than raising an exception during bounded
+  membership or evidence-binding checks.
 - `unsupported_spatial_precision_deny.json` proves that unsupported precision
   labels such as `EXACT` fail closed instead of implying an unsafe location posture.
 - `unclassified_geometry_reference_deny.json` proves that even an opaque internal
@@ -42,6 +45,6 @@ candidate-type vocabulary, spatial-precision vocabulary, and geometry-reference
 precision binding; bounded candidate discriminator; inline location denial;
 opaque-reference boundary; conditional EvidenceRef binding; and supersession
 correction binding; malformed-reference finite denial; and nonempty governed
-reference bindings. It does not confirm a site, authorize publication, or
+reference bindings; and malformed-vocabulary finite denial. It does not confirm a site, authorize publication, or
 establish full EvidenceBundle closure, policy, cultural review, or public-safe
 transformation.
