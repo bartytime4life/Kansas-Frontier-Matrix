@@ -51,14 +51,28 @@ class KdheHabTemporalValidatorTests(unittest.TestCase):
         self.assertEqual(payload["authority"], "NONE")
 
     def test_observation_times_are_monotonic(self) -> None:
-        candidate = self._candidate()
-        candidate["first_observed_at"] = "2026-07-24T17:00:00Z"
-        result = validate_document(candidate)
-        self.assertEqual(result.outcome, "DENY")
-        self.assertIn(
-            "KDHE_HAB_OBSERVATION_TIME_ORDER_INVALID",
-            {finding.code for finding in result.findings},
-        )
+        cases = {
+            "first_after_last": (
+                "first_observed_at",
+                "2026-07-24T17:00:00Z",
+                "/first_observed_at",
+            ),
+            "last_after_retrieval": (
+                "last_observed_at",
+                "2026-07-24T17:00:00Z",
+                "/last_observed_at",
+            ),
+        }
+        for _, (field, value, expected_path) in cases.items():
+            with self.subTest(field=field):
+                candidate = self._candidate()
+                candidate[field] = value
+                result = validate_document(candidate)
+                self.assertEqual(result.outcome, "DENY")
+                self.assertEqual(
+                    {(finding.code, finding.path) for finding in result.findings},
+                    {("KDHE_HAB_OBSERVATION_TIME_ORDER_INVALID", expected_path)},
+                )
 
     def test_source_update_cannot_follow_retrieval(self) -> None:
         candidate = self._candidate()

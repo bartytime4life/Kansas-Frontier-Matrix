@@ -184,7 +184,9 @@ def _semantic_findings(
     source_updated = _time(source_updated_raw) if source_updated_raw is not None else None
 
     if first is not None and last is not None and retrieved is not None:
-        if first > last or last > retrieved:
+        if first > last:
+            findings.append(Finding("KDHE_HAB_OBSERVATION_TIME_ORDER_INVALID", "/first_observed_at"))
+        if last > retrieved:
             findings.append(Finding("KDHE_HAB_OBSERVATION_TIME_ORDER_INVALID", "/last_observed_at"))
     if source_updated is not None and retrieved is not None and source_updated > retrieved:
         findings.append(Finding("KDHE_HAB_SOURCE_TIME_AFTER_RETRIEVAL", "/source_updated_at"))
