@@ -147,7 +147,7 @@ def _schema_findings(candidate: Mapping[str, Any]) -> list[Finding]:
 
 
 def _time(value: Any) -> datetime | None:
-    if not isinstance(value, str):
+    if not isinstance(value, str) or value.endswith("-00:00"):
         return None
     try:
         parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
@@ -194,7 +194,7 @@ def _semantic_findings(
     budget = candidate.get("freshness_budget_hours")
     if state in ACTIVE_STATES and freshness != "current":
         findings.append(Finding("KDHE_HAB_ACTIVE_STATE_NOT_CURRENT", "/freshness_status"))
-    if freshness == "current" and source_updated is None:
+    if freshness == "current" and source_updated_raw is None:
         findings.append(Finding("KDHE_HAB_CURRENT_SOURCE_TIME_MISSING", "/source_updated_at"))
     if (
         freshness == "current"

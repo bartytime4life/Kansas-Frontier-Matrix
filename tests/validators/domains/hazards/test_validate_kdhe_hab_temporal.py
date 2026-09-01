@@ -71,21 +71,21 @@ class KdheHabTemporalValidatorTests(unittest.TestCase):
         )
 
     def test_unknown_timestamp_offsets_are_denied(self) -> None:
-        fields = (
-            "source_updated_at",
-            "retrieved_at",
-            "first_observed_at",
-            "last_observed_at",
-        )
-        for field in fields:
+        unknown_values = {
+            "source_updated_at": "2026-07-25T17:00:00-00:00",
+            "retrieved_at": "2026-07-23T12:00:00-00:00",
+            "first_observed_at": "2026-07-25T17:00:00-00:00",
+            "last_observed_at": "2026-07-25T17:00:00-00:00",
+        }
+        for field, value in unknown_values.items():
             with self.subTest(field=field):
                 candidate = self._candidate()
-                candidate[field] = str(candidate[field]).replace("Z", "-00:00")
+                candidate[field] = value
                 result = validate_document(candidate)
                 self.assertEqual(result.outcome, "DENY")
-                self.assertIn(
-                    ("KDHE_HAB_TIMESTAMP_UNKNOWN_OFFSET", f"/{field}"),
+                self.assertEqual(
                     {(finding.code, finding.path) for finding in result.findings},
+                    {("KDHE_HAB_TIMESTAMP_UNKNOWN_OFFSET", f"/{field}")},
                 )
 
     def test_current_snapshot_exceeding_budget_is_denied(self) -> None:
