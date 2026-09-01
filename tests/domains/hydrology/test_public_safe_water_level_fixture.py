@@ -95,6 +95,23 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
             mutated["measurement"]["datum_ref"] = value  # type: ignore[index]
             self.assertIn(unsupported, validate_candidate(mutated))
 
+        invalid_identifier = Finding(
+            "DATUM_REF_IDENTIFIER_INVALID", "$.measurement.datum_ref"
+        )
+        for value in (
+            "fixture://hydrology/datum/",
+            "fixture://hydrology/datum/   ",
+            "fixture://hydrology/datum/NAVD88",
+            "fixture://hydrology/datum/synthetic/local-reference",
+            "fixture://hydrology/datum/-synthetic-reference",
+            "fixture://hydrology/datum/synthetic-reference-",
+            "fixture://hydrology/datum/synthetic--reference",
+            "fixture://hydrology/datum/" + ("a" * 129),
+        ):
+            mutated = copy.deepcopy(candidate)
+            mutated["measurement"]["datum_ref"] = value  # type: ignore[index]
+            self.assertIn(invalid_identifier, validate_candidate(mutated))
+
     def test_observation_family_role_parameter_and_unit_are_closed(self) -> None:
         cases = (
             ("object_family", "FlowObservation", Finding("OBJECT_FAMILY_INVALID", "$.object_family")),

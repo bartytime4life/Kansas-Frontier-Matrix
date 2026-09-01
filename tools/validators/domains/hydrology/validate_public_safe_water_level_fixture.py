@@ -104,6 +104,9 @@ REQUIRED_LIMITATIONS = frozenset(
     }
 )
 _CANONICAL_UTC = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
+_CANONICAL_DATUM_IDENTIFIER = re.compile(
+    r"\A(?=.{1,128}\Z)[a-z0-9]+(?:[._-][a-z0-9]+)*\Z"
+)
 
 
 def _parse_utc(value: object) -> datetime | None:
@@ -255,6 +258,14 @@ def validate_candidate(candidate: object) -> list[Finding]:
             add_finding(findings, "DATUM_REF_MISSING", "$.measurement.datum_ref")
         elif not datum_ref.startswith(FIXTURE_DATUM_PREFIX):
             add_finding(findings, "DATUM_REF_NOT_FIXTURE", "$.measurement.datum_ref")
+        elif _CANONICAL_DATUM_IDENTIFIER.fullmatch(
+            datum_ref[len(FIXTURE_DATUM_PREFIX) :]
+        ) is None:
+            add_finding(
+                findings,
+                "DATUM_REF_IDENTIFIER_INVALID",
+                "$.measurement.datum_ref",
+            )
         if measurement.get("qualifier") != "synthetic":
             add_finding(findings, "QUALIFIER_INVALID", "$.measurement.qualifier")
         provisional_status = measurement.get("provisional_status")
