@@ -1,5 +1,8 @@
 import { PUBLIC_WORKSPACE_CONTEXT_QUERY_PARAM } from "./workspace-context";
-import { resolveSinglePublicKnowledgeDomainId } from "./workspace-navigation";
+import {
+  resolveSinglePublicKnowledgeDomainId,
+  type PublicKnowledgeDomainSelectionTransition,
+} from "./workspace-navigation";
 
 export const PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RELEASE_PROFILE =
   "kfm.explorer.public-knowledge-domain-deep-link-release.v1" as const;
@@ -9,6 +12,20 @@ export type PublicKnowledgeDomainDeepLinkRelease = Readonly<{
   replacementUrl: URL | null;
   reason: "UNCHANGED" | "RELEASED" | "STALE_OWNER";
 }>;
+
+/**
+ * Commit URL ownership only after the existing Knowledge control can consume
+ * a newly requested domain. An absent or disabled control leaves ownership
+ * clear, allowing later synchronization to retry instead of treating an
+ * unrendered domain as restored.
+ */
+export function resolvePublicKnowledgeDomainUrlConsumerCommit(
+  transition: PublicKnowledgeDomainSelectionTransition,
+  consumerReady: boolean,
+): string | null {
+  if (transition.domainIdToSelect !== null && !consumerReady) return null;
+  return transition.activeDeepLinkDomainId;
+}
 
 /**
  * Release URL ownership when a user manually selects another Knowledge domain

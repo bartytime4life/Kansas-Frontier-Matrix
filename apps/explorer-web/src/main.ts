@@ -18,7 +18,10 @@ import {
   resolvePublicMapCaseManualSelectionTransition,
   resolvePublicMapCaseUrlTransition,
 } from "./site/workspace-map-deep-link";
-import { resolvePublicKnowledgeDomainManualSelectionTransition } from "./site/workspace-knowledge-deep-link";
+import {
+  resolvePublicKnowledgeDomainManualSelectionTransition,
+  resolvePublicKnowledgeDomainUrlConsumerCommit,
+} from "./site/workspace-knowledge-deep-link";
 
 const root = document.querySelector<HTMLElement>("#root");
 
@@ -142,14 +145,20 @@ const syncWorkspaceNavigation = (): void => {
     activeDeepLinkKnowledgeDomainId,
     currentDomainId,
   );
-  activeDeepLinkKnowledgeDomainId = domainTransition.activeDeepLinkDomainId;
   const domainIdToSelect = domainTransition.domainIdToSelect;
   if (domainIdToSelect !== null) {
     const domainButton = Array.from(
       root.querySelectorAll<HTMLButtonElement>("button[data-domain-id]"),
     ).find((button) => button.dataset.domainId === domainIdToSelect);
+    const consumerReady = domainButton !== undefined && !domainButton.disabled;
+    activeDeepLinkKnowledgeDomainId =
+      resolvePublicKnowledgeDomainUrlConsumerCommit(
+        domainTransition,
+        consumerReady,
+      );
     if (
       domainButton !== undefined &&
+      !domainButton.disabled &&
       domainButton.getAttribute("aria-pressed") !== "true"
     ) {
       const priorFocus =
@@ -159,6 +168,9 @@ const syncWorkspaceNavigation = (): void => {
       domainButton.click();
       if (priorFocus?.isConnected) priorFocus.focus();
     }
+  } else {
+    activeDeepLinkKnowledgeDomainId =
+      resolvePublicKnowledgeDomainUrlConsumerCommit(domainTransition, true);
   }
 };
 syncWorkspaceNavigation();

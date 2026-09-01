@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
+import mainSource from "../src/main.ts?raw";
 import {
   resolvePublicKnowledgeDomainManualSelectionTransition,
+  resolvePublicKnowledgeDomainUrlConsumerCommit,
 } from "../src/site/workspace-knowledge-deep-link";
+import { resolvePublicKnowledgeDomainSelectionTransition } from "../src/site/workspace-navigation";
 import {
   PUBLIC_WORKSPACE_CONTEXT_PROFILE,
   PUBLIC_WORKSPACE_CONTEXT_QUERY_PARAM,
@@ -41,6 +44,45 @@ function contextUrl(domainIds: readonly string[]): URL {
 }
 
 describe("public Knowledge-domain deep-link release", () => {
+  it("commits URL ownership after the existing domain control is ready", () => {
+    const transition = resolvePublicKnowledgeDomainSelectionTransition(
+      contextUrl(["archaeology"]),
+      null,
+      "hydrology",
+    );
+
+    expect(transition.domainIdToSelect).toBe("archaeology");
+    expect(
+      resolvePublicKnowledgeDomainUrlConsumerCommit(transition, true),
+    ).toBe("archaeology");
+  });
+
+  it("keeps an unavailable domain consumer unowned and retryable", () => {
+    const transition = resolvePublicKnowledgeDomainSelectionTransition(
+      contextUrl(["people_dna_land"]),
+      null,
+      "hydrology",
+    );
+
+    expect(transition.domainIdToSelect).toBe("people_dna_land");
+    expect(
+      resolvePublicKnowledgeDomainUrlConsumerCommit(transition, false),
+    ).toBeNull();
+  });
+
+  it("preserves established ownership when no new selection is required", () => {
+    const transition = resolvePublicKnowledgeDomainSelectionTransition(
+      contextUrl(["archaeology"]),
+      "archaeology",
+      "archaeology",
+    );
+
+    expect(transition.domainIdToSelect).toBeNull();
+    expect(
+      resolvePublicKnowledgeDomainUrlConsumerCommit(transition, false),
+    ).toBe("archaeology");
+  });
+
   it("preserves ownership during programmatic restoration of the same domain", () => {
     expect(
       resolvePublicKnowledgeDomainManualSelectionTransition(
@@ -103,5 +145,14 @@ describe("public Knowledge-domain deep-link release", () => {
       replacementUrl: null,
       reason: "UNCHANGED",
     });
+  });
+
+  it("composes ownership at the existing enabled domain-control boundary", () => {
+    expect(mainSource).toContain(
+      "resolvePublicKnowledgeDomainUrlConsumerCommit",
+    );
+    expect(mainSource).toContain("!domainButton.disabled");
+    expect(mainSource).toContain("domainButton.click()");
+    expect(mainSource).not.toContain("domainIds.join");
   });
 });
