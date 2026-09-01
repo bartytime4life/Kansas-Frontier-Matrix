@@ -42,7 +42,7 @@ notes:
   - "NFHL and similar flood layers are regulatory context only; validators must deny treating them as observed inundation, forecast flood extent, or emergency instruction."
   - "Validators enforce declared contracts, schemas, and policy. They do not define Hydrology meaning, create EvidenceBundles, issue flood warnings, approve release, or publish public outputs."
   - "v0.2 adds a frozen standard-library synthetic FlowObservation fixture validator with exact fail-closed polarity; it does not validate a real gauge, source, observation, EvidenceBundle, policy decision, proof, release, or publication."
-  - "The bounded synthetic WaterLevelObservation fixture profile requires generalized location and a fixture-bound datum reference with a canonical nonempty identifier; it creates no live-source, release, flood-warning, or publication authority."
+  - "The bounded synthetic WaterLevelObservation fixture profile requires generalized location plus concrete canonical fixture identifiers for its source, gauge, evidence, and datum references; it creates no live-source, release, flood-warning, or publication authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -89,7 +89,7 @@ The answer should be a navigable validator index and deterministic validation ou
 | Bounded EvidenceBundle alias validation | **CONFIRMED executable** | The workflow runs `validate_evidence_bundle.py` and `tests/domains/hydrology/test_hydrology_smoke.py` against one valid and one deliberately invalid local fixture under fail-closed process-level network guards. This proves shape and polarity only. |
 | Bounded aquifer pair validation | **CONFIRMED executable** | The workflow runs both aquifer wrappers and dedicated tests against synthetic valid/invalid families with network denied. This proves closed shape, fixture polarity, optional observation links, and responsibility separation only. |
 | `validate_public_safe_flow_fixture.py` | **CONFIRMED bounded executable** | Validates a frozen synthetic fixture-only FlowObservation profile with no real source, gauge, evidence, policy, proof, release, or publication effect. |
-| `validate_public_safe_water_level_fixture.py` | **CONFIRMED bounded executable** | Validates a frozen synthetic fixture-only WaterLevelObservation profile with generalized location and an explicit fixture-bound datum reference carrying a canonical nonempty identifier; it validates no real gauge or datum authority. |
+| `validate_public_safe_water_level_fixture.py` | **CONFIRMED bounded executable** | Validates a frozen synthetic fixture-only WaterLevelObservation profile with generalized location and concrete canonical fixture identifiers for its source, gauge, evidence, and datum references; it validates no real gauge or datum authority. |
 | `validate_nhdplus_waterbody_crosswalk.py` | **CONFIRMED bounded executable** | Validates the closed synthetic USGS NHDPlusHR waterbody Permanent Identifier to NHDPlusV2 COMID profile, deterministic document hash, exact/multi-match cardinality, overlap-area bounds, and fail-closed ambiguity outcomes. |
 | Broader executables, semantic schemas, policy bundles, receipts, and CI wiring | **HELD / NEEDS VERIFICATION** | Placeholder validators and proposed schema/policy surfaces remain; no broad Hydrology semantics, evidence closure, policy, proof, or release behavior is accepted here. |
 

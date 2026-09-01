@@ -104,9 +104,23 @@ REQUIRED_LIMITATIONS = frozenset(
     }
 )
 _CANONICAL_UTC = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
-_CANONICAL_DATUM_IDENTIFIER = re.compile(
+_CANONICAL_RESOURCE_IDENTIFIER = re.compile(
     r"\A(?=.{1,128}\Z)[a-z0-9]+(?:[._-][a-z0-9]+)*\Z"
 )
+_CANONICAL_EVIDENCE_SEGMENT = re.compile(
+    r"\A(?=.{1,128}\Z)[A-Za-z0-9]+(?:[._:-][A-Za-z0-9]+)*\Z"
+)
+
+
+def _has_canonical_evidence_path(value: str) -> bool:
+    suffix = value[len(FIXTURE_EVIDENCE_PREFIX) :]
+    return (
+        1 <= len(suffix) <= 256
+        and all(
+            _CANONICAL_EVIDENCE_SEGMENT.fullmatch(segment) is not None
+            for segment in suffix.split("/")
+        )
+    )
 
 
 def _parse_utc(value: object) -> datetime | None:
@@ -148,6 +162,14 @@ def validate_candidate(candidate: object) -> list[Finding]:
             "SOURCE_DESCRIPTOR_REF_NOT_FIXTURE",
             "$.source_descriptor_ref",
         )
+    elif _CANONICAL_RESOURCE_IDENTIFIER.fullmatch(
+        source_descriptor_ref[len(FIXTURE_SOURCE_PREFIX) :]
+    ) is None:
+        add_finding(
+            findings,
+            "SOURCE_DESCRIPTOR_REF_IDENTIFIER_INVALID",
+            "$.source_descriptor_ref",
+        )
 
     gauge_site_ref = candidate.get("gauge_site_ref")
     if not is_nonempty_string(gauge_site_ref):
@@ -156,6 +178,14 @@ def validate_candidate(candidate: object) -> list[Finding]:
         add_finding(
             findings,
             "GAUGE_SITE_REF_NOT_GENERALIZED_FIXTURE",
+            "$.gauge_site_ref",
+        )
+    elif _CANONICAL_RESOURCE_IDENTIFIER.fullmatch(
+        gauge_site_ref[len(FIXTURE_GAUGE_PREFIX) :]
+    ) is None:
+        add_finding(
+            findings,
+            "GAUGE_SITE_REF_IDENTIFIER_INVALID",
             "$.gauge_site_ref",
         )
 
@@ -168,6 +198,8 @@ def validate_candidate(candidate: object) -> list[Finding]:
         add_finding(findings, "EVIDENCE_REF_MISSING", "$.evidence_refs")
     elif any(not value.startswith(FIXTURE_EVIDENCE_PREFIX) for value in evidence_refs):
         add_finding(findings, "EVIDENCE_REF_NOT_FIXTURE", "$.evidence_refs")
+    elif any(not _has_canonical_evidence_path(value) for value in evidence_refs):
+        add_finding(findings, "EVIDENCE_REF_IDENTIFIER_INVALID", "$.evidence_refs")
 
     spatial = candidate.get("spatial_support")
     if not isinstance(spatial, dict):
@@ -258,7 +290,7 @@ def validate_candidate(candidate: object) -> list[Finding]:
             add_finding(findings, "DATUM_REF_MISSING", "$.measurement.datum_ref")
         elif not datum_ref.startswith(FIXTURE_DATUM_PREFIX):
             add_finding(findings, "DATUM_REF_NOT_FIXTURE", "$.measurement.datum_ref")
-        elif _CANONICAL_DATUM_IDENTIFIER.fullmatch(
+        elif _CANONICAL_RESOURCE_IDENTIFIER.fullmatch(
             datum_ref[len(FIXTURE_DATUM_PREFIX) :]
         ) is None:
             add_finding(

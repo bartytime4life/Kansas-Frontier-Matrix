@@ -112,6 +112,55 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
             mutated["measurement"]["datum_ref"] = value  # type: ignore[index]
             self.assertIn(invalid_identifier, validate_candidate(mutated))
 
+    def test_fixture_references_identify_concrete_synthetic_resources(self) -> None:
+        candidate = _load_candidate()
+        self.assertEqual(validate_candidate(candidate), [])
+
+        source_invalid = Finding(
+            "SOURCE_DESCRIPTOR_REF_IDENTIFIER_INVALID", "$.source_descriptor_ref"
+        )
+        for value in (
+            "fixture://sources/hydrology/",
+            "fixture://sources/hydrology/   ",
+            "fixture://sources/hydrology/Synthetic-Gauge",
+            "fixture://sources/hydrology/synthetic/gauge",
+            "fixture://sources/hydrology/-synthetic-gauge",
+            "fixture://sources/hydrology/" + ("a" * 129),
+        ):
+            mutated = copy.deepcopy(candidate)
+            mutated["source_descriptor_ref"] = value
+            self.assertIn(source_invalid, validate_candidate(mutated))
+
+        gauge_invalid = Finding(
+            "GAUGE_SITE_REF_IDENTIFIER_INVALID", "$.gauge_site_ref"
+        )
+        for value in (
+            "fixture://hydrology/gauge/generalized/",
+            "fixture://hydrology/gauge/generalized/   ",
+            "fixture://hydrology/gauge/generalized/GAUGE-99999",
+            "fixture://hydrology/gauge/generalized/99999/site",
+            "fixture://hydrology/gauge/generalized/-99999",
+            "fixture://hydrology/gauge/generalized/" + ("9" * 129),
+        ):
+            mutated = copy.deepcopy(candidate)
+            mutated["gauge_site_ref"] = value
+            self.assertIn(gauge_invalid, validate_candidate(mutated))
+
+        evidence_invalid = Finding(
+            "EVIDENCE_REF_IDENTIFIER_INVALID", "$.evidence_refs"
+        )
+        for value in (
+            "fixture://evidence/hydrology/",
+            "fixture://evidence/hydrology/   ",
+            "fixture://evidence/hydrology/water-level//receipt",
+            "fixture://evidence/hydrology/water-level/../receipt",
+            "fixture://evidence/hydrology/-water-level/receipt",
+            "fixture://evidence/hydrology/" + ("a" * 257),
+        ):
+            mutated = copy.deepcopy(candidate)
+            mutated["evidence_refs"] = [value]
+            self.assertIn(evidence_invalid, validate_candidate(mutated))
+
     def test_observation_family_role_parameter_and_unit_are_closed(self) -> None:
         cases = (
             ("object_family", "FlowObservation", Finding("OBJECT_FAMILY_INVALID", "$.object_family")),
