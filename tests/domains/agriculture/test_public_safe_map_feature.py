@@ -19,6 +19,10 @@ def _module():
     return module
 
 
+def _case(manifest, case_id):
+    return next(case for case in manifest["cases"] if case["case_id"] == case_id)
+
+
 def test_fixture_matrix_is_exact():
     module = _module()
     manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
@@ -40,7 +44,7 @@ def test_fixture_matrix_is_exact():
 def test_valid_candidate_exposes_generalized_support_only():
     module = _module()
     manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
-    candidate = module.materialize_case(manifest, manifest["cases"][0])
+    candidate = module.materialize_case(manifest, _case(manifest, "valid_county_crop_observation"))
     assert module.validate_payload(candidate).outcome == "PASS"
     assert candidate["support"]["generalized"] is True
     assert candidate["freshness"]["state"] == "CURRENT"
@@ -59,10 +63,31 @@ def test_valid_candidate_exposes_generalized_support_only():
         assert forbidden not in candidate_keys
 
 
+def test_crop_rotation_fixture_is_generalized_derived_context():
+    module = _module()
+    manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    valid = module.materialize_case(manifest, _case(manifest, "valid_generalized_grid_crop_rotation"))
+    collapsed = module.materialize_case(manifest, _case(manifest, "crop_rotation_as_observed_role_denied"))
+
+    valid_result = module.validate_payload(valid)
+    collapsed_result = module.validate_payload(collapsed)
+
+    assert valid_result.outcome == "PASS"
+    assert valid["object_family"] == "CropRotation"
+    assert valid["semantic_role"] == "DERIVED_CONTEXT"
+    assert valid["support"]["kind"] == "GENERALIZED_GRID"
+    assert valid["support"]["precision_class"] == "GENERALIZED_PUBLIC_SAFE"
+    assert valid["indicator"]["value_role"] == "MODELED_OR_DERIVED"
+    assert collapsed_result.outcome == "DENY"
+    assert [(f.code, f.path) for f in collapsed_result.findings] == [
+        ("AG_MAP_FAMILY_ROLE_COLLAPSE", "/semantic_role")
+    ]
+
+
 def test_harmful_precision_fails_before_shape_acceptance():
     module = _module()
     manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
-    candidate = module.materialize_case(manifest, manifest["cases"][1])
+    candidate = module.materialize_case(manifest, _case(manifest, "harmful_precision_geometry"))
     result = module.validate_payload(candidate)
     assert result.outcome == "DENY"
     assert {f.code for f in result.findings} == {"AG_MAP_HARMFUL_PRECISION_DENIED"}
@@ -71,8 +96,8 @@ def test_harmful_precision_fails_before_shape_acceptance():
 def test_freshness_state_is_derived_from_vintage_and_evaluation_date():
     module = _module()
     manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
-    mismatch = module.materialize_case(manifest, manifest["cases"][7])
-    stale = module.materialize_case(manifest, manifest["cases"][8])
+    mismatch = module.materialize_case(manifest, _case(manifest, "stale_state_mismatch"))
+    stale = module.materialize_case(manifest, _case(manifest, "explicit_stale_candidate"))
 
     mismatch_result = module.validate_payload(mismatch)
     stale_result = module.validate_payload(stale)
@@ -88,7 +113,7 @@ def test_freshness_state_is_derived_from_vintage_and_evaluation_date():
 def test_identity_changes_when_temporal_freshness_or_support_semantics_change():
     module = _module()
     manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
-    candidate = module.materialize_case(manifest, manifest["cases"][0])
+    candidate = module.materialize_case(manifest, _case(manifest, "valid_county_crop_observation"))
     first = module.canonical_identity(candidate)
 
     temporal_change = json.loads(json.dumps(candidate))
