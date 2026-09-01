@@ -102,7 +102,7 @@ Each row names **what must be true**, **what evidence would settle it**, and the
 | **CONFIRMED** | Verified this session from attached docs, repo evidence, tests, logs, or generated artifacts. | Doctrine and source-family lineage; cited from the Domains Culmination Atlas and Encyclopedia. |
 | **PROPOSED** | Design, path, placement, or recommendation not yet verified in implementation. | Most lane-internal items: validator names, route names, exact paths, fixture sets. |
 | **NEEDS VERIFICATION** | Checkable but not yet checked strongly enough to act as fact. | Anything resolvable by a single direct check (file presence, rights review, schema inspection). |
-| **UNKNOWN** | Not resolvable without more evidence. | Implementation-maturity questions that need a current repository evidence. |
+| **UNKNOWN** | Not resolvable without more evidence. | Implementation-maturity questions that need current repository evidence. |
 | **DENY** | A default-deny rule; the item exists to *fail closed*, not to be implemented as a public path. | Sensitive locations, private joins, model-as-observed surfaces. |
 | **EXTERNAL** | Sourced from authoritative external research. | External standards behavior; used as reference, never as KFM truth. Must be cited and contained. |
 
@@ -137,7 +137,7 @@ flowchart LR
 ```
 
 > [!NOTE]
-> The **happy path** is `NEEDS VERIFICATION → CONFIRMED` with a cited evidence row. The **current repo-grounded path** is to reconcile claims against the current repository evidencesitory, treat uncertain items as `NEEDS VERIFICATION`, and only advance them when evidence exists. The unacceptable path is `PROPOSED → silently treated as fact`.
+> The **happy path** is `NEEDS VERIFICATION → CONFIRMED` with a cited evidence row. The **current repo-grounded path** is to reconcile claims against the current repository, treat uncertain items as `NEEDS VERIFICATION`, and only advance them when evidence exists. The unacceptable path is `PROPOSED → silently treated as fact`.
 
 [Back to top ↑](#top)
 

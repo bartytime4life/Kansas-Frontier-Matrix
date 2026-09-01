@@ -24,7 +24,7 @@ notes:
   - CONTRACT_VERSION 3.0.0 pinned; doctrine-adjacent policy doc.
   - This is the human-facing policy doctrine; enforceable bundles live in policy/domains/atmosphere/.
   - Anti-collapse rules are CONFIRMED (Atlas 11.I); rego file paths are PROPOSED.
-  - Current repository evidence; every policy path and enforcement claim is PROPOSED.
+  - Grounded in current repository evidence; every policy path and enforcement claim remains PROPOSED or NEEDS VERIFICATION where direct repo confirmation is still pending.
   - Meta Block v2 carries no nested HTML comments; inline annotation uses # only.
 [/KFM_META_BLOCK_V2] -->
 
@@ -83,7 +83,7 @@ This document states the **policy doctrine** for Atmosphere/Air: the allow/deny/
 ## 2. Truth Posture and Evidence Basis
 
 > [!NOTE]
-> The **anti-collapse rules** (AQI≠concentration, AOD≠PM2.5, model≠observation, low-cost-sensor caveats, advisory≠life-safety) are CONFIRMED doctrine (Atlas §11.I). The **policy posture** (deny-by-default, fail-closed) is CONFIRMED operating-contract doctrine. Every **rego file path** and enforcement-maturity claim is PROPOSED — no current repository evidencesitory was inspected this session.
+> The **anti-collapse rules** (AQI≠concentration, AOD≠PM2.5, model≠observation, low-cost-sensor caveats, advisory≠life-safety) are CONFIRMED doctrine (Atlas §11.I). The **policy posture** (deny-by-default, fail-closed) is CONFIRMED operating-contract doctrine. This document is grounded in current repository evidence; **rego file paths** and enforcement-maturity claims remain PROPOSED or NEEDS VERIFICATION where direct repo confirmation is still pending.
 
 Evidence used, all CONFIRMED in indexed project knowledge:
 

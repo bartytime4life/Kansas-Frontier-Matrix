@@ -21,7 +21,7 @@ tags: [kfm, domain, atmosphere, air, continuity, lineage, governance]
 notes:
   - "CONTRACT_VERSION pinned to 3.0.0 per ai-build-operating-contract.md."
   - "Continuity inventory specialized for Atmosphere/Air per the continuity-inventory pattern in the KFM Whole-UI + Governed AI Expansion Report (exact section anchor NEEDS VERIFICATION)."
-  - "Repo is not mounted in this session; all path-shaped claims are PROPOSED until verified."
+  - "This review is grounded in current repository evidence; path-shaped claims remain PROPOSED or NEEDS VERIFICATION only where the repo does not yet confirm a final implementation path."
   - "Carries forward prior atmosphere doctrine from KFM Domains Culmination Atlas Ch. 11 and the KFM Encyclopedia (Atmosphere/Air/Climate)."
 [/KFM_META_BLOCK_V2] -->
 
@@ -36,7 +36,7 @@ notes:
 ![Domain](https://img.shields.io/badge/domain-atmosphere%20%2F%20air-0e7490)
 ![Lifecycle](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-informational)
 ![Contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-6f42c1)
-![Repo Verified](https://img.shields.io/badge/repo--verified-NO%20(not%20mounted)-lightgrey)
+![Repo Verified](https://img.shields.io/badge/repo--verified-current%20evidence-lightgrey)
 ![Last Updated](https://img.shields.io/badge/last%20updated-2026--05--28-grey)
 
 **Status:** draft &nbsp;·&nbsp; **Owners:** _TODO — Atmosphere/Air steward + Docs steward_ &nbsp;·&nbsp; **Operating contract:** `CONTRACT_VERSION = "3.0.0"` &nbsp;·&nbsp; **Last updated:** 2026-05-28
@@ -80,7 +80,7 @@ notes:
 
 **Out of scope (this file):**
 
-- Implementation maturity claims. The repo is **not mounted** in this session; any statement about routes, packages, modules, tests, CI, runtime, or deployment is bounded to PROPOSED / UNKNOWN / NEEDS VERIFICATION.
+- Implementation maturity claims. This document is grounded in current repository evidence; any statement about routes, packages, modules, tests, CI, runtime, or deployment remains bounded to PROPOSED / UNKNOWN / NEEDS VERIFICATION when direct repo confirmation is not yet available.
 - Operational alerting. **KFM is not an emergency alert system** and Atmosphere/Air must not provide life-safety instructions (see §6, anchor A6).
 - External standards normative text. Standards (EPA AQS, AirNow, NOAA/NWS, OGC) are referenced as **source families** for source-role purposes only; their authoritative content lives upstream.
 
@@ -443,7 +443,7 @@ stateDiagram-v2
 | Item | Verdict | Reason | Future trigger |
 |---|---|---|---|
 | Live source connectors (EPA AQS, AirNow, OpenAQ, Mesonet, NOAA, CAMS, HRRR-Smoke, HMS, GOES/ABI, VIIRS) | **DEFER** | First-PR slice is **no-network**; rights, terms, quotas, attribution NEEDS VERIFICATION per source. | After per-source `SourceDescriptor`, rights review, and dry-run fixtures pass. |
-| Public-facing Atmosphere/Air routes (`/atmosphere/...`) | **DEFER** | No current repository evidence, no governed-API surface verified. | After governed-API skeleton, schemas, fixtures, and policy land. |
+| Public-facing Atmosphere/Air routes (`/atmosphere/...`) | **DEFER** | Current repository evidence is incomplete; no governed-API surface is verified. | After governed-API skeleton, schemas, fixtures, and policy land. |
 | Real-time emergency alerting | **NOT CARRIED FORWARD** | Anchor A6 — Atmosphere/Air is not an emergency alert system. Hazards owns life-safety context. | None. Permanent. |
 | 3D atmospheric scenes (volumetric model rendering) | **DEFER** | 3D is conditional in KFM and admission-gated (ADR-S-07; Directory Rules §11 / maplibre-3d). Atmosphere/Air must satisfy 2D evidence continuity before any 3D handoff. | After `StoryManifest`, Evidence Drawer, and 3D admission policy pass in 2D. |
 | Direct in-browser model adapters (Ollama / OpenAI / provider) | **DEFER** | Governed API is mandatory; no direct model call from browser. | After `MockAdapter` tests and security review pass. |
@@ -548,7 +548,7 @@ This document is done enough to enter the repository when:
 | **CONFIRMED** | Directly supported by attached KFM doctrinal sources. |
 | **PROPOSED** | Design, path, schema, route, component, policy, or process not yet verified in implementation. |
 | **INFERRED** | Reasonably derivable from visible evidence but not directly stated. |
-| **UNKNOWN** | Not resolvable without more evidence (no current repository evidence, runtime, logs, dashboards, or live source checks in this session). |
+| **UNKNOWN** | Not resolvable without more evidence (current repository evidence is incomplete; no runtime, logs, dashboards, or live source checks are established in this session). |
 | **NEEDS VERIFICATION** | Concrete point that must be checked before being treated as current fact. |
 | **CONFLICTED** | Sources indicate unresolved file-home or behavior ambiguity. |
 | **DEFERRED** | Intentionally excluded from this slice until a later trigger. |
@@ -579,6 +579,6 @@ Attached KFM doctrinal sources used to ground this inventory. None of these prov
 
 **Related docs:** [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) · [`docs/domains/atmosphere/README.md`](./README.md) · [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md)
 
-**Last updated:** 2026-05-28 · **CONTRACT_VERSION:** 3.0.0 · **Authority:** doctrine carry-forward (this file does not decide schemas, policy, or release surfaces) · **Repo-verified:** NO (current repository evidence)
+**Last updated:** 2026-05-28 · **CONTRACT_VERSION:** 3.0.0 · **Authority:** doctrine carry-forward (this file does not decide schemas, policy, or release surfaces) · **Repo-verified:** NO (current repository evidence is incomplete for this file)
 
 [Back to top](#quick-jump)

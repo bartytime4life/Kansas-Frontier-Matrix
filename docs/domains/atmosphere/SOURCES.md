@@ -225,7 +225,7 @@ REQUIRE steward review for biodiversity-location joins
 ABSTAIN when support is inadequate
 ```
 
-A `policy/sensitivity/` entry SHOULD govern any join that could surface a sensitive species location through smoke/fire/drought context. **NEEDS VERIFICATION:** presence of such an entry in the current repository evidence.
+A `policy/sensitivity/` entry SHOULD govern any join that could surface a sensitive species location through smoke/fire/drought context. **NEEDS VERIFICATION:** presence of such an entry in the current repository.
 
 [↑ Back to top](#top)
 
@@ -252,7 +252,7 @@ Source role is **fixed at admission and never upgraded by promotion**. These rul
 | ID | Question | Owner role | Resolution path |
 |---|---|---|---|
 | OQ-AIR-SRC-01 | Do per-domain source registers (`docs/domains/atmosphere/SOURCES.md`) coexist with the global `docs/sources/`, or should atmosphere sources live under `docs/sources/`? | Docs steward + Directory Rules owner | ADR / `directory-rules.md` §6.1 check |
-| OQ-AIR-SRC-02 | What is the canonical `SourceDescriptor` schema home and actual field set in the current repository evidence? | Schema owner | Repo inspection vs. Atlas §24.1.3 / ADR-0001 |
+| OQ-AIR-SRC-02 | What is the canonical `SourceDescriptor` schema home and actual field set in the current repository? | Schema owner | Repo inspection vs. Atlas §24.1.3 / ADR-0001 |
 | OQ-AIR-SRC-03 | Which `policy/sensitivity/` entry governs atmosphere × biodiversity-location joins? | Sensitivity reviewer | `policy/` inspection |
 | OQ-AIR-SRC-04 | Confirmed rights / current terms for each named source family. | Atmosphere stewards | Per-source license review |
 

@@ -152,7 +152,7 @@ connectors/                                     ← source-specific fetchers (CA
 
 > [!NOTE]
 > **NEEDS VERIFICATION.** Every specific repo path above is PROPOSED until inspected
-> against the current repository evidencesitory. Status of the *rules* (Directory Rules §3, §7.4, §12,
+> against the current repository. Status of the *rules* (Directory Rules §3, §7.4, §12,
 > ADR-0001): **CONFIRMED**. Status of any specific path's presence: **PROPOSED**.
 > [DIRRULES §5]
 
@@ -383,7 +383,7 @@ residence, infrastructure exposure correlations): **T2 or higher**, fail-closed.
 
 | Concern | PROPOSED home (per ADR-0001) | Status |
 |---|---|---|
-| Source descriptor **shape** (JSON Schema) | `schemas/contracts/v1/source/source-descriptor.json` | PROPOSED; **NEEDS VERIFICATION** in current repository evidence. [DIRRULES §7.4] [ENCY §24.1.3] |
+| Source descriptor **shape** (JSON Schema) | `schemas/contracts/v1/source/source-descriptor.json` | PROPOSED; **NEEDS VERIFICATION** in the current repository. [DIRRULES §7.4] [ENCY §24.1.3] |
 | Source descriptor **meaning** (semantic Markdown) | `contracts/source/source_descriptor.md` | PROPOSED. |
 | Atmosphere object-family schemas | `schemas/contracts/v1/domains/atmosphere/` | PROPOSED. |
 | Atmosphere object-family contracts | `contracts/domains/atmosphere/` | PROPOSED. |
@@ -477,7 +477,7 @@ fixtures/domains/atmosphere/
 pipeline_specs/atmosphere/
 ```
 
-> Every path above is **PROPOSED** and **NEEDS VERIFICATION** in the current repository evidence.
+> Every path above is **PROPOSED** and **NEEDS VERIFICATION** in the current repository.
 > Inclusion here is doctrinal — the canonical authority for any specific file's
 > presence is `git ls-tree`-equivalent inspection, not this README.
 > [DIRRULES §5] [DIRRULES §18]

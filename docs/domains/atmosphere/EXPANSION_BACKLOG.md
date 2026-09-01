@@ -42,7 +42,7 @@ notes:
 | **Owners** | `<atmosphere-stewards>` *(PROPOSED — assign in `CODEOWNERS`)* |
 | **Last updated** | `2026-05-29` |
 | **Operating contract** | `CONTRACT_VERSION = "3.0.0"` *(per `ai-build-operating-contract.md`)* |
-| **Implementation maturity** | `UNKNOWN` — current repository evidence; no claim about live files, tests, routes, or releases |
+| **Implementation maturity** | `UNKNOWN` — current repository evidence is used where available; no claim is made about live files, tests, routes, or releases beyond what is evidenced |
 | **Doctrinal anchors** | `[DOM-AIR]`, `[ENCY]` §7.9 + §11, `[UNIFIED]` §6.10, `[DIRRULES]` §12, `[ENCY]` Atlas §24.12 |
 
 > [!IMPORTANT]
@@ -129,7 +129,7 @@ flowchart LR
 | `CONFIRMED` | Doctrine settled in `[DOM-AIR]` / `[ENCY]` / `[DIRRULES]`. |
 | `PROPOSED` | Design or path consistent with doctrine; not yet verified in implementation. |
 | `INFERRED` | Reasonably derivable from doctrine but not directly stated. |
-| `NEEDS VERIFICATION` | Checkable against a current repository evidence, source terms, or external spec — not yet checked. |
+| `NEEDS VERIFICATION` | Checkable against current repository evidence, source terms, or external spec — not yet checked. |
 | `CONFLICTED` | Sources disagree, or doctrine and a proposed convention appear inconsistent; held until an ADR or drift entry resolves it. |
 | `UNKNOWN` | Not resolvable without more evidence. |
 | `DENY` | Policy-blocked on the normal public path; never promoted by default. |
@@ -546,7 +546,7 @@ This document is done enough to enter the repository when:
 ## 22. Related docs
 
 > [!NOTE]
-> Links below are repo-relative. Targets marked **`TODO`** are `PROPOSED` per Directory Rules §12 lane pattern but have not been verified to exist in a current repository evidence this session.
+> Links below are repo-relative. Targets marked **`TODO`** are `PROPOSED` per Directory Rules §12 lane pattern but have not been verified to exist in the current repository in this session.
 
 - [`docs/domains/atmosphere/README.md`](./README.md) — domain README *(**TODO** — verify presence)*
 - [`docs/domains/atmosphere/SOURCES.md`](./SOURCES.md) — source registry overview *(**TODO**)*

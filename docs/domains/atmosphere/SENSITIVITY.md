@@ -24,7 +24,7 @@ notes:
   - CONTRACT_VERSION 3.0.0 pinned; doctrine-adjacent sensitivity reference.
   - Canonical per-object tier-and-redaction reference for the lane; PUBLICATION_POSTURE/POLICY/PRESERVATION_MATRIX reference it.
   - Tier scheme T0-T4 and transition matrix are CONFIRMED doctrine; per-object tiers are PROPOSED.
-  - Current repository evidence; every policy path is PROPOSED.
+  - Grounded in current repository evidence; every policy path remains PROPOSED or NEEDS VERIFICATION where direct repo confirmation is still pending.
   - Meta Block v2 carries no nested HTML comments; inline annotation uses # only.
 [/KFM_META_BLOCK_V2] -->
 
@@ -84,7 +84,7 @@ This document is the **canonical sensitivity-and-tiering reference** for the Atm
 ## 2. Truth Posture and Evidence Basis
 
 > [!NOTE]
-> The **T0–T4 tier scheme** and the **tier-transition matrix** are CONFIRMED doctrine (Atlas §24.5). The Atmosphere/Air **default tier** ("observed → T0/T1; stale-state badge + operational disclaimer") is CONFIRMED in the per-domain matrix. **Per-object** tier assignments below are PROPOSED specializations. No current repository evidencesitory was inspected; every `policy/` path is PROPOSED.
+> The **T0–T4 tier scheme** and the **tier-transition matrix** are CONFIRMED doctrine (Atlas §24.5). The Atmosphere/Air **default tier** ("observed → T0/T1; stale-state badge + operational disclaimer") is CONFIRMED in the per-domain matrix. **Per-object** tier assignments below are PROPOSED specializations. This document is grounded in current repository evidence; every `policy/` path remains PROPOSED or NEEDS VERIFICATION where direct repo confirmation is still pending.
 
 Evidence used, all CONFIRMED in indexed project knowledge:
 

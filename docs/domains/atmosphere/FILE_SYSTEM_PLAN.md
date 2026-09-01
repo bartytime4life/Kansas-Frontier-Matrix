@@ -90,7 +90,7 @@ This plan covers **where every Atmosphere / Air file should live** across the KF
 The plan **does not** assert that any of these paths exist today; it asserts where they should land **if and when** they are created or migrated.
 
 > [!NOTE]
-> Current repository evidence grounds this document. Per Directory Rules §17 and the project's repository-preflight rule, every concrete path below is **PROPOSED** until inspected. Conflicts between this plan and the current repository evidence are filed to `docs/registers/DRIFT_REGISTER.md` rather than silently reconciled.
+> Current repository evidence grounds this document. Per Directory Rules §17 and the project's repository-preflight rule, every concrete path below remains **PROPOSED** until inspected. Conflicts between this plan and the current repository evidence are filed to `docs/registers/DRIFT_REGISTER.md` rather than silently reconciled.
 
 [↑ Back to top](#-contents)
 
@@ -717,7 +717,7 @@ This document is done enough to enter the repository when:
 - it is placed according to Directory Rules (`docs/domains/atmosphere/FILE_SYSTEM_PLAN.md`, `PROPOSED` per §12);
 - a docs steward and an atmosphere steward review it;
 - it is linked from `docs/domains/atmosphere/README.md` and cross-links the backlog and expansion plan;
-- the folder-name and schema-home questions are confirmed against the current repository evidence (VB-AIR-05) and recorded in ADR-S-01 / ADR-atmosphere-folder-name;
+- the folder-name and schema-home questions are confirmed against the current repository (VB-AIR-05) and recorded in ADR-S-01 / ADR-atmosphere-folder-name;
 - a single consolidated drift entry (VB-AIR-07) covers the §16.1 items across this plan and its siblings;
 - the `ReleaseManifest` home (OQ-AIR-FS-03) is resolved by ADR;
 - the `GENERATED_RECEIPT.json` planned for this artifact is wired into CI;

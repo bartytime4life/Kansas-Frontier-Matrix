@@ -127,7 +127,7 @@ flowchart LR
   classDef root fill:#eef2ff,stroke:#4338ca,color:#1e1b4b;
 ```
 > [!NOTE]
-> The diagram is **doctrine-grounded** (Directory Rules §12). Whether each lane currently *exists* in the current repository evidence is **NEEDS VERIFICATION** until inspected.
+> The diagram is **doctrine-grounded** (Directory Rules §12). Whether each lane currently *exists* in the current repository is **NEEDS VERIFICATION** until inspected.
 [⬆ Back to top](#mini-toc)
 ---
 ## 4. Lane registry — by responsibility root
@@ -296,7 +296,7 @@ Atmosphere uses a fixed knowledge-character vocabulary (Atlas v1.0 Ch. 11 §C) t
 [⬆ Back to top](#mini-toc)
 ---
 ## 11. Open questions and verification backlog
-The following items are **NEEDS VERIFICATION** / **OPEN** in this session and should be settled by current repository evidence, accepted ADRs, or registry entries before any Atmosphere path on this page is treated as CONFIRMED. They should be tracked in `docs/registers/VERIFICATION_BACKLOG.md`.
+The following items are **NEEDS VERIFICATION** / **OPEN** in this session and should be settled by inspected repository evidence, accepted ADRs, or registry entries before any Atmosphere path on this page is treated as CONFIRMED. They should be tracked in `docs/registers/VERIFICATION_BACKLOG.md`.
 | Item | Evidence that would settle it | Status |
 |---|---|---|
 | Domain segment: `atmosphere/` (Directory Rules §12) vs `air/` (Atlas v1.1 §24.13 crosswalk). | Accepted ADR + per-root `README.md` declarations. | NEEDS VERIFICATION |
@@ -356,5 +356,5 @@ This document is done enough to enter the repository when:
 - [`docs/standards/OGC-API-TILES.md`](../../standards/OGC-API-TILES.md) — Tile delivery profile for Atmosphere layers via the governed API.
 - [`docs/standards/OAI-PMH.md`](../../standards/OAI-PMH.md) — Harvest conformance for Atmosphere catalog records.
 ---
-<sub>Last updated: **2026-05-28** · Document status: **draft** · Conformance: **PROPOSED** (no current repository evidence this session) · Path-segment basis: **Directory Rules v1.3 §12** · CONTRACT_VERSION: **3.0.0** · Naming ADR: **pending**.</sub>
+<sub>Last updated: **2026-05-28** · Document status: **draft** · Conformance: **PROPOSED** (current repository evidence is still being verified this session) · Path-segment basis: **Directory Rules v1.3 §12** · CONTRACT_VERSION: **3.0.0** · Naming ADR: **pending**.</sub>
 [⬆ Back to top](#mini-toc)

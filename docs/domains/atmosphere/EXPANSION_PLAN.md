@@ -222,7 +222,7 @@ flowchart TB
 | **NOAA / NWS** *(tertiary)* | Public-domain context for advisories; needed for `AdvisoryContext`. | Generally permissive; verify per product. |
 
 > [!NOTE]
-> A prior draft cited a `New_Ideas_5-8-26.pdf` for the Kansas Mesonet rights note. That filename could **not** be confirmed in indexed project knowledge this session; the corroborating reference located is `New Ideas 4-14-26.pdf` (SRC-P23-003). The `5-8-26` citation is marked `NEEDS VERIFICATION` and should not be treated as a confirmed source until checked against a current repository evidence or source ledger.
+> A prior draft cited a `New_Ideas_5-8-26.pdf` for the Kansas Mesonet rights note. That filename could **not** be confirmed in indexed project knowledge this session; the corroborating reference located is `New Ideas 4-14-26.pdf` (SRC-P23-003). The `5-8-26` citation is marked `NEEDS VERIFICATION` and should not be treated as a confirmed source until checked against current repository evidence or source ledger.
 
 [Back to top](#-contents)
 
@@ -579,7 +579,7 @@ This document is done enough to enter the repository when:
 ## 22. Related docs
 
 > [!NOTE]
-> Links below are repo-relative. Targets marked **`TODO`** are `PROPOSED` per Directory Rules §12 lane pattern but have not been verified to exist in a current repository evidence this session.
+> Links below are repo-relative. Targets marked **`TODO`** are `PROPOSED` per Directory Rules §12 lane pattern but have not been verified to exist in the current repository in this session.
 
 - [`docs/domains/atmosphere/README.md`](./README.md) — domain README *(**TODO**)*
 - [`docs/domains/atmosphere/EXPANSION_BACKLOG.md`](./EXPANSION_BACKLOG.md) — companion unsorted register

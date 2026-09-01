@@ -10,7 +10,7 @@ updated: 2026-05-28
 policy_label: public
 related: [ai-build-operating-contract.md, directory-rules.md, docs/domains/atmosphere/README.md, docs/atlases/cross-lane-relation-atlas.md]
 tags: [kfm, atmosphere, air, cross-lane, governance]
-notes: [CONTRACT_VERSION = "3.0.0"; repo presence of every path below is PROPOSED until a current repository evidence is inspected; schema/contract segment is "air/" while docs segment is "atmosphere/" — see Open Questions OQ-AIR-XL-02]
+notes: [CONTRACT_VERSION = "3.0.0"; repo presence of every path below is PROPOSED until current repository evidence is inspected; schema/contract segment is "air/" while docs segment is "atmosphere/" — see Open Questions OQ-AIR-XL-02]
 [/KFM_META_BLOCK_V2] -->
 
 # 🌫️ Atmosphere / Air — Cross-Lane Relations
@@ -283,7 +283,7 @@ tier where the neighbor contributes restricted geometry or identity. Link the re
 ## 9. Worked join examples (illustrative)
 
 > [!NOTE]
-> Examples are **illustrative**, not sourced from a current repository evidence. They show how the four
+> Examples are **illustrative**, not sourced from the current repository. They show how the four
 > constraints apply; they do not assert that any pipeline implements them. `PROPOSED`.
 
 <details>

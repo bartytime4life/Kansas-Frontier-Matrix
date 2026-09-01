@@ -335,7 +335,7 @@ Atmosphere/Air's intersections with the §24.12 Master Open-ADR Backlog. These a
 These remain `NEEDS VERIFICATION` before promotion from `draft` to `published`:
 
 1. The §24.13 row and §24.14 citing-domains list for Atmosphere/Air against the mounted Atlas.
-2. Responsibility-root segment per lane (`air` vs `atmosphere`) in the current repository evidence.
+2. Responsibility-root segment per lane (`air` vs `atmosphere`) in the current repository.
 3. The §24.14 sensitivity defaults for Atmosphere object families (most asserted T0 here are PROPOSED).
 4. The exact T0–T4 tier definitions (ADR-S-05).
 5. The knowledge-character ↔ source-role permitted pairings (ADR-S-04).

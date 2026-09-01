@@ -157,7 +157,7 @@ Atmosphere/Air **inherits** the universal trust-membrane invariants and adds dom
 
 ## 4. Atmosphere/Air API surface catalog
 
-The catalog below restates the J-section of the Domains Culmination Atlas Ch. 11 (Atmosphere/Air) and aligns it with the master API surface table at Atlas §20.3. Every row is **PROPOSED implementation**; exact routes, route prefixes, and adapter names are UNKNOWN until verified against the current repository evidence.
+The catalog below restates the J-section of the Domains Culmination Atlas Ch. 11 (Atmosphere/Air) and aligns it with the master API surface table at Atlas §20.3. Every row is **PROPOSED implementation**; exact routes, route prefixes, and adapter names are UNKNOWN until verified against the current repository.
 
 ### 4.1 Per-domain surfaces (from Atlas Ch. 11 §J)
 
@@ -382,7 +382,7 @@ PROPOSED schema homes (CONFIRMED doctrine for the universal shapes):
 }
 ```
 
-**Illustrative only.** The actual envelope shape, field names, value vocabularies, and identifier schemes are governed by `schemas/contracts/v1/` and accepted ADRs, not by this example. NEEDS VERIFICATION against the current repository evidence.
+**Illustrative only.** The actual envelope shape, field names, value vocabularies, and identifier schemes are governed by `schemas/contracts/v1/` and accepted ADRs, not by this example. NEEDS VERIFICATION against the current repository.
 
 </details>
 
@@ -480,7 +480,7 @@ Atmosphere/Air publication requires a `ReleaseManifest`, a resolvable `EvidenceB
 
 ## 11. Validators, tests, and fixtures
 
-The validator and test obligations below are **PROPOSED** (Atlas Ch. 11 §K plus Encyclopedia §K plus Atlas §20.4). Implementation maturity, file presence, and CI wiring are NEEDS VERIFICATION until checked against the current repository evidence.
+The validator and test obligations below are **PROPOSED** (Atlas Ch. 11 §K plus Encyclopedia §K plus Atlas §20.4). Implementation maturity, file presence, and CI wiring are NEEDS VERIFICATION until checked against the current repository.
 
 ### 11.1 Universal test families (apply to Atmosphere/Air)
 

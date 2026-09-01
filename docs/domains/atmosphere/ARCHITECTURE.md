@@ -50,7 +50,7 @@ notes:
 | **Placement** | `docs/domains/atmosphere/ARCHITECTURE.md` (Directory Rules v1.3 §4 Step 3, §12) |
 
 > [!IMPORTANT]
-> Every path, schema home, route name, validator, package, and CI workflow named below is **PROPOSED** until verified against a current repository evidencesitory. Doctrine in this document is grounded in attached KFM sources; implementation maturity is not claimed. See [Verification backlog](#verification-backlog).
+> Every path, schema home, route name, validator, package, and CI workflow named below is **PROPOSED** until verified against current repository evidence. Doctrine in this document is grounded in attached KFM sources; implementation maturity is not claimed. See [Verification backlog](#verification-backlog).
 
 ---
 

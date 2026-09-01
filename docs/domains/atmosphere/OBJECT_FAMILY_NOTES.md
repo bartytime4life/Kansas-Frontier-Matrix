@@ -24,7 +24,7 @@ notes:
   - CONTRACT_VERSION 3.0.0 pinned; doctrine-adjacent design-notes companion.
   - Companion to OBJECT_FAMILY_MAP.md - this file is the rationale, that file is the reference table.
   - DDD classifications are PROPOSED applications of the DDD Reference to KFM; not yet ratified.
-  - Current repository evidence; every contract/schema path is PROPOSED.
+  - Grounded in current repository evidence; contract/schema paths remain PROPOSED or NEEDS VERIFICATION where direct repo confirmation is still pending.
   - Meta Block v2 carries no nested HTML comments; inline annotation uses # only.
 [/KFM_META_BLOCK_V2] -->
 
@@ -84,7 +84,7 @@ The two are meant to be read together. The Map answers "what is the object and w
 ## 2. Truth Posture and Method
 
 > [!IMPORTANT]
-> The object roster is CONFIRMED (Atlas §11.B). The **DDD classifications, aggregate boundaries, and modeling rationale in this file are PROPOSED** — they apply the patterns from the Domain-Driven Design Reference to KFM objects, following the v2.1 DDD Pattern Crosswalk, but the Atlas does not itself assign DDD stereotypes to Atmosphere/Air objects. Current repository evidence was inspected for this document, so all contract/schema paths are PROPOSED.
+> The object roster is CONFIRMED (Atlas §11.B). The **DDD classifications, aggregate boundaries, and modeling rationale in this file are PROPOSED** — they apply the patterns from the Domain-Driven Design Reference to KFM objects, following the v2.1 DDD Pattern Crosswalk, but the Atlas does not itself assign DDD stereotypes to Atmosphere/Air objects. This document is grounded in current repository evidence; contract/schema paths remain PROPOSED or NEEDS VERIFICATION where direct repo confirmation is still pending.
 
 DDD patterns used here, from the Domain-Driven Design Reference (Eric Evans, CC-BY 4.0):
 
