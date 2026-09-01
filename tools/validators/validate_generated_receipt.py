@@ -24,12 +24,12 @@ from itertools import islice
 from pathlib import Path, PurePosixPath
 from typing import Iterable, Mapping, Sequence
 
-from jsonschema import Draft202012Validator, FormatChecker
+from jsonschema import Draft202012Validator
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
-from tools.validators._common.local_resolver import build_registry
+from tools.validators._common.jsonschema_compat import load_draft202012_validator
 from tools.ci.install_python_ci import (
     MIGRATION_MANIFEST,
     InstallConfigurationError,
@@ -115,11 +115,7 @@ def _parse_finite_float(value: str) -> float:
 
 def _load_schema_validator() -> Draft202012Validator:
     schema = json.loads(RECEIPT_SCHEMA.read_text(encoding="utf-8"))
-    return Draft202012Validator(
-        schema,
-        registry=build_registry(REPO_ROOT),
-        format_checker=FormatChecker(),
-    )
+    return load_draft202012_validator(schema, REPO_ROOT / "schemas/contracts/v1", check_formats=True)
 
 
 def _load_json_object(path: Path) -> tuple[dict[str, object] | None, list[Finding]]:

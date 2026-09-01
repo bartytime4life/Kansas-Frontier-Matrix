@@ -2,7 +2,7 @@
   "schema_version": "kfm.trust-spine-fixture-slice.v1",
   "flow_id": "kfm://fixture/trust-spine/mrts-05",
   "status": "PROPOSED_FIXTURE_ONLY",
-  "base_ref": "be8652410fa22499ac2ada43a26ed09bc3ab0514",
+  "base_ref": "58007b112a414352843488e8dfd903b802f2373a",
   "artifact_count": 11,
   "artifacts": [
     {
@@ -119,7 +119,7 @@
   "governing_refs": [
     {
       "path": "control_plane/object_family_register.yaml",
-      "sha256": "sha256:edb84b419131e3ac5cd70476cf3319bbfe2c6c7c82d427c0106c08f9b3fba31c"
+      "sha256": "sha256:c44b729a3d1ad3c8aa751e3fea776a432d1df4a73fc5823a1bf4eb1cfe7c9592"
     },
     {
       "path": "docs/doctrine/directory-rules.md",

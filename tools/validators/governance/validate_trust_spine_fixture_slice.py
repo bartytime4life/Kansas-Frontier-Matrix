@@ -24,13 +24,13 @@ from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any, Mapping, Sequence
 
-from jsonschema import Draft202012Validator, FormatChecker
+from jsonschema import Draft202012Validator
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from tools.validators._common.local_resolver import build_registry
+from tools.validators._common.jsonschema_compat import load_draft202012_validator
 from tools.validators.policy.validate_policy_decision_semantics_v1 import (
     validate_payload as validate_policy_payload,
 )
@@ -223,11 +223,7 @@ def _schema_errors(instance: Mapping[str, Any], schema_path: Path) -> list[Findi
     try:
         schema = json.loads(schema_path.read_text(encoding="utf-8"))
         Draft202012Validator.check_schema(schema)
-        validator = Draft202012Validator(
-            schema,
-            registry=build_registry(REPO_ROOT),
-            format_checker=FormatChecker(),
-        )
+        validator = load_draft202012_validator(schema, REPO_ROOT / "schemas/contracts/v1", check_formats=True)
         errors = sorted(
             validator.iter_errors(instance),
             key=lambda error: (_pointer(tuple(error.absolute_path)), str(error.validator)),

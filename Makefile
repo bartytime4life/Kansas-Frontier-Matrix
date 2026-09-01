@@ -140,7 +140,7 @@ trust-spine-fixture-slice:
 	$(KFM_VALIDATION_ENV) python -m unittest tests.validators.governance.test_validate_trust_spine_fixture_slice --verbose
 	$(KFM_VALIDATION_ENV) python tools/validators/governance/validate_trust_spine_fixture_slice.py --fixtures
 	$(KFM_VALIDATION_ENV) python tools/validators/governance/validate_trust_spine_fixture_slice.py
-	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-trust-spine-fixture-slice-mrts-05-20260822.json --repo-root . --artifact-git-ref f2d5ec5f34c97beaedca96f1ea7cce84b3643b67
+	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-trust-spine-fixture-slice-mrts-05-20260822.json --repo-root . --artifact-git-ref $(shell git rev-parse HEAD)
 
 ci-conformance-report:
 	$(KFM_VALIDATION_ENV) python -m unittest tests.validators.test_validate_generated_receipt --verbose

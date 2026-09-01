@@ -4,9 +4,9 @@ import math
 import sys
 from pathlib import Path
 
-from jsonschema import Draft202012Validator, FormatChecker
+from jsonschema import Draft202012Validator
 
-from tools.validators._common.local_resolver import build_registry
+from tools.validators._common.jsonschema_compat import load_draft202012_validator
 
 
 class DuplicateKeyError(ValueError):
@@ -45,11 +45,11 @@ def _load_instance(path):
 def load_validator(schema_path: Path, *, check_formats: bool = False):
     schema = json.loads(schema_path.read_text(encoding="utf-8"))
     repo_root = Path(__file__).resolve().parents[3]
-    registry = build_registry(repo_root)
-    kwargs = {"registry": registry}
-    if check_formats:
-        kwargs["format_checker"] = FormatChecker()
-    return Draft202012Validator(schema, **kwargs)
+    return load_draft202012_validator(
+        schema,
+        repo_root / "schemas/contracts/v1",
+        check_formats=check_formats,
+    )
 
 
 def validate_files(validator, files):

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import hashlib
 import json
 import math
 import re
@@ -161,9 +162,17 @@ def identity_subject(candidate: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def compute_manifest_spec_hash(candidate: Mapping[str, Any]) -> str:
+    subject = identity_subject(candidate)
     if HASH_IMPORT_ERROR is not None or compute_spec_hash is None:
-        raise RuntimeError("hashing package unavailable") from HASH_IMPORT_ERROR
-    return compute_spec_hash(identity_subject(candidate))
+        payload = json.dumps(
+            subject,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=False,
+            allow_nan=False,
+        ).encode("utf-8")
+        return "sha256:" + hashlib.sha256(payload).hexdigest()
+    return compute_spec_hash(subject)
 
 
 def compute_manifest_id(candidate: Mapping[str, Any]) -> str:
