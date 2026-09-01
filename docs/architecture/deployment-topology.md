@@ -878,7 +878,7 @@ Production reliance also requires evidence for backup, restore, rebuild-from-sou
 | P0 | Secret store and rotation | `UNKNOWN` | Selected store, service identities, references, rotation/revocation, incident procedure |
 | P0 | Release-to-deployment authority | `HOLD` | Accepted candidate/release binding, deployment decision, artifact/config/policy digests, reviewer authority |
 | P0 | Rollback and correction execution | `HOLD` | Exercised rollback target, cache/derivative invalidation, post-rollback verification |
-| P0 | Incident guidance ↔ restricted runbook handoff | `HOLD` | Resolve issue [#2900](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2900) without exposing restricted procedure |
+| P0 | Incident guidance ↔ restricted runbook handoff | `HOLD` | Resolve issue [#2900](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2900) with the milestone inventory and synthetic tabletop slice in [`docs/security/incident-response-handoff-decision.md`](../security/incident-response-handoff-decision.md) without exposing restricted procedure |
 | P1 | Governed API substantive vertical slice | `PARTIAL / HOLD` | Evidence, policy, citation, release, freshness, correction, safe-error fixtures and tests |
 | P1 | EvidenceRef-to-EvidenceBundle governed resolver | `OPEN / HOLD / NEEDS VERIFICATION` | Resolve issue [#2975](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2975); no direct store shortcut |
 | P1 | Explorer live transport and renderer admission | `HOLD` | Accepted boundary, pinned dependency, current browser/runtime probe packet, CSP/worker/PMTiles/selection evidence |

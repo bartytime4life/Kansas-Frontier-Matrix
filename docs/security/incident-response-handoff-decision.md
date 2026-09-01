@@ -10,7 +10,7 @@ owners:
   - "OWNER_TBD — accountable public security guidance owner"
   - "OWNER_TBD — accountable restricted incident-operations owner"
 created: 2026-08-15
-updated: 2026-08-15
+updated: 2026-09-01
 policy_label: public-safe governance
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -59,13 +59,63 @@ notes:
 | --- | --- |
 | Decision state | `PROPOSED` |
 | Proposed disposition | `ACCEPT_SPLIT` |
-| Repository checkpoint | `main@2d7f3014d52cc51556f1ecb1660f8998e8654035` |
+| Repository checkpoint | `main@db23a8bfa9fa126e87009a41240576619ccaac02` |
 | Public guidance path | `docs/security/INCIDENT_RESPONSE.md` |
 | Restricted operational path | `docs/runbooks/INCIDENT_RESPONSE.md` |
 | Path migration | None |
 | Operational activation | None |
 | Publication effect | None |
 | Acceptance blocker | Accountable owners and independent review remain unverified |
+
+## Milestone inventory and overlap map
+
+| Surface | Classification | Role in this slice |
+| --- | --- | --- |
+| `docs/security/INCIDENT_RESPONSE.md` | `PARTIAL` | Public guidance surface; supplies reporting, evidence-preservation, correction, and rollback doctrine. |
+| `docs/runbooks/INCIDENT_RESPONSE.md` | `PARTIAL` | Restricted operational lane; supplies private playbooks and the synthetic tabletop appendix. |
+| `docs/security/incident-response-handoff-decision.md` | `IMPLEMENTED` | Records the first bounded slice: inventory, overlap map, finite states, and rollback contract. |
+| `docs/architecture/deployment-topology.md` | `PARTIAL` | Holds the related P0 verification row and points back to this slice. |
+| `issue #2900` | `SUPERSEDED` | Closed lineage for the deferred handoff decision. |
+| `issue #3380` | `IMPLEMENTED` | Milestone tracker for this bounded slice. |
+| `PR #4080` | `PARTIAL` | Open WIP implementation slice; evidence only, no acceptance authority. |
+| `Other repository surfaces` | `NOT_INSPECTED` | Outside this slice and left explicit rather than implied. |
+
+## Synthetic tabletop handoff slice
+
+This slice is synthetic only. It proves the public-to-restricted seam, not live
+incident handling.
+
+1. `REPORTED` — a public-safe report lands with a report identifier, receipt
+   time, affected-surface label, and evidence references only.
+2. `ACKNOWLEDGED` — an authorized responder acknowledges receipt without
+   confirming incident facts publicly.
+3. `TRIAGED` — the restricted lane assigns severity, scope, and an operational
+   owner.
+4. `TRANSFERRED` — operational control and evidence custody move to the
+   restricted lane.
+5. `ACTIVE` — containment, investigation, restoration, or coordination is
+   underway under restricted control.
+6. `MONITORING` — immediate action is complete but validation and recurrence
+   checks continue.
+7. `CLOSED` — closure criteria and required records are complete.
+8. `CORRECTED` — a later correction supersedes the prior record transparently.
+9. `ABSTAIN` — evidence is insufficient to classify or communicate beyond the
+   safe boundary.
+10. `ACCESS_DENIED` — the restricted lane is unavailable to the requester; the
+    fallback route is used instead of improvisation.
+11. `STALE_RUNBOOK` — required procedure or ownership evidence is stale; unsafe
+    execution is held.
+12. Evidence custody carries references, timestamps, handling labels, and role
+    identifiers only; it does not mirror logs, screenshots, credentials, prompts,
+    or payloads into public history.
+13. Secrets and keys are rotated or revoked through the issuing authority, with
+    access and audit evidence preserved.
+14. Forward correction uses `CorrectionNotice`; rollbacks use `RollbackCard`.
+    A rollback restores the prior split and does not copy restricted procedure
+    into public history.
+15. Hosted checks stay bounded to markdown/link and stale-reference validation
+    plus the focused governance test. A passing run does not prove operational
+    readiness.
 
 ## Evidence and rationale
 

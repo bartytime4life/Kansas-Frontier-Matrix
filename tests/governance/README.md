@@ -3,20 +3,20 @@ doc_id: kfm://doc/tests-governance-readme
 title: tests/governance/ — Governance Validator Test Lane
 type: README
 version: v0.2
-status: draft; repository-grounded; six-module-inventory; split-workflow-binding; deterministic; no-network; non-authoritative
+status: draft; repository-grounded; seven-module-inventory; split-workflow-binding; deterministic; no-network; non-authoritative
 owners: OWNER_TBD — Governance steward · QA steward · Validator steward · Evidence steward · Policy steward · Security reviewer · CI steward · Release steward
 created: 2026-07-29
-updated: 2026-08-31
+updated: 2026-09-01
 policy_label: repository-facing; tests; governance; briefing-signals; issue-inventory; fixture-backed; read-only; no-network; non-publisher
 owning_root: tests/
-responsibility: executable conformance checks for bounded BriefingSignal validation, deduplication, materiality, issue routing, and read-only GitHub issue-inventory projections without granting governance or repository-mutation authority
-truth_posture: CONFIRMED six direct test modules, 53 source-defined test methods, two directly bound workflow definitions, and no dedicated Make target at the pinned snapshot / UNKNOWN complete governance coverage, full-directory hosted collection, required-check status, production parity, accountable stewardship, correction propagation, and operational rollback
+responsibility: executable conformance checks for bounded BriefingSignal validation, deduplication, materiality, issue routing, read-only GitHub issue-inventory projections, and documentation-slice inventory/overlap checks without granting governance or repository-mutation authority
+truth_posture: CONFIRMED seven direct test modules, 55 source-defined test methods, two directly bound workflow definitions, and no dedicated Make target at the pinned snapshot / UNKNOWN complete governance coverage, full-directory hosted collection, required-check status, production parity, accountable stewardship, correction propagation, and operational rollback
 evidence_repository: bartytime4life/Kansas-Frontier-Matrix
 evidence_base_ref: main
 evidence_base_commit: 5d835798e09a4dd14735779cb44206a8a3e8b2d3
 evidence_prior_blob: 724ce8cb818d7d0f8b4e0e2412e30609142f17f1
-direct_test_module_count: 6
-source_defined_test_count: 53
+direct_test_module_count: 7
+source_defined_test_count: 55
 direct_workflow_binding_count: 2
 related:
   - ../README.md
@@ -36,8 +36,8 @@ notes:
 
 # Governance tests
 
-`tests/governance/` contains six modules and 53 deterministic tests for bounded governance
-validators, routing helpers, and read-only issue-inventory projections. These
+`tests/governance/` contains seven modules and 55 deterministic tests for bounded governance
+validators, routing helpers, read-only issue-inventory projections, and documentation-slice inventory/overlap checks. These
 tests verify repository code and fixtures at the checked-out commit. They do
 not create governance authority, approve review, admit a source, close
 evidence, mutate GitHub, release, deploy, or publish.
@@ -50,9 +50,10 @@ evidence, mutate GitHub, release, deploy, or publish.
 | [`test_briefing_signal_dedup.py`](test_briefing_signal_dedup.py) | 8 | Cluster stability, replay, collision detection, duplicate classification, input-order invariance, dry-run-only output, and active network denial |
 | [`test_briefing_signal_materiality.py`](test_briefing_signal_materiality.py) | 9 | Exact materiality thresholds, mandatory overrides, six finite route profiles, schema-valid semantic negatives, deterministic reporting, and active network denial |
 | [`test_briefing_signal_issue_inventory.py`](test_briefing_signal_issue_inventory.py) | 11 | Closed issue-inventory projections, existing-target binding, missing/closed/ambiguous target holds, invalid-inventory precedence, deterministic reports, and absence of mutation clients |
+| [`test_incident_response_handoff_slice.py`](test_incident_response_handoff_slice.py) | 2 | Milestone inventory, overlap map, synthetic tabletop handoff, and rollback/forward-fix boundary for incident-response guidance |
 | [`test_briefing_signal_live_issue_inventory.py`](test_briefing_signal_live_issue_inventory.py) | 6 | Binding a stored GitHub issue-read receipt to BriefingSignal routing, identity reproduction, freshness and `as_of` requirements, fixture/live-input separation, and active network denial |
 | [`test_github_issue_inventory_read.py`](test_github_issue_inventory_read.py) | 6 | Fixture-backed issue-read schema, repository/ref binding, pull-request exclusion, rate-limit holds, explicit staleness, and deterministic identity |
-| **Total** | **53** | Source-defined `unittest` methods; not a coverage percentage or production claim. |
+| **Total** | **55** | Source-defined `unittest` methods; not a coverage percentage or production claim. |
 
 The “live” binding test uses the committed read receipt under
 [`fixtures/contracts/v1/governance/github_issue_inventory_read/`](../../fixtures/contracts/v1/governance/github_issue_inventory_read/).
