@@ -1,4 +1,7 @@
-import { parsePublicWorkspaceContextUrl } from "./workspace-context";
+import {
+  PUBLIC_WORKSPACE_CONTEXT_QUERY_PARAM,
+  parsePublicWorkspaceContextUrl,
+} from "./workspace-context";
 import {
   PUBLIC_WORKSPACES,
   findPublicWorkspaceByHash,
@@ -39,6 +42,26 @@ export function resolvePublicWorkspaceNavigationState(
           ? "ANCHOR_ONLY"
           : "UNRESOLVED",
   });
+}
+
+/**
+ * Clone one browser URL and remove only a rejected KFM public-context query.
+ *
+ * The strict context parser already rejects malformed, duplicate, oversized,
+ * evidence-bearing, private, or hash-mismatched projections. Keeping a rejected
+ * projection in the address bar would leave stale or sensitive-looking values
+ * in browser history and copied links even though Explorer refuses to consume
+ * them. This helper preserves unrelated query parameters and the public anchor.
+ */
+export function sanitizePublicWorkspaceNavigationUrl(url: URL): URL {
+  const safeUrl = new URL(url.toString());
+  if (
+    safeUrl.searchParams.has(PUBLIC_WORKSPACE_CONTEXT_QUERY_PARAM) &&
+    parsePublicWorkspaceContextUrl(safeUrl) === null
+  ) {
+    safeUrl.searchParams.delete(PUBLIC_WORKSPACE_CONTEXT_QUERY_PARAM);
+  }
+  return safeUrl;
 }
 
 /**
