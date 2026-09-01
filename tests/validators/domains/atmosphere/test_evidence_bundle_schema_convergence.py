@@ -141,6 +141,40 @@ class AtmosphereEvidenceBundleSchemaConvergenceTests(unittest.TestCase):
         self.assertEqual(result.stdout, "")
         self.assertIn("Unrecognized option: --fixture", result.stderr)
 
+    def test_declared_projection_validator_preserves_help(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            result = subprocess.run(
+                [str(PROJECTION_VALIDATOR), "--help"],
+                cwd=directory,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("usage:", result.stdout)
+        self.assertIn("--fixtures", result.stdout)
+
+    def test_declared_projection_validator_preserves_end_of_options(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "-evidence-bundle.json"
+            path.write_text(
+                (SHARED_FIXTURES / "valid/valid_1.json").read_text(
+                    encoding="utf-8"
+                ),
+                encoding="utf-8",
+            )
+            result = subprocess.run(
+                [str(PROJECTION_VALIDATOR), "--", path.name],
+                cwd=directory,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn(f"OK {path.name}", result.stdout)
+
     def test_declared_projection_validator_requires_an_input_mode(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             result = subprocess.run(
