@@ -31,6 +31,16 @@ class GeoParquet2RcPyArrowCarrierProbeTests(unittest.TestCase):
         self.assertEqual(result.outcome, "ERROR")
         self.assertIn("CARRIER_DIGEST_MISMATCH", result.reason_codes)
 
+    def test_truncated_carrier_errors(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            generate(root)
+            path = root / "synthetic-geoparquet-2.0.0-rc.1.parquet"
+            path.write_bytes(path.read_bytes()[:32])
+            result = validate(root, root / "manifest.json")
+        self.assertEqual(result.outcome, "ERROR")
+        self.assertIn("CARRIER_UNREADABLE", result.reason_codes)
+
     def test_governance_claim_errors(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

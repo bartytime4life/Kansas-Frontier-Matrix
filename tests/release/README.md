@@ -10,16 +10,16 @@ updated: 2026-08-30
 supersedes: v1.1 documentation at the same path; no test, fixture, validator, workflow, release object, or public surface is superseded
 policy_label: public-doc; tests; release-prerequisites; promotion-safety; synthetic; fail-closed; non-authoritative
 current_path: tests/release/README.md
-truth_posture: CONFIRMED fifteen direct modules and 123 source-defined tests at the pinned snapshot / PARTIAL aggregate local execution and cross-family coverage / UNKNOWN required-check status, complete collection count, and independent stewardship
+truth_posture: CONFIRMED fifteen direct modules and 124 source-defined tests at the pinned snapshot / PARTIAL aggregate local execution and cross-family coverage / UNKNOWN required-check status, complete collection count, and independent stewardship
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: 1ea6593ede80d5ce10f561c7eec72135d6ccf806
+  base_commit: db23a8bfa9fa126e87009a41240576619ccaac02
   target_prior_blob: 8e4e14eb35dcd2026b7bf0de37ec9751f75a710d
   direct_modules: 15
-  source_defined_tests: 123
+  source_defined_tests: 124
   count_note: source-defined test functions or methods; parametrization and collection behavior may change collected-case totals
 related:
   - ../README.md
@@ -57,8 +57,8 @@ approve a release.
 
 ## Status
 
-At `main@1ea6593ede80d5ce10f561c7eec72135d6ccf806`, this directory has
-15 direct `test_*.py` modules containing 123 source-defined `test_*` functions
+At `main@db23a8bfa9fa126e87009a41240576619ccaac02`, this directory has
+15 direct `test_*.py` modules containing 124 source-defined `test_*` functions
 or methods. The prior README described three direct modules and a proposed
 future tree, so it materially understated current implementation.
 
@@ -69,7 +69,7 @@ can prevent collection.
 | Property | Confirmed boundary |
 |---|---|
 | Placement | Canonical executable conformance evidence under `tests/` |
-| Direct inventory | 15 modules; 123 source-defined tests |
+| Direct inventory | 15 modules; 124 source-defined tests |
 | Runners | Mix of pytest-compatible `unittest` and pytest functions |
 | Inputs | Repository-owned synthetic fixtures, schemas, validators, helpers, and temporary files |
 | Network posture | Bounded tests and workflows deny or avoid network use; no universal lane-wide network guard is proven |
@@ -109,7 +109,7 @@ those distinctions.
 | [`test_cosign_attestation_verification_plan.py`](test_cosign_attestation_verification_plan.py) | 10 | Draft 2020-12 schema, valid/invalid fixture polarity, unsafe JSON and path rejection, deterministic CLI output, and absence of network or Cosign execution |
 | [`test_geoparquet_2_rc_compatibility_assessment.py`](test_geoparquet_2_rc_compatibility_assessment.py) | 10 | Exact synthetic toolchain matrix, finite `READY`/`HOLD`/`ERROR` assessment, evidence-ref uniqueness, and non-governance boundary |
 | [`test_geoparquet_2_rc_gdal_consumer_probe.py`](test_geoparquet_2_rc_gdal_consumer_probe.py) | 8 | Synthetic GDAL-probe result classification, carrier and image integrity, semantic comparison, and refusal of interoperability or governance claims |
-| [`test_geoparquet_2_rc_pyarrow_carriers.py`](test_geoparquet_2_rc_pyarrow_carriers.py) | 5 | Synthetic PyArrow carrier generation, digest and CRS checks, partial outcome, and governance-claim denial |
+| [`test_geoparquet_2_rc_pyarrow_carriers.py`](test_geoparquet_2_rc_pyarrow_carriers.py) | 6 | Synthetic PyArrow carrier generation, digest and CRS checks, malformed-carrier rejection, partial outcome, and governance-claim denial |
 | [`test_geospatial_carrier_readiness.py`](test_geospatial_carrier_readiness.py) | 14 | Closed schema, finite carrier-readiness cases, MVT/COG/GeoParquet profile rules, deterministic case CLI, and no-network validation |
 | [`test_promotion_decision_schema.py`](test_promotion_decision_schema.py) | 1 | PromotionDecision fixture validation through the release validator |
 | [`test_promotion_gate.py`](test_promotion_gate.py) | 19 | Bounded A–G candidate readiness, outcome precedence, review separation, temporal/identity checks, safe diagnostics, no-network behavior, and finite CLI exits |

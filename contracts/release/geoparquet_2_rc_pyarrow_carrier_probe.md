@@ -49,7 +49,7 @@ production artifacts.
 - Parquet-native geospatial row-group statistics and pruning correctness;
 - projected/geographic CRS round trips beyond this one OGC:CRS84 fixture;
 - GEOGRAPHY logical-type behavior;
-- malformed/truncated carrier coverage outside focused negative tests;
+- malformed/truncated carrier coverage beyond one focused negative test;
 - independent human review; and
 - adoption, migration, release, deployment, publication, or public use.
 
