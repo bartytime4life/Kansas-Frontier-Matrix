@@ -83,7 +83,7 @@ The answer should be a navigable validator index and deterministic validation ou
 | Boundary and sensitivity doctrine | **CONFIRMED in repo evidence / draft** | `docs/domains/people-dna-land/SCOPE_AND_BOUNDARY.md` and `SENSITIVITY.md` define this as a T4/deny-by-default sensitive bounded context with consent, revocation, DNA, living-person, and private land controls. |
 | Segment naming | **CONFLICTED / NEEDS ADR** | Domain docs record the open `people` vs `people-dna-land` segment conflict for some schema/contract/policy roots. This README follows the requested path and Directory Rules-style `people-dna-land` segment while marking implementation homes as needs verification. |
 | Child README lanes | **NONE** | This directory currently keeps its executable validators flat; distinct subdirectories remain proposal-only. |
-| Executable validator set | **CONFIRMED / BOUNDED** | Seven local Python entrypoints are present. They perform structural, fixture-scoped, or delegated fail-closed checks; none grants semantic, consent, source-admission, policy, release, or publication authority. |
+| Executable validator set | **CONFIRMED / BOUNDED** | Eight local Python entrypoints are present. They perform structural, fixture-scoped, or delegated fail-closed checks; none grants semantic, consent, source-admission, policy, release, or publication authority. |
 | Pipeline and CI binding | **CONFIRMED / BOUNDED** | The People/DNA/Land dispatcher and workflow invoke the reviewed validator/test set with deterministic no-network settings. Proof production and release remain explicit holds. |
 
 [Back to top](#top)
@@ -101,6 +101,7 @@ The reviewed branch contains these local validator entrypoints:
 | `validate_source_descriptor.py` | Fail-closed adapter to the shared SourceDescriptor validator; it does not admit or activate a source. |
 | `validate_catalog_matrix.py` | Fail-closed adapter to shared CatalogMatrix closure checks; catalog authority remains external. |
 | `validate_domain_layer_descriptor.py` | Structural schema and synthetic fixture-polarity check for the proposed downstream layer carrier. |
+| `validate_domain_feature_identity.py` | Structural schema and synthetic fixture-polarity check for the proposed deterministic identity carrier; identity remains distinct from truth. |
 | `validate_consent_overlay.py` | Synthetic, fixture-only consent-overlay safety validation with explicit living-person and raw-genomic denial. |
 | `validate_consent_revocation_propagation_assessment.py` | Synthetic assessment of declared revocation propagation; it does not execute cleanup or rollback. |
 
@@ -285,6 +286,7 @@ The stable dispatcher can replay specific governed lanes, for example:
 
 ```bash
 KFM_NO_NETWORK=1 python pipelines/domains/people-dna-land/validate.py domain-layer-descriptor --fixtures
+KFM_NO_NETWORK=1 python pipelines/domains/people-dna-land/validate.py domain-feature-identity --fixtures
 KFM_NO_NETWORK=1 python pipelines/domains/people-dna-land/validate.py correction-notice --fixtures
 KFM_NO_NETWORK=1 python pipelines/domains/people-dna-land/rollback.py --fixtures
 ```

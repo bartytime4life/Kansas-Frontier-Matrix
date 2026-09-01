@@ -1,0 +1,25 @@
+{
+  "id": "pdl-feature-identity:synthetic-historical-aggregate-v1",
+  "version": "0.1",
+  "domain": "people-dna-land",
+  "object_role": "HistoricalPopulationAggregate",
+  "temporal_scope": {
+    "start_year": 1860,
+    "end_year": 1869,
+    "precision": "decade"
+  },
+  "identity_state": "candidate",
+  "sensitivity": "public-safe-aggregate",
+  "authority": {
+    "establishes_person_identity": false,
+    "establishes_kinship": false,
+    "establishes_residence": false,
+    "establishes_land_title": false,
+    "authorizes_release": false,
+    "authorizes_publication": false
+  },
+  "limitations": [
+    "Synthetic aggregate fixture only.",
+    "Identity support is not person, relationship, residence, ownership, title, consent, release, or publication authority."
+  ]
+}

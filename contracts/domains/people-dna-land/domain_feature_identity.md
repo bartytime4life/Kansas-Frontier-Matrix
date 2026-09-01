@@ -19,7 +19,7 @@ owners:
   - OWNER_TBD — Release steward
   - OWNER_TBD — Docs steward
 created: NEEDS VERIFICATION — scaffold existed before v0.2 expansion
-updated: 2026-06-22
+updated: 2026-09-01
 policy_label: restricted-review; semantic-contract; domain-feature-identity; people-dna-land; deterministic-identity; spec-hash; source-role-aware; temporal-scope-aware; living-person-aware; DNA-aware; title-sensitive; evidence-bound; consent-aware; release-gated; rollback-aware; not-person-truth; not-title-truth; not-publication-authority
 tags: [kfm, contracts, people-dna-land, domain-feature-identity, identity, deterministic-id, spec_hash, source-id, object-role, temporal-scope, normalized-digest, PersonAssertion, PersonIdentityCandidate, PersonCanonical, GenealogyRelationship, DNAMatchEvidence, LandInstrument, LandOwnershipAssertion, ParcelVersion, EvidenceBundle, PolicyDecision, ConsentGrant, RevocationReceipt, ReleaseManifest, RollbackCard]
 related:
@@ -78,7 +78,7 @@ notes:
 > **Status:** `draft` / semantic contract  
 > **Contract path:** `contracts/domains/people-dna-land/domain_feature_identity.md`  
 > **Schema path:** `schemas/contracts/v1/domains/people-dna-land/domain_feature_identity.schema.json`  
-> **Truth posture:** the target file and paired schema are confirmed from current repo evidence. The schema is still a PROPOSED scaffold with limited required shape. Full field semantics, fixtures, validator behavior, policy enforcement, source registry records, release manifests, public DTO behavior, and runtime behavior remain **NEEDS VERIFICATION**.
+> **Truth posture:** the target file and paired schema are confirmed from current repo evidence. The schema is still a PROPOSED scaffold with limited required shape. Bounded structural fixture polarity and validator wiring are confirmed; full field semantics, policy enforcement, source registry records, release manifests, public DTO behavior, and runtime behavior remain **NEEDS VERIFICATION**.
 
 > [!CAUTION]
 > `domain_feature_identity` is identity support. It does **not** make a person assertion true, does **not** merge people, does **not** prove a genealogy relationship, does **not** expose DNA evidence, does **not** certify title or ownership, does **not** grant consent, and does **not** publish anything.
@@ -116,7 +116,7 @@ This contract is intentionally conservative. A stable identifier is useful for a
 | Sensitivity and consent | `docs/domains/people-dna-land/SENSITIVITY_PROFILE.md`, `docs/domains/people-dna-land/CONSENT_MODEL.md` | Deny-default and render-gate doctrine. |
 | Source registry | `data/registry/sources/people-dna-land/` or accepted source-registry home | Source roles, rights, cadence, caveats, activation state. |
 | Policy | `policy/domains/people-dna-land/` | Expected allow/deny/restrict/abstain gates. |
-| Fixtures/tests | `fixtures/domains/people-dna-land/domain_feature_identity/`, `tests/domains/people-dna-land/` | Expected proof; not established by this document. |
+| Fixtures/tests | `fixtures/domains/people-dna-land/domain_feature_identity/`, `tests/validators/domains/people-dna-land/`, `tests/pipelines/domains/people-dna-land/` | Deterministic structural fixture polarity and dispatcher binding are executable; semantic identity proof remains unestablished. |
 | Release/correction/rollback | `release/candidates/people-dna-land/` and release roots | Required downstream governance. |
 
 ---
@@ -139,7 +139,7 @@ The paired schema exists and is **PROPOSED**, but it is not yet a full implement
 | Policy pointer | `policy/domains/people-dna-land/` |
 
 > [!WARNING]
-> The schema pointer to a validator path does not prove that the validator exists or runs. Treat validator, fixture, CI, and policy enforcement as **NEEDS VERIFICATION** until current repo evidence confirms them.
+> The declared validator path and deterministic synthetic fixture polarity are executable. They prove only conformance to the current permissive schema scaffold; identity semantics, policy enforcement, consent, source admission, review, release, correction execution, and publication remain **NEEDS VERIFICATION** and separately governed.
 
 ---
 

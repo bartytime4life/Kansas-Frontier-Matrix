@@ -130,6 +130,10 @@ jobs:
               ),
               Path(
                   "tools/validators/domains/people-dna-land/"
+                  "validate_domain_feature_identity.py"
+              ),
+              Path(
+                  "tools/validators/domains/people-dna-land/"
                   "validate_evidence_bundle.py"
               ),
               Path(
@@ -179,6 +183,7 @@ jobs:
               fixture_root / "consent_overlay",
               fixture_root / "consent_revocation_propagation",
               fixture_root / "domain_layer_descriptor",
+              fixture_root / "domain_feature_identity",
           }
           expected_markers = {
               fixture_root / "golden/PLACEHOLDER.md":
@@ -257,14 +262,17 @@ jobs:
             tests/validators/domains/people-dna-land/test_domain_source_descriptor_validator_entrypoint.py \
             tests/validators/domains/people-dna-land/test_domain_catalog_matrix_validator_entrypoint.py \
             tests/validators/domains/people-dna-land/test_domain_layer_descriptor_validator_entrypoint.py \
+            tests/validators/domains/people-dna-land/test_domain_feature_identity_validator_entrypoint.py \
             tests/validators/test_screen_living_persons.py \
             tests/pipelines/domains/people-dna-land/test_validate_pipeline_dispatch.py \
             tests/pipelines/domains/people-dna-land/test_domain_layer_descriptor_dispatch.py \
+            tests/pipelines/domains/people-dna-land/test_domain_feature_identity_dispatch.py \
             tests/pipelines/domains/people-dna-land/test_rollback_assessment_pipeline.py \
             tests/pipelines/domains/people-dna-land/test_correction_notice_dispatch.py
 
           python pipelines/domains/people-dna-land/validate.py correction-notice --fixtures
           python pipelines/domains/people-dna-land/validate.py domain-layer-descriptor --fixtures
+          python pipelines/domains/people-dna-land/validate.py domain-feature-identity --fixtures
           python pipelines/domains/people-dna-land/rollback.py --fixtures
 
           echo "WORKFLOW_CHECK_EXECUTED: people-dna-land-domain-validator-dispatch"
@@ -327,7 +335,8 @@ jobs:
           dispatcher suite plus two frozen, synthetic, no-network consent
           profiles. The domain suite checks schema inventory, EvidenceBundle and
           SourceDescriptor delegation, CatalogMatrix closure,
-          DomainLayerDescriptor fixture polarity, living-person denial,
+          DomainLayerDescriptor and DomainFeatureIdentity fixture polarity,
+          living-person denial,
           CorrectionNotice dispatch, and rollback-assessment dispatch. These
           checks are structural or fixture-scoped and do not establish semantic
           completeness, source admission, correction execution, or release.
