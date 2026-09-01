@@ -96,6 +96,7 @@ SENSITIVITY_CLASSES = frozenset(
 )
 LIFECYCLE_STATES = frozenset({"WORK", "QUARANTINE", "PROCESSED", "CATALOG"})
 EVIDENCE_BOUND_LIFECYCLE_STATES = frozenset({"PROCESSED", "CATALOG"})
+CANDIDATE_ID_PATTERN = re.compile(r"^arc-candidate-[a-z0-9][a-z0-9-]*$")
 KFM_REFERENCE_PATTERN = re.compile(r"^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$")
 
 
@@ -147,8 +148,14 @@ def validate_candidate_feature(payload: Any) -> list[str]:
         errors.append("unknown fields are denied: " + ", ".join(unknown))
 
     candidate_id = payload.get("candidate_feature_id")
-    if not isinstance(candidate_id, str) or not candidate_id.startswith("arc-candidate-"):
-        errors.append("candidate_feature_id must start with arc-candidate-")
+    if (
+        not isinstance(candidate_id, str)
+        or CANDIDATE_ID_PATTERN.fullmatch(candidate_id) is None
+    ):
+        errors.append(
+            "candidate_feature_id must match "
+            "^arc-candidate-[a-z0-9][a-z0-9-]*$"
+        )
     if payload.get("object_type") != "CandidateFeature":
         errors.append("object_type must be CandidateFeature")
     if payload.get("truth_state") != "CANDIDATE":
@@ -205,6 +212,7 @@ def validate_fixture_suite() -> int:
         FIXTURE_ROOT / "location_bearing_reference_deny.json": "opaque kfm:// references",
         FIXTURE_ROOT / "unbound_catalog_candidate_deny.json": "evidence_refs are required",
         FIXTURE_ROOT / "superseded_without_correction_deny.json": "correction_refs are required",
+        FIXTURE_ROOT / "malformed_candidate_id_deny.json": "candidate_feature_id must match",
     }
     valid_errors = validate_candidate_feature(_load(valid_path))
     if valid_errors:

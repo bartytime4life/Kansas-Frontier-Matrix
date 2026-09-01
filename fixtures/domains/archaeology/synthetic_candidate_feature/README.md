@@ -6,6 +6,8 @@ burial, sacred-place, collection-security, or culturally restricted data.
 
 - `valid.json` remains explicitly `CANDIDATE`, uses governed references, keeps
   spatial precision withheld, and contains no inline geometry.
+- `malformed_candidate_id_deny.json` proves that the validator and schema share
+  the same lowercase candidate-identifier grammar.
 - `sensitive_geometry_deny.json` uses synthetic zero coordinates solely to prove
   that any inline coordinate field is rejected before downstream use.
 - `location_bearing_reference_deny.json` proves that a nominal `kfm://`
@@ -24,7 +26,8 @@ python tools/validators/archaeology/validate_candidate_feature.py --fixtures
 python -m unittest tests.domains.archaeology.test_candidate_not_site
 ```
 
-Passing these checks proves only the bounded candidate discriminator, inline
+Passing these checks proves only the schema-aligned candidate identifier and
+bounded candidate discriminator, inline
 location denial, opaque-reference boundary, conditional EvidenceRef binding,
 and supersession correction binding. It does not confirm a site, authorize
 publication, or establish full

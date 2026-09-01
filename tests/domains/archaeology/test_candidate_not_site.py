@@ -10,6 +10,7 @@ import unittest
 from pathlib import Path
 
 from tools.validators.archaeology.validate_candidate_feature import (
+    CANDIDATE_ID_PATTERN,
     FORBIDDEN_INLINE_LOCATION_FIELDS,
     FORBIDDEN_SITE_CLAIM_FIELDS,
     validate_candidate_feature,
@@ -36,6 +37,14 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         self.assertEqual(self.valid["truth_state"], "CANDIDATE")
         self.assertNotIn("geometry", self.valid)
         self.assertNotIn("coordinates", self.valid)
+
+    def test_malformed_candidate_identifier_fails_closed(self) -> None:
+        payload = _load(FIXTURE_ROOT / "malformed_candidate_id_deny.json")
+        errors = validate_candidate_feature(payload)
+        self.assertIn(
+            "candidate_feature_id must match ^arc-candidate-[a-z0-9][a-z0-9-]*$",
+            errors,
+        )
 
     def test_inline_location_fixture_fails_closed(self) -> None:
         payload = _load(FIXTURE_ROOT / "sensitive_geometry_deny.json")
@@ -95,6 +104,10 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         properties = schema["properties"]
         self.assertEqual(properties["object_type"], {"const": "CandidateFeature"})
         self.assertEqual(properties["truth_state"], {"const": "CANDIDATE"})
+        self.assertEqual(
+            properties["candidate_feature_id"]["pattern"],
+            CANDIDATE_ID_PATTERN.pattern,
+        )
         self.assertFalse(schema["additionalProperties"])
         self.assertTrue(FORBIDDEN_INLINE_LOCATION_FIELDS.isdisjoint(properties))
         self.assertTrue(FORBIDDEN_SITE_CLAIM_FIELDS.isdisjoint(properties))
