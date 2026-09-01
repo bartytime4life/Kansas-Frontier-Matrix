@@ -123,7 +123,12 @@ def build_commands(executable: str | None = None) -> tuple[tuple[str, ...], ...]
 def install() -> None:
     """Install the committed CLI dependency overlay and local package."""
 
-    environment = os.environ.copy()
+    environment = {
+        key: value
+        for key, value in os.environ.items()
+        if not key.upper().startswith("PIP_")
+    }
+    environment["PIP_CONFIG_FILE"] = os.devnull
     environment["PIP_DISABLE_PIP_VERSION_CHECK"] = "1"
     environment["PIP_NO_INPUT"] = "1"
     deadline = time.monotonic() + INSTALL_TIMEOUT_SECONDS
