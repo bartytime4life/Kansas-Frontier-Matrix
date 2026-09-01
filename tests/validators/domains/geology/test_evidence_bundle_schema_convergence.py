@@ -81,6 +81,16 @@ class GeologyEvidenceBundleSchemaConvergenceTests(unittest.TestCase):
         self.assertEqual(result.stdout, "")
         self.assertIn("No files provided", result.stderr)
 
+    def test_fixture_profile_cannot_ignore_an_explicit_file(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = Path(directory) / "must_not_be_ignored.json"
+            fixture.write_text("{}", encoding="utf-8")
+            result = self.run_domain_validator("--fixtures", str(fixture))
+
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        self.assertEqual(result.stdout, "")
+        self.assertIn("Cannot combine --fixtures", result.stderr)
+
     def test_inline_exact_subsurface_location_is_rejected(self) -> None:
         payload = self.load(SHARED_FIXTURES / "valid/valid_1.json")
         payload["exact_subsurface_location"] = {
