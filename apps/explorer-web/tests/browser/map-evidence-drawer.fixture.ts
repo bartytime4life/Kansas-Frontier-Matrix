@@ -15,7 +15,10 @@ const cases: readonly MapEvidenceFixtureCase[] = Object.freeze([
       selection_id: "selection:flow-001",
       layer_id: "layer:synthetic-streamflow",
       feature_id: "feature:flow-001",
-      evidence_refs: ["kfm:evidence:synthetic:flow-001"],
+      evidence_refs: [
+        "kfm:evidence:synthetic:flow-001",
+        "kfm:evidence:synthetic:flow-000",
+      ],
     },
   },
   {
