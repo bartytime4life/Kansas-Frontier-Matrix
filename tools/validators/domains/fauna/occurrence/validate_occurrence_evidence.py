@@ -212,6 +212,24 @@ def _event_time_matches_event_date(observation: Mapping[str, Any]) -> bool:
     return timestamp.date().isoformat() == event_date
 
 
+def _validation_not_before_retrieval(
+    provenance: Mapping[str, Any],
+    validation: Mapping[str, Any],
+) -> bool:
+    """Keep validation causally at or after source retrieval."""
+
+    retrieved_at = provenance.get("retrieved_at")
+    validated_at = validation.get("validated_at")
+    if not isinstance(retrieved_at, str) or not isinstance(validated_at, str):
+        return False
+    try:
+        retrieved = datetime.fromisoformat(retrieved_at.replace("Z", "+00:00"))
+        validated = datetime.fromisoformat(validated_at.replace("Z", "+00:00"))
+    except ValueError:
+        return False
+    return validated >= retrieved
+
+
 def _role_matches_basis(role: object, basis: object) -> bool:
     if role == "observed":
         return basis in DIRECT_BASIS
@@ -387,6 +405,17 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
     if not temporal_consistent:
         _add(findings, "obs.event_time_date_mismatch", "/observation/event_time")
 
+    validation_chronology_consistent = _validation_not_before_retrieval(
+        provenance,
+        validation,
+    )
+    if not validation_chronology_consistent:
+        _add(
+            findings,
+            "prov.validation_precedes_retrieval",
+            "/validation/validated_at",
+        )
+
     rights_resolved = _rights_resolved(rights)
     if not rights_resolved:
         _add(findings, "rights.unresolved", "/rights")
@@ -465,7 +494,12 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
                 )
 
     result = validation.get("validator_result")
-    all_gates = all(actual_checks.values()) and role_matches and temporal_consistent
+    all_gates = (
+        all(actual_checks.values())
+        and role_matches
+        and temporal_consistent
+        and validation_chronology_consistent
+    )
     if result == "pass":
         if review_pending or not all_gates or declared_reasons:
             _add(

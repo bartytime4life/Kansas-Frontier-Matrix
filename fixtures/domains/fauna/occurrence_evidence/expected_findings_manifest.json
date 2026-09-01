@@ -222,6 +222,20 @@
       "path": "semantic_invalid/spec_hash_mismatch.json"
     },
     {
+      "expected_findings": [
+        {
+          "code": "prov.validation_precedes_retrieval",
+          "path": "/validation/validated_at"
+        },
+        {
+          "code": "schema.pass_gate_failed",
+          "path": "/validation/validator_result"
+        }
+      ],
+      "expected_outcome": "ERROR",
+      "path": "semantic_invalid/validation_precedes_retrieval.json"
+    },
+    {
       "expected_findings": [],
       "expected_outcome": "PASS",
       "path": "valid/valid_modeled_context.json"

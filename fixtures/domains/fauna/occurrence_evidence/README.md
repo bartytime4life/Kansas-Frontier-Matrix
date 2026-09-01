@@ -39,6 +39,7 @@ These fixtures are synthetic, no-network, and unsuitable as biological or geogra
 | `semantic_invalid/rights_unresolved_pass.json` | Rejects a claimed pass with unresolved rights. |
 | `semantic_invalid/sensitive_exact_without_generalization.json` | Rejects exact public precision when generalization and review are required. |
 | `semantic_invalid/spec_hash_mismatch.json` | Rejects mismatched deterministic hash and occurrence identity. |
+| `semantic_invalid/validation_precedes_retrieval.json` | Rejects a validation timestamp that predates source retrieval. |
 | `expected_findings_manifest.json` | Canonical exact outcome/code/path manifest for all JSON fixtures above. |
 
 The fixtures do not activate an eBird, iNaturalist, GBIF, BISON, EDDMapS, or other connector and do not establish rights, taxonomic authority, stewardship review, evidence closure, release, or publication.

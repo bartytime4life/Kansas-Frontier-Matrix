@@ -143,6 +143,26 @@ class OccurrenceEvidenceTests(unittest.TestCase):
             ),
             result.findings,
         )
+
+    def test_validation_cannot_precede_source_retrieval(self) -> None:
+        candidate = _load("semantic_invalid/validation_precedes_retrieval.json")
+
+        result = validator.validate_candidate(candidate)
+
+        self.assertIn(
+            validator.Finding(
+                "prov.validation_precedes_retrieval",
+                "/validation/validated_at",
+            ),
+            result.findings,
+        )
+        self.assertIn(
+            validator.Finding(
+                "schema.pass_gate_failed",
+                "/validation/validator_result",
+            ),
+            result.findings,
+        )
         self.assertIn(
             validator.Finding(
                 "schema.pass_gate_failed",
