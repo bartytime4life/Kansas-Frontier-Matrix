@@ -127,7 +127,8 @@ def _validate_refs(value: Any, field: str, *, required: bool = False) -> list[st
     if required and not value:
         return [f"{field} must contain at least one reference"]
     errors: list[str] = []
-    if len(value) != len(set(value)):
+    string_refs = [ref for ref in value if isinstance(ref, str)]
+    if len(string_refs) != len(set(string_refs)):
         errors.append(f"{field} must not contain duplicate references")
     for ref in value:
         if not _is_opaque_kfm_ref(ref):
@@ -244,6 +245,7 @@ def validate_fixture_suite() -> int:
         FIXTURE_ROOT / "unsupported_candidate_type_deny.json": "candidate_type is not in",
         FIXTURE_ROOT / "unsupported_spatial_precision_deny.json": "spatial_precision_class is not in",
         FIXTURE_ROOT / "unclassified_geometry_reference_deny.json": "spatial_precision_class is required",
+        FIXTURE_ROOT / "non_string_reference_deny.json": "opaque kfm:// references",
     }
     valid_errors = validate_candidate_feature(_load(valid_path))
     if valid_errors:

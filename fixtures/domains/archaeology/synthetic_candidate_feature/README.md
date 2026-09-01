@@ -20,6 +20,8 @@ burial, sacred-place, collection-security, or culturally restricted data.
 - `location_bearing_reference_deny.json` proves that a nominal `kfm://`
   reference cannot smuggle query, fragment, or encoded locator material through
   a governed-reference field.
+- `non_string_reference_deny.json` proves that malformed structured reference
+  values return a finite denial rather than crashing validation.
 - `unbound_catalog_candidate_deny.json` proves that a candidate cannot claim
   under-review/retained posture or processed/catalog lifecycle without at least
   one governed EvidenceRef.
@@ -37,6 +39,6 @@ Passing these checks proves only the schema-aligned candidate identifier,
 candidate-type vocabulary, spatial-precision vocabulary, and geometry-reference
 precision binding; bounded candidate discriminator; inline location denial;
 opaque-reference boundary; conditional EvidenceRef binding; and supersession
-correction binding. It does not confirm a site, authorize publication, or
-establish full EvidenceBundle closure, policy, cultural review, or public-safe
-transformation.
+correction binding; malformed-reference finite denial. It does not confirm a
+site, authorize publication, or establish full EvidenceBundle closure, policy,
+cultural review, or public-safe transformation.

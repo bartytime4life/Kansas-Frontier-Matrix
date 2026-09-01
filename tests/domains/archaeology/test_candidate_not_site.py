@@ -81,6 +81,12 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         self.assertTrue(errors)
         self.assertTrue(any("opaque kfm:// references" in error for error in errors))
 
+    def test_non_string_reference_fails_closed_without_exception(self) -> None:
+        payload = _load(FIXTURE_ROOT / "non_string_reference_deny.json")
+        errors = validate_candidate_feature(payload)
+        self.assertTrue(errors)
+        self.assertTrue(any("opaque kfm:// references" in error for error in errors))
+
     def test_catalog_candidate_requires_evidence_binding(self) -> None:
         payload = _load(FIXTURE_ROOT / "unbound_catalog_candidate_deny.json")
         errors = validate_candidate_feature(payload)
@@ -140,6 +146,7 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         self.assertTrue(FORBIDDEN_INLINE_LOCATION_FIELDS.isdisjoint(properties))
         self.assertTrue(FORBIDDEN_SITE_CLAIM_FIELDS.isdisjoint(properties))
         expected_ref_pattern = "^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
+        self.assertEqual(properties["source_refs"]["items"]["type"], "string")
         self.assertEqual(properties["source_refs"]["items"]["pattern"], expected_ref_pattern)
         self.assertEqual(properties["candidate_geometry_ref"]["pattern"], expected_ref_pattern)
         self.assertEqual(properties["evidence_refs"]["minItems"], 1)
