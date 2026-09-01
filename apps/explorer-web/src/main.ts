@@ -7,7 +7,10 @@ import "./site/site-responsive.css";
 import { mountExplorerSite } from "./site/mount-explorer-site";
 import { mountSyntheticFocusWorkspace } from "./site/mount-synthetic-focus-workspace";
 import { mountPublicTrustSurface } from "./site/trust-surface";
-import { mountPublicWorkspaceNavigation } from "./site/workspace-navigation";
+import {
+  mountPublicWorkspaceNavigation,
+  syncPublicWorkspaceNavigation,
+} from "./site/workspace-navigation";
 
 const root = document.querySelector<HTMLElement>("#root");
 
@@ -25,6 +28,13 @@ if (navigation === null || trustSection === null) {
 }
 
 mountPublicWorkspaceNavigation(navigation);
+const syncWorkspaceNavigation = (): void => {
+  syncPublicWorkspaceNavigation(navigation, new URL(window.location.href));
+};
+syncWorkspaceNavigation();
+window.addEventListener("hashchange", syncWorkspaceNavigation);
+window.addEventListener("popstate", syncWorkspaceNavigation);
+
 mountSyntheticFocusWorkspace(root);
 
 const trustSurfaceHost = document.createElement("div");
