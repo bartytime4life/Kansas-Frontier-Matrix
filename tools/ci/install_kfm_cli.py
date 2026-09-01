@@ -22,6 +22,7 @@ LOCKFILE = REPO_ROOT / "tools/ci/python-cli.lock"
 LOCAL_PACKAGE = REPO_ROOT / "packages/kfm-cli"
 LOCAL_SPEC = "./packages/kfm-cli"
 LOCK_LIMIT_BYTES = 262_144
+INSTALL_TIMEOUT_SECONDS = 300
 HASH_LINE = re.compile(r"^\s+--hash=sha256:[0-9a-f]{64}(?: \\)?$")
 FORBIDDEN_LOCK_TEXT = (
     "--extra-index-url",
@@ -125,13 +126,17 @@ def install() -> None:
     environment["PIP_DISABLE_PIP_VERSION_CHECK"] = "1"
     environment["PIP_NO_INPUT"] = "1"
     for command in build_commands():
-        subprocess.run(
-            command,
-            check=True,
-            cwd=REPO_ROOT,
-            env=environment,
-            shell=False,
-        )
+        try:
+            subprocess.run(
+                command,
+                check=True,
+                cwd=REPO_ROOT,
+                env=environment,
+                shell=False,
+                timeout=INSTALL_TIMEOUT_SECONDS,
+            )
+        except subprocess.TimeoutExpired as exc:
+            raise CliInstallConfigurationError("CLI_INSTALL_TIMEOUT") from exc
 
 
 def main(argv: Sequence[str] | None = None) -> int:
