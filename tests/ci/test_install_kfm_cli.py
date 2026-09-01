@@ -42,7 +42,10 @@ class InstallKfmCliTests(unittest.TestCase):
                 module.validate_lockfile(path)
 
     def test_install_executes_argument_vectors_without_a_shell(self) -> None:
-        with mock.patch.object(module.subprocess, "run") as run:
+        with (
+            mock.patch.object(module.time, "monotonic", side_effect=(100.0, 100.0, 150.0)),
+            mock.patch.object(module.subprocess, "run") as run,
+        ):
             module.install()
         self.assertEqual(2, run.call_count)
         for call in run.call_args_list:
@@ -50,14 +53,32 @@ class InstallKfmCliTests(unittest.TestCase):
             self.assertIs(call.kwargs["shell"], False)
             self.assertIs(call.kwargs["check"], True)
             self.assertEqual(REPO_ROOT, call.kwargs["cwd"])
-            self.assertEqual(module.INSTALL_TIMEOUT_SECONDS, call.kwargs["timeout"])
+        self.assertEqual(
+            [300.0, 250.0],
+            [call.kwargs["timeout"] for call in run.call_args_list],
+        )
 
     def test_install_timeout_fails_closed_before_second_command(self) -> None:
         expired = module.subprocess.TimeoutExpired(
             cmd=("python", "-m", "pip"),
             timeout=module.INSTALL_TIMEOUT_SECONDS,
         )
-        with mock.patch.object(module.subprocess, "run", side_effect=expired) as run:
+        with (
+            mock.patch.object(module.time, "monotonic", side_effect=(100.0, 100.0)),
+            mock.patch.object(module.subprocess, "run", side_effect=expired) as run,
+        ):
+            with self.assertRaisesRegex(
+                module.CliInstallConfigurationError,
+                "^CLI_INSTALL_TIMEOUT$",
+            ):
+                module.install()
+        self.assertEqual(1, run.call_count)
+
+    def test_install_uses_one_deadline_across_both_commands(self) -> None:
+        with (
+            mock.patch.object(module.time, "monotonic", side_effect=(100.0, 100.0, 401.0)),
+            mock.patch.object(module.subprocess, "run") as run,
+        ):
             with self.assertRaisesRegex(
                 module.CliInstallConfigurationError,
                 "^CLI_INSTALL_TIMEOUT$",
