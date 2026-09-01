@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Compatibility entrypoint for the Atmosphere EvidenceBundle projection."""
 
 from pathlib import Path

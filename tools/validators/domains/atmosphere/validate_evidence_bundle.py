@@ -31,6 +31,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     """Run shared shape validation for explicit files or the fixture profile."""
 
     arguments = list(sys.argv[1:] if argv is None else argv)
+    unknown_options = [
+        argument
+        for argument in arguments
+        if argument.startswith("-") and argument != "--fixtures"
+    ]
+    if unknown_options:
+        print(f"Unrecognized option: {unknown_options[0]}", file=sys.stderr)
+        return 2
     if "--fixtures" in arguments and any(
         argument != "--fixtures" for argument in arguments
     ):

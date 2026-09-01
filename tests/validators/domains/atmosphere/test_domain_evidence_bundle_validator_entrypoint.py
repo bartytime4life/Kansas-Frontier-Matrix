@@ -50,6 +50,13 @@ class AtmosphereEvidenceBundleEntrypointTests(unittest.TestCase):
             result.stderr,
         )
 
+    def test_abbreviated_fixture_flag_cannot_ignore_an_explicit_file(self) -> None:
+        result = self._run("--fixture", str(INVALID_FIXTURE))
+
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        self.assertEqual(result.stdout, "")
+        self.assertIn("Unrecognized option: --fixture", result.stderr)
+
     def test_explicit_valid_file_passes_from_unrelated_working_directory(self) -> None:
         result = self._run(str(VALID_FIXTURE))
 
