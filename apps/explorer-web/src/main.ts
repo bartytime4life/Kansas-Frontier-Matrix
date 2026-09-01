@@ -14,6 +14,7 @@ import {
   sanitizePublicWorkspaceNavigationUrl,
   syncPublicWorkspaceNavigation,
 } from "./site/workspace-navigation";
+import { resolvePublicMapCaseManualSelectionTransition } from "./site/workspace-map-deep-link";
 
 const root = document.querySelector<HTMLElement>("#root");
 
@@ -31,8 +32,38 @@ if (navigation === null || trustSection === null) {
 }
 
 mountPublicWorkspaceNavigation(navigation);
-let activeDeepLinkMapCaseId: string | null = null;
+let activeDeepLinkMapCaseId: "missing" | null = null;
 let activeDeepLinkKnowledgeDomainId: string | null = null;
+
+const releaseDeepLinkMapOwnershipOnManualSelection = (event: MouseEvent): void => {
+  const button =
+    event.target instanceof Element
+      ? event.target.closest<HTMLButtonElement>("button[data-map-evidence-case]")
+      : null;
+  const caseId = button?.dataset.mapEvidenceCase;
+  if (button === null || caseId === undefined || !root.contains(button)) return;
+
+  const currentUrl = new URL(window.location.href);
+  const transition = resolvePublicMapCaseManualSelectionTransition(
+    currentUrl,
+    activeDeepLinkMapCaseId,
+    caseId,
+  );
+  activeDeepLinkMapCaseId = transition.activeDeepLinkMapCaseId;
+  if (
+    transition.replacementUrl !== null &&
+    transition.replacementUrl.href !== currentUrl.href
+  ) {
+    window.history.replaceState(
+      window.history.state,
+      "",
+      transition.replacementUrl.toString(),
+    );
+    syncPublicWorkspaceNavigation(navigation, transition.replacementUrl);
+  }
+};
+root.addEventListener("click", releaseDeepLinkMapOwnershipOnManualSelection);
+
 const syncWorkspaceNavigation = (): void => {
   const currentUrl = new URL(window.location.href);
   const safeUrl = sanitizePublicWorkspaceNavigationUrl(currentUrl);
