@@ -164,24 +164,26 @@ def _source_role_conflict(left: Mapping[str, Any], right: Mapping[str, Any]) -> 
     return left.get("source_role") != right.get("source_role")
 
 
-def _unresolved_domain_aliases(path: Path = DOMAIN_LANE_REGISTER_PATH) -> Mapping[str, str]:
-    """Read unresolved domain aliases only as a fail-closed review signal.
+def _unresolved_domain_aliases(path: Path | None = None) -> Mapping[str, str]:
+    """Read unresolved aliases as a fail-closed dependency, never identity authority.
 
-    The domain-lane register is explicitly a proposed machine projection, so
-    these entries must never normalize or authorize a domain identity. They are
-    useful here only to stop a raw alias/canonical pair from masquerading as two
-    independently governed domains.
+    The domain-lane register is a projection-only review aid. If it cannot be
+    read or parsed, the helper cannot safely prove that two raw domain names are
+    distinct governed lanes, so the dependency failure must propagate instead
+    of being treated as an empty alias set.
     """
+    register_path = DOMAIN_LANE_REGISTER_PATH if path is None else path
     try:
-        value = yaml.safe_load(path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeError, yaml.YAMLError):
-        return {}
-    aliases = _mapping(_mapping(value).get("unresolved_aliases"))
-    return {
-        key: target
+        value = yaml.safe_load(register_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, yaml.YAMLError) as exc:
+        raise ValueError("domain lane register unavailable") from exc
+    aliases = _mapping(value).get("unresolved_aliases")
+    if not isinstance(aliases, Mapping) or not all(
+        isinstance(key, str) and isinstance(target, str)
         for key, target in aliases.items()
-        if isinstance(key, str) and isinstance(target, str)
-    }
+    ):
+        raise ValueError("domain lane alias projection invalid")
+    return dict(aliases)
 
 
 def _domain_alias_collision(left_domain: object, right_domain: object) -> bool:
@@ -218,7 +220,12 @@ def derive_decision(candidate: Mapping[str, Any]) -> dict[str, Any]:
         and isinstance(right.get("domain"), str)
         and left.get("domain") == right.get("domain")
     )
-    domain_alias_collision = _domain_alias_collision(left.get("domain"), right.get("domain"))
+    try:
+        domain_alias_collision = _domain_alias_collision(left.get("domain"), right.get("domain"))
+        alias_dependency_error = False
+    except ValueError:
+        domain_alias_collision = False
+        alias_dependency_error = True
     if same_domain or domain_alias_collision:
         matched = False
     inherited = _strictest_sensitivity(left, right)
@@ -230,7 +237,7 @@ def derive_decision(candidate: Mapping[str, Any]) -> dict[str, Any]:
         for endpoint in (left, right)
     )
     source_conflict = _source_role_conflict(left, right)
-    dependency_error = request.get("dependency_state") == "ERROR"
+    dependency_error = request.get("dependency_state") == "ERROR" or alias_dependency_error
 
     failures = {
         "DEPENDENCIES_READY": int(dependency_error),
@@ -247,7 +254,9 @@ def derive_decision(candidate: Mapping[str, Any]) -> dict[str, Any]:
         outcome, status, reason, obligation = "ABSTAIN", "NO_JOIN_CANDIDATE", "CROSS_DOMAIN_PAIR_REQUIRED", "ROUTE_TO_DOMAIN_LOCAL_VALIDATOR"
     elif domain_alias_collision:
         outcome, status, reason, obligation = "ABSTAIN", "NO_JOIN_CANDIDATE", "DOMAIN_ALIAS_REVIEW_REQUIRED", "ROUTE_TO_DOMAIN_ALIAS_REVIEW"
-    elif dependency_error:
+    elif alias_dependency_error:
+        outcome, status, reason, obligation = "ERROR", "VALIDATOR_SYSTEM_ERROR", "DOMAIN_ALIAS_REGISTER_UNAVAILABLE", "REPAIR_DOMAIN_ALIAS_REGISTER_DEPENDENCY"
+    elif request.get("dependency_state") == "ERROR":
         outcome, status, reason, obligation = "ERROR", "VALIDATOR_SYSTEM_ERROR", "VALIDATOR_DEPENDENCY_ERROR", "REPAIR_VALIDATOR_DEPENDENCY"
     elif living_count:
         outcome, status, reason, obligation = "DENY", "LIVING_PERSON_JOIN_DENIED", "LIVING_PERSON_JOIN_DENIED", "REQUIRE_CONSENT_AND_POLICY_REVIEW"
