@@ -85,6 +85,7 @@ export type MapRuntimeReasonCode =
   | "MAP_RUNTIME_INITIALIZATION_FAILED"
   | "MAP_RUNTIME_CAMERA_INVALID"
   | "MAP_RUNTIME_NAVIGATION_FAILED"
+  | "MAP_RUNTIME_RESIZE_FAILED"
   | "MAP_RUNTIME_SELECTION_INVALID"
   | "MAP_RUNTIME_STATE_INVALID"
   | "MAP_RUNTIME_LISTENER_INVALID";
@@ -117,6 +118,7 @@ export interface MapRuntimePort {
   initialize(initialCamera?: MapRuntimeCamera): Promise<MapRuntimeSnapshot>;
   getSnapshot(): MapRuntimeSnapshot;
   setCamera(camera: MapRuntimeCamera): MapRuntimeSnapshot;
+  resize(): MapRuntimeSnapshot;
   subscribeSnapshot(listener: MapRuntimeSnapshotListener): () => void;
   subscribeSelection(listener: MapRuntimeSelectionListener): () => void;
   dispose(): void;
