@@ -401,15 +401,19 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
     expires = _time(advisory.get("expires_at"))
     rescinded = _time(advisory.get("rescinded_at"))
     checked = _time(source.get("checked_at"))
-    if not unknown_offset_paths and (
-        issued is None
-        or effective is None
-        or checked is None
-        or issued > effective
-        or effective > checked
-        or (expires is not None and expires < effective)
-        or (rescinded is not None and (rescinded < effective or rescinded > checked))
-    ):
+    temporal_order_invalid = any(
+        (
+            issued is None and "/advisory/issued_at" not in unknown_offset_paths,
+            effective is None and "/advisory/effective_at" not in unknown_offset_paths,
+            checked is None and "/source_surface/checked_at" not in unknown_offset_paths,
+            issued is not None and effective is not None and issued > effective,
+            effective is not None and checked is not None and effective > checked,
+            expires is not None and effective is not None and expires < effective,
+            rescinded is not None and effective is not None and rescinded < effective,
+            rescinded is not None and checked is not None and rescinded > checked,
+        )
+    )
+    if temporal_order_invalid:
         findings.append(Finding("TEMPORAL_ORDER_INVALID", "/advisory"))
 
     if not _canonical_strings(controls.get("evidence_refs")):
