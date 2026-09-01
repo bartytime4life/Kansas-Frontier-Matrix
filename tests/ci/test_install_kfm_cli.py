@@ -168,7 +168,8 @@ class InstallKfmCliTests(unittest.TestCase):
         self.assertEqual(2, run.call_count)
         for call in run.call_args_list:
             environment = call.kwargs["env"]
-            for key in source_overrides:
+            self.assertEqual(module.os.devnull, environment["PIP_CONFIG_FILE"])
+            for key in source_overrides.keys() - {"PIP_CONFIG_FILE"}:
                 self.assertNotIn(key, environment)
             self.assertEqual("preserved", environment["KFM_TEST_SENTINEL"])
             self.assertEqual("1", environment["PIP_DISABLE_PIP_VERSION_CHECK"])
