@@ -13,6 +13,21 @@ name: soil-hydrology-public-safe-context
       - "contracts/joins/cross_lane_join_assessment.md"
       - "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json"
       - "tools/joins/join_candidates.py"
+      - "fixtures/contracts/v1/joins/cross_lane_join_assessment/**"
+      - "tests/joins/**"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/soil-hydrology-public-safe-context.yml"
+      - "control_plane/domain_lane_register.yaml"
+      - "contracts/cross_domain/soil_hydrology/**"
+      - "fixtures/contracts/v1/joins/soil_hydrology_public_safe_context/**"
+      - "tests/cross_domain/soil_hydrology/**"
+      - "tools/validators/cross_domain/soil_hydrology/**"
+      - "contracts/joins/cross_lane_join_assessment.md"
+      - "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json"
+      - "tools/joins/join_candidates.py"
+      - "fixtures/contracts/v1/joins/cross_lane_join_assessment/**"
       - "tests/joins/**"
   workflow_dispatch:
 
