@@ -44,7 +44,7 @@ function contextUrl(domainIds: readonly string[]): URL {
 }
 
 describe("public Knowledge-domain deep-link release", () => {
-  it("commits URL ownership after the existing domain control is ready", () => {
+  it("commits URL ownership after the existing control applies the domain", () => {
     const transition = resolvePublicKnowledgeDomainSelectionTransition(
       contextUrl(["archaeology"]),
       null,
@@ -53,11 +53,14 @@ describe("public Knowledge-domain deep-link release", () => {
 
     expect(transition.domainIdToSelect).toBe("archaeology");
     expect(
-      resolvePublicKnowledgeDomainUrlConsumerCommit(transition, true),
+      resolvePublicKnowledgeDomainUrlConsumerCommit(
+        transition,
+        "archaeology",
+      ),
     ).toBe("archaeology");
   });
 
-  it("keeps an unavailable domain consumer unowned and retryable", () => {
+  it("keeps an unapplied domain consumer unowned and retryable", () => {
     const transition = resolvePublicKnowledgeDomainSelectionTransition(
       contextUrl(["people_dna_land"]),
       null,
@@ -66,7 +69,10 @@ describe("public Knowledge-domain deep-link release", () => {
 
     expect(transition.domainIdToSelect).toBe("people_dna_land");
     expect(
-      resolvePublicKnowledgeDomainUrlConsumerCommit(transition, false),
+      resolvePublicKnowledgeDomainUrlConsumerCommit(transition, "hydrology"),
+    ).toBeNull();
+    expect(
+      resolvePublicKnowledgeDomainUrlConsumerCommit(transition, null),
     ).toBeNull();
   });
 
@@ -79,7 +85,7 @@ describe("public Knowledge-domain deep-link release", () => {
 
     expect(transition.domainIdToSelect).toBeNull();
     expect(
-      resolvePublicKnowledgeDomainUrlConsumerCommit(transition, false),
+      resolvePublicKnowledgeDomainUrlConsumerCommit(transition, null),
     ).toBe("archaeology");
   });
 
@@ -153,6 +159,16 @@ describe("public Knowledge-domain deep-link release", () => {
     );
     expect(mainSource).toContain("!domainButton.disabled");
     expect(mainSource).toContain("domainButton.click()");
+    const clickIndex = mainSource.indexOf("domainButton.click()");
+    expect(
+      mainSource.indexOf(
+        "resolvePublicKnowledgeDomainUrlConsumerCommit(",
+        clickIndex,
+      ),
+    ).toBeGreaterThan(clickIndex);
+    expect(mainSource).toContain(
+      'button[data-domain-id][aria-pressed="true"]',
+    );
     expect(mainSource).not.toContain("domainIds.join");
   });
 });

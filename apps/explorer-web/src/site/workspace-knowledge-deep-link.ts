@@ -14,16 +14,21 @@ export type PublicKnowledgeDomainDeepLinkRelease = Readonly<{
 }>;
 
 /**
- * Commit URL ownership only after the existing Knowledge control can consume
- * a newly requested domain. An absent or disabled control leaves ownership
- * clear, allowing later synchronization to retry instead of treating an
- * unrendered domain as restored.
+ * Commit URL ownership only after the existing Knowledge controls visibly
+ * apply a newly requested domain. An absent, disabled, or ineffective control
+ * leaves ownership clear, allowing later synchronization to retry instead of
+ * treating an unrendered domain as restored.
  */
 export function resolvePublicKnowledgeDomainUrlConsumerCommit(
   transition: PublicKnowledgeDomainSelectionTransition,
-  consumerReady: boolean,
+  selectedDomainId: string | null,
 ): string | null {
-  if (transition.domainIdToSelect !== null && !consumerReady) return null;
+  if (
+    transition.domainIdToSelect !== null &&
+    selectedDomainId !== transition.domainIdToSelect
+  ) {
+    return null;
+  }
   return transition.activeDeepLinkDomainId;
 }
 

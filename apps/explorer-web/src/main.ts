@@ -151,11 +151,13 @@ const syncWorkspaceNavigation = (): void => {
       root.querySelectorAll<HTMLButtonElement>("button[data-domain-id]"),
     ).find((button) => button.dataset.domainId === domainIdToSelect);
     const consumerReady = domainButton !== undefined && !domainButton.disabled;
-    activeDeepLinkKnowledgeDomainId =
-      resolvePublicKnowledgeDomainUrlConsumerCommit(
-        domainTransition,
-        consumerReady,
-      );
+    if (consumerReady) {
+      // Provisional ownership keeps the programmatic click from looking like a
+      // manual selection to the delegated release listener. The observed DOM
+      // state below is still authoritative for the final commit.
+      activeDeepLinkKnowledgeDomainId =
+        domainTransition.activeDeepLinkDomainId;
+    }
     if (
       domainButton !== undefined &&
       !domainButton.disabled &&
@@ -168,10 +170,16 @@ const syncWorkspaceNavigation = (): void => {
       domainButton.click();
       if (priorFocus?.isConnected) priorFocus.focus();
     }
-  } else {
-    activeDeepLinkKnowledgeDomainId =
-      resolvePublicKnowledgeDomainUrlConsumerCommit(domainTransition, true);
   }
+  const selectedDomainId =
+    root.querySelector<HTMLButtonElement>(
+      'button[data-domain-id][aria-pressed="true"]',
+    )?.dataset.domainId ?? null;
+  activeDeepLinkKnowledgeDomainId =
+    resolvePublicKnowledgeDomainUrlConsumerCommit(
+      domainTransition,
+      selectedDomainId,
+    );
 };
 syncWorkspaceNavigation();
 window.addEventListener("hashchange", syncWorkspaceNavigation);
