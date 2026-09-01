@@ -40,6 +40,34 @@ test("a feature without governed evidence visibly abstains without citations", a
   await expect(drawer.getByRole("link")).toHaveCount(0);
 });
 
+test("an unresolved citation visibly abstains without reflecting requested evidence", async ({
+  page,
+}) => {
+  await page.goto(fixture);
+  await page
+    .getByRole("button", {
+      name: "Select feature with unresolved evidence citation",
+    })
+    .click();
+
+  await expect(page.getByRole("status")).toHaveText(
+    "ABSTAIN / CITATION_UNRESOLVED",
+  );
+  const drawer = page.locator('aside[data-component="evidence-drawer"]');
+  await expect(drawer).toContainText(
+    "One or more required citations could not be resolved.",
+  );
+  await expect(drawer).toContainText("Review: PENDING");
+  await expect(drawer).toContainText("Release: UNRELEASED");
+  await expect(drawer).not.toContainText(
+    "kfm:evidence:synthetic:unresolved-provenance-001",
+  );
+  await expect(drawer).not.toContainText(
+    "A required synthetic provenance reference did not resolve.",
+  );
+  await expect(drawer.getByRole("link")).toHaveCount(0);
+});
+
 test("a policy-restricted feature shows fixed denial copy without sensitive leakage", async ({
   page,
 }) => {
