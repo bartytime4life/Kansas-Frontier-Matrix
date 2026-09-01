@@ -558,6 +558,22 @@
           "SCHEMA_INVALID"
         ]
       }
+    },
+    {
+      "name": "deny_observed_at_future",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/observed_at",
+          "value": "2099-12-31T23:59:59Z"
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "OBSERVED_AT_FUTURE"
+        ]
+      }
     }
   ]
 }

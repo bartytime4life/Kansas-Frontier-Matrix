@@ -249,6 +249,38 @@ def _range_findings(
     if not REQUIRED_RANGE_ROLES <= roles:
         findings.add(Finding("REQUIRED_RANGE_ROLE_MISSING", "/range_profile/entries"))
 
+    # Validate individual range entries for boundary-violation cases
+    for index, entry in enumerate(typed_entries):
+        # Validate offset value is non-negative
+        try:
+            offset = int(entry["offset"])
+            if offset < 0:
+                findings.add(Finding("RANGE_OFFSET_INVALID", f"/range_profile/entries/{index}/offset"))
+        except (ValueError, TypeError, KeyError):
+            pass
+        
+        # Validate length value is positive and not exceeding max
+        try:
+            length = int(entry["length"])
+            if length <= 0:
+                findings.add(Finding("RANGE_LENGTH_INVALID", f"/range_profile/entries/{index}/length"))
+            elif length > MAX_PAYLOAD_BYTES:
+                findings.add(Finding("RANGE_LENGTH_INVALID", f"/range_profile/entries/{index}/length"))
+        except (ValueError, TypeError, KeyError):
+            pass
+        
+        # Validate digest format
+        digest = entry.get("digest")
+        if isinstance(digest, str):
+            if digest.startswith("sha256:"):
+                hex_part = digest[7:]
+                if not all(c in "0123456789abcdef" for c in hex_part):
+                    findings.add(Finding("DIGEST_FORMAT_INVALID", f"/range_profile/entries/{index}/digest"))
+            elif ":" in digest:
+                algo = digest.split(":")[0]
+                if algo != "sha256":
+                    findings.add(Finding("DIGEST_ALGORITHM_UNSUPPORTED", f"/range_profile/entries/{index}/digest"))
+
     sort_keys = [
         (entry.get("offset"), entry.get("range_id")) for entry in typed_entries
     ]
@@ -372,8 +404,18 @@ def _semantic_findings(candidate: Mapping[str, object]) -> list[Finding]:
         findings.add(
             Finding("MANIFEST_SPEC_HASH_MISMATCH", "/manifest_spec_hash")
         )
-    if not _is_utc(candidate.get("observed_at")):
+    observed_at = candidate.get("observed_at")
+    if not _is_utc(observed_at):
         findings.add(Finding("UTC_TIMESTAMP_REQUIRED", "/observed_at"))
+    else:
+        # Check if timestamp is in the future (allow 1 second tolerance for clock skew)
+        try:
+            observed_dt = datetime.fromisoformat(str(observed_at).rstrip("Z") + "+00:00")
+            now = datetime.now(observed_dt.tzinfo)
+            if observed_dt > now.replace(microsecond=0).replace(second=now.second + 1):
+                findings.add(Finding("OBSERVED_AT_FUTURE", "/observed_at"))
+        except (ValueError, TypeError):
+            pass
 
     artifact = candidate["artifact"]
     range_profile = candidate["range_profile"]
