@@ -62,6 +62,14 @@ class AtmosphereEvidenceBundleEntrypointTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
         self.assertIn(f"FAIL {INVALID_FIXTURE}", result.stdout)
 
+    def test_missing_explicit_file_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            missing_path = Path(directory) / "missing-evidence-bundle.json"
+            result = self._run(str(missing_path))
+
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn(f"FAIL {missing_path}", result.stdout)
+
     def test_mixed_explicit_files_fail_if_any_carrier_is_invalid(self) -> None:
         result = self._run(str(VALID_FIXTURE), str(INVALID_FIXTURE))
 
