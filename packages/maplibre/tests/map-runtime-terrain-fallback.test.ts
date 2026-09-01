@@ -316,4 +316,73 @@ describe("renderer-neutral terrain transition coordination", () => {
     );
     expect(coordinator.commit(latest).mode).toBe("TERRAIN");
   });
+
+  it("commits only after asynchronous renderer execution succeeds", async () => {
+    const coordinator = createMapRuntimeTerrainTransitionCoordinator();
+    const ticket = coordinator.plan(terrainRequest, {
+      terrainSupported: true,
+      demSourceReady: true,
+    });
+    const applied: unknown[] = [];
+
+    const state = await coordinator.execute(ticket, async (plan) => {
+      expect(coordinator.getState()).toBeNull();
+      applied.push(plan);
+    });
+
+    expect(applied).toEqual([ticket.plan]);
+    expect(state).toBe(ticket.plan.target);
+    expect(coordinator.getState()).toBe(ticket.plan.target);
+  });
+
+  it("normalizes renderer failure and preserves the applied state", async () => {
+    const initial = resolveMapRuntimeTerrainState(terrainRequest, {
+      terrainSupported: true,
+      demSourceReady: true,
+    });
+    const coordinator = createMapRuntimeTerrainTransitionCoordinator(initial);
+    const ticket = coordinator.plan(terrainRequest, {
+      terrainSupported: false,
+      demSourceReady: true,
+    });
+
+    await expect(
+      coordinator.execute(ticket, () => {
+        throw new Error("renderer detail must not escape");
+      }),
+    ).rejects.toMatchObject({
+      code: "MAP_RUNTIME_TERRAIN_TRANSITION_FAILED",
+      message: "Map runtime terrain transition execution failed.",
+    });
+    expect(coordinator.getState()).toBe(initial);
+    expect(() => coordinator.commit(ticket)).toThrow(
+      expect.objectContaining({ code: "MAP_RUNTIME_STATE_INVALID" }),
+    );
+  });
+
+  it("does not let a stale in-flight execution clear the latest ticket", async () => {
+    const coordinator = createMapRuntimeTerrainTransitionCoordinator();
+    const first = coordinator.plan(terrainRequest, {
+      terrainSupported: true,
+      demSourceReady: false,
+    });
+    let finishFirst: (() => void) | undefined;
+    const firstExecution = coordinator.execute(
+      first,
+      () =>
+        new Promise<void>((resolve) => {
+          finishFirst = resolve;
+        }),
+    );
+    const latest = coordinator.plan(terrainRequest, {
+      terrainSupported: true,
+      demSourceReady: true,
+    });
+
+    finishFirst?.();
+    await expect(firstExecution).rejects.toMatchObject({
+      code: "MAP_RUNTIME_STATE_INVALID",
+    });
+    expect(coordinator.commit(latest)).toBe(latest.plan.target);
+  });
 });
