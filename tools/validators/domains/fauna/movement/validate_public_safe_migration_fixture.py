@@ -92,11 +92,12 @@ def _fixture_ref(value: object, prefix: str) -> bool:
 
 
 def _finite_number(value: object) -> bool:
-    return (
-        not isinstance(value, bool)
-        and isinstance(value, (int, float))
-        and math.isfinite(float(value))
-    )
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return False
+    try:
+        return math.isfinite(float(value))
+    except (OverflowError, ValueError):
+        return False
 
 
 def _time_findings(value: object) -> list[Finding]:
@@ -212,7 +213,13 @@ def validate_candidate(candidate: object) -> ValidationResult:
         ),
     }
     for field, (expected, code) in exact_values.items():
-        if candidate.get(field) != expected:
+        actual = candidate.get(field)
+        matches = (
+            type(actual) is bool and actual is expected
+            if isinstance(expected, bool)
+            else actual == expected
+        )
+        if not matches:
             _add(findings, code, f"/{field}")
 
     for field, prefix in {

@@ -108,6 +108,31 @@ class PublicSafeMigrationFixtureTests(unittest.TestCase):
             validate_candidate(oversized).findings,
         )
 
+    def test_numeric_boolean_stand_ins_fail_closed(self):
+        candidate = json.loads(VALID.read_text(encoding="utf-8"))
+        candidate["fixture_only"] = 1
+        candidate["telemetry_truth"] = 0
+        candidate["individual_tracking_truth"] = 0
+        self.assertEqual(
+            validate_candidate(candidate).findings,
+            (
+                Finding(
+                    "claim.individual_tracking_truth_forbidden",
+                    "/individual_tracking_truth",
+                ),
+                Finding("claim.telemetry_truth_forbidden", "/telemetry_truth"),
+                Finding("schema.fixture_only_required", "/fixture_only"),
+            ),
+        )
+
+    def test_oversized_integer_position_fails_closed(self):
+        candidate = json.loads(VALID.read_text(encoding="utf-8"))
+        candidate["geometry"]["coordinates"][1] = [10**1000, 0]
+        self.assertIn(
+            Finding("geom.position_invalid", "/geometry/coordinates/1"),
+            validate_candidate(candidate).findings,
+        )
+
     def test_cli_output_is_stable_and_does_not_echo_geometry(self):
         output = io.StringIO()
         with redirect_stdout(output):
