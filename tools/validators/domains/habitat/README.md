@@ -101,7 +101,7 @@ The reviewed task branch establishes five substantive direct-child validators:
 
 The following direct-child files remain placeholders: `validate_catalog_matrix.py`, `validate_habitat_patch.py`, `validate_schema.py`, `validate_source_descriptor.py`, and `validate_suitability_model.py`. Their existence proves no validation behavior.
 
-Habitat EvidenceBundle projection validation remains declared at the top-level entry point `tools/validators/validate_habitat_evidence_bundle_projection.py`. The domain-side `validate_evidence_bundle.py` is a bounded delegate to the same adopted projection schema, shared JSON Schema runner, and synthetic fixture family; it adds no independent evidence semantics or authority. Focused workflow `habitat-evidence-bundle-convergence.yml` exercises both paths.
+Habitat EvidenceBundle projection validation remains declared at the historical top-level entry point `tools/validators/validate_habitat_evidence_bundle_projection.py`. That compatibility command now delegates unchanged arguments to the path-independent domain implementation `tools/validators/domains/habitat/validate_evidence_bundle.py`, which uses the adopted projection schema, shared JSON Schema runner, and synthetic fixture family. Neither path adds independent evidence semantics or authority. Focused workflow `habitat-evidence-bundle-convergence.yml` exercises both paths, and the entrypoint suite proves identical fixture, explicit-file, and usage-error results.
 
 No child directory is established below this index. Add one only when a distinct validator specialty has accepted contracts, schemas, policy posture, fixtures, receipts, and report semantics; do not create a parallel authority home for an already-established direct-child or schema-declared entry point.
 
