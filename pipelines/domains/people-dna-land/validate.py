@@ -23,6 +23,8 @@ VALIDATORS = {
     / "tools/validators/domains/people-dna-land/validate_evidence_bundle.py",
     "source-descriptor": REPO_ROOT
     / "tools/validators/domains/people-dna-land/validate_source_descriptor.py",
+    "catalog-matrix": REPO_ROOT
+    / "tools/validators/domains/people-dna-land/validate_catalog_matrix.py",
     "living-person": REPO_ROOT / "tools/validators/genealogy/screen_living_persons.py",
     "consent-overlay": REPO_ROOT
     / "tools/validators/domains/people-dna-land/validate_consent_overlay.py",
