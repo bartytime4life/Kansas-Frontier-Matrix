@@ -122,6 +122,15 @@ class KdheHabTemporalValidatorTests(unittest.TestCase):
         self.path.write_text("{not-json}\n", encoding="utf-8")
         self.assertEqual(validate_file(self.path).outcome, "ERROR")
 
+    def test_schema_invalid_types_return_finite_deny_results(self) -> None:
+        invalid_state = self._candidate()
+        invalid_state["normalized_state"] = ["WATCH"]
+        self.assertEqual(validate_document(invalid_state).outcome, "DENY")
+
+        invalid_budget = self._candidate()
+        invalid_budget["freshness_budget_hours"] = 10**1000
+        self.assertEqual(validate_document(invalid_budget).outcome, "DENY")
+
 
 if __name__ == "__main__":
     unittest.main()
