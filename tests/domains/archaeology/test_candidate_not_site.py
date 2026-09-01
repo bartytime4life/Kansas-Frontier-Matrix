@@ -95,6 +95,23 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
                 payload["confidence_statement"] = malformed
                 self.assertIn(expected_error, validate_candidate_feature(payload))
 
+    def test_explicit_null_optional_scalars_fail_closed(self) -> None:
+        cases = {
+            "candidate_type": "candidate_type is not in the bounded vocabulary",
+            "spatial_precision_class": (
+                "spatial_precision_class is not in the bounded vocabulary"
+            ),
+            "spec_hash": "spec_hash must match ^sha256:[a-f0-9]{64}$",
+            "confidence_statement": (
+                "confidence_statement must contain 1 to 1000 characters"
+            ),
+        }
+        for field, expected_error in cases.items():
+            with self.subTest(field=field):
+                payload = copy.deepcopy(self.valid)
+                payload[field] = None
+                self.assertIn(expected_error, validate_candidate_feature(payload))
+
     def test_unsupported_spatial_precision_fails_closed(self) -> None:
         payload = _load(FIXTURE_ROOT / "unsupported_spatial_precision_deny.json")
         errors = validate_candidate_feature(payload)
