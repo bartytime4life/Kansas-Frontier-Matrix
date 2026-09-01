@@ -2,7 +2,7 @@
 doc_id: kfm://doc/tools-validators-domains-hazards-readme
 title: tools/validators/domains/hazards/ — Hazards Validator Index
 type: readme
-version: v0.15
+version: v0.16
 status: draft; repository-grounded; mixed-maturity; non-semantic; non-policy; non-release; non-publication
 owner: NEEDS VERIFICATION — CODEOWNERS routes /tools/validators/ to @bartytime4life; no independently verified Hazards validation steward or required-review control was established
 created: 2026-07-07
@@ -33,6 +33,7 @@ related:
   - ../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../../../docs/doctrine/directory-rules.md
 notes:
+  - "v0.16 enforces the declared repository-local file boundary before reading a snapshot, preventing arbitrary external paths from becoming validator inputs."
   - "v0.15 binds first-after-last and last-after-retrieval ordering findings to the exact timestamp field that violates its boundary."
   - "v0.14 prevents timestamps with unknown local offsets from participating in derived ordering, freshness, or expiration findings after they are denied."
   - "v0.13 denies RFC3339's unknown-local-offset marker on snapshot timestamps so ordering and freshness checks cannot silently treat unknown local time as exact UTC."
@@ -48,7 +49,7 @@ notes:
   - "Four scripts have substantive implementations and paired deterministic tests; two scripts remain explicit NotImplementedError placeholders and are not validation evidence."
   - "The EvidenceBundle convergence test enforces the single declared validator path and shared-fixture polarity."
   - "The domain-hazards workflow executes the bounded smoke and USDM materiality lane; dedicated profile workflows execute the drinking-water advisory and NFHL/NLD/NID suites; proof and release jobs remain explicit holds."
-  - "This correction changes documentation only; it changes no validator implementation, schema, contract, fixture, test, workflow, policy, source, evidence, lifecycle object, release, deployment, or public surface."
+  - "The v0.6 workflow-inventory correction changed documentation only; it changed no validator implementation, schema, contract, fixture, test, workflow, policy, source, evidence, lifecycle object, release, deployment, or public surface."
 [/KFM_META_BLOCK_V2] -->
 
 # `tools/validators/domains/hazards/` — Hazards Validator Index
@@ -100,7 +101,7 @@ The Hazards boundary remains fail-closed:
 | Validator | Confirmed bounded behavior | Paired executable evidence | Workflow posture |
 |---|---|---|---|
 | [`validate_drinking_water_advisory.py`](./validate_drinking_water_advisory.py) | Closed proposed advisory profile with deterministic structural and semantic findings | [`test_drinking_water_advisory.py`](../../../../tests/domains/hazards/test_drinking_water_advisory.py) and the [`drinking_water_advisory/`](../../../../fixtures/domains/hazards/drinking_water_advisory/README.md) fixture family | Hosted by dedicated [`drinking-water-advisory.yml`](../../../../.github/workflows/drinking-water-advisory.yml), which runs the focused unit suite and exact fixture replay; exact-head hosted result is required before claiming PASS |
-| [`validate_kdhe_hab_temporal.py`](./validate_kdhe_hab_temporal.py) | Deterministic cross-field observation ordering, source-time ordering, active-state currentness, retrieval-relative freshness enforcement, canonical RFC3339-second explicit-time expiry evaluation, and evaluation-basis binding for the inactive KDHE HAB advisory snapshot profile | [`test_validate_kdhe_hab_temporal.py`](../../../../tests/validators/domains/hazards/test_validate_kdhe_hab_temporal.py) and the existing [`kdhe_hab_advisory_snapshot/`](../../../../fixtures/domains/hazards/kdhe_hab_advisory_snapshot/) valid/invalid families | Not separately hosted at this boundary; local focused proof and exact fixture replay are required, and hosted checks must not be described as profile execution unless a workflow actually invokes it |
+| [`validate_kdhe_hab_temporal.py`](./validate_kdhe_hab_temporal.py) | Repository-local file admission, deterministic cross-field observation ordering, source-time ordering, active-state currentness, retrieval-relative freshness enforcement, canonical RFC3339-second explicit-time expiry evaluation, and evaluation-basis binding for the inactive KDHE HAB advisory snapshot profile | [`test_validate_kdhe_hab_temporal.py`](../../../../tests/validators/domains/hazards/test_validate_kdhe_hab_temporal.py) and the existing [`kdhe_hab_advisory_snapshot/`](../../../../fixtures/domains/hazards/kdhe_hab_advisory_snapshot/) valid/invalid families | Not separately hosted at this boundary; local focused proof and exact fixture replay are required, and hosted checks must not be described as profile execution unless a workflow actually invokes it |
 | [`validate_nfhl_nld_nid_source_role_profile.py`](./validate_nfhl_nld_nid_source_role_profile.py) | Fail-closed NFHL/NLD/NID source-role separation profile | [`test_validate_nfhl_nld_nid_source_role_profile.py`](../../../../tests/validators/domains/hazards/test_validate_nfhl_nld_nid_source_role_profile.py) | Hosted by dedicated [`nfhl-nld-nid-source-role-profile.yml`](../../../../.github/workflows/nfhl-nld-nid-source-role-profile.yml), which runs the focused deterministic no-network suite and exact fixture replay; exact-head hosted result is required before claiming PASS |
 | [`validate_usdm_materiality.py`](./validate_usdm_materiality.py) | Deterministic, no-network USDM material-change evaluation over committed synthetic cases | [`test_validate_usdm_materiality.py`](../../../../tests/domains/hazards/test_validate_usdm_materiality.py) and [`usdm_materiality/cases.json`](../../../../fixtures/domains/hazards/usdm_materiality/cases.json) | Executed by `make hazards-validate`, which is invoked by [`domain-hazards.yml`](../../../../.github/workflows/domain-hazards.yml) |
 
@@ -169,7 +170,7 @@ The `domain-hazards` proof and release-dry-run jobs intentionally emit explicit 
 
 Individual validators own their finite result grammar. This index does not normalize materially different findings into a shared approval state.
 
-KDHE HAB file-validation output identifies whether validation was retrieval-relative or used an explicit caller-supplied evaluation instant. Snapshot timestamps and the CLI evaluation instant must carry a known offset; RFC3339's unknown-local-offset marker (`-00:00`) is denied rather than collapsed to UTC or used for derived ordering, freshness, or expiration findings. Observation-order findings bind first-after-last to `/first_observed_at` and last-after-retrieval to `/last_observed_at`, preserving an actionable field path without assigning causal authority. The CLI otherwise accepts only timezone-aware RFC3339 whole-second instants with a valid offset, and the programmatic interface rejects evaluation instants whose normalized UTC value has subsecond precision. Accepted instants are normalized to UTC in the result, while retrieval-relative output uses a null evaluation time. An instant before retrieval yields the pre-retrieval finding and does not also assert explicit-time expiration for a carrier that did not yet exist. This canonical binding supports deterministic replay but does not create a runtime DecisionEnvelope, EvidenceBundle, approval, alert, or current-condition claim.
+KDHE HAB file validation admits only paths that resolve within the repository root and returns a finite error before reading an external path. Its output identifies whether validation was retrieval-relative or used an explicit caller-supplied evaluation instant. Snapshot timestamps and the CLI evaluation instant must carry a known offset; RFC3339's unknown-local-offset marker (`-00:00`) is denied rather than collapsed to UTC or used for derived ordering, freshness, or expiration findings. Observation-order findings bind first-after-last to `/first_observed_at` and last-after-retrieval to `/last_observed_at`, preserving an actionable field path without assigning causal authority. The CLI otherwise accepts only timezone-aware RFC3339 whole-second instants with a valid offset, and the programmatic interface rejects evaluation instants whose normalized UTC value has subsecond precision. Accepted instants are normalized to UTC in the result, while retrieval-relative output uses a null evaluation time. An instant before retrieval yields the pre-retrieval finding and does not also assert explicit-time expiration for a carrier that did not yet exist. This canonical binding supports deterministic replay but does not create a runtime DecisionEnvelope, EvidenceBundle, approval, alert, or current-condition claim.
 
 ## Inputs and outputs
 

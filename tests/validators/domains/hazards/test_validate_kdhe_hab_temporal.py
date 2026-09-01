@@ -14,6 +14,7 @@ from unittest import mock
 
 from tools.validators.domains.hazards.validate_kdhe_hab_temporal import (
     FIXTURES,
+    ROOT,
     main as validate_main,
     run_fixture_suite,
     validate_document,
@@ -33,7 +34,7 @@ class KdheHabTemporalValidatorTests(unittest.TestCase):
         )
 
     def setUp(self) -> None:
-        self.temporary_directory = tempfile.TemporaryDirectory()
+        self.temporary_directory = tempfile.TemporaryDirectory(dir=ROOT)
         self.path = Path(self.temporary_directory.name) / "candidate.json"
 
     def tearDown(self) -> None:
@@ -266,6 +267,21 @@ class KdheHabTemporalValidatorTests(unittest.TestCase):
         self.assertEqual(validate_file(self.path).outcome, "ERROR")
         self.path.write_text("{not-json}\n", encoding="utf-8")
         self.assertEqual(validate_file(self.path).outcome, "ERROR")
+
+    def test_file_loader_rejects_paths_outside_repository(self) -> None:
+        with tempfile.TemporaryDirectory() as outside_directory:
+            outside_path = Path(outside_directory) / "candidate.json"
+            outside_path.write_text(
+                json.dumps(self._candidate()) + "\n",
+                encoding="utf-8",
+            )
+            result = validate_file(outside_path)
+
+        self.assertEqual(result.outcome, "ERROR")
+        self.assertEqual(
+            {(finding.code, finding.path) for finding in result.findings},
+            {("KDHE_HAB_INPUT_OUTSIDE_REPOSITORY", "/")},
+        )
 
     def test_schema_invalid_types_return_finite_deny_results(self) -> None:
         invalid_state = self._candidate()

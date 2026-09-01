@@ -40,6 +40,7 @@ ERROR_CODES = {
     "KDHE_HAB_FILE_NOT_FOUND",
     "KDHE_HAB_FILE_READ_ERROR",
     "KDHE_HAB_FILE_TOO_LARGE",
+    "KDHE_HAB_INPUT_OUTSIDE_REPOSITORY",
     "KDHE_HAB_INPUT_SYMLINK_DENIED",
     "KDHE_HAB_JSON_INVALID",
     "KDHE_HAB_JSON_DUPLICATE_KEY",
@@ -94,6 +95,10 @@ def _read(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
     try:
         if path.is_symlink():
             return None, [Finding("KDHE_HAB_INPUT_SYMLINK_DENIED", "/")]
+        resolved = path.resolve(strict=False)
+        if not resolved.is_relative_to(ROOT.resolve()):
+            return None, [Finding("KDHE_HAB_INPUT_OUTSIDE_REPOSITORY", "/")]
+        path = resolved
         if not path.is_file():
             return None, [Finding("KDHE_HAB_FILE_NOT_FOUND", "/")]
         if path.stat().st_size > MAX_FILE_BYTES:
