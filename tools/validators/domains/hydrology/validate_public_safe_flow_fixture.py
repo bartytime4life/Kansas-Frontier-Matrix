@@ -46,7 +46,15 @@ ALLOWED_TOP_LEVEL_FIELDS = frozenset(
 ALLOWED_SPATIAL_FIELDS = frozenset({"kind", "county_fips"})
 ALLOWED_TEMPORAL_FIELDS = frozenset({"aggregation_window", "observed_at", "retrieved_at"})
 ALLOWED_MEASUREMENT_FIELDS = frozenset(
-    {"parameter_code", "value", "unit", "qualifier", "provisional_status", "no_data"}
+    {
+        "parameter_code",
+        "value",
+        "unit",
+        "unit_transform_ref",
+        "qualifier",
+        "provisional_status",
+        "no_data",
+    }
 )
 ALLOWED_PROVISIONAL_STATUSES = frozenset(
     {"provisional", "final", "corrected", "estimated", "ice_affected"}
@@ -230,6 +238,18 @@ def validate_candidate(candidate: object) -> list[Finding]:
             add_finding(findings, "MEASUREMENT_VALUE_OUT_OF_RANGE", "$.measurement.value")
         if measurement.get("unit") != "ft3/s":
             add_finding(findings, "MEASUREMENT_UNIT_INVALID", "$.measurement.unit")
+        if "unit_transform_ref" not in measurement:
+            add_finding(
+                findings,
+                "UNIT_TRANSFORM_REF_MISSING",
+                "$.measurement.unit_transform_ref",
+            )
+        elif measurement.get("unit_transform_ref") is not None:
+            add_finding(
+                findings,
+                "UNIT_TRANSFORM_REF_UNSUPPORTED",
+                "$.measurement.unit_transform_ref",
+            )
         if measurement.get("qualifier") != "synthetic":
             add_finding(findings, "QUALIFIER_INVALID", "$.measurement.qualifier")
         provisional_status = measurement.get("provisional_status")
