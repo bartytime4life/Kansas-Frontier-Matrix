@@ -151,6 +151,35 @@ class OccurrenceEvidenceTests(unittest.TestCase):
             result.findings,
         )
 
+    def test_public_safe_geometry_type_must_match_precision(self) -> None:
+        candidate = _load(
+            "semantic_invalid/public_safe_type_precision_mismatch.json"
+        )
+
+        result = validator.validate_candidate(candidate)
+
+        self.assertIn(
+            validator.Finding(
+                "geom.public_safe_type_precision_mismatch",
+                "/geometry/public_safe_geometry/precision_class",
+            ),
+            result.findings,
+        )
+        self.assertIn(
+            validator.Finding(
+                "schema.validation_check_mismatch",
+                "/validation/checks/geometry_public_safe",
+            ),
+            result.findings,
+        )
+        self.assertIn(
+            validator.Finding(
+                "schema.pass_gate_failed",
+                "/validation/validator_result",
+            ),
+            result.findings,
+        )
+
     def test_closed_schema_rejects_undeclared_fields(self) -> None:
         candidate = _load("valid/valid_observed_open.json")
         candidate["runtime_hint"] = "not part of the occurrence evidence contract"

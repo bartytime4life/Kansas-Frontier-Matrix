@@ -243,6 +243,18 @@ def _geometry_findings(
     if isinstance(public_safe, Mapping):
         public_precision = public_safe.get("precision_class")
         public_type = public_safe.get("geometry_type")
+        allowed_precisions = {
+            "point": frozenset({"exact", "generalized_point"}),
+            "grid": frozenset({"grid"}),
+            "county": frozenset({"county"}),
+            "withheld": frozenset({"withheld"}),
+        }
+        if public_precision not in allowed_precisions.get(public_type, frozenset()):
+            _add(
+                findings,
+                "geom.public_safe_type_precision_mismatch",
+                "/geometry/public_safe_geometry/precision_class",
+            )
         if generalization and public_precision == "exact":
             _add(
                 findings,
