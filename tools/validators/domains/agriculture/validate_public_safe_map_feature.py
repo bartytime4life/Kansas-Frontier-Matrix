@@ -125,6 +125,9 @@ WKT_POINT_PATTERN = re.compile(
     r"(?i)\bpoint\s*\(\s*[+-]?\d{1,3}\.\d+\s+"
     r"[+-]?\d{1,3}\.\d+\s*\)"
 )
+EVIDENCE_REF_PATTERN = re.compile(
+    r"^evidence:synthetic:agriculture:[a-z0-9]+(?:-[a-z0-9]+)*:v[1-9][0-9]*$"
+)
 
 
 @dataclass(frozen=True, order=True)
@@ -299,6 +302,12 @@ def _semantic_findings(value: Mapping[str, Any]) -> tuple[Finding, ...]:
     evidence_refs = value["evidence_refs"]
     if evidence_refs != sorted(set(evidence_refs)):
         findings.add(Finding("AG_MAP_EVIDENCE_REFS_NONCANONICAL", "/evidence_refs"))
+    for index, evidence_ref in enumerate(evidence_refs):
+        if not EVIDENCE_REF_PATTERN.fullmatch(evidence_ref):
+            findings.add(Finding(
+                "AG_MAP_EVIDENCE_REF_NAMESPACE_MISMATCH",
+                f"/evidence_refs/{index}",
+            ))
     limitations = value["limitations"]
     if limitations != sorted(set(limitations)):
         findings.add(Finding("AG_MAP_LIMITATIONS_NONCANONICAL", "/limitations"))

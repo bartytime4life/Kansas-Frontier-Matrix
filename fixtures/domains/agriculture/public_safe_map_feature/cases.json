@@ -184,6 +184,22 @@
       ]
     },
     {
+      "case_id": "evidence_ref_namespace_mismatch",
+      "mutations": [
+        {
+          "path": "/evidence_refs/0",
+          "value": "evidence:synthetic:hydrology:streamflow:v1"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "AG_MAP_SCHEMA_INVALID",
+          "path": "/evidence_refs/0"
+        }
+      ]
+    },
+    {
       "case_id": "modeled_suitability_as_observed",
       "mutations": [
         {

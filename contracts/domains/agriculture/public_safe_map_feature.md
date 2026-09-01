@@ -106,6 +106,11 @@ evidence reference. JSON decoding is strict: duplicate object members and
 non-finite numeric literals are invalid, and programmatic candidates receive
 the same finite-number check before schema validation or identity hashing.
 
+Every EvidenceRef is carrier-local and synthetic-only. Its canonical form is
+`evidence:synthetic:agriculture:<slug>:vN`, where the slug is lowercase
+kebab-case and `N` is a positive integer. Foreign-domain, live-source, URL,
+parcel, operator, or unversioned references are not admitted by this carrier.
+
 The carrier must never contain exact/reconstructable:
 
 - field boundaries or coordinates;

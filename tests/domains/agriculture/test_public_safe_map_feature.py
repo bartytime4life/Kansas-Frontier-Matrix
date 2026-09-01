@@ -279,3 +279,28 @@ def test_strict_json_decoder_rejects_nonfinite_and_duplicate_members():
             assert (error.finding.code, error.finding.path) == expected
         else:
             raise AssertionError("unsafe JSON unexpectedly decoded")
+
+
+def test_schema_and_semantics_bind_evidence_refs_to_agriculture_synthetic_namespace():
+    module = _module()
+    manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    candidate = module.materialize_case(
+        manifest, _case(manifest, "valid_county_crop_observation")
+    )
+
+    assert module.validate_payload(candidate).outcome == "PASS"
+    assert all(
+        module.EVIDENCE_REF_PATTERN.fullmatch(item)
+        for item in candidate["evidence_refs"]
+    )
+
+    candidate["evidence_refs"] = ["evidence:synthetic:hydrology:streamflow:v1"]
+    candidate["spec_hash"], candidate["id"] = module.canonical_identity(candidate)
+
+    assert [(finding.code, finding.path) for finding in module._schema_findings(candidate)] == [
+        ("AG_MAP_SCHEMA_INVALID", "/evidence_refs/0")
+    ]
+    assert (
+        "AG_MAP_EVIDENCE_REF_NAMESPACE_MISMATCH",
+        "/evidence_refs/0",
+    ) in {(finding.code, finding.path) for finding in module._semantic_findings(candidate)}
