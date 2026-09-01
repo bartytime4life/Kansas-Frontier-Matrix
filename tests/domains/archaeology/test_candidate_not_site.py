@@ -100,6 +100,11 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         payload.pop("evidence_refs")
         self.assertEqual(validate_candidate_feature(payload), [])
 
+    def test_present_evidence_binding_cannot_be_empty(self) -> None:
+        payload = _load(FIXTURE_ROOT / "empty_evidence_refs_deny.json")
+        errors = validate_candidate_feature(payload)
+        self.assertIn("evidence_refs must contain at least one reference", errors)
+
     def test_superseded_candidate_requires_correction_binding(self) -> None:
         payload = _load(
             FIXTURE_ROOT / "superseded_without_correction_deny.json"
@@ -150,6 +155,7 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         self.assertEqual(properties["source_refs"]["items"]["pattern"], expected_ref_pattern)
         self.assertEqual(properties["candidate_geometry_ref"]["pattern"], expected_ref_pattern)
         self.assertEqual(properties["evidence_refs"]["minItems"], 1)
+        self.assertEqual(properties["correction_refs"]["minItems"], 1)
         evidence_conditional = schema["allOf"][0]
         self.assertEqual(evidence_conditional["then"]["required"], ["evidence_refs"])
         correction_conditional = schema["allOf"][1]
@@ -157,7 +163,6 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
             correction_conditional["then"]["required"],
             ["correction_refs"],
         )
-        self.assertEqual(properties["correction_refs"]["minItems"], 1)
         geometry_precision_conditional = schema["allOf"][2]
         self.assertEqual(
             geometry_precision_conditional["if"]["required"],

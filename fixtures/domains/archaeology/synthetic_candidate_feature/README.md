@@ -25,6 +25,8 @@ burial, sacred-place, collection-security, or culturally restricted data.
 - `unbound_catalog_candidate_deny.json` proves that a candidate cannot claim
   under-review/retained posture or processed/catalog lifecycle without at least
   one governed EvidenceRef.
+- `empty_evidence_refs_deny.json` proves that an explicitly present EvidenceRef
+  binding cannot be an empty array, even while the candidate remains in `WORK`.
 - `superseded_without_correction_deny.json` proves that a superseded candidate
   cannot lose its governed correction or withdrawal lineage.
 
@@ -39,6 +41,7 @@ Passing these checks proves only the schema-aligned candidate identifier,
 candidate-type vocabulary, spatial-precision vocabulary, and geometry-reference
 precision binding; bounded candidate discriminator; inline location denial;
 opaque-reference boundary; conditional EvidenceRef binding; and supersession
-correction binding; malformed-reference finite denial. It does not confirm a
-site, authorize publication, or establish full EvidenceBundle closure, policy,
-cultural review, or public-safe transformation.
+correction binding; malformed-reference finite denial; and nonempty governed
+reference bindings. It does not confirm a site, authorize publication, or
+establish full EvidenceBundle closure, policy, cultural review, or public-safe
+transformation.
