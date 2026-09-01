@@ -23,6 +23,9 @@
     "unit": "ft3/s",
     "unit_transform_ref": null,
     "method_ref": "fixture://hydrology/method/synthetic-discharge-observation",
+    "caveat_refs": [
+      "fixture://hydrology/caveat/synthetic-only"
+    ],
     "qualifier": "synthetic",
     "provisional_status": "provisional",
     "no_data": false
