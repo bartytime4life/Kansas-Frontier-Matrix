@@ -61,10 +61,11 @@ function camerasEqual(left: MapRuntimeCamera, right: MapRuntimeCamera): boolean 
  * Minimal package-owned MapLibre implementation of the accepted MapRuntimePort.
  *
  * This first slice owns only renderer construction, camera synchronization,
- * finite lifecycle state, and teardown. It starts with an inline empty style,
- * performs no source discovery, and exposes no raw MapLibre values. Source,
- * layer, selection, protocol, plugin, worker, and external-style admission stay
- * out of scope until separately governed inputs and browser probes exist.
+ * responsive container resize, finite lifecycle state, and teardown. It starts
+ * with an inline empty style, performs no source discovery, and exposes no raw
+ * MapLibre values. Source, layer, selection, protocol, plugin, worker, and
+ * external-style admission stay out of scope until separately governed inputs
+ * and browser probes exist.
  */
 export class MapLibreAdapter implements MapRuntimePort {
   readonly profile = MAP_RUNTIME_PORT_PROFILE;
@@ -250,6 +251,27 @@ export class MapLibreAdapter implements MapRuntimePort {
     }
     this.camera = frozen;
     return this.notifySnapshot();
+  }
+
+  resize(): MapRuntimeSnapshot {
+    this.assertReady();
+    const map = this.map!;
+    try {
+      map.resize();
+    } catch {
+      this.failRuntime();
+      throw new MapRuntimePortError(
+        "MAP_RUNTIME_RESIZE_FAILED",
+        "Map runtime resize failed.",
+      );
+    }
+    if (this.state !== "READY" || this.map !== map) {
+      throw new MapRuntimePortError(
+        "MAP_RUNTIME_RESIZE_FAILED",
+        "Map runtime resize failed.",
+      );
+    }
+    return this.getSnapshot();
   }
 
   subscribeSnapshot(listener: MapRuntimeSnapshotListener): () => void {
