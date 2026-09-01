@@ -24,7 +24,13 @@ def main(argv: list[str] | None = None) -> int:
     resolve or merge people, establish kinship, expose DNA, prove residence or
     title, grant consent, activate policy, authorize release, or publish data.
     """
-    args = sys.argv[1:] if argv is None else argv
+    args = list(sys.argv[1:] if argv is None else argv)
+    if "--fixtures" in args and len(args) != 1:
+        print(
+            "Cannot combine --fixtures with explicit DomainFeatureIdentity files",
+            file=sys.stderr,
+        )
+        return 2
     return run(SCHEMA, FIXTURES, args)
 
 
