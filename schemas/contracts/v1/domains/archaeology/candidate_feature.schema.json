@@ -199,6 +199,18 @@
           "correction_refs"
         ]
       }
+    },
+    {
+      "if": {
+        "required": [
+          "candidate_geometry_ref"
+        ]
+      },
+      "then": {
+        "required": [
+          "spatial_precision_class"
+        ]
+      }
     }
   ]
 }

@@ -220,6 +220,10 @@ def validate_candidate_feature(payload: Any) -> list[str]:
             "candidate_geometry_ref must be an opaque governed kfm:// reference "
             "without query, fragment, or encoded locator material"
         )
+    if "candidate_geometry_ref" in payload and spatial_precision_class is None:
+        errors.append(
+            "spatial_precision_class is required with candidate_geometry_ref"
+        )
 
     return errors
 
@@ -239,6 +243,7 @@ def validate_fixture_suite() -> int:
         FIXTURE_ROOT / "malformed_candidate_id_deny.json": "candidate_feature_id must match",
         FIXTURE_ROOT / "unsupported_candidate_type_deny.json": "candidate_type is not in",
         FIXTURE_ROOT / "unsupported_spatial_precision_deny.json": "spatial_precision_class is not in",
+        FIXTURE_ROOT / "unclassified_geometry_reference_deny.json": "spatial_precision_class is required",
     }
     valid_errors = validate_candidate_feature(_load(valid_path))
     if valid_errors:

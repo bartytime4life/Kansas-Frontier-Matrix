@@ -61,6 +61,14 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
             errors,
         )
 
+    def test_geometry_reference_requires_spatial_precision(self) -> None:
+        payload = _load(FIXTURE_ROOT / "unclassified_geometry_reference_deny.json")
+        errors = validate_candidate_feature(payload)
+        self.assertIn(
+            "spatial_precision_class is required with candidate_geometry_ref",
+            errors,
+        )
+
     def test_inline_location_fixture_fails_closed(self) -> None:
         payload = _load(FIXTURE_ROOT / "sensitive_geometry_deny.json")
         errors = validate_candidate_feature(payload)
@@ -143,6 +151,15 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
             ["correction_refs"],
         )
         self.assertEqual(properties["correction_refs"]["minItems"], 1)
+        geometry_precision_conditional = schema["allOf"][2]
+        self.assertEqual(
+            geometry_precision_conditional["if"]["required"],
+            ["candidate_geometry_ref"],
+        )
+        self.assertEqual(
+            geometry_precision_conditional["then"]["required"],
+            ["spatial_precision_class"],
+        )
 
     def test_fixture_cli_is_deterministic_and_local(self) -> None:
         result = subprocess.run(

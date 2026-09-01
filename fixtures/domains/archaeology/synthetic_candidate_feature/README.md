@@ -13,6 +13,8 @@ burial, sacred-place, collection-security, or culturally restricted data.
   allowing them to weaken the candidate boundary.
 - `unsupported_spatial_precision_deny.json` proves that unsupported precision
   labels such as `EXACT` fail closed instead of implying an unsafe location posture.
+- `unclassified_geometry_reference_deny.json` proves that even an opaque internal
+  geometry reference cannot omit its withheld or generalized precision posture.
 - `sensitive_geometry_deny.json` uses synthetic zero coordinates solely to prove
   that any inline coordinate field is rejected before downstream use.
 - `location_bearing_reference_deny.json` proves that a nominal `kfm://`
@@ -32,8 +34,9 @@ python -m unittest tests.domains.archaeology.test_candidate_not_site
 ```
 
 Passing these checks proves only the schema-aligned candidate identifier,
-candidate-type vocabulary, and spatial-precision vocabulary; bounded candidate
-discriminator; inline location denial; opaque-reference boundary; conditional
-EvidenceRef binding; and supersession correction binding. It does not confirm a
-site, authorize publication, or establish full EvidenceBundle closure, policy,
-cultural review, or public-safe transformation.
+candidate-type vocabulary, spatial-precision vocabulary, and geometry-reference
+precision binding; bounded candidate discriminator; inline location denial;
+opaque-reference boundary; conditional EvidenceRef binding; and supersession
+correction binding. It does not confirm a site, authorize publication, or
+establish full EvidenceBundle closure, policy, cultural review, or public-safe
+transformation.
