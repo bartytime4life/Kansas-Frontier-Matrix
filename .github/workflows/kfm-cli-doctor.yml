@@ -1,0 +1,83 @@
+# Focused executable proof for the developer CLI under packages/.
+name: kfm-cli-doctor
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/kfm-cli-doctor.yml"
+      - "packages/kfm-cli/**"
+      - "tests/packages/kfm_cli/**"
+      - "tests/ci/test_install_kfm_cli.py"
+      - "tools/ci/install_kfm_cli.py"
+      - "tools/ci/python-cli.lock"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/kfm-cli-doctor.yml"
+      - "packages/kfm-cli/**"
+      - "tests/packages/kfm_cli/**"
+      - "tests/ci/test_install_kfm_cli.py"
+      - "tools/ci/install_kfm_cli.py"
+      - "tools/ci/python-cli.lock"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kfm-cli-doctor-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.11"
+          - "3.12"
+
+    steps:
+      - name: Check out validated revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: |
+            tools/ci/python-test.lock
+            tools/ci/python-cli.lock
+
+      - name: Install repository test profile
+        run: python tools/ci/install_python_ci.py project-test
+
+      - name: Install hash-locked KFM CLI
+        run: python tools/ci/install_kfm_cli.py
+
+      - name: Validate installer controls
+        run: |
+          python -m unittest tests/ci/test_install_python_ci.py -v
+          python -m unittest tests/ci/test_install_kfm_cli.py -v
+
+      - name: Validate configuration doctor
+        run: |
+          python -m pytest tests/packages/kfm_cli/test_doctor.py -q --strict-config --strict-markers
+          python -m kfm_cli doctor
+          kfm doctor
+          python -m pip check
