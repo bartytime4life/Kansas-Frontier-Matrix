@@ -54,6 +54,7 @@ ALLOWED_MEASUREMENT_FIELDS = frozenset(
         "unit",
         "unit_transform_ref",
         "method_ref",
+        "caveat_refs",
         "qualifier",
         "provisional_status",
         "no_data",
@@ -91,6 +92,7 @@ FIXTURE_SOURCE_PREFIX = "fixture://sources/hydrology/"
 FIXTURE_EVIDENCE_PREFIX = "fixture://evidence/hydrology/"
 FIXTURE_GAUGE_PREFIX = "fixture://hydrology/gauge/generalized/"
 FIXTURE_METHOD_PREFIX = "fixture://hydrology/method/"
+FIXTURE_CAVEAT_PREFIX = "fixture://hydrology/caveat/"
 EXPECTED_GOVERNANCE = {
     "rights_state": "fixture_only",
     "sensitivity_state": "public_safe_fixture",
@@ -274,6 +276,22 @@ def validate_candidate(candidate: object) -> list[Finding]:
             add_finding(findings, "METHOD_REF_MISSING", "$.measurement.method_ref")
         elif not method_ref.startswith(FIXTURE_METHOD_PREFIX):
             add_finding(findings, "METHOD_REF_NOT_FIXTURE", "$.measurement.method_ref")
+        if "caveat_refs" not in measurement:
+            add_finding(findings, "CAVEAT_REFS_MISSING", "$.measurement.caveat_refs")
+        else:
+            caveat_refs = measurement.get("caveat_refs")
+            if not isinstance(caveat_refs, list) or any(
+                not is_nonempty_string(value) for value in caveat_refs
+            ):
+                add_finding(findings, "CAVEAT_REFS_INVALID", "$.measurement.caveat_refs")
+            elif any(
+                not value.startswith(FIXTURE_CAVEAT_PREFIX) for value in caveat_refs
+            ):
+                add_finding(
+                    findings,
+                    "CAVEAT_REF_NOT_FIXTURE",
+                    "$.measurement.caveat_refs",
+                )
         if measurement.get("qualifier") != "synthetic":
             add_finding(findings, "QUALIFIER_INVALID", "$.measurement.qualifier")
         provisional_status = measurement.get("provisional_status")
