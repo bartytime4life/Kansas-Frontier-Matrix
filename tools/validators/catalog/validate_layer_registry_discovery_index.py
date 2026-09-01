@@ -7,12 +7,12 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-PROFILE = "kfm.layer-registry-discovery-index-drift.v1"
+PROFILE = "kfm.layer-registry-discovery-index-drift.v2"
 SECTION_HEADER = "## Confirmed child lanes"
-ROW_RE = re.compile(r"^\|\s*\[`([^`]+/)`\]\([^)]+\)\s*\|")
+ROW_RE = re.compile(r"^\|\s*\[`([^`]+/)`\]\(([^)]+)\)\s*\|")
 
 
-def _read_indexed_lanes(readme_path: Path) -> list[str]:
+def _read_indexed_lanes(readme_path: Path) -> tuple[list[str], list[str]]:
     text = readme_path.read_text(encoding="utf-8")
     start = text.find(SECTION_HEADER)
     if start < 0:
@@ -23,13 +23,23 @@ def _read_indexed_lanes(readme_path: Path) -> list[str]:
         section = section[:next_h2]
 
     lanes: list[str] = []
+    invalid_link_rows: list[str] = []
     for line in section.splitlines():
+        stripped = line.strip()
+        if not stripped.startswith("| [`"):
+            continue
         match = ROW_RE.match(line)
-        if match:
-            lanes.append(match.group(1))
-    if not lanes:
+        if match is None:
+            invalid_link_rows.append(stripped)
+            continue
+        lane, destination = match.groups()
+        if destination != f"{lane}README.md":
+            invalid_link_rows.append(stripped)
+            continue
+        lanes.append(lane)
+    if not lanes and not invalid_link_rows:
         raise ValueError("layer registry child-lane index contains no parseable lane rows")
-    return lanes
+    return lanes, sorted(invalid_link_rows)
 
 
 def _read_actual_lanes(registry_root: Path) -> list[str]:
@@ -50,7 +60,7 @@ def validate_layer_registry_discovery_index(
     registry_root = registry_root.resolve()
     readme_path = (readme_path or registry_root / "README.md").resolve()
 
-    indexed = _read_indexed_lanes(readme_path)
+    indexed, invalid_link_rows = _read_indexed_lanes(readme_path)
     actual = _read_actual_lanes(registry_root)
     counts = Counter(indexed)
     duplicates = sorted(name for name, count in counts.items() if count > 1)
@@ -61,7 +71,12 @@ def validate_layer_registry_discovery_index(
 
     outcome = (
         "PASS"
-        if not (duplicates or missing_from_index or stale_index_entries)
+        if not (
+            duplicates
+            or invalid_link_rows
+            or missing_from_index
+            or stale_index_entries
+        )
         else "FAIL"
     )
     return {
@@ -73,6 +88,7 @@ def validate_layer_registry_discovery_index(
         "actual_children": actual,
         "indexed_children": indexed,
         "duplicate_entries": duplicates,
+        "invalid_link_rows": invalid_link_rows,
         "missing_from_index": missing_from_index,
         "stale_index_entries": stale_index_entries,
     }

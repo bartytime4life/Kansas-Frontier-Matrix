@@ -7,7 +7,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-PROFILE = "kfm.catalog-domain-compatibility-redirect.v1"
+PROFILE = "kfm.catalog-domain-compatibility-redirect.v2"
 SECTION_HEADER = "## Current bounded inventory"
 ROW_RE = re.compile(
     r"^-\s+\[`([^`]+/)`\]\(\./([^/]+)/README\.md\)\s*$"
@@ -54,6 +54,13 @@ def _direct_children(root: Path) -> list[str]:
     )
 
 
+def _child_readme_routes_to_canonical(readme_path: Path, lane: str) -> bool:
+    text = readme_path.read_text(encoding="utf-8")
+    if any(marker in text for marker in ("<<<<<<<", "=======", ">>>>>>>")):
+        return False
+    return f"data/catalog/domain/{lane}/" in text
+
+
 def validate_catalog_domain_compatibility_redirect(
     compatibility_root: Path,
     canonical_root: Path,
@@ -74,12 +81,19 @@ def validate_catalog_domain_compatibility_redirect(
     stale_index_entries = sorted(indexed_unique - actual_set)
 
     missing_child_readmes: list[str] = []
+    invalid_child_redirects: list[str] = []
     missing_canonical_targets: list[str] = []
     for lane in sorted(actual_set | indexed_unique):
         child = compatibility_root / lane.rstrip("/")
         target = canonical_root / lane.rstrip("/")
-        if child.is_dir() and not (child / "README.md").is_file():
-            missing_child_readmes.append(lane)
+        child_readme = child / "README.md"
+        if child.is_dir():
+            if not child_readme.is_file():
+                missing_child_readmes.append(lane)
+            elif not _child_readme_routes_to_canonical(
+                child_readme, lane.rstrip("/")
+            ):
+                invalid_child_redirects.append(lane)
         if lane in indexed_unique and not target.is_dir():
             missing_canonical_targets.append(lane)
 
@@ -91,6 +105,7 @@ def validate_catalog_domain_compatibility_redirect(
             or missing_from_index
             or stale_index_entries
             or missing_child_readmes
+            or invalid_child_redirects
             or missing_canonical_targets
         )
         else "FAIL"
@@ -109,6 +124,7 @@ def validate_catalog_domain_compatibility_redirect(
         "missing_from_index": missing_from_index,
         "stale_index_entries": stale_index_entries,
         "missing_child_readmes": missing_child_readmes,
+        "invalid_child_redirects": invalid_child_redirects,
         "missing_canonical_targets": missing_canonical_targets,
         "canonical_only_children_allowed": True,
     }

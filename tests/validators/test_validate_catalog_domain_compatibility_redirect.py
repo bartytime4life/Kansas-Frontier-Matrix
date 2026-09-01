@@ -23,6 +23,7 @@ def _write_layout(
     canonical: list[str] | None = None,
     missing_readme: set[str] | None = None,
     row_overrides: dict[str, str] | None = None,
+    readme_overrides: dict[str, str] | None = None,
 ) -> tuple[Path, Path]:
     compat = root / "catalog" / "domain"
     canonical_root = root / "data" / "catalog" / "domain"
@@ -30,12 +31,22 @@ def _write_layout(
     canonical_root.mkdir(parents=True)
     missing_readme = missing_readme or set()
     row_overrides = row_overrides or {}
+    readme_overrides = readme_overrides or {}
 
     for lane in actual:
         child = compat / lane
         child.mkdir()
         if lane not in missing_readme:
-            (child / "README.md").write_text("# redirect\n", encoding="utf-8")
+            (child / "README.md").write_text(
+                readme_overrides.get(
+                    lane,
+                    (
+                        "# redirect\n\n"
+                        f"Canonical catalog: data/catalog/domain/{lane}/\n"
+                    ),
+                ),
+                encoding="utf-8",
+            )
 
     for lane in canonical if canonical is not None else actual:
         (canonical_root / lane).mkdir()
@@ -141,6 +152,43 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
             self.assertEqual("FAIL", report["outcome"])
             self.assertEqual(["agriculture/"], report["missing_child_readmes"])
 
+    def test_contradictory_child_redirect_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            compat, canonical = _write_layout(
+                Path(tmp),
+                actual=["agriculture"],
+                indexed=["agriculture"],
+                readme_overrides={
+                    "agriculture": (
+                        "# redirect\n\n"
+                        "Canonical catalog: data/catalog/domain/fauna/\n"
+                    )
+                },
+            )
+            report = validate_catalog_domain_compatibility_redirect(compat, canonical)
+            self.assertEqual("FAIL", report["outcome"])
+            self.assertEqual(["agriculture/"], report["invalid_child_redirects"])
+
+    def test_conflicted_child_redirect_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            compat, canonical = _write_layout(
+                Path(tmp),
+                actual=["agriculture"],
+                indexed=["agriculture"],
+                readme_overrides={
+                    "agriculture": (
+                        "<<<<<<< HEAD\n"
+                        "Canonical catalog: data/catalog/domain/agriculture/\n"
+                        "=======\n"
+                        "Canonical catalog: data/catalog/domain/agriculture/\n"
+                        ">>>>>>> origin/main\n"
+                    )
+                },
+            )
+            report = validate_catalog_domain_compatibility_redirect(compat, canonical)
+            self.assertEqual("FAIL", report["outcome"])
+            self.assertEqual(["agriculture/"], report["invalid_child_redirects"])
+
     def test_cli_json_is_deterministic(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             compat, canonical = _write_layout(
@@ -165,7 +213,7 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
             self.assertEqual(outputs[0], outputs[1])
             report = json.loads(outputs[0])
             self.assertEqual(
-                "kfm.catalog-domain-compatibility-redirect.v1",
+                "kfm.catalog-domain-compatibility-redirect.v2",
                 report["profile"],
             )
 
