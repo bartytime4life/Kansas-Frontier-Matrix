@@ -185,7 +185,7 @@ def validate_candidate_feature(payload: Any) -> list[str]:
     if payload.get("truth_state") != "CANDIDATE":
         errors.append("truth_state must remain CANDIDATE")
     candidate_type = payload.get("candidate_type")
-    if candidate_type is not None and not _is_bounded_string(
+    if "candidate_type" in payload and not _is_bounded_string(
         candidate_type, CANDIDATE_TYPES
     ):
         errors.append("candidate_type is not in the bounded vocabulary")
@@ -199,7 +199,7 @@ def validate_candidate_feature(payload: Any) -> list[str]:
         errors.append("sensitivity_class is not in the bounded vocabulary")
     spatial_precision_class = payload.get("spatial_precision_class")
     if (
-        spatial_precision_class is not None
+        "spatial_precision_class" in payload
         and not _is_bounded_string(
             spatial_precision_class, SPATIAL_PRECISION_CLASSES
         )
@@ -254,7 +254,7 @@ def validate_candidate_feature(payload: Any) -> list[str]:
         )
     spec_hash = payload.get("spec_hash")
     if (
-        spec_hash is not None
+        "spec_hash" in payload
         and (
             not isinstance(spec_hash, str)
             or SPEC_HASH_PATTERN.fullmatch(spec_hash) is None
@@ -263,7 +263,7 @@ def validate_candidate_feature(payload: Any) -> list[str]:
         errors.append("spec_hash must match ^sha256:[a-f0-9]{64}$")
     confidence_statement = payload.get("confidence_statement")
     if (
-        confidence_statement is not None
+        "confidence_statement" in payload
         and (
             not isinstance(confidence_statement, str)
             or not 1 <= len(confidence_statement) <= CONFIDENCE_STATEMENT_MAX_LENGTH
