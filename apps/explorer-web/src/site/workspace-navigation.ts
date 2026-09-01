@@ -129,8 +129,12 @@ export function resolvePublicKnowledgeDomainSelectionTransition(
  * evidence than the URL is allowed to carry. The admitted fixture is also
  * domain-neutral: domain-scoped links must use a governed domain integration
  * seam rather than piggybacking on this synthetic Evidence Drawer exercise.
- * This is especially important for People/DNA/Land and Archaeology, where
- * domain-scoped spatial/evidence behavior must remain fail closed.
+ *
+ * The fixture currently consumes only its one synthetic layer and selection.
+ * Any populated place, camera, time, comparison, story, or additional-layer
+ * state therefore remains outside this integration seam and must not be silently
+ * ignored while the Evidence Drawer is restored. Future governed consumers can
+ * add those dimensions explicitly without widening this synthetic allowlist.
  */
 export function resolvePublicEvidenceFreeMapCaseId(url: URL): "missing" | null {
   const context = parsePublicWorkspaceContextUrl(url);
@@ -138,7 +142,17 @@ export function resolvePublicEvidenceFreeMapCaseId(url: URL): "missing" | null {
   if (
     context?.workspaceId !== "explore" ||
     context.domainIds.length !== 0 ||
+    context.placeIds.length !== 0 ||
+    context.layerIds.length !== 1 ||
     selection === null ||
+    context.layerIds[0] !== selection.layerId ||
+    context.camera !== null ||
+    context.time.validAt !== null ||
+    context.time.observedAt !== null ||
+    context.time.asOf !== null ||
+    context.time.releaseId !== null ||
+    context.compare.mode !== "NONE" ||
+    context.storyNodeId !== null ||
     selection.evidenceRefs.length !== 0
   ) {
     return null;
