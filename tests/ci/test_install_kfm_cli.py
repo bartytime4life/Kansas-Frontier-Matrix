@@ -50,6 +50,20 @@ class InstallKfmCliTests(unittest.TestCase):
             self.assertIs(call.kwargs["shell"], False)
             self.assertIs(call.kwargs["check"], True)
             self.assertEqual(REPO_ROOT, call.kwargs["cwd"])
+            self.assertEqual(module.INSTALL_TIMEOUT_SECONDS, call.kwargs["timeout"])
+
+    def test_install_timeout_fails_closed_before_second_command(self) -> None:
+        expired = module.subprocess.TimeoutExpired(
+            cmd=("python", "-m", "pip"),
+            timeout=module.INSTALL_TIMEOUT_SECONDS,
+        )
+        with mock.patch.object(module.subprocess, "run", side_effect=expired) as run:
+            with self.assertRaisesRegex(
+                module.CliInstallConfigurationError,
+                "^CLI_INSTALL_TIMEOUT$",
+            ):
+                module.install()
+        self.assertEqual(1, run.call_count)
 
     def test_main_rejects_arguments(self) -> None:
         with self.assertRaises(module.CliInstallConfigurationError):
