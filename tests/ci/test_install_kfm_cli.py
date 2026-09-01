@@ -86,6 +86,22 @@ class InstallKfmCliTests(unittest.TestCase):
                 module.install()
         self.assertEqual(1, run.call_count)
 
+    def test_install_command_failure_uses_finite_error_and_stops(self) -> None:
+        failed = module.subprocess.CalledProcessError(
+            returncode=1,
+            cmd=("python", "-m", "pip"),
+        )
+        with (
+            mock.patch.object(module.time, "monotonic", side_effect=(100.0, 100.0)),
+            mock.patch.object(module.subprocess, "run", side_effect=failed) as run,
+        ):
+            with self.assertRaisesRegex(
+                module.CliInstallConfigurationError,
+                "^CLI_INSTALL_COMMAND_FAILED$",
+            ):
+                module.install()
+        self.assertEqual(1, run.call_count)
+
     def test_main_rejects_arguments(self) -> None:
         with self.assertRaises(module.CliInstallConfigurationError):
             module.main(["anything"])
