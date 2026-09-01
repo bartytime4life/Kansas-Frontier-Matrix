@@ -10,6 +10,43 @@ export type PublicMapCaseDeepLinkRelease = Readonly<{
   reason: "UNCHANGED" | "RELEASED" | "STALE_OWNER";
 }>;
 
+export type PublicMapCaseUrlTransition = Readonly<{
+  activeDeepLinkMapCaseId: "missing" | null;
+  mapCaseIdToSelect: "missing" | null;
+  resetOwnedSelection: boolean;
+}>;
+
+/**
+ * Reconcile the synthetic map fixture that is still owned by public URL state.
+ *
+ * Departing from an active deep link asks the site controller to reset the
+ * owned fixture, which invalidates any in-flight request and removes its
+ * Evidence Drawer. Manual selection releases ownership before URL
+ * synchronization, so a user's later fixture remains visible.
+ */
+export function resolvePublicMapCaseUrlTransition(
+  url: URL,
+  activeDeepLinkMapCaseId: "missing" | null,
+): PublicMapCaseUrlTransition {
+  const requestedMapCaseId = resolvePublicEvidenceFreeMapCaseId(url);
+  if (requestedMapCaseId !== null) {
+    return Object.freeze({
+      activeDeepLinkMapCaseId: requestedMapCaseId,
+      mapCaseIdToSelect:
+        requestedMapCaseId === activeDeepLinkMapCaseId
+          ? null
+          : requestedMapCaseId,
+      resetOwnedSelection: false,
+    });
+  }
+
+  return Object.freeze({
+    activeDeepLinkMapCaseId: null,
+    mapCaseIdToSelect: null,
+    resetOwnedSelection: activeDeepLinkMapCaseId !== null,
+  });
+}
+
 /**
  * Release URL ownership when a user manually selects another synthetic map
  * fixture while the public-safe evidence-free deep link owns the `missing`

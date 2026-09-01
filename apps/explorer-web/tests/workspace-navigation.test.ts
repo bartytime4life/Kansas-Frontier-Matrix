@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
 import { MAP_FEATURE_SELECTION_PROFILE } from "@kfm/maplibre";
 import mainSource from "../src/main.ts?raw";
-import navigationCss from "../src/site/site-foundation-a.css?raw";
 import navigationSource from "../src/site/workspace-navigation.ts?raw";
 import {
   PUBLIC_WORKSPACE_CONTEXT_PROFILE,
@@ -15,6 +15,11 @@ import {
   resolveSinglePublicKnowledgeDomainId,
   sanitizePublicWorkspaceNavigationUrl,
 } from "../src/site/workspace-navigation";
+
+const navigationCss = readFileSync(
+  new URL("../src/site/site-foundation-a.css", import.meta.url),
+  "utf8",
+);
 
 const knowledgeContext = Object.freeze({
   profile: PUBLIC_WORKSPACE_CONTEXT_PROFILE,

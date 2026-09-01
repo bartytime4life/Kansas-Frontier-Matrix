@@ -9,6 +9,7 @@ import {
   mountMapRuntimeTrustStatus,
   type MapEvidenceFixtureCase,
   type MapEvidenceFixtureController,
+  type MapFeatureSelection,
   type MapRuntimeTrustStatusController,
 } from "../features/map_runtime";
 import {
@@ -26,7 +27,10 @@ import {
   type KnowledgeDomain,
 } from "./catalog";
 
-export type ExplorerSiteController = Readonly<{ destroy: () => void }>;
+export type ExplorerSiteController = Readonly<{
+  resetMapEvidenceSelection: () => void;
+  destroy: () => void;
+}>;
 
 const supportedProjection = Object.freeze({
   profile: "kfm.explorer.evidence-drawer.public-safe.v1",
@@ -286,12 +290,19 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
   lab.append(fixtureHost);
   mapSection.append(lab);
   main.append(mapSection);
-  mapFixture = mountMapFeatureEvidenceFixture(fixtureHost, mapCases, async (selection) => {
+  const resolveFixtureEvidence = async (selection: MapFeatureSelection) => {
     await Promise.resolve();
     if (selection.selectionId === "selection:restricted") return restrictedProjection;
     if (selection.selectionId === "selection:error") throw new Error("Synthetic governed resolver failure");
     return supportedProjection;
-  });
+  };
+  const mountMapFixture = (): MapEvidenceFixtureController =>
+    mountMapFeatureEvidenceFixture(
+      fixtureHost,
+      mapCases,
+      resolveFixtureEvidence,
+    );
+  mapFixture = mountMapFixture();
   mapRuntimeStatus = mountMapRuntimeTrustStatus(runtimeStatusHost, mapRuntime);
 
   const knowledge = el(document, "section", "section-shell");
@@ -381,6 +392,11 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
   root.replaceChildren(skip, header, main, footer);
 
   return Object.freeze({
+    resetMapEvidenceSelection: () => {
+      if (mapFixture === null) return;
+      mapFixture.destroy();
+      mapFixture = mountMapFixture();
+    },
     destroy: () => {
       cleanup.forEach((fn) => fn());
       mapRuntimeStatus?.destroy();

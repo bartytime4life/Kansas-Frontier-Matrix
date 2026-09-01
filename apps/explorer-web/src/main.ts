@@ -14,7 +14,10 @@ import {
   sanitizePublicWorkspaceNavigationUrl,
   syncPublicWorkspaceNavigation,
 } from "./site/workspace-navigation";
-import { resolvePublicMapCaseManualSelectionTransition } from "./site/workspace-map-deep-link";
+import {
+  resolvePublicMapCaseManualSelectionTransition,
+  resolvePublicMapCaseUrlTransition,
+} from "./site/workspace-map-deep-link";
 import { resolvePublicKnowledgeDomainManualSelectionTransition } from "./site/workspace-knowledge-deep-link";
 
 const root = document.querySelector<HTMLElement>("#root");
@@ -107,10 +110,16 @@ const syncWorkspaceNavigation = (): void => {
   }
   syncPublicWorkspaceNavigation(navigation, safeUrl);
 
-  const mapCaseId = resolvePublicEvidenceFreeMapCaseId(safeUrl);
-  if (mapCaseId === null) {
-    activeDeepLinkMapCaseId = null;
-  } else if (mapCaseId !== activeDeepLinkMapCaseId) {
+  const mapTransition = resolvePublicMapCaseUrlTransition(
+    safeUrl,
+    activeDeepLinkMapCaseId,
+  );
+  activeDeepLinkMapCaseId = mapTransition.activeDeepLinkMapCaseId;
+  if (mapTransition.resetOwnedSelection) {
+    site.resetMapEvidenceSelection();
+  }
+  const mapCaseId = mapTransition.mapCaseIdToSelect;
+  if (mapCaseId !== null) {
     const mapCaseButton = root.querySelector<HTMLButtonElement>(
       `button[data-map-evidence-case="${mapCaseId}"]`,
     );
@@ -119,7 +128,6 @@ const syncWorkspaceNavigation = (): void => {
         document.activeElement instanceof HTMLElement
           ? document.activeElement
           : null;
-      activeDeepLinkMapCaseId = mapCaseId;
       mapCaseButton.click();
       if (priorFocus?.isConnected) priorFocus.focus();
     }

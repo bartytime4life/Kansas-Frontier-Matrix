@@ -152,7 +152,7 @@ export function resolvePublicKnowledgeDomainSelectionTransition(
  */
 export function resolvePublicEvidenceFreeMapCaseId(url: URL): "missing" | null {
   const context = parsePublicWorkspaceContextUrl(url);
-  const selection = context?.selection;
+  const selection = context?.selection ?? null;
   if (
     context?.workspaceId !== "explore" ||
     context.domainIds.length !== 0 ||

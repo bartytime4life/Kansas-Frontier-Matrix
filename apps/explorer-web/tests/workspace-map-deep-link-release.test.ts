@@ -1,12 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { MAP_FEATURE_SELECTION_PROFILE } from "@kfm/maplibre";
 import mainSource from "../src/main.ts?raw";
+import mountSource from "../src/site/mount-explorer-site.ts?raw";
 import {
   PUBLIC_WORKSPACE_CONTEXT_PROFILE,
   PUBLIC_WORKSPACE_CONTEXT_QUERY_PARAM,
   serializePublicWorkspaceContext,
 } from "../src/site/workspace-context";
-import { resolvePublicMapCaseManualSelectionTransition } from "../src/site/workspace-map-deep-link";
+import {
+  resolvePublicMapCaseManualSelectionTransition,
+  resolvePublicMapCaseUrlTransition,
+} from "../src/site/workspace-map-deep-link";
 
 const missingMapContext = Object.freeze({
   profile: PUBLIC_WORKSPACE_CONTEXT_PROFILE,
@@ -46,6 +50,29 @@ function missingMapUrl(): URL {
 }
 
 describe("Explorer manual map-selection deep-link release", () => {
+  it("selects a newly URL-owned case without resetting the fixture", () => {
+    expect(resolvePublicMapCaseUrlTransition(missingMapUrl(), null)).toEqual({
+      activeDeepLinkMapCaseId: "missing",
+      mapCaseIdToSelect: "missing",
+      resetOwnedSelection: false,
+    });
+  });
+
+  it("resets evidence only when a departing URL still owns the fixture", () => {
+    const neutralUrl = new URL("https://example.invalid/explorer?lang=en#map");
+
+    expect(resolvePublicMapCaseUrlTransition(neutralUrl, "missing")).toEqual({
+      activeDeepLinkMapCaseId: null,
+      mapCaseIdToSelect: null,
+      resetOwnedSelection: true,
+    });
+    expect(resolvePublicMapCaseUrlTransition(neutralUrl, null)).toEqual({
+      activeDeepLinkMapCaseId: null,
+      mapCaseIdToSelect: null,
+      resetOwnedSelection: false,
+    });
+  });
+
   it("keeps URL ownership when the restored missing case is selected again", () => {
     const transition = resolvePublicMapCaseManualSelectionTransition(
       missingMapUrl(),
@@ -113,6 +140,11 @@ describe("Explorer manual map-selection deep-link release", () => {
     expect(mainSource).toContain(
       "syncPublicWorkspaceNavigation(navigation, transition.replacementUrl)",
     );
+    expect(mainSource).toContain("resolvePublicMapCaseUrlTransition");
+    expect(mainSource).toContain("site.resetMapEvidenceSelection()");
+    expect(mountSource).toContain("resetMapEvidenceSelection");
+    expect(mountSource).toContain("mapFixture.destroy()");
+    expect(mountSource).toContain("mapFixture = mountMapFixture()");
     expect(mainSource).not.toContain("selection.evidenceRefs.join");
   });
 });
