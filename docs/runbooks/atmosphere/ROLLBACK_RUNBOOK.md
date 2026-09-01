@@ -954,7 +954,7 @@ Before merge, close the draft pull request or revert the branch commit. After me
 
 ---
 
-## Appendix A — Non-executing Atmosphere candidate template
+<a id="appendix-a-non-executing-atmosphere-candidate-template"></a>\n\n## Appendix A — Non-executing Atmosphere candidate template
 
 > [!IMPORTANT]
 > This template shows the current field families but is intentionally not a ready-to-submit JSON object. Replace every angle-bracket value from governed case evidence, compute the selected deterministic digest, keep arrays sorted and unique, and validate the result. Do not copy a plausible identifier or digest into a real case merely to obtain `PASS`.
@@ -1020,7 +1020,7 @@ The fixture is synthetic and remains non-authoritative.
 
 ---
 
-## Appendix B — Command and path matrix
+<a id="appendix-b-command-and-path-matrix"></a>\n\n## Appendix B — Command and path matrix
 
 | Purpose | Current path or command | Status / limit |
 |---|---|---|

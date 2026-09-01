@@ -32,7 +32,7 @@ responsibility_root: docs/
 responsibility: "Record the proposed published-alias and rollback-governance decision, current bounded implementation evidence, acceptance gates, migration posture, and rollback boundaries without creating release or publication authority."
 current_path: docs/adr/ADR-0015-data-published-_domain_-current-alias-is-governed-by-rollback_card.md
 supersedes: []
-superseded_by: null
+superseded_by: []
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
