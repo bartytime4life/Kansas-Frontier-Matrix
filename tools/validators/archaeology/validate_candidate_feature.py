@@ -241,7 +241,9 @@ def validate_candidate_feature(payload: Any) -> list[str]:
                 )
             )
     geometry_ref = payload.get("candidate_geometry_ref")
-    if geometry_ref is not None and not _is_opaque_kfm_ref(geometry_ref):
+    if "candidate_geometry_ref" in payload and not _is_opaque_kfm_ref(
+        geometry_ref
+    ):
         errors.append(
             "candidate_geometry_ref must be an opaque governed kfm:// reference "
             "without query, fragment, or encoded locator material"

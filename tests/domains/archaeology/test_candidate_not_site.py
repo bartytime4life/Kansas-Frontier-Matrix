@@ -111,6 +111,16 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
             errors,
         )
 
+    def test_explicit_null_geometry_reference_fails_closed(self) -> None:
+        payload = copy.deepcopy(self.valid)
+        payload["candidate_geometry_ref"] = None
+        errors = validate_candidate_feature(payload)
+        self.assertIn(
+            "candidate_geometry_ref must be an opaque governed kfm:// reference "
+            "without query, fragment, or encoded locator material",
+            errors,
+        )
+
     def test_inline_location_fixture_fails_closed(self) -> None:
         payload = _load(FIXTURE_ROOT / "sensitive_geometry_deny.json")
         errors = validate_candidate_feature(payload)
