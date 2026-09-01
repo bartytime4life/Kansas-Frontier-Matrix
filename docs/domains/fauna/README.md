@@ -56,7 +56,9 @@ notes:
 ![First PR](https://img.shields.io/badge/first%20PR-synthetic--only-lightgrey)
 ![Build](https://img.shields.io/badge/CI-bounded%20synthetic%20active-brightgreen)
 
-**Status:** draft; repository-grounded; mixed implementation maturity · **Review route:** `@bartytime4life` via CODEOWNERS; Fauna stewardship and independent review remain `NEEDS VERIFICATION` · **Last updated:** 2026-08-29 · **`CONTRACT_VERSION = "3.0.0"`**
+**Status:** draft; repository-grounded; mixed implementation maturity · **Bounded validation:** synthetic fixture checks and Fauna workflow coverage are active; live-source admission, production retrieval, promotion, release, and publication remain held · **Review route:** `@bartytime4life` via CODEOWNERS; Fauna stewardship and independent review remain `NEEDS VERIFICATION` · **Last updated:** 2026-08-29 · **`CONTRACT_VERSION = "3.0.0"`**
+
+> **Current repository-state correction.** This lane is repository-grounded and has bounded synthetic validation in place, but it does not claim source admission, policy acceptance, production data retrieval, release, deployment, promotion, or public publication. Any live-source or public-output claim remains `HOLD` / `DENY` / `ABSTAIN` until the corresponding source, rights, policy, geoprivacy, review, and proof gates are explicitly satisfied.
 
 ---
 
@@ -407,7 +409,7 @@ Repository inspection resolves former blanket path questions but leaves authorit
 | Added `MonitoringEvent` to ubiquitous-language table; added explicit non-ownership note | gap closure | Atlas §7.B owned-object list |
 | Added DIRRULES section citations to §2 / §4 / §5 placement claims | clarification | Make placement basis auditable per §4 Step 5 |
 | Bumped doc `version` v1 → v1.1; `updated` 2026-05-16 → 2026-06-02 | housekeeping | MINOR — no operating-law change, no receipts re-issued |
-| Reconciled repository presence, bounded fixture workflow, explicit proof/release holds, CODEOWNERS routing, runbook maturity, path drift, and ADR status against current main | repository-state correction | Remove blanket `PROPOSED` and `CI TODO` claims without implying source admission, policy acceptance, review, runtime readiness, release, or publication |
+| Reconciled repository presence, bounded fixture workflow, explicit proof/release holds, CODEOWNERS routing, runbook maturity, path drift, and ADR status against current main | repository-state correction | Remove blanket `PROPOSED` and stale CI-status drift claims without implying source admission, policy acceptance, review, runtime readiness, release, or publication |
 | Preserved both published Fauna guidance surfaces and their unresolved carrier-topology relationship in the lifecycle diagram and FAQ | review correction | Address the post-merge P2 finding without selecting a canonical carrier or changing release authority |
 
 > **Backward compatibility.** All prior heading anchors are preserved (`#1-scope` … `#13-appendix-and-15-readme-contract-crosswalk` retained where text was unchanged); the appendix anchor is renumbered to `#16-...` because §10–§13 were inserted for companion sections. Inbound links targeting the old `#10`–`#13` (Verification backlog, FAQ, Related docs, Appendix) should be re-pointed — see §16 anchor note.
