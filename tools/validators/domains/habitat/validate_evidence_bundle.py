@@ -29,6 +29,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     """Run shared shape validation for explicit files or the fixture profile."""
 
     arguments = list(sys.argv[1:] if argv is None else argv)
+    if "--fixtures" in arguments and any(
+        argument != "--fixtures" for argument in arguments
+    ):
+        print("Cannot combine --fixtures with explicit files", file=sys.stderr)
+        return 2
     return run(SCHEMA_PATH, FIXTURES_DIR, arguments)
 
 
