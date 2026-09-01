@@ -371,6 +371,24 @@ def run(argv: Sequence[str] | None = None) -> int:
         except (JsonInputError, ValueError, TypeError, CanonicalizationFailure, sqlite3.Error):
             print(json.dumps({"scope": SCOPE, "status": "FAIL", "reason": "INPUT_OR_DERIVATION_ERROR"}, sort_keys=True, separators=(",", ":")))
             return 1
+        result = validate_document(derived)
+        if not result.coherent:
+            print(
+                json.dumps(
+                    {
+                        "findings": [
+                            {"code": finding.code, "path": finding.path}
+                            for finding in result.findings
+                        ],
+                        "scope": SCOPE,
+                        "status": "FAIL",
+                        "reason": "DERIVED_ASSESSMENT_INVALID",
+                    },
+                    sort_keys=True,
+                    separators=(",", ":"),
+                )
+            )
+            return 1
         print(json.dumps(derived, sort_keys=True, separators=(",", ":")))
         return 0
     if not args.files:
