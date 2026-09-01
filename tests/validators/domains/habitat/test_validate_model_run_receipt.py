@@ -94,7 +94,7 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
         second = subprocess.run(command, cwd=ROOT, check=False, capture_output=True, text=True)
         self.assertEqual(0, first.returncode, first.stderr)
         self.assertEqual(first.stdout, second.stdout)
-        self.assertIn('"case_count":19', first.stdout)
+        self.assertIn('"case_count":21', first.stdout)
         self.assertIn('"suite_match":true', first.stdout)
 
         with tempfile.TemporaryDirectory() as directory:

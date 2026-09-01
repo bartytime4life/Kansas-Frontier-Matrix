@@ -216,6 +216,28 @@
       ]
     },
     {
+      "case_id": "unknown-started-offset-denied",
+      "base": "completed",
+      "mutations": [
+        { "path": "/started_at", "value": "2026-08-10T12:00:00-00:00" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "MODEL_RUN_SCHEMA_INVALID", "path": "/started_at" }
+      ]
+    },
+    {
+      "case_id": "unknown-completed-offset-denied",
+      "base": "completed",
+      "mutations": [
+        { "path": "/completed_at", "value": "2026-08-10T12:05:00-00:00" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "MODEL_RUN_SCHEMA_INVALID", "path": "/completed_at" }
+      ]
+    },
+    {
       "case_id": "duplicate-input-ref",
       "base": "completed",
       "mutations": [

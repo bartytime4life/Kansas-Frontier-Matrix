@@ -14,9 +14,9 @@
     ".github/workflows/habitat-model-run-receipt.yml": "sha256:1812620807ea7ac6287e670564bcc2fb7583bfd54714f7337cea3fb959799c57",
     "contracts/domains/habitat/model_run_receipt.md": "sha256:f611914064a5691dab68c6dff79c19c4df943e93a9141335cc27fef7a332401f",
     "docs/intake/exploratory/habitat-model-run-receipt-source-map.md": "sha256:6128a385928d422602f29bd08bdd2a0cc29c8eda0fdb08fa6d399a4678a99435",
-    "fixtures/contracts/v1/domains/habitat/model_run_receipt/cases.json": "sha256:a0ad846d48aa8e50e80653e42879a0fe6056cd8f3661ee53da5a0cb0b2bc4a45",
+    "fixtures/contracts/v1/domains/habitat/model_run_receipt/cases.json": "sha256:78d700af4e35764eaf6551c07f59e790f07751469cd4d3e0a90fd92ee3bb59fb",
     "schemas/contracts/v1/domains/habitat/model_run_receipt.schema.json": "sha256:717e5e6bc6ecb8ba814fe0bc243eeff3cfac6aaed6565dcddab4b9b56b3e05b0",
-    "tests/validators/domains/habitat/test_validate_model_run_receipt.py": "sha256:5f0975c55ff6fcf98ba26a400d2cad5b4993545b6b57b8131611868658f4829a",
+    "tests/validators/domains/habitat/test_validate_model_run_receipt.py": "sha256:5a52b0f2e288d3d299436656347072faf31160bf616b72378ad1f661228b168d",
     "tools/validators/domains/habitat/validate_model_run_receipt.py": "sha256:ed8d79d103bf692b48f2cdfd159a7bf654456b34cf41fbf05fb391e00a3ef703"
   },
   "model_identity": {
@@ -68,7 +68,7 @@
     {
       "gate": "focused-model-run-receipt-suite",
       "outcome": "PASS",
-      "reason": "Nine tests, twenty-three subtests, and nineteen exact fixture cases passed, including unknown-local-offset denial."
+      "reason": "Nine tests, twenty-five subtests, and twenty-one exact fixture cases passed, including unknown-local-offset denial at every governed timestamp field."
     },
     {
       "gate": "completed-failed-source-role-and-non-authority-boundary",
@@ -126,5 +126,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Completes the existing Habitat ModelRunReceipt schema and validator scaffolds as a closed fixture-only profile, including fail-closed denial of RFC 3339 unknown local offsets. Private research contributed only to candidate discovery; public provenance contains no private identifiers or copied private content. The profile performs no model run, evidence resolution, policy or review decision, lifecycle transition, release, deployment, or publication."
+  "notes": "Completes the existing Habitat ModelRunReceipt schema and validator scaffolds as a closed fixture-only profile, including fail-closed denial of RFC 3339 unknown local offsets at started, completed, and recorded timestamps. Private research contributed only to candidate discovery; public provenance contains no private identifiers or copied private content. The profile performs no model run, evidence resolution, policy or review decision, lifecycle transition, release, deployment, or publication."
 }
