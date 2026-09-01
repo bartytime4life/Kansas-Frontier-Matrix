@@ -286,8 +286,15 @@ def _semantic_findings(payload: Mapping[str, object]) -> list[Finding]:
             findings.append(Finding("DENY_HISTORY_LEAK", "/history", "DENY public projection cannot expose history identifiers"))
 
     elif outcome == "ERROR":
-        if reason != "UPSTREAM_ERROR" or trust_map.get("policy") != "ERROR":
-            findings.append(Finding("ERROR_STATE_INVALID", "/outcome", "ERROR requires UPSTREAM_ERROR and ERROR policy"))
+        allowed_error_reasons = {"UPSTREAM_ERROR", "PROVIDER_SCOPE_ERROR"}
+        if reason not in allowed_error_reasons or trust_map.get("policy") != "ERROR":
+            findings.append(
+                Finding(
+                    "ERROR_STATE_INVALID",
+                    "/outcome",
+                    "ERROR requires a supported error reason and ERROR policy",
+                )
+            )
         if refs_list or citations_list or negatives or corrections:
             findings.append(Finding("ERROR_DETAIL_LEAK", "/", "ERROR cannot expose evidence or history"))
 
