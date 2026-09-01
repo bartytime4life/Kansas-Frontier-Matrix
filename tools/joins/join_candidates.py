@@ -18,6 +18,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+import yaml
 from jsonschema import Draft202012Validator, FormatChecker
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -34,6 +35,7 @@ from hashing import (  # noqa: E402
 
 SCHEMA_PATH = REPO_ROOT / "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json"
 CASES_PATH = REPO_ROOT / "fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json"
+DOMAIN_LANE_REGISTER_PATH = REPO_ROOT / "control_plane/domain_lane_register.yaml"
 IDENTITY_PREFIX = "kfm:cross-lane-join-assessment:"
 CANDIDATE_PREFIX = "kfm:join-candidate:"
 SCOPE = "cross-lane-join-assessment-fixture-only-v1"
@@ -162,6 +164,39 @@ def _source_role_conflict(left: Mapping[str, Any], right: Mapping[str, Any]) -> 
     return left.get("source_role") != right.get("source_role")
 
 
+def _unresolved_domain_aliases(path: Path = DOMAIN_LANE_REGISTER_PATH) -> Mapping[str, str]:
+    """Read unresolved domain aliases only as a fail-closed review signal.
+
+    The domain-lane register is explicitly a proposed machine projection, so
+    these entries must never normalize or authorize a domain identity. They are
+    useful here only to stop a raw alias/canonical pair from masquerading as two
+    independently governed domains.
+    """
+    try:
+        value = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, yaml.YAMLError):
+        return {}
+    aliases = _mapping(_mapping(value).get("unresolved_aliases"))
+    return {
+        key: target
+        for key, target in aliases.items()
+        if isinstance(key, str) and isinstance(target, str)
+    }
+
+
+def _domain_alias_collision(left_domain: object, right_domain: object) -> bool:
+    if not isinstance(left_domain, str) or not isinstance(right_domain, str) or left_domain == right_domain:
+        return False
+    aliases = _unresolved_domain_aliases()
+    left_target = aliases.get(left_domain)
+    right_target = aliases.get(right_domain)
+    return (
+        left_target == right_domain
+        or right_target == left_domain
+        or (isinstance(left_target, str) and left_target == right_target)
+    )
+
+
 def derive_decision(candidate: Mapping[str, Any]) -> dict[str, Any]:
     request = _mapping(candidate.get("request"))
     endpoints = _mapping(candidate.get("endpoints"))
@@ -183,7 +218,8 @@ def derive_decision(candidate: Mapping[str, Any]) -> dict[str, Any]:
         and isinstance(right.get("domain"), str)
         and left.get("domain") == right.get("domain")
     )
-    if same_domain:
+    domain_alias_collision = _domain_alias_collision(left.get("domain"), right.get("domain"))
+    if same_domain or domain_alias_collision:
         matched = False
     inherited = _strictest_sensitivity(left, right)
     missing_evidence = sum(endpoint.get("evidence_ref") is None for endpoint in (left, right))
@@ -209,6 +245,8 @@ def derive_decision(candidate: Mapping[str, Any]) -> dict[str, Any]:
 
     if same_domain:
         outcome, status, reason, obligation = "ABSTAIN", "NO_JOIN_CANDIDATE", "CROSS_DOMAIN_PAIR_REQUIRED", "ROUTE_TO_DOMAIN_LOCAL_VALIDATOR"
+    elif domain_alias_collision:
+        outcome, status, reason, obligation = "ABSTAIN", "NO_JOIN_CANDIDATE", "DOMAIN_ALIAS_REVIEW_REQUIRED", "ROUTE_TO_DOMAIN_ALIAS_REVIEW"
     elif dependency_error:
         outcome, status, reason, obligation = "ERROR", "VALIDATOR_SYSTEM_ERROR", "VALIDATOR_DEPENDENCY_ERROR", "REPAIR_VALIDATOR_DEPENDENCY"
     elif living_count:
