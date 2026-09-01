@@ -161,6 +161,22 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
             mutated["evidence_refs"] = [value]
             self.assertIn(evidence_invalid, validate_candidate(mutated))
 
+    def test_evidence_references_are_unique(self) -> None:
+        candidate = _load_candidate()
+        evidence_ref = candidate["evidence_refs"][0]  # type: ignore[index]
+
+        candidate["evidence_refs"] = [  # type: ignore[index]
+            evidence_ref,
+            "fixture://evidence/hydrology/water-level/99999/receipt-2",
+        ]
+        self.assertEqual(validate_candidate(candidate), [])
+
+        candidate["evidence_refs"] = [evidence_ref, evidence_ref]  # type: ignore[index]
+        self.assertIn(
+            Finding("EVIDENCE_REFS_DUPLICATE", "$.evidence_refs"),
+            validate_candidate(candidate),
+        )
+
     def test_observation_family_role_parameter_and_unit_are_closed(self) -> None:
         cases = (
             ("object_family", "FlowObservation", Finding("OBJECT_FAMILY_INVALID", "$.object_family")),

@@ -196,10 +196,13 @@ def validate_candidate(candidate: object) -> list[Finding]:
         or any(not is_nonempty_string(value) for value in evidence_refs)
     ):
         add_finding(findings, "EVIDENCE_REF_MISSING", "$.evidence_refs")
-    elif any(not value.startswith(FIXTURE_EVIDENCE_PREFIX) for value in evidence_refs):
-        add_finding(findings, "EVIDENCE_REF_NOT_FIXTURE", "$.evidence_refs")
-    elif any(not _has_canonical_evidence_path(value) for value in evidence_refs):
-        add_finding(findings, "EVIDENCE_REF_IDENTIFIER_INVALID", "$.evidence_refs")
+    else:
+        if any(not value.startswith(FIXTURE_EVIDENCE_PREFIX) for value in evidence_refs):
+            add_finding(findings, "EVIDENCE_REF_NOT_FIXTURE", "$.evidence_refs")
+        elif any(not _has_canonical_evidence_path(value) for value in evidence_refs):
+            add_finding(findings, "EVIDENCE_REF_IDENTIFIER_INVALID", "$.evidence_refs")
+        if len(evidence_refs) != len(set(evidence_refs)):
+            add_finding(findings, "EVIDENCE_REFS_DUPLICATE", "$.evidence_refs")
 
     spatial = candidate.get("spatial_support")
     if not isinstance(spatial, dict):
