@@ -63,6 +63,30 @@ class AtmosphereEvidenceBundleSchemaConvergenceTests(unittest.TestCase):
         self.assertIn("OK ", result.stdout)
         self.assertIn("EXPECTED_FAIL ", result.stdout)
 
+    def test_declared_projection_validator_inherits_domain_argument_guard(self) -> None:
+        invalid_fixture = SHARED_FIXTURES / "invalid/invalid_1.json"
+
+        with tempfile.TemporaryDirectory() as directory:
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(PROJECTION_VALIDATOR),
+                    "--fixtures",
+                    str(invalid_fixture),
+                ],
+                cwd=directory,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        self.assertEqual(result.stdout, "")
+        self.assertIn(
+            "Cannot combine --fixtures with explicit files",
+            result.stderr,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
