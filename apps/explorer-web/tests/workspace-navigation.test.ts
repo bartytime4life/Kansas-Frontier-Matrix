@@ -98,7 +98,7 @@ describe("Explorer public workspace navigation integration", () => {
     ).toBeNull();
   });
 
-  it("restores only the existing evidence-free synthetic map abstention case", () => {
+  it("restores only the existing domain-neutral evidence-free synthetic map abstention case", () => {
     const missingEvidenceContext = {
       ...knowledgeContext,
       workspaceId: "explore",
@@ -120,6 +120,14 @@ describe("Explorer public workspace navigation integration", () => {
         featureId: "feature:flow-001",
       },
     };
+    const archaeologyScopedContext = {
+      ...missingEvidenceContext,
+      domainIds: ["archaeology"],
+    };
+    const peopleDnaLandScopedContext = {
+      ...missingEvidenceContext,
+      domainIds: ["people_dna_land"],
+    };
 
     expect(
       resolvePublicEvidenceFreeMapCaseId(
@@ -129,6 +137,16 @@ describe("Explorer public workspace navigation integration", () => {
     expect(
       resolvePublicEvidenceFreeMapCaseId(
         contextUrl(strippedSupportedContext, "#map"),
+      ),
+    ).toBeNull();
+    expect(
+      resolvePublicEvidenceFreeMapCaseId(
+        contextUrl(archaeologyScopedContext, "#map"),
+      ),
+    ).toBeNull();
+    expect(
+      resolvePublicEvidenceFreeMapCaseId(
+        contextUrl(peopleDnaLandScopedContext, "#map"),
       ),
     ).toBeNull();
   });
@@ -209,6 +227,7 @@ describe("Explorer public workspace navigation integration", () => {
       "resolveSinglePublicKnowledgeDomainId",
     );
     expect(navigationSource).toContain("resolvePublicEvidenceFreeMapCaseId");
+    expect(navigationSource).toContain("context.domainIds.length !== 0");
     expect(navigationSource).toContain('selection.selectionId === "selection:missing"');
     expect(navigationSource).toContain("selection.evidenceRefs.length !== 0");
     expect(navigationSource).not.toContain("evidenceRefs.some");
