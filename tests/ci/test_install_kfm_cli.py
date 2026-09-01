@@ -116,6 +116,33 @@ class InstallKfmCliTests(unittest.TestCase):
                 module.install()
         self.assertEqual(1, run.call_count)
 
+    def test_install_closes_ambient_pip_controls(self) -> None:
+        inherited = {
+            "PIP_CONSTRAINT": "/outside/constraint.txt",
+            "PIP_INDEX_URL": "https://packages.invalid/simple",
+            "PIP_REQUIREMENT": "/outside/requirements.txt",
+            "PIP_TARGET": "/outside/target",
+            "UNRELATED_STATE": "preserved",
+        }
+        with (
+            mock.patch.dict(module.os.environ, inherited, clear=False),
+            mock.patch.object(module.time, "monotonic", side_effect=(100.0, 100.0, 150.0)),
+            mock.patch.object(module.subprocess, "run") as run,
+        ):
+            module.install()
+        self.assertEqual(2, run.call_count)
+        for call in run.call_args_list:
+            environment = call.kwargs["env"]
+            self.assertFalse(any(key.upper().startswith("PIP_") for key in environment if key not in {
+                "PIP_CONFIG_FILE",
+                "PIP_DISABLE_PIP_VERSION_CHECK",
+                "PIP_NO_INPUT",
+            }))
+            self.assertEqual(module.os.devnull, environment["PIP_CONFIG_FILE"])
+            self.assertEqual("1", environment["PIP_DISABLE_PIP_VERSION_CHECK"])
+            self.assertEqual("1", environment["PIP_NO_INPUT"])
+            self.assertEqual("preserved", environment["UNRELATED_STATE"])
+
     def test_main_rejects_arguments(self) -> None:
         with self.assertRaises(module.CliInstallConfigurationError):
             module.main(["anything"])
