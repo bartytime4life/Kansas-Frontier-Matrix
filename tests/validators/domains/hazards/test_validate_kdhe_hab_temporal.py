@@ -291,6 +291,18 @@ class KdheHabTemporalValidatorTests(unittest.TestCase):
         self.assertEqual(payload["target"], "<outside-repository>")
         self.assertNotIn(marker, stream.getvalue())
 
+    def test_ancestor_symlink_loop_returns_finite_error(self) -> None:
+        with tempfile.TemporaryDirectory(dir=ROOT) as temporary_directory:
+            loop = Path(temporary_directory) / "loop"
+            loop.symlink_to(loop)
+            result = validate_file(loop / "candidate.json")
+
+        self.assertEqual(result.outcome, "ERROR")
+        self.assertEqual(
+            {(finding.code, finding.path) for finding in result.findings},
+            {("KDHE_HAB_INPUT_SYMLINK_DENIED", "/")},
+        )
+
     def test_schema_invalid_types_return_finite_deny_results(self) -> None:
         invalid_state = self._candidate()
         invalid_state["normalized_state"] = ["WATCH"]

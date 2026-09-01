@@ -95,7 +95,10 @@ def _read(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
     try:
         if path.is_symlink():
             return None, [Finding("KDHE_HAB_INPUT_SYMLINK_DENIED", "/")]
-        resolved = path.resolve(strict=False)
+        try:
+            resolved = path.resolve(strict=False)
+        except RuntimeError:
+            return None, [Finding("KDHE_HAB_INPUT_SYMLINK_DENIED", "/")]
         if not resolved.is_relative_to(ROOT.resolve()):
             return None, [Finding("KDHE_HAB_INPUT_OUTSIDE_REPOSITORY", "/")]
         path = resolved
