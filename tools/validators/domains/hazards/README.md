@@ -14,7 +14,7 @@ responsibility: index current Hazards validator implementations and placeholders
 truth_posture: cite-or-abstain; executable claims require current code plus paired deterministic proof; file presence or a green held workflow never establishes source admission, evidence closure, current hazard conditions, life-safety authority, release, or publication
 evidence_repository: bartytime4life/Kansas-Frontier-Matrix
 evidence_base_ref: main
-evidence_base_commit: 6a4b988784c31583af5d1cded3b2654360c1c123
+evidence_base_commit: 7e5bfa8e178940876f90d096613661a72c0ae66b
 evidence_base_role: pre-change evidence base; the inventory below includes this proposed branch change and is exact only at the branch head reported by GitHub
 codeowners_route: /tools/validators/ @bartytime4life
 directory_rules_adoption_adr: docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
@@ -69,7 +69,7 @@ notes:
 
 This directory is the Hazards validation implementation lane under the `tools/` responsibility root. It owns repository validator code and this local inventory. Hazards meaning remains under [`contracts/`](../../../../contracts/domains/hazards/README.md); machine shape remains under [`schemas/`](../../../../schemas/contracts/v1/domains/hazards/README.md); fixtures and tests remain under their own roots.
 
-The pre-change evidence base is `main@6a4b988784c31583af5d1cded3b2654360c1c123`. The inventory below additionally includes the KDHE HAB temporal validator proposed on this branch and is exact only at the branch head reported by GitHub. It distinguishes substantive implementations from tracked placeholders and distinguishes the aggregate Hazards workflow from dedicated profile workflows so hosted evidence is not understated or overstated.
+The pre-change evidence base is `main@7e5bfa8e178940876f90d096613661a72c0ae66b`. The inventory below additionally includes the KDHE HAB temporal validator proposed on this branch and is exact only at the branch head reported by GitHub. It distinguishes substantive implementations from tracked placeholders and distinguishes the aggregate Hazards workflow from dedicated profile workflows so hosted evidence is not understated or overstated.
 
 ## Status
 
@@ -219,6 +219,6 @@ This README is repository-facing documentation. Rollback is a reviewed revert of
 | Field | Value |
 |---|---|
 | Evidence date | 2026-09-01 |
-| Pre-change repository commit | `6a4b988784c31583af5d1cded3b2654360c1c123` |
+| Pre-change repository commit | `7e5bfa8e178940876f90d096613661a72c0ae66b` |
 | Review result | Six scripts confirmed: four substantive implementations and two explicit `NotImplementedError` placeholders; the KDHE HAB temporal profile has focused deterministic local proof but no dedicated hosted workflow at this boundary |
 | Next trigger | Validator add/remove/rename, placeholder implementation, fixture/test/workflow change, validator-registry change, source-admission change, or consumer adoption |
