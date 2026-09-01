@@ -1,6 +1,7 @@
 {
   "record_id": "fixture:hydrology:invalid",
   "object_family": "NFHLZone",
+  "source_role": "modeled",
   "source_descriptor_ref": "",
   "evidence_refs": [],
   "gauge_site_ref": "",
@@ -10,14 +11,22 @@
     "longitude": "synthetic-forbidden-location"
   },
   "temporal_scope": {
+    "aggregation_window": "forecast",
     "observed_at": "not-a-time",
+    "source_time": "not-a-source-time",
     "retrieved_at": "2026-08-02T11:00:00Z"
   },
   "measurement": {
     "parameter_code": "forecast",
     "value": -1,
     "unit": "cfs forecast",
+    "unit_transform_ref": "fixture://transforms/hydrology/unverified-normalization",
+    "method_ref": "https://example.invalid/live-method",
+    "caveat_refs": [
+      "https://example.invalid/live-caveat"
+    ],
     "qualifier": "modeled",
+    "provisional_status": "",
     "no_data": 0
   },
   "governance": {
