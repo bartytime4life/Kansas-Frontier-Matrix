@@ -1,6 +1,7 @@
 import withdrawnFixture from "../../../../fixtures/ui/focus_composed_claim_projection/valid/abstain-withdrawn.json";
 import answerFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/answer-corrected.json";
 import heldFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/abstain-source-drift-review.json";
+import unresolvedCitationFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/abstain-invalid-provenance-reference.json";
 import revokedFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/abstain-revoked.json";
 import staleFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/abstain-stale.json";
 import supersededFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/abstain-superseded.json";
@@ -35,6 +36,19 @@ const cases: readonly MapEvidenceFixtureCase[] = Object.freeze([
       layer_id: "layer:synthetic-streamflow",
       feature_id: "feature:missing-evidence",
       evidence_refs: [],
+    },
+  },
+  {
+    caseId: "citation-unresolved",
+    label: "Select feature with unresolved evidence citation",
+    selection: {
+      profile: MAP_FEATURE_SELECTION_PROFILE,
+      selection_id: "selection:citation-unresolved",
+      layer_id: "layer:synthetic-streamflow",
+      feature_id: "feature:citation-unresolved",
+      evidence_refs: [
+        "kfm:evidence:synthetic:unresolved-provenance-001",
+      ],
     },
   },
   {
@@ -190,6 +204,8 @@ if (root === null) throw new Error("Map evidence fixture root is missing.");
 mountMapFeatureEvidenceFixture(root, cases, async (selection) => {
   await Promise.resolve();
   switch (selection.selectionId) {
+    case "selection:citation-unresolved":
+      return unresolvedCitationFixture;
     case "selection:restricted":
       return denyFixture;
     case "selection:held":
