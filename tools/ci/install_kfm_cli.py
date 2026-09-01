@@ -138,6 +138,7 @@ def install() -> None:
                 cwd=REPO_ROOT,
                 env=environment,
                 shell=False,
+                stdin=subprocess.DEVNULL,
                 timeout=remaining_seconds,
             )
         except subprocess.TimeoutExpired as exc:
