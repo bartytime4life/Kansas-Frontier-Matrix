@@ -128,6 +128,26 @@ def _spatial_temporal_match(left: Mapping[str, Any], right: Mapping[str, Any], t
     return left_start <= right_end + tolerance and right_start <= left_end + tolerance
 
 
+def _temporal_boundary_ambiguous(
+    left: Mapping[str, Any], right: Mapping[str, Any], tolerance_seconds: object
+) -> bool:
+    """Fail closed when zero-tolerance intervals only touch at one boundary.
+
+    The shared temporal profile does not establish repository-wide boundary
+    inclusivity. A positive tolerance is an explicit request to compare across
+    a bounded gap; zero tolerance must not silently choose closed intervals.
+    """
+    if tolerance_seconds != 0:
+        return False
+    if left.get("spatial_cell_ref") is None or left.get("spatial_cell_ref") != right.get("spatial_cell_ref"):
+        return False
+    left_start, left_end = _time(left.get("valid_from")), _time(left.get("valid_to"))
+    right_start, right_end = _time(right.get("valid_from")), _time(right.get("valid_to"))
+    if None in {left_start, left_end, right_start, right_end}:
+        return False
+    return left_end == right_start or right_end == left_start
+
+
 def _strictest_sensitivity(left: Mapping[str, Any], right: Mapping[str, Any]) -> str:
     values = [value for value in (left.get("sensitivity"), right.get("sensitivity")) if value in SENSITIVITY_RANK]
     return max(values, key=SENSITIVITY_RANK.get) if values else "PROHIBITED"
@@ -148,6 +168,12 @@ def derive_decision(candidate: Mapping[str, Any]) -> dict[str, Any]:
         if predicate == "EXACT_KEY"
         else _spatial_temporal_match(left, right, request.get("temporal_tolerance_seconds"))
     )
+    temporal_boundary_ambiguous = (
+        predicate == "SPATIAL_TEMPORAL"
+        and _temporal_boundary_ambiguous(left, right, request.get("temporal_tolerance_seconds"))
+    )
+    if temporal_boundary_ambiguous:
+        matched = False
     same_domain = (
         isinstance(left.get("domain"), str)
         and isinstance(right.get("domain"), str)
@@ -187,6 +213,8 @@ def derive_decision(candidate: Mapping[str, Any]) -> dict[str, Any]:
         outcome, status, reason, obligation = "DENY", "GEOMETRY_PRECISION_BLOCKED", "GEOMETRY_PRECISION_BLOCKED", "GENERALIZE_OR_WITHHOLD_GEOMETRY"
     elif missing_evidence:
         outcome, status, reason, obligation = "ABSTAIN", "EVIDENCE_REF_MISSING", "EVIDENCE_REF_MISSING", "RESOLVE_EVIDENCE_REFS"
+    elif temporal_boundary_ambiguous:
+        outcome, status, reason, obligation = "ABSTAIN", "NO_JOIN_CANDIDATE", "TEMPORAL_BOUNDARY_AMBIGUOUS", "ROUTE_TO_PAIR_TEMPORAL_SEMANTICS"
     elif not matched:
         outcome, status, reason, obligation = "ABSTAIN", "NO_JOIN_CANDIDATE", "JOIN_PREDICATE_NOT_SATISFIED", "REVIEW_JOIN_BASIS"
     elif source_conflict:
