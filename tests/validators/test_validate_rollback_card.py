@@ -114,6 +114,60 @@ class RollbackCardValidatorTests(unittest.TestCase):
         self.assertEqual(canonical.stdout, compatibility.stdout)
         self.assertEqual(canonical.stderr, compatibility.stderr)
 
+    def test_operator_guidance_describes_compatibility_delegate(self) -> None:
+        stale_claims_by_path = {
+            "docs/runbooks/atmosphere/RELEASE_ROLLBACK_RUNBOOK.md": (
+                "compatibility-looking entry point remains a placeholder",
+            ),
+            "docs/runbooks/atmosphere/ROLLBACK_RUNBOOK.md": (
+                "generic validator entrypoint are placeholders",
+                "`tools/validators/validate_rollback_card.py` raises "
+                "`NotImplementedError`",
+            ),
+            "docs/runbooks/flora/ROLLBACK_RUNBOOK.md": (
+                "generic validator entrypoint are placeholders",
+                "known `NotImplementedError` placeholder",
+            ),
+            "docs/runbooks/archaeology/ROLLBACK_RUNBOOK.md": (
+                "generic validator entrypoint are placeholders",
+                "`tools/validators/validate_rollback_card.py` raises "
+                "`NotImplementedError`",
+            ),
+            "docs/architecture/publication/ROLLBACK.md": (
+                "| Generic validator entrypoint | **CONFIRMED placeholder** |",
+            ),
+            "docs/adr/ADR-0015-data-published-_domain_-current-alias-is-governed-by-rollback_card.md": (
+                "| Generic RollbackCard entrypoint | **CONFIRMED placeholder** |",
+            ),
+            "packages/release/README.md": (
+                "schema-declared validator is absent, while a different "
+                "validator raises `NotImplementedError`",
+            ),
+            "packages/release/src/README.md": (
+                "Schema-declared validator is absent; another validator is "
+                "placeholder-only.",
+                "different validator is a `NotImplementedError` placeholder",
+            ),
+            "policy/data/README.md": (
+                "root compatibility entry point and rollback apply helper "
+                "remain placeholders",
+                "root shim and rollback apply helper remain placeholders",
+            ),
+        }
+
+        for relative_path, stale_claims in sorted(
+            stale_claims_by_path.items()
+        ):
+            with self.subTest(path=relative_path):
+                guidance = (REPO_ROOT / relative_path).read_text(
+                    encoding="utf-8"
+                )
+                normalized = guidance.casefold()
+                self.assertIn("delegat", normalized)
+                self.assertIn("canonical", normalized)
+                for stale_claim in stale_claims:
+                    self.assertNotIn(stale_claim, guidance)
+
     def test_duplicate_keys_fail_closed_without_echo(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "duplicate.json"
