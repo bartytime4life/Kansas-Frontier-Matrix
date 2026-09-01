@@ -31,9 +31,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     """Run shared shape validation for explicit files or the fixture profile."""
 
     arguments = list(sys.argv[1:] if argv is None else argv)
+    try:
+        option_boundary = arguments.index("--")
+    except ValueError:
+        option_arguments = arguments
+    else:
+        option_arguments = arguments[:option_boundary]
     fixture_mode_requested = any(
         argument.startswith("--") and "--fixtures".startswith(argument)
-        for argument in arguments
+        for argument in option_arguments
     )
     if fixture_mode_requested and arguments != ["--fixtures"]:
         print(

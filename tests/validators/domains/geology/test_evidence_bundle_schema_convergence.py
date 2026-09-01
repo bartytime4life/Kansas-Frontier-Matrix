@@ -101,6 +101,14 @@ class GeologyEvidenceBundleSchemaConvergenceTests(unittest.TestCase):
                 self.assertEqual(result.stdout, "")
                 self.assertIn("Use exactly --fixtures", result.stderr)
 
+    def test_option_terminator_preserves_explicit_file_validation(self) -> None:
+        fixture = SHARED_FIXTURES / "valid/valid_1.json"
+        result = self.run_domain_validator("--", str(fixture))
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn(f"OK {fixture}", result.stdout)
+        self.assertEqual(result.stderr, "")
+
     def test_inline_exact_subsurface_location_is_rejected(self) -> None:
         payload = self.load(SHARED_FIXTURES / "valid/valid_1.json")
         payload["exact_subsurface_location"] = {
