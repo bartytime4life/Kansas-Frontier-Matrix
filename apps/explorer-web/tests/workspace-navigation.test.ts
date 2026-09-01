@@ -9,6 +9,7 @@ import {
   serializePublicWorkspaceContext,
 } from "../src/site/workspace-context";
 import {
+  resolvePublicEvidenceFreeMapCaseId,
   resolvePublicWorkspaceNavigationState,
   resolveSinglePublicKnowledgeDomainId,
   sanitizePublicWorkspaceNavigationUrl,
@@ -97,6 +98,41 @@ describe("Explorer public workspace navigation integration", () => {
     ).toBeNull();
   });
 
+  it("restores only the existing evidence-free synthetic map abstention case", () => {
+    const missingEvidenceContext = {
+      ...knowledgeContext,
+      workspaceId: "explore",
+      domainIds: [],
+      layerIds: ["layer:synthetic-streamflow"],
+      selection: {
+        profile: MAP_FEATURE_SELECTION_PROFILE,
+        selectionId: "selection:missing",
+        layerId: "layer:synthetic-streamflow",
+        featureId: "feature:missing",
+        evidenceRefs: [],
+      },
+    };
+    const strippedSupportedContext = {
+      ...missingEvidenceContext,
+      selection: {
+        ...missingEvidenceContext.selection,
+        selectionId: "selection:supported",
+        featureId: "feature:flow-001",
+      },
+    };
+
+    expect(
+      resolvePublicEvidenceFreeMapCaseId(
+        contextUrl(missingEvidenceContext, "#map"),
+      ),
+    ).toBe("missing");
+    expect(
+      resolvePublicEvidenceFreeMapCaseId(
+        contextUrl(strippedSupportedContext, "#map"),
+      ),
+    ).toBeNull();
+  });
+
   it("scrubs a rejected context while preserving unrelated public URL state", () => {
     const mismatched = contextUrl(knowledgeContext, "#trust");
     mismatched.searchParams.set("lang", "en");
@@ -150,6 +186,7 @@ describe("Explorer public workspace navigation integration", () => {
       contextState: "ANCHOR_ONLY",
     });
     expect(resolveSinglePublicKnowledgeDomainId(url)).toBeNull();
+    expect(resolvePublicEvidenceFreeMapCaseId(url)).toBeNull();
 
     const sanitized = sanitizePublicWorkspaceNavigationUrl(url);
     expect(sanitized.searchParams.has(PUBLIC_WORKSPACE_CONTEXT_QUERY_PARAM)).toBe(
@@ -162,7 +199,7 @@ describe("Explorer public workspace navigation integration", () => {
     );
   });
 
-  it("keeps URL synchronization bounded to navigation and public domain state", () => {
+  it("keeps URL synchronization bounded to navigation, safe abstention, and public domain state", () => {
     expect(navigationSource).toContain('link.setAttribute("aria-current", "page")');
     expect(navigationSource).toContain('link.removeAttribute("aria-current")');
     expect(navigationSource).toContain(
@@ -171,10 +208,16 @@ describe("Explorer public workspace navigation integration", () => {
     expect(navigationSource).toContain(
       "resolveSinglePublicKnowledgeDomainId",
     );
+    expect(navigationSource).toContain("resolvePublicEvidenceFreeMapCaseId");
+    expect(navigationSource).toContain('selection.selectionId === "selection:missing"');
+    expect(navigationSource).toContain("selection.evidenceRefs.length !== 0");
     expect(navigationSource).not.toContain("evidenceRefs.some");
     expect(mainSource).toContain("sanitizePublicWorkspaceNavigationUrl");
     expect(mainSource).toContain("window.history.replaceState");
     expect(mainSource).toContain("syncPublicWorkspaceNavigation");
+    expect(mainSource).toContain("resolvePublicEvidenceFreeMapCaseId");
+    expect(mainSource).toContain("data-map-evidence-case");
+    expect(mainSource).toContain("mapCaseButton.click()");
     expect(mainSource).toContain("resolveSinglePublicKnowledgeDomainId");
     expect(mainSource).toContain(
       'querySelectorAll<HTMLButtonElement>("button[data-domain-id]")',
