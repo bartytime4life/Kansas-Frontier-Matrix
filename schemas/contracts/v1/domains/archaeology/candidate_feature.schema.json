@@ -3,12 +3,214 @@
   "$id": "https://schemas.kfm.local/schemas/contracts/v1/domains/archaeology/candidate_feature.schema.json",
   "title": "Candidate Feature",
   "type": "object",
-  "description": "PROPOSED scaffold for schemas/contracts/v1/domains/archaeology/candidate_feature.schema.json. Fields are to be defined by the owning domain steward.",
+  "description": "DRAFT bounded projection for an archaeology candidate that is not a confirmed site and never carries inline location geometry.",
   "x-kfm": {
-    "status": "PROPOSED",
-    "source_doc": "docs/domains/archaeology/MISSING_OR_PLANNED_FILES.md",
-    "contract_doc": "contracts/domains/archaeology/candidate_feature.md"
+    "status": "DRAFT_BOUNDED_PROJECTION",
+    "contract_doc": "contracts/domains/archaeology/candidate_feature.md",
+    "public_location_posture": "DENY_INLINE_LOCATION",
+    "truth_posture": "CANDIDATE_ONLY"
   },
-  "properties": {},
-  "additionalProperties": true
+  "required": [
+    "candidate_feature_id",
+    "object_type",
+    "truth_state",
+    "origin_method",
+    "source_refs",
+    "review_state",
+    "sensitivity_class",
+    "lifecycle_state"
+  ],
+  "properties": {
+    "candidate_feature_id": {
+      "type": "string",
+      "pattern": "^arc-candidate-[a-z0-9][a-z0-9-]*$"
+    },
+    "object_type": {
+      "const": "CandidateFeature"
+    },
+    "truth_state": {
+      "const": "CANDIDATE"
+    },
+    "candidate_type": {
+      "type": "string",
+      "enum": [
+        "ANOMALY",
+        "ARCHIVAL_LEAD",
+        "EARTHWORK",
+        "FIELD_OBSERVATION",
+        "LANDSCAPE_TRACE",
+        "MATERIAL_SCATTER",
+        "STRUCTURE_TRACE",
+        "OTHER"
+      ]
+    },
+    "origin_method": {
+      "type": "string",
+      "enum": [
+        "ARCHIVAL",
+        "CROSS_DOMAIN_CONTEXT",
+        "FIELD_SURVEY",
+        "GEOPHYSICS",
+        "HISTORICAL_MAP_COMPARISON",
+        "LIDAR",
+        "REMOTE_SENSING",
+        "STEWARD_SUBMISSION",
+        "OTHER"
+      ]
+    },
+    "source_refs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
+      }
+    },
+    "observation_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
+      }
+    },
+    "candidate_geometry_ref": {
+      "type": "string",
+      "pattern": "^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
+    },
+    "spatial_precision_class": {
+      "type": "string",
+      "enum": [
+        "WITHHELD",
+        "GENERALIZED",
+        "PUBLIC_SAFE_GENERALIZED"
+      ]
+    },
+    "confidence_statement": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1000
+    },
+    "review_state": {
+      "type": "string",
+      "enum": [
+        "INTAKE",
+        "NEEDS_REVIEW",
+        "UNDER_REVIEW",
+        "RETAINED",
+        "REJECTED",
+        "QUARANTINED",
+        "SUPERSEDED"
+      ]
+    },
+    "sensitivity_class": {
+      "type": "string",
+      "enum": [
+        "RESTRICTED",
+        "WITHHELD",
+        "PUBLIC_SAFE_GENERALIZED"
+      ]
+    },
+    "lifecycle_state": {
+      "type": "string",
+      "enum": [
+        "WORK",
+        "QUARANTINE",
+        "PROCESSED",
+        "CATALOG"
+      ]
+    },
+    "correction_refs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
+      }
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "anyOf": [
+          {
+            "properties": {
+              "review_state": {
+                "enum": [
+                  "UNDER_REVIEW",
+                  "RETAINED"
+                ]
+              }
+            },
+            "required": [
+              "review_state"
+            ]
+          },
+          {
+            "properties": {
+              "lifecycle_state": {
+                "enum": [
+                  "PROCESSED",
+                  "CATALOG"
+                ]
+              }
+            },
+            "required": [
+              "lifecycle_state"
+            ]
+          }
+        ]
+      },
+      "then": {
+        "required": [
+          "evidence_refs"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "review_state": {
+            "const": "SUPERSEDED"
+          }
+        },
+        "required": [
+          "review_state"
+        ]
+      },
+      "then": {
+        "required": [
+          "correction_refs"
+        ]
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "candidate_geometry_ref"
+        ]
+      },
+      "then": {
+        "required": [
+          "spatial_precision_class"
+        ]
+      }
+    }
+  ]
 }
