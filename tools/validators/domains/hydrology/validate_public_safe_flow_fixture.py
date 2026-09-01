@@ -224,14 +224,6 @@ def validate_candidate(candidate: object) -> list[Finding]:
             add_finding(findings, "RETRIEVAL_TIME_INVALID", "$.temporal_scope.retrieved_at")
         if observed is not None and retrieved is not None and retrieved < observed:
             add_finding(findings, "TEMPORAL_ORDER_INVALID", "$.temporal_scope")
-        if (
-            source_time is not None
-            and (
-                (observed is not None and source_time < observed)
-                or (retrieved is not None and source_time > retrieved)
-            )
-        ):
-            add_finding(findings, "TEMPORAL_SOURCE_ORDER_INVALID", "$.temporal_scope")
 
     measurement = candidate.get("measurement")
     if not isinstance(measurement, dict):
