@@ -50,6 +50,7 @@ def test_crop_rotation_rejects_observed_role_collapse():
     collapsed = copy.deepcopy(candidate)
     collapsed["semantic_role"] = "OBSERVED_AGGREGATE"
     collapsed["support"]["kind"] = "COUNTY"
+    collapsed["support"]["key"] = "US-KS-20169"
     collapsed["support"]["precision_class"] = "AGGREGATE_PUBLIC_SAFE"
     collapsed["indicator"]["value_role"] = "OBSERVED"
     collapsed["spec_hash"], collapsed["id"] = module.canonical_identity(collapsed)

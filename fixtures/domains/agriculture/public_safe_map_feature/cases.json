@@ -279,8 +279,16 @@
           "value": "GENERALIZED_GRID"
         },
         {
+          "path": "/support/key",
+          "value": "KS-GRID-20KM-038-024"
+        },
+        {
           "path": "/support/precision_class",
           "value": "GENERALIZED_PUBLIC_SAFE"
+        },
+        {
+          "path": "/indicator/key",
+          "value": "drought_stress_index"
         }
       ],
       "expected_outcome": "DENY",

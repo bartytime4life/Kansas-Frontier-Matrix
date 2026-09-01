@@ -6,6 +6,7 @@ import argparse
 import copy
 import hashlib
 import json
+import re
 from dataclasses import dataclass
 from datetime import date
 from itertools import islice
@@ -32,6 +33,23 @@ FAMILY_ROLES = {
     "SupplyChainNode": {"INFRASTRUCTURE_CONTEXT"},
     "DroughtStressIndicator": {"DERIVED_INDICATOR"},
     "PestStressIndicator": {"DERIVED_INDICATOR"},
+}
+FAMILY_INDICATOR_KEYS = {
+    "CropObservation": {"cropland_class"},
+    "CropRotation": {"crop_rotation_class"},
+    "YieldObservation": {"yield_rate"},
+    "IrrigationLink": {"irrigation_context_class"},
+    "ConservationPractice": {"conservation_practice_context_class"},
+    "SoilCropSuitability": {"soil_crop_suitability_index"},
+    "AgriculturalEconomyObservation": {"agricultural_receipts"},
+    "SupplyChainNode": {"supply_chain_context_class"},
+    "DroughtStressIndicator": {"drought_stress_index"},
+    "PestStressIndicator": {"pest_stress_index"},
+}
+SUPPORT_KEY_PATTERNS = {
+    "COUNTY": re.compile(r"^US-KS-20[0-9]{3}$"),
+    "REGION": re.compile(r"^KS-AG-[A-Z0-9]+(?:-[A-Z0-9]+)*-REGION-[0-9]{2}$"),
+    "GENERALIZED_GRID": re.compile(r"^KS-GRID-[1-9][0-9]*KM-[0-9]{3}-[0-9]{3}$"),
 }
 ROLE_SUPPORT = {
     "OBSERVED_AGGREGATE": {"COUNTY", "REGION"},
@@ -158,6 +176,10 @@ def _semantic_findings(value: Mapping[str, Any]) -> tuple[Finding, ...]:
         findings.add(Finding("AG_MAP_FAMILY_ROLE_COLLAPSE", "/semantic_role"))
     if support["kind"] not in ROLE_SUPPORT[role]:
         findings.add(Finding("AG_MAP_SUPPORT_ROLE_COLLAPSE", "/support/kind"))
+    if not SUPPORT_KEY_PATTERNS[support["kind"]].fullmatch(support["key"]):
+        findings.add(Finding("AG_MAP_SUPPORT_KEY_KIND_MISMATCH", "/support/key"))
+    if role in FAMILY_ROLES[family] and indicator["key"] not in FAMILY_INDICATOR_KEYS[family]:
+        findings.add(Finding("AG_MAP_INDICATOR_KEY_FAMILY_MISMATCH", "/indicator/key"))
     if indicator["value_role"] != ROLE_VALUE[role]:
         findings.add(Finding("AG_MAP_VALUE_ROLE_COLLAPSE", "/indicator/value_role"))
 

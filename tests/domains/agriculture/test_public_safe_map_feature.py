@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import importlib.util
 import json
 import sys
@@ -123,3 +124,53 @@ def test_identity_changes_when_temporal_freshness_or_support_semantics_change():
     freshness_change = json.loads(json.dumps(candidate))
     freshness_change["freshness"]["evaluated_at"] = "2025-10-02"
     assert module.canonical_identity(freshness_change) != first
+
+
+def test_support_key_namespace_matches_declared_kind():
+    module = _module()
+    manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    county = module.materialize_case(
+        manifest, _case(manifest, "valid_county_crop_observation")
+    )
+    grid = module.materialize_case(
+        manifest, _case(manifest, "valid_generalized_grid_crop_rotation")
+    )
+    region = copy.deepcopy(county)
+    region["support"]["kind"] = "REGION"
+    region["support"]["key"] = "KS-AG-CROP-REGION-01"
+    region["spec_hash"], region["id"] = module.canonical_identity(region)
+
+    assert module.validate_payload(county).outcome == "PASS"
+    assert module.validate_payload(region).outcome == "PASS"
+    assert module.validate_payload(grid).outcome == "PASS"
+
+    mismatches = (
+        (county, "KS-GRID-20KM-038-024"),
+        (region, "US-KS-20169"),
+        (grid, "KS-AG-CROP-REGION-01"),
+    )
+    for candidate, wrong_key in mismatches:
+        candidate = copy.deepcopy(candidate)
+        candidate["support"]["key"] = wrong_key
+        candidate["spec_hash"], candidate["id"] = module.canonical_identity(candidate)
+        result = module.validate_payload(candidate)
+        assert ("AG_MAP_SUPPORT_KEY_KIND_MISMATCH", "/support/key") in {
+            (finding.code, finding.path) for finding in result.findings
+        }
+
+
+def test_indicator_key_is_bound_to_object_family():
+    module = _module()
+    manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    candidate = module.materialize_case(
+        manifest, _case(manifest, "valid_county_crop_observation")
+    )
+
+    for forbidden_value in ("operator_name", "private_address", "proprietary_yield"):
+        mutated = copy.deepcopy(candidate)
+        mutated["indicator"]["key"] = forbidden_value
+        mutated["spec_hash"], mutated["id"] = module.canonical_identity(mutated)
+        result = module.validate_payload(mutated)
+        assert [(finding.code, finding.path) for finding in result.findings] == [
+            ("AG_MAP_INDICATOR_KEY_FAMILY_MISMATCH", "/indicator/key")
+        ]
