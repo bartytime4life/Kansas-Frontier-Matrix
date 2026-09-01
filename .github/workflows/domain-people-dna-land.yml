@@ -4,9 +4,10 @@
 # and release producers remain held.
 #
 # Authority boundary:
-# - This workflow opens only repository-owned synthetic fixture payloads under
-#   fixtures/domains/people-dna-land/consent_overlay/ and
-#   fixtures/domains/people-dna-land/consent_revocation_propagation/.
+# - This workflow opens only repository-owned deterministic synthetic fixtures
+#   under fixtures/domains/people-dna-land/ plus the five explicitly inventoried
+#   shared roots for EvidenceBundle, SourceDescriptor, historical/living-person
+#   resolution, CatalogMatrix closure, and CorrectionNotice.
 # - It does not open real person, genealogy, DNA/genomic, consent, revocation,
 #   parcel, deed, title, assessor, tax, or private person-land payloads.
 # - It does not establish identity, kinship, consent validity, title, boundary,
@@ -72,6 +73,11 @@ jobs:
             "fixtures/domains/people-dna-land/consent_overlay/revocation_manifest.json"
             "fixtures/domains/people-dna-land/consent_revocation_propagation/README.md"
             "fixtures/domains/people-dna-land/consent_revocation_propagation/cases.json"
+            "fixtures/contracts/v1/evidence/evidence_bundle/README.md"
+            "fixtures/contracts/v1/source/source_descriptor/README.md"
+            "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/README.md"
+            "fixtures/data/catalog_matrix/closure/README.md"
+            "fixtures/correction/correction_notice/README.md"
             "policy/domains/people-dna-land/README.md"
             "policy/consent/people-dna-land/README.md"
             "tests/domains/people-dna-land/README.md"
@@ -223,9 +229,42 @@ jobs:
                   f"the accepted synthetic profiles: {surfaced_payloads}."
               )
 
+          shared_fixture_roots = {
+              Path("fixtures/contracts/v1/evidence/evidence_bundle"),
+              Path("fixtures/contracts/v1/source/source_descriptor"),
+              Path(
+                  "fixtures/contracts/v1/domains/people-dna-land/"
+                  "historical_person_place_event_resolution"
+              ),
+              Path("fixtures/data/catalog_matrix/closure"),
+              Path("fixtures/correction/correction_notice"),
+          }
+          for root in sorted(shared_fixture_roots):
+              if root.is_symlink() or not root.is_dir():
+                  raise SystemExit(
+                      "Declared shared synthetic fixture root is unavailable or "
+                      f"unsafe: {root}."
+                  )
+              payloads = sorted(
+                  path
+                  for path in root.rglob("*")
+                  if path.is_file()
+                  and path.name not in {"README.md", ".gitkeep"}
+              )
+              if not payloads:
+                  raise SystemExit(
+                      f"Declared shared synthetic fixture root is empty: {root}."
+                  )
+              symlinks = [path for path in payloads if path.is_symlink()]
+              if symlinks:
+                  raise SystemExit(
+                      "Shared synthetic fixture roots must not contain symlink "
+                      f"payloads: {symlinks}."
+                  )
+
           print(
-              "People/DNA/Land executable, placeholder, marker, and synthetic "
-              "fixture inventories are explicit."
+              "People/DNA/Land executable, placeholder, marker, domain-fixture, "
+              "and shared-fixture inventories are explicit."
           )
           PY
 
@@ -332,7 +371,8 @@ jobs:
           `WORKFLOW_HOLD: broader People/DNA/Land semantics, policy runtime, evidence closure, proof, and release remain unestablished`
 
           When green, this job has executed the bounded domain validator and
-          dispatcher suite plus two frozen, synthetic, no-network consent
+          dispatcher suite against the explicitly inventoried domain and shared
+          synthetic fixture roots, plus two frozen, synthetic, no-network consent
           profiles. The domain suite checks schema inventory, EvidenceBundle and
           SourceDescriptor delegation, CatalogMatrix closure,
           DomainLayerDescriptor and DomainFeatureIdentity fixture polarity,
