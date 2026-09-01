@@ -6,6 +6,7 @@ import argparse
 import copy
 import hashlib
 import json
+import math
 import re
 from dataclasses import dataclass
 from datetime import date
@@ -109,6 +110,22 @@ FALSE_RELEASE = {
     "published": False,
 }
 
+PROTECTED_IDENTIFIER_PATTERN = re.compile(
+    r"(?i)\b(?:parcel|field|farm|operator|owner|well|permit|water[-_ ]?right)"
+    r"(?:[-_ ]?id)?\s*[:=#]\s*[a-z0-9][a-z0-9._/-]{2,}\b"
+)
+LABELED_COORDINATE_PATTERN = re.compile(
+    r"(?i)\b(?:lat(?:itude)?|lon(?:gitude)?)\s*[:=]\s*[+-]?\d{1,3}\.\d+\b"
+)
+COORDINATE_PAIR_PATTERN = re.compile(
+    r"(?<![\w.])([+-]?\d{1,3}\.\d{3,})\s*,\s*"
+    r"([+-]?\d{1,3}\.\d{3,})(?![\w.])"
+)
+WKT_POINT_PATTERN = re.compile(
+    r"(?i)\bpoint\s*\(\s*[+-]?\d{1,3}\.\d+\s+"
+    r"[+-]?\d{1,3}\.\d+\s*\)"
+)
+
 
 @dataclass(frozen=True, order=True)
 class Finding:
@@ -122,13 +139,70 @@ class Result:
     findings: tuple[Finding, ...]
 
 
+class StrictJSONError(ValueError):
+    """Fail-closed JSON decoding error with a stable public finding."""
+
+    def __init__(self, code: str, path: str = "/") -> None:
+        super().__init__(code)
+        self.finding = Finding(code, path)
+
+
 def _pointer(parts: Iterable[Any]) -> str:
     encoded = [str(part).replace("~", "~0").replace("/", "~1") for part in parts]
     return "/" + "/".join(encoded) if encoded else "/"
 
 
 def _schema() -> Mapping[str, Any]:
-    return json.loads(SCHEMA.read_text(encoding="utf-8"))
+    return _strict_json_loads(SCHEMA.read_text(encoding="utf-8"))
+
+
+def _reject_duplicate_members(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    value: dict[str, Any] = {}
+    for key, item in pairs:
+        if key in value:
+            raise StrictJSONError("AG_MAP_DUPLICATE_JSON_MEMBER", f"/{key}")
+        value[key] = item
+    return value
+
+
+def _reject_nonfinite_constant(_: str) -> None:
+    raise StrictJSONError("AG_MAP_NONFINITE_NUMBER_DENIED")
+
+
+def _strict_json_loads(text: str) -> Any:
+    return json.loads(
+        text,
+        object_pairs_hook=_reject_duplicate_members,
+        parse_constant=_reject_nonfinite_constant,
+    )
+
+
+def _contains_coordinate_literal(value: str) -> bool:
+    if LABELED_COORDINATE_PATTERN.search(value) or WKT_POINT_PATTERN.search(value):
+        return True
+    for match in COORDINATE_PAIR_PATTERN.finditer(value):
+        first, second = (float(part) for part in match.groups())
+        if ((abs(first) <= 90 and abs(second) <= 180)
+                or (abs(first) <= 180 and abs(second) <= 90)):
+            return True
+    return False
+
+
+def _unsafe_scalar_findings(value: Any, path: tuple[Any, ...] = ()) -> set[Finding]:
+    findings: set[Finding] = set()
+    if isinstance(value, Mapping):
+        for key, item in value.items():
+            findings.update(_unsafe_scalar_findings(item, (*path, key)))
+    elif isinstance(value, list):
+        for index, item in enumerate(value):
+            findings.update(_unsafe_scalar_findings(item, (*path, index)))
+    elif isinstance(value, float) and not math.isfinite(value):
+        findings.add(Finding("AG_MAP_NONFINITE_NUMBER_DENIED", _pointer(path)))
+    elif isinstance(value, str):
+        if (_contains_coordinate_literal(value)
+                or PROTECTED_IDENTIFIER_PATTERN.search(value)):
+            findings.add(Finding("AG_MAP_HARMFUL_PRECISION_DENIED", _pointer(path)))
+    return findings
 
 
 def _forbidden_key_findings(value: Any, path: tuple[Any, ...] = ()) -> set[Finding]:
@@ -158,7 +232,8 @@ def canonical_hash(value: Mapping[str, Any]) -> str:
     payload.pop("id", None)
     payload.pop("spec_hash", None)
     encoded = json.dumps(
-        payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True
+        payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True,
+        allow_nan=False,
     ).encode("utf-8")
     return hashlib.sha256(encoded).hexdigest()
 
@@ -244,7 +319,9 @@ def _semantic_findings(value: Mapping[str, Any]) -> tuple[Finding, ...]:
 
 
 def validate_payload(value: Mapping[str, Any]) -> Result:
-    precision = tuple(sorted(_forbidden_key_findings(value)))
+    precision = tuple(sorted(
+        _forbidden_key_findings(value) | _unsafe_scalar_findings(value)
+    ))
     if precision:
         return Result("DENY", precision)
     schema_findings = _schema_findings(value)
@@ -269,7 +346,7 @@ def _set(document: Any, pointer: str, replacement: Any) -> None:
 
 
 def load_fixtures() -> dict[str, Any]:
-    return json.loads(FIXTURES.read_text(encoding="utf-8"))
+    return _strict_json_loads(FIXTURES.read_text(encoding="utf-8"))
 
 
 def materialize_case(manifest: Mapping[str, Any], case: Mapping[str, Any]) -> dict[str, Any]:
@@ -312,8 +389,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         return run_fixtures()
     if not args.path:
         parser.error("path or --fixtures required")
-    value = json.loads(Path(args.path).read_text(encoding="utf-8"))
-    result = validate_payload(value)
+    try:
+        value = _strict_json_loads(Path(args.path).read_text(encoding="utf-8"))
+    except StrictJSONError as error:
+        result = Result("DENY", (error.finding,))
+    else:
+        result = validate_payload(value)
     print(json.dumps({
         "outcome": result.outcome,
         "findings": [{"code": f.code, "path": f.path} for f in result.findings],

@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import importlib.util
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -224,3 +225,57 @@ def test_schema_binds_indicator_key_to_object_family():
     assert [(finding.code, finding.path) for finding in module._schema_findings(candidate)] == [
         ("AG_MAP_SCHEMA_INVALID", "/indicator/key")
     ]
+
+
+def test_protected_detail_in_permitted_scalar_fields_is_denied():
+    module = _module()
+    manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    candidate = module.materialize_case(
+        manifest, _case(manifest, "valid_county_crop_observation")
+    )
+
+    coordinate = copy.deepcopy(candidate)
+    coordinate["indicator"]["value"] = "38.8751,-98.4520"
+    coordinate["spec_hash"], coordinate["id"] = module.canonical_identity(coordinate)
+    assert [(finding.code, finding.path) for finding in module.validate_payload(coordinate).findings] == [
+        ("AG_MAP_HARMFUL_PRECISION_DENIED", "/indicator/value")
+    ]
+
+    parcel = copy.deepcopy(candidate)
+    parcel["evidence_refs"] = ["parcel_id:KS-EL-004821"]
+    parcel["spec_hash"], parcel["id"] = module.canonical_identity(parcel)
+    assert [(finding.code, finding.path) for finding in module.validate_payload(parcel).findings] == [
+        ("AG_MAP_HARMFUL_PRECISION_DENIED", "/evidence_refs/0")
+    ]
+
+
+def test_nonfinite_programmatic_values_fail_before_schema_or_identity():
+    module = _module()
+    manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    candidate = module.materialize_case(
+        manifest, _case(manifest, "valid_county_crop_observation")
+    )
+
+    for value in (math.nan, math.inf, -math.inf):
+        mutated = copy.deepcopy(candidate)
+        mutated["indicator"]["value"] = value
+        result = module.validate_payload(mutated)
+        assert [(finding.code, finding.path) for finding in result.findings] == [
+            ("AG_MAP_NONFINITE_NUMBER_DENIED", "/indicator/value")
+        ]
+
+
+def test_strict_json_decoder_rejects_nonfinite_and_duplicate_members():
+    module = _module()
+
+    for text, expected in (
+        ('{"value":NaN}', ("AG_MAP_NONFINITE_NUMBER_DENIED", "/")),
+        ('{"release":{"public_use_allowed":true,"public_use_allowed":false}}',
+         ("AG_MAP_DUPLICATE_JSON_MEMBER", "/public_use_allowed")),
+    ):
+        try:
+            module._strict_json_loads(text)
+        except module.StrictJSONError as error:
+            assert (error.finding.code, error.finding.path) == expected
+        else:
+            raise AssertionError("unsafe JSON unexpectedly decoded")

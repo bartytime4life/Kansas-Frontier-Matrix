@@ -100,6 +100,12 @@ A coordinate literal, field/farm identifier, private label, or key from another
 support namespace is invalid even when its characters satisfy the generic key
 shape.
 
+Protected detail is denied whether it appears as an object member name or is
+embedded in an otherwise permitted scalar string such as an indicator value or
+evidence reference. JSON decoding is strict: duplicate object members and
+non-finite numeric literals are invalid, and programmatic candidates receive
+the same finite-number check before schema validation or identity hashing.
+
 The carrier must never contain exact/reconstructable:
 
 - field boundaries or coordinates;
