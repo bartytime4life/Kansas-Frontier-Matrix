@@ -17,9 +17,12 @@ related:
   - ../../tools/joins/join_candidates.py
   - ../../fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json
   - ../../tests/joins/test_join_candidates.py
+  - ../../tests/joins/test_cross_lane_scope_precedence.py
   - ../../tests/joins/test_cross_lane_synthetic_role_guard.py
   - ../../tests/joins/test_cross_lane_temporal_boundary_guard.py
+  - ../../tests/joins/test_cross_lane_domain_alias_guard.py
   - ../../tests/joins/README.md
+  - ../../control_plane/domain_lane_register.yaml
   - ../../docs/architecture/cross-domain/source-role-anti-collapse.md
   - ../../docs/intake/exploratory/full-atlas-crosswalk-validator-source-map.md
   - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
@@ -27,6 +30,7 @@ notes:
   - "ALLOW means only that the helper may emit a reviewable join candidate. It never means truth, policy permission, release, or publication."
   - "The exact-key lane uses parameterized in-memory SQLite over synthetic fixture values and performs no database or lifecycle write."
   - "Same-domain endpoints are outside this cross-lane profile and abstain with CROSS_DOMAIN_PAIR_REQUIRED; callers must route them to a domain-local validator."
+  - "Unresolved domain aliases recorded by the projection-only domain-lane register are review signals, never normalization authority; alias/canonical pairs abstain with DOMAIN_ALIAS_REVIEW_REQUIRED."
   - "The generic seam does not own a repository-wide source-role crosswalk. Equal roles may continue to candidate proof, but any unequal role vector abstains for pair/domain-owned compatibility review."
   - "Zero-tolerance SPATIAL_TEMPORAL intervals that only touch at one boundary abstain; this profile does not invent repository-wide interval-boundary inclusivity."
 [/KFM_META_BLOCK_V2] -->
@@ -45,8 +49,8 @@ This profile joins those two sources without establishing a crosswalk registry o
 
 | Outcome | Report status | Meaning |
 |---|---|---|
-| `ALLOW` | `JOIN_CANDIDATE` | The declared predicate matched across two distinct domain lanes and generic evidence, role, sensitivity, living-person, and dependency checks produced no failure. A pair-specific validator and later governance gates remain mandatory. |
-| `ABSTAIN` | `NO_JOIN_CANDIDATE`, `EVIDENCE_REF_MISSING`, `SOURCE_ROLE_REVIEW_REQUIRED`, or `SENSITIVITY_REVIEW_REQUIRED` | The helper cannot safely emit an unrestricted cross-lane candidate under the declared inputs. Same-domain requests are `NO_JOIN_CANDIDATE` with `CROSS_DOMAIN_PAIR_REQUIRED`; zero-tolerance temporal boundary-touch requests are `NO_JOIN_CANDIDATE` with `TEMPORAL_BOUNDARY_AMBIGUOUS`; any unequal source-role vector is `SOURCE_ROLE_REVIEW_REQUIRED` until pair/domain authority resolves compatibility. |
+| `ALLOW` | `JOIN_CANDIDATE` | The declared predicate matched across two distinct domain lanes and generic evidence, role, sensitivity, living-person, dependency, and unresolved-alias checks produced no failure. A pair-specific validator and later governance gates remain mandatory. |
+| `ABSTAIN` | `NO_JOIN_CANDIDATE`, `EVIDENCE_REF_MISSING`, `SOURCE_ROLE_REVIEW_REQUIRED`, or `SENSITIVITY_REVIEW_REQUIRED` | The helper cannot safely emit an unrestricted cross-lane candidate under the declared inputs. Same-domain requests are `NO_JOIN_CANDIDATE` with `CROSS_DOMAIN_PAIR_REQUIRED`; unresolved alias/canonical domain pairs are `NO_JOIN_CANDIDATE` with `DOMAIN_ALIAS_REVIEW_REQUIRED`; zero-tolerance temporal boundary-touch requests are `NO_JOIN_CANDIDATE` with `TEMPORAL_BOUNDARY_AMBIGUOUS`; any unequal source-role vector is `SOURCE_ROLE_REVIEW_REQUIRED` until pair/domain authority resolves compatibility. |
 | `DENY` | `LIVING_PERSON_JOIN_DENIED` or `GEOMETRY_PRECISION_BLOCKED` | A bounded privacy or sensitivity rule forbids candidate emission in this fixture profile. |
 | `ERROR` | `VALIDATOR_SYSTEM_ERROR` | A declared dependency is unavailable; no candidate assertion is made. |
 
@@ -67,13 +71,14 @@ Each rule reports a non-negative failure count. Endpoint source roles remain sep
 
 `SOURCE_ROLES_COMPATIBLE` is intentionally conservative at this generic responsibility root. Current cross-domain architecture records that KFM has no accepted repository-wide crosswalk that can declare two distinct source-role classes equivalent or compatible for a relationship. Therefore equal role values may continue to fixture-only candidate proof, while **every unequal role vector** fails closed to `SOURCE_ROLE_REVIEW_REQUIRED` with `SOURCE_ROLE_CONFLICT` and `RESOLVE_SOURCE_ROLE_COMPATIBILITY`. That includes observed/regulatory/administrative mismatches as well as modeled, aggregate, candidate, and mixed synthetic/non-synthetic pairs. The pair-specific or participating-domain validator may later establish a legitimate compatibility rule without letting this generic helper invent one.
 
-`JOIN_PREDICATE_MATCHED` is the effective cross-lane candidate predicate. It fails when the declared exact-key or spatial-temporal predicate does not match **or when both endpoints declare the same domain**, because a same-domain comparison is not a cross-lane candidate. Same-domain inputs return `ABSTAIN` / `NO_JOIN_CANDIDATE` with reason `CROSS_DOMAIN_PAIR_REQUIRED` and obligation `ROUTE_TO_DOMAIN_LOCAL_VALIDATOR`; the helper does not relabel domain-local work as a cross-domain relation.
+`JOIN_PREDICATE_MATCHED` is the effective cross-lane candidate predicate. It fails when the declared exact-key or spatial-temporal predicate does not match, when both endpoints declare the same domain, **or when their raw domain values form an unresolved alias/canonical pair recorded by the projection-only domain-lane register**. Same-domain inputs return `ABSTAIN` / `NO_JOIN_CANDIDATE` with reason `CROSS_DOMAIN_PAIR_REQUIRED` and obligation `ROUTE_TO_DOMAIN_LOCAL_VALIDATOR`; the helper does not relabel domain-local work as a cross-domain relation. Unresolved alias/canonical pairs return `ABSTAIN` / `NO_JOIN_CANDIDATE` with reason `DOMAIN_ALIAS_REVIEW_REQUIRED` and obligation `ROUTE_TO_DOMAIN_ALIAS_REVIEW`. The helper does not normalize either endpoint, does not accept the proposed register as semantic authority, and does not turn an unresolved compatibility name into a second independently governed domain.
 
 For `SPATIAL_TEMPORAL`, zero-tolerance intervals that only touch at `left.valid_to == right.valid_from` or `right.valid_to == left.valid_from` also fail `JOIN_PREDICATE_MATCHED`. The shared `TemporalWindow` contract explicitly treats boundary inclusivity as compatibility-significant rather than globally settled, so this join profile must not silently choose closed-interval semantics. Boundary-touch inputs therefore return `ABSTAIN` / `NO_JOIN_CANDIDATE` with reason `TEMPORAL_BOUNDARY_AMBIGUOUS` and obligation `ROUTE_TO_PAIR_TEMPORAL_SEMANTICS`. A genuine interval overlap remains eligible, and a positive declared tolerance remains an explicit bounded comparison rule rather than an implied repository-wide time convention.
 
 ## Join mechanics
 
 - Both endpoints must declare distinct `domain` values. Same-domain requests are routed away from this profile and never emit `JOIN_CANDIDATE`.
+- Raw domain values that form an unresolved alias/canonical pair in `control_plane/domain_lane_register.yaml` are also routed to review. That projection is consumed only as a conservative collision signal: the helper preserves both raw domain values and never normalizes, registers, accepts, or migrates a domain identity.
 - `EXACT_KEY` uses a parameterized one-row-per-side SQLite join in an in-memory database. Keys are values, never SQL fragments.
 - `SPATIAL_TEMPORAL` compares synthetic spatial-cell refs and timezone-aware intervals with a declared tolerance. It is not a geometry engine and proves no real-world spatial relationship.
 - A zero-tolerance spatial-temporal boundary touch abstains instead of inventing inclusive-end semantics. Pair-specific temporal policy must resolve the boundary; positive tolerance is explicit and remains bounded to candidate comparison.
@@ -87,7 +92,7 @@ The decision's effects are schema-fixed to false for lifecycle writes, evidence 
 
 ## Directory Rules basis
 
-Generic relationship meaning belongs in `contracts/joins/`; shape in `schemas/contracts/v1/joins/`; the dry-run helper in `tools/joins/`; synthetic cases in `fixtures/contracts/v1/joins/`; tests in `tests/joins/`; authoring provenance in `data/receipts/generated/`. Pair-specific meaning, source-role compatibility, policy, evidence, receipts, lifecycle data, and release remain in their owning roots.
+Generic relationship meaning belongs in `contracts/joins/`; shape in `schemas/contracts/v1/joins/`; the dry-run helper in `tools/joins/`; synthetic cases in `fixtures/contracts/v1/joins/`; tests in `tests/joins/`; authoring provenance in `data/receipts/generated/`. Pair-specific meaning, source-role compatibility, domain alias acceptance or migration, policy, evidence, receipts, lifecycle data, and release remain in their owning roots. `control_plane/domain_lane_register.yaml` remains a projection-only review aid; consuming its unresolved-alias rows as a fail-closed signal does not promote it into domain identity authority.
 
 ## Non-effects and rollback
 
