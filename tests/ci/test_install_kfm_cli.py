@@ -149,6 +149,31 @@ class InstallKfmCliTests(unittest.TestCase):
             self.assertIs(call.kwargs["check"], True)
             self.assertEqual(REPO_ROOT, call.kwargs["cwd"])
 
+    def test_install_strips_pip_source_environment_overrides(self) -> None:
+        source_overrides = {
+            "PIP_CONFIG_FILE": "/tmp/pip.conf",
+            "PIP_EXTRA_INDEX_URL": "https://packages.example.invalid/extra",
+            "PIP_FIND_LINKS": "https://packages.example.invalid/wheels",
+            "PIP_INDEX_URL": "https://packages.example.invalid/simple",
+            "PIP_TRUSTED_HOST": "packages.example.invalid",
+        }
+        with mock.patch.dict(
+            module.os.environ,
+            {**source_overrides, "KFM_TEST_SENTINEL": "preserved"},
+            clear=False,
+        ):
+            with mock.patch.object(module.subprocess, "run") as run:
+                module.install()
+
+        self.assertEqual(2, run.call_count)
+        for call in run.call_args_list:
+            environment = call.kwargs["env"]
+            for key in source_overrides:
+                self.assertNotIn(key, environment)
+            self.assertEqual("preserved", environment["KFM_TEST_SENTINEL"])
+            self.assertEqual("1", environment["PIP_DISABLE_PIP_VERSION_CHECK"])
+            self.assertEqual("1", environment["PIP_NO_INPUT"])
+
     def test_main_rejects_arguments(self) -> None:
         with self.assertRaises(module.CliInstallConfigurationError):
             module.main(["anything"])
