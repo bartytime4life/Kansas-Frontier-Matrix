@@ -24,8 +24,7 @@ LOCAL_SPEC = "./packages/kfm-cli"
 LOCK_LIMIT_BYTES = 262_144
 HASH_LINE = re.compile(r"^\s+--hash=sha256:[0-9a-f]{64}(?: \\)?$")
 REQUIREMENT_LINE = re.compile(
-    r"^[A-Za-z0-9][A-Za-z0-9._-]*==[A-Za-z0-9][A-Za-z0-9.!+_-]* \\$"
-)
+    r"^[A-Za-z0-9][A-Za-z0-9._-]*==[A-Za-z0-9][A-Za-z0-9.!+_-]* \\$")
 FORBIDDEN_LOCK_TEXT = (
     "--extra-index-url",
     "--index-url",
@@ -69,11 +68,17 @@ def validate_lockfile(path: Path = LOCKFILE) -> None:
     hashes = [line for line in lines if "--hash=" in line]
     if not requirements:
         raise CliInstallConfigurationError("CLI_LOCKFILE_HASH_COVERAGE_INVALID")
+    seen_requirement_names: set[str] = set()
     for requirement in requirements:
         if "==" not in requirement or not requirement.rstrip().endswith("\\"):
             raise CliInstallConfigurationError("CLI_LOCKFILE_REQUIREMENT_UNPINNED")
         if not REQUIREMENT_LINE.fullmatch(requirement):
             raise CliInstallConfigurationError("CLI_LOCKFILE_REQUIREMENT_UNSAFE")
+        name = requirement.split("==", 1)[0]
+        normalized_name = re.sub(r"[-_.]+", "-", name).lower()
+        if normalized_name in seen_requirement_names:
+            raise CliInstallConfigurationError("CLI_LOCKFILE_REQUIREMENT_DUPLICATE")
+        seen_requirement_names.add(normalized_name)
     if any(not HASH_LINE.fullmatch(line) for line in hashes):
         raise CliInstallConfigurationError("CLI_LOCKFILE_HASH_INVALID")
 
