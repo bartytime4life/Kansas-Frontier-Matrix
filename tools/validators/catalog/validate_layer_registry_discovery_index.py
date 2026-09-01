@@ -7,7 +7,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-PROFILE = "kfm.layer-registry-discovery-index-drift.v2"
+PROFILE = "kfm.layer-registry-discovery-index-drift.v3"
 SECTION_HEADER = "## Confirmed child lanes"
 ROW_RE = re.compile(r"^\|\s*\[`([^`]+/)`\]\(([^)]+)\)\s*\|")
 
@@ -68,6 +68,11 @@ def validate_layer_registry_discovery_index(
     actual_set = set(actual)
     missing_from_index = sorted(actual_set - indexed_unique)
     stale_index_entries = sorted(indexed_unique - actual_set)
+    missing_child_readmes = sorted(
+        lane
+        for lane in indexed_unique.intersection(actual_set)
+        if not (registry_root / lane.rstrip("/") / "README.md").is_file()
+    )
 
     outcome = (
         "PASS"
@@ -76,6 +81,7 @@ def validate_layer_registry_discovery_index(
             or invalid_link_rows
             or missing_from_index
             or stale_index_entries
+            or missing_child_readmes
         )
         else "FAIL"
     )
@@ -91,6 +97,7 @@ def validate_layer_registry_discovery_index(
         "invalid_link_rows": invalid_link_rows,
         "missing_from_index": missing_from_index,
         "stale_index_entries": stale_index_entries,
+        "missing_child_readmes": missing_child_readmes,
     }
 
 

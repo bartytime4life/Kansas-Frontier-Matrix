@@ -114,6 +114,18 @@ class LayerRegistryDiscoveryIndexTests(unittest.TestCase):
         self.assertEqual("FAIL", report["outcome"])
         self.assertEqual(1, len(report["invalid_link_rows"]))
 
+    def test_missing_child_readme_fails_closed(self) -> None:
+        tempdir, root = self._fixture(("agriculture",), ("agriculture",))
+        self.addCleanup(tempdir.cleanup)
+        (root / "agriculture" / "README.md").unlink()
+
+        report = validate_layer_registry_discovery_index(root)
+
+        self.assertEqual("FAIL", report["outcome"])
+        self.assertEqual(["agriculture/"], report["missing_child_readmes"])
+        self.assertEqual([], report["missing_from_index"])
+        self.assertEqual([], report["stale_index_entries"])
+
     def test_missing_section_errors(self) -> None:
         tempdir, root = self._fixture(("agriculture",), ("agriculture",))
         self.addCleanup(tempdir.cleanup)
@@ -143,7 +155,7 @@ class LayerRegistryDiscoveryIndexTests(unittest.TestCase):
         self.assertEqual(first.stdout, second.stdout)
         parsed = json.loads(first.stdout)
         self.assertEqual(
-            "kfm.layer-registry-discovery-index-drift.v2", parsed["profile"]
+            "kfm.layer-registry-discovery-index-drift.v3", parsed["profile"]
         )
         self.assertEqual("PASS", parsed["outcome"])
 

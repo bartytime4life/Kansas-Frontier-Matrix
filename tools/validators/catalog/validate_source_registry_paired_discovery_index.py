@@ -7,7 +7,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-PROFILE = "kfm.source-registry-paired-discovery-index.v1"
+PROFILE = "kfm.source-registry-paired-discovery-index.v2"
 SECTION_HEADER = "The 13 paired domain README lanes confirmed at the pinned base are:"
 ROW_RE = re.compile(
     r"^\|\s*[^|]+\|\s*\[`sources/([^/]+)/`\]\(([^)]+)\)\s*"
@@ -106,6 +106,12 @@ def validate_source_registry_paired_discovery_index(
     canonical_actual_set = set(canonical_actual)
     parallel_actual_set = set(parallel_actual)
     paired_actual_set = canonical_actual_set.intersection(parallel_actual_set)
+    canonical_root = repo_root / "data" / "registry" / "sources"
+    missing_canonical_readmes = sorted(
+        domain
+        for domain in canonical_index_set.intersection(canonical_actual_set)
+        if not (canonical_root / domain / "README.md").is_file()
+    )
 
     missing_canonical_index = sorted(paired_actual_set - canonical_index_set)
     stale_canonical_index = sorted(canonical_index_set - canonical_actual_set)
@@ -122,6 +128,7 @@ def validate_source_registry_paired_discovery_index(
         or stale_canonical_index
         or missing_parallel_index
         or stale_parallel_index
+        or missing_canonical_readmes
     )
 
     return {
@@ -141,6 +148,7 @@ def validate_source_registry_paired_discovery_index(
         "stale_canonical_index": stale_canonical_index,
         "missing_parallel_index": missing_parallel_index,
         "stale_parallel_index": stale_parallel_index,
+        "missing_canonical_readmes": missing_canonical_readmes,
         "unpaired_canonical_domains": unpaired_canonical_domains,
         "unpaired_parallel_domains": unpaired_parallel_domains,
     }
