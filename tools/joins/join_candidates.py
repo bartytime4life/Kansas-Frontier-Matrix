@@ -50,6 +50,42 @@ RULE_ORDER = (
 SENSITIVITY_RANK = {"PUBLIC_SAFE": 0, "INTERNAL": 1, "RESTRICTED": 2, "PROHIBITED": 3}
 
 
+class _UniqueKeySafeLoader(yaml.SafeLoader):
+    """Safe YAML loader that rejects ambiguous duplicate mapping keys."""
+
+
+def _construct_unique_mapping(
+    loader: _UniqueKeySafeLoader, node: yaml.nodes.MappingNode, deep: bool = False
+) -> Mapping[object, object]:
+    seen: set[object] = set()
+    for key_node, _ in node.value:
+        key = loader.construct_object(key_node, deep=deep)
+        try:
+            duplicate = key in seen
+        except TypeError as exc:
+            raise yaml.constructor.ConstructorError(
+                "while constructing a mapping",
+                node.start_mark,
+                "found an unhashable mapping key",
+                key_node.start_mark,
+            ) from exc
+        if duplicate:
+            raise yaml.constructor.ConstructorError(
+                "while constructing a mapping",
+                node.start_mark,
+                "found a duplicate mapping key",
+                key_node.start_mark,
+            )
+        seen.add(key)
+    return yaml.SafeLoader.construct_mapping(loader, node, deep=deep)
+
+
+_UniqueKeySafeLoader.add_constructor(
+    yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
+    _construct_unique_mapping,
+)
+
+
 @dataclass(frozen=True, order=True)
 class Finding:
     code: str
@@ -174,7 +210,10 @@ def _unresolved_domain_aliases(path: Path | None = None) -> Mapping[str, str]:
     """
     register_path = DOMAIN_LANE_REGISTER_PATH if path is None else path
     try:
-        value = yaml.safe_load(register_path.read_text(encoding="utf-8"))
+        value = yaml.load(
+            register_path.read_text(encoding="utf-8"),
+            Loader=_UniqueKeySafeLoader,
+        )
     except (OSError, UnicodeError, yaml.YAMLError) as exc:
         raise ValueError("domain lane register unavailable") from exc
     aliases = _mapping(value).get("unresolved_aliases")

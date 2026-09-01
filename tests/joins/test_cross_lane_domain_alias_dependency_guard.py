@@ -68,3 +68,41 @@ def test_malformed_alias_projection_fails_closed_as_dependency_error(tmp_path: P
     assert "REPAIR_DOMAIN_ALIAS_REGISTER_DEPENDENCY" in decision["obligations"]
     assert _rule_counts(decision)["DEPENDENCIES_READY"] == 1
     assert not any(decision["effects"].values())
+
+
+def _assert_duplicate_projection_fails_closed(
+    candidate: dict[str, object],
+    tmp_path: Path,
+    monkeypatch,
+    projection: str,
+) -> None:
+    ambiguous = tmp_path / "domain_lane_register.yaml"
+    ambiguous.write_text(projection, encoding="utf-8")
+    monkeypatch.setattr(MODULE, "DOMAIN_LANE_REGISTER_PATH", ambiguous)
+
+    decision = MODULE.derive_decision(candidate)
+
+    assert decision["validator_outcome"] == "ERROR"
+    assert decision["status"] == "VALIDATOR_SYSTEM_ERROR"
+    assert decision["reason_codes"] == ["DOMAIN_ALIAS_REGISTER_UNAVAILABLE"]
+    assert "REPAIR_DOMAIN_ALIAS_REGISTER_DEPENDENCY" in decision["obligations"]
+    assert _rule_counts(decision)["DEPENDENCIES_READY"] == 1
+    assert not any(decision["effects"].values())
+
+
+def test_duplicate_alias_projection_block_fails_closed(tmp_path: Path, monkeypatch) -> None:
+    _assert_duplicate_projection_fails_closed(
+        _base_candidate(),
+        tmp_path,
+        monkeypatch,
+        "unresolved_aliases:\n  air: atmosphere\nunresolved_aliases:\n  transport: roads-rail-trade\n",
+    )
+
+
+def test_duplicate_alias_name_fails_closed(tmp_path: Path, monkeypatch) -> None:
+    _assert_duplicate_projection_fails_closed(
+        _base_candidate(),
+        tmp_path,
+        monkeypatch,
+        "unresolved_aliases:\n  air: atmosphere\n  air: geology\n",
+    )
