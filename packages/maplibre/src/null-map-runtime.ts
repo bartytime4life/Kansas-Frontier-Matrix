@@ -75,6 +75,11 @@ export class NullMapRuntime implements MapRuntimePort {
     return this.notifySnapshot();
   }
 
+  resize(): MapRuntimeSnapshot {
+    this.assertReady();
+    return this.getSnapshot();
+  }
+
   subscribeSnapshot(listener: MapRuntimeSnapshotListener): () => void {
     this.assertNotDisposed();
     if (typeof listener !== "function") {
