@@ -57,6 +57,44 @@ test("a policy-restricted feature shows fixed denial copy without sensitive leak
   await expect(drawer.getByRole("link")).toHaveCount(0);
 });
 
+test("superseded evidence remains visible only as audit history", async ({ page }) => {
+  await page.goto(fixture);
+  await page
+    .getByRole("button", { name: "Select superseded evidence history" })
+    .click();
+
+  await expect(page.getByRole("status")).toHaveText(
+    "ABSTAIN / SUPERSEDED_EVIDENCE",
+  );
+  const drawer = page.locator('aside[data-component="evidence-drawer"]');
+  await expect(drawer).toContainText(
+    "The available evidence is superseded and is shown only as history.",
+  );
+  await expect(drawer).toContainText(
+    "kfm:evidence:synthetic:superseded-001",
+  );
+  await expect(drawer.getByRole("link")).toHaveCount(0);
+});
+
+test("evidence history outside the clicked selection fails closed without leaking", async ({
+  page,
+}) => {
+  await page.goto(fixture);
+  await page
+    .getByRole("button", { name: "Select feature with mismatched evidence history" })
+    .click();
+
+  await expect(page.getByRole("status")).toHaveText(
+    "ERROR / DRAWER_EVIDENCE_OUTSIDE_SELECTION",
+  );
+  const drawer = page.locator('aside[data-component="evidence-drawer"]');
+  await expect(drawer).toContainText("ERROR / UPSTREAM_ERROR");
+  await expect(drawer).not.toContainText(
+    "kfm:evidence:synthetic:superseded-001",
+  );
+  await expect(drawer.getByRole("link")).toHaveCount(0);
+});
+
 test("evidence outside the clicked selection fails closed", async ({ page }) => {
   await page.goto(fixture);
   await page
