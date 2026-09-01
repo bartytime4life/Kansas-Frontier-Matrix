@@ -31,6 +31,25 @@ const MAX_ZOOM = 24;
 const TILE_SIZE_PX = 512;
 const MAX_VIEWPORT_PX = 32_768;
 const MAX_PADDING_PX = 16_384;
+const BOUNDS_FIELDS = new Set(["west", "south", "east", "north"]);
+const VIEWPORT_FIELDS = new Set(["widthPx", "heightPx", "paddingPx"]);
+const FIT_OPTION_FIELDS = new Set(["minZoom", "maxZoom"]);
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function hasOnlyFields(
+  value: Record<string, unknown>,
+  allowed: ReadonlySet<string>,
+  required: readonly string[],
+): boolean {
+  const keys = Object.keys(value);
+  return (
+    required.every((field) => Object.prototype.hasOwnProperty.call(value, field)) &&
+    keys.every((field) => allowed.has(field))
+  );
+}
 
 function failInvalidState(message: string): never {
   throw new MapRuntimePortError("MAP_RUNTIME_STATE_INVALID", message);
@@ -42,8 +61,8 @@ function finite(value: unknown): value is number {
 
 function validateBounds(bounds: MapRuntimeBounds): void {
   if (
-    typeof bounds !== "object" ||
-    bounds === null ||
+    !isRecord(bounds) ||
+    !hasOnlyFields(bounds, BOUNDS_FIELDS, ["west", "south", "east", "north"]) ||
     !finite(bounds.west) ||
     !finite(bounds.south) ||
     !finite(bounds.east) ||
@@ -64,8 +83,8 @@ function validateBounds(bounds: MapRuntimeBounds): void {
 
 function validateViewport(viewport: MapRuntimeViewport): number {
   if (
-    typeof viewport !== "object" ||
-    viewport === null ||
+    !isRecord(viewport) ||
+    !hasOnlyFields(viewport, VIEWPORT_FIELDS, ["widthPx", "heightPx"]) ||
     !Number.isSafeInteger(viewport.widthPx) ||
     !Number.isSafeInteger(viewport.heightPx) ||
     viewport.widthPx < 1 ||
@@ -93,6 +112,9 @@ function validateZoomRange(options: MapRuntimeBoundsFitOptions): {
   minZoom: number;
   maxZoom: number;
 } {
+  if (!isRecord(options) || !hasOnlyFields(options, FIT_OPTION_FIELDS, [])) {
+    failInvalidState("Map runtime bounds-fit options are invalid.");
+  }
   const minZoom = options.minZoom ?? MIN_ZOOM;
   const maxZoom = options.maxZoom ?? MAX_ZOOM;
   if (
