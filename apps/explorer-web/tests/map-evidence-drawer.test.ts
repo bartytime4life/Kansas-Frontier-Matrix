@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import answerFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/answer-corrected.json";
+import supersededFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/abstain-superseded.json";
 import denyFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/deny-sensitive.json";
 import mapRuntimeSource from "../src/features/map_runtime/index.tsx?raw";
 import {
@@ -109,6 +110,51 @@ describe("Explorer map feature to Evidence Drawer bridge", () => {
     });
     expect(JSON.stringify(result.drawer)).not.toContain(
       "SENSITIVE_DENIAL_CANARY_4d7ec2",
+    );
+  });
+
+  it("preserves independently scoped superseded history as audit-only", async () => {
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: ["kfm:evidence:synthetic:superseded-001"],
+      },
+      async () => supersededFixture,
+    );
+
+    expect(result).toMatchObject({
+      code: "SUPERSEDED_EVIDENCE",
+      drawer: {
+        outcome: "ABSTAIN",
+        code: "SUPERSEDED_EVIDENCE",
+        evidenceRefs: [],
+        citations: [],
+      },
+    });
+    expect(result.drawer.historyLabels).toHaveLength(1);
+  });
+
+  it("fails closed when negative-only history widens beyond the clicked selection", async () => {
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: ["kfm:evidence:synthetic:flow-001"],
+      },
+      async () => supersededFixture,
+    );
+
+    expect(result).toMatchObject({
+      code: "DRAWER_EVIDENCE_OUTSIDE_SELECTION",
+      drawer: {
+        outcome: "ERROR",
+        code: "UPSTREAM_ERROR",
+        evidenceRefs: [],
+        citations: [],
+        historyLabels: [],
+      },
+    });
+    expect(JSON.stringify(result.drawer)).not.toContain(
+      "kfm:evidence:synthetic:superseded-001",
     );
   });
 
