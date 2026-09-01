@@ -73,6 +73,7 @@ jobs:
             "tools/validators/domains/geology/README.md"
             "tools/validators/domains/geology/validate_resource_class_distinction.py"
             "tools/validators/domains/geology/validate_aem_campaign.py"
+            "tools/validators/domains/geology/validate_schema.py"
             "tools/validators/geology/public_safe_geometry/validate_public_safe_geometry.py"
             "tools/validators/geology/README.md"
             "tools/validators/geology/resource_class/README.md"
@@ -133,6 +134,10 @@ jobs:
               Path(
                   "tools/validators/domains/geology/"
                   "validate_production_material_change.py"
+              ),
+              Path(
+                  "tools/validators/domains/geology/"
+                  "validate_schema.py"
               ),
               Path(
                   "tools/validators/geology/public_safe_geometry/"
