@@ -23,8 +23,8 @@
   ],
   "artifact_hashes": {
     ".github/workflows/cross-lane-join-assessment.yml": "sha256:3d8eaaaac9831c4d018c819bdd8111f994d466373bce3f9803d08c8b46013a61",
-    ".github/workflows/soil-hydrology-public-safe-context.yml": "sha256:2cdd0edeeb074c006b2c620a8d5801f2da41ef1049a22bd3a54e5e122634e900",
-    ".github/workflows/soil-agriculture-public-safe-context.yml": "sha256:a6ece9dcb04cb0c550c8ef6041be3f0a0f3589e7d9d5a2dbb25d632c49b5de3f",
+    ".github/workflows/soil-hydrology-public-safe-context.yml": "sha256:4914255dc12681f3ee2ab1c6ec21cf3ec1c2a31993c73ac702faf5b95f617efa",
+    ".github/workflows/soil-agriculture-public-safe-context.yml": "sha256:02a454bf4dc37fca7dc009e0a7336abdeebf7c77fcf97bc2628622fe8266e280",
     ".github/workflows/fauna-habitat-public-safe-assignment.yml": "sha256:ae04722885e1d94418e2c6ab0d6a9174cb51b88fce4b17d1dd259a55176505f3",
     "contracts/joins/cross_lane_join_assessment.md": "sha256:3b54788bb7fe5404bfc9553868c7ca39efe4f9165ebb6045f36924b6ee2e7ce1",
     "docs/intake/exploratory/full-atlas-crosswalk-validator-source-map.md": "sha256:34299c5ba17f3d451d09e2d9a2f69514711a0c8ed1303f88233c56b6ded45962",
@@ -37,7 +37,7 @@
     "tests/joins/test_cross_lane_source_role_schema_guard.py": "sha256:9c6bd884f0c51fd7f22d517c7b4ac5a2d866edef80b36a6cf5f1ca7a8f1ebac5",
     "tests/joins/test_cross_lane_synthetic_role_guard.py": "sha256:f63cf5320fe45d5848bc03f747a2eaf073c66932eb584349ab0e6d9d96c4e7ef",
     "tests/joins/test_cross_lane_temporal_boundary_guard.py": "sha256:8a3f943cb7127682dae40c9ee9f6086aefc13efc686614e7bba8ff81b6497e6e",
-    "tests/joins/test_cross_lane_workflow_propagation.py": "sha256:a731a81e33ee8b547447dc4b7c2398ae01e989829ea4ceb47b3c6f0d05f34136",
+    "tests/joins/test_cross_lane_workflow_propagation.py": "sha256:d8d733597848e67e8a7869f5778ae4ab37f8e6c9606c752d6d4874c4755248b3",
     "tests/joins/test_join_candidates.py": "sha256:8f1203d844342fcd011a505e64d857f06b4e9f49d5c9649f92d90928063fd06c",
     "tools/joins/join_candidates.py": "sha256:691ee9376a2fb4164cf63124bf88e76c2915cf667f10fb794e8229ad77d83bba"
   },
