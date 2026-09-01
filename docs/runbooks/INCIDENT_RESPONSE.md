@@ -1,597 +1,589 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runbook-incident-response
-title: Incident Response Runbook
-type: standard
-version: v1
-status: draft
-owners: [docs-steward, security-steward, release-steward]
+title: Incident Response — Restricted Operational Readiness Runbook
+type: runbook
+version: v2.0
+status: draft; repository-grounded; RESTRICTED_OPERATIONAL_LANE; LIVE_RESPONSE_HELD; NON_RELEASE; NON_PUBLICATION
+owners:
+  - docs steward — NEEDS VERIFICATION
+  - security steward — NEEDS VERIFICATION
+  - release steward — NEEDS VERIFICATION
 created: 2026-05-12
-updated: 2026-05-12
-policy_label: restricted
+updated: 2026-09-01
+owning_root: docs/
+policy_label: restricted; incident-operations; fail-closed; non-publishing
+responsibility: restricted human procedure for classifying, preserving, containing, correcting, withdrawing, rolling back, reviewing, and rehearsing KFM trust incidents without creating operational authority, public disclosure authority, or release authority
+truth_posture: CONFIRMED repository paths and bounded validators / PROPOSED public-to-restricted handoff and accountable role split / NEEDS VERIFICATION private intake, named responders, live containment mechanisms, custody system, response objectives, disclosure route, and operational exercise
 related:
   - docs/runbooks/README.md
-  - docs/runbooks/governed_ai_ROLLBACK.md
-  - docs/runbooks/ui_ROLLBACK.md
   - docs/security/README.md
+  - docs/security/INCIDENT_RESPONSE.md
+  - docs/security/incident-response-handoff-decision.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/lifecycle-law.md
-  - docs/registers/DRIFT_REGISTER.md
-  - docs/registers/VERIFICATION_BACKLOG.md
-  - release/rollback_cards/
-  - release/correction_notices/
-  - control_plane/policy_gate_register.yaml
-tags: [kfm, runbook, incident-response, security, rollback, correction, governance]
+  - docs/governance/ESCALATION.md
+  - docs/governance/SEPARATION_OF_DUTIES.md
+  - release/correction_notices/README.md
+  - release/rollback_cards/README.md
+  - release/withdrawal_notices/README.md
 notes:
-  - PROPOSED placement under docs/runbooks/ per Directory Rules §6.1 and the §10.3 instruction that a leaked-secret event must produce "a runbook entry in docs/runbooks/".
-  - Directory Rules §6.1 also lists docs/security/ as a home for "incident response"; relationship between the two homes is NEEDS VERIFICATION pending ADR.
-  - No repository mounted in this session; specific paths, owners, branches, and tool versions are PROPOSED or NEEDS VERIFICATION.
+  - "Evidence snapshot: bartytime4life/Kansas-Frontier-Matrix main at 0ec8a69e2a35ef8b52d696bdc553ea17b2f35be8; previous target blob 33d364c98f88f94b78e401298a0970e7dec2cbb9; zero open pull requests at initial inspection; final overlap review found only PR #4018 on seven path-disjoint archaeology files."
+  - "The repository tracks two incident-response documents. Current indexes describe this file as the restricted operational lane and docs/security/INCIDENT_RESPONSE.md as public security guidance, but the handoff decision remains proposed and accountable acceptance is unverified."
+  - "This file contains no private contact, on-call roster, credential, endpoint, exploit detail, harmful coordinate, real incident evidence, or live containment command."
+  - "A validator pass, synthetic exercise, correction candidate, withdrawal candidate, rollback candidate, workflow result, pull-request state, or documentation merge does not prove containment, approval, recovery, release, deployment, or publication."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Incident Response Runbook
+# Incident Response — Restricted Operational Readiness Runbook
 
-> Governed, fail-closed procedure for detecting, containing, correcting, and rolling back KFM incidents that threaten evidence integrity, sensitivity controls, the trust membrane, or release safety — without bypassing them.
-
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Policy label: restricted" src="https://img.shields.io/badge/policy_label-restricted-orange">
-  <img alt="Posture: fail-closed" src="https://img.shields.io/badge/posture-fail--closed-critical">
-  <img alt="Authority: docs control plane" src="https://img.shields.io/badge/authority-docs%2Frunbooks-blue">
-  <img alt="Version: v1" src="https://img.shields.io/badge/version-v1-lightgrey">
-  <img alt="Last updated: 2026-05-12" src="https://img.shields.io/badge/last%20updated-2026--05--12-informational">
-</p>
-
-| Field | Value |
-|---|---|
-| **Status** | `draft` — first publication of this runbook; no prior incident rehearsals attached. |
-| **Owners** | `docs-steward`, `security-steward`, `release-steward` *(roles; named individuals NEEDS VERIFICATION)* |
-| **Last updated** | 2026-05-12 |
-| **Policy label** | `restricted` — operational; references to sensitive procedures are non-public. |
-| **Authority class** | Operational runbook (`docs/` explains; it does not decide alone). |
+Use this runbook to coordinate a KFM trust incident without improvising around
+the trust membrane, destroying evidence, exposing restricted details, or
+mistaking a documentation procedure for operational authority.
 
 > [!IMPORTANT]
-> **KFM is never a life-safety authority.** This runbook handles incidents internal to the KFM trust path (data, evidence, publication, AI surfaces, infrastructure exposure). It does **not** instruct the public about hazards, emergencies, or real-world response. Emergency-alert authority lives with NWS, FEMA, state, and local agencies. KFM products that touch hazard or alert data must fail closed if they could be mistaken for life-safety instruction.
+> **Current capability is readiness and rehearsal, not a verified live-response
+> system.** The repository does not establish a current private intake route,
+> named on-call roster, production disablement command, evidence-custody store,
+> response-time commitment, or operational exercise. Apply only an independently
+> authorized containment control. Otherwise preserve evidence, reduce further
+> mutation, return `HOLD`, and escalate through the verified review route.
 
----
+> [!CAUTION]
+> Never put a credential, token, private endpoint, exploit detail, unredacted
+> log, living-person record, protected community material, exact harmful
+> coordinate, or restricted incident payload in a public issue, pull request,
+> commit, workflow log, chat, Notion page, or this runbook.
 
-## Quick jump
+**Quick navigation:** [scope](#1-scope-and-boundary) ·
+[roles](#2-roles-and-separation-of-duties) ·
+[classes](#3-incident-classes) · [severity](#4-severity-and-slo-targets) ·
+[lifecycle](#5-incident-lifecycle) · [signals](#6-detection-signals) ·
+[triage](#7-triage) · [containment](#8-containment) ·
+[recovery](#9-eradication-and-recovery) ·
+[post-incident](#10-post-incident-correction-rollback-audit) ·
+[playbooks](#11-specific-playbooks) · [communications](#12-communications) ·
+[references](#13-related-docs) · [templates](#appendix-a--templates) ·
+[readiness](#appendix-b--verification-backlog)
 
-- [1. Scope and boundary](#1-scope-and-boundary)
-- [2. Roles and separation of duties](#2-roles-and-separation-of-duties)
-- [3. Incident classes](#3-incident-classes)
-- [4. Severity and SLO targets](#4-severity-and-slo-targets)
-- [5. Incident lifecycle](#5-incident-lifecycle)
-- [6. Detection signals](#6-detection-signals)
-- [7. Triage](#7-triage)
-- [8. Containment](#8-containment)
-- [9. Eradication and recovery](#9-eradication-and-recovery)
-- [10. Post-incident: correction, rollback, audit](#10-post-incident-correction-rollback-audit)
-- [11. Specific playbooks](#11-specific-playbooks)
-- [12. Communications](#12-communications)
-- [13. Related docs](#13-related-docs)
-- [Appendix A — Templates](#appendix-a--templates)
-- [Appendix B — Verification backlog](#appendix-b--verification-backlog)
-
----
+<a id="1-scope-and-boundary"></a>
 
 ## 1. Scope and boundary
 
-This runbook covers any event that violates, threatens, or weakens a KFM trust invariant — and any event whose **response** must itself stay inside the trust membrane rather than around it.
+This runbook covers incidents that threaten KFM's evidence integrity,
+sensitivity controls, source or rights posture, repository controls, release
+integrity, correction lineage, or public trust membrane. It is a human
+coordination and readiness document. It does not declare that an incident
+occurred, grant access, authorize containment, or operate infrastructure.
 
-In scope:
+### The two incident-response surfaces
 
-- Trust-membrane violations (public surface reaching `RAW`, `WORK`, `QUARANTINE`, canonical/internal stores, model runtimes, unpublished candidates, source credentials).
-- Sensitivity exposure (archaeology, fauna/flora occurrence, infrastructure, living-person/DNA, culturally sensitive geometry, precise location leaked via tile, vector, 3D, screenshot, popup label, or AI text).
-- Evidence-chain failure (`EvidenceRef` fails to resolve at runtime while a public surface still renders content as authoritative).
-- Source integrity (mislabeled source role; rights/sovereignty status changed without re-evaluation; stale source published as current).
-- Release integrity (release lacks rollback target, manifest mismatch, mutable tag drift, unsigned artifact accepted, kill-switch bypassed, `spec_hash` drift).
-- Governed AI failure (uncited or weakly-cited answer; synthetic content presented as observed reality; direct browser-to-model path).
-- Operational security (real secret committed to `configs/` or any non-secret store; exposure beyond loopback; admin shortcut used as public path).
-- Renderer/map governance (sensitive geometry hidden only by style; unreleased tile load; popup substituting for the Evidence Drawer; uncited export).
+| Surface | Current repository description | Boundary |
+|---|---|---|
+| [`docs/security/INCIDENT_RESPONSE.md`](../security/INCIDENT_RESPONSE.md) | Public security guidance and doctrine-facing expectations | Must not expose private routing, tactical procedure, credentials, endpoints, or restricted evidence |
+| This runbook | Restricted human-operational lane | Must not invent private capability, disclose restricted material through Git history, or replace accepted contracts, policy, review, or release authority |
+| [Handoff decision packet](../security/incident-response-handoff-decision.md) | Proposed `ACCEPT_SPLIT` decision | Still `PROPOSED`; merging or linking it does not accept the split or assign accountable owners |
 
-Out of scope:
+Use the conservative applicable requirements from both tracked documents while
+the handoff remains unaccepted. Do not rename, consolidate, retire, or declare
+either file canonical through this runbook.
 
-- Real-world emergencies. KFM does not issue alerts; route those to the authoritative agency.
-- Routine bug triage with no trust-membrane, evidence, sensitivity, or release implication — handle in normal engineering review.
+### In scope
 
-> [!NOTE]
-> **Trust-membrane invariants this runbook protects** (CONFIRMED doctrine across the project corpus):
-> `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED`; public clients and normal UI surfaces use governed interfaces only; cite-or-abstain; deny-by-default for sensitive classes; promotion is a governed state transition; release decisions carry rollback targets; corrections supersede rather than silently mutate.
+- suspected public access to non-public lifecycle material;
+- sensitive or harmful-precision exposure in data, tiles, exports, screenshots,
+  logs, reports, search, or generated text;
+- unsupported, wrongly attributed, rights-uncertain, or stale public claims;
+- source-role, validation, policy, review, manifest, signature, or rollback
+  failures that could affect governed state;
+- leaked or suspected credentials, tokens, signing material, or private routes;
+- unauthorized repository-state transitions, branch or pull-request mutation,
+  settings drift, workflow bypass, or provenance loss;
+- correction, withdrawal, rollback, or invalidation gaps; and
+- near misses or synthetic exercises that reveal a control gap.
 
-[Back to top](#top)
+### Out of scope
 
----
+- public emergency instructions or life-safety interpretation;
+- vulnerability disclosure through a public issue or pull request;
+- real credential rotation, host isolation, route changes, cache purge,
+  deployment, withdrawal, rollback, or public notice without separate authority;
+- destructive evidence cleanup or unilateral history rewrite; and
+- routine defects with no trust, sensitivity, security, evidence, or public
+  consequence.
+
+KFM is not an emergency-alerting authority. Refer the public to the appropriate
+official authority where a KFM surface could be mistaken for current safety
+guidance.
+
+<a id="2-roles-and-separation-of-duties"></a>
 
 ## 2. Roles and separation of duties
 
-Separation of policy-significant duties is required for material incidents (CONFIRMED doctrine). The **detector** of an incident should not be the **decider** who publishes the correction or the **releaser** who restores public state.
+The role names below describe required functions, not verified staffing. Record
+the accountable person or authorized system privately for each incident. A
+CODEOWNERS route, commit author, repository owner, bot, passing workflow, or PR
+review is not by itself an incident assignment or operational approval.
 
-| Role *(PROPOSED titles; map to your actual on-call rotation)* | Responsibility |
-|---|---|
-| **Incident Commander (IC)** | Owns the timeline. Coordinates roles. Holds the kill-switch and feature-flag decisions. Writes the post-incident summary. |
-| **Security steward** | Owns operational security: secret rotation, exposure, audit, infra posture. |
-| **Release steward** | Owns the release path: `ReleaseManifest`, `RollbackCard`, `CorrectionNotice`, public state restoration. |
-| **Policy steward** | Owns gate logic: `policy/` rules, `PolicyDecision` outcomes, deny/abstain enforcement. |
-| **Subsystem owner(s)** | Owns the affected lane (UI, governed AI, map shell, domain pipeline, source connector, etc.). |
-| **Docs steward** | Owns lineage, drift register, verification backlog, runbook updates. |
-| **Reviewer (independent)** | Approves the correction/rollback prior to public re-emission when materiality applies. |
+| Function | Minimum responsibility | Must not assume |
+|---|---|---|
+| Reporter or detector | Preserve the signal and use the approved private route | Incident status, severity, containment authority, or public disclosure authority |
+| Incident lead | Maintain scope, timeline, decisions, owners, and finite state | Release, evidence-custody, or independent-review authority unless separately assigned |
+| Security responder | Coordinate access, credential, forensic, and infrastructure handling | Permission to publish restricted evidence or silently rewrite history |
+| Evidence custodian | Preserve originals, hashes, access history, and references | That a repository or coordination page is an approved restricted evidence store |
+| Affected-surface owner | Explain the system and prepare a bounded repair | Authority to approve their own material correction or restoration |
+| Privacy, rights, sensitivity, or sovereignty reviewer | Decide handling obligations within accepted scope | Technical containment or release authority |
+| Correction or release authority | Decide correction, withdrawal, rollback, invalidation, and safe restoration | That a valid candidate or green check authorizes execution |
+| Independent reviewer | Review material decisions and closure evidence | Responsibility already held as author, responder, or releaser without recorded exception |
+| Communications owner | Approve public-safe status and correction language | Permission to expose restricted facts or claim unverified impact |
 
-> [!IMPORTANT]
-> **No single person should detect, decide, release, and audit a material incident.** Where the team is small, the Incident Commander **must not** simultaneously sign the corrected release; another reviewer signs. This is a hard rule, not a preference.
+Emergency action is limited to an already authorized control that only reduces
+exposure. Record the actor, exact action, scope, time, expiry or reversal
+condition, and independent review requirement. Do not improvise a new public or
+administrative path during an incident.
 
-[Back to top](#top)
-
----
+<a id="3-incident-classes"></a>
 
 ## 3. Incident classes
 
-Defect class drives the correction posture and the rollback posture. The table below is the canonical mapping for KFM — every incident is given a class, and the class determines the recovery path. *(Defect classes CONFIRMED in project corpus; per-class procedures PROPOSED here.)*
+Classification chooses the next review route; it does not prove impact.
 
-| Defect class | Typical trigger | Correction posture | Rollback posture |
-|---|---|---|---|
-| **Evidence gap** | `EvidenceRef` does not resolve to `EvidenceBundle`; published claim has no support. | `ABSTAIN` on or withdraw the unsupported claim; emit `CorrectionNotice`. | Restore prior evidence-supported release. |
-| **Source role** | Modeled output ingested as observation; authority source treated as observation; source-role upcast via paraphrase. | Re-label at `SourceDescriptor`; refuse upcast; re-promote through gates. | Restore prior correctly-labeled release. |
-| **Rights** | Source license/sovereignty status changed; unknown rights published. | Withdraw or generalize; record rights re-evaluation in `ReviewRecord`. | Restore prior rights-cleared release. |
-| **Sensitivity** | Exact archaeology / fauna / flora / infrastructure / living-person / DNA / culturally sensitive geometry exposed via tile, vector, 3D, screenshot, popup, label, export, or AI text. | Redact / generalize / restrict tier / deny; emit `RedactionReceipt`; supersede with public-safe release. | Restore prior public-safe release; invalidate caches, tiles, exports, screenshots, AI outputs that referenced exposed coordinates. |
-| **Geometry** | Invalid GeoJSON; bad CRS; precision claim outside source basis. | Re-validate; correct geometry; supersede. | Restore prior valid-geometry release. |
-| **Temporal** | Stale source published as current; valid-time / transaction-time confusion; expired operational context shown as current. | Add stale-state markers; re-promote; supersede with fresh release. | Restore prior fresh release. |
-| **Policy** | Policy gate skipped, bypassed, or evaluated incorrectly. | Re-evaluate; record `PolicyDecision`; supersede. | Restore prior policy-cleared release. |
-| **Validation** | Schema mismatch; contract drift; closure check passed in error. | Re-run validator; fix schema/contract; supersede. | Restore prior schema-valid release. |
-| **Rendering** | Map shell loads unreleased tile, hides sensitive geometry only by style, or treats popup as Evidence Drawer substitute. | Block layer; fix descriptor; supersede. | Disable layer via feature flag; restore prior `LayerManifest`. |
-| **API** | Public route reaches `RAW` / `WORK` / `QUARANTINE` / canonical stores; admin shortcut used as public path. | Close route; fix membrane; supersede. | Disable route via feature flag; restore prior route map. |
-| **AI output** | Uncited claim emitted; restricted prompt/output leakage; synthetic content presented as observed. | Force `ABSTAIN` or `DENY`; force `RealityBoundaryNote`; revalidate citations; supersede `AIReceipt`. | Disable Focus Mode adapter via kill-switch; restore prior `MockAdapter` baseline. |
-| **Operational security** | Real secret committed to `configs/` or repo; exposure beyond loopback; signing key custody loss. | Rotate; revoke; audit access; supersede infra config. | Restore prior secret-free state; rotate forward (no rollback of the rotation itself). |
+| Class | Examples | Fail-closed direction |
+|---|---|---|
+| Trust-membrane | Public path reaches RAW, WORK, QUARANTINE, internal receipts, private source, or direct model/runtime surface | Stop further exposure through an authorized control; preserve request and route evidence |
+| Sensitive disclosure | Exact protected location, living-person or DNA detail, private-land linkage, sacred or culturally sensitive material, harmful infrastructure detail | Restrict evidence; stop the affected carrier; do not repeat the detail in coordination systems |
+| Evidence or claim integrity | Missing support, broken evidence reference, unsupported claim, synthetic material presented as observed | `ABSTAIN`, withdraw, or hold the affected claim pending evidence and correction review |
+| Source, rights, or sovereignty | Wrong source role, changed terms, unknown redistribution, community or consent duty unresolved | Hold use and downstream release; obtain accountable review |
+| Validation or policy | Schema, validator, policy, review, or closure gate bypassed or mis-evaluated | Hold affected transitions; reproduce safely; do not weaken the gate |
+| Release or public-state | Manifest, proof, signature, alias, rollback target, cache, or public carrier inconsistent | Preserve current safe state or request authorized containment; prepare correction, withdrawal, or rollback candidate |
+| Credential or access | Secret, token, key, protected endpoint, unauthorized access, or custody uncertainty | Use the approved private route; rotate or revoke only through the issuing authority |
+| Repository control | Unauthorized ready, merge, branch, ruleset, workflow, release, deployment, or identity transition | Stop further task mutations; preserve event chronology and exact SHAs; contain the controlling client through an authorized account/security path |
+| Availability or integrity loss | Corruption, deletion, unavailability, dependency compromise, or unexplained output drift | Preserve state and evidence; hold promotion or restoration until target and authority are verified |
+| Near miss or exercise | Synthetic scenario or safely contained event revealing a gap | Record limited result and corrective work; do not claim live readiness |
 
-> [!CAUTION]
-> Defect class **operational security** has an asymmetric rollback rule. **You do not roll back a secret rotation.** A leaked secret is a one-way door: the new secret is the floor, and any artifact, log, or cache that contained the old secret is treated as compromised until proven otherwise.
+One event may have several classes. Record each without collapsing technical,
+policy, lifecycle, privacy, and communications outcomes into one status.
 
-[Back to top](#top)
+<a id="4-severity-and-slo-targets"></a>
 
----
+## 4. Severity and response priorities
 
-## 4. Severity and SLO targets
+The repository does not establish accepted incident SLAs or SLOs. Do not copy
+fictional acknowledgement or containment times into an incident record. Until
+accountable targets are accepted, use priority without a clock promise:
 
-Severity is qualitative and reviewer-assigned. Time targets below are **PROPOSED** placeholders — calibrate against actual on-call capacity and record the calibrated values in `control_plane/`.
+| Priority | Condition | Immediate posture |
+|---|---|---|
+| Critical | Active or plausibly active public sensitive disclosure, credential/key compromise, uncontrolled trust-membrane access, or unauthorized production/repository transition | Escalate immediately through the approved private route; apply only authorized exposure-reducing containment |
+| High | Material public claim, rights, evidence, policy, release, or integrity failure with bounded or uncertain active exposure | Hold affected public use and assemble accountable containment/correction review |
+| Moderate | Non-public control failure, reproducible validator gap, or integrity uncertainty with no evidence of public exposure | Preserve evidence, prevent promotion, and prioritize bounded repair |
+| Low | Near miss, documentation drift, or synthetic exercise finding | Track corrective action and verify closure proportionally |
 
-| Severity | Definition | Acknowledge | Contain | Public correction or rollback |
-|---|---|---|---|---|
-| **SEV-1** | Public exposure of sensitive geometry or living-person/DNA data; trust-membrane breach with public traffic; signing-key compromise. | ≤ 15 min *(PROPOSED)* | ≤ 1 hr *(PROPOSED)* | ≤ 24 hr *(PROPOSED)* |
-| **SEV-2** | Uncited or wrongly-attributed public claim; rights/source-role mislabel published; release missing rollback target. | ≤ 1 hr *(PROPOSED)* | ≤ 4 hr *(PROPOSED)* | ≤ 72 hr *(PROPOSED)* |
-| **SEV-3** | Non-public drift, validator gap, policy fixture stale, internal exposure with no public traffic. | ≤ 1 business day *(PROPOSED)* | ≤ 5 business days *(PROPOSED)* | Next release *(PROPOSED)* |
-| **SEV-4** | Near-miss; preventive note; documentation drift only. | ≤ 5 business days *(PROPOSED)* | n/a | Optional. |
+When impact or exposure is unknown, use the more protective priority and label
+the uncertainty. Replace these priorities only through an accountable decision
+that also defines staffing, intake, escalation, and measurement.
 
-> [!WARNING]
-> If severity is **uncertain**, treat the incident as the **higher** severity. Fail-closed applies to severity assignment as it applies to publication.
-
-[Back to top](#top)
-
----
+<a id="5-incident-lifecycle"></a>
 
 ## 5. Incident lifecycle
 
-The lifecycle below mirrors KFM's lifecycle law: nothing exits a phase without the required artifacts and a recorded decision.
-
 ```mermaid
-flowchart LR
-    A[Detect<br/>signal] --> B[Triage<br/>class + severity]
-    B --> C{Public<br/>exposure?}
-    C -- "yes" --> D[Contain<br/>kill-switch · flag · route off]
-    C -- "no" --> E[Contain<br/>internal hold]
-    D --> F[Eradicate<br/>fix root cause]
-    E --> F
-    F --> G{Recovery<br/>path}
-    G -- "supersede" --> H[Publish<br/>CorrectionNotice]
-    G -- "restore" --> I[Execute<br/>RollbackCard]
-    H --> J[Audit<br/>receipts · ledger · drift register]
-    I --> J
-    J --> K[Post-incident<br/>review + verification backlog]
+flowchart TD
+    A["Signal received"] --> B["Preserve and minimize"]
+    B --> C{"Private route verified?"}
+    C -- "No" --> D["HOLD and escalate safely"]
+    C -- "Yes" --> E["Acknowledge and triage"]
+    E --> F{"Authorized containment exists?"}
+    F -- "No" --> D
+    F -- "Yes" --> G["Contain and record"]
+    G --> H["Investigate and repair"]
+    H --> I["Correct, withdraw, or roll back"]
+    I --> J["Verify, monitor, review"]
+    J --> K["Close or correct the record"]
 ```
 
-Every transition between phases must leave a receipt. A phase is closed only when (i) required artifacts exist, (ii) every required artifact **resolves** the artifacts it depends on (`EvidenceRef` → `EvidenceBundle`, `source_id` → `SourceDescriptor`, `model_id` → `ModelRunReceipt`), and (iii) the policy gate evaluated and recorded its decision. Missing any of these means the transition **fails closed** and the prior state is preserved.
+Suggested coordination states follow the proposed handoff packet:
+`REPORTED`, `ACKNOWLEDGED`, `TRIAGED`, `TRANSFERRED`, `ACTIVE`,
+`MONITORING`, `CLOSED`, `CORRECTED`, `ABSTAIN`, `ACCESS_DENIED`, and
+`STALE_RUNBOOK`. They are human coordination labels only. They do not authorize
+containment, disclosure, lifecycle transition, release, deployment, or
+publication.
 
-[Back to top](#top)
+Closure requires a traceable record of the original signal, impact and
+uncertainty, authorized containment, investigation, correction or rollback,
+downstream invalidation, validation, independent review, monitoring, and any
+remaining work. A silent edit is not closure.
 
----
+<a id="6-detection-signals"></a>
 
 ## 6. Detection signals
 
-Detection is a multi-source problem. No single channel is authoritative; treat any of the following as an admissible signal until ruled out.
+Treat a credible report as an admissible signal, not as proof or noise. Signals
+may include:
 
-- **Automated checks failing** — schema validation, OPA/Rego gates on `run_manifest.json`, Cosign/Rekor attestation lookups, `spec_hash` reproducibility checks, kill-switch fixture, STAC/DCAT/PROV acceptance harness.
-- **Cite-or-abstain violations** — Focus Mode `AIReceipt` showing `ANSWER` outcome without resolved citations; `EvidenceDrawerPayload` rendered without a resolvable `EvidenceBundle`.
-- **Policy denial bypassed** — `PolicyDecision` records absent for an action that should have hit a gate; admin route used in a public-facing flow.
-- **Source-head drift** — ETag / Last-Modified change on a fetched source without a new `RunReceipt`; rights field changed upstream.
-- **Renderer breach indicators** — `addSource` / `addLayer` against an asset lacking `LayerManifest`, `TileArtifactManifest`, valid release state, or rights field; sensitive geometry rendered without `RedactionReceipt`.
-- **External report** — researcher, steward, community member, or downstream consumer flags an issue. Treat these with the same weight as automated checks.
-- **Secret-scanning hit** — repo, CI logs, container image, or backup found to contain a real credential.
-- **Audit-ledger anomaly** — append-only ledger shows missing or out-of-order events; rollback executed without `RollbackCard`; release without rollback target.
+- a security, secret, dependency, policy, schema, topology, or release check;
+- a public response, layer, export, screenshot, report, or generated answer
+  containing unsupported or restricted material;
+- missing or inconsistent source head, evidence, receipt, manifest, signature,
+  review, rollback, correction, or withdrawal references;
+- unexpected GitHub events, actor identity, draft/ready/merge state, workflow
+  execution, settings, deployment, or branch movement;
+- a source, rights, consent, privacy, sensitivity, or community-steward report;
+- unexplained digest, byte, timestamp, alias, cache, or public-state drift; or
+- an external researcher or user report.
 
-> [!TIP]
-> Detection signals should be wired into the **same** check-rollup that gates promotion (PROPOSED: a Checks API rollup that blocks merge until receipts verify). The incident commander should never be the only listener.
+Do not paste the raw signal into a public coordination surface. Record a
+minimized description and a restricted evidence reference. If the private route
+is unverified, preserve the original locally under approved handling and record
+`ACCESS_DENIED` or `STALE_RUNBOOK` without spreading the payload.
 
-[Back to top](#top)
-
----
+<a id="7-triage"></a>
 
 ## 7. Triage
 
-Triage assigns four things and nothing else:
+### Step 1 — Freeze the evidence boundary
 
-1. **Class** — pick from §3.
-2. **Severity** — pick from §4 (fail-closed: pick higher when uncertain).
-3. **Affected surfaces** — public clients, normal UI, governed API, AI surface, exports, screenshots, downstream derivatives (graphs, vector indexes, scenes, story snapshots, tiles, caches).
-4. **Containment plan** — feature flag off, route disable, layer block, kill-switch file, secret rotation, or "internal hold; no public action needed."
+Record the exact time, observing actor or system, repository commit or release
+identity, affected carrier, current public state, and how the signal was
+received. Preserve originals read-only where the approved custody system
+permits. Hash files before analysis. Do not normalize, redact, crop, or rename
+the only copy.
 
-<details>
-<summary><strong>Triage worksheet (copy and fill)</strong></summary>
+### Step 2 — Minimize coordination data
 
-```text
-incident_id:             # short slug, e.g. inc-2026-05-12-001
-detected_at:             # ISO 8601 UTC
-detected_by:             # role or person
-detection_signal:        # which check, who reported, what tipped it
-class:                   # one of §3
-severity:                # one of §4 (escalate on uncertainty)
-public_exposure:         # yes | no | unknown
-affected_surfaces:       # list
-affected_releases:       # release_id(s) implicated
-affected_downstream:     # graphs / tiles / scenes / exports / AI outputs
-known_evidence_refs:     # EvidenceBundle ids in play
-known_source_refs:       # SourceDescriptor ids in play
-proposed_containment:    # flag off / route off / layer block / kill-switch / rotation
-ic:                      # incident commander
-witnesses:               # who else has eyes on it
-notes:                   # free text, signed and timed
-```
-</details>
+Across the public/restricted seam, share only a report ID, receipt time,
+public-safe affected-surface label, unconfirmed priority, evidence-reference
+identifier, handling label, and accountable role identifiers. Keep payloads,
+logs, credentials, personal data, exact coordinates, screenshots, exploit
+detail, vendor material, and tactical steps restricted.
 
-[Back to top](#top)
+### Step 3 — State facts and unknowns separately
 
----
+Record:
+
+- observed facts and their evidence references;
+- inference or hypothesis;
+- public exposure as `YES`, `NO`, or `UNKNOWN`;
+- affected source, data, code, workflow, release, and derivative identities;
+- incident classes and response priority;
+- owners and authority still missing; and
+- the next action that reduces risk without destroying evidence.
+
+### Step 4 — Choose a finite disposition
+
+| Disposition | Meaning |
+|---|---|
+| `HOLD` | Evidence, authority, custody, target, rights, sensitivity, review, or operational mechanism is incomplete |
+| `ESCALATE` | Competent authority or restricted handling is required |
+| `ABSTAIN` | Evidence is insufficient to classify or communicate further |
+| `DENY` | Requested exposure, release, access, or transition is forbidden |
+| `ERROR` | Tooling or operational failure prevents a trustworthy result |
+| `READY_FOR_AUTHORIZED_CONTAINMENT_REVIEW` | Scope, evidence references, owner, action, rollback/expiry, and review route are assembled; execution is still separate |
+
+<a id="8-containment"></a>
 
 ## 8. Containment
 
-Containment is **deny-by-default, fail-closed**. The right move is the one that stops the exposure or claim from being treated as authoritative, even if it stops legitimate traffic along with it. Restoring legitimate function is the next phase, not this one.
+Containment is an authorized action that reduces exposure while preserving
+evidence and correction paths. This runbook may identify the need; it does not
+create the control or authority.
 
-### 8.1 Containment levers
+### 8.1 Containment decision matrix
 
-| Lever | When to use | Reversibility |
+| Signal | Safe request | Do not do |
 |---|---|---|
-| **Kill-switch file** *(PROPOSED mechanism per ML-063-005)* | SEV-1; release or promotion path must fail closed across the board. | Reversible by removing the file after the underlying defect is fixed. |
-| **Feature flag off** | UI route, panel, Focus Mode, Story Mode, Export, or a layer should disappear from public clients without changing API contracts. | Fully reversible. |
-| **Layer block / `LayerManifest` deny** | A specific layer or tile artifact must stop loading. | Reversible via layer registry; emits a `LayerManifest` revision. |
-| **Route disable** | A governed API route is breaching the membrane. | Reversible via route map revision; old client builds may show `ERROR`. |
-| **AI adapter swap to `MockAdapter`** | Live provider is emitting uncited or restricted content. | Reversible after citation validation and policy gate review pass. |
-| **Cache / CDN purge** | Sensitive tile, PMTiles, COG, vector tile, or 3D asset has been served. | Forward-only for the purged copy; new release supersedes. |
-| **Secret rotation** | Real credential exposed. | **One-way** — never roll back the rotation. |
-| **Public surface withdrawal** | Released claim is unsupported and supersede is not yet ready. | Reversible by emitting a superseding release. |
+| Sensitive carrier exposed | Disable or withdraw the entire affected carrier through its authorized owner; request cache and derivative invalidation | Hide only by CSS, style, popup filtering, or AI disclaimer |
+| Unsupported public claim | Hold or withdraw the affected claim and its derivatives | Quietly edit history or replace evidence after the fact |
+| Credential or key suspected | Rotate/revoke through the issuing authority; preserve access/audit evidence | Test the credential in chat, issue, PR, or unapproved environment; roll back a completed rotation |
+| Public route crosses membrane | Disable the affected route through an approved mechanism | Add a temporary direct read from internal stores |
+| Repository-control transition | Stop further task mutations; capture timeline, actor, SHAs, events, reviews, checks, and settings evidence | Open duplicate repair PRs, merge, revert, delete branches, or change rulesets without separate authority |
+| Corrupt or unavailable artifact | Hold promotion and identify the last verified safe target | Copy a file into `PUBLISHED` or rewrite receipts |
+| AI or generated-output leak | Disable the affected public adapter or surface through an authorized control; invalidate outputs | Treat a prompt note as containment or rewrite the only receipt |
 
-### 8.2 Containment rules
+### 8.2 Evidence-preserving rules
 
-> [!IMPORTANT]
-> Containment **must not** open a new untrusted path. Disabling the governed API route in favor of a "temporary direct read" against canonical stores is **not** containment — it is a second incident on top of the first. The trust membrane forbids any public client, any normal UI surface, and any released AI surface from reaching `RAW`, `WORK`, `QUARANTINE`, canonical/internal stores, graph internals, vector indexes, source APIs, or direct model runtimes during an incident.
+1. Do not delete the original evidence or the only affected artifact.
+2. Do not force-push, rewrite shared history, purge logs, rotate away audit
+   access, or delete public evidence without an approved preservation and
+   notification plan.
+3. For a committed secret, rotate and revoke first. Treat repository-history
+   cleanup as a separate authorized security operation coordinated with clone,
+   cache, artifact, and backup owners.
+4. Record exact actions, actors, timestamps, targets, observed results, and
+   non-effects. Preserve failed attempts.
+5. Keep emergency containment narrow, reversible where possible, time-bounded,
+   and subject to independent review before permanence or re-expansion.
+6. Do not restore service through a path that bypasses evidence, policy,
+   sensitivity, review, or the trust membrane.
 
-> [!CAUTION]
-> Style-only hiding is **not** containment for sensitive geometry. If sensitive coordinates were exposed via vector tile, COG, or 3D asset, the tile/COG/asset itself must be withdrawn or replaced with a public-safe derivative. Hiding a layer with a style filter leaves the geometry in the artifact.
-
-[Back to top](#top)
-
----
+<a id="9-eradication-and-recovery"></a>
 
 ## 9. Eradication and recovery
 
-Eradication is fixing the root cause. Recovery is restoring a safe public state through the **same governed release path** the original publication used — never a hidden file copy, never a direct write to `data/published/`, never a hand-edit of a canonical record.
+Root-cause repair and public recovery are separate decisions. A code fix does
+not restore a public surface. Choose the public-state path using evidence and
+accountable authority:
 
-### 9.1 Recovery decision
+| Path | Use when | Required review evidence |
+|---|---|---|
+| Forward correction | A safe replacement can supersede the defective claim or artifact | Correction scope, impact assessment, propagation/invalidation plan, validation, review, release target |
+| Withdrawal | The affected public material must be removed and no safe replacement is ready | Withdrawal scope, reason, affected derivatives, public-safe notice, review, monitoring |
+| Rollback | A known prior release is proven safer and can be restored coherently | Exact prior target, compatibility, invalidations, rollback candidate, validation, review, read-back |
+| Continue containment | No safe recovery target or authority is established | Current containment, remaining exposure, owner, next review, monitoring |
 
-Two paths, picked by defect class:
+Never move a file backward through lifecycle directories and call it rollback.
+Never edit RAW or a historical receipt to make the incident disappear. A new
+correction, withdrawal, or rollback record supersedes the prior state while
+preserving lineage.
 
-- **Supersede (forward-fix correction).** Publish a new release that supersedes the defective one. Required when the right answer differs from the old answer (e.g., evidence updated, source role corrected, rights re-evaluated, sensitivity generalized).
-- **Rollback (restore prior).** Restore the most recent prior safe release. Required when the new release introduced the defect and the prior release was safe (e.g., release missing rollback target, broken `LayerManifest`, adapter regression).
+### Bounded repository validation
 
-Both paths emit auditable artifacts; both paths must invalidate downstream derivatives.
+The repository provides no-network validators for candidate record families.
+They validate shapes and semantic checks only; they do not execute recovery:
 
-### 9.2 Closure rules
+```bash
+python tools/validators/correction/validate_correction_notice.py --fixtures
+python tools/validators/correction/validate_correction_propagation_plan.py --fixtures
+python tools/validators/release/validate_withdrawal_notice.py --fixtures
+python tools/validators/release/validate_rollback_card.py --fixtures
+```
 
-The transition from "fixed" to "publicly safe" is closed only when:
+Focused regression tests:
 
-1. The defect's root cause is removed from `RAW` / `WORK` / `PROCESSED` / `CATALOG` as far upstream as the class requires.
-2. A `ValidationReport` records the re-run of every gate the defect bypassed or failed.
-3. A `PolicyDecision` records the explicit re-evaluation outcome.
-4. A `ReviewRecord` is attached when materiality applies and is signed by a reviewer **distinct from the author** of the corrected content.
-5. A `ReleaseManifest` is emitted (forward correction) or restored (rollback) — never silently swapped.
-6. A `CorrectionNotice` lists invalidated derivatives (graphs, vector indexes, scenes, story snapshots, exports, AI outputs, downstream tiles).
-7. A `RollbackCard` is recorded when rollback is the path, including the targeted prior release and the reason.
-8. Caches, CDN copies, OCI tags, and signed manifests pointing to the defective release are purged or redirected.
-9. Re-publication uses immutable digests, not mutable tags.
-10. The audit ledger has a coherent record across the full lifecycle of the incident.
+```bash
+python -m pytest \
+  tests/validators/test_validate_correction_notice.py \
+  tests/validators/test_validate_correction_propagation_plan.py \
+  tests/validators/test_validate_withdrawal_notice.py \
+  tests/validators/test_validate_rollback_card.py \
+  -q --strict-config --strict-markers
+```
 
-> [!NOTE]
-> Operational thresholds in any quarantine rules used during containment must be labeled explicitly (`policy_basis = operational_threshold` vs `scientific_basis = source-derived observation`) to prevent accidental regulatory interpretation or scientific overclaim.
+Run from an exact commit in an isolated Python environment with the root test
+dependencies installed. Record the command, revision, environment, exit code,
+and output. A pass proves only the assertions reached by that command.
 
-[Back to top](#top)
-
----
+<a id="10-post-incident-correction-rollback-audit"></a>
 
 ## 10. Post-incident: correction, rollback, audit
 
-The post-incident step is where the incident becomes legible to KFM's governance plane. Three artifacts are mandatory; a fourth is conditional.
+Before closure, reconcile the applicable record families without claiming that
+one substitutes for another:
 
-| Artifact | When | What it records |
+| Record | Purpose | Repository surface |
 |---|---|---|
-| **`CorrectionNotice`** | Public claim was wrong, has been corrected, or has been withdrawn. | `claim_ref`, `prior_release_ref`, `change_summary`, `invalidates[]`, `review_ref`, `time`. |
-| **`RollbackCard`** | Rollback path was chosen. | `release_id`, `rollback_to`, `reason`, `invalidates[]`, `review_ref`, `time`. |
-| **Audit-ledger entry** | Always. | Detect → triage → contain → eradicate → recover → close, with timestamps and signatures. |
-| **`RealityBoundaryNote`** | AI surface, synthetic carrier, or reconstructed scene was implicated. | `scope`, `method_summary`, `evidence_refs[]`, `visibility`. |
+| Incident chronology | What was observed, decided, attempted, and verified | Approved restricted custody system — **NEEDS VERIFICATION** |
+| Correction notice candidate | Describe a forward correction without executing it | [`contracts/correction/correction_notice.md`](../../contracts/correction/correction_notice.md) and [`release/correction_notices/`](../../release/correction_notices/README.md) |
+| Correction impact assessment | Bound affected carriers, claims, releases, and derivatives | [`contracts/correction/correction_impact_assessment.md`](../../contracts/correction/correction_impact_assessment.md) |
+| Propagation plan | Track invalidation and rebuild obligations | [`contracts/correction/correction_propagation_plan.md`](../../contracts/correction/correction_propagation_plan.md) |
+| Withdrawal notice candidate | Describe public withdrawal and affected scope | [`contracts/release/withdrawal_notice.md`](../../contracts/release/withdrawal_notice.md) |
+| Rollback card candidate | Bind exact target and rollback assertions | [`contracts/release/rollback_card.md`](../../contracts/release/rollback_card.md) and [`release/rollback_cards/`](../../release/rollback_cards/README.md) |
+| Review and release evidence | Separate approval, execution, read-back, and public status | Owning review and release surfaces; operational binding **NEEDS VERIFICATION** |
 
-Register updates after every material incident:
+Update the drift or verification registers only with public-safe facts. Do not
+use a docs register as the restricted evidence store. When a prior public status
+or incident statement was wrong, append a correction with the original and
+superseding evidence; do not silently overwrite it.
 
-- `docs/registers/DRIFT_REGISTER.md` — defect class, surface, defect type, fix reference.
-- `docs/registers/VERIFICATION_BACKLOG.md` — anything left as NEEDS VERIFICATION, including gate coverage gaps.
-- `control_plane/contradiction_register.yaml` — if the incident revealed a doctrine/implementation conflict.
-- `control_plane/deprecation_register.yaml` — if a sunset was required.
+Closure must state which downstream carriers were searched: catalog records,
+graphs, indexes, embeddings, tiles, COGs, scenes, caches, reports, exports,
+screenshots, story snapshots, generated answers, logs, mirrors, packages, and
+dependent releases. Unknown coverage remains open work.
 
-> [!IMPORTANT]
-> A correction is **not** complete until downstream derivatives are invalidated. Graphs, vector indexes, embeddings, scene caches, story snapshots, exports, screenshots, and AI summaries that referenced the defective content are all derivatives. Re-publishing the correction without listing the invalidations is a documented anti-pattern.
-
-[Back to top](#top)
-
----
+<a id="11-specific-playbooks"></a>
 
 ## 11. Specific playbooks
 
-Each playbook below is a short, runnable procedure for one common defect class. They are deliberately compact. All paths inside them are PROPOSED until a mounted repository confirms them.
+### 11.1 Suspected credential or signing-key exposure
 
-<details>
-<summary><strong>11.1 Leaked secret in <code>configs/</code> or repo</strong></summary>
+1. Stop repeating or testing the value.
+2. Use the approved private security route; if unverified, record
+   `ACCESS_DENIED` and escalate without copying the value.
+3. Through the issuing authority, rotate or revoke the affected credential.
+4. Preserve creation, access, use, rotation, and revocation evidence.
+5. Inventory repository history, forks, clones, CI logs, artifacts, caches,
+   images, backups, screenshots, and vendor systems that may contain it.
+6. Plan any history rewrite or deletion separately with evidence preservation,
+   consumer coordination, public disclosure review, and rollback.
+7. Add a safe regression check without encoding the real value.
 
-**Trigger.** Secret-scanning hit, accidental commit, screenshot leak, log-leak, or a real secret found under `configs/dev/`, `configs/test/`, or any non-secret store. Directory Rules §10.3 names this case explicitly.
+Never roll back a completed secret rotation.
 
-**Class.** Operational security. **Severity.** SEV-1 if production; SEV-2 if local-only; assume SEV-1 until proven local.
+### 11.2 Sensitive geometry or protected detail exposed
 
-1. **Rotate the secret at the issuing system first** — before touching the repo, before opening a PR. The new secret is the floor.
-2. **Revoke the old secret.** Confirm revocation; verify the old credential no longer authenticates.
-3. **Audit access logs** for the window between secret creation and revocation. Record any access in the incident timeline.
-4. **Purge from repo history** if committed. `git filter-repo` or equivalent; force-push the rewritten history; coordinate with anyone with local clones.
-5. **Purge from caches** — CI artifact stores, container layers, backup snapshots, logs, build caches.
-6. **Open a `CorrectionNotice`** if any artifact derived from the leak was published.
-7. **Update `docs/registers/DRIFT_REGISTER.md`** with the leak class and fix.
-8. **Add a runbook update** if the leak class is new.
-9. **Verify**: secret scanning re-run is clean; new secret in environment store; audit logs preserved.
+1. Do not quote, screenshot, or map the detail in public coordination.
+2. Identify every carrier, derivative, cache, export, generated answer, and
+   downstream consumer.
+3. Request authorized carrier-level containment. Style-only hiding is not
+   containment when the bytes still contain the detail.
+4. Route to the competent privacy, cultural, community, species, land, or
+   infrastructure reviewer.
+5. Prepare withdrawal or a public-safe generalized/redacted correction.
+6. Verify that the original is no longer public and the restricted evidence is
+   retained only under approved handling.
 
-> [!CAUTION]
-> Do not roll back the rotation. Do not "temporarily" restore the old secret to avoid disruption. The window of exposure is the window where the old secret existed; reducing that window is the priority that overrides convenience.
-</details>
+### 11.3 Unsupported or misleading public claim
 
-<details>
-<summary><strong>11.2 Sensitive geometry exposed via public tile, export, or AI text</strong></summary>
+1. Bind the exact claim, release, evidence reference, and public carriers.
+2. Hold or withdraw the claim; do not replace the support silently.
+3. Identify source-role, evidence, temporal, rights, or generated-language
+   cause.
+4. Prepare correction impact and propagation candidates.
+5. Revalidate the replacement and obtain independent review before restoration.
 
-**Trigger.** Exact archaeology / fauna / flora / infrastructure / living-person / DNA / culturally sensitive geometry served via PMTiles, COG, MVT, MLT, 3D Tiles, screenshot, story export, popup label, or AI answer.
+### 11.4 Unauthorized repository ready, merge, deployment, or settings change
 
-**Class.** Sensitivity. **Severity.** SEV-1.
+1. Stop new branch, PR, review, merge, revert, release, or settings mutations
+   from the affected task.
+2. Capture current default-branch SHA, target branch/head, event timeline,
+   actor identity as reported by GitHub, reviews, checks, deployments, rulesets,
+   and affected files.
+3. Distinguish direct tool actions from external integration or
+   owner-credentialed events; do not guess the client or session.
+4. Preserve the landed state. Decide forward repair, revert, or no change only
+   after introduced-versus-inherited validation and accountable review.
+5. Contain or revoke the responsible client/session through an independently
+   authorized account-security path.
+6. Correct GitHub and Notion status records with timestamps and exact SHAs.
 
-1. **Withdraw the asset** at the layer level — kill-switch / feature flag / `LayerManifest` deny. Do not rely on style hiding.
-2. **Purge caches** — CDN, OCI tags pointing to the defective digest, browser-side cached tiles where reachable.
-3. **Invalidate AI outputs and exports** that referenced the coordinates. List them in the `CorrectionNotice`.
-4. **Generate a public-safe derivative** — generalization (H3, geohash bucket, county/HUC aggregation), redaction, or restricted-tier reassignment. Emit a `RedactionReceipt`.
-5. **Re-validate the new artifact** — schema, geometry, sensitivity, rights, release state.
-6. **Publish the superseding release** with the public-safe derivative and an attached `RealityBoundaryNote` if any synthetic representation was used in mitigation.
-7. **Record review** — independent reviewer (cultural review for archaeology and culturally sensitive content; species/locality review for fauna/flora).
-8. **Update `docs/registers/DRIFT_REGISTER.md`** with the surface that leaked (tile / vector / 3D / screenshot / export / AI text).
+### 11.5 Public route, layer, export, or generated surface crosses the membrane
 
-> [!WARNING]
-> Style-only hiding is not redaction. If the geometry was in the artifact, the artifact must be replaced.
-</details>
+1. Identify the exact route and carrier without querying restricted content
+   through the public path.
+2. Request the narrowest authorized control that stops exposure.
+3. Preserve request, response, configuration, release, and provenance evidence.
+4. Repair the boundary through the governed interface; do not install a
+   temporary internal-store shortcut.
+5. Validate denial and no-leak behavior with synthetic public-safe fixtures.
+6. Restore only through separately reviewed release and read-back evidence.
 
-<details>
-<summary><strong>11.3 Uncited or weakly-cited AI answer reached a public surface</strong></summary>
-
-**Trigger.** Focus Mode emitted `ANSWER` without resolved citations; `AIReceipt` shows missing citation validation; synthetic content presented as observed reality.
-
-**Class.** AI output. **Severity.** SEV-2 (escalate to SEV-1 if the answer touched sensitivity, rights, or life-safety-adjacent content).
-
-1. **Disable the live adapter via kill-switch.** Swap to `MockAdapter` if Focus Mode must remain on for non-public testing; otherwise feature-flag the Focus route off.
-2. **Force `ABSTAIN` or `DENY`** for any retry of the affected question class until citation validation is verified.
-3. **Audit the `AIReceipt` window** — sample answers from the period the defect was active; identify any that should also be withdrawn or corrected.
-4. **Attach a `RealityBoundaryNote`** if synthetic content was presented as observed.
-5. **Publish a `CorrectionNotice`** for each material answer that reached a public surface.
-6. **Re-validate citation validation** — fixtures pass; negative fixtures (uncited / weakly-cited / unsupported) still `DENY` or `ABSTAIN`.
-7. **Restore the live adapter** only after the policy precheck/postcheck contract is re-verified end-to-end.
-
-> [!IMPORTANT]
-> AI is interpretive, not the root truth source. Restoration of the AI surface comes **after** evidence, policy, citation validation, and finite response envelopes pass — never before.
-</details>
-
-<details>
-<summary><strong>11.4 Release published without a rollback target, or with a mutable tag</strong></summary>
-
-**Trigger.** OPA/Rego policy on `release_manifest` denied missing `rollback`, but a release got through; release references a moving symbolic tag instead of an immutable digest; `spec_hash` mismatch between manifest and run receipt.
-
-**Class.** Release integrity. **Severity.** SEV-2.
-
-1. **Hold further promotions** via kill-switch.
-2. **Locate the prior safe release** — verify digests, manifests, signatures, `EvidenceBundle` resolution, policy state.
-3. **Execute `RollbackCard`** referencing the prior safe release as the rollback target.
-4. **Emit rollback attestation** — every map/release rollback emits its own attestation.
-5. **Re-emit the corrected release** with an immutable digest reference, a complete `ReleaseManifest`, and a rollback target.
-6. **Verify** `spec_hash` reproducibility, signature presence, STAC/DCAT/PROV validation, and check-rollup blocking until receipts verify.
-7. **Update `docs/registers/DRIFT_REGISTER.md`** with the release integrity failure mode and fix.
-</details>
-
-<details>
-<summary><strong>11.5 Public client reached <code>RAW</code> / <code>WORK</code> / <code>QUARANTINE</code> or a canonical store</strong></summary>
-
-**Trigger.** Route audit reveals an `apps/explorer-web/`-equivalent fetch that bypassed `apps/governed-api/` (or the actual governed-API path); admin route used as the normal public path; direct model endpoint reachable from the browser.
-
-**Class.** API / trust-membrane breach. **Severity.** SEV-1.
-
-1. **Disable the offending route via feature flag.** If the route is unauthenticated and reachable from the public internet, also block at the reverse proxy.
-2. **Audit logs** for the exposure window — count requests, identify whether sensitive content was actually returned.
-3. **Patch the membrane** — route through the governed API, restore the policy gate, restore the `EvidenceBundle` resolution step.
-4. **Re-validate** with no-public-raw-path and no-unreleased-tile fixture tests.
-5. **Emit a `CorrectionNotice`** if sensitive content was returned.
-6. **ADR** if the route's existence implied a doctrine gap; record in `docs/adr/`.
-</details>
-
-<details>
-<summary><strong>11.6 Source rights or sovereignty changed upstream</strong></summary>
-
-**Trigger.** Source publisher changed license, withdrew permission, or updated sovereignty/CARE terms after KFM had published derived content.
-
-**Class.** Rights. **Severity.** SEV-2.
-
-1. **Hold further releases derived from the source.**
-2. **Withdraw or generalize** existing derived public artifacts. Sensitivity-class derivations may require full withdrawal.
-3. **Update `SourceDescriptor`** with the new rights state.
-4. **Re-run the `ValidationReport`** and `PolicyDecision` against the new rights.
-5. **Emit a `CorrectionNotice`** listing invalidated derivatives.
-6. **Document** in `docs/sources/` and `control_plane/source_authority_register.yaml`.
-</details>
-
-<details>
-<summary><strong>11.7 Source role collapse (modeled treated as observed)</strong></summary>
-
-**Trigger.** A modeled or analytical product was ingested or paraphrased into an observation-class claim. Often surfaced by source-role anti-collapse validators.
-
-**Class.** Source role. **Severity.** SEV-2.
-
-1. **Restore correct source role** at `SourceDescriptor`. Source role is fixed at admission; never upgraded by promotion.
-2. **Withdraw any claim** that treats the modeled product as observed.
-3. **AI surface check** — ban list of upcasting phrases; sample `AIReceipt` records for paraphrase-based upcasts.
-4. **Re-publish** with correct role labeling and an explicit caveat in the Evidence Drawer.
-5. **Emit `CorrectionNotice`** for material public claims.
-</details>
-
-[Back to top](#top)
-
----
+<a id="12-communications"></a>
 
 ## 12. Communications
 
-Communication is part of the trust posture. The principle is: **the public correction must be as visible as the original claim, and no more.**
+No private reporting route or status channel is verified by this document.
+Communications must use the route approved for the affected system and data
+class.
 
-| Audience | Channel *(PROPOSED)* | What to share | What to withhold |
-|---|---|---|---|
-| Public consumers of the affected surface | Public-facing `CorrectionNotice`, status page, or in-product banner. | What changed, when, and why; how to find the corrected version; how to report related concerns. | Restricted geometry, secret material, exact source paths to sensitive content, internal route names. |
-| Affected source publishers and stewards | Direct contact via established channel. | What was misused; what has been withdrawn; what review is in progress. | Internal stack details unless required. |
-| Downstream consumers (data partners, AI surfaces, exports) | Machine-readable `CorrectionNotice` referenced in their feed. | Invalidated derivative list; rollback/correction release IDs; new digest references. | n/a. |
-| Internal team | Incident timeline + post-incident review. | Everything material to learning. | Avoid blame language; focus on system change. |
-| Regulators or rights-holders | Only when required by class (e.g., living-person/DNA exposure, cultural sensitivity breach). | Material facts, mitigation, timeline. | Speculation; uncertain attribution. |
+| Audience | Public-safe content | Withhold unless explicitly approved |
+|---|---|---|
+| Responders | Report ID, role assignment, minimized scope, evidence references, handling labels, decisions, timestamps | Payloads outside the restricted custody system |
+| Repository contributors | Affected path or workflow, safe stop, review owner, next action | Credentials, exploit detail, private endpoints, sensitive evidence |
+| Data or community stewards | Applicable source, rights, consent, sovereignty, sensitivity, or harmful-precision question | Unnecessary personal, cultural, or location detail |
+| Public users | Confirmed affected service or claim, safe action, correction/withdrawal status, authoritative alternatives | Speculation, internal topology, exploit detail, identities, restricted evidence |
+| Vendors or authorities | Minimum necessary scope through the approved route | Unrelated KFM or third-party material |
 
-> [!NOTE]
-> KFM does not act as an emergency-alert channel. Hazard or alert content that prompted the incident must be referred back to its authoritative source (NWS, FEMA, state/local agency). KFM's communication describes its **own** correction, not the underlying real-world event.
+Every external statement must distinguish observed fact, inference, unknown,
+current containment, and next update. Do not claim `RESOLVED`, `SAFE`,
+`CONTAINED`, or `NO IMPACT` without evidence and accountable approval.
 
-[Back to top](#top)
-
----
+<a id="13-related-docs"></a>
 
 ## 13. Related docs
 
-*(Targets are PROPOSED until the repository is mounted and verified.)*
+- [Runbooks index](./README.md)
+- [Security root](../security/README.md)
+- [Public security incident guidance](../security/INCIDENT_RESPONSE.md)
+- [Proposed public/restricted handoff decision](../security/incident-response-handoff-decision.md)
+- [Threat model](../security/THREAT_MODEL.md)
+- [Exposure plan](../security/EXPOSURE_PLAN.md)
+- [Secrets guidance](../security/SECRETS.md)
+- [Escalation guide](../governance/ESCALATION.md)
+- [Separation of duties](../governance/SEPARATION_OF_DUTIES.md)
+- [Trust membrane](../doctrine/trust-membrane.md)
+- [Lifecycle law](../doctrine/lifecycle-law.md)
+- [UI rollback](./ui_ROLLBACK.md)
+- [Correction notices](../../release/correction_notices/README.md)
+- [Withdrawal notices](../../release/withdrawal_notices/README.md)
+- [Rollback cards](../../release/rollback_cards/README.md)
 
-- `docs/runbooks/README.md` — runbook index. *(TODO link target)*
-- `docs/runbooks/governed_ai_ROLLBACK.md` — AI adapter rollback and kill switch. *(TODO link target)*
-- `docs/runbooks/ui_ROLLBACK.md` — UI feature-flag and schema deprecation steps. *(TODO link target)*
-- `docs/security/README.md` — threat model and exposure posture. *(TODO link target)*
-- `docs/doctrine/trust-membrane.md` — invariants this runbook protects. *(TODO link target)*
-- `docs/doctrine/lifecycle-law.md` — phase-by-phase governance. *(TODO link target)*
-- `docs/registers/DRIFT_REGISTER.md` — running record of drift entries. *(TODO link target)*
-- `docs/registers/VERIFICATION_BACKLOG.md` — open verification items. *(TODO link target)*
-- `release/rollback_cards/` — `RollbackCard` instances. *(TODO link target)*
-- `release/correction_notices/` — `CorrectionNotice` instances. *(TODO link target)*
-- `control_plane/policy_gate_register.yaml` — gate inventory and outcomes. *(TODO link target)*
-
-[Back to top](#top)
-
----
+<a id="appendix-a--templates"></a>
 
 ## Appendix A — Templates
 
-<details>
-<summary><strong>A.1 <code>CorrectionNotice</code> field skeleton (PROPOSED)</strong></summary>
+### A.1 Public-safe handoff record
+
+```yaml
+report_id: "incident-candidate-YYYYMMDD-NNN"
+recorded_at: "YYYY-MM-DDTHH:MM:SSZ"
+state: "REPORTED"
+priority: "UNKNOWN"
+public_exposure: "UNKNOWN"
+affected_surface: "public-safe label only"
+evidence_refs:
+  - "restricted-ref:identifier"
+handling_label: "RESTRICTED"
+accountable_roles:
+  incident_lead: "OWNER_TBD"
+  evidence_custodian: "OWNER_TBD"
+next_action: "verify private route and assign triage"
+non_effects:
+  - "no containment or public-state change claimed"
+```
+
+Do not add a real payload, credential, private endpoint, personal identifier,
+exact coordinate, or exploit detail to this projection.
+
+### A.2 Decision log entry
 
 ```text
-object_type:        CorrectionNotice
-claim_ref:          # reference to the corrected claim
-prior_release_ref:  # release_id that contained the defect
-change_summary:     # what changed and why (public-safe text)
-invalidates:        # list of derivative artifact refs (graphs, exports, scenes, AI outputs)
-review_ref:         # ReviewRecord id; reviewer distinct from author when material
-time:               # ISO 8601 UTC
-notice_visibility:  # public | restricted
+time_utc:
+actor_role:
+observed_fact:
+evidence_ref:
+decision:
+authority_basis:
+action_requested_or_taken:
+observed_result:
+unknowns:
+next_review:
 ```
-</details>
 
-<details>
-<summary><strong>A.2 <code>RollbackCard</code> field skeleton (PROPOSED)</strong></summary>
+### A.3 Closure review
 
-```text
-object_type:    RollbackCard
-release_id:     # the defective release being rolled back
-rollback_to:    # the prior safe release_id
-reason:         # short text; class + brief cause
-invalidates:    # derivative artifact refs affected
-review_ref:     # ReviewRecord id
-time:           # ISO 8601 UTC
-```
-</details>
+- [ ] Original signal and immutable references are preserved.
+- [ ] Public exposure and affected scope are evidenced, not assumed.
+- [ ] Every response action has actor, authority, target, time, and result.
+- [ ] Failed attempts and external side effects remain visible.
+- [ ] Root cause and control gap are separated from symptoms.
+- [ ] Correction, withdrawal, rollback, and invalidation decisions are explicit.
+- [ ] Downstream carriers and consumers were searched or remain listed unknown.
+- [ ] Independent review and public communications approval are recorded.
+- [ ] Regression validation covers the failure without using restricted data.
+- [ ] Remaining risks, monitoring, owners, and dates are open and honest.
+- [ ] Closure did not delete or silently rewrite incident history.
 
-<details>
-<summary><strong>A.3 Post-incident review skeleton (PROPOSED)</strong></summary>
-
-```text
-incident_id:
-summary:                  # one paragraph, public-safe where possible
-class:                    # §3
-severity:                 # §4
-timeline:                 # detect → contain → eradicate → recover → close, with timestamps
-artifacts:                # CorrectionNotice / RollbackCard / RedactionReceipt / RealityBoundaryNote ids
-detection_assessment:     # what worked, what missed
-containment_assessment:   # what worked, what missed
-recovery_assessment:      # what worked, what missed
-gate_gaps:                # validator / policy / receipt gaps revealed
-register_updates:         # DRIFT_REGISTER / VERIFICATION_BACKLOG entries opened
-followups:                # owned, dated
-```
-</details>
-
-<details>
-<summary><strong>A.4 Incident timeline format (PROPOSED)</strong></summary>
-
-```text
-HH:MM UTC  ROLE  event
-HH:MM UTC  IC    Triage: class=<...>, severity=<...>, exposure=<yes|no>
-HH:MM UTC  ...   Containment lever engaged: <flag|route|layer|kill-switch|rotation>
-HH:MM UTC  ...   ValidationReport re-run: PASS|FAIL on <gate>
-HH:MM UTC  ...   ReviewRecord signed by <role>
-HH:MM UTC  ...   ReleaseManifest <id> superseded by <id>  OR  RollbackCard <id> executed
-HH:MM UTC  IC    Close: registers updated, public state verified
-```
-</details>
-
-[Back to top](#top)
-
----
+<a id="appendix-b--verification-backlog"></a>
 
 ## Appendix B — Verification backlog
 
-Items below are NEEDS VERIFICATION and should be resolved as the repository is inspected and as the runbook is exercised.
+A live operational runbook is not ready until all applicable items are closed:
 
-- Confirm whether the runbook home is `docs/runbooks/INCIDENT_RESPONSE.md` (this file) **and** a peer page lives at `docs/security/incident-response.md`, or whether `docs/security/` redirects here. Directory Rules §6.1 lists both candidate homes.
-- Confirm severity time targets in §4 against actual on-call capacity; record in `control_plane/`.
-- Confirm the exact kill-switch mechanism for KFM's release pipeline (PROPOSED to mirror ML-063-005 kill-switch file).
-- Confirm whether `release/rollback_cards/` and `release/correction_notices/` exist as the canonical homes (PROPOSED).
-- Confirm the named individuals behind each role; placeholders used here.
-- Confirm the public correction surface (status page, in-product banner, public `CorrectionNotice` feed).
-- Confirm rights-change detection cadence across third-party sources (CONFIRMED gap in the v1.0 risk register).
-- Confirm AI surface paraphrase-detection coverage and ban-list maintenance.
-- Confirm cross-surface lint coverage for sensitivity leaks via popup labels, exports, screenshots, and AI text (CONFIRMED gap in the v1.0 risk register).
+- [ ] Accept or supersede the proposed public/restricted handoff decision.
+- [ ] Name accountable owners for public guidance, restricted operations,
+      private intake, incident lead, evidence custody, communications,
+      privacy/rights/sensitivity, vendors, correction, withdrawal, and rollback.
+- [ ] Verify the private intake route and access-denied fallback without placing
+      private details in public Git history.
+- [ ] Define accepted priority and response objectives with staffing and
+      measurement evidence.
+- [ ] Register authorized containment mechanisms for each deployed carrier,
+      including expiry, rollback, and independent review.
+- [ ] Establish an approved restricted evidence-custody, retention, redaction,
+      access, legal-hold, and disposal procedure.
+- [ ] Bind correction, withdrawal, rollback, invalidation, release, and public
+      read-back to accountable roles and executable evidence.
+- [ ] Test denial, no-leak, cache, tile/export, generated-output, repository-
+      control, secret, and unavailable-runbook scenarios with synthetic data.
+- [ ] Perform a public-to-restricted handoff exercise and a recovery exercise;
+      record exact scope, failures, and non-effects.
+- [ ] Verify public communications, correction, and vulnerability-disclosure
+      routes and their review requirements.
+- [ ] Add staleness review after owner, route, platform, policy, source,
+      sensitivity, release, or incident changes.
+
+Until then, this runbook supports classification, evidence-preserving
+readiness, bounded candidate validation, and synthetic tabletop work only. It
+does not prove operational containment or safe public recovery.
 
 [Back to top](#top)
-
----
-
-**Related:** [Runbooks index](#13-related-docs) · [Trust membrane doctrine](#13-related-docs) · [Lifecycle law](#13-related-docs) · [Drift register](#13-related-docs)
-
-**Last updated:** 2026-05-12 · **[Back to top](#top)**
