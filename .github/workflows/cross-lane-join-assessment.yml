@@ -5,6 +5,7 @@ name: cross-lane-join-assessment
   pull_request:
     paths:
       - ".github/workflows/cross-lane-join-assessment.yml"
+      - "control_plane/domain_lane_register.yaml"
       - "contracts/joins/cross_lane_join_assessment.md"
       - "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json"
       - "tools/joins/join_candidates.py"
@@ -16,6 +17,7 @@ name: cross-lane-join-assessment
     branches: [main]
     paths:
       - ".github/workflows/cross-lane-join-assessment.yml"
+      - "control_plane/domain_lane_register.yaml"
       - "contracts/joins/cross_lane_join_assessment.md"
       - "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json"
       - "tools/joins/join_candidates.py"
@@ -62,7 +64,11 @@ jobs:
       - name: Run fixture matrix
         run: python tools/joins/join_candidates.py --fixtures
       - name: Run focused tests
-        run: python -m pytest tests/joins/test_join_candidates.py -q --strict-config --strict-markers
+        run: >-
+          python -m pytest
+          tests/joins/test_join_candidates.py
+          tests/joins/test_cross_lane_*.py
+          -q --strict-config --strict-markers
       - name: Validate generated authoring receipt
         run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-full-atlas-crosswalk-validator-20260830.json --repo-root .
       - name: Record trust boundary
