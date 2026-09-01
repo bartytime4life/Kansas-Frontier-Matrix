@@ -209,6 +209,35 @@ class OccurrenceEvidenceTests(unittest.TestCase):
             result.findings,
         )
 
+    def test_exact_public_precision_requires_exact_internal_precision(self) -> None:
+        candidate = _load(
+            "semantic_invalid/exact_public_internal_precision_mismatch.json"
+        )
+
+        result = validator.validate_candidate(candidate)
+
+        self.assertIn(
+            validator.Finding(
+                "geom.exact_public_internal_precision_mismatch",
+                "/geometry/precision_class",
+            ),
+            result.findings,
+        )
+        self.assertIn(
+            validator.Finding(
+                "schema.validation_check_mismatch",
+                "/validation/checks/geometry_public_safe",
+            ),
+            result.findings,
+        )
+        self.assertIn(
+            validator.Finding(
+                "schema.pass_gate_failed",
+                "/validation/validator_result",
+            ),
+            result.findings,
+        )
+
     def test_exact_public_geometry_requires_explicit_safety_declaration(self) -> None:
         candidate = _load(
             "semantic_invalid/exact_public_safety_declaration_missing.json"

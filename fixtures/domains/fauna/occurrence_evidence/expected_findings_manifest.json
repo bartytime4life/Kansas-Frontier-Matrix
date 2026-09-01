@@ -36,6 +36,24 @@
     {
       "expected_findings": [
         {
+          "code": "geom.exact_public_internal_precision_mismatch",
+          "path": "/geometry/precision_class"
+        },
+        {
+          "code": "schema.pass_gate_failed",
+          "path": "/validation/validator_result"
+        },
+        {
+          "code": "schema.validation_check_mismatch",
+          "path": "/validation/checks/geometry_public_safe"
+        }
+      ],
+      "expected_outcome": "ERROR",
+      "path": "semantic_invalid/exact_public_internal_precision_mismatch.json"
+    },
+    {
+      "expected_findings": [
+        {
           "code": "schema.pass_gate_failed",
           "path": "/validation/validator_result"
         },
