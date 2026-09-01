@@ -3,7 +3,7 @@ doc_id: kfm://doc/tests-domains-agriculture-rollback-drill-readme
 title: tests/domains/agriculture/rollback_drill/ — Agriculture Rollback-Drill and Reversibility Test Boundary
 type: readme; directory-readme; domain-test-sublane; rollback-drill-enforceability-boundary
 version: v0.2
-status: draft; repository-grounded; README-only; dual-rollback-schema-scaffolds; contract-path-conflict; fixture-payloads-unconfirmed; validators-missing; workflows-todo-only; non-authoritative
+status: draft; repository-grounded; README-only; dual-rollback-schema-scaffolds; contract-path-conflict; fixture-payloads-unconfirmed; validators-missing; workflow-proof-bounded-generic-hazards; non-authoritative
 owners: OWNER_TBD — Agriculture test steward · Agriculture domain steward · Release steward · Rollback steward · Correction steward · Evidence steward · Receipt and proof steward · Catalog steward · Policy steward · Sensitivity and rights steward · Validator steward · Runtime and UI steward · Security steward · Docs steward
 created: NEEDS VERIFICATION — empty placeholder was expanded before v0.2
 updated: 2026-07-16
@@ -19,8 +19,9 @@ truth_posture: >
   missing release validator and absent named fixture path; Agriculture release-fixture README with
   no confirmed payload inventory; release/rollback_cards as a compact review-card lane rather than
   execution proof; release/rollback as a separate rollback-review lane; data/rollback/agriculture
-  as proposed data-plane alias-revert support; rollback-drill and domain-agriculture workflows
-  containing TODO-only echo jobs; and no executable file surfaced under the rollback_drill child lane /
+  as proposed data-plane alias-revert support; the repository `rollback-drill` workflow as a
+  bounded readiness hold that runs the generic release rehearsal and Hazards synthetic rehearsal,
+  not a production rollback engine; and no executable file surfaced under the rollback_drill child lane /
   PROPOSED rollback-drill scenario contract, release-plane versus data-plane test split, finite drill
   outcomes, safe reason codes, positive controls, negative cases, synthetic fixture profile,
   deterministic alias/replay verification, downstream invalidation proof, public-surface stale-state
@@ -111,14 +112,14 @@ notes:
   <img alt="Lane: rollback drill" src="https://img.shields.io/badge/lane-rollback__drill-success">
   <img alt="Maturity: README only" src="https://img.shields.io/badge/maturity-README__only-lightgrey">
   <img alt="Schemas: thin and conflicted" src="https://img.shields.io/badge/schemas-thin__%2B__conflicted-orange">
-  <img alt="CI: TODO only" src="https://img.shields.io/badge/CI-TODO__only-critical">
+  <img alt="CI: bounded readiness hold" src="https://img.shields.io/badge/CI-bounded__readiness__hold-success">
 </p>
 
 > [!IMPORTANT]
 > **A rollback drill proves readiness, not authority or execution.** A passing test may show that a synthetic release graph can be restored deterministically. It does not approve a production rollback, mutate a public alias, issue a correction, withdraw a release, or authorize publication.
 
 > [!CAUTION]
-> **Current implementation is not established.** The `rollback_drill/` directory is README-only in bounded repository evidence. Both rollback-card schemas are permissive scaffolds, the validator paths they declare are absent, release fixture payloads are unconfirmed, and the workflows execute TODO echo commands.
+> **Current implementation is not established.** The `rollback_drill/` directory remains README-only in bounded repository evidence. Both rollback-card schemas are permissive scaffolds, the validator paths they declare are absent, release fixture payloads are unconfirmed, and the repository `rollback-drill` workflow is a bounded synthetic readiness proof rather than an Agriculture execution path.
 
 > [!WARNING]
 > **Rollback must not create a second incident.** A target that is missing, unverifiable, less restrictive, evidence-broken, rights-stale, source-role-collapsed, or incompletely invalidated must produce a failing, held, withdrawn, abstaining, or error outcome—not a best-effort restoration.
@@ -232,9 +233,9 @@ This lane must not collapse:
 | `release/rollback_cards/` | **CONFIRMED review-card lane** | Documents compact Markdown review aids, not execution proof. |
 | `release/rollback/` | **CONFIRMED rollback-review lane** | Separate review lane with unresolved relation to other rollback homes. |
 | `data/rollback/agriculture/` | **CONFIRMED path / proposed role** | Documents data-plane alias-revert support, not release authority. |
-| Rollback-drill workflow | **CONFIRMED TODO-only** | Runs `echo TODO simulate-rollback` and `echo TODO verify-published-aliases`. |
-| Agriculture workflow | **CONFIRMED TODO-only** | Runs three Agriculture `echo TODO` jobs. |
-| Current successful drill, production use, aliases, invalidators | **UNKNOWN** | No such claim is supported here. |
+| Rollback-drill workflow | **CONFIRMED bounded readiness proof** | Executes the generic release rehearsal and the Hazards synthetic rollback rehearsal, requiring the combined output to contain `Ran 12 tests` and `OK`; it remains a hold-only workflow and does not simulate production rollback. |
+| Agriculture workflow | **CONFIRMED non-authoritative README-only lane** | The Agriculture drill lane still has no executable rollback implementation; no substantive Agriculture rehearsal is currently proven here. |
+| Current successful drill, production use, aliases, invalidators | **UNKNOWN** | No production rollback claim, alias mutation, or invalidation execution is supported here. |
 
 ### Maturity posture
 
@@ -511,22 +512,9 @@ The relationship among `release/rollback_cards/`, `release/rollback/`, `release/
 
 ### Workflow posture
 
-The current rollback workflow runs:
+The repository `rollback-drill` workflow does not run echo-only commands at the current revision. It checks out the inspected revision, installs the declared Python test dependencies, validates the release RollbackCard fixture profile, and runs the generic plus Hazards synthetic rollback rehearsal in isolated temporary roots with the explicit requirement that the combined output contains `Ran 12 tests` and `OK`.
 
-```yaml
-- run: 'echo TODO simulate-rollback'
-- run: 'echo TODO verify-published-aliases'
-```
-
-The Agriculture workflow runs:
-
-```yaml
-- run: 'echo TODO validate-agriculture'
-- run: 'echo TODO build-proof-agriculture'
-- run: 'echo TODO publish-dry-run-agriculture'
-```
-
-A green run of either workflow currently proves only that checkout and echo commands completed.
+The separate Agriculture domain workflow remains a TODO-only scaffold under current evidence. It does not prove a valid Agriculture rollback target, a production rollback engine, alias governance, or public invalidation. A green result there would still only prove shell and placeholder execution, not substantive Agriculture rollback proof.
 
 [Back to top](#top)
 
@@ -968,22 +956,23 @@ Reason codes remain **PROPOSED** until accepted in a contract or ADR.
 
 ### Current workflow truth
 
-A successful `rollback-drill` workflow currently means:
+A successful repository `rollback-drill` workflow at the current revision means:
 
-- checkout succeeded;
-- `echo TODO simulate-rollback` succeeded;
-- `echo TODO verify-published-aliases` succeeded.
+- checkout and dependency installation succeeded;
+- the release RollbackCard schema remained closed and fixture-validated;
+- the generic synthetic rehearsal and the Hazards synthetic rehearsal both ran and produced a combined `Ran 12 tests` result with `OK`;
+- the workflow explicitly held without simulating a production rollback, selecting a live target, mutating aliases, or publishing evidence.
 
 It does **not** mean:
 
-- a RollbackCard validated;
-- a release target resolved;
+- an Agriculture rollback implementation exists;
+- a RollbackCard validated a production release target;
 - an alias changed;
-- evidence closed;
-- policy passed;
-- derivatives invalidated;
+- evidence closed for a real release;
+- policy passed for a live production action;
+- derivatives invalidated in an operational environment;
 - a public trust state changed;
-- a replay succeeded.
+- a replay succeeded beyond the synthetic bounded rehearsal.
 
 ### Required admission before enforcement claims
 
