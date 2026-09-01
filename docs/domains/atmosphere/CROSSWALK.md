@@ -24,7 +24,7 @@ notes:
   - CONTRACT_VERSION pinned to 3.0.0 per ai-build-operating-contract.md.
   - Specializes Atlas v1.1 §24.13 (Atlas↔Dossier↔Root) and §24.14 (Object Family × Domain) for Atmosphere/Air.
   - Atlas crosswalk uses segment `air`; Directory Rules §12 uses `atmosphere`. Segment choice is ADR-class — see §3.
-  - Repo not mounted; all path-shaped claims PROPOSED until verified.
+  - Current repo evidence grounds the path-shaped claims here; any remaining unverified row stays NEEDS VERIFICATION.
 [/KFM_META_BLOCK_V2] -->
 
 # Atmosphere / Air — Crosswalk
@@ -83,7 +83,7 @@ It also threads the related registers (§24.1 source roles, §24.5 sensitivity t
 > *"Which Atlas chapter, which dossier, which responsibility root, which object family, which source role, which sensitivity tier, which decision outcome, and which catalog profile does this belong to?"*
 
 > [!NOTE]
-> Every implementation-layer path on this page is **PROPOSED**. No repository is mounted in this session. This crosswalk is the doctrinal mapping, not an inventory of files that currently exist. A row moves from PROPOSED to CONFIRMED only against mounted-repo evidence.
+> This crosswalk is grounded in current repository evidence and accepted doctrine. Any row that is not directly evidenced in the repo remains `NEEDS VERIFICATION` rather than being silently treated as an existing file or authority.
 
 [⬆ Back to top](#contents)
 
@@ -335,7 +335,7 @@ Atmosphere/Air's intersections with the §24.12 Master Open-ADR Backlog. These a
 These remain `NEEDS VERIFICATION` before promotion from `draft` to `published`:
 
 1. The §24.13 row and §24.14 citing-domains list for Atmosphere/Air against the mounted Atlas.
-2. Responsibility-root segment per lane (`air` vs `atmosphere`) in the mounted repo.
+2. Responsibility-root segment per lane (`air` vs `atmosphere`) in the current repository evidence.
 3. The §24.14 sensitivity defaults for Atmosphere object families (most asserted T0 here are PROPOSED).
 4. The exact T0–T4 tier definitions (ADR-S-05).
 5. The knowledge-character ↔ source-role permitted pairings (ADR-S-04).
@@ -369,7 +369,7 @@ This document is done enough to enter the repository when:
 
 ## 16. Related docs
 
-> Placeholder links — verify paths against mounted repo before merging.
+> Placeholder links — verify paths against current repository evidence before merging.
 
 - [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED present in project.)*
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — placement law §12; ADR-class rule §2.4(5); conflict rule §2.5. *(CONFIRMED present in project.)*

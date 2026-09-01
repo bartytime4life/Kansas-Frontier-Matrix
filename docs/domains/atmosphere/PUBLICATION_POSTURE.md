@@ -23,7 +23,7 @@ tags: [kfm, atmosphere, air, publication, sensitivity, rights, release, advisory
 notes:
   - CONTRACT_VERSION 3.0.0 pinned; doctrine-adjacent posture doc.
   - Publication posture statement is CONFIRMED (Atlas 11.I); implementation paths are PROPOSED.
-  - No mounted repo this session; routes, DTOs, and enforcement maturity are PROPOSED/UNKNOWN.
+  - Current repository evidence; routes, DTOs, and enforcement maturity are PROPOSED/UNKNOWN.
   - Atmosphere/Air is NOT an emergency-alert authority; advisory redirection is required.
   - Meta Block v2 carries no nested HTML comments; inline annotation uses # only.
 [/KFM_META_BLOCK_V2] -->
@@ -84,7 +84,7 @@ This document states the **publication posture** for the Atmosphere/Air lane: th
 ## 2. Truth Posture and Evidence Basis
 
 > [!NOTE]
-> The **publication-posture statement** and the **block-on-unresolved rule** are CONFIRMED doctrine (Atlas §11.I). The **release requirements** are CONFIRMED doctrine (Atlas §11.M). Every **route, DTO, and enforcement-maturity claim** is PROPOSED or UNKNOWN — the Atlas marks the exact resolver route UNKNOWN, and no mounted repository was inspected this session.
+> The **publication-posture statement** and the **block-on-unresolved rule** are CONFIRMED doctrine (Atlas §11.I). The **release requirements** are CONFIRMED doctrine (Atlas §11.M). Every **route, DTO, and enforcement-maturity claim** is PROPOSED or UNKNOWN — the Atlas marks the exact resolver route UNKNOWN, and no current repository evidencesitory was inspected this session.
 
 Evidence used, all CONFIRMED in indexed project knowledge:
 

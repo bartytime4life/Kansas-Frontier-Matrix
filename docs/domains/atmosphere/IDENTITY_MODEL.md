@@ -22,7 +22,7 @@ related:
   - ai-build-operating-contract.md               # CONFIRMED — operating contract
 tags: [kfm, atmosphere, air, identity, evidence, governance, doctrine]
 notes:
-  # Implementation-layer claims are PROPOSED pending mounted-repo inspection.
+  # Implementation-layer claims are PROPOSED pending current-repo inspection.
   # Deterministic-identity basis ('source id + object role + temporal scope + normalized digest') is PROPOSED per Domains Culmination Atlas v1.1.
   # Source-role enum and spec_hash convention (JCS + SHA-256, recorded jcs:sha256:<hex>) are CONFIRMED doctrine (Pass-10 C1-02).
   # The specific bundle_id / evidence_ref_id base32 derivation is NEEDS VERIFICATION (not located in indexed project knowledge).
@@ -460,7 +460,7 @@ The Atlas §11.K backlog and the Atmosphere knowledge-character constraints impl
 | OQ-12 | Confirm radar-derived precipitation handling — is radar-derived `Precipitation Observation` treated as `observed`, `modeled`, or split into a separate family? | **OPEN** | Atmosphere contract or ADR. |
 | OQ-13 | Confirm the literal `bundle_id` / `evidence_ref_id` derivation (`eb-`/`er-` + base32-26) vs. the content-addressed `kfm://entity-bundle/<sha256>` form. | **NEEDS VERIFICATION** *(formula attributed to an unlocatable source; content-addressing CONFIRMED, exact encoding not)* | Mounted `evidence_bundle.schema.json` / `evidence_ref.schema.json`. |
 | OQ-14 | Confirm canonical hash algorithm (SHA-256 vs. BLAKE3 vs. dual-hash) for Atmosphere `spec_hash`. | **OPEN** *(Pass-1 used sha256 fallback where blake3 unavailable)* | Hashing-policy ADR + build-environment confirmation. |
-| OQ-15 | Confirm the `New_Ideas_5-8-26.pdf` source referenced for the resolution rule, Mesonet consent note, FIRMS thresholds, and SMAP cadence. | **NEEDS VERIFICATION** *(file not in indexed project knowledge; Kansas Mesonet corroborated only via `New Ideas 4-14-26.pdf`, SRC-P23-003)* | Source-ledger / mounted-repo confirmation of the file and its contents. |
+| OQ-15 | Confirm the `New_Ideas_5-8-26.pdf` source referenced for the resolution rule, Mesonet consent note, FIRMS thresholds, and SMAP cadence. | **NEEDS VERIFICATION** *(file not in indexed project knowledge; Kansas Mesonet corroborated only via `New Ideas 4-14-26.pdf`, SRC-P23-003)* | Source-ledger / current-repo confirmation of the file and its contents. |
 
 [Back to top ↑](#contents)
 

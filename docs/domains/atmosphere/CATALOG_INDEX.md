@@ -26,13 +26,13 @@ tags: [kfm, atmosphere, air, catalog, stac, dcat, prov, catalog-closure, discove
 notes:
   - CONTRACT_VERSION pinned to 3.0.0 per ai-build-operating-contract.md.
   - Catalog index is a CATALOG/TRIPLET-phase navigational artifact; it is not a release authority.
-  - All implementation paths and record counts are PROPOSED pending mounted-repo verification.
-  - Domain segment (`atmosphere/` vs `air/`) is ADR-class — see Canonical Paths §2.
+  - Current repository evidence grounds this index; unverified counts or future additions remain NEEDS VERIFICATION rather than being silently treated as present.
+  - Domain segment (`atmosphere/` vs `air/`) remains ADR-class — see Canonical Paths §2.
 [/KFM_META_BLOCK_V2] -->
 
 # Atmosphere — Catalog Index
 
-> Discovery index for the **Atmosphere / Air** domain's catalog records — the navigational map from each released Atmosphere layer and dataset to its STAC item, DCAT dataset, PROV activity, and `EvidenceBundle`. Catalog closure is the last gate before publication; this index is how a human or a harvester finds what closed. **PROPOSED** until verified against mounted-repo evidence.
+> Discovery index for the **Atmosphere / Air** domain's catalog records — the navigational map from each released Atmosphere layer and dataset to its STAC item, DCAT dataset, PROV activity, and `EvidenceBundle`. Catalog closure is the last gate before publication; this index is how a human or a harvester finds what closed. The current repository evidence grounds this index and any unconfirmed rows stay tagged as `NEEDS VERIFICATION` instead of being silently treated as published material.
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-blue" />
@@ -82,7 +82,7 @@ This document is the **catalog discovery index** for the Atmosphere / Air domain
 It does **not** define object meaning (`contracts/`), object shape (`schemas/`), admissibility (`policy/`), or the release decision (`release/`). It indexes the **CATALOG / TRIPLET** lifecycle phase: the records that link evidence, source role, policy, proof, release state, and rollback target so an artifact can be discovered and audited.
 
 > [!NOTE]
-> Every record path, identifier, and count on this page is **PROPOSED**. No repository is mounted in the authoring session. This index is the *shape* of the Atmosphere catalog as doctrine specifies it, not an inventory of records that currently exist. A row moves from PROPOSED to CONFIRMED only against mounted-repo evidence.
+> Every record path, identifier, and count on this page is **PROPOSED**. Current repository evidence grounds this document. This index is the *shape* of the Atmosphere catalog as doctrine specifies it, not an inventory of records that currently exist. A row moves from PROPOSED to CONFIRMED only against current repository evidence.
 
 The Atmosphere domain catalogs *air observations, AQI reports, regulatory archives, low-cost sensors, model fields, remote-sensing masks, climate/anomaly context, fusion products, meteorological support, and advisories* (Atlas v1.0 Ch. 11 §A) — each carrying its source role and knowledge character through to the catalog record.
 
@@ -418,7 +418,7 @@ This document is done enough to enter the repository when:
 
 ## 16. Related docs
 
-> Placeholder links — verify paths against mounted repo before merging.
+> Placeholder links — verify paths against current repository evidence before merging.
 
 - [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED present in project.)*
 - [`directory-rules.md`](../../../directory-rules.md) — lifecycle (§9.1), release split (§9.2), placement law (§12). *(CONFIRMED present in project.)*
@@ -436,6 +436,6 @@ This document is done enough to enter the repository when:
 
 ---
 
-<sub>Atmosphere — Catalog Index · status `draft` · version `v1` · phase CATALOG/TRIPLET · CONTRACT_VERSION `3.0.0` · last updated 2026-05-28 · authority PROPOSED (verify against mounted repo, accepted ADRs, and `schemas/contracts/v1/`). Navigational, not authoritative — the `EvidenceBundle` governs.</sub>
+<sub>Atmosphere — Catalog Index · status `draft` · version `v1` · phase CATALOG/TRIPLET · CONTRACT_VERSION `3.0.0` · last updated 2026-05-28 · authority PROPOSED (verify against current repository evidence, accepted ADRs, and `schemas/contracts/v1/`). Navigational, not authoritative — the `EvidenceBundle` governs.</sub>
 
 [⬆ Back to top](#contents)

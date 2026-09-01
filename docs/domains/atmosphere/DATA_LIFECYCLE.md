@@ -22,7 +22,7 @@ related:
 tags: [kfm, domain, atmosphere, air, lifecycle, governance, publication]
 notes:
   - CONTRACT_VERSION = "3.0.0" (doctrine-adjacent doc).
-  - All repo-shaped paths are PROPOSED until verified against the mounted repository.
+  - All repo-shaped paths are PROPOSED until verified against the current repository evidencesitory.
   - Atmosphere/Air does not replace official advisories or emergency alerting.
 [/KFM_META_BLOCK_V2] -->
 
@@ -153,7 +153,7 @@ flowchart LR
 
 **CONFIRMED doctrine / PROPOSED implementation.** Each row below restates the universal
 KFM stage (per the Atmosphere/Air *H. Pipeline shape* table) and adds the atmosphere-specific
-handling burden. Implementation maturity for each stage in the mounted repository is **UNKNOWN**
+handling burden. Implementation maturity for each stage in the current repository evidencesitory is **UNKNOWN**
 in this session.
 
 ### 3.1 RAW — admitted source material under source identity
@@ -426,7 +426,7 @@ domain's *F. Cross-lane relations* table.
 
 **PROPOSED.** The Atmosphere/Air lane carries the KFM-universal validator set plus
 domain-specific knowledge-character validators (source: domain *K. Validators, tests,
-fixtures*). Names and CI wiring are **PROPOSED** until verified against the mounted repository.
+fixtures*). Names and CI wiring are **PROPOSED** until verified against the current repository evidencesitory.
 
 <details>
 <summary><strong>Universal validator set (applies to all lanes)</strong></summary>
@@ -506,7 +506,7 @@ sequenceDiagram
 **Source basis:** Directory Rules §6 (`docs/` and per-root trees), §9 (lifecycle phases under
 `data/`), §12 (Domain Placement Law), and the §5 canonical root tree (CONFIRMED doctrine);
 current repository inventory **UNKNOWN** in this session. Every path below is **PROPOSED**
-until verified against mounted-repo evidence.
+until verified against current repository evidence.
 
 ```text
 docs/domains/atmosphere/                    # human-facing domain control plane (this file lives here)
@@ -552,7 +552,7 @@ release/candidates/atmosphere/
 | OQ-AIR-LC-01 | Reconcile docs segment `atmosphere/` vs schema/contract segment `air/`. | Docs steward + atmosphere steward | ADR |
 | OQ-AIR-LC-02 | Is `SensorCalibrationReceipt` a real receipt type, or a sub-field of `TransformReceipt`? | Pipeline steward | Receipt-catalog inspection + ADR |
 | OQ-AIR-LC-03 | Canonical home for the realtime-vs-historical AQ STAC collection split. | Catalog steward | repo inspection + ADR |
-| OQ-AIR-LC-04 | Confirm `data/receipts/` and `data/proofs/` sub-segment names against the live tree. | Pipeline steward | mounted-repo inspection |
+| OQ-AIR-LC-04 | Confirm `data/receipts/` and `data/proofs/` sub-segment names against the live tree. | Pipeline steward | current-repo inspection |
 
 ## Open verification backlog
 

@@ -109,7 +109,7 @@ The **machine-readable** knowledge-character registry (the artifact schemas and 
 | Registry **home** (`data/registry/` vs. `control_plane/` vs. schema-adjacent) | **OPEN** — ADR-class per Directory Rules §2.4(5); Atlas ADR-S-03. |
 | Registry **enum values** | **OPEN** — Atlas KFM-P1-IDEA-0051. |
 | Registry **field shape** (`required_guards`, `forbidden`, `public_release`) | **INFERRED** proposal — see explainer §8. |
-| Registry **presence on disk** | **NEEDS VERIFICATION** — repo not mounted this session. |
+| Registry **presence on disk** | **NEEDS VERIFICATION** — current repository evidence is used where available; direct file presence is still a verification item. |
 
 > [!NOTE]
 > This `docs/`-lane file is the human-readable index. It is **not** the machine artifact and must not be loaded by validators as one. When the machine registry lands (per ADR-S-03), this file should link to it, not embed it.

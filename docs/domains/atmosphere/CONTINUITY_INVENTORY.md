@@ -95,7 +95,7 @@ notes:
 
 | Aspect | Value | Status |
 |---|---|---|
-| Proposed path | `docs/domains/atmosphere/CONTINUITY_INVENTORY.md` | **PROPOSED** — not verified against mounted repo |
+| Proposed path | `docs/domains/atmosphere/CONTINUITY_INVENTORY.md` | **PROPOSED** — not verified against current repository evidence |
 | Responsibility root | `docs/` (human-facing control plane) | **CONFIRMED** by Directory Rules §4 / §5 |
 | Domain segment placement | `<root>/domains/atmosphere/<file>` | **CONFIRMED** by Directory Rules §12 Domain Placement Law |
 | Authority class | Doctrine carry-forward / lineage register | **PROPOSED** doc-class label; conforms to §15 Required README Contract spirit |
@@ -443,7 +443,7 @@ stateDiagram-v2
 | Item | Verdict | Reason | Future trigger |
 |---|---|---|---|
 | Live source connectors (EPA AQS, AirNow, OpenAQ, Mesonet, NOAA, CAMS, HRRR-Smoke, HMS, GOES/ABI, VIIRS) | **DEFER** | First-PR slice is **no-network**; rights, terms, quotas, attribution NEEDS VERIFICATION per source. | After per-source `SourceDescriptor`, rights review, and dry-run fixtures pass. |
-| Public-facing Atmosphere/Air routes (`/atmosphere/...`) | **DEFER** | No mounted repo, no governed-API surface verified. | After governed-API skeleton, schemas, fixtures, and policy land. |
+| Public-facing Atmosphere/Air routes (`/atmosphere/...`) | **DEFER** | No current repository evidence, no governed-API surface verified. | After governed-API skeleton, schemas, fixtures, and policy land. |
 | Real-time emergency alerting | **NOT CARRIED FORWARD** | Anchor A6 — Atmosphere/Air is not an emergency alert system. Hazards owns life-safety context. | None. Permanent. |
 | 3D atmospheric scenes (volumetric model rendering) | **DEFER** | 3D is conditional in KFM and admission-gated (ADR-S-07; Directory Rules §11 / maplibre-3d). Atmosphere/Air must satisfy 2D evidence continuity before any 3D handoff. | After `StoryManifest`, Evidence Drawer, and 3D admission policy pass in 2D. |
 | Direct in-browser model adapters (Ollama / OpenAI / provider) | **DEFER** | Governed API is mandatory; no direct model call from browser. | After `MockAdapter` tests and security review pass. |
@@ -456,7 +456,7 @@ stateDiagram-v2
 
 ## 16. Verification backlog
 
-Carried forward from Atlas Ch. 11 §N and the Build Manual first-PR posture. Each row needs **mounted-repo evidence** — schemas, fixtures, validators, tests, workflows, logs, emitted artifacts, review records, or release manifests — to settle. These SHOULD be mirrored in `docs/registers/VERIFICATION_BACKLOG.md`.
+Carried forward from Atlas Ch. 11 §N and the Build Manual first-PR posture. Each row needs **current repository evidence** — schemas, fixtures, validators, tests, workflows, logs, emitted artifacts, review records, or release manifests — to settle. These SHOULD be mirrored in `docs/registers/VERIFICATION_BACKLOG.md`.
 
 | # | Item to verify | Evidence that would settle it | Status |
 |---|---|---|---|
@@ -526,7 +526,7 @@ This document is done enough to enter the repository when:
 - [`docs/standards/`](../../standards/) — Standards conformance briefs (e.g., PROV, PMTILES, OGC-API-TILES, OAI-PMH, ISO-19115). External standards inform but do not outrank the trust membrane.
 
 > [!NOTE]
-> Several link targets above are **PROPOSED paths** consistent with Directory Rules §12 and §15 (Required README Contract). They are not verified against mounted-repo state.
+> Several link targets above are **PROPOSED paths** consistent with Directory Rules §12 and §15 (Required README Contract). They are not verified against current-repo state.
 
 [Back to top](#quick-jump)
 
@@ -548,7 +548,7 @@ This document is done enough to enter the repository when:
 | **CONFIRMED** | Directly supported by attached KFM doctrinal sources. |
 | **PROPOSED** | Design, path, schema, route, component, policy, or process not yet verified in implementation. |
 | **INFERRED** | Reasonably derivable from visible evidence but not directly stated. |
-| **UNKNOWN** | Not resolvable without more evidence (no mounted repo, runtime, logs, dashboards, or live source checks in this session). |
+| **UNKNOWN** | Not resolvable without more evidence (no current repository evidence, runtime, logs, dashboards, or live source checks in this session). |
 | **NEEDS VERIFICATION** | Concrete point that must be checked before being treated as current fact. |
 | **CONFLICTED** | Sources indicate unresolved file-home or behavior ambiguity. |
 | **DEFERRED** | Intentionally excluded from this slice until a later trigger. |
@@ -559,7 +559,7 @@ This document is done enough to enter the repository when:
 
 ## Appendix B — Source pointers consulted
 
-Attached KFM doctrinal sources used to ground this inventory. None of these prove mounted-repo state; they are doctrine and lineage.
+Attached KFM doctrinal sources used to ground this inventory. None of these prove current-repo state; they are doctrine and lineage.
 
 | Pointer | Source | Used for |
 |---|---|---|
@@ -579,6 +579,6 @@ Attached KFM doctrinal sources used to ground this inventory. None of these prov
 
 **Related docs:** [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) · [`docs/domains/atmosphere/README.md`](./README.md) · [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md)
 
-**Last updated:** 2026-05-28 · **CONTRACT_VERSION:** 3.0.0 · **Authority:** doctrine carry-forward (this file does not decide schemas, policy, or release surfaces) · **Repo-verified:** NO (repo not mounted in this session)
+**Last updated:** 2026-05-28 · **CONTRACT_VERSION:** 3.0.0 · **Authority:** doctrine carry-forward (this file does not decide schemas, policy, or release surfaces) · **Repo-verified:** NO (current repository evidence)
 
 [Back to top](#quick-jump)

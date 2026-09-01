@@ -22,7 +22,7 @@ tags: [kfm, atmosphere, air, doctrine, preservation, source-role, knowledge-char
 notes:
   - CONTRACT_VERSION 3.0.0 pinned; doctrine-adjacent register.
   - Document name PRESERVATION_MATRIX.md is PROPOSED; no pre-existing KFM artifact uses this exact name.
-  - All implementation-layer claims (schemas, validators, policies, routes) are PROPOSED until verified against a mounted repo.
+  - All implementation-layer claims (schemas, validators, policies, routes) are PROPOSED until verified against a current repository evidence.
   - "Atmosphere / Air" is the canonical domain identity in Atlas v1.1 11; "atmosphere" is the directory slug per Directory Rules 12.
   - Meta Block v2 carries no nested HTML comments; inline annotation uses # only.
 [/KFM_META_BLOCK_V2] -->
@@ -88,7 +88,7 @@ notes:
 - Public client UI affordances. Those are governed by `apps/explorer-web/` and `packages/maplibre/`, not by this document. **[CONFIRMED doctrine — DIRRULES §11; MAP-MASTER]**
 
 > [!IMPORTANT]
-> **Truth posture.** Every claim in this document is labeled. Implementation-layer claims (schemas, validators, exact paths, routes, policies) are **PROPOSED** until verified against a mounted repository. The document name `PRESERVATION_MATRIX.md` and its placement under `docs/domains/atmosphere/` are also **PROPOSED** under Directory Rules §12 (Domain Placement Law) — see §3 and the Open Questions register.
+> **Truth posture.** Every claim in this document is labeled. Implementation-layer claims (schemas, validators, exact paths, routes, policies) are **PROPOSED** until verified against a current repository evidencesitory. The document name `PRESERVATION_MATRIX.md` and its placement under `docs/domains/atmosphere/` are also **PROPOSED** under Directory Rules §12 (Domain Placement Law) — see §3 and the Open Questions register.
 
 [Back to top](#contents)
 
@@ -215,7 +215,7 @@ Source role is a first-class identity attribute set at admission and **preserved
 
 ### 5.2 Required SourceDescriptor fields (PROPOSED schema)
 
-The cross-cutting Atlas v1.1 §24.1.3 names the SourceDescriptor surface that carries source role. The fields below are **PROPOSED** shape; canonical schema home defaults to `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001. **NEEDS VERIFICATION:** field presence in mounted repo.
+The cross-cutting Atlas v1.1 §24.1.3 names the SourceDescriptor surface that carries source role. The fields below are **PROPOSED** shape; canonical schema home defaults to `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001. **NEEDS VERIFICATION:** field presence in current repository evidence.
 
 <details>
 <summary><strong>SourceDescriptor field surface (PROPOSED, illustrative)</strong></summary>
@@ -721,7 +721,7 @@ This document is done enough to enter the repository when:
 3. Source-role anti-collapse validator denies the publication-equivalent answer; Focus Mode returns `ABSTAIN` with reason `MODEL_AS_OBSERVED_FORBIDDEN`.
 4. UI may render the model field clearly labeled, but the answer to "was it observed" remains ABSTAIN. The Evidence Drawer offers a path to nearest VIIRS detections (`REMOTE_SENSING_MASK`, also modeled) and nearest AQS PM2.5 samples (`OBSERVED_SENSOR`) — but neither becomes a stand-in for direct observed smoke.
 
-*All three examples are illustrative; no claim is made that the mounted repo currently implements them end-to-end.*
+*All three examples are illustrative; no claim is made that the current repository evidence currently implements them end-to-end.*
 
 </details>
 

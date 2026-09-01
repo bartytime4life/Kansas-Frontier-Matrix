@@ -22,7 +22,7 @@ tags: [kfm, domain, atmosphere, air, climate, weather]
 notes:
   - "CONTRACT_VERSION pinned to 3.0.0 per ai-build-operating-contract.md."
   - "Directory Rules cited at v1.3 (current corpus version)."
-  - "Implementation paths are PROPOSED until mounted-repo verification."
+  - "Implementation paths are PROPOSED until current-repo verification."
   - "Domain ownership and source rights still NEEDS VERIFICATION."
 [/KFM_META_BLOCK_V2] -->
 
@@ -50,7 +50,7 @@ notes:
 | **Placement** | `docs/domains/atmosphere/ARCHITECTURE.md` (Directory Rules v1.3 §4 Step 3, §12) |
 
 > [!IMPORTANT]
-> Every path, schema home, route name, validator, package, and CI workflow named below is **PROPOSED** until verified against a mounted repository. Doctrine in this document is grounded in attached KFM sources; implementation maturity is not claimed. See [Verification backlog](#verification-backlog).
+> Every path, schema home, route name, validator, package, and CI workflow named below is **PROPOSED** until verified against a current repository evidencesitory. Doctrine in this document is grounded in attached KFM sources; implementation maturity is not claimed. See [Verification backlog](#verification-backlog).
 
 ---
 
@@ -403,7 +403,7 @@ release/candidates/atmosphere/                    # release decision artifacts
 ```
 
 > [!NOTE]
-> The above tree is **PROPOSED** as the canonical placement *until mounted-repo inspection confirms it*. Per Directory Rules §4 Step 5, any path that no section justifies is marked **PROPOSED** or **NEEDS VERIFICATION** and tracked in `docs/registers/DRIFT_REGISTER.md` or `docs/registers/VERIFICATION_BACKLOG.md`. Receipts and proofs (process memory and evidence closure) are emitted *alongside* these lanes under `data/receipts/...` and `data/proofs/...`; release *decisions* live under `release/` — not in this domain's data lanes.
+> The above tree is **PROPOSED** as the canonical placement *until current-repo inspection confirms it*. Per Directory Rules §4 Step 5, any path that no section justifies is marked **PROPOSED** or **NEEDS VERIFICATION** and tracked in `docs/registers/DRIFT_REGISTER.md` or `docs/registers/VERIFICATION_BACKLOG.md`. Receipts and proofs (process memory and evidence closure) are emitted *alongside* these lanes under `data/receipts/...` and `data/proofs/...`; release *decisions* live under `release/` — not in this domain's data lanes.
 
 Cross-domain artifacts (e.g., a smoke validator that also serves Hazards and Agriculture) live under the **lowest common responsibility root** *without* an `atmosphere/` segment — e.g., `tools/validators/smoke/`, not `tools/validators/domains/atmosphere/smoke/` (Directory Rules, multi-domain / cross-cutting files).
 
@@ -514,7 +514,7 @@ Fixtures should be **no-network** by default. Co-location windows (e.g., 2–6 w
 ## 17. Related docs
 
 > [!NOTE]
-> All paths below are **PROPOSED** until mounted-repo verification. Resolve links once the corresponding docs land.
+> All paths below are **PROPOSED** until current-repo verification. Resolve links once the corresponding docs land.
 
 - [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — canonical operating contract `CONTRACT_VERSION = "3.0.0"` *(CONFIRMED present in project)*
 - [`docs/domains/README.md`](../README.md) — domains landing page *(PROPOSED)*
@@ -619,7 +619,7 @@ These items are explicitly unresolved by this document and should be tracked in 
 ## Footer
 
 > [!NOTE]
-> This document is **draft** and reflects CONFIRMED doctrine from the KFM Domains Culmination Atlas (Ch. 11), the KFM Encyclopedia (Atmosphere/Air/Climate), and Directory Rules v1.3. Implementation depth is **PROPOSED** until mounted-repo evidence is available. Operating contract `CONTRACT_VERSION = "3.0.0"`.
+> This document is **draft** and reflects CONFIRMED doctrine from the KFM Domains Culmination Atlas (Ch. 11), the KFM Encyclopedia (Atmosphere/Air/Climate), and Directory Rules v1.3. Implementation depth is **PROPOSED** until current repository evidence is available. Operating contract `CONTRACT_VERSION = "3.0.0"`.
 
 **Related docs:** [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) · [`docs/domains/README.md`](../README.md) · [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) · sibling domains under [`docs/domains/`](../)
 

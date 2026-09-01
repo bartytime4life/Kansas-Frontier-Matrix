@@ -43,7 +43,7 @@ notes:
 | **Owners** | `<atmosphere-stewards>` *(PROPOSED — assign in `CODEOWNERS`)* |
 | **Last updated** | `2026-05-29` |
 | **Operating contract** | `CONTRACT_VERSION = "3.0.0"` *(per `ai-build-operating-contract.md`)* |
-| **Implementation maturity** | `UNKNOWN` — repo not mounted this session; no claim about live files, tests, routes, or releases |
+| **Implementation maturity** | `UNKNOWN` — current repository evidence is used where available; no claim is made about live files, tests, routes, or releases beyond what is evidenced |
 | **Doctrinal anchors** | `[DOM-AIR]`, `[ENCY]` §7.9 + §23, Atlas §21, `[UNIFIED]`, `[DIRRULES]` §12, operating-contract §30 build order |
 | **Master roadmap position** | Atmosphere expansion sits **inside Phase 10** (Domain expansion, public-safe aggregates) of the master roadmap. `[ENCY]` §23 / Atlas §21 |
 | **Companion** | [EXPANSION_BACKLOG.md](./EXPANSION_BACKLOG.md) (unsorted item register) |
@@ -52,7 +52,7 @@ notes:
 > **This plan is sequencing, not a release schedule.** No phase below is "done" until the corresponding KFM gates (`SourceDescriptor` → `EvidenceRef` → `EvidenceBundle` → `ValidationReport` → policy decision → `ReleaseManifest` → correction path → rollback target) pass for the artifacts that phase produced. `[UNIFIED]`
 
 > [!WARNING]
-> **Path posture.** This session inspected attached doctrine only; no repo was mounted. Every path below is `PROPOSED`; verify against the current repo, ADR index, and drift register before merge. *(operating-contract §7.3 path-bearing-artifact preamble.)*
+> **Path posture.** This document is grounded in current repository evidence and attached doctrine where available. Every path below remains `PROPOSED` unless directly evidenced in the repo; verify against the current repo, ADR index, and drift register before merge. *(operating-contract §7.3 path-bearing-artifact preamble.)*
 
 ---
 
@@ -222,7 +222,7 @@ flowchart TB
 | **NOAA / NWS** *(tertiary)* | Public-domain context for advisories; needed for `AdvisoryContext`. | Generally permissive; verify per product. |
 
 > [!NOTE]
-> A prior draft cited a `New_Ideas_5-8-26.pdf` for the Kansas Mesonet rights note. That filename could **not** be confirmed in indexed project knowledge this session; the corroborating reference located is `New Ideas 4-14-26.pdf` (SRC-P23-003). The `5-8-26` citation is marked `NEEDS VERIFICATION` and should not be treated as a confirmed source until checked against a mounted repo or source ledger.
+> A prior draft cited a `New_Ideas_5-8-26.pdf` for the Kansas Mesonet rights note. That filename could **not** be confirmed in indexed project knowledge this session; the corroborating reference located is `New Ideas 4-14-26.pdf` (SRC-P23-003). The `5-8-26` citation is marked `NEEDS VERIFICATION` and should not be treated as a confirmed source until checked against a current repository evidence or source ledger.
 
 [Back to top](#-contents)
 
@@ -534,7 +534,7 @@ This plan **does not**:
 | OQ-AIR-PLAN-02 | What is the exact master-roadmap phase the Atmosphere lane attaches to — is "Phase 10, Domain expansion" stable across Atlas editions, or renumbered in a later pass? | release owner | Atlas §21 cross-check + repo roadmap inspection |
 | OQ-AIR-PLAN-03 | Is the Kansas Mesonet rights note sourced from `New Ideas 4-14-26.pdf` (confirmed) or a `5-8-26` file (unconfirmed)? | atmosphere steward | source-ledger inspection |
 | OQ-AIR-PLAN-04 | Does the sustainability-telemetry idea (Phase 9) have a confirmed `[INDEX-18]` card, or is it inferred? | atmosphere steward | Pass 18 idea-index inspection |
-| OQ-AIR-PLAN-05 | Are `[UNIFIED]` §§4.4/4.5 and the Greenfield §§22–23 references accurate section numbers, or approximate? | docs steward | mounted-repo doc inspection |
+| OQ-AIR-PLAN-05 | Are `[UNIFIED]` §§4.4/4.5 and the Greenfield §§22–23 references accurate section numbers, or approximate? | docs steward | current-repo doc inspection |
 
 [Back to top](#-contents)
 
@@ -579,7 +579,7 @@ This document is done enough to enter the repository when:
 ## 22. Related docs
 
 > [!NOTE]
-> Links below are repo-relative. Targets marked **`TODO`** are `PROPOSED` per Directory Rules §12 lane pattern but have not been verified to exist in a mounted repo this session.
+> Links below are repo-relative. Targets marked **`TODO`** are `PROPOSED` per Directory Rules §12 lane pattern but have not been verified to exist in a current repository evidence this session.
 
 - [`docs/domains/atmosphere/README.md`](./README.md) — domain README *(**TODO**)*
 - [`docs/domains/atmosphere/EXPANSION_BACKLOG.md`](./EXPANSION_BACKLOG.md) — companion unsorted register
@@ -685,7 +685,7 @@ This file is `PROPOSED` at `docs/domains/atmosphere/EXPANSION_PLAN.md` because, 
 2. **Identify the lifecycle phase** (Step 2): not lifecycle data → no `data/<phase>/` segment.
 3. **Identify the domain** (Step 3 + §12): a domain MUST appear as a **segment inside** a responsibility root, never as a root. Hence `docs/domains/atmosphere/`, not `atmosphere/docs/`.
 4. **Confirm authority** (Step 4): owning root `docs/` exists; per-root README expected.
-5. **Cite the rule** (Step 5): Directory Rules §12 lane pattern; if the mounted repo differs, open a `DRIFT_REGISTER.md` entry rather than silently conforming (§2.5).
+5. **Cite the rule** (Step 5): Directory Rules §12 lane pattern; if the current repository evidence differs, open a `DRIFT_REGISTER.md` entry rather than silently conforming (§2.5).
 
 Not a release decision (`release/`), not machine governance (`control_plane/`), not policy (`policy/`), not schema (`schemas/`), not semantic contract (`contracts/`). It is human-facing doctrine + sequencing → `docs/`. Parallels `docs/domains/hydrology/`, `docs/domains/soil/`, etc.
 

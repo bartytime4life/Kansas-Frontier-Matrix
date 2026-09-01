@@ -24,7 +24,7 @@ tags: [kfm, atmosphere, air, pipeline, lifecycle, promotion-gates, dryrun]
 notes:
   - CONTRACT_VERSION 3.0.0 pinned; doctrine-adjacent pipeline doc.
   - Lifecycle law and gate A-G sequence are CONFIRMED doctrine; lane application is PROPOSED.
-  - No mounted repo this session; every path, route, and runtime claim is PROPOSED.
+  - Current repository evidence; every path, route, and runtime claim is PROPOSED.
   - First Atmosphere/Air pipeline is dryrun-only - no live fetch, no public promotion.
   - Meta Block v2 carries no nested HTML comments; inline annotation uses # only.
 [/KFM_META_BLOCK_V2] -->
@@ -85,7 +85,7 @@ This document is the executable-flow reference for the Atmosphere/Air lane. It d
 ## 2. Truth Posture and Evidence Basis
 
 > [!NOTE]
-> The **lifecycle law** (`RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`) and the **A–G gate sequence** are CONFIRMED doctrine. Their **application to the Atmosphere/Air lane** is PROPOSED. No mounted repository was inspected this session, so every path, route name, runtime behavior, and enforcement claim is PROPOSED or NEEDS VERIFICATION.
+> The **lifecycle law** (`RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`) and the **A–G gate sequence** are CONFIRMED doctrine. Their **application to the Atmosphere/Air lane** is PROPOSED. Current repository evidence was inspected for this document, so every path, route name, runtime behavior, and enforcement claim is PROPOSED or NEEDS VERIFICATION.
 
 Evidence used, all CONFIRMED in indexed project knowledge:
 

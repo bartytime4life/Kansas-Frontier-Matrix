@@ -34,7 +34,7 @@ notes:
 
 > Defines how Atmosphere/Air objects bind to the KFM map shell, Evidence Drawer, Focus Mode, and release manifests — and the knowledge-character discipline that public surfaces must enforce before render.
 
-<!-- Badges: placeholders until CI/owners are confirmed in the mounted repo -->
+<!-- Badges: placeholders until CI/owners are confirmed in the current repository evidence -->
 ![status: draft](https://img.shields.io/badge/status-draft-lightgrey)
 ![doctrine: CONFIRMED](https://img.shields.io/badge/doctrine-CONFIRMED-blue)
 ![implementation: PROPOSED](https://img.shields.io/badge/implementation-PROPOSED-orange)
@@ -124,7 +124,7 @@ CONFIRMED authority hierarchy for atmosphere map/UI surfaces:
 
 ## 3. Contract surface (KFM map/UI object families)
 
-CONFIRMED doctrine: every atmosphere layer renders through this fixed set of contracts — all twelve are confirmed Master MapLibre objects with the field roles shown. PROPOSED implementation: all schema-home paths below resolve under `schemas/contracts/v1/...` per ADR-0001 and remain UNKNOWN until verified in a mounted repo.
+CONFIRMED doctrine: every atmosphere layer renders through this fixed set of contracts — all twelve are confirmed Master MapLibre objects with the field roles shown. PROPOSED implementation: all schema-home paths below resolve under `schemas/contracts/v1/...` per ADR-0001 and remain UNKNOWN until verified in a current repository evidence.
 
 | Contract | Role in atmosphere map UI | Required atmosphere bindings | PROPOSED schema home |
 |---|---|---|---|
@@ -143,7 +143,7 @@ CONFIRMED doctrine: every atmosphere layer renders through this fixed set of con
 | `PromotionDecision` | Governed transition to PUBLISHED. | Includes atmosphere-specific gates (units, AQI vs. concentration, model vs. observed). | `schemas/contracts/v1/policy/promotion_decision.schema.json` |
 
 > [!NOTE]
-> Contract field lists above reflect the Master MapLibre object-map (**CONFIRMED doctrine** from [MAP-MASTER]: `LayerManifest` carries layer_id, title, source refs, source-layer, geometry class, evidence dependency, policy class, stale rules; `MapContextEnvelope` carries camera, bounds, time, visible layers, clicked feature, **released context only**; `MapReleaseManifest` carries the rollback target and no-file-move promotion). Atmosphere-specific bindings are **PROPOSED** additions; all field-level additions require schema and ADR confirmation in the mounted repo. The atmosphere `Runtime Response Envelope`/`FocusModeResponse` pairing matches the per-domain J-table pattern (`AtmosphereAirDecisionEnvelope`, route UNKNOWN) used across the Atlas.
+> Contract field lists above reflect the Master MapLibre object-map (**CONFIRMED doctrine** from [MAP-MASTER]: `LayerManifest` carries layer_id, title, source refs, source-layer, geometry class, evidence dependency, policy class, stale rules; `MapContextEnvelope` carries camera, bounds, time, visible layers, clicked feature, **released context only**; `MapReleaseManifest` carries the rollback target and no-file-move promotion). Atmosphere-specific bindings are **PROPOSED** additions; all field-level additions require schema and ADR confirmation in the current repository evidence. The atmosphere `Runtime Response Envelope`/`FocusModeResponse` pairing matches the per-domain J-table pattern (`AtmosphereAirDecisionEnvelope`, route UNKNOWN) used across the Atlas.
 
 [↑ Back to top](#contents)
 
@@ -247,7 +247,7 @@ PROPOSED additions to `LayerManifest` for atmosphere layers, layered on the CONF
 }
 ```
 
-This snippet is **illustrative only**. Field names and enum values are PROPOSED and must be confirmed against the actual `schemas/contracts/v1/map/layer_manifest.schema.json` in the mounted repo.
+This snippet is **illustrative only**. Field names and enum values are PROPOSED and must be confirmed against the actual `schemas/contracts/v1/map/layer_manifest.schema.json` in the current repository evidence.
 
 > Note: the example pairs `knowledge_character: "public_aqi_report"` with `parameter: "PM2.5"` and `unit: "µg/m³"`. A reviewer should confirm whether an AirNow PM2.5 hourly *report* is being rendered as a concentration (`observed_sensor`) or as a public index (`public_aqi_report`) — these are different knowledge characters with different denials (§11). The example deliberately surfaces that ambiguity; it is not a settled binding.
 </details>
@@ -535,7 +535,7 @@ CONFIRMED Master MapLibre expectation: trust-visible states require keyboard, co
 | # | Item | Status | What would resolve it |
 |---|---|---|---|
 | 1 | Atlas crosswalk uses `schemas/contracts/v1/air/`; Directory Rules §12 uses `atmosphere/` as the lane and `schemas/contracts/v1/domains/atmosphere/` as the schema home. | **RESOLVED in favor of `atmosphere/` + `…/domains/atmosphere/`** *(Directory Rules §2.1 authority order: Directory Rules > Atlas crosswalk; §12 lists `schemas/contracts/v1/domains/<domain>/` verbatim)* — pending ADR-S-01 ratification + a single drift entry. | ADR-S-01 acceptance + `docs/registers/DRIFT_REGISTER.md` entry. |
-| 2 | Exact schema file homes under `schemas/contracts/v1/...` for atmosphere additions to `LayerManifest`. | PROPOSED | Inspect mounted repo `schemas/contracts/v1/map/` and `schemas/contracts/v1/ui/`. |
+| 2 | Exact schema file homes under `schemas/contracts/v1/...` for atmosphere additions to `LayerManifest`. | PROPOSED | Inspect current repository evidence `schemas/contracts/v1/map/` and `schemas/contracts/v1/ui/`. |
 | 3 | Whether `knowledge_character` belongs on `LayerManifest` directly or on a sidecar `AtmosphereLayerProfile`. | PROPOSED | ADR after schema-team review. |
 | 4 | Exact route names for atmosphere feature/detail/layer manifest/Focus Mode resolvers. | UNKNOWN | Inspect mounted `apps/governed-api/` routes. |
 | 5 | Source rights / terms / quotas for OpenAQ, AirNow, EPA AQS, NOAA, Mesonet, PurpleAir, CAMS, HRRR-Smoke, HMS, GOES/ABI, VIIRS. | NEEDS VERIFICATION | Source-onboarding receipts and the source registry under `data/registry/sources/atmosphere/`. |
@@ -594,7 +594,7 @@ This document is done enough to enter the repository when:
 ## 17. Related docs
 
 > [!NOTE]
-> All paths below are **PROPOSED** until confirmed in the mounted repo unless marked CONFIRMED. They follow Directory Rules placement.
+> All paths below are **PROPOSED** until confirmed in the current repository evidence unless marked CONFIRMED. They follow Directory Rules placement.
 
 - `docs/domains/atmosphere/README.md` — atmosphere lane landing page *(PROPOSED; verify)*.
 - [`docs/domains/atmosphere/KNOWLEDGE_CHARACTERS.md`](./KNOWLEDGE_CHARACTERS.md) — knowledge-character vocabulary this doc renders *(companion)*.

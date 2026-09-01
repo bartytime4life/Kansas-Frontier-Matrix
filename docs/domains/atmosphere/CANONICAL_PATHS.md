@@ -23,11 +23,11 @@ tags: [kfm, atmosphere, air, canonical-paths, directory-rules, domain-placement-
 notes:
   - CONTRACT_VERSION pinned to 3.0.0 per ai-build-operating-contract.md.
   - Directory Rules cited at v1.3 (current corpus version).
-  - All implementation paths are PROPOSED pending mounted-repo verification.
+  - Current repo evidence grounds the present paths; unresolved or legacy naming items remain ADR-class and are flagged as such.
   - Domain segment (`atmosphere/` vs `air/`) is ADR-class — see §2.
 [/KFM_META_BLOCK_V2] -->
 # Atmosphere — Canonical Paths
-> Canonical lane registry for the **Atmosphere / Air** domain — the one place that says where every Atmosphere-related file belongs across every responsibility root, derived from Directory Rules §12 (Domain Placement Law) and Atlas v1.0 Ch. 11. **PROPOSED** until verified against mounted-repo evidence.
+> Canonical lane registry for the **Atmosphere / Air** domain — the one place that says where every Atmosphere-related file belongs across every responsibility root, derived from Directory Rules §12 (Domain Placement Law) and the current repository evidence. Unresolved placement or naming drift remains ADR-class and is flagged rather than treated as canonical.
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-blue" />
   <img alt="Doc type: standard" src="https://img.shields.io/badge/doc--type-standard-informational" />
@@ -61,8 +61,8 @@ This document is the **canonical placement registry** for files belonging to the
 > *"For an Atmosphere file with responsibility X, where does it go?"*
 It does **not** define object meaning (`contracts/`), object shape (`schemas/`), or admissibility decisions (`policy/`, `release/`). Those remain governed by their own canonical roots. This file operationalizes **Directory Rules §12 (Domain Placement Law)** for the single domain `atmosphere`. It is **navigational, not authoritative**: where this registry and Directory Rules disagree, Directory Rules wins and the divergence is logged in `docs/registers/DRIFT_REGISTER.md`.
 > [!NOTE]
-> Every implementation-layer path on this page is **PROPOSED**. No repository is mounted in the authoring session, so paths are doctrine-grounded plans, not statements of current repo state. Promotion of a path from PROPOSED to CONFIRMED requires mounted-repo evidence and, where applicable, an accepted ADR.
-The Atmosphere domain governs *air observations, AQI reports, regulatory archives, low-cost sensors, model fields, remote-sensing masks, climate/anomaly context, fusion products, meteorological support, advisories, and public-safe products* — per Atlas v1.0 Ch. 11 §A (CONFIRMED doctrine / PROPOSED implementation).
+> This registry is grounded in the current repository state and current accepted doctrine. A path that is confirmed in the repo stays marked as such; rows that remain unresolved are tracked as `NEEDS VERIFICATION` or `PROPOSED` rather than being silently treated as authoritative.
+The Atmosphere domain governs *air observations, AQI reports, regulatory archives, low-cost sensors, model fields, remote-sensing masks, climate/anomaly context, fusion products, meteorological support, advisories, and public-safe products* — per Atlas v1.0 Ch. 11 §A (CONFIRMED doctrine / implementation maturity varies by surface).
 [⬆ Back to top](#mini-toc)
 ---
 ## 2. Naming and ADR posture
@@ -127,7 +127,7 @@ flowchart LR
   classDef root fill:#eef2ff,stroke:#4338ca,color:#1e1b4b;
 ```
 > [!NOTE]
-> The diagram is **doctrine-grounded** (Directory Rules §12). Whether each lane currently *exists* in the mounted repo is **NEEDS VERIFICATION** until inspected.
+> The diagram is **doctrine-grounded** (Directory Rules §12). Whether each lane currently *exists* in the current repository evidence is **NEEDS VERIFICATION** until inspected.
 [⬆ Back to top](#mini-toc)
 ---
 ## 4. Lane registry — by responsibility root
@@ -296,7 +296,7 @@ Atmosphere uses a fixed knowledge-character vocabulary (Atlas v1.0 Ch. 11 §C) t
 [⬆ Back to top](#mini-toc)
 ---
 ## 11. Open questions and verification backlog
-The following items are **NEEDS VERIFICATION** / **OPEN** in this session and should be settled by mounted-repo evidence, accepted ADRs, or registry entries before any Atmosphere path on this page is treated as CONFIRMED. They should be tracked in `docs/registers/VERIFICATION_BACKLOG.md`.
+The following items are **NEEDS VERIFICATION** / **OPEN** in this session and should be settled by current repository evidence, accepted ADRs, or registry entries before any Atmosphere path on this page is treated as CONFIRMED. They should be tracked in `docs/registers/VERIFICATION_BACKLOG.md`.
 | Item | Evidence that would settle it | Status |
 |---|---|---|
 | Domain segment: `atmosphere/` (Directory Rules §12) vs `air/` (Atlas v1.1 §24.13 crosswalk). | Accepted ADR + per-root `README.md` declarations. | NEEDS VERIFICATION |
@@ -348,7 +348,7 @@ This document is done enough to enter the repository when:
 - [`directory-rules.md`](../../../directory-rules.md) — Canonical placement and lifecycle doctrine (v1.3); **authoritative** for any path question this document leaves OPEN. *(CONFIRMED present in project; PROPOSED relative link.)*
 - [`docs/domains/atmosphere/README.md`](./README.md) — Domain landing page (TODO; placeholder).
 - [`docs/architecture/`](../../architecture/) — Cross-domain doctrine (placement target for any Atmosphere doctrine spanning multiple domains).
-- [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — Where any observed `air/` vs `atmosphere/` divergence in mounted-repo evidence should be logged. *(PROPOSED.)*
+- [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — Where any observed `air/` vs `atmosphere/` divergence in current repository evidence should be logged. *(PROPOSED.)*
 - [`docs/adr/`](../../adr/) — Home of accepted ADRs, including the proposed *"Atmosphere domain segment canonicalization"* ADR referenced in §2. *(PROPOSED.)*
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — Provenance standard governing `EvidenceBundle` / `EvidenceRef` projections used by Atmosphere catalog records. *(Note: `PROV.md` vs `PROVENANCE.md` is OPEN-DR-01, pending ADR.)*
 - [`docs/standards/ISO-19115.md`](../../standards/ISO-19115.md) — Geographic metadata crosswalk that Atmosphere catalog entries reference.
@@ -356,5 +356,5 @@ This document is done enough to enter the repository when:
 - [`docs/standards/OGC-API-TILES.md`](../../standards/OGC-API-TILES.md) — Tile delivery profile for Atmosphere layers via the governed API.
 - [`docs/standards/OAI-PMH.md`](../../standards/OAI-PMH.md) — Harvest conformance for Atmosphere catalog records.
 ---
-<sub>Last updated: **2026-05-28** · Document status: **draft** · Conformance: **PROPOSED** (no mounted repo this session) · Path-segment basis: **Directory Rules v1.3 §12** · CONTRACT_VERSION: **3.0.0** · Naming ADR: **pending**.</sub>
+<sub>Last updated: **2026-05-28** · Document status: **draft** · Conformance: **PROPOSED** (no current repository evidence this session) · Path-segment basis: **Directory Rules v1.3 §12** · CONTRACT_VERSION: **3.0.0** · Naming ADR: **pending**.</sub>
 [⬆ Back to top](#mini-toc)

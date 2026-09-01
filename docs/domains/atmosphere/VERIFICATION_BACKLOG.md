@@ -10,7 +10,7 @@ updated: 2026-08-02
 policy_label: public
 related: [docs/domains/atmosphere/README.md, docs/domains/atmosphere/SOURCE_REGISTRY.md, docs/domains/atmosphere/UBIQUITOUS_LANGUAGE.md, docs/registers/VERIFICATION_BACKLOG.md, docs/registers/DRIFT_REGISTER.md, docs/doctrine/directory-rules.md, contracts/domains/atmosphere/, schemas/contracts/v1/domains/atmosphere/, policy/domains/atmosphere/, data/registry/sources/atmosphere/, release/candidates/atmosphere/, ai-build-operating-contract.md]
 tags: [kfm, domain, atmosphere, air, climate, verification, backlog, governance]
-notes: [CONTRACT_VERSION pinned 3.0.0 # domain-scoped companion to docs/registers/VERIFICATION_BACKLOG.md per Directory Rules §18 # all lane file paths PROPOSED until mounted-repo verification # source rights are the dominant blocker (§5) # air-vs-atmosphere slug drift is a confirmed open ADR item (ATM-OQ-09)]
+notes: [CONTRACT_VERSION pinned 3.0.0 # domain-scoped companion to docs/registers/VERIFICATION_BACKLOG.md per Directory Rules §18 # current repo evidence grounds this register; remaining gaps stay tracked as NEEDS VERIFICATION # source rights are the dominant blocker (§5) # air-vs-atmosphere slug drift is a confirmed open ADR item (ATM-OQ-09)]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -67,7 +67,7 @@ This register is the **domain-scoped checkable list** for Atmosphere / Air / Cli
 
 - Source rights, endpoint behavior, and freshness assumptions per source family.
 - Knowledge-character discipline (`OBSERVED_SENSOR` vs `PUBLIC_AQI_REPORT` vs `REGULATORY_ARCHIVE` vs `LOW_COST_SENSOR` vs `ATMOSPHERIC_MODEL_FIELD` vs `REMOTE_SENSING_MASK` vs `CLIMATE_ANOMALY_CONTEXT` vs `DERIVED_FUSION` vs `METEOROLOGICAL_CONTEXT` vs `ALERT_AND_ADVISORY_CONTEXT` vs `NETWORK_AND_SITE_CONTEXT`).
-- Pipeline, validator, governed-API, Evidence Drawer, Focus Mode, MapLibre, catalog, release, rollback, and correction surfaces — each at **PROPOSED** until mounted-repo evidence resolves it.
+- Pipeline, validator, governed-API, Evidence Drawer, Focus Mode, MapLibre, catalog, release, rollback, and correction surfaces — each at **PROPOSED** until current repository evidence resolves it.
 - Cross-lane interactions with **Hazards**, **Hydrology**, **Agriculture**, and **Biodiversity** lanes that depend on atmosphere knowledge-character labels.
 
 Each row names **what must be true**, **what evidence would settle it**, and the **status** at last review.
@@ -102,7 +102,7 @@ Each row names **what must be true**, **what evidence would settle it**, and the
 | **CONFIRMED** | Verified this session from attached docs, repo evidence, tests, logs, or generated artifacts. | Doctrine and source-family lineage; cited from the Domains Culmination Atlas and Encyclopedia. |
 | **PROPOSED** | Design, path, placement, or recommendation not yet verified in implementation. | Most lane-internal items: validator names, route names, exact paths, fixture sets. |
 | **NEEDS VERIFICATION** | Checkable but not yet checked strongly enough to act as fact. | Anything resolvable by a single direct check (file presence, rights review, schema inspection). |
-| **UNKNOWN** | Not resolvable without more evidence. | Implementation-maturity questions that need a mounted repo. |
+| **UNKNOWN** | Not resolvable without more evidence. | Implementation-maturity questions that need a current repository evidence. |
 | **DENY** | A default-deny rule; the item exists to *fail closed*, not to be implemented as a public path. | Sensitive locations, private joins, model-as-observed surfaces. |
 | **EXTERNAL** | Sourced from authoritative external research. | External standards behavior; used as reference, never as KFM truth. Must be cited and contained. |
 
@@ -137,7 +137,7 @@ flowchart LR
 ```
 
 > [!NOTE]
-> The **happy path** is `NEEDS VERIFICATION → CONFIRMED` with a cited evidence row. The **most common path in this domain right now** is `PROPOSED → PROPOSED` because the repository is not mounted and source rights have not been reviewed. Both paths are acceptable; the unacceptable path is `PROPOSED → silently treated as fact`.
+> The **happy path** is `NEEDS VERIFICATION → CONFIRMED` with a cited evidence row. The **current repo-grounded path** is to reconcile claims against the current repository evidencesitory, treat uncertain items as `NEEDS VERIFICATION`, and only advance them when evidence exists. The unacceptable path is `PROPOSED → silently treated as fact`.
 
 [Back to top ↑](#top)
 
@@ -344,7 +344,7 @@ Atmosphere knowledge informs adjacent lanes. These rows track items where atmosp
 
 ## 15. Open questions register
 
-Unresolved doctrinal or design questions that cannot be settled by a single evidence row. Tracked here until resolved by **ADR**, **steward decision**, **mounted-repo inspection**, or **source-rights review**.
+Unresolved doctrinal or design questions that cannot be settled by a single evidence row. Tracked here until resolved by **ADR**, **steward decision**, **current-repo inspection**, or **source-rights review**.
 
 | ID | Question | Owner role | Resolution path | Status |
 |---|---|---|---|---|

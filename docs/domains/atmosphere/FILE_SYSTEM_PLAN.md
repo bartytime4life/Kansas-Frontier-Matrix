@@ -24,7 +24,7 @@ related:
 <!--
   KFM Meta Block v2 note: '#'-style inline annotations only; no nested HTML comments inside the block above.
   CONTRACT_VERSION = "3.0.0" (doctrine-adjacent doc).
-  Plan-class doc: every concrete path is PROPOSED; repo not mounted this session.
+  Plan-class doc: current repository evidence grounds prioritized path placement; any path not yet confirmed remains NEEDS VERIFICATION rather than being treated as fact.
   Surfaces folder/slug drift (atmosphere vs atmosphere-air-and-climate vs air) — see §2 and §16.
 -->
 
@@ -43,7 +43,7 @@ A **PROPOSED** repository-level layout for the Atmosphere / Air domain across ev
 > **Status:** `draft` · **Owners:** `<Atmosphere/Air domain steward — TBD>` · **Updated:** `2026-05-29` · **Contract:** `CONTRACT_VERSION = "3.0.0"`
 
 > [!IMPORTANT]
-> This document is a **plan**, not a scaffold. Every file-path in this document is **PROPOSED** until verified against a mounted repository. No claim here implies that a path, schema, validator, route, layer, or release surface exists on disk today. Path placement follows `docs/doctrine/directory-rules.md` (Directory Rules) §12 Domain Placement Law; the schema home defaults to `schemas/contracts/v1/...` per ADR-0001.
+> This document is a **plan** and a repo-grounded navigational map, not a blanket claim that every path exists or is final. Current repository evidence confirms which paths are present; any path that is not yet checked remains `NEEDS VERIFICATION` rather than being silently treated as operational. Path placement follows `docs/doctrine/directory-rules.md` (Directory Rules) §12 Domain Placement Law; the schema home defaults to `schemas/contracts/v1/...` per ADR-0001.
 
 > [!NOTE]
 > **Companion documents.** This plan is the *placement* view of the domain. Its siblings are [`EXPANSION_BACKLOG.md`](./EXPANSION_BACKLOG.md) (the unsorted candidate register) and [`EXPANSION_PLAN.md`](./EXPANSION_PLAN.md) (the sequenced build roadmap). Where those documents say *what* and *when*, this one says *where*.
@@ -90,7 +90,7 @@ This plan covers **where every Atmosphere / Air file should live** across the KF
 The plan **does not** assert that any of these paths exist today; it asserts where they should land **if and when** they are created or migrated.
 
 > [!NOTE]
-> The repository is **not mounted** in this session. Per Directory Rules §17 and the project's repository-preflight rule, every concrete path below is **PROPOSED** until inspected. Conflicts between this plan and the mounted repo are filed to `docs/registers/DRIFT_REGISTER.md` rather than silently reconciled.
+> Current repository evidence grounds this document. Per Directory Rules §17 and the project's repository-preflight rule, every concrete path below is **PROPOSED** until inspected. Conflicts between this plan and the current repository evidence are filed to `docs/registers/DRIFT_REGISTER.md` rather than silently reconciled.
 
 [↑ Back to top](#-contents)
 
@@ -669,7 +669,7 @@ From Atlas v1.1 Ch. 11 §N plus this plan's own preflight gaps. **All NEEDS VERI
 | VB-AIR-05 | Mounted-repo confirmation that the canonical folder is `atmosphere/` and not `atmosphere-air-and-climate/` or `air/`. | `git ls-tree`-equivalent inspection of `docs/domains/`, `schemas/contracts/v1/domains/`, etc. |
 | VB-AIR-06 | Per-root README presence for each atmosphere lane entry. | Directory Rules §15 README contract. |
 | VB-AIR-07 | Drift entry filed in `docs/registers/DRIFT_REGISTER.md` for §16.1 items (single consolidated entry). | Register entry visible. |
-| VB-AIR-08 | `ReleaseManifest` home (`release/` vs. `data/published/.../manifest/`). | ADR decision + mounted-repo inspection. |
+| VB-AIR-08 | `ReleaseManifest` home (`release/` vs. `data/published/.../manifest/`). | ADR decision + current-repo inspection. |
 
 [↑ Back to top](#-contents)
 
@@ -717,7 +717,7 @@ This document is done enough to enter the repository when:
 - it is placed according to Directory Rules (`docs/domains/atmosphere/FILE_SYSTEM_PLAN.md`, `PROPOSED` per §12);
 - a docs steward and an atmosphere steward review it;
 - it is linked from `docs/domains/atmosphere/README.md` and cross-links the backlog and expansion plan;
-- the folder-name and schema-home questions are confirmed against the mounted repo (VB-AIR-05) and recorded in ADR-S-01 / ADR-atmosphere-folder-name;
+- the folder-name and schema-home questions are confirmed against the current repository evidence (VB-AIR-05) and recorded in ADR-S-01 / ADR-atmosphere-folder-name;
 - a single consolidated drift entry (VB-AIR-07) covers the §16.1 items across this plan and its siblings;
 - the `ReleaseManifest` home (OQ-AIR-FS-03) is resolved by ADR;
 - the `GENERATED_RECEIPT.json` planned for this artifact is wired into CI;

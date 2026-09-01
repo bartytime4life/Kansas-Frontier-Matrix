@@ -24,7 +24,7 @@ tags: [kfm, atmosphere, air, object-family, identity, temporal, knowledge-charac
 notes:
   - CONTRACT_VERSION 3.0.0 pinned; doctrine-adjacent map.
   - Object roster is CONFIRMED from Atlas 11.B owns-list; field realization is PROPOSED.
-  - No mounted repo this session; every contract/schema path is PROPOSED.
+  - Current repository evidence; every contract/schema path is PROPOSED.
   - Meta Block v2 carries no nested HTML comments; inline annotation uses # only.
 [/KFM_META_BLOCK_V2] -->
 
@@ -79,7 +79,7 @@ This map is the single per-object reference for Atmosphere/Air. It exists so tha
 **This map does not cover** object-family *shape* (that lives in `schemas/contracts/v1/domains/atmosphere/`), object *meaning* prose (that lives in `contracts/domains/atmosphere/`), or source rights and cadence (that lives in `docs/domains/atmosphere/SOURCE_FAMILIES.md` and `data/registry/sources/atmosphere/`). It crosswalks to all three.
 
 > [!NOTE]
-> This is a doctrine-adjacent reference, not a creation order. Every contract/schema path named here is **PROPOSED** until verified against a mounted repository. The object roster itself is **CONFIRMED** from Atlas §11.B.
+> This is a doctrine-adjacent reference, not a creation order. Every contract/schema path named here is **PROPOSED** until verified against a current repository evidencesitory. The object roster itself is **CONFIRMED** from Atlas §11.B.
 
 [Back to top](#table-of-contents)
 
@@ -88,7 +88,7 @@ This map is the single per-object reference for Atmosphere/Air. It exists so tha
 ## 2. Truth Posture and Evidence Basis
 
 > [!IMPORTANT]
-> **Roster is CONFIRMED; field realization is PROPOSED.** The 15-object owns-list is CONFIRMED doctrine from the Atlas §11.B scope statement. The identity rule (`source_id + object_role + temporal_scope + normalized_digest`) is labeled **PROPOSED deterministic basis** in the Atlas. The six-time temporal-distinctness rule is **CONFIRMED**. No mounted repository was inspected this session, so all `contracts/` and `schemas/` paths are PROPOSED.
+> **Roster is CONFIRMED; field realization is PROPOSED.** The 15-object owns-list is CONFIRMED doctrine from the Atlas §11.B scope statement. The identity rule (`source_id + object_role + temporal_scope + normalized_digest`) is labeled **PROPOSED deterministic basis** in the Atlas. The six-time temporal-distinctness rule is **CONFIRMED**. Current repository evidence was inspected for this document, so all `contracts/` and `schemas/` paths are PROPOSED.
 
 Evidence used to build this map, all CONFIRMED in indexed project knowledge:
 
@@ -375,7 +375,7 @@ Per Atlas §11.I, these are CONFIRMED doctrine and bind every object in this map
 | OQ-AIROBJ-02 | Freeze the one-to-one object → knowledge-character binding (several objects are role-dependent). | atmosphere-domain-steward | `ADR-XXXX-atmosphere-knowledge-character-vocabulary` |
 | OQ-AIROBJ-03 | Resolve SmokeContext ownership split between Atmosphere/Air (reading) and Hazards (event/impact). | atmosphere + hazards stewards | `ADR-XXXX-atmosphere-hazards-smokecontext-ownership` |
 | OQ-AIROBJ-04 | Fix the identity-digest algorithm (BLAKE3 vs SHA-256) and `normalized_digest` definition. | docs-steward + domain stewards | Repo-wide ADR + schema decision |
-| OQ-AIROBJ-05 | Do any of these contract/schema files already exist in the mounted repo? Classify CONFIRMED or DRIFT. | docs-steward | Mounted-repo inspection |
+| OQ-AIROBJ-05 | Do any of these contract/schema files already exist in the current repository evidence? Classify CONFIRMED or DRIFT. | docs-steward | Mounted-repo inspection |
 
 ## Open verification backlog
 

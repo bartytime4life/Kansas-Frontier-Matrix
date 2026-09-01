@@ -157,7 +157,7 @@ This page points; it does not hold. The canonical homes:
 4. **Need the machine register?** → `control_plane/` / `data/registry/`, **not** this page.
 
 > [!NOTE]
-> Every path on this page is **PROPOSED** or **NEEDS VERIFICATION** until checked against a mounted repository. This index does not assert that any linked file or directory currently exists.
+> Every path on this page is **PROPOSED** or **NEEDS VERIFICATION** until checked against a current repository evidencesitory. This index does not assert that any linked file or directory currently exists.
 
 [↑ Back to top](#top)
 
@@ -200,7 +200,7 @@ This document is done enough to enter the repository when:
 - it is placed according to Directory Rules and OQ-AIR-IDX-01 / OQ-AIR-IDX-04 are resolved;
 - a docs steward and the Atmosphere / Air domain steward review it;
 - it is linked from `docs/domains/atmosphere/README.md`;
-- all relative links resolve against the mounted repo;
+- all relative links resolve against the current repository evidence;
 - it does not conflict with accepted ADRs;
 - any conflict with current repo conventions is logged in `docs/registers/DRIFT_REGISTER.md`;
 - the `GENERATED_RECEIPT.json` planned in the PR is wired into CI;

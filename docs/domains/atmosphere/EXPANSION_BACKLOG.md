@@ -18,7 +18,7 @@ related:
 tags: [kfm, atmosphere, air, backlog, expansion, governance]
 notes:
   # Path PROPOSED per Directory Rules §12 (Domain Placement Law) and §4 (placement quick check).
-  # Item statuses align with [DOM-AIR] and [ENCY] §7.9 doctrine; implementation maturity remains PROPOSED until a mounted-repo scan confirms.
+  # Item statuses align with [DOM-AIR] and [ENCY] §7.9 doctrine; implementation maturity remains PROPOSED until a current-repo scan confirms.
   # Doctrine-adjacent doc: pinned CONTRACT_VERSION = "3.0.0".
   # Meta Block v2 rule: no nested HTML comments inside this block; '#' annotations only.
 [/KFM_META_BLOCK_V2] -->
@@ -42,7 +42,7 @@ notes:
 | **Owners** | `<atmosphere-stewards>` *(PROPOSED — assign in `CODEOWNERS`)* |
 | **Last updated** | `2026-05-29` |
 | **Operating contract** | `CONTRACT_VERSION = "3.0.0"` *(per `ai-build-operating-contract.md`)* |
-| **Implementation maturity** | `UNKNOWN` — repo not mounted in this session; no claim about live files, tests, routes, or releases |
+| **Implementation maturity** | `UNKNOWN` — current repository evidence; no claim about live files, tests, routes, or releases |
 | **Doctrinal anchors** | `[DOM-AIR]`, `[ENCY]` §7.9 + §11, `[UNIFIED]` §6.10, `[DIRRULES]` §12, `[ENCY]` Atlas §24.12 |
 
 > [!IMPORTANT]
@@ -91,7 +91,7 @@ notes:
 > [!NOTE]
 > `SmokeContext` is a **shared object family**: it is named in the owned-family list of **both** Atmosphere / Air (`[DOM-AIR]` §B) **and** Hazards (`[DOM-HAZ]` §B). The boundary discipline is unchanged — Atmosphere supplies **observed / model smoke context**; Hazards owns **hazard-event truth and life-safety context**. Any cross-lane `SmokeContext` join MUST preserve that ownership split. `CONFLICTED → resolve via cross-lane join policy ADR (see §16, aligned to Atlas ADR-S-14).`
 
-**Truth posture.** `CONFIRMED` doctrine; `PROPOSED` implementation. Live API rights, source schemas, attribution requirements, source cadence, and mounted-repo depth all remain `UNKNOWN / NEEDS VERIFICATION` per `[UNIFIED]` §6.10.
+**Truth posture.** `CONFIRMED` doctrine; `PROPOSED` implementation. Live API rights, source schemas, attribution requirements, source cadence, and current-repo depth all remain `UNKNOWN / NEEDS VERIFICATION` per `[UNIFIED]` §6.10.
 
 > [!NOTE]
 > The Atmosphere domain is doctrinally subordinate to two cross-cutting laws that are **never relaxed** by anything in this backlog:
@@ -129,7 +129,7 @@ flowchart LR
 | `CONFIRMED` | Doctrine settled in `[DOM-AIR]` / `[ENCY]` / `[DIRRULES]`. |
 | `PROPOSED` | Design or path consistent with doctrine; not yet verified in implementation. |
 | `INFERRED` | Reasonably derivable from doctrine but not directly stated. |
-| `NEEDS VERIFICATION` | Checkable against a mounted repo, source terms, or external spec — not yet checked. |
+| `NEEDS VERIFICATION` | Checkable against a current repository evidence, source terms, or external spec — not yet checked. |
 | `CONFLICTED` | Sources disagree, or doctrine and a proposed convention appear inconsistent; held until an ADR or drift entry resolves it. |
 | `UNKNOWN` | Not resolvable without more evidence. |
 | `DENY` | Policy-blocked on the normal public path; never promoted by default. |
@@ -325,7 +325,7 @@ The Atmosphere domain treats **knowledge character** (per `[DOM-AIR]` §C) as a 
 
 ## 11. Validator, test, and fixture backlog
 
-Per `[DOM-AIR]` §K and `[ENCY]` Appendix K, every validator below is `PROPOSED` until a mounted-repo scan locates it in `tools/validators/` or `tests/domains/atmosphere/`. The Atlas explicitly names V-01 through V-07 as PROPOSED for this domain; V-08 through V-12 are `INFERRED` from cross-cutting doctrine.
+Per `[DOM-AIR]` §K and `[ENCY]` Appendix K, every validator below is `PROPOSED` until a current-repo scan locates it in `tools/validators/` or `tests/domains/atmosphere/`. The Atlas explicitly names V-01 through V-07 as PROPOSED for this domain; V-08 through V-12 are `INFERRED` from cross-cutting doctrine.
 
 | # | Validator / test | Purpose | Status |
 |---|---|---|---|
@@ -474,7 +474,7 @@ How a new item enters this backlog.
 6. **Steward review** before promotion to a track that touches a public surface (B, C). Deny items (D) are reviewed but **not** scheduled.
 
 > [!TIP]
-> A backlog item with no citation, no gate, and no validation path is documentation drift, not a proposal. Reviewers may close such PRs and request the author resubmit with the missing fields. Conflicts between this backlog and the mounted repo open a `docs/registers/DRIFT_REGISTER.md` entry per `[DIRRULES]` §2.5 — they are not silently conformed.
+> A backlog item with no citation, no gate, and no validation path is documentation drift, not a proposal. Reviewers may close such PRs and request the author resubmit with the missing fields. Conflicts between this backlog and the current repository evidence open a `docs/registers/DRIFT_REGISTER.md` entry per `[DIRRULES]` §2.5 — they are not silently conformed.
 
 [Back to top](#-contents)
 
@@ -546,7 +546,7 @@ This document is done enough to enter the repository when:
 ## 22. Related docs
 
 > [!NOTE]
-> Links below are repo-relative. Targets marked **`TODO`** are `PROPOSED` per Directory Rules §12 lane pattern but have not been verified to exist in a mounted repo this session.
+> Links below are repo-relative. Targets marked **`TODO`** are `PROPOSED` per Directory Rules §12 lane pattern but have not been verified to exist in a current repository evidence this session.
 
 - [`docs/domains/atmosphere/README.md`](./README.md) — domain README *(**TODO** — verify presence)*
 - [`docs/domains/atmosphere/SOURCES.md`](./SOURCES.md) — source registry overview *(**TODO**)*
@@ -608,7 +608,7 @@ This file is `PROPOSED` at `docs/domains/atmosphere/EXPANSION_BACKLOG.md` becaus
 2. **Identify the lifecycle phase** (Step 2): not lifecycle data → no `data/<phase>/` segment.
 3. **Identify the domain** (Step 3 + §12): a domain MUST appear as a **segment inside** a responsibility root, never as a root. Hence `docs/domains/atmosphere/`, not `atmosphere/docs/`.
 4. **Confirm authority** (Step 4): owning root `docs/` exists; per-root README expected.
-5. **Cite the rule** (Step 5): Directory Rules §12 lane pattern; if the mounted repo differs, open a `DRIFT_REGISTER.md` entry rather than silently conforming (§2.5).
+5. **Cite the rule** (Step 5): Directory Rules §12 lane pattern; if the current repository evidence differs, open a `DRIFT_REGISTER.md` entry rather than silently conforming (§2.5).
 
 This is not a release decision (`release/`), not machine governance (`control_plane/`), not policy (`policy/`), not schema (`schemas/`), not semantic contract (`contracts/`). It is human-facing doctrine + backlog → `docs/`. It parallels `docs/domains/hydrology/`, `docs/domains/soil/`, etc.
 

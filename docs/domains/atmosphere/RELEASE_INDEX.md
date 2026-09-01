@@ -24,7 +24,7 @@ notes:
   - CONTRACT_VERSION 3.0.0 pinned; doctrine-adjacent navigation index.
   - Human-facing navigation index for atmosphere releases.
   - Not a release decision authority. Authority lives in release/manifests/.
-  - All implementation-layer claims are PROPOSED pending mounted-repo verification.
+  - All implementation-layer claims are PROPOSED pending current-repo verification.
   - Meta Block v2 carries no nested HTML comments; inline annotation uses # only.
 [/KFM_META_BLOCK_V2] -->
 
@@ -197,7 +197,7 @@ flowchart LR
 ```
 
 > [!NOTE]
-> The lifecycle invariant and the release-decision plane are **CONFIRMED doctrine**. The specific path segments under `data/` and `release/` are **PROPOSED** per the Domain Placement Law and require mounted-repo verification.
+> The lifecycle invariant and the release-decision plane are **CONFIRMED doctrine**. The specific path segments under `data/` and `release/` are **PROPOSED** per the Domain Placement Law and require current-repo verification.
 
 [⬆ Back to top](#table-of-contents)
 
@@ -342,7 +342,7 @@ rel-atmosphere-2026-014        # full-domain release
 
 ## 10. Release register (PROPOSED template)
 
-The table below is the **template form** for the per-release register. Each row should resolve to a `ReleaseManifest` under `release/manifests/`. Today, the register is intentionally empty pending mounted-repo verification.
+The table below is the **template form** for the per-release register. Each row should resolve to a `ReleaseManifest` under `release/manifests/`. Today, the register is intentionally empty pending current-repo verification.
 
 | release_id | release_state | spec_hash | policy_label | rights_status | sensitivity | artifacts | rollback_supported | evidence_refs | promotion_decision | manifest_path | status |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -420,7 +420,7 @@ Atmosphere releases must carry a visible correction path and a resolvable rollba
 
 ## 12. Validation gates and required closure
 
-Every atmosphere release must close the following gates before transitioning to `PUBLISHED`. The list reflects CONFIRMED doctrine from the universal closure rules (Atlas §24.6.2) and the atmosphere-specific validator list (Atlas §11.K); the implementation maturity of each test is UNKNOWN without mounted-repo evidence.
+Every atmosphere release must close the following gates before transitioning to `PUBLISHED`. The list reflects CONFIRMED doctrine from the universal closure rules (Atlas §24.6.2) and the atmosphere-specific validator list (Atlas §11.K); the implementation maturity of each test is UNKNOWN without current repository evidence.
 
 | Gate | Required artifact | Atmosphere-specific tests (PROPOSED) |
 |---|---|---|

@@ -276,7 +276,7 @@ knowledge_characters:
 ```
 
 > [!NOTE]
-> Every key above is illustrative. The Atlas confirms the *terms* and the *four explicit guards* (§11.I); the field structure (`required_guards`, `forbidden`, `public_release`) is an **INFERRED** proposal for the registry PR. Do not treat this YAML as an emitted schema until a mounted-repo file confirms it.
+> Every key above is illustrative. The Atlas confirms the *terms* and the *four explicit guards* (§11.I); the field structure (`required_guards`, `forbidden`, `public_release`) is an **INFERRED** proposal for the registry PR. Do not treat this YAML as an emitted schema until a current-repo file confirms it.
 
 [Back to top ↑](#contents)
 

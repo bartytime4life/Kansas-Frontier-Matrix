@@ -643,7 +643,7 @@ Core companion docs currently linked from this README (repository existence conf
 
 ## Last reviewed
 
-**2026-08-28** — v0.4 repository reconciliation at `main@f7af2c3dcefd38ae5e86141cfbc0931c0ef7d90f`: removed source-session no-mounted-repository claims; confirmed current responsibility-root lane presence; classified `pipelines/domains/air/` as retained documentation-only compatibility; corrected CODEOWNERS routing, verified related links, and restored ADR-0001/ADR-0029 status separation. Runtime, source admission, rights, evidence, review, release, deployment, promotion, publication, and compatibility-retirement claims remain held or unverified.
+**2026-08-28** — v0.4 repository reconciliation at `main@f7af2c3dcefd38ae5e86141cfbc0931c0ef7d90f`: removed source-session no-current-repository claims; confirmed current responsibility-root lane presence; classified `pipelines/domains/air/` as retained documentation-only compatibility; corrected CODEOWNERS routing, verified related links, and restored ADR-0001/ADR-0029 status separation. Runtime, source admission, rights, evidence, review, release, deployment, promotion, publication, and compatibility-retirement claims remain held or unverified.
 
 ---
 

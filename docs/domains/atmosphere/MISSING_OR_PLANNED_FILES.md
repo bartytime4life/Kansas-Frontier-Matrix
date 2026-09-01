@@ -28,7 +28,7 @@ notes:
 
 # Atmosphere/Air — Missing or Planned Files Register
 
-> Inventory of files the Atmosphere/Air domain is **expected to need** but whose existence in the current repository has not been verified this session. Each entry is **PROPOSED** until checked against mounted-repo evidence or an accepted ADR. This register does not create files; it makes the gap visible and reviewable.
+> Inventory of files the Atmosphere/Air domain may need, paired with current repository evidence where available. Any row that is not confirmed in the repo remains **PROPOSED** or **NEEDS VERIFICATION**; this register does not create files or convert an unconfirmed path into authority.
 
 [![Status: Draft](https://img.shields.io/badge/status-draft-orange)](#)
 [![Domain: Atmosphere / Air](https://img.shields.io/badge/domain-atmosphere%2Fair-1f8fff)](./README.md)
@@ -79,7 +79,7 @@ notes:
 ## 1. Scope and Purpose
 
 > [!NOTE]
-> This register is doctrine-grounded planning, not a creation order. Listing a path here does **not** create it, reserve it, or imply it exists. A path becomes real only via an accepted PR that ties the file to a contract, schema, fixture, validator, policy, or runbook, with truth labels intact.
+> This register is doctrine-grounded planning anchored to repository evidence, not a creation order. Listing a path here does **not** create it, reserve it, or imply it exists. A path becomes real only via an accepted PR that ties the file to a contract, schema, fixture, validator, policy, or runbook, with truth labels intact.
 
 **This register covers.** Files the Atmosphere/Air domain is expected to require to satisfy the **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED** lifecycle for atmosphere/air objects — observations, regulatory archives, low-cost sensors, model fields, remote-sensing masks, climate context, and derived fusion — under cite-or-abstain, deny-by-default, and watcher-as-non-publisher invariants.
 
@@ -102,7 +102,7 @@ Every entry below uses these columns:
 |---|---|
 | **Path** | PROPOSED location under the appropriate KFM responsibility root, applying Domain Placement Law (`<root>/domains/atmosphere/...`). |
 | **Object / purpose** | What the file is expected to do. Mapped to a KFM object family or function where possible. |
-| **Truth label** | CONFIRMED, INFERRED, PROPOSED, UNKNOWN, NEEDS VERIFICATION. Implementation-layer claims are PROPOSED at minimum until a mounted-repo check confirms them. |
+| **Truth label** | CONFIRMED, INFERRED, PROPOSED, UNKNOWN, NEEDS VERIFICATION. Implementation-layer claims are PROPOSED at minimum until a current-repo check confirms them. |
 | **Depends on** | Upstream files, ADRs, or schema decisions that block this file. |
 | **Blocks** | Downstream surfaces (UI, governed API, Focus Mode) that cannot proceed until this file lands. |
 | **Notes** | Tradeoffs, sensitivity hooks, drift risks, ADR triggers. |
@@ -140,7 +140,7 @@ docs/adr/                                 # cross-cutting ADRs (atmosphere-speci
 ```
 
 > [!WARNING]
-> **Do not** create `atmosphere/` at the repository root (Directory Rules §3 explicitly names `atmosphere` as a domain that must live as a lane), and **do not** create a parallel `schemas/atmosphere/` outside `schemas/contracts/v1/...`. Either is a Directory Rules §2.4 (ADR-required) and §13.1 (drift) violation and requires an ADR before merging. If the mounted repo already contains such a structure, raise it as a **DRIFT_REGISTER** entry rather than treating it as canon.
+> **Do not** create `atmosphere/` at the repository root (Directory Rules §3 explicitly names `atmosphere` as a domain that must live as a lane), and **do not** create a parallel `schemas/atmosphere/` outside `schemas/contracts/v1/...`. Either is a Directory Rules §2.4 (ADR-required) and §13.1 (drift) violation and requires an ADR before merging. If the current repository evidence already contains such a structure, raise it as a **DRIFT_REGISTER** entry rather than treating it as canon.
 
 > [!NOTE]
 > **Registry sub-lane choice.** Directory Rules §4 Step 3 lists **both** `data/registry/<domain>/` **and** `data/registry/sources/<domain>/` as valid registry homes. This register uses `data/registry/sources/atmosphere/` for source descriptors specifically; whether non-source registry records (e.g., a parameter registry) also live under `data/registry/atmosphere/` is **NEEDS VERIFICATION** and tracked in §9.
@@ -152,7 +152,7 @@ docs/adr/                                 # cross-cutting ADRs (atmosphere-speci
 ## 4. Verification Posture
 
 > [!NOTE]
-> **NEEDS VERIFICATION (repository state).** The repository was not mounted during the authoring of this register. Every "exists / does not exist" claim below is therefore an inference from doctrine and indexed project artifacts, not a repo fact. Once a mounted-repo inspection is performed, this register **MUST** be regenerated and rows reclassified:
+> **NEEDS VERIFICATION (repository state).** The repository was not mounted during the authoring of this register. Every "exists / does not exist" claim below is therefore an inference from doctrine and indexed project artifacts, not a repo fact. Once a current-repo inspection is performed, this register **MUST** be regenerated and rows reclassified:
 >
 > - **CONFIRMED** if the path exists and conforms to Directory Rules.
 > - **DRIFT** (linked to `docs/registers/DRIFT_REGISTER.md`) if the path exists but conflicts with Rules.
@@ -289,7 +289,7 @@ All rows below are **PROPOSED**. Treat each table as a candidate path inventory 
 ### 6.3 `schemas/contracts/v1/domains/atmosphere/` — machine shape
 
 > [!NOTE]
-> Default schema home is `schemas/contracts/v1/...` per ADR-0001 (Directory Rules §13.1). **NEEDS VERIFICATION** that this is the live authority in the mounted repo. If `contracts/<...>.schema.json` is used instead, raise a drift entry; do not duplicate. **[CONFIRMED rule / NEEDS VERIFICATION repo presence]**
+> Default schema home is `schemas/contracts/v1/...` per ADR-0001 (Directory Rules §13.1). **NEEDS VERIFICATION** that this is the live authority in the current repository evidence. If `contracts/<...>.schema.json` is used instead, raise a drift entry; do not duplicate. **[CONFIRMED rule / NEEDS VERIFICATION repo presence]**
 
 | Path | Schema | Truth label | Notes |
 |---|---|---|---|
@@ -525,7 +525,7 @@ Mirrors Atlas §11.N and adds path-level items surfaced by this register.
 | Implement knowledge-character registry and confirm enum stability. | `knowledge_character.schema.json`, `KNOWLEDGE_CHARACTERS.md`, accepted ADR. | NEEDS VERIFICATION |
 | Verify catalog / proof / release closure for at least one Atmosphere/Air object. | EvidenceBundle, ValidationReport, ReleaseManifest, RollbackCard for a dryrun release. | NEEDS VERIFICATION |
 | Verify MapLibre / Evidence Drawer / Focus Mode integration. | Released LayerManifest + tile asset under `data/published/layers/atmosphere/` + Drawer fixture. | NEEDS VERIFICATION |
-| Confirm `schemas/contracts/v1/...` is the live schema home in the mounted repo. | `git ls-tree` of `schemas/` and `contracts/`; ADR-0001 acceptance. | NEEDS VERIFICATION |
+| Confirm `schemas/contracts/v1/...` is the live schema home in the current repository evidence. | `git ls-tree` of `schemas/` and `contracts/`; ADR-0001 acceptance. | NEEDS VERIFICATION |
 | Resolve runbook subfolder vs flat-prefix convention. | Accepted ADR. | NEEDS VERIFICATION |
 | Confirm receipts/proofs are global-only or also domain-scoped. | Per-root README declarations + drift register check. | NEEDS VERIFICATION |
 | Confirm `policy/` (singular) is the live policy home; if `policies/` exists, classify as compatibility. | `git ls-tree`; per-root README. | NEEDS VERIFICATION |
@@ -583,7 +583,7 @@ Mirrors Atlas §11.N and adds path-level items surfaced by this register.
 | OQ-AIR-04 | Should `ClimateNormal` / `ClimateAnomaly` be modeled inside Atmosphere/Air or split into a `climate/` sub-segment within the domain? Atlas §11.B places them inside Atmosphere/Air. | atmosphere-domain-steward | repo inspection + ADR if split |
 | OQ-AIR-05 | How does `SmokeContext` deconflict ownership with the Hazards `SmokeContext` object (same name in Atlas §11.B and §12.E)? Suggested resolution: Atmosphere/Air owns the atmospheric reading; Hazards owns the event/impact projection. | atmosphere + hazards stewards | ADR (`ADR-XXXX-atmosphere-hazards-smokecontext-ownership`) |
 | OQ-AIR-06 | Which registry sub-lane — `data/registry/atmosphere/` vs `data/registry/sources/atmosphere/` — owns non-source registry records? | source steward | Directory Rules §4 Step 3 + repo inspection |
-| OQ-AIR-07 | Do any of the paths above already exist in the mounted repo? If yes, classify CONFIRMED or DRIFT; if no, keep PROPOSED. | docs-steward | mounted-repo inspection |
+| OQ-AIR-07 | Do any of the paths above already exist in the current repository evidence? If yes, classify CONFIRMED or DRIFT; if no, keep PROPOSED. | docs-steward | current-repo inspection |
 
 ## Open verification backlog
 

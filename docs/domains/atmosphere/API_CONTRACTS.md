@@ -19,7 +19,7 @@ related:
   - contracts/air/
 tags: [kfm, domain, atmosphere, air, api, contracts, governed-api]
 notes:
-  - Repo not mounted in this session; all repo-shaped claims are PROPOSED.
+  - Current repo evidence grounds the path and surface references in this file; any unverified implementation claim stays NEEDS VERIFICATION.
   - Folder-name asymmetry: docs/domains/atmosphere/ vs schemas/contracts/v1/air/ — see §2.
   - CONTRACT_VERSION pinned to "3.0.0" per ai-build-operating-contract.md.
 [/KFM_META_BLOCK_V2] -->
@@ -45,8 +45,8 @@ notes:
 | **Owners** | `TODO` — Atmosphere/Air domain steward · API steward · Docs steward |
 | **Last updated** | 2026-05-28 |
 | **Operating contract** | `CONTRACT_VERSION = "3.0.0"` — `ai-build-operating-contract.md` |
-| **Authority of this doc** | PROPOSED — supplements the domain README; not a substitute for `schemas/contracts/v1/`, `contracts/`, `policy/`, or accepted ADRs |
-| **Repo evidence basis** | Doctrine only — repository not mounted in this session |
+| **Authority of this doc** | Repository-grounded explanatory doc; it supplements the domain README and does not replace `schemas/contracts/v1/`, `contracts/`, `policy/`, or accepted ADRs |
+| **Repo evidence basis** | Current repo inspection plus doctrine; exact implementation claims remain validation-bound |
 
 ---
 
@@ -80,7 +80,7 @@ This document is the **API and contract surface map** for the Atmosphere/Air dom
 It is a **navigational reference**, not authority. The canonical sources for any shape, outcome, or policy decision remain `schemas/contracts/v1/...`, `contracts/...`, and accepted ADRs. Where this doc and a canonical source disagree, the canonical source wins and the disagreement is recorded in the drift register, not silently absorbed here. This mirrors the Atlas Chapter 24 authority rule: master tables are navigational, not authoritative; `EvidenceBundle`, the source dossiers, and the schemas under `schemas/contracts/v1/...` remain the canonical sources for any claim.
 
 > [!IMPORTANT]
-> **Doctrine is CONFIRMED; implementation is PROPOSED.** The contract families and finite outcomes described below come from project doctrine (the Encyclopedia, the Domains Culmination Atlas v1.1, and Directory Rules). The repository was not mounted during the drafting of this file. Every implementation-shaped claim — exact routes, exact schema files, exact field names, exact test coverage — is PROPOSED until verified against mounted-repo evidence.
+> **Doctrine is CONFIRMED; implementation maturity varies by surface.** The contract families and finite outcomes described below come from project doctrine (the Encyclopedia, the Domains Culmination Atlas v1.1, and Directory Rules) and are checked against the current repository state. Exact implementation claims — routes, schema files, field names, and test coverage — remain validation-bound until directly evidenced in the repo.
 
 ---
 
@@ -157,7 +157,7 @@ Atmosphere/Air **inherits** the universal trust-membrane invariants and adds dom
 
 ## 4. Atmosphere/Air API surface catalog
 
-The catalog below restates the J-section of the Domains Culmination Atlas Ch. 11 (Atmosphere/Air) and aligns it with the master API surface table at Atlas §20.3. Every row is **PROPOSED implementation**; exact routes, route prefixes, and adapter names are UNKNOWN until verified against the mounted repo.
+The catalog below restates the J-section of the Domains Culmination Atlas Ch. 11 (Atmosphere/Air) and aligns it with the master API surface table at Atlas §20.3. Every row is **PROPOSED implementation**; exact routes, route prefixes, and adapter names are UNKNOWN until verified against the current repository evidence.
 
 ### 4.1 Per-domain surfaces (from Atlas Ch. 11 §J)
 
@@ -184,7 +184,7 @@ These surfaces are domain-agnostic governed APIs; Atmosphere/Air is one of the d
 | U7 | Correction / rollback submit | `POST /api/v1/corrections` | `CorrectionNotice` candidate; `RollbackCard` | ACCEPTED / HOLD / DENY / ERROR | PROPOSED |
 
 > [!NOTE]
-> Route prefixes (`/api/v1/...`), domain segment naming (`atmosphere` vs `air`), and content-type negotiation are NOT asserted as repo facts. They are PROPOSED shapes pending verification. DTO names in the table above are pinned to the Atlas §20.3 wording; whether the mounted repo uses `DomainFeatureEnvelope` or a domain alias (`AtmosphereAirDecisionEnvelope`) is NEEDS VERIFICATION.
+> Route prefixes (`/api/v1/...`), domain segment naming (`atmosphere` vs `air`), and content-type negotiation are NOT asserted as repo facts. They are PROPOSED shapes pending verification. DTO names in the table above are pinned to the Atlas §20.3 wording; whether the current repository evidence uses `DomainFeatureEnvelope` or a domain alias (`AtmosphereAirDecisionEnvelope`) is NEEDS VERIFICATION.
 
 [⬆ Back to top](#contents)
 
@@ -382,7 +382,7 @@ PROPOSED schema homes (CONFIRMED doctrine for the universal shapes):
 }
 ```
 
-**Illustrative only.** The actual envelope shape, field names, value vocabularies, and identifier schemes are governed by `schemas/contracts/v1/` and accepted ADRs, not by this example. NEEDS VERIFICATION against the mounted repo.
+**Illustrative only.** The actual envelope shape, field names, value vocabularies, and identifier schemes are governed by `schemas/contracts/v1/` and accepted ADRs, not by this example. NEEDS VERIFICATION against the current repository evidence.
 
 </details>
 
@@ -480,7 +480,7 @@ Atmosphere/Air publication requires a `ReleaseManifest`, a resolvable `EvidenceB
 
 ## 11. Validators, tests, and fixtures
 
-The validator and test obligations below are **PROPOSED** (Atlas Ch. 11 §K plus Encyclopedia §K plus Atlas §20.4). Implementation maturity, file presence, and CI wiring are NEEDS VERIFICATION until checked against the mounted repo.
+The validator and test obligations below are **PROPOSED** (Atlas Ch. 11 §K plus Encyclopedia §K plus Atlas §20.4). Implementation maturity, file presence, and CI wiring are NEEDS VERIFICATION until checked against the current repository evidence.
 
 ### 11.1 Universal test families (apply to Atmosphere/Air)
 
@@ -569,7 +569,7 @@ flowchart TD
 ```
 
 > [!NOTE]
-> **NEEDS VERIFICATION.** The exact step names, the placement of the citation check, the relationship between the feature resolver and the Evidence Drawer payload generator, and the wiring of Focus Mode to `AIReceipt` reflect doctrine, not mounted-repo evidence. Treat the diagram as a doctrinal flow, not as a route map.
+> **NEEDS VERIFICATION.** The exact step names, the placement of the citation check, the relationship between the feature resolver and the Evidence Drawer payload generator, and the wiring of Focus Mode to `AIReceipt` reflect doctrine, not current repository evidence. Treat the diagram as a doctrinal flow, not as a route map.
 
 [⬆ Back to top](#contents)
 
@@ -629,7 +629,7 @@ This document is done enough to enter the repository when:
 
 ## 18. Related docs
 
-> Placeholder links — verify paths against mounted repo before merging.
+> Placeholder links — verify paths against current repository evidence before merging.
 
 - [AI Build Operating Contract](../../../ai-build-operating-contract.md) — `CONTRACT_VERSION = "3.0.0"`; canonical operating law.
 - [Directory Rules](../../doctrine/directory-rules.md) — Domain Placement Law (§12), schema-home rule (§7.4).
@@ -648,6 +648,6 @@ This document is done enough to enter the repository when:
 
 ---
 
-<sub>Atmosphere/Air — API & Contract Surfaces · status `draft` · version `v1-draft` · CONTRACT_VERSION `3.0.0` · last updated 2026-05-28 · authority PROPOSED (verify against mounted repo, accepted ADRs, and `schemas/contracts/v1/`).</sub>
+<sub>Atmosphere/Air — API & Contract Surfaces · status `draft` · version `v1-draft` · CONTRACT_VERSION `3.0.0` · last updated 2026-05-28 · authority PROPOSED (verify against current repository evidence, accepted ADRs, and `schemas/contracts/v1/`).</sub>
 
 [⬆ Back to top](#contents)
