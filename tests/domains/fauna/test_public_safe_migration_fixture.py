@@ -22,6 +22,7 @@ from tools.validators.domains.fauna.movement.validate_public_safe_migration_fixt
 
 
 VALID = FIXTURE_ROOT / "valid" / "public_safe_synthetic_route.json"
+DEGENERATE = FIXTURE_ROOT / "invalid" / "degenerate_route.json"
 EXACT = FIXTURE_ROOT / "invalid" / "exact_track_claim.json"
 INSUFFICIENT = FIXTURE_ROOT / "invalid" / "insufficient_positions.json"
 
@@ -46,6 +47,14 @@ class PublicSafeMigrationFixtureTests(unittest.TestCase):
 
     def test_manifest_replays_exact_inventory(self):
         self.assertTrue(validate_fixture_manifest().ok)
+
+    def test_degenerate_route_fails_closed(self):
+        self.assertEqual(
+            validate_file(DEGENERATE).findings,
+            (
+                Finding("geom.route_degenerate", "/geometry/coordinates"),
+            ),
+        )
 
     def test_exact_track_and_truth_claims_fail_closed(self):
         self.assertEqual(

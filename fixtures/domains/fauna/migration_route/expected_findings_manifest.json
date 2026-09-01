@@ -1,6 +1,15 @@
 {
   "cases": [
     {
+      "path": "invalid/degenerate_route.json",
+      "expected_findings": [
+        {
+          "code": "geom.route_degenerate",
+          "path": "/geometry/coordinates"
+        }
+      ]
+    },
+    {
       "path": "invalid/exact_track_claim.json",
       "expected_findings": [
         {

@@ -154,6 +154,7 @@ def _geometry_findings(value: object) -> list[Finding]:
     if len(coordinates) > MAX_POSITIONS:
         _add(findings, "geom.position_limit_exceeded", "/geometry/coordinates")
         return findings
+    normalized_positions: list[tuple[float, float]] = []
     for index, position in enumerate(coordinates):
         path = f"/geometry/coordinates/{index}"
         if not (
@@ -166,6 +167,13 @@ def _geometry_findings(value: object) -> list[Finding]:
         longitude, latitude = float(position[0]), float(position[1])
         if not (-180 <= longitude <= 180 and -90 <= latitude <= 90):
             _add(findings, "geom.position_out_of_bounds", path)
+            continue
+        normalized_positions.append((longitude, latitude))
+    if (
+        len(normalized_positions) == len(coordinates)
+        and len(set(normalized_positions)) < 2
+    ):
+        _add(findings, "geom.route_degenerate", "/geometry/coordinates")
     return findings
 
 
