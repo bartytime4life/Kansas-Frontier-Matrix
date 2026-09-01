@@ -89,6 +89,7 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         self.assertIn(expected_error, validate_candidate_feature(payload))
         for malformed in (
             {"synthetic": "not-a-statement"},
+            " \t\n",
             "x" * (CONFIDENCE_STATEMENT_MAX_LENGTH + 1),
         ):
             with self.subTest(value_type=type(malformed).__name__):
@@ -201,6 +202,7 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         )
         self.assertEqual(properties["spec_hash"]["pattern"], SPEC_HASH_PATTERN.pattern)
         self.assertEqual(properties["confidence_statement"]["minLength"], 1)
+        self.assertEqual(properties["confidence_statement"]["pattern"], r"\S")
         self.assertEqual(
             properties["confidence_statement"]["maxLength"],
             CONFIDENCE_STATEMENT_MAX_LENGTH,

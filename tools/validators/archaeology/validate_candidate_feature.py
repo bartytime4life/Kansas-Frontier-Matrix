@@ -267,6 +267,7 @@ def validate_candidate_feature(payload: Any) -> list[str]:
         and (
             not isinstance(confidence_statement, str)
             or not 1 <= len(confidence_statement) <= CONFIDENCE_STATEMENT_MAX_LENGTH
+            or not confidence_statement.strip()
         )
     ):
         errors.append("confidence_statement must contain 1 to 1000 characters")

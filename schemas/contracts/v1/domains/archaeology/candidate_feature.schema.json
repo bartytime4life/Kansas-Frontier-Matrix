@@ -99,7 +99,8 @@
     "confidence_statement": {
       "type": "string",
       "minLength": 1,
-      "maxLength": 1000
+      "maxLength": 1000,
+      "pattern": "\\S"
     },
     "review_state": {
       "type": "string",
