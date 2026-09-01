@@ -9,6 +9,7 @@ import { mountSyntheticFocusWorkspace } from "./site/mount-synthetic-focus-works
 import { mountPublicTrustSurface } from "./site/trust-surface";
 import {
   mountPublicWorkspaceNavigation,
+  sanitizePublicWorkspaceNavigationUrl,
   syncPublicWorkspaceNavigation,
 } from "./site/workspace-navigation";
 
@@ -29,7 +30,12 @@ if (navigation === null || trustSection === null) {
 
 mountPublicWorkspaceNavigation(navigation);
 const syncWorkspaceNavigation = (): void => {
-  syncPublicWorkspaceNavigation(navigation, new URL(window.location.href));
+  const currentUrl = new URL(window.location.href);
+  const safeUrl = sanitizePublicWorkspaceNavigationUrl(currentUrl);
+  if (safeUrl.href !== currentUrl.href) {
+    window.history.replaceState(window.history.state, "", safeUrl.toString());
+  }
+  syncPublicWorkspaceNavigation(navigation, safeUrl);
 };
 syncWorkspaceNavigation();
 window.addEventListener("hashchange", syncWorkspaceNavigation);
