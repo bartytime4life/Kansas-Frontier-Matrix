@@ -86,6 +86,7 @@ FIXTURE_SOURCE_PREFIX = "fixture://sources/hydrology/"
 FIXTURE_EVIDENCE_PREFIX = "fixture://evidence/hydrology/"
 FIXTURE_GAUGE_PREFIX = "fixture://hydrology/gauge/generalized/"
 FIXTURE_DATUM_PREFIX = "fixture://hydrology/datum/"
+MAX_EVIDENCE_REFS = 32
 EXPECTED_GOVERNANCE = {
     "rights_state": "fixture_only",
     "sensitivity_state": "public_safe_fixture",
@@ -203,6 +204,8 @@ def validate_candidate(candidate: object) -> list[Finding]:
             add_finding(findings, "EVIDENCE_REF_IDENTIFIER_INVALID", "$.evidence_refs")
         if len(evidence_refs) != len(set(evidence_refs)):
             add_finding(findings, "EVIDENCE_REFS_DUPLICATE", "$.evidence_refs")
+        if len(evidence_refs) > MAX_EVIDENCE_REFS:
+            add_finding(findings, "EVIDENCE_REFS_TOO_MANY", "$.evidence_refs")
         if evidence_refs != sorted(evidence_refs):
             add_finding(
                 findings,

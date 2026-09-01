@@ -19,6 +19,7 @@ if str(REPO_ROOT) not in __import__("sys").path:
 from tools.validators.domains.hydrology.validate_public_safe_water_level_fixture import (  # noqa: E402
     FORBIDDEN_LOCATION_ALIASES,
     Finding,
+    MAX_EVIDENCE_REFS,
     validate_candidate,
     validate_file,
 )
@@ -188,6 +189,22 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
         candidate["evidence_refs"] = [second, first]
         self.assertIn(
             Finding("EVIDENCE_REFS_NOT_CANONICAL_ORDER", "$.evidence_refs"),
+            validate_candidate(candidate),
+        )
+
+    def test_evidence_reference_count_is_bounded(self) -> None:
+        candidate = _load_candidate()
+        candidate["evidence_refs"] = [  # type: ignore[index]
+            f"fixture://evidence/hydrology/water-level/99999/receipt-{index:02d}"
+            for index in range(MAX_EVIDENCE_REFS)
+        ]
+        self.assertEqual(validate_candidate(candidate), [])
+
+        candidate["evidence_refs"].append(  # type: ignore[union-attr]
+            "fixture://evidence/hydrology/water-level/99999/receipt-overflow"
+        )
+        self.assertIn(
+            Finding("EVIDENCE_REFS_TOO_MANY", "$.evidence_refs"),
             validate_candidate(candidate),
         )
 
