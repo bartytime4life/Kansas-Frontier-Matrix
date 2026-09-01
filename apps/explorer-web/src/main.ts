@@ -15,6 +15,7 @@ import {
   syncPublicWorkspaceNavigation,
 } from "./site/workspace-navigation";
 import { resolvePublicMapCaseManualSelectionTransition } from "./site/workspace-map-deep-link";
+import { resolvePublicKnowledgeDomainManualSelectionTransition } from "./site/workspace-knowledge-deep-link";
 
 const root = document.querySelector<HTMLElement>("#root");
 
@@ -63,6 +64,40 @@ const releaseDeepLinkMapOwnershipOnManualSelection = (event: MouseEvent): void =
   }
 };
 root.addEventListener("click", releaseDeepLinkMapOwnershipOnManualSelection);
+
+const releaseDeepLinkKnowledgeOwnershipOnManualSelection = (
+  event: MouseEvent,
+): void => {
+  const button =
+    event.target instanceof Element
+      ? event.target.closest<HTMLButtonElement>("button[data-domain-id]")
+      : null;
+  const domainId = button?.dataset.domainId;
+  if (button === null || domainId === undefined || !root.contains(button)) return;
+
+  const currentUrl = new URL(window.location.href);
+  const transition = resolvePublicKnowledgeDomainManualSelectionTransition(
+    currentUrl,
+    activeDeepLinkKnowledgeDomainId,
+    domainId,
+  );
+  activeDeepLinkKnowledgeDomainId = transition.activeDeepLinkDomainId;
+  if (
+    transition.replacementUrl !== null &&
+    transition.replacementUrl.href !== currentUrl.href
+  ) {
+    window.history.replaceState(
+      window.history.state,
+      "",
+      transition.replacementUrl.toString(),
+    );
+    syncPublicWorkspaceNavigation(navigation, transition.replacementUrl);
+  }
+};
+root.addEventListener(
+  "click",
+  releaseDeepLinkKnowledgeOwnershipOnManualSelection,
+);
 
 const syncWorkspaceNavigation = (): void => {
   const currentUrl = new URL(window.location.href);

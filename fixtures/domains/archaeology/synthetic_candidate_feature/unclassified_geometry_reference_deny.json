@@ -1,0 +1,13 @@
+{
+  "candidate_feature_id": "arc-candidate-synthetic-deny-008",
+  "object_type": "CandidateFeature",
+  "truth_state": "CANDIDATE",
+  "origin_method": "FIELD_SURVEY",
+  "source_refs": [
+    "kfm://source/synthetic/archaeology-candidate-deny-008"
+  ],
+  "candidate_geometry_ref": "kfm://geometry/synthetic/archaeology-candidate-deny-008",
+  "review_state": "NEEDS_REVIEW",
+  "sensitivity_class": "RESTRICTED",
+  "lifecycle_state": "WORK"
+}
