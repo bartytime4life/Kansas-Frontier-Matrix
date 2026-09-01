@@ -17,7 +17,6 @@ class IncidentResponseHandoffSliceTests(unittest.TestCase):
 
         for token in (
             "Milestone inventory and overlap map",
-            "main@db23a8bfa9fa126e87009a41240576619ccaac02",
             "docs/security/INCIDENT_RESPONSE.md",
             "docs/runbooks/INCIDENT_RESPONSE.md",
             "docs/security/incident-response-handoff-decision.md",
@@ -32,6 +31,7 @@ class IncidentResponseHandoffSliceTests(unittest.TestCase):
         ):
             self.assertIn(token, decision)
 
+        self.assertRegex(decision, r"Repository checkpoint \| `main@[0-9a-f]{40}`")
         self.assertIn("incident-response-handoff-decision.md", topology)
         self.assertIn("#2900", topology)
 
