@@ -91,12 +91,15 @@ class GeologyEvidenceBundleSchemaConvergenceTests(unittest.TestCase):
         self.assertEqual(result.stdout, "")
         self.assertIn("Use exactly --fixtures", result.stderr)
 
-    def test_fixture_profile_abbreviation_cannot_ignore_an_explicit_file(self) -> None:
-        result = self.run_domain_validator("--fixture", "/missing.json")
+    def test_fixture_profile_abbreviations_cannot_ignore_an_explicit_file(self) -> None:
+        for length in range(3, len("--fixtures")):
+            abbreviation = "--fixtures"[:length]
+            with self.subTest(abbreviation=abbreviation):
+                result = self.run_domain_validator(abbreviation, "/missing.json")
 
-        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
-        self.assertEqual(result.stdout, "")
-        self.assertIn("Use exactly --fixtures", result.stderr)
+                self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+                self.assertEqual(result.stdout, "")
+                self.assertIn("Use exactly --fixtures", result.stderr)
 
     def test_inline_exact_subsurface_location_is_rejected(self) -> None:
         payload = self.load(SHARED_FIXTURES / "valid/valid_1.json")
