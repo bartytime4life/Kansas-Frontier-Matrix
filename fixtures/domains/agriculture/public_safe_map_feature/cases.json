@@ -1,0 +1,143 @@
+{
+  "base": {
+    "profile": "kfm.domains.agriculture.public-safe-map-feature.v1",
+    "status": "PROPOSED_INACTIVE",
+    "object_type": "AgricultureMapFeatureCandidate",
+    "version": "1.0.0",
+    "id": "ag-map-feature:000000000000000000000000",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "domain": "agriculture",
+    "object_family": "CropObservation",
+    "semantic_role": "OBSERVED_AGGREGATE",
+    "support": {
+      "kind": "COUNTY",
+      "key": "US-KS-20169",
+      "generalized": true,
+      "precision_class": "AGGREGATE_PUBLIC_SAFE"
+    },
+    "temporal": {
+      "kind": "CROP_YEAR",
+      "year": 2025,
+      "start": "2024-09-01",
+      "end": "2025-08-31",
+      "source_vintage": "2025-09-15"
+    },
+    "indicator": {
+      "key": "cropland_class",
+      "label": "Synthetic cropland class",
+      "unit": "CLASS",
+      "value_role": "OBSERVED",
+      "value": "GRAIN"
+    },
+    "uncertainty": {
+      "state": "NOT_QUANTIFIED",
+      "label": "Synthetic fixture; no production estimate."
+    },
+    "evidence_refs": ["evidence:synthetic:agriculture:map-feature:v1"],
+    "rights_state": "SYNTHETIC_ONLY",
+    "sensitivity": {
+      "exact_field_geometry": false,
+      "operator_identity": false,
+      "parcel_owner_join": false,
+      "private_address": false,
+      "sensitive_infrastructure": false,
+      "proprietary_value": false,
+      "transform_parameters": false
+    },
+    "authority": {
+      "hydrology_observation": false,
+      "water_right": false,
+      "habitat_occurrence": false,
+      "geology_truth": false,
+      "atmosphere_forecast": false,
+      "hazard_alert": false
+    },
+    "release": {
+      "state": "UNRELEASED_CANDIDATE",
+      "policy_evaluated": false,
+      "review_approved": false,
+      "release_authorized": false,
+      "public_use_allowed": false,
+      "published": false
+    },
+    "limitations": [
+      "Generalized aggregate support; not farm or operator truth.",
+      "Synthetic no-network fixture only."
+    ]
+  },
+  "cases": [
+    {
+      "case_id": "valid_county_crop_observation",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "harmful_precision_geometry",
+      "mutations": [
+        {
+          "path": "/geometry",
+          "value": {"type": "Point", "coordinates": [-98.3, 38.6]}
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "AG_MAP_HARMFUL_PRECISION_DENIED", "path": "/geometry"},
+        {"code": "AG_MAP_HARMFUL_PRECISION_DENIED", "path": "/geometry/coordinates"}
+      ]
+    },
+    {
+      "case_id": "modeled_suitability_as_observed",
+      "mutations": [
+        {"path": "/object_family", "value": "SoilCropSuitability"},
+        {"path": "/semantic_role", "value": "OBSERVED_AGGREGATE"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "AG_MAP_FAMILY_ROLE_COLLAPSE", "path": "/semantic_role"}
+      ]
+    },
+    {
+      "case_id": "irrigation_claims_water_right",
+      "mutations": [
+        {"path": "/object_family", "value": "IrrigationLink"},
+        {"path": "/semantic_role", "value": "IRRIGATION_CONTEXT"},
+        {"path": "/indicator/unit", "value": "CONTEXT_ONLY"},
+        {"path": "/indicator/value_role", "value": "CONTEXT_ONLY"},
+        {"path": "/authority/water_right", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "AG_MAP_SCHEMA_INVALID", "path": "/authority/water_right"}
+      ]
+    },
+    {
+      "case_id": "crop_year_label_outside_interval",
+      "mutations": [{"path": "/temporal/year", "value": 2026}],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "AG_MAP_YEAR_OUTSIDE_INTERVAL", "path": "/temporal/year"}
+      ]
+    },
+    {
+      "case_id": "derived_indicator_value_role_collapse",
+      "mutations": [
+        {"path": "/object_family", "value": "DroughtStressIndicator"},
+        {"path": "/semantic_role", "value": "DERIVED_INDICATOR"},
+        {"path": "/support/kind", "value": "GENERALIZED_GRID"},
+        {"path": "/support/precision_class", "value": "GENERALIZED_PUBLIC_SAFE"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "AG_MAP_VALUE_ROLE_COLLAPSE", "path": "/indicator/value_role"}
+      ]
+    },
+    {
+      "case_id": "public_use_overclaim",
+      "mutations": [{"path": "/release/public_use_allowed", "value": true}],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "AG_MAP_SCHEMA_INVALID", "path": "/release/public_use_allowed"}
+      ]
+    }
+  ]
+}
