@@ -9,6 +9,7 @@ GOVERNANCE_STATE_INVALID	$.governance.rights_state
 GOVERNANCE_STATE_INVALID	$.governance.rollback_state
 GOVERNANCE_STATE_INVALID	$.governance.sensitivity_state
 LIMITATIONS_INVALID	$.limitations
+METHOD_REF_NOT_FIXTURE	$.measurement.method_ref
 MEASUREMENT_UNIT_INVALID	$.measurement.unit
 MEASUREMENT_VALUE_OUT_OF_RANGE	$.measurement.value
 NO_DATA_STATE_INVALID	$.measurement.no_data
