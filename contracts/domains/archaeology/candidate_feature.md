@@ -2,11 +2,11 @@
 doc_id: kfm://contract/domains/archaeology/candidate-feature
 title: contracts/domains/archaeology/candidate_feature.md — CandidateFeature Contract
 type: contract
-version: v0.2
+version: v0.3
 status: draft
 owners: OWNER_TBD — Archaeology steward · Contract steward · Evidence steward · Schema steward · Policy steward · Review steward · Validation steward · Release steward · Docs steward
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-09-01
 policy_label: public; contracts; domains; archaeology; candidate-feature; semantic-contract; sensitive-lane
 tags: [kfm, contracts, archaeology, candidate-feature, candidate, evidence, review, policy, sensitivity, lifecycle, governance]
 related:
@@ -29,7 +29,7 @@ related:
   - ../../../release/
 notes:
   - "Expanded from a planned-file scaffold into the object-level CandidateFeature semantic contract."
-  - "The paired schema is currently a PROPOSED scaffold with empty properties and additionalProperties enabled."
+  - "The paired schema now has a bounded draft projection for candidate identity, governed references, review/lifecycle posture, and fail-closed inline-location and confirmed-site claim denial; the full proposed contract remains open."
   - "This contract preserves the candidate-vs-confirmed boundary and does not authorize public release or exact-location disclosure."
   - "CandidateFeature is a review candidate, not a confirmed ArchaeologicalSite."
 [/KFM_META_BLOCK_V2] -->
@@ -46,7 +46,7 @@ notes:
   <img alt="Domain: archaeology" src="https://img.shields.io/badge/domain-archaeology-8a6d3b">
   <img alt="Family: candidate" src="https://img.shields.io/badge/family-candidate-blue">
   <img alt="Sensitivity: fail closed" src="https://img.shields.io/badge/sensitivity-fail__closed-red">
-  <img alt="Schema: scaffold" src="https://img.shields.io/badge/schema-scaffold-orange">
+  <img alt="Schema: bounded draft" src="https://img.shields.io/badge/schema-bounded__draft-orange">
 </p>
 
 `contracts/domains/archaeology/candidate_feature.md`
@@ -141,19 +141,21 @@ The paired schema found for this contract is:
 schemas/contracts/v1/domains/archaeology/candidate_feature.schema.json
 ```
 
-Current schema evidence:
+Current bounded schema evidence:
 
 | Schema fact | Status |
 |---|---|
-| Schema file exists | `CONFIRMED` |
-| Schema title is `Candidate Feature` | `CONFIRMED` |
-| Schema status is `PROPOSED` | `CONFIRMED` |
-| Schema properties are empty | `CONFIRMED` |
-| `additionalProperties` is `true` | `CONFIRMED` |
-| Schema `contract_doc` points to this contract | `CONFIRMED` |
-| Validator implementation | `UNKNOWN / NOT FOUND IN THIS TASK` |
+| Schema file exists and identifies `CandidateFeature` | `CONFIRMED` |
+| `object_type` is fixed to `CandidateFeature` | `CONFIRMED / ENFORCED` |
+| `truth_state` is fixed to `CANDIDATE` | `CONFIRMED / ENFORCED` |
+| Inline geometry, coordinates, latitude/longitude, bounding boxes, geohashes, and WKT | `DENIED` by the bounded validator and closed schema properties |
+| Confirmed-site identity or confirmation claim fields | `DENIED` by the bounded validator and closed schema properties |
+| Source references | At least one governed `kfm://` reference is required |
+| Candidate lifecycle | Limited to `WORK`, `QUARANTINE`, `PROCESSED`, or `CATALOG`; `PUBLISHED` is denied |
+| Fixtures and deterministic validation | Synthetic positive and expected-fail fixtures plus standard-library unit tests are present |
+| Full proposed field vocabulary, EvidenceBundle closure, policy behavior, review workflow, release workflow, API behavior, and UI behavior | `NOT IMPLEMENTED / NEEDS VERIFICATION` |
 
-This contract therefore defines semantic expectations for future schema and validator work. It does not claim that machine validation currently enforces those expectations.
+This is a bounded draft projection, not full contract completion. It establishes only the executable candidate discriminator, governed-reference minimum, and fail-closed inline-location/site-claim boundary. It does not authorize public exposure, candidate-to-site promotion, cultural review, EvidenceBundle closure, release, or publication.
 
 ---
 
@@ -278,7 +280,7 @@ Before relying on this contract, verify:
 | Source | Status | Supports | Limits |
 |---|---|---|---|
 | Prior `candidate_feature.md` scaffold | `CONFIRMED` | Target file existed and was sourced from the planned-files ledger. | Scaffold did not define authoritative semantics. |
-| `candidate_feature.schema.json` | `CONFIRMED scaffold` | Schema exists, is `PROPOSED`, has empty properties, and points to this contract. | Does not enforce full candidate semantics. |
+| `candidate_feature.schema.json` and bounded validator/tests | `CONFIRMED bounded draft projection` | Enforce candidate-only identity, governed source references, non-published lifecycle, and denial of inline location and confirmed-site claims with synthetic no-network fixtures. | Do not implement the full proposed contract, EvidenceBundle closure, policy/cultural review, candidate-to-site promotion, release, or publication. |
 | `OBJECT_MAP.md` | `CONFIRMED current map` | Maps `CandidateFeature` to `candidate_feature.md` and `candidate_feature.schema.json`; preserves candidate/confirmed distinction. | Map marks rows `NEEDS VERIFICATION`. |
 | `README.md` in this directory | `CONFIRMED current boundary` | States this directory defines semantic meaning only and preserves candidate-versus-confirmed boundaries. | Does not prove schema, validator, policy, or release behavior. |
 | `CANONICAL_PATHS.md` | `CONFIRMED path doctrine / PROPOSED path realizations` | Reconciles archaeology contract/schema path form to `contracts/domains/archaeology/` and `schemas/contracts/v1/domains/archaeology/`; marks sensitive-lane posture. | Does not authorize release or prove all paths exist. |
@@ -299,9 +301,9 @@ Rollback target: prior scaffold blob SHA `ad91f1da2594d4963aa5638d10078bec89987e
 - [ ] Owners are confirmed and `OWNER_TBD` is replaced.
 - [ ] Candidate type vocabulary is reviewed by the Archaeology steward.
 - [ ] Candidate-to-site promotion rule is accepted and linked.
-- [ ] Paired JSON Schema is expanded from scaffold status.
-- [ ] Valid and invalid fixtures cover candidate, rejected, quarantined, retained, promoted, and superseded states.
-- [ ] Validator enforces required evidence, source-role, precision, sensitivity, and review fields.
+- [x] Paired JSON Schema has a bounded candidate discriminator, governed-reference minimum, closed field set, and inline-location/site-claim denial; the full proposed field vocabulary remains open.
+- [ ] Valid and invalid fixtures cover candidate, rejected, quarantined, retained, promoted, and superseded states; the current synthetic pair covers one valid candidate and one inline-location denial.
+- [x] A standard-library validator enforces the bounded candidate identity, source-reference, review/lifecycle, sensitivity, and denial invariants; full source-role, EvidenceBundle, policy, and promotion validation remains open.
 - [ ] Exact-location public exposure is tested as `DENY` unless a public-safe transform and release record are present.
 - [ ] EvidenceBundle, PolicyDecision, ReviewRecord, PublicationTransformReceipt, ReleaseManifest, CorrectionNotice, and RollbackCard references are validated where required.
 - [ ] API/UI surfaces prove they cannot treat candidate objects as confirmed sites.
