@@ -24,6 +24,8 @@ VALIDATORS = {
     "source-descriptor": REPO_ROOT
     / "tools/validators/domains/people-dna-land/validate_source_descriptor.py",
     "living-person": REPO_ROOT / "tools/validators/genealogy/screen_living_persons.py",
+    "consent-overlay": REPO_ROOT
+    / "tools/validators/domains/people-dna-land/validate_consent_overlay.py",
 }
 
 
