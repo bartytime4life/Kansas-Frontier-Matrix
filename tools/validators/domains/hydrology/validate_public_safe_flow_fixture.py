@@ -47,6 +47,9 @@ ALLOWED_TEMPORAL_FIELDS = frozenset({"observed_at", "retrieved_at"})
 ALLOWED_MEASUREMENT_FIELDS = frozenset(
     {"parameter_code", "value", "unit", "qualifier", "provisional_status", "no_data"}
 )
+ALLOWED_PROVISIONAL_STATUSES = frozenset(
+    {"provisional", "final", "corrected", "estimated", "ice_affected"}
+)
 ALLOWED_GOVERNANCE_FIELDS = frozenset(
     {
         "rights_state",
@@ -222,10 +225,17 @@ def validate_candidate(candidate: object) -> list[Finding]:
             add_finding(findings, "MEASUREMENT_UNIT_INVALID", "$.measurement.unit")
         if measurement.get("qualifier") != "synthetic":
             add_finding(findings, "QUALIFIER_INVALID", "$.measurement.qualifier")
-        if not is_nonempty_string(measurement.get("provisional_status")):
+        provisional_status = measurement.get("provisional_status")
+        if not is_nonempty_string(provisional_status):
             add_finding(
                 findings,
                 "PROVISIONAL_STATUS_MISSING",
+                "$.measurement.provisional_status",
+            )
+        elif provisional_status not in ALLOWED_PROVISIONAL_STATUSES:
+            add_finding(
+                findings,
+                "PROVISIONAL_STATUS_INVALID",
                 "$.measurement.provisional_status",
             )
         if measurement.get("no_data") is not False:
