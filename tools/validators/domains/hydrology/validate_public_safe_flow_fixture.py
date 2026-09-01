@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from pathlib import Path
+import re
 import sys
 from typing import Sequence
 
@@ -89,16 +90,16 @@ EXPECTED_GOVERNANCE = {
 REQUIRED_LIMITATIONS = frozenset(
     {"not_a_flood_warning", "not_life_safety_guidance", "synthetic_fixture_only"}
 )
+_CANONICAL_UTC = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
 
 
 def _parse_utc(value: object) -> datetime | None:
-    if not isinstance(value, str) or not value.endswith("Z"):
+    if not isinstance(value, str) or _CANONICAL_UTC.fullmatch(value) is None:
         return None
     try:
-        parsed = datetime.fromisoformat(value[:-1] + "+00:00")
+        return datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ")
     except ValueError:
         return None
-    return parsed if parsed.utcoffset() is not None else None
 
 
 def validate_candidate(candidate: object) -> list[Finding]:
