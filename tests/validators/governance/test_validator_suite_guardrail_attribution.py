@@ -60,6 +60,27 @@ class ValidatorSuiteGuardrailAttributionTests(unittest.TestCase):
         self.assertIn("github.event.before", trusted_base_ref)
         self.assertIn("make repository-topology", self._run_lines(topology_step))
 
+    def test_independent_validation_stages_survive_prior_failure(self) -> None:
+        expected_steps = [
+            "Require a non-vacuous aggregate validator inventory",
+            "Test shared JSON Schema runner fixture semantics",
+            "Test generated-receipt shape and artifact integrity",
+            "Test material-change assessment profile",
+            "Run repository aggregate validators",
+        ]
+        steps_by_name = {step.get("name"): step for step in self.steps}
+
+        for step_name in expected_steps:
+            with self.subTest(step=step_name):
+                self.assertIn(step_name, steps_by_name)
+                self.assertEqual(
+                    "${{ !cancelled() }}",
+                    str(steps_by_name[step_name].get("if", "")),
+                )
+
+        summary_step = steps_by_name["Record aggregate-validator boundary"]
+        self.assertEqual("always()", str(summary_step.get("if", "")))
+
     def test_workflow_identity_and_read_only_permissions_are_unchanged(self) -> None:
         workflow = yaml.safe_load(self.text)
 
