@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -10,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[4]
 DOMAIN_SCHEMA = ROOT / "schemas/contracts/v1/domains/atmosphere/evidence_bundle.schema.json"
 SHARED_SCHEMA = ROOT / "schemas/contracts/v1/evidence/evidence_bundle.schema.json"
 SHARED_FIXTURES = ROOT / "fixtures/contracts/v1/evidence/evidence_bundle"
+PROJECTION_VALIDATOR = ROOT / "tools/validators/validate_atmosphere_evidence_bundle_projection.py"
 
 
 class AtmosphereEvidenceBundleSchemaConvergenceTests(unittest.TestCase):
@@ -38,6 +42,26 @@ class AtmosphereEvidenceBundleSchemaConvergenceTests(unittest.TestCase):
         invalid = self.load(SHARED_FIXTURES / "invalid/invalid_1.json")
         self.assertEqual(list(validator.iter_errors(valid)), [])
         self.assertNotEqual(list(validator.iter_errors(invalid)), [])
+
+    def test_declared_projection_validator_delegates_from_unrelated_directory(self) -> None:
+        schema = self.load(DOMAIN_SCHEMA)
+        self.assertEqual(
+            schema["x-kfm"]["validator"],
+            "tools/validators/validate_atmosphere_evidence_bundle_projection.py",
+        )
+
+        with tempfile.TemporaryDirectory() as directory:
+            result = subprocess.run(
+                [sys.executable, str(PROJECTION_VALIDATOR), "--fixtures"],
+                cwd=directory,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("OK ", result.stdout)
+        self.assertIn("EXPECTED_FAIL ", result.stdout)
 
 
 if __name__ == "__main__":
