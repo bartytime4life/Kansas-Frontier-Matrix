@@ -61,12 +61,26 @@ describe("Map runtime bounds fit", () => {
     });
   });
 
-  it("fails closed on invalid geographic or viewport inputs", () => {
+  it("fails closed on invalid geographic, shape, viewport, and zoom inputs", () => {
     expect(() =>
       fitMapRuntimeCameraToBounds(
         { west: -181, south: 37, east: -95, north: 40 },
         { widthPx: 800, heightPx: 600 },
       ),
+    ).toThrow(expect.objectContaining({ code: "MAP_RUNTIME_STATE_INVALID" }));
+
+    const extraFieldBounds = {
+      west: -101,
+      south: 37,
+      east: -95,
+      north: 40,
+      rawSource: "forbidden",
+    } as unknown as Parameters<typeof fitMapRuntimeCameraToBounds>[0];
+    expect(() =>
+      fitMapRuntimeCameraToBounds(extraFieldBounds, {
+        widthPx: 800,
+        heightPx: 600,
+      }),
     ).toThrow(expect.objectContaining({ code: "MAP_RUNTIME_STATE_INVALID" }));
 
     expect(() =>
