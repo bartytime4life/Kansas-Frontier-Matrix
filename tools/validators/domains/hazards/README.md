@@ -2,7 +2,7 @@
 doc_id: kfm://doc/tools-validators-domains-hazards-readme
 title: tools/validators/domains/hazards/ — Hazards Validator Index
 type: readme
-version: v0.11
+version: v0.12
 status: draft; repository-grounded; mixed-maturity; non-semantic; non-policy; non-release; non-publication
 owner: NEEDS VERIFICATION — CODEOWNERS routes /tools/validators/ to @bartytime4life; no independently verified Hazards validation steward or required-review control was established
 created: 2026-07-07
@@ -33,6 +33,7 @@ related:
   - ../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../../../docs/doctrine/directory-rules.md
 notes:
+  - "v0.12 rejects subsecond programmatic evaluation instants so semantic evaluation and the canonical whole-second result envelope cannot disagree about the evaluated instant."
   - "v0.11 keeps explicit-time findings temporally coherent: an evaluation before retrieval is denied as pre-retrieval and cannot also claim that the not-yet-retrieved carrier was expired at that evaluation instant."
   - "v0.10 makes the explicit evaluation interface canonical and replay-safe by accepting only timezone-aware RFC3339 whole-second instants with a known, valid offset before normalizing them to UTC in the result envelope."
   - "v0.9 binds each file-validation result to retrieval-relative or explicit-as-of evaluation and emits a canonical UTC evaluation time when supplied, so downstream consumers can distinguish the meaning of PASS without inspecting source values."
@@ -165,7 +166,7 @@ The `domain-hazards` proof and release-dry-run jobs intentionally emit explicit 
 
 Individual validators own their finite result grammar. This index does not normalize materially different findings into a shared approval state.
 
-KDHE HAB file-validation output identifies whether validation was retrieval-relative or used an explicit caller-supplied evaluation instant. The CLI accepts only timezone-aware RFC3339 whole-second instants with a known, valid offset; it rejects RFC3339's unknown-local-offset marker (`-00:00`) rather than collapsing it to UTC. Accepted instants are normalized to UTC in the result, while retrieval-relative output uses a null evaluation time. An instant before retrieval yields the pre-retrieval finding and does not also assert explicit-time expiration for a carrier that did not yet exist. This canonical binding supports deterministic replay but does not create a runtime DecisionEnvelope, EvidenceBundle, approval, alert, or current-condition claim.
+KDHE HAB file-validation output identifies whether validation was retrieval-relative or used an explicit caller-supplied evaluation instant. The CLI accepts only timezone-aware RFC3339 whole-second instants with a known, valid offset; it rejects RFC3339's unknown-local-offset marker (`-00:00`) rather than collapsing it to UTC. The programmatic interface likewise rejects evaluation instants whose normalized UTC value has subsecond precision. Accepted instants are normalized to UTC in the result, while retrieval-relative output uses a null evaluation time. An instant before retrieval yields the pre-retrieval finding and does not also assert explicit-time expiration for a carrier that did not yet exist. This canonical binding supports deterministic replay but does not create a runtime DecisionEnvelope, EvidenceBundle, approval, alert, or current-condition claim.
 
 ## Inputs and outputs
 

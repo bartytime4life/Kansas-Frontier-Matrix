@@ -220,6 +220,7 @@ def validate_document(
         not isinstance(as_of, datetime)
         or as_of.tzinfo is None
         or as_of.utcoffset() is None
+        or as_of.astimezone(timezone.utc).microsecond != 0
     ):
         return ValidationResult(
             "ERROR",

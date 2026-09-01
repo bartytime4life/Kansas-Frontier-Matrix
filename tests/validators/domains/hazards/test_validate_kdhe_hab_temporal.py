@@ -133,6 +133,17 @@ class KdheHabTemporalValidatorTests(unittest.TestCase):
             {"KDHE_HAB_EVALUATION_TIME_INVALID"},
         )
 
+    def test_subsecond_programmatic_evaluation_returns_finite_error(self) -> None:
+        result = validate_document(
+            self._candidate(),
+            as_of=datetime.fromisoformat("2026-07-25T15:00:00.500+00:00"),
+        )
+        self.assertEqual(result.outcome, "ERROR")
+        self.assertEqual(
+            {finding.code for finding in result.findings},
+            {"KDHE_HAB_EVALUATION_TIME_INVALID"},
+        )
+
     def test_cli_as_of_is_deterministic_and_rejects_invalid_combinations(self) -> None:
         self.path.write_text(json.dumps(self._candidate()) + "\n", encoding="utf-8")
         stream = io.StringIO()
