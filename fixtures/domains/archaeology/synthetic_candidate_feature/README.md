@@ -8,6 +8,9 @@ burial, sacred-place, collection-security, or culturally restricted data.
   spatial precision withheld, and contains no inline geometry.
 - `malformed_candidate_id_deny.json` proves that the validator and schema share
   the same lowercase candidate-identifier grammar.
+- `unsupported_candidate_type_deny.json` proves that the validator rejects
+  confirmed-site-like or otherwise unsupported candidate-type labels rather than
+  allowing them to weaken the candidate boundary.
 - `sensitive_geometry_deny.json` uses synthetic zero coordinates solely to prove
   that any inline coordinate field is rejected before downstream use.
 - `location_bearing_reference_deny.json` proves that a nominal `kfm://`
@@ -27,7 +30,7 @@ python -m unittest tests.domains.archaeology.test_candidate_not_site
 ```
 
 Passing these checks proves only the schema-aligned candidate identifier and
-bounded candidate discriminator, inline
+candidate-type vocabulary, bounded candidate discriminator, inline
 location denial, opaque-reference boundary, conditional EvidenceRef binding,
 and supersession correction binding. It does not confirm a site, authorize
 publication, or establish full

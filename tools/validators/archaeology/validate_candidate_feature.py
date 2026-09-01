@@ -66,6 +66,18 @@ FORBIDDEN_SITE_CLAIM_FIELDS = frozenset(
         "site_status",
     }
 )
+CANDIDATE_TYPES = frozenset(
+    {
+        "ANOMALY",
+        "ARCHIVAL_LEAD",
+        "EARTHWORK",
+        "FIELD_OBSERVATION",
+        "LANDSCAPE_TRACE",
+        "MATERIAL_SCATTER",
+        "STRUCTURE_TRACE",
+        "OTHER",
+    }
+)
 ORIGIN_METHODS = frozenset(
     {
         "ARCHIVAL",
@@ -160,6 +172,9 @@ def validate_candidate_feature(payload: Any) -> list[str]:
         errors.append("object_type must be CandidateFeature")
     if payload.get("truth_state") != "CANDIDATE":
         errors.append("truth_state must remain CANDIDATE")
+    candidate_type = payload.get("candidate_type")
+    if candidate_type is not None and candidate_type not in CANDIDATE_TYPES:
+        errors.append("candidate_type is not in the bounded vocabulary")
     if payload.get("origin_method") not in ORIGIN_METHODS:
         errors.append("origin_method is not in the bounded vocabulary")
     if payload.get("review_state") not in REVIEW_STATES:
@@ -213,6 +228,7 @@ def validate_fixture_suite() -> int:
         FIXTURE_ROOT / "unbound_catalog_candidate_deny.json": "evidence_refs are required",
         FIXTURE_ROOT / "superseded_without_correction_deny.json": "correction_refs are required",
         FIXTURE_ROOT / "malformed_candidate_id_deny.json": "candidate_feature_id must match",
+        FIXTURE_ROOT / "unsupported_candidate_type_deny.json": "candidate_type is not in",
     }
     valid_errors = validate_candidate_feature(_load(valid_path))
     if valid_errors:
