@@ -1,5 +1,6 @@
 import withdrawnFixture from "../../../../fixtures/ui/focus_composed_claim_projection/valid/abstain-withdrawn.json";
 import answerFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/answer-corrected.json";
+import revokedFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/abstain-revoked.json";
 import staleFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/abstain-stale.json";
 import supersededFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/abstain-superseded.json";
 import denyFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/deny-sensitive.json";
@@ -93,6 +94,28 @@ const cases: readonly MapEvidenceFixtureCase[] = Object.freeze([
     },
   },
   {
+    caseId: "revoked",
+    label: "Select revoked evidence history",
+    selection: {
+      profile: MAP_FEATURE_SELECTION_PROFILE,
+      selection_id: "selection:revoked",
+      layer_id: "layer:synthetic-streamflow",
+      feature_id: "feature:revoked",
+      evidence_refs: ["kfm:evidence:synthetic:revoked-001"],
+    },
+  },
+  {
+    caseId: "revoked-mismatch",
+    label: "Select feature with mismatched revoked evidence",
+    selection: {
+      profile: MAP_FEATURE_SELECTION_PROFILE,
+      selection_id: "selection:revoked-mismatch",
+      layer_id: "layer:synthetic-streamflow",
+      feature_id: "feature:revoked-mismatch",
+      evidence_refs: ["kfm:evidence:synthetic:other"],
+    },
+  },
+  {
     caseId: "superseded",
     label: "Select superseded evidence history",
     selection: {
@@ -152,6 +175,9 @@ mountMapFeatureEvidenceFixture(root, cases, async (selection) => {
     case "selection:withdrawn":
     case "selection:withdrawn-mismatch":
       return withdrawnFixture.evidence_drawer;
+    case "selection:revoked":
+    case "selection:revoked-mismatch":
+      return revokedFixture;
     case "selection:superseded":
     case "selection:history-mismatch":
       return supersededFixture;
