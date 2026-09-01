@@ -23,7 +23,7 @@ def test_schema_is_valid_draft_2020_12() -> None:
 
 
 def test_fixture_matrix_has_exact_expected_size_and_polarity() -> None:
-    assert len(MODULE.fixture_cases()) == 19
+    assert len(MODULE.fixture_cases()) == 20
     assert MODULE.fixture_profile() == 0
 
 
@@ -61,6 +61,19 @@ def test_sql_metacharacters_are_parameter_values() -> None:
     assert result.status == "PASS"
     assert candidate["decision"]["matched"] is False
     assert candidate["decision"]["validator_outcome"] == "ABSTAIN"
+
+
+def test_same_domain_pair_is_not_emitted_as_cross_lane_candidate() -> None:
+    candidate, result, _, _ = MODULE.fixture_cases()[19]
+    assert result.status == "PASS"
+    decision = candidate["decision"]
+    assert decision["validator_outcome"] == "ABSTAIN"
+    assert decision["status"] == "NO_JOIN_CANDIDATE"
+    assert decision["matched"] is False
+    assert decision["reason_codes"] == ["CROSS_DOMAIN_PAIR_REQUIRED"]
+    assert "ROUTE_TO_DOMAIN_LOCAL_VALIDATOR" in decision["obligations"]
+    results = {item["rule_code"]: item["failure_count"] for item in decision["rule_results"]}
+    assert results["JOIN_PREDICATE_MATCHED"] == 1
 
 
 def test_rule_counts_roles_and_sensitivity_are_inspectable() -> None:
