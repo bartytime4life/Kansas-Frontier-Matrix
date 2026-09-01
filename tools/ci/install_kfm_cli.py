@@ -23,6 +23,9 @@ LOCAL_PACKAGE = REPO_ROOT / "packages/kfm-cli"
 LOCAL_SPEC = "./packages/kfm-cli"
 LOCK_LIMIT_BYTES = 262_144
 HASH_LINE = re.compile(r"^\s+--hash=sha256:[0-9a-f]{64}(?: \\)?$")
+REQUIREMENT_LINE = re.compile(
+    r"^[A-Za-z0-9][A-Za-z0-9._-]*==[A-Za-z0-9][A-Za-z0-9.!+_-]* \\$"
+)
 FORBIDDEN_LOCK_TEXT = (
     "--extra-index-url",
     "--index-url",
@@ -69,6 +72,8 @@ def validate_lockfile(path: Path = LOCKFILE) -> None:
     for requirement in requirements:
         if "==" not in requirement or not requirement.rstrip().endswith("\\"):
             raise CliInstallConfigurationError("CLI_LOCKFILE_REQUIREMENT_UNPINNED")
+        if not REQUIREMENT_LINE.fullmatch(requirement):
+            raise CliInstallConfigurationError("CLI_LOCKFILE_REQUIREMENT_UNSAFE")
     if any(not HASH_LINE.fullmatch(line) for line in hashes):
         raise CliInstallConfigurationError("CLI_LOCKFILE_HASH_INVALID")
 
