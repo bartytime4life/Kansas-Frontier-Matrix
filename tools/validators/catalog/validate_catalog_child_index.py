@@ -7,10 +7,18 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
+try:
+    from tools.validators.catalog._markdown_inventory import (
+        visible_line_spans as _visible_line_spans,
+    )
+except ModuleNotFoundError as exc:
+    if exc.name != "tools":
+        raise
+    from _markdown_inventory import visible_line_spans as _visible_line_spans
+
 PROFILE = "kfm.catalog-child-index-drift.v6"
 SECTION_TITLE = "Current bounded child-lane index"
 SECTION_HEADER = f"## {SECTION_TITLE}"
-FENCE_OPEN_RE = re.compile(r"^ {0,3}(?P<fence>`{3,}|~{3,}).*$")
 ATX_H2_RE = re.compile(r"^ {0,3}##(?:[ \t]+(?P<title>.*?)[ \t]*|[ \t]*)$")
 CLOSING_HASH_RE = re.compile(r"[ \t]+#+[ \t]*$")
 ROW_RE = re.compile(r"^\|\s*`([^`]+/)`\s*\|\s*(.*?)\s*\|\s*$")
@@ -18,33 +26,6 @@ ALIAS_TARGET_RE = re.compile(
     r"`PROPOSED\s*/\s*COMPATIBILITY-ALIAS`\s+to\s+`([^`]+/)`",
     re.IGNORECASE,
 )
-
-
-def _visible_line_spans(text: str) -> list[tuple[int, int, str]]:
-    visible: list[tuple[int, int, str]] = []
-    fence_char: str | None = None
-    fence_length = 0
-    offset = 0
-    for raw_line in text.splitlines(keepends=True):
-        line = raw_line.rstrip("\r\n")
-        if fence_char is not None:
-            closing = re.fullmatch(
-                rf" {{0,3}}{re.escape(fence_char)}{{{fence_length},}}[ \t]*",
-                line,
-            )
-            if closing is not None:
-                fence_char = None
-                fence_length = 0
-        else:
-            opening = FENCE_OPEN_RE.match(line)
-            if opening is not None:
-                fence = opening.group("fence")
-                fence_char = fence[0]
-                fence_length = len(fence)
-            else:
-                visible.append((offset, offset + len(line), line))
-        offset += len(raw_line)
-    return visible
 
 
 def _h2_spans(text: str) -> list[tuple[int, int, str]]:
