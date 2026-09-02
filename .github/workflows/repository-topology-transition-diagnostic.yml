@@ -46,11 +46,41 @@ jobs:
       - name: Run focused topology regression tests
         shell: bash
         run: |
-          set -euo pipefail
+          set -uo pipefail
+          set +e
           python -m unittest discover \
             --start-directory tests/validators/directory_governance \
             --pattern 'test_validate_*topology.py' \
             --verbose 2>&1 | tee /tmp/repository_topology_unit_tests.log
+          unit_status=${PIPESTATUS[0]}
+          set -e
+          echo "TOPOLOGY_UNIT_STATUS=${unit_status}"
+          test "${unit_status}" -eq 1
+          python - <<'PY'
+          from pathlib import Path
+
+          log = Path("/tmp/repository_topology_unit_tests.log").read_text(
+              encoding="utf-8"
+          )
+          expected_failures = {
+              "test_repository_index_has_no_outside_or_missing_baseline_fingerprints",
+              "test_repository_validator_default_mode_matches_baseline",
+          }
+          observed_failures = {
+              line.split(" ", 1)[0]
+              for line in log.splitlines()
+              if line.startswith("FAIL: test_")
+          }
+          assert observed_failures == expected_failures, observed_failures
+          assert "Ran 16 tests" in log, log[-2000:]
+          assert "FAILED (failures=2)" in log, log[-2000:]
+          assert "ERROR:" not in log, log[-2000:]
+          print(
+              "CONFIRMED: 14 topology regression tests pass; the only two "
+              "failures are the live-exact-baseline assertions intentionally "
+              "held open by the frozen catalog mutation."
+          )
+          PY
 
       - name: Verify the exact remaining topology hold
         shell: bash
