@@ -49,8 +49,8 @@
     "attached_docs": [],
     "evidence_refs": [
       "repo:main@3ee7942913e32c11d8fbf91fa4a4f221dddd4ac0",
-      "repo:pull/4208@6a7bf4951bd7b70ae5c5dc644b4318537eba8514",
-      "github:actions/run/33635052269"
+      "repo:pull/4208@1cc7b74e9c924437f7bb1a26db8f73cc34559715",
+      "github:actions/run/33635581612"
     ]
   },
   "truth_labels": {
@@ -94,8 +94,8 @@
     },
     {
       "gate": "hosted-exact-head",
-      "outcome": "FAIL",
-      "reason": "At exact implementation head 6a7bf4951bd7b70ae5c5dc644b4318537eba8514, GitHub Actions run 33635052269 passed schema, fixture, and focused validator steps, then failed only because this successor receipt still bound the prior artifact hashes. The receipt-only successor head remains to be executed."
+      "outcome": "PASS",
+      "reason": "The evidence-drawer-payload workflow passed at exact receipt-bound head 1cc7b74e9c924437f7bb1a26db8f73cc34559715 in GitHub Actions run 33635581612."
     },
     {
       "gate": "human-review",
@@ -110,12 +110,12 @@
     {
       "id": "repo:evidence-drawer-payload-contract",
       "validated": true,
-      "evidence_ref": "contracts/ui/evidence_drawer_payload.md@6a7bf4951bd7b70ae5c5dc644b4318537eba8514"
+      "evidence_ref": "contracts/ui/evidence_drawer_payload.md@1cc7b74e9c924437f7bb1a26db8f73cc34559715"
     },
     {
       "id": "repo:pull-4208-terminal-release-proof",
       "validated": true,
-      "evidence_ref": "github:actions/run/33635052269"
+      "evidence_ref": "github:actions/run/33635581612"
     }
   ],
   "human_review": {
@@ -124,7 +124,7 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-09-02T13:23:00Z",
+  "created_at": "2026-09-02T13:28:00Z",
   "emitter": "OpenAI GPT-5.6 via ChatGPT",
   "links": {
     "pr_number": 4208,
