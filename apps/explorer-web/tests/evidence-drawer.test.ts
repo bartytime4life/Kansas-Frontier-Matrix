@@ -24,6 +24,7 @@ describe("Explorer Evidence Drawer governed projection", () => {
       title: "Synthetic streamflow observation",
       landmarkRole: "complementary",
       accessibilityLabel: "Evidence Drawer: supported evidence",
+      evidenceRefsLabel: "Current evidence references",
       ariaLive: "polite",
     });
     expect(result.evidenceRefs).toEqual(["kfm:evidence:synthetic:flow-001"]);
@@ -44,6 +45,7 @@ describe("Explorer Evidence Drawer governed projection", () => {
       code: "STALE_EVIDENCE",
       title: "Evidence not sufficient",
       message: "Available evidence is stale for this request.",
+      evidenceRefsLabel: "Non-current evidence references",
     });
     expect(result.evidenceRefs).toEqual(["kfm:evidence:synthetic:stale-001"]);
     expect(result.citations).toEqual([]);

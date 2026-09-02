@@ -117,10 +117,10 @@ test("keeps superseded Focus evidence in visible correction history only", async
     drawer.locator('ul[aria-label="Evidence trust state"]'),
   ).toContainText("Correction: CORRECTED");
   await expect(
-    drawer.locator('ul[aria-label="Evidence references"]'),
+    drawer.locator('ul[aria-label="Current evidence references"]'),
   ).toContainText("kfm:evidence:synthetic:corrected-soil-summary-001");
   await expect(
-    drawer.locator('ul[aria-label="Evidence references"]'),
+    drawer.locator('ul[aria-label="Current evidence references"]'),
   ).not.toContainText("kfm:evidence:synthetic:superseded-soil-summary-001");
   await expect(
     drawer.locator('ul[aria-label="Evidence history"]'),

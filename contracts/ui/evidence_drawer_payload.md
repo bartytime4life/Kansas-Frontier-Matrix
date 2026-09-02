@@ -211,6 +211,9 @@ This is declaration validation only. The profile does not dereference a correcti
 - The payload must come from governed API/runtime code after evidence, policy, citation, review, and release checks.
 - The drawer must preserve finite negative states and never convert missing, stale, denied, held, superseded, revoked, or withdrawn evidence into an `ANSWER`.
 - Current evidence and audit history remain separate fields and identities.
+- Evidence-reference lists must identify `ANSWER` refs as current support and
+  `ABSTAIN` refs as non-current; a visible stale ref must never be announced as
+  current claim support.
 - Denial and error details are fixed in the browser; untrusted title, summary, limitation, evidence, citation, and history values are suppressed.
 - The browser must not read RAW, WORK, QUARANTINE, PROCESSED, CATALOG/TRIPLET, canonical stores, proof stores, or direct model output.
 - Accessibility labels and visible trust labels must describe the same finite state.
