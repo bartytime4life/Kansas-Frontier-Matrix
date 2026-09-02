@@ -383,7 +383,7 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
             original_open = os.open
             swapped = False
 
-            def racing_open(path, flags, mode=0o777, *, dir_fd=None):
+            def racing_open(path, flags, mode=0o600, *, dir_fd=None):
                 nonlocal swapped
                 if dir_fd is None:
                     descriptor = original_open(path, flags, mode)
