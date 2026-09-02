@@ -111,14 +111,27 @@ class CatalogChildIndexDriftTests(unittest.TestCase):
             self.assertEqual(report["outcome"], "FAIL")
             self.assertEqual(report["duplicate_entries"], ["stac/"])
 
-    def test_duplicate_child_lane_section_is_error(self) -> None:
+    def test_closing_hash_child_lane_section_is_parseable(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "catalog"
+            root.mkdir()
+            (root / "stac").mkdir()
+            readme = _readme(("stac/", "test posture")).replace(
+                "## Current bounded child-lane index",
+                "## Current bounded child-lane index ##",
+            )
+            (root / "README.md").write_text(readme, encoding="utf-8")
+            report = MODULE.validate_catalog_child_index(root)
+            self.assertEqual(report["outcome"], "PASS")
+
+    def test_duplicate_closing_hash_child_lane_section_is_error(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "catalog"
             root.mkdir()
             (root / "stac").mkdir()
             duplicate = _readme(("stac/", "test posture")).replace(
                 "## Next section",
-                "## Current bounded child-lane index\n\n## Next section",
+                "## Current bounded child-lane index ##\n\n## Next section",
             )
             (root / "README.md").write_text(duplicate, encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "duplicate section"):

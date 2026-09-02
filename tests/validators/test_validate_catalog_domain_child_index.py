@@ -135,14 +135,27 @@ class CatalogDomainChildIndexDriftTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "missing section"):
                 MODULE.validate_catalog_domain_child_index(root)
 
-    def test_duplicate_known_child_lanes_section_is_error(self) -> None:
+    def test_closing_hash_known_child_lanes_section_is_parseable(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "domain"
+            root.mkdir()
+            (root / "agriculture").mkdir()
+            readme = _readme("agriculture/").replace(
+                "## Known child lanes",
+                "## Known child lanes ##",
+            )
+            (root / "README.md").write_text(readme, encoding="utf-8")
+            report = MODULE.validate_catalog_domain_child_index(root)
+            self.assertEqual(report["outcome"], "PASS")
+
+    def test_duplicate_closing_hash_known_child_lanes_section_is_error(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "domain"
             root.mkdir()
             (root / "agriculture").mkdir()
             duplicate = _readme("agriculture/").replace(
                 "## Catalog requirements",
-                "## Known child lanes\n\n## Catalog requirements",
+                "## Known child lanes ##\n\n## Catalog requirements",
             )
             (root / "README.md").write_text(duplicate, encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "duplicate section"):

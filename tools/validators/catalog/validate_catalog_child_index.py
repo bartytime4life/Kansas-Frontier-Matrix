@@ -7,8 +7,13 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-PROFILE = "kfm.catalog-child-index-drift.v3"
-SECTION_HEADER = "## Current bounded child-lane index"
+PROFILE = "kfm.catalog-child-index-drift.v4"
+SECTION_TITLE = "Current bounded child-lane index"
+SECTION_HEADER = f"## {SECTION_TITLE}"
+SECTION_HEADER_RE = re.compile(
+    rf"(?m)^##[ \t]+{re.escape(SECTION_TITLE)}(?:[ \t]+#+)?[ \t]*$"
+)
+NEXT_H2_RE = re.compile(r"(?m)^##(?:[ \t]+|$)")
 ROW_RE = re.compile(r"^\|\s*`([^`]+/)`\s*\|\s*(.*?)\s*\|\s*$")
 ALIAS_TARGET_RE = re.compile(
     r"`PROPOSED\s*/\s*COMPATIBILITY-ALIAS`\s+to\s+`([^`]+/)`",
@@ -18,18 +23,15 @@ ALIAS_TARGET_RE = re.compile(
 
 def _read_index_rows(readme_path: Path) -> list[tuple[str, str]]:
     text = readme_path.read_text(encoding="utf-8")
-    marker_count = sum(
-        line.strip() == SECTION_HEADER for line in text.splitlines()
-    )
-    if marker_count > 1:
+    section_matches = list(SECTION_HEADER_RE.finditer(text))
+    if len(section_matches) > 1:
         raise ValueError(f"duplicate section: {SECTION_HEADER}")
-    start = text.find(SECTION_HEADER)
-    if start < 0:
+    if not section_matches:
         raise ValueError(f"missing section: {SECTION_HEADER}")
-    section = text[start + len(SECTION_HEADER):]
-    next_h2 = section.find("\n## ")
-    if next_h2 >= 0:
-        section = section[:next_h2]
+    section = text[section_matches[0].end():]
+    next_h2 = NEXT_H2_RE.search(section)
+    if next_h2 is not None:
+        section = section[:next_h2.start()]
 
     rows: list[tuple[str, str]] = []
     for line in section.splitlines():

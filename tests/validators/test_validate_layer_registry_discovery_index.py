@@ -133,12 +133,23 @@ class LayerRegistryDiscoveryIndexTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "missing section"):
             validate_layer_registry_discovery_index(root)
 
-    def test_duplicate_section_errors(self) -> None:
+    def test_closing_hash_section_is_parseable(self) -> None:
+        tempdir, root = self._fixture(("agriculture",), ("agriculture",))
+        self.addCleanup(tempdir.cleanup)
+        readme = _readme("agriculture").replace(
+            "## Confirmed child lanes",
+            "## Confirmed child lanes ##",
+        )
+        (root / "README.md").write_text(readme, encoding="utf-8")
+        report = validate_layer_registry_discovery_index(root)
+        self.assertEqual(report["outcome"], "PASS")
+
+    def test_duplicate_closing_hash_section_errors(self) -> None:
         tempdir, root = self._fixture(("agriculture",), ("agriculture",))
         self.addCleanup(tempdir.cleanup)
         duplicate = _readme("agriculture").replace(
             "## Layer registry boundary",
-            "## Confirmed child lanes\n\n## Layer registry boundary",
+            "## Confirmed child lanes ##\n\n## Layer registry boundary",
         )
         (root / "README.md").write_text(duplicate, encoding="utf-8")
         with self.assertRaisesRegex(ValueError, "duplicate section"):
@@ -166,7 +177,7 @@ class LayerRegistryDiscoveryIndexTests(unittest.TestCase):
         self.assertEqual(first.stdout, second.stdout)
         parsed = json.loads(first.stdout)
         self.assertEqual(
-            "kfm.layer-registry-discovery-index-drift.v4", parsed["profile"]
+            "kfm.layer-registry-discovery-index-drift.v5", parsed["profile"]
         )
         self.assertEqual("PASS", parsed["outcome"])
 
