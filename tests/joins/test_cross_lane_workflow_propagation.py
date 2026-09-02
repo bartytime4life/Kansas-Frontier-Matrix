@@ -30,6 +30,7 @@ REQUIRED_TRIGGER_PATHS = (
     "tests/joins/**",
 )
 CROSS_LANE_TEST_GLOB = "tests/joins/test_cross_lane_*.py"
+CUMULATIVE_REVIEW_PATH_COUNT = 20
 _TRIGGER_RE = re.compile(
     r"(?m)^  (pull_request|push|workflow_dispatch):(?:\n|$)"
 )
@@ -104,6 +105,33 @@ def _receipt_trigger_findings(workflow_source: str, receipt_source: str) -> list
     return findings
 
 
+def _overlap_scope_findings(receipt_source: str) -> list[str]:
+    payload = json.loads(receipt_source)
+    artifact_paths = payload.get("artifact_paths", [])
+    gates = payload.get("validation_gates", [])
+    gate = next(
+        (
+            item
+            for item in gates
+            if item.get("gate") == "active-work-and-overlap-reconciliation"
+        ),
+        None,
+    )
+    if gate is None:
+        return ["receipt: active-work-and-overlap-reconciliation gate missing"]
+
+    reason = gate.get("reason", "")
+    required_scope = (
+        f"all {CUMULATIVE_REVIEW_PATH_COUNT} cumulative branch paths",
+        f"all {len(artifact_paths)} receipt-bound artifacts",
+    )
+    return [
+        f"overlap gate: missing scope {scope}"
+        for scope in required_scope
+        if scope not in reason
+    ]
+
+
 def _missing_documented_guards(source: str) -> list[str]:
     actual = {path.name for path in README.parent.glob("test_cross_lane_*.py")}
     documented = set(_DOCUMENTED_GUARD_RE.findall(source))
@@ -140,6 +168,28 @@ def test_cross_lane_receipt_validator_triggers_for_every_bound_artifact() -> Non
         WORKFLOWS[0].read_text(encoding="utf-8"),
         RECEIPT.read_text(encoding="utf-8"),
     ) == []
+
+
+def test_receipt_overlap_gate_covers_complete_review_unit() -> None:
+    assert _overlap_scope_findings(RECEIPT.read_text(encoding="utf-8")) == []
+
+
+@pytest.mark.parametrize(
+    ("complete_scope", "partial_scope"),
+    (
+        ("all 20 cumulative branch paths", "the latest three changed paths"),
+        ("all 19 receipt-bound artifacts", "selected receipt artifacts"),
+    ),
+)
+def test_synthetic_partial_overlap_scope_is_detected(
+    complete_scope: str, partial_scope: str
+) -> None:
+    source = RECEIPT.read_text(encoding="utf-8")
+    assert complete_scope in source
+    mutated = source.replace(complete_scope, partial_scope, 1)
+    assert f"overlap gate: missing scope {complete_scope}" in _overlap_scope_findings(
+        mutated
+    )
 
 
 def test_readme_documents_every_cross_lane_guard() -> None:
