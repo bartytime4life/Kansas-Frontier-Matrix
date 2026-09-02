@@ -62,6 +62,7 @@ export type MapRuntimeTerrainTransitionTicket = Readonly<{
 
 export type MapRuntimeTerrainTransitionExecutor = (
   plan: MapRuntimeTerrainTransitionPlan,
+  signal: AbortSignal,
 ) => void | Promise<void>;
 
 export type MapRuntimeTerrainTransitionCoordinator = Readonly<{
@@ -272,6 +273,7 @@ export function createMapRuntimeTerrainTransitionCoordinator(
     initial === null ? null : (Object.freeze({ ...initial }) as MapRuntimeTerrainState);
   let pending: MapRuntimeTerrainTransitionTicket | null = null;
   let executing: MapRuntimeTerrainTransitionTicket | null = null;
+  let executionController: AbortController | null = null;
   let nextRevision = 1;
   let disposed = false;
 
@@ -345,16 +347,19 @@ export function createMapRuntimeTerrainTransitionCoordinator(
       }
       pending = null;
       executing = accepted;
+      const controller = new AbortController();
+      executionController = controller;
       try {
-        await executor(accepted.plan);
+        await executor(accepted.plan, controller.signal);
       } catch {
         if (disposed) {
           requireActive();
         }
-        if (executing !== accepted) {
+        if (executing !== accepted || executionController !== controller) {
           invalid("Map runtime terrain transition execution state is invalid.");
         }
         executing = null;
+        executionController = null;
         throw new MapRuntimePortError(
           "MAP_RUNTIME_TERRAIN_TRANSITION_FAILED",
           "Map runtime terrain transition execution failed.",
@@ -363,11 +368,12 @@ export function createMapRuntimeTerrainTransitionCoordinator(
       if (disposed) {
         requireActive();
       }
-      if (executing !== accepted) {
+      if (executing !== accepted || executionController !== controller) {
         invalid("Map runtime terrain transition execution state is invalid.");
       }
       current = accepted.plan.target;
       executing = null;
+      executionController = null;
       return current;
     },
 
@@ -376,6 +382,9 @@ export function createMapRuntimeTerrainTransitionCoordinator(
       disposed = true;
       pending = null;
       executing = null;
+      const controller = executionController;
+      executionController = null;
+      controller?.abort();
     },
   });
 }
