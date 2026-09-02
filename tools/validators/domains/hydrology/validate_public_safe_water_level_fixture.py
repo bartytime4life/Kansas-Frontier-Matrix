@@ -119,9 +119,19 @@ _EVIDENCE_TIMESTAMP_SEGMENT_SHAPE = re.compile(
 )
 
 
+def _is_canonical_evidence_timestamp(segment: str) -> bool:
+    if _CANONICAL_EVIDENCE_TIMESTAMP_SEGMENT.fullmatch(segment) is None:
+        return False
+    try:
+        datetime.strptime(segment, "%Y%m%dT%H%M%SZ")
+    except ValueError:
+        return False
+    return True
+
+
 def _is_canonical_evidence_segment(segment: str) -> bool:
     if _EVIDENCE_TIMESTAMP_SEGMENT_SHAPE.fullmatch(segment) is not None:
-        return _CANONICAL_EVIDENCE_TIMESTAMP_SEGMENT.fullmatch(segment) is not None
+        return _is_canonical_evidence_timestamp(segment)
     return _CANONICAL_EVIDENCE_SEGMENT.fullmatch(segment) is not None
 
 
