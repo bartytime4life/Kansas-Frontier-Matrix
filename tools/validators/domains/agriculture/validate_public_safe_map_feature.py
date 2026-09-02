@@ -118,6 +118,10 @@ PROTECTED_IDENTIFIER_PATTERN = re.compile(
     r"\s*[:=#]\s*"
     r")[a-z0-9][a-z0-9._/-]*\b"
 )
+PRIVATE_IDENTITY_LABEL_PATTERN = re.compile(
+    r"\b(?i:parcel|field|farm|operator|owner|well|permit|water[-_ ]?right)\s+"
+    r"[A-Z0-9][A-Za-z0-9.'’/-]*(?:\s+[A-Z0-9][A-Za-z0-9.'’/-]*)*\b"
+)
 LABELED_COORDINATE_PATTERN = re.compile(
     r"(?i)\b(?:lat(?:itude)?|lon(?:gitude)?)\s*[:=]\s*"
     r"[+-]?\d{1,3}(?:\.\d+)?\b"
@@ -208,7 +212,8 @@ def _unsafe_scalar_findings(value: Any, path: tuple[Any, ...] = ()) -> set[Findi
         findings.add(Finding("AG_MAP_NONFINITE_NUMBER_DENIED", _pointer(path)))
     elif isinstance(value, str):
         if (_contains_coordinate_literal(value)
-                or PROTECTED_IDENTIFIER_PATTERN.search(value)):
+                or PROTECTED_IDENTIFIER_PATTERN.search(value)
+                or PRIVATE_IDENTITY_LABEL_PATTERN.search(value)):
             findings.add(Finding("AG_MAP_HARMFUL_PRECISION_DENIED", _pointer(path)))
     return findings
 
