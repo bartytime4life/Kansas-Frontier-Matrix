@@ -187,6 +187,10 @@ jobs:
               ),
               Path(
                   "tools/validators/domains/atmosphere/"
+                  "validate_air_observation.py"
+              ),
+              Path(
+                  "tools/validators/domains/atmosphere/"
                   "validate_prescribed_burn_quality_flag.py"
               ),
               Path(
