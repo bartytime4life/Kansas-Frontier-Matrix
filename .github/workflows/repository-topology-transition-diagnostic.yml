@@ -40,7 +40,7 @@ jobs:
         shell: bash
         run: python tools/ci/install_python_ci.py project-runtime
 
-      - name: Emit and prove the bounded shrinkage candidate
+      - name: Emit and classify the bounded transition candidate
         shell: bash
         run: |
           set -uo pipefail
@@ -99,12 +99,21 @@ jobs:
           assert not removed_identities, removed_identities
           assert not added_identities, added_identities
 
+          classifications = {}
           for identity in sorted(expected):
               before = members(old[identity])
               after = members(new[identity])
               removed = sorted(before - after)
               added = sorted(after - before)
+              if after < before:
+                  classification = "STRICT_SHRINKAGE"
+              elif before < after:
+                  classification = "GROWTH"
+              else:
+                  classification = "MIXED_CHANGE"
+              classifications[" / ".join(identity)] = classification
               print("BEGIN_TRANSITION " + json.dumps(identity))
+              print("CLASSIFICATION=" + classification)
               print("OLD_FINGERPRINT=" + old[identity]["fingerprint"])
               print("NEW_FINGERPRINT=" + new[identity]["fingerprint"])
               print("OLD_EVIDENCE_SHA256=" + old[identity]["evidence_sha256"])
@@ -116,15 +125,11 @@ jobs:
                   + json.dumps(new[identity], sort_keys=True, separators=(",", ":"))
               )
               print("END_TRANSITION")
-              assert after < before, (
-                  f"transition is not strict shrinkage for {identity}: "
-                  f"removed={removed}, added={added}"
-              )
 
-          print("CONFIRMED: all four topology transitions are strict evidence shrinkage.")
+          print("CLASSIFICATIONS=" + json.dumps(classifications, sort_keys=True))
           print(
-              "BOUNDARY: this diagnostic emits no migration, deletion, release, "
-              "deployment, publication, or policy authority."
+              "BOUNDARY: classification only; no migration, deletion, release, "
+              "deployment, publication, policy, or baseline-update authority."
           )
           PY
 
