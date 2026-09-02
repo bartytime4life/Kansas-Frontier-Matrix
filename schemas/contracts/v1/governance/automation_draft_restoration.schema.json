@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm.invalid/schemas/contracts/v1/governance/automation_draft_restoration.schema.json",
+  "title": "AutomationDraftRestoration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "incident_id",
+    "repository",
+    "control_issue",
+    "pr_number",
+    "expected_base_ref",
+    "expected_base_sha",
+    "expected_head_branch",
+    "expected_head_sha",
+    "ready_event_at",
+    "ready_actor",
+    "ready_performed_via_app",
+    "draft_only_marker",
+    "restore_to_draft",
+    "close_on_restore_failure",
+    "fallback",
+    "merge_allowed",
+    "release_allowed",
+    "deploy_allowed",
+    "publish_allowed",
+    "settings_change_allowed",
+    "reason"
+  ],
+  "properties": {
+    "profile": {"const": "kfm.automation.draft-restoration.v1"},
+    "incident_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._:-]{2,191}$"},
+    "repository": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9-]{0,38}/[A-Za-z0-9._-]{1,100}$"},
+    "control_issue": {"const": 4024},
+    "pr_number": {"type": "integer", "minimum": 1},
+    "expected_base_ref": {"const": "main"},
+    "expected_base_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "expected_head_branch": {
+      "type": "string",
+      "pattern": "^(automation|fix)/(?!\\.)(?!.*(?:/\\.|\\.\\.|//))[A-Za-z0-9][A-Za-z0-9._/-]{2,126}$"
+    },
+    "expected_head_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "ready_event_at": {"type": "string", "format": "date-time", "maxLength": 64},
+    "ready_actor": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9-]{0,38}$"},
+    "ready_performed_via_app": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,99}$"}
+      ]
+    },
+    "draft_only_marker": {"const": "<!-- KFM_AUTOMATION_DRAFT_ONLY -->"},
+    "restore_to_draft": {"const": true},
+    "close_on_restore_failure": {"const": true},
+    "fallback": {"const": "CLOSE_UNMERGED"},
+    "merge_allowed": {"const": false},
+    "release_allowed": {"const": false},
+    "deploy_allowed": {"const": false},
+    "publish_allowed": {"const": false},
+    "settings_change_allowed": {"const": false},
+    "reason": {"type": "string", "minLength": 1, "maxLength": 512}
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/governance/automation_draft_restoration.md",
+    "validator": "tools/validators/governance/validate_automation_draft_restoration.py",
+    "tests": "tests/validators/test_validate_automation_draft_restoration.py",
+    "workflow": ".github/workflows/automation-draft-pr-restorer.yml",
+    "status": "PROPOSED"
+  }
+}
