@@ -201,8 +201,9 @@ Rules:
 7. Every correction prior ref must be represented as `SUPERSEDED` negative history.
 8. A payload with correction history must not declare `trust_state.correction: NONE`; visible lineage and its trust label must agree.
 9. `ABSTAIN / STALE_EVIDENCE` must declare `trust_state.freshness: STALE`; contradictory current-freshness labels fail closed.
-10. Only terminal correction targets may be current answer support; every terminal target must appear in `evidence_refs`.
-11. Intermediate correction targets remain superseded history and never become simultaneous current support.
+10. `ABSTAIN / WITHDRAWN_EVIDENCE` and `ABSTAIN / REVOKED_EVIDENCE` must declare `trust_state.release: WITHDRAWN`; contradictory released labels fail closed.
+11. Only terminal correction targets may be current answer support; every terminal target must appear in `evidence_refs`.
+12. Intermediate correction targets remain superseded history and never become simultaneous current support.
 
 This is declaration validation only. The profile does not dereference a correction registry, authenticate a notice, prove timestamps, or establish that a public cache was invalidated.
 

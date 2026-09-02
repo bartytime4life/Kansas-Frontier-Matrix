@@ -291,6 +291,14 @@ def _semantic_findings(payload: Mapping[str, object]) -> list[Finding]:
                     "stale abstention requires STALE freshness",
                 )
             )
+        if reason in {"WITHDRAWN_EVIDENCE", "REVOKED_EVIDENCE"} and trust_map.get("release") != "WITHDRAWN":
+            findings.append(
+                Finding(
+                    "RELEASE_STATE_INVALID",
+                    "/trust_state/release",
+                    "withdrawn or revoked abstention requires WITHDRAWN release state",
+                )
+            )
         required_state = {
             "SUPERSEDED_EVIDENCE": "SUPERSEDED",
             "HELD_EVIDENCE": "HELD",

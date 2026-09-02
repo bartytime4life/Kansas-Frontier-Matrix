@@ -97,6 +97,29 @@ class EvidenceDrawerPayloadValidatorTests(unittest.TestCase):
             {item.code for item in findings},
         )
 
+    def test_terminal_abstention_cannot_claim_released_state(self) -> None:
+        source = json.loads(
+            (MODULE.FIXTURES_ROOT / "valid/abstain-revoked.json").read_text(encoding="utf-8")
+        )
+
+        for reason, state in (
+            ("WITHDRAWN_EVIDENCE", "WITHDRAWN"),
+            ("REVOKED_EVIDENCE", "REVOKED"),
+        ):
+            with self.subTest(reason=reason):
+                payload = json.loads(json.dumps(source))
+                payload["reason_code"] = reason
+                payload["history"]["negative_outcomes"][0]["state"] = state
+                payload["history"]["negative_outcomes"][0]["reason_code"] = reason
+                self.assertEqual([], MODULE._semantic_findings(payload))
+
+                payload["trust_state"]["release"] = "RELEASED"
+                findings = MODULE._semantic_findings(payload)
+                self.assertEqual(
+                    {"RELEASE_STATE_INVALID"},
+                    {item.code for item in findings},
+                )
+
     def test_negative_state_reason_must_match(self) -> None:
         findings = MODULE.validate_payload(
             MODULE.FIXTURES_ROOT / "invalid/negative-state-reason-mismatch.json"

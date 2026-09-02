@@ -454,10 +454,16 @@ function historyCombinationIsValid(
     return history.negativeOutcomes.some((item) => item.state === "HELD");
   }
   if (outcome === "ABSTAIN" && reasonCode === "WITHDRAWN_EVIDENCE") {
-    return history.negativeOutcomes.some((item) => item.state === "WITHDRAWN");
+    return (
+      trustState.release === "WITHDRAWN" &&
+      history.negativeOutcomes.some((item) => item.state === "WITHDRAWN")
+    );
   }
   if (outcome === "ABSTAIN" && reasonCode === "REVOKED_EVIDENCE") {
-    return history.negativeOutcomes.some((item) => item.state === "REVOKED");
+    return (
+      trustState.release === "WITHDRAWN" &&
+      history.negativeOutcomes.some((item) => item.state === "REVOKED")
+    );
   }
 
   return true;
