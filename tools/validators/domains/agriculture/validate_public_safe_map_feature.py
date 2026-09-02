@@ -119,8 +119,8 @@ PROTECTED_IDENTIFIER_PATTERN = re.compile(
     r")[a-z0-9][a-z0-9._/-]*\b"
 )
 PRIVATE_IDENTITY_LABEL_PATTERN = re.compile(
-    r"\b(?i:parcel|field|farm|operator|owner|well|permit|water[-_ ]?right)\s+"
-    r"[A-Z0-9][A-Za-z0-9.'’/-]*(?:\s+[A-Z0-9][A-Za-z0-9.'’/-]*)*\b"
+    r"\A(?i:\s*(?:parcel|field|farm|operator|owner|well|permit|water[-_ ]?right)\s+"
+    r"[a-z0-9][a-z0-9.'’/-]*(?:\s+[a-z0-9][a-z0-9.'’/-]*)*\s*)\Z"
 )
 LABELED_COORDINATE_PATTERN = re.compile(
     r"(?i)\b(?:lat(?:itude)?|lon(?:gitude)?)\s*[:=]\s*"
