@@ -26,7 +26,9 @@ file. The final descriptor is opened nonblocking before its regular-file check,
 so a FIFO or other nonregular input cannot stall validation while waiting for
 another process. An ordinary file used as a directory component remains a
 `FILE_NOT_FOUND` error; only a confirmed symlink receives
-`INPUT_SYMLINK_DENIED`.
+`INPUT_SYMLINK_DENIED`. The final descriptor is read with a byte limit as well
+as a pre-read size check, so growth after admission cannot bypass the bounded
+carrier limit.
 
 `PASS` proves local profile coherence only. It does not establish a current
 advisory, safe drinking water, source admission, evidence closure, policy or

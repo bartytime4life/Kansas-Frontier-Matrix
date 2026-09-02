@@ -430,6 +430,36 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
                 [("FILE_NOT_FOUND", "/")],
             )
 
+    def test_file_growth_after_fstat_remains_size_bounded(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "input.json"
+            path.write_bytes(b"{}")
+            original_fstat = os.fstat
+            grew = False
+
+            def growing_fstat(file_descriptor):
+                nonlocal grew
+                metadata = original_fstat(file_descriptor)
+                if not grew:
+                    with path.open("ab") as stream:
+                        stream.write(b" " * validator.MAX_FILE_BYTES)
+                    grew = True
+                return metadata
+
+            with mock.patch.object(
+                validator.os,
+                "fstat",
+                side_effect=growing_fstat,
+            ):
+                result = validator.validate_file(path)
+
+            self.assertTrue(grew)
+            self.assertEqual(result.outcome, "ERROR")
+            self.assertEqual(
+                [(finding.code, finding.path) for finding in result.findings],
+                [("FILE_TOO_LARGE", "/")],
+            )
+
     def test_validator_has_no_network_client_import(self) -> None:
         source = VALIDATOR_PATH.read_text(encoding="utf-8")
         forbidden = (

@@ -201,9 +201,12 @@ def _read_text_no_symlinks(path: Path) -> str:
                 raise FileNotFoundError(path)
             if file_stat.st_size > MAX_FILE_BYTES:
                 raise FileTooLargeError(path)
-            with os.fdopen(file_fd, "r", encoding="utf-8") as stream:
+            with os.fdopen(file_fd, "rb") as stream:
                 file_fd = -1
-                return stream.read()
+                content = stream.read(MAX_FILE_BYTES + 1)
+            if len(content) > MAX_FILE_BYTES:
+                raise FileTooLargeError(path)
+            return content.decode("utf-8")
         finally:
             if file_fd >= 0:
                 os.close(file_fd)
