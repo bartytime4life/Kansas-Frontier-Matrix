@@ -7,13 +7,18 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-PROFILE = "kfm.layer-registry-discovery-index-drift.v3"
+PROFILE = "kfm.layer-registry-discovery-index-drift.v4"
 SECTION_HEADER = "## Confirmed child lanes"
 ROW_RE = re.compile(r"^\|\s*\[`([^`]+/)`\]\(([^)]+)\)\s*\|")
 
 
 def _read_indexed_lanes(readme_path: Path) -> tuple[list[str], list[str]]:
     text = readme_path.read_text(encoding="utf-8")
+    marker_count = sum(
+        line.strip() == SECTION_HEADER for line in text.splitlines()
+    )
+    if marker_count > 1:
+        raise ValueError(f"duplicate section: {SECTION_HEADER}")
     start = text.find(SECTION_HEADER)
     if start < 0:
         raise ValueError(f"missing section: {SECTION_HEADER}")

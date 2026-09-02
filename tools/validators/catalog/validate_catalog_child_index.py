@@ -7,7 +7,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-PROFILE = "kfm.catalog-child-index-drift.v2"
+PROFILE = "kfm.catalog-child-index-drift.v3"
 SECTION_HEADER = "## Current bounded child-lane index"
 ROW_RE = re.compile(r"^\|\s*`([^`]+/)`\s*\|\s*(.*?)\s*\|\s*$")
 ALIAS_TARGET_RE = re.compile(
@@ -18,6 +18,11 @@ ALIAS_TARGET_RE = re.compile(
 
 def _read_index_rows(readme_path: Path) -> list[tuple[str, str]]:
     text = readme_path.read_text(encoding="utf-8")
+    marker_count = sum(
+        line.strip() == SECTION_HEADER for line in text.splitlines()
+    )
+    if marker_count > 1:
+        raise ValueError(f"duplicate section: {SECTION_HEADER}")
     start = text.find(SECTION_HEADER)
     if start < 0:
         raise ValueError(f"missing section: {SECTION_HEADER}")

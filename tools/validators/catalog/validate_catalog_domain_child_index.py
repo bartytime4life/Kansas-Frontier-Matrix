@@ -7,13 +7,18 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-PROFILE = "kfm.catalog-domain-child-index-drift.v1"
+PROFILE = "kfm.catalog-domain-child-index-drift.v2"
 SECTION_HEADER = "## Known child lanes"
 ROW_RE = re.compile(r"^\|\s*`([^`]+/)`\s*\|")
 
 
 def _read_indexed_lanes(readme_path: Path) -> list[str]:
     text = readme_path.read_text(encoding="utf-8")
+    marker_count = sum(
+        line.strip() == SECTION_HEADER for line in text.splitlines()
+    )
+    if marker_count > 1:
+        raise ValueError(f"duplicate section: {SECTION_HEADER}")
     start = text.find(SECTION_HEADER)
     if start < 0:
         raise ValueError(f"missing section: {SECTION_HEADER}")

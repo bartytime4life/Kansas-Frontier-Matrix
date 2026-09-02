@@ -111,6 +111,19 @@ class CatalogChildIndexDriftTests(unittest.TestCase):
             self.assertEqual(report["outcome"], "FAIL")
             self.assertEqual(report["duplicate_entries"], ["stac/"])
 
+    def test_duplicate_child_lane_section_is_error(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "catalog"
+            root.mkdir()
+            (root / "stac").mkdir()
+            duplicate = _readme(("stac/", "test posture")).replace(
+                "## Next section",
+                "## Current bounded child-lane index\n\n## Next section",
+            )
+            (root / "README.md").write_text(duplicate, encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "duplicate section"):
+                MODULE.validate_catalog_child_index(root)
+
     def test_missing_alias_target_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "catalog"
