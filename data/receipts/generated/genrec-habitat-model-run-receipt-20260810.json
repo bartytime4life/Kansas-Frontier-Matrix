@@ -16,7 +16,7 @@
     "docs/intake/exploratory/habitat-model-run-receipt-source-map.md": "sha256:6128a385928d422602f29bd08bdd2a0cc29c8eda0fdb08fa6d399a4678a99435",
     "fixtures/contracts/v1/domains/habitat/model_run_receipt/cases.json": "sha256:c85ff7f0b92e578d54ce260f66b1c7463b1bf492b1ac4f7760532e1951001b2e",
     "schemas/contracts/v1/domains/habitat/model_run_receipt.schema.json": "sha256:717e5e6bc6ecb8ba814fe0bc243eeff3cfac6aaed6565dcddab4b9b56b3e05b0",
-    "tests/validators/domains/habitat/test_validate_model_run_receipt.py": "sha256:98a9a6c4282b67c51a501458fb2ae69d5c5db4d6d42976ffd90cf0da9630c4e8",
+    "tests/validators/domains/habitat/test_validate_model_run_receipt.py": "sha256:2693b7111ece8c42d2d179a84c685b33167d70154f04e44911aca4efaef83ab7",
     "tools/validators/domains/habitat/validate_model_run_receipt.py": "sha256:217b4e6529efe6d5c06629e05998b5cdc1023d28047099c9424f68ca04d831c2"
   },
   "model_identity": {
@@ -68,7 +68,7 @@
     {
       "gate": "focused-model-run-receipt-suite",
       "outcome": "PASS",
-      "reason": "Thirteen tests, thirty-nine subtests, and twenty-four exact fixture cases passed, including sensitive-value-safe structured input-error mapping, deterministic failure-reason ordering, mixed-known-offset chronology, known-UTC acceptance, and unknown-local-offset denial at every governed timestamp field."
+      "reason": "Thirteen tests, forty subtests, and twenty-four exact fixture cases passed, including sensitive-value-safe structured input-error mapping with root-type separation, deterministic failure-reason ordering, mixed-known-offset chronology, known-UTC acceptance, and unknown-local-offset denial at every governed timestamp field."
     },
     {
       "gate": "completed-failed-source-role-and-non-authority-boundary",

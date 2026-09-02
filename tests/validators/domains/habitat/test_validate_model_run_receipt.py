@@ -190,7 +190,7 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
                         payload["findings"],
                     )
 
-    def test_cli_malformed_bytes_do_not_echo_candidate_content(self) -> None:
+    def test_cli_malformed_and_non_object_inputs_do_not_echo_candidate_content(self) -> None:
         sentinel = "do-not-echo-habitat-secret"
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -198,7 +198,13 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
             malformed.write_text(f'{{"secret":"{sentinel}"', encoding="utf-8")
             undecodable = root / "undecodable.json"
             undecodable.write_bytes(b"\xff\xfe" + sentinel.encode("ascii"))
-            for path in (malformed, undecodable):
+            non_object = root / "non-object.json"
+            non_object.write_text(f'["{sentinel}"]', encoding="utf-8")
+            for path, code in (
+                (malformed, "MODEL_RUN_JSON_INVALID"),
+                (undecodable, "MODEL_RUN_JSON_INVALID"),
+                (non_object, "MODEL_RUN_JSON_ROOT_INVALID"),
+            ):
                 with self.subTest(path=path.name):
                     completed = subprocess.run(
                         [sys.executable, str(Path(validator.__file__)), str(path)],
@@ -215,7 +221,7 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
                     self.assertEqual("NONE", payload["authority"])
                     self.assertEqual(path.name, payload["input"])
                     self.assertEqual(
-                        [{"code": "MODEL_RUN_JSON_INVALID", "path": "/"}],
+                        [{"code": code, "path": "/"}],
                         payload["findings"],
                     )
 
