@@ -199,6 +199,25 @@ class GeologyPublicSafeGeometryTests(unittest.TestCase):
                 self.assertEqual("", completed.stdout)
                 self.assertIn("unrecognized arguments", completed.stderr)
 
+    def test_option_terminator_allows_dash_prefixed_assessment_filename(self) -> None:
+        manifest = validator.load_fixtures()
+        hold = validator.materialize_case(manifest, manifest["cases"][0])
+        with tempfile.TemporaryDirectory() as raw:
+            path = Path(raw) / "--fixtures"
+            path.write_text(json.dumps(hold), encoding="utf-8")
+            completed = subprocess.run(
+                [sys.executable, str(Path(validator.__file__)), "--", path.name],
+                cwd=raw,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+        self.assertEqual(0, completed.returncode, completed.stderr)
+        payload = json.loads(completed.stdout)
+        self.assertEqual("HOLD", payload["outcome"])
+        self.assertNotIn("profile_id", payload)
+        self.assertNotIn("suite_match", payload)
+
     def test_duplicate_json_fails_without_echoing_candidate_value(self) -> None:
         sentinel = "EXACT_LOCATION_SENTINEL_THAT_MUST_NOT_ECHO"
         with tempfile.TemporaryDirectory() as raw:
