@@ -7,32 +7,60 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-PROFILE = "kfm.catalog-domain-compatibility-redirect.v5"
-SECTION_HEADER = "## Current bounded inventory"
+try:
+    from tools.validators.catalog._markdown_inventory import (
+        visible_line_spans as _visible_line_spans,
+    )
+except ModuleNotFoundError as exc:
+    if exc.name != "tools":
+        raise
+    from _markdown_inventory import visible_line_spans as _visible_line_spans
+
+PROFILE = "kfm.catalog-domain-compatibility-redirect.v7"
+SECTION_TITLE = "Current bounded inventory"
+SECTION_HEADER = f"## {SECTION_TITLE}"
+ATX_H2_RE = re.compile(r"^ {0,3}##(?:[ \t]+(?P<title>.*?)[ \t]*|[ \t]*)$")
+CLOSING_HASH_RE = re.compile(r"[ \t]+#+[ \t]*$")
 ROW_RE = re.compile(
     r"^-\s+\[`([^`]+/)`\]\(\./([^/]+)/README\.md\)\s*$"
 )
-CONFLICT_BOUNDARY_RE = re.compile(r"^(?:<{7}|>{7})(?: .*)?$")
+CONFLICT_BOUNDARY_RE = re.compile(r"^(?:<{7,}|>{7,})(?: .*)?$")
+
+
+def _h2_spans(text: str) -> list[tuple[int, int, str]]:
+    headings: list[tuple[int, int, str]] = []
+    for start, end, line in _visible_line_spans(text):
+        heading = ATX_H2_RE.match(line)
+        if heading is None:
+            continue
+        title = heading.group("title") or ""
+        title = CLOSING_HASH_RE.sub("", title).strip(" \t")
+        headings.append((start, end, title))
+    return headings
 
 
 def _read_redirect_rows(readme_path: Path) -> tuple[list[str], list[str]]:
     text = readme_path.read_text(encoding="utf-8")
-    marker_count = sum(
-        line.strip() == SECTION_HEADER for line in text.splitlines()
-    )
-    if marker_count == 0:
+    headings = _h2_spans(text)
+    section_matches = [heading for heading in headings if heading[2] == SECTION_TITLE]
+    if not section_matches:
         raise ValueError(f"missing section: {SECTION_HEADER}")
-    if marker_count > 1:
+    if len(section_matches) > 1:
         raise ValueError(f"duplicate section: {SECTION_HEADER}")
-    start = text.find(SECTION_HEADER)
-    section = text[start + len(SECTION_HEADER):]
-    next_h2 = section.find("\n## ")
-    if next_h2 >= 0:
-        section = section[:next_h2]
+    section_start = section_matches[0][1]
+    section_end = next(
+        (start for start, _, _ in headings if start > section_start),
+        len(text),
+    )
+    section_lines = [
+        line
+        for start, _, line in _visible_line_spans(text)
+        if section_start <= start < section_end
+    ]
 
     lanes: list[str] = []
     invalid_rows: list[str] = []
-    for line in section.splitlines():
+    for line in section_lines:
         stripped = line.strip()
         if not stripped.startswith("- ["):
             continue

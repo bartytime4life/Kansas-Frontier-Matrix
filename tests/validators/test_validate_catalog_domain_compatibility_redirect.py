@@ -146,6 +146,72 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "duplicate section"):
                 validate_catalog_domain_compatibility_redirect(compat, canonical)
 
+    def test_indented_closing_hash_inventory_section_is_parseable(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            compat, canonical = _write_layout(
+                Path(tmp), actual=["agriculture"], indexed=["agriculture"]
+            )
+            readme = compat / "README.md"
+            readme.write_text(
+                readme.read_text(encoding="utf-8").replace(
+                    "## Current bounded inventory",
+                    "   ## Current bounded inventory ##",
+                ),
+                encoding="utf-8",
+            )
+            report = validate_catalog_domain_compatibility_redirect(compat, canonical)
+            self.assertEqual("PASS", report["outcome"])
+
+    def test_indented_next_heading_bounds_inventory_section(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            compat, canonical = _write_layout(
+                Path(tmp), actual=["agriculture"], indexed=["agriculture"]
+            )
+            readme = compat / "README.md"
+            readme.write_text(
+                readme.read_text(encoding="utf-8")
+                + "\n   ## Example\n\n"
+                + "- [`agriculture/`](./agriculture/README.md)\n",
+                encoding="utf-8",
+            )
+            report = validate_catalog_domain_compatibility_redirect(compat, canonical)
+            self.assertEqual("PASS", report["outcome"])
+
+    def test_fenced_inventory_example_is_not_counted(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            compat, canonical = _write_layout(
+                Path(tmp), actual=["agriculture"], indexed=["agriculture"]
+            )
+            readme = compat / "README.md"
+            example = (
+                "```markdown\n"
+                "## Current bounded inventory\n"
+                "- [`example/`](./example/README.md)\n"
+                "```\n\n"
+            )
+            readme.write_text(
+                example + readme.read_text(encoding="utf-8"),
+                encoding="utf-8",
+            )
+            report = validate_catalog_domain_compatibility_redirect(compat, canonical)
+            self.assertEqual("PASS", report["outcome"])
+
+    def test_fenced_rows_inside_inventory_are_not_indexed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            compat, canonical = _write_layout(
+                Path(tmp), actual=["agriculture"], indexed=["agriculture"]
+            )
+            readme = compat / "README.md"
+            readme.write_text(
+                readme.read_text(encoding="utf-8")
+                + "\n```markdown\n"
+                + "- [`agriculture/`](./agriculture/README.md)\n"
+                + "```\n",
+                encoding="utf-8",
+            )
+            report = validate_catalog_domain_compatibility_redirect(compat, canonical)
+            self.assertEqual("PASS", report["outcome"])
+
     def test_missing_canonical_target_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             compat, canonical = _write_layout(
@@ -259,6 +325,37 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
             self.assertEqual("PASS", report["outcome"])
             self.assertEqual([], report["invalid_child_redirects"])
 
+    def test_wide_configured_conflict_markers_fail_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            boundary_width = 12
+            compat, canonical = _write_layout(
+                Path(tmp),
+                actual=["agriculture"],
+                indexed=["agriculture"],
+                readme_overrides={
+                    "agriculture": (
+                        f"{'<' * boundary_width} HEAD\n"
+                        "Canonical catalog: data/catalog/domain/agriculture/\n"
+                        f"{'=' * boundary_width}\n"
+                        "Canonical catalog: data/catalog/domain/agriculture/\n"
+                        f"{'>' * boundary_width} origin/main\n"
+                    )
+                },
+            )
+
+            report = validate_catalog_domain_compatibility_redirect(compat, canonical)
+
+            self.assertEqual("FAIL", report["outcome"])
+            self.assertEqual(
+                [
+                    {
+                        "lane": "agriculture/",
+                        "reason_codes": ["MERGE_CONFLICT_MARKER"],
+                    }
+                ],
+                report["invalid_child_redirect_details"],
+            )
+
     def test_child_redirect_reason_codes_are_stable_and_composable(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             compat, canonical = _write_layout(
@@ -314,7 +411,7 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
             self.assertEqual(outputs[0], outputs[1])
             report = json.loads(outputs[0])
             self.assertEqual(
-                "kfm.catalog-domain-compatibility-redirect.v5",
+                "kfm.catalog-domain-compatibility-redirect.v7",
                 report["profile"],
             )
 

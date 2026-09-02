@@ -133,6 +133,80 @@ class LayerRegistryDiscoveryIndexTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "missing section"):
             validate_layer_registry_discovery_index(root)
 
+    def test_closing_hash_section_is_parseable(self) -> None:
+        tempdir, root = self._fixture(("agriculture",), ("agriculture",))
+        self.addCleanup(tempdir.cleanup)
+        readme = _readme("agriculture").replace(
+            "## Confirmed child lanes",
+            "## Confirmed child lanes ##",
+        )
+        (root / "README.md").write_text(readme, encoding="utf-8")
+        report = validate_layer_registry_discovery_index(root)
+        self.assertEqual(report["outcome"], "PASS")
+
+    def test_duplicate_closing_hash_section_errors(self) -> None:
+        tempdir, root = self._fixture(("agriculture",), ("agriculture",))
+        self.addCleanup(tempdir.cleanup)
+        duplicate = _readme("agriculture").replace(
+            "## Layer registry boundary",
+            "## Confirmed child lanes ##\n\n## Layer registry boundary",
+        )
+        (root / "README.md").write_text(duplicate, encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "duplicate section"):
+            validate_layer_registry_discovery_index(root)
+
+    def test_indented_section_is_parseable(self) -> None:
+        tempdir, root = self._fixture(("agriculture",), ("agriculture",))
+        self.addCleanup(tempdir.cleanup)
+        readme = _readme("agriculture").replace(
+            "## Confirmed child lanes",
+            "   ## Confirmed child lanes",
+        )
+        (root / "README.md").write_text(readme, encoding="utf-8")
+        report = validate_layer_registry_discovery_index(root)
+        self.assertEqual(report["outcome"], "PASS")
+
+    def test_indented_next_heading_bounds_section(self) -> None:
+        tempdir, root = self._fixture(("agriculture",), ("agriculture",))
+        self.addCleanup(tempdir.cleanup)
+        readme = _readme("agriculture").replace(
+            "## Layer registry boundary",
+            "   ## Layer registry boundary\n\n"
+            "| [`outside/`](outside/README.md) | example only |",
+        )
+        (root / "README.md").write_text(readme, encoding="utf-8")
+        report = validate_layer_registry_discovery_index(root)
+        self.assertEqual(report["outcome"], "PASS")
+
+    def test_fenced_section_example_is_not_counted(self) -> None:
+        tempdir, root = self._fixture(("agriculture",), ("agriculture",))
+        self.addCleanup(tempdir.cleanup)
+        example = (
+            "```markdown\n"
+            "## Confirmed child lanes\n"
+            "| [`example/`](example/README.md) | example only |\n"
+            "```\n\n"
+        )
+        (root / "README.md").write_text(
+            example + _readme("agriculture"),
+            encoding="utf-8",
+        )
+        report = validate_layer_registry_discovery_index(root)
+        self.assertEqual(report["outcome"], "PASS")
+
+    def test_fenced_rows_inside_section_are_not_indexed(self) -> None:
+        tempdir, root = self._fixture(("agriculture",), ("agriculture",))
+        self.addCleanup(tempdir.cleanup)
+        readme = _readme("agriculture").replace(
+            "## Layer registry boundary",
+            "```markdown\n"
+            "| [`example/`](example/README.md) | example only |\n"
+            "```\n\n## Layer registry boundary",
+        )
+        (root / "README.md").write_text(readme, encoding="utf-8")
+        report = validate_layer_registry_discovery_index(root)
+        self.assertEqual(report["outcome"], "PASS")
+
     def test_cli_output_is_deterministic_json(self) -> None:
         tempdir, root = self._fixture(
             ("agriculture", "atmosphere"),
@@ -155,7 +229,7 @@ class LayerRegistryDiscoveryIndexTests(unittest.TestCase):
         self.assertEqual(first.stdout, second.stdout)
         parsed = json.loads(first.stdout)
         self.assertEqual(
-            "kfm.layer-registry-discovery-index-drift.v3", parsed["profile"]
+            "kfm.layer-registry-discovery-index-drift.v7", parsed["profile"]
         )
         self.assertEqual("PASS", parsed["outcome"])
 
