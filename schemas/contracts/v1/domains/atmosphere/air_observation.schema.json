@@ -10,7 +10,7 @@
     "contract_doc": "contracts/domains/atmosphere/AirObservation.md",
     "profile_doc": "docs/domains/atmosphere/OBSERVED_MODELED_SEPARATION.md",
     "fixtures_root": "fixtures/domains/atmosphere/observed_modeled_separation/",
-    "validator": "tools/validators/domains/atmosphere/validate_observed_modeled_separation.py",
+    "validator": "tools/validators/domains/atmosphere/validate_air_observation.py",
     "not_for_life_safety": true
   },
   "$defs": {
