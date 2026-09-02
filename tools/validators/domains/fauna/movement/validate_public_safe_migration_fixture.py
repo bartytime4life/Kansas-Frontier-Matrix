@@ -24,6 +24,7 @@ MANIFEST_PATH = FIXTURE_ROOT / "expected_findings_manifest.json"
 SCOPE = "fauna-public-safe-migration-fixture-v1"
 MAX_POSITIONS = 4096
 MAX_EVIDENCE_REFS = 64
+MAX_INPUT_BYTES = 1_048_576
 
 TOP_LEVEL_KEYS = frozenset(
     {
@@ -323,7 +324,14 @@ def _fixture_case_path(value: str) -> Path | None:
 
 def validate_file(path: Path | str) -> ValidationResult:
     try:
-        candidate = _load_json_text(Path(path).read_text(encoding="utf-8"))
+        candidate_path = Path(path)
+        if (
+            candidate_path.is_symlink()
+            or not candidate_path.is_file()
+            or candidate_path.stat().st_size > MAX_INPUT_BYTES
+        ):
+            raise ValueError("candidate must be a bounded regular file")
+        candidate = _load_json_text(candidate_path.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, ValueError, RecursionError):
         return ValidationResult((Finding("schema.input_invalid", "/"),))
     return validate_candidate(candidate)

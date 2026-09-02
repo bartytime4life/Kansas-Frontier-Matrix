@@ -18,6 +18,7 @@ from tools.validators.domains.fauna.movement import (
 )
 from tools.validators.domains.fauna.movement.validate_public_safe_migration_fixture import (
     FIXTURE_ROOT,
+    MAX_INPUT_BYTES,
     Finding,
     main,
     validate_candidate,
@@ -70,6 +71,31 @@ class PublicSafeMigrationFixtureTests(unittest.TestCase):
                         validate_file(path).findings,
                         (Finding("schema.input_invalid", "/"),),
                     )
+
+    def test_symlinked_and_oversized_inputs_fail_before_read(self):
+        with TemporaryDirectory() as temp_dir:
+            temp_root = Path(temp_dir)
+            target = temp_root / "target.json"
+            target.write_text(VALID.read_text(encoding="utf-8"), encoding="utf-8")
+            symlink = temp_root / "symlink.json"
+            symlink.symlink_to(target)
+            self.assertEqual(
+                validate_file(symlink).findings,
+                (Finding("schema.input_invalid", "/"),),
+            )
+
+            oversized = temp_root / "oversized.json"
+            oversized.write_bytes(b" " * (MAX_INPUT_BYTES + 1))
+            with patch.object(
+                Path,
+                "read_text",
+                side_effect=AssertionError("oversized candidate was read"),
+            ) as candidate_reader:
+                self.assertEqual(
+                    validate_file(oversized).findings,
+                    (Finding("schema.input_invalid", "/"),),
+                )
+            candidate_reader.assert_not_called()
 
     def test_manifest_path_escape_fails_before_candidate_read(self):
         with TemporaryDirectory() as temp_dir:
