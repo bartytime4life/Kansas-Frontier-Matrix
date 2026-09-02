@@ -404,6 +404,26 @@ def validate_fixture_manifest(path: Path = FIXTURE_PATH) -> list[dict[str, objec
             "findings": ["FIXTURE_MANIFEST_INVALID"],
             "ok": False,
         }]
+    case_names = [case.get("name") for case in cases]
+    if (
+        len(case_names) != len(set(case_names))
+        or any(
+            not isinstance(case.get("name"), str)
+            or not case["name"]
+            or not isinstance(case.get("base"), str)
+            or case["base"] not in bases
+            or case.get("expected_outcome") not in {"PASS", "ABSTAIN", "DENY", "ERROR"}
+            or not isinstance(case.get("expected_findings"), list)
+            or not all(isinstance(code, str) for code in case["expected_findings"])
+            for case in cases
+        )
+    ):
+        return [{
+            "name": "fixture_manifest",
+            "outcome": "ERROR",
+            "findings": ["FIXTURE_CASE_INVALID"],
+            "ok": False,
+        }]
     results: list[dict[str, object]] = []
     for case in cases:
         result = validate_candidate(materialize_fixture_case(manifest, case))
