@@ -2,16 +2,19 @@
 doc_id: kfm://doc/intake/exploratory/know-the-universe-pattern-review
 title: Know the Universe interaction and trust-disclosure source map
 type: exploratory-intake-source-map
-version: v1.0.0
-status: triaged; implementation-mapped; non-authoritative; non-publisher
+version: v1.0.1
+status: triaged; corrective-reconciliation; non-authoritative; non-publisher
 owners: OWNER_TBD - Explorer UI steward; MapLibre steward; evidence steward; accessibility steward
 created: 2026-09-02
 updated: 2026-09-02
 policy_label: public
 owning_root: docs/
 responsibility: reconcile public Know the Universe interaction patterns with current KFM Explorer authorities and one bounded fixture-first implementation
-truth_posture: CONFIRMED source-review observations and repository overlap / PROPOSED KFM adaptation / UNKNOWN exact private source tree, reusable license, and production architecture
-repository_snapshot: main@4f41d9aa6123ea38207f21cd74dd1d704fef48f4
+truth_posture: CONFIRMED source-review observations and repository evidence / PROPOSED KFM adaptation / UNKNOWN exact private source tree, reusable license, and production architecture
+source_review_snapshot: main@4f41d9aa6123ea38207f21cd74dd1d704fef48f4
+repository_snapshot: main@596f105e7dfd3e6963e04ed076b3ebb7f68c78fc
+implementation_origin: PR #4225; merge commit 596f105e7dfd3e6963e04ed076b3ebb7f68c78fc
+correction_status: corrective draft; exact-head hosted validation pending
 source_url: https://knowtheuniverse.com/?sel=13094770-2323017
 related:
   - ./README.md
@@ -35,33 +38,57 @@ No public source repository, source map, package manifest, production test suite
 
 ## Current repository reconciliation
 
-At inspected `main@4f41d9aa6123ea38207f21cd74dd1d704fef48f4`:
+The original source review inspected `main@4f41d9aa6123ea38207f21cd74dd1d704fef48f4`. PR #4225 later introduced the bounded Explorer interaction slice and was merged as `main@596f105e7dfd3e6963e04ed076b3ebb7f68c78fc`.
 
-- `apps/explorer-web/src/features/evidence_drawer/index.tsx` already resolves a closed public-safe projection into finite `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` states;
-- the projection already carries `source_role`, including `derived`, but the supported drawer previously rendered that role only as one trust-list entry;
-- `MapRuntimePort` already owns renderer-neutral camera and feature-selection values and should not be expanded for an unproved traversal prototype;
-- `workspace-context.ts` already owns strict public-safe camera, selection, time, compare, and story deep-link state, so no second URL grammar is justified;
-- StoryManifest, the fixture-first Story Player, the time banner, and the click-to-Evidence-Drawer bridge already exist; and
-- no canonical crosshair-selection or continuous-traverse implementation was established in the bounded search.
+At the current repository snapshot:
 
-The smallest dependency-closed gap is to make derived representation status prominent, then add app-local renderer-neutral primitives for later integration without acquiring a renderer or changing shared contracts.
+- `apps/explorer-web/src/features/evidence_drawer/index.tsx` resolves a closed public-safe projection into finite `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` states;
+- the projection carries `source_role`, including `derived`, and the supported drawer now exposes a prominent derived-representation disclosure;
+- `MapRuntimePort` remains the renderer-neutral camera and feature-selection boundary and was not expanded by this slice;
+- `workspace-context.ts` remains the strict public-safe camera, selection, time, compare, and story deep-link authority;
+- StoryManifest, the fixture-first Story Player, the time banner, and the click-to-Evidence-Drawer bridge remain the integration surfaces; and
+- PR #4225 added app-local exploration-mode, view-context, crosshair-candidate, and synthetic point-cloud benchmark modules without acquiring a renderer or activating a live source.
 
 ## Implemented boundary
 
-This source map accompanies one bounded fixture-first implementation:
+The bounded fixture-first implementation consists of:
 
-1. **Derived-representation disclosure.** A supported Evidence Drawer result whose trusted source role is `derived` receives a prominent semantic note: “Computed from upstream evidence; not a source-observed relationship or event.” Negative outcomes never receive the disclosure and continue to use fixed no-leak copy.
-2. **Explicit exploration modes.** An app-local controller models `ORIENT`, `INSPECT`, `TRAVERSE`, and `STORY`, bounded traversal speed, discoverable conflict-safe shortcuts, reduced-motion fallback, persistent Escape state, and interruption on drawer, route, visibity, or runtime-error events. It does not request pointer lock or change `MapRuntimePort`.
-3. **What-you-are-seeing projection.** A closed public-safe view context composes place, time, mode, visible-layer count, representation role, release, freshness, and correction into a finite strip view model. It does not infer state from pixels or renderer properties.
+1. **Derived-representation disclosure.** A supported Evidence Drawer result whose trusted source role is `derived` receives a prominent semantic note: “Computed from upstream evidence; not a source-observed relationship or event.” Negative outcomes retain fixed no-leak copy.
+2. **Explicit exploration modes.** An app-local controller models `ORIENT`, `INSPECT`, `TRAVERSE`, and `STORY`, bounded traversal speed, discoverable conflict-safe shortcuts, reduced-motion fallback, persistent Escape state, and interruption on drawer, route, visibility, or runtime-error events. It does not request pointer lock or change `MapRuntimePort`.
+3. **What-you-are-seeing projection.** A closed public-safe view context composes place, time, mode, visible-layer count, representation role, release state, freshness, and correction state into a finite strip view model. It does not infer state from pixels or renderer properties.
 4. **Crosshair candidate handoff.** A strict public-visible candidate becomes the existing map-selection wire shape. Zero candidates abstain, multiple candidates require explicit disambiguation, and malformed, hidden, private, duplicate, or expanded payloads fail closed.
-5. **Synthetic high-density benchmark contract.** A deterministic 50,000 / 250,000 / 1,000,000-point plan, streaming sample generator, and finite result evaluator define performance and safety gates without allocating a million-point fixture, executing GAU work, admitting a source, or adding a renderer dependency.
+5. **Synthetic high-density benchmark contract.** A deterministic 50,000 / 250,000 / 1,000,000-point plan, streaming sample generator, and finite result evaluator define performance and safety gates without allocating a million-point fixture, executing GPU work, admitting a source, or adding a renderer dependency.
+
+## Corrective reconciliation after PR #4225
+
+The merged exact-head checks did **not** establish a valid implementation handoff. Current GitHub evidence identifies the following bounded defects:
+
+- `point-cloud-benchmark.ts` contained a non-UTF-8 binary suffix and an extra closing parenthesis in seed validation;
+- `exploration-mode.ts` called an undefined `buttton` identifier and contained a public-runtime guard trigger in commentary;
+- `crosshair-selection.ts` called the nonexistent `replaceChildrer` method;
+- the Evidence Drawer workflow continued to validate a historical receipt against current bytes after the Evidence Drawer implementation changed; and
+- this source map described authoring checks without recording the exact hosted failures that followed the merge.
+
+The failed exact-head workflow runs for the PR #4225 head were:
+
+| Workflow | Run | Failed step |
+|---|---:|---|
+| `validator-suite` | `33664974091` | Run repository topology ratchet |
+| `maplibre-acquisition-inventory` | `33664974188` | Run scanner tests and controlled-remote remediation rehearsal |
+| `evidence-drawer-payload` | `33664974212` | Validate evidence-drawer production artifact digests |
+| `MapLibre Perf Governance` | `33664973768` | Validate runtime and policy implementation |
+| `policy-boundary-guards` | `33664973893` | Run policy boundary guards |
+| `ui-build` | `33664973915` | Run Explorer tests |
+
+The policy-boundary JUnit artifact specifically confirmed the non-UTF-8 point-cloud file and the forbidden path-shaped literal. The remaining failed steps are treated as exact-head evidence to re-run after the corrective branch is complete; their root causes are not broadened beyond currently verified evidence.
 
 ## Directory Rules basis
 
 - App-local interaction, rendering controls, and view-model code remain under `apps/explorer-web/src/features/`.
 - Explorer tests remain under `apps/explorer-web/tests/`.
 - External idea reconciliation remains under `docs/intake/exploratory/`.
-- Existing evidence, contract, schema, policy, receipt, release, StoryManifest, workspace-context, and MapRuntimePort authorities are referenced rather than copied or redefined.
+- Generated authoring receipts remain under the established `data/receipts/generated/` lifecycle responsibility.
+- Existing evidence, contract, schema, policy, release, StoryManifest, workspace-context, and MapRuntimePort authorities are referenced rather than copied or redefined.
 - No compatibility root, schema home, policy home, source registry, release home, or public data path is added.
 
 ## Trust and accessibility invariants
@@ -69,7 +96,7 @@ This source map accompanies one bounded fixture-first implementation:
 - A renderer candidate scopes a governed request; it is not evidence.
 - Derived, modeled, classified, interpolated, clustered, or nearest-neighbour graphics must not be presented as observed relationships or events.
 - `Esc` remains an explicit exit from traversal-like state.
-- Single-key shortcuts do not activate in text-entry contexts or with browser/system modifiers.
+- Single-key shortcuts do not activate in text-entry contexts or with browser or system modifiers.
 - Reduced-motion preference prevents traversal activation.
 - Multiple crosshair hits are never silently resolved by array order.
 - Public-safe context rejects private and unknown fields.
@@ -77,6 +104,7 @@ This source map accompanies one bounded fixture-first implementation:
 - Existing 2D, Evidence Drawer, correction, and rollback paths remain the inspectable baseline.
 
 ## Deferred integration
+
 The following remain intentionally held behind existing runtime, source, rights, accessibility, and performance gates:
 
 - actual pointer lock or first-person camera motion;
@@ -92,7 +120,7 @@ Future integration should reuse the current StoryManifest, `kfm-context`, MapRun
 
 ## Validation and rollback
 
-Changed-area validation is:
+The corrective branch must run, at its exact head:
 
 ```bash
 pnpm --dir apps/explorer-web test:unit
@@ -100,6 +128,8 @@ pnpm --dir apps/explorer-web build
 git diff --check
 ```
 
-The authoring environment additionally performed strict TypeScript no-emit checking of the changed production modules and a Node runtime assertion pass over the app-local controller, context, crosshair, and benchmark functions. Repository-native Vitest, Vite, Playwright, topology, governance, and accessibility results remain exact-head hosted checks until reported by CI.
+It must also re-run the repository-native topology, policy-boundary, MapLibre acquisition, performance-governance, Evidence Drawer receipt-integrity, schema, policy, and baseline checks that cover the changed paths.
 
-Rollback is a focused revert of this additive source map, the app-local modules/tests, and the Evidence Drawer view-model/DOM change. No source, lifecycle data, evidence membership, policy decision, review, release, deployment, publication, or repository setting is changed.
+**No hosted check is represented as passing in this document until exact-head workflow evidence exists.** Local reconstruction and hash calculations establish only candidate source integrity and receipt preparation.
+
+Rollback is a focused revert of the corrective branch. The historical PR #4225 receipts remain immutable lineage records; successor receipts identify the corrected current bytes. No source, lifecycle data, evidence membership, policy decision, human review, release, deployment, publication, or repository setting is changed.
