@@ -83,7 +83,7 @@ class AirObservationValidatorEntrypointTests(unittest.TestCase):
                 metadata_path = Path(metadata_value)
                 self.assertFalse(metadata_path.is_absolute())
                 self.assertNotIn("..", metadata_path.parts)
-                self.assertNotIn("\\\\", metadata_value)
+                self.assertNotIn("\\", metadata_value)
                 normalized_value = metadata_path.as_posix()
                 if metadata_value.endswith("/"):
                     normalized_value += "/"
