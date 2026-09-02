@@ -23,6 +23,7 @@ LOCKFILE = REPO_ROOT / "tools/ci/python-cli.lock"
 LOCAL_PACKAGE = REPO_ROOT / "packages/kfm-cli"
 LOCAL_SPEC = "./packages/kfm-cli"
 LOCK_LIMIT_BYTES = 262_144
+MAX_REQUIREMENTS = 128
 MAX_HASHES_PER_REQUIREMENT = 32
 INSTALL_TIMEOUT_SECONDS = 300
 UNSAFE_PYTHON_ENVIRONMENT = {"PYTHONHOME", "PYTHONPATH", "PYTHONUSERBASE"}
@@ -89,6 +90,10 @@ def validate_lockfile(path: Path = LOCKFILE) -> None:
         raise CliInstallConfigurationError("CLI_LOCKFILE_DIRECTIVE_UNSAFE")
     requirements = [line for line in lock_lines if not line[0].isspace()]
     hashes = [line for line in lock_lines if "--hash=" in line]
+    if len(requirements) > MAX_REQUIREMENTS:
+        raise CliInstallConfigurationError(
+            "CLI_LOCKFILE_REQUIREMENT_LIMIT_EXCEEDED"
+        )
     hash_coverage: list[int] = []
     hash_groups: list[list[str]] = []
     for line in lock_lines:

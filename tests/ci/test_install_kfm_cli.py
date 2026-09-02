@@ -135,6 +135,21 @@ class InstallKfmCliTests(unittest.TestCase):
             ):
                 module.validate_lockfile(path)
 
+    def test_lock_validation_bounds_requirement_count(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "excessive-requirements.lock"
+            requirements = "".join(
+                f"demo{index}==1.0 \\\n"
+                f"    --hash=sha256:{index:064x}\n"
+                for index in range(module.MAX_REQUIREMENTS + 1)
+            )
+            path.write_text(requirements, encoding="utf-8")
+            with self.assertRaisesRegex(
+                module.CliInstallConfigurationError,
+                "^CLI_LOCKFILE_REQUIREMENT_LIMIT_EXCEEDED$",
+            ):
+                module.validate_lockfile(path)
+
     def test_lock_validation_binds_hash_continuations(self) -> None:
         cases = {
             "missing-intermediate": (
