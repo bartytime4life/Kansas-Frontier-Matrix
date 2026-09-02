@@ -44,6 +44,8 @@ GIT_REPOSITORY_CONTEXT_VARIABLES = (
     "GIT_WORK_TREE",
 )
 
+GIT_INVENTORY_TIMEOUT_SECONDS = 10
+
 
 def repository_git_environment() -> dict[str, str]:
     environment = os.environ.copy()
@@ -53,14 +55,22 @@ def repository_git_environment() -> dict[str, str]:
 
 
 def tracked_markdown_paths(repo_root: Path = REPO_ROOT) -> tuple[Path, ...]:
-    result = subprocess.run(
-        ["git", "ls-files", "--stage", "-z", "--", "*.md"],
-        cwd=repo_root,
-        capture_output=True,
-        text=True,
-        check=False,
-        env=repository_git_environment(),
-    )
+    command = ["git", "ls-files", "--stage", "-z", "--", "*.md"]
+    try:
+        result = subprocess.run(
+            command,
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=repository_git_environment(),
+            timeout=GIT_INVENTORY_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as error:
+        raise AssertionError(
+            "timed out enumerating repository-owned Markdown after "
+            f"{GIT_INVENTORY_TIMEOUT_SECONDS} seconds"
+        ) from error
     if result.returncode != 0:
         raise AssertionError(
             "could not enumerate repository-owned Markdown: "
@@ -535,6 +545,22 @@ class RollbackCardValidatorTests(unittest.TestCase):
                     (owned_guidance,),
                     tracked_markdown_paths(repo_root),
                 )
+
+    def test_guidance_inventory_timeout_fails_closed(self) -> None:
+        with patch.object(
+            subprocess,
+            "run",
+            side_effect=subprocess.TimeoutExpired(
+                cmd=["git", "ls-files"],
+                timeout=GIT_INVENTORY_TIMEOUT_SECONDS,
+            ),
+        ):
+            with self.assertRaisesRegex(
+                AssertionError,
+                r"timed out enumerating repository-owned Markdown after "
+                r"10 seconds",
+            ):
+                tracked_markdown_paths()
 
     def test_workflow_runs_for_repository_markdown_changes(self) -> None:
         workflow = (
