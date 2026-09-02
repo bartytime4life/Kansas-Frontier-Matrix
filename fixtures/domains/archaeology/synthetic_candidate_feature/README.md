@@ -40,6 +40,8 @@ burial, sacred-place, collection-security, or culturally restricted data.
   directly to digits, such as `lat39`, cannot evade the protected-path rule.
 - `misbound_reference_family_deny.json` proves that a syntactically valid
   source reference cannot satisfy an EvidenceRef/EvidenceBundle binding.
+- `empty_reference_identity_deny.json` proves that a bare evidence family path
+  cannot masquerade as a concrete EvidenceRef or EvidenceBundle identity.
 - `non_string_reference_deny.json` proves that malformed structured reference
   values return a finite denial rather than crashing validation.
 - `unbound_catalog_candidate_deny.json` proves that a candidate cannot claim

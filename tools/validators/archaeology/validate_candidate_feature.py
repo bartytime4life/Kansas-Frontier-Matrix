@@ -124,12 +124,31 @@ KFM_REFERENCE_PATTERN = re.compile(
     r"[Nn][Oo][Rr][Tt][Hh][Ii][Nn][Gg]|[Uu][Tt][Mm]|[Mm][Gg][Rr][Ss])"
     r"(?:$|[0-9]|[/._~-]))kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
 )
+OPAQUE_ID_PATH_PATTERN = (
+    r"[A-Za-z0-9][A-Za-z0-9._~-]*(?:/[A-Za-z0-9][A-Za-z0-9._~-]*)*"
+)
 REFERENCE_FAMILY_PATTERNS = {
-    "source_refs": re.compile(r"^kfm://(?:source|source-descriptor|source-record)/"),
-    "evidence_refs": re.compile(r"^kfm://(?:evidence|evidence-ref|evidence-bundle)/"),
-    "observation_refs": re.compile(r"^kfm://observation/"),
-    "correction_refs": re.compile(r"^kfm://(?:correction|correction-notice|rollback)/"),
-    "candidate_geometry_ref": re.compile(r"^kfm://geometry/"),
+    "source_refs": re.compile(
+        r"^kfm://(?:source|source-descriptor|source-record)/"
+        + OPAQUE_ID_PATH_PATTERN
+        + r"$"
+    ),
+    "evidence_refs": re.compile(
+        r"^kfm://(?:evidence|evidence-ref|evidence-bundle)/"
+        + OPAQUE_ID_PATH_PATTERN
+        + r"$"
+    ),
+    "observation_refs": re.compile(
+        r"^kfm://observation/" + OPAQUE_ID_PATH_PATTERN + r"$"
+    ),
+    "correction_refs": re.compile(
+        r"^kfm://(?:correction|correction-notice|rollback)/"
+        + OPAQUE_ID_PATH_PATTERN
+        + r"$"
+    ),
+    "candidate_geometry_ref": re.compile(
+        r"^kfm://geometry/" + OPAQUE_ID_PATH_PATTERN + r"$"
+    ),
 }
 SPEC_HASH_PATTERN = re.compile(r"^sha256:[a-f0-9]{64}$")
 CONFIDENCE_STATEMENT_MAX_LENGTH = 1000
@@ -177,9 +196,10 @@ def _validate_refs(value: Any, field: str, *, required: bool = False) -> list[st
                 "fragment, or protected locator material"
             )
             continue
-        if REFERENCE_FAMILY_PATTERNS[field].match(ref) is None:
+        if REFERENCE_FAMILY_PATTERNS[field].fullmatch(ref) is None:
             errors.append(
-                f"{field} entries must use the allowed governed reference family"
+                f"{field} entries must use the allowed governed reference family "
+                "with a non-empty opaque identity"
             )
     return errors
 
@@ -284,12 +304,15 @@ def validate_candidate_feature(payload: Any) -> list[str]:
         )
     elif (
         "candidate_geometry_ref" in payload
-        and REFERENCE_FAMILY_PATTERNS["candidate_geometry_ref"].match(
+        and REFERENCE_FAMILY_PATTERNS["candidate_geometry_ref"].fullmatch(
             geometry_ref
         )
         is None
     ):
-        errors.append("candidate_geometry_ref must use the kfm://geometry/ family")
+        errors.append(
+            "candidate_geometry_ref must use the kfm://geometry/ family with a "
+            "non-empty opaque identity"
+        )
     if "candidate_geometry_ref" in payload and spatial_precision_class is None:
         errors.append(
             "spatial_precision_class is required with candidate_geometry_ref"
@@ -327,6 +350,7 @@ def validate_fixture_suite() -> int:
         FIXTURE_ROOT / "path_locator_reference_deny.json": "protected locator material",
         FIXTURE_ROOT / "compact_locator_reference_deny.json": "protected locator material",
         FIXTURE_ROOT / "misbound_reference_family_deny.json": "allowed governed reference family",
+        FIXTURE_ROOT / "empty_reference_identity_deny.json": "non-empty opaque identity",
         FIXTURE_ROOT / "unbound_catalog_candidate_deny.json": "evidence_refs are required",
         FIXTURE_ROOT / "superseded_without_correction_deny.json": "correction_refs are required",
         FIXTURE_ROOT / "malformed_candidate_id_deny.json": "candidate_feature_id must match",

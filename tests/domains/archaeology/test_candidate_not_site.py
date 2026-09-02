@@ -255,9 +255,37 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
     def test_misbound_reference_family_fixture_fails_closed(self) -> None:
         payload = _load(FIXTURE_ROOT / "misbound_reference_family_deny.json")
         self.assertIn(
-            "evidence_refs entries must use the allowed governed reference family",
+            "evidence_refs entries must use the allowed governed reference family "
+            "with a non-empty opaque identity",
             validate_candidate_feature(payload),
         )
+
+    def test_empty_reference_identity_fixture_fails_closed(self) -> None:
+        payload = _load(FIXTURE_ROOT / "empty_reference_identity_deny.json")
+        self.assertIn(
+            "evidence_refs entries must use the allowed governed reference family "
+            "with a non-empty opaque identity",
+            validate_candidate_feature(payload),
+        )
+
+    def test_reference_fields_require_nonempty_segmented_identity(self) -> None:
+        cases = {
+            "source_refs": ["kfm://source/"],
+            "evidence_refs": ["kfm://evidence/synthetic/"],
+            "observation_refs": ["kfm://observation/synthetic//identity"],
+            "correction_refs": ["kfm://correction//identity"],
+            "candidate_geometry_ref": "kfm://geometry/",
+        }
+        for field, value in cases.items():
+            with self.subTest(field=field):
+                payload = copy.deepcopy(self.valid)
+                payload[field] = value
+                self.assertTrue(
+                    any(
+                        "non-empty opaque identity" in error
+                        for error in validate_candidate_feature(payload)
+                    )
+                )
 
     def test_reference_fields_reject_cross_family_bindings(self) -> None:
         cases = {
