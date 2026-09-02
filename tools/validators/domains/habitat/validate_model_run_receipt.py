@@ -349,7 +349,7 @@ def _run_fixtures() -> int:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
     parser.add_argument("path", nargs="?", type=Path)
     parser.add_argument("--fixtures", action="store_true")
     args = parser.parse_args(argv)

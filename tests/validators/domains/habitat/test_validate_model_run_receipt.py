@@ -116,6 +116,21 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
         self.assertEqual(2, completed.returncode)
         self.assertIn('"outcome":"ERROR"', completed.stdout)
 
+    def test_cli_rejects_abbreviated_fixture_flags(self) -> None:
+        for length in range(3, len("--fixtures")):
+            abbreviation = "--fixtures"[:length]
+            with self.subTest(abbreviation=abbreviation):
+                completed = subprocess.run(
+                    [sys.executable, str(Path(validator.__file__)), abbreviation],
+                    cwd=ROOT,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
+                self.assertEqual(2, completed.returncode)
+                self.assertEqual("", completed.stdout)
+                self.assertIn("unrecognized arguments", completed.stderr)
+
     def test_duplicate_nonfinite_symlink_and_oversize_are_errors(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
