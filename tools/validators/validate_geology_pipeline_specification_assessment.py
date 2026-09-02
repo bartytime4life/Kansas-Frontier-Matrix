@@ -411,7 +411,8 @@ def validate_fixture_manifest(path: Path = FIXTURE_PATH) -> list[dict[str, objec
         or any(
             not isinstance(case.get("base"), str)
             or case["base"] not in bases
-            or case.get("expected_outcome") not in {"PASS", "ABSTAIN", "DENY", "ERROR"}
+            or not isinstance(case.get("expected_outcome"), str)
+            or case["expected_outcome"] not in {"PASS", "ABSTAIN", "DENY", "ERROR"}
             or not isinstance(case.get("expected_findings"), list)
             or not all(isinstance(code, str) for code in case["expected_findings"])
             for case in cases
