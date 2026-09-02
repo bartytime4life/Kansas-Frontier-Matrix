@@ -29,3 +29,17 @@ def test_fixture_polarity_is_executable_and_fail_closed():
 def test_no_input_fails_closed():
     module = _load_module()
     assert module.main([]) == 2
+
+
+def test_fixture_mode_rejects_explicit_candidates(capsys):
+    module = _load_module()
+    candidate = (
+        module.FIXTURES / "valid" / "public_safe_historical_aggregate.json"
+    )
+    assert candidate.is_file()
+
+    assert module.main(["--fixtures", str(candidate)]) == 2
+    assert (
+        "Cannot combine --fixtures with explicit DomainLayerDescriptor files"
+        in capsys.readouterr().err
+    )

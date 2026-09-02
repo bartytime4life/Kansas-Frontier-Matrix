@@ -24,7 +24,13 @@ def main(argv: list[str] | None = None) -> int:
     authorize rendering, release, publication, source admission, identity,
     kinship, DNA, residence, title, parcel, consent, or policy decisions.
     """
-    args = sys.argv[1:] if argv is None else argv
+    args = list(sys.argv[1:] if argv is None else argv)
+    if "--fixtures" in args and len(args) != 1:
+        print(
+            "Cannot combine --fixtures with explicit DomainLayerDescriptor files",
+            file=sys.stderr,
+        )
+        return 2
     return run(SCHEMA, FIXTURES, args)
 
 
