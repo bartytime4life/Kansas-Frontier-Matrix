@@ -67,7 +67,7 @@ jobs:
               "test_repository_validator_default_mode_matches_baseline",
           }
           observed_failures = {
-              line.split(" ", 1)[0]
+              line.removeprefix("FAIL: ").split(" ", 1)[0]
               for line in log.splitlines()
               if line.startswith("FAIL: test_")
           }
