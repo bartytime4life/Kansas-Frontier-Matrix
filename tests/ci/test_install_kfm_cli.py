@@ -27,6 +27,8 @@ class InstallKfmCliTests(unittest.TestCase):
     def test_commands_use_hash_lock_and_fixed_local_package(self) -> None:
         dependency, local = module.build_commands(executable="python")
         self.assertEqual("python", dependency[0])
+        self.assertEqual("-P", dependency[1])
+        self.assertEqual("-P", local[1])
         self.assertIn("--require-hashes", dependency)
         self.assertEqual(str(module.LOCKFILE), dependency[-1])
         self.assertIn("--no-deps", local)
@@ -116,12 +118,15 @@ class InstallKfmCliTests(unittest.TestCase):
                 module.install()
         self.assertEqual(1, run.call_count)
 
-    def test_install_closes_ambient_pip_controls(self) -> None:
+    def test_install_closes_ambient_process_controls(self) -> None:
         inherited = {
             "PIP_CONSTRAINT": "/outside/constraint.txt",
             "PIP_INDEX_URL": "https://packages.invalid/simple",
             "PIP_REQUIREMENT": "/outside/requirements.txt",
             "PIP_TARGET": "/outside/target",
+            "PYTHONHOME": "/outside/python-home",
+            "pythonpath": "/outside/imports",
+            "PyThOnUsErBaSe": "/outside/user-base",
             "UNRELATED_STATE": "preserved",
         }
         with (
@@ -141,6 +146,13 @@ class InstallKfmCliTests(unittest.TestCase):
             self.assertEqual(module.os.devnull, environment["PIP_CONFIG_FILE"])
             self.assertEqual("1", environment["PIP_DISABLE_PIP_VERSION_CHECK"])
             self.assertEqual("1", environment["PIP_NO_INPUT"])
+            self.assertFalse(
+                any(
+                    key.upper() in module.UNSAFE_PYTHON_ENVIRONMENT
+                    for key in environment
+                )
+            )
+            self.assertEqual("1", environment["PYTHONNOUSERSITE"])
             self.assertEqual("preserved", environment["UNRELATED_STATE"])
 
     def test_main_rejects_arguments(self) -> None:
