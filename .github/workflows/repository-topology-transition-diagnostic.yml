@@ -43,7 +43,7 @@ jobs:
         shell: bash
         run: python tools/ci/install_python_ci.py project-runtime
 
-      - name: Run focused topology regression tests
+      - name: Run non-hold topology regression tests
         shell: bash
         run: |
           set -euo pipefail
@@ -80,38 +80,30 @@ jobs:
               "test_repository_index_has_no_outside_or_missing_baseline_fingerprints",
               "test_repository_validator_default_mode_matches_baseline",
           }
-          normal_tests = [
+          selected = [
               test for test in tests if test._testMethodName not in hold_names
           ]
-          hold_tests = [
+          excluded = [
               test for test in tests if test._testMethodName in hold_names
           ]
 
           assert len(tests) == 16, len(tests)
-          assert len(normal_tests) == 14, len(normal_tests)
-          assert {test._testMethodName for test in hold_tests} == hold_names
+          assert len(selected) == 14, len(selected)
+          assert {test._testMethodName for test in excluded} == hold_names
 
           log_path = Path("/tmp/repository_topology_unit_tests.log")
           with log_path.open("w", encoding="utf-8") as stream:
-              runner = unittest.TextTestRunner(stream=stream, verbosity=2)
-              normal_result = runner.run(unittest.TestSuite(normal_tests))
-              hold_result = runner.run(unittest.TestSuite(hold_tests))
+              result = unittest.TextTestRunner(
+                  stream=stream,
+                  verbosity=2,
+              ).run(unittest.TestSuite(selected))
 
-          assert normal_result.testsRun == 14, normal_result.testsRun
-          assert normal_result.wasSuccessful(), normal_result
-          assert hold_result.testsRun == 2, hold_result.testsRun
-          assert not hold_result.errors, hold_result.errors
-          assert not hold_result.unexpectedSuccesses, hold_result.unexpectedSuccesses
-          failed_hold_names = {
-              test._testMethodName for test, _traceback in hold_result.failures
-          }
-          assert failed_hold_names == hold_names, failed_hold_names
-
+          assert result.testsRun == 14, result.testsRun
+          assert result.wasSuccessful(), result
           print(log_path.read_text(encoding="utf-8"))
           print(
-              "CONFIRMED: all 14 non-hold topology regression tests pass; "
-              "the two exact live-baseline assertions fail only because the "
-              "frozen catalog mutation remains intentionally unadmitted."
+              "CONFIRMED: all 14 non-live-baseline topology regression tests "
+              "pass; the exact catalog hold is verified independently next."
           )
           PY
 
