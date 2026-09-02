@@ -270,6 +270,7 @@ export function createMapRuntimeTerrainTransitionCoordinator(
   let current =
     initial === null ? null : (Object.freeze({ ...initial }) as MapRuntimeTerrainState);
   let pending: MapRuntimeTerrainTransitionTicket | null = null;
+  let executing: MapRuntimeTerrainTransitionTicket | null = null;
   let nextRevision = 1;
 
   function requirePending(
@@ -290,6 +291,9 @@ export function createMapRuntimeTerrainTransitionCoordinator(
       request: MapRuntimeTerrainRequest,
       capabilities: MapRuntimeTerrainCapabilities,
     ): MapRuntimeTerrainTransitionTicket {
+      if (executing !== null) {
+        invalid("Map runtime terrain transition execution is in progress.");
+      }
       if (!Number.isSafeInteger(nextRevision)) {
         invalid("Map runtime terrain transition revision is exhausted.");
       }
@@ -326,21 +330,25 @@ export function createMapRuntimeTerrainTransitionCoordinator(
       if (typeof executor !== "function") {
         invalid("Map runtime terrain transition executor is invalid.");
       }
+      pending = null;
+      executing = accepted;
       try {
         await executor(accepted.plan);
       } catch {
-        if (pending !== accepted) {
-          invalid("Map runtime terrain transition ticket is stale or invalid.");
+        if (executing !== accepted) {
+          invalid("Map runtime terrain transition execution state is invalid.");
         }
-        pending = null;
+        executing = null;
         throw new MapRuntimePortError(
           "MAP_RUNTIME_TERRAIN_TRANSITION_FAILED",
           "Map runtime terrain transition execution failed.",
         );
       }
-      const completed = requirePending(accepted);
-      current = completed.plan.target;
-      pending = null;
+      if (executing !== accepted) {
+        invalid("Map runtime terrain transition execution state is invalid.");
+      }
+      current = accepted.plan.target;
+      executing = null;
       return current;
     },
   });
