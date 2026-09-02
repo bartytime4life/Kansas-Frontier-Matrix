@@ -228,6 +228,14 @@ def _semantic_findings(value: Mapping[str, Any]) -> tuple[Finding, ...]:
             "/outputs",
         )
     )
+    failure_reason_codes = list(value["failure_reason_codes"])
+    if failure_reason_codes != sorted(failure_reason_codes):
+        findings.add(
+            Finding(
+                "MODEL_RUN_FAILURE_REASON_ORDER_INVALID",
+                "/failure_reason_codes",
+            )
+        )
 
     if value["run_state"] == "COMPLETED":
         if not value["outputs"]:
@@ -341,7 +349,7 @@ def _run_fixtures() -> int:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
     parser.add_argument("path", nargs="?", type=Path)
     parser.add_argument("--fixtures", action="store_true")
     args = parser.parse_args(argv)

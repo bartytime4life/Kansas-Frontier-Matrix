@@ -100,7 +100,7 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
         second = subprocess.run(command, cwd=ROOT, check=False, capture_output=True, text=True)
         self.assertEqual(0, first.returncode, first.stderr)
         self.assertEqual(first.stdout, second.stdout)
-        self.assertIn('"case_count":23', first.stdout)
+        self.assertIn('"case_count":24', first.stdout)
         self.assertIn('"suite_match":true', first.stdout)
 
         with tempfile.TemporaryDirectory() as directory:
@@ -115,6 +115,140 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
             )
         self.assertEqual(2, completed.returncode)
         self.assertIn('"outcome":"ERROR"', completed.stdout)
+
+    def test_cli_rejects_abbreviated_fixture_flags(self) -> None:
+        for length in range(3, len("--fixtures")):
+            abbreviation = "--fixtures"[:length]
+            with self.subTest(abbreviation=abbreviation):
+                completed = subprocess.run(
+                    [sys.executable, str(Path(validator.__file__)), abbreviation],
+                    cwd=ROOT,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
+                self.assertEqual(2, completed.returncode)
+                self.assertEqual("", completed.stdout)
+                self.assertIn("unrecognized arguments", completed.stderr)
+
+    def test_cli_mode_boundary_and_option_terminated_path(self) -> None:
+        manifest = validator.load_fixtures()
+        candidate = validator.materialize_case(manifest, manifest["cases"][0])
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            ordinary = root / "candidate.json"
+            ordinary.write_text(json.dumps(candidate), encoding="utf-8")
+            mixed = subprocess.run(
+                [sys.executable, str(Path(validator.__file__)), "--fixtures", str(ordinary)],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+            dash_prefixed = root / "--fixtures"
+            dash_prefixed.write_text(json.dumps(candidate), encoding="utf-8")
+            terminated = subprocess.run(
+                [sys.executable, str(Path(validator.__file__)), "--", dash_prefixed.name],
+                cwd=root,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertEqual(2, mixed.returncode)
+        self.assertEqual("", mixed.stdout)
+        self.assertIn("path cannot be combined with --fixtures", mixed.stderr)
+        self.assertEqual(0, terminated.returncode, terminated.stderr)
+        payload = json.loads(terminated.stdout)
+        self.assertEqual("PASS", payload["outcome"])
+        self.assertEqual("NONE", payload["authority"])
+        self.assertEqual("--fixtures", payload["input"])
+
+    def test_cli_missing_and_directory_inputs_are_errors(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            existing_directory = root / "candidate"
+            existing_directory.mkdir()
+            for path in (root / "missing.json", existing_directory):
+                with self.subTest(path=path.name):
+                    completed = subprocess.run(
+                        [sys.executable, str(Path(validator.__file__)), str(path)],
+                        cwd=ROOT,
+                        check=False,
+                        capture_output=True,
+                        text=True,
+                    )
+                    self.assertEqual(2, completed.returncode)
+                    self.assertEqual("", completed.stderr)
+                    payload = json.loads(completed.stdout)
+                    self.assertEqual("ERROR", payload["outcome"])
+                    self.assertEqual("NONE", payload["authority"])
+                    self.assertEqual(path.name, payload["input"])
+                    self.assertEqual(
+                        [{"code": "MODEL_RUN_INPUT_NOT_FILE", "path": "/"}],
+                        payload["findings"],
+                    )
+
+    def test_cli_malformed_and_non_object_inputs_do_not_echo_candidate_content(self) -> None:
+        sentinel = "do-not-echo-habitat-secret"
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            malformed = root / "malformed.json"
+            malformed.write_text(f'{{"secret":"{sentinel}"', encoding="utf-8")
+            undecodable = root / "undecodable.json"
+            undecodable.write_bytes(b"\xff\xfe" + sentinel.encode("ascii"))
+            non_object = root / "non-object.json"
+            non_object.write_text(f'["{sentinel}"]', encoding="utf-8")
+            for path, code in (
+                (malformed, "MODEL_RUN_JSON_INVALID"),
+                (undecodable, "MODEL_RUN_JSON_INVALID"),
+                (non_object, "MODEL_RUN_JSON_ROOT_INVALID"),
+            ):
+                with self.subTest(path=path.name):
+                    completed = subprocess.run(
+                        [sys.executable, str(Path(validator.__file__)), str(path)],
+                        cwd=ROOT,
+                        check=False,
+                        capture_output=True,
+                        text=True,
+                    )
+                    self.assertEqual(2, completed.returncode)
+                    self.assertEqual("", completed.stderr)
+                    self.assertNotIn(sentinel, completed.stdout)
+                    payload = json.loads(completed.stdout)
+                    self.assertEqual("ERROR", payload["outcome"])
+                    self.assertEqual("NONE", payload["authority"])
+                    self.assertEqual(path.name, payload["input"])
+                    self.assertEqual(
+                        [{"code": code, "path": "/"}],
+                        payload["findings"],
+                    )
+
+    def test_cli_denial_exit_is_distinct_from_input_error(self) -> None:
+        sentinel = "do-not-echo-schema-denied-value"
+        with tempfile.TemporaryDirectory() as directory:
+            denied = Path(directory) / "schema-denied.json"
+            denied.write_text(json.dumps({"secret": sentinel}), encoding="utf-8")
+            completed = subprocess.run(
+                [sys.executable, str(Path(validator.__file__)), str(denied)],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertEqual(1, completed.returncode)
+        self.assertEqual("", completed.stderr)
+        self.assertNotIn(sentinel, completed.stdout)
+        payload = json.loads(completed.stdout)
+        self.assertEqual("DENY", payload["outcome"])
+        self.assertEqual("NONE", payload["authority"])
+        self.assertEqual(denied.name, payload["input"])
+        self.assertEqual(
+            [{"code": "MODEL_RUN_SCHEMA_INVALID", "path": "/"}],
+            payload["findings"],
+        )
 
     def test_duplicate_nonfinite_symlink_and_oversize_are_errors(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -139,6 +273,24 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
                     value, findings = validator._read(path)
                     self.assertIsNone(value)
                     self.assertEqual(code, findings[0].code)
+
+                    completed = subprocess.run(
+                        [sys.executable, str(Path(validator.__file__)), str(path)],
+                        cwd=ROOT,
+                        check=False,
+                        capture_output=True,
+                        text=True,
+                    )
+                    self.assertEqual(2, completed.returncode)
+                    self.assertEqual("", completed.stderr)
+                    payload = json.loads(completed.stdout)
+                    self.assertEqual("ERROR", payload["outcome"])
+                    self.assertEqual("NONE", payload["authority"])
+                    self.assertEqual(path.name, payload["input"])
+                    self.assertEqual(
+                        [{"code": code, "path": "/"}],
+                        payload["findings"],
+                    )
 
 
 if __name__ == "__main__":
