@@ -1,0 +1,46 @@
+schema_version: kfm.repository-topology-correction-register.v1
+authority: accepted-decision-projection-only
+non_effects:
+  - does_not_suppress_live_findings
+  - does_not_reclassify_roots
+  - does_not_authorize_unregistered_edits
+  - does_not_authorize_deletion_migration_release_or_publication
+entries:
+  - correction_id: KFM-TOPO-004-CORR-4228-01
+    status: proposed
+    consume_once: true
+    rule_id: KFM-TOPO-004
+    subject: catalog/
+    path: catalog/domain/agriculture/README.md
+    from:
+      fingerprint: sha256:521388927153c91a67ca8cead55af9d688a6064517d109aa556cffca91505006
+      blob: bf1a333573c6d068fbb0b695356346003842aceb
+      member_count: 43
+    to:
+      fingerprint: sha256:0ad45247555960029c34d1222365cbe17a5cabec278bf9f6b8f3e9572ea33e8f
+      blob: 4be1711bfa011636ac1c5cd13e7c98e5002ff9c0
+      member_count: 43
+    exact_delta:
+      removed:
+        - catalog/domain/agriculture/README.md@bf1a333573c6d068fbb0b695356346003842aceb
+      added:
+        - catalog/domain/agriculture/README.md@4be1711bfa011636ac1c5cd13e7c98e5002ff9c0
+      unchanged_member_count: 42
+      require_equal_path_set: true
+    decision_ref:
+      path: docs/adr/ADR-0038-trusted-base-topology-correction-transitions.md
+      blob: null
+      accepted_commit: null
+    evidence_refs:
+      - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228
+      - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4209
+      - c99ebad3ffda99dc041fe3b1e4e74a0497a166b4
+      - main@df45bbaea90c210ec485dd85562a314ed0c9ccf4
+    reason_code: committed-merge-conflict-boundary-repair
+    rollback:
+      mode: revoke-acceptance-and-fail-closed
+      prohibited_automatic_restore_blob: bf1a333573c6d068fbb0b695356346003842aceb
+      content_change_requires_new_transition: true
+    retirement:
+      reuse: forbidden
+      condition: baseline-has-to-fingerprint-and-no-pending-consumer
