@@ -280,6 +280,70 @@ describe("Explorer map feature to Evidence Drawer bridge", () => {
     });
   });
 
+  it("preserves abstention correction targets as audit-only history", async () => {
+    const abstentionWithCorrection = structuredClone(answerFixture);
+    abstentionWithCorrection.outcome = "ABSTAIN";
+    abstentionWithCorrection.reason_code = "CITATION_UNRESOLVED";
+    abstentionWithCorrection.evidence_refs = [];
+    abstentionWithCorrection.citations = [];
+    abstentionWithCorrection.trust_state.policy = "ABSTAIN";
+
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: [],
+        history_evidence_refs: [
+          "kfm:evidence:synthetic:flow-000",
+          "kfm:evidence:synthetic:flow-001",
+        ],
+      },
+      async () => abstentionWithCorrection,
+    );
+
+    expect(result).toMatchObject({
+      code: "CITATION_UNRESOLVED",
+      drawer: {
+        outcome: "ABSTAIN",
+        evidenceRefs: [],
+        evidenceRefsLabel: "Non-current evidence references",
+      },
+    });
+    expect(result.drawer.historyLabels).toContain(
+      "Correction lineage: kfm:evidence:synthetic:flow-000 → kfm:evidence:synthetic:flow-001 (2026-08-01T00:00:00Z)",
+    );
+  });
+
+  it("fails closed when an abstention correction target is carried as current support", async () => {
+    const abstentionWithCorrection = structuredClone(answerFixture);
+    abstentionWithCorrection.outcome = "ABSTAIN";
+    abstentionWithCorrection.reason_code = "CITATION_UNRESOLVED";
+    abstentionWithCorrection.evidence_refs = [];
+    abstentionWithCorrection.citations = [];
+    abstentionWithCorrection.trust_state.policy = "ABSTAIN";
+
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: ["kfm:evidence:synthetic:flow-001"],
+        history_evidence_refs: ["kfm:evidence:synthetic:flow-000"],
+      },
+      async () => abstentionWithCorrection,
+    );
+
+    expect(result).toMatchObject({
+      code: "DRAWER_EVIDENCE_OUTSIDE_SELECTION",
+      drawer: {
+        outcome: "ERROR",
+        evidenceRefs: [],
+        citations: [],
+        historyLabels: [],
+      },
+    });
+    expect(JSON.stringify(result.drawer)).not.toContain(
+      "kfm:evidence:synthetic:flow-001",
+    );
+  });
+
   it("fails closed when negative-only history widens beyond the clicked selection", async () => {
     const result = await resolveMapFeatureEvidence(
       {
