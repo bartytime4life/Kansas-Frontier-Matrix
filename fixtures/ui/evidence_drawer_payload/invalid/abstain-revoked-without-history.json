@@ -1,0 +1,25 @@
+{
+  "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+  "id": "kfm:ui:evidence-drawer:invalid-revoked-history-001",
+  "outcome": "ABSTAIN",
+  "reason_code": "REVOKED_EVIDENCE",
+  "title": "Synthetic revoked observation without history",
+  "summary": "REVOKED_HISTORY_REQUIRED_CANARY",
+  "evidence_refs": [],
+  "citations": [],
+  "limitations": [
+    "Revoked evidence cannot be represented without its audit history."
+  ],
+  "trust_state": {
+    "source_role": "official",
+    "policy": "ABSTAIN",
+    "review": "REVIEWED",
+    "release": "WITHDRAWN",
+    "freshness": "UNKNOWN",
+    "correction": "NONE"
+  },
+  "history": {
+    "negative_outcomes": [],
+    "corrections": []
+  }
+}

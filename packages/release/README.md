@@ -206,7 +206,7 @@ The package should reduce duplicated candidate-normalization and validation risk
 | Package-local tests | **NOT ESTABLISHED by bounded search** | Package behavior is not proved. |
 | `ReleaseManifest` | **DRAFT / PROPOSED / thin schema** | Rich semantics exist; closure is not enforced. |
 | `PromotionDecision` | **DRAFT / PROPOSED / concrete schema** | Shape validator/test exist; authorization is not proved. |
-| `RollbackCard` | **DRAFT / PROPOSED / thin schema** | Declared validator absent; another validator is a placeholder. |
+| `RollbackCard` | **DRAFT / PROPOSED / closed candidate schema** | Canonical no-network validator and historical compatibility delegate provide bounded shape/local-consistency evidence only. |
 | `CorrectionNotice` | **DRAFT / thin schema** | Validator absent; contract-family placement is conflicted. |
 | Signing standard | **DRAFT** | Key custody and production verification remain unproved. |
 | Promotion-gate ADR | **PROPOSED** | Competing A–G vocabularies remain unresolved. |
@@ -479,12 +479,12 @@ Package implication:
 
 ### `RollbackCard`
 
-The semantic contract exists; the schema is thin. The schema-declared validator is absent, while a different validator raises `NotImplementedError`.
+The semantic contract and proposed fixture profile exist. The schema-declared canonical validator is implemented, and the historical top-level entrypoint delegates to it with compatibility coverage.
 
 Package implication:
 
 - future code may normalize explicit rollback metadata;
-- no rollback-validation maturity may be claimed yet;
+- only bounded candidate shape and local-consistency validation may be claimed;
 - no alias movement, cache invalidation, restoration, or notice publication may execute here.
 
 ### `CorrectionNotice`
@@ -1022,7 +1022,7 @@ Until then, the correct maturity label remains **greenfield placeholder** or a n
 | 13 | Package CI enforcement | UNKNOWN |
 | 14 | ReleaseManifest hardening and validator | NEEDS VERIFICATION |
 | 15 | PromotionDecision policy/review/runtime wiring | NEEDS VERIFICATION |
-| 16 | RollbackCard validator and fixtures | NEEDS VERIFICATION |
+| 16 | RollbackCard validator and fixtures | CONFIRMED bounded proposed candidate profile |
 | 17 | CorrectionNotice family and validator | CONFLICTED / NEEDS VERIFICATION |
 | 18 | Accepted A–G gate vocabulary | CONFLICTED / NEEDS VERIFICATION |
 | 19 | Canonicalization profile | NEEDS VERIFICATION |
@@ -1145,7 +1145,7 @@ Package revocation does not erase history. It stops unsafe use and routes correc
 | Release root | Owns release-governance records | Lane conventions still contain open questions |
 | ReleaseManifest | Rich draft meaning, thin schema | No production closure |
 | PromotionDecision | Concrete proposed shape and test | No authorization |
-| RollbackCard | Rich meaning, thin schema | Validator incomplete |
+| RollbackCard | Rich meaning, closed proposed candidate schema | Bounded validator and compatibility coverage; no execution authority |
 | CorrectionNotice | Rich meaning, thin schema | Placement/validator unresolved |
 | Signing standard | Draft | No production signer or trust-root proof |
 | Promotion-gate ADR | Proposed | Vocabulary not accepted |

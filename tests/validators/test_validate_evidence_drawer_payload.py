@@ -60,6 +60,30 @@ class EvidenceDrawerPayloadValidatorTests(unittest.TestCase):
             {item.code for item in findings},
         )
 
+    def test_revoked_abstention_requires_bound_non_current_history(self) -> None:
+        valid_path = MODULE.FIXTURES_ROOT / "valid/abstain-revoked.json"
+        missing_path = (
+            MODULE.FIXTURES_ROOT
+            / "invalid/abstain-revoked-without-history.json"
+        )
+
+        self.assertEqual((), MODULE.validate_payload(valid_path))
+        self.assertIn(
+            "NEGATIVE_HISTORY_REQUIRED",
+            {item.code for item in MODULE.validate_payload(missing_path)},
+        )
+
+        payload = json.loads(valid_path.read_text(encoding="utf-8"))
+        self.assertEqual("REVOKED_EVIDENCE", payload["reason_code"])
+        self.assertEqual([], payload["evidence_refs"])
+        self.assertEqual([], payload["citations"])
+        revoked = payload["history"]["negative_outcomes"]
+        self.assertEqual(1, len(revoked))
+        self.assertEqual("REVOKED", revoked[0]["state"])
+        self.assertEqual("REVOKED_EVIDENCE", revoked[0]["reason_code"])
+        self.assertTrue(revoked[0]["visible_in_runtime"])
+        self.assertFalse(revoked[0]["resolvable_as_current"])
+
     def test_answer_history_must_be_a_complete_correction_chain(self) -> None:
         findings = MODULE.validate_payload(
             MODULE.FIXTURES_ROOT / "invalid/answer-unbound-history.json"

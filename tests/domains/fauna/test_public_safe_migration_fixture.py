@@ -178,9 +178,8 @@ class PublicSafeMigrationFixtureTests(unittest.TestCase):
         )
 
         candidate["evidence_refs"] = [
-            f"fixture:evidence:fauna:synthetic-{index}"
-            for index in range(65)
-        ]
+            "fixture:evidence:fauna:over-limit-duplicate"
+        ] * 65
         self.assertEqual(
             validate_candidate(candidate).findings,
             (

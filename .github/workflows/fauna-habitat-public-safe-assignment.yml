@@ -5,6 +5,7 @@ name: fauna-habitat-public-safe-assignment
   pull_request:
     paths:
       - ".github/workflows/fauna-habitat-public-safe-assignment.yml"
+      - "control_plane/domain_lane_register.yaml"
       - "contracts/cross_domain/fauna_habitat/**"
       - "fixtures/contracts/v1/joins/fauna_habitat_public_safe_assignment/**"
       - "tests/cross_domain/fauna_habitat/**"
@@ -19,6 +20,7 @@ name: fauna-habitat-public-safe-assignment
     branches: [main]
     paths:
       - ".github/workflows/fauna-habitat-public-safe-assignment.yml"
+      - "control_plane/domain_lane_register.yaml"
       - "contracts/cross_domain/fauna_habitat/**"
       - "fixtures/contracts/v1/joins/fauna_habitat_public_safe_assignment/**"
       - "tests/cross_domain/fauna_habitat/**"
@@ -73,6 +75,7 @@ jobs:
         run: >-
           python -m pytest
           tests/joins/test_join_candidates.py
+          tests/joins/test_cross_lane_*.py
           tests/cross_domain/fauna_habitat/test_public_safe_assignment.py
           -q --strict-config --strict-markers
       - name: Validate generated authoring receipt

@@ -1,8 +1,8 @@
 # KFM Agriculture domain CI readiness workflow.
 # Status: one bounded fixture-only CDL watcher proof is executable in this lane;
-# three dedicated Agriculture validator suites and one deterministic NDVI
-# computation suite are separately governed; broader domain validation, proof,
-# and release-dry-run producers remain held.
+# four dedicated Agriculture validator suites, one deterministic NDVI
+# computation suite, and the public-safe map carrier suite are governed;
+# broader domain validation, proof, and release-dry-run producers remain held.
 #
 # Authority boundary:
 # - This workflow proves one synthetic ingest-adjacent review-signal helper and
@@ -45,6 +45,9 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install declared Agriculture validation dependencies
+        run: python tools/ci/install_python_ci.py project-test
+
       - name: Evaluate Agriculture validation readiness
         shell: bash
         run: |
@@ -74,11 +77,15 @@ jobs:
             ".github/workflows/agriculture-vegetation-connectivity-gate.yml"
             "contracts/domains/agriculture/ndvi_delta_computation.md"
             "contracts/domains/agriculture/vegetation_connectivity_gate.md"
+            "contracts/domains/agriculture/public_safe_map_feature.md"
             "fixtures/domains/agriculture/ndvi_delta_computation/cases.json"
+            "fixtures/domains/agriculture/public_safe_map_feature/cases.json"
             "fixtures/domains/agriculture/vegetation_connectivity_gate/cases.json"
             "schemas/contracts/v1/domains/agriculture/ndvi_delta_computation.schema.json"
+            "schemas/contracts/v1/domains/agriculture/public_safe_map_feature.schema.json"
             "schemas/contracts/v1/domains/agriculture/vegetation_connectivity_gate.schema.json"
             "tests/domains/agriculture/test_ndvi_delta_computation.py"
+            "tools/validators/domains/agriculture/validate_public_safe_map_feature.py"
             "release/agriculture/README.md"
           )
 
@@ -124,7 +131,20 @@ jobs:
           test_paths = [path for path in test_inventory if path.suffix == ".py"]
           if not test_paths:
               raise SystemExit("Agriculture test inventory contains no Python modules.")
-          expected_dedicated_tests = {"test_ndvi_delta_computation.py"}
+          expected_dedicated_tests = {
+              "test_ndvi_delta_computation.py",
+              "test_public_safe_agricultural_economy_observation.py",
+              "test_public_safe_conservation_practice_context.py",
+              "test_public_safe_crop_observation.py",
+              "test_public_safe_crop_rotation.py",
+              "test_public_safe_drought_stress_indicator.py",
+              "test_public_safe_irrigation_context.py",
+              "test_public_safe_map_feature.py",
+              "test_public_safe_pest_stress_indicator.py",
+              "test_public_safe_soil_crop_suitability.py",
+              "test_public_safe_supply_chain_context.py",
+              "test_public_safe_yield_observation.py",
+          }
           observed_dedicated_tests = set()
           for path in test_paths:
               classification = classify_test_source(path.read_text(encoding="utf-8"))
@@ -179,6 +199,7 @@ jobs:
               "hls_ndvi_zonal_materiality/validate_hls_ndvi_zonal_materiality.py",
               "ndvi_readiness/README.md",
               "ndvi_readiness/validate_ndvi_readiness.py",
+              "validate_public_safe_map_feature.py",
               "vegetation_connectivity_gate/validate_connectivity_gate.py",
           }
           expected_domain_inventory = {
@@ -240,14 +261,24 @@ jobs:
               f"dedicated_validators={len(dedicated_validator_paths)}"
           )
           print(
-              "Dedicated NDVI delta computation, HLS NDVI materiality, NDVI readiness, "
-              "and vegetation connectivity suites remain owned by their path-filtered "
-              "workflows."
+              "Dedicated public-safe map carrier validation executes in this workflow. "
+              "NDVI delta computation, HLS NDVI materiality, NDVI readiness, and "
+              "vegetation connectivity remain owned by their path-filtered workflows."
           )
           PY
 
-          echo "WORKFLOW_SKIPPED_EXPLICIT: validate-agriculture"
-          echo "WORKFLOW_HOLD: broader Agriculture executable validation is not established"
+          echo "WORKFLOW_PARTIAL_EXECUTION: public-safe map carrier validation is established"
+          echo "WORKFLOW_HOLD: broader Agriculture executable validation remains unestablished"
+
+      - name: Run public-safe map feature carrier validation
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/domains/agriculture/validate_public_safe_map_feature.py --fixtures
+          python -m pytest -q tests/domains/agriculture/test_public_safe*.py
 
       - name: Run bounded CDL material-change watcher proof
         env:
@@ -262,18 +293,20 @@ jobs:
           cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
           ### Agriculture validation status
 
-          `WORKFLOW_SKIPPED_EXPLICIT`
+          `WORKFLOW_PARTIAL_EXECUTION: public-safe map carrier validation is established`
 
-          `WORKFLOW_HOLD: broader Agriculture executable validation is not established`
+          `WORKFLOW_HOLD: broader Agriculture executable validation remains unestablished`
 
           Recognized placeholder inventory is not domain validation. This job
-          separately executes the synthetic, fixture-only CDL material-change
-          watcher proof; that helper is ingest-adjacent and review-signal-only.
+          executes the synthetic public-safe map carrier suite and separately
+          executes the fixture-only CDL material-change watcher proof; the latter
+          helper is ingest-adjacent and review-signal-only.
 
           The direct Agriculture validator lane remains documentation-only. The
           canonical domain lane contains recognized greenfield test and validator
-          stubs, one substantive deterministic NDVI computation test suite, and
-          three substantive fixture-only validators. The NDVI delta computation,
+          stubs, one substantive deterministic NDVI computation test suite, the
+          public-safe carrier tests, and four substantive fixture-only validators.
+          The NDVI delta computation,
           HLS NDVI zonal materiality, smoke-aware NDVI readiness, and vegetation
           connectivity suites remain executed by their own path-filtered workflows
           rather than this broad readiness lane.
@@ -282,10 +315,10 @@ jobs:
           It cannot admit a source, decide canonical materiality policy, create
           a receipt or proof, promote lifecycle state, release, or publish.
 
-          This result confirms only that the known boundaries still match that
-          maturity posture. It does not validate Agriculture contracts, schemas,
-          source roles, rights, sensitivity, evidence, policy, lifecycle state,
-          cross-domain joins, public aggregation, or release readiness.
+          This result validates only the governed public-safe map carrier boundary
+          and confirms that other known boundaries retain their maturity posture.
+          It does not validate source admission, policy, lifecycle promotion,
+          cross-domain joins, release readiness, or publication authority.
           EOF
 
   build-proof-agriculture:

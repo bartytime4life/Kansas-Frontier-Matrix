@@ -116,7 +116,7 @@ tags: [kfm, runbook, flora, plants, rollback, withdrawal, correction, rollback-c
 notes:
   - "Same-path modernization under accepted ADR-0029; no root, lane, contract, schema, policy, fixture, validator, test, workflow, receipt, proof, release object, alias, or public state is created or moved."
   - "The generic release RollbackCard 1.0.0 profile is the current bounded validator target. The Flora-domain rollback-card schema remains a permissive greenfield stub and is not an equivalent authority surface."
-  - "Operational rollback remains HOLD: the production rollback pipeline and generic validator entrypoint are placeholders, the published-alias decision remains proposed, Flora policy is inactive, and the available apply helper is synthetic-workspace-only."
+  - "Operational rollback remains HOLD: the production rollback pipeline is a placeholder, the generic validator entrypoint delegates only to the bounded canonical validator, the published-alias decision remains proposed, Flora policy is inactive, and the available apply helper is synthetic-workspace-only."
   - "This runbook is an instruction and review-handoff surface. It is not a RollbackCard, ReviewRecord, PolicyDecision, CorrectionNotice, release approval, rollback receipt, or execution record."
 [/KFM_META_BLOCK_V2] -->
 
@@ -246,7 +246,7 @@ The update is a same-path `PLACE` under the `docs/` responsibility root. It crea
 | Generic `RollbackCard` contract/schema | Closed 1.0.0 fixture-first candidate profile | Use for non-executing candidate validation |
 | Generic release validator | Implemented, deterministic, no-network | Proves shape and local consistency only |
 | Generic fixtures/tests | Three named valid candidates, six named invalid cases, and negative parser tests | Bounded polarity proof; not operational proof |
-| Generic top-level validator | Greenfield `NotImplementedError` placeholder | Do not invoke as the current validator |
+| Generic top-level validator | Compatibility delegate to the canonical release validator | Bounded validation only; no rollback authority |
 | Flora-domain rollback schema | `id`-only, `additionalProperties: true`, declared companions not established | Permissive greenfield stub; not equivalent to generic profile |
 | Synthetic rehearsal helper | Marker-protected, `synthetic: true`, no-network | May run only in disposable synthetic roots |
 | Synthetic rehearsal tests | Non-vacuous rollback, withdrawal, marker, digest, target, and invalidation cases | Rehearsal proof only |
@@ -710,7 +710,7 @@ Therefore:
 
 ### 7.5 Generic entrypoint conflict
 
-[`tools/validators/validate_rollback_card.py`](../../../tools/validators/validate_rollback_card.py) is a known `NotImplementedError` placeholder. The current implementation is release-scoped:
+[`tools/validators/validate_rollback_card.py`](../../../tools/validators/validate_rollback_card.py) is the historical compatibility entrypoint and delegates to the release-scoped canonical validator:
 
 ```text
 tools/validators/release/validate_rollback_card.py
@@ -813,7 +813,7 @@ Do not add `--apply` until the default plan passes and a reviewer verifies that 
 - has read-only repository permission;
 - runs on pull requests, `main`, and manual dispatch;
 - confirms the production rollback pipeline remains a placeholder;
-- confirms the generic validator entrypoint remains a placeholder;
+- confirms the generic validator entrypoint delegates to the canonical validator with fixture parity;
 - runs the release-scoped fixture profile;
 - runs non-vacuous synthetic rehearsal tests;
 - checks known rollback-card placeholder inventories;
@@ -1212,7 +1212,7 @@ Do not:
 - select a target by filename, branch name, date, or memory;
 - call a Git revert a data-release rollback;
 - use the permissive Flora schema as operational proof;
-- use the generic placeholder validator entrypoint;
+- treat the generic compatibility validator as a separate authority or as rollback approval;
 - bypass the synthetic marker or `synthetic: true` guard;
 - point the synthetic helper at repository or production paths;
 - hide sensitive geometry only with client styling;
@@ -1500,7 +1500,7 @@ Reverting this runbook:
 | Synthetic apply | Same command plus `--apply` | **RESTRICTED TO SYNTHETIC ROOT** | Writes synthetic alias/correction/invalidation only |
 | Validate binding receipt | `python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-rollback-card-contract-current-binding-20260815.json --repo-root .` | **CONFIRMED repository path** | Hash/current-binding evidence only |
 | Workflow security | `make workflow-security` | **Repository-native target** | Does not prove release authority |
-| Generic validator wrapper | `tools/validators/validate_rollback_card.py` | **PLACEHOLDER** | Do not use as implemented validator |
+| Generic validator wrapper | `tools/validators/validate_rollback_card.py` | **COMPATIBILITY DELEGATE** | Same bounded validation as canonical CLI; no execution authority |
 | Production rollback pipeline | `pipelines/rollback/main.py` | **PLACEHOLDER / HOLD** | No execution |
 | Flora rollback pipeline | `pipelines/domains/flora/rollback/` | **README + `.gitkeep`** | No executable Flora rollback |
 | Generic RollbackCard schema | `schemas/contracts/v1/release/rollback_card.schema.json` | **Current bounded target** | Proposed fixture-first candidate profile |

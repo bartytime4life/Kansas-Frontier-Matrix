@@ -5,6 +5,7 @@ name: soil-agriculture-public-safe-context
   pull_request:
     paths:
       - ".github/workflows/soil-agriculture-public-safe-context.yml"
+      - "control_plane/domain_lane_register.yaml"
       - "contracts/cross_domain/soil_agriculture/**"
       - "fixtures/contracts/v1/joins/soil_agriculture_public_safe_context/**"
       - "tests/cross_domain/soil_agriculture/**"
@@ -12,6 +13,21 @@ name: soil-agriculture-public-safe-context
       - "contracts/joins/cross_lane_join_assessment.md"
       - "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json"
       - "tools/joins/join_candidates.py"
+      - "fixtures/contracts/v1/joins/cross_lane_join_assessment/**"
+      - "tests/joins/**"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/soil-agriculture-public-safe-context.yml"
+      - "control_plane/domain_lane_register.yaml"
+      - "contracts/cross_domain/soil_agriculture/**"
+      - "fixtures/contracts/v1/joins/soil_agriculture_public_safe_context/**"
+      - "tests/cross_domain/soil_agriculture/**"
+      - "tools/validators/cross_domain/soil_agriculture/**"
+      - "contracts/joins/cross_lane_join_assessment.md"
+      - "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json"
+      - "tools/joins/join_candidates.py"
+      - "fixtures/contracts/v1/joins/cross_lane_join_assessment/**"
       - "tests/joins/**"
   workflow_dispatch:
 
@@ -55,6 +71,7 @@ jobs:
         run: >-
           python -m pytest
           tests/joins/test_join_candidates.py
+          tests/joins/test_cross_lane_*.py
           tests/cross_domain/soil_agriculture/test_public_safe_context.py
           -q --strict-config --strict-markers
       - name: Record trust boundary

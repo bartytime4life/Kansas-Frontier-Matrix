@@ -244,9 +244,9 @@ def validate_candidate(candidate: object) -> ValidationResult:
     evidence_refs = candidate.get("evidence_refs")
     if not isinstance(evidence_refs, list) or not evidence_refs:
         _add(findings, "evidence.fixture_ref_required", "/evidence_refs")
+    elif len(evidence_refs) > MAX_EVIDENCE_REFS:
+        _add(findings, "evidence.reference_limit_exceeded", "/evidence_refs")
     else:
-        if len(evidence_refs) > MAX_EVIDENCE_REFS:
-            _add(findings, "evidence.reference_limit_exceeded", "/evidence_refs")
         seen_evidence_refs: set[str] = set()
         for index, item in enumerate(evidence_refs):
             if not _fixture_ref(item, "fixture:evidence:fauna:"):
