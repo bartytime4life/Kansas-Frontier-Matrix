@@ -419,6 +419,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         result = Result("DENY", (error.finding,))
     except json.JSONDecodeError:
         result = Result("DENY", (Finding("AG_MAP_JSON_DECODE_INVALID", "/"),))
+    except (OSError, UnicodeError):
+        result = Result("ERROR", (Finding("AG_MAP_INPUT_UNAVAILABLE", "/"),))
     else:
         result = validate_payload(value)
     print(json.dumps({
