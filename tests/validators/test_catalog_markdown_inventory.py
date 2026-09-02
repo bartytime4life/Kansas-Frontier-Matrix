@@ -51,6 +51,20 @@ class CatalogMarkdownInventoryTests(unittest.TestCase):
             ["    ```", "visible"],
         )
 
+    def test_unterminated_fences_fail_closed_with_stable_offsets(self) -> None:
+        cases = (
+            ("visible\n```example\nhidden\n", "```", len("visible\n")),
+            ("  ~~~~ example\nhidden", "~~~~", 0),
+        )
+
+        for text, fence, offset in cases:
+            with self.subTest(fence=fence):
+                with self.assertRaisesRegex(
+                    ValueError,
+                    rf"^unterminated Markdown fence {fence!r} at offset {offset}$",
+                ):
+                    visible_line_spans(text)
+
     def test_all_inventory_validators_share_the_canonical_scanner(self) -> None:
         modules = (
             validate_catalog_child_index,
@@ -64,6 +78,8 @@ class CatalogMarkdownInventoryTests(unittest.TestCase):
         for module in modules:
             with self.subTest(module=module.__name__):
                 self.assertIs(module._visible_line_spans, visible_line_spans)
+                with self.assertRaisesRegex(ValueError, "unterminated Markdown fence"):
+                    module._visible_line_spans("visible\n```example\nhidden\n")
 
 
 if __name__ == "__main__":
