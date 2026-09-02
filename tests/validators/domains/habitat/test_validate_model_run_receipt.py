@@ -214,6 +214,24 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
                     self.assertIsNone(value)
                     self.assertEqual(code, findings[0].code)
 
+                    completed = subprocess.run(
+                        [sys.executable, str(Path(validator.__file__)), str(path)],
+                        cwd=ROOT,
+                        check=False,
+                        capture_output=True,
+                        text=True,
+                    )
+                    self.assertEqual(2, completed.returncode)
+                    self.assertEqual("", completed.stderr)
+                    payload = json.loads(completed.stdout)
+                    self.assertEqual("ERROR", payload["outcome"])
+                    self.assertEqual("NONE", payload["authority"])
+                    self.assertEqual(path.name, payload["input"])
+                    self.assertEqual(
+                        [{"code": code, "path": "/"}],
+                        payload["findings"],
+                    )
+
 
 if __name__ == "__main__":
     unittest.main()
