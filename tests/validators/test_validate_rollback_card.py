@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from jsonschema import Draft202012Validator
 
@@ -31,6 +33,25 @@ STALE_RELEASE_PACKAGE_ROLLBACK_GUIDANCE_PATTERNS = (
 )
 
 
+GIT_REPOSITORY_CONTEXT_VARIABLES = (
+    "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+    "GIT_CEILING_DIRECTORIES",
+    "GIT_COMMON_DIR",
+    "GIT_DIR",
+    "GIT_DISCOVERY_ACROSS_FILESYSTEM",
+    "GIT_INDEX_FILE",
+    "GIT_OBJECT_DIRECTORY",
+    "GIT_WORK_TREE",
+)
+
+
+def repository_git_environment() -> dict[str, str]:
+    environment = os.environ.copy()
+    for variable in GIT_REPOSITORY_CONTEXT_VARIABLES:
+        environment.pop(variable, None)
+    return environment
+
+
 def tracked_markdown_paths(repo_root: Path = REPO_ROOT) -> tuple[Path, ...]:
     result = subprocess.run(
         ["git", "ls-files", "--stage", "-z", "--", "*.md"],
@@ -38,6 +59,7 @@ def tracked_markdown_paths(repo_root: Path = REPO_ROOT) -> tuple[Path, ...]:
         capture_output=True,
         text=True,
         check=False,
+        env=repository_git_environment(),
     )
     if result.returncode != 0:
         raise AssertionError(
@@ -467,6 +489,52 @@ class RollbackCardValidatorTests(unittest.TestCase):
                 r"regular file: ROLLBACK\.md \(index mode 120000\)",
             ):
                 tracked_markdown_paths(repo_root)
+
+    def test_guidance_inventory_ignores_ambient_alternate_index(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repo_root = Path(directory)
+            subprocess.run(
+                ["git", "init", "--quiet"],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            owned_guidance = repo_root / "OWNED.md"
+            owned_guidance.write_text("# Owned guidance\n", encoding="utf-8")
+            subprocess.run(
+                ["git", "add", "--", owned_guidance.name],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+            alternate_guidance = repo_root / "RUNNER_LOCAL.md"
+            alternate_guidance.write_text(
+                "# Runner-local guidance\n",
+                encoding="utf-8",
+            )
+            alternate_index = repo_root / "runner-local.index"
+            alternate_environment = os.environ.copy()
+            alternate_environment["GIT_INDEX_FILE"] = str(alternate_index)
+            subprocess.run(
+                ["git", "add", "--", alternate_guidance.name],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
+                env=alternate_environment,
+            )
+
+            with patch.dict(
+                os.environ,
+                {"GIT_INDEX_FILE": str(alternate_index)},
+            ):
+                self.assertEqual(
+                    (owned_guidance,),
+                    tracked_markdown_paths(repo_root),
+                )
 
     def test_workflow_runs_for_repository_markdown_changes(self) -> None:
         workflow = (
