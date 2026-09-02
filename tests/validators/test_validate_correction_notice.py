@@ -52,6 +52,24 @@ class CorrectionNoticeValidatorTests(unittest.TestCase):
         self.assertEqual(SCHEMA_PATH, compatibility.SCHEMA_PATH)
         self.assertEqual(validate_path(path), compatibility.validate_path(path))
 
+    def test_cli_rejects_abbreviated_fixture_options(self) -> None:
+        option = "--fixtures"
+        for script in (
+            "tools/validators/correction/validate_correction_notice.py",
+            "tools/validators/validate_correction_notice.py",
+        ):
+            for stop in range(3, len(option)):
+                abbreviated = option[:stop]
+                with self.subTest(script=script, option=abbreviated):
+                    result = subprocess.run(
+                        [sys.executable, script, abbreviated],
+                        capture_output=True,
+                        text=True,
+                        check=False,
+                    )
+                    self.assertEqual(2, result.returncode)
+                    self.assertNotIn("CORRECTION_NOTICE_FIXTURES_VALID", result.stdout)
+
     def test_both_cli_entry_points_are_no_network_and_pass(self) -> None:
         for script in (
             "tools/validators/correction/validate_correction_notice.py",

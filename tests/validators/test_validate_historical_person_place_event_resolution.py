@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import importlib.util
 import json
+import subprocess
 import sys
 import unittest
 from pathlib import Path
@@ -79,6 +80,20 @@ class HistoricalResolutionTests(unittest.TestCase):
         codes = self.codes(candidate)
         self.assertIn("RAW_DNA_FIELD_DENIED", codes)
         self.assertIn("PRIVATE_OR_PRECISE_FIELD_DENIED", codes)
+
+    def test_cli_rejects_abbreviated_fixture_options(self) -> None:
+        option = "--fixtures"
+        for stop in range(3, len(option)):
+            abbreviated = option[:stop]
+            with self.subTest(option=abbreviated):
+                result = subprocess.run(
+                    [sys.executable, str(VALIDATOR_PATH), abbreviated],
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                self.assertEqual(2, result.returncode)
+                self.assertNotIn("HISTORICAL_RESOLUTION_FIXTURES_VALID", result.stdout)
 
     def test_fixture_runner(self) -> None:
         self.assertEqual(module.run_fixtures(), 0)
