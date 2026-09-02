@@ -62,6 +62,7 @@ export type MapRuntimeTerrainTransitionTicket = Readonly<{
 
 export type MapRuntimeTerrainTransitionExecutor = (
   plan: MapRuntimeTerrainTransitionPlan,
+  signal: AbortSignal,
 ) => void | Promise<void>;
 
 export type MapRuntimeTerrainTransitionCoordinator = Readonly<{
@@ -76,6 +77,8 @@ export type MapRuntimeTerrainTransitionCoordinator = Readonly<{
     ticket: MapRuntimeTerrainTransitionTicket,
     executor: MapRuntimeTerrainTransitionExecutor,
   ): Promise<MapRuntimeTerrainState>;
+  cancel(ticket: MapRuntimeTerrainTransitionTicket): MapRuntimeTerrainState | null;
+  dispose(): void;
 }>;
 
 const REQUEST_FIELDS = new Set([
@@ -271,11 +274,24 @@ export function createMapRuntimeTerrainTransitionCoordinator(
     initial === null ? null : (Object.freeze({ ...initial }) as MapRuntimeTerrainState);
   let pending: MapRuntimeTerrainTransitionTicket | null = null;
   let executing: MapRuntimeTerrainTransitionTicket | null = null;
+  let executionController: AbortController | null = null;
+  const cancelledTickets = new Set<MapRuntimeTerrainTransitionTicket>();
   let nextRevision = 1;
+  let disposed = false;
+
+  function requireActive(): void {
+    if (disposed) {
+      throw new MapRuntimePortError(
+        "MAP_RUNTIME_DISPOSED",
+        "Map runtime terrain transition coordinator is disposed.",
+      );
+    }
+  }
 
   function requirePending(
     ticket: MapRuntimeTerrainTransitionTicket,
   ): MapRuntimeTerrainTransitionTicket {
+    requireActive();
     if (ticket !== pending) {
       invalid("Map runtime terrain transition ticket is stale or invalid.");
     }
@@ -291,6 +307,7 @@ export function createMapRuntimeTerrainTransitionCoordinator(
       request: MapRuntimeTerrainRequest,
       capabilities: MapRuntimeTerrainCapabilities,
     ): MapRuntimeTerrainTransitionTicket {
+      requireActive();
       if (executing !== null) {
         invalid("Map runtime terrain transition execution is in progress.");
       }
@@ -332,24 +349,70 @@ export function createMapRuntimeTerrainTransitionCoordinator(
       }
       pending = null;
       executing = accepted;
+      const controller = new AbortController();
+      executionController = controller;
       try {
-        await executor(accepted.plan);
+        await executor(accepted.plan, controller.signal);
       } catch {
-        if (executing !== accepted) {
+        if (disposed) {
+          requireActive();
+        }
+        if (cancelledTickets.delete(accepted)) {
+          throw new MapRuntimePortError(
+            "MAP_RUNTIME_TERRAIN_TRANSITION_CANCELLED",
+            "Map runtime terrain transition execution was cancelled.",
+          );
+        }
+        if (executing !== accepted || executionController !== controller) {
           invalid("Map runtime terrain transition execution state is invalid.");
         }
         executing = null;
+        executionController = null;
         throw new MapRuntimePortError(
           "MAP_RUNTIME_TERRAIN_TRANSITION_FAILED",
           "Map runtime terrain transition execution failed.",
         );
       }
-      if (executing !== accepted) {
+      if (disposed) {
+        requireActive();
+      }
+      if (cancelledTickets.delete(accepted)) {
+        throw new MapRuntimePortError(
+          "MAP_RUNTIME_TERRAIN_TRANSITION_CANCELLED",
+          "Map runtime terrain transition execution was cancelled.",
+        );
+      }
+      if (executing !== accepted || executionController !== controller) {
         invalid("Map runtime terrain transition execution state is invalid.");
       }
       current = accepted.plan.target;
       executing = null;
+      executionController = null;
       return current;
+    },
+
+    cancel(ticket: MapRuntimeTerrainTransitionTicket): MapRuntimeTerrainState | null {
+      requireActive();
+      if (ticket !== executing || executionController === null) {
+        invalid("Map runtime terrain transition ticket is not executing.");
+      }
+      const controller = executionController;
+      cancelledTickets.add(ticket);
+      executing = null;
+      executionController = null;
+      controller.abort();
+      return current;
+    },
+
+    dispose(): void {
+      if (disposed) return;
+      disposed = true;
+      pending = null;
+      executing = null;
+      const controller = executionController;
+      executionController = null;
+      cancelledTickets.clear();
+      controller?.abort();
     },
   });
 }
