@@ -73,6 +73,22 @@ class InstallKfmCliTests(unittest.TestCase):
             ):
                 module.validate_lockfile(path)
 
+    def test_lock_validation_rejects_normalized_duplicate_requirement(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "duplicate.lock"
+            path.write_text(
+                "demo_pkg==1.0 \\\n"
+                f"    --hash=sha256:{'0' * 64}\n"
+                "Demo.Pkg==1.0 \\\n"
+                f"    --hash=sha256:{'1' * 64}\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                module.CliInstallConfigurationError,
+                "^CLI_LOCKFILE_REQUIREMENT_DUPLICATE$",
+            ):
+                module.validate_lockfile(path)
+
     def test_install_executes_argument_vectors_without_a_shell(self) -> None:
         with (
             mock.patch.object(module.time, "monotonic", side_effect=(100.0, 100.0, 150.0)),

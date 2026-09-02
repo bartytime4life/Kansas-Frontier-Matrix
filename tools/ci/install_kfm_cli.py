@@ -30,6 +30,7 @@ REQUIREMENT_LINE = re.compile(
     r"^[A-Za-z0-9]+(?:[._-][A-Za-z0-9]+)*"
     r"==[A-Za-z0-9]+(?:[._+!-][A-Za-z0-9]+)* \\?$"
 )
+DISTRIBUTION_SEPARATOR = re.compile(r"[-_.]+")
 FORBIDDEN_LOCK_TEXT = (
     "--extra-index-url",
     "--index-url",
@@ -82,11 +83,18 @@ def validate_lockfile(path: Path = LOCKFILE) -> None:
             hash_coverage[-1] += 1
     if not hash_coverage or any(count == 0 for count in hash_coverage):
         raise CliInstallConfigurationError("CLI_LOCKFILE_HASH_COVERAGE_INVALID")
+    seen_distributions: set[str] = set()
     for requirement in requirements:
         if "==" not in requirement or not requirement.rstrip().endswith("\\"):
             raise CliInstallConfigurationError("CLI_LOCKFILE_REQUIREMENT_UNPINNED")
         if not REQUIREMENT_LINE.fullmatch(requirement):
             raise CliInstallConfigurationError("CLI_LOCKFILE_REQUIREMENT_UNSAFE")
+        distribution = DISTRIBUTION_SEPARATOR.sub(
+            "-", requirement.split("==", 1)[0].lower()
+        )
+        if distribution in seen_distributions:
+            raise CliInstallConfigurationError("CLI_LOCKFILE_REQUIREMENT_DUPLICATE")
+        seen_distributions.add(distribution)
     if any(not HASH_LINE.fullmatch(line) for line in hashes):
         raise CliInstallConfigurationError("CLI_LOCKFILE_HASH_INVALID")
 
