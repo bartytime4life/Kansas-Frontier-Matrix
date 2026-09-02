@@ -133,6 +133,21 @@ class GeologyPipelineSpecificationAssessmentTests(unittest.TestCase):
             results,
         )
 
+    def test_fixture_manifest_cannot_pass_vacuously(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "cases.json"
+            path.write_text('{"bases":{},"cases":[]}', encoding="utf-8")
+            results = MODULE.validate_fixture_manifest(path)
+        self.assertEqual(
+            [{
+                "name": "fixture_manifest",
+                "outcome": "ERROR",
+                "findings": ["FIXTURE_MANIFEST_INVALID"],
+                "ok": False,
+            }],
+            results,
+        )
+
     def test_fixture_cli_rejects_abbreviated_flags(self) -> None:
         for length in range(3, len("--fixtures")):
             abbreviation = "--fixtures"[:length]
