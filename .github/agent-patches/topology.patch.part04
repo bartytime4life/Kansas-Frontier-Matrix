@@ -1,0 +1,207 @@
++        "governance_issue": (
++            "https://github.com/bartytime4life/"
++            "Kansas-Frontier-Matrix/issues/4228"
++        ),
++        "path": path,
++        "prior_blob_sha": prior_blob_sha,
++        "prior_evidence_sha256": prior.evidence_sha256,
++        "prior_fingerprint": prior.fingerprint,
++        "reason": module.RECONCILIATION_REASON,
++        "record_id": "catalog-example-readme-conflict-20260902",
++        "retire_when": module.RECONCILIATION_RETIREMENT,
++        "rule_id": "KFM-TOPO-004",
++        "subject": "catalog/",
++        "trusted_base_sha": trusted_base_sha,
++    }
+ 
+ 
+ def _root_registry(*roots: dict[str, object]) -> bytes:
+@@ -505,6 +535,214 @@
+         self.assertEqual(0, code, report)
+         self.assertEqual("PASS", report["outcome"])
+ 
++    def test_registered_preexisting_conflict_reconciliation_is_exact(self) -> None:
++        path = "catalog/domain/example/README.md"
++        prior_blob_sha = "a" * 40
++        current_blob_sha = "b" * 40
++        trusted_sha = "c" * 40
++        shared = "catalog/README.md@" + "d" * 40
++        prior = module._finding(
++            "KFM-TOPO-004",
++            "catalog/",
++            [shared, f"{path}@{prior_blob_sha}"],
++        )
++        current = module._finding(
++            "KFM-TOPO-004",
++            "catalog/",
++            [shared, f"{path}@{current_blob_sha}"],
++        )
++        record = _reconciliation_record(
++            prior,
++            current,
++            path=path,
++            prior_blob_sha=prior_blob_sha,
++            current_blob_sha=current_blob_sha,
++            trusted_base_sha=trusted_sha,
++        )
++        module._validate_conflict_reconciliation_record(
++            record,
++            _entry(current),
++            _entry(prior),
++            current,
++            current,
++            b"<<<<<<< HEAD\nleft\n=======\nright\n>>>>>>> origin/main\n",
++            b"resolved\n",
++            trusted_sha,
++        )
++
++        with self.assertRaisesRegex(module.TopologyError, "not already present"):
++            module._validate_conflict_reconciliation_record(
++                record,
++                _entry(current),
++                _entry(prior),
++                current,
++                prior,
++                b"<<<<<<< HEAD\nleft\n=======\nright\n>>>>>>> origin/main\n",
++                b"resolved\n",
++                trusted_sha,
++            )
++        with self.assertRaisesRegex(module.TopologyError, "no complete conflict"):
++            module._validate_conflict_reconciliation_record(
++                record,
++                _entry(current),
++                _entry(prior),
++                current,
++                current,
++                b"ordinary prior text\n",
++                b"resolved\n",
++                trusted_sha,
++            )
++        with self.assertRaisesRegex(module.TopologyError, "still contains conflict"):
++            module._validate_conflict_reconciliation_record(
++                record,
++                _entry(current),
++                _entry(prior),
++                current,
++                current,
++                b"<<<<<<< HEAD\nleft\n=======\nright\n>>>>>>> origin/main\n",
++                b"<<<<<<< HEAD\nunresolved\n",
++                trusted_sha,
++            )
++
++    def test_reconciled_trusted_entries_apply_only_the_registered_transition(
++        self,
++    ) -> None:
++        path = "catalog/domain/example/README.md"
++        prior_blob_sha = "a" * 40
++        current_blob_sha = "b" * 40
++        trusted_sha = "c" * 40
++        shared = "catalog/README.md@" + "d" * 40
++        prior = module._finding(
++            "KFM-TOPO-004",
++            "catalog/",
++            [shared, f"{path}@{prior_blob_sha}"],
++        )
++        current = module._finding(
++            "KFM-TOPO-004",
++            "catalog/",
++            [shared, f"{path}@{current_blob_sha}"],
++        )
++        record = _reconciliation_record(
++            prior,
++            current,
++            path=path,
++            prior_blob_sha=prior_blob_sha,
++            current_blob_sha=current_blob_sha,
++            trusted_base_sha=trusted_sha,
++        )
++        current_entry = _entry(current)
++        trusted_entry = _entry(prior)
++        with (
++            mock.patch.object(
++                module,
++                "_frozen_root_finding_at_ref",
++                return_value=current,
++            ),
++            mock.patch.object(
++                module,
++                "_git_blob",
++                side_effect=[
++                    b"<<<<<<< HEAD\nleft\n=======\nright\n>>>>>>> main\n",
++                    b"resolved\n",
++                ],
++            ),
++        ):
++            adjusted = module._reconciled_trusted_entries(
++                REPO_ROOT,
++                {current.fingerprint: current_entry},
++                {prior.fingerprint: trusted_entry},
++                (current,),
++                module._empty_reconciliation_data(),
++                {str(record["record_id"]): record},
++                module._empty_reconciliation_data(),
++                {},
++                trusted_sha,
++            )
++        self.assertEqual({current.fingerprint}, set(adjusted))
++        self.assertEqual(current_entry, adjusted[current.fingerprint])
++
++    def test_reconciliation_register_is_append_only_and_one_at_a_time(self) -> None:
++        empty_data = module._empty_reconciliation_data()
++        current_data = module._empty_reconciliation_data()
++        prior = module._finding(
++            "KFM-TOPO-004",
++            "catalog/",
++            ["catalog/domain/example/README.md@" + "a" * 40],
++        )
++        current = module._finding(
++            "KFM-TOPO-004",
++            "catalog/",
++            ["catalog/domain/example/README.md@" + "b" * 40],
++        )
++        first = _reconciliation_record(prior, current)
++        additions = module.validate_reconciliation_transition(
++            current_data,
++            {str(first["record_id"]): first},
++            empty_data,
++            {},
++        )
++        self.assertEqual((first["record_id"],), additions)
++
++        mutated = dict(first)
++        mutated["governance_issue"] = (
++            "https://github.com/bartytime4life/"
++            "Kansas-Frontier-Matrix/issues/9999"
++        )
++        with self.assertRaisesRegex(module.TopologyError, "mutates"):
++            module.validate_reconciliation_transition(
++                current_data,
++                {str(first["record_id"]): mutated},
++                empty_data,
++                {str(first["record_id"]): first},
++            )
++        with self.assertRaisesRegex(module.TopologyError, "removes"):
++            module.validate_reconciliation_transition(
++                current_data,
++                {},
++                empty_data,
++                {str(first["record_id"]): first},
++            )
++        second = dict(first)
++        second["record_id"] = "catalog-second-readme-conflict-20260902"
++        second["path"] = "catalog/domain/second/README.md"
++        with self.assertRaisesRegex(module.TopologyError, "more than one"):
++            module.validate_reconciliation_transition(
++                current_data,
++                {
++                    str(first["record_id"]): first,
++                    str(second["record_id"]): second,
++                },
++                empty_data,
++                {},
++            )
++
++    def test_reconciliation_register_parser_rejects_scope_expansion(self) -> None:
++        prior = module._finding(
++            "KFM-TOPO-004",
++            "catalog/",
