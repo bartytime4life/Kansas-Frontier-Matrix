@@ -77,6 +77,7 @@ export type MapRuntimeTerrainTransitionCoordinator = Readonly<{
     ticket: MapRuntimeTerrainTransitionTicket,
     executor: MapRuntimeTerrainTransitionExecutor,
   ): Promise<MapRuntimeTerrainState>;
+  cancel(ticket: MapRuntimeTerrainTransitionTicket): MapRuntimeTerrainState | null;
   dispose(): void;
 }>;
 
@@ -274,6 +275,7 @@ export function createMapRuntimeTerrainTransitionCoordinator(
   let pending: MapRuntimeTerrainTransitionTicket | null = null;
   let executing: MapRuntimeTerrainTransitionTicket | null = null;
   let executionController: AbortController | null = null;
+  const cancelledTickets = new Set<MapRuntimeTerrainTransitionTicket>();
   let nextRevision = 1;
   let disposed = false;
 
@@ -355,6 +357,12 @@ export function createMapRuntimeTerrainTransitionCoordinator(
         if (disposed) {
           requireActive();
         }
+        if (cancelledTickets.delete(accepted)) {
+          throw new MapRuntimePortError(
+            "MAP_RUNTIME_TERRAIN_TRANSITION_CANCELLED",
+            "Map runtime terrain transition execution was cancelled.",
+          );
+        }
         if (executing !== accepted || executionController !== controller) {
           invalid("Map runtime terrain transition execution state is invalid.");
         }
@@ -368,12 +376,31 @@ export function createMapRuntimeTerrainTransitionCoordinator(
       if (disposed) {
         requireActive();
       }
+      if (cancelledTickets.delete(accepted)) {
+        throw new MapRuntimePortError(
+          "MAP_RUNTIME_TERRAIN_TRANSITION_CANCELLED",
+          "Map runtime terrain transition execution was cancelled.",
+        );
+      }
       if (executing !== accepted || executionController !== controller) {
         invalid("Map runtime terrain transition execution state is invalid.");
       }
       current = accepted.plan.target;
       executing = null;
       executionController = null;
+      return current;
+    },
+
+    cancel(ticket: MapRuntimeTerrainTransitionTicket): MapRuntimeTerrainState | null {
+      requireActive();
+      if (ticket !== executing || executionController === null) {
+        invalid("Map runtime terrain transition ticket is not executing.");
+      }
+      const controller = executionController;
+      cancelledTickets.add(ticket);
+      executing = null;
+      executionController = null;
+      controller.abort();
       return current;
     },
 
@@ -384,6 +411,7 @@ export function createMapRuntimeTerrainTransitionCoordinator(
       executing = null;
       const controller = executionController;
       executionController = null;
+      cancelledTickets.clear();
       controller?.abort();
     },
   });
