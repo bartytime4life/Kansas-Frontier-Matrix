@@ -208,6 +208,24 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         self.assertTrue(errors)
         self.assertTrue(any("opaque kfm:// references" in error for error in errors))
 
+    def test_reference_terminal_line_breaks_fail_closed_in_every_field(self) -> None:
+        payload = _load(FIXTURE_ROOT / "reference_line_terminator_deny.json")
+        errors = validate_candidate_feature(payload)
+        expected_fields = {
+            "source_refs",
+            "evidence_refs",
+            "observation_refs",
+            "correction_refs",
+            "candidate_geometry_ref",
+        }
+        for field in expected_fields:
+            with self.subTest(field=field):
+                self.assertTrue(
+                    any(error.startswith(field) for error in errors),
+                    errors,
+                )
+        self.assertEqual(len(errors), len(expected_fields))
+
     def test_path_locator_reference_fixture_fails_closed(self) -> None:
         payload = _load(FIXTURE_ROOT / "path_locator_reference_deny.json")
         self.assertIn(

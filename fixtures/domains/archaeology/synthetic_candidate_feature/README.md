@@ -36,6 +36,9 @@ burial, sacred-place, collection-security, or culturally restricted data.
 - `location_bearing_reference_deny.json` proves that a nominal `kfm://`
   reference cannot smuggle query, fragment, or encoded locator material through
   a governed-reference field.
+- `reference_line_terminator_deny.json` proves that terminal line breaks cannot
+  exploit `$`-anchor differences between schema engines across any governed
+  reference field.
 - `path_locator_reference_deny.json` proves that a nominally opaque geometry
   reference cannot smuggle case-varied latitude, longitude, bounding-box,
   coordinate-system, or other protected locator tokens through its path.
@@ -68,7 +71,7 @@ python -m unittest tests.domains.archaeology.test_candidate_not_site
 Passing these checks proves only the schema-aligned, strict-end candidate identifier,
 candidate-type vocabulary, spatial-precision vocabulary, and geometry-reference
 precision binding; bounded candidate discriminator; inline location denial;
-opaque-reference, protected-locator-token, and reference-family boundaries;
+strict-end opaque-reference, protected-locator-token, and reference-family boundaries;
 conditional EvidenceRef binding; and supersession
 correction binding; malformed-reference finite denial; and nonempty governed
 evidence, observation, and correction bindings; malformed-vocabulary and

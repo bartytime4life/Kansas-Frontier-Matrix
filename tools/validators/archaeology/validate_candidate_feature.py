@@ -126,7 +126,7 @@ KFM_REFERENCE_PATTERN = re.compile(
     r"[Cc][Oo][Oo][Rr][Dd][Ii][Nn][Aa][Tt][Ee][Ss]?|[Bb][Bb][Oo][Xx]|"
     r"[Gg][Ee][Oo][Hh][Aa][Ss][Hh]|[Ww][Kk][Tt]|[Ee][Aa][Ss][Tt][Ii][Nn][Gg]|"
     r"[Nn][Oo][Rr][Tt][Hh][Ii][Nn][Gg]|[Uu][Tt][Mm]|[Mm][Gg][Rr][Ss])"
-    r"(?:$|[0-9]|[/._~-]))kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
+    r"(?:$|[0-9]|[/._~-]))kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*(?![\s\S])"
 )
 OPAQUE_ID_PATH_PATTERN = (
     r"[A-Za-z0-9][A-Za-z0-9._~-]*(?:/[A-Za-z0-9][A-Za-z0-9._~-]*)*"
@@ -135,23 +135,23 @@ REFERENCE_FAMILY_PATTERNS = {
     "source_refs": re.compile(
         r"^kfm://(?:source|source-descriptor|source-record)/"
         + OPAQUE_ID_PATH_PATTERN
-        + r"$"
+        + r"(?![\s\S])"
     ),
     "evidence_refs": re.compile(
         r"^kfm://(?:evidence|evidence-ref|evidence-bundle)/"
         + OPAQUE_ID_PATH_PATTERN
-        + r"$"
+        + r"(?![\s\S])"
     ),
     "observation_refs": re.compile(
-        r"^kfm://observation/" + OPAQUE_ID_PATH_PATTERN + r"$"
+        r"^kfm://observation/" + OPAQUE_ID_PATH_PATTERN + r"(?![\s\S])"
     ),
     "correction_refs": re.compile(
         r"^kfm://(?:correction|correction-notice|rollback)/"
         + OPAQUE_ID_PATH_PATTERN
-        + r"$"
+        + r"(?![\s\S])"
     ),
     "candidate_geometry_ref": re.compile(
-        r"^kfm://geometry/" + OPAQUE_ID_PATH_PATTERN + r"$"
+        r"^kfm://geometry/" + OPAQUE_ID_PATH_PATTERN + r"(?![\s\S])"
     ),
 }
 SPEC_HASH_PATTERN = re.compile(r"^sha256:[a-f0-9]{64}$")
@@ -353,6 +353,7 @@ def validate_fixture_suite() -> int:
     deny_paths = {
         FIXTURE_ROOT / "sensitive_geometry_deny.json": "inline location fields are denied",
         FIXTURE_ROOT / "location_bearing_reference_deny.json": "opaque kfm:// references",
+        FIXTURE_ROOT / "reference_line_terminator_deny.json": "opaque kfm:// references",
         FIXTURE_ROOT / "path_locator_reference_deny.json": "protected locator material",
         FIXTURE_ROOT / "compact_locator_reference_deny.json": "protected locator material",
         FIXTURE_ROOT / "misbound_reference_family_deny.json": "allowed governed reference family",
