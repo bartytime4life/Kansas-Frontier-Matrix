@@ -166,6 +166,31 @@ class GeologyPipelineSpecificationAssessmentTests(unittest.TestCase):
             results,
         )
 
+    def test_fixture_manifest_contains_materialization_errors_finitely(self) -> None:
+        manifest = {
+            "bases": {"bedrock": MANIFEST["bases"]["bedrock"]},
+            "cases": [{
+                "name": "broken_mutation_pointer",
+                "base": "bedrock",
+                "mutations": [{"path": "/missing/path", "value": True}],
+                "expected_outcome": "PASS",
+                "expected_findings": [],
+            }],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "cases.json"
+            path.write_text(json.dumps(manifest), encoding="utf-8")
+            results = MODULE.validate_fixture_manifest(path)
+        self.assertEqual(
+            [{
+                "name": "broken_mutation_pointer",
+                "outcome": "ERROR",
+                "findings": ["FIXTURE_CASE_MATERIALIZATION_ERROR"],
+                "ok": False,
+            }],
+            results,
+        )
+
     def test_fixture_cli_rejects_abbreviated_flags(self) -> None:
         for length in range(3, len("--fixtures")):
             abbreviation = "--fixtures"[:length]
