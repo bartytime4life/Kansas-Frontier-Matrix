@@ -122,7 +122,7 @@
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "The prior exact repair head passed the 20-case fixture matrix, 58 focused tests, generated-receipt validation, and all three pair workflows. This non-force refresh consumes 16 disjoint current-main commits; hosted validation of the refreshed head is pending."
+      "reason": "The prior exact repair head passed the 20-case fixture matrix, 58 focused tests, generated-receipt validation, and all three pair workflows. Draft PR #4190 is rerunning hosted validation on the refreshed current-main head."
     },
     {
       "gate": "human-review",
@@ -164,9 +164,9 @@
   "created_at": "2026-08-30T18:09:17.956Z",
   "emitter": "OpenAI ChatGPT automation runtime",
   "links": {
-    "pr_number": 4175,
+    "pr_number": 4190,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Successor provenance receipt for the CrossLaneJoinAssessment review unit. It binds the generic join contract, current pair-profile inventory, all seven dedicated synthetic regression files, the self-checking nine-module join-test inventory, and the generic plus three pair-specific workflows. Generic join validation triggers on every receipt-bound artifact. Disposition precedence is now fail-closed: for distinct raw domains, dependency failures remain ERROR and living-person or blocked sensitive-geometry conditions remain DENY before unresolved aliases can route to review; same-domain scope routing remains first because the generic helper does not own domain-local work. Deterministic positive and synthetic-negative proof prevents alias review from downgrading stronger outcomes. Overlap reconciliation remains explicitly scoped to all 20 cumulative branch paths and all 19 receipt-bound artifacts so partial review claims fail closed. The branch was refreshed non-destructively onto current main after reconciling open PRs #4188 and #4189; current-main bytes remain unchanged outside the bounded seam. The historical 20260809 receipt remains immutable. This receipt creates no source, evidence, policy, review, proof, promotion, release, publication, or public-use authority."
+  "notes": "Successor provenance receipt for the CrossLaneJoinAssessment review unit. It binds the generic join contract, current pair-profile inventory, all seven dedicated synthetic regression files, the self-checking nine-module join-test inventory, and the generic plus three pair-specific workflows. Generic join validation triggers on every receipt-bound artifact. Disposition precedence is now fail-closed: for distinct raw domains, dependency failures remain ERROR and living-person or blocked sensitive-geometry conditions remain DENY before unresolved aliases can route to review; same-domain scope routing remains first because the generic helper does not own domain-local work. Deterministic positive and synthetic-negative proof prevents alias review from downgrading stronger outcomes. Overlap reconciliation remains explicitly scoped to all 20 cumulative branch paths and all 19 receipt-bound artifacts so partial review claims fail closed. Closed PR #4175 remains preserved and unmerged; draft PR #4190 carries the same validated repair after the branch was refreshed non-destructively onto current main after reconciling open PRs #4188 and #4189; current-main bytes remain unchanged outside the bounded seam. The historical 20260809 receipt remains immutable. This receipt creates no source, evidence, policy, review, proof, promotion, release, publication, or public-use authority."
 }
