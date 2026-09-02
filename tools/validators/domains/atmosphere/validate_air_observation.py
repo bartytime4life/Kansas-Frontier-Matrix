@@ -64,6 +64,8 @@ def _schema_findings(candidate: dict[str, object]) -> list[Finding]:
         Finding("AIR_OBSERVATION_SCHEMA_INVALID", _json_path(error.absolute_path))
         for error in errors[:_MAX_SCHEMA_FINDINGS]
     }
+    if len(errors) > _MAX_SCHEMA_FINDINGS:
+        findings.add(Finding("SCHEMA_FINDINGS_TRUNCATED", "$"))
     return sorted(findings)
 
 
