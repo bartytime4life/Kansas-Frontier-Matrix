@@ -7,27 +7,60 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-PROFILE = "kfm.catalog-domain-child-index-drift.v3"
+PROFILE = "kfm.catalog-domain-child-index-drift.v4"
 SECTION_TITLE = "Known child lanes"
 SECTION_HEADER = f"## {SECTION_TITLE}"
-SECTION_HEADER_RE = re.compile(
-    rf"(?m)^##[ \t]+{re.escape(SECTION_TITLE)}(?:[ \t]+#+)?[ \t]*$"
-)
-NEXT_H2_RE = re.compile(r"(?m)^##(?:[ \t]+|$)")
+FENCE_OPEN_RE = re.compile(r"^ {0,3}(?P<fence>`{3,}|~{3,}).*$")
+ATX_H2_RE = re.compile(r"^ {0,3}##(?:[ \t]+(?P<title>.*?)[ \t]*|[ \t]*)$")
+CLOSING_HASH_RE = re.compile(r"[ \t]+#+[ \t]*$")
 ROW_RE = re.compile(r"^\|\s*`([^`]+/)`\s*\|")
+
+
+def _h2_spans(text: str) -> list[tuple[int, int, str]]:
+    headings: list[tuple[int, int, str]] = []
+    fence_char: str | None = None
+    fence_length = 0
+    offset = 0
+    for raw_line in text.splitlines(keepends=True):
+        line = raw_line.rstrip("\r\n")
+        if fence_char is not None:
+            closing = re.fullmatch(
+                rf" {{0,3}}{re.escape(fence_char)}{{{fence_length},}}[ \t]*",
+                line,
+            )
+            if closing is not None:
+                fence_char = None
+                fence_length = 0
+        else:
+            opening = FENCE_OPEN_RE.match(line)
+            if opening is not None:
+                fence = opening.group("fence")
+                fence_char = fence[0]
+                fence_length = len(fence)
+            else:
+                heading = ATX_H2_RE.match(line)
+                if heading is not None:
+                    title = heading.group("title") or ""
+                    title = CLOSING_HASH_RE.sub("", title).strip(" \t")
+                    headings.append((offset, offset + len(line), title))
+        offset += len(raw_line)
+    return headings
 
 
 def _read_indexed_lanes(readme_path: Path) -> list[str]:
     text = readme_path.read_text(encoding="utf-8")
-    section_matches = list(SECTION_HEADER_RE.finditer(text))
+    headings = _h2_spans(text)
+    section_matches = [heading for heading in headings if heading[2] == SECTION_TITLE]
     if len(section_matches) > 1:
         raise ValueError(f"duplicate section: {SECTION_HEADER}")
     if not section_matches:
         raise ValueError(f"missing section: {SECTION_HEADER}")
-    section = text[section_matches[0].end():]
-    next_h2 = NEXT_H2_RE.search(section)
-    if next_h2 is not None:
-        section = section[:next_h2.start()]
+    section_start = section_matches[0][1]
+    section_end = next(
+        (start for start, _, _ in headings if start > section_start),
+        len(text),
+    )
+    section = text[section_start:section_end]
 
     lanes: list[str] = []
     for line in section.splitlines():

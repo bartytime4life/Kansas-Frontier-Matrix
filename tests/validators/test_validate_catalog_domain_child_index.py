@@ -161,6 +161,50 @@ class CatalogDomainChildIndexDriftTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "duplicate section"):
                 MODULE.validate_catalog_domain_child_index(root)
 
+    def test_indented_known_child_lanes_section_is_parseable(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "domain"
+            root.mkdir()
+            (root / "agriculture").mkdir()
+            readme = _readme("agriculture/").replace(
+                "## Known child lanes",
+                "   ## Known child lanes",
+            )
+            (root / "README.md").write_text(readme, encoding="utf-8")
+            report = MODULE.validate_catalog_domain_child_index(root)
+            self.assertEqual(report["outcome"], "PASS")
+
+    def test_indented_next_heading_bounds_known_child_lanes_section(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "domain"
+            root.mkdir()
+            (root / "agriculture").mkdir()
+            readme = _readme("agriculture/").replace(
+                "## Catalog requirements",
+                "   ## Catalog requirements\n\n| `outside/` | example only |",
+            )
+            (root / "README.md").write_text(readme, encoding="utf-8")
+            report = MODULE.validate_catalog_domain_child_index(root)
+            self.assertEqual(report["outcome"], "PASS")
+
+    def test_fenced_known_child_lanes_example_is_not_counted(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "domain"
+            root.mkdir()
+            (root / "agriculture").mkdir()
+            example = (
+                "~~~markdown\n"
+                "## Known child lanes\n"
+                "| `example/` | example only |\n"
+                "~~~\n\n"
+            )
+            (root / "README.md").write_text(
+                example + _readme("agriculture/"),
+                encoding="utf-8",
+            )
+            report = MODULE.validate_catalog_domain_child_index(root)
+            self.assertEqual(report["outcome"], "PASS")
+
     def test_cli_emits_deterministic_machine_readable_report(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "domain"

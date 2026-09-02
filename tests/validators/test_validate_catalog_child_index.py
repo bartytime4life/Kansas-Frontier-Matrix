@@ -137,6 +137,50 @@ class CatalogChildIndexDriftTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "duplicate section"):
                 MODULE.validate_catalog_child_index(root)
 
+    def test_indented_child_lane_section_is_parseable(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "catalog"
+            root.mkdir()
+            (root / "stac").mkdir()
+            readme = _readme(("stac/", "test posture")).replace(
+                "## Current bounded child-lane index",
+                "   ## Current bounded child-lane index",
+            )
+            (root / "README.md").write_text(readme, encoding="utf-8")
+            report = MODULE.validate_catalog_child_index(root)
+            self.assertEqual(report["outcome"], "PASS")
+
+    def test_indented_next_heading_bounds_child_lane_section(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "catalog"
+            root.mkdir()
+            (root / "stac").mkdir()
+            readme = _readme(("stac/", "test posture")).replace(
+                "## Next section",
+                "   ## Next section\n\n| `outside/` | example only |",
+            )
+            (root / "README.md").write_text(readme, encoding="utf-8")
+            report = MODULE.validate_catalog_child_index(root)
+            self.assertEqual(report["outcome"], "PASS")
+
+    def test_fenced_section_example_is_not_counted(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "catalog"
+            root.mkdir()
+            (root / "stac").mkdir()
+            example = (
+                "```markdown\n"
+                "## Current bounded child-lane index\n"
+                "| `example/` | example only |\n"
+                "```\n\n"
+            )
+            (root / "README.md").write_text(
+                example + _readme(("stac/", "test posture")),
+                encoding="utf-8",
+            )
+            report = MODULE.validate_catalog_child_index(root)
+            self.assertEqual(report["outcome"], "PASS")
+
     def test_missing_alias_target_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "catalog"
