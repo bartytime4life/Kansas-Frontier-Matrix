@@ -54,6 +54,19 @@ export function resolvePublicMapCaseRetryPlan(
 }
 
 /**
+ * Accept a scheduled retry callback only while it still owns the active local
+ * generation. Navigation, manual release, or a newer retry invalidates older
+ * callbacks so they cannot clear a replacement timer or resynchronize stale
+ * URL state.
+ */
+export function isPublicMapCaseRetryGenerationCurrent(
+  activeGeneration: number,
+  callbackGeneration: number,
+): boolean {
+  return activeGeneration === callbackGeneration;
+}
+
+/**
  * Commit URL ownership only after the fixture control accepted the requested
  * selection. A disabled control ignores `click()`, so retaining the prior
  * owner keeps the URL request retryable instead of falsely claiming that its

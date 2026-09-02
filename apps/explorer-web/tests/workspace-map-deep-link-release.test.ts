@@ -8,6 +8,7 @@ import {
 } from "../src/site/workspace-context";
 import {
   PUBLIC_MAP_CASE_DEEP_LINK_RETRY_LIMIT,
+  isPublicMapCaseRetryGenerationCurrent,
   resolvePublicMapCaseManualSelectionTransition,
   resolvePublicMapCaseRetryPlan,
   resolvePublicMapCaseUrlConsumerCommit,
@@ -111,6 +112,12 @@ describe("Explorer manual map-selection deep-link release", () => {
       urlHref: changedUrl.href,
       shouldSchedule: true,
     });
+  });
+
+  it("rejects a stale retry callback after cancellation or replacement", () => {
+    expect(isPublicMapCaseRetryGenerationCurrent(4, 4)).toBe(true);
+    expect(isPublicMapCaseRetryGenerationCurrent(5, 4)).toBe(false);
+    expect(isPublicMapCaseRetryGenerationCurrent(6, 4)).toBe(false);
   });
 
   it("releases ownership only when a departing URL still owns the fixture", () => {
@@ -238,6 +245,19 @@ describe("Explorer manual map-selection deep-link release", () => {
     expect(mainSource).toContain("mapCaseButton?.disabled");
     expect(mainSource).toContain("scheduleMapDeepLinkRetry(safeUrl)");
     expect(mainSource).toContain("window.location.href !== retryPlan.urlHref");
+    const mapRetryScheduleIndex = mainSource.indexOf(
+      "const scheduleMapDeepLinkRetry",
+    );
+    const staleGenerationGuardIndex = mainSource.indexOf(
+      "isPublicMapCaseRetryGenerationCurrent(",
+      mapRetryScheduleIndex,
+    );
+    const mapRetryClearIndex = mainSource.indexOf(
+      "pendingMapDeepLinkRetry = null",
+      staleGenerationGuardIndex,
+    );
+    expect(staleGenerationGuardIndex).toBeGreaterThan(mapRetryScheduleIndex);
+    expect(mapRetryClearIndex).toBeGreaterThan(staleGenerationGuardIndex);
     expect(mainSource).toContain("const selectionApplied = mapCaseButton.disabled");
     expect(mainSource).not.toContain("activeDeepLinkMapCaseId = mapTransition.activeDeepLinkMapCaseId");
     expect(mainSource).not.toContain("selection.evidenceRefs.join");
