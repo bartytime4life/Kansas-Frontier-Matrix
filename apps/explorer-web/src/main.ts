@@ -271,7 +271,7 @@ const syncWorkspaceNavigation = (): void => {
   } else {
     const ownedConsumerCurrent =
       mapTransition.activeDeepLinkMapCaseId === null ||
-      (mapCaseButton !== undefined && mapCaseButton.disabled);
+      mapCaseButton !== undefined;
     activeDeepLinkMapCaseId = resolvePublicMapCaseUrlConsumerCommit(
       mapTransition,
       false,

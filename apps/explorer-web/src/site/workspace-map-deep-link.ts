@@ -84,8 +84,10 @@ export function isPublicMapCaseRetryGenerationCurrent(
 /**
  * Commit URL ownership only after the fixture control accepted the requested
  * selection, and retain established ownership only while its unique consumer
- * still reports the selected state. Mount churn therefore cannot leave a URL
- * owning a removed, duplicated, or deselected fixture.
+ * remains mounted. Map controls are disabled only while their asynchronous
+ * evidence request is pending, so re-enablement must not look like deselection.
+ * Manual selection owns release; mount churn cannot leave a URL owning a
+ * removed or duplicated fixture.
  */
 export function resolvePublicMapCaseUrlConsumerCommit(
   transition: PublicMapCaseUrlTransition,

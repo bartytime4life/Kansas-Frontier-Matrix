@@ -105,7 +105,7 @@ describe("Explorer manual map-selection deep-link release", () => {
     });
   });
 
-  it("drops established ownership when its selected consumer is no longer current", () => {
+  it("retains established ownership after async re-enablement but drops a missing consumer", () => {
     const owned = resolvePublicMapCaseUrlTransition(missingMapUrl(), "missing");
 
     expect(resolvePublicMapCaseUrlConsumerCommit(owned, false, true)).toBe(
@@ -279,6 +279,12 @@ describe("Explorer manual map-selection deep-link release", () => {
     expect(mainSource).toContain("root.querySelectorAll<HTMLButtonElement>(");
     expect(mainSource).toContain(
       "const ownedConsumerCurrent =\n      mapTransition.activeDeepLinkMapCaseId === null ||",
+    );
+    expect(mainSource).toContain(
+      "mapTransition.activeDeepLinkMapCaseId === null ||\n      mapCaseButton !== undefined",
+    );
+    expect(mainSource).not.toContain(
+      "mapCaseButton !== undefined && mapCaseButton.disabled",
     );
     expect(mainSource).toContain(
       "requestedMapCaseId !== null && activeDeepLinkMapCaseId === null",
