@@ -79,21 +79,30 @@ def validate_lockfile(path: Path = LOCKFILE) -> None:
     requirements = [line for line in lock_lines if not line[0].isspace()]
     hashes = [line for line in lock_lines if "--hash=" in line]
     hash_coverage: list[int] = []
+    hash_groups: list[list[str]] = []
     for line in lock_lines:
         if not line[0].isspace():
             hash_coverage.append(0)
+            hash_groups.append([])
         elif "--hash=" in line:
             if not hash_coverage:
                 raise CliInstallConfigurationError(
                     "CLI_LOCKFILE_HASH_COVERAGE_INVALID"
                 )
             hash_coverage[-1] += 1
+            hash_groups[-1].append(line)
             if hash_coverage[-1] > MAX_HASHES_PER_REQUIREMENT:
                 raise CliInstallConfigurationError(
                     "CLI_LOCKFILE_HASH_LIMIT_EXCEEDED"
                 )
     if not hash_coverage or any(count == 0 for count in hash_coverage):
         raise CliInstallConfigurationError("CLI_LOCKFILE_HASH_COVERAGE_INVALID")
+    if any(
+        any(not line.rstrip().endswith("\\") for line in group[:-1])
+        or group[-1].rstrip().endswith("\\")
+        for group in hash_groups
+    ):
+        raise CliInstallConfigurationError("CLI_LOCKFILE_CONTINUATION_INVALID")
     seen_distributions: set[str] = set()
     for requirement in requirements:
         if "==" not in requirement or not requirement.rstrip().endswith("\\"):

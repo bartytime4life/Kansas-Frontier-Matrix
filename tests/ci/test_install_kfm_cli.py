@@ -119,6 +119,31 @@ class InstallKfmCliTests(unittest.TestCase):
             ):
                 module.validate_lockfile(path)
 
+    def test_lock_validation_binds_hash_continuations(self) -> None:
+        cases = {
+            "missing-intermediate": (
+                "demo==1.0 \\\n"
+                f"    --hash=sha256:{'0' * 64}\n"
+                f"    --hash=sha256:{'1' * 64}\n"
+            ),
+            "dangling-final": (
+                "first==1.0 \\\n"
+                f"    --hash=sha256:{'0' * 64} \\\n"
+                "second==2.0 \\\n"
+                f"    --hash=sha256:{'1' * 64}\n"
+            ),
+        }
+        with tempfile.TemporaryDirectory() as temp:
+            for name, text in cases.items():
+                with self.subTest(name=name):
+                    path = Path(temp) / f"{name}.lock"
+                    path.write_text(text, encoding="utf-8")
+                    with self.assertRaisesRegex(
+                        module.CliInstallConfigurationError,
+                        "^CLI_LOCKFILE_CONTINUATION_INVALID$",
+                    ):
+                        module.validate_lockfile(path)
+
     def test_install_executes_argument_vectors_without_a_shell(self) -> None:
         with (
             mock.patch.object(module.time, "monotonic", side_effect=(100.0, 100.0, 150.0)),
