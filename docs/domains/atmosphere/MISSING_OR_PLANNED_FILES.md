@@ -16,7 +16,7 @@ related:
   - docs/domains/atmosphere/README.md
   - docs/domains/README.md
   - docs/doctrine/directory-rules.md
-  - ai-build-operating-contract.md
+  - docs/doctrine/ai-build-operating-contract.md
   - docs/adr/README.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/registers/DRIFT_REGISTER.md
