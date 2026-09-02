@@ -19,6 +19,9 @@ burial, sacred-place, collection-security, or culturally restricted data.
   membership or evidence-binding checks.
 - `malformed_spec_hash_deny.json` proves that optional evidence-binding digests
   use the same lowercase SHA-256 grammar in the schema and executable validator.
+- `spec_hash_line_terminator_deny.json` proves that a terminal line break cannot
+  exploit `$`-anchor differences between schema engines to become part of an
+  evidence-binding digest.
 - `null_optional_scalars_deny.json` proves that explicitly null candidate type,
   spatial precision, and evidence-binding digest values fail closed instead of
   being treated as omitted.
@@ -76,7 +79,7 @@ conditional EvidenceRef binding; and supersession
 correction binding; malformed-reference finite denial; and nonempty governed
 evidence, observation, and correction bindings; malformed-vocabulary and
 null-scalar finite denial; and
-schema-aligned `spec_hash` and deterministic Unicode-safe confidence-statement
+schema-aligned strict-end `spec_hash` and deterministic Unicode-safe confidence-statement
 validation. It
 does not confirm a site,
 authorize publication, or establish full EvidenceBundle closure, policy,

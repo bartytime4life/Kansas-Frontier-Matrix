@@ -154,7 +154,7 @@ REFERENCE_FAMILY_PATTERNS = {
         r"^kfm://geometry/" + OPAQUE_ID_PATH_PATTERN + r"(?![\s\S])"
     ),
 }
-SPEC_HASH_PATTERN = re.compile(r"^sha256:[a-f0-9]{64}$")
+SPEC_HASH_PATTERN = re.compile(r"^sha256:[a-f0-9]{64}(?![\s\S])")
 CONFIDENCE_STATEMENT_MAX_LENGTH = 1000
 # Keep this ECMAScript-compatible for the Draft 2020-12 schema.  Requiring a
 # non-surrogate BMP content code point makes supplementary-only strings fail
@@ -328,7 +328,9 @@ def validate_candidate_feature(payload: Any) -> list[str]:
         not isinstance(spec_hash, str)
         or SPEC_HASH_PATTERN.fullmatch(spec_hash) is None
     ):
-        errors.append("spec_hash must match ^sha256:[a-f0-9]{64}$")
+        errors.append(
+            "spec_hash must match ^sha256:[a-f0-9]{64}(?![\\s\\S])"
+        )
     confidence_statement = payload.get("confidence_statement")
     if (
         "confidence_statement" in payload
@@ -370,6 +372,7 @@ def validate_fixture_suite() -> int:
         FIXTURE_ROOT / "empty_observation_refs_deny.json": "observation_refs must contain",
         FIXTURE_ROOT / "non_string_vocabulary_deny.json": "candidate_type is not in",
         FIXTURE_ROOT / "malformed_spec_hash_deny.json": "spec_hash must match",
+        FIXTURE_ROOT / "spec_hash_line_terminator_deny.json": "spec_hash must match",
         FIXTURE_ROOT / "null_optional_scalars_deny.json": "candidate_type is not in",
         FIXTURE_ROOT / "malformed_confidence_statement_deny.json": "confidence_statement must contain",
         FIXTURE_ROOT / "unicode_invisible_confidence_deny.json": "confidence_statement must contain",

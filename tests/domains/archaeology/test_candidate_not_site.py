@@ -89,16 +89,30 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
 
     def test_malformed_spec_hash_fails_closed(self) -> None:
         payload = _load(FIXTURE_ROOT / "malformed_spec_hash_deny.json")
-        expected_error = "spec_hash must match ^sha256:[a-f0-9]{64}$"
+        expected_error = (
+            "spec_hash must match ^sha256:[a-f0-9]{64}(?![\\s\\S])"
+        )
         self.assertIn(expected_error, validate_candidate_feature(payload))
         payload["spec_hash"] = {"synthetic": "not-a-digest"}
         self.assertIn(expected_error, validate_candidate_feature(payload))
+
+    def test_spec_hash_terminal_line_break_fails_closed(self) -> None:
+        payload = _load(FIXTURE_ROOT / "spec_hash_line_terminator_deny.json")
+        expected_error = (
+            "spec_hash must match ^sha256:[a-f0-9]{64}(?![\\s\\S])"
+        )
+        self.assertTrue(payload["spec_hash"].endswith("\n"))
+        self.assertEqual(validate_candidate_feature(payload), [expected_error])
+        payload["spec_hash"] = "sha256:" + "a" * 64
+        self.assertEqual(validate_candidate_feature(payload), [])
 
     def test_null_optional_scalars_fail_closed_while_omission_remains_valid(self) -> None:
         cases = {
             "candidate_type": "candidate_type is not in the bounded vocabulary",
             "spatial_precision_class": "spatial_precision_class is not in the bounded vocabulary",
-            "spec_hash": "spec_hash must match ^sha256:[a-f0-9]{64}$",
+            "spec_hash": (
+                "spec_hash must match ^sha256:[a-f0-9]{64}(?![\\s\\S])"
+            ),
         }
         for field, expected_error in cases.items():
             with self.subTest(field=field):
@@ -115,7 +129,7 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
             {
                 "candidate_type is not in the bounded vocabulary",
                 "spatial_precision_class is not in the bounded vocabulary",
-                "spec_hash must match ^sha256:[a-f0-9]{64}$",
+                "spec_hash must match ^sha256:[a-f0-9]{64}(?![\\s\\S])",
             },
         )
 

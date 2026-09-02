@@ -217,7 +217,7 @@ The current schema does not require these fields. They are `PROPOSED` semantic r
 | `lifecycle_state` | RAW/WORK/QUARANTINE/PROCESSED/CATALOG/TRIPLET/PUBLISHED posture where used. |
 | `release_refs` | Release/candidate linkage where applicable. |
 | `correction_refs` | Correction, correction-notice, or rollback lineage references. |
-| `spec_hash` | Integrity pin for the representation. |
+| `spec_hash` | Lowercase SHA-256 integrity pin using a strict end-of-input grammar; terminal line breaks are denied. |
 
 ---
 

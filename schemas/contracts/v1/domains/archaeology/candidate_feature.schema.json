@@ -170,7 +170,8 @@
     },
     "spec_hash": {
       "type": "string",
-      "pattern": "^sha256:[a-f0-9]{64}$"
+      "$comment": "Uses a portable strict end-of-input assertion so terminal line breaks cannot become part of the evidence-binding digest.",
+      "pattern": "^sha256:[a-f0-9]{64}(?![\\s\\S])"
     }
   },
   "additionalProperties": false,
