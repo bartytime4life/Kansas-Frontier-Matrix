@@ -13,6 +13,7 @@ import copy
 import hashlib
 import json
 import math
+import sys
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -373,18 +374,72 @@ def materialize_fixture_case(manifest: Mapping[str, object], case: Mapping[str, 
     candidate = _resolve_base(manifest, str(case["base"]))
     for mutation in case.get("mutations", []):
         assert isinstance(mutation, Mapping)
-        _replace(candidate, str(mutation["path"]), mutation.get("value"))
+        pointer = mutation["path"]
+        if not isinstance(pointer, str) or not pointer.startswith("/") or pointer == "/":
+            raise ValueError("mutation path must be a non-root JSON pointer")
+        _replace(candidate, pointer, mutation.get("value"))
     spec_hash, assessment_id = compute_identity(candidate)
     candidate["spec_hash"] = case.get("spec_hash_override", spec_hash)
     candidate["assessment_id"] = case.get("assessment_id_override", assessment_id)
     return candidate
 
 
-def validate_fixture_manifest() -> list[dict[str, object]]:
-    manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+def validate_fixture_manifest(path: Path = FIXTURE_PATH) -> list[dict[str, object]]:
+    manifest, findings = load_json_object(path)
+    if manifest is None:
+        return [{
+            "name": "fixture_manifest",
+            "outcome": "ERROR",
+            "findings": [finding.code for finding in findings],
+            "ok": False,
+        }]
+    bases = manifest.get("bases")
+    cases = manifest.get("cases")
+    if (
+        not isinstance(bases, Mapping)
+        or not isinstance(cases, list)
+        or not cases
+        or not all(isinstance(case, Mapping) for case in cases)
+    ):
+        return [{
+            "name": "fixture_manifest",
+            "outcome": "ERROR",
+            "findings": ["FIXTURE_MANIFEST_INVALID"],
+            "ok": False,
+        }]
+    case_names = [case.get("name") for case in cases]
+    if (
+        any(not isinstance(name, str) or not name for name in case_names)
+        or len(case_names) != len(set(case_names))
+        or any(
+            not isinstance(case.get("base"), str)
+            or case["base"] not in bases
+            or not isinstance(case.get("expected_outcome"), str)
+            or case["expected_outcome"] not in {"PASS", "ABSTAIN", "DENY", "ERROR"}
+            or not isinstance(case.get("expected_findings"), list)
+            or not all(isinstance(code, str) for code in case["expected_findings"])
+            for case in cases
+        )
+    ):
+        return [{
+            "name": "fixture_manifest",
+            "outcome": "ERROR",
+            "findings": ["FIXTURE_CASE_INVALID"],
+            "ok": False,
+        }]
     results: list[dict[str, object]] = []
-    for case in manifest["cases"]:
-        result = validate_candidate(materialize_fixture_case(manifest, case))
+    for case in cases:
+        try:
+            candidate = materialize_fixture_case(manifest, case)
+        except (AssertionError, KeyError, IndexError, RecursionError, TypeError, ValueError):
+            results.append({
+                "name": case["name"],
+                "outcome": "ERROR",
+                "findings": ["FIXTURE_CASE_MATERIALIZATION_ERROR"],
+                "ok": False,
+            })
+            continue
+        result = validate_candidate(candidate)
         results.append({
             "name": case["name"],
             "outcome": result.outcome,
@@ -395,11 +450,14 @@ def validate_fixture_manifest() -> list[dict[str, object]]:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
     parser.add_argument("input", nargs="?", type=Path)
     parser.add_argument("--fixtures", action="store_true")
-    args = parser.parse_args(argv)
+    arguments = list(sys.argv[1:] if argv is None else argv)
+    args = parser.parse_args(arguments)
     if args.fixtures:
+        if arguments != ["--fixtures"]:
+            parser.error("--fixtures must be used as the only argument")
         results = validate_fixture_manifest()
         for result in results:
             print(json.dumps(result, sort_keys=True, separators=(",", ":")))

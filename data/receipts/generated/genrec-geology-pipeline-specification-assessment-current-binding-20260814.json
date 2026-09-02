@@ -16,8 +16,8 @@
     "docs/intake/exploratory/geology-pipeline-specification-assessment-source-map.md": "sha256:befef5654c7e3286f654d608590f61c568bf784a08b26ce9ba3a3a08547cd55e",
     "fixtures/contracts/v1/domains/geology/geology_pipeline_specification_assessment/cases.json": "sha256:0909ab2c3ad636be12db61313cdeb084dd285b70473c9c10494884e8a3468e1a",
     "schemas/contracts/v1/domains/geology/geology_pipeline_specification_assessment.schema.json": "sha256:367acea4df49aabea04bd4fdb9a373e25560cf6798c5b31b8bfe0bb420948fcf",
-    "tests/validators/domains/geology/test_validate_geology_pipeline_specification_assessment.py": "sha256:323bdf68cde3897ec4e4820d22817eeda35a53e6eefbb4d350979d462a83659b",
-    "tools/validators/validate_geology_pipeline_specification_assessment.py": "sha256:d4947359ce25992409b634b817ab92ab61f2a5b5e3f387837a9bc0a5f7fd4785"
+    "tests/validators/domains/geology/test_validate_geology_pipeline_specification_assessment.py": "sha256:888c95672f990f87de1f13b1cd40d1a3b9d5e46e1c40fc010b1ad86bc11975cd",
+    "tools/validators/validate_geology_pipeline_specification_assessment.py": "sha256:48b635f6023a775bf57a6d58ca4237a8d5e9018c292242d2d64e53dbf8b8a11f"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -84,7 +84,7 @@
     {
       "gate": "focused-unittest-suite",
       "outcome": "PASS",
-      "reason": "Nine deterministic focused tests passed after the path correction."
+      "reason": "Twenty deterministic focused tests passed, including finite non-string mutation-pointer rejection."
     },
     {
       "gate": "exact-fixture-replay",

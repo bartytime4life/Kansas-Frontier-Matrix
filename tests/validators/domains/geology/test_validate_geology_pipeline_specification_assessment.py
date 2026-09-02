@@ -4,6 +4,7 @@ import copy
 import importlib.util
 import json
 import socket
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -113,6 +114,225 @@ class GeologyPipelineSpecificationAssessmentTests(unittest.TestCase):
             first = MODULE.validate_fixture_manifest()
             second = MODULE.validate_fixture_manifest()
         self.assertEqual(first, second)
+
+    def test_fixture_manifest_duplicate_keys_fail_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "cases.json"
+            path.write_text(
+                '{"bases":{},"bases":{},"cases":[]}',
+                encoding="utf-8",
+            )
+            results = MODULE.validate_fixture_manifest(path)
+        self.assertEqual(
+            [{
+                "name": "fixture_manifest",
+                "outcome": "ERROR",
+                "findings": ["JSON_DUPLICATE_KEY"],
+                "ok": False,
+            }],
+            results,
+        )
+
+    def test_fixture_manifest_cannot_pass_vacuously(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "cases.json"
+            path.write_text('{"bases":{},"cases":[]}', encoding="utf-8")
+            results = MODULE.validate_fixture_manifest(path)
+        self.assertEqual(
+            [{
+                "name": "fixture_manifest",
+                "outcome": "ERROR",
+                "findings": ["FIXTURE_MANIFEST_INVALID"],
+                "ok": False,
+            }],
+            results,
+        )
+
+    def test_fixture_manifest_rejects_malformed_cases_finitely(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "cases.json"
+            path.write_text(
+                json.dumps({"bases": {}, "cases": [{"name": "broken"}]}),
+                encoding="utf-8",
+            )
+            results = MODULE.validate_fixture_manifest(path)
+        self.assertEqual(
+            [{
+                "name": "fixture_manifest",
+                "outcome": "ERROR",
+                "findings": ["FIXTURE_CASE_INVALID"],
+                "ok": False,
+            }],
+            results,
+        )
+
+    def test_fixture_manifest_rejects_non_string_case_names_finitely(self) -> None:
+        manifest = {
+            "bases": {"bedrock": MANIFEST["bases"]["bedrock"]},
+            "cases": [{
+                "name": [],
+                "base": "bedrock",
+                "expected_outcome": "PASS",
+                "expected_findings": [],
+            }],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "cases.json"
+            path.write_text(json.dumps(manifest), encoding="utf-8")
+            results = MODULE.validate_fixture_manifest(path)
+        self.assertEqual(
+            [{
+                "name": "fixture_manifest",
+                "outcome": "ERROR",
+                "findings": ["FIXTURE_CASE_INVALID"],
+                "ok": False,
+            }],
+            results,
+        )
+
+    def test_fixture_manifest_rejects_non_string_outcomes_finitely(self) -> None:
+        manifest = {
+            "bases": {"bedrock": MANIFEST["bases"]["bedrock"]},
+            "cases": [{
+                "name": "invalid_outcome",
+                "base": "bedrock",
+                "expected_outcome": [],
+                "expected_findings": [],
+            }],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "cases.json"
+            path.write_text(json.dumps(manifest), encoding="utf-8")
+            results = MODULE.validate_fixture_manifest(path)
+        self.assertEqual(
+            [{
+                "name": "fixture_manifest",
+                "outcome": "ERROR",
+                "findings": ["FIXTURE_CASE_INVALID"],
+                "ok": False,
+            }],
+            results,
+        )
+
+    def test_fixture_manifest_contains_materialization_errors_finitely(self) -> None:
+        manifest = {
+            "bases": {"bedrock": MANIFEST["bases"]["bedrock"]},
+            "cases": [{
+                "name": "broken_mutation_pointer",
+                "base": "bedrock",
+                "mutations": [{"path": "/missing/path", "value": True}],
+                "expected_outcome": "PASS",
+                "expected_findings": [],
+            }],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "cases.json"
+            path.write_text(json.dumps(manifest), encoding="utf-8")
+            results = MODULE.validate_fixture_manifest(path)
+        self.assertEqual(
+            [{
+                "name": "broken_mutation_pointer",
+                "outcome": "ERROR",
+                "findings": ["FIXTURE_CASE_MATERIALIZATION_ERROR"],
+                "ok": False,
+            }],
+            results,
+        )
+
+    def test_fixture_manifest_rejects_non_string_mutation_paths_finitely(self) -> None:
+        manifest = {
+            "bases": {"bedrock": MANIFEST["bases"]["bedrock"]},
+            "cases": [{
+                "name": "invalid_mutation_path",
+                "base": "bedrock",
+                "mutations": [{"path": [], "value": True}],
+                "expected_outcome": "PASS",
+                "expected_findings": [],
+            }],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "cases.json"
+            path.write_text(json.dumps(manifest), encoding="utf-8")
+            results = MODULE.validate_fixture_manifest(path)
+        self.assertEqual(
+            [{
+                "name": "invalid_mutation_path",
+                "outcome": "ERROR",
+                "findings": ["FIXTURE_CASE_MATERIALIZATION_ERROR"],
+                "ok": False,
+            }],
+            results,
+        )
+
+    def test_fixture_cli_rejects_abbreviated_flags(self) -> None:
+        for length in range(3, len("--fixtures")):
+            abbreviation = "--fixtures"[:length]
+            with self.subTest(abbreviation=abbreviation):
+                completed = subprocess.run(
+                    [sys.executable, str(MODULE_PATH), abbreviation],
+                    cwd=ROOT,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
+                self.assertEqual(2, completed.returncode)
+                self.assertEqual("", completed.stdout)
+                self.assertIn("unrecognized arguments", completed.stderr)
+
+    def test_fixture_cli_rejects_ignored_explicit_input(self) -> None:
+        candidate = self._candidate("pass_bedrock_units")
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "candidate.json"
+            path.write_text(json.dumps(candidate), encoding="utf-8")
+            completed = subprocess.run(
+                [sys.executable, str(MODULE_PATH), "--fixtures", str(path)],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+        self.assertEqual(2, completed.returncode)
+        self.assertEqual("", completed.stdout)
+        self.assertIn("--fixtures must be used as the only argument", completed.stderr)
+
+    def test_fixture_cli_rejects_repeated_or_decorated_mode(self) -> None:
+        for arguments in (
+            ["--fixtures", "--fixtures"],
+            ["--fixtures", "--"],
+        ):
+            with self.subTest(arguments=arguments):
+                completed = subprocess.run(
+                    [sys.executable, str(MODULE_PATH), *arguments],
+                    cwd=ROOT,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
+                self.assertEqual(2, completed.returncode)
+                self.assertEqual("", completed.stdout)
+                self.assertIn(
+                    "--fixtures must be used as the only argument",
+                    completed.stderr,
+                )
+
+    def test_option_terminator_allows_dash_prefixed_input_filename(self) -> None:
+        candidate = self._candidate("pass_bedrock_units")
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "--fixtures"
+            path.write_text(json.dumps(candidate), encoding="utf-8")
+            completed = subprocess.run(
+                [sys.executable, str(MODULE_PATH), "--", path.name],
+                cwd=directory,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+        self.assertEqual(0, completed.returncode, completed.stderr)
+        payload = json.loads(completed.stdout)
+        self.assertEqual("PASS", payload["outcome"])
+        self.assertEqual("NONE", payload["authority"])
+        self.assertNotIn("name", payload)
+        self.assertNotIn("ok", payload)
 
 
 if __name__ == "__main__":
