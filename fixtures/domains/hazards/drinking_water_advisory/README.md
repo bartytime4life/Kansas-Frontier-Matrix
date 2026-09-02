@@ -24,6 +24,8 @@ it; independently knowable issue, check, expiry, and rescission bounds remain
 enforced.
 An exact expiry cannot precede the source check while a record claims an
 `ISSUED`, `ACTIVE_CONFIRMED`, or `UPDATED` current status.
+`NOT_MODIFIED` is continuity evidence only when a previous record is present;
+otherwise validation denies the claim at `previous_record_present`.
 Input validation opens every directory and the final regular file through
 no-follow descriptors, then sizes and reads that same final descriptor. Leaf,
 ancestor, and cyclic symlinks fail closed, while a rename or symlink swap after

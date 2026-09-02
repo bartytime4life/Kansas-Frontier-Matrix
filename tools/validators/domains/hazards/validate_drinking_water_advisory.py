@@ -442,6 +442,14 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
     elif status == "ACTIVE_CONFIRMED" and outcome not in {"FETCHED", "NOT_MODIFIED"}:
         findings.append(Finding("CURRENT_SOURCE_REQUIRED", "/source_surface/source_check_outcome"))
 
+    if outcome == "NOT_MODIFIED" and not previous_present:
+        findings.append(
+            Finding(
+                "NOT_MODIFIED_PRIOR_REQUIRED",
+                "/source_surface/previous_record_present",
+            )
+        )
+
     absence = (
         source.get("source_mode") == "COMPLETE_SNAPSHOT"
         and source.get("snapshot_complete") is True

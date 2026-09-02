@@ -140,6 +140,24 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
             {("RESCISSION_STATUS_MISMATCH", "/advisory/rescinded_at")},
         )
 
+    def test_not_modified_requires_previous_record(self) -> None:
+        candidate = copy.deepcopy(self.valid["valid_active_not_modified"])
+        candidate["source_surface"]["previous_record_present"] = False
+        candidate = validator.assign_identity(candidate)
+
+        result = validator.validate_payload(candidate)
+
+        self.assertEqual(result.outcome, "DENY")
+        self.assertEqual(
+            {(finding.code, finding.path) for finding in result.findings},
+            {
+                (
+                    "NOT_MODIFIED_PRIOR_REQUIRED",
+                    "/source_surface/previous_record_present",
+                )
+            },
+        )
+
     def test_unknown_offsets_are_not_used_as_exact_temporal_evidence(self) -> None:
         base = self.valid["valid_authoritative_rescission"]
         timestamp_fields = (
