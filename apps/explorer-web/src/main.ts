@@ -239,14 +239,19 @@ const syncWorkspaceNavigation = (): void => {
     currentDomainId,
   );
   const domainIdToSelect = domainTransition.domainIdToSelect;
+  const requestedDomainId = domainTransition.activeDeepLinkDomainId;
+  const domainConsumerId = domainIdToSelect ?? requestedDomainId;
+  const domainButton =
+    domainConsumerId === null
+      ? undefined
+      : Array.from(
+          root.querySelectorAll<HTMLButtonElement>("button[data-domain-id]"),
+        ).find((button) => button.dataset.domainId === domainConsumerId);
+  const consumerReady = domainButton !== undefined && !domainButton.disabled;
+  if (requestedDomainId !== null && !consumerReady) {
+    scheduleKnowledgeDomainDeepLinkRetry(safeUrl);
+  }
   if (domainIdToSelect !== null) {
-    const domainButton = Array.from(
-      root.querySelectorAll<HTMLButtonElement>("button[data-domain-id]"),
-    ).find((button) => button.dataset.domainId === domainIdToSelect);
-    const consumerReady = domainButton !== undefined && !domainButton.disabled;
-    if (!consumerReady) {
-      scheduleKnowledgeDomainDeepLinkRetry(safeUrl);
-    }
     if (consumerReady) {
       // Provisional ownership keeps the programmatic click from looking like a
       // manual selection to the delegated release listener. The observed DOM
@@ -275,8 +280,9 @@ const syncWorkspaceNavigation = (): void => {
     resolvePublicKnowledgeDomainUrlConsumerCommit(
       domainTransition,
       selectedDomainId,
+      requestedDomainId === null || consumerReady,
     );
-  if (activeDeepLinkKnowledgeDomainId !== null || domainIdToSelect === null) {
+  if (activeDeepLinkKnowledgeDomainId !== null || requestedDomainId === null) {
     cancelPendingKnowledgeDomainDeepLinkRetry();
   }
 };

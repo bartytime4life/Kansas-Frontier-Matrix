@@ -52,15 +52,20 @@ export function resolvePublicKnowledgeDomainRetryPlan(
 }
 
 /**
- * Commit URL ownership only after the existing Knowledge controls visibly
- * apply a newly requested domain. An absent, disabled, or ineffective control
- * leaves ownership clear, allowing later synchronization to retry instead of
- * treating an unrendered domain as restored.
+ * Commit URL ownership only after the existing Knowledge control is enabled
+ * and visibly applies the requested domain. This readiness proof is required
+ * even when the requested domain was already selected before synchronization;
+ * an absent, disabled, or ineffective control leaves ownership clear and
+ * retryable instead of treating an unavailable consumer as restored.
  */
 export function resolvePublicKnowledgeDomainUrlConsumerCommit(
   transition: PublicKnowledgeDomainSelectionTransition,
   selectedDomainId: string | null,
+  consumerReady: boolean,
 ): string | null {
+  if (transition.activeDeepLinkDomainId !== null && !consumerReady) {
+    return null;
+  }
   if (
     transition.domainIdToSelect !== null &&
     selectedDomainId !== transition.domainIdToSelect

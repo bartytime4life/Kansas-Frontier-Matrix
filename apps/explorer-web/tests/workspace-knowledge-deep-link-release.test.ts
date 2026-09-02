@@ -98,6 +98,7 @@ describe("public Knowledge-domain deep-link release", () => {
       resolvePublicKnowledgeDomainUrlConsumerCommit(
         transition,
         "archaeology",
+        true,
       ),
     ).toBe("archaeology");
   });
@@ -111,10 +112,14 @@ describe("public Knowledge-domain deep-link release", () => {
 
     expect(transition.domainIdToSelect).toBe("people_dna_land");
     expect(
-      resolvePublicKnowledgeDomainUrlConsumerCommit(transition, "hydrology"),
+      resolvePublicKnowledgeDomainUrlConsumerCommit(
+        transition,
+        "hydrology",
+        true,
+      ),
     ).toBeNull();
     expect(
-      resolvePublicKnowledgeDomainUrlConsumerCommit(transition, null),
+      resolvePublicKnowledgeDomainUrlConsumerCommit(transition, null, true),
     ).toBeNull();
   });
 
@@ -127,8 +132,32 @@ describe("public Knowledge-domain deep-link release", () => {
 
     expect(transition.domainIdToSelect).toBeNull();
     expect(
-      resolvePublicKnowledgeDomainUrlConsumerCommit(transition, null),
+      resolvePublicKnowledgeDomainUrlConsumerCommit(transition, null, true),
     ).toBe("archaeology");
+  });
+
+  it("keeps an already-selected but disabled domain consumer unowned", () => {
+    const transition = resolvePublicKnowledgeDomainSelectionTransition(
+      contextUrl(["people_dna_land"]),
+      null,
+      "people_dna_land",
+    );
+
+    expect(transition.domainIdToSelect).toBeNull();
+    expect(
+      resolvePublicKnowledgeDomainUrlConsumerCommit(
+        transition,
+        "people_dna_land",
+        false,
+      ),
+    ).toBeNull();
+    expect(
+      resolvePublicKnowledgeDomainUrlConsumerCommit(
+        transition,
+        "people_dna_land",
+        true,
+      ),
+    ).toBe("people_dna_land");
   });
 
   it("preserves ownership during programmatic restoration of the same domain", () => {
@@ -256,6 +285,12 @@ describe("public Knowledge-domain deep-link release", () => {
       "resolvePublicKnowledgeDomainUrlConsumerCommit",
     );
     expect(mainSource).toContain("!domainButton.disabled");
+    expect(mainSource).toContain(
+      "requestedDomainId !== null && !consumerReady",
+    );
+    expect(mainSource).toContain(
+      "requestedDomainId === null || consumerReady",
+    );
     expect(mainSource).toContain(
       '!button.disabled && button.getAttribute("aria-pressed") === "true"',
     );
