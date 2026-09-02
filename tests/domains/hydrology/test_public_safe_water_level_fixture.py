@@ -113,23 +113,39 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
             mutated["measurement"]["datum_ref"] = value  # type: ignore[index]
             self.assertIn(invalid_identifier, validate_candidate(mutated))
 
-    def test_record_identity_binds_generalized_gauge_and_observation_time(self) -> None:
+    def test_record_identity_binds_gauge_datum_and_observation_time(self) -> None:
         candidate = _load_candidate()
         self.assertEqual(
             candidate["record_id"],
-            "fixture:hydrology:water-level:99999:20260802T120000Z",
+            "fixture:hydrology:water-level:99999:synthetic-local-reference:"
+            "20260802T120000Z",
         )
         self.assertEqual(validate_candidate(candidate), [])
 
         invalid = Finding("RECORD_ID_NOT_CANONICAL", "$.record_id")
         for value in (
-            "fixture:hydrology:water-level:88888:20260802T120000Z",
-            "fixture:hydrology:water-level:99999:20260802T120001Z",
+            "fixture:hydrology:water-level:88888:synthetic-local-reference:"
+            "20260802T120000Z",
+            "fixture:hydrology:water-level:99999:synthetic-local-reference:"
+            "20260802T120001Z",
+            "fixture:hydrology:water-level:99999:alternate-local-reference:"
+            "20260802T120000Z",
             "https://example.invalid/water-level/99999",
         ):
             mutated = copy.deepcopy(candidate)
             mutated["record_id"] = value
             self.assertIn(invalid, validate_candidate(mutated))
+
+        changed_datum = copy.deepcopy(candidate)
+        changed_datum["measurement"]["datum_ref"] = (  # type: ignore[index]
+            "fixture://hydrology/datum/alternate-local-reference"
+        )
+        self.assertIn(invalid, validate_candidate(changed_datum))
+        changed_datum["record_id"] = (
+            "fixture:hydrology:water-level:99999:alternate-local-reference:"
+            "20260802T120000Z"
+        )
+        self.assertEqual(validate_candidate(changed_datum), [])
 
     def test_fixture_references_identify_concrete_synthetic_resources(self) -> None:
         candidate = _load_candidate()

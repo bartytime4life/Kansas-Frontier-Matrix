@@ -284,19 +284,8 @@ def validate_candidate(candidate: object) -> list[Finding]:
         if observed is not None and retrieved is not None and retrieved < observed:
             add_finding(findings, "TEMPORAL_ORDER_INVALID", "$.temporal_scope")
 
-    if (
-        is_nonempty_string(record_id)
-        and gauge_identifier is not None
-        and observed is not None
-    ):
-        expected_record_id = (
-            f"fixture:hydrology:water-level:{gauge_identifier}:"
-            f"{observed.strftime('%Y%m%dT%H%M%SZ')}"
-        )
-        if record_id != expected_record_id:
-            add_finding(findings, "RECORD_ID_NOT_CANONICAL", "$.record_id")
-
     measurement = candidate.get("measurement")
+    datum_identifier: str | None = None
     if not isinstance(measurement, dict):
         add_finding(findings, "MEASUREMENT_INVALID", "$.measurement")
     else:
@@ -327,6 +316,8 @@ def validate_candidate(candidate: object) -> list[Finding]:
                 "DATUM_REF_IDENTIFIER_INVALID",
                 "$.measurement.datum_ref",
             )
+        else:
+            datum_identifier = datum_ref[len(FIXTURE_DATUM_PREFIX) :]
         if measurement.get("qualifier") != "synthetic":
             add_finding(findings, "QUALIFIER_INVALID", "$.measurement.qualifier")
         provisional_status = measurement.get("provisional_status")
@@ -344,6 +335,19 @@ def validate_candidate(candidate: object) -> list[Finding]:
             )
         if measurement.get("no_data") is not False:
             add_finding(findings, "NO_DATA_STATE_INVALID", "$.measurement.no_data")
+
+    if (
+        is_nonempty_string(record_id)
+        and gauge_identifier is not None
+        and datum_identifier is not None
+        and observed is not None
+    ):
+        expected_record_id = (
+            f"fixture:hydrology:water-level:{gauge_identifier}:"
+            f"{datum_identifier}:{observed.strftime('%Y%m%dT%H%M%SZ')}"
+        )
+        if record_id != expected_record_id:
+            add_finding(findings, "RECORD_ID_NOT_CANONICAL", "$.record_id")
 
     governance = candidate.get("governance")
     if not isinstance(governance, dict):
