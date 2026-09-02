@@ -92,7 +92,7 @@
     "provider": "OpenAI",
     "version": "2026-08-30"
   },
-  "notes": "Successor provenance receipt for the CrossLaneJoinAssessment review unit. It binds the generic join contract, current pair-profile inventory, all seven dedicated synthetic regression files, the self-checking nine-module join-test inventory, and the generic plus three pair-specific workflows. Generic join validation triggers on every receipt-bound artifact. Disposition precedence is fail-closed: for distinct raw domains, dependency failures remain ERROR and living-person or blocked sensitive-geometry conditions remain DENY before unresolved aliases can route to review; same-domain scope routing remains first because the generic helper does not own domain-local work. Deterministic positive and synthetic-negative proof prevents alias review from downgrading stronger outcomes or hiding missing-evidence and restricted-sensitivity review obligations. Alias projection integrity also requires exact registered targets and rejects self-reference, canonical-lane keys, alias chains, and redirected symlink paths so incoherent or externally supplied projection bytes cannot fail open. CLI validation requires exact long-option spelling and mutually exclusive fixture, derive, and file-validation modes so an explicit assessment input cannot be silently ignored. Fresh overlap reconciliation checked all 16 other open pull requests against the complete historical and current branch-path scope plus the complete receipt artifact inventory. Current-main bytes remain unchanged outside this bounded seam. Historical closed PRs remain preserved and unmerged. The historical 20260809 receipt remains immutable. This receipt creates no source, evidence, policy, review, proof, promotion, release, publication, or public-use authority.",
+  "notes": "Successor provenance receipt for the CrossLaneJoinAssessment review unit. It binds the generic join contract, current pair-profile inventory, all seven dedicated synthetic regression files, the self-checking nine-module join-test inventory, and the generic plus three pair-specific workflows. Generic join validation triggers on every receipt-bound artifact. Disposition precedence is fail-closed: for distinct raw domains, dependency failures remain ERROR and living-person or blocked sensitive-geometry conditions remain DENY before unresolved aliases can route to review; same-domain scope routing remains first because the generic helper does not own domain-local work. Deterministic positive and synthetic-negative proof prevents alias review from downgrading stronger outcomes or hiding missing-evidence and restricted-sensitivity review obligations. Alias projection integrity also requires exact registered targets and rejects self-reference, canonical-lane keys, alias chains, and redirected symlink paths so incoherent or externally supplied projection bytes cannot fail open. CLI validation requires exact long-option spelling and mutually exclusive fixture, derive, and file-validation modes so an explicit assessment input cannot be silently ignored. Fresh overlap reconciliation checked all 16 other open pull requests against the complete historical and current branch-path scope plus the complete receipt artifact inventory. Current-main bytes remain unchanged outside this bounded seam. Historical closed PRs remain preserved and unmerged. Hosted exact-head validation passed the generic cross-lane and all three pair workflows with the generated receipt bound and review still pending. The historical 20260809 receipt remains immutable. This receipt creates no source, evidence, policy, review, proof, promotion, release, publication, or public-use authority.",
   "override_record": null,
   "parameters": {
     "max_tokens": null,
@@ -145,8 +145,8 @@
     },
     {
       "gate": "focused-pytest-and-fixture-matrix",
-      "outcome": "SKIPPED",
-      "reason": "The prior exact head passed 20/20 fixtures and 65 focused tests. A new deterministic negative case requires a symlinked projection to fail closed while the existing positive case retains a regular valid projection; hosted exact-head execution is pending."
+      "outcome": "PASS",
+      "reason": "Hosted exact-head execution passed 20/20 generic fixtures and 66 focused tests, including the regular-file positive case and the symlinked-projection fail-closed negative case."
     },
     {
       "gate": "artifact-hash-replay",
@@ -160,8 +160,8 @@
     },
     {
       "gate": "hosted-exact-head-ci",
-      "outcome": "SKIPPED",
-      "reason": "The prior exact head passed the generic and all three pair workflows. Hosted validation of the symlinked-projection authority-boundary increment is pending."
+      "outcome": "PASS",
+      "reason": "The generic cross-lane workflow passed 66 tests and 19-artifact receipt validation; Fauna-Habitat passed 73 tests, and Soil-Agriculture plus Soil-Hydrology passed 72 tests each."
     },
     {
       "gate": "human-review",
