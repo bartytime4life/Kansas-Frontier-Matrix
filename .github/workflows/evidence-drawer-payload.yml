@@ -79,7 +79,7 @@ jobs:
       - name: Verify current generated authoring receipt integrity
         run: |
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-evidence-drawer-payload-repair-20260823.json \
+            data/receipts/generated/genrec-evidence-drawer-payload-trust-labels-20260902.json \
             --repo-root .
 
       - name: Record trust boundary

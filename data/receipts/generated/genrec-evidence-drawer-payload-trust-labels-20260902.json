@@ -1,0 +1,115 @@
+{
+  "receipt_id": "genrec-evidence-drawer-payload-trust-labels-20260902",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/evidence-drawer-payload.yml",
+    "apps/explorer-web/src/features/evidence_drawer/index.tsx",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts",
+    "apps/explorer-web/tests/browser/workspace-navigation.spec.ts",
+    "apps/explorer-web/tests/evidence-drawer.test.ts",
+    "contracts/ui/evidence_drawer_payload.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/evidence-drawer-payload.yml": "sha256:03bb1604a9d6db130db7731cce68753fd3059db3202ebee35ce7c3b793e79ea7",
+    "apps/explorer-web/src/features/evidence_drawer/index.tsx": "sha256:f59376940ee4af08e93089a5c60ce65a7c043cb9fab2b00283990877fc4588c7",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts": "sha256:3ffc245b0f0946b1ded198a0b44e066c63faa43355b2bb1bd5626c0cae24121e",
+    "apps/explorer-web/tests/browser/workspace-navigation.spec.ts": "sha256:b58d09605cb21272c49910f6adc9220b891725e3713b062376948485c778c644",
+    "apps/explorer-web/tests/evidence-drawer.test.ts": "sha256:f407ff915bcd4b1fcc525fec93a971f2ef40b82aa25a83cb07301e1aa8e6cdfc",
+    "contracts/ui/evidence_drawer_payload.md": "sha256:3cc8d81b04305bf91e254eea1beae3611d36fe8011ff1520ad5ccff9ceaafae5"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6",
+    "version": "2026-09-02"
+  },
+  "prompt_or_contract": "sha256:3cc8d81b04305bf91e254eea1beae3611d36fe8011ff1520ad5ccff9ceaafae5",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository-native local validation",
+      "repository-native hosted validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:main@3ee7942913e32c11d8fbf91fa4a4f221dddd4ac0",
+      "repo:pull/4208@88f6883cb5ff6813e3ad2780f4ebe2732aaa3ecb",
+      "github:actions/run/33598908770"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/evidence-drawer-payload.yml": "PROPOSED",
+    "apps/explorer-web/src/features/evidence_drawer/index.tsx": "PROPOSED",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/workspace-navigation.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/evidence-drawer.test.ts": "PROPOSED",
+    "contracts/ui/evidence_drawer_payload.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "historical-receipt-preservation",
+      "outcome": "PASS",
+      "reason": "The 2026-08-23 receipt remains unchanged as historical authoring lineage; this successor receipt binds the current final artifact bytes."
+    },
+    {
+      "gate": "focused-no-network-explorer-tests",
+      "outcome": "PASS",
+      "reason": "Thirty-nine deterministic synthetic public-safe focused tests passed without network access."
+    },
+    {
+      "gate": "full-explorer-unit-and-build",
+      "outcome": "PASS",
+      "reason": "All 403 Explorer unit tests and the TypeScript plus Vite production build passed."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "The repository validator accepted the successor receipt shape, artifact-map parity, canonical paths, and final SHA-256 bindings."
+    },
+    {
+      "gate": "hosted-exact-head",
+      "outcome": "SKIPPED",
+      "reason": "GitHub Actions must settle against the successor commit before review disposition."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Accountable human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "repo:evidence-drawer-payload-contract",
+      "validated": true,
+      "evidence_ref": "contracts/ui/evidence_drawer_payload.md@78dce9d07c91f154df86d9785f586d4e195f626b"
+    },
+    {
+      "id": "repo:pull-4208-exact-head-failure",
+      "validated": true,
+      "evidence_ref": "github:actions/run/33598908770"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-02T06:32:00Z",
+  "emitter": "OpenAI GPT-5.6 via ChatGPT",
+  "links": {
+    "pr_number": 4208,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Successor authoring provenance for PR #4208's Evidence Drawer current-versus-non-current reference labels and regression proof. The historical 2026-08-23 receipt remains unchanged. This receipt is not evidence, policy approval, human review, merge authority, release authority, deployment authority, publication authority, or public-use permission."
+}
