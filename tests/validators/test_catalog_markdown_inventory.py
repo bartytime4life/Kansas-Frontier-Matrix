@@ -43,12 +43,27 @@ class CatalogMarkdownInventoryTests(unittest.TestCase):
             ["visible-before", "visible-after"],
         )
 
-    def test_four_space_fence_is_visible_markdown(self) -> None:
-        text = "    ```\nvisible\n"
+    def test_indented_code_is_not_visible_inventory(self) -> None:
+        text = "\n".join(
+            [
+                "visible-before",
+                "    | hidden-four-space |",
+                "  \t| hidden-tab-stop |",
+                "\t| hidden-tab |",
+                "   | visible-three-space |",
+                "    ",
+                "visible-after",
+            ]
+        )
 
         self.assertEqual(
             [line for _, _, line in visible_line_spans(text)],
-            ["    ```", "visible"],
+            [
+                "visible-before",
+                "   | visible-three-space |",
+                "    ",
+                "visible-after",
+            ],
         )
 
     def test_unterminated_fences_fail_closed_with_stable_offsets(self) -> None:
@@ -101,6 +116,10 @@ class CatalogMarkdownInventoryTests(unittest.TestCase):
                     ValueError, "backtick fence info contains backtick"
                 ):
                     module._visible_line_spans("```language`variant\n```\n")
+                self.assertEqual(
+                    module._visible_line_spans("    | hidden |\n| visible |\n"),
+                    [(15, 26, "| visible |")],
+                )
 
 
 if __name__ == "__main__":

@@ -5,8 +5,24 @@ import re
 FENCE_OPEN_RE = re.compile(r"^ {0,3}(?P<fence>`{3,}|~{3,}).*$")
 
 
+def _is_indented_code_line(line: str) -> bool:
+    if not line.strip():
+        return False
+    column = 0
+    for character in line:
+        if character == " ":
+            column += 1
+        elif character == "\t":
+            column += 4 - (column % 4)
+        else:
+            return False
+        if column >= 4:
+            return True
+    return False
+
+
 def visible_line_spans(text: str) -> list[tuple[int, int, str]]:
-    """Return non-fenced Markdown lines with offsets into the original text."""
+    """Return non-code Markdown lines with offsets into the original text."""
     visible: list[tuple[int, int, str]] = []
     fence_char: str | None = None
     fence_length = 0
@@ -35,7 +51,7 @@ def visible_line_spans(text: str) -> list[tuple[int, int, str]]:
                 fence_char = fence[0]
                 fence_length = len(fence)
                 fence_offset = offset
-            else:
+            elif not _is_indented_code_line(line):
                 visible.append((offset, offset + len(line), line))
         offset += len(raw_line)
     if fence_char is not None:
