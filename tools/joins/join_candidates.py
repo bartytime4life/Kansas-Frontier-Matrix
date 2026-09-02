@@ -499,11 +499,15 @@ def _display(path: Path) -> str:
 
 
 def run(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
     parser.add_argument("files", nargs="*", type=Path)
     parser.add_argument("--derive", type=Path, help="derive and print one sealed assessment; stdout only")
     parser.add_argument("--fixtures", action="store_true")
     args = parser.parse_args(argv)
+    if args.fixtures and (args.files or args.derive is not None):
+        parser.error("--fixtures cannot be combined with assessment files or --derive")
+    if args.derive is not None and args.files:
+        parser.error("--derive cannot be combined with assessment files")
     if args.fixtures:
         return fixture_profile()
     if args.derive is not None:

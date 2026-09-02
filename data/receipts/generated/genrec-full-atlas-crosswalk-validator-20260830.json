@@ -1,6 +1,25 @@
 {
-  "receipt_id": "genrec-full-atlas-crosswalk-validator-20260830",
-  "contract_version": "3.0.0",
+  "artifact_hashes": {
+    ".github/workflows/cross-lane-join-assessment.yml": "sha256:121dd44c48895d4b39e65d763660fd907b60cf60b1efce6220bc7bf2ba0d0d98",
+    ".github/workflows/fauna-habitat-public-safe-assignment.yml": "sha256:ae04722885e1d94418e2c6ab0d6a9174cb51b88fce4b17d1dd259a55176505f3",
+    ".github/workflows/soil-agriculture-public-safe-context.yml": "sha256:02a454bf4dc37fca7dc009e0a7336abdeebf7c77fcf97bc2628622fe8266e280",
+    ".github/workflows/soil-hydrology-public-safe-context.yml": "sha256:4914255dc12681f3ee2ab1c6ec21cf3ec1c2a31993c73ac702faf5b95f617efa",
+    "contracts/joins/README.md": "sha256:0a91c1c699cbaa8cadee09dea378861cedc9c6fdb9aab6ba25655899d6abb821",
+    "contracts/joins/cross_lane_join_assessment.md": "sha256:c4bbdc0c35733569191dd24e861d9b8520cb293b4e7150c0dfba41b8a81c78f8",
+    "docs/intake/exploratory/full-atlas-crosswalk-validator-source-map.md": "sha256:34299c5ba17f3d451d09e2d9a2f69514711a0c8ed1303f88233c56b6ded45962",
+    "fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json": "sha256:7372e0d9900bc3f1d17861b3bdf0afa2570fe8436edcbd972c485257605c7b94",
+    "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json": "sha256:1ad7520fc7c07514d7887e73db8ebb9ebde4df1f3f26a4f6013f5fba239e1bb7",
+    "tests/joins/README.md": "sha256:55dc936fc55a19de05f0f5f15804433b5f617027292e666385af59cd31c06723",
+    "tests/joins/test_cross_lane_domain_alias_dependency_guard.py": "sha256:5b1d653cdc1a9766ac9093a43905c97384ea2f84e92620419187f3cb33b6ce4d",
+    "tests/joins/test_cross_lane_domain_alias_guard.py": "sha256:bd8bbc0fdfefe7e264f3b11dadd4c753ee5e225c20bcc7b5d4dad97fb6f2ff02",
+    "tests/joins/test_cross_lane_scope_precedence.py": "sha256:7f5da617cb65996c876093f43b1201bc27add2508a3846fbedd8bca956acf1ce",
+    "tests/joins/test_cross_lane_source_role_schema_guard.py": "sha256:9c6bd884f0c51fd7f22d517c7b4ac5a2d866edef80b36a6cf5f1ca7a8f1ebac5",
+    "tests/joins/test_cross_lane_synthetic_role_guard.py": "sha256:f63cf5320fe45d5848bc03f747a2eaf073c66932eb584349ab0e6d9d96c4e7ef",
+    "tests/joins/test_cross_lane_temporal_boundary_guard.py": "sha256:8a3f943cb7127682dae40c9ee9f6086aefc13efc686614e7bba8ff81b6497e6e",
+    "tests/joins/test_cross_lane_workflow_propagation.py": "sha256:8db63dc7c31eec11497dcc8bb8afcc5ffd80a79b37eb38e54a66dc5ac45e7587",
+    "tests/joins/test_join_candidates.py": "sha256:63f28e4f5f938de72a8d04558cf85b4cbc62e5f20c97c11dffefe766678a3a88",
+    "tools/joins/join_candidates.py": "sha256:51a062bc250ebf890392604c228b7733740d33fc8351bd257cb9c3028cf08ba1"
+  },
   "artifact_paths": [
     ".github/workflows/cross-lane-join-assessment.yml",
     ".github/workflows/soil-hydrology-public-safe-context.yml",
@@ -22,44 +41,35 @@
     "tests/joins/test_join_candidates.py",
     "tools/joins/join_candidates.py"
   ],
-  "artifact_hashes": {
-    ".github/workflows/cross-lane-join-assessment.yml": "sha256:121dd44c48895d4b39e65d763660fd907b60cf60b1efce6220bc7bf2ba0d0d98",
-    ".github/workflows/soil-hydrology-public-safe-context.yml": "sha256:4914255dc12681f3ee2ab1c6ec21cf3ec1c2a31993c73ac702faf5b95f617efa",
-    ".github/workflows/soil-agriculture-public-safe-context.yml": "sha256:02a454bf4dc37fca7dc009e0a7336abdeebf7c77fcf97bc2628622fe8266e280",
-    ".github/workflows/fauna-habitat-public-safe-assignment.yml": "sha256:ae04722885e1d94418e2c6ab0d6a9174cb51b88fce4b17d1dd259a55176505f3",
-    "contracts/joins/cross_lane_join_assessment.md": "sha256:a2bcc522676ceb55c0e3071e43dad04940c046e924afee381f4d9eeafaa1ccb0",
-    "docs/intake/exploratory/full-atlas-crosswalk-validator-source-map.md": "sha256:34299c5ba17f3d451d09e2d9a2f69514711a0c8ed1303f88233c56b6ded45962",
-    "fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json": "sha256:7372e0d9900bc3f1d17861b3bdf0afa2570fe8436edcbd972c485257605c7b94",
-    "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json": "sha256:1ad7520fc7c07514d7887e73db8ebb9ebde4df1f3f26a4f6013f5fba239e1bb7",
-    "tests/joins/README.md": "sha256:55dc936fc55a19de05f0f5f15804433b5f617027292e666385af59cd31c06723",
-    "tests/joins/test_cross_lane_domain_alias_dependency_guard.py": "sha256:5b1d653cdc1a9766ac9093a43905c97384ea2f84e92620419187f3cb33b6ce4d",
-    "tests/joins/test_cross_lane_domain_alias_guard.py": "sha256:bd8bbc0fdfefe7e264f3b11dadd4c753ee5e225c20bcc7b5d4dad97fb6f2ff02",
-    "tests/joins/test_cross_lane_scope_precedence.py": "sha256:7f5da617cb65996c876093f43b1201bc27add2508a3846fbedd8bca956acf1ce",
-    "tests/joins/test_cross_lane_source_role_schema_guard.py": "sha256:9c6bd884f0c51fd7f22d517c7b4ac5a2d866edef80b36a6cf5f1ca7a8f1ebac5",
-    "tests/joins/test_cross_lane_synthetic_role_guard.py": "sha256:f63cf5320fe45d5848bc03f747a2eaf073c66932eb584349ab0e6d9d96c4e7ef",
-    "tests/joins/test_cross_lane_temporal_boundary_guard.py": "sha256:8a3f943cb7127682dae40c9ee9f6086aefc13efc686614e7bba8ff81b6497e6e",
-    "tests/joins/test_cross_lane_workflow_propagation.py": "sha256:8db63dc7c31eec11497dcc8bb8afcc5ffd80a79b37eb38e54a66dc5ac45e7587",
-    "tests/joins/test_join_candidates.py": "sha256:8f1203d844342fcd011a505e64d857f06b4e9f49d5c9649f92d90928063fd06c",
-    "tools/joins/join_candidates.py": "sha256:daa88add4ccaf752ff078a727350ac1100126b5191cb7a9ee42f2e55bce9bc6d",
-    "contracts/joins/README.md": "sha256:0a91c1c699cbaa8cadee09dea378861cedc9c6fdb9aab6ba25655899d6abb821"
-  },
-  "model_identity": {
-    "provider": "OpenAI",
-    "model": "GPT-5",
-    "version": "2026-08-30"
-  },
-  "prompt_or_contract": "sha256:0659f1a0332bac17b4d8db2021e37bd1a4fd987ea95ae5de83c39a1b27811174",
-  "parameters": {
-    "seed": null,
-    "temperature": null,
-    "top_p": null,
-    "max_tokens": null,
-    "tools_enabled": [
-      "GitHub connector repository inspection and mutation",
-      "Google Drive connector read-only lineage inspection",
-      "Notion connector read-only coordination inspection",
-      "deterministic local hash replay"
-    ]
+  "citations": [
+    {
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fc39181a6727c67bcf66bc75d6f25316ce445dd5/.github/workflows/cross-lane-join-assessment.yml",
+      "id": "repository:cross-lane-workflow",
+      "validated": true
+    },
+    {
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fc39181a6727c67bcf66bc75d6f25316ce445dd5/tests/joins/README.md",
+      "id": "repository:join-test-lane",
+      "validated": true
+    },
+    {
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fc39181a6727c67bcf66bc75d6f25316ce445dd5/tools/validators/validate_generated_receipt.py",
+      "id": "repository:generated-receipt-validator",
+      "validated": true
+    },
+    {
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/3943#discussion_r3890111628",
+      "id": "repository:merged-regression-review",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-30T18:09:17.956Z",
+  "emitter": "OpenAI ChatGPT automation runtime",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
   },
   "inputs": {
     "evidence_refs": [
@@ -72,11 +82,41 @@
       "drive://1JhlatU-DMO1d6oh82HiLzZQDXgI6gA6kLtqs7Y1-jr8"
     ]
   },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": 4206
+  },
+  "model_identity": {
+    "model": "GPT-5",
+    "provider": "OpenAI",
+    "version": "2026-08-30"
+  },
+  "notes": "Successor provenance receipt for the CrossLaneJoinAssessment review unit. It binds the generic join contract, current pair-profile inventory, all seven dedicated synthetic regression files, the self-checking nine-module join-test inventory, and the generic plus three pair-specific workflows. Generic join validation triggers on every receipt-bound artifact. Disposition precedence is fail-closed: for distinct raw domains, dependency failures remain ERROR and living-person or blocked sensitive-geometry conditions remain DENY before unresolved aliases can route to review; same-domain scope routing remains first because the generic helper does not own domain-local work. Deterministic positive and synthetic-negative proof prevents alias review from downgrading stronger outcomes or hiding missing-evidence and restricted-sensitivity review obligations. Alias projection integrity also requires exact registered targets and rejects self-reference, canonical-lane keys, and alias chains so a parseable but incoherent projection cannot fail open. CLI validation requires exact long-option spelling and mutually exclusive fixture, derive, and file-validation modes so an explicit assessment input cannot be silently ignored. Fresh overlap reconciliation checked all 16 other open pull requests against the complete six-path branch diff and all 19 receipt-bound artifacts. Current-main bytes remain unchanged outside this bounded seam. Historical closed PRs remain preserved and unmerged. The historical 20260809 receipt remains immutable. This receipt creates no source, evidence, policy, review, proof, promotion, release, publication, or public-use authority.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector repository inspection and mutation",
+      "Google Drive connector read-only lineage inspection",
+      "Notion connector read-only coordination inspection",
+      "deterministic local hash replay"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@eed7627f0bac70c4f11303ce6790320f46f7b080"
+  ],
+  "prompt_or_contract": "sha256:0659f1a0332bac17b4d8db2021e37bd1a4fd987ea95ae5de83c39a1b27811174",
+  "receipt_id": "genrec-full-atlas-crosswalk-validator-20260830",
   "truth_labels": {
     ".github/workflows/cross-lane-join-assessment.yml": "PROPOSED",
-    ".github/workflows/soil-hydrology-public-safe-context.yml": "PROPOSED",
-    ".github/workflows/soil-agriculture-public-safe-context.yml": "PROPOSED",
     ".github/workflows/fauna-habitat-public-safe-assignment.yml": "PROPOSED",
+    ".github/workflows/soil-agriculture-public-safe-context.yml": "PROPOSED",
+    ".github/workflows/soil-hydrology-public-safe-context.yml": "PROPOSED",
+    "contracts/joins/README.md": "PROPOSED",
     "contracts/joins/cross_lane_join_assessment.md": "PROPOSED",
     "docs/intake/exploratory/full-atlas-crosswalk-validator-source-map.md": "PROPOSED",
     "fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json": "PROPOSED",
@@ -90,24 +130,23 @@
     "tests/joins/test_cross_lane_temporal_boundary_guard.py": "PROPOSED",
     "tests/joins/test_cross_lane_workflow_propagation.py": "PROPOSED",
     "tests/joins/test_join_candidates.py": "PROPOSED",
-    "tools/joins/join_candidates.py": "PROPOSED",
-    "contracts/joins/README.md": "PROPOSED"
+    "tools/joins/join_candidates.py": "PROPOSED"
   },
   "validation_gates": [
     {
       "gate": "active-work-and-overlap-reconciliation",
       "outcome": "PASS",
-      "reason": "Fresh current-state reconciliation found zero open pull requests and rechecked the current four-path precedence increment together with all 20 cumulative branch paths and all 19 receipt-bound artifacts; no path, object-family, or authority collision was found."
+      "reason": "Fresh current-state reconciliation checked all 16 other open pull requests against the complete six-path branch diff and all 19 receipt-bound artifacts; no path, object-family, or authority collision was found."
     },
     {
       "gate": "current-main-regression-reproduction",
       "outcome": "PASS",
-      "reason": "Deterministic synthetic analysis showed that structurally parseable aliases with unknown or chained targets were treated as available, allowing a true alias relationship to evade conservative review."
+      "reason": "Static reproduction showed that argparse accepted abbreviated long options and that fixture or derive mode could silently ignore an explicit assessment-file operand, allowing the caller's intended input to escape validation."
     },
     {
       "gate": "focused-pytest-and-fixture-matrix",
       "outcome": "SKIPPED",
-      "reason": "The prior exact head passed 20/20 fixtures and 60 focused tests. New positive and negative cases bind registered alias targets and require unknown or chained targets to fail closed; hosted execution of the new exact head is pending."
+      "reason": "The prior exact head passed 20/20 fixtures and 63 focused tests. New deterministic subprocess proofs require ambiguous CLI combinations and abbreviated long options to fail with exit 2 while exact fixture mode and option-terminated dash-prefixed filenames remain valid; hosted execution of the new exact head is pending."
     },
     {
       "gate": "artifact-hash-replay",
@@ -122,51 +161,12 @@
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "The prior exact head passed the generic and all three pair workflows. Hosted validation of the alias-target integrity increment is pending."
+      "reason": "The prior exact head passed the generic and all three pair workflows. Hosted validation of the CLI-mode exclusivity increment is pending."
     },
     {
       "gate": "human-review",
       "outcome": "SKIPPED",
       "reason": "Accountable human review remains pending; this automation does not request, submit, or approve review."
     }
-  ],
-  "policy_decisions": [
-    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@eed7627f0bac70c4f11303ce6790320f46f7b080"
-  ],
-  "citations": [
-    {
-      "id": "repository:cross-lane-workflow",
-      "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fc39181a6727c67bcf66bc75d6f25316ce445dd5/.github/workflows/cross-lane-join-assessment.yml"
-    },
-    {
-      "id": "repository:join-test-lane",
-      "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fc39181a6727c67bcf66bc75d6f25316ce445dd5/tests/joins/README.md"
-    },
-    {
-      "id": "repository:generated-receipt-validator",
-      "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fc39181a6727c67bcf66bc75d6f25316ce445dd5/tools/validators/validate_generated_receipt.py"
-    },
-    {
-      "id": "repository:merged-regression-review",
-      "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/3943#discussion_r3890111628"
-    }
-  ],
-  "human_review": {
-    "reviewer_ids": [],
-    "state": "pending",
-    "timestamp": null
-  },
-  "override_record": null,
-  "created_at": "2026-08-30T18:09:17.956Z",
-  "emitter": "OpenAI ChatGPT automation runtime",
-  "links": {
-    "pr_number": 4190,
-    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
-    "drift_register_entry": null
-  },
-  "notes": "Successor provenance receipt for the CrossLaneJoinAssessment review unit. It binds the generic join contract, current pair-profile inventory, all seven dedicated synthetic regression files, the self-checking nine-module join-test inventory, and the generic plus three pair-specific workflows. Generic join validation triggers on every receipt-bound artifact. Disposition precedence is fail-closed: for distinct raw domains, dependency failures remain ERROR and living-person or blocked sensitive-geometry conditions remain DENY before unresolved aliases can route to review; same-domain scope routing remains first because the generic helper does not own domain-local work. Deterministic positive and synthetic-negative proof prevents alias review from downgrading stronger outcomes or hiding missing-evidence and restricted-sensitivity review obligations. Alias projection integrity also requires exact registered targets and rejects self-reference, canonical-lane keys, and alias chains so a parseable but incoherent projection cannot fail open. Fresh overlap reconciliation found zero open pull requests and remains explicitly scoped to the current four-path increment, all 20 cumulative branch paths, and all 19 receipt-bound artifacts so partial claims fail closed. Closed PRs #4175 and #4190 remain preserved and unmerged; this branch is refreshed non-destructively onto current main before any replacement draft is opened. Current-main bytes remain unchanged outside the bounded four-path seam. The historical 20260809 receipt remains immutable. This receipt creates no source, evidence, policy, review, proof, promotion, release, publication, or public-use authority."
+  ]
 }

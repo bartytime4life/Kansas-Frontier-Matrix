@@ -6,7 +6,7 @@ version: v0.1.0
 status: proposed; fixture-first; dry-run; local-only; non-authoritative
 owners: OWNER_TBD — join steward; participating domain stewards; evidence steward; sensitivity steward; validation steward
 created: 2026-08-09
-updated: 2026-09-01
+updated: 2026-09-02
 policy_label: repository-facing; cross-domain-join; sql-first; non-publisher; fail-closed
 owning_root: contracts/
 responsibility: Define a deterministic dry-run assessment for exact-key and synthetic spatial-temporal join candidates while preserving endpoint roles, evidence, sensitivity, and non-publisher effects.
@@ -36,6 +36,7 @@ notes:
   - "If the unresolved-alias projection is unavailable or malformed, the helper fails closed as VALIDATOR_SYSTEM_ERROR with DOMAIN_ALIAS_REGISTER_UNAVAILABLE; missing projection is never interpreted as an empty alias set."
   - "The generic seam does not own a repository-wide source-role crosswalk. Equal roles may continue to candidate proof, but any unequal role vector abstains for pair/domain-owned compatibility review."
   - "Zero-tolerance SPATIAL_TEMPORAL intervals that only touch at one boundary abstain; this profile does not invent repository-wide interval-boundary inclusivity."
+  - "CLI modes are mutually exclusive and long options require exact spelling; fixture or derive mode never silently ignores an explicit assessment file."
 [/KFM_META_BLOCK_V2] -->
 
 # CrossLaneJoinAssessment
@@ -93,6 +94,7 @@ Disposition precedence preserves mandatory trust routes. Same-domain scope routi
 - Missing EvidenceRefs abstain. Any unequal source-role pair abstains for pair/domain-owned compatibility review because the generic seam owns no accepted global crosswalk. Restricted generalized context abstains for sensitivity review. Restricted exact geometry and living-person joins deny.
 - `candidate_id` is RFC 8785/SHA-256 over request and endpoints. `spec_hash` binds the complete assessment excluding `assessment_id` and `spec_hash`.
 - `--derive` validates the fully sealed assessment before stdout. A malformed or schema-invalid input returns a bounded `FAIL` result and never emits a schema-invalid assessment as successful output.
+- CLI modes are mutually exclusive and long options are not abbreviated. `--fixtures` cannot be combined with assessment files or `--derive`, and `--derive` cannot be combined with assessment files, so an explicit input is never silently ignored; `--` remains available for a dash-prefixed filename.
 
 ## Non-publisher effects
 
