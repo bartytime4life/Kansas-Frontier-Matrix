@@ -11,19 +11,27 @@ import {
   mapRuntimeSelectionToEvidenceRequest,
   resolveMapRuntimeSelectionEvidence,
 } from "../src/adapters/MapRuntimeEvidenceAdapter";
+import { SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS } from "../src/site/mount-explorer-site";
 
 const runtimeSelection = Object.freeze({
   profile: MAP_FEATURE_SELECTION_PROFILE,
   selectionId: "selection:flow-001",
   layerId: "layer:synthetic-streamflow",
   featureId: "feature:flow-001",
-  evidenceRefs: Object.freeze([
-    "kfm:evidence:synthetic:flow-001",
-    "kfm:evidence:synthetic:flow-000",
-  ]),
+  evidenceRefs: SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS,
 });
 
 describe("MapRuntimePort to Explorer evidence integration", () => {
+  it("keeps shipped correction history inside the supported selection scope", () => {
+    expect(SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS).toEqual([
+      "kfm:evidence:synthetic:flow-000",
+      "kfm:evidence:synthetic:flow-001",
+    ]);
+    expect(runtimeSelection.evidenceRefs).toBe(
+      SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS,
+    );
+  });
+
   it("converts the KFM-owned runtime selection into the strict Explorer bridge shape", () => {
     expect(mapRuntimeSelectionToEvidenceRequest(runtimeSelection)).toEqual({
       profile: MAP_FEATURE_SELECTION_PROFILE,
@@ -31,8 +39,8 @@ describe("MapRuntimePort to Explorer evidence integration", () => {
       layer_id: "layer:synthetic-streamflow",
       feature_id: "feature:flow-001",
       evidence_refs: [
-        "kfm:evidence:synthetic:flow-001",
         "kfm:evidence:synthetic:flow-000",
+        "kfm:evidence:synthetic:flow-001",
       ],
     });
   });
