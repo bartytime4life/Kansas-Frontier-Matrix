@@ -6,7 +6,7 @@ FENCE_OPEN_RE = re.compile(r"^ {0,3}(?P<fence>`{3,}|~{3,}).*$")
 RAW_HTML_BLOCK_SPECS = (
     (
         re.compile(r"^ {0,3}<!--"),
-        re.compile(r"-->"),
+        re.compile(r"--!?>"),
         "Markdown HTML comment",
     ),
     (
