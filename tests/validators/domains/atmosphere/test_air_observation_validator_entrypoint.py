@@ -78,7 +78,12 @@ class AirObservationValidatorEntrypointTests(unittest.TestCase):
         self.assertLessEqual(set(expected_paths), set(schema["x-kfm"]))
         for field, expected_path in expected_paths.items():
             with self.subTest(field=field):
-                declared_path = REPO_ROOT / schema["x-kfm"][field]
+                metadata_value = schema["x-kfm"][field]
+                self.assertIsInstance(metadata_value, str)
+                metadata_path = Path(metadata_value)
+                self.assertFalse(metadata_path.is_absolute())
+                self.assertNotIn("..", metadata_path.parts)
+                declared_path = REPO_ROOT / metadata_path
                 self.assertEqual(declared_path.resolve(), expected_path.resolve())
                 self.assertTrue(declared_path.exists())
 
