@@ -24,6 +24,7 @@ LOCAL_PACKAGE = REPO_ROOT / "packages/kfm-cli"
 LOCAL_SPEC = "./packages/kfm-cli"
 LOCK_LIMIT_BYTES = 262_144
 INSTALL_TIMEOUT_SECONDS = 300
+UNSAFE_PYTHON_ENVIRONMENT = {"PYTHONHOME", "PYTHONPATH", "PYTHONUSERBASE"}
 HASH_LINE = re.compile(r"^\s+--hash=sha256:[0-9a-f]{64}(?: \\)?$")
 FORBIDDEN_LOCK_TEXT = (
     "--extra-index-url",
@@ -96,6 +97,7 @@ def build_commands(executable: str | None = None) -> tuple[tuple[str, ...], ...]
     return (
         (
             python,
+            "-P",
             "-m",
             "pip",
             "install",
@@ -107,6 +109,7 @@ def build_commands(executable: str | None = None) -> tuple[tuple[str, ...], ...]
         ),
         (
             python,
+            "-P",
             "-m",
             "pip",
             "install",
@@ -127,10 +130,12 @@ def install() -> None:
         key: value
         for key, value in os.environ.items()
         if not key.upper().startswith("PIP_")
+        and key.upper() not in UNSAFE_PYTHON_ENVIRONMENT
     }
     environment["PIP_CONFIG_FILE"] = os.devnull
     environment["PIP_DISABLE_PIP_VERSION_CHECK"] = "1"
     environment["PIP_NO_INPUT"] = "1"
+    environment["PYTHONNOUSERSITE"] = "1"
     deadline = time.monotonic() + INSTALL_TIMEOUT_SECONDS
     for command in build_commands():
         remaining_seconds = deadline - time.monotonic()
