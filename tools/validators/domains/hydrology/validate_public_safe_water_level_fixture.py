@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from decimal import Decimal
 from pathlib import Path
 import re
 import sys
@@ -89,6 +90,7 @@ FIXTURE_DATUM_PREFIX = "fixture://hydrology/datum/"
 MAX_EVIDENCE_REFS = 32
 MAX_SOURCE_LATENCY_SECONDS = 300
 MAX_RETRIEVAL_LATENCY_SECONDS = 900
+MAX_MEASUREMENT_DECIMAL_PLACES = 2
 EXPECTED_GOVERNANCE = {
     "rights_state": "fixture_only",
     "sensitivity_state": "public_safe_fixture",
@@ -403,6 +405,12 @@ def validate_candidate(candidate: object) -> list[Finding]:
         value = measurement.get("value")
         if not is_finite_number(value) or not -10_000 <= value <= 10_000:
             add_finding(findings, "MEASUREMENT_VALUE_OUT_OF_RANGE", "$.measurement.value")
+        elif Decimal(str(value)).as_tuple().exponent < -MAX_MEASUREMENT_DECIMAL_PLACES:
+            add_finding(
+                findings,
+                "MEASUREMENT_PRECISION_EXCEEDED",
+                "$.measurement.value",
+            )
         if measurement.get("unit") != "ft":
             add_finding(findings, "MEASUREMENT_UNIT_INVALID", "$.measurement.unit")
         datum_ref = measurement.get("datum_ref")

@@ -20,6 +20,7 @@ from tools.validators.domains.hydrology.validate_public_safe_water_level_fixture
     FORBIDDEN_LOCATION_ALIASES,
     Finding,
     MAX_EVIDENCE_REFS,
+    MAX_MEASUREMENT_DECIMAL_PLACES,
     MAX_RETRIEVAL_LATENCY_SECONDS,
     MAX_SOURCE_LATENCY_SECONDS,
     validate_candidate,
@@ -386,6 +387,23 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
             self.assertEqual(validate_candidate(candidate), [])
         expected = Finding("MEASUREMENT_VALUE_OUT_OF_RANGE", "$.measurement.value")
         for value in (-10_001, 10_001, True, False, float("nan"), float("inf")):
+            candidate = _load_candidate()
+            candidate["measurement"]["value"] = value  # type: ignore[index]
+            self.assertIn(expected, validate_candidate(candidate))
+
+    def test_measurement_precision_is_public_safe(self) -> None:
+        self.assertEqual(MAX_MEASUREMENT_DECIMAL_PLACES, 2)
+
+        for value in (-9_999.99, -0.01, 0, 0.01, 9_999.99):
+            candidate = _load_candidate()
+            candidate["measurement"]["value"] = value  # type: ignore[index]
+            self.assertEqual(validate_candidate(candidate), [])
+
+        expected = Finding(
+            "MEASUREMENT_PRECISION_EXCEEDED",
+            "$.measurement.value",
+        )
+        for value in (-0.001, 0.001, 12.345):
             candidate = _load_candidate()
             candidate["measurement"]["value"] = value  # type: ignore[index]
             self.assertIn(expected, validate_candidate(candidate))
