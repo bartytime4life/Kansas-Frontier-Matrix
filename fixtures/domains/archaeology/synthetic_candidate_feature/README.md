@@ -36,6 +36,8 @@ burial, sacred-place, collection-security, or culturally restricted data.
 - `path_locator_reference_deny.json` proves that a nominally opaque geometry
   reference cannot smuggle case-varied latitude, longitude, bounding-box,
   coordinate-system, or other protected locator tokens through its path.
+- `misbound_reference_family_deny.json` proves that a syntactically valid
+  source reference cannot satisfy an EvidenceRef/EvidenceBundle binding.
 - `non_string_reference_deny.json` proves that malformed structured reference
   values return a finite denial rather than crashing validation.
 - `unbound_catalog_candidate_deny.json` proves that a candidate cannot claim
@@ -56,8 +58,8 @@ python -m unittest tests.domains.archaeology.test_candidate_not_site
 Passing these checks proves only the schema-aligned candidate identifier,
 candidate-type vocabulary, spatial-precision vocabulary, and geometry-reference
 precision binding; bounded candidate discriminator; inline location denial;
-opaque-reference and protected-locator-token boundary; conditional EvidenceRef
-binding; and supersession
+opaque-reference, protected-locator-token, and reference-family boundaries;
+conditional EvidenceRef binding; and supersession
 correction binding; malformed-reference finite denial; and nonempty governed
 reference bindings; malformed-vocabulary and null-scalar finite denial; and
 schema-aligned `spec_hash` and deterministic Unicode-safe confidence-statement

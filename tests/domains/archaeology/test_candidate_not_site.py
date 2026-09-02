@@ -17,6 +17,7 @@ from tools.validators.archaeology.validate_candidate_feature import (
     FORBIDDEN_INLINE_LOCATION_FIELDS,
     FORBIDDEN_SITE_CLAIM_FIELDS,
     KFM_REFERENCE_PATTERN,
+    REFERENCE_FAMILY_PATTERNS,
     SPEC_HASH_PATTERN,
     SPATIAL_PRECISION_CLASSES,
     validate_candidate_feature,
@@ -224,6 +225,32 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
                     )
                 )
 
+    def test_misbound_reference_family_fixture_fails_closed(self) -> None:
+        payload = _load(FIXTURE_ROOT / "misbound_reference_family_deny.json")
+        self.assertIn(
+            "evidence_refs entries must use the allowed governed reference family",
+            validate_candidate_feature(payload),
+        )
+
+    def test_reference_fields_reject_cross_family_bindings(self) -> None:
+        cases = {
+            "source_refs": ["kfm://evidence/synthetic/misbound-source"],
+            "evidence_refs": ["kfm://source/synthetic/misbound-evidence"],
+            "observation_refs": ["kfm://correction/synthetic/misbound-observation"],
+            "correction_refs": ["kfm://observation/synthetic/misbound-correction"],
+            "candidate_geometry_ref": "kfm://evidence/synthetic/misbound-geometry",
+        }
+        for field, value in cases.items():
+            with self.subTest(field=field):
+                payload = copy.deepcopy(self.valid)
+                payload[field] = value
+                self.assertTrue(
+                    any(
+                        "reference family" in error or "kfm://geometry/ family" in error
+                        for error in validate_candidate_feature(payload)
+                    )
+                )
+
     def test_non_string_reference_fails_closed_without_exception(self) -> None:
         payload = _load(FIXTURE_ROOT / "non_string_reference_deny.json")
         errors = validate_candidate_feature(payload)
@@ -309,6 +336,18 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         self.assertEqual(properties["candidate_geometry_ref"]["pattern"], expected_ref_pattern)
         for field in ("evidence_refs", "observation_refs", "correction_refs"):
             self.assertEqual(properties[field]["items"]["pattern"], expected_ref_pattern)
+        schema_family_locations = {
+            "source_refs": properties["source_refs"]["items"],
+            "evidence_refs": properties["evidence_refs"]["items"],
+            "observation_refs": properties["observation_refs"]["items"],
+            "correction_refs": properties["correction_refs"]["items"],
+            "candidate_geometry_ref": properties["candidate_geometry_ref"],
+        }
+        for field, location in schema_family_locations.items():
+            self.assertEqual(
+                location["allOf"][0]["pattern"],
+                REFERENCE_FAMILY_PATTERNS[field].pattern,
+            )
         self.assertEqual(properties["evidence_refs"]["minItems"], 1)
         self.assertEqual(properties["correction_refs"]["minItems"], 1)
         evidence_conditional = schema["allOf"][0]
