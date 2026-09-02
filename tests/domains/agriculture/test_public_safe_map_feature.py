@@ -4,6 +4,7 @@ import copy
 import importlib.util
 import json
 import math
+import subprocess
 import sys
 from pathlib import Path
 
@@ -457,3 +458,56 @@ def test_malformed_json_returns_machine_readable_denial(tmp_path, capsys):
     assert output["findings"] == [
         {"code": "AG_MAP_JSON_DECODE_INVALID", "path": "/"}
     ]
+
+def test_cli_rejects_abbreviated_fixture_flags():
+    for length in range(3, len("--fixtures")):
+        abbreviation = "--fixtures"[:length]
+        completed = subprocess.run(
+            [sys.executable, str(VALIDATOR_PATH), abbreviation],
+            cwd=ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        assert completed.returncode == 2
+        assert completed.stdout == ""
+        assert "unrecognized arguments" in completed.stderr
+
+
+def test_cli_rejects_fixture_mode_with_explicit_path():
+    completed = subprocess.run(
+        [sys.executable, str(VALIDATOR_PATH), "--fixtures", "candidate.json"],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert completed.returncode == 2
+    assert completed.stdout == ""
+    assert "path cannot be combined with --fixtures" in completed.stderr
+
+
+def test_cli_option_terminator_allows_dash_prefixed_candidate(tmp_path):
+    module = _module()
+    manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    candidate = module.materialize_case(
+        manifest, _case(manifest, "valid_county_crop_observation")
+    )
+    candidate_path = tmp_path / "--fixtures"
+    candidate_path.write_text(json.dumps(candidate), encoding="utf-8")
+
+    completed = subprocess.run(
+        [sys.executable, str(VALIDATOR_PATH), "--", candidate_path.name],
+        cwd=tmp_path,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert completed.returncode == 0
+    assert completed.stderr == ""
+    payload = json.loads(completed.stdout)
+    assert payload["outcome"] == "PASS"
+    assert payload["findings"] == []
+    assert payload["authority"] == "NONE"
+    assert payload["execution_mode"] == "SYNTHETIC_NO_NETWORK"
+
