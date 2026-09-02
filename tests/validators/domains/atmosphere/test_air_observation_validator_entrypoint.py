@@ -20,6 +20,7 @@ if str(REPO_ROOT) not in sys.path:
 
 from tools.validators._common.public_safe_fixture import Finding
 from tools.validators.domains.atmosphere.validate_air_observation import (
+    SCHEMA_PATH,
     ValidationResult,
     main,
     validate_candidate,
@@ -54,6 +55,14 @@ class AirObservationValidatorEntrypointTests(unittest.TestCase):
     def test_bound_observation_passes(self) -> None:
         result = validate_file(VALID_DIR / "air_observation_bound.json")
         self.assertEqual(result, ValidationResult("PASS", ()))
+
+    def test_schema_metadata_points_to_air_observation_entrypoint(self) -> None:
+        schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+
+        self.assertEqual(
+            schema["x-kfm"]["validator"],
+            str(VALIDATOR.relative_to(REPO_ROOT)),
+        )
 
     def test_declared_schema_rejects_short_observation_id(self) -> None:
         candidate = self._bound_observation()
