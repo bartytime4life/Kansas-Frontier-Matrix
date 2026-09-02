@@ -82,6 +82,20 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         payload["spec_hash"] = {"synthetic": "not-a-digest"}
         self.assertIn(expected_error, validate_candidate_feature(payload))
 
+    def test_null_optional_scalars_fail_closed_while_omission_remains_valid(self) -> None:
+        cases = {
+            "candidate_type": "candidate_type is not in the bounded vocabulary",
+            "spatial_precision_class": "spatial_precision_class is not in the bounded vocabulary",
+            "spec_hash": "spec_hash must match ^sha256:[a-f0-9]{64}$",
+        }
+        for field, expected_error in cases.items():
+            with self.subTest(field=field):
+                payload = copy.deepcopy(self.valid)
+                payload[field] = None
+                self.assertIn(expected_error, validate_candidate_feature(payload))
+                payload.pop(field)
+                self.assertEqual(validate_candidate_feature(payload), [])
+
     def test_malformed_confidence_statement_fails_closed(self) -> None:
         payload = _load(
             FIXTURE_ROOT / "malformed_confidence_statement_deny.json"

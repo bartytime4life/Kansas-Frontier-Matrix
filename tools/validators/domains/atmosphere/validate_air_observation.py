@@ -12,7 +12,7 @@ import argparse
 import json
 from pathlib import Path
 import sys
-from typing import Sequence
+from typing import Iterable, Sequence
 
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
@@ -23,6 +23,7 @@ from tools.validators._common.public_safe_fixture import (  # noqa: E402
     Finding,
     validate_fixture_file,
 )
+from tools.validators._common.jsonschema_runner import load_validator  # noqa: E402
 from tools.validators.domains.atmosphere.validate_observed_modeled_separation import (  # noqa: E402
     ValidationResult,
     outcome_for_findings,
@@ -31,6 +32,39 @@ from tools.validators.domains.atmosphere.validate_observed_modeled_separation im
 
 
 SCOPE = "atmosphere-air-observation"
+SCHEMA_PATH = (
+    REPO_ROOT
+    / "schemas"
+    / "contracts"
+    / "v1"
+    / "domains"
+    / "atmosphere"
+    / "air_observation.schema.json"
+)
+_SCHEMA_VALIDATOR = load_validator(SCHEMA_PATH, check_formats=True)
+_MAX_SCHEMA_FINDINGS = 50
+
+
+def _json_path(parts: Iterable[object]) -> str:
+    path = "$"
+    for part in parts:
+        if isinstance(part, int):
+            path += f"[{part}]"
+        else:
+            path += f".{part}"
+    return path
+
+
+def _schema_findings(candidate: dict[str, object]) -> list[Finding]:
+    errors = sorted(
+        _SCHEMA_VALIDATOR.iter_errors(candidate),
+        key=lambda error: (list(error.absolute_path), error.validator or ""),
+    )
+    findings = {
+        Finding("AIR_OBSERVATION_SCHEMA_INVALID", _json_path(error.absolute_path))
+        for error in errors[:_MAX_SCHEMA_FINDINGS]
+    }
+    return sorted(findings)
 
 
 def validate_candidate(candidate: object) -> list[Finding]:
@@ -40,7 +74,10 @@ def validate_candidate(candidate: object) -> list[Finding]:
         return validate_profile_candidate(candidate)
     if candidate.get("object_type") != "AirObservation":
         return [Finding("AIR_OBSERVATION_REQUIRED", "$.object_type")]
-    return validate_profile_candidate(candidate)
+
+    findings = _schema_findings(candidate)
+    findings.extend(validate_profile_candidate(candidate))
+    return sorted(set(findings))
 
 
 def validate_file(path: Path | str) -> ValidationResult:

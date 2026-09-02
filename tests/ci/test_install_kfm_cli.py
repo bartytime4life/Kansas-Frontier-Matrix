@@ -43,6 +43,20 @@ class InstallKfmCliTests(unittest.TestCase):
             with self.assertRaises(module.CliInstallConfigurationError):
                 module.validate_lockfile(path)
 
+    def test_lock_validation_rejects_conditional_requirement(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "conditional.lock"
+            path.write_text(
+                "typer==0.27.2; python_version >= '3.11' \\\n"
+                f"    --hash=sha256:{'0' * 64}\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                module.CliInstallConfigurationError,
+                "^CLI_LOCKFILE_REQUIREMENT_UNSAFE$",
+            ):
+                module.validate_lockfile(path)
+
     def test_install_executes_argument_vectors_without_a_shell(self) -> None:
         with (
             mock.patch.object(module.time, "monotonic", side_effect=(100.0, 100.0, 150.0)),

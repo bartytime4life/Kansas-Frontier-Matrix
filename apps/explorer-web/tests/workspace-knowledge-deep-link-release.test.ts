@@ -142,13 +142,50 @@ describe("public Knowledge-domain deep-link release", () => {
     });
   });
 
-  it("leaves ordinary manual selection unchanged without a deep-link owner", () => {
+  it("releases an uncommitted URL request after a different manual domain applies", () => {
+    const transition = resolvePublicKnowledgeDomainManualSelectionTransition(
+      contextUrl(["archaeology"]),
+      null,
+      "people_dna_land",
+      true,
+    );
+
+    expect(transition.reason).toBe("RELEASED");
+    expect(transition.activeDeepLinkDomainId).toBeNull();
+    expect(
+      transition.replacementUrl?.searchParams.has(
+        PUBLIC_WORKSPACE_CONTEXT_QUERY_PARAM,
+      ),
+    ).toBe(false);
+    expect(transition.replacementUrl?.searchParams.get("lang")).toBe("en");
+    expect(transition.replacementUrl?.hash).toBe("#knowledge");
+    expect(decodeURIComponent(transition.replacementUrl?.toString() ?? "")).not.toContain(
+      "people_dna_land",
+    );
+  });
+
+  it("leaves ordinary manual selection unchanged without a URL request", () => {
+    expect(
+      resolvePublicKnowledgeDomainManualSelectionTransition(
+        new URL("https://example.invalid/explorer?lang=en#knowledge"),
+        null,
+        "people_dna_land",
+        true,
+      ),
+    ).toEqual({
+      activeDeepLinkDomainId: null,
+      replacementUrl: null,
+      reason: "UNCHANGED",
+    });
+  });
+
+  it("keeps an uncommitted URL request when a manual domain does not apply", () => {
     expect(
       resolvePublicKnowledgeDomainManualSelectionTransition(
         contextUrl(["archaeology"]),
         null,
         "people_dna_land",
-        true,
+        false,
       ),
     ).toEqual({
       activeDeepLinkDomainId: null,
