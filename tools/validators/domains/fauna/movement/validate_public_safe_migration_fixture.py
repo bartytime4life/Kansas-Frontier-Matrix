@@ -418,11 +418,6 @@ def validate_fixture_manifest() -> ValidationResult:
     if findings:
         return ValidationResult(tuple(sorted(set(findings))))
 
-    for index, fixture_path, expected_findings in resolved_cases:
-        actual = validate_file(fixture_path).findings
-        if expected_findings != actual:
-            _add(findings, "fixture.outcome_mismatch", f"/cases/{index}")
-
     actual_paths = sorted(
         str(path.relative_to(FIXTURE_ROOT))
         for folder in (FIXTURE_ROOT / "valid", FIXTURE_ROOT / "invalid")
@@ -432,6 +427,13 @@ def validate_fixture_manifest() -> ValidationResult:
         _add(findings, "fixture.paths_not_canonical", "/cases")
     if declared != actual_paths:
         _add(findings, "fixture.inventory_mismatch", "/cases")
+    if findings:
+        return ValidationResult(tuple(sorted(set(findings))))
+
+    for index, fixture_path, expected_findings in resolved_cases:
+        actual = validate_file(fixture_path).findings
+        if expected_findings != actual:
+            _add(findings, "fixture.outcome_mismatch", f"/cases/{index}")
     return ValidationResult(tuple(sorted(set(findings))))
 
 
