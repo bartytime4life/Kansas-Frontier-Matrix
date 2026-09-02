@@ -346,14 +346,26 @@ def test_short_protected_identifiers_are_denied():
         ]
 
 
-def test_private_identity_labels_without_id_delimiters_are_denied():
+def test_private_identity_labels_are_denied_at_every_case_and_token_count():
     module = _module()
     manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
     candidate = module.materialize_case(
         manifest, _case(manifest, "valid_county_crop_observation")
     )
 
-    for value in ("Owner Jane Doe", "operator John Smith", "Farm Smith Acres"):
+    assert module.validate_payload(candidate).outcome == "PASS"
+    assert candidate["limitations"] == [
+        "Generalized aggregate support; not farm or operator truth."
+    ]
+
+    for value in (
+        "Owner Jane",
+        "Farm Sunflower",
+        "operator john",
+        "owner jane doe",
+        "operator john smith",
+        "farm smith acres",
+    ):
         mutated = copy.deepcopy(candidate)
         mutated["indicator"]["value"] = value
         mutated["spec_hash"], mutated["id"] = module.canonical_identity(mutated)
