@@ -62,12 +62,18 @@ function externalSelection(
   selection: MapFeatureSelection,
 ): Readonly<Record<string, unknown>> {
   const frozen = freezeMapFeatureSelection(selection);
+  const historyEvidenceRefs = frozen.historyEvidenceRefs;
   return Object.freeze({
     profile: frozen.profile,
     selection_id: frozen.selectionId,
     layer_id: frozen.layerId,
     feature_id: frozen.featureId,
     evidence_refs: Object.freeze([...frozen.evidenceRefs]),
+    ...(historyEvidenceRefs === undefined
+      ? {}
+      : {
+          history_evidence_refs: Object.freeze([...historyEvidenceRefs]),
+        }),
   });
 }
 

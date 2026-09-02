@@ -18,8 +18,8 @@ const selection: MapFeatureSelection = Object.freeze({
   selectionId: "selection:synthetic:flow-001",
   layerId: "layer:released:synthetic-streamflow",
   featureId: "feature:synthetic:flow-001",
-  evidenceRefs: Object.freeze([
-    "kfm:evidence:synthetic:flow-001",
+  evidenceRefs: Object.freeze(["kfm:evidence:synthetic:flow-001"]),
+  historyEvidenceRefs: Object.freeze([
     "kfm:evidence:synthetic:flow-000",
   ]),
 });
@@ -126,7 +126,7 @@ describe("MapRuntimePort to governed Evidence Drawer binding", () => {
       resolver,
     );
     const missing = await resolveMapRuntimeSelectionEvidence(
-      { ...selection, evidenceRefs: [] },
+      { ...selection, evidenceRefs: [], historyEvidenceRefs: [] },
       admittedLayerManifest(),
       resolver,
     );
