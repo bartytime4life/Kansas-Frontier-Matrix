@@ -112,10 +112,10 @@ _CANONICAL_EVIDENCE_SEGMENT = re.compile(
     r"\A(?=.{1,128}\Z)[a-z0-9]+(?:[._:-][a-z0-9]+)*\Z"
 )
 _CANONICAL_EVIDENCE_TIMESTAMP_SEGMENT = re.compile(
-    r"\A\d{8}T\d{6}Z\Z"
+    r"\A[0-9]{8}T[0-9]{6}Z\Z"
 )
 _EVIDENCE_TIMESTAMP_SEGMENT_SHAPE = re.compile(
-    r"\A\d{8}t\d{6}z\Z", re.IGNORECASE
+    r"\A[0-9]{8}t[0-9]{6}z\Z", re.IGNORECASE
 )
 
 

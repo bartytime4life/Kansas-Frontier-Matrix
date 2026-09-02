@@ -192,6 +192,8 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
             "fixture://evidence/hydrology/water-level/20260802t120000z/receipt-1",
             "fixture://evidence/hydrology/water-level/20260802t120000Z/receipt-1",
             "fixture://evidence/hydrology/water-level/20260802T120000z/receipt-1",
+            "fixture://evidence/hydrology/water-level/٢٠٢٦٠٨٠٢T١٢٠٠٠٠Z/receipt-1",
+            "fixture://evidence/hydrology/water-level/２０２６０８０２T１２００００Z/receipt-1",
             "fixture://evidence/hydrology/water-level//receipt",
             "fixture://evidence/hydrology/water-level/../receipt",
             "fixture://evidence/hydrology/-water-level/receipt",
