@@ -1,8 +1,13 @@
 import { describe, expect, it } from "vitest";
 import mainSource from "../src/main.ts?raw";
 import {
+  PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT,
+  hasSinglePublicKnowledgeDomainConsumer,
+  isPublicKnowledgeDomainRetryGenerationCurrent,
+  resolvePublicKnowledgeDomainRetryPlan,
   resolvePublicKnowledgeDomainManualSelectionTransition,
   resolvePublicKnowledgeDomainUrlConsumerCommit,
+  resolveSinglePublicKnowledgeDomainControlId,
 } from "../src/site/workspace-knowledge-deep-link";
 import { resolvePublicKnowledgeDomainSelectionTransition } from "../src/site/workspace-navigation";
 import {
@@ -44,6 +49,84 @@ function contextUrl(domainIds: readonly string[]): URL {
 }
 
 describe("public Knowledge-domain deep-link release", () => {
+  it("fails closed when mounted or selected Knowledge controls are ambiguous", () => {
+    expect(
+      hasSinglePublicKnowledgeDomainConsumer(
+        ["hydrology", "archaeology"],
+        "archaeology",
+      ),
+    ).toBe(true);
+    expect(
+      hasSinglePublicKnowledgeDomainConsumer([], "archaeology"),
+    ).toBe(false);
+    expect(
+      hasSinglePublicKnowledgeDomainConsumer(
+        ["archaeology", "archaeology"],
+        "archaeology",
+      ),
+    ).toBe(false);
+
+    expect(
+      resolveSinglePublicKnowledgeDomainControlId(["archaeology"]),
+    ).toBe("archaeology");
+    expect(resolveSinglePublicKnowledgeDomainControlId([])).toBeNull();
+    expect(
+      resolveSinglePublicKnowledgeDomainControlId([
+        "archaeology",
+        "archaeology",
+      ]),
+    ).toBeNull();
+    expect(
+      resolveSinglePublicKnowledgeDomainControlId([undefined]),
+    ).toBeNull();
+  });
+
+  it("bounds unavailable-control retries and resets the budget for a new URL", () => {
+    let state = Object.freeze({
+      attemptsRemaining: PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT,
+      urlHref: null,
+    });
+    for (
+      let index = 0;
+      index < PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT;
+      index += 1
+    ) {
+      const plan = resolvePublicKnowledgeDomainRetryPlan(
+        state,
+        contextUrl(["archaeology"]).href,
+      );
+      expect(plan.shouldSchedule).toBe(true);
+      state = plan;
+    }
+    expect(
+      resolvePublicKnowledgeDomainRetryPlan(
+        state,
+        contextUrl(["archaeology"]).href,
+      ),
+    ).toEqual({
+      attemptsRemaining: 0,
+      urlHref: contextUrl(["archaeology"]).href,
+      shouldSchedule: false,
+    });
+
+    expect(
+      resolvePublicKnowledgeDomainRetryPlan(
+        state,
+        contextUrl(["people_dna_land"]).href,
+      ),
+    ).toEqual({
+      attemptsRemaining: PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT - 1,
+      urlHref: contextUrl(["people_dna_land"]).href,
+      shouldSchedule: true,
+    });
+  });
+
+  it("rejects a stale retry callback after cancellation or replacement", () => {
+    expect(isPublicKnowledgeDomainRetryGenerationCurrent(4, 4)).toBe(true);
+    expect(isPublicKnowledgeDomainRetryGenerationCurrent(5, 4)).toBe(false);
+    expect(isPublicKnowledgeDomainRetryGenerationCurrent(6, 4)).toBe(false);
+  });
+
   it("commits URL ownership after the existing control applies the domain", () => {
     const transition = resolvePublicKnowledgeDomainSelectionTransition(
       contextUrl(["archaeology"]),
@@ -56,6 +139,7 @@ describe("public Knowledge-domain deep-link release", () => {
       resolvePublicKnowledgeDomainUrlConsumerCommit(
         transition,
         "archaeology",
+        true,
       ),
     ).toBe("archaeology");
   });
@@ -69,10 +153,14 @@ describe("public Knowledge-domain deep-link release", () => {
 
     expect(transition.domainIdToSelect).toBe("people_dna_land");
     expect(
-      resolvePublicKnowledgeDomainUrlConsumerCommit(transition, "hydrology"),
+      resolvePublicKnowledgeDomainUrlConsumerCommit(
+        transition,
+        "hydrology",
+        true,
+      ),
     ).toBeNull();
     expect(
-      resolvePublicKnowledgeDomainUrlConsumerCommit(transition, null),
+      resolvePublicKnowledgeDomainUrlConsumerCommit(transition, null, true),
     ).toBeNull();
   });
 
@@ -85,8 +173,32 @@ describe("public Knowledge-domain deep-link release", () => {
 
     expect(transition.domainIdToSelect).toBeNull();
     expect(
-      resolvePublicKnowledgeDomainUrlConsumerCommit(transition, null),
+      resolvePublicKnowledgeDomainUrlConsumerCommit(transition, null, true),
     ).toBe("archaeology");
+  });
+
+  it("keeps an already-selected but disabled domain consumer unowned", () => {
+    const transition = resolvePublicKnowledgeDomainSelectionTransition(
+      contextUrl(["people_dna_land"]),
+      null,
+      "people_dna_land",
+    );
+
+    expect(transition.domainIdToSelect).toBeNull();
+    expect(
+      resolvePublicKnowledgeDomainUrlConsumerCommit(
+        transition,
+        "people_dna_land",
+        false,
+      ),
+    ).toBeNull();
+    expect(
+      resolvePublicKnowledgeDomainUrlConsumerCommit(
+        transition,
+        "people_dna_land",
+        true,
+      ),
+    ).toBe("people_dna_land");
   });
 
   it("preserves ownership during programmatic restoration of the same domain", () => {
@@ -215,9 +327,39 @@ describe("public Knowledge-domain deep-link release", () => {
     );
     expect(mainSource).toContain("!domainButton.disabled");
     expect(mainSource).toContain(
+      "requestedDomainId !== null && !consumerReady",
+    );
+    expect(mainSource).toContain(
+      "requestedDomainId === null || consumerReady",
+    );
+    expect(mainSource).toContain(
       '!button.disabled && button.getAttribute("aria-pressed") === "true"',
     );
     expect(mainSource).toContain("domainButton.click()");
+    expect(mainSource).toContain(
+      "scheduleKnowledgeDomainDeepLinkRetry(safeUrl)",
+    );
+    expect(mainSource).toContain(
+      "cancelPendingKnowledgeDomainDeepLinkRetry()",
+    );
+    expect(mainSource).toContain(
+      "window.location.href !== retryPlan.urlHref",
+    );
+    const knowledgeRetryScheduleIndex = mainSource.indexOf(
+      "const scheduleKnowledgeDomainDeepLinkRetry",
+    );
+    const staleGenerationGuardIndex = mainSource.indexOf(
+      "isPublicKnowledgeDomainRetryGenerationCurrent(",
+      knowledgeRetryScheduleIndex,
+    );
+    const knowledgeRetryClearIndex = mainSource.indexOf(
+      "pendingKnowledgeDomainDeepLinkRetry = null",
+      staleGenerationGuardIndex,
+    );
+    expect(staleGenerationGuardIndex).toBeGreaterThan(
+      knowledgeRetryScheduleIndex,
+    );
+    expect(knowledgeRetryClearIndex).toBeGreaterThan(staleGenerationGuardIndex);
     const clickIndex = mainSource.indexOf("domainButton.click()");
     expect(
       mainSource.indexOf(
@@ -227,6 +369,12 @@ describe("public Knowledge-domain deep-link release", () => {
     ).toBeGreaterThan(clickIndex);
     expect(mainSource).toContain(
       'button[data-domain-id][aria-pressed="true"]',
+    );
+    expect(mainSource).toContain(
+      "hasSinglePublicKnowledgeDomainConsumer(",
+    );
+    expect(mainSource).toContain(
+      "resolveSinglePublicKnowledgeDomainControlId(",
     );
     expect(mainSource).not.toContain("domainIds.join");
   });

@@ -16,6 +16,9 @@ import {
 } from "./site/workspace-navigation";
 import {
   PUBLIC_MAP_CASE_DEEP_LINK_RETRY_LIMIT,
+  hasSinglePublicMapCaseConsumer,
+  isPublicMapCaseOwnedConsumerCurrent,
+  isPublicMapCaseRetryGenerationCurrent,
   resolvePublicMapCaseManualSelectionTransition,
   resolvePublicMapCaseRetryPlan,
   resolvePublicMapCaseUrlConsumerCommit,
@@ -23,8 +26,14 @@ import {
   type PublicMapCaseRetryState,
 } from "./site/workspace-map-deep-link";
 import {
+  PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT,
+  hasSinglePublicKnowledgeDomainConsumer,
+  isPublicKnowledgeDomainRetryGenerationCurrent,
+  resolvePublicKnowledgeDomainRetryPlan,
   resolvePublicKnowledgeDomainManualSelectionTransition,
   resolvePublicKnowledgeDomainUrlConsumerCommit,
+  resolveSinglePublicKnowledgeDomainControlId,
+  type PublicKnowledgeDomainRetryState,
 } from "./site/workspace-knowledge-deep-link";
 
 const root = document.querySelector<HTMLElement>("#root");
@@ -44,14 +53,24 @@ if (navigation === null || trustSection === null) {
 
 mountPublicWorkspaceNavigation(navigation);
 let activeDeepLinkMapCaseId: "missing" | null = null;
+let activeDeepLinkMapCaseConsumer: HTMLButtonElement | null = null;
 let activeDeepLinkKnowledgeDomainId: string | null = null;
 let pendingMapDeepLinkRetry: number | null = null;
+let pendingKnowledgeDomainDeepLinkRetry: number | null = null;
+let mapDeepLinkRetryGeneration = 0;
+let knowledgeDomainDeepLinkRetryGeneration = 0;
 let mapDeepLinkRetryState: PublicMapCaseRetryState = Object.freeze({
   attemptsRemaining: PUBLIC_MAP_CASE_DEEP_LINK_RETRY_LIMIT,
   urlHref: null,
 });
+let knowledgeDomainDeepLinkRetryState: PublicKnowledgeDomainRetryState =
+  Object.freeze({
+    attemptsRemaining: PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT,
+    urlHref: null,
+  });
 
 const cancelPendingMapDeepLinkRetry = (): void => {
+  mapDeepLinkRetryGeneration += 1;
   if (pendingMapDeepLinkRetry !== null) {
     window.clearTimeout(pendingMapDeepLinkRetry);
   }
@@ -70,10 +89,60 @@ const scheduleMapDeepLinkRetry = (url: URL): void => {
   );
   mapDeepLinkRetryState = retryPlan;
   if (!retryPlan.shouldSchedule) return;
+  mapDeepLinkRetryGeneration += 1;
+  const retryGeneration = mapDeepLinkRetryGeneration;
   pendingMapDeepLinkRetry = window.setTimeout(() => {
+    if (
+      !isPublicMapCaseRetryGenerationCurrent(
+        mapDeepLinkRetryGeneration,
+        retryGeneration,
+      )
+    ) {
+      return;
+    }
     pendingMapDeepLinkRetry = null;
     if (window.location.href !== retryPlan.urlHref) {
       cancelPendingMapDeepLinkRetry();
+      return;
+    }
+    syncWorkspaceNavigation();
+  }, 16);
+};
+
+const cancelPendingKnowledgeDomainDeepLinkRetry = (): void => {
+  knowledgeDomainDeepLinkRetryGeneration += 1;
+  if (pendingKnowledgeDomainDeepLinkRetry !== null) {
+    window.clearTimeout(pendingKnowledgeDomainDeepLinkRetry);
+  }
+  pendingKnowledgeDomainDeepLinkRetry = null;
+  knowledgeDomainDeepLinkRetryState = Object.freeze({
+    attemptsRemaining: PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT,
+    urlHref: null,
+  });
+};
+
+const scheduleKnowledgeDomainDeepLinkRetry = (url: URL): void => {
+  if (pendingKnowledgeDomainDeepLinkRetry !== null) return;
+  const retryPlan = resolvePublicKnowledgeDomainRetryPlan(
+    knowledgeDomainDeepLinkRetryState,
+    url.href,
+  );
+  knowledgeDomainDeepLinkRetryState = retryPlan;
+  if (!retryPlan.shouldSchedule) return;
+  knowledgeDomainDeepLinkRetryGeneration += 1;
+  const retryGeneration = knowledgeDomainDeepLinkRetryGeneration;
+  pendingKnowledgeDomainDeepLinkRetry = window.setTimeout(() => {
+    if (
+      !isPublicKnowledgeDomainRetryGenerationCurrent(
+        knowledgeDomainDeepLinkRetryGeneration,
+        retryGeneration,
+      )
+    ) {
+      return;
+    }
+    pendingKnowledgeDomainDeepLinkRetry = null;
+    if (window.location.href !== retryPlan.urlHref) {
+      cancelPendingKnowledgeDomainDeepLinkRetry();
       return;
     }
     syncWorkspaceNavigation();
@@ -96,10 +165,14 @@ const releaseDeepLinkMapOwnershipOnManualSelection = (event: MouseEvent): void =
     button.disabled,
   );
   activeDeepLinkMapCaseId = transition.activeDeepLinkMapCaseId;
+  if (activeDeepLinkMapCaseId === null) {
+    activeDeepLinkMapCaseConsumer = null;
+  }
   if (
     transition.replacementUrl !== null &&
     transition.replacementUrl.href !== currentUrl.href
   ) {
+    cancelPendingMapDeepLinkRetry();
     window.history.replaceState(
       window.history.state,
       "",
@@ -132,6 +205,7 @@ const releaseDeepLinkKnowledgeOwnershipOnManualSelection = (
     transition.replacementUrl !== null &&
     transition.replacementUrl.href !== currentUrl.href
   ) {
+    cancelPendingKnowledgeDomainDeepLinkRetry();
     window.history.replaceState(
       window.history.state,
       "",
@@ -159,15 +233,33 @@ const syncWorkspaceNavigation = (): void => {
   );
   if (mapTransition.releaseOwnedSelection) {
     cancelPendingMapDeepLinkRetry();
+    activeDeepLinkMapCaseConsumer = null;
   }
   const mapCaseId = mapTransition.mapCaseIdToSelect;
-  if (mapCaseId !== null) {
-    const mapCaseButton = root.querySelector<HTMLButtonElement>(
-      `button[data-map-evidence-case="${mapCaseId}"]`,
+  const requestedMapCaseId =
+    mapCaseId ?? mapTransition.activeDeepLinkMapCaseId;
+  const mapCaseButtons =
+    requestedMapCaseId === null
+      ? []
+      : Array.from(
+          root.querySelectorAll<HTMLButtonElement>(
+            `button[data-map-evidence-case="${requestedMapCaseId}"]`,
+          ),
+        );
+  const mapConsumerIsUnique =
+    requestedMapCaseId !== null &&
+    hasSinglePublicMapCaseConsumer(
+      mapCaseButtons.map((button) => button.dataset.mapEvidenceCase),
+      requestedMapCaseId,
     );
-    if (mapCaseButton?.disabled) {
+  const mapCaseButton =
+    mapConsumerIsUnique && mapCaseButtons.length === 1
+      ? mapCaseButtons[0]
+      : undefined;
+  if (mapCaseId !== null) {
+    if (mapCaseButton === undefined || mapCaseButton.disabled) {
       scheduleMapDeepLinkRetry(safeUrl);
-    } else if (mapCaseButton !== null) {
+    } else {
       const priorFocus =
         document.activeElement instanceof HTMLElement
           ? document.activeElement
@@ -177,33 +269,72 @@ const syncWorkspaceNavigation = (): void => {
       activeDeepLinkMapCaseId = resolvePublicMapCaseUrlConsumerCommit(
         mapTransition,
         selectionApplied,
+        true,
       );
+      activeDeepLinkMapCaseConsumer =
+        selectionApplied && activeDeepLinkMapCaseId === mapCaseId
+          ? mapCaseButton
+          : null;
       if (selectionApplied) cancelPendingMapDeepLinkRetry();
       if (priorFocus?.isConnected) priorFocus.focus();
     }
   } else {
+    const ownedConsumerCurrent =
+      mapTransition.activeDeepLinkMapCaseId === null ||
+      isPublicMapCaseOwnedConsumerCurrent(
+        activeDeepLinkMapCaseConsumer,
+        mapCaseButton,
+      );
     activeDeepLinkMapCaseId = resolvePublicMapCaseUrlConsumerCommit(
       mapTransition,
       false,
+      ownedConsumerCurrent,
     );
-    if (activeDeepLinkMapCaseId === null) cancelPendingMapDeepLinkRetry();
+    if (activeDeepLinkMapCaseId === null) {
+      activeDeepLinkMapCaseConsumer = null;
+    }
+    if (requestedMapCaseId !== null && activeDeepLinkMapCaseId === null) {
+      scheduleMapDeepLinkRetry(safeUrl);
+    } else if (activeDeepLinkMapCaseId === null) {
+      cancelPendingMapDeepLinkRetry();
+    }
   }
 
-  const currentDomainId =
-    root.querySelector<HTMLButtonElement>(
-      'button[data-domain-id][aria-pressed="true"]',
-    )?.dataset.domainId ?? null;
+  const currentDomainId = resolveSinglePublicKnowledgeDomainControlId(
+    Array.from(
+      root.querySelectorAll<HTMLButtonElement>(
+        'button[data-domain-id][aria-pressed="true"]',
+      ),
+    ).map((button) => button.dataset.domainId),
+  );
   const domainTransition = resolvePublicKnowledgeDomainSelectionTransition(
     safeUrl,
     activeDeepLinkKnowledgeDomainId,
     currentDomainId,
   );
   const domainIdToSelect = domainTransition.domainIdToSelect;
+  const requestedDomainId = domainTransition.activeDeepLinkDomainId;
+  const domainConsumerId = domainIdToSelect ?? requestedDomainId;
+  const domainButtons = Array.from(
+    root.querySelectorAll<HTMLButtonElement>("button[data-domain-id]"),
+  );
+  const domainConsumerIsUnique =
+    domainConsumerId !== null &&
+    hasSinglePublicKnowledgeDomainConsumer(
+      domainButtons.map((button) => button.dataset.domainId),
+      domainConsumerId,
+    );
+  const domainButton =
+    !domainConsumerIsUnique
+      ? undefined
+      : domainButtons.find(
+          (button) => button.dataset.domainId === domainConsumerId,
+        );
+  const consumerReady = domainButton !== undefined && !domainButton.disabled;
+  if (requestedDomainId !== null && !consumerReady) {
+    scheduleKnowledgeDomainDeepLinkRetry(safeUrl);
+  }
   if (domainIdToSelect !== null) {
-    const domainButton = Array.from(
-      root.querySelectorAll<HTMLButtonElement>("button[data-domain-id]"),
-    ).find((button) => button.dataset.domainId === domainIdToSelect);
-    const consumerReady = domainButton !== undefined && !domainButton.disabled;
     if (consumerReady) {
       // Provisional ownership keeps the programmatic click from looking like a
       // manual selection to the delegated release listener. The observed DOM
@@ -224,18 +355,26 @@ const syncWorkspaceNavigation = (): void => {
       if (priorFocus?.isConnected) priorFocus.focus();
     }
   }
-  const selectedDomainId =
-    root.querySelector<HTMLButtonElement>(
-      'button[data-domain-id][aria-pressed="true"]',
-    )?.dataset.domainId ?? null;
+  const selectedDomainId = resolveSinglePublicKnowledgeDomainControlId(
+    Array.from(
+      root.querySelectorAll<HTMLButtonElement>(
+        'button[data-domain-id][aria-pressed="true"]',
+      ),
+    ).map((button) => button.dataset.domainId),
+  );
   activeDeepLinkKnowledgeDomainId =
     resolvePublicKnowledgeDomainUrlConsumerCommit(
       domainTransition,
       selectedDomainId,
+      requestedDomainId === null || consumerReady,
     );
+  if (activeDeepLinkKnowledgeDomainId !== null || requestedDomainId === null) {
+    cancelPendingKnowledgeDomainDeepLinkRetry();
+  }
 };
 const syncWorkspaceNavigationFromBrowser = (): void => {
   cancelPendingMapDeepLinkRetry();
+  cancelPendingKnowledgeDomainDeepLinkRetry();
   syncWorkspaceNavigation();
 };
 syncWorkspaceNavigationFromBrowser();

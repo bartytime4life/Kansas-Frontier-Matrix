@@ -8,6 +8,9 @@ import {
 } from "../src/site/workspace-context";
 import {
   PUBLIC_MAP_CASE_DEEP_LINK_RETRY_LIMIT,
+  hasSinglePublicMapCaseConsumer,
+  isPublicMapCaseOwnedConsumerCurrent,
+  isPublicMapCaseRetryGenerationCurrent,
   resolvePublicMapCaseManualSelectionTransition,
   resolvePublicMapCaseRetryPlan,
   resolvePublicMapCaseUrlConsumerCommit,
@@ -52,6 +55,22 @@ function missingMapUrl(): URL {
 }
 
 describe("Explorer manual map-selection deep-link release", () => {
+  it("fails closed when the requested Map control is absent or duplicated", () => {
+    expect(
+      hasSinglePublicMapCaseConsumer(
+        ["supported", "missing", "restricted"],
+        "missing",
+      ),
+    ).toBe(true);
+    expect(hasSinglePublicMapCaseConsumer([], "missing")).toBe(false);
+    expect(
+      hasSinglePublicMapCaseConsumer(["missing", "missing"], "missing"),
+    ).toBe(false);
+    expect(
+      hasSinglePublicMapCaseConsumer([undefined, "supported"], "missing"),
+    ).toBe(false);
+  });
+
   it("selects a newly URL-owned case without resetting the fixture", () => {
     expect(resolvePublicMapCaseUrlTransition(missingMapUrl(), null)).toEqual({
       activeDeepLinkMapCaseId: null,
@@ -63,26 +82,63 @@ describe("Explorer manual map-selection deep-link release", () => {
   it("commits ownership only after the requested control accepts selection", () => {
     const requested = resolvePublicMapCaseUrlTransition(missingMapUrl(), null);
 
-    expect(resolvePublicMapCaseUrlConsumerCommit(requested, false)).toBeNull();
+    expect(
+      resolvePublicMapCaseUrlConsumerCommit(requested, false, true),
+    ).toBeNull();
     expect(
       resolvePublicMapCaseUrlTransition(
         missingMapUrl(),
-        resolvePublicMapCaseUrlConsumerCommit(requested, false),
+        resolvePublicMapCaseUrlConsumerCommit(requested, false, true),
       ),
     ).toEqual(requested);
-    expect(resolvePublicMapCaseUrlConsumerCommit(requested, true)).toBe(
+    expect(resolvePublicMapCaseUrlConsumerCommit(requested, true, true)).toBe(
       "missing",
     );
     expect(
       resolvePublicMapCaseUrlTransition(
         missingMapUrl(),
-        resolvePublicMapCaseUrlConsumerCommit(requested, true),
+        resolvePublicMapCaseUrlConsumerCommit(requested, true, true),
       ),
     ).toEqual({
       activeDeepLinkMapCaseId: "missing",
       mapCaseIdToSelect: null,
       releaseOwnedSelection: false,
     });
+  });
+
+  it("retains established ownership after async re-enablement but drops a missing consumer", () => {
+    const owned = resolvePublicMapCaseUrlTransition(missingMapUrl(), "missing");
+
+    expect(resolvePublicMapCaseUrlConsumerCommit(owned, false, true)).toBe(
+      "missing",
+    );
+    expect(
+      resolvePublicMapCaseUrlConsumerCommit(owned, false, false),
+    ).toBeNull();
+  });
+
+  it("retains only the exact mounted consumer that accepted the URL request", () => {
+    const acceptedConsumer = Object.freeze({ caseId: "missing" });
+    const replacementConsumer = Object.freeze({ caseId: "missing" });
+
+    expect(
+      isPublicMapCaseOwnedConsumerCurrent(
+        acceptedConsumer,
+        acceptedConsumer,
+      ),
+    ).toBe(true);
+    expect(
+      isPublicMapCaseOwnedConsumerCurrent(
+        acceptedConsumer,
+        replacementConsumer,
+      ),
+    ).toBe(false);
+    expect(
+      isPublicMapCaseOwnedConsumerCurrent(acceptedConsumer, undefined),
+    ).toBe(false);
+    expect(
+      isPublicMapCaseOwnedConsumerCurrent(null, replacementConsumer),
+    ).toBe(false);
   });
 
   it("bounds disabled-control retries and resets the budget for a new URL", () => {
@@ -111,6 +167,12 @@ describe("Explorer manual map-selection deep-link release", () => {
       urlHref: changedUrl.href,
       shouldSchedule: true,
     });
+  });
+
+  it("rejects a stale retry callback after cancellation or replacement", () => {
+    expect(isPublicMapCaseRetryGenerationCurrent(4, 4)).toBe(true);
+    expect(isPublicMapCaseRetryGenerationCurrent(5, 4)).toBe(false);
+    expect(isPublicMapCaseRetryGenerationCurrent(6, 4)).toBe(false);
   });
 
   it("releases ownership only when a departing URL still owns the fixture", () => {
@@ -235,9 +297,41 @@ describe("Explorer manual map-selection deep-link release", () => {
     expect(mainSource).toContain("resolvePublicMapCaseUrlTransition");
     expect(mainSource).toContain("resolvePublicMapCaseUrlConsumerCommit");
     expect(mainSource).toContain("caseId,\n    button.disabled,");
-    expect(mainSource).toContain("mapCaseButton?.disabled");
+    expect(mainSource).toContain(
+      "mapCaseButton === undefined || mapCaseButton.disabled",
+    );
+    expect(mainSource).toContain("hasSinglePublicMapCaseConsumer(");
+    expect(mainSource).toContain("root.querySelectorAll<HTMLButtonElement>(");
+    expect(mainSource).toContain(
+      "const ownedConsumerCurrent =\n      mapTransition.activeDeepLinkMapCaseId === null ||",
+    );
+    expect(mainSource).toContain(
+      "isPublicMapCaseOwnedConsumerCurrent(\n        activeDeepLinkMapCaseConsumer,",
+    );
+    expect(mainSource).toContain(
+      "activeDeepLinkMapCaseConsumer =\n        selectionApplied &&",
+    );
+    expect(mainSource).not.toContain(
+      "mapCaseButton !== undefined && mapCaseButton.disabled",
+    );
+    expect(mainSource).toContain(
+      "requestedMapCaseId !== null && activeDeepLinkMapCaseId === null",
+    );
     expect(mainSource).toContain("scheduleMapDeepLinkRetry(safeUrl)");
     expect(mainSource).toContain("window.location.href !== retryPlan.urlHref");
+    const mapRetryScheduleIndex = mainSource.indexOf(
+      "const scheduleMapDeepLinkRetry",
+    );
+    const staleGenerationGuardIndex = mainSource.indexOf(
+      "isPublicMapCaseRetryGenerationCurrent(",
+      mapRetryScheduleIndex,
+    );
+    const mapRetryClearIndex = mainSource.indexOf(
+      "pendingMapDeepLinkRetry = null",
+      staleGenerationGuardIndex,
+    );
+    expect(staleGenerationGuardIndex).toBeGreaterThan(mapRetryScheduleIndex);
+    expect(mapRetryClearIndex).toBeGreaterThan(staleGenerationGuardIndex);
     expect(mainSource).toContain("const selectionApplied = mapCaseButton.disabled");
     expect(mainSource).not.toContain("activeDeepLinkMapCaseId = mapTransition.activeDeepLinkMapCaseId");
     expect(mainSource).not.toContain("selection.evidenceRefs.join");

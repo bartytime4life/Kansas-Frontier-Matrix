@@ -7,6 +7,16 @@ import {
 export const PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RELEASE_PROFILE =
   "kfm.explorer.public-knowledge-domain-deep-link-release.v1" as const;
 
+export const PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT = 8 as const;
+
+export type PublicKnowledgeDomainRetryState = Readonly<{
+  attemptsRemaining: number;
+  urlHref: string | null;
+}>;
+
+export type PublicKnowledgeDomainRetryPlan = PublicKnowledgeDomainRetryState &
+  Readonly<{ shouldSchedule: boolean }>;
+
 export type PublicKnowledgeDomainDeepLinkRelease = Readonly<{
   activeDeepLinkDomainId: string | null;
   replacementUrl: URL | null;
@@ -14,15 +24,90 @@ export type PublicKnowledgeDomainDeepLinkRelease = Readonly<{
 }>;
 
 /**
- * Commit URL ownership only after the existing Knowledge controls visibly
- * apply a newly requested domain. An absent, disabled, or ineffective control
- * leaves ownership clear, allowing later synchronization to retry instead of
- * treating an unrendered domain as restored.
+ * Resolve visible Knowledge state only when exactly one control reports the
+ * selection. Responsive or repeated mounts must not turn DOM order into
+ * catalog authority.
+ */
+export function resolveSinglePublicKnowledgeDomainControlId(
+  selectedDomainIds: readonly (string | undefined)[],
+): string | null {
+  if (selectedDomainIds.length !== 1) return null;
+  const selectedDomainId = selectedDomainIds[0];
+  return selectedDomainId === undefined || selectedDomainId.length === 0
+    ? null
+    : selectedDomainId;
+}
+
+/**
+ * A URL request has one truthful consumer only when exactly one mounted
+ * Knowledge control carries the requested catalog identifier.
+ */
+export function hasSinglePublicKnowledgeDomainConsumer(
+  mountedDomainIds: readonly (string | undefined)[],
+  requestedDomainId: string,
+): boolean {
+  return (
+    mountedDomainIds.filter((domainId) => domainId === requestedDomainId)
+      .length === 1
+  );
+}
+
+/**
+ * Reserve one finite retry for a Knowledge-domain control that is absent or
+ * disabled while its validated public URL request is pending. A different URL
+ * receives a fresh budget; exhaustion fails closed without polling forever or
+ * claiming that the requested catalog domain became visible.
+ */
+export function resolvePublicKnowledgeDomainRetryPlan(
+  state: PublicKnowledgeDomainRetryState,
+  requestedUrlHref: string,
+): PublicKnowledgeDomainRetryPlan {
+  const attemptsRemaining =
+    state.urlHref === requestedUrlHref
+      ? state.attemptsRemaining
+      : PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT;
+  if (attemptsRemaining <= 0) {
+    return Object.freeze({
+      attemptsRemaining: 0,
+      urlHref: requestedUrlHref,
+      shouldSchedule: false,
+    });
+  }
+  return Object.freeze({
+    attemptsRemaining: attemptsRemaining - 1,
+    urlHref: requestedUrlHref,
+    shouldSchedule: true,
+  });
+}
+
+/**
+ * Accept a scheduled retry callback only while it still owns the active local
+ * generation. Navigation, manual release, or a newer retry invalidates older
+ * callbacks so they cannot clear a replacement timer or resynchronize stale
+ * URL state.
+ */
+export function isPublicKnowledgeDomainRetryGenerationCurrent(
+  activeGeneration: number,
+  callbackGeneration: number,
+): boolean {
+  return activeGeneration === callbackGeneration;
+}
+
+/**
+ * Commit URL ownership only after the existing Knowledge control is enabled
+ * and visibly applies the requested domain. This readiness proof is required
+ * even when the requested domain was already selected before synchronization;
+ * an absent, disabled, or ineffective control leaves ownership clear and
+ * retryable instead of treating an unavailable consumer as restored.
  */
 export function resolvePublicKnowledgeDomainUrlConsumerCommit(
   transition: PublicKnowledgeDomainSelectionTransition,
   selectedDomainId: string | null,
+  consumerReady: boolean,
 ): string | null {
+  if (transition.activeDeepLinkDomainId !== null && !consumerReady) {
+    return null;
+  }
   if (
     transition.domainIdToSelect !== null &&
     selectedDomainId !== transition.domainIdToSelect

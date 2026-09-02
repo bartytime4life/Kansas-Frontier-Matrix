@@ -27,7 +27,22 @@ export type PublicMapCaseUrlTransition = Readonly<{
 }>;
 
 /**
- * Reserve one finite retry for a disabled public map-selection control.
+ * A public Map URL request has one truthful fixture consumer only when exactly
+ * one mounted control carries the requested synthetic case identifier.
+ * Responsive or repeated mounts must not turn DOM order into ownership.
+ */
+export function hasSinglePublicMapCaseConsumer(
+  mountedCaseIds: readonly (string | undefined)[],
+  requestedCaseId: string,
+): boolean {
+  return (
+    mountedCaseIds.filter((caseId) => caseId === requestedCaseId).length === 1
+  );
+}
+
+/**
+ * Reserve one finite retry for an absent or disabled public map-selection
+ * control.
  * A different URL receives a fresh budget; exhausting the budget fails closed
  * with no timer rather than polling indefinitely or claiming URL ownership.
  */
@@ -54,15 +69,51 @@ export function resolvePublicMapCaseRetryPlan(
 }
 
 /**
+ * Accept a scheduled retry callback only while it still owns the active local
+ * generation. Navigation, manual release, or a newer retry invalidates older
+ * callbacks so they cannot clear a replacement timer or resynchronize stale
+ * URL state.
+ */
+export function isPublicMapCaseRetryGenerationCurrent(
+  activeGeneration: number,
+  callbackGeneration: number,
+): boolean {
+  return activeGeneration === callbackGeneration;
+}
+
+/**
+ * Keep established URL ownership only while the exact consumer that accepted
+ * the request remains mounted. A replacement control with the same synthetic
+ * case identifier is a new consumer and must prove selection independently;
+ * ordinary re-enablement of the original async control remains current.
+ */
+export function isPublicMapCaseOwnedConsumerCurrent(
+  ownedConsumer: object | null,
+  mountedConsumer: object | undefined,
+): boolean {
+  return ownedConsumer !== null && mountedConsumer === ownedConsumer;
+}
+
+/**
  * Commit URL ownership only after the fixture control accepted the requested
- * selection. A disabled control ignores `click()`, so retaining the prior
- * owner keeps the URL request retryable instead of falsely claiming that its
- * Evidence Drawer was restored.
+ * selection, and retain established ownership only while its unique consumer
+ * remains mounted. Map controls are disabled only while their asynchronous
+ * evidence request is pending, so re-enablement must not look like deselection.
+ * Manual selection owns release; mount churn cannot leave a URL owning a
+ * removed or duplicated fixture.
  */
 export function resolvePublicMapCaseUrlConsumerCommit(
   transition: PublicMapCaseUrlTransition,
   selectionApplied: boolean,
+  ownedConsumerCurrent: boolean,
 ): "missing" | null {
+  if (
+    transition.mapCaseIdToSelect === null &&
+    transition.activeDeepLinkMapCaseId !== null &&
+    !ownedConsumerCurrent
+  ) {
+    return null;
+  }
   if (transition.mapCaseIdToSelect === null || !selectionApplied) {
     return transition.activeDeepLinkMapCaseId;
   }
