@@ -248,6 +248,52 @@ class SourceRegistryPairedDiscoveryIndexTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "duplicate section marker"):
             validate_source_registry_paired_discovery_index(repo)
 
+    def test_indented_next_heading_bounds_pairing_section(self) -> None:
+        tempdir, repo = self._fixture(
+            (("agriculture", "agriculture"),),
+            ("agriculture",),
+            ("agriculture",),
+        )
+        self.addCleanup(tempdir.cleanup)
+        readme = repo / "data" / "registry" / "sources" / "README.md"
+        readme.write_text(
+            readme.read_text(encoding="utf-8").replace(
+                "## Write rule while topology is unresolved",
+                "   ## Write rule while topology is unresolved\n\n"
+                "| Domain | Canonical-family lane | Parallel domain-first lane |\n"
+                "|---|---|---|\n"
+                "| Agriculture | [`sources/agriculture/`](agriculture/README.md) "
+                "| [`agriculture/sources/`](../agriculture/sources/README.md) |",
+            ),
+            encoding="utf-8",
+        )
+        report = validate_source_registry_paired_discovery_index(repo)
+        self.assertEqual("PASS", report["outcome"])
+
+    def test_fenced_pairing_marker_example_is_not_counted(self) -> None:
+        tempdir, repo = self._fixture(
+            (("agriculture", "agriculture"),),
+            ("agriculture",),
+            ("agriculture",),
+        )
+        self.addCleanup(tempdir.cleanup)
+        readme = repo / "data" / "registry" / "sources" / "README.md"
+        example = (
+            "```markdown\n"
+            "The 13 paired domain README lanes confirmed at the pinned base are:\n"
+            "| Domain | Canonical-family lane | Parallel domain-first lane |\n"
+            "|---|---|---|\n"
+            "| Example | [`sources/example/`](example/README.md) "
+            "| [`example/sources/`](../example/sources/README.md) |\n"
+            "```\n\n"
+        )
+        readme.write_text(
+            example + readme.read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
+        report = validate_source_registry_paired_discovery_index(repo)
+        self.assertEqual("PASS", report["outcome"])
+
     def test_cli_output_is_deterministic_json(self) -> None:
         tempdir, repo = self._fixture(
             (("agriculture", "agriculture"), ("atmosphere", "atmosphere")),
@@ -271,7 +317,7 @@ class SourceRegistryPairedDiscoveryIndexTests(unittest.TestCase):
         self.assertEqual(first.stdout, second.stdout)
         parsed = json.loads(first.stdout)
         self.assertEqual(
-            "kfm.source-registry-paired-discovery-index.v4", parsed["profile"]
+            "kfm.source-registry-paired-discovery-index.v5", parsed["profile"]
         )
         self.assertEqual("PASS", parsed["outcome"])
 

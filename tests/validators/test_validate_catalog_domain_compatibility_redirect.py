@@ -146,6 +146,56 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "duplicate section"):
                 validate_catalog_domain_compatibility_redirect(compat, canonical)
 
+    def test_indented_closing_hash_inventory_section_is_parseable(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            compat, canonical = _write_layout(
+                Path(tmp), actual=["agriculture"], indexed=["agriculture"]
+            )
+            readme = compat / "README.md"
+            readme.write_text(
+                readme.read_text(encoding="utf-8").replace(
+                    "## Current bounded inventory",
+                    "   ## Current bounded inventory ##",
+                ),
+                encoding="utf-8",
+            )
+            report = validate_catalog_domain_compatibility_redirect(compat, canonical)
+            self.assertEqual("PASS", report["outcome"])
+
+    def test_indented_next_heading_bounds_inventory_section(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            compat, canonical = _write_layout(
+                Path(tmp), actual=["agriculture"], indexed=["agriculture"]
+            )
+            readme = compat / "README.md"
+            readme.write_text(
+                readme.read_text(encoding="utf-8")
+                + "\n   ## Example\n\n"
+                + "- [`agriculture/`](./agriculture/README.md)\n",
+                encoding="utf-8",
+            )
+            report = validate_catalog_domain_compatibility_redirect(compat, canonical)
+            self.assertEqual("PASS", report["outcome"])
+
+    def test_fenced_inventory_example_is_not_counted(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            compat, canonical = _write_layout(
+                Path(tmp), actual=["agriculture"], indexed=["agriculture"]
+            )
+            readme = compat / "README.md"
+            example = (
+                "```markdown\n"
+                "## Current bounded inventory\n"
+                "- [`example/`](./example/README.md)\n"
+                "```\n\n"
+            )
+            readme.write_text(
+                example + readme.read_text(encoding="utf-8"),
+                encoding="utf-8",
+            )
+            report = validate_catalog_domain_compatibility_redirect(compat, canonical)
+            self.assertEqual("PASS", report["outcome"])
+
     def test_missing_canonical_target_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             compat, canonical = _write_layout(
@@ -345,7 +395,7 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
             self.assertEqual(outputs[0], outputs[1])
             report = json.loads(outputs[0])
             self.assertEqual(
-                "kfm.catalog-domain-compatibility-redirect.v5",
+                "kfm.catalog-domain-compatibility-redirect.v6",
                 report["profile"],
             )
 

@@ -7,8 +7,10 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-PROFILE = "kfm.source-registry-paired-discovery-index.v4"
+PROFILE = "kfm.source-registry-paired-discovery-index.v5"
 SECTION_HEADER = "The 13 paired domain README lanes confirmed at the pinned base are:"
+FENCE_OPEN_RE = re.compile(r"^ {0,3}(?P<fence>`{3,}|~{3,}).*$")
+ATX_H2_RE = re.compile(r"^ {0,3}##(?:[ \t]+|[ \t]*$)")
 ROW_RE = re.compile(
     r"^\|\s*[^|]+\|\s*\[`sources/([^/]+)/`\]\(([^)]+)\)\s*"
     r"\|\s*\[`([^/]+)/sources/`\]\(([^)]+)\)\s*\|$"
@@ -18,22 +20,56 @@ TABLE_SEPARATOR_RE = re.compile(
 )
 
 
+def _visible_line_spans(text: str) -> list[tuple[int, int, str]]:
+    visible: list[tuple[int, int, str]] = []
+    fence_char: str | None = None
+    fence_length = 0
+    offset = 0
+    for raw_line in text.splitlines(keepends=True):
+        line = raw_line.rstrip("\r\n")
+        if fence_char is not None:
+            if re.fullmatch(
+                rf" {{0,3}}{re.escape(fence_char)}{{{fence_length},}}[ \t]*",
+                line,
+            ):
+                fence_char = None
+                fence_length = 0
+        else:
+            opening = FENCE_OPEN_RE.match(line)
+            if opening is not None:
+                fence = opening.group("fence")
+                fence_char = fence[0]
+                fence_length = len(fence)
+            else:
+                visible.append((offset, offset + len(line), line))
+        offset += len(raw_line)
+    return visible
+
+
 def _read_index_rows(
     readme_path: Path,
 ) -> tuple[list[dict[str, str]], list[str]]:
     text = readme_path.read_text(encoding="utf-8")
-    marker_count = sum(
-        line.strip() == SECTION_HEADER for line in text.splitlines()
-    )
-    if marker_count == 0:
+    visible = _visible_line_spans(text)
+    section_matches = [
+        (start, end)
+        for start, end, line in visible
+        if line.strip() == SECTION_HEADER
+    ]
+    if not section_matches:
         raise ValueError(f"missing section marker: {SECTION_HEADER}")
-    if marker_count > 1:
+    if len(section_matches) > 1:
         raise ValueError(f"duplicate section marker: {SECTION_HEADER}")
-    start = text.find(SECTION_HEADER)
-    section = text[start + len(SECTION_HEADER):]
-    next_h2 = section.find("\n## ")
-    if next_h2 >= 0:
-        section = section[:next_h2]
+    section_start = section_matches[0][1]
+    section_end = next(
+        (
+            start
+            for start, _, line in visible
+            if start > section_start and ATX_H2_RE.match(line)
+        ),
+        len(text),
+    )
+    section = text[section_start:section_end]
 
     rows: list[dict[str, str]] = []
     invalid_rows: list[str] = []

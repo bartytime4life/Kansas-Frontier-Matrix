@@ -211,6 +211,62 @@ class CrosswalkRegistryInventoryTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "duplicate section marker"):
             validate_crosswalk_registry_inventory(repo)
 
+    def test_indented_closing_hash_inventory_section_is_parseable(self) -> None:
+        paths = ("README.md", "water_planning/README.md")
+        rows = tuple((path, path) for path in paths)
+        tempdir, repo = self._fixture(rows, paths)
+        self.addCleanup(tempdir.cleanup)
+        readme = repo / "data" / "registry" / "crosswalks" / "README.md"
+        readme.write_text(
+            readme.read_text(encoding="utf-8").replace(
+                "## Current inventory",
+                "   ## Current inventory ##",
+            ),
+            encoding="utf-8",
+        )
+        report = validate_crosswalk_registry_inventory(repo)
+        self.assertEqual("PASS", report["outcome"])
+
+    def test_indented_next_heading_bounds_inventory_section(self) -> None:
+        paths = ("README.md", "water_planning/README.md")
+        rows = tuple((path, path) for path in paths)
+        tempdir, repo = self._fixture(rows, paths)
+        self.addCleanup(tempdir.cleanup)
+        readme = repo / "data" / "registry" / "crosswalks" / "README.md"
+        readme.write_text(
+            readme.read_text(encoding="utf-8").replace(
+                "## Repository fit",
+                "   ## Repository fit\n\n"
+                "| Tracked path | Role | Bounded state |\n"
+                "|---|---|---|\n"
+                "| [`README.md`](README.md) | example | only |",
+            ),
+            encoding="utf-8",
+        )
+        report = validate_crosswalk_registry_inventory(repo)
+        self.assertEqual("PASS", report["outcome"])
+
+    def test_fenced_inventory_example_is_not_counted(self) -> None:
+        paths = ("README.md", "water_planning/README.md")
+        rows = tuple((path, path) for path in paths)
+        tempdir, repo = self._fixture(rows, paths)
+        self.addCleanup(tempdir.cleanup)
+        readme = repo / "data" / "registry" / "crosswalks" / "README.md"
+        example = (
+            "~~~markdown\n"
+            "## Current inventory\n"
+            "| Tracked path | Role | Bounded state |\n"
+            "|---|---|---|\n"
+            "| [`example.md`](example.md) | example | only |\n"
+            "~~~\n\n"
+        )
+        readme.write_text(
+            example + readme.read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
+        report = validate_crosswalk_registry_inventory(repo)
+        self.assertEqual("PASS", report["outcome"])
+
     def test_cli_output_is_deterministic_json(self) -> None:
         paths = (
             "README.md",
@@ -236,7 +292,7 @@ class CrosswalkRegistryInventoryTests(unittest.TestCase):
         self.assertEqual(0, first.returncode)
         self.assertEqual(first.stdout, second.stdout)
         parsed = json.loads(first.stdout)
-        self.assertEqual("kfm.crosswalk-registry-inventory-drift.v2", parsed["profile"])
+        self.assertEqual("kfm.crosswalk-registry-inventory-drift.v3", parsed["profile"])
         self.assertEqual("PASS", parsed["outcome"])
 
 
