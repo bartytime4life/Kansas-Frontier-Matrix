@@ -70,7 +70,17 @@ def validate_lockfile(path: Path = LOCKFILE) -> None:
         if line and not line[0].isspace() and not line.startswith("#")
     ]
     hashes = [line for line in text.splitlines() if "--hash=" in line]
-    if not requirements or len(hashes) < len(requirements):
+    hash_coverage: list[int] = []
+    for line in text.splitlines():
+        if line and not line[0].isspace() and not line.startswith("#"):
+            hash_coverage.append(0)
+        elif "--hash=" in line:
+            if not hash_coverage:
+                raise CliInstallConfigurationError(
+                    "CLI_LOCKFILE_HASH_COVERAGE_INVALID"
+                )
+            hash_coverage[-1] += 1
+    if not hash_coverage or any(count == 0 for count in hash_coverage):
         raise CliInstallConfigurationError("CLI_LOCKFILE_HASH_COVERAGE_INVALID")
     for requirement in requirements:
         if "==" not in requirement or not requirement.rstrip().endswith("\\"):
