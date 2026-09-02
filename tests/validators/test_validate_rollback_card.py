@@ -31,6 +31,29 @@ STALE_RELEASE_PACKAGE_ROLLBACK_GUIDANCE_PATTERNS = (
 )
 
 
+def tracked_markdown_paths() -> tuple[Path, ...]:
+    result = subprocess.run(
+        ["git", "ls-files", "-z", "--", "*.md"],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        raise AssertionError(
+            "could not enumerate repository-owned Markdown: "
+            + result.stderr.strip()
+        )
+    paths = tuple(
+        REPO_ROOT / relative_path
+        for relative_path in result.stdout.split("\0")
+        if relative_path
+    )
+    if not paths:
+        raise AssertionError("repository-owned Markdown inventory is empty")
+    return paths
+
+
 class RollbackCardValidatorTests(unittest.TestCase):
     def test_schema_is_valid_draft_2020_12(self) -> None:
         schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
@@ -354,7 +377,7 @@ class RollbackCardValidatorTests(unittest.TestCase):
     ) -> None:
         rollback_guidance_paths = []
         release_package_root = REPO_ROOT / "packages/release"
-        for path in sorted(REPO_ROOT.rglob("*.md")):
+        for path in tracked_markdown_paths():
             guidance = path.read_text(encoding="utf-8")
             is_release_package_guidance = (
                 path.is_relative_to(release_package_root)
@@ -388,6 +411,24 @@ class RollbackCardValidatorTests(unittest.TestCase):
                         STALE_RELEASE_PACKAGE_ROLLBACK_GUIDANCE_PATTERNS
                     ):
                         self.assertNotRegex(guidance, stale_pattern)
+
+    def test_guidance_inventory_excludes_untracked_markdown(self) -> None:
+        with tempfile.TemporaryDirectory(
+            prefix=".rollback-guidance-untracked-",
+            dir=REPO_ROOT,
+        ) as directory:
+            untracked_guidance = Path(directory) / "ROLLBACK.md"
+            untracked_guidance.write_text(
+                "The generic validator remains a placeholder.\n",
+                encoding="utf-8",
+            )
+            self.assertNotIn(untracked_guidance, tracked_markdown_paths())
+
+    def test_workflow_runs_for_repository_markdown_changes(self) -> None:
+        workflow = (
+            REPO_ROOT / ".github/workflows/rollback-card.yml"
+        ).read_text(encoding="utf-8")
+        self.assertRegex(workflow, r'(?m)^\s+- "\*\*/\*\.md"$')
 
     def test_stale_operator_guidance_patterns_are_non_vacuous(self) -> None:
         stale_variants = (

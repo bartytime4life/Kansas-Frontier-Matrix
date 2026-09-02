@@ -4,6 +4,7 @@ name: rollback-card
 "on":
   pull_request:
     paths:
+      - "**/*.md"
       - "contracts/release/rollback_card.md"
       - "schemas/contracts/v1/release/rollback_card.schema.json"
       - "fixtures/release/rollback_card/**"
