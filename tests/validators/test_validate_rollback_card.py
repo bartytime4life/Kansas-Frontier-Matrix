@@ -108,6 +108,53 @@ def tracked_markdown_paths(repo_root: Path = REPO_ROOT) -> tuple[Path, ...]:
     paths = tuple(paths)
     if not paths:
         raise AssertionError("repository-owned Markdown inventory is empty")
+    flags_command = [
+        "git",
+        "ls-files",
+        "-v",
+        "-z",
+        "--",
+        ":(icase)*.md",
+    ]
+    try:
+        flags_result = subprocess.run(
+            flags_command,
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=repository_git_environment(),
+            timeout=GIT_INVENTORY_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as error:
+        raise AssertionError(
+            "timed out verifying repository-owned Markdown index flags after "
+            f"{GIT_INVENTORY_TIMEOUT_SECONDS} seconds"
+        ) from error
+    if flags_result.returncode != 0:
+        raise AssertionError(
+            "could not verify repository-owned Markdown index flags: "
+            + flags_result.stderr.strip()
+        )
+    flagged_paths = []
+    for entry in flags_result.stdout.split("\0"):
+        if not entry:
+            continue
+        tag, separator, relative_path = entry.partition(" ")
+        if not separator or len(tag) != 1:
+            raise AssertionError(
+                "could not parse repository-owned Markdown index flags"
+            )
+        if tag != "H":
+            raise AssertionError(
+                "repository-owned Markdown must not use special index flags: "
+                f"{relative_path} (index tag {tag})"
+            )
+        flagged_paths.append(repo_root / relative_path)
+    if tuple(flagged_paths) != paths:
+        raise AssertionError(
+            "repository-owned Markdown index inventories do not match"
+        )
     worktree_command = [
         "git",
         "diff-files",
@@ -622,6 +669,63 @@ class RollbackCardValidatorTests(unittest.TestCase):
                 r"worktree differs from Git index: ROLLBACK\.md",
             ):
                 tracked_markdown_paths(repo_root)
+
+    def test_guidance_inventory_rejects_hidden_worktree_changes(self) -> None:
+        for index_flag in ("--assume-unchanged", "--skip-worktree"):
+            with self.subTest(index_flag=index_flag):
+                with tempfile.TemporaryDirectory() as directory:
+                    repo_root = Path(directory)
+                    subprocess.run(
+                        ["git", "init", "--quiet"],
+                        cwd=repo_root,
+                        capture_output=True,
+                        text=True,
+                        check=True,
+                    )
+                    guidance = repo_root / "ROLLBACK.md"
+                    guidance.write_text(
+                        "# Reviewed guidance\n",
+                        encoding="utf-8",
+                    )
+                    subprocess.run(
+                        ["git", "add", "--", guidance.name],
+                        cwd=repo_root,
+                        capture_output=True,
+                        text=True,
+                        check=True,
+                    )
+                    subprocess.run(
+                        ["git", "update-index", index_flag, guidance.name],
+                        cwd=repo_root,
+                        capture_output=True,
+                        text=True,
+                        check=True,
+                    )
+                    guidance.write_text(
+                        "The generic validator remains a placeholder.\n",
+                        encoding="utf-8",
+                    )
+                    hidden_change = subprocess.run(
+                        [
+                            "git",
+                            "diff-files",
+                            "--no-ext-diff",
+                            "--name-only",
+                            "--",
+                            guidance.name,
+                        ],
+                        cwd=repo_root,
+                        capture_output=True,
+                        text=True,
+                        check=True,
+                    )
+                    self.assertEqual("", hidden_change.stdout)
+
+                    with self.assertRaisesRegex(
+                        AssertionError,
+                        r"must not use special index flags: ROLLBACK\.md",
+                    ):
+                        tracked_markdown_paths(repo_root)
 
     def test_guidance_inventory_ignores_ambient_alternate_index(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
