@@ -54,6 +54,27 @@ def test_missing_alias_projection_fails_closed_as_dependency_error(tmp_path: Pat
     assert not any(decision["effects"].values())
 
 
+def test_symlinked_alias_projection_fails_closed_as_dependency_error(tmp_path: Path, monkeypatch) -> None:
+    candidate = _base_candidate()
+    target = tmp_path / "alternate_authority.yaml"
+    target.write_text(
+        "unresolved_aliases:\n  air: atmosphere\nentries:\n  - lane_id: atmosphere\n",
+        encoding="utf-8",
+    )
+    projection = tmp_path / "domain_lane_register.yaml"
+    projection.symlink_to(target)
+    monkeypatch.setattr(MODULE, "DOMAIN_LANE_REGISTER_PATH", projection)
+
+    decision = MODULE.derive_decision(candidate)
+
+    assert decision["validator_outcome"] == "ERROR"
+    assert decision["status"] == "VALIDATOR_SYSTEM_ERROR"
+    assert decision["reason_codes"] == ["DOMAIN_ALIAS_REGISTER_UNAVAILABLE"]
+    assert "REPAIR_DOMAIN_ALIAS_REGISTER_DEPENDENCY" in decision["obligations"]
+    assert _rule_counts(decision)["DEPENDENCIES_READY"] == 1
+    assert not any(decision["effects"].values())
+
+
 def test_malformed_alias_projection_fails_closed_as_dependency_error(tmp_path: Path, monkeypatch) -> None:
     candidate = _base_candidate()
     malformed = tmp_path / "domain_lane_register.yaml"

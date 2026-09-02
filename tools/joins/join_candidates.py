@@ -209,6 +209,8 @@ def _unresolved_domain_aliases(path: Path | None = None) -> Mapping[str, str]:
     of being treated as an empty alias set.
     """
     register_path = DOMAIN_LANE_REGISTER_PATH if path is None else path
+    if register_path.is_symlink():
+        raise ValueError("domain lane register unavailable")
     try:
         value = yaml.load(
             register_path.read_text(encoding="utf-8"),
