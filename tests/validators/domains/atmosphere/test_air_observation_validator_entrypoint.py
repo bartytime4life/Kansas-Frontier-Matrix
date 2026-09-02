@@ -20,6 +20,7 @@ if str(REPO_ROOT) not in sys.path:
 
 from tools.validators._common.public_safe_fixture import Finding
 from tools.validators.domains.atmosphere.validate_air_observation import (
+    SCHEMA_PATH,
     ValidationResult,
     main,
     validate_candidate,
@@ -55,6 +56,49 @@ class AirObservationValidatorEntrypointTests(unittest.TestCase):
         result = validate_file(VALID_DIR / "air_observation_bound.json")
         self.assertEqual(result, ValidationResult("PASS", ()))
 
+    def test_schema_metadata_points_to_air_observation_entrypoint(self) -> None:
+        schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+
+        self.assertEqual(
+            schema["x-kfm"]["validator"],
+            str(VALIDATOR.relative_to(REPO_ROOT)),
+        )
+
+    def test_schema_metadata_paths_resolve_to_governed_assets(self) -> None:
+        schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+        expected_paths = {
+            "contract_doc": REPO_ROOT
+            / "contracts/domains/atmosphere/AirObservation.md",
+            "profile_doc": REPO_ROOT
+            / "docs/domains/atmosphere/OBSERVED_MODELED_SEPARATION.md",
+            "fixtures_root": FIXTURE_ROOT,
+            "validator": VALIDATOR,
+        }
+
+        self.assertLessEqual(set(expected_paths), set(schema["x-kfm"]))
+        for field, expected_path in expected_paths.items():
+            with self.subTest(field=field):
+                metadata_value = schema["x-kfm"][field]
+                self.assertIsInstance(metadata_value, str)
+                canonical_value = expected_path.relative_to(REPO_ROOT).as_posix()
+                if field == "fixtures_root":
+                    canonical_value += "/"
+                self.assertEqual(metadata_value, canonical_value)
+                metadata_path = Path(metadata_value)
+                self.assertFalse(metadata_path.is_absolute())
+                self.assertNotIn("..", metadata_path.parts)
+                self.assertNotIn("\\", metadata_value)
+                normalized_value = metadata_path.as_posix()
+                if metadata_value.endswith("/"):
+                    normalized_value += "/"
+                self.assertEqual(metadata_value, normalized_value)
+                declared_path = REPO_ROOT / metadata_path
+                self.assertEqual(declared_path.resolve(), expected_path.resolve())
+                if field == "fixtures_root":
+                    self.assertTrue(declared_path.is_dir())
+                else:
+                    self.assertTrue(declared_path.is_file())
+
     def test_declared_schema_rejects_short_observation_id(self) -> None:
         candidate = self._bound_observation()
         candidate["observation_id"] = "x"
@@ -86,6 +130,65 @@ class AirObservationValidatorEntrypointTests(unittest.TestCase):
                 "$.temporal_scope.observed_at",
             ),
             validate_candidate(candidate),
+        )
+
+    def test_schema_findings_report_bounded_truncation(self) -> None:
+        candidate = self._bound_observation()
+        candidate["evidence_refs"] = [""] * 80
+
+        findings = validate_candidate(candidate)
+        schema_findings = [
+            finding
+            for finding in findings
+            if finding.code == "AIR_OBSERVATION_SCHEMA_INVALID"
+        ]
+        self.assertLessEqual(len(schema_findings), 50)
+        self.assertIn(Finding("SCHEMA_FINDINGS_TRUNCATED", "$"), findings)
+        self.assertEqual(findings, validate_candidate(candidate))
+
+    def test_adapter_preserves_temporal_unit_and_sensor_semantics(self) -> None:
+        temporal_candidate = self._bound_observation()
+        temporal_scope = deepcopy(temporal_candidate["temporal_scope"])
+        self.assertIsInstance(temporal_scope, dict)
+        temporal_scope["retrieved_at"] = "2000-01-01T00:00:00Z"
+        temporal_candidate["temporal_scope"] = temporal_scope
+        self.assertIn(
+            Finding("TEMPORAL_ORDER_INVALID", "$.temporal_scope"),
+            validate_candidate(temporal_candidate),
+        )
+
+        measurement_candidate = self._bound_observation()
+        measurement = deepcopy(measurement_candidate["measurement"])
+        self.assertIsInstance(measurement, dict)
+        measurement["value"] = float("nan")
+        measurement["unit"] = ""
+        measurement_candidate["measurement"] = measurement
+        measurement_findings = validate_candidate(measurement_candidate)
+        self.assertIn(
+            Finding("MEASUREMENT_VALUE_INVALID", "$.measurement.value"),
+            measurement_findings,
+        )
+        self.assertIn(
+            Finding("MEASUREMENT_UNIT_INVALID", "$.measurement.unit"),
+            measurement_findings,
+        )
+
+        low_cost_candidate = self._bound_observation()
+        low_cost_candidate["source_role"] = "low_cost_sensor"
+        low_cost_findings = validate_candidate(low_cost_candidate)
+        self.assertIn(
+            Finding(
+                "LOW_COST_SENSOR_CAVEAT_REQUIRED",
+                "$.low_cost_sensor_caveat",
+            ),
+            low_cost_findings,
+        )
+        self.assertIn(
+            Finding(
+                "CONFIDENCE_STATEMENT_REQUIRED",
+                "$.confidence_statement",
+            ),
+            low_cost_findings,
         )
 
     def test_unresolved_observation_preserves_abstain(self) -> None:
