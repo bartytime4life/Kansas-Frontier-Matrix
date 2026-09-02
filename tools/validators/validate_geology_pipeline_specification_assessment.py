@@ -381,8 +381,15 @@ def materialize_fixture_case(manifest: Mapping[str, object], case: Mapping[str, 
     return candidate
 
 
-def validate_fixture_manifest() -> list[dict[str, object]]:
-    manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+def validate_fixture_manifest(path: Path = FIXTURE_PATH) -> list[dict[str, object]]:
+    manifest, findings = load_json_object(path)
+    if manifest is None:
+        return [{
+            "name": "fixture_manifest",
+            "outcome": "ERROR",
+            "findings": [finding.code for finding in findings],
+            "ok": False,
+        }]
     results: list[dict[str, object]] = []
     for case in manifest["cases"]:
         result = validate_candidate(materialize_fixture_case(manifest, case))
