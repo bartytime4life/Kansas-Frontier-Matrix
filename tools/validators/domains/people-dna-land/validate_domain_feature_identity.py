@@ -16,6 +16,22 @@ SCHEMA = (
 FIXTURES = ROOT / "fixtures/domains/people-dna-land/domain_feature_identity"
 
 
+_FIXTURE_OPTION = "--fixtures"
+
+
+def _abbreviated_fixture_option(arguments: list[str]) -> str | None:
+    """Return an abbreviated fixture flag before the option terminator."""
+    for argument in arguments:
+        if argument == "--":
+            break
+        if (
+            2 < len(argument) < len(_FIXTURE_OPTION)
+            and _FIXTURE_OPTION.startswith(argument)
+        ):
+            return argument
+    return None
+
+
 def main(argv: list[str] | None = None) -> int:
     """Validate structural People/DNA/Land DomainFeatureIdentity candidates.
 
@@ -25,7 +41,17 @@ def main(argv: list[str] | None = None) -> int:
     title, grant consent, activate policy, authorize release, or publish data.
     """
     args = list(sys.argv[1:] if argv is None else argv)
-    if "--fixtures" in args and len(args) != 1:
+    option_arguments = (
+        args[: args.index("--")] if "--" in args else args
+    )
+    abbreviation = _abbreviated_fixture_option(option_arguments)
+    if abbreviation is not None:
+        print(
+            f"Abbreviated --fixtures option is not allowed: {abbreviation}",
+            file=sys.stderr,
+        )
+        return 2
+    if "--fixtures" in option_arguments and len(args) != 1:
         print(
             "Cannot combine --fixtures with explicit DomainFeatureIdentity files",
             file=sys.stderr,

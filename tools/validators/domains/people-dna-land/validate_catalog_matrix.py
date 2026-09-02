@@ -35,9 +35,35 @@ def run_shared(args: Sequence[str]) -> int:
     return completed.returncode
 
 
+_FIXTURE_OPTION = "--fixtures"
+
+
+def _abbreviated_fixture_option(arguments: list[str]) -> str | None:
+    """Return an abbreviated fixture flag before the option terminator."""
+    for argument in arguments:
+        if argument == "--":
+            break
+        if (
+            2 < len(argument) < len(_FIXTURE_OPTION)
+            and _FIXTURE_OPTION.startswith(argument)
+        ):
+            return argument
+    return None
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     arguments = list(sys.argv[1:] if argv is None else argv)
-    if "--fixtures" in arguments and len(arguments) != 1:
+    option_arguments = (
+        arguments[: arguments.index("--")] if "--" in arguments else arguments
+    )
+    abbreviation = _abbreviated_fixture_option(option_arguments)
+    if abbreviation is not None:
+        print(
+            f"Abbreviated --fixtures option is not allowed: {abbreviation}",
+            file=sys.stderr,
+        )
+        return 2
+    if "--fixtures" in option_arguments and len(arguments) != 1:
         print(
             "Cannot combine --fixtures with explicit CatalogMatrix files",
             file=sys.stderr,

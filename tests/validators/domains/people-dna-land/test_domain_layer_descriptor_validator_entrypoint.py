@@ -43,3 +43,21 @@ def test_fixture_mode_rejects_explicit_candidates(capsys):
         "Cannot combine --fixtures with explicit DomainLayerDescriptor files"
         in capsys.readouterr().err
     )
+
+
+
+def test_abbreviated_fixture_options_fail_closed(monkeypatch, capsys):
+    module = _load_module()
+
+    def should_not_run(*args, **kwargs):
+        raise AssertionError("schema runner must not receive abbreviated fixture options")
+
+    monkeypatch.setattr(module, "run", should_not_run)
+
+    for length in range(3, len("--fixtures")):
+        abbreviation = "--fixtures"[:length]
+        assert module.main([abbreviation, "explicit-candidate.json"]) == 2
+        assert (
+            f"Abbreviated --fixtures option is not allowed: {abbreviation}"
+            in capsys.readouterr().err
+        )

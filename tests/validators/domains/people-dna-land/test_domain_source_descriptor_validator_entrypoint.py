@@ -49,5 +49,20 @@ class PeopleDnaLandSourceDescriptorEntrypointTests(unittest.TestCase):
         )
 
 
+    def test_abbreviated_fixture_options_fail_closed(self) -> None:
+        for length in range(3, len("--fixtures")):
+            abbreviation = "--fixtures"[:length]
+            with self.subTest(abbreviation=abbreviation):
+                result = self.run_validator(
+                    DOMAIN_SCRIPT, abbreviation, "explicit-candidate.json"
+                )
+                self.assertEqual(result.returncode, 2)
+                self.assertEqual(result.stdout, "")
+                self.assertIn(
+                    f"Abbreviated --fixtures option is not allowed: {abbreviation}",
+                    result.stderr,
+                )
+
+
 if __name__ == "__main__":
     unittest.main()

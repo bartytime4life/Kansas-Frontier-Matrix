@@ -105,3 +105,21 @@ def test_valid_fixture_is_public_safe_aggregate_and_non_authoritative():
                 yield from keys(nested)
 
     assert FORBIDDEN_PUBLIC_FIXTURE_KEYS.isdisjoint(keys(fixture))
+
+
+
+def test_abbreviated_fixture_options_fail_closed(monkeypatch, capsys):
+    module = _load_module()
+
+    def should_not_run(*args, **kwargs):
+        raise AssertionError("schema runner must not receive abbreviated fixture options")
+
+    monkeypatch.setattr(module, "run", should_not_run)
+
+    for length in range(3, len("--fixtures")):
+        abbreviation = "--fixtures"[:length]
+        assert module.main([abbreviation, str(VALID_FIXTURE)]) == 2
+        assert (
+            f"Abbreviated --fixtures option is not allowed: {abbreviation}"
+            in capsys.readouterr().err
+        )
