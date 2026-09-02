@@ -1,0 +1,132 @@
+# Temporary read-only diagnostic for the current repository-topology baseline drift.
+# It is branch-scoped and must be removed before review handoff.
+name: repository-topology-transition-diagnostic
+
+"on":
+  push:
+    branches:
+      - fix/repository-topology-convergence-20260902
+
+permissions:
+  contents: read
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out the exact branch revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared validator dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-runtime
+
+      - name: Emit and prove the bounded shrinkage candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/directory_governance/validate_repository_topology.py \
+            --emit-baseline > /tmp/repository_topology_baseline_candidate.json
+          python - <<'PY'
+          import base64
+          import json
+          import zlib
+          from pathlib import Path
+
+          baseline_path = Path(
+              "tools/validators/directory_governance/repository_topology_baseline.json"
+          )
+          candidate_path = Path("/tmp/repository_topology_baseline_candidate.json")
+          current = json.loads(baseline_path.read_text(encoding="utf-8"))
+          candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
+
+          def index(payload):
+              return {
+                  (entry["rule_id"], entry["subject"]): entry
+                  for entry in payload["entries"]
+              }
+
+          def members(entry):
+              decoded = zlib.decompress(
+                  base64.b64decode(entry["evidence_zlib_base64"])
+              ).decode("utf-8")
+              return set() if decoded == "" else set(decoded.split("\0"))
+
+          old = index(current)
+          new = index(candidate)
+          changed = {
+              identity
+              for identity in old.keys() & new.keys()
+              if old[identity]["fingerprint"] != new[identity]["fingerprint"]
+          }
+          removed_identities = set(old) - set(new)
+          added_identities = set(new) - set(old)
+          expected = {
+              ("KFM-TOPO-001", "path-grammar:uppercase"),
+              ("KFM-TOPO-004", "catalog/"),
+              ("KFM-TOPO-009", "scaffold-only-leaf-directories"),
+              ("KFM-TOPO-016", "doc-id:kfm://doc/NEEDS-VERIFICATION"),
+          }
+
+          print("CHANGED_IDENTITIES=" + json.dumps(sorted(changed)))
+          print("REMOVED_IDENTITIES=" + json.dumps(sorted(removed_identities)))
+          print("ADDED_IDENTITIES=" + json.dumps(sorted(added_identities)))
+          assert changed == expected, (changed, expected)
+          assert not removed_identities, removed_identities
+          assert not added_identities, added_identities
+
+          for identity in sorted(expected):
+              before = members(old[identity])
+              after = members(new[identity])
+              removed = sorted(before - after)
+              added = sorted(after - before)
+              print("BEGIN_TRANSITION " + json.dumps(identity))
+              print("OLD_FINGERPRINT=" + old[identity]["fingerprint"])
+              print("NEW_FINGERPRINT=" + new[identity]["fingerprint"])
+              print("OLD_EVIDENCE_SHA256=" + old[identity]["evidence_sha256"])
+              print("NEW_EVIDENCE_SHA256=" + new[identity]["evidence_sha256"])
+              print("REMOVED_MEMBERS=" + json.dumps(removed))
+              print("ADDED_MEMBERS=" + json.dumps(added))
+              print(
+                  "CANDIDATE_ENTRY="
+                  + json.dumps(new[identity], sort_keys=True, separators=(",", ":"))
+              )
+              print("END_TRANSITION")
+              assert after < before, (
+                  f"transition is not strict shrinkage for {identity}: "
+                  f"removed={removed}, added={added}"
+              )
+
+          print("CONFIRMED: all four topology transitions are strict evidence shrinkage.")
+          print(
+              "BOUNDARY: this diagnostic emits no migration, deletion, release, "
+              "deployment, publication, or policy authority."
+          )
+          PY
+
+      - name: Upload the validator-generated candidate
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: repository-topology-baseline-candidate
+          path: /tmp/repository_topology_baseline_candidate.json
+          if-no-files-found: error
+          retention-days: 1
