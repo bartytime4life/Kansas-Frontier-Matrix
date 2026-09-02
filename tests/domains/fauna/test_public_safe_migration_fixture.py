@@ -9,6 +9,8 @@ import socket
 import unittest
 import urllib.request
 from contextlib import redirect_stdout
+from pathlib import Path
+from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
 from tools.validators.domains.fauna.movement.validate_public_safe_migration_fixture import (
@@ -50,6 +52,21 @@ class PublicSafeMigrationFixtureTests(unittest.TestCase):
 
     def test_manifest_replays_exact_inventory(self):
         self.assertTrue(validate_fixture_manifest().ok)
+
+    def test_duplicate_json_members_fail_closed(self):
+        payloads = {
+            "top-level": '{"route_id":"safe","route_id":"forbidden"}',
+            "nested": '{"geometry":{"type":"Point","type":"LineString"}}',
+        }
+        with TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "candidate.json"
+            for name, payload in payloads.items():
+                with self.subTest(name=name):
+                    path.write_text(payload, encoding="utf-8")
+                    self.assertEqual(
+                        validate_file(path).findings,
+                        (Finding("schema.input_invalid", "/"),),
+                    )
 
     def test_degenerate_route_fails_closed(self):
         self.assertEqual(

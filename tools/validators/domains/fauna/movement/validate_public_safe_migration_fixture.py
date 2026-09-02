@@ -289,9 +289,22 @@ def validate_candidate(candidate: object) -> ValidationResult:
     return ValidationResult(tuple(sorted(set(findings))))
 
 
+def _reject_duplicate_members(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    candidate: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in candidate:
+            raise ValueError(f"duplicate JSON member: {key}")
+        candidate[key] = value
+    return candidate
+
+
+def _load_json_text(value: str) -> object:
+    return json.loads(value, object_pairs_hook=_reject_duplicate_members)
+
+
 def validate_file(path: Path | str) -> ValidationResult:
     try:
-        candidate = json.loads(Path(path).read_text(encoding="utf-8"))
+        candidate = _load_json_text(Path(path).read_text(encoding="utf-8"))
     except (OSError, UnicodeError, ValueError, RecursionError):
         return ValidationResult((Finding("schema.input_invalid", "/"),))
     return validate_candidate(candidate)
@@ -299,7 +312,7 @@ def validate_file(path: Path | str) -> ValidationResult:
 
 def validate_fixture_manifest() -> ValidationResult:
     try:
-        manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+        manifest = _load_json_text(MANIFEST_PATH.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, ValueError, RecursionError):
         return ValidationResult((Finding("fixture.manifest_invalid", "/"),))
     if not isinstance(manifest, Mapping) or not isinstance(manifest.get("cases"), list):
