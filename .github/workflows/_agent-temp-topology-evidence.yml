@@ -1,5 +1,5 @@
 # TEMPORARY branch-only diagnostic. Remove before reviewable delivery.
-# Packages strict-shrinkage baseline candidates without changing repository state.
+# Packages exact transition evidence without changing repository state.
 name: _agent-temp-topology-evidence
 
 "on":
@@ -25,7 +25,7 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
 
-      - name: Build strict-shrinkage candidate
+      - name: Build transition evidence packet
         shell: bash
         run: |
           set -euo pipefail
@@ -40,68 +40,85 @@ jobs:
           baseline_path = root / topology.BASELINE_REPOSITORY_PATH
           raw = baseline_path.read_bytes()
           plain = json.loads(raw.decode("utf-8"))
-          data, entries = topology._load_baseline_bytes(raw, label="diagnostic")
+          trusted_data, trusted_entries = topology._load_baseline_bytes(
+              raw, label="diagnostic"
+          )
           findings, tracked_path_count = topology.scan(root)
           by_identity = {(item.rule_id, item.subject): item for item in findings}
+          prior_by_identity = {
+              (entry["rule_id"], entry["subject"]): (fingerprint, entry)
+              for fingerprint, entry in trusted_entries.items()
+          }
 
-          shrink_identities = (
+          identities = (
               ("KFM-TOPO-001", "path-grammar:uppercase"),
+              ("KFM-TOPO-004", "catalog/"),
               ("KFM-TOPO-009", "scaffold-only-leaf-directories"),
               ("KFM-TOPO-016", "doc-id:kfm://doc/NEEDS-VERIFICATION"),
           )
           comparisons = []
           replacements = {}
-          for identity in shrink_identities:
+          for identity in identities:
               current = by_identity[identity]
-              prior_pair = next(
-                  (pair for pair in entries.items()
-                   if (pair[1]["rule_id"], pair[1]["subject"]) == identity),
-                  None,
-              )
-              assert prior_pair is not None, f"missing prior entry for {identity}"
-              prior_fingerprint, prior = prior_pair
+              prior_fingerprint, prior = prior_by_identity[identity]
               current_members = set(current.evidence_members)
               prior_members = set(prior["evidence_members"])
               added = sorted(current_members - prior_members)
               removed = sorted(prior_members - current_members)
-              assert current_members < prior_members, (
-                  f"{identity} is not strict shrinkage; added={added}; removed={removed}"
-              )
-              replacement = topology._serialized_baseline_entry(current)
-              replacements[prior_fingerprint] = replacement
+              if current.fingerprint == prior_fingerprint:
+                  classification = "EXACT_MATCH"
+              elif current_members < prior_members:
+                  classification = "STRICT_SHRINKAGE"
+                  replacements[prior_fingerprint] = (
+                      topology._serialized_baseline_entry(current)
+                  )
+              elif prior_members < current_members:
+                  classification = "EXPANSION"
+              elif len(current_members) == len(prior_members):
+                  classification = "EQUAL_CARDINALITY_REPLACEMENT"
+              else:
+                  classification = "MIXED_REPLACEMENT"
               comparisons.append({
                   "rule_id": identity[0],
                   "subject": identity[1],
+                  "classification": classification,
                   "prior_fingerprint": prior_fingerprint,
                   "current_fingerprint": current.fingerprint,
+                  "prior_evidence_sha256": prior["evidence_sha256"],
+                  "current_evidence_sha256": current.evidence_sha256,
                   "prior_member_count": len(prior_members),
                   "current_member_count": len(current_members),
                   "added_members": added,
                   "removed_members": removed,
-                  "strict_subset": True,
+                  "serialized_current_entry": (
+                      topology._serialized_baseline_entry(current)
+                  ),
               })
 
-          candidate_entries = []
-          for entry in plain["entries"]:
-              candidate_entries.append(replacements.get(entry["fingerprint"], entry))
+          candidate_entries = [
+              replacements.get(entry["fingerprint"], entry)
+              for entry in plain["entries"]
+          ]
           candidate_entries.sort(key=lambda item: item["fingerprint"])
           plain["entries"] = candidate_entries
-
-          candidate_raw = (json.dumps(plain, indent=2, sort_keys=True) + "\n").encode("utf-8")
-          candidate_data, candidate = topology._load_baseline_bytes(
-              candidate_raw, label="candidate"
+          candidate_raw = (
+              json.dumps(plain, indent=2, sort_keys=True) + "\n"
+          ).encode("utf-8")
+          candidate_data, candidate_entries_by_fingerprint = (
+              topology._load_baseline_bytes(candidate_raw, label="candidate")
           )
-          topology.validate_baseline_transition(data=candidate_data, current_data=candidate_data, current_entries=candidate, trusted_data=data, trusted_entries=entries) if False else None
           topology.validate_baseline_transition(
               candidate_data,
-              candidate,
-              data,
-              entries,
+              candidate_entries_by_fingerprint,
+              trusted_data,
+              trusted_entries,
           )
 
           out = root / "artifacts/temporary/topology-reconciliation"
-          (out / "repository_topology_baseline.candidate.json").write_bytes(candidate_raw)
-          (out / "strict-shrinkage-comparison.json").write_text(
+          (out / "repository_topology_baseline.candidate.json").write_bytes(
+              candidate_raw
+          )
+          (out / "transition-evidence.json").write_text(
               json.dumps({
                   "tracked_path_count": tracked_path_count,
                   "candidate_entry_count": len(candidate_entries),
@@ -109,7 +126,22 @@ jobs:
               }, indent=2, sort_keys=True) + "\n",
               encoding="utf-8",
           )
-          print(json.dumps(comparisons, indent=2, sort_keys=True))
+          summary = [
+              {
+                  key: item[key]
+                  for key in (
+                      "rule_id",
+                      "subject",
+                      "classification",
+                      "prior_member_count",
+                      "current_member_count",
+                      "added_members",
+                      "removed_members",
+                  )
+              }
+              for item in comparisons
+          ]
+          print(json.dumps(summary, indent=2, sort_keys=True))
           PY
 
       - name: Upload bounded candidate
