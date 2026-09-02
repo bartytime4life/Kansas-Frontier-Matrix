@@ -32,6 +32,7 @@ The following Hydrology fixture lanes have populated README coverage. This table
 | `aquifer_observation/` | Synthetic groundwater measurement shapes, including linked and unlinked observations. | Valid observed measurement or expected rejection for source-role or embedded-Geology collapse. |
 | `aquifer_context_link/` | Synthetic typed Hydrology-to-Geology relation shapes. | Valid observation/well relation or expected rejection for endpoint, measurement, or copied-geometry collapse. |
 | `public_safe_flow/` | Frozen synthetic FlowObservation public-safe profile with exact positive/negative polarity. | Valid fixture-only flow shape or expected rejection for role, location, time, unit, governance, and warning-authority collapse. |
+| `public_safe_water_level/` | Frozen synthetic WaterLevelObservation public-safe profile with exact positive/negative polarity. | Valid datum-bound fixture-only stage shape or expected rejection for role, datum, location, time, unit, governance, and warning-authority collapse. |
 | `nhdplus_waterbody_crosswalk/` | Synthetic NHDPlusHR waterbody Permanent Identifier to NHDPlusV2 COMID overlap mappings. | Exact mapping `ANSWER`; split, merge, and complex mappings `ABSTAIN`; malformed, duplicate, scope-drift, impossible-area, false-geometry, and hash defects fail closed. |
 | `sources/` | Synthetic source-reference, source-role, rights, sensitivity, cadence, freshness, source-head, and admission examples. | Validation pass, review-ready, source-role-preserved, or fail-closed when source posture is unresolved. |
 | `valid/` | Broad positive-path staging and navigation lane. | Validation pass, review-ready, evidence-resolved, citation-ready, provenance-resolved, public-safe context, or governed `ANSWER`. |
@@ -49,6 +50,7 @@ The following Hydrology fixture lanes have populated README coverage. This table
 | `decision_envelope/` | Exercises bounded runtime outcomes; does not bypass evidence, policy, release, source-role, or trust-membrane gates. |
 | `aquifer_observation/` | Exercises the measurement carrier; aquifer interpretation remains an optional external link. |
 | `aquifer_context_link/` | Exercises relation metadata and typed endpoints; carries no measurement or Geology geometry. |
+| `public_safe_water_level/` | Exercises an observed instantaneous stage carrier with an explicit fixture-only datum reference; carries no flood-warning or regulatory authority. |
 | `nhdplus_waterbody_crosswalk/` | Exercises version-bound waterbody overlap mapping and cardinality; carries no USGS source row or identity-equality assertion. |
 | `valid/` | Indexes broad positive cases and routes stable cases to more specific family lanes. |
 | `invalid/` | Indexes broad fail-closed cases and routes stable defects to more specific invalid child lanes. |
@@ -64,6 +66,7 @@ The following Hydrology fixture lanes have populated README coverage. This table
 | Run identity, stage, inputs, outputs, code ref, source descriptor refs, validation refs, spec hash, and outcome | `run_receipt/` |
 | Groundwater-level or aquifer-state measurement shape | `aquifer_observation/` |
 | Hydrology observation/well to Geology hydrostratigraphic relation shape | `aquifer_context_link/` |
+| Public-safe instantaneous water-level observation with explicit datum provenance | `public_safe_water_level/` |
 | NHDPlusHR waterbody Permanent Identifier to NHDPlusV2 COMID overlap mapping | `nhdplus_waterbody_crosswalk/` |
 | Source-like role, rights, sensitivity, cadence, source-head, and admission examples | `sources/` |
 | Broad valid scenario not yet sorted | `valid/` |
@@ -85,6 +88,7 @@ The following Hydrology fixture lanes have populated README coverage. This table
 - `run_receipt/invalid/README.md`
 - `aquifer_observation/README.md`
 - `aquifer_context_link/README.md`
+- `public_safe_water_level/valid/public_safe_water_level.json`
 - `nhdplus_waterbody_crosswalk/README.md`
 - `sources/README.md`
 - `valid/README.md`
@@ -153,8 +157,9 @@ Do not use this root or its child lanes for real records, real source exports, l
 
 - Target README: replaced greenfield stub content.
 - Fixture payload inventory: the two aquifer families contain public-safe
-  synthetic valid and expected-invalid JSON payloads, `public_safe_flow/`
-  contains one positive plus one exact expected-invalid profile, and
+  synthetic valid and expected-invalid JSON payloads, `public_safe_flow/` and
+  `public_safe_water_level/` each contain one positive plus one exact
+  expected-invalid profile, and
   `nhdplus_waterbody_crosswalk/` contains two valid plus six fail-closed
   fixtures; broader inventory remains only partially verified.
 - Child README inventory: PARTIALLY VERIFIED against populated child lane READMEs fetched during this update and recent preceding updates.
