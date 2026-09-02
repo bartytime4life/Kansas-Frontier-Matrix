@@ -7,7 +7,9 @@ on:
       - 'schemas/contracts/v1/domains/atmosphere/evidence_bundle.schema.json'
       - 'fixtures/contracts/v1/evidence/evidence_bundle/**'
       - 'tools/validators/validate_atmosphere_evidence_bundle_projection.py'
+      - 'tools/validators/domains/atmosphere/validate_evidence_bundle.py'
       - 'tests/validators/domains/atmosphere/test_evidence_bundle_schema_convergence.py'
+      - 'tests/validators/domains/atmosphere/test_domain_evidence_bundle_validator_entrypoint.py'
       - '.github/workflows/atmosphere-evidence-bundle-convergence.yml'
   workflow_dispatch:
 
@@ -36,10 +38,15 @@ jobs:
         run: >-
           python -m py_compile
           tools/validators/validate_atmosphere_evidence_bundle_projection.py
+          tools/validators/domains/atmosphere/validate_evidence_bundle.py
           tests/validators/domains/atmosphere/test_evidence_bundle_schema_convergence.py
+          tests/validators/domains/atmosphere/test_domain_evidence_bundle_validator_entrypoint.py
       - name: Run deterministic convergence tests
         run: >-
           python -m unittest -q
           tests.validators.domains.atmosphere.test_evidence_bundle_schema_convergence
+          tests.validators.domains.atmosphere.test_domain_evidence_bundle_validator_entrypoint
       - name: Validate shared fixtures through the Atmosphere projection
-        run: python tools/validators/validate_atmosphere_evidence_bundle_projection.py --fixtures
+        run: |
+          python tools/validators/validate_atmosphere_evidence_bundle_projection.py --fixtures
+          python tools/validators/domains/atmosphere/validate_evidence_bundle.py --fixtures
