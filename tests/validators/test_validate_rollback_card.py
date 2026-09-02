@@ -217,6 +217,71 @@ class RollbackCardValidatorTests(unittest.TestCase):
         self.assertEqual(canonical.stdout, compatibility.stdout)
         self.assertEqual(canonical.stderr, compatibility.stderr)
 
+    def test_compatibility_entrypoint_preserves_cli_argument_controls(self) -> None:
+        scenarios = (
+            (
+                "help",
+                ("--help",),
+                0,
+                "stdout",
+                "usage: validate_rollback_card.py",
+            ),
+            (
+                "missing-mode",
+                (),
+                2,
+                "stderr",
+                "provide one or more files or use --fixtures",
+            ),
+            (
+                "conflicting-modes",
+                (
+                    "--fixtures",
+                    "fixtures/release/rollback_card/valid/valid_hold.json",
+                ),
+                2,
+                "stderr",
+                "--fixtures cannot be combined with explicit files",
+            ),
+            (
+                "option-terminator",
+                ("--", "--fixtures"),
+                1,
+                "stdout",
+                '"code":"FILE_NOT_FOUND"',
+            ),
+        )
+        for name, arguments, expected_returncode, stream, expected_marker in scenarios:
+            with self.subTest(name=name):
+                canonical = subprocess.run(
+                    [
+                        sys.executable,
+                        "tools/validators/release/validate_rollback_card.py",
+                        *arguments,
+                    ],
+                    cwd=REPO_ROOT,
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                compatibility = subprocess.run(
+                    [
+                        sys.executable,
+                        "tools/validators/validate_rollback_card.py",
+                        *arguments,
+                    ],
+                    cwd=REPO_ROOT,
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+
+                self.assertEqual(expected_returncode, canonical.returncode)
+                self.assertIn(expected_marker, getattr(canonical, stream))
+                self.assertEqual(canonical.returncode, compatibility.returncode)
+                self.assertEqual(canonical.stdout, compatibility.stdout)
+                self.assertEqual(canonical.stderr, compatibility.stderr)
+
     def test_operator_guidance_describes_compatibility_delegate(self) -> None:
         stale_claims_by_path = {
             "docs/runbooks/atmosphere/RELEASE_ROLLBACK_RUNBOOK.md": (
