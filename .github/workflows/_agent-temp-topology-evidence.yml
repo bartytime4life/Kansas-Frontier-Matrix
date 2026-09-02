@@ -29,7 +29,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p artifacts/temporary/topology-reconciliation
+          out="artifacts/temporary/topology-reconciliation"
+          mkdir -p "${out}"
           python3 - <<'PY'
           import json
           from pathlib import Path
@@ -143,6 +144,14 @@ jobs:
           ]
           print(json.dumps(summary, indent=2, sort_keys=True))
           PY
+          mkdir -p "${out}/repository-files"
+          cp --parents \
+            tools/validators/directory_governance/validate_repository_topology.py \
+            tools/validators/directory_governance/README.md \
+            tests/validators/directory_governance/test_validate_repository_topology.py \
+            .github/workflows/validator-suite.yml \
+            Makefile \
+            "${out}/repository-files/"
 
       - name: Upload bounded candidate
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
