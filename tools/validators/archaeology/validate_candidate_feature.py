@@ -122,7 +122,7 @@ KFM_REFERENCE_PATTERN = re.compile(
     r"[Cc][Oo][Oo][Rr][Dd][Ii][Nn][Aa][Tt][Ee][Ss]?|[Bb][Bb][Oo][Xx]|"
     r"[Gg][Ee][Oo][Hh][Aa][Ss][Hh]|[Ww][Kk][Tt]|[Ee][Aa][Ss][Tt][Ii][Nn][Gg]|"
     r"[Nn][Oo][Rr][Tt][Hh][Ii][Nn][Gg]|[Uu][Tt][Mm]|[Mm][Gg][Rr][Ss])"
-    r"(?:$|[/._~-]))kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
+    r"(?:$|[0-9]|[/._~-]))kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
 )
 REFERENCE_FAMILY_PATTERNS = {
     "source_refs": re.compile(r"^kfm://(?:source|source-descriptor|source-record)/"),
@@ -325,6 +325,7 @@ def validate_fixture_suite() -> int:
         FIXTURE_ROOT / "sensitive_geometry_deny.json": "inline location fields are denied",
         FIXTURE_ROOT / "location_bearing_reference_deny.json": "opaque kfm:// references",
         FIXTURE_ROOT / "path_locator_reference_deny.json": "protected locator material",
+        FIXTURE_ROOT / "compact_locator_reference_deny.json": "protected locator material",
         FIXTURE_ROOT / "misbound_reference_family_deny.json": "allowed governed reference family",
         FIXTURE_ROOT / "unbound_catalog_candidate_deny.json": "evidence_refs are required",
         FIXTURE_ROOT / "superseded_without_correction_deny.json": "correction_refs are required",

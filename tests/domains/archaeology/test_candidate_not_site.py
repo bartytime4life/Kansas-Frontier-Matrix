@@ -206,6 +206,14 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
             validate_candidate_feature(payload),
         )
 
+    def test_compact_locator_reference_fixture_fails_closed(self) -> None:
+        payload = _load(FIXTURE_ROOT / "compact_locator_reference_deny.json")
+        self.assertIn(
+            "candidate_geometry_ref must be an opaque governed kfm:// reference "
+            "without query, fragment, or protected locator material",
+            validate_candidate_feature(payload),
+        )
+
     def test_protected_locator_tokens_fail_closed_in_every_reference_field(self) -> None:
         cases = {
             "source_refs": ["kfm://source/synthetic/Latitude/000"],
@@ -213,6 +221,25 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
             "observation_refs": ["kfm://observation/synthetic/GeoHash/none"],
             "correction_refs": ["kfm://correction/synthetic/MGRS/none"],
             "candidate_geometry_ref": "kfm://geometry/synthetic/BBox/none",
+        }
+        for field, value in cases.items():
+            with self.subTest(field=field):
+                payload = copy.deepcopy(self.valid)
+                payload[field] = value
+                self.assertTrue(
+                    any(
+                        "protected locator material" in error
+                        for error in validate_candidate_feature(payload)
+                    )
+                )
+
+    def test_digit_suffixed_locator_tokens_fail_closed_in_every_reference_field(self) -> None:
+        cases = {
+            "source_refs": ["kfm://source/synthetic/lat39"],
+            "evidence_refs": ["kfm://evidence/synthetic/lon98"],
+            "observation_refs": ["kfm://observation/synthetic/geohash9y"],
+            "correction_refs": ["kfm://correction/synthetic/utm14"],
+            "candidate_geometry_ref": "kfm://geometry/synthetic/mgrs14",
         }
         for field, value in cases.items():
             with self.subTest(field=field):

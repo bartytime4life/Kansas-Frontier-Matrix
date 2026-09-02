@@ -36,6 +36,8 @@ burial, sacred-place, collection-security, or culturally restricted data.
 - `path_locator_reference_deny.json` proves that a nominally opaque geometry
   reference cannot smuggle case-varied latitude, longitude, bounding-box,
   coordinate-system, or other protected locator tokens through its path.
+- `compact_locator_reference_deny.json` proves that joining a locator token
+  directly to digits, such as `lat39`, cannot evade the protected-path rule.
 - `misbound_reference_family_deny.json` proves that a syntactically valid
   source reference cannot satisfy an EvidenceRef/EvidenceBundle binding.
 - `non_string_reference_deny.json` proves that malformed structured reference
