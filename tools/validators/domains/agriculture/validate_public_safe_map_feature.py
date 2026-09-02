@@ -132,6 +132,14 @@ COORDINATE_PAIR_PATTERN = re.compile(
     r"(?<![\w.])([+-]?\d{1,3}(?:\.\d+)?)(?:\s*,\s*|\s+)"
     r"([+-]?\d{1,3}(?:\.\d+)?)(?![\w.])"
 )
+CARDINAL_PREFIX_COORDINATE_PATTERN = re.compile(
+    r"(?i)(?<![\w.])([NS])\s*(\d{1,2}(?:\.\d+)?)"
+    r"(?:\s*,\s*|\s+)([EW])\s*(\d{1,3}(?:\.\d+)?)(?![\w.])"
+)
+CARDINAL_SUFFIX_COORDINATE_PATTERN = re.compile(
+    r"(?i)(?<![\w.])(\d{1,2}(?:\.\d+)?)\s*([NS])"
+    r"(?:\s*,\s*|\s+)(\d{1,3}(?:\.\d+)?)\s*([EW])(?![\w.])"
+)
 WKT_POINT_PATTERN = re.compile(
     r"(?i)\bpoint\s*\(\s*[+-]?\d{1,3}(?:\.\d+)?\s+"
     r"[+-]?\d{1,3}(?:\.\d+)?\s*\)"
@@ -194,6 +202,15 @@ def _strict_json_loads(text: str) -> Any:
 def _contains_coordinate_literal(value: str) -> bool:
     if LABELED_COORDINATE_PATTERN.search(value) or WKT_POINT_PATTERN.search(value):
         return True
+    for pattern, latitude_group, longitude_group in (
+        (CARDINAL_PREFIX_COORDINATE_PATTERN, 2, 4),
+        (CARDINAL_SUFFIX_COORDINATE_PATTERN, 1, 3),
+    ):
+        for match in pattern.finditer(value):
+            latitude = float(match.group(latitude_group))
+            longitude = float(match.group(longitude_group))
+            if latitude <= 90 and longitude <= 180:
+                return True
     for match in COORDINATE_PAIR_PATTERN.finditer(value):
         first, second = (float(part) for part in match.groups())
         if ((abs(first) <= 90 and abs(second) <= 180)
