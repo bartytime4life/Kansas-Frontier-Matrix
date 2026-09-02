@@ -97,6 +97,35 @@ class PublicSafeMigrationFixtureTests(unittest.TestCase):
                 )
             candidate_reader.assert_not_called()
 
+    def test_symlinked_and_oversized_manifests_fail_before_read(self):
+        with TemporaryDirectory() as temp_dir:
+            temp_root = Path(temp_dir)
+            target = temp_root / "target.json"
+            target.write_text('{"cases": []}', encoding="utf-8")
+            symlink = temp_root / "manifest-symlink.json"
+            symlink.symlink_to(target)
+            with patch.object(migration_validator, "MANIFEST_PATH", symlink):
+                self.assertEqual(
+                    validate_fixture_manifest().findings,
+                    (Finding("fixture.manifest_invalid", "/"),),
+                )
+
+            oversized = temp_root / "manifest-oversized.json"
+            oversized.write_bytes(b" " * (MAX_INPUT_BYTES + 1))
+            with (
+                patch.object(migration_validator, "MANIFEST_PATH", oversized),
+                patch.object(
+                    Path,
+                    "read_text",
+                    side_effect=AssertionError("oversized manifest was read"),
+                ) as manifest_reader,
+            ):
+                self.assertEqual(
+                    validate_fixture_manifest().findings,
+                    (Finding("fixture.manifest_invalid", "/"),),
+                )
+            manifest_reader.assert_not_called()
+
     def test_manifest_path_escape_fails_before_candidate_read(self):
         with TemporaryDirectory() as temp_dir:
             manifest_path = Path(temp_dir) / "manifest.json"

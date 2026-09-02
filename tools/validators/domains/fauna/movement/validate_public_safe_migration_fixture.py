@@ -303,6 +303,16 @@ def _load_json_text(value: str) -> object:
     return json.loads(value, object_pairs_hook=_reject_duplicate_members)
 
 
+def _load_bounded_json(path: Path) -> object:
+    if (
+        path.is_symlink()
+        or not path.is_file()
+        or path.stat().st_size > MAX_INPUT_BYTES
+    ):
+        raise ValueError("input must be a bounded regular file")
+    return _load_json_text(path.read_text(encoding="utf-8"))
+
+
 def _fixture_case_path(value: str) -> Path | None:
     relative_path = Path(value)
     if (
@@ -324,14 +334,7 @@ def _fixture_case_path(value: str) -> Path | None:
 
 def validate_file(path: Path | str) -> ValidationResult:
     try:
-        candidate_path = Path(path)
-        if (
-            candidate_path.is_symlink()
-            or not candidate_path.is_file()
-            or candidate_path.stat().st_size > MAX_INPUT_BYTES
-        ):
-            raise ValueError("candidate must be a bounded regular file")
-        candidate = _load_json_text(candidate_path.read_text(encoding="utf-8"))
+        candidate = _load_bounded_json(Path(path))
     except (OSError, UnicodeError, ValueError, RecursionError):
         return ValidationResult((Finding("schema.input_invalid", "/"),))
     return validate_candidate(candidate)
@@ -339,7 +342,7 @@ def validate_file(path: Path | str) -> ValidationResult:
 
 def validate_fixture_manifest() -> ValidationResult:
     try:
-        manifest = _load_json_text(MANIFEST_PATH.read_text(encoding="utf-8"))
+        manifest = _load_bounded_json(MANIFEST_PATH)
     except (OSError, UnicodeError, ValueError, RecursionError):
         return ValidationResult((Finding("fixture.manifest_invalid", "/"),))
     if not isinstance(manifest, Mapping) or not isinstance(manifest.get("cases"), list):
