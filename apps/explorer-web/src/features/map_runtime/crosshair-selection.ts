@@ -171,7 +171,10 @@ export function resolveCrosshairSelection(
     });
   }
   const candidates = Object.freeze(parsed as CrosshairCandidate[]);
-  if (new Set(candidates.map((candidate) => candidate.candidateId)).size !== candidates.length) {
+  if (
+    new Set(candidates.map((candidate) => candidate.candidateId)).size !==
+    candidates.length
+  ) {
     return Object.freeze({
       outcome: "ERROR",
       code: "INVALID_CANDIDATE",
@@ -239,7 +242,7 @@ export function mountCrosshairSelectionControl(
   }
 
   region.replaceChildren(heading, status, controls);
-  host.replaceChildrer(region);
+  host.replaceChildren(region);
 
   return Object.freeze({
     state,

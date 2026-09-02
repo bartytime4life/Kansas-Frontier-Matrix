@@ -2,7 +2,7 @@
  * App-local exploration-mode proof inspired by spatial-navigation products.
  *
  * This module does not change MapRuntimePort, acquire a renderer, request
- * pointer lock, resolve evidence, or grant release/publication authority. It
+ * pointer lock, resolve evidence, or grant release or publication authority. It
  * makes interaction state explicit and interruptible before any concrete
  * renderer integration is attempted.
  */
@@ -315,7 +315,7 @@ export function mountExplorationModeControl(
   for (const modeName of EXPLORATION_MODES) {
     const button = document.createElement("button");
     button.type = "button";
-    buttton.textContent = modeName[0] + modeName.slice(1).toLowerCase();
+    button.textContent = modeName[0] + modeName.slice(1).toLowerCase();
     button.dataset.explorationMode = modeName;
     button.addEventListener("click", () => {
       controller.selectMode(modeName);

@@ -1,0 +1,131 @@
+{
+  "receipt_id": "genrec-know-universe-interaction-correction-20260902",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/features/map_runtime/crosshair-selection.ts",
+    "apps/explorer-web/src/features/map_runtime/exploration-mode.ts",
+    "apps/explorer-web/src/features/map_runtime/point-cloud-benchmark.ts",
+    "docs/intake/exploratory/know-the-universe-pattern-review.md"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/features/map_runtime/crosshair-selection.ts": "sha256:70d596716f14f7d13a18a6df09705f6d8bf727fe740641726d00931a3539309c",
+    "apps/explorer-web/src/features/map_runtime/exploration-mode.ts": "sha256:da8627faabad3c6d2a5d423e74ad7cae6741630f4a5ffbf27522f1e17cd662f2",
+    "apps/explorer-web/src/features/map_runtime/point-cloud-benchmark.ts": "sha256:0de3499c9ec721c52a709cc742a39e335b9c9f9c529f931b37c419a080657152",
+    "docs/intake/exploratory/know-the-universe-pattern-review.md": "sha256:75fe1e9e9ec60a591d1a4ab5e375062d68efd0cc94b07cf5a1858cf38810e976"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-09-02"
+  },
+  "prompt_or_contract": "sha256:421ea2c9910ff6837f9be0c6dd6c9f93210fdfaa9cd1c4fc362b9b005c6f5a71",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "TypeScript 5.8.3",
+      "Node.js 22.16.0",
+      "local deterministic hash validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [
+      "KFM_Know_the_Universe_Pattern_Review_2026-09-02.md",
+      "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf",
+      "KFM Contributor Reliability System_ Documentation, PR Quality, and CI Hardening.pdf",
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent.md"
+    ],
+    "evidence_refs": [
+      "repo:pull/4225@be8079d0f95c6bdd4af3ef9885b07cc379aa8eb0",
+      "repo:main@596f105e7dfd3e6963e04ed076b3ebb7f68c78fc",
+      "receipt:genrec-know-universe-interaction-20260902",
+      "github:actions/run/33664973768",
+      "github:actions/run/33664973893",
+      "github:actions/run/33664973915",
+      "github:actions/run/33664974091",
+      "github:actions/run/33664974188"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/features/map_runtime/crosshair-selection.ts": "PROPOSED",
+    "apps/explorer-web/src/features/map_runtime/exploration-mode.ts": "PROPOSED",
+    "apps/explorer-web/src/features/map_runtime/point-cloud-benchmark.ts": "PROPOSED",
+    "docs/intake/exploratory/know-the-universe-pattern-review.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-pr-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, PR #4225, exact-head workflow steps, accepted Directory Rules, and open branch overlap were inspected before branch creation."
+    },
+    {
+      "gate": "strict-typescript-no-emit",
+      "outcome": "PASS",
+      "reason": "TypeScript 5.8.3 strict checking passed for the three corrected app-local modules with a minimal declaration for the existing MapLibre package export."
+    },
+    {
+      "gate": "app-local-runtime-assertions",
+      "outcome": "PASS",
+      "reason": "Node.js 22.16.0 assertions passed for exploration interruption, shortcut exclusion, crosshair selection and disambiguation, deterministic point sampling, performance PASS and HOLD outcomes, safety DENY, and expanded-payload ERROR."
+    },
+    {
+      "gate": "utf8-and-public-runtime-literal-check",
+      "outcome": "PASS",
+      "reason": "The corrected modules decode as UTF-8 and no longer contain the verified forbidden path-shaped public-runtime literal."
+    },
+    {
+      "gate": "repository-native-explorer-and-governance-checks",
+      "outcome": "SKIPPED",
+      "reason": "Repository-native Vitest, Vite, topology, policy-boundary, acquisition, performance, and hosted checks remain pending at the corrective exact head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md"
+  ],
+  "citations": [
+    {
+      "id": "repository:pr-4225-origin",
+      "validated": true,
+      "evidence_ref": "repo:pull/4225@be8079d0f95c6bdd4af3ef9885b07cc379aa8eb0"
+    },
+    {
+      "id": "repository:merged-main-snapshot",
+      "validated": true,
+      "evidence_ref": "repo:main@596f105e7dfd3e6963e04ed076b3ebb7f68c78fc"
+    },
+    {
+      "id": "repository:policy-boundary-junit",
+      "validated": true,
+      "evidence_ref": "github:actions/run/33664973893#policy-boundary-guards-junit"
+    },
+    {
+      "id": "repository:directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-02T20:01:29Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Corrective successor provenance for PR #4225 interaction files. The original receipt remains immutable lineage for the merged bytes and is not treated as proof that those bytes passed hosted validation. This receipt binds corrected candidate bytes and local bounded checks only; exact-head hosted validation and human review remain pending. No live source, renderer acquisition, lifecycle promotion, release, deployment, publication, or repository-settings authority is granted."
+}
