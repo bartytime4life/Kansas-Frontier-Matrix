@@ -6,11 +6,11 @@ import {
 } from "@kfm/maplibre";
 import answerFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/answer-corrected.json";
 import denyFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/deny-sensitive.json";
-import adapterSource from "../src/adapters/MapRuntimeEvidenceAdapter.ts?raw";
+import adapterSource from "../src/adapters/map-runtime-evidence-adapter.ts?raw";
 import {
   mapRuntimeSelectionToEvidenceRequest,
   resolveMapRuntimeSelectionEvidence,
-} from "../src/adapters/MapRuntimeEvidenceAdapter";
+} from "../src/adapters/map-runtime-evidence-adapter";
 import { resolveMapFeatureEvidence } from "../src/features/map_runtime";
 import {
   SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS,
