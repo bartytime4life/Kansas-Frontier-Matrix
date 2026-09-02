@@ -16,16 +16,16 @@
   ],
   "artifact_hashes": {
     ".github/workflows/evidence-drawer-payload.yml": "sha256:03bb1604a9d6db130db7731cce68753fd3059db3202ebee35ce7c3b793e79ea7",
-    "apps/explorer-web/src/adapters/GovernedClient.ts": "sha256:29235ecf9642c41a8e5f8c74a81f5b477cfba0110fb4797e8640f0c176bcf440",
+    "apps/explorer-web/src/adapters/GovernedClient.ts": "sha256:648a4285af49f72cfb052a39fd3d4ac035b074bb2429b1abc5b7426b839f9af7",
     "apps/explorer-web/src/features/evidence_drawer/index.tsx": "sha256:f59376940ee4af08e93089a5c60ce65a7c043cb9fab2b00283990877fc4588c7",
     "apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts": "sha256:21bca123eda755afbe6da43e5465e733909880557c10f08748fb1bd1068133fa",
     "apps/explorer-web/tests/browser/workspace-navigation.spec.ts": "sha256:b58d09605cb21272c49910f6adc9220b891725e3713b062376948485c778c644",
-    "apps/explorer-web/tests/evidence-drawer.test.ts": "sha256:e30a129629590ee9aa2ec6ae3009f0fb6aec92d167123bc2c11de6470999499b",
-    "contracts/ui/evidence_drawer_payload.md": "sha256:a659cd4e78903f99e6024a9cc41d23154decdecebf99a610574517c11e8bada6",
+    "apps/explorer-web/tests/evidence-drawer.test.ts": "sha256:312600de850a082d38e04996c919f1c8fe4705cdc7b4e35d039d44dcd72b058b",
+    "contracts/ui/evidence_drawer_payload.md": "sha256:4b2697c1ea259e2733e11a8e3ab667ef358770050b6fcf2d2a76d4793176de13",
     "fixtures/ui/evidence_drawer_payload/invalid/abstain-correction-without-superseded-history.expected_code.txt": "sha256:cda21b7240e7b89fc7cf3bafaf8765429a3081e624d7daa5fc62b47e6c653c12",
     "fixtures/ui/evidence_drawer_payload/invalid/abstain-correction-without-superseded-history.json": "sha256:514e291537e7d38ffcb15cd78306f7819fc0527c9931c448e1015ef7a524c108",
-    "tests/validators/test_validate_evidence_drawer_payload.py": "sha256:50520ebfc8bc5b6f701830756415002579b909a8978a890af6ce28855c822cdd",
-    "tools/validators/ui/validate_evidence_drawer_payload.py": "sha256:dbc61e18e78188e69c90946fb81a9c971f4a6218dd9cfca29e4726c3d3b396cf"
+    "tests/validators/test_validate_evidence_drawer_payload.py": "sha256:1b6d5e1d450fcdeccc02f434aab9af08907dbc671f37916bb643fcdbe14b43c1",
+    "tools/validators/ui/validate_evidence_drawer_payload.py": "sha256:fe09178b44da72ef503580df4c183bccd9e91ba892d2032f4e23b3043d12ed98"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -49,8 +49,8 @@
     "attached_docs": [],
     "evidence_refs": [
       "repo:main@3ee7942913e32c11d8fbf91fa4a4f221dddd4ac0",
-      "repo:pull/4208@660066bbfb6d31c213be168c551c9aa8763e23dd",
-      "github:actions/run/33629880352"
+      "repo:pull/4208@6a7bf4951bd7b70ae5c5dc644b4318537eba8514",
+      "github:actions/run/33635052269"
     ]
   },
   "truth_labels": {
@@ -75,17 +75,17 @@
     {
       "gate": "focused-no-network-explorer-tests",
       "outcome": "PASS",
-      "reason": "Sixteen deterministic synthetic public-safe Evidence Drawer tests passed without network access."
+      "reason": "Eighteen deterministic synthetic public-safe Evidence Drawer tests passed without network access."
     },
     {
       "gate": "canonical-payload-validator",
       "outcome": "PASS",
-      "reason": "The canonical no-network validator accepted 12 valid fixtures, rejected 11 invalid fixtures, and passed all 14 validator tests including correction-lineage and stale-freshness trust-state parity."
+      "reason": "The canonical no-network validator accepted 12 valid fixtures, rejected 11 invalid fixtures, and passed all 15 validator tests including correction-lineage, stale-freshness, and terminal-release trust-state parity."
     },
     {
       "gate": "full-explorer-unit-and-build",
       "outcome": "PASS",
-      "reason": "All 411 Explorer unit tests and the TypeScript plus Vite production build passed."
+      "reason": "All 413 Explorer unit tests and the TypeScript plus Vite production build passed."
     },
     {
       "gate": "generated-receipt-integrity",
@@ -94,8 +94,8 @@
     },
     {
       "gate": "hosted-exact-head",
-      "outcome": "PASS",
-      "reason": "The evidence-drawer-payload workflow passed at exact implementation head 660066bbfb6d31c213be168c551c9aa8763e23dd in GitHub Actions run 33629880352."
+      "outcome": "FAIL",
+      "reason": "At exact implementation head 6a7bf4951bd7b70ae5c5dc644b4318537eba8514, GitHub Actions run 33635052269 passed schema, fixture, and focused validator steps, then failed only because this successor receipt still bound the prior artifact hashes. The receipt-only successor head remains to be executed."
     },
     {
       "gate": "human-review",
@@ -110,12 +110,12 @@
     {
       "id": "repo:evidence-drawer-payload-contract",
       "validated": true,
-      "evidence_ref": "contracts/ui/evidence_drawer_payload.md@660066bbfb6d31c213be168c551c9aa8763e23dd"
+      "evidence_ref": "contracts/ui/evidence_drawer_payload.md@6a7bf4951bd7b70ae5c5dc644b4318537eba8514"
     },
     {
-      "id": "repo:pull-4208-stale-freshness-proof",
+      "id": "repo:pull-4208-terminal-release-proof",
       "validated": true,
-      "evidence_ref": "github:actions/run/33629880352"
+      "evidence_ref": "github:actions/run/33635052269"
     }
   ],
   "human_review": {
@@ -124,12 +124,12 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-09-02T12:22:51Z",
+  "created_at": "2026-09-02T13:23:00Z",
   "emitter": "OpenAI GPT-5.6 via ChatGPT",
   "links": {
     "pr_number": 4208,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Successor authoring provenance for PR #4208's Evidence Drawer current-versus-non-current reference labels, contract-required superseded correction history, correction-lineage trust-state parity, stale-reason freshness parity, canonical validator parity, and regression proof. The historical 2026-08-23 receipt remains unchanged. This receipt is not evidence, policy approval, human review, merge authority, release authority, deployment authority, publication authority, or public-use permission."
+  "notes": "Successor authoring provenance for PR #4208's Evidence Drawer current-versus-non-current reference labels, contract-required superseded correction history, correction-lineage trust-state parity, stale-reason freshness parity, terminal withdrawn/revoked release-state parity, canonical validator parity, and regression proof. The historical 2026-08-23 receipt remains unchanged. This receipt is not evidence, policy approval, human review, merge authority, release authority, deployment authority, publication authority, or public-use permission."
 }
