@@ -479,12 +479,12 @@ Package implication:
 
 ### `RollbackCard`
 
-The semantic contract exists; the schema is thin. The schema-declared validator is absent, while a different validator raises `NotImplementedError`.
+The semantic contract and proposed fixture profile exist. The schema-declared canonical validator is implemented, and the historical top-level entrypoint delegates to it with compatibility coverage.
 
 Package implication:
 
 - future code may normalize explicit rollback metadata;
-- no rollback-validation maturity may be claimed yet;
+- only bounded candidate shape and local-consistency validation may be claimed;
 - no alias movement, cache invalidation, restoration, or notice publication may execute here.
 
 ### `CorrectionNotice`

@@ -4,6 +4,7 @@ import {
 } from "@kfm/maplibre";
 import {
   EVIDENCE_DRAWER_PROJECTION_PROFILE,
+  parseEvidenceDrawerProjection,
   type EvidenceDrawerReasonCode,
 } from "../../adapters/GovernedClient";
 import {
@@ -77,6 +78,20 @@ function parseEvidenceRefs(value: unknown): readonly string[] | null {
   if (!value.every(isSafeId)) return null;
   if (new Set(value).size !== value.length) return null;
   return Object.freeze([...value]);
+}
+
+function governedDrawerEvidenceRefs(input: unknown): readonly string[] {
+  const parsed = parseEvidenceDrawerProjection(input);
+  if (!parsed.ok) return Object.freeze([]);
+
+  return Object.freeze([
+    ...parsed.payload.evidenceRefs,
+    ...parsed.payload.history.negativeOutcomes.map((item) => item.evidenceRef),
+    ...parsed.payload.history.corrections.flatMap((item) => [
+      item.priorEvidenceRef,
+      item.activeEvidenceRef,
+    ]),
+  ]);
 }
 
 /** Strictly validate one renderer-neutral feature selection. */
@@ -198,7 +213,8 @@ export async function resolveMapFeatureEvidence(
 
   const drawer = resolveEvidenceDrawer(drawerInput);
   const allowedEvidence = new Set(selection.evidenceRefs);
-  if (drawer.evidenceRefs.some((evidenceRef) => !allowedEvidence.has(evidenceRef))) {
+  const governedEvidence = governedDrawerEvidenceRefs(drawerInput);
+  if (governedEvidence.some((evidenceRef) => !allowedEvidence.has(evidenceRef))) {
     return localResolution(selection, "DRAWER_EVIDENCE_OUTSIDE_SELECTION");
   }
 

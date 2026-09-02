@@ -86,6 +86,7 @@ export type MapRuntimeReasonCode =
   | "MAP_RUNTIME_CAMERA_INVALID"
   | "MAP_RUNTIME_SELECTION_INVALID"
   | "MAP_RUNTIME_STATE_INVALID"
+  | "MAP_RUNTIME_TERRAIN_TRANSITION_FAILED"
   | "MAP_RUNTIME_LISTENER_INVALID";
 
 export type MapRuntimeSnapshot = Readonly<{
