@@ -1,0 +1,67 @@
+# TEMPORARY branch-only diagnostic. Remove before reviewable delivery.
+# Emits current topology evidence members to Actions logs with read-only scope.
+name: _agent-temp-topology-evidence
+
+"on":
+  push:
+    branches:
+      - fix/topology-ratchet-reconcile-20260902
+
+permissions:
+  contents: read
+
+concurrency:
+  group: _agent-temp-topology-evidence-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  emit-topology-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out diagnostic revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Emit bounded topology evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          from tools.validators.directory_governance import validate_repository_topology as topology
+
+          targets = {
+              ("KFM-TOPO-001", "path-grammar:uppercase"),
+              ("KFM-TOPO-004", "catalog/"),
+              ("KFM-TOPO-009", "scaffold-only-leaf-directories"),
+              ("KFM-TOPO-016", "doc-id:kfm://doc/NEEDS-VERIFICATION"),
+          }
+          findings, tracked_path_count = topology.scan(Path("."))
+          selected = [
+              finding
+              for finding in findings
+              if (finding.rule_id, finding.subject) in targets
+          ]
+          assert len(selected) == len(targets), (
+              "expected all four current aggregate findings; got "
+              f"{[(item.rule_id, item.subject) for item in selected]}"
+          )
+          print(f"TOPOLOGY_TRACKED_PATH_COUNT={tracked_path_count}")
+          for finding in sorted(selected):
+              payload = {
+                  "rule_id": finding.rule_id,
+                  "subject": finding.subject,
+                  "fingerprint": finding.fingerprint,
+                  "evidence_sha256": finding.evidence_sha256,
+                  "evidence_members": list(finding.evidence_members),
+                  "serialized_entry": topology._serialized_baseline_entry(finding),
+              }
+              print("BEGIN_TOPOLOGY_EVIDENCE")
+              print(json.dumps(payload, indent=2, sort_keys=True))
+              print("END_TOPOLOGY_EVIDENCE")
+          PY
