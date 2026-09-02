@@ -182,6 +182,24 @@ class ObjectFamilyDiscoveryIndexTests(unittest.TestCase):
                 ):
                     build_discovery_index(register, source_path="registry.json")
 
+    def test_required_discovery_lists_cannot_be_omitted(self) -> None:
+        for field in (
+            "producer_classes",
+            "consumer_classes",
+            "dependency_family_ids",
+            "evidence_family_ids",
+            "release_family_ids",
+            "correction_family_ids",
+            "rollback_family_ids",
+        ):
+            with self.subTest(field=field):
+                register = _register()
+                del register["entries"][0][field]
+                with self.assertRaisesRegex(
+                    DiscoveryIndexError, rf"beta\.{field} is required"
+                ):
+                    build_discovery_index(register, source_path="registry.json")
+
     def test_duplicate_family_id_fails_closed(self) -> None:
         register = _register()
         register["entries"][0]["family_id"] = "alpha"

@@ -150,6 +150,24 @@ class SourceRegistryPairedDiscoveryIndexTests(unittest.TestCase):
         self.assertEqual(["agriculture"], report["missing_canonical_readmes"])
         self.assertEqual([], report["stale_canonical_index"])
 
+    def test_missing_parallel_readme_fails_closed(self) -> None:
+        tempdir, repo = self._fixture(
+            (("agriculture", "agriculture"),),
+            ("agriculture",),
+            ("agriculture",),
+        )
+        self.addCleanup(tempdir.cleanup)
+        parallel_readme = (
+            repo / "data" / "registry" / "agriculture" / "sources" / "README.md"
+        )
+        parallel_readme.unlink()
+
+        report = validate_source_registry_paired_discovery_index(repo)
+
+        self.assertEqual("FAIL", report["outcome"])
+        self.assertEqual(["agriculture"], report["missing_parallel_readmes"])
+        self.assertEqual([], report["stale_parallel_index"])
+
     def test_duplicate_index_row_fails_closed(self) -> None:
         tempdir, repo = self._fixture(
             (("agriculture", "agriculture"), ("agriculture", "agriculture")),
@@ -209,7 +227,7 @@ class SourceRegistryPairedDiscoveryIndexTests(unittest.TestCase):
         self.assertEqual(first.stdout, second.stdout)
         parsed = json.loads(first.stdout)
         self.assertEqual(
-            "kfm.source-registry-paired-discovery-index.v2", parsed["profile"]
+            "kfm.source-registry-paired-discovery-index.v3", parsed["profile"]
         )
         self.assertEqual("PASS", parsed["outcome"])
 

@@ -86,7 +86,9 @@ def load_register(path: Path) -> dict[str, Any]:
 
 
 def _string_list(entry: dict[str, Any], field: str, family_id: str) -> list[str]:
-    value = entry.get(field, [])
+    if field not in entry:
+        raise DiscoveryIndexError(f"{family_id}.{field} is required")
+    value = entry[field]
     if not isinstance(value, list) or any(
         not isinstance(item, str) or not item for item in value
     ):

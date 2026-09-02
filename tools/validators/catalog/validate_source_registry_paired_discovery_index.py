@@ -7,7 +7,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-PROFILE = "kfm.source-registry-paired-discovery-index.v2"
+PROFILE = "kfm.source-registry-paired-discovery-index.v3"
 SECTION_HEADER = "The 13 paired domain README lanes confirmed at the pinned base are:"
 ROW_RE = re.compile(
     r"^\|\s*[^|]+\|\s*\[`sources/([^/]+)/`\]\(([^)]+)\)\s*"
@@ -64,7 +64,7 @@ def _parallel_domains(repo_root: Path) -> list[str]:
         for entry in registry_root.iterdir()
         if entry.is_dir()
         and not entry.name.startswith(".")
-        and (entry / "sources" / "README.md").is_file()
+        and (entry / "sources").is_dir()
     )
 
 
@@ -107,10 +107,16 @@ def validate_source_registry_paired_discovery_index(
     parallel_actual_set = set(parallel_actual)
     paired_actual_set = canonical_actual_set.intersection(parallel_actual_set)
     canonical_root = repo_root / "data" / "registry" / "sources"
+    parallel_root = repo_root / "data" / "registry"
     missing_canonical_readmes = sorted(
         domain
         for domain in canonical_index_set.intersection(canonical_actual_set)
         if not (canonical_root / domain / "README.md").is_file()
+    )
+    missing_parallel_readmes = sorted(
+        domain
+        for domain in parallel_index_set.intersection(parallel_actual_set)
+        if not (parallel_root / domain / "sources" / "README.md").is_file()
     )
 
     missing_canonical_index = sorted(paired_actual_set - canonical_index_set)
@@ -129,6 +135,7 @@ def validate_source_registry_paired_discovery_index(
         or missing_parallel_index
         or stale_parallel_index
         or missing_canonical_readmes
+        or missing_parallel_readmes
     )
 
     return {
@@ -149,6 +156,7 @@ def validate_source_registry_paired_discovery_index(
         "missing_parallel_index": missing_parallel_index,
         "stale_parallel_index": stale_parallel_index,
         "missing_canonical_readmes": missing_canonical_readmes,
+        "missing_parallel_readmes": missing_parallel_readmes,
         "unpaired_canonical_domains": unpaired_canonical_domains,
         "unpaired_parallel_domains": unpaired_parallel_domains,
     }

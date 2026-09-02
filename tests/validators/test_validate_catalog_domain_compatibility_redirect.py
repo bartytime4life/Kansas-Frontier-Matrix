@@ -152,6 +152,20 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
             self.assertEqual("FAIL", report["outcome"])
             self.assertEqual(["agriculture/"], report["missing_child_readmes"])
 
+    def test_unexpected_root_payload_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            compat, canonical = _write_layout(
+                Path(tmp),
+                actual=["agriculture"],
+                indexed=["agriculture"],
+            )
+            (compat / "payload.json").write_text("{}\n", encoding="utf-8")
+
+            report = validate_catalog_domain_compatibility_redirect(compat, canonical)
+
+            self.assertEqual("FAIL", report["outcome"])
+            self.assertEqual(["payload.json"], report["unexpected_root_files"])
+
     def test_contradictory_child_redirect_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             compat, canonical = _write_layout(
@@ -262,7 +276,7 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
             self.assertEqual(outputs[0], outputs[1])
             report = json.loads(outputs[0])
             self.assertEqual(
-                "kfm.catalog-domain-compatibility-redirect.v3",
+                "kfm.catalog-domain-compatibility-redirect.v4",
                 report["profile"],
             )
 

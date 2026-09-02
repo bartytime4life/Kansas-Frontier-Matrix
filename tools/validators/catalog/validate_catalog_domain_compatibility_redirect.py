@@ -7,7 +7,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-PROFILE = "kfm.catalog-domain-compatibility-redirect.v3"
+PROFILE = "kfm.catalog-domain-compatibility-redirect.v4"
 SECTION_HEADER = "## Current bounded inventory"
 ROW_RE = re.compile(
     r"^-\s+\[`([^`]+/)`\]\(\./([^/]+)/README\.md\)\s*$"
@@ -54,6 +54,16 @@ def _direct_children(root: Path) -> list[str]:
     )
 
 
+def _unexpected_root_files(root: Path) -> list[str]:
+    return sorted(
+        entry.name
+        for entry in root.iterdir()
+        if entry.is_file()
+        and not entry.name.startswith(".")
+        and entry.name != "README.md"
+    )
+
+
 def _child_redirect_reason_codes(readme_path: Path, lane: str) -> list[str]:
     text = readme_path.read_text(encoding="utf-8")
     reasons: list[str] = []
@@ -76,6 +86,7 @@ def validate_catalog_domain_compatibility_redirect(
 
     indexed, invalid_redirect_rows = _read_redirect_rows(readme_path)
     actual = _direct_children(compatibility_root)
+    unexpected_root_files = _unexpected_root_files(compatibility_root)
     counts = Counter(indexed)
     duplicate_entries = sorted(name for name, count in counts.items() if count > 1)
     indexed_unique = set(indexed)
@@ -116,6 +127,7 @@ def validate_catalog_domain_compatibility_redirect(
             or missing_child_readmes
             or invalid_child_redirects
             or missing_canonical_targets
+            or unexpected_root_files
         )
         else "FAIL"
     )
@@ -136,6 +148,7 @@ def validate_catalog_domain_compatibility_redirect(
         "invalid_child_redirects": invalid_child_redirects,
         "invalid_child_redirect_details": invalid_child_redirect_details,
         "missing_canonical_targets": missing_canonical_targets,
+        "unexpected_root_files": unexpected_root_files,
         "canonical_only_children_allowed": True,
     }
 
