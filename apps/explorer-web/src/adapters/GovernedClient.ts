@@ -392,6 +392,18 @@ function historyCombinationIsValid(
   const currentRefs = new Set(evidenceRefs);
   if (history.negativeOutcomes.some((item) => currentRefs.has(item.evidenceRef))) return false;
 
+  const correctionPriorRefs = new Set(
+    history.corrections.map((item) => item.priorEvidenceRef),
+  );
+  const supersededRefs = new Set(
+    history.negativeOutcomes
+      .filter((item) => item.state === "SUPERSEDED")
+      .map((item) => item.evidenceRef),
+  );
+  if ([...correctionPriorRefs].some((ref) => !supersededRefs.has(ref))) {
+    return false;
+  }
+
   if (outcome === "DENY" || outcome === "ERROR") {
     return history.negativeOutcomes.length === 0 && history.corrections.length === 0;
   }
@@ -403,15 +415,9 @@ function historyCombinationIsValid(
     }
     if (trustState.correction === "CORRECTED") {
       if (history.corrections.length === 0) return false;
-      const priorRefs = new Set(history.corrections.map((item) => item.priorEvidenceRef));
-      const supersededRefs = new Set(
-        history.negativeOutcomes
-          .filter((item) => item.state === "SUPERSEDED")
-          .map((item) => item.evidenceRef),
-      );
       if (
-        priorRefs.size !== supersededRefs.size ||
-        [...priorRefs].some((ref) => !supersededRefs.has(ref))
+        correctionPriorRefs.size !== supersededRefs.size ||
+        [...correctionPriorRefs].some((ref) => !supersededRefs.has(ref))
       ) {
         return false;
       }
@@ -420,7 +426,7 @@ function historyCombinationIsValid(
       }
       const terminalRefs = history.corrections
         .map((item) => item.activeEvidenceRef)
-        .filter((ref) => !priorRefs.has(ref));
+        .filter((ref) => !correctionPriorRefs.has(ref));
       if (terminalRefs.length === 0 || terminalRefs.some((ref) => !currentRefs.has(ref))) {
         return false;
       }

@@ -52,6 +52,46 @@ describe("Explorer Evidence Drawer governed projection", () => {
     expect(result.trustLabels).toContain("Freshness: STALE");
   });
 
+  it("keeps a fully recorded abstention correction visible as audit history", () => {
+    const correctedAbstention = {
+      ...abstainFixture,
+      history: answerFixture.history,
+    };
+
+    const result = resolveEvidenceDrawer(correctedAbstention);
+
+    expect(result).toMatchObject({
+      outcome: "ABSTAIN",
+      code: "STALE_EVIDENCE",
+      evidenceRefsLabel: "Non-current evidence references",
+    });
+    expect(result.historyLabels).toContain(
+      "Correction lineage: kfm:evidence:synthetic:flow-000 → kfm:evidence:synthetic:flow-001 (2026-08-01T00:00:00Z)",
+    );
+    expect(result.historyLabels.join(" ")).toContain("Superseded evidence");
+  });
+
+  it("fails closed when an abstention correction omits superseded prior history", () => {
+    const untrackedCorrection = {
+      ...abstainFixture,
+      history: {
+        negative_outcomes: [],
+        corrections: answerFixture.history.corrections,
+      },
+    };
+
+    const result = resolveEvidenceDrawer(untrackedCorrection);
+
+    expect(result).toMatchObject({
+      outcome: "ERROR",
+      code: "INVALID_PAYLOAD",
+    });
+    expect(result.evidenceRefs).toEqual([]);
+    expect(result.citations).toEqual([]);
+    expect(result.historyLabels).toEqual([]);
+    expect(JSON.stringify(result)).not.toContain("kfm:evidence:synthetic:flow-000");
+  });
+
   it("shows superseded evidence as history without current claim support", () => {
     const result = resolveEvidenceDrawer(supersededFixture);
     expect(result).toMatchObject({
