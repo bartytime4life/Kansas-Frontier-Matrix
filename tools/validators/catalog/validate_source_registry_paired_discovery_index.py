@@ -7,28 +7,55 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-PROFILE = "kfm.source-registry-paired-discovery-index.v3"
+PROFILE = "kfm.source-registry-paired-discovery-index.v4"
 SECTION_HEADER = "The 13 paired domain README lanes confirmed at the pinned base are:"
 ROW_RE = re.compile(
     r"^\|\s*[^|]+\|\s*\[`sources/([^/]+)/`\]\(([^)]+)\)\s*"
     r"\|\s*\[`([^/]+)/sources/`\]\(([^)]+)\)\s*\|$"
 )
+TABLE_SEPARATOR_RE = re.compile(
+    r"^\|\s*:?-+:?\s*(?:\|\s*:?-+:?\s*)+\|?$"
+)
 
 
-def _read_index_rows(readme_path: Path) -> list[dict[str, str]]:
+def _read_index_rows(
+    readme_path: Path,
+) -> tuple[list[dict[str, str]], list[str]]:
     text = readme_path.read_text(encoding="utf-8")
-    start = text.find(SECTION_HEADER)
-    if start < 0:
+    marker_count = sum(
+        line.strip() == SECTION_HEADER for line in text.splitlines()
+    )
+    if marker_count == 0:
         raise ValueError(f"missing section marker: {SECTION_HEADER}")
+    if marker_count > 1:
+        raise ValueError(f"duplicate section marker: {SECTION_HEADER}")
+    start = text.find(SECTION_HEADER)
     section = text[start + len(SECTION_HEADER):]
     next_h2 = section.find("\n## ")
     if next_h2 >= 0:
         section = section[:next_h2]
 
     rows: list[dict[str, str]] = []
+    invalid_rows: list[str] = []
+    table_active = False
     for line in section.splitlines():
-        match = ROW_RE.match(line)
+        stripped = line.strip()
+        if TABLE_SEPARATOR_RE.fullmatch(stripped):
+            table_active = True
+            continue
+        if not table_active:
+            continue
+        if not stripped:
+            if rows or invalid_rows:
+                table_active = False
+            continue
+        if not stripped.startswith("|"):
+            if rows or invalid_rows:
+                table_active = False
+            continue
+        match = ROW_RE.match(stripped)
         if not match:
+            invalid_rows.append(stripped)
             continue
         canonical_domain, canonical_link, parallel_domain, parallel_link = match.groups()
         rows.append(
@@ -39,9 +66,9 @@ def _read_index_rows(readme_path: Path) -> list[dict[str, str]]:
                 "parallel_link": parallel_link,
             }
         )
-    if not rows:
+    if not rows and not invalid_rows:
         raise ValueError("source registry paired discovery index contains no parseable rows")
-    return rows
+    return rows, sorted(invalid_rows)
 
 
 def _canonical_domains(repo_root: Path) -> list[str]:
@@ -78,7 +105,7 @@ def validate_source_registry_paired_discovery_index(
         readme_path or repo_root / "data" / "registry" / "sources" / "README.md"
     ).resolve()
 
-    rows = _read_index_rows(readme_path)
+    rows, invalid_index_rows = _read_index_rows(readme_path)
     canonical_index = [row["canonical_domain"] for row in rows]
     parallel_index = [row["parallel_domain"] for row in rows]
     canonical_actual = _canonical_domains(repo_root)
@@ -127,7 +154,8 @@ def validate_source_registry_paired_discovery_index(
     unpaired_parallel_domains = sorted(parallel_actual_set - canonical_actual_set)
 
     failures = (
-        duplicate_index_domains
+        invalid_index_rows
+        or duplicate_index_domains
         or row_domain_mismatches
         or link_mismatches
         or missing_canonical_index
@@ -148,6 +176,7 @@ def validate_source_registry_paired_discovery_index(
         "canonical_domains": canonical_actual,
         "parallel_domains": parallel_actual,
         "paired_domains": sorted(paired_actual_set),
+        "invalid_index_rows": invalid_index_rows,
         "duplicate_index_domains": duplicate_index_domains,
         "row_domain_mismatches": row_domain_mismatches,
         "link_mismatches": link_mismatches,
