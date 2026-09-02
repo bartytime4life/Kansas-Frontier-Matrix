@@ -9,6 +9,7 @@ import {
 import {
   PUBLIC_MAP_CASE_DEEP_LINK_RETRY_LIMIT,
   hasSinglePublicMapCaseConsumer,
+  isPublicMapCaseOwnedConsumerCurrent,
   isPublicMapCaseRetryGenerationCurrent,
   resolvePublicMapCaseManualSelectionTransition,
   resolvePublicMapCaseRetryPlan,
@@ -114,6 +115,30 @@ describe("Explorer manual map-selection deep-link release", () => {
     expect(
       resolvePublicMapCaseUrlConsumerCommit(owned, false, false),
     ).toBeNull();
+  });
+
+  it("retains only the exact mounted consumer that accepted the URL request", () => {
+    const acceptedConsumer = Object.freeze({ caseId: "missing" });
+    const replacementConsumer = Object.freeze({ caseId: "missing" });
+
+    expect(
+      isPublicMapCaseOwnedConsumerCurrent(
+        acceptedConsumer,
+        acceptedConsumer,
+      ),
+    ).toBe(true);
+    expect(
+      isPublicMapCaseOwnedConsumerCurrent(
+        acceptedConsumer,
+        replacementConsumer,
+      ),
+    ).toBe(false);
+    expect(
+      isPublicMapCaseOwnedConsumerCurrent(acceptedConsumer, undefined),
+    ).toBe(false);
+    expect(
+      isPublicMapCaseOwnedConsumerCurrent(null, replacementConsumer),
+    ).toBe(false);
   });
 
   it("bounds disabled-control retries and resets the budget for a new URL", () => {
@@ -281,7 +306,10 @@ describe("Explorer manual map-selection deep-link release", () => {
       "const ownedConsumerCurrent =\n      mapTransition.activeDeepLinkMapCaseId === null ||",
     );
     expect(mainSource).toContain(
-      "mapTransition.activeDeepLinkMapCaseId === null ||\n      mapCaseButton !== undefined",
+      "isPublicMapCaseOwnedConsumerCurrent(\n        activeDeepLinkMapCaseConsumer,",
+    );
+    expect(mainSource).toContain(
+      "activeDeepLinkMapCaseConsumer =\n        selectionApplied &&",
     );
     expect(mainSource).not.toContain(
       "mapCaseButton !== undefined && mapCaseButton.disabled",

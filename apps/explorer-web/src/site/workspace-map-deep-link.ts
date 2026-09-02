@@ -82,6 +82,19 @@ export function isPublicMapCaseRetryGenerationCurrent(
 }
 
 /**
+ * Keep established URL ownership only while the exact consumer that accepted
+ * the request remains mounted. A replacement control with the same synthetic
+ * case identifier is a new consumer and must prove selection independently;
+ * ordinary re-enablement of the original async control remains current.
+ */
+export function isPublicMapCaseOwnedConsumerCurrent(
+  ownedConsumer: object | null,
+  mountedConsumer: object | undefined,
+): boolean {
+  return ownedConsumer !== null && mountedConsumer === ownedConsumer;
+}
+
+/**
  * Commit URL ownership only after the fixture control accepted the requested
  * selection, and retain established ownership only while its unique consumer
  * remains mounted. Map controls are disabled only while their asynchronous

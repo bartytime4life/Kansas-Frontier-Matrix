@@ -17,6 +17,7 @@ import {
 import {
   PUBLIC_MAP_CASE_DEEP_LINK_RETRY_LIMIT,
   hasSinglePublicMapCaseConsumer,
+  isPublicMapCaseOwnedConsumerCurrent,
   isPublicMapCaseRetryGenerationCurrent,
   resolvePublicMapCaseManualSelectionTransition,
   resolvePublicMapCaseRetryPlan,
@@ -52,6 +53,7 @@ if (navigation === null || trustSection === null) {
 
 mountPublicWorkspaceNavigation(navigation);
 let activeDeepLinkMapCaseId: "missing" | null = null;
+let activeDeepLinkMapCaseConsumer: HTMLButtonElement | null = null;
 let activeDeepLinkKnowledgeDomainId: string | null = null;
 let pendingMapDeepLinkRetry: number | null = null;
 let pendingKnowledgeDomainDeepLinkRetry: number | null = null;
@@ -163,6 +165,9 @@ const releaseDeepLinkMapOwnershipOnManualSelection = (event: MouseEvent): void =
     button.disabled,
   );
   activeDeepLinkMapCaseId = transition.activeDeepLinkMapCaseId;
+  if (activeDeepLinkMapCaseId === null) {
+    activeDeepLinkMapCaseConsumer = null;
+  }
   if (
     transition.replacementUrl !== null &&
     transition.replacementUrl.href !== currentUrl.href
@@ -228,6 +233,7 @@ const syncWorkspaceNavigation = (): void => {
   );
   if (mapTransition.releaseOwnedSelection) {
     cancelPendingMapDeepLinkRetry();
+    activeDeepLinkMapCaseConsumer = null;
   }
   const mapCaseId = mapTransition.mapCaseIdToSelect;
   const requestedMapCaseId =
@@ -265,18 +271,28 @@ const syncWorkspaceNavigation = (): void => {
         selectionApplied,
         true,
       );
+      activeDeepLinkMapCaseConsumer =
+        selectionApplied && activeDeepLinkMapCaseId === mapCaseId
+          ? mapCaseButton
+          : null;
       if (selectionApplied) cancelPendingMapDeepLinkRetry();
       if (priorFocus?.isConnected) priorFocus.focus();
     }
   } else {
     const ownedConsumerCurrent =
       mapTransition.activeDeepLinkMapCaseId === null ||
-      mapCaseButton !== undefined;
+      isPublicMapCaseOwnedConsumerCurrent(
+        activeDeepLinkMapCaseConsumer,
+        mapCaseButton,
+      );
     activeDeepLinkMapCaseId = resolvePublicMapCaseUrlConsumerCommit(
       mapTransition,
       false,
       ownedConsumerCurrent,
     );
+    if (activeDeepLinkMapCaseId === null) {
+      activeDeepLinkMapCaseConsumer = null;
+    }
     if (requestedMapCaseId !== null && activeDeepLinkMapCaseId === null) {
       scheduleMapDeepLinkRetry(safeUrl);
     } else if (activeDeepLinkMapCaseId === null) {
