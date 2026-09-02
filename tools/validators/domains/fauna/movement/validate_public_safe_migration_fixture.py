@@ -13,6 +13,8 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
+import stat
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -24,6 +26,7 @@ MANIFEST_PATH = FIXTURE_ROOT / "expected_findings_manifest.json"
 SCOPE = "fauna-public-safe-migration-fixture-v1"
 MAX_POSITIONS = 4096
 MAX_EVIDENCE_REFS = 64
+MAX_INPUT_BYTES = 1_048_576
 
 TOP_LEVEL_KEYS = frozenset(
     {
@@ -289,9 +292,66 @@ def validate_candidate(candidate: object) -> ValidationResult:
     return ValidationResult(tuple(sorted(set(findings))))
 
 
+def _reject_duplicate_members(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    candidate: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in candidate:
+            raise ValueError(f"duplicate JSON member: {key}")
+        candidate[key] = value
+    return candidate
+
+
+def _load_json_text(value: str) -> object:
+    return json.loads(value, object_pairs_hook=_reject_duplicate_members)
+
+
+def _load_bounded_json(path: Path) -> object:
+    nofollow = getattr(os, "O_NOFOLLOW", None)
+    if nofollow is None:
+        raise OSError("platform cannot enforce no-follow input reads")
+    flags = os.O_RDONLY | nofollow | getattr(os, "O_CLOEXEC", 0)
+    descriptor = os.open(path, flags)
+    try:
+        file_status = os.fstat(descriptor)
+        if (
+            not stat.S_ISREG(file_status.st_mode)
+            or file_status.st_size > MAX_INPUT_BYTES
+        ):
+            raise ValueError("input must be a bounded regular file")
+        stream = os.fdopen(descriptor, "rb")
+        descriptor = -1
+        with stream:
+            payload = stream.read(MAX_INPUT_BYTES + 1)
+    finally:
+        if descriptor >= 0:
+            os.close(descriptor)
+    if len(payload) > MAX_INPUT_BYTES:
+        raise ValueError("input exceeded the byte limit while reading")
+    return _load_json_text(payload.decode("utf-8"))
+
+
+def _fixture_case_path(value: str) -> Path | None:
+    relative_path = Path(value)
+    if (
+        value != relative_path.as_posix()
+        or relative_path.is_absolute()
+        or len(relative_path.parts) != 2
+        or relative_path.parts[0] not in {"valid", "invalid"}
+        or relative_path.suffix != ".json"
+    ):
+        return None
+    candidate_path = FIXTURE_ROOT / relative_path
+    if any(
+        (FIXTURE_ROOT / Path(*relative_path.parts[:depth])).is_symlink()
+        for depth in range(1, len(relative_path.parts) + 1)
+    ):
+        return None
+    return candidate_path
+
+
 def validate_file(path: Path | str) -> ValidationResult:
     try:
-        candidate = json.loads(Path(path).read_text(encoding="utf-8"))
+        candidate = _load_bounded_json(Path(path))
     except (OSError, UnicodeError, ValueError, RecursionError):
         return ValidationResult((Finding("schema.input_invalid", "/"),))
     return validate_candidate(candidate)
@@ -299,16 +359,21 @@ def validate_file(path: Path | str) -> ValidationResult:
 
 def validate_fixture_manifest() -> ValidationResult:
     try:
-        manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+        manifest = _load_bounded_json(MANIFEST_PATH)
     except (OSError, UnicodeError, ValueError, RecursionError):
         return ValidationResult((Finding("fixture.manifest_invalid", "/"),))
-    if not isinstance(manifest, Mapping) or not isinstance(manifest.get("cases"), list):
+    if not isinstance(manifest, Mapping) or set(manifest) != {"cases"}:
+        return ValidationResult((Finding("fixture.manifest_invalid", "/"),))
+    if not isinstance(manifest.get("cases"), list):
         return ValidationResult((Finding("fixture.manifest_invalid", "/cases"),))
 
     findings: list[Finding] = []
-    declared: list[str] = []
+    parsed_cases: list[tuple[int, str, tuple[Finding, ...]]] = []
     for index, case in enumerate(manifest["cases"]):
-        if not isinstance(case, Mapping):
+        if not isinstance(case, Mapping) or set(case) != {
+            "expected_findings",
+            "path",
+        }:
             _add(findings, "fixture.case_invalid", f"/cases/{index}")
             continue
         relative_path = case.get("path")
@@ -316,19 +381,50 @@ def validate_fixture_manifest() -> ValidationResult:
         if not isinstance(relative_path, str) or not isinstance(expected, list):
             _add(findings, "fixture.case_invalid", f"/cases/{index}")
             continue
-        declared.append(relative_path)
-        actual = validate_file(FIXTURE_ROOT / relative_path).findings
-        expected_findings = tuple(
-            sorted(
-                Finding(item.get("code"), item.get("path"))
-                for item in expected
-                if isinstance(item, Mapping)
-                and isinstance(item.get("code"), str)
-                and isinstance(item.get("path"), str)
+        expected_findings: list[Finding] = []
+        expected_is_valid = True
+        for finding_index, item in enumerate(expected):
+            if (
+                not isinstance(item, Mapping)
+                or set(item) != {"code", "path"}
+                or not isinstance(item.get("code"), str)
+                or not isinstance(item.get("path"), str)
+            ):
+                _add(
+                    findings,
+                    "fixture.case_invalid",
+                    f"/cases/{index}/expected_findings/{finding_index}",
+                )
+                expected_is_valid = False
+            else:
+                expected_findings.append(Finding(item["code"], item["path"]))
+        if not expected_is_valid:
+            continue
+        canonical_expected_findings = tuple(sorted(set(expected_findings)))
+        if tuple(expected_findings) != canonical_expected_findings:
+            _add(
+                findings,
+                "fixture.expected_findings_not_canonical",
+                f"/cases/{index}/expected_findings",
             )
-        )
-        if len(expected_findings) != len(expected) or expected_findings != actual:
-            _add(findings, "fixture.outcome_mismatch", f"/cases/{index}")
+            continue
+        parsed_cases.append((index, relative_path, canonical_expected_findings))
+
+    if findings:
+        return ValidationResult(tuple(sorted(set(findings))))
+
+    declared: list[str] = []
+    resolved_cases: list[tuple[int, Path, tuple[Finding, ...]]] = []
+    for index, relative_path, expected_findings in parsed_cases:
+        fixture_path = _fixture_case_path(relative_path)
+        if fixture_path is None:
+            _add(findings, "fixture.path_invalid", f"/cases/{index}/path")
+            continue
+        declared.append(relative_path)
+        resolved_cases.append((index, fixture_path, expected_findings))
+
+    if findings:
+        return ValidationResult(tuple(sorted(set(findings))))
 
     actual_paths = sorted(
         str(path.relative_to(FIXTURE_ROOT))
@@ -339,6 +435,13 @@ def validate_fixture_manifest() -> ValidationResult:
         _add(findings, "fixture.paths_not_canonical", "/cases")
     if declared != actual_paths:
         _add(findings, "fixture.inventory_mismatch", "/cases")
+    if findings:
+        return ValidationResult(tuple(sorted(set(findings))))
+
+    for index, fixture_path, expected_findings in resolved_cases:
+        actual = validate_file(fixture_path).findings
+        if expected_findings != actual:
+            _add(findings, "fixture.outcome_mismatch", f"/cases/{index}")
     return ValidationResult(tuple(sorted(set(findings))))
 
 

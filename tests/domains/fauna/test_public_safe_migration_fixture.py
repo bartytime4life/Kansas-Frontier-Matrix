@@ -9,10 +9,16 @@ import socket
 import unittest
 import urllib.request
 from contextlib import redirect_stdout
+from pathlib import Path
+from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
+from tools.validators.domains.fauna.movement import (
+    validate_public_safe_migration_fixture as migration_validator,
+)
 from tools.validators.domains.fauna.movement.validate_public_safe_migration_fixture import (
     FIXTURE_ROOT,
+    MAX_INPUT_BYTES,
     Finding,
     main,
     validate_candidate,
@@ -50,6 +56,251 @@ class PublicSafeMigrationFixtureTests(unittest.TestCase):
 
     def test_manifest_replays_exact_inventory(self):
         self.assertTrue(validate_fixture_manifest().ok)
+
+    def test_duplicate_json_members_fail_closed(self):
+        payloads = {
+            "top-level": '{"route_id":"safe","route_id":"forbidden"}',
+            "nested": '{"geometry":{"type":"Point","type":"LineString"}}',
+        }
+        with TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "candidate.json"
+            for name, payload in payloads.items():
+                with self.subTest(name=name):
+                    path.write_text(payload, encoding="utf-8")
+                    self.assertEqual(
+                        validate_file(path).findings,
+                        (Finding("schema.input_invalid", "/"),),
+                    )
+
+    def test_symlinked_and_oversized_inputs_fail_before_read(self):
+        with TemporaryDirectory() as temp_dir:
+            temp_root = Path(temp_dir)
+            target = temp_root / "target.json"
+            target.write_text(VALID.read_text(encoding="utf-8"), encoding="utf-8")
+            symlink = temp_root / "symlink.json"
+            symlink.symlink_to(target)
+            self.assertEqual(
+                validate_file(symlink).findings,
+                (Finding("schema.input_invalid", "/"),),
+            )
+
+            oversized = temp_root / "oversized.json"
+            oversized.write_bytes(b" " * (MAX_INPUT_BYTES + 1))
+            with patch.object(
+                migration_validator.os,
+                "fdopen",
+                side_effect=AssertionError("oversized candidate was read"),
+            ) as candidate_reader:
+                self.assertEqual(
+                    validate_file(oversized).findings,
+                    (Finding("schema.input_invalid", "/"),),
+                )
+            candidate_reader.assert_not_called()
+
+    def test_symlinked_and_oversized_manifests_fail_before_read(self):
+        with TemporaryDirectory() as temp_dir:
+            temp_root = Path(temp_dir)
+            target = temp_root / "target.json"
+            target.write_text('{"cases": []}', encoding="utf-8")
+            symlink = temp_root / "manifest-symlink.json"
+            symlink.symlink_to(target)
+            with patch.object(migration_validator, "MANIFEST_PATH", symlink):
+                self.assertEqual(
+                    validate_fixture_manifest().findings,
+                    (Finding("fixture.manifest_invalid", "/"),),
+                )
+
+            oversized = temp_root / "manifest-oversized.json"
+            oversized.write_bytes(b" " * (MAX_INPUT_BYTES + 1))
+            with (
+                patch.object(migration_validator, "MANIFEST_PATH", oversized),
+                patch.object(
+                    migration_validator.os,
+                    "fdopen",
+                    side_effect=AssertionError("oversized manifest was read"),
+                ) as manifest_reader,
+            ):
+                self.assertEqual(
+                    validate_fixture_manifest().findings,
+                    (Finding("fixture.manifest_invalid", "/"),),
+                )
+            manifest_reader.assert_not_called()
+
+    def test_manifest_path_escape_fails_before_candidate_read(self):
+        with TemporaryDirectory() as temp_dir:
+            manifest_path = Path(temp_dir) / "manifest.json"
+            path_cases = {
+                "traversal": "../outside.json",
+                "absolute": str(Path(temp_dir) / "outside.json"),
+                "nested": "valid/nested/outside.json",
+            }
+            for name, candidate_path in path_cases.items():
+                with self.subTest(name=name):
+                    manifest_path.write_text(
+                        json.dumps(
+                            {
+                                "cases": [
+                                    {
+                                        "path": candidate_path,
+                                        "expected_findings": [],
+                                    }
+                                ]
+                            }
+                        ),
+                        encoding="utf-8",
+                    )
+                    with (
+                        patch.object(
+                            migration_validator,
+                            "MANIFEST_PATH",
+                            manifest_path,
+                        ),
+                        patch.object(
+                            migration_validator,
+                            "validate_file",
+                        ) as candidate_reader,
+                    ):
+                        result = migration_validator.validate_fixture_manifest()
+                    self.assertIn(
+                        Finding("fixture.path_invalid", "/cases/0/path"),
+                        result.findings,
+                    )
+                    candidate_reader.assert_not_called()
+
+    def test_manifest_schema_is_closed_before_candidate_read(self):
+        path = "valid/public_safe_synthetic_route.json"
+        cases = {
+            "top-level": (
+                {"cases": [], "ignored": True},
+                Finding("fixture.manifest_invalid", "/"),
+            ),
+            "case": (
+                {
+                    "cases": [
+                        {
+                            "path": path,
+                            "expected_findings": [],
+                            "ignored": True,
+                        }
+                    ]
+                },
+                Finding("fixture.case_invalid", "/cases/0"),
+            ),
+            "expected-finding": (
+                {
+                    "cases": [
+                        {
+                            "path": path,
+                            "expected_findings": [
+                                {"code": "ignored", "path": "/", "extra": True}
+                            ],
+                        }
+                    ]
+                },
+                Finding(
+                    "fixture.case_invalid",
+                    "/cases/0/expected_findings/0",
+                ),
+            ),
+        }
+        with TemporaryDirectory() as temp_dir:
+            manifest_path = Path(temp_dir) / "manifest.json"
+            for name, (manifest, expected) in cases.items():
+                with self.subTest(name=name):
+                    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+                    with (
+                        patch.object(
+                            migration_validator,
+                            "MANIFEST_PATH",
+                            manifest_path,
+                        ),
+                        patch.object(
+                            migration_validator,
+                            "validate_file",
+                        ) as candidate_reader,
+                    ):
+                        result = migration_validator.validate_fixture_manifest()
+                    self.assertEqual(result.findings, (expected,))
+                    candidate_reader.assert_not_called()
+
+    def test_manifest_inventory_is_preflighted_before_candidate_read(self):
+        canonical_manifest = json.loads(
+            migration_validator.MANIFEST_PATH.read_text(encoding="utf-8")
+        )
+        canonical_cases = canonical_manifest["cases"]
+        manifests = {
+            "reordered": (
+                {"cases": list(reversed(canonical_cases))},
+                (
+                    Finding("fixture.inventory_mismatch", "/cases"),
+                    Finding("fixture.paths_not_canonical", "/cases"),
+                ),
+            ),
+            "incomplete": (
+                {"cases": canonical_cases[:-1]},
+                (Finding("fixture.inventory_mismatch", "/cases"),),
+            ),
+        }
+        with TemporaryDirectory() as temp_dir:
+            manifest_path = Path(temp_dir) / "manifest.json"
+            for name, (manifest, expected) in manifests.items():
+                with self.subTest(name=name):
+                    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+                    with (
+                        patch.object(
+                            migration_validator,
+                            "MANIFEST_PATH",
+                            manifest_path,
+                        ),
+                        patch.object(
+                            migration_validator,
+                            "validate_file",
+                        ) as candidate_reader,
+                    ):
+                        result = migration_validator.validate_fixture_manifest()
+                    self.assertEqual(result.findings, expected)
+                    candidate_reader.assert_not_called()
+
+    def test_expected_findings_are_canonical_before_candidate_read(self):
+        canonical_manifest = json.loads(
+            migration_validator.MANIFEST_PATH.read_text(encoding="utf-8")
+        )
+        exact_track_findings = canonical_manifest["cases"][2]["expected_findings"]
+        manifests = {
+            "reordered": copy.deepcopy(canonical_manifest),
+            "duplicate": copy.deepcopy(canonical_manifest),
+        }
+        manifests["reordered"]["cases"][2]["expected_findings"] = list(
+            reversed(exact_track_findings)
+        )
+        manifests["duplicate"]["cases"][2]["expected_findings"].append(
+            copy.deepcopy(exact_track_findings[0])
+        )
+        expected = (
+            Finding(
+                "fixture.expected_findings_not_canonical",
+                "/cases/2/expected_findings",
+            ),
+        )
+        with TemporaryDirectory() as temp_dir:
+            manifest_path = Path(temp_dir) / "manifest.json"
+            for name, manifest in manifests.items():
+                with self.subTest(name=name):
+                    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+                    with (
+                        patch.object(
+                            migration_validator,
+                            "MANIFEST_PATH",
+                            manifest_path,
+                        ),
+                        patch.object(
+                            migration_validator,
+                            "validate_file",
+                        ) as candidate_reader,
+                    ):
+                        result = migration_validator.validate_fixture_manifest()
+                    self.assertEqual(result.findings, expected)
+                    candidate_reader.assert_not_called()
 
     def test_degenerate_route_fails_closed(self):
         self.assertEqual(
