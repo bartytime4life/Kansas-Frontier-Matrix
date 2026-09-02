@@ -1,14 +1,151 @@
-# TEMPORARY inert staging helper. Replaced and removed before draft delivery.
+# TEMPORARY branch-only apply/validation helper. It removes itself before push.
 name: _agent-temp-topology-evidence
 
 "on":
-  workflow_dispatch:
+  push:
+    branches:
+      - fix/topology-ratchet-reconcile-20260902
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: _agent-temp-topology-apply-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: "true"
+  COREPACK_ENABLE_STRICT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  TZ: UTC
 
 jobs:
-  inert:
+  apply-validate-and-clean:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - run: echo "Temporary helper is inert."
+      - name: Check out task branch without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22"
+          package-manager-cache: false
+
+      - name: Reconstruct the reviewed final index
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .github/agent-patches/topology.patch.part* > /tmp/topology.patch
+          echo "b3c99fbee2cc97e3ea8620f1eecc112b4d96d5b21366e5b150957bfa0cfaa6bc  /tmp/topology.patch" | sha256sum -c -
+          git apply --index /tmp/topology.patch
+          git rm -r .github/agent-patches .github/workflows/_agent-temp-topology-evidence.yml
+
+          python3 - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          from tools.validators.directory_governance import validate_repository_topology as topology
+
+          baseline_path = Path(topology.BASELINE_REPOSITORY_PATH)
+          raw = baseline_path.read_bytes()
+          plain = json.loads(raw.decode("utf-8"))
+          _data, entries = topology._load_baseline_bytes(raw, label="pre-reconciliation")
+          findings, _tracked = topology.scan(Path("."))
+          live = {(item.rule_id, item.subject): item for item in findings}
+          prior = {
+              (entry["rule_id"], entry["subject"]): (fingerprint, entry)
+              for fingerprint, entry in entries.items()
+          }
+
+          expected = {
+              ("KFM-TOPO-004", "catalog/"): (
+                  "sha256:521388927153c91a67ca8cead55af9d688a6064517d109aa556cffca91505006",
+                  "sha256:0ad45247555960029c34d1222365cbe17a5cabec278bf9f6b8f3e9572ea33e8f",
+              ),
+              ("KFM-TOPO-009", "scaffold-only-leaf-directories"): (
+                  "sha256:33beca76d66938e5191a9121442481ba939079efa7a637c874f80380ab8b8a0c",
+                  "sha256:87288006ed747565d494d4667b7fe927760de706d6478e4e34afddd1caf62208",
+              ),
+              ("KFM-TOPO-016", "doc-id:kfm://doc/NEEDS-VERIFICATION"): (
+                  "sha256:1831dfdc821f0553c6a55336d9e1e6122298db4ad1518232deb5f2b68cec6593",
+                  "sha256:a20d1ec8834c7b3fc105ad3b01063e1ebc73b48fed9e5b7902d03ba1507de13b",
+              ),
+          }
+          replacements = {}
+          for identity, (prior_fp, current_fp) in expected.items():
+              actual_prior_fp, prior_entry = prior[identity]
+              current = live[identity]
+              assert actual_prior_fp == prior_fp, (identity, actual_prior_fp)
+              assert current.fingerprint == current_fp, (identity, current.fingerprint)
+              prior_members = set(prior_entry["evidence_members"])
+              current_members = set(current.evidence_members)
+              if identity[0] in {"KFM-TOPO-009", "KFM-TOPO-016"}:
+                  assert current_members < prior_members, identity
+              else:
+                  assert len(current_members) == len(prior_members), identity
+                  assert prior_members - current_members == {
+                      "catalog/domain/agriculture/README.md@bf1a333573c6d068fbb0b695356346003842aceb"
+                  }
+                  assert current_members - prior_members == {
+                      "catalog/domain/agriculture/README.md@4be1711bfa011636ac1c5cd13e7c98e5002ff9c0"
+                  }
+              replacements[prior_fp] = topology._serialized_baseline_entry(current)
+
+          plain["entries"] = sorted(
+              [replacements.get(entry["fingerprint"], entry) for entry in plain["entries"]],
+              key=lambda entry: entry["fingerprint"],
+          )
+          rendered = (json.dumps(plain, indent=2, sort_keys=True) + "\n").encode("utf-8")
+          digest = hashlib.sha256(rendered).hexdigest()
+          assert digest == "520c45966362dad0f7b090e504887be920800fd0d3d3bb328f037d25b9d5bbf1", digest
+          baseline_path.write_bytes(rendered)
+          PY
+
+          git add tools/validators/directory_governance/repository_topology_baseline.json
+          git diff --cached --check
+
+      - name: Validate topology implementation and trusted transition
+        shell: bash
+        env:
+          KFM_TRUSTED_BASE_REF: df45bbaea90c210ec485dd85562a314ed0c9ccf4
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/validators/directory_governance/validate_repository_topology.py \
+            tests/validators/directory_governance/test_validate_repository_topology.py
+          python3 -m unittest \
+            tests.validators.directory_governance.test_validate_repository_topology \
+            tests.validators.directory_governance.test_validate_output_security_topology \
+            --verbose
+          make repository-topology
+
+      - name: Validate Explorer path normalization
+        shell: bash
+        run: |
+          set -euo pipefail
+          corepack enable
+          pnpm install --frozen-lockfile --ignore-scripts
+          pnpm --dir apps/explorer-web test:unit
+          pnpm --dir apps/explorer-web build
+          test -z "$(git diff --name-only)"
+          git diff --cached --check
+
+      - name: Commit and push only after validation
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git config user.name "kfm-topology-reconciliation"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "fix(governance): reconcile topology after verified repairs"
+          auth="$(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic ${auth}" \
+            push origin HEAD:refs/heads/fix/topology-ratchet-reconcile-20260902
