@@ -9,8 +9,12 @@ from __future__ import annotations
 
 import argparse
 import copy
+import errno
 import json
 import math
+import os
+import re
+import stat
 import sys
 from dataclasses import dataclass
 from datetime import datetime
@@ -39,7 +43,10 @@ SCHEMA = (
 CASES = ROOT / "fixtures/domains/hazards/drinking_water_advisory/cases.json"
 COMMON_CONTRACT = ROOT / "contracts/common/advisory_event_envelope.md"
 MAX_FILE_BYTES = 1_048_576
+MAX_INPUT_PATHS = 32
 MAX_SCHEMA_FINDINGS = 100
+DATE_TIME_FORMAT_CHECKER = FormatChecker()
+AWARE_DATETIME_OFFSET = re.compile(r"(?:Z|[+-][0-9]{2}:[0-9]{2})$")
 SCOPE = "drinking-water-advisory-fixture-only-v1"
 CONFIRMED_STATUSES = {
     "ISSUED",
@@ -106,6 +113,14 @@ class NonFiniteNumberError(ValueError):
     pass
 
 
+class SymlinkPathError(OSError):
+    pass
+
+
+class FileTooLargeError(OSError):
+    pass
+
+
 def _pairs(items: list[tuple[str, Any]]) -> dict[str, Any]:
     result: dict[str, Any] = {}
     for key, value in items:
@@ -126,20 +141,96 @@ def _float(value: str) -> float:
     return parsed
 
 
+def _read_text_no_symlinks(path: Path) -> str:
+    """Read one regular file through descriptor-bound no-follow traversal."""
+    if "\x00" in os.fspath(path):
+        raise FileNotFoundError(path)
+    nofollow = getattr(os, "O_NOFOLLOW", 0)
+    directory = getattr(os, "O_DIRECTORY", 0)
+    cloexec = getattr(os, "O_CLOEXEC", 0)
+    nonblock = getattr(os, "O_NONBLOCK", 0)
+    if not nofollow or not directory:
+        raise OSError(errno.ENOTSUP, "no-follow descriptor traversal unavailable")
+
+    absolute = Path(os.path.abspath(path))
+    parts = absolute.parts
+    if len(parts) < 2:
+        raise FileNotFoundError(path)
+
+    directory_fd = os.open(
+        absolute.anchor,
+        os.O_RDONLY | directory | cloexec,
+    )
+    try:
+        for part in parts[1:-1]:
+            try:
+                next_fd = os.open(
+                    part,
+                    os.O_RDONLY | directory | nofollow | cloexec,
+                    dir_fd=directory_fd,
+                )
+            except OSError as exc:
+                if exc.errno == errno.ELOOP:
+                    raise SymlinkPathError(path) from exc
+                if exc.errno == errno.ENOTDIR:
+                    try:
+                        entry_stat = os.stat(
+                            part,
+                            dir_fd=directory_fd,
+                            follow_symlinks=False,
+                        )
+                    except OSError:
+                        raise FileNotFoundError(path) from exc
+                    if stat.S_ISLNK(entry_stat.st_mode):
+                        raise SymlinkPathError(path) from exc
+                    raise FileNotFoundError(path) from exc
+                raise
+            os.close(directory_fd)
+            directory_fd = next_fd
+
+        try:
+            file_fd = os.open(
+                parts[-1],
+                os.O_RDONLY | nofollow | cloexec | nonblock,
+                dir_fd=directory_fd,
+            )
+        except OSError as exc:
+            if exc.errno == errno.ELOOP:
+                raise SymlinkPathError(path) from exc
+            raise
+        try:
+            file_stat = os.fstat(file_fd)
+            if not stat.S_ISREG(file_stat.st_mode):
+                raise FileNotFoundError(path)
+            if file_stat.st_size > MAX_FILE_BYTES:
+                raise FileTooLargeError(path)
+            with os.fdopen(file_fd, "rb") as stream:
+                file_fd = -1
+                content = stream.read(MAX_FILE_BYTES + 1)
+            if len(content) > MAX_FILE_BYTES:
+                raise FileTooLargeError(path)
+            return content.decode("utf-8")
+        finally:
+            if file_fd >= 0:
+                os.close(file_fd)
+    finally:
+        os.close(directory_fd)
+
+
 def _read(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
     try:
-        if path.is_symlink():
-            return None, [Finding("INPUT_SYMLINK_DENIED", "/")]
-        if not path.is_file():
-            return None, [Finding("FILE_NOT_FOUND", "/")]
-        if path.stat().st_size > MAX_FILE_BYTES:
-            return None, [Finding("FILE_TOO_LARGE", "/")]
         value = json.loads(
-            path.read_text(encoding="utf-8"),
+            _read_text_no_symlinks(path),
             object_pairs_hook=_pairs,
             parse_constant=_nonfinite,
             parse_float=_float,
         )
+    except SymlinkPathError:
+        return None, [Finding("INPUT_SYMLINK_DENIED", "/")]
+    except FileNotFoundError:
+        return None, [Finding("FILE_NOT_FOUND", "/")]
+    except FileTooLargeError:
+        return None, [Finding("FILE_TOO_LARGE", "/")]
     except UnicodeError:
         return None, [Finding("JSON_INVALID", "/")]
     except DuplicateKeyError:
@@ -237,11 +328,27 @@ def _present_ref(value: Any) -> bool:
     return isinstance(value, str) and bool(value)
 
 
+def _aware_datetime(value: Any) -> bool:
+    return (
+        isinstance(value, str)
+        and AWARE_DATETIME_OFFSET.search(value) is not None
+        and DATE_TIME_FORMAT_CHECKER.conforms(value, "date-time")
+    )
+
+
+def _unknown_offset(value: Any) -> bool:
+    return _aware_datetime(value) and value.endswith("-00:00")
+
+
 def _time(value: Any) -> datetime | None:
-    if not isinstance(value, str):
+    if (
+        not _aware_datetime(value)
+        or _unknown_offset(value)
+    ):
         return None
+    normalized = value[:-1] + "+00:00" if value.endswith("Z") else value
     try:
-        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        parsed = datetime.fromisoformat(normalized)
     except ValueError:
         return None
     return parsed if parsed.tzinfo is not None else None
@@ -335,6 +442,14 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
     elif status == "ACTIVE_CONFIRMED" and outcome not in {"FETCHED", "NOT_MODIFIED"}:
         findings.append(Finding("CURRENT_SOURCE_REQUIRED", "/source_surface/source_check_outcome"))
 
+    if outcome == "NOT_MODIFIED" and not previous_present:
+        findings.append(
+            Finding(
+                "NOT_MODIFIED_PRIOR_REQUIRED",
+                "/source_surface/previous_record_present",
+            )
+        )
+
     absence = (
         source.get("source_mode") == "COMPLETE_SNAPSHOT"
         and source.get("snapshot_complete") is True
@@ -362,6 +477,8 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
             findings.append(Finding("RESCISSION_REQUIRED", "/advisory"))
     elif clears:
         findings.append(Finding("FALSE_CLEAR_ATTEMPT", "/advisory/clears_prior_advisory"))
+    if status != "RESCINDED" and advisory.get("rescinded_at") is not None:
+        findings.append(Finding("RESCISSION_STATUS_MISMATCH", "/advisory/rescinded_at"))
 
     if previous_present and status != "ISSUED" and not _present_ref(
         controls.get("prior_advisory_ref")
@@ -372,21 +489,50 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
     ) not in {"ISSUED", "ACTIVE_CONFIRMED", "UPDATED"}:
         findings.append(Finding("LAST_CONFIRMED_STATUS_REQUIRED", "/advisory/last_confirmed_status"))
 
+    timestamp_fields = (
+        ("/source_surface/checked_at", source.get("checked_at")),
+        ("/advisory/issued_at", advisory.get("issued_at")),
+        ("/advisory/effective_at", advisory.get("effective_at")),
+        ("/advisory/expires_at", advisory.get("expires_at")),
+        ("/advisory/rescinded_at", advisory.get("rescinded_at")),
+    )
+    unknown_offset_paths = {
+        path
+        for path, value in timestamp_fields
+        if _unknown_offset(value)
+    }
+    findings.extend(
+        Finding("TIMESTAMP_UNKNOWN_OFFSET", path)
+        for path in sorted(unknown_offset_paths)
+    )
+
     issued = _time(advisory.get("issued_at"))
     effective = _time(advisory.get("effective_at"))
     expires = _time(advisory.get("expires_at"))
     rescinded = _time(advisory.get("rescinded_at"))
     checked = _time(source.get("checked_at"))
-    if (
-        issued is None
-        or effective is None
-        or checked is None
-        or issued > effective
-        or effective > checked
-        or (expires is not None and expires < effective)
-        or (rescinded is not None and (rescinded < effective or rescinded > checked))
-    ):
-        findings.append(Finding("TEMPORAL_ORDER_INVALID", "/advisory"))
+    temporal_order_checks = (
+        (issued is not None and effective is not None and issued > effective, "/advisory/issued_at"),
+        (issued is not None and checked is not None and issued > checked, "/advisory/issued_at"),
+        (effective is not None and checked is not None and effective > checked, "/advisory/effective_at"),
+        (expires is not None and issued is not None and expires < issued, "/advisory/expires_at"),
+        (expires is not None and effective is not None and expires < effective, "/advisory/expires_at"),
+        (
+            status in {"ISSUED", "ACTIVE_CONFIRMED", "UPDATED"}
+            and expires is not None
+            and checked is not None
+            and expires < checked,
+            "/advisory/expires_at",
+        ),
+        (rescinded is not None and issued is not None and rescinded < issued, "/advisory/rescinded_at"),
+        (rescinded is not None and effective is not None and rescinded < effective, "/advisory/rescinded_at"),
+        (rescinded is not None and checked is not None and rescinded > checked, "/advisory/rescinded_at"),
+    )
+    findings.extend(
+        Finding("TEMPORAL_ORDER_INVALID", path)
+        for invalid, path in temporal_order_checks
+        if invalid
+    )
 
     if not _canonical_strings(controls.get("evidence_refs")):
         findings.append(Finding("NONCANONICAL_EVIDENCE_REFS", "/controls/evidence_refs"))
@@ -569,7 +715,8 @@ def validate_fixtures() -> tuple[bool, list[dict[str, Any]]]:
 
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Validate inactive DrinkingWaterAdvisory fixtures."
+        description="Validate inactive DrinkingWaterAdvisory fixtures.",
+        allow_abbrev=False,
     )
     parser.add_argument("paths", nargs="*", type=Path)
     parser.add_argument("--fixtures", action="store_true")
@@ -577,8 +724,22 @@ def _parser() -> argparse.ArgumentParser:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    args = _parser().parse_args(argv)
+    raw_argv = list(sys.argv[1:] if argv is None else argv)
+    fixture_option_count = 0
+    for token in raw_argv:
+        if token == "--":
+            break
+        if token == "--fixtures":
+            fixture_option_count += 1
+    parser = _parser()
+    args = parser.parse_args(raw_argv)
+    if fixture_option_count > 1:
+        parser.error("--fixtures may be provided only once")
+    if len(args.paths) > MAX_INPUT_PATHS:
+        parser.error(f"at most {MAX_INPUT_PATHS} input paths may be provided")
     if args.fixtures:
+        if args.paths:
+            parser.error("input paths cannot be combined with --fixtures")
         ok, rows = validate_fixtures()
         for row in rows:
             print(json.dumps(row, sort_keys=True, separators=(",", ":")))
