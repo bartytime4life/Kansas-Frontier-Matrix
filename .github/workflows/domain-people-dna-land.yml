@@ -217,12 +217,36 @@ jobs:
                       "review it before accepting this workflow."
                   )
 
+          def collect_fixture_payloads(
+              root: Path, *, excluded_names: set[str]
+          ) -> list[Path]:
+              if root.is_symlink() or not root.is_dir():
+                  raise SystemExit(
+                      "Synthetic fixture root is unavailable or symlinked: "
+                      f"{root}."
+                  )
+              entries = sorted(root.rglob("*"))
+              symlinks = [path for path in entries if path.is_symlink()]
+              if symlinks:
+                  raise SystemExit(
+                      "Synthetic fixture roots must not contain symlink "
+                      f"entries: {symlinks}."
+                  )
+              return [
+                  path
+                  for path in entries
+                  if path.is_file() and path.name not in excluded_names
+              ]
+
+
+          domain_fixture_payloads = collect_fixture_payloads(
+              fixture_root,
+              excluded_names={"README.md", ".gitkeep", "PLACEHOLDER.md"},
+          )
           surfaced_payloads = sorted(
               path.as_posix()
-              for path in fixture_root.rglob("*")
-              if path.is_file()
-              and path.name not in {"README.md", ".gitkeep", "PLACEHOLDER.md"}
-              and not any(
+              for path in domain_fixture_payloads
+              if not any(
                   path.is_relative_to(root) for root in accepted_fixture_roots
               )
           )
@@ -232,44 +256,50 @@ jobs:
                   f"the accepted synthetic profiles: {surfaced_payloads}."
               )
 
-          def collect_shared_fixture_payloads(root: Path) -> list[Path]:
-              entries = sorted(root.rglob("*"))
-              symlinks = [path for path in entries if path.is_symlink()]
-              if symlinks:
-                  raise SystemExit(
-                      "Shared synthetic fixture roots must not contain symlink "
-                      f"entries: {symlinks}."
-                  )
-              return [
-                  path
-                  for path in entries
-                  if path.is_file()
-                  and path.name not in {"README.md", ".gitkeep"}
-              ]
-
-
-          # Prove that directory symlinks are rejected before payload filtering.
+          # Prove root and nested directory symlinks fail before file filtering.
           with tempfile.TemporaryDirectory() as temporary_directory:
-              probe_root = Path(temporary_directory) / "fixture-root"
-              probe_target = Path(temporary_directory) / "outside"
+              probe_base = Path(temporary_directory)
+              probe_root = probe_base / "fixture-root"
+              probe_target = probe_base / "outside"
               probe_root.mkdir()
               probe_target.mkdir()
               (probe_target / "payload.json").write_text(
                   "{}\n", encoding="utf-8"
               )
-              probe_link = probe_root / "linked-directory"
+
+              probe_link = probe_root / "valid"
               probe_link.symlink_to(probe_target, target_is_directory=True)
               try:
-                  collect_shared_fixture_payloads(probe_root)
+                  collect_fixture_payloads(
+                      probe_root, excluded_names={"README.md"}
+                  )
               except SystemExit as exc:
                   if str(probe_link) not in str(exc):
                       raise SystemExit(
-                          "Symlinked fixture-directory probe failed without "
+                          "Nested fixture-directory symlink probe failed without "
                           f"identifying the unsafe entry: {exc}"
                       ) from exc
               else:
                   raise SystemExit(
-                      "Symlinked fixture directory bypassed the fixture-root "
+                      "Nested fixture-directory symlink bypassed the domain "
+                      "fixture boundary."
+                  )
+
+              linked_root = probe_base / "linked-root"
+              linked_root.symlink_to(probe_target, target_is_directory=True)
+              try:
+                  collect_fixture_payloads(
+                      linked_root, excluded_names={"README.md"}
+                  )
+              except SystemExit as exc:
+                  if str(linked_root) not in str(exc):
+                      raise SystemExit(
+                          "Fixture-root symlink probe failed without identifying "
+                          f"the unsafe root: {exc}"
+                      ) from exc
+              else:
+                  raise SystemExit(
+                      "Symlinked fixture root bypassed the domain fixture "
                       "boundary."
                   )
 
@@ -346,7 +376,9 @@ jobs:
                       "Declared shared synthetic fixture root is unavailable or "
                       f"unsafe: {root}."
                   )
-              payloads = collect_shared_fixture_payloads(root)
+              payloads = collect_fixture_payloads(
+                  root, excluded_names={"README.md", ".gitkeep"}
+              )
               if not payloads:
                   raise SystemExit(
                       f"Declared shared synthetic fixture root is empty: {root}."
