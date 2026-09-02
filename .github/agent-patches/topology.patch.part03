@@ -1,0 +1,177 @@
++        raise TopologyError("registered Git blob exceeds the per-file limit")
++    return raw
++
++
++def _merge_conflict_marker_state(raw: bytes) -> tuple[bool, bool, bool]:
++    lines = raw.splitlines()
++    return (
++        any(line.startswith(b"<<<<<<< ") for line in lines),
++        any(line == b"=======" for line in lines),
++        any(line.startswith(b">>>>>>> ") for line in lines),
++    )
++
++
++def _validate_conflict_reconciliation_record(
++    record: Mapping[str, object],
++    current_entry: Mapping[str, object],
++    trusted_entry: Mapping[str, object],
++    current_finding: Finding,
++    trusted_live_finding: Finding,
++    prior_blob: bytes,
++    current_blob: bytes,
++    trusted_sha: str,
++) -> None:
++    if record["trusted_base_sha"] != trusted_sha:
++        raise TopologyError("reconciliation record is not bound to the trusted base")
++    for prefix, entry in (("prior", trusted_entry), ("current", current_entry)):
++        if (
++            entry.get("rule_id") != record["rule_id"]
++            or entry.get("subject") != record["subject"]
++            or entry.get("evidence_sha256") != record[f"{prefix}_evidence_sha256"]
++            or entry.get("fingerprint") != record[f"{prefix}_fingerprint"]
++        ):
++            raise TopologyError(
++                f"reconciliation record does not bind the {prefix} baseline entry"
++            )
++    if (
++        current_finding.rule_id != record["rule_id"]
++        or current_finding.subject != record["subject"]
++        or current_finding.evidence_sha256 != record["current_evidence_sha256"]
++        or current_finding.fingerprint != record["current_fingerprint"]
++        or tuple(current_entry.get("evidence_members", ()))
++        != current_finding.evidence_members
++    ):
++        raise TopologyError("reconciliation record does not bind current live evidence")
++    if trusted_live_finding != current_finding:
++        raise TopologyError(
++            "reconciliation target was not already present on the trusted base"
++        )
++    prior_members = set(trusted_entry.get("evidence_members", ()))
++    current_members = set(current_entry.get("evidence_members", ()))
++    path = str(record["path"])
++    expected_removed = f"{path}@{record['prior_blob_sha']}"
++    expected_added = f"{path}@{record['current_blob_sha']}"
++    if (
++        len(prior_members) != len(current_members)
++        or prior_members - current_members != {expected_removed}
++        or current_members - prior_members != {expected_added}
++    ):
++        raise TopologyError(
++            "reconciliation must replace exactly one registered README blob"
++        )
++    try:
++        prior_blob.decode("utf-8")
++        current_blob.decode("utf-8")
++    except UnicodeError as exc:
++        raise TopologyError("registered README correction is not UTF-8") from exc
++    if _merge_conflict_marker_state(prior_blob) != (True, True, True):
++        raise TopologyError("registered prior README has no complete conflict markers")
++    if any(_merge_conflict_marker_state(current_blob)):
++        raise TopologyError("registered current README still contains conflict markers")
++
++
++def _reconciled_trusted_entries(
++    repo_root: Path,
++    current_entries: Mapping[str, Mapping[str, object]],
++    trusted_entries: Mapping[str, Mapping[str, object]],
++    current_findings: Sequence[Finding],
++    current_reconciliation_data: Mapping[str, object],
++    current_reconciliations: Mapping[str, Mapping[str, object]],
++    trusted_reconciliation_data: Mapping[str, object],
++    trusted_reconciliations: Mapping[str, Mapping[str, object]],
++    trusted_sha: str,
++) -> dict[str, Mapping[str, object]]:
++    additions = validate_reconciliation_transition(
++        current_reconciliation_data,
++        current_reconciliations,
++        trusted_reconciliation_data,
++        trusted_reconciliations,
++    )
++    adjusted = dict(trusted_entries)
++    current_by_identity = {
++        (finding.rule_id, finding.subject): finding for finding in current_findings
++    }
++    for record_id in additions:
++        record = current_reconciliations[record_id]
++        prior_fingerprint = str(record["prior_fingerprint"])
++        current_fingerprint = str(record["current_fingerprint"])
++        trusted_entry = adjusted.get(prior_fingerprint)
++        current_entry = current_entries.get(current_fingerprint)
++        identity = (str(record["rule_id"]), str(record["subject"]))
++        current_finding = current_by_identity.get(identity)
++        if trusted_entry is None or current_entry is None or current_finding is None:
++            raise TopologyError(
++                "reconciliation record does not resolve both baseline identities"
++            )
++        if current_fingerprint in adjusted:
++            raise TopologyError("reconciliation target already exists in trusted baseline")
++        trusted_live_finding = _frozen_root_finding_at_ref(
++            repo_root, trusted_sha, str(record["subject"])
++        )
++        prior_blob = _git_blob(repo_root, str(record["prior_blob_sha"]))
++        current_blob = _git_blob(repo_root, str(record["current_blob_sha"]))
++        _validate_conflict_reconciliation_record(
++            record,
++            current_entry,
++            trusted_entry,
++            current_finding,
++            trusted_live_finding,
++            prior_blob,
++            current_blob,
++            trusted_sha,
++        )
++        del adjusted[prior_fingerprint]
++        adjusted[current_fingerprint] = current_entry
++    return adjusted
+ 
+ def candidate_baseline(findings: Sequence[Finding], *, expires_on: str) -> dict[str, object]:
+     date.fromisoformat(expires_on)
+@@ -1247,12 +1685,27 @@
+         baseline_data, baseline = _load_baseline_bytes(
+             args.baseline.read_bytes(), label="current"
+         )
++        reconciliation_path = (
++            args.repo_root.resolve() / RECONCILIATION_REPOSITORY_PATH
++        )
++        if (
++            reconciliation_path.is_symlink()
++            or not reconciliation_path.is_file()
++            or reconciliation_path.stat().st_size > MAX_FILE_BYTES
++        ):
++            raise TopologyError("reconciliation register is missing or unsafe")
++        reconciliation_data, reconciliations = _load_reconciliation_bytes(
++            reconciliation_path.read_bytes(), label="current"
++        )
+         if args.trusted_baseline_ref:
+             enforce_trusted_baseline(
+                 args.repo_root.resolve(),
+                 baseline_data,
+                 baseline,
+                 str(args.trusted_baseline_ref),
++                current_findings=findings,
++                current_reconciliation_data=reconciliation_data,
++                current_reconciliations=reconciliations,
+             )
+         code, safe_report = evaluate(
+             findings,
+--- a/tests/validators/directory_governance/test_validate_repository_topology.py
++++ b/tests/validators/directory_governance/test_validate_repository_topology.py
+@@ -34,6 +34,36 @@
+     entry = module._serialized_baseline_entry(finding)
+     entry["evidence_members"] = finding.evidence_members
+     return entry
++
++
++def _reconciliation_record(
++    prior: object,
++    current: object,
++    *,
++    path: str = "catalog/domain/example/README.md",
++    prior_blob_sha: str = "a" * 40,
++    current_blob_sha: str = "b" * 40,
++    trusted_base_sha: str = "c" * 40,
++) -> dict[str, object]:
++    return {
++        "current_blob_sha": current_blob_sha,
++        "current_evidence_sha256": current.evidence_sha256,
++        "current_fingerprint": current.fingerprint,
