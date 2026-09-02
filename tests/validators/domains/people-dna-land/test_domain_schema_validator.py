@@ -44,6 +44,36 @@ class PeopleDnaLandSchemaValidatorTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertIn("FAIL ", result.stdout)
 
+    def test_symlinked_schema_path_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            target = root / "target.schema.json"
+            target.write_text(
+                '{"$schema":"https://json-schema.org/draft/2020-12/schema"}',
+                encoding="utf-8",
+            )
+            path = root / "linked.schema.json"
+            path.symlink_to(target)
+            result = self.run_validator(str(path))
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn(
+            "schema path must be a regular non-symlink file",
+            result.stdout,
+        )
+
+    def test_oversized_schema_fails_before_parsing(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "oversized.schema.json"
+            path.write_bytes(b" " * ((2 * 1024 * 1024) + 1))
+            result = self.run_validator(str(path))
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn(
+            "schema exceeds maximum size of 2097152 bytes",
+            result.stdout,
+        )
+
     def test_duplicate_json_member_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             path = Path(temp_dir) / "duplicate.schema.json"

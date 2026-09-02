@@ -3,10 +3,15 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
+import stat
 import sys
 from pathlib import Path
 
 from jsonschema import Draft202012Validator
+
+
+MAX_SCHEMA_BYTES = 2 * 1024 * 1024
 
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
@@ -38,8 +43,36 @@ def _finite_float(raw_value):
 
 
 def _load_schema(path: Path):
+    if path.is_symlink():
+        raise ValueError("schema path must be a regular non-symlink file")
+
+    flags = os.O_RDONLY
+    if hasattr(os, "O_NOFOLLOW"):
+        flags |= os.O_NOFOLLOW
+
+    descriptor = -1
+    try:
+        descriptor = os.open(path, flags)
+        metadata = os.fstat(descriptor)
+        if not stat.S_ISREG(metadata.st_mode):
+            raise ValueError("schema path must be a regular non-symlink file")
+        if metadata.st_size > MAX_SCHEMA_BYTES:
+            raise ValueError(
+                f"schema exceeds maximum size of {MAX_SCHEMA_BYTES} bytes"
+            )
+
+        with os.fdopen(descriptor, "rb") as handle:
+            descriptor = -1
+            payload = handle.read(MAX_SCHEMA_BYTES + 1)
+    finally:
+        if descriptor >= 0:
+            os.close(descriptor)
+
+    if len(payload) > MAX_SCHEMA_BYTES:
+        raise ValueError(f"schema exceeds maximum size of {MAX_SCHEMA_BYTES} bytes")
+
     return json.loads(
-        path.read_text(encoding="utf-8"),
+        payload.decode("utf-8"),
         object_pairs_hook=_unique_object,
         parse_constant=_reject_nonfinite_constant,
         parse_float=_finite_float,
