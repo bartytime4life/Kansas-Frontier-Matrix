@@ -160,6 +160,11 @@ def _evidence_ref_matches_datum(value: str, datum_identifier: str) -> bool:
     return len(segments) >= 4 and segments[3] == datum_identifier
 
 
+def _evidence_ref_matches_source(value: str, source_identifier: str) -> bool:
+    segments = value[len(FIXTURE_EVIDENCE_PREFIX) :].split("/")
+    return len(segments) >= 5 and segments[4] == source_identifier
+
+
 def _parse_utc(value: object) -> datetime | None:
     if not isinstance(value, str) or _CANONICAL_UTC.fullmatch(value) is None:
         return None
@@ -192,6 +197,7 @@ def validate_candidate(candidate: object) -> list[Finding]:
         add_finding(findings, "SOURCE_ROLE_INVALID", "$.source_role")
 
     source_descriptor_ref = candidate.get("source_descriptor_ref")
+    source_identifier: str | None = None
     if not is_nonempty_string(source_descriptor_ref):
         add_finding(findings, "SOURCE_DESCRIPTOR_REF_MISSING", "$.source_descriptor_ref")
     elif not source_descriptor_ref.startswith(FIXTURE_SOURCE_PREFIX):
@@ -208,6 +214,8 @@ def validate_candidate(candidate: object) -> list[Finding]:
             "SOURCE_DESCRIPTOR_REF_IDENTIFIER_INVALID",
             "$.source_descriptor_ref",
         )
+    else:
+        source_identifier = source_descriptor_ref[len(FIXTURE_SOURCE_PREFIX) :]
 
     gauge_site_ref = candidate.get("gauge_site_ref")
     gauge_identifier: str | None = None
@@ -420,6 +428,27 @@ def validate_candidate(candidate: object) -> list[Finding]:
         add_finding(
             findings,
             "EVIDENCE_REF_DATUM_MISMATCH",
+            "$.evidence_refs",
+        )
+
+    if (
+        evidence_identity_is_valid
+        and observed is not None
+        and datum_identifier is not None
+        and source_identifier is not None
+        and all(
+            _evidence_ref_matches_observation_time(value, observed)
+            and _evidence_ref_matches_datum(value, datum_identifier)
+            for value in evidence_refs
+        )
+        and any(
+            not _evidence_ref_matches_source(value, source_identifier)
+            for value in evidence_refs
+        )
+    ):
+        add_finding(
+            findings,
+            "EVIDENCE_REF_SOURCE_MISMATCH",
             "$.evidence_refs",
         )
 

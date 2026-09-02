@@ -4,7 +4,7 @@
   "source_role": "observed",
   "source_descriptor_ref": "fixture://sources/hydrology/synthetic-water-level-gauge",
   "evidence_refs": [
-    "fixture://evidence/hydrology/water-level/99999/20260802T120000Z/synthetic-local-reference"
+    "fixture://evidence/hydrology/water-level/99999/20260802T120000Z/synthetic-local-reference/synthetic-water-level-gauge"
   ],
   "gauge_site_ref": "fixture://hydrology/gauge/generalized/99999",
   "spatial_support": {
