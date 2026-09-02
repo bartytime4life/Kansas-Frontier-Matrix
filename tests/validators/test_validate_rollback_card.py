@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from jsonschema import Draft202012Validator
 
@@ -29,6 +31,168 @@ STALE_RELEASE_PACKAGE_ROLLBACK_GUIDANCE_PATTERNS = (
     r"(?i)(?=[^\n]*\brollbackcard\b)(?=[^\n]*\bvalidator\b)"
     r"(?=[^\n]*(?:\babsent\b|\bplaceholders?\b|notimplementederror))[^\n]*",
 )
+
+
+GIT_REPOSITORY_CONTEXT_VARIABLES = (
+    "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+    "GIT_CEILING_DIRECTORIES",
+    "GIT_COMMON_DIR",
+    "GIT_DIR",
+    "GIT_DISCOVERY_ACROSS_FILESYSTEM",
+    "GIT_INDEX_FILE",
+    "GIT_OBJECT_DIRECTORY",
+    "GIT_WORK_TREE",
+)
+
+GIT_INVENTORY_TIMEOUT_SECONDS = 10
+
+
+def repository_git_environment() -> dict[str, str]:
+    environment = os.environ.copy()
+    for variable in GIT_REPOSITORY_CONTEXT_VARIABLES:
+        environment.pop(variable, None)
+    return environment
+
+
+def tracked_markdown_paths(repo_root: Path = REPO_ROOT) -> tuple[Path, ...]:
+    command = [
+        "git",
+        "ls-files",
+        "--stage",
+        "-z",
+        "--",
+        ":(icase)*.md",
+    ]
+    try:
+        result = subprocess.run(
+            command,
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=repository_git_environment(),
+            timeout=GIT_INVENTORY_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as error:
+        raise AssertionError(
+            "timed out enumerating repository-owned Markdown after "
+            f"{GIT_INVENTORY_TIMEOUT_SECONDS} seconds"
+        ) from error
+    if result.returncode != 0:
+        raise AssertionError(
+            "could not enumerate repository-owned Markdown: "
+            + result.stderr.strip()
+        )
+    paths: list[Path] = []
+    for entry in result.stdout.split("\0"):
+        if not entry:
+            continue
+        metadata, separator, relative_path = entry.partition("\t")
+        metadata_parts = metadata.split()
+        if not separator or len(metadata_parts) != 3:
+            raise AssertionError(
+                "could not parse repository-owned Markdown index entry"
+            )
+        mode, _, stage = metadata_parts
+        if stage != "0":
+            raise AssertionError(
+                "repository-owned Markdown index must be fully merged: "
+                f"{relative_path} (index stage {stage})"
+            )
+        if mode not in {"100644", "100755"}:
+            raise AssertionError(
+                "repository-owned Markdown must be a regular file: "
+                f"{relative_path} (index mode {mode})"
+            )
+        paths.append(repo_root / relative_path)
+    paths = tuple(paths)
+    if not paths:
+        raise AssertionError("repository-owned Markdown inventory is empty")
+    flags_command = [
+        "git",
+        "ls-files",
+        "-v",
+        "-z",
+        "--",
+        ":(icase)*.md",
+    ]
+    try:
+        flags_result = subprocess.run(
+            flags_command,
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=repository_git_environment(),
+            timeout=GIT_INVENTORY_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as error:
+        raise AssertionError(
+            "timed out verifying repository-owned Markdown index flags after "
+            f"{GIT_INVENTORY_TIMEOUT_SECONDS} seconds"
+        ) from error
+    if flags_result.returncode != 0:
+        raise AssertionError(
+            "could not verify repository-owned Markdown index flags: "
+            + flags_result.stderr.strip()
+        )
+    flagged_paths = []
+    for entry in flags_result.stdout.split("\0"):
+        if not entry:
+            continue
+        tag, separator, relative_path = entry.partition(" ")
+        if not separator or len(tag) != 1:
+            raise AssertionError(
+                "could not parse repository-owned Markdown index flags"
+            )
+        if tag != "H":
+            raise AssertionError(
+                "repository-owned Markdown must not use special index flags: "
+                f"{relative_path} (index tag {tag})"
+            )
+        flagged_paths.append(repo_root / relative_path)
+    if tuple(flagged_paths) != paths:
+        raise AssertionError(
+            "repository-owned Markdown index inventories do not match"
+        )
+    worktree_command = [
+        "git",
+        "diff-files",
+        "--no-ext-diff",
+        "--name-only",
+        "-z",
+        "--",
+        ":(icase)*.md",
+    ]
+    try:
+        worktree_result = subprocess.run(
+            worktree_command,
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=repository_git_environment(),
+            timeout=GIT_INVENTORY_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as error:
+        raise AssertionError(
+            "timed out verifying repository-owned Markdown worktree after "
+            f"{GIT_INVENTORY_TIMEOUT_SECONDS} seconds"
+        ) from error
+    if worktree_result.returncode != 0:
+        raise AssertionError(
+            "could not verify repository-owned Markdown worktree: "
+            + worktree_result.stderr.strip()
+        )
+    modified_paths = tuple(
+        path for path in worktree_result.stdout.split("\0") if path
+    )
+    if modified_paths:
+        raise AssertionError(
+            "repository-owned Markdown worktree differs from Git index: "
+            + ", ".join(modified_paths)
+        )
+    return paths
 
 
 class RollbackCardValidatorTests(unittest.TestCase):
@@ -354,7 +518,7 @@ class RollbackCardValidatorTests(unittest.TestCase):
     ) -> None:
         rollback_guidance_paths = []
         release_package_root = REPO_ROOT / "packages/release"
-        for path in sorted(REPO_ROOT.rglob("*.md")):
+        for path in tracked_markdown_paths():
             guidance = path.read_text(encoding="utf-8")
             is_release_package_guidance = (
                 path.is_relative_to(release_package_root)
@@ -388,6 +552,285 @@ class RollbackCardValidatorTests(unittest.TestCase):
                         STALE_RELEASE_PACKAGE_ROLLBACK_GUIDANCE_PATTERNS
                     ):
                         self.assertNotRegex(guidance, stale_pattern)
+
+    def test_guidance_inventory_excludes_untracked_markdown(self) -> None:
+        with tempfile.TemporaryDirectory(
+            prefix=".rollback-guidance-untracked-",
+            dir=REPO_ROOT,
+        ) as directory:
+            untracked_guidance = Path(directory) / "ROLLBACK.md"
+            untracked_guidance.write_text(
+                "The generic validator remains a placeholder.\n",
+                encoding="utf-8",
+            )
+            self.assertNotIn(untracked_guidance, tracked_markdown_paths())
+
+    def test_guidance_inventory_rejects_tracked_symlink(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repo_root = Path(directory)
+            subprocess.run(
+                ["git", "init", "--quiet"],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            target = repo_root / "runner-local-guidance.txt"
+            target.write_text(
+                "The generic validator remains a placeholder.\n",
+                encoding="utf-8",
+            )
+            guidance = repo_root / "ROLLBACK.md"
+            guidance.symlink_to(target.name)
+            subprocess.run(
+                ["git", "add", "--", guidance.name],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+            with self.assertRaisesRegex(
+                AssertionError,
+                r"regular file: ROLLBACK\.md \(index mode 120000\)",
+            ):
+                tracked_markdown_paths(repo_root)
+
+    def test_guidance_inventory_rejects_unmerged_index_entries(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repo_root = Path(directory)
+            subprocess.run(
+                ["git", "init", "--quiet"],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            object_ids = []
+            for content in (
+                "# Base guidance\n",
+                "# Ours guidance\n",
+                "# Theirs guidance\n",
+            ):
+                result = subprocess.run(
+                    ["git", "hash-object", "-w", "--stdin"],
+                    cwd=repo_root,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    input=content,
+                )
+                object_ids.append(result.stdout.strip())
+            index_entries = "".join(
+                f"100644 {object_id} {stage}\tCONFLICT.md\n"
+                for stage, object_id in enumerate(object_ids, start=1)
+            )
+            subprocess.run(
+                ["git", "update-index", "--index-info"],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
+                input=index_entries,
+            )
+
+            with self.assertRaisesRegex(
+                AssertionError,
+                r"fully merged: CONFLICT\.md \(index stage 1\)",
+            ):
+                tracked_markdown_paths(repo_root)
+
+    def test_guidance_inventory_rejects_modified_worktree(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repo_root = Path(directory)
+            subprocess.run(
+                ["git", "init", "--quiet"],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            guidance = repo_root / "ROLLBACK.md"
+            guidance.write_text("# Reviewed guidance\n", encoding="utf-8")
+            subprocess.run(
+                ["git", "add", "--", guidance.name],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            guidance.write_text(
+                "The generic validator remains a placeholder.\n",
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(
+                AssertionError,
+                r"worktree differs from Git index: ROLLBACK\.md",
+            ):
+                tracked_markdown_paths(repo_root)
+
+    def test_guidance_inventory_rejects_hidden_worktree_changes(self) -> None:
+        for index_flag in ("--assume-unchanged", "--skip-worktree"):
+            with self.subTest(index_flag=index_flag):
+                with tempfile.TemporaryDirectory() as directory:
+                    repo_root = Path(directory)
+                    subprocess.run(
+                        ["git", "init", "--quiet"],
+                        cwd=repo_root,
+                        capture_output=True,
+                        text=True,
+                        check=True,
+                    )
+                    guidance = repo_root / "ROLLBACK.md"
+                    guidance.write_text(
+                        "# Reviewed guidance\n",
+                        encoding="utf-8",
+                    )
+                    subprocess.run(
+                        ["git", "add", "--", guidance.name],
+                        cwd=repo_root,
+                        capture_output=True,
+                        text=True,
+                        check=True,
+                    )
+                    subprocess.run(
+                        ["git", "update-index", index_flag, guidance.name],
+                        cwd=repo_root,
+                        capture_output=True,
+                        text=True,
+                        check=True,
+                    )
+                    guidance.write_text(
+                        "The generic validator remains a placeholder.\n",
+                        encoding="utf-8",
+                    )
+                    hidden_change = subprocess.run(
+                        [
+                            "git",
+                            "diff-files",
+                            "--no-ext-diff",
+                            "--name-only",
+                            "--",
+                            guidance.name,
+                        ],
+                        cwd=repo_root,
+                        capture_output=True,
+                        text=True,
+                        check=True,
+                    )
+                    self.assertEqual("", hidden_change.stdout)
+
+                    with self.assertRaisesRegex(
+                        AssertionError,
+                        r"must not use special index flags: ROLLBACK\.md",
+                    ):
+                        tracked_markdown_paths(repo_root)
+
+    def test_guidance_inventory_ignores_ambient_alternate_index(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repo_root = Path(directory)
+            subprocess.run(
+                ["git", "init", "--quiet"],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            owned_guidance = repo_root / "OWNED.md"
+            owned_guidance.write_text("# Owned guidance\n", encoding="utf-8")
+            subprocess.run(
+                ["git", "add", "--", owned_guidance.name],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+            alternate_guidance = repo_root / "RUNNER_LOCAL.md"
+            alternate_guidance.write_text(
+                "# Runner-local guidance\n",
+                encoding="utf-8",
+            )
+            alternate_index = repo_root / "runner-local.index"
+            alternate_environment = os.environ.copy()
+            alternate_environment["GIT_INDEX_FILE"] = str(alternate_index)
+            subprocess.run(
+                ["git", "add", "--", alternate_guidance.name],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
+                env=alternate_environment,
+            )
+
+            with patch.dict(
+                os.environ,
+                {"GIT_INDEX_FILE": str(alternate_index)},
+            ):
+                self.assertEqual(
+                    (owned_guidance,),
+                    tracked_markdown_paths(repo_root),
+                )
+
+    def test_guidance_inventory_includes_case_variant_extensions(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repo_root = Path(directory)
+            subprocess.run(
+                ["git", "init", "--quiet"],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            guidance_paths = tuple(
+                repo_root / name
+                for name in ("LOWER.md", "UPPER.MD", "TITLE.Md", "MIXED.mD")
+            )
+            for guidance_path in guidance_paths:
+                guidance_path.write_text(
+                    "# Repository-owned guidance\n",
+                    encoding="utf-8",
+                )
+            subprocess.run(
+                ["git", "add", "--", *(path.name for path in guidance_paths)],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+            self.assertEqual(
+                tuple(sorted(guidance_paths)),
+                tracked_markdown_paths(repo_root),
+            )
+
+    def test_guidance_inventory_timeout_fails_closed(self) -> None:
+        with patch.object(
+            subprocess,
+            "run",
+            side_effect=subprocess.TimeoutExpired(
+                cmd=["git", "ls-files"],
+                timeout=GIT_INVENTORY_TIMEOUT_SECONDS,
+            ),
+        ):
+            with self.assertRaisesRegex(
+                AssertionError,
+                r"timed out enumerating repository-owned Markdown after "
+                r"10 seconds",
+            ):
+                tracked_markdown_paths()
+
+    def test_workflow_runs_for_repository_markdown_changes(self) -> None:
+        workflow = (
+            REPO_ROOT / ".github/workflows/rollback-card.yml"
+        ).read_text(encoding="utf-8")
+        for extension in ("md", "MD", "Md", "mD"):
+            with self.subTest(extension=extension):
+                self.assertRegex(
+                    workflow,
+                    rf'(?m)^\s+- "\*\*/\*\.{extension}"$',
+                )
 
     def test_stale_operator_guidance_patterns_are_non_vacuous(self) -> None:
         stale_variants = (

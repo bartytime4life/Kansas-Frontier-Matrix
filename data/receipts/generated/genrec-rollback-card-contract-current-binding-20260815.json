@@ -6,7 +6,7 @@
     "contracts/release/rollback_card.md"
   ],
   "artifact_hashes": {
-    ".github/workflows/rollback-card.yml": "sha256:9c038521ab80c85d1c730faf2b1edff97e56c7a39ff03de469f04c80a76260cb",
+    ".github/workflows/rollback-card.yml": "sha256:dd0a15c1ecd6ff37b9e92e0096ea5d0278f8bb993494563859b0d90f33256abd",
     "contracts/release/rollback_card.md": "sha256:2b71e8133192e31998f582a75b1b6eefafa624614cb6acecdc42a61c2f828b14"
   },
   "model_identity": {
