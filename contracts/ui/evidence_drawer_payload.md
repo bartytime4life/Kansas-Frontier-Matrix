@@ -199,8 +199,11 @@ Rules:
 5. `SUPERSEDED_EVIDENCE`, `HELD_EVIDENCE`, `WITHDRAWN_EVIDENCE`, and `REVOKED_EVIDENCE` abstentions require a matching negative-history record.
 6. Correction edges must be acyclic, non-self-referential, and unique by prior ref.
 7. Every correction prior ref must be represented as `SUPERSEDED` negative history.
-8. Only terminal correction targets may be current answer support; every terminal target must appear in `evidence_refs`.
-9. Intermediate correction targets remain superseded history and never become simultaneous current support.
+8. A payload with correction history must not declare `trust_state.correction: NONE`; visible lineage and its trust label must agree.
+9. `ABSTAIN / STALE_EVIDENCE` must declare `trust_state.freshness: STALE`; contradictory current-freshness labels fail closed.
+10. `ABSTAIN / WITHDRAWN_EVIDENCE` and `ABSTAIN / REVOKED_EVIDENCE` must declare `trust_state.release: WITHDRAWN`; contradictory released labels fail closed.
+11. Only terminal correction targets may be current answer support; every terminal target must appear in `evidence_refs`.
+12. Intermediate correction targets remain superseded history and never become simultaneous current support.
 
 This is declaration validation only. The profile does not dereference a correction registry, authenticate a notice, prove timestamps, or establish that a public cache was invalidated.
 
@@ -211,6 +214,9 @@ This is declaration validation only. The profile does not dereference a correcti
 - The payload must come from governed API/runtime code after evidence, policy, citation, review, and release checks.
 - The drawer must preserve finite negative states and never convert missing, stale, denied, held, superseded, revoked, or withdrawn evidence into an `ANSWER`.
 - Current evidence and audit history remain separate fields and identities.
+- Evidence-reference lists must identify `ANSWER` refs as current support and
+  `ABSTAIN` refs as non-current; a visible stale ref must never be announced as
+  current claim support.
 - Denial and error details are fixed in the browser; untrusted title, summary, limitation, evidence, citation, and history values are suppressed.
 - The browser must not read RAW, WORK, QUARANTINE, PROCESSED, CATALOG/TRIPLET, canonical stores, proof stores, or direct model output.
 - Accessibility labels and visible trust labels must describe the same finite state.

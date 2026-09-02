@@ -104,20 +104,25 @@ function governedDrawerEvidenceScope(
     });
   }
 
+  const nonCurrentAbstention = parsed.payload.outcome === "ABSTAIN";
+  const correctionActiveRefs = parsed.payload.history.corrections.map(
+    (item) => item.activeEvidenceRef,
+  );
+
   return Object.freeze({
     current: Object.freeze([
-      ...parsed.payload.evidenceRefs,
-      ...parsed.payload.history.corrections.map(
-        (item) => item.activeEvidenceRef,
-      ),
+      ...(nonCurrentAbstention ? [] : parsed.payload.evidenceRefs),
+      ...(nonCurrentAbstention ? [] : correctionActiveRefs),
     ]),
     history: Object.freeze([
+      ...(nonCurrentAbstention ? parsed.payload.evidenceRefs : []),
       ...parsed.payload.history.negativeOutcomes.map(
         (item) => item.evidenceRef,
       ),
       ...parsed.payload.history.corrections.map(
         (item) => item.priorEvidenceRef,
       ),
+      ...(nonCurrentAbstention ? correctionActiveRefs : []),
     ]),
   });
 }

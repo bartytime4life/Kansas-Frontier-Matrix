@@ -13,6 +13,9 @@ export type EvidenceDrawerViewModel = Readonly<{
   title: string;
   message: string;
   evidenceRefs: readonly string[];
+  evidenceRefsLabel:
+    | "Current evidence references"
+    | "Non-current evidence references";
   citations: readonly EvidenceDrawerCitation[];
   limitations: readonly string[];
   trustLabels: readonly string[];
@@ -123,6 +126,7 @@ function fixedNegativeView(
     title,
     message: SAFE_NEGATIVE_MESSAGES[code],
     evidenceRefs: outcome === "ABSTAIN" ? evidenceRefs : EMPTY_STRINGS,
+    evidenceRefsLabel: "Non-current evidence references",
     citations: EMPTY_CITATIONS,
     limitations: Object.freeze(["No unsupported claim is shown."]),
     trustLabels: negativeTrustLabels(outcome, labels),
@@ -144,6 +148,7 @@ export function resolveEvidenceDrawer(
       title: "Evidence not available",
       message: "No governed evidence response is available.",
       evidenceRefs: EMPTY_STRINGS,
+      evidenceRefsLabel: "Non-current evidence references",
       citations: EMPTY_CITATIONS,
       limitations: Object.freeze(["No unsupported claim is shown."]),
       trustLabels: Object.freeze(["Evidence state: unavailable"]),
@@ -162,6 +167,7 @@ export function resolveEvidenceDrawer(
       title: "Evidence unavailable",
       message: "The governed evidence response is invalid.",
       evidenceRefs: EMPTY_STRINGS,
+      evidenceRefsLabel: "Non-current evidence references",
       citations: EMPTY_CITATIONS,
       limitations: Object.freeze(["No partial or unsupported claim is shown."]),
       trustLabels: Object.freeze(["Evidence state: invalid payload"]),
@@ -191,6 +197,7 @@ export function resolveEvidenceDrawer(
     title: payload.title,
     message: payload.summary,
     evidenceRefs: payload.evidenceRefs,
+    evidenceRefsLabel: "Current evidence references",
     citations: payload.citations,
     limitations: payload.limitations,
     trustLabels: labels,
@@ -278,7 +285,7 @@ export function mountEvidenceDrawer(
     trustList.append(item);
   }
 
-  evidenceList.setAttribute("aria-label", "Evidence references");
+  evidenceList.setAttribute("aria-label", state.evidenceRefsLabel);
   for (const evidenceRef of state.evidenceRefs) {
     const item = document.createElement("li");
     item.textContent = evidenceRef;

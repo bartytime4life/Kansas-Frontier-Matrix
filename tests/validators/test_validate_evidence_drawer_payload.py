@@ -51,6 +51,75 @@ class EvidenceDrawerPayloadValidatorTests(unittest.TestCase):
         )
         self.assertEqual((), findings)
 
+    def test_every_outcome_requires_superseded_correction_prior_history(self) -> None:
+        valid = MODULE.validate_payload(
+            MODULE.FIXTURES_ROOT / "valid/answer-corrected.json"
+        )
+        invalid = MODULE.validate_payload(
+            MODULE.FIXTURES_ROOT
+            / "invalid/abstain-correction-without-superseded-history.json"
+        )
+
+        self.assertEqual((), valid)
+        self.assertEqual(
+            {"CORRECTION_PRIOR_NOT_SUPERSEDED"},
+            {item.code for item in invalid},
+        )
+
+    def test_correction_history_cannot_claim_no_correction(self) -> None:
+        payload = json.loads(
+            (MODULE.FIXTURES_ROOT / "valid/abstain-stale.json").read_text(encoding="utf-8")
+        )
+        corrected = json.loads(
+            (MODULE.FIXTURES_ROOT / "valid/answer-corrected.json").read_text(encoding="utf-8")
+        )
+        payload["history"] = corrected["history"]
+
+        findings = MODULE._semantic_findings(payload)
+        self.assertEqual(
+            {"CORRECTION_STATE_REQUIRED"},
+            {item.code for item in findings},
+        )
+
+        payload["trust_state"]["correction"] = "CORRECTED"
+        self.assertEqual([], MODULE._semantic_findings(payload))
+
+    def test_stale_abstention_cannot_claim_current_freshness(self) -> None:
+        payload = json.loads(
+            (MODULE.FIXTURES_ROOT / "valid/abstain-stale.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual([], MODULE._semantic_findings(payload))
+
+        payload["trust_state"]["freshness"] = "CURRENT"
+        findings = MODULE._semantic_findings(payload)
+        self.assertEqual(
+            {"STALE_STATE_INVALID"},
+            {item.code for item in findings},
+        )
+
+    def test_terminal_abstention_cannot_claim_released_state(self) -> None:
+        source = json.loads(
+            (MODULE.FIXTURES_ROOT / "valid/abstain-revoked.json").read_text(encoding="utf-8")
+        )
+
+        for reason, state in (
+            ("WITHDRAWN_EVIDENCE", "WITHDRAWN"),
+            ("REVOKED_EVIDENCE", "REVOKED"),
+        ):
+            with self.subTest(reason=reason):
+                payload = json.loads(json.dumps(source))
+                payload["reason_code"] = reason
+                payload["history"]["negative_outcomes"][0]["state"] = state
+                payload["history"]["negative_outcomes"][0]["reason_code"] = reason
+                self.assertEqual([], MODULE._semantic_findings(payload))
+
+                payload["trust_state"]["release"] = "RELEASED"
+                findings = MODULE._semantic_findings(payload)
+                self.assertEqual(
+                    {"RELEASE_STATE_INVALID"},
+                    {item.code for item in findings},
+                )
+
     def test_negative_state_reason_must_match(self) -> None:
         findings = MODULE.validate_payload(
             MODULE.FIXTURES_ROOT / "invalid/negative-state-reason-mismatch.json"
@@ -120,6 +189,7 @@ class EvidenceDrawerPayloadValidatorTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
         self.assertIn("kfm.explorer.evidence-drawer.public-safe.v1", source)
         self.assertIn("SUPERSEDED_EVIDENCE", source)
+        self.assertIn("correctionPriorRefs", source)
         self.assertIn("correctionsContainCycle", source)
         self.assertIn("resolvable_as_current", source)
 

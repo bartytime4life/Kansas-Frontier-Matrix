@@ -103,6 +103,30 @@ describe("Explorer public workspace context", () => {
       JSON.stringify(validContext),
     );
     expect(parsePublicWorkspaceContextQuery(params)).toBeNull();
+
+    const historyOnlyContext = {
+      ...urlSafeContext,
+      selection: {
+        ...urlSafeContext.selection,
+        historyEvidenceRefs: ["kfm:evidence:private:history-canary-4a72"],
+      },
+    };
+    expect(parsePublicWorkspaceContext(historyOnlyContext)).not.toBeNull();
+    expect(serializePublicWorkspaceContext(historyOnlyContext)).toBeNull();
+    expect(
+      withPublicWorkspaceContext(
+        new URL("https://example.test/explorer"),
+        historyOnlyContext,
+      ),
+    ).toBeNull();
+
+    const historyParams = new URLSearchParams();
+    historyParams.set(
+      PUBLIC_WORKSPACE_CONTEXT_QUERY_PARAM,
+      JSON.stringify(historyOnlyContext),
+    );
+    expect(historyParams.toString()).toContain("history-canary-4a72");
+    expect(parsePublicWorkspaceContextQuery(historyParams)).toBeNull();
   });
 
   it("rejects extra, private, or internally inconsistent fields", () => {

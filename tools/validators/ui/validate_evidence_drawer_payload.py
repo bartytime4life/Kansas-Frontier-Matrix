@@ -194,6 +194,33 @@ def _semantic_findings(payload: Mapping[str, object]) -> list[Finding]:
     if current_refs.intersection(negative_refs):
         findings.append(Finding("NEGATIVE_HISTORY_CURRENT_OVERLAP", "/history/negative_outcomes", "historical evidence cannot be current support"))
 
+    prior_refs = {
+        item.get("prior_evidence_ref")
+        for item in corrections
+        if isinstance(item.get("prior_evidence_ref"), str)
+    }
+    superseded_refs = {
+        item.get("evidence_ref")
+        for item in negatives
+        if item.get("state") == "SUPERSEDED" and isinstance(item.get("evidence_ref"), str)
+    }
+    if not prior_refs.issubset(superseded_refs):
+        findings.append(
+            Finding(
+                "CORRECTION_PRIOR_NOT_SUPERSEDED",
+                "/history/negative_outcomes",
+                "every correction prior must be represented as superseded history",
+            )
+        )
+    if corrections and trust_map.get("correction") == "NONE":
+        findings.append(
+            Finding(
+                "CORRECTION_STATE_REQUIRED",
+                "/trust_state/correction",
+                "correction history cannot declare correction state NONE",
+            )
+        )
+
     if outcome == "ANSWER":
         if reason != "SUPPORTED":
             findings.append(Finding("ANSWER_REASON_INVALID", "/reason_code", "ANSWER requires SUPPORTED"))
@@ -220,17 +247,7 @@ def _semantic_findings(payload: Mapping[str, object]) -> list[Finding]:
         if trust_map.get("correction") == "CORRECTED":
             if not corrections:
                 findings.append(Finding("CORRECTION_HISTORY_REQUIRED", "/history/corrections", "corrected ANSWER requires correction history"))
-            prior_refs = {
-                item.get("prior_evidence_ref")
-                for item in corrections
-                if isinstance(item.get("prior_evidence_ref"), str)
-            }
-            superseded_refs = {
-                item.get("evidence_ref")
-                for item in negatives
-                if item.get("state") == "SUPERSEDED" and isinstance(item.get("evidence_ref"), str)
-            }
-            if prior_refs != superseded_refs or any(
+            if superseded_refs.difference(prior_refs) or any(
                 item.get("state") != "SUPERSEDED" for item in negatives
             ):
                 findings.append(
@@ -266,6 +283,22 @@ def _semantic_findings(payload: Mapping[str, object]) -> list[Finding]:
     elif outcome == "ABSTAIN":
         if reason == "SUPPORTED" or trust_map.get("policy") != "ABSTAIN":
             findings.append(Finding("ABSTAIN_STATE_INVALID", "/outcome", "ABSTAIN requires non-supported reason and ABSTAIN policy"))
+        if reason == "STALE_EVIDENCE" and trust_map.get("freshness") != "STALE":
+            findings.append(
+                Finding(
+                    "STALE_STATE_INVALID",
+                    "/trust_state/freshness",
+                    "stale abstention requires STALE freshness",
+                )
+            )
+        if reason in {"WITHDRAWN_EVIDENCE", "REVOKED_EVIDENCE"} and trust_map.get("release") != "WITHDRAWN":
+            findings.append(
+                Finding(
+                    "RELEASE_STATE_INVALID",
+                    "/trust_state/release",
+                    "withdrawn or revoked abstention requires WITHDRAWN release state",
+                )
+            )
         required_state = {
             "SUPERSEDED_EVIDENCE": "SUPERSEDED",
             "HELD_EVIDENCE": "HELD",

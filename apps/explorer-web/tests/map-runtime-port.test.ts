@@ -123,6 +123,12 @@ describe("MapRuntimePort dependency-free consumer seam", () => {
         historyEvidenceRefs: ["evidence:synthetic:1"],
       }),
     ).toBe(false);
+    expect(
+      isMapFeatureSelection({
+        ...selection,
+        historyEvidenceRefs: null,
+      }),
+    ).toBe(false);
 
     await runtime.initialize();
     expect(() => runtime.setCamera({ ...runtime.getSnapshot().camera, zoom: 99 })).toThrow(
@@ -132,6 +138,12 @@ describe("MapRuntimePort dependency-free consumer seam", () => {
       runtime.emitSelection({
         ...selection,
         evidenceRefs: ["duplicate", "duplicate"],
+      }),
+    ).toThrow(MapRuntimePortError);
+    expect(() =>
+      runtime.emitSelection({
+        ...selection,
+        historyEvidenceRefs: null as never,
       }),
     ).toThrow(MapRuntimePortError);
     expect(() => runtime.emitTrustState("READY" as never)).toThrow(

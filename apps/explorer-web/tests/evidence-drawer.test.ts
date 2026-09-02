@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import answerFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/answer-corrected.json";
 import abstainFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/abstain-stale.json";
+import revokedFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/abstain-revoked.json";
 import supersededFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/abstain-superseded.json";
 import denyFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/deny-sensitive.json";
 import errorFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/error-upstream.json";
@@ -24,6 +25,7 @@ describe("Explorer Evidence Drawer governed projection", () => {
       title: "Synthetic streamflow observation",
       landmarkRole: "complementary",
       accessibilityLabel: "Evidence Drawer: supported evidence",
+      evidenceRefsLabel: "Current evidence references",
       ariaLive: "polite",
     });
     expect(result.evidenceRefs).toEqual(["kfm:evidence:synthetic:flow-001"]);
@@ -44,10 +46,138 @@ describe("Explorer Evidence Drawer governed projection", () => {
       code: "STALE_EVIDENCE",
       title: "Evidence not sufficient",
       message: "Available evidence is stale for this request.",
+      evidenceRefsLabel: "Non-current evidence references",
     });
     expect(result.evidenceRefs).toEqual(["kfm:evidence:synthetic:stale-001"]);
     expect(result.citations).toEqual([]);
     expect(result.trustLabels).toContain("Freshness: STALE");
+  });
+
+  it("fails closed when stale abstention claims current freshness", () => {
+    const contradictoryFreshness = {
+      ...abstainFixture,
+      trust_state: {
+        ...abstainFixture.trust_state,
+        freshness: "CURRENT",
+      },
+    };
+
+    const result = resolveEvidenceDrawer(contradictoryFreshness);
+
+    expect(result).toMatchObject({
+      outcome: "ERROR",
+      code: "INVALID_PAYLOAD",
+    });
+    expect(result.evidenceRefs).toEqual([]);
+    expect(result.citations).toEqual([]);
+    expect(result.historyLabels).toEqual([]);
+    expect(JSON.stringify(result)).not.toContain("kfm:evidence:synthetic:stale-001");
+  });
+
+  it.each([
+    ["WITHDRAWN_EVIDENCE", "WITHDRAWN"],
+    ["REVOKED_EVIDENCE", "REVOKED"],
+  ] as const)(
+    "requires terminal %s history to carry withdrawn release state",
+    (reasonCode, historyState) => {
+      const terminalPayload = {
+        ...revokedFixture,
+        reason_code: reasonCode,
+        history: {
+          ...revokedFixture.history,
+          negative_outcomes: revokedFixture.history.negative_outcomes.map((item) => ({
+            ...item,
+            state: historyState,
+            reason_code: reasonCode,
+          })),
+        },
+      };
+
+      expect(resolveEvidenceDrawer(terminalPayload)).toMatchObject({
+        outcome: "ABSTAIN",
+        code: reasonCode,
+      });
+
+      const contradictoryRelease = {
+        ...terminalPayload,
+        trust_state: {
+          ...terminalPayload.trust_state,
+          release: "RELEASED",
+        },
+      };
+      const result = resolveEvidenceDrawer(contradictoryRelease);
+
+      expect(result).toMatchObject({
+        outcome: "ERROR",
+        code: "INVALID_PAYLOAD",
+      });
+      expect(result.evidenceRefs).toEqual([]);
+      expect(result.citations).toEqual([]);
+      expect(result.historyLabels).toEqual([]);
+      expect(JSON.stringify(result)).not.toContain("kfm:evidence:synthetic:revoked-001");
+    },
+  );
+
+  it("keeps a fully recorded abstention correction visible as audit history", () => {
+    const correctedAbstention = {
+      ...abstainFixture,
+      trust_state: {
+        ...abstainFixture.trust_state,
+        correction: "CORRECTED",
+      },
+      history: answerFixture.history,
+    };
+
+    const result = resolveEvidenceDrawer(correctedAbstention);
+
+    expect(result).toMatchObject({
+      outcome: "ABSTAIN",
+      code: "STALE_EVIDENCE",
+      evidenceRefsLabel: "Non-current evidence references",
+    });
+    expect(result.historyLabels).toContain(
+      "Correction lineage: kfm:evidence:synthetic:flow-000 → kfm:evidence:synthetic:flow-001 (2026-08-01T00:00:00Z)",
+    );
+    expect(result.historyLabels.join(" ")).toContain("Superseded evidence");
+  });
+
+  it("fails closed when visible correction lineage declares no correction", () => {
+    const contradictoryCorrection = {
+      ...abstainFixture,
+      history: answerFixture.history,
+    };
+
+    const result = resolveEvidenceDrawer(contradictoryCorrection);
+
+    expect(result).toMatchObject({
+      outcome: "ERROR",
+      code: "INVALID_PAYLOAD",
+    });
+    expect(result.evidenceRefs).toEqual([]);
+    expect(result.citations).toEqual([]);
+    expect(result.historyLabels).toEqual([]);
+    expect(JSON.stringify(result)).not.toContain("kfm:evidence:synthetic:flow-000");
+  });
+
+  it("fails closed when an abstention correction omits superseded prior history", () => {
+    const untrackedCorrection = {
+      ...abstainFixture,
+      history: {
+        negative_outcomes: [],
+        corrections: answerFixture.history.corrections,
+      },
+    };
+
+    const result = resolveEvidenceDrawer(untrackedCorrection);
+
+    expect(result).toMatchObject({
+      outcome: "ERROR",
+      code: "INVALID_PAYLOAD",
+    });
+    expect(result.evidenceRefs).toEqual([]);
+    expect(result.citations).toEqual([]);
+    expect(result.historyLabels).toEqual([]);
+    expect(JSON.stringify(result)).not.toContain("kfm:evidence:synthetic:flow-000");
   });
 
   it("shows superseded evidence as history without current claim support", () => {

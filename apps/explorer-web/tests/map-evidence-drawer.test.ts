@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 
 import answerFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/answer-corrected.json";
+import unresolvedCitationFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/abstain-invalid-provenance-reference.json";
+import staleFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/abstain-stale.json";
 import supersededFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/abstain-superseded.json";
 import denyFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/deny-sensitive.json";
 import mapRuntimeSource from "../src/features/map_runtime/index.tsx?raw";
@@ -196,6 +198,150 @@ describe("Explorer map feature to Evidence Drawer bridge", () => {
       },
     });
     expect(result.drawer.historyLabels).toHaveLength(1);
+  });
+
+  it("preserves stale abstention evidence as audit-only", async () => {
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: [],
+        history_evidence_refs: ["kfm:evidence:synthetic:stale-001"],
+      },
+      async () => staleFixture,
+    );
+
+    expect(result).toMatchObject({
+      code: "STALE_EVIDENCE",
+      drawer: {
+        outcome: "ABSTAIN",
+        code: "STALE_EVIDENCE",
+        evidenceRefs: ["kfm:evidence:synthetic:stale-001"],
+        citations: [],
+      },
+    });
+    expect(JSON.stringify(result.drawer)).not.toContain(
+      "STALE_SUMMARY_MUST_NOT_RENDER_AS_A_CLAIM",
+    );
+  });
+
+  it("preserves any visible abstention evidence as audit-only", async () => {
+    const evidenceRef =
+      "kfm:evidence:synthetic:unresolved-provenance-001";
+    const unresolvedWithVisibleRef = {
+      ...unresolvedCitationFixture,
+      evidence_refs: [evidenceRef],
+    };
+
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: [],
+        history_evidence_refs: [evidenceRef],
+      },
+      async () => unresolvedWithVisibleRef,
+    );
+
+    expect(result).toMatchObject({
+      code: "CITATION_UNRESOLVED",
+      drawer: {
+        outcome: "ABSTAIN",
+        code: "CITATION_UNRESOLVED",
+        evidenceRefs: [evidenceRef],
+        evidenceRefsLabel: "Non-current evidence references",
+      },
+    });
+  });
+
+  it("fails closed when abstention evidence is carried as current support", async () => {
+    const evidenceRef =
+      "kfm:evidence:synthetic:unresolved-provenance-001";
+    const unresolvedWithVisibleRef = {
+      ...unresolvedCitationFixture,
+      evidence_refs: [evidenceRef],
+    };
+
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: [evidenceRef],
+        history_evidence_refs: [],
+      },
+      async () => unresolvedWithVisibleRef,
+    );
+
+    expect(result).toMatchObject({
+      code: "DRAWER_EVIDENCE_OUTSIDE_SELECTION",
+      drawer: {
+        outcome: "ERROR",
+        evidenceRefs: [],
+        citations: [],
+        historyLabels: [],
+      },
+    });
+  });
+
+  it("preserves abstention correction targets as audit-only history", async () => {
+    const abstentionWithCorrection = structuredClone(answerFixture);
+    abstentionWithCorrection.outcome = "ABSTAIN";
+    abstentionWithCorrection.reason_code = "CITATION_UNRESOLVED";
+    abstentionWithCorrection.evidence_refs = [];
+    abstentionWithCorrection.citations = [];
+    abstentionWithCorrection.trust_state.policy = "ABSTAIN";
+
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: [],
+        history_evidence_refs: [
+          "kfm:evidence:synthetic:flow-000",
+          "kfm:evidence:synthetic:flow-001",
+        ],
+      },
+      async () => abstentionWithCorrection,
+    );
+
+    expect(result).toMatchObject({
+      code: "CITATION_UNRESOLVED",
+      drawer: {
+        outcome: "ABSTAIN",
+        evidenceRefs: [],
+        evidenceRefsLabel: "Non-current evidence references",
+      },
+    });
+    expect(result.drawer.historyLabels).toContain(
+      "Correction lineage: kfm:evidence:synthetic:flow-000 → kfm:evidence:synthetic:flow-001 (2026-08-01T00:00:00Z)",
+    );
+  });
+
+  it("fails closed when an abstention correction target is carried as current support", async () => {
+    const abstentionWithCorrection = structuredClone(answerFixture);
+    abstentionWithCorrection.outcome = "ABSTAIN";
+    abstentionWithCorrection.reason_code = "CITATION_UNRESOLVED";
+    abstentionWithCorrection.evidence_refs = [];
+    abstentionWithCorrection.citations = [];
+    abstentionWithCorrection.trust_state.policy = "ABSTAIN";
+
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: ["kfm:evidence:synthetic:flow-001"],
+        history_evidence_refs: ["kfm:evidence:synthetic:flow-000"],
+      },
+      async () => abstentionWithCorrection,
+    );
+
+    expect(result).toMatchObject({
+      code: "DRAWER_EVIDENCE_OUTSIDE_SELECTION",
+      drawer: {
+        outcome: "ERROR",
+        evidenceRefs: [],
+        citations: [],
+        historyLabels: [],
+      },
+    });
+    expect(JSON.stringify(result.drawer)).not.toContain(
+      "kfm:evidence:synthetic:flow-001",
+    );
   });
 
   it("fails closed when negative-only history widens beyond the clicked selection", async () => {

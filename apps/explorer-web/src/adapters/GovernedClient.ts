@@ -392,6 +392,24 @@ function historyCombinationIsValid(
   const currentRefs = new Set(evidenceRefs);
   if (history.negativeOutcomes.some((item) => currentRefs.has(item.evidenceRef))) return false;
 
+  const correctionPriorRefs = new Set(
+    history.corrections.map((item) => item.priorEvidenceRef),
+  );
+  const supersededRefs = new Set(
+    history.negativeOutcomes
+      .filter((item) => item.state === "SUPERSEDED")
+      .map((item) => item.evidenceRef),
+  );
+  if ([...correctionPriorRefs].some((ref) => !supersededRefs.has(ref))) {
+    return false;
+  }
+  if (
+    history.corrections.length > 0 &&
+    trustState.correction === "NONE"
+  ) {
+    return false;
+  }
+
   if (outcome === "DENY" || outcome === "ERROR") {
     return history.negativeOutcomes.length === 0 && history.corrections.length === 0;
   }
@@ -403,15 +421,9 @@ function historyCombinationIsValid(
     }
     if (trustState.correction === "CORRECTED") {
       if (history.corrections.length === 0) return false;
-      const priorRefs = new Set(history.corrections.map((item) => item.priorEvidenceRef));
-      const supersededRefs = new Set(
-        history.negativeOutcomes
-          .filter((item) => item.state === "SUPERSEDED")
-          .map((item) => item.evidenceRef),
-      );
       if (
-        priorRefs.size !== supersededRefs.size ||
-        [...priorRefs].some((ref) => !supersededRefs.has(ref))
+        correctionPriorRefs.size !== supersededRefs.size ||
+        [...correctionPriorRefs].some((ref) => !supersededRefs.has(ref))
       ) {
         return false;
       }
@@ -420,7 +432,7 @@ function historyCombinationIsValid(
       }
       const terminalRefs = history.corrections
         .map((item) => item.activeEvidenceRef)
-        .filter((ref) => !priorRefs.has(ref));
+        .filter((ref) => !correctionPriorRefs.has(ref));
       if (terminalRefs.length === 0 || terminalRefs.some((ref) => !currentRefs.has(ref))) {
         return false;
       }
@@ -435,14 +447,23 @@ function historyCombinationIsValid(
       history.negativeOutcomes.some((item) => item.state === "SUPERSEDED")
     );
   }
+  if (outcome === "ABSTAIN" && reasonCode === "STALE_EVIDENCE") {
+    return trustState.freshness === "STALE";
+  }
   if (outcome === "ABSTAIN" && reasonCode === "HELD_EVIDENCE") {
     return history.negativeOutcomes.some((item) => item.state === "HELD");
   }
   if (outcome === "ABSTAIN" && reasonCode === "WITHDRAWN_EVIDENCE") {
-    return history.negativeOutcomes.some((item) => item.state === "WITHDRAWN");
+    return (
+      trustState.release === "WITHDRAWN" &&
+      history.negativeOutcomes.some((item) => item.state === "WITHDRAWN")
+    );
   }
   if (outcome === "ABSTAIN" && reasonCode === "REVOKED_EVIDENCE") {
-    return history.negativeOutcomes.some((item) => item.state === "REVOKED");
+    return (
+      trustState.release === "WITHDRAWN" &&
+      history.negativeOutcomes.some((item) => item.state === "REVOKED")
+    );
   }
 
   return true;

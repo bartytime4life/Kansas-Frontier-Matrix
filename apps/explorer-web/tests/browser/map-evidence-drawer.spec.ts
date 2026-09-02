@@ -145,7 +145,18 @@ test("stale evidence visibly abstains with temporal trust state", async ({ page 
   const drawer = page.locator('aside[data-component="evidence-drawer"]');
   await expect(drawer).toContainText("Available evidence is stale for this request.");
   await expect(drawer).toContainText("Freshness: STALE");
-  await expect(drawer).toContainText("kfm:evidence:synthetic:stale-001");
+  await expect(
+    drawer.getByRole("list", {
+      name: "Non-current evidence references",
+      exact: true,
+    }),
+  ).toContainText("kfm:evidence:synthetic:stale-001");
+  await expect(
+    drawer.getByRole("list", {
+      name: "Current evidence references",
+      exact: true,
+    }),
+  ).toHaveCount(0);
   await expect(drawer).not.toContainText(
     "STALE_SUMMARY_MUST_NOT_RENDER_AS_A_CLAIM",
   );
