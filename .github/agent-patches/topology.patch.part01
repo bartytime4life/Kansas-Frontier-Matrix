@@ -1,0 +1,189 @@
+--- a/tools/validators/directory_governance/validate_repository_topology.py
++++ b/tools/validators/directory_governance/validate_repository_topology.py
+@@ -28,8 +28,18 @@
+ 
+ REPORT_VERSION = "kfm.repository-topology-report.v1"
+ BASELINE_VERSION = "kfm.repository-topology-baseline.v1"
++RECONCILIATION_VERSION = "kfm.repository-topology-reconciliation.v1"
+ DEFAULT_BASELINE = Path(__file__).with_name("repository_topology_baseline.json")
+-BASELINE_REPOSITORY_PATH = "tools/validators/directory_governance/repository_topology_baseline.json"
++DEFAULT_RECONCILIATION = Path(__file__).with_name(
++    "repository_topology_reconciliation.json"
++)
++BASELINE_REPOSITORY_PATH = (
++    "tools/validators/directory_governance/repository_topology_baseline.json"
++)
++RECONCILIATION_REPOSITORY_PATH = (
++    "tools/validators/directory_governance/"
++    "repository_topology_reconciliation.json"
++)
+ BOOTSTRAP_BASE_SHA = "bff35f5ddf00ef623eacf96be13a743e134f482f"
+ ADOPTED_SHA256 = "44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+ MAX_FILE_BYTES = 4 * 1024 * 1024
+@@ -39,7 +49,20 @@
+ MAX_EVIDENCE_MEMBERS = 20_000
+ MAX_EVIDENCE_MEMBER_BYTES = 16 * 1024
+ MAX_FINDINGS = 2_000
++MAX_RECONCILIATIONS = 32
+ GIT_TIMEOUT_SECONDS = 30
++
++RECONCILIATION_AUTHORITY = "preexisting_conflict_corrections_only"
++RECONCILIATION_CLOSURE_REF = "issue-4228-frozen-root-correction-gate"
++RECONCILIATION_NON_EFFECTS = [
++    "does_not_authorize_frozen_root_writes",
++    "does_not_accept_same_change_content_mutation",
++    "does_not_grant_evidence_policy_review_release_or_publication_status",
++]
++RECONCILIATION_REASON = "merge_conflict_marker_removal"
++RECONCILIATION_RETIREMENT = (
++    "retire_record_only_after_the_registered_redirect_is_governedly_retired"
++)
+ 
+ 
+ @dataclass(frozen=True)
+@@ -1098,25 +1121,440 @@
+     current_data: Mapping[str, object],
+     current_entries: Mapping[str, Mapping[str, object]],
+     trusted_ref: str,
++    *,
++    current_findings: Sequence[Finding] = (),
++    current_reconciliation_data: Mapping[str, object] | None = None,
++    current_reconciliations: Mapping[str, Mapping[str, object]] | None = None,
+ ) -> None:
+-    if not re.fullmatch(r"[A-Za-z0-9_./^~:-]{1,200}", trusted_ref) or trusted_ref.startswith("-"):
++    if (
++        not re.fullmatch(r"[A-Za-z0-9_./^~:-]{1,200}", trusted_ref)
++        or trusted_ref.startswith("-")
++    ):
+         raise TopologyError("trusted baseline ref is invalid")
+     try:
+-        trusted_sha = _git(repo_root, "rev-parse", "--verify", f"{trusted_ref}^{{commit}}").decode("ascii").strip()
++        trusted_sha = (
++            _git(
++                repo_root,
++                "rev-parse",
++                "--verify",
++                f"{trusted_ref}^{{commit}}",
++            )
++            .decode("ascii")
++            .strip()
++        )
+     except (TopologyError, UnicodeError) as exc:
+         raise TopologyError("trusted baseline ref cannot be resolved") from exc
+     if not re.fullmatch(r"[0-9a-f]{40}", trusted_sha):
+         raise TopologyError("trusted baseline ref did not resolve to a commit")
+     try:
+-        raw = _git(repo_root, "show", f"{trusted_sha}:{BASELINE_REPOSITORY_PATH}")
++        raw = _git(
++            repo_root, "show", f"{trusted_sha}:{BASELINE_REPOSITORY_PATH}"
++        )
+     except TopologyError:
+         expected_generation = f"main@{BOOTSTRAP_BASE_SHA}"
+-        if trusted_sha != BOOTSTRAP_BASE_SHA or current_data.get("generated_from_ref") != expected_generation:
+-            raise TopologyError("trusted baseline is missing outside the governed bootstrap")
++        if (
++            trusted_sha != BOOTSTRAP_BASE_SHA
++            or current_data.get("generated_from_ref") != expected_generation
++        ):
++            raise TopologyError(
++                "trusted baseline is missing outside the governed bootstrap"
++            )
+         return
+     trusted_data, trusted_entries = _load_baseline_bytes(raw, label="trusted")
+-    validate_baseline_transition(current_data, current_entries, trusted_data, trusted_entries)
+-
++    if not current_entries and not trusted_entries:
++        validate_baseline_transition(
++            current_data, current_entries, trusted_data, trusted_entries
++        )
++        return
++    if current_reconciliation_data is None or current_reconciliations is None:
++        reconciliation_path = repo_root / RECONCILIATION_REPOSITORY_PATH
++        if (
++            reconciliation_path.is_symlink()
++            or not reconciliation_path.is_file()
++            or reconciliation_path.stat().st_size > MAX_FILE_BYTES
++        ):
++            raise TopologyError("reconciliation register is missing or unsafe")
++        current_reconciliation_data, current_reconciliations = (
++            _load_reconciliation_bytes(
++                reconciliation_path.read_bytes(), label="current"
++            )
++        )
++    try:
++        trusted_reconciliation_raw = _git(
++            repo_root,
++            "show",
++            f"{trusted_sha}:{RECONCILIATION_REPOSITORY_PATH}",
++        )
++    except TopologyError:
++        trusted_reconciliation_data = _empty_reconciliation_data()
++        trusted_reconciliations: dict[str, Mapping[str, object]] = {}
++    else:
++        trusted_reconciliation_data, trusted_reconciliations = (
++            _load_reconciliation_bytes(
++                trusted_reconciliation_raw, label="trusted"
++            )
++        )
++    adjusted_trusted_entries = _reconciled_trusted_entries(
++        repo_root,
++        current_entries,
++        trusted_entries,
++        current_findings,
++        current_reconciliation_data,
++        current_reconciliations,
++        trusted_reconciliation_data,
++        trusted_reconciliations,
++        trusted_sha,
++    )
++    validate_baseline_transition(
++        current_data, current_entries, trusted_data, adjusted_trusted_entries
++    )
++
++
++
++def _empty_reconciliation_data() -> dict[str, object]:
++    return {
++        "authority": RECONCILIATION_AUTHORITY,
++        "closure_ref": RECONCILIATION_CLOSURE_REF,
++        "entries": [],
++        "non_effects": list(RECONCILIATION_NON_EFFECTS),
++        "owner": "@bartytime4life",
++        "schema_version": RECONCILIATION_VERSION,
++    }
++
++
++def _load_reconciliation_bytes(
++    raw: bytes, *, label: str
++) -> tuple[Mapping[str, object], dict[str, Mapping[str, object]]]:
++    if len(raw) > MAX_FILE_BYTES:
++        raise TopologyError(f"{label} reconciliation register is too large")
++    try:
++        data = json.loads(
++            raw.decode("utf-8"),
++            object_pairs_hook=_unique_object,
++            parse_constant=_nonfinite,
++            parse_float=_finite_float,
++        )
++    except (OSError, UnicodeError, json.JSONDecodeError, TopologyError) as exc:
++        raise TopologyError(
++            f"{label} reconciliation JSON is invalid: {type(exc).__name__}"
++        ) from exc
++    expected = {
++        "authority",
++        "closure_ref",
++        "entries",
++        "non_effects",
++        "owner",
++        "schema_version",
++    }
++    if not isinstance(data, dict) or set(data) != expected:
++        raise TopologyError("reconciliation root does not match the v1 contract")
++    if (
++        data["schema_version"] != RECONCILIATION_VERSION
++        or data["authority"] != RECONCILIATION_AUTHORITY
++        or data["closure_ref"] != RECONCILIATION_CLOSURE_REF
++        or data["non_effects"] != RECONCILIATION_NON_EFFECTS
++        or data["owner"] != "@bartytime4life"
++    ):
++        raise TopologyError("reconciliation identity or authority is invalid")
