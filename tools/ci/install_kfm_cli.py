@@ -59,12 +59,16 @@ def validate_lockfile(path: Path = LOCKFILE) -> None:
     if path.is_symlink() or not path.is_file():
         raise CliInstallConfigurationError("CLI_LOCKFILE_UNSAFE")
     try:
-        size = path.stat().st_size
-        text = path.read_text(encoding="utf-8")
-    except (OSError, UnicodeError) as exc:
+        with path.open("rb") as stream:
+            raw = stream.read(LOCK_LIMIT_BYTES + 1)
+    except OSError as exc:
         raise CliInstallConfigurationError("CLI_LOCKFILE_UNREADABLE") from exc
-    if size <= 0 or size > LOCK_LIMIT_BYTES:
+    if not raw or len(raw) > LOCK_LIMIT_BYTES:
         raise CliInstallConfigurationError("CLI_LOCKFILE_SIZE_INVALID")
+    try:
+        text = raw.decode("utf-8")
+    except UnicodeError as exc:
+        raise CliInstallConfigurationError("CLI_LOCKFILE_UNREADABLE") from exc
     if any(separator in text for separator in NONCANONICAL_LINE_BREAKS):
         raise CliInstallConfigurationError("CLI_LOCKFILE_LINE_BREAK_INVALID")
 

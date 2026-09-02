@@ -195,6 +195,27 @@ class InstallKfmCliTests(unittest.TestCase):
                     ):
                         module.validate_lockfile(path)
 
+    def test_lock_validation_bounds_the_actual_read(self) -> None:
+        path = mock.Mock()
+        path.is_symlink.return_value = False
+        path.is_file.return_value = True
+        stream = mock.MagicMock()
+        stream.__enter__.return_value.read.return_value = (
+            b"x" * (module.LOCK_LIMIT_BYTES + 1)
+        )
+        path.open.return_value = stream
+
+        with self.assertRaisesRegex(
+            module.CliInstallConfigurationError,
+            "^CLI_LOCKFILE_SIZE_INVALID$",
+        ):
+            module.validate_lockfile(path)
+
+        path.open.assert_called_once_with("rb")
+        stream.__enter__.return_value.read.assert_called_once_with(
+            module.LOCK_LIMIT_BYTES + 1
+        )
+
     def test_lock_validation_binds_hash_continuations(self) -> None:
         cases = {
             "missing-intermediate": (
