@@ -46,39 +46,72 @@ jobs:
       - name: Run focused topology regression tests
         shell: bash
         run: |
-          set -uo pipefail
-          set +e
-          python -m unittest discover \
-            --start-directory tests/validators/directory_governance \
-            --pattern 'test_validate_*topology.py' \
-            --verbose 2>&1 | tee /tmp/repository_topology_unit_tests.log
-          unit_status=${PIPESTATUS[0]}
-          set -e
-          echo "TOPOLOGY_UNIT_STATUS=${unit_status}"
-          test "${unit_status}" -eq 1
+          set -euo pipefail
           python - <<'PY'
+          import importlib.util
+          import sys
+          import unittest
           from pathlib import Path
 
-          log = Path("/tmp/repository_topology_unit_tests.log").read_text(
-              encoding="utf-8"
+          test_path = Path(
+              "tests/validators/directory_governance/"
+              "test_validate_repository_topology.py"
           )
-          expected_failures = {
+          spec = importlib.util.spec_from_file_location(
+              "kfm_repository_topology_tests",
+              test_path,
+          )
+          assert spec is not None and spec.loader is not None
+          module = importlib.util.module_from_spec(spec)
+          sys.modules[spec.name] = module
+          spec.loader.exec_module(module)
+
+          discovered = unittest.defaultTestLoader.loadTestsFromModule(module)
+
+          def flatten(suite):
+              for item in suite:
+                  if isinstance(item, unittest.TestSuite):
+                      yield from flatten(item)
+                  else:
+                      yield item
+
+          tests = list(flatten(discovered))
+          hold_names = {
               "test_repository_index_has_no_outside_or_missing_baseline_fingerprints",
               "test_repository_validator_default_mode_matches_baseline",
           }
-          observed_failures = {
-              line.removeprefix("FAIL: ").split(" ", 1)[0]
-              for line in log.splitlines()
-              if line.startswith("FAIL: test_")
+          normal_tests = [
+              test for test in tests if test._testMethodName not in hold_names
+          ]
+          hold_tests = [
+              test for test in tests if test._testMethodName in hold_names
+          ]
+
+          assert len(tests) == 16, len(tests)
+          assert len(normal_tests) == 14, len(normal_tests)
+          assert {test._testMethodName for test in hold_tests} == hold_names
+
+          log_path = Path("/tmp/repository_topology_unit_tests.log")
+          with log_path.open("w", encoding="utf-8") as stream:
+              runner = unittest.TextTestRunner(stream=stream, verbosity=2)
+              normal_result = runner.run(unittest.TestSuite(normal_tests))
+              hold_result = runner.run(unittest.TestSuite(hold_tests))
+
+          assert normal_result.testsRun == 14, normal_result.testsRun
+          assert normal_result.wasSuccessful(), normal_result
+          assert hold_result.testsRun == 2, hold_result.testsRun
+          assert not hold_result.errors, hold_result.errors
+          assert not hold_result.unexpectedSuccesses, hold_result.unexpectedSuccesses
+          failed_hold_names = {
+              test._testMethodName for test, _traceback in hold_result.failures
           }
-          assert observed_failures == expected_failures, observed_failures
-          assert "Ran 16 tests" in log, log[-2000:]
-          assert "FAILED (failures=2)" in log, log[-2000:]
-          assert "ERROR:" not in log, log[-2000:]
+          assert failed_hold_names == hold_names, failed_hold_names
+
+          print(log_path.read_text(encoding="utf-8"))
           print(
-              "CONFIRMED: 14 topology regression tests pass; the only two "
-              "failures are the live-exact-baseline assertions intentionally "
-              "held open by the frozen catalog mutation."
+              "CONFIRMED: all 14 non-hold topology regression tests pass; "
+              "the two exact live-baseline assertions fail only because the "
+              "frozen catalog mutation remains intentionally unadmitted."
           )
           PY
 
