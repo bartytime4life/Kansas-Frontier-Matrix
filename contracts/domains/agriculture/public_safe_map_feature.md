@@ -222,8 +222,10 @@ identity.
 The validator has two mutually exclusive modes: one explicit candidate path or
 the exact `--fixtures` flag. Abbreviated options are rejected, and fixture mode
 cannot silently ignore a positional path. A path beginning with a dash remains
-addressable after the standard `--` option terminator. These controls change no
-carrier semantics, source state, authority, or publication effect.
+addressable after the standard `--` option terminator. A missing, unreadable,
+non-file, or non-UTF-8 candidate produces deterministic
+`ERROR / AG_MAP_INPUT_UNAVAILABLE` output instead of a traceback. These controls
+change no carrier semantics, source state, authority, or publication effect.
 
 ## Validation outcomes
 
