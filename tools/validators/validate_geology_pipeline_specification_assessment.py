@@ -13,6 +13,7 @@ import copy
 import hashlib
 import json
 import math
+import sys
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -398,10 +399,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
     parser.add_argument("input", nargs="?", type=Path)
     parser.add_argument("--fixtures", action="store_true")
-    args = parser.parse_args(argv)
+    arguments = list(sys.argv[1:] if argv is None else argv)
+    args = parser.parse_args(arguments)
     if args.fixtures:
-        if args.input is not None:
-            parser.error("input cannot be combined with --fixtures")
+        if arguments != ["--fixtures"]:
+            parser.error("--fixtures must be used as the only argument")
         results = validate_fixture_manifest()
         for result in results:
             print(json.dumps(result, sort_keys=True, separators=(",", ":")))
