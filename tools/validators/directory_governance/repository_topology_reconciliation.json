@@ -1,0 +1,29 @@
+{
+  "authority": "preexisting_conflict_corrections_only",
+  "closure_ref": "issue-4228-frozen-root-correction-gate",
+  "entries": [
+    {
+      "current_blob_sha": "4be1711bfa011636ac1c5cd13e7c98e5002ff9c0",
+      "current_evidence_sha256": "sha256:2ee2ee5e1bb3e87b8b796a81c29729ceb0822e16427246f92e2d40072726ddbc",
+      "current_fingerprint": "sha256:0ad45247555960029c34d1222365cbe17a5cabec278bf9f6b8f3e9572ea33e8f",
+      "governance_issue": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228",
+      "path": "catalog/domain/agriculture/README.md",
+      "prior_blob_sha": "bf1a333573c6d068fbb0b695356346003842aceb",
+      "prior_evidence_sha256": "sha256:8241bb4f1da8abfa669d201fda804f875922ea27338e15af47bf5362edf0525b",
+      "prior_fingerprint": "sha256:521388927153c91a67ca8cead55af9d688a6064517d109aa556cffca91505006",
+      "reason": "merge_conflict_marker_removal",
+      "record_id": "catalog-agriculture-readme-conflict-20260902",
+      "retire_when": "retire_record_only_after_the_registered_redirect_is_governedly_retired",
+      "rule_id": "KFM-TOPO-004",
+      "subject": "catalog/",
+      "trusted_base_sha": "df45bbaea90c210ec485dd85562a314ed0c9ccf4"
+    }
+  ],
+  "non_effects": [
+    "does_not_authorize_frozen_root_writes",
+    "does_not_accept_same_change_content_mutation",
+    "does_not_grant_evidence_policy_review_release_or_publication_status"
+  ],
+  "owner": "@bartytime4life",
+  "schema_version": "kfm.repository-topology-reconciliation.v1"
+}
