@@ -15,9 +15,12 @@ import {
   syncPublicWorkspaceNavigation,
 } from "./site/workspace-navigation";
 import {
+  PUBLIC_MAP_CASE_DEEP_LINK_RETRY_LIMIT,
   resolvePublicMapCaseManualSelectionTransition,
+  resolvePublicMapCaseRetryPlan,
   resolvePublicMapCaseUrlConsumerCommit,
   resolvePublicMapCaseUrlTransition,
+  type PublicMapCaseRetryState,
 } from "./site/workspace-map-deep-link";
 import {
   resolvePublicKnowledgeDomainManualSelectionTransition,
@@ -43,17 +46,36 @@ mountPublicWorkspaceNavigation(navigation);
 let activeDeepLinkMapCaseId: "missing" | null = null;
 let activeDeepLinkKnowledgeDomainId: string | null = null;
 let pendingMapDeepLinkRetry: number | null = null;
+let mapDeepLinkRetryState: PublicMapCaseRetryState = Object.freeze({
+  attemptsRemaining: PUBLIC_MAP_CASE_DEEP_LINK_RETRY_LIMIT,
+  urlHref: null,
+});
 
 const cancelPendingMapDeepLinkRetry = (): void => {
-  if (pendingMapDeepLinkRetry === null) return;
-  window.clearTimeout(pendingMapDeepLinkRetry);
+  if (pendingMapDeepLinkRetry !== null) {
+    window.clearTimeout(pendingMapDeepLinkRetry);
+  }
   pendingMapDeepLinkRetry = null;
+  mapDeepLinkRetryState = Object.freeze({
+    attemptsRemaining: PUBLIC_MAP_CASE_DEEP_LINK_RETRY_LIMIT,
+    urlHref: null,
+  });
 };
 
-const scheduleMapDeepLinkRetry = (): void => {
+const scheduleMapDeepLinkRetry = (url: URL): void => {
   if (pendingMapDeepLinkRetry !== null) return;
+  const retryPlan = resolvePublicMapCaseRetryPlan(
+    mapDeepLinkRetryState,
+    url.href,
+  );
+  mapDeepLinkRetryState = retryPlan;
+  if (!retryPlan.shouldSchedule) return;
   pendingMapDeepLinkRetry = window.setTimeout(() => {
     pendingMapDeepLinkRetry = null;
+    if (window.location.href !== retryPlan.urlHref) {
+      cancelPendingMapDeepLinkRetry();
+      return;
+    }
     syncWorkspaceNavigation();
   }, 16);
 };
@@ -143,7 +165,7 @@ const syncWorkspaceNavigation = (): void => {
       `button[data-map-evidence-case="${mapCaseId}"]`,
     );
     if (mapCaseButton?.disabled) {
-      scheduleMapDeepLinkRetry();
+      scheduleMapDeepLinkRetry(safeUrl);
     } else if (mapCaseButton !== null) {
       const priorFocus =
         document.activeElement instanceof HTMLElement
@@ -163,6 +185,7 @@ const syncWorkspaceNavigation = (): void => {
       mapTransition,
       false,
     );
+    if (activeDeepLinkMapCaseId === null) cancelPendingMapDeepLinkRetry();
   }
 
   const currentDomainId =
@@ -210,9 +233,13 @@ const syncWorkspaceNavigation = (): void => {
       selectedDomainId,
     );
 };
-syncWorkspaceNavigation();
-window.addEventListener("hashchange", syncWorkspaceNavigation);
-window.addEventListener("popstate", syncWorkspaceNavigation);
+const syncWorkspaceNavigationFromBrowser = (): void => {
+  cancelPendingMapDeepLinkRetry();
+  syncWorkspaceNavigation();
+};
+syncWorkspaceNavigationFromBrowser();
+window.addEventListener("hashchange", syncWorkspaceNavigationFromBrowser);
+window.addEventListener("popstate", syncWorkspaceNavigationFromBrowser);
 
 mountSyntheticFocusWorkspace(root);
 

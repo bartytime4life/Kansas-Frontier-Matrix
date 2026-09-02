@@ -7,7 +7,9 @@ import {
   serializePublicWorkspaceContext,
 } from "../src/site/workspace-context";
 import {
+  PUBLIC_MAP_CASE_DEEP_LINK_RETRY_LIMIT,
   resolvePublicMapCaseManualSelectionTransition,
+  resolvePublicMapCaseRetryPlan,
   resolvePublicMapCaseUrlConsumerCommit,
   resolvePublicMapCaseUrlTransition,
 } from "../src/site/workspace-map-deep-link";
@@ -80,6 +82,34 @@ describe("Explorer manual map-selection deep-link release", () => {
       activeDeepLinkMapCaseId: "missing",
       mapCaseIdToSelect: null,
       releaseOwnedSelection: false,
+    });
+  });
+
+  it("bounds disabled-control retries and resets the budget for a new URL", () => {
+    let state = Object.freeze({
+      attemptsRemaining: PUBLIC_MAP_CASE_DEEP_LINK_RETRY_LIMIT,
+      urlHref: null,
+    });
+    for (let index = 0; index < PUBLIC_MAP_CASE_DEEP_LINK_RETRY_LIMIT; index += 1) {
+      const plan = resolvePublicMapCaseRetryPlan(
+        state,
+        missingMapUrl().href,
+      );
+      expect(plan.shouldSchedule).toBe(true);
+      state = plan;
+    }
+    expect(resolvePublicMapCaseRetryPlan(state, missingMapUrl().href)).toEqual({
+      attemptsRemaining: 0,
+      urlHref: missingMapUrl().href,
+      shouldSchedule: false,
+    });
+
+    const changedUrl = missingMapUrl();
+    changedUrl.searchParams.set("lang", "es");
+    expect(resolvePublicMapCaseRetryPlan(state, changedUrl.href)).toEqual({
+      attemptsRemaining: PUBLIC_MAP_CASE_DEEP_LINK_RETRY_LIMIT - 1,
+      urlHref: changedUrl.href,
+      shouldSchedule: true,
     });
   });
 
@@ -168,7 +198,8 @@ describe("Explorer manual map-selection deep-link release", () => {
     expect(mainSource).toContain("resolvePublicMapCaseUrlTransition");
     expect(mainSource).toContain("resolvePublicMapCaseUrlConsumerCommit");
     expect(mainSource).toContain("mapCaseButton?.disabled");
-    expect(mainSource).toContain("scheduleMapDeepLinkRetry()");
+    expect(mainSource).toContain("scheduleMapDeepLinkRetry(safeUrl)");
+    expect(mainSource).toContain("window.location.href !== retryPlan.urlHref");
     expect(mainSource).toContain("const selectionApplied = mapCaseButton.disabled");
     expect(mainSource).not.toContain("activeDeepLinkMapCaseId = mapTransition.activeDeepLinkMapCaseId");
     expect(mainSource).not.toContain("selection.evidenceRefs.join");

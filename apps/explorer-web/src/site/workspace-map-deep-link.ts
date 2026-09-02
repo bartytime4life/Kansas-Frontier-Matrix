@@ -4,6 +4,16 @@ import { resolvePublicEvidenceFreeMapCaseId } from "./workspace-navigation";
 export const PUBLIC_MAP_CASE_DEEP_LINK_RELEASE_PROFILE =
   "kfm.explorer.public-map-case-deep-link-release.v1" as const;
 
+export const PUBLIC_MAP_CASE_DEEP_LINK_RETRY_LIMIT = 8 as const;
+
+export type PublicMapCaseRetryState = Readonly<{
+  attemptsRemaining: number;
+  urlHref: string | null;
+}>;
+
+export type PublicMapCaseRetryPlan = PublicMapCaseRetryState &
+  Readonly<{ shouldSchedule: boolean }>;
+
 export type PublicMapCaseDeepLinkRelease = Readonly<{
   activeDeepLinkMapCaseId: "missing" | null;
   replacementUrl: URL | null;
@@ -15,6 +25,33 @@ export type PublicMapCaseUrlTransition = Readonly<{
   mapCaseIdToSelect: "missing" | null;
   releaseOwnedSelection: boolean;
 }>;
+
+/**
+ * Reserve one finite retry for a disabled public map-selection control.
+ * A different URL receives a fresh budget; exhausting the budget fails closed
+ * with no timer rather than polling indefinitely or claiming URL ownership.
+ */
+export function resolvePublicMapCaseRetryPlan(
+  state: PublicMapCaseRetryState,
+  requestedUrlHref: string,
+): PublicMapCaseRetryPlan {
+  const attemptsRemaining =
+    state.urlHref === requestedUrlHref
+      ? state.attemptsRemaining
+      : PUBLIC_MAP_CASE_DEEP_LINK_RETRY_LIMIT;
+  if (attemptsRemaining <= 0) {
+    return Object.freeze({
+      attemptsRemaining: 0,
+      urlHref: requestedUrlHref,
+      shouldSchedule: false,
+    });
+  }
+  return Object.freeze({
+    attemptsRemaining: attemptsRemaining - 1,
+    urlHref: requestedUrlHref,
+    shouldSchedule: true,
+  });
+}
 
 /**
  * Commit URL ownership only after the fixture control accepted the requested
