@@ -1,5 +1,5 @@
 {
-  "record_id": "fixture:hydrology:water-level:99999:synthetic-local-reference:20260802T120000Z",
+  "record_id": "fixture:hydrology:water-level:99999:synthetic-local-reference:synthetic-water-level-gauge:20260802T120000Z",
   "object_family": "WaterLevelObservation",
   "source_role": "observed",
   "source_descriptor_ref": "fixture://sources/hydrology/synthetic-water-level-gauge",

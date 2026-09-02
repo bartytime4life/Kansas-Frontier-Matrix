@@ -456,11 +456,13 @@ def validate_candidate(candidate: object) -> list[Finding]:
         is_nonempty_string(record_id)
         and gauge_identifier is not None
         and datum_identifier is not None
+        and source_identifier is not None
         and observed is not None
     ):
         expected_record_id = (
             f"fixture:hydrology:water-level:{gauge_identifier}:"
-            f"{datum_identifier}:{observed.strftime('%Y%m%dT%H%M%SZ')}"
+            f"{datum_identifier}:{source_identifier}:"
+            f"{observed.strftime('%Y%m%dT%H%M%SZ')}"
         )
         if record_id != expected_record_id:
             add_finding(findings, "RECORD_ID_NOT_CANONICAL", "$.record_id")

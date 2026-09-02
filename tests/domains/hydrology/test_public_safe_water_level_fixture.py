@@ -113,22 +113,26 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
             mutated["measurement"]["datum_ref"] = value  # type: ignore[index]
             self.assertIn(invalid_identifier, validate_candidate(mutated))
 
-    def test_record_identity_binds_gauge_datum_and_observation_time(self) -> None:
+    def test_record_identity_binds_gauge_datum_source_and_observation_time(self) -> None:
         candidate = _load_candidate()
         self.assertEqual(
             candidate["record_id"],
             "fixture:hydrology:water-level:99999:synthetic-local-reference:"
-            "20260802T120000Z",
+            "synthetic-water-level-gauge:20260802T120000Z",
         )
         self.assertEqual(validate_candidate(candidate), [])
 
         invalid = Finding("RECORD_ID_NOT_CANONICAL", "$.record_id")
         for value in (
             "fixture:hydrology:water-level:88888:synthetic-local-reference:"
-            "20260802T120000Z",
+            "synthetic-water-level-gauge:20260802T120000Z",
             "fixture:hydrology:water-level:99999:synthetic-local-reference:"
-            "20260802T120001Z",
+            "synthetic-water-level-gauge:20260802T120001Z",
             "fixture:hydrology:water-level:99999:alternate-local-reference:"
+            "synthetic-water-level-gauge:20260802T120000Z",
+            "fixture:hydrology:water-level:99999:synthetic-local-reference:"
+            "alternate-water-level-gauge:20260802T120000Z",
+            "fixture:hydrology:water-level:99999:synthetic-local-reference:"
             "20260802T120000Z",
             "https://example.invalid/water-level/99999",
         ):
@@ -143,7 +147,7 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
         self.assertIn(invalid, validate_candidate(changed_datum))
         changed_datum["record_id"] = (
             "fixture:hydrology:water-level:99999:alternate-local-reference:"
-            "20260802T120000Z"
+            "synthetic-water-level-gauge:20260802T120000Z"
         )
         self.assertIn(
             Finding("EVIDENCE_REF_DATUM_MISMATCH", "$.evidence_refs"),
@@ -298,6 +302,14 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
         changed_source["source_descriptor_ref"] = (
             "fixture://sources/hydrology/alternate-water-level-gauge"
         )
+        invalid_record_id = Finding("RECORD_ID_NOT_CANONICAL", "$.record_id")
+        self.assertIn(invalid_record_id, validate_candidate(changed_source))
+        self.assertIn(mismatch, validate_candidate(changed_source))
+        changed_source["record_id"] = (
+            "fixture:hydrology:water-level:99999:synthetic-local-reference:"
+            "alternate-water-level-gauge:20260802T120000Z"
+        )
+        self.assertNotIn(invalid_record_id, validate_candidate(changed_source))
         self.assertIn(mismatch, validate_candidate(changed_source))
         changed_source["evidence_refs"] = [
             "fixture://evidence/hydrology/water-level/99999/20260802T120000Z/"
