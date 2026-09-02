@@ -4,6 +4,7 @@ import copy
 import importlib.util
 import json
 import socket
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -113,6 +114,56 @@ class GeologyPipelineSpecificationAssessmentTests(unittest.TestCase):
             first = MODULE.validate_fixture_manifest()
             second = MODULE.validate_fixture_manifest()
         self.assertEqual(first, second)
+
+    def test_fixture_cli_rejects_abbreviated_flags(self) -> None:
+        for length in range(3, len("--fixtures")):
+            abbreviation = "--fixtures"[:length]
+            with self.subTest(abbreviation=abbreviation):
+                completed = subprocess.run(
+                    [sys.executable, str(MODULE_PATH), abbreviation],
+                    cwd=ROOT,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
+                self.assertEqual(2, completed.returncode)
+                self.assertEqual("", completed.stdout)
+                self.assertIn("unrecognized arguments", completed.stderr)
+
+    def test_fixture_cli_rejects_ignored_explicit_input(self) -> None:
+        candidate = self._candidate("pass_bedrock_units")
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "candidate.json"
+            path.write_text(json.dumps(candidate), encoding="utf-8")
+            completed = subprocess.run(
+                [sys.executable, str(MODULE_PATH), "--fixtures", str(path)],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+        self.assertEqual(2, completed.returncode)
+        self.assertEqual("", completed.stdout)
+        self.assertIn("input cannot be combined with --fixtures", completed.stderr)
+
+    def test_option_terminator_allows_dash_prefixed_input_filename(self) -> None:
+        candidate = self._candidate("pass_bedrock_units")
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "--fixtures"
+            path.write_text(json.dumps(candidate), encoding="utf-8")
+            completed = subprocess.run(
+                [sys.executable, str(MODULE_PATH), "--", path.name],
+                cwd=directory,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+        self.assertEqual(0, completed.returncode, completed.stderr)
+        payload = json.loads(completed.stdout)
+        self.assertEqual("PASS", payload["outcome"])
+        self.assertEqual("NONE", payload["authority"])
+        self.assertNotIn("name", payload)
+        self.assertNotIn("ok", payload)
 
 
 if __name__ == "__main__":
