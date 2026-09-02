@@ -33,14 +33,14 @@ export const SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS = Object.freeze([
   "kfm:evidence:synthetic:flow-001",
 ]);
 
-const supportedProjection = Object.freeze({
+export const SUPPORTED_SYNTHETIC_STREAMFLOW_PROJECTION = Object.freeze({
   profile: "kfm.explorer.evidence-drawer.public-safe.v1",
   id: "kfm:ui:evidence-drawer:answer-001",
   outcome: "ANSWER",
   reason_code: "SUPPORTED",
   title: "Synthetic streamflow observation",
   summary: "A synthetic, generalized flow observation is supported by the cited fixture evidence.",
-  evidence_refs: SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS,
+  evidence_refs: Object.freeze(["kfm:evidence:synthetic:flow-001"]),
   citations: Object.freeze([
     Object.freeze({
       label: "Synthetic fixture evidence",
@@ -295,7 +295,7 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
     await Promise.resolve();
     if (selection.selectionId === "selection:restricted") return restrictedProjection;
     if (selection.selectionId === "selection:error") throw new Error("Synthetic governed resolver failure");
-    return supportedProjection;
+    return SUPPORTED_SYNTHETIC_STREAMFLOW_PROJECTION;
   });
   mapRuntimeStatus = mountMapRuntimeTrustStatus(runtimeStatusHost, mapRuntime);
 
