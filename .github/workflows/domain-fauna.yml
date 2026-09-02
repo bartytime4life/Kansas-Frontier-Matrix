@@ -73,10 +73,9 @@ jobs:
             fi
           done
 
-          python -m unittest discover \
-            --start-directory tests/domains/fauna \
-            --pattern 'test_fauna_smoke.py' \
-            --verbose
+          python -m unittest --verbose \
+            tests.domains.fauna.test_fauna_smoke \
+            tests.domains.fauna.test_public_safe_migration_fixture
 
       - name: Record Fauna validation scope
         if: always()
@@ -87,15 +86,13 @@ jobs:
 
           `VALIDATION_SCOPE: synthetic-public-safe-fixture-only`
 
-          This job runs only the accepted deterministic standard-library suite in
-          `tests/domains/fauna/test_fauna_smoke.py`. It reads seven small synthetic
-          fixtures, blocks network calls in the test boundary, accepts only two
-          fixture-only candidates that are explicitly not released and not eligible
-          for promotion, requires transform-reference/caveat closure for the
-          sensitive-withheld scenario, and proves fail-closed findings for
-          missing source reference; unresolved taxonomy, evidence, rights,
-          sensitivity, policy, geoprivacy, review, correction, and rollback;
-          and precision hints.
+          This job runs the accepted deterministic standard-library suites in
+          `tests/domains/fauna/test_fauna_smoke.py` and
+          `tests/domains/fauna/test_public_safe_migration_fixture.py`. They read only
+          small synthetic fixtures and block network calls in the test boundary.
+          The migration suite additionally enforces generalized public-safe route
+          geometry, fixture-only references, non-telemetry semantics, seasonal
+          windows, and fail-closed malformed-coordinate handling.
 
           A green result does not establish Fauna truth, taxonomic identity,
           source admission, rights clearance, geoprivacy review, evidence closure,
