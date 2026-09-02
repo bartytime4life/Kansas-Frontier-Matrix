@@ -2,98 +2,96 @@
 doc_id: kfm://tests/joins/readme
 title: Join Assessment Test Lane
 type: test-lane-readme
-version: v0.2.0
-status: draft; repository-grounded; synthetic-only; no-network; two-executable-modules-confirmed; 20-source-defined-tests
+version: v0.3.0
+status: draft; repository-grounded; synthetic-only; no-network; nine-executable-modules-confirmed
 owners: @bartytime4life — CONFIRMED CODEOWNERS review route; accountable join, validation, sensitivity, and historical-context stewardship UNKNOWN
 created: 2026-08-09
-updated: 2026-08-30
+updated: 2026-09-01
 policy_label: repository-facing; tests; joins; non-publisher
 owning_root: tests/
 responsibility: Document the bounded synthetic proof surface for generic cross-lane and historical-network proximity assessment helpers.
 truth_posture: cite-or-abstain
-evidence_base: 31f5ade589b9f20d87a59ce83be228e577f51cca
-prior_blob: ec529c0701820da8a243a21529bf74f06cb28b78
+evidence_base: 9da74db4465a59336fba4cbe1658b85ebeba34c9
+prior_blob: d5f5b8508b7aae0a1ebe94238d3c9bd5c45d56d1
 [/KFM_META_BLOCK_V2] -->
 
 # Join assessment test lane
 
-`tests/joins/` contains two executable modules with 20 source-defined tests
-over 39 synthetic fixture cases. One module assesses generic cross-lane join
-candidates; the other assesses bounded historical-network proximity candidates.
+`tests/joins/` contains nine executable modules: one generic
+CrossLaneJoinAssessment suite, six focused generic boundary guards, one workflow
+propagation guard, and one historical-network proximity suite. Every case uses
+repository fixtures or synthetic mutations.
 
-Passing this lane shows only that the repository helpers behave deterministically
-against their stored contracts, schemas, and fixtures. It does not establish a
-real-world relationship, identify a person, grant authority, approve a source,
-resolve rights or sensitivity, release an artifact, or publish a join.
+Passing this lane shows only deterministic agreement among the covered helpers,
+contracts, schemas, fixtures, workflows, and receipts. It does not establish a
+real-world relationship, identify a person, admit a source, clear rights or
+sensitivity, approve review, release an artifact, or publish a join.
 
-## Inventory
+## Executable inventory
 
-| Test module | Helper under test | Fixture family | Source-defined tests |
-| --- | --- | --- | ---: |
-| [`test_join_candidates.py`](test_join_candidates.py) | [`tools/joins/join_candidates.py`](../../tools/joins/join_candidates.py) | [`cross_lane_join_assessment`](../../fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json) | 10 |
-| [`test_historical_network_proximity.py`](test_historical_network_proximity.py) | [`tools/joins/historical_network_proximity.py`](../../tools/joins/historical_network_proximity.py) | [`historical_network_proximity_assessment`](../../fixtures/contracts/v1/joins/historical_network_proximity_assessment/cases.json) | 10 |
+| Test module | Bounded proof |
+| --- | --- |
+| [`test_join_candidates.py`](test_join_candidates.py) | Generic fixture derivation, validation, tamper resistance, non-network behavior, and non-publisher effects. |
+| [`test_cross_lane_scope_precedence.py`](test_cross_lane_scope_precedence.py) | Same-domain requests route to their domain validator before cross-lane dependency disposition. |
+| [`test_cross_lane_source_role_schema_guard.py`](test_cross_lane_source_role_schema_guard.py) | Endpoint and copied decision source roles share one closed schema vocabulary. |
+| [`test_cross_lane_synthetic_role_guard.py`](test_cross_lane_synthetic_role_guard.py) | Equal roles may remain candidates; unequal or synthetic/non-synthetic roles require review. |
+| [`test_cross_lane_temporal_boundary_guard.py`](test_cross_lane_temporal_boundary_guard.py) | Genuine overlap remains eligible while zero-tolerance boundary contact abstains. |
+| [`test_cross_lane_domain_alias_guard.py`](test_cross_lane_domain_alias_guard.py) | Unresolved alias/canonical pairs abstain in both orientations without normalization. |
+| [`test_cross_lane_domain_alias_dependency_guard.py`](test_cross_lane_domain_alias_dependency_guard.py) | Missing or malformed alias projection fails closed instead of becoming an empty alias set. |
+| [`test_cross_lane_workflow_propagation.py`](test_cross_lane_workflow_propagation.py) | Four hosted workflows retain pull-request and main replay, dependency path filters, guard collection, and this inventory. |
+| [`test_historical_network_proximity.py`](test_historical_network_proximity.py) | Bounded historical-network proximity remains synthetic, deterministic, and non-authoritative. |
 
-The counts above describe test functions or `unittest` methods in the two source
-modules. They are not a claim about every case collected by a broader repository
-test command.
+The inventory is a repository observation, not a required-check claim. The
+workflow propagation guard compares the documented `test_cross_lane_*.py`
+names with the actual directory so a newly added boundary module cannot remain
+silently undocumented.
 
-## Generic cross-lane candidate coverage
+## Generic CrossLaneJoinAssessment coverage
 
-`test_join_candidates.py` checks the generic helper against the
-[cross-lane join contract](../../contracts/joins/cross_lane_join_assessment.md),
-[schema](../../schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json),
-and 19-case fixture matrix:
+The generic suite and its focused guards jointly cover:
 
-- 13 cases expect contract validation `PASS` and six expect `FAIL`;
-- exact-key candidates use parameterized, in-memory SQLite;
-- spatial-temporal examples cover bounded match and mismatch behavior;
-- missing evidence, source-role conflict, restricted exact geometry,
-  living-person risk, and dependency failure remain non-allow outcomes;
-- SQL metacharacters are treated as values;
-- rule, source-role, sensitivity, and decision details remain inspectable;
-- decision, identity, duplicate-key, schema, and interval tampering fail closed;
-- symlinked fixture inputs are denied without echoing fixture values; and
-- the helper source contains no known network client or file-write token.
+- parameterized, in-memory exact-key candidate evaluation;
+- bounded synthetic spatial-temporal comparison;
+- same-domain routing before cross-lane disposition;
+- missing EvidenceRefs and dependency failures;
+- closed source-role schema projection and unequal-role abstention;
+- restricted exact geometry and living-person denial;
+- zero-tolerance temporal boundary ambiguity;
+- unresolved domain aliases and fail-closed alias-register loss;
+- schema, decision, identity, duplicate-key, and interval tampering;
+- denied symlinked fixture inputs and absence of known network/file-write tokens;
+- workflow triggers for the alias register, generic fixtures, helper, contract,
+  schema, and all join tests; and
+- false lifecycle, evidence, policy, review, release, publication, and public-use
+  effects for every candidate outcome.
 
-The finite helper outcomes are `ALLOW`, `ABSTAIN`, `DENY`, and `ERROR`.
-`ALLOW` authorizes only candidate-report emission. All publisher-effect fields
-remain false.
+The finite helper outcomes are `ALLOW`, `ABSTAIN`, `DENY`, and
+`ERROR`. `ALLOW` authorizes only local candidate-report emission.
 
 ## Historical-network proximity coverage
 
-`test_historical_network_proximity.py` checks the historical helper against the
-[historical-network contract](../../contracts/joins/historical_network_proximity_assessment.md),
-[schema](../../schemas/contracts/v1/joins/historical_network_proximity_assessment.schema.json),
-and 20-case fixture matrix:
+`test_historical_network_proximity.py` keeps candidate, no-overlap,
+ambiguous, unsupported, and context-only outcomes distinct. It checks half-open
+temporal overlap, bounded uncertainty, source-role and approximation mismatches,
+deterministic profile hashing, duplicate-key rejection, non-finite values,
+symlink denial, mocked socket denial, and non-authoritative effects.
 
-- seven cases expect `PASS`, ten expect `DENY`, and three expect `ERROR`;
-- the schema is closed and carries `PROPOSED_INACTIVE` status, `NONE` authority,
-  and false network, geometry, real-location, and release flags;
-- candidate, no-overlap, ambiguous, unsupported, and context-only
-  interpretations remain distinct;
-- temporal overlap is half-open, with per-side and combined uncertainty kept
-  separate;
-- distance, time, source-role, approximation, and uncertainty mismatches retain
-  exact negative reason codes;
-- outputs do not assert a relationship, identity, or authority;
-- the profile hash is deterministic and changes with governed inputs;
-- duplicate keys, non-finite values, and symlinked fixtures fail closed while
-  mocked socket access is denied; and
-- the helper source contains no known network or file-write token.
-
-These checks describe a candidate-assessment envelope only. They do not activate
-the proposed contract or turn proximity into evidence of association.
+These checks do not activate the proposed historical-network contract or turn
+proximity into evidence of association.
 
 ## Run locally
 
-From the repository root, run the generic lane exactly as its hosted workflow:
+Run the generic lane exactly as the hosted cross-lane workflow:
 
 ```bash
 python tools/joins/join_candidates.py --fixtures
-python -m pytest tests/joins/test_join_candidates.py -q --strict-config --strict-markers
+python -m pytest \
+  tests/joins/test_join_candidates.py \
+  tests/joins/test_cross_lane_*.py \
+  -q --strict-config --strict-markers
 ```
 
-Run the historical-network lane exactly as its hosted workflow:
+Run the historical-network lane:
 
 ```bash
 python -m py_compile \
@@ -103,74 +101,61 @@ python tests/joins/test_historical_network_proximity.py --verbose
 python tools/joins/historical_network_proximity.py --fixtures
 ```
 
-The repository `Makefile` has no join-specific target. Use the focused commands
-above when changing this directory or either helper.
-
 ## Hosted workflow coverage
 
-| Workflow | Direct test command | README edit triggers it? |
+| Workflow | Generic guard coverage | Trigger lifecycle |
 | --- | --- | --- |
-| [`cross-lane-join-assessment`](../../.github/workflows/cross-lane-join-assessment.yml) | `pytest tests/joins/test_join_candidates.py` plus the generic fixture runner | Yes; its path filter includes `tests/joins/**` |
-| [`historical-network-proximity-assessment`](../../.github/workflows/historical-network-proximity-assessment.yml) | `python tests/joins/test_historical_network_proximity.py --verbose` plus compile and fixture checks | No; its path filter names the historical test, helper, fixture, schema, contract, and receipt but not this README |
+| [`cross-lane-join-assessment`](../../.github/workflows/cross-lane-join-assessment.yml) | Fixture runner, generic suite, and every `test_cross_lane_*.py` module | Pull request, main push, manual dispatch |
+| [`soil-hydrology-public-safe-context`](../../.github/workflows/soil-hydrology-public-safe-context.yml) | Generic lane plus Soil–Hydrology pair proof | Pull request, main push, manual dispatch |
+| [`soil-agriculture-public-safe-context`](../../.github/workflows/soil-agriculture-public-safe-context.yml) | Generic lane plus Soil–Agriculture pair proof | Pull request, main push, manual dispatch |
+| [`fauna-habitat-public-safe-assignment`](../../.github/workflows/fauna-habitat-public-safe-assignment.yml) | Generic lane plus Fauna–Habitat pair proof | Pull request, main push, manual dispatch |
+| [`historical-network-proximity-assessment`](../../.github/workflows/historical-network-proximity-assessment.yml) | Historical-network proof only | Its own bounded filters and dispatch |
 
-Both workflows use Python 3.11, read-only repository permissions, and
-`KFM_NO_NETWORK=1`. Each also validates a stored generated receipt. A successful
-receipt check confirms agreement with the checked-in expected artifact; it is not
-live acquisition, production execution, release evidence, or publication.
+The four generic-consuming workflows use Python 3.11, read-only repository
+permissions, `KFM_NO_NETWORK=1`, generic fixture replay, and focused tests.
+Their path filters include the unresolved domain-alias register, generic fixture
+family, helper, contract, schema, and `tests/joins/**`. A workflow that did
+not run is unavailable evidence, never a pass.
 
-Because this README does not trigger the historical workflow, a documentation-only
-change here can receive direct hosted evidence for the generic lane while leaving
-the historical lane uncollected. That path-filter gap is implementation work
-outside this Markdown change.
+The historical workflow remains independently scoped. Its README path-filter
+coverage is not implied by the generic workflows.
 
 ## Safety and authority boundary
 
 | Evidence from this lane | What it does not establish |
 | --- | --- |
-| Synthetic fixtures parse and produce expected finite outcomes | Truth of any real-world link, identity, event, or location |
-| Helpers remain deterministic for the covered inputs | Complete semantic coverage or production parity |
-| Network and publisher effects are absent from the checked helper surface | Runtime confinement outside the tested process |
-| Schemas, contracts, and stored receipts agree for covered cases | Adoption, activation, approval, release, or publication |
-| Fail-closed cases reject covered malformed or unsafe inputs | Rights clearance, consent, sovereignty, privacy, or harmful-precision resolution |
+| Synthetic fixtures and mutations produce expected finite outcomes | Truth of a real-world link, identity, event, or location |
+| Helpers remain deterministic for covered inputs | Complete semantic or production parity |
+| Workflow dependencies and test collection remain connected | Required-check status or successful execution on an untested head |
+| Network and publisher effects are absent from the checked surface | Runtime confinement outside the tested process |
+| Contracts, schemas, fixtures, workflows, and stored receipts agree | Adoption, approval, release, deployment, or publication |
+| Covered malformed or unsafe inputs fail closed | Rights clearance, consent, sovereignty, privacy, or harmful-precision resolution |
 
-Evidence outranks the generated candidate language. Downstream evidence,
-provenance, rights, sensitivity, policy, correction, review, and release controls
-remain required before any candidate can affect a governed artifact.
+Evidence outranks generated candidate language. Downstream evidence, provenance,
+rights, sensitivity, policy, correction, review, and release controls remain
+required before a candidate can affect a governed artifact.
 
 ## Interpreting failures
 
-1. Treat a fixture-runner failure as a contract, schema, fixture, or helper
-   disagreement. Do not rewrite the expected outcome until the governing evidence
-   and intended boundary are confirmed.
-2. Treat a test failure as a regression in the named invariant. Inspect the
-   smallest relevant helper, contract, schema, and fixture case together.
-3. Treat an unexpected `ALLOW` or `PASS` as safety-significant. Hold downstream
-   use and verify evidence, role, sensitivity, identity, temporal, and uncertainty
-   inputs.
-4. Treat a workflow that did not run as unavailable evidence, not a pass.
-5. Preserve synthetic values in failures and reviews; do not substitute real
-   people, precise locations, or restricted source material.
+1. Treat a fixture-runner failure as contract, schema, fixture, or helper drift.
+2. Treat a focused guard failure as a regression in its named invariant.
+3. Treat an unexpected `ALLOW` or `PASS` as safety-significant and
+   verify evidence, roles, sensitivity, identity, temporal, and dependency inputs.
+4. Treat missing workflow execution as unavailable evidence, not success.
+5. Preserve synthetic values; do not substitute real people, precise locations,
+   or restricted material.
 
-## Maintenance
+## Maintenance and rollback
 
-When either join assessment changes:
+When this lane changes:
 
-- keep the test-module, helper, contract, schema, fixture, and workflow links in
-  this inventory synchronized;
-- update counts only from current source and fixture evidence;
-- preserve finite outcomes, non-publisher effects, and fail-closed behavior;
-- add synthetic cases for new branches without introducing real identities or
-  harmful precision; and
-- record workflow collection gaps explicitly rather than implying hosted
-  coverage.
+- keep module, helper, contract, schema, fixture, workflow, and receipt references
+  synchronized;
+- add deterministic positive and negative cases for every new branch;
+- keep all generic-consuming workflows aligned on dependencies and collection;
+- preserve finite outcomes, non-publisher effects, and fail-closed behavior; and
+- update claims only from exact repository evidence.
 
-Current unresolved gaps are accountable join stewardship beyond the confirmed
-CODEOWNERS review route, required-check status, complete cross-lane coverage,
-production confinement, correction propagation, operational rollback, and the
-historical workflow's parent-README path filter.
-
-## Rollback
-
-This document changes no helper, contract, schema, fixture, workflow, receipt, or
-runtime behavior. Before merge, rollback is closing the pull request or reverting
-its documentation commit.
+This document changes no runtime relationship or publication authority. Before
+merge, rollback is closing the pull request or forward-reverting the bounded
+documentation/test/receipt commits.

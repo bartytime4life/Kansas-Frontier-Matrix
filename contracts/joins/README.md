@@ -2,17 +2,22 @@
 doc_id: kfm://doc/contracts-joins-readme
 title: contracts/joins — Cross-Domain Join Semantic Contract README
 type: readme
-version: v0.2
+version: v0.3
 status: draft
 owners: OWNER_TBD — Contract steward · Domain stewards · Policy steward · Schema steward · Evidence steward · Sensitivity reviewer · Release steward · Docs steward · Directory Rules reviewer
 created: 2026-06-24
-updated: 2026-08-11
+updated: 2026-09-01
 policy_label: public-with-gates; contracts; joins; semantic-contracts; cross-domain; evidence-bound; release-gated; no-parallel-authority
 owning_root: contracts/
 responsibility: Orient the canonical semantic-contract lane for cross-domain join meanings without replacing domain truth, schema, policy, evidence, lifecycle, release, or publication authority.
-truth_posture: CONFIRMED lane and child paths / PROPOSED wider join roster and inactive profiles / cite-or-abstain
+truth_posture: CONFIRMED current inventory and responsibility split / PROPOSED fixture-first profiles / cite-or-abstain
 related:
   - ../README.md
+  - ./cross_lane_join_assessment.md
+  - ../cross_domain/README.md
+  - ../cross_domain/fauna_habitat/public_safe_assignment_profile.md
+  - ../cross_domain/soil_agriculture/public_safe_context_profile.md
+  - ../cross_domain/soil_hydrology/public_safe_context_profile.md
   - ./people-settlements/README.md
   - ./people-settlements/cemetery/README.md
   - ./historical_network_proximity_assessment.md
@@ -23,14 +28,14 @@ related:
   - ../../policy/sensitivity/
   - ../../policy/consent/
   - ../../tests/joins/
-  - ../../fixtures/joins/
+  - ../../fixtures/contracts/v1/joins/
   - ../../data/registry/sources/
   - ../../release/
 tags: [kfm, contracts, joins, semantic-contracts, cross-domain, evidence-bundle, policy-decision, review-record, release-manifest, rollback-card, sensitivity, consent, no-parallel-authority]
 notes:
   - "Root README for `contracts/joins/`, the semantic contract lane for cross-domain join object meanings."
   - "Join contracts explain relationship meaning; they do not own source-domain truth, schemas, policy, data, release state, public layers, runtime code, or AI output."
-  - "The currently verified child lane is `people-settlements/`, with `people-settlements/cemetery/` as a restricted cemetery/burial-context sublane."
+  - "The current inventory includes the generic CrossLaneJoinAssessment, historical-network assessment, People–Settlements lane, and three pair-specific profiles under sibling `contracts/cross_domain/`; every profile remains proposed and non-publishing."
   - "Previous file content was blank; rollback target is blob SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`."
 [/KFM_META_BLOCK_V2] -->
 
@@ -51,8 +56,8 @@ notes:
 **Status:** draft root join-lane README  
 **Owners:** `OWNER_TBD` — Contract steward · Domain stewards · Policy steward · Schema steward · Evidence steward · Sensitivity reviewer · Release steward · Docs steward · Directory Rules reviewer  
 **Path:** `contracts/joins/README.md`  
-**Verified child lane:** [`people-settlements/`](./people-settlements/)  
-**Truth posture:** CONFIRMED blank file replaced · CONFIRMED `people-settlements/` child README exists · PROPOSED wider joins roster, schemas, policies, fixtures, tests, and release behavior until verified
+**Verified inventory:** [`cross_lane_join_assessment.md`](./cross_lane_join_assessment.md), [`historical_network_proximity_assessment.md`](./historical_network_proximity_assessment.md), [`people-settlements/`](./people-settlements/), and three pair-specific profiles under [`../cross_domain/`](../cross_domain/)  
+**Truth posture:** CONFIRMED current files and responsibility split · PROPOSED fixture-first assessment semantics · no relationship, policy, release, or publication authority
 
 ## Quick jumps
 
@@ -87,13 +92,15 @@ A join contract may define:
 | Responsibility | Expected or related path | Relationship to this README |
 |---|---|---|
 | Contracts root | [`../README.md`](../README.md) | Defines contracts as object meaning and excludes schema, policy, validation, and source data. |
-| Join semantic contracts | `contracts/joins/` | This lane; Markdown meaning for cross-domain joins. |
+| Generic join semantic contracts | `contracts/joins/` | This lane; reusable relationship meaning that does not select a pair-specific domain authority. |
+| Generic candidate assessment | [`./cross_lane_join_assessment.md`](./cross_lane_join_assessment.md) | Deterministic, fixture-first cross-lane candidate semantics; non-publishing. |
+| Pair-specific semantic profiles | [`../cross_domain/`](../cross_domain/) | Lowest-common contract responsibility root for named domain-pair meaning; not a parallel generic join authority. |
 | Verified child join | [`./people-settlements/`](./people-settlements/) | People/Genealogy/DNA/Land ↔ Settlements/Infrastructure join family. |
 | Restricted child join | [`./people-settlements/cemetery/`](./people-settlements/cemetery/) | Cemetery, burial, memorial, and graveyard context join. |
 | Machine schemas | `schemas/contracts/v1/joins/` | Shape authority; not owned here. |
 | Join policy | `policy/joins/` | Admissibility, restriction, denial, abstain, and public-safe transform rules. |
 | Sensitivity and consent policy | `policy/sensitivity/`, `policy/consent/` | Cross-cutting sensitive-lane gates. |
-| Tests and fixtures | `tests/joins/`, `fixtures/joins/` | Proof and examples; not contract authority. |
+| Tests and fixtures | `tests/joins/`, `fixtures/contracts/v1/joins/`, `tests/cross_domain/` | Synthetic proof and examples; not contract authority. |
 | Source registry | `data/registry/sources/` | Source identity, role, rights, cadence, and authority limits. |
 | Lifecycle data | `data/<phase>/...` | RAW/WORK/QUARANTINE/PROCESSED/CATALOG/PUBLISHED records; never stored here. |
 | Release and rollback | `release/` | Promotion, manifest, correction, withdrawal, and rollback authority. |
@@ -105,17 +112,20 @@ A join contract may define:
 
 | Join lane | Meaning | Status posture |
 |---|---|---|
-| [`people-settlements/`](./people-settlements/) | Person, genealogy, DNA, land, and settlement/place relationship semantics. | CONFIRMED child README exists; schemas/policy/tests PROPOSED. |
-| [`people-settlements/cemetery/`](./people-settlements/cemetery/) | Cemetery, burial, memorial, and graveyard relationship semantics. | CONFIRMED child README exists; restricted by default. |
+| [`cross_lane_join_assessment.md`](./cross_lane_join_assessment.md) | Generic exact-key and spatial-temporal candidate assessment across distinct governed domains. | PROPOSED fixture-first profile with schema, helper, fixtures, focused tests, and CI; no relationship truth, policy, release, or publication authority. |
 | [`historical_network_proximity_assessment.md`](./historical_network_proximity_assessment.md) | Qualified historical place/route proximity-candidate meaning with separate valid time, uncertainty, source role, and interpretation. | PROPOSED inactive fixture profile; no relationship, route-use, release, or publication authority. |
-| `flora-habitat/` | Plant/ecological context relationships. | PROPOSED; do not create without checking canonical domain lanes. |
-| `fauna-habitat/` | Animal occurrence/context relationships. | PROPOSED; sensitive species location gates likely apply. |
-| `hydrology-hazards/` | Flood, drought, water, and hazard-context joins. | PROPOSED; not-for-life-safety gates likely apply. |
-| `roads-settlements/` | Route, access, trade, settlement, and infrastructure joins. | PROPOSED. |
-| `soils-geology/` | Substrate, material, geomorphology, and soil/geology joins. | PROPOSED. |
-| `land-agriculture/` | Parcel, land use, crop, and agriculture-context joins. | PROPOSED; land/title anti-collapse required. |
+| [`people-settlements/`](./people-settlements/) | Person, genealogy, DNA, land, and settlement/place relationship semantics. | CONFIRMED child README exists; schemas/policy/tests remain PROPOSED. |
+| [`people-settlements/cemetery/`](./people-settlements/cemetery/) | Cemetery, burial, memorial, and graveyard relationship semantics. | CONFIRMED child README exists; restricted by default. |
+| [`Fauna–Habitat public-safe assignment`](../cross_domain/fauna_habitat/public_safe_assignment_profile.md) | Pair-specific public-safe assignment candidate meaning. | PROPOSED fixture-first profile under the pair-specific contract lane; executable validator/test exist; sensitive-location controls remain mandatory. |
+| [`Soil–Agriculture public-safe context`](../cross_domain/soil_agriculture/public_safe_context_profile.md) | Pair-specific public-safe context candidate meaning. | PROPOSED fixture-first profile under the pair-specific contract lane; executable validator/test exist; no farm, parcel, operator, or crop truth. |
+| [`Soil–Hydrology public-safe context`](../cross_domain/soil_hydrology/public_safe_context_profile.md) | Pair-specific public-safe context candidate meaning. | PROPOSED fixture-first profile under the pair-specific contract lane; executable validator/test exist; non-emergency and non-causal. |
+| `flora-habitat/` | Plant/ecological context relationships. | PROPOSED future lane; do not create without checking canonical domain lanes and overlap. |
+| `hydrology-hazards/` | Flood, drought, water, and hazard-context joins. | PROPOSED future lane; not-for-life-safety gates likely apply. |
+| `roads-settlements/` | Route, access, trade, settlement, and infrastructure joins. | PROPOSED future lane. |
+| `soils-geology/` | Substrate, material, geomorphology, and soil/geology joins. | PROPOSED future lane. |
+| `land-agriculture/` | Parcel, land use, crop, and agriculture-context joins. | PROPOSED future lane; land/title anti-collapse required. |
 
-The proposed list is an orientation aid, not proof of existing files.
+Only linked rows claim current files. Unlinked rows are orientation candidates, not implementation or authority claims.
 
 ---
 
@@ -157,7 +167,7 @@ Accepted durable content under `contracts/joins/`:
 | Domain object contracts | `contracts/domains/<domain>/` or accepted domain contract lane | Joins relate objects; domains own object meaning. |
 | JSON Schema | `schemas/contracts/v1/joins/` | Schemas own machine shape. |
 | Policy rules | `policy/joins/`, `policy/sensitivity/`, `policy/consent/` | Policy decides admissibility and exposure. |
-| Fixtures and tests | `fixtures/joins/`, `tests/joins/` | Proof and examples belong outside contracts. |
+| Fixtures and tests | `fixtures/contracts/v1/joins/`, `tests/joins/` | Proof and examples belong outside contracts. |
 | Source descriptors or source registry records | `data/registry/sources/` | Source identity and rights are not join meaning. |
 | RAW / WORK / QUARANTINE / PROCESSED / CATALOG / PUBLISHED data | `data/<phase>/...` | Lifecycle data is never contract meaning. |
 | Release manifests, rollback cards, correction notices | `release/` | Publication is a governed state transition. |

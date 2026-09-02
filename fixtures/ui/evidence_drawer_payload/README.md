@@ -3,7 +3,7 @@
 Reusable, synthetic, public-safe fixtures for the proposed UI projection at
 `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json`.
 
-- `valid/` covers supported single-step and multi-step corrections, stale, superseded, denied, and error outcomes.
+- `valid/` covers supported single-step and multi-step corrections, stale, superseded, revoked, denied, and error outcomes.
 - `invalid/` pairs each JSON candidate with one `.expected_code.txt` containing
   the stable validator finding that must remain present.
 - The corrected answer demonstrates that current support and superseded history

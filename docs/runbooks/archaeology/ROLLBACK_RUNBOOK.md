@@ -85,7 +85,7 @@ tags: [kfm, runbook, archaeology, rollback, withdrawal, correction, synthetic-re
 notes:
   - "Same-path modernization under the docs/ responsibility root; no path, authority root, contract, schema, policy, release object, or public state is created or moved."
   - "The generic release RollbackCard 1.0.0 profile is the current bounded validator target. The Archaeology-domain rollback-card schema remains a permissive greenfield stub and is not an equivalent authority surface."
-  - "Operational rollback remains HOLD: the production pipeline and generic validator entrypoint are placeholders, while the available apply helper is synthetic-workspace-only."
+  - "Operational rollback remains HOLD: the production pipeline is a placeholder, the generic validator entrypoint delegates only to the bounded canonical validator, and the available apply helper is synthetic-workspace-only."
   - "This runbook is an instruction and handoff surface. It is not a RollbackCard, ReviewRecord, PolicyDecision, CorrectionNotice, release approval, or rollback execution record."
 [/KFM_META_BLOCK_V2] -->
 
@@ -191,7 +191,7 @@ The target is a tracked human-facing runbook under `docs/runbooks/archaeology/`.
 | Release validator | Implemented, no-network, file-size bounded, duplicate-key aware, schema + semantic checks | Candidate shape/local consistency can be tested |
 | Release fixtures | Three valid and six invalid candidates with expected findings | Fixture polarity is testable |
 | Archaeology-domain rollback schema | Permissive id-only greenfield stub; `additionalProperties: true` | **CONFLICTED / HOLD**; do not treat as equivalent to the generic release profile |
-| Generic validator entrypoint | `tools/validators/validate_rollback_card.py` raises `NotImplementedError` | Do not use this entrypoint |
+| Generic validator entrypoint | `tools/validators/validate_rollback_card.py` delegates to the canonical release validator | Bounded compatibility validation only; no execution authority |
 | Production rollback pipeline | `pipelines/rollback/main.py` is a one-line greenfield placeholder | No production rollback engine is established |
 | Synthetic helper | Marker-protected, no-network, deterministic; PLAN by default; APPLY only inside marked synthetic root | Safe for rehearsal only |
 | Synthetic tests | Eight non-vacuous tests cover plan/no-write, rollback, withdrawal, marker, synthetic flag, invalidations, target, and digest failures | Rehearsal behavior has bounded deterministic proof |
@@ -829,7 +829,7 @@ The following items remain outside this documentation-only slice:
 | Item | Current state | Required next evidence |
 |---|---|---|
 | Production rollback pipeline | Placeholder | Accepted interface, target selection, no-write/negative tests, execution receipts, invalidation adapters, and rollback of the operator itself |
-| Generic validator entrypoint | Placeholder | Reconcile or retire without breaking consumers; keep release validator canonical for current profile |
+| Generic validator entrypoint | **CONFIRMED delegation** | Preserve compatibility parity while keeping the release validator canonical |
 | Archaeology-domain RollbackCard schema | Permissive greenfield stub | Contract/schema/fixture/validator decision, consumer inventory, migration/alias plan, and ADR if authority changes |
 | Reviewer identity and assignments | One GitHub route only | Accepted actor identity, StewardshipAssignment, interval, scope, conflict/recusal, and independent capacity |
 | ReviewRecord shape | Conflicted candidates | Canonical machine profile and migration decision |

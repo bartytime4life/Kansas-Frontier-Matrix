@@ -21,7 +21,7 @@ responsibility: >-
 truth_posture: >-
   CONFIRMED current same-path placement, closed fixture-first UI projection,
   strict Explorer parser and finite view model, keyboard-operable drawer,
-  renderer-neutral map-selection bridge, evidence-subset enforcement, synthetic
+  renderer-neutral map-selection bridge, active-and-history evidence-scope enforcement, synthetic
   positive and negative fixtures, deterministic validators, focused test sources,
   and read-only workflow / PROPOSED production click-to-evidence composition,
   authenticated governed transport, typed conflict and caveat grammar, and
@@ -111,7 +111,7 @@ notes:
 | **Evidence snapshot** | `main@0a547c12e7965565d397fcad46d94c1c7b41f0c7` |
 | **Document role** | Human-readable map-selection and drawer-boundary reference; not a semantic contract, machine schema, policy rule, evidence record, review record, release record, or runtime gate |
 | **Placement** | **CONFIRMED / PLACE:** accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [Directory Rules v2](../../doctrine/directory-rules.md); this existing `docs/architecture/map-master/` path remains in the `docs/` explanation root |
-| **Current selection path** | **CONFIRMED / BOUNDED:** strict renderer-neutral `MapFeatureSelection`, injected resolver, returned-evidence subset check, finite local failures, and synthetic browser controls |
+| **Current selection path** | **CONFIRMED / BOUNDED:** strict renderer-neutral `MapFeatureSelection`, injected resolver, active-and-history evidence-scope check, finite local failures, and synthetic browser controls |
 | **Current drawer path** | **CONFIRMED / BOUNDED:** closed fixture-first public-safe projection, strict parser, finite view model, keyboard-operable `<aside>`, correction/negative history, and fixed no-leak negative copy |
 | **Current renderer** | **HOLD:** no functioning MapLibre click path is established by the inspected implementation |
 | **Current transport** | **HOLD:** the bridge accepts an injected resolver; the inspected fixture composition uses deterministic in-memory data and performs no network access |
@@ -163,7 +163,7 @@ Its implementation description did not age as well. The current repository has m
 | [`contracts/evidence/evidence_drawer_payload.md`](../../../contracts/evidence/evidence_drawer_payload.md) | Adjacent evidence-family contract remains `PATH-NEEDS-REVIEW`; its paired schema is described as permissive | UI/evidence semantic-home seam remains unresolved |
 | [`GovernedClient.ts`](../../../apps/explorer-web/src/adapters/GovernedClient.ts) | Strict parser for `kfm.explorer.evidence-drawer.public-safe.v1`; no transport or lifecycle-store access | Bounded app adapter fails closed over supplied objects |
 | [`evidence_drawer/index.tsx`](../../../apps/explorer-web/src/features/evidence_drawer/index.tsx) | Finite view-model resolver and keyboard-operable drawer renderer | App-local projection and accessibility slice exists |
-| [`map_runtime/index.tsx`](../../../apps/explorer-web/src/features/map_runtime/index.tsx) | Strict renderer-neutral selection parser, injected resolver, evidence-subset check, finite local failures, and synthetic controls | Bounded click-to-drawer laboratory exists without a renderer or live service |
+| [`map_runtime/index.tsx`](../../../apps/explorer-web/src/features/map_runtime/index.tsx) | Strict renderer-neutral selection parser, injected resolver, active-and-history evidence-scope check, finite local failures, and synthetic controls | Bounded click-to-drawer laboratory exists without a renderer or live service |
 | [`evidence-drawer.test.ts`](../../../apps/explorer-web/tests/evidence-drawer.test.ts) | Test source covers answer, stale abstention, superseded history, no-leak denial/error, malformed payloads, and forbidden access patterns | Intended bounded behavior is inspectable; this documentation run did not execute it |
 | [`map-evidence-drawer.test.ts`](../../../apps/explorer-web/tests/map-evidence-drawer.test.ts) | Test source covers strict selection, missing evidence, denial, out-of-scope evidence, resolver failure, and renderer/network/store exclusions | Selection-to-drawer scope rules are fixture-backed |
 | Browser test sources | Keyboard open/close, focus entry/return, citations, correction history, abstention, denial, scope mismatch, and resolver-error behavior are represented | Browser expectations exist; production accessibility and live integration remain open |
@@ -198,7 +198,7 @@ This page explains how a map-facing interaction becomes a bounded Evidence Drawe
 - the injected-resolver boundary and its no-network current implementation;
 - exact current `EvidenceDrawerPayload` projection fields;
 - finite outcomes and public-safe reason codes;
-- evidence-subset enforcement between selection and drawer;
+- active-and-history evidence-scope enforcement between selection and drawer;
 - no-leak handling for denied, errored, malformed, and mismatched inputs;
 - bounded correction and negative history;
 - current keyboard, focus, landmark, and live-region behavior;
@@ -254,7 +254,7 @@ flowchart LR
   C -->|throws| Y["ERROR<br/>GOVERNED_RESOLVER_ERROR"]
   C --> D["resolveEvidenceDrawer<br/>strict projection parser"]
   D -->|malformed| Z["ERROR<br/>INVALID_PAYLOAD"]
-  D --> E{"Returned refs are a subset<br/>of selected refs?"}
+  D --> E{"Active + history refs are a subset<br/>of selected refs?"}
   E -->|no| Q["ERROR<br/>DRAWER_EVIDENCE_OUTSIDE_SELECTION"]
   E -->|yes| F["Finite drawer view model"]
   F --> G["mountEvidenceDrawer<br/>keyboard-operable aside"]
@@ -300,7 +300,7 @@ flowchart LR
   V --> D["Existing finite drawer surface"]
 ```
 
-The production target must not bypass the existing evidence-subset and no-leak rules. Route names, authentication, request envelopes, caching, timeout behavior, correction invalidation, and renderer ownership require their own contracts, decisions, code, fixtures, tests, and operational evidence.
+The production target must not bypass the existing active-and-history evidence-scope and no-leak rules. Route names, authentication, request envelopes, caching, timeout behavior, correction invalidation, and renderer ownership require their own contracts, decisions, code, fixtures, tests, and operational evidence.
 
 [Back to top](#top)
 
@@ -406,7 +406,7 @@ These codes are not serialized profile reason codes:
 | `NO_GOVERNED_RESPONSE` | Drawer view resolver | Local `ABSTAIN`; no input exists |
 | `INVALID_PAYLOAD` | Drawer view resolver | Local `ERROR`; malformed or contradictory projection |
 | `SELECTION_INVALID` | Map-selection bridge | Local fixed `ERROR` |
-| `DRAWER_EVIDENCE_OUTSIDE_SELECTION` | Map-selection bridge | Local fixed `ERROR`; returned support exceeded request scope |
+| `DRAWER_EVIDENCE_OUTSIDE_SELECTION` | Map-selection bridge | Local fixed `ERROR`; returned active or audit-history evidence exceeded selection scope |
 | `GOVERNED_RESOLVER_ERROR` | Map-selection bridge | Local fixed `ERROR`; private exception text suppressed |
 
 ### 4.4 Accessibility behavior confirmed in the bounded renderer
@@ -683,7 +683,7 @@ synthetic selection
   -> missing refs? ABSTAIN
   -> injected resolver
   -> strict EvidenceDrawerPayload parse
-  -> returned refs subset of selected refs?
+  -> active + history refs subset of selected refs?
   -> finite drawer view model
   -> keyboard-operable aside
 

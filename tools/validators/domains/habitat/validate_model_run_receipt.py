@@ -106,7 +106,7 @@ def _pointer(parts: Iterable[object]) -> str:
 
 
 def _time(value: object) -> datetime | None:
-    if not isinstance(value, str):
+    if not isinstance(value, str) or value.endswith("-00:00"):
         return None
     try:
         return datetime.fromisoformat(value[:-1] + "+00:00" if value.endswith("Z") else value)

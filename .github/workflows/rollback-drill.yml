@@ -88,7 +88,6 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          import ast
           from pathlib import Path
           import json
           import subprocess
@@ -173,24 +172,15 @@ jobs:
           )
 
           generic_validator = generic_validator_path.read_text(encoding="utf-8")
-          expected_validator = """def main():
-              raise NotImplementedError("Greenfield placeholder")
-
-          if __name__ == '__main__':
-              main()
-          """
-          generic_validator_ast = ast.dump(
-              ast.parse(generic_validator, filename=generic_validator_path.as_posix()),
-              include_attributes=False,
+          assert "NotImplementedError" not in generic_validator, (
+              "the generic RollbackCard compatibility entrypoint regressed to a placeholder"
           )
-          expected_validator_ast = ast.dump(
-              ast.parse(expected_validator, filename="expected:validate_rollback_card.py"),
-              include_attributes=False,
-          )
-          assert generic_validator_ast == expected_validator_ast, (
-              "the generic RollbackCard validator is no longer the known placeholder; "
-              "inspect imports, helpers, classes, calls, and entrypoint semantics; then "
-              "reconcile it with the schema-declared validator paths and wire tests"
+          assert (
+              "from tools.validators.release.validate_rollback_card import main as _canonical_main"
+              in generic_validator
+          ), "the generic RollbackCard entrypoint no longer delegates to the canonical validator"
+          assert "return _canonical_main(argv)" in generic_validator, (
+              "the generic RollbackCard entrypoint delegation call changed"
           )
 
           drill_inventory = sorted(
@@ -237,6 +227,22 @@ jobs:
           )
           assert '"outcome":"PASS"' in fixture_result.stdout
           assert "FIXTURE_POLARITY_ERROR" not in fixture_result.stdout
+
+          compatibility_result = subprocess.run(
+              [sys.executable, generic_validator_path.as_posix(), "--fixtures"],
+              check=False,
+              capture_output=True,
+              text=True,
+          )
+          assert compatibility_result.returncode == fixture_result.returncode, (
+              compatibility_result.stdout + compatibility_result.stderr
+          )
+          assert compatibility_result.stdout == fixture_result.stdout, (
+              "generic and canonical RollbackCard fixture output diverged"
+          )
+          assert compatibility_result.stderr == fixture_result.stderr, (
+              "generic and canonical RollbackCard diagnostics diverged"
+          )
 
           rehearsal_result = subprocess.run(
               [
@@ -300,7 +306,8 @@ jobs:
                   "Placeholder created from the current docs/domains markdown inventory."
               ]
 
-          print("CONFIRMED: the production rollback pipeline and generic RollbackCard entrypoint remain placeholders.")
+          print("CONFIRMED: the production rollback pipeline remains a placeholder while the generic RollbackCard entrypoint delegates to the canonical release validator.")
+          print("CONFIRMED: generic and canonical RollbackCard fixture execution is byte-identical.")
           print("CONFIRMED: rollback_apply.py remains marker-protected, synthetic-only, and non-authoritative.")
           print("CONFIRMED: the generic and Hazards synthetic rollback rehearsal profiles ran 12 non-vacuous tests in isolated temporary roots.")
           print("CONFIRMED: the release RollbackCard schema is closed and its bounded local fixture profile passes.")
@@ -319,7 +326,7 @@ jobs:
           {
             echo "### Rollback simulation"
             echo
-            echo "- The release RollbackCard profile remains closed and fixture-validated; the generic entrypoint and production pipeline remain placeholders, while rollback_apply.py is a marker-protected synthetic-only rehearsal covered by 12 non-vacuous generic and Hazards isolated-root tests."
+            echo "- The release RollbackCard profile remains closed and fixture-validated; the historical generic entrypoint delegates to the canonical validator with byte-identical fixture output, while the production pipeline remains a placeholder and rollback_apply.py is a marker-protected synthetic-only rehearsal covered by 12 non-vacuous generic and Hazards isolated-root tests."
             echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** no production rollback engine, live target selection, signature/review verification, policy decision, receipt flow, external invalidation execution, or published-alias mutation is accepted."
             echo "- The Agriculture RollbackCard profile and direct drill lane remain scaffolds, and the two root JSON cards remain documentation-inventory placeholders rather than schema-admissible rollback authority."
             echo "- Result: ${{ job.status }}. No production rollback target was selected or mutated, and no card, receipt, proof, signature, release transition, or publication authority was created."

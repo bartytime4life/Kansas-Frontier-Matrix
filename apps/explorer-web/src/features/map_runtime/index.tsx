@@ -4,6 +4,7 @@ import {
 } from "@kfm/maplibre";
 import {
   EVIDENCE_DRAWER_PROJECTION_PROFILE,
+  parseEvidenceDrawerProjection,
   type EvidenceDrawerReasonCode,
 } from "../../adapters/GovernedClient";
 import {
@@ -46,12 +47,16 @@ export type MapEvidenceFixtureController = Readonly<{
   destroy: () => void;
 }>;
 
-const SELECTION_FIELDS = new Set([
+const SELECTION_REQUIRED_FIELDS = new Set([
   "profile",
   "selection_id",
   "layer_id",
   "feature_id",
   "evidence_refs",
+]);
+const SELECTION_FIELDS = new Set([
+  ...SELECTION_REQUIRED_FIELDS,
+  "history_evidence_refs",
 ]);
 const SAFE_ID = /^[A-Za-z0-9][A-Za-z0-9:._/-]{0,159}$/;
 const MAX_EVIDENCE_REFS = 16;
@@ -60,12 +65,16 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function hasExactFields(
+function hasRequiredAndAllowedFields(
   value: Record<string, unknown>,
+  required: ReadonlySet<string>,
   allowed: ReadonlySet<string>,
 ): boolean {
   const keys = Object.keys(value);
-  return keys.length === allowed.size && keys.every((key) => allowed.has(key));
+  return (
+    keys.every((key) => allowed.has(key)) &&
+    [...required].every((key) => Object.hasOwn(value, key))
+  );
 }
 
 function isSafeId(value: unknown): value is string {
@@ -79,11 +88,54 @@ function parseEvidenceRefs(value: unknown): readonly string[] | null {
   return Object.freeze([...value]);
 }
 
+type GovernedDrawerEvidenceScope = Readonly<{
+  current: readonly string[];
+  history: readonly string[];
+}>;
+
+function governedDrawerEvidenceScope(
+  input: unknown,
+): GovernedDrawerEvidenceScope {
+  const parsed = parseEvidenceDrawerProjection(input);
+  if (!parsed.ok) {
+    return Object.freeze({
+      current: Object.freeze([]),
+      history: Object.freeze([]),
+    });
+  }
+
+  return Object.freeze({
+    current: Object.freeze([
+      ...parsed.payload.evidenceRefs,
+      ...parsed.payload.history.corrections.map(
+        (item) => item.activeEvidenceRef,
+      ),
+    ]),
+    history: Object.freeze([
+      ...parsed.payload.history.negativeOutcomes.map(
+        (item) => item.evidenceRef,
+      ),
+      ...parsed.payload.history.corrections.map(
+        (item) => item.priorEvidenceRef,
+      ),
+    ]),
+  });
+}
+
 /** Strictly validate one renderer-neutral feature selection. */
 export function parseMapFeatureSelection(
   value: unknown,
 ): MapFeatureSelection | null {
-  if (!isRecord(value) || !hasExactFields(value, SELECTION_FIELDS)) return null;
+  if (
+    !isRecord(value) ||
+    !hasRequiredAndAllowedFields(
+      value,
+      SELECTION_REQUIRED_FIELDS,
+      SELECTION_FIELDS,
+    )
+  ) {
+    return null;
+  }
   if (value.profile !== MAP_FEATURE_SELECTION_PROFILE) return null;
   if (!isSafeId(value.selection_id)) return null;
   if (!isSafeId(value.layer_id)) return null;
@@ -91,6 +143,21 @@ export function parseMapFeatureSelection(
 
   const evidenceRefs = parseEvidenceRefs(value.evidence_refs);
   if (evidenceRefs === null) return null;
+  const historyEvidenceRefs =
+    value.history_evidence_refs === undefined
+      ? undefined
+      : parseEvidenceRefs(value.history_evidence_refs);
+  if (historyEvidenceRefs === null) return null;
+  const allEvidenceRefs = [
+    ...evidenceRefs,
+    ...(historyEvidenceRefs ?? []),
+  ];
+  if (
+    allEvidenceRefs.length > MAX_EVIDENCE_REFS ||
+    new Set(allEvidenceRefs).size !== allEvidenceRefs.length
+  ) {
+    return null;
+  }
 
   return Object.freeze({
     profile: MAP_FEATURE_SELECTION_PROFILE,
@@ -98,6 +165,7 @@ export function parseMapFeatureSelection(
     layerId: value.layer_id,
     featureId: value.feature_id,
     evidenceRefs,
+    ...(historyEvidenceRefs === undefined ? {} : { historyEvidenceRefs }),
   });
 }
 
@@ -185,7 +253,10 @@ export async function resolveMapFeatureEvidence(
     return localResolution(null, "SELECTION_INVALID");
   }
 
-  if (selection.evidenceRefs.length === 0) {
+  if (
+    selection.evidenceRefs.length === 0 &&
+    (selection.historyEvidenceRefs?.length ?? 0) === 0
+  ) {
     return localResolution(selection, "MISSING_EVIDENCE");
   }
 
@@ -197,8 +268,17 @@ export async function resolveMapFeatureEvidence(
   }
 
   const drawer = resolveEvidenceDrawer(drawerInput);
-  const allowedEvidence = new Set(selection.evidenceRefs);
-  if (drawer.evidenceRefs.some((evidenceRef) => !allowedEvidence.has(evidenceRef))) {
+  const allowedCurrentEvidence = new Set(selection.evidenceRefs);
+  const allowedHistoryEvidence = new Set(selection.historyEvidenceRefs ?? []);
+  const governedEvidence = governedDrawerEvidenceScope(drawerInput);
+  if (
+    governedEvidence.current.some(
+      (evidenceRef) => !allowedCurrentEvidence.has(evidenceRef),
+    ) ||
+    governedEvidence.history.some(
+      (evidenceRef) => !allowedHistoryEvidence.has(evidenceRef),
+    )
+  ) {
     return localResolution(selection, "DRAWER_EVIDENCE_OUTSIDE_SELECTION");
   }
 

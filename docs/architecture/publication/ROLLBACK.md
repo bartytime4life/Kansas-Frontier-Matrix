@@ -684,7 +684,7 @@ The owning pull request should verify:
 | Alias preflight | **CONFIRMED fixture-only / PROPOSED_INACTIVE** | Initial bind, advance, correction, and rollback declarations; no live write |
 | Synthetic rehearsal helper/tests | **CONFIRMED** | Marker-protected temporary plan/apply and negative tests |
 | Production rollback pipeline | **CONFIRMED placeholder** | `pipelines/rollback/main.py` has no production implementation |
-| Generic validator entrypoint | **CONFIRMED placeholder** | `tools/validators/validate_rollback_card.py` remains `NotImplementedError` |
+| Generic validator entrypoint | **CONFIRMED compatibility delegate** | `tools/validators/validate_rollback_card.py` delegates to the canonical release validator; both remain non-executing |
 | Root RollbackCard instances | **CONFIRMED placeholders** | Two JSON files are not shared-schema candidates or authority |
 | Accepted operational RollbackCard profile | **UNKNOWN / HOLD** | Candidate profile cannot express completed authority or execution |
 | Accepted release/rollback policy | **UNKNOWN / HOLD** | Current `policy/release/` rules are scaffold/inactive |
@@ -735,7 +735,7 @@ A badge, chart, or dashboard cannot substitute for the underlying records and ch
 | Treating a schema-valid card as approved | Shape is not evidence, policy, review, or decision | Resolve support and accountable authority |
 | Treating synthetic `APPLY` as production rollback | The helper changes only marker-protected temporary roots | Keep production on hold until an accepted operator exists |
 | Directly editing a published alias | Bypasses current-state verification, decision, receipts, and invalidation | Use an accepted conditional operator and append-only receipts |
-| Using the generic placeholder validator | It raises `NotImplementedError` and is not the schema-declared validator | Use the release validator or deliberately converge entrypoints |
+| Treating the generic compatibility validator as separate authority | It delegates to the schema-declared canonical validator and proves bounded candidate validation only | Preserve parity and keep rollback approval/execution separate |
 | Storing RollbackCard decisions under `data/rollback/` | Violates accepted decision/receipt split | Place decisions under `release/rollback_cards/`; classify legacy objects |
 | Storing execution receipts under `release/rollback_cards/` | Collapses decision and process memory | Emit to `data/receipts/rollback/` once the profile exists |
 | Deleting the failed release or receipts | Destroys audit and correction lineage | Preserve history; use governed erasure separately when legally required |
@@ -776,7 +776,7 @@ A badge, chart, or dashboard cannot substitute for the underlying records and ch
 - [ ] Converge or explicitly version shared and domain-local rollback-card schemas.
 - [ ] Align `release/rollback_cards/README.md` and retire/deprecate conflicting lane guidance through a reviewed migration.
 - [ ] Classify every object under generic `data/rollback/`; materialize `data/receipts/rollback/` with contract, schema, fixtures, validator, tests, and retention.
-- [ ] Replace the production pipeline and generic validator placeholders through one dependency-closed implementation.
+- [ ] Implement the production pipeline and an accepted operational RollbackCard profile while preserving the generic compatibility delegate.
 - [ ] Adopt a fail-closed policy bundle, evaluator, decision envelope, replay identity, and reason mapping.
 - [ ] Accept actor/authority/subject binding and separation-of-duties enforcement.
 - [ ] Define immutable alias/profile, compare-and-swap semantics, concurrency, signature, and stale-prior-state behavior.
