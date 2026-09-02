@@ -66,6 +66,24 @@ class EvidenceDrawerPayloadValidatorTests(unittest.TestCase):
             {item.code for item in invalid},
         )
 
+    def test_correction_history_cannot_claim_no_correction(self) -> None:
+        payload = json.loads(
+            (MODULE.FIXTURES_ROOT / "valid/abstain-stale.json").read_text(encoding="utf-8")
+        )
+        corrected = json.loads(
+            (MODULE.FIXTURES_ROOT / "valid/answer-corrected.json").read_text(encoding="utf-8")
+        )
+        payload["history"] = corrected["history"]
+
+        findings = MODULE._semantic_findings(payload)
+        self.assertEqual(
+            {"CORRECTION_STATE_REQUIRED"},
+            {item.code for item in findings},
+        )
+
+        payload["trust_state"]["correction"] = "CORRECTED"
+        self.assertEqual([], MODULE._semantic_findings(payload))
+
     def test_negative_state_reason_must_match(self) -> None:
         findings = MODULE.validate_payload(
             MODULE.FIXTURES_ROOT / "invalid/negative-state-reason-mismatch.json"

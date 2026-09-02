@@ -199,8 +199,9 @@ Rules:
 5. `SUPERSEDED_EVIDENCE`, `HELD_EVIDENCE`, `WITHDRAWN_EVIDENCE`, and `REVOKED_EVIDENCE` abstentions require a matching negative-history record.
 6. Correction edges must be acyclic, non-self-referential, and unique by prior ref.
 7. Every correction prior ref must be represented as `SUPERSEDED` negative history.
-8. Only terminal correction targets may be current answer support; every terminal target must appear in `evidence_refs`.
-9. Intermediate correction targets remain superseded history and never become simultaneous current support.
+8. A payload with correction history must not declare `trust_state.correction: NONE`; visible lineage and its trust label must agree.
+9. Only terminal correction targets may be current answer support; every terminal target must appear in `evidence_refs`.
+10. Intermediate correction targets remain superseded history and never become simultaneous current support.
 
 This is declaration validation only. The profile does not dereference a correction registry, authenticate a notice, prove timestamps, or establish that a public cache was invalidated.
 

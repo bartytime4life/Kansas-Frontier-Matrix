@@ -212,6 +212,14 @@ def _semantic_findings(payload: Mapping[str, object]) -> list[Finding]:
                 "every correction prior must be represented as superseded history",
             )
         )
+    if corrections and trust_map.get("correction") == "NONE":
+        findings.append(
+            Finding(
+                "CORRECTION_STATE_REQUIRED",
+                "/trust_state/correction",
+                "correction history cannot declare correction state NONE",
+            )
+        )
 
     if outcome == "ANSWER":
         if reason != "SUPPORTED":

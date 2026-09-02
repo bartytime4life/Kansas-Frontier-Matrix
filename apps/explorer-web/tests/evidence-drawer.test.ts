@@ -55,6 +55,10 @@ describe("Explorer Evidence Drawer governed projection", () => {
   it("keeps a fully recorded abstention correction visible as audit history", () => {
     const correctedAbstention = {
       ...abstainFixture,
+      trust_state: {
+        ...abstainFixture.trust_state,
+        correction: "CORRECTED",
+      },
       history: answerFixture.history,
     };
 
@@ -69,6 +73,24 @@ describe("Explorer Evidence Drawer governed projection", () => {
       "Correction lineage: kfm:evidence:synthetic:flow-000 → kfm:evidence:synthetic:flow-001 (2026-08-01T00:00:00Z)",
     );
     expect(result.historyLabels.join(" ")).toContain("Superseded evidence");
+  });
+
+  it("fails closed when visible correction lineage declares no correction", () => {
+    const contradictoryCorrection = {
+      ...abstainFixture,
+      history: answerFixture.history,
+    };
+
+    const result = resolveEvidenceDrawer(contradictoryCorrection);
+
+    expect(result).toMatchObject({
+      outcome: "ERROR",
+      code: "INVALID_PAYLOAD",
+    });
+    expect(result.evidenceRefs).toEqual([]);
+    expect(result.citations).toEqual([]);
+    expect(result.historyLabels).toEqual([]);
+    expect(JSON.stringify(result)).not.toContain("kfm:evidence:synthetic:flow-000");
   });
 
   it("fails closed when an abstention correction omits superseded prior history", () => {

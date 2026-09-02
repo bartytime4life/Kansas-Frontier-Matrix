@@ -403,6 +403,12 @@ function historyCombinationIsValid(
   if ([...correctionPriorRefs].some((ref) => !supersededRefs.has(ref))) {
     return false;
   }
+  if (
+    history.corrections.length > 0 &&
+    trustState.correction === "NONE"
+  ) {
+    return false;
+  }
 
   if (outcome === "DENY" || outcome === "ERROR") {
     return history.negativeOutcomes.length === 0 && history.corrections.length === 0;
