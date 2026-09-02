@@ -22,7 +22,9 @@ Input validation opens every directory and the final regular file through
 no-follow descriptors, then sizes and reads that same final descriptor. Leaf,
 ancestor, and cyclic symlinks fail closed, while a rename or symlink swap after
 directory admission cannot redirect the fixture-only validator to another
-file.
+file. The final descriptor is opened nonblocking before its regular-file check,
+so a FIFO or other nonregular input cannot stall validation while waiting for
+another process.
 
 `PASS` proves local profile coherence only. It does not establish a current
 advisory, safe drinking water, source admission, evidence closure, policy or

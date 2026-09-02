@@ -402,6 +402,21 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
             self.assertEqual(findings, [])
             self.assertEqual(candidate, {"origin": "safe"})
 
+    def test_fifo_input_fails_without_waiting_for_a_writer(self) -> None:
+        if not hasattr(os, "mkfifo") or not getattr(os, "O_NONBLOCK", 0):
+            self.skipTest("nonblocking FIFO admission unavailable")
+        with tempfile.TemporaryDirectory() as directory:
+            fifo = Path(directory) / "input.json"
+            os.mkfifo(fifo, mode=0o600)
+
+            result = validator.validate_file(fifo)
+
+            self.assertEqual(result.outcome, "ERROR")
+            self.assertEqual(
+                [(finding.code, finding.path) for finding in result.findings],
+                [("FILE_NOT_FOUND", "/")],
+            )
+
     def test_validator_has_no_network_client_import(self) -> None:
         source = VALIDATOR_PATH.read_text(encoding="utf-8")
         forbidden = (

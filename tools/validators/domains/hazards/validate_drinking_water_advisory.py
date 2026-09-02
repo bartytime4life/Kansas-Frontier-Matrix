@@ -145,6 +145,7 @@ def _read_text_no_symlinks(path: Path) -> str:
     nofollow = getattr(os, "O_NOFOLLOW", 0)
     directory = getattr(os, "O_DIRECTORY", 0)
     cloexec = getattr(os, "O_CLOEXEC", 0)
+    nonblock = getattr(os, "O_NONBLOCK", 0)
     if not nofollow or not directory:
         raise OSError(errno.ENOTSUP, "no-follow descriptor traversal unavailable")
 
@@ -175,7 +176,7 @@ def _read_text_no_symlinks(path: Path) -> str:
         try:
             file_fd = os.open(
                 parts[-1],
-                os.O_RDONLY | nofollow | cloexec,
+                os.O_RDONLY | nofollow | cloexec | nonblock,
                 dir_fd=directory_fd,
             )
         except OSError as exc:
