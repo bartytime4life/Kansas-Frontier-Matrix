@@ -127,6 +127,19 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
                 {finding.code for finding in result.findings},
             )
 
+    def test_non_rescinded_status_cannot_carry_rescission_time(self) -> None:
+        candidate = copy.deepcopy(self.valid["valid_active_not_modified"])
+        candidate["advisory"]["rescinded_at"] = "2026-08-11T12:00:00Z"
+        candidate = validator.assign_identity(candidate)
+
+        result = validator.validate_payload(candidate)
+
+        self.assertEqual(result.outcome, "DENY")
+        self.assertEqual(
+            {(finding.code, finding.path) for finding in result.findings},
+            {("RESCISSION_STATUS_MISMATCH", "/advisory/rescinded_at")},
+        )
+
     def test_unknown_offsets_are_not_used_as_exact_temporal_evidence(self) -> None:
         base = self.valid["valid_authoritative_rescission"]
         timestamp_fields = (

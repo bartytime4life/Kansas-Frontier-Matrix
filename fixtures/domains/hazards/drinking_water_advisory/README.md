@@ -10,6 +10,8 @@ for source-check, issue, effective, expiry, and rescission timestamps. Such
 values are never treated as exact UTC evidence for derived temporal findings.
 An unknown-offset rescission time is also insufficient to establish
 authoritative clearance of a prior advisory.
+Only a `RESCINDED` record may carry a rescission timestamp; other statuses
+fail with a field-specific status mismatch instead of implying clearance.
 The marker is recognized only on a schema-valid aware date-time; a malformed
 string that merely ends in `-00:00` cannot satisfy rescission requirements.
 Semantic ordering accepts the same RFC 3339 date-time grammar and aware-offset

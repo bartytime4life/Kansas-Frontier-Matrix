@@ -468,6 +468,8 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
             findings.append(Finding("RESCISSION_REQUIRED", "/advisory"))
     elif clears:
         findings.append(Finding("FALSE_CLEAR_ATTEMPT", "/advisory/clears_prior_advisory"))
+    if status != "RESCINDED" and advisory.get("rescinded_at") is not None:
+        findings.append(Finding("RESCISSION_STATUS_MISMATCH", "/advisory/rescinded_at"))
 
     if previous_present and status != "ISSUED" and not _present_ref(
         controls.get("prior_advisory_ref")
