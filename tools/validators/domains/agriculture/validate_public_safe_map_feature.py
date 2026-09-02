@@ -116,14 +116,14 @@ PROTECTED_IDENTIFIER_PATTERN = re.compile(
     r"[-_ ]?id\s*(?:[:=#]\s*)?"
     r"|(?:parcel|field|farm|operator|owner|well|permit|water[-_ ]?right)"
     r"\s*[:=#]\s*"
-    r")[a-z0-9][a-z0-9._/-]{2,}\b"
+    r")[a-z0-9][a-z0-9._/-]*\b"
 )
 LABELED_COORDINATE_PATTERN = re.compile(
     r"(?i)\b(?:lat(?:itude)?|lon(?:gitude)?)\s*[:=]\s*"
     r"[+-]?\d{1,3}(?:\.\d+)?\b"
 )
 COORDINATE_PAIR_PATTERN = re.compile(
-    r"(?<![\w.])([+-]?\d{1,3}(?:\.\d+)?)\s*,\s*"
+    r"(?<![\w.])([+-]?\d{1,3}(?:\.\d+)?)(?:\s*,\s*|\s+)"
     r"([+-]?\d{1,3}(?:\.\d+)?)(?![\w.])"
 )
 WKT_POINT_PATTERN = re.compile(

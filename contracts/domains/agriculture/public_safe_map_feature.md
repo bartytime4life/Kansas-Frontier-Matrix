@@ -104,7 +104,8 @@ Protected detail is denied whether it appears as an object member name or is
 embedded in an otherwise permitted scalar string such as an indicator value or
 evidence reference. Protected identifiers remain denied with punctuation or
 plain whitespace separators, and coordinate literals remain denied whether
-integer or fractional. JSON decoding is strict: malformed documents, duplicate
+integer or fractional and whether coordinate pairs use commas or whitespace.
+Protected identifier values are denied at every length. JSON decoding is strict: malformed documents, duplicate
 object members, and non-finite numeric literals receive machine-readable
 denials; programmatic candidates receive the same finite-number check before
 schema validation or identity hashing.
