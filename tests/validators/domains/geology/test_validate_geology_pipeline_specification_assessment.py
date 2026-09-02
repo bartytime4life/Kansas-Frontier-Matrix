@@ -115,6 +115,24 @@ class GeologyPipelineSpecificationAssessmentTests(unittest.TestCase):
             second = MODULE.validate_fixture_manifest()
         self.assertEqual(first, second)
 
+    def test_fixture_manifest_duplicate_keys_fail_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "cases.json"
+            path.write_text(
+                '{"bases":{},"bases":{},"cases":[]}',
+                encoding="utf-8",
+            )
+            results = MODULE.validate_fixture_manifest(path)
+        self.assertEqual(
+            [{
+                "name": "fixture_manifest",
+                "outcome": "ERROR",
+                "findings": ["JSON_DUPLICATE_KEY"],
+                "ok": False,
+            }],
+            results,
+        )
+
     def test_fixture_cli_rejects_abbreviated_flags(self) -> None:
         for length in range(3, len("--fixtures")):
             abbreviation = "--fixtures"[:length]
