@@ -308,9 +308,17 @@ jobs:
               "the schema-declared RollbackCard validator must exist"
           )
 
-          assert 'raise NotImplementedError("Greenfield placeholder")' in (
-              root_validator.read_text(encoding="utf-8")
-          ), "the root rollback-card entrypoint is no longer the confirmed placeholder shim"
+          root_validator_text = root_validator.read_text(encoding="utf-8")
+          assert "NotImplementedError" not in root_validator_text, (
+              "the root RollbackCard compatibility entrypoint regressed to a placeholder"
+          )
+          assert (
+              "from tools.validators.release.validate_rollback_card import main as _canonical_main"
+              in root_validator_text
+          ), "the root RollbackCard entrypoint no longer delegates to the canonical validator"
+          assert "return _canonical_main(argv)" in root_validator_text, (
+              "the root RollbackCard entrypoint delegation call changed"
+          )
 
           rollback_helper_text = rollback_helper.read_text(encoding="utf-8")
           assert "greenfield placeholder" not in rollback_helper_text, (
@@ -338,6 +346,22 @@ jobs:
           assert fixture_result.returncode == 0, fixture_result.stdout + fixture_result.stderr
           assert '"outcome":"PASS"' in fixture_result.stdout
           assert "FIXTURE_POLARITY_ERROR" not in fixture_result.stdout
+
+          compatibility_result = subprocess.run(
+              [sys.executable, root_validator.as_posix(), "--fixtures"],
+              check=False,
+              capture_output=True,
+              text=True,
+          )
+          assert compatibility_result.returncode == fixture_result.returncode, (
+              compatibility_result.stdout + compatibility_result.stderr
+          )
+          assert compatibility_result.stdout == fixture_result.stdout, (
+              "compatibility and canonical RollbackCard fixture output diverged"
+          )
+          assert compatibility_result.stderr == fixture_result.stderr, (
+              "compatibility and canonical RollbackCard diagnostics diverged"
+          )
 
           rehearsal_result = subprocess.run(
               [
@@ -388,6 +412,7 @@ jobs:
               )
 
           print("CONFIRMED: RollbackCard schema remains PROPOSED while pointing to a bounded local validator and fixture lane.")
+          print("CONFIRMED: the root RollbackCard compatibility entrypoint delegates to the canonical validator with byte-identical fixture output.")
           print("CONFIRMED: rollback-card valid/invalid fixtures passed the implemented bounded validator profile.")
           print("CONFIRMED: rollback_apply.py remains marker-protected, synthetic-only, and non-authoritative.")
           print("CONFIRMED: the non-vacuous synthetic rollback rehearsal test profile passed in isolated temporary roots.")
@@ -403,7 +428,7 @@ jobs:
             echo "### Rollback-card presence"
             echo
             echo "- RollbackCard remains PROPOSED while declaring a bounded local validator and fixture lane; this job proves the implemented fixture profile still passes."
-            echo "- The root validator entrypoint remains a placeholder shim, while rollback_apply.py is a marker-protected synthetic-only rehearsal verified through isolated temporary-root tests."
+            echo "- The historical root validator entrypoint delegates to the schema-declared canonical validator and must produce byte-identical fixture output; rollback_apply.py remains a marker-protected synthetic-only rehearsal verified through isolated temporary-root tests."
             echo "- The helper denies non-synthetic inputs, incomplete invalidation sets, missing targets, digest mismatches, and missing markers without touching production state."
             echo "- The two root JSON cards remain PROPOSED documentation-inventory placeholders without the schema-required id; they are inventory evidence, not executable rollback authority."
             echo "- Result: ${{ job.status }}. No production rollback, mutation, release decision, or publication authority was created."

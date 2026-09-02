@@ -13,6 +13,7 @@ import os
 import re
 import subprocess
 import sys
+import time
 from pathlib import Path
 from typing import Sequence
 
@@ -23,7 +24,12 @@ LOCAL_PACKAGE = REPO_ROOT / "packages/kfm-cli"
 LOCAL_SPEC = "./packages/kfm-cli"
 LOCK_LIMIT_BYTES = 262_144
 INSTALL_TIMEOUT_SECONDS = 300
+UNSAFE_PYTHON_ENVIRONMENT = {"PYTHONHOME", "PYTHONPATH", "PYTHONUSERBASE"}
 HASH_LINE = re.compile(r"^\s+--hash=sha256:[0-9a-f]{64}(?: \\)?$")
+REQUIREMENT_LINE = re.compile(
+    r"^[A-Za-z0-9]+(?:[._-][A-Za-z0-9]+)*"
+    r"==[A-Za-z0-9]+(?:[._+!-][A-Za-z0-9]+)* \\?$"
+)
 FORBIDDEN_LOCK_TEXT = (
     "--extra-index-url",
     "--index-url",
@@ -69,6 +75,8 @@ def validate_lockfile(path: Path = LOCKFILE) -> None:
     for requirement in requirements:
         if "==" not in requirement or not requirement.rstrip().endswith("\\"):
             raise CliInstallConfigurationError("CLI_LOCKFILE_REQUIREMENT_UNPINNED")
+        if not REQUIREMENT_LINE.fullmatch(requirement):
+            raise CliInstallConfigurationError("CLI_LOCKFILE_REQUIREMENT_UNSAFE")
     if any(not HASH_LINE.fullmatch(line) for line in hashes):
         raise CliInstallConfigurationError("CLI_LOCKFILE_HASH_INVALID")
 
@@ -95,6 +103,7 @@ def build_commands(executable: str | None = None) -> tuple[tuple[str, ...], ...]
     return (
         (
             python,
+            "-I",
             "-m",
             "pip",
             "install",
@@ -106,6 +115,7 @@ def build_commands(executable: str | None = None) -> tuple[tuple[str, ...], ...]
         ),
         (
             python,
+            "-I",
             "-m",
             "pip",
             "install",
@@ -122,10 +132,21 @@ def build_commands(executable: str | None = None) -> tuple[tuple[str, ...], ...]
 def install() -> None:
     """Install the committed CLI dependency overlay and local package."""
 
-    environment = os.environ.copy()
+    environment = {
+        key: value
+        for key, value in os.environ.items()
+        if not key.upper().startswith("PIP_")
+        and key.upper() not in UNSAFE_PYTHON_ENVIRONMENT
+    }
+    environment["PIP_CONFIG_FILE"] = os.devnull
     environment["PIP_DISABLE_PIP_VERSION_CHECK"] = "1"
     environment["PIP_NO_INPUT"] = "1"
+    environment["PYTHONNOUSERSITE"] = "1"
+    deadline = time.monotonic() + INSTALL_TIMEOUT_SECONDS
     for command in build_commands():
+        remaining_seconds = deadline - time.monotonic()
+        if remaining_seconds <= 0:
+            raise CliInstallConfigurationError("CLI_INSTALL_TIMEOUT")
         try:
             subprocess.run(
                 command,
@@ -133,10 +154,15 @@ def install() -> None:
                 cwd=REPO_ROOT,
                 env=environment,
                 shell=False,
-                timeout=INSTALL_TIMEOUT_SECONDS,
+                stdin=subprocess.DEVNULL,
+                timeout=remaining_seconds,
             )
         except subprocess.TimeoutExpired as exc:
             raise CliInstallConfigurationError("CLI_INSTALL_TIMEOUT") from exc
+        except subprocess.CalledProcessError as exc:
+            raise CliInstallConfigurationError("CLI_INSTALL_COMMAND_FAILED") from exc
+        except OSError as exc:
+            raise CliInstallConfigurationError("CLI_INSTALL_EXECUTION_FAILED") from exc
 
 
 def main(argv: Sequence[str] | None = None) -> int:

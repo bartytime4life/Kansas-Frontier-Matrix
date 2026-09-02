@@ -184,6 +184,40 @@ class GeologyPublicSafeGeometryTests(unittest.TestCase):
         self.assertEqual(1, deny_run.returncode, deny_run.stderr)
         self.assertEqual("DENY", json.loads(deny_run.stdout)["outcome"])
 
+    def test_fixture_cli_rejects_abbreviated_flags(self) -> None:
+        for length in range(3, len("--fixtures")):
+            abbreviation = "--fixtures"[:length]
+            with self.subTest(abbreviation=abbreviation):
+                completed = subprocess.run(
+                    [sys.executable, str(Path(validator.__file__)), abbreviation],
+                    cwd=ROOT,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
+                self.assertEqual(2, completed.returncode)
+                self.assertEqual("", completed.stdout)
+                self.assertIn("unrecognized arguments", completed.stderr)
+
+    def test_option_terminator_allows_dash_prefixed_assessment_filename(self) -> None:
+        manifest = validator.load_fixtures()
+        hold = validator.materialize_case(manifest, manifest["cases"][0])
+        with tempfile.TemporaryDirectory() as raw:
+            path = Path(raw) / "--fixtures"
+            path.write_text(json.dumps(hold), encoding="utf-8")
+            completed = subprocess.run(
+                [sys.executable, str(Path(validator.__file__)), "--", path.name],
+                cwd=raw,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+        self.assertEqual(0, completed.returncode, completed.stderr)
+        payload = json.loads(completed.stdout)
+        self.assertEqual("HOLD", payload["outcome"])
+        self.assertNotIn("profile_id", payload)
+        self.assertNotIn("suite_match", payload)
+
     def test_duplicate_json_fails_without_echoing_candidate_value(self) -> None:
         sentinel = "EXACT_LOCATION_SENTINEL_THAT_MUST_NOT_ECHO"
         with tempfile.TemporaryDirectory() as raw:

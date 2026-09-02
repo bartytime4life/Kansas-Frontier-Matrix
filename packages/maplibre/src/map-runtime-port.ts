@@ -74,7 +74,10 @@ export type MapFeatureSelection = Readonly<{
   selectionId: string;
   layerId: string;
   featureId: string;
+  /** Evidence references eligible to support the current projection. */
   evidenceRefs: readonly string[];
+  /** Evidence references eligible only for bounded audit history. */
+  historyEvidenceRefs?: readonly string[];
 }>;
 
 export type MapRuntimeReasonCode =
@@ -86,6 +89,7 @@ export type MapRuntimeReasonCode =
   | "MAP_RUNTIME_CAMERA_INVALID"
   | "MAP_RUNTIME_SELECTION_INVALID"
   | "MAP_RUNTIME_STATE_INVALID"
+  | "MAP_RUNTIME_TERRAIN_TRANSITION_FAILED"
   | "MAP_RUNTIME_LISTENER_INVALID";
 
 export type MapRuntimeSnapshot = Readonly<{
@@ -128,12 +132,16 @@ const CAMERA_FIELDS = new Set([
   "bearing",
   "pitch",
 ]);
-const SELECTION_FIELDS = new Set([
+const SELECTION_REQUIRED_FIELDS = new Set([
   "profile",
   "selectionId",
   "layerId",
   "featureId",
   "evidenceRefs",
+]);
+const SELECTION_FIELDS = new Set([
+  ...SELECTION_REQUIRED_FIELDS,
+  "historyEvidenceRefs",
 ]);
 const SAFE_ID = /^[A-Za-z0-9][A-Za-z0-9:._/-]{0,159}$/;
 const MAX_EVIDENCE_REFS = 16;
@@ -149,6 +157,18 @@ function hasExactFields(
 ): boolean {
   const keys = Object.keys(value);
   return keys.length === expected.size && keys.every((key) => expected.has(key));
+}
+
+function hasRequiredAndAllowedFields(
+  value: Record<string, unknown>,
+  required: ReadonlySet<string>,
+  allowed: ReadonlySet<string>,
+): boolean {
+  const keys = Object.keys(value);
+  return (
+    keys.every((key) => allowed.has(key)) &&
+    [...required].every((key) => Object.hasOwn(value, key))
+  );
 }
 
 function isFiniteNumber(value: unknown): value is number {
@@ -181,7 +201,16 @@ export function isMapRuntimeCamera(value: unknown): value is MapRuntimeCamera {
 export function isMapFeatureSelection(
   value: unknown,
 ): value is MapFeatureSelection {
-  if (!isRecord(value) || !hasExactFields(value, SELECTION_FIELDS)) return false;
+  if (
+    !isRecord(value) ||
+    !hasRequiredAndAllowedFields(
+      value,
+      SELECTION_REQUIRED_FIELDS,
+      SELECTION_FIELDS,
+    )
+  ) {
+    return false;
+  }
   if (value.profile !== MAP_FEATURE_SELECTION_PROFILE) return false;
   if (!isSafeId(value.selectionId)) return false;
   if (!isSafeId(value.layerId)) return false;
@@ -190,7 +219,18 @@ export function isMapFeatureSelection(
     return false;
   }
   if (!value.evidenceRefs.every(isSafeId)) return false;
-  return new Set(value.evidenceRefs).size === value.evidenceRefs.length;
+  if (new Set(value.evidenceRefs).size !== value.evidenceRefs.length) return false;
+
+  const historyEvidenceRefs = value.historyEvidenceRefs ?? [];
+  if (
+    !Array.isArray(historyEvidenceRefs) ||
+    value.evidenceRefs.length + historyEvidenceRefs.length > MAX_EVIDENCE_REFS
+  ) {
+    return false;
+  }
+  if (!historyEvidenceRefs.every(isSafeId)) return false;
+  const allEvidenceRefs = [...value.evidenceRefs, ...historyEvidenceRefs];
+  return new Set(allEvidenceRefs).size === allEvidenceRefs.length;
 }
 
 export function isMapRuntimeTrustState(
@@ -235,9 +275,15 @@ export function freezeMapFeatureSelection(
       "Map feature selection is invalid.",
     );
   }
+  const historyEvidenceRefs = selection.historyEvidenceRefs;
   return Object.freeze({
     ...selection,
     evidenceRefs: Object.freeze([...selection.evidenceRefs]),
+    ...(historyEvidenceRefs === undefined
+      ? {}
+      : {
+          historyEvidenceRefs: Object.freeze([...historyEvidenceRefs]),
+        }),
   });
 }
 

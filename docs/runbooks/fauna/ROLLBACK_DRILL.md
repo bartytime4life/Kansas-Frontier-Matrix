@@ -1,7 +1,8 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runbooks/fauna/rollback-drill
 title: Fauna — Rollback Drill
-type: runbook; rehearsal-procedure; domain-lane; sensitive-domain; non-authoritative
+type: standard
+profile: rehearsal-procedure; domain-lane; sensitive-domain; non-authoritative
 version: v0.1
 prior_version: unversioned planned-file scaffold
 status: draft; repository-grounded; shared-synthetic-rehearsal-executable; fauna-integrated-and-operational-rollback-held; non-publisher
@@ -1256,7 +1257,8 @@ At the pinned definition it:
 
 - installs declared repository test dependencies;
 - confirms the production rollback pipeline remains a placeholder;
-- confirms the generic legacy validator entry point remains a placeholder;
+- confirms the generic legacy validator entry point delegates to the canonical
+  release validator with byte-identical fixture output;
 - validates the stronger release-scoped `RollbackCard` fixture profile;
 - runs the non-vacuous shared synthetic rehearsal tests;
 - confirms direct domain drill material remains guidance-only where expected;

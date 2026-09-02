@@ -9,6 +9,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 from jsonschema import Draft202012Validator
 
@@ -360,6 +361,46 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
                 result = validator.validate_file(loop / "input.json")
                 self.assertEqual(result.outcome, "ERROR")
                 self.assertEqual(result.findings[0].code, "INPUT_SYMLINK_DENIED")
+
+    def test_descriptor_traversal_binds_read_to_opened_directory(self) -> None:
+        if not getattr(os, "O_NOFOLLOW", 0) or not getattr(os, "O_DIRECTORY", 0):
+            self.skipTest("descriptor no-follow traversal unavailable")
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "source"
+            source.mkdir()
+            (source / "input.json").write_text(
+                '{"origin":"safe"}',
+                encoding="utf-8",
+            )
+            attacker = root / "attacker"
+            attacker.mkdir()
+            (attacker / "input.json").write_text(
+                '{"origin":"attacker"}',
+                encoding="utf-8",
+            )
+            pinned = root / "source-pinned"
+            original_open = os.open
+            swapped = False
+
+            def racing_open(path, flags, mode=0o777, *, dir_fd=None):
+                nonlocal swapped
+                if dir_fd is None:
+                    descriptor = original_open(path, flags, mode)
+                else:
+                    descriptor = original_open(path, flags, mode, dir_fd=dir_fd)
+                if path == "source" and flags & os.O_DIRECTORY and not swapped:
+                    source.rename(pinned)
+                    source.symlink_to(attacker, target_is_directory=True)
+                    swapped = True
+                return descriptor
+
+            with mock.patch.object(validator.os, "open", side_effect=racing_open):
+                candidate, findings = validator._read(source / "input.json")
+
+            self.assertTrue(swapped)
+            self.assertEqual(findings, [])
+            self.assertEqual(candidate, {"origin": "safe"})
 
     def test_validator_has_no_network_client_import(self) -> None:
         source = VALIDATOR_PATH.read_text(encoding="utf-8")

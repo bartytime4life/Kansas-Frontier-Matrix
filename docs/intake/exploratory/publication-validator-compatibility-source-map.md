@@ -1,16 +1,17 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/intake/exploratory/publication-validator-compatibility-source-map
 title: Publication Manifest Validator Compatibility Source Map
-type: source-map; exploratory-intake; implementation-lineage
-version: v1.1.0
+type: source-map
+profile: exploratory-intake; implementation-lineage
+version: v1.2.0
 status: proposed; repository-grounded; compatibility-only; fixture-only; no-network
 owners: OWNER_TBD — Validator steward · Data steward · Release steward
 created: 2026-08-10
-updated: 2026-08-10
+updated: 2026-09-02
 policy_label: public; exploratory; validators; release; no-publication-authority
 owning_root: docs/
 responsibility: Record the evidence, bounded compatibility decision, exact-head correction, validation, and rollback for replacing two obsolete root manifest-validator stubs with delegation-only entrypoints.
-truth_posture: CONFIRMED repository and source evidence / PROPOSED compatibility change pending review / NEEDS VERIFICATION hosted checks and consumer inventory
+truth_posture: CONFIRMED historical manifest compatibility lineage / CONFIRMED current RollbackCard compatibility delegation / PROPOSED manifest compatibility change pending review
 [/KFM_META_BLOCK_V2] -->
 
 # Publication Manifest Validator Compatibility Source Map
@@ -32,7 +33,7 @@ The repository's citation-validation compatibility entrypoint establishes the sa
 
 ## Exact-head narrowing
 
-The first branch head also delegated the root `RollbackCard` path. Hosted `rollback-drill` failed because current repository control deliberately requires `tools/validators/validate_rollback_card.py` to remain an explicit stub/hold until separate rollback adoption criteria are met. The repair restores that file byte-for-byte and removes it from this packet. This PR therefore fixes only the two manifest entrypoints whose canonical validators are already admitted by current workflows.
+The original manifest packet temporarily excluded the root `RollbackCard` path after its historical branch head conflicted with then-current `rollback-drill` assertions. That historical exclusion does not describe current repository behavior: `tools/validators/validate_rollback_card.py` now delegates to the schema-declared canonical release validator, and dedicated tests plus release and rollback workflows require compatibility parity. RollbackCard remains outside this manifest-specific packet because it is owned by its separate validated compatibility review unit, not because the entrypoint is unavailable.
 
 ## Bounded implementation
 

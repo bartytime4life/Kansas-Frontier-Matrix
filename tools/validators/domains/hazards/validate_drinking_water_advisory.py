@@ -9,9 +9,12 @@ from __future__ import annotations
 
 import argparse
 import copy
+import errno
 import json
 import math
+import os
 import re
+import stat
 import sys
 from dataclasses import dataclass
 from datetime import datetime
@@ -109,6 +112,14 @@ class NonFiniteNumberError(ValueError):
     pass
 
 
+class SymlinkPathError(OSError):
+    pass
+
+
+class FileTooLargeError(OSError):
+    pass
+
+
 def _pairs(items: list[tuple[str, Any]]) -> dict[str, Any]:
     result: dict[str, Any] = {}
     for key, value in items:
@@ -129,34 +140,78 @@ def _float(value: str) -> float:
     return parsed
 
 
-def _has_symlink_component(path: Path) -> bool:
-    """Return whether the lexical input path traverses any symlink."""
+def _read_text_no_symlinks(path: Path) -> str:
+    """Read one regular file through descriptor-bound no-follow traversal."""
+    nofollow = getattr(os, "O_NOFOLLOW", 0)
+    directory = getattr(os, "O_DIRECTORY", 0)
+    cloexec = getattr(os, "O_CLOEXEC", 0)
+    if not nofollow or not directory:
+        raise OSError(errno.ENOTSUP, "no-follow descriptor traversal unavailable")
+
+    absolute = Path(os.path.abspath(path))
+    parts = absolute.parts
+    if len(parts) < 2:
+        raise FileNotFoundError(path)
+
+    directory_fd = os.open(
+        absolute.anchor,
+        os.O_RDONLY | directory | cloexec,
+    )
     try:
-        absolute = path.absolute()
-        current = Path(absolute.anchor)
-        for part in absolute.parts[1:]:
-            current /= part
-            if current.is_symlink():
-                return True
-    except (OSError, RuntimeError, ValueError):
-        return False
-    return False
+        for part in parts[1:-1]:
+            try:
+                next_fd = os.open(
+                    part,
+                    os.O_RDONLY | directory | nofollow | cloexec,
+                    dir_fd=directory_fd,
+                )
+            except OSError as exc:
+                if exc.errno in {errno.ELOOP, errno.ENOTDIR}:
+                    raise SymlinkPathError(path) from exc
+                raise
+            os.close(directory_fd)
+            directory_fd = next_fd
+
+        try:
+            file_fd = os.open(
+                parts[-1],
+                os.O_RDONLY | nofollow | cloexec,
+                dir_fd=directory_fd,
+            )
+        except OSError as exc:
+            if exc.errno == errno.ELOOP:
+                raise SymlinkPathError(path) from exc
+            raise
+        try:
+            file_stat = os.fstat(file_fd)
+            if not stat.S_ISREG(file_stat.st_mode):
+                raise FileNotFoundError(path)
+            if file_stat.st_size > MAX_FILE_BYTES:
+                raise FileTooLargeError(path)
+            with os.fdopen(file_fd, "r", encoding="utf-8") as stream:
+                file_fd = -1
+                return stream.read()
+        finally:
+            if file_fd >= 0:
+                os.close(file_fd)
+    finally:
+        os.close(directory_fd)
 
 
 def _read(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
     try:
-        if _has_symlink_component(path):
-            return None, [Finding("INPUT_SYMLINK_DENIED", "/")]
-        if not path.is_file():
-            return None, [Finding("FILE_NOT_FOUND", "/")]
-        if path.stat().st_size > MAX_FILE_BYTES:
-            return None, [Finding("FILE_TOO_LARGE", "/")]
         value = json.loads(
-            path.read_text(encoding="utf-8"),
+            _read_text_no_symlinks(path),
             object_pairs_hook=_pairs,
             parse_constant=_nonfinite,
             parse_float=_float,
         )
+    except SymlinkPathError:
+        return None, [Finding("INPUT_SYMLINK_DENIED", "/")]
+    except FileNotFoundError:
+        return None, [Finding("FILE_NOT_FOUND", "/")]
+    except FileTooLargeError:
+        return None, [Finding("FILE_TOO_LARGE", "/")]
     except UnicodeError:
         return None, [Finding("JSON_INVALID", "/")]
     except DuplicateKeyError:

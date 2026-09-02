@@ -1,0 +1,414 @@
+{
+  "base": {
+    "profile": "kfm.domains.agriculture.public-safe-map-feature.v1",
+    "status": "PROPOSED_INACTIVE",
+    "object_type": "AgricultureMapFeatureCandidate",
+    "version": "1.0.0",
+    "id": "ag-map-feature:000000000000000000000000",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "domain": "agriculture",
+    "object_family": "CropObservation",
+    "semantic_role": "OBSERVED_AGGREGATE",
+    "support": {
+      "kind": "COUNTY",
+      "key": "US-KS-20169",
+      "generalized": true,
+      "precision_class": "AGGREGATE_PUBLIC_SAFE"
+    },
+    "temporal": {
+      "kind": "CROP_YEAR",
+      "year": 2025,
+      "start": "2024-09-01",
+      "end": "2025-08-31",
+      "source_vintage": "2025-09-15"
+    },
+    "freshness": {
+      "evaluated_at": "2025-10-01",
+      "max_age_days": 90,
+      "state": "CURRENT"
+    },
+    "indicator": {
+      "key": "cropland_class",
+      "label": "Synthetic cropland class",
+      "unit": "CLASS",
+      "value_role": "OBSERVED",
+      "value": "GRAIN"
+    },
+    "uncertainty": {
+      "state": "NOT_QUANTIFIED",
+      "label": "Synthetic fixture; no production estimate."
+    },
+    "evidence_refs": [
+      "evidence:synthetic:agriculture:map-feature:v1"
+    ],
+    "rights_state": "SYNTHETIC_ONLY",
+    "sensitivity": {
+      "exact_field_geometry": false,
+      "operator_identity": false,
+      "parcel_owner_join": false,
+      "private_address": false,
+      "sensitive_infrastructure": false,
+      "proprietary_value": false,
+      "transform_parameters": false
+    },
+    "authority": {
+      "hydrology_observation": false,
+      "water_right": false,
+      "habitat_occurrence": false,
+      "geology_truth": false,
+      "atmosphere_forecast": false,
+      "hazard_alert": false
+    },
+    "release": {
+      "state": "UNRELEASED_CANDIDATE",
+      "policy_evaluated": false,
+      "review_approved": false,
+      "release_authorized": false,
+      "public_use_allowed": false,
+      "published": false
+    },
+    "limitations": [
+      "Generalized aggregate support; not farm or operator truth.",
+      "Synthetic no-network fixture only."
+    ]
+  },
+  "cases": [
+    {
+      "case_id": "valid_county_crop_observation",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "county_precision_class_mismatch",
+      "mutations": [
+        {
+          "path": "/support/precision_class",
+          "value": "GENERALIZED_PUBLIC_SAFE"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "AG_MAP_SCHEMA_INVALID",
+          "path": "/support/precision_class"
+        }
+      ]
+    },
+    {
+      "case_id": "valid_generalized_grid_crop_rotation",
+      "mutations": [
+        {
+          "path": "/object_family",
+          "value": "CropRotation"
+        },
+        {
+          "path": "/semantic_role",
+          "value": "DERIVED_CONTEXT"
+        },
+        {
+          "path": "/support/kind",
+          "value": "GENERALIZED_GRID"
+        },
+        {
+          "path": "/support/key",
+          "value": "KS-GRID-20KM-038-024"
+        },
+        {
+          "path": "/support/precision_class",
+          "value": "GENERALIZED_PUBLIC_SAFE"
+        },
+        {
+          "path": "/indicator/key",
+          "value": "crop_rotation_class"
+        },
+        {
+          "path": "/indicator/label",
+          "value": "Synthetic generalized crop rotation context"
+        },
+        {
+          "path": "/indicator/value_role",
+          "value": "MODELED_OR_DERIVED"
+        },
+        {
+          "path": "/indicator/value",
+          "value": "GRAIN_TO_OILSEED"
+        }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "crop_rotation_as_observed_role_denied",
+      "mutations": [
+        {
+          "path": "/object_family",
+          "value": "CropRotation"
+        },
+        {
+          "path": "/indicator/key",
+          "value": "crop_rotation_class"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "AG_MAP_FAMILY_ROLE_COLLAPSE",
+          "path": "/semantic_role"
+        }
+      ]
+    },
+    {
+      "case_id": "harmful_precision_geometry",
+      "mutations": [
+        {
+          "path": "/geometry",
+          "value": {
+            "type": "Point",
+            "coordinates": [
+              -98.3,
+              38.6
+            ]
+          }
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "AG_MAP_HARMFUL_PRECISION_DENIED",
+          "path": "/geometry"
+        },
+        {
+          "code": "AG_MAP_HARMFUL_PRECISION_DENIED",
+          "path": "/geometry/coordinates"
+        }
+      ]
+    },
+    {
+      "case_id": "evidence_ref_namespace_mismatch",
+      "mutations": [
+        {
+          "path": "/evidence_refs/0",
+          "value": "evidence:synthetic:hydrology:streamflow:v1"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "AG_MAP_SCHEMA_INVALID",
+          "path": "/evidence_refs/0"
+        }
+      ]
+    },
+    {
+      "case_id": "modeled_suitability_as_observed",
+      "mutations": [
+        {
+          "path": "/object_family",
+          "value": "SoilCropSuitability"
+        },
+        {
+          "path": "/semantic_role",
+          "value": "OBSERVED_AGGREGATE"
+        },
+        {
+          "path": "/indicator/key",
+          "value": "soil_crop_suitability_index"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "AG_MAP_FAMILY_ROLE_COLLAPSE",
+          "path": "/semantic_role"
+        }
+      ]
+    },
+    {
+      "case_id": "irrigation_claims_water_right",
+      "mutations": [
+        {
+          "path": "/object_family",
+          "value": "IrrigationLink"
+        },
+        {
+          "path": "/semantic_role",
+          "value": "IRRIGATION_CONTEXT"
+        },
+        {
+          "path": "/indicator/key",
+          "value": "irrigation_context_class"
+        },
+        {
+          "path": "/indicator/unit",
+          "value": "CONTEXT_ONLY"
+        },
+        {
+          "path": "/indicator/value_role",
+          "value": "CONTEXT_ONLY"
+        },
+        {
+          "path": "/authority/water_right",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "AG_MAP_SCHEMA_INVALID",
+          "path": "/authority/water_right"
+        }
+      ]
+    },
+    {
+      "case_id": "irrigation_claims_hydrology_observation",
+      "mutations": [
+        {
+          "path": "/object_family",
+          "value": "IrrigationLink"
+        },
+        {
+          "path": "/semantic_role",
+          "value": "IRRIGATION_CONTEXT"
+        },
+        {
+          "path": "/indicator/key",
+          "value": "irrigation_context_class"
+        },
+        {
+          "path": "/indicator/unit",
+          "value": "CONTEXT_ONLY"
+        },
+        {
+          "path": "/indicator/value_role",
+          "value": "CONTEXT_ONLY"
+        },
+        {
+          "path": "/authority/hydrology_observation",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "AG_MAP_SCHEMA_INVALID",
+          "path": "/authority/hydrology_observation"
+        }
+      ]
+    },
+    {
+      "case_id": "crop_year_label_outside_interval",
+      "mutations": [
+        {
+          "path": "/temporal/year",
+          "value": 2026
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "AG_MAP_YEAR_OUTSIDE_INTERVAL",
+          "path": "/temporal/year"
+        }
+      ]
+    },
+    {
+      "case_id": "derived_indicator_value_role_collapse",
+      "mutations": [
+        {
+          "path": "/object_family",
+          "value": "DroughtStressIndicator"
+        },
+        {
+          "path": "/semantic_role",
+          "value": "DERIVED_INDICATOR"
+        },
+        {
+          "path": "/support/kind",
+          "value": "GENERALIZED_GRID"
+        },
+        {
+          "path": "/support/key",
+          "value": "KS-GRID-20KM-038-024"
+        },
+        {
+          "path": "/support/precision_class",
+          "value": "GENERALIZED_PUBLIC_SAFE"
+        },
+        {
+          "path": "/indicator/key",
+          "value": "drought_stress_index"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "AG_MAP_VALUE_ROLE_COLLAPSE",
+          "path": "/indicator/value_role"
+        }
+      ]
+    },
+    {
+      "case_id": "public_use_overclaim",
+      "mutations": [
+        {
+          "path": "/release/public_use_allowed",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "AG_MAP_SCHEMA_INVALID",
+          "path": "/release/public_use_allowed"
+        }
+      ]
+    },
+    {
+      "case_id": "stale_state_mismatch",
+      "mutations": [
+        {
+          "path": "/freshness/evaluated_at",
+          "value": "2026-01-01"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "AG_MAP_FRESHNESS_STATE_MISMATCH",
+          "path": "/freshness/state"
+        }
+      ]
+    },
+    {
+      "case_id": "explicit_stale_candidate",
+      "mutations": [
+        {
+          "path": "/freshness/evaluated_at",
+          "value": "2026-01-01"
+        },
+        {
+          "path": "/freshness/state",
+          "value": "STALE"
+        }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "freshness_evaluation_precedes_vintage",
+      "mutations": [
+        {
+          "path": "/freshness/evaluated_at",
+          "value": "2025-09-01"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "AG_MAP_FRESHNESS_EVALUATION_PRECEDES_VINTAGE",
+          "path": "/freshness/evaluated_at"
+        }
+      ]
+    }
+  ]
+}

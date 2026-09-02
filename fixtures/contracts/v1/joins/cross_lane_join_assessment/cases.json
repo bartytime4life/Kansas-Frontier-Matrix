@@ -226,6 +226,14 @@
       ],
       "expected_status": "PASS",
       "expected_findings": []
+    },
+    {
+      "name": "same_domain_abstains",
+      "mutations": [
+        {"path": "/endpoints/right/domain", "value": "fixture-left"}
+      ],
+      "expected_status": "PASS",
+      "expected_findings": []
     }
   ]
 }
