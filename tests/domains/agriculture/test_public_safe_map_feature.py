@@ -511,3 +511,23 @@ def test_cli_option_terminator_allows_dash_prefixed_candidate(tmp_path):
     assert payload["authority"] == "NONE"
     assert payload["execution_mode"] == "SYNTHETIC_NO_NETWORK"
 
+def test_unavailable_input_returns_machine_readable_error(tmp_path, capsys):
+    module = _module()
+    missing = tmp_path / "missing.json"
+    invalid_utf8 = tmp_path / "invalid-utf8.json"
+    invalid_utf8.write_bytes(b"\xff\xfe")
+    directory = tmp_path / "directory"
+    directory.mkdir()
+
+    for candidate_path in (missing, invalid_utf8, directory):
+        assert module.main([str(candidate_path)]) == 1
+        captured = capsys.readouterr()
+        assert captured.err == ""
+        payload = json.loads(captured.out)
+        assert payload["outcome"] == "ERROR"
+        assert payload["findings"] == [
+            {"code": "AG_MAP_INPUT_UNAVAILABLE", "path": "/"}
+        ]
+        assert payload["authority"] == "NONE"
+        assert payload["execution_mode"] == "SYNTHETIC_NO_NETWORK"
+
