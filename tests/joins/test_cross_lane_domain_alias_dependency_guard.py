@@ -13,6 +13,12 @@ MODULE = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = MODULE
 SPEC.loader.exec_module(MODULE)
 
+AUTHORITY_ENVELOPE = (
+    "version: v1\n"
+    "registry: domain_lane_register\n"
+    "authority: machine_projection_only\n"
+)
+
 
 def _rule_counts(decision: dict[str, object]) -> dict[str, int]:
     return {
@@ -58,7 +64,8 @@ def test_symlinked_alias_projection_fails_closed_as_dependency_error(tmp_path: P
     candidate = _base_candidate()
     target = tmp_path / "alternate_authority.yaml"
     target.write_text(
-        "unresolved_aliases:\n  air: atmosphere\nentries:\n  - lane_id: atmosphere\n",
+        AUTHORITY_ENVELOPE
+        + "unresolved_aliases:\n  air: atmosphere\nentries:\n  - lane_id: atmosphere\n",
         encoding="utf-8",
     )
     projection = tmp_path / "domain_lane_register.yaml"
@@ -78,7 +85,10 @@ def test_symlinked_alias_projection_fails_closed_as_dependency_error(tmp_path: P
 def test_malformed_alias_projection_fails_closed_as_dependency_error(tmp_path: Path, monkeypatch) -> None:
     candidate = _base_candidate()
     malformed = tmp_path / "domain_lane_register.yaml"
-    malformed.write_text("unresolved_aliases: [air, atmosphere]\n", encoding="utf-8")
+    malformed.write_text(
+        AUTHORITY_ENVELOPE + "unresolved_aliases: [air, atmosphere]\n",
+        encoding="utf-8",
+    )
     monkeypatch.setattr(MODULE, "DOMAIN_LANE_REGISTER_PATH", malformed)
 
     decision = MODULE.derive_decision(candidate)
@@ -96,9 +106,14 @@ def _assert_projection_fails_closed(
     tmp_path: Path,
     monkeypatch,
     projection: str,
+    *,
+    include_authority_envelope: bool = True,
 ) -> None:
     ambiguous = tmp_path / "domain_lane_register.yaml"
-    ambiguous.write_text(projection, encoding="utf-8")
+    ambiguous.write_text(
+        (AUTHORITY_ENVELOPE if include_authority_envelope else "") + projection,
+        encoding="utf-8",
+    )
     monkeypatch.setattr(MODULE, "DOMAIN_LANE_REGISTER_PATH", ambiguous)
 
     decision = MODULE.derive_decision(candidate)
@@ -131,11 +146,40 @@ def test_duplicate_alias_name_fails_closed(tmp_path: Path, monkeypatch) -> None:
 def test_custom_valid_alias_projection_resolves_registered_target(tmp_path: Path) -> None:
     projection = tmp_path / "domain_lane_register.yaml"
     projection.write_text(
-        "unresolved_aliases:\n  air: atmosphere\nentries:\n  - lane_id: atmosphere\n",
+        AUTHORITY_ENVELOPE
+        + "unresolved_aliases:\n  air: atmosphere\nentries:\n  - lane_id: atmosphere\n",
         encoding="utf-8",
     )
 
     assert MODULE._unresolved_domain_aliases(projection) == {"air": "atmosphere"}
+
+
+def test_missing_authority_envelope_fails_closed(tmp_path: Path, monkeypatch) -> None:
+    _assert_projection_fails_closed(
+        _base_candidate(),
+        tmp_path,
+        monkeypatch,
+        "unresolved_aliases:\n  air: atmosphere\nentries:\n  - lane_id: atmosphere\n",
+        include_authority_envelope=False,
+    )
+
+
+def test_authority_overclaim_fails_closed(tmp_path: Path, monkeypatch) -> None:
+    _assert_projection_fails_closed(
+        _base_candidate(),
+        tmp_path,
+        monkeypatch,
+        (
+            "version: v1\n"
+            "registry: domain_lane_register\n"
+            "authority: domain_identity_authority\n"
+            "unresolved_aliases:\n"
+            "  air: atmosphere\n"
+            "entries:\n"
+            "  - lane_id: atmosphere\n"
+        ),
+        include_authority_envelope=False,
+    )
 
 
 def test_unknown_alias_target_fails_closed(tmp_path: Path, monkeypatch) -> None:

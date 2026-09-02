@@ -219,6 +219,12 @@ def _unresolved_domain_aliases(path: Path | None = None) -> Mapping[str, str]:
     except (OSError, UnicodeError, yaml.YAMLError) as exc:
         raise ValueError("domain lane register unavailable") from exc
     document = _mapping(value)
+    if (
+        document.get("version") != "v1"
+        or document.get("registry") != "domain_lane_register"
+        or document.get("authority") != "machine_projection_only"
+    ):
+        raise ValueError("domain lane alias projection invalid")
     aliases = document.get("unresolved_aliases")
     entries = document.get("entries")
     if not isinstance(aliases, Mapping) or not isinstance(entries, list):
