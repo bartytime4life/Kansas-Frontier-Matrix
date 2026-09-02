@@ -125,9 +125,28 @@ class ConsentRevocationPropagationAssessmentTests(unittest.TestCase):
             target.write_text("{}", encoding="utf-8")
             link = root / "link.json"
             link.symlink_to(target)
+
+            target_dir = root / "target-dir"
+            target_dir.mkdir()
+            nested_target = target_dir / "nested.json"
+            nested_target.write_text("{}", encoding="utf-8")
+            linked_dir = root / "linked-dir"
+            linked_dir.symlink_to(target_dir, target_is_directory=True)
+
+            oversized = root / "oversized.json"
+            oversized.write_bytes(b"{" + (b" " * MODULE.MAX_FILE_BYTES) + b"}")
+            directory_input = root / "directory-input"
+            directory_input.mkdir()
+
             self.assertEqual(MODULE.load_json_object(duplicate)[1][0].code, "JSON_DUPLICATE_KEY")
             self.assertEqual(MODULE.load_json_object(nonfinite)[1][0].code, "JSON_NONFINITE_NUMBER")
             self.assertEqual(MODULE.load_json_object(link)[1][0].code, "INPUT_SYMLINK_DENIED")
+            self.assertEqual(
+                MODULE.load_json_object(linked_dir / nested_target.name)[1][0].code,
+                "INPUT_SYMLINK_DENIED",
+            )
+            self.assertEqual(MODULE.load_json_object(oversized)[1][0].code, "FILE_TOO_LARGE")
+            self.assertEqual(MODULE.load_json_object(directory_input)[1][0].code, "FILE_NOT_FOUND")
 
     def test_fixture_replay_is_deterministic_and_no_network(self) -> None:
         with mock.patch.object(

@@ -14,6 +14,8 @@ import copy
 import hashlib
 import json
 import math
+import os
+import stat
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -89,26 +91,54 @@ def _finite_float(value: str) -> float:
     return parsed
 
 
+def _has_symlink_component(path: Path) -> bool:
+    absolute_path = path.absolute()
+    return any(
+        component.is_symlink()
+        for component in (absolute_path, *absolute_path.parents)
+    )
+
+
 def load_json_object(path: Path) -> tuple[dict[str, object] | None, list[Finding]]:
+    descriptor = -1
     try:
-        if path.is_symlink():
+        absolute_path = path.absolute()
+        if _has_symlink_component(absolute_path):
             return None, [Finding("INPUT_SYMLINK_DENIED", "/")]
-        if not path.is_file():
+
+        flags = os.O_RDONLY
+        if hasattr(os, "O_NOFOLLOW"):
+            flags |= os.O_NOFOLLOW
+        descriptor = os.open(absolute_path, flags)
+        metadata = os.fstat(descriptor)
+        if not stat.S_ISREG(metadata.st_mode):
             return None, [Finding("FILE_NOT_FOUND", "/")]
-        if path.stat().st_size > MAX_FILE_BYTES:
+        if metadata.st_size > MAX_FILE_BYTES:
             return None, [Finding("FILE_TOO_LARGE", "/")]
+
+        with os.fdopen(descriptor, "rb") as handle:
+            descriptor = -1
+            payload = handle.read(MAX_FILE_BYTES + 1)
+        if len(payload) > MAX_FILE_BYTES:
+            return None, [Finding("FILE_TOO_LARGE", "/")]
+
         value = json.loads(
-            path.read_text(encoding="utf-8"),
+            payload.decode("utf-8"),
             object_pairs_hook=_pairs,
             parse_constant=_nonfinite,
             parse_float=_finite_float,
         )
+    except FileNotFoundError:
+        return None, [Finding("FILE_NOT_FOUND", "/")]
     except DuplicateKeyError:
         return None, [Finding("JSON_DUPLICATE_KEY", "/")]
     except NonFiniteNumberError:
         return None, [Finding("JSON_NONFINITE_NUMBER", "/")]
     except (OSError, UnicodeError, json.JSONDecodeError, RecursionError, ValueError):
         return None, [Finding("JSON_INVALID", "/")]
+    finally:
+        if descriptor >= 0:
+            os.close(descriptor)
     if not isinstance(value, dict):
         return None, [Finding("ROOT_NOT_OBJECT", "/")]
     return value, []

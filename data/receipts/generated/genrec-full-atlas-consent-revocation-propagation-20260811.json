@@ -22,8 +22,8 @@
     "fixtures/domains/people-dna-land/consent_revocation_propagation/README.md": "sha256:4b758064e16e71a74bcb8218cc8fcabf8f542eda042422cc436272b05d2c92f1",
     "fixtures/domains/people-dna-land/consent_revocation_propagation/cases.json": "sha256:5ff62c55261a9e0c96660719d0ad79301bd537f524cc2006fb89147dcba22e6c",
     "schemas/contracts/v1/domains/people-dna-land/consent_revocation_propagation_assessment.schema.json": "sha256:e31d0a8f32bd437f678de7760abdb7da2027517a5d6f490b5818897224a257fc",
-    "tests/domains/people-dna-land/consent/revocation/test_consent_revocation_propagation_assessment.py": "sha256:14710050998a2b0e725cb28ddbb82d2d0947a61b69a61df01f5a51f48109ee0a",
-    "tools/validators/domains/people-dna-land/validate_consent_revocation_propagation_assessment.py": "sha256:dca450ad5f2a6f6fe310698b0d68cde5dfcf4fa53ab83d96573ae14cb10f93fd"
+    "tests/domains/people-dna-land/consent/revocation/test_consent_revocation_propagation_assessment.py": "sha256:02285ec01341c6f1e90fb805561627d5c1c9c4a22c445a684171f6b49d3439ba",
+    "tools/validators/domains/people-dna-land/validate_consent_revocation_propagation_assessment.py": "sha256:2f717d4ac1dce505707cd6a0a8c59e5c81aa53d9f0b0afba2663017abf97c5b2"
   },
   "model_identity": {
     "provider": "OpenAI",
