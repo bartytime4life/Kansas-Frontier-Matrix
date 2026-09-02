@@ -114,17 +114,22 @@ _CANONICAL_EVIDENCE_SEGMENT = re.compile(
 _CANONICAL_EVIDENCE_TIMESTAMP_SEGMENT = re.compile(
     r"\A\d{8}T\d{6}Z\Z"
 )
+_EVIDENCE_TIMESTAMP_SEGMENT_SHAPE = re.compile(
+    r"\A\d{8}t\d{6}z\Z", re.IGNORECASE
+)
+
+
+def _is_canonical_evidence_segment(segment: str) -> bool:
+    if _EVIDENCE_TIMESTAMP_SEGMENT_SHAPE.fullmatch(segment) is not None:
+        return _CANONICAL_EVIDENCE_TIMESTAMP_SEGMENT.fullmatch(segment) is not None
+    return _CANONICAL_EVIDENCE_SEGMENT.fullmatch(segment) is not None
 
 
 def _has_canonical_evidence_path(value: str) -> bool:
     suffix = value[len(FIXTURE_EVIDENCE_PREFIX) :]
     return (
         1 <= len(suffix) <= 256
-        and all(
-            _CANONICAL_EVIDENCE_SEGMENT.fullmatch(segment) is not None
-            or _CANONICAL_EVIDENCE_TIMESTAMP_SEGMENT.fullmatch(segment) is not None
-            for segment in suffix.split("/")
-        )
+        and all(_is_canonical_evidence_segment(segment) for segment in suffix.split("/"))
     )
 
 
