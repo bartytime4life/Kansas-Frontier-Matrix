@@ -119,6 +119,22 @@ class InstallKfmCliTests(unittest.TestCase):
             ):
                 module.validate_lockfile(path)
 
+    def test_lock_validation_rejects_duplicate_hash(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "duplicate-hash.lock"
+            digest = "0" * 64
+            path.write_text(
+                "demo==1.0 \\\n"
+                f"    --hash=sha256:{digest} \\\n"
+                f"    --hash=sha256:{digest}\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                module.CliInstallConfigurationError,
+                "^CLI_LOCKFILE_HASH_DUPLICATE$",
+            ):
+                module.validate_lockfile(path)
+
     def test_lock_validation_binds_hash_continuations(self) -> None:
         cases = {
             "missing-intermediate": (

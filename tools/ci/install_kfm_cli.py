@@ -128,6 +128,10 @@ def validate_lockfile(path: Path = LOCKFILE) -> None:
         seen_distributions.add(distribution)
     if any(not HASH_LINE.fullmatch(line) for line in hashes):
         raise CliInstallConfigurationError("CLI_LOCKFILE_HASH_INVALID")
+    for group in hash_groups:
+        digests = [line.split("sha256:", 1)[1].split()[0] for line in group]
+        if len(digests) != len(set(digests)):
+            raise CliInstallConfigurationError("CLI_LOCKFILE_HASH_DUPLICATE")
 
 
 def validate_local_package(path: Path = LOCAL_PACKAGE) -> None:
