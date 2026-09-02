@@ -83,6 +83,11 @@ class AirObservationValidatorEntrypointTests(unittest.TestCase):
                 metadata_path = Path(metadata_value)
                 self.assertFalse(metadata_path.is_absolute())
                 self.assertNotIn("..", metadata_path.parts)
+                self.assertNotIn("\\\\", metadata_value)
+                normalized_value = metadata_path.as_posix()
+                if metadata_value.endswith("/"):
+                    normalized_value += "/"
+                self.assertEqual(metadata_value, normalized_value)
                 declared_path = REPO_ROOT / metadata_path
                 self.assertEqual(declared_path.resolve(), expected_path.resolve())
                 self.assertTrue(declared_path.exists())
