@@ -193,6 +193,10 @@ jobs:
               ),
               Path(
                   "tools/validators/domains/atmosphere/"
+                  "validate_evidence_bundle.py"
+              ),
+              Path(
+                  "tools/validators/domains/atmosphere/"
                   "airnow_aqs_reconciliation/validate_reconciliation.py"
               ),
           }
