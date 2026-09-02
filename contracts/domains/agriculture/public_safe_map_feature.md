@@ -108,9 +108,10 @@ integer or fractional and whether coordinate pairs use commas or whitespace.
 Protected identifier values are denied at every length. A complete scalar that
 is shaped as a private identity label remains denied with one or more identity
 tokens, regardless of capitalization or Unicode letter width, even when it
-omits an ID suffix or punctuation. Compatibility-equivalent Unicode forms are
-normalized before scalar scanning, so full-width labels and identifiers cannot
-bypass the same rules. Descriptive aggregate prose may mention field, farm,
+omits an ID suffix or uses whitespace, colon, equals, or hash delimiters.
+Compatibility-equivalent Unicode forms are normalized before scalar scanning,
+so full-width labels, delimiters, and identifiers cannot bypass the same rules.
+Descriptive aggregate prose may mention field, farm,
 parcel, operator, well, permit, or water-right concepts without being recast as
 an identity label; explicit protected identifiers and coordinate literals
 remain denied anywhere in a scalar. JSON decoding is strict: malformed documents, duplicate
