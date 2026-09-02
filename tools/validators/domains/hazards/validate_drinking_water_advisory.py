@@ -43,6 +43,7 @@ SCHEMA = (
 CASES = ROOT / "fixtures/domains/hazards/drinking_water_advisory/cases.json"
 COMMON_CONTRACT = ROOT / "contracts/common/advisory_event_envelope.md"
 MAX_FILE_BYTES = 1_048_576
+MAX_INPUT_PATHS = 32
 MAX_SCHEMA_FINDINGS = 100
 DATE_TIME_FORMAT_CHECKER = FormatChecker()
 AWARE_DATETIME_OFFSET = re.compile(r"(?:Z|[+-][0-9]{2}:[0-9]{2})$")
@@ -726,6 +727,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(raw_argv)
     if fixture_option_count > 1:
         parser.error("--fixtures may be provided only once")
+    if len(args.paths) > MAX_INPUT_PATHS:
+        parser.error(f"at most {MAX_INPUT_PATHS} input paths may be provided")
     if args.fixtures:
         if args.paths:
             parser.error("input paths cannot be combined with --fixtures")

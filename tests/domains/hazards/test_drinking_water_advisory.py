@@ -567,6 +567,30 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
                     self.assertEqual(completed.returncode, 2)
                     self.assertEqual(completed.stdout, "")
 
+    def test_cli_rejects_unbounded_input_fanout_before_reading(self) -> None:
+        completed = subprocess.run(
+            [
+                sys.executable,
+                str(VALIDATOR_PATH),
+                *[
+                    f"missing-{index}.json"
+                    for index in range(validator.MAX_INPUT_PATHS + 1)
+                ],
+            ],
+            cwd=REPO_ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+
+        self.assertEqual(completed.returncode, 2)
+        self.assertEqual(completed.stdout, "")
+        self.assertIn(
+            f"at most {validator.MAX_INPUT_PATHS} input paths may be provided",
+            completed.stderr,
+        )
+
     def test_option_terminator_allows_fixture_named_input(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "--fixtures"
