@@ -23,6 +23,7 @@ FIXTURE_ROOT = ROOT / "fixtures" / "domains" / "fauna" / "migration_route"
 MANIFEST_PATH = FIXTURE_ROOT / "expected_findings_manifest.json"
 SCOPE = "fauna-public-safe-migration-fixture-v1"
 MAX_POSITIONS = 4096
+MAX_EVIDENCE_REFS = 64
 
 TOP_LEVEL_KEYS = frozenset(
     {
@@ -244,6 +245,9 @@ def validate_candidate(candidate: object) -> ValidationResult:
     if not isinstance(evidence_refs, list) or not evidence_refs:
         _add(findings, "evidence.fixture_ref_required", "/evidence_refs")
     else:
+        if len(evidence_refs) > MAX_EVIDENCE_REFS:
+            _add(findings, "evidence.reference_limit_exceeded", "/evidence_refs")
+        seen_evidence_refs: set[str] = set()
         for index, item in enumerate(evidence_refs):
             if not _fixture_ref(item, "fixture:evidence:fauna:"):
                 _add(
@@ -251,6 +255,14 @@ def validate_candidate(candidate: object) -> ValidationResult:
                     "evidence.fixture_ref_required",
                     f"/evidence_refs/{index}",
                 )
+            elif item in seen_evidence_refs:
+                _add(
+                    findings,
+                    "evidence.reference_duplicate",
+                    f"/evidence_refs/{index}",
+                )
+            else:
+                seen_evidence_refs.add(item)
 
     findings.extend(_time_findings(candidate.get("time_scope")))
     findings.extend(_geometry_findings(candidate.get("geometry")))

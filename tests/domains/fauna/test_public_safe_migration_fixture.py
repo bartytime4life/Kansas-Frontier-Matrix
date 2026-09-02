@@ -161,6 +161,36 @@ class PublicSafeMigrationFixtureTests(unittest.TestCase):
             ),
         )
 
+    def test_evidence_references_are_bounded_and_duplicate_safe(self):
+        candidate = json.loads(VALID.read_text(encoding="utf-8"))
+        candidate["evidence_refs"] = [
+            "fixture:evidence:fauna:synthetic-duplicate",
+            "fixture:evidence:fauna:synthetic-duplicate",
+        ]
+        self.assertEqual(
+            validate_candidate(candidate).findings,
+            (
+                Finding(
+                    "evidence.reference_duplicate",
+                    "/evidence_refs/1",
+                ),
+            ),
+        )
+
+        candidate["evidence_refs"] = [
+            f"fixture:evidence:fauna:synthetic-{index}"
+            for index in range(65)
+        ]
+        self.assertEqual(
+            validate_candidate(candidate).findings,
+            (
+                Finding(
+                    "evidence.reference_limit_exceeded",
+                    "/evidence_refs",
+                ),
+            ),
+        )
+
     def test_oversized_integer_position_fails_closed(self):
         candidate = json.loads(VALID.read_text(encoding="utf-8"))
         candidate["geometry"]["coordinates"][1] = [10**1000, 0]
