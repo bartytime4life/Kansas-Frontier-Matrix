@@ -233,7 +233,13 @@ def test_cli_exact_modes_and_option_terminator_remain_available(tmp_path: Path) 
         text=True,
     )
     assert fixture_run.returncode == 0, fixture_run.stderr
-    assert len(fixture_run.stdout.splitlines()) == 20
+    fixture_report = json.loads(fixture_run.stdout)
+    assert fixture_report == {
+        "cases": 20,
+        "failed_case_indexes": [],
+        "scope": MODULE.SCOPE,
+        "status": "PASS",
+    }
 
     dash_path = tmp_path / "--fixtures"
     dash_path.write_text(json.dumps(MODULE.fixture_cases()[0][0]))
