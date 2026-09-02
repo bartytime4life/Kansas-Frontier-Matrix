@@ -11,7 +11,11 @@ import {
   mapRuntimeSelectionToEvidenceRequest,
   resolveMapRuntimeSelectionEvidence,
 } from "../src/adapters/MapRuntimeEvidenceAdapter";
-import { SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS } from "../src/site/mount-explorer-site";
+import { resolveMapFeatureEvidence } from "../src/features/map_runtime";
+import {
+  SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS,
+  SUPPORTED_SYNTHETIC_STREAMFLOW_PROJECTION,
+} from "../src/site/mount-explorer-site";
 
 const runtimeSelection = Object.freeze({
   profile: MAP_FEATURE_SELECTION_PROFILE,
@@ -22,14 +26,37 @@ const runtimeSelection = Object.freeze({
 });
 
 describe("MapRuntimePort to Explorer evidence integration", () => {
-  it("keeps shipped correction history inside the supported selection scope", () => {
+  it("keeps audit history scoped without presenting it as current support", async () => {
     expect(SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS).toEqual([
       "kfm:evidence:synthetic:flow-000",
+      "kfm:evidence:synthetic:flow-001",
+    ]);
+    expect(SUPPORTED_SYNTHETIC_STREAMFLOW_PROJECTION.evidence_refs).toEqual([
       "kfm:evidence:synthetic:flow-001",
     ]);
     expect(runtimeSelection.evidenceRefs).toBe(
       SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS,
     );
+
+    const result = await resolveMapFeatureEvidence(
+      Object.freeze({
+        profile: MAP_FEATURE_SELECTION_PROFILE,
+        selection_id: runtimeSelection.selectionId,
+        layer_id: runtimeSelection.layerId,
+        feature_id: runtimeSelection.featureId,
+        evidence_refs: SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS,
+      }),
+      async () => SUPPORTED_SYNTHETIC_STREAMFLOW_PROJECTION,
+    );
+
+    expect(result).toMatchObject({
+      code: "SUPPORTED",
+      drawer: {
+        outcome: "ANSWER",
+        code: "SUPPORTED",
+        evidenceRefs: ["kfm:evidence:synthetic:flow-001"],
+      },
+    });
   });
 
   it("converts the KFM-owned runtime selection into the strict Explorer bridge shape", () => {
