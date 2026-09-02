@@ -97,7 +97,7 @@ def build_commands(executable: str | None = None) -> tuple[tuple[str, ...], ...]
     return (
         (
             python,
-            "-P",
+            "-I",
             "-m",
             "pip",
             "install",
@@ -109,7 +109,7 @@ def build_commands(executable: str | None = None) -> tuple[tuple[str, ...], ...]
         ),
         (
             python,
-            "-P",
+            "-I",
             "-m",
             "pip",
             "install",
