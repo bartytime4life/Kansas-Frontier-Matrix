@@ -225,6 +225,31 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
                         payload["findings"],
                     )
 
+    def test_cli_denial_exit_is_distinct_from_input_error(self) -> None:
+        sentinel = "do-not-echo-schema-denied-value"
+        with tempfile.TemporaryDirectory() as directory:
+            denied = Path(directory) / "schema-denied.json"
+            denied.write_text(json.dumps({"secret": sentinel}), encoding="utf-8")
+            completed = subprocess.run(
+                [sys.executable, str(Path(validator.__file__)), str(denied)],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertEqual(1, completed.returncode)
+        self.assertEqual("", completed.stderr)
+        self.assertNotIn(sentinel, completed.stdout)
+        payload = json.loads(completed.stdout)
+        self.assertEqual("DENY", payload["outcome"])
+        self.assertEqual("NONE", payload["authority"])
+        self.assertEqual(denied.name, payload["input"])
+        self.assertEqual(
+            [{"code": "MODEL_RUN_SCHEMA_INVALID", "path": "/"}],
+            payload["findings"],
+        )
+
     def test_duplicate_nonfinite_symlink_and_oversize_are_errors(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
