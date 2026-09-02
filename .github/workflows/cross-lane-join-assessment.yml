@@ -5,7 +5,11 @@ name: cross-lane-join-assessment
   pull_request:
     paths:
       - ".github/workflows/cross-lane-join-assessment.yml"
+      - ".github/workflows/fauna-habitat-public-safe-assignment.yml"
+      - ".github/workflows/soil-agriculture-public-safe-context.yml"
+      - ".github/workflows/soil-hydrology-public-safe-context.yml"
       - "control_plane/domain_lane_register.yaml"
+      - "contracts/joins/README.md"
       - "contracts/joins/cross_lane_join_assessment.md"
       - "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json"
       - "tools/joins/join_candidates.py"
@@ -17,7 +21,11 @@ name: cross-lane-join-assessment
     branches: [main]
     paths:
       - ".github/workflows/cross-lane-join-assessment.yml"
+      - ".github/workflows/fauna-habitat-public-safe-assignment.yml"
+      - ".github/workflows/soil-agriculture-public-safe-context.yml"
+      - ".github/workflows/soil-hydrology-public-safe-context.yml"
       - "control_plane/domain_lane_register.yaml"
+      - "contracts/joins/README.md"
       - "contracts/joins/cross_lane_join_assessment.md"
       - "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json"
       - "tools/joins/join_candidates.py"

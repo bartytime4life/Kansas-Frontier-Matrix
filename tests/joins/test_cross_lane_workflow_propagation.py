@@ -6,6 +6,8 @@ workflow, access a network, or grant review, release, or publication authority.
 
 from __future__ import annotations
 
+import fnmatch
+import json
 import re
 from pathlib import Path
 
@@ -15,6 +17,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 README = ROOT / "tests/joins/README.md"
 CONTRACT_README = ROOT / "contracts/joins/README.md"
+RECEIPT = ROOT / "data/receipts/generated/genrec-full-atlas-crosswalk-validator-20260830.json"
 WORKFLOWS = (
     ROOT / ".github/workflows/cross-lane-join-assessment.yml",
     ROOT / ".github/workflows/soil-hydrology-public-safe-context.yml",
@@ -29,6 +32,7 @@ REQUIRED_TRIGGER_PATHS = (
 _TRIGGER_RE = re.compile(
     r"(?m)^  (pull_request|push|workflow_dispatch):(?:\n|$)"
 )
+_TRIGGER_PATH_RE = re.compile(r'(?m)^      - "([^"]+)"$')
 _DOCUMENTED_GUARD_RE = re.compile(r"`(test_cross_lane_[a-z0-9_]+\.py)`")
 REQUIRED_JOIN_CONTRACT_LINKS = (
     "./cross_lane_join_assessment.md",
@@ -72,6 +76,33 @@ def _propagation_findings(source: str) -> list[str]:
     return findings
 
 
+def _receipt_trigger_findings(workflow_source: str, receipt_source: str) -> list[str]:
+    payload = json.loads(receipt_source)
+    artifact_paths = payload.get("artifact_paths")
+    if not isinstance(artifact_paths, list) or not all(
+        isinstance(path, str) and path for path in artifact_paths
+    ):
+        return ["receipt: artifact_paths must be a non-empty string list"]
+
+    findings: list[str] = []
+    sections = _trigger_sections(workflow_source)
+    for trigger in ("pull_request", "push"):
+        section = sections.get(trigger)
+        if section is None:
+            findings.append(f"{trigger}: trigger missing")
+            continue
+        patterns = _TRIGGER_PATH_RE.findall(section)
+        for artifact_path in artifact_paths:
+            if not any(
+                fnmatch.fnmatchcase(artifact_path, pattern) for pattern in patterns
+            ):
+                findings.append(
+                    f"{trigger}: receipt artifact not covered {artifact_path}"
+                )
+
+    return findings
+
+
 def _missing_documented_guards(source: str) -> list[str]:
     actual = {path.name for path in README.parent.glob("test_cross_lane_*.py")}
     documented = set(_DOCUMENTED_GUARD_RE.findall(source))
@@ -94,6 +125,13 @@ def _drop_trigger_line(source: str, trigger: str, line: str) -> str:
 @pytest.mark.parametrize("workflow", WORKFLOWS, ids=lambda path: path.stem)
 def test_cross_lane_workflows_propagate_all_dependencies(workflow: Path) -> None:
     assert _propagation_findings(workflow.read_text(encoding="utf-8")) == []
+
+
+def test_cross_lane_receipt_validator_triggers_for_every_bound_artifact() -> None:
+    assert _receipt_trigger_findings(
+        WORKFLOWS[0].read_text(encoding="utf-8"),
+        RECEIPT.read_text(encoding="utf-8"),
+    ) == []
 
 
 def test_readme_documents_every_cross_lane_guard() -> None:
@@ -148,6 +186,25 @@ def test_synthetic_missing_dependency_is_detected(
     source = WORKFLOWS[0].read_text(encoding="utf-8")
     mutated = _drop_trigger_line(source, trigger, line)
     assert expected in _propagation_findings(mutated)
+
+
+@pytest.mark.parametrize(
+    ("trigger", "artifact_path"),
+    (
+        ("pull_request", ".github/workflows/fauna-habitat-public-safe-assignment.yml"),
+        ("push", "contracts/joins/README.md"),
+    ),
+)
+def test_synthetic_untriggered_receipt_artifact_is_detected(
+    trigger: str, artifact_path: str
+) -> None:
+    source = WORKFLOWS[0].read_text(encoding="utf-8")
+    mutated = _drop_trigger_line(source, trigger, f'      - "{artifact_path}"\n')
+    expected = f"{trigger}: receipt artifact not covered {artifact_path}"
+    assert expected in _receipt_trigger_findings(
+        mutated,
+        RECEIPT.read_text(encoding="utf-8"),
+    )
 
 
 def test_synthetic_missing_guard_collection_is_detected() -> None:
