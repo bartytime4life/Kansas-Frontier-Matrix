@@ -370,6 +370,10 @@ def test_private_identity_labels_are_denied_at_every_case_token_count_and_width(
         "operator Zoë",
         "Ｆａｒｍ Sunflower",
         "water right Niño",
+        "Owner: José",
+        "operator=Zoë",
+        "Farm # Sunflower",
+        "Ｏｗｎｅｒ：Ｊａｎｅ",
     ):
         mutated = copy.deepcopy(candidate)
         mutated["indicator"]["value"] = value
@@ -386,6 +390,8 @@ def test_private_identity_labels_are_denied_at_every_case_token_count_and_width(
         "Agriculture irrigation-use context only; not hydrologic observation or water-right authority.",
         "Synthetic county-level fixture only; no well, permit, parcel, operator, or field precision.",
         "County résumé notes no farm or operator observation.",
+        "Farm-to-market context",
+        "Owner-reported aggregate",
     ):
         normalized = module.unicodedata.normalize("NFKC", description)
         assert not module.PRIVATE_IDENTITY_LABEL_PATTERN.search(normalized)
