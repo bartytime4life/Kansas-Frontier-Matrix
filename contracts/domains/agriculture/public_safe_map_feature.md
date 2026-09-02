@@ -217,6 +217,14 @@ Changing semantic role, temporal scope, freshness evaluation, spatial support,
 evidence binding, sensitivity declaration, or non-effects therefore changes
 identity.
 
+## CLI mode controls
+
+The validator has two mutually exclusive modes: one explicit candidate path or
+the exact `--fixtures` flag. Abbreviated options are rejected, and fixture mode
+cannot silently ignore a positional path. A path beginning with a dash remains
+addressable after the standard `--` option terminator. These controls change no
+carrier semantics, source state, authority, or publication effect.
+
 ## Validation outcomes
 
 - `PASS` — the synthetic candidate satisfies schema and semantic invariants.
