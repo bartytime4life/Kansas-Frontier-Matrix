@@ -228,6 +228,14 @@ def _semantic_findings(value: Mapping[str, Any]) -> tuple[Finding, ...]:
             "/outputs",
         )
     )
+    failure_reason_codes = list(value["failure_reason_codes"])
+    if failure_reason_codes != sorted(failure_reason_codes):
+        findings.add(
+            Finding(
+                "MODEL_RUN_FAILURE_REASON_ORDER_INVALID",
+                "/failure_reason_codes",
+            )
+        )
 
     if value["run_state"] == "COMPLETED":
         if not value["outputs"]:
