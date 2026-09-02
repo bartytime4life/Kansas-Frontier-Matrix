@@ -85,6 +85,7 @@ def _fixture_ref(value: object, prefix: str) -> bool:
     return (
         value == value.strip()
         and bool(suffix)
+        and any(character.islower() or character.isdigit() for character in suffix)
         and all(
             character.islower() or character.isdigit() or character in ":-"
             for character in value

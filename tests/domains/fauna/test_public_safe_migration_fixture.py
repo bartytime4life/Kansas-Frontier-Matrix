@@ -139,12 +139,12 @@ class PublicSafeMigrationFixtureTests(unittest.TestCase):
             ),
         )
 
-    def test_prefix_only_fixture_references_fail_closed(self):
+    def test_semantically_empty_fixture_references_fail_closed(self):
         candidate = json.loads(VALID.read_text(encoding="utf-8"))
-        candidate["route_id"] = "fixture:fauna:migration:"
-        candidate["taxon_ref"] = "fixture:taxon:fauna:"
-        candidate["source_descriptor_ref"] = "fixture:source:fauna:"
-        candidate["evidence_refs"] = ["fixture:evidence:fauna:"]
+        candidate["route_id"] = "fixture:fauna:migration::"
+        candidate["taxon_ref"] = "fixture:taxon:fauna:-:"
+        candidate["source_descriptor_ref"] = "fixture:source:fauna:--"
+        candidate["evidence_refs"] = ["fixture:evidence:fauna:-:"]
         self.assertEqual(
             validate_candidate(candidate).findings,
             (
