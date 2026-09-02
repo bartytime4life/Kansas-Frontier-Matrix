@@ -1,8 +1,0 @@
-{
-  "version": "0.1",
-  "domain": "people-dna-land",
-  "layer_family": "historical-person-aggregate",
-  "limitations": [
-    "missing id must fail closed"
-  ]
-}
