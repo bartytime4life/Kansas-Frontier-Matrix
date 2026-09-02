@@ -354,7 +354,7 @@ describe("renderer-neutral terrain transition coordination", () => {
       code: "MAP_RUNTIME_TERRAIN_TRANSITION_FAILED",
       message: "Map runtime terrain transition execution failed.",
     });
-    expect(coordinator.getState()).toBe(initial);
+    expect(coordinator.getState()).toEqual(initial);
     expect(() => coordinator.commit(ticket)).toThrow(
       expect.objectContaining({ code: "MAP_RUNTIME_STATE_INVALID" }),
     );
