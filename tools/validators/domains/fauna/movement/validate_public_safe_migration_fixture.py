@@ -79,6 +79,10 @@ def _add(findings: list[Finding], code: str, path: str) -> None:
         findings.append(finding)
 
 
+def _ascii_identity_character(character: str) -> bool:
+    return "a" <= character <= "z" or "0" <= character <= "9"
+
+
 def _fixture_ref(value: object, prefix: str) -> bool:
     if not isinstance(value, str) or not value.strip():
         return False
@@ -86,9 +90,9 @@ def _fixture_ref(value: object, prefix: str) -> bool:
     return (
         value == value.strip()
         and bool(suffix)
-        and any(character.islower() or character.isdigit() for character in suffix)
+        and any(_ascii_identity_character(character) for character in suffix)
         and all(
-            character.islower() or character.isdigit() or character in ":-"
+            _ascii_identity_character(character) or character in ":-"
             for character in value
         )
     )

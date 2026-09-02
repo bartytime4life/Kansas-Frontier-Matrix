@@ -161,6 +161,28 @@ class PublicSafeMigrationFixtureTests(unittest.TestCase):
             ),
         )
 
+    def test_unicode_fixture_reference_homoglyphs_fail_closed(self):
+        candidate = json.loads(VALID.read_text(encoding="utf-8"))
+        candidate["route_id"] = "fixture:fauna:migration:synthetic-α"
+        candidate["taxon_ref"] = "fixture:taxon:fauna:synthetic-١"
+        candidate["source_descriptor_ref"] = "fixture:source:fauna:synthetic-é"
+        candidate["evidence_refs"] = ["fixture:evidence:fauna:synthetic-０"]
+        self.assertEqual(
+            validate_candidate(candidate).findings,
+            (
+                Finding(
+                    "evidence.fixture_ref_required",
+                    "/evidence_refs/0",
+                ),
+                Finding("schema.fixture_ref_required", "/route_id"),
+                Finding(
+                    "schema.fixture_ref_required",
+                    "/source_descriptor_ref",
+                ),
+                Finding("schema.fixture_ref_required", "/taxon_ref"),
+            ),
+        )
+
     def test_evidence_references_are_bounded_and_duplicate_safe(self):
         candidate = json.loads(VALID.read_text(encoding="utf-8"))
         candidate["evidence_refs"] = [
