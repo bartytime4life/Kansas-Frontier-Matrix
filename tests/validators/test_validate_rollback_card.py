@@ -108,6 +108,43 @@ def tracked_markdown_paths(repo_root: Path = REPO_ROOT) -> tuple[Path, ...]:
     paths = tuple(paths)
     if not paths:
         raise AssertionError("repository-owned Markdown inventory is empty")
+    worktree_command = [
+        "git",
+        "diff-files",
+        "--no-ext-diff",
+        "--name-only",
+        "-z",
+        "--",
+        ":(icase)*.md",
+    ]
+    try:
+        worktree_result = subprocess.run(
+            worktree_command,
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=repository_git_environment(),
+            timeout=GIT_INVENTORY_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as error:
+        raise AssertionError(
+            "timed out verifying repository-owned Markdown worktree after "
+            f"{GIT_INVENTORY_TIMEOUT_SECONDS} seconds"
+        ) from error
+    if worktree_result.returncode != 0:
+        raise AssertionError(
+            "could not verify repository-owned Markdown worktree: "
+            + worktree_result.stderr.strip()
+        )
+    modified_paths = tuple(
+        path for path in worktree_result.stdout.split("\0") if path
+    )
+    if modified_paths:
+        raise AssertionError(
+            "repository-owned Markdown worktree differs from Git index: "
+            + ", ".join(modified_paths)
+        )
     return paths
 
 
@@ -553,6 +590,36 @@ class RollbackCardValidatorTests(unittest.TestCase):
             with self.assertRaisesRegex(
                 AssertionError,
                 r"fully merged: CONFLICT\.md \(index stage 1\)",
+            ):
+                tracked_markdown_paths(repo_root)
+
+    def test_guidance_inventory_rejects_modified_worktree(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repo_root = Path(directory)
+            subprocess.run(
+                ["git", "init", "--quiet"],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            guidance = repo_root / "ROLLBACK.md"
+            guidance.write_text("# Reviewed guidance\n", encoding="utf-8")
+            subprocess.run(
+                ["git", "add", "--", guidance.name],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            guidance.write_text(
+                "The generic validator remains a placeholder.\n",
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(
+                AssertionError,
+                r"worktree differs from Git index: ROLLBACK\.md",
             ):
                 tracked_markdown_paths(repo_root)
 
