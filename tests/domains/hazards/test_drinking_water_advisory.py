@@ -375,6 +375,15 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
                 [("FILE_NOT_FOUND", "/")],
             )
 
+    def test_embedded_nul_path_is_not_reported_as_invalid_json(self) -> None:
+        result = validator.validate_file(Path("input\x00.json"))
+
+        self.assertEqual(result.outcome, "ERROR")
+        self.assertEqual(
+            [(finding.code, finding.path) for finding in result.findings],
+            [("FILE_NOT_FOUND", "/")],
+        )
+
     def test_descriptor_traversal_binds_read_to_opened_directory(self) -> None:
         if not getattr(os, "O_NOFOLLOW", 0) or not getattr(os, "O_DIRECTORY", 0):
             self.skipTest("descriptor no-follow traversal unavailable")

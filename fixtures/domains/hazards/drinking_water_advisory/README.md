@@ -28,7 +28,9 @@ another process. An ordinary file used as a directory component remains a
 `FILE_NOT_FOUND` error; only a confirmed symlink receives
 `INPUT_SYMLINK_DENIED`. The final descriptor is read with a byte limit as well
 as a pre-read size check, so growth after admission cannot bypass the bounded
-carrier limit.
+carrier limit. Malformed paths containing an embedded NUL fail before
+descriptor traversal as `FILE_NOT_FOUND`; they are not misreported as invalid
+carrier JSON.
 
 The command interface keeps fixture replay distinct from explicit carrier
 validation: only exact, single-use `--fixtures` selects replay, it cannot be

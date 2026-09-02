@@ -142,6 +142,8 @@ def _float(value: str) -> float:
 
 def _read_text_no_symlinks(path: Path) -> str:
     """Read one regular file through descriptor-bound no-follow traversal."""
+    if "\x00" in os.fspath(path):
+        raise FileNotFoundError(path)
     nofollow = getattr(os, "O_NOFOLLOW", 0)
     directory = getattr(os, "O_DIRECTORY", 0)
     cloexec = getattr(os, "O_CLOEXEC", 0)
