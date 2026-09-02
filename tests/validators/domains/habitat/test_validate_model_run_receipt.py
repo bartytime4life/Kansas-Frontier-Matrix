@@ -23,6 +23,15 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
         self.assertFalse(schema["additionalProperties"])
         self.assertFalse(schema["$defs"]["governance"]["additionalProperties"])
         self.assertEqual({"const": "MODELED"}, schema["$defs"]["output"]["properties"]["source_role"])
+        aware_datetime = schema["$defs"]["aware_datetime"]
+        self.assertEqual({"pattern": "-00:00$"}, aware_datetime["not"])
+        self.assertIsNotNone(validator._time("2026-08-10T12:06:00Z"))
+        self.assertIsNotNone(validator._time("2026-08-10T12:06:00+00:00"))
+        self.assertIsNone(validator._time("2026-08-10T12:06:00-00:00"))
+        self.assertLess(
+            validator._time("2026-08-10T07:00:00-05:00"),
+            validator._time("2026-08-10T14:05:00+02:00"),
+        )
 
     def test_exact_fixture_matrix(self) -> None:
         manifest = validator.load_fixtures()
@@ -91,7 +100,7 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
         second = subprocess.run(command, cwd=ROOT, check=False, capture_output=True, text=True)
         self.assertEqual(0, first.returncode, first.stderr)
         self.assertEqual(first.stdout, second.stdout)
-        self.assertIn('"case_count":18', first.stdout)
+        self.assertIn('"case_count":23', first.stdout)
         self.assertIn('"suite_match":true', first.stdout)
 
         with tempfile.TemporaryDirectory() as directory:
