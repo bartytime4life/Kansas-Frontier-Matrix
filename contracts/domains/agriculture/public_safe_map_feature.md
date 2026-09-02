@@ -114,10 +114,11 @@ so full-width labels, delimiters, and identifiers cannot bypass the same rules.
 Descriptive aggregate prose may mention field, farm,
 parcel, operator, well, permit, or water-right concepts without being recast as
 an identity label; explicit protected identifiers and coordinate literals
-remain denied anywhere in a scalar. JSON decoding is strict: malformed documents, duplicate
-object members, and non-finite numeric literals receive machine-readable
-denials; programmatic candidates receive the same finite-number check before
-schema validation or identity hashing.
+remain denied anywhere in a scalar. JSON decoding is strict: malformed documents,
+duplicate object members, and non-finite numeric literals receive machine-readable
+denials; duplicate-member paths use RFC 6901 JSON Pointer escaping so `/` and `~`
+in member names remain unambiguous. Programmatic candidates receive the same
+finite-number check before schema validation or identity hashing.
 
 Every EvidenceRef is carrier-local and synthetic-only. Its canonical form is
 `evidence:synthetic:agriculture:<slug>:vN`, where the slug is lowercase
