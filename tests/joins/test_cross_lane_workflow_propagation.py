@@ -29,6 +29,7 @@ REQUIRED_TRIGGER_PATHS = (
     "fixtures/contracts/v1/joins/cross_lane_join_assessment/**",
     "tests/joins/**",
 )
+CROSS_LANE_TEST_GLOB = "tests/joins/test_cross_lane_*.py"
 _TRIGGER_RE = re.compile(
     r"(?m)^  (pull_request|push|workflow_dispatch):(?:\n|$)"
 )
@@ -115,6 +116,13 @@ def _missing_join_contract_links(source: str) -> list[str]:
     )
 
 
+def _local_command_findings(source: str) -> list[str]:
+    expected = f"  {CROSS_LANE_TEST_GLOB} \\\n"
+    if expected not in source:
+        return ["local command: cross-lane pytest glob must be unquoted"]
+    return []
+
+
 def _drop_trigger_line(source: str, trigger: str, line: str) -> str:
     section = _trigger_sections(source)[trigger]
     assert line in section
@@ -142,6 +150,24 @@ def test_join_contract_readme_routes_current_generic_and_pair_profiles() -> None
     assert _missing_join_contract_links(
         CONTRACT_README.read_text(encoding="utf-8")
     ) == []
+
+
+def test_readme_local_command_expands_cross_lane_pytest_glob() -> None:
+    assert _local_command_findings(README.read_text(encoding="utf-8")) == []
+
+
+def test_synthetic_quoted_local_pytest_glob_is_detected() -> None:
+    source = README.read_text(encoding="utf-8")
+    unquoted = f"  {CROSS_LANE_TEST_GLOB} \\\n"
+    assert unquoted in source
+    mutated = source.replace(
+        unquoted,
+        f"  '{CROSS_LANE_TEST_GLOB}' \\\n",
+        1,
+    )
+    assert _local_command_findings(mutated) == [
+        "local command: cross-lane pytest glob must be unquoted"
+    ]
 
 
 def test_synthetic_missing_join_contract_link_is_detected() -> None:

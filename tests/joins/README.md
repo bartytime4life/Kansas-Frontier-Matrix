@@ -87,7 +87,7 @@ Run the generic lane exactly as the hosted cross-lane workflow:
 python tools/joins/join_candidates.py --fixtures
 python -m pytest \
   tests/joins/test_join_candidates.py \
-  'tests/joins/test_cross_lane_*.py' \
+  tests/joins/test_cross_lane_*.py \
   -q --strict-config --strict-markers
 ```
 
