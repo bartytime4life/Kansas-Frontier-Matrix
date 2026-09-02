@@ -97,7 +97,7 @@
     {
       "gate": "active-work-and-overlap-reconciliation",
       "outcome": "PASS",
-      "reason": "Fresh changed-filename reconciliation checked all 20 cumulative review-unit paths and all 19 receipt-bound artifacts, including the current four-path precedence repair, against open pull requests #4188 and #4189; no path, object-family, or authority collision was found."
+      "reason": "Fresh changed-filename reconciliation checked all 20 cumulative branch paths and all 19 receipt-bound artifacts, including the current four-path precedence repair, against open pull requests #4188 and #4189; no path, object-family, or authority collision was found."
     },
     {
       "gate": "current-main-regression-reproduction",
@@ -122,7 +122,7 @@
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "The prior exact repair head passed the 20-case fixture matrix, 58 focused tests, generated-receipt validation, and all three pair workflows. Draft PR #4190 is rerunning hosted validation on the refreshed current-main head."
+      "reason": "Hosted validation on the pre-correction refreshed head passed 20/20 fixtures and 57/58 focused tests; the sole seam failure was the overlap gate's missing exact phrase `all 20 cumulative branch paths`. Draft PR #4190 is rerunning hosted validation after restoring that phrase."
     },
     {
       "gate": "human-review",
