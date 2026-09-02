@@ -52,6 +52,13 @@ class CorrectionNoticeValidatorTests(unittest.TestCase):
         self.assertEqual(SCHEMA_PATH, compatibility.SCHEMA_PATH)
         self.assertEqual(validate_path(path), compatibility.validate_path(path))
 
+    def test_fixture_runner_rejects_symlinked_lanes_before_filtering(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "valid").symlink_to(FIXTURES_ROOT / "valid", target_is_directory=True)
+            (root / "invalid").symlink_to(FIXTURES_ROOT / "invalid", target_is_directory=True)
+            self.assertEqual(2, compatibility.run_fixtures(root))
+
     def test_cli_rejects_abbreviated_fixture_options(self) -> None:
         option = "--fixtures"
         for script in (

@@ -81,6 +81,16 @@ class HistoricalResolutionTests(unittest.TestCase):
         self.assertIn("RAW_DNA_FIELD_DENIED", codes)
         self.assertIn("PRIVATE_OR_PRECISE_FIELD_DENIED", codes)
 
+    def test_fixture_runner_rejects_symlinked_lanes_before_filtering(self) -> None:
+        with self.subTest("synthetic symlinked fixture inventory"):
+            import tempfile
+
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                (root / "valid").symlink_to(FIXTURE_ROOT / "valid", target_is_directory=True)
+                (root / "invalid").symlink_to(FIXTURE_ROOT / "invalid", target_is_directory=True)
+                self.assertEqual(module.run_fixtures(root), 2)
+
     def test_cli_rejects_abbreviated_fixture_options(self) -> None:
         option = "--fixtures"
         for stop in range(3, len(option)):
