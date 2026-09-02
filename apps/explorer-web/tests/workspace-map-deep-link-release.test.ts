@@ -242,7 +242,9 @@ describe("Explorer manual map-selection deep-link release", () => {
     expect(mainSource).toContain("resolvePublicMapCaseUrlTransition");
     expect(mainSource).toContain("resolvePublicMapCaseUrlConsumerCommit");
     expect(mainSource).toContain("caseId,\n    button.disabled,");
-    expect(mainSource).toContain("mapCaseButton?.disabled");
+    expect(mainSource).toContain(
+      "mapCaseButton === null || mapCaseButton.disabled",
+    );
     expect(mainSource).toContain("scheduleMapDeepLinkRetry(safeUrl)");
     expect(mainSource).toContain("window.location.href !== retryPlan.urlHref");
     const mapRetryScheduleIndex = mainSource.indexOf(

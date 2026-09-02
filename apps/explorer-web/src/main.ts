@@ -231,9 +231,9 @@ const syncWorkspaceNavigation = (): void => {
     const mapCaseButton = root.querySelector<HTMLButtonElement>(
       `button[data-map-evidence-case="${mapCaseId}"]`,
     );
-    if (mapCaseButton?.disabled) {
+    if (mapCaseButton === null || mapCaseButton.disabled) {
       scheduleMapDeepLinkRetry(safeUrl);
-    } else if (mapCaseButton !== null) {
+    } else {
       const priorFocus =
         document.activeElement instanceof HTMLElement
           ? document.activeElement

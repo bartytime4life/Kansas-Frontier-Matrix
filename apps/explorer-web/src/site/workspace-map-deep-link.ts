@@ -27,7 +27,8 @@ export type PublicMapCaseUrlTransition = Readonly<{
 }>;
 
 /**
- * Reserve one finite retry for a disabled public map-selection control.
+ * Reserve one finite retry for an absent or disabled public map-selection
+ * control.
  * A different URL receives a fresh budget; exhausting the budget fails closed
  * with no timer rather than polling indefinitely or claiming URL ownership.
  */
