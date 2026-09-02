@@ -150,6 +150,22 @@ class InstallKfmCliTests(unittest.TestCase):
             ):
                 module.validate_lockfile(path)
 
+    def test_lock_validation_bounds_physical_line_length(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "oversized-line.lock"
+            prefix = "demo==1.0"
+            path.write_text(
+                prefix
+                + "0" * (module.MAX_LOCK_LINE_LENGTH - len(prefix) + 1)
+                + "\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                module.CliInstallConfigurationError,
+                "^CLI_LOCKFILE_LINE_TOO_LONG$",
+            ):
+                module.validate_lockfile(path)
+
     def test_lock_validation_binds_hash_continuations(self) -> None:
         cases = {
             "missing-intermediate": (
