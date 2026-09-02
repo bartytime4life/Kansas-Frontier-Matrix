@@ -214,7 +214,8 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
 
         candidate["evidence_refs"] = [  # type: ignore[index]
             evidence_ref,
-            "fixture://evidence/hydrology/water-level/99999/receipt-2",
+            "fixture://evidence/hydrology/water-level/99999/"
+            "20260802T120000Z/receipt-2",
         ]
         self.assertEqual(validate_candidate(candidate), [])
 
@@ -237,10 +238,29 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
             mutated["evidence_refs"] = [value]
             self.assertIn(mismatch, validate_candidate(mutated))
 
+    def test_evidence_references_bind_observation_time(self) -> None:
+        candidate = _load_candidate()
+        self.assertEqual(validate_candidate(candidate), [])
+
+        mismatch = Finding("EVIDENCE_REF_TIME_MISMATCH", "$.evidence_refs")
+        for value in (
+            "fixture://evidence/hydrology/water-level/99999/20260802T120001Z",
+            "fixture://evidence/hydrology/water-level/99999/receipt-1",
+        ):
+            mutated = copy.deepcopy(candidate)
+            mutated["evidence_refs"] = [value]
+            self.assertIn(mismatch, validate_candidate(mutated))
+
     def test_evidence_references_use_canonical_order(self) -> None:
         candidate = _load_candidate()
-        first = "fixture://evidence/hydrology/water-level/99999/receipt-1"
-        second = "fixture://evidence/hydrology/water-level/99999/receipt-2"
+        first = (
+            "fixture://evidence/hydrology/water-level/99999/"
+            "20260802T120000Z/receipt-1"
+        )
+        second = (
+            "fixture://evidence/hydrology/water-level/99999/"
+            "20260802T120000Z/receipt-2"
+        )
 
         candidate["evidence_refs"] = [first, second]
         self.assertEqual(validate_candidate(candidate), [])
@@ -254,13 +274,15 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
     def test_evidence_reference_count_is_bounded(self) -> None:
         candidate = _load_candidate()
         candidate["evidence_refs"] = [  # type: ignore[index]
-            f"fixture://evidence/hydrology/water-level/99999/receipt-{index:02d}"
+            "fixture://evidence/hydrology/water-level/99999/"
+            f"20260802T120000Z/receipt-{index:02d}"
             for index in range(MAX_EVIDENCE_REFS)
         ]
         self.assertEqual(validate_candidate(candidate), [])
 
         candidate["evidence_refs"].append(  # type: ignore[union-attr]
-            "fixture://evidence/hydrology/water-level/99999/receipt-overflow"
+            "fixture://evidence/hydrology/water-level/99999/"
+            "20260802T120000Z/receipt-overflow"
         )
         self.assertIn(
             Finding("EVIDENCE_REFS_TOO_MANY", "$.evidence_refs"),

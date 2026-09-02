@@ -150,6 +150,11 @@ def _evidence_ref_matches_water_level_identity(
     return len(segments) >= 2 and segments[:2] == ["water-level", gauge_identifier]
 
 
+def _evidence_ref_matches_observation_time(value: str, observed: datetime) -> bool:
+    segments = value[len(FIXTURE_EVIDENCE_PREFIX) :].split("/")
+    return len(segments) >= 3 and segments[2] == observed.strftime("%Y%m%dT%H%M%SZ")
+
+
 def _parse_utc(value: object) -> datetime | None:
     if not isinstance(value, str) or _CANONICAL_UTC.fullmatch(value) is None:
         return None
@@ -318,6 +323,29 @@ def validate_candidate(candidate: object) -> list[Finding]:
             add_finding(findings, "RETRIEVAL_TIME_BEFORE_SOURCE", "$.temporal_scope")
         if observed is not None and retrieved is not None and retrieved < observed:
             add_finding(findings, "TEMPORAL_ORDER_INVALID", "$.temporal_scope")
+
+    evidence_identity_is_valid = (
+        observed is not None
+        and gauge_identifier is not None
+        and isinstance(evidence_refs, list)
+        and bool(evidence_refs)
+        and all(is_nonempty_string(value) for value in evidence_refs)
+        and all(value.startswith(FIXTURE_EVIDENCE_PREFIX) for value in evidence_refs)
+        and all(_has_canonical_evidence_path(value) for value in evidence_refs)
+        and all(
+            _evidence_ref_matches_water_level_identity(value, gauge_identifier)
+            for value in evidence_refs
+        )
+    )
+    if evidence_identity_is_valid and any(
+        not _evidence_ref_matches_observation_time(value, observed)
+        for value in evidence_refs
+    ):
+        add_finding(
+            findings,
+            "EVIDENCE_REF_TIME_MISMATCH",
+            "$.evidence_refs",
+        )
 
     measurement = candidate.get("measurement")
     datum_identifier: str | None = None
