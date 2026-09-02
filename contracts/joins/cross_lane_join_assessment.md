@@ -32,6 +32,7 @@ notes:
   - "The exact-key lane uses parameterized in-memory SQLite over synthetic fixture values and performs no database or lifecycle write."
   - "Same-domain endpoints are outside this cross-lane profile and abstain with CROSS_DOMAIN_PAIR_REQUIRED; callers must route them to a domain-local validator."
   - "Unresolved domain aliases recorded by the projection-only domain-lane register are review signals, never normalization authority; alias/canonical pairs abstain with DOMAIN_ALIAS_REVIEW_REQUIRED."
+  - "Missing EvidenceRefs and restricted generalized sensitivity review retain their explicit routes before unresolved-alias review; alias collision never suppresses evidence or sensitivity obligations."
   - "If the unresolved-alias projection is unavailable or malformed, the helper fails closed as VALIDATOR_SYSTEM_ERROR with DOMAIN_ALIAS_REGISTER_UNAVAILABLE; missing projection is never interpreted as an empty alias set."
   - "The generic seam does not own a repository-wide source-role crosswalk. Equal roles may continue to candidate proof, but any unequal role vector abstains for pair/domain-owned compatibility review."
   - "Zero-tolerance SPATIAL_TEMPORAL intervals that only touch at one boundary abstain; this profile does not invent repository-wide interval-boundary inclusivity."
@@ -79,7 +80,7 @@ The unresolved-alias projection is also a validator dependency. If `control_plan
 
 For `SPATIAL_TEMPORAL`, zero-tolerance intervals that only touch at `left.valid_to == right.valid_from` or `right.valid_to == left.valid_from` also fail `JOIN_PREDICATE_MATCHED`. The shared `TemporalWindow` contract explicitly treats boundary inclusivity as compatibility-significant rather than globally settled, so this join profile must not silently choose closed-interval semantics. Boundary-touch inputs therefore return `ABSTAIN` / `NO_JOIN_CANDIDATE` with reason `TEMPORAL_BOUNDARY_AMBIGUOUS` and obligation `ROUTE_TO_PAIR_TEMPORAL_SEMANTICS`. A genuine interval overlap remains eligible, and a positive declared tolerance remains an explicit bounded comparison rule rather than an implied repository-wide time convention.
 
-Disposition precedence preserves stronger failures. Same-domain scope routing remains first because the generic cross-lane helper does not own domain-local work. For distinct raw domains, unavailable dependencies produce `ERROR`, and living-person or blocked sensitive geometry produces `DENY`, before an unresolved alias collision can route the request to alias review. Alias review never downgrades a system error or a privacy/sensitivity denial.
+Disposition precedence preserves mandatory trust routes. Same-domain scope routing remains first because the generic cross-lane helper does not own domain-local work. For distinct raw domains, unavailable dependencies produce `ERROR`, and living-person or blocked sensitive geometry produces `DENY`. Missing EvidenceRefs then retain `EVIDENCE_REF_MISSING`, and restricted generalized context retains `SENSITIVITY_REVIEW_REQUIRED`, before an unresolved alias collision can route the request to alias review. Alias review never downgrades a system error or privacy/sensitivity denial, and never hides evidence or sensitivity-review obligations.
 
 ## Join mechanics
 

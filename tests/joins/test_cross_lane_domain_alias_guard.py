@@ -112,3 +112,31 @@ def test_alias_review_does_not_downgrade_sensitive_geometry_denial() -> None:
     assert "GENERALIZE_OR_WITHHOLD_GEOMETRY" in decision["obligations"]
     assert _rule_counts(decision)["SENSITIVITY_SAFE"] >= 1
     assert _rule_counts(decision)["JOIN_PREDICATE_MATCHED"] == 1
+
+def test_alias_review_does_not_hide_missing_evidence() -> None:
+    candidate = _candidate("air", "atmosphere")
+    candidate["endpoints"]["left"]["evidence_ref"] = None
+    decision = MODULE.derive_decision(candidate)
+
+    assert decision["validator_outcome"] == "ABSTAIN"
+    assert decision["status"] == "EVIDENCE_REF_MISSING"
+    assert decision["reason_codes"] == ["EVIDENCE_REF_MISSING"]
+    assert "RESOLVE_EVIDENCE_REFS" in decision["obligations"]
+    assert _rule_counts(decision)["EVIDENCE_REFS_PRESENT"] == 1
+    assert _rule_counts(decision)["JOIN_PREDICATE_MATCHED"] == 1
+    assert not any(decision["effects"].values())
+
+
+def test_alias_review_does_not_hide_restricted_sensitivity_review() -> None:
+    candidate = _candidate("air", "atmosphere")
+    candidate["endpoints"]["left"]["sensitivity"] = "RESTRICTED"
+    candidate["endpoints"]["left"]["geometry_precision"] = "GENERALIZED"
+    decision = MODULE.derive_decision(candidate)
+
+    assert decision["validator_outcome"] == "ABSTAIN"
+    assert decision["status"] == "SENSITIVITY_REVIEW_REQUIRED"
+    assert decision["reason_codes"] == ["SENSITIVITY_REVIEW_REQUIRED"]
+    assert "ROUTE_TO_SENSITIVITY_REVIEW" in decision["obligations"]
+    assert _rule_counts(decision)["SENSITIVITY_SAFE"] == 1
+    assert _rule_counts(decision)["JOIN_PREDICATE_MATCHED"] == 1
+    assert not any(decision["effects"].values())

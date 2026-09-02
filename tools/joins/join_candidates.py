@@ -299,18 +299,18 @@ def derive_decision(candidate: Mapping[str, Any]) -> dict[str, Any]:
         outcome, status, reason, obligation = "DENY", "LIVING_PERSON_JOIN_DENIED", "LIVING_PERSON_JOIN_DENIED", "REQUIRE_CONSENT_AND_POLICY_REVIEW"
     elif exact_sensitive_count or inherited == "PROHIBITED":
         outcome, status, reason, obligation = "DENY", "GEOMETRY_PRECISION_BLOCKED", "GEOMETRY_PRECISION_BLOCKED", "GENERALIZE_OR_WITHHOLD_GEOMETRY"
-    elif domain_alias_collision:
-        outcome, status, reason, obligation = "ABSTAIN", "NO_JOIN_CANDIDATE", "DOMAIN_ALIAS_REVIEW_REQUIRED", "ROUTE_TO_DOMAIN_ALIAS_REVIEW"
     elif missing_evidence:
         outcome, status, reason, obligation = "ABSTAIN", "EVIDENCE_REF_MISSING", "EVIDENCE_REF_MISSING", "RESOLVE_EVIDENCE_REFS"
+    elif inherited == "RESTRICTED":
+        outcome, status, reason, obligation = "ABSTAIN", "SENSITIVITY_REVIEW_REQUIRED", "SENSITIVITY_REVIEW_REQUIRED", "ROUTE_TO_SENSITIVITY_REVIEW"
+    elif domain_alias_collision:
+        outcome, status, reason, obligation = "ABSTAIN", "NO_JOIN_CANDIDATE", "DOMAIN_ALIAS_REVIEW_REQUIRED", "ROUTE_TO_DOMAIN_ALIAS_REVIEW"
     elif temporal_boundary_ambiguous:
         outcome, status, reason, obligation = "ABSTAIN", "NO_JOIN_CANDIDATE", "TEMPORAL_BOUNDARY_AMBIGUOUS", "ROUTE_TO_PAIR_TEMPORAL_SEMANTICS"
     elif not matched:
         outcome, status, reason, obligation = "ABSTAIN", "NO_JOIN_CANDIDATE", "JOIN_PREDICATE_NOT_SATISFIED", "REVIEW_JOIN_BASIS"
     elif source_conflict:
         outcome, status, reason, obligation = "ABSTAIN", "SOURCE_ROLE_REVIEW_REQUIRED", "SOURCE_ROLE_CONFLICT", "RESOLVE_SOURCE_ROLE_COMPATIBILITY"
-    elif inherited == "RESTRICTED":
-        outcome, status, reason, obligation = "ABSTAIN", "SENSITIVITY_REVIEW_REQUIRED", "SENSITIVITY_REVIEW_REQUIRED", "ROUTE_TO_SENSITIVITY_REVIEW"
     else:
         outcome, status, reason, obligation = "ALLOW", "JOIN_CANDIDATE", "JOIN_PREDICATE_SATISFIED", "ROUTE_TO_PAIR_JOIN_VALIDATOR"
 
