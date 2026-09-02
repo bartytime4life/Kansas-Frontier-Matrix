@@ -92,7 +92,13 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
             {"synthetic": "not-a-statement"},
             " \t\n",
             "\u0085",
+            "\u00ad",
+            "\u034f",
+            "\u061c",
+            "\u115f",
+            "\ufe0f",
             "\ufeff",
+            "\U000e0001",
             "x" * (CONFIDENCE_STATEMENT_MAX_LENGTH + 1),
         ):
             with self.subTest(value_type=type(malformed).__name__):
@@ -109,11 +115,18 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
 
     def test_unicode_invisible_confidence_fixture_fails_closed(self) -> None:
         payload = _load(FIXTURE_ROOT / "unicode_invisible_confidence_deny.json")
-        self.assertEqual(payload["confidence_statement"], "\ufeff")
+        self.assertEqual(payload["confidence_statement"], "\u061c\ufe0f")
         self.assertIn(
             "confidence_statement must contain 1 to 1000 characters",
             validate_candidate_feature(payload),
         )
+
+    def test_unicode_content_with_supplementary_context_remains_valid(self) -> None:
+        for statement in ("uncertain \U0001f600", "不確実"):
+            with self.subTest(statement=statement):
+                payload = copy.deepcopy(self.valid)
+                payload["confidence_statement"] = statement
+                self.assertEqual(validate_candidate_feature(payload), [])
 
     def test_omitted_confidence_statement_remains_optional(self) -> None:
         payload = copy.deepcopy(self.valid)

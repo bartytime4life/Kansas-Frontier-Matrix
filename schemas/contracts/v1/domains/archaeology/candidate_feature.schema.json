@@ -100,7 +100,8 @@
       "type": "string",
       "minLength": 1,
       "maxLength": 1000,
-      "pattern": "[^\\u0000-\\u0020\\u007F-\\u00A0\\u1680\\u180E\\u2000-\\u200F\\u2028-\\u202F\\u205F-\\u206F\\u3000\\uFEFF]"
+      "$comment": "Requires a portable non-surrogate BMP content code point; excludes Unicode 15.0 BMP Cc/Cf/separators and Default_Ignorable ranges.",
+      "pattern": "(?=[\\u0000-\\uFFFF])[^\\u0000-\\u0020\\u007F-\\u00A0\\u00AD\\u034F\\u0600-\\u0605\\u061C\\u06DD\\u070F\\u0890-\\u0891\\u08E2\\u115F-\\u1160\\u1680\\u17B4-\\u17B5\\u180B-\\u180F\\u2000-\\u200F\\u2028-\\u202F\\u205F-\\u206F\\u3000\\u3164\\uD800-\\uDFFF\\uFE00-\\uFE0F\\uFEFF\\uFFA0\\uFFF0-\\uFFFB]"
     },
     "review_state": {
       "type": "string",

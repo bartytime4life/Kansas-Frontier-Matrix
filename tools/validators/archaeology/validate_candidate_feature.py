@@ -115,9 +115,19 @@ CANDIDATE_ID_PATTERN = re.compile(r"^arc-candidate-[a-z0-9][a-z0-9-]*$")
 KFM_REFERENCE_PATTERN = re.compile(r"^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$")
 SPEC_HASH_PATTERN = re.compile(r"^sha256:[a-f0-9]{64}$")
 CONFIDENCE_STATEMENT_MAX_LENGTH = 1000
+# Keep this ECMAScript-compatible for the Draft 2020-12 schema.  Requiring a
+# non-surrogate BMP content code point makes supplementary-only strings fail
+# closed while preserving supplementary characters alongside ordinary text.
+# The excluded BMP set covers Unicode 15.0 Cc/Cf/separator code points plus
+# BMP Default_Ignorable_Code_Point ranges that are not already in those
+# categories.
 CONFIDENCE_CONTENT_PATTERN = re.compile(
-    r"[^\u0000-\u0020\u007F-\u00A0\u1680\u180E\u2000-\u200F"
-    r"\u2028-\u202F\u205F-\u206F\u3000\uFEFF]"
+    r"(?=[\u0000-\uFFFF])"
+    r"[^\u0000-\u0020\u007F-\u00A0\u00AD\u034F\u0600-\u0605"
+    r"\u061C\u06DD\u070F\u0890-\u0891\u08E2\u115F-\u1160"
+    r"\u1680\u17B4-\u17B5\u180B-\u180F\u2000-\u200F"
+    r"\u2028-\u202F\u205F-\u206F\u3000\u3164\uD800-\uDFFF"
+    r"\uFE00-\uFE0F\uFEFF\uFFA0\uFFF0-\uFFFB]"
 )
 
 

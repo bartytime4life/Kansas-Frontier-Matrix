@@ -19,7 +19,8 @@ burial, sacred-place, collection-security, or culturally restricted data.
 - `malformed_confidence_statement_deny.json` proves that optional confidence
   prose remains a bounded string instead of accepting empty or structured values.
 - `unicode_invisible_confidence_deny.json` proves that a confidence statement
-  containing only a Unicode byte-order mark cannot masquerade as reviewable text.
+  containing only an Arabic Letter Mark plus a variation selector cannot
+  masquerade as reviewable text.
 - `unsupported_spatial_precision_deny.json` proves that unsupported precision
   labels such as `EXACT` fail closed instead of implying an unsafe location posture.
 - `unclassified_geometry_reference_deny.json` proves that even an opaque internal
