@@ -184,6 +184,21 @@ class GeologyPublicSafeGeometryTests(unittest.TestCase):
         self.assertEqual(1, deny_run.returncode, deny_run.stderr)
         self.assertEqual("DENY", json.loads(deny_run.stdout)["outcome"])
 
+    def test_fixture_cli_rejects_abbreviated_flags(self) -> None:
+        for length in range(3, len("--fixtures")):
+            abbreviation = "--fixtures"[:length]
+            with self.subTest(abbreviation=abbreviation):
+                completed = subprocess.run(
+                    [sys.executable, str(Path(validator.__file__)), abbreviation],
+                    cwd=ROOT,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
+                self.assertEqual(2, completed.returncode)
+                self.assertEqual("", completed.stdout)
+                self.assertIn("unrecognized arguments", completed.stderr)
+
     def test_duplicate_json_fails_without_echoing_candidate_value(self) -> None:
         sentinel = "EXACT_LOCATION_SENTINEL_THAT_MUST_NOT_ECHO"
         with tempfile.TemporaryDirectory() as raw:
