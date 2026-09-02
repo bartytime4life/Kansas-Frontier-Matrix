@@ -12,7 +12,7 @@
   "artifact_hashes": {
     ".github/workflows/evidence-drawer-payload.yml": "sha256:03bb1604a9d6db130db7731cce68753fd3059db3202ebee35ce7c3b793e79ea7",
     "apps/explorer-web/src/features/evidence_drawer/index.tsx": "sha256:f59376940ee4af08e93089a5c60ce65a7c043cb9fab2b00283990877fc4588c7",
-    "apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts": "sha256:3ffc245b0f0946b1ded198a0b44e066c63faa43355b2bb1bd5626c0cae24121e",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts": "sha256:21bca123eda755afbe6da43e5465e733909880557c10f08748fb1bd1068133fa",
     "apps/explorer-web/tests/browser/workspace-navigation.spec.ts": "sha256:b58d09605cb21272c49910f6adc9220b891725e3713b062376948485c778c644",
     "apps/explorer-web/tests/evidence-drawer.test.ts": "sha256:f407ff915bcd4b1fcc525fec93a971f2ef40b82aa25a83cb07301e1aa8e6cdfc",
     "contracts/ui/evidence_drawer_payload.md": "sha256:3cc8d81b04305bf91e254eea1beae3611d36fe8011ff1520ad5ccff9ceaafae5"
