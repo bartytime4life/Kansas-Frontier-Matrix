@@ -463,6 +463,32 @@ def test_malformed_json_returns_machine_readable_denial(tmp_path, capsys):
         {"code": "AG_MAP_JSON_DECODE_INVALID", "path": "/"}
     ]
 
+def test_parser_limit_failures_return_machine_readable_denial(tmp_path, capsys):
+    module = _module()
+    depth = sys.getrecursionlimit() * 2
+    candidates = {
+        "excessive-depth.json": "[" * depth + "0" + "]" * depth,
+    }
+    integer_limit = getattr(sys, "get_int_max_str_digits", lambda: 0)()
+    if integer_limit:
+        candidates["excessive-integer.json"] = (
+            '{"value":' + "9" * (integer_limit + 1) + "}"
+        )
+
+    for filename, document in candidates.items():
+        candidate_path = tmp_path / filename
+        candidate_path.write_text(document, encoding="utf-8")
+
+        assert module.main([str(candidate_path)]) == 1
+        captured = capsys.readouterr()
+        assert captured.err == ""
+        output = json.loads(captured.out)
+        assert output["outcome"] == "DENY"
+        assert output["findings"] == [
+            {"code": "AG_MAP_JSON_DECODE_INVALID", "path": "/"}
+        ]
+
+
 def test_cli_rejects_abbreviated_fixture_flags():
     for length in range(3, len("--fixtures")):
         abbreviation = "--fixtures"[:length]
