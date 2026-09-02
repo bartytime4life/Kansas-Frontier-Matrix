@@ -97,7 +97,7 @@
     {
       "gate": "active-work-and-overlap-reconciliation",
       "outcome": "PASS",
-      "reason": "Fresh changed-filename reconciliation checked this four-path repair against the two pre-existing open pull requests (#4171 and #4172); both are path-, object-family-, and authority-disjoint."
+      "reason": "Fresh changed-filename reconciliation checked all 20 cumulative branch paths and all 19 receipt-bound artifacts, including this four-path precedence repair, against the two pre-existing open pull requests (#4171 and #4172); no path, object-family, or authority collision was found."
     },
     {
       "gate": "current-main-regression-reproduction",
@@ -122,7 +122,7 @@
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Hosted validation is pending on draft PR #4175; no post-update hosted result is claimed by this receipt."
+      "reason": "Hosted validation on the pre-correction receipt head passed the 20-case fixture matrix and 55 focused tests, then failed three provenance propagation assertions because the receipt omitted the exact complete-scope phrases; hosted validation of this corrected receipt head is pending."
     },
     {
       "gate": "human-review",
@@ -168,5 +168,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Successor provenance receipt for the CrossLaneJoinAssessment review unit. It binds the generic join contract, current pair-profile inventory, all seven dedicated synthetic regression files, the self-checking nine-module join-test inventory, and the generic plus three pair-specific workflows. Generic join validation triggers on every receipt-bound artifact. Disposition precedence is now fail-closed: for distinct raw domains, dependency failures remain ERROR and living-person or blocked sensitive-geometry conditions remain DENY before unresolved aliases can route to review; same-domain scope routing remains first because the generic helper does not own domain-local work. Deterministic positive and synthetic-negative proof prevents alias review from downgrading stronger outcomes. The historical 20260809 receipt remains immutable. This receipt creates no source, evidence, policy, review, proof, promotion, release, publication, or public-use authority."
+  "notes": "Successor provenance receipt for the CrossLaneJoinAssessment review unit. It binds the generic join contract, current pair-profile inventory, all seven dedicated synthetic regression files, the self-checking nine-module join-test inventory, and the generic plus three pair-specific workflows. Generic join validation triggers on every receipt-bound artifact. Disposition precedence is now fail-closed: for distinct raw domains, dependency failures remain ERROR and living-person or blocked sensitive-geometry conditions remain DENY before unresolved aliases can route to review; same-domain scope routing remains first because the generic helper does not own domain-local work. Deterministic positive and synthetic-negative proof prevents alias review from downgrading stronger outcomes. Overlap reconciliation remains explicitly scoped to all 20 cumulative branch paths and all 19 receipt-bound artifacts so partial review claims fail closed. The historical 20260809 receipt remains immutable. This receipt creates no source, evidence, policy, review, proof, promotion, release, publication, or public-use authority."
 }
