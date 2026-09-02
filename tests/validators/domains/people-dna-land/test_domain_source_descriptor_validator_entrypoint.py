@@ -38,6 +38,16 @@ class PeopleDnaLandSourceDescriptorEntrypointTests(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
         self.assertIn("No files provided", result.stderr)
 
+    def test_fixture_mode_rejects_explicit_candidates(self) -> None:
+        result = self.run_validator(
+            DOMAIN_SCRIPT, "--fixtures", "explicit-candidate.json"
+        )
+        self.assertEqual(result.returncode, 2)
+        self.assertIn(
+            "Cannot combine --fixtures with explicit SourceDescriptor files",
+            result.stderr,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

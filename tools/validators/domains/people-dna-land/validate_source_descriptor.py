@@ -26,6 +26,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     """Run the shared SourceDescriptor validator through the People/DNA/Land seam."""
 
     arguments = list(sys.argv[1:] if argv is None else argv)
+    if "--fixtures" in arguments and len(arguments) != 1:
+        print(
+            "Cannot combine --fixtures with explicit SourceDescriptor files",
+            file=sys.stderr,
+        )
+        return 2
     return _shared_main(arguments)
 
 

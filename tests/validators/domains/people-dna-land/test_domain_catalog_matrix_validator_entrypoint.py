@@ -87,3 +87,18 @@ def test_missing_shared_validator_fails_closed(monkeypatch, tmp_path):
     monkeypatch.setattr(module.subprocess, "run", should_not_run)
 
     assert module.main(["--fixtures"]) == 2
+
+
+def test_fixture_mode_rejects_explicit_candidates(monkeypatch, capsys):
+    module = _load_module()
+
+    def should_not_run(*args, **kwargs):
+        raise AssertionError("subprocess must not run for mixed validation modes")
+
+    monkeypatch.setattr(module.subprocess, "run", should_not_run)
+
+    assert module.main(["--fixtures", "explicit-candidate.json"]) == 2
+    assert (
+        "Cannot combine --fixtures with explicit CatalogMatrix files"
+        in capsys.readouterr().err
+    )

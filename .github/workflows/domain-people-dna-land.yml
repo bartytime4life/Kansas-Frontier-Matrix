@@ -432,6 +432,7 @@ jobs:
             tests/pipelines/domains/people-dna-land/test_correction_notice_dispatch.py
 
           python pipelines/domains/people-dna-land/validate.py correction-notice --fixtures
+          python pipelines/domains/people-dna-land/validate.py catalog-matrix --fixtures
           python pipelines/domains/people-dna-land/validate.py domain-layer-descriptor --fixtures
           python pipelines/domains/people-dna-land/validate.py domain-feature-identity --fixtures
           python pipelines/domains/people-dna-land/rollback.py --fixtures

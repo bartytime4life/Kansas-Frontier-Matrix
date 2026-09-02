@@ -15,7 +15,13 @@ FIXTURES = ROOT / "fixtures/contracts/v1/evidence/evidence_bundle"
 
 def main(argv: list[str] | None = None) -> int:
     """Validate People/DNA/Land EvidenceBundle projections against shared fixtures/files."""
-    args = sys.argv[1:] if argv is None else argv
+    args = list(sys.argv[1:] if argv is None else argv)
+    if "--fixtures" in args and len(args) != 1:
+        print(
+            "Cannot combine --fixtures with explicit EvidenceBundle files",
+            file=sys.stderr,
+        )
+        return 2
     return run(SCHEMA, FIXTURES, args)
 
 
