@@ -342,12 +342,28 @@ def validate_revocation_manifest(candidate: object) -> list[Finding]:
     return sorted(findings)
 
 
+def _has_symlink_component(path: Path | str) -> bool:
+    absolute_path = Path(path).absolute()
+    return any(
+        component.is_symlink()
+        for component in (absolute_path, *absolute_path.parents)
+    )
+
+
+def _symlink_denied() -> list[Finding]:
+    return [Finding("FIXTURE_SYMLINK_DENIED", "$")]
+
+
 def load_revocation_manifest(path: Path | str) -> tuple[dict[str, Any] | None, list[Finding]]:
+    fixture_path = Path(path)
+    if _has_symlink_component(fixture_path):
+        return None, _symlink_denied()
+
     captured: dict[str, object] = {}
     def validate(candidate: object) -> list[Finding]:
         captured["candidate"] = candidate
         return validate_revocation_manifest(candidate)
-    findings = validate_fixture_file(path, validate)
+    findings = validate_fixture_file(fixture_path, validate)
     candidate = captured.get("candidate")
     if findings or not isinstance(candidate, dict):
         return None, findings or [Finding("REVOCATION_MANIFEST_NOT_OBJECT", "$")]
@@ -435,8 +451,12 @@ def validate_candidate(candidate: object, *, revocation_manifest: Mapping[str, A
 
 
 def validate_file(path: Path | str, *, revocation_manifest: Mapping[str, Any] | None) -> list[Finding]:
+    fixture_path = Path(path)
+    if _has_symlink_component(fixture_path):
+        return _symlink_denied()
+
     return validate_fixture_file(
-        path,
+        fixture_path,
         lambda candidate: validate_candidate(candidate, revocation_manifest=revocation_manifest),
     )
 

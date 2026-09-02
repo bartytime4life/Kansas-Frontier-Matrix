@@ -475,6 +475,42 @@ class ConsentOverlayFixtureTests(unittest.TestCase):
             )
             self.assertNotIn("0001-01-01T00:00:00+23:59", rendered)
 
+    def test_symlinked_consent_inputs_fail_closed(self) -> None:
+        expected = [Finding("FIXTURE_SYMLINK_DENIED", "$")]
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+
+            direct_overlay = root / "direct-overlay.json"
+            direct_overlay.symlink_to(_valid_fixture())
+            self.assertEqual(
+                VALIDATOR.validate_file(
+                    direct_overlay,
+                    revocation_manifest=self.manifest,
+                ),
+                expected,
+            )
+
+            linked_fixture_dir = root / "linked-valid"
+            linked_fixture_dir.symlink_to(
+                VALID_FIXTURE_DIR,
+                target_is_directory=True,
+            )
+            self.assertEqual(
+                VALIDATOR.validate_file(
+                    linked_fixture_dir / _valid_fixture().name,
+                    revocation_manifest=self.manifest,
+                ),
+                expected,
+            )
+
+            linked_root = root / "linked-root"
+            linked_root.symlink_to(FIXTURE_ROOT, target_is_directory=True)
+            manifest, findings = VALIDATOR.load_revocation_manifest(
+                linked_root / MANIFEST_PATH.name
+            )
+            self.assertIsNone(manifest)
+            self.assertEqual(findings, expected)
+
     def test_file_size_is_bounded(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "large.json"
