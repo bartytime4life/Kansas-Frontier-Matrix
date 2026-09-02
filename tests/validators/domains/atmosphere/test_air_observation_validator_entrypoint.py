@@ -80,6 +80,10 @@ class AirObservationValidatorEntrypointTests(unittest.TestCase):
             with self.subTest(field=field):
                 metadata_value = schema["x-kfm"][field]
                 self.assertIsInstance(metadata_value, str)
+                canonical_value = expected_path.relative_to(REPO_ROOT).as_posix()
+                if field == "fixtures_root":
+                    canonical_value += "/"
+                self.assertEqual(metadata_value, canonical_value)
                 metadata_path = Path(metadata_value)
                 self.assertFalse(metadata_path.is_absolute())
                 self.assertNotIn("..", metadata_path.parts)
