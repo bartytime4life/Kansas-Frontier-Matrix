@@ -306,9 +306,16 @@ def _expected_code(path: Path) -> str | None:
     return lines[0] if len(lines) == 1 else None
 
 
-def run_fixtures() -> int:
-    valid_paths = sorted((FIXTURE_ROOT / "valid").glob("*.json"))
-    invalid_paths = sorted((FIXTURE_ROOT / "invalid").glob("*.json"))
+def run_fixtures(root: Path = FIXTURE_ROOT) -> int:
+    try:
+        if root.is_symlink() or any(path.is_symlink() for path in root.rglob("*")):
+            print("HISTORICAL_RESOLUTION_FIXTURES_ERROR symlinked fixture paths denied")
+            return 2
+    except OSError:
+        print("HISTORICAL_RESOLUTION_FIXTURES_ERROR fixture inventory unreadable")
+        return 2
+    valid_paths = sorted((root / "valid").glob("*.json"))
+    invalid_paths = sorted((root / "invalid").glob("*.json"))
     failures: list[str] = []
     if not valid_paths or not invalid_paths:
         print("HISTORICAL_RESOLUTION_FIXTURES_ERROR nonempty valid and invalid lanes required")
@@ -331,7 +338,7 @@ def run_fixtures() -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
     parser.add_argument("paths", nargs="*", type=Path)
     parser.add_argument("--fixtures", action="store_true")
     return parser

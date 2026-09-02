@@ -89,6 +89,13 @@ def validate_path(path: Path) -> tuple[str, ...]:
 
 
 def run_fixtures(root: Path = FIXTURES_ROOT) -> int:
+    try:
+        if root.is_symlink() or any(path.is_symlink() for path in root.rglob("*")):
+            print("CORRECTION_NOTICE_FIXTURES_ERROR symlinked fixture paths denied")
+            return 2
+    except OSError:
+        print("CORRECTION_NOTICE_FIXTURES_ERROR fixture inventory unreadable")
+        return 2
     valid = sorted((root / "valid").glob("*.json"))
     invalid = sorted((root / "invalid").glob("*.json"))
     if not valid or not invalid:
@@ -114,7 +121,8 @@ def run_fixtures(root: Path = FIXTURES_ROOT) -> int:
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Validate CorrectionNotice instances against the current proposed schema."
+        description="Validate CorrectionNotice instances against the current proposed schema.",
+        allow_abbrev=False,
     )
     parser.add_argument("notices", nargs="*", type=Path)
     parser.add_argument("--fixtures", action="store_true")
