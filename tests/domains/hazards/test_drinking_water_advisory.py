@@ -504,6 +504,44 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
         self.assertEqual(len(rows), 18)
         self.assertEqual({row["outcome"] for row in rows}, {"PASS", "DENY", "ERROR"})
 
+    def test_cli_rejects_ambiguous_fixture_modes(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "valid.json"
+            path.write_text(json.dumps(self.valid["valid_issued"]), encoding="utf-8")
+            commands = (
+                ["--fixture"],
+                ["--fixtures", str(path)],
+                ["--fixtures", "--fixtures"],
+            )
+            for arguments in commands:
+                with self.subTest(arguments=arguments):
+                    completed = subprocess.run(
+                        [sys.executable, str(VALIDATOR_PATH), *arguments],
+                        cwd=REPO_ROOT,
+                        check=False,
+                        capture_output=True,
+                        text=True,
+                    )
+                    self.assertEqual(completed.returncode, 2)
+                    self.assertEqual(completed.stdout, "")
+
+    def test_option_terminator_allows_fixture_named_input(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "--fixtures"
+            path.write_text(json.dumps(self.valid["valid_issued"]), encoding="utf-8")
+            completed = subprocess.run(
+                [sys.executable, str(VALIDATOR_PATH), "--", path.name],
+                cwd=directory,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        payload = json.loads(completed.stdout)
+        self.assertEqual(payload["outcome"], "PASS")
+        self.assertEqual(payload["name"], "--fixtures")
+
 
 if __name__ == "__main__":
     unittest.main()

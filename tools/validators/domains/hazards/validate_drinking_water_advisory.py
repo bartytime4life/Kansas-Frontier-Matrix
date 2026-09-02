@@ -698,7 +698,8 @@ def validate_fixtures() -> tuple[bool, list[dict[str, Any]]]:
 
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Validate inactive DrinkingWaterAdvisory fixtures."
+        description="Validate inactive DrinkingWaterAdvisory fixtures.",
+        allow_abbrev=False,
     )
     parser.add_argument("paths", nargs="*", type=Path)
     parser.add_argument("--fixtures", action="store_true")
@@ -706,8 +707,20 @@ def _parser() -> argparse.ArgumentParser:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    args = _parser().parse_args(argv)
+    raw_argv = list(sys.argv[1:] if argv is None else argv)
+    fixture_option_count = 0
+    for token in raw_argv:
+        if token == "--":
+            break
+        if token == "--fixtures":
+            fixture_option_count += 1
+    parser = _parser()
+    args = parser.parse_args(raw_argv)
+    if fixture_option_count > 1:
+        parser.error("--fixtures may be provided only once")
     if args.fixtures:
+        if args.paths:
+            parser.error("input paths cannot be combined with --fixtures")
         ok, rows = validate_fixtures()
         for row in rows:
             print(json.dumps(row, sort_keys=True, separators=(",", ":")))

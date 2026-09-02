@@ -30,6 +30,11 @@ another process. An ordinary file used as a directory component remains a
 as a pre-read size check, so growth after admission cannot bypass the bounded
 carrier limit.
 
+The command interface keeps fixture replay distinct from explicit carrier
+validation: only exact, single-use `--fixtures` selects replay, it cannot be
+combined with input paths, and `-- --fixtures` remains an ordinary literal
+filename.
+
 `PASS` proves local profile coherence only. It does not establish a current
 advisory, safe drinking water, source admission, evidence closure, policy or
 health review, alert authority, release, publication, or public use.
