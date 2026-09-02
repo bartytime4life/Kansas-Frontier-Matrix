@@ -89,6 +89,21 @@ class InstallKfmCliTests(unittest.TestCase):
             ):
                 module.validate_lockfile(path)
 
+    def test_lock_validation_rejects_unrecognized_pip_directive(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "directive.lock"
+            path.write_text(
+                "demo==1.0 \\\n"
+                f"    --hash=sha256:{'0' * 64}\n"
+                "--find-links=/synthetic/packages\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                module.CliInstallConfigurationError,
+                "^CLI_LOCKFILE_DIRECTIVE_UNSAFE$",
+            ):
+                module.validate_lockfile(path)
+
     def test_install_executes_argument_vectors_without_a_shell(self) -> None:
         with (
             mock.patch.object(module.time, "monotonic", side_effect=(100.0, 100.0, 150.0)),

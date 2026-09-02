@@ -65,15 +65,21 @@ def validate_lockfile(path: Path = LOCKFILE) -> None:
     if any(token in lowered for token in FORBIDDEN_LOCK_TEXT):
         raise CliInstallConfigurationError("CLI_LOCKFILE_SOURCE_UNSAFE")
 
-    requirements = [
+    lock_lines = [
         line
         for line in text.splitlines()
-        if line and not line[0].isspace() and not line.startswith("#")
+        if line.strip() and not line.lstrip().startswith("#")
     ]
-    hashes = [line for line in text.splitlines() if "--hash=" in line]
+    if any(
+        (line[0].isspace() and "--hash=" not in line) or line.startswith("-")
+        for line in lock_lines
+    ):
+        raise CliInstallConfigurationError("CLI_LOCKFILE_DIRECTIVE_UNSAFE")
+    requirements = [line for line in lock_lines if not line[0].isspace()]
+    hashes = [line for line in lock_lines if "--hash=" in line]
     hash_coverage: list[int] = []
-    for line in text.splitlines():
-        if line and not line[0].isspace() and not line.startswith("#"):
+    for line in lock_lines:
+        if not line[0].isspace():
             hash_coverage.append(0)
         elif "--hash=" in line:
             if not hash_coverage:
