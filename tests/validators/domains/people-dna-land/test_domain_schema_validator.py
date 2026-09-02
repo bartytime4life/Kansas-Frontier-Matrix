@@ -62,6 +62,26 @@ class PeopleDnaLandSchemaValidatorTests(unittest.TestCase):
             result.stdout,
         )
 
+    def test_schema_below_symlinked_directory_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            target_dir = root / "target"
+            target_dir.mkdir()
+            target = target_dir / "target.schema.json"
+            target.write_text(
+                '{"$schema":"https://json-schema.org/draft/2020-12/schema"}',
+                encoding="utf-8",
+            )
+            linked_dir = root / "linked"
+            linked_dir.symlink_to(target_dir, target_is_directory=True)
+            result = self.run_validator(str(linked_dir / target.name))
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn(
+            "schema path must be a regular non-symlink file",
+            result.stdout,
+        )
+
     def test_oversized_schema_fails_before_parsing(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             path = Path(temp_dir) / "oversized.schema.json"

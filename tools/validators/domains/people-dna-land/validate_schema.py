@@ -43,7 +43,11 @@ def _finite_float(raw_value):
 
 
 def _load_schema(path: Path):
-    if path.is_symlink():
+    absolute_path = path.absolute()
+    if any(
+        component.is_symlink()
+        for component in (absolute_path, *absolute_path.parents)
+    ):
         raise ValueError("schema path must be a regular non-symlink file")
 
     flags = os.O_RDONLY
@@ -52,7 +56,7 @@ def _load_schema(path: Path):
 
     descriptor = -1
     try:
-        descriptor = os.open(path, flags)
+        descriptor = os.open(absolute_path, flags)
         metadata = os.fstat(descriptor)
         if not stat.S_ISREG(metadata.st_mode):
             raise ValueError("schema path must be a regular non-symlink file")
