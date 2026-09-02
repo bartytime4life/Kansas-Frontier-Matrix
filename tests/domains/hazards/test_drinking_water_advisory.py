@@ -319,7 +319,7 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
         self.assertEqual(validator.canonical_spec_hash(reordered), candidate["spec_hash"])
         self.assertEqual(validator.expected_advisory_id(reordered), candidate["advisory_id"])
 
-    def test_duplicate_key_nonfinite_and_symlink_are_errors(self) -> None:
+    def test_duplicate_key_nonfinite_and_symlink_paths_are_errors(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             inputs = {
@@ -342,6 +342,22 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
                 link = root / "link.json"
                 link.symlink_to(target)
                 result = validator.validate_file(link)
+                self.assertEqual(result.outcome, "ERROR")
+                self.assertEqual(result.findings[0].code, "INPUT_SYMLINK_DENIED")
+
+                nested = root / "nested"
+                nested.mkdir()
+                nested_input = nested / "input.json"
+                nested_input.write_text("{}", encoding="utf-8")
+                alias = root / "alias"
+                alias.symlink_to(nested, target_is_directory=True)
+                result = validator.validate_file(alias / "input.json")
+                self.assertEqual(result.outcome, "ERROR")
+                self.assertEqual(result.findings[0].code, "INPUT_SYMLINK_DENIED")
+
+                loop = root / "loop"
+                loop.symlink_to(loop, target_is_directory=True)
+                result = validator.validate_file(loop / "input.json")
                 self.assertEqual(result.outcome, "ERROR")
                 self.assertEqual(result.findings[0].code, "INPUT_SYMLINK_DENIED")
 

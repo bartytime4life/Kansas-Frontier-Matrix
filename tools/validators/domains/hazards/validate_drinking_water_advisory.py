@@ -129,9 +129,23 @@ def _float(value: str) -> float:
     return parsed
 
 
+def _has_symlink_component(path: Path) -> bool:
+    """Return whether the lexical input path traverses any symlink."""
+    try:
+        absolute = path.absolute()
+        current = Path(absolute.anchor)
+        for part in absolute.parts[1:]:
+            current /= part
+            if current.is_symlink():
+                return True
+    except (OSError, RuntimeError, ValueError):
+        return False
+    return False
+
+
 def _read(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
     try:
-        if path.is_symlink():
+        if _has_symlink_component(path):
             return None, [Finding("INPUT_SYMLINK_DENIED", "/")]
         if not path.is_file():
             return None, [Finding("FILE_NOT_FOUND", "/")]

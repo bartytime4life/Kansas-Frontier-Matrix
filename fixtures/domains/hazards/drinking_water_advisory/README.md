@@ -18,6 +18,9 @@ consumers do not need to infer which value violated the governed sequence.
 An unknown intermediate timestamp suppresses only comparisons that require
 it; independently knowable issue, check, expiry, and rescission bounds remain
 enforced.
+Input validation also rejects leaf or ancestor symlinks before file access,
+including cyclic ancestor aliases, so the lexical carrier path cannot redirect
+the fixture-only validator to a different file.
 
 `PASS` proves local profile coherence only. It does not establish a current
 advisory, safe drinking water, source admission, evidence closure, policy or
