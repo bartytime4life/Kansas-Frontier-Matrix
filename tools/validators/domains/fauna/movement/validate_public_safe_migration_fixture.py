@@ -81,9 +81,10 @@ def _add(findings: list[Finding], code: str, path: str) -> None:
 def _fixture_ref(value: object, prefix: str) -> bool:
     if not isinstance(value, str) or not value.strip():
         return False
+    suffix = value[len(prefix) :] if value.startswith(prefix) else ""
     return (
         value == value.strip()
-        and value.startswith(prefix)
+        and bool(suffix)
         and all(
             character.islower() or character.isdigit() or character in ":-"
             for character in value

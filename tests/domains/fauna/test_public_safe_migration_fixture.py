@@ -139,6 +139,28 @@ class PublicSafeMigrationFixtureTests(unittest.TestCase):
             ),
         )
 
+    def test_prefix_only_fixture_references_fail_closed(self):
+        candidate = json.loads(VALID.read_text(encoding="utf-8"))
+        candidate["route_id"] = "fixture:fauna:migration:"
+        candidate["taxon_ref"] = "fixture:taxon:fauna:"
+        candidate["source_descriptor_ref"] = "fixture:source:fauna:"
+        candidate["evidence_refs"] = ["fixture:evidence:fauna:"]
+        self.assertEqual(
+            validate_candidate(candidate).findings,
+            (
+                Finding(
+                    "evidence.fixture_ref_required",
+                    "/evidence_refs/0",
+                ),
+                Finding("schema.fixture_ref_required", "/route_id"),
+                Finding(
+                    "schema.fixture_ref_required",
+                    "/source_descriptor_ref",
+                ),
+                Finding("schema.fixture_ref_required", "/taxon_ref"),
+            ),
+        )
+
     def test_oversized_integer_position_fails_closed(self):
         candidate = json.loads(VALID.read_text(encoding="utf-8"))
         candidate["geometry"]["coordinates"][1] = [10**1000, 0]
