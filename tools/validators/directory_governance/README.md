@@ -23,15 +23,27 @@ policy-source singularity, trust-shaped artifacts, public/internal-store
 separation, schema and document identities, generated-output provenance,
 boundary READMEs, adopted-authority binding, and active-alias closure.
 
-Derived from the pinned `main@c259404…` bootstrap, the current ratchet records
-138 exact inherited finding groups after reviewed convergence. Those are
-warnings, not conformance claims: any addition or changed
-fingerprint fails as new drift, any removed finding requires the baseline to
-shrink in the same change, and invariant rules cannot be baselined.
-In pull-request CI the proposed baseline is also compared with the trusted base
-commit: waiver additions, waiver mutation, metadata changes, and deadline
-extensions fail. The current file is a one-time bootstrap from `main@c259404…`;
-future ordinary changes may only remove entries or shorten its deadline.
+Derived from the pinned bootstrap, the current ratchet records 127 exact
+inherited finding groups after reviewed convergence. Those are warnings, not
+conformance claims: any addition or changed fingerprint fails as new drift, any
+removed finding requires the baseline to shrink in the same change, and
+invariant rules cannot be baselined. In pull-request CI the proposed baseline is
+also compared with the trusted base commit: waiver additions, waiver mutation,
+metadata changes, and deadline extensions fail. Future ordinary changes may
+only remove entries, strictly shrink one aggregate evidence set, or shorten the
+deadline.
+
+`repository_topology_reconciliation.json` is a separate, append-only proof
+register for one narrower case: an exact README merge-conflict correction that
+already exists unchanged on the trusted base but left the content-sensitive
+`KFM-TOPO-004` baseline stale. A new record is accepted only when the trusted
+base and tested tree have identical frozen-root evidence, the baseline changes
+exactly one registered `README.md` blob at equal cardinality, the prior Git blob
+contains a complete conflict-marker triplet, the current blob contains none,
+and the record binds the trusted commit, old and new blobs, evidence digests,
+fingerprints, governance issue, and retirement condition. At most one new
+record may be added in a transition; records cannot be removed or mutated. This
+mechanism does not authorize a frozen-root write or accept a same-change edit.
 
 `render_repository_topology_diagnostics.py` is a bounded diagnostic projection
 for failed ratchet runs. It preserves the ratchet exit code and reports only the
