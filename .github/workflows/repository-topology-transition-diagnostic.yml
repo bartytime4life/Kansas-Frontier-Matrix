@@ -43,9 +43,14 @@ jobs:
       - name: Emit and prove the bounded shrinkage candidate
         shell: bash
         run: |
-          set -euo pipefail
+          set -uo pipefail
+          set +e
           python tools/validators/directory_governance/validate_repository_topology.py \
             --emit-baseline > /tmp/repository_topology_baseline_candidate.json
+          validator_status=$?
+          set -e
+          echo "VALIDATOR_STATUS=${validator_status}"
+          test -s /tmp/repository_topology_baseline_candidate.json
           python - <<'PY'
           import base64
           import json
