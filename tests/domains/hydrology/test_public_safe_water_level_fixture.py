@@ -20,6 +20,8 @@ from tools.validators.domains.hydrology.validate_public_safe_water_level_fixture
     FORBIDDEN_LOCATION_ALIASES,
     Finding,
     MAX_EVIDENCE_REFS,
+    MAX_RETRIEVAL_LATENCY_SECONDS,
+    MAX_SOURCE_LATENCY_SECONDS,
     validate_candidate,
     validate_file,
 )
@@ -408,6 +410,37 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
         self.assertIn(
             Finding("OBSERVED_TIME_INVALID", "$.temporal_scope.observed_at"),
             validate_candidate(candidate),
+        )
+
+    def test_temporal_provenance_latency_is_bounded(self) -> None:
+        self.assertEqual(MAX_SOURCE_LATENCY_SECONDS, 300)
+        self.assertEqual(MAX_RETRIEVAL_LATENCY_SECONDS, 900)
+
+        boundary = _load_candidate()
+        boundary["temporal_scope"]["source_time"] = "2026-08-02T12:05:00Z"  # type: ignore[index]
+        boundary["temporal_scope"]["retrieved_at"] = "2026-08-02T12:15:00Z"  # type: ignore[index]
+        self.assertEqual(validate_candidate(boundary), [])
+
+        source_late = _load_candidate()
+        source_late["temporal_scope"]["source_time"] = "2026-08-02T12:05:01Z"  # type: ignore[index]
+        self.assertIn(
+            Finding(
+                "SOURCE_LATENCY_EXCEEDED",
+                "$.temporal_scope.source_time",
+            ),
+            validate_candidate(source_late),
+        )
+
+        retrieval_late = _load_candidate()
+        retrieval_late["temporal_scope"]["retrieved_at"] = (  # type: ignore[index]
+            "2026-08-02T12:15:01Z"
+        )
+        self.assertIn(
+            Finding(
+                "RETRIEVAL_LATENCY_EXCEEDED",
+                "$.temporal_scope.retrieved_at",
+            ),
+            validate_candidate(retrieval_late),
         )
 
     def test_precise_location_aliases_are_forbidden(self) -> None:

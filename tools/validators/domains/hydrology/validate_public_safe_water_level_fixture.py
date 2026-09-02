@@ -87,6 +87,8 @@ FIXTURE_EVIDENCE_PREFIX = "fixture://evidence/hydrology/"
 FIXTURE_GAUGE_PREFIX = "fixture://hydrology/gauge/generalized/"
 FIXTURE_DATUM_PREFIX = "fixture://hydrology/datum/"
 MAX_EVIDENCE_REFS = 32
+MAX_SOURCE_LATENCY_SECONDS = 300
+MAX_RETRIEVAL_LATENCY_SECONDS = 900
 EXPECTED_GOVERNANCE = {
     "rights_state": "fixture_only",
     "sensitivity_state": "public_safe_fixture",
@@ -332,10 +334,34 @@ def validate_candidate(candidate: object) -> list[Finding]:
             add_finding(findings, "RETRIEVAL_TIME_INVALID", "$.temporal_scope.retrieved_at")
         if observed is not None and source_time is not None and source_time < observed:
             add_finding(findings, "SOURCE_TIME_BEFORE_OBSERVED", "$.temporal_scope")
+        if (
+            observed is not None
+            and source_time is not None
+            and source_time >= observed
+            and (source_time - observed).total_seconds()
+            > MAX_SOURCE_LATENCY_SECONDS
+        ):
+            add_finding(
+                findings,
+                "SOURCE_LATENCY_EXCEEDED",
+                "$.temporal_scope.source_time",
+            )
         if source_time is not None and retrieved is not None and retrieved < source_time:
             add_finding(findings, "RETRIEVAL_TIME_BEFORE_SOURCE", "$.temporal_scope")
         if observed is not None and retrieved is not None and retrieved < observed:
             add_finding(findings, "TEMPORAL_ORDER_INVALID", "$.temporal_scope")
+        if (
+            observed is not None
+            and retrieved is not None
+            and retrieved >= observed
+            and (retrieved - observed).total_seconds()
+            > MAX_RETRIEVAL_LATENCY_SECONDS
+        ):
+            add_finding(
+                findings,
+                "RETRIEVAL_LATENCY_EXCEEDED",
+                "$.temporal_scope.retrieved_at",
+            )
 
     evidence_identity_is_valid = (
         observed is not None
