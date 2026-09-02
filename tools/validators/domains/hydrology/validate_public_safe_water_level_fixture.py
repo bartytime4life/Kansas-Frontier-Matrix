@@ -155,6 +155,11 @@ def _evidence_ref_matches_observation_time(value: str, observed: datetime) -> bo
     return len(segments) >= 3 and segments[2] == observed.strftime("%Y%m%dT%H%M%SZ")
 
 
+def _evidence_ref_matches_datum(value: str, datum_identifier: str) -> bool:
+    segments = value[len(FIXTURE_EVIDENCE_PREFIX) :].split("/")
+    return len(segments) >= 4 and segments[3] == datum_identifier
+
+
 def _parse_utc(value: object) -> datetime | None:
     if not isinstance(value, str) or _CANONICAL_UTC.fullmatch(value) is None:
         return None
@@ -398,6 +403,25 @@ def validate_candidate(candidate: object) -> list[Finding]:
             )
         if measurement.get("no_data") is not False:
             add_finding(findings, "NO_DATA_STATE_INVALID", "$.measurement.no_data")
+
+    if (
+        evidence_identity_is_valid
+        and observed is not None
+        and datum_identifier is not None
+        and all(
+            _evidence_ref_matches_observation_time(value, observed)
+            for value in evidence_refs
+        )
+        and any(
+            not _evidence_ref_matches_datum(value, datum_identifier)
+            for value in evidence_refs
+        )
+    ):
+        add_finding(
+            findings,
+            "EVIDENCE_REF_DATUM_MISMATCH",
+            "$.evidence_refs",
+        )
 
     if (
         is_nonempty_string(record_id)

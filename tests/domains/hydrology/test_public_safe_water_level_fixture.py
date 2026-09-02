@@ -145,6 +145,14 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
             "fixture:hydrology:water-level:99999:alternate-local-reference:"
             "20260802T120000Z"
         )
+        self.assertIn(
+            Finding("EVIDENCE_REF_DATUM_MISMATCH", "$.evidence_refs"),
+            validate_candidate(changed_datum),
+        )
+        changed_datum["evidence_refs"] = [
+            "fixture://evidence/hydrology/water-level/99999/"
+            "20260802T120000Z/alternate-local-reference"
+        ]
         self.assertEqual(validate_candidate(changed_datum), [])
 
     def test_fixture_references_identify_concrete_synthetic_resources(self) -> None:
@@ -215,7 +223,7 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
         candidate["evidence_refs"] = [  # type: ignore[index]
             evidence_ref,
             "fixture://evidence/hydrology/water-level/99999/"
-            "20260802T120000Z/receipt-2",
+            "20260802T120000Z/synthetic-local-reference/receipt-2",
         ]
         self.assertEqual(validate_candidate(candidate), [])
 
@@ -231,8 +239,10 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
 
         mismatch = Finding("EVIDENCE_REF_IDENTITY_MISMATCH", "$.evidence_refs")
         for value in (
-            "fixture://evidence/hydrology/flow/99999/20260802T120000Z",
-            "fixture://evidence/hydrology/water-level/88888/20260802T120000Z",
+            "fixture://evidence/hydrology/flow/99999/20260802T120000Z/"
+            "synthetic-local-reference",
+            "fixture://evidence/hydrology/water-level/88888/20260802T120000Z/"
+            "synthetic-local-reference",
         ):
             mutated = copy.deepcopy(candidate)
             mutated["evidence_refs"] = [value]
@@ -244,8 +254,24 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
 
         mismatch = Finding("EVIDENCE_REF_TIME_MISMATCH", "$.evidence_refs")
         for value in (
-            "fixture://evidence/hydrology/water-level/99999/20260802T120001Z",
-            "fixture://evidence/hydrology/water-level/99999/receipt-1",
+            "fixture://evidence/hydrology/water-level/99999/20260802T120001Z/"
+            "synthetic-local-reference",
+            "fixture://evidence/hydrology/water-level/99999/receipt-1/"
+            "synthetic-local-reference",
+        ):
+            mutated = copy.deepcopy(candidate)
+            mutated["evidence_refs"] = [value]
+            self.assertIn(mismatch, validate_candidate(mutated))
+
+    def test_evidence_references_bind_datum_identity(self) -> None:
+        candidate = _load_candidate()
+        self.assertEqual(validate_candidate(candidate), [])
+
+        mismatch = Finding("EVIDENCE_REF_DATUM_MISMATCH", "$.evidence_refs")
+        for value in (
+            "fixture://evidence/hydrology/water-level/99999/20260802T120000Z",
+            "fixture://evidence/hydrology/water-level/99999/20260802T120000Z/"
+            "alternate-local-reference",
         ):
             mutated = copy.deepcopy(candidate)
             mutated["evidence_refs"] = [value]
@@ -255,11 +281,11 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
         candidate = _load_candidate()
         first = (
             "fixture://evidence/hydrology/water-level/99999/"
-            "20260802T120000Z/receipt-1"
+            "20260802T120000Z/synthetic-local-reference/receipt-1"
         )
         second = (
             "fixture://evidence/hydrology/water-level/99999/"
-            "20260802T120000Z/receipt-2"
+            "20260802T120000Z/synthetic-local-reference/receipt-2"
         )
 
         candidate["evidence_refs"] = [first, second]
@@ -275,14 +301,14 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
         candidate = _load_candidate()
         candidate["evidence_refs"] = [  # type: ignore[index]
             "fixture://evidence/hydrology/water-level/99999/"
-            f"20260802T120000Z/receipt-{index:02d}"
+            f"20260802T120000Z/synthetic-local-reference/receipt-{index:02d}"
             for index in range(MAX_EVIDENCE_REFS)
         ]
         self.assertEqual(validate_candidate(candidate), [])
 
         candidate["evidence_refs"].append(  # type: ignore[union-attr]
             "fixture://evidence/hydrology/water-level/99999/"
-            "20260802T120000Z/receipt-overflow"
+            "20260802T120000Z/synthetic-local-reference/receipt-overflow"
         )
         self.assertIn(
             Finding("EVIDENCE_REFS_TOO_MANY", "$.evidence_refs"),
