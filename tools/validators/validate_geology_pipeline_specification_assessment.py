@@ -390,8 +390,22 @@ def validate_fixture_manifest(path: Path = FIXTURE_PATH) -> list[dict[str, objec
             "findings": [finding.code for finding in findings],
             "ok": False,
         }]
+    bases = manifest.get("bases")
+    cases = manifest.get("cases")
+    if (
+        not isinstance(bases, Mapping)
+        or not isinstance(cases, list)
+        or not cases
+        or not all(isinstance(case, Mapping) for case in cases)
+    ):
+        return [{
+            "name": "fixture_manifest",
+            "outcome": "ERROR",
+            "findings": ["FIXTURE_MANIFEST_INVALID"],
+            "ok": False,
+        }]
     results: list[dict[str, object]] = []
-    for case in manifest["cases"]:
+    for case in cases:
         result = validate_candidate(materialize_fixture_case(manifest, case))
         results.append({
             "name": case["name"],
