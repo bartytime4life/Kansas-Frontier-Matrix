@@ -125,7 +125,7 @@ PRIVATE_IDENTITY_LABEL_PATTERN = re.compile(
     r"[^\W_](?:[^\W_]|[.'’/\-])*(?:\s+[^\W_](?:[^\W_]|[.'’/\-])*)*\s*)\Z"
 )
 LABELED_COORDINATE_PATTERN = re.compile(
-    r"(?i)\b(?:lat(?:itude)?|lon(?:gitude)?)\s*[:=]\s*"
+    r"(?i)\b(?:lat(?:itude)?|lon(?:gitude)?)(?:\s*[:=]\s*|\s+)"
     r"[+-]?\d{1,3}(?:\.\d+)?\b"
 )
 COORDINATE_PAIR_PATTERN = re.compile(
