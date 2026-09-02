@@ -174,7 +174,7 @@ def _reject_duplicate_members(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     value: dict[str, Any] = {}
     for key, item in pairs:
         if key in value:
-            raise StrictJSONError("AG_MAP_DUPLICATE_JSON_MEMBER", f"/{key}")
+            raise StrictJSONError("AG_MAP_DUPLICATE_JSON_MEMBER", _pointer((key,)))
         value[key] = item
     return value
 
