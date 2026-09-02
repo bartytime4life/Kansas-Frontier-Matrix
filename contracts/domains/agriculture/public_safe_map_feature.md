@@ -103,13 +103,25 @@ shape.
 Protected detail is denied whether it appears as an object member name or is
 embedded in an otherwise permitted scalar string such as an indicator value or
 evidence reference. Protected identifiers remain denied with punctuation or
-plain whitespace separators, and coordinate literals remain denied whether
-integer or fractional and whether coordinate pairs use commas or whitespace.
-Protected identifier values are denied at every length, and private identity
-labels remain denied even when they omit an ID suffix or punctuation. JSON
-decoding is strict: malformed documents, duplicate
-object members, and non-finite numeric literals receive machine-readable
-denials; programmatic candidates receive the same finite-number check before
+plain whitespace separators. Latitude and longitude labels are denied whether
+they use punctuation or plain whitespace; coordinate literals remain denied
+whether integer or fractional and whether coordinate pairs use commas, whitespace,
+or cardinal-direction prefix/suffix notation. Cardinal pairs are range-checked as
+latitude then longitude so out-of-range lookalikes are not misclassified.
+Protected identifier values are denied at every length. A complete scalar that
+is shaped as a private identity label remains denied with one or more identity
+tokens, regardless of capitalization or Unicode letter width, even when it
+omits an ID suffix or uses whitespace, colon, equals, or hash delimiters.
+Compatibility-equivalent Unicode forms are normalized before scalar scanning,
+so full-width labels, delimiters, and identifiers cannot bypass the same rules.
+Descriptive aggregate prose may mention field, farm,
+parcel, operator, well, permit, or water-right concepts without being recast as
+an identity label; explicit protected identifiers and coordinate literals
+remain denied anywhere in a scalar. JSON decoding is strict: malformed documents,
+duplicate object members, non-finite numeric literals, excessive nesting, and
+integer-parser limit failures receive machine-readable denials; duplicate-member
+paths use RFC 6901 JSON Pointer escaping so `/` and `~` in member names remain
+unambiguous. Programmatic candidates receive the same finite-number check before
 schema validation or identity hashing.
 
 Every EvidenceRef is carrier-local and synthetic-only. Its canonical form is
@@ -209,6 +221,16 @@ with sorted JSON keys and compact separators, and computes SHA-256.
 Changing semantic role, temporal scope, freshness evaluation, spatial support,
 evidence binding, sensitivity declaration, or non-effects therefore changes
 identity.
+
+## CLI mode controls
+
+The validator has two mutually exclusive modes: one explicit candidate path or
+the exact `--fixtures` flag. Abbreviated options are rejected, and fixture mode
+cannot silently ignore a positional path. A path beginning with a dash remains
+addressable after the standard `--` option terminator. A missing, unreadable,
+non-file, or non-UTF-8 candidate produces deterministic
+`ERROR / AG_MAP_INPUT_UNAVAILABLE` output instead of a traceback. These controls
+change no carrier semantics, source state, authority, or publication effect.
 
 ## Validation outcomes
 

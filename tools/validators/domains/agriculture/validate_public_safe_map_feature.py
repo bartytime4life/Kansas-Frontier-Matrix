@@ -8,6 +8,7 @@ import hashlib
 import json
 import math
 import re
+import unicodedata
 from dataclasses import dataclass
 from datetime import date
 from itertools import islice
@@ -119,16 +120,25 @@ PROTECTED_IDENTIFIER_PATTERN = re.compile(
     r")[a-z0-9][a-z0-9._/-]*\b"
 )
 PRIVATE_IDENTITY_LABEL_PATTERN = re.compile(
-    r"\b(?i:parcel|field|farm|operator|owner|well|permit|water[-_ ]?right)\s+"
-    r"[A-Z0-9][A-Za-z0-9.'’/-]*(?:\s+[A-Z0-9][A-Za-z0-9.'’/-]*)*\b"
+    r"\A(?i:\s*(?:parcel|field|farm|operator|owner|well|permit|water[-_ ]?right)"
+    r"(?:\s+|\s*[:=#]\s*)"
+    r"[^\W_](?:[^\W_]|[.'’/\-])*(?:\s+[^\W_](?:[^\W_]|[.'’/\-])*)*\s*)\Z"
 )
 LABELED_COORDINATE_PATTERN = re.compile(
-    r"(?i)\b(?:lat(?:itude)?|lon(?:gitude)?)\s*[:=]\s*"
+    r"(?i)\b(?:lat(?:itude)?|lon(?:gitude)?)(?:\s*[:=]\s*|\s+)"
     r"[+-]?\d{1,3}(?:\.\d+)?\b"
 )
 COORDINATE_PAIR_PATTERN = re.compile(
     r"(?<![\w.])([+-]?\d{1,3}(?:\.\d+)?)(?:\s*,\s*|\s+)"
     r"([+-]?\d{1,3}(?:\.\d+)?)(?![\w.])"
+)
+CARDINAL_PREFIX_COORDINATE_PATTERN = re.compile(
+    r"(?i)(?<![\w.])([NS])\s*(\d{1,2}(?:\.\d+)?)"
+    r"(?:\s*,\s*|\s+)([EW])\s*(\d{1,3}(?:\.\d+)?)(?![\w.])"
+)
+CARDINAL_SUFFIX_COORDINATE_PATTERN = re.compile(
+    r"(?i)(?<![\w.])(\d{1,2}(?:\.\d+)?)\s*([NS])"
+    r"(?:\s*,\s*|\s+)(\d{1,3}(?:\.\d+)?)\s*([EW])(?![\w.])"
 )
 WKT_POINT_PATTERN = re.compile(
     r"(?i)\bpoint\s*\(\s*[+-]?\d{1,3}(?:\.\d+)?\s+"
@@ -172,7 +182,7 @@ def _reject_duplicate_members(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     value: dict[str, Any] = {}
     for key, item in pairs:
         if key in value:
-            raise StrictJSONError("AG_MAP_DUPLICATE_JSON_MEMBER", f"/{key}")
+            raise StrictJSONError("AG_MAP_DUPLICATE_JSON_MEMBER", _pointer((key,)))
         value[key] = item
     return value
 
@@ -192,6 +202,15 @@ def _strict_json_loads(text: str) -> Any:
 def _contains_coordinate_literal(value: str) -> bool:
     if LABELED_COORDINATE_PATTERN.search(value) or WKT_POINT_PATTERN.search(value):
         return True
+    for pattern, latitude_group, longitude_group in (
+        (CARDINAL_PREFIX_COORDINATE_PATTERN, 2, 4),
+        (CARDINAL_SUFFIX_COORDINATE_PATTERN, 1, 3),
+    ):
+        for match in pattern.finditer(value):
+            latitude = float(match.group(latitude_group))
+            longitude = float(match.group(longitude_group))
+            if latitude <= 90 and longitude <= 180:
+                return True
     for match in COORDINATE_PAIR_PATTERN.finditer(value):
         first, second = (float(part) for part in match.groups())
         if ((abs(first) <= 90 and abs(second) <= 180)
@@ -211,9 +230,10 @@ def _unsafe_scalar_findings(value: Any, path: tuple[Any, ...] = ()) -> set[Findi
     elif isinstance(value, float) and not math.isfinite(value):
         findings.add(Finding("AG_MAP_NONFINITE_NUMBER_DENIED", _pointer(path)))
     elif isinstance(value, str):
-        if (_contains_coordinate_literal(value)
-                or PROTECTED_IDENTIFIER_PATTERN.search(value)
-                or PRIVATE_IDENTITY_LABEL_PATTERN.search(value)):
+        normalized = unicodedata.normalize("NFKC", value)
+        if (_contains_coordinate_literal(normalized)
+                or PROTECTED_IDENTIFIER_PATTERN.search(normalized)
+                or PRIVATE_IDENTITY_LABEL_PATTERN.search(normalized)):
             findings.add(Finding("AG_MAP_HARMFUL_PRECISION_DENIED", _pointer(path)))
     return findings
 
@@ -400,11 +420,13 @@ def run_fixtures() -> int:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(allow_abbrev=False)
     parser.add_argument("path", nargs="?")
     parser.add_argument("--fixtures", action="store_true")
     args = parser.parse_args(argv)
     if args.fixtures:
+        if args.path:
+            parser.error("path cannot be combined with --fixtures")
         return run_fixtures()
     if not args.path:
         parser.error("path or --fixtures required")
@@ -412,10 +434,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         value = _strict_json_loads(Path(args.path).read_text(encoding="utf-8"))
     except StrictJSONError as error:
         result = Result("DENY", (error.finding,))
-    except json.JSONDecodeError:
+    except (OSError, UnicodeError):
+        result = Result("ERROR", (Finding("AG_MAP_INPUT_UNAVAILABLE", "/"),))
+    except (RecursionError, ValueError):
         result = Result("DENY", (Finding("AG_MAP_JSON_DECODE_INVALID", "/"),))
     else:
-        result = validate_payload(value)
+        try:
+            result = validate_payload(value)
+        except RecursionError:
+            result = Result("DENY", (Finding("AG_MAP_JSON_DECODE_INVALID", "/"),))
     print(json.dumps({
         "outcome": result.outcome,
         "findings": [{"code": f.code, "path": f.path} for f in result.findings],

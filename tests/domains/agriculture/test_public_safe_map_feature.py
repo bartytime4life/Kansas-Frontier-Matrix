@@ -4,6 +4,7 @@ import copy
 import importlib.util
 import json
 import math
+import subprocess
 import sys
 from pathlib import Path
 
@@ -272,6 +273,10 @@ def test_strict_json_decoder_rejects_nonfinite_and_duplicate_members():
         ('{"value":NaN}', ("AG_MAP_NONFINITE_NUMBER_DENIED", "/")),
         ('{"release":{"public_use_allowed":true,"public_use_allowed":false}}',
          ("AG_MAP_DUPLICATE_JSON_MEMBER", "/public_use_allowed")),
+        ('{"a/b":1,"a/b":2}',
+         ("AG_MAP_DUPLICATE_JSON_MEMBER", "/a~1b")),
+        ('{"a~b":1,"a~b":2}',
+         ("AG_MAP_DUPLICATE_JSON_MEMBER", "/a~0b")),
     ):
         try:
             module._strict_json_loads(text)
@@ -346,14 +351,35 @@ def test_short_protected_identifiers_are_denied():
         ]
 
 
-def test_private_identity_labels_without_id_delimiters_are_denied():
+def test_private_identity_labels_are_denied_at_every_case_token_count_and_width():
     module = _module()
     manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
     candidate = module.materialize_case(
         manifest, _case(manifest, "valid_county_crop_observation")
     )
 
-    for value in ("Owner Jane Doe", "operator John Smith", "Farm Smith Acres"):
+    assert module.validate_payload(candidate).outcome == "PASS"
+    assert (
+        "Generalized aggregate support; not farm or operator truth."
+        in candidate["limitations"]
+    )
+
+    for value in (
+        "Owner Jane",
+        "Farm Sunflower",
+        "operator john",
+        "owner jane doe",
+        "operator john smith",
+        "farm smith acres",
+        "Owner José",
+        "operator Zoë",
+        "Ｆａｒｍ Sunflower",
+        "water right Niño",
+        "Owner: José",
+        "operator=Zoë",
+        "Farm # Sunflower",
+        "Ｏｗｎｅｒ：Ｊａｎｅ",
+    ):
         mutated = copy.deepcopy(candidate)
         mutated["indicator"]["value"] = value
         mutated["spec_hash"], mutated["id"] = module.canonical_identity(mutated)
@@ -361,6 +387,34 @@ def test_private_identity_labels_without_id_delimiters_are_denied():
         assert [(finding.code, finding.path) for finding in result.findings] == [
             ("AG_MAP_HARMFUL_PRECISION_DENIED", "/indicator/value")
         ]
+
+    for description in (
+        "Synthetic county aggregate fixture; no field or operator observation.",
+        "County aggregate only; not field, farm, parcel, or operator truth.",
+        "Derived generalized-grid context only; not observed field or planting truth.",
+        "Agriculture irrigation-use context only; not hydrologic observation or water-right authority.",
+        "Synthetic county-level fixture only; no well, permit, parcel, operator, or field precision.",
+        "County résumé notes no farm or operator observation.",
+        "Farm-to-market context",
+        "Owner-reported aggregate",
+    ):
+        normalized = module.unicodedata.normalize("NFKC", description)
+        assert not module.PRIVATE_IDENTITY_LABEL_PATTERN.search(normalized)
+
+
+def test_unicode_compatibility_forms_do_not_bypass_protected_id_denial():
+    module = _module()
+    manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    candidate = module.materialize_case(
+        manifest, _case(manifest, "valid_county_crop_observation")
+    )
+
+    candidate["indicator"]["value"] = "ｆａｒｍ＿ｉｄ 1"
+    candidate["spec_hash"], candidate["id"] = module.canonical_identity(candidate)
+    result = module.validate_payload(candidate)
+    assert [(finding.code, finding.path) for finding in result.findings] == [
+        ("AG_MAP_HARMFUL_PRECISION_DENIED", "/indicator/value")
+    ]
 
 
 def test_integer_coordinate_literals_are_denied():
@@ -397,6 +451,52 @@ def test_whitespace_separated_coordinate_pairs_are_denied():
         ]
 
 
+def test_whitespace_labeled_coordinate_literals_are_denied():
+    module = _module()
+    manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    candidate = module.materialize_case(
+        manifest, _case(manifest, "valid_county_crop_observation")
+    )
+
+    for value in (
+        "lat 38.8751",
+        "longitude -98.4520",
+        "lat 38.8751 lon -98.4520",
+    ):
+        mutated = copy.deepcopy(candidate)
+        mutated["indicator"]["value"] = value
+        mutated["spec_hash"], mutated["id"] = module.canonical_identity(mutated)
+        result = module.validate_payload(mutated)
+        assert [(finding.code, finding.path) for finding in result.findings] == [
+            ("AG_MAP_HARMFUL_PRECISION_DENIED", "/indicator/value")
+        ]
+
+
+def test_cardinal_coordinate_pairs_are_denied():
+    module = _module()
+    manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    candidate = module.materialize_case(
+        manifest, _case(manifest, "valid_county_crop_observation")
+    )
+
+    for value in (
+        "N 38.8751 W 98.4520",
+        "N38.8751,W98.4520",
+        "38.8751N 98.4520W",
+        "ｎ 38.8751 ｗ 98.4520",
+    ):
+        mutated = copy.deepcopy(candidate)
+        mutated["indicator"]["value"] = value
+        mutated["spec_hash"], mutated["id"] = module.canonical_identity(mutated)
+        result = module.validate_payload(mutated)
+        assert [(finding.code, finding.path) for finding in result.findings] == [
+            ("AG_MAP_HARMFUL_PRECISION_DENIED", "/indicator/value")
+        ]
+
+    assert not module._contains_coordinate_literal("N 91 W 98")
+    assert not module._contains_coordinate_literal("38N 181W")
+
+
 def test_malformed_json_returns_machine_readable_denial(tmp_path, capsys):
     module = _module()
     candidate_path = tmp_path / "malformed.json"
@@ -408,3 +508,101 @@ def test_malformed_json_returns_machine_readable_denial(tmp_path, capsys):
     assert output["findings"] == [
         {"code": "AG_MAP_JSON_DECODE_INVALID", "path": "/"}
     ]
+
+def test_parser_limit_failures_return_machine_readable_denial(tmp_path, capsys):
+    module = _module()
+    depth = sys.getrecursionlimit() * 2
+    candidates = {
+        "excessive-depth.json": "[" * depth + "0" + "]" * depth,
+    }
+    integer_limit = getattr(sys, "get_int_max_str_digits", lambda: 0)()
+    if integer_limit:
+        candidates["excessive-integer.json"] = (
+            '{"value":' + "9" * (integer_limit + 1) + "}"
+        )
+
+    for filename, document in candidates.items():
+        candidate_path = tmp_path / filename
+        candidate_path.write_text(document, encoding="utf-8")
+
+        assert module.main([str(candidate_path)]) == 1
+        captured = capsys.readouterr()
+        assert captured.err == ""
+        output = json.loads(captured.out)
+        assert output["outcome"] == "DENY"
+        assert output["findings"] == [
+            {"code": "AG_MAP_JSON_DECODE_INVALID", "path": "/"}
+        ]
+
+
+def test_cli_rejects_abbreviated_fixture_flags():
+    for length in range(3, len("--fixtures")):
+        abbreviation = "--fixtures"[:length]
+        completed = subprocess.run(
+            [sys.executable, str(VALIDATOR_PATH), abbreviation],
+            cwd=ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        assert completed.returncode == 2
+        assert completed.stdout == ""
+        assert "unrecognized arguments" in completed.stderr
+
+
+def test_cli_rejects_fixture_mode_with_explicit_path():
+    completed = subprocess.run(
+        [sys.executable, str(VALIDATOR_PATH), "--fixtures", "candidate.json"],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert completed.returncode == 2
+    assert completed.stdout == ""
+    assert "path cannot be combined with --fixtures" in completed.stderr
+
+
+def test_cli_option_terminator_allows_dash_prefixed_candidate(tmp_path):
+    module = _module()
+    manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    candidate = module.materialize_case(
+        manifest, _case(manifest, "valid_county_crop_observation")
+    )
+    candidate_path = tmp_path / "--fixtures"
+    candidate_path.write_text(json.dumps(candidate), encoding="utf-8")
+
+    completed = subprocess.run(
+        [sys.executable, str(VALIDATOR_PATH), "--", candidate_path.name],
+        cwd=tmp_path,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert completed.returncode == 0
+    assert completed.stderr == ""
+    payload = json.loads(completed.stdout)
+    assert payload["outcome"] == "PASS"
+    assert payload["findings"] == []
+    assert payload["authority"] == "NONE"
+    assert payload["execution_mode"] == "SYNTHETIC_NO_NETWORK"
+
+def test_unavailable_input_returns_machine_readable_error(tmp_path, capsys):
+    module = _module()
+    missing = tmp_path / "missing.json"
+    invalid_utf8 = tmp_path / "invalid-utf8.json"
+    invalid_utf8.write_bytes(b"\xff\xfe")
+    directory = tmp_path / "directory"
+    directory.mkdir()
+
+    for candidate_path in (missing, invalid_utf8, directory):
+        assert module.main([str(candidate_path)]) == 1
+        captured = capsys.readouterr()
+        assert captured.err == ""
+        payload = json.loads(captured.out)
+        assert payload["outcome"] == "ERROR"
+        assert payload["findings"] == [
+            {"code": "AG_MAP_INPUT_UNAVAILABLE", "path": "/"}
+        ]
+        assert payload["authority"] == "NONE"
+        assert payload["execution_mode"] == "SYNTHETIC_NO_NETWORK"
