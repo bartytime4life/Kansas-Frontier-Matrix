@@ -106,7 +106,8 @@ evidence reference. Protected identifiers remain denied with punctuation or
 plain whitespace separators, and coordinate literals remain denied whether
 integer or fractional and whether coordinate pairs use commas or whitespace.
 Protected identifier values are denied at every length, and private identity
-labels remain denied even when they omit an ID suffix or punctuation. JSON
+labels remain denied regardless of capitalization and even when they omit an ID
+suffix or punctuation. JSON
 decoding is strict: malformed documents, duplicate
 object members, and non-finite numeric literals receive machine-readable
 denials; programmatic candidates receive the same finite-number check before
