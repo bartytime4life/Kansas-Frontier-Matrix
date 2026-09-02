@@ -190,6 +190,30 @@ class GeologyPipelineSpecificationAssessmentTests(unittest.TestCase):
             results,
         )
 
+    def test_fixture_manifest_rejects_non_string_outcomes_finitely(self) -> None:
+        manifest = {
+            "bases": {"bedrock": MANIFEST["bases"]["bedrock"]},
+            "cases": [{
+                "name": "invalid_outcome",
+                "base": "bedrock",
+                "expected_outcome": [],
+                "expected_findings": [],
+            }],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "cases.json"
+            path.write_text(json.dumps(manifest), encoding="utf-8")
+            results = MODULE.validate_fixture_manifest(path)
+        self.assertEqual(
+            [{
+                "name": "fixture_manifest",
+                "outcome": "ERROR",
+                "findings": ["FIXTURE_CASE_INVALID"],
+                "ok": False,
+            }],
+            results,
+        )
+
     def test_fixture_manifest_contains_materialization_errors_finitely(self) -> None:
         manifest = {
             "bases": {"bedrock": MANIFEST["bases"]["bedrock"]},
