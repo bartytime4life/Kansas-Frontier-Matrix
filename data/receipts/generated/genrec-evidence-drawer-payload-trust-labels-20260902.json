@@ -3,6 +3,7 @@
   "contract_version": "3.0.0",
   "artifact_paths": [
     ".github/workflows/evidence-drawer-payload.yml",
+    "apps/explorer-web/src/adapters/GovernedClient.ts",
     "apps/explorer-web/src/features/evidence_drawer/index.tsx",
     "apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts",
     "apps/explorer-web/tests/browser/workspace-navigation.spec.ts",
@@ -11,10 +12,11 @@
   ],
   "artifact_hashes": {
     ".github/workflows/evidence-drawer-payload.yml": "sha256:03bb1604a9d6db130db7731cce68753fd3059db3202ebee35ce7c3b793e79ea7",
+    "apps/explorer-web/src/adapters/GovernedClient.ts": "sha256:c12b5368f27f9edad89dfeda43d4fa5fe6c3003f4b23e42ae96d332e0f4df989",
     "apps/explorer-web/src/features/evidence_drawer/index.tsx": "sha256:f59376940ee4af08e93089a5c60ce65a7c043cb9fab2b00283990877fc4588c7",
     "apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts": "sha256:21bca123eda755afbe6da43e5465e733909880557c10f08748fb1bd1068133fa",
     "apps/explorer-web/tests/browser/workspace-navigation.spec.ts": "sha256:b58d09605cb21272c49910f6adc9220b891725e3713b062376948485c778c644",
-    "apps/explorer-web/tests/evidence-drawer.test.ts": "sha256:f407ff915bcd4b1fcc525fec93a971f2ef40b82aa25a83cb07301e1aa8e6cdfc",
+    "apps/explorer-web/tests/evidence-drawer.test.ts": "sha256:f3419031ceaedc96f0a757bfd366ea466a713181b64472e8bb865d8e15d33366",
     "contracts/ui/evidence_drawer_payload.md": "sha256:3cc8d81b04305bf91e254eea1beae3611d36fe8011ff1520ad5ccff9ceaafae5"
   },
   "model_identity": {
@@ -39,12 +41,13 @@
     "attached_docs": [],
     "evidence_refs": [
       "repo:main@3ee7942913e32c11d8fbf91fa4a4f221dddd4ac0",
-      "repo:pull/4208@88f6883cb5ff6813e3ad2780f4ebe2732aaa3ecb",
-      "github:actions/run/33598908770"
+      "repo:pull/4208@2300d63b0c7c50ec663c62e3821b51aee962cf5d",
+      "github:actions/run/33613906199"
     ]
   },
   "truth_labels": {
     ".github/workflows/evidence-drawer-payload.yml": "PROPOSED",
+    "apps/explorer-web/src/adapters/GovernedClient.ts": "PROPOSED",
     "apps/explorer-web/src/features/evidence_drawer/index.tsx": "PROPOSED",
     "apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts": "PROPOSED",
     "apps/explorer-web/tests/browser/workspace-navigation.spec.ts": "PROPOSED",
@@ -60,12 +63,12 @@
     {
       "gate": "focused-no-network-explorer-tests",
       "outcome": "PASS",
-      "reason": "Thirty-nine deterministic synthetic public-safe focused tests passed without network access."
+      "reason": "Fourteen deterministic synthetic public-safe Evidence Drawer tests passed without network access."
     },
     {
       "gate": "full-explorer-unit-and-build",
       "outcome": "PASS",
-      "reason": "All 403 Explorer unit tests and the TypeScript plus Vite production build passed."
+      "reason": "All 409 Explorer unit tests and the TypeScript plus Vite production build passed."
     },
     {
       "gate": "generated-receipt-integrity",
@@ -95,7 +98,7 @@
     {
       "id": "repo:pull-4208-exact-head-failure",
       "validated": true,
-      "evidence_ref": "github:actions/run/33598908770"
+      "evidence_ref": "github:actions/run/33613906199"
     }
   ],
   "human_review": {
@@ -111,5 +114,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Successor authoring provenance for PR #4208's Evidence Drawer current-versus-non-current reference labels and regression proof. The historical 2026-08-23 receipt remains unchanged. This receipt is not evidence, policy approval, human review, merge authority, release authority, deployment authority, publication authority, or public-use permission."
+  "notes": "Successor authoring provenance for PR #4208's Evidence Drawer current-versus-non-current reference labels, contract-required superseded correction history, and regression proof. The historical 2026-08-23 receipt remains unchanged. This receipt is not evidence, policy approval, human review, merge authority, release authority, deployment authority, publication authority, or public-use permission."
 }
