@@ -147,7 +147,8 @@ def validate_candidate(candidate: object) -> list[Finding]:
         "UNDECLARED_TOP_LEVEL_FIELD",
         "$",
     )
-    if not is_nonempty_string(candidate.get("record_id")):
+    record_id = candidate.get("record_id")
+    if not is_nonempty_string(record_id):
         add_finding(findings, "RECORD_ID_MISSING", "$.record_id")
     if candidate.get("object_family") != "WaterLevelObservation":
         add_finding(findings, "OBJECT_FAMILY_INVALID", "$.object_family")
@@ -173,6 +174,7 @@ def validate_candidate(candidate: object) -> list[Finding]:
         )
 
     gauge_site_ref = candidate.get("gauge_site_ref")
+    gauge_identifier: str | None = None
     if not is_nonempty_string(gauge_site_ref):
         add_finding(findings, "GAUGE_SITE_REF_MISSING", "$.gauge_site_ref")
     elif not gauge_site_ref.startswith(FIXTURE_GAUGE_PREFIX):
@@ -189,6 +191,8 @@ def validate_candidate(candidate: object) -> list[Finding]:
             "GAUGE_SITE_REF_IDENTIFIER_INVALID",
             "$.gauge_site_ref",
         )
+    else:
+        gauge_identifier = gauge_site_ref[len(FIXTURE_GAUGE_PREFIX) :]
 
     evidence_refs = candidate.get("evidence_refs")
     if (
@@ -247,6 +251,7 @@ def validate_candidate(candidate: object) -> list[Finding]:
             add_finding(findings, "COUNTY_FIPS_INVALID", "$.spatial_support.county_fips")
 
     temporal = candidate.get("temporal_scope")
+    observed: datetime | None = None
     if not isinstance(temporal, dict):
         add_finding(findings, "TEMPORAL_SCOPE_INVALID", "$.temporal_scope")
     else:
@@ -278,6 +283,18 @@ def validate_candidate(candidate: object) -> list[Finding]:
             add_finding(findings, "RETRIEVAL_TIME_BEFORE_SOURCE", "$.temporal_scope")
         if observed is not None and retrieved is not None and retrieved < observed:
             add_finding(findings, "TEMPORAL_ORDER_INVALID", "$.temporal_scope")
+
+    if (
+        is_nonempty_string(record_id)
+        and gauge_identifier is not None
+        and observed is not None
+    ):
+        expected_record_id = (
+            f"fixture:hydrology:water-level:{gauge_identifier}:"
+            f"{observed.strftime('%Y%m%dT%H%M%SZ')}"
+        )
+        if record_id != expected_record_id:
+            add_finding(findings, "RECORD_ID_NOT_CANONICAL", "$.record_id")
 
     measurement = candidate.get("measurement")
     if not isinstance(measurement, dict):
