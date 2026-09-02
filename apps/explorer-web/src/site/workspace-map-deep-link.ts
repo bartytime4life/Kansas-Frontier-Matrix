@@ -13,37 +13,31 @@ export type PublicMapCaseDeepLinkRelease = Readonly<{
 export type PublicMapCaseUrlTransition = Readonly<{
   activeDeepLinkMapCaseId: "missing" | null;
   mapCaseIdToSelect: "missing" | null;
-  resetOwnedSelection: boolean;
+  releaseOwnedSelection: boolean;
 }>;
 
 /**
- * Choose a stable keyboard target after the URL-owned map fixture is reset.
- * Focus outside the fixture is never moved. Within the fixture, preserve the
- * focused case when it still exists; focus from a removed drawer falls back to
- * the first public synthetic control instead of disappearing with the old DOM.
+ * Commit URL ownership only after the fixture control accepted the requested
+ * selection. A disabled control ignores `click()`, so retaining the prior
+ * owner keeps the URL request retryable instead of falsely claiming that its
+ * Evidence Drawer was restored.
  */
-export function resolvePublicMapEvidenceResetFocusCaseId(
-  focusWasInsideFixture: boolean,
-  focusedCaseId: string | null,
-  availableCaseIds: readonly string[],
-): string | null {
-  if (!focusWasInsideFixture) return null;
-  if (
-    focusedCaseId !== null &&
-    availableCaseIds.includes(focusedCaseId)
-  ) {
-    return focusedCaseId;
+export function resolvePublicMapCaseUrlConsumerCommit(
+  transition: PublicMapCaseUrlTransition,
+  selectionApplied: boolean,
+): "missing" | null {
+  if (transition.mapCaseIdToSelect === null || !selectionApplied) {
+    return transition.activeDeepLinkMapCaseId;
   }
-  return availableCaseIds[0] ?? null;
+  return transition.mapCaseIdToSelect;
 }
 
 /**
  * Reconcile the synthetic map fixture that is still owned by public URL state.
  *
- * Departing from an active deep link asks the site controller to reset the
- * owned fixture, which invalidates any in-flight request and removes its
- * Evidence Drawer. Manual selection releases ownership before URL
- * synchronization, so a user's later fixture remains visible.
+ * Departing from an active deep link releases consumer ownership. Fixture
+ * lifecycle remains producer-owned; this consumer cancels its own pending
+ * retry without independently remounting or reinterpreting the fixture.
  */
 export function resolvePublicMapCaseUrlTransition(
   url: URL,
@@ -52,19 +46,19 @@ export function resolvePublicMapCaseUrlTransition(
   const requestedMapCaseId = resolvePublicEvidenceFreeMapCaseId(url);
   if (requestedMapCaseId !== null) {
     return Object.freeze({
-      activeDeepLinkMapCaseId: requestedMapCaseId,
+      activeDeepLinkMapCaseId,
       mapCaseIdToSelect:
         requestedMapCaseId === activeDeepLinkMapCaseId
           ? null
           : requestedMapCaseId,
-      resetOwnedSelection: false,
+      releaseOwnedSelection: false,
     });
   }
 
   return Object.freeze({
     activeDeepLinkMapCaseId: null,
     mapCaseIdToSelect: null,
-    resetOwnedSelection: activeDeepLinkMapCaseId !== null,
+    releaseOwnedSelection: activeDeepLinkMapCaseId !== null,
   });
 }
 

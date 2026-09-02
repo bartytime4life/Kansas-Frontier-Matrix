@@ -9,7 +9,6 @@ import {
   mountMapRuntimeTrustStatus,
   type MapEvidenceFixtureCase,
   type MapEvidenceFixtureController,
-  type MapFeatureSelection,
   type MapRuntimeTrustStatusController,
 } from "../features/map_runtime";
 import {
@@ -26,17 +25,8 @@ import {
   type FeatureMaturity,
   type KnowledgeDomain,
 } from "./catalog";
-import { resolvePublicMapEvidenceResetFocusCaseId } from "./workspace-map-deep-link";
 
-export type ExplorerSiteController = Readonly<{
-  resetMapEvidenceSelection: () => void;
-  destroy: () => void;
-}>;
-
-export const SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS = Object.freeze([
-  "kfm:evidence:synthetic:flow-000",
-  "kfm:evidence:synthetic:flow-001",
-]);
+export type ExplorerSiteController = Readonly<{ destroy: () => void }>;
 
 const supportedProjection = Object.freeze({
   profile: "kfm.explorer.evidence-drawer.public-safe.v1",
@@ -45,7 +35,7 @@ const supportedProjection = Object.freeze({
   reason_code: "SUPPORTED",
   title: "Synthetic streamflow observation",
   summary: "A synthetic, generalized flow observation is supported by the cited fixture evidence.",
-  evidence_refs: SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS,
+  evidence_refs: Object.freeze(["kfm:evidence:synthetic:flow-001"]),
   citations: Object.freeze([
     Object.freeze({
       label: "Synthetic fixture evidence",
@@ -105,7 +95,7 @@ const restrictedProjection = Object.freeze({
 });
 
 const mapCases: readonly MapEvidenceFixtureCase[] = Object.freeze([
-  { caseId: "supported", label: "Supported synthetic streamflow", selection: { profile: MAP_FEATURE_SELECTION_PROFILE, selection_id: "selection:flow-001", layer_id: "layer:synthetic-streamflow", feature_id: "feature:flow-001", evidence_refs: SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS } },
+  { caseId: "supported", label: "Supported synthetic streamflow", selection: { profile: MAP_FEATURE_SELECTION_PROFILE, selection_id: "selection:flow-001", layer_id: "layer:synthetic-streamflow", feature_id: "feature:flow-001", evidence_refs: ["kfm:evidence:synthetic:flow-001"] } },
   { caseId: "missing", label: "Feature without governed evidence", selection: { profile: MAP_FEATURE_SELECTION_PROFILE, selection_id: "selection:missing", layer_id: "layer:synthetic-streamflow", feature_id: "feature:missing", evidence_refs: [] } },
   { caseId: "restricted", label: "Policy-restricted feature", selection: { profile: MAP_FEATURE_SELECTION_PROFILE, selection_id: "selection:restricted", layer_id: "layer:synthetic-restricted", feature_id: "feature:restricted", evidence_refs: ["kfm:evidence:synthetic:restricted"] } },
   { caseId: "mismatch", label: "Mismatched evidence scope", selection: { profile: MAP_FEATURE_SELECTION_PROFILE, selection_id: "selection:mismatch", layer_id: "layer:synthetic-streamflow", feature_id: "feature:mismatch", evidence_refs: ["kfm:evidence:synthetic:other"] } },
@@ -296,19 +286,12 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
   lab.append(fixtureHost);
   mapSection.append(lab);
   main.append(mapSection);
-  const resolveFixtureEvidence = async (selection: MapFeatureSelection) => {
+  mapFixture = mountMapFeatureEvidenceFixture(fixtureHost, mapCases, async (selection) => {
     await Promise.resolve();
     if (selection.selectionId === "selection:restricted") return restrictedProjection;
     if (selection.selectionId === "selection:error") throw new Error("Synthetic governed resolver failure");
     return supportedProjection;
-  };
-  const mountMapFixture = (): MapEvidenceFixtureController =>
-    mountMapFeatureEvidenceFixture(
-      fixtureHost,
-      mapCases,
-      resolveFixtureEvidence,
-    );
-  mapFixture = mountMapFixture();
+  });
   mapRuntimeStatus = mountMapRuntimeTrustStatus(runtimeStatusHost, mapRuntime);
 
   const knowledge = el(document, "section", "section-shell");
@@ -398,32 +381,6 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
   root.replaceChildren(skip, header, main, footer);
 
   return Object.freeze({
-    resetMapEvidenceSelection: () => {
-      if (mapFixture === null) return;
-      const activeElement = document.activeElement;
-      const focusWasInsideFixture =
-        activeElement !== null && fixtureHost.contains(activeElement);
-      const focusedCaseId =
-        activeElement
-          ?.closest<HTMLButtonElement>("button[data-map-evidence-case]")
-          ?.dataset.mapEvidenceCase ?? null;
-      const focusCaseId = resolvePublicMapEvidenceResetFocusCaseId(
-        focusWasInsideFixture,
-        focusedCaseId,
-        mapCases.map((fixtureCase) => fixtureCase.caseId),
-      );
-      mapFixture.destroy();
-      mapFixture = mountMapFixture();
-      if (focusCaseId !== null) {
-        Array.from(
-          fixtureHost.querySelectorAll<HTMLButtonElement>(
-            "button[data-map-evidence-case]",
-          ),
-        )
-          .find((button) => button.dataset.mapEvidenceCase === focusCaseId)
-          ?.focus();
-      }
-    },
     destroy: () => {
       cleanup.forEach((fn) => fn());
       mapRuntimeStatus?.destroy();

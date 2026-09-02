@@ -16,6 +16,7 @@ import {
 } from "./site/workspace-navigation";
 import {
   resolvePublicMapCaseManualSelectionTransition,
+  resolvePublicMapCaseUrlConsumerCommit,
   resolvePublicMapCaseUrlTransition,
 } from "./site/workspace-map-deep-link";
 import {
@@ -41,6 +42,21 @@ if (navigation === null || trustSection === null) {
 mountPublicWorkspaceNavigation(navigation);
 let activeDeepLinkMapCaseId: "missing" | null = null;
 let activeDeepLinkKnowledgeDomainId: string | null = null;
+let pendingMapDeepLinkRetry: number | null = null;
+
+const cancelPendingMapDeepLinkRetry = (): void => {
+  if (pendingMapDeepLinkRetry === null) return;
+  window.clearTimeout(pendingMapDeepLinkRetry);
+  pendingMapDeepLinkRetry = null;
+};
+
+const scheduleMapDeepLinkRetry = (): void => {
+  if (pendingMapDeepLinkRetry !== null) return;
+  pendingMapDeepLinkRetry = window.setTimeout(() => {
+    pendingMapDeepLinkRetry = null;
+    syncWorkspaceNavigation();
+  }, 16);
+};
 
 const releaseDeepLinkMapOwnershipOnManualSelection = (event: MouseEvent): void => {
   const button =
@@ -118,23 +134,35 @@ const syncWorkspaceNavigation = (): void => {
     safeUrl,
     activeDeepLinkMapCaseId,
   );
-  activeDeepLinkMapCaseId = mapTransition.activeDeepLinkMapCaseId;
-  if (mapTransition.resetOwnedSelection) {
-    site.resetMapEvidenceSelection();
+  if (mapTransition.releaseOwnedSelection) {
+    cancelPendingMapDeepLinkRetry();
   }
   const mapCaseId = mapTransition.mapCaseIdToSelect;
   if (mapCaseId !== null) {
     const mapCaseButton = root.querySelector<HTMLButtonElement>(
       `button[data-map-evidence-case="${mapCaseId}"]`,
     );
-    if (mapCaseButton !== null) {
+    if (mapCaseButton?.disabled) {
+      scheduleMapDeepLinkRetry();
+    } else if (mapCaseButton !== null) {
       const priorFocus =
         document.activeElement instanceof HTMLElement
           ? document.activeElement
           : null;
       mapCaseButton.click();
+      const selectionApplied = mapCaseButton.disabled;
+      activeDeepLinkMapCaseId = resolvePublicMapCaseUrlConsumerCommit(
+        mapTransition,
+        selectionApplied,
+      );
+      if (selectionApplied) cancelPendingMapDeepLinkRetry();
       if (priorFocus?.isConnected) priorFocus.focus();
     }
+  } else {
+    activeDeepLinkMapCaseId = resolvePublicMapCaseUrlConsumerCommit(
+      mapTransition,
+      false,
+    );
   }
 
   const currentDomainId =

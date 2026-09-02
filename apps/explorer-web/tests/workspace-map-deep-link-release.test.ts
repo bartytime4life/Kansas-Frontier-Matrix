@@ -1,15 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { MAP_FEATURE_SELECTION_PROFILE } from "@kfm/maplibre";
 import mainSource from "../src/main.ts?raw";
-import mountSource from "../src/site/mount-explorer-site.ts?raw";
 import {
   PUBLIC_WORKSPACE_CONTEXT_PROFILE,
   PUBLIC_WORKSPACE_CONTEXT_QUERY_PARAM,
   serializePublicWorkspaceContext,
 } from "../src/site/workspace-context";
 import {
-  resolvePublicMapEvidenceResetFocusCaseId,
   resolvePublicMapCaseManualSelectionTransition,
+  resolvePublicMapCaseUrlConsumerCommit,
   resolvePublicMapCaseUrlTransition,
 } from "../src/site/workspace-map-deep-link";
 
@@ -53,45 +52,50 @@ function missingMapUrl(): URL {
 describe("Explorer manual map-selection deep-link release", () => {
   it("selects a newly URL-owned case without resetting the fixture", () => {
     expect(resolvePublicMapCaseUrlTransition(missingMapUrl(), null)).toEqual({
-      activeDeepLinkMapCaseId: "missing",
+      activeDeepLinkMapCaseId: null,
       mapCaseIdToSelect: "missing",
-      resetOwnedSelection: false,
+      releaseOwnedSelection: false,
     });
   });
 
-  it("resets evidence only when a departing URL still owns the fixture", () => {
+  it("commits ownership only after the requested control accepts selection", () => {
+    const requested = resolvePublicMapCaseUrlTransition(missingMapUrl(), null);
+
+    expect(resolvePublicMapCaseUrlConsumerCommit(requested, false)).toBeNull();
+    expect(
+      resolvePublicMapCaseUrlTransition(
+        missingMapUrl(),
+        resolvePublicMapCaseUrlConsumerCommit(requested, false),
+      ),
+    ).toEqual(requested);
+    expect(resolvePublicMapCaseUrlConsumerCommit(requested, true)).toBe(
+      "missing",
+    );
+    expect(
+      resolvePublicMapCaseUrlTransition(
+        missingMapUrl(),
+        resolvePublicMapCaseUrlConsumerCommit(requested, true),
+      ),
+    ).toEqual({
+      activeDeepLinkMapCaseId: "missing",
+      mapCaseIdToSelect: null,
+      releaseOwnedSelection: false,
+    });
+  });
+
+  it("releases ownership only when a departing URL still owns the fixture", () => {
     const neutralUrl = new URL("https://example.invalid/explorer?lang=en#map");
 
     expect(resolvePublicMapCaseUrlTransition(neutralUrl, "missing")).toEqual({
       activeDeepLinkMapCaseId: null,
       mapCaseIdToSelect: null,
-      resetOwnedSelection: true,
+      releaseOwnedSelection: true,
     });
     expect(resolvePublicMapCaseUrlTransition(neutralUrl, null)).toEqual({
       activeDeepLinkMapCaseId: null,
       mapCaseIdToSelect: null,
-      resetOwnedSelection: false,
+      releaseOwnedSelection: false,
     });
-  });
-
-  it("preserves a stable keyboard target when the owned fixture is remounted", () => {
-    const caseIds = Object.freeze(["supported", "missing", "restricted"]);
-
-    expect(
-      resolvePublicMapEvidenceResetFocusCaseId(false, "missing", caseIds),
-    ).toBeNull();
-    expect(
-      resolvePublicMapEvidenceResetFocusCaseId(true, "missing", caseIds),
-    ).toBe("missing");
-    expect(
-      resolvePublicMapEvidenceResetFocusCaseId(true, null, caseIds),
-    ).toBe("supported");
-    expect(
-      resolvePublicMapEvidenceResetFocusCaseId(true, "retired", caseIds),
-    ).toBe("supported");
-    expect(
-      resolvePublicMapEvidenceResetFocusCaseId(true, null, Object.freeze([])),
-    ).toBeNull();
   });
 
   it("keeps URL ownership when the restored missing case is selected again", () => {
@@ -162,13 +166,11 @@ describe("Explorer manual map-selection deep-link release", () => {
       "syncPublicWorkspaceNavigation(navigation, transition.replacementUrl)",
     );
     expect(mainSource).toContain("resolvePublicMapCaseUrlTransition");
-    expect(mainSource).toContain("site.resetMapEvidenceSelection()");
-    expect(mountSource).toContain("resetMapEvidenceSelection");
-    expect(mountSource).toContain("mapFixture.destroy()");
-    expect(mountSource).toContain("mapFixture = mountMapFixture()");
-    expect(mountSource).toContain("focusWasInsideFixture");
-    expect(mountSource).toContain("resolvePublicMapEvidenceResetFocusCaseId");
-    expect(mountSource).toContain("?.focus()");
+    expect(mainSource).toContain("resolvePublicMapCaseUrlConsumerCommit");
+    expect(mainSource).toContain("mapCaseButton?.disabled");
+    expect(mainSource).toContain("scheduleMapDeepLinkRetry()");
+    expect(mainSource).toContain("const selectionApplied = mapCaseButton.disabled");
+    expect(mainSource).not.toContain("activeDeepLinkMapCaseId = mapTransition.activeDeepLinkMapCaseId");
     expect(mainSource).not.toContain("selection.evidenceRefs.join");
   });
 });

@@ -1,12 +1,17 @@
+#!/usr/bin/env python3
+"""Compatibility entrypoint for the Atmosphere EvidenceBundle projection."""
+
 from pathlib import Path
 import sys
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from tools.validators._common.jsonschema_runner import run
+REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
-SCHEMA = Path("schemas/contracts/v1/domains/atmosphere/evidence_bundle.schema.json")
-FIXTURES = Path("fixtures/contracts/v1/evidence/evidence_bundle")
+from tools.validators.domains.atmosphere.validate_evidence_bundle import (  # noqa: E402
+    main,
+)
 
 if __name__ == "__main__":
-    raise SystemExit(run(SCHEMA, FIXTURES, sys.argv[1:]))
+    raise SystemExit(main())
