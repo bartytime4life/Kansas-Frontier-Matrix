@@ -1,0 +1,26 @@
++            ["catalog/domain/example/README.md@" + "a" * 40],
++        )
++        current = module._finding(
++            "KFM-TOPO-004",
++            "catalog/",
++            ["catalog/domain/example/README.md@" + "b" * 40],
++        )
++        payload = module._empty_reconciliation_data()
++        entry = _reconciliation_record(prior, current)
++        payload["entries"] = [entry]
++        raw = (json.dumps(payload, sort_keys=True) + "\n").encode("utf-8")
++        data, records = module._load_reconciliation_bytes(raw, label="test")
++        self.assertEqual(module.RECONCILIATION_VERSION, data["schema_version"])
++        self.assertEqual([entry["record_id"]], list(records))
++
++        expanded = json.loads(raw)
++        expanded["entries"][0]["subject"] = "src/"
++        with self.assertRaisesRegex(module.TopologyError, "exceeds"):
++            module._load_reconciliation_bytes(
++                (json.dumps(expanded) + "\n").encode("utf-8"),
++                label="test",
++            )
++
+     def test_artifact_fingerprints_bind_to_indexed_content(self) -> None:
+         paths = ("artifacts/release/example/release_manifest.json",)
+         modes = {paths[0]: "100644"}
